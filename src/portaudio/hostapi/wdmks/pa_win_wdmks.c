@@ -1,5 +1,5 @@
 /*
-* $Id: pa_win_wdmks.c 1933 2014-08-28 05:59:40Z robiwan $
+* $Id$
 * PortAudio Windows WDM-KS interface
 *
 * Author: Andrew Baldwin, Robert Bielik (WaveRT)
@@ -27,13 +27,13 @@
 */
 
 /*
-* The text above constitutes the entire PortAudio license; however, 
+* The text above constitutes the entire PortAudio license; however,
 * the PortAudio community also makes the following non-binding requests:
 *
 * Any person wishing to distribute modifications to the Software is
 * requested to send the modifications to the original developer so that
-* they can be incorporated into the canonical version. It is also 
-* requested that these non-binding requests be included along with the 
+* they can be incorporated into the canonical version. It is also
+* requested that these non-binding requests be included along with the
 * license above.
 */
 
@@ -94,7 +94,7 @@ of a device for the duration of active stream using those devices
 #endif
 
 #include <windows.h>
-#ifndef __GNUC__
+#ifndef __GNUC__ /* Fix for ticket #257: MinGW-w64: Inclusion of <winioctl.h> triggers multiple redefinition errors. */
 #include <winioctl.h>
 #endif
 #include <process.h>
@@ -163,9 +163,15 @@ Default is to use the pin category.
 #define DYNAMIC_GUID(data) {data}
 #define _NTRTL_ /* Turn off default definition of DEFINE_GUIDEX */
 #undef DEFINE_GUID
-#define DEFINE_GUID(n,data) EXTERN_C const GUID n = {data}
-#define DEFINE_GUID_THUNK(n,data) DEFINE_GUID(n,data)
-#define DEFINE_GUIDEX(n) DEFINE_GUID_THUNK(n, STATIC_##n)
+#if defined(__clang__) || (defined(_MSVC_TRADITIONAL) && !_MSVC_TRADITIONAL) /* clang-cl and new msvc preprocessor: avoid too many arguments error */
+    #define DEFINE_GUID(n, ...) EXTERN_C const GUID n = {__VA_ARGS__}
+    #define DEFINE_GUID_THUNK(n, ...) DEFINE_GUID(n, __VA_ARGS__)
+    #define DEFINE_GUIDEX(n) DEFINE_GUID_THUNK(n, STATIC_##n)
+#else
+    #define DEFINE_GUID(n, data) EXTERN_C const GUID n = {data}
+    #define DEFINE_GUID_THUNK(n, data) DEFINE_GUID(n, data)
+    #define DEFINE_GUIDEX(n) DEFINE_GUID_THUNK(n, STATIC_##n)
+#endif /* __clang__, !_MSVC_TRADITIONAL */
 #endif
 
 #include <setupapi.h>
@@ -174,7 +180,7 @@ Default is to use the pin category.
 #define EXTERN_C extern
 #endif
 
-#if 0 && defined(__GNUC__)
+#if defined(__GNUC__)
 
 /* For MinGW we reference mingw-include files supplied with WASAPI */
 #define WINBOOL BOOL
@@ -223,7 +229,7 @@ typedef struct
 static PaWinWDMKSAvRtEntryPoints paWinWDMKSAvRtEntryPoints = {0};
 
 /* An unspecified channel count (-1) is not treated correctly, so we replace it with
-* an arbitrarily large number */ 
+* an arbitrarily large number */
 #define MAXIMUM_NUMBER_OF_CHANNELS 256
 
 /* Forward definition to break circular type reference between pin and filter */
@@ -365,7 +371,7 @@ typedef struct __PaWinWdmIOInfo
     HANDLE              *events;        /* noOfPackets handles (WaveCyclic) 1 (WaveRT) */
     DATAPACKET          *packets;       /* noOfPackets packets (WaveCyclic) 2 (WaveRT) */
     /* WaveRT polled mode */
-    unsigned            lastPosition; 
+    unsigned            lastPosition;
     unsigned            pollCntr;
 } PaWinWdmIOInfo;
 
@@ -408,7 +414,7 @@ struct __PaWinWdmStream
 };
 
 /* Gather all processing variables in a struct */
-struct __PaProcessThreadInfo 
+struct __PaProcessThreadInfo
 {
     PaWinWdmStream              *stream;
     PaStreamCallbackTimeInfo    ti;
@@ -428,7 +434,7 @@ struct __PaProcessThreadInfo
 
 /* Used for transferring device infos during scanning / rescanning */
 typedef struct __PaWinWDMScanDeviceInfosResults
-{ 
+{
     PaDeviceInfo **deviceInfos;
     PaDeviceIndex defaultInputDevice;
     PaDeviceIndex defaultOutputDevice;
@@ -643,6 +649,16 @@ static BOOL IsDeviceTheSame(const PaWinWdmDeviceInfo* pDev1,
 
 static BOOL IsEarlierThanVista()
 {
+/*
+NOTE: GetVersionEx() is deprecated as of Windows 8.1 and can not be used to reliably detect
+versions of Windows higher than Windows 8 (due to manifest requirements for reporting higher versions).
+Microsoft recommends switching to VerifyVersionInfo (available on Win 2k and later), however GetVersionEx
+is faster, for now we just disable the deprecation warning.
+See: https://msdn.microsoft.com/en-us/library/windows/desktop/ms724451(v=vs.85).aspx
+See: http://www.codeproject.com/Articles/678606/Part-Overcoming-Windows-s-deprecation-of-GetVe
+*/
+#pragma warning (disable : 4996) /* use of GetVersionEx */
+
     OSVERSIONINFO osvi;
     osvi.dwOSVersionInfoSize = sizeof(osvi);
     if (GetVersionEx(&osvi) && osvi.dwMajorVersion<6)
@@ -650,6 +666,8 @@ static BOOL IsEarlierThanVista()
         return TRUE;
     }
     return FALSE;
+
+#pragma warning (default : 4996)
 }
 
 
@@ -717,9 +735,9 @@ static PaError WdmSyncIoctl(
     if (!bRes)
     {
         unsigned long error = GetLastError();
-        if ( !(((error == ERROR_INSUFFICIENT_BUFFER ) || ( error == ERROR_MORE_DATA )) && 
+        if ( !(((error == ERROR_INSUFFICIENT_BUFFER ) || ( error == ERROR_MORE_DATA )) &&
             ( ioctlNumber == IOCTL_KS_PROPERTY ) &&
-            ( outBufferCount == 0 ) ) ) 
+            ( outBufferCount == 0 ) ) )
         {
             KSPROPERTY* ksProperty = (KSPROPERTY*)inBuffer;
 
@@ -1045,8 +1063,9 @@ static const KSTOPOLOGY_CONNECTION* FindStartConnectionFrom(ULONG startPin, PaWi
         }
     }
 
+    /* Some devices may report topologies that leave pins unconnected. This may be by design or driver installation
+       issues. Pass the error condition back to caller. */
     PA_DEBUG(("FindStartConnectionFrom: returning NULL\n"));
-    assert(FALSE);
     return 0;
 }
 
@@ -1065,23 +1084,23 @@ static const KSTOPOLOGY_CONNECTION* FindStartConnectionTo(ULONG startPin, PaWinW
         }
     }
 
+    /* Unconnected pin. Inform caller. */
     PA_DEBUG(("FindStartConnectionTo: returning NULL\n"));
-    assert(FALSE);
     return 0;
 }
 
 static ULONG GetConnectedPin(ULONG startPin, BOOL forward, PaWinWdmFilter* filter, int muxPosition, ULONG *muxInputPinId, ULONG *muxNodeId)
 {
     int limit=1000;
-    const KSTOPOLOGY_CONNECTION *conn = NULL; 
+    const KSTOPOLOGY_CONNECTION *conn = NULL;
     TFnGetConnection fnGetConnection = forward ? GetConnectionTo : GetConnectionFrom ;
     PA_LOGE_;
     while (1)
     {
         limit--;
         if (limit == 0) {
-           PA_DEBUG(("GetConnectedPin: LOOP LIMIT REACHED\n"));
-           break;
+            PA_DEBUG(("GetConnectedPin: LOOP LIMIT REACHED\n"));
+            break;
         }
 
         if (conn == NULL)
@@ -1145,7 +1164,7 @@ static void DumpConnectionsAndNodes(PaWinWdmFilter* filter)
     for (i=0; i < filter->connections->Count; ++i)
     {
         const KSTOPOLOGY_CONNECTION* pConn = connections + i;
-        PA_DEBUG(("  Connection: %u - FromNode=%u,FromPin=%u -> ToNode=%u,ToPin=%u\n", 
+        PA_DEBUG(("  Connection: %u - FromNode=%u,FromPin=%u -> ToNode=%u,ToPin=%u\n",
             i,
             pConn->FromNode, pConn->FromNodePin,
             pConn->ToNode, pConn->ToNodePin
@@ -1168,7 +1187,7 @@ static void DumpConnectionsAndNodes(PaWinWdmFilter* filter)
 
 }
 
-typedef struct __PaUsbTerminalGUIDToName 
+typedef struct __PaUsbTerminalGUIDToName
 {
     USHORT     usbGUID;
     wchar_t    name[64];
@@ -1778,7 +1797,7 @@ static PaWinWdmPin* PinNew(PaWinWdmFilter* parentFilter, unsigned long pinId, Pa
                         PA_DEBUG(("PinNew: Pin name '%s'\n", pin->friendlyName));
 #else
                         PA_DEBUG(("PinNew: Pin name '%S'\n", pin->friendlyName));
-#endif                                
+#endif
 
                         /* Set endpoint pin ID (this is the topology INPUT pin, since portmixer will always traverse the
                         filter in audio streaming direction, see http://msdn.microsoft.com/en-us/library/windows/hardware/ff536331(v=vs.85).aspx
@@ -1908,7 +1927,7 @@ static PaWinWdmPin* PinNew(PaWinWdmFilter* parentFilter, unsigned long pinId, Pa
                                     FALSE,
                                     pin->parentFilter->topologyFilter,
                                     muxPos,
-                                    &pin->inputs[i]->muxPinId, 
+                                    &pin->inputs[i]->muxPinId,
                                     &pin->inputs[i]->muxNodeId);
 
                                 if (endpointPinId != KSFILTER_NODE)
@@ -1958,8 +1977,8 @@ static PaWinWdmPin* PinNew(PaWinWdmFilter* parentFilter, unsigned long pinId, Pa
                                 }
                                 else
                                 {
-                                    /* Should never come here! */
-                                    assert(FALSE);
+                                    /* Unconnected pin */
+                                    goto error;
                                 }
                             }
                         }
@@ -2213,7 +2232,7 @@ static PaError PinIsFormatSupported(PaWinWdmPin* pin, const WAVEFORMATEX* format
     dataRange = (KSDATARANGE_AUDIO*)pin->dataRanges;
     for(count = 0;
         count<pin->dataRangesItem->Count;
-        count++, 
+        count++,
         dataRange = (KSDATARANGE_AUDIO*)( ((char*)dataRange) + dataRange->DataRange.FormatSize)) /* Need to update dataRange here, due to 'continue' !! */
     {
         /* Check major format*/
@@ -2244,7 +2263,7 @@ static PaError PinIsFormatSupported(PaWinWdmPin* pin, const WAVEFORMATEX* format
         PA_DEBUG(("\tBits:%d-%d\n",dataRange->MinimumBitsPerSample,dataRange->MaximumBitsPerSample));
         PA_DEBUG(("\tSampleRate:%d-%d\n",dataRange->MinimumSampleFrequency,dataRange->MaximumSampleFrequency));
 
-        if( dataRange->MaximumChannels != (ULONG)-1 && 
+        if( dataRange->MaximumChannels != (ULONG)-1 &&
             dataRange->MaximumChannels < format->nChannels )
         {
             result = paInvalidChannelCount;
@@ -2301,7 +2320,7 @@ static PaError PinQueryNotificationSupport(PaWinWdmPin* pPin, BOOL* pbResult)
         sizeof(BOOL),
         NULL);
 
-    if (result != paNoError) 
+    if (result != paNoError)
     {
         PA_DEBUG(("Failed PinQueryNotificationSupport\n"));
     }
@@ -2332,13 +2351,13 @@ static PaError PinGetBufferWithNotification(PaWinWdmPin* pPin, void** pBuffer, D
         sizeof(KSRTAUDIO_BUFFER),
         NULL);
 
-    if (result == paNoError) 
+    if (result == paNoError)
     {
         *pBuffer = propOut.BufferAddress;
         *pRequestedBufSize = propOut.ActualBufferSize;
         *pbCallMemBarrier = propOut.CallMemoryBarrier;
     }
-    else 
+    else
     {
         PA_DEBUG(("Failed to get buffer with notification\n"));
     }
@@ -2374,7 +2393,7 @@ static PaError PinGetBufferWithoutNotification(PaWinWdmPin* pPin, void** pBuffer
         *pRequestedBufSize = propOut.ActualBufferSize;
         *pbCallMemBarrier = propOut.CallMemoryBarrier;
     }
-    else 
+    else
     {
         PA_DEBUG(("Failed to get buffer without notification\n"));
     }
@@ -2404,8 +2423,8 @@ static PaError PinGetBuffer(PaWinWdmPin* pPin, void** pBuffer, DWORD* pRequested
     {
         limit--;
         if (limit == 0) {
-           PA_DEBUG(("PinGetBuffer: LOOP LIMIT REACHED\n"));
-           break;
+            PA_DEBUG(("PinGetBuffer: LOOP LIMIT REACHED\n"));
+            break;
         }
 
         if (pPin->pinKsSubType != SubType_kPolled)
@@ -2455,7 +2474,7 @@ static PaError PinGetBuffer(PaWinWdmPin* pPin, void** pBuffer, DWORD* pRequested
     return result;
 }
 
-static PaError PinRegisterPositionRegister(PaWinWdmPin* pPin) 
+static PaError PinRegisterPositionRegister(PaWinWdmPin* pPin)
 {
     PaError result = paNoError;
     KSRTAUDIO_HWREGISTER_PROPERTY propIn;
@@ -2475,7 +2494,7 @@ static PaError PinRegisterPositionRegister(PaWinWdmPin* pPin)
         sizeof(KSRTAUDIO_HWREGISTER),
         NULL);
 
-    if (result == paNoError) 
+    if (result == paNoError)
     {
         pPin->positionRegister = (ULONG*)propOut.Register;
     }
@@ -2489,7 +2508,7 @@ static PaError PinRegisterPositionRegister(PaWinWdmPin* pPin)
     return result;
 }
 
-static PaError PinRegisterNotificationHandle(PaWinWdmPin* pPin, HANDLE handle) 
+static PaError PinRegisterNotificationHandle(PaWinWdmPin* pPin, HANDLE handle)
 {
     PaError result = paNoError;
     KSRTAUDIO_NOTIFICATION_EVENT_PROPERTY prop;
@@ -2518,7 +2537,7 @@ static PaError PinRegisterNotificationHandle(PaWinWdmPin* pPin, HANDLE handle)
     return result;
 }
 
-static PaError PinUnregisterNotificationHandle(PaWinWdmPin* pPin, HANDLE handle) 
+static PaError PinUnregisterNotificationHandle(PaWinWdmPin* pPin, HANDLE handle)
 {
     PaError result = paNoError;
     KSRTAUDIO_NOTIFICATION_EVENT_PROPERTY prop;
@@ -2662,7 +2681,7 @@ static PaError PinGetAudioPositionViaIOCTLWrite(PaWinWdmPin* pPin, ULONG* pPosit
 /***********************************************************************************************/
 
 /**
-* Create a new filter object. 
+* Create a new filter object.
 */
 static PaWinWdmFilter* FilterNew( PaWDMKSType type, DWORD devNode, const wchar_t* filterName, const wchar_t* friendlyName, PaError* error )
 {
@@ -2809,7 +2828,7 @@ PaError FilterInitializePins( PaWinWdmFilter* filter )
         return paNoError;
 
     if (filter->pins != NULL)
-        return paNoError;   
+        return paNoError;
 
     /* Allocate pointer array to hold the pins */
     filter->pins = (PaWinWdmPin**)PaUtil_AllocateMemory( sizeof(PaWinWdmPin*) * filter->pinCount );
@@ -2831,6 +2850,10 @@ PaError FilterInitializePins( PaWinWdmFilter* filter )
         {
             filter->pins[pinId] = newPin;
             ++filter->validPinCount;
+        }
+        else
+        {
+            filter->pins[pinId] = 0;
         }
     }
 
@@ -3031,10 +3054,10 @@ static void TrimString(wchar_t* str, size_t length)
 
 /**
 * Build the list of available filters
-* Use the SetupDi API to enumerate all devices in the KSCATEGORY_AUDIO which 
-* have a KSCATEGORY_RENDER or KSCATEGORY_CAPTURE alias. For each of these 
-* devices initialise a PaWinWdmFilter structure by calling our NewFilter() 
-* function. We enumerate devices twice, once to count how many there are, 
+* Use the SetupDi API to enumerate all devices in the KSCATEGORY_AUDIO which
+* have a KSCATEGORY_RENDER or KSCATEGORY_CAPTURE alias. For each of these
+* devices initialise a PaWinWdmFilter structure by calling our NewFilter()
+* function. We enumerate devices twice, once to count how many there are,
 * and once to initialize the PaWinWdmFilter structures.
 *
 * Vista and later: Also check KSCATEGORY_REALTIME for WaveRT devices.
@@ -3212,7 +3235,7 @@ PaWinWdmFilter** BuildFilterList( int* pFilterCount, int* pNoOfPaDevices, PaErro
                 very literate. */
                 if (!SetupDiGetDeviceRegistryPropertyW(handle,
                     &devInfoData,
-                    SPDRP_LOCATION_INFORMATION, 
+                    SPDRP_LOCATION_INFORMATION,
                     &type,
                     (BYTE*)friendlyName,
                     sizeof(friendlyName),
@@ -3246,7 +3269,7 @@ PaWinWdmFilter** BuildFilterList( int* pFilterCount, int* pNoOfPaDevices, PaErro
 
             TrimString(friendlyName, sizeFriendlyName);
 
-            newFilter = FilterNew(streamingType, 
+            newFilter = FilterNew(streamingType,
                 devInfoData.DevInst,
                 devInterfaceDetails->DevicePath,
                 friendlyName,
@@ -3327,7 +3350,7 @@ static ULONG GetNameHash(const wchar_t* str, const BOOL input)
 
 static PaError CreateHashEntry(PaNameHashObject* obj, const wchar_t* name, const BOOL input)
 {
-    ULONG hash = GetNameHash(name, input); 
+    ULONG hash = GetNameHash(name, input);
     PaNameHashIndex * pLast = NULL;
     PaNameHashIndex * p = obj->list;
     while (p != 0)
@@ -3409,7 +3432,7 @@ static void DeinitNameHashObject(PaNameHashObject* obj)
 
 static unsigned GetNameIndex(PaNameHashObject* obj, const wchar_t* name, const BOOL input)
 {
-    ULONG hash = GetNameHash(name, input); 
+    ULONG hash = GetNameHash(name, input);
     PaNameHashIndex* p = obj->list;
     while (p != NULL)
     {
@@ -3630,7 +3653,7 @@ static PaError ScanDeviceInfos( struct PaUtilHostApiRepresentation *hostApi, PaH
                     case Type_kWaveCyclic:
                         if (IsEarlierThanVista())
                         {
-                            /* XP doesn't tolerate low latency, unless the Process Priority Class is set to REALTIME_PRIORITY_CLASS 
+                            /* XP doesn't tolerate low latency, unless the Process Priority Class is set to REALTIME_PRIORITY_CLASS
                             through SetPriorityClass, then 10 ms is quite feasible. However, one should then bear in mind that ALL of
                             the process is running in REALTIME_PRIORITY_CLASS, which might not be appropriate for an application with
                             a GUI . In this case it is advisable to separate the audio engine in another process and use IPC to communicate
@@ -3993,7 +4016,7 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         /* Check that the input format is supported */
         channelMask = PaWin_DefaultChannelMask(inputChannelCount);
         PaWin_InitializeWaveFormatExtensible((PaWinWaveFormat*)&wfx,
-            inputChannelCount, 
+            inputChannelCount,
             testFormat,
             PaWin_SampleFormatToLinearWaveFormatTag(testFormat),
             sampleRate,
@@ -4008,7 +4031,7 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         {
             /* Try a WAVE_FORMAT_PCM instead */
             PaWin_InitializeWaveFormatEx((PaWinWaveFormat*)&wfx,
-                inputChannelCount, 
+                inputChannelCount,
                 testFormat,
                 PaWin_SampleFormatToLinearWaveFormatTag(testFormat),
                 sampleRate);
@@ -4104,7 +4127,7 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         /* Check that the output format is supported */
         channelMask = PaWin_DefaultChannelMask(outputChannelCount);
         PaWin_InitializeWaveFormatExtensible((PaWinWaveFormat*)&wfx,
-            outputChannelCount, 
+            outputChannelCount,
             testFormat,
             PaWin_SampleFormatToLinearWaveFormatTag(testFormat),
             sampleRate,
@@ -4120,7 +4143,7 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
         {
             /* Try a WAVE_FORMAT_PCM instead */
             PaWin_InitializeWaveFormatEx((PaWinWaveFormat*)&wfx,
-                outputChannelCount, 
+                outputChannelCount,
                 testFormat,
                 PaWin_SampleFormatToLinearWaveFormatTag(testFormat),
                 sampleRate);
@@ -4174,7 +4197,7 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
     return result;
 }
 
-static void ResetStreamEvents(PaWinWdmStream* stream) 
+static void ResetStreamEvents(PaWinWdmStream* stream)
 {
     unsigned i;
     ResetEvent(stream->eventAbort);
@@ -4198,7 +4221,7 @@ static void ResetStreamEvents(PaWinWdmStream* stream)
     }
 }
 
-static void CloseStreamEvents(PaWinWdmStream* stream) 
+static void CloseStreamEvents(PaWinWdmStream* stream)
 {
     unsigned i;
     PaWinWdmIOInfo* ios[2] = { &stream->capture, &stream->render };
@@ -4357,7 +4380,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     else
     {
         userInputChannels = 0;
-        inputSampleFormat = hostInputSampleFormat = paInt16; /* Supress 'uninitialised var' warnings. */
+        inputSampleFormat = paInt16; /* Suppress 'uninitialised var' warnings. */
     }
 
     if( outputParameters )
@@ -4392,7 +4415,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     else
     {
         userOutputChannels = 0;
-        outputSampleFormat = hostOutputSampleFormat = paInt16; /* Supress 'uninitialized var' warnings. */
+        outputSampleFormat = paInt16; /* Suppress 'uninitialized var' warnings. */
     }
 
     /* validate platform specific flags */
@@ -4483,7 +4506,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             while (1)
             {
                 PaWin_InitializeWaveFormatExtensible((PaWinWaveFormat*)&wfx,
-                    channelsToProbe, 
+                    channelsToProbe,
                     hostInputSampleFormat,
                     PaWin_SampleFormatToLinearWaveFormatTag(hostInputSampleFormat),
                     sampleRate,
@@ -4500,7 +4523,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                 {
                     /* Try a WAVE_FORMAT_PCM instead */
                     PaWin_InitializeWaveFormatEx((PaWinWaveFormat*)&wfx,
-                        channelsToProbe, 
+                        channelsToProbe,
                         hostInputSampleFormat,
                         PaWin_SampleFormatToLinearWaveFormatTag(hostInputSampleFormat),
                         sampleRate);
@@ -4577,6 +4600,8 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     }
     else
     {
+        hostInputSampleFormat = (PaSampleFormat)0; /* Avoid uninitialized variable warning */
+
         stream->capture.pPin = NULL;
         stream->capture.bytesPerFrame = 0;
     }
@@ -4633,7 +4658,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             while (1)
             {
                 PaWin_InitializeWaveFormatExtensible((PaWinWaveFormat*)&wfx,
-                    channelsToProbe, 
+                    channelsToProbe,
                     hostOutputSampleFormat,
                     PaWin_SampleFormatToLinearWaveFormatTag(hostOutputSampleFormat),
                     sampleRate,
@@ -4649,7 +4674,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                 if( result != paNoError && result != paDeviceUnavailable )
                 {
                     PaWin_InitializeWaveFormatEx((PaWinWaveFormat*)&wfx,
-                        channelsToProbe, 
+                        channelsToProbe,
                         hostOutputSampleFormat,
                         PaWin_SampleFormatToLinearWaveFormatTag(hostOutputSampleFormat),
                         sampleRate);
@@ -4701,6 +4726,8 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     }
     else
     {
+        hostOutputSampleFormat = (PaSampleFormat)0; /* Avoid uninitialized variable warning */
+
         stream->render.pPin = NULL;
         stream->render.bytesPerFrame = 0;
     }
@@ -4770,7 +4797,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
         stream->userInputChannels, inputSampleFormat, hostInputSampleFormat,
         stream->userOutputChannels, outputSampleFormat, hostOutputSampleFormat,
         sampleRate, streamFlags, framesPerUserBuffer,
-        max(stream->capture.framesPerBuffer, stream->render.framesPerBuffer), 
+        max(stream->capture.framesPerBuffer, stream->render.framesPerBuffer),
         paUtilBoundedHostBufferSize,
         streamCallback, userData );
     if( result != paNoError )
@@ -4817,7 +4844,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                 ULONG hwFifoLatency = 0;
                 ULONG dummy;
                 result = PinGetBuffer(stream->capture.pPin, (void**)&stream->capture.hostBuffer, &dwRequestedSize, &bCallMemoryBarrier);
-                if (!result) 
+                if (!result)
                 {
                     PA_DEBUG(("Input buffer start = %p, size = %u\n", stream->capture.hostBuffer, dwRequestedSize));
                     if (dwRequestedSize != dwTotalSize)
@@ -4841,7 +4868,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
 
                     stream->capture.pPin->fnMemBarrier = bCallMemoryBarrier ? MemoryBarrierRead : MemoryBarrierDummy;
                 }
-                else 
+                else
                 {
                     PA_DEBUG(("Failed to get input buffer (WaveRT)\n"));
                     PaWinWDM_SetLastErrorInfo(paUnanticipatedHostError, "Failed to get input buffer (WaveRT)");
@@ -4873,7 +4900,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             goto error;
         }
     }
-    else 
+    else
     {
         stream->capture.hostBuffer = 0;
     }
@@ -4912,7 +4939,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                 ULONG hwFifoLatency = 0;
                 ULONG dummy;
                 result = PinGetBuffer(stream->render.pPin, (void**)&stream->render.hostBuffer, &dwRequestedSize, &bCallMemoryBarrier);
-                if (!result) 
+                if (!result)
                 {
                     PA_DEBUG(("Output buffer start = %p, size = %u, membarrier = %u\n", stream->render.hostBuffer, dwRequestedSize, bCallMemoryBarrier));
                     if (dwRequestedSize != dwTotalSize)
@@ -4936,7 +4963,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
 
                     stream->render.pPin->fnMemBarrier = bCallMemoryBarrier ? MemoryBarrierWrite : MemoryBarrierDummy;
                 }
-                else 
+                else
                 {
                     PA_DEBUG(("Failed to get output buffer (with notification)\n"));
                     PaWinWDM_SetLastErrorInfo(paUnanticipatedHostError, "Failed to get output buffer (with notification)");
@@ -4968,7 +4995,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             goto error;
         }
     }
-    else 
+    else
     {
         stream->render.hostBuffer = 0;
     }
@@ -5094,7 +5121,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                         PaWinWDM_SetLastErrorInfo(paUnanticipatedHostError, "Failed to read capture position register (IOCTL)");
                         result = paUnanticipatedHostError;
                         goto error;
-                    }                
+                    }
                 }
                 else
                 {
@@ -5489,19 +5516,19 @@ static void DuplicateFirstChannelInt32(void* buffer, int channels, int samples)
 }
 
 /*
-Increase the priority of the calling thread to RT 
+Increase the priority of the calling thread to RT
 */
-static HANDLE BumpThreadPriority() 
+static HANDLE BumpThreadPriority()
 {
     HANDLE hThread = GetCurrentThread();
     DWORD dwTask = 0;
     HANDLE hAVRT = NULL;
 
     /* If we have access to AVRT.DLL (Vista and later), use it */
-    if (paWinWDMKSAvRtEntryPoints.AvSetMmThreadCharacteristics != NULL) 
+    if (paWinWDMKSAvRtEntryPoints.AvSetMmThreadCharacteristics != NULL)
     {
         hAVRT = paWinWDMKSAvRtEntryPoints.AvSetMmThreadCharacteristics("Pro Audio", &dwTask);
-        if (hAVRT != NULL && hAVRT != INVALID_HANDLE_VALUE) 
+        if (hAVRT != NULL && hAVRT != INVALID_HANDLE_VALUE)
         {
             BOOL bret = paWinWDMKSAvRtEntryPoints.AvSetMmThreadPriority(hAVRT, PA_AVRT_PRIORITY_CRITICAL);
             if (!bret)
@@ -5538,7 +5565,7 @@ static void DropThreadPriority(HANDLE hAVRT)
 {
     HANDLE hThread = GetCurrentThread();
 
-    if (hAVRT != NULL) 
+    if (hAVRT != NULL)
     {
         paWinWDMKSAvRtEntryPoints.AvSetMmThreadPriority(hAVRT, PA_AVRT_PRIORITY_NORMAL);
         paWinWDMKSAvRtEntryPoints.AvRevertMmThreadCharacteristics(hAVRT);
@@ -5608,7 +5635,7 @@ static PaError PreparePinsForStart(PaProcessThreadInfo* pInfo)
         pInfo->priming += pInfo->stream->render.noOfPackets;
         ++pInfo->pending;
         SetEvent(pInfo->stream->render.events[0]);
-        if (pInfo->stream->render.pPin->parentFilter->devInfo.streamingType == Type_kWaveCyclic) 
+        if (pInfo->stream->render.pPin->parentFilter->devInfo.streamingType == Type_kWaveCyclic)
         {
             unsigned i;
             for(i=1; i < pInfo->stream->render.noOfPackets; ++i)
@@ -5778,7 +5805,7 @@ static PaError PaDoProcessing(PaProcessThreadInfo* pInfo)
                 framesProcessed = 0;
             }
         }
-        else 
+        else
         {
             framesProcessed = PaUtil_EndBufferProcessing(&pInfo->stream->bufferProcessor, &pInfo->cbResult);
         }
@@ -5924,7 +5951,7 @@ PA_THREAD_FUNC ProcessingThread(void* pParam)
     assert(noOfHandles <= (info.stream->capture.noOfPackets + info.stream->render.noOfPackets + 1));
 
     /* Prepare render and capture pins */
-    if ((result = PreparePinsForStart(&info)) != paNoError) 
+    if ((result = PreparePinsForStart(&info)) != paNoError)
     {
         PA_DEBUG(("Failed to prepare device(s)!\n"));
         goto error;
@@ -6005,7 +6032,7 @@ PA_THREAD_FUNC ProcessingThread(void* pParam)
         unsigned eventSignalled = wait - WAIT_OBJECT_0;
         DWORD dwCurrentTime = 0;
 
-        if (wait == WAIT_FAILED) 
+        if (wait == WAIT_FAILED)
         {
             PA_DEBUG(("Wait failed = %ld! \n",wait));
             break;
@@ -6038,7 +6065,7 @@ PA_THREAD_FUNC ProcessingThread(void* pParam)
         /* Get event time */
         dwCurrentTime = GetCurrentTimeInMillisecs();
 
-        /* Since we can mix capture/render devices between WaveCyclic, WaveRT polled and WaveRT notification (3x3 combinations), 
+        /* Since we can mix capture/render devices between WaveCyclic, WaveRT polled and WaveRT notification (3x3 combinations),
         we can't rely on the timeout of WFMO to check for device timeouts, we need to keep tally. */
         if (info.stream->capture.pPin && (dwCurrentTime - timeStamp[0]) >= info.timeout)
         {
@@ -6497,7 +6524,7 @@ static PaError PaPinCaptureEventHandler_WaveCyclic(PaProcessThreadInfo* pInfo, u
     {
         PA_HP_TRACE((pInfo->stream->hLog, ">>> Capture bogus event (no data): idx=%u", eventIndex));
 
-        /* Bogus event, reset! This is to handle the behavior of this USB mic: http://shop.xtz.se/measurement-system/microphone-to-dirac-live-room-correction-suite 
+        /* Bogus event, reset! This is to handle the behavior of this USB mic: http://shop.xtz.se/measurement-system/microphone-to-dirac-live-room-correction-suite
            on startup of streaming, where it erroneously sets the event without the corresponding buffer being filled (DataUsed == 0) */
         ResetEvent(packet->Signal.hEvent);
 
@@ -6525,6 +6552,7 @@ static PaError PaPinCaptureSubmitHandler_WaveCyclic(PaProcessThreadInfo* pInfo, 
     assert(packet != 0);
     PA_HP_TRACE((pInfo->stream->hLog, "Capture submit: %u", eventIndex));
     packet->Header.DataUsed = 0; /* Reset for reuse */
+    packet->Header.OptionsFlags = 0; /* Reset for reuse. Required for e.g. Focusrite Scarlett 2i4 (1st Gen) see #310 */
     ResetEvent(packet->Signal.hEvent);
     result = PinRead(pInfo->stream->capture.pPin->handle, packet);
     ++pInfo->pending;

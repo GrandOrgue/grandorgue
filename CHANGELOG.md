@@ -1,3 +1,4 @@
+- Upgraded PortAudio Library to the latest stable release, v19.7.0. The upgraded library corrects PortAudio errors in GrandOrgue on macOS 11.
 # 3.4.0 (2021-10-24)
 - Eliminated using opensuse repositories when building for windows on github https://github.com/GrandOrgue/grandorgue/issues/28
 - Fixed hang on Panic button after the sound had been suddenly stopped https://github.com/GrandOrgue/grandorgue/issues/762
