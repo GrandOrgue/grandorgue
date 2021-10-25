@@ -1,8 +1,11 @@
 - Added release truncation controls to ODF and Organ Settings panel. https://github.com/GrandOrgue/grandorgue/discussions/680
+# 3.4.0 (2021-10-24)
+- Eliminated using opensuse repositories when building for windows on github https://github.com/GrandOrgue/grandorgue/issues/28
+- Fixed hang on Panic button after the sound had been suddenly stopped https://github.com/GrandOrgue/grandorgue/issues/762
+- Make the Paths settings in the Options tab expandable
 - Added build for linux appimage https://github.com/GrandOrgue/grandorgue/issues/698
 - Fixed bug preventing building with -DGO_USE_JACK=OFF
 - Moved the netbeans project files to the ide-projects/NetBeans12 subdirectory https://github.com/GrandOrgue/grandorgue/discussions/771
-- Make the Paths settings in the Options tab expandable
 # 3.3.0 (2021-10-08)
 - Added automated release tagging on GitHub https://github.com/GrandOrgue/grandorgue/issues/711
 - Added polish language support https://github.com/GrandOrgue/grandorgue/discussions/743
