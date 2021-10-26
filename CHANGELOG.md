@@ -1,3 +1,4 @@
+- Fixed the addition of .cmb file extension when exporting settings if necessary https://github.com/GrandOrgue/grandorgue/issues/802
 # 3.4.0 (2021-10-24)
 - Eliminated using opensuse repositories when building for windows on github https://github.com/GrandOrgue/grandorgue/issues/28
 - Fixed hang on Panic button after the sound had been suddenly stopped https://github.com/GrandOrgue/grandorgue/issues/762
