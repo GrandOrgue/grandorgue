@@ -1,3 +1,4 @@
+- Removed translation of GrandOrgue midi ports https://github.com/GrandOrgue/grandorgue/issues/791
 - Switched the build for windows to use wxWidgets 3.1.5 https://github.com/GrandOrgue/grandorgue/issues/792
 - Added bundling feature of settings file and ODF with same name in same directory
 - Fixed the addition of .cmb file extension when exporting settings if necessary https://github.com/GrandOrgue/grandorgue/issues/802

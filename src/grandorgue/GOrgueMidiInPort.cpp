@@ -79,5 +79,5 @@ const wxString GOrgueMidiInPort::GetClientName()
 
 const wxString GOrgueMidiInPort::GetPortName()
 {
-	return _("GrandOrgue Input");
+	return wxT("GrandOrgue Input");
 }
