@@ -374,7 +374,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		}
 		else
 		{
-			wxString bundledSettingsFile = m_odf.BeforeLast('.');
+			wxString bundledSettingsFile = m_odf.BeforeLast('.') + wxT(".cmb");
 			if (wxFileExists(bundledSettingsFile) || findArchive(m_odf)->containsFile(bundledSettingsFile))
 			{
 				setting_file = bundledSettingsFile;
