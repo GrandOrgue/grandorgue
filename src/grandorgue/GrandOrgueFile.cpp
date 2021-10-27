@@ -375,10 +375,21 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		else
 		{
 			wxString bundledSettingsFile = m_odf.BeforeLast('.') + wxT(".cmb");
-			if (wxFileExists(bundledSettingsFile) || findArchive(m_odf)->containsFile(bundledSettingsFile))
+			if (!useArchives())
 			{
-				setting_file = bundledSettingsFile;
-				m_b_customized = true;
+				if (wxFileExists(bundledSettingsFile))
+				{
+					setting_file = bundledSettingsFile;
+					m_b_customized = true;
+				}
+			}
+			else
+			{
+				if (findArchive(m_odf)->containsFile(bundledSettingsFile))
+				{
+					setting_file = bundledSettingsFile;
+					m_b_customized = true;
+				}
 			}
 		}
 	}
