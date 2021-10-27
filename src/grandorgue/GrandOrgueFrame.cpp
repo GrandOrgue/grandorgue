@@ -755,8 +755,11 @@ void GOrgueFrame::OnExport(wxCommandEvent& event)
 	wxFileDialog dlg(this, _("Export Settings"), m_Settings.SettingPath(), wxEmptyString, _("Settings files (*.cmb)|*.cmb"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (dlg.ShowModal() == wxID_OK)
 	{
-		if (!doc->Export(dlg.GetPath()))
-			GOMessageBox(wxString::Format(_("Failed to export settings to '%s'"), dlg.GetPath().c_str()), _("Error"), wxOK | wxICON_ERROR, this);
+		wxString exportedFilePath = dlg.GetPath();
+		if (!exportedFilePath.EndsWith(wxT(".cmb"), NULL))
+			exportedFilePath += wxT(".cmb");
+		if (!doc->Export(exportedFilePath))
+			GOMessageBox(wxString::Format(_("Failed to export settings to '%s'"), exportedFilePath.c_str()), _("Error"), wxOK | wxICON_ERROR, this);
 	}
 }
 

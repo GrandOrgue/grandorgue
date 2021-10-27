@@ -5221,7 +5221,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
     <simpara>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current preset number if the latter was saved.</simpara>
     <simpara>It is possible to select multiple elements at once, to e.g. update one setting of multiple elements to the same value in a single operation.</simpara>
     <simpara>
-      <emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set, when made in the <emphasis>Organ Settings</emphasis> dialog, are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. If they were designed to be integral part of the sample set, these customizations need to be manually merged from the settings file to the organ definition file.
+      <emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set, when made in the <emphasis>Organ Settings</emphasis> dialog, are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. If they were designed to be integral part of the sample set, these customizations need to be manually merged from the settings file to the organ definition file. It is however possible to export the settings to a file with the same name as the ODF file, except that the suffix must be .cmb instead of .organ (eg. TheOrgan.organ becomes TheOrgan.cmb as name for the exported settings file). When that settings file is put in the same directory as it's companion .organ file, it will be used as default settings for that organ.
     </simpara>
     </note>
     <sect1>
