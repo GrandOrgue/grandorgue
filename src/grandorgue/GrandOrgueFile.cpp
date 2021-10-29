@@ -617,13 +617,16 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 		if (hash != wxEmptyString)
 			if (hash != m_ODFHash)
 			{
-				wxLogWarning(_("The combination file does not exactly match the current ODF."));
-			}
-		/* skip informational items */
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
-		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), false);
+				if (wxMessageBox(_("The combination file does not exactly match the current ODF. Importing it can cause various problems. Should it really be imported?"), _("Import"), wxYES_NO, NULL) == wxYES)
+				{
+					/* skip informational items */
+					cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
+					cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), false);
 
-		ReadCombinations(cfg);
+					ReadCombinations(cfg);
+				}
+			}
+
 	}
 	catch (wxString error)
 	{
