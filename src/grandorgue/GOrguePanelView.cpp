@@ -18,7 +18,7 @@ BEGIN_EVENT_TABLE(GOrguePanelView, wxScrolledWindow)
 	EVT_SIZE(GOrguePanelView::OnSize)
 END_EVENT_TABLE()
 
-GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxWindow* parent)
+GOrguePanelView* GOrguePanelView::createWithFrame(GOrgueDocumentBase* doc, GOGUIPanel* panel)
 {
 	wxFrame* frame = new wxFrame(NULL, -1, panel->GetName(), wxDefaultPosition, wxDefaultSize, 
 				     wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | 
@@ -30,8 +30,7 @@ GOrguePanelView* GOrguePanelView::createWindow(GOrgueDocumentBase* doc, GOGUIPan
 	wxIcon icon;
 	icon.CopyFromBitmap(GetImage_GOIcon());
 	frame->SetIcon(icon);
-	parent = frame;
-	return new GOrguePanelView(doc, panel, parent);
+	return new GOrguePanelView(doc, panel, frame);
 }
 
 
@@ -39,7 +38,8 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 	wxScrolledWindow(parent),
 	GOrgueView(doc, parent),
 	m_panelwidget(NULL),
-	m_panel(panel)
+	m_panel(panel),
+	m_TopWindow(dynamic_cast<wxTopLevelWindow *>(parent))
 {
 	wxWindow* frame = parent;
 	
@@ -61,18 +61,23 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 
 	// Get the position and size of the window as saved by the user previously,
 	// or otherwise its default values
-	wxRect size = panel->GetWindowSize();
+	wxRect const savedRect = panel->GetWindowRect();
 
 	// If both width and height are set, set position and size of the window
 	// E.g. in case of corrupted preferences, this might not be the case 
-	if (size.GetWidth() && size.GetHeight())
-		frame->SetSize(size);
+	if (savedRect.GetWidth() && savedRect.GetHeight())
+		frame->SetSize(savedRect);
+
 	// However, even if this worked, we cannot be sure that the window is now 
 	// fully within the client area of an existing display.
 	// For example, the user may have disconnected the display, or lowered its resolution.
 	// So, we need to get the client area of the desired display, or
 	// if it does not exist anymore, the client area of the default display
-	int nr = wxDisplay::GetFromWindow(frame);
+	int const savedDisplayNum = panel->GetDisplayNum();
+	int nr 
+	  = savedDisplayNum >= 0 && savedDisplayNum < (int) wxDisplay::GetCount()
+	    ? savedDisplayNum
+	    : wxDisplay::GetFromWindow(frame);
 	wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
 	wxRect max = display.GetClientArea();
 	// If our current window is within this area, all is fine
@@ -86,7 +91,9 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 			current.SetHeight(max.GetHeight());
 		frame->SetSize(current.CenterIn(max, wxBOTH));
 	}
-	
+	if (m_TopWindow && panel->IsMaximized())
+	  m_TopWindow->Maximize(true);
+
 	m_panelwidget = panelwidget;
 	
 	// At this point, the new window may fill the whole display and still not be large
@@ -94,19 +101,6 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 	// is needed to fit the content completely to the window.
 	wxSize scaledsize = m_panelwidget->UpdateSize(frame->GetClientSize());
 	
-	// If we resized the window with respect to a default or user setting,
-	// it should now be resized again, to eliminate (by default) any whitespace.
-	// On the other hand, if the user wanted to have whitespace, we must keep
-	// the size set by the user.
-	if (size != frame->GetRect()) {
-		// However, there is a chance that the scaled size is actually larger
-		// than the actual size (in case the display area is so small that with
-		// the minimum scaling we still need scrollbars). In that case we should
-		// not do any resizing. So, resize only if this eliminates whitespace.
-		if ((scaledsize.GetWidth()<=frame->GetClientSize().GetWidth()) && (scaledsize.GetHeight()<=frame->GetClientSize().GetHeight()))
-			frame->SetClientSize(scaledsize);
-	}
-
 	frame->Show();
 	frame->Update();
 	
@@ -152,7 +146,33 @@ void GOrguePanelView::AddEvent(GOGUIControl* control)
 
 void GOrguePanelView::SyncState()
 {
-	m_panel->SetWindowSize(GetParent()->GetRect());
+	m_panel->SetWindowRect(GetParent()->GetRect());
+
+	if (m_TopWindow)
+	{
+	  bool isMaximized = m_TopWindow->IsMaximized();
+
+	  m_panel->SetMaximized(isMaximized);
+
+	  // calculate the best display num
+	  int displayNum = wxDisplay::GetFromWindow(m_TopWindow);
+
+	  if (displayNum == wxNOT_FOUND)
+	    // actually wxNOT_FOUND == -1, but we don't want to depend on it
+	    displayNum = -1;
+	  else if (! isMaximized)
+	  {
+	    // check that the window fits the display
+	    // we do not check it for maximized window because their decoration may be outside the display
+	    wxDisplay const display(displayNum);
+	    wxRect const clientArea = display.GetClientArea();
+
+	    if (! clientArea.Contains(m_TopWindow->GetRect()))
+	      // do not store the dispplay num if the window does not fit it
+	      displayNum = -1;
+	  }
+	  m_panel->SetDisplayNum(displayNum);
+	}
 	m_panel->SetInitialOpenWindow(true);
 }
 

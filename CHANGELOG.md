@@ -1,3 +1,4 @@
+- Fixed restoring the size and the position of panels when they did not fit their displays https://github.com/GrandOrgue/grandorgue/issues/787
 - Removed translation of GrandOrgue midi ports https://github.com/GrandOrgue/grandorgue/issues/791
 - Switched the build for windows to use wxWidgets 3.1.5 https://github.com/GrandOrgue/grandorgue/issues/792
 - Added bundling feature of settings file and ODF with same name in same directory
