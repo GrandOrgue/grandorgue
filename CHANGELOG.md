@@ -1,3 +1,4 @@
+- Fixed bug in reading .cmb files from an organ in a package https://github.com/GrandOrgue/grandorgue/issues/813
 - Removed translation of GrandOrgue midi ports https://github.com/GrandOrgue/grandorgue/issues/791
 - Switched the build for windows to use wxWidgets 3.1.5 https://github.com/GrandOrgue/grandorgue/issues/792
 - Added bundling feature of settings file and ODF with same name in same directory
