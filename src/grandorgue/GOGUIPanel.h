@@ -62,6 +62,7 @@ public:
 	void SetView(GOrguePanelView* view);
 
 	GrandOrgueFile* GetOrganFile();
+	const wxString& GetGroup() { return m_group; }
 	const wxString& GetName();
 	const wxString& GetGroupName();
 	void AddEvent(GOGUIControl* control);

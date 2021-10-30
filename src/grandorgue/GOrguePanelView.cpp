@@ -13,6 +13,7 @@
 #include <wx/frame.h>
 #include <wx/icon.h>
 #include <wx/image.h>
+#include <wx/log.h>
 
 BEGIN_EVENT_TABLE(GOrguePanelView, wxScrolledWindow)
 	EVT_SIZE(GOrguePanelView::OnSize)
@@ -62,11 +63,19 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 	// Get the position and size of the window as saved by the user previously,
 	// or otherwise its default values
 	wxRect size = panel->GetWindowSize();
+	wxString const group(panel->GetGroup());
+
+	wxLogMessage("GOrguePanelView::GOrguePanelView %s savedSize=(%i, %i, %i, %i)", group, size.x, size.y, size.width, size.height);
 
 	// If both width and height are set, set position and size of the window
 	// E.g. in case of corrupted preferences, this might not be the case 
 	if (size.GetWidth() && size.GetHeight())
 		frame->SetSize(size);
+
+	wxRect current = frame->GetRect();
+
+	wxLogMessage("GOrguePanelView::GOrguePanelView %s currentRect=(%i, %i, %i, %i)", group, current.x, current.y, current.width, current.height);
+
 	// However, even if this worked, we cannot be sure that the window is now 
 	// fully within the client area of an existing display.
 	// For example, the user may have disconnected the display, or lowered its resolution.
@@ -75,8 +84,10 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 	int nr = wxDisplay::GetFromWindow(frame);
 	wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
 	wxRect max = display.GetClientArea();
+
+	wxLogMessage("GOrguePanelView::GOrguePanelView %s display=%i clientArea=(%i, %i, %i, %i)", group, nr, max.x, max.y, max.width, max.height);
+
 	// If our current window is within this area, all is fine
-	wxRect current = frame->GetRect();
 	if (!max.Contains(current)) {
 		// Otherwise, check and correct width and height,
 		// and place the frame at the center of the Client Area of the display
@@ -84,7 +95,14 @@ GOrguePanelView::GOrguePanelView(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxW
 			current.SetWidth(max.GetWidth());
 		if (current.GetHeight() > max.GetHeight())
 			current.SetHeight(max.GetHeight());
-		frame->SetSize(current.CenterIn(max, wxBOTH));
+
+		wxRect newRect(current.CenterIn(max, wxBOTH));
+
+		wxLogMessage("GOrguePanelView::GOrguePanelView %s newRect=(%i, %i, %i, %i)", group, newRect.x, newRect.y, newRect.width, newRect.height);
+		frame->SetSize(newRect);
+
+		wxRect finalRect(frame->GetRect());
+		wxLogMessage("GOrguePanelView::GOrguePanelView %s finalRect=(%i, %i, %i, %i)", group, finalRect.x, finalRect.y, finalRect.width, finalRect.height);
 	}
 	
 	m_panelwidget = panelwidget;
