@@ -9,6 +9,7 @@
 
 #include "GOrgueView.h"
 #include <wx/scrolwin.h>
+#include <wx/toplevel.h>
 
 class GOGUIControl;
 class GOGUIPanel;
@@ -19,6 +20,7 @@ class GOrguePanelView : public wxScrolledWindow, public GOrgueView
 private:
 	GOGUIPanelWidget* m_panelwidget;
 	GOGUIPanel* m_panel;
+	wxTopLevelWindow* m_TopWindow; // only if the parent is top level window, else NULL
 	wxSize m_Scroll;
 
 	void OnSize(wxSizeEvent& event);
@@ -29,7 +31,8 @@ public:
 
 	void AddEvent(GOGUIControl* control);
 
-	static GOrguePanelView* createWindow(GOrgueDocumentBase* doc, GOGUIPanel* panel, wxWindow* parent);
+	// creates a PanelView and a wxFrame filled with this PanelView
+	static GOrguePanelView* createWithFrame(GOrgueDocumentBase* doc, GOGUIPanel* panel);
 	void SyncState();
 
 	void Raise();
