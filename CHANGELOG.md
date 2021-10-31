@@ -1,5 +1,6 @@
 - Renamed the source code files to have the single GO prefix https://github.com/GrandOrgue/grandorgue/issues/816
 - Added implementation of the threading primitives with standard C++11 ones https://github.com/GrandOrgue/grandorgue/issues/817
+- Added ASIO logo to About splash screen https://github.com/GrandOrgue/grandorgue/issues/823
 # 3.4.1 (2021-11-02)
 - Changed log error to warning when importing combinations https://github.com/GrandOrgue/grandorgue/issues/809
 - Eased restrictions on importing .cmb settings https://github.com/GrandOrgue/grandorgue/issues/807
