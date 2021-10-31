@@ -31,7 +31,7 @@ class GrandOrgueFile;
 class GOGUIPanel : private GOrgueSaveableObject
 {
 private:
-	void ReadFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefault);
+	void ReadSizeInfoFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefault);
 
 protected:
 	GrandOrgueFile* m_organfile;

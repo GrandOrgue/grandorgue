@@ -106,7 +106,7 @@ void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxS
 	m_GroupName = group_name;
 	m_controls.resize(0);
 
-	ReadFromCfg(cfg, false);
+	ReadSizeInfoFromCfg(cfg, false);
 }
 
 
@@ -451,7 +451,7 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 			LoadControl(control, cfg, buffer);
 		}
 	}
-	ReadFromCfg(cfg, is_main_panel);
+	ReadSizeInfoFromCfg(cfg, is_main_panel);
 }
 
 GOGUIControl* GOGUIPanel::CreateGUIElement(GOrgueConfigReader& cfg, wxString group)
@@ -553,7 +553,7 @@ void GOGUIPanel::Draw(GOrgueDC& dc)
 		m_controls[i]->Draw(dc);
 }
 
-void GOGUIPanel::ReadFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefault)
+void GOGUIPanel::ReadSizeInfoFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefault)
 {
 	int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -windowLimit, windowLimit, false, 0);
 	int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -windowLimit, windowLimit, false, 0);
