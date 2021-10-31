@@ -364,6 +364,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	ini.ReadData(odf_ini_file, ODFSetting, false);
 
 	wxString setting_file = file2;
+	bool can_read_cmb_directly = true;
 
 	if (setting_file.IsEmpty())
 	{
@@ -389,6 +390,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 				{
 					setting_file = bundledSettingsFile;
 					m_b_customized = true;
+					can_read_cmb_directly = false;
 				}
 			}
 		}
@@ -397,7 +399,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	if (!setting_file.IsEmpty())
 	{
 		GOrgueConfigFileReader extra_odf_config;
-		if (!useArchives())
+		if (can_read_cmb_directly)
 		{
 			if (!extra_odf_config.Read(setting_file))
 			{
