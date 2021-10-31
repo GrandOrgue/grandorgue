@@ -612,12 +612,14 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 
 		wxString church_name = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"));
 		if (church_name != m_ChurchName)
-			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
+			if (wxMessageBox(_("This combination file was originally made for another organ. Importing it can cause various problems. Should it really be imported?"), _("Import"), wxYES_NO, NULL) == wxNO)
+				return;
+
 		wxString hash = odf_ini_file.getEntry(wxT("Organ"), wxT("ODFHash"));
 		if (hash != wxEmptyString)
 			if (hash != m_ODFHash)
 			{
-				wxLogError(_("The ODF does not match the combination file."));
+				wxLogWarning(_("The combination file does not exactly match the current ODF."));
 			}
 		/* skip informational items */
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
