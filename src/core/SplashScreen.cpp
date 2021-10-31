@@ -34,8 +34,12 @@ BEGIN_EVENT_TABLE(GOSplashBitmap, wxControl)
 	EVT_KEY_DOWN(GOSplashBitmap::OnKey)
 END_EVENT_TABLE()
 
+<<<<<<< HEAD
 
 GOSplashBitmap::GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap) :
+=======
+GOrgueSplashBitmap::GOrgueSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap) :
+>>>>>>> 0716053f0 ([IMP] Add ASIO Image to Splash Screen)
 wxControl(parent, id, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
 	m_Bitmap(bitmap)
 {
@@ -82,6 +86,11 @@ void GOSplash::DrawText(wxBitmap& bitmap)
 {
 	wxMemoryDC dc(bitmap);
 	wxFont font;
+
+    /* Set ASIO license image */
+    wxImage asio = GetImage_ASIO();
+    wxBitmap m_asio = (wxBitmap)asio.Scale(asio.GetWidth() * 0.1, asio.GetHeight() * 0.1, wxIMAGE_QUALITY_HIGH);
+    dc.DrawBitmap(m_asio, 70, 10);
 
 	font = *wxNORMAL_FONT;
 	font.SetPointSize(14);
