@@ -87,10 +87,12 @@ void GOSplash::DrawText(wxBitmap& bitmap)
 	wxMemoryDC dc(bitmap);
 	wxFont font;
 
-    /* Set ASIO license image */
-    wxImage asio = GetImage_ASIO();
-    wxBitmap m_asio = (wxBitmap)asio.Scale(asio.GetWidth() * 0.1, asio.GetHeight() * 0.1, wxIMAGE_QUALITY_HIGH);
-    dc.DrawBitmap(m_asio, 70, 10);
+    #ifdef ASIO_INCLUDED
+        /* Set ASIO license image */
+        wxImage asio = GetImage_ASIO();
+        wxBitmap m_asio = (wxBitmap)asio.Scale(asio.GetWidth() * 0.1, asio.GetHeight() * 0.1, wxIMAGE_QUALITY_HIGH);
+        dc.DrawBitmap(m_asio, 70, 10);
+    #endif
 
 	font = *wxNORMAL_FONT;
 	font.SetPointSize(14);

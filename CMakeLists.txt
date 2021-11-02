@@ -68,6 +68,11 @@ else ()
 endif ()
 option(GO_SEPARATE_LINUX_PACKAGES "Generate separate linux packages for resources and demo" OFF)
 
+# Add ASIO variable
+if(RTAUDIO_USE_ASIO)
+  add_definitions(-DASIO_INCLUDED)
+endif()
+
 # only use options supported by the compiler
 include(CheckIncludeFileCXX)
 include(CheckFunctionExists)
