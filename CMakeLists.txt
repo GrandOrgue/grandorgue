@@ -115,6 +115,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 # setup compiler flags for debug vs release compiles
 add_option(-Wall)
+add_definitions(-DGO_STD_MUTEX)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
 else()

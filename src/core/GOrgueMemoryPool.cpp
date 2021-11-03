@@ -6,6 +6,7 @@
 
 #include "GOrgueMemoryPool.h"
 
+#include "threading/atomic.h"
 #include "threading/GOMutexLocker.h"
 #include <wx/file.h>
 #include <wx/intl.h>
