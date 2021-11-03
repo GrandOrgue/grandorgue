@@ -1,4 +1,12 @@
 - Added release truncation controls to ODF and Organ Settings panel. https://github.com/GrandOrgue/grandorgue/discussions/680
+# 3.4.1 (2021-11-02)
+- Changed log error to warning when importing combinations https://github.com/GrandOrgue/grandorgue/issues/809
+- Eased restrictions on importing .cmb settings https://github.com/GrandOrgue/grandorgue/issues/807
+- Fixed restoring the size and the position of panels when they did not fit their displays https://github.com/GrandOrgue/grandorgue/issues/787
+- Removed translation of GrandOrgue midi ports https://github.com/GrandOrgue/grandorgue/issues/791
+- Switched the build for windows to use wxWidgets 3.1.5 https://github.com/GrandOrgue/grandorgue/issues/792
+- Added bundling feature of settings file and ODF with same name in same directory
+- Fixed the addition of .cmb file extension when exporting settings if necessary https://github.com/GrandOrgue/grandorgue/issues/802
 # 3.4.0 (2021-10-24)
 - Eliminated using opensuse repositories when building for windows on github https://github.com/GrandOrgue/grandorgue/issues/28
 - Fixed hang on Panic button after the sound had been suddenly stopped https://github.com/GrandOrgue/grandorgue/issues/762
