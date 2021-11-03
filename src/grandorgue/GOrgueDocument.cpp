@@ -134,7 +134,7 @@ void GOrgueDocument::ShowPanel(unsigned id)
 	if (!showWindow(GOrgueDocument::PANEL, panel))
 	{
 		registerWindow(GOrgueDocument::PANEL, panel,
-			       GOrguePanelView::createWindow(this, panel, NULL));
+			       GOrguePanelView::createWithFrame(this, panel));
 	}
 }
 

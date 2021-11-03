@@ -364,6 +364,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	ini.ReadData(odf_ini_file, ODFSetting, false);
 
 	wxString setting_file = file2;
+	bool can_read_cmb_directly = true;
 
 	if (setting_file.IsEmpty())
 	{
@@ -375,10 +376,22 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 		else
 		{
 			wxString bundledSettingsFile = m_odf.BeforeLast('.') + wxT(".cmb");
-			if (wxFileExists(bundledSettingsFile) || findArchive(m_odf)->containsFile(bundledSettingsFile))
+			if (!useArchives())
 			{
-				setting_file = bundledSettingsFile;
-				m_b_customized = true;
+				if (wxFileExists(bundledSettingsFile))
+				{
+					setting_file = bundledSettingsFile;
+					m_b_customized = true;
+				}
+			}
+			else
+			{
+				if (findArchive(m_odf)->containsFile(bundledSettingsFile))
+				{
+					setting_file = bundledSettingsFile;
+					m_b_customized = true;
+					can_read_cmb_directly = false;
+				}
 			}
 		}
 	}
@@ -386,7 +399,7 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 	if (!setting_file.IsEmpty())
 	{
 		GOrgueConfigFileReader extra_odf_config;
-		if (!useArchives())
+		if (can_read_cmb_directly)
 		{
 			if (!extra_odf_config.Read(setting_file))
 			{
@@ -403,19 +416,15 @@ wxString GrandOrgueFile::Load(GOrgueProgressDialog* dlg, const GOrgueOrgan& orga
 			}
 		}
 
-		if (odf_ini_file.getEntry(wxT("Organ"), wxT("ChurchName")).Trim() == extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).Trim())
-		{
-			ini.ReadData(extra_odf_config, CMBSetting, false);
-		}
-		else
-		{
-			wxLogWarning(_("This combination file is only compatible with:\n%s"), extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).c_str());
-		}
+		if (odf_ini_file.getEntry(wxT("Organ"), wxT("ChurchName")).Trim() != extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).Trim())
+			wxLogWarning(_("This .cmb file was originally created for:\n%s"), extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).c_str());
+
+		ini.ReadData(extra_odf_config, CMBSetting, false);
 		wxString hash = extra_odf_config.getEntry(wxT("Organ"), wxT("ODFHash"));
 		if (hash != wxEmptyString)
 			if (hash != m_ODFHash)
 			{
-				if (wxMessageBox(_("The ODF does not match the combination file. Importing it can cause various problems. Should they really be imported?"), _("Import"), wxYES_NO, NULL) == wxNO)
+				if (wxMessageBox(_("The .cmb file does not exactly match the current ODF. Importing it can cause various problems. Should it really be imported?"), _("Import"), wxYES_NO, NULL) == wxNO)
 				{
 						ini.ClearCMB();
 				}
@@ -603,12 +612,14 @@ void GrandOrgueFile::LoadCombination(const wxString& file)
 
 		wxString church_name = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"));
 		if (church_name != m_ChurchName)
-			throw wxString::Format(_("File belongs to a different organ: %s"), church_name.c_str());
+			if (wxMessageBox(_("This combination file was originally made for another organ. Importing it can cause various problems. Should it really be imported?"), _("Import"), wxYES_NO, NULL) == wxNO)
+				return;
+
 		wxString hash = odf_ini_file.getEntry(wxT("Organ"), wxT("ODFHash"));
 		if (hash != wxEmptyString)
 			if (hash != m_ODFHash)
 			{
-				wxLogError(_("The ODF does not match the combination file."));
+				wxLogWarning(_("The combination file does not exactly match the current ODF."));
 			}
 		/* skip informational items */
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);

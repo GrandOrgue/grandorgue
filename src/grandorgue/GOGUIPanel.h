@@ -30,6 +30,9 @@ class GrandOrgueFile;
 
 class GOGUIPanel : private GOrgueSaveableObject
 {
+private:
+	void ReadSizeInfoFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefault);
+
 protected:
 	GrandOrgueFile* m_organfile;
 	GOGUIMouseStateTracker& m_MouseState;
@@ -41,7 +44,9 @@ protected:
 	GOGUIDisplayMetrics* m_metrics;
 	GOGUILayoutEngine* m_layout;
 	GOrguePanelView* m_view;
-	wxRect m_size;
+	wxRect m_rect;
+	int m_DisplayNum;
+	bool m_IsMaximized;
 	bool m_InitialOpenWindow;
 
 	void LoadControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group);
@@ -62,6 +67,7 @@ public:
 	void SetView(GOrguePanelView* view);
 
 	GrandOrgueFile* GetOrganFile();
+	const wxString& GetGroup() { return m_group; }
 	const wxString& GetName();
 	const wxString& GetGroupName();
 	void AddEvent(GOGUIControl* control);
@@ -82,8 +88,12 @@ public:
 	unsigned GetHeight();
 	bool InitialOpenWindow();
 
-	wxRect GetWindowSize();
-	void SetWindowSize(wxRect rect);
+	wxRect GetWindowRect();
+	void SetWindowRect(wxRect rect);
+	int GetDisplayNum() const { return m_DisplayNum; }
+	void SetDisplayNum(int displayNum) { m_DisplayNum = displayNum; }
+	bool IsMaximized() const { return m_IsMaximized; }
+	void SetMaximized(bool isMaximized) { m_IsMaximized = isMaximized; }
 	void SetInitialOpenWindow(bool open);
 };
 
