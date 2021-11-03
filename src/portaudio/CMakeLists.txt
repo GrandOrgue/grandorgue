@@ -17,31 +17,31 @@ endif()
 
 
 set(PortAudio_Sources 
-  src/common/pa_allocation.c
-  src/common/pa_converters.c
-  src/common/pa_cpuload.c
-  src/common/pa_debugprint.c
-  src/common/pa_dither.c
-  src/common/pa_front.c
-  src/common/pa_process.c
-  src/common/pa_ringbuffer.c
-  src/common/pa_stream.c
-  src/common/pa_trace.c)
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_allocation.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_converters.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_cpuload.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_debugprint.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_dither.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_front.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_process.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_ringbuffer.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_stream.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common/pa_trace.c)
 
 set(PortAudio_Unix
-  src/os/unix/pa_unix_hostapis.c
-  src/os/unix/pa_unix_util.c)
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/unix/pa_unix_hostapis.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/unix/pa_unix_util.c)
 
 set(PortAudio_Win
-  src/os/win/pa_win_coinitialize.c
-  src/os/win/pa_win_hostapis.c
-  src/os/win/pa_win_util.c
-  src/os/win/pa_win_waveformat.c)
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/win/pa_win_coinitialize.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/win/pa_win_hostapis.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/win/pa_win_util.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/win/pa_win_waveformat.c)
 
 set(PortAudio_Mac
-  src/hostapi/coreaudio/pa_mac_core.c
-  src/hostapi/coreaudio/pa_mac_core_blocking.c
-  src/hostapi/coreaudio/pa_mac_core_utilities.c)
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/coreaudio/pa_mac_core.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/coreaudio/pa_mac_core_blocking.c
+  ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/coreaudio/pa_mac_core_utilities.c)
 
 set(PA_Libs)
 
@@ -57,7 +57,7 @@ if (WIN32)
 
    if (RTAUDIO_USE_DSOUND)
       add_definitions(-DPA_USE_DS)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/dsound/pa_win_ds.c src/hostapi/dsound/pa_win_ds_dynlink.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/dsound/pa_win_ds.c ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/dsound/pa_win_ds_dynlink.c)
    endif ()
 
    if (RTAUDIO_USE_ASIO)
@@ -67,12 +67,12 @@ if (WIN32)
         "${ASIO_SDK_DIR}/host"
 	"${ASIO_SDK_DIR}/host/pc"
       )
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/asio/iasiothiscallresolver.cpp src/hostapi/asio/pa_asio.cpp)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/asio/iasiothiscallresolver.cpp ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/asio/pa_asio.cpp)
    endif ()
 
    if (RTAUDIO_USE_WMME)
       add_definitions(-DPA_USE_WMME)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/wmme/pa_win_wmme.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/wmme/pa_win_wmme.c)
    endif ()
 
    check_include_file_cxx(rpcsal.h HAVE_RPCSAL_H)
@@ -80,28 +80,28 @@ if (WIN32)
    KSRTAUDIO_HWREGISTER_PROPERTY x;" HAVE_KSRT)
    if (${HAVE_KSRT})
    else()
-     include_directories(src/hostapi/wasapi/mingw-include)
+     include_directories(${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/wasapi/mingw-include)
    endif ()
 
    if (RTAUDIO_USE_WDMKS)
       add_definitions(-DPA_USE_WDMKS)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/wdmks/pa_win_wdmks.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/wdmks/pa_win_wdmks.c)
       set(PA_Libs ${PA_Libs} setupapi)
    endif ()
 
    if (RTAUDIO_USE_WASAPI)
       add_definitions(-DPA_USE_WASAPI)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/wasapi/pa_win_wasapi.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/wasapi/pa_win_wasapi.c)
    endif ()
 
    if (RTAUDIO_USE_JACK)
       add_definitions(-DPA_USE_JACK)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/jack/pa_jack.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/jack/pa_jack.c)
    endif ()
 
    set(PortAudio_Sources ${PortAudio_Sources} ${PortAudio_Win})
    set(PA_Libs ${PA_Libs} winmm)
-   include_directories(src/os/win)
+   include_directories(${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/win)
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
@@ -112,23 +112,23 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
    if (RTAUDIO_USE_JACK)
       add_definitions(-DPA_USE_JACK)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/jack/pa_jack.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/jack/pa_jack.c)
    endif ()
 
    if (RTAUDIO_USE_ALSA)
       add_definitions(-DPA_USE_ALSA)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/alsa/pa_linux_alsa.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/alsa/pa_linux_alsa.c)
       set(PA_Libs ${PA_Libs} asound)
    endif ()
 
    if (RTAUDIO_USE_OSS)
       add_definitions(-DPA_USE_OSS)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/oss/pa_unix_oss.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/oss/pa_unix_oss.c)
       set(PA_Libs ${PA_Libs} aoss)
    endif ()
 
    set(PortAudio_Sources ${PortAudio_Sources} ${PortAudio_Unix})
-   include_directories(src/os/unix)
+   include_directories(${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/unix)
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
@@ -137,11 +137,11 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    message(STATUS "    Support for CoreAudio     : ${RTAUDIO_USE_CORE}")
 
    set(PortAudio_Sources ${PortAudio_Sources} ${PortAudio_Unix})
-   include_directories(src/os/unix)
+   include_directories(${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/os/unix)
 
    if (RTAUDIO_USE_JACK)
       add_definitions(-DPA_USE_JACK)
-      set(PortAudio_Sources ${PortAudio_Sources} src/hostapi/jack/pa_jack.c)
+      set(PortAudio_Sources ${PortAudio_Sources} ${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/jack/pa_jack.c)
    endif ()
 
    if (RTAUDIO_USE_CORE)
