@@ -21,64 +21,64 @@
 
 #include "SplashScreen.h"
 
-#include "GrandOrgueDef.h"
+#include "go_defs.h"
 #include "Images.h"
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/frame.h>
 #include <wx/image.h>
 
-BEGIN_EVENT_TABLE(GOrgueSplashBitmap, wxControl)
-	EVT_PAINT(GOrgueSplashBitmap::OnPaint)
-	EVT_LEFT_DOWN(GOrgueSplashBitmap::OnClick)
-	EVT_KEY_DOWN(GOrgueSplashBitmap::OnKey)
+BEGIN_EVENT_TABLE(GOSplashBitmap, wxControl)
+	EVT_PAINT(GOSplashBitmap::OnPaint)
+	EVT_LEFT_DOWN(GOSplashBitmap::OnClick)
+	EVT_KEY_DOWN(GOSplashBitmap::OnKey)
 END_EVENT_TABLE()
 
 
-GOrgueSplashBitmap::GOrgueSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap) :
+GOSplashBitmap::GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap) :
 wxControl(parent, id, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
 	m_Bitmap(bitmap)
 {
 }
 
-void GOrgueSplashBitmap::OnPaint(wxPaintEvent& event)
+void GOSplashBitmap::OnPaint(wxPaintEvent& event)
 {
 	wxPaintDC dc(this);
 	dc.DrawBitmap(m_Bitmap, 0, 0);
 }
 
-void GOrgueSplashBitmap::OnClick(wxMouseEvent& event)
+void GOSplashBitmap::OnClick(wxMouseEvent& event)
 {
 	GetParent()->Close(true);
 }
 
-void GOrgueSplashBitmap::OnKey(wxKeyEvent& event)
+void GOSplashBitmap::OnKey(wxKeyEvent& event)
 {
 	GetParent()->Close(true);
 }
 
-#define GORGUE_SPLASH_TIMER_ID       (9999)
-#define GORGUE_SPLASH_TIMEOUT_LENGTH (3000)
+#define GO_SPLASH_TIMER_ID       (9999)
+#define GO_SPLASH_TIMEOUT_LENGTH (3000)
 
-BEGIN_EVENT_TABLE(GOrgueSplash, wxDialog)
-	EVT_SHOW(GOrgueSplash::OnShowWindow)
-	EVT_TIMER(GORGUE_SPLASH_TIMER_ID, GOrgueSplash::OnNotify)
-	EVT_CLOSE(GOrgueSplash::OnCloseWindow)
+BEGIN_EVENT_TABLE(GOSplash, wxDialog)
+	EVT_SHOW(GOSplash::OnShowWindow)
+	EVT_TIMER(GO_SPLASH_TIMER_ID, GOSplash::OnNotify)
+	EVT_CLOSE(GOSplash::OnCloseWindow)
 END_EVENT_TABLE()
 
-GOrgueSplash::GOrgueSplash(bool has_timeout, wxWindow *parent, wxWindowID id) :
+GOSplash::GOSplash(bool has_timeout, wxWindow *parent, wxWindowID id) :
 	wxDialog(parent, id, wxEmptyString, wxPoint(0, 0), wxSize(100, 100), wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
-	m_Timer(this, GORGUE_SPLASH_TIMER_ID), m_hasTimeout(has_timeout)
+	m_Timer(this, GO_SPLASH_TIMER_ID), m_hasTimeout(has_timeout)
 {
 	SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
 	wxBitmap bitmap = GetImage_Splash();
 	DrawText(bitmap);
-	m_Image = new GOrgueSplashBitmap(this, wxID_ANY, bitmap);
+	m_Image = new GOSplashBitmap(this, wxID_ANY, bitmap);
 	SetClientSize(bitmap.GetWidth(), bitmap.GetHeight());
 	CentreOnScreen();
 }
 
-void GOrgueSplash::DrawText(wxBitmap& bitmap)
+void GOSplash::DrawText(wxBitmap& bitmap)
 {
 	wxMemoryDC dc(bitmap);
 	wxFont font;
@@ -109,25 +109,25 @@ void GOrgueSplash::DrawText(wxBitmap& bitmap)
 	dc.DrawLabel(msg, wxRect(60, 62, 370, 100), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
 }
 
-GOrgueSplash::~GOrgueSplash()
+GOSplash::~GOSplash()
 {
 	m_Timer.Stop();
 }
 
-void GOrgueSplash::OnShowWindow(wxShowEvent &event)
+void GOSplash::OnShowWindow(wxShowEvent &event)
 {
   if (m_hasTimeout)
-    m_Timer.Start(GORGUE_SPLASH_TIMEOUT_LENGTH, true);
+    m_Timer.Start(GO_SPLASH_TIMEOUT_LENGTH, true);
   m_Image->SetFocus();
   Update();
 }
 
-void GOrgueSplash::OnNotify(wxTimerEvent& WXUNUSED(event))
+void GOSplash::OnNotify(wxTimerEvent& WXUNUSED(event))
 {
   Close(true);
 }
 
-void GOrgueSplash::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
+void GOSplash::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
 {
   m_Timer.Stop();
   if (m_hasTimeout)
@@ -136,8 +136,8 @@ void GOrgueSplash::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
     EndModal(wxID_OK);
 }
 
-void GOrgueSplash::DoSplash(bool hasTimeout, wxWindow *parent) {
-  GOrgueSplash* const splash = new GOrgueSplash(hasTimeout, parent, wxID_ANY);
+void GOSplash::DoSplash(bool hasTimeout, wxWindow *parent) {
+  GOSplash* const splash = new GOSplash(hasTimeout, parent, wxID_ANY);
   
   if (hasTimeout)
     splash->Show();

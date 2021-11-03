@@ -16,8 +16,8 @@ fi
 
 PARALLEL_PRMS="-j$(nproc)"
 
-mkdir -p build-for/linux
-pushd build-for/linux
+mkdir -p build/linux
+pushd build/linux
 
 rm -rf *
 export LANG=C

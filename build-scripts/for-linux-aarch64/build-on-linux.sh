@@ -17,16 +17,16 @@ fi
 PARALLEL_PRMS="-j$(nproc)"
 
 # Build imageconverter
-mkdir -p build-for/build-tools
-pushd build-for/build-tools
+mkdir -p build/build-tools
+pushd build/build-tools
 rm -rf *
 cmake $SRC_DIR/src/build
 make
 popd
 
 # Build for aarch64
-mkdir -p build-for/linux-aarch64
-pushd build-for/linux-aarch64
+mkdir -p build/linux-aarch64
+pushd build/linux-aarch64
 rm -rf *
 export LANG=C
 export PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig

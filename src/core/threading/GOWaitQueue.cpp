@@ -4,6 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
+#ifndef GO_STD_MUTEX
+
 #ifdef GOWAITQUEUE_USE_STD_MUTEX
 #include <chrono>
 #endif
@@ -66,3 +68,5 @@ void GOWaitQueue::Wakeup()
   m_Wait.unlock();
 #endif
 }
+
+#endif

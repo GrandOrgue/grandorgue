@@ -13,138 +13,140 @@ add_option(-msse3)
 
 add_option(-mstackrealign)
 
-include_directories(${CMAKE_BINARY_DIR}/src/core/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
+include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${JACK_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 include(UsewxWidgets)
 
 set(grandorgue_src
 contrib/zita-convolver.cpp
 
-GOGUIBankedGeneralsPanel.cpp
-GOGUIButton.cpp
-GOGUICrescendoPanel.cpp
-GOGUIControl.cpp
-GOGUICouplerPanel.cpp
-GOGUIDisplayMetrics.cpp
-GOGUIDivisionalsPanel.cpp
-GOGUILayoutEngine.cpp
-GOGUIHW1DisplayMetrics.cpp
-GOGUISetterDisplayMetrics.cpp
-GOGUIEnclosure.cpp
-GOGUIFloatingPanel.cpp
-GOGUIHW1Background.cpp
-GOGUIImage.cpp
-GOGUILabel.cpp
-GOGUIManual.cpp
-GOGUIManualBackground.cpp
-GOGUIMasterPanel.cpp
-GOGUIMetronomePanel.cpp
-GOGUIPanel.cpp
-GOGUIPanelWidget.cpp
-GOGUIRecorderPanel.cpp
-GOGUISequencerPanel.cpp
-GOSoundAudioSection.cpp
-GOSoundEngine.cpp
-GOSoundGroupWorkItem.cpp
-GOSoundOutputWorkItem.cpp
-GOSoundProvider.cpp
-GOSoundProviderSynthedTrem.cpp
-GOSoundProviderWave.cpp
-GOSoundRecorder.cpp
-GOSoundReverb.cpp
-GOSoundReverbEngine.cpp
-GOSoundReverbPartition.cpp
-GOSoundResample.cpp
-GOSoundReleaseWorkItem.cpp
-GOSoundSamplerPool.cpp
-GOSoundScheduler.cpp
-GOSoundThread.cpp
-GOSoundTremulantWorkItem.cpp
-GOSoundWindchestWorkItem.cpp
-GOrgueAudioRecorder.cpp
-GOrgueCache.cpp
-GOrgueCacheCleaner.cpp
-GOrgueCacheWriter.cpp
-GOrgueCombinationDefinition.cpp
-GOrgueCombination.cpp
-GOrgueBitmapCache.cpp
-GOrgueButton.cpp
-GOrgueCoupler.cpp
-GOrgueDivisional.cpp
-GOrgueDivisionalCoupler.cpp
-GOrgueDummyPipe.cpp
-GOrgueDrawStop.cpp
-GOrgueElementCreator.cpp
-GOrgueEnclosure.cpp
-GOrgueFilename.cpp
-GOrgueFrameGeneral.cpp
-GOrgueGeneral.cpp
-GOrgueKeyReceiver.cpp
-GOrgueLabel.cpp
-GOrgueManual.cpp
-GOrgueMetronome.cpp
-GOrgueMainWindowData.cpp
-GOrgueMidi.cpp
-GOrgueMidiListener.cpp
-GOrgueMidiInPort.cpp
-GOrgueMidiOutPort.cpp
-GOrgueMidiPlayer.cpp
-GOrgueMidiSender.cpp
-GOrgueMidiReceiver.cpp
-GOrgueMidiRecorder.cpp
-GOrgueMidiRtFactory.cpp
-GOrgueMidiRtInPort.cpp
-GOrgueMidiRtOutPort.cpp
-GOrgueModel.cpp
-GOrguePipe.cpp
-GOrguePipeConfig.cpp
-GOrguePipeConfigNode.cpp
-GOrguePipeConfigTreeNode.cpp
-GOrguePiston.cpp
-GOrgueProgressDialog.cpp
-GOrgueProperties.cpp
-GOrguePushbutton.cpp
-GOrgueRank.cpp
-GOrgueReferencePipe.cpp
-GOrgueReleaseAlignTable.cpp
-GOrgueSetter.cpp
-GOrgueSetterButton.cpp
-GOrgueSettings.cpp
-GOrgueSound.cpp
-GOrgueSoundJackPort.cpp
-GOrgueSoundPort.cpp
-GOrgueSoundPortaudioPort.cpp
-GOrgueSoundPortsConfig.cpp
-GOrgueSoundRtPort.cpp
-GOrgueSoundingPipe.cpp
-GOrgueStop.cpp
-GOrgueTremulant.cpp
-GOrgueWindchest.cpp
-GOrgueSwitch.cpp
-GrandOrgueFile.cpp
-GrandOrgueFrame.cpp
-MIDIEventDialog.cpp
-MIDIEventRecvDialog.cpp
-MIDIEventSendDialog.cpp
-MIDIEventKeyDialog.cpp
+gui/GOGUIBankedGeneralsPanel.cpp
+gui/GOGUIButton.cpp
+gui/GOGUICrescendoPanel.cpp
+gui/GOGUIControl.cpp
+gui/GOGUICouplerPanel.cpp
+gui/GOGUIDisplayMetrics.cpp
+gui/GOGUIDivisionalsPanel.cpp
+gui/GOGUILayoutEngine.cpp
+gui/GOGUIHW1DisplayMetrics.cpp
+gui/GOGUISetterDisplayMetrics.cpp
+gui/GOGUIEnclosure.cpp
+gui/GOGUIFloatingPanel.cpp
+gui/GOGUIHW1Background.cpp
+gui/GOGUIImage.cpp
+gui/GOGUILabel.cpp
+gui/GOGUIManual.cpp
+gui/GOGUIManualBackground.cpp
+gui/GOGUIMasterPanel.cpp
+gui/GOGUIMetronomePanel.cpp
+gui/GOGUIPanel.cpp
+gui/GOGUIPanelWidget.cpp
+gui/GOGUIRecorderPanel.cpp
+gui/GOGUISequencerPanel.cpp
+sound/GOSoundAudioSection.cpp
+sound/GOSoundEngine.cpp
+sound/scheduler/GOSoundGroupWorkItem.cpp
+sound/scheduler/GOSoundOutputWorkItem.cpp
+sound/GOSoundProvider.cpp
+sound/GOSoundProviderSynthedTrem.cpp
+sound/GOSoundProviderWave.cpp
+sound/GOSoundRecorder.cpp
+sound/GOSoundReverb.cpp
+sound/GOSoundReverbEngine.cpp
+sound/GOSoundReverbPartition.cpp
+sound/GOSoundResample.cpp
+sound/scheduler/GOSoundReleaseWorkItem.cpp
+sound/GOSoundSamplerPool.cpp
+sound/scheduler/GOSoundScheduler.cpp
+sound/scheduler/GOSoundThread.cpp
+sound/scheduler/GOSoundTremulantWorkItem.cpp
+sound/scheduler/GOSoundWindchestWorkItem.cpp
+GOAudioRecorder.cpp
+GOCache.cpp
+GOCacheCleaner.cpp
+GOCacheWriter.cpp
+GOCombinationDefinition.cpp
+GOCombination.cpp
+GOBitmapCache.cpp
+GOButton.cpp
+GOCoupler.cpp
+GODivisional.cpp
+GODivisionalCoupler.cpp
+GODummyPipe.cpp
+GODrawStop.cpp
+GOElementCreator.cpp
+GOEnclosure.cpp
+GOFilename.cpp
+GOFrameGeneral.cpp
+GOGeneral.cpp
+GOKeyReceiver.cpp
+GOLabel.cpp
+GOManual.cpp
+GOMetronome.cpp
+GOMainWindowData.cpp
+midi/GOMidi.cpp
+midi/GOMidiListener.cpp
+midi/GOMidiInPort.cpp
+midi/GOMidiOutPort.cpp
+midi/GOMidiPlayer.cpp
+midi/GOMidiSender.cpp
+midi/GOMidiReceiver.cpp
+midi/GOMidiRecorder.cpp
+midi/GOMidiRtFactory.cpp
+midi/GOMidiRtInPort.cpp
+midi/GOMidiRtOutPort.cpp
+GOModel.cpp
+GOPipe.cpp
+GOPipeConfig.cpp
+GOPipeConfigNode.cpp
+GOPipeConfigTreeNode.cpp
+GOPiston.cpp
+GOProgressDialog.cpp
+GOProperties.cpp
+GOPushbutton.cpp
+GORank.cpp
+GOReferencePipe.cpp
+GOReleaseAlignTable.cpp
+GOSetter.cpp
+GOSetterButton.cpp
+settings/GOSettings.cpp
+sound/GOSound.cpp
+sound/ports/GOSoundJackPort.cpp
+sound/ports/GOSoundPort.cpp
+sound/ports/GOSoundPortaudioPort.cpp
+sound/ports/GOSoundPortsConfig.cpp
+sound/ports/GOSoundRtPort.cpp
+GOSoundingPipe.cpp
+GOStop.cpp
+GOTremulant.cpp
+GOWindchest.cpp
+GOSwitch.cpp
+GODefinitionFile.cpp
+GOFrame.cpp
+midi/MIDIEventDialog.cpp
+midi/MIDIEventRecvDialog.cpp
+midi/MIDIEventSendDialog.cpp
+midi/MIDIEventKeyDialog.cpp
 OrganDialog.cpp
-GOrgueDocument.cpp
-GOrguePanelView.cpp
-SettingsArchives.cpp
-SettingsAudioGroup.cpp
-SettingsAudioOutput.cpp
-SettingsDefaults.cpp
-SettingsDialog.cpp
-SettingsMidiDevices.cpp
-SettingsMidiMessage.cpp
-SettingsOption.cpp
-SettingsOrgan.cpp
-SettingsReverb.cpp
-SettingsTemperaments.cpp
+GODocument.cpp
+GOPanelView.cpp
+settings/SettingsArchives.cpp
+settings/SettingsAudioGroup.cpp
+settings/SettingsAudioOutput.cpp
+settings/SettingsDefaults.cpp
+settings/SettingsDialog.cpp
+settings/SettingsMidiDevices.cpp
+settings/SettingsMidiMessage.cpp
+settings/SettingsOption.cpp
+settings/SettingsOrgan.cpp
+settings/SettingsReverb.cpp
+settings/SettingsTemperaments.cpp
 )
 
 add_library(golib STATIC ${grandorgue_src})
@@ -155,31 +157,20 @@ link_directories(${go_libdir})
 
 if (WIN32)
    set_source_files_properties("${RESOURCEDIR}/GrandOrgue.rc" PROPERTIES GENERATED "YES")
-   add_executable(GrandOrgue WIN32 GrandOrgue.cpp "${RESOURCEDIR}/GrandOrgue.rc")
+   add_executable(GrandOrgue WIN32 GOApp.cpp "${RESOURCEDIR}/GrandOrgue.rc")
    add_dependencies(GrandOrgue resources) # GrandOrgue.rc and GrandOrgue.manifest & GOIcon.ico referenced from GrandOrgue.rc
    add_linker_option(GrandOrgue large-address-aware)
-   add_executable(GrandOrgueTool GrandOrgueTool.cpp "${RESOURCEDIR}/GrandOrgue.rc")
-   add_dependencies(GrandOrgueTool resources) # GrandOrgue.rc and GrandOrgue.manifest & GOIcon.ico referenced from GrandOrgue.rc
-   add_linker_option(GrandOrgueTool large-address-aware)
 else ()
-   add_executable(GrandOrgue GrandOrgue.cpp)
-   add_executable(GrandOrgueTool GrandOrgueTool.cpp)
+   add_executable(GrandOrgue GOApp.cpp)
 endif ()
 
 BUILD_EXECUTABLE(GrandOrgue)
 target_link_libraries(GrandOrgue golib)
-BUILD_EXECUTABLE(GrandOrgueTool)
-target_link_libraries(GrandOrgueTool golib)
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()
   CopyDependencies(GrandOrgue "${BININSTDIR}/GrandOrgue${CMAKE_EXECUTABLE_SUFFIX}" ${go_libs} ${go_libdir})
 endif()
-
-add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
-target_link_libraries(perftest golib)
-
-add_custom_target(runperftest COMMAND perftest "${CMAKE_SOURCE_DIR}/tests" DEPENDS perftest)
 
 if (GO_USE_JACK STREQUAL "ON")
    add_definitions(-DGO_USE_JACK)

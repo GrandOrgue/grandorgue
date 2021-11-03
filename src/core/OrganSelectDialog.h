@@ -10,13 +10,13 @@
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
 
-class GOrgueOrgan;
-class GOrgueOrganList;
+class GOOrgan;
+class GOOrganList;
 
 class OrganSelectDialog : public wxDialog
 {
 private:
-	const GOrgueOrganList& m_OrganList;
+	const GOOrganList& m_OrganList;
 	wxListView* m_Organs;
 
 	enum {
@@ -27,9 +27,9 @@ private:
 	void OnDoubleClick(wxListEvent& event);
 
 public:
-	OrganSelectDialog(wxWindow* parent, wxString title, const GOrgueOrganList& organList);
+	OrganSelectDialog(wxWindow* parent, wxString title, const GOOrganList& organList);
 
-	const GOrgueOrgan* GetSelection();
+	const GOOrgan* GetSelection();
 
 	DECLARE_EVENT_TABLE()
 };

@@ -11,5 +11,10 @@
 
 #define WAIT_TIMEOUT_MS 1000
 
+#if defined GO_STD_MUTEX
+#include <chrono>
+extern std::chrono::milliseconds const THREADING_WAIT_TIMEOUT;
+#endif
+
 #endif /* COMMON_IMPL_H */
 

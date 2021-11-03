@@ -1,4 +1,12 @@
 - Upgraded PortAudio Library to the latest stable release, v19.7.0. The upgraded library corrects PortAudio errors in GrandOrgue on macOS 11.
+- Restructured the source code directory tree https://github.com/GrandOrgue/grandorgue/issues/834
+- Renamed the source code files to have the single GO prefix https://github.com/GrandOrgue/grandorgue/issues/816
+- Added implementation of the threading primitives with standard C++11 ones https://github.com/GrandOrgue/grandorgue/issues/817
+- Changed build default directory to 'build' https://github.com/GrandOrgue/grandorgue/issues/843
+# 3.4.1 (2021-11-02)
+- Changed log error to warning when importing combinations https://github.com/GrandOrgue/grandorgue/issues/809
+- Eased restrictions on importing .cmb settings https://github.com/GrandOrgue/grandorgue/issues/807
+- Fixed restoring the size and the position of panels when they did not fit their displays https://github.com/GrandOrgue/grandorgue/issues/787
 - Removed translation of GrandOrgue midi ports https://github.com/GrandOrgue/grandorgue/issues/791
 - Switched the build for windows to use wxWidgets 3.1.5 https://github.com/GrandOrgue/grandorgue/issues/792
 - Added bundling feature of settings file and ODF with same name in same directory

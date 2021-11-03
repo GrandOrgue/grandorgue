@@ -24,7 +24,40 @@ unsigned compose_result(bool isSignalReceived, bool isMutexLocked)
 }
 
 
-#ifdef WX_MUTEX
+#if defined GO_STD_MUTEX
+GOCondition::GOCondition(GOMutex& mutex):
+    r_mutex(mutex.GetTimedMutex())
+{
+}
+
+GOCondition::~GOCondition()
+{
+}
+
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *)
+{
+  bool isSignalReceived;
+  
+  if (isWithTimeout)
+    isSignalReceived = m_condition.wait_for(r_mutex, THREADING_WAIT_TIMEOUT) != std::cv_status::timeout;
+  else
+  {
+    m_condition.wait(r_mutex);
+    isSignalReceived = true;
+  }
+  return compose_result(isSignalReceived, true);
+}
+
+void GOCondition::Signal()
+{
+	m_condition.notify_one();
+}
+
+void GOCondition::Broadcast()
+{
+	m_condition.notify_all();
+}
+#elif defined WX_MUTEX
 
 GOCondition::GOCondition(GOMutex& mutex) :
 	m_condition(mutex.m_Mutex)
@@ -35,7 +68,7 @@ GOCondition::~GOCondition()
 {
 }
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *)
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *)
 {
   bool isSignalReceived;
   
@@ -73,7 +106,7 @@ GOCondition::~GOCondition()
 	  Signal();
 }
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *pThread)
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *pThread)
 {
   m_Waiters.fetch_add(1);
   m_Mutex.Unlock();
@@ -131,7 +164,7 @@ void GOCondition::Broadcast()
 
 #endif
 
-unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOrgueThread* pThread)
+unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOThread* pThread)
 {
   unsigned rc = 0;
   bool isFirstTime = true;

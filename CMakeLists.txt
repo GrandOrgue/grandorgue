@@ -115,6 +115,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 # setup compiler flags for debug vs release compiles
 add_option(-Wall)
+add_definitions(-DGO_STD_MUTEX)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
 else()
@@ -190,6 +191,7 @@ add_subdirectory(src/build)
 add_subdirectory(src/images)
 add_subdirectory(src/core)
 add_subdirectory(src/grandorgue)
+add_subdirectory(src/tools)
 add_subdirectory(po)
 add_subdirectory(help)
 add_subdirectory(sounds)
@@ -214,7 +216,7 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 set(CPACK_PACKAGE_CONTACT "osamarin68@gmail.com")
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build-for/")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build/")
 
 # components
 set(CPACK_COMPONENTS_ALL Unspecified resources demo)

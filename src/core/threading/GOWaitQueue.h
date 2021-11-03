@@ -7,6 +7,8 @@
 #ifndef GOWAITQUEUE_H
 #define GOWAITQUEUE_H
 
+#ifndef GO_STD_MUTEX
+
 #if 1
 //#ifdef __WIN32__
   #include <wx/thread.h>
@@ -20,7 +22,7 @@
   #define GOWAITQUEUE_USE_STD_MUTEX
 #endif
 
-#include "GOrgueThread.h"
+#include "GOThread.h"
 
 class GOWaitQueue
 {
@@ -49,5 +51,7 @@ public:
 
   void Wakeup();
 };
+
+#endif
 
 #endif
