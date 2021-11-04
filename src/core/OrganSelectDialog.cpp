@@ -6,9 +6,9 @@
 
 #include "OrganSelectDialog.h"
 
-#include "GOrgueArchiveFile.h"
-#include "GOrgueOrgan.h"
-#include "GOrgueOrganList.h"
+#include "GOArchiveFile.h"
+#include "GOOrgan.h"
+#include "GOOrganList.h"
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
@@ -17,7 +17,7 @@ BEGIN_EVENT_TABLE(OrganSelectDialog, wxDialog)
 	EVT_LIST_ITEM_ACTIVATED(ID_ORGANS, OrganSelectDialog::OnDoubleClick)
 END_EVENT_TABLE()
 
-OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, const GOrgueOrganList& organList) :
+OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, const GOOrganList& organList) :
 	wxDialog(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600, 480), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
 	m_OrganList(organList)
 {
@@ -34,7 +34,7 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, const GOr
 
 	for(unsigned i = 0, j = 0; j < m_OrganList.GetOrganList().size(); j++)
 	{
-		const GOrgueOrgan* o = m_OrganList.GetOrganList()[j];
+		const GOOrgan* o = m_OrganList.GetOrganList()[j];
 		if (!o->IsUsable(m_OrganList))
 			continue;
 		m_Organs->InsertItem(i, o->GetChurchName());
@@ -44,7 +44,7 @@ OrganSelectDialog::OrganSelectDialog(wxWindow* parent, wxString title, const GOr
 		m_Organs->SetItem(i, 4, o->GetODFPath());
 		if (o->GetArchiveID() != wxEmptyString)
 		{
-			const GOrgueArchiveFile* a = m_OrganList.GetArchiveByID(o->GetArchiveID());
+			const GOArchiveFile* a = m_OrganList.GetArchiveByID(o->GetArchiveID());
 			m_Organs->SetItem(i, 3, a ? a->GetName() : o->GetArchiveID());
 		}
 		i++;
@@ -74,9 +74,9 @@ void OrganSelectDialog::OnOK(wxCommandEvent& event)
 	EndModal(wxID_OK);
 }
 
-const GOrgueOrgan* OrganSelectDialog::GetSelection()
+const GOOrgan* OrganSelectDialog::GetSelection()
 {
-	return (const GOrgueOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
+	return (const GOOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
 }
 
 void OrganSelectDialog::OnDoubleClick(wxListEvent& event)

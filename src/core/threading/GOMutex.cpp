@@ -127,7 +127,7 @@ bool GOMutex::DoTryLock()
 
 #endif
 
-bool GOMutex::LockOrStop(const char* lockerInfo, GOrgueThread *pThread)
+bool GOMutex::LockOrStop(const char* lockerInfo, GOThread *pThread)
 {
   bool isLocked = false;
 

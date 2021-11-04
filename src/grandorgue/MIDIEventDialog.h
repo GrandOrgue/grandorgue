@@ -7,20 +7,20 @@
 #ifndef MIDIEVENTDIALOG_H_
 #define MIDIEVENTDIALOG_H_
 
-#include "GOrgueView.h"
+#include "GOView.h"
 #include <wx/propdlg.h>
 
-class GOrgueKeyReceiver;
-class GOrgueMidi;
-class GOrgueMidiListener;
-class GOrgueMidiReceiverBase;
-class GOrgueMidiSender;
-class GOrgueSettings;
+class GOKeyReceiver;
+class GOMidi;
+class GOMidiListener;
+class GOMidiReceiverBase;
+class GOMidiSender;
+class GOSettings;
 class MIDIEventKeyDialog;
 class MIDIEventRecvDialog;
 class MIDIEventSendDialog;
 
-class MIDIEventDialog : public wxPropertySheetDialog, public GOrgueView
+class MIDIEventDialog : public wxPropertySheetDialog, public GOView
 {
 private:
 	MIDIEventRecvDialog* m_recvPage;
@@ -35,10 +35,10 @@ private:
 	void OnCancel(wxCommandEvent& event);
 
 public:
-	MIDIEventDialog (GOrgueDocumentBase* doc, wxWindow* parent, wxString title, GOrgueSettings& settings, GOrgueMidiReceiverBase* event, GOrgueMidiSender* sender, GOrgueKeyReceiver* key, GOrgueMidiSender* division = NULL);
+	MIDIEventDialog (GODocumentBase* doc, wxWindow* parent, wxString title, GOSettings& settings, GOMidiReceiverBase* event, GOMidiSender* sender, GOKeyReceiver* key, GOMidiSender* division = NULL);
 	~MIDIEventDialog();
 
-	void RegisterMIDIListener(GOrgueMidi* midi);
+	void RegisterMIDIListener(GOMidi* midi);
 
 	DECLARE_EVENT_TABLE()
 };

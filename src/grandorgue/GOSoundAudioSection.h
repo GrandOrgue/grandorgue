@@ -10,17 +10,17 @@
 #include "GOSoundCompress.h"
 #include "GOSoundDefs.h"
 #include "GOSoundResample.h"
-#include "GOrgueInt.h"
-#include "GOrgueWave.h"
+#include "GOInt.h"
+#include "GOWave.h"
 #include <assert.h>
 #include <math.h>
 
 class GOAudioSection;
-class GOrgueCache;
-class GOrgueCacheWriter;
-class GOrgueMemoryPool;
-class GOrgueReleaseAlignTable;
-class GOrgueSampleStatistic;
+class GOCache;
+class GOCacheWriter;
+class GOMemoryPool;
+class GOReleaseAlignTable;
+class GOSampleStatistic;
 
 struct audio_section_stream_s;
 
@@ -128,7 +128,7 @@ private:
 	unsigned char             *m_Data;
 
 	/* If this is a release section, it may contain an alignment table */
-	GOrgueReleaseAlignTable   *m_ReleaseAligner;
+	GOReleaseAlignTable   *m_ReleaseAligner;
 	unsigned                   m_ReleaseStartSegment;
 
 	/* Number of significant bits in the decoded sample data */
@@ -144,7 +144,7 @@ private:
 	unsigned                   m_Channels;
 
 	/* Size of the section in BYTES */
-	GOrgueMemoryPool          &m_Pool;
+	GOMemoryPool          &m_Pool;
 	unsigned                   m_AllocSize;
 
 	unsigned                   m_MaxAmplitude;
@@ -152,14 +152,14 @@ private:
 	int                        m_MaxAbsDerivative;
 
 public:
-	GOAudioSection(GOrgueMemoryPool& pool);
+	GOAudioSection(GOMemoryPool& pool);
 	~GOAudioSection();
 	void ClearData();
 	unsigned GetChannels() const;
 	unsigned GetBytesPerSample() const;
 	unsigned GetLength() const;
-	bool LoadCache(GOrgueCache& cache);
-	bool SaveCache(GOrgueCacheWriter& cache) const;
+	bool LoadCache(GOCache& cache);
+	bool SaveCache(GOCacheWriter& cache) const;
 
 	/* Initialize a stream to play this audio section and seek into it using
 	 * release alignment if available. */
@@ -172,7 +172,7 @@ public:
 	static bool ReadBlock(audio_section_stream *stream, float *buffer, unsigned int n_blocks);
 	static void GetHistory(const audio_section_stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
-	void Setup(const void *pcm_data, GOrgueWave::SAMPLE_FORMAT pcm_data_format, unsigned pcm_data_channels, unsigned pcm_data_sample_rate, unsigned pcm_data_nb_samples, 
+	void Setup(const void *pcm_data, GOWave::SAMPLE_FORMAT pcm_data_format, unsigned pcm_data_channels, unsigned pcm_data_sample_rate, unsigned pcm_data_nb_samples, 
 		   const std::vector<GO_WAVE_LOOP> *loop_points, bool compress, unsigned crossfade_length);
 
 	bool IsOneshot() const;
@@ -187,7 +187,7 @@ public:
 	bool SupportsStreamAlignment() const;
 	void SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables, unsigned start_index);
 
-	GOrgueSampleStatistic GetStatistic();
+	GOSampleStatistic GetStatistic();
 };
 
 inline

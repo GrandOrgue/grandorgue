@@ -15,11 +15,11 @@
 #include "GOSoundTremulantWorkItem.h"
 #include "GOSoundReleaseWorkItem.h"
 #include "GOSoundWindchestWorkItem.h"
-#include "GOrgueEvent.h"
-#include "GOrguePipe.h"
-#include "GOrgueReleaseAlignTable.h"
-#include "GOrgueWindchest.h"
-#include "GrandOrgueFile.h"
+#include "GOEvent.h"
+#include "GOPipe.h"
+#include "GOReleaseAlignTable.h"
+#include "GOWindchest.h"
+#include "GODefinitionFile.h"
 
 GOSoundEngine::GOSoundEngine() :
 	m_PolyphonyLimiting(true),
@@ -237,7 +237,7 @@ void GOSoundEngine::ClearSetup()
 	Reset();
 }
 
-void GOSoundEngine::Setup(GrandOrgueFile* organ_file, unsigned release_count)
+void GOSoundEngine::Setup(GODefinitionFile* organ_file, unsigned release_count)
 {
 	m_Scheduler.Clear();
 	if (release_count < 1)
@@ -287,7 +287,7 @@ bool GOSoundEngine::ProcessSampler(float *output_buffer, GO_SAMPLER* sampler, un
 		
 		/* Add these samples to the current output buffer shifting
 		 * right by the necessary amount to bring the sample gain back
-		 * to unity (this value is computed in GOrguePipe.cpp)
+		 * to unity (this value is computed in GOPipe.cpp)
 		 */
 		for(unsigned i = 0; i < n_frames * 2; i++)
 			output_buffer[i] += temp[i];
@@ -394,7 +394,7 @@ void GOSoundEngine::SetAudioRecorder(GOSoundRecorder* recorder, bool downmix)
 	m_AudioRecorder->SetOutputs(outputs, m_SamplesPerBuffer);
 }
 
-void GOSoundEngine::SetupReverb(GOrgueSettings& settings)
+void GOSoundEngine::SetupReverb(GOSettings& settings)
 {
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 		if (m_AudioOutputs[i])

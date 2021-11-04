@@ -8,22 +8,22 @@
 #define GOGUILABEL_H
 
 #include "GOGUIControl.h"
-#include "GOrgueBitmap.h"
-#include "GOrgueFont.h"
+#include "GOBitmap.h"
+#include "GOFont.h"
 #include <wx/colour.h>
 
-class GOrgueLabel;
+class GOLabel;
 
 class GOGUILabel : public GOGUIControl
 {
 private:
 	int m_DispXpos;
 	int m_DispYpos;
-	GOrgueLabel* m_Label;
-	GOrgueBitmap m_Bitmap;
+	GOLabel* m_Label;
+	GOBitmap m_Bitmap;
 	unsigned m_FontSize;
 	wxString m_FontName;
-	GOrgueFont m_Font;
+	GOFont m_Font;
 	wxString m_Text;
 	wxColour m_TextColor;
 	wxRect m_TextRect;
@@ -32,14 +32,14 @@ private:
 	unsigned m_TileOffsetY;
 
 public:
-	GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label);
-	void Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos = 0, unsigned y_pos = 0, wxString name = wxT(""), unsigned imageno = 1);
-	void Load(GOrgueConfigReader& cfg, wxString group);
+	GOGUILabel(GOGUIPanel* panel, GOLabel* label);
+	void Init(GOConfigReader& cfg, wxString group, unsigned x_pos = 0, unsigned y_pos = 0, wxString name = wxT(""), unsigned imageno = 1);
+	void Load(GOConfigReader& cfg, wxString group);
 	void Layout();
 
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
-	void PrepareDraw(double scale, GOrgueBitmap* background);
-	void Draw(GOrgueDC& dc);
+	void PrepareDraw(double scale, GOBitmap* background);
+	void Draw(GODC& dc);
 };
 
 #endif

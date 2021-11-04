@@ -8,22 +8,22 @@
 #define GOGUIIMAGE_H
 
 #include "GOGUIControl.h"
-#include "GOrgueBitmap.h"
+#include "GOBitmap.h"
 
 class GOGUIImage : public GOGUIControl
 {
 protected:
-	GOrgueBitmap m_Bitmap;
+	GOBitmap m_Bitmap;
 	unsigned m_TileOffsetX;
 	unsigned m_TileOffsetY;
 
 public:
 	GOGUIImage(GOGUIPanel* panel);
 
-	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Load(GOConfigReader& cfg, wxString group);
 
-	void PrepareDraw(double scale, GOrgueBitmap* background);
-	void Draw(GOrgueDC& dc);
+	void PrepareDraw(double scale, GOBitmap* background);
+	void Draw(GODC& dc);
 };
 
 #endif

@@ -6,9 +6,9 @@
 
 #include "MIDIList.h"
 
-#include "GOrgueEvent.h"
-#include "GOrgueEventDistributor.h"
-#include "GOrgueMidiConfigurator.h"
+#include "GOEvent.h"
+#include "GOEventDistributor.h"
+#include "GOMidiConfigurator.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
@@ -22,9 +22,9 @@ BEGIN_EVENT_TABLE(MIDIList, wxDialog)
         EVT_COMMAND_RANGE(ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, MIDIList::OnButton)
 END_EVENT_TABLE()
 
-MIDIList::MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GOrgueEventDistributor* midi_elements) :
+MIDIList::MIDIList (GODocumentBase* doc, wxWindow* parent, GOEventDistributor* midi_elements) :
 	wxDialog(parent, wxID_ANY, _("MIDI Objects"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-	GOrgueView(doc, this)
+	GOView(doc, this)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
@@ -57,7 +57,7 @@ MIDIList::MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GOrgueEventDistri
 
 	for(unsigned i = 0; i < midi_elements->GetMidiConfiguratorCount(); i++)
 	{
-		GOrgueMidiConfigurator* obj = midi_elements->GetMidiConfigurator(i);
+		GOMidiConfigurator* obj = midi_elements->GetMidiConfigurator(i);
 		m_Objects->InsertItem(i, obj->GetMidiType());
 		m_Objects->SetItemPtrData(i, (wxUIntPtr)obj);
 		m_Objects->SetItem(i, 1, obj->GetMidiName());
@@ -77,13 +77,13 @@ MIDIList::~MIDIList()
 
 void MIDIList::OnButton(wxCommandEvent& event)
 {
-	GOrgueMidiConfigurator* obj = (GOrgueMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
+	GOMidiConfigurator* obj = (GOMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
 	obj->TriggerElementActions(event.GetId() - ID_BUTTON);
 }
 
 void MIDIList::OnStatus(wxCommandEvent& event)
 {
-	GOrgueMidiConfigurator* obj = (GOrgueMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
+	GOMidiConfigurator* obj = (GOMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
 	wxString status = obj->GetElementStatus();
 	GOMessageBox(wxString::Format(_("Status: %s"), status), obj->GetMidiType() + _(" ") + obj->GetMidiName(), wxOK);
 }
@@ -97,7 +97,7 @@ void MIDIList::OnObjectClick(wxListEvent& event)
 {
 	m_Edit->Enable();
 	m_Status->Enable();
-	GOrgueMidiConfigurator* obj = (GOrgueMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
+	GOMidiConfigurator* obj = (GOMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
 	std::vector<wxString> actions = obj->GetElementActions();
 	for(unsigned i = 0; i < m_Buttons.size(); i++)
 		if (i < actions.size())
@@ -112,7 +112,7 @@ void MIDIList::OnObjectClick(wxListEvent& event)
 
 void MIDIList::OnObjectDoubleClick(wxListEvent& event)
 {
-	GOrgueMidiConfigurator* obj = (GOrgueMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
+	GOMidiConfigurator* obj = (GOMidiConfigurator*)m_Objects->GetItemData(m_Objects->GetFirstSelected());
 	obj->ShowConfigDialog();
 }
 

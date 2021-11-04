@@ -12,10 +12,10 @@
 #include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GrandOrgueFile.h"
+#include "GODefinitionFile.h"
 #include <wx/intl.h>
 
-GOGUICrescendoPanel::GOGUICrescendoPanel(GrandOrgueFile* organfile) :
+GOGUICrescendoPanel::GOGUICrescendoPanel(GODefinitionFile* organfile) :
 	m_organfile(organfile)
 {
 }
@@ -24,12 +24,12 @@ GOGUICrescendoPanel:: ~GOGUICrescendoPanel()
 {
 }
 
-void GOGUICrescendoPanel::CreatePanels(GOrgueConfigReader& cfg)
+void GOGUICrescendoPanel::CreatePanels(GOConfigReader& cfg)
 {
 	m_organfile->AddPanel(CreateCrescendoPanel(cfg));
 }
 
-GOGUIPanel* GOGUICrescendoPanel::CreateCrescendoPanel(GOrgueConfigReader& cfg)
+GOGUIPanel* GOGUICrescendoPanel::CreateCrescendoPanel(GOConfigReader& cfg)
 {
 	GOGUIButton* button;
 

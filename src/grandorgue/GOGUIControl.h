@@ -7,8 +7,8 @@
 #ifndef GOGUICONTROL_H
 #define GOGUICONTROL_H
 
-#include "GOrgueControlChangedHandler.h"
-#include "GOrgueSaveableObject.h"
+#include "GOControlChangedHandler.h"
+#include "GOSaveableObject.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
@@ -16,11 +16,11 @@ class GOGUIDisplayMetrics;
 class GOGUILayoutEngine;
 class GOGUIMouseState;
 class GOGUIPanel;
-class GOrgueBitmap;
-class GOrgueConfigReader;
-class GOrgueDC;
+class GOBitmap;
+class GOConfigReader;
+class GODC;
 
-class GOGUIControl : private GOrgueSaveableObject, protected GOrgueControlChangedHandler {
+class GOGUIControl : private GOSaveableObject, protected GOControlChangedHandler {
 protected:
 	GOGUIPanel* m_panel;
 	GOGUIDisplayMetrics* m_metrics;
@@ -29,8 +29,8 @@ protected:
 	wxRect m_BoundingRect;
 	bool m_DrawPending;
 
-	void Init(GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
+	void Init(GOConfigReader& cfg, wxString group);
+	void Save(GOConfigWriter& cfg);
 
 	void ControlChanged(void* control);
 
@@ -38,11 +38,11 @@ public:
 	GOGUIControl(GOGUIPanel* panel, void* control);
 	virtual ~GOGUIControl();
 
-	virtual void Load(GOrgueConfigReader& cfg, wxString group);
+	virtual void Load(GOConfigReader& cfg, wxString group);
 	virtual void Layout();
 
-	virtual void PrepareDraw(double scale, GOrgueBitmap* background);
-	virtual void Draw(GOrgueDC& dc);
+	virtual void PrepareDraw(double scale, GOBitmap* background);
+	virtual void Draw(GODC& dc);
 	virtual const wxRect& GetBoundingRect();
 	virtual bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	virtual bool HandleMouseScroll(int x, int y, int amount);

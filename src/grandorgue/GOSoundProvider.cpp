@@ -7,16 +7,16 @@
 #include "GOSoundProvider.h"
 
 #include "GOSoundAudioSection.h"
-#include "GOrgueCache.h"
-#include "GOrgueCacheWriter.h"
-#include "GOrgueMemoryPool.h"
-#include "GOrgueReleaseAlignTable.h"
-#include "GOrgueSampleStatistic.h"
+#include "GOCache.h"
+#include "GOCacheWriter.h"
+#include "GOMemoryPool.h"
+#include "GOReleaseAlignTable.h"
+#include "GOSampleStatistic.h"
 #include <wx/intl.h>
 
 #define DELETE_AND_NULL(x) do { if (x) { delete x; x = NULL; } } while (0)
 
-GOSoundProvider::GOSoundProvider(GOrgueMemoryPool& pool) :
+GOSoundProvider::GOSoundProvider(GOMemoryPool& pool) :
 	m_MidiKeyNumber(0),
 	m_MidiPitchFract(0),
 	m_Tuning(1),
@@ -45,7 +45,7 @@ void GOSoundProvider::ClearData()
 	m_ReleaseInfo.clear();
 }
 
-bool GOSoundProvider::LoadCache(GOrgueCache& cache)
+bool GOSoundProvider::LoadCache(GOCache& cache)
 {
 	if (!cache.Read(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
 		return false;
@@ -90,7 +90,7 @@ void GOSoundProvider::UseSampleGroup(unsigned sample_group)
 	m_SampleGroup = sample_group;
 }
 
-bool GOSoundProvider::SaveCache(GOrgueCacheWriter& cache)
+bool GOSoundProvider::SaveCache(GOCacheWriter& cache)
 {
 	if (!cache.Write(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
 		return false;
@@ -325,9 +325,9 @@ bool GOSoundProvider::checkNotNecessaryRelease()
 	return false;
 }
 
-GOrgueSampleStatistic GOSoundProvider::GetStatistic()
+GOSampleStatistic GOSoundProvider::GetStatistic()
 {
-	GOrgueSampleStatistic stat;
+	GOSampleStatistic stat;
 	for(unsigned i = 0; i < m_Attack.size(); i++)
 		stat.Cumulate(m_Attack[i]->GetStatistic());
 	for(unsigned i = 0; i < m_Release.size(); i++)

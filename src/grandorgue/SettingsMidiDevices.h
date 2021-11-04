@@ -10,7 +10,7 @@
 #include <wx/panel.h>
 #include <vector>
 
-class GOrgueSound;
+class GOSound;
 class wxButton;
 class wxCheckListBox;
 class wxChoice;
@@ -25,7 +25,7 @@ class SettingsMidiDevices : public wxPanel
 		ID_RECORDERDEVICE,
 	};
 private:
-	GOrgueSound& m_Sound;
+	GOSound& m_Sound;
 	wxCheckListBox* m_InDevices;
 	wxCheckListBox* m_OutDevices;
 	std::vector<int> m_InDeviceData;
@@ -39,7 +39,7 @@ private:
 	void OnInChannelShiftClick(wxCommandEvent& event);
 
 public:
-	SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent);
+	SettingsMidiDevices(GOSound& sound, wxWindow* parent);
 
 	void Save();
 

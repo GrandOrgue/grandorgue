@@ -8,9 +8,9 @@
 #include "GOSoundEngine.h"
 #include "GOSoundProviderWave.h"
 #include "GOSoundRecorder.h"
-#include "GOrgueSettings.h"
-#include "GOrgueWindchest.h"
-#include "GrandOrgueFile.h"
+#include "GOSettings.h"
+#include "GOWindchest.h"
+#include "GODefinitionFile.h"
 #include <wx/app.h>
 #include <wx/image.h>
 #include <wx/stopwatch.h>
@@ -58,10 +58,10 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 {
 	try
 	{
-		GOrgueSettings settings(wxT("perftest"));
-		GrandOrgueFile* organfile = new GrandOrgueFile(NULL, settings);
+		GOSettings settings(wxT("perftest"));
+		GODefinitionFile* organfile = new GODefinitionFile(NULL, settings);
 		organfile->SetODFPath(argv[1]);
-		organfile->AddWindchest(new GOrgueWindchest(organfile));
+		organfile->AddWindchest(new GOWindchest(organfile));
 		GOSoundEngine* engine = new GOSoundEngine();
 		GOSoundRecorder recorder;
 

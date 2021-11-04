@@ -6,9 +6,9 @@
 
 #include "SettingsReverb.h"
 
-#include "GOrgueStandardFile.h"
-#include "GOrgueSettings.h"
-#include "GOrgueWave.h"
+#include "GOStandardFile.h"
+#include "GOSettings.h"
+#include "GOWave.h"
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -26,7 +26,7 @@ BEGIN_EVENT_TABLE(SettingsReverb, wxPanel)
 	EVT_SPIN(ID_GAIN_SPIN, SettingsReverb::OnGainSpinChanged)
 END_EVENT_TABLE()
 
-SettingsReverb::SettingsReverb(GOrgueSettings& settings, wxWindow* parent) :
+SettingsReverb::SettingsReverb(GOSettings& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {
@@ -107,11 +107,11 @@ void SettingsReverb::UpdateLimits()
 		m_Channel->Disable();
 		return;
 	}
-	GOrgueWave wav;
+	GOWave wav;
 	m_FileName->SetLabel(m_File->GetPath());
 	try
 	{
-		GOrgueStandardFile file(m_File->GetPath());
+		GOStandardFile file(m_File->GetPath());
 		wav.Open(&file);
 		m_StartOffset->Enable();
 		m_Length->Enable();

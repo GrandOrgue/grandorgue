@@ -8,10 +8,10 @@
 
 #include "GOSoundEngine.h"
 #include "GOSoundTremulantWorkItem.h"
-#include "GOrgueWindchest.h"
+#include "GOWindchest.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundWindchestWorkItem::GOSoundWindchestWorkItem(GOSoundEngine& sound_engine, GOrgueWindchest* windchest) :
+GOSoundWindchestWorkItem::GOSoundWindchestWorkItem(GOSoundEngine& sound_engine, GOWindchest* windchest) :
 	m_engine(sound_engine),
 	m_Volume(0),
 	m_Done(false),

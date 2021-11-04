@@ -7,11 +7,11 @@
 #ifndef MIDIEVENTSENDDIALOG_H_
 #define MIDIEVENTSENDDIALOG_H_
 
-#include "GOrgueChoice.h"
-#include "GOrgueMidiSender.h"
+#include "GOChoice.h"
+#include "GOMidiSender.h"
 #include <wx/panel.h>
 
-class GOrgueSettings;
+class GOSettings;
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
@@ -21,11 +21,11 @@ class MIDIEventRecvDialog;
 class MIDIEventSendDialog : public wxPanel
 {
 private:
-	GOrgueSettings& m_Settings;
-	GOrgueMidiSender* m_original;
+	GOSettings& m_Settings;
+	GOMidiSender* m_original;
 	MIDIEventRecvDialog* m_recv;
-	GOrgueMidiSenderData m_midi;
-	GOrgueChoice<midi_send_message_type>* m_eventtype;
+	GOMidiSenderData m_midi;
+	GOChoice<midi_send_message_type>* m_eventtype;
 	wxChoice *m_eventno, *m_channel, *m_device;
 	wxStaticText* m_KeyLabel;
 	wxSpinCtrl *m_key;
@@ -67,7 +67,7 @@ protected:
 	};
 
 public:
-	MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, MIDIEventRecvDialog* recv, GOrgueSettings& settings);
+	MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event, MIDIEventRecvDialog* recv, GOSettings& settings);
 	~MIDIEventSendDialog();
 
 	void DoApply();

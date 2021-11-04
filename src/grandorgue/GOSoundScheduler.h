@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef GORGUESOUNDSCHEDULER_H
-#define GORGUESOUNDSCHEDULER_H
+#ifndef GOSOUNDSCHEDULER_H
+#define GOSOUNDSCHEDULER_H
 
 #include "threading/atomic.h"
 #include "threading/GOMutex.h"

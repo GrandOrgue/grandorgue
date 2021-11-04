@@ -9,9 +9,9 @@
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
-#include "GOrgueConfigReader.h"
-#include "GOrgueDC.h"
-#include "GOrgueManual.h"
+#include "GOConfigReader.h"
+#include "GODC.h"
+#include "GOManual.h"
 
 GOGUIManualBackground::GOGUIManualBackground(GOGUIPanel* panel, unsigned manual_number):
 	GOGUIControl(panel, NULL),
@@ -19,12 +19,12 @@ GOGUIManualBackground::GOGUIManualBackground(GOGUIPanel* panel, unsigned manual_
 {
 }
 
-void GOGUIManualBackground::Init(GOrgueConfigReader& cfg, wxString group)
+void GOGUIManualBackground::Init(GOConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Init(cfg, group);
 }
 
-void GOGUIManualBackground::Load(GOrgueConfigReader& cfg, wxString group)
+void GOGUIManualBackground::Load(GOConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 }
@@ -40,13 +40,13 @@ void GOGUIManualBackground::Layout()
 	m_HBackground = m_panel->GetWood(m_metrics->GetKeyHorizBackgroundImageNum());
 }
 
-void GOGUIManualBackground::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUIManualBackground::PrepareDraw(double scale, GOBitmap* background)
 {
 	m_VBackground.PrepareTileBitmap(scale, m_VRect, 0, 0, background);
 	m_HBackground.PrepareTileBitmap(scale, m_HRect, 0, 0, background);
 }
 
-void GOGUIManualBackground::Draw(GOrgueDC& dc)
+void GOGUIManualBackground::Draw(GODC& dc)
 {
 	dc.DrawBitmap(m_VBackground, m_VRect);
 	dc.DrawBitmap(m_HBackground, m_HRect);

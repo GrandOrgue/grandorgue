@@ -10,13 +10,13 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "GOrgueConfigReader.h"
-#include "GOrgueDC.h"
-#include "GOrgueManual.h"
+#include "GOConfigReader.h"
+#include "GODC.h"
+#include "GOManual.h"
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOrgueManual* manual, unsigned manual_number):
+GOGUIManual::GOGUIManual(GOGUIPanel* panel, GOManual* manual, unsigned manual_number):
 	GOGUIControl(panel, manual),
 	m_manual(manual),
 	m_ManualNumber(manual_number),
@@ -35,7 +35,7 @@ unsigned GOGUIManual::GetKeyCount()
 	return m_Keys.size();
 }
 
-void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
+void GOGUIManual::Init(GOConfigReader& cfg, wxString group)
 {
 	const wxChar* keyNames[12] = { wxT("C"), wxT("Cis"), wxT("D"), wxT("Dis"), wxT("E"), wxT("F"), wxT("Fis"), wxT("G"),
 				       wxT("Gis"), wxT("A"), wxT("Ais"), wxT("B") };
@@ -134,7 +134,7 @@ void GOGUIManual::Init(GOrgueConfigReader& cfg, wxString group)
 	m_BoundingRect = wxRect(-1, -1, width + 1, height + 1);
 }
 
-void GOGUIManual::Load(GOrgueConfigReader& cfg, wxString group)
+void GOGUIManual::Load(GOConfigReader& cfg, wxString group)
 {
 	const wxChar* keyNames[12] = { wxT("C"), wxT("Cis"), wxT("D"), wxT("Dis"), wxT("E"), wxT("F"), wxT("Fis"), wxT("G"),
 				       wxT("Gis"), wxT("A"), wxT("Ais"), wxT("B") };
@@ -274,7 +274,7 @@ void GOGUIManual::Layout()
 	}
 }
 
-void GOGUIManual::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUIManual::PrepareDraw(double scale, GOBitmap* background)
 {
 	for (unsigned i = 0; i < m_Keys.size(); i++)
 	{
@@ -283,11 +283,11 @@ void GOGUIManual::PrepareDraw(double scale, GOrgueBitmap* background)
 	}
 }
 
-void GOGUIManual::Draw(GOrgueDC& dc)
+void GOGUIManual::Draw(GODC& dc)
 {
 	for (unsigned i = 0; i < m_Keys.size(); i++)
 	{
-		GOrgueBitmap& bitmap = m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? m_Keys[i].OnBitmap : m_Keys[i].OffBitmap;
+		GOBitmap& bitmap = m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? m_Keys[i].OnBitmap : m_Keys[i].OffBitmap;
 		dc.DrawBitmap(bitmap, m_Keys[i].Rect);
 	}
 	GOGUIControl::Draw(dc);

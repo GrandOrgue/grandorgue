@@ -9,7 +9,7 @@
 
 #include "GOGUIControl.h"
 
-#include "GOrgueBitmap.h"
+#include "GOBitmap.h"
 #include <vector>
 
 class GOGUIHW1Background : public GOGUIControl
@@ -19,9 +19,9 @@ class GOGUIHW1Background : public GOGUIControl
 	public:
 
 	wxRect rect;
-	GOrgueBitmap bmp;
+	GOBitmap bmp;
 
-	GOBackgroundImage(wxRect Rect, const GOrgueBitmap& Bmp) :
+	GOBackgroundImage(wxRect Rect, const GOBitmap& Bmp) :
 		rect(Rect),
 		bmp(Bmp)
 		{
@@ -33,11 +33,11 @@ private:
 public:
 	GOGUIHW1Background(GOGUIPanel* panel);
 
-	void Init(GOrgueConfigReader& cfg, wxString group);
+	void Init(GOConfigReader& cfg, wxString group);
 	void Layout();
 
-	void PrepareDraw(double scale, GOrgueBitmap* background);
-	void Draw(GOrgueDC& dc);
+	void PrepareDraw(double scale, GOBitmap* background);
+	void Draw(GODC& dc);
 };
 
 #endif

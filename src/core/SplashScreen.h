@@ -12,7 +12,7 @@
 #include <wx/dialog.h>
 #include <wx/timer.h>
 
-class GOrgueSplashBitmap : public wxControl
+class GOSplashBitmap : public wxControl
 {
 private:
 	wxBitmap m_Bitmap;
@@ -22,24 +22,24 @@ private:
 	void OnKey(wxKeyEvent& event);
 
 public:
-	GOrgueSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap);
+	GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap);
 
 	DECLARE_EVENT_TABLE()
 };
 
-class GOrgueSplash : private wxDialog
+class GOSplash : private wxDialog
 {
 private:
-	GOrgueSplashBitmap* m_Image;
+	GOSplashBitmap* m_Image;
 	wxTimer  m_Timer;
 	bool m_hasTimeout;
 
-	GOrgueSplash
+	GOSplash
 		(bool               has_timeout
 		,wxWindow          *parent
 		,wxWindowID         id
 		);
-	~GOrgueSplash();
+	~GOSplash();
 	
 	void OnShowWindow(wxShowEvent &event);
 	void OnCloseWindow(wxCloseEvent& event);

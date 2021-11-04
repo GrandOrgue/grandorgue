@@ -6,12 +6,12 @@
 
 #include "OrganDialog.h"
 
-#include "GOrgueEvent.h"
-#include "GOrgueRank.h"
-#include "GOrgueSampleStatistic.h"
-#include "GOrgueSettings.h"
-#include "GOrgueWindchest.h"
-#include "GrandOrgueFile.h"
+#include "GOEvent.h"
+#include "GORank.h"
+#include "GOSampleStatistic.h"
+#include "GOSettings.h"
+#include "GOWindchest.h"
+#include "GODefinitionFile.h"
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choicdlg.h>
@@ -28,14 +28,14 @@
 class OrganTreeItemData : public wxTreeItemData
 {
 public:
-	OrganTreeItemData(GOrguePipeConfigNode& c)
+	OrganTreeItemData(GOPipeConfigNode& c)
 	{
 		node = &c;
 		config = &node->GetPipeConfig();
 	}
 
-	GOrguePipeConfigNode* node;
-	GOrguePipeConfig* config;
+	GOPipeConfigNode* node;
+	GOPipeConfig* config;
 };
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_TREE_UPDATED)
@@ -68,9 +68,9 @@ BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
 	EVT_BUTTON(ID_EVENT_COLLAPSE, OrganDialog::OnCollapse)
 END_EVENT_TABLE()
 
-OrganDialog::OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile) :
+OrganDialog::OrganDialog (GODocumentBase* doc, wxWindow* parent, GODefinitionFile* organfile) :
 	wxDialog(parent, wxID_ANY, _("Organ settings"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-	GOrgueView(doc, this),
+	GOView(doc, this),
 	m_organfile(organfile),
 	m_Apply(NULL),
 	m_Reset(NULL),
@@ -329,7 +329,7 @@ void OrganDialog::Load()
 		}
 	}
 
-	GOrgueSampleStatistic stat;
+	GOSampleStatistic stat;
 	for(unsigned i = 0; i < entries.size(); i++)
 		if (m_Tree->GetItemData(entries[i]))
 			stat.Cumulate(((OrganTreeItemData*)m_Tree->GetItemData(entries[i]))->node->GetStatistic());
@@ -646,7 +646,7 @@ void OrganDialog::Modified()
 		m_Apply->Enable();
 }
 
-void OrganDialog::FillTree(wxTreeItemId parent, GOrguePipeConfigNode& config)
+void OrganDialog::FillTree(wxTreeItemId parent, GOPipeConfigNode& config)
 {
 	wxTreeItemData* data = new OrganTreeItemData(config);
 	wxTreeItemId e;

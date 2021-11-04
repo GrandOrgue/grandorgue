@@ -9,7 +9,7 @@
 
 #include <wx/panel.h>
 
-class GOrgueSettings;
+class GOSettings;
 class wxCheckBox;
 class wxChoice;
 class wxFileDirPickerEvent;
@@ -34,7 +34,7 @@ class SettingsReverb : public wxPanel
 		ID_GAIN_SPIN,
 	};
 private:
-	GOrgueSettings& m_Settings;
+	GOSettings& m_Settings;
 	wxCheckBox* m_Enabled;
 	wxCheckBox* m_Direct;
 	wxFilePickerCtrl* m_File;
@@ -58,7 +58,7 @@ private:
 	bool Validate();
 
 public:
-	SettingsReverb(GOrgueSettings& settings, wxWindow* parent);
+	SettingsReverb(GOSettings& settings, wxWindow* parent);
 
 	void Save();
 

@@ -7,7 +7,7 @@
 #ifndef GOGUIPANELCREATOR_H
 #define GOGUIPANELCREATOR_H
 
-class GOrgueConfigReader;
+class GOConfigReader;
 
 class GOGUIPanelCreator
 {
@@ -16,7 +16,7 @@ public:
 	{
 	}
 
-	virtual void CreatePanels(GOrgueConfigReader& cfg) = 0;
+	virtual void CreatePanels(GOConfigReader& cfg) = 0;
 };
 
 #endif

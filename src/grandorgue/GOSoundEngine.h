@@ -12,7 +12,7 @@
 #include "GOSoundSamplerPool.h"
 #include <vector>
 
-class GOrgueWindchest;
+class GOWindchest;
 class GOSoundProvider;
 class GOSoundRecorder;
 class GOSoundGroupWorkItem;
@@ -22,8 +22,8 @@ class GOSoundTouchWorkItem;
 class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
 class GOSoundWorkItem;
-class GrandOrgueFile;
-class GOrgueSettings;
+class GODefinitionFile;
+class GOSettings;
 
 typedef struct
 {
@@ -82,10 +82,10 @@ public:
 	GOSoundEngine();
 	~GOSoundEngine();
 	void Reset();
-	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
+	void Setup(GODefinitionFile* organ_file, unsigned release_count = 1);
 	void ClearSetup();
 	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
-	void SetupReverb(GOrgueSettings& settings);
+	void SetupReverb(GOSettings& settings);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
 	void SetSamplesPerBuffer(unsigned sample_per_buffer);

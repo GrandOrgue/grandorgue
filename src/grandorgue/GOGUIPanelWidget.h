@@ -7,7 +7,7 @@
 #ifndef GOGUIPANELWIDGET_H
 #define GOGUIPANELWIDGET_H
 
-#include "GOrgueBitmap.h"
+#include "GOBitmap.h"
 #include <wx/bitmap.h>
 #include <wx/panel.h>
 
@@ -21,7 +21,7 @@ private:
 	GOGUIPanel* m_panel;
 	wxImage m_BGImage;
 	bool m_BGInit;
-	GOrgueBitmap m_Background;
+	GOBitmap m_Background;
 	wxBitmap m_ClientBitmap;
 	double m_Scale;
 	double m_FontScale;

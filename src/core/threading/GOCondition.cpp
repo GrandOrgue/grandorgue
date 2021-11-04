@@ -68,7 +68,7 @@ GOCondition::~GOCondition()
 {
 }
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *)
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *)
 {
   bool isSignalReceived;
   
@@ -106,7 +106,7 @@ GOCondition::~GOCondition()
 	  Signal();
 }
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *pThread)
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *pThread)
 {
   m_Waiters.fetch_add(1);
   m_Mutex.Unlock();
@@ -164,7 +164,7 @@ void GOCondition::Broadcast()
 
 #endif
 
-unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOrgueThread* pThread)
+unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOThread* pThread)
 {
   unsigned rc = 0;
   bool isFirstTime = true;

@@ -7,29 +7,29 @@
 #ifndef MIDIEVENTRECVDIALOG_H_
 #define MIDIEVENTRECVDIALOG_H_
 
-#include "GOrgueChoice.h"
-#include "GOrgueMidiCallback.h"
-#include "GOrgueMidiListener.h"
-#include "GOrgueMidiReceiverBase.h"
+#include "GOChoice.h"
+#include "GOMidiCallback.h"
+#include "GOMidiListener.h"
+#include "GOMidiReceiverBase.h"
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <vector>
 
-class GOrgueSettings;
+class GOSettings;
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
 class wxStaticText;
 class wxToggleButton;
 
-class MIDIEventRecvDialog : public wxPanel, protected GOrgueMidiCallback
+class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback
 {
 private:
-	GOrgueSettings& m_Settings;
-	GOrgueMidiReceiverBase* m_original;
-	GOrgueMidiReceiverData m_midi;
-	GOrgueMidiListener m_listener;
-	GOrgueChoice<midi_match_message_type>* m_eventtype;
+	GOSettings& m_Settings;
+	GOMidiReceiverBase* m_original;
+	GOMidiReceiverData m_midi;
+	GOMidiListener m_listener;
+	GOChoice<midi_match_message_type>* m_eventtype;
 	wxChoice *m_eventno, *m_channel, *m_device;
 	wxStaticText* m_DataLabel;
 	wxSpinCtrl *m_data;
@@ -47,10 +47,10 @@ private:
 	wxButton* m_new, *m_delete;
 	wxTimer m_Timer;
 	int m_current;
-	std::vector<GOrgueMidiEvent> m_OnList;
-	std::vector<GOrgueMidiEvent> m_OffList;
+	std::vector<GOMidiEvent> m_OnList;
+	std::vector<GOMidiEvent> m_OffList;
 
-	bool SimilarEvent(const GOrgueMidiEvent& e1, const GOrgueMidiEvent& e2);
+	bool SimilarEvent(const GOMidiEvent& e1, const GOMidiEvent& e2);
 
 	void StoreEvent();
 	void LoadEvent();
@@ -65,7 +65,7 @@ private:
 	void OnDeleteClick(wxCommandEvent& event);
 	void OnEventChange(wxCommandEvent& event);
 	void OnTypeChange(wxCommandEvent& event);
-	void OnMidiEvent(const GOrgueMidiEvent& event);
+	void OnMidiEvent(const GOMidiEvent& event);
 
 protected:
 	enum {
@@ -87,9 +87,9 @@ protected:
 	};
 
 public:
-	MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBase* event, GOrgueSettings& settings);
+	MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOSettings& settings);
 	~MIDIEventRecvDialog();
-	void RegisterMIDIListener(GOrgueMidi* midi);
+	void RegisterMIDIListener(GOMidi* midi);
 
 	void DoApply();
 	MIDI_MATCH_EVENT GetCurrentEvent();

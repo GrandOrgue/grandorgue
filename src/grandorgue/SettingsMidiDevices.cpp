@@ -6,9 +6,9 @@
 
 #include "SettingsMidiDevices.h"
 
-#include "GOrgueMidi.h"
-#include "GOrgueSettings.h"
-#include "GOrgueSound.h"
+#include "GOMidi.h"
+#include "GOSettings.h"
+#include "GOSound.h"
 #include <wx/button.h>
 #include <wx/checklst.h>
 #include <wx/choice.h>
@@ -24,7 +24,7 @@ BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_BUTTON(ID_INOUTDEVICE, SettingsMidiDevices::OnInOutDeviceClick)
 END_EVENT_TABLE()
 
-SettingsMidiDevices::SettingsMidiDevices(GOrgueSound& sound, wxWindow* parent) :
+SettingsMidiDevices::SettingsMidiDevices(GOSound& sound, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Sound(sound)
 {

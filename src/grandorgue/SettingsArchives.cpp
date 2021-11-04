@@ -6,9 +6,9 @@
 
 #include "SettingsArchives.h"
 
-#include "GOrgueArchiveFile.h"
-#include "GOrgueOrgan.h"
-#include "GOrgueSettings.h"
+#include "GOArchiveFile.h"
+#include "GOOrgan.h"
+#include "GOSettings.h"
 #include "SettingsOrgan.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(SettingsArchives, wxPanel)
 	EVT_BUTTON(ID_DEL, SettingsArchives::OnDel)
 END_EVENT_TABLE()
 
-SettingsArchives::SettingsArchives(GOrgueSettings& settings, SettingsOrgan& organs, wxWindow* parent) :
+SettingsArchives::SettingsArchives(GOSettings& settings, SettingsOrgan& organs, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_Organs(organs)
@@ -42,7 +42,7 @@ SettingsArchives::SettingsArchives(GOrgueSettings& settings, SettingsOrgan& orga
 
 	for(unsigned i = 0; i < m_Settings.GetArchiveList().size(); i++)
 	{
-		GOrgueArchiveFile* a = m_Settings.GetArchiveList()[i];
+		GOArchiveFile* a = m_Settings.GetArchiveList()[i];
 		wxString title = a->GetName();
 		wxString info = wxEmptyString;
 		if (!a->IsUsable(m_Settings))
@@ -82,11 +82,11 @@ void SettingsArchives::OnArchiveSelected(wxListEvent& event)
 
 void SettingsArchives::OnDel(wxCommandEvent& event)
 {
-	const GOrgueArchiveFile* a = (const GOrgueArchiveFile*)m_Archives->GetItemData(m_Archives->GetFirstSelected());
+	const GOArchiveFile* a = (const GOArchiveFile*)m_Archives->GetItemData(m_Archives->GetFirstSelected());
 
 	for(long i = 0; i < m_Archives->GetItemCount(); i++)
 	{
-		const GOrgueArchiveFile* a1 = (const GOrgueArchiveFile*)m_Archives->GetItemData(i);
+		const GOArchiveFile* a1 = (const GOArchiveFile*)m_Archives->GetItemData(i);
 		if (a == a1)
 			continue;
 		if (!a1->IsUsable(m_Settings))
@@ -99,7 +99,7 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 		}
 	}
 
-	std::vector<const GOrgueOrgan*> organ_list = m_Organs.GetOrgans();
+	std::vector<const GOOrgan*> organ_list = m_Organs.GetOrgans();
 	for(unsigned i = 0; i < organ_list.size(); i++)
 		if (organ_list[i]->GetArchiveID() == a->GetID())
 		{
@@ -108,7 +108,7 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 		}
 	for(long i = 0; i < m_Archives->GetItemCount(); i++)
 	{
-		const GOrgueArchiveFile* a1 = (const GOrgueArchiveFile*)m_Archives->GetItemData(i);
+		const GOArchiveFile* a1 = (const GOArchiveFile*)m_Archives->GetItemData(i);
 		if (a == a1)
 			continue;
 		for(unsigned j = 0; j < a1->GetDependencies().size(); j++)
@@ -126,7 +126,7 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 
 void SettingsArchives::Save()
 {
-	ptr_vector<GOrgueArchiveFile>& list = m_Settings.GetArchiveList();
+	ptr_vector<GOArchiveFile>& list = m_Settings.GetArchiveList();
 	for(unsigned i = 0; i < list.size(); i++)
 	{
 		bool found = false;
@@ -139,5 +139,5 @@ void SettingsArchives::Save()
 	}
 	list.clear();
 	for(long i = 0; i < m_Archives->GetItemCount(); i++)
-		list.push_back((GOrgueArchiveFile*)m_Archives->GetItemData(i));
+		list.push_back((GOArchiveFile*)m_Archives->GetItemData(i));
 }

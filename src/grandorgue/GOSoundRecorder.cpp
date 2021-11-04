@@ -7,7 +7,7 @@
 #include "GOSoundRecorder.h"
 
 #include "GOSoundBufferItem.h"
-#include "GOrgueWaveTypes.h"
+#include "GOWaveTypes.h"
 #include "threading/GOMutexLocker.h"
 #include <wx/intl.h>
 #include <wx/log.h>

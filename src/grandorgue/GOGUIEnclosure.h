@@ -8,20 +8,20 @@
 #define GOGUIENCLOSURE_H
 
 #include "GOGUIControl.h"
-#include "GOrgueBitmap.h"
-#include "GOrgueFont.h"
+#include "GOBitmap.h"
+#include "GOFont.h"
 #include <wx/colour.h>
 #include <vector>
 
-class GOrgueEnclosure;
+class GOEnclosure;
 
 class GOGUIEnclosure : public GOGUIControl
 {
 private:
-	GOrgueEnclosure* m_enclosure;
+	GOEnclosure* m_enclosure;
 	unsigned m_FontSize;
 	wxString m_FontName;
-	GOrgueFont m_Font;
+	GOFont m_Font;
 	wxColor m_TextColor;
 	wxString m_Text;
 	wxRect m_TextRect;
@@ -31,17 +31,17 @@ private:
 	int m_MouseAxisEnd;
 	unsigned m_TileOffsetX;
 	unsigned m_TileOffsetY;
-	std::vector<GOrgueBitmap> m_Bitmaps;
+	std::vector<GOBitmap> m_Bitmaps;
 	
 public:
-	GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control);
+	GOGUIEnclosure(GOGUIPanel* panel, GOEnclosure* control);
 
-	void Init(GOrgueConfigReader& cfg, wxString group);
-	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Init(GOConfigReader& cfg, wxString group);
+	void Load(GOConfigReader& cfg, wxString group);
 	void Layout();
 
-	void PrepareDraw(double scale, GOrgueBitmap* background);
-	void Draw(GOrgueDC& dc);
+	void PrepareDraw(double scale, GOBitmap* background);
+	void Draw(GODC& dc);
 	bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
 	bool HandleMouseScroll(int x, int y, int amount);
 };

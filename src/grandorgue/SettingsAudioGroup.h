@@ -10,7 +10,7 @@
 #include <wx/panel.h>
 #include <vector>
 
-class GOrgueSettings;
+class GOSettings;
 class wxButton;
 class wxListBox;
 
@@ -30,7 +30,7 @@ class SettingsAudioGroup : public wxPanel, public GOAudioGroupCallback
 	};
 
 private:
-	GOrgueSettings& m_Settings;
+	GOSettings& m_Settings;
 	wxListBox* m_AudioGroups;
 	wxButton* m_Add;
 	wxButton* m_Del;
@@ -42,7 +42,7 @@ private:
 	void OnGroupChange(wxCommandEvent& event);
 
 public:
-	SettingsAudioGroup(GOrgueSettings& settings, wxWindow* parent);
+	SettingsAudioGroup(GOSettings& settings, wxWindow* parent);
 
 	std::vector<wxString> GetGroups();
 

@@ -7,14 +7,14 @@
 #include "GOSoundProviderWave.h"
 
 #include "GOSoundAudioSection.h"
-#include "GOrgueBuffer.h"
-#include "GOrgueFile.h"
-#include "GOrgueMemoryPool.h"
-#include "GOrgueWave.h"
+#include "GOBuffer.h"
+#include "GOFile.h"
+#include "GOMemoryPool.h"
+#include "GOWave.h"
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOSoundProviderWave::GOSoundProviderWave(GOrgueMemoryPool& pool) :
+GOSoundProviderWave::GOSoundProviderWave(GOMemoryPool& pool) :
 	GOSoundProvider(pool)
 {
 }
@@ -37,7 +37,7 @@ unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample)
 		return 3;
 }
 
-void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int attack_start, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, 
+void GOSoundProviderWave::CreateAttack(const char* data, GOWave& wave, int attack_start, std::vector<GO_WAVE_LOOP> loop_list, int sample_group, unsigned bits_per_sample, unsigned channels, 
 				       bool compress, loop_load_type loop_mode, bool percussive, unsigned min_attack_velocity, unsigned loop_crossfade_length, unsigned max_released_time)
 {
 	std::vector<GO_WAVE_LOOP> loops;
@@ -107,11 +107,11 @@ void GOSoundProviderWave::CreateAttack(const char* data, GOrgueWave& wave, int a
 	m_AttackInfo.push_back(attack_info);
 	GOAudioSection* section = new GOAudioSection(m_pool);
 	m_Attack.push_back(section);
-	section->Setup(data + attack_pos * GetBytesPerSample(bits_per_sample) * channels, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, 
+	section->Setup(data + attack_pos * GetBytesPerSample(bits_per_sample) * channels, (GOWave::SAMPLE_FORMAT)bits_per_sample, 
 		       channels, wave.GetSampleRate(), wave.GetLength(), &loops, compress, loop_crossfade_length);
 }
 
-void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int sample_group, unsigned max_playback_time, int cue_point, int release_end, unsigned bits_per_sample, unsigned channels, bool compress)
+void GOSoundProviderWave::CreateRelease(const char* data, GOWave& wave, int sample_group, unsigned max_playback_time, int cue_point, int release_end, unsigned bits_per_sample, unsigned channels, bool compress)
 {
 	unsigned release_offset = wave.HasReleaseMarker() ? wave.GetReleaseMarkerPosition() : 0;
 	if (cue_point != -1)
@@ -133,14 +133,14 @@ void GOSoundProviderWave::CreateRelease(const char* data, GOrgueWave& wave, int 
 	m_ReleaseInfo.push_back(release_info);
 	GOAudioSection* section = new GOAudioSection(m_pool);
 	m_Release.push_back(section);
-	section->Setup(data + release_offset * GetBytesPerSample(bits_per_sample) * channels, (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, channels, wave.GetSampleRate(), release_samples, NULL, compress, 0);
+	section->Setup(data + release_offset * GetBytesPerSample(bits_per_sample) * channels, (GOWave::SAMPLE_FORMAT)bits_per_sample, channels, wave.GetSampleRate(), release_samples, NULL, compress, 0);
 }
 
-void GOSoundProviderWave::LoadPitch(const GOrgueFilename& filename)
+void GOSoundProviderWave::LoadPitch(const GOFilename& filename)
 {
 	wxLogDebug(_("Loading file %s"), filename.GetTitle().c_str());
 
-	GOrgueWave wave;
+	GOWave wave;
 	wave.Open(filename.Open().get());
 
 	m_MidiKeyNumber = wave.GetMidiNote();
@@ -148,18 +148,18 @@ void GOSoundProviderWave::LoadPitch(const GOrgueFilename& filename)
 }
 
 
-void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, 
+void GOSoundProviderWave::ProcessFile(const GOFilename& filename, std::vector<GO_WAVE_LOOP> loops, bool is_attack, bool is_release, int sample_group, 
 				      unsigned max_playback_time, int attack_start, int cue_point, int release_end, unsigned bits_per_sample, int load_channels, bool compress, loop_load_type loop_mode, 
 				      bool percussive, unsigned min_attack_velocity, bool use_pitch, unsigned loop_crossfade_length, unsigned max_released_time)
 {
 	wxLogDebug(_("Loading file %s"), filename.GetTitle().c_str());
 
-	GOrgueWave wave;
+	GOWave wave;
 	wave.Open(filename.Open().get());
 
 	/* allocate data to work with */
 	unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
-	GOrgueBuffer<char> data(totalDataSize);
+	GOBuffer<char> data(totalDataSize);
 
 	if (use_pitch)
 	{
@@ -179,7 +179,7 @@ void GOSoundProviderWave::ProcessFile(const GOrgueFilename& filename, std::vecto
 	if (bits_per_sample > wave.GetBitsPerSample())
 		bits_per_sample = wave.GetBitsPerSample();
 
-	wave.ReadSamples(data.get(), (GOrgueWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
+	wave.ReadSamples(data.get(), (GOWave::SAMPLE_FORMAT)bits_per_sample, wave.GetSampleRate(), wave_channels);
 
 	if (is_attack)
 		CreateAttack(data.get(), wave, attack_start, loops, sample_group, bits_per_sample, channels, compress, loop_mode, percussive, min_attack_velocity, loop_crossfade_length, max_released_time);

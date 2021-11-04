@@ -6,12 +6,12 @@
 
 #include "SettingsDefaults.h"
 
-#include "GOrgueSettings.h"
+#include "GOSettings.h"
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
-SettingsDefaults::SettingsDefaults(GOrgueSettings& settings, wxWindow* parent) :
+SettingsDefaults::SettingsDefaults(GOSettings& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {

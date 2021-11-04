@@ -13,7 +13,7 @@ add_option(-msse3)
 
 add_option(-mstackrealign)
 
-include_directories(${CMAKE_BINARY_DIR}/src/core/GrandOrgueDef.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
+include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
@@ -65,75 +65,75 @@ GOSoundScheduler.cpp
 GOSoundThread.cpp
 GOSoundTremulantWorkItem.cpp
 GOSoundWindchestWorkItem.cpp
-GOrgueAudioRecorder.cpp
-GOrgueCache.cpp
-GOrgueCacheCleaner.cpp
-GOrgueCacheWriter.cpp
-GOrgueCombinationDefinition.cpp
-GOrgueCombination.cpp
-GOrgueBitmapCache.cpp
-GOrgueButton.cpp
-GOrgueCoupler.cpp
-GOrgueDivisional.cpp
-GOrgueDivisionalCoupler.cpp
-GOrgueDummyPipe.cpp
-GOrgueDrawStop.cpp
-GOrgueElementCreator.cpp
-GOrgueEnclosure.cpp
-GOrgueFilename.cpp
-GOrgueFrameGeneral.cpp
-GOrgueGeneral.cpp
-GOrgueKeyReceiver.cpp
-GOrgueLabel.cpp
-GOrgueManual.cpp
-GOrgueMetronome.cpp
-GOrgueMainWindowData.cpp
-GOrgueMidi.cpp
-GOrgueMidiListener.cpp
-GOrgueMidiInPort.cpp
-GOrgueMidiOutPort.cpp
-GOrgueMidiPlayer.cpp
-GOrgueMidiSender.cpp
-GOrgueMidiReceiver.cpp
-GOrgueMidiRecorder.cpp
-GOrgueMidiRtFactory.cpp
-GOrgueMidiRtInPort.cpp
-GOrgueMidiRtOutPort.cpp
-GOrgueModel.cpp
-GOrguePipe.cpp
-GOrguePipeConfig.cpp
-GOrguePipeConfigNode.cpp
-GOrguePipeConfigTreeNode.cpp
-GOrguePiston.cpp
-GOrgueProgressDialog.cpp
-GOrgueProperties.cpp
-GOrguePushbutton.cpp
-GOrgueRank.cpp
-GOrgueReferencePipe.cpp
-GOrgueReleaseAlignTable.cpp
-GOrgueSetter.cpp
-GOrgueSetterButton.cpp
-GOrgueSettings.cpp
-GOrgueSound.cpp
-GOrgueSoundJackPort.cpp
-GOrgueSoundPort.cpp
-GOrgueSoundPortaudioPort.cpp
-GOrgueSoundPortsConfig.cpp
-GOrgueSoundRtPort.cpp
-GOrgueSoundingPipe.cpp
-GOrgueStop.cpp
-GOrgueTremulant.cpp
-GOrgueWindchest.cpp
-GOrgueSwitch.cpp
-GrandOrgueFile.cpp
-GrandOrgueFrame.cpp
+GOAudioRecorder.cpp
+GOCache.cpp
+GOCacheCleaner.cpp
+GOCacheWriter.cpp
+GOCombinationDefinition.cpp
+GOCombination.cpp
+GOBitmapCache.cpp
+GOButton.cpp
+GOCoupler.cpp
+GODivisional.cpp
+GODivisionalCoupler.cpp
+GODummyPipe.cpp
+GODrawStop.cpp
+GOElementCreator.cpp
+GOEnclosure.cpp
+GOFilename.cpp
+GOFrameGeneral.cpp
+GOGeneral.cpp
+GOKeyReceiver.cpp
+GOLabel.cpp
+GOManual.cpp
+GOMetronome.cpp
+GOMainWindowData.cpp
+GOMidi.cpp
+GOMidiListener.cpp
+GOMidiInPort.cpp
+GOMidiOutPort.cpp
+GOMidiPlayer.cpp
+GOMidiSender.cpp
+GOMidiReceiver.cpp
+GOMidiRecorder.cpp
+GOMidiRtFactory.cpp
+GOMidiRtInPort.cpp
+GOMidiRtOutPort.cpp
+GOModel.cpp
+GOPipe.cpp
+GOPipeConfig.cpp
+GOPipeConfigNode.cpp
+GOPipeConfigTreeNode.cpp
+GOPiston.cpp
+GOProgressDialog.cpp
+GOProperties.cpp
+GOPushbutton.cpp
+GORank.cpp
+GOReferencePipe.cpp
+GOReleaseAlignTable.cpp
+GOSetter.cpp
+GOSetterButton.cpp
+GOSettings.cpp
+GOSound.cpp
+GOSoundJackPort.cpp
+GOSoundPort.cpp
+GOSoundPortaudioPort.cpp
+GOSoundPortsConfig.cpp
+GOSoundRtPort.cpp
+GOSoundingPipe.cpp
+GOStop.cpp
+GOTremulant.cpp
+GOWindchest.cpp
+GOSwitch.cpp
+GODefinitionFile.cpp
+GOFrame.cpp
 MIDIEventDialog.cpp
 MIDIEventRecvDialog.cpp
 MIDIEventSendDialog.cpp
 MIDIEventKeyDialog.cpp
 OrganDialog.cpp
-GOrgueDocument.cpp
-GOrguePanelView.cpp
+GODocument.cpp
+GOPanelView.cpp
 SettingsArchives.cpp
 SettingsAudioGroup.cpp
 SettingsAudioOutput.cpp
@@ -155,15 +155,15 @@ link_directories(${go_libdir})
 
 if (WIN32)
    set_source_files_properties("${RESOURCEDIR}/GrandOrgue.rc" PROPERTIES GENERATED "YES")
-   add_executable(GrandOrgue WIN32 GrandOrgue.cpp "${RESOURCEDIR}/GrandOrgue.rc")
+   add_executable(GrandOrgue WIN32 GOApp.cpp "${RESOURCEDIR}/GrandOrgue.rc")
    add_dependencies(GrandOrgue resources) # GrandOrgue.rc and GrandOrgue.manifest & GOIcon.ico referenced from GrandOrgue.rc
    add_linker_option(GrandOrgue large-address-aware)
-   add_executable(GrandOrgueTool GrandOrgueTool.cpp "${RESOURCEDIR}/GrandOrgue.rc")
+   add_executable(GrandOrgueTool GOTool.cpp "${RESOURCEDIR}/GrandOrgue.rc")
    add_dependencies(GrandOrgueTool resources) # GrandOrgue.rc and GrandOrgue.manifest & GOIcon.ico referenced from GrandOrgue.rc
    add_linker_option(GrandOrgueTool large-address-aware)
 else ()
-   add_executable(GrandOrgue GrandOrgue.cpp)
-   add_executable(GrandOrgueTool GrandOrgueTool.cpp)
+   add_executable(GrandOrgue GOApp.cpp)
+   add_executable(GrandOrgueTool GOTool.cpp)
 endif ()
 
 BUILD_EXECUTABLE(GrandOrgue)

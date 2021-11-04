@@ -14,9 +14,9 @@
 
 #include "SettingsDialog.h"
 
-#include "GOrgueEvent.h"
-#include "GOrgueSound.h"
-#include "GrandOrgueID.h"
+#include "GOEvent.h"
+#include "GOSound.h"
+#include "go_ids.h"
 #include "SettingsArchives.h"
 #include "SettingsAudioGroup.h"
 #include "SettingsAudioOutput.h"
@@ -37,7 +37,7 @@ BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
 END_EVENT_TABLE()
 
 SettingsDialog::SettingsDialog(
-  wxWindow* win, GOrgueSound& sound, SettingsReasons *reasons
+  wxWindow* win, GOSound& sound, SettingsReasons *reasons
 ): wxPropertySheetDialog(
   win, wxID_ANY, _("Program Settings"), wxDefaultPosition, wxDefaultSize,
   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT

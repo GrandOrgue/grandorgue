@@ -27,7 +27,7 @@ public:
 	 * @param pThread. If != NULL then the constructor may return wihout locking when pThread->ShouldStop()
 	 */
 
-	GOMutexLocker(GOMutex& mutex, bool try_lock = false, const char* lockerInfo = NULL, GOrgueThread* pThread = NULL) :
+	GOMutexLocker(GOMutex& mutex, bool try_lock = false, const char* lockerInfo = NULL, GOThread* pThread = NULL) :
 		m_Mutex(mutex),
 		m_Locked(false)
 	{

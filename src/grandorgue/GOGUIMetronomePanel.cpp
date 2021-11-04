@@ -11,10 +11,10 @@
 #include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GrandOrgueFile.h"
+#include "GODefinitionFile.h"
 #include <wx/intl.h>
 
-GOGUIMetronomePanel::GOGUIMetronomePanel(GrandOrgueFile* organfile) : 
+GOGUIMetronomePanel::GOGUIMetronomePanel(GODefinitionFile* organfile) : 
 	m_organfile(organfile)
 {
 }
@@ -23,12 +23,12 @@ GOGUIMetronomePanel::~GOGUIMetronomePanel()
 {
 }
 
-void GOGUIMetronomePanel::CreatePanels(GOrgueConfigReader& cfg)
+void GOGUIMetronomePanel::CreatePanels(GOConfigReader& cfg)
 {
 	m_organfile->AddPanel(CreateMetronomePanel(cfg));
 }
 
-GOGUIPanel* GOGUIMetronomePanel::CreateMetronomePanel(GOrgueConfigReader& cfg)
+GOGUIPanel* GOGUIMetronomePanel::CreateMetronomePanel(GOConfigReader& cfg)
 {
 	GOGUIButton* button;
 

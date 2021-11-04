@@ -10,8 +10,8 @@
 #include <wx/panel.h>
 
 enum class GOInitialLoadType;
-template<class T> class GOrgueChoice;
-class GOrgueSettings;
+template<class T> class GOChoice;
+class GOSettings;
 class wxCheckBox;
 class wxChoice;
 class wxDirPickerCtrl;
@@ -45,7 +45,7 @@ class SettingsOption : public wxPanel
 		ID_LANGUAGE
 	};
 private:
-	GOrgueSettings& m_Settings;
+	GOSettings& m_Settings;
 	wxChoice* m_Concurrency;
 	wxChoice* m_ReleaseConcurrency;
 	wxChoice* m_LoadConcurrency;
@@ -54,7 +54,7 @@ private:
 	wxCheckBox* m_Limit;
 	wxCheckBox* m_CompressCache;
 	wxCheckBox* m_ManageCache;
-	GOrgueChoice<GOInitialLoadType>* m_LoadLastFile;
+	GOChoice<GOInitialLoadType>* m_LoadLastFile;
 	wxCheckBox* m_Scale;
 	wxCheckBox* m_Random;
 	wxCheckBox* m_ODFCheck;
@@ -79,7 +79,7 @@ private:
 	unsigned m_OldReleaseLoad;
 
 public:
-	SettingsOption(GOrgueSettings& settings, wxWindow* parent);
+	SettingsOption(GOSettings& settings, wxWindow* parent);
 
 	bool NeedReload();
 	bool NeedRestart();

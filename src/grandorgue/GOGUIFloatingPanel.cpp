@@ -13,14 +13,14 @@
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GOrgueDivisional.h"
-#include "GOrgueEnclosure.h"
-#include "GOrgueManual.h"
-#include "GOrgueWindchest.h"
-#include "GrandOrgueFile.h"
+#include "GODivisional.h"
+#include "GOEnclosure.h"
+#include "GOManual.h"
+#include "GOWindchest.h"
+#include "GODefinitionFile.h"
 #include <wx/intl.h>
 
-GOGUIFloatingPanel::GOGUIFloatingPanel(GrandOrgueFile* organfile) :
+GOGUIFloatingPanel::GOGUIFloatingPanel(GODefinitionFile* organfile) :
 	m_organfile(organfile)
 {
 }
@@ -29,12 +29,12 @@ GOGUIFloatingPanel::~GOGUIFloatingPanel()
 {
 }
 
-void GOGUIFloatingPanel::CreatePanels(GOrgueConfigReader& cfg)
+void GOGUIFloatingPanel::CreatePanels(GOConfigReader& cfg)
 {
 	m_organfile->AddPanel(CreateFloatingPanel(cfg));
 }
 
-GOGUIPanel* GOGUIFloatingPanel::CreateFloatingPanel(GOrgueConfigReader& cfg)
+GOGUIPanel* GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader& cfg)
 {
 	GOGUIPanel* panel = new GOGUIPanel(m_organfile);
 	GOGUIDisplayMetrics* metrics = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_FLOATING);
@@ -58,7 +58,7 @@ GOGUIPanel* GOGUIFloatingPanel::CreateFloatingPanel(GOrgueConfigReader& cfg)
 
 		for(unsigned j = 0; j < 10; j++)
 		{
-			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, m_organfile->GetManual(i)->GetDivisionalTemplate(), true);
+			GODivisional* divisional = new GODivisional(m_organfile, m_organfile->GetManual(i)->GetDivisionalTemplate(), true);
 			divisional->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
 			m_organfile->GetManual(i)->AddDivisional(divisional);
 
@@ -69,7 +69,7 @@ GOGUIPanel* GOGUIFloatingPanel::CreateFloatingPanel(GOrgueConfigReader& cfg)
 
 	}
 
-	GOrgueEnclosure* master_enc = new GOrgueEnclosure(m_organfile);
+	GOEnclosure* master_enc = new GOEnclosure(m_organfile);
 	master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
 	m_organfile->AddEnclosure(master_enc);
 	master_enc->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("SM"))));
@@ -80,10 +80,10 @@ GOGUIPanel* GOGUIFloatingPanel::CreateFloatingPanel(GOrgueConfigReader& cfg)
 
 	for(unsigned i = 0; i < m_organfile->GetWindchestGroupCount(); i++)
 	{
-		GOrgueWindchest* windchest = m_organfile->GetWindchest(i);
+		GOWindchest* windchest = m_organfile->GetWindchest(i);
 		windchest->AddEnclosure(master_enc);
 
-		GOrgueEnclosure* enc = new GOrgueEnclosure(m_organfile);
+		GOEnclosure* enc = new GOEnclosure(m_organfile);
 		enc->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1), windchest->GetName(), 127);
 		m_organfile->AddEnclosure(enc);
 		enc->SetElementID(m_organfile->GetRecorderElementID(wxString::Format(wxT("SM%d"), i)));

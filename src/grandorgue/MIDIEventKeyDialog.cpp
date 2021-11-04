@@ -6,7 +6,7 @@
 
 #include "MIDIEventKeyDialog.h"
 
-#include "GOrgueKeyConvert.h"
+#include "GOKeyConvert.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
@@ -18,7 +18,7 @@ BEGIN_EVENT_TABLE(MIDIEventKeyDialog, wxPanel)
 	EVT_TOGGLEBUTTON(ID_LISTEN_MINUS, MIDIEventKeyDialog::OnMinusListenClick)
 END_EVENT_TABLE()
 
-MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow* parent, GOrgueKeyReceiver* event) :
+MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow* parent, GOKeyReceiver* event) :
 	wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
 	m_original(event),
 	m_key(*event),
