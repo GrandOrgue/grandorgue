@@ -34,12 +34,7 @@ BEGIN_EVENT_TABLE(GOSplashBitmap, wxControl)
 	EVT_KEY_DOWN(GOSplashBitmap::OnKey)
 END_EVENT_TABLE()
 
-<<<<<<< HEAD
-
 GOSplashBitmap::GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap) :
-=======
-GOrgueSplashBitmap::GOrgueSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap& bitmap) :
->>>>>>> 0716053f0 ([IMP] Add ASIO Image to Splash Screen)
 wxControl(parent, id, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
 	m_Bitmap(bitmap)
 {
