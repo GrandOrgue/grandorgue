@@ -7,8 +7,8 @@ message(STATUS "PortAudio build Configuration")
 INCLUDE (CheckIncludeFile)
 INCLUDE (CheckCXXSourceCompiles)
 
-include_directories(include)
-include_directories(common)
+include_directories(${PORTAUDIO_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/common)
 
 CHECK_INCLUDE_FILE (sys/soundcard.h HAVE_SYS_SOUNDCARD_H)
 if (HAVE_SYS_SOUNDCARD_H)
