@@ -68,11 +68,6 @@ else ()
 endif ()
 option(GO_SEPARATE_LINUX_PACKAGES "Generate separate linux packages for resources and demo" OFF)
 
-# Add ASIO variable
-if(RTAUDIO_USE_ASIO)
-  add_definitions(-DASIO_INCLUDED)
-endif()
-
 # only use options supported by the compiler
 include(CheckIncludeFileCXX)
 include(CheckFunctionExists)
@@ -134,6 +129,11 @@ endif ()
 
 if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
   pkg_check_modules(JACK REQUIRED IMPORTED_TARGET jack)
+endif()
+
+# Add ASIO variable
+if(WIN32 AND RTAUDIO_USE_ASIO)
+  add_definitions(-DASIO_INCLUDED)
 endif()
 
 if(RTAUDIO_USE_ASIO AND NOT ASIO_SDK_DIR)
