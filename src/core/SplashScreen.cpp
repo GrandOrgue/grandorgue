@@ -86,7 +86,7 @@ void GOSplash::DrawText(wxBitmap& bitmap)
         /* Set ASIO license image */
         wxImage asio = GetImage_ASIO();
         wxBitmap m_asio = (wxBitmap)asio.Scale(asio.GetWidth() * 0.1, asio.GetHeight() * 0.1, wxIMAGE_QUALITY_HIGH);
-        dc.DrawBitmap(m_asio, 70, 10);
+        dc.DrawBitmap(m_asio, 70, 62);
     #endif
 
 	font = *wxNORMAL_FONT;
@@ -111,8 +111,16 @@ void GOSplash::DrawText(wxBitmap& bitmap)
 	font.SetWeight(wxFONTWEIGHT_NORMAL);
 	font.SetPointSize(7);
 	dc.SetFont(font);
-	wxString msg = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2021 GrandOrgue contributors\n\nThis software comes with no warranty.\n\nASIO Interface Technology by Steinberg Media Technologies GmbH,\nby use of the Steinberg ASIO SDK, Version 2.2.\nASIO is a trademark and software of Steinberg Media Technologies GmbH.");
-	dc.DrawLabel(msg, wxRect(60, 62, 370, 100), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+	wxString msg = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2021 GrandOrgue contributors\n\nThis software comes with no warranty");
+	dc.DrawLabel(msg, wxRect(60, 72, 370, 40), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+    #ifdef ASIO_INCLUDED
+	font = *wxNORMAL_FONT;
+	font.SetWeight(wxFONTWEIGHT_NORMAL);
+	font.SetPointSize(7);
+	dc.SetFont(font);
+	msg = _("ASIO Interface Technology by Steinberg Media Technologies GmbH,\nby use of the Steinberg ASIO SDK, Version 2.3.3.\nASIO is a trademark and software of Steinberg Media Technologies GmbH.");
+	dc.DrawLabel(msg, wxRect(60, 122, 370, 40), wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
+    #endif
 }
 
 GOSplash::~GOSplash()
