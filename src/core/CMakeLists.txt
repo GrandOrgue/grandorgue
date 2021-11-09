@@ -14,6 +14,7 @@ threading/GOCondition.cpp
 threading/GOMutex.cpp
 threading/GOWaitQueue.cpp
 threading/GOrgueThread.cpp
+threading/threading_impl.cpp
 GOSoundTouchWorkItem.cpp
 GOrgueArchive.cpp
 GOrgueArchiveCreator.cpp

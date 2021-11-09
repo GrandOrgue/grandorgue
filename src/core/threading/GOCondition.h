@@ -7,7 +7,9 @@
 #ifndef GOCONDITION_H
 #define GOCONDITION_H
 
-#ifdef WX_MUTEX
+#if defined GO_STD_MUTEX
+#include <condition_variable>
+#elif defined WX_MUTEX
 #include <wx/thread.h>
 #else
 #include "atomic.h"
@@ -26,7 +28,10 @@ public:
   };
 
 private:
-#ifdef WX_MUTEX
+#if defined GO_STD_MUTEX
+  std::timed_mutex &r_mutex;
+  std::condition_variable_any m_condition;
+#elif defined WX_MUTEX
   wxCondition m_condition;
 #else
   atomic_int m_Waiters;

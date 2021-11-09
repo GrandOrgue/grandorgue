@@ -7,7 +7,9 @@
 #ifndef GOMUTEX_H
 #define GOMUTEX_H
 
-#ifdef WX_MUTEX
+#ifdef GO_STD_MUTEX
+#include <mutex>
+#elif WX_MUTEX
 #include <wx/thread.h>
 #else
 #include "atomic.h"
@@ -19,7 +21,9 @@
 class GOMutex
 {
 private:
-#ifdef WX_MUTEX
+#if defined GO_STD_MUTEX
+  std::timed_mutex m_mutex;
+#elif defined WX_MUTEX
   wxMutex m_Mutex;
 #else
   GOWaitQueue m_Wait;
@@ -38,6 +42,10 @@ private:
 public:
   GOMutex();
   ~GOMutex();
+
+#if defined GO_STD_MUTEX
+  std::timed_mutex& GetTimedMutex() { return m_mutex; };
+#endif
 
   bool LockOrStop(const char* lockerInfo = NULL, GOrgueThread *pThread = NULL);
   void Lock(const char* lockerInfo = NULL) { LockOrStop(lockerInfo, NULL); }
