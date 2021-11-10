@@ -34,7 +34,7 @@ GOCondition::~GOCondition()
 {
 }
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *)
+unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *)
 {
   bool isSignalReceived;
   
