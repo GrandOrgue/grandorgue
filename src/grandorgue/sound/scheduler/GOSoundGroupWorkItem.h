@@ -7,9 +7,9 @@
 #ifndef GOSOUNDGROUPWORKITEM_H
 #define GOSOUNDGROUPWORKITEM_H
 
-#include "GOSoundBufferItem.h"
-#include "GOSoundSamplerList.h"
-#include "GOSoundWorkItem.h"
+#include "sound/GOSoundBufferItem.h"
+#include "sound/GOSoundSamplerList.h"
+#include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 #include "GOSoundThread.h"

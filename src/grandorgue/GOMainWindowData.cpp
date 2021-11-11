@@ -6,8 +6,8 @@
 
 #include "GOMainWindowData.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GODefinitionFile.h"
 
 GOMainWindowData::GOMainWindowData(GODefinitionFile* organfile) :

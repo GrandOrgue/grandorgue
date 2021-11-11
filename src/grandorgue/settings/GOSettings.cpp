@@ -4,23 +4,23 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 
-#include "GOSoundDefs.h"
-#include "GOArchiveFile.h"
-#include "GOConfigFileWriter.h"
-#include "GOConfigFileReader.h"
-#include "GOConfigReader.h"
-#include "GOConfigReaderDB.h"
-#include "GOConfigWriter.h"
+#include "sound/GOSoundDefs.h"
+#include "archive/GOArchiveFile.h"
+#include "config/GOConfigFileWriter.h"
+#include "config/GOConfigFileReader.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigReaderDB.h"
+#include "config/GOConfigWriter.h"
 #include "go_limits.h"
 #include "GOMemoryPool.h"
 #include "GOOrgan.h"
 #include "GOPath.h"
-#include "GOSettingEnum.cpp"
-#include "GOSettingNumber.cpp"
+#include "settings/GOSettingEnum.cpp"
+#include "settings/GOSettingNumber.cpp"
 #include "GOStdPath.h"
-#include "GOSoundPort.h"
+#include "sound/ports/GOSoundPort.h"
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>

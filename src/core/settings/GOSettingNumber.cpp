@@ -4,10 +4,10 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSettingNumber.h"
+#include "settings/GOSettingNumber.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 
 template<class T>
 GOSettingNumber<T>::GOSettingNumber(GOSettingStore* store, wxString group, wxString name, T min_value, T max_value, T default_value) :

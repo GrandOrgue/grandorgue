@@ -9,7 +9,7 @@
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GODC.h"
 #include "GOManual.h"
 

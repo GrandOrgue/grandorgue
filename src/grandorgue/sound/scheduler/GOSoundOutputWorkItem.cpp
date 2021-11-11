@@ -6,7 +6,7 @@
 
 #include "GOSoundOutputWorkItem.h"
 
-#include "GOSoundReverb.h"
+#include "sound/GOSoundReverb.h"
 #include "threading/GOMutexLocker.h"
 #include "GOSoundThread.h"
 

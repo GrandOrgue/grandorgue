@@ -7,7 +7,7 @@
 #ifndef GOSETTINGENUM_H
 #define GOSETTINGENUM_H
 
-#include "GOSetting.h"
+#include "settings/GOSetting.h"
 
 template<class T>
 class GOSettingEnum : private GOSetting

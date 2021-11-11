@@ -11,7 +11,7 @@
 #include "GOSoundRtPort.h"
 #include "GOSoundPortaudioPort.h"
 #include "GOSoundJackPort.h"
-#include "GOSound.h"
+#include "sound/GOSound.h"
 #include <wx/intl.h>
 
 const std::vector<wxString> GOSoundPort::c_NoApis;

@@ -4,10 +4,10 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSettingString.h"
+#include "settings/GOSettingString.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 
 GOSettingString::GOSettingString(GOSettingStore* store, wxString group, wxString name, wxString default_value) :
 	GOSetting(store, group, name),

@@ -6,7 +6,7 @@
 
 #include "GOModel.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GODivisionalCoupler.h"
 #include "GOEnclosure.h"
 #include "GOGeneral.h"

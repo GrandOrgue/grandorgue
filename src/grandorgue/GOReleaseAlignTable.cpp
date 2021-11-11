@@ -6,7 +6,7 @@
 
 #include "GOReleaseAlignTable.h"
 
-#include "GOSoundAudioSection.h"
+#include "sound/GOSoundAudioSection.h"
 #include "GOCache.h"
 #include "GOCacheWriter.h"
 #include <stdlib.h>

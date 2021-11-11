@@ -23,8 +23,8 @@
 #define GOFRAME_H
 
 #include "GOEvent.h"
-#include "GOMidiCallback.h"
-#include "GOMidiListener.h"
+#include "midi/GOMidiCallback.h"
+#include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
 #include <vector>
 #include <wx/dcmemory.h>

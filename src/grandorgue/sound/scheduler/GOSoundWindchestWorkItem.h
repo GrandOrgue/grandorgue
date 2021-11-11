@@ -7,7 +7,7 @@
 #ifndef GOSOUNDWINDCHESTWORKITEM_H
 #define GOSOUNDWINDCHESTWORKITEM_H
 
-#include "GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOMutex.h"
 #include "ptrvector.h"
 

@@ -7,8 +7,8 @@
 #ifndef GOSOUNDOUTPUTWORKITEM_H
 #define GOSOUNDOUTPUTWORKITEM_H
 
-#include "GOSoundBufferItem.h"
-#include "GOSoundWorkItem.h"
+#include "sound/GOSoundBufferItem.h"
+#include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOMutex.h"
 #include <vector>
 

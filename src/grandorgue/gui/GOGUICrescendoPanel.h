@@ -7,7 +7,7 @@
 #ifndef GOGUICRESCENDOPANEL_H
 #define GOGUICRESCENDOPANEL_H
 
-#include "GOGUIPanelCreator.h"
+#include "gui/GOGUIPanelCreator.h"
 
 class GOGUIPanel;
 class GODefinitionFile;

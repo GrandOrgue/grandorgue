@@ -6,9 +6,9 @@
 
 #include "SettingsArchives.h"
 
-#include "GOArchiveFile.h"
+#include "archive/GOArchiveFile.h"
 #include "GOOrgan.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "SettingsOrgan.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>

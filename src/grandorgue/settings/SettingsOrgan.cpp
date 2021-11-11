@@ -6,10 +6,10 @@
 
 #include "SettingsOrgan.h"
 
-#include "GOArchiveFile.h"
+#include "archive/GOArchiveFile.h"
 #include "GOOrgan.h"
-#include "GOSettings.h"
-#include "MIDIEventDialog.h"
+#include "settings/GOSettings.h"
+#include "midi/MIDIEventDialog.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
 #include <wx/msgdlg.h>

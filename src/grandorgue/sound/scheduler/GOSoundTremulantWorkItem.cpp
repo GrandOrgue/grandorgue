@@ -6,7 +6,7 @@
 
 #include "GOSoundTremulantWorkItem.h"
 
-#include "GOSoundEngine.h"
+#include "sound/GOSoundEngine.h"
 #include "threading/GOMutexLocker.h"
 
 GOSoundTremulantWorkItem::GOSoundTremulantWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer) :

@@ -4,9 +4,9 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOConfigReaderDB.h"
+#include "config/GOConfigReaderDB.h"
 
-#include "GOConfigFileReader.h"
+#include "config/GOConfigFileReader.h"
 #include <wx/intl.h>
 #include <wx/log.h>
 

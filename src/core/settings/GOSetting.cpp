@@ -4,9 +4,9 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSetting.h"
+#include "settings/GOSetting.h"
 
-#include "GOSettingStore.h"
+#include "settings/GOSettingStore.h"
 
 GOSetting::GOSetting(GOSettingStore* store, wxString group, wxString name) :
 	m_Group(group),

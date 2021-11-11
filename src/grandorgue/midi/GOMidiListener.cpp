@@ -7,8 +7,8 @@
 #include "GOMidiListener.h"
 
 #include "GOMidi.h"
-#include "GOMidiCallback.h"
-#include "GOMidiEvent.h"
+#include "midi/GOMidiCallback.h"
+#include "midi/GOMidiEvent.h"
 
 GOMidiListener::GOMidiListener() :
 	m_Callback(NULL),

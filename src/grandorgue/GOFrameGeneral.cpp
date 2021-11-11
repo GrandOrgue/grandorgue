@@ -6,8 +6,8 @@
 
 #include "GOFrameGeneral.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GODivisional.h"
 #include "GOGeneral.h"
 #include "GOManual.h"

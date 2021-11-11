@@ -7,7 +7,7 @@
 #ifndef GOORGAN_H
 #define GOORGAN_H
 
-#include "GOMidiReceiverBase.h"
+#include "midi/GOMidiReceiverBase.h"
 #include <wx/string.h>
 
 class GOConfigReader;

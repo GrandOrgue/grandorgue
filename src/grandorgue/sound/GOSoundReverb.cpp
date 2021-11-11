@@ -8,7 +8,7 @@
 
 #include "GOSoundResample.h"
 #include "GOStandardFile.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GOWave.h"
 #include "contrib/zita-convolver.h"
 #include <wx/intl.h>

@@ -9,10 +9,10 @@
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GODC.h"
 #include "GOLabel.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOLabel* label) :

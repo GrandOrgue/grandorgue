@@ -10,8 +10,8 @@
 #include "GOMidiListener.h"
 #include "GOMidiRtInPort.h"
 #include "GOMidiRtOutPort.h"
-#include "GOMidiWXEvent.h"
-#include "GOSettings.h"
+#include "midi/GOMidiWXEvent.h"
+#include "settings/GOSettings.h"
 
 BEGIN_EVENT_TABLE(GOMidi, wxEvtHandler)
 	EVT_MIDI(GOMidi::OnMidiEvent)

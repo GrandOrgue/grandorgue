@@ -7,7 +7,7 @@
 #ifndef GOMIDISENDER_H
 #define GOMIDISENDER_H
 
-#include "GOMidiSenderData.h"
+#include "midi/GOMidiSenderData.h"
 
 #include <wx/string.h>
 

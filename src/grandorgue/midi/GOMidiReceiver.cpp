@@ -6,10 +6,10 @@
 
 #include "GOMidiReceiver.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOEnclosure.h"
 #include "GOManual.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 
 GOMidiReceiver::GOMidiReceiver(GODefinitionFile* organfile, MIDI_RECEIVER_TYPE type):

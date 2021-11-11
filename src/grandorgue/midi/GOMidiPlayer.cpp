@@ -7,11 +7,11 @@
 #include "GOMidiPlayer.h"
 
 #include "GOEvent.h"
-#include "GOMidiEvent.h"
-#include "GOMidiMap.h"
-#include "GOMidiFileReader.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiMap.h"
+#include "midi/GOMidiFileReader.h"
 #include "GOSetterButton.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>
 

@@ -4,10 +4,10 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSettingEnum.h"
+#include "settings/GOSettingEnum.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 
 template<class T>
 GOSettingEnum<T>::GOSettingEnum(GOSettingStore* store, wxString group, wxString name, const struct IniFileEnumEntry* entries, unsigned count, T default_value) :

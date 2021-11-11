@@ -6,10 +6,10 @@
 
 #include "GOMidiSender.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
-#include "GOMidiEvent.h"
-#include "GOMidiMap.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiMap.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>
 

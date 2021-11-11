@@ -6,7 +6,7 @@
 
 #include "GOStop.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GORank.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>

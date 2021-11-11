@@ -7,7 +7,7 @@
 #ifndef GOMIDIINPORT_H
 #define GOMIDIINPORT_H
 
-#include "GOMidiMerger.h"
+#include "midi/GOMidiMerger.h"
 #include "ptrvector.h"
 #include <wx/string.h>
 

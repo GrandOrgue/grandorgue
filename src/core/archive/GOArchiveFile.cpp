@@ -6,8 +6,8 @@
 
 #include "GOArchiveFile.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GOHash.h"
 #include "GOOrganList.h"
 #include <wx/filefn.h>

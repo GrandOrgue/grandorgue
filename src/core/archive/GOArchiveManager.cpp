@@ -8,9 +8,9 @@
 
 #include "GOArchive.h"
 #include "GOArchiveFile.h"
-#include "GOConfigFileReader.h"
-#include "GOConfigReader.h"
-#include "GOConfigReaderDB.h"
+#include "config/GOConfigFileReader.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigReaderDB.h"
 #include "GOFile.h"
 #include "GOOrgan.h"
 #include "GOOrganList.h"

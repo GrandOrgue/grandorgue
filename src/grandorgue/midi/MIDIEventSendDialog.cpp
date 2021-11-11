@@ -6,7 +6,7 @@
 
 #include "MIDIEventSendDialog.h"
 
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "MIDIEventRecvDialog.h"
 #include <wx/button.h>
 #include <wx/choice.h>

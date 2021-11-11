@@ -8,11 +8,11 @@
 
 #include "GOEvent.h"
 #include "GOMidi.h"
-#include "GOMidiEvent.h"
-#include "GOMidiFile.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiFile.h"
 #include "GOPath.h"
 #include "GOSetterButton.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 #include <wx/filename.h>
 #include <wx/intl.h>

@@ -7,7 +7,7 @@
 #ifndef GOSETTINGSTRING_H
 #define GOSETTINGSTRING_H
 
-#include "GOSetting.h"
+#include "settings/GOSetting.h"
 
 class GOSettingString : private GOSetting
 {

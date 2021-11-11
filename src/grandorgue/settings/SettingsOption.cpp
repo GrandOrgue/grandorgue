@@ -6,10 +6,10 @@
 
 #include "SettingsOption.h"
 
-#include "GOSoundDefs.h"
+#include "sound/GOSoundDefs.h"
 #include "GOChoice.h"
 #include "go_limits.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/filepicker.h>

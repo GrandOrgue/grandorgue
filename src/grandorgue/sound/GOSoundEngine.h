@@ -8,7 +8,7 @@
 #define GOSOUNDENGINE_H_
 
 #include "GOSoundResample.h"
-#include "GOSoundScheduler.h"
+#include "scheduler/GOSoundScheduler.h"
 #include "GOSoundSamplerPool.h"
 #include <vector>
 

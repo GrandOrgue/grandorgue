@@ -7,7 +7,7 @@
 #ifndef GOCONFIGREADERDB_H
 #define GOCONFIGREADERDB_H
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include <wx/hashmap.h>
 #include <wx/string.h>
 

@@ -6,9 +6,9 @@
 
 #include "SettingsMidiDevices.h"
 
-#include "GOMidi.h"
-#include "GOSettings.h"
-#include "GOSound.h"
+#include "midi/GOMidi.h"
+#include "settings/GOSettings.h"
+#include "sound/GOSound.h"
 #include <wx/button.h>
 #include <wx/checklst.h>
 #include <wx/choice.h>

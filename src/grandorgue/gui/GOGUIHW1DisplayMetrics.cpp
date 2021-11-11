@@ -6,7 +6,7 @@
 
 #include "GOGUIHW1DisplayMetrics.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 
 GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOConfigReader& ini, wxString group) :
 	GOGUIDisplayMetrics()

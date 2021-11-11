@@ -9,7 +9,7 @@
 
 #include "GOLabel.h"
 #include "GOElementCreator.h"
-#include "GOMidiPlayerContent.h"
+#include "midi/GOMidiPlayerContent.h"
 #include "GOTime.h"
 #include "GOTimerCallback.h"
 #include <wx/string.h>

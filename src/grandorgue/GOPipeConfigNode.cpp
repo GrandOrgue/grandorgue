@@ -8,7 +8,7 @@
 
 #include "GOSampleStatistic.h"
 #include "GOStatisticCallback.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 
 GOPipeConfigNode::GOPipeConfigNode(GOPipeConfigNode* parent, GODefinitionFile* organfile, GOPipeUpdateCallback* callback, GOStatisticCallback* statistic) :

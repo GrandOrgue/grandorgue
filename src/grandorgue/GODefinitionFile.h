@@ -8,7 +8,7 @@
 #define GODEFINITIONFILE_H
 
 #include "ptrvector.h"
-#include "GOGUIMouseStateTracker.h"
+#include "gui/GOGUIMouseStateTracker.h"
 #include "GOBitmapCache.h"
 #include "GOCombinationDefinition.h"
 #include "GOEventDistributor.h"

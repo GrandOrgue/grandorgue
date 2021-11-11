@@ -7,8 +7,8 @@
 #include "GOMidiInPort.h"
 
 #include "GOMidi.h"
-#include "GOMidiEvent.h"
-#include "GOMidiMap.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiMap.h"
 #include <wx/intl.h>
 #include <wx/stopwatch.h>
 

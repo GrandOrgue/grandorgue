@@ -10,9 +10,9 @@
 #include "ptrvector.h"
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
-#include "GOMidi.h"
+#include "midi/GOMidi.h"
 #include "GOSoundDevInfo.h"
-#include "GOSoundPortsConfig.h"
+#include "ports/GOSoundPortsConfig.h"
 
 #include "threading/atomic.h"
 #include "threading/GOMutex.h"

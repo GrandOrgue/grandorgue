@@ -6,8 +6,8 @@
 
 #include "GOTool.h"
 
-#include "GOArchiveCreator.h"
-#include "GOSettingDirectory.h"
+#include "archive/GOArchiveCreator.h"
+#include "settings/GOSettingDirectory.h"
 #include "GOStdPath.h"
 #include "go_defs.h"
 #include <wx/filename.h>

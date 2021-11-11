@@ -8,7 +8,7 @@
 #include "GOSoundEngine.h"
 #include "GOSoundProviderWave.h"
 #include "GOSoundRecorder.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"
 #include <wx/app.h>

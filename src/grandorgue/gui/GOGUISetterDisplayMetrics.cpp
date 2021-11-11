@@ -6,7 +6,7 @@
 
 #include "GOGUISetterDisplayMetrics.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOManual.h"
 #include "GODefinitionFile.h"
 #include <algorithm>

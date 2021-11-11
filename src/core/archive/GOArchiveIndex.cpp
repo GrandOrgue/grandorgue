@@ -7,7 +7,7 @@
 #include "GOArchiveIndex.h"
 
 #include "GOHash.h"
-#include "GOSettingDirectory.h"
+#include "settings/GOSettingDirectory.h"
 #include <wx/filename.h>
 #include <wx/log.h>
 

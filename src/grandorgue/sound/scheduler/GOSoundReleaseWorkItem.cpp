@@ -7,7 +7,7 @@
 
 #include "GOSoundReleaseWorkItem.h"
 
-#include "GOSoundEngine.h"
+#include "sound/GOSoundEngine.h"
 #include "GOSoundGroupWorkItem.h"
 
 GOSoundReleaseWorkItem::GOSoundReleaseWorkItem(GOSoundEngine& sound_engine, ptr_vector<GOSoundGroupWorkItem>& audio_groups) :

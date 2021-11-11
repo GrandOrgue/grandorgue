@@ -6,7 +6,7 @@
 
 #include "SettingsDefaults.h"
 
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>

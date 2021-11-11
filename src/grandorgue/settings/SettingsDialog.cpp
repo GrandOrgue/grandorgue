@@ -15,7 +15,7 @@
 #include "SettingsDialog.h"
 
 #include "GOEvent.h"
-#include "GOSound.h"
+#include "sound/GOSound.h"
 #include "go_ids.h"
 #include "SettingsArchives.h"
 #include "SettingsAudioGroup.h"

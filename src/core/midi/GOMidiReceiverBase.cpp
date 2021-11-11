@@ -6,8 +6,8 @@
 
 #include "GOMidiReceiverBase.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GOMidiEvent.h"
 #include "GOMidiMap.h"
 #include "GORodgers.h"

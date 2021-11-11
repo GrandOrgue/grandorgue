@@ -6,8 +6,8 @@
 
 #include "GOKeyReceiver.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GODefinitionFile.h"
 
 GOKeyReceiver::GOKeyReceiver(GODefinitionFile* organfile, KEY_RECEIVER_TYPE type) :

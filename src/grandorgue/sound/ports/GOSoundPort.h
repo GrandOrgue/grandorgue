@@ -7,7 +7,7 @@
 #ifndef GOSOUNDPORT_H
 #define GOSOUNDPORT_H
 
-#include "GOSoundDevInfo.h"
+#include "sound/GOSoundDevInfo.h"
 #include "GOSoundPortsConfig.h"
 
 #include <wx/string.h>

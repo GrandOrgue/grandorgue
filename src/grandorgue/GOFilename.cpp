@@ -6,10 +6,10 @@
 
 #include "GOFilename.h"
 
-#include "GOArchive.h"
+#include "archive/GOArchive.h"
 #include "GOHash.h"
 #include "GOInvalidFile.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GOStandardFile.h"
 #include "GODefinitionFile.h"
 #include <wx/filename.h>

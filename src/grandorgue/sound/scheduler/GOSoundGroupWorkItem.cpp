@@ -6,7 +6,7 @@
 
 #include "GOSoundGroupWorkItem.h"
 
-#include "GOSoundEngine.h"
+#include "sound/GOSoundEngine.h"
 #include "GOSoundWindchestWorkItem.h"
 #include "threading/GOMutexLocker.h"
 

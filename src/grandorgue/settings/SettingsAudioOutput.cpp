@@ -16,9 +16,9 @@
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
 
-#include "GOSettings.h"
-#include "GOSound.h"
-#include "GOSoundPort.h"
+#include "settings/GOSettings.h"
+#include "sound/GOSound.h"
+#include "sound/ports/GOSoundPort.h"
 
 
 class AudioItemData : public wxTreeItemData

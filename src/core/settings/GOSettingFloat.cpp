@@ -4,10 +4,10 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSettingFloat.h"
+#include "settings/GOSettingFloat.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 
 GOSettingFloat::GOSettingFloat(GOSettingStore* store, wxString group, wxString name, float min_value, float max_value, float default_value) :
 	GOSetting(store, group, name),

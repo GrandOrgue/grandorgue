@@ -6,7 +6,7 @@
 
 #include "GOPiston.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOCoupler.h"
 #include "GODrawStop.h"
 #include "GOManual.h"

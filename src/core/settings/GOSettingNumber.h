@@ -7,7 +7,7 @@
 #ifndef GOSETTINGNUMBER_H
 #define GOSETTINGNUMBER_H
 
-#include "GOSetting.h"
+#include "settings/GOSetting.h"
 
 template<class T>
 class GOSettingNumber : private GOSetting

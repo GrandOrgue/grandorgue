@@ -7,8 +7,8 @@
 #ifndef GOSOUNDRELEASEWORKITEM_H
 #define GOSOUNDRELEASEWORKITEM_H
 
-#include "GOSoundSimpleSamplerList.h"
-#include "GOSoundWorkItem.h"
+#include "sound/GOSoundSimpleSamplerList.h"
+#include "sound/scheduler/GOSoundWorkItem.h"
 #include "ptrvector.h"
 
 class GOSoundEngine;

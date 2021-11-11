@@ -6,8 +6,8 @@
 
 #include "GOPanelView.h"
 
-#include "GOGUIPanel.h"
-#include "GOGUIPanelWidget.h"
+#include "gui/GOGUIPanel.h"
+#include "gui/GOGUIPanelWidget.h"
 #include "Images.h"
 #include <wx/display.h>
 #include <wx/frame.h>

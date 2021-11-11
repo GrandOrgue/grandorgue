@@ -7,7 +7,7 @@
 #ifndef GOMIDIRECEIVER_H
 #define GOMIDIRECEIVER_H
 
-#include "GOMidiReceiverBase.h"
+#include "midi/GOMidiReceiverBase.h"
 
 class GODefinitionFile;
 

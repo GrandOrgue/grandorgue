@@ -6,7 +6,7 @@
 
 #include "GOSoundWindchestWorkItem.h"
 
-#include "GOSoundEngine.h"
+#include "sound/GOSoundEngine.h"
 #include "GOSoundTremulantWorkItem.h"
 #include "GOWindchest.h"
 #include "threading/GOMutexLocker.h"

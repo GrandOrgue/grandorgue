@@ -8,9 +8,9 @@
 #define MIDIEVENTRECVDIALOG_H_
 
 #include "GOChoice.h"
-#include "GOMidiCallback.h"
+#include "midi/GOMidiCallback.h"
 #include "GOMidiListener.h"
-#include "GOMidiReceiverBase.h"
+#include "midi/GOMidiReceiverBase.h"
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <vector>

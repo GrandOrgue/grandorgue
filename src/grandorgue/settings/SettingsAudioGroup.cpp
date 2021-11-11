@@ -6,7 +6,7 @@
 
 #include "SettingsAudioGroup.h"
 
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include <wx/button.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>

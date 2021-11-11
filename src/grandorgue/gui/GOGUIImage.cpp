@@ -8,7 +8,7 @@
 
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIPanel.h"
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GODC.h"
 
 GOGUIImage::GOGUIImage(GOGUIPanel* panel) :

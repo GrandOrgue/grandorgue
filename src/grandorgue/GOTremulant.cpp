@@ -6,8 +6,8 @@
 
 #include "GOTremulant.h"
 
-#include "GOSoundProviderSynthedTrem.h"
-#include "GOConfigReader.h"
+#include "sound/GOSoundProviderSynthedTrem.h"
+#include "config/GOConfigReader.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>
 

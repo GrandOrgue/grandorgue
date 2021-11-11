@@ -8,10 +8,10 @@
 
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
-#include "GOGUIMouseState.h"
+#include "gui/GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 #include "GOButton.h"
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GODC.h"
 #include <wx/intl.h>
 

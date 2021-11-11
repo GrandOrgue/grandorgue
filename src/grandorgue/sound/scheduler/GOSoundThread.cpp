@@ -7,7 +7,7 @@
 #include "GOSoundThread.h"
 
 #include "GOSoundScheduler.h"
-#include "GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOMutexLocker.h"
 #include <wx/log.h>
 

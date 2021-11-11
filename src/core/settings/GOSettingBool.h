@@ -7,7 +7,7 @@
 #ifndef GOSETTINGBOOL_H
 #define GOSETTINGBOOL_H
 
-#include "GOSetting.h"
+#include "settings/GOSetting.h"
 
 class GOSettingBool : private GOSetting
 {

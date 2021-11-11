@@ -8,8 +8,8 @@
 #define GODOCUMENT_H
 
 #include "GODocumentBase.h"
-#include "GOMidiCallback.h"
-#include "GOMidiListener.h"
+#include "midi/GOMidiCallback.h"
+#include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
 #include <wx/string.h>
 

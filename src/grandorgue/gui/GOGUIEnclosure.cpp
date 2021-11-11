@@ -4,13 +4,13 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOGUIEnclosure.h"
+#include "gui/GOGUIEnclosure.h"
 
-#include "GOGUIDisplayMetrics.h"
-#include "GOGUILayoutEngine.h"
-#include "GOGUIMouseState.h"
-#include "GOGUIPanel.h"
-#include "GOConfigReader.h"
+#include "gui/GOGUIDisplayMetrics.h"
+#include "gui/GOGUILayoutEngine.h"
+#include "gui/GOGUIMouseState.h"
+#include "gui/GOGUIPanel.h"
+#include "config/GOConfigReader.h"
 #include "GODC.h"
 #include "GOEnclosure.h"
 #include <wx/intl.h>

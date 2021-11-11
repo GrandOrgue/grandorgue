@@ -16,8 +16,8 @@
 #include <wx/treectrl.h>
 #include <wx/treelist.h>
 
-#include "GOSoundDevInfo.h"
-#include "GOSoundPortsConfig.h"
+#include "sound/GOSoundDevInfo.h"
+#include "sound/ports/GOSoundPortsConfig.h"
 #include "SettingsAudioGroup.h"
 
 class AudioItemData;

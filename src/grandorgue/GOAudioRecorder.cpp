@@ -6,11 +6,11 @@
 
 #include "GOAudioRecorder.h"
 
-#include "GOSoundRecorder.h"
+#include "sound/GOSoundRecorder.h"
 #include "GOEvent.h"
 #include "GOPath.h"
 #include "GOSetterButton.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 #include <wx/filename.h>
 #include <wx/intl.h>

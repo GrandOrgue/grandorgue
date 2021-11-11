@@ -7,7 +7,7 @@
 #ifndef GOSETTINGDIRECTORY_H
 #define GOSETTINGDIRECTORY_H
 
-#include "GOSettingString.h"
+#include "settings/GOSettingString.h"
 
 class GOSettingDirectory : public GOSettingString
 {

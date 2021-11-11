@@ -6,7 +6,7 @@
 
 #include "OrganSelectDialog.h"
 
-#include "GOArchiveFile.h"
+#include "archive/GOArchiveFile.h"
 #include "GOOrgan.h"
 #include "GOOrganList.h"
 #include <wx/msgdlg.h>

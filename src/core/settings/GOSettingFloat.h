@@ -7,7 +7,7 @@
 #ifndef GOSETTINGFLOAT_H
 #define GOSETTINGFLOAT_H
 
-#include "GOSetting.h"
+#include "settings/GOSetting.h"
 
 class GOSettingFloat : private GOSetting
 {

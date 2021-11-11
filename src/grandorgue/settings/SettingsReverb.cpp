@@ -7,7 +7,7 @@
 #include "SettingsReverb.h"
 
 #include "GOStandardFile.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GOWave.h"
 #include <wx/button.h>
 #include <wx/checkbox.h>

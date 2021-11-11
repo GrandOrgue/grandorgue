@@ -7,8 +7,8 @@
 #ifndef GOLABEL_H
 #define GOLABEL_H
 
-#include "GOMidiConfigurator.h"
-#include "GOMidiSender.h"
+#include "midi/GOMidiConfigurator.h"
+#include "midi/GOMidiSender.h"
 #include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
 #include <wx/string.h>

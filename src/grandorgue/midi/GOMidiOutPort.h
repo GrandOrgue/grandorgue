@@ -7,7 +7,7 @@
 #ifndef GOMIDIOUTPORT_H
 #define GOMIDIOUTPORT_H
 
-#include "GOMidiOutputMerger.h"
+#include "midi/GOMidiOutputMerger.h"
 #include <wx/string.h>
 #include "ptrvector.h"
 

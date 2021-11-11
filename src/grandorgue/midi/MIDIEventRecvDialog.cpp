@@ -6,9 +6,9 @@
 
 #include "MIDIEventRecvDialog.h"
 
-#include "GOMidiEvent.h"
+#include "midi/GOMidiEvent.h"
 #include "GORodgers.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 #include <wx/button.h>
 #include <wx/choice.h>

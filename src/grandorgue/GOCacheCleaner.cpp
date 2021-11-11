@@ -6,9 +6,9 @@
 
 #include "GOCacheCleaner.h"
 
-#include "GOArchiveFile.h"
+#include "archive/GOArchiveFile.h"
 #include "GOOrgan.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "ptrvector.h"
 #include <wx/arrstr.h>
 #include <wx/dir.h>

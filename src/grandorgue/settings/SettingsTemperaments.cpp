@@ -7,9 +7,9 @@
 #include "SettingsTemperaments.h"
 
 #include "go_limits.h"
-#include "GOTemperamentUser.h"
+#include "temperaments/GOTemperamentUser.h"
 #include "GOTime.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include <wx/button.h>
 #include <wx/grid.h>
 #include <wx/sizer.h>

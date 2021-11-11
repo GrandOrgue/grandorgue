@@ -6,7 +6,7 @@
 
 #include "GOWindchest.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOEnclosure.h"
 #include "GOPipeWindchestCallback.h"
 #include "GOTremulant.h"

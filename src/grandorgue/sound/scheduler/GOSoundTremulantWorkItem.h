@@ -7,8 +7,8 @@
 #ifndef GOSOUNDTREMULANTWORKITEM_H
 #define GOSOUNDTREMULANTWORKITEM_H
 
-#include "GOSoundSamplerList.h"
-#include "GOSoundWorkItem.h"
+#include "sound/GOSoundSamplerList.h"
+#include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOMutex.h"
 
 class GOSoundEngine;
