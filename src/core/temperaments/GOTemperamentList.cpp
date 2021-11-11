@@ -6,8 +6,8 @@
 
 #include "GOTemperamentList.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "go_limits.h"
 #include "GOTemperament.h"
 #include "GOTemperamentCent.h"

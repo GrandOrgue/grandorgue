@@ -200,8 +200,53 @@
           <in>imageconverter.cpp</in>
         </df>
         <df name="core">
+          <df name="archive">
+            <in>GOArchive.cpp</in>
+            <in>GOArchiveCreator.cpp</in>
+            <in>GOArchiveEntryFile.cpp</in>
+            <in>GOArchiveFile.cpp</in>
+            <in>GOArchiveIndex.cpp</in>
+            <in>GOArchiveManager.cpp</in>
+            <in>GOArchiveReader.cpp</in>
+            <in>GOArchiveWriter.cpp</in>
+          </df>
+          <df name="config">
+            <in>GOConfigFileReader.cpp</in>
+            <in>GOConfigFileWriter.cpp</in>
+            <in>GOConfigReader.cpp</in>
+            <in>GOConfigReaderDB.cpp</in>
+            <in>GOConfigWriter.cpp</in>
+          </df>
           <df name="contrib">
             <in>sha1.cpp</in>
+          </df>
+          <df name="midi">
+            <in>GOMidiEvent.cpp</in>
+            <in>GOMidiFileReader.cpp</in>
+            <in>GOMidiMap.cpp</in>
+            <in>GOMidiMerger.cpp</in>
+            <in>GOMidiOutputMerger.cpp</in>
+            <in>GOMidiPlayerContent.cpp</in>
+            <in>GOMidiReceiverBase.cpp</in>
+            <in>GOMidiReceiverData.cpp</in>
+            <in>GOMidiSenderData.cpp</in>
+            <in>GOMidiWXEvent.cpp</in>
+          </df>
+          <df name="settings">
+            <in>GOSetting.cpp</in>
+            <in>GOSettingBool.cpp</in>
+            <in>GOSettingDirectory.cpp</in>
+            <in>GOSettingEnum.cpp</in>
+            <in>GOSettingFile.cpp</in>
+            <in>GOSettingFloat.cpp</in>
+            <in>GOSettingStore.cpp</in>
+            <in>GOSettingString.cpp</in>
+          </df>
+          <df name="temperament">
+            <in>GOTemperament.cpp</in>
+            <in>GOTemperamentCent.cpp</in>
+            <in>GOTemperamentList.cpp</in>
+            <in>GOTemperamentUser.cpp</in>
           </df>
           <df name="threading">
             <in>GOCondition.cpp</in>
@@ -209,21 +254,8 @@
             <in>GOThread.cpp</in>
             <in>GOWaitQueue.cpp</in>
           </df>
-          <in>GOArchive.cpp</in>
-          <in>GOArchiveCreator.cpp</in>
-          <in>GOArchiveEntryFile.cpp</in>
-          <in>GOArchiveFile.cpp</in>
-          <in>GOArchiveIndex.cpp</in>
-          <in>GOArchiveManager.cpp</in>
-          <in>GOArchiveReader.cpp</in>
-          <in>GOArchiveWriter.cpp</in>
           <in>GOBitmap.cpp</in>
           <in>GOCompress.cpp</in>
-          <in>GOConfigFileReader.cpp</in>
-          <in>GOConfigFileWriter.cpp</in>
-          <in>GOConfigReader.cpp</in>
-          <in>GOConfigReaderDB.cpp</in>
-          <in>GOConfigWriter.cpp</in>
           <in>GODC.cpp</in>
           <in>GODocumentBase.cpp</in>
           <in>GOEvent.cpp</in>
@@ -237,36 +269,14 @@
           <in>GOLog.cpp</in>
           <in>GOLogWindow.cpp</in>
           <in>GOMemoryPool.cpp</in>
-          <in>GOMidiEvent.cpp</in>
-          <in>GOMidiFileReader.cpp</in>
-          <in>GOMidiMap.cpp</in>
-          <in>GOMidiMerger.cpp</in>
-          <in>GOMidiOutputMerger.cpp</in>
-          <in>GOMidiPlayerContent.cpp</in>
-          <in>GOMidiReceiverBase.cpp</in>
-          <in>GOMidiReceiverData.cpp</in>
-          <in>GOMidiSenderData.cpp</in>
-          <in>GOMidiWXEvent.cpp</in>
           <in>GOOrgan.cpp</in>
           <in>GOOrganList.cpp</in>
           <in>GOPath.cpp</in>
           <in>GORodgers.cpp</in>
           <in>GOSampleStatistic.cpp</in>
-          <in>GOSetting.cpp</in>
-          <in>GOSettingBool.cpp</in>
-          <in>GOSettingDirectory.cpp</in>
-          <in>GOSettingEnum.cpp</in>
-          <in>GOSettingFile.cpp</in>
-          <in>GOSettingFloat.cpp</in>
-          <in>GOSettingStore.cpp</in>
-          <in>GOSettingString.cpp</in>
           <in>GOSoundTouchWorkItem.cpp</in>
           <in>GOStandardFile.cpp</in>
           <in>GOStdPath.cpp</in>
-          <in>GOTemperament.cpp</in>
-          <in>GOTemperamentCent.cpp</in>
-          <in>GOTemperamentList.cpp</in>
-          <in>GOTemperamentUser.cpp</in>
           <in>GOTimer.cpp</in>
           <in>GOUtil.cpp</in>
           <in>GOView.cpp</in>
@@ -2026,81 +2036,11 @@
         <ccTool flags="1">
         </ccTool>
       </item>
-      <item path="../../src/core/GOArchive.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOArchiveCreator.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOArchiveEntryFile.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOArchiveFile.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOArchiveIndex.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOArchiveManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOArchiveReader.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOArchiveWriter.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
       <item path="../../src/core/GOBitmap.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="3">
         </ccTool>
       </item>
       <item path="../../src/core/GOCompress.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOConfigFileReader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOConfigFileWriter.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOConfigReader.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOConfigReaderDB.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOConfigWriter.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="3">
         </ccTool>
       </item>
@@ -2162,64 +2102,6 @@
         <ccTool flags="3">
         </ccTool>
       </item>
-      <item path="../../src/core/GOMidiEvent.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiFileReader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiMap.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiMerger.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiOutputMerger.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiPlayerContent.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiReceiverBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiReceiverData.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiSenderData.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOMidiWXEvent.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
       <item path="../../src/core/GOOrgan.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="3">
         </ccTool>
@@ -2243,41 +2125,6 @@
         <ccTool flags="3">
         </ccTool>
       </item>
-      <item path="../../src/core/GOSetting.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOSettingBool.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOSettingDirectory.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOSettingEnum.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOSettingFile.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOSettingFloat.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOSettingStore.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOSettingString.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
       <item path="../../src/core/GOSoundTouchWorkItem.cpp"
             ex="false"
             tool="1"
@@ -2290,31 +2137,6 @@
         </ccTool>
       </item>
       <item path="../../src/core/GOStdPath.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOTemperament.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOTemperamentCent.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOTemperamentList.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="3">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOTemperamentUser.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
         <ccTool flags="3">
         </ccTool>
       </item>
@@ -4140,7 +3962,249 @@
         <ccTool flags="3">
         </ccTool>
       </item>
+      <item path="../../src/core/archive/GOArchive.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/archive/GOArchiveCreator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/archive/GOArchiveEntryFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/archive/GOArchiveFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/archive/GOArchiveIndex.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/archive/GOArchiveManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/archive/GOArchiveReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/archive/GOArchiveWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/config/GOConfigFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/config/GOConfigFileWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/config/GOConfigReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/config/GOConfigReaderDB.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/config/GOConfigWriter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
       <item path="../../src/core/contrib/sha1.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiMap.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiMerger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiOutputMerger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiPlayerContent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiReceiverBase.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiReceiverData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiSenderData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiWXEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSetting.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSettingBool.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSettingDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSettingEnum.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSettingFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSettingFloat.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSettingStore.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/settings/GOSettingString.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/temperament/GOTemperament.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/temperament/GOTemperamentCent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/temperament/GOTemperamentList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="3">
+        </ccTool>
+      </item>
+      <item path="../../src/core/temperament/GOTemperamentUser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
         <ccTool flags="3">
         </ccTool>
       </item>

@@ -6,8 +6,8 @@
 
 #include "GOTemperamentUser.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 
 
 GOTemperamentUser::GOTemperamentUser(wxString name, wxString title, wxString group) :
