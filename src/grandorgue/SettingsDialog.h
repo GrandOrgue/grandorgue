@@ -12,7 +12,7 @@
 
 #include "SettingsReason.h"
 
-class GOrgueSound;
+class GOSound;
 class SettingsArchives;
 class SettingsAudioGroup;
 class SettingsAudioOutput;
@@ -31,7 +31,7 @@ private:
     ID_REASONS = 100
   };
   
-  GOrgueSound& m_Sound;
+  GOSound& m_Sound;
   bool m_ReasonsAlreadyShown;
   SettingsReasons *m_Reasons;
   SettingsOption* m_OptionsPage;
@@ -69,7 +69,7 @@ public:
     PAGE_ORGAN_PACKAGES
   } PageSelector;
   
-  SettingsDialog(wxWindow* parent, GOrgueSound& sound, SettingsReasons *reasons);
+  SettingsDialog(wxWindow* parent, GOSound& sound, SettingsReasons *reasons);
 
   bool NeedReload();
   bool NeedRestart();

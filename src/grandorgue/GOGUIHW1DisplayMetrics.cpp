@@ -6,9 +6,9 @@
 
 #include "GOGUIHW1DisplayMetrics.h"
 
-#include "GOrgueConfigReader.h"
+#include "GOConfigReader.h"
 
-GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, wxString group) :
+GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(GOConfigReader& ini, wxString group) :
 	GOGUIDisplayMetrics()
 {
 	if (group.IsEmpty())

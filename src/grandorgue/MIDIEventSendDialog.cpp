@@ -6,7 +6,7 @@
 
 #include "MIDIEventSendDialog.h"
 
-#include "GOrgueSettings.h"
+#include "GOSettings.h"
 #include "MIDIEventRecvDialog.h"
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -22,7 +22,7 @@ BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_CHOICE(ID_EVENT, MIDIEventSendDialog::OnTypeChange)
 END_EVENT_TABLE()
 
-MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* event, MIDIEventRecvDialog* recv, GOrgueSettings& settings):
+MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event, MIDIEventRecvDialog* recv, GOSettings& settings):
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_original(event),
@@ -51,7 +51,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOrgueMidiSender* ev
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Event:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-	m_eventtype = new GOrgueChoice<midi_send_message_type>(this, ID_EVENT);
+	m_eventtype = new GOChoice<midi_send_message_type>(this, ID_EVENT);
 	sizer->Add(m_eventtype, 1, wxEXPAND);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Channel:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);

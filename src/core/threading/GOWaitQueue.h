@@ -22,7 +22,7 @@
   #define GOWAITQUEUE_USE_STD_MUTEX
 #endif
 
-#include "GOrgueThread.h"
+#include "GOThread.h"
 
 class GOWaitQueue
 {

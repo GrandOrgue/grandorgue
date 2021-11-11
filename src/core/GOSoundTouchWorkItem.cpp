@@ -6,10 +6,10 @@
 
 #include "GOSoundTouchWorkItem.h"
 
-#include "GOrgueMemoryPool.h"
+#include "GOMemoryPool.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundTouchWorkItem::GOSoundTouchWorkItem(GOrgueMemoryPool& pool) :
+GOSoundTouchWorkItem::GOSoundTouchWorkItem(GOMemoryPool& pool) :
 	m_Pool(pool),
 	m_Stop(false)
 {

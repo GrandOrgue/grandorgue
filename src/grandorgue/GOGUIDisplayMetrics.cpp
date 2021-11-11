@@ -216,12 +216,12 @@ bool GOGUIDisplayMetrics::HasDrawstopOuterColOffsetUp()
 	return m_DispDrawstopOuterColOffsetUp;
 }
 
-GOrgueFont GOGUIDisplayMetrics::GetControlLabelFont()
+GOFont GOGUIDisplayMetrics::GetControlLabelFont()
 {
 	return m_ControlLabelFont;
 }
 
-GOrgueFont GOGUIDisplayMetrics::GetGroupLabelFont()
+GOFont GOGUIDisplayMetrics::GetGroupLabelFont()
 {
 	return m_GroupLabelFont;
 }

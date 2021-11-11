@@ -6,10 +6,10 @@
 
 #include "SettingsTemperaments.h"
 
-#include "GOrgueLimits.h"
-#include "GOrgueTemperamentUser.h"
-#include "GOrgueTime.h"
-#include "GOrgueSettings.h"
+#include "go_limits.h"
+#include "GOTemperamentUser.h"
+#include "GOTime.h"
+#include "GOSettings.h"
 #include <wx/button.h>
 #include <wx/grid.h>
 #include <wx/sizer.h>
@@ -21,7 +21,7 @@ BEGIN_EVENT_TABLE(SettingsTemperaments, wxPanel)
 	EVT_BUTTON(ID_DEL, SettingsTemperaments::OnDel)
 END_EVENT_TABLE()
 
-SettingsTemperaments::SettingsTemperaments(GOrgueSettings& settings, wxWindow* parent) :
+SettingsTemperaments::SettingsTemperaments(GOSettings& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Temperaments(settings.GetTemperaments()),
 	m_Ptrs()
@@ -68,7 +68,7 @@ SettingsTemperaments::SettingsTemperaments(GOrgueSettings& settings, wxWindow* p
 
 	for(unsigned i = 0; i < m_Temperaments.GetUserTemperaments().size(); i++)
 	{
-		GOrgueTemperamentUser* t = m_Temperaments.GetUserTemperaments()[i];
+		GOTemperamentUser* t = m_Temperaments.GetUserTemperaments()[i];
 
 		unsigned row = m_List->GetNumberRows();
 		m_Ptrs.push_back(t);
@@ -134,7 +134,7 @@ void SettingsTemperaments::Update()
 
 void SettingsTemperaments::Save()
 {
-	ptr_vector<GOrgueTemperamentUser>& list = m_Temperaments.GetUserTemperaments();
+	ptr_vector<GOTemperamentUser>& list = m_Temperaments.GetUserTemperaments();
 	for(unsigned i = 0; i < list.size(); i++)
 	{
 		bool found = false;
@@ -151,7 +151,7 @@ void SettingsTemperaments::Save()
 	for(unsigned i = 0; i < m_Ptrs.size(); i++)
 	{
 		if (!m_Ptrs[i])
-			m_Ptrs[i] = new GOrgueTemperamentUser(wxString::Format(wxT("UserTemperament%d-%d"), time, i), m_List->GetCellValue(i, 1), m_List->GetCellValue(i, 0));
+			m_Ptrs[i] = new GOTemperamentUser(wxString::Format(wxT("UserTemperament%d-%d"), time, i), m_List->GetCellValue(i, 1), m_List->GetCellValue(i, 0));
 
 		m_Ptrs[i]->SetTitle(m_List->GetCellValue(i, 1));
 		m_Ptrs[i]->SetGroup(m_List->GetCellValue(i, 0));

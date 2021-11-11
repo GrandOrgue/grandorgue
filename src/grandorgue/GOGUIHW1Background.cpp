@@ -6,7 +6,7 @@
 
 #include "GOGUIHW1Background.h"
 
-#include "GOrgueDC.h"
+#include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
@@ -17,7 +17,7 @@ GOGUIHW1Background::GOGUIHW1Background(GOGUIPanel* panel):
 {
 }
 
-void GOGUIHW1Background::Init(GOrgueConfigReader& cfg, wxString group)
+void GOGUIHW1Background::Init(GOConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Init(cfg, group);
 }
@@ -72,13 +72,13 @@ void GOGUIHW1Background::Layout()
 	}
 }
 
-void GOGUIHW1Background::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUIHW1Background::PrepareDraw(double scale, GOBitmap* background)
 {
 	for(unsigned i = 0; i < m_Images.size(); i++)
 		m_Images[i].bmp.PrepareTileBitmap(scale, m_Images[i].rect, 0, 0, background);
 }
 
-void GOGUIHW1Background::Draw(GOrgueDC& dc)
+void GOGUIHW1Background::Draw(GODC& dc)
 {
 	for(unsigned i = 0; i < m_Images.size(); i++)
 		dc.DrawBitmap(m_Images[i].bmp, m_Images[i].rect);

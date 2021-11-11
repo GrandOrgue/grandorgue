@@ -12,12 +12,12 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GOrgueDivisional.h"
-#include "GOrgueManual.h"
-#include "GrandOrgueFile.h"
+#include "GODivisional.h"
+#include "GOManual.h"
+#include "GODefinitionFile.h"
 #include <wx/intl.h>
 
-GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GrandOrgueFile* organfile) :
+GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GODefinitionFile* organfile) :
 	m_organfile(organfile)
 {
 }
@@ -26,12 +26,12 @@ GOGUIDivisionalsPanel:: ~GOGUIDivisionalsPanel()
 {
 }
 
-void GOGUIDivisionalsPanel::CreatePanels(GOrgueConfigReader& cfg)
+void GOGUIDivisionalsPanel::CreatePanels(GOConfigReader& cfg)
 {
 	m_organfile->AddPanel(CreateDivisionalsPanel(cfg));
 }
 
-GOGUIPanel* GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOrgueConfigReader& cfg)
+GOGUIPanel* GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader& cfg)
 {
 	GOGUIButton* button;
 
@@ -67,7 +67,7 @@ GOGUIPanel* GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOrgueConfigReader& cf
 	for (unsigned int i = m_organfile->GetFirstManualIndex(); i < m_organfile->GetODFManualCount(); i++)
 	{
 		int x, y;
-		GOrgueManual* manual = m_organfile->GetManual(i);
+		GOManual* manual = m_organfile->GetManual(i);
 
 		panel->GetLayoutEngine()->GetPushbuttonBlitPosition(100 + i, 1, x, y);
 
@@ -77,7 +77,7 @@ GOGUIPanel* GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOrgueConfigReader& cf
 
 		for(unsigned j = 0; j < 10; j++)
 		{
-			GOrgueDivisional* divisional = new GOrgueDivisional(m_organfile, manual->GetDivisionalTemplate(), true);
+			GODivisional* divisional = new GODivisional(m_organfile, manual->GetDivisionalTemplate(), true);
 			divisional->Init(cfg, wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100), i, 100 + j, wxString::Format(wxT("%d"), j + 1));
 			manual->AddDivisional(divisional);
 

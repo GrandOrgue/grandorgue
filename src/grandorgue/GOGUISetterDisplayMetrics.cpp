@@ -6,12 +6,12 @@
 
 #include "GOGUISetterDisplayMetrics.h"
 
-#include "GOrgueConfigReader.h"
-#include "GOrgueManual.h"
-#include "GrandOrgueFile.h"
+#include "GOConfigReader.h"
+#include "GOManual.h"
+#include "GODefinitionFile.h"
 #include <algorithm>
 
-GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type) :
+GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(GOConfigReader& ini, GODefinitionFile* organfile, GOGUISetterType type) :
 	GOGUIDisplayMetrics()
 {
 	unsigned x_size, y_size;

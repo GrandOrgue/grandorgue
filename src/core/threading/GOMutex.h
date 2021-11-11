@@ -16,7 +16,7 @@
 #include "GOWaitQueue.h"
 #endif
 
-#include "GOrgueThread.h"
+#include "GOThread.h"
 
 class GOMutex
 {
@@ -47,7 +47,7 @@ public:
   std::timed_mutex& GetTimedMutex() { return m_mutex; };
 #endif
 
-  bool LockOrStop(const char* lockerInfo = NULL, GOrgueThread *pThread = NULL);
+  bool LockOrStop(const char* lockerInfo = NULL, GOThread *pThread = NULL);
   void Lock(const char* lockerInfo = NULL) { LockOrStop(lockerInfo, NULL); }
   void Unlock();
   bool TryLock(const char* lockerInfo = NULL);

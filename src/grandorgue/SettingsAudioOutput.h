@@ -16,12 +16,12 @@
 #include <wx/treectrl.h>
 #include <wx/treelist.h>
 
-#include "GOrgueSoundDevInfo.h"
-#include "GOrgueSoundPortsConfig.h"
+#include "GOSoundDevInfo.h"
+#include "GOSoundPortsConfig.h"
 #include "SettingsAudioGroup.h"
 
 class AudioItemData;
-class GOrgueSound;
+class GOSound;
 
 class SettingsAudioOutput : public wxPanel
 {
@@ -38,10 +38,10 @@ class SettingsAudioOutput : public wxPanel
 	};
 
 private:
-	GOrgueSound& m_Sound;
-	GOrgueSettings& m_Settings;
+	GOSound& m_Sound;
+	GOSettings& m_Settings;
 	GOAudioGroupCallback& m_GroupCallback;
-	GOrgueSoundPortsConfig m_SoundPortsConfig;
+	GOSoundPortsConfig m_SoundPortsConfig;
 	
 	wxChoice* m_SampleRate;
 	wxSpinCtrl* m_SamplesPerBuffer;
@@ -54,14 +54,14 @@ private:
 	wxButton* m_Properties;
 	wxButton* m_Default;
 	
-	GOrgueSoundPortsConfig m_PortsConfigPopulatedWith;
-	std::vector<GOrgueSoundDevInfo> m_DeviceList;
+	GOSoundPortsConfig m_PortsConfigPopulatedWith;
+	std::vector<GOSoundDevInfo> m_DeviceList;
 	
 	bool GetPortItemChecked(
 	  const wxString &portName, const wxString& apiName = wxEmptyString
 	) const;
 	void SetPortItemChecked(wxTreeListItem item, bool isChecked);
-	GOrgueSoundPortsConfig & RenewSoundPortsConfig();
+	GOSoundPortsConfig & RenewSoundPortsConfig();
 
 	AudioItemData* GetObject(const wxTreeItemId& id);
 	wxTreeItemId GetDeviceNode(const wxString& name);
@@ -88,7 +88,7 @@ private:
 	void OnOutputDefault(wxCommandEvent& event);
 
 public:
-	SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallback& callback, wxWindow* parent);
+	SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& callback, wxWindow* parent);
 
 	void Save();
 

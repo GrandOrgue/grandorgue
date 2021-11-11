@@ -10,17 +10,17 @@
 #include "GOSoundWorkItem.h"
 #include "threading/GOMutex.h"
 
-class GOrgueMemoryPool;
+class GOMemoryPool;
 
 class GOSoundTouchWorkItem : public GOSoundWorkItem
 {
 private:
-	GOrgueMemoryPool& m_Pool;
+	GOMemoryPool& m_Pool;
 	GOMutex m_Mutex;
 	bool m_Stop;
 
 public:
-	GOSoundTouchWorkItem(GOrgueMemoryPool& pool);
+	GOSoundTouchWorkItem(GOMemoryPool& pool);
 
 	unsigned GetGroup();
 	unsigned GetCost();

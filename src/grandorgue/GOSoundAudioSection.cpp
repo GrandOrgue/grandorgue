@@ -6,14 +6,14 @@
 
 #include "GOSoundAudioSection.h"
 
-#include "GOrgueAlloc.h"
+#include "GOAlloc.h"
 #include "GOSoundCompress.h"
 #include "GOSoundResample.h"
-#include "GOrgueCache.h"
-#include "GOrgueCacheWriter.h"
-#include "GOrgueMemoryPool.h"
-#include "GOrgueReleaseAlignTable.h"
-#include "GOrgueSampleStatistic.h"
+#include "GOCache.h"
+#include "GOCacheWriter.h"
+#include "GOMemoryPool.h"
+#include "GOReleaseAlignTable.h"
+#include "GOSampleStatistic.h"
 #include <wx/intl.h>
 
 #ifndef M_PI
@@ -28,7 +28,7 @@ static unsigned limited_diff(unsigned a, unsigned b)
 		return 0;
 }
 
-GOAudioSection::GOAudioSection(GOrgueMemoryPool& pool):
+GOAudioSection::GOAudioSection(GOMemoryPool& pool):
 	m_Data(NULL),
 	m_ReleaseAligner(NULL),
 	m_ReleaseStartSegment(0),
@@ -71,7 +71,7 @@ void GOAudioSection::ClearData()
 	m_StartSegments.clear();
 }
 
-bool GOAudioSection::LoadCache(GOrgueCache& cache)
+bool GOAudioSection::LoadCache(GOCache& cache)
 {
 	if (!cache.Read(&m_AllocSize, sizeof(m_AllocSize)))
 		return false;
@@ -141,7 +141,7 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 	m_ReleaseAligner = NULL;
 	if (load_align_tracker)
 	{
-		m_ReleaseAligner = new GOrgueReleaseAlignTable();
+		m_ReleaseAligner = new GOReleaseAlignTable();
 		if (!m_ReleaseAligner->Load(cache))
 			return false;
 	}
@@ -149,7 +149,7 @@ bool GOAudioSection::LoadCache(GOrgueCache& cache)
 	return true;
 }
 
-bool GOAudioSection::SaveCache(GOrgueCacheWriter& cache) const
+bool GOAudioSection::SaveCache(GOCacheWriter& cache) const
 {
 	if (!cache.Write(&m_AllocSize, sizeof(m_AllocSize)))
 		return false;
@@ -544,21 +544,21 @@ bool GOAudioSection::ReadBlock(audio_section_stream *stream, float *buffer, unsi
 
 static
 inline
-unsigned wave_bits_per_sample(GOrgueWave::SAMPLE_FORMAT format)
+unsigned wave_bits_per_sample(GOWave::SAMPLE_FORMAT format)
 {
 	switch (format)
 	{
-	case GOrgueWave::SF_SIGNEDBYTE_8:
+	case GOWave::SF_SIGNEDBYTE_8:
 		return 8;
-	case GOrgueWave::SF_SIGNEDSHORT_12:
+	case GOWave::SF_SIGNEDSHORT_12:
 		return 12;
-	case GOrgueWave::SF_SIGNEDSHORT_16:
+	case GOWave::SF_SIGNEDSHORT_16:
 		return 16;
-	case GOrgueWave::SF_SIGNEDINT24_20:
+	case GOWave::SF_SIGNEDINT24_20:
 		return 20;
-	case GOrgueWave::SF_SIGNEDINT24_24:
+	case GOWave::SF_SIGNEDINT24_24:
 		return 24;
-	case GOrgueWave::SF_IEEE_FLOAT:
+	case GOWave::SF_IEEE_FLOAT:
 		return 32;
 	default:
 		assert(0 && "bad sample format enumeration");
@@ -567,7 +567,7 @@ unsigned wave_bits_per_sample(GOrgueWave::SAMPLE_FORMAT format)
 }
 
 static inline
-unsigned wave_bytes_per_sample(GOrgueWave::SAMPLE_FORMAT format)
+unsigned wave_bytes_per_sample(GOWave::SAMPLE_FORMAT format)
 {
 	return (wave_bits_per_sample(format) + 7) / 8;
 }
@@ -642,7 +642,7 @@ void GOAudioSection::DoCrossfade(unsigned char* dest, unsigned dest_offset, cons
 			}
 }
 
-void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT pcm_data_format, const unsigned pcm_data_channels, const unsigned pcm_data_sample_rate, const unsigned pcm_data_nb_samples, 
+void GOAudioSection::Setup(const void *pcm_data, const GOWave::SAMPLE_FORMAT pcm_data_format, const unsigned pcm_data_channels, const unsigned pcm_data_sample_rate, const unsigned pcm_data_nb_samples, 
 			   const std::vector<GO_WAVE_LOOP> *loop_points, bool compress, unsigned crossfade_length)
 {
 	if (pcm_data_channels < 1 || pcm_data_channels > 2)
@@ -717,7 +717,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 			end_seg.end_ptr = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
 			if (!end_seg.end_data)
-				throw GOrgueOutOfMemory();
+				throw GOOutOfMemory();
 
 			const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
 
@@ -756,7 +756,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 		const unsigned copy_len = 1 + end_seg.end_offset - end_seg.transition_offset;
 
 		if (!end_seg.end_data)
-			throw GOrgueOutOfMemory();
+			throw GOOutOfMemory();
 
 		memcpy (end_seg.end_data, ((const unsigned char*)pcm_data) + end_seg.transition_offset * m_BytesPerSample, copy_len * m_BytesPerSample);
 		memset (((unsigned char*)end_seg.end_data) + copy_len * m_BytesPerSample, 0, (end_length - copy_len) * m_BytesPerSample);
@@ -770,7 +770,7 @@ void GOAudioSection::Setup(const void *pcm_data, const GOrgueWave::SAMPLE_FORMAT
 	m_AllocSize = total_alloc_samples * m_BytesPerSample;
 	m_Data = (unsigned char*)m_Pool.Alloc(m_AllocSize, !compress);
 	if (m_Data == NULL)
-		throw GOrgueOutOfMemory();
+		throw GOOutOfMemory();
 	m_SampleRate     = pcm_data_sample_rate;
 	m_SampleCount    = total_alloc_samples;
 	m_SampleFracBits = m_BitsPerSample - 1;
@@ -791,7 +791,7 @@ void GOAudioSection::Compress(bool format16)
 {
 	unsigned char* data = (unsigned char*)m_Pool.Alloc(m_AllocSize, false);
 	if (data == NULL)
-		throw GOrgueOutOfMemory();
+		throw GOOutOfMemory();
 
 	unsigned output_len = 0;
 	DecompressionCache state;
@@ -835,7 +835,7 @@ void GOAudioSection::Compress(bool format16)
 				m_Pool.Free(data);
 				m_Data = (unsigned char*)m_Pool.MoveToPool(m_Data, m_AllocSize);
 				if (m_Data == NULL)
-					throw GOrgueOutOfMemory();
+					throw GOOutOfMemory();
 				return;
 			}
 		}
@@ -897,7 +897,7 @@ void GOAudioSection::Compress(bool format16)
 
 	m_Data = (unsigned char*)m_Pool.MoveToPool(m_Data, m_AllocSize);
 	if (m_Data == NULL)
-		throw GOrgueOutOfMemory();
+		throw GOOutOfMemory();
 }
 
 void GOAudioSection::SetupStreamAlignment(const std::vector<const GOAudioSection*> &joinables, unsigned start_index)
@@ -925,7 +925,7 @@ void GOAudioSection::SetupStreamAlignment(const std::vector<const GOAudioSection
 
 	if ((max_derivative != 0) && (max_amplitude != 0))
 	{
-		m_ReleaseAligner = new GOrgueReleaseAlignTable();
+		m_ReleaseAligner = new GOReleaseAlignTable();
 		m_ReleaseAligner->ComputeTable
 			(*this
 			,max_amplitude
@@ -1039,9 +1039,9 @@ void GOAudioSection::GetHistory(const audio_section_stream *stream, int history[
 	}
 }
 
-GOrgueSampleStatistic GOAudioSection::GetStatistic()
+GOSampleStatistic GOAudioSection::GetStatistic()
 {
-	GOrgueSampleStatistic stat;
+	GOSampleStatistic stat;
 
 	size_t size = 0;
 	for (unsigned i = 0; i < m_EndSegments.size(); i++)

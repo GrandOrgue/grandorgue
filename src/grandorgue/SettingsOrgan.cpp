@@ -6,9 +6,9 @@
 
 #include "SettingsOrgan.h"
 
-#include "GOrgueArchiveFile.h"
-#include "GOrgueOrgan.h"
-#include "GOrgueSettings.h"
+#include "GOArchiveFile.h"
+#include "GOOrgan.h"
+#include "GOSettings.h"
 #include "MIDIEventDialog.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
@@ -24,7 +24,7 @@ BEGIN_EVENT_TABLE(SettingsOrgan, wxPanel)
 	EVT_BUTTON(ID_PROPERTIES, SettingsOrgan::OnProperties)
 END_EVENT_TABLE()
 
-SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent) :
+SettingsOrgan::SettingsOrgan(GOSettings& settings, GOMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_midi(midi)
@@ -56,7 +56,7 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 
 	for(unsigned i = 0; i < m_Settings.GetOrganList().size(); i++)
 	{
-		GOrgueOrgan* o = m_Settings.GetOrganList()[i];
+		GOOrgan* o = m_Settings.GetOrganList()[i];
 		wxString title = o->GetChurchName();
 		if (!o->IsUsable(m_Settings))
 			title = _("MISSING - ") + title;
@@ -68,7 +68,7 @@ SettingsOrgan::SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindo
 		m_Organs->SetItem(i, 5, o->GetODFPath());
 		if (o->GetArchiveID() != wxEmptyString)
 		{
-			const GOrgueArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
+			const GOArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
 			m_Organs->SetItem(i, 4, a ? a->GetName() : o->GetArchiveID());
 		}
 	}
@@ -166,24 +166,24 @@ void SettingsOrgan::OnDel(wxCommandEvent& event)
 
 void SettingsOrgan::OnProperties(wxCommandEvent& event)
 {
-	GOrgueOrgan* o = (GOrgueOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
+	GOOrgan* o = (GOOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
 	MIDIEventDialog dlg(NULL, this, wxString::Format(_("MIDI settings for organ %s"), o->GetChurchName().c_str()), m_Settings, &o->GetMIDIReceiver(), NULL, NULL);
 	dlg.RegisterMIDIListener(&m_midi);
 	dlg.ShowModal();
 	m_Organs->SetItem(m_Organs->GetFirstSelected(), 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No") );
 }
 
-std::vector<const GOrgueOrgan*> SettingsOrgan::GetOrgans()
+std::vector<const GOOrgan*> SettingsOrgan::GetOrgans()
 {
-	std::vector<const GOrgueOrgan*> list;
+	std::vector<const GOOrgan*> list;
 	for(long j = 0; j < m_Organs->GetItemCount(); j++)
-		list.push_back((const GOrgueOrgan*)m_Organs->GetItemData(j));
+		list.push_back((const GOOrgan*)m_Organs->GetItemData(j));
 	return list;
 }
 
 void SettingsOrgan::Save()
 {
-	ptr_vector<GOrgueOrgan>& list = m_Settings.GetOrganList();
+	ptr_vector<GOOrgan>& list = m_Settings.GetOrganList();
 	for(unsigned i = 0; i < list.size(); i++)
 	{
 		bool found = false;
@@ -196,5 +196,5 @@ void SettingsOrgan::Save()
 	}
 	list.clear();
 	for(long i = 0; i < m_Organs->GetItemCount(); i++)
-		list.push_back((GOrgueOrgan*)m_Organs->GetItemData(i));
+		list.push_back((GOOrgan*)m_Organs->GetItemData(i));
 }

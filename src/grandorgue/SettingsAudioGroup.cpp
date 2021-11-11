@@ -6,7 +6,7 @@
 
 #include "SettingsAudioGroup.h"
 
-#include "GOrgueSettings.h"
+#include "GOSettings.h"
 #include <wx/button.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>
@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(SettingsAudioGroup, wxPanel)
 	EVT_BUTTON(ID_AUDIOGROUP_CHANGE, SettingsAudioGroup::OnGroupChange)
 END_EVENT_TABLE()
 
-SettingsAudioGroup::SettingsAudioGroup(GOrgueSettings& settings, wxWindow* parent) :
+SettingsAudioGroup::SettingsAudioGroup(GOSettings& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {

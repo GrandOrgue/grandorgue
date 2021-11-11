@@ -13,7 +13,7 @@
 #include <vector>
 
 class GOSoundReverb;
-class GOrgueSettings;
+class GOSettings;
 
 class GOSoundOutputWorkItem : public GOSoundWorkItem, public GOSoundBufferItem
 {
@@ -43,7 +43,7 @@ public:
 	void Clear();
 	void Reset();
 
-	void SetupReverb(GOrgueSettings& settings);
+	void SetupReverb(GOSettings& settings);
 
 	const std::vector<float>& GetMeterInfo();
 	void ResetMeterInfo();

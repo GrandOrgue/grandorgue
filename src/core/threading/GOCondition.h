@@ -17,7 +17,7 @@
 #endif
 
 #include "GOMutex.h"
-#include "GOrgueThread.h"
+#include "GOThread.h"
 
 class GOCondition
 {
@@ -42,7 +42,7 @@ private:
   GOCondition(const GOCondition&) = delete;
   const GOCondition& operator=(const GOCondition&) = delete;
 
-  unsigned DoWait(bool isWithTimeout, const char* waiterInfo, GOrgueThread *pThread);
+  unsigned DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *pThread);
 public:
   GOCondition(GOMutex& mutex);
   ~GOCondition();
@@ -53,7 +53,7 @@ public:
    * After return tries to reaqquire mutex lock
    * @return the bit combination of SIGNAL_RECEIVED and MUTEX_RELOCKED
    */
-  unsigned WaitOrStop(const char* waiterInfo = NULL, GOrgueThread* pThread = NULL);
+  unsigned WaitOrStop(const char* waiterInfo = NULL, GOThread* pThread = NULL);
   void Wait() { WaitOrStop(NULL, NULL); }
   void Signal();
   void Broadcast();

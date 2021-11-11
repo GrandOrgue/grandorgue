@@ -10,9 +10,9 @@
 #include <vector>
 #include <wx/panel.h>
 
-class GOrgueSettings;
-class GOrgueTemperamentList;
-class GOrgueTemperamentUser;
+class GOSettings;
+class GOTemperamentList;
+class GOTemperamentUser;
 class wxButton;
 class wxGrid;
 class wxGridEvent;
@@ -25,8 +25,8 @@ class SettingsTemperaments : public wxPanel
 		ID_DEL,
 	};
 private:
-	GOrgueTemperamentList& m_Temperaments;
-	std::vector<GOrgueTemperamentUser*> m_Ptrs;
+	GOTemperamentList& m_Temperaments;
+	std::vector<GOTemperamentUser*> m_Ptrs;
 	wxGrid* m_List;
 	wxButton* m_Add;
 	wxButton* m_Del;
@@ -38,7 +38,7 @@ private:
 	void Update();
 
 public:
-	SettingsTemperaments(GOrgueSettings& settings, wxWindow* parent);
+	SettingsTemperaments(GOSettings& settings, wxWindow* parent);
 
 	void Save();
 	

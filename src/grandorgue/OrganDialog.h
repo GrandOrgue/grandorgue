@@ -7,12 +7,12 @@
 #ifndef ORGANDIALOG_H_
 #define ORGANDIALOG_H_
 
-#include "GOrgueView.h"
+#include "GOView.h"
 #include <wx/dialog.h>
 #include <vector>
 
-class GOrguePipeConfigNode;
-class GrandOrgueFile;
+class GOPipeConfigNode;
+class GODefinitionFile;
 class OrganTreeItemData;
 class wxButton;
 class wxCheckBox;
@@ -26,10 +26,10 @@ class wxTreeCtrl;
 class wxTreeEvent;
 class wxTreeItemId;
 
-class OrganDialog : public wxDialog, public GOrgueView
+class OrganDialog : public wxDialog, public GOView
 {
 private:
-	GrandOrgueFile* m_organfile;
+	GODefinitionFile* m_organfile;
 	wxTreeCtrl* m_Tree;
 	wxTextCtrl* m_Amplitude;
 	wxSpinButton* m_AmplitudeSpin;
@@ -75,7 +75,7 @@ private:
 	void SetEmpty(wxChoice* choice);
 	void RemoveEmpty(wxChoice* choice);
 	void UpdateAudioGroup(std::vector<wxString> audio_group, unsigned& pos, wxTreeItemId item);
-	void FillTree(wxTreeItemId parent, GOrguePipeConfigNode& config);
+	void FillTree(wxTreeItemId parent, GOPipeConfigNode& config);
 	void CloseTree(wxTreeItemId parent);
 
 	void OnTreeChanging(wxTreeEvent& e);
@@ -132,7 +132,7 @@ protected:
 	};
 
 public:
-	OrganDialog (GOrgueDocumentBase* doc, wxWindow* parent, GrandOrgueFile* organfile);
+	OrganDialog (GODocumentBase* doc, wxWindow* parent, GODefinitionFile* organfile);
 	~OrganDialog();
 
 	bool Destroy();

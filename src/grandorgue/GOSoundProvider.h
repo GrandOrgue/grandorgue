@@ -8,13 +8,13 @@
 #define GOSOUNDPROVIDER_H_
 
 #include "ptrvector.h"
-#include "GOrgueStatisticCallback.h"
+#include "GOStatisticCallback.h"
 #include <vector>
 
 class GOAudioSection;
-class GOrgueCache;
-class GOrgueCacheWriter;
-class GOrgueMemoryPool;
+class GOCache;
+class GOCacheWriter;
+class GOMemoryPool;
 
 typedef struct audio_section_stream_s audio_section_stream;
 
@@ -31,7 +31,7 @@ typedef struct
 	unsigned max_playback_time;
 } release_section_info;
 
-class GOSoundProvider : public GOrgueStatisticCallback
+class GOSoundProvider : public GOStatisticCallback
 {
 
 protected:
@@ -44,20 +44,20 @@ protected:
 	std::vector<attack_section_info> m_AttackInfo;
 	ptr_vector<GOAudioSection> m_Release;
 	std::vector<release_section_info> m_ReleaseInfo;
-	GOrgueMemoryPool &m_pool;
+	GOMemoryPool &m_pool;
 	void ComputeReleaseAlignmentInfo();
 	float m_VelocityVolumeBase;
 	float m_VelocityVolumeIncrement;
 	unsigned m_ReleaseCrossfadeLength;
 
 public:
-	GOSoundProvider(GOrgueMemoryPool& pool);
+	GOSoundProvider(GOMemoryPool& pool);
 	virtual ~GOSoundProvider();
 
 	void ClearData();
 
-	virtual bool LoadCache(GOrgueCache& cache);
-	virtual bool SaveCache(GOrgueCacheWriter& cache);
+	virtual bool LoadCache(GOCache& cache);
+	virtual bool SaveCache(GOCacheWriter& cache);
 
 	void UseSampleGroup(unsigned sample_group);
 	void SetVelocityParameter(float min_volume, float max_volume);
@@ -81,7 +81,7 @@ public:
 	bool checkMissingRelease();
 	bool checkNotNecessaryRelease();
 
-	GOrgueSampleStatistic GetStatistic();
+	GOSampleStatistic GetStatistic();
 };
 
 inline

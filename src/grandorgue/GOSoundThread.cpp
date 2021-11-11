@@ -12,7 +12,7 @@
 #include <wx/log.h>
 
 GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler):
-	GOrgueThread(),
+	GOThread(),
 	m_Scheduler(scheduler),
 	m_Condition(m_Mutex)
 {

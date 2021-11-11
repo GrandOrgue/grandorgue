@@ -9,7 +9,7 @@
 
 #include <wx/panel.h>
 
-class GOrgueSettings;
+class GOSettings;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
@@ -27,7 +27,7 @@ class SettingsDefaults : public wxPanel
 		ID_VOLUME,
 	};
 private:
-	GOrgueSettings& m_Settings;
+	GOSettings& m_Settings;
 	wxDirPickerCtrl* m_OrganPath;
 	wxDirPickerCtrl* m_OrganPackagePath;
 	wxDirPickerCtrl* m_SettingPath;
@@ -39,7 +39,7 @@ private:
 	wxSpinCtrl* m_Volume;
 
 public:
-	SettingsDefaults(GOrgueSettings& settings, wxWindow* parent);
+	SettingsDefaults(GOSettings& settings, wxWindow* parent);
 
 	void Save();
 };

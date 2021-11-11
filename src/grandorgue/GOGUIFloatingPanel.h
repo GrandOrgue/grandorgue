@@ -10,20 +10,20 @@
 #include "GOGUIPanelCreator.h"
 
 class GOGUIPanel;
-class GrandOrgueFile;
+class GODefinitionFile;
 
 class GOGUIFloatingPanel : public GOGUIPanelCreator
 {
 private:
-	GrandOrgueFile* m_organfile;
+	GODefinitionFile* m_organfile;
 
-	GOGUIPanel* CreateFloatingPanel(GOrgueConfigReader& cfg);
+	GOGUIPanel* CreateFloatingPanel(GOConfigReader& cfg);
 
 public:
-	GOGUIFloatingPanel(GrandOrgueFile* organfile);
+	GOGUIFloatingPanel(GODefinitionFile* organfile);
 	~GOGUIFloatingPanel();
 
-	void CreatePanels(GOrgueConfigReader& cfg);
+	void CreatePanels(GOConfigReader& cfg);
 };
 
 #endif

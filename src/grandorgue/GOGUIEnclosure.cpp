@@ -10,12 +10,12 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "GOrgueConfigReader.h"
-#include "GOrgueDC.h"
-#include "GOrgueEnclosure.h"
+#include "GOConfigReader.h"
+#include "GODC.h"
+#include "GOEnclosure.h"
 #include <wx/intl.h>
 
-GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control):
+GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOEnclosure* control):
 	GOGUIControl(panel, control),
 	m_enclosure(control),
 	m_FontSize(0),
@@ -32,7 +32,7 @@ GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel* panel, GOrgueEnclosure* control):
 	m_layout->RegisterEnclosure(this);
 }
 
-void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
+void GOGUIEnclosure::Init(GOConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Init(cfg, group);
 
@@ -86,7 +86,7 @@ void GOGUIEnclosure::Init(GOrgueConfigReader& cfg, wxString group)
 	m_Font.SetPoints(m_FontSize);
 }
 
-void GOGUIEnclosure::Load(GOrgueConfigReader& cfg, wxString group)
+void GOGUIEnclosure::Load(GOConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 
@@ -152,15 +152,15 @@ void GOGUIEnclosure::Layout()
 	m_MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
 
-void GOGUIEnclosure::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUIEnclosure::PrepareDraw(double scale, GOBitmap* background)
 {
 	for(unsigned i = 0; i < m_Bitmaps.size(); i++)
 		m_Bitmaps[i].PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
-void GOGUIEnclosure::Draw(GOrgueDC& dc)
+void GOGUIEnclosure::Draw(GODC& dc)
 {
-	GOrgueBitmap& bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
+	GOBitmap& bmp = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
 	dc.DrawBitmap(bmp, m_BoundingRect);
 
 	if (m_TextWidth)

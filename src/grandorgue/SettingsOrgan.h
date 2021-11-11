@@ -10,9 +10,9 @@
 #include <wx/panel.h>
 #include <vector>
 
-class GOrgueMidi;
-class GOrgueOrgan;
-class GOrgueSettings;
+class GOMidi;
+class GOOrgan;
+class GOSettings;
 class wxButton;
 class wxListEvent;
 class wxListView;
@@ -28,8 +28,8 @@ class SettingsOrgan : public wxPanel
 		ID_PROPERTIES,
 	};
 private:
-	GOrgueSettings& m_Settings;
-	GOrgueMidi& m_midi;
+	GOSettings& m_Settings;
+	GOMidi& m_midi;
 	wxListView* m_Organs;
 	wxButton* m_Up;
 	wxButton* m_Down;
@@ -47,9 +47,9 @@ private:
 	void MoveOrgan(long from, long to);
 
 public:
-	SettingsOrgan(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent);
+	SettingsOrgan(GOSettings& settings, GOMidi& midi, wxWindow* parent);
 
-	std::vector<const GOrgueOrgan*> GetOrgans();
+	std::vector<const GOOrgan*> GetOrgans();
 
 	void Save();
 	

@@ -7,9 +7,9 @@
 #include "SettingsOption.h"
 
 #include "GOSoundDefs.h"
-#include "GOrgueChoice.h"
-#include "GOrgueLimits.h"
-#include "GOrgueSettings.h"
+#include "GOChoice.h"
+#include "go_limits.h"
+#include "GOSettings.h"
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/filepicker.h>
@@ -19,7 +19,7 @@
 #include <wx/stattext.h>
 
 
-SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
+SettingsOption::SettingsOption(GOSettings& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {
@@ -72,7 +72,7 @@ SettingsOption::SettingsOption(GOrgueSettings& settings, wxWindow* parent) :
 	item6->Add(m_Limit = new wxCheckBox(this, ID_MANAGE_POLYPHONY, _("Active polyphony management")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Scale = new wxCheckBox(this, ID_SCALE_RELEASE, _("Release sample scaling")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_Random = new wxCheckBox(this, ID_RANDOMIZE, _("Randomize pipe speaking")), 0, wxEXPAND | wxALL, 5);
-	item6->Add(m_LoadLastFile  = new GOrgueChoice<GOInitialLoadType>(this, ID_LOAD_LAST_FILE), 0, wxEXPAND | wxALL, 5);
+	item6->Add(m_LoadLastFile  = new GOChoice<GOInitialLoadType>(this, ID_LOAD_LAST_FILE), 0, wxEXPAND | wxALL, 5);
 	m_LoadLastFile->Append(_("Load last used organ at startup"), GOInitialLoadType::LOAD_LAST_USED);
 	m_LoadLastFile->Append(_("Load first favorit organ at startup"), GOInitialLoadType::LOAD_FIRST);
 	m_LoadLastFile->Append(_("Start without any organ"), GOInitialLoadType::LOAD_NONE);

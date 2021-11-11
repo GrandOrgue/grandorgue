@@ -10,12 +10,12 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "GOrgueButton.h"
-#include "GOrgueConfigReader.h"
-#include "GOrgueDC.h"
+#include "GOButton.h"
+#include "GOConfigReader.h"
+#include "GODC.h"
 #include <wx/intl.h>
 
-GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_piston) :
+GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOButton* control, bool is_piston) :
 	GOGUIControl(panel, control),
 	m_IsPiston(is_piston),
 	m_DispKeyLabelOnLeft(true),
@@ -35,7 +35,7 @@ GOGUIButton::GOGUIButton(GOGUIPanel* panel, GOrgueButton* control, bool is_pisto
 {
 }
 
-void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos, unsigned image)
+void GOGUIButton::Init(GOConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos, unsigned image)
 {
 	GOGUIControl::Init(cfg, group);
 
@@ -102,7 +102,7 @@ void GOGUIButton::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, 
 	m_Font.SetPoints(m_FontSize);
 }
 
-void GOGUIButton::Load(GOrgueConfigReader& cfg, wxString group)
+void GOGUIButton::Load(GOConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 	m_IsPiston = cfg.ReadBoolean(ODFSetting, group, wxT("DisplayAsPiston"), false, m_IsPiston);
@@ -227,15 +227,15 @@ bool GOGUIButton::HandleMousePress(int x, int y, bool right, GOGUIMouseState& st
 	}
 }
 
-void GOGUIButton::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUIButton::PrepareDraw(double scale, GOBitmap* background)
 {
 	m_OnBitmap.PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 	m_OffBitmap.PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
-void GOGUIButton::Draw(GOrgueDC& dc)
+void GOGUIButton::Draw(GODC& dc)
 {
-	GOrgueBitmap& bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged() ? m_OnBitmap : m_OffBitmap;
+	GOBitmap& bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged() ? m_OnBitmap : m_OffBitmap;
 	dc.DrawBitmap(bmp, m_BoundingRect);
 	if (m_TextWidth)
 		dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth);

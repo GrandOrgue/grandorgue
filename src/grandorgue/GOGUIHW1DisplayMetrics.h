@@ -9,12 +9,12 @@
 
 #include "GOGUIDisplayMetrics.h"
 
-class GOrgueConfigReader;
+class GOConfigReader;
 
 class GOGUIHW1DisplayMetrics : public GOGUIDisplayMetrics
 {
 public:
-	GOGUIHW1DisplayMetrics(GOrgueConfigReader& ini, wxString group);
+	GOGUIHW1DisplayMetrics(GOConfigReader& ini, wxString group);
 };
 
 #endif

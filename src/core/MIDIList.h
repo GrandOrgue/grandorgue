@@ -7,16 +7,16 @@
 #ifndef MIDILIST_H
 #define MIDILIST_H
 
-#include "GOrgueView.h"
+#include "GOView.h"
 #include <wx/dialog.h>
 #include <vector>
 
-class GOrgueEventDistributor;
+class GOEventDistributor;
 class wxButton;
 class wxListEvent;
 class wxListView;
 
-class MIDIList : public wxDialog, public GOrgueView
+class MIDIList : public wxDialog, public GOView
 {
 private:
 	wxListView* m_Objects;
@@ -40,7 +40,7 @@ private:
 	void OnButton(wxCommandEvent& event);
 
 public:
-	MIDIList (GOrgueDocumentBase* doc, wxWindow* parent, GOrgueEventDistributor* midi_elements);
+	MIDIList (GODocumentBase* doc, wxWindow* parent, GOEventDistributor* midi_elements);
 	~MIDIList();
 
 	DECLARE_EVENT_TABLE()

@@ -16,9 +16,9 @@
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
 
-#include "GOrgueSettings.h"
-#include "GOrgueSound.h"
-#include "GOrgueSoundPort.h"
+#include "GOSettings.h"
+#include "GOSound.h"
+#include "GOSoundPort.h"
 
 
 class AudioItemData : public wxTreeItemData
@@ -120,7 +120,7 @@ bool SettingsAudioOutput::GetPortItemChecked(
 }
 
 
-SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallback& callback, wxWindow* parent) :
+SettingsAudioOutput::SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& callback, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Sound(sound),
 	m_Settings(sound.GetSettings()),
@@ -157,13 +157,13 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	m_SoundPorts->AppendColumn(wxEmptyString);
 	item2->Add(m_SoundPorts, 1, wxALIGN_LEFT | wxEXPAND);
 	
-	for (const wxString &portName: GOrgueSoundPort::getPortNames())
+	for (const wxString &portName: GOSoundPort::getPortNames())
 	{
 	  const wxTreeListItem portItem = m_SoundPorts->AppendItem(
 	    m_SoundPorts->GetRootItem(), getPortItemName(portName)
 	  );
 	  SetPortItemChecked(portItem, m_SoundPortsConfig.IsConfigEnabled(portName));
-	  for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName)) {
+	  for (const wxString &apiName: GOSoundPort::getApiNames(portName)) {
 	    const wxTreeListItem portApiItem
 	      = m_SoundPorts->AppendItem(portItem, getPortItemName(portName, apiName));
 	    
@@ -235,13 +235,13 @@ SettingsAudioOutput::SettingsAudioOutput(GOrgueSound& sound, GOAudioGroupCallbac
 	UpdateButtons();
 }
 
-GOrgueSoundPortsConfig & SettingsAudioOutput::RenewSoundPortsConfig()
+GOSoundPortsConfig & SettingsAudioOutput::RenewSoundPortsConfig()
 
 {
-  for (const wxString &portName: GOrgueSoundPort::getPortNames())
+  for (const wxString &portName: GOSoundPort::getPortNames())
   {
     m_SoundPortsConfig.SetConfigEnabled(portName, GetPortItemChecked(portName));
-    for (const wxString &apiName: GOrgueSoundPort::getApiNames(portName)) {
+    for (const wxString &apiName: GOSoundPort::getApiNames(portName)) {
       m_SoundPortsConfig.SetConfigEnabled(portName, apiName, GetPortItemChecked(portName, apiName));
     }
   }
@@ -369,7 +369,7 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 }
 
 void SettingsAudioOutput::AssureDeviceList() {
-  const GOrgueSoundPortsConfig portsConfig(RenewSoundPortsConfig());
+  const GOSoundPortsConfig portsConfig(RenewSoundPortsConfig());
   
   if (m_PortsConfigPopulatedWith != portsConfig) {
     m_DeviceList = m_Sound.GetAudioDevices(portsConfig);

@@ -7,9 +7,9 @@
 #include "GOSoundReverb.h"
 
 #include "GOSoundResample.h"
-#include "GOrgueStandardFile.h"
-#include "GOrgueSettings.h"
-#include "GOrgueWave.h"
+#include "GOStandardFile.h"
+#include "GOSettings.h"
+#include "GOWave.h"
 #include "contrib/zita-convolver.h"
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -35,7 +35,7 @@ void GOSoundReverb::Cleanup()
 	}
 }
 
-void GOSoundReverb::Setup(GOrgueSettings& settings)
+void GOSoundReverb::Setup(GOSettings& settings)
 {
 	Cleanup();
 
@@ -58,12 +58,12 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 			if (m_engine[i]->configure(1, 1, 1000000, settings.SamplesPerBuffer(), val, Convproc::MAXPART))
 				throw (wxString)_("Invalid reverb configuration (samples per buffer)");
 
-		GOrgueWave wav;
+		GOWave wav;
 		unsigned block = 0x4000;
 		unsigned offset = settings.ReverbStartOffset();
 		float gain = settings.ReverbGain();
 
-		GOrgueStandardFile reverb_file(settings.ReverbFile());
+		GOStandardFile reverb_file(settings.ReverbFile());
 		wav.Open(&reverb_file);
 		if (offset > wav.GetLength())
 			throw (wxString)_("Invalid reverb start offset");
@@ -71,7 +71,7 @@ void GOSoundReverb::Setup(GOrgueSettings& settings)
 		data = (float*)malloc(sizeof(float)*len);
 		if (!data)
 			throw (wxString)_("Out of memory");
-		wav.ReadSamples(data, GOrgueWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -settings.ReverbChannel());
+		wav.ReadSamples(data, GOWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -settings.ReverbChannel());
 		for(unsigned i = 0; i < len; i++)
 			data[i] *= gain;
 		if (len >= offset + settings.ReverbLen() && settings.ReverbLen())

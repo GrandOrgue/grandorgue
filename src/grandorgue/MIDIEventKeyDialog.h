@@ -7,7 +7,7 @@
 #ifndef MIDIEVENTKEYDIALOG_H_
 #define MIDIEVENTKEYDIALOG_H_
 
-#include "GOrgueKeyReceiver.h"
+#include "GOKeyReceiver.h"
 #include <wx/panel.h>
 
 class wxChoice;
@@ -17,8 +17,8 @@ class MIDIEventKeyDialog : public wxPanel
 {
 
 private:
-	GOrgueKeyReceiver* m_original;
-	GOrgueKeyReceiverData m_key;
+	GOKeyReceiver* m_original;
+	GOKeyReceiverData m_key;
 	wxChoice *m_keyselect;
 	wxToggleButton* m_listen;
 	wxChoice *m_keyminusselect;
@@ -39,7 +39,7 @@ protected:
 		ID_LISTEN_MINUS,
 	};
 public:
-	MIDIEventKeyDialog (wxWindow* parent, GOrgueKeyReceiver* event);
+	MIDIEventKeyDialog (wxWindow* parent, GOKeyReceiver* event);
 	~MIDIEventKeyDialog();
 
 	void DoApply();

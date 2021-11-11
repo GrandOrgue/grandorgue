@@ -6,10 +6,10 @@
 
 #include "MIDIEventRecvDialog.h"
 
-#include "GOrgueMidiEvent.h"
-#include "GOrgueRodgers.h"
-#include "GOrgueSettings.h"
-#include "GrandOrgueFile.h"
+#include "GOMidiEvent.h"
+#include "GORodgers.h"
+#include "GOSettings.h"
+#include "GODefinitionFile.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
@@ -28,7 +28,7 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 END_EVENT_TABLE()
 
 
-MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBase* event, GOrgueSettings& settings):
+MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOSettings& settings):
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_original(event),
@@ -60,7 +60,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOrgueMidiReceiverBa
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Event:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-	m_eventtype = new GOrgueChoice<midi_match_message_type>(this, ID_EVENT);
+	m_eventtype = new GOChoice<midi_match_message_type>(this, ID_EVENT);
 	sizer->Add(m_eventtype, 1, wxEXPAND);
 
 	sizer->Add(new wxStaticText(this, wxID_ANY, _("&Channel:")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -195,7 +195,7 @@ MIDIEventRecvDialog::~MIDIEventRecvDialog()
 	StopListen();
 }
 
-void MIDIEventRecvDialog::RegisterMIDIListener(GOrgueMidi* midi)
+void MIDIEventRecvDialog::RegisterMIDIListener(GOMidi* midi)
 {
 	if (midi)
 		m_listener.Register(midi);
@@ -485,7 +485,7 @@ void MIDIEventRecvDialog::OnTimer(wxTimerEvent& event)
 		DetectEvent();
 }
 
-void MIDIEventRecvDialog::OnMidiEvent(const GOrgueMidiEvent& event)
+void MIDIEventRecvDialog::OnMidiEvent(const GOMidiEvent& event)
 {
 	switch(event.GetMidiType())
 	{
@@ -576,7 +576,7 @@ void MIDIEventRecvDialog::StopListen()
 	m_OffList.clear();
 }
 
-bool MIDIEventRecvDialog::SimilarEvent(const GOrgueMidiEvent& e1, const GOrgueMidiEvent& e2)
+bool MIDIEventRecvDialog::SimilarEvent(const GOMidiEvent& e1, const GOMidiEvent& e2)
 {
 	if (e1.GetDevice() != e2.GetDevice())
 		return false;
@@ -610,7 +610,7 @@ void MIDIEventRecvDialog::DetectEvent()
 				if (SimilarEvent(m_OnList[i], m_OnList[i + 1]))
 						continue;
 			}
-			GOrgueMidiEvent on = m_OnList[i];
+			GOMidiEvent on = m_OnList[i];
 			for(unsigned j = 0; j < m_OffList.size(); j++)
 			{
 				if (j + 1 < m_OffList.size())
@@ -621,7 +621,7 @@ void MIDIEventRecvDialog::DetectEvent()
 						continue;
 					}
 				}
-				GOrgueMidiEvent off = m_OffList[j];
+				GOMidiEvent off = m_OffList[j];
 				if (on.GetDevice() != off.GetDevice())
 					continue;
 				if (on.GetChannel() != off.GetChannel())
@@ -830,7 +830,7 @@ void MIDIEventRecvDialog::DetectEvent()
 	}
 
 	MIDI_MATCH_EVENT& e = m_midi.GetEvent(m_current);
-	GOrgueMidiEvent& event = m_OnList[0];
+	GOMidiEvent& event = m_OnList[0];
 	unsigned low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
 	unsigned high_value = (m_midi.GetType() == MIDI_RECV_MANUAL || m_midi.GetType() == MIDI_RECV_ENCLOSURE) ? 127 : 1;
 	switch(event.GetMidiType())

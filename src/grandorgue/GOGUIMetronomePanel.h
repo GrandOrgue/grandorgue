@@ -10,20 +10,20 @@
 #include "GOGUIPanelCreator.h"
 
 class GOGUIPanel;
-class GrandOrgueFile;
+class GODefinitionFile;
 
 class GOGUIMetronomePanel : public GOGUIPanelCreator
 {
 private:
-	GrandOrgueFile* m_organfile;
+	GODefinitionFile* m_organfile;
 
-	GOGUIPanel* CreateMetronomePanel(GOrgueConfigReader& cfg);
+	GOGUIPanel* CreateMetronomePanel(GOConfigReader& cfg);
 
 public:
-	GOGUIMetronomePanel(GrandOrgueFile* organfile);
+	GOGUIMetronomePanel(GODefinitionFile* organfile);
 	virtual ~GOGUIMetronomePanel();
 
-	void CreatePanels(GOrgueConfigReader& cfg);
+	void CreatePanels(GOConfigReader& cfg);
 };
 
 #endif

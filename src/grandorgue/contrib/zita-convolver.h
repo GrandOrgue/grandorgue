@@ -24,7 +24,7 @@
 
 
 #include <wx/wx.h>
-#include "threading/GOrgueThread.h"
+#include "threading/GOThread.h"
 #include "fftw3.h"
 
 class ZCsema
@@ -108,7 +108,7 @@ private:
 };
 
 
-class Convlevel : private GOrgueThread
+class Convlevel : private GOThread
 {
 private:
 

@@ -8,8 +8,8 @@
 #define GOGUIPANEL_H
 
 #include "ptrvector.h"
-#include "GOrgueBitmap.h"
-#include "GOrgueSaveableObject.h"
+#include "GOBitmap.h"
+#include "GOSaveableObject.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
@@ -19,54 +19,54 @@ class GOGUILayoutEngine;
 class GOGUIMouseState;
 class GOGUIMouseStateTracker;
 class GOGUIPanelWidget;
-class GOrgueConfigReader;
-class GOrgueConfigWriter;
-class GOrgueButton;
-class GOrgueDC;
-class GOrguePanelView;
-class GrandOrgueFile;
+class GOConfigReader;
+class GOConfigWriter;
+class GOButton;
+class GODC;
+class GOPanelView;
+class GODefinitionFile;
 
 #define GOBitmapPrefix "../GO:"
 
-class GOGUIPanel : private GOrgueSaveableObject
+class GOGUIPanel : private GOSaveableObject
 {
 private:
-	void ReadSizeInfoFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefault);
+	void ReadSizeInfoFromCfg(GOConfigReader& cfg, bool isOpenByDefault);
 
 protected:
-	GrandOrgueFile* m_organfile;
+	GODefinitionFile* m_organfile;
 	GOGUIMouseStateTracker& m_MouseState;
 	ptr_vector<GOGUIControl> m_controls;
-	std::vector<GOrgueBitmap> m_WoodImages;
+	std::vector<GOBitmap> m_WoodImages;
 	unsigned m_BackgroundControls;
 	wxString m_Name;
 	wxString m_GroupName;
 	GOGUIDisplayMetrics* m_metrics;
 	GOGUILayoutEngine* m_layout;
-	GOrguePanelView* m_view;
+	GOPanelView* m_view;
 	wxRect m_rect;
 	int m_DisplayNum;
 	bool m_IsMaximized;
 	bool m_InitialOpenWindow;
 
-	void LoadControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group);
-	void LoadBackgroundControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group);
-	void Save(GOrgueConfigWriter& cfg);
+	void LoadControl(GOGUIControl* control, GOConfigReader& cfg, wxString group);
+	void LoadBackgroundControl(GOGUIControl* control, GOConfigReader& cfg, wxString group);
+	void Save(GOConfigWriter& cfg);
 
-	GOGUIControl* CreateGUIElement(GOrgueConfigReader& cfg, wxString group);
+	GOGUIControl* CreateGUIElement(GOConfigReader& cfg, wxString group);
 
 	void SendMousePress(int x, int y, bool right, GOGUIMouseState& state);
 
 public:
-	GOGUIPanel(GrandOrgueFile* organfile);
+	GOGUIPanel(GODefinitionFile* organfile);
 	virtual ~GOGUIPanel();
-	void Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
-	void Load(GOrgueConfigReader& cfg, wxString group);
+	void Init(GOConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name=wxT(""));
+	void Load(GOConfigReader& cfg, wxString group);
 	void Layout();
 
-	void SetView(GOrguePanelView* view);
+	void SetView(GOPanelView* view);
 
-	GrandOrgueFile* GetOrganFile();
+	GODefinitionFile* GetOrganFile();
 	const wxString& GetGroup() { return m_group; }
 	const wxString& GetName();
 	const wxString& GetGroupName();
@@ -74,10 +74,10 @@ public:
 	void AddControl(GOGUIControl* control);
 	GOGUIDisplayMetrics* GetDisplayMetrics();
 	GOGUILayoutEngine* GetLayoutEngine();
-	void PrepareDraw(double scale, GOrgueBitmap* background);
-	void Draw(GOrgueDC& dc);
-	const GOrgueBitmap& GetWood(unsigned which);
-	GOrgueBitmap LoadBitmap(wxString filename, wxString maskname);
+	void PrepareDraw(double scale, GOBitmap* background);
+	void Draw(GODC& dc);
+	const GOBitmap& GetWood(unsigned which);
+	GOBitmap LoadBitmap(wxString filename, wxString maskname);
 	void HandleKey(int key);
 	void HandleMousePress(int x, int y, bool right);
 	void HandleMouseRelease(bool right);

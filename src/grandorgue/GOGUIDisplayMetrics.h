@@ -7,7 +7,7 @@
 #ifndef GOGUIDISPLAYMETRICS_H
 #define GOGUIDISPLAYMETRICS_H
 
-#include "GOrgueFont.h"
+#include "GOFont.h"
 #include <wx/colour.h>
 #include <wx/string.h>
 
@@ -53,8 +53,8 @@ protected:
 	unsigned m_PedalKeyWidth;
 	unsigned m_ManualHeight;
 	unsigned m_ManualKeyWidth;
-	GOrgueFont m_GroupLabelFont;
-	GOrgueFont m_ControlLabelFont;
+	GOFont m_GroupLabelFont;
+	GOFont m_ControlLabelFont;
 
 	void Init();
 
@@ -69,8 +69,8 @@ public:
 	unsigned NumberOfButtonCols();
 	unsigned NumberOfExtraButtonRows();
 
-	GOrgueFont GetControlLabelFont();
-	GOrgueFont GetGroupLabelFont();
+	GOFont GetControlLabelFont();
+	GOFont GetGroupLabelFont();
 
 	unsigned GetScreenWidth();
 	unsigned GetScreenHeight();

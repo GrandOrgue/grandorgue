@@ -9,11 +9,11 @@
 
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
-#include "threading/GOrgueThread.h"
+#include "threading/GOThread.h"
 
 class GOSoundScheduler;
 
-class GOSoundThread : public GOrgueThread
+class GOSoundThread : public GOThread
 {
 private:
 	GOSoundScheduler* m_Scheduler;

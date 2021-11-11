@@ -7,8 +7,8 @@
 #include "GOGUIControl.h"
 
 #include "GOGUIPanel.h"
-#include "GOrgueConfigReader.h"
-#include "GrandOrgueFile.h"
+#include "GOConfigReader.h"
+#include "GODefinitionFile.h"
 
 GOGUIControl::GOGUIControl(GOGUIPanel* panel,void* control) :
 	m_panel(panel),
@@ -25,13 +25,13 @@ GOGUIControl::~GOGUIControl()
 {
 }
 
-void GOGUIControl::Init(GOrgueConfigReader& cfg, wxString group)
+void GOGUIControl::Init(GOConfigReader& cfg, wxString group)
 {
 	m_panel->GetOrganFile()->RegisterSaveableObject(this);
 	m_group = group;
 }
 
-void GOGUIControl::Load(GOrgueConfigReader& cfg, wxString group)
+void GOGUIControl::Load(GOConfigReader& cfg, wxString group)
 {
 	m_panel->GetOrganFile()->RegisterSaveableObject(this);
 	m_group = group;
@@ -41,7 +41,7 @@ void GOGUIControl::Layout()
 {
 }
 
-void GOGUIControl::Save(GOrgueConfigWriter& cfg)
+void GOGUIControl::Save(GOConfigWriter& cfg)
 {
 }
 
@@ -55,11 +55,11 @@ void GOGUIControl::ControlChanged(void* control)
 		}
 }
 
-void GOGUIControl::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUIControl::PrepareDraw(double scale, GOBitmap* background)
 {
 }
 
-void GOGUIControl::Draw(GOrgueDC& dc)
+void GOGUIControl::Draw(GODC& dc)
 {
 	m_DrawPending = false;
 }

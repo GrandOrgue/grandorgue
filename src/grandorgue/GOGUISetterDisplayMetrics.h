@@ -11,13 +11,13 @@
 
 typedef enum { GOGUI_SETTER_SETTER, GOGUI_SETTER_GENERALS, GOGUI_SETTER_CRESCENDO, GOGUI_SETTER_DIVISIONALS, GOGUI_SETTER_COUPLER, GOGUI_SETTER_MASTER, GOGUI_METRONOME, GOGUI_SETTER_FLOATING, GOGUI_RECORDER } GOGUISetterType;
 
-class GOrgueConfigReader;
-class GrandOrgueFile;
+class GOConfigReader;
+class GODefinitionFile;
 
 class GOGUISetterDisplayMetrics : public GOGUIDisplayMetrics
 {
 public:
-	GOGUISetterDisplayMetrics(GOrgueConfigReader& ini, GrandOrgueFile* organfile, GOGUISetterType type);
+	GOGUISetterDisplayMetrics(GOConfigReader& ini, GODefinitionFile* organfile, GOGUISetterType type);
 };
 
 #endif

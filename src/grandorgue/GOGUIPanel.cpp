@@ -18,27 +18,27 @@
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanelWidget.h"
-#include "GOrgueConfigReader.h"
-#include "GOrgueConfigWriter.h"
-#include "GOrgueCoupler.h"
-#include "GOrgueDC.h"
-#include "GOrgueDivisional.h"
-#include "GOrgueDivisionalCoupler.h"
-#include "GOrgueGeneral.h"
-#include "GOrgueManual.h"
-#include "GOrguePanelView.h"
-#include "GOrguePiston.h"
-#include "GOrgueSetter.h"
-#include "GOrgueSwitch.h"
-#include "GOrgueStop.h"
-#include "GOrgueTremulant.h"
-#include "GrandOrgueFile.h"
+#include "GOConfigReader.h"
+#include "GOConfigWriter.h"
+#include "GOCoupler.h"
+#include "GODC.h"
+#include "GODivisional.h"
+#include "GODivisionalCoupler.h"
+#include "GOGeneral.h"
+#include "GOManual.h"
+#include "GOPanelView.h"
+#include "GOPiston.h"
+#include "GOSetter.h"
+#include "GOSwitch.h"
+#include "GOStop.h"
+#include "GOTremulant.h"
+#include "GODefinitionFile.h"
 #include "Images.h"
 #include <wx/image.h>
 
 constexpr static int windowLimit = 10000;
 
-GOGUIPanel::GOGUIPanel(GrandOrgueFile* organfile) :
+GOGUIPanel::GOGUIPanel(GODefinitionFile* organfile) :
 	m_organfile(organfile),
 	m_MouseState(organfile->GetMouseStateTracker()),
 	m_controls(0),
@@ -71,7 +71,7 @@ bool GOGUIPanel::InitialOpenWindow()
 	return m_InitialOpenWindow;
 }
 
-GrandOrgueFile* GOGUIPanel::GetOrganFile()
+GODefinitionFile* GOGUIPanel::GetOrganFile()
 {
 	return m_organfile;
 }
@@ -86,17 +86,17 @@ const wxString& GOGUIPanel::GetGroupName()
 	return m_GroupName;
 }
 
-GOrgueBitmap GOGUIPanel::LoadBitmap(wxString filename, wxString maskname)
+GOBitmap GOGUIPanel::LoadBitmap(wxString filename, wxString maskname)
 {
 	return m_organfile->GetBitmapCache().GetBitmap(filename, maskname);
 }
 
-void GOGUIPanel::SetView(GOrguePanelView* view)
+void GOGUIPanel::SetView(GOPanelView* view)
 {
 	m_view = view;
 }
 
-void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name)
+void GOGUIPanel::Init(GOConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name, wxString group, wxString group_name)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
@@ -110,7 +110,7 @@ void GOGUIPanel::Init(GOrgueConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxS
 }
 
 
-void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
+void GOGUIPanel::Load(GOConfigReader& cfg, wxString group)
 {
 	m_organfile->RegisterSaveableObject(this);
 	m_group = group;
@@ -454,19 +454,19 @@ void GOGUIPanel::Load(GOrgueConfigReader& cfg, wxString group)
 	ReadSizeInfoFromCfg(cfg, is_main_panel);
 }
 
-GOGUIControl* GOGUIPanel::CreateGUIElement(GOrgueConfigReader& cfg, wxString group)
+GOGUIControl* GOGUIPanel::CreateGUIElement(GOConfigReader& cfg, wxString group)
 {
 	wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
 
-	GOrgueButton* button = m_organfile->GetButton(type, true);
+	GOButton* button = m_organfile->GetButton(type, true);
 	if (button)
 		return new GOGUIButton(this, button, false);
 
-	GOrgueLabel* label = m_organfile->GetLabel(type, true);
+	GOLabel* label = m_organfile->GetLabel(type, true);
 	if (label)
 		return new GOGUILabel(this, label);
 
-	GOrgueEnclosure* enclosure = m_organfile->GetEnclosure(type, true);
+	GOEnclosure* enclosure = m_organfile->GetEnclosure(type, true);
 	if (enclosure)
 		return new GOGUIEnclosure(this, enclosure);
 
@@ -513,13 +513,13 @@ void GOGUIPanel::AddEvent(GOGUIControl* control)
 		m_view->AddEvent(control);
 }
 
-void GOGUIPanel::LoadControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group)
+void GOGUIPanel::LoadControl(GOGUIControl* control, GOConfigReader& cfg, wxString group)
 {
 	control->Load(cfg, group);
 	AddControl(control);
 }
 
-void GOGUIPanel::LoadBackgroundControl(GOGUIControl* control, GOrgueConfigReader& cfg, wxString group)
+void GOGUIPanel::LoadBackgroundControl(GOGUIControl* control, GOConfigReader& cfg, wxString group)
 {
 	control->Load(cfg, group);
 	m_controls.insert(m_BackgroundControls, control);
@@ -541,19 +541,19 @@ GOGUILayoutEngine* GOGUIPanel::GetLayoutEngine()
 	return m_layout;
 }
 
-void GOGUIPanel::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUIPanel::PrepareDraw(double scale, GOBitmap* background)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->PrepareDraw(scale, background);
 }
 
-void GOGUIPanel::Draw(GOrgueDC& dc)
+void GOGUIPanel::Draw(GODC& dc)
 {
 	for(unsigned i = 0; i < m_controls.size(); i++)
 		m_controls[i]->Draw(dc);
 }
 
-void GOGUIPanel::ReadSizeInfoFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefault)
+void GOGUIPanel::ReadSizeInfoFromCfg(GOConfigReader& cfg, bool isOpenByDefault)
 {
 	int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -windowLimit, windowLimit, false, 0);
 	int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -windowLimit, windowLimit, false, 0);
@@ -566,7 +566,7 @@ void GOGUIPanel::ReadSizeInfoFromCfg(GOrgueConfigReader& cfg, bool isOpenByDefau
 	m_InitialOpenWindow = cfg.ReadBoolean(CMBSetting, m_group, wxT("WindowDisplayed"), false, isOpenByDefault);
 }
 
-void GOGUIPanel::Save(GOrgueConfigWriter& cfg)
+void GOGUIPanel::Save(GOConfigWriter& cfg)
 {
 	cfg.WriteBoolean(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
 	cfg.WriteBoolean(m_group, wxT("WindowMaximized"), m_IsMaximized);
@@ -629,7 +629,7 @@ void GOGUIPanel::HandleMouseScroll(int x, int y, int amount)
 			return;
 }
 
-const GOrgueBitmap& GOGUIPanel::GetWood(unsigned index)
+const GOBitmap& GOGUIPanel::GetWood(unsigned index)
 {
 	return m_WoodImages[index - 1];
 }

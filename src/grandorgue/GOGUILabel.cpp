@@ -9,13 +9,13 @@
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
-#include "GOrgueConfigReader.h"
-#include "GOrgueDC.h"
-#include "GOrgueLabel.h"
-#include "GOrgueSettings.h"
-#include "GrandOrgueFile.h"
+#include "GOConfigReader.h"
+#include "GODC.h"
+#include "GOLabel.h"
+#include "GOSettings.h"
+#include "GODefinitionFile.h"
 
-GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label) :
+GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOLabel* label) :
 	GOGUIControl(panel, label),
 	m_DispXpos(0),
 	m_DispYpos(0),
@@ -32,7 +32,7 @@ GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOrgueLabel* label) :
 {
 }
 
-void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos, wxString name, unsigned DispImageNum)
+void GOGUILabel::Init(GOConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos, wxString name, unsigned DispImageNum)
 {
 	GOGUIControl::Init(cfg, group);
 
@@ -68,7 +68,7 @@ void GOGUILabel::Init(GOrgueConfigReader& cfg, wxString group, unsigned x_pos, u
 	m_Font.SetPoints(m_FontSize);
 }
 
-void GOGUILabel::Load(GOrgueConfigReader& cfg, wxString group)
+void GOGUILabel::Load(GOConfigReader& cfg, wxString group)
 {
 	GOGUIControl::Load(cfg, group);
 
@@ -164,12 +164,12 @@ void GOGUILabel::Layout()
 	m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
 
-void GOGUILabel::PrepareDraw(double scale, GOrgueBitmap* background)
+void GOGUILabel::PrepareDraw(double scale, GOBitmap* background)
 {
 	m_Bitmap.PrepareTileBitmap(scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
-void GOGUILabel::Draw(GOrgueDC& dc)
+void GOGUILabel::Draw(GODC& dc)
 {
 	if (m_Label)
 		m_Text = m_Label->GetContent();

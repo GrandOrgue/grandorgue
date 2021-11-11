@@ -8,9 +8,9 @@
 
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
-#include "GOrgueDC.h"
-#include "GOrgueFont.h"
-#include "GOrgueKeyConvert.h"
+#include "GODC.h"
+#include "GOFont.h"
+#include "GOKeyConvert.h"
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 
@@ -56,7 +56,7 @@ GOGUIPanelWidget::~GOGUIPanelWidget()
 void GOGUIPanelWidget::initFont()
 {
 	wxMemoryDC dc;
-	GOrgueFont font;
+	GOFont font;
 	wxCoord cx, cy;
 	font.SetPoints(39);
 	dc.SetFont(font.GetFont(1));
@@ -113,7 +113,7 @@ void GOGUIPanelWidget::OnUpdate()
 		m_ClientBitmap = wxBitmap(m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5);
 	wxMemoryDC dc;
 	dc.SelectObject(m_ClientBitmap);
-	GOrgueDC DC(&dc, m_Scale, m_FontScale);
+	GODC DC(&dc, m_Scale, m_FontScale);
 
 	m_panel->Draw(DC);
 	SetSize(m_ClientBitmap.GetWidth(), m_ClientBitmap.GetHeight());
@@ -125,7 +125,7 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent& event)
 
 	wxMemoryDC mdc;
 	mdc.SelectObject(m_ClientBitmap);
-	GOrgueDC DC(&mdc, m_Scale, m_FontScale);
+	GODC DC(&mdc, m_Scale, m_FontScale);
 
 	control->Draw(DC);
 	RefreshRect(DC.ScaleRect(control->GetBoundingRect()), false);

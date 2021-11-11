@@ -11,10 +11,10 @@
 #include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GrandOrgueFile.h"
+#include "GODefinitionFile.h"
 #include <wx/intl.h>
 
-GOGUIBankedGeneralsPanel::GOGUIBankedGeneralsPanel(GrandOrgueFile* organfile) :
+GOGUIBankedGeneralsPanel::GOGUIBankedGeneralsPanel(GODefinitionFile* organfile) :
 	m_organfile(organfile)
 {
 }
@@ -23,12 +23,12 @@ GOGUIBankedGeneralsPanel:: ~GOGUIBankedGeneralsPanel()
 {
 }
 
-void GOGUIBankedGeneralsPanel::CreatePanels(GOrgueConfigReader& cfg)
+void GOGUIBankedGeneralsPanel::CreatePanels(GOConfigReader& cfg)
 {
 	m_organfile->AddPanel(CreateBankedGeneralsPanel(cfg));
 }
 
-GOGUIPanel* GOGUIBankedGeneralsPanel::CreateBankedGeneralsPanel(GOrgueConfigReader& cfg)
+GOGUIPanel* GOGUIBankedGeneralsPanel::CreateBankedGeneralsPanel(GOConfigReader& cfg)
 {
 	GOGUIButton* button;
 

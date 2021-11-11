@@ -6,7 +6,7 @@
 
 #include "SettingsMidiMessage.h"
 
-#include "GOrgueSettings.h"
+#include "GOSettings.h"
 #include "MIDIEventDialog.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE(SettingsMidiMessage, wxPanel)
 	EVT_BUTTON(ID_PROPERTIES, SettingsMidiMessage::OnProperties)
 END_EVENT_TABLE()
 
-SettingsMidiMessage::SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& midi, wxWindow* parent) :
+SettingsMidiMessage::SettingsMidiMessage(GOSettings& settings, GOMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_midi(midi)
@@ -40,7 +40,7 @@ SettingsMidiMessage::SettingsMidiMessage(GOrgueSettings& settings, GOrgueMidi& m
 
 	for (unsigned i = 0; i < m_Settings.GetEventCount(); i++)
 	{
-		GOrgueMidiReceiverBase* recv = m_Settings.GetMidiEvent(i);
+		GOMidiReceiverBase* recv = m_Settings.GetMidiEvent(i);
 		m_Events->InsertItem(i, m_Settings.GetEventGroup(i));
 		m_Events->SetItemPtrData(i, (wxUIntPtr)recv);
 		m_Events->SetItem(i, 1, m_Settings.GetEventTitle(i));
@@ -66,7 +66,7 @@ void SettingsMidiMessage::OnEventsDoubleClick(wxListEvent& event)
 	m_Properties->Enable();
 	int index = m_Events->GetFirstSelected();
 
-	GOrgueMidiReceiverBase* recv = (GOrgueMidiReceiverBase*)m_Events->GetItemData(m_Events->GetFirstSelected());
+	GOMidiReceiverBase* recv = (GOMidiReceiverBase*)m_Events->GetItemData(m_Events->GetFirstSelected());
 	MIDIEventDialog dlg(NULL, this, wxString::Format(_("Initial MIDI settings for %s"), m_Settings.GetEventTitle(index).c_str()), m_Settings, recv, NULL, NULL);
 	dlg.RegisterMIDIListener(&m_midi);
 	dlg.ShowModal();
