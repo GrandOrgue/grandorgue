@@ -16,15 +16,15 @@ fi
 
 PARALLEL_PRMS="-j$(nproc)"
 
-mkdir -p build-for/build-tools
-pushd build-for/build-tools
+mkdir -p build/build-tools
+pushd build/build-tools
 rm -rf *
 cmake $SRC_DIR/src/build
 make
 popd
 
-mkdir -p build-for/win64
-pushd build-for/win64
+mkdir -p build/win64
+pushd build/win64
 
 rm -rf *
 export LANG=C
