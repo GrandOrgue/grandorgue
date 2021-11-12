@@ -6,9 +6,9 @@
 
 #include "GOCoupler.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOManual.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>
 

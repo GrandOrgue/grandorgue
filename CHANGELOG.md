@@ -1,3 +1,4 @@
+- Restructured the source code directory tree https://github.com/GrandOrgue/grandorgue/issues/834
 - Renamed the source code files to have the single GO prefix https://github.com/GrandOrgue/grandorgue/issues/816
 - Added implementation of the threading primitives with standard C++11 ones https://github.com/GrandOrgue/grandorgue/issues/817
 - Changed build default directory to 'build' https://github.com/GrandOrgue/grandorgue/issues/843

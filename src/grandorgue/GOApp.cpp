@@ -7,8 +7,8 @@
 #include "GOApp.h"
 
 #include "GOLog.h"
-#include "GOSettings.h"
-#include "GOSound.h"
+#include "settings/GOSettings.h"
+#include "sound/GOSound.h"
 #include "GOStdPath.h"
 #include "go_defs.h"
 #include "GOFrame.h"

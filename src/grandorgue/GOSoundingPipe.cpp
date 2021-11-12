@@ -7,13 +7,13 @@
 #include "GOSoundingPipe.h"
 
 #include "GOAlloc.h"
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOHash.h"
 #include "go_limits.h"
 #include "GOPath.h"
 #include "GORank.h"
-#include "GOSettings.h"
-#include "GOTemperament.h"
+#include "settings/GOSettings.h"
+#include "temperaments/GOTemperament.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>

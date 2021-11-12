@@ -6,11 +6,11 @@
 
 #include "GOManual.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOCoupler.h"
 #include "GODocument.h"
 #include "GODivisional.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GOStop.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>

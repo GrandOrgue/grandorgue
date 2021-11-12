@@ -8,9 +8,9 @@
 #define GORANK_H
 
 #include "ptrvector.h"
-#include "GOMidiConfigurator.h"
+#include "midi/GOMidiConfigurator.h"
 #include "GOPipeConfigTreeNode.h"
-#include "GOMidiSender.h"
+#include "midi/GOMidiSender.h"
 #include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
 

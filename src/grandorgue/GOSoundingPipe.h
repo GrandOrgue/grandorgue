@@ -7,7 +7,7 @@
 #ifndef GOSOUNDINGPIPE_H
 #define GOSOUNDINGPIPE_H
 
-#include "GOSoundProviderWave.h"
+#include "sound/GOSoundProviderWave.h"
 #include "GOCacheObject.h"
 #include "GOPipe.h"
 #include "GOPipeConfigNode.h"

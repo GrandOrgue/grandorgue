@@ -6,11 +6,11 @@
 
 #include "GOMetronome.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GORank.h"
 #include "GOSetterButton.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"

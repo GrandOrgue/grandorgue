@@ -6,9 +6,9 @@
 
 #include "GOOrganList.h"
 
-#include "GOArchiveFile.h"
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "archive/GOArchiveFile.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GOOrgan.h"
 #include <algorithm>
 

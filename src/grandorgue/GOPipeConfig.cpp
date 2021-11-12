@@ -6,8 +6,8 @@
 
 #include "GOPipeConfig.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GODefinitionFile.h"
 
 GOPipeConfig::GOPipeConfig(GODefinitionFile* organfile, GOPipeUpdateCallback* callback) :

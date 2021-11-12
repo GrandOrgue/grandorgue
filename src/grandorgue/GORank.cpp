@@ -6,11 +6,11 @@
 
 #include "GORank.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GODocument.h"
 #include "GODummyPipe.h"
 #include "GOReferencePipe.h"
-#include "GOSettings.h"
+#include "settings/GOSettings.h"
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"

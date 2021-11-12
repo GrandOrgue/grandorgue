@@ -6,8 +6,8 @@
 
 #include "GODivisional.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GODivisionalCoupler.h"
 #include "GOSetter.h"
 #include "GOManual.h"

@@ -6,8 +6,8 @@
 
 #include "GODrawStop.h"
 
-#include "GOConfigReader.h"
-#include "GOConfigWriter.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "GOSwitch.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>

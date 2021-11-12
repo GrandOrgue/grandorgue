@@ -6,7 +6,7 @@
 
 #include "GOReferencePipe.h"
 
-#include "GOConfigReader.h"
+#include "config/GOConfigReader.h"
 #include "GOManual.h"
 #include "GORank.h"
 #include "GOStop.h"
