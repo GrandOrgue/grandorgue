@@ -215,7 +215,7 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 set(CPACK_PACKAGE_CONTACT "osamarin68@gmail.com")
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build-for/")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build/")
 
 # components
 set(CPACK_COMPONENTS_ALL Unspecified resources demo)
