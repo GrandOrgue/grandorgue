@@ -164,8 +164,8 @@ set(RT_INCLUDE_DIRS ${RTMIDI_SRC_DIR} ${RTAUDIO_SRC_DIR})
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
+  set(PORTAUDIO_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/submodules/PortAudio/include)
   add_subdirectory(src/portaudio)
-  set(PORTAUDIO_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/portaudio/include)
   set(PORTAUDIO_LIBRARIES PortAudio)
 else()
   pkg_check_modules(PORTAUDIO REQUIRED portaudio-2.0)

@@ -1,3 +1,4 @@
+- Upgraded PortAudio Library to the latest stable release, v19.7.0. The upgraded library corrects PortAudio errors in GrandOrgue on macOS 11.
 - Restructured the source code directory tree https://github.com/GrandOrgue/grandorgue/issues/834
 - Renamed the source code files to have the single GO prefix https://github.com/GrandOrgue/grandorgue/issues/816
 - Added implementation of the threading primitives with standard C++11 ones https://github.com/GrandOrgue/grandorgue/issues/817

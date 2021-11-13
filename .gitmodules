@@ -5,3 +5,6 @@
 	path = submodules/RtMidi
 	url = https://github.com/thestk/rtmidi
 	branch = 4.0.0
+[submodule "submodules/PortAudio"]
+	path = submodules/PortAudio
+	url = https://github.com/PortAudio/portaudio.git
