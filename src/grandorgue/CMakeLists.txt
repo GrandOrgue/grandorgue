@@ -65,6 +65,7 @@ sound/scheduler/GOSoundReleaseWorkItem.cpp
 sound/GOSoundSamplerPool.cpp
 sound/scheduler/GOSoundScheduler.cpp
 sound/scheduler/GOSoundThread.cpp
+sound/scheduler/GOSoundTouchWorkItem.cpp
 sound/scheduler/GOSoundTremulantWorkItem.cpp
 sound/scheduler/GOSoundWindchestWorkItem.cpp
 GOAudioRecorder.cpp

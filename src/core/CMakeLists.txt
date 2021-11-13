@@ -16,7 +16,6 @@ threading/GOMutex.cpp
 threading/GOWaitQueue.cpp
 threading/GOThread.cpp
 threading/threading_impl.cpp
-sound/scheduler/GOSoundTouchWorkItem.cpp
 archive/GOArchive.cpp
 archive/GOArchiveCreator.cpp
 archive/GOArchiveFile.cpp
