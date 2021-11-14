@@ -29,7 +29,6 @@ class GOFrame;
 class GOLog;
 class GOSound;
 class GOSettings;
-class wxSplashScreenWindow;
 
 class GOApp : public wxApp
 {

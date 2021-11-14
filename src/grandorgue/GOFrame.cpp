@@ -29,7 +29,7 @@
 #include "OrganSelectDialog.h"
 #include "settings/SettingsDialog.h"
 #include "settings/SettingsReason.h"
-#include "SplashScreen.h"
+#include "GOSplash.h"
 #include "Images.h"
 #include "threading/GOMutexLocker.h"
 #include "wxGaugeAudio.h"
