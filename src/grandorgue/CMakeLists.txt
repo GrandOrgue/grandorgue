@@ -124,6 +124,7 @@ sound/ports/GOSoundPortaudioPort.cpp
 sound/ports/GOSoundPortsConfig.cpp
 sound/ports/GOSoundRtPort.cpp
 GOSoundingPipe.cpp
+GOSplash.cpp
 GOStop.cpp
 GOTremulant.cpp
 GOWindchest.cpp

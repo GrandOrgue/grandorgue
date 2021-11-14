@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SPLASHSCREEN_H
-#define SPLASHSCREEN_H
+#ifndef GOSPLASH_H
+#define GOSPLASH_H
 
 #include <wx/bitmap.h>
 #include <wx/control.h>

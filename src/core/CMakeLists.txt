@@ -81,7 +81,6 @@ GOWavPack.cpp
 GOWavPackWriter.cpp
 midi/MIDIList.cpp
 OrganSelectDialog.cpp
-SplashScreen.cpp
 wxGaugeAudio.cpp
 )
 
