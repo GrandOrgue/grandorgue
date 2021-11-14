@@ -1,3 +1,4 @@
+# 3.4.2 (2021-11-14)
 - Added ASIO logo to About splash screen https://github.com/GrandOrgue/grandorgue/issues/823
 - Upgraded PortAudio Library to the latest stable release, v19.7.0. The upgraded library corrects PortAudio errors in GrandOrgue on macOS 11.
 - Restructured the source code directory tree https://github.com/GrandOrgue/grandorgue/issues/834
