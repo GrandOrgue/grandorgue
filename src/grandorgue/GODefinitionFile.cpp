@@ -1016,10 +1016,10 @@ void GODefinitionFile::SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* han
 		m_soundengine->SwitchSample(pipe, handle);
 }
 
-void GODefinitionFile::UpdateVelocity(GO_SAMPLER* handle, unsigned velocity)
+void GODefinitionFile::UpdateVelocity(const GOSoundProvider* pipe, GO_SAMPLER* handle, unsigned velocity)
 {
 	if (m_soundengine)
-		m_soundengine->UpdateVelocity(handle, velocity);
+		m_soundengine->UpdateVelocity(pipe, handle, velocity);
 }
 
 void GODefinitionFile::SendMidiMessage(GOMidiEvent& e)
