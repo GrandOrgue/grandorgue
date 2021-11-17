@@ -359,7 +359,7 @@ void GOSoundingPipe::Change(unsigned velocity, unsigned last_velocity)
 	else if (m_Instances && !velocity)
 		SetOff();
 	else if (m_Sampler && last_velocity != velocity)
-		m_organfile->UpdateVelocity(m_Sampler, velocity);
+		m_organfile->UpdateVelocity(GetSoundProvider(), m_Sampler, velocity);
 }
 
 void GOSoundingPipe::UpdateAmplitude()

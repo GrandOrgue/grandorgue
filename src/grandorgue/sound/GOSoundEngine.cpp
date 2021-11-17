@@ -654,12 +654,20 @@ void GOSoundEngine::SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle
 	handle->new_attack = m_CurrentTime + handle->delay;
 }
 
-void GOSoundEngine::UpdateVelocity(GO_SAMPLER* handle, unsigned velocity)
+void GOSoundEngine::UpdateVelocity(const GOSoundProvider* pipe, GO_SAMPLER* handle, unsigned velocity)
 {
 	assert(handle);
-	handle->velocity = velocity;
-	/* Concurrent update possible, as it just update a float */
-	handle->fader.SetVelocityVolume(handle->pipe->GetVelocityVolume(handle->velocity));
+	assert(pipe);
+
+	if (handle->pipe == pipe)
+	{
+	  // we've just checked that handle is still playing the same pipe
+	  // may be handle was switched to another pipe between checking and SetVelocityVolume
+	  // but we don't want to lock it because this functionality is not so important
+	  // Concurrent update possible, as it just update a float
+	  handle->velocity = velocity;
+	  handle->fader.SetVelocityVolume(pipe->GetVelocityVolume(handle->velocity));
+	}
 }
 
 const std::vector<double>& GOSoundEngine::GetMeterInfo()
