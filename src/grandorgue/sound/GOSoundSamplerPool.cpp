@@ -42,16 +42,16 @@ void GOSoundSamplerPool::SetUsageLimit(unsigned count)
 	GOMutexLocker locker(m_Lock);
 	while(m_Samplers.size() < m_UsageLimit)
 	{
-		GO_SAMPLER* sampler = new GO_SAMPLER;
+		GOSoundSampler* sampler = new GOSoundSampler;
 		m_SamplerCount.fetch_add(1);
 		m_Samplers.push_back(sampler);
 		ReturnSampler(sampler);
 	}
 }
 
-GO_SAMPLER* GOSoundSamplerPool::GetSampler()
+GOSoundSampler* GOSoundSamplerPool::GetSampler()
 {
-	GO_SAMPLER* sampler = NULL;
+	GOSoundSampler* sampler = NULL;
 
 	if (m_SamplerCount < m_UsageLimit)
 	{
@@ -60,11 +60,11 @@ GO_SAMPLER* GOSoundSamplerPool::GetSampler()
 			m_SamplerCount.fetch_add(1);
 	}
 	if (sampler)
-		memset(sampler, 0, sizeof(GO_SAMPLER));
+		memset(sampler, 0, sizeof(GOSoundSampler));
 	return sampler;
 }
 
-void GOSoundSamplerPool::ReturnSampler(GO_SAMPLER* sampler)
+void GOSoundSamplerPool::ReturnSampler(GOSoundSampler* sampler)
 {
 	assert(m_SamplerCount > 0);
 	m_SamplerCount.fetch_add(-1);

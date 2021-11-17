@@ -13,10 +13,10 @@
 class GOSoundProvider;
 class GOSoundWindchestWorkItem;
 
-class GO_SAMPLER
+class GOSoundSampler
 {
 public:
-	GO_SAMPLER *next;
+	GOSoundSampler *next;
 	const GOSoundProvider     *pipe;
 	int                        sampler_group_id;
 	GOSoundWindchestWorkItem*  windchest;

@@ -996,27 +996,27 @@ GOBitmapCache& GODefinitionFile::GetBitmapCache()
 	return m_bitmaps;
 }
 
-GO_SAMPLER* GODefinitionFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop)
+GOSoundSampler* GODefinitionFile::StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop)
 {
 	if (!m_soundengine)
 		return NULL;
 	return m_soundengine->StartSample(pipe, sampler_group_id, audio_group, velocity, delay, last_stop);
 }
 
-uint64_t GODefinitionFile::StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
+uint64_t GODefinitionFile::StopSample(const GOSoundProvider *pipe, GOSoundSampler* handle)
 {
 	if (m_soundengine)
 		return m_soundengine->StopSample(pipe, handle);
 	return 0;
 }
 
-void GODefinitionFile::SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle)
+void GODefinitionFile::SwitchSample(const GOSoundProvider *pipe, GOSoundSampler* handle)
 {
 	if (m_soundengine)
 		m_soundengine->SwitchSample(pipe, handle);
 }
 
-void GODefinitionFile::UpdateVelocity(const GOSoundProvider* pipe, GO_SAMPLER* handle, unsigned velocity)
+void GODefinitionFile::UpdateVelocity(const GOSoundProvider* pipe, GOSoundSampler* handle, unsigned velocity)
 {
 	if (m_soundengine)
 		m_soundengine->UpdateVelocity(pipe, handle, velocity);

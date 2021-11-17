@@ -28,7 +28,7 @@ void GOSoundTremulantWorkItem::Clear()
 	m_Samplers.Clear();
 }
 
-void GOSoundTremulantWorkItem::Add(GO_SAMPLER* sampler)
+void GOSoundTremulantWorkItem::Add(GOSoundSampler* sampler)
 {
 	m_Samplers.Put(sampler);
 }
@@ -69,7 +69,7 @@ void GOSoundTremulantWorkItem::Run(GOSoundThread *thread)
 	float output_buffer[m_SamplesPerBuffer * 2];
 	std::fill(output_buffer, output_buffer + m_SamplesPerBuffer * 2, 0.0f);
 	output_buffer[2 * m_SamplesPerBuffer - 1] = 1.0f;
-	for (GO_SAMPLER* sampler = m_Samplers.Get(); sampler; sampler = m_Samplers.Get())
+	for (GOSoundSampler* sampler = m_Samplers.Get(); sampler; sampler = m_Samplers.Get())
 	{
 		bool keep;
 		keep = m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, 1);

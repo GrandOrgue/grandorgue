@@ -42,7 +42,7 @@ class GODocument;
 class GOSoundEngine;
 class GOSoundProvider;
 class GOSoundRecorder;
-class GO_SAMPLER;
+class GOSoundSampler;
 typedef struct _GOHashType GOHashType;
 
 class GODefinitionFile : public GOEventDistributor, private GOPipeUpdateCallback, public GOTimer, public GOModel
@@ -203,10 +203,10 @@ public:
 	const wxString& GetRecordingDetails();
 	const wxString& GetInfoFilename();
 
-	GO_SAMPLER* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop);
-	uint64_t StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
-	void SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
-	void UpdateVelocity(const GOSoundProvider* pipe, GO_SAMPLER* handle, unsigned velocity);
+	GOSoundSampler* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop);
+	uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler* handle);
+	void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler* handle);
+	void UpdateVelocity(const GOSoundProvider* pipe, GOSoundSampler* handle, unsigned velocity);
 
 	void SendMidiMessage(GOMidiEvent& e);
 	void SendMidiRecorderMessage(GOMidiEvent& e);
