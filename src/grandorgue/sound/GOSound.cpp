@@ -334,7 +334,7 @@ bool GOSound::AudioCallback(unsigned dev_index, float* output_buffer, unsigned i
 		wxLogError(_("No sound output will happen. Samples per buffer has been changed by the sound driver to %d"), n_frames);
 		return 1;
 	}
-	GO_SOUND_OUTPUT* device = &m_AudioOutputs[dev_index];
+	GOSoundOutput* device = &m_AudioOutputs[dev_index];
 	GOMutexLocker locker(device->mutex);
 
 	if (device->wait && device->waiting)
