@@ -1,3 +1,4 @@
+- Fixed hang after changing the audio device https://github.com/GrandOrgue/grandorgue/issues/701
 - Fixed a possible crash when playing with shared pipes https://github.com/GrandOrgue/grandorgue/issues/847
 # 3.4.2 (2021-11-14)
 - Added ASIO logo to About splash screen https://github.com/GrandOrgue/grandorgue/issues/823
