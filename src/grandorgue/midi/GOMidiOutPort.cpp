@@ -6,38 +6,20 @@
 
 #include "GOMidiOutPort.h"
 
-#include "GOMidi.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiMap.h"
-#include <wx/intl.h>
+
+#include "GOMidi.h"
+
 
 GOMidiOutPort::GOMidiOutPort(GOMidi* midi, wxString prefix, wxString name) :
-	m_midi(midi),
-	m_merger(),
-	m_IsActive(false),
-	m_Name(name),
-	m_Prefix(prefix)
+	GOMidiPort(midi, prefix, name),
+	m_merger()
 {
-	m_ID = m_midi->GetMidiMap().GetDeviceByString(m_Name);
 }
 
 GOMidiOutPort::~GOMidiOutPort()
 {
-}
-
-const wxString& GOMidiOutPort::GetName()
-{
-	return m_Name;
-}
-
-unsigned GOMidiOutPort::GetID()
-{
-	return m_ID;
-}
-
-bool GOMidiOutPort::IsActive()
-{
-	return m_IsActive;
 }
 
 bool GOMidiOutPort::Open()
@@ -62,12 +44,7 @@ void GOMidiOutPort::Send(const GOMidiEvent& e)
 	}
 }
 
-const wxString GOMidiOutPort::GetClientName()
-{
-	return wxT("GrandOrgue");
-}
-
-const wxString GOMidiOutPort::GetPortName()
+const wxString GOMidiOutPort::GetPortName() const
 {
 	return wxT("GrandOrgue Output");
 }

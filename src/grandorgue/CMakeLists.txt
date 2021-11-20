@@ -95,6 +95,7 @@ midi/GOMidi.cpp
 midi/GOMidiListener.cpp
 midi/GOMidiInPort.cpp
 midi/GOMidiOutPort.cpp
+midi/GOMidiPort.cpp
 midi/GOMidiPlayer.cpp
 midi/GOMidiSender.cpp
 midi/GOMidiReceiver.cpp

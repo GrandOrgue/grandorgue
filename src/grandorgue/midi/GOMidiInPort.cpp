@@ -4,42 +4,24 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOMidiInPort.h"
-
-#include "GOMidi.h"
-#include "midi/GOMidiEvent.h"
-#include "midi/GOMidiMap.h"
-#include <wx/intl.h>
 #include <wx/stopwatch.h>
 
+#include "GOMidiInPort.h"
+
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiMap.h"
+
+#include "GOMidi.h"
+
 GOMidiInPort::GOMidiInPort(GOMidi* midi, wxString prefix, wxString name) :
-	m_midi(midi),
-	m_IsActive(false),
-	m_Name(name),
-	m_Prefix(prefix),
+	GOMidiPort(midi, prefix, name),
 	m_merger(),
 	m_ChannelShift(0)
 {
-	m_ID = m_midi->GetMidiMap().GetDeviceByString(m_Name);
 }
 
 GOMidiInPort::~GOMidiInPort()
 {
-}
-
-const wxString& GOMidiInPort::GetName()
-{
-	return m_Name;
-}
-
-unsigned GOMidiInPort::GetID()
-{
-	return m_ID;
-}
-
-bool GOMidiInPort::IsActive()
-{
-	return m_IsActive;
 }
 
 void GOMidiInPort::Receive(const std::vector<unsigned char> msg)
@@ -72,12 +54,7 @@ bool GOMidiInPort::Open(int channel_shift)
 	return m_IsActive;
 }
 
-const wxString GOMidiInPort::GetClientName()
-{
-	return wxT("GrandOrgue");
-}
-
-const wxString GOMidiInPort::GetPortName()
+const wxString GOMidiInPort::GetPortName() const
 {
 	return wxT("GrandOrgue Input");
 }

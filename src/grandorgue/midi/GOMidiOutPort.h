@@ -7,39 +7,31 @@
 #ifndef GOMIDIOUTPORT_H
 #define GOMIDIOUTPORT_H
 
-#include "midi/GOMidiOutputMerger.h"
-#include <wx/string.h>
 #include "ptrvector.h"
+#include <wx/string.h>
 
-class GOMidi;
+#include "GOMidiPort.h"
+#include "midi/GOMidiOutputMerger.h"
+
 class GOMidiEvent;
 
-class GOMidiOutPort
+class GOMidiOutPort: public GOMidiPort
 {
 protected:
-	GOMidi* m_midi;
 	GOMidiOutputMerger m_merger;
-	bool m_IsActive;
-	wxString m_Name;
-	wxString m_Prefix;
-	unsigned m_ID;
 
-	const wxString GetClientName();
-	const wxString GetPortName();
 	virtual void SendData(std::vector<unsigned char>& msg) = 0;
 
 public:
 	GOMidiOutPort(GOMidi* midi, wxString prefix, wxString name);
 	virtual ~GOMidiOutPort();
 
+	virtual const wxString GetPortName() const;
+
 	virtual bool Open();
 	virtual void Close() = 0;
 
 	void Send(const GOMidiEvent& e);
-
-	const wxString& GetName();
-	unsigned GetID();
-	bool IsActive();
 };
 
 #endif
