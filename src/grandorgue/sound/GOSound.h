@@ -31,7 +31,7 @@ class GOSettings;
 
 class GOSound
 {
-	class GO_SOUND_OUTPUT
+	class GOSoundOutput
 	{
 	public:
 		GOSoundPort* port;
@@ -40,7 +40,7 @@ class GOSound
 		bool wait;
 		bool waiting;
 
-		GO_SOUND_OUTPUT() :
+		GOSoundOutput() :
 			condition(mutex)
 		{
 			port = 0;
@@ -48,7 +48,7 @@ class GOSound
 			waiting = false;
 		}
 
-		GO_SOUND_OUTPUT(const GO_SOUND_OUTPUT& old) :
+		GOSoundOutput(const GOSoundOutput& old) :
 			condition(mutex)
 		{
 			port = old.port;
@@ -56,7 +56,7 @@ class GOSound
 			waiting = old.waiting;
 		}
 
-		const GO_SOUND_OUTPUT& operator=(const GO_SOUND_OUTPUT& old)
+		const GOSoundOutput& operator=(const GOSoundOutput& old)
 		{
 			port = old.port;
 			wait = old.wait;
@@ -71,7 +71,7 @@ private:
 
 	bool logSoundErrors;
 
-	std::vector<GO_SOUND_OUTPUT> m_AudioOutputs;
+	std::vector<GOSoundOutput> m_AudioOutputs;
 	atomic_uint m_WaitCount;
 	atomic_uint m_CalcCount;
 
