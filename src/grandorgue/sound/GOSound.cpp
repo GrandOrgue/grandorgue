@@ -20,6 +20,7 @@
 #include <wx/window.h>
 
 GOSound::GOSound(GOSettings& settings) :
+	m_open(false),
 	logSoundErrors(true),
 	m_AudioOutputs(),
 	m_WaitCount(),
@@ -69,11 +70,11 @@ void GOSound::OpenMidi()
 	m_midi.Open();
 }
 
-bool GOSound::OpenSound()
+void GOSound::OpenSound()
 {
 	m_LastErrorMessage = wxEmptyString;
+	assert(! m_open);
 	assert(m_AudioOutputs.size() == 0);
-	bool opened_ok = false;
 
 	unsigned audio_group_count = m_Settings.GetAudioGroups().size();
 	std::vector<GOAudioDeviceConfig> audio_config = m_Settings.GetAudioDeviceConfig();
@@ -149,7 +150,7 @@ bool GOSound::OpenSound()
 		OpenMidi();
 		StartStreams();
 		StartThreads();
-		opened_ok = true;
+		m_open = true;
 
 		if (m_organfile)
 			m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
@@ -162,11 +163,8 @@ bool GOSound::OpenSound()
 		  m_LastErrorMessage = msg;
 	}
 
-	if (!opened_ok)
+	if (!m_open)
 		CloseSound();
-
-	return opened_ok;
-
 }
 
 void GOSound::StartStreams()
@@ -223,19 +221,20 @@ void GOSound::CloseSound()
 		m_organfile->Abort();
 	ResetMeters();
 	m_AudioOutputs.clear();
+	m_open = false;
 }
 
-bool GOSound::ResetSound(bool force)
+bool GOSound::AssureSoundIsOpen()
 {
-	wxBusyCursor busy;
-	if (!m_AudioOutputs.size() && !force)
-		return false;
+  if (! m_open)
+    OpenSound();
+  return m_open;
+}
 
-	CloseSound();
-	if (!OpenSound())
-		return false;
-
-	return true;
+void GOSound::AssureSoundIsClosed()
+{
+  if (m_open)
+    CloseSound();
 }
 
 void GOSound::AssignOrganFile(GODefinitionFile* organfile)
@@ -281,6 +280,10 @@ void GOSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
 std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
   const GOSoundPortsConfig &portsConfig
 ) {
+  // Getting a device list tries to open and close each device
+  // Because some devices (ex. ASIO) cann't be open more than once
+  // then close the current audio device
+  AssureSoundIsClosed();
   m_defaultAudioDevice = wxEmptyString;
   std::vector<GOSoundDevInfo> list = GOSoundPort::getDeviceList(portsConfig);
   for(unsigned i = 0; i < list.size(); i++)

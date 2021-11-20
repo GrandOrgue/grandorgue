@@ -66,6 +66,8 @@ class GOSound
 	};
 
 private:
+	bool m_open;
+
 	GOMutex m_lock;
 	GOMutex m_thread_lock;
 
@@ -99,6 +101,10 @@ private:
 	void ResetMeters();
 
 	void OpenMidi();
+
+	void OpenSound();
+	void CloseSound();
+
 	void StartStreams();
 	void UpdateMeter();
 
@@ -107,9 +113,8 @@ public:
 	GOSound(GOSettings& settings);
 	~GOSound();
 
-	bool OpenSound();
-	void CloseSound();
-	bool ResetSound(bool force = false);
+	bool AssureSoundIsOpen();
+	void AssureSoundIsClosed();
 
 	wxString getLastErrorMessage() const { return m_LastErrorMessage; }
 	wxString getState();

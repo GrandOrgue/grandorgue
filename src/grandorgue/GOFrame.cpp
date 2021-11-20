@@ -371,7 +371,7 @@ void GOFrame::Init(wxString filename)
 	
 	m_Sound.SetLogSoundErrorMessages(false);
 
-	bool open_sound = m_Sound.OpenSound();
+	bool open_sound = m_Sound.AssureSoundIsOpen();
 
 	if (! open_sound)
 	  settingsReasons.push_back(SettingsReason(m_Sound.getLastErrorMessage(), SettingsDialog::PAGE_AUDIO_OUTPUT));
@@ -869,7 +869,8 @@ void GOFrame::OnProperties(wxCommandEvent& event)
 
 void GOFrame::OnAudioPanic(wxCommandEvent& WXUNUSED(event))
 {
-	m_Sound.ResetSound(true);
+	m_Sound.AssureSoundIsClosed();
+	m_Sound.AssureSoundIsOpen();
 }
 
 void GOFrame::OnMidiMonitor(wxCommandEvent& WXUNUSED(event))
@@ -913,9 +914,10 @@ void GOFrame::OnSettings(wxCommandEvent& event)
 {
   m_InSettings = true;
   
+  bool isToContinue = true; // will GO continue running? Otherwise it will exit
   SettingsReasons * const pReasons = (SettingsReasons *) event.GetClientData();
-
   SettingsDialog dialog(this, m_Sound, pReasons);
+
   if (dialog.ShowModal() == wxID_OK)
   {
     GOArchiveManager manager(m_Settings, m_Settings.UserCachePath);
@@ -923,7 +925,11 @@ void GOFrame::OnSettings(wxCommandEvent& event)
 
     UpdateVolumeControlWithSettings();
     m_Settings.SetMainWindowRect(GetRect());
-    m_Sound.ResetSound(true);
+
+    // because the sound settings might be changed, close sound.
+    // It will reopened later
+    m_Sound.AssureSoundIsClosed();
+
     m_Settings.Flush();
     if (
       dialog.NeedRestart()
@@ -934,6 +940,7 @@ void GOFrame::OnSettings(wxCommandEvent& event)
     ) {
       m_App.SetRestart();
       SetEventAfterSettings(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_EXIT);
+      isToContinue = false;
     } else if (
       dialog.NeedReload() && m_Sound.GetOrganFile() != NULL
       && wxMessageBox(
@@ -946,6 +953,12 @@ void GOFrame::OnSettings(wxCommandEvent& event)
   }
   if (pReasons)
     delete pReasons;
+
+  // The sound might be closed in the settings dialog (for obtaining the list of devices)
+  // or later if the settings were changed
+  if (isToContinue)
+    m_Sound.AssureSoundIsOpen();
+
   if (m_AfterSettingsEventType != wxEVT_NULL)
   {
     wxCommandEvent event(m_AfterSettingsEventType, m_AfterSettingsEventId);
