@@ -67,6 +67,10 @@ void GOSoundEngine::Reset()
   }
 
   m_Scheduler.Clear();
+
+  // clear all buffered sound
+  for (unsigned i = 0; i < m_AudioGroups.size(); i++)
+    m_AudioGroups[i]->Clear();
   
   if (m_HasBeenSetup) 
   {
@@ -403,8 +407,13 @@ void GOSoundEngine::SetupReverb(GOSettings& settings)
 
 void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output, bool last)
 {
+  size_t const nBytes = sizeof(float) * n_frames * m_AudioOutputs[audio_output + 1]->GetChannels();
+
+  if (m_HasBeenSetup)
+  {
 	m_AudioOutputs[audio_output + 1]->Finish(last);
-	memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, sizeof(float) * n_frames * m_AudioOutputs[audio_output + 1]->GetChannels());
+	memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, nBytes);
+  } else memset(output_buffer, 0, nBytes);
 }
 
 void GOSoundEngine::NextPeriod()

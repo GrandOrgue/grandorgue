@@ -46,7 +46,9 @@ void GOSoundGroupWorkItem::ProcessList(GOSoundSamplerList& list, float* output_b
 {
 	for (GOSoundSampler* sampler = list.Get(); sampler; sampler = list.Get())
 	{
-		if (m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, sampler->windchest->GetVolume()))
+		GOSoundWindchestWorkItem* const windchest = sampler->windchest;
+
+		if (windchest && m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, windchest->GetVolume()))
 			Add(sampler);
 	}
 }
