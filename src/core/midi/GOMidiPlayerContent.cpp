@@ -9,7 +9,7 @@
 #include "GOMidiEvent.h"
 #include "GOMidiFileReader.h"
 #include "GOMidiMap.h"
-#include "GOMidiMerger.h"
+#include "GOMidiInputMerger.h"
 
 GOMidiPlayerContent::GOMidiPlayerContent() :
 	m_Events(),

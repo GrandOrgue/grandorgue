@@ -11,7 +11,7 @@
 
 #include "GOMidiPort.h"
 
-#include "midi/GOMidiMerger.h"
+#include "midi/GOMidiInputMerger.h"
 
 class GOMidiInPort: public GOMidiPort
 {
