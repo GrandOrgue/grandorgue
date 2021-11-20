@@ -44,14 +44,14 @@ void GOSoundReleaseWorkItem::Reset()
 	m_WaitCnt = 0;
 }
 
-void GOSoundReleaseWorkItem::Add(GO_SAMPLER* sampler)
+void GOSoundReleaseWorkItem::Add(GOSoundSampler* sampler)
 {
 	m_List.Put(sampler);
 }
 
 void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread)
 {
-	GO_SAMPLER* sampler;
+	GOSoundSampler* sampler;
 	do
 	{
 		while((sampler = m_List.Get()))
@@ -75,7 +75,7 @@ void GOSoundReleaseWorkItem::Exec()
 {
 	m_Stop = true;
 	Run();
-	GO_SAMPLER* sampler;
+	GOSoundSampler* sampler;
 	while((sampler = m_List.Get()))
 		m_engine.PassSampler(sampler);
 }

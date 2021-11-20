@@ -34,7 +34,7 @@ void GOSoundGroupWorkItem::Clear()
 	m_Release.Clear();
 }
 
-void GOSoundGroupWorkItem::Add(GO_SAMPLER* sampler)
+void GOSoundGroupWorkItem::Add(GOSoundSampler* sampler)
 {
 	if (sampler->is_release)
 		m_Release.Put(sampler);
@@ -44,7 +44,7 @@ void GOSoundGroupWorkItem::Add(GO_SAMPLER* sampler)
 
 void GOSoundGroupWorkItem::ProcessList(GOSoundSamplerList& list, float* output_buffer)
 {
-	for (GO_SAMPLER* sampler = list.Get(); sampler; sampler = list.Get())
+	for (GOSoundSampler* sampler = list.Get(); sampler; sampler = list.Get())
 	{
 		if (m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, sampler->windchest->GetVolume()))
 			Add(sampler);
@@ -53,7 +53,7 @@ void GOSoundGroupWorkItem::ProcessList(GOSoundSamplerList& list, float* output_b
 
 void GOSoundGroupWorkItem::ProcessReleaseList(GOSoundSamplerList& list, float* output_buffer)
 {
-	for (GO_SAMPLER* sampler = list.Get(); sampler; sampler = list.Get())
+	for (GOSoundSampler* sampler = list.Get(); sampler; sampler = list.Get())
 	{
 		if (m_Stop && sampler->time + 2000 < m_engine.GetTime())
 		{

@@ -13,13 +13,13 @@
 #include "GOPipeConfigNode.h"
 #include "GOPipeWindchestCallback.h"
 
-class GO_SAMPLER;
+class GOSoundSampler;
 
 class GOSoundingPipe : public GOPipe, private GOCacheObject, private GOPipeUpdateCallback, 
 	private GOPipeWindchestCallback
 {
 private:
-	GO_SAMPLER* m_Sampler;
+	GOSoundSampler* m_Sampler;
 	uint64_t m_LastStop;
 	int m_Instances;
 	bool m_Tremulant;

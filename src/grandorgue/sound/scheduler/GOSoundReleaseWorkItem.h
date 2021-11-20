@@ -13,7 +13,7 @@
 
 class GOSoundEngine;
 class GOSoundGroupWorkItem;
-class GO_SAMPLER;
+class GOSoundSampler;
 
 class GOSoundReleaseWorkItem : public GOSoundWorkItem
 {
@@ -37,7 +37,7 @@ public:
 	void Clear();
 	void Reset();
 
-	void Add(GO_SAMPLER* sampler);
+	void Add(GOSoundSampler* sampler);
 };
 
 #endif

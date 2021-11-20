@@ -13,7 +13,7 @@
 class GOSoundSimpleSamplerList
 {
 private:
-	atomic<GO_SAMPLER*> m_List;
+	atomic<GOSoundSampler*> m_List;
 public:
 	GOSoundSimpleSamplerList()
 	{
@@ -25,25 +25,25 @@ public:
 		m_List = 0;
 	}
 
-	GO_SAMPLER* Get()
+	GOSoundSampler* Get()
 	{
 		do
 		{
-			GO_SAMPLER* sampler = m_List;
+			GOSoundSampler* sampler = m_List;
 			if (!sampler)
 				return NULL;
-			GO_SAMPLER* next = sampler->next;
+			GOSoundSampler* next = sampler->next;
 			if (m_List.compare_exchange(sampler, next))
 				return sampler;
 		}
 		while(true);
 	}
 
-	void Put(GO_SAMPLER* sampler)
+	void Put(GOSoundSampler* sampler)
 	{
 		do
 		{
-			GO_SAMPLER* current = m_List;
+			GOSoundSampler* current = m_List;
 			sampler->next = current;
 			if (m_List.compare_exchange(current, sampler))
 				return;

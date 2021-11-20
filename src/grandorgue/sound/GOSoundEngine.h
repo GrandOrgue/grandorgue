@@ -31,7 +31,7 @@ typedef struct
 	std::vector< std::vector<float> > scale_factors;
 } GOAudioOutputConfiguration;
 
-class GO_SAMPLER;
+class GOSoundSampler;
 
 class GOSoundEngine
 {
@@ -72,9 +72,9 @@ private:
 	   0 detached release
 	   1 .. n Windchests
 	*/
-	void StartSampler(GO_SAMPLER* sampler, int sampler_group_id, unsigned audio_group);
-	void CreateReleaseSampler(GO_SAMPLER* sampler);
-	void SwitchAttackSampler(GO_SAMPLER* sampler);
+	void StartSampler(GOSoundSampler* sampler, int sampler_group_id, unsigned audio_group);
+	void CreateReleaseSampler(GOSoundSampler* sampler);
+	void SwitchAttackSampler(GOSoundSampler* sampler);
 	float GetRandomFactor();
 
 public:
@@ -103,19 +103,19 @@ public:
 	const std::vector<double>& GetMeterInfo();
 	void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);
 
-	GO_SAMPLER* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop);
-	uint64_t StopSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
-	void SwitchSample(const GOSoundProvider *pipe, GO_SAMPLER* handle);
-	void UpdateVelocity(const GOSoundProvider* pipe, GO_SAMPLER* handle, unsigned velocity);
+	GOSoundSampler* StartSample(const GOSoundProvider *pipe, int sampler_group_id, unsigned audio_group, unsigned velocity, unsigned delay, uint64_t last_stop);
+	uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler* handle);
+	void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler* handle);
+	void UpdateVelocity(const GOSoundProvider* pipe, GOSoundSampler* handle, unsigned velocity);
 
 	void GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output, bool last);
 	void NextPeriod();
 	GOSoundScheduler& GetScheduler();
 
-	bool ProcessSampler(float *buffer, GO_SAMPLER* sampler, unsigned n_frames, float volume);
-	void ProcessRelease(GO_SAMPLER* sampler);
-	void PassSampler(GO_SAMPLER* sampler);
-	void ReturnSampler(GO_SAMPLER* sampler);
+	bool ProcessSampler(float *buffer, GOSoundSampler* sampler, unsigned n_frames, float volume);
+	void ProcessRelease(GOSoundSampler* sampler);
+	void PassSampler(GOSoundSampler* sampler);
+	void ReturnSampler(GOSoundSampler* sampler);
 	float GetGain();
 	uint64_t GetTime() const
 	{

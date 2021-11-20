@@ -12,7 +12,7 @@
 #include "threading/GOMutex.h"
 #include "ptrvector.h"
 
-class GO_SAMPLER;
+class GOSoundSampler;
 
 class GOSoundSamplerPool
 {
@@ -22,12 +22,12 @@ private:
 	atomic_uint m_SamplerCount;
 	unsigned                m_UsageLimit;
 	GOSoundSimpleSamplerList m_AvailableSamplers;
-	ptr_vector<GO_SAMPLER> m_Samplers;
+	ptr_vector<GOSoundSampler> m_Samplers;
 
 public:
 	GOSoundSamplerPool();
-	GO_SAMPLER* GetSampler();
-	void ReturnSampler(GO_SAMPLER* sampler);
+	GOSoundSampler* GetSampler();
+	void ReturnSampler(GOSoundSampler* sampler);
 	void ReturnAll();
 	unsigned GetUsageLimit() const;
 	void SetUsageLimit(unsigned count);

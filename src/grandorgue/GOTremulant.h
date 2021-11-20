@@ -15,7 +15,7 @@ class GOSoundProvider;
 class GOConfigReader;
 class GOConfigWriter;
 struct IniFileEnumEntry;
-class GO_SAMPLER;
+class GOSoundSampler;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
 
@@ -29,7 +29,7 @@ private:
 	int m_StopRate;
 	int m_AmpModDepth;
 	GOSoundProvider* m_TremProvider;
-	GO_SAMPLER* m_PlaybackHandle;
+	GOSoundSampler* m_PlaybackHandle;
 	uint64_t m_LastStop;
 	int m_SamplerGroupID;
 

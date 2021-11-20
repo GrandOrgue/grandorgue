@@ -34,7 +34,7 @@ public:
 
 	void Reset();
 	void Clear();
-	void Add(GO_SAMPLER* sampler);
+	void Add(GOSoundSampler* sampler);
 
 	float GetVolume()
 	{
