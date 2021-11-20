@@ -6,8 +6,8 @@
 
 #include "GOMidiPort.h"
 
+#include "midi/GOMidi.h"
 #include "midi/GOMidiMap.h"
-#include "GOMidi.h"
 
 
 GOMidiPort::GOMidiPort(GOMidi* midi, wxString prefix, wxString name):

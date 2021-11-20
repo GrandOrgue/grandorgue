@@ -6,10 +6,9 @@
 
 #include "GOMidiOutPort.h"
 
+#include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiMap.h"
-
-#include "GOMidi.h"
 
 
 GOMidiOutPort::GOMidiOutPort(GOMidi* midi, wxString prefix, wxString name) :
