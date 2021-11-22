@@ -100,7 +100,10 @@ midi/ports/GOMidiRtInPort.cpp
 midi/ports/GOMidiRtOutPort.cpp
 midi/GOMidi.cpp
 midi/GOMidiListener.cpp
+midi/GOMidiInputMerger.cpp
+midi/GOMidiOutputMerger.cpp
 midi/GOMidiPlayer.cpp
+midi/GOMidiPlayerContent.cpp
 midi/GOMidiSender.cpp
 midi/GOMidiReceiver.cpp
 midi/GOMidiRecorder.cpp

@@ -46,10 +46,7 @@ GOLogWindow.cpp
 GOMemoryPool.cpp
 midi/GOMidiEvent.cpp
 midi/GOMidiFileReader.cpp
-midi/GOMidiInputMerger.cpp
 midi/GOMidiMap.cpp
-midi/GOMidiOutputMerger.cpp
-midi/GOMidiPlayerContent.cpp
 midi/GOMidiReceiverBase.cpp
 midi/GOMidiReceiverData.cpp
 midi/GOMidiSenderData.cpp
