@@ -28,8 +28,7 @@ private:
 	unsigned m_Done;
 	volatile bool m_Stop;
 
-	void ProcessList(GOSoundSamplerList& list, float* output_buffer);
-	void ProcessReleaseList(GOSoundSamplerList& list, float* output_buffer);
+	void ProcessList(GOSoundSamplerList& list, bool toDropOld, float* output_buffer);
 
 public:
 	GOSoundGroupWorkItem(GOSoundEngine& sound_engine, unsigned samples_per_buffer);
@@ -44,6 +43,7 @@ public:
 	void Reset();
 	void Clear();
 	void Add(GOSoundSampler* sampler);
+	void WaitAndClear();
 };
 
 #endif
