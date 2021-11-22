@@ -1,4 +1,4 @@
-# Installation of GrandOgue
+# Installation of GrandOrgue
 This document describes installing GrandOrgue from already built installation files. If you want to build these files from sources see [BUILD.md](BUILD.md).
 
 Generally, for installing GrandOrgue or upgrading from a previous version you have to do two steps:
@@ -13,9 +13,9 @@ These two steps will be described later in the text.
 
 ## Warning
 
-Installation of program creates neither the configuration file nor directories used by GrandOrgue to store data and cache. These directories reside in the user home directory and are created when GrandOrgue is launched the first time.
+Installation of the program creates neither the configuration file nor directories used by GrandOrgue to store data and cache. These directories reside in the user home directory and are created when GrandOrgue is launched the first time.
 
-## Installation or upgdading on Linux
+## Installation or upgrading on Linux
 
 ### Run GrandOrgue on Linux directly from AppImage
 The GrandOrgue appimage is built for x86_64 architecture without jack support to maximize compatibility. This method does not require any installation of dependencies or GrandOrgue itself.
@@ -24,7 +24,7 @@ The GrandOrgue appimage is built for x86_64 architecture without jack support to
 2. Make the appimage file executable (Right click file, select properties, on Permissions tab make sure that Allow executing file as program is ticked. Or open terminal where the file is and run: chmod +x grandorgue*.AppImage)
 3. The file is now runnable and can be started by clicking on it
 
-### Installation or upgdading on rpm-based systems (centos, fedora, redhat, oracle linux, opensuse)
+### Installation or upgrading on rpm-based systems (centos, fedora, redhat, oracle linux, opensuse)
 
 1. Download the linux package file ``grandorgue-<version>.<arch>.rpm`` where `<arch>` is
 
@@ -68,7 +68,7 @@ The GrandOrgue appimage is built for x86_64 architecture without jack support to
             yum update <path>/grandorgue-<version>.<arch>.rpm
             ```
 
-3. After installation, run GrandOrgue from the Aplication menu or from the overview screen.
+3. After installation, run GrandOrgue from the Applications menu or from the overview screen.
 
 ### Installation or upgrading on debian-based systems (debian 9+, ubuntu 18+, mint, raspbian)
 
@@ -90,7 +90,7 @@ The GrandOrgue appimage is built for x86_64 architecture without jack support to
     apt-get install <path>/grandorgue_<version>_<arch>.deb
     ```
 
-4. After installation or upgrading, run GrandOrgue from the Aplication menu or from the overview screen.
+4. After installation or upgrading, run GrandOrgue from the Applications menu or from the overview screen.
 
 ### Running GrandOrgue on Linux without installation
 This method requires that all dependencies have already been installed. Usually this way is used for trying a new GrandOrgue version when an old one has already been installed.
@@ -111,7 +111,7 @@ This method requires that all dependencies have already been installed. Usually 
 ### Running Grandorgue on Windows without installation
 1. Download the file ``grandorgue-<version>.windows.x86_64.zip``
 2. Unpack it's contents to some directory.
-3. Run ``GrandOrgue.exe`` from the `bin` subdirecttory
+3. Run ``GrandOrgue.exe`` from the `bin` subdirectory
 
 ## Installation on OSx (intel-based only)
 1. Download the file grandorgue-<version>.os.osx.x86_64.dmg
