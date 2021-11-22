@@ -7,25 +7,20 @@
 #ifndef GOMIDIINPORT_H
 #define GOMIDIINPORT_H
 
-#include "midi/GOMidiMerger.h"
 #include "ptrvector.h"
-#include <wx/string.h>
 
-class GOMidi;
+#include "GOMidiPort.h"
 
-class GOMidiInPort
+#include "midi/GOMidiInputMerger.h"
+
+class GOMidiInPort: public GOMidiPort
 {
 protected:
-	GOMidi* m_midi;
-	bool m_IsActive;
-	wxString m_Name;
-	wxString m_Prefix;
-	unsigned m_ID;
 	GOMidiMerger m_merger;
 	int m_ChannelShift;
 
-	const wxString GetClientName();
-	const wxString GetPortName();
+	virtual const wxString GetPortName() const;
+
 	void Receive(const std::vector<unsigned char> msg);
 
 public:
@@ -34,10 +29,6 @@ public:
 
 	virtual bool Open(int channel_shift = 0);
 	virtual void Close() = 0;
-
-	const wxString& GetName();
-	unsigned GetID();
-	bool IsActive();
 };
 
 #endif

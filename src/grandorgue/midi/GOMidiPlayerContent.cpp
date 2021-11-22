@@ -6,10 +6,10 @@
 
 #include "GOMidiPlayerContent.h"
 
-#include "GOMidiEvent.h"
-#include "GOMidiFileReader.h"
-#include "GOMidiMap.h"
-#include "GOMidiMerger.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiFileReader.h"
+#include "midi/GOMidiMap.h"
+#include "GOMidiInputMerger.h"
 
 GOMidiPlayerContent::GOMidiPlayerContent() :
 	m_Events(),

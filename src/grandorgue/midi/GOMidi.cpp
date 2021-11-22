@@ -8,8 +8,6 @@
 
 #include "GOEvent.h"
 #include "GOMidiListener.h"
-#include "GOMidiRtInPort.h"
-#include "GOMidiRtOutPort.h"
 #include "midi/GOMidiWXEvent.h"
 #include "settings/GOSettings.h"
 

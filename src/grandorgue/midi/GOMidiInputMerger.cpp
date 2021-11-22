@@ -4,9 +4,9 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOMidiMerger.h"
+#include "GOMidiInputMerger.h"
 
-#include "GOMidiEvent.h"
+#include "midi/GOMidiEvent.h"
 #include <string.h>
 
 GOMidiMerger::GOMidiMerger()

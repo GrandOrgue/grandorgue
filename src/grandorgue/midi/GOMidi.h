@@ -7,9 +7,11 @@
 #ifndef GOMIDI_H
 #define GOMIDI_H
 
-#include "GOMidiRtFactory.h"
 #include "ptrvector.h"
+
 #include <wx/event.h>
+
+#include "ports/GOMidiFactory.h"
 
 class GOMidiEvent;
 class GOMidiInPort;
@@ -28,7 +30,7 @@ private:
 	ptr_vector<GOMidiOutPort> m_midi_out_devices;
 	int m_transpose;
 	std::vector<GOMidiListener*> m_Listeners;
-	GOMidiRtFactory m_MidiFactory;
+	GOMidiFactory m_MidiFactory;
 	void OnMidiEvent(wxMidiEvent& event);
 
 public:

@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef GOMIDIMERGER_H
-#define GOMIDIMERGER_H
+#ifndef GOMIDIINPUTMERGER_H
+#define GOMIDIINPUTMERGER_H
 
 class GOMidiEvent;
 
