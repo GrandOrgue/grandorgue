@@ -6,7 +6,7 @@
 
 #include "GOMidiInputMerger.h"
 
-#include "GOMidiEvent.h"
+#include "midi/GOMidiEvent.h"
 #include <string.h>
 
 GOMidiMerger::GOMidiMerger()

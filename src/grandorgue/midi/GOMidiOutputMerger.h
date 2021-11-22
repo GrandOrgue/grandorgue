@@ -7,9 +7,11 @@
 #ifndef GOMIDIOUTPUTMERGER_H
 #define GOMIDIOUTPUTMERGER_H
 
-#include "GOMidiEvent.h"
-#include <wx/string.h>
 #include <vector>
+
+#include <wx/string.h>
+
+#include "midi/GOMidiEvent.h"
 
 class GOMidiOutputEvent;
 
