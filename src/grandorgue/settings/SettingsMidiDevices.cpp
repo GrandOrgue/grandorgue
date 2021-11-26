@@ -28,74 +28,68 @@ SettingsMidiDevices::SettingsMidiDevices(GOSound& sound, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Sound(sound)
 {
-	m_Sound.GetMidi().UpdateDevices();
-
-	wxArrayString choices;
-	std::vector<wxString> list = m_Sound.GetMidi().GetInDevices();
-	std::vector<bool> state;
-	for (unsigned i = 0; i < list.size(); i++)
-	{
-		choices.push_back(list[i]);
-		m_InDeviceData.push_back(m_Sound.GetSettings().GetMidiInDeviceChannelShift(list[i]));
-		m_InOutDeviceData.push_back(m_Sound.GetSettings().GetMidiInOutDevice(list[i]));
-		state.push_back(m_Sound.GetSettings().GetMidiInState(list[i]));
-	}
-
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
+
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
-	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxSize(100, 200), choices);
-	for (unsigned i = 0; i < state.size(); i++)
-	{
-		if (state[i])
-			m_InDevices->Check(i);
-	}
+	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxSize(100, 100));
 	item3->Add(m_InDevices, 1, wxEXPAND | wxALL, 5);
 
 	wxBoxSizer* item4 = new wxBoxSizer(wxHORIZONTAL);
 	m_InProperties = new wxButton(this, ID_INCHANNELSHIFT, _("A&dvanced..."));
 	m_InProperties->Disable();
 	item4->Add(m_InProperties, 0, wxALL, 5);
+
 	m_InOutDevice = new wxButton(this, ID_INOUTDEVICE, _("&MIDI-Output-Device..."));
 	m_InOutDevice->Disable();
 	item4->Add(m_InOutDevice, 0, wxALL, 5);
 	item3->Add(item4, 0, wxALIGN_RIGHT | wxALL, 5);
 	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
-	choices.clear();
-	std::vector<bool> out_state;
-	list = m_Sound.GetMidi().GetOutDevices();
-	for (unsigned i = 0; i < list.size(); i++)
-	{
-		choices.push_back(list[i]);
-		out_state.push_back(m_Sound.GetSettings().GetMidiOutState(list[i]) == 1);
-	}
-
 	item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &output devices"));
-	m_OutDevices = new wxCheckListBox(this, ID_OUTDEVICES, wxDefaultPosition, wxSize(100, 200), choices);
-	for (unsigned i = 0; i < out_state.size(); i++)
-		if (out_state[i])
-			m_OutDevices->Check(i);
-
+	m_OutDevices = new wxCheckListBox(this, ID_OUTDEVICES, wxDefaultPosition, wxSize(100, 100));
 	item3->Add(m_OutDevices, 1, wxEXPAND | wxALL, 5);
-	wxBoxSizer* box = new wxBoxSizer(wxHORIZONTAL);
-	item3->Add(box);
-	box->Add(new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to ")), 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
-	m_RecorderDevice = new wxChoice(this, ID_RECORDERDEVICE, wxDefaultPosition, wxSize(400, wxDefaultCoord));
-	box->Add(m_RecorderDevice, 1, wxEXPAND | wxALL, 5);
-	m_RecorderDevice->Append(_("No device"));
-	m_RecorderDevice->Select(0);
-	list = m_Sound.GetMidi().GetOutDevices();
-	for (unsigned i = 0; i < list.size(); i++)
-	{
-		m_RecorderDevice->Append(list[i]);
-		if (m_Sound.GetSettings().MidiRecorderOutputDevice() == list[i])
-			m_RecorderDevice->SetSelection(m_RecorderDevice->GetCount() - 1);
-	}
+
+	item4 = new wxBoxSizer(wxHORIZONTAL);
+	item3->Add(
+	  new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to:")),
+	  0, wxEXPAND | wxALIGN_LEFT | wxALL, 5
+	);
+	m_RecorderDevice = new wxChoice(
+	  this, ID_RECORDERDEVICE, wxDefaultPosition, wxSize(100, wxDefaultCoord)
+	);
+	item3->Add(m_RecorderDevice, 0, wxEXPAND | wxALL, 5);
 	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
 	topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
+
+	m_Sound.GetMidi().UpdateDevices();
+
+	// Fill m_InDevices
+	for (const wxString& deviceName : m_Sound.GetMidi().GetInDevices())
+	{
+	  const int i = m_InDevices->Append(deviceName);
+
+	  if (settings.GetMidiInState(deviceName))
+	    m_InDevices->Check(i);
+	  m_InDeviceData.push_back(settings.GetMidiInDeviceChannelShift(deviceName));
+	  m_InOutDeviceData.push_back(settings.GetMidiInOutDevice(deviceName));
+	}
+
+	// Fill m_OutDevices and m_RecorderDevice
+	m_RecorderDevice->Append(_("No device"));
+	m_RecorderDevice->Select(0);
+	for (const wxString& deviceName : m_Sound.GetMidi().GetOutDevices())
+	{
+	  const int iOut = m_OutDevices->Append(deviceName);
+	  const int iRec = m_RecorderDevice->Append(deviceName);
+
+	  if (settings.GetMidiOutState(deviceName) == 1)
+	    m_OutDevices->Check(iOut);
+	  if (settings.MidiRecorderOutputDevice() == deviceName)
+	    m_RecorderDevice->SetSelection(iRec);
+	}
 }
 
 void SettingsMidiDevices::OnInDevicesClick(wxCommandEvent& event)
