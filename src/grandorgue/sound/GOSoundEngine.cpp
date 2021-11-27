@@ -67,7 +67,7 @@ void GOSoundEngine::Reset()
   }
 
   m_Scheduler.Clear();
-  
+
   if (m_HasBeenSetup) 
   {
 	for (unsigned i = 0; i < m_Tremulants.size(); i++)
@@ -230,6 +230,12 @@ void GOSoundEngine::StartSampler(GOSoundSampler* sampler, int sampler_group_id, 
 void GOSoundEngine::ClearSetup()
 {
 	m_HasBeenSetup = false;
+
+	// the winchests may be still used from audio callbacks.
+	// clear the pending sound before destroying the windchests
+	for (unsigned i = 0; i < m_AudioGroups.size(); i++)
+	  m_AudioGroups[i]->WaitAndClear();
+
 	m_Scheduler.Clear();
 	m_Windchests.clear();
 	m_Tremulants.clear();
@@ -403,8 +409,14 @@ void GOSoundEngine::SetupReverb(GOSettings& settings)
 
 void GOSoundEngine::GetAudioOutput(float *output_buffer, unsigned n_frames, unsigned audio_output, bool last)
 {
+  size_t const nBytes = sizeof(float) * n_frames * m_AudioOutputs[audio_output + 1]->GetChannels();
+
+  if (m_HasBeenSetup)
+  {
 	m_AudioOutputs[audio_output + 1]->Finish(last);
-	memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, sizeof(float) * n_frames * m_AudioOutputs[audio_output + 1]->GetChannels());
+	memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, nBytes);
+  } else
+	memset(output_buffer, 0, nBytes);
 }
 
 void GOSoundEngine::NextPeriod()
