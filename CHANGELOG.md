@@ -1,3 +1,5 @@
+# 3.4.4 (2021-11-27)
+- Fixed crash after loading an organ several times https://github.com/GrandOrgue/grandorgue/issues/707
 # 3.4.3 (2021-11-22)
 - Fixed hang after changing the audio device https://github.com/GrandOrgue/grandorgue/issues/701
 - Fixed a possible crash when playing with shared pipes https://github.com/GrandOrgue/grandorgue/issues/847
