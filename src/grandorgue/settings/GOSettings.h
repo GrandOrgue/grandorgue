@@ -61,14 +61,16 @@ class GOSettings : public GOSettingStore, public GOOrganList {
 private:
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
-	std::map<wxString, bool> m_MidiIn;
-	std::map<wxString, unsigned> m_MidiInShift;
-	std::map<wxString, wxString> m_MidiInOutDeviceMap;
-	std::map<wxString, bool> m_MidiOut;
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
 	GOPortsConfig m_SoundPortsConfig;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
+
+	GOPortsConfig m_MidiPortsConfig;
+	std::map<wxString, bool> m_MidiIn;
+	std::map<wxString, unsigned> m_MidiInShift;
+	std::map<wxString, wxString> m_MidiInOutDeviceMap;
+	std::map<wxString, bool> m_MidiOut;
 	ptr_vector<GOMidiReceiverBase> m_MIDIEvents;
 	GOMidiMap m_MidiMap;
 	GOTemperamentList m_Temperaments;
@@ -149,6 +151,8 @@ public:
 	GOSettingUnsigned MetronomeMeasure;
 	GOSettingUnsigned MetronomeBPM;
 
+	GOSettingBool IsToAutoAddMidi;
+	GOSettingBool IsToCheckMidiOnStart;
 	GOSettingString MidiRecorderOutputDevice;
 
 	GOSettingDirectory OrganPath;
@@ -199,6 +203,12 @@ public:
 	const unsigned GetTotalAudioChannels() const;
 	void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
 	unsigned GetDefaultLatency();
+
+	const GOPortsConfig & GetMidiPortsConfig() const
+	{ return m_MidiPortsConfig; }
+
+	void SetMidiPortsConfig(const GOPortsConfig & portsConfig)
+	{ m_MidiPortsConfig = portsConfig; }
 
 	GOMidiMap& GetMidiMap();
 
