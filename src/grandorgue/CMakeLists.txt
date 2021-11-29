@@ -91,11 +91,11 @@ GOLabel.cpp
 GOManual.cpp
 GOMetronome.cpp
 GOMainWindowData.cpp
-midi/ports/GOMidiFactory.cpp
+midi/ports/GOMidiPortFactory.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp
 midi/ports/GOMidiPort.cpp
-midi/ports/GOMidiRtFactory.cpp
+midi/ports/GOMidiRtPortFactory.cpp
 midi/ports/GOMidiRtInPort.cpp
 midi/ports/GOMidiRtOutPort.cpp
 midi/GOMidi.cpp
@@ -126,7 +126,7 @@ sound/GOSound.cpp
 sound/ports/GOSoundJackPort.cpp
 sound/ports/GOSoundPort.cpp
 sound/ports/GOSoundPortaudioPort.cpp
-sound/ports/GOSoundPortsConfig.cpp
+settings/GOPortsConfig.cpp
 sound/ports/GOSoundRtPort.cpp
 GOSoundingPipe.cpp
 GOSplash.cpp

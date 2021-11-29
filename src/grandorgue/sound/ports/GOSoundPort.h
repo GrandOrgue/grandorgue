@@ -8,7 +8,7 @@
 #define GOSOUNDPORT_H
 
 #include "sound/GOSoundDevInfo.h"
-#include "GOSoundPortsConfig.h"
+#include "settings/GOPortsConfig.h"
 
 #include <wx/string.h>
 #include <vector>

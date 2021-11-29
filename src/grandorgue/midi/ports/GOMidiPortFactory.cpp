@@ -4,7 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOMidiFactory.h"
+#include "GOMidiPortFactory.h"
 
 void GOMidiFactory::addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports)
 {

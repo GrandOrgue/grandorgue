@@ -11,7 +11,7 @@
 
 #include "GOMidiInPort.h"
 #include "GOMidiOutPort.h"
-#include "GOMidiRtFactory.h"
+#include "GOMidiRtPortFactory.h"
 
 class GOMidi;
 

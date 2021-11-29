@@ -11,7 +11,7 @@
 
 #include <wx/event.h>
 
-#include "ports/GOMidiFactory.h"
+#include "ports/GOMidiPortFactory.h"
 
 class GOMidiEvent;
 class GOMidiInPort;

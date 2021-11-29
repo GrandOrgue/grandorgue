@@ -12,7 +12,7 @@
 #include "GOSoundRecorder.h"
 #include "midi/GOMidi.h"
 #include "GOSoundDevInfo.h"
-#include "ports/GOSoundPortsConfig.h"
+#include "settings/GOPortsConfig.h"
 
 #include "threading/atomic.h"
 #include "threading/GOMutex.h"

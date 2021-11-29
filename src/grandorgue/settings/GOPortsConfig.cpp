@@ -1,4 +1,4 @@
-#include "GOSoundPortsConfig.h"
+#include "GOPortsConfig.h"
 
 int GOSoundPortsConfig::Find(
   const wxString &portName, const wxString &apiName

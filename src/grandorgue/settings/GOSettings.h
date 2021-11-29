@@ -20,7 +20,7 @@
 #include "settings/GOSettingString.h"
 #include "settings/GOSettingStore.h"
 #include "settings/GOSettingString.h"
-#include "sound/ports/GOSoundPortsConfig.h"
+#include "GOPortsConfig.h"
 #include "ptrvector.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
