@@ -181,7 +181,7 @@ void GOSoundJackPort::Close()
 
 static const wxString OLD_STYLE_NAME = wxT("Jack Output");
 
-GOSoundPort* GOSoundJackPort::create(const GOSoundPortsConfig &portsConfig, GOSound* sound, wxString name)
+GOSoundPort* GOSoundJackPort::create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name)
 {
 #if defined(GO_USE_JACK)
   wxString devName = getName();
@@ -191,7 +191,7 @@ GOSoundPort* GOSoundJackPort::create(const GOSoundPortsConfig &portsConfig, GOSo
   return NULL;
 }
 
-void GOSoundJackPort::addDevices(const GOSoundPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& result)
+void GOSoundJackPort::addDevices(const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& result)
 {
 #if defined(GO_USE_JACK)  
   if (portsConfig.IsEnabled(PORT_NAME))

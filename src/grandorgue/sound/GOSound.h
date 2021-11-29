@@ -126,8 +126,8 @@ public:
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
-	std::vector<GOSoundDevInfo> GetAudioDevices(const GOSoundPortsConfig &portsConfig);
-	const wxString GetDefaultAudioDevice(const GOSoundPortsConfig &portsConfig);
+	std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
+	const wxString GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
 
 	GOMidi& GetMidi();
 

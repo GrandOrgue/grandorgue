@@ -141,7 +141,7 @@ enum {
   SUBSYS_JACK_BIT = 4
 };
 
-GOSoundPort* GOSoundPort::create(const GOSoundPortsConfig &portsConfig, GOSound* sound, wxString name)
+GOSoundPort* GOSoundPort::create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name)
 {
   GOSoundPort *port = NULL;
   NameParser parser(name);
@@ -173,7 +173,7 @@ GOSoundPort* GOSoundPort::create(const GOSoundPortsConfig &portsConfig, GOSound*
 }
 
 std::vector<GOSoundDevInfo> GOSoundPort::getDeviceList(
-  const GOSoundPortsConfig &portsConfig
+  const GOPortsConfig &portsConfig
 ) {
   std::vector<GOSoundDevInfo> result;
   

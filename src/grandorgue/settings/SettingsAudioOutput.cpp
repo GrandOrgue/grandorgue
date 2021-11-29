@@ -235,7 +235,7 @@ SettingsAudioOutput::SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& c
 	UpdateButtons();
 }
 
-GOSoundPortsConfig & SettingsAudioOutput::RenewSoundPortsConfig()
+GOPortsConfig & SettingsAudioOutput::RenewSoundPortsConfig()
 
 {
   for (const wxString &portName: GOSoundPort::getPortNames())
@@ -369,7 +369,7 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 }
 
 void SettingsAudioOutput::AssureDeviceList() {
-  const GOSoundPortsConfig portsConfig(RenewSoundPortsConfig());
+  const GOPortsConfig portsConfig(RenewSoundPortsConfig());
   
   if (m_PortsConfigPopulatedWith != portsConfig) {
     m_DeviceList = m_Sound.GetAudioDevices(portsConfig);

@@ -1,6 +1,6 @@
 #include "GOPortsConfig.h"
 
-int GOSoundPortsConfig::Find(
+int GOPortsConfig::Find(
   const wxString &portName, const wxString &apiName
 ) const {
   int res = -1;
@@ -18,7 +18,7 @@ int GOSoundPortsConfig::Find(
   return res;
 }
 
-void GOSoundPortsConfig::SetConfigEnabled(
+void GOPortsConfig::SetConfigEnabled(
   const wxString &portName, const wxString &apiName, bool isEnabled
 ) {
   const PortApiConfig c(portName, apiName, isEnabled);
@@ -30,7 +30,7 @@ void GOSoundPortsConfig::SetConfigEnabled(
     m_PortApiConfigs.push_back(c);
 }
 
-bool GOSoundPortsConfig::IsConfigEnabled(
+bool GOPortsConfig::IsConfigEnabled(
   const wxString &portName, const wxString &apiName
 ) const {
   const int i = Find(portName, apiName);

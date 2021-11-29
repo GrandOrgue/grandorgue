@@ -128,7 +128,7 @@ void GOSoundPortaudioPort::terminate()
 }
 
 
-GOSoundPort* GOSoundPortaudioPort::create(const GOSoundPortsConfig &portsConfig, GOSound* sound, wxString name)
+GOSoundPort* GOSoundPortaudioPort::create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name)
 {
   if (portsConfig.IsEnabled(PORT_NAME))
   {
@@ -143,7 +143,7 @@ GOSoundPort* GOSoundPortaudioPort::create(const GOSoundPortsConfig &portsConfig,
   return NULL;
 }
 
-void GOSoundPortaudioPort::addDevices(const GOSoundPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& result)
+void GOSoundPortaudioPort::addDevices(const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& result)
 {
   if (portsConfig.IsEnabled(PORT_NAME))
   {

@@ -135,7 +135,7 @@ void GOSound::OpenSound()
 		{
 			wxString name = audio_config[i].name;
 			
-			const GOSoundPortsConfig &portsConfig(m_Settings.GetPortsConfig());
+			const GOPortsConfig &portsConfig(m_Settings.GetPortsConfig());
 			
 			if (name == wxEmptyString)
 				name = GetDefaultAudioDevice(portsConfig);
@@ -278,7 +278,7 @@ void GOSound::SetLogSoundErrorMessages(bool settingsDialogVisible)
 }
 
 std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
-  const GOSoundPortsConfig &portsConfig
+  const GOPortsConfig &portsConfig
 ) {
   // Getting a device list tries to open and close each device
   // Because some devices (ex. ASIO) cann't be open more than once
@@ -296,7 +296,7 @@ std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
 }
 
 const wxString GOSound::GetDefaultAudioDevice(
-  const GOSoundPortsConfig &portsConfig
+  const GOPortsConfig &portsConfig
 ) {
   if (m_defaultAudioDevice.IsEmpty())
     GetAudioDevices(portsConfig);

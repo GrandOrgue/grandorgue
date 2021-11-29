@@ -1,10 +1,10 @@
-#ifndef GOSOUNDPORTSCONFIG_H
-#define GOSOUNDPORTSCONFIG_H
+#ifndef GOPORTSCONFIG_H
+#define GOPORTSCONFIG_H
 
 #include <vector>
 #include <wx/string.h>
 
-class GOSoundPortsConfig {
+class GOPortsConfig {
 private:
   struct PortApiConfig {
     wxString m_PortName;
@@ -34,14 +34,14 @@ private:
   int Find(const wxString &portName, const wxString &apiName) const;
   
 public:
-  GOSoundPortsConfig() {}
-  GOSoundPortsConfig(const GOSoundPortsConfig &src): m_PortApiConfigs(src.m_PortApiConfigs) {}
+  GOPortsConfig() {}
+  GOPortsConfig(const GOPortsConfig &src): m_PortApiConfigs(src.m_PortApiConfigs) {}
   
-  bool operator==(const GOSoundPortsConfig &other) const { return m_PortApiConfigs == other.m_PortApiConfigs; }
-  bool operator!=(const GOSoundPortsConfig &other) const { return m_PortApiConfigs != other.m_PortApiConfigs; }
+  bool operator==(const GOPortsConfig &other) const { return m_PortApiConfigs == other.m_PortApiConfigs; }
+  bool operator!=(const GOPortsConfig &other) const { return m_PortApiConfigs != other.m_PortApiConfigs; }
 
   void Clear() { m_PortApiConfigs.clear(); }
-  void AssignFrom(const GOSoundPortsConfig &src) { m_PortApiConfigs = src.m_PortApiConfigs; }
+  void AssignFrom(const GOPortsConfig &src) { m_PortApiConfigs = src.m_PortApiConfigs; }
   
   void SetConfigEnabled(const wxString &portName, const wxString &apiName, bool isEnabled);
   
