@@ -5,13 +5,58 @@
 */
 
 #include "GOMidiPortFactory.h"
+#include "GOMidiRtPortFactory.h"
+
+static bool hasPortsPopulated = false;
+static std::vector<wxString> portNames;
+
+const std::vector<wxString>& GOMidiPortFactory::GetPortNames() const
+{
+  if (! hasPortsPopulated)
+  {
+    portNames.push_back(GOMidiRtPortFactory::PORT_NAME);
+    hasPortsPopulated = true;
+  }
+  return portNames;
+}
+
+const std::vector<wxString>& GOMidiPortFactory::GetPortApiNames(const wxString & portName)
+const
+{
+  if (portName == GOMidiRtPortFactory::PORT_NAME)
+    return GOMidiRtPortFactory::getApis();
+  else // old-style name
+    return c_NoApis;
+}
+
+static GOMidiPortFactory instance;
+
+GOMidiPortFactory& GOMidiPortFactory::getInstance() { return instance; }
+
+static GOMidiRtPortFactory* p_rt_factory = NULL;
+
+GOMidiRtPortFactory* get_rt()
+{
+  if (! p_rt_factory)
+    p_rt_factory = new GOMidiRtPortFactory();
+  return p_rt_factory;
+}
 
 void GOMidiPortFactory::addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports)
 {
-  m_RtFactory.addMissingInDevices(midi, ports);
+  get_rt() -> addMissingInDevices(midi, ports);
 }
 
 void GOMidiPortFactory::addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports)
 {
-  m_RtFactory.addMissingOutDevices(midi, ports);
+  get_rt() -> addMissingOutDevices(midi, ports);
+}
+
+void GOMidiPortFactory::terminate()
+{
+  if (p_rt_factory)
+  {
+    delete p_rt_factory;
+    p_rt_factory = NULL;
+  }
 }

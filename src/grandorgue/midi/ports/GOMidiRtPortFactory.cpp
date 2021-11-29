@@ -12,6 +12,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+const wxString GOMidiRtPortFactory::PORT_NAME = wxT("Rt");
+
 static std::vector<RtMidi::Api> apis;
 static bool hasApisPopulated = false;
 
@@ -113,4 +115,22 @@ void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOu
       wxString error = wxString::FromAscii(e.getMessage().c_str());
       wxLogError(_("RtMidi error: %s"), error.c_str());
     }
+}
+
+static bool hasApiNamesPopulated = false;
+static std::vector<wxString> apiNames;
+
+const std::vector<wxString> & GOMidiRtPortFactory::getApis()
+{
+  if (! hasApiNamesPopulated)
+  {
+    std::vector<RtMidi::Api> apiIndices;
+    RtMidi::getCompiledApi(apiIndices);
+
+    for (unsigned k = 0; k < apiIndices.size(); k++) {
+      apiNames.push_back(wxString(RtMidi::getApiName(apiIndices[k])));
+    }
+    hasApiNamesPopulated = true;
+  }
+  return apiNames;
 }
