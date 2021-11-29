@@ -7,18 +7,25 @@
 #ifndef SETTINGSMIDIDEVICES_H
 #define SETTINGSMIDIDEVICES_H
 
-#include <wx/panel.h>
 #include <vector>
+
+#include <wx/checkbox.h>
+#include <wx/panel.h>
+
+#include "GOSettings.h"
+#include "GOSettingsPorts.h"
 
 class GOSound;
 class wxButton;
 class wxCheckListBox;
 class wxChoice;
 
-class SettingsMidiDevices : public wxPanel
+class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 {
 	enum {
 		ID_INDEVICES = 200,
+		ID_AUTO_ADD_MIDI,
+		ID_CHECK_ON_STARTUP,
 		ID_INCHANNELSHIFT,
 		ID_INOUTDEVICE,
 		ID_OUTDEVICES,
@@ -26,13 +33,18 @@ class SettingsMidiDevices : public wxPanel
 	};
 private:
 	GOSound& m_Sound;
+	GOSettings& m_Settings;
+
+	wxCheckBox* m_AutoAddInput;
+	wxCheckBox* m_CheckOnStartup;
 	wxCheckListBox* m_InDevices;
 	wxCheckListBox* m_OutDevices;
-	std::vector<int> m_InDeviceData;
-	std::vector<wxString> m_InOutDeviceData;
 	wxButton* m_InProperties;
 	wxButton* m_InOutDevice;
 	wxChoice* m_RecorderDevice;
+
+	std::vector<int> m_InDeviceData;
+	std::vector<wxString> m_InOutDeviceData;
 
 	void OnInDevicesClick(wxCommandEvent& event);
 	void OnInOutDeviceClick(wxCommandEvent& event);
