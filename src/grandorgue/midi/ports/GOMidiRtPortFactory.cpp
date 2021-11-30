@@ -4,7 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOMidiRtFactory.h"
+#include "GOMidiRtPortFactory.h"
 #include "GOMidiRtInPort.h"
 #include "GOMidiRtOutPort.h"
 
@@ -15,7 +15,7 @@
 static std::vector<RtMidi::Api> apis;
 static bool hasApisPopulated = false;
 
-GOMidiRtFactory::GOMidiRtFactory()
+GOMidiRtPortFactory::GOMidiRtPortFactory()
 {
   if (! hasApisPopulated)
   {
@@ -24,7 +24,7 @@ GOMidiRtFactory::GOMidiRtFactory()
   }
 }
 
-GOMidiRtFactory::~GOMidiRtFactory()
+GOMidiRtPortFactory::~GOMidiRtPortFactory()
 {
   for (std::map<RtMidi::Api, RtMidiOut*>::iterator it = m_RtMidiOuts.begin(); it != m_RtMidiOuts.end(); it ++)
   {
@@ -51,7 +51,7 @@ GOMidiRtFactory::~GOMidiRtFactory()
   m_RtMidiIns.clear();
 }
 
-void GOMidiRtFactory::addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports)
+void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports)
 {
   for(unsigned i = 0; i < apis.size(); i++)
     try
@@ -83,7 +83,7 @@ void GOMidiRtFactory::addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>
     }
 }
 
-void GOMidiRtFactory::addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports)
+void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports)
 {
   for(unsigned i = 0; i < apis.size(); i++)
     try

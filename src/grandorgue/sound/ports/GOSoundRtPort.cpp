@@ -229,7 +229,7 @@ const std::vector<wxString> & GOSoundRtPort::getApis()
   return apiNames;
 }
 
-GOSoundPort* GOSoundRtPort::create(const GOSoundPortsConfig &portsConfig, GOSound* sound, wxString name)
+GOSoundPort* GOSoundRtPort::create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name)
 {
   GOSoundRtPort* port = NULL;
   
@@ -291,7 +291,7 @@ GOSoundPort* GOSoundRtPort::create(const GOSoundPortsConfig &portsConfig, GOSoun
   return port;
 }
 
-void GOSoundRtPort::addDevices(const GOSoundPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& result)
+void GOSoundRtPort::addDevices(const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& result)
 {
   if (portsConfig.IsEnabled(PORT_NAME))
     try

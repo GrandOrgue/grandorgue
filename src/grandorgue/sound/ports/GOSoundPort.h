@@ -8,7 +8,7 @@
 #define GOSOUNDPORT_H
 
 #include "sound/GOSoundDevInfo.h"
-#include "GOSoundPortsConfig.h"
+#include "settings/GOPortsConfig.h"
 
 #include <wx/string.h>
 #include <vector>
@@ -72,8 +72,8 @@ public:
   static const std::vector<wxString> & getPortNames();
   static const std::vector<wxString> & getApiNames(const wxString & portName);
   
-  static std::vector<GOSoundDevInfo> getDeviceList(const GOSoundPortsConfig &portsConfig);
-  static GOSoundPort* create(const GOSoundPortsConfig &portsConfig, GOSound* sound, wxString name);
+  static std::vector<GOSoundDevInfo> getDeviceList(const GOPortsConfig &portsConfig);
+  static GOSoundPort* create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name);
 
   static void terminate();
 

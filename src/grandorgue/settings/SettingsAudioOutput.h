@@ -17,7 +17,7 @@
 #include <wx/treelist.h>
 
 #include "sound/GOSoundDevInfo.h"
-#include "sound/ports/GOSoundPortsConfig.h"
+#include "GOPortsConfig.h"
 #include "SettingsAudioGroup.h"
 
 class AudioItemData;
@@ -41,7 +41,7 @@ private:
 	GOSound& m_Sound;
 	GOSettings& m_Settings;
 	GOAudioGroupCallback& m_GroupCallback;
-	GOSoundPortsConfig m_SoundPortsConfig;
+	GOPortsConfig m_SoundPortsConfig;
 	
 	wxChoice* m_SampleRate;
 	wxSpinCtrl* m_SamplesPerBuffer;
@@ -54,14 +54,14 @@ private:
 	wxButton* m_Properties;
 	wxButton* m_Default;
 	
-	GOSoundPortsConfig m_PortsConfigPopulatedWith;
+	GOPortsConfig m_PortsConfigPopulatedWith;
 	std::vector<GOSoundDevInfo> m_DeviceList;
 	
 	bool GetPortItemChecked(
 	  const wxString &portName, const wxString& apiName = wxEmptyString
 	) const;
 	void SetPortItemChecked(wxTreeListItem item, bool isChecked);
-	GOSoundPortsConfig & RenewSoundPortsConfig();
+	GOPortsConfig & RenewSoundPortsConfig();
 
 	AudioItemData* GetObject(const wxTreeItemId& id);
 	wxTreeItemId GetDeviceNode(const wxString& name);

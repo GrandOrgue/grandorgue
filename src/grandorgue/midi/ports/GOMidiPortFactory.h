@@ -4,20 +4,20 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef GOMIDIFACTORY_H
-#define GOMIDIFACTORY_H
+#ifndef GOMIDIPORTFACTORY_H
+#define GOMIDIPORTFACTORY_H
 
 #include <ptrvector.h>
 
 #include "GOMidiInPort.h"
 #include "GOMidiOutPort.h"
-#include "GOMidiRtFactory.h"
+#include "GOMidiRtPortFactory.h"
 
 class GOMidi;
 
-class GOMidiFactory {
+class GOMidiPortFactory {
 private:
-  GOMidiRtFactory m_RtFactory;
+  GOMidiRtPortFactory m_RtFactory;
 
 public:
   void addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports);

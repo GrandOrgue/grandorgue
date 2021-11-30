@@ -1,6 +1,12 @@
-#include "GOSoundPortsConfig.h"
+/*
+* Copyright 2006 Milan Digital Audio LLC
+* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+*/
 
-int GOSoundPortsConfig::Find(
+#include "GOPortsConfig.h"
+
+int GOPortsConfig::Find(
   const wxString &portName, const wxString &apiName
 ) const {
   int res = -1;
@@ -18,7 +24,7 @@ int GOSoundPortsConfig::Find(
   return res;
 }
 
-void GOSoundPortsConfig::SetConfigEnabled(
+void GOPortsConfig::SetConfigEnabled(
   const wxString &portName, const wxString &apiName, bool isEnabled
 ) {
   const PortApiConfig c(portName, apiName, isEnabled);
@@ -30,7 +36,7 @@ void GOSoundPortsConfig::SetConfigEnabled(
     m_PortApiConfigs.push_back(c);
 }
 
-bool GOSoundPortsConfig::IsConfigEnabled(
+bool GOPortsConfig::IsConfigEnabled(
   const wxString &portName, const wxString &apiName
 ) const {
   const int i = Find(portName, apiName);

@@ -20,7 +20,7 @@
 #include "settings/GOSettingString.h"
 #include "settings/GOSettingStore.h"
 #include "settings/GOSettingString.h"
-#include "sound/ports/GOSoundPortsConfig.h"
+#include "GOPortsConfig.h"
 #include "ptrvector.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
@@ -66,7 +66,7 @@ private:
 	std::map<wxString, bool> m_MidiOut;
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
-	GOSoundPortsConfig m_PortsConfig;
+	GOPortsConfig m_PortsConfig;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 	ptr_vector<GOMidiReceiverBase> m_MIDIEvents;
 	GOMidiMap m_MidiMap;
@@ -188,10 +188,10 @@ public:
 	unsigned GetAudioGroupId(const wxString& str);
 	int GetStrictAudioGroupId(const wxString& str);
 
-	const GOSoundPortsConfig & GetPortsConfig() const
+	const GOPortsConfig & GetPortsConfig() const
 	{ return m_PortsConfig; }
 	
-	void SetPortsConfig(const GOSoundPortsConfig & portsConfig)
+	void SetPortsConfig(const GOPortsConfig & portsConfig)
 	{ m_PortsConfig = portsConfig; }
 	
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();

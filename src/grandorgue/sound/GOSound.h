@@ -12,7 +12,7 @@
 #include "GOSoundRecorder.h"
 #include "midi/GOMidi.h"
 #include "GOSoundDevInfo.h"
-#include "ports/GOSoundPortsConfig.h"
+#include "settings/GOPortsConfig.h"
 
 #include "threading/atomic.h"
 #include "threading/GOMutex.h"
@@ -126,8 +126,8 @@ public:
 
 	void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
-	std::vector<GOSoundDevInfo> GetAudioDevices(const GOSoundPortsConfig &portsConfig);
-	const wxString GetDefaultAudioDevice(const GOSoundPortsConfig &portsConfig);
+	std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
+	const wxString GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
 
 	GOMidi& GetMidi();
 

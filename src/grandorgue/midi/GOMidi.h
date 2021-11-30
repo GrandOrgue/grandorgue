@@ -11,7 +11,7 @@
 
 #include <wx/event.h>
 
-#include "ports/GOMidiFactory.h"
+#include "ports/GOMidiPortFactory.h"
 
 class GOMidiEvent;
 class GOMidiInPort;
@@ -30,7 +30,7 @@ private:
 	ptr_vector<GOMidiOutPort> m_midi_out_devices;
 	int m_transpose;
 	std::vector<GOMidiListener*> m_Listeners;
-	GOMidiFactory m_MidiFactory;
+	GOMidiPortFactory m_MidiFactory;
 	void OnMidiEvent(wxMidiEvent& event);
 
 public:

@@ -1,5 +1,5 @@
-#ifndef GOMIDIRTFACTORY_H
-#define GOMIDIRTFACTORY_H
+#ifndef GOMIDIRTPORTFACTORY_H
+#define GOMIDIRTPORTFACTORY_H
 
 #include <map>
 
@@ -7,14 +7,14 @@
 #include "GOMidiOutPort.h"
 #include "RtMidi.h"
 
-class GOMidiRtFactory {
+class GOMidiRtPortFactory {
 private:
   std::map<RtMidi::Api, RtMidiIn*> m_RtMidiIns;
   std::map<RtMidi::Api, RtMidiOut*> m_RtMidiOuts;
   
 public:
-  GOMidiRtFactory();
-  ~GOMidiRtFactory();
+  GOMidiRtPortFactory();
+  ~GOMidiRtPortFactory();
   
   void addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports);
   void addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports);
