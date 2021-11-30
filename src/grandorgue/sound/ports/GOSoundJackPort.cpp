@@ -153,7 +153,7 @@ void GOSoundJackPort::StartStream()
 
 wxString GOSoundJackPort::getName()
 {
-  return composeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
+  return GOSoundPortFactory::composeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
 }
 #endif /* GO_USE_JACK */
 

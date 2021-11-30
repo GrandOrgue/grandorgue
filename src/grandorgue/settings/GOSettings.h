@@ -7,10 +7,13 @@
 #ifndef GOSETTINGS_H
 #define GOSETTINGS_H
 
+#include <map>
+#include <vector>
+#include <wx/gdicmn.h>
+#include <wx/string.h>
+
 #include "midi/GOMidiMap.h"
 #include "midi/GOMidiReceiverBase.h"
-#include "GOOrganList.h"
-#include "temperaments/GOTemperamentList.h"
 #include "settings/GOSettingBool.h"
 #include "settings/GOSettingDirectory.h"
 #include "settings/GOSettingEnum.h"
@@ -20,12 +23,10 @@
 #include "settings/GOSettingString.h"
 #include "settings/GOSettingStore.h"
 #include "settings/GOSettingString.h"
+#include "temperaments/GOTemperamentList.h"
+#include "GOOrganList.h"
 #include "GOPortsConfig.h"
 #include "ptrvector.h"
-#include <wx/gdicmn.h>
-#include <wx/string.h>
-#include <map>
-#include <vector>
 
 typedef struct
 {
@@ -66,7 +67,7 @@ private:
 	std::map<wxString, bool> m_MidiOut;
 	wxString m_ResourceDir;
 	std::vector<wxString> m_AudioGroups;
-	GOPortsConfig m_PortsConfig;
+	GOPortsConfig m_SoundPortsConfig;
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 	ptr_vector<GOMidiReceiverBase> m_MIDIEvents;
 	GOMidiMap m_MidiMap;
@@ -188,11 +189,11 @@ public:
 	unsigned GetAudioGroupId(const wxString& str);
 	int GetStrictAudioGroupId(const wxString& str);
 
-	const GOPortsConfig & GetPortsConfig() const
-	{ return m_PortsConfig; }
+	const GOPortsConfig & GetSoundPortsConfig() const
+	{ return m_SoundPortsConfig; }
 	
-	void SetPortsConfig(const GOPortsConfig & portsConfig)
-	{ m_PortsConfig = portsConfig; }
+	void SetSoundPortsConfig(const GOPortsConfig & portsConfig)
+	{ m_SoundPortsConfig = portsConfig; }
 	
 	const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
 	const unsigned GetTotalAudioChannels() const;

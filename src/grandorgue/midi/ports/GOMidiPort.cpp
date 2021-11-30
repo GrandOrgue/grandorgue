@@ -9,7 +9,6 @@
 #include "midi/GOMidi.h"
 #include "midi/GOMidiMap.h"
 
-
 GOMidiPort::GOMidiPort(GOMidi* midi, wxString prefix, wxString name):
   m_midi(midi),
   m_IsActive(false),

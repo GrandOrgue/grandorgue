@@ -7,19 +7,21 @@
 #ifndef GOSOUND_H
 #define GOSOUND_H
 
-#include "ptrvector.h"
-#include "GOSoundEngine.h"
-#include "GOSoundRecorder.h"
-#include "midi/GOMidi.h"
-#include "GOSoundDevInfo.h"
-#include "settings/GOPortsConfig.h"
+#include <map>
+#include <vector>
+#include <wx/string.h>
 
+#include "midi/GOMidi.h"
+#include "ports/GOSoundPortFactory.h"
+#include "settings/GOPortsConfig.h"
 #include "threading/atomic.h"
 #include "threading/GOMutex.h"
 #include "threading/GOCondition.h"
-#include <wx/string.h>
-#include <map>
-#include <vector>
+
+#include "GOSoundEngine.h"
+#include "GOSoundRecorder.h"
+#include "GOSoundDevInfo.h"
+#include "ptrvector.h"
 
 class GODefinitionFile;
 class GOMidi;

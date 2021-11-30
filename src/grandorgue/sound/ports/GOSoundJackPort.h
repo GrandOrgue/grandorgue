@@ -17,6 +17,7 @@
 #include <jack/jack.h>
 #endif
 
+#include "GOSoundPortFactory.h"
 #include "GOSoundPort.h"
 
 class GOSoundJackPort : public GOSoundPort
@@ -49,7 +50,7 @@ public:
 public:
 	void Close();
 
-	static const std::vector<wxString> & getApis() { return c_NoApis; }
+	static const std::vector<wxString> & getApis() { return GOSoundPortFactory::c_NoApis; }
 	static GOSoundPort* create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name);
 	static void addDevices(const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& list);
 };

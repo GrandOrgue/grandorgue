@@ -8,6 +8,7 @@
 #define GOSOUNDPORTAUDIOPORT_H
 
 #include "GOSoundPort.h"
+#include "GOSoundPortFactory.h"
 #include "portaudio.h"
 
 class GOSoundPortaudioPort : public GOSoundPort
@@ -30,7 +31,7 @@ public:
 	void StartStream();
 	void Close();
 
-	static const std::vector<wxString> & getApis() { return c_NoApis; }
+	static const std::vector<wxString> & getApis() { return GOSoundPortFactory::c_NoApis; }
 	static GOSoundPort* create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name);
 	static void addDevices(const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo>& list);
 	static void terminate();

@@ -18,7 +18,7 @@
 
 #include "settings/GOSettings.h"
 #include "sound/GOSound.h"
-#include "sound/ports/GOSoundPort.h"
+#include "sound/ports/GOSoundPortFactory.h"
 
 
 class AudioItemData : public wxTreeItemData
@@ -125,7 +125,7 @@ SettingsAudioOutput::SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& c
 	m_Sound(sound),
 	m_Settings(sound.GetSettings()),
 	m_GroupCallback(callback),
-	m_SoundPortsConfig(m_Settings.GetPortsConfig())
+	m_SoundPortsConfig(m_Settings.GetSoundPortsConfig())
 {
 	wxBoxSizer* const item0 = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item1 = new wxBoxSizer(wxHORIZONTAL);
@@ -157,13 +157,13 @@ SettingsAudioOutput::SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& c
 	m_SoundPorts->AppendColumn(wxEmptyString);
 	item2->Add(m_SoundPorts, 1, wxALIGN_LEFT | wxEXPAND);
 	
-	for (const wxString &portName: GOSoundPort::getPortNames())
+	for (const wxString &portName: GOSoundPortFactory::getInstance().GetPortNames())
 	{
 	  const wxTreeListItem portItem = m_SoundPorts->AppendItem(
 	    m_SoundPorts->GetRootItem(), getPortItemName(portName)
 	  );
 	  SetPortItemChecked(portItem, m_SoundPortsConfig.IsConfigEnabled(portName));
-	  for (const wxString &apiName: GOSoundPort::getApiNames(portName)) {
+	  for (const wxString &apiName: GOSoundPortFactory::getInstance().GetPortApiNames(portName)) {
 	    const wxTreeListItem portApiItem
 	      = m_SoundPorts->AppendItem(portItem, getPortItemName(portName, apiName));
 	    
@@ -238,10 +238,10 @@ SettingsAudioOutput::SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& c
 GOPortsConfig & SettingsAudioOutput::RenewSoundPortsConfig()
 
 {
-  for (const wxString &portName: GOSoundPort::getPortNames())
+  for (const wxString &portName: GOSoundPortFactory::getInstance().GetPortNames())
   {
     m_SoundPortsConfig.SetConfigEnabled(portName, GetPortItemChecked(portName));
-    for (const wxString &apiName: GOSoundPort::getApiNames(portName)) {
+    for (const wxString &apiName: GOSoundPortFactory::getInstance().GetPortApiNames(portName)) {
       m_SoundPortsConfig.SetConfigEnabled(portName, apiName, GetPortItemChecked(portName, apiName));
     }
   }
@@ -686,7 +686,7 @@ void SettingsAudioOutput::Save()
 	  wxLogError(_("Invalid sample rate"));
   m_Settings.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
   
-  m_Sound.GetSettings().SetPortsConfig(RenewSoundPortsConfig());
+  m_Sound.GetSettings().SetSoundPortsConfig(RenewSoundPortsConfig());
   
   std::vector<GOAudioDeviceConfig> audio_config;
   wxTreeItemId root = m_AudioOutput->GetRootItem();
