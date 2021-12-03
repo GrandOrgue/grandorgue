@@ -7,6 +7,7 @@
 #ifndef GOSOUNDRTPORT_H
 #define GOSOUNDRTPORT_H
 
+#include "sound/GOSoundDevInfo.h"
 #include "GOSoundPort.h"
 #include "RtAudio.h"
 

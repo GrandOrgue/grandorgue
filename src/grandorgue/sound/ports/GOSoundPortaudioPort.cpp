@@ -43,7 +43,7 @@ wxString GOSoundPortaudioPort::getName(unsigned index)
 {
 	const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
 	const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
-	return composeDeviceName(PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
+	return GOSoundPortFactory::composeDeviceName(PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
 }
 
 void GOSoundPortaudioPort::Open()

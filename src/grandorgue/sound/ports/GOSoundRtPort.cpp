@@ -9,6 +9,8 @@
 #include <wx/log.h>
 #include <wx/intl.h>
 
+#include "GOSoundPortFactory.h"
+
 const wxString GOSoundRtPort::PORT_NAME = wxT("Rt");
 
 GOSoundRtPort::GOSoundRtPort(GOSound* sound, RtAudio* rtApi, wxString name)
@@ -156,8 +158,8 @@ wxString GOSoundRtPort::getName(RtAudio* rt_api, unsigned index)
     wxString error = wxString::FromAscii(e.getMessage().c_str());
     wxLogError(_("RtAudio error: %s"), error.c_str());
     devName = wxString::Format(_("<unknown> %d"), index);
-}
-  return composeDeviceName(PORT_NAME, apiName, devName);
+  }
+  return GOSoundPortFactory::composeDeviceName(PORT_NAME, apiName, devName);
 }
 
 wxString get_oldstyle_name(RtAudio::Api api, RtAudio* rt_api, unsigned index)
@@ -236,7 +238,7 @@ GOSoundPort* GOSoundRtPort::create(const GOPortsConfig &portsConfig, GOSound* so
   if (portsConfig.IsEnabled(PORT_NAME))
     try
     {
-      NameParser parser(name);
+      GOSoundPortFactory::NameParser parser(name);
       const wxString subsysName = parser.nextComp();
       wxString apiName = subsysName == PORT_NAME ? parser.nextComp() : wxT("");
 

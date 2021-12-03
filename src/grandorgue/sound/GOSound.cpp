@@ -39,7 +39,7 @@ GOSound::~GOSound()
 
 	CloseSound();
 
-	GOSoundPort::terminate();
+	GOSoundPortFactory::terminate();
 }
 
 void GOSound::StartThreads()
@@ -135,12 +135,12 @@ void GOSound::OpenSound()
 		{
 			wxString name = audio_config[i].name;
 			
-			const GOPortsConfig &portsConfig(m_Settings.GetPortsConfig());
+			const GOPortsConfig &portsConfig(m_Settings.GetSoundPortsConfig());
 			
 			if (name == wxEmptyString)
 				name = GetDefaultAudioDevice(portsConfig);
 
-			m_AudioOutputs[i].port = GOSoundPort::create(portsConfig, this, name);
+			m_AudioOutputs[i].port = GOSoundPortFactory::create(portsConfig, this, name);
 			if (!m_AudioOutputs[i].port)
 				throw wxString::Format(_("Output device %s not found - no sound output will occure"), name.c_str());
 
@@ -285,7 +285,7 @@ std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
   // then close the current audio device
   AssureSoundIsClosed();
   m_defaultAudioDevice = wxEmptyString;
-  std::vector<GOSoundDevInfo> list = GOSoundPort::getDeviceList(portsConfig);
+  std::vector<GOSoundDevInfo> list = GOSoundPortFactory::getDeviceList(portsConfig);
   for(unsigned i = 0; i < list.size(); i++)
 	  if (list[i].isDefault)
 	  {
