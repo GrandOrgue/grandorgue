@@ -42,14 +42,16 @@ GOMidiRtPortFactory* get_rt()
   return p_rt_factory;
 }
 
-void GOMidiPortFactory::addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports)
+void GOMidiPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiInPort>& ports)
 {
-  get_rt() -> addMissingInDevices(midi, ports);
+  if (portsConfig.IsEnabled(GOMidiRtPortFactory::PORT_NAME))
+    get_rt() -> addMissingInDevices(midi, portsConfig, ports);
 }
 
-void GOMidiPortFactory::addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports)
+void GOMidiPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiOutPort>& ports)
 {
-  get_rt() -> addMissingOutDevices(midi, ports);
+  if (portsConfig.IsEnabled(GOMidiRtPortFactory::PORT_NAME))
+    get_rt() -> addMissingOutDevices(midi, portsConfig, ports);
 }
 
 void GOMidiPortFactory::terminate()

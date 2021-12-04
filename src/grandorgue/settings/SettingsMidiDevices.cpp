@@ -84,36 +84,51 @@ SettingsMidiDevices::SettingsMidiDevices(GOSound& sound, wxWindow* parent) :
 	m_AutoAddInput->SetValue(m_Settings.IsToAutoAddMidi());
 	m_CheckOnStartup->SetValue(m_Settings.IsToCheckMidiOnStart());
 
-	FillPortsWith(m_Settings.GetMidiPortsConfig());
+	const GOPortsConfig& portsConfig = m_Settings.GetMidiPortsConfig();
 
-	GOMidi& midi(m_Sound.GetMidi());
+	FillPortsWith(portsConfig);
+	RenewDevices(portsConfig);
+}
 
-	midi.UpdateDevices();
+void SettingsMidiDevices::RenewDevices(const GOPortsConfig& portsConfig)
+{
+  GOMidi& midi(m_Sound.GetMidi());
+  midi.UpdateDevices(portsConfig);
 
-	// Fill m_InDevices
-	for (const wxString& deviceName : midi.GetInDevices())
-	{
-	  const int i = m_InDevices->Append(deviceName);
+  m_InDevices->Clear();
+  // Fill m_InDevices
+  for (const wxString& deviceName : midi.GetInDevices())
+  {
+    const int i = m_InDevices->Append(deviceName);
 
-	  if (m_Settings.GetMidiInState(deviceName))
-	    m_InDevices->Check(i);
-	  m_InDeviceData.push_back(m_Settings.GetMidiInDeviceChannelShift(deviceName));
-	  m_InOutDeviceData.push_back(m_Settings.GetMidiInOutDevice(deviceName));
-	}
+    if (m_Settings.GetMidiInState(deviceName))
+      m_InDevices->Check(i);
+    m_InDeviceData.push_back(m_Settings.GetMidiInDeviceChannelShift(deviceName));
+    m_InOutDeviceData.push_back(m_Settings.GetMidiInOutDevice(deviceName));
+  }
 
-	// Fill m_OutDevices and m_RecorderDevice
-	m_RecorderDevice->Append(_("No device"));
-	m_RecorderDevice->Select(0);
-	for (const wxString& deviceName : midi.GetOutDevices())
-	{
-	  const int iOut = m_OutDevices->Append(deviceName);
-	  const int iRec = m_RecorderDevice->Append(deviceName);
+  // Fill m_OutDevices and m_RecorderDevice
+  m_RecorderDevice->Clear();
+  m_RecorderDevice->Append(_("No device"));
+  m_RecorderDevice->Select(0);
+  m_OutDevices->Clear();
+  for (const wxString& deviceName : midi.GetOutDevices())
+  {
+    const int iOut = m_OutDevices->Append(deviceName);
+    const int iRec = m_RecorderDevice->Append(deviceName);
 
-	  if (m_Settings.GetMidiOutState(deviceName) == 1)
-	    m_OutDevices->Check(iOut);
-	  if (m_Settings.MidiRecorderOutputDevice() == deviceName)
-	    m_RecorderDevice->SetSelection(iRec);
-	}
+    if (m_Settings.GetMidiOutState(deviceName) == 1)
+      m_OutDevices->Check(iOut);
+    if (m_Settings.MidiRecorderOutputDevice() == deviceName)
+      m_RecorderDevice->SetSelection(iRec);
+  }
+}
+
+void SettingsMidiDevices::OnPortChanged(
+  const wxString &portName, const wxString apiName, bool oldEnabled, bool newEnabled
+)
+{
+  RenewDevices(RenewPortsConfig());
 }
 
 void SettingsMidiDevices::OnInDevicesClick(wxCommandEvent& event)

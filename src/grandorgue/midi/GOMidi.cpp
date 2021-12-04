@@ -23,10 +23,12 @@ GOMidi::GOMidi(GOSettings& settings) :
 {
 }
 
-void GOMidi::UpdateDevices()
+void GOMidi::UpdateDevices(const GOPortsConfig& portsConfig)
 {
-  m_MidiFactory.addMissingInDevices(this, m_midi_in_devices);
-  m_MidiFactory.addMissingOutDevices(this, m_midi_out_devices);
+  m_midi_in_devices.clear();
+  m_MidiFactory.addMissingInDevices(this, portsConfig, m_midi_in_devices);
+  m_midi_out_devices.clear();
+  m_MidiFactory.addMissingOutDevices(this, portsConfig, m_midi_out_devices);
 }
 
 
@@ -38,7 +40,7 @@ GOMidi::~GOMidi()
 
 void GOMidi::Open()
 {
-	UpdateDevices();
+	UpdateDevices(m_Settings.GetMidiPortsConfig());
 
 	for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
 	{

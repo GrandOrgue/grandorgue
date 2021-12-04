@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include "settings/GOPortsConfig.h"
+
 #include "GOMidiInPort.h"
 #include "GOMidiOutPort.h"
 #include "RtMidi.h"
@@ -18,8 +20,8 @@ public:
   GOMidiRtPortFactory();
   ~GOMidiRtPortFactory();
   
-  void addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports);
-  void addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports);
+  void addMissingInDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiInPort>& ports);
+  void addMissingOutDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiOutPort>& ports);
 
   static const std::vector<wxString> & getApis();
 };

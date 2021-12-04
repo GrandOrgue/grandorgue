@@ -12,6 +12,7 @@
 #include <wx/checkbox.h>
 #include <wx/panel.h>
 
+#include "GOPortsConfig.h"
 #include "GOSettings.h"
 #include "GOSettingsPorts.h"
 
@@ -46,6 +47,10 @@ private:
 	std::vector<int> m_InDeviceData;
 	std::vector<wxString> m_InOutDeviceData;
 
+	void RenewDevices(const GOPortsConfig& portsConfig);
+	void OnPortChanged(
+	  const wxString &portName, const wxString apiName, bool oldEnabled, bool newEnabled
+	);
 	void OnInDevicesClick(wxCommandEvent& event);
 	void OnInOutDeviceClick(wxCommandEvent& event);
 	void OnInChannelShiftClick(wxCommandEvent& event);
