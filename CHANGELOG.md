@@ -1,3 +1,4 @@
+- Added capability of switching automatic adding new midi devices https://github.com/GrandOrgue/grandorgue/issues/703
 - Added capability of enabling and disabling particular MIDI APIs https://github.com/GrandOrgue/grandorgue/issues/703
 # 3.4.4 (2021-11-27)
 - Fixed crash after loading an organ several times https://github.com/GrandOrgue/grandorgue/issues/707

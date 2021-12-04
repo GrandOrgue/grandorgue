@@ -430,16 +430,20 @@ const wxString GOSettings::GetPackageDirectory()
 	return m_ResourceDir + wxFileName::GetPathSeparator() + wxT("packages");
 }
 
-bool GOSettings::GetMidiInState(wxString device)
+bool GOSettings::GetMidiInState(wxString device, bool isEnabledByDefault)
 {
+	bool isEnabled = false;
 	std::map<wxString, bool>::iterator it = m_MidiIn.find(device);
-	if (it == m_MidiIn.end())
-	{
-		m_MidiIn[device] = device.Find(wxT("GrandOrgue")) == wxNOT_FOUND;
-		return m_MidiIn[device];
-	}
+
+	if (it != m_MidiIn.end())
+		isEnabled = it->second;
 	else
-		return it->second;
+	{
+		isEnabled
+		  = isEnabledByDefault && device.Find(wxT("GrandOrgue")) == wxNOT_FOUND;
+		m_MidiIn[device] = isEnabled;
+	}
+	return isEnabled;
 }
 
 void GOSettings::SetMidiInState(wxString device, bool enabled)

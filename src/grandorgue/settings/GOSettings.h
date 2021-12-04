@@ -176,7 +176,7 @@ public:
 	GOMidiReceiverBase* GetMidiEvent(unsigned index);
 	GOMidiReceiverBase* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
 	
-	bool GetMidiInState(wxString device);
+	bool GetMidiInState(wxString device, bool isEnabledByDefault);
 	void SetMidiInState(wxString device, bool enabled);
 	unsigned GetMidiInDeviceChannelShift(wxString device);
 	void SetMidiInDeviceChannelShift(wxString device, unsigned shift);

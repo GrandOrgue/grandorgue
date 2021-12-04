@@ -47,7 +47,7 @@ private:
 	std::vector<int> m_InDeviceData;
 	std::vector<wxString> m_InOutDeviceData;
 
-	void RenewDevices(const GOPortsConfig& portsConfig);
+	void RenewDevices(const GOPortsConfig& portsConfig, const bool isToAutoAddInput);
 	void OnPortChanged(
 	  const wxString &portName, const wxString apiName, bool oldEnabled, bool newEnabled
 	);

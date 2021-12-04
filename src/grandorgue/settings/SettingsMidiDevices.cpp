@@ -81,27 +81,31 @@ SettingsMidiDevices::SettingsMidiDevices(GOSound& sound, wxWindow* parent) :
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
 
-	m_AutoAddInput->SetValue(m_Settings.IsToAutoAddMidi());
+	const bool isToAutoAddInput = m_Settings.IsToAutoAddMidi();
+
+	m_AutoAddInput->SetValue(isToAutoAddInput);
 	m_CheckOnStartup->SetValue(m_Settings.IsToCheckMidiOnStart());
 
 	const GOPortsConfig& portsConfig = m_Settings.GetMidiPortsConfig();
 
 	FillPortsWith(portsConfig);
-	RenewDevices(portsConfig);
+	RenewDevices(portsConfig, isToAutoAddInput);
 }
 
-void SettingsMidiDevices::RenewDevices(const GOPortsConfig& portsConfig)
+void SettingsMidiDevices::RenewDevices(
+  const GOPortsConfig& portsConfig, const bool isToAutoAddInput
+)
 {
   GOMidi& midi(m_Sound.GetMidi());
-  midi.UpdateDevices(portsConfig);
 
+  midi.UpdateDevices(portsConfig);
   m_InDevices->Clear();
   // Fill m_InDevices
   for (const wxString& deviceName : midi.GetInDevices())
   {
     const int i = m_InDevices->Append(deviceName);
 
-    if (m_Settings.GetMidiInState(deviceName))
+    if (m_Settings.GetMidiInState(deviceName, isToAutoAddInput))
       m_InDevices->Check(i);
     m_InDeviceData.push_back(m_Settings.GetMidiInDeviceChannelShift(deviceName));
     m_InOutDeviceData.push_back(m_Settings.GetMidiInOutDevice(deviceName));
@@ -128,7 +132,7 @@ void SettingsMidiDevices::OnPortChanged(
   const wxString &portName, const wxString apiName, bool oldEnabled, bool newEnabled
 )
 {
-  RenewDevices(RenewPortsConfig());
+  RenewDevices(RenewPortsConfig(), m_AutoAddInput->IsChecked());
 }
 
 void SettingsMidiDevices::OnInDevicesClick(wxCommandEvent& event)

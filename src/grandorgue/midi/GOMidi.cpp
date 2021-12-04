@@ -40,11 +40,13 @@ GOMidi::~GOMidi()
 
 void GOMidi::Open()
 {
+	const bool isToAutoAdd = m_Settings.IsToAutoAddMidi();
+
 	UpdateDevices(m_Settings.GetMidiPortsConfig());
 
 	for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
 	{
-		if (m_Settings.GetMidiInState(m_midi_in_devices[i]->GetName()))
+		if (m_Settings.GetMidiInState(m_midi_in_devices[i]->GetName(), isToAutoAdd))
 			m_midi_in_devices[i]->Open(m_Settings.GetMidiInDeviceChannelShift(m_midi_in_devices[i]->GetName()));
 		else
 			m_midi_in_devices[i]->Close();
