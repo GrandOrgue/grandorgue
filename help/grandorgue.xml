@@ -2,24 +2,9 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <book lang="en">
 <!--
- GrandOrgue - free pipe organ simulator
-
- Copyright 2006 Milan Digital Audio LLC
- Copyright 2009-2019 GrandOrgue contributors (see AUTHORS)
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License as
- published by the Free Software Foundation; either version 2 of the
- License, or (at your option) any later version.
-
- This program is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+Copyright 2006 Milan Digital Audio LLC
+Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 -->
   <title>GrandOrgue Help</title>
   <titleabbrev>GrandOrgue</titleabbrev>
@@ -4929,59 +4914,86 @@ messages to easily switch between samplesets.
       </figure>
       <para>This tab shows all available MIDI devices.</para>
       <variablelist>
+	<varlistentry>
+	  <term>Auto add new devices</term>
+	  <listitem>
+	    <para>
+	      This checkbox controls whether any new input devices will be enabled
+	      automatically when GrandOrgue starts.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>Check on startup</term>
+	  <listitem>
+	    <para>
+	      This checkbox controls whether to open the Program Settings dialog
+	      when GrandOrgue starts if no active midi devices found.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>Midi ports</term>
+	  <listitem>
+	    <para>
+	      By checking or unchecking the midi ports it's possible to filter
+	      the list of midi devices used by GrandOrgue.
+	    </para>
+	  </listitem>
+	</varlistentry>
         <varlistentry>
-          <term>Upper frame</term>
+          <term>Midi input devices</term>
           <listitem>
             <para>
-The upper  frame shows a list of all available MIDI input interfaces. Selecting
+This checklist shows all available MIDI input interfaces. Selecting
 a device means that GrandOrgue will listen for incoming MIDI messages through
 that interface. This allows to listen to more than one device at a time; for
 example, to listen to both a controller and a sequencer or loopback device.
-          </para>
-          <para>
+	    </para>
+	    <para>
 The <indexterm><secondary>Advanced properties</secondary></indexterm>
 <emphasis>Advanced</emphasis> button is grayed out unless an input channel is
 selected. It opens a dialog to set advanced properties of the selected input
 channel.
-          </para>
-          <figure>
-            <title>MIDI input channel advanced properties</title>
-            <mediaobject>
-              <imageobject>
-                <imagedata fileref="images/midi_input_device_advanced_properties.png"/>
-              </imageobject>
-            </mediaobject>
-          </figure>
-          <para>
+	    </para>
+	    <figure>
+	      <title>MIDI input channel advanced properties</title>
+	      <mediaobject>
+		<imageobject>
+		  <imagedata fileref="images/midi_input_device_advanced_properties.png"/>
+		</imageobject>
+	      </mediaobject>
+	    </figure>
+	    <para>
 This allows the setting of a channel offset. A channel offset allows the use of
 two MIDI interfaces with conflicting MIDI channels. For example, applying a
 channel offset of 8 to one of the MIDI interfaces would cause that interface's
 channel 1 to appear as channel 9, channel 2 to appear as channel 10, and so on.
 This may be useful if you have multiple keyboards that are configured to use
 the same channel.
-          </para>
-	  <note><simpara>GrandOrgue is capable of matching the MIDI
-	  interface and this is configured by the MIDI detection by
-	  default. Therefore it is possible to use the same MIDI
-	  channel on multiple interfaces without configuring any
-	  channel offset.</simpara></note>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term>Lower frame</term>
-        <listitem>
-          <para>
-The lower frame shows a list of all available MIDI output interfaces. Selecting
+	    </para>
+	    <note><simpara>GrandOrgue is capable of matching the MIDI
+	    interface and this is configured by the MIDI detection by
+	    default. Therefore it is possible to use the same MIDI
+	    channel on multiple interfaces without configuring any
+	    channel offset.</simpara></note>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>MIDI output devices</term>
+	  <listitem>
+	    <para>
+Theis checklistshows all available MIDI output interfaces. Selecting
 a device means that GrandOrgue will write MIDI information to external
 hardware. Possible uses are SAM or LED drivers for stop control feedback, or
 physical pipes drivers when digitally expanding a genuine pipe organ.
-          </para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term>Send MIDI Recorder Output Stream</term>
-        <listitem>
-          <para>
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>Send MIDI Recorder Output Stream</term>
+	  <listitem>
+	    <para>
 The dropdown labeled <emphasis>Send MIDI Recorder Output Stream to</emphasis>
 allows the user to pick a target output MIDI device to receive all
 Recorder-generated output. The selected device must be activeted in the
@@ -4990,16 +5002,16 @@ Recorder-generated output. The selected device must be activeted in the
           <para>When an output device is selected in that dropdown, the recorder outpout is generated even if no MIDI file is being recorded.</para>
         </listitem>
       </varlistentry>
-    </variablelist>
-    <note><simpara>The devices list is refreshed whenever the <emphasis>Audio &amp; Midi Settings</emphasis> dialog is displayed.</simpara></note>
-    <note><simpara>GrandOrgue requires a MIDI input/output port to
-    connect to. MIDI (sequencer) software, that just tries to connect
-    to existing MIDI ports, is not compatible with GrandOrgue. If
-    you want to use such software, create a virtual MIDI
-    port<footnote><simpara>For linux, use <emphasis>sudo modprobe
-    snd-seq-dummy ports=9</emphasis></simpara></footnote> and let
-    GrandOrgue as well as the other MIDI software connect to
-    it.</simpara></note>
+      </variablelist>
+      <note><simpara>The devices list is refreshed whenever the <emphasis>Settings</emphasis> dialog is displayed.</simpara></note>
+      <note><simpara>GrandOrgue requires a MIDI input/output port to
+      connect to. MIDI (sequencer) software, that just tries to connect
+      to existing MIDI ports, is not compatible with GrandOrgue. If
+      you want to use such software, create a virtual MIDI
+      port<footnote><simpara>For linux, use <emphasis>sudo modprobe
+      snd-seq-dummy ports=9</emphasis></simpara></footnote> and let
+      GrandOrgue as well as the other MIDI software connect to
+      it.</simpara></note>
     </sect1>
     <sect1 id="temperamentTab">
       <title>Temperaments</title>
