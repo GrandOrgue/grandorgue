@@ -1,3 +1,4 @@
+- Added a setting option whether to check for existence of active midi devices on startup https://github.com/GrandOrgue/grandorgue/issues/796
 - Added capability of switching automatic adding new midi devices https://github.com/GrandOrgue/grandorgue/issues/703
 - Added capability of enabling and disabling particular MIDI APIs https://github.com/GrandOrgue/grandorgue/issues/703
 # 3.4.4 (2021-11-27)
