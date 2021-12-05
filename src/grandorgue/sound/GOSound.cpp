@@ -39,6 +39,7 @@ GOSound::~GOSound()
 
 	CloseSound();
 
+	GOMidiPortFactory::terminate();
 	GOSoundPortFactory::terminate();
 }
 

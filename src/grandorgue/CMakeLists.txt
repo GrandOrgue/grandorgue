@@ -145,6 +145,7 @@ OrganDialog.cpp
 GODocument.cpp
 GOPanelView.cpp
 settings/GOPortFactory.cpp
+settings/GOSettingsPorts.cpp
 settings/SettingsArchives.cpp
 settings/SettingsAudioGroup.cpp
 settings/SettingsAudioOutput.cpp

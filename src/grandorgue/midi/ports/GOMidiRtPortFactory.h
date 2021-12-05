@@ -13,11 +13,15 @@ private:
   std::map<RtMidi::Api, RtMidiOut*> m_RtMidiOuts;
   
 public:
+  static const wxString PORT_NAME;
+
   GOMidiRtPortFactory();
   ~GOMidiRtPortFactory();
   
   void addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports);
   void addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports);
+
+  static const std::vector<wxString> & getApis();
 };
 
-#endif /* GOMIDIRTFACTORY_H */
+#endif /* GOMIDIRTPORTFACTORY_H */

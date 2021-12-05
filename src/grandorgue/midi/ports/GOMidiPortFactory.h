@@ -9,20 +9,24 @@
 
 #include <ptrvector.h>
 
+#include "settings/GOPortFactory.h"
+
 #include "GOMidiInPort.h"
 #include "GOMidiOutPort.h"
-#include "GOMidiRtPortFactory.h"
 
 class GOMidi;
 
-class GOMidiPortFactory {
-private:
-  GOMidiRtPortFactory m_RtFactory;
-
+class GOMidiPortFactory: public GOPortFactory
+{
 public:
-  void addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports);
-  void addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports);
+  virtual const std::vector<wxString>& GetPortNames() const;
+  virtual const std::vector<wxString>& GetPortApiNames(const wxString & portName) const;
+
+  static GOMidiPortFactory& getInstance();
+  static void addMissingInDevices(GOMidi* midi, ptr_vector<GOMidiInPort>& ports);
+  static void addMissingOutDevices(GOMidi* midi, ptr_vector<GOMidiOutPort>& ports);
+  static void terminate();
 };
 
-#endif /* GOMIDIFACTORY_H */
+#endif /* GOMIDIPORTFACTORY_H */
 

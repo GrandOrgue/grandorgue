@@ -14,16 +14,17 @@
 #include <wx/spinctrl.h>
 #include <wx/string.h>
 #include <wx/treectrl.h>
-#include <wx/treelist.h>
 
 #include "sound/GOSoundDevInfo.h"
-#include "GOPortsConfig.h"
+#include "sound/ports/GOSoundPort.h"
+#include "GOSettings.h"
+#include "GOSettingsPorts.h"
 #include "SettingsAudioGroup.h"
 
 class AudioItemData;
 class GOSound;
 
-class SettingsAudioOutput : public wxPanel
+class SettingsAudioOutput : public wxPanel, GOSettingsPorts
 {
 	enum {
 		ID_OUTPUT_LIST = 200,
@@ -41,12 +42,10 @@ private:
 	GOSound& m_Sound;
 	GOSettings& m_Settings;
 	GOAudioGroupCallback& m_GroupCallback;
-	GOPortsConfig m_SoundPortsConfig;
 	
 	wxChoice* m_SampleRate;
 	wxSpinCtrl* m_SamplesPerBuffer;
 	
-	wxTreeListCtrl* m_SoundPorts;
 	wxTreeCtrl* m_AudioOutput;
 	wxButton* m_Add;
 	wxButton* m_Del;
@@ -57,12 +56,6 @@ private:
 	GOPortsConfig m_PortsConfigPopulatedWith;
 	std::vector<GOSoundDevInfo> m_DeviceList;
 	
-	bool GetPortItemChecked(
-	  const wxString &portName, const wxString& apiName = wxEmptyString
-	) const;
-	void SetPortItemChecked(wxTreeListItem item, bool isChecked);
-	GOPortsConfig & RenewSoundPortsConfig();
-
 	AudioItemData* GetObject(const wxTreeItemId& id);
 	wxTreeItemId GetDeviceNode(const wxString& name);
 	wxTreeItemId GetChannelNode(const wxTreeItemId& audio, unsigned channel);
