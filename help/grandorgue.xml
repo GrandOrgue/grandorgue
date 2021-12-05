@@ -4928,7 +4928,7 @@ messages to easily switch between samplesets.
 	  <listitem>
 	    <para>
 	      This checkbox controls whether to open the Program Settings dialog
-	      when GrandOrgue starts if no active midi devices found.
+	      when GrandOrgue starts if no active midi devices can be found.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -4983,7 +4983,7 @@ the same channel.
 	  <term>MIDI output devices</term>
 	  <listitem>
 	    <para>
-Theis checklistshows all available MIDI output interfaces. Selecting
+This checklist shows all available MIDI output interfaces. Selecting
 a device means that GrandOrgue will write MIDI information to external
 hardware. Possible uses are SAM or LED drivers for stop control feedback, or
 physical pipes drivers when digitally expanding a genuine pipe organ.

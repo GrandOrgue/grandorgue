@@ -32,7 +32,7 @@ private:
       m_ApiName = apiName;
     }
 
-    bool isFor(const wxString& portName, const wxString &apiName = wxEmptyString)
+    bool isItemForPortApi(const wxString& portName, const wxString &apiName = wxEmptyString)
     {
       return m_PortName == portName && m_ApiName == apiName;
     }

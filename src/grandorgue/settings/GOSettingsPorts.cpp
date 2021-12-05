@@ -48,7 +48,7 @@ bool GOSettingsPorts::GetPortItemChecked(
     wxTreeListItem item = m_Ports->GetFirstItem();
     item.IsOk();
     item = m_Ports->GetNextItem(item)
-  ) if (((PortItemData *) m_Ports->GetItemData(item))->isFor(portName, apiName))
+  ) if (((PortItemData *) m_Ports->GetItemData(item))->isItemForPortApi(portName, apiName))
   {
     isChecked = m_Ports->GetCheckedState(item);
     break;
