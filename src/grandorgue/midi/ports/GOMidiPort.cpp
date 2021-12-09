@@ -9,16 +9,35 @@
 #include "midi/GOMidi.h"
 #include "midi/GOMidiMap.h"
 
-GOMidiPort::GOMidiPort(GOMidi* midi, wxString prefix, wxString name):
-  m_midi(midi),
-  m_IsActive(false),
-  m_Name(name),
-  m_Prefix(prefix)
-{
-  m_ID = m_midi->GetMidiMap().GetDeviceByString(m_Name);
-}
-
 const wxString GOMidiPort::GetClientName() const
 {
   return wxT("GrandOrgue");
+}
+
+GOMidiPort::GOMidiPort(
+  GOMidi* midi,
+  const wxString& portName,
+  const wxString& apiName,
+  const wxString& deviceName,
+  const wxString& fullName
+):
+  m_midi(midi),
+  m_IsActive(false),
+  m_PortName(portName),
+  m_ApiName(apiName),
+  m_DeviceName(deviceName),
+  m_FullName(fullName)
+{
+  m_ID = m_midi->GetMidiMap().GetDeviceByString(GetName());
+}
+
+bool GOMidiPort::IsEqualTo(
+  const wxString& portName,
+  const wxString& apiName,
+  const wxString& deviceName
+) const
+{
+  return m_PortName == portName
+    && m_ApiName == apiName
+    && m_DeviceName == deviceName;
 }

@@ -47,8 +47,8 @@ public:
 	void Recv(const GOMidiEvent& e);
 	void Send(const GOMidiEvent& e);
 
-	std::vector<wxString> GetInDevices();
-	std::vector<wxString> GetOutDevices();
+	const ptr_vector<GOMidiInPort>& GetInDevices() const { return m_midi_in_devices; }
+	const ptr_vector<GOMidiOutPort>& GetOutDevices() const { return m_midi_out_devices; }
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);

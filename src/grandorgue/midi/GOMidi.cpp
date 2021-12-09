@@ -25,9 +25,7 @@ GOMidi::GOMidi(GOSettings& settings) :
 
 void GOMidi::UpdateDevices(const GOPortsConfig& portsConfig)
 {
-  m_midi_in_devices.clear();
   m_MidiFactory.addMissingInDevices(this, portsConfig, m_midi_in_devices);
-  m_midi_out_devices.clear();
   m_MidiFactory.addMissingOutDevices(this, portsConfig, m_midi_out_devices);
 }
 
@@ -41,42 +39,35 @@ GOMidi::~GOMidi()
 void GOMidi::Open()
 {
 	const bool isToAutoAdd = m_Settings.IsToAutoAddMidi();
+	const GOPortsConfig& portsConfig(m_Settings.GetMidiPortsConfig());
 
-	UpdateDevices(m_Settings.GetMidiPortsConfig());
+	UpdateDevices(portsConfig);
 
 	for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
 	{
-		if (m_Settings.GetMidiInState(m_midi_in_devices[i]->GetName(), isToAutoAdd))
-			m_midi_in_devices[i]->Open(m_Settings.GetMidiInDeviceChannelShift(m_midi_in_devices[i]->GetName()));
-		else
-			m_midi_in_devices[i]->Close();
+	  GOMidiInPort* pPort = m_midi_in_devices[i];
+
+	  if (
+		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
+		  && m_Settings.GetMidiInState(pPort->GetName(), isToAutoAdd)
+	  )
+		  pPort->Open(m_Settings.GetMidiInDeviceChannelShift(pPort->GetName()));
+	  else
+		  pPort->Close();
 	}
 
 	for (unsigned i = 0; i < m_midi_out_devices.size(); i++)
 	{
-		if (m_Settings.GetMidiOutState(m_midi_out_devices[i]->GetName()))
-			m_midi_out_devices[i]->Open();
-		else
-			m_midi_out_devices[i]->Close();
+	  GOMidiOutPort* pPort = m_midi_out_devices[i];
+
+	  if (
+		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
+		  && m_Settings.GetMidiOutState(pPort->GetName())
+	  )
+		  pPort->Open();
+	  else
+		  pPort->Close();
 	}
-}
-
-std::vector<wxString> GOMidi::GetInDevices()
-{
-	std::vector<wxString> list;
-	for(unsigned i = 0; i < m_midi_in_devices.size(); i++)
-		if (m_midi_in_devices[i])
-			list.push_back(m_midi_in_devices[i]->GetName());
-	return list;
-}
-
-std::vector<wxString> GOMidi::GetOutDevices()
-{
-	std::vector<wxString> list;
-	for(unsigned i = 0; i < m_midi_out_devices.size(); i++)
-		if (m_midi_out_devices[i])
-			list.push_back(m_midi_out_devices[i]->GetName());
-	return list;
 }
 
 bool GOMidi::HasActiveDevice()

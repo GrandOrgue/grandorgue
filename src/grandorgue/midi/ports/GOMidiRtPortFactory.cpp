@@ -7,6 +7,7 @@
 #include "GOMidiRtPortFactory.h"
 #include "GOMidiRtInPort.h"
 #include "GOMidiRtOutPort.h"
+#include "GOMidiPortFactory.h"
 
 #include <vector>
 #include <wx/intl.h>
@@ -55,6 +56,8 @@ GOMidiRtPortFactory::~GOMidiRtPortFactory()
 
 void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiInPort>& ports)
 {
+  GOMidiPortFactory& portFactory(GOMidiPortFactory::getInstance());
+
   for(unsigned i = 0; i < apis.size(); i++)
     try
     {
@@ -63,7 +66,6 @@ void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig&
 
       if (portsConfig.IsEnabled(PORT_NAME, apiName))
       {
-	const wxString apiPrefix = wxString::FromAscii(apiName.c_str()) + ": ";
 	RtMidiIn* &pRtMidiIn(m_RtMidiIns[api]);
 
 	if (pRtMidiIn == NULL)
@@ -71,14 +73,26 @@ void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig&
 
 	for (unsigned j = 0; j < pRtMidiIn->getPortCount(); j++)
 	{
-	  wxString name = apiPrefix + wxString::FromAscii(pRtMidiIn->getPortName(j).c_str());
+	  const wxString deviceName = wxString::FromAscii(pRtMidiIn->getPortName(j).c_str());
 	  bool found = false;
 
 	  for(unsigned k = 0; k < ports.size(); k++)
-	    if (ports[k] && ports[k]->GetName() == name)
+	  {
+	    GOMidiInPort* const pOld = ports[k];
+
+	    if (pOld && pOld->IsEqualTo(PORT_NAME, apiName, deviceName))
+	    {
 	      found = true;
+	      break;
+	    }
+	  }
 	  if (!found)
-	    ports.push_back(new GOMidiRtInPort(midi, apiPrefix, name, api));
+	    ports.push_back(
+	      new GOMidiRtInPort(
+		midi, api, deviceName,
+		portFactory.ComposeDeviceName(PORT_NAME, apiName, deviceName)
+	      )
+	    );
 	}
       }
     }
@@ -91,6 +105,8 @@ void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig&
 
 void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiOutPort>& ports)
 {
+  GOMidiPortFactory& portFactory(GOMidiPortFactory::getInstance());
+
   for(unsigned i = 0; i < apis.size(); i++)
     try
     {
@@ -99,7 +115,6 @@ void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig
 
       if (portsConfig.IsEnabled(PORT_NAME, apiName))
       {
-	const wxString apiPrefix = wxString::FromAscii(apiName.c_str()) + ": ";
 	RtMidiOut* &pRtMidiOut(m_RtMidiOuts[api]);
 
 	if (pRtMidiOut == NULL)
@@ -107,14 +122,26 @@ void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig
 
 	for (unsigned j = 0; j < pRtMidiOut->getPortCount(); j++)
 	{
-	  wxString name = apiPrefix + wxString::FromAscii(pRtMidiOut->getPortName(j).c_str());
+	  const wxString deviceName = wxString::FromAscii(pRtMidiOut->getPortName(j).c_str());
 	  bool found = false;
 
 	  for(unsigned k = 0; k < ports.size(); k++)
-	    if (ports[k] && ports[k]->GetName() == name)
+	  {
+	    const GOMidiOutPort* const pOld = ports[k];
+
+	    if (pOld && pOld->IsEqualTo(PORT_NAME, apiName, deviceName))
+	    {
 	      found = true;
+	      break;
+	    }
+	  }
 	  if (!found)
-	    ports.push_back(new GOMidiRtOutPort(midi, apiPrefix, name, api));
+	    ports.push_back(
+	      new GOMidiRtOutPort(
+		midi, api, deviceName,
+		portFactory.ComposeDeviceName(PORT_NAME, apiName, deviceName)
+	      )
+	    );
 	}
       }
     }
@@ -128,6 +155,11 @@ void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig
 static bool hasApiNamesPopulated = false;
 static std::vector<wxString> apiNames;
 
+wxString GOMidiRtPortFactory::getApiName(RtMidi::Api api)
+{
+  return wxString(RtMidi::getApiName(api));
+}
+
 const std::vector<wxString> & GOMidiRtPortFactory::getApis()
 {
   if (! hasApiNamesPopulated)
@@ -136,7 +168,7 @@ const std::vector<wxString> & GOMidiRtPortFactory::getApis()
     RtMidi::getCompiledApi(apiIndices);
 
     for (unsigned k = 0; k < apiIndices.size(); k++) {
-      apiNames.push_back(wxString(RtMidi::getApiName(apiIndices[k])));
+      apiNames.push_back(getApiName(apiIndices[k]));
     }
     hasApiNamesPopulated = true;
   }

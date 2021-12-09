@@ -23,10 +23,17 @@ protected:
 	virtual void SendData(std::vector<unsigned char>& msg) = 0;
 
 public:
-	GOMidiOutPort(GOMidi* midi, wxString prefix, wxString name);
+	GOMidiOutPort(
+	  GOMidi* midi,
+	  const wxString& portName,
+	  const wxString& apiName,
+	  const wxString& deviceName,
+	  const wxString& fullName
+	);
+
 	virtual ~GOMidiOutPort();
 
-	virtual const wxString GetPortName() const;
+	virtual const wxString GetMyNativePortName() const;
 
 	virtual bool Open();
 	virtual void Close() = 0;

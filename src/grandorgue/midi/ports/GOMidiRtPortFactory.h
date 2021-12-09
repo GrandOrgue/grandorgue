@@ -23,6 +23,7 @@ public:
   void addMissingInDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiInPort>& ports);
   void addMissingOutDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiOutPort>& ports);
 
+  static wxString getApiName(RtMidi::Api api);
   static const std::vector<wxString> & getApis();
 };
 

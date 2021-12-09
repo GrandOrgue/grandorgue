@@ -40,51 +40,6 @@ const std::vector<wxString>& GOSoundPortFactory::GetPortApiNames(const wxString 
 }
 
 
-static const wxString NAME_DELIM = wxT(": ");
-static const size_t NEME_DELIM_LEN = NAME_DELIM.length();
-
-wxString GOSoundPortFactory::NameParser::nextComp()
-{
-  wxString res("");
-
-  if (hasMore()) {
-    size_t newPos = m_Name.find(NAME_DELIM, m_Pos);
-    size_t compEnd;
-
-    if (newPos != wxString::npos) {
-      compEnd = newPos;
-      newPos += NEME_DELIM_LEN;
-    } else {
-      compEnd = m_Name.length();
-    }
-    res = m_Name.substr(m_Pos, compEnd - m_Pos);
-    m_Pos = newPos;
-  }
-  return res;
-}
-
-void append_name(wxString const &nameComp, wxString &resName)
-{
-  if (! nameComp.IsEmpty()) {
-    resName.Append(nameComp);
-    resName.Append(NAME_DELIM);
-  }
-}
-
-wxString GOSoundPortFactory::composeDeviceName(
-  wxString const &subsysName,
-  wxString const &apiName,
-  wxString const &devName
-)
-{
-  wxString resName;
-
-  append_name(subsysName, resName);
-  append_name(apiName, resName);
-  append_name(devName, resName);
-  return resName;
-}
-
 enum {
   SUBSYS_PA_BIT = 1,
   SUBSYS_RT_BIT = 2,
