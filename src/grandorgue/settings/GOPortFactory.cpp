@@ -15,7 +15,8 @@ wxString GOPortFactory::NameParser::nextComp()
 {
   wxString res("");
 
-  if (hasMore()) {
+  if (hasMore())
+  {
     size_t newPos = m_Name.find(c_NameDelim, m_Pos);
     size_t compEnd;
 

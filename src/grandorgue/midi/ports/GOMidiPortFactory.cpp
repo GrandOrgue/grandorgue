@@ -45,7 +45,7 @@ GOMidiRtPortFactory* get_rt()
 void GOMidiPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiInPort>& ports)
 {
   if (portsConfig.IsEnabled(GOMidiRtPortFactory::PORT_NAME))
-    get_rt() -> addMissingInDevices(midi, portsConfig, ports);
+    get_rt()->addMissingInDevices(midi, portsConfig, ports);
 }
 
 void GOMidiPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiOutPort>& ports)

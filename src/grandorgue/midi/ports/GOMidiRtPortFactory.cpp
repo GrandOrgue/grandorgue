@@ -58,7 +58,7 @@ void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig&
 {
   GOMidiPortFactory& portFactory(GOMidiPortFactory::getInstance());
 
-  for(unsigned i = 0; i < apis.size(); i++)
+  for (unsigned i = 0; i < apis.size(); i++)
     try
     {
       const RtMidi::Api api = apis[i];
@@ -76,7 +76,7 @@ void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig&
 	  const wxString deviceName = wxString::FromAscii(pRtMidiIn->getPortName(j).c_str());
 	  bool found = false;
 
-	  for(unsigned k = 0; k < ports.size(); k++)
+	  for (unsigned k = 0; k < ports.size(); k++)
 	  {
 	    GOMidiInPort* const pOld = ports[k];
 
@@ -107,7 +107,7 @@ void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig
 {
   GOMidiPortFactory& portFactory(GOMidiPortFactory::getInstance());
 
-  for(unsigned i = 0; i < apis.size(); i++)
+  for (unsigned i = 0; i < apis.size(); i++)
     try
     {
       const RtMidi::Api api = apis[i];
@@ -125,7 +125,7 @@ void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig
 	  const wxString deviceName = wxString::FromAscii(pRtMidiOut->getPortName(j).c_str());
 	  bool found = false;
 
-	  for(unsigned k = 0; k < ports.size(); k++)
+	  for (unsigned k = 0; k < ports.size(); k++)
 	  {
 	    const GOMidiOutPort* const pOld = ports[k];
 
