@@ -89,7 +89,9 @@ void GOMidiRtPortFactory::addMissingInDevices(GOMidi* midi, const GOPortsConfig&
 	  if (!found)
 	    ports.push_back(
 	      new GOMidiRtInPort(
-		midi, api, deviceName,
+		midi, 
+		api,
+		deviceName,
 		portFactory.ComposeDeviceName(PORT_NAME, apiName, deviceName)
 	      )
 	    );
@@ -138,7 +140,9 @@ void GOMidiRtPortFactory::addMissingOutDevices(GOMidi* midi, const GOPortsConfig
 	  if (!found)
 	    ports.push_back(
 	      new GOMidiRtOutPort(
-		midi, api, deviceName,
+		midi,
+		api,
+		deviceName,
 		portFactory.ComposeDeviceName(PORT_NAME, apiName, deviceName)
 	      )
 	    );
