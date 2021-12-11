@@ -21,7 +21,12 @@ protected:
   static void MIDICallback (double timeStamp, std::vector<unsigned char>* msg, void* userData);
 
 public:
-  GOMidiRtInPort(GOMidi* midi, wxString prefix, wxString name, RtMidi::Api api);
+  GOMidiRtInPort(
+    GOMidi* midi,
+    RtMidi::Api api,
+    const wxString& deviceName,
+    const wxString& fullName
+  );
   ~GOMidiRtInPort();
 
   bool Open(int channel_shift = 0);

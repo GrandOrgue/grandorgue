@@ -21,7 +21,12 @@ protected:
   void SendData(std::vector<unsigned char>& msg);
 
 public:
-  GOMidiRtOutPort(GOMidi* midi, wxString prefix, wxString name, RtMidi::Api api);
+  GOMidiRtOutPort(
+    GOMidi* midi,
+    RtMidi::Api api,
+    const wxString& deviceName,
+    const wxString& fullName
+  );
   ~GOMidiRtOutPort();
 
   bool Open();

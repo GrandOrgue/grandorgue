@@ -371,18 +371,18 @@ void GOFrame::Init(wxString filename)
 	
 	m_Sound.SetLogSoundErrorMessages(false);
 
-	bool open_sound = m_Sound.AssureSoundIsOpen();
+	bool soundProblems = ! m_Sound.AssureSoundIsOpen();
 
-	if (! open_sound)
+	if (soundProblems)
 	  settingsReasons.push_back(SettingsReason(m_Sound.getLastErrorMessage(), SettingsDialog::PAGE_AUDIO_OUTPUT));
 	m_Sound.SetLogSoundErrorMessages(true);
 
-	bool openMidi = m_Sound.GetMidi().HasActiveDevice();
+	bool midiProblems = ! m_Sound.GetMidi().HasActiveDevice() && m_Settings.IsToCheckMidiOnStart();
 	
-	if (open_sound && ! openMidi)
+	if (! soundProblems && midiProblems)
 	  settingsReasons.push_back(SettingsReason(_("No active MIDI input devices"), SettingsDialog::PAGE_MIDI_DEVICES));
 	
-	if (!open_sound || !openMidi)
+	if (soundProblems || midiProblems)
 	{
 		wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ID_SETTINGS);
 		

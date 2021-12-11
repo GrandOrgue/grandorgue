@@ -159,7 +159,7 @@ wxString GOSoundRtPort::getName(RtAudio* rt_api, unsigned index)
     wxLogError(_("RtAudio error: %s"), error.c_str());
     devName = wxString::Format(_("<unknown> %d"), index);
   }
-  return GOSoundPortFactory::composeDeviceName(PORT_NAME, apiName, devName);
+  return GOSoundPortFactory::getInstance().ComposeDeviceName(PORT_NAME, apiName, devName);
 }
 
 wxString get_oldstyle_name(RtAudio::Api api, RtAudio* rt_api, unsigned index)
@@ -263,7 +263,7 @@ GOSoundPort* GOSoundRtPort::create(const GOPortsConfig &portsConfig, GOSound* so
 	      const wxString devName = getName(rtApi, i);
 
 	      if (
-		devName == name
+		devName == name || devName + GOPortFactory::c_NameDelim == name
 		|| (apiName.IsEmpty() && get_oldstyle_name(apiIndex, rtApi, i) == name)
 	      )
 	      {

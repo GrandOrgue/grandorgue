@@ -12,6 +12,7 @@
 #include <wx/event.h>
 
 #include "ports/GOMidiPortFactory.h"
+#include "settings/GOPortsConfig.h"
 
 class GOMidiEvent;
 class GOMidiInPort;
@@ -26,8 +27,10 @@ class GOMidi : public wxEvtHandler
 {
 private:
 	GOSettings& m_Settings;
+
 	ptr_vector<GOMidiInPort> m_midi_in_devices;
 	ptr_vector<GOMidiOutPort> m_midi_out_devices;
+
 	int m_transpose;
 	std::vector<GOMidiListener*> m_Listeners;
 	GOMidiPortFactory m_MidiFactory;
@@ -39,13 +42,13 @@ public:
 	~GOMidi();
 
 	void Open();
-	void UpdateDevices();
+	void UpdateDevices(const GOPortsConfig& portsConfig);
 
 	void Recv(const GOMidiEvent& e);
 	void Send(const GOMidiEvent& e);
 
-	std::vector<wxString> GetInDevices();
-	std::vector<wxString> GetOutDevices();
+	const ptr_vector<GOMidiInPort>& GetInDevices() const { return m_midi_in_devices; }
+	const ptr_vector<GOMidiOutPort>& GetOutDevices() const { return m_midi_out_devices; }
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);

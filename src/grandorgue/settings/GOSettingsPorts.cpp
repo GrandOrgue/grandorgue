@@ -6,6 +6,9 @@
 
 #include "GOSettingsPorts.h"
 
+#include <wx/treelist.h>
+
+
 wxString GOSettingsPorts::GetPortItemName(
   const wxString &portName, const wxString &apiName
 ) const
@@ -24,6 +27,35 @@ wxString GOSettingsPorts::GetPortItemName(
   return itemName;
 }
 
+const wxTreeListItem GOSettingsPorts::AddPortItem(
+  const wxTreeListItem& parentItem, const wxString &portName, const wxString &apiName
+)
+{
+  return m_Ports->AppendItem(
+    parentItem, GetPortItemName(portName, apiName),
+    wxWithImages::NO_IMAGE, wxWithImages::NO_IMAGE,
+    new PortItemData(portName, apiName)
+  );
+}
+
+bool GOSettingsPorts::GetPortItemChecked(
+  const wxString &portName, const wxString& apiName
+) const
+{
+  bool isChecked = true;
+
+  for (
+    wxTreeListItem item = m_Ports->GetFirstItem();
+    item.IsOk();
+    item = m_Ports->GetNextItem(item)
+  ) if (((PortItemData *) m_Ports->GetItemData(item))->isItemForPortApi(portName, apiName))
+  {
+    isChecked = m_Ports->GetCheckedState(item);
+    break;
+  }
+  return isChecked;
+}
+
 void GOSettingsPorts::SetPortItemChecked(wxTreeListItem item, bool isChecked)
 {
   if (isChecked)
@@ -32,23 +64,16 @@ void GOSettingsPorts::SetPortItemChecked(wxTreeListItem item, bool isChecked)
     m_Ports->UncheckItem(item);
 }
 
-bool GOSettingsPorts::GetPortItemChecked(
-  const wxString &portName, const wxString& apiName
-) const
+void GOSettingsPorts::OnPortItemChecked(wxTreeListEvent& event)
 {
-  bool isChecked = true;
-  const wxString itemText = GetPortItemName(portName, apiName);
+  const wxTreeListItem& item = event.GetItem();
+  const PortItemData* data = (PortItemData *) m_Ports->GetItemData(item);
+  const bool oldIsChecked = event.GetOldCheckedState();
+  const bool newIsChecked = m_Ports->GetCheckedState(item);
 
-  for (
-    wxTreeListItem item = m_Ports->GetFirstItem();
-    item.IsOk();
-    item = m_Ports->GetNextItem(item)
-  ) if (m_Ports->GetItemText(item, 0) == itemText)
-  {
-    isChecked = m_Ports->GetCheckedState(item);
-    break;
-  }
-  return isChecked;
+  OnPortChanged(
+    data->m_PortName, data->m_ApiName, oldIsChecked, newIsChecked
+  );
 }
 
 GOSettingsPorts::GOSettingsPorts(
@@ -59,7 +84,14 @@ GOSettingsPorts::GOSettingsPorts(
   m_PortsSizer = new wxStaticBoxSizer(wxVERTICAL, parent, name);
   m_Ports = new wxTreeListCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTL_SINGLE | wxTL_CHECKBOX | wxTL_NO_HEADER);
   m_Ports->AppendColumn(wxEmptyString);
+  m_Ports->Bind(wxEVT_TREELIST_ITEM_CHECKED, &GOSettingsPorts::OnPortItemChecked, this);
   m_PortsSizer->Add(m_Ports, 1, wxEXPAND | wxALIGN_LEFT);
+}
+
+GOSettingsPorts::~GOSettingsPorts()
+{
+  if (m_Ports)
+    m_Ports->Unbind(wxEVT_TREELIST_ITEM_CHECKED, &GOSettingsPorts::OnPortItemChecked, this);
 }
 
 void GOSettingsPorts::FillPortsWith(const GOPortsConfig& config)
@@ -72,14 +104,14 @@ void GOSettingsPorts::FillPortsWith(const GOPortsConfig& config)
     const wxTreeListItem& rootItem = m_Ports->GetRootItem();
     const wxTreeListItem& portItem
       = m_PortFactory.IsToUsePortName()
-      ? m_Ports->AppendItem(rootItem, GetPortItemName(portName))
+      ? AddPortItem(rootItem, portName)
       : rootItem;
 
     SetPortItemChecked(portItem, m_PortsConfig.IsConfigEnabled(portName));
     for (const wxString &apiName: m_PortFactory.GetPortApiNames(portName))
     {
       const wxTreeListItem portApiItem
-	= m_Ports->AppendItem(portItem, GetPortItemName(portName, apiName));
+	= AddPortItem(portItem, portName, apiName);
 
       SetPortItemChecked(
 	portApiItem, m_PortsConfig.IsConfigEnabled(portName, apiName)
@@ -94,8 +126,11 @@ GOPortsConfig& GOSettingsPorts::RenewPortsConfig()
   for (const wxString &portName: m_PortFactory.GetPortNames())
   {
     m_PortsConfig.SetConfigEnabled(portName, GetPortItemChecked(portName));
-    for (const wxString &apiName: m_PortFactory.GetPortApiNames(portName)) {
-      m_PortsConfig.SetConfigEnabled(portName, apiName, GetPortItemChecked(portName, apiName));
+    for (const wxString &apiName: m_PortFactory.GetPortApiNames(portName))
+    {
+      bool isChecked = GetPortItemChecked(portName, apiName);
+
+      m_PortsConfig.SetConfigEnabled(portName, apiName, isChecked);
     }
   }
   return m_PortsConfig;

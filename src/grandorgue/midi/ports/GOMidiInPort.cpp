@@ -12,8 +12,14 @@
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiMap.h"
 
-GOMidiInPort::GOMidiInPort(GOMidi* midi, wxString prefix, wxString name) :
-	GOMidiPort(midi, prefix, name),
+GOMidiInPort::GOMidiInPort(
+	GOMidi* midi,
+	const wxString& portName,
+	const wxString& apiName,
+	const wxString& deviceName,
+	const wxString& fullName
+):
+	GOMidiPort(midi, portName, apiName, deviceName, fullName),
 	m_merger(),
 	m_ChannelShift(0)
 {
@@ -53,7 +59,7 @@ bool GOMidiInPort::Open(int channel_shift)
 	return m_IsActive;
 }
 
-const wxString GOMidiInPort::GetPortName() const
+const wxString GOMidiInPort::GetMyNativePortName() const
 {
 	return wxT("GrandOrgue Input");
 }

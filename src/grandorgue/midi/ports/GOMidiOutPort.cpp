@@ -11,8 +11,14 @@
 #include "midi/GOMidiMap.h"
 
 
-GOMidiOutPort::GOMidiOutPort(GOMidi* midi, wxString prefix, wxString name) :
-	GOMidiPort(midi, prefix, name),
+GOMidiOutPort::GOMidiOutPort(
+	GOMidi* midi,
+	const wxString& portName,
+	const wxString& apiName,
+	const wxString& deviceName,
+	const wxString& fullName
+):
+	GOMidiPort(midi, portName, apiName, deviceName, fullName),
 	m_merger()
 {
 }
@@ -43,7 +49,7 @@ void GOMidiOutPort::Send(const GOMidiEvent& e)
 	}
 }
 
-const wxString GOMidiOutPort::GetPortName() const
+const wxString GOMidiOutPort::GetMyNativePortName() const
 {
 	return wxT("GrandOrgue Output");
 }

@@ -19,12 +19,19 @@ protected:
 	GOMidiMerger m_merger;
 	int m_ChannelShift;
 
-	virtual const wxString GetPortName() const;
+	virtual const wxString GetMyNativePortName() const;
 
 	void Receive(const std::vector<unsigned char> msg);
 
 public:
-	GOMidiInPort(GOMidi* midi, wxString prefix, wxString name);
+	GOMidiInPort(
+	  GOMidi* midi,
+	  const wxString& portName,
+	  const wxString& apiName,
+	  const wxString& deviceName,
+	  const wxString& fullName
+	);
+
 	virtual ~GOMidiInPort();
 
 	virtual bool Open(int channel_shift = 0);

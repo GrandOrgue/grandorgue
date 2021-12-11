@@ -153,7 +153,7 @@ void GOSoundJackPort::StartStream()
 
 wxString GOSoundJackPort::getName()
 {
-  return GOSoundPortFactory::composeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
+  return GOSoundPortFactory::getInstance().ComposeDeviceName(PORT_NAME, wxEmptyString, "Native Output");
 }
 #endif /* GO_USE_JACK */
 
@@ -184,8 +184,12 @@ static const wxString OLD_STYLE_NAME = wxT("Jack Output");
 GOSoundPort* GOSoundJackPort::create(const GOPortsConfig &portsConfig, GOSound* sound, wxString name)
 {
 #if defined(GO_USE_JACK)
-  wxString devName = getName();
-  if (portsConfig.IsEnabled(PORT_NAME) && (name == devName || name == OLD_STYLE_NAME))
+  const wxString devName = getName();
+  
+  if (
+    portsConfig.IsEnabled(PORT_NAME)
+    && (name == devName || devName + GOPortFactory::c_NameDelim == name || name == OLD_STYLE_NAME)
+  )
     return new GOSoundJackPort(sound, devName);
 #endif
   return NULL;

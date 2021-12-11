@@ -43,7 +43,7 @@ wxString GOSoundPortaudioPort::getName(unsigned index)
 {
 	const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
 	const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
-	return GOSoundPortFactory::composeDeviceName(PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
+	return GOSoundPortFactory::getInstance().ComposeDeviceName(PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
 }
 
 void GOSoundPortaudioPort::Open()
@@ -136,8 +136,9 @@ GOSoundPort* GOSoundPortaudioPort::create(const GOPortsConfig &portsConfig, GOSo
     for(int i = 0; i < Pa_GetDeviceCount(); i++)
     {
       wxString devName = getName(i);
-	    if (devName == name || get_oldstyle_name(i) == name)
-		    return new GOSoundPortaudioPort(sound, devName);
+
+      if (devName == name || devName + GOPortFactory::c_NameDelim == name || get_oldstyle_name(i) == name)
+	return new GOSoundPortaudioPort(sound, devName);
     }
   }
   return NULL;

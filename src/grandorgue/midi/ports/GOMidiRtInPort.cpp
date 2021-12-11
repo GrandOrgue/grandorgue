@@ -5,11 +5,22 @@
 */
 
 #include "GOMidiRtInPort.h"
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOMidiRtInPort::GOMidiRtInPort(GOMidi* midi, wxString prefix, wxString name, RtMidi::Api api) :
-  GOMidiInPort(midi, prefix, name),
+#include "GOMidiRtPortFactory.h"
+
+GOMidiRtInPort::GOMidiRtInPort(
+  GOMidi* midi,
+  RtMidi::Api api,
+  const wxString& deviceName,
+  const wxString& fullName
+):
+  GOMidiInPort(
+    midi, GOMidiRtPortFactory::PORT_NAME, GOMidiRtPortFactory::getApiName(api),
+    deviceName, fullName
+  ),
   m_api(api),
   m_port(NULL)
 {
@@ -41,9 +52,9 @@ bool GOMidiRtInPort::Open(int channel_shift)
   {
 	  for (unsigned i = 0; i <  m_port->getPortCount(); i++)
 	  {
-		  if (m_Name == m_Prefix + wxString::FromAscii(m_port->getPortName(i).c_str()))
+		  if (m_DeviceName == wxString::FromAscii(m_port->getPortName(i).c_str()))
 		  {
-			  m_port->openPort(i, (const char*)GetPortName().fn_str());
+			  m_port->openPort(i, (const char*)GetMyNativePortName().fn_str());
 			  m_IsActive = true;
 			  break;
 		  }
