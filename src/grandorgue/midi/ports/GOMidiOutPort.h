@@ -36,7 +36,6 @@ public:
 	virtual const wxString GetMyNativePortName() const;
 
 	virtual bool Open();
-	virtual void Close() = 0;
 
 	void Send(const GOMidiEvent& e);
 };

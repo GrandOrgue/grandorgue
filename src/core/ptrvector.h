@@ -10,7 +10,8 @@
 #include <vector>
 
 template<class T>
-class ptr_vector : protected std::vector<T*> {
+class ptr_vector : protected std::vector<T*>
+{
 private: 
 	/* Disable copying as it will break things */
 	ptr_vector(const ptr_vector&);
@@ -81,6 +82,12 @@ public:
 	{
 		std::vector<T*>::insert(std::vector<T*>::begin() + pos, ptr);
 	}
+
+	typename std::vector<T*>::const_iterator begin() const noexcept
+	{ return std::vector<T*>::begin(); }
+
+	typename std::vector<T*>::const_iterator end() const noexcept
+	{ return std::vector<T*>::end(); }
 };
 
 #endif

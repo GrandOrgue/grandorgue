@@ -101,14 +101,13 @@ void SettingsMidiDevices::RenewDevices(
   midi.UpdateDevices(portsConfig);
 
   // Fill m_InDevices
-  const ptr_vector<GOMidiInPort>& inPorts = midi.GetInDevices();
-
   m_InDevices->Clear();
-  for (unsigned i = 0, l = inPorts.size(); i < l; i ++)
+  for (const GOMidiPort* port: midi.GetInDevices())
   {
-    const GOMidiInPort* const port = inPorts[i];
-
-    if (portsConfig.IsEnabled(port->GetPortName(), port->GetApiName()))
+    if (
+      portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())
+      && port->IsToUse()
+    )
     {
       const wxString deviceName = port->GetName();
       const int i = m_InDevices->Append(deviceName);
@@ -121,17 +120,16 @@ void SettingsMidiDevices::RenewDevices(
   }
 
   // Fill m_OutDevices and m_RecorderDevice
-  const ptr_vector<GOMidiOutPort>& outPorts = midi.GetOutDevices();
-
   m_RecorderDevice->Clear();
   m_RecorderDevice->Append(_("No device"));
   m_RecorderDevice->Select(0);
   m_OutDevices->Clear();
-  for (unsigned i = 0, l = outPorts.size(); i < l; i ++)
+  for (const GOMidiPort* port: midi.GetOutDevices())
   {
-    const GOMidiOutPort* const port = outPorts[i];
-
-    if (portsConfig.IsEnabled(port->GetPortName(), port->GetApiName()))
+    if (
+      portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())
+      && port->IsToUse()
+    )
     {
       const wxString deviceName = port->GetName();
       const int iOut = m_OutDevices->Append(deviceName);

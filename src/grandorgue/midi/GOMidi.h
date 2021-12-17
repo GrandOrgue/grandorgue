@@ -15,10 +15,9 @@
 #include "settings/GOPortsConfig.h"
 
 class GOMidiEvent;
-class GOMidiInPort;
+class GOMidiPort;
 class GOMidiListener;
 class GOMidiMap;
-class GOMidiOutPort;
 class GOSettings;
 class GODefinitionFile;
 class wxMidiEvent;
@@ -28,8 +27,8 @@ class GOMidi : public wxEvtHandler
 private:
 	GOSettings& m_Settings;
 
-	ptr_vector<GOMidiInPort> m_midi_in_devices;
-	ptr_vector<GOMidiOutPort> m_midi_out_devices;
+	ptr_vector<GOMidiPort> m_midi_in_devices;
+	ptr_vector<GOMidiPort> m_midi_out_devices;
 
 	int m_transpose;
 	std::vector<GOMidiListener*> m_Listeners;
@@ -47,8 +46,8 @@ public:
 	void Recv(const GOMidiEvent& e);
 	void Send(const GOMidiEvent& e);
 
-	const ptr_vector<GOMidiInPort>& GetInDevices() const { return m_midi_in_devices; }
-	const ptr_vector<GOMidiOutPort>& GetOutDevices() const { return m_midi_out_devices; }
+	const ptr_vector<GOMidiPort>& GetInDevices() const { return m_midi_in_devices; }
+	const ptr_vector<GOMidiPort>& GetOutDevices() const { return m_midi_out_devices; }
 	bool HasActiveDevice();
 	int GetTranspose();
 	void SetTranspose(int transpose);

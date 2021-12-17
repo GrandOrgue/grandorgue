@@ -24,7 +24,7 @@ protected:
 
   unsigned m_ID;
 
-  const wxString GetClientName() const;
+  static const wxString GetClientName();
   virtual const wxString GetMyNativePortName() const = 0;
 
 public:
@@ -41,6 +41,9 @@ public:
   const wxString& GetApiName() const { return m_ApiName; }
   const wxString& GetDeviceName() const { return m_DeviceName; }
   const wxString& GetName() const { return m_FullName; }
+  bool IsToUse() const;
+  const wxString GetDefaultLogicalName() const { return m_FullName; }
+  const wxString GetDefaultRegEx() const { return wxEmptyString; }
   bool IsEqualTo(
     const wxString& portName,
     const wxString& apiName,
@@ -48,6 +51,10 @@ public:
   ) const;
   unsigned GetID() const { return m_ID; }
   bool IsActive() const { return m_IsActive; }
+
+  virtual bool Open() = 0;
+  virtual void Close() = 0;
+
 };
 
 #endif /* GOMIDIPORT_H */
