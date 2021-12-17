@@ -96,8 +96,8 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event,
 
 	m_device->Append(_("Any device"));
 
-	for (const wxString& it : m_Settings.GetMidiOutDeviceList())
-		m_device->Append(it);
+	for (const GOMidiDeviceConfig* pDevConf : m_Settings.m_MidiOut)
+		m_device->Append(pDevConf->m_LogicalName);
 
 	for(unsigned int i = 1 ; i <= 16; i++)
 		m_channel->Append(wxString::Format(wxT("%d"), i));;
@@ -389,10 +389,15 @@ MIDI_SEND_EVENT MIDIEventSendDialog::CopyEvent()
 	e.low_value = 0;
 	e.high_value = 127;
 
-	wxString out_device = m_Settings.GetMidiInOutDevice(m_Settings.GetMidiMap().GetDeviceByID(recv.device));
-	if (out_device == wxEmptyString)
+	const GOMidiDeviceConfig* pInDev
+	  = m_Settings.m_MidiIn.FindByLogicalName(
+	    m_Settings.GetMidiMap().GetDeviceByID(recv.device)
+	  );
+	const GOMidiDeviceConfig* pOutDev = pInDev ? pInDev->p_OutputDevice : NULL;
+	
+	if (! pOutDev)
 		return e;
-	e.device = m_Settings.GetMidiMap().GetDeviceByString(out_device);
+	e.device = m_Settings.GetMidiMap().GetDeviceByString(pOutDev->m_LogicalName);
 	if (m_midi.GetType() == MIDI_SEND_MANUAL)
 	{
 		if (recv.type == MIDI_M_NOTE || recv.type == MIDI_M_NOTE_NO_VELOCITY ||

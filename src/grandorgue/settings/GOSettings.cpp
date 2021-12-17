@@ -31,10 +31,12 @@
 #include "GOStdPath.h"
 #include "GOPortFactory.h"
 
-static const wxString SOUND_PORTS = wxT("SoundPorts");
+static const wxString COUNT = wxT("Count");
 static const wxString ENABLED = wxT(".Enabled");
 static const wxString MIDI_PORTS = wxT("MidiPorts");
 static const wxString MIDI_IN(wxT("MIDIIn"));
+static const wxString MIDI_OUT(wxT("MIDIOut"));
+static const wxString SOUND_PORTS = wxT("SoundPorts");
 
 const GOMidiSetting GOSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal") },
@@ -139,13 +141,15 @@ GOSettings::GOSettings(wxString instance) :
 	MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
 	IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
 	IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
-	MidiRecorderOutputDevice(this, wxT("MIDIOut"), wxT("MIDIRecorderDevice"), wxEmptyString),
+	MidiRecorderOutputDevice(this, MIDI_OUT, wxT("MIDIRecorderDevice"), wxEmptyString),
 	OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
 	OrganPackagePath(this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
 	SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
 	AudioRecorderPath(this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
 	MidiRecorderPath(this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
-	MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString)
+	MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString),
+	m_MidiIn(MIDI_IN),
+	m_MidiOut(MIDI_OUT)
 {
 	m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") + m_InstanceName;
 	for(unsigned i = 0; i < GetEventCount(); i++)
@@ -236,7 +240,7 @@ void GOSettings::Load()
 		m_Temperaments.Load(cfg);
 
 		m_AudioGroups.clear();
-		unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), wxT("Count"), 0, 200, false, 0);
+		unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), COUNT, 0, 200, false, 0);
 		for(unsigned i = 0; i < count; i++)
 			m_AudioGroups.push_back(cfg.ReadString(CMBSetting, wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), false, wxString::Format(_("Audio group %d"), i + 1)));
 		if (!m_AudioGroups.size())
@@ -248,7 +252,7 @@ void GOSettings::Load()
 		);
 
 		m_AudioDeviceConfig.clear();
-		count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), wxT("Count"), 0, 200, false, 0);
+		count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), COUNT, 0, 200, false, 0);
 		for(unsigned i = 0; i < count; i++)
 		{
 			GOAudioDeviceConfig conf;
@@ -301,21 +305,8 @@ void GOSettings::Load()
 		if (Concurrency() == 0)
 			Concurrency(1);
 
-		count = cfg.ReadInteger(CMBSetting, MIDI_IN, wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
-		for(unsigned i = 0; i < count; i++)
-		{
-			wxString name = cfg.ReadString(CMBSetting, MIDI_IN, wxString::Format(wxT("Device%03d"), i + 1));
-			SetMidiInState(name, cfg.ReadBoolean(CMBSetting, MIDI_IN, wxString::Format(wxT("Device%03dEnabled"), i + 1)));
-			SetMidiInDeviceChannelShift(name, cfg.ReadInteger(CMBSetting, MIDI_IN, wxString::Format(wxT("Device%03dShift"), i + 1), 0, 15));
-			SetMidiInOutDevice(name, cfg.ReadString(CMBSetting, MIDI_IN, wxString::Format(wxT("Device%03dOutputDevice"), i + 1), false));
-		}
-
-		count = cfg.ReadInteger(CMBSetting, wxT("MIDIOut"), wxT("Count"), 0, MAX_MIDI_DEVICES, false, 0);
-		for(unsigned i = 0; i < count; i++)
-		{
-			wxString name = cfg.ReadString(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), i + 1));
-			SetMidiOutState(name, cfg.ReadBoolean(CMBSetting, wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), i + 1)));
-		}
+		m_MidiOut.Load(cfg);
+		m_MidiIn.Load(cfg, &m_MidiOut);
 
 		if (wxFileExists(m_ConfigFileName))
 			wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
@@ -430,6 +421,7 @@ const wxString GOSettings::GetPackageDirectory()
 	return m_ResourceDir + wxFileName::GetPathSeparator() + wxT("packages");
 }
 
+/*
 bool GOSettings::GetMidiInState(wxString device, bool isEnabledByDefault)
 {
 	bool isEnabled = false;
@@ -509,6 +501,7 @@ std::vector<wxString> GOSettings::GetMidiOutDeviceList()
 		list.push_back(it->first);
 	return list;
 }
+ */
 
 const std::vector<wxString>& GOSettings::GetAudioGroups()
 {
@@ -608,7 +601,7 @@ void GOSettings::Flush()
 
 	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
 		cfg.WriteString(wxT("AudioGroups"), wxString::Format(wxT("Name%03d"), i + 1), m_AudioGroups[i]);
-	cfg.WriteInteger(wxT("AudioGroups"), wxT("Count"), m_AudioGroups.size());
+	cfg.WriteInteger(wxT("AudioGroups"), COUNT, m_AudioGroups.size());
 
 	save_ports_config(
 	  cfg, SOUND_PORTS, GOSoundPortFactory::getInstance(), m_SoundPortsConfig
@@ -632,33 +625,12 @@ void GOSettings::Flush()
 			}
 		}
 	}
-	cfg.WriteInteger(wxT("AudioDevices"), wxT("Count"), m_AudioDeviceConfig.size());
+	cfg.WriteInteger(wxT("AudioDevices"), COUNT, m_AudioDeviceConfig.size());
 
 	save_ports_config(cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(), m_MidiPortsConfig);
 
-	unsigned count = 0;
-	for (std::map<wxString, bool>::iterator it = m_MidiIn.begin(); it != m_MidiIn.end(); it++)
-	{
-		count++;
-		cfg.WriteString(MIDI_IN, wxString::Format(wxT("Device%03d"), count), it->first);
-		cfg.WriteBoolean(MIDI_IN, wxString::Format(wxT("Device%03dEnabled"), count), it->second);
-		cfg.WriteInteger(MIDI_IN, wxString::Format(wxT("Device%03dShift"), count), GetMidiInDeviceChannelShift(it->first));
-		cfg.WriteString(MIDI_IN, wxString::Format(wxT("Device%03dOutputDevice"), count), GetMidiInOutDevice(it->first));
-	}
-	if (count > MAX_MIDI_DEVICES)
-		count = MAX_MIDI_DEVICES;
-	cfg.WriteInteger(MIDI_IN, wxT("Count"), count);
-
-	count = 0;
-	for (std::map<wxString, bool>::iterator it = m_MidiOut.begin(); it != m_MidiOut.end(); it++)
-	{
-		count++;
-		cfg.WriteString(wxT("MIDIOut"), wxString::Format(wxT("Device%03d"), count), it->first);
-		cfg.WriteBoolean(wxT("MIDIOut"), wxString::Format(wxT("Device%03dEnabled"), count), it->second);
-	}
-	if (count > MAX_MIDI_DEVICES)
-		count = MAX_MIDI_DEVICES;
-	cfg.WriteInteger(wxT("MIDIOut"), wxT("Count"), count);
+	m_MidiOut.Save(cfg, false);
+	m_MidiIn.Save(cfg, true);
 
 	if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name))
 	{
