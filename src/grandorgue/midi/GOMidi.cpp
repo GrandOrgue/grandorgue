@@ -46,7 +46,7 @@ void GOMidi::Open()
 
 	UpdateDevices(portsConfig);
 
-	for (GOMidiPort* pPort: m_midi_in_devices)
+	for (GOMidiPort* pPort : m_midi_in_devices)
 	{
 	  if (
 		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
@@ -57,7 +57,7 @@ void GOMidi::Open()
 	    pPort->Close();
 	}
 
-	for (GOMidiPort* pPort: m_midi_out_devices)
+	for (GOMidiPort* pPort : m_midi_out_devices)
 	{
 	  if (
 		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())

@@ -102,7 +102,7 @@ void SettingsMidiDevices::RenewDevices(
 
   // Fill m_InDevices
   m_InDevices->Clear();
-  for (const GOMidiPort* port: midi.GetInDevices())
+  for (const GOMidiPort* port : midi.GetInDevices())
   {
     if (
       portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())
@@ -124,7 +124,7 @@ void SettingsMidiDevices::RenewDevices(
   m_RecorderDevice->Append(_("No device"));
   m_RecorderDevice->Select(0);
   m_OutDevices->Clear();
-  for (const GOMidiPort* port: midi.GetOutDevices())
+  for (const GOMidiPort* port : midi.GetOutDevices())
   {
     if (
       portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())

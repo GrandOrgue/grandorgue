@@ -96,7 +96,7 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event,
 
 	m_device->Append(_("Any device"));
 
-	for (const wxString& it: m_Settings.GetMidiOutDeviceList())
+	for (const wxString& it : m_Settings.GetMidiOutDeviceList())
 		m_device->Append(it);
 
 	for(unsigned int i = 1 ; i <= 16; i++)
