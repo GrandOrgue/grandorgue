@@ -96,9 +96,8 @@ MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event,
 
 	m_device->Append(_("Any device"));
 
-	std::vector<wxString> device_names = m_Settings.GetMidiOutDeviceList();
-	for(std::vector<wxString>::iterator it = device_names.begin(); it != device_names.end(); it++)
-		m_device->Append(*it);
+	for (const wxString& it : m_Settings.GetMidiOutDeviceList())
+		m_device->Append(it);
 
 	for(unsigned int i = 1 ; i <= 16; i++)
 		m_channel->Append(wxString::Format(wxT("%d"), i));;

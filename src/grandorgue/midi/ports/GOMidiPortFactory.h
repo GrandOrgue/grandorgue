@@ -12,8 +12,7 @@
 #include "settings/GOPortFactory.h"
 #include "settings/GOPortsConfig.h"
 
-#include "GOMidiInPort.h"
-#include "GOMidiOutPort.h"
+#include "GOMidiPort.h"
 
 class GOMidi;
 
@@ -24,8 +23,8 @@ public:
   virtual const std::vector<wxString>& GetPortApiNames(const wxString & portName) const;
 
   static GOMidiPortFactory& getInstance();
-  static void addMissingInDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiInPort>& ports);
-  static void addMissingOutDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiOutPort>& ports);
+  static void addMissingInDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiPort>& ports);
+  static void addMissingOutDevices(GOMidi* midi, const GOPortsConfig& portsConfig, ptr_vector<GOMidiPort>& ports);
   static void terminate();
 };
 

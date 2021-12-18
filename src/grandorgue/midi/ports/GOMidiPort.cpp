@@ -9,9 +9,11 @@
 #include "midi/GOMidi.h"
 #include "midi/GOMidiMap.h"
 
-const wxString GOMidiPort::GetClientName() const
+static wxString GRANDORGUE = wxT("GrandOrgue");
+
+const wxString GOMidiPort::GetClientName()
 {
-  return wxT("GrandOrgue");
+  return GRANDORGUE;
 }
 
 GOMidiPort::GOMidiPort(
@@ -29,6 +31,11 @@ GOMidiPort::GOMidiPort(
   m_FullName(fullName)
 {
   m_ID = m_midi->GetMidiMap().GetDeviceByString(GetName());
+}
+
+bool GOMidiPort::IsToUse() const
+{
+  return m_DeviceName.Find(GetClientName()) == wxNOT_FOUND;
 }
 
 bool GOMidiPort::IsEqualTo(

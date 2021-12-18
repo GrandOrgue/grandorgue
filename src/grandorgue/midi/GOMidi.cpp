@@ -6,10 +6,13 @@
 
 #include "GOMidi.h"
 
+#include "midi/GOMidiWXEvent.h"
+#include "ports/GOMidiInPort.h"
+#include "ports/GOMidiOutPort.h"
+#include "settings/GOSettings.h"
+
 #include "GOEvent.h"
 #include "GOMidiListener.h"
-#include "midi/GOMidiWXEvent.h"
-#include "settings/GOSettings.h"
 
 BEGIN_EVENT_TABLE(GOMidi, wxEvtHandler)
 	EVT_MIDI(GOMidi::OnMidiEvent)
@@ -43,30 +46,26 @@ void GOMidi::Open()
 
 	UpdateDevices(portsConfig);
 
-	for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
+	for (GOMidiPort* pPort : m_midi_in_devices)
 	{
-	  GOMidiInPort* pPort = m_midi_in_devices[i];
-
 	  if (
 		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
 		  && m_Settings.GetMidiInState(pPort->GetName(), isToAutoAdd)
 	  )
-		  pPort->Open(m_Settings.GetMidiInDeviceChannelShift(pPort->GetName()));
+		((GOMidiInPort *) pPort)->Open(m_Settings.GetMidiInDeviceChannelShift(pPort->GetName()));
 	  else
-		  pPort->Close();
+	    pPort->Close();
 	}
 
-	for (unsigned i = 0; i < m_midi_out_devices.size(); i++)
+	for (GOMidiPort* pPort : m_midi_out_devices)
 	{
-	  GOMidiOutPort* pPort = m_midi_out_devices[i];
-
 	  if (
 		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
 		  && m_Settings.GetMidiOutState(pPort->GetName())
 	  )
-		  pPort->Open();
+	    pPort->Open();
 	  else
-		  pPort->Close();
+	    pPort->Close();
 	}
 }
 
@@ -96,7 +95,7 @@ void GOMidi::OnMidiEvent(wxMidiEvent& event)
 void GOMidi::Send(const GOMidiEvent& e)
 {
 	for(unsigned j = 0; j < m_midi_out_devices.size(); j++)
-		m_midi_out_devices[j]->Send(e);
+		((GOMidiOutPort*) m_midi_out_devices[j])->Send(e);
 }
 
 void GOMidi::Register(GOMidiListener* listener)

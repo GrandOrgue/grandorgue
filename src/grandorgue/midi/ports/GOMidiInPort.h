@@ -34,8 +34,8 @@ public:
 
 	virtual ~GOMidiInPort();
 
-	virtual bool Open(int channel_shift = 0);
-	virtual void Close() = 0;
+	virtual bool Open(int channel_shift);
+	bool Open() { return Open(0); }
 };
 
 #endif

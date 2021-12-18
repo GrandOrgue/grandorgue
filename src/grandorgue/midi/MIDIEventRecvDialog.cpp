@@ -113,9 +113,8 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* 
 
 	m_device->Append(_("Any device"));
 
-	std::vector<wxString> device_names = m_Settings.GetMidiInDeviceList();
-	for(std::vector<wxString>::iterator it = device_names.begin(); it != device_names.end(); it++)
-		m_device->Append(*it);
+	for (const wxString& it : m_Settings.GetMidiInDeviceList())
+		m_device->Append(it);
 
 	m_channel->Append(_("Any channel"));
 	for(unsigned int i = 1 ; i <= 16; i++)
