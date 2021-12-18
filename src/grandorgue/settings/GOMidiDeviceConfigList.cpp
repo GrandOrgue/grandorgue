@@ -17,7 +17,7 @@ GOMidiDeviceConfig* GOMidiDeviceConfigList::FindByLogicalName(
 {
   GOMidiDeviceConfig* res = NULL;
 
-  for (GOMidiDeviceConfig* pDevConf: m_list)
+  for (GOMidiDeviceConfig* pDevConf : m_list)
     if (pDevConf->m_LogicalName == logicalName)
     {
       res = pDevConf;
@@ -33,7 +33,7 @@ GOMidiDeviceConfig* GOMidiDeviceConfigList::FindByPhysicalName(
   GOMidiDeviceConfig* res = NULL;
   GOMidiDeviceConfig* candidate = NULL;
 
-  for (GOMidiDeviceConfig* pDevConf: m_list)
+  for (GOMidiDeviceConfig* pDevConf : m_list)
   {
     if (pDevConf->m_PhysicalName == physicalName)
     { // hasAlreadyMatches
@@ -132,7 +132,7 @@ void GOMidiDeviceConfigList::Save(
 {
   unsigned i = 0;
 
-  for (GOMidiDeviceConfig* devConf: m_list)
+  for (GOMidiDeviceConfig* devConf : m_list)
   {
     i++;
     cfg.WriteString(
