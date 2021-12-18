@@ -344,6 +344,10 @@
             <in>GOPortFactory.cpp</in>
             <in>GOPortsConfig.cpp</in>
             <in>GOSettings.cpp</in>
+            <in>GOSettingsMidiDeviceList.cpp</in>
+            <in>GOSettingsMidiDeviceList.h</in>
+            <in>GOSettingsMidiMatchDialog.cpp</in>
+            <in>GOSettingsMidiMatchDialog.h</in>
             <in>GOSettingsPorts.cpp</in>
             <in>SettingsArchives.cpp</in>
             <in>SettingsAudioGroup.cpp</in>
@@ -7617,6 +7621,26 @@
             flavor2="8">
         <ccTool flags="5">
         </ccTool>
+      </item>
+      <item path="../../src/grandorgue/settings/GOSettingsMidiDeviceList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/settings/GOSettingsMidiDeviceList.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/settings/GOSettingsMidiMatchDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/settings/GOSettingsMidiMatchDialog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/grandorgue/settings/GOSettingsPorts.cpp"
             ex="false"

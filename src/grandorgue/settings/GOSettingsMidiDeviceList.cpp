@@ -6,6 +6,8 @@
 
 #include "GOSettingsMidiDeviceList.h"
 
+#include "GOSettingsMidiMatchDialog.h"
+
 GOSettingsMidiDeviceList::GOSettingsMidiDeviceList(
   const ptr_vector<GOMidiPort>& ports,
   GOMidiDeviceConfigList& configListPersist,
@@ -22,11 +24,18 @@ GOSettingsMidiDeviceList::GOSettingsMidiDeviceList(
     &GOSettingsMidiDeviceList::OnChecked,
     this
   );
+  m_BMatching = new wxButton(parent, wxID_ANY, _("Matching..."));
+  m_BMatching->Bind(
+    wxEVT_BUTTON,
+    &GOSettingsMidiDeviceList::OnMatchingClick,
+    this
+  );
   Init();
 }
 
 void GOSettingsMidiDeviceList::ClearDevices()
 {
+  m_BMatching->Disable();
   // We cann't use lbDevices->Clear() because it disables the event handler
   for (int i = m_LbDevices->GetCount() - 1; i >= 0; i--)
     m_LbDevices->Delete(i);
@@ -93,6 +102,7 @@ GOMidiDeviceConfig&
 
 void GOSettingsMidiDeviceList::OnSelected(wxCommandEvent& event)
 {
+  m_BMatching->Enable();
 }
 
 void GOSettingsMidiDeviceList::OnChecked(wxCommandEvent& event)
@@ -100,6 +110,18 @@ void GOSettingsMidiDeviceList::OnChecked(wxCommandEvent& event)
   unsigned i = (unsigned) event.GetInt();
 
   GetDeviceConf(i).m_IsEnabled = m_LbDevices->IsChecked(i);
+}
+
+void GOSettingsMidiDeviceList::OnMatchingClick(
+  wxCommandEvent& event
+)
+{
+  GOMidiDeviceConfig& devConf = GetSelectedDeviceConf();
+  GOSettingsMidiMatchDialog dlg(m_parent, &m_ListedConfs);
+
+  dlg.FillWith(devConf);
+  if (dlg.ShowModal() == wxID_OK)
+    dlg.SaveTo(devConf);
 }
 
 void GOSettingsMidiDeviceList::Save(

@@ -26,14 +26,16 @@ private:
   GOMidiDeviceConfigList& m_ConfList;
   GOMidiDeviceConfig::RefVector m_ListedConfs;
   wxCheckListBox* m_LbDevices;
-  
+  wxButton* m_BMatching;
+
   // temporary storage for configs when edited
   GOMidiDeviceConfigList m_ConfListTmp;
 
   void ClearDevices();
 
   void OnChecked(wxCommandEvent& event);
-  
+  void OnMatchingClick(wxCommandEvent& event);
+
 public:
   GOSettingsMidiDeviceList(
     const ptr_vector<GOMidiPort>& ports,
@@ -43,6 +45,7 @@ public:
   );
 
   wxCheckListBox* GetListbox() const { return m_LbDevices; }
+  wxButton* GetMatchingButton() const { return m_BMatching; }
 
   void Init();
 
