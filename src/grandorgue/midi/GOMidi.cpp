@@ -62,10 +62,10 @@ void GOMidi::Open()
 	    pDevConf = midiIn.FindByPhysicalName(physicalName);
 	    if (! pDevConf && isToAutoAdd)
 	      pDevConf = midiIn.Append(
-		pPort->GetDefaultLogicalName(),
-		pPort->GetDefaultRegEx(),
-		true,
-		physicalName
+	        pPort->GetDefaultLogicalName(),
+	        pPort->GetDefaultRegEx(),
+	        true,
+	        physicalName
 	      );
 	  }
 	  if (pDevConf && pDevConf->m_IsEnabled)
