@@ -58,6 +58,7 @@ option(RTMIDI_USE_CORE        "Enable RtMidi support for Core Audio (OS X only)"
 option(RTMIDI_USE_JACK        "Enable RtMidi support for Jack" ON)
 option(RTMIDI_USE_ALSA        "Enable RtMidi support for ALSA (Linux only)" ON)
 option(RTMIDI_USE_MM          "Enable RtMidi support for MM (Windows only)" ON)
+option(USE_INTERNAL_RTAUDIO   "Use builtin RtAudio/RtMidi sources" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)
 option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
 option(GO_USE_JACK	      "Use native Jack output" ON)
@@ -141,31 +142,38 @@ if(RTAUDIO_USE_ASIO AND NOT ASIO_SDK_DIR)
 endif()
 
 # include RtAudio
-if(NOT RTAUDIO_SRC_DIR)
-  set(RTAUDIO_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtAudio")
-  if(NOT EXISTS "${RTAUDIO_SRC_DIR}/RtAudio.h")
-    message(
-      FATAL_ERROR 
-      "${RTAUDIO_SRC_DIR}/RtAudio.h file does not exist."
-      "Possible the RtAudio submodule has not been updated."
-      "Try to execute 'git submodule update --init --recursive' in the source directory"
-    )
+if (USE_INTERNAL_RTAUDIO)
+  if(NOT RTAUDIO_SRC_DIR)
+    set(RTAUDIO_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtAudio")
+    if(NOT EXISTS "${RTAUDIO_SRC_DIR}/RtAudio.h")
+      message(
+        FATAL_ERROR 
+        "${RTAUDIO_SRC_DIR}/RtAudio.h file does not exist."
+        "Possible the RtAudio submodule has not been updated."
+        "Try to execute 'git submodule update --init --recursive' in the source directory"
+      )
+    endif()
   endif()
-endif()
-if(NOT RTMIDI_SRC_DIR)
-  set(RTMIDI_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtMidi")
-  if(NOT EXISTS "${RTMIDI_SRC_DIR}/RtMidi.h")
-    message(
-      FATAL_ERROR 
-      "${RTMIDI_SRC_DIR}/RtMidi.h file does not exist."
-      "Possible the RtMidi submodule has not been updated."
-      "Try to execute 'git submodule update --init --recursive' in the source directory"
-    )
+  if(NOT RTMIDI_SRC_DIR)
+    set(RTMIDI_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtMidi")
+    if(NOT EXISTS "${RTMIDI_SRC_DIR}/RtMidi.h")
+      message(
+        FATAL_ERROR 
+        "${RTMIDI_SRC_DIR}/RtMidi.h file does not exist."
+        "Possible the RtMidi submodule has not been updated."
+        "Try to execute 'git submodule update --init --recursive' in the source directory"
+      )
+    endif()
   endif()
+  add_subdirectory(src/rt)
+  set(RT_LIBRARIES RtAudio RtMidi)
+  set(RT_INCLUDE_DIRS ${RTMIDI_SRC_DIR} ${RTAUDIO_SRC_DIR})
+else()
+  pkg_check_modules(RTAUDIO REQUIRED rtaudio)
+  pkg_check_modules(RTMIDI REQUIRED rtmidi)
+  set(RT_LIBRARIES ${RTAUDIO_LIBRARIES} ${RTMIDI_LIBRARIES})
+  set(RT_INCLUDE_DIRS ${RTMIDI_INCLUDE_DIRS} ${RTAUDIO_INCLUDE_DIRS})
 endif()
-add_subdirectory(src/rt)
-set(RT_LIBRARIES RtAudio RtMidi)
-set(RT_INCLUDE_DIRS ${RTMIDI_SRC_DIR} ${RTAUDIO_SRC_DIR})
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
