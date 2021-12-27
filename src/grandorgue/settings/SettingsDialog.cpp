@@ -45,7 +45,7 @@ SettingsDialog::SettingsDialog(
 {
   wxBookCtrlBase* notebook = GetBookCtrl();
 
-  m_MidiDevicePage = new SettingsMidiDevices(m_Sound, notebook);
+  m_MidiDevicePage = new SettingsMidiDevices(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
   m_OptionsPage = new SettingsOption(m_Sound.GetSettings(), notebook);
   m_OrganPage = new SettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
   m_ArchivePage = new SettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);

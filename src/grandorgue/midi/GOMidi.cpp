@@ -9,6 +9,7 @@
 #include "midi/GOMidiWXEvent.h"
 #include "ports/GOMidiInPort.h"
 #include "ports/GOMidiOutPort.h"
+#include "settings/GOMidiDeviceConfig.h"
 #include "settings/GOSettings.h"
 
 #include "GOEvent.h"
@@ -43,25 +44,45 @@ void GOMidi::Open()
 {
 	const bool isToAutoAdd = m_Settings.IsToAutoAddMidi();
 	const GOPortsConfig& portsConfig(m_Settings.GetMidiPortsConfig());
+	GOMidiDeviceConfigList& midiIn = m_Settings.m_MidiIn;
 
 	UpdateDevices(portsConfig);
 
 	for (GOMidiPort* pPort : m_midi_in_devices)
 	{
+	  GOMidiDeviceConfig* pDevConf = NULL;
+
 	  if (
-		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
-		  && m_Settings.GetMidiInState(pPort->GetName(), isToAutoAdd)
+	    pPort->IsToUse()
+	    && portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
 	  )
-		((GOMidiInPort *) pPort)->Open(m_Settings.GetMidiInDeviceChannelShift(pPort->GetName()));
+	  {
+	    const wxString& physicalName = pPort->GetName();
+	    
+	    pDevConf = midiIn.FindByPhysicalName(physicalName);
+	    if (! pDevConf && isToAutoAdd)
+	      pDevConf = midiIn.Append(
+	        pPort->GetDefaultLogicalName(),
+	        pPort->GetDefaultRegEx(),
+	        true,
+	        physicalName
+	      );
+	  }
+	  if (pDevConf && pDevConf->m_IsEnabled)
+	    ((GOMidiInPort *) pPort)->Open(pDevConf->m_ChannelShift);
 	  else
 	    pPort->Close();
 	}
 
 	for (GOMidiPort* pPort : m_midi_out_devices)
 	{
+	  GOMidiDeviceConfig* devConf;
+
 	  if (
-		  portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
-		  && m_Settings.GetMidiOutState(pPort->GetName())
+	    pPort->IsToUse()
+	    && portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
+	    && (devConf = m_Settings.m_MidiOut.FindByPhysicalName(pPort->GetName()))
+	    && devConf->m_IsEnabled
 	  )
 	    pPort->Open();
 	  else

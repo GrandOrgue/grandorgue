@@ -113,8 +113,8 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* 
 
 	m_device->Append(_("Any device"));
 
-	for (const wxString& it : m_Settings.GetMidiInDeviceList())
-		m_device->Append(it);
+	for (GOMidiDeviceConfig* pDevConf : m_Settings.m_MidiIn)
+		m_device->Append(pDevConf->m_LogicalName);
 
 	m_channel->Append(_("Any channel"));
 	for(unsigned int i = 1 ; i <= 16; i++)

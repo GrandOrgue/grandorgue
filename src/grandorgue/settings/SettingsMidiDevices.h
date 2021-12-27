@@ -12,14 +12,17 @@
 #include <wx/checkbox.h>
 #include <wx/panel.h>
 
+#include "GOMidiDeviceConfigList.h"
 #include "GOPortsConfig.h"
 #include "GOSettings.h"
 #include "GOSettingsPorts.h"
 
-class GOSound;
 class wxButton;
 class wxCheckListBox;
 class wxChoice;
+class GOMidi;
+class GOMidiPort;
+class GOSettings;
 
 class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 {
@@ -33,19 +36,56 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 		ID_RECORDERDEVICE,
 	};
 private:
-	GOSound& m_Sound;
 	GOSettings& m_Settings;
+	GOMidi& m_Midi;
+
+	class MidiDeviceListSettings
+	{
+	private:
+	  const ptr_vector<GOMidiPort>& m_Ports;
+	  GOMidiDeviceConfigList& m_ConfList;
+	  wxCheckListBox* m_LbDevices;
+
+	  // temporary storage for configs when edited
+	  GOMidiDeviceConfigList m_ConfListTmp;
+
+	  void ClearDevices();
+
+	public:
+	  MidiDeviceListSettings(
+	    const ptr_vector<GOMidiPort>& ports,
+	    GOMidiDeviceConfigList& configListPersist,
+	    wxWindow* parent,
+	    wxWindowID id
+	  );
+
+	  wxCheckListBox* GetListbox() const { return m_LbDevices; }
+
+	  void Init();
+
+	  void RefreshDevices(
+	    const GOPortsConfig& portsConfig,
+	    const bool isToAutoEnable,
+	    const MidiDeviceListSettings* pOutDevList = NULL
+	  );
+
+	  unsigned GetDeviceCount() const;
+	  GOMidiDeviceConfig& GetDeviceConf(unsigned i) const;
+	  GOMidiDeviceConfig& GetSelectedDeviceConf() const;
+
+	  void OnChecked(wxCommandEvent& event);
+
+	  void Save(const MidiDeviceListSettings* pOutDevList = NULL);
+	};
+
+	MidiDeviceListSettings m_InDevices;
+	MidiDeviceListSettings m_OutDevices;
 
 	wxCheckBox* m_AutoAddInput;
 	wxCheckBox* m_CheckOnStartup;
-	wxCheckListBox* m_InDevices;
-	wxCheckListBox* m_OutDevices;
 	wxButton* m_InProperties;
 	wxButton* m_InOutDevice;
 	wxChoice* m_RecorderDevice;
-
-	std::vector<int> m_InDeviceData;
-	std::vector<wxString> m_InOutDeviceData;
 
 	void RenewDevices(const GOPortsConfig& portsConfig, const bool isToAutoAddInput);
 	void OnPortChanged(
@@ -56,7 +96,7 @@ private:
 	void OnInChannelShiftClick(wxCommandEvent& event);
 
 public:
-	SettingsMidiDevices(GOSound& sound, wxWindow* parent);
+	SettingsMidiDevices(GOSettings& settings, GOMidi& midi, wxWindow* parent);
 
 	void Save();
 

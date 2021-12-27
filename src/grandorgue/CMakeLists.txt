@@ -144,6 +144,8 @@ midi/MIDIEventKeyDialog.cpp
 OrganDialog.cpp
 GODocument.cpp
 GOPanelView.cpp
+settings/GOMidiDeviceConfig.cpp
+settings/GOMidiDeviceConfigList.cpp
 settings/GOPortFactory.cpp
 settings/GOSettingsPorts.cpp
 settings/SettingsArchives.cpp

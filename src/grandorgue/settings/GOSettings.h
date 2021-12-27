@@ -24,6 +24,7 @@
 #include "settings/GOSettingStore.h"
 #include "settings/GOSettingString.h"
 #include "temperaments/GOTemperamentList.h"
+#include "GOMidiDeviceConfigList.h"
 #include "GOOrganList.h"
 #include "GOPortsConfig.h"
 #include "ptrvector.h"
@@ -67,10 +68,6 @@ private:
 	std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 
 	GOPortsConfig m_MidiPortsConfig;
-	std::map<wxString, bool> m_MidiIn;
-	std::map<wxString, unsigned> m_MidiInShift;
-	std::map<wxString, wxString> m_MidiInOutDeviceMap;
-	std::map<wxString, bool> m_MidiOut;
 	ptr_vector<GOMidiReceiverBase> m_MIDIEvents;
 	GOMidiMap m_MidiMap;
 	GOTemperamentList m_Temperaments;
@@ -161,6 +158,9 @@ public:
 	GOSettingDirectory AudioRecorderPath;
 	GOSettingDirectory MidiRecorderPath;
 	GOSettingDirectory MidiPlayerPath;
+
+	GOMidiDeviceConfigList m_MidiIn;
+	GOMidiDeviceConfigList m_MidiOut;
 	
 	void Load();
 
@@ -175,7 +175,8 @@ public:
 	wxString GetEventTitle(unsigned index);
 	GOMidiReceiverBase* GetMidiEvent(unsigned index);
 	GOMidiReceiverBase* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
-	
+
+	/*
 	bool GetMidiInState(wxString device, bool isEnabledByDefault);
 	void SetMidiInState(wxString device, bool enabled);
 	unsigned GetMidiInDeviceChannelShift(wxString device);
@@ -187,6 +188,7 @@ public:
 	bool GetMidiOutState(wxString device);
 	void SetMidiOutState(wxString device, bool enabled);
 	std::vector<wxString> GetMidiOutDeviceList();
+	 */
 
 	const std::vector<wxString>& GetAudioGroups();
 	void SetAudioGroups(const std::vector<wxString>& audio_groups);

@@ -17,7 +17,6 @@
 #include "midi/GOMidi.h"
 #include "midi/ports/GOMidiPortFactory.h"
 #include "settings/GOSettings.h"
-#include "sound/GOSound.h"
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_LISTBOX(ID_INDEVICES, SettingsMidiDevices::OnInDevicesClick)
@@ -26,11 +25,138 @@ BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_BUTTON(ID_INOUTDEVICE, SettingsMidiDevices::OnInOutDeviceClick)
 END_EVENT_TABLE()
 
-SettingsMidiDevices::SettingsMidiDevices(GOSound& sound, wxWindow* parent) :
+SettingsMidiDevices::MidiDeviceListSettings::MidiDeviceListSettings(
+  const ptr_vector<GOMidiPort>& ports,
+  GOMidiDeviceConfigList& configListPersist,
+  wxWindow* parent,
+  wxWindowID id
+):
+  m_Ports(ports), m_ConfList(configListPersist)
+{
+  m_LbDevices = new wxCheckListBox(
+    parent, id, wxDefaultPosition, wxSize(100, 100)
+  );
+  m_LbDevices->Bind(
+    wxEVT_CHECKLISTBOX,
+    &SettingsMidiDevices::MidiDeviceListSettings::OnChecked,
+    this
+  );
+}
+
+void SettingsMidiDevices::MidiDeviceListSettings::ClearDevices()
+{
+  // We cann't use lbDevices->Clear() because it disables the event handler
+  for (int i = m_LbDevices->GetCount() - 1; i >= 0; i--)
+    m_LbDevices->Delete(i);
+}
+
+void SettingsMidiDevices::MidiDeviceListSettings::Init()
+{
+  ClearDevices();
+  m_ConfListTmp.Clear();
+}
+
+void SettingsMidiDevices::MidiDeviceListSettings::RefreshDevices(
+  const GOPortsConfig& portsConfig,
+  const bool isToAutoEnable,
+  const MidiDeviceListSettings* pOutDevList
+)
+{
+  ClearDevices();
+  for (GOMidiPort* port : m_Ports)
+    if (
+      port->IsToUse()
+      && portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())
+    )
+    {
+      const wxString physicalName = port->GetName();
+      GOMidiDeviceConfig* const pConf
+	= m_ConfList.FindByPhysicalName(physicalName);
+      GOMidiDeviceConfig* pConfTmp
+	= m_ConfListTmp.FindByPhysicalName(physicalName);
+
+      if (! pConfTmp)
+	pConfTmp = pConf
+	  ? m_ConfListTmp.Append(
+	    *pConf, pOutDevList ? &pOutDevList->m_ConfListTmp : NULL
+	  )
+	  : m_ConfListTmp.Append(
+	    port->GetDefaultLogicalName(),
+	    port->GetDefaultRegEx(),
+	    isToAutoEnable,
+	    physicalName
+	  );
+
+      const int i = m_LbDevices->Append(physicalName, pConfTmp);
+
+      if (pConfTmp->m_IsEnabled)
+	m_LbDevices->Check(i);
+    }
+}
+
+unsigned SettingsMidiDevices::MidiDeviceListSettings::GetDeviceCount() const
+{
+  return m_LbDevices->GetCount();
+}
+
+GOMidiDeviceConfig& SettingsMidiDevices::MidiDeviceListSettings::GetDeviceConf(
+  unsigned i
+) const
+{
+  return * (GOMidiDeviceConfig*) m_LbDevices->GetClientData(i);
+}
+
+GOMidiDeviceConfig& 
+  SettingsMidiDevices::MidiDeviceListSettings::GetSelectedDeviceConf()
+  const
+{
+  return GetDeviceConf(m_LbDevices->GetSelection());
+}
+
+void SettingsMidiDevices::MidiDeviceListSettings::OnChecked(wxCommandEvent& event)
+{
+  unsigned i = (unsigned) event.GetInt();
+
+  GetDeviceConf(i).m_IsEnabled = m_LbDevices->IsChecked(i);
+}
+
+void SettingsMidiDevices::MidiDeviceListSettings::Save(
+  const MidiDeviceListSettings* pOutDevList
+)
+{
+  for (int l = m_LbDevices->GetCount(), i = 0; i < l; i++)
+  {
+    GOMidiDeviceConfig* pDevConfTmp
+      = (GOMidiDeviceConfig*) m_LbDevices->GetClientData(i);
+    GOMidiDeviceConfig* pDevConf = m_ConfList.FindByPhysicalName(
+      pDevConfTmp->m_PhysicalName
+    );
+    const GOMidiDeviceConfigList* pOutConfList
+      = pOutDevList ? & pOutDevList->m_ConfList : NULL;
+
+    if (pDevConf)
+    {
+      pDevConf->Assign(*pDevConfTmp);
+      if (pOutConfList)
+	pOutConfList->MapOutputDevice(*pDevConfTmp, *pDevConf);
+    } else
+      m_ConfList.Append(*pDevConfTmp, pOutConfList);
+  }
+}
+
+SettingsMidiDevices::SettingsMidiDevices(
+  GOSettings& settings, GOMidi& midi, wxWindow* parent
+):
 	wxPanel(parent, wxID_ANY),
 	GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("Midi &ports")),
-	m_Sound(sound),
-	m_Settings(sound.GetSettings())
+	m_Settings(settings),
+	m_Midi(midi),
+	m_InDevices(
+	  m_Midi.GetInDevices(), m_Settings.m_MidiIn, this, ID_INDEVICES
+        ),
+	m_OutDevices(
+	  m_Midi.GetOutDevices(), m_Settings.m_MidiOut, this, ID_OUTDEVICES
+	)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* box1 = new wxBoxSizer(wxHORIZONTAL);
@@ -48,8 +174,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOSound& sound, wxWindow* parent) :
 	box1->Add(GetPortsBox(), 1, wxEXPAND | wxALL, 5);
 	topSizer->Add(box1, 0.5, wxEXPAND | wxALL, 5);
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
-	m_InDevices = new wxCheckListBox(this, ID_INDEVICES, wxDefaultPosition, wxSize(100, 100));
-	item3->Add(m_InDevices, 1, wxEXPAND | wxALL, 5);
+	item3->Add(m_InDevices.GetListbox(), 1, wxEXPAND | wxALL, 5);
 
 	wxBoxSizer* item4 = new wxBoxSizer(wxHORIZONTAL);
 	m_InProperties = new wxButton(this, ID_INCHANNELSHIFT, _("A&dvanced..."));
@@ -63,8 +188,7 @@ SettingsMidiDevices::SettingsMidiDevices(GOSound& sound, wxWindow* parent) :
 	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
 	item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &output devices"));
-	m_OutDevices = new wxCheckListBox(this, ID_OUTDEVICES, wxDefaultPosition, wxSize(100, 100));
-	item3->Add(m_OutDevices, 1, wxEXPAND | wxALL, 5);
+	item3->Add(m_OutDevices.GetListbox(), 1, wxEXPAND | wxALL, 5);
 
 	item4 = new wxBoxSizer(wxHORIZONTAL);
 	item3->Add(
@@ -96,50 +220,21 @@ void SettingsMidiDevices::RenewDevices(
   const GOPortsConfig& portsConfig, const bool isToAutoAddInput
 )
 {
-  GOMidi& midi(m_Sound.GetMidi());
+  m_Midi.UpdateDevices(portsConfig);
+  m_OutDevices.RefreshDevices(portsConfig, false);
+  m_InDevices.RefreshDevices(portsConfig, isToAutoAddInput, &m_OutDevices);
 
-  midi.UpdateDevices(portsConfig);
-
-  // Fill m_InDevices
-  m_InDevices->Clear();
-  for (const GOMidiPort* port : midi.GetInDevices())
-  {
-    if (
-      portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())
-      && port->IsToUse()
-    )
-    {
-      const wxString deviceName = port->GetName();
-      const int i = m_InDevices->Append(deviceName);
-
-      if (m_Settings.GetMidiInState(deviceName, isToAutoAddInput))
-	m_InDevices->Check(i);
-      m_InDeviceData.push_back(m_Settings.GetMidiInDeviceChannelShift(deviceName));
-      m_InOutDeviceData.push_back(m_Settings.GetMidiInOutDevice(deviceName));
-    }
-  }
-
-  // Fill m_OutDevices and m_RecorderDevice
+  // Fill m_RecorderDevice
   m_RecorderDevice->Clear();
   m_RecorderDevice->Append(_("No device"));
   m_RecorderDevice->Select(0);
-  m_OutDevices->Clear();
-  for (const GOMidiPort* port : midi.GetOutDevices())
+  for (unsigned l = m_OutDevices.GetDeviceCount(), i = 0; i < l; i++)
   {
-    if (
-      portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())
-      && port->IsToUse()
-    )
-    {
-      const wxString deviceName = port->GetName();
-      const int iOut = m_OutDevices->Append(deviceName);
-      const int iRec = m_RecorderDevice->Append(deviceName);
+    const GOMidiDeviceConfig& c = m_OutDevices.GetDeviceConf(i);
 
-      if (m_Settings.GetMidiOutState(deviceName) == 1)
-	m_OutDevices->Check(iOut);
-      if (m_Settings.MidiRecorderOutputDevice() == deviceName)
-	m_RecorderDevice->SetSelection(iRec);
-    }
+    m_RecorderDevice->Append(c.m_PhysicalName);
+    if (m_Settings.MidiRecorderOutputDevice() == c.m_LogicalName)
+      m_RecorderDevice->SetSelection(i + 1);
   }
 }
 
@@ -152,59 +247,72 @@ void SettingsMidiDevices::OnPortChanged(
 
 void SettingsMidiDevices::OnInDevicesClick(wxCommandEvent& event)
 {
-	m_InProperties->Enable();
-	m_InOutDevice->Enable();
+  m_InProperties->Enable();
+  m_InOutDevice->Enable();
 }
 
 void SettingsMidiDevices::OnInOutDeviceClick(wxCommandEvent& event)
 {
-	int index = m_InDevices->GetSelection();
-	wxArrayString choices = m_RecorderDevice->GetStrings();
-	choices[0] = _("No device");
-	int selection = 0;
-	for(unsigned i = 1; i < choices.GetCount(); i++)
-		if (choices[i] == m_InOutDeviceData[index])
-			selection = i;
-	int result = wxGetSingleChoiceIndex(_("Select the corresponding MIDI output device for converting input events into output events"), _("MIDI output device"), choices, selection, this);
-	if (result == -1)
-		return;
-	if (result)
-		m_InOutDeviceData[index] = choices[result];
-	else
-		m_InOutDeviceData[index] = wxEmptyString;
+  GOMidiDeviceConfig& devConf = m_InDevices.GetSelectedDeviceConf();
+  wxArrayString choices = m_RecorderDevice->GetStrings();
+  int selection = 0;
+
+  choices[0] = _("No device");
+
+  if (devConf.p_OutputDevice)
+    for (unsigned i = 1; i < choices.GetCount(); i++)
+      if (choices[i] == devConf.p_OutputDevice->m_PhysicalName)
+	selection = i;
+
+  int result = wxGetSingleChoiceIndex(
+    _("Select the corresponding MIDI output device for converting input events into output events"),
+    _("MIDI output device"),
+    choices,
+    selection,
+    this
+  );
+
+  if (result >= 0)
+    devConf.p_OutputDevice
+      = result ? &m_OutDevices.GetDeviceConf(result - 1) : NULL;
 }
 
 void SettingsMidiDevices::OnInChannelShiftClick(wxCommandEvent& event)
 {
-	m_InProperties->Enable();
-	m_InOutDevice->Enable();
-	int index = m_InDevices->GetSelection();
-	int result = ::wxGetNumberFromUser(_("A channel offset allows the use of two MIDI\ninterfaces with conflicting MIDI channels. For\nexample, applying a channel offset of 8 to\none of the MIDI interfaces would cause that\ninterface's channel 1 to appear as channel 9,\nchannel 2 to appear as channel 10, and so on."), _("Channel offset:"), 
-					   m_InDevices->GetString(index), m_InDeviceData[index], 0, 15, this);
+  m_InProperties->Enable();
+  m_InOutDevice->Enable();
 
-	if (result >= 0)
-		m_InDeviceData[index] = result;
+  GOMidiDeviceConfig& devConf = m_InDevices.GetSelectedDeviceConf();
+  int result = ::wxGetNumberFromUser(
+    _("A channel offset allows the use of two MIDI\n"
+      "interfaces with conflicting MIDI channels. For\n"
+      "example, applying a channel offset of 8 to\n"
+      "one of the MIDI interfaces would cause that\n"
+      "interface's channel 1 to appear as channel 9,\n"
+      "channel 2 to appear as channel 10, and so on."
+    ),
+    _("Channel offset:"),
+    devConf.m_PhysicalName, devConf.m_ChannelShift, 0, 15, this
+  );
+
+  if (result >= 0)
+    devConf.m_ChannelShift = result;
 }
 
 void SettingsMidiDevices::Save()
 {
-	m_Settings.IsToAutoAddMidi(m_AutoAddInput->IsChecked());
-	m_Settings.IsToCheckMidiOnStart(m_CheckOnStartup->IsChecked());
-	m_Settings.SetMidiPortsConfig(RenewPortsConfig());
+  m_Settings.IsToAutoAddMidi(m_AutoAddInput->IsChecked());
+  m_Settings.IsToCheckMidiOnStart(m_CheckOnStartup->IsChecked());
+  m_Settings.SetMidiPortsConfig(RenewPortsConfig());
+  m_OutDevices.Save();
+  m_InDevices.Save(&m_OutDevices);
 
-	for (unsigned i = 0; i < m_InDevices->GetCount(); i++)
-	{
-		m_Settings.SetMidiInState(m_InDevices->GetString(i), m_InDevices->IsChecked(i));
-		m_Settings.SetMidiInDeviceChannelShift(m_InDevices->GetString(i), m_InDeviceData[i]);
-		m_Settings.SetMidiInOutDevice(m_InDevices->GetString(i), m_InOutDeviceData[i]);
-	}
+  const int iRec = m_RecorderDevice->GetSelection();
 
-	for (unsigned i = 0; i < m_OutDevices->GetCount(); i++)
-	{
-		m_Settings.SetMidiOutState(m_OutDevices->GetString(i), m_OutDevices->IsChecked(i));
-	}
-	if (m_RecorderDevice->GetSelection() == 0)
-		m_Settings.MidiRecorderOutputDevice(wxEmptyString);
-	else
-		m_Settings.MidiRecorderOutputDevice(m_RecorderDevice->GetString(m_RecorderDevice->GetSelection()));
+  if (iRec <= 0)
+    m_Settings.MidiRecorderOutputDevice(wxEmptyString);
+  else
+    m_Settings.MidiRecorderOutputDevice(
+      m_OutDevices.GetDeviceConf(iRec - 1).m_LogicalName
+    );
 }
