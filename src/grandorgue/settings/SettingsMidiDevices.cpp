@@ -7,7 +7,6 @@
 #include "SettingsMidiDevices.h"
 
 #include <wx/button.h>
-#include <wx/checklst.h>
 #include <wx/choice.h>
 #include <wx/choicdlg.h>
 #include <wx/numdlg.h>
@@ -25,125 +24,6 @@ BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_BUTTON(ID_INOUTDEVICE, SettingsMidiDevices::OnInOutDeviceClick)
 END_EVENT_TABLE()
 
-SettingsMidiDevices::MidiDeviceListSettings::MidiDeviceListSettings(
-  const ptr_vector<GOMidiPort>& ports,
-  GOMidiDeviceConfigList& configListPersist,
-  wxWindow* parent,
-  wxWindowID id
-):
-  m_Ports(ports), m_ConfList(configListPersist)
-{
-  m_LbDevices = new wxCheckListBox(
-    parent, id, wxDefaultPosition, wxSize(100, 100)
-  );
-  m_LbDevices->Bind(
-    wxEVT_CHECKLISTBOX,
-    &SettingsMidiDevices::MidiDeviceListSettings::OnChecked,
-    this
-  );
-}
-
-void SettingsMidiDevices::MidiDeviceListSettings::ClearDevices()
-{
-  // We cann't use lbDevices->Clear() because it disables the event handler
-  for (int i = m_LbDevices->GetCount() - 1; i >= 0; i--)
-    m_LbDevices->Delete(i);
-}
-
-void SettingsMidiDevices::MidiDeviceListSettings::Init()
-{
-  ClearDevices();
-  m_ConfListTmp.Clear();
-}
-
-void SettingsMidiDevices::MidiDeviceListSettings::RefreshDevices(
-  const GOPortsConfig& portsConfig,
-  const bool isToAutoEnable,
-  const MidiDeviceListSettings* pOutDevList
-)
-{
-  ClearDevices();
-  for (GOMidiPort* port : m_Ports)
-    if (
-      port->IsToUse()
-      && portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())
-    )
-    {
-      const wxString physicalName = port->GetName();
-      GOMidiDeviceConfig* const pConf
-	= m_ConfList.FindByPhysicalName(physicalName);
-      GOMidiDeviceConfig* pConfTmp
-	= m_ConfListTmp.FindByPhysicalName(physicalName);
-
-      if (! pConfTmp)
-	pConfTmp = pConf
-	  ? m_ConfListTmp.Append(
-	    *pConf, pOutDevList ? &pOutDevList->m_ConfListTmp : NULL
-	  )
-	  : m_ConfListTmp.Append(
-	    port->GetDefaultLogicalName(),
-	    port->GetDefaultRegEx(),
-	    isToAutoEnable,
-	    physicalName
-	  );
-
-      const int i = m_LbDevices->Append(physicalName, pConfTmp);
-
-      if (pConfTmp->m_IsEnabled)
-	m_LbDevices->Check(i);
-    }
-}
-
-unsigned SettingsMidiDevices::MidiDeviceListSettings::GetDeviceCount() const
-{
-  return m_LbDevices->GetCount();
-}
-
-GOMidiDeviceConfig& SettingsMidiDevices::MidiDeviceListSettings::GetDeviceConf(
-  unsigned i
-) const
-{
-  return * (GOMidiDeviceConfig*) m_LbDevices->GetClientData(i);
-}
-
-GOMidiDeviceConfig& 
-  SettingsMidiDevices::MidiDeviceListSettings::GetSelectedDeviceConf()
-  const
-{
-  return GetDeviceConf(m_LbDevices->GetSelection());
-}
-
-void SettingsMidiDevices::MidiDeviceListSettings::OnChecked(wxCommandEvent& event)
-{
-  unsigned i = (unsigned) event.GetInt();
-
-  GetDeviceConf(i).m_IsEnabled = m_LbDevices->IsChecked(i);
-}
-
-void SettingsMidiDevices::MidiDeviceListSettings::Save(
-  const MidiDeviceListSettings* pOutDevList
-)
-{
-  for (int l = m_LbDevices->GetCount(), i = 0; i < l; i++)
-  {
-    GOMidiDeviceConfig* pDevConfTmp
-      = (GOMidiDeviceConfig*) m_LbDevices->GetClientData(i);
-    GOMidiDeviceConfig* pDevConf = m_ConfList.FindByPhysicalName(
-      pDevConfTmp->m_PhysicalName
-    );
-    const GOMidiDeviceConfigList* pOutConfList
-      = pOutDevList ? & pOutDevList->m_ConfList : NULL;
-
-    if (pDevConf)
-    {
-      pDevConf->Assign(*pDevConfTmp);
-      if (pOutConfList)
-	pOutConfList->MapOutputDevice(*pDevConfTmp, *pDevConf);
-    } else
-      m_ConfList.Append(*pDevConfTmp, pOutConfList);
-  }
-}
-
 SettingsMidiDevices::SettingsMidiDevices(
   GOSettings& settings, GOMidi& midi, wxWindow* parent
 ):
@@ -152,10 +32,16 @@ SettingsMidiDevices::SettingsMidiDevices(
 	m_Settings(settings),
 	m_Midi(midi),
 	m_InDevices(
-	  m_Midi.GetInDevices(), m_Settings.m_MidiIn, this, ID_INDEVICES
+	  m_Midi.GetInDevices(),
+	  m_Settings.m_MidiIn,
+	  this,
+	  ID_INDEVICES
         ),
 	m_OutDevices(
-	  m_Midi.GetOutDevices(), m_Settings.m_MidiOut, this, ID_OUTDEVICES
+	  m_Midi.GetOutDevices(),
+	  m_Settings.m_MidiOut,
+	  this,
+	  ID_OUTDEVICES
 	)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);

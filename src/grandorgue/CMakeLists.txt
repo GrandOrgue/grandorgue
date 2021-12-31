@@ -147,6 +147,7 @@ GOPanelView.cpp
 settings/GOMidiDeviceConfig.cpp
 settings/GOMidiDeviceConfigList.cpp
 settings/GOPortFactory.cpp
+settings/GOSettingsMidiDeviceList.cpp
 settings/GOSettingsPorts.cpp
 settings/SettingsArchives.cpp
 settings/SettingsAudioGroup.cpp

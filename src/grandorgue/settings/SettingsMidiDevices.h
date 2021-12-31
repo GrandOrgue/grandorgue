@@ -7,14 +7,12 @@
 #ifndef SETTINGSMIDIDEVICES_H
 #define SETTINGSMIDIDEVICES_H
 
-#include <vector>
-
 #include <wx/checkbox.h>
 #include <wx/panel.h>
 
-#include "GOMidiDeviceConfigList.h"
 #include "GOPortsConfig.h"
 #include "GOSettings.h"
+#include "GOSettingsMidiDeviceList.h"
 #include "GOSettingsPorts.h"
 
 class wxButton;
@@ -39,47 +37,8 @@ private:
 	GOSettings& m_Settings;
 	GOMidi& m_Midi;
 
-	class MidiDeviceListSettings
-	{
-	private:
-	  const ptr_vector<GOMidiPort>& m_Ports;
-	  GOMidiDeviceConfigList& m_ConfList;
-	  wxCheckListBox* m_LbDevices;
-
-	  // temporary storage for configs when edited
-	  GOMidiDeviceConfigList m_ConfListTmp;
-
-	  void ClearDevices();
-
-	public:
-	  MidiDeviceListSettings(
-	    const ptr_vector<GOMidiPort>& ports,
-	    GOMidiDeviceConfigList& configListPersist,
-	    wxWindow* parent,
-	    wxWindowID id
-	  );
-
-	  wxCheckListBox* GetListbox() const { return m_LbDevices; }
-
-	  void Init();
-
-	  void RefreshDevices(
-	    const GOPortsConfig& portsConfig,
-	    const bool isToAutoEnable,
-	    const MidiDeviceListSettings* pOutDevList = NULL
-	  );
-
-	  unsigned GetDeviceCount() const;
-	  GOMidiDeviceConfig& GetDeviceConf(unsigned i) const;
-	  GOMidiDeviceConfig& GetSelectedDeviceConf() const;
-
-	  void OnChecked(wxCommandEvent& event);
-
-	  void Save(const MidiDeviceListSettings* pOutDevList = NULL);
-	};
-
-	MidiDeviceListSettings m_InDevices;
-	MidiDeviceListSettings m_OutDevices;
+	GOSettingsMidiDeviceList m_InDevices;
+	GOSettingsMidiDeviceList m_OutDevices;
 
 	wxCheckBox* m_AutoAddInput;
 	wxCheckBox* m_CheckOnStartup;
