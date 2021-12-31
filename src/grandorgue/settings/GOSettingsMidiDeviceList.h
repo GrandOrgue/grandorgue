@@ -24,7 +24,7 @@ private:
   wxWindow* m_parent;
   const ptr_vector<GOMidiPort>& m_Ports;
   GOMidiDeviceConfigList& m_ConfList;
-  GOMidiDeviceConfig::List m_ListedConfs;
+  GOMidiDeviceConfig::RefVector m_ListedConfs;
   wxCheckListBox* m_LbDevices;
   
   // temporary storage for configs when edited

@@ -30,10 +30,10 @@ public:
 
   void Clear() { m_list.clear(); }
 
-  GOMidiDeviceConfig::List::const_iterator begin() const noexcept
+  GOMidiDeviceConfig::RefVector::const_iterator begin() const noexcept
   { return m_list.begin(); }
 
-  GOMidiDeviceConfig::List::const_iterator end() const noexcept
+  GOMidiDeviceConfig::RefVector::const_iterator end() const noexcept
   { return m_list.end(); }
 
   GOMidiDeviceConfig* FindByLogicalName(const wxString& logicalName) const;
@@ -52,7 +52,7 @@ public:
    * @param protectList - the list of physical names to keep
    */
   void RemoveByLogicalNameOutOf(
-    const wxString& logicalName, const GOMidiDeviceConfig::List& protectList
+    const wxString& logicalName, const GOMidiDeviceConfig::RefVector& protectList
   );
 
   /**

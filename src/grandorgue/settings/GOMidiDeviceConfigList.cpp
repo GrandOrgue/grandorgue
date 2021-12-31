@@ -57,7 +57,7 @@ GOMidiDeviceConfig* GOMidiDeviceConfigList::FindByPhysicalName(
 }
 
 void GOMidiDeviceConfigList::RemoveByLogicalNameOutOf(
-  const wxString& logicalName, const GOMidiDeviceConfig::List& protectList
+  const wxString& logicalName, const GOMidiDeviceConfig::RefVector& protectList
 )
 {
   for (int i = m_list.size() - 1; i >= 0; i --)

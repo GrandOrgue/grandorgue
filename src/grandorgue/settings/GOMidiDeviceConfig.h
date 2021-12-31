@@ -18,7 +18,7 @@ private:
   wxRegEx* p_CompiledRegEx = NULL;
 
 public:
-  typedef std::vector<GOMidiDeviceConfig*> List;
+  typedef std::vector<GOMidiDeviceConfig*> RefVector;
 
   wxString m_LogicalName;
   wxString m_RegEx;
