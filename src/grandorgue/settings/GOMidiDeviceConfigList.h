@@ -34,7 +34,7 @@ public:
   { return m_list.begin(); }
 
   std::vector<GOMidiDeviceConfig*>::const_iterator end() const noexcept
-  { return m_list.begin(); }
+  { return m_list.end(); }
 
   GOMidiDeviceConfig* FindByLogicalName(const wxString& logicalName) const;
 
