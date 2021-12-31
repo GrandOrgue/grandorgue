@@ -99,7 +99,7 @@ bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString& errMsg)
     rc = false;
   }
   if (rc && p_OtherDevices)
-  { // Check logicalName for uniqueness
+    // Check logicalName for uniqueness
     for (const GOMidiDeviceConfig* pDev : *p_OtherDevices)
       if (
 	pDev->m_PhysicalName != m_PhysicalName
@@ -110,6 +110,10 @@ bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString& errMsg)
 	rc = false;
 	break;
       }
+  if (rc && newLogicalName != m_PhysicalName && t_regex->GetValue().IsEmpty())
+  {
+    errMsg = _("Regex must be specified when physical and logical device names differ");
+    rc = false;
   }
   if (rc)
     errMsg = wxEmptyString;
