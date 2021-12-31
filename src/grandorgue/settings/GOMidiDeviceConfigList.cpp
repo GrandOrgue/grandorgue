@@ -138,6 +138,9 @@ void GOMidiDeviceConfigList::Save(
     cfg.WriteString(
       m_GroupName, wxString::Format(DEVICE03D, i), devConf->m_LogicalName
     );
+    cfg.WriteString(
+      m_GroupName, wxString::Format(DEVICE03D_REGEX, i), devConf->m_RegEx
+    );
     cfg.WriteBoolean(
       m_GroupName, wxString::Format(DEVICE03D_ENABLED, i), devConf->m_IsEnabled
     );
