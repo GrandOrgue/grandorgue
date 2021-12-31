@@ -83,6 +83,13 @@ public:
 		std::vector<T*>::insert(std::vector<T*>::begin() + pos, ptr);
 	}
 
+	void erase(unsigned pos)
+	{
+		if (at(pos))
+		  delete at(pos);
+		std::vector<T*>::erase(std::vector<T*>::begin() + pos);
+	}
+
 	typename std::vector<T*>::const_iterator begin() const noexcept
 	{ return std::vector<T*>::begin(); }
 
