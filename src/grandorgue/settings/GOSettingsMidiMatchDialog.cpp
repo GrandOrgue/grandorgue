@@ -6,15 +6,19 @@
 
 #include "GOSettingsMidiMatchDialog.h"
 
+#include <wx/app.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 
+#include "GOEvent.h"
+
 BEGIN_EVENT_TABLE(GOSettingsMidiMatchDialog, wxDialog)
   EVT_TEXT(ID_LOGICAL_NAME, GOSettingsMidiMatchDialog::OnLogicalNameChanged)
   EVT_TEXT(ID_REGEX, GOSettingsMidiMatchDialog::OnRegexChanged)
+  EVT_BUTTON(wxID_HELP, GOSettingsMidiMatchDialog::OnHelp)
 END_EVENT_TABLE()
 
 GOSettingsMidiMatchDialog::GOSettingsMidiMatchDialog(
@@ -151,6 +155,13 @@ void GOSettingsMidiMatchDialog::OnRegexChanged(wxCommandEvent& event)
 
   ValidateRegex(errMsg);
   m_StatusBar->SetStatusText(errMsg);
+}
+
+void GOSettingsMidiMatchDialog::OnHelp(wxCommandEvent& event)
+{
+  wxCommandEvent help(wxEVT_SHOWHELP, 0);
+  help.SetString("MIDI Matching");
+  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
 }
 
 bool GOSettingsMidiMatchDialog::Validate()

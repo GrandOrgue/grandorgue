@@ -41,6 +41,7 @@ private:
 
   void OnLogicalNameChanged(wxCommandEvent& event);
   void OnRegexChanged(wxCommandEvent& event);
+  void OnHelp(wxCommandEvent& event);
 
 public:
   GOSettingsMidiMatchDialog(
