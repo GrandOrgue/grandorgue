@@ -121,7 +121,10 @@ void GOSettingsMidiDeviceList::OnMatchingClick(
 
   dlg.FillWith(devConf);
   if (dlg.ShowModal() == wxID_OK)
+  {
     dlg.SaveTo(devConf);
+    m_ConfListTmp.RemoveByLogicalNameOutOf(devConf.m_LogicalName, m_ListedConfs);
+  }
 }
 
 void GOSettingsMidiDeviceList::Save(
@@ -143,5 +146,8 @@ void GOSettingsMidiDeviceList::Save(
 	pOutConfList->MapOutputDevice(*pDevConfTmp, *pDevConf);
     } else
       m_ConfList.Append(*pDevConfTmp, pOutConfList);
+
+    // remove unlisted devices with the same logical name
+    m_ConfList.RemoveByLogicalNameOutOf(pDevConfTmp->m_LogicalName, m_ListedConfs);
   }
 }
