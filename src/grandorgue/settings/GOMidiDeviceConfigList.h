@@ -46,6 +46,16 @@ public:
   GOMidiDeviceConfig* FindByPhysicalName(const wxString& physicalName) const;
 
   /**
+   * Remove the device from the list that has the logical name specified
+   * and the physicalName is not in the protectList
+   * @param logicalName - the logical device name to delete
+   * @param protectList - the list of physical names to keep
+   */
+  void RemoveByLogicalNameOutOf(
+    const wxString& logicalName, const GOMidiDeviceConfig::List& protectList
+  );
+
+  /**
    * If devConfSrc.p_OutputDevice is set than fill devConfDst.p_OutputDevice
    * with a device with the same logical name in this list
    **/

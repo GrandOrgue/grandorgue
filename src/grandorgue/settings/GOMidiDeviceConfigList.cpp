@@ -56,6 +56,31 @@ GOMidiDeviceConfig* GOMidiDeviceConfigList::FindByPhysicalName(
   return res;
 }
 
+void GOMidiDeviceConfigList::RemoveByLogicalNameOutOf(
+  const wxString& logicalName, const GOMidiDeviceConfig::List& protectList
+)
+{
+  for (int i = m_list.size() - 1; i >= 0; i --)
+  {
+    GOMidiDeviceConfig* pDev = m_list[i];
+
+    if (pDev->m_LogicalName == logicalName)
+    {
+      bool isProtected = false;
+
+      if (! pDev->m_PhysicalName.IsEmpty())
+	for (GOMidiDeviceConfig* pProt : protectList)
+	  if (pProt->m_PhysicalName == pDev->m_PhysicalName)
+	  {
+	    isProtected = true;
+	    break;
+	  }
+      if (! isProtected)
+	m_list.erase(i);
+    }
+  }
+}
+
 void GOMidiDeviceConfigList::MapOutputDevice(
   const GOMidiDeviceConfig& devConfSrc, GOMidiDeviceConfig& devConfDst
 ) const
