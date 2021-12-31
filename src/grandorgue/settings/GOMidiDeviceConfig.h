@@ -7,6 +7,8 @@
 #ifndef GOMIDIDEVICECONFIG_H
 #define GOMIDIDEVICECONFIG_H
 
+#include <vector>
+
 #include <wx/regex.h>
 #include <wx/string.h>
 
@@ -16,6 +18,8 @@ private:
   wxRegEx* p_CompiledRegEx = NULL;
 
 public:
+  typedef std::vector<GOMidiDeviceConfig*> List;
+
   wxString m_LogicalName;
   wxString m_RegEx;
   bool m_IsEnabled;

@@ -30,10 +30,10 @@ public:
 
   void Clear() { m_list.clear(); }
 
-  std::vector<GOMidiDeviceConfig*>::const_iterator begin() const noexcept
+  GOMidiDeviceConfig::List::const_iterator begin() const noexcept
   { return m_list.begin(); }
 
-  std::vector<GOMidiDeviceConfig*>::const_iterator end() const noexcept
+  GOMidiDeviceConfig::List::const_iterator end() const noexcept
   { return m_list.end(); }
 
   GOMidiDeviceConfig* FindByLogicalName(const wxString& logicalName) const;
