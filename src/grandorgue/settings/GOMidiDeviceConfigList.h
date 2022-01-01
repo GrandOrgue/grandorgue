@@ -30,11 +30,11 @@ public:
 
   void Clear() { m_list.clear(); }
 
-  std::vector<GOMidiDeviceConfig*>::const_iterator begin() const noexcept
+  GOMidiDeviceConfig::RefVector::const_iterator begin() const noexcept
   { return m_list.begin(); }
 
-  std::vector<GOMidiDeviceConfig*>::const_iterator end() const noexcept
-  { return m_list.begin(); }
+  GOMidiDeviceConfig::RefVector::const_iterator end() const noexcept
+  { return m_list.end(); }
 
   GOMidiDeviceConfig* FindByLogicalName(const wxString& logicalName) const;
 
@@ -44,6 +44,16 @@ public:
    * If not found, returns NULL
    **/
   GOMidiDeviceConfig* FindByPhysicalName(const wxString& physicalName) const;
+
+  /**
+   * Remove the device from the list that has the logical name specified
+   * and the physicalName is not in the protectList
+   * @param logicalName - the logical device name to delete
+   * @param protectList - the list of physical names to keep
+   */
+  void RemoveByLogicalNameOutOf(
+    const wxString& logicalName, const GOMidiDeviceConfig::RefVector& protectList
+  );
 
   /**
    * If devConfSrc.p_OutputDevice is set than fill devConfDst.p_OutputDevice
