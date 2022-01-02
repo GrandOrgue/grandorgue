@@ -53,6 +53,7 @@ private:
 	void OnInDevicesClick(wxCommandEvent& event);
 	void OnInOutDeviceClick(wxCommandEvent& event);
 	void OnInChannelShiftClick(wxCommandEvent& event);
+	void OnOutDevicesClick(wxCommandEvent& event);
 
 public:
 	SettingsMidiDevices(GOSettings& settings, GOMidi& midi, wxWindow* parent);

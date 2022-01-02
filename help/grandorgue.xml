@@ -4977,6 +4977,80 @@ the same channel.
 	    default. Therefore it is possible to use the same MIDI
 	    channel on multiple interfaces without configuring any
 	    channel offset.</simpara></note>
+	    <term>Matching</term>
+	    <para>
+	      The <emphasis>Matching</emphasis> button allows to change the way
+	      Grandorgue recognises the midi device
+	    </para>
+	    <indexterm>
+	      <primary>MIDI Matching</primary>
+	    </indexterm>
+	    <figure>
+	      <title>MIDI device matching properties</title>
+	      <mediaobject>
+		<imageobject>
+		  <imagedata fileref="images/midi_matching_editor.png"/>
+		</imageobject>
+	      </mediaobject>
+	    </figure>
+	    <variablelist>
+	      <varlistentry>
+		<term>Physical device name</term>
+		<listitem>
+		  <para>
+		  This is the name of MIDI device as it is reported by a midi port.
+		  A user can not alter it, but this name may be not persistent
+		  across reboots
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>Logical device name</term>
+		<listitem>
+		  <para>
+		    This is the name of MIDI device as it is presented to the user.
+		    By default it is the same name as the physical name, but
+		    the user is capable to set some another name
+		  </para>
+		  <note>
+		    <simpara>The logical device name must be unique</simpara>
+		  </note>
+		  <note>
+		    <simpara>
+		      If the user alters the logical name, a regex pattern must
+		      be provided so that GrandOrgue can find this device by its
+		      physical name.
+		    </simpara>
+		    <simpara>
+		      Specify there the most common part among the physical names
+		      of the device appear across reboots
+		    </simpara>
+		  </note>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry>
+		<term>Physical name regex pattern</term>
+		<listitem>
+		  <para>
+		    This is a pattern that allows GrandOrgue to find this MIDI
+		    device with it's physical device name.
+		  </para>
+		  <para>
+		    The simplest pattern would be the most common part of the
+		    physical device name that is present always and it kept
+		    across reboots. More advanced regular expressions are also
+		    supported, look at
+		    <ulink url="https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions">
+		      the full syntax
+		    </ulink>
+		  </para>
+		  <para>
+		    By default the regex pattern is empty so the device can be
+		    found only if it's physical name is equal to it's logical name
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>

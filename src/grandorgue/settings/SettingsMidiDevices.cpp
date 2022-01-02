@@ -9,6 +9,7 @@
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/choicdlg.h>
+#include <wx/gbsizer.h>
 #include <wx/numdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -22,6 +23,7 @@ BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_LISTBOX_DCLICK(ID_INDEVICES, SettingsMidiDevices::OnInOutDeviceClick)
 	EVT_BUTTON(ID_INCHANNELSHIFT, SettingsMidiDevices::OnInChannelShiftClick)
 	EVT_BUTTON(ID_INOUTDEVICE, SettingsMidiDevices::OnInOutDeviceClick)
+	EVT_LISTBOX(ID_OUTDEVICES, SettingsMidiDevices::OnOutDevicesClick)
 END_EVENT_TABLE()
 
 SettingsMidiDevices::SettingsMidiDevices(
@@ -60,7 +62,7 @@ SettingsMidiDevices::SettingsMidiDevices(
 	box1->Add(GetPortsBox(), 1, wxEXPAND | wxALL, 5);
 	topSizer->Add(box1, 0.5, wxEXPAND | wxALL, 5);
 	wxBoxSizer* item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
-	item3->Add(m_InDevices.GetListbox(), 1, wxEXPAND | wxALL, 5);
+	item3->Add(m_InDevices.GetListbox(), 1, wxEXPAND | wxUP | wxRIGHT | wxLEFT, 5);
 
 	wxBoxSizer* item4 = new wxBoxSizer(wxHORIZONTAL);
 	m_InProperties = new wxButton(this, ID_INCHANNELSHIFT, _("A&dvanced..."));
@@ -70,24 +72,42 @@ SettingsMidiDevices::SettingsMidiDevices(
 	m_InOutDevice = new wxButton(this, ID_INOUTDEVICE, _("&MIDI-Output-Device..."));
 	m_InOutDevice->Disable();
 	item4->Add(m_InOutDevice, 0, wxALL, 5);
-	item3->Add(item4, 0, wxALIGN_RIGHT | wxALL, 5);
-	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
+
+	item4->Add(m_InDevices.GetMatchingButton(), 0, wxALL, 5);
+
+	item3->Add(item4, 0, wxALIGN_RIGHT);
+	topSizer->Add(item3, 1, wxEXPAND | wxDOWN | wxRIGHT | wxLEFT, 5);
 
 	item3 = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &output devices"));
 	item3->Add(m_OutDevices.GetListbox(), 1, wxEXPAND | wxALL, 5);
 
-	item4 = new wxBoxSizer(wxHORIZONTAL);
-	item3->Add(
+	wxGridBagSizer* const bottomGb = new wxGridBagSizer(5, 5);
+
+	bottomGb->AddGrowableCol(0, 1);
+	bottomGb->Add(
 	  new wxStaticText(this, wxID_ANY, _("Send MIDI Recorder Output Stream to:")),
-	  0, wxEXPAND | wxALIGN_LEFT | wxALL, 5
+	  wxGBPosition(0, 0),
+	  wxDefaultSpan,
+	  wxALIGN_LEFT | wxALIGN_BOTTOM | wxALL
 	);
 	m_RecorderDevice = new wxChoice(
 	  this, ID_RECORDERDEVICE, wxDefaultPosition, wxSize(100, wxDefaultCoord)
 	);
-	item3->Add(m_RecorderDevice, 0, wxEXPAND | wxALL, 5);
+	bottomGb->Add(
+	  m_RecorderDevice, wxGBPosition(1, 0), wxGBSpan(1, 2), wxEXPAND | wxALL
+	);
+	bottomGb->Add(
+	  m_OutDevices.GetMatchingButton(),
+	  wxGBPosition(0, 1),
+	  wxDefaultSpan,
+	  wxALIGN_RIGHT | wxDOWN,
+	  5
+	);
+	item3->Add(bottomGb, 0, wxEXPAND | wxDOWN | wxRIGHT | wxLEFT, 5);
+
 	topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
-	topSizer->AddSpacer(5);
+	// topSizer->AddSpacer(5);
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
 
@@ -106,6 +126,8 @@ void SettingsMidiDevices::RenewDevices(
   const GOPortsConfig& portsConfig, const bool isToAutoAddInput
 )
 {
+  m_InProperties->Disable();
+  m_InOutDevice->Disable();
   m_Midi.UpdateDevices(portsConfig);
   m_OutDevices.RefreshDevices(portsConfig, false);
   m_InDevices.RefreshDevices(portsConfig, isToAutoAddInput, &m_OutDevices);
@@ -135,6 +157,7 @@ void SettingsMidiDevices::OnInDevicesClick(wxCommandEvent& event)
 {
   m_InProperties->Enable();
   m_InOutDevice->Enable();
+  m_InDevices.OnSelected(event);
 }
 
 void SettingsMidiDevices::OnInOutDeviceClick(wxCommandEvent& event)
@@ -165,9 +188,6 @@ void SettingsMidiDevices::OnInOutDeviceClick(wxCommandEvent& event)
 
 void SettingsMidiDevices::OnInChannelShiftClick(wxCommandEvent& event)
 {
-  m_InProperties->Enable();
-  m_InOutDevice->Enable();
-
   GOMidiDeviceConfig& devConf = m_InDevices.GetSelectedDeviceConf();
   int result = ::wxGetNumberFromUser(
     _("A channel offset allows the use of two MIDI\n"
@@ -183,6 +203,11 @@ void SettingsMidiDevices::OnInChannelShiftClick(wxCommandEvent& event)
 
   if (result >= 0)
     devConf.m_ChannelShift = result;
+}
+
+void SettingsMidiDevices::OnOutDevicesClick(wxCommandEvent& event)
+{
+  m_OutDevices.OnSelected(event);
 }
 
 void SettingsMidiDevices::Save()
