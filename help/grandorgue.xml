@@ -5017,11 +5017,13 @@ the same channel.
 		  </note>
 		  <note>
 		    <simpara>
-		      If the user alters the logical name, it must provide a regex
-		      pattern for GrandOrgue could find this device by it's physical name.
+		      If the user alters the logical name, a regex pattern must
+		      be provided so that GrandOrgue can find this device by its
+		      physical name.
 		    </simpara>
 		    <simpara>
-		      Specify there the most common part of the physical device name that
+		      Specify there the most common part among the physical names
+		      of the device appear across reboots
 		    </simpara>
 		  </note>
 		</listitem>

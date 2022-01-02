@@ -23,7 +23,7 @@ END_EVENT_TABLE()
 
 GOSettingsMidiMatchDialog::GOSettingsMidiMatchDialog(
   wxWindow* parent, std::vector<GOMidiDeviceConfig*>* otherDevices
-):
+) :
   wxDialog(
     parent,
     wxID_ANY,
@@ -90,15 +90,15 @@ void GOSettingsMidiMatchDialog::FillWith(const GOMidiDeviceConfig& devConf)
 
 bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString& errMsg)
 {
-  bool rc = true;
+  bool isValid = true;
   const wxString& newLogicalName = t_LogicalName->GetValue();
 
   if (newLogicalName.IsEmpty())
   {
     errMsg = _("Logical device name must not be empty");
-    rc = false;
+    isValid = false;
   }
-  if (rc && p_OtherDevices)
+  if (isValid && p_OtherDevices)
     // Check logicalName for uniqueness
     for (const GOMidiDeviceConfig* pDev : *p_OtherDevices)
       if (
@@ -107,17 +107,17 @@ bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString& errMsg)
       )
       {
 	errMsg = _("Logical device name is already used by ") + pDev->m_PhysicalName;
-	rc = false;
+	isValid = false;
 	break;
       }
-  if (rc && newLogicalName != m_PhysicalName && t_regex->GetValue().IsEmpty())
+  if (isValid && newLogicalName != m_PhysicalName && t_regex->GetValue().IsEmpty())
   {
     errMsg = _("Regex must be specified when physical and logical device names differ");
-    rc = false;
+    isValid = false;
   }
-  if (rc)
+  if (isValid)
     errMsg = wxEmptyString;
-  return rc;
+  return isValid;
 }
 
 void GOSettingsMidiMatchDialog::OnLogicalNameChanged(wxCommandEvent& event)
@@ -130,7 +130,7 @@ void GOSettingsMidiMatchDialog::OnLogicalNameChanged(wxCommandEvent& event)
 
 bool GOSettingsMidiMatchDialog::ValidateRegex(wxString& errMsg)
 {
-  bool rc = true;
+  bool isValid = true;
   const wxString& newRegex = t_regex->GetValue();
 
   if (! newRegex.IsEmpty())
@@ -140,17 +140,17 @@ bool GOSettingsMidiMatchDialog::ValidateRegex(wxString& errMsg)
     if (! regex.IsValid())
     {
       errMsg = _("Invalid regex");
-      rc = false;
+      isValid = false;
     } else if (! regex.Matches(m_PhysicalName, 0))
     {
       errMsg = _("The regex does not match the physical device name");
-      rc = false;
+      isValid = false;
     }
   }
-  if (rc)
+  if (isValid)
     errMsg = wxEmptyString;
 
-  return rc;
+  return isValid;
 }
 
 void GOSettingsMidiMatchDialog::OnRegexChanged(wxCommandEvent& event)
@@ -171,15 +171,15 @@ void GOSettingsMidiMatchDialog::OnHelp(wxCommandEvent& event)
 bool GOSettingsMidiMatchDialog::Validate()
 {
   wxString errMsg;
-  bool rc = true;
+  bool isValid = true;
 
-  if (rc)
-    rc = ValidateLogicalName(errMsg);
-  if (rc)
-    rc = ValidateRegex(errMsg);
-  if (! rc)
+  if (isValid)
+    isValid = ValidateLogicalName(errMsg);
+  if (isValid)
+    isValid = ValidateRegex(errMsg);
+  if (! isValid)
     wxMessageBox(errMsg, _("MIDI matching error"),  wxOK | wxCENTRE | wxICON_ERROR);
-  return rc;
+  return isValid;
 }
 
 void GOSettingsMidiMatchDialog::SaveTo(GOMidiDeviceConfig& devConf)
