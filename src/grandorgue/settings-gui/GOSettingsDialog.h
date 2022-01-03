@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef GOSETTINGSDIALOG_H
+#define GOSETTINGSDIALOG_H
 
 #include <vector>
 #include <wx/propdlg.h>
@@ -13,18 +13,18 @@
 #include "GOSettingsReason.h"
 
 class GOSound;
-class SettingsArchives;
-class SettingsAudioGroup;
-class SettingsAudioOutput;
+class GOSettingsArchives;
+class GOSettingsAudioGroup;
+class GOSettingsAudioOutput;
 class SettingsMidiDevices;
-class SettingsMidiMessage;
-class SettingsOption;
-class SettingsDefaults;
-class SettingsOrgan;
-class SettingsReverb;
-class SettingsTemperaments;
+class GOSettingsMidiMessage;
+class GOSettingsOption;
+class GOSettingsDefaults;
+class GOSettingsOrgan;
+class GOSettingsReverb;
+class GOSettingsTemperaments;
 
-class SettingsDialog : public wxPropertySheetDialog
+class GOSettingsDialog : public wxPropertySheetDialog
 {
 private:
   enum {
@@ -34,16 +34,16 @@ private:
   GOSound& m_Sound;
   bool m_ReasonsAlreadyShown;
   SettingsReasons *m_Reasons;
-  SettingsOption* m_OptionsPage;
-  SettingsDefaults* m_DefaultsPage;
-  SettingsAudioOutput* m_OutputPage;
-  SettingsReverb* m_ReverbPage;
-  SettingsAudioGroup* m_GroupPage;
-  SettingsOrgan* m_OrganPage;
+  GOSettingsOption* m_OptionsPage;
+  GOSettingsDefaults* m_DefaultsPage;
+  GOSettingsAudioOutput* m_OutputPage;
+  GOSettingsReverb* m_ReverbPage;
+  GOSettingsAudioGroup* m_GroupPage;
+  GOSettingsOrgan* m_OrganPage;
   SettingsMidiDevices* m_MidiDevicePage;
-  SettingsTemperaments* m_TemperamentsPage;
-  SettingsMidiMessage* m_MidiMessagePage;
-  SettingsArchives* m_ArchivePage;
+  GOSettingsTemperaments* m_TemperamentsPage;
+  GOSettingsMidiMessage* m_MidiMessagePage;
+  GOSettingsArchives* m_ArchivePage;
 
   void OnShow(wxShowEvent &);
 
@@ -69,7 +69,7 @@ public:
     PAGE_ORGAN_PACKAGES
   } PageSelector;
   
-  SettingsDialog(wxWindow* parent, GOSound& sound, SettingsReasons *reasons);
+  GOSettingsDialog(wxWindow* parent, GOSound& sound, SettingsReasons *reasons);
 
   bool NeedReload();
   bool NeedRestart();

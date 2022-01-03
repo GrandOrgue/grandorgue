@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSMIDIDEVICES_H
-#define SETTINGSMIDIDEVICES_H
+#ifndef GOSETTINGSMIDIDEVICES_H
+#define GOSETTINGSMIDIDEVICES_H
 
 #include <wx/checkbox.h>
 #include <wx/panel.h>

@@ -13,13 +13,13 @@
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 
-BEGIN_EVENT_TABLE(SettingsMidiMessage, wxPanel)
-	EVT_LIST_ITEM_SELECTED(ID_EVENTS, SettingsMidiMessage::OnEventsClick)
-	EVT_LIST_ITEM_ACTIVATED(ID_EVENTS, SettingsMidiMessage::OnEventsDoubleClick)
-	EVT_BUTTON(ID_PROPERTIES, SettingsMidiMessage::OnProperties)
+BEGIN_EVENT_TABLE(GOSettingsMidiMessage, wxPanel)
+	EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiMessage::OnEventsClick)
+	EVT_LIST_ITEM_ACTIVATED(ID_EVENTS, GOSettingsMidiMessage::OnEventsDoubleClick)
+	EVT_BUTTON(ID_PROPERTIES, GOSettingsMidiMessage::OnProperties)
 END_EVENT_TABLE()
 
-SettingsMidiMessage::SettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWindow* parent) :
+GOSettingsMidiMessage::GOSettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_midi(midi)
@@ -56,12 +56,12 @@ SettingsMidiMessage::SettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWin
 	m_Events->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
 }
 
-void SettingsMidiMessage::OnEventsClick(wxListEvent& event)
+void GOSettingsMidiMessage::OnEventsClick(wxListEvent& event)
 {
 	m_Properties->Enable();
 }
 
-void SettingsMidiMessage::OnEventsDoubleClick(wxListEvent& event)
+void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent& event)
 {
 	m_Properties->Enable();
 	int index = m_Events->GetFirstSelected();
@@ -73,7 +73,7 @@ void SettingsMidiMessage::OnEventsDoubleClick(wxListEvent& event)
 	m_Events->SetItem(index, 2, recv->GetEventCount() > 0 ? _("Yes") : _("No") );
 }
 
-void SettingsMidiMessage::OnProperties(wxCommandEvent& event)
+void GOSettingsMidiMessage::OnProperties(wxCommandEvent& event)
 {
 	wxListEvent listevent;
 	OnEventsDoubleClick(listevent);

@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSREVERB_H
-#define SETTINGSREVERB_H
+#ifndef GOSETTINGSREVERB_H
+#define GOSETTINGSREVERB_H
 
 #include <wx/panel.h>
 
@@ -20,7 +20,7 @@ class wxSpinEvent;
 class wxStaticText;
 class wxTextCtrl;
 
-class SettingsReverb : public wxPanel
+class GOSettingsReverb : public wxPanel
 {
 	enum {
 		ID_ENABLED = 200,
@@ -58,7 +58,7 @@ private:
 	bool Validate();
 
 public:
-	SettingsReverb(GOConfig& settings, wxWindow* parent);
+	GOSettingsReverb(GOConfig& settings, wxWindow* parent);
 
 	void Save();
 

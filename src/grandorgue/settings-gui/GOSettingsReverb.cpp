@@ -19,14 +19,14 @@
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 
-BEGIN_EVENT_TABLE(SettingsReverb, wxPanel)
-	EVT_CHECKBOX(ID_ENABLED, SettingsReverb::OnEnabled)
-	EVT_FILEPICKER_CHANGED(ID_FILE, SettingsReverb::OnFileChanged)
-	EVT_TEXT(ID_GAIN, SettingsReverb::OnGainChanged)
-	EVT_SPIN(ID_GAIN_SPIN, SettingsReverb::OnGainSpinChanged)
+BEGIN_EVENT_TABLE(GOSettingsReverb, wxPanel)
+	EVT_CHECKBOX(ID_ENABLED, GOSettingsReverb::OnEnabled)
+	EVT_FILEPICKER_CHANGED(ID_FILE, GOSettingsReverb::OnFileChanged)
+	EVT_TEXT(ID_GAIN, GOSettingsReverb::OnGainChanged)
+	EVT_SPIN(ID_GAIN_SPIN, GOSettingsReverb::OnGainSpinChanged)
 END_EVENT_TABLE()
 
-SettingsReverb::SettingsReverb(GOConfig& settings, wxWindow* parent) :
+GOSettingsReverb::GOSettingsReverb(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {
@@ -98,7 +98,7 @@ SettingsReverb::SettingsReverb(GOConfig& settings, wxWindow* parent) :
 	topSizer->Fit(this);
 }
 
-void SettingsReverb::UpdateLimits()
+void GOSettingsReverb::UpdateLimits()
 {
 	if (m_File->GetPath() == wxEmptyString || !m_Enabled->GetValue())
 	{
@@ -130,7 +130,7 @@ void SettingsReverb::UpdateLimits()
 	}
 }
 
-void SettingsReverb::UpdateFile()
+void GOSettingsReverb::UpdateFile()
 {
 	UpdateLimits();
 	m_Channel->SetSelection(0);
@@ -138,7 +138,7 @@ void SettingsReverb::UpdateFile()
 	m_Length->SetValue(m_Length->GetMax());
 }
 
-void SettingsReverb::UpdateEnabled()
+void GOSettingsReverb::UpdateEnabled()
 {
 	if (m_Enabled->GetValue())
 	{
@@ -166,31 +166,31 @@ void SettingsReverb::UpdateEnabled()
 }
 
 
-void SettingsReverb::OnEnabled(wxCommandEvent& event)
+void GOSettingsReverb::OnEnabled(wxCommandEvent& event)
 {
 	if (m_Enabled->GetValue())
 		wxMessageBox(_("This feature is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, this);
 	UpdateEnabled();
 }
 
-void SettingsReverb::OnFileChanged(wxFileDirPickerEvent& e)
+void GOSettingsReverb::OnFileChanged(wxFileDirPickerEvent& e)
 {
 	UpdateFile();
 }
 
-void SettingsReverb::OnGainSpinChanged(wxSpinEvent& e)
+void GOSettingsReverb::OnGainSpinChanged(wxSpinEvent& e)
 {
 	m_Gain->ChangeValue(wxString::Format(wxT("%f"), (float)(m_GainSpin->GetValue() / 20.0)));
 }
 
-void SettingsReverb::OnGainChanged(wxCommandEvent &e)
+void GOSettingsReverb::OnGainChanged(wxCommandEvent &e)
 {
 	double gain;
 	if (m_Gain->GetValue().ToDouble(&gain))
 		m_GainSpin->SetValue(gain * 20);
 }
 
-bool SettingsReverb::Validate()
+bool GOSettingsReverb::Validate()
 {
 	if (m_Enabled->GetValue())
 	{
@@ -203,7 +203,7 @@ bool SettingsReverb::Validate()
 	return wxPanel::Validate();
 }
 
-void SettingsReverb::Save()
+void GOSettingsReverb::Save()
 {
 	m_Settings.ReverbEnabled(m_Enabled->IsChecked());
 	m_Settings.ReverbDirect(m_Direct->IsChecked());

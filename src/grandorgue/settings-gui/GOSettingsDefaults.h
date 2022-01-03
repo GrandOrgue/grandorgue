@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSDEFAULTS_H
-#define SETTINGSDEFAULTS_H
+#ifndef GOSETTINGSDEFAULTS_H
+#define GOSETTINGSDEFAULTS_H
 
 #include <wx/panel.h>
 
@@ -13,7 +13,7 @@ class GOConfig;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
-class SettingsDefaults : public wxPanel
+class GOSettingsDefaults : public wxPanel
 {
 	enum {
 		ID_ORGAN_PATH = 200,
@@ -39,7 +39,7 @@ private:
 	wxSpinCtrl* m_Volume;
 
 public:
-	SettingsDefaults(GOConfig& settings, wxWindow* parent);
+	GOSettingsDefaults(GOConfig& settings, wxWindow* parent);
 
 	void Save();
 };

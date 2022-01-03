@@ -74,16 +74,16 @@ public:
 	float volume;
 };
 
-BEGIN_EVENT_TABLE(SettingsAudioOutput, wxPanel)
-	EVT_TREE_SEL_CHANGED(ID_OUTPUT_LIST, SettingsAudioOutput::OnOutputChanged)
-	EVT_BUTTON(ID_OUTPUT_ADD, SettingsAudioOutput::OnOutputAdd)
-	EVT_BUTTON(ID_OUTPUT_DEL, SettingsAudioOutput::OnOutputDel)
-	EVT_BUTTON(ID_OUTPUT_CHANGE, SettingsAudioOutput::OnOutputChange)
-	EVT_BUTTON(ID_OUTPUT_PROPERTIES, SettingsAudioOutput::OnOutputProperties)
-	EVT_BUTTON(ID_OUTPUT_DEFAULT, SettingsAudioOutput::OnOutputDefault)
+BEGIN_EVENT_TABLE(GOSettingsAudioOutput, wxPanel)
+	EVT_TREE_SEL_CHANGED(ID_OUTPUT_LIST, GOSettingsAudioOutput::OnOutputChanged)
+	EVT_BUTTON(ID_OUTPUT_ADD, GOSettingsAudioOutput::OnOutputAdd)
+	EVT_BUTTON(ID_OUTPUT_DEL, GOSettingsAudioOutput::OnOutputDel)
+	EVT_BUTTON(ID_OUTPUT_CHANGE, GOSettingsAudioOutput::OnOutputChange)
+	EVT_BUTTON(ID_OUTPUT_PROPERTIES, GOSettingsAudioOutput::OnOutputProperties)
+	EVT_BUTTON(ID_OUTPUT_DEFAULT, GOSettingsAudioOutput::OnOutputDefault)
 END_EVENT_TABLE()
 
-SettingsAudioOutput::SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& callback, wxWindow* parent) :
+GOSettingsAudioOutput::GOSettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& callback, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	GOSettingsPorts(this, GOSoundPortFactory::getInstance(), _("Sound &ports")),
 	m_Sound(sound),
@@ -178,14 +178,14 @@ SettingsAudioOutput::SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& c
 	UpdateButtons();
 }
 
-AudioItemData* SettingsAudioOutput::GetObject(const wxTreeItemId& id)
+AudioItemData* GOSettingsAudioOutput::GetObject(const wxTreeItemId& id)
 {
 	if (!id.IsOk())
 		return NULL;
 	return (AudioItemData*) m_AudioOutput->GetItemData(id);
 }
 
-wxTreeItemId SettingsAudioOutput::GetDeviceNode(const wxString& name)
+wxTreeItemId GOSettingsAudioOutput::GetDeviceNode(const wxString& name)
 {
 	wxTreeItemIdValue i;
 	wxTreeItemId current;
@@ -201,7 +201,7 @@ wxTreeItemId SettingsAudioOutput::GetDeviceNode(const wxString& name)
 	return current;
 }
 
-wxTreeItemId SettingsAudioOutput::GetChannelNode(const wxTreeItemId& audio, unsigned channel)
+wxTreeItemId GOSettingsAudioOutput::GetChannelNode(const wxTreeItemId& audio, unsigned channel)
 {
 	wxTreeItemIdValue i;
 	wxTreeItemId current;
@@ -216,7 +216,7 @@ wxTreeItemId SettingsAudioOutput::GetChannelNode(const wxTreeItemId& audio, unsi
 	return current;
 }
 
-wxTreeItemId SettingsAudioOutput::GetGroupNode(const wxTreeItemId& channel, const wxString& name, bool left)
+wxTreeItemId GOSettingsAudioOutput::GetGroupNode(const wxTreeItemId& channel, const wxString& name, bool left)
 {
 	wxTreeItemIdValue i;
 	wxTreeItemId current;
@@ -231,12 +231,12 @@ wxTreeItemId SettingsAudioOutput::GetGroupNode(const wxTreeItemId& channel, cons
 	return current;
 }
 
-wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name)
+wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(wxString name)
 {
 	return AddDeviceNode(name, m_Sound.GetSettings().GetDefaultLatency());
 }
 
-wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_latency)
+wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_latency)
 {
 	wxTreeItemId current;
 	if (name == wxEmptyString)
@@ -252,7 +252,7 @@ wxTreeItemId SettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_
 	return current;
 }
 
-wxTreeItemId SettingsAudioOutput::AddChannelNode(const wxTreeItemId& audio, unsigned channel)
+wxTreeItemId GOSettingsAudioOutput::AddChannelNode(const wxTreeItemId& audio, unsigned channel)
 {
 	wxTreeItemId current;
 	current = GetChannelNode(audio, channel);
@@ -264,7 +264,7 @@ wxTreeItemId SettingsAudioOutput::AddChannelNode(const wxTreeItemId& audio, unsi
 	return current;
 }
 
-wxTreeItemId SettingsAudioOutput::AddGroupNode(const wxTreeItemId& channel, const wxString& name, bool left)
+wxTreeItemId GOSettingsAudioOutput::AddGroupNode(const wxTreeItemId& channel, const wxString& name, bool left)
 {
 	wxTreeItemId current;
 	current = GetGroupNode(channel, name, left);
@@ -277,14 +277,14 @@ wxTreeItemId SettingsAudioOutput::AddGroupNode(const wxTreeItemId& channel, cons
 	return current;
 }
 
-void SettingsAudioOutput::UpdateDevice(const wxTreeItemId& dev)
+void GOSettingsAudioOutput::UpdateDevice(const wxTreeItemId& dev)
 {
 	AudioItemData* data = GetObject(dev);
 	wxString text = wxString::Format(_("Device: %s [%d ms requested]"), data->name.c_str(), data->latency);
 	m_AudioOutput->SetItemText(dev, text);
 }
 
-void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
+void GOSettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 {
 	AudioItemData* data = GetObject(group);
 	wxString name = wxString::Format(data->left ? _("%s - left") :  _("%s - right"), data->name.c_str());
@@ -297,7 +297,7 @@ void SettingsAudioOutput::UpdateVolume(const wxTreeItemId& group, float volume)
 		m_AudioOutput->SetItemText(group, wxString::Format(_("%s: mute"), name.c_str()));
 }
 
-void SettingsAudioOutput::AssureDeviceList() {
+void GOSettingsAudioOutput::AssureDeviceList() {
   const GOPortsConfig portsConfig(RenewPortsConfig());
   
   if (m_PortsConfigPopulatedWith != portsConfig) {
@@ -306,7 +306,7 @@ void SettingsAudioOutput::AssureDeviceList() {
   }
 }
 
-std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices(
+std::vector<wxString> GOSettingsAudioOutput::GetRemainingAudioDevices(
   const wxTreeItemId *ignoreItem
 )
 {
@@ -326,7 +326,7 @@ std::vector<wxString> SettingsAudioOutput::GetRemainingAudioDevices(
   return result;
 }
 
-std::vector<std::pair<wxString, bool> > SettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId& channel)
+std::vector<std::pair<wxString, bool> > GOSettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId& channel)
 {
 	std::vector<std::pair<wxString, bool> > result;
 	std::vector<wxString> groups = m_GroupCallback.GetGroups();
@@ -341,7 +341,7 @@ std::vector<std::pair<wxString, bool> > SettingsAudioOutput::GetRemainingAudioGr
 	return result;
 }
 
-void SettingsAudioOutput::UpdateButtons()
+void GOSettingsAudioOutput::UpdateButtons()
 {
 	wxTreeItemId selection = m_AudioOutput->GetSelection();
 	AudioItemData* data = GetObject(selection);
@@ -408,12 +408,12 @@ void SettingsAudioOutput::UpdateButtons()
 	}
 }
 
-void SettingsAudioOutput::OnOutputChanged(wxTreeEvent& event)
+void GOSettingsAudioOutput::OnOutputChanged(wxTreeEvent& event)
 {
 	UpdateButtons();
 }
 
-void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
+void GOSettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 {
 	wxTreeItemId selection = m_AudioOutput->GetSelection();
 	AudioItemData* data = GetObject(selection);
@@ -457,7 +457,7 @@ void SettingsAudioOutput::OnOutputAdd(wxCommandEvent& event)
 	UpdateButtons();
 }
 
-void SettingsAudioOutput::OnOutputDel(wxCommandEvent& event)
+void GOSettingsAudioOutput::OnOutputDel(wxCommandEvent& event)
 {
 	wxTreeItemId selection = m_AudioOutput->GetSelection();
 	AudioItemData* data = GetObject(selection);
@@ -477,7 +477,7 @@ void SettingsAudioOutput::OnOutputDel(wxCommandEvent& event)
 	UpdateButtons();
 }
 
-void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
+void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 {
 	wxTreeItemId selection = m_AudioOutput->GetSelection();
 	AudioItemData* data = GetObject(selection);
@@ -534,7 +534,7 @@ void SettingsAudioOutput::OnOutputChange(wxCommandEvent& event)
 	UpdateButtons();
 }
 
-void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
+void GOSettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 {
 	wxTreeItemId selection = m_AudioOutput->GetSelection();
 	AudioItemData* data = GetObject(selection);
@@ -565,7 +565,7 @@ void SettingsAudioOutput::OnOutputProperties(wxCommandEvent& event)
 	UpdateButtons();
 }
 
-void SettingsAudioOutput::OnOutputDefault(wxCommandEvent& event)
+void GOSettingsAudioOutput::OnOutputDefault(wxCommandEvent& event)
 {
 	if (wxMessageBox(_("Should the audio config be reverted to the default stereo configuration?"), _("Revert"), wxYES_NO, this) == wxNO)
 		return;
@@ -605,7 +605,7 @@ void SettingsAudioOutput::OnOutputDefault(wxCommandEvent& event)
 	UpdateButtons();
 }
 
-void SettingsAudioOutput::Save()
+void GOSettingsAudioOutput::Save()
 {
   unsigned long sample_rate;
 

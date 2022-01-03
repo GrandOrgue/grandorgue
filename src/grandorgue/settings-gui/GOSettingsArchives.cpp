@@ -15,12 +15,12 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
-BEGIN_EVENT_TABLE(SettingsArchives, wxPanel)
-	EVT_LIST_ITEM_SELECTED(ID_ARCHIVES, SettingsArchives::OnArchiveSelected)
-	EVT_BUTTON(ID_DEL, SettingsArchives::OnDel)
+BEGIN_EVENT_TABLE(GOSettingsArchives, wxPanel)
+	EVT_LIST_ITEM_SELECTED(ID_ARCHIVES, GOSettingsArchives::OnArchiveSelected)
+	EVT_BUTTON(ID_DEL, GOSettingsArchives::OnDel)
 END_EVENT_TABLE()
 
-SettingsArchives::SettingsArchives(GOConfig& settings, SettingsOrgan& organs, wxWindow* parent) :
+GOSettingsArchives::GOSettingsArchives(GOConfig& settings, GOSettingsOrgan& organs, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_Organs(organs)
@@ -75,12 +75,12 @@ SettingsArchives::SettingsArchives(GOConfig& settings, SettingsOrgan& organs, wx
 	topSizer->Fit(this);
 }
 
-void SettingsArchives::OnArchiveSelected(wxListEvent& event)
+void GOSettingsArchives::OnArchiveSelected(wxListEvent& event)
 {
 	m_Del->Enable();
 }
 
-void SettingsArchives::OnDel(wxCommandEvent& event)
+void GOSettingsArchives::OnDel(wxCommandEvent& event)
 {
 	const GOArchiveFile* a = (const GOArchiveFile*)m_Archives->GetItemData(m_Archives->GetFirstSelected());
 
@@ -124,7 +124,7 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 	m_Del->Disable();
 }
 
-void SettingsArchives::Save()
+void GOSettingsArchives::Save()
 {
 	ptr_vector<GOArchiveFile>& list = m_Settings.GetArchiveList();
 	for(unsigned i = 0; i < list.size(); i++)

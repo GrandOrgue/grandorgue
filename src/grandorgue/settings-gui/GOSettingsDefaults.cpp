@@ -11,7 +11,7 @@
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
-SettingsDefaults::SettingsDefaults(GOConfig& settings, wxWindow* parent) :
+GOSettingsDefaults::GOSettingsDefaults(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {
@@ -97,7 +97,7 @@ SettingsDefaults::SettingsDefaults(GOConfig& settings, wxWindow* parent) :
 	topSizer->FitInside(this);
 }
 
-void SettingsDefaults::Save()
+void GOSettingsDefaults::Save()
 {
 	m_Settings.OrganPath(m_OrganPath->GetPath());
 	m_Settings.OrganPackagePath(m_OrganPackagePath->GetPath());

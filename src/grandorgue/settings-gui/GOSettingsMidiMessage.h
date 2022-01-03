@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSMIDIMESSAGE_H
-#define SETTINGSMIDIMESSAGE_H
+#ifndef GOSETTINGSMIDIMESSAGE_H
+#define GOSETTINGSMIDIMESSAGE_H
 
 #include <wx/panel.h>
 
@@ -15,7 +15,7 @@ class wxButton;
 class wxListEvent;
 class wxListView;
 
-class SettingsMidiMessage : public wxPanel
+class GOSettingsMidiMessage : public wxPanel
 {
 	enum {
 		ID_EVENTS,
@@ -33,7 +33,7 @@ private:
 	void OnProperties(wxCommandEvent& event);
 
 public:
-	SettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWindow* parent);
+	GOSettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWindow* parent);
 
 	DECLARE_EVENT_TABLE()
 };

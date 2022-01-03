@@ -15,16 +15,16 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
-BEGIN_EVENT_TABLE(SettingsOrgan, wxPanel)
-	EVT_LIST_ITEM_SELECTED(ID_ORGANS, SettingsOrgan::OnOrganSelected)
-	EVT_BUTTON(ID_UP, SettingsOrgan::OnUp)
-	EVT_BUTTON(ID_DOWN, SettingsOrgan::OnDown)
-	EVT_BUTTON(ID_TOP, SettingsOrgan::OnTop)
-	EVT_BUTTON(ID_DEL, SettingsOrgan::OnDel)
-	EVT_BUTTON(ID_PROPERTIES, SettingsOrgan::OnProperties)
+BEGIN_EVENT_TABLE(GOSettingsOrgan, wxPanel)
+	EVT_LIST_ITEM_SELECTED(ID_ORGANS, GOSettingsOrgan::OnOrganSelected)
+	EVT_BUTTON(ID_UP, GOSettingsOrgan::OnUp)
+	EVT_BUTTON(ID_DOWN, GOSettingsOrgan::OnDown)
+	EVT_BUTTON(ID_TOP, GOSettingsOrgan::OnTop)
+	EVT_BUTTON(ID_DEL, GOSettingsOrgan::OnDel)
+	EVT_BUTTON(ID_PROPERTIES, GOSettingsOrgan::OnProperties)
 END_EVENT_TABLE()
 
-SettingsOrgan::SettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent) :
+GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_midi(midi)
@@ -92,7 +92,7 @@ SettingsOrgan::SettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent)
 	topSizer->Fit(this);
 }
 
-void SettingsOrgan::OnOrganSelected(wxListEvent& event)
+void GOSettingsOrgan::OnOrganSelected(wxListEvent& event)
 {
 	long index = m_Organs->GetFirstSelected();
 	m_Del->Enable();
@@ -113,7 +113,7 @@ void SettingsOrgan::OnOrganSelected(wxListEvent& event)
 		m_Down->Disable();
 }
 
-void SettingsOrgan::MoveOrgan(long from, long to)
+void GOSettingsOrgan::MoveOrgan(long from, long to)
 {
 	wxListItem item;
 	item.SetId(from);
@@ -136,22 +136,22 @@ void SettingsOrgan::MoveOrgan(long from, long to)
 	m_Organs->Select(to);
 }
 
-void SettingsOrgan::OnUp(wxCommandEvent& event)
+void GOSettingsOrgan::OnUp(wxCommandEvent& event)
 {
 	MoveOrgan(m_Organs->GetFirstSelected(), m_Organs->GetFirstSelected() - 1);
 }
 
-void SettingsOrgan::OnDown(wxCommandEvent& event)
+void GOSettingsOrgan::OnDown(wxCommandEvent& event)
 {
 	MoveOrgan(m_Organs->GetFirstSelected(), m_Organs->GetFirstSelected() + 1);
 }
 
-void SettingsOrgan::OnTop(wxCommandEvent& event)
+void GOSettingsOrgan::OnTop(wxCommandEvent& event)
 {
 	MoveOrgan(m_Organs->GetFirstSelected(), 0);
 }
 
-void SettingsOrgan::OnDel(wxCommandEvent& event)
+void GOSettingsOrgan::OnDel(wxCommandEvent& event)
 {
 	if (wxMessageBox(wxString::Format(_("Do you want to remove %s?"), m_Organs->GetItemText(m_Organs->GetFirstSelected()).c_str()), _("Organs"), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES)
 	{
@@ -164,7 +164,7 @@ void SettingsOrgan::OnDel(wxCommandEvent& event)
 	}
 }
 
-void SettingsOrgan::OnProperties(wxCommandEvent& event)
+void GOSettingsOrgan::OnProperties(wxCommandEvent& event)
 {
 	GOOrgan* o = (GOOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
 	MIDIEventDialog dlg(NULL, this, wxString::Format(_("MIDI settings for organ %s"), o->GetChurchName().c_str()), m_Settings, &o->GetMIDIReceiver(), NULL, NULL);
@@ -173,7 +173,7 @@ void SettingsOrgan::OnProperties(wxCommandEvent& event)
 	m_Organs->SetItem(m_Organs->GetFirstSelected(), 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No") );
 }
 
-std::vector<const GOOrgan*> SettingsOrgan::GetOrgans()
+std::vector<const GOOrgan*> GOSettingsOrgan::GetOrgans()
 {
 	std::vector<const GOOrgan*> list;
 	for(long j = 0; j < m_Organs->GetItemCount(); j++)
@@ -181,7 +181,7 @@ std::vector<const GOOrgan*> SettingsOrgan::GetOrgans()
 	return list;
 }
 
-void SettingsOrgan::Save()
+void GOSettingsOrgan::Save()
 {
 	ptr_vector<GOOrgan>& list = m_Settings.GetOrganList();
 	for(unsigned i = 0; i < list.size(); i++)

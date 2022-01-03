@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSOPTION_H
-#define SETTINGSOPTION_H
+#ifndef GOSETTINGSOPTION_H
+#define GOSETTINGSOPTION_H
 
 #include <wx/panel.h>
 
@@ -17,7 +17,7 @@ class wxChoice;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
-class SettingsOption : public wxPanel
+class GOSettingsOption : public wxPanel
 {
 	enum {
 		ID_WAVE_FORMAT = 200,
@@ -79,7 +79,7 @@ private:
 	unsigned m_OldReleaseLoad;
 
 public:
-	SettingsOption(GOConfig& settings, wxWindow* parent);
+	GOSettingsOption(GOConfig& settings, wxWindow* parent);
 
 	bool NeedReload();
 	bool NeedRestart();

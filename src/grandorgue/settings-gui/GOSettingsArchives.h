@@ -4,18 +4,18 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSARCHIVES_H
-#define SETTINGSARCHIVES_H
+#ifndef GOSETTINGSARCHIVES_H
+#define GOSETTINGSARCHIVES_H
 
 #include <wx/panel.h>
 
 class GOConfig;
-class SettingsOrgan;
+class GOSettingsOrgan;
 class wxButton;
 class wxListEvent;
 class wxListView;
 
-class SettingsArchives : public wxPanel
+class GOSettingsArchives : public wxPanel
 {
 	enum {
 		ID_ARCHIVES,
@@ -23,7 +23,7 @@ class SettingsArchives : public wxPanel
 	};
 private:
 	GOConfig& m_Settings;
-	SettingsOrgan& m_Organs;
+	GOSettingsOrgan& m_Organs;
 	wxListView* m_Archives;
 	wxButton* m_Del;
 
@@ -31,7 +31,7 @@ private:
 	void OnDel(wxCommandEvent& event);
 
 public:
-	SettingsArchives(GOConfig& settings, SettingsOrgan& organs, wxWindow* parent);
+	GOSettingsArchives(GOConfig& settings, GOSettingsOrgan& organs, wxWindow* parent);
 
 	void Save();
 

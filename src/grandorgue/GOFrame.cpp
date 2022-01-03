@@ -374,13 +374,13 @@ void GOFrame::Init(wxString filename)
 	bool soundProblems = ! m_Sound.AssureSoundIsOpen();
 
 	if (soundProblems)
-	  settingsReasons.push_back(SettingsReason(m_Sound.getLastErrorMessage(), SettingsDialog::PAGE_AUDIO_OUTPUT));
+	  settingsReasons.push_back(GOSettingsReason(m_Sound.getLastErrorMessage(), GOSettingsDialog::PAGE_AUDIO_OUTPUT));
 	m_Sound.SetLogSoundErrorMessages(true);
 
 	bool midiProblems = ! m_Sound.GetMidi().HasActiveDevice() && m_Settings.IsToCheckMidiOnStart();
 	
 	if (! soundProblems && midiProblems)
-	  settingsReasons.push_back(SettingsReason(_("No active MIDI input devices"), SettingsDialog::PAGE_MIDI_DEVICES));
+	  settingsReasons.push_back(GOSettingsReason(_("No active MIDI input devices"), GOSettingsDialog::PAGE_MIDI_DEVICES));
 	
 	if (soundProblems || midiProblems)
 	{
@@ -916,7 +916,7 @@ void GOFrame::OnSettings(wxCommandEvent& event)
   
   bool isToContinue = true; // will GO continue running? Otherwise it will exit
   SettingsReasons * const pReasons = (SettingsReasons *) event.GetClientData();
-  SettingsDialog dialog(this, m_Sound, pReasons);
+  GOSettingsDialog dialog(this, m_Sound, pReasons);
 
   if (dialog.ShowModal() == wxID_OK)
   {

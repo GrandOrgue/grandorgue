@@ -19,7 +19,7 @@
 #include <wx/stattext.h>
 
 
-SettingsOption::SettingsOption(GOConfig& settings, wxWindow* parent) :
+GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {
@@ -212,7 +212,7 @@ SettingsOption::SettingsOption(GOConfig& settings, wxWindow* parent) :
 	topSizer->Fit(this);
 }
 
-void SettingsOption::Save()
+void GOSettingsOption::Save()
 {
 	if (m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
 		wxMessageBox(_("Polyphase is not supported with lossless compression - falling back to linear.") , _("Warning"), wxOK | wxICON_WARNING, this);
@@ -245,7 +245,7 @@ void SettingsOption::Save()
 	m_Settings.LanguageCode(langData->GetData());
 }
 
-bool SettingsOption::NeedReload()
+bool GOSettingsOption::NeedReload()
 {
 	return m_OldLosslessCompression != m_Settings.LosslessCompression() ||
 		m_OldBitsPerSample != m_Settings.BitsPerSample() ||
@@ -255,7 +255,7 @@ bool SettingsOption::NeedReload()
 		m_OldChannels != m_Settings.LoadChannels();
 }
 
-bool SettingsOption::NeedRestart()
+bool GOSettingsOption::NeedRestart()
 {
   return m_OldLanguageCode != m_Settings.LanguageCode();
 }
