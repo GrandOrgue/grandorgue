@@ -2,6 +2,7 @@
 - Added a setting option whether to check for existence of active midi devices on startup https://github.com/GrandOrgue/grandorgue/issues/796
 - Added capability of switching auto enabling of new midi devices on/off https://github.com/GrandOrgue/grandorgue/issues/703
 - Added capability of enabling and disabling particular MIDI APIs https://github.com/GrandOrgue/grandorgue/issues/703
+- Updated to RtAudio 5.2.0 and to RtMidi 5.0.0
 - Added support for building against system-wide RtAudio and RtMidi libraries
 # 3.4.4 (2021-11-27)
 - Fixed crash after loading an organ several times https://github.com/GrandOrgue/grandorgue/issues/707
