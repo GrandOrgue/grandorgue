@@ -9,8 +9,8 @@
 #include "midi/GOMidiWXEvent.h"
 #include "ports/GOMidiInPort.h"
 #include "ports/GOMidiOutPort.h"
-#include "settings/GOMidiDeviceConfig.h"
-#include "settings/GOSettings.h"
+#include "config/GOMidiDeviceConfig.h"
+#include "config/GOConfig.h"
 
 #include "GOEvent.h"
 #include "GOMidiListener.h"

@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef GOSETTINGS_H
-#define GOSETTINGS_H
+#ifndef GOCONFIG_H
+#define GOCONFIG_H
 
 #include <map>
 #include <vector>

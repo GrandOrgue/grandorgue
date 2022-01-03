@@ -10,8 +10,8 @@
 #include <wx/checkbox.h>
 #include <wx/panel.h>
 
-#include "GOPortsConfig.h"
-#include "GOSettings.h"
+#include "config/GOConfig.h"
+#include "config/GOPortsConfig.h"
 #include "GOSettingsMidiDeviceList.h"
 #include "GOSettingsPorts.h"
 

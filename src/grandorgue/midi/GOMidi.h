@@ -12,7 +12,7 @@
 #include <wx/event.h>
 
 #include "ports/GOMidiPortFactory.h"
-#include "settings/GOPortsConfig.h"
+#include "config/GOPortsConfig.h"
 
 class GOMidiEvent;
 class GOMidiPort;

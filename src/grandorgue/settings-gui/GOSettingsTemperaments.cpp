@@ -4,12 +4,12 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsTemperaments.h"
+#include "GOSettingsTemperaments.h"
 
 #include "go_limits.h"
 #include "temperaments/GOTemperamentUser.h"
 #include "GOTime.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include <wx/button.h>
 #include <wx/grid.h>
 #include <wx/sizer.h>

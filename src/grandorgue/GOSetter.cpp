@@ -11,7 +11,7 @@
 #include "GOEvent.h"
 #include "GOFrameGeneral.h"
 #include "GOSetterButton.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GODefinitionFile.h"
 #include "go_ids.h"
 #include <wx/app.h>

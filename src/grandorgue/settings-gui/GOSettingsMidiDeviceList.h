@@ -15,8 +15,8 @@
 
 #include "midi/ports/GOMidiPort.h"
 
-#include "GOMidiDeviceConfigList.h"
-#include "GOPortsConfig.h"
+#include "config/GOMidiDeviceConfigList.h"
+#include "config/GOPortsConfig.h"
 
 class GOSettingsMidiDeviceList
 {

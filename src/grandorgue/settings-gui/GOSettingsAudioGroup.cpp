@@ -4,9 +4,9 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsAudioGroup.h"
+#include "GOSettingsAudioGroup.h"
 
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include <wx/button.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>

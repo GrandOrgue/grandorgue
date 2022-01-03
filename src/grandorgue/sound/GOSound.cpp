@@ -10,7 +10,7 @@
 #include "scheduler/GOSoundThread.h"
 #include "GOEvent.h"
 #include "midi/GOMidi.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "sound/ports/GOSoundPort.h"
 #include "GODefinitionFile.h"
 #include "threading/GOMultiMutexLocker.h"

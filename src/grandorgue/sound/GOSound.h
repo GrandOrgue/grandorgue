@@ -13,7 +13,7 @@
 
 #include "midi/GOMidi.h"
 #include "ports/GOSoundPortFactory.h"
-#include "settings/GOPortsConfig.h"
+#include "config/GOPortsConfig.h"
 #include "threading/atomic.h"
 #include "threading/GOMutex.h"
 #include "threading/GOCondition.h"

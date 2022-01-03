@@ -4,7 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSettings.h"
+#include "GOConfig.h"
 
 #include <wx/filename.h>
 #include <wx/log.h>

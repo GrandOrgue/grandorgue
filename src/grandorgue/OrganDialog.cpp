@@ -9,7 +9,7 @@
 #include "GOEvent.h"
 #include "GORank.h"
 #include "GOSampleStatistic.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"
 #include <wx/button.h>

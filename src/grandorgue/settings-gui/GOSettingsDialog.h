@@ -10,7 +10,7 @@
 #include <vector>
 #include <wx/propdlg.h>
 
-#include "SettingsReason.h"
+#include "GOSettingsReason.h"
 
 class GOSound;
 class SettingsArchives;

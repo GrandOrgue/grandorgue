@@ -12,21 +12,21 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
-#include "SettingsDialog.h"
+#include "GOSettingsDialog.h"
 
 #include "GOEvent.h"
 #include "sound/GOSound.h"
 #include "go_ids.h"
-#include "SettingsArchives.h"
-#include "SettingsAudioGroup.h"
-#include "SettingsAudioOutput.h"
-#include "SettingsDefaults.h"
-#include "SettingsMidiDevices.h"
-#include "SettingsMidiMessage.h"
-#include "SettingsOption.h"
-#include "SettingsOrgan.h"
-#include "SettingsReverb.h"
-#include "SettingsTemperaments.h"
+#include "GOSettingsArchives.h"
+#include "GOSettingsAudioGroup.h"
+#include "GOSettingsAudioOutput.h"
+#include "GOSettingsDefaults.h"
+#include "GOSettingsMidiDevices.h"
+#include "GOSettingsMidiMessage.h"
+#include "GOSettingsOption.h"
+#include "GOSettingsOrgan.h"
+#include "GOSettingsReverb.h"
+#include "GOSettingsTemperaments.h"
 
 BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
   EVT_SHOW(SettingsDialog::OnShow)

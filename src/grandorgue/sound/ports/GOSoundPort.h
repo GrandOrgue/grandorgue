@@ -7,7 +7,7 @@
 #ifndef GOSOUNDPORT_H
 #define GOSOUNDPORT_H
 
-#include "settings/GOPortsConfig.h"
+#include "config/GOPortsConfig.h"
 
 #include <wx/string.h>
 #include <vector>

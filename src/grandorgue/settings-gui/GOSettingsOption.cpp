@@ -4,12 +4,12 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsOption.h"
+#include "GOSettingsOption.h"
 
 #include "sound/GOSoundDefs.h"
 #include "GOChoice.h"
 #include "go_limits.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/filepicker.h>

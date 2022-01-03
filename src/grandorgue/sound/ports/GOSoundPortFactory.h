@@ -7,8 +7,8 @@
 #ifndef GOSOUNDPORTFACTORY_H
 #define GOSOUNDPORTFACTORY_H
 
-#include "settings/GOPortFactory.h"
-#include "settings/GOPortsConfig.h"
+#include "config/GOPortFactory.h"
+#include "config/GOPortsConfig.h"
 #include "sound/GOSoundDevInfo.h"
 #include "GOSoundPort.h"
 

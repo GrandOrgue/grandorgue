@@ -11,7 +11,7 @@
 #include "midi/GOMidiMap.h"
 #include "midi/GOMidiFileReader.h"
 #include "GOSetterButton.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>
 

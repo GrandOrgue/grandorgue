@@ -11,7 +11,7 @@
 
 #include <wx/dialog.h>
 
-#include "GOMidiDeviceConfig.h"
+#include "config/GOMidiDeviceConfig.h"
 
 class wxCheckListBox;
 class wxStatusBar;

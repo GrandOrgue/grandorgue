@@ -11,7 +11,7 @@
 #include "midi/GOMidiEvent.h"
 #include "GOOrgan.h"
 #include "GOPanelView.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "sound/GOSound.h"
 #include "GOView.h"
 #include "GODefinitionFile.h"

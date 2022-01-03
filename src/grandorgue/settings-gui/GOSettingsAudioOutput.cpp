@@ -4,7 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsAudioOutput.h"
+#include "GOSettingsAudioOutput.h"
 
 #include <wx/arrstr.h>
 #include <wx/button.h>
@@ -16,7 +16,7 @@
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
 
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "sound/GOSound.h"
 #include "sound/ports/GOSoundPortFactory.h"
 

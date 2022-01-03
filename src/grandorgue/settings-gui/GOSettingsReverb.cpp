@@ -4,10 +4,10 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsReverb.h"
+#include "GOSettingsReverb.h"
 
 #include "GOStandardFile.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOWave.h"
 #include <wx/button.h>
 #include <wx/checkbox.h>

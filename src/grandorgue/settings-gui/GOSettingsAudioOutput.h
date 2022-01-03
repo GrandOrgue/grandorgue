@@ -15,11 +15,11 @@
 #include <wx/string.h>
 #include <wx/treectrl.h>
 
+#include "config/GOConfig.h"
 #include "sound/GOSoundDevInfo.h"
 #include "sound/ports/GOSoundPort.h"
-#include "GOSettings.h"
 #include "GOSettingsPorts.h"
-#include "SettingsAudioGroup.h"
+#include "GOSettingsAudioGroup.h"
 
 class AudioItemData;
 class GOSound;

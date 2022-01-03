@@ -4,7 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsMidiDevices.h"
+#include "GOSettingsMidiDevices.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -16,7 +16,7 @@
 
 #include "midi/GOMidi.h"
 #include "midi/ports/GOMidiPortFactory.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_LISTBOX(ID_INDEVICES, SettingsMidiDevices::OnInDevicesClick)

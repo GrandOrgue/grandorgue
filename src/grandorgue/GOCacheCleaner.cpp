@@ -8,7 +8,7 @@
 
 #include "archive/GOArchiveFile.h"
 #include "GOOrgan.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "ptrvector.h"
 #include <wx/arrstr.h>
 #include <wx/dir.h>

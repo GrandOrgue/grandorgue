@@ -4,9 +4,9 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsDefaults.h"
+#include "GOSettingsDefaults.h"
 
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>

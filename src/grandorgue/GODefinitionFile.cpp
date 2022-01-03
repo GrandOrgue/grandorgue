@@ -54,7 +54,7 @@
 #include "GOPushbutton.h"
 #include "GOReleaseAlignTable.h"
 #include "GOSetter.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOSoundingPipe.h"
 #include "GOSwitch.h"
 #include "GORank.h"
