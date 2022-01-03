@@ -28,7 +28,7 @@
 class GOFrame;
 class GOLog;
 class GOSound;
-class GOSettings;
+class GOConfig;
 
 class GOApp : public wxApp
 {
@@ -45,7 +45,7 @@ private:
 protected:
   GOFrame* m_Frame;
   wxLocale m_locale;
-  GOSettings* m_Settings;
+  GOConfig* m_Settings;
   GOSound* m_soundSystem;
   GOLog* m_Log;
   wxString m_FileName;

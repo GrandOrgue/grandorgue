@@ -23,7 +23,7 @@ class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
 class GOSoundWorkItem;
 class GODefinitionFile;
-class GOSettings;
+class GOConfig;
 
 typedef struct
 {
@@ -85,7 +85,7 @@ public:
 	void Setup(GODefinitionFile* organ_file, unsigned release_count = 1);
 	void ClearSetup();
 	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
-	void SetupReverb(GOSettings& settings);
+	void SetupReverb(GOConfig& settings);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
 	void SetSamplesPerBuffer(unsigned sample_per_buffer);

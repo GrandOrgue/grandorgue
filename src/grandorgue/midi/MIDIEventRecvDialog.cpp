@@ -28,7 +28,7 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 END_EVENT_TABLE()
 
 
-MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOSettings& settings):
+MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOConfig& settings):
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_original(event),

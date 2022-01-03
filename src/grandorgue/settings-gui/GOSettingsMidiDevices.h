@@ -20,7 +20,7 @@ class wxCheckListBox;
 class wxChoice;
 class GOMidi;
 class GOMidiPort;
-class GOSettings;
+class GOConfig;
 
 class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 {
@@ -34,7 +34,7 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 		ID_RECORDERDEVICE,
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	GOMidi& m_Midi;
 
 	GOSettingsMidiDeviceList m_InDevices;
@@ -56,7 +56,7 @@ private:
 	void OnOutDevicesClick(wxCommandEvent& event);
 
 public:
-	SettingsMidiDevices(GOSettings& settings, GOMidi& midi, wxWindow* parent);
+	SettingsMidiDevices(GOConfig& settings, GOMidi& midi, wxWindow* parent);
 
 	void Save();
 

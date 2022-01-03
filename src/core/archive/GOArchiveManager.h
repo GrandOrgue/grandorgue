@@ -9,7 +9,7 @@
 
 class GOArchive;
 class GOOrganList;
-class GOSettings;
+class GOConfig;
 class GOSettingDirectory;
 
 #include <wx/string.h>

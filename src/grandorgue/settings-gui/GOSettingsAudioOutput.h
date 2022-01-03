@@ -40,7 +40,7 @@ class SettingsAudioOutput : public wxPanel, GOSettingsPorts
 
 private:
 	GOSound& m_Sound;
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	GOAudioGroupCallback& m_GroupCallback;
 	
 	wxChoice* m_SampleRate;

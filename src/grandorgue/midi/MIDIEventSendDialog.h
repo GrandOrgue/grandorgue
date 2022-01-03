@@ -11,7 +11,7 @@
 #include "GOMidiSender.h"
 #include <wx/panel.h>
 
-class GOSettings;
+class GOConfig;
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
@@ -21,7 +21,7 @@ class MIDIEventRecvDialog;
 class MIDIEventSendDialog : public wxPanel
 {
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	GOMidiSender* m_original;
 	MIDIEventRecvDialog* m_recv;
 	GOMidiSenderData m_midi;
@@ -67,7 +67,7 @@ protected:
 	};
 
 public:
-	MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event, MIDIEventRecvDialog* recv, GOSettings& settings);
+	MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event, MIDIEventRecvDialog* recv, GOConfig& settings);
 	~MIDIEventSendDialog();
 
 	void DoApply();

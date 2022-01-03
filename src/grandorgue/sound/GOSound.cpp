@@ -19,7 +19,7 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
-GOSound::GOSound(GOSettings& settings) :
+GOSound::GOSound(GOConfig& settings) :
 	m_open(false),
 	logSoundErrors(true),
 	m_AudioOutputs(),
@@ -263,7 +263,7 @@ void GOSound::AssignOrganFile(GODefinitionFile* organfile)
 	}
 }
 
-GOSettings& GOSound::GetSettings()
+GOConfig& GOSound::GetSettings()
 {
 	return m_Settings;
 }

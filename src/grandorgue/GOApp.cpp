@@ -106,7 +106,7 @@ bool GOApp::OnInit()
 	if (!wxApp::OnInit())
 		return false;
 
-	m_Settings = new GOSettings(m_InstanceName);
+	m_Settings = new GOConfig(m_InstanceName);
 	m_Settings->Load();
 
 	GOStdPath::InitLocaleDir();

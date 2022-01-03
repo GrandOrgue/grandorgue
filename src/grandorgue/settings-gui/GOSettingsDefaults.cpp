@@ -11,7 +11,7 @@
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
-SettingsDefaults::SettingsDefaults(GOSettings& settings, wxWindow* parent) :
+SettingsDefaults::SettingsDefaults(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {

@@ -24,7 +24,7 @@ BEGIN_EVENT_TABLE(SettingsOrgan, wxPanel)
 	EVT_BUTTON(ID_PROPERTIES, SettingsOrgan::OnProperties)
 END_EVENT_TABLE()
 
-SettingsOrgan::SettingsOrgan(GOSettings& settings, GOMidi& midi, wxWindow* parent) :
+SettingsOrgan::SettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_midi(midi)

@@ -18,14 +18,14 @@ class GOMidiEvent;
 class GOMidiPort;
 class GOMidiListener;
 class GOMidiMap;
-class GOSettings;
+class GOConfig;
 class GODefinitionFile;
 class wxMidiEvent;
 
 class GOMidi : public wxEvtHandler
 {
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 
 	ptr_vector<GOMidiPort> m_midi_in_devices;
 	ptr_vector<GOMidiPort> m_midi_out_devices;
@@ -37,7 +37,7 @@ private:
 
 public:
 
-	GOMidi(GOSettings& settings);
+	GOMidi(GOConfig& settings);
 	~GOMidi();
 
 	void Open();

@@ -12,7 +12,7 @@
 
 class GOMidi;
 class GOOrgan;
-class GOSettings;
+class GOConfig;
 class wxButton;
 class wxListEvent;
 class wxListView;
@@ -28,7 +28,7 @@ class SettingsOrgan : public wxPanel
 		ID_PROPERTIES,
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	GOMidi& m_midi;
 	wxListView* m_Organs;
 	wxButton* m_Up;
@@ -47,7 +47,7 @@ private:
 	void MoveOrgan(long from, long to);
 
 public:
-	SettingsOrgan(GOSettings& settings, GOMidi& midi, wxWindow* parent);
+	SettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent);
 
 	std::vector<const GOOrgan*> GetOrgans();
 

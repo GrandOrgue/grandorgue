@@ -35,7 +35,7 @@ void GOSoundReverb::Cleanup()
 	}
 }
 
-void GOSoundReverb::Setup(GOSettings& settings)
+void GOSoundReverb::Setup(GOConfig& settings)
 {
 	Cleanup();
 

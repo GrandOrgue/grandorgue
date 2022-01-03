@@ -21,7 +21,7 @@ BEGIN_EVENT_TABLE(SettingsTemperaments, wxPanel)
 	EVT_BUTTON(ID_DEL, SettingsTemperaments::OnDel)
 END_EVENT_TABLE()
 
-SettingsTemperaments::SettingsTemperaments(GOSettings& settings, wxWindow* parent) :
+SettingsTemperaments::SettingsTemperaments(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Temperaments(settings.GetTemperaments()),
 	m_Ptrs()

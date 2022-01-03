@@ -9,7 +9,7 @@
 
 #include <wx/panel.h>
 
-class GOSettings;
+class GOConfig;
 class SettingsOrgan;
 class wxButton;
 class wxListEvent;
@@ -22,7 +22,7 @@ class SettingsArchives : public wxPanel
 		ID_DEL,
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	SettingsOrgan& m_Organs;
 	wxListView* m_Archives;
 	wxButton* m_Del;
@@ -31,7 +31,7 @@ private:
 	void OnDel(wxCommandEvent& event);
 
 public:
-	SettingsArchives(GOSettings& settings, SettingsOrgan& organs, wxWindow* parent);
+	SettingsArchives(GOConfig& settings, SettingsOrgan& organs, wxWindow* parent);
 
 	void Save();
 

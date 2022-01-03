@@ -27,7 +27,7 @@ BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 END_EVENT_TABLE()
 
 SettingsMidiDevices::SettingsMidiDevices(
-  GOSettings& settings, GOMidi& midi, wxWindow* parent
+  GOConfig& settings, GOMidi& midi, wxWindow* parent
 ):
 	wxPanel(parent, wxID_ANY),
 	GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("Midi &ports")),

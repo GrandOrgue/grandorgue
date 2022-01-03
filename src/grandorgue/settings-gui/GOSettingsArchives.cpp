@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(SettingsArchives, wxPanel)
 	EVT_BUTTON(ID_DEL, SettingsArchives::OnDel)
 END_EVENT_TABLE()
 
-SettingsArchives::SettingsArchives(GOSettings& settings, SettingsOrgan& organs, wxWindow* parent) :
+SettingsArchives::SettingsArchives(GOConfig& settings, SettingsOrgan& organs, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_Organs(organs)

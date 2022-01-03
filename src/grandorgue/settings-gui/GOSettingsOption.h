@@ -11,7 +11,7 @@
 
 enum class GOInitialLoadType;
 template<class T> class GOChoice;
-class GOSettings;
+class GOConfig;
 class wxCheckBox;
 class wxChoice;
 class wxDirPickerCtrl;
@@ -45,7 +45,7 @@ class SettingsOption : public wxPanel
 		ID_LANGUAGE
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	wxChoice* m_Concurrency;
 	wxChoice* m_ReleaseConcurrency;
 	wxChoice* m_LoadConcurrency;
@@ -79,7 +79,7 @@ private:
 	unsigned m_OldReleaseLoad;
 
 public:
-	SettingsOption(GOSettings& settings, wxWindow* parent);
+	SettingsOption(GOConfig& settings, wxWindow* parent);
 
 	bool NeedReload();
 	bool NeedRestart();

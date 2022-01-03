@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE(SettingsMidiMessage, wxPanel)
 	EVT_BUTTON(ID_PROPERTIES, SettingsMidiMessage::OnProperties)
 END_EVENT_TABLE()
 
-SettingsMidiMessage::SettingsMidiMessage(GOSettings& settings, GOMidi& midi, wxWindow* parent) :
+SettingsMidiMessage::SettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_midi(midi)

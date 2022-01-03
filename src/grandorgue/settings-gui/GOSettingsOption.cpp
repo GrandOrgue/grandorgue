@@ -19,7 +19,7 @@
 #include <wx/stattext.h>
 
 
-SettingsOption::SettingsOption(GOSettings& settings, wxWindow* parent) :
+SettingsOption::SettingsOption(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {

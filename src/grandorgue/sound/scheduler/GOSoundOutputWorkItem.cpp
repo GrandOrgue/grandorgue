@@ -132,7 +132,7 @@ bool GOSoundOutputWorkItem::GetRepeat()
 	return false;
 }
 
-void GOSoundOutputWorkItem::SetupReverb(GOSettings& settings)
+void GOSoundOutputWorkItem::SetupReverb(GOConfig& settings)
 {
 	m_Reverb->Setup(settings);
 }

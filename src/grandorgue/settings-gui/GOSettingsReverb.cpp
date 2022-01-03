@@ -26,7 +26,7 @@ BEGIN_EVENT_TABLE(SettingsReverb, wxPanel)
 	EVT_SPIN(ID_GAIN_SPIN, SettingsReverb::OnGainSpinChanged)
 END_EVENT_TABLE()
 
-SettingsReverb::SettingsReverb(GOSettings& settings, wxWindow* parent) :
+SettingsReverb::SettingsReverb(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings)
 {

@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE(GOMidi, wxEvtHandler)
 	EVT_MIDI(GOMidi::OnMidiEvent)
 END_EVENT_TABLE()
 
-GOMidi::GOMidi(GOSettings& settings) :
+GOMidi::GOMidi(GOConfig& settings) :
 	m_Settings(settings),
 	m_midi_in_devices(),
 	m_midi_out_devices(),

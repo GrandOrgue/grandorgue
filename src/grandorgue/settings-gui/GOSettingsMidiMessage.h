@@ -10,7 +10,7 @@
 #include <wx/panel.h>
 
 class GOMidi;
-class GOSettings;
+class GOConfig;
 class wxButton;
 class wxListEvent;
 class wxListView;
@@ -23,7 +23,7 @@ class SettingsMidiMessage : public wxPanel
 	};
 
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	GOMidi& m_midi;
 	wxListView* m_Events;
 	wxButton* m_Properties;
@@ -33,7 +33,7 @@ private:
 	void OnProperties(wxCommandEvent& event);
 
 public:
-	SettingsMidiMessage(GOSettings& settings, GOMidi& midi, wxWindow* parent);
+	SettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWindow* parent);
 
 	DECLARE_EVENT_TABLE()
 };

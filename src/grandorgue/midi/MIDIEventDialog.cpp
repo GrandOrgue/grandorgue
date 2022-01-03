@@ -17,7 +17,7 @@ BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 	EVT_BUTTON(wxID_CANCEL, MIDIEventDialog::OnCancel)
 END_EVENT_TABLE()
 
-MIDIEventDialog::MIDIEventDialog (GODocumentBase* doc, wxWindow* parent, wxString title, GOSettings& settings, GOMidiReceiverBase* event, GOMidiSender* sender, GOKeyReceiver* key, GOMidiSender* division):
+MIDIEventDialog::MIDIEventDialog (GODocumentBase* doc, wxWindow* parent, wxString title, GOConfig& settings, GOMidiReceiverBase* event, GOMidiSender* sender, GOKeyReceiver* key, GOMidiSender* division):
 	wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
 	GOView(doc, this),
 	m_recvPage(NULL),

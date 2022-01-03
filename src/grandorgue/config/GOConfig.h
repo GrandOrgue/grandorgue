@@ -58,7 +58,7 @@ enum class GOInitialLoadType {
 	LOAD_FIRST
 };
 
-class GOSettings : public GOSettingStore, public GOOrganList {
+class GOConfig : public GOSettingStore, public GOOrganList {
 private:
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
@@ -82,8 +82,8 @@ private:
 	wxString GetEventSection(unsigned index);
 
 public:
-	GOSettings(wxString instance);
-	~GOSettings();
+	GOConfig(wxString instance);
+	~GOConfig();
 
 	GOSettingDirectory UserSettingPath;
 	GOSettingDirectory UserCachePath;

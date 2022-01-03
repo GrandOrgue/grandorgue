@@ -70,7 +70,7 @@
 #include <math.h>
 
 
-GODefinitionFile::GODefinitionFile(GODocument* doc, GOSettings& settings) :
+GODefinitionFile::GODefinitionFile(GODocument* doc, GOConfig& settings) :
 	m_doc(doc),
 	m_odf(),
 	m_ArchiveID(),
@@ -981,7 +981,7 @@ GOMemoryPool& GODefinitionFile::GetMemoryPool()
 	return m_pool;
 }
 
-GOSettings& GODefinitionFile::GetSettings()
+GOConfig& GODefinitionFile::GetSettings()
 {
 	return m_Settings;
 }

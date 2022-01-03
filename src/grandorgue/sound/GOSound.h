@@ -29,7 +29,7 @@ class GOSoundThread;
 class GOSoundPort;
 class GOSoundRtPort;
 class GOSoundPortaudioPort;
-class GOSettings;
+class GOConfig;
 
 class GOSound
 {
@@ -91,7 +91,7 @@ private:
 	GOSoundEngine m_SoundEngine;
 	ptr_vector <GOSoundThread> m_Threads;
 
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 
 	GOMidi m_midi;
 	
@@ -112,7 +112,7 @@ private:
 
 public:
 
-	GOSound(GOSettings& settings);
+	GOSound(GOConfig& settings);
 	~GOSound();
 
 	bool AssureSoundIsOpen();
@@ -121,7 +121,7 @@ public:
 	wxString getLastErrorMessage() const { return m_LastErrorMessage; }
 	wxString getState();
 
-	GOSettings& GetSettings();
+	GOConfig& GetSettings();
 
 	void AssignOrganFile(GODefinitionFile* organfile);
 	GODefinitionFile* GetOrganFile();

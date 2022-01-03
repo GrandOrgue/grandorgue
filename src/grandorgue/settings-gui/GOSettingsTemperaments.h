@@ -10,7 +10,7 @@
 #include <vector>
 #include <wx/panel.h>
 
-class GOSettings;
+class GOConfig;
 class GOTemperamentList;
 class GOTemperamentUser;
 class wxButton;
@@ -38,7 +38,7 @@ private:
 	void Update();
 
 public:
-	SettingsTemperaments(GOSettings& settings, wxWindow* parent);
+	SettingsTemperaments(GOConfig& settings, wxWindow* parent);
 
 	void Save();
 	

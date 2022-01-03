@@ -16,7 +16,7 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOCacheCleaner::GOCacheCleaner(GOSettings& settings) :
+GOCacheCleaner::GOCacheCleaner(GOConfig& settings) :
 	m_settings(settings)
 {
 }

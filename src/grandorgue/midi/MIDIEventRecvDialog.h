@@ -15,7 +15,7 @@
 #include <wx/timer.h>
 #include <vector>
 
-class GOSettings;
+class GOConfig;
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
@@ -25,7 +25,7 @@ class wxToggleButton;
 class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback
 {
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_Settings;
 	GOMidiReceiverBase* m_original;
 	GOMidiReceiverData m_midi;
 	GOMidiListener m_listener;
@@ -87,7 +87,7 @@ protected:
 	};
 
 public:
-	MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOSettings& settings);
+	MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOConfig& settings);
 	~MIDIEventRecvDialog();
 	void RegisterMIDIListener(GOMidi* midi);
 

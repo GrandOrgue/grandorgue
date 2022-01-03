@@ -22,7 +22,7 @@ BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 	EVT_CHOICE(ID_EVENT, MIDIEventSendDialog::OnTypeChange)
 END_EVENT_TABLE()
 
-MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event, MIDIEventRecvDialog* recv, GOSettings& settings):
+MIDIEventSendDialog::MIDIEventSendDialog (wxWindow* parent, GOMidiSender* event, MIDIEventRecvDialog* recv, GOConfig& settings):
 	wxPanel(parent, wxID_ANY),
 	m_Settings(settings),
 	m_original(event),
