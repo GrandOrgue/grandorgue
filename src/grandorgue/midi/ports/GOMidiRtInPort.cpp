@@ -31,6 +31,20 @@ GOMidiRtInPort::~GOMidiRtInPort()
   Close(true);
 }
 
+const wxString GOMidiRtInPort::GetDefaultLogicalName() const
+{
+  return GOMidiRtPortFactory::getInstance()->GetDefaultLogicalName(
+    m_api, GetDeviceName(), GetName()
+  );
+}
+
+const wxString GOMidiRtInPort::GetDefaultRegEx() const
+{
+  return GOMidiRtPortFactory::getInstance()->GetDefaultRegEx(
+    m_api, GetDeviceName(), GetName()
+  );
+}
+
 bool GOMidiRtInPort::Open(int channel_shift)
 {
   Close(false);
