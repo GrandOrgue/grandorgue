@@ -279,7 +279,8 @@ wxString GOMidiRtPortFactory::GetDefaultRegEx(
   }
   if (! regEx.IsEmpty())
     // add the api name to the regex
-    regEx = GOMidiPortFactory::getInstance()
-	.ComposeDeviceName(PORT_NAME, getApiName(api), regEx);
+    regEx = GOMidiPortFactory::getInstance().ComposeDeviceName(
+      PORT_NAME, getApiName(api), regEx
+    );
   return regEx;
 }

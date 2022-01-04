@@ -102,7 +102,7 @@ GOMidiDeviceConfig* GOMidiDeviceConfigList::Append(
 
   if (pDevConf && pDevConf->m_PhysicalName.IsEmpty())
   {
-      // the device is not matched. Replase it instead of adding a new one
+    // the device is not matched. Replace it instead of adding a new one
     pDevConf->Assign(devConf);
     toAdd = false;
   }
