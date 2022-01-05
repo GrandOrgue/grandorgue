@@ -96,12 +96,38 @@ GOMidiDeviceConfig* GOMidiDeviceConfigList::Append(
   const GOMidiDeviceConfigList* outputList
 )
 {
-  GOMidiDeviceConfig* pDevConf = new GOMidiDeviceConfig(devConf);
+  // At first, find the device with the same logical name
+  GOMidiDeviceConfig* pDevConf = FindByLogicalName(devConf.m_LogicalName);
+  bool toAdd = true;
+
+  if (pDevConf && pDevConf->m_PhysicalName.IsEmpty())
+  {
+    // the device is not matched. Replace it instead of adding a new one
+    pDevConf->Assign(devConf);
+    toAdd = false;
+  }
+  else
+  {
+    bool isDuplicate = pDevConf;
+
+    pDevConf = new GOMidiDeviceConfig(devConf);
+    if (isDuplicate)
+    // construct an unique logical name
+    {
+      unsigned n = 0;
+
+      do {
+	pDevConf->m_LogicalName
+	  = wxString::Format(wxT("%s-%u"), devConf.m_LogicalName, ++n);
+      } while (FindByLogicalName(pDevConf->m_LogicalName));
+    }
+  }
 
   if (outputList)
     // Map the output device against outputList
     outputList->MapOutputDevice(devConf, *pDevConf);
-  m_list.push_back(pDevConf);
+  if (toAdd)
+    m_list.push_back(pDevConf);
   return pDevConf;
 }
 

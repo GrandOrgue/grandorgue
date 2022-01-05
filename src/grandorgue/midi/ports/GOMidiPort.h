@@ -42,8 +42,8 @@ public:
   const wxString& GetDeviceName() const { return m_DeviceName; }
   const wxString& GetName() const { return m_FullName; }
   bool IsToUse() const;
-  const wxString GetDefaultLogicalName() const { return m_FullName; }
-  const wxString GetDefaultRegEx() const { return wxEmptyString; }
+  virtual const wxString GetDefaultLogicalName() const { return m_FullName; }
+  virtual const wxString GetDefaultRegEx() const { return wxEmptyString; }
   bool IsEqualTo(
     const wxString& portName,
     const wxString& apiName,

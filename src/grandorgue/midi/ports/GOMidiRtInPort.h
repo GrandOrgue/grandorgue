@@ -29,6 +29,9 @@ public:
   );
   ~GOMidiRtInPort();
 
+  virtual const wxString GetDefaultLogicalName() const;
+  virtual const wxString GetDefaultRegEx() const;
+
   bool Open(int channel_shift = 0);
   void Close() { Close(true); }
 };

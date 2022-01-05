@@ -29,6 +29,9 @@ public:
   );
   ~GOMidiRtOutPort();
 
+  virtual const wxString GetDefaultLogicalName() const;
+  virtual const wxString GetDefaultRegEx() const;
+
   bool Open();
   void Close() { Close(true); }
 };
