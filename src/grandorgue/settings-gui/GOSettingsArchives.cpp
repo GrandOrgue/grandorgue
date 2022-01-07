@@ -22,7 +22,7 @@ END_EVENT_TABLE()
 
 GOSettingsArchives::GOSettingsArchives(GOConfig& settings, GOSettingsOrgan& organs, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings),
+	m_config(settings),
 	m_Organs(organs)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -40,18 +40,18 @@ GOSettingsArchives::GOSettingsArchives(GOConfig& settings, GOSettingsOrgan& orga
 	buttonSizer->Add(m_Del, 0, wxALIGN_LEFT | wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
-	for(unsigned i = 0; i < m_Settings.GetArchiveList().size(); i++)
+	for(unsigned i = 0; i < m_config.GetArchiveList().size(); i++)
 	{
-		GOArchiveFile* a = m_Settings.GetArchiveList()[i];
+		GOArchiveFile* a = m_config.GetArchiveList()[i];
 		wxString title = a->GetName();
 		wxString info = wxEmptyString;
-		if (!a->IsUsable(m_Settings))
+		if (!a->IsUsable(m_config))
 		    title = _("MISSING - ") + title;
-		else if (!a->IsComplete(m_Settings))
+		else if (!a->IsComplete(m_config))
 		{
 		    title = _("INCOMPLETE - ") + title;
 		    for(unsigned i = 0; i < a->GetDependencies().size(); i++)
-			    if (!m_Settings.GetArchiveByID(a->GetDependencies()[i], true))
+			    if (!m_config.GetArchiveByID(a->GetDependencies()[i], true))
 				    info += wxString::Format(_("requires '%s' "), a->GetDependencyTitles()[i]);
 		}
 		m_Archives->InsertItem(i, title);
@@ -89,7 +89,7 @@ void GOSettingsArchives::OnDel(wxCommandEvent& event)
 		const GOArchiveFile* a1 = (const GOArchiveFile*)m_Archives->GetItemData(i);
 		if (a == a1)
 			continue;
-		if (!a1->IsUsable(m_Settings))
+		if (!a1->IsUsable(m_config))
 			continue;
 		if (a->GetID() == a1->GetID())
 		{
@@ -126,7 +126,7 @@ void GOSettingsArchives::OnDel(wxCommandEvent& event)
 
 void GOSettingsArchives::Save()
 {
-	ptr_vector<GOArchiveFile>& list = m_Settings.GetArchiveList();
+	ptr_vector<GOArchiveFile>& list = m_config.GetArchiveList();
 	for(unsigned i = 0; i < list.size(); i++)
 	{
 		bool found = false;

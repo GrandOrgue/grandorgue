@@ -22,7 +22,7 @@ END_EVENT_TABLE()
 
 GOSettingsAudioGroup::GOSettingsAudioGroup(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_config(settings)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
@@ -43,7 +43,7 @@ GOSettingsAudioGroup::GOSettingsAudioGroup(GOConfig& settings, wxWindow* parent)
 	buttonSizer->Add(m_Change, 0, wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
-	std::vector<wxString> audio_groups = m_Settings.GetAudioGroups();
+	std::vector<wxString> audio_groups = m_config.GetAudioGroups();
 	for(unsigned i = 0; i < audio_groups.size(); i++)
 		m_AudioGroups->Append(audio_groups[i]);
 
@@ -107,5 +107,5 @@ void GOSettingsAudioGroup::Save()
 	std::vector<wxString> audio_groups;
 	for(unsigned i = 0; i < m_AudioGroups->GetCount(); i++)
 		audio_groups.push_back(m_AudioGroups->GetString(i));
-	m_Settings.SetAudioGroups(audio_groups);
+	m_config.SetAudioGroups(audio_groups);
 }

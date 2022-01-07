@@ -87,7 +87,7 @@ GOSettingsAudioOutput::GOSettingsAudioOutput(GOSound& sound, GOAudioGroupCallbac
 	wxPanel(parent, wxID_ANY),
 	GOSettingsPorts(this, GOSoundPortFactory::getInstance(), _("Sound &ports")),
 	m_Sound(sound),
-	m_Settings(sound.GetSettings()),
+	m_config(sound.GetSettings()),
 	m_GroupCallback(callback)
 {
 	wxBoxSizer* const item0 = new wxBoxSizer(wxVERTICAL);
@@ -105,11 +105,11 @@ GOSettingsAudioOutput::GOSettingsAudioOutput(GOSound& sound, GOAudioGroupCallbac
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Samples per buffer:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_SamplesPerBuffer = new wxSpinCtrl(this, ID_SAMPLES_PER_BUFFER, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 	m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
-	m_SamplesPerBuffer->SetValue(m_Settings.SamplesPerBuffer());
+	m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
 
 	m_SampleRate->Select(0);
 	for(unsigned i = 0; i < m_SampleRate->GetCount(); i++)
-		if (wxString::Format(wxT("%d"), m_Settings.SampleRate()) == m_SampleRate->GetString(i))
+		if (wxString::Format(wxT("%d"), m_config.SampleRate()) == m_SampleRate->GetString(i))
 			m_SampleRate->Select(i);
 	
 	item2->Add(grid, 0, wxEXPAND | wxALL, 5);
@@ -610,10 +610,10 @@ void GOSettingsAudioOutput::Save()
   unsigned long sample_rate;
 
   if (m_SampleRate->GetStringSelection().ToULong(&sample_rate))
-	  m_Settings.SampleRate(sample_rate);
+	  m_config.SampleRate(sample_rate);
   else
 	  wxLogError(_("Invalid sample rate"));
-  m_Settings.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
+  m_config.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
   
   m_Sound.GetSettings().SetSoundPortsConfig(RenewPortsConfig());
   

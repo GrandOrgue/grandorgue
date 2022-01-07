@@ -28,7 +28,7 @@ END_EVENT_TABLE()
 
 GOSettingsReverb::GOSettingsReverb(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_config(settings)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -77,23 +77,23 @@ GOSettingsReverb::GOSettingsReverb(GOConfig& settings, wxWindow* parent) :
 	m_GainSpin->SetRange(1, 1000);
 	m_Delay->SetRange(0, 10000);
 
-	m_Enabled->SetValue(m_Settings.ReverbEnabled());
+	m_Enabled->SetValue(m_config.ReverbEnabled());
 	UpdateEnabled();
 
-	m_StartOffset->SetRange(0, m_Settings.ReverbStartOffset());
-	m_Length->SetRange(0, m_Settings.ReverbLen());
+	m_StartOffset->SetRange(0, m_config.ReverbStartOffset());
+	m_Length->SetRange(0, m_config.ReverbLen());
 
-	m_File->SetPath(m_Settings.ReverbFile());
+	m_File->SetPath(m_config.ReverbFile());
 	m_FileName->SetLabel(m_File->GetPath());
 	UpdateLimits();
 
-	m_Gain->ChangeValue(wxString::Format(wxT("%f"), m_Settings.ReverbGain()));
-	m_GainSpin->SetValue(m_Settings.ReverbGain() * 20);
-	m_StartOffset->SetValue(m_Settings.ReverbStartOffset());
-	m_Length->SetValue(m_Settings.ReverbLen());
-	m_Channel->SetSelection(m_Settings.ReverbChannel() - 1);
-	m_Direct->SetValue(m_Settings.ReverbDirect());
-	m_Delay->SetValue(m_Settings.ReverbDelay());
+	m_Gain->ChangeValue(wxString::Format(wxT("%f"), m_config.ReverbGain()));
+	m_GainSpin->SetValue(m_config.ReverbGain() * 20);
+	m_StartOffset->SetValue(m_config.ReverbStartOffset());
+	m_Length->SetValue(m_config.ReverbLen());
+	m_Channel->SetSelection(m_config.ReverbChannel() - 1);
+	m_Direct->SetValue(m_config.ReverbDirect());
+	m_Delay->SetValue(m_config.ReverbDelay());
 
 	topSizer->Fit(this);
 }
@@ -205,14 +205,14 @@ bool GOSettingsReverb::Validate()
 
 void GOSettingsReverb::Save()
 {
-	m_Settings.ReverbEnabled(m_Enabled->IsChecked());
-	m_Settings.ReverbDirect(m_Direct->IsChecked());
-	m_Settings.ReverbFile(m_File->GetPath());
-	m_Settings.ReverbLen(m_Length->GetValue());
-	m_Settings.ReverbDelay(m_Delay->GetValue());
-	m_Settings.ReverbStartOffset(m_StartOffset->GetValue());
-	m_Settings.ReverbChannel(m_Channel->GetSelection() + 1);
+	m_config.ReverbEnabled(m_Enabled->IsChecked());
+	m_config.ReverbDirect(m_Direct->IsChecked());
+	m_config.ReverbFile(m_File->GetPath());
+	m_config.ReverbLen(m_Length->GetValue());
+	m_config.ReverbDelay(m_Delay->GetValue());
+	m_config.ReverbStartOffset(m_StartOffset->GetValue());
+	m_config.ReverbChannel(m_Channel->GetSelection() + 1);
 	double gain;
 	if (m_Gain->GetValue().ToDouble(&gain))
-		m_Settings.ReverbGain(gain);
+		m_config.ReverbGain(gain);
 }

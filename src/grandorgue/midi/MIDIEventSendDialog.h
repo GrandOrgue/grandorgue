@@ -21,7 +21,7 @@ class MIDIEventRecvDialog;
 class MIDIEventSendDialog : public wxPanel
 {
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	GOMidiSender* m_original;
 	MIDIEventRecvDialog* m_recv;
 	GOMidiSenderData m_midi;

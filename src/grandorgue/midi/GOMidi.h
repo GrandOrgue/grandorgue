@@ -25,7 +25,7 @@ class wxMidiEvent;
 class GOMidi : public wxEvtHandler
 {
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 
 	ptr_vector<GOMidiPort> m_midi_in_devices;
 	ptr_vector<GOMidiPort> m_midi_out_devices;

@@ -29,7 +29,7 @@ GOSound::GOSound(GOConfig& settings) :
 	meter_counter(0),
 	m_defaultAudioDevice(),
 	m_organfile(0),
-	m_Settings(settings),
+	m_config(settings),
 	m_midi(settings)
 {
 }
@@ -47,7 +47,7 @@ void GOSound::StartThreads()
 {
 	StopThreads();
 
-	unsigned n_cpus = m_Settings.Concurrency();
+	unsigned n_cpus = m_config.Concurrency();
 
 	GOMutexLocker thread_locker(m_thread_lock);
 	for(unsigned i = 0; i < n_cpus; i++)
@@ -77,8 +77,8 @@ void GOSound::OpenSound()
 	assert(! m_open);
 	assert(m_AudioOutputs.size() == 0);
 
-	unsigned audio_group_count = m_Settings.GetAudioGroups().size();
-	std::vector<GOAudioDeviceConfig> audio_config = m_Settings.GetAudioDeviceConfig();
+	unsigned audio_group_count = m_config.GetAudioGroups().size();
+	std::vector<GOAudioDeviceConfig> audio_config = m_config.GetAudioDeviceConfig();
 	std::vector<GOAudioOutputConfiguration> engine_config;
 
 	m_AudioOutputs.resize(audio_config.size());
@@ -99,7 +99,7 @@ void GOSound::OpenSound()
 				continue;
 			for(unsigned k = 0; k < audio_config[i].scale_factors[j].size(); k++)
 			{
-				int id = m_Settings.GetStrictAudioGroupId(audio_config[i].scale_factors[j][k].name);
+				int id = m_config.GetStrictAudioGroupId(audio_config[i].scale_factors[j][k].name);
 				if (id == -1)
 					continue;
 				if (audio_config[i].scale_factors[j][k].left >= -120)
@@ -109,24 +109,24 @@ void GOSound::OpenSound()
 			}
 		}
 	}
-	m_SamplesPerBuffer = m_Settings.SamplesPerBuffer();
+	m_SamplesPerBuffer = m_config.SamplesPerBuffer();
 	m_SoundEngine.SetSamplesPerBuffer(m_SamplesPerBuffer);
-	m_SoundEngine.SetPolyphonyLimiting(m_Settings.ManagePolyphony());
-	m_SoundEngine.SetHardPolyphony(m_Settings.PolyphonyLimit());
-	m_SoundEngine.SetScaledReleases(m_Settings.ScaleRelease());
-	m_SoundEngine.SetRandomizeSpeaking(m_Settings.RandomizeSpeaking());
-	m_SoundEngine.SetInterpolationType(m_Settings.InterpolationType());
+	m_SoundEngine.SetPolyphonyLimiting(m_config.ManagePolyphony());
+	m_SoundEngine.SetHardPolyphony(m_config.PolyphonyLimit());
+	m_SoundEngine.SetScaledReleases(m_config.ScaleRelease());
+	m_SoundEngine.SetRandomizeSpeaking(m_config.RandomizeSpeaking());
+	m_SoundEngine.SetInterpolationType(m_config.InterpolationType());
 	m_SoundEngine.SetAudioGroupCount(audio_group_count);
-	unsigned sample_rate = m_Settings.SampleRate();
-	m_AudioRecorder.SetBytesPerSample(m_Settings.WaveFormatBytesPerSample());
+	unsigned sample_rate = m_config.SampleRate();
+	m_AudioRecorder.SetBytesPerSample(m_config.WaveFormatBytesPerSample());
 	GetEngine().SetSampleRate(sample_rate);
 	m_AudioRecorder.SetSampleRate(sample_rate);
 	m_SoundEngine.SetAudioOutput(engine_config);
-	m_SoundEngine.SetupReverb(m_Settings);
-	m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_Settings.RecordDownmix());
+	m_SoundEngine.SetupReverb(m_config);
+	m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
 
 	if (m_organfile)
-		m_SoundEngine.Setup(m_organfile, m_Settings.ReleaseConcurrency());
+		m_SoundEngine.Setup(m_organfile, m_config.ReleaseConcurrency());
 	else
 		m_SoundEngine.ClearSetup();
 
@@ -136,7 +136,7 @@ void GOSound::OpenSound()
 		{
 			wxString name = audio_config[i].name;
 			
-			const GOPortsConfig &portsConfig(m_Settings.GetSoundPortsConfig());
+			const GOPortsConfig &portsConfig(m_config.GetSoundPortsConfig());
 			
 			if (name == wxEmptyString)
 				name = GetDefaultAudioDevice(portsConfig);
@@ -258,14 +258,14 @@ void GOSound::AssignOrganFile(GODefinitionFile* organfile)
 
 	if (m_organfile && m_AudioOutputs.size())
 	{
-		m_SoundEngine.Setup(organfile, m_Settings.ReleaseConcurrency());
+		m_SoundEngine.Setup(organfile, m_config.ReleaseConcurrency());
 		m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
 	}
 }
 
 GOConfig& GOSound::GetSettings()
 {
-	return m_Settings;
+	return m_config;
 }
 
 GODefinitionFile* GOSound::GetOrganFile()

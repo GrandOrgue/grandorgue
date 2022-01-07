@@ -26,7 +26,7 @@ END_EVENT_TABLE()
 
 GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings),
+	m_config(settings),
 	m_midi(midi)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -54,11 +54,11 @@ GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* par
 	buttonSizer->Add(m_Properties, 0, wxALIGN_LEFT | wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
-	for(unsigned i = 0; i < m_Settings.GetOrganList().size(); i++)
+	for(unsigned i = 0; i < m_config.GetOrganList().size(); i++)
 	{
-		GOOrgan* o = m_Settings.GetOrganList()[i];
+		GOOrgan* o = m_config.GetOrganList()[i];
 		wxString title = o->GetChurchName();
-		if (!o->IsUsable(m_Settings))
+		if (!o->IsUsable(m_config))
 			title = _("MISSING - ") + title;
 		m_Organs->InsertItem(i, title);
 		m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
@@ -68,7 +68,7 @@ GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* par
 		m_Organs->SetItem(i, 5, o->GetODFPath());
 		if (o->GetArchiveID() != wxEmptyString)
 		{
-			const GOArchiveFile* a = m_Settings.GetArchiveByID(o->GetArchiveID());
+			const GOArchiveFile* a = m_config.GetArchiveByID(o->GetArchiveID());
 			m_Organs->SetItem(i, 4, a ? a->GetName() : o->GetArchiveID());
 		}
 	}
@@ -167,7 +167,7 @@ void GOSettingsOrgan::OnDel(wxCommandEvent& event)
 void GOSettingsOrgan::OnProperties(wxCommandEvent& event)
 {
 	GOOrgan* o = (GOOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
-	MIDIEventDialog dlg(NULL, this, wxString::Format(_("MIDI settings for organ %s"), o->GetChurchName().c_str()), m_Settings, &o->GetMIDIReceiver(), NULL, NULL);
+	MIDIEventDialog dlg(NULL, this, wxString::Format(_("MIDI settings for organ %s"), o->GetChurchName().c_str()), m_config, &o->GetMIDIReceiver(), NULL, NULL);
 	dlg.RegisterMIDIListener(&m_midi);
 	dlg.ShowModal();
 	m_Organs->SetItem(m_Organs->GetFirstSelected(), 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No") );
@@ -183,7 +183,7 @@ std::vector<const GOOrgan*> GOSettingsOrgan::GetOrgans()
 
 void GOSettingsOrgan::Save()
 {
-	ptr_vector<GOOrgan>& list = m_Settings.GetOrganList();
+	ptr_vector<GOOrgan>& list = m_config.GetOrganList();
 	for(unsigned i = 0; i < list.size(); i++)
 	{
 		bool found = false;

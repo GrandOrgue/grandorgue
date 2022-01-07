@@ -111,13 +111,13 @@ GODefinitionFile::GODefinitionFile(GODocument* doc, GOConfig& settings) :
 	m_SampleSetId2(0),
 	m_bitmaps(this),
 	m_PipeConfig(NULL, this, this),
-	m_Settings(settings),
+	m_config(settings),
 	m_GeneralTemplate(this),
 	m_PitchLabel(this),
 	m_TemperamentLabel(this),
 	m_MainWindowData(this)
 {
-	m_pool.SetMemoryLimit(m_Settings.MemoryLimit() * 1024 * 1024);
+	m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
 bool GODefinitionFile::IsCacheable()
@@ -183,7 +183,7 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader& cfg)
 		else
 		{
 			m_InfoFilename = wxEmptyString;
-			if (m_Settings.ODFCheck())
+			if (m_config.ODFCheck())
 				wxLogWarning(_("InfoFilename does not point to a html file"));
 		}
 	}
@@ -196,7 +196,7 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader& cfg)
 	m_DivisionalsStoreTremulants = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreTremulants"));
 	m_GeneralsStoreDivisionalCouplers = cfg.ReadBoolean(ODFSetting, group, wxT("GeneralsStoreDivisionalCouplers"));
 	m_CombinationsStoreNonDisplayedDrawstops = cfg.ReadBoolean(ODFSetting, group, wxT("CombinationsStoreNonDisplayedDrawstops"), false, true);
-	m_volume = cfg.ReadInteger(CMBSetting, group, wxT("Volume"), -120, 100, false, m_Settings.Volume());
+	m_volume = cfg.ReadInteger(CMBSetting, group, wxT("Volume"), -120, 100, false, m_config.Volume());
 	if (m_volume > 20)
 		m_volume = 0;
 	m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
@@ -278,19 +278,19 @@ wxString GODefinitionFile::GetOrganHash()
 
 wxString GODefinitionFile::GenerateSettingFileName()
 {
-	return m_Settings.UserSettingPath()  + wxFileName::GetPathSeparator() + 
-		GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_Settings.Preset());
+	return m_config.UserSettingPath()  + wxFileName::GetPathSeparator() + 
+		GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_config.Preset());
 }
 
 wxString GODefinitionFile::GenerateCacheFileName()
 {
-	return m_Settings.UserCachePath()  + wxFileName::GetPathSeparator() + 
-		GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_Settings.Preset());
+	return m_config.UserCachePath()  + wxFileName::GetPathSeparator() + 
+		GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_config.Preset());
 }
 
 bool GODefinitionFile::LoadArchive(wxString ID, wxString& name, const wxString& parentID)
 {
-	GOArchiveManager manager(m_Settings, m_Settings.UserCachePath);
+	GOArchiveManager manager(m_config, m_config.UserCachePath);
 	GOArchive* archive = manager.LoadArchive(ID);
 	if (archive)
 	{
@@ -298,12 +298,12 @@ bool GODefinitionFile::LoadArchive(wxString ID, wxString& name, const wxString& 
 		return true;
 	}
 	name = wxEmptyString;
-	const GOArchiveFile* a = m_Settings.GetArchiveByID(ID);
+	const GOArchiveFile* a = m_config.GetArchiveByID(ID);
 	if (a)
 		name = a->GetName();
 	else if (parentID != wxEmptyString)
 	{
-		a = m_Settings.GetArchiveByID(parentID);
+		a = m_config.GetArchiveByID(parentID);
 		for(unsigned i = 0; i < a->GetDependencies().size(); i++)
 			if (a->GetDependencies()[i] == ID)
 				name = a->GetDependencyTitles()[i];
@@ -360,7 +360,7 @@ wxString GODefinitionFile::Load(GOProgressDialog* dlg, const GOOrgan& organ, con
 	m_ODFHash = odf_ini_file.GetHash();
 	wxString error = wxT("!");
 	m_b_customized = false;
-	GOConfigReaderDB ini(m_Settings.ODFCheck());
+	GOConfigReaderDB ini(m_config.ODFCheck());
 	ini.ReadData(odf_ini_file, ODFSetting, false);
 
 	wxString setting_file = file2;
@@ -442,7 +442,7 @@ wxString GODefinitionFile::Load(GOProgressDialog* dlg, const GOOrgan& organ, con
 
 	try
 	{
-		GOConfigReader cfg(ini, m_Settings.ODFCheck());
+		GOConfigReader cfg(ini, m_config.ODFCheck());
 		/* skip informational items */
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), false);
 		cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
@@ -533,7 +533,7 @@ wxString GODefinitionFile::Load(GOProgressDialog* dlg, const GOOrgan& organ, con
 				}
 			}
 
-			if (!cache_ok && !m_Settings.ManageCache())
+			if (!cache_ok && !m_config.ManageCache())
 			{
 				GOMessageBox(_("The cache for this organ is outdated. Please update or delete it."), _("Warning"), wxOK | wxICON_WARNING, NULL);
 			}
@@ -544,7 +544,7 @@ wxString GODefinitionFile::Load(GOProgressDialog* dlg, const GOOrgan& organ, con
 		if (!cache_ok)
 		{
 			ptr_vector<GOLoadThread> threads;
-			for(unsigned i = 0; i < m_Settings.LoadConcurrency(); i++)
+			for(unsigned i = 0; i < m_config.LoadConcurrency(); i++)
 				threads.push_back(new GOLoadThread(*this, m_pool, nb_loaded_obj));
 
 			for(unsigned i = 0; i < threads.size(); i++)
@@ -572,8 +572,8 @@ wxString GODefinitionFile::Load(GOProgressDialog* dlg, const GOOrgan& organ, con
 			if (nb_loaded_obj >= GetCacheObjectCount())
 				m_Cacheable = true;
 
-			if (m_Settings.ManageCache() && m_Cacheable)
-				UpdateCache(dlg, m_Settings.CompressCache());
+			if (m_config.ManageCache() && m_Cacheable)
+				UpdateCache(dlg, m_config.CompressCache());
 		}
 		SetTemperament(m_Temperament);
 	}
@@ -952,7 +952,7 @@ const wxString GODefinitionFile::GetOrganPathInfo()
 {
 	if (m_ArchiveID == wxEmptyString)
 		return GetODFFilename();
-	const GOArchiveFile *archive = m_Settings.GetArchiveByID(m_ArchiveID);
+	const GOArchiveFile *archive = m_config.GetArchiveByID(m_ArchiveID);
 	wxString name = GetODFFilename();
 	if (archive)
 		name += wxString::Format(_(" from '%s' (%s)"), archive->GetName().c_str(), m_ArchiveID.c_str());
@@ -983,7 +983,7 @@ GOMemoryPool& GODefinitionFile::GetMemoryPool()
 
 GOConfig& GODefinitionFile::GetSettings()
 {
-	return m_Settings;
+	return m_config;
 }
 
 GOGUIMouseStateTracker& GODefinitionFile::GetMouseStateTracker()
@@ -1070,7 +1070,7 @@ void GODefinitionFile::PreparePlayback(GOSoundEngine* engine, GOMidi* midi, GOSo
 {
 	m_soundengine = engine;
 	m_midi = midi;
-	m_MidiRecorder->SetOutputDevice(m_Settings.MidiRecorderOutputDevice());
+	m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
 	m_AudioRecorder->SetAudioRecorder(recorder);
 
 	m_MidiRecorder->Clear();
@@ -1171,7 +1171,7 @@ void GODefinitionFile::SetTemperament(const GOTemperament& temperament)
 
 void GODefinitionFile::SetTemperament(wxString name)
 {
-	const GOTemperament& temperament = m_Settings.GetTemperaments().GetTemperament(name);
+	const GOTemperament& temperament = m_config.GetTemperaments().GetTemperament(name);
 	m_Temperament = temperament.GetName();
 	SetTemperament(temperament);
 }
@@ -1195,7 +1195,7 @@ void GODefinitionFile::Modified()
 
 int GODefinitionFile::GetRecorderElementID(wxString name)
 {
-	return m_Settings.GetMidiMap().GetElementByString(name);
+	return m_config.GetMidiMap().GetElementByString(name);
 }
 
 GOCombinationDefinition& GODefinitionFile::GetGeneralTemplate()

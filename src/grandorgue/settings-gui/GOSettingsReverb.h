@@ -34,7 +34,7 @@ class GOSettingsReverb : public wxPanel
 		ID_GAIN_SPIN,
 	};
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	wxCheckBox* m_Enabled;
 	wxCheckBox* m_Direct;
 	wxFilePickerCtrl* m_File;

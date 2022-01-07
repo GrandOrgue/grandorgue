@@ -27,7 +27,7 @@ class GOSettingsDefaults : public wxPanel
 		ID_VOLUME,
 	};
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	wxDirPickerCtrl* m_OrganPath;
 	wxDirPickerCtrl* m_OrganPackagePath;
 	wxDirPickerCtrl* m_SettingPath;

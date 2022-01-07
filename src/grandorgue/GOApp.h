@@ -45,7 +45,7 @@ private:
 protected:
   GOFrame* m_Frame;
   wxLocale m_locale;
-  GOConfig* m_Settings;
+  GOConfig* m_config;
   GOSound* m_soundSystem;
   GOLog* m_Log;
   wxString m_FileName;

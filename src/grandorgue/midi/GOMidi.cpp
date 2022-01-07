@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(GOMidi, wxEvtHandler)
 END_EVENT_TABLE()
 
 GOMidi::GOMidi(GOConfig& settings) :
-	m_Settings(settings),
+	m_config(settings),
 	m_midi_in_devices(),
 	m_midi_out_devices(),
 	m_Listeners()
@@ -42,9 +42,9 @@ GOMidi::~GOMidi()
 
 void GOMidi::Open()
 {
-	const bool isToAutoAdd = m_Settings.IsToAutoAddMidi();
-	const GOPortsConfig& portsConfig(m_Settings.GetMidiPortsConfig());
-	GOMidiDeviceConfigList& midiIn = m_Settings.m_MidiIn;
+	const bool isToAutoAdd = m_config.IsToAutoAddMidi();
+	const GOPortsConfig& portsConfig(m_config.GetMidiPortsConfig());
+	GOMidiDeviceConfigList& midiIn = m_config.m_MidiIn;
 
 	UpdateDevices(portsConfig);
 
@@ -81,7 +81,7 @@ void GOMidi::Open()
 	  if (
 	    pPort->IsToUse()
 	    && portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
-	    && (devConf = m_Settings.m_MidiOut.FindByPhysicalName(pPort->GetName()))
+	    && (devConf = m_config.m_MidiOut.FindByPhysicalName(pPort->GetName()))
 	    && devConf->m_IsEnabled
 	  )
 	    pPort->Open();
@@ -147,5 +147,5 @@ void GOMidi::Unregister(GOMidiListener* listener)
 
 GOMidiMap& GOMidi::GetMidiMap()
 {
-	return m_Settings.GetMidiMap();
+	return m_config.GetMidiMap();
 }

@@ -21,16 +21,16 @@
 
 GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_config(settings)
 {
 	wxArrayString choices;
 
-	m_OldChannels = m_Settings.LoadChannels();
-	m_OldLosslessCompression = m_Settings.LosslessCompression();
-	m_OldBitsPerSample = m_Settings.BitsPerSample();
-	m_OldLoopLoad = m_Settings.LoopLoad();
-	m_OldAttackLoad = m_Settings.AttackLoad();
-	m_OldReleaseLoad = m_Settings.ReleaseLoad();
+	m_OldChannels = m_config.LoadChannels();
+	m_OldLosslessCompression = m_config.LosslessCompression();
+	m_OldBitsPerSample = m_config.BitsPerSample();
+	m_OldLoopLoad = m_config.LoopLoad();
+	m_OldAttackLoad = m_config.AttackLoad();
+	m_OldReleaseLoad = m_config.ReleaseLoad();
 
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
@@ -51,7 +51,7 @@ GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SPANISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SPANISH)));
 	m_Language->Append(wxLocale::GetLanguageName(wxLANGUAGE_SWEDISH), new wxStringClientData(wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SWEDISH)));
 	
-	m_OldLanguageCode = m_Settings.LanguageCode();
+	m_OldLanguageCode = m_config.LanguageCode();
 	
 	unsigned langIndex = 0;
 	for (unsigned i = 0; i < m_Language->GetCount(); i++)
@@ -76,10 +76,10 @@ GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	m_LoadLastFile->Append(_("Load last used organ at startup"), GOInitialLoadType::LOAD_LAST_USED);
 	m_LoadLastFile->Append(_("Load first favorit organ at startup"), GOInitialLoadType::LOAD_FIRST);
 	m_LoadLastFile->Append(_("Start without any organ"), GOInitialLoadType::LOAD_NONE);
-	m_Limit->SetValue(m_Settings.ManagePolyphony());
-	m_LoadLastFile->SetCurrentSelection(m_Settings.LoadLastFile());
-	m_Scale->SetValue(m_Settings.ScaleRelease());
-	m_Random->SetValue(m_Settings.RandomizeSpeaking());
+	m_Limit->SetValue(m_config.ManagePolyphony());
+	m_LoadLastFile->SetCurrentSelection(m_config.LoadLastFile());
+	m_Scale->SetValue(m_config.ScaleRelease());
+	m_Random->SetValue(m_config.RandomizeSpeaking());
 
 	wxFlexGridSizer* grid = new wxFlexGridSizer(2, 5, 5);
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound Engine"));
@@ -119,12 +119,12 @@ GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_RecordDownmix  = new wxCheckBox(this, ID_RECORD_DOWNMIX, _("Record stereo downmix")), 0, wxEXPAND | wxALL, 5);
 
-	m_Interpolation->Select(m_Settings.InterpolationType());
-	m_Concurrency->Select(m_Settings.Concurrency() - 1);
-	m_ReleaseConcurrency->Select(m_Settings.ReleaseConcurrency() - 1);
-	m_LoadConcurrency->Select(m_Settings.LoadConcurrency());
-	m_WaveFormat->Select(m_Settings.WaveFormatBytesPerSample() - 1);
-	m_RecordDownmix->SetValue(m_Settings.RecordDownmix());
+	m_Interpolation->Select(m_config.InterpolationType());
+	m_Concurrency->Select(m_config.Concurrency() - 1);
+	m_ReleaseConcurrency->Select(m_config.ReleaseConcurrency() - 1);
+	m_LoadConcurrency->Select(m_config.LoadConcurrency());
+	m_WaveFormat->Select(m_config.WaveFormatBytesPerSample() - 1);
+	m_RecordDownmix->SetValue(m_config.RecordDownmix());
 
 	item9 = new wxBoxSizer(wxVERTICAL);
 	item6 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("&Paths"));
@@ -136,8 +136,8 @@ GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	grid->Add(new wxStaticText(this, wxID_ANY, _("Cache store:")), 0, wxALL | wxALIGN_CENTER_VERTICAL);
 	grid->Add(m_CachePath = new wxDirPickerCtrl(this, ID_CACHE_DIR, wxEmptyString, _("Select directory for cache store"), wxDefaultPosition, wxDefaultSize, 
 						    wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST), 1, wxEXPAND | wxALL);
-	m_SettingsPath->SetPath(m_Settings.UserSettingPath());
-	m_CachePath->SetPath(m_Settings.UserCachePath());
+	m_SettingsPath->SetPath(m_config.UserSettingPath());
+	m_CachePath->SetPath(m_config.UserCachePath());
 
 	item6->Add(grid, 1, wxEXPAND | wxALL, 5);
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -146,7 +146,7 @@ GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
 	item6->Add(m_LosslessCompression = new wxCheckBox(this, ID_LOSSLESS_COMPRESSION, _("Lossless compression")), 0, wxEXPAND | wxALL, 5);
-	m_LosslessCompression->SetValue(m_Settings.LosslessCompression());
+	m_LosslessCompression->SetValue(m_config.LosslessCompression());
 
 	grid = new wxFlexGridSizer(2, 5, 5);
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
@@ -187,22 +187,22 @@ GOSettingsOption::GOSettingsOption(GOConfig& settings, wxWindow* parent) :
 	grid->Add(m_MemoryLimit = new wxSpinCtrl(this, ID_MEMORY_LIMIT, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 	m_MemoryLimit->SetRange(0, 1024 * 1024);
 
-	m_Channels->Select(m_Settings.LoadChannels());
-	m_BitsPerSample->Select((m_Settings.BitsPerSample() - 8) / 4);
-	m_LoopLoad->Select(m_Settings.LoopLoad());
-	m_AttackLoad->Select(m_Settings.AttackLoad());
-	m_ReleaseLoad->Select(m_Settings.ReleaseLoad());
-	m_MemoryLimit->SetValue(m_Settings.MemoryLimit());
+	m_Channels->Select(m_config.LoadChannels());
+	m_BitsPerSample->Select((m_config.BitsPerSample() - 8) / 4);
+	m_LoopLoad->Select(m_config.LoopLoad());
+	m_AttackLoad->Select(m_config.AttackLoad());
+	m_ReleaseLoad->Select(m_config.ReleaseLoad());
+	m_MemoryLimit->SetValue(m_config.MemoryLimit());
 
 	item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Cache"));
 	item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_CompressCache  = new wxCheckBox(this, ID_COMPRESS_CACHE, _("Compress cache")), 0, wxEXPAND | wxALL, 5);
 	item6->Add(m_ManageCache  = new wxCheckBox(this, ID_MANAGE_CACHE, _("Automatically manage cache")), 0, wxEXPAND | wxALL, 5);
-	m_CompressCache->SetValue(m_Settings.CompressCache());
-	m_ManageCache->SetValue(m_Settings.ManageCache());
+	m_CompressCache->SetValue(m_config.CompressCache());
+	m_ManageCache->SetValue(m_config.ManageCache());
 
 	item9->Add(m_ODFCheck  = new wxCheckBox(this, ID_ODF_CHECK, _("Perform strict ODF")), 0, wxEXPAND | wxALL, 5);
-	m_ODFCheck->SetValue(m_Settings.ODFCheck());
+	m_ODFCheck->SetValue(m_config.ODFCheck());
 
 	item0->Add(item9, 1, wxEXPAND | wxALL, 0);
 	
@@ -217,45 +217,45 @@ void GOSettingsOption::Save()
 	if (m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
 		wxMessageBox(_("Polyphase is not supported with lossless compression - falling back to linear.") , _("Warning"), wxOK | wxICON_WARNING, this);
 
-	m_Settings.LosslessCompression(m_LosslessCompression->IsChecked());
-	m_Settings.ManagePolyphony(m_Limit->IsChecked());
-	m_Settings.CompressCache(m_CompressCache->IsChecked());
-	m_Settings.ManageCache(m_ManageCache->IsChecked());
-	m_Settings.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
-	m_Settings.ODFCheck(m_ODFCheck->IsChecked());
-	m_Settings.RecordDownmix(m_RecordDownmix->IsChecked());
-	m_Settings.ScaleRelease(m_Scale->IsChecked());
-	m_Settings.RandomizeSpeaking(m_Random->IsChecked());
-	m_Settings.Concurrency(m_Concurrency->GetSelection() + 1);
-	m_Settings.ReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
-	m_Settings.LoadConcurrency(m_LoadConcurrency->GetSelection());
-	m_Settings.WaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
-	m_Settings.UserSettingPath(m_SettingsPath->GetPath());
-	m_Settings.UserCachePath(m_CachePath->GetPath());
-	m_Settings.BitsPerSample(m_BitsPerSample->GetSelection() * 4 + 8);
-	m_Settings.LoopLoad(m_LoopLoad->GetSelection());
-	m_Settings.AttackLoad(m_AttackLoad->GetSelection());
-	m_Settings.ReleaseLoad(m_ReleaseLoad->GetSelection());
-	m_Settings.LoadChannels(m_Channels->GetSelection());
-	m_Settings.InterpolationType(m_Interpolation->GetSelection());
-	m_Settings.MemoryLimit(m_MemoryLimit->GetValue());
+	m_config.LosslessCompression(m_LosslessCompression->IsChecked());
+	m_config.ManagePolyphony(m_Limit->IsChecked());
+	m_config.CompressCache(m_CompressCache->IsChecked());
+	m_config.ManageCache(m_ManageCache->IsChecked());
+	m_config.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
+	m_config.ODFCheck(m_ODFCheck->IsChecked());
+	m_config.RecordDownmix(m_RecordDownmix->IsChecked());
+	m_config.ScaleRelease(m_Scale->IsChecked());
+	m_config.RandomizeSpeaking(m_Random->IsChecked());
+	m_config.Concurrency(m_Concurrency->GetSelection() + 1);
+	m_config.ReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
+	m_config.LoadConcurrency(m_LoadConcurrency->GetSelection());
+	m_config.WaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
+	m_config.UserSettingPath(m_SettingsPath->GetPath());
+	m_config.UserCachePath(m_CachePath->GetPath());
+	m_config.BitsPerSample(m_BitsPerSample->GetSelection() * 4 + 8);
+	m_config.LoopLoad(m_LoopLoad->GetSelection());
+	m_config.AttackLoad(m_AttackLoad->GetSelection());
+	m_config.ReleaseLoad(m_ReleaseLoad->GetSelection());
+	m_config.LoadChannels(m_Channels->GetSelection());
+	m_config.InterpolationType(m_Interpolation->GetSelection());
+	m_config.MemoryLimit(m_MemoryLimit->GetValue());
 	
 	// Language
 	const wxStringClientData * const langData = (wxStringClientData *) m_Language->GetClientObject(m_Language->GetSelection());
-	m_Settings.LanguageCode(langData->GetData());
+	m_config.LanguageCode(langData->GetData());
 }
 
 bool GOSettingsOption::NeedReload()
 {
-	return m_OldLosslessCompression != m_Settings.LosslessCompression() ||
-		m_OldBitsPerSample != m_Settings.BitsPerSample() ||
-		m_OldLoopLoad != m_Settings.LoopLoad() || 
-		m_OldAttackLoad != m_Settings.AttackLoad() ||
-		m_OldReleaseLoad != m_Settings.ReleaseLoad() ||
-		m_OldChannels != m_Settings.LoadChannels();
+	return m_OldLosslessCompression != m_config.LosslessCompression() ||
+		m_OldBitsPerSample != m_config.BitsPerSample() ||
+		m_OldLoopLoad != m_config.LoopLoad() || 
+		m_OldAttackLoad != m_config.AttackLoad() ||
+		m_OldReleaseLoad != m_config.ReleaseLoad() ||
+		m_OldChannels != m_config.LoadChannels();
 }
 
 bool GOSettingsOption::NeedRestart()
 {
-  return m_OldLanguageCode != m_Settings.LanguageCode();
+  return m_OldLanguageCode != m_config.LanguageCode();
 }

@@ -97,7 +97,7 @@ private:
 	GOMemoryPool m_pool;
 	GOBitmapCache m_bitmaps;
 	GOPipeConfigTreeNode m_PipeConfig;
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	GOCombinationDefinition m_GeneralTemplate;
 	GOLabel m_PitchLabel;
 	GOLabel m_TemperamentLabel;

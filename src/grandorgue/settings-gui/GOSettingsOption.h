@@ -45,7 +45,7 @@ class GOSettingsOption : public wxPanel
 		ID_LANGUAGE
 	};
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	wxChoice* m_Concurrency;
 	wxChoice* m_ReleaseConcurrency;
 	wxChoice* m_LoadConcurrency;

@@ -91,7 +91,7 @@ private:
 	GOSoundEngine m_SoundEngine;
 	ptr_vector <GOSoundThread> m_Threads;
 
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 
 	GOMidi m_midi;
 	

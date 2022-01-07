@@ -30,7 +30,7 @@ class GOSettingsAudioGroup : public wxPanel, public GOAudioGroupCallback
 	};
 
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	wxListBox* m_AudioGroups;
 	wxButton* m_Add;
 	wxButton* m_Del;

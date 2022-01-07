@@ -63,7 +63,7 @@ private:
   wxSpinCtrl* m_SetterPosition;
   wxSpinCtrl* m_Volume;
   GOSound& m_Sound;
-  GOConfig& m_Settings;
+  GOConfig& m_config;
   GOMidiListener m_listener;
   wxString m_Title;
   wxString m_Label;

@@ -25,7 +25,7 @@ class wxToggleButton;
 class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback
 {
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	GOMidiReceiverBase* m_original;
 	GOMidiReceiverData m_midi;
 	GOMidiListener m_listener;

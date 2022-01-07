@@ -23,7 +23,7 @@ class GOSettingsMidiMessage : public wxPanel
 	};
 
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	GOMidi& m_midi;
 	wxListView* m_Events;
 	wxButton* m_Properties;

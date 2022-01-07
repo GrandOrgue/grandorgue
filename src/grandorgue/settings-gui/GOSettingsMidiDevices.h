@@ -34,7 +34,7 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 		ID_RECORDERDEVICE,
 	};
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	GOMidi& m_Midi;
 
 	GOSettingsMidiDeviceList m_InDevices;

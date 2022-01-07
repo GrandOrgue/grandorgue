@@ -22,7 +22,7 @@ class GOSettingsArchives : public wxPanel
 		ID_DEL,
 	};
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	GOSettingsOrgan& m_Organs;
 	wxListView* m_Archives;
 	wxButton* m_Del;

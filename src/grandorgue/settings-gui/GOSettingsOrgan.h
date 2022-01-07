@@ -28,7 +28,7 @@ class GOSettingsOrgan : public wxPanel
 		ID_PROPERTIES,
 	};
 private:
-	GOConfig& m_Settings;
+	GOConfig& m_config;
 	GOMidi& m_midi;
 	wxListView* m_Organs;
 	wxButton* m_Up;

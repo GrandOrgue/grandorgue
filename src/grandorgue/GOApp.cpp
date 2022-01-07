@@ -32,7 +32,7 @@ GOApp::GOApp() :
   m_Restart(false),
   m_Frame(NULL),
   m_locale(),
-  m_Settings(NULL),
+  m_config(NULL),
   m_soundSystem(NULL),
   m_Log(NULL),
   m_FileName(),
@@ -106,14 +106,14 @@ bool GOApp::OnInit()
 	if (!wxApp::OnInit())
 		return false;
 
-	m_Settings = new GOConfig(m_InstanceName);
-	m_Settings->Load();
+	m_config = new GOConfig(m_InstanceName);
+	m_config->Load();
 
 	GOStdPath::InitLocaleDir();
-	m_locale.Init(m_Settings->GetLanguageId());
+	m_locale.Init(m_config->GetLanguageId());
 	m_locale.AddCatalog(wxT("GrandOrgue"));
 
-	m_soundSystem = new GOSound(*m_Settings);
+	m_soundSystem = new GOSound(*m_config);
 
 	m_Frame = new GOFrame(*this, NULL, wxID_ANY, wxString::Format(_("GrandOrgue %s"), wxT(APP_VERSION)), wxDefaultPosition, wxDefaultSize, 
 				  wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE, *m_soundSystem);
@@ -139,7 +139,7 @@ int GOApp::OnRun()
 int GOApp::OnExit()
 {
   delete m_soundSystem;
-  delete m_Settings;
+  delete m_config;
   wxLog::SetActiveTarget(NULL);
   delete m_Log;
 
