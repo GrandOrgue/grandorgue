@@ -4,20 +4,20 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSTEMPERAMENTS_H
-#define SETTINGSTEMPERAMENTS_H
+#ifndef GOSETTINGSTEMPERAMENTS_H
+#define GOSETTINGSTEMPERAMENTS_H
 
 #include <vector>
 #include <wx/panel.h>
 
-class GOSettings;
+class GOConfig;
 class GOTemperamentList;
 class GOTemperamentUser;
 class wxButton;
 class wxGrid;
 class wxGridEvent;
 
-class SettingsTemperaments : public wxPanel
+class GOSettingsTemperaments : public wxPanel
 {
 	enum {
 		ID_LIST,
@@ -38,7 +38,7 @@ private:
 	void Update();
 
 public:
-	SettingsTemperaments(GOSettings& settings, wxWindow* parent);
+	GOSettingsTemperaments(GOConfig& settings, wxWindow* parent);
 
 	void Save();
 	

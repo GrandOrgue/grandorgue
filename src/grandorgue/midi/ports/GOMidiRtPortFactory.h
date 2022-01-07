@@ -5,7 +5,7 @@
 #include <wx/regex.h>
 
 #include "ptrvector.h"
-#include "settings/GOPortsConfig.h"
+#include "config/GOPortsConfig.h"
 
 #include "GOMidiPort.h"
 #include "RtMidi.h"

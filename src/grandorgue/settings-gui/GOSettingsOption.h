@@ -4,20 +4,20 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSOPTION_H
-#define SETTINGSOPTION_H
+#ifndef GOSETTINGSOPTION_H
+#define GOSETTINGSOPTION_H
 
 #include <wx/panel.h>
 
 enum class GOInitialLoadType;
 template<class T> class GOChoice;
-class GOSettings;
+class GOConfig;
 class wxCheckBox;
 class wxChoice;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
-class SettingsOption : public wxPanel
+class GOSettingsOption : public wxPanel
 {
 	enum {
 		ID_WAVE_FORMAT = 200,
@@ -45,7 +45,7 @@ class SettingsOption : public wxPanel
 		ID_LANGUAGE
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_config;
 	wxChoice* m_Concurrency;
 	wxChoice* m_ReleaseConcurrency;
 	wxChoice* m_LoadConcurrency;
@@ -79,7 +79,7 @@ private:
 	unsigned m_OldReleaseLoad;
 
 public:
-	SettingsOption(GOSettings& settings, wxWindow* parent);
+	GOSettingsOption(GOConfig& settings, wxWindow* parent);
 
 	bool NeedReload();
 	bool NeedRestart();

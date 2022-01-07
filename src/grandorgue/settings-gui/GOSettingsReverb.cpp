@@ -4,10 +4,10 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsReverb.h"
+#include "GOSettingsReverb.h"
 
 #include "GOStandardFile.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOWave.h"
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -19,16 +19,16 @@
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 
-BEGIN_EVENT_TABLE(SettingsReverb, wxPanel)
-	EVT_CHECKBOX(ID_ENABLED, SettingsReverb::OnEnabled)
-	EVT_FILEPICKER_CHANGED(ID_FILE, SettingsReverb::OnFileChanged)
-	EVT_TEXT(ID_GAIN, SettingsReverb::OnGainChanged)
-	EVT_SPIN(ID_GAIN_SPIN, SettingsReverb::OnGainSpinChanged)
+BEGIN_EVENT_TABLE(GOSettingsReverb, wxPanel)
+	EVT_CHECKBOX(ID_ENABLED, GOSettingsReverb::OnEnabled)
+	EVT_FILEPICKER_CHANGED(ID_FILE, GOSettingsReverb::OnFileChanged)
+	EVT_TEXT(ID_GAIN, GOSettingsReverb::OnGainChanged)
+	EVT_SPIN(ID_GAIN_SPIN, GOSettingsReverb::OnGainSpinChanged)
 END_EVENT_TABLE()
 
-SettingsReverb::SettingsReverb(GOSettings& settings, wxWindow* parent) :
+GOSettingsReverb::GOSettingsReverb(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_config(settings)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -77,28 +77,28 @@ SettingsReverb::SettingsReverb(GOSettings& settings, wxWindow* parent) :
 	m_GainSpin->SetRange(1, 1000);
 	m_Delay->SetRange(0, 10000);
 
-	m_Enabled->SetValue(m_Settings.ReverbEnabled());
+	m_Enabled->SetValue(m_config.ReverbEnabled());
 	UpdateEnabled();
 
-	m_StartOffset->SetRange(0, m_Settings.ReverbStartOffset());
-	m_Length->SetRange(0, m_Settings.ReverbLen());
+	m_StartOffset->SetRange(0, m_config.ReverbStartOffset());
+	m_Length->SetRange(0, m_config.ReverbLen());
 
-	m_File->SetPath(m_Settings.ReverbFile());
+	m_File->SetPath(m_config.ReverbFile());
 	m_FileName->SetLabel(m_File->GetPath());
 	UpdateLimits();
 
-	m_Gain->ChangeValue(wxString::Format(wxT("%f"), m_Settings.ReverbGain()));
-	m_GainSpin->SetValue(m_Settings.ReverbGain() * 20);
-	m_StartOffset->SetValue(m_Settings.ReverbStartOffset());
-	m_Length->SetValue(m_Settings.ReverbLen());
-	m_Channel->SetSelection(m_Settings.ReverbChannel() - 1);
-	m_Direct->SetValue(m_Settings.ReverbDirect());
-	m_Delay->SetValue(m_Settings.ReverbDelay());
+	m_Gain->ChangeValue(wxString::Format(wxT("%f"), m_config.ReverbGain()));
+	m_GainSpin->SetValue(m_config.ReverbGain() * 20);
+	m_StartOffset->SetValue(m_config.ReverbStartOffset());
+	m_Length->SetValue(m_config.ReverbLen());
+	m_Channel->SetSelection(m_config.ReverbChannel() - 1);
+	m_Direct->SetValue(m_config.ReverbDirect());
+	m_Delay->SetValue(m_config.ReverbDelay());
 
 	topSizer->Fit(this);
 }
 
-void SettingsReverb::UpdateLimits()
+void GOSettingsReverb::UpdateLimits()
 {
 	if (m_File->GetPath() == wxEmptyString || !m_Enabled->GetValue())
 	{
@@ -130,7 +130,7 @@ void SettingsReverb::UpdateLimits()
 	}
 }
 
-void SettingsReverb::UpdateFile()
+void GOSettingsReverb::UpdateFile()
 {
 	UpdateLimits();
 	m_Channel->SetSelection(0);
@@ -138,7 +138,7 @@ void SettingsReverb::UpdateFile()
 	m_Length->SetValue(m_Length->GetMax());
 }
 
-void SettingsReverb::UpdateEnabled()
+void GOSettingsReverb::UpdateEnabled()
 {
 	if (m_Enabled->GetValue())
 	{
@@ -166,31 +166,31 @@ void SettingsReverb::UpdateEnabled()
 }
 
 
-void SettingsReverb::OnEnabled(wxCommandEvent& event)
+void GOSettingsReverb::OnEnabled(wxCommandEvent& event)
 {
 	if (m_Enabled->GetValue())
 		wxMessageBox(_("This feature is currently not supported.") , _("Warning"), wxOK | wxICON_WARNING, this);
 	UpdateEnabled();
 }
 
-void SettingsReverb::OnFileChanged(wxFileDirPickerEvent& e)
+void GOSettingsReverb::OnFileChanged(wxFileDirPickerEvent& e)
 {
 	UpdateFile();
 }
 
-void SettingsReverb::OnGainSpinChanged(wxSpinEvent& e)
+void GOSettingsReverb::OnGainSpinChanged(wxSpinEvent& e)
 {
 	m_Gain->ChangeValue(wxString::Format(wxT("%f"), (float)(m_GainSpin->GetValue() / 20.0)));
 }
 
-void SettingsReverb::OnGainChanged(wxCommandEvent &e)
+void GOSettingsReverb::OnGainChanged(wxCommandEvent &e)
 {
 	double gain;
 	if (m_Gain->GetValue().ToDouble(&gain))
 		m_GainSpin->SetValue(gain * 20);
 }
 
-bool SettingsReverb::Validate()
+bool GOSettingsReverb::Validate()
 {
 	if (m_Enabled->GetValue())
 	{
@@ -203,16 +203,16 @@ bool SettingsReverb::Validate()
 	return wxPanel::Validate();
 }
 
-void SettingsReverb::Save()
+void GOSettingsReverb::Save()
 {
-	m_Settings.ReverbEnabled(m_Enabled->IsChecked());
-	m_Settings.ReverbDirect(m_Direct->IsChecked());
-	m_Settings.ReverbFile(m_File->GetPath());
-	m_Settings.ReverbLen(m_Length->GetValue());
-	m_Settings.ReverbDelay(m_Delay->GetValue());
-	m_Settings.ReverbStartOffset(m_StartOffset->GetValue());
-	m_Settings.ReverbChannel(m_Channel->GetSelection() + 1);
+	m_config.ReverbEnabled(m_Enabled->IsChecked());
+	m_config.ReverbDirect(m_Direct->IsChecked());
+	m_config.ReverbFile(m_File->GetPath());
+	m_config.ReverbLen(m_Length->GetValue());
+	m_config.ReverbDelay(m_Delay->GetValue());
+	m_config.ReverbStartOffset(m_StartOffset->GetValue());
+	m_config.ReverbChannel(m_Channel->GetSelection() + 1);
 	double gain;
 	if (m_Gain->GetValue().ToDouble(&gain))
-		m_Settings.ReverbGain(gain);
+		m_config.ReverbGain(gain);
 }

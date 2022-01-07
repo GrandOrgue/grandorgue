@@ -12,31 +12,31 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
-#include "SettingsDialog.h"
+#include "GOSettingsDialog.h"
 
 #include "GOEvent.h"
 #include "sound/GOSound.h"
 #include "go_ids.h"
-#include "SettingsArchives.h"
-#include "SettingsAudioGroup.h"
-#include "SettingsAudioOutput.h"
-#include "SettingsDefaults.h"
-#include "SettingsMidiDevices.h"
-#include "SettingsMidiMessage.h"
-#include "SettingsOption.h"
-#include "SettingsOrgan.h"
-#include "SettingsReverb.h"
-#include "SettingsTemperaments.h"
+#include "GOSettingsArchives.h"
+#include "GOSettingsAudioGroup.h"
+#include "GOSettingsAudioOutput.h"
+#include "GOSettingsDefaults.h"
+#include "GOSettingsMidiDevices.h"
+#include "GOSettingsMidiMessage.h"
+#include "GOSettingsOption.h"
+#include "GOSettingsOrgan.h"
+#include "GOSettingsReverb.h"
+#include "GOSettingsTemperaments.h"
 
-BEGIN_EVENT_TABLE(SettingsDialog, wxPropertySheetDialog)
-  EVT_SHOW(SettingsDialog::OnShow)
-  EVT_BUTTON(wxID_APPLY, SettingsDialog::OnApply)
-  EVT_BUTTON(wxID_OK, SettingsDialog::OnOK)
-  EVT_BUTTON(wxID_HELP, SettingsDialog::OnHelp)
-  EVT_BUTTON(ID_REASONS, SettingsDialog::OnReasons)
+BEGIN_EVENT_TABLE(GOSettingsDialog, wxPropertySheetDialog)
+  EVT_SHOW(GOSettingsDialog::OnShow)
+  EVT_BUTTON(wxID_APPLY, GOSettingsDialog::OnApply)
+  EVT_BUTTON(wxID_OK, GOSettingsDialog::OnOK)
+  EVT_BUTTON(wxID_HELP, GOSettingsDialog::OnHelp)
+  EVT_BUTTON(ID_REASONS, GOSettingsDialog::OnReasons)
 END_EVENT_TABLE()
 
-SettingsDialog::SettingsDialog(
+GOSettingsDialog::GOSettingsDialog(
   wxWindow* win, GOSound& sound, SettingsReasons *reasons
 ): wxPropertySheetDialog(
   win, wxID_ANY, _("Program Settings"), wxDefaultPosition, wxDefaultSize,
@@ -46,15 +46,15 @@ SettingsDialog::SettingsDialog(
   wxBookCtrlBase* notebook = GetBookCtrl();
 
   m_MidiDevicePage = new SettingsMidiDevices(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_OptionsPage = new SettingsOption(m_Sound.GetSettings(), notebook);
-  m_OrganPage = new SettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_ArchivePage = new SettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
-  m_MidiMessagePage = new SettingsMidiMessage(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_GroupPage = new SettingsAudioGroup(m_Sound.GetSettings(), notebook);
-  m_OutputPage = new SettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
-  m_ReverbPage = new SettingsReverb(m_Sound.GetSettings(), notebook);
-  m_TemperamentsPage = new SettingsTemperaments(m_Sound.GetSettings(), notebook);
-  m_DefaultsPage = new SettingsDefaults(m_Sound.GetSettings(), notebook);
+  m_OptionsPage = new GOSettingsOption(m_Sound.GetSettings(), notebook);
+  m_OrganPage = new GOSettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+  m_ArchivePage = new GOSettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
+  m_MidiMessagePage = new GOSettingsMidiMessage(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+  m_GroupPage = new GOSettingsAudioGroup(m_Sound.GetSettings(), notebook);
+  m_OutputPage = new GOSettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
+  m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
+  m_TemperamentsPage = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
+  m_DefaultsPage = new GOSettingsDefaults(m_Sound.GetSettings(), notebook);
 
   notebook->AddPage(m_OptionsPage,  _("Options"));
   notebook->AddPage(m_DefaultsPage,  _("Defaults and Initial Settings"));
@@ -89,7 +89,7 @@ SettingsDialog::SettingsDialog(
   LayoutDialog();
 }
 
-void SettingsDialog::OnShow(wxShowEvent &)
+void GOSettingsDialog::OnShow(wxShowEvent &)
 {
   if (! m_ReasonsAlreadyShown && m_Reasons && m_Reasons->size())
   {
@@ -100,25 +100,25 @@ void SettingsDialog::OnShow(wxShowEvent &)
   m_ReasonsAlreadyShown = true;
 }
 
-void SettingsDialog::OnApply(wxCommandEvent& event)
+void GOSettingsDialog::OnApply(wxCommandEvent& event)
 {
 	DoApply();
 }
 
-void SettingsDialog::OnHelp(wxCommandEvent& event)
+void GOSettingsDialog::OnHelp(wxCommandEvent& event)
 {
 	wxCommandEvent help(wxEVT_SHOWHELP, 0);
 	help.SetString(GetBookCtrl()->GetPageText(GetBookCtrl()->GetSelection()));
 	wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
 }
 
-void SettingsDialog::OnOK(wxCommandEvent& event)
+void GOSettingsDialog::OnOK(wxCommandEvent& event)
 {
 	if (DoApply())
 		event.Skip();
 }
 
-bool SettingsDialog::DoApply()
+bool GOSettingsDialog::DoApply()
 {
 	if (!(this->Validate()))
 		return false;
@@ -136,7 +136,7 @@ bool SettingsDialog::DoApply()
 	return true;
 }
 
-void SettingsDialog::OnReasons(wxCommandEvent& event)
+void GOSettingsDialog::OnReasons(wxCommandEvent& event)
 {
   unsigned nReasons = m_Reasons ? (unsigned) m_Reasons->size() : 0;
   
@@ -149,7 +149,7 @@ void SettingsDialog::OnReasons(wxCommandEvent& event)
     
     for (unsigned i = 0; i < nReasons; i++)
     {
-      const SettingsReason &reason(m_Reasons->operator[](i));
+      const GOSettingsReason &reason(m_Reasons->operator[](i));
       
       reasonStrs.Add(reason.m_ReasonMessage);
       if ((int) reason.m_SettingsPageNum == currPageNum)
@@ -163,12 +163,12 @@ void SettingsDialog::OnReasons(wxCommandEvent& event)
   }
 }
 
-bool SettingsDialog::NeedReload()
+bool GOSettingsDialog::NeedReload()
 {
   return m_OptionsPage->NeedReload();
 }
 
-bool SettingsDialog::NeedRestart()
+bool GOSettingsDialog::NeedRestart()
 {
   return m_OptionsPage->NeedRestart();
 }

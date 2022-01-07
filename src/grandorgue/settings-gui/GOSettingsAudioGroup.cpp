@@ -4,25 +4,25 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsAudioGroup.h"
+#include "GOSettingsAudioGroup.h"
 
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include <wx/button.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 #include <wx/textdlg.h>
 
-BEGIN_EVENT_TABLE(SettingsAudioGroup, wxPanel)
-	EVT_LISTBOX(ID_AUDIOGROUP_LIST, SettingsAudioGroup::OnGroup)
-	EVT_LISTBOX_DCLICK(ID_AUDIOGROUP_LIST, SettingsAudioGroup::OnGroupChange)
-	EVT_BUTTON(ID_AUDIOGROUP_ADD, SettingsAudioGroup::OnGroupAdd)
-	EVT_BUTTON(ID_AUDIOGROUP_DEL, SettingsAudioGroup::OnGroupDel)
-	EVT_BUTTON(ID_AUDIOGROUP_CHANGE, SettingsAudioGroup::OnGroupChange)
+BEGIN_EVENT_TABLE(GOSettingsAudioGroup, wxPanel)
+	EVT_LISTBOX(ID_AUDIOGROUP_LIST, GOSettingsAudioGroup::OnGroup)
+	EVT_LISTBOX_DCLICK(ID_AUDIOGROUP_LIST, GOSettingsAudioGroup::OnGroupChange)
+	EVT_BUTTON(ID_AUDIOGROUP_ADD, GOSettingsAudioGroup::OnGroupAdd)
+	EVT_BUTTON(ID_AUDIOGROUP_DEL, GOSettingsAudioGroup::OnGroupDel)
+	EVT_BUTTON(ID_AUDIOGROUP_CHANGE, GOSettingsAudioGroup::OnGroupChange)
 END_EVENT_TABLE()
 
-SettingsAudioGroup::SettingsAudioGroup(GOSettings& settings, wxWindow* parent) :
+GOSettingsAudioGroup::GOSettingsAudioGroup(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_config(settings)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->AddSpacer(5);
@@ -43,7 +43,7 @@ SettingsAudioGroup::SettingsAudioGroup(GOSettings& settings, wxWindow* parent) :
 	buttonSizer->Add(m_Change, 0, wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
-	std::vector<wxString> audio_groups = m_Settings.GetAudioGroups();
+	std::vector<wxString> audio_groups = m_config.GetAudioGroups();
 	for(unsigned i = 0; i < audio_groups.size(); i++)
 		m_AudioGroups->Append(audio_groups[i]);
 
@@ -52,7 +52,7 @@ SettingsAudioGroup::SettingsAudioGroup(GOSettings& settings, wxWindow* parent) :
 	topSizer->Fit(this);
 }
 
-void SettingsAudioGroup::OnGroup(wxCommandEvent& event)
+void GOSettingsAudioGroup::OnGroup(wxCommandEvent& event)
 {
 	if (m_AudioGroups->GetSelection() != wxNOT_FOUND)
 		m_Change->Enable();
@@ -65,7 +65,7 @@ void SettingsAudioGroup::OnGroup(wxCommandEvent& event)
 		m_Del->Disable();
 }
 
-void SettingsAudioGroup::OnGroupAdd(wxCommandEvent& event)
+void GOSettingsAudioGroup::OnGroupAdd(wxCommandEvent& event)
 {
 	wxString str = wxGetTextFromUser(_("New audio group name"), _("Audio groups")).Trim();
 	if (str != wxEmptyString)
@@ -73,14 +73,14 @@ void SettingsAudioGroup::OnGroupAdd(wxCommandEvent& event)
 			m_AudioGroups->Append(str);
 }
 
-void SettingsAudioGroup::OnGroupDel(wxCommandEvent& event)
+void GOSettingsAudioGroup::OnGroupDel(wxCommandEvent& event)
 {
 	if (m_AudioGroups->GetCount() > 1)
 		m_AudioGroups->Delete(m_AudioGroups->GetSelection());
 	m_AudioGroups->SetSelection(0);
 }
 
-void SettingsAudioGroup::OnGroupChange(wxCommandEvent& event)
+void GOSettingsAudioGroup::OnGroupChange(wxCommandEvent& event)
 {
 	int index = m_AudioGroups->GetSelection();
 	wxString str = wxGetTextFromUser(_("Audio group name"), _("Audio groups"), m_AudioGroups->GetString(index)).Trim();
@@ -94,7 +94,7 @@ void SettingsAudioGroup::OnGroupChange(wxCommandEvent& event)
 	}
 }
 
-std::vector<wxString> SettingsAudioGroup::GetGroups()
+std::vector<wxString> GOSettingsAudioGroup::GetGroups()
 {
 	std::vector<wxString> result;
 	for(unsigned i = 0; i < m_AudioGroups->GetCount(); i++)
@@ -102,10 +102,10 @@ std::vector<wxString> SettingsAudioGroup::GetGroups()
 	return result;
 }
 
-void SettingsAudioGroup::Save()
+void GOSettingsAudioGroup::Save()
 {
 	std::vector<wxString> audio_groups;
 	for(unsigned i = 0; i < m_AudioGroups->GetCount(); i++)
 		audio_groups.push_back(m_AudioGroups->GetString(i));
-	m_Settings.SetAudioGroups(audio_groups);
+	m_config.SetAudioGroups(audio_groups);
 }

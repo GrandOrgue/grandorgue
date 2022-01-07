@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSAUDIOOUTPUT_H
-#define SETTINGSAUDIOOUTPUT_H
+#ifndef GOSETTINGSAUDIOOUTPUT_H
+#define GOSETTINGSAUDIOOUTPUT_H
 
 #include <vector>
 #include <wx/button.h>
@@ -15,16 +15,16 @@
 #include <wx/string.h>
 #include <wx/treectrl.h>
 
+#include "config/GOConfig.h"
 #include "sound/GOSoundDevInfo.h"
 #include "sound/ports/GOSoundPort.h"
-#include "GOSettings.h"
 #include "GOSettingsPorts.h"
-#include "SettingsAudioGroup.h"
+#include "GOSettingsAudioGroup.h"
 
 class AudioItemData;
 class GOSound;
 
-class SettingsAudioOutput : public wxPanel, GOSettingsPorts
+class GOSettingsAudioOutput : public wxPanel, GOSettingsPorts
 {
 	enum {
 		ID_OUTPUT_LIST = 200,
@@ -40,7 +40,7 @@ class SettingsAudioOutput : public wxPanel, GOSettingsPorts
 
 private:
 	GOSound& m_Sound;
-	GOSettings& m_Settings;
+	GOConfig& m_config;
 	GOAudioGroupCallback& m_GroupCallback;
 	
 	wxChoice* m_SampleRate;
@@ -81,7 +81,7 @@ private:
 	void OnOutputDefault(wxCommandEvent& event);
 
 public:
-	SettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& callback, wxWindow* parent);
+	GOSettingsAudioOutput(GOSound& sound, GOAudioGroupCallback& callback, wxWindow* parent);
 
 	void Save();
 

@@ -12,7 +12,7 @@
 #include "go_limits.h"
 #include "GOPath.h"
 #include "GORank.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "temperaments/GOTemperament.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"

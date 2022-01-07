@@ -4,8 +4,8 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef GOSETTINGS_H
-#define GOSETTINGS_H
+#ifndef GOCONFIG_H
+#define GOCONFIG_H
 
 #include <map>
 #include <vector>
@@ -58,7 +58,7 @@ enum class GOInitialLoadType {
 	LOAD_FIRST
 };
 
-class GOSettings : public GOSettingStore, public GOOrganList {
+class GOConfig : public GOSettingStore, public GOOrganList {
 private:
 	wxString m_InstanceName;
 	wxString m_ConfigFileName;
@@ -82,8 +82,8 @@ private:
 	wxString GetEventSection(unsigned index);
 
 public:
-	GOSettings(wxString instance);
-	~GOSettings();
+	GOConfig(wxString instance);
+	~GOConfig();
 
 	GOSettingDirectory UserSettingPath;
 	GOSettingDirectory UserCachePath;

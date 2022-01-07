@@ -12,7 +12,7 @@
 #include "midi/GOMidiFile.h"
 #include "GOPath.h"
 #include "GOSetterButton.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GODefinitionFile.h"
 #include <wx/filename.h>
 #include <wx/intl.h>

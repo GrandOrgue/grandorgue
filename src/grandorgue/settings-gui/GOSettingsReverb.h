@@ -4,12 +4,12 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSREVERB_H
-#define SETTINGSREVERB_H
+#ifndef GOSETTINGSREVERB_H
+#define GOSETTINGSREVERB_H
 
 #include <wx/panel.h>
 
-class GOSettings;
+class GOConfig;
 class wxCheckBox;
 class wxChoice;
 class wxFileDirPickerEvent;
@@ -20,7 +20,7 @@ class wxSpinEvent;
 class wxStaticText;
 class wxTextCtrl;
 
-class SettingsReverb : public wxPanel
+class GOSettingsReverb : public wxPanel
 {
 	enum {
 		ID_ENABLED = 200,
@@ -34,7 +34,7 @@ class SettingsReverb : public wxPanel
 		ID_GAIN_SPIN,
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_config;
 	wxCheckBox* m_Enabled;
 	wxCheckBox* m_Direct;
 	wxFilePickerCtrl* m_File;
@@ -58,7 +58,7 @@ private:
 	bool Validate();
 
 public:
-	SettingsReverb(GOSettings& settings, wxWindow* parent);
+	GOSettingsReverb(GOConfig& settings, wxWindow* parent);
 
 	void Save();
 

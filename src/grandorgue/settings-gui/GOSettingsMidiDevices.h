@@ -4,14 +4,14 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSMIDIDEVICES_H
-#define SETTINGSMIDIDEVICES_H
+#ifndef GOSETTINGSMIDIDEVICES_H
+#define GOSETTINGSMIDIDEVICES_H
 
 #include <wx/checkbox.h>
 #include <wx/panel.h>
 
-#include "GOPortsConfig.h"
-#include "GOSettings.h"
+#include "config/GOConfig.h"
+#include "config/GOPortsConfig.h"
 #include "GOSettingsMidiDeviceList.h"
 #include "GOSettingsPorts.h"
 
@@ -20,7 +20,7 @@ class wxCheckListBox;
 class wxChoice;
 class GOMidi;
 class GOMidiPort;
-class GOSettings;
+class GOConfig;
 
 class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 {
@@ -34,7 +34,7 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts
 		ID_RECORDERDEVICE,
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_config;
 	GOMidi& m_Midi;
 
 	GOSettingsMidiDeviceList m_InDevices;
@@ -56,7 +56,7 @@ private:
 	void OnOutDevicesClick(wxCommandEvent& event);
 
 public:
-	SettingsMidiDevices(GOSettings& settings, GOMidi& midi, wxWindow* parent);
+	SettingsMidiDevices(GOConfig& settings, GOMidi& midi, wxWindow* parent);
 
 	void Save();
 

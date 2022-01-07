@@ -4,25 +4,25 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsArchives.h"
+#include "GOSettingsArchives.h"
 
 #include "archive/GOArchiveFile.h"
 #include "GOOrgan.h"
-#include "settings/GOSettings.h"
-#include "SettingsOrgan.h"
+#include "config/GOConfig.h"
+#include "GOSettingsOrgan.h"
 #include <wx/button.h>
 #include <wx/listctrl.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
-BEGIN_EVENT_TABLE(SettingsArchives, wxPanel)
-	EVT_LIST_ITEM_SELECTED(ID_ARCHIVES, SettingsArchives::OnArchiveSelected)
-	EVT_BUTTON(ID_DEL, SettingsArchives::OnDel)
+BEGIN_EVENT_TABLE(GOSettingsArchives, wxPanel)
+	EVT_LIST_ITEM_SELECTED(ID_ARCHIVES, GOSettingsArchives::OnArchiveSelected)
+	EVT_BUTTON(ID_DEL, GOSettingsArchives::OnDel)
 END_EVENT_TABLE()
 
-SettingsArchives::SettingsArchives(GOSettings& settings, SettingsOrgan& organs, wxWindow* parent) :
+GOSettingsArchives::GOSettingsArchives(GOConfig& settings, GOSettingsOrgan& organs, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings),
+	m_config(settings),
 	m_Organs(organs)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
@@ -40,18 +40,18 @@ SettingsArchives::SettingsArchives(GOSettings& settings, SettingsOrgan& organs, 
 	buttonSizer->Add(m_Del, 0, wxALIGN_LEFT | wxALL, 5);
 	topSizer->Add(buttonSizer, 0, wxALL, 5);
 
-	for(unsigned i = 0; i < m_Settings.GetArchiveList().size(); i++)
+	for(unsigned i = 0; i < m_config.GetArchiveList().size(); i++)
 	{
-		GOArchiveFile* a = m_Settings.GetArchiveList()[i];
+		GOArchiveFile* a = m_config.GetArchiveList()[i];
 		wxString title = a->GetName();
 		wxString info = wxEmptyString;
-		if (!a->IsUsable(m_Settings))
+		if (!a->IsUsable(m_config))
 		    title = _("MISSING - ") + title;
-		else if (!a->IsComplete(m_Settings))
+		else if (!a->IsComplete(m_config))
 		{
 		    title = _("INCOMPLETE - ") + title;
 		    for(unsigned i = 0; i < a->GetDependencies().size(); i++)
-			    if (!m_Settings.GetArchiveByID(a->GetDependencies()[i], true))
+			    if (!m_config.GetArchiveByID(a->GetDependencies()[i], true))
 				    info += wxString::Format(_("requires '%s' "), a->GetDependencyTitles()[i]);
 		}
 		m_Archives->InsertItem(i, title);
@@ -75,12 +75,12 @@ SettingsArchives::SettingsArchives(GOSettings& settings, SettingsOrgan& organs, 
 	topSizer->Fit(this);
 }
 
-void SettingsArchives::OnArchiveSelected(wxListEvent& event)
+void GOSettingsArchives::OnArchiveSelected(wxListEvent& event)
 {
 	m_Del->Enable();
 }
 
-void SettingsArchives::OnDel(wxCommandEvent& event)
+void GOSettingsArchives::OnDel(wxCommandEvent& event)
 {
 	const GOArchiveFile* a = (const GOArchiveFile*)m_Archives->GetItemData(m_Archives->GetFirstSelected());
 
@@ -89,7 +89,7 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 		const GOArchiveFile* a1 = (const GOArchiveFile*)m_Archives->GetItemData(i);
 		if (a == a1)
 			continue;
-		if (!a1->IsUsable(m_Settings))
+		if (!a1->IsUsable(m_config))
 			continue;
 		if (a->GetID() == a1->GetID())
 		{
@@ -124,9 +124,9 @@ void SettingsArchives::OnDel(wxCommandEvent& event)
 	m_Del->Disable();
 }
 
-void SettingsArchives::Save()
+void GOSettingsArchives::Save()
 {
-	ptr_vector<GOArchiveFile>& list = m_Settings.GetArchiveList();
+	ptr_vector<GOArchiveFile>& list = m_config.GetArchiveList();
 	for(unsigned i = 0; i < list.size(); i++)
 	{
 		bool found = false;

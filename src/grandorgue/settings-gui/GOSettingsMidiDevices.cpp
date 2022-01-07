@@ -4,7 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsMidiDevices.h"
+#include "GOSettingsMidiDevices.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -16,7 +16,7 @@
 
 #include "midi/GOMidi.h"
 #include "midi/ports/GOMidiPortFactory.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 	EVT_LISTBOX(ID_INDEVICES, SettingsMidiDevices::OnInDevicesClick)
@@ -27,21 +27,21 @@ BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
 END_EVENT_TABLE()
 
 SettingsMidiDevices::SettingsMidiDevices(
-  GOSettings& settings, GOMidi& midi, wxWindow* parent
+  GOConfig& settings, GOMidi& midi, wxWindow* parent
 ):
 	wxPanel(parent, wxID_ANY),
 	GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("Midi &ports")),
-	m_Settings(settings),
+	m_config(settings),
 	m_Midi(midi),
 	m_InDevices(
 	  m_Midi.GetInDevices(),
-	  m_Settings.m_MidiIn,
+	  m_config.m_MidiIn,
 	  this,
 	  ID_INDEVICES
         ),
 	m_OutDevices(
 	  m_Midi.GetOutDevices(),
-	  m_Settings.m_MidiOut,
+	  m_config.m_MidiOut,
 	  this,
 	  ID_OUTDEVICES
 	)
@@ -111,12 +111,12 @@ SettingsMidiDevices::SettingsMidiDevices(
 	this->SetSizer(topSizer);
 	topSizer->Fit(this);
 
-	const bool isToAutoAddInput = m_Settings.IsToAutoAddMidi();
+	const bool isToAutoAddInput = m_config.IsToAutoAddMidi();
 
 	m_AutoAddInput->SetValue(isToAutoAddInput);
-	m_CheckOnStartup->SetValue(m_Settings.IsToCheckMidiOnStart());
+	m_CheckOnStartup->SetValue(m_config.IsToCheckMidiOnStart());
 
-	const GOPortsConfig& portsConfig = m_Settings.GetMidiPortsConfig();
+	const GOPortsConfig& portsConfig = m_config.GetMidiPortsConfig();
 
 	FillPortsWith(portsConfig);
 	RenewDevices(portsConfig, isToAutoAddInput);
@@ -141,7 +141,7 @@ void SettingsMidiDevices::RenewDevices(
     const GOMidiDeviceConfig& c = m_OutDevices.GetDeviceConf(i);
 
     m_RecorderDevice->Append(c.m_PhysicalName);
-    if (m_Settings.MidiRecorderOutputDevice() == c.m_LogicalName)
+    if (m_config.MidiRecorderOutputDevice() == c.m_LogicalName)
       m_RecorderDevice->SetSelection(i + 1);
   }
 }
@@ -212,18 +212,18 @@ void SettingsMidiDevices::OnOutDevicesClick(wxCommandEvent& event)
 
 void SettingsMidiDevices::Save()
 {
-  m_Settings.IsToAutoAddMidi(m_AutoAddInput->IsChecked());
-  m_Settings.IsToCheckMidiOnStart(m_CheckOnStartup->IsChecked());
-  m_Settings.SetMidiPortsConfig(RenewPortsConfig());
+  m_config.IsToAutoAddMidi(m_AutoAddInput->IsChecked());
+  m_config.IsToCheckMidiOnStart(m_CheckOnStartup->IsChecked());
+  m_config.SetMidiPortsConfig(RenewPortsConfig());
   m_OutDevices.Save();
   m_InDevices.Save(&m_OutDevices);
 
   const int iRec = m_RecorderDevice->GetSelection();
 
   if (iRec <= 0)
-    m_Settings.MidiRecorderOutputDevice(wxEmptyString);
+    m_config.MidiRecorderOutputDevice(wxEmptyString);
   else
-    m_Settings.MidiRecorderOutputDevice(
+    m_config.MidiRecorderOutputDevice(
       m_OutDevices.GetDeviceConf(iRec - 1).m_LogicalName
     );
 }

@@ -8,7 +8,7 @@
 
 #include "GOSoundResample.h"
 #include "GOStandardFile.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOWave.h"
 #include "contrib/zita-convolver.h"
 #include <wx/intl.h>
@@ -35,7 +35,7 @@ void GOSoundReverb::Cleanup()
 	}
 }
 
-void GOSoundReverb::Setup(GOSettings& settings)
+void GOSoundReverb::Setup(GOConfig& settings)
 {
 	Cleanup();
 

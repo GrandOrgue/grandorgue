@@ -36,7 +36,7 @@ class GOMidiRecorder;
 class GOOrgan;
 class GOProgressDialog;
 class GOSetter;
-class GOSettings;
+class GOConfig;
 class GOTemperament;
 class GODocument;
 class GOSoundEngine;
@@ -97,7 +97,7 @@ private:
 	GOMemoryPool m_pool;
 	GOBitmapCache m_bitmaps;
 	GOPipeConfigTreeNode m_PipeConfig;
-	GOSettings& m_Settings;
+	GOConfig& m_config;
 	GOCombinationDefinition m_GeneralTemplate;
 	GOLabel m_PitchLabel;
 	GOLabel m_TemperamentLabel;
@@ -121,7 +121,7 @@ private:
 
 public:
 
-	GODefinitionFile(GODocument* doc, GOSettings& settings);
+	GODefinitionFile(GODocument* doc, GOConfig& settings);
 	wxString Load(GOProgressDialog* dlg, const GOOrgan& organ, const wxString& cmb = wxEmptyString);
 	void LoadCombination(const wxString& cmb);
 	bool Save();
@@ -148,7 +148,7 @@ public:
 	unsigned GetPanelCount();
 	void AddPanel(GOGUIPanel* panel);
 	GOMemoryPool& GetMemoryPool();
-	GOSettings& GetSettings();
+	GOConfig& GetSettings();
 	GOBitmapCache& GetBitmapCache();
 	GOPipeConfigNode& GetPipeConfig();
 	void SetTemperament(wxString name);

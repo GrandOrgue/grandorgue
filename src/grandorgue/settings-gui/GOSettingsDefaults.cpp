@@ -4,16 +4,16 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsDefaults.h"
+#include "GOSettingsDefaults.h"
 
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
-SettingsDefaults::SettingsDefaults(GOSettings& settings, wxWindow* parent) :
+GOSettingsDefaults::GOSettingsDefaults(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings)
+	m_config(settings)
 {
 	wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
@@ -31,7 +31,7 @@ SettingsDefaults::SettingsDefaults(GOSettings& settings, wxWindow* parent) :
 	grid->Add(m_Volume = new wxSpinCtrl(this, ID_VOLUME, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 	m_Volume->SetRange(-120, 20);
 
-	m_Volume->SetValue(m_Settings.Volume());
+	m_Volume->SetValue(m_config.Volume());
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	grid = new wxFlexGridSizer(2, 5, 5);
@@ -46,8 +46,8 @@ SettingsDefaults::SettingsDefaults(GOSettings& settings, wxWindow* parent) :
 	grid->Add(m_MetronomeMeasure = new wxSpinCtrl(this, ID_METRONOME_MEASURE, wxEmptyString, wxDefaultPosition, wxDefaultSize), 0, wxALL);
 	m_MetronomeMeasure->SetRange(0, 32);
 
-	m_MetronomeBPM->SetValue(m_Settings.MetronomeBPM());
-	m_MetronomeMeasure->SetValue(m_Settings.MetronomeMeasure());
+	m_MetronomeBPM->SetValue(m_config.MetronomeBPM());
+	m_MetronomeMeasure->SetValue(m_config.MetronomeMeasure());
 	item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
 	item9 = new wxBoxSizer(wxVERTICAL);
@@ -84,12 +84,12 @@ SettingsDefaults::SettingsDefaults(GOSettings& settings, wxWindow* parent) :
 
 	item6->Add(grid, 1, wxEXPAND | wxALL, 5);
 
-	m_OrganPath->SetPath(m_Settings.OrganPath());
-	m_OrganPackagePath->SetPath(m_Settings.OrganPackagePath());
-	m_SettingPath->SetPath(m_Settings.SettingPath());
-	m_AudioRecorderPath->SetPath(m_Settings.AudioRecorderPath());
-	m_MidiRecorderPath->SetPath(m_Settings.MidiRecorderPath());
-	m_MidiPlayerPath->SetPath(m_Settings.MidiPlayerPath());
+	m_OrganPath->SetPath(m_config.OrganPath());
+	m_OrganPackagePath->SetPath(m_config.OrganPackagePath());
+	m_SettingPath->SetPath(m_config.SettingPath());
+	m_AudioRecorderPath->SetPath(m_config.AudioRecorderPath());
+	m_MidiRecorderPath->SetPath(m_config.MidiRecorderPath());
+	m_MidiPlayerPath->SetPath(m_config.MidiPlayerPath());
 
 	topSizer->Add(item0, 1, wxEXPAND | wxALL, 5);
 	topSizer->AddSpacer(5);
@@ -97,15 +97,15 @@ SettingsDefaults::SettingsDefaults(GOSettings& settings, wxWindow* parent) :
 	topSizer->FitInside(this);
 }
 
-void SettingsDefaults::Save()
+void GOSettingsDefaults::Save()
 {
-	m_Settings.OrganPath(m_OrganPath->GetPath());
-	m_Settings.OrganPackagePath(m_OrganPackagePath->GetPath());
-	m_Settings.SettingPath(m_SettingPath->GetPath());
-	m_Settings.AudioRecorderPath(m_AudioRecorderPath->GetPath());
-	m_Settings.MidiRecorderPath(m_MidiRecorderPath->GetPath());
-	m_Settings.MidiPlayerPath(m_MidiPlayerPath->GetPath());
-	m_Settings.MetronomeBPM(m_MetronomeBPM->GetValue());
-	m_Settings.MetronomeMeasure(m_MetronomeMeasure->GetValue());
-	m_Settings.Volume(m_Volume->GetValue());
+	m_config.OrganPath(m_OrganPath->GetPath());
+	m_config.OrganPackagePath(m_OrganPackagePath->GetPath());
+	m_config.SettingPath(m_SettingPath->GetPath());
+	m_config.AudioRecorderPath(m_AudioRecorderPath->GetPath());
+	m_config.MidiRecorderPath(m_MidiRecorderPath->GetPath());
+	m_config.MidiPlayerPath(m_MidiPlayerPath->GetPath());
+	m_config.MetronomeBPM(m_MetronomeBPM->GetValue());
+	m_config.MetronomeMeasure(m_MetronomeMeasure->GetValue());
+	m_config.Volume(m_Volume->GetValue());
 }

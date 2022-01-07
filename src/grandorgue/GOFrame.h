@@ -34,7 +34,7 @@ class GOApp;
 class GODocument;
 class GOMidiEvent;
 class GOOrgan;
-class GOSettings;
+class GOConfig;
 class GOSound;
 class wxChoice;
 class wxGaugeAudio;
@@ -63,7 +63,7 @@ private:
   wxSpinCtrl* m_SetterPosition;
   wxSpinCtrl* m_Volume;
   GOSound& m_Sound;
-  GOSettings& m_Settings;
+  GOConfig& m_config;
   GOMidiListener m_listener;
   wxString m_Title;
   wxString m_Label;

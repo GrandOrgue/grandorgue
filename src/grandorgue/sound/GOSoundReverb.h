@@ -9,7 +9,7 @@
 
 #include "ptrvector.h"
 class Convproc;
-class GOSettings;
+class GOConfig;
 
 class GOSoundReverb
 {
@@ -24,7 +24,7 @@ public:
 	virtual ~GOSoundReverb();
 
 	void Reset();
-	void Setup(GOSettings& settings);
+	void Setup(GOConfig& settings);
 
 	void Process(float *output_buffer, unsigned n_frames);
 };

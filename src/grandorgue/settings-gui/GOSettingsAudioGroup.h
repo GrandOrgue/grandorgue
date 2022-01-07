@@ -4,13 +4,13 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSAUDIOGROUP_H
-#define SETTINGSAUDIOGROUP_H
+#ifndef GOSETTINGSAUDIOGROUP_H
+#define GOSETTINGSAUDIOGROUP_H
 
 #include <wx/panel.h>
 #include <vector>
 
-class GOSettings;
+class GOConfig;
 class wxButton;
 class wxListBox;
 
@@ -20,7 +20,7 @@ public:
 	virtual std::vector<wxString> GetGroups() = 0;
 };
 
-class SettingsAudioGroup : public wxPanel, public GOAudioGroupCallback
+class GOSettingsAudioGroup : public wxPanel, public GOAudioGroupCallback
 {
 	enum {
 		ID_AUDIOGROUP_LIST = 200,
@@ -30,7 +30,7 @@ class SettingsAudioGroup : public wxPanel, public GOAudioGroupCallback
 	};
 
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_config;
 	wxListBox* m_AudioGroups;
 	wxButton* m_Add;
 	wxButton* m_Del;
@@ -42,7 +42,7 @@ private:
 	void OnGroupChange(wxCommandEvent& event);
 
 public:
-	SettingsAudioGroup(GOSettings& settings, wxWindow* parent);
+	GOSettingsAudioGroup(GOConfig& settings, wxWindow* parent);
 
 	std::vector<wxString> GetGroups();
 

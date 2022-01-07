@@ -9,7 +9,7 @@
 #include "config/GOConfigReader.h"
 #include "GOEnclosure.h"
 #include "GOManual.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GODefinitionFile.h"
 
 GOMidiReceiver::GOMidiReceiver(GODefinitionFile* organfile, MIDI_RECEIVER_TYPE type):

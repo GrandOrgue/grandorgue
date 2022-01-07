@@ -8,7 +8,7 @@
 
 #include "archive/GOArchiveFile.h"
 #include "GOOrgan.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "ptrvector.h"
 #include <wx/arrstr.h>
 #include <wx/dir.h>
@@ -16,8 +16,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-GOCacheCleaner::GOCacheCleaner(GOSettings& settings) :
-	m_settings(settings)
+GOCacheCleaner::GOCacheCleaner(GOConfig& settings) :
+	m_config(settings)
 {
 }
 	    
@@ -28,7 +28,7 @@ GOCacheCleaner::~GOCacheCleaner()
 wxArrayString GOCacheCleaner::GetOrganIDList()
 {
 	wxArrayString list;
-	const ptr_vector<GOOrgan>& organs = m_settings.GetOrganList();
+	const ptr_vector<GOOrgan>& organs = m_config.GetOrganList();
 	for(unsigned i = 0; i < organs.size(); i++)
 		list.Add(organs[i]->GetOrganHash());
 	return list;
@@ -37,7 +37,7 @@ wxArrayString GOCacheCleaner::GetOrganIDList()
 wxArrayString GOCacheCleaner::GetArchiveIDList()
 {
 	wxArrayString list;
-	const ptr_vector<GOArchiveFile>& archives = m_settings.GetArchiveList();
+	const ptr_vector<GOArchiveFile>& archives = m_config.GetArchiveList();
 	for(unsigned i = 0; i < archives.size(); i++)
 		list.Add(archives[i]->GetArchiveHash());
 	return list;
@@ -45,10 +45,10 @@ wxArrayString GOCacheCleaner::GetArchiveIDList()
 
 void GOCacheCleaner::Cleanup()
 {
-	if (!m_settings.ManageCache())
+	if (!m_config.ManageCache())
 		return;
 
-	wxDir dir(m_settings.UserCachePath());
+	wxDir dir(m_config.UserCachePath());
 	if(!dir.IsOpened())
 	{
 		wxLogError(_("Failed to read cache directory"));

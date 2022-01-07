@@ -10,7 +10,7 @@
 #include "config/GOConfigWriter.h"
 #include "GORank.h"
 #include "GOSetterButton.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"

@@ -4,20 +4,20 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#ifndef SETTINGSORGAN_H
-#define SETTINGSORGAN_H
+#ifndef GOSETTINGSORGAN_H
+#define GOSETTINGSORGAN_H
 
 #include <wx/panel.h>
 #include <vector>
 
 class GOMidi;
 class GOOrgan;
-class GOSettings;
+class GOConfig;
 class wxButton;
 class wxListEvent;
 class wxListView;
 
-class SettingsOrgan : public wxPanel
+class GOSettingsOrgan : public wxPanel
 {
 	enum {
 		ID_ORGANS,
@@ -28,7 +28,7 @@ class SettingsOrgan : public wxPanel
 		ID_PROPERTIES,
 	};
 private:
-	GOSettings& m_Settings;
+	GOConfig& m_config;
 	GOMidi& m_midi;
 	wxListView* m_Organs;
 	wxButton* m_Up;
@@ -47,7 +47,7 @@ private:
 	void MoveOrgan(long from, long to);
 
 public:
-	SettingsOrgan(GOSettings& settings, GOMidi& midi, wxWindow* parent);
+	GOSettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent);
 
 	std::vector<const GOOrgan*> GetOrgans();
 

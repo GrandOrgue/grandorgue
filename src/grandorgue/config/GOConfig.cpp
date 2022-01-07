@@ -4,7 +4,7 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "GOSettings.h"
+#include "GOConfig.h"
 
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -38,7 +38,7 @@ static const wxString MIDI_IN(wxT("MIDIIn"));
 static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
 
-const GOMidiSetting GOSettings:: m_MIDISettings[] = {
+const GOMidiSetting GOConfig:: m_MIDISettings[] = {
 	{ MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal") },
 	{ MIDI_RECV_MANUAL, 2, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 1") },
 	{ MIDI_RECV_MANUAL, 3, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 2") },
@@ -83,13 +83,13 @@ const GOMidiSetting GOSettings:: m_MIDISettings[] = {
 	{ MIDI_RECV_SETTER, 29, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure +") },
 };
 
-const struct IniFileEnumEntry GOSettings::m_InitialLoadTypes[] = {
+const struct IniFileEnumEntry GOConfig::m_InitialLoadTypes[] = {
 	{ wxT("N"), (int)GOInitialLoadType::LOAD_NONE },
         { wxT("Y"), (int)GOInitialLoadType::LOAD_LAST_USED },
         { wxT("First"), (int)GOInitialLoadType::LOAD_FIRST },
 };
 
-GOSettings::GOSettings(wxString instance) :
+GOConfig::GOConfig(wxString instance) :
 	m_InstanceName(instance),
 	m_ResourceDir(),
 	m_AudioGroups(),
@@ -168,7 +168,7 @@ GOSettings::GOSettings(wxString instance) :
 	MidiPlayerPath.setDefaultValue(docdir + _("MIDI recordings"));
 }
 
-GOSettings::~GOSettings()
+GOConfig::~GOConfig()
 {
 	Flush();
 }
@@ -209,7 +209,7 @@ void save_ports_config(
   }
 }
 
-void GOSettings::Load()
+void GOConfig::Load()
 {
 	GOConfigFileReader cfg_file;
 	if (wxFileExists(m_ConfigFileName))
@@ -340,7 +340,7 @@ void GOSettings::Load()
 	}
 }
 
-int GOSettings::GetLanguageId() const
+int GOConfig::GetLanguageId() const
 {
   int langId = wxLANGUAGE_DEFAULT;
   const wxString langCode = LanguageCode();
@@ -355,17 +355,17 @@ int GOSettings::GetLanguageId() const
   return langId;
 }
 
-void GOSettings::SetLanguageId(int langId)
+void GOConfig::SetLanguageId(int langId)
 {
   LanguageCode(langId == wxLANGUAGE_DEFAULT ? wxString(wxEmptyString) : wxLocale::GetLanguageCanonicalName(langId));
 }
 
-unsigned GOSettings::GetEventCount()
+unsigned GOConfig::GetEventCount()
 {
 	return sizeof(m_MIDISettings) / sizeof(m_MIDISettings[0]);
 }
 
-wxString GOSettings::GetEventSection(unsigned index)
+wxString GOConfig::GetEventSection(unsigned index)
 {
 	assert(index < GetEventCount());
 	switch(m_MIDISettings[index].type)
@@ -385,25 +385,25 @@ wxString GOSettings::GetEventSection(unsigned index)
 	}
 }
 
-wxString GOSettings::GetEventGroup(unsigned index)
+wxString GOConfig::GetEventGroup(unsigned index)
 {
 	assert(index < GetEventCount());
 	return wxGetTranslation(m_MIDISettings[index].group);
 }
 
-wxString GOSettings::GetEventTitle(unsigned index)
+wxString GOConfig::GetEventTitle(unsigned index)
 {
 	assert(index < GetEventCount());
 	return wxGetTranslation(m_MIDISettings[index].name);
 }
 
-GOMidiReceiverBase* GOSettings::GetMidiEvent(unsigned index)
+GOMidiReceiverBase* GOConfig::GetMidiEvent(unsigned index)
 {
 	assert(index < GetEventCount());
 	return m_MIDIEvents[index];
 }
 
-GOMidiReceiverBase* GOSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index)
+GOMidiReceiverBase* GOConfig::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index)
 {
 	for(unsigned i = 0; i < GetEventCount(); i++)
 		if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
@@ -411,12 +411,12 @@ GOMidiReceiverBase* GOSettings::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned 
 	return NULL;
 }
 
-const wxString GOSettings::GetResourceDirectory()
+const wxString GOConfig::GetResourceDirectory()
 {
 	return m_ResourceDir.c_str();
 }
 
-const wxString GOSettings::GetPackageDirectory()
+const wxString GOConfig::GetPackageDirectory()
 {
 	return m_ResourceDir + wxFileName::GetPathSeparator() + wxT("packages");
 }
@@ -503,19 +503,19 @@ std::vector<wxString> GOSettings::GetMidiOutDeviceList()
 }
  */
 
-const std::vector<wxString>& GOSettings::GetAudioGroups()
+const std::vector<wxString>& GOConfig::GetAudioGroups()
 {
 	return m_AudioGroups;
 }
 
-void GOSettings::SetAudioGroups(const std::vector<wxString>& audio_groups)
+void GOConfig::SetAudioGroups(const std::vector<wxString>& audio_groups)
 {
 	if (!audio_groups.size())
 		return;
 	m_AudioGroups = audio_groups;
 }
 
-unsigned GOSettings::GetAudioGroupId(const wxString& str)
+unsigned GOConfig::GetAudioGroupId(const wxString& str)
 {
 	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
 		if (m_AudioGroups[i] == str)
@@ -523,7 +523,7 @@ unsigned GOSettings::GetAudioGroupId(const wxString& str)
 	return 0;
 }
 
-int GOSettings::GetStrictAudioGroupId(const wxString& str)
+int GOConfig::GetStrictAudioGroupId(const wxString& str)
 {
 	for(unsigned i = 0; i < m_AudioGroups.size(); i++)
 		if (m_AudioGroups[i] == str)
@@ -531,19 +531,19 @@ int GOSettings::GetStrictAudioGroupId(const wxString& str)
 	return -1;
 }
 
-const std::vector<GOAudioDeviceConfig>& GOSettings::GetAudioDeviceConfig()
+const std::vector<GOAudioDeviceConfig>& GOConfig::GetAudioDeviceConfig()
 {
 	return m_AudioDeviceConfig;
 }
 
-void GOSettings::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config)
+void GOConfig::SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config)
 {
 	if (!config.size())
 		return;
 	m_AudioDeviceConfig = config;
 }
 
-const unsigned GOSettings::GetTotalAudioChannels() const
+const unsigned GOConfig::GetTotalAudioChannels() const
 {
   unsigned channels = 0;
   
@@ -552,27 +552,27 @@ const unsigned GOSettings::GetTotalAudioChannels() const
   return channels;
 }
 
-unsigned GOSettings::GetDefaultLatency()
+unsigned GOConfig::GetDefaultLatency()
 {
 	return 50;
 }
 
-GOMidiMap& GOSettings::GetMidiMap()
+GOMidiMap& GOConfig::GetMidiMap()
 {
 	return m_MidiMap;
 }
 
-GOTemperamentList& GOSettings::GetTemperaments()
+GOTemperamentList& GOConfig::GetTemperaments()
 {
 	return m_Temperaments;
 }
 
-wxRect GOSettings::GetMainWindowRect()
+wxRect GOConfig::GetMainWindowRect()
 {
   return wxRect(m_MainWindowX, m_MainWindowY, m_MainWindowWidth, m_MainWindowHeight);
 }
 
-void GOSettings::SetMainWindowRect(const wxRect &rect)
+void GOConfig::SetMainWindowRect(const wxRect &rect)
 {
   m_MainWindowX = rect.x;
   m_MainWindowY = rect.y;
@@ -580,7 +580,7 @@ void GOSettings::SetMainWindowRect(const wxRect &rect)
   m_MainWindowHeight = rect.height;
 }
 
-void GOSettings::Flush()
+void GOConfig::Flush()
 {
 	wxString tmp_name = m_ConfigFileName + wxT(".new");
 	GOConfigFileWriter cfg_file;

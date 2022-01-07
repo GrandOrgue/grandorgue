@@ -10,7 +10,7 @@
 #include "GOCoupler.h"
 #include "GODocument.h"
 #include "GODivisional.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOStop.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>

@@ -8,7 +8,7 @@
 
 #include "midi/GOMidiEvent.h"
 #include "GORodgers.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GODefinitionFile.h"
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -28,9 +28,9 @@ BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
 END_EVENT_TABLE()
 
 
-MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOSettings& settings):
+MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* event, GOConfig& settings):
 	wxPanel(parent, wxID_ANY),
-	m_Settings(settings),
+	m_config(settings),
 	m_original(event),
 	m_midi(*event),
 	m_listener(),
@@ -113,7 +113,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog (wxWindow* parent, GOMidiReceiverBase* 
 
 	m_device->Append(_("Any device"));
 
-	for (GOMidiDeviceConfig* pDevConf : m_Settings.m_MidiIn)
+	for (GOMidiDeviceConfig* pDevConf : m_config.m_MidiIn)
 		m_device->Append(pDevConf->m_LogicalName);
 
 	m_channel->Append(_("Any channel"));
@@ -357,7 +357,7 @@ void MIDIEventRecvDialog::LoadEvent()
 			if (m_midi.GetEvent(i).device == 0)
 				device =  _("Any device");
 			else
-				device = m_Settings.GetMidiMap().GetDeviceByID(m_midi.GetEvent(i).device);
+				device = m_config.GetMidiMap().GetDeviceByID(m_midi.GetEvent(i).device);
 			buffer.Printf(_("%d (%s)"), i + 1, device.c_str());
 			m_eventno->Append(buffer);
 		}
@@ -376,7 +376,7 @@ void MIDIEventRecvDialog::LoadEvent()
 
 	m_device->SetSelection(0);
 	for(unsigned i = 1; i < m_device->GetCount(); i++)
-		if (m_Settings.GetMidiMap().GetDeviceByID(e.device) == m_device->GetString(i))
+		if (m_config.GetMidiMap().GetDeviceByID(e.device) == m_device->GetString(i))
 			m_device->SetSelection(i);
 
 	m_channel->SetSelection(0);
@@ -399,7 +399,7 @@ MIDI_MATCH_EVENT MIDIEventRecvDialog::GetCurrentEvent()
 	if (m_device->GetSelection() == 0)
 		e.device = 0;
 	else
-		e.device = m_Settings.GetMidiMap().GetDeviceByString(m_device->GetStringSelection());
+		e.device = m_config.GetMidiMap().GetDeviceByString(m_device->GetStringSelection());
 
 	e.type = m_eventtype->GetCurrentSelection();
 	if (m_channel->GetSelection() == 0)

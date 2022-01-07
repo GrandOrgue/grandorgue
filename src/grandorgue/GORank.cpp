@@ -10,7 +10,7 @@
 #include "GODocument.h"
 #include "GODummyPipe.h"
 #include "GOReferencePipe.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"
 #include "GODefinitionFile.h"

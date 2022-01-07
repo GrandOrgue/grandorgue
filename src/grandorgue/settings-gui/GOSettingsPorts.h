@@ -13,8 +13,8 @@
 #include <wx/string.h>
 #include <wx/treelist.h>
 
-#include "GOPortFactory.h"
-#include "GOPortsConfig.h"
+#include "config/GOPortFactory.h"
+#include "config/GOPortsConfig.h"
 
 class GOSettingsPorts
 {

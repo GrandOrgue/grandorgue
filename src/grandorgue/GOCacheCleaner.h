@@ -7,19 +7,19 @@
 #ifndef GOCACHECLEANER_H
 #define GOCACHECLEANER_H
 
-class GOSettings;
+class GOConfig;
 class wxArrayString;
 
 class GOCacheCleaner
 {
 private:
-	GOSettings& m_settings;
+	GOConfig& m_config;
 
 	wxArrayString GetOrganIDList();
 	wxArrayString GetArchiveIDList();
 	
 public:
-	GOCacheCleaner(GOSettings& settings);
+	GOCacheCleaner(GOConfig& settings);
 	~GOCacheCleaner();
 
 	void Cleanup();

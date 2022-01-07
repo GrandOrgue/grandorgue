@@ -15,7 +15,7 @@ class GOMidi;
 class GOMidiListener;
 class GOMidiReceiverBase;
 class GOMidiSender;
-class GOSettings;
+class GOConfig;
 class MIDIEventKeyDialog;
 class MIDIEventRecvDialog;
 class MIDIEventSendDialog;
@@ -35,7 +35,7 @@ private:
 	void OnCancel(wxCommandEvent& event);
 
 public:
-	MIDIEventDialog (GODocumentBase* doc, wxWindow* parent, wxString title, GOSettings& settings, GOMidiReceiverBase* event, GOMidiSender* sender, GOKeyReceiver* key, GOMidiSender* division = NULL);
+	MIDIEventDialog (GODocumentBase* doc, wxWindow* parent, wxString title, GOConfig& settings, GOMidiReceiverBase* event, GOMidiSender* sender, GOKeyReceiver* key, GOMidiSender* division = NULL);
 	~MIDIEventDialog();
 
 	void RegisterMIDIListener(GOMidi* midi);

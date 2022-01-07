@@ -58,7 +58,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress, unsigned sample_i
 {
 	try
 	{
-		GOSettings settings(wxT("perftest"));
+		GOConfig settings(wxT("perftest"));
 		GODefinitionFile* organfile = new GODefinitionFile(NULL, settings);
 		organfile->SetODFPath(argv[1]);
 		organfile->AddWindchest(new GOWindchest(organfile));

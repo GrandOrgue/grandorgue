@@ -400,7 +400,7 @@ void GOSoundEngine::SetAudioRecorder(GOSoundRecorder* recorder, bool downmix)
 	m_AudioRecorder->SetOutputs(outputs, m_SamplesPerBuffer);
 }
 
-void GOSoundEngine::SetupReverb(GOSettings& settings)
+void GOSoundEngine::SetupReverb(GOConfig& settings)
 {
 	for(unsigned i = 0; i < m_AudioOutputs.size(); i++)
 		if (m_AudioOutputs[i])

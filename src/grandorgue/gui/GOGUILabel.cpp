@@ -12,7 +12,7 @@
 #include "config/GOConfigReader.h"
 #include "GODC.h"
 #include "GOLabel.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GODefinitionFile.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel* panel, GOLabel* label) :

@@ -4,24 +4,24 @@
 * License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 */
 
-#include "SettingsTemperaments.h"
+#include "GOSettingsTemperaments.h"
 
 #include "go_limits.h"
 #include "temperaments/GOTemperamentUser.h"
 #include "GOTime.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include <wx/button.h>
 #include <wx/grid.h>
 #include <wx/sizer.h>
 #include <wx/stopwatch.h>
 
-BEGIN_EVENT_TABLE(SettingsTemperaments, wxPanel)
-	EVT_GRID_CMD_SELECT_CELL(ID_LIST, SettingsTemperaments::OnListSelected)
-	EVT_BUTTON(ID_ADD, SettingsTemperaments::OnAdd)
-	EVT_BUTTON(ID_DEL, SettingsTemperaments::OnDel)
+BEGIN_EVENT_TABLE(GOSettingsTemperaments, wxPanel)
+	EVT_GRID_CMD_SELECT_CELL(ID_LIST, GOSettingsTemperaments::OnListSelected)
+	EVT_BUTTON(ID_ADD, GOSettingsTemperaments::OnAdd)
+	EVT_BUTTON(ID_DEL, GOSettingsTemperaments::OnDel)
 END_EVENT_TABLE()
 
-SettingsTemperaments::SettingsTemperaments(GOSettings& settings, wxWindow* parent) :
+GOSettingsTemperaments::GOSettingsTemperaments(GOConfig& settings, wxWindow* parent) :
 	wxPanel(parent, wxID_ANY),
 	m_Temperaments(settings.GetTemperaments()),
 	m_Ptrs()
@@ -92,7 +92,7 @@ SettingsTemperaments::SettingsTemperaments(GOSettings& settings, wxWindow* paren
 	Update();
 }
 
-void SettingsTemperaments::OnAdd(wxCommandEvent& event)
+void GOSettingsTemperaments::OnAdd(wxCommandEvent& event)
 {
 	unsigned row = m_List->GetNumberRows();
 	m_Ptrs.push_back(NULL);
@@ -106,7 +106,7 @@ void SettingsTemperaments::OnAdd(wxCommandEvent& event)
 	Update();
 }
 
-void SettingsTemperaments::OnDel(wxCommandEvent& event)
+void GOSettingsTemperaments::OnDel(wxCommandEvent& event)
 {
 	unsigned row = m_List->GetGridCursorRow();
 	m_List->DeleteRows(row, 1);
@@ -114,13 +114,13 @@ void SettingsTemperaments::OnDel(wxCommandEvent& event)
 	Update();
 }
 
-void SettingsTemperaments::OnListSelected(wxGridEvent& event)
+void GOSettingsTemperaments::OnListSelected(wxGridEvent& event)
 {
 	event.Skip();
 	Update();
 }
 
-void SettingsTemperaments::Update()
+void GOSettingsTemperaments::Update()
 {
 	if (m_Ptrs.size() > 0 && m_List->GetGridCursorRow() >= 0)
 		m_Del->Enable();
@@ -132,7 +132,7 @@ void SettingsTemperaments::Update()
 		m_Add->Disable();
 }
 
-void SettingsTemperaments::Save()
+void GOSettingsTemperaments::Save()
 {
 	ptr_vector<GOTemperamentUser>& list = m_Temperaments.GetUserTemperaments();
 	for(unsigned i = 0; i < list.size(); i++)

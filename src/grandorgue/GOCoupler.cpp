@@ -8,7 +8,7 @@
 
 #include "config/GOConfigReader.h"
 #include "GOManual.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GODefinitionFile.h"
 #include <wx/intl.h>
 

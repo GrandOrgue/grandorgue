@@ -9,7 +9,7 @@
 #include "archive/GOArchive.h"
 #include "GOHash.h"
 #include "GOInvalidFile.h"
-#include "settings/GOSettings.h"
+#include "config/GOConfig.h"
 #include "GOStandardFile.h"
 #include "GODefinitionFile.h"
 #include <wx/filename.h>
