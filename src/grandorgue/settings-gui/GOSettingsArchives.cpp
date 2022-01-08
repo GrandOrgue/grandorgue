@@ -88,10 +88,8 @@ void GOSettingsArchives::OnDel(wxCommandEvent &event) {
 
   for (long i = 0; i < m_Archives->GetItemCount(); i++) {
     const GOArchiveFile *a1 = (const GOArchiveFile *)m_Archives->GetItemData(i);
-    if (a == a1)
-      continue;
-    if (!a1->IsUsable(m_config))
-      continue;
+    if (a == a1) continue;
+    if (!a1->IsUsable(m_config)) continue;
     if (a->GetID() == a1->GetID()) {
       m_Archives->DeleteItem(m_Archives->GetFirstSelected());
       m_Del->Disable();
@@ -114,8 +112,7 @@ void GOSettingsArchives::OnDel(wxCommandEvent &event) {
     }
   for (long i = 0; i < m_Archives->GetItemCount(); i++) {
     const GOArchiveFile *a1 = (const GOArchiveFile *)m_Archives->GetItemData(i);
-    if (a == a1)
-      continue;
+    if (a == a1) continue;
     for (unsigned j = 0; j < a1->GetDependencies().size(); j++) {
       if (a->GetID() == a1->GetDependencies()[j]) {
         wxMessageBox(
@@ -139,10 +136,8 @@ void GOSettingsArchives::Save() {
   for (unsigned i = 0; i < list.size(); i++) {
     bool found = false;
     for (long j = 0; j < m_Archives->GetItemCount(); j++)
-      if (m_Archives->GetItemData(j) == (wxUIntPtr)list[i])
-        found = true;
-    if (!found)
-      delete list[i];
+      if (m_Archives->GetItemData(j) == (wxUIntPtr)list[i]) found = true;
+    if (!found) delete list[i];
     list[i] = 0;
   }
   list.clear();

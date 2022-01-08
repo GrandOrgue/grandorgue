@@ -20,12 +20,12 @@ typedef enum {
 } KEY_MATCH_TYPE;
 
 class GOKeyReceiverData {
-protected:
+ protected:
   KEY_RECEIVER_TYPE m_type;
   unsigned m_ShortcutKey;
   unsigned m_MinusKey;
 
-public:
+ public:
   GOKeyReceiverData(KEY_RECEIVER_TYPE type);
   virtual ~GOKeyReceiverData();
 

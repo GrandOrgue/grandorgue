@@ -81,11 +81,11 @@ typedef struct {
 } MIDI_MATCH_EVENT;
 
 class GOMidiReceiverData {
-protected:
+ protected:
   MIDI_RECEIVER_TYPE m_type;
   std::vector<MIDI_MATCH_EVENT> m_events;
 
-public:
+ public:
   GOMidiReceiverData(MIDI_RECEIVER_TYPE type);
   virtual ~GOMidiReceiverData();
 

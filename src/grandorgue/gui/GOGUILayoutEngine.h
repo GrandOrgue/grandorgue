@@ -15,7 +15,7 @@ class GOGUIEnclosure;
 class GOGUIManual;
 
 class GOGUILayoutEngine {
-public:
+ public:
   typedef struct {
     unsigned width;
     unsigned height;
@@ -25,7 +25,7 @@ public:
     int piston_y;
   } MANUAL_RENDER_INFO;
 
-protected:
+ protected:
   GOGUIDisplayMetrics &m_metrics;
   std::vector<MANUAL_RENDER_INFO> m_ManualRenderInfo;
   std::vector<GOGUIEnclosure *> m_Enclosures;
@@ -37,7 +37,7 @@ protected:
   int m_CenterY;
   int m_CenterWidth;
 
-public:
+ public:
   GOGUILayoutEngine(GOGUIDisplayMetrics &metrics);
   virtual ~GOGUILayoutEngine();
 
@@ -69,8 +69,8 @@ public:
   virtual int GetCenterX();
   virtual int GetHackY();
 
-  virtual const MANUAL_RENDER_INFO &
-  GetManualRenderInfo(const unsigned manual_nb) const;
+  virtual const MANUAL_RENDER_INFO &GetManualRenderInfo(
+    const unsigned manual_nb) const;
 
   void RegisterEnclosure(GOGUIEnclosure *enclosure);
   void RegisterManual(GOGUIManual *manual);

@@ -13,7 +13,7 @@
 #include "portaudio.h"
 
 class GOSoundPortaudioPort : public GOSoundPort {
-private:
+ private:
   PaStream *m_stream;
 
   static int Callback(
@@ -27,7 +27,7 @@ private:
   static wxString getName(unsigned index);
   static wxString getLastError(PaError error);
 
-public:
+ public:
   static const wxString PORT_NAME;
 
   GOSoundPortaudioPort(GOSound *sound, wxString name);
@@ -40,8 +40,8 @@ public:
   static const std::vector<wxString> &getApis() {
     return GOSoundPortFactory::c_NoApis;
   }
-  static GOSoundPort *
-  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+  static GOSoundPort *create(
+    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
   static void terminate();

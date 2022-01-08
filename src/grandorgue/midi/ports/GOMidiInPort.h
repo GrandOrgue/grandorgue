@@ -13,7 +13,7 @@
 #include "ptrvector.h"
 
 class GOMidiInPort : public GOMidiPort {
-protected:
+ protected:
   GOMidiMerger m_merger;
   int m_ChannelShift;
 
@@ -21,7 +21,7 @@ protected:
 
   void Receive(const std::vector<unsigned char> msg);
 
-public:
+ public:
   GOMidiInPort(
     GOMidi *midi,
     const wxString &portName,

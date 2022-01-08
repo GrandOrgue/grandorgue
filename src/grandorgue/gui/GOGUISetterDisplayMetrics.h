@@ -26,7 +26,7 @@ class GOConfigReader;
 class GODefinitionFile;
 
 class GOGUISetterDisplayMetrics : public GOGUIDisplayMetrics {
-public:
+ public:
   GOGUISetterDisplayMetrics(
     GOConfigReader &ini, GODefinitionFile *organfile, GOGUISetterType type);
 };

@@ -11,7 +11,7 @@
 class GOMidiEvent;
 
 class GOEventHandler {
-public:
+ public:
   virtual ~GOEventHandler() {}
 
   virtual void ProcessMidi(const GOMidiEvent &event) = 0;

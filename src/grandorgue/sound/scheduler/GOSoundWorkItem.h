@@ -11,7 +11,7 @@
 class GOSoundThread;
 
 class GOSoundWorkItem {
-public:
+ public:
   virtual ~GOSoundWorkItem() {}
 
   virtual unsigned GetGroup() = 0;

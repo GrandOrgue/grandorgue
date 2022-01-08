@@ -52,7 +52,8 @@ GOSplash::GOSplash(bool has_timeout, wxWindow *parent, wxWindowID id)
       wxPoint(0, 0),
       wxSize(100, 100),
       wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
-      m_Timer(this, GO_SPLASH_TIMER_ID), m_hasTimeout(has_timeout) {
+      m_Timer(this, GO_SPLASH_TIMER_ID),
+      m_hasTimeout(has_timeout) {
   SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
   wxBitmap bitmap = GetImage_Splash();
   DrawText(bitmap);
@@ -104,9 +105,9 @@ void GOSplash::DrawText(wxBitmap &bitmap) {
   font.SetWeight(wxFONTWEIGHT_NORMAL);
   font.SetPointSize(7);
   dc.SetFont(font);
-  wxString msg
-    = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2021 "
-        "GrandOrgue contributors\n\nThis software comes with no warranty");
+  wxString msg = _(
+    "Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2021 "
+    "GrandOrgue contributors\n\nThis software comes with no warranty");
   dc.DrawLabel(
     msg,
     wxRect(60, 72, 370, 40),
@@ -116,9 +117,10 @@ void GOSplash::DrawText(wxBitmap &bitmap) {
   font.SetWeight(wxFONTWEIGHT_NORMAL);
   font.SetPointSize(7);
   dc.SetFont(font);
-  msg = _("ASIO Interface Technology by Steinberg Media Technologies GmbH,\nby "
-          "use of the Steinberg ASIO SDK, Version 2.3.3.\nASIO is a trademark "
-          "and software of Steinberg Media Technologies GmbH.");
+  msg = _(
+    "ASIO Interface Technology by Steinberg Media Technologies GmbH,\nby "
+    "use of the Steinberg ASIO SDK, Version 2.3.3.\nASIO is a trademark "
+    "and software of Steinberg Media Technologies GmbH.");
   dc.DrawLabel(
     msg,
     wxRect(60, 122, 370, 40),
@@ -129,8 +131,7 @@ void GOSplash::DrawText(wxBitmap &bitmap) {
 GOSplash::~GOSplash() { m_Timer.Stop(); }
 
 void GOSplash::OnShowWindow(wxShowEvent &event) {
-  if (m_hasTimeout)
-    m_Timer.Start(GO_SPLASH_TIMEOUT_LENGTH, true);
+  if (m_hasTimeout) m_Timer.Start(GO_SPLASH_TIMEOUT_LENGTH, true);
   m_Image->SetFocus();
   Update();
 }

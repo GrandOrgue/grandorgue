@@ -12,7 +12,7 @@
 #include <wx/dcmemory.h>
 
 class wxGaugeAudio : public wxControl {
-private:
+ private:
   int m_Value;
   bool m_Clip;
   bool m_Update;
@@ -22,7 +22,7 @@ private:
   void OnPaint(wxPaintEvent &event);
   void Update();
 
-public:
+ public:
   wxGaugeAudio(
     wxWindow *parent, wxWindowID id, const wxPoint &pos = wxDefaultPosition);
   ~wxGaugeAudio(void);

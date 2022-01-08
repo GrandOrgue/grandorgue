@@ -11,11 +11,11 @@
 #include "GOMutex.h"
 
 class GOMutexLocker {
-private:
+ private:
   GOMutex &m_Mutex;
   bool m_Locked;
 
-public:
+ public:
   /**
    * Lock the mutex
    * When try_lock = true or pThread is not null then the mutex may be not
@@ -47,21 +47,18 @@ public:
   }
 
   ~GOMutexLocker() {
-    if (m_Locked)
-      m_Mutex.Unlock();
+    if (m_Locked) m_Mutex.Unlock();
   }
 
   bool TryLock(const char *lockerInfo = NULL) {
-    if (!m_Locked)
-      m_Locked = m_Mutex.TryLock(lockerInfo);
+    if (!m_Locked) m_Locked = m_Mutex.TryLock(lockerInfo);
     return m_Locked;
   }
 
   bool IsLocked() const { return m_Locked; }
 
   void Unlock() {
-    if (m_Locked)
-      m_Mutex.Unlock();
+    if (m_Locked) m_Mutex.Unlock();
     m_Locked = false;
   }
 

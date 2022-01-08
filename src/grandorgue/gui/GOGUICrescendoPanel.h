@@ -14,12 +14,12 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUICrescendoPanel : public GOGUIPanelCreator {
-private:
+ private:
   GODefinitionFile *m_organfile;
 
   GOGUIPanel *CreateCrescendoPanel(GOConfigReader &cfg);
 
-public:
+ public:
   GOGUICrescendoPanel(GODefinitionFile *organfile);
   virtual ~GOGUICrescendoPanel();
 

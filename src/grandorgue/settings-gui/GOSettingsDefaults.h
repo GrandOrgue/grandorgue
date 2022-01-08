@@ -27,7 +27,7 @@ class GOSettingsDefaults : public wxPanel {
     ID_VOLUME,
   };
 
-private:
+ private:
   GOConfig &m_config;
   wxDirPickerCtrl *m_OrganPath;
   wxDirPickerCtrl *m_OrganPackagePath;
@@ -39,7 +39,7 @@ private:
   wxSpinCtrl *m_MetronomeBPM;
   wxSpinCtrl *m_Volume;
 
-public:
+ public:
   GOSettingsDefaults(GOConfig &settings, wxWindow *parent);
 
   void Save();

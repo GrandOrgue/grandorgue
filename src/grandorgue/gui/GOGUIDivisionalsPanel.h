@@ -14,12 +14,12 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUIDivisionalsPanel : public GOGUIPanelCreator {
-private:
+ private:
   GODefinitionFile *m_organfile;
 
   GOGUIPanel *CreateDivisionalsPanel(GOConfigReader &cfg);
 
-public:
+ public:
   GOGUIDivisionalsPanel(GODefinitionFile *organfile);
   virtual ~GOGUIDivisionalsPanel();
 

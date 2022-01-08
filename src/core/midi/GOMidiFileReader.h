@@ -17,7 +17,7 @@ class GOMidiEvent;
 class GOMidiMap;
 
 class GOMidiFileReader {
-private:
+ private:
   GOMidiMap &m_Map;
   GOBuffer<uint8_t> m_Data;
   unsigned m_Tracks;
@@ -33,7 +33,7 @@ private:
   bool StartTrack();
   unsigned DecodeTime();
 
-public:
+ public:
   GOMidiFileReader(GOMidiMap &map);
   ~GOMidiFileReader();
 

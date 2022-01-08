@@ -13,8 +13,10 @@
 #include "config/GOConfigFileReader.h"
 
 GOConfigReaderDB::GOConfigReaderDB(bool case_sensitive)
-    : m_CaseSensitive(case_sensitive), m_ODF(1000), m_ODF_LC(1000), m_CMB(100) {
-}
+    : m_CaseSensitive(case_sensitive),
+      m_ODF(1000),
+      m_ODF_LC(1000),
+      m_CMB(100) {}
 
 GOConfigReaderDB::~GOConfigReaderDB() {}
 
@@ -55,8 +57,7 @@ bool GOConfigReaderDB::ReadData(
     wxString group = i->first;
 
     if (!handle_prefix || group.StartsWith(wxT("_"))) {
-      if (handle_prefix)
-        group = group.Mid(1);
+      if (handle_prefix) group = group.Mid(1);
 
       for (std::map<wxString, wxString>::const_iterator j = g.begin();
            j != g.end();
@@ -67,8 +68,7 @@ bool GOConfigReaderDB::ReadData(
 
         if (type == ODFSetting) {
           AddEntry(m_ODF, k, value);
-          if (!m_CaseSensitive)
-            AddEntry(m_ODF_LC, k.Lower(), value);
+          if (!m_CaseSensitive) AddEntry(m_ODF_LC, k.Lower(), value);
           m_ODFUsed[k] = false;
         } else {
           AddEntry(m_CMB, k, value);

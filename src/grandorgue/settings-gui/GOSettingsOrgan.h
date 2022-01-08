@@ -29,7 +29,7 @@ class GOSettingsOrgan : public wxPanel {
     ID_PROPERTIES,
   };
 
-private:
+ private:
   GOConfig &m_config;
   GOMidi &m_midi;
   wxListView *m_Organs;
@@ -48,7 +48,7 @@ private:
 
   void MoveOrgan(long from, long to);
 
-public:
+ public:
   GOSettingsOrgan(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
   std::vector<const GOOrgan *> GetOrgans();

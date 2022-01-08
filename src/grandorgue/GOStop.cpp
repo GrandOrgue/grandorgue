@@ -14,9 +14,12 @@
 #include "config/GOConfigReader.h"
 
 GOStop::GOStop(GODefinitionFile *organfile, unsigned first_midi_note_number)
-    : GODrawstop(organfile), m_RankInfo(0), m_KeyVelocity(0),
+    : GODrawstop(organfile),
+      m_RankInfo(0),
+      m_KeyVelocity(0),
       m_FirstMidiNoteNumber(first_midi_note_number),
-      m_FirstAccessiblePipeLogicalKeyNumber(0), m_NumberOfAccessiblePipes(0) {}
+      m_FirstAccessiblePipeLogicalKeyNumber(0),
+      m_NumberOfAccessiblePipes(0) {}
 
 unsigned GOStop::IsAuto() const {
   /* m_auto seems to state that if a stop only has 1 note, the note isn't
@@ -127,15 +130,12 @@ void GOStop::SetKey(unsigned note, unsigned velocity) {
     || note
       >= m_FirstAccessiblePipeLogicalKeyNumber + m_NumberOfAccessiblePipes)
     return;
-  if (IsAuto())
-    return;
+  if (IsAuto()) return;
   note -= m_FirstAccessiblePipeLogicalKeyNumber;
 
-  if (m_KeyVelocity[note] == velocity)
-    return;
+  if (m_KeyVelocity[note] == velocity) return;
   m_KeyVelocity[note] = velocity;
-  if (IsActive())
-    SetRankKey(note, m_KeyVelocity[note]);
+  if (IsActive()) SetRankKey(note, m_KeyVelocity[note]);
 }
 
 void GOStop::ChangeState(bool on) {
@@ -150,8 +150,7 @@ void GOStop::ChangeState(bool on) {
 GOStop::~GOStop(void) {}
 
 void GOStop::AbortPlayback() {
-  if (IsAuto())
-    Set(false);
+  if (IsAuto()) Set(false);
   GOButton::AbortPlayback();
 }
 
@@ -165,8 +164,7 @@ void GOStop::PreparePlayback() {
 void GOStop::StartPlayback() {
   GODrawstop::StartPlayback();
 
-  if (IsAuto() && IsActive())
-    SetRankKey(0, 0x7f);
+  if (IsAuto() && IsActive()) SetRankKey(0, 0x7f);
 }
 
 GORank *GOStop::GetRank(unsigned index) { return m_RankInfo[index].Rank; }

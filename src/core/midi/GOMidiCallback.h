@@ -11,7 +11,7 @@
 class GOMidiEvent;
 
 class GOMidiCallback {
-public:
+ public:
   virtual ~GOMidiCallback() {}
 
   virtual void OnMidiEvent(const GOMidiEvent &event) = 0;

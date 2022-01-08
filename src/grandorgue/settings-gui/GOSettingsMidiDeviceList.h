@@ -18,7 +18,7 @@
 #include "ptrvector.h"
 
 class GOSettingsMidiDeviceList {
-private:
+ private:
   wxWindow *m_parent;
   const ptr_vector<GOMidiPort> &m_Ports;
   GOMidiDeviceConfigList &m_ConfList;
@@ -34,7 +34,7 @@ private:
   void OnChecked(wxCommandEvent &event);
   void OnMatchingClick(wxCommandEvent &event);
 
-public:
+ public:
   GOSettingsMidiDeviceList(
     const ptr_vector<GOMidiPort> &ports,
     GOMidiDeviceConfigList &configListPersist,

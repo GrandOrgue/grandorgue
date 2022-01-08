@@ -22,7 +22,7 @@ class GOSoundSampler;
 typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
 
 class GOTremulant : public GODrawstop, private GOCacheObject {
-private:
+ private:
   static const struct IniFileEnumEntry m_tremulant_types[];
   GOTremulantType m_TremulantType;
   int m_Period;
@@ -48,7 +48,7 @@ private:
   void AbortPlayback();
   void StartPlayback();
 
-public:
+ public:
   GOTremulant(GODefinitionFile *organfile);
   ~GOTremulant();
   void Load(GOConfigReader &cfg, wxString group, int sampler_group_id);

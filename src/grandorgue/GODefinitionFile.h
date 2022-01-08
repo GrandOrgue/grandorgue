@@ -54,7 +54,7 @@ class GODefinitionFile : public GOEventDistributor,
                          public GOModel {
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
-private:
+ private:
   GODocument *m_doc;
   wxString m_odf;
   wxString m_ArchiveID;
@@ -125,7 +125,7 @@ private:
     wxString ID, wxString &name, const wxString &parentID = wxEmptyString);
   void CloseArchives();
 
-public:
+ public:
   GODefinitionFile(GODocument *doc, GOConfig &settings);
   wxString Load(
     GOProgressDialog *dlg,

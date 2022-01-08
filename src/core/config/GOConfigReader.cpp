@@ -25,21 +25,22 @@ bool GOConfigReader::Read(
   bool found = false;
 
   if (required) {
-    if (group.length() >= 6 && group.Mid(0, 6) == wxT("Setter")) // Setter
-                                                                 // groups
-                                                                 // aren't
-                                                                 // required.
+    if (group.length() >= 6 && group.Mid(0, 6) == wxT("Setter"))  // Setter
+                                                                  // groups
+                                                                  // aren't
+                                                                  // required.
       required = false;
     else if (group.length() >= 5 && group.Mid(0, 5) == wxT("Panel")) {
-      if (group.length() >= 14 && group.Mid(8, 6) == wxT("Setter")) // Setter
-                                                                    // groups
-                                                                    // aren't
-                                                                    // required.
+      if (
+        group.length() >= 14 && group.Mid(8, 6) == wxT("Setter"))  // Setter
+                                                                   // groups
+                                                                   // aren't
+                                                                   // required.
         required = false;
     } else if (
       group.length() >= 12
       && group.Mid(0, 12)
-        == wxT("FrameGeneral")) // FrameGeneral groups aren't required.
+        == wxT("FrameGeneral"))  // FrameGeneral groups aren't required.
       required = false;
   }
 
@@ -68,8 +69,7 @@ wxString GOConfigReader::ReadString(
   wxString value;
   bool found = Read(type, group, key, required, value);
 
-  if (!found)
-    value = defaultValue;
+  if (!found) value = defaultValue;
   return value;
 }
 
@@ -135,8 +135,7 @@ bool GOConfigReader::ReadBoolean(
   bool required,
   bool defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
-    return defaultValue;
+  if (!Read(type, group, key, required, value)) return defaultValue;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -147,10 +146,8 @@ bool GOConfigReader::ReadBoolean(
         value.c_str());
     value.Trim();
   }
-  if (value == wxT("Y") || value == wxT("y"))
-    return true;
-  if (value == wxT("N") || value == wxT("n"))
-    return false;
+  if (value == wxT("Y") || value == wxT("y")) return true;
+  if (value == wxT("N") || value == wxT("n")) return false;
   value.MakeUpper();
   wxLogWarning(
     _("Strange boolean value for section '%s' entry '%s': %s"),
@@ -183,8 +180,7 @@ wxColour GOConfigReader::ReadColor(
   bool required,
   wxString defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
-    value = defaultValue;
+  if (!Read(type, group, key, required, value)) value = defaultValue;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -233,8 +229,7 @@ wxColour GOConfigReader::ReadColor(
     return wxColour(0xA5, 0x2A, 0x2A);
 
   wxColour colour;
-  if (parseColor(colour, value))
-    return colour;
+  if (parseColor(colour, value)) return colour;
 
   wxString error;
   error.Printf(
@@ -264,8 +259,7 @@ int GOConfigReader::ReadInteger(
   bool required,
   int defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
-    return defaultValue;
+  if (!Read(type, group, key, required, value)) return defaultValue;
 
   long retval;
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
@@ -299,8 +293,7 @@ int GOConfigReader::ReadInteger(
       value.c_str());
   }
 
-  if (nmin <= retval && retval <= nmax)
-    return retval;
+  if (nmin <= retval && retval <= nmax) return retval;
 
   wxString error;
   error.Printf(
@@ -351,8 +344,7 @@ double GOConfigReader::ReadFloat(
   bool required,
   double defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
-    return defaultValue;
+  if (!Read(type, group, key, required, value)) return defaultValue;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -380,8 +372,7 @@ double GOConfigReader::ReadFloat(
     throw error;
   }
 
-  if (nmin <= retval && retval <= nmax)
-    return retval;
+  if (nmin <= retval && retval <= nmax) return retval;
 
   wxString error;
   error.Printf(
@@ -412,8 +403,7 @@ unsigned GOConfigReader::ReadSize(
     = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
   wxString value;
 
-  if (!Read(type, group, key, required, value))
-    value = defaultValue;
+  if (!Read(type, group, key, required, value)) value = defaultValue;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -437,8 +427,7 @@ unsigned GOConfigReader::ReadSize(
 
   long size;
   if (parseLong(size, value))
-    if (100 <= size && size <= 4000)
-      return size;
+    if (100 <= size && size <= 4000) return size;
 
   wxString error;
   error.Printf(
@@ -461,8 +450,7 @@ unsigned GOConfigReader::ReadFontSize(
   bool required,
   wxString defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
-    value = defaultValue;
+  if (!Read(type, group, key, required, value)) value = defaultValue;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -484,8 +472,7 @@ unsigned GOConfigReader::ReadFontSize(
 
   long size;
   if (parseLong(size, value))
-    if (1 <= size && size <= 50)
-      return size;
+    if (1 <= size && size <= 50) return size;
 
   wxString error;
   error.Printf(
@@ -507,8 +494,7 @@ int GOConfigReader::ReadEnum(
   int defaultEntry = -1;
   wxString value;
   for (unsigned i = 0; i < count; i++)
-    if (entry[i].value == defaultValue)
-      defaultEntry = i;
+    if (entry[i].value == defaultValue) defaultEntry = i;
   if (defaultEntry == -1) {
     wxLogError(_("Invalid enum default value"));
     defaultEntry = 0;
@@ -527,8 +513,7 @@ int GOConfigReader::ReadEnum(
     value.Trim();
   }
   for (unsigned i = 0; i < count; i++)
-    if (entry[i].name == value)
-      return entry[i].value;
+    if (entry[i].name == value) return entry[i].value;
 
   wxString error;
   error.Printf(

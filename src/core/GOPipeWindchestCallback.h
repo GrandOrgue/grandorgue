@@ -9,7 +9,7 @@
 #define GOPIPEWINDCHESTCALLBACK_H
 
 class GOPipeWindchestCallback {
-public:
+ public:
   virtual ~GOPipeWindchestCallback() {}
 
   virtual void SetTremulant(bool on) = 0;

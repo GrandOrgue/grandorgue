@@ -24,8 +24,7 @@ const GOHashType &GOHash::getHash() {
 wxString GOHash::getStringHash() {
   getHash();
   wxString result = wxEmptyString;
-  for (unsigned i = 0; i < 20; i++)
-    result += wxDecToHex(m_Hash.hash[i]);
+  for (unsigned i = 0; i < 20; i++) result += wxDecToHex(m_Hash.hash[i]);
   return result;
 }
 

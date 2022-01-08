@@ -17,14 +17,14 @@ class wxColour;
 class wxRect;
 
 class GODC {
-private:
+ private:
   wxDC *m_DC;
   double m_Scale;
   double m_FontScale;
 
   wxString WrapText(const wxString &string, unsigned width);
 
-public:
+ public:
   GODC(wxDC *dc, double scale, double fontScale);
 
   void DrawBitmap(GOBitmap &bitmap, const wxRect &target);

@@ -12,8 +12,7 @@
 GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(
   GOConfigReader &ini, wxString group)
     : GOGUIDisplayMetrics() {
-  if (group.IsEmpty())
-    group = wxT("Organ");
+  if (group.IsEmpty()) group = wxT("Organ");
 
   m_DispScreenSizeHoriz
     = ini.ReadSize(ODFSetting, group, wxT("DispScreenSizeHoriz"), 0);

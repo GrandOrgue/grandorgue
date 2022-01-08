@@ -31,8 +31,8 @@ GOCondition::GOCondition(GOMutex &mutex) : r_mutex(mutex.GetTimedMutex()) {}
 
 GOCondition::~GOCondition() {}
 
-unsigned
-GOCondition::DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *) {
+unsigned GOCondition::DoWait(
+  bool isWithTimeout, const char *waiterInfo, GOThread *) {
   bool isSignalReceived;
 
   if (isWithTimeout)
@@ -54,8 +54,8 @@ GOCondition::GOCondition(GOMutex &mutex) : m_condition(mutex.m_Mutex) {}
 
 GOCondition::~GOCondition() {}
 
-unsigned
-GOCondition::DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *) {
+unsigned GOCondition::DoWait(
+  bool isWithTimeout, const char *waiterInfo, GOThread *) {
   bool isSignalReceived;
 
   if (isWithTimeout)
@@ -77,8 +77,7 @@ void GOCondition::Broadcast() { m_condition.Broadcast(); }
 GOCondition::GOCondition(GOMutex &mutex) : m_Waiters(0), m_Mutex(mutex) {}
 
 GOCondition::~GOCondition() {
-  while (m_Waiters > 0)
-    Signal();
+  while (m_Waiters > 0) Signal();
 }
 
 unsigned GOCondition::DoWait(
@@ -94,8 +93,7 @@ unsigned GOCondition::DoWait(
 
   do {
     isMutexLocked = m_Mutex.LockOrStop(waiterInfo, pThread);
-    if (isMutexLocked)
-      break;
+    if (isMutexLocked) break;
 
     // a timeout occured
     if (isFirstTime && waiterInfo) {
@@ -140,8 +138,7 @@ unsigned GOCondition::WaitOrStop(const char *waiterInfo, GOThread *pThread) {
   while (pThread == NULL || !pThread->ShouldStop()) {
     rc = DoWait(pThread != NULL, waiterInfo, pThread);
 
-    if (rc & SIGNAL_RECEIVED)
-      break;
+    if (rc & SIGNAL_RECEIVED) break;
 
     // timeout occured
     if (isFirstTime && waiterInfo) {

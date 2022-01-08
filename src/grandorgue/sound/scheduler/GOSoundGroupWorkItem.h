@@ -18,7 +18,7 @@
 class GOSoundEngine;
 
 class GOSoundGroupWorkItem : public GOSoundWorkItem, public GOSoundBufferItem {
-private:
+ private:
   GOSoundEngine &m_engine;
   GOSoundSamplerList m_Active;
   GOSoundSamplerList m_Release;
@@ -28,10 +28,10 @@ private:
   unsigned m_Done;
   volatile bool m_Stop;
 
-  void
-  ProcessList(GOSoundSamplerList &list, bool toDropOld, float *output_buffer);
+  void ProcessList(
+    GOSoundSamplerList &list, bool toDropOld, float *output_buffer);
 
-public:
+ public:
   GOSoundGroupWorkItem(
     GOSoundEngine &sound_engine, unsigned samples_per_buffer);
 

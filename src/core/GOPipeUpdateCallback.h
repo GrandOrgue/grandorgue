@@ -9,7 +9,7 @@
 #define GOPIPEUPDATECALLBACK_H
 
 class GOPipeUpdateCallback {
-public:
+ public:
   virtual ~GOPipeUpdateCallback() {}
 
   virtual void UpdateAmplitude() = 0;

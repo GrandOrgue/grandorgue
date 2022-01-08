@@ -51,8 +51,7 @@ void SHA1_Init(SHA_CTX *ctx) {
   ctx->H[3] = 0x10325476;
   ctx->H[4] = 0xc3d2e1f0;
 
-  for (i = 0; i < 80; i++)
-    ctx->W[i] = 0;
+  for (i = 0; i < 80; i++) ctx->W[i] = 0;
 }
 
 void SHA1_Update(SHA_CTX *ctx, const void *_dataIn, int len) {
@@ -90,8 +89,7 @@ void SHA1_Final(unsigned char hashout[20], SHA_CTX *ctx) {
   padlen[6] = (unsigned char)((ctx->sizeLo >> 8) & 255);
   padlen[7] = (unsigned char)((ctx->sizeLo >> 0) & 255);
   SHA1_Update(ctx, &pad0x80, 1);
-  while (ctx->lenW != 56)
-    SHA1_Update(ctx, &pad0x00, 1);
+  while (ctx->lenW != 56) SHA1_Update(ctx, &pad0x00, 1);
   SHA1_Update(ctx, padlen, 8);
 
   /* Output hash

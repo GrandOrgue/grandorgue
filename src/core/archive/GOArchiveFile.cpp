@@ -23,7 +23,10 @@ GOArchiveFile::GOArchiveFile(
   wxString name,
   const std::vector<wxString> &dependencies,
   const std::vector<wxString> &dependency_titles)
-    : m_ID(id), m_Path(path), m_Name(name), m_Dependencies(dependencies),
+    : m_ID(id),
+      m_Path(path),
+      m_Name(name),
+      m_Dependencies(dependencies),
       m_DependencyTitles(dependency_titles) {
   m_FileID = GetCurrentFileID();
 }
@@ -103,15 +106,12 @@ bool GOArchiveFile::IsUsable(const GOOrganList &organs) const {
 }
 
 bool GOArchiveFile::IsComplete(const GOOrganList &organs) const {
-  if (!IsUsable(organs))
-    return false;
+  if (!IsUsable(organs)) return false;
   for (unsigned i = 0; i < m_Dependencies.size(); i++) {
     const GOArchiveFile *archive
       = organs.GetArchiveByID(m_Dependencies[i], true);
-    if (!archive)
-      return false;
-    if (!archive->IsUsable(organs))
-      return false;
+    if (!archive) return false;
+    if (!archive->IsUsable(organs)) return false;
   }
   return true;
 }

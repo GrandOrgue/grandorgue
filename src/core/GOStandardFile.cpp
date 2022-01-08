@@ -22,8 +22,7 @@ const wxString GOStandardFile::GetPath() { return m_Path; }
 size_t GOStandardFile::GetSize() { return m_Size; }
 
 bool GOStandardFile::Open() {
-  if (!m_File.Open(m_Path, wxFile::read))
-    return false;
+  if (!m_File.Open(m_Path, wxFile::read)) return false;
   m_Size = m_File.Length();
   return true;
 }
@@ -31,7 +30,6 @@ void GOStandardFile::Close() { m_File.Close(); }
 
 size_t GOStandardFile::Read(void *buffer, size_t len) {
   ssize_t read = m_File.Read(buffer, len);
-  if (read == wxInvalidOffset)
-    return 0;
+  if (read == wxInvalidOffset) return 0;
   return read;
 }

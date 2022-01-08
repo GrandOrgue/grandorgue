@@ -34,8 +34,12 @@ END_EVENT_TABLE()
 
 GOGUIPanelWidget::GOGUIPanelWidget(
   GOGUIPanel *panel, wxWindow *parent, wxWindowID id)
-    : wxPanel(parent, id), m_panel(panel), m_BGInit(false),
-      m_Background(&m_BGImage), m_Scale(1), m_FontScale(1) {
+    : wxPanel(parent, id),
+      m_panel(panel),
+      m_BGInit(false),
+      m_Background(&m_BGImage),
+      m_Scale(1),
+      m_FontScale(1) {
   initFont();
   SetLabel(m_panel->GetName());
   m_ClientBitmap.Create(
@@ -61,24 +65,23 @@ void GOGUIPanelWidget::initFont() {
 }
 
 void GOGUIPanelWidget::Focus() {
-  if (!HasFocus())
-    SetFocus();
+  if (!HasFocus()) SetFocus();
 }
 
 wxSize GOGUIPanelWidget::UpdateSize(wxSize size) {
   double scaleX = size.GetWidth() / (double)m_panel->GetWidth();
   double scaleY = size.GetHeight() / (double)m_panel->GetHeight();
-  if (scaleX < scaleY) // To fit all, we need to use the SMALLEST of the two
+  if (scaleX < scaleY)  // To fit all, we need to use the SMALLEST of the two
     m_Scale = scaleX;
   else
     m_Scale = scaleY;
-  if (m_Scale > 2) // Actually useless, because max frame size is set to initial
-                   // size
+  if (m_Scale > 2)  // Actually useless, because max frame size is set to
+                    // initial size
     m_Scale = 2;
-  if (m_Scale < 0.25) // Let's not make the window content TOO small. There will
-                      // be scrollbars if the user sizes to smaller than this.
-                      // Without this limit, sizing too a too small value causes
-                      // a crash!
+  if (m_Scale < 0.25)  // Let's not make the window content TOO small. There
+                       // will be scrollbars if the user sizes to smaller than
+                       // this. Without this limit, sizing too a too small value
+                       // causes a crash!
     m_Scale = 0.25;
   m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
   OnUpdate();
@@ -131,8 +134,7 @@ void GOGUIPanelWidget::OnGOControl(wxCommandEvent &event) {
 }
 
 bool GOGUIPanelWidget::ForwardMouseEvent(wxMouseEvent &event) {
-  if (GetClientRect().Contains(event.GetPosition()))
-    return false;
+  if (GetClientRect().Contains(event.GetPosition())) return false;
   wxPoint pos = ClientToScreen(event.GetPosition());
   wxWindow *window = wxFindWindowAtPoint(pos);
   if (window) {
@@ -149,8 +151,7 @@ void GOGUIPanelWidget::OnMouseMove(wxMouseEvent &event) {
     return;
   }
 
-  if (ForwardMouseEvent(event))
-    return;
+  if (ForwardMouseEvent(event)) return;
   m_panel->HandleMousePress(
     event.GetX() / m_Scale, event.GetY() / m_Scale, false);
   event.Skip();
@@ -159,8 +160,7 @@ void GOGUIPanelWidget::OnMouseMove(wxMouseEvent &event) {
 void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent &event) {
   Focus();
 
-  if (ForwardMouseEvent(event))
-    return;
+  if (ForwardMouseEvent(event)) return;
 
   m_panel->HandleMouseRelease(false);
 
@@ -187,14 +187,12 @@ void GOGUIPanelWidget::OnMouseScroll(wxMouseEvent &event) {
 void GOGUIPanelWidget::OnKeyCommand(wxKeyEvent &event) {
   int k = event.GetKeyCode();
   if (!event.AltDown()) {
-    if (!event.ShiftDown())
-      m_panel->HandleKey(259); /* Disable setter */
+    if (!event.ShiftDown()) m_panel->HandleKey(259); /* Disable setter */
     if (event.ShiftDown() || event.GetKeyCode() == WXK_SHIFT)
       m_panel->HandleKey(260); /* Enable setter */
 
     k = WXKtoVK(k);
-    if (k)
-      m_panel->HandleKey(k);
+    if (k) m_panel->HandleKey(k);
   }
   event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
   event.Skip();
@@ -202,8 +200,7 @@ void GOGUIPanelWidget::OnKeyCommand(wxKeyEvent &event) {
 
 void GOGUIPanelWidget::OnKeyUp(wxKeyEvent &event) {
   int k = event.GetKeyCode();
-  if (k == WXK_SHIFT)
-    m_panel->HandleKey(259); /* Disable setter */
+  if (k == WXK_SHIFT) m_panel->HandleKey(259); /* Disable setter */
   event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
   event.Skip();
 }

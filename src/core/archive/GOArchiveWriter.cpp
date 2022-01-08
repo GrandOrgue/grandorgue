@@ -30,8 +30,7 @@ bool GOArchiveWriter::Write(const void *data, size_t size) {
 bool GOArchiveWriter::Add(wxString name, const GOBuffer<uint8_t> &content) {
   name.Replace(wxT("\\"), wxT("/"));
   for (unsigned i = 0; i < m_Names.size(); i++)
-    if (m_Names[i] == name)
-      return false;
+    if (m_Names[i] == name) return false;
   m_Names.push_back(name);
   wxCharBuffer fname = name.utf8_str();
   GOZipLocalHeader sig;
@@ -77,14 +76,10 @@ bool GOArchiveWriter::Add(wxString name, const GOBuffer<uint8_t> &content) {
   centralext.compressed_size = locext.compressed_size;
   centralext.offset = m_Offset;
 
-  if (!Write(&sig, sizeof(sig)))
-    return false;
-  if (!Write(fname.data(), fname.length()))
-    return false;
-  if (!Write(&locext, sizeof(locext)))
-    return false;
-  if (!Write(content.get(), content.GetSize()))
-    return false;
+  if (!Write(&sig, sizeof(sig))) return false;
+  if (!Write(fname.data(), fname.length())) return false;
+  if (!Write(&locext, sizeof(locext))) return false;
+  if (!Write(content.get(), content.GetSize())) return false;
 
   GOBuffer<uint8_t> entry;
   entry.Append((const uint8_t *)&csig, sizeof(csig));
@@ -99,8 +94,7 @@ bool GOArchiveWriter::Add(wxString name, const GOBuffer<uint8_t> &content) {
 }
 
 bool GOArchiveWriter::Close() {
-  if (!m_File.IsOpened())
-    return false;
+  if (!m_File.IsOpened()) return false;
 
   GOZipEnd64Record end64;
   end64.signature = 0x06064b50;
@@ -114,8 +108,7 @@ bool GOArchiveWriter::Close() {
   end64.directory_size = m_directory.GetSize();
   end64.directory_offset = m_Offset;
 
-  if (!Write(m_directory.get(), m_directory.GetSize()))
-    return false;
+  if (!Write(m_directory.get(), m_directory.GetSize())) return false;
 
   GOZipEnd64Locator locator64;
   locator64.signature = 0x07064b50;
@@ -133,12 +126,9 @@ bool GOArchiveWriter::Close() {
   end.directory_offset = 0xffffffff;
   end.comment_len = 0;
 
-  if (!Write(&end64, sizeof(end64)))
-    return false;
-  if (!Write(&locator64, sizeof(locator64)))
-    return false;
-  if (!Write(&end, sizeof(end)))
-    return false;
+  if (!Write(&end64, sizeof(end64))) return false;
+  if (!Write(&locator64, sizeof(locator64))) return false;
+  if (!Write(&end, sizeof(end))) return false;
 
   m_File.Close();
   return true;

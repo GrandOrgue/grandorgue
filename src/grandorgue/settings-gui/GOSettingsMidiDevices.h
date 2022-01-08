@@ -34,7 +34,7 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts {
     ID_RECORDERDEVICE,
   };
 
-private:
+ private:
   GOConfig &m_config;
   GOMidi &m_Midi;
 
@@ -47,8 +47,8 @@ private:
   wxButton *m_InOutDevice;
   wxChoice *m_RecorderDevice;
 
-  void
-  RenewDevices(const GOPortsConfig &portsConfig, const bool isToAutoAddInput);
+  void RenewDevices(
+    const GOPortsConfig &portsConfig, const bool isToAutoAddInput);
   void OnPortChanged(
     const wxString &portName,
     const wxString apiName,
@@ -59,7 +59,7 @@ private:
   void OnInChannelShiftClick(wxCommandEvent &event);
   void OnOutDevicesClick(wxCommandEvent &event);
 
-public:
+ public:
   SettingsMidiDevices(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
   void Save();

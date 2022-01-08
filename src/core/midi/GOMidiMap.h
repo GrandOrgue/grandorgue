@@ -13,11 +13,11 @@
 #include <vector>
 
 class GOMidiMap {
-private:
+ private:
   std::vector<wxString> m_DeviceMap;
   std::vector<wxString> m_ElementMap;
 
-public:
+ public:
   GOMidiMap();
   ~GOMidiMap();
 

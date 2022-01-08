@@ -27,7 +27,7 @@ class GOSettingsReverb;
 class GOSettingsTemperaments;
 
 class GOSettingsDialog : public wxPropertySheetDialog {
-private:
+ private:
   enum { ID_REASONS = 100 };
 
   GOSound &m_Sound;
@@ -53,7 +53,7 @@ private:
   void OnHelp(wxCommandEvent &event);
   void OnReasons(wxCommandEvent &event);
 
-public:
+ public:
   // the order must be the same as the order of pages
   typedef enum {
     PAGE_OPTIONS = 0,

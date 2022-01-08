@@ -18,7 +18,7 @@ class GOSoundReverb;
 class GOConfig;
 
 class GOSoundOutputWorkItem : public GOSoundWorkItem, public GOSoundBufferItem {
-private:
+ private:
   std::vector<float> m_ScaleFactors;
   std::vector<GOSoundBufferItem *> m_Outputs;
   unsigned m_OutputCount;
@@ -28,7 +28,7 @@ private:
   unsigned m_Done;
   volatile bool m_Stop;
 
-public:
+ public:
   GOSoundOutputWorkItem(
     unsigned channels,
     std::vector<float> scale_factors,

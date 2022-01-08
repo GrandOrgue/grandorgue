@@ -29,8 +29,11 @@ MIDIEventSendDialog::MIDIEventSendDialog(
   GOMidiSender *event,
   MIDIEventRecvDialog *recv,
   GOConfig &settings)
-    : wxPanel(parent, wxID_ANY), m_config(settings), m_original(event),
-      m_recv(recv), m_midi(*event) {
+    : wxPanel(parent, wxID_ANY),
+      m_config(settings),
+      m_original(event),
+      m_recv(recv),
+      m_midi(*event) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxFlexGridSizer *sizer = new wxFlexGridSizer(2, 5, 5);
   topSizer->Add(sizer, 0, wxALL, 6);
@@ -141,8 +144,7 @@ MIDIEventSendDialog::MIDIEventSendDialog(
   box->Add(m_LengthValue, 0);
 
   m_copy = new wxButton(this, ID_COPY, _("&Copy current receive event"));
-  if (!m_recv)
-    m_copy->Disable();
+  if (!m_recv) m_copy->Disable();
   sizer->Add(new wxBoxSizer(wxVERTICAL), 0, wxTOP, 5);
   sizer->Add(m_copy, 0, wxTOP, 5);
 
@@ -212,8 +214,7 @@ MIDIEventSendDialog::MIDIEventSendDialog(
   }
 
   m_current = 0;
-  if (!m_midi.GetEventCount())
-    m_midi.AddNewEvent();
+  if (!m_midi.GetEventCount()) m_midi.AddNewEvent();
 
   LoadEvent();
 
@@ -290,45 +291,45 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent &event) {
   else
     m_HighValueLabel->SetLabel(_("&On value:"));
   switch (type) {
-  case MIDI_S_NOTE_ON:
-  case MIDI_S_NOTE_OFF:
-  case MIDI_S_NOTE:
-    m_KeyLabel->SetLabel(_("&MIDI-note:"));
-    break;
+    case MIDI_S_NOTE_ON:
+    case MIDI_S_NOTE_OFF:
+    case MIDI_S_NOTE:
+      m_KeyLabel->SetLabel(_("&MIDI-note:"));
+      break;
 
-  case MIDI_S_CTRL_ON:
-  case MIDI_S_CTRL_OFF:
-  case MIDI_S_CTRL:
-    m_KeyLabel->SetLabel(_("&Controller-No:"));
-    break;
+    case MIDI_S_CTRL_ON:
+    case MIDI_S_CTRL_OFF:
+    case MIDI_S_CTRL:
+      m_KeyLabel->SetLabel(_("&Controller-No:"));
+      break;
 
-  case MIDI_S_RPN:
-  case MIDI_S_NRPN:
-  case MIDI_S_RPN_ON:
-  case MIDI_S_RPN_OFF:
-  case MIDI_S_NRPN_ON:
-  case MIDI_S_NRPN_OFF:
-    m_KeyLabel->SetLabel(_("&Parameter-No:"));
-    break;
+    case MIDI_S_RPN:
+    case MIDI_S_NRPN:
+    case MIDI_S_RPN_ON:
+    case MIDI_S_RPN_OFF:
+    case MIDI_S_NRPN_ON:
+    case MIDI_S_NRPN_OFF:
+      m_KeyLabel->SetLabel(_("&Parameter-No:"));
+      break;
 
-  case MIDI_S_HW_NAME_STRING:
-  case MIDI_S_HW_NAME_LCD:
-  case MIDI_S_HW_STRING:
-  case MIDI_S_HW_LCD:
-    m_KeyLabel->SetLabel(_("&ID:"));
-    break;
+    case MIDI_S_HW_NAME_STRING:
+    case MIDI_S_HW_NAME_LCD:
+    case MIDI_S_HW_STRING:
+    case MIDI_S_HW_LCD:
+      m_KeyLabel->SetLabel(_("&ID:"));
+      break;
 
-  case MIDI_S_RPN_RANGE:
-  case MIDI_S_NRPN_RANGE:
-    m_KeyLabel->SetLabel(_("&Value:"));
-    break;
+    case MIDI_S_RPN_RANGE:
+    case MIDI_S_NRPN_RANGE:
+      m_KeyLabel->SetLabel(_("&Value:"));
+      break;
 
-  case MIDI_S_RODGERS_STOP_CHANGE:
-    m_KeyLabel->SetLabel(_("&Device number:"));
-    break;
+    case MIDI_S_RODGERS_STOP_CHANGE:
+      m_KeyLabel->SetLabel(_("&Device number:"));
+      break;
 
-  default:
-    m_KeyLabel->SetLabel(_("&CTRL/PGM:"));
+    default:
+      m_KeyLabel->SetLabel(_("&CTRL/PGM:"));
   }
   m_StartLabel->SetLabel(_("&Start-Position:"));
   m_LengthLabel->SetLabel(_("&Length:"));
@@ -428,8 +429,7 @@ MIDI_SEND_EVENT MIDIEventSendDialog::CopyEvent() {
     m_config.GetMidiMap().GetDeviceByID(recv.device));
   const GOMidiDeviceConfig *pOutDev = pInDev ? pInDev->p_OutputDevice : NULL;
 
-  if (!pOutDev)
-    return e;
+  if (!pOutDev) return e;
   e.device = m_config.GetMidiMap().GetDeviceByString(pOutDev->m_LogicalName);
   if (m_midi.GetType() == MIDI_SEND_MANUAL) {
     if (

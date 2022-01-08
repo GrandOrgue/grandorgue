@@ -79,12 +79,10 @@ bool GOMidiPlayerContent::Load(
 
     for (unsigned i = 1; i <= manuals; i++)
       SetupManual(map, i, wxString::Format(wxT("M%d"), i));
-    if (pedal)
-      SetupManual(map, manuals + 1, wxString::Format(wxT("M%d"), 0));
+    if (pedal) SetupManual(map, manuals + 1, wxString::Format(wxT("M%d"), 0));
   }
   for (unsigned i = 0; i < events.size(); i++)
-    if (merger.Process(events[i]))
-      m_Events.push_back(events[i]);
+    if (merger.Process(events[i])) m_Events.push_back(events[i]);
 
   return true;
 }

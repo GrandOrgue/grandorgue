@@ -23,7 +23,7 @@ typedef struct _GOArchiveEntry {
 } GOArchiveEntry;
 
 class GOArchiveIndex {
-private:
+ private:
   const GOSettingDirectory &m_CachePath;
   wxString m_Path;
   wxFile m_File;
@@ -41,16 +41,16 @@ private:
   bool ReadEntry(GOArchiveEntry &e);
 
   bool ReadContent(wxString &id, std::vector<GOArchiveEntry> &entries);
-  bool
-  WriteContent(const wxString &id, const std::vector<GOArchiveEntry> &entries);
+  bool WriteContent(
+    const wxString &id, const std::vector<GOArchiveEntry> &entries);
 
-public:
+ public:
   GOArchiveIndex(const GOSettingDirectory &cachePath, const wxString &path);
   ~GOArchiveIndex();
 
   bool ReadIndex(wxString &id, std::vector<GOArchiveEntry> &entries);
-  bool
-  WriteIndex(const wxString &id, const std::vector<GOArchiveEntry> &entries);
+  bool WriteIndex(
+    const wxString &id, const std::vector<GOArchiveEntry> &entries);
 };
 
 #endif

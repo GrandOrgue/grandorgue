@@ -18,7 +18,7 @@ class GODefinitionFile;
 class GOSoundRecorder;
 
 class GOAudioRecorder : public GOElementCreator, private GOTimerCallback {
-private:
+ private:
   GODefinitionFile *m_organfile;
   GOSoundRecorder *m_recorder;
   GOLabel m_RecordingTime;
@@ -34,7 +34,7 @@ private:
   void UpdateDisplay();
   void HandleTimer();
 
-public:
+ public:
   GOAudioRecorder(GODefinitionFile *organfile);
   ~GOAudioRecorder();
 

@@ -23,7 +23,7 @@ class MIDIEventRecvDialog;
 class MIDIEventSendDialog;
 
 class MIDIEventDialog : public wxPropertySheetDialog, public GOView {
-private:
+ private:
   MIDIEventRecvDialog *m_recvPage;
   MIDIEventSendDialog *m_sendPage;
   MIDIEventSendDialog *m_sendDivisionPage;
@@ -35,7 +35,7 @@ private:
   void OnOK(wxCommandEvent &event);
   void OnCancel(wxCommandEvent &event);
 
-public:
+ public:
   MIDIEventDialog(
     GODocumentBase *doc,
     wxWindow *parent,

@@ -18,8 +18,10 @@
 
 GOReferencePipe::GOReferencePipe(
   GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number)
-    : GOPipe(organfile, rank, midi_key_number), m_Reference(NULL),
-      m_ReferenceID(0), m_Filename() {}
+    : GOPipe(organfile, rank, midi_key_number),
+      m_Reference(NULL),
+      m_ReferenceID(0),
+      m_Filename() {}
 
 void GOReferencePipe::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {

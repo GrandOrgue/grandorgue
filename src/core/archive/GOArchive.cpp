@@ -30,8 +30,7 @@ bool GOArchive::OpenArchive(const wxString &path) {
   }
   {
     GOArchiveIndex index(m_CachePath, m_Path);
-    if (index.ReadIndex(m_ID, m_Entries))
-      return true;
+    if (index.ReadIndex(m_ID, m_Entries)) return true;
   }
 
   GOArchiveReader reader(m_File);
@@ -52,8 +51,7 @@ void GOArchive::Close() {
 
 bool GOArchive::containsFile(const wxString &name) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
-    if (m_Entries[i].name == name)
-      return true;
+    if (m_Entries[i].name == name) return true;
   return false;
 }
 
@@ -69,11 +67,9 @@ GOFile *GOArchive::OpenFile(const wxString &name) {
 size_t GOArchive::ReadContent(void *buffer, size_t offset, size_t len) {
   GOMutexLocker lock(m_Mutex);
   ssize_t pos = m_File.Seek(offset);
-  if (pos != (ssize_t)offset)
-    return 0;
+  if (pos != (ssize_t)offset) return 0;
   ssize_t l = m_File.Read(buffer, len);
-  if (l == wxInvalidOffset)
-    return 0;
+  if (l == wxInvalidOffset) return 0;
   return l;
 }
 

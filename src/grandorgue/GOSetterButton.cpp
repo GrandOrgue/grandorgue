@@ -23,8 +23,7 @@ void GOSetterButton::Push() {
 }
 
 void GOSetterButton::Set(bool on) {
-  if (IsEngaged() == on)
-    return;
+  if (IsEngaged() == on) return;
   m_setter->SetterButtonChanged(this);
   Display(on);
 }

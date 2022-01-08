@@ -17,7 +17,7 @@ class GOSoundTremulantWorkItem;
 class GOWindchest;
 
 class GOSoundWindchestWorkItem : public GOSoundWorkItem {
-private:
+ private:
   GOSoundEngine &m_engine;
   GOMutex m_Mutex;
   float m_Volume;
@@ -25,7 +25,7 @@ private:
   GOWindchest *m_Windchest;
   std::vector<GOSoundTremulantWorkItem *> m_Tremulants;
 
-public:
+ public:
   GOSoundWindchestWorkItem(GOSoundEngine &sound_engine, GOWindchest *windchest);
 
   unsigned GetGroup();
@@ -40,8 +40,7 @@ public:
 
   float GetWindchestVolume();
   float GetVolume() {
-    if (!m_Done)
-      Run();
+    if (!m_Done) Run();
     return m_Volume;
   }
 };

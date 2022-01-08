@@ -21,7 +21,7 @@ struct IniFileEnumEntry {
 typedef enum { ODFSetting, CMBSetting } GOSettingType;
 
 class GOConfigReader {
-private:
+ private:
   bool m_Strict;
   GOConfigReaderDB &m_Config;
 
@@ -32,7 +32,7 @@ private:
     bool required,
     wxString &value);
 
-public:
+ public:
   GOConfigReader(GOConfigReaderDB &cfg, bool strict = true);
 
   bool ReadBoolean(

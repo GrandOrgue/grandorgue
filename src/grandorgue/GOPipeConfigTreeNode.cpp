@@ -13,7 +13,8 @@ GOPipeConfigTreeNode::GOPipeConfigTreeNode(
   GOPipeConfigNode *parent,
   GODefinitionFile *organfile,
   GOPipeUpdateCallback *callback)
-    : GOPipeConfigNode(parent, organfile, this, NULL), m_Childs(),
+    : GOPipeConfigNode(parent, organfile, this, NULL),
+      m_Childs(),
       m_Callback(callback) {}
 
 void GOPipeConfigTreeNode::AddChild(GOPipeConfigNode *node) {
@@ -29,22 +30,19 @@ GOPipeConfigNode *GOPipeConfigTreeNode::GetChild(unsigned index) {
 void GOPipeConfigTreeNode::UpdateAmplitude() {
   for (unsigned i = 0; i < m_Childs.size(); i++)
     m_Childs[i]->GetPipeConfig().GetCallback()->UpdateAmplitude();
-  if (m_Callback)
-    m_Callback->UpdateAmplitude();
+  if (m_Callback) m_Callback->UpdateAmplitude();
 }
 
 void GOPipeConfigTreeNode::UpdateTuning() {
   for (unsigned i = 0; i < m_Childs.size(); i++)
     m_Childs[i]->GetPipeConfig().GetCallback()->UpdateTuning();
-  if (m_Callback)
-    m_Callback->UpdateTuning();
+  if (m_Callback) m_Callback->UpdateTuning();
 }
 
 void GOPipeConfigTreeNode::UpdateAudioGroup() {
   for (unsigned i = 0; i < m_Childs.size(); i++)
     m_Childs[i]->GetPipeConfig().GetCallback()->UpdateAudioGroup();
-  if (m_Callback)
-    m_Callback->UpdateAudioGroup();
+  if (m_Callback) m_Callback->UpdateAudioGroup();
 }
 
 GOSampleStatistic GOPipeConfigTreeNode::GetStatistic() {

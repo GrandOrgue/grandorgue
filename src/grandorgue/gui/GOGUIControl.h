@@ -24,7 +24,7 @@ class GODC;
 
 class GOGUIControl : private GOSaveableObject,
                      protected GOControlChangedHandler {
-protected:
+ protected:
   GOGUIPanel *m_panel;
   GOGUIDisplayMetrics *m_metrics;
   GOGUILayoutEngine *m_layout;
@@ -37,7 +37,7 @@ protected:
 
   void ControlChanged(void *control);
 
-public:
+ public:
   GOGUIControl(GOGUIPanel *panel, void *control);
   virtual ~GOGUIControl();
 
@@ -47,8 +47,8 @@ public:
   virtual void PrepareDraw(double scale, GOBitmap *background);
   virtual void Draw(GODC &dc);
   virtual const wxRect &GetBoundingRect();
-  virtual bool
-  HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
+  virtual bool HandleMousePress(
+    int x, int y, bool right, GOGUIMouseState &state);
   virtual bool HandleMouseScroll(int x, int y, int amount);
 };
 

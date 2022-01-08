@@ -30,14 +30,12 @@ GOProgressDialog::GOProgressDialog()
     : m_dlg(NULL), m_last(0), m_const(0), m_value(0), m_max(0) {}
 
 GOProgressDialog::~GOProgressDialog() {
-  if (m_dlg)
-    m_dlg->Destroy();
+  if (m_dlg) m_dlg->Destroy();
 }
 
 void GOProgressDialog::Setup(
   long max, const wxString &title, const wxString &msg) {
-  if (m_dlg)
-    m_dlg->Destroy();
+  if (m_dlg) m_dlg->Destroy();
   m_dlg = new wxProgressDialog(
     title,
     msg,
@@ -49,8 +47,7 @@ void GOProgressDialog::Setup(
   m_const = 0;
   m_value = 0;
   m_max = 0;
-  if (!max)
-    max = 1;
+  if (!max) max = 1;
   Reset(max, msg);
 }
 
@@ -63,16 +60,13 @@ void GOProgressDialog::Reset(long max, const wxString &msg) {
 }
 
 bool GOProgressDialog::Update(unsigned value, const wxString &msg) {
-  if (!m_dlg)
-    return true;
+  if (!m_dlg) return true;
   m_value = value;
-  if (m_last == wxGetUTCTime())
-    return true;
+  if (m_last == wxGetUTCTime()) return true;
   m_last = wxGetUTCTime();
 
   int newValue = (DLG_MAX_VALUE - 1) * (m_value + m_const) / m_max;
 
-  if (newValue <= DLG_MAX_VALUE && !m_dlg->Update(newValue, msg))
-    return false;
+  if (newValue <= DLG_MAX_VALUE && !m_dlg->Update(newValue, msg)) return false;
   return true;
 }

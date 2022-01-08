@@ -37,11 +37,15 @@ IMPLEMENT_DYNAMIC_CLASS(wxMsgBoxEvent, wxEvent)
 
 wxRenameFileEvent::wxRenameFileEvent(
   const wxString &filename, const wxString &directory, const wxString &filter)
-    : wxEvent(0, wxEVT_RENAMEFILE), m_Filename(filename),
-      m_Directory(directory), m_Filter(filter) {}
+    : wxEvent(0, wxEVT_RENAMEFILE),
+      m_Filename(filename),
+      m_Directory(directory),
+      m_Filter(filter) {}
 
 wxRenameFileEvent::wxRenameFileEvent(const wxRenameFileEvent &e)
-    : wxEvent(e), m_Filename(e.m_Filename), m_Directory(e.m_Directory),
+    : wxEvent(e),
+      m_Filename(e.m_Filename),
+      m_Directory(e.m_Directory),
       m_Filter(e.m_Filter) {}
 
 wxEvent *wxRenameFileEvent::Clone() const {

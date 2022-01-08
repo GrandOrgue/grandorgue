@@ -23,7 +23,7 @@ class GOTremulant;
 class GODefinitionFile;
 
 class GOWindchest : private GOPlaybackStateHandler {
-private:
+ private:
   GODefinitionFile *m_organfile;
   wxString m_Name;
   float m_Volume;
@@ -38,7 +38,7 @@ private:
   void PreparePlayback();
   void PrepareRecording();
 
-public:
+ public:
   GOWindchest(GODefinitionFile *organfile);
 
   void Init(GOConfigReader &cfg, wxString group, wxString name);

@@ -14,7 +14,7 @@
 #include "GOCombinationElement.h"
 
 class GODrawstop : public GOButton, public GOCombinationElement {
-public:
+ public:
   typedef enum {
     FUNCTION_INPUT,
     FUNCTION_AND,
@@ -25,7 +25,7 @@ public:
     FUNCTION_NOR
   } GOFunctionType;
 
-private:
+ private:
   static const struct IniFileEnumEntry m_function_types[];
   GOFunctionType m_Type;
   int m_GCState;
@@ -34,7 +34,7 @@ private:
   std::vector<GODrawstop *> m_ControlledDrawstops;
   std::vector<GODrawstop *> m_ControllingDrawstops;
 
-protected:
+ protected:
   bool m_StoreDivisional;
   bool m_StoreGeneral;
 
@@ -46,7 +46,7 @@ protected:
 
   void PreparePlayback();
 
-public:
+ public:
   GODrawstop(GODefinitionFile *organfile);
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);

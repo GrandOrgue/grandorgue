@@ -15,15 +15,16 @@
 
 GOCombination::GOCombination(
   GOCombinationDefinition &combination_template, GODefinitionFile *organfile)
-    : m_OrganFile(organfile), m_Template(combination_template), m_State(0),
+    : m_OrganFile(organfile),
+      m_Template(combination_template),
+      m_State(0),
       m_Protected(false) {}
 
 GOCombination::~GOCombination() {}
 
 void GOCombination::Clear() {
   UpdateState();
-  for (unsigned i = 0; i < m_State.size(); i++)
-    m_State[i] = -1;
+  for (unsigned i = 0; i < m_State.size(); i++) m_State[i] = -1;
 }
 
 void GOCombination::Copy(GOCombination *combination) {
@@ -45,8 +46,7 @@ void GOCombination::UpdateState() {
   else if (m_State.size() < elements.size()) {
     unsigned current = m_State.size();
     m_State.resize(elements.size());
-    while (current < elements.size())
-      m_State[current++] = -1;
+    while (current < elements.size()) m_State[current++] = -1;
   }
 }
 
@@ -59,8 +59,7 @@ bool GOCombination::PushLocal() {
   UpdateState();
 
   if (m_OrganFile->GetSetter()->IsSetterActive()) {
-    if (m_Protected)
-      return false;
+    if (m_Protected) return false;
     if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_REGULAR) {
       for (unsigned i = 0; i < elements.size(); i++) {
         if (

@@ -20,7 +20,7 @@ class wxListEvent;
 class wxListView;
 
 class MIDIList : public wxDialog, public GOView {
-private:
+ private:
   wxListView *m_Objects;
   wxButton *m_Edit;
   wxButton *m_Status;
@@ -41,7 +41,7 @@ private:
   void OnStatus(wxCommandEvent &event);
   void OnButton(wxCommandEvent &event);
 
-public:
+ public:
   MIDIList(
     GODocumentBase *doc, wxWindow *parent, GOEventDistributor *midi_elements);
   ~MIDIList();

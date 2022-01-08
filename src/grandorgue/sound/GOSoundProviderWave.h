@@ -111,7 +111,7 @@ class GOSoundProviderWave : public GOSoundProvider {
   void LoadPitch(const GOFilename &filename);
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 
-public:
+ public:
   GOSoundProviderWave(GOMemoryPool &pool);
 
   void LoadFromFile(

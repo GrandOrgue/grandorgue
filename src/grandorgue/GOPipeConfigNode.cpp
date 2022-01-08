@@ -17,19 +17,19 @@ GOPipeConfigNode::GOPipeConfigNode(
   GODefinitionFile *organfile,
   GOPipeUpdateCallback *callback,
   GOStatisticCallback *statistic)
-    : m_organfile(organfile), m_parent(parent),
-      m_PipeConfig(organfile, callback), m_StatisticCallback(statistic),
+    : m_organfile(organfile),
+      m_parent(parent),
+      m_PipeConfig(organfile, callback),
+      m_StatisticCallback(statistic),
       m_Name() {
-  if (m_parent)
-    m_parent->AddChild(this);
+  if (m_parent) m_parent->AddChild(this);
 }
 
 GOPipeConfigNode::~GOPipeConfigNode() {}
 
 void GOPipeConfigNode::SetParent(GOPipeConfigNode *parent) {
   m_parent = parent;
-  if (m_parent)
-    m_parent->AddChild(this);
+  if (m_parent) m_parent->AddChild(this);
 }
 
 const wxString &GOPipeConfigNode::GetName() { return m_Name; }
@@ -120,8 +120,7 @@ bool GOPipeConfigNode::GetEffectiveCompress() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
-  if (m_PipeConfig.GetLoopLoad() != -1)
-    return m_PipeConfig.GetLoopLoad();
+  if (m_PipeConfig.GetLoopLoad() != -1) return m_PipeConfig.GetLoopLoad();
   if (m_parent)
     return m_parent->GetEffectiveLoopLoad();
   else
@@ -129,8 +128,7 @@ unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
-  if (m_PipeConfig.GetAttackLoad() != -1)
-    return m_PipeConfig.GetAttackLoad();
+  if (m_PipeConfig.GetAttackLoad() != -1) return m_PipeConfig.GetAttackLoad();
   if (m_parent)
     return m_parent->GetEffectiveAttackLoad();
   else
@@ -138,8 +136,7 @@ unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
-  if (m_PipeConfig.GetReleaseLoad() != -1)
-    return m_PipeConfig.GetReleaseLoad();
+  if (m_PipeConfig.GetReleaseLoad() != -1) return m_PipeConfig.GetReleaseLoad();
   if (m_parent)
     return m_parent->GetEffectiveReleaseLoad();
   else
@@ -147,8 +144,7 @@ unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveChannels() {
-  if (m_PipeConfig.GetChannels() != -1)
-    return m_PipeConfig.GetChannels();
+  if (m_PipeConfig.GetChannels() != -1) return m_PipeConfig.GetChannels();
   if (m_parent)
     return m_parent->GetEffectiveChannels();
   else
@@ -156,8 +152,7 @@ unsigned GOPipeConfigNode::GetEffectiveChannels() {
 }
 
 GOSampleStatistic GOPipeConfigNode::GetStatistic() {
-  if (m_StatisticCallback)
-    return m_StatisticCallback->GetStatistic();
+  if (m_StatisticCallback) return m_StatisticCallback->GetStatistic();
   return GOSampleStatistic();
 }
 

@@ -35,7 +35,7 @@ typedef struct {
 class GOSoundSampler;
 
 class GOSoundEngine {
-private:
+ private:
   unsigned m_PolyphonySoftLimit;
   bool m_PolyphonyLimiting;
   bool m_ScaledReleases;
@@ -77,7 +77,7 @@ private:
   void SwitchAttackSampler(GOSoundSampler *sampler);
   float GetRandomFactor();
 
-public:
+ public:
   GOSoundEngine();
   ~GOSoundEngine();
   void Reset();

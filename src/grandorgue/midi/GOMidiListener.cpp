@@ -28,12 +28,10 @@ void GOMidiListener::Register(GOMidi *midi) {
 }
 
 void GOMidiListener::Unregister() {
-  if (m_midi)
-    m_midi->Unregister(this);
+  if (m_midi) m_midi->Unregister(this);
   m_midi = NULL;
 }
 
 void GOMidiListener::Send(const GOMidiEvent &event) {
-  if (m_Callback)
-    m_Callback->OnMidiEvent(event);
+  if (m_Callback) m_Callback->OnMidiEvent(event);
 }

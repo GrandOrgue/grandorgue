@@ -14,8 +14,7 @@ GOFont::GOFont() : m_Name(), m_Points(0), m_Scale(0) {
 }
 
 void GOFont::SetName(const wxString &name) {
-  if (name == wxEmptyString)
-    return;
+  if (name == wxEmptyString) return;
   wxFont new_font = m_Font;
   if (new_font.SetFaceName(name)) {
     m_Font = new_font;

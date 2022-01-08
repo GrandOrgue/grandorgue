@@ -22,7 +22,7 @@ class GOMetronome : private GOTimerCallback,
                     private GOPlaybackStateHandler,
                     private GOSaveableObject,
                     public GOElementCreator {
-private:
+ private:
   GODefinitionFile *m_organfile;
   unsigned m_BPM;
   unsigned m_MeasureLength;
@@ -53,7 +53,7 @@ private:
   void UpdateBPM(int val);
   void UpdateMeasure(int val);
 
-public:
+ public:
   GOMetronome(GODefinitionFile *organfile);
   virtual ~GOMetronome();
 

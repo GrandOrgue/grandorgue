@@ -23,7 +23,7 @@ class GODefinitionFile;
 class wxMidiEvent;
 
 class GOMidi : public wxEvtHandler {
-private:
+ private:
   GOConfig &m_config;
 
   ptr_vector<GOMidiPort> m_midi_in_devices;
@@ -34,7 +34,7 @@ private:
   GOMidiPortFactory m_MidiFactory;
   void OnMidiEvent(wxMidiEvent &event);
 
-public:
+ public:
   GOMidi(GOConfig &settings);
   ~GOMidi();
 

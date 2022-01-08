@@ -34,8 +34,7 @@ int main(int ac, const char *ag[]) {
   while (fread(&c, 1, 1, in) == 1) {
     pos++;
     fprintf(out, "  0x%02x,", c);
-    if (!(pos % 16))
-      fprintf(out, "\n");
+    if (!(pos % 16)) fprintf(out, "\n");
   }
   fprintf(out, "\n};\n\n");
 

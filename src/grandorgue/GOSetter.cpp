@@ -243,11 +243,20 @@ const struct ElementListEntry *GOSetter::GetButtonList() {
 }
 
 GOSetter::GOSetter(GODefinitionFile *organfile)
-    : m_organfile(organfile), m_pos(0), m_bank(0), m_crescendopos(0),
-      m_crescendobank(0), m_framegeneral(0), m_general(0), m_crescendo(0),
-      m_PosDisplay(organfile), m_BankDisplay(organfile),
-      m_CrescendoDisplay(organfile), m_TransposeDisplay(organfile),
-      m_NameDisplay(organfile), m_swell(organfile),
+    : m_organfile(organfile),
+      m_pos(0),
+      m_bank(0),
+      m_crescendopos(0),
+      m_crescendobank(0),
+      m_framegeneral(0),
+      m_general(0),
+      m_crescendo(0),
+      m_PosDisplay(organfile),
+      m_BankDisplay(organfile),
+      m_CrescendoDisplay(organfile),
+      m_TransposeDisplay(organfile),
+      m_NameDisplay(organfile),
+      m_swell(organfile),
       m_SetterType(SETTER_REGULAR) {
   CreateButtons(m_organfile);
 
@@ -402,201 +411,200 @@ void GOSetter::Load(GOConfigReader &cfg) {
 
 void GOSetter::ButtonChanged(int id) {
   switch (id) {
-  case ID_SETTER_PREV:
-    Prev();
-    break;
-  case ID_SETTER_NEXT:
-    Next();
-    break;
-  case ID_SETTER_SET:
-    wxTheApp->GetTopWindow()->UpdateWindowUI();
-    break;
-  case ID_SETTER_M1:
-    SetPosition(m_pos - 1, false);
-    break;
-  case ID_SETTER_M10:
-    SetPosition(m_pos - 10, false);
-    break;
-  case ID_SETTER_M100:
-    SetPosition(m_pos - 100, false);
-    break;
-  case ID_SETTER_P1:
-    SetPosition(m_pos + 1, false);
-    break;
-  case ID_SETTER_P10:
-    SetPosition(m_pos + 10, false);
-    break;
-  case ID_SETTER_P100:
-    SetPosition(m_pos + 100, false);
-    break;
-  case ID_SETTER_HOME:
-    SetPosition(0, false);
-    break;
-  case ID_SETTER_GC:
-    m_organfile->Reset();
-    break;
-  case ID_SETTER_CURRENT:
-    SetPosition(m_pos);
-    break;
-  case ID_SETTER_DELETE:
-    for (unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
-      m_framegeneral[j]->Copy(m_framegeneral[j + 1]);
-    ResetDisplay();
-    break;
-  case ID_SETTER_INSERT:
-    for (unsigned j = m_framegeneral.size() - 1; j > m_pos; j--)
-      m_framegeneral[j]->Copy(m_framegeneral[j - 1]);
-    SetPosition(m_pos);
-    break;
-  case ID_SETTER_L0:
-  case ID_SETTER_L1:
-  case ID_SETTER_L2:
-  case ID_SETTER_L3:
-  case ID_SETTER_L4:
-  case ID_SETTER_L5:
-  case ID_SETTER_L6:
-  case ID_SETTER_L7:
-  case ID_SETTER_L8:
-  case ID_SETTER_L9:
-    SetPosition(m_pos - (m_pos % 10) + id - ID_SETTER_L0);
-    break;
-  case ID_SETTER_GENERAL00:
-  case ID_SETTER_GENERAL01:
-  case ID_SETTER_GENERAL02:
-  case ID_SETTER_GENERAL03:
-  case ID_SETTER_GENERAL04:
-  case ID_SETTER_GENERAL05:
-  case ID_SETTER_GENERAL06:
-  case ID_SETTER_GENERAL07:
-  case ID_SETTER_GENERAL08:
-  case ID_SETTER_GENERAL09:
-  case ID_SETTER_GENERAL10:
-  case ID_SETTER_GENERAL11:
-  case ID_SETTER_GENERAL12:
-  case ID_SETTER_GENERAL13:
-  case ID_SETTER_GENERAL14:
-  case ID_SETTER_GENERAL15:
-  case ID_SETTER_GENERAL16:
-  case ID_SETTER_GENERAL17:
-  case ID_SETTER_GENERAL18:
-  case ID_SETTER_GENERAL19:
-  case ID_SETTER_GENERAL20:
-  case ID_SETTER_GENERAL21:
-  case ID_SETTER_GENERAL22:
-  case ID_SETTER_GENERAL23:
-  case ID_SETTER_GENERAL24:
-  case ID_SETTER_GENERAL25:
-  case ID_SETTER_GENERAL26:
-  case ID_SETTER_GENERAL27:
-  case ID_SETTER_GENERAL28:
-  case ID_SETTER_GENERAL29:
-  case ID_SETTER_GENERAL30:
-  case ID_SETTER_GENERAL31:
-  case ID_SETTER_GENERAL32:
-  case ID_SETTER_GENERAL33:
-  case ID_SETTER_GENERAL34:
-  case ID_SETTER_GENERAL35:
-  case ID_SETTER_GENERAL36:
-  case ID_SETTER_GENERAL37:
-  case ID_SETTER_GENERAL38:
-  case ID_SETTER_GENERAL39:
-  case ID_SETTER_GENERAL40:
-  case ID_SETTER_GENERAL41:
-  case ID_SETTER_GENERAL42:
-  case ID_SETTER_GENERAL43:
-  case ID_SETTER_GENERAL44:
-  case ID_SETTER_GENERAL45:
-  case ID_SETTER_GENERAL46:
-  case ID_SETTER_GENERAL47:
-  case ID_SETTER_GENERAL48:
-  case ID_SETTER_GENERAL49:
-    m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push();
-    ResetDisplay();
-    m_button[id]->Display(true);
-    break;
-  case ID_SETTER_GENERAL_PREV:
-  case ID_SETTER_GENERAL_NEXT:
-    if (id == ID_SETTER_GENERAL_PREV && m_bank > 0)
-      m_bank--;
-    if (id == ID_SETTER_GENERAL_NEXT && m_bank < GENERAL_BANKS - 1)
-      m_bank++;
+    case ID_SETTER_PREV:
+      Prev();
+      break;
+    case ID_SETTER_NEXT:
+      Next();
+      break;
+    case ID_SETTER_SET:
+      wxTheApp->GetTopWindow()->UpdateWindowUI();
+      break;
+    case ID_SETTER_M1:
+      SetPosition(m_pos - 1, false);
+      break;
+    case ID_SETTER_M10:
+      SetPosition(m_pos - 10, false);
+      break;
+    case ID_SETTER_M100:
+      SetPosition(m_pos - 100, false);
+      break;
+    case ID_SETTER_P1:
+      SetPosition(m_pos + 1, false);
+      break;
+    case ID_SETTER_P10:
+      SetPosition(m_pos + 10, false);
+      break;
+    case ID_SETTER_P100:
+      SetPosition(m_pos + 100, false);
+      break;
+    case ID_SETTER_HOME:
+      SetPosition(0, false);
+      break;
+    case ID_SETTER_GC:
+      m_organfile->Reset();
+      break;
+    case ID_SETTER_CURRENT:
+      SetPosition(m_pos);
+      break;
+    case ID_SETTER_DELETE:
+      for (unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
+        m_framegeneral[j]->Copy(m_framegeneral[j + 1]);
+      ResetDisplay();
+      break;
+    case ID_SETTER_INSERT:
+      for (unsigned j = m_framegeneral.size() - 1; j > m_pos; j--)
+        m_framegeneral[j]->Copy(m_framegeneral[j - 1]);
+      SetPosition(m_pos);
+      break;
+    case ID_SETTER_L0:
+    case ID_SETTER_L1:
+    case ID_SETTER_L2:
+    case ID_SETTER_L3:
+    case ID_SETTER_L4:
+    case ID_SETTER_L5:
+    case ID_SETTER_L6:
+    case ID_SETTER_L7:
+    case ID_SETTER_L8:
+    case ID_SETTER_L9:
+      SetPosition(m_pos - (m_pos % 10) + id - ID_SETTER_L0);
+      break;
+    case ID_SETTER_GENERAL00:
+    case ID_SETTER_GENERAL01:
+    case ID_SETTER_GENERAL02:
+    case ID_SETTER_GENERAL03:
+    case ID_SETTER_GENERAL04:
+    case ID_SETTER_GENERAL05:
+    case ID_SETTER_GENERAL06:
+    case ID_SETTER_GENERAL07:
+    case ID_SETTER_GENERAL08:
+    case ID_SETTER_GENERAL09:
+    case ID_SETTER_GENERAL10:
+    case ID_SETTER_GENERAL11:
+    case ID_SETTER_GENERAL12:
+    case ID_SETTER_GENERAL13:
+    case ID_SETTER_GENERAL14:
+    case ID_SETTER_GENERAL15:
+    case ID_SETTER_GENERAL16:
+    case ID_SETTER_GENERAL17:
+    case ID_SETTER_GENERAL18:
+    case ID_SETTER_GENERAL19:
+    case ID_SETTER_GENERAL20:
+    case ID_SETTER_GENERAL21:
+    case ID_SETTER_GENERAL22:
+    case ID_SETTER_GENERAL23:
+    case ID_SETTER_GENERAL24:
+    case ID_SETTER_GENERAL25:
+    case ID_SETTER_GENERAL26:
+    case ID_SETTER_GENERAL27:
+    case ID_SETTER_GENERAL28:
+    case ID_SETTER_GENERAL29:
+    case ID_SETTER_GENERAL30:
+    case ID_SETTER_GENERAL31:
+    case ID_SETTER_GENERAL32:
+    case ID_SETTER_GENERAL33:
+    case ID_SETTER_GENERAL34:
+    case ID_SETTER_GENERAL35:
+    case ID_SETTER_GENERAL36:
+    case ID_SETTER_GENERAL37:
+    case ID_SETTER_GENERAL38:
+    case ID_SETTER_GENERAL39:
+    case ID_SETTER_GENERAL40:
+    case ID_SETTER_GENERAL41:
+    case ID_SETTER_GENERAL42:
+    case ID_SETTER_GENERAL43:
+    case ID_SETTER_GENERAL44:
+    case ID_SETTER_GENERAL45:
+    case ID_SETTER_GENERAL46:
+    case ID_SETTER_GENERAL47:
+    case ID_SETTER_GENERAL48:
+    case ID_SETTER_GENERAL49:
+      m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push();
+      ResetDisplay();
+      m_button[id]->Display(true);
+      break;
+    case ID_SETTER_GENERAL_PREV:
+    case ID_SETTER_GENERAL_NEXT:
+      if (id == ID_SETTER_GENERAL_PREV && m_bank > 0) m_bank--;
+      if (id == ID_SETTER_GENERAL_NEXT && m_bank < GENERAL_BANKS - 1) m_bank++;
 
-    m_BankDisplay.SetContent(wxString::Format(wxT("%c"), m_bank + wxT('A')));
-    break;
+      m_BankDisplay.SetContent(wxString::Format(wxT("%c"), m_bank + wxT('A')));
+      break;
 
-  case ID_SETTER_REGULAR:
-    SetSetterType(SETTER_REGULAR);
-    break;
-  case ID_SETTER_SCOPE:
-    SetSetterType(SETTER_SCOPE);
-    break;
-  case ID_SETTER_SCOPED:
-    SetSetterType(SETTER_SCOPED);
-    break;
-  case ID_SETTER_CRESCENDO_A:
-  case ID_SETTER_CRESCENDO_B:
-  case ID_SETTER_CRESCENDO_C:
-  case ID_SETTER_CRESCENDO_D:
-    SetCrescendoType(id - ID_SETTER_CRESCENDO_A);
-    break;
+    case ID_SETTER_REGULAR:
+      SetSetterType(SETTER_REGULAR);
+      break;
+    case ID_SETTER_SCOPE:
+      SetSetterType(SETTER_SCOPE);
+      break;
+    case ID_SETTER_SCOPED:
+      SetSetterType(SETTER_SCOPED);
+      break;
+    case ID_SETTER_CRESCENDO_A:
+    case ID_SETTER_CRESCENDO_B:
+    case ID_SETTER_CRESCENDO_C:
+    case ID_SETTER_CRESCENDO_D:
+      SetCrescendoType(id - ID_SETTER_CRESCENDO_A);
+      break;
 
-  case ID_SETTER_CRESCENDO_PREV:
-    Crescendo(m_crescendopos - 1, true);
-    break;
-  case ID_SETTER_CRESCENDO_NEXT:
-    Crescendo(m_crescendopos + 1, true);
-    break;
-  case ID_SETTER_CRESCENDO_CURRENT:
-    m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
-    break;
+    case ID_SETTER_CRESCENDO_PREV:
+      Crescendo(m_crescendopos - 1, true);
+      break;
+    case ID_SETTER_CRESCENDO_NEXT:
+      Crescendo(m_crescendopos + 1, true);
+      break;
+    case ID_SETTER_CRESCENDO_CURRENT:
+      m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
+      break;
 
-  case ID_SETTER_PITCH_M1:
-    m_organfile->GetPipeConfig().ModifyTuning(-1);
-    break;
-  case ID_SETTER_PITCH_M10:
-    m_organfile->GetPipeConfig().ModifyTuning(-10);
-    break;
-  case ID_SETTER_PITCH_M100:
-    m_organfile->GetPipeConfig().ModifyTuning(-100);
-    break;
-  case ID_SETTER_PITCH_P1:
-    m_organfile->GetPipeConfig().ModifyTuning(1);
-    break;
-  case ID_SETTER_PITCH_P10:
-    m_organfile->GetPipeConfig().ModifyTuning(10);
-    break;
-  case ID_SETTER_PITCH_P100:
-    m_organfile->GetPipeConfig().ModifyTuning(100);
-    break;
-  case ID_SETTER_SAVE:
-    m_organfile->Save();
-    break;
+    case ID_SETTER_PITCH_M1:
+      m_organfile->GetPipeConfig().ModifyTuning(-1);
+      break;
+    case ID_SETTER_PITCH_M10:
+      m_organfile->GetPipeConfig().ModifyTuning(-10);
+      break;
+    case ID_SETTER_PITCH_M100:
+      m_organfile->GetPipeConfig().ModifyTuning(-100);
+      break;
+    case ID_SETTER_PITCH_P1:
+      m_organfile->GetPipeConfig().ModifyTuning(1);
+      break;
+    case ID_SETTER_PITCH_P10:
+      m_organfile->GetPipeConfig().ModifyTuning(10);
+      break;
+    case ID_SETTER_PITCH_P100:
+      m_organfile->GetPipeConfig().ModifyTuning(100);
+      break;
+    case ID_SETTER_SAVE:
+      m_organfile->Save();
+      break;
 
-  case ID_SETTER_TEMPERAMENT_NEXT:
-  case ID_SETTER_TEMPERAMENT_PREV: {
-    unsigned index
-      = m_organfile->GetSettings().GetTemperaments().GetTemperamentIndex(
-        m_organfile->GetTemperament());
-    index += m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
-    if (id == ID_SETTER_TEMPERAMENT_NEXT)
-      index++;
-    else
-      index--;
-    index = index
-      % m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
-    m_organfile->SetTemperament(
-      m_organfile->GetSettings().GetTemperaments().GetTemperamentName(index));
-  } break;
+    case ID_SETTER_TEMPERAMENT_NEXT:
+    case ID_SETTER_TEMPERAMENT_PREV: {
+      unsigned index
+        = m_organfile->GetSettings().GetTemperaments().GetTemperamentIndex(
+          m_organfile->GetTemperament());
+      index
+        += m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
+      if (id == ID_SETTER_TEMPERAMENT_NEXT)
+        index++;
+      else
+        index--;
+      index = index
+        % m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
+      m_organfile->SetTemperament(
+        m_organfile->GetSettings().GetTemperaments().GetTemperamentName(index));
+    } break;
 
-  case ID_SETTER_TRANSPOSE_DOWN:
-  case ID_SETTER_TRANSPOSE_UP: {
-    int value = m_organfile->GetSettings().Transpose();
-    if (id == ID_SETTER_TRANSPOSE_UP)
-      value++;
-    else
-      value--;
-    SetTranspose(value);
-  } break;
+    case ID_SETTER_TRANSPOSE_DOWN:
+    case ID_SETTER_TRANSPOSE_UP: {
+      int value = m_organfile->GetSettings().Transpose();
+      if (id == ID_SETTER_TRANSPOSE_UP)
+        value++;
+      else
+        value--;
+      SetTranspose(value);
+    } break;
   }
 }
 
@@ -665,24 +673,20 @@ void GOSetter::SetCrescendoType(unsigned no) {
 
 void GOSetter::ResetDisplay() {
   m_button[ID_SETTER_HOME]->Display(false);
-  for (unsigned i = 0; i < 10; i++)
-    m_button[ID_SETTER_L0 + i]->Display(false);
+  for (unsigned i = 0; i < 10; i++) m_button[ID_SETTER_L0 + i]->Display(false);
   for (unsigned i = 0; i < GENERALS; i++)
     m_button[ID_SETTER_GENERAL00 + i]->Display(false);
 }
 
 void GOSetter::UpdatePosition(int pos) {
-  if (pos != (int)m_pos)
-    SetPosition(pos);
+  if (pos != (int)m_pos) SetPosition(pos);
 }
 
 void GOSetter::SetPosition(int pos, bool push) {
   wxString buffer;
   int old_pos = m_pos;
-  while (pos < 0)
-    pos += m_framegeneral.size();
-  while (pos >= (int)m_framegeneral.size())
-    pos -= m_framegeneral.size();
+  while (pos < 0) pos += m_framegeneral.size();
+  while (pos >= (int)m_framegeneral.size()) pos -= m_framegeneral.size();
   m_pos = pos;
   if (push) {
     m_framegeneral[m_pos]->Push();
@@ -704,15 +708,11 @@ void GOSetter::SetPosition(int pos, bool push) {
 }
 
 void GOSetter::Crescendo(int newpos, bool force) {
-  if (newpos < 0)
-    newpos = 0;
-  if (newpos > CRESCENDO_STEPS - 1)
-    newpos = CRESCENDO_STEPS - 1;
-  if (IsSetterActive() && !force)
-    return;
+  if (newpos < 0) newpos = 0;
+  if (newpos > CRESCENDO_STEPS - 1) newpos = CRESCENDO_STEPS - 1;
+  if (IsSetterActive() && !force) return;
   unsigned pos = newpos;
-  if (pos == m_crescendopos)
-    return;
+  if (pos == m_crescendopos) return;
 
   while (pos > m_crescendopos) {
     m_crescendo[++m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
@@ -753,8 +753,7 @@ void GOSetter::UpdateModified(bool modified) {
 }
 
 GOEnclosure *GOSetter::GetEnclosure(const wxString &name, bool is_panel) {
-  if (name == wxT("Swell"))
-    return &m_swell;
+  if (name == wxT("Swell")) return &m_swell;
 
   return NULL;
 }
@@ -763,26 +762,20 @@ GOLabel *GOSetter::GetLabel(const wxString &name, bool is_panel) {
   if (name == wxT("Label") || name == wxT("SequencerLabel"))
     return &m_PosDisplay;
 
-  if (name == wxT("CrescendoLabel"))
-    return &m_CrescendoDisplay;
+  if (name == wxT("CrescendoLabel")) return &m_CrescendoDisplay;
 
-  if (name == wxT("GeneralLabel"))
-    return &m_BankDisplay;
+  if (name == wxT("GeneralLabel")) return &m_BankDisplay;
 
-  if (name == wxT("PitchLabel"))
-    return m_organfile->GetPitchLabel();
+  if (name == wxT("PitchLabel")) return m_organfile->GetPitchLabel();
 
   if (name == wxT("TemperamentLabel"))
     return m_organfile->GetTemperamentLabel();
 
-  if (name == wxT("TransposeLabel"))
-    return &m_TransposeDisplay;
+  if (name == wxT("TransposeLabel")) return &m_TransposeDisplay;
 
-  if (is_panel)
-    return NULL;
+  if (is_panel) return NULL;
 
-  if (name == wxT("OrganNameLabel"))
-    return &m_NameDisplay;
+  if (name == wxT("OrganNameLabel")) return &m_NameDisplay;
 
   return NULL;
 }

@@ -232,8 +232,7 @@ void GOSettingsReverb::OnGainSpinChanged(wxSpinEvent &e) {
 
 void GOSettingsReverb::OnGainChanged(wxCommandEvent &e) {
   double gain;
-  if (m_Gain->GetValue().ToDouble(&gain))
-    m_GainSpin->SetValue(gain * 20);
+  if (m_Gain->GetValue().ToDouble(&gain)) m_GainSpin->SetValue(gain * 20);
 }
 
 bool GOSettingsReverb::Validate() {
@@ -260,6 +259,5 @@ void GOSettingsReverb::Save() {
   m_config.ReverbStartOffset(m_StartOffset->GetValue());
   m_config.ReverbChannel(m_Channel->GetSelection() + 1);
   double gain;
-  if (m_Gain->GetValue().ToDouble(&gain))
-    m_config.ReverbGain(gain);
+  if (m_Gain->GetValue().ToDouble(&gain)) m_config.ReverbGain(gain);
 }

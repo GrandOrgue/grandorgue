@@ -15,7 +15,7 @@ class GOCacheWriter;
 class GOHash;
 
 class GOCacheObject {
-public:
+ public:
   virtual ~GOCacheObject() {}
 
   virtual void Initialize() = 0;

@@ -18,7 +18,7 @@
 #include "config/GOPortsConfig.h"
 
 class GOSettingsPorts {
-private:
+ private:
   const GOPortFactory &m_PortFactory;
 
   struct PortItemData : public wxClientData {
@@ -55,14 +55,14 @@ private:
 
   void OnPortItemChecked(wxTreeListEvent &event);
 
-protected:
+ protected:
   virtual void OnPortChanged(
     const wxString &portName,
     const wxString apiName,
     bool oldEnabled,
     bool newEnabled) {}
 
-public:
+ public:
   GOSettingsPorts(
     wxWindow *parent, const GOPortFactory &portFactory, const wxString &name);
   ~GOSettingsPorts();

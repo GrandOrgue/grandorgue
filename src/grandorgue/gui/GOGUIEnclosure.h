@@ -19,7 +19,7 @@
 class GOEnclosure;
 
 class GOGUIEnclosure : public GOGUIControl {
-private:
+ private:
   GOEnclosure *m_enclosure;
   unsigned m_FontSize;
   wxString m_FontName;
@@ -35,7 +35,7 @@ private:
   unsigned m_TileOffsetY;
   std::vector<GOBitmap> m_Bitmaps;
 
-public:
+ public:
   GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control);
 
   void Init(GOConfigReader &cfg, wxString group);

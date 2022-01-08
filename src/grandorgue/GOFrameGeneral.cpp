@@ -22,7 +22,8 @@ GOFrameGeneral::GOFrameGeneral(
   GOCombinationDefinition &general_template,
   GODefinitionFile *organfile,
   bool is_setter)
-    : GOCombination(general_template, organfile), m_organfile(organfile),
+    : GOCombination(general_template, organfile),
+      m_organfile(organfile),
       m_IsSetter(is_setter) {}
 
 void GOFrameGeneral::Load(GOConfigReader &cfg, wxString group) {
@@ -246,8 +247,7 @@ void GOFrameGeneral::LoadCombination(GOConfigReader &cfg) {
 
   int pos;
   UpdateState();
-  for (unsigned i = 0; i < m_State.size(); i++)
-    m_State[i] = -1;
+  for (unsigned i = 0; i < m_State.size(); i++) m_State[i] = -1;
 
   for (unsigned i = 0; i < NumberOfStops; i++) {
     buffer.Printf(wxT("StopManual%03d"), i + 1);
@@ -411,44 +411,43 @@ void GOFrameGeneral::Save(GOConfigWriter &cfg) {
   unsigned divisional_coupler_count = 0;
 
   for (unsigned i = 0; i < elements.size(); i++) {
-    if (m_State[i] == -1)
-      continue;
+    if (m_State[i] == -1) continue;
     int value = m_State[i] == 1 ? elements[i].index : -elements[i].index;
     switch (elements[i].type) {
-    case GOCombinationDefinition::COMBINATION_STOP:
-      stop_count++;
-      buffer.Printf(wxT("StopManual%03d"), stop_count);
-      cfg.WriteInteger(m_group, buffer, elements[i].manual);
-      buffer.Printf(wxT("StopNumber%03d"), stop_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+      case GOCombinationDefinition::COMBINATION_STOP:
+        stop_count++;
+        buffer.Printf(wxT("StopManual%03d"), stop_count);
+        cfg.WriteInteger(m_group, buffer, elements[i].manual);
+        buffer.Printf(wxT("StopNumber%03d"), stop_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
 
-    case GOCombinationDefinition::COMBINATION_COUPLER:
-      coupler_count++;
-      buffer.Printf(wxT("CouplerManual%03d"), coupler_count);
-      cfg.WriteInteger(m_group, buffer, elements[i].manual);
-      buffer.Printf(wxT("CouplerNumber%03d"), coupler_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+      case GOCombinationDefinition::COMBINATION_COUPLER:
+        coupler_count++;
+        buffer.Printf(wxT("CouplerManual%03d"), coupler_count);
+        cfg.WriteInteger(m_group, buffer, elements[i].manual);
+        buffer.Printf(wxT("CouplerNumber%03d"), coupler_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
 
-    case GOCombinationDefinition::COMBINATION_TREMULANT:
-      tremulant_count++;
-      buffer.Printf(wxT("TremulantNumber%03d"), tremulant_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+      case GOCombinationDefinition::COMBINATION_TREMULANT:
+        tremulant_count++;
+        buffer.Printf(wxT("TremulantNumber%03d"), tremulant_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
 
-    case GOCombinationDefinition::COMBINATION_SWITCH:
-      switch_count++;
-      buffer.Printf(wxT("SwitchNumber%03d"), switch_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+      case GOCombinationDefinition::COMBINATION_SWITCH:
+        switch_count++;
+        buffer.Printf(wxT("SwitchNumber%03d"), switch_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
 
-    case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-      divisional_coupler_count++;
-      buffer.Printf(
-        wxT("DivisionalCouplerNumber%03d"), divisional_coupler_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+      case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+        divisional_coupler_count++;
+        buffer.Printf(
+          wxT("DivisionalCouplerNumber%03d"), divisional_coupler_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
     }
   }
 

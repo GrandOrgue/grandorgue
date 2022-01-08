@@ -19,15 +19,15 @@ class GOMidiMap;
 class GOOrgan;
 
 class GOOrganList {
-private:
+ private:
   ptr_vector<GOOrgan> m_OrganList;
   ptr_vector<GOArchiveFile> m_ArchiveList;
 
-protected:
+ protected:
   void Load(GOConfigReader &cfg, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, GOMidiMap &map);
 
-public:
+ public:
   GOOrganList();
   ~GOOrganList();
 
@@ -39,8 +39,8 @@ public:
   void AddArchive(const GOArchiveFile &archive);
   ptr_vector<GOArchiveFile> &GetArchiveList();
   const ptr_vector<GOArchiveFile> &GetArchiveList() const;
-  const GOArchiveFile *
-  GetArchiveByID(const wxString &id, bool useable = false) const;
+  const GOArchiveFile *GetArchiveByID(
+    const wxString &id, bool useable = false) const;
   const GOArchiveFile *GetArchiveByPath(const wxString &path) const;
 };
 

@@ -13,7 +13,7 @@
 class GOMidi;
 
 class GOMidiPort {
-protected:
+ protected:
   GOMidi *m_midi;
   bool m_IsActive;
 
@@ -27,7 +27,7 @@ protected:
   static const wxString GetClientName();
   virtual const wxString GetMyNativePortName() const = 0;
 
-public:
+ public:
   GOMidiPort(
     GOMidi *midi,
     const wxString &portName,

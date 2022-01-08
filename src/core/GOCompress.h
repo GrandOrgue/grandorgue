@@ -10,7 +10,8 @@
 
 #include <stdint.h>
 
-template <class T> class GOBuffer;
+template <class T>
+class GOBuffer;
 
 bool compressBuffer(GOBuffer<uint8_t> &buffer);
 

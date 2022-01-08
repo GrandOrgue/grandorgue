@@ -14,12 +14,12 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUIMasterPanel : public GOGUIPanelCreator {
-private:
+ private:
   GODefinitionFile *m_organfile;
 
   GOGUIPanel *CreateMasterPanel(GOConfigReader &cfg);
 
-public:
+ public:
   GOGUIMasterPanel(GODefinitionFile *organfile);
   virtual ~GOGUIMasterPanel();
 

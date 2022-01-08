@@ -23,7 +23,7 @@ class GOWindchest;
 class GODefinitionFile;
 
 class GOModel {
-protected:
+ protected:
   ptr_vector<GOWindchest> m_windchest;
   ptr_vector<GOManual> m_manual;
   ptr_vector<GOEnclosure> m_enclosure;
@@ -39,7 +39,7 @@ protected:
 
   void Load(GOConfigReader &cfg, GODefinitionFile *organfile);
 
-public:
+ public:
   GOModel();
   ~GOModel();
 

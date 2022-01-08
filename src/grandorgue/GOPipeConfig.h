@@ -17,7 +17,7 @@ class GOConfigWriter;
 class GODefinitionFile;
 
 class GOPipeConfig {
-private:
+ private:
   GODefinitionFile *m_OrganFile;
   GOPipeUpdateCallback *m_Callback;
   wxString m_Group;
@@ -38,7 +38,7 @@ private:
   int m_AttackLoad;
   int m_ReleaseLoad;
 
-public:
+ public:
   GOPipeConfig(GODefinitionFile *organfile, GOPipeUpdateCallback *callback);
 
   void Init(GOConfigReader &cfg, wxString group, wxString prefix);

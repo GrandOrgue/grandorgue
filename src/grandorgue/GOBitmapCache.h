@@ -16,7 +16,7 @@
 class GODefinitionFile;
 
 class GOBitmapCache {
-private:
+ private:
   GODefinitionFile *m_organfile;
   ptr_vector<wxImage> m_Bitmaps;
   std::vector<wxString> m_Filenames;
@@ -24,7 +24,7 @@ private:
 
   bool loadFile(wxImage &img, wxString filename);
 
-public:
+ public:
   GOBitmapCache(GODefinitionFile *organfile);
   virtual ~GOBitmapCache();
 

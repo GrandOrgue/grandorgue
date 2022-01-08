@@ -11,7 +11,7 @@
 class GOMidiEvent;
 
 class GOMidiMerger {
-private:
+ private:
   unsigned m_BankLsb[16];
   unsigned m_BankMsb[16];
   bool m_Rpn;
@@ -20,7 +20,7 @@ private:
   unsigned m_NrpnLsb[16];
   unsigned m_NrpnMsb[16];
 
-public:
+ public:
   GOMidiMerger();
 
   void Clear();

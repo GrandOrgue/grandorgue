@@ -13,14 +13,14 @@
 class GOArchive;
 
 class GOArchiveEntryFile : public GOFile {
-private:
+ private:
   GOArchive *m_archiv;
   wxString m_Name;
   size_t m_Offset;
   size_t m_Length;
   size_t m_Pos;
 
-public:
+ public:
   GOArchiveEntryFile(
     GOArchive *archive, const wxString &name, size_t offset, size_t len);
 

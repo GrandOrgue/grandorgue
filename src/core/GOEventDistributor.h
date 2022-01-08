@@ -22,7 +22,7 @@ class GOPlaybackStateHandler;
 class GOSaveableObject;
 
 class GOEventDistributor {
-private:
+ private:
   std::vector<GOEventHandler *> m_handler;
   std::vector<GOControlChangedHandler *> m_ControlChangedHandler;
   std::vector<GOPlaybackStateHandler *> m_PlaybackStateHandler;
@@ -30,7 +30,7 @@ private:
   std::vector<GOMidiConfigurator *> m_MidiConfigurator;
   std::vector<GOCacheObject *> m_CacheObjects;
 
-protected:
+ protected:
   void Cleanup();
 
   void SendMidi(const GOMidiEvent &event);
@@ -46,7 +46,7 @@ protected:
   void StartPlayback();
   void PrepareRecording();
 
-public:
+ public:
   GOEventDistributor();
   ~GOEventDistributor();
 

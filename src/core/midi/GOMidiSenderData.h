@@ -56,11 +56,11 @@ typedef struct {
 } MIDI_SEND_EVENT;
 
 class GOMidiSenderData {
-protected:
+ protected:
   MIDI_SENDER_TYPE m_type;
   std::vector<MIDI_SEND_EVENT> m_events;
 
-public:
+ public:
   GOMidiSenderData(MIDI_SENDER_TYPE type);
   virtual ~GOMidiSenderData();
 

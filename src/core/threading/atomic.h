@@ -12,11 +12,12 @@
 
 #include <atomic>
 
-template <class T> class atomic {
-private:
+template <class T>
+class atomic {
+ private:
   std::atomic<T> m_Value;
 
-public:
+ public:
   atomic() : m_Value() {}
 
   atomic(const T &val) : m_Value(val) {}
@@ -42,12 +43,13 @@ public:
 
 #include <wx/thread.h>
 
-template <class T> class atomic {
-private:
+template <class T>
+class atomic {
+ private:
   wxCriticalSection m_Lock;
   T m_Value;
 
-public:
+ public:
   atomic() {}
 
   atomic(const T &val) { m_Value = val; }
@@ -93,11 +95,13 @@ public:
 typedef atomic<unsigned> atomic_uint;
 typedef atomic<int> atomic_int;
 
-template <class T> inline T load_once(const T &var) {
+template <class T>
+inline T load_once(const T &var) {
   return *(const volatile T *)&var;
 }
 
-template <class T> inline void store_once(T &var, const T val) {
+template <class T>
+inline void store_once(T &var, const T val) {
   *(const volatile T *)&var = val;
 }
 

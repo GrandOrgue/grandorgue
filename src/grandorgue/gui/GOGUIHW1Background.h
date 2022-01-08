@@ -15,7 +15,7 @@
 
 class GOGUIHW1Background : public GOGUIControl {
   class GOBackgroundImage {
-  public:
+   public:
     wxRect rect;
     GOBitmap bmp;
 
@@ -23,10 +23,10 @@ class GOGUIHW1Background : public GOGUIControl {
         : rect(Rect), bmp(Bmp) {}
   };
 
-private:
+ private:
   std::vector<GOBackgroundImage> m_Images;
 
-public:
+ public:
   GOGUIHW1Background(GOGUIPanel *panel);
 
   void Init(GOConfigReader &cfg, wxString group);

@@ -11,7 +11,7 @@
 #include <wx/string.h>
 
 class GOStdPath {
-public:
+ public:
   static void InitLocaleDir();
   static wxString GetBaseDir();
   static wxString GetResourceDir();

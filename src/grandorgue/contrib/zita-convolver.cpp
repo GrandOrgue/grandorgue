@@ -28,8 +28,16 @@ float Convproc::_mac_cost = 1.0f;
 float Convproc::_fft_cost = 5.0f;
 
 Convproc::Convproc(void)
-    : _state(ST_IDLE), _options(0), _skipcnt(0), _density(0), _ninp(0),
-      _nout(0), _quantum(0), _minpart(0), _maxpart(0), _nlevels(0),
+    : _state(ST_IDLE),
+      _options(0),
+      _skipcnt(0),
+      _density(0),
+      _ninp(0),
+      _nout(0),
+      _quantum(0),
+      _minpart(0),
+      _maxpart(0),
+      _nlevels(0),
       _latecnt(0) {
   memset(_inpbuff, 0, MAXINP * sizeof(float *));
   memset(_outbuff, 0, MAXOUT * sizeof(float *));
@@ -43,8 +51,7 @@ void Convproc::set_options(unsigned int options) { _options = options; }
 void Convproc::set_density(float density) { _density = density; }
 
 void Convproc::set_skipcnt(unsigned int skipcnt) {
-  if ((_quantum == _minpart) && (_quantum == _maxpart))
-    _skipcnt = skipcnt;
+  if ((_quantum == _minpart) && (_quantum == _maxpart)) _skipcnt = skipcnt;
 }
 
 int Convproc::configure(
@@ -58,8 +65,7 @@ int Convproc::configure(
   int prio, d, r, s;
   float cfft, cmac, t;
 
-  if (_state != ST_IDLE)
-    return Converror::BAD_STATE;
+  if (_state != ST_IDLE) return Converror::BAD_STATE;
   if (
     (quantum & (quantum - 1)) || (quantum < MINQUANT) || (quantum > MAXQUANT)
     || (minpart & (minpart - 1)) || (minpart < MINPART) || (minpart < quantum)
@@ -79,10 +85,8 @@ int Convproc::configure(
     _density = 1.0 / nmin;
   else {
     t = 1.0f / nmax;
-    if (_density < t)
-      _density = t;
-    if (_density > 1)
-      _density = 1;
+    if (_density < t) _density = t;
+    if (_density > 1) _density = 1;
   }
 
   cfft = _fft_cost * (ninp + nout);
@@ -95,8 +99,7 @@ int Convproc::configure(
   } else
     s = 1;
   nmin = (s == 1) ? 2 : 6;
-  if (minpart == quantum)
-    nmin++;
+  if (minpart == quantum) nmin++;
 
   prio = 0;
   size = quantum;
@@ -112,8 +115,7 @@ int Convproc::configure(
         r = 1 << s;
         d = npar - nmin;
         d = d - (d + r - 1) / r;
-        if (cfft < d * cmac)
-          npar = nmin;
+        if (cfft < d * cmac) npar = nmin;
       }
       _convlev[pind] = new Convlevel();
       _convlev[pind]->configure(prio, offs, npar, size, _options);
@@ -136,10 +138,8 @@ int Convproc::configure(
     _latecnt = 0;
     _inpsize = 2 * size;
 
-    for (i = 0; i < ninp; i++)
-      _inpbuff[i] = new float[_inpsize];
-    for (i = 0; i < nout; i++)
-      _outbuff[i] = new float[_minpart];
+    for (i = 0; i < ninp; i++) _inpbuff[i] = new float[_inpsize];
+    for (i = 0; i < nout; i++) _outbuff[i] = new float[_minpart];
   } catch (...) {
     cleanup();
     return Converror::MEM_ALLOC;
@@ -158,8 +158,7 @@ int Convproc::impdata_create(
   int ind1) {
   unsigned int j;
 
-  if (_state != ST_STOP)
-    return Converror::BAD_STATE;
+  if (_state != ST_STOP) return Converror::BAD_STATE;
   try {
     for (j = 0; j < _nlevels; j++) {
       _convlev[j]->impdata_create(inp, out, step, data, ind0, ind1);
@@ -180,8 +179,7 @@ int Convproc::impdata_update(
   int ind1) {
   unsigned int j;
 
-  if (_state < ST_STOP)
-    return Converror::BAD_STATE;
+  if (_state < ST_STOP) return Converror::BAD_STATE;
   for (j = 0; j < _nlevels; j++) {
     _convlev[j]->impdata_update(inp, out, step, data, ind0, ind1);
   }
@@ -192,8 +190,7 @@ int Convproc::impdata_copy(
   unsigned int inp1, unsigned int out1, unsigned int inp2, unsigned int out2) {
   unsigned int j;
 
-  if (_state != ST_STOP)
-    return Converror::BAD_STATE;
+  if (_state != ST_STOP) return Converror::BAD_STATE;
   try {
     for (j = 0; j < _nlevels; j++) {
       _convlev[j]->impdata_copy(inp1, out1, inp2, out2);
@@ -208,12 +205,9 @@ int Convproc::impdata_copy(
 int Convproc::reset(void) {
   unsigned int k;
 
-  if (_state == ST_IDLE)
-    return Converror::BAD_STATE;
-  for (k = 0; k < _ninp; k++)
-    memset(_inpbuff[k], 0, _inpsize * sizeof(float));
-  for (k = 0; k < _nout; k++)
-    memset(_outbuff[k], 0, _minpart * sizeof(float));
+  if (_state == ST_IDLE) return Converror::BAD_STATE;
+  for (k = 0; k < _ninp; k++) memset(_inpbuff[k], 0, _inpsize * sizeof(float));
+  for (k = 0; k < _nout; k++) memset(_outbuff[k], 0, _minpart * sizeof(float));
   for (k = 0; k < _nlevels; k++)
     _convlev[k]->reset(_inpsize, _minpart, _inpbuff, _outbuff);
   return 0;
@@ -222,8 +216,7 @@ int Convproc::reset(void) {
 int Convproc::start_process(int abspri, int policy) {
   unsigned int k;
 
-  if (_state != ST_STOP)
-    return Converror::BAD_STATE;
+  if (_state != ST_STOP) return Converror::BAD_STATE;
 
   _latecnt = 0;
   _inpoffs = 0;
@@ -240,20 +233,17 @@ int Convproc::process(bool sync) {
   unsigned int k;
   int f = 0;
 
-  if (_state != ST_PROC)
-    return 0;
+  if (_state != ST_PROC) return 0;
 
   _inpoffs += _quantum;
-  if (_inpoffs == _inpsize)
-    _inpoffs = 0;
+  if (_inpoffs == _inpsize) _inpoffs = 0;
 
   _outoffs += _quantum;
   if (_outoffs == _minpart) {
     _outoffs = 0;
     for (k = 0; k < _nout; k++)
       memset(_outbuff[k], 0, _minpart * sizeof(float));
-    for (k = 0; k < _nlevels; k++)
-      f |= _convlev[k]->readout(sync, _skipcnt);
+    for (k = 0; k < _nlevels; k++) f |= _convlev[k]->readout(sync, _skipcnt);
     if (_skipcnt < _minpart)
       _skipcnt = 0;
     else
@@ -270,10 +260,8 @@ int Convproc::process(bool sync) {
 int Convproc::stop_process(void) {
   unsigned int k;
 
-  if (_state != ST_PROC)
-    return Converror::BAD_STATE;
-  for (k = 0; k < _nlevels; k++)
-    _convlev[k]->stop();
+  if (_state != ST_PROC) return Converror::BAD_STATE;
+  for (k = 0; k < _nlevels; k++) _convlev[k]->stop();
   _state = ST_WAIT;
   return 0;
 }
@@ -330,23 +318,29 @@ bool Convproc::check_stop(void) {
 void Convproc::print(FILE *F) {
   unsigned int k;
 
-  for (k = 0; k < _nlevels; k++)
-    _convlev[k]->print(F);
+  for (k = 0; k < _nlevels; k++) _convlev[k]->print(F);
 }
 
 typedef float FV4 __attribute__((vector_size(16)));
 
 Convlevel::Convlevel(void)
-    : _stat(ST_IDLE), _npar(0), _parsize(0), _options(0), _inp_list(0),
-      _out_list(0), _plan_r2c(0), _plan_c2r(0), _time_data(0), _prep_data(0),
+    : _stat(ST_IDLE),
+      _npar(0),
+      _parsize(0),
+      _options(0),
+      _inp_list(0),
+      _out_list(0),
+      _plan_r2c(0),
+      _plan_c2r(0),
+      _time_data(0),
+      _prep_data(0),
       _freq_data(0) {}
 
 Convlevel::~Convlevel(void) { cleanup(); }
 
 void *Convlevel::alloc_aligned(size_t size) {
   void *p = malloc(size);
-  if (!p)
-    throw(Converror(Converror::MEM_ALLOC));
+  if (!p) throw(Converror(Converror::MEM_ALLOC));
   memset(p, 0, size);
   return p;
 }
@@ -373,8 +367,7 @@ void Convlevel::configure(
     = fftwf_plan_dft_r2c_1d(2 * _parsize, _time_data, _freq_data, fftwopt);
   _plan_c2r
     = fftwf_plan_dft_c2r_1d(2 * _parsize, _freq_data, _time_data, fftwopt);
-  if (_plan_r2c && _plan_c2r)
-    return;
+  if (_plan_r2c && _plan_c2r) return;
   throw(Converror(Converror::MEM_ALLOC));
 }
 
@@ -394,8 +387,7 @@ void Convlevel::impdata_create(
   n = i1 - i0;
   i0 = _offs - i0;
   i1 = i0 + _npar * _parsize;
-  if ((i0 >= n) || (i1 <= 0))
-    return;
+  if ((i0 >= n) || (i1 <= 0)) return;
 
   M = findmacnode(inp, out, true);
   if (!(M->_fftb)) {
@@ -415,12 +407,10 @@ void Convlevel::impdata_create(
         memset(_prep_data, 0, 2 * _parsize * sizeof(float));
         j0 = (i0 < 0) ? 0 : i0;
         j1 = (i1 > n) ? n : i1;
-        for (j = j0; j < j1; j++)
-          _prep_data[j - i0] = norm * data[j * step];
+        for (j = j0; j < j1; j++) _prep_data[j - i0] = norm * data[j * step];
         fftwf_execute_dft_r2c(_plan_r2c, _prep_data, _freq_data);
 #ifdef ENABLE_VECTOR_MODE
-        if (_options & OPT_VECTOR_MODE)
-          fftswap(_freq_data);
+        if (_options & OPT_VECTOR_MODE) fftswap(_freq_data);
 #endif
         fftb = M->_fftb[k];
         for (j = 0; j <= (int)_parsize; j++) {
@@ -447,14 +437,12 @@ void Convlevel::impdata_update(
   Macnode *M;
 
   M = findmacnode(inp, out, false);
-  if (!M)
-    return;
+  if (!M) return;
 
   n = i1 - i0;
   i0 = _offs - i0;
   i1 = i0 + _npar * _parsize;
-  if ((i0 >= n) || (i1 <= 0))
-    return;
+  if ((i0 >= n) || (i1 <= 0)) return;
 
   norm = 0.5f / _parsize;
   for (k = 0; k < _npar; k++) {
@@ -464,12 +452,10 @@ void Convlevel::impdata_update(
       memset(_prep_data, 0, 2 * _parsize * sizeof(float));
       j0 = (i0 < 0) ? 0 : i0;
       j1 = (i1 > n) ? n : i1;
-      for (j = j0; j < j1; j++)
-        _prep_data[j - i0] = norm * data[j * step];
+      for (j = j0; j < j1; j++) _prep_data[j - i0] = norm * data[j * step];
       fftwf_execute_dft_r2c(_plan_r2c, _prep_data, fftb);
 #ifdef ENABLE_VECTOR_MODE
-      if (_options & OPT_VECTOR_MODE)
-        fftswap(fftb);
+      if (_options & OPT_VECTOR_MODE) fftswap(fftb);
 #endif
     }
     i0 = i1;
@@ -482,11 +468,9 @@ void Convlevel::impdata_copy(
   Macnode *M2;
 
   M1 = findmacnode(inp1, out1, false);
-  if (!M1)
-    return;
+  if (!M1) return;
   M2 = findmacnode(inp2, out2, true);
-  if (M2->_fftb)
-    return;
+  if (M2->_fftb) return;
   M2->_fftb = M1->_fftb;
   M2->_copy = true;
 }
@@ -548,8 +532,7 @@ void Convlevel::cleanup(void) {
   Stop();
   X = _inp_list;
   while (X) {
-    for (i = 0; i < _npar; i++)
-      free(X->_ffta[i]);
+    for (i = 0; i < _npar; i++) free(X->_ffta[i]);
     delete[] X->_ffta;
     X1 = X->_next;
     delete X;
@@ -571,8 +554,7 @@ void Convlevel::cleanup(void) {
       delete M;
       M = M1;
     }
-    for (i = 0; i < 3; i++)
-      free(Y->_buff[i]);
+    for (i = 0; i < 3; i++) free(Y->_buff[i]);
     Y1 = Y->_next;
     delete Y;
     Y = Y1;
@@ -633,15 +615,12 @@ void Convlevel::process(bool skip) {
 
   for (X = _inp_list; X; X = X->_next) {
     inpd = _inpbuff[X->_inp];
-    if (n1)
-      memcpy(_time_data, inpd + i1, n1 * sizeof(float));
-    if (n2)
-      memcpy(_time_data + n1, inpd, n2 * sizeof(float));
+    if (n1) memcpy(_time_data, inpd + i1, n1 * sizeof(float));
+    if (n2) memcpy(_time_data + n1, inpd, n2 * sizeof(float));
     memset(_time_data + _parsize, 0, _parsize * sizeof(float));
     fftwf_execute_dft_r2c(_plan_r2c, _time_data, X->_ffta[_ptind]);
 #ifdef ENABLE_VECTOR_MODE
-    if (_options & OPT_VECTOR_MODE)
-      fftswap(X->_ffta[_ptind]);
+    if (_options & OPT_VECTOR_MODE) fftswap(X->_ffta[_ptind]);
 #endif
   }
 
@@ -685,28 +664,24 @@ void Convlevel::process(bool skip) {
               }
             }
           }
-          if (i == 0)
-            i = _npar;
+          if (i == 0) i = _npar;
           i--;
         }
       }
 
 #ifdef ENABLE_VECTOR_MODE
-      if (_options & OPT_VECTOR_MODE)
-        fftswap(_freq_data);
+      if (_options & OPT_VECTOR_MODE) fftswap(_freq_data);
 #endif
       fftwf_execute_dft_c2r(_plan_c2r, _freq_data, _time_data);
       outd = Y->_buff[opi1];
-      for (k = 0; k < _parsize; k++)
-        outd[k] += _time_data[k];
+      for (k = 0; k < _parsize; k++) outd[k] += _time_data[k];
       outd = Y->_buff[opi2];
       memcpy(outd, _time_data + _parsize, _parsize * sizeof(float));
     }
   }
 
   _ptind++;
-  if (_ptind == _npar)
-    _ptind = 0;
+  if (_ptind == _npar) _ptind = 0;
 }
 
 int Convlevel::readout(bool sync, unsigned int skipcnt) {
@@ -725,22 +700,19 @@ int Convlevel::readout(bool sync, unsigned int skipcnt) {
           break;
         _wait--;
       }
-      if (++_opind == 3)
-        _opind = 0;
+      if (++_opind == 3) _opind = 0;
       _trig.post();
       _wait++;
     } else {
       process(skipcnt >= 2 * _parsize);
-      if (++_opind == 3)
-        _opind = 0;
+      if (++_opind == 3) _opind = 0;
     }
   }
 
   for (Y = _out_list; Y; Y = Y->_next) {
     p = Y->_buff[_opind] + _outoffs;
     q = _outbuff[Y->_out];
-    for (i = 0; i < _outsize; i++)
-      q[i] += p[i];
+    for (i = 0; i < _outsize; i++) q[i] += p[i];
   }
 
   return (_wait > 1) ? _bits : 0;
@@ -756,8 +728,8 @@ void Convlevel::print(FILE *F) {
     _npar);
 }
 
-Macnode *
-Convlevel::findmacnode(unsigned int inp, unsigned int out, bool create) {
+Macnode *Convlevel::findmacnode(
+  unsigned int inp, unsigned int out, bool create) {
   unsigned int i;
   Inpnode *X;
   Outnode *Y;
@@ -766,8 +738,7 @@ Convlevel::findmacnode(unsigned int inp, unsigned int out, bool create) {
   for (X = _inp_list; X && (X->_inp != inp); X = X->_next)
     ;
   if (!X) {
-    if (!create)
-      return 0;
+    if (!create) return 0;
     X = new Inpnode;
     X->_next = _inp_list;
     _inp_list = X;
@@ -783,8 +754,7 @@ Convlevel::findmacnode(unsigned int inp, unsigned int out, bool create) {
   for (Y = _out_list; Y && (Y->_out != out); Y = Y->_next)
     ;
   if (!Y) {
-    if (!create)
-      return 0;
+    if (!create) return 0;
     Y = new Outnode;
     Y->_next = _out_list;
     _out_list = Y;
@@ -801,8 +771,7 @@ Convlevel::findmacnode(unsigned int inp, unsigned int out, bool create) {
   for (M = Y->_list; M && (M->_inpn != X); M = M->_next)
     ;
   if (!M) {
-    if (!create)
-      return 0;
+    if (!create) return 0;
     M = new Macnode;
     M->_next = Y->_list;
     Y->_list = M;

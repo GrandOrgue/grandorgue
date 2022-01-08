@@ -20,7 +20,7 @@ class GOCache {
   bool m_Mapable;
   bool m_OK;
 
-public:
+ public:
   GOCache(wxFile &cache_file, GOMemoryPool &pool);
   virtual ~GOCache();
 

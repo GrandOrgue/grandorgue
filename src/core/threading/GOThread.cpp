@@ -15,16 +15,14 @@ GOThread::~GOThread() { Stop(); }
 
 void GOThread::Start() {
   m_Stop = false;
-  if (m_Thread.joinable())
-    return;
+  if (m_Thread.joinable()) return;
   m_Thread = std::thread(GOThread::EntryPoint, this);
 }
 
 void GOThread::MarkForStop() { m_Stop = true; }
 
 void GOThread::Wait() {
-  if (m_Thread.joinable())
-    m_Thread.join();
+  if (m_Thread.joinable()) m_Thread.join();
 }
 
 void GOThread::Stop() {

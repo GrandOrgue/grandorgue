@@ -14,8 +14,12 @@
 #include "GOSaveableObject.h"
 
 GOEventDistributor::GOEventDistributor()
-    : m_handler(), m_ControlChangedHandler(), m_PlaybackStateHandler(),
-      m_SaveableObjects(), m_MidiConfigurator(), m_CacheObjects() {}
+    : m_handler(),
+      m_ControlChangedHandler(),
+      m_PlaybackStateHandler(),
+      m_SaveableObjects(),
+      m_MidiConfigurator(),
+      m_CacheObjects() {}
 
 GOEventDistributor::~GOEventDistributor() {}
 
@@ -67,8 +71,7 @@ void GOEventDistributor::SendMidi(const GOMidiEvent &event) {
 }
 
 void GOEventDistributor::HandleKey(int key) {
-  for (unsigned i = 0; i < m_handler.size(); i++)
-    m_handler[i]->HandleKey(key);
+  for (unsigned i = 0; i < m_handler.size(); i++) m_handler[i]->HandleKey(key);
 }
 
 void GOEventDistributor::ReadCombinations(GOConfigReader &cfg) {
@@ -123,8 +126,7 @@ void GOEventDistributor::PrepareRecording() {
 }
 
 void GOEventDistributor::ControlChanged(void *control) {
-  if (!control)
-    return;
+  if (!control) return;
   for (unsigned i = 0; i < m_ControlChangedHandler.size(); i++)
     m_ControlChangedHandler[i]->ControlChanged(control);
 }

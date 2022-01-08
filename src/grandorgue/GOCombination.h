@@ -14,10 +14,10 @@ class GOCombinationDefinition;
 class GODefinitionFile;
 
 class GOCombination {
-private:
+ private:
   GODefinitionFile *m_OrganFile;
 
-protected:
+ protected:
   GOCombinationDefinition &m_Template;
   std::vector<int> m_State;
   bool m_Protected;
@@ -25,7 +25,7 @@ protected:
   void UpdateState();
   virtual bool PushLocal();
 
-public:
+ public:
   GOCombination(
     GOCombinationDefinition &combination_template, GODefinitionFile *organfile);
   virtual ~GOCombination();

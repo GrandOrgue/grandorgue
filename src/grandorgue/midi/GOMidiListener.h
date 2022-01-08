@@ -16,7 +16,7 @@ class GOMidiListener {
   GOMidiCallback *m_Callback;
   GOMidi *m_midi;
 
-public:
+ public:
   GOMidiListener();
   virtual ~GOMidiListener();
 

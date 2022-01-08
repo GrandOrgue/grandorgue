@@ -23,7 +23,8 @@ GOMidiRtOutPort::GOMidiRtOutPort(
       GOMidiRtPortFactory::getApiName(api),
       deviceName,
       fullName),
-      m_api(api), m_port(NULL) {}
+      m_api(api),
+      m_port(NULL) {}
 
 GOMidiRtOutPort::~GOMidiRtOutPort() { Close(true); }
 
@@ -39,15 +40,13 @@ const wxString GOMidiRtOutPort::GetDefaultRegEx() const {
 
 bool GOMidiRtOutPort::Open() {
   Close(false);
-  if (!m_port)
-    try {
+  if (!m_port) try {
       m_port = new RtMidiOut(m_api, (const char *)GetClientName().fn_str());
     } catch (RtMidiError &e) {
       wxString error = wxString::FromAscii(e.getMessage().c_str());
       wxLogError(_("RtMidi error: %s"), error.c_str());
     }
-  if (!m_port)
-    return false;
+  if (!m_port) return false;
   try {
     for (unsigned i = 0; i < m_port->getPortCount(); i++) {
       if (m_DeviceName == wxString::FromAscii(m_port->getPortName(i).c_str())) {
@@ -65,8 +64,7 @@ bool GOMidiRtOutPort::Open() {
 
 void GOMidiRtOutPort::Close(bool isToFreePort) {
   if (m_IsActive) {
-    if (m_port)
-      try {
+    if (m_port) try {
         m_port->closePort();
       } catch (RtMidiError &e) {
         wxString error = wxString::FromAscii(e.getMessage().c_str());
@@ -91,8 +89,7 @@ void GOMidiRtOutPort::Close(bool isToFreePort) {
 }
 
 void GOMidiRtOutPort::SendData(std::vector<unsigned char> &msg) {
-  if (m_port)
-    try {
+  if (m_port) try {
       m_port->sendMessage(&msg);
     } catch (RtMidiError &e) {
       wxString error = wxString::FromAscii(e.getMessage().c_str());

@@ -15,13 +15,13 @@
 class GODefinitionFile;
 
 class GOMainWindowData : private GOSaveableObject {
-protected:
+ protected:
   GODefinitionFile *m_organfile;
   wxRect m_size;
 
   void Save(GOConfigWriter &cfg);
 
-public:
+ public:
   GOMainWindowData(GODefinitionFile *m_organfile);
   virtual ~GOMainWindowData();
   void Load(GOConfigReader &cfg, wxString group);

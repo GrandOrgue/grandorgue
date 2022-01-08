@@ -15,17 +15,27 @@
 #include "config/GOConfigReader.h"
 
 GOCoupler::GOCoupler(GODefinitionFile *organfile, unsigned sourceManual)
-    : GODrawstop(organfile), m_UnisonOff(false),
+    : GODrawstop(organfile),
+      m_UnisonOff(false),
       m_CoupleToSubsequentUnisonIntermanualCouplers(false),
       m_CoupleToSubsequentUpwardIntermanualCouplers(false),
       m_CoupleToSubsequentDownwardIntermanualCouplers(false),
       m_CoupleToSubsequentUpwardIntramanualCouplers(false),
       m_CoupleToSubsequentDownwardIntramanualCouplers(false),
-      m_CouplerType(COUPLER_NORMAL), m_SourceManual(sourceManual),
-      m_CouplerID(0), m_DestinationManual(0), m_DestinationKeyshift(0),
-      m_Keyshift(0), m_KeyVelocity(0), m_InternalVelocity(0), m_OutVelocity(0),
-      m_CurrentTone(-1), m_LastTone(-1), m_FirstMidiNote(0),
-      m_FirstLogicalKey(0), m_NumberOfKeys(127) {}
+      m_CouplerType(COUPLER_NORMAL),
+      m_SourceManual(sourceManual),
+      m_CouplerID(0),
+      m_DestinationManual(0),
+      m_DestinationKeyshift(0),
+      m_Keyshift(0),
+      m_KeyVelocity(0),
+      m_InternalVelocity(0),
+      m_OutVelocity(0),
+      m_CurrentTone(-1),
+      m_LastTone(-1),
+      m_FirstMidiNote(0),
+      m_FirstLogicalKey(0),
+      m_NumberOfKeys(127) {}
 
 void GOCoupler::PreparePlayback() {
   GODrawstop::PreparePlayback();
@@ -54,8 +64,7 @@ void GOCoupler::StartPlayback() {
 
   GOManual *src = m_organfile->GetManual(m_SourceManual);
 
-  if (m_UnisonOff && IsActive())
-    src->SetUnisonOff(true);
+  if (m_UnisonOff && IsActive()) src->SetUnisonOff(true);
 }
 
 const struct IniFileEnumEntry GOCoupler::m_coupler_types[] = {
@@ -251,49 +260,38 @@ void GOCoupler::SetupCombinationState() {
 }
 
 void GOCoupler::SetOut(int noteNumber, unsigned velocity) {
-  if (noteNumber < 0)
-    return;
+  if (noteNumber < 0) return;
   unsigned note = noteNumber;
-  if (note >= m_InternalVelocity.size())
-    return;
-  if (m_InternalVelocity[note] == velocity)
-    return;
+  if (note >= m_InternalVelocity.size()) return;
+  if (m_InternalVelocity[note] == velocity) return;
   m_InternalVelocity[note] = velocity;
 
-  if (!IsActive())
-    return;
+  if (!IsActive()) return;
   unsigned newstate = m_InternalVelocity[note];
-  if (newstate)
-    newstate--;
+  if (newstate) newstate--;
   GOManual *dest = m_organfile->GetManual(m_DestinationManual);
   m_OutVelocity[note] = newstate;
   dest->SetKey(note, m_OutVelocity[note], this, m_CouplerID);
 }
 
 unsigned GOCoupler::GetInternalState(int noteNumber) {
-  if (noteNumber < 0)
-    return 0;
+  if (noteNumber < 0) return 0;
   unsigned note = noteNumber;
-  if (note >= m_InternalVelocity.size())
-    return 0;
+  if (note >= m_InternalVelocity.size()) return 0;
   return m_InternalVelocity[note];
 }
 
 void GOCoupler::ChangeKey(int note, unsigned velocity) {
-  if (m_UnisonOff)
-    return;
+  if (m_UnisonOff) return;
   if (m_CouplerType == COUPLER_BASS || m_CouplerType == COUPLER_MELODY) {
     int nextNote = -1;
     if (m_CouplerType == COUPLER_BASS) {
       for (nextNote = 0; nextNote < (int)m_KeyVelocity.size(); nextNote++)
-        if (m_KeyVelocity[nextNote] > 0)
-          break;
-      if (nextNote == (int)m_KeyVelocity.size())
-        nextNote = -1;
+        if (m_KeyVelocity[nextNote] > 0) break;
+      if (nextNote == (int)m_KeyVelocity.size()) nextNote = -1;
     } else {
       for (nextNote = m_KeyVelocity.size() - 1; nextNote >= 0; nextNote--)
-        if (m_KeyVelocity[nextNote] > 0)
-          break;
+        if (m_KeyVelocity[nextNote] > 0) break;
     }
 
     if (m_CurrentTone != -1 && nextNote != m_CurrentTone) {
@@ -321,8 +319,7 @@ void GOCoupler::SetKey(
   unsigned note,
   const std::vector<unsigned> &velocities,
   const std::vector<GOCoupler *> &couplers) {
-  if (note < 0 || note >= m_KeyVelocity.size())
-    return;
+  if (note < 0 || note >= m_KeyVelocity.size()) return;
   if (note < m_FirstLogicalKey || note >= m_FirstLogicalKey + m_NumberOfKeys)
     return;
 
@@ -342,11 +339,9 @@ void GOCoupler::SetKey(
       else
         continue;
     }
-    if (velocities[i] > velocity)
-      velocity = velocities[i];
+    if (velocities[i] > velocity) velocity = velocities[i];
   }
-  if (m_KeyVelocity[note] == velocity)
-    return;
+  if (m_KeyVelocity[note] == velocity) return;
   m_KeyVelocity[note] = velocity;
   ChangeKey(note, velocity);
 }
@@ -361,8 +356,7 @@ void GOCoupler::ChangeState(bool on) {
 
   for (unsigned i = 0; i < m_InternalVelocity.size(); i++) {
     unsigned newstate = on ? m_InternalVelocity[i] : 0;
-    if (newstate > 0)
-      newstate--;
+    if (newstate > 0) newstate--;
     if (m_OutVelocity[i] != newstate) {
       m_OutVelocity[i] = newstate;
       dest->SetKey(i, m_OutVelocity[i], this, m_CouplerID);

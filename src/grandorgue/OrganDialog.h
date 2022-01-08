@@ -30,7 +30,7 @@ class wxTreeEvent;
 class wxTreeItemId;
 
 class OrganDialog : public wxDialog, public GOView {
-private:
+ private:
   GODefinitionFile *m_organfile;
   wxTreeCtrl *m_Tree;
   wxTextCtrl *m_Amplitude;
@@ -107,7 +107,7 @@ private:
   void OnAudioGroupAssitant(wxCommandEvent &e);
   void OnCollapse(wxCommandEvent &e);
 
-protected:
+ protected:
   enum {
     ID_EVENT_TREE = 200,
     ID_EVENT_APPLY,
@@ -133,7 +133,7 @@ protected:
     ID_EVENT_COMPRESS
   };
 
-public:
+ public:
   OrganDialog(
     GODocumentBase *doc, wxWindow *parent, GODefinitionFile *organfile);
   ~OrganDialog();

@@ -10,8 +10,9 @@
 
 #include <wx/choice.h>
 
-template <class T> class GOChoice : public wxChoice {
-public:
+template <class T>
+class GOChoice : public wxChoice {
+ public:
   GOChoice(
     wxWindow *parent,
     wxWindowID id,
@@ -30,8 +31,7 @@ public:
   void SetCurrentSelection(const T value) {
     SetSelection(0);
     for (unsigned i = 0; i < GetCount(); i++)
-      if ((void *)value == GetClientData(i))
-        SetSelection(i);
+      if ((void *)value == GetClientData(i)) SetSelection(i);
   }
 };
 

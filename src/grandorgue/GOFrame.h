@@ -44,7 +44,7 @@ class wxHtmlHelpController;
 class wxSpinCtrl;
 
 class GOFrame : public wxFrame, protected GOMidiCallback {
-private:
+ private:
   GOApp &m_App;
   GOMutex m_mutex;
   wxMenu *m_file_menu;
@@ -161,7 +161,7 @@ private:
   void LoadFirstOrgan();
   void SendLoadOrgan(const GOOrgan &organ);
 
-public:
+ public:
   GOFrame(
     GOApp &app,
     wxFrame *frame,

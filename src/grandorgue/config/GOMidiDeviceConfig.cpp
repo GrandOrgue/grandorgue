@@ -12,15 +12,15 @@ GOMidiDeviceConfig::GOMidiDeviceConfig(
   const wxString &regEx,
   bool isEnabled,
   const wxString &physicalName)
-    : m_LogicalName(logicalName), m_IsEnabled(isEnabled),
+    : m_LogicalName(logicalName),
+      m_IsEnabled(isEnabled),
       m_PhysicalName(physicalName) {
   SetRegEx(regEx);
 }
 
 void GOMidiDeviceConfig::SetRegEx(const wxString &regEx) {
   if (regEx != m_RegEx) {
-    if (p_CompiledRegEx)
-      delete p_CompiledRegEx;
+    if (p_CompiledRegEx) delete p_CompiledRegEx;
     m_RegEx = regEx;
     p_CompiledRegEx = regEx.IsEmpty() ? NULL : new wxRegEx(regEx);
   }

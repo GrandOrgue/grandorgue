@@ -22,16 +22,15 @@ GOConfigFileReader::~GOConfigFileReader() {}
 
 wxString GOConfigFileReader::GetHash() { return m_Hash; }
 
-const std::map<wxString, std::map<wxString, wxString>> &
-GOConfigFileReader::GetContent() {
+const std::map<wxString, std::map<wxString, wxString>>
+  &GOConfigFileReader::GetContent() {
   return m_Entries;
 }
 
-wxString
-GOConfigFileReader::GetNextLine(const wxString &buffer, unsigned &pos) {
+wxString GOConfigFileReader::GetNextLine(
+  const wxString &buffer, unsigned &pos) {
   int newpos = buffer.find(wxT("\n"), pos);
-  if (newpos < (int)pos)
-    newpos = buffer.Len();
+  if (newpos < (int)pos) newpos = buffer.Len();
   wxString line = buffer.Mid(pos, newpos - pos);
   pos = newpos + 1;
   if (line.Len() > 0 && line[line.Len() - 1] == wxT('\r'))
@@ -42,8 +41,7 @@ GOConfigFileReader::GetNextLine(const wxString &buffer, unsigned &pos) {
 wxString GOConfigFileReader::getEntry(wxString group, wxString name) {
   std::map<wxString, std::map<wxString, wxString>>::const_iterator i
     = m_Entries.find(group);
-  if (i == m_Entries.end())
-    return wxEmptyString;
+  if (i == m_Entries.end()) return wxEmptyString;
   const std::map<wxString, wxString> &g = i->second;
   std::map<wxString, wxString>::const_iterator j = g.find(name);
   if (j == g.end())
@@ -116,10 +114,8 @@ bool GOConfigFileReader::Read(GOFile *file) {
     wxString line = GetNextLine(input, pos);
     lineno++;
 
-    if (line == wxEmptyString)
-      continue;
-    if (line.Len() >= 1 && line[0] == wxT(';'))
-      continue;
+    if (line == wxEmptyString) continue;
+    if (line.Len() >= 1 && line[0] == wxT(';')) continue;
     if (line.Len() > 1 && line[0] == wxT('[')) {
       if (line[line.Len() - 1] != wxT(']')) {
         line = line.Trim();

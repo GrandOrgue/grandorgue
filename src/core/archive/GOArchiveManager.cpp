@@ -39,8 +39,7 @@ GOArchive *GOArchiveManager::OpenArchive(const wxString &path) {
 
 bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
   GOFile *indexFile = archive->OpenFile(wxT("organindex.ini"));
-  if (!indexFile)
-    return false;
+  if (!indexFile) return false;
   GOConfigFileReader ini_file;
   if (!ini_file.Read(indexFile)) {
     delete indexFile;
@@ -66,8 +65,7 @@ bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
       wxString group = wxString::Format(wxT("Dependency%03d"), i + 1);
       wxString dep_id = cfg.ReadString(CMBSetting, group, wxT("PackageID"));
       wxString title = cfg.ReadString(CMBSetting, group, wxT("Title"));
-      if (dep_id == id)
-        throw(wxString) _("Self referencing organ package");
+      if (dep_id == id) throw(wxString) _("Self referencing organ package");
       depend.push_back(dep_id);
       depend_titles.push_back(title);
     }
@@ -104,11 +102,9 @@ bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
 GOArchive *GOArchiveManager::LoadArchive(const wxString &id) {
   for (unsigned i = 0; i < m_OrganList.GetArchiveList().size(); i++) {
     const GOArchiveFile *file = m_OrganList.GetArchiveList()[i];
-    if (file->GetID() != id)
-      continue;
+    if (file->GetID() != id) continue;
     GOArchive *archive = OpenArchive(file->GetPath());
-    if (!archive)
-      continue;
+    if (!archive) continue;
     if (!ReadIndex(archive, archive->GetArchiveID() != id)) {
       delete archive;
       continue;
@@ -145,12 +141,10 @@ bool GOArchiveManager::RegisterPackage(const wxString &path) {
   wxString p = GONormalizePath(path);
   const GOArchiveFile *archive = m_OrganList.GetArchiveByPath(p);
   if (archive != NULL) {
-    if (archive->GetFileID() == archive->GetCurrentFileID())
-      return true;
+    if (archive->GetFileID() == archive->GetCurrentFileID()) return true;
   }
   wxString id;
-  if (archive)
-    id = archive->GetID();
+  if (archive) id = archive->GetID();
   wxString result = InstallPackage(p, id);
   if (result != wxEmptyString) {
     wxLogError(_("%s"), result.c_str());
@@ -166,8 +160,7 @@ void GOArchiveManager::RegisterPackageDirectory(const wxString &path) {
     return;
   }
   wxString name;
-  if (!dir.GetFirst(&name, wxT("*.orgue"), wxDIR_FILES | wxDIR_HIDDEN))
-    return;
+  if (!dir.GetFirst(&name, wxT("*.orgue"), wxDIR_FILES | wxDIR_HIDDEN)) return;
   do {
     RegisterPackage(path + wxFileName::GetPathSeparator() + name);
   } while (dir.GetNext(&name));

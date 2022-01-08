@@ -104,12 +104,12 @@ bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString &errMsg) {
   if (
     isValid && newLogicalName != m_PhysicalName
     && t_regex->GetValue().IsEmpty()) {
-    errMsg = _("Regex must be specified when physical and logical device names "
-               "differ");
+    errMsg = _(
+      "Regex must be specified when physical and logical device names "
+      "differ");
     isValid = false;
   }
-  if (isValid)
-    errMsg = wxEmptyString;
+  if (isValid) errMsg = wxEmptyString;
   return isValid;
 }
 
@@ -135,8 +135,7 @@ bool GOSettingsMidiMatchDialog::ValidateRegex(wxString &errMsg) {
       isValid = false;
     }
   }
-  if (isValid)
-    errMsg = wxEmptyString;
+  if (isValid) errMsg = wxEmptyString;
 
   return isValid;
 }
@@ -158,10 +157,8 @@ bool GOSettingsMidiMatchDialog::Validate() {
   wxString errMsg;
   bool isValid = true;
 
-  if (isValid)
-    isValid = ValidateLogicalName(errMsg);
-  if (isValid)
-    isValid = ValidateRegex(errMsg);
+  if (isValid) isValid = ValidateLogicalName(errMsg);
+  if (isValid) isValid = ValidateRegex(errMsg);
   if (!isValid)
     wxMessageBox(
       errMsg, _("MIDI matching error"), wxOK | wxCENTRE | wxICON_ERROR);

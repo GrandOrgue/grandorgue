@@ -22,7 +22,7 @@ class GOSettingsMidiMessage : public wxPanel {
     ID_PROPERTIES,
   };
 
-private:
+ private:
   GOConfig &m_config;
   GOMidi &m_midi;
   wxListView *m_Events;
@@ -32,7 +32,7 @@ private:
   void OnEventsDoubleClick(wxListEvent &event);
   void OnProperties(wxCommandEvent &event);
 
-public:
+ public:
   GOSettingsMidiMessage(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
   DECLARE_EVENT_TABLE()

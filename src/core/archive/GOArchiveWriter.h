@@ -16,7 +16,7 @@
 #include "GOZipFormat.h"
 
 class GOArchiveWriter {
-private:
+ private:
   wxFile m_File;
   size_t m_Offset;
   GOBuffer<uint8_t> m_directory;
@@ -25,7 +25,7 @@ private:
 
   bool Write(const void *data, size_t size);
 
-public:
+ public:
   GOArchiveWriter();
   ~GOArchiveWriter();
 

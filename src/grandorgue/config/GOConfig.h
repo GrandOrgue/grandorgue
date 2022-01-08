@@ -53,7 +53,7 @@ typedef struct {
 enum class GOInitialLoadType { LOAD_NONE, LOAD_LAST_USED, LOAD_FIRST };
 
 class GOConfig : public GOSettingStore, public GOOrganList {
-private:
+ private:
   wxString m_InstanceName;
   wxString m_ConfigFileName;
   wxString m_ResourceDir;
@@ -75,7 +75,7 @@ private:
 
   wxString GetEventSection(unsigned index);
 
-public:
+ public:
   GOConfig(wxString instance);
   ~GOConfig();
 
@@ -123,12 +123,12 @@ public:
   GOSettingString LanguageCode;
 
   class GOSettingUnsignedBit : public GOSettingUnsigned {
-  protected:
+   protected:
     unsigned validate(unsigned value) {
       return GOSettingUnsigned::validate(value - value % 4);
     }
 
-  public:
+   public:
     GOSettingUnsignedBit(
       GOSettingStore *store,
       wxString group,

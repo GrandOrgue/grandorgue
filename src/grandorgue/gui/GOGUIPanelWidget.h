@@ -18,7 +18,7 @@ class GOGUIPanel;
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL, -1)
 
 class GOGUIPanelWidget : public wxPanel {
-private:
+ private:
   GOGUIPanel *m_panel;
   wxImage m_BGImage;
   bool m_BGInit;
@@ -41,7 +41,7 @@ private:
   void OnKeyCommand(wxKeyEvent &event);
   void OnKeyUp(wxKeyEvent &event);
 
-public:
+ public:
   GOGUIPanelWidget(
     GOGUIPanel *panel, wxWindow *parent, wxWindowID id = wxID_ANY);
   ~GOGUIPanelWidget();

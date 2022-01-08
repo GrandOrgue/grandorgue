@@ -39,15 +39,12 @@ void GOKeyReceiver::Save(GOConfigWriter &cfg, wxString group) {
 }
 
 KEY_MATCH_TYPE GOKeyReceiver::Match(unsigned key) {
-  if (m_ShortcutKey == key)
-    return KEY_MATCH;
-  if (m_MinusKey == key)
-    return KEY_MATCH_MINUS;
+  if (m_ShortcutKey == key) return KEY_MATCH;
+  if (m_MinusKey == key) return KEY_MATCH_MINUS;
   return KEY_MATCH_NONE;
 }
 
 void GOKeyReceiver::Assign(const GOKeyReceiverData &data) {
   *(GOKeyReceiverData *)this = data;
-  if (m_organfile)
-    m_organfile->Modified();
+  if (m_organfile) m_organfile->Modified();
 }

@@ -28,7 +28,7 @@
 #include <vector>
 
 class GOTool : public wxAppConsole {
-private:
+ private:
   wxLocale m_locale;
   static const wxCmdLineEntryDesc m_cmdLineDesc[];
 
@@ -46,7 +46,7 @@ private:
     std::vector<wxString> odfs,
     std::vector<wxString> packages);
 
-public:
+ public:
   GOTool();
 };
 

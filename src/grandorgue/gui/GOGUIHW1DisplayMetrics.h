@@ -13,7 +13,7 @@
 class GOConfigReader;
 
 class GOGUIHW1DisplayMetrics : public GOGUIDisplayMetrics {
-public:
+ public:
   GOGUIHW1DisplayMetrics(GOConfigReader &ini, wxString group);
 };
 

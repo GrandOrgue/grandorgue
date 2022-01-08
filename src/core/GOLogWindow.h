@@ -16,7 +16,7 @@ class wxListCtrl;
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_ADD_LOG_MESSAGE, -1)
 
 class GOLogWindow : public wxFrame {
-private:
+ private:
   wxListCtrl *m_List;
 
   void OnLog(wxCommandEvent &event);
@@ -25,7 +25,7 @@ private:
   void OnPopup(wxContextMenuEvent &event);
   void OnCloseWindow(wxCloseEvent &event);
 
-public:
+ public:
   GOLogWindow(
     wxWindow *parent,
     wxWindowID id,

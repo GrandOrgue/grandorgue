@@ -39,8 +39,7 @@ wxArrayString GOCacheCleaner::GetArchiveIDList() {
 }
 
 void GOCacheCleaner::Cleanup() {
-  if (!m_config.ManageCache())
-    return;
+  if (!m_config.ManageCache()) return;
 
   wxDir dir(m_config.UserCachePath());
   if (!dir.IsOpened()) {
@@ -52,8 +51,7 @@ void GOCacheCleaner::Cleanup() {
   wxArrayString archives = GetArchiveIDList();
 
   wxString name;
-  if (!dir.GetFirst(&name))
-    return;
+  if (!dir.GetFirst(&name)) return;
   do {
     wxFileName fn(name);
     if (fn.GetExt() == wxT("idx")) {

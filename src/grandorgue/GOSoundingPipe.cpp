@@ -32,14 +32,26 @@ GOSoundingPipe::GOSoundingPipe(
   float min_volume,
   float max_volume,
   bool retune)
-    : GOPipe(organfile, rank, midi_key_number), m_Sampler(NULL), m_LastStop(0),
-      m_Instances(0), m_Tremulant(false), m_AttackInfo(), m_ReleaseInfo(),
-      m_Filename(), m_SamplerGroupID(sampler_group_id), m_AudioGroupID(0),
-      m_Percussive(percussive), m_TemperamentOffset(0),
-      m_HarmonicNumber(harmonic_number), m_LoopCrossfadeLength(0),
-      m_ReleaseCrossfadeLength(0), m_PitchCorrection(pitch_correction),
-      m_MinVolume(min_volume), m_MaxVolume(max_volume),
-      m_SampleMidiKeyNumber(-1), m_RetunePipe(retune),
+    : GOPipe(organfile, rank, midi_key_number),
+      m_Sampler(NULL),
+      m_LastStop(0),
+      m_Instances(0),
+      m_Tremulant(false),
+      m_AttackInfo(),
+      m_ReleaseInfo(),
+      m_Filename(),
+      m_SamplerGroupID(sampler_group_id),
+      m_AudioGroupID(0),
+      m_Percussive(percussive),
+      m_TemperamentOffset(0),
+      m_HarmonicNumber(harmonic_number),
+      m_LoopCrossfadeLength(0),
+      m_ReleaseCrossfadeLength(0),
+      m_PitchCorrection(pitch_correction),
+      m_MinVolume(min_volume),
+      m_MaxVolume(max_volume),
+      m_SampleMidiKeyNumber(-1),
+      m_RetunePipe(retune),
       m_SoundProvider(organfile->GetMemoryPool()),
       m_PipeConfig(&rank->GetPipeConfig(), organfile, this, &m_SoundProvider) {}
 
@@ -269,8 +281,7 @@ void GOSoundingPipe::LoadData() {
 bool GOSoundingPipe::LoadCache(GOCache &cache) {
   try {
     bool result = m_SoundProvider.LoadCache(cache);
-    if (result)
-      Validate();
+    if (result) Validate();
     return result;
   } catch (std::bad_alloc &ba) {
     m_SoundProvider.ClearData();
@@ -329,11 +340,9 @@ void GOSoundingPipe::Initialize() {}
 const wxString &GOSoundingPipe::GetLoadTitle() { return m_Filename; }
 
 void GOSoundingPipe::Validate() {
-  if (!m_organfile->GetSettings().ODFCheck())
-    return;
+  if (!m_organfile->GetSettings().ODFCheck()) return;
 
-  if (!m_PipeConfig.GetEffectiveChannels())
-    return;
+  if (!m_PipeConfig.GetEffectiveChannels()) return;
 
   if (m_SoundProvider.checkForMissingAttack()) {
     wxLogWarning(
@@ -406,15 +415,13 @@ void GOSoundingPipe::SetTremulant(bool on) {
     if (!m_Tremulant) {
       m_Tremulant = true;
       m_SoundProvider.UseSampleGroup(1);
-      if (m_Sampler)
-        m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
+      if (m_Sampler) m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
     }
   } else {
     if (m_Tremulant) {
       m_Tremulant = false;
       m_SoundProvider.UseSampleGroup(0);
-      if (m_Sampler)
-        m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
+      if (m_Sampler) m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
     }
   }
 }
@@ -429,10 +436,8 @@ void GOSoundingPipe::SetOn(unsigned velocity) {
     velocity,
     m_PipeConfig.GetEffectiveDelay(),
     m_LastStop);
-  if (m_Sampler)
-    m_Instances++;
-  if (GetSoundProvider()->IsOneshot())
-    m_Sampler = 0;
+  if (m_Sampler) m_Instances++;
+  if (GetSoundProvider()->IsOneshot()) m_Sampler = 0;
 }
 
 void GOSoundingPipe::SetOff() {

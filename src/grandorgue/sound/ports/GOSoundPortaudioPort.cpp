@@ -17,8 +17,8 @@ wxString GOSoundPortaudioPort::getLastError(PaError error) {
   if (
     error == paUnanticipatedHostError
     || error
-      == paInternalError // workaround of
-                         // https://github.com/PortAudio/portaudio/issues/620
+      == paInternalError  // workaround of
+                          // https://github.com/PortAudio/portaudio/issues/620
   ) {
     const PaHostErrorInfo *const pErrInfo = Pa_GetLastHostErrorInfo();
 
@@ -27,8 +27,7 @@ wxString GOSoundPortaudioPort::getLastError(PaError error) {
       && strlen(pErrInfo->errorText))
       errText = pErrInfo->errorText;
   }
-  if (errText == NULL)
-    errText = Pa_GetErrorText(error);
+  if (errText == NULL) errText = Pa_GetErrorText(error);
   return wxGetTranslation(wxString::FromAscii(errText));
 }
 
@@ -55,8 +54,7 @@ void GOSoundPortaudioPort::Open() {
   stream_parameters.hostApiSpecificStreamInfo = NULL;
 
   for (int i = 0; i < Pa_GetDeviceCount(); i++)
-    if (getName(i) == m_Name)
-      stream_parameters.device = i;
+    if (getName(i) == m_Name) stream_parameters.device = i;
 
   PaError error;
   error = Pa_OpenStream(
@@ -93,8 +91,7 @@ void GOSoundPortaudioPort::StartStream() {
 }
 
 void GOSoundPortaudioPort::Close() {
-  if (!m_stream || !m_IsOpen)
-    return;
+  if (!m_stream || !m_IsOpen) return;
   Pa_StopStream(m_stream);
   Pa_CloseStream(m_stream);
   m_stream = 0;
@@ -161,8 +158,7 @@ void GOSoundPortaudioPort::addDevices(
     assure_initialised();
     for (int i = 0; i < Pa_GetDeviceCount(); i++) {
       const PaDeviceInfo *dev_info = Pa_GetDeviceInfo(i);
-      if (dev_info->maxOutputChannels < 1)
-        continue;
+      if (dev_info->maxOutputChannels < 1) continue;
 
       GOSoundDevInfo info;
       info.channels = dev_info->maxOutputChannels;

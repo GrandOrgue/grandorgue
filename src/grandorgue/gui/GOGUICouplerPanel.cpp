@@ -31,8 +31,8 @@ void GOGUICouplerPanel::CreatePanels(GOConfigReader &cfg) {
     m_organfile->AddPanel(CreateCouplerPanel(cfg, i));
 }
 
-GOGUIPanel *
-GOGUICouplerPanel::CreateCouplerPanel(GOConfigReader &cfg, unsigned manual_nr) {
+GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
+  GOConfigReader &cfg, unsigned manual_nr) {
   GOManual *manual = m_organfile->GetManual(manual_nr);
 
   GOGUIPanel *panel = new GOGUIPanel(m_organfile);

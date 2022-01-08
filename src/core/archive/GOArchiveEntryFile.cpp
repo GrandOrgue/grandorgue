@@ -11,7 +11,10 @@
 
 GOArchiveEntryFile::GOArchiveEntryFile(
   GOArchive *archive, const wxString &name, size_t offset, size_t len)
-    : m_archiv(archive), m_Name(name), m_Offset(offset), m_Length(len),
+    : m_archiv(archive),
+      m_Name(name),
+      m_Offset(offset),
+      m_Length(len),
       m_Pos(0) {}
 
 size_t GOArchiveEntryFile::GetSize() { return m_Length; }
@@ -29,8 +32,7 @@ void GOArchiveEntryFile::Close() {}
 
 size_t GOArchiveEntryFile::Read(void *buffer, size_t len) {
   size_t remain = m_Length - m_Pos;
-  if (len > remain)
-    len = remain;
+  if (len > remain) len = remain;
   len = m_archiv->ReadContent(buffer, m_Offset + m_Pos, len);
   m_Pos += len;
   return len;

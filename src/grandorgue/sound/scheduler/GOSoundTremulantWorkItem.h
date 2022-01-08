@@ -15,7 +15,7 @@
 class GOSoundEngine;
 
 class GOSoundTremulantWorkItem : public GOSoundWorkItem {
-private:
+ private:
   GOSoundEngine &m_engine;
   GOSoundSamplerList m_Samplers;
   GOMutex m_Mutex;
@@ -23,7 +23,7 @@ private:
   unsigned m_SamplesPerBuffer;
   bool m_Done;
 
-public:
+ public:
   GOSoundTremulantWorkItem(
     GOSoundEngine &sound_engine, unsigned samples_per_buffer);
 
@@ -38,8 +38,7 @@ public:
   void Add(GOSoundSampler *sampler);
 
   float GetVolume() {
-    if (!m_Done)
-      Run();
+    if (!m_Done) Run();
     return m_Volume;
   }
 };

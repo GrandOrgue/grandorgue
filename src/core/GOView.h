@@ -13,11 +13,11 @@
 class GODocumentBase;
 
 class GOView {
-private:
+ private:
   GODocumentBase *m_doc;
   wxWindow *m_wnd;
 
-public:
+ public:
   GOView(GODocumentBase *doc, wxWindow *wnd);
   virtual ~GOView();
 

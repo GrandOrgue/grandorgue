@@ -29,12 +29,12 @@
 class ZCsema {
   wxSemaphore m_sema;
 
-public:
+ public:
   ZCsema(void) {}
   ~ZCsema(void) {}
 
-  ZCsema(const ZCsema &);            // disabled
-  ZCsema &operator=(const ZCsema &); // disabled
+  ZCsema(const ZCsema &);             // disabled
+  ZCsema &operator=(const ZCsema &);  // disabled
 
   void init(int s, int v) {
     assert(s == 0);
@@ -48,7 +48,7 @@ public:
 // ----------------------------------------------------------------------------
 
 class Inpnode {
-private:
+ private:
   friend class Convlevel;
 
   Inpnode *_next;
@@ -57,7 +57,7 @@ private:
 };
 
 class Macnode {
-private:
+ private:
   friend class Convlevel;
 
   Macnode *_next;
@@ -67,7 +67,7 @@ private:
 };
 
 class Outnode {
-private:
+ private:
   friend class Convlevel;
 
   Outnode *_next;
@@ -77,10 +77,10 @@ private:
 };
 
 class Converror {
-public:
+ public:
   enum { BAD_STATE = -1, BAD_PARAM = -2, MEM_ALLOC = -3 };
 
-private:
+ private:
   friend class Convlevel;
   friend class Convproc;
 
@@ -90,7 +90,7 @@ private:
 };
 
 class Convlevel : private GOThread {
-private:
+ private:
   friend class Convproc;
 
   enum { OPT_FFTW_MEASURE = 1, OPT_VECTOR_MODE = 2 };
@@ -154,37 +154,37 @@ private:
 
   Macnode *findmacnode(unsigned int inp, unsigned int out, bool create);
 
-  volatile unsigned int _stat; // current processing state
-  int _prio;                   // relative priority
-  unsigned int _offs;          // offset from start of impulse response
-  unsigned int _npar;          // number of partitions
-  unsigned int _parsize;       // partition and outbut buffer size
-  unsigned int _outsize;       // step size for output buffer
-  unsigned int _outoffs;       // offset into output buffer
-  unsigned int _inpsize;       // size of shared input buffer
-  unsigned int _inpoffs;       // offset into input buffer
-  unsigned int _options;       // various options
-  unsigned int _ptind;         // rotating partition index
-  unsigned int _opind;         // rotating output buffer index
-  int _bits;                   // bit identifiying this level
-  int _wait;                   // number of unfinished cycles
-  ZCsema _trig;                // sema used to trigger a cycle
-  ZCsema _done;                // sema used to wait for a cycle
-  Inpnode *_inp_list;          // linked list of active inputs
-  Outnode *_out_list;          // linked list of active outputs
-  fftwf_plan _plan_r2c;        // FFTW plan, forward FFT
-  fftwf_plan _plan_c2r;        // FFTW plan, inverse FFT
-  float *_time_data;           // workspace
-  float *_prep_data;           // workspace
-  fftwf_complex *_freq_data;   // workspace
-  float **_inpbuff;            // array of shared input buffers
-  float **_outbuff;            // array of shared output buffers
+  volatile unsigned int _stat;  // current processing state
+  int _prio;                    // relative priority
+  unsigned int _offs;           // offset from start of impulse response
+  unsigned int _npar;           // number of partitions
+  unsigned int _parsize;        // partition and outbut buffer size
+  unsigned int _outsize;        // step size for output buffer
+  unsigned int _outoffs;        // offset into output buffer
+  unsigned int _inpsize;        // size of shared input buffer
+  unsigned int _inpoffs;        // offset into input buffer
+  unsigned int _options;        // various options
+  unsigned int _ptind;          // rotating partition index
+  unsigned int _opind;          // rotating output buffer index
+  int _bits;                    // bit identifiying this level
+  int _wait;                    // number of unfinished cycles
+  ZCsema _trig;                 // sema used to trigger a cycle
+  ZCsema _done;                 // sema used to wait for a cycle
+  Inpnode *_inp_list;           // linked list of active inputs
+  Outnode *_out_list;           // linked list of active outputs
+  fftwf_plan _plan_r2c;         // FFTW plan, forward FFT
+  fftwf_plan _plan_c2r;         // FFTW plan, inverse FFT
+  float *_time_data;            // workspace
+  float *_prep_data;            // workspace
+  fftwf_complex *_freq_data;    // workspace
+  float **_inpbuff;             // array of shared input buffers
+  float **_outbuff;             // array of shared output buffers
 };
 
 // ----------------------------------------------------------------------------
 
 class Convproc {
-public:
+ public:
   Convproc(void);
   virtual ~Convproc(void);
 
@@ -264,24 +264,24 @@ public:
   static float _mac_cost;
   static float _fft_cost;
 
-private:
-  unsigned int _state;         // current state
-  float *_inpbuff[MAXINP];     // input buffers
-  float *_outbuff[MAXOUT];     // output buffers
-  unsigned int _inpoffs;       // current offset in input buffers
-  unsigned int _outoffs;       // current offset in output buffers
-  unsigned int _options;       // option bits
-  unsigned int _skipcnt;       // number of frames to skip
-  float _density;              // matrix density hint
-  unsigned int _ninp;          // number of inputs
-  unsigned int _nout;          // number of outputs
-  unsigned int _quantum;       // processing block size
-  unsigned int _minpart;       // smallest partition size
-  unsigned int _maxpart;       // largest allowed partition size
-  unsigned int _nlevels;       // number of partition sizes
-  unsigned int _inpsize;       // size of input buffers
-  unsigned int _latecnt;       // count of cycles ending too late
-  Convlevel *_convlev[MAXLEV]; // array of processors
+ private:
+  unsigned int _state;          // current state
+  float *_inpbuff[MAXINP];      // input buffers
+  float *_outbuff[MAXOUT];      // output buffers
+  unsigned int _inpoffs;        // current offset in input buffers
+  unsigned int _outoffs;        // current offset in output buffers
+  unsigned int _options;        // option bits
+  unsigned int _skipcnt;        // number of frames to skip
+  float _density;               // matrix density hint
+  unsigned int _ninp;           // number of inputs
+  unsigned int _nout;           // number of outputs
+  unsigned int _quantum;        // processing block size
+  unsigned int _minpart;        // smallest partition size
+  unsigned int _maxpart;        // largest allowed partition size
+  unsigned int _nlevels;        // number of partition sizes
+  unsigned int _inpsize;        // size of input buffers
+  unsigned int _latecnt;        // count of cycles ending too late
+  Convlevel *_convlev[MAXLEV];  // array of processors
   void *_dummy[64];
 };
 

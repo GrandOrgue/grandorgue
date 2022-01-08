@@ -13,10 +13,10 @@
 class GOSoundReverbPartition;
 
 class GOSoundReverbEngine {
-private:
+ private:
   ptr_vector<GOSoundReverbPartition> m_Partitions;
 
-public:
+ public:
   GOSoundReverbEngine(unsigned samples_per_buffer);
   ~GOSoundReverbEngine();
 

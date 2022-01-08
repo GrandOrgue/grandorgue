@@ -31,7 +31,8 @@ SettingsMidiDevices::SettingsMidiDevices(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
     : wxPanel(parent, wxID_ANY),
       GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("Midi &ports")),
-      m_config(settings), m_Midi(midi),
+      m_config(settings),
+      m_Midi(midi),
       m_InDevices(m_Midi.GetInDevices(), m_config.m_MidiIn, this, ID_INDEVICES),
       m_OutDevices(
         m_Midi.GetOutDevices(), m_config.m_MidiOut, this, ID_OUTDEVICES) {
@@ -165,8 +166,7 @@ void SettingsMidiDevices::OnInOutDeviceClick(wxCommandEvent &event) {
 
   if (devConf.p_OutputDevice)
     for (unsigned i = 1; i < choices.GetCount(); i++)
-      if (choices[i] == devConf.p_OutputDevice->m_PhysicalName)
-        selection = i;
+      if (choices[i] == devConf.p_OutputDevice->m_PhysicalName) selection = i;
 
   int result = wxGetSingleChoiceIndex(
     _("Select the corresponding MIDI output device for converting input "
@@ -197,8 +197,7 @@ void SettingsMidiDevices::OnInChannelShiftClick(wxCommandEvent &event) {
     15,
     this);
 
-  if (result >= 0)
-    devConf.m_ChannelShift = result;
+  if (result >= 0) devConf.m_ChannelShift = result;
 }
 
 void SettingsMidiDevices::OnOutDevicesClick(wxCommandEvent &event) {

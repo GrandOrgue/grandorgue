@@ -34,7 +34,7 @@ class GOSettingsReverb : public wxPanel {
     ID_GAIN_SPIN,
   };
 
-private:
+ private:
   GOConfig &m_config;
   wxCheckBox *m_Enabled;
   wxCheckBox *m_Direct;
@@ -58,7 +58,7 @@ private:
 
   bool Validate();
 
-public:
+ public:
   GOSettingsReverb(GOConfig &settings, wxWindow *parent);
 
   void Save();

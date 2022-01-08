@@ -20,8 +20,8 @@ BEGIN_EVENT_TABLE(GOPanelView, wxScrolledWindow)
 EVT_SIZE(GOPanelView::OnSize)
 END_EVENT_TABLE()
 
-GOPanelView *
-GOPanelView::createWithFrame(GODocumentBase *doc, GOGUIPanel *panel) {
+GOPanelView *GOPanelView::createWithFrame(
+  GODocumentBase *doc, GOGUIPanel *panel) {
   wxFrame *frame = new wxFrame(
     NULL,
     -1,
@@ -43,8 +43,11 @@ GOPanelView::createWithFrame(GODocumentBase *doc, GOGUIPanel *panel) {
 
 GOPanelView::GOPanelView(
   GODocumentBase *doc, GOGUIPanel *panel, wxWindow *parent)
-    : wxScrolledWindow(parent), GOView(doc, parent), m_panelwidget(NULL),
-      m_panel(panel), m_TopWindow(dynamic_cast<wxTopLevelWindow *>(parent)) {
+    : wxScrolledWindow(parent),
+      GOView(doc, parent),
+      m_panelwidget(NULL),
+      m_panel(panel),
+      m_TopWindow(dynamic_cast<wxTopLevelWindow *>(parent)) {
   wxWindow *frame = parent;
 
   GOGUIPanelWidget *panelwidget = new GOGUIPanelWidget(panel, this);
@@ -70,8 +73,7 @@ GOPanelView::GOPanelView(
 
   // If both width and height are set, set position and size of the window
   // E.g. in case of corrupted preferences, this might not be the case
-  if (savedRect.GetWidth() && savedRect.GetHeight())
-    frame->SetSize(savedRect);
+  if (savedRect.GetWidth() && savedRect.GetHeight()) frame->SetSize(savedRect);
 
   // However, even if this worked, we cannot be sure that the window is now
   // fully within the client area of an existing display.
@@ -89,14 +91,12 @@ GOPanelView::GOPanelView(
   if (!max.Contains(current)) {
     // Otherwise, check and correct width and height,
     // and place the frame at the center of the Client Area of the display
-    if (current.GetWidth() > max.GetWidth())
-      current.SetWidth(max.GetWidth());
+    if (current.GetWidth() > max.GetWidth()) current.SetWidth(max.GetWidth());
     if (current.GetHeight() > max.GetHeight())
       current.SetHeight(max.GetHeight());
     frame->SetSize(current.CenterIn(max, wxBOTH));
   }
-  if (m_TopWindow && panel->IsMaximized())
-    m_TopWindow->Maximize(true);
+  if (m_TopWindow && panel->IsMaximized()) m_TopWindow->Maximize(true);
 
   m_panelwidget = panelwidget;
 
@@ -127,13 +127,11 @@ GOPanelView::GOPanelView(
 }
 
 GOPanelView::~GOPanelView() {
-  if (m_panel)
-    m_panel->SetView(NULL);
+  if (m_panel) m_panel->SetView(NULL);
 }
 
 void GOPanelView::RemoveView() {
-  if (m_panel)
-    m_panel->SetView(NULL);
+  if (m_panel) m_panel->SetView(NULL);
   m_panel = NULL;
   GOView::RemoveView();
 }
@@ -175,8 +173,7 @@ void GOPanelView::SyncState() {
 }
 
 bool GOPanelView::Destroy() {
-  if (m_panel)
-    m_panel->SetView(NULL);
+  if (m_panel) m_panel->SetView(NULL);
   return wxScrolledWindow::Destroy();
 }
 

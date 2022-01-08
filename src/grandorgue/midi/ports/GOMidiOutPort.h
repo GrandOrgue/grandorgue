@@ -17,12 +17,12 @@
 class GOMidiEvent;
 
 class GOMidiOutPort : public GOMidiPort {
-protected:
+ protected:
   GOMidiOutputMerger m_merger;
 
   virtual void SendData(std::vector<unsigned char> &msg) = 0;
 
-public:
+ public:
   GOMidiOutPort(
     GOMidi *midi,
     const wxString &portName,

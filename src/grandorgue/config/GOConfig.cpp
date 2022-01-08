@@ -136,9 +136,15 @@ const struct IniFileEnumEntry GOConfig::m_InitialLoadTypes[] = {
 };
 
 GOConfig::GOConfig(wxString instance)
-    : m_InstanceName(instance), m_ResourceDir(), m_AudioGroups(),
-      m_AudioDeviceConfig(), m_MIDIEvents(), m_MainWindowX(0), m_MainWindowY(0),
-      m_MainWindowWidth(0), m_MainWindowHeight(0),
+    : m_InstanceName(instance),
+      m_ResourceDir(),
+      m_AudioGroups(),
+      m_AudioDeviceConfig(),
+      m_MIDIEvents(),
+      m_MainWindowX(0),
+      m_MainWindowY(0),
+      m_MainWindowWidth(0),
+      m_MainWindowHeight(0),
       UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
       UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
       Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
@@ -213,7 +219,8 @@ GOConfig::GOConfig(wxString instance)
         this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
       MidiPlayerPath(
         this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString),
-      m_MidiIn(MIDI_IN), m_MidiOut(MIDI_OUT) {
+      m_MidiIn(MIDI_IN),
+      m_MidiOut(MIDI_OUT) {
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueConfig") + m_InstanceName;
   for (unsigned i = 0; i < GetEventCount(); i++)
@@ -380,12 +387,9 @@ void GOConfig::Load() {
       m_MIDIEvents[i]->Load(cfg, GetEventSection(i), m_MidiMap);
 
     long cpus = wxThread::GetCPUCount();
-    if (cpus == -1)
-      cpus = 4;
-    if (cpus > MAX_CPU)
-      cpus = MAX_CPU;
-    if (cpus == 0)
-      cpus = 1;
+    if (cpus == -1) cpus = 4;
+    if (cpus > MAX_CPU) cpus = MAX_CPU;
+    if (cpus == 0) cpus = 1;
 
     Concurrency.setDefaultValue(cpus);
     ReleaseConcurrency.setDefaultValue(cpus);
@@ -394,8 +398,7 @@ void GOConfig::Load() {
 
       GOSettingStore::Load(cfg);
 
-    if (Concurrency() == 0)
-      Concurrency(1);
+    if (Concurrency() == 0) Concurrency(1);
 
     m_MidiOut.Load(cfg);
     m_MidiIn.Load(cfg, &m_MidiOut);
@@ -435,8 +438,7 @@ int GOConfig::GetLanguageId() const {
   if (!langCode.IsEmpty()) {
     const wxLanguageInfo *const langInfo = wxLocale::FindLanguageInfo(langCode);
 
-    if (langInfo != NULL)
-      langId = langInfo->Language;
+    if (langInfo != NULL) langId = langInfo->Language;
   }
   return langId;
 }
@@ -454,18 +456,19 @@ unsigned GOConfig::GetEventCount() {
 wxString GOConfig::GetEventSection(unsigned index) {
   assert(index < GetEventCount());
   switch (m_MIDISettings[index].type) {
-  case MIDI_RECV_ENCLOSURE:
-    return wxString::Format(wxT("Enclosure%03d"), m_MIDISettings[index].index);
+    case MIDI_RECV_ENCLOSURE:
+      return wxString::Format(
+        wxT("Enclosure%03d"), m_MIDISettings[index].index);
 
-  case MIDI_RECV_MANUAL:
-    return wxString::Format(wxT("Manual%03d"), m_MIDISettings[index].index);
+    case MIDI_RECV_MANUAL:
+      return wxString::Format(wxT("Manual%03d"), m_MIDISettings[index].index);
 
-  case MIDI_RECV_SETTER:
-    return wxString::Format(wxT("Setter%03d"), m_MIDISettings[index].index);
+    case MIDI_RECV_SETTER:
+      return wxString::Format(wxT("Setter%03d"), m_MIDISettings[index].index);
 
-  default:
-    assert(false);
-    return wxEmptyString;
+    default:
+      assert(false);
+      return wxEmptyString;
   }
 }
 
@@ -484,8 +487,8 @@ GOMidiReceiverBase *GOConfig::GetMidiEvent(unsigned index) {
   return m_MIDIEvents[index];
 }
 
-GOMidiReceiverBase *
-GOConfig::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index) {
+GOMidiReceiverBase *GOConfig::FindMidiEvent(
+  MIDI_RECEIVER_TYPE type, unsigned index) {
   for (unsigned i = 0; i < GetEventCount(); i++)
     if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
       return m_MIDIEvents[i];
@@ -583,22 +586,19 @@ const std::vector<wxString> &GOConfig::GetAudioGroups() {
 }
 
 void GOConfig::SetAudioGroups(const std::vector<wxString> &audio_groups) {
-  if (!audio_groups.size())
-    return;
+  if (!audio_groups.size()) return;
   m_AudioGroups = audio_groups;
 }
 
 unsigned GOConfig::GetAudioGroupId(const wxString &str) {
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
-    if (m_AudioGroups[i] == str)
-      return i;
+    if (m_AudioGroups[i] == str) return i;
   return 0;
 }
 
 int GOConfig::GetStrictAudioGroupId(const wxString &str) {
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
-    if (m_AudioGroups[i] == str)
-      return i;
+    if (m_AudioGroups[i] == str) return i;
   return -1;
 }
 
@@ -608,8 +608,7 @@ const std::vector<GOAudioDeviceConfig> &GOConfig::GetAudioDeviceConfig() {
 
 void GOConfig::SetAudioDeviceConfig(
   const std::vector<GOAudioDeviceConfig> &config) {
-  if (!config.size())
-    return;
+  if (!config.size()) return;
   m_AudioDeviceConfig = config;
 }
 
@@ -722,6 +721,5 @@ void GOConfig::Flush() {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
     return;
   }
-  if (!GORenameFile(tmp_name, m_ConfigFileName))
-    return;
+  if (!GORenameFile(tmp_name, m_ConfigFileName)) return;
 }

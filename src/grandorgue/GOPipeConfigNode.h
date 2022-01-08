@@ -15,7 +15,7 @@ class GOSampleStatistic;
 class GOStatisticCallback;
 
 class GOPipeConfigNode : private GOSaveableObject {
-private:
+ private:
   GODefinitionFile *m_organfile;
   GOPipeConfigNode *m_parent;
   GOPipeConfig m_PipeConfig;
@@ -24,7 +24,7 @@ private:
 
   void Save(GOConfigWriter &cfg);
 
-public:
+ public:
   GOPipeConfigNode(
     GOPipeConfigNode *parent,
     GODefinitionFile *organfile,

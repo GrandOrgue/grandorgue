@@ -20,11 +20,11 @@ class GOTemperament;
 class GODefinitionFile;
 
 class GOPipe : private GOPlaybackStateHandler {
-private:
+ private:
   unsigned m_Velocity;
   std::vector<unsigned> m_Velocities;
 
-protected:
+ protected:
   GODefinitionFile *m_organfile;
   GORank *m_Rank;
   unsigned m_MidiKeyNumber;
@@ -36,7 +36,7 @@ protected:
   void PreparePlayback();
   void PrepareRecording();
 
-public:
+ public:
   GOPipe(GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number);
   virtual ~GOPipe();
   virtual void Load(GOConfigReader &cfg, wxString group, wxString prefix) = 0;

@@ -15,12 +15,13 @@
 
 #include "GOAlloc.h"
 
-template <class T> class GOBuffer {
-private:
+template <class T>
+class GOBuffer {
+ private:
   std::unique_ptr<T[]> m_Data;
   size_t m_Count;
 
-public:
+ public:
   GOBuffer() : m_Data(nullptr), m_Count(0) {}
 
   GOBuffer(size_t count) : m_Count(count) { m_Data = GOAllocArray<T>(m_Count); }
@@ -64,16 +65,14 @@ public:
   }
 
   void Append(const GOBuffer &b) {
-    if (!b.GetSize())
-      return;
+    if (!b.GetSize()) return;
     size_t pos = m_Count;
     resize(pos + b.GetCount());
     memcpy(&m_Data[pos], b.get(), b.GetSize());
   }
 
   void Append(const T *data, size_t count) {
-    if (!count)
-      return;
+    if (!count) return;
     size_t pos = m_Count;
     resize(pos + count);
     memcpy(&m_Data[pos], data, count * sizeof(T));

@@ -158,8 +158,7 @@ void GOTool::OnInitCmdLine(wxCmdLineParser &parser) {
 }
 
 bool GOTool::OnCmdLineParsed(wxCmdLineParser &parser) {
-  if (parser.Found(wxT("c")))
-    return CmdLineCreate(parser);
+  if (parser.Found(wxT("c"))) return CmdLineCreate(parser);
 
   wxLogError(_("No function selected"));
   return false;
@@ -219,14 +218,10 @@ bool GOTool::CreateOrganPackage(
       wxLogError(_("Failed to open archive %s"), packages[i].c_str());
       return false;
     }
-  for (unsigned i = 0; i < odfs.size(); i++)
-    archiveCreator.AddOrgan(odfs[i]);
-  if (!archiveCreator.CreatePackage(organPackage, title))
-    return false;
-  if (!archiveCreator.AddDirectory(inputDirectory))
-    return false;
-  if (!archiveCreator.FinishPackage())
-    return false;
+  for (unsigned i = 0; i < odfs.size(); i++) archiveCreator.AddOrgan(odfs[i]);
+  if (!archiveCreator.CreatePackage(organPackage, title)) return false;
+  if (!archiveCreator.AddDirectory(inputDirectory)) return false;
+  if (!archiveCreator.FinishPackage()) return false;
   wxLogInfo(_("organ package %s created"), organPackage.c_str());
   return true;
 }

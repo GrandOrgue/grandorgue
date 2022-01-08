@@ -13,7 +13,7 @@
 class wxImage;
 
 class GOBitmap {
-private:
+ private:
   wxImage *m_img;
   wxBitmap m_bmp;
   double m_Scale;
@@ -25,7 +25,7 @@ private:
   void ScaleBMP(
     wxImage &img, double scale, const wxRect &rect, GOBitmap *background);
 
-public:
+ public:
   GOBitmap();
   GOBitmap(wxImage *img);
 

@@ -25,7 +25,8 @@ END_EVENT_TABLE()
 
 GOSettingsTemperaments::GOSettingsTemperaments(
   GOConfig &settings, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY), m_Temperaments(settings.GetTemperaments()),
+    : wxPanel(parent, wxID_ANY),
+      m_Temperaments(settings.GetTemperaments()),
       m_Ptrs() {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
@@ -133,11 +134,9 @@ void GOSettingsTemperaments::Save() {
   for (unsigned i = 0; i < list.size(); i++) {
     bool found = false;
     for (unsigned j = 0; j < m_Ptrs.size(); j++)
-      if (m_Ptrs[j] == list[i])
-        found = true;
+      if (m_Ptrs[j] == list[i]) found = true;
 
-    if (!found)
-      delete list[i];
+    if (!found) delete list[i];
     list[i] = 0;
   }
   list.clear();

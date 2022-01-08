@@ -12,8 +12,10 @@
 
 GOSoundTremulantWorkItem::GOSoundTremulantWorkItem(
   GOSoundEngine &sound_engine, unsigned samples_per_buffer)
-    : m_engine(sound_engine), m_Volume(0),
-      m_SamplesPerBuffer(samples_per_buffer), m_Done(false) {}
+    : m_engine(sound_engine),
+      m_Volume(0),
+      m_SamplesPerBuffer(samples_per_buffer),
+      m_Done(false) {}
 
 void GOSoundTremulantWorkItem::Reset() {
   GOMutexLocker locker(m_Mutex);
@@ -33,13 +35,11 @@ unsigned GOSoundTremulantWorkItem::GetCost() { return 0; }
 bool GOSoundTremulantWorkItem::GetRepeat() { return false; }
 
 void GOSoundTremulantWorkItem::Run(GOSoundThread *thread) {
-  if (m_Done)
-    return;
+  if (m_Done) return;
 
   GOMutexLocker locker(m_Mutex);
 
-  if (m_Done)
-    return;
+  if (m_Done) return;
 
   m_Samplers.Move();
   if (m_Samplers.Peek() == NULL) {
@@ -57,8 +57,7 @@ void GOSoundTremulantWorkItem::Run(GOSoundThread *thread) {
     keep
       = m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, 1);
 
-    if (keep)
-      m_Samplers.Put(sampler);
+    if (keep) m_Samplers.Put(sampler);
   }
   m_Volume = output_buffer[2 * m_SamplesPerBuffer - 1];
   m_Done = true;

@@ -17,9 +17,19 @@
 #include "config/GOConfigReader.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabel *label)
-    : GOGUIControl(panel, label), m_DispXpos(0), m_DispYpos(0), m_Label(label),
-      m_Bitmap(), m_FontSize(0), m_FontName(), m_Text(), m_TextColor(0, 0, 0),
-      m_TextRect(), m_TextWidth(0), m_TileOffsetX(0), m_TileOffsetY(0) {}
+    : GOGUIControl(panel, label),
+      m_DispXpos(0),
+      m_DispYpos(0),
+      m_Label(label),
+      m_Bitmap(),
+      m_FontSize(0),
+      m_FontName(),
+      m_Text(),
+      m_TextColor(0, 0, 0),
+      m_TextRect(),
+      m_TextWidth(0),
+      m_TileOffsetX(0),
+      m_TileOffsetY(0) {}
 
 void GOGUILabel::Init(
   GOConfigReader &cfg,
@@ -109,8 +119,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       ODFSetting, group, wxT("DispAtTopOfDrawstopCol"), true, false);
 
     m_DispYpos = 1;
-    if (!DispAtTopOfDrawstopCol)
-      m_DispYpos += -32;
+    if (!DispAtTopOfDrawstopCol) m_DispYpos += -32;
   } else {
     y = cfg.ReadInteger(
       ODFSetting,
@@ -257,10 +266,8 @@ void GOGUILabel::Layout() {
     m_DispYpos = m_layout->GetJambLeftRightY() + 1
       + m_layout->GetJambLeftRightHeight() - 32;
 
-  if (m_BoundingRect.GetX() == -1)
-    m_BoundingRect.SetX(m_DispXpos);
-  if (m_BoundingRect.GetY() == -1)
-    m_BoundingRect.SetY(m_DispYpos);
+  if (m_BoundingRect.GetX() == -1) m_BoundingRect.SetX(m_DispXpos);
+  if (m_BoundingRect.GetY() == -1) m_BoundingRect.SetY(m_DispYpos);
 
   m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
@@ -271,8 +278,7 @@ void GOGUILabel::PrepareDraw(double scale, GOBitmap *background) {
 }
 
 void GOGUILabel::Draw(GODC &dc) {
-  if (m_Label)
-    m_Text = m_Label->GetContent();
+  if (m_Label) m_Text = m_Label->GetContent();
 
   dc.DrawBitmap(m_Bitmap, m_BoundingRect);
   if (m_TextWidth)
@@ -283,11 +289,9 @@ void GOGUILabel::Draw(GODC &dc) {
 
 bool GOGUILabel::HandleMousePress(
   int x, int y, bool right, GOGUIMouseState &state) {
-  if (!m_BoundingRect.Contains(x, y))
-    return false;
+  if (!m_BoundingRect.Contains(x, y)) return false;
   if (right) {
-    if (!m_Label)
-      return false;
+    if (!m_Label) return false;
     m_Label->ShowConfigDialog();
     return true;
   } else

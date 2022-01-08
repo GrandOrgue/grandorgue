@@ -17,7 +17,7 @@ class GOConfigWriter;
 class GOOrganList;
 
 class GOArchiveFile {
-private:
+ private:
   wxString m_ID;
   wxString m_FileID;
   wxString m_Path;
@@ -25,7 +25,7 @@ private:
   std::vector<wxString> m_Dependencies;
   std::vector<wxString> m_DependencyTitles;
 
-public:
+ public:
   GOArchiveFile(
     wxString id,
     wxString path,

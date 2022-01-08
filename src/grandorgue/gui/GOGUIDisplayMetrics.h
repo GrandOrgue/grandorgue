@@ -14,7 +14,7 @@
 #include "GOFont.h"
 
 class GOGUIDisplayMetrics {
-protected:
+ protected:
   /* Values loaded from ODF */
   unsigned m_DispScreenSizeHoriz;
   unsigned m_DispScreenSizeVert;
@@ -59,7 +59,7 @@ protected:
 
   void Init();
 
-public:
+ public:
   GOGUIDisplayMetrics();
   virtual ~GOGUIDisplayMetrics();
 

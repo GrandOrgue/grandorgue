@@ -11,10 +11,10 @@
 #include "GOFile.h"
 
 class GOInvalidFile : public GOFile {
-private:
+ private:
   wxString m_Name;
 
-public:
+ public:
   GOInvalidFile(const wxString &name);
 
   bool isValid();

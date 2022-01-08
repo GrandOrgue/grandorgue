@@ -17,7 +17,7 @@ class GOMidiMap;
 struct IniFileEnumEntry;
 
 class GOMidiReceiverBase : public GOMidiReceiverData {
-private:
+ private:
   typedef struct {
     unsigned device;
     int channel;
@@ -34,11 +34,11 @@ private:
   void deleteInternal(unsigned device);
   unsigned createInternal(unsigned device);
 
-protected:
+ protected:
   virtual void Preconfigure(GOConfigReader &cfg, wxString group);
   virtual int GetTranspose();
 
-public:
+ public:
   GOMidiReceiverBase(MIDI_RECEIVER_TYPE type);
 
   virtual void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);

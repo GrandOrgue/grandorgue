@@ -38,8 +38,7 @@ void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread) {
     while ((sampler = m_List.Get())) {
       m_Cnt.fetch_add(1);
       m_engine.ProcessRelease(sampler);
-      if (m_Stop && m_Cnt > 10)
-        break;
+      if (m_Stop && m_Cnt > 10) break;
     }
     unsigned wait = m_WaitCnt;
     if (wait < m_AudioGroups.size()) {
@@ -53,6 +52,5 @@ void GOSoundReleaseWorkItem::Exec() {
   m_Stop = true;
   Run();
   GOSoundSampler *sampler;
-  while ((sampler = m_List.Get()))
-    m_engine.PassSampler(sampler);
+  while ((sampler = m_List.Get())) m_engine.PassSampler(sampler);
 }

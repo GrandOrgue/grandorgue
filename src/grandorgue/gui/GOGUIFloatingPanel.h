@@ -14,12 +14,12 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUIFloatingPanel : public GOGUIPanelCreator {
-private:
+ private:
   GODefinitionFile *m_organfile;
 
   GOGUIPanel *CreateFloatingPanel(GOConfigReader &cfg);
 
-public:
+ public:
   GOGUIFloatingPanel(GODefinitionFile *organfile);
   ~GOGUIFloatingPanel();
 

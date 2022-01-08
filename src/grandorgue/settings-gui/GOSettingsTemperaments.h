@@ -26,7 +26,7 @@ class GOSettingsTemperaments : public wxPanel {
     ID_DEL,
   };
 
-private:
+ private:
   GOTemperamentList &m_Temperaments;
   std::vector<GOTemperamentUser *> m_Ptrs;
   wxGrid *m_List;
@@ -39,7 +39,7 @@ private:
 
   void Update();
 
-public:
+ public:
   GOSettingsTemperaments(GOConfig &settings, wxWindow *parent);
 
   void Save();

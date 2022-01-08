@@ -18,9 +18,14 @@
 GOEnclosure::GOEnclosure(GODefinitionFile *organfile)
     : m_midi(organfile, MIDI_RECV_ENCLOSURE),
       m_sender(organfile, MIDI_SEND_ENCLOSURE),
-      m_shortcut(organfile, KEY_RECV_ENCLOSURE), m_organfile(organfile),
-      m_AmpMinimumLevel(0), m_MIDIInputNumber(0), m_MIDIValue(0), m_Name(),
-      m_Displayed1(false), m_Displayed2(false) {
+      m_shortcut(organfile, KEY_RECV_ENCLOSURE),
+      m_organfile(organfile),
+      m_AmpMinimumLevel(0),
+      m_MIDIInputNumber(0),
+      m_MIDIValue(0),
+      m_Name(),
+      m_Displayed1(false),
+      m_Displayed2(false) {
   m_organfile->RegisterEventHandler(this);
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);
@@ -68,10 +73,8 @@ void GOEnclosure::Save(GOConfigWriter &cfg) {
 }
 
 void GOEnclosure::Set(int n) {
-  if (n < 0)
-    n = 0;
-  if (n > 127)
-    n = 127;
+  if (n < 0) n = 0;
+  if (n > 127) n = 127;
   m_MIDIValue = n;
   m_sender.SetValue(m_MIDIValue);
   m_organfile->UpdateVolume();
@@ -92,21 +95,20 @@ void GOEnclosure::Scroll(bool scroll_up) {
 
 void GOEnclosure::ProcessMidi(const GOMidiEvent &event) {
   int value;
-  if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
-    Set(value);
+  if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE) Set(value);
 }
 
 void GOEnclosure::HandleKey(int key) {
   switch (m_shortcut.Match(key)) {
-  case KEY_MATCH:
-    Set(m_MIDIValue + 8);
-    break;
+    case KEY_MATCH:
+      Set(m_MIDIValue + 8);
+      break;
 
-  case KEY_MATCH_MINUS:
-    Set(m_MIDIValue - 8);
-    break;
-  default:
-    break;
+    case KEY_MATCH_MINUS:
+      Set(m_MIDIValue - 8);
+      break;
+    default:
+      break;
   }
 }
 
@@ -166,8 +168,6 @@ std::vector<wxString> GOEnclosure::GetElementActions() {
 }
 
 void GOEnclosure::TriggerElementActions(unsigned no) {
-  if (no == 0)
-    Scroll(false);
-  if (no == 1)
-    Scroll(true);
+  if (no == 0) Scroll(false);
+  if (no == 1) Scroll(true);
 }

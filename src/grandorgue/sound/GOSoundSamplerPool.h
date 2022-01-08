@@ -16,14 +16,14 @@
 class GOSoundSampler;
 
 class GOSoundSamplerPool {
-private:
+ private:
   GOMutex m_Lock;
   atomic_uint m_SamplerCount;
   unsigned m_UsageLimit;
   GOSoundSimpleSamplerList m_AvailableSamplers;
   ptr_vector<GOSoundSampler> m_Samplers;
 
-public:
+ public:
   GOSoundSamplerPool();
   GOSoundSampler *GetSampler();
   void ReturnSampler(GOSoundSampler *sampler);

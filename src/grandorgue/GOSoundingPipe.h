@@ -20,7 +20,7 @@ class GOSoundingPipe : public GOPipe,
                        private GOCacheObject,
                        private GOPipeUpdateCallback,
                        private GOPipeWindchestCallback {
-private:
+ private:
   GOSoundSampler *m_Sampler;
   uint64_t m_LastStop;
   int m_Instances;
@@ -70,7 +70,7 @@ private:
   void AbortPlayback();
   void PreparePlayback();
 
-public:
+ public:
   GOSoundingPipe(
     GODefinitionFile *organfile,
     GORank *rank,
@@ -83,8 +83,8 @@ public:
     float max_volume,
     bool retune);
 
-  void
-  Init(GOConfigReader &cfg, wxString group, wxString prefix, wxString filename);
+  void Init(
+    GOConfigReader &cfg, wxString group, wxString prefix, wxString filename);
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);
   void SetTemperament(const GOTemperament &temperament);
 };

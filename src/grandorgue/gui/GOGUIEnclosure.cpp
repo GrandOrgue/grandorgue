@@ -18,10 +18,18 @@
 #include "gui/GOGUIPanel.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)
-    : GOGUIControl(panel, control), m_enclosure(control), m_FontSize(0),
-      m_FontName(), m_TextColor(0, 0, 0), m_Text(), m_TextWidth(0),
-      m_MouseAxisStart(0), m_MouseAxisEnd(0), m_TileOffsetX(0),
-      m_TileOffsetY(0), m_Bitmaps(0) {
+    : GOGUIControl(panel, control),
+      m_enclosure(control),
+      m_FontSize(0),
+      m_FontName(),
+      m_TextColor(0, 0, 0),
+      m_Text(),
+      m_TextWidth(0),
+      m_MouseAxisStart(0),
+      m_MouseAxisEnd(0),
+      m_TileOffsetX(0),
+      m_TileOffsetY(0),
+      m_Bitmaps(0) {
   m_layout->RegisterEnclosure(this);
 }
 
@@ -90,8 +98,8 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
     1,
     128,
     false,
-    16); // Allowed number of bitmaps is 1 to 128 (not 127... Midi pedals can
-         // give a value from 0 to 127, making 128 levels)
+    16);  // Allowed number of bitmaps is 1 to 128 (not 127... Midi pedals can
+          // give a value from 0 to 127, making 128 levels)
   wxChar style = wxT('A')
     + cfg.ReadInteger(ODFSetting, group, wxT("EnclosureStyle"), 1, 4, false, 1)
     - 1;
@@ -307,15 +315,13 @@ void GOGUIEnclosure::Draw(GODC &dc) {
 
 bool GOGUIEnclosure::HandleMousePress(
   int x, int y, bool right, GOGUIMouseState &state) {
-  if (!m_BoundingRect.Contains(x, y))
-    return false;
+  if (!m_BoundingRect.Contains(x, y)) return false;
   if (right) {
     m_enclosure->ShowConfigDialog();
     return true;
   } else {
     unsigned value;
-    if (!m_MouseRect.Contains(x, y))
-      return false;
+    if (!m_MouseRect.Contains(x, y)) return false;
     y -= m_MouseRect.GetY();
     if (y <= m_MouseAxisStart && m_MouseAxisStart != 0)
       value = (127 * y / m_MouseAxisStart);
@@ -326,8 +332,7 @@ bool GOGUIEnclosure::HandleMousePress(
     else
       value = 127;
 
-    if (state.GetControl() == this && state.GetIndex() == value)
-      return true;
+    if (state.GetControl() == this && state.GetIndex() == value) return true;
     state.SetControl(this);
     state.SetIndex(value);
 
@@ -337,8 +342,7 @@ bool GOGUIEnclosure::HandleMousePress(
 }
 
 bool GOGUIEnclosure::HandleMouseScroll(int x, int y, int amount) {
-  if (!m_BoundingRect.Contains(x, y) || !amount)
-    return false;
+  if (!m_BoundingRect.Contains(x, y) || !amount) return false;
   m_enclosure->Scroll(amount > 0);
   return true;
 }

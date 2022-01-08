@@ -15,8 +15,15 @@
 #include "GOMidiFile.h"
 
 GOMidiFileReader::GOMidiFileReader(GOMidiMap &map)
-    : m_Map(map), m_Data(), m_Tracks(0), m_Speed(0), m_Pos(0), m_TrackEnd(0),
-      m_LastTime(0), m_PPQ(0), m_Tempo(0) {}
+    : m_Map(map),
+      m_Data(),
+      m_Tracks(0),
+      m_Speed(0),
+      m_Pos(0),
+      m_TrackEnd(0),
+      m_LastTime(0),
+      m_PPQ(0),
+      m_Tempo(0) {}
 
 GOMidiFileReader::~GOMidiFileReader() { m_Data.free(); }
 
@@ -54,29 +61,29 @@ bool GOMidiFileReader::Open(wxString filename) {
   }
   m_Tracks = h->tracks;
   switch (h->type) {
-  case 0:
-    if (m_Tracks != 1) {
-      wxLogError(_("MIDI file type 0 only supports one track"));
+    case 0:
+      if (m_Tracks != 1) {
+        wxLogError(_("MIDI file type 0 only supports one track"));
+        return false;
+      }
+      break;
+
+    case 1:
+      if (m_Tracks < 1) {
+        wxLogError(_("MIDI file type 1 has not tracks"));
+        return false;
+      }
+      break;
+
+    case 2:
+      wxLogError(_("MIDI file type 2 is not supported"));
       return false;
-    }
-    break;
 
-  case 1:
-    if (m_Tracks < 1) {
-      wxLogError(_("MIDI file type 1 has not tracks"));
+    default:
+      wxLogError(_("Unkown MIDI file type %d"), (int)h->type);
       return false;
-    }
-    break;
-
-  case 2:
-    wxLogError(_("MIDI file type 2 is not supported"));
-    return false;
-
-  default:
-    wxLogError(_("Unkown MIDI file type %d"), (int)h->type);
-    return false;
   }
-  m_Tempo = 0x7A120; // 120 BPM
+  m_Tempo = 0x7A120;  // 120 BPM
   unsigned ppq = h->ppq;
   if (ppq & 0x8000) {
     unsigned frames = 1 + ((-ppq >> 8) & 0x7F);
@@ -93,8 +100,7 @@ bool GOMidiFileReader::Open(wxString filename) {
 
 bool GOMidiFileReader::StartTrack() {
   do {
-    if (m_Pos >= m_Data.GetCount())
-      return false;
+    if (m_Pos >= m_Data.GetCount()) return false;
     if (m_Pos + sizeof(MIDIFileHeader) > m_Data.GetCount()) {
       wxLogError(_("Incomplete chunk at offset %d"), m_Pos);
       m_Pos += sizeof(MIDIFileHeader);
@@ -149,19 +155,16 @@ unsigned GOMidiFileReader::DecodeTime() {
 bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
   do {
     std::vector<unsigned char> msg;
-    if (m_Pos >= m_Data.GetCount())
-      return false;
+    if (m_Pos >= m_Data.GetCount()) return false;
     if (m_TrackEnd && m_Pos >= m_TrackEnd) {
       wxLogError(_("End of track marker missing at offset %d"), m_Pos);
       m_Pos = m_TrackEnd;
       m_TrackEnd = 0;
     }
     if (!m_TrackEnd)
-      if (!StartTrack())
-        return false;
+      if (!StartTrack()) return false;
     unsigned rel_time = DecodeTime();
-    if (m_Pos >= m_TrackEnd)
-      return false;
+    if (m_Pos >= m_TrackEnd) return false;
     unsigned len;
     if (m_Data[m_Pos] & 0x80) {
       msg.push_back(m_Data[m_Pos]);
@@ -174,78 +177,77 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
     }
     m_LastStatus = 0;
     switch (msg[0] & 0xF0) {
-    case 0x80:
-    case 0x90:
-    case 0xA0:
-    case 0xB0:
-    case 0xE0:
-      m_LastStatus = msg[0];
-      len = 2;
-      break;
-
-    case 0xC0:
-    case 0xD0:
-      m_LastStatus = msg[0];
-      len = 1;
-      break;
-
-    case 0xF0:
-      switch (msg[0]) {
-      case 0xF6:
-      case 0xF8:
-      case 0xF9:
-      case 0xFA:
-      case 0xFB:
-      case 0xFC:
-      case 0xFE:
-        len = 0;
-        break;
-
-      case 0xF1:
-      case 0xF3:
-        len = 1;
-        break;
-      case 0xF2:
+      case 0x80:
+      case 0x90:
+      case 0xA0:
+      case 0xB0:
+      case 0xE0:
+        m_LastStatus = msg[0];
         len = 2;
         break;
 
-      case 0xF0:
-      case 0xF7:
-        if (m_Pos + 1 > m_TrackEnd) {
-          wxLogError(_("Incomplete MIDI message at %d"), m_Pos - 1);
-          return false;
-        }
-        len = m_Data[m_Pos];
-        m_Pos += 1;
+      case 0xC0:
+      case 0xD0:
+        m_LastStatus = msg[0];
+        len = 1;
         break;
 
-      case 0xFF:
-        if (m_Pos + 2 > m_TrackEnd) {
-          wxLogError(_("Incomplete MIDI message at %d"), m_Pos - 1);
-          return false;
+      case 0xF0:
+        switch (msg[0]) {
+          case 0xF6:
+          case 0xF8:
+          case 0xF9:
+          case 0xFA:
+          case 0xFB:
+          case 0xFC:
+          case 0xFE:
+            len = 0;
+            break;
+
+          case 0xF1:
+          case 0xF3:
+            len = 1;
+            break;
+          case 0xF2:
+            len = 2;
+            break;
+
+          case 0xF0:
+          case 0xF7:
+            if (m_Pos + 1 > m_TrackEnd) {
+              wxLogError(_("Incomplete MIDI message at %d"), m_Pos - 1);
+              return false;
+            }
+            len = m_Data[m_Pos];
+            m_Pos += 1;
+            break;
+
+          case 0xFF:
+            if (m_Pos + 2 > m_TrackEnd) {
+              wxLogError(_("Incomplete MIDI message at %d"), m_Pos - 1);
+              return false;
+            }
+            msg.push_back(m_Data[m_Pos]);
+            msg.push_back(m_Data[m_Pos + 1]);
+            len = m_Data[m_Pos + 1];
+            m_Pos += 2;
+            break;
+
+          default:
+            wxLogError(_("Unknown MIDI message %02X at %d"), msg[0], m_Pos - 1);
+            return false;
         }
-        msg.push_back(m_Data[m_Pos]);
-        msg.push_back(m_Data[m_Pos + 1]);
-        len = m_Data[m_Pos + 1];
-        m_Pos += 2;
         break;
 
       default:
         wxLogError(_("Unknown MIDI message %02X at %d"), msg[0], m_Pos - 1);
         return false;
-      }
-      break;
-
-    default:
-      wxLogError(_("Unknown MIDI message %02X at %d"), msg[0], m_Pos - 1);
-      return false;
     }
     if (m_Pos + len > m_TrackEnd) {
       wxLogError(_("Incomplete MIDI message at %d"), m_Pos - msg.size());
       return false;
     }
-    for (unsigned i = 0; i < len; i++)
-      msg.push_back(m_Data[m_Pos++]);
+    for (unsigned i = 0; i < len; i++) msg.push_back(m_Data[m_Pos++]);
     m_LastTime += rel_time * m_Speed;
 
     if (msg[0] == 0xFF && msg[1] == 0x2F && msg[2] == 0x00) {
@@ -265,16 +267,13 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
 
     e.FromMidi(msg, m_Map);
     e.SetTime(m_LastTime);
-    if (e.GetMidiType() != MIDI_NONE)
-      return true;
+    if (e.GetMidiType() != MIDI_NONE) return true;
   } while (true);
 }
 
 bool GOMidiFileReader::Close() {
-  if (m_Tracks)
-    wxLogError(_("Some tracks are missing"));
-  if (m_TrackEnd)
-    wxLogError(_("Last track is missing the end marker"));
+  if (m_Tracks) wxLogError(_("Some tracks are missing"));
+  if (m_TrackEnd) wxLogError(_("Last track is missing the end marker"));
   if (m_Pos < m_TrackEnd) {
     wxLogError(_("Error decoding a track"));
     return false;

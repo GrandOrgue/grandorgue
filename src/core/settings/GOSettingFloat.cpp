@@ -17,8 +17,10 @@ GOSettingFloat::GOSettingFloat(
   float min_value,
   float max_value,
   float default_value)
-    : GOSetting(store, group, name), m_Value(default_value),
-      m_MinValue(min_value), m_MaxValue(max_value),
+    : GOSetting(store, group, name),
+      m_Value(default_value),
+      m_MinValue(min_value),
+      m_MaxValue(max_value),
       m_DefaultValue(default_value) {}
 
 void GOSettingFloat::Load(GOConfigReader &cfg) {
@@ -45,9 +47,7 @@ float GOSettingFloat::operator()() const { return m_Value; }
 void GOSettingFloat::operator()(float value) { m_Value = validate(value); }
 
 float GOSettingFloat::validate(float value) {
-  if (value <= m_MinValue)
-    value = m_MinValue;
-  if (value >= m_MaxValue)
-    value = m_MaxValue;
+  if (value <= m_MinValue) value = m_MinValue;
+  if (value >= m_MaxValue) value = m_MaxValue;
   return value;
 }

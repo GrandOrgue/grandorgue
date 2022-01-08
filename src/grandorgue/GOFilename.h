@@ -18,7 +18,7 @@ class GOHash;
 class GODefinitionFile;
 
 class GOFilename {
-private:
+ private:
   wxString m_Name;
   wxString m_Path;
   GOArchive *m_Archiv;
@@ -26,7 +26,7 @@ private:
 
   void SetPath(const wxString &base, const wxString &path);
 
-public:
+ public:
   GOFilename();
 
   void Assign(const wxString &name, GODefinitionFile *organfile);

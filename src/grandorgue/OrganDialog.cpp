@@ -28,7 +28,7 @@
 #include "config/GOConfig.h"
 
 class OrganTreeItemData : public wxTreeItemData {
-public:
+ public:
   OrganTreeItemData(GOPipeConfigNode &c) {
     node = &c;
     config = &node->GetPipeConfig();
@@ -77,9 +77,15 @@ OrganDialog::OrganDialog(
       wxDefaultPosition,
       wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-      GOView(doc, this), m_organfile(organfile), m_Apply(NULL), m_Reset(NULL),
-      m_Last(NULL), m_LoadChangeCnt(0), m_ModalDialog(NULL),
-      m_Destroying(false), m_DestroyPending(false) {
+      GOView(doc, this),
+      m_organfile(organfile),
+      m_Apply(NULL),
+      m_Reset(NULL),
+      m_Last(NULL),
+      m_LoadChangeCnt(0),
+      m_ModalDialog(NULL),
+      m_Destroying(false),
+      m_DestroyPending(false) {
   wxArrayString choices;
 
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
@@ -328,8 +334,7 @@ OrganDialog::OrganDialog(
     0,
     wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  if (m_organfile->GetIgnorePitch())
-    m_IgnorePitch->SetValue(true);
+  if (m_organfile->GetIgnorePitch()) m_IgnorePitch->SetValue(true);
 
   settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
   scroll->SetSizer(settingSizer);
@@ -359,8 +364,7 @@ bool OrganDialog::CloseModal() {
     wxDialog *dlg = m_ModalDialog;
     m_ModalDialog = NULL;
     dlg->EndModal(wxID_CANCEL);
-    if (m_Destroying)
-      m_DestroyPending = true;
+    if (m_Destroying) m_DestroyPending = true;
     return true;
   }
   return false;
@@ -369,23 +373,20 @@ bool OrganDialog::CloseModal() {
 bool OrganDialog::Destroy() {
   Hide();
   m_Destroying = true;
-  if (CloseModal())
-    return true;
+  if (CloseModal()) return true;
   return wxDialog::Destroy();
 }
 
 void OrganDialog::SetEmpty(wxChoice *choice) {
   int index = choice->FindString(wxEmptyString);
-  if (index == wxNOT_FOUND)
-    index = choice->Append(wxEmptyString);
+  if (index == wxNOT_FOUND) index = choice->Append(wxEmptyString);
   choice->SetSelection(index);
 }
 
 void OrganDialog::RemoveEmpty(wxChoice *choice) {
   int sel = choice->GetSelection();
   int index = choice->FindString(wxEmptyString);
-  if (index != wxNOT_FOUND)
-    choice->Delete(index);
+  if (index != wxNOT_FOUND) choice->Delete(index);
   choice->SetSelection(sel);
 }
 
@@ -460,14 +461,10 @@ void OrganDialog::Load() {
   m_AudioGroupAssistant->Enable();
 
   if (entries.size() > 1) {
-    if (!m_Amplitude->IsModified())
-      m_Amplitude->ChangeValue(wxEmptyString);
-    if (!m_Gain->IsModified())
-      m_Gain->ChangeValue(wxEmptyString);
-    if (!m_Tuning->IsModified())
-      m_Tuning->ChangeValue(wxEmptyString);
-    if (!m_Delay->IsModified())
-      m_Delay->ChangeValue(wxEmptyString);
+    if (!m_Amplitude->IsModified()) m_Amplitude->ChangeValue(wxEmptyString);
+    if (!m_Gain->IsModified()) m_Gain->ChangeValue(wxEmptyString);
+    if (!m_Tuning->IsModified()) m_Tuning->ChangeValue(wxEmptyString);
+    if (!m_Delay->IsModified()) m_Delay->ChangeValue(wxEmptyString);
     if (m_AudioGroup->GetValue() == m_LastAudioGroup) {
       m_AudioGroup->SetValue(wxT(" "));
       m_LastAudioGroup = m_AudioGroup->GetValue();
@@ -500,8 +497,7 @@ void OrganDialog::Load() {
     m_Apply->Disable();
 
   for (unsigned i = 0; i < entries.size(); i++)
-    if (m_Last && m_Tree->GetItemData(entries[i]) == m_Last)
-      return;
+    if (m_Last && m_Tree->GetItemData(entries[i]) == m_Last) return;
 
   m_Last = 0;
   for (unsigned i = 0; i < entries.size() && !m_Last; i++)
@@ -584,8 +580,7 @@ void OrganDialog::OnAmplitudeSpinChanged(wxSpinEvent &e) {
 
 void OrganDialog::OnAmplitudeChanged(wxCommandEvent &e) {
   double amp;
-  if (m_Amplitude->GetValue().ToDouble(&amp))
-    m_AmplitudeSpin->SetValue(amp);
+  if (m_Amplitude->GetValue().ToDouble(&amp)) m_AmplitudeSpin->SetValue(amp);
   Modified();
 }
 
@@ -598,8 +593,7 @@ void OrganDialog::OnGainSpinChanged(wxSpinEvent &e) {
 
 void OrganDialog::OnGainChanged(wxCommandEvent &e) {
   double gain;
-  if (m_Gain->GetValue().ToDouble(&gain))
-    m_GainSpin->SetValue(gain);
+  if (m_Gain->GetValue().ToDouble(&gain)) m_GainSpin->SetValue(gain);
   Modified();
 }
 
@@ -612,8 +606,7 @@ void OrganDialog::OnTuningSpinChanged(wxSpinEvent &e) {
 
 void OrganDialog::OnTuningChanged(wxCommandEvent &e) {
   double tuning;
-  if (m_Tuning->GetValue().ToDouble(&tuning))
-    m_TuningSpin->SetValue(tuning);
+  if (m_Tuning->GetValue().ToDouble(&tuning)) m_TuningSpin->SetValue(tuning);
   Modified();
 }
 
@@ -626,8 +619,7 @@ void OrganDialog::OnDelaySpinChanged(wxSpinEvent &e) {
 
 void OrganDialog::OnDelayChanged(wxCommandEvent &e) {
   long delay;
-  if (m_Delay->GetValue().ToLong(&delay))
-    m_DelaySpin->SetValue(delay);
+  if (m_Delay->GetValue().ToLong(&delay)) m_DelaySpin->SetValue(delay);
   Modified();
 }
 
@@ -665,37 +657,24 @@ void OrganDialog::OnReleaseLoadChanged(wxCommandEvent &e) {
 
 bool OrganDialog::Changed() {
   bool changed = false;
-  if (m_Amplitude->IsModified())
-    changed = true;
-  if (m_Gain->IsModified())
-    changed = true;
-  if (m_Tuning->IsModified())
-    changed = true;
-  if (m_Delay->IsModified())
-    changed = true;
-  if (m_AudioGroup->GetValue() != m_LastAudioGroup)
-    changed = true;
-  if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
-    changed = true;
-  if (m_Compress->GetSelection() != m_LastCompress)
-    changed = true;
-  if (m_Channels->GetSelection() != m_LastChannels)
-    changed = true;
-  if (m_LoopLoad->GetSelection() != m_LastLoopLoad)
-    changed = true;
-  if (m_AttackLoad->GetSelection() != m_LastAttackLoad)
-    changed = true;
-  if (m_ReleaseLoad->GetSelection() != m_LastReleaseLoad)
-    changed = true;
+  if (m_Amplitude->IsModified()) changed = true;
+  if (m_Gain->IsModified()) changed = true;
+  if (m_Tuning->IsModified()) changed = true;
+  if (m_Delay->IsModified()) changed = true;
+  if (m_AudioGroup->GetValue() != m_LastAudioGroup) changed = true;
+  if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample) changed = true;
+  if (m_Compress->GetSelection() != m_LastCompress) changed = true;
+  if (m_Channels->GetSelection() != m_LastChannels) changed = true;
+  if (m_LoopLoad->GetSelection() != m_LastLoopLoad) changed = true;
+  if (m_AttackLoad->GetSelection() != m_LastAttackLoad) changed = true;
+  if (m_ReleaseLoad->GetSelection() != m_LastReleaseLoad) changed = true;
 
   return changed;
 }
 
 void OrganDialog::Modified() {
-  if (m_Reset)
-    m_Reset->Enable();
-  if (m_Apply)
-    m_Apply->Enable();
+  if (m_Reset) m_Reset->Enable();
+  if (m_Apply) m_Apply->Enable();
 }
 
 void OrganDialog::FillTree(wxTreeItemId parent, GOPipeConfigNode &config) {
@@ -754,16 +733,11 @@ void OrganDialog::OnEventApply(wxCommandEvent &e) {
 
   for (unsigned i = 0; i < entries.size(); i++) {
     OrganTreeItemData *e = (OrganTreeItemData *)m_Tree->GetItemData(entries[i]);
-    if (!e)
-      continue;
-    if (m_Amplitude->IsModified())
-      e->config->SetAmplitude(amp);
-    if (m_Gain->IsModified())
-      e->config->SetGain(gain);
-    if (m_Tuning->IsModified())
-      e->config->SetTuning(tuning);
-    if (m_Delay->IsModified())
-      e->config->SetDelay(delay);
+    if (!e) continue;
+    if (m_Amplitude->IsModified()) e->config->SetAmplitude(amp);
+    if (m_Gain->IsModified()) e->config->SetGain(gain);
+    if (m_Tuning->IsModified()) e->config->SetTuning(tuning);
+    if (m_Delay->IsModified()) e->config->SetDelay(delay);
     if (m_AudioGroup->GetValue() != m_LastAudioGroup)
       e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
     if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -788,23 +762,23 @@ void OrganDialog::OnEventApply(wxCommandEvent &e) {
   if (m_Amplitude->IsModified()) {
     m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
     m_Amplitude
-      ->DiscardEdits(); // workaround of osx implementation bug
-                        // https://github.com/oleg68/GrandOrgue/issues/87
+      ->DiscardEdits();  // workaround of osx implementation bug
+                         // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_Gain->IsModified()) {
     m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
-    m_Gain->DiscardEdits(); // workaround of osx implementation bug
-                            // https://github.com/oleg68/GrandOrgue/issues/87
+    m_Gain->DiscardEdits();  // workaround of osx implementation bug
+                             // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_Tuning->IsModified()) {
     m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
-    m_Tuning->DiscardEdits(); // workaround of osx implementation bug
-                              // https://github.com/oleg68/GrandOrgue/issues/87
+    m_Tuning->DiscardEdits();  // workaround of osx implementation bug
+                               // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_Delay->IsModified()) {
     m_Delay->ChangeValue(wxString::Format(wxT("%lu"), delay));
-    m_Delay->DiscardEdits(); // workaround of osx implementation bug
-                             // https://github.com/oleg68/GrandOrgue/issues/87
+    m_Delay->DiscardEdits();  // workaround of osx implementation bug
+                              // https://github.com/oleg68/GrandOrgue/issues/87
   }
   m_LastAudioGroup = m_AudioGroup->GetValue();
   m_LastBitsPerSample = m_BitsPerSample->GetSelection();
@@ -826,8 +800,7 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e) {
 
   for (unsigned i = 0; i < entries.size(); i++) {
     OrganTreeItemData *e = (OrganTreeItemData *)m_Tree->GetItemData(entries[i]);
-    if (!e)
-      continue;
+    if (!e) continue;
     e->config->SetAmplitude(e->config->GetDefaultAmplitude());
     e->config->SetGain(e->config->GetDefaultGain());
     e->config->SetTuning(e->config->GetDefaultTuning());
@@ -855,8 +828,7 @@ void OrganDialog::OnTreeChanging(wxTreeEvent &e) {
 
 void OrganDialog::OnTreeChanged(wxTreeEvent &e) {
   wxArrayTreeItemIds entries;
-  if (m_LoadChangeCnt)
-    return;
+  if (m_LoadChangeCnt) return;
   m_LoadChangeCnt++;
   do {
     bool rescan = false;
@@ -870,18 +842,15 @@ void OrganDialog::OnTreeChanged(wxTreeEvent &e) {
         while (child.IsOk()) {
           bool found = false;
           for (unsigned j = 0; j < entries.size(); j++)
-            if (entries[j] == child)
-              found = true;
-          if (!found)
-            m_Tree->SelectItem(child, true);
+            if (entries[j] == child) found = true;
+          if (!found) m_Tree->SelectItem(child, true);
           child = m_Tree->GetNextChild(entries[i], it);
         }
         rescan = true;
         m_Tree->SelectItem(entries[i], false);
       }
     }
-    if (rescan)
-      continue;
+    if (rescan) continue;
   } while (false);
   m_LoadChangeCnt--;
 
@@ -911,8 +880,7 @@ void OrganDialog::UpdateAudioGroup(
   if (e) {
     e->config->SetAudioGroup(audio_group[pos]);
     pos++;
-    if (pos >= audio_group.size())
-      pos = 0;
+    if (pos >= audio_group.size()) pos = 0;
   }
 
   wxTreeItemIdValue it;
@@ -932,8 +900,7 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
   wxArrayString strs;
   std::vector<wxString> group_list
     = m_organfile->GetSettings().GetAudioGroups();
-  for (unsigned i = 0; i < group_list.size(); i++)
-    strs.Add(group_list[i]);
+  for (unsigned i = 0; i < group_list.size(); i++) strs.Add(group_list[i]);
 
   wxMultiChoiceDialog dlg(
     this, _("Select audio groups to distribute:"), _("Organ dialog"), strs);
@@ -950,8 +917,7 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
     return;
   }
   group_list.clear();
-  for (unsigned i = 0; i < sel.Count(); i++)
-    group_list.push_back(strs[sel[i]]);
+  for (unsigned i = 0; i < sel.Count(); i++) group_list.push_back(strs[sel[i]]);
 
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);

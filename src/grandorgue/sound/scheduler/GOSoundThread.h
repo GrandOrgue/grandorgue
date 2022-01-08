@@ -15,7 +15,7 @@
 class GOSoundScheduler;
 
 class GOSoundThread : public GOThread {
-private:
+ private:
   GOSoundScheduler *m_Scheduler;
 
   GOMutex m_Mutex;
@@ -23,7 +23,7 @@ private:
 
   void Entry();
 
-public:
+ public:
   GOSoundThread(GOSoundScheduler *scheduler);
 
   void Run();

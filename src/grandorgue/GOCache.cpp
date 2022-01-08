@@ -15,7 +15,11 @@
 #include "go_defs.h"
 
 GOCache::GOCache(wxFile &cache_file, GOMemoryPool &pool)
-    : m_stream(0), m_fstream(0), m_zstream(0), m_pool(pool), m_Mapable(false),
+    : m_stream(0),
+      m_fstream(0),
+      m_zstream(0),
+      m_pool(pool),
+      m_Mapable(false),
       m_OK(false) {
   int magic;
 
@@ -40,10 +44,8 @@ GOCache::GOCache(wxFile &cache_file, GOMemoryPool &pool)
     }
   }
 
-  if (!m_OK || m_stream->TellI() == wxInvalidOffset)
-    m_Mapable = false;
-  if (m_Mapable)
-    m_Mapable = m_pool.SetCacheFile(cache_file);
+  if (!m_OK || m_stream->TellI() == wxInvalidOffset) m_Mapable = false;
+  if (m_Mapable) m_Mapable = m_pool.SetCacheFile(cache_file);
 }
 
 GOCache::~GOCache() { Close(); }
@@ -51,18 +53,15 @@ GOCache::~GOCache() { Close(); }
 bool GOCache::ReadHeader() { return m_OK; }
 
 void GOCache::Close() {
-  if (m_zstream)
-    delete m_zstream;
+  if (m_zstream) delete m_zstream;
   m_zstream = 0;
-  if (m_fstream)
-    delete m_fstream;
+  if (m_fstream) delete m_fstream;
   m_fstream = 0;
 }
 
 bool GOCache::Read(void *data, unsigned length) {
   m_stream->Read(data, length);
-  if (m_stream->LastRead() != length)
-    return false;
+  if (m_stream->LastRead() != length) return false;
   return true;
 }
 
@@ -80,8 +79,7 @@ void *GOCache::ReadBlock(unsigned length) {
     }
   }
   void *data = m_pool.Alloc(length, true);
-  if (data == NULL)
-    throw GOOutOfMemory();
+  if (data == NULL) throw GOOutOfMemory();
 
   m_stream->Read(data, length);
   if (m_stream->LastRead() != length) {

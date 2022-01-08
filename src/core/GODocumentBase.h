@@ -13,10 +13,10 @@
 class GOView;
 
 class GODocumentBase {
-public:
+ public:
   typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
 
-private:
+ private:
   typedef struct {
     WindowType type;
     void *data;
@@ -25,11 +25,11 @@ private:
 
   std::vector<WindowInfo> m_Windows;
 
-protected:
+ protected:
   void SyncState();
   void CloseWindows();
 
-public:
+ public:
   GODocumentBase();
   ~GODocumentBase();
 

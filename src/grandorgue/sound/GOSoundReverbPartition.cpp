@@ -14,10 +14,20 @@
 
 GOSoundReverbPartition::GOSoundReverbPartition(
   unsigned size, unsigned cnt, unsigned start_pos)
-    : m_PartitionSize(size), m_PartitionCount(cnt), m_fftwTmpReal(0),
-      m_fftwTmpComplex(0), m_TimeToFreq(0), m_FreqToTime(0), m_Input(0),
-      m_Output(0), m_InputPos(start_pos), m_InputStartPos(start_pos),
-      m_OutputPos(0), m_InputHistory(), m_IRData(), m_InputHistoryPos(0) {
+    : m_PartitionSize(size),
+      m_PartitionCount(cnt),
+      m_fftwTmpReal(0),
+      m_fftwTmpComplex(0),
+      m_TimeToFreq(0),
+      m_FreqToTime(0),
+      m_Input(0),
+      m_Output(0),
+      m_InputPos(start_pos),
+      m_InputStartPos(start_pos),
+      m_OutputPos(0),
+      m_InputHistory(),
+      m_IRData(),
+      m_InputHistoryPos(0) {
   m_fftwTmpReal = new float[m_PartitionSize * 2];
   m_fftwTmpComplex = new fftwf_complex[m_PartitionSize + 1];
 
@@ -34,25 +44,18 @@ GOSoundReverbPartition::GOSoundReverbPartition(
   for (unsigned i = 0; i < m_PartitionCount; i++)
     m_InputHistory.push_back(new fftwf_complex[m_PartitionSize + 1]);
 
-  for (unsigned i = 0; i < m_PartitionCount; i++)
-    m_IRData.push_back(NULL);
+  for (unsigned i = 0; i < m_PartitionCount; i++) m_IRData.push_back(NULL);
 
   Reset();
 }
 
 GOSoundReverbPartition::~GOSoundReverbPartition() {
-  if (m_TimeToFreq)
-    fftwf_destroy_plan(m_TimeToFreq);
-  if (m_FreqToTime)
-    fftwf_destroy_plan(m_FreqToTime);
-  if (m_fftwTmpReal)
-    delete[] m_fftwTmpReal;
-  if (m_fftwTmpComplex)
-    delete[] m_fftwTmpComplex;
-  if (m_Input)
-    delete[] m_Input;
-  if (m_Output)
-    delete[] m_Output;
+  if (m_TimeToFreq) fftwf_destroy_plan(m_TimeToFreq);
+  if (m_FreqToTime) fftwf_destroy_plan(m_FreqToTime);
+  if (m_fftwTmpReal) delete[] m_fftwTmpReal;
+  if (m_fftwTmpComplex) delete[] m_fftwTmpComplex;
+  if (m_Input) delete[] m_Input;
+  if (m_Output) delete[] m_Output;
 }
 
 void GOSoundReverbPartition::Reset() {
@@ -136,8 +139,7 @@ void GOSoundReverbPartition::AddIR(
   for (unsigned i = 0; i < m_PartitionCount; i++) {
     unsigned minpos = offset + i * m_PartitionSize;
     unsigned maxpos = offset + (i + 1) * m_PartitionSize;
-    if (pos + len < minpos || pos >= maxpos)
-      continue;
+    if (pos + len < minpos || pos >= maxpos) continue;
     std::fill(m_fftwTmpReal, m_fftwTmpReal + 2 * m_PartitionSize, 0);
     unsigned startpos = minpos < pos ? pos : minpos;
     unsigned endpos = pos + len > maxpos ? maxpos : pos + len;

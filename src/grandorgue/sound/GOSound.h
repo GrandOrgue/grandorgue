@@ -34,7 +34,7 @@ class GOConfig;
 
 class GOSound {
   class GOSoundOutput {
-  public:
+   public:
     GOSoundPort *port;
     GOMutex mutex;
     GOCondition condition;
@@ -61,7 +61,7 @@ class GOSound {
     }
   };
 
-private:
+ private:
   bool m_open;
 
   GOMutex m_lock;
@@ -104,7 +104,7 @@ private:
   void StartStreams();
   void UpdateMeter();
 
-public:
+ public:
   GOSound(GOConfig &settings);
   ~GOSound();
 
@@ -128,8 +128,8 @@ public:
 
   GOSoundEngine &GetEngine();
 
-  bool
-  AudioCallback(unsigned dev_index, float *outputBuffer, unsigned int nFrames);
+  bool AudioCallback(
+    unsigned dev_index, float *outputBuffer, unsigned int nFrames);
 };
 
 #endif

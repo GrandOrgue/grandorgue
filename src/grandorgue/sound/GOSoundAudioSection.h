@@ -92,7 +92,7 @@ typedef struct audio_section_stream_s {
 } audio_section_stream;
 
 class GOAudioSection {
-private:
+ private:
   template <class T>
   static void MonoUncompressedLinear(
     audio_section_stream *stream, float *output, unsigned int n_blocks);
@@ -167,7 +167,7 @@ private:
   int m_MaxAbsAmplitude;
   int m_MaxAbsDerivative;
 
-public:
+ public:
   GOAudioSection(GOMemoryPool &pool);
   ~GOAudioSection();
   void ClearData();
@@ -190,8 +190,8 @@ public:
     float sample_rate_adjustment) const;
 
   /* Read an audio buffer from an audio section stream */
-  static bool
-  ReadBlock(audio_section_stream *stream, float *buffer, unsigned int n_blocks);
+  static bool ReadBlock(
+    audio_section_stream *stream, float *buffer, unsigned int n_blocks);
   static void GetHistory(
     const audio_section_stream *stream,
     int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);

@@ -20,7 +20,7 @@
 #include "GOThread.h"
 
 class GOMutex {
-private:
+ private:
 #if defined GO_STD_MUTEX
   std::timed_mutex m_mutex;
 #elif defined WX_MUTEX
@@ -39,7 +39,7 @@ private:
   bool DoTryLock();
   void DoUnlock();
 
-public:
+ public:
   GOMutex();
   ~GOMutex();
 

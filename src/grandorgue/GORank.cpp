@@ -19,10 +19,20 @@
 #include "config/GOConfigReader.h"
 
 GORank::GORank(GODefinitionFile *organfile)
-    : m_organfile(organfile), m_Name(), m_Pipes(), m_StopCount(0), m_Velocity(),
-      m_Velocities(), m_FirstMidiNoteNumber(0), m_Percussive(false),
-      m_WindchestGroup(0), m_HarmonicNumber(8), m_PitchCorrection(0),
-      m_MinVolume(100), m_MaxVolume(100), m_RetuneRank(true),
+    : m_organfile(organfile),
+      m_Name(),
+      m_Pipes(),
+      m_StopCount(0),
+      m_Velocity(),
+      m_Velocities(),
+      m_FirstMidiNoteNumber(0),
+      m_Percussive(false),
+      m_WindchestGroup(0),
+      m_HarmonicNumber(8),
+      m_PitchCorrection(0),
+      m_MinVolume(100),
+      m_MaxVolume(100),
+      m_RetuneRank(true),
       m_sender(organfile, MIDI_SEND_MANUAL),
       m_PipeConfig(NULL, organfile, NULL) {
   m_organfile->RegisterMidiConfigurator(this);
@@ -159,8 +169,7 @@ unsigned GORank::RegisterStop(GOStop *stop) {
 }
 
 void GORank::SetKey(int note, unsigned velocity, unsigned stopID) {
-  if (note < 0 || note >= (int)m_Pipes.size())
-    return;
+  if (note < 0 || note >= (int)m_Pipes.size()) return;
 
   if (m_Velocities[note][stopID] <= velocity && velocity <= m_Velocity[note]) {
     m_Velocities[note][stopID] = velocity;
@@ -196,8 +205,7 @@ void GORank::AbortPlayback() { m_sender.SetName(wxEmptyString); }
 
 void GORank::PreparePlayback() {
   m_sender.ResetKey();
-  for (unsigned i = 0; i < m_Velocity.size(); i++)
-    m_Velocity[i] = 0;
+  for (unsigned i = 0; i < m_Velocity.size(); i++) m_Velocity[i] = 0;
   for (unsigned i = 0; i < m_Velocities.size(); i++)
     for (unsigned j = 0; j < m_Velocities[i].size(); j++)
       m_Velocities[i][j] = 0;

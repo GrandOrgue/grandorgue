@@ -12,7 +12,7 @@
 #include <wx/defs.h>
 
 class GOIntHelper {
-public:
+ public:
   static uint8_t swap_value(uint8_t val) { return val; }
 
   static int8_t swap_value(int8_t val) { return val; }
@@ -36,8 +36,9 @@ public:
 
 #pragma pack(push, 1)
 
-template <typename A, bool enable_swap, A swap_func(A)> class GOInt {
-private:
+template <typename A, bool enable_swap, A swap_func(A)>
+class GOInt {
+ private:
   A m_Value;
 
   A swap(A val) const {
@@ -49,7 +50,7 @@ private:
 
   void assign(A val) { m_Value = swap(val); }
 
-public:
+ public:
   GOInt(A val = 0) { assign(val); }
 
   operator A() const { return swap(m_Value); }
@@ -97,7 +98,7 @@ typedef GOInt<uint64_t, GOIntHelper::isLittleEndian(), GOIntHelper::swap_value>
   GOUInt64BE;
 
 class GOInt24 {
-private:
+ private:
   uint16_t lo;
   int8_t hi;
 
@@ -106,7 +107,7 @@ private:
     hi = (value >> 16) & 0xff;
   }
 
-public:
+ public:
   GOInt24(int val = 0) { assign(val); }
 
   operator int() { return ((hi << 16) | lo); }
@@ -118,7 +119,7 @@ public:
 };
 
 class GOInt24LE {
-private:
+ private:
   uint8_t lo, mi;
   int8_t hi;
 
@@ -128,7 +129,7 @@ private:
     hi = (value >> 16) & 0xff;
   }
 
-public:
+ public:
   GOInt24LE(int val = 0) { assign(val); }
 
   operator int() { return ((hi << 16) | (mi << 8) | lo); }

@@ -15,15 +15,15 @@ class GOConfigWriter;
 class GOSettingStore;
 
 class GOSetting {
-private:
+ private:
   GOSetting(const GOSetting &);
   void operator=(const GOSetting &);
 
-protected:
+ protected:
   wxString m_Group;
   wxString m_Name;
 
-public:
+ public:
   GOSetting(GOSettingStore *store, wxString group, wxString name);
   virtual ~GOSetting();
 

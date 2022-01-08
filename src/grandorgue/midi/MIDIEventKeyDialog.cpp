@@ -23,7 +23,9 @@ END_EVENT_TABLE()
 MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event)
     : wxPanel(
       parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
-      m_original(event), m_key(*event), m_keyminusselect(NULL),
+      m_original(event),
+      m_key(*event),
+      m_keyminusselect(NULL),
       m_minuslisten(NULL) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -57,8 +59,7 @@ MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event)
   SetSizer(topSizer);
 
   FillKeylist(m_keyselect, m_key.GetShortcut());
-  if (m_keyminusselect)
-    FillKeylist(m_keyminusselect, m_key.GetMinusKey());
+  if (m_keyminusselect) FillKeylist(m_keyminusselect, m_key.GetMinusKey());
 
   topSizer->Fit(this);
 }
@@ -72,8 +73,7 @@ void MIDIEventKeyDialog::FillKeylist(wxChoice *select, unsigned shortcut) {
   select->SetSelection(0);
   for (unsigned i = 0; i < count; i++) {
     select->Append(wxGetTranslation(keys[i].name), (void *)&keys[i]);
-    if (keys[i].key_code == shortcut)
-      select->SetSelection(i + 1);
+    if (keys[i].key_code == shortcut) select->SetSelection(i + 1);
   }
 }
 
@@ -129,18 +129,15 @@ void MIDIEventKeyDialog::OnKeyDown(wxKeyEvent &event) {
   unsigned code = WXKtoVK(event.GetKeyCode());
   if (code) {
     wxChoice *select = m_keyselect;
-    if (m_minuslisten && m_minuslisten->GetValue())
-      select = m_keyminusselect;
+    if (m_minuslisten && m_minuslisten->GetValue()) select = m_keyminusselect;
     for (unsigned i = 0; i < select->GetCount(); i++) {
       const GOShortcutKey *key
         = (const GOShortcutKey *)select->GetClientData(i);
-      if (key && key->key_code == code)
-        select->SetSelection(i);
+      if (key && key->key_code == code) select->SetSelection(i);
     }
 
     m_listen->SetValue(false);
-    if (m_minuslisten)
-      m_minuslisten->SetValue(false);
+    if (m_minuslisten) m_minuslisten->SetValue(false);
     Listen(false);
   } else
     event.Skip();

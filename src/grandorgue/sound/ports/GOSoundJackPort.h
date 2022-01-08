@@ -22,40 +22,40 @@
 #include "GOSoundPortFactory.h"
 
 class GOSoundJackPort : public GOSoundPort {
-public:
+ public:
   static const wxString PORT_NAME;
 
   GOSoundJackPort(GOSound *sound, wxString name);
   ~GOSoundJackPort();
 
 #if defined(GO_USE_JACK)
-private:
+ private:
   jack_client_t *m_JackClient = NULL;
   jack_port_t **m_JackOutputPorts = NULL;
   float *m_GoBuffer = NULL;
   bool m_IsOpen = false;
   bool m_IsStarted = false;
 
-  static void
-  JackLatencyCallback(jack_latency_callback_mode_t mode, void *data);
+  static void JackLatencyCallback(
+    jack_latency_callback_mode_t mode, void *data);
   static int JackProcessCallback(jack_nframes_t nFrames, void *data);
   static void JackShutdownCallback(void *data);
 
   static wxString getName();
 
-public:
+ public:
   void Open();
   void StartStream();
 #endif /* GO_USE_JACK */
 
-public:
+ public:
   void Close();
 
   static const std::vector<wxString> &getApis() {
     return GOSoundPortFactory::c_NoApis;
   }
-  static GOSoundPort *
-  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+  static GOSoundPort *create(
+    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
 };

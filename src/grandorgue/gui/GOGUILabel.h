@@ -17,7 +17,7 @@
 class GOLabel;
 
 class GOGUILabel : public GOGUIControl {
-private:
+ private:
   int m_DispXpos;
   int m_DispYpos;
   GOLabel *m_Label;
@@ -32,7 +32,7 @@ private:
   unsigned m_TileOffsetX;
   unsigned m_TileOffsetY;
 
-public:
+ public:
   GOGUILabel(GOGUIPanel *panel, GOLabel *label);
   void Init(
     GOConfigReader &cfg,

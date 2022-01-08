@@ -12,14 +12,14 @@
 #include "GOGUIControl.h"
 
 class GOGUIManualBackground : public GOGUIControl {
-private:
+ private:
   unsigned m_ManualNumber;
   wxRect m_VRect;
   GOBitmap m_VBackground;
   wxRect m_HRect;
   GOBitmap m_HBackground;
 
-public:
+ public:
   GOGUIManualBackground(GOGUIPanel *panel, unsigned manual_number);
 
   void Init(GOConfigReader &cfg, wxString group);

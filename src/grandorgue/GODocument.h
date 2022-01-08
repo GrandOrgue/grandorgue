@@ -25,7 +25,7 @@ class GOSound;
 class GODefinitionFile;
 
 class GODocument : public GODocumentBase, protected GOMidiCallback {
-private:
+ private:
   GOMutex m_lock;
   bool m_OrganFileReady;
   GODefinitionFile *m_organfile;
@@ -38,7 +38,7 @@ private:
   void SyncState();
   void CloseOrgan();
 
-public:
+ public:
   GODocument(GOSound *sound);
   ~GODocument();
 
