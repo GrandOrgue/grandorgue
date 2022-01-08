@@ -24,14 +24,14 @@ class GOTimer : private wxTimer {
     unsigned interval;
   } GOTimerEntry;
 
- private:
+private:
   std::vector<GOTimerEntry> m_Entries;
   GOMutex m_Lock;
 
   void Schedule();
   void Notify();
 
- public:
+public:
   GOTimer();
   ~GOTimer();
 

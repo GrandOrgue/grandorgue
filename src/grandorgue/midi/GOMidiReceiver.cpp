@@ -32,25 +32,29 @@ void GOMidiReceiver::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
 }
 
 void GOMidiReceiver::Preconfigure(GOConfigReader &cfg, wxString group) {
-  if (!m_organfile) return;
+  if (!m_organfile)
+    return;
   unsigned index = 0;
 
   if (m_type == MIDI_RECV_SETTER) {
     index = m_Index;
   }
   if (m_type == MIDI_RECV_MANUAL) {
-    if (m_Index == -1) return;
+    if (m_Index == -1)
+      return;
 
     index = m_organfile->GetManual(m_Index)->GetMIDIInputNumber();
   }
   if (m_type == MIDI_RECV_ENCLOSURE) {
-    if (m_Index == -1) return;
+    if (m_Index == -1)
+      return;
 
     index = m_organfile->GetEnclosureElement(m_Index)->GetMIDIInputNumber();
   }
   GOMidiReceiverBase *recv
     = m_organfile->GetSettings().FindMidiEvent(m_type, index);
-  if (!recv) return;
+  if (!recv)
+    return;
 
   for (unsigned i = 0; i < recv->GetEventCount(); i++)
     m_events.push_back(recv->GetEvent(i));
@@ -62,5 +66,6 @@ int GOMidiReceiver::GetTranspose() {
 
 void GOMidiReceiver::Assign(const GOMidiReceiverData &data) {
   GOMidiReceiverBase::Assign(data);
-  if (m_organfile) m_organfile->Modified();
+  if (m_organfile)
+    m_organfile->Modified();
 }

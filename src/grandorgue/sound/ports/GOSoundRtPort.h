@@ -13,7 +13,7 @@
 #include "sound/GOSoundDevInfo.h"
 
 class GOSoundRtPort : public GOSoundPort {
- private:
+private:
   RtAudio *m_rtApi;
   unsigned m_nBuffers;
 
@@ -27,7 +27,7 @@ class GOSoundRtPort : public GOSoundPort {
 
   static wxString getName(RtAudio *rtApi, unsigned index);
 
- public:
+public:
   static const wxString PORT_NAME;
 
   // rtApi to be deleted in the destructor
@@ -39,8 +39,8 @@ class GOSoundRtPort : public GOSoundPort {
   void Close();
 
   static const std::vector<wxString> &getApis();
-  static GOSoundPort *create(
-    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+  static GOSoundPort *
+  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
 };

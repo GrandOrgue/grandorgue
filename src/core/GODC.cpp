@@ -43,7 +43,8 @@ wxString GODC::WrapText(const wxString &string, unsigned width) {
         maybreak = true;
     }
     if (maybreak || i == string.Length()) {
-      if (!work.Length()) continue;
+      if (!work.Length())
+        continue;
       m_DC->GetTextExtent(line + wxT(' ') + work, &cx, &cy);
       if (cx > (int)width) {
         if (!str.Length())

@@ -119,19 +119,23 @@ void GODrawstop::Save(GOConfigWriter &cfg) {
 }
 
 void GODrawstop::Set(bool on) {
-  if (IsEngaged() == on) return;
+  if (IsEngaged() == on)
+    return;
   Display(on);
   SetState(on);
 }
 
 void GODrawstop::Reset() {
-  if (IsReadOnly()) return;
-  if (m_GCState < 0) return;
+  if (IsReadOnly())
+    return;
+  if (m_GCState < 0)
+    return;
   Set(m_GCState > 0 ? true : false);
 }
 
 void GODrawstop::SetState(bool on) {
-  if (IsActive() == on) return;
+  if (IsActive() == on)
+    return;
   if (IsReadOnly()) {
     Display(on);
   }
@@ -142,7 +146,8 @@ void GODrawstop::SetState(bool on) {
 }
 
 void GODrawstop::SetCombination(bool on) {
-  if (IsReadOnly()) return;
+  if (IsReadOnly())
+    return;
   m_CombinationState = on;
   Set(on);
 }
@@ -157,43 +162,43 @@ void GODrawstop::PreparePlayback() {
 void GODrawstop::Update() {
   bool state;
   switch (m_Type) {
-    case FUNCTION_INPUT:
-      SetState(IsEngaged());
-      break;
+  case FUNCTION_INPUT:
+    SetState(IsEngaged());
+    break;
 
-    case FUNCTION_AND:
-    case FUNCTION_NAND:
-      state = true;
-      for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-        state = state && m_ControllingDrawstops[i]->IsActive();
-      if (m_Type == FUNCTION_NAND)
-        SetState(!state);
-      else
-        SetState(state);
-      break;
-
-    case FUNCTION_OR:
-    case FUNCTION_NOR:
-      state = false;
-      for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-        state = state || m_ControllingDrawstops[i]->IsActive();
-      if (m_Type == FUNCTION_NOR)
-        SetState(!state);
-      else
-        SetState(state);
-      break;
-
-    case FUNCTION_XOR:
-      state = false;
-      for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-        state = state != m_ControllingDrawstops[i]->IsActive();
-      SetState(state);
-      break;
-
-    case FUNCTION_NOT:
-      state = m_ControllingDrawstops[0]->IsActive();
+  case FUNCTION_AND:
+  case FUNCTION_NAND:
+    state = true;
+    for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+      state = state && m_ControllingDrawstops[i]->IsActive();
+    if (m_Type == FUNCTION_NAND)
       SetState(!state);
-      break;
+    else
+      SetState(state);
+    break;
+
+  case FUNCTION_OR:
+  case FUNCTION_NOR:
+    state = false;
+    for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+      state = state || m_ControllingDrawstops[i]->IsActive();
+    if (m_Type == FUNCTION_NOR)
+      SetState(!state);
+    else
+      SetState(state);
+    break;
+
+  case FUNCTION_XOR:
+    state = false;
+    for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+      state = state != m_ControllingDrawstops[i]->IsActive();
+    SetState(state);
+    break;
+
+  case FUNCTION_NOT:
+    state = m_ControllingDrawstops[0]->IsActive();
+    SetState(!state);
+    break;
   }
 }
 

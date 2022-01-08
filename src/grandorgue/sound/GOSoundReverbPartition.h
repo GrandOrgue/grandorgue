@@ -12,7 +12,7 @@
 #include "ptrvector.h"
 
 class GOSoundReverbPartition {
- private:
+private:
   unsigned m_PartitionSize;
   unsigned m_PartitionCount;
   float *m_fftwTmpReal;
@@ -30,7 +30,7 @@ class GOSoundReverbPartition {
 
   void ZeroComplex(fftwf_complex *data, unsigned len);
 
- public:
+public:
   GOSoundReverbPartition(unsigned size, unsigned cnt, unsigned start_pos);
   ~GOSoundReverbPartition();
 

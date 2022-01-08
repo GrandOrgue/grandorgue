@@ -33,8 +33,10 @@ void GOMainWindowData::Save(GOConfigWriter &cfg) {
   wxRect size = m_size;
   int x = size.GetLeft();
   int y = size.GetTop();
-  if (x < -20) x = -20;
-  if (y < -20) y = -20;
+  if (x < -20)
+    x = -20;
+  if (y < -20)
+    y = -20;
   cfg.WriteInteger(m_group, wxT("WindowX"), x);
   cfg.WriteInteger(m_group, wxT("WindowY"), y);
   cfg.WriteInteger(m_group, wxT("WindowWidth"), size.GetWidth());

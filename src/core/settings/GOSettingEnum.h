@@ -10,9 +10,8 @@
 
 #include "settings/GOSetting.h"
 
-template <class T>
-class GOSettingEnum : private GOSetting {
- private:
+template <class T> class GOSettingEnum : private GOSetting {
+private:
   T m_Value;
   T m_DefaultValue;
   const struct IniFileEnumEntry *m_Entries;
@@ -21,7 +20,7 @@ class GOSettingEnum : private GOSetting {
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
 
- public:
+public:
   GOSettingEnum(
     GOSettingStore *store,
     wxString group,

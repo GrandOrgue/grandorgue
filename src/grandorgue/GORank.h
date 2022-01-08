@@ -23,7 +23,7 @@ class GODefinitionFile;
 class GORank : private GOSaveableObject,
                public GOMidiConfigurator,
                private GOPlaybackStateHandler {
- private:
+private:
   GODefinitionFile *m_organfile;
   wxString m_Name;
   ptr_vector<GOPipe> m_Pipes;
@@ -50,7 +50,7 @@ class GORank : private GOSaveableObject,
   void StartPlayback();
   void PrepareRecording();
 
- public:
+public:
   GORank(GODefinitionFile *organfile);
   ~GORank();
   void Init(

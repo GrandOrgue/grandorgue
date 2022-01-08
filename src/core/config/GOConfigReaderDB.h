@@ -16,7 +16,7 @@
 class GOConfigFileReader;
 
 class GOConfigReaderDB {
- private:
+private:
   WX_DECLARE_STRING_HASH_MAP(wxString, GOStringHashMap);
   WX_DECLARE_STRING_HASH_MAP(bool, GOBoolHashMap);
 
@@ -29,16 +29,16 @@ class GOConfigReaderDB {
 
   void AddEntry(GOStringHashMap &hash, wxString key, wxString value);
 
- public:
+public:
   GOConfigReaderDB(bool case_sensitive = true);
   ~GOConfigReaderDB();
   void ReportUnused();
   void ClearCMB();
-  bool ReadData(
-    GOConfigFileReader &ODF, GOSettingType type, bool handle_prefix);
+  bool
+  ReadData(GOConfigFileReader &ODF, GOSettingType type, bool handle_prefix);
 
-  bool GetString(
-    GOSettingType type, wxString group, wxString key, wxString &value);
+  bool
+  GetString(GOSettingType type, wxString group, wxString key, wxString &value);
 };
 
 #endif

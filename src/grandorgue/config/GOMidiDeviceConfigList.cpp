@@ -11,8 +11,8 @@
 #include "config/GOConfigWriter.h"
 #include "go_limits.h"
 
-GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByLogicalName(
-  const wxString &logicalName) const {
+GOMidiDeviceConfig *
+GOMidiDeviceConfigList::FindByLogicalName(const wxString &logicalName) const {
   GOMidiDeviceConfig *res = NULL;
 
   for (GOMidiDeviceConfig *pDevConf : m_list)
@@ -23,20 +23,20 @@ GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByLogicalName(
   return res;
 }
 
-GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByPhysicalName(
-  const wxString &physicalName) const {
+GOMidiDeviceConfig *
+GOMidiDeviceConfigList::FindByPhysicalName(const wxString &physicalName) const {
   GOMidiDeviceConfig *res = NULL;
   GOMidiDeviceConfig *candidate = NULL;
 
   for (GOMidiDeviceConfig *pDevConf : m_list) {
-    if (pDevConf->m_PhysicalName == physicalName) {  // hasAlreadyMatches
+    if (pDevConf->m_PhysicalName == physicalName) { // hasAlreadyMatches
       res = pDevConf;
       break;
     }
     if (
-      !candidate  // physicalName has not yet matched
+      !candidate // physicalName has not yet matched
       && pDevConf->m_PhysicalName.IsEmpty()
-      && pDevConf->DoesMatch(physicalName)  // devConf has not yet matched
+      && pDevConf->DoesMatch(physicalName) // devConf has not yet matched
     )
       candidate = pDevConf;
     // Even we have a candidate, we continue to search for already matched
@@ -63,7 +63,8 @@ void GOMidiDeviceConfigList::RemoveByLogicalNameOutOf(
             isProtected = true;
             break;
           }
-      if (!isProtected) m_list.erase(i);
+      if (!isProtected)
+        m_list.erase(i);
     }
   }
 }
@@ -104,7 +105,8 @@ GOMidiDeviceConfig *GOMidiDeviceConfigList::Append(
   if (outputList)
     // Map the output device against outputList
     outputList->MapOutputDevice(devConf, *pDevConf);
-  if (toAdd) m_list.push_back(pDevConf);
+  if (toAdd)
+    m_list.push_back(pDevConf);
   return pDevConf;
 }
 
@@ -128,14 +130,14 @@ void GOMidiDeviceConfigList::Load(
         CMBSetting,
         m_GroupName,
         wxString::Format(DEVICE03D_REGEX, i),
-        false),  // regEx
+        false), // regEx
       cfg.ReadBoolean(
         CMBSetting,
         m_GroupName,
-        wxString::Format(DEVICE03D_ENABLED, i))  // isEnabled
+        wxString::Format(DEVICE03D_ENABLED, i)) // isEnabled
     );
 
-    if (outputMidiDevices)  // load an input device
+    if (outputMidiDevices) // load an input device
     {
       devConf->m_ChannelShift = cfg.ReadInteger(
         CMBSetting, m_GroupName, wxString::Format(DEVICE03D_SHIFT, i), 0, 15);
@@ -178,6 +180,7 @@ void GOMidiDeviceConfigList::Save(GOConfigWriter &cfg, const bool isInput) {
           devConf->p_OutputDevice->m_LogicalName);
     }
   }
-  if (i > MAX_MIDI_DEVICES) i = MAX_MIDI_DEVICES;
+  if (i > MAX_MIDI_DEVICES)
+    i = MAX_MIDI_DEVICES;
   cfg.WriteInteger(m_GroupName, COUNT, i);
 }

@@ -39,7 +39,7 @@ class GOSettingsAudioOutput : public wxPanel, GOSettingsPorts {
     ID_SAMPLES_PER_BUFFER
   };
 
- private:
+private:
   GOSound &m_Sound;
   GOConfig &m_config;
   GOAudioGroupCallback &m_GroupCallback;
@@ -60,23 +60,23 @@ class GOSettingsAudioOutput : public wxPanel, GOSettingsPorts {
   AudioItemData *GetObject(const wxTreeItemId &id);
   wxTreeItemId GetDeviceNode(const wxString &name);
   wxTreeItemId GetChannelNode(const wxTreeItemId &audio, unsigned channel);
-  wxTreeItemId GetGroupNode(
-    const wxTreeItemId &channel, const wxString &name, bool left);
+  wxTreeItemId
+  GetGroupNode(const wxTreeItemId &channel, const wxString &name, bool left);
 
   wxTreeItemId AddDeviceNode(wxString name);
   wxTreeItemId AddDeviceNode(wxString name, unsigned latency);
   wxTreeItemId AddChannelNode(const wxTreeItemId &audio, unsigned channel);
-  wxTreeItemId AddGroupNode(
-    const wxTreeItemId &channel, const wxString &name, bool left);
+  wxTreeItemId
+  AddGroupNode(const wxTreeItemId &channel, const wxString &name, bool left);
   void UpdateDevice(const wxTreeItemId &dev);
   void UpdateVolume(const wxTreeItemId &group, float volume);
   void UpdateButtons();
 
   void AssureDeviceList();
-  std::vector<wxString> GetRemainingAudioDevices(
-    const wxTreeItemId *ignoreItem);
-  std::vector<std::pair<wxString, bool>> GetRemainingAudioGroups(
-    const wxTreeItemId &channel);
+  std::vector<wxString>
+  GetRemainingAudioDevices(const wxTreeItemId *ignoreItem);
+  std::vector<std::pair<wxString, bool>>
+  GetRemainingAudioGroups(const wxTreeItemId &channel);
 
   void OnOutputChanged(wxTreeEvent &event);
   void OnOutputAdd(wxCommandEvent &event);
@@ -85,7 +85,7 @@ class GOSettingsAudioOutput : public wxPanel, GOSettingsPorts {
   void OnOutputProperties(wxCommandEvent &event);
   void OnOutputDefault(wxCommandEvent &event);
 
- public:
+public:
   GOSettingsAudioOutput(
     GOSound &sound, GOAudioGroupCallback &callback, wxWindow *parent);
 

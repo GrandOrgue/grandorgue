@@ -355,13 +355,16 @@ void GOGUIButton::Layout() {
   int x, y;
   if (m_IsPiston) {
     m_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, x, y);
-    if (!m_DispKeyLabelOnLeft) x -= 13;
+    if (!m_DispKeyLabelOnLeft)
+      x -= 13;
   } else {
     m_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, x, y);
   }
 
-  if (m_BoundingRect.GetX() == -1) m_BoundingRect.SetX(x);
-  if (m_BoundingRect.GetY() == -1) m_BoundingRect.SetY(y);
+  if (m_BoundingRect.GetX() == -1)
+    m_BoundingRect.SetX(x);
+  if (m_BoundingRect.GetY() == -1)
+    m_BoundingRect.SetY(y);
 
   m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
   m_MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
@@ -369,7 +372,8 @@ void GOGUIButton::Layout() {
 
 bool GOGUIButton::HandleMousePress(
   int x, int y, bool right, GOGUIMouseState &state) {
-  if (!m_MouseRect.Contains(x, y)) return false;
+  if (!m_MouseRect.Contains(x, y))
+    return false;
   if (m_Radius) {
     if (
       (m_MouseRect.GetX() + m_Radius - x) * (m_MouseRect.GetX() + m_Radius - x)
@@ -382,9 +386,11 @@ bool GOGUIButton::HandleMousePress(
     m_Button->ShowConfigDialog();
     return true;
   } else {
-    if (state.GetControl() == this) return true;
+    if (state.GetControl() == this)
+      return true;
     state.SetControl(this);
-    if (m_Button->IsReadOnly()) return true;
+    if (m_Button->IsReadOnly())
+      return true;
 
     m_Button->Push();
     return true;

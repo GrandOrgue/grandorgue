@@ -18,11 +18,11 @@ class GOTemperament;
 class GOTemperamentUser;
 
 class GOTemperamentList {
- private:
+private:
   ptr_vector<GOTemperament> m_Temperaments;
   ptr_vector<GOTemperamentUser> m_UserTemperaments;
 
- public:
+public:
   GOTemperamentList();
   ~GOTemperamentList();
 

@@ -11,10 +11,10 @@
 #include "GOTemperament.h"
 
 class GOTemperamentCent : public GOTemperament {
- protected:
+protected:
   float m_Tuning[12];
 
- public:
+public:
   GOTemperamentCent(
     wxString name,
     float i1,

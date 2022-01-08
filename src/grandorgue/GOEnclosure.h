@@ -27,7 +27,7 @@ class GOEnclosure : private GOEventHandler,
                     private GOSaveableObject,
                     private GOPlaybackStateHandler,
                     public GOMidiConfigurator {
- private:
+private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOKeyReceiver m_shortcut;
@@ -49,11 +49,11 @@ class GOEnclosure : private GOEventHandler,
   void StartPlayback();
   void PrepareRecording();
 
- public:
+public:
   GOEnclosure(GODefinitionFile *organfile);
   virtual ~GOEnclosure();
-  void Init(
-    GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value);
+  void
+  Init(GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value);
   void Load(GOConfigReader &cfg, wxString group, int enclosure_nb);
   void Set(int n);
   const wxString &GetName();

@@ -17,7 +17,7 @@
 class GOSound;
 
 class GOSoundPort {
- protected:
+protected:
   GOSound *m_Sound;
   unsigned m_Index;
   bool m_IsOpen;
@@ -31,7 +31,7 @@ class GOSoundPort {
   void SetActualLatency(double latency);
   bool AudioCallback(float *outputBuffer, unsigned int nFrames);
 
- public:
+public:
   GOSoundPort(GOSound *sound, wxString name);
   virtual ~GOSoundPort();
 

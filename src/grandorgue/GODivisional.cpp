@@ -344,35 +344,36 @@ void GODivisional::Save(GOConfigWriter &cfg) {
   unsigned switch_count = 0;
 
   for (unsigned i = 0; i < elements.size(); i++) {
-    if (m_State[i] == -1) continue;
+    if (m_State[i] == -1)
+      continue;
     int value = m_State[i] == 1 ? elements[i].index : -elements[i].index;
     switch (elements[i].type) {
-      case GOCombinationDefinition::COMBINATION_STOP:
-        stop_count++;
-        buffer.Printf(wxT("Stop%03d"), stop_count);
-        cfg.WriteInteger(m_group, buffer, value);
-        break;
+    case GOCombinationDefinition::COMBINATION_STOP:
+      stop_count++;
+      buffer.Printf(wxT("Stop%03d"), stop_count);
+      cfg.WriteInteger(m_group, buffer, value);
+      break;
 
-      case GOCombinationDefinition::COMBINATION_COUPLER:
-        coupler_count++;
-        buffer.Printf(wxT("Coupler%03d"), coupler_count);
-        cfg.WriteInteger(m_group, buffer, value);
-        break;
+    case GOCombinationDefinition::COMBINATION_COUPLER:
+      coupler_count++;
+      buffer.Printf(wxT("Coupler%03d"), coupler_count);
+      cfg.WriteInteger(m_group, buffer, value);
+      break;
 
-      case GOCombinationDefinition::COMBINATION_TREMULANT:
-        tremulant_count++;
-        buffer.Printf(wxT("Tremulant%03d"), tremulant_count);
-        cfg.WriteInteger(m_group, buffer, value);
-        break;
+    case GOCombinationDefinition::COMBINATION_TREMULANT:
+      tremulant_count++;
+      buffer.Printf(wxT("Tremulant%03d"), tremulant_count);
+      cfg.WriteInteger(m_group, buffer, value);
+      break;
 
-      case GOCombinationDefinition::COMBINATION_SWITCH:
-        switch_count++;
-        buffer.Printf(wxT("Switch%03d"), switch_count);
-        cfg.WriteInteger(m_group, buffer, value);
-        break;
+    case GOCombinationDefinition::COMBINATION_SWITCH:
+      switch_count++;
+      buffer.Printf(wxT("Switch%03d"), switch_count);
+      cfg.WriteInteger(m_group, buffer, value);
+      break;
 
-      case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-        break;
+    case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+      break;
     }
   }
 
@@ -397,14 +398,17 @@ void GODivisional::Push() {
   PushLocal();
 
   /* only use divisional couples, if not in setter mode */
-  if (m_organfile->GetSetter()->IsSetterActive()) return;
+  if (m_organfile->GetSetter()->IsSetterActive())
+    return;
 
   for (unsigned k = 0; k < m_organfile->GetDivisionalCouplerCount(); k++) {
     GODivisionalCoupler *coupler = m_organfile->GetDivisionalCoupler(k);
-    if (!coupler->IsEngaged()) continue;
+    if (!coupler->IsEngaged())
+      continue;
 
     for (unsigned i = 0; i < coupler->GetNumberOfManuals(); i++) {
-      if (coupler->GetManual(i) != m_ManualNumber) continue;
+      if (coupler->GetManual(i) != m_ManualNumber)
+        continue;
 
       for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
         m_organfile->GetManual(coupler->GetManual(j))
@@ -413,7 +417,8 @@ void GODivisional::Push() {
 
       if (coupler->IsBidirectional()) {
         for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++) {
-          if (coupler->GetManual(j) == m_ManualNumber) break;
+          if (coupler->GetManual(j) == m_ManualNumber)
+            break;
           m_organfile->GetManual(coupler->GetManual(j))
             ->GetDivisional(m_DivisionalNumber)
             ->PushLocal();

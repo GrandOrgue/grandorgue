@@ -12,14 +12,13 @@
 
 #include <map>
 
-template <class T>
-class GOBuffer;
+template <class T> class GOBuffer;
 
 class GOConfigFileWriter {
- private:
+private:
   std::map<wxString, std::map<wxString, wxString>> m_Entries;
 
- public:
+public:
   GOConfigFileWriter();
 
   void AddEntry(wxString group, wxString name, wxString value);

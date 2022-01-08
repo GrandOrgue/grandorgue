@@ -42,7 +42,8 @@ GOSoundRecorder::GOSoundRecorder()
 
 GOSoundRecorder::~GOSoundRecorder() {
   Close();
-  if (m_Buffer) delete[] m_Buffer;
+  if (m_Buffer)
+    delete[] m_Buffer;
 }
 
 struct_WAVE GOSoundRecorder::generateHeader(unsigned datasize) {
@@ -87,7 +88,8 @@ void GOSoundRecorder::Close() {
     GOMutexLocker locker(m_Mutex);
     m_Recording = false;
   }
-  if (!m_file.IsOpened()) return;
+  if (!m_file.IsOpened())
+    return;
   struct_WAVE WAVE = generateHeader(m_BufferPos);
   m_file.Seek(0);
   m_file.Write(&WAVE, sizeof(WAVE));
@@ -100,7 +102,8 @@ void GOSoundRecorder::SetSampleRate(unsigned sample_rate) {
 }
 
 void GOSoundRecorder::SetBytesPerSample(unsigned value) {
-  if (value < 1 || value > 4) value = 4;
+  if (value < 1 || value > 4)
+    value = 4;
   m_BytesPerSample = value;
   SetupBuffer();
 }
@@ -114,7 +117,8 @@ void GOSoundRecorder::SetOutputs(
 
 void GOSoundRecorder::SetupBuffer() {
   Close();
-  if (m_Buffer) delete[] m_Buffer;
+  if (m_Buffer)
+    delete[] m_Buffer;
   m_Channels = 0;
   for (unsigned i = 0; i < m_Outputs.size(); i++)
     m_Channels += m_Outputs[i]->GetChannels();
@@ -126,8 +130,10 @@ static inline int float_to_fixed(float f, unsigned fractional_bits) {
   assert(fractional_bits > 0);
   int max_val = 1 << fractional_bits;
   int f_exp = f * max_val;
-  if (f_exp < -max_val) return -max_val;
-  if (f_exp > max_val - 1) return max_val - 1;
+  if (f_exp < -max_val)
+    return -max_val;
+  if (f_exp > max_val - 1)
+    return max_val - 1;
   return f_exp;
 }
 
@@ -145,8 +151,7 @@ static void convertValue(float value, GOInt8 &result) {
 
 static void convertValue(float value, float &result) { result = value; }
 
-template <class T>
-void GOSoundRecorder::ConvertData() {
+template <class T> void GOSoundRecorder::ConvertData() {
   unsigned start_pos = 0;
   T *buf = (T *)m_Buffer;
   for (unsigned i = 0; i < m_Outputs.size(); i++) {
@@ -171,25 +176,29 @@ unsigned GOSoundRecorder::GetCost() { return 0; }
 bool GOSoundRecorder::GetRepeat() { return false; }
 
 void GOSoundRecorder::Run(GOSoundThread *thread) {
-  if (!m_Recording) return;
-  if (m_Done) return;
+  if (!m_Recording)
+    return;
+  if (m_Done)
+    return;
   GOMutexLocker locker(m_Mutex);
-  if (m_Done) return;
-  if (!m_Recording) return;
+  if (m_Done)
+    return;
+  if (!m_Recording)
+    return;
 
   switch (m_BytesPerSample) {
-    case 1:
-      ConvertData<GOInt8>();
-      break;
-    case 2:
-      ConvertData<GOInt16LE>();
-      break;
-    case 3:
-      ConvertData<GOInt24LE>();
-      break;
-    case 4:
-      ConvertData<float>();
-      break;
+  case 1:
+    ConvertData<GOInt8>();
+    break;
+  case 2:
+    ConvertData<GOInt16LE>();
+    break;
+  case 3:
+    ConvertData<GOInt24LE>();
+    break;
+  case 4:
+    ConvertData<float>();
+    break;
   }
   m_file.Write(m_Buffer, m_BufferSize);
   m_BufferPos += m_BufferSize;

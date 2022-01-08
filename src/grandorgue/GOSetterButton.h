@@ -13,10 +13,10 @@
 class GOSetterButtonCallback;
 
 class GOSetterButton : public GOButton {
- protected:
+protected:
   GOSetterButtonCallback *m_setter;
 
- public:
+public:
   GOSetterButton(
     GODefinitionFile *organfile,
     GOSetterButtonCallback *setter,

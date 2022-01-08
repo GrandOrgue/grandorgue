@@ -112,19 +112,20 @@ void GOOrgan::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
 
 bool GOOrgan::Match(const GOMidiEvent &e) {
   switch (m_midi.Match(e)) {
-    case MIDI_MATCH_CHANGE:
-    case MIDI_MATCH_ON:
-      return true;
+  case MIDI_MATCH_CHANGE:
+  case MIDI_MATCH_ON:
+    return true;
 
-    default:
-      return false;
+  default:
+    return false;
   }
 }
 
 bool GOOrgan::IsUsable(const GOOrganList &organs) const {
   if (m_ArchiveID != wxEmptyString) {
     const GOArchiveFile *archive = organs.GetArchiveByID(m_ArchiveID, true);
-    if (!archive) return false;
+    if (!archive)
+      return false;
     return archive->IsComplete(organs);
   } else
     return wxFileExists(m_ODF);

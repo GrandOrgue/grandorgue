@@ -12,10 +12,10 @@
 #include "threading/atomic.h"
 
 class GOSoundSimpleSamplerList {
- private:
+private:
   atomic<GOSoundSampler *> m_List;
 
- public:
+public:
   GOSoundSimpleSamplerList() { Clear(); }
 
   void Clear() { m_List = 0; }
@@ -23,9 +23,11 @@ class GOSoundSimpleSamplerList {
   GOSoundSampler *Get() {
     do {
       GOSoundSampler *sampler = m_List;
-      if (!sampler) return NULL;
+      if (!sampler)
+        return NULL;
       GOSoundSampler *next = sampler->next;
-      if (m_List.compare_exchange(sampler, next)) return sampler;
+      if (m_List.compare_exchange(sampler, next))
+        return sampler;
     } while (true);
   }
 
@@ -33,7 +35,8 @@ class GOSoundSimpleSamplerList {
     do {
       GOSoundSampler *current = m_List;
       sampler->next = current;
-      if (m_List.compare_exchange(current, sampler)) return;
+      if (m_List.compare_exchange(current, sampler))
+        return;
     } while (true);
   }
 };

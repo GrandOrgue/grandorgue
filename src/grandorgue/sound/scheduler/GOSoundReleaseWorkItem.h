@@ -17,7 +17,7 @@ class GOSoundGroupWorkItem;
 class GOSoundSampler;
 
 class GOSoundReleaseWorkItem : public GOSoundWorkItem {
- private:
+private:
   GOSoundEngine &m_engine;
   ptr_vector<GOSoundGroupWorkItem> &m_AudioGroups;
   GOSoundSimpleSamplerList m_List;
@@ -25,7 +25,7 @@ class GOSoundReleaseWorkItem : public GOSoundWorkItem {
   atomic_uint m_Cnt;
   volatile bool m_Stop;
 
- public:
+public:
   GOSoundReleaseWorkItem(
     GOSoundEngine &sound_engine,
     ptr_vector<GOSoundGroupWorkItem> &audio_groups);

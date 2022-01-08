@@ -66,7 +66,8 @@ GOMidiRtPortFactory::~GOMidiRtPortFactory() {
 static GOMidiRtPortFactory *instance = NULL;
 
 GOMidiRtPortFactory *GOMidiRtPortFactory::getInstance() {
-  if (!instance) instance = new GOMidiRtPortFactory();
+  if (!instance)
+    instance = new GOMidiRtPortFactory();
   return instance;
 }
 
@@ -85,7 +86,8 @@ void GOMidiRtPortFactory::addMissingInDevices(
   ptr_vector<GOMidiPort> &ports) {
   GOMidiPortFactory &portFactory(GOMidiPortFactory::getInstance());
 
-  for (unsigned i = 0; i < apis.size(); i++) try {
+  for (unsigned i = 0; i < apis.size(); i++)
+    try {
       const RtMidi::Api api = apis[i];
       const std::string apiName = RtMidi::getApiName(api);
 
@@ -129,7 +131,8 @@ void GOMidiRtPortFactory::addMissingOutDevices(
   ptr_vector<GOMidiPort> &ports) {
   GOMidiPortFactory &portFactory(GOMidiPortFactory::getInstance());
 
-  for (unsigned i = 0; i < apis.size(); i++) try {
+  for (unsigned i = 0; i < apis.size(); i++)
+    try {
       const RtMidi::Api api = apis[i];
       const std::string apiName = RtMidi::getApiName(api);
 
@@ -192,25 +195,25 @@ wxString GOMidiRtPortFactory::GetDefaultLogicalName(
   wxString logicalName;
 
   switch (api) {
-    case RtMidi::Api::LINUX_ALSA:
-      if (m_AlsaDevnamePattern.Matches(deviceName))
-        logicalName = m_AlsaDevnamePattern.GetMatch(deviceName, 2);
-      break;
-    case RtMidi::Api::UNIX_JACK:
-      if (m_JackDevnamePattern.Matches(deviceName))
-        logicalName = m_JackDevnamePattern.GetMatch(deviceName, 4);
-      break;
-    case RtMidi::Api::WINDOWS_MM:
-      if (m_WinMmDevnamePattern.Matches(deviceName))
-        logicalName = m_WinMmDevnamePattern.GetMatch(deviceName, 1);
-      break;
-    default:
-      break;
+  case RtMidi::Api::LINUX_ALSA:
+    if (m_AlsaDevnamePattern.Matches(deviceName))
+      logicalName = m_AlsaDevnamePattern.GetMatch(deviceName, 2);
+    break;
+  case RtMidi::Api::UNIX_JACK:
+    if (m_JackDevnamePattern.Matches(deviceName))
+      logicalName = m_JackDevnamePattern.GetMatch(deviceName, 4);
+    break;
+  case RtMidi::Api::WINDOWS_MM:
+    if (m_WinMmDevnamePattern.Matches(deviceName))
+      logicalName = m_WinMmDevnamePattern.GetMatch(deviceName, 1);
+    break;
+  default:
+    break;
   }
   if (logicalName.IsEmpty())
     // by default logical name equals to the full physical name
     logicalName = fullName;
-  else  // add the api name to the logical name
+  else // add the api name to the logical name
     logicalName = GOMidiPortFactory::getInstance().ComposeDeviceName(
       PORT_NAME, getApiName(api), logicalName);
   return logicalName;
@@ -221,31 +224,31 @@ wxString GOMidiRtPortFactory::GetDefaultRegEx(
   wxString regEx;
 
   switch (api) {
-    case RtMidi::Api::LINUX_ALSA:
-      if (m_AlsaDevnamePattern.Matches(deviceName))
-        // Client Name:Port Name
-        regEx = wxString::Format(
-          wxT("%s:%s"),
-          m_AlsaDevnamePattern.GetMatch(deviceName, 1),
-          m_AlsaDevnamePattern.GetMatch(deviceName, 2));
-      break;
-    case RtMidi::Api::UNIX_JACK:
-      if (m_JackDevnamePattern.Matches(deviceName))
-        // Midi-Bridge:Client Name:(direction_num)) Port Name
-        regEx = wxString::Format(
-          wxT("Midi-Bridge:%s:(%s_%s) %s"),
-          m_JackDevnamePattern.GetMatch(deviceName, 1),
-          m_JackDevnamePattern.GetMatch(deviceName, 2),
-          m_JackDevnamePattern.GetMatch(deviceName, 3),
-          m_JackDevnamePattern.GetMatch(deviceName, 4));
-      break;
-    case RtMidi::Api::WINDOWS_MM:
-      if (m_WinMmDevnamePattern.Matches(deviceName))
-        // Device Name
-        regEx = m_WinMmDevnamePattern.GetMatch(deviceName, 1);
-      break;
-    default:
-      break;
+  case RtMidi::Api::LINUX_ALSA:
+    if (m_AlsaDevnamePattern.Matches(deviceName))
+      // Client Name:Port Name
+      regEx = wxString::Format(
+        wxT("%s:%s"),
+        m_AlsaDevnamePattern.GetMatch(deviceName, 1),
+        m_AlsaDevnamePattern.GetMatch(deviceName, 2));
+    break;
+  case RtMidi::Api::UNIX_JACK:
+    if (m_JackDevnamePattern.Matches(deviceName))
+      // Midi-Bridge:Client Name:(direction_num)) Port Name
+      regEx = wxString::Format(
+        wxT("Midi-Bridge:%s:(%s_%s) %s"),
+        m_JackDevnamePattern.GetMatch(deviceName, 1),
+        m_JackDevnamePattern.GetMatch(deviceName, 2),
+        m_JackDevnamePattern.GetMatch(deviceName, 3),
+        m_JackDevnamePattern.GetMatch(deviceName, 4));
+    break;
+  case RtMidi::Api::WINDOWS_MM:
+    if (m_WinMmDevnamePattern.Matches(deviceName))
+      // Device Name
+      regEx = m_WinMmDevnamePattern.GetMatch(deviceName, 1);
+    break;
+  default:
+    break;
   }
   if (!regEx.IsEmpty())
     // add the api name to the regex

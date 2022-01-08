@@ -25,8 +25,8 @@ void GOGUIBankedGeneralsPanel::CreatePanels(GOConfigReader &cfg) {
   m_organfile->AddPanel(CreateBankedGeneralsPanel(cfg));
 }
 
-GOGUIPanel *GOGUIBankedGeneralsPanel::CreateBankedGeneralsPanel(
-  GOConfigReader &cfg) {
+GOGUIPanel *
+GOGUIBankedGeneralsPanel::CreateBankedGeneralsPanel(GOConfigReader &cfg) {
   GOGUIButton *button;
 
   GOGUIPanel *panel = new GOGUIPanel(m_organfile);

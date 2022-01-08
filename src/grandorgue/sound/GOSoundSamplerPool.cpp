@@ -23,7 +23,8 @@ void GOSoundSamplerPool::ReturnAll() {
 
   m_SamplerCount = 0;
 
-  if (m_Samplers.size() > m_UsageLimit) m_Samplers.resize(m_UsageLimit);
+  if (m_Samplers.size() > m_UsageLimit)
+    m_Samplers.resize(m_UsageLimit);
 
   m_AvailableSamplers.Clear();
 
@@ -48,9 +49,11 @@ GOSoundSampler *GOSoundSamplerPool::GetSampler() {
 
   if (m_SamplerCount < m_UsageLimit) {
     sampler = m_AvailableSamplers.Get();
-    if (sampler) m_SamplerCount.fetch_add(1);
+    if (sampler)
+      m_SamplerCount.fetch_add(1);
   }
-  if (sampler) memset(sampler, 0, sizeof(GOSoundSampler));
+  if (sampler)
+    memset(sampler, 0, sizeof(GOSoundSampler));
   return sampler;
 }
 

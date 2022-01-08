@@ -19,12 +19,12 @@ class GODefinitionFile;
 struct IniFileEnumEntry;
 
 class GOMidiSender : public GOMidiSenderData {
- private:
+private:
   static const struct IniFileEnumEntry m_MidiTypes[];
   GODefinitionFile *m_organfile;
   int m_ElementID;
 
- public:
+public:
   GOMidiSender(GODefinitionFile *organfile, MIDI_SENDER_TYPE type);
   ~GOMidiSender();
 

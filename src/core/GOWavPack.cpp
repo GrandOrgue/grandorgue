@@ -24,7 +24,8 @@ GOWavPack::GOWavPack(const GOBuffer<uint8_t> &file)
 GOWavPack::~GOWavPack() {
   m_Samples.free();
   m_Wrapper.free();
-  if (m_context) WavpackCloseFile(m_context);
+  if (m_context)
+    WavpackCloseFile(m_context);
 }
 
 bool GOWavPack::IsWavPack(const GOBuffer<uint8_t> &data) {
@@ -40,17 +41,20 @@ unsigned GOWavPack::GetOrigDataLen() { return m_OrigDataLen; }
 bool GOWavPack::Unpack() {
   m_context
     = WavpackOpenFileInputEx(&m_Reader, this, NULL, NULL, OPEN_WRAPPER, 0);
-  if (!m_context) return false;
+  if (!m_context)
+    return false;
 
   unsigned header = WavpackGetWrapperBytes(m_context);
-  if (!header) return false;
+  if (!header)
+    return false;
 
   unsigned channels = WavpackGetNumChannels(m_context);
   unsigned samples = WavpackGetNumSamples(m_context);
   m_Samples.resize(channels * samples * 4);
   unsigned res
     = WavpackUnpackSamples(m_context, (int32_t *)m_Samples.get(), samples);
-  if (res != samples) return false;
+  if (res != samples)
+    return false;
 
   m_OrigDataLen = channels * samples * WavpackGetBytesPerSample(m_context);
 
@@ -94,7 +98,8 @@ int GOWavPack::SetPosRel(void *id, int32_t delta, int mode) {
 uint32_t GOWavPack::GetLength() { return m_data.GetSize(); }
 
 int32_t GOWavPack::ReadBytes(void *data, int32_t bcount) {
-  if (m_pos + bcount > m_data.GetSize()) bcount = m_data.GetSize() - m_pos;
+  if (m_pos + bcount > m_data.GetSize())
+    bcount = m_data.GetSize() - m_pos;
   memcpy(data, m_data.get() + m_pos, bcount);
   m_pos += bcount;
   return bcount;
@@ -122,14 +127,14 @@ int GOWavPack::SetPosAbs(uint32_t pos) {
 
 int GOWavPack::SetPosRel(int32_t delta, int mode) {
   switch (mode) {
-    case SEEK_SET:
-      return SetPosAbs(delta);
-    case SEEK_CUR:
-      return SetPosAbs(m_pos + delta);
-    case SEEK_END:
-      return SetPosAbs(m_data.GetCount() + delta);
-    default:
-      return -1;
+  case SEEK_SET:
+    return SetPosAbs(delta);
+  case SEEK_CUR:
+    return SetPosAbs(m_pos + delta);
+  case SEEK_END:
+    return SetPosAbs(m_data.GetCount() + delta);
+  default:
+    return -1;
   }
 }
 

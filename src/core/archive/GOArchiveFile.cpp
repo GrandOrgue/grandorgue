@@ -106,12 +106,15 @@ bool GOArchiveFile::IsUsable(const GOOrganList &organs) const {
 }
 
 bool GOArchiveFile::IsComplete(const GOOrganList &organs) const {
-  if (!IsUsable(organs)) return false;
+  if (!IsUsable(organs))
+    return false;
   for (unsigned i = 0; i < m_Dependencies.size(); i++) {
     const GOArchiveFile *archive
       = organs.GetArchiveByID(m_Dependencies[i], true);
-    if (!archive) return false;
-    if (!archive->IsUsable(organs)) return false;
+    if (!archive)
+      return false;
+    if (!archive->IsUsable(organs))
+      return false;
   }
   return true;
 }

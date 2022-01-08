@@ -69,7 +69,8 @@ MIDIEventDialog::MIDIEventDialog(
 MIDIEventDialog::~MIDIEventDialog() {}
 
 void MIDIEventDialog::RegisterMIDIListener(GOMidi *midi) {
-  if (m_recvPage) m_recvPage->RegisterMIDIListener(midi);
+  if (m_recvPage)
+    m_recvPage->RegisterMIDIListener(midi);
 }
 
 void MIDIEventDialog::OnApply(wxCommandEvent &event) { DoApply(); }
@@ -82,8 +83,12 @@ void MIDIEventDialog::OnOK(wxCommandEvent &event) {
 void MIDIEventDialog::OnCancel(wxCommandEvent &event) { Destroy(); }
 
 void MIDIEventDialog::DoApply() {
-  if (m_recvPage) m_recvPage->DoApply();
-  if (m_sendPage) m_sendPage->DoApply();
-  if (m_sendDivisionPage) m_sendDivisionPage->DoApply();
-  if (m_keyPage) m_keyPage->DoApply();
+  if (m_recvPage)
+    m_recvPage->DoApply();
+  if (m_sendPage)
+    m_sendPage->DoApply();
+  if (m_sendDivisionPage)
+    m_sendDivisionPage->DoApply();
+  if (m_keyPage)
+    m_keyPage->DoApply();
 }

@@ -9,7 +9,7 @@
 #define GOCONTROLCHANGEDHANDLER_H
 
 class GOControlChangedHandler {
- public:
+public:
   virtual ~GOControlChangedHandler() {}
 
   virtual void ControlChanged(void *control) = 0;

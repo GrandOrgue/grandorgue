@@ -92,7 +92,8 @@ void GOSoundJackPort::Open() {
     throw wxString::Format(
       "jack_client_open() failed, status = 0x%2.0x", jack_status);
   }
-  if (jack_status & JackServerStarted) wxLogDebug("JACK server started");
+  if (jack_status & JackServerStarted)
+    wxLogDebug("JACK server started");
   if (jack_status & JackNameNotUnique)
     wxLogDebug("Unique name `%s' assigned", jack_get_client_name(m_JackClient));
 

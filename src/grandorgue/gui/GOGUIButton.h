@@ -17,7 +17,7 @@
 class GOButton;
 
 class GOGUIButton : public GOGUIControl {
- protected:
+protected:
   bool m_IsPiston;
   bool m_DispKeyLabelOnLeft;
   GOButton *m_Button;
@@ -37,7 +37,7 @@ class GOGUIButton : public GOGUIControl {
   unsigned m_TileOffsetX;
   unsigned m_TileOffsetY;
 
- public:
+public:
   GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston = false);
 
   void Init(

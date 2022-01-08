@@ -18,7 +18,7 @@ class GOManual;
 class GODefinitionFile;
 
 class GOCombinationDefinition {
- public:
+public:
   typedef enum {
     COMBINATION_STOP = 0,
     COMBINATION_COUPLER = 1,
@@ -35,7 +35,7 @@ class GOCombinationDefinition {
     GOCombinationElement *control;
   } CombinationSlot;
 
- private:
+private:
   GODefinitionFile *m_organfile;
   std::vector<CombinationSlot> m_Content;
 
@@ -50,7 +50,7 @@ class GOCombinationDefinition {
     unsigned index,
     bool store_unconditional);
 
- public:
+public:
   GOCombinationDefinition(GODefinitionFile *organfile);
   ~GOCombinationDefinition();
 

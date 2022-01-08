@@ -12,8 +12,7 @@
 
 class GOOutOfMemory {};
 
-template <class T, class... Args>
-std::unique_ptr<T> GOAlloc(Args... args) {
+template <class T, class... Args> std::unique_ptr<T> GOAlloc(Args... args) {
   try {
     return std::unique_ptr<T>(new T(args...));
   } catch (std::bad_alloc &ba) {
@@ -21,8 +20,7 @@ std::unique_ptr<T> GOAlloc(Args... args) {
   }
 }
 
-template <class T>
-std::unique_ptr<T[]> GOAllocArray(size_t count) {
+template <class T> std::unique_ptr<T[]> GOAllocArray(size_t count) {
   try {
     return std::unique_ptr<T[]>(new T[count]);
   } catch (std::bad_alloc &ba) {

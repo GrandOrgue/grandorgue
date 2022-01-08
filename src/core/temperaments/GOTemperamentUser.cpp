@@ -35,8 +35,10 @@ void GOTemperamentUser::Save(GOConfigWriter &cfg, wxString group) {
 float GOTemperamentUser::GetNoteOffset(unsigned note) { return m_Tuning[note]; }
 
 void GOTemperamentUser::SetNoteOffset(unsigned note, float offset) {
-  if (offset > 1200) offset = 1200;
-  if (offset < -1200) offset = -1200;
+  if (offset > 1200)
+    offset = 1200;
+  if (offset < -1200)
+    offset = -1200;
   m_Tuning[note] = offset;
 }
 

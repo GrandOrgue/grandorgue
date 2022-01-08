@@ -14,7 +14,7 @@
 
 class GOPipeConfigTreeNode : public GOPipeConfigNode,
                              private GOPipeUpdateCallback {
- private:
+private:
   std::vector<GOPipeConfigNode *> m_Childs;
   GOPipeUpdateCallback *m_Callback;
 
@@ -22,7 +22,7 @@ class GOPipeConfigTreeNode : public GOPipeConfigNode,
   void UpdateTuning();
   void UpdateAudioGroup();
 
- public:
+public:
   GOPipeConfigTreeNode(
     GOPipeConfigNode *parent,
     GODefinitionFile *organfile,

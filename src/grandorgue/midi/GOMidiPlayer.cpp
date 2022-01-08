@@ -61,17 +61,17 @@ void GOMidiPlayer::Load(GOConfigReader &cfg) {
 
 void GOMidiPlayer::ButtonChanged(int id) {
   switch (id) {
-    case ID_MIDI_PLAYER_STOP:
-      StopPlaying();
-      break;
+  case ID_MIDI_PLAYER_STOP:
+    StopPlaying();
+    break;
 
-    case ID_MIDI_PLAYER_PLAY:
-      Play();
-      break;
+  case ID_MIDI_PLAYER_PLAY:
+    Play();
+    break;
 
-    case ID_MIDI_PLAYER_PAUSE:
-      Pause();
-      break;
+  case ID_MIDI_PLAYER_PAUSE:
+    Pause();
+    break;
   }
 }
 
@@ -130,7 +130,8 @@ void GOMidiPlayer::Play() {
 }
 
 void GOMidiPlayer::Pause() {
-  if (!m_IsPlaying) return;
+  if (!m_IsPlaying)
+    return;
   if (m_Pause) {
     m_Pause = false;
     m_button[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
@@ -181,7 +182,8 @@ void GOMidiPlayer::UpdateDisplay() {
 }
 
 void GOMidiPlayer::HandleTimer() {
-  if (!m_IsPlaying) return;
+  if (!m_IsPlaying)
+    return;
   GOTime now = wxGetLocalTimeMillis();
   if (m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000 <= now) {
     m_PlayingSeconds++;
@@ -212,8 +214,10 @@ GOEnclosure *GOMidiPlayer::GetEnclosure(const wxString &name, bool is_panel) {
 }
 
 GOLabel *GOMidiPlayer::GetLabel(const wxString &name, bool is_panel) {
-  if (is_panel) return NULL;
+  if (is_panel)
+    return NULL;
 
-  if (name == wxT("MidiPlayerLabel")) return &m_PlayingTime;
+  if (name == wxT("MidiPlayerLabel"))
+    return &m_PlayingTime;
   return NULL;
 }

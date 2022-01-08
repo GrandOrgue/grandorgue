@@ -14,21 +14,21 @@
 #include <wx/timer.h>
 
 class GOSplashBitmap : public wxControl {
- private:
+private:
   wxBitmap m_Bitmap;
 
   void OnPaint(wxPaintEvent &event);
   void OnClick(wxMouseEvent &event);
   void OnKey(wxKeyEvent &event);
 
- public:
+public:
   GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap &bitmap);
 
   DECLARE_EVENT_TABLE()
 };
 
 class GOSplash : private wxDialog {
- private:
+private:
   GOSplashBitmap *m_Image;
   wxTimer m_Timer;
   bool m_hasTimeout;
@@ -42,7 +42,7 @@ class GOSplash : private wxDialog {
 
   void DrawText(wxBitmap &bitmap);
 
- public:
+public:
   static void DoSplash(bool hasTimeout, wxWindow *parent);
 
   DECLARE_EVENT_TABLE()

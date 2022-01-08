@@ -25,17 +25,21 @@ void GOSoundThread::Entry() {
     do {
       GOSoundWorkItem *next = m_Scheduler->GetNextGroup();
 
-      if (next == NULL) break;
+      if (next == NULL)
+        break;
       next->Run(this);
       shouldStop = ShouldStop();
     } while (!shouldStop);
 
-    if (shouldStop) break;
+    if (shouldStop)
+      break;
 
     GOMutexLocker lock(m_Mutex, false, "GOSoundThread::Entry", this);
 
-    if (!lock.IsLocked() || ShouldStop()) break;
-    if (!m_Condition.WaitOrStop("GOSoundThread::Entry")) break;
+    if (!lock.IsLocked() || ShouldStop())
+      break;
+    if (!m_Condition.WaitOrStop("GOSoundThread::Entry"))
+      break;
   }
   return;
 }

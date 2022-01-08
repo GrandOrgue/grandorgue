@@ -139,7 +139,8 @@ void GOGUIManual::Init(GOConfigReader &cfg, wxString group) {
 
     if (height < m_Keys[i].Rect.GetBottom())
       height = m_Keys[i].Rect.GetBottom();
-    if (width < m_Keys[i].Rect.GetRight()) width = m_Keys[i].Rect.GetRight();
+    if (width < m_Keys[i].Rect.GetRight())
+      width = m_Keys[i].Rect.GetRight();
     x += key_width;
   }
 
@@ -167,8 +168,10 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
   bool color_wooden = cfg.ReadBoolean(
     ODFSetting, group, wxT("DispKeyColourWooden"), false, false);
   wxString type = m_ManualNumber ? wxT("Manual") : wxT("Pedal");
-  if (color_inverted) type += wxT("Inverted");
-  if (color_wooden && m_ManualNumber) type += wxT("Wood");
+  if (color_inverted)
+    type += wxT("Inverted");
+  if (color_wooden && m_ManualNumber)
+    type += wxT("Wood");
   unsigned first_midi_note = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -388,7 +391,8 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
 
     if (height < m_Keys[i].Rect.GetBottom())
       height = m_Keys[i].Rect.GetBottom();
-    if (width < m_Keys[i].Rect.GetRight()) width = m_Keys[i].Rect.GetRight();
+    if (width < m_Keys[i].Rect.GetRight())
+      width = m_Keys[i].Rect.GetRight();
     x += key_width;
   }
 
@@ -415,8 +419,10 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
 void GOGUIManual::Layout() {
   const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri
     = m_layout->GetManualRenderInfo(m_ManualNumber);
-  if (m_BoundingRect.GetX() == -1) m_BoundingRect.SetX(mri.x + 1);
-  if (m_BoundingRect.GetY() == -1) m_BoundingRect.SetY(mri.keys_y);
+  if (m_BoundingRect.GetX() == -1)
+    m_BoundingRect.SetX(mri.x + 1);
+  if (m_BoundingRect.GetY() == -1)
+    m_BoundingRect.SetY(mri.keys_y);
 
   for (unsigned i = 0; i < m_Keys.size(); i++) {
     m_Keys[i].Rect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
@@ -443,7 +449,8 @@ void GOGUIManual::Draw(GODC &dc) {
 
 bool GOGUIManual::HandleMousePress(
   int x, int y, bool right, GOGUIMouseState &state) {
-  if (!m_BoundingRect.Contains(x, y)) return false;
+  if (!m_BoundingRect.Contains(x, y))
+    return false;
 
   if (right) {
     m_manual->ShowConfigDialog();
@@ -455,7 +462,8 @@ bool GOGUIManual::HandleMousePress(
           i + 1 < m_Keys.size() && m_Keys[i + 1].IsSharp
           && m_Keys[i + 1].MouseRect.Contains(x, y))
           continue;
-        if (state.GetControl() == this && state.GetIndex() == i) return true;
+        if (state.GetControl() == this && state.GetIndex() == i)
+          return true;
         state.SetControl(this);
         state.SetIndex(i);
 

@@ -13,10 +13,10 @@
 #include "GOMutex.h"
 
 class GOMultiMutexLocker {
- private:
+private:
   std::vector<GOMutex *> m_Mutex;
 
- public:
+public:
   GOMultiMutexLocker() : m_Mutex(0) {}
 
   ~GOMultiMutexLocker() {

@@ -49,8 +49,8 @@ static inline int AudioReadCompressed16(const unsigned char *&ptr) {
   return val;
 }
 
-static inline void AudioWriteCompressed8(
-  unsigned char *data, unsigned &output_len, int encode) {
+static inline void
+AudioWriteCompressed8(unsigned char *data, unsigned &output_len, int encode) {
   if (-64 <= encode && encode <= 63) {
     *((int8_t *)(data + output_len)) = ((encode) << 1) | 0x01;
     output_len++;
@@ -70,8 +70,8 @@ static inline void AudioWriteCompressed8(
   }
 }
 
-static inline void AudioWriteCompressed16(
-  unsigned char *data, unsigned &output_len, int encode) {
+static inline void
+AudioWriteCompressed16(unsigned char *data, unsigned &output_len, int encode) {
   if (-16384 <= encode && encode <= 16383) {
     *((int16_t *)(data + output_len)) = ((encode) << 1) | 0x01;
     output_len += 2;
@@ -104,8 +104,8 @@ static inline void InitDecompressionCache(DecompressionCache &cache) {
   }
 }
 
-static inline void DecompressionStep(
-  DecompressionCache &cache, unsigned channels, bool format16) {
+static inline void
+DecompressionStep(DecompressionCache &cache, unsigned channels, bool format16) {
   for (unsigned j = 0; j < channels; j++) {
     int val;
     if (format16)

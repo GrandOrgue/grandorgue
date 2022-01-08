@@ -46,7 +46,7 @@ typedef enum {
 #define MIDI_CTRL_NOTES_OFF 123
 
 class GOMidiEvent {
- private:
+private:
   midi_message_type m_miditype;
   int m_channel, m_key, m_value;
   unsigned m_device;
@@ -54,7 +54,7 @@ class GOMidiEvent {
   wxString m_string;
   std::vector<uint8_t> m_data;
 
- public:
+public:
   GOMidiEvent();
   GOMidiEvent(const GOMidiEvent &e);
 
@@ -85,8 +85,8 @@ class GOMidiEvent {
   void SetData(const std::vector<uint8_t> &data) { m_data = data; }
 
   void FromMidi(const std::vector<unsigned char> &msg, GOMidiMap &map);
-  void ToMidi(
-    std::vector<std::vector<unsigned char>> &msg, GOMidiMap &map) const;
+  void
+  ToMidi(std::vector<std::vector<unsigned char>> &msg, GOMidiMap &map) const;
 
   wxString ToString(GOMidiMap &map) const;
 };

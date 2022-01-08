@@ -21,7 +21,7 @@ typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
 class GOSetter : private GOPlaybackStateHandler,
                  private GOControlChangedHandler,
                  public GOElementCreator {
- private:
+private:
   GODefinitionFile *m_organfile;
   unsigned m_pos;
   unsigned m_bank;
@@ -54,7 +54,7 @@ class GOSetter : private GOPlaybackStateHandler,
   void StartPlayback();
   void PrepareRecording();
 
- public:
+public:
   GOSetter(GODefinitionFile *organfile);
   virtual ~GOSetter();
 

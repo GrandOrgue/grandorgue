@@ -11,7 +11,7 @@
 #include "GOButton.h"
 
 class GOPushbutton : public GOButton {
- public:
+public:
   GOPushbutton(GODefinitionFile *organfile);
 };
 

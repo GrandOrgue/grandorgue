@@ -30,7 +30,7 @@ class GOFile;
 class GOOrgan;
 
 class GOArchiveCreator {
- private:
+private:
   GOOrganList m_OrganList;
   GOArchiveManager m_Manager;
   GOArchiveWriter m_Output;
@@ -48,7 +48,7 @@ class GOArchiveCreator {
   bool compressData(
     const wxString &name, const wxString &ext, GOBuffer<uint8_t> &data);
 
- public:
+public:
   GOArchiveCreator(const GOSettingDirectory &cacheDir);
   ~GOArchiveCreator();
 

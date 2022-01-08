@@ -62,7 +62,8 @@ GOSettingsOrgan::GOSettingsOrgan(
   for (unsigned i = 0; i < m_config.GetOrganList().size(); i++) {
     GOOrgan *o = m_config.GetOrganList()[i];
     wxString title = o->GetChurchName();
-    if (!o->IsUsable(m_config)) title = _("MISSING - ") + title;
+    if (!o->IsUsable(m_config))
+      title = _("MISSING - ") + title;
     m_Organs->InsertItem(i, title);
     m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
     m_Organs->SetItem(i, 1, o->GetOrganBuilder());
@@ -120,7 +121,8 @@ void GOSettingsOrgan::MoveOrgan(long from, long to) {
   m_Organs->GetItem(item);
   item.SetId(to);
   m_Organs->InsertItem(item);
-  if (to < from) from++;
+  if (to < from)
+    from++;
   for (unsigned i = 0; i < 6; i++) {
     item.SetId(from);
     item.SetColumn(i);
@@ -195,8 +197,10 @@ void GOSettingsOrgan::Save() {
   for (unsigned i = 0; i < list.size(); i++) {
     bool found = false;
     for (long j = 0; j < m_Organs->GetItemCount(); j++)
-      if (m_Organs->GetItemData(j) == (wxUIntPtr)list[i]) found = true;
-    if (!found) delete list[i];
+      if (m_Organs->GetItemData(j) == (wxUIntPtr)list[i])
+        found = true;
+    if (!found)
+      delete list[i];
     list[i] = 0;
   }
   list.clear();

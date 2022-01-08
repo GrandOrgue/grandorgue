@@ -14,10 +14,10 @@ class GOConfigReader;
 class GOConfigWriter;
 
 class GOSaveableObject {
- protected:
+protected:
   wxString m_group;
 
- public:
+public:
   GOSaveableObject() : m_group() {}
 
   virtual ~GOSaveableObject() {}

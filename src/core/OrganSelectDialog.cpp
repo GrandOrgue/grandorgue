@@ -47,7 +47,8 @@ OrganSelectDialog::OrganSelectDialog(
 
   for (unsigned i = 0, j = 0; j < m_OrganList.GetOrganList().size(); j++) {
     const GOOrgan *o = m_OrganList.GetOrganList()[j];
-    if (!o->IsUsable(m_OrganList)) continue;
+    if (!o->IsUsable(m_OrganList))
+      continue;
     m_Organs->InsertItem(i, o->GetChurchName());
     m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
     m_Organs->SetItem(i, 1, o->GetOrganBuilder());

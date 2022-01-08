@@ -20,7 +20,7 @@ class GOSoundBufferItem;
 struct struct_WAVE;
 
 class GOSoundRecorder : public GOSoundWorkItem {
- private:
+private:
   wxFile m_file;
   GOMutex m_lock;
   GOMutex m_Mutex;
@@ -37,11 +37,10 @@ class GOSoundRecorder : public GOSoundWorkItem {
   char *m_Buffer;
 
   void SetupBuffer();
-  template <class T>
-  void ConvertData();
+  template <class T> void ConvertData();
   struct_WAVE generateHeader(unsigned datasize);
 
- public:
+public:
   GOSoundRecorder();
   virtual ~GOSoundRecorder();
 

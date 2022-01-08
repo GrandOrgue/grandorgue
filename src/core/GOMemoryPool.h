@@ -44,7 +44,7 @@ class GOMemoryPool {
   bool AllocatePool();
   bool InMemoryPool(void *ptr);
 
- public:
+public:
   GOMemoryPool();
   ~GOMemoryPool();
   void SetMemoryLimit(size_t limit);

@@ -26,15 +26,18 @@ GOMidiInPort::GOMidiInPort(
 GOMidiInPort::~GOMidiInPort() {}
 
 void GOMidiInPort::Receive(const std::vector<unsigned char> msg) {
-  if (!IsActive()) return;
+  if (!IsActive())
+    return;
 
   GOMidiEvent e;
   e.FromMidi(msg, m_midi->GetMidiMap());
-  if (e.GetMidiType() == MIDI_NONE) return;
+  if (e.GetMidiType() == MIDI_NONE)
+    return;
   e.SetDevice(GetID());
   e.SetTime(wxGetLocalTimeMillis());
 
-  if (!m_merger.Process(e)) return;
+  if (!m_merger.Process(e))
+    return;
 
   /* Compat stuff */
   if (e.GetChannel() != -1)

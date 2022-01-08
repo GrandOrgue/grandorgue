@@ -67,29 +67,31 @@ void GOAudioRecorder::Load(GOConfigReader &cfg) {
 
 void GOAudioRecorder::ButtonChanged(int id) {
   switch (id) {
-    case ID_AUDIO_RECORDER_STOP:
-      StopRecording();
-      break;
+  case ID_AUDIO_RECORDER_STOP:
+    StopRecording();
+    break;
 
-    case ID_AUDIO_RECORDER_RECORD:
-      StartRecording(false);
-      break;
+  case ID_AUDIO_RECORDER_RECORD:
+    StartRecording(false);
+    break;
 
-    case ID_AUDIO_RECORDER_RECORD_RENAME:
-      StartRecording(true);
-      break;
+  case ID_AUDIO_RECORDER_RECORD_RENAME:
+    StartRecording(true);
+    break;
   }
 }
 
-GOEnclosure *GOAudioRecorder::GetEnclosure(
-  const wxString &name, bool is_panel) {
+GOEnclosure *
+GOAudioRecorder::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
 GOLabel *GOAudioRecorder::GetLabel(const wxString &name, bool is_panel) {
-  if (is_panel) return NULL;
+  if (is_panel)
+    return NULL;
 
-  if (name == wxT("AudioRecorderLabel")) return &m_RecordingTime;
+  if (name == wxT("AudioRecorderLabel"))
+    return &m_RecordingTime;
   return NULL;
 }
 
@@ -112,7 +114,8 @@ void GOAudioRecorder::StopRecording() {
   m_button[ID_AUDIO_RECORDER_RECORD]->Display(false);
   m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
   m_organfile->DeleteTimer(this);
-  if (!IsRecording()) return;
+  if (!IsRecording())
+    return;
 
   m_recorder->Close();
   if (!m_DoRename) {
@@ -128,7 +131,8 @@ void GOAudioRecorder::StopRecording() {
 
 void GOAudioRecorder::StartRecording(bool rename) {
   StopRecording();
-  if (!m_organfile) return;
+  if (!m_organfile)
+    return;
 
   m_Filename = m_organfile->GetSettings().AudioRecorderPath()
     + wxFileName::GetPathSeparator()
@@ -136,7 +140,8 @@ void GOAudioRecorder::StartRecording(bool rename) {
   m_DoRename = rename;
 
   m_recorder->Open(m_Filename);
-  if (!IsRecording()) return;
+  if (!IsRecording())
+    return;
 
   if (m_DoRename)
     m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);

@@ -11,7 +11,7 @@
 #include "settings/GOSetting.h"
 
 class GOSettingFloat : private GOSetting {
- private:
+private:
   float m_Value;
   float m_MinValue;
   float m_MaxValue;
@@ -20,10 +20,10 @@ class GOSettingFloat : private GOSetting {
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
 
- protected:
+protected:
   virtual float validate(float value);
 
- public:
+public:
   GOSettingFloat(
     GOSettingStore *store,
     wxString group,

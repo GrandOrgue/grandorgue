@@ -20,7 +20,8 @@ GOMidiDeviceConfig::GOMidiDeviceConfig(
 
 void GOMidiDeviceConfig::SetRegEx(const wxString &regEx) {
   if (regEx != m_RegEx) {
-    if (p_CompiledRegEx) delete p_CompiledRegEx;
+    if (p_CompiledRegEx)
+      delete p_CompiledRegEx;
     m_RegEx = regEx;
     p_CompiledRegEx = regEx.IsEmpty() ? NULL : new wxRegEx(regEx);
   }

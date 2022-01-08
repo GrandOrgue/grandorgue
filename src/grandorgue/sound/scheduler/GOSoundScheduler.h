@@ -16,7 +16,7 @@
 class GOSoundWorkItem;
 
 class GOSoundScheduler {
- private:
+private:
   std::vector<GOSoundWorkItem *> m_Work;
   std::vector<GOSoundWorkItem **> m_WorkItems;
   atomic_uint m_NextItem;
@@ -35,7 +35,7 @@ class GOSoundScheduler {
   void RemoveList(GOSoundWorkItem *item, std::vector<GOSoundWorkItem *> &list);
   void ExecList(std::vector<GOSoundWorkItem *> &list);
 
- public:
+public:
   GOSoundScheduler();
   ~GOSoundScheduler();
 

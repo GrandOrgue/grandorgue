@@ -13,12 +13,12 @@
 #include "config/GOConfigReader.h"
 #include "sound/GOSoundProviderSynthedTrem.h"
 
-#define DELETE_AND_NULL(x) \
-  do {                     \
-    if (x) {               \
-      delete x;            \
-      x = NULL;            \
-    }                      \
+#define DELETE_AND_NULL(x)                                                     \
+  do {                                                                         \
+    if (x) {                                                                   \
+      delete x;                                                                \
+      x = NULL;                                                                \
+    }                                                                          \
   } while (0)
 
 const struct IniFileEnumEntry GOTremulant::m_tremulant_types[] = {

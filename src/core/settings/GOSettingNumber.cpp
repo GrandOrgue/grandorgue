@@ -24,8 +24,7 @@ GOSettingNumber<T>::GOSettingNumber(
     m_MaxValue(max_value),
     m_DefaultValue(default_value) {}
 
-template <class T>
-void GOSettingNumber<T>::Load(GOConfigReader &cfg) {
+template <class T> void GOSettingNumber<T>::Load(GOConfigReader &cfg) {
   (*this)(cfg.ReadInteger(
     CMBSetting,
     m_Group,
@@ -36,12 +35,10 @@ void GOSettingNumber<T>::Load(GOConfigReader &cfg) {
     m_DefaultValue));
 }
 
-template <class T>
-void GOSettingNumber<T>::Save(GOConfigWriter &cfg) {
+template <class T> void GOSettingNumber<T>::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_Group, m_Name, m_Value);
 }
 
-template <class T>
-void GOSettingNumber<T>::setDefaultValue(T default_value) {
+template <class T> void GOSettingNumber<T>::setDefaultValue(T default_value) {
   m_DefaultValue = default_value;
 }

@@ -76,19 +76,21 @@ bool GOButton::IsReadOnly() { return m_ReadOnly; }
 const wxString &GOButton::GetName() { return m_Name; }
 
 void GOButton::HandleKey(int key) {
-  if (m_ReadOnly) return;
+  if (m_ReadOnly)
+    return;
   switch (m_shortcut.Match(key)) {
-    case KEY_MATCH:
-      Push();
-      break;
+  case KEY_MATCH:
+    Push();
+    break;
 
-    default:
-      break;
+  default:
+    break;
   }
 }
 
 void GOButton::Push() {
-  if (m_ReadOnly) return;
+  if (m_ReadOnly)
+    return;
   Set(m_Engaged ^ true);
 }
 
@@ -109,30 +111,33 @@ void GOButton::StartPlayback() {}
 void GOButton::PrepareRecording() { m_sender.SetDisplay(m_Engaged); }
 
 void GOButton::ProcessMidi(const GOMidiEvent &event) {
-  if (m_ReadOnly) return;
+  if (m_ReadOnly)
+    return;
   switch (m_midi.Match(event)) {
-    case MIDI_MATCH_CHANGE:
+  case MIDI_MATCH_CHANGE:
+    Push();
+    break;
+
+  case MIDI_MATCH_ON:
+    if (m_Pushbutton)
       Push();
-      break;
+    else
+      Set(true);
+    break;
 
-    case MIDI_MATCH_ON:
-      if (m_Pushbutton)
-        Push();
-      else
-        Set(true);
-      break;
+  case MIDI_MATCH_OFF:
+    if (!m_Pushbutton)
+      Set(false);
+    break;
 
-    case MIDI_MATCH_OFF:
-      if (!m_Pushbutton) Set(false);
-      break;
-
-    default:
-      break;
+  default:
+    break;
   }
 }
 
 void GOButton::Display(bool onoff) {
-  if (m_Engaged == onoff) return;
+  if (m_Engaged == onoff)
+    return;
   m_sender.SetDisplay(onoff);
   m_Engaged = onoff;
   m_organfile->ControlChanged(this);
@@ -181,5 +186,6 @@ std::vector<wxString> GOButton::GetElementActions() {
 }
 
 void GOButton::TriggerElementActions(unsigned no) {
-  if (no == 0) Push();
+  if (no == 0)
+    Push();
 }

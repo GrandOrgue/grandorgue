@@ -16,7 +16,7 @@ class GOSettingDirectory;
 #include <wx/string.h>
 
 class GOArchiveManager {
- private:
+private:
   GOOrganList &m_OrganList;
   const GOSettingDirectory &m_CacheDir;
 
@@ -24,7 +24,7 @@ class GOArchiveManager {
   bool ReadIndex(GOArchive *archive, bool InstallOrgans = false);
   wxString InstallPackage(const wxString &path, const wxString &last_id);
 
- public:
+public:
   GOArchiveManager(GOOrganList &OrganList, const GOSettingDirectory &CacheDir);
   ~GOArchiveManager();
 

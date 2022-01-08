@@ -20,7 +20,7 @@ class GOSettingDirectory;
 typedef struct _GOArchiveEntry GOArchiveEntry;
 
 class GOArchive {
- private:
+private:
   GOMutex m_Mutex;
   const GOSettingDirectory &m_CachePath;
   wxString m_ID;
@@ -29,7 +29,7 @@ class GOArchive {
   wxFile m_File;
   wxString m_Path;
 
- public:
+public:
   GOArchive(const GOSettingDirectory &cachePath);
   ~GOArchive();
 

@@ -14,12 +14,12 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUICouplerPanel : public GOGUIPanelCreator {
- private:
+private:
   GODefinitionFile *m_organfile;
 
   GOGUIPanel *CreateCouplerPanel(GOConfigReader &cfg, unsigned manual_nr);
 
- public:
+public:
   GOGUICouplerPanel(GODefinitionFile *organfile);
   ~GOGUICouplerPanel();
 

@@ -11,18 +11,18 @@
 #include "settings/GOSetting.h"
 
 class GOSettingString : private GOSetting {
- private:
+private:
   wxString m_Value;
   wxString m_DefaultValue;
 
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
 
- protected:
+protected:
   wxString getDefaultValue();
   virtual wxString validate(wxString value);
 
- public:
+public:
   GOSettingString(
     GOSettingStore *store,
     wxString group,

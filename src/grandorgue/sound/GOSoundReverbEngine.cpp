@@ -44,7 +44,8 @@ GOSoundReverbEngine::GOSoundReverbEngine(unsigned samples_per_buffer)
 GOSoundReverbEngine::~GOSoundReverbEngine() {}
 
 void GOSoundReverbEngine::Reset() {
-  for (unsigned i = 0; i < m_Partitions.size(); i++) m_Partitions[i]->Reset();
+  for (unsigned i = 0; i < m_Partitions.size(); i++)
+    m_Partitions[i]->Reset();
 }
 
 void GOSoundReverbEngine::Process(

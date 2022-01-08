@@ -41,8 +41,10 @@ wxStaticText *GOPropertiesText(wxWindow *parent, int title, wxString text) {
     font.SetWeight(wxFONTWEIGHT_BOLD);
     item->SetFont(font);
   }
-  if (title < 0) item->SetForegroundColour(*wxRED);
-  if (title) item->Wrap(abs(title));
+  if (title < 0)
+    item->SetForegroundColour(*wxRED);
+  if (title)
+    item->Wrap(abs(title));
   return item;
 }
 

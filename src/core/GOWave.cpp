@@ -78,11 +78,13 @@ void GOWave::LoadCueChunk(const uint8_t *ptr, unsigned long length) {
 
   GO_WAVECUEPOINT *points = (GO_WAVECUEPOINT *)(ptr + sizeof(GO_WAVECUECHUNK));
   m_hasRelease = (nbPoints > 0);
-  if (m_hasRelease) m_CuePoint = 0;
+  if (m_hasRelease)
+    m_CuePoint = 0;
   for (unsigned k = 0; k < nbPoints; k++) {
     assert(m_Channels != 0);
     unsigned position = points[k].dwSampleOffset;
-    if (position > m_CuePoint) m_CuePoint = position;
+    if (position > m_CuePoint)
+      m_CuePoint = position;
   }
 }
 
@@ -138,14 +140,16 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
   size_t start = 0;
   size_t origDataLen = 0;
   try {
-    if (content.GetSize() < 12) throw(wxString) _("< Not a RIFF file");
+    if (content.GetSize() < 12)
+      throw(wxString) _("< Not a RIFF file");
 
     const uint8_t *ptr = content.get();
     unsigned length = content.GetSize();
 
     if (GOWavPack::IsWavPack(content)) {
       GOWavPack pack(content);
-      if (!pack.Unpack()) throw(wxString) _("Failed to decode WavePack data");
+      if (!pack.Unpack())
+        throw(wxString) _("Failed to decode WavePack data");
 
       m_SampleData = pack.GetSamples();
 
@@ -223,7 +227,8 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
       offset += size + (size & 1);
     }
 
-    if (offset != length) throw(wxString) _("<Invalid WAV file");
+    if (offset != length)
+      throw(wxString) _("<Invalid WAV file");
     if (!m_SampleData.get() || !m_SampleData.GetSize())
       throw(wxString) _("No samples found");
 
@@ -278,7 +283,8 @@ unsigned GOWave::GetReleaseMarkerPosition() const {
 }
 
 const GO_WAVE_LOOP &GOWave::GetLongestLoop() const {
-  if (m_Loops.size() < 1) throw(wxString) _("wave does not contain loops");
+  if (m_Loops.size() < 1)
+    throw(wxString) _("wave does not contain loops");
 
   assert(m_Loops[0].end_sample > m_Loops[0].start_sample);
   unsigned lidx = 0;
@@ -294,20 +300,19 @@ const GO_WAVE_LOOP &GOWave::GetLongestLoop() const {
 }
 
 unsigned GOWave::GetLength() const {
-  if (m_isPacked) return m_SampleData.GetSize() / (4 * m_Channels);
+  if (m_isPacked)
+    return m_SampleData.GetSize() / (4 * m_Channels);
   /* return number of samples in the stream */
   assert((m_SampleData.GetSize() % (m_BytesPerSample * m_Channels)) == 0);
   return m_SampleData.GetSize() / (m_BytesPerSample * m_Channels);
 }
 
-template <class T>
-void GOWave::writeNext(uint8_t *&output, const T &value) {
+template <class T> void GOWave::writeNext(uint8_t *&output, const T &value) {
   *(T *)output = value;
   output += sizeof(T);
 }
 
-template <class T>
-T GOWave::readNext(const uint8_t *&input) {
+template <class T> T GOWave::readNext(const uint8_t *&input) {
   T val = *(T *)input;
   input += sizeof(T);
   return val;
@@ -323,7 +328,8 @@ void GOWave::ReadSamples(
   int return_channels /** number of channels to return or if negative,
                          specific channel as mono*/
 ) const {
-  if (m_SampleRate != sample_rate) throw(wxString) _("bad format!");
+  if (m_SampleRate != sample_rate)
+    throw(wxString) _("bad format!");
 
   if (m_BytesPerSample < 1 || m_BytesPerSample > 4)
     throw(wxString) _("Unsupported format");
@@ -340,7 +346,8 @@ void GOWave::ReadSamples(
   /* need reduce stereo to mono ? */
   if (m_Channels != (unsigned)return_channels && return_channels == 1)
     merge_count = m_Channels;
-  if (select_channel != 0) merge_count = m_Channels;
+  if (select_channel != 0)
+    merge_count = m_Channels;
 
   const uint8_t *input = m_SampleData.get();
   uint8_t *output = (uint8_t *)dest_buffer;
@@ -354,97 +361,98 @@ void GOWave::ReadSamples(
       if (m_isPacked && m_BytesPerSample != 4) {
         val = readNext<int32_t>(input);
         switch (m_BytesPerSample) {
-          case 1:
-            val <<= 16;
-            break;
-          case 2:
-            val <<= 8;
-            break;
+        case 1:
+          val <<= 16;
+          break;
+        case 2:
+          val <<= 8;
+          break;
         }
       } else {
         switch (m_BytesPerSample) {
-          case 1:
-            val = readNext<GOInt8>(input) - 0x80;
-            val <<= 16;
-            break;
-          case 2:
-            val = readNext<GOInt16LE>(input);
-            val <<= 8;
-            break;
-          case 3:
-            val = readNext<GOInt24LE>(input);
-            break;
-          case 4:
-            val = readNext<float>(input) * (float)(1 << 23);
-            break;
-          default:
-            throw(wxString) _("bad format!");
+        case 1:
+          val = readNext<GOInt8>(input) - 0x80;
+          val <<= 16;
+          break;
+        case 2:
+          val = readNext<GOInt16LE>(input);
+          val <<= 8;
+          break;
+        case 3:
+          val = readNext<GOInt24LE>(input);
+          break;
+        case 4:
+          val = readNext<float>(input) * (float)(1 << 23);
+          break;
+        default:
+          throw(wxString) _("bad format!");
         }
       }
 
-      if (select_channel && select_channel != j + 1) continue;
+      if (select_channel && select_channel != j + 1)
+        continue;
       value += val;
     }
     if (select_channel == 0 && merge_count > 1)
       value = value / (int)merge_count;
 
     switch (read_format) {
-      case SF_SIGNEDBYTE_8:
-        writeNext<GOInt8>(output, value >> 16);
-        break;
-      case SF_SIGNEDSHORT_9:
-        writeNext<GOInt16>(output, value >> 15);
-        break;
-      case SF_SIGNEDSHORT_10:
-        writeNext<GOInt16>(output, value >> 14);
-        break;
-      case SF_SIGNEDSHORT_11:
-        writeNext<GOInt16>(output, value >> 13);
-        break;
-      case SF_SIGNEDSHORT_12:
-        writeNext<GOInt16>(output, value >> 12);
-        break;
-      case SF_SIGNEDSHORT_13:
-        writeNext<GOInt16>(output, value >> 11);
-        break;
-      case SF_SIGNEDSHORT_14:
-        writeNext<GOInt16>(output, value >> 10);
-        break;
-      case SF_SIGNEDSHORT_15:
-        writeNext<GOInt16>(output, value >> 9);
-        break;
-      case SF_SIGNEDSHORT_16:
-        writeNext<GOInt16>(output, value >> 8);
-        break;
-      case SF_SIGNEDINT24_17:
-        writeNext<GOInt24>(output, value >> 7);
-        break;
-      case SF_SIGNEDINT24_18:
-        writeNext<GOInt24>(output, value >> 6);
-        break;
-      case SF_SIGNEDINT24_19:
-        writeNext<GOInt24>(output, value >> 5);
-        break;
-      case SF_SIGNEDINT24_20:
-        writeNext<GOInt24>(output, value >> 4);
-        break;
-      case SF_SIGNEDINT24_21:
-        writeNext<GOInt24>(output, value >> 3);
-        break;
-      case SF_SIGNEDINT24_22:
-        writeNext<GOInt24>(output, value >> 2);
-        break;
-      case SF_SIGNEDINT24_23:
-        writeNext<GOInt24>(output, value >> 1);
-        break;
-      case SF_SIGNEDINT24_24:
-        writeNext<GOInt24>(output, value);
-        break;
-      case SF_IEEE_FLOAT:
-        writeNext<float>(output, value / (float)(1 << 23));
-        break;
-      default:
-        throw(wxString) _("bad return format!");
+    case SF_SIGNEDBYTE_8:
+      writeNext<GOInt8>(output, value >> 16);
+      break;
+    case SF_SIGNEDSHORT_9:
+      writeNext<GOInt16>(output, value >> 15);
+      break;
+    case SF_SIGNEDSHORT_10:
+      writeNext<GOInt16>(output, value >> 14);
+      break;
+    case SF_SIGNEDSHORT_11:
+      writeNext<GOInt16>(output, value >> 13);
+      break;
+    case SF_SIGNEDSHORT_12:
+      writeNext<GOInt16>(output, value >> 12);
+      break;
+    case SF_SIGNEDSHORT_13:
+      writeNext<GOInt16>(output, value >> 11);
+      break;
+    case SF_SIGNEDSHORT_14:
+      writeNext<GOInt16>(output, value >> 10);
+      break;
+    case SF_SIGNEDSHORT_15:
+      writeNext<GOInt16>(output, value >> 9);
+      break;
+    case SF_SIGNEDSHORT_16:
+      writeNext<GOInt16>(output, value >> 8);
+      break;
+    case SF_SIGNEDINT24_17:
+      writeNext<GOInt24>(output, value >> 7);
+      break;
+    case SF_SIGNEDINT24_18:
+      writeNext<GOInt24>(output, value >> 6);
+      break;
+    case SF_SIGNEDINT24_19:
+      writeNext<GOInt24>(output, value >> 5);
+      break;
+    case SF_SIGNEDINT24_20:
+      writeNext<GOInt24>(output, value >> 4);
+      break;
+    case SF_SIGNEDINT24_21:
+      writeNext<GOInt24>(output, value >> 3);
+      break;
+    case SF_SIGNEDINT24_22:
+      writeNext<GOInt24>(output, value >> 2);
+      break;
+    case SF_SIGNEDINT24_23:
+      writeNext<GOInt24>(output, value >> 1);
+      break;
+    case SF_SIGNEDINT24_24:
+      writeNext<GOInt24>(output, value);
+      break;
+    case SF_IEEE_FLOAT:
+      writeNext<float>(output, value / (float)(1 << 23));
+      break;
+    default:
+      throw(wxString) _("bad return format!");
     }
   }
 }
@@ -463,9 +471,11 @@ unsigned GOWave::GetMidiNote() const { return m_MidiNote; }
 float GOWave::GetPitchFract() const { return m_PitchFract; }
 
 bool GOWave::IsWave(const GOBuffer<uint8_t> &data) {
-  if (data.GetSize() < 12) return false;
+  if (data.GetSize() < 12)
+    return false;
   GO_WAVECHUNKHEADER *riffHeader = (GO_WAVECHUNKHEADER *)data.get();
-  if (riffHeader->fccChunk != WAVE_TYPE_RIFF) return false;
+  if (riffHeader->fccChunk != WAVE_TYPE_RIFF)
+    return false;
   GO_WAVETYPEFIELD *riffIdent
     = (GO_WAVETYPEFIELD *)(data.get() + sizeof(GO_WAVECHUNKHEADER));
   return *riffIdent == WAVE_TYPE_WAVE;
@@ -557,20 +567,20 @@ bool GOWave::Save(GOBuffer<uint8_t> &buf) {
     for (unsigned i = 0; i < GetLength() * GetChannels(); i++) {
       int32_t val;
       switch (m_BytesPerSample) {
-        case 1:
-          val = readNext<GOInt8>(input) - 0x80;
-          break;
-        case 2:
-          val = readNext<GOInt16LE>(input);
-          break;
-        case 3:
-          val = readNext<GOInt24LE>(input);
-          break;
-        case 4:
-          val = readNext<int32_t>(input);
-          break;
-        default:
-          throw(wxString) _("bad format!");
+      case 1:
+        val = readNext<GOInt8>(input) - 0x80;
+        break;
+      case 2:
+        val = readNext<GOInt16LE>(input);
+        break;
+      case 3:
+        val = readNext<GOInt24LE>(input);
+        break;
+      case 4:
+        val = readNext<int32_t>(input);
+        break;
+      default:
+        throw(wxString) _("bad format!");
       }
       data[i] = val;
     }
@@ -584,7 +594,9 @@ bool GOWave::Save(GOBuffer<uint8_t> &buf) {
         GetSampleRate(),
         GetLength()))
     return false;
-  if (!pack.AddWrapper(header)) return false;
-  if (!pack.AddSampleData(data)) return false;
+  if (!pack.AddWrapper(header))
+    return false;
+  if (!pack.AddSampleData(data))
+    return false;
   return pack.GetResult(buf);
 }

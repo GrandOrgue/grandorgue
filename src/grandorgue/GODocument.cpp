@@ -78,7 +78,8 @@ bool GODocument::Import(
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
   for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
-    if (m_organfile->GetPanel(i)->InitialOpenWindow()) ShowPanel(i);
+    if (m_organfile->GetPanel(i)->InitialOpenWindow())
+      ShowPanel(i);
   if (!m_organfile->GetMainWindowData()->GetWindowSize().IsEmpty()) {
     GOFrame *const frame = dynamic_cast<GOFrame *>(wxTheApp->GetTopWindow());
 
@@ -102,14 +103,16 @@ bool GODocument::Import(
 }
 
 bool GODocument::ImportCombination(const wxString &cmb) {
-  if (!m_organfile) return false;
+  if (!m_organfile)
+    return false;
   m_organfile->LoadCombination(cmb);
   m_organfile->Modified();
   return true;
 }
 
 bool GODocument::UpdateCache(GOProgressDialog *dlg, bool compress) {
-  if (!m_organfile) return false;
+  if (!m_organfile)
+    return false;
   return m_organfile->UpdateCache(dlg, compress);
 }
 
@@ -132,7 +135,8 @@ void GODocument::SyncState() {
 }
 
 bool GODocument::Revert(GOProgressDialog *dlg) {
-  if (m_organfile) m_organfile->DeleteSettings();
+  if (m_organfile)
+    m_organfile->DeleteSettings();
   Modify(false);
   return Load(dlg, m_organfile->GetOrganInfo());
 }
@@ -171,9 +175,11 @@ GODefinitionFile *GODocument::GetOrganFile() { return m_organfile; }
 void GODocument::OnMidiEvent(const GOMidiEvent &event) {
   GOMutexLocker locker(m_lock);
 
-  if (!m_OrganFileReady) return;
+  if (!m_OrganFileReady)
+    return;
 
-  if (m_organfile) m_organfile->ProcessMidi(event);
+  if (m_organfile)
+    m_organfile->ProcessMidi(event);
 }
 
 void GODocument::ShowOrganDialog() {

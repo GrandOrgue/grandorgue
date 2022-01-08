@@ -44,7 +44,8 @@ wxString formatCDDouble(double value) {
   if (value >= 5) {
     int pos = result.length() - 1;
     while (pos >= 0 && (result[pos] == wxT('9') || result[pos] == wxT('.'))) {
-      if (result[pos] == wxT('9')) result[pos] = wxT('0');
+      if (result[pos] == wxT('9'))
+        result[pos] = wxT('0');
       pos--;
     }
     if (pos < 0)
@@ -66,22 +67,27 @@ bool parseCDouble(double &result, wxString value) {
     sign = true;
     value = value.Mid(1);
   }
-  if (value.length() < 1) return false;
+  if (value.length() < 1)
+    return false;
   for (pos = 0; pos < value.length(); pos++) {
     if (value[pos] == wxT('.')) {
-      if (pos == 0) return false;
+      if (pos == 0)
+        return false;
       pos++;
       break;
     }
-    if (value[pos] < wxT('0') || wxT('9') < value[pos]) return false;
+    if (value[pos] < wxT('0') || wxT('9') < value[pos])
+      return false;
     result = result * 10 + (value[pos] - wxT('0'));
   }
   for (; pos < value.length(); pos++) {
-    if (value[pos] < wxT('0') || wxT('9') < value[pos]) return false;
+    if (value[pos] < wxT('0') || wxT('9') < value[pos])
+      return false;
     result = result + shift * (value[pos] - wxT('0'));
     shift = shift / 10;
   }
-  if (sign) result = -result;
+  if (sign)
+    result = -result;
   return true;
 }
 
@@ -96,12 +102,15 @@ bool parseLong(long &result, wxString value) {
     } else if (value[0] == wxT('+'))
       pos = 1;
   }
-  if (value.length() < pos + 1) return false;
+  if (value.length() < pos + 1)
+    return false;
   for (; pos < value.length(); pos++) {
-    if (value[pos] < wxT('0') || wxT('9') < value[pos]) return false;
+    if (value[pos] < wxT('0') || wxT('9') < value[pos])
+      return false;
     result = result * 10 + (value[pos] - wxT('0'));
   }
-  if (sign) result = -result;
+  if (sign)
+    result = -result;
   return true;
 }
 

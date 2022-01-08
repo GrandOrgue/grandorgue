@@ -100,7 +100,8 @@ void GOLogWindow::OnLog(wxCommandEvent &event) {
   m_List->SetColumnWidth(0, wxLIST_AUTOSIZE);
   m_List->SetColumnWidth(1, wxLIST_AUTOSIZE);
 
-  if (!IsShown()) Show();
+  if (!IsShown())
+    Show();
 }
 
 void GOLogWindow::OnCloseWindow(wxCloseEvent &event) {
@@ -113,15 +114,15 @@ void GOLogWindow::LogMsg(
   static unsigned count = 0;
   int l;
   switch (level) {
-    case wxLOG_FatalError:
-    case wxLOG_Error:
-      l = 0;
-      break;
-    case wxLOG_Warning:
-      l = 1;
-      break;
-    default:
-      l = 2;
+  case wxLOG_FatalError:
+  case wxLOG_Error:
+    l = 0;
+    break;
+  case wxLOG_Warning:
+    l = 1;
+    break;
+  default:
+    l = 2;
   }
   wxCommandEvent e(wxEVT_ADD_LOG_MESSAGE, 0);
   e.SetString(msg);
@@ -129,5 +130,6 @@ void GOLogWindow::LogMsg(
   e.SetTimestamp(timestamp);
   GetEventHandler()->AddPendingEvent(e);
   count++;
-  if ((count % 100) == 0) wxTheApp->Yield(true);
+  if ((count % 100) == 0)
+    wxTheApp->Yield(true);
 }

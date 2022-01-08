@@ -13,7 +13,7 @@
 #include "GOBuffer.h"
 
 class GOWavPack {
- private:
+private:
   const GOBuffer<uint8_t> &m_data;
   GOBuffer<uint8_t> m_Samples;
   GOBuffer<uint8_t> m_Wrapper;
@@ -39,7 +39,7 @@ class GOWavPack {
   int SetPosAbs(uint32_t pos);
   int SetPosRel(int32_t delta, int mode);
 
- public:
+public:
   GOWavPack(const GOBuffer<uint8_t> &file);
   ~GOWavPack();
 

@@ -14,11 +14,11 @@ class GOConfigFileWriter;
 struct IniFileEnumEntry;
 
 class GOConfigWriter {
- private:
+private:
   GOConfigFileWriter &m_ConfigFile;
   bool m_Prefix;
 
- public:
+public:
   GOConfigWriter(GOConfigFileWriter &cfg, bool prefix);
 
   void WriteString(wxString group, wxString key, wxString value);

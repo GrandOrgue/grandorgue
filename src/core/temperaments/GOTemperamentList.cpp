@@ -52,10 +52,12 @@ ptr_vector<GOTemperamentUser> &GOTemperamentList::GetUserTemperaments() {
 }
 
 const GOTemperament &GOTemperamentList::GetTemperament(unsigned index) {
-  if (index < m_Temperaments.size()) return *m_Temperaments[index];
+  if (index < m_Temperaments.size())
+    return *m_Temperaments[index];
 
   index -= m_Temperaments.size();
-  if (index < m_UserTemperaments.size()) return *m_UserTemperaments[index];
+  if (index < m_UserTemperaments.size())
+    return *m_UserTemperaments[index];
 
   /* else return original temperament */
   return *m_Temperaments[0];
@@ -63,10 +65,12 @@ const GOTemperament &GOTemperamentList::GetTemperament(unsigned index) {
 
 const GOTemperament &GOTemperamentList::GetTemperament(wxString Name) {
   for (unsigned i = 0; i < m_Temperaments.size(); i++)
-    if (Name == m_Temperaments[i]->GetName()) return *m_Temperaments[i];
+    if (Name == m_Temperaments[i]->GetName())
+      return *m_Temperaments[i];
 
   for (unsigned i = 0; i < m_UserTemperaments.size(); i++)
-    if (Name == m_UserTemperaments[i]->GetName()) return *m_UserTemperaments[i];
+    if (Name == m_UserTemperaments[i]->GetName())
+      return *m_UserTemperaments[i];
 
   /* else return original temperament */
   return *m_Temperaments[0];
@@ -74,7 +78,8 @@ const GOTemperament &GOTemperamentList::GetTemperament(wxString Name) {
 
 unsigned GOTemperamentList::GetTemperamentIndex(wxString name) {
   for (unsigned i = 0; i < m_Temperaments.size(); i++)
-    if (m_Temperaments[i]->GetName() == name) return i;
+    if (m_Temperaments[i]->GetName() == name)
+      return i;
 
   for (unsigned i = 0; i < m_UserTemperaments.size(); i++)
     if (m_UserTemperaments[i]->GetName() == name)
@@ -84,7 +89,8 @@ unsigned GOTemperamentList::GetTemperamentIndex(wxString name) {
 }
 
 const wxString GOTemperamentList::GetTemperamentName(unsigned index) {
-  if (index < m_Temperaments.size()) return m_Temperaments[index]->GetName();
+  if (index < m_Temperaments.size())
+    return m_Temperaments[index]->GetName();
 
   index -= m_Temperaments.size();
   if (index < m_UserTemperaments.size())
@@ -100,7 +106,8 @@ unsigned GOTemperamentList::GetTemperamentCount() {
 void GOTemperamentList::InitTemperaments() {
   wxString group;
 
-  if (m_Temperaments.size()) return;
+  if (m_Temperaments.size())
+    return;
 
   group = wxT("");
   m_Temperaments.push_back(

@@ -49,7 +49,8 @@ bool GOConfigFileWriter::GetFileContent(GOBuffer<uint8_t> &buf) {
   buf.Append(bom, sizeof(bom));
   buf.Append((const uint8_t *)b.data(), b.length());
 
-  if (!compressBuffer(buf)) return false;
+  if (!compressBuffer(buf))
+    return false;
 
   return true;
 }
@@ -57,11 +58,14 @@ bool GOConfigFileWriter::GetFileContent(GOBuffer<uint8_t> &buf) {
 bool GOConfigFileWriter::Save(wxString filename) {
   wxFile out;
   GOBuffer<uint8_t> buf;
-  if (!GetFileContent(buf)) return false;
+  if (!GetFileContent(buf))
+    return false;
 
-  if (!out.Create(filename, true)) return false;
+  if (!out.Create(filename, true))
+    return false;
 
-  if (!out.Write(buf.get(), buf.GetSize())) return false;
+  if (!out.Write(buf.get(), buf.GetSize()))
+    return false;
   out.Flush();
   out.Close();
   return true;

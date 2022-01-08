@@ -29,7 +29,8 @@ void GOFilename::Hash(GOHash &hash) const {
   }
   hash.Update(m_Path);
   wxFileName path_name(m_Path);
-  if (!m_Hash) return;
+  if (!m_Hash)
+    return;
   uint64_t size = path_name.GetSize().GetValue();
   uint64_t time = path_name.GetModificationTime().GetTicks();
   hash.Update(time);
@@ -37,7 +38,8 @@ void GOFilename::Hash(GOHash &hash) const {
 }
 
 std::unique_ptr<GOFile> GOFilename::Open() const {
-  if (m_Archiv) return (std::unique_ptr<GOFile>)m_Archiv->OpenFile(m_Name);
+  if (m_Archiv)
+    return (std::unique_ptr<GOFile>)m_Archiv->OpenFile(m_Name);
 
   if (m_Path != wxEmptyString && wxFileExists(m_Path))
     return (std::unique_ptr<GOFile>)new GOStandardFile(m_Path, m_Name);

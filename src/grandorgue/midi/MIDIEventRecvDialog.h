@@ -26,7 +26,7 @@ class wxStaticText;
 class wxToggleButton;
 
 class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback {
- private:
+private:
   GOConfig &m_config;
   GOMidiReceiverBase *m_original;
   GOMidiReceiverData m_midi;
@@ -69,7 +69,7 @@ class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback {
   void OnTypeChange(wxCommandEvent &event);
   void OnMidiEvent(const GOMidiEvent &event);
 
- protected:
+protected:
   enum {
     ID_EVENT_NO = 200,
     ID_EVENT_NEW,
@@ -88,7 +88,7 @@ class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback {
     ID_DEBOUNCE
   };
 
- public:
+public:
   MIDIEventRecvDialog(
     wxWindow *parent, GOMidiReceiverBase *event, GOConfig &settings);
   ~MIDIEventRecvDialog();

@@ -17,7 +17,7 @@ class wxButton;
 class wxListBox;
 
 class GOAudioGroupCallback {
- public:
+public:
   virtual std::vector<wxString> GetGroups() = 0;
 };
 
@@ -29,7 +29,7 @@ class GOSettingsAudioGroup : public wxPanel, public GOAudioGroupCallback {
     ID_AUDIOGROUP_CHANGE,
   };
 
- private:
+private:
   GOConfig &m_config;
   wxListBox *m_AudioGroups;
   wxButton *m_Add;
@@ -41,7 +41,7 @@ class GOSettingsAudioGroup : public wxPanel, public GOAudioGroupCallback {
   void OnGroupDel(wxCommandEvent &event);
   void OnGroupChange(wxCommandEvent &event);
 
- public:
+public:
   GOSettingsAudioGroup(GOConfig &settings, wxWindow *parent);
 
   std::vector<wxString> GetGroups();

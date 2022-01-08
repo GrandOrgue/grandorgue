@@ -13,7 +13,7 @@ class GOGUIMouseState {
   void *m_control;
   unsigned m_index;
 
- public:
+public:
   GOGUIMouseState() {
     m_sequence = 0;
     clear();

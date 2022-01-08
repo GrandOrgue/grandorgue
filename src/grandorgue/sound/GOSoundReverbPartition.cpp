@@ -44,18 +44,25 @@ GOSoundReverbPartition::GOSoundReverbPartition(
   for (unsigned i = 0; i < m_PartitionCount; i++)
     m_InputHistory.push_back(new fftwf_complex[m_PartitionSize + 1]);
 
-  for (unsigned i = 0; i < m_PartitionCount; i++) m_IRData.push_back(NULL);
+  for (unsigned i = 0; i < m_PartitionCount; i++)
+    m_IRData.push_back(NULL);
 
   Reset();
 }
 
 GOSoundReverbPartition::~GOSoundReverbPartition() {
-  if (m_TimeToFreq) fftwf_destroy_plan(m_TimeToFreq);
-  if (m_FreqToTime) fftwf_destroy_plan(m_FreqToTime);
-  if (m_fftwTmpReal) delete[] m_fftwTmpReal;
-  if (m_fftwTmpComplex) delete[] m_fftwTmpComplex;
-  if (m_Input) delete[] m_Input;
-  if (m_Output) delete[] m_Output;
+  if (m_TimeToFreq)
+    fftwf_destroy_plan(m_TimeToFreq);
+  if (m_FreqToTime)
+    fftwf_destroy_plan(m_FreqToTime);
+  if (m_fftwTmpReal)
+    delete[] m_fftwTmpReal;
+  if (m_fftwTmpComplex)
+    delete[] m_fftwTmpComplex;
+  if (m_Input)
+    delete[] m_Input;
+  if (m_Output)
+    delete[] m_Output;
 }
 
 void GOSoundReverbPartition::Reset() {
@@ -139,7 +146,8 @@ void GOSoundReverbPartition::AddIR(
   for (unsigned i = 0; i < m_PartitionCount; i++) {
     unsigned minpos = offset + i * m_PartitionSize;
     unsigned maxpos = offset + (i + 1) * m_PartitionSize;
-    if (pos + len < minpos || pos >= maxpos) continue;
+    if (pos + len < minpos || pos >= maxpos)
+      continue;
     std::fill(m_fftwTmpReal, m_fftwTmpReal + 2 * m_PartitionSize, 0);
     unsigned startpos = minpos < pos ? pos : minpos;
     unsigned endpos = pos + len > maxpos ? maxpos : pos + len;

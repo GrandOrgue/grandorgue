@@ -15,7 +15,8 @@ GODocumentBase::~GODocumentBase() {}
 
 bool GODocumentBase::WindowExists(WindowType type, void *data) {
   for (unsigned i = 0; i < m_Windows.size(); i++)
-    if (m_Windows[i].type == type && m_Windows[i].data == data) return true;
+    if (m_Windows[i].type == type && m_Windows[i].data == data)
+      return true;
   return false;
 }
 
@@ -48,7 +49,8 @@ void GODocumentBase::unregisterWindow(GOView *window) {
 
 void GODocumentBase::SyncState() {
   for (unsigned i = 0; i < m_Windows.size(); i++)
-    if (m_Windows[i].data) m_Windows[i].window->SyncState();
+    if (m_Windows[i].data)
+      m_Windows[i].window->SyncState();
 }
 
 void GODocumentBase::CloseWindows() {

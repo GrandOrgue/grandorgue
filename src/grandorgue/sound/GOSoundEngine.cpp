@@ -53,7 +53,8 @@ GOSoundEngine::GOSoundEngine()
 }
 
 GOSoundEngine::~GOSoundEngine() {
-  if (m_ReleaseProcessor) delete m_ReleaseProcessor;
+  if (m_ReleaseProcessor)
+    delete m_ReleaseProcessor;
 }
 
 void GOSoundEngine::Reset() {
@@ -75,7 +76,8 @@ void GOSoundEngine::Reset() {
       m_Scheduler.Add(m_AudioOutputs[i]);
     m_Scheduler.Add(m_AudioRecorder);
     m_Scheduler.Add(m_ReleaseProcessor);
-    if (m_TouchProcessor) m_Scheduler.Add(m_TouchProcessor.get());
+    if (m_TouchProcessor)
+      m_Scheduler.Add(m_TouchProcessor.get());
   }
   m_UsedPolyphony = 0;
 
@@ -125,7 +127,8 @@ unsigned GOSoundEngine::GetHardPolyphony() const {
 }
 
 void GOSoundEngine::SetAudioGroupCount(unsigned groups) {
-  if (groups < 1) groups = 1;
+  if (groups < 1)
+    groups = 1;
   m_AudioGroupCount = groups;
   m_AudioGroups.clear();
   for (unsigned i = 0; i < m_AudioGroupCount; i++)
@@ -166,7 +169,8 @@ void GOSoundEngine::PassSampler(GOSoundSampler *sampler) {
 
 void GOSoundEngine::StartSampler(
   GOSoundSampler *sampler, int sampler_group_id, unsigned audio_group) {
-  if (audio_group >= m_AudioGroupCount) audio_group = 0;
+  if (audio_group >= m_AudioGroupCount)
+    audio_group = 0;
 
   sampler->sampler_group_id = sampler_group_id;
   sampler->audio_group_id = audio_group;
@@ -203,7 +207,8 @@ void GOSoundEngine::ClearSetup() {
 void GOSoundEngine::Setup(
   GODefinitionFile *organ_file, unsigned release_count) {
   m_Scheduler.Clear();
-  if (release_count < 1) release_count = 1;
+  if (release_count < 1)
+    release_count = 1;
   m_Scheduler.SetRepeatCount(release_count);
   m_Tremulants.clear();
   for (unsigned i = 0; i < organ_file->GetTremulantCount(); i++)
@@ -260,7 +265,8 @@ bool GOSoundEngine::ProcessSampler(
      * right by the necessary amount to bring the sample gain back
      * to unity (this value is computed in GOPipe.cpp)
      */
-    for (unsigned i = 0; i < n_frames * 2; i++) output_buffer[i] += temp[i];
+    for (unsigned i = 0; i < n_frames * 2; i++)
+      output_buffer[i] += temp[i];
 
     if (
       (sampler->stop && sampler->stop <= m_CurrentTime)
@@ -315,7 +321,8 @@ void GOSoundEngine::SetAudioOutput(
     std::fill(scale_factors.begin(), scale_factors.end(), 0.0f);
     for (unsigned j = 0; j < audio_outputs[i].channels; j++)
       for (unsigned k = 0; k < audio_outputs[i].scale_factors[j].size(); k++) {
-        if (k >= m_AudioGroupCount * 2) continue;
+        if (k >= m_AudioGroupCount * 2)
+          continue;
         float factor = audio_outputs[i].scale_factors[j][k];
         if (factor >= -120 && factor < 40)
           factor = powf(10.0f, factor * 0.05f);
@@ -352,7 +359,8 @@ void GOSoundEngine::SetAudioRecorder(GOSoundRecorder *recorder, bool downmix) {
 
 void GOSoundEngine::SetupReverb(GOConfig &settings) {
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-    if (m_AudioOutputs[i]) m_AudioOutputs[i]->SetupReverb(settings);
+    if (m_AudioOutputs[i])
+      m_AudioOutputs[i]->SetupReverb(settings);
 }
 
 void GOSoundEngine::GetAudioOutput(
@@ -372,7 +380,8 @@ void GOSoundEngine::NextPeriod() {
 
   m_CurrentTime += m_SamplesPerBuffer;
   unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
-  if (used_samplers > m_UsedPolyphony) m_UsedPolyphony = used_samplers;
+  if (used_samplers > m_UsedPolyphony)
+    m_UsedPolyphony = used_samplers;
 
   m_Scheduler.Reset();
 }
@@ -387,10 +396,12 @@ GOSoundSampler *GOSoundEngine::StartSample(
   unsigned delay_samples = (delay * m_SampleRate) / (1000);
   uint64_t start_time = m_CurrentTime + delay_samples;
   uint64_t released_time = ((start_time - last_stop) * 1000) / m_SampleRate;
-  if (released_time > (unsigned)-1) released_time = (unsigned)-1;
+  if (released_time > (unsigned)-1)
+    released_time = (unsigned)-1;
 
   const GOAudioSection *attack = pipe->GetAttack(velocity, released_time);
-  if (!attack || attack->GetChannels() == 0) return NULL;
+  if (!attack || attack->GetChannels() == 0)
+    return NULL;
   GOSoundSampler *sampler = m_SamplerPool.GetSampler();
   if (sampler) {
     sampler->pipe = pipe;
@@ -411,14 +422,17 @@ GOSoundSampler *GOSoundEngine::StartSample(
 }
 
 void GOSoundEngine::SwitchAttackSampler(GOSoundSampler *handle) {
-  if (!handle->pipe) return;
+  if (!handle->pipe)
+    return;
 
   unsigned time = 1000;
 
   const GOSoundProvider *this_pipe = handle->pipe;
   const GOAudioSection *section = this_pipe->GetAttack(handle->velocity, time);
-  if (!section) return;
-  if (handle->is_release) return;
+  if (!section)
+    return;
+  if (handle->is_release)
+    return;
 
   GOSoundSampler *new_sampler = m_SamplerPool.GetSampler();
   if (new_sampler != NULL) {
@@ -445,7 +459,8 @@ void GOSoundEngine::SwitchAttackSampler(GOSoundSampler *handle) {
 }
 
 void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
-  if (!handle->pipe) return;
+  if (!handle->pipe)
+    return;
 
   /* The beloow code creates a new sampler to playback the release, the
    * following code takes the active sampler for this pipe (which will be
@@ -468,7 +483,8 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
   if (vol) {
     const GOAudioSection *release_section = this_pipe->GetRelease(
       &handle->stream, ((double)(m_CurrentTime - handle->time)) / m_SampleRate);
-    if (!release_section) return;
+    if (!release_section)
+      return;
 
     GOSoundSampler *new_sampler = m_SamplerPool.GetSampler();
     if (new_sampler != NULL) {
@@ -525,8 +541,10 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
           int time_to_full_reverb = ((60 * release_section->GetLength())
                                      / release_section->GetSampleRate())
             + 40;
-          if (time_to_full_reverb > 350) time_to_full_reverb = 350;
-          if (time_to_full_reverb < 100) time_to_full_reverb = 100;
+          if (time_to_full_reverb > 350)
+            time_to_full_reverb = 350;
+          if (time_to_full_reverb < 100)
+            time_to_full_reverb = 100;
           if (time < time_to_full_reverb) {
             /* in function of note duration, fading happens between:
              * 200 ms and 6 s for release with little reverberation e.g. short
@@ -582,8 +600,8 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
   }
 }
 
-uint64_t GOSoundEngine::StopSample(
-  const GOSoundProvider *pipe, GOSoundSampler *handle) {
+uint64_t
+GOSoundEngine::StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle) {
   assert(handle);
   assert(pipe);
 
@@ -591,7 +609,8 @@ uint64_t GOSoundEngine::StopSample(
   // decays away (and hence the sampler is discarded back into the pool), and
   // then the user releases a key. If the sampler had already been reused
   // with another pipe, that sample would erroneously be told to decay.
-  if (pipe != handle->pipe) return 0;
+  if (pipe != handle->pipe)
+    return 0;
 
   handle->stop = m_CurrentTime + handle->delay;
   return handle->stop;
@@ -606,7 +625,8 @@ void GOSoundEngine::SwitchSample(
   // decays away (and hence the sampler is discarded back into the pool), and
   // then the user releases a key. If the sampler had already been reused
   // with another pipe, that sample would erroneously be told to decay.
-  if (pipe != handle->pipe) return;
+  if (pipe != handle->pipe)
+    return;
 
   handle->new_attack = m_CurrentTime + handle->delay;
 }
@@ -630,11 +650,14 @@ const std::vector<double> &GOSoundEngine::GetMeterInfo() {
   m_MeterInfo[0] = m_UsedPolyphony / (double)GetHardPolyphony();
   m_UsedPolyphony = 0;
 
-  for (unsigned i = 1; i < m_MeterInfo.size(); i++) m_MeterInfo[i] = 0;
+  for (unsigned i = 1; i < m_MeterInfo.size(); i++)
+    m_MeterInfo[i] = 0;
   for (unsigned i = 0, nr = 1; i < m_AudioOutputs.size(); i++) {
-    if (!m_AudioOutputs[i]) continue;
+    if (!m_AudioOutputs[i])
+      continue;
     const std::vector<float> &info = m_AudioOutputs[i]->GetMeterInfo();
-    for (unsigned j = 0; j < info.size(); j++) m_MeterInfo[nr++] = info[j];
+    for (unsigned j = 0; j < info.size(); j++)
+      m_MeterInfo[nr++] = info[j];
     m_AudioOutputs[i]->ResetMeterInfo();
   }
   return m_MeterInfo;

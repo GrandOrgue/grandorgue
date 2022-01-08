@@ -13,13 +13,13 @@
 #include "GOFile.h"
 
 class GOStandardFile : public GOFile {
- private:
+private:
   wxString m_Path;
   wxString m_Name;
   wxFile m_File;
   size_t m_Size;
 
- public:
+public:
   GOStandardFile(const wxString &path);
   GOStandardFile(const wxString &path, const wxString &name);
   ~GOStandardFile();

@@ -19,7 +19,7 @@ class GOEventDistributor;
 class GOMemoryPool;
 
 class GOLoadThread : private GOThread {
- private:
+private:
   GOEventDistributor &m_Objects;
   atomic_uint &m_Pos;
   GOMemoryPool &m_pool;
@@ -28,7 +28,7 @@ class GOLoadThread : private GOThread {
 
   void Entry();
 
- public:
+public:
   GOLoadThread(GOEventDistributor &objs, GOMemoryPool &pool, atomic_uint &pos);
   ~GOLoadThread();
 

@@ -11,7 +11,7 @@
 #include "ptrvector.h"
 
 class GOMidiRtPortFactory {
- private:
+private:
   std::map<RtMidi::Api, RtMidiIn *> m_RtMidiIns;
   std::map<RtMidi::Api, RtMidiOut *> m_RtMidiOuts;
 
@@ -20,7 +20,7 @@ class GOMidiRtPortFactory {
   wxRegEx m_JackDevnamePattern;
   wxRegEx m_WinMmDevnamePattern;
 
- public:
+public:
   static const wxString PORT_NAME;
 
   GOMidiRtPortFactory();

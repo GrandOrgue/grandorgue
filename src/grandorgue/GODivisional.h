@@ -15,14 +15,14 @@ class GOConfigReader;
 class GOConfigWriter;
 
 class GODivisional : public GOPushbutton, public GOCombination {
- protected:
+protected:
   int m_DivisionalNumber;
   unsigned m_ManualNumber;
   bool m_IsSetter;
 
   bool PushLocal();
 
- public:
+public:
   GODivisional(
     GODefinitionFile *organfile,
     GOCombinationDefinition &divisional_template,

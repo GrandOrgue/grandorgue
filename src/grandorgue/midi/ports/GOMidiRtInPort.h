@@ -12,7 +12,7 @@
 #include "RtMidi.h"
 
 class GOMidiRtInPort : public GOMidiInPort {
- protected:
+protected:
   const RtMidi::Api m_api;
   RtMidiIn *m_port;
 
@@ -21,7 +21,7 @@ class GOMidiRtInPort : public GOMidiInPort {
   static void MIDICallback(
     double timeStamp, std::vector<unsigned char> *msg, void *userData);
 
- public:
+public:
   GOMidiRtInPort(
     GOMidi *midi,
     RtMidi::Api api,

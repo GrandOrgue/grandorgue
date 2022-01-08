@@ -20,5 +20,6 @@ GOLog::~GOLog() {
 }
 
 void GOLog::DoLogTextAtLevel(wxLogLevel level, const wxString &msg) {
-  if (m_LogWindow) m_LogWindow->LogMsg(level, msg, time(0));
+  if (m_LogWindow)
+    m_LogWindow->LogMsg(level, msg, time(0));
 }

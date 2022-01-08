@@ -11,7 +11,8 @@
 
 GOSetting::GOSetting(GOSettingStore *store, wxString group, wxString name)
   : m_Group(group), m_Name(name) {
-  if (store) store->AddSetting(this);
+  if (store)
+    store->AddSetting(this);
 }
 
 GOSetting::~GOSetting() {}

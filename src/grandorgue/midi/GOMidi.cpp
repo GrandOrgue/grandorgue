@@ -80,7 +80,8 @@ void GOMidi::Open() {
 
 bool GOMidi::HasActiveDevice() {
   for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
-    if (m_midi_in_devices[i]->IsActive()) return true;
+    if (m_midi_in_devices[i]->IsActive())
+      return true;
 
   return false;
 }
@@ -93,7 +94,8 @@ void GOMidi::Recv(const GOMidiEvent &e) {
 void GOMidi::OnMidiEvent(wxMidiEvent &event) {
   GOMidiEvent e = event.GetMidiEvent();
   for (unsigned i = 0; i < m_Listeners.size(); i++)
-    if (m_Listeners[i]) m_Listeners[i]->Send(e);
+    if (m_Listeners[i])
+      m_Listeners[i]->Send(e);
 }
 
 void GOMidi::Send(const GOMidiEvent &e) {
@@ -102,9 +104,11 @@ void GOMidi::Send(const GOMidiEvent &e) {
 }
 
 void GOMidi::Register(GOMidiListener *listener) {
-  if (!listener) return;
+  if (!listener)
+    return;
   for (unsigned i = 0; i < m_Listeners.size(); i++)
-    if (m_Listeners[i] == listener) return;
+    if (m_Listeners[i] == listener)
+      return;
   for (unsigned i = 0; i < m_Listeners.size(); i++)
     if (!m_Listeners[i]) {
       m_Listeners[i] = listener;

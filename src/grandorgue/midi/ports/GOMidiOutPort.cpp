@@ -27,13 +27,16 @@ bool GOMidiOutPort::Open() {
 }
 
 void GOMidiOutPort::Send(const GOMidiEvent &e) {
-  if (!IsActive()) return;
+  if (!IsActive())
+    return;
   if (GetID() == e.GetDevice() || e.GetDevice() == 0) {
     GOMidiEvent e1 = e;
-    if (!m_merger.Process(e1)) return;
+    if (!m_merger.Process(e1))
+      return;
     std::vector<std::vector<unsigned char>> msg;
     e1.ToMidi(msg, m_midi->GetMidiMap());
-    for (unsigned i = 0; i < msg.size(); i++) SendData(msg[i]);
+    for (unsigned i = 0; i < msg.size(); i++)
+      SendData(msg[i]);
   }
 }
 

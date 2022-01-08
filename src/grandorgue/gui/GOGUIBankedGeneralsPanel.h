@@ -14,12 +14,12 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUIBankedGeneralsPanel : public GOGUIPanelCreator {
- private:
+private:
   GODefinitionFile *m_organfile;
 
   GOGUIPanel *CreateBankedGeneralsPanel(GOConfigReader &cfg);
 
- public:
+public:
   GOGUIBankedGeneralsPanel(GODefinitionFile *organfile);
   virtual ~GOGUIBankedGeneralsPanel();
 

@@ -11,11 +11,11 @@
 #include "GODrawStop.h"
 
 class GOSwitch : public GODrawstop {
- protected:
+protected:
   void ChangeState(bool);
   void SetupCombinationState();
 
- public:
+public:
   GOSwitch(GODefinitionFile *organfile);
   ~GOSwitch();
 

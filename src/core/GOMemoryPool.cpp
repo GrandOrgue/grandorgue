@@ -50,15 +50,18 @@ GOMemoryPool::GOMemoryPool()
 GOMemoryPool::~GOMemoryPool() { FreePool(); }
 
 bool inline GOMemoryPool::InMemoryPool(void *ptr) {
-  if (m_CacheStart <= ptr && ptr <= m_CacheStart + m_CacheSize) return true;
-  if (m_PoolStart <= ptr && ptr <= m_PoolEnd) return true;
+  if (m_CacheStart <= ptr && ptr <= m_CacheStart + m_CacheSize)
+    return true;
+  if (m_PoolStart <= ptr && ptr <= m_PoolEnd)
+    return true;
   return false;
 }
 
 void *GOMemoryPool::Alloc(size_t length, bool final) {
   if (m_MemoryLimit && m_CacheSize + m_PoolSize + m_MallocSize > m_MemoryLimit)
     return NULL;
-  if (!final) return malloc(length);
+  if (!final)
+    return malloc(length);
   GOMutexLocker locker(m_mutex);
   void *data = PoolAlloc(length);
   if (data) {
@@ -70,7 +73,8 @@ void *GOMemoryPool::Alloc(size_t length, bool final) {
 }
 
 void GOMemoryPool::Free(void *data) {
-  if (!data) return;
+  if (!data)
+    return;
   if (InMemoryPool(data)) {
     GOMutexLocker locker(m_mutex);
     if (m_PoolAllocs.count(data)) {
@@ -104,8 +108,10 @@ void GOMemoryPool::AddPoolAlloc(void *data) { m_PoolAllocs.insert(data); }
 void *GOMemoryPool::PoolAlloc(size_t length) {
   char *new_ptr;
 
-  if (!m_PoolStart) return NULL;
-  if (!length) length++;
+  if (!m_PoolStart)
+    return NULL;
+  if (!length)
+    length++;
 
   new_ptr = m_PoolPtr + length;
   if (m_PoolPtr <= new_ptr && new_ptr < m_PoolEnd) {
@@ -148,11 +154,14 @@ void *GOMemoryPool::PoolAlloc(size_t length) {
 }
 
 void *GOMemoryPool::GetCacheData(size_t offset, size_t length) {
-  if (!length) return NULL;
+  if (!length)
+    return NULL;
   if (m_CacheStart) {
     char *data = m_CacheStart + offset;
-    for (unsigned i = 0; i < length; i += m_PageSize) touchMemory(data + i);
-    if (length) touchMemory(data + length - 1);
+    for (unsigned i = 0; i < length; i += m_PageSize)
+      touchMemory(data + i);
+    if (length)
+      touchMemory(data + length - 1);
     AddPoolAlloc(data);
     return data;
   }
@@ -204,7 +213,8 @@ bool GOMemoryPool::SetCacheFile(wxFile &cache_file) {
     m_CacheSize = cache_file.Length();
     m_CacheStart = (char *)MapViewOfFile(map, FILE_MAP_READ, 0, 0, m_CacheSize);
     last_error = GetLastError();
-    if (!m_CacheStart) m_CacheSize = 0;
+    if (!m_CacheStart)
+      m_CacheSize = 0;
     CloseHandle(map);
   }
   if (!m_CacheStart)
@@ -264,7 +274,8 @@ size_t GOMemoryPool::GetSystemMemory() {
 
 size_t GOMemoryPool::GetSystemMemoryLimit() {
   size_t mem = GetSystemMemory() / (1024 * 1024);
-  if (mem > 200) mem -= 200;
+  if (mem > 200)
+    mem -= 200;
   return mem;
 }
 
@@ -292,9 +303,11 @@ size_t GOMemoryPool::GetVMALimit() {
   size_t max_block = 0;
   for (char *ptr = 0; ptr < info.lpMaximumApplicationAddress;
        ptr += mem_info.RegionSize) {
-    if (VirtualQuery(ptr, &mem_info, sizeof(mem_info)) <= 0) break;
+    if (VirtualQuery(ptr, &mem_info, sizeof(mem_info)) <= 0)
+      break;
     if (mem_info.State == MEM_FREE)
-      if (max_block < mem_info.RegionSize) max_block = mem_info.RegionSize;
+      if (max_block < mem_info.RegionSize)
+        max_block = mem_info.RegionSize;
   }
   return max_block;
 #endif
@@ -324,7 +337,8 @@ bool GOMemoryPool::AllocatePool() {
 #ifdef __WIN32__
   m_PoolStart
     = (char *)VirtualAlloc(NULL, m_PoolLimit, MEM_RESERVE, PAGE_NOACCESS);
-  if (!m_PoolStart) return false;
+  if (!m_PoolStart)
+    return false;
 #endif
   return true;
 }
@@ -341,7 +355,8 @@ void GOMemoryPool::InitPool() {
     (int)m_PageSize);
 
   while (m_PoolLimit) {
-    if (AllocatePool()) break;
+    if (AllocatePool())
+      break;
     if (m_PoolLimit < 500 * 1024 * 1024) {
       wxLogWarning(
         wxT("Initialization of the memory pool failed (size: %llu bytes)"),
@@ -360,12 +375,16 @@ void GOMemoryPool::FreePool() {
     wxLogError(wxT("Freeing non-empty memory pool"));
   }
 #if defined __linux__ || __WXMAC__
-  if (m_PoolStart) munmap(m_PoolStart, m_PoolLimit);
-  if (m_CacheSize) munmap(m_CacheStart, m_CacheSize);
+  if (m_PoolStart)
+    munmap(m_PoolStart, m_PoolLimit);
+  if (m_CacheSize)
+    munmap(m_CacheStart, m_CacheSize);
 #endif
 #ifdef __WIN32__
-  if (m_PoolStart) VirtualFree(m_PoolStart, 0, MEM_RELEASE);
-  if (m_CacheSize) UnmapViewOfFile(m_CacheStart);
+  if (m_PoolStart)
+    VirtualFree(m_PoolStart, 0, MEM_RELEASE);
+  if (m_CacheSize)
+    UnmapViewOfFile(m_CacheStart);
 #endif
   m_PoolStart = 0;
   m_PoolSize = 0;
@@ -377,11 +396,15 @@ void GOMemoryPool::FreePool() {
 
 void GOMemoryPool::GrowPool(size_t length) {
   size_t new_size = m_PoolSize + m_PoolIncrement;
-  while (new_size < m_PoolSize + length) new_size += m_PageSize;
-  if (new_size > m_PoolLimit || new_size < m_PoolSize) new_size = m_PoolLimit;
-  if (m_PoolSize >= m_PoolLimit) return;
+  while (new_size < m_PoolSize + length)
+    new_size += m_PageSize;
+  if (new_size > m_PoolLimit || new_size < m_PoolSize)
+    new_size = m_PoolLimit;
+  if (m_PoolSize >= m_PoolLimit)
+    return;
 #if defined __linux__ || __WXMAC__
-  if (mprotect(m_PoolStart, new_size, PROT_READ | PROT_WRITE) == -1) return;
+  if (mprotect(m_PoolStart, new_size, PROT_READ | PROT_WRITE) == -1)
+    return;
   m_PoolSize = new_size;
 #endif
 #ifdef __WIN32__
@@ -400,12 +423,14 @@ void GOMemoryPool::TouchMemory(bool &stop) {
   if (m_TouchCache) {
     for (int i = 0; m_TouchPos < m_CacheSize; m_TouchPos += m_PageSize, i++) {
       touchMemory(m_CacheStart + m_TouchPos);
-      if (load_once(stop) || i > 1000) return;
+      if (load_once(stop) || i > 1000)
+        return;
     }
   } else {
     for (int i = 0; m_TouchPos < m_PoolSize; m_TouchPos += m_PageSize, i++) {
       touchMemory(m_PoolStart + m_TouchPos);
-      if (load_once(stop) || i > 1000) return;
+      if (load_once(stop) || i > 1000)
+        return;
     }
   }
   m_TouchCache = !m_TouchCache;

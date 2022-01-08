@@ -21,10 +21,10 @@
 #include "GOThread.h"
 
 class GOCondition {
- public:
+public:
   enum { SIGNAL_RECEIVED = 0x1, MUTEX_LOCKED = 0x2 };
 
- private:
+private:
 #if defined GO_STD_MUTEX
   std::timed_mutex &r_mutex;
   std::condition_variable_any m_condition;
@@ -39,10 +39,10 @@ class GOCondition {
   GOCondition(const GOCondition &) = delete;
   const GOCondition &operator=(const GOCondition &) = delete;
 
-  unsigned DoWait(
-    bool isWithTimeout, const char *waiterInfo, GOThread *pThread);
+  unsigned
+  DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *pThread);
 
- public:
+public:
   GOCondition(GOMutex &mutex);
   ~GOCondition();
 

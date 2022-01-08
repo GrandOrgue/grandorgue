@@ -13,13 +13,13 @@ class Convproc;
 class GOConfig;
 
 class GOSoundReverb {
- private:
+private:
   unsigned m_channels;
   ptr_vector<Convproc> m_engine;
 
   void Cleanup();
 
- public:
+public:
   GOSoundReverb(unsigned channels);
   virtual ~GOSoundReverb();
 

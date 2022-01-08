@@ -14,10 +14,10 @@
 class GOConfigReader;
 
 class GOGeneral : public GOPushbutton {
- private:
+private:
   GOFrameGeneral m_general;
 
- public:
+public:
   GOGeneral(
     GOCombinationDefinition &general_template,
     GODefinitionFile *organfile,

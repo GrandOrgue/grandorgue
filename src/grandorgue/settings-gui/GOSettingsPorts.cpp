@@ -13,10 +13,12 @@ wxString GOSettingsPorts::GetPortItemName(
   const wxString &portName, const wxString &apiName) const {
   wxString itemName;
 
-  if (m_PortFactory.IsToUsePortName()) itemName = portName;
+  if (m_PortFactory.IsToUsePortName())
+    itemName = portName;
 
   if (!apiName.IsEmpty()) {
-    if (!itemName.IsEmpty()) itemName += ": ";
+    if (!itemName.IsEmpty())
+      itemName += ": ";
     itemName += apiName;
   }
   return itemName;

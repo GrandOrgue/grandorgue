@@ -15,7 +15,7 @@ class GOOrgan;
 class GOOrganList;
 
 class OrganSelectDialog : public wxDialog {
- private:
+private:
   const GOOrganList &m_OrganList;
   wxListView *m_Organs;
 
@@ -24,7 +24,7 @@ class OrganSelectDialog : public wxDialog {
   void OnOK(wxCommandEvent &event);
   void OnDoubleClick(wxListEvent &event);
 
- public:
+public:
   OrganSelectDialog(
     wxWindow *parent, wxString title, const GOOrganList &organList);
 

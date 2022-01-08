@@ -71,21 +71,23 @@ unsigned GOSoundGroupWorkItem::GetCost() {
 bool GOSoundGroupWorkItem::GetRepeat() { return true; }
 
 void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
-  if (m_Done == 3)  // has already processed in this period
+  if (m_Done == 3) // has already processed in this period
     return;
   {
     GOMutexLocker locker(
       m_Mutex, false, "GOSoundGroupWorkItem::Run.beforeProcess", pThread);
 
-    if (!locker.IsLocked()) return;
+    if (!locker.IsLocked())
+      return;
 
-    if (m_Done == 0)  // the first thread entered to Run()
+    if (m_Done == 0) // the first thread entered to Run()
     {
       m_Active.Move();
       m_Release.Move();
-      m_Done = 1;  // there are some thteads in Run()
+      m_Done = 1; // there are some thteads in Run()
     } else {
-      if (!m_Active.Peek() && !m_Release.Peek()) return;
+      if (!m_Active.Peek() && !m_Release.Peek())
+        return;
     }
     m_ActiveCount++;
   }
@@ -102,13 +104,14 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
     GOMutexLocker locker(
       m_Mutex, false, "GOSoundGroupWorkItem::Run.afterProcess", pThread);
 
-    if (!locker.IsLocked()) return;
+    if (!locker.IsLocked())
+      return;
 
     if (m_Done == 1)
     // The first thread is finished. Assign the result to the common buffer
     {
       memcpy(m_Buffer, buffer, m_SamplesPerBuffer * 2 * sizeof(float));
-      m_Done = 2;  // some thread has already finished
+      m_Done = 2; // some thread has already finished
     } else
     // not the first thread. Add the result to the common buffer
     {
@@ -119,7 +122,7 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
     if (!m_ActiveCount)
     // the last thread
     {
-      m_Done = 3;  // all threads have finished processing this period
+      m_Done = 3; // all threads have finished processing this period
       m_Condition.Broadcast();
     }
   }
@@ -131,9 +134,11 @@ void GOSoundGroupWorkItem::Exec() {
 }
 
 void GOSoundGroupWorkItem::Finish(bool stop, GOSoundThread *pThread) {
-  if (stop) m_Stop = true;
+  if (stop)
+    m_Stop = true;
   Run(pThread);
-  if (m_Done == 3) return;
+  if (m_Done == 3)
+    return;
 
   {
     GOMutexLocker locker(

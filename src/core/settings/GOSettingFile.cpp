@@ -14,7 +14,8 @@ GOSettingFile::GOSettingFile(
   : GOSettingString(store, group, name, default_value) {}
 
 wxString GOSettingFile::validate(wxString value) {
-  if (value == wxEmptyString || !wxFileExists(value)) value = getDefaultValue();
+  if (value == wxEmptyString || !wxFileExists(value))
+    value = getDefaultValue();
   wxFileName file(value);
   file.MakeAbsolute();
   value = file.GetFullPath();

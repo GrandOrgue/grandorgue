@@ -11,12 +11,12 @@
 #include <wx/string.h>
 
 class GOTemperament {
- protected:
+protected:
   wxString m_Group;
   wxString m_Name;
   wxString m_Title;
 
- public:
+public:
   GOTemperament(wxString name, wxString group = wxEmptyString);
   GOTemperament(wxString name, wxString title, wxString group);
   virtual ~GOTemperament();

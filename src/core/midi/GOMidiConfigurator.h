@@ -13,7 +13,7 @@
 #include <vector>
 
 class GOMidiConfigurator {
- public:
+public:
   virtual ~GOMidiConfigurator() {}
 
   virtual wxString GetMidiType() = 0;

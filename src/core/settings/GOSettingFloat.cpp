@@ -47,7 +47,9 @@ float GOSettingFloat::operator()() const { return m_Value; }
 void GOSettingFloat::operator()(float value) { m_Value = validate(value); }
 
 float GOSettingFloat::validate(float value) {
-  if (value <= m_MinValue) value = m_MinValue;
-  if (value >= m_MaxValue) value = m_MaxValue;
+  if (value <= m_MinValue)
+    value = m_MinValue;
+  if (value >= m_MaxValue)
+    value = m_MaxValue;
   return value;
 }

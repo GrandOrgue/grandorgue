@@ -27,7 +27,7 @@ class GOButton : private GOEventHandler,
                  protected GOSaveableObject,
                  protected GOPlaybackStateHandler,
                  public GOMidiConfigurator {
- protected:
+protected:
   GODefinitionFile *m_organfile;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
@@ -49,7 +49,7 @@ class GOButton : private GOEventHandler,
   void PreparePlayback();
   void PrepareRecording();
 
- public:
+public:
   GOButton(
     GODefinitionFile *organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
   virtual ~GOButton();

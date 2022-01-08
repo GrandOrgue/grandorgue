@@ -104,7 +104,8 @@ int GOGUILayoutEngine::GetEnclosureX(const GOGUIEnclosure *enclosure) {
   int enclosure_x
     = (m_metrics.GetScreenWidth() - GetEnclosuresWidth() + 6) >> 1;
   for (unsigned int i = 0; i < m_Enclosures.size(); i++) {
-    if (enclosure == m_Enclosures[i]) return enclosure_x;
+    if (enclosure == m_Enclosures[i])
+      return enclosure_x;
     enclosure_x += m_metrics.GetEnclosureWidth();
   }
 
@@ -113,28 +114,33 @@ int GOGUILayoutEngine::GetEnclosureX(const GOGUIEnclosure *enclosure) {
 
 int GOGUILayoutEngine::GetJambLeftX() {
   int jamblx = (GetCenterX() - GetJambLeftRightWidth()) >> 1;
-  if (m_metrics.HasPairDrawstopCols()) jamblx += 5;
+  if (m_metrics.HasPairDrawstopCols())
+    jamblx += 5;
   return jamblx;
 }
 
 int GOGUILayoutEngine::GetJambRightX() {
   int jambrx = GetJambLeftX() + GetCenterX() + GetCenterWidth();
-  if (m_metrics.HasPairDrawstopCols()) jambrx += 5;
+  if (m_metrics.HasPairDrawstopCols())
+    jambrx += 5;
   return jambrx;
 }
 
 int GOGUILayoutEngine::GetJambTopDrawstop() {
-  if (m_metrics.HasTrimAboveExtraRows()) return GetCenterY() + 8;
+  if (m_metrics.HasTrimAboveExtraRows())
+    return GetCenterY() + 8;
   return GetCenterY();
 }
 
 int GOGUILayoutEngine::GetJambTopPiston() {
-  if (m_metrics.HasTrimAboveExtraRows()) return GetCenterY() + 8;
+  if (m_metrics.HasTrimAboveExtraRows())
+    return GetCenterY() + 8;
   return GetCenterY();
 }
 
 int GOGUILayoutEngine::GetJambTopY() {
-  if (m_metrics.HasTrimAboveExtraRows()) return GetCenterY() + 8;
+  if (m_metrics.HasTrimAboveExtraRows())
+    return GetCenterY() + 8;
   return GetCenterY();
 }
 
@@ -201,7 +207,8 @@ void GOGUILayoutEngine::GetPushbuttonBlitPosition(
     }
   } else {
     int i = buttonRow;
-    if (i == 99) i = 0;
+    if (i == 99)
+      i = 0;
 
     if (i >= (int)m_Manuals.size())
       blitY = GetHackY()
@@ -226,7 +233,8 @@ void GOGUILayoutEngine::GetPushbuttonBlitPosition(
 /* TODO: this method could do with a cleanup */
 
 void GOGUILayoutEngine::Update() {
-  if (!m_Manuals.size()) m_Manuals.push_back(NULL);
+  if (!m_Manuals.size())
+    m_Manuals.push_back(NULL);
 
   m_ManualRenderInfo.resize(m_Manuals.size());
   m_CenterY = m_metrics.GetScreenHeight() - m_metrics.GetPedalHeight();
@@ -253,7 +261,8 @@ void GOGUILayoutEngine::Update() {
       m_CenterY -= 12;
     }
 
-    if (!m_Manuals[i]) continue;
+    if (!m_Manuals[i])
+      continue;
 
     if (i) {
       if (!m_metrics.HasButtonsAboveManuals()) {
@@ -308,7 +317,8 @@ void GOGUILayoutEngine::Update() {
 
   m_CenterY -= GetPistonTopHeight();
   m_CenterY -= GetJambTopHeight();
-  if (m_metrics.HasTrimAboveExtraRows()) m_CenterY -= 8;
+  if (m_metrics.HasTrimAboveExtraRows())
+    m_CenterY -= 8;
 }
 
 const GOGUILayoutEngine::MANUAL_RENDER_INFO &

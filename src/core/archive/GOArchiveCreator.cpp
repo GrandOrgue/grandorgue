@@ -81,8 +81,8 @@ void GOArchiveCreator::AddOrgan(const wxString &path) {
   m_OrganPaths.push_back(name);
 }
 
-std::unique_ptr<GOFile> GOArchiveCreator::findPackageFile(
-  const wxString &name) {
+std::unique_ptr<GOFile>
+GOArchiveCreator::findPackageFile(const wxString &name) {
   for (unsigned i = 0; i < m_packages.size(); i++) {
     if (m_packages[i]->containsFile(name))
       return std::unique_ptr<GOFile>(m_packages[i]->OpenFile(name));
@@ -99,7 +99,8 @@ bool GOArchiveCreator::storeFile(
       wxLogError(_("Failed to read %s from the organ package"), name.c_str());
       return false;
     }
-    if (!memcmp(data.get(), compare.get(), data.GetSize())) return true;
+    if (!memcmp(data.get(), compare.get(), data.GetSize()))
+      return true;
   }
   if (!m_Output.Add(name, data)) {
     wxLogError(_("Failed to write %s to the organ package"), name.c_str());
@@ -142,13 +143,15 @@ bool GOArchiveCreator::writePackageIndex() {
   }
 
   GOBuffer<uint8_t> buf;
-  if (!cfg_file.GetFileContent(buf)) return false;
+  if (!cfg_file.GetFileContent(buf))
+    return false;
   return m_Output.Add(wxT("organindex.ini"), buf);
 }
 
 bool GOArchiveCreator::FinishPackage() {
   for (unsigned i = 0; i < m_organs.size(); i++) {
-    if (m_organs[i]) continue;
+    if (m_organs[i])
+      continue;
     std::unique_ptr<GOFile> f = findPackageFile(m_OrganPaths[i]);
     if (!f) {
       wxLogError(
@@ -156,7 +159,8 @@ bool GOArchiveCreator::FinishPackage() {
         m_OrganPaths[i].c_str());
       return false;
     }
-    if (!addOrganData(i, f.get())) return false;
+    if (!addOrganData(i, f.get()))
+      return false;
   }
   if (!writePackageIndex()) {
     wxLogError(_("Failed writing the package index file"));
@@ -174,12 +178,14 @@ bool GOArchiveCreator::checkExtension(const wxString &name, wxString ext) {
     wxLogWarning(_("%s: extension with uppercase letters"), name.c_str());
     ext = ext.Lower();
   }
-  if (ext == wxT("wav") || ext == wxT("wv")) return true;
+  if (ext == wxT("wav") || ext == wxT("wv"))
+    return true;
   if (
     ext == wxT("png") || ext == wxT("gif") || ext == wxT("jpg")
     || ext == wxT("bmp"))
     return true;
-  if (ext == wxT("organ")) return true;
+  if (ext == wxT("organ"))
+    return true;
   return false;
 }
 
@@ -208,15 +214,18 @@ bool GOArchiveCreator::AddDirectory(const wxString &path) {
     }
     wxString fn = fname.GetLongPath();
     fn.Replace(wxFileName::GetPathSeparator(), wxT("\\"));
-    if (fn == "organindex.ini") continue;
+    if (fn == "organindex.ini")
+      continue;
     if (!compressData(fn, fname.GetExt().Lower(), buf)) {
       wxLogError(_("failed to compress data %s"), fn.c_str());
       return false;
     }
     for (unsigned i = 0; i < m_OrganPaths.size(); i++)
       if (m_OrganPaths[i] == fn)
-        if (!addOrganData(i, &f)) return false;
-    if (!storeFile(fn, buf)) return false;
+        if (!addOrganData(i, &f))
+          return false;
+    if (!storeFile(fn, buf))
+      return false;
   }
   return true;
 }
@@ -248,9 +257,11 @@ bool GOArchiveCreator::addOrganData(unsigned idx, GOFile *file) {
     return false;
   }
   it = map.find(wxT("OrganBuilder"));
-  if (it != map.end()) organ_builder = it->second;
+  if (it != map.end())
+    organ_builder = it->second;
   it = map.find(wxT("RecordingDetails"));
-  if (it != map.end()) recording_details = it->second;
+  if (it != map.end())
+    recording_details = it->second;
   m_organs[idx] = new GOOrgan(
     m_OrganPaths[idx],
     wxEmptyString,
@@ -274,7 +285,8 @@ bool GOArchiveCreator::compressData(
     return wav.Save(data);
   }
   if (ext == wxT("organ")) {
-    if (!isBufferCompressed(data)) return compressBuffer(data);
+    if (!isBufferCompressed(data))
+      return compressBuffer(data);
   }
   return true;
 }

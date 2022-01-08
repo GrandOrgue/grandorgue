@@ -14,12 +14,12 @@
 class GOMemoryPool;
 
 class GOSoundTouchWorkItem : public GOSoundWorkItem {
- private:
+private:
   GOMemoryPool &m_Pool;
   GOMutex m_Mutex;
   bool m_Stop;
 
- public:
+public:
   GOSoundTouchWorkItem(GOMemoryPool &pool);
 
   unsigned GetGroup();

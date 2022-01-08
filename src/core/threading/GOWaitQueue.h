@@ -26,7 +26,7 @@
 #include "GOThread.h"
 
 class GOWaitQueue {
- private:
+private:
 #ifdef GOWAITQUEUE_USE_WX
   wxSemaphore m_Wait;
 #elif defined(GOWAITQUEUE_USE_STD_MUTEX)
@@ -36,7 +36,7 @@ class GOWaitQueue {
   void WaitInfinitely();
   bool WaitWithTimeout();
 
- public:
+public:
   GOWaitQueue();
   ~GOWaitQueue();
 

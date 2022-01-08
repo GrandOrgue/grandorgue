@@ -18,14 +18,14 @@ class GOConfigWriter;
 class GODefinitionFile;
 
 class GOFrameGeneral : public GOCombination, private GOSaveableObject {
- private:
+private:
   GODefinitionFile *m_organfile;
   bool m_IsSetter;
 
   void Save(GOConfigWriter &cfg);
   void LoadCombination(GOConfigReader &cfg);
 
- public:
+public:
   GOFrameGeneral(
     GOCombinationDefinition &general_template,
     GODefinitionFile *organfile,

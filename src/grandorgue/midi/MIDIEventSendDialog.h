@@ -21,7 +21,7 @@ class wxStaticText;
 class MIDIEventRecvDialog;
 
 class MIDIEventSendDialog : public wxPanel {
- private:
+private:
   GOConfig &m_config;
   GOMidiSender *m_original;
   MIDIEventRecvDialog *m_recv;
@@ -51,7 +51,7 @@ class MIDIEventSendDialog : public wxPanel {
   void OnTypeChange(wxCommandEvent &event);
   void OnCopyClick(wxCommandEvent &event);
 
- protected:
+protected:
   enum {
     ID_EVENT_NO = 200,
     ID_EVENT_NEW,
@@ -67,7 +67,7 @@ class MIDIEventSendDialog : public wxPanel {
     ID_COPY
   };
 
- public:
+public:
   MIDIEventSendDialog(
     wxWindow *parent,
     GOMidiSender *event,

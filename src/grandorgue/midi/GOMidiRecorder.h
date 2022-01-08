@@ -30,7 +30,7 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
     unsigned key;
   } midi_map;
 
- private:
+private:
   GODefinitionFile *m_organfile;
   GOMidiMap &m_Map;
   GOLabel m_RecordingTime;
@@ -64,7 +64,7 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
   void SendEvent(GOMidiEvent &e);
   bool SetupMapping(unsigned element, bool isNRPN);
 
- public:
+public:
   GOMidiRecorder(GODefinitionFile *organfile);
   ~GOMidiRecorder();
 

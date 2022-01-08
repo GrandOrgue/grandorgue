@@ -12,7 +12,7 @@
 #include "RtMidi.h"
 
 class GOMidiRtOutPort : public GOMidiOutPort {
- protected:
+protected:
   RtMidi::Api m_api;
   RtMidiOut *m_port;
 
@@ -20,7 +20,7 @@ class GOMidiRtOutPort : public GOMidiOutPort {
 
   void SendData(std::vector<unsigned char> &msg);
 
- public:
+public:
   GOMidiRtOutPort(
     GOMidi *midi,
     RtMidi::Api api,

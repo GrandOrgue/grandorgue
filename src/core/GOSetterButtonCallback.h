@@ -11,7 +11,7 @@
 class GOSetterButton;
 
 class GOSetterButtonCallback {
- public:
+public:
   virtual ~GOSetterButtonCallback() {}
 
   virtual void SetterButtonChanged(GOSetterButton *button) = 0;

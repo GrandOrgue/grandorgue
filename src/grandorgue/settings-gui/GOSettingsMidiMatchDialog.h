@@ -19,7 +19,7 @@ class wxStatusBar;
 class wxTextCtrl;
 
 class GOSettingsMidiMatchDialog : public wxDialog {
- private:
+private:
   enum { ID_LOGICAL_NAME = 200, ID_REGEX };
 
   // for checking for logical name uniqueness
@@ -40,7 +40,7 @@ class GOSettingsMidiMatchDialog : public wxDialog {
   void OnRegexChanged(wxCommandEvent &event);
   void OnHelp(wxCommandEvent &event);
 
- public:
+public:
   GOSettingsMidiMatchDialog(
     wxWindow *parent, std::vector<GOMidiDeviceConfig *> *otherDevices = NULL);
 

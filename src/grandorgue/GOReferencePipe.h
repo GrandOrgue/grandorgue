@@ -12,7 +12,7 @@
 #include "GOPipe.h"
 
 class GOReferencePipe : public GOPipe, private GOCacheObject {
- private:
+private:
   GOPipe *m_Reference;
   unsigned m_ReferenceID;
   wxString m_Filename;
@@ -26,7 +26,7 @@ class GOReferencePipe : public GOPipe, private GOCacheObject {
 
   void Change(unsigned velocity, unsigned old_velocity);
 
- public:
+public:
   GOReferencePipe(
     GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number);
 

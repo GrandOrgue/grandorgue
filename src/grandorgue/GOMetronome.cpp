@@ -130,36 +130,36 @@ void GOMetronome::Save(GOConfigWriter &cfg) {
 
 void GOMetronome::ButtonChanged(int id) {
   switch (id) {
-    case ID_METRONOME_ON:
-      if (m_Running)
-        StopTimer();
-      else
-        StartTimer();
-      break;
+  case ID_METRONOME_ON:
+    if (m_Running)
+      StopTimer();
+    else
+      StartTimer();
+    break;
 
-    case ID_METRONOME_MEASURE_P1:
-      UpdateMeasure(1);
-      break;
+  case ID_METRONOME_MEASURE_P1:
+    UpdateMeasure(1);
+    break;
 
-    case ID_METRONOME_MEASURE_M1:
-      UpdateMeasure(-1);
-      break;
+  case ID_METRONOME_MEASURE_M1:
+    UpdateMeasure(-1);
+    break;
 
-    case ID_METRONOME_BEAT_P1:
-      UpdateBPM(1);
-      break;
+  case ID_METRONOME_BEAT_P1:
+    UpdateBPM(1);
+    break;
 
-    case ID_METRONOME_BEAT_M1:
-      UpdateBPM(-1);
-      break;
+  case ID_METRONOME_BEAT_M1:
+    UpdateBPM(-1);
+    break;
 
-    case ID_METRONOME_BEAT_P10:
-      UpdateBPM(10);
-      break;
+  case ID_METRONOME_BEAT_P10:
+    UpdateBPM(10);
+    break;
 
-    case ID_METRONOME_BEAT_M10:
-      UpdateBPM(-10);
-      break;
+  case ID_METRONOME_BEAT_M10:
+    UpdateBPM(-10);
+    break;
   }
 }
 
@@ -168,8 +168,10 @@ void GOMetronome::UpdateBPM(int val) {
     m_BPM = 1;
   else
     m_BPM += val;
-  if (m_BPM > 500) m_BPM = 500;
-  if (m_Running) m_organfile->UpdateInterval(this, 60000 / m_BPM);
+  if (m_BPM > 500)
+    m_BPM = 500;
+  if (m_Running)
+    m_organfile->UpdateInterval(this, 60000 / m_BPM);
   UpdateState();
 }
 
@@ -178,7 +180,8 @@ void GOMetronome::UpdateMeasure(int val) {
     m_MeasureLength = 0;
   else
     m_MeasureLength += val;
-  if (m_MeasureLength > 32) m_MeasureLength = 32;
+  if (m_MeasureLength > 32)
+    m_MeasureLength = 32;
   UpdateState();
 }
 
@@ -212,7 +215,8 @@ void GOMetronome::HandleTimer() {
   m_rank->SetKey(type, 0, m_StopID);
 
   m_Pos++;
-  if (m_Pos >= m_MeasureLength) m_Pos = 0;
+  if (m_Pos >= m_MeasureLength)
+    m_Pos = 0;
 }
 
 void GOMetronome::AbortPlayback() { StopTimer(); }
@@ -231,10 +235,13 @@ GOEnclosure *GOMetronome::GetEnclosure(const wxString &name, bool is_panel) {
 }
 
 GOLabel *GOMetronome::GetLabel(const wxString &name, bool is_panel) {
-  if (is_panel) return NULL;
+  if (is_panel)
+    return NULL;
 
-  if (name == wxT("MetronomeBPM")) return &m_BPMDisplay;
-  if (name == wxT("MetronomeMeasure")) return &m_MeasureDisplay;
+  if (name == wxT("MetronomeBPM"))
+    return &m_BPMDisplay;
+  if (name == wxT("MetronomeMeasure"))
+    return &m_MeasureDisplay;
 
   return NULL;
 }

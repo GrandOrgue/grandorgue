@@ -27,7 +27,7 @@
 class TestApp : public wxApp {
   wxMilliClock_t getCPUTime();
 
- public:
+public:
   TestApp();
   bool OnInit();
   int OnRun();
@@ -137,7 +137,8 @@ void TestApp::RunTest(
 
       for (unsigned i = 0; i < pipes.size(); i++) {
         GO_SAMPLER *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
-        if (handle) handles.push_back(handle);
+        if (handle)
+          handles.push_back(handle);
       }
 
       wxMilliClock_t start = getCPUTime();

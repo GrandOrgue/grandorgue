@@ -88,7 +88,8 @@ GOSettingsDialog::GOSettingsDialog(
   if (pButtonSizer) {
     wxButton *const pReasonBtn = new wxButton(this, ID_REASONS, _("Reason"));
 
-    if (!hasReasons) pReasonBtn->Disable();
+    if (!hasReasons)
+      pReasonBtn->Disable();
 
     pButtonSizer->Insert(
       3, pReasonBtn, wxSizerFlags().Border(wxLEFT | wxRIGHT, 20));
@@ -118,11 +119,13 @@ void GOSettingsDialog::OnHelp(wxCommandEvent &event) {
 }
 
 void GOSettingsDialog::OnOK(wxCommandEvent &event) {
-  if (DoApply()) event.Skip();
+  if (DoApply())
+    event.Skip();
 }
 
 bool GOSettingsDialog::DoApply() {
-  if (!(this->Validate())) return false;
+  if (!(this->Validate()))
+    return false;
 
   m_MidiDevicePage->Save();
   m_OptionsPage->Save();
@@ -150,7 +153,8 @@ void GOSettingsDialog::OnReasons(wxCommandEvent &event) {
       const GOSettingsReason &reason(m_Reasons->operator[](i));
 
       reasonStrs.Add(reason.m_ReasonMessage);
-      if ((int)reason.m_SettingsPageNum == currPageNum) currReasonIndex = i;
+      if ((int)reason.m_SettingsPageNum == currPageNum)
+        currReasonIndex = i;
     }
 
     const int index = wxGetSingleChoiceIndex(

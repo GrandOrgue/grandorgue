@@ -35,7 +35,7 @@ class GOManual : private GOEventHandler,
                  private GOSaveableObject,
                  private GOPlaybackStateHandler,
                  public GOMidiConfigurator {
- private:
+private:
   wxString m_group;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
@@ -84,7 +84,7 @@ class GOManual : private GOEventHandler,
   void StartPlayback();
   void PrepareRecording();
 
- public:
+public:
   GOManual(GODefinitionFile *organfile);
   void Init(
     GOConfigReader &cfg,
@@ -94,8 +94,8 @@ class GOManual : private GOEventHandler,
     unsigned keys);
   void Load(GOConfigReader &cfg, wxString group, int manualNumber);
   unsigned RegisterCoupler(GOCoupler *coupler);
-  void SetKey(
-    unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);
+  void
+  SetKey(unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);
   void Set(unsigned note, unsigned velocity);
   void SetUnisonOff(bool on);
   void Update();

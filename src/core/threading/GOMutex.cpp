@@ -92,7 +92,8 @@ void GOMutex::DoUnlock() {
 
   int value = m_Lock.fetch_add(-1);
 
-  if (value > 1) m_Wait.Wakeup();
+  if (value > 1)
+    m_Wait.Wakeup();
 }
 
 bool GOMutex::DoTryLock() {
@@ -130,7 +131,8 @@ bool GOMutex::LockOrStop(const char *lockerInfo, GOThread *pThread) {
   } else
     isLocked = DoLock(false);
 
-  if (isLocked) m_LockerInfo = LOCKER_INFO(lockerInfo);
+  if (isLocked)
+    m_LockerInfo = LOCKER_INFO(lockerInfo);
   return isLocked;
 }
 
@@ -142,6 +144,7 @@ void GOMutex::Unlock() {
 bool GOMutex::TryLock(const char *lockerInfo) {
   bool isLocked = DoTryLock();
 
-  if (isLocked) m_LockerInfo = LOCKER_INFO(lockerInfo);
+  if (isLocked)
+    m_LockerInfo = LOCKER_INFO(lockerInfo);
   return isLocked;
 }

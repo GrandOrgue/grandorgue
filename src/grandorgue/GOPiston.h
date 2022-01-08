@@ -16,12 +16,12 @@ class GOConfigReader;
 class GOConfigWriter;
 
 class GOPiston : public GOPushbutton, private GOControlChangedHandler {
- private:
+private:
   GOButton *drawstop;
 
   void ControlChanged(void *control);
 
- public:
+public:
   GOPiston(GODefinitionFile *organfile);
   void Load(GOConfigReader &cfg, wxString group);
   void Push();

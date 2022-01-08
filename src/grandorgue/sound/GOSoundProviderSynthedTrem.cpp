@@ -21,8 +21,10 @@ inline short SynthTrem(double amp, double angle) {
 }
 
 inline short SynthTrem(double amp, double angle, double fade) {
-  if (fade > 1.0) fade = 1.0;
-  if (fade < 0.0) fade = 0.0;
+  if (fade > 1.0)
+    fade = 1.0;
+  if (fade < 0.0)
+    fade = 0.0;
   return (short)(fade * amp * sin(angle));
 }
 

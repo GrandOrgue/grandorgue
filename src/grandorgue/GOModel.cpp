@@ -49,7 +49,7 @@ void GOModel::Load(GOConfigReader &cfg, GODefinitionFile *organfile) {
   m_FirstManual = cfg.ReadBoolean(ODFSetting, group, wxT("HasPedals")) ? 0 : 1;
 
   m_manual.resize(0);
-  m_manual.resize(m_FirstManual);  // Add empty slot for pedal, if necessary
+  m_manual.resize(m_FirstManual); // Add empty slot for pedal, if necessary
   for (unsigned int i = m_FirstManual; i < m_ODFManualCount; i++)
     m_manual.push_back(new GOManual(organfile));
   for (unsigned int i = 0; i < 4; i++)
@@ -163,7 +163,8 @@ unsigned GOModel::AddWindchest(GOWindchest *windchest) {
 }
 
 unsigned GOModel::GetManualAndPedalCount() {
-  if (!m_manual.size()) return 0;
+  if (!m_manual.size())
+    return 0;
   return m_manual.size() - 1;
 }
 

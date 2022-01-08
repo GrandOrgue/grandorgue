@@ -11,8 +11,7 @@
 #include <wx/panel.h>
 
 enum class GOInitialLoadType;
-template <class T>
-class GOChoice;
+template <class T> class GOChoice;
 class GOConfig;
 class wxCheckBox;
 class wxChoice;
@@ -46,7 +45,7 @@ class GOSettingsOption : public wxPanel {
     ID_LANGUAGE
   };
 
- private:
+private:
   GOConfig &m_config;
   wxChoice *m_Concurrency;
   wxChoice *m_ReleaseConcurrency;
@@ -80,7 +79,7 @@ class GOSettingsOption : public wxPanel {
   unsigned m_OldAttackLoad;
   unsigned m_OldReleaseLoad;
 
- public:
+public:
   GOSettingsOption(GOConfig &settings, wxWindow *parent);
 
   bool NeedReload();

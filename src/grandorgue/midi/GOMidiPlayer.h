@@ -24,7 +24,7 @@ class GOMidiFileReader;
 class GODefinitionFile;
 
 class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
- private:
+private:
   GODefinitionFile *m_organfile;
   GOMidiPlayerContent m_content;
   GOLabel m_PlayingTime;
@@ -43,7 +43,7 @@ class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
   void UpdateDisplay();
   void HandleTimer();
 
- public:
+public:
   GOMidiPlayer(GODefinitionFile *organfile);
   ~GOMidiPlayer();
 

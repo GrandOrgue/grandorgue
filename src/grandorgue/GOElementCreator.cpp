@@ -31,7 +31,8 @@ GOButton *GOElementCreator::GetButton(const wxString &name, bool is_panel) {
        entries[i].name != wxEmptyString && entries[i].value >= 0;
        i++)
     if (name == entries[i].name) {
-      if (is_panel && !entries[i].is_public) return NULL;
+      if (is_panel && !entries[i].is_public)
+        return NULL;
       return m_button[entries[i].value];
     }
 
@@ -40,5 +41,6 @@ GOButton *GOElementCreator::GetButton(const wxString &name, bool is_panel) {
 
 void GOElementCreator::SetterButtonChanged(GOSetterButton *button) {
   for (unsigned i = 0; i < m_button.size(); i++)
-    if (m_button[i] == button) ButtonChanged(i);
+    if (m_button[i] == button)
+      ButtonChanged(i);
 }

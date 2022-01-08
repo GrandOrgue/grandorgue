@@ -28,7 +28,7 @@ class GOStackPrinter : public wxStackWalker {
       frame.GetLine());
   }
 
- public:
+public:
   static void printStack(void *p) {
     GOStackPrinter print(p);
     print.Walk();
@@ -36,7 +36,7 @@ class GOStackPrinter : public wxStackWalker {
 };
 #else
 class GOStackPrinter {
- public:
+public:
   static void printStack(void *p) {}
 };
 #endif

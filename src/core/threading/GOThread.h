@@ -11,16 +11,16 @@
 #include <thread>
 
 class GOThread {
- private:
+private:
   std::thread m_Thread;
   bool m_Stop;
 
   static void EntryPoint(GOThread *thread);
 
- protected:
+protected:
   virtual void Entry() = 0;
 
- public:
+public:
   GOThread();
   virtual ~GOThread();
 

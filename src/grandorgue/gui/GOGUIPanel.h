@@ -31,10 +31,10 @@ class GODefinitionFile;
 #define GOBitmapPrefix "../GO:"
 
 class GOGUIPanel : private GOSaveableObject {
- private:
+private:
   void ReadSizeInfoFromCfg(GOConfigReader &cfg, bool isOpenByDefault);
 
- protected:
+protected:
   GODefinitionFile *m_organfile;
   GOGUIMouseStateTracker &m_MouseState;
   ptr_vector<GOGUIControl> m_controls;
@@ -59,7 +59,7 @@ class GOGUIPanel : private GOSaveableObject {
 
   void SendMousePress(int x, int y, bool right, GOGUIMouseState &state);
 
- public:
+public:
   GOGUIPanel(GODefinitionFile *organfile);
   virtual ~GOGUIPanel();
   void Init(

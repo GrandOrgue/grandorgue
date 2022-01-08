@@ -14,7 +14,7 @@ class GOCacheWriter {
   wxOutputStream *m_zstream;
   wxOutputStream *m_stream;
 
- public:
+public:
   GOCacheWriter(wxOutputStream &stream, bool compressed);
   virtual ~GOCacheWriter();
 

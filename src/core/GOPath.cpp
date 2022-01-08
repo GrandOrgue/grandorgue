@@ -12,7 +12,8 @@
 #include <wx/log.h>
 
 void GOCreateDirectory(const wxString &path) {
-  if (wxFileName::DirExists(path)) return;
+  if (wxFileName::DirExists(path))
+    return;
   if (!wxFileName::Mkdir(path, 0777, wxPATH_MKDIR_FULL)) {
     wxLogError(_("Failed to create directory '%s'"), path.c_str());
   }
@@ -31,7 +32,8 @@ wxString GOGetPath(const wxString &path) {
 
 void GOSyncDirectory(const wxString &path) {
   int fd = wxOpen(path.c_str(), O_RDONLY, 0);
-  if (fd == -1) return;
+  if (fd == -1)
+    return;
   wxFsync(fd);
   wxClose(fd);
 }

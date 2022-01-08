@@ -9,7 +9,7 @@
 #define GOTIMERCALLBACK_H
 
 class GOTimerCallback {
- public:
+public:
   ~GOTimerCallback() {}
 
   virtual void HandleTimer() = 0;

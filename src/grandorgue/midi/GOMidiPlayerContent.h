@@ -17,23 +17,23 @@ class GOMidiMap;
 class GOMidiFileReader;
 
 class GOMidiPlayerContent {
- private:
+private:
   std::vector<GOMidiEvent> m_Events;
   unsigned m_Pos;
 
-  void ReadFileContent(
-    GOMidiFileReader &reader, std::vector<GOMidiEvent> &events);
+  void
+  ReadFileContent(GOMidiFileReader &reader, std::vector<GOMidiEvent> &events);
   void SetupManual(GOMidiMap &map, unsigned channel, wxString ID);
 
- public:
+public:
   GOMidiPlayerContent();
   virtual ~GOMidiPlayerContent();
 
   void Clear();
   void Reset();
   bool IsLoaded();
-  bool Load(
-    GOMidiFileReader &reader, GOMidiMap &map, unsigned manuals, bool pedal);
+  bool
+  Load(GOMidiFileReader &reader, GOMidiMap &map, unsigned manuals, bool pedal);
 
   const GOMidiEvent &GetCurrentEvent();
   bool Next();

@@ -32,15 +32,18 @@ void wxGaugeAudio::OnPaint(wxPaintEvent &event) {
   m_Update = false;
   int split = (m_Value + 1) << 1;
   dc.Blit(0, 0, split, 11, &m_gaugedc, 0, 11);
-  if (66 - split) dc.Blit(split, 0, 66 - split, 11, &m_gaugedc, split, 0);
+  if (66 - split)
+    dc.Blit(split, 0, 66 - split, 11, &m_gaugedc, split, 0);
   dc.Blit(66, 0, 7, 11, &m_gaugedc, 66, m_Clip ? 11 : 0);
 }
 
 void wxGaugeAudio::SetValue(int what) {
-  if (what < 0) what = 0;
+  if (what < 0)
+    what = 0;
   if (what > 32) {
     what = 32;
-    if (!m_Clip) m_Clip = true;
+    if (!m_Clip)
+      m_Clip = true;
   }
   if (what != m_Value) {
     m_Value = what;
@@ -56,7 +59,8 @@ void wxGaugeAudio::ResetClip() {
 }
 
 void wxGaugeAudio::Update() {
-  if (m_Update) return;
+  if (m_Update)
+    return;
   m_Update = true;
   Refresh(false);
 }

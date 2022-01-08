@@ -14,12 +14,12 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUISequencerPanel : public GOGUIPanelCreator {
- private:
+private:
   GODefinitionFile *m_organfile;
 
   GOGUIPanel *CreateSequencerPanel(GOConfigReader &cfg);
 
- public:
+public:
   GOGUISequencerPanel(GODefinitionFile *organfile);
   virtual ~GOGUISequencerPanel();
 

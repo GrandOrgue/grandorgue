@@ -11,11 +11,11 @@
 class GOSoundThread;
 
 class GOSoundBufferItem {
- protected:
+protected:
   unsigned m_SamplesPerBuffer;
   unsigned m_Channels;
 
- public:
+public:
   GOSoundBufferItem(unsigned samples_per_buffer, unsigned channels)
     : m_SamplesPerBuffer(samples_per_buffer), m_Channels(channels) {
     m_Buffer = new float[m_SamplesPerBuffer * m_Channels];

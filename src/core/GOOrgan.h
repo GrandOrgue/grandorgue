@@ -18,7 +18,7 @@ class GOMidiMap;
 class GOOrganList;
 
 class GOOrgan {
- private:
+private:
   wxString m_ODF;
   wxString m_ChurchName;
   wxString m_OrganBuilder;
@@ -28,7 +28,7 @@ class GOOrgan {
   long m_LastUse;
   GOMidiReceiverBase m_midi;
 
- public:
+public:
   GOOrgan(
     wxString odf,
     wxString archive,

@@ -33,13 +33,17 @@ void GOSoundReverb::Cleanup() {
 void GOSoundReverb::Setup(GOConfig &settings) {
   Cleanup();
 
-  if (!settings.ReverbEnabled()) return;
+  if (!settings.ReverbEnabled())
+    return;
 
   m_engine.clear();
-  for (unsigned i = 0; i < m_channels; i++) m_engine.push_back(new Convproc());
+  for (unsigned i = 0; i < m_channels; i++)
+    m_engine.push_back(new Convproc());
   unsigned val = settings.SamplesPerBuffer();
-  if (val < Convproc::MINPART) val = Convproc::MINPART;
-  if (val > Convproc::MAXPART) val = Convproc::MAXPART;
+  if (val < Convproc::MINPART)
+    val = Convproc::MINPART;
+  if (val > Convproc::MAXPART)
+    val = Convproc::MAXPART;
   float *data = NULL;
   unsigned len = 0;
   try {
@@ -59,19 +63,22 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       throw(wxString) _("Invalid reverb start offset");
     len = wav.GetLength();
     data = (float *)malloc(sizeof(float) * len);
-    if (!data) throw(wxString) _("Out of memory");
+    if (!data)
+      throw(wxString) _("Out of memory");
     wav.ReadSamples(
       data,
       GOWave::SF_IEEE_FLOAT,
       wav.GetSampleRate(),
       -settings.ReverbChannel());
-    for (unsigned i = 0; i < len; i++) data[i] *= gain;
+    for (unsigned i = 0; i < len; i++)
+      data[i] *= gain;
     if (len >= offset + settings.ReverbLen() && settings.ReverbLen())
       len = offset + settings.ReverbLen();
     if (wav.GetSampleRate() != settings.SampleRate()) {
       float *new_data
         = resample_block(data, len, wav.GetSampleRate(), settings.SampleRate());
-      if (!new_data) throw(wxString) _("Resampling failed");
+      if (!new_data)
+        throw(wxString) _("Resampling failed");
       free(data);
       data = new_data;
       offset = (offset * settings.SampleRate()) / (float)wav.GetSampleRate();
@@ -95,15 +102,18 @@ void GOSoundReverb::Setup(GOConfig &settings) {
     wxLogError(_("Reverb load error: %s"), error.c_str());
     m_engine.clear();
   }
-  if (data) free(data);
+  if (data)
+    free(data);
 }
 
 void GOSoundReverb::Reset() {
-  for (unsigned i = 0; i < m_engine.size(); i++) m_engine[i]->reset();
+  for (unsigned i = 0; i < m_engine.size(); i++)
+    m_engine[i]->reset();
 }
 
 void GOSoundReverb::Process(float *output_buffer, unsigned n_frames) {
-  if (!m_engine.size()) return;
+  if (!m_engine.size())
+    return;
 
   for (unsigned i = 0; i < m_channels; i++) {
     float *ptr = m_engine[i]->inpdata(0);
@@ -111,7 +121,8 @@ void GOSoundReverb::Process(float *output_buffer, unsigned n_frames) {
       ptr[j] = output_buffer[i + m_channels * j];
   }
 
-  for (unsigned i = 0; i < m_engine.size(); i++) m_engine[i]->process();
+  for (unsigned i = 0; i < m_engine.size(); i++)
+    m_engine[i]->process();
 
   for (unsigned i = 0; i < m_channels; i++) {
     float *ptr = m_engine[i]->outdata(0);

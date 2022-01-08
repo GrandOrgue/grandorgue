@@ -20,11 +20,11 @@ class GOMidiDeviceConfigList
 // we can't use std::vector<GOMidiDeviceConfig> because it does not keep
 // the references to it's elements unchanged
 {
- private:
+private:
   ptr_vector<GOMidiDeviceConfig> m_list;
   wxString m_GroupName;
 
- public:
+public:
   GOMidiDeviceConfigList(const wxString &groupName = wxEmptyString)
     : m_GroupName(groupName) {}
 

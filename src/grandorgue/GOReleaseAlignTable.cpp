@@ -33,7 +33,8 @@ bool GOReleaseAlignTable::Load(GOCache &cache) {
   if (!cache.Read(
         &m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative)))
     return false;
-  if (!cache.Read(&m_PositionEntries, sizeof(m_PositionEntries))) return false;
+  if (!cache.Read(&m_PositionEntries, sizeof(m_PositionEntries)))
+    return false;
   return true;
 }
 
@@ -43,7 +44,8 @@ bool GOReleaseAlignTable::Save(GOCacheWriter &cache) {
   if (!cache.Write(
         &m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative)))
     return false;
-  if (!cache.Write(&m_PositionEntries, sizeof(m_PositionEntries))) return false;
+  if (!cache.Write(&m_PositionEntries, sizeof(m_PositionEntries)))
+    return false;
   return true;
 }
 
@@ -150,9 +152,11 @@ void GOReleaseAlignTable::ComputeTable(
                k++) {
             foundsecond = true;
             int sl = (l + 1) / 2;
-            if ((l & 1) == 0) sl = -sl;
+            if ((l & 1) == 0)
+              sl = -sl;
             int sk = (k + 2) / 2;
-            if ((k & 1) == 0) sk = -sk;
+            if ((k & 1) == 0)
+              sk = -sk;
             if (
               (i + sl < PHASE_ALIGN_DERIVATIVES) && (i + sl >= 0)
               && (j + sk < PHASE_ALIGN_AMPLITUDES) && (j + sk >= 0)

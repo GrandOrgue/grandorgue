@@ -13,7 +13,7 @@
 #include <vector>
 
 class GOPortsConfig {
- private:
+private:
   struct PortApiConfig {
     wxString m_PortName;
     wxString m_ApiName;
@@ -38,7 +38,7 @@ class GOPortsConfig {
 
   int Find(const wxString &portName, const wxString &apiName) const;
 
- public:
+public:
   GOPortsConfig() {}
   GOPortsConfig(const GOPortsConfig &src)
     : m_PortApiConfigs(src.m_PortApiConfigs) {}

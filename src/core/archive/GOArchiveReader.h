@@ -18,7 +18,7 @@ class wxFile;
 typedef struct _GOArchiveEntry GOArchiveEntry;
 
 class GOArchiveReader {
- private:
+private:
   wxFile &m_File;
 
   bool Seek(size_t offset);
@@ -40,7 +40,7 @@ class GOArchiveReader {
   bool ReadEnd64Record(size_t offset, GOZipEnd64Record &record);
   bool ReadEndRecord(std::vector<GOArchiveEntry> &entries);
 
- public:
+public:
   GOArchiveReader(wxFile &file);
   ~GOArchiveReader();
 

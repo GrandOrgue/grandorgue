@@ -41,11 +41,14 @@ bool GOArchiveReader::GenerateFileHash(wxString &id) {
   unsigned length = m_File.Length();
   GOHash hash;
   char buf[4096];
-  if (!Seek(0)) return false;
+  if (!Seek(0))
+    return false;
   for (unsigned pos = 0; pos < length; pos += sizeof(buf)) {
     size_t l = length - pos;
-    if (l > sizeof(buf)) l = sizeof(buf);
-    if (!Read(buf, l)) return false;
+    if (l > sizeof(buf))
+      l = sizeof(buf);
+    if (!Read(buf, l))
+      return false;
     hash.Update(buf, l);
   }
   id = hash.getStringHash();
@@ -61,7 +64,8 @@ uint32_t GOArchiveReader::CalculateCrc(size_t offset, size_t length) {
   uint32_t crc = crc32(0, Z_NULL, 0);
   while (length > 0) {
     size_t len = length;
-    if (len > sizeof(buf)) len = sizeof(buf);
+    if (len > sizeof(buf))
+      len = sizeof(buf);
     if (!Read(buf, len)) {
       wxLogError(_("Reading data for CRC failed"));
       return 0;
@@ -88,8 +92,10 @@ bool GOArchiveReader::ReadFileRecord(
   std::vector<GOArchiveEntry> &entries) {
   GOBuffer<uint8_t> central_buf(
     central.name_length + central.extra_length + central.comment_length);
-  if (!Seek(central_offset + sizeof(central))) return false;
-  if (!Read(central_buf.get(), central_buf.GetSize())) return false;
+  if (!Seek(central_offset + sizeof(central)))
+    return false;
+  if (!Read(central_buf.get(), central_buf.GetSize()))
+    return false;
   size_t central_uncompressed_size = central.uncompressed_size;
   size_t central_compressed_size = central.compressed_size;
   size_t local_offset = central.offset;
@@ -174,8 +180,10 @@ bool GOArchiveReader::ReadFileRecord(
     wxLogError(_("Invalid local header offset"));
     return false;
   }
-  if (!Seek(local_offset)) return false;
-  if (!Read(&local, sizeof(local))) return false;
+  if (!Seek(local_offset))
+    return false;
+  if (!Read(&local, sizeof(local)))
+    return false;
   if (local.signature != ZIP_LOCAL_HEADER) {
     wxLogError(_("Missing local header"));
     return false;
@@ -187,7 +195,8 @@ bool GOArchiveReader::ReadFileRecord(
     return false;
   }
   GOBuffer<uint8_t> local_buf(local.name_length + local.extra_length);
-  if (!Read(local_buf.get(), local_buf.GetSize())) return false;
+  if (!Read(local_buf.get(), local_buf.GetSize()))
+    return false;
   size_t local_uncompressed_size = local.uncompressed_size;
   size_t local_compressed_size = local.compressed_size;
   {
@@ -341,8 +350,10 @@ bool GOArchiveReader::ReadCentralDirectory(
       wxLogError(_("Incomplete central directory entry"));
       return false;
     }
-    if (!Seek(offset)) return false;
-    if (!Read(&record, sizeof(record))) return false;
+    if (!Seek(offset))
+      return false;
+    if (!Read(&record, sizeof(record)))
+      return false;
     size_t len = sizeof(record);
     len += record.name_length + record.extra_length + record.comment_length;
     if (record.signature != ZIP_CENTRAL_DIRECTORY_HEADER) {
@@ -353,7 +364,8 @@ bool GOArchiveReader::ReadCentralDirectory(
       wxLogError(_("Incomplete central directory entry"));
       return false;
     }
-    if (!ReadFileRecord(offset, record, entries)) return false;
+    if (!ReadFileRecord(offset, record, entries))
+      return false;
     offset += len;
     length -= len;
     entry_count--;
@@ -366,16 +378,21 @@ bool GOArchiveReader::ReadCentralDirectory(
 }
 
 bool GOArchiveReader::ReadEnd64Record(size_t offset, GOZipEnd64Record &record) {
-  if (12 + record.size < sizeof(record)) return false;
+  if (12 + record.size < sizeof(record))
+    return false;
 
   size_t size = 12 + record.size - sizeof(record);
   offset += sizeof(record);
   while (size > 0) {
     GOZipEnd64BlockHeader header;
-    if (size < sizeof(header)) return false;
-    if (!Seek(offset)) return false;
-    if (!Read(&header, sizeof(header))) return false;
-    if (size < sizeof(header) + header.size) return false;
+    if (size < sizeof(header))
+      return false;
+    if (!Seek(offset))
+      return false;
+    if (!Read(&header, sizeof(header)))
+      return false;
+    if (size < sizeof(header) + header.size)
+      return false;
     size -= sizeof(header) + header.size;
     offset += sizeof(header) + header.size;
   }
@@ -393,15 +410,21 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry> &entries) {
       wxLogError(_("No end record found"));
       return false;
     }
-    if (!Seek(pos - i - sizeof(record))) return false;
-    if (!Read(&record, sizeof(record))) return false;
-    if (record.signature != ZIP_END_RECORD) continue;
-    if (record.comment_len != i) continue;
+    if (!Seek(pos - i - sizeof(record)))
+      return false;
+    if (!Read(&record, sizeof(record)))
+      return false;
+    if (record.signature != ZIP_END_RECORD)
+      continue;
+    if (record.comment_len != i)
+      continue;
     pos -= i + sizeof(record);
 
     if (pos > sizeof(locator)) {
-      if (!Seek(pos - sizeof(locator))) return false;
-      if (!Read(&locator, sizeof(locator))) return false;
+      if (!Seek(pos - sizeof(locator)))
+        return false;
+      if (!Read(&locator, sizeof(locator)))
+        return false;
       if (locator.signature == ZIP_END64_LOCATOR) {
         zip64 = true;
         if (locator.disk_count != 1 || locator.end_record_disk != 0) {
@@ -412,8 +435,10 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry> &entries) {
           wxLogError(_("Invalid offset in Zip64 end locator"));
           return false;
         }
-        if (!Seek(locator.end_record_offset)) return false;
-        if (!Read(&record64, sizeof(record64))) return false;
+        if (!Seek(locator.end_record_offset))
+          return false;
+        if (!Read(&record64, sizeof(record64)))
+          return false;
         if (record64.signature != ZIP_END64_RECORD) {
           wxLogError(_("Zip64 end record not found"));
           return false;
@@ -427,11 +452,14 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry> &entries) {
     size_t directory_size = record.directory_size;
     size_t directory_offset = record.directory_offset;
     if (zip64) {
-      if (current_disk == 0xffff) current_disk = record64.current_disk;
-      if (directory_disk == 0xffff) directory_disk = record64.directory_disk;
+      if (current_disk == 0xffff)
+        current_disk = record64.current_disk;
+      if (directory_disk == 0xffff)
+        directory_disk = record64.directory_disk;
       if (entry_count_disk == 0xffff)
         entry_count_disk = record64.entry_count_disk;
-      if (entry_count == 0xffff) entry_count = record64.entry_count;
+      if (entry_count == 0xffff)
+        entry_count = record64.entry_count;
       if (directory_size == 0xffffffff)
         directory_size = record64.directory_size;
       if (directory_offset == 0xffffffff)
@@ -463,9 +491,11 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry> &entries) {
 bool GOArchiveReader::ListContent(
   wxString &id, std::vector<GOArchiveEntry> &entries) {
   entries.clear();
-  if (!GenerateFileHash(id)) return false;
+  if (!GenerateFileHash(id))
+    return false;
 
-  if (!ReadEndRecord(entries)) return false;
+  if (!ReadEndRecord(entries))
+    return false;
 
   return true;
 }

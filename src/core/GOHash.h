@@ -17,12 +17,12 @@ typedef struct _GOHashType {
 } GOHashType;
 
 class GOHash {
- private:
+private:
   SHA_CTX m_ctx;
   GOHashType m_Hash;
   bool m_Done;
 
- public:
+public:
   GOHash();
   ~GOHash();
 

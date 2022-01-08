@@ -18,10 +18,10 @@ class GODefinitionFile;
 struct IniFileEnumEntry;
 
 class GOCoupler : public GODrawstop {
- public:
+public:
   typedef enum { COUPLER_NORMAL, COUPLER_BASS, COUPLER_MELODY } GOCouplerType;
 
- private:
+private:
   static const struct IniFileEnumEntry m_coupler_types[];
   bool m_UnisonOff;
   bool m_CoupleToSubsequentUnisonIntermanualCouplers;
@@ -56,7 +56,7 @@ class GOCoupler : public GODrawstop {
   void PreparePlayback();
   void StartPlayback();
 
- public:
+public:
   GOCoupler(GODefinitionFile *organfile, unsigned sourceManual);
   void Init(
     GOConfigReader &cfg,

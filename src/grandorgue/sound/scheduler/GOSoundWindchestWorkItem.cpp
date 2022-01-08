@@ -23,7 +23,8 @@ GOSoundWindchestWorkItem::GOSoundWindchestWorkItem(
 void GOSoundWindchestWorkItem::Init(
   ptr_vector<GOSoundTremulantWorkItem> &tremulants) {
   m_Tremulants.clear();
-  if (!m_Windchest) return;
+  if (!m_Windchest)
+    return;
   for (unsigned i = 0; i < m_Windchest->GetTremulantCount(); i++)
     m_Tremulants.push_back(tremulants[m_Windchest->GetTremulantId(i)]);
 }
@@ -49,11 +50,13 @@ float GOSoundWindchestWorkItem::GetWindchestVolume() {
 }
 
 void GOSoundWindchestWorkItem::Run(GOSoundThread *thread) {
-  if (m_Done) return;
+  if (m_Done)
+    return;
 
   GOMutexLocker locker(m_Mutex);
 
-  if (m_Done) return;
+  if (m_Done)
+    return;
 
   float volume = m_engine.GetGain();
   if (m_Windchest != NULL) {

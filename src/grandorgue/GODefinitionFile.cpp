@@ -205,7 +205,8 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
     true);
   m_volume = cfg.ReadInteger(
     CMBSetting, group, wxT("Volume"), -120, 100, false, m_config.Volume());
-  if (m_volume > 20) m_volume = 0;
+  if (m_volume > 20)
+    m_volume = 0;
   m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
   m_IgnorePitch
     = cfg.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
@@ -265,7 +266,8 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
   for (unsigned i = 0; i < m_panelcreators.size(); i++)
     m_panelcreators[i]->CreatePanels(cfg);
 
-  for (unsigned i = 0; i < m_panels.size(); i++) m_panels[i]->Layout();
+  for (unsigned i = 0; i < m_panels.size(); i++)
+    m_panels[i]->Layout();
 
   m_GeneralTemplate.InitGeneral();
   for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
@@ -312,7 +314,8 @@ bool GODefinitionFile::LoadArchive(
   else if (parentID != wxEmptyString) {
     a = m_config.GetArchiveByID(parentID);
     for (unsigned i = 0; i < a->GetDependencies().size(); i++)
-      if (a->GetDependencies()[i] == ID) name = a->GetDependencyTitles()[i];
+      if (a->GetDependencies()[i] == ID)
+        name = a->GetDependencyTitles()[i];
   }
   return false;
 }
@@ -501,7 +504,8 @@ wxString GODefinitionFile::Load(
         try {
           while (true) {
             GOCacheObject *obj = GetCacheObject(nb_loaded_obj);
-            if (!obj) break;
+            if (!obj)
+              break;
             if (!obj->LoadCache(reader)) {
               cache_ok = false;
               wxLogError(
@@ -523,7 +527,8 @@ wxString GODefinitionFile::Load(
               return wxEmptyString;
             }
           }
-          if (nb_loaded_obj >= GetCacheObjectCount()) m_Cacheable = true;
+          if (nb_loaded_obj >= GetCacheObjectCount())
+            m_Cacheable = true;
         } catch (wxString msg) {
           cache_ok = false;
           wxLogError(_("Cache load failure: %s"), msg.c_str());
@@ -547,12 +552,14 @@ wxString GODefinitionFile::Load(
       for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
         threads.push_back(new GOLoadThread(*this, m_pool, nb_loaded_obj));
 
-      for (unsigned i = 0; i < threads.size(); i++) threads[i]->Run();
+      for (unsigned i = 0; i < threads.size(); i++)
+        threads[i]->Run();
 
       for (unsigned pos = nb_loaded_obj.fetch_add(1); true;
            pos = nb_loaded_obj.fetch_add(1)) {
         GOCacheObject *obj = GetCacheObject(pos);
-        if (!obj) break;
+        if (!obj)
+          break;
         obj->LoadData();
         if (!dlg->Update(nb_loaded_obj, obj->GetLoadTitle())) {
           dummy.free();
@@ -568,9 +575,11 @@ wxString GODefinitionFile::Load(
         }
       }
 
-      for (unsigned i = 0; i < threads.size(); i++) threads[i]->checkResult();
+      for (unsigned i = 0; i < threads.size(); i++)
+        threads[i]->checkResult();
 
-      if (nb_loaded_obj >= GetCacheObjectCount()) m_Cacheable = true;
+      if (nb_loaded_obj >= GetCacheObjectCount())
+        m_Cacheable = true;
 
       if (m_config.ManageCache() && m_Cacheable)
         UpdateCache(dlg, m_config.CompressCache());
@@ -655,11 +664,13 @@ bool GODefinitionFile::UpdateCache(GOProgressDialog *dlg, bool compress) {
   bool cache_save_ok = writer.WriteHeader();
 
   GOHashType hash = GenerateCacheHash();
-  if (!writer.Write(&hash, sizeof(hash))) cache_save_ok = false;
+  if (!writer.Write(&hash, sizeof(hash)))
+    cache_save_ok = false;
 
   for (unsigned i = 0; cache_save_ok; i++) {
     GOCacheObject *obj = GetCacheObject(i);
-    if (!obj) break;
+    if (!obj)
+      break;
     if (!obj->SaveCache(writer)) {
       cache_save_ok = false;
       wxLogError(
@@ -683,7 +694,8 @@ bool GODefinitionFile::UpdateCache(GOProgressDialog *dlg, bool compress) {
 }
 
 void GODefinitionFile::DeleteCache() {
-  if (CachePresent()) wxRemoveFile(m_CacheFilename);
+  if (CachePresent())
+    wxRemoveFile(m_CacheFilename);
 }
 
 GODefinitionFile::~GODefinitionFile(void) {
@@ -696,13 +708,15 @@ GODefinitionFile::~GODefinitionFile(void) {
 }
 
 void GODefinitionFile::CloseArchives() {
-  for (unsigned i = 0; i < m_archives.size(); i++) m_archives[i]->Close();
+  for (unsigned i = 0; i < m_archives.size(); i++)
+    m_archives[i]->Close();
 }
 
 void GODefinitionFile::DeleteSettings() { wxRemoveFile(m_SettingFilename); }
 
 bool GODefinitionFile::Save() {
-  if (!Export(m_SettingFilename)) return false;
+  if (!Export(m_SettingFilename))
+    return false;
   m_doc->Modify(false);
   m_setter->UpdateModified(false);
   return true;
@@ -740,15 +754,17 @@ bool GODefinitionFile::Export(const wxString &cmb) {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
     return false;
   }
-  if (!GORenameFile(tmp_name, fn)) return false;
+  if (!GORenameFile(tmp_name, fn))
+    return false;
   return true;
 }
 
-GOEnclosure *GODefinitionFile::GetEnclosure(
-  const wxString &name, bool is_panel) {
+GOEnclosure *
+GODefinitionFile::GetEnclosure(const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
     GOEnclosure *c = m_elementcreators[i]->GetEnclosure(name, is_panel);
-    if (c) return c;
+    if (c)
+      return c;
   }
   return NULL;
 }
@@ -756,7 +772,8 @@ GOEnclosure *GODefinitionFile::GetEnclosure(
 GOLabel *GODefinitionFile::GetLabel(const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
     GOLabel *c = m_elementcreators[i]->GetLabel(name, is_panel);
-    if (c) return c;
+    if (c)
+      return c;
   }
   return NULL;
 }
@@ -764,7 +781,8 @@ GOLabel *GODefinitionFile::GetLabel(const wxString &name, bool is_panel) {
 GOButton *GODefinitionFile::GetButton(const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
     GOButton *c = m_elementcreators[i]->GetButton(name, is_panel);
-    if (c) return c;
+    if (c)
+      return c;
   }
   return NULL;
 }
@@ -833,7 +851,8 @@ bool GODefinitionFile::useArchives() { return m_archives.size() > 0; }
 
 GOArchive *GODefinitionFile::findArchive(const wxString &name) {
   for (unsigned i = 0; i < m_archives.size(); i++) {
-    if (m_archives[i]->containsFile(name)) return m_archives[i];
+    if (m_archives[i]->containsFile(name))
+      return m_archives[i];
   }
   return NULL;
 }
@@ -856,7 +875,8 @@ const wxString GODefinitionFile::GetODFFilename() { return m_odf; }
 const wxString GODefinitionFile::GetODFPath() { return m_path.c_str(); }
 
 const wxString GODefinitionFile::GetOrganPathInfo() {
-  if (m_ArchiveID == wxEmptyString) return GetODFFilename();
+  if (m_ArchiveID == wxEmptyString)
+    return GetODFFilename();
   const GOArchiveFile *archive = m_config.GetArchiveByID(m_ArchiveID);
   wxString name = GetODFFilename();
   if (archive)
@@ -899,33 +919,39 @@ GOSoundSampler *GODefinitionFile::StartSample(
   unsigned velocity,
   unsigned delay,
   uint64_t last_stop) {
-  if (!m_soundengine) return NULL;
+  if (!m_soundengine)
+    return NULL;
   return m_soundengine->StartSample(
     pipe, sampler_group_id, audio_group, velocity, delay, last_stop);
 }
 
 uint64_t GODefinitionFile::StopSample(
   const GOSoundProvider *pipe, GOSoundSampler *handle) {
-  if (m_soundengine) return m_soundengine->StopSample(pipe, handle);
+  if (m_soundengine)
+    return m_soundengine->StopSample(pipe, handle);
   return 0;
 }
 
 void GODefinitionFile::SwitchSample(
   const GOSoundProvider *pipe, GOSoundSampler *handle) {
-  if (m_soundengine) m_soundengine->SwitchSample(pipe, handle);
+  if (m_soundengine)
+    m_soundengine->SwitchSample(pipe, handle);
 }
 
 void GODefinitionFile::UpdateVelocity(
   const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity) {
-  if (m_soundengine) m_soundengine->UpdateVelocity(pipe, handle, velocity);
+  if (m_soundengine)
+    m_soundengine->UpdateVelocity(pipe, handle, velocity);
 }
 
 void GODefinitionFile::SendMidiMessage(GOMidiEvent &e) {
-  if (m_midi) m_midi->Send(e);
+  if (m_midi)
+    m_midi->Send(e);
 }
 
 void GODefinitionFile::SendMidiRecorderMessage(GOMidiEvent &e) {
-  if (m_MidiRecorder) m_MidiRecorder->SendMidiRecorderMessage(e);
+  if (m_MidiRecorder)
+    m_MidiRecorder->SendMidiRecorderMessage(e);
 }
 
 GOMidi *GODefinitionFile::GetMidi() { return m_midi; }
@@ -985,12 +1011,14 @@ void GODefinitionFile::PrepareRecording() {
 }
 
 void GODefinitionFile::Update() {
-  for (unsigned i = 0; i < m_switches.size(); i++) m_switches[i]->Update();
+  for (unsigned i = 0; i < m_switches.size(); i++)
+    m_switches[i]->Update();
 
   for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
     m_manual[i]->Update();
 
-  for (unsigned i = 0; i < m_tremulant.size(); i++) m_tremulant[i]->Update();
+  for (unsigned i = 0; i < m_tremulant.size(); i++)
+    m_tremulant[i]->Update();
 
   for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
     m_divisionalcoupler[i]->Update();
@@ -1017,17 +1045,20 @@ void GODefinitionFile::ProcessMidi(const GOMidiEvent &event) {
       return;
     }
   } else if (event.GetMidiType() == MIDI_SYSEX_GO_SETUP) {
-    if (!m_MidiSamplesetMatch[event.GetDevice()]) return;
+    if (!m_MidiSamplesetMatch[event.GetDevice()])
+      return;
   }
 
   GOEventDistributor::SendMidi(event);
 }
 
 void GODefinitionFile::Reset() {
-  for (unsigned l = 0; l < GetSwitchCount(); l++) GetSwitch(l)->Reset();
+  for (unsigned l = 0; l < GetSwitchCount(); l++)
+    GetSwitch(l)->Reset();
   for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
     GetManual(k)->Reset();
-  for (unsigned l = 0; l < GetTremulantCount(); l++) GetTremulant(l)->Reset();
+  for (unsigned l = 0; l < GetTremulantCount(); l++)
+    GetTremulant(l)->Reset();
   for (unsigned j = 0; j < GetDivisionalCouplerCount(); j++)
     GetDivisionalCoupler(j)->Reset();
   for (unsigned k = 0; k < GetGeneralCount(); k++)

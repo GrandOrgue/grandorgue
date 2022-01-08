@@ -11,17 +11,17 @@
 #include "settings/GOSetting.h"
 
 class GOSettingBool : private GOSetting {
- private:
+private:
   bool m_Value;
   bool m_DefaultValue;
 
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
 
- protected:
+protected:
   virtual bool validate(bool value);
 
- public:
+public:
   GOSettingBool(
     GOSettingStore *store, wxString group, wxString name, bool default_value);
 

@@ -14,10 +14,10 @@
 #include <vector>
 
 class GOMidiDeviceConfig {
- private:
+private:
   wxRegEx *p_CompiledRegEx = NULL;
 
- public:
+public:
   typedef std::vector<GOMidiDeviceConfig *> RefVector;
 
   wxString m_LogicalName;

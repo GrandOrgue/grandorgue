@@ -16,7 +16,7 @@ class wxChoice;
 class wxToggleButton;
 
 class MIDIEventKeyDialog : public wxPanel {
- private:
+private:
   GOKeyReceiver *m_original;
   GOKeyReceiverData m_key;
   wxChoice *m_keyselect;
@@ -31,7 +31,7 @@ class MIDIEventKeyDialog : public wxPanel {
   void Listen(bool enable);
   void FillKeylist(wxChoice *select, unsigned shortcut);
 
- protected:
+protected:
   enum {
     ID_KEY_SELECT = 200,
     ID_MINUS_KEY_SELECT,
@@ -39,7 +39,7 @@ class MIDIEventKeyDialog : public wxPanel {
     ID_LISTEN_MINUS,
   };
 
- public:
+public:
   MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event);
   ~MIDIEventKeyDialog();
 

@@ -115,7 +115,8 @@ bool GOApp::OnInit() {
     ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
 #endif
 
-  if (!wxApp::OnInit()) return false;
+  if (!wxApp::OnInit())
+    return false;
 
   m_config = new GOConfig(m_InstanceName);
   m_config->Load();
@@ -145,7 +146,8 @@ bool GOApp::OnInit() {
 }
 
 void GOApp::MacOpenFile(const wxString &filename) {
-  if (m_Frame) m_Frame->SendLoadFile(filename);
+  if (m_Frame)
+    m_Frame->SendLoadFile(filename);
 }
 
 int GOApp::OnRun() { return wxApp::OnRun(); }

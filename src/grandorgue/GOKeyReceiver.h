@@ -17,10 +17,10 @@ class GOConfigWriter;
 class GODefinitionFile;
 
 class GOKeyReceiver : public GOKeyReceiverData {
- private:
+private:
   GODefinitionFile *m_organfile;
 
- public:
+public:
   GOKeyReceiver(GODefinitionFile *organfile, KEY_RECEIVER_TYPE type);
 
   void Load(GOConfigReader &cfg, wxString group);

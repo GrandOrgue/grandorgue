@@ -24,8 +24,7 @@ GOSettingEnum<T>::GOSettingEnum(
     m_Entries(entries),
     m_Count(count) {}
 
-template <class T>
-void GOSettingEnum<T>::Load(GOConfigReader &cfg) {
+template <class T> void GOSettingEnum<T>::Load(GOConfigReader &cfg) {
   (*this)((T)cfg.ReadEnum(
     CMBSetting,
     m_Group,
@@ -36,12 +35,10 @@ void GOSettingEnum<T>::Load(GOConfigReader &cfg) {
     (int)m_DefaultValue));
 }
 
-template <class T>
-void GOSettingEnum<T>::Save(GOConfigWriter &cfg) {
+template <class T> void GOSettingEnum<T>::Save(GOConfigWriter &cfg) {
   cfg.WriteEnum(m_Group, m_Name, (int)m_Value, m_Entries, m_Count);
 }
 
-template <class T>
-void GOSettingEnum<T>::setDefaultValue(T default_value) {
+template <class T> void GOSettingEnum<T>::setDefaultValue(T default_value) {
   m_DefaultValue = default_value;
 }

@@ -10,21 +10,22 @@
 
 #include <vector>
 
-template <class T>
-class ptr_vector : protected std::vector<T *> {
- private:
+template <class T> class ptr_vector : protected std::vector<T *> {
+private:
   /* Disable copying as it will break things */
   ptr_vector(const ptr_vector &);
   const ptr_vector operator=(const ptr_vector &);
 
- public:
+public:
   ptr_vector(unsigned new_size = 0) : std::vector<T *>(new_size) {
-    for (unsigned i = 0; i < new_size; i++) at(i) = 0;
+    for (unsigned i = 0; i < new_size; i++)
+      at(i) = 0;
   }
 
   ~ptr_vector() {
     for (unsigned i = 0; i < size(); i++)
-      if (at(i)) delete at(i);
+      if (at(i))
+        delete at(i);
   }
 
   T *&operator[](unsigned pos) { return at(pos); }
@@ -42,9 +43,11 @@ class ptr_vector : protected std::vector<T *> {
   void resize(unsigned new_size) {
     unsigned oldsize = size();
     for (unsigned i = new_size; i < oldsize; i++)
-      if (at(i)) delete at(i);
+      if (at(i))
+        delete at(i);
     std::vector<T *>::resize(new_size);
-    for (unsigned i = oldsize; i < new_size; i++) at(i) = 0;
+    for (unsigned i = oldsize; i < new_size; i++)
+      at(i) = 0;
   }
 
   void push_back(T *ptr) { std::vector<T *>::push_back(ptr); }
@@ -54,7 +57,8 @@ class ptr_vector : protected std::vector<T *> {
   }
 
   void erase(unsigned pos) {
-    if (at(pos)) delete at(pos);
+    if (at(pos))
+      delete at(pos);
     std::vector<T *>::erase(std::vector<T *>::begin() + pos);
   }
 

@@ -11,7 +11,7 @@
 #include "GOSoundProvider.h"
 
 class GOSoundProviderSynthedTrem : public GOSoundProvider {
- public:
+public:
   GOSoundProviderSynthedTrem(GOMemoryPool &pool);
 
   void Create(int period, int start_rate, int stop_rate, int amp_mod_depth);

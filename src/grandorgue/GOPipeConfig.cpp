@@ -76,7 +76,8 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
     24,
     false,
     -1);
-  if (m_BitsPerSample < 8 || m_BitsPerSample > 24) m_BitsPerSample = -1;
+  if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
+    m_BitsPerSample = -1;
   m_Compress = cfg.ReadInteger(
     CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
   m_Channels = cfg.ReadInteger(
@@ -139,7 +140,8 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
     24,
     false,
     -1);
-  if (m_BitsPerSample < 8 || m_BitsPerSample > 24) m_BitsPerSample = -1;
+  if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
+    m_BitsPerSample = -1;
   m_Compress = cfg.ReadInteger(
     CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
   m_Channels = cfg.ReadInteger(
@@ -205,8 +207,10 @@ float GOPipeConfig::GetTuning() { return m_Tuning; }
 float GOPipeConfig::GetDefaultTuning() { return m_DefaultTuning; }
 
 void GOPipeConfig::SetTuning(float cent) {
-  if (cent < -1800) cent = -1800;
-  if (cent > 1800) cent = 1800;
+  if (cent < -1800)
+    cent = -1800;
+  if (cent > 1800)
+    cent = 1800;
   m_Tuning = cent;
   m_OrganFile->Modified();
   m_Callback->UpdateTuning();

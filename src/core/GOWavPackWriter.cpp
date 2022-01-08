@@ -12,13 +12,15 @@ GOWavPackWriter::GOWavPackWriter() : m_Output(), m_Context(0) {}
 GOWavPackWriter::~GOWavPackWriter() { Close(); }
 
 bool GOWavPackWriter::Write(void *data, int32_t count) {
-  if (count < 0) return false;
+  if (count < 0)
+    return false;
   m_Output.Append((const uint8_t *)data, count);
   return true;
 }
 
 int GOWavPackWriter::WriteCallback(void *id, void *data, int32_t bcount) {
-  if (id == NULL) return 0;
+  if (id == NULL)
+    return 0;
   return ((GOWavPackWriter *)id)->Write(data, bcount) ? 1 : 0;
 }
 
@@ -31,7 +33,8 @@ bool GOWavPackWriter::Init(
   Close();
   m_Output.free();
   m_Context = WavpackOpenFileOutput(&WriteCallback, this, NULL);
-  if (!m_Context) return false;
+  if (!m_Context)
+    return false;
   WavpackConfig config;
   memset(&config, 0, sizeof(config));
   config.bits_per_sample = bitsPerSample;
@@ -50,7 +53,8 @@ bool GOWavPackWriter::AddWrapper(GOBuffer<uint8_t> &header) {
 }
 
 bool GOWavPackWriter::AddSampleData(GOBuffer<int32_t> &sampleData) {
-  if (WavpackPackInit(m_Context) == 0) return false;
+  if (WavpackPackInit(m_Context) == 0)
+    return false;
   return WavpackPackSamples(
            m_Context,
            sampleData.get(),
@@ -59,14 +63,17 @@ bool GOWavPackWriter::AddSampleData(GOBuffer<int32_t> &sampleData) {
 }
 
 bool GOWavPackWriter::Close() {
-  if (!m_Context) return false;
+  if (!m_Context)
+    return false;
   m_Context = WavpackCloseFile(m_Context);
   return m_Context == NULL;
 }
 
 bool GOWavPackWriter::GetResult(GOBuffer<uint8_t> &result) {
-  if (WavpackFlushSamples(m_Context) == 0) return false;
-  if (!Close()) return false;
+  if (WavpackFlushSamples(m_Context) == 0)
+    return false;
+  if (!Close())
+    return false;
   result = std::move(m_Output);
   return true;
 }

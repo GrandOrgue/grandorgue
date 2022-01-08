@@ -71,33 +71,36 @@ void GOSoundProviderWave::CreateAttack(
 
   if ((loop_list.size() > 0) && !percussive) {
     switch (loop_mode) {
-      case LOOP_LOAD_ALL:
-        for (unsigned i = 0; i < loop_list.size(); i++)
+    case LOOP_LOAD_ALL:
+      for (unsigned i = 0; i < loop_list.size(); i++)
+        if (attack_pos <= loop_list[i].start_sample)
+          loops.push_back(loop_list[i]);
+      break;
+    case LOOP_LOAD_CONSERVATIVE: {
+      unsigned cidx = 0;
+      for (unsigned i = 1; i < loop_list.size(); i++)
+        if (loop_list[i].end_sample < loop_list[i].end_sample)
           if (attack_pos <= loop_list[i].start_sample)
-            loops.push_back(loop_list[i]);
-        break;
-      case LOOP_LOAD_CONSERVATIVE: {
-        unsigned cidx = 0;
-        for (unsigned i = 1; i < loop_list.size(); i++)
-          if (loop_list[i].end_sample < loop_list[i].end_sample)
-            if (attack_pos <= loop_list[i].start_sample) cidx = i;
-        loops.push_back(loop_list[cidx]);
-      } break;
-      default: {
-        assert(loop_mode == LOOP_LOAD_LONGEST);
+            cidx = i;
+      loops.push_back(loop_list[cidx]);
+    } break;
+    default: {
+      assert(loop_mode == LOOP_LOAD_LONGEST);
 
-        unsigned lidx = 0;
-        for (unsigned int i = 1; i < loop_list.size(); i++) {
-          assert(loop_list[i].end_sample > loop_list[i].start_sample);
-          if (
-            (loop_list[i].end_sample - loop_list[i].start_sample)
-            > (loop_list[lidx].end_sample - loop_list[lidx].start_sample))
-            if (attack_pos <= loop_list[i].start_sample) lidx = i;
-        }
-        loops.push_back(loop_list[lidx]);
+      unsigned lidx = 0;
+      for (unsigned int i = 1; i < loop_list.size(); i++) {
+        assert(loop_list[i].end_sample > loop_list[i].start_sample);
+        if (
+          (loop_list[i].end_sample - loop_list[i].start_sample)
+          > (loop_list[lidx].end_sample - loop_list[lidx].start_sample))
+          if (attack_pos <= loop_list[i].start_sample)
+            lidx = i;
       }
+      loops.push_back(loop_list[lidx]);
     }
-    if (loops.size() == 0) throw(wxString) _("No loop found");
+    }
+    if (loops.size() == 0)
+      throw(wxString) _("No loop found");
     for (unsigned i = 0; i < loops.size(); i++) {
       loops[i].start_sample -= attack_pos;
       loops[i].end_sample -= attack_pos;
@@ -134,9 +137,11 @@ void GOSoundProviderWave::CreateRelease(
   bool compress) {
   unsigned release_offset
     = wave.HasReleaseMarker() ? wave.GetReleaseMarkerPosition() : 0;
-  if (cue_point != -1) release_offset = cue_point;
+  if (cue_point != -1)
+    release_offset = cue_point;
   unsigned release_end_marker = wave.GetLength();
-  if (release_end != -1) release_end_marker = release_end;
+  if (release_end != -1)
+    release_end_marker = release_end;
   if (release_end_marker > wave.GetLength())
     throw(wxString) _("Invalid release end position");
 
@@ -207,7 +212,8 @@ void GOSoundProviderWave::ProcessFile(
   }
 
   unsigned channels = wave.GetChannels();
-  if (load_channels == 1) channels = 1;
+  if (load_channels == 1)
+    channels = 1;
   unsigned wave_channels = channels;
   if (load_channels < 0 && (unsigned)-load_channels <= wave.GetChannels()) {
     wave_channels = load_channels;
@@ -258,8 +264,10 @@ unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber) {
   if (MidiKeyNumber > 0 && MidiKeyNumber < 133) {
     fade_length
       = 184 - (int)((((float)MidiKeyNumber - 42.0f) / 44.0f) * 178.0f);
-    if (MidiKeyNumber < 42) fade_length = 184;
-    if (MidiKeyNumber > 86) fade_length = 6;
+    if (MidiKeyNumber < 42)
+      fade_length = 184;
+    if (MidiKeyNumber > 86)
+      fade_length = 6;
   }
   return fade_length;
 }
@@ -277,7 +285,8 @@ void GOSoundProviderWave::LoadFromFile(
   unsigned loop_crossfade_length,
   unsigned release_crossfase_length) {
   ClearData();
-  if (!load_channels) return;
+  if (!load_channels)
+    return;
 
   bool load_first_attack = true;
 
@@ -324,7 +333,8 @@ void GOSoundProviderWave::LoadFromFile(
       unsigned min_velocity = 0xff;
       unsigned max_released_time = 0;
       for (unsigned i = 0; i < attacks.size(); i++) {
-        if (attacks[i].sample_group != k) continue;
+        if (attacks[i].sample_group != k)
+          continue;
         if (attacks[i].min_attack_velocity < min_velocity)
           min_velocity = attacks[i].min_attack_velocity;
         if (attacks[i].max_released_time > max_released_time)
@@ -350,7 +360,8 @@ void GOSoundProviderWave::LoadFromFile(
         }
         for (unsigned j = i + 1; j < attacks.size(); j++)
           attacks[j - 1] = attacks[j];
-        if ((int)i < best_idx) best_idx--;
+        if ((int)i < best_idx)
+          best_idx--;
         attacks.resize(attacks.size() - 1);
         i--;
       }

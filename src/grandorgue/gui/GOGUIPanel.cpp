@@ -61,8 +61,10 @@ GOGUIPanel::GOGUIPanel(GODefinitionFile *organfile)
 }
 
 GOGUIPanel::~GOGUIPanel() {
-  if (m_layout) delete m_layout;
-  if (m_metrics) delete m_metrics;
+  if (m_layout)
+    delete m_layout;
+  if (m_metrics)
+    delete m_metrics;
 }
 
 bool GOGUIPanel::InitialOpenWindow() { return m_InitialOpenWindow; }
@@ -142,7 +144,8 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
 
   unsigned first_manual
     = cfg.ReadBoolean(ODFSetting, panel_group, wxT("HasPedals")) ? 0 : 1;
-  for (unsigned i = 0; i < first_manual; i++) m_layout->RegisterManual(0);
+  for (unsigned i = 0; i < first_manual; i++)
+    m_layout->RegisterManual(0);
 
   LoadBackgroundControl(
     new GOGUIHW1Background(this), cfg, wxString::Format(wxT("---")));
@@ -687,18 +690,21 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
   ReadSizeInfoFromCfg(cfg, is_main_panel);
 }
 
-GOGUIControl *GOGUIPanel::CreateGUIElement(
-  GOConfigReader &cfg, wxString group) {
+GOGUIControl *
+GOGUIPanel::CreateGUIElement(GOConfigReader &cfg, wxString group) {
   wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
 
   GOButton *button = m_organfile->GetButton(type, true);
-  if (button) return new GOGUIButton(this, button, false);
+  if (button)
+    return new GOGUIButton(this, button, false);
 
   GOLabel *label = m_organfile->GetLabel(type, true);
-  if (label) return new GOGUILabel(this, label);
+  if (label)
+    return new GOGUILabel(this, label);
 
   GOEnclosure *enclosure = m_organfile->GetEnclosure(type, true);
-  if (enclosure) return new GOGUIEnclosure(this, enclosure);
+  if (enclosure)
+    return new GOGUIEnclosure(this, enclosure);
 
   return NULL;
 }
@@ -706,7 +712,8 @@ GOGUIControl *GOGUIPanel::CreateGUIElement(
 void GOGUIPanel::Layout() {
   m_layout->Update();
 
-  for (unsigned i = 0; i < m_controls.size(); i++) m_controls[i]->Layout();
+  for (unsigned i = 0; i < m_controls.size(); i++)
+    m_controls[i]->Layout();
 }
 
 unsigned GOGUIPanel::GetWidth() { return m_metrics->GetScreenWidth(); }
@@ -720,7 +727,8 @@ void GOGUIPanel::SetWindowRect(wxRect rect) { m_rect = rect; }
 void GOGUIPanel::SetInitialOpenWindow(bool open) { m_InitialOpenWindow = open; }
 
 void GOGUIPanel::AddEvent(GOGUIControl *control) {
-  if (m_view) m_view->AddEvent(control);
+  if (m_view)
+    m_view->AddEvent(control);
 }
 
 void GOGUIPanel::LoadControl(
@@ -750,7 +758,8 @@ void GOGUIPanel::PrepareDraw(double scale, GOBitmap *background) {
 }
 
 void GOGUIPanel::Draw(GODC &dc) {
-  for (unsigned i = 0; i < m_controls.size(); i++) m_controls[i]->Draw(dc);
+  for (unsigned i = 0; i < m_controls.size(); i++)
+    m_controls[i]->Draw(dc);
 }
 
 void GOGUIPanel::ReadSizeInfoFromCfg(
@@ -799,13 +808,13 @@ void GOGUIPanel::Modified() { m_organfile->Modified(); }
 
 void GOGUIPanel::HandleKey(int key) {
   switch (key) {
-    case 259: /* Shift not down */
-      m_organfile->GetSetter()->SetterActive(false);
-      break;
+  case 259: /* Shift not down */
+    m_organfile->GetSetter()->SetterActive(false);
+    break;
 
-    case 260: /* Shift down */
-      m_organfile->GetSetter()->SetterActive(true);
-      break;
+  case 260: /* Shift down */
+    m_organfile->GetSetter()->SetterActive(true);
+    break;
   }
 
   m_organfile->HandleKey(key);
@@ -814,7 +823,8 @@ void GOGUIPanel::HandleKey(int key) {
 void GOGUIPanel::SendMousePress(
   int x, int y, bool right, GOGUIMouseState &state) {
   for (unsigned i = 0; i < m_controls.size(); i++)
-    if (m_controls[i]->HandleMousePress(x, y, right, state)) return;
+    if (m_controls[i]->HandleMousePress(x, y, right, state))
+      return;
 }
 
 void GOGUIPanel::HandleMousePress(int x, int y, bool right) {
@@ -824,12 +834,14 @@ void GOGUIPanel::HandleMousePress(int x, int y, bool right) {
 }
 
 void GOGUIPanel::HandleMouseRelease(bool right) {
-  if (!right) m_MouseState.ReleaseMouseState();
+  if (!right)
+    m_MouseState.ReleaseMouseState();
 }
 
 void GOGUIPanel::HandleMouseScroll(int x, int y, int amount) {
   for (unsigned i = 0; i < m_controls.size(); i++)
-    if (m_controls[i]->HandleMouseScroll(x, y, amount)) return;
+    if (m_controls[i]->HandleMouseScroll(x, y, amount))
+      return;
 }
 
 const GOBitmap &GOGUIPanel::GetWood(unsigned index) {

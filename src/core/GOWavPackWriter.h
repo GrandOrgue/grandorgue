@@ -13,7 +13,7 @@
 #include "GOBuffer.h"
 
 class GOWavPackWriter {
- private:
+private:
   GOBuffer<uint8_t> m_Output;
   WavpackContext *m_Context;
 
@@ -21,7 +21,7 @@ class GOWavPackWriter {
   static int WriteCallback(void *id, void *data, int32_t bcount);
   bool Close();
 
- public:
+public:
   GOWavPackWriter();
   ~GOWavPackWriter();
 

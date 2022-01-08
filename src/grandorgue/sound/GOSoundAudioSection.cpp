@@ -65,32 +65,46 @@ void GOAudioSection::ClearData() {
 }
 
 bool GOAudioSection::LoadCache(GOCache &cache) {
-  if (!cache.Read(&m_AllocSize, sizeof(m_AllocSize))) return false;
-  if (!cache.Read(&m_SampleCount, sizeof(m_SampleCount))) return false;
-  if (!cache.Read(&m_SampleRate, sizeof(m_SampleRate))) return false;
-  if (!cache.Read(&m_BitsPerSample, sizeof(m_BitsPerSample))) return false;
-  if (!cache.Read(&m_BytesPerSample, sizeof(m_BytesPerSample))) return false;
-  if (!cache.Read(&m_Compressed, sizeof(m_Compressed))) return false;
-  if (!cache.Read(&m_Channels, sizeof(m_Channels))) return false;
-  if (!cache.Read(&m_SampleFracBits, sizeof(m_SampleFracBits))) return false;
-  if (!cache.Read(&m_MaxAmplitude, sizeof(m_MaxAmplitude))) return false;
+  if (!cache.Read(&m_AllocSize, sizeof(m_AllocSize)))
+    return false;
+  if (!cache.Read(&m_SampleCount, sizeof(m_SampleCount)))
+    return false;
+  if (!cache.Read(&m_SampleRate, sizeof(m_SampleRate)))
+    return false;
+  if (!cache.Read(&m_BitsPerSample, sizeof(m_BitsPerSample)))
+    return false;
+  if (!cache.Read(&m_BytesPerSample, sizeof(m_BytesPerSample)))
+    return false;
+  if (!cache.Read(&m_Compressed, sizeof(m_Compressed)))
+    return false;
+  if (!cache.Read(&m_Channels, sizeof(m_Channels)))
+    return false;
+  if (!cache.Read(&m_SampleFracBits, sizeof(m_SampleFracBits)))
+    return false;
+  if (!cache.Read(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
+    return false;
   if (!cache.Read(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
     return false;
   m_Data = (unsigned char *)cache.ReadBlock(m_AllocSize);
-  if (!m_Data) return false;
+  if (!m_Data)
+    return false;
 
   unsigned temp;
-  if (!cache.Read(&temp, sizeof(temp))) return false;
+  if (!cache.Read(&temp, sizeof(temp)))
+    return false;
   for (unsigned i = 0; i < temp; i++) {
     audio_start_data_segment s;
-    if (!cache.Read(&s, sizeof(s))) return false;
+    if (!cache.Read(&s, sizeof(s)))
+      return false;
     m_StartSegments.push_back(s);
   }
 
-  if (!cache.Read(&temp, sizeof(temp))) return false;
+  if (!cache.Read(&temp, sizeof(temp)))
+    return false;
   for (unsigned i = 0; i < temp; i++) {
     audio_end_data_segment s;
-    if (!cache.Read(&s.end_offset, sizeof(s.end_offset))) return false;
+    if (!cache.Read(&s.end_offset, sizeof(s.end_offset)))
+      return false;
     if (!cache.Read(
           &s.next_start_segment_index, sizeof(s.next_start_segment_index)))
       return false;
@@ -98,11 +112,15 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
       return false;
     if (!cache.Read(&s.end_loop_length, sizeof(s.end_loop_length)))
       return false;
-    if (!cache.Read(&s.read_end, sizeof(s.read_end))) return false;
-    if (!cache.Read(&s.end_pos, sizeof(s.end_pos))) return false;
-    if (!cache.Read(&s.end_size, sizeof(s.end_size))) return false;
+    if (!cache.Read(&s.read_end, sizeof(s.read_end)))
+      return false;
+    if (!cache.Read(&s.end_pos, sizeof(s.end_pos)))
+      return false;
+    if (!cache.Read(&s.end_size, sizeof(s.end_size)))
+      return false;
     s.end_data = (unsigned char *)cache.ReadBlock(s.end_size);
-    if (!s.end_data) return false;
+    if (!s.end_data)
+      return false;
     s.end_ptr = s.end_data - m_BytesPerSample * s.transition_offset;
 
     m_EndSegments.push_back(s);
@@ -114,40 +132,55 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
   m_ReleaseAligner = NULL;
   if (load_align_tracker) {
     m_ReleaseAligner = new GOReleaseAlignTable();
-    if (!m_ReleaseAligner->Load(cache)) return false;
+    if (!m_ReleaseAligner->Load(cache))
+      return false;
   }
 
   return true;
 }
 
 bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
-  if (!cache.Write(&m_AllocSize, sizeof(m_AllocSize))) return false;
-  if (!cache.Write(&m_SampleCount, sizeof(m_SampleCount))) return false;
-  if (!cache.Write(&m_SampleRate, sizeof(m_SampleRate))) return false;
-  if (!cache.Write(&m_BitsPerSample, sizeof(m_BitsPerSample))) return false;
-  if (!cache.Write(&m_BytesPerSample, sizeof(m_BytesPerSample))) return false;
-  if (!cache.Write(&m_Compressed, sizeof(m_Compressed))) return false;
-  if (!cache.Write(&m_Channels, sizeof(m_Channels))) return false;
-  if (!cache.Write(&m_SampleFracBits, sizeof(m_SampleFracBits))) return false;
-  if (!cache.Write(&m_MaxAmplitude, sizeof(m_MaxAmplitude))) return false;
+  if (!cache.Write(&m_AllocSize, sizeof(m_AllocSize)))
+    return false;
+  if (!cache.Write(&m_SampleCount, sizeof(m_SampleCount)))
+    return false;
+  if (!cache.Write(&m_SampleRate, sizeof(m_SampleRate)))
+    return false;
+  if (!cache.Write(&m_BitsPerSample, sizeof(m_BitsPerSample)))
+    return false;
+  if (!cache.Write(&m_BytesPerSample, sizeof(m_BytesPerSample)))
+    return false;
+  if (!cache.Write(&m_Compressed, sizeof(m_Compressed)))
+    return false;
+  if (!cache.Write(&m_Channels, sizeof(m_Channels)))
+    return false;
+  if (!cache.Write(&m_SampleFracBits, sizeof(m_SampleFracBits)))
+    return false;
+  if (!cache.Write(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
+    return false;
   if (!cache.Write(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
     return false;
-  if (!cache.WriteBlock(m_Data, m_AllocSize)) return false;
+  if (!cache.WriteBlock(m_Data, m_AllocSize))
+    return false;
 
   unsigned temp;
 
   temp = m_StartSegments.size();
-  if (!cache.Write(&temp, sizeof(unsigned))) return false;
+  if (!cache.Write(&temp, sizeof(unsigned)))
+    return false;
   for (unsigned i = 0; i < temp; i++) {
     const audio_start_data_segment *s = &m_StartSegments[i];
-    if (!cache.Write(s, sizeof(*s))) return false;
+    if (!cache.Write(s, sizeof(*s)))
+      return false;
   }
 
   temp = m_EndSegments.size();
-  if (!cache.Write(&temp, sizeof(temp))) return false;
+  if (!cache.Write(&temp, sizeof(temp)))
+    return false;
   for (unsigned i = 0; i < temp; i++) {
     const audio_end_data_segment *s = &m_EndSegments[i];
-    if (!cache.Write(&s->end_offset, sizeof(s->end_offset))) return false;
+    if (!cache.Write(&s->end_offset, sizeof(s->end_offset)))
+      return false;
     if (!cache.Write(
           &s->next_start_segment_index, sizeof(s->next_start_segment_index)))
       return false;
@@ -155,10 +188,14 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
       return false;
     if (!cache.Write(&s->end_loop_length, sizeof(s->end_loop_length)))
       return false;
-    if (!cache.Write(&s->read_end, sizeof(s->read_end))) return false;
-    if (!cache.Write(&s->end_pos, sizeof(s->end_pos))) return false;
-    if (!cache.Write(&s->end_size, sizeof(s->end_size))) return false;
-    if (!cache.WriteBlock(s->end_data, s->end_size)) return false;
+    if (!cache.Write(&s->read_end, sizeof(s->read_end)))
+      return false;
+    if (!cache.Write(&s->end_pos, sizeof(s->end_pos)))
+      return false;
+    if (!cache.Write(&s->end_size, sizeof(s->end_size)))
+      return false;
+    if (!cache.WriteBlock(s->end_data, s->end_size))
+      return false;
   }
 
   const bool save_align_tracker = (m_ReleaseAligner != NULL);
@@ -166,7 +203,8 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
     return false;
 
   if (save_align_tracker) {
-    if (!m_ReleaseAligner->Save(cache)) return false;
+    if (!m_ReleaseAligner->Save(cache))
+      return false;
   }
 
   return true;
@@ -367,12 +405,14 @@ inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
     /* TODO: Add support for polyphase compressed decoders. Fallback to
      * linear interpolation for now. */
     if (channels == 1) {
-      if (bits_per_sample >= 20) return MonoCompressedLinear<true>;
+      if (bits_per_sample >= 20)
+        return MonoCompressedLinear<true>;
 
       assert(bits_per_sample >= 12);
       return MonoCompressedLinear<false>;
     } else if (channels == 2) {
-      if (bits_per_sample >= 20) return StereoCompressedLinear<true>;
+      if (bits_per_sample >= 20)
+        return StereoCompressedLinear<true>;
 
       assert(bits_per_sample >= 12);
       return StereoCompressedLinear<false>;
@@ -380,23 +420,35 @@ inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
   } else {
     if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed) {
       if (channels == 1) {
-        if (bits_per_sample <= 8) return MonoUncompressedPolyphase<GOInt8>;
-        if (bits_per_sample <= 16) return MonoUncompressedPolyphase<GOInt16>;
-        if (bits_per_sample <= 24) return MonoUncompressedPolyphase<GOInt24>;
+        if (bits_per_sample <= 8)
+          return MonoUncompressedPolyphase<GOInt8>;
+        if (bits_per_sample <= 16)
+          return MonoUncompressedPolyphase<GOInt16>;
+        if (bits_per_sample <= 24)
+          return MonoUncompressedPolyphase<GOInt24>;
       } else if (channels == 2) {
-        if (bits_per_sample <= 8) return StereoUncompressedPolyphase<GOInt8>;
-        if (bits_per_sample <= 16) return StereoUncompressedPolyphase<GOInt16>;
-        if (bits_per_sample <= 24) return StereoUncompressedPolyphase<GOInt24>;
+        if (bits_per_sample <= 8)
+          return StereoUncompressedPolyphase<GOInt8>;
+        if (bits_per_sample <= 16)
+          return StereoUncompressedPolyphase<GOInt16>;
+        if (bits_per_sample <= 24)
+          return StereoUncompressedPolyphase<GOInt24>;
       }
     } else {
       if (channels == 1) {
-        if (bits_per_sample <= 8) return MonoUncompressedLinear<GOInt8>;
-        if (bits_per_sample <= 16) return MonoUncompressedLinear<GOInt16>;
-        if (bits_per_sample <= 24) return MonoUncompressedLinear<GOInt24>;
+        if (bits_per_sample <= 8)
+          return MonoUncompressedLinear<GOInt8>;
+        if (bits_per_sample <= 16)
+          return MonoUncompressedLinear<GOInt16>;
+        if (bits_per_sample <= 24)
+          return MonoUncompressedLinear<GOInt24>;
       } else if (channels == 2) {
-        if (bits_per_sample <= 8) return StereoUncompressedLinear<GOInt8>;
-        if (bits_per_sample <= 16) return StereoUncompressedLinear<GOInt16>;
-        if (bits_per_sample <= 24) return StereoUncompressedLinear<GOInt24>;
+        if (bits_per_sample <= 8)
+          return StereoUncompressedLinear<GOInt8>;
+        if (bits_per_sample <= 16)
+          return StereoUncompressedLinear<GOInt16>;
+        if (bits_per_sample <= 24)
+          return StereoUncompressedLinear<GOInt24>;
       }
     }
   }
@@ -405,8 +457,8 @@ inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
   return NULL;
 }
 
-inline unsigned GOAudioSection::PickEndSegment(
-  unsigned start_segment_index) const {
+inline unsigned
+GOAudioSection::PickEndSegment(unsigned start_segment_index) const {
   const unsigned x = abs(rand());
   for (unsigned i = 0; i < m_EndSegments.size(); i++) {
     const unsigned idx = (i + x) % m_EndSegments.size();
@@ -432,7 +484,8 @@ bool GOAudioSection::ReadBlock(
         = ((UPSAMPLE_FACTOR / 2)
            + ((stream->end_pos - stream->position_index) << UPSAMPLE_BITS))
         / stream->increment_fraction;
-      if (len == 0) len = 1;
+      if (len == 0)
+        len = 1;
       len = std::min(len, n_blocks);
       stream->end_decode_call(stream, buffer, len);
       buffer += 2 * len;
@@ -441,7 +494,8 @@ bool GOAudioSection::ReadBlock(
       if (stream->position_index >= stream->end_pos) {
         const audio_end_data_segment *end = stream->end_seg;
         if (end->next_start_segment_index < 0) {
-          for (unsigned i = 0; i < n_blocks * 2; i++) buffer[i] = 0;
+          for (unsigned i = 0; i < n_blocks * 2; i++)
+            buffer[i] = 0;
           return 0;
         }
 
@@ -476,7 +530,8 @@ bool GOAudioSection::ReadBlock(
       unsigned len
         = ((stream->read_end - stream->position_index) << UPSAMPLE_BITS)
         / stream->increment_fraction;
-      if (len == 0) len = 1;
+      if (len == 0)
+        len = 1;
       len = std::min(len, n_blocks);
       stream->decode_call(stream, buffer, len);
       buffer += 2 * len;
@@ -489,21 +544,21 @@ bool GOAudioSection::ReadBlock(
 
 static inline unsigned wave_bits_per_sample(GOWave::SAMPLE_FORMAT format) {
   switch (format) {
-    case GOWave::SF_SIGNEDBYTE_8:
-      return 8;
-    case GOWave::SF_SIGNEDSHORT_12:
-      return 12;
-    case GOWave::SF_SIGNEDSHORT_16:
-      return 16;
-    case GOWave::SF_SIGNEDINT24_20:
-      return 20;
-    case GOWave::SF_SIGNEDINT24_24:
-      return 24;
-    case GOWave::SF_IEEE_FLOAT:
-      return 32;
-    default:
-      assert(0 && "bad sample format enumeration");
-      return 0;
+  case GOWave::SF_SIGNEDBYTE_8:
+    return 8;
+  case GOWave::SF_SIGNEDSHORT_12:
+    return 12;
+  case GOWave::SF_SIGNEDSHORT_16:
+    return 16;
+  case GOWave::SF_SIGNEDINT24_20:
+    return 20;
+  case GOWave::SF_SIGNEDINT24_24:
+    return 24;
+  case GOWave::SF_IEEE_FLOAT:
+    return 32;
+  default:
+    assert(0 && "bad sample format enumeration");
+    return 0;
   }
 }
 
@@ -539,15 +594,18 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative() {
     for (unsigned int j = 0; j < m_Channels; j++) {
       int val = GetSample(i, j, &cache);
       f += val;
-      if (abs(val) > m_MaxAmplitude) m_MaxAmplitude = abs(val);
+      if (abs(val) > m_MaxAmplitude)
+        m_MaxAmplitude = abs(val);
     }
 
-    if (abs(f) > m_MaxAbsAmplitude) m_MaxAbsAmplitude = abs(f);
+    if (abs(f) > m_MaxAbsAmplitude)
+      m_MaxAbsAmplitude = abs(f);
 
     if (i != 0) {
       /* Get v */
       int v = f - f_p;
-      if (abs(v) > m_MaxAbsDerivative) m_MaxAbsDerivative = abs(v);
+      if (abs(v) > m_MaxAbsDerivative)
+        m_MaxAbsDerivative = abs(v);
     }
     f_p = f;
   }
@@ -657,7 +715,8 @@ void GOAudioSection::Setup(
       end_seg.end_ptr
         = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
-      if (!end_seg.end_data) throw GOOutOfMemory();
+      if (!end_seg.end_data)
+        throw GOOutOfMemory();
 
       const unsigned copy_len
         = 1 + end_seg.end_offset - end_seg.transition_offset;
@@ -713,7 +772,8 @@ void GOAudioSection::Setup(
     const unsigned copy_len
       = 1 + end_seg.end_offset - end_seg.transition_offset;
 
-    if (!end_seg.end_data) throw GOOutOfMemory();
+    if (!end_seg.end_data)
+      throw GOOutOfMemory();
 
     memcpy(
       end_seg.end_data,
@@ -733,7 +793,8 @@ void GOAudioSection::Setup(
 
   m_AllocSize = total_alloc_samples * m_BytesPerSample;
   m_Data = (unsigned char *)m_Pool.Alloc(m_AllocSize, !compress);
-  if (m_Data == NULL) throw GOOutOfMemory();
+  if (m_Data == NULL)
+    throw GOOutOfMemory();
   m_SampleRate = pcm_data_sample_rate;
   m_SampleCount = total_alloc_samples;
   m_SampleFracBits = m_BitsPerSample - 1;
@@ -745,12 +806,14 @@ void GOAudioSection::Setup(
 
   GetMaxAmplitudeAndDerivative();
 
-  if (compress) Compress(m_BitsPerSample > 16);
+  if (compress)
+    Compress(m_BitsPerSample > 16);
 }
 
 void GOAudioSection::Compress(bool format16) {
   unsigned char *data = (unsigned char *)m_Pool.Alloc(m_AllocSize, false);
-  if (data == NULL) throw GOOutOfMemory();
+  if (data == NULL)
+    throw GOOutOfMemory();
 
   unsigned output_len = 0;
   DecompressionCache state;
@@ -771,7 +834,8 @@ void GOAudioSection::Compress(bool format16) {
     state.prev[1] = state.value[1];
 
     state.value[0] = GetSample(i, 0);
-    if (m_Channels > 1) state.value[1] = GetSample(i, 1);
+    if (m_Channels > 1)
+      state.value[1] = GetSample(i, 1);
 
     for (unsigned j = 0; j < m_Channels; j++) {
       int val = state.value[j];
@@ -787,7 +851,8 @@ void GOAudioSection::Compress(bool format16) {
       if (output_len + 10 >= m_AllocSize) {
         m_Pool.Free(data);
         m_Data = (unsigned char *)m_Pool.MoveToPool(m_Data, m_AllocSize);
-        if (m_Data == NULL) throw GOOutOfMemory();
+        if (m_Data == NULL)
+          throw GOOutOfMemory();
         return;
       }
     }
@@ -848,7 +913,8 @@ void GOAudioSection::Compress(bool format16) {
   m_Compressed = true;
 
   m_Data = (unsigned char *)m_Pool.MoveToPool(m_Data, m_AllocSize);
-  if (m_Data == NULL) throw GOOutOfMemory();
+  if (m_Data == NULL)
+    throw GOOutOfMemory();
 }
 
 void GOAudioSection::SetupStreamAlignment(
@@ -857,7 +923,8 @@ void GOAudioSection::SetupStreamAlignment(
     delete m_ReleaseAligner;
     m_ReleaseAligner = NULL;
   }
-  if (!joinables.size()) return;
+  if (!joinables.size())
+    return;
 
   int max_amplitude = m_MaxAbsAmplitude;
   int max_derivative = m_MaxAbsDerivative;
@@ -882,8 +949,8 @@ void GOAudioSection::SetupStreamAlignment(
   }
 }
 
-unsigned GOAudioSection::GetMargin(
-  bool compressed, interpolation_type interpolation) {
+unsigned
+GOAudioSection::GetMargin(bool compressed, interpolation_type interpolation) {
   if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed)
     return POLYPHASE_READAHEAD;
   else if (compressed)

@@ -57,7 +57,8 @@ static bool LRUCompare(const GOOrgan *a, const GOOrgan *b) {
 std::vector<const GOOrgan *> GOOrganList::GetLRUOrganList() {
   std::vector<const GOOrgan *> lru;
   for (unsigned i = 0; i < m_OrganList.size(); i++)
-    if (m_OrganList[i]->IsUsable(*this)) lru.push_back(m_OrganList[i]);
+    if (m_OrganList[i]->IsUsable(*this))
+      lru.push_back(m_OrganList[i]);
   std::sort(lru.begin(), lru.end(), LRUCompare);
   return lru;
 }
@@ -81,8 +82,8 @@ ptr_vector<GOArchiveFile> &GOOrganList::GetArchiveList() {
   return m_ArchiveList;
 }
 
-const GOArchiveFile *GOOrganList::GetArchiveByID(
-  const wxString &id, bool useable) const {
+const GOArchiveFile *
+GOOrganList::GetArchiveByID(const wxString &id, bool useable) const {
   for (unsigned i = 0; i < m_ArchiveList.size(); i++)
     if (m_ArchiveList[i]->GetID() == id)
       if (!useable || m_ArchiveList[i]->IsUsable(*this))
@@ -92,7 +93,8 @@ const GOArchiveFile *GOOrganList::GetArchiveByID(
 
 const GOArchiveFile *GOOrganList::GetArchiveByPath(const wxString &path) const {
   for (unsigned i = 0; i < m_ArchiveList.size(); i++)
-    if (m_ArchiveList[i]->GetPath() == path) return m_ArchiveList[i];
+    if (m_ArchiveList[i]->GetPath() == path)
+      return m_ArchiveList[i];
   return NULL;
 }
 

@@ -26,15 +26,15 @@ const std::vector<wxString> &GOSoundPortFactory::GetPortNames() const {
   return portNames;
 }
 
-const std::vector<wxString> &GOSoundPortFactory::GetPortApiNames(
-  const wxString &portName) const {
+const std::vector<wxString> &
+GOSoundPortFactory::GetPortApiNames(const wxString &portName) const {
   if (portName == GOSoundPortaudioPort::PORT_NAME)
     return GOSoundPortaudioPort::getApis();
   else if (portName == GOSoundRtPort::PORT_NAME)
     return GOSoundRtPort::getApis();
   else if (portName == GOSoundJackPort::PORT_NAME)
     return GOSoundJackPort::getApis();
-  else  // old-style name
+  else // old-style name
     return c_NoApis;
 }
 
@@ -45,7 +45,7 @@ GOSoundPort *GOSoundPortFactory::create(
   GOSoundPort *port = NULL;
   NameParser parser(name);
   wxString subsysName = parser.nextComp();
-  unsigned short subsysMask;  // possible subsystems matching with the name
+  unsigned short subsysMask; // possible subsystems matching with the name
 
   if (subsysName == GOSoundPortaudioPort::PORT_NAME)
     subsysMask = SUBSYS_PA_BIT;
@@ -53,7 +53,7 @@ GOSoundPort *GOSoundPortFactory::create(
     subsysMask = SUBSYS_RT_BIT;
   else if (subsysName == GOSoundJackPort::PORT_NAME)
     subsysMask = SUBSYS_JACK_BIT;
-  else  // old-style name
+  else // old-style name
     subsysMask = SUBSYS_PA_BIT | SUBSYS_RT_BIT | SUBSYS_JACK_BIT;
 
   if (
@@ -71,8 +71,8 @@ GOSoundPort *GOSoundPortFactory::create(
   return port;
 }
 
-std::vector<GOSoundDevInfo> GOSoundPortFactory::getDeviceList(
-  const GOPortsConfig &portsConfig) {
+std::vector<GOSoundDevInfo>
+GOSoundPortFactory::getDeviceList(const GOPortsConfig &portsConfig) {
   std::vector<GOSoundDevInfo> result;
 
   if (portsConfig.IsEnabled(GOSoundPortaudioPort::PORT_NAME))

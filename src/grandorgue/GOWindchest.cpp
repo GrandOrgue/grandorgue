@@ -114,7 +114,8 @@ void GOWindchest::UpdateTremulant(GOTremulant *tremulant) {
   for (unsigned i = 0; i < m_tremulant.size(); i++)
     if (tremulant == m_organfile->GetTremulant(m_tremulant[i])) {
       GOTremulant *t = m_organfile->GetTremulant(m_tremulant[i]);
-      if (t->GetTremulantType() != GOWavTrem) continue;
+      if (t->GetTremulantType() != GOWavTrem)
+        continue;
       bool on = t->IsActive();
       for (unsigned j = 0; j < m_pipes.size(); j++)
         m_pipes[j]->SetTremulant(on);

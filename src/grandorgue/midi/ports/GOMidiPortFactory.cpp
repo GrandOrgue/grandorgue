@@ -20,11 +20,11 @@ const std::vector<wxString> &GOMidiPortFactory::GetPortNames() const {
   return portNames;
 }
 
-const std::vector<wxString> &GOMidiPortFactory::GetPortApiNames(
-  const wxString &portName) const {
+const std::vector<wxString> &
+GOMidiPortFactory::GetPortApiNames(const wxString &portName) const {
   if (portName == GOMidiRtPortFactory::PORT_NAME)
     return GOMidiRtPortFactory::getApis();
-  else  // old-style name
+  else // old-style name
     return c_NoApis;
 }
 

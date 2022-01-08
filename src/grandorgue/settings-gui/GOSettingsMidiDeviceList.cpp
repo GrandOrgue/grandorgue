@@ -28,7 +28,8 @@ GOSettingsMidiDeviceList::GOSettingsMidiDeviceList(
 void GOSettingsMidiDeviceList::ClearDevices() {
   m_BMatching->Disable();
   // We cann't use lbDevices->Clear() because it disables the event handler
-  for (int i = m_LbDevices->GetCount() - 1; i >= 0; i--) m_LbDevices->Delete(i);
+  for (int i = m_LbDevices->GetCount() - 1; i >= 0; i--)
+    m_LbDevices->Delete(i);
   m_ListedConfs.clear();
 }
 
@@ -65,7 +66,8 @@ void GOSettingsMidiDeviceList::RefreshDevices(
 
       const int i = m_LbDevices->Append(physicalName);
 
-      if (pConfTmp->m_IsEnabled) m_LbDevices->Check(i);
+      if (pConfTmp->m_IsEnabled)
+        m_LbDevices->Check(i);
     }
 }
 
@@ -109,7 +111,8 @@ void GOSettingsMidiDeviceList::Save(
 
     if (pDevConf) {
       pDevConf->Assign(*pDevConfTmp);
-      if (pOutConfList) pOutConfList->MapOutputDevice(*pDevConfTmp, *pDevConf);
+      if (pOutConfList)
+        pOutConfList->MapOutputDevice(*pDevConfTmp, *pDevConf);
     } else
       m_ConfList.Append(*pDevConfTmp, pOutConfList);
 

@@ -28,17 +28,17 @@ struct ElementListEntry {
 };
 
 class GOElementCreator : private GOSetterButtonCallback {
- private:
+private:
   void SetterButtonChanged(GOSetterButton *button);
 
- protected:
+protected:
   ptr_vector<GOSetterButton> m_button;
 
   virtual const struct ElementListEntry *GetButtonList() = 0;
   virtual void ButtonChanged(int id) = 0;
   void CreateButtons(GODefinitionFile *organfile);
 
- public:
+public:
   GOElementCreator();
   virtual ~GOElementCreator();
 

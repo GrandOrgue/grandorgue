@@ -16,7 +16,7 @@
 class GOManual;
 
 class GOGUIManual : public GOGUIControl {
- private:
+private:
   typedef struct {
     unsigned MidiNumber;
     bool IsSharp;
@@ -30,7 +30,7 @@ class GOGUIManual : public GOGUIControl {
   unsigned m_ManualNumber;
   std::vector<KeyInfo> m_Keys;
 
- public:
+public:
   GOGUIManual(GOGUIPanel *panel, GOManual *manual, unsigned manual_number);
 
   bool IsSharp(unsigned key);

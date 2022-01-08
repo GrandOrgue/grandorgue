@@ -24,14 +24,16 @@ const wxString &GOMidiMap::GetDeviceByID(unsigned id) {
 
 unsigned GOMidiMap::GetDeviceByString(const wxString &str) {
   for (unsigned i = 0; i < m_DeviceMap.size(); i++)
-    if (m_DeviceMap[i] == str) return i;
+    if (m_DeviceMap[i] == str)
+      return i;
   m_DeviceMap.push_back(str);
   return m_DeviceMap.size() - 1;
 }
 
 unsigned GOMidiMap::GetElementByString(const wxString &str) {
   for (unsigned i = 0; i < m_ElementMap.size(); i++)
-    if (m_ElementMap[i] == str) return i;
+    if (m_ElementMap[i] == str)
+      return i;
   m_ElementMap.push_back(str);
   return m_ElementMap.size() - 1;
 }

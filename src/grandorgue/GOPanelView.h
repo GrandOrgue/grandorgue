@@ -18,16 +18,16 @@ class GOGUIPanel;
 class GOGUIPanelWidget;
 
 class GOPanelView : public wxScrolledWindow, public GOView {
- private:
+private:
   GOGUIPanelWidget *m_panelwidget;
   GOGUIPanel *m_panel;
   wxTopLevelWindow
-    *m_TopWindow;  // only if the parent is top level window, else NULL
+    *m_TopWindow; // only if the parent is top level window, else NULL
   wxSize m_Scroll;
 
   void OnSize(wxSizeEvent &event);
 
- public:
+public:
   GOPanelView(GODocumentBase *doc, GOGUIPanel *panel, wxWindow *parent);
   ~GOPanelView();
 

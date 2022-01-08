@@ -16,12 +16,12 @@
 #include "GOSampleStatistic.h"
 #include "GOSoundAudioSection.h"
 
-#define DELETE_AND_NULL(x) \
-  do {                     \
-    if (x) {               \
-      delete x;            \
-      x = NULL;            \
-    }                      \
+#define DELETE_AND_NULL(x)                                                     \
+  do {                                                                         \
+    if (x) {                                                                   \
+      delete x;                                                                \
+      x = NULL;                                                                \
+    }                                                                          \
   } while (0)
 
 GOSoundProvider::GOSoundProvider(GOMemoryPool &pool)
@@ -50,29 +50,37 @@ void GOSoundProvider::ClearData() {
 }
 
 bool GOSoundProvider::LoadCache(GOCache &cache) {
-  if (!cache.Read(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber))) return false;
-  if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract))) return false;
+  if (!cache.Read(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
+    return false;
+  if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
+    return false;
   if (!cache.Read(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
 
   unsigned attacks;
-  if (!cache.Read(&attacks, sizeof(attacks))) return false;
+  if (!cache.Read(&attacks, sizeof(attacks)))
+    return false;
   for (unsigned i = 0; i < attacks; i++) {
     attack_section_info info;
-    if (!cache.Read(&info, sizeof(info))) return false;
+    if (!cache.Read(&info, sizeof(info)))
+      return false;
     m_AttackInfo.push_back(info);
     m_Attack.push_back(new GOAudioSection(m_pool));
-    if (!m_Attack[i]->LoadCache(cache)) return false;
+    if (!m_Attack[i]->LoadCache(cache))
+      return false;
   }
 
   unsigned releases;
-  if (!cache.Read(&releases, sizeof(releases))) return false;
+  if (!cache.Read(&releases, sizeof(releases)))
+    return false;
   for (unsigned i = 0; i < releases; i++) {
     release_section_info info;
-    if (!cache.Read(&info, sizeof(info))) return false;
+    if (!cache.Read(&info, sizeof(info)))
+      return false;
     m_ReleaseInfo.push_back(info);
     m_Release.push_back(new GOAudioSection(m_pool));
-    if (!m_Release[i]->LoadCache(cache)) return false;
+    if (!m_Release[i]->LoadCache(cache))
+      return false;
   }
 
   return true;
@@ -83,23 +91,31 @@ void GOSoundProvider::UseSampleGroup(unsigned sample_group) {
 }
 
 bool GOSoundProvider::SaveCache(GOCacheWriter &cache) {
-  if (!cache.Write(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber))) return false;
-  if (!cache.Write(&m_MidiPitchFract, sizeof(m_MidiPitchFract))) return false;
+  if (!cache.Write(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
+    return false;
+  if (!cache.Write(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
+    return false;
   if (!cache.Write(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
 
   unsigned attacks = m_Attack.size();
-  if (!cache.Write(&attacks, sizeof(attacks))) return false;
+  if (!cache.Write(&attacks, sizeof(attacks)))
+    return false;
   for (unsigned i = 0; i < m_Attack.size(); i++) {
-    if (!cache.Write(&m_AttackInfo[i], sizeof(m_AttackInfo[i]))) return false;
-    if (!m_Attack[i]->SaveCache(cache)) return false;
+    if (!cache.Write(&m_AttackInfo[i], sizeof(m_AttackInfo[i])))
+      return false;
+    if (!m_Attack[i]->SaveCache(cache))
+      return false;
   }
 
   unsigned releases = m_Release.size();
-  if (!cache.Write(&releases, sizeof(releases))) return false;
+  if (!cache.Write(&releases, sizeof(releases)))
+    return false;
   for (unsigned i = 0; i < m_Release.size(); i++) {
-    if (!cache.Write(&m_ReleaseInfo[i], sizeof(m_ReleaseInfo[i]))) return false;
-    if (!m_Release[i]->SaveCache(cache)) return false;
+    if (!cache.Write(&m_ReleaseInfo[i], sizeof(m_ReleaseInfo[i])))
+      return false;
+    if (!m_Release[i]->SaveCache(cache))
+      return false;
   }
 
   return true;
@@ -110,14 +126,16 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo() {
   for (int k = -1; k < 2; k++) {
     sections.clear();
     for (unsigned i = 0; i < m_Attack.size(); i++)
-      if (m_AttackInfo[i].sample_group == k) sections.push_back(m_Attack[i]);
+      if (m_AttackInfo[i].sample_group == k)
+        sections.push_back(m_Attack[i]);
     for (unsigned i = 0; i < m_Release.size(); i++)
       if (m_ReleaseInfo[i].sample_group == k)
         m_Release[i]->SetupStreamAlignment(sections, 0);
 
     sections.clear();
     for (unsigned i = 0; i < m_Attack.size(); i++)
-      if (m_AttackInfo[i].sample_group != k) sections.push_back(m_Attack[i]);
+      if (m_AttackInfo[i].sample_group != k)
+        sections.push_back(m_Attack[i]);
     for (unsigned i = 0; i < m_Attack.size(); i++)
       if (m_AttackInfo[i].sample_group == k)
         m_Attack[i]->SetupStreamAlignment(sections, 1);
@@ -131,9 +149,11 @@ void GOSoundProvider::ComputeReleaseAlignmentInfo() {
 }
 
 int GOSoundProvider::IsOneshot() const {
-  if (!m_Attack.size()) return false;
+  if (!m_Attack.size())
+    return false;
   for (unsigned i = 0; i < m_Attack.size(); i++)
-    if (!m_Attack[i]->IsOneshot()) return false;
+    if (!m_Attack[i]->IsOneshot())
+      return false;
 
   return true;
 }
@@ -164,8 +184,8 @@ float GOSoundProvider::GetVelocityVolume(unsigned velocity) const {
   return m_VelocityVolumeBase + (velocity * m_VelocityVolumeIncrement);
 }
 
-const GOAudioSection *GOSoundProvider::GetAttack(
-  unsigned velocity, unsigned released_time) const {
+const GOAudioSection *
+GOSoundProvider::GetAttack(unsigned velocity, unsigned released_time) const {
   const unsigned x = abs(rand());
   int best_match = -1;
   for (unsigned i = 0; i < m_Attack.size(); i++) {
@@ -174,8 +194,10 @@ const GOAudioSection *GOSoundProvider::GetAttack(
       m_AttackInfo[idx].sample_group != -1
       && m_AttackInfo[idx].sample_group != m_SampleGroup)
       continue;
-    if (m_AttackInfo[idx].min_attack_velocity > velocity) continue;
-    if (m_AttackInfo[idx].max_released_time < released_time) continue;
+    if (m_AttackInfo[idx].min_attack_velocity > velocity)
+      continue;
+    if (m_AttackInfo[idx].max_released_time < released_time)
+      continue;
     if (best_match == -1)
       best_match = idx;
     else if (
@@ -186,7 +208,8 @@ const GOAudioSection *GOSoundProvider::GetAttack(
       best_match = idx;
   }
 
-  if (best_match != -1) return m_Attack[best_match];
+  if (best_match != -1)
+    return m_Attack[best_match];
   return NULL;
 }
 
@@ -195,7 +218,8 @@ const GOAudioSection *GOSoundProvider::GetRelease(
   unsigned attack_idx = 0;
   unsigned time = std::min(playback_time, 3600.0) * 1000;
   for (unsigned i = 0; i < m_Attack.size(); i++) {
-    if (handle->audio_section == m_Attack[i]) attack_idx = i;
+    if (handle->audio_section == m_Attack[i])
+      attack_idx = i;
   }
 
   const unsigned x = abs(rand());
@@ -205,7 +229,8 @@ const GOAudioSection *GOSoundProvider::GetRelease(
     if (
       m_ReleaseInfo[idx].sample_group != m_AttackInfo[attack_idx].sample_group)
       continue;
-    if (m_ReleaseInfo[idx].max_playback_time < time) continue;
+    if (m_ReleaseInfo[idx].max_playback_time < time)
+      continue;
     if (best_match == -1)
       best_match = idx;
     else if (
@@ -214,7 +239,8 @@ const GOAudioSection *GOSoundProvider::GetRelease(
       best_match = idx;
   }
 
-  if (best_match != -1) return m_Release[best_match];
+  if (best_match != -1)
+    return m_Release[best_match];
 
   return NULL;
 }
@@ -229,7 +255,8 @@ bool GOSoundProvider::checkForMissingRelease() {
         if (m_ReleaseInfo[i].max_playback_time == (unsigned)-1)
           max_release = true;
       }
-    if (cnt && !max_release) return true;
+    if (cnt && !max_release)
+      return true;
   }
   return false;
 }
@@ -244,27 +271,34 @@ bool GOSoundProvider::checkForMissingAttack() {
         if (m_AttackInfo[i].max_released_time == (unsigned)-1)
           max_release = true;
       }
-    if (cnt && !max_release) return true;
+    if (cnt && !max_release)
+      return true;
   }
   return false;
 }
 
 bool GOSoundProvider::checkMissingRelease() {
-  if (IsOneshot()) return false;
+  if (IsOneshot())
+    return false;
   for (int k = -1; k < 2; k++) {
     bool found = false;
     for (unsigned i = 0; i < m_Attack.size() && !found; i++)
-      if (m_AttackInfo[i].sample_group == k) found = true;
-    if (!found) continue;
+      if (m_AttackInfo[i].sample_group == k)
+        found = true;
+    if (!found)
+      continue;
     found = false;
     for (unsigned i = 0; i < m_Release.size() && !found; i++)
-      if (m_ReleaseInfo[i].sample_group == k) found = true;
-    if (!found) return true;
+      if (m_ReleaseInfo[i].sample_group == k)
+        found = true;
+    if (!found)
+      return true;
   }
   return false;
 }
 bool GOSoundProvider::checkNotNecessaryRelease() {
-  if (IsOneshot() && m_Release.size()) return true;
+  if (IsOneshot() && m_Release.size())
+    return true;
   return false;
 }
 
