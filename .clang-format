@@ -1,0 +1,6 @@
+AlignAfterOpenBracket: AlwaysBreak
+AlignOperands: 'false'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+BreakBeforeBinaryOperators: All
+ContinuationIndentWidth: '2'
