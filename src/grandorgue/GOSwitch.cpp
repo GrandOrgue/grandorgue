@@ -11,17 +11,17 @@
 
 #include "GODefinitionFile.h"
 
-GOSwitch::GOSwitch(GODefinitionFile* organfile) : GODrawstop(organfile) {}
+GOSwitch::GOSwitch(GODefinitionFile *organfile) : GODrawstop(organfile) {}
 
 GOSwitch::~GOSwitch() {}
 
 void GOSwitch::ChangeState(bool on) {}
 
 void GOSwitch::SetupCombinationState() {
-  m_StoreDivisional =
-      m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_StoreGeneral =
-      m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreDivisional
+    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreGeneral
+    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 wxString GOSwitch::GetMidiType() { return _("Drawstop"); }

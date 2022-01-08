@@ -56,18 +56,18 @@ typedef struct {
 } MIDI_SEND_EVENT;
 
 class GOMidiSenderData {
- protected:
+protected:
   MIDI_SENDER_TYPE m_type;
   std::vector<MIDI_SEND_EVENT> m_events;
 
- public:
+public:
   GOMidiSenderData(MIDI_SENDER_TYPE type);
   virtual ~GOMidiSenderData();
 
   MIDI_SENDER_TYPE GetType() const;
 
   unsigned GetEventCount() const;
-  MIDI_SEND_EVENT& GetEvent(unsigned index);
+  MIDI_SEND_EVENT &GetEvent(unsigned index);
   unsigned AddNewEvent();
   void DeleteEvent(unsigned index);
 };

@@ -33,17 +33,18 @@ wxString GOPortFactory::NameParser::nextComp() {
 
 void append_name(wxString const &nameComp, wxString &resName) {
   if (!nameComp.IsEmpty()) {
-    if (!resName.IsEmpty()) resName.Append(GOPortFactory::c_NameDelim);
+    if (!resName.IsEmpty())
+      resName.Append(GOPortFactory::c_NameDelim);
     resName.Append(nameComp);
   }
 }
 
-wxString GOPortFactory::ComposeDeviceName(wxString const &portName,
-                                          wxString const &apiName,
-                                          wxString const &devName) {
+wxString GOPortFactory::ComposeDeviceName(
+  wxString const &portName, wxString const &apiName, wxString const &devName) {
   wxString resName;
 
-  if (IsToUsePortName()) append_name(portName, resName);
+  if (IsToUsePortName())
+    append_name(portName, resName);
   append_name(apiName, resName);
   append_name(devName, resName);
   return resName;

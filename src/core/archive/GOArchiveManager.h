@@ -16,22 +16,22 @@ class GOSettingDirectory;
 #include <wx/string.h>
 
 class GOArchiveManager {
- private:
-  GOOrganList& m_OrganList;
-  const GOSettingDirectory& m_CacheDir;
+private:
+  GOOrganList &m_OrganList;
+  const GOSettingDirectory &m_CacheDir;
 
-  GOArchive* OpenArchive(const wxString& path);
-  bool ReadIndex(GOArchive* archive, bool InstallOrgans = false);
-  wxString InstallPackage(const wxString& path, const wxString& last_id);
+  GOArchive *OpenArchive(const wxString &path);
+  bool ReadIndex(GOArchive *archive, bool InstallOrgans = false);
+  wxString InstallPackage(const wxString &path, const wxString &last_id);
 
- public:
-  GOArchiveManager(GOOrganList& OrganList, const GOSettingDirectory& CacheDir);
+public:
+  GOArchiveManager(GOOrganList &OrganList, const GOSettingDirectory &CacheDir);
   ~GOArchiveManager();
 
-  GOArchive* LoadArchive(const wxString& id);
-  wxString InstallPackage(const wxString& path);
-  bool RegisterPackage(const wxString& path);
-  void RegisterPackageDirectory(const wxString& path);
+  GOArchive *LoadArchive(const wxString &id);
+  wxString InstallPackage(const wxString &path);
+  bool RegisterPackage(const wxString &path);
+  void RegisterPackageDirectory(const wxString &path);
 };
 
 #endif

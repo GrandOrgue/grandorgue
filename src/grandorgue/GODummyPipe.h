@@ -11,14 +11,14 @@
 #include "GOPipe.h"
 
 class GODummyPipe : public GOPipe {
- private:
+private:
   void Change(unsigned velocity, unsigned old_velocity);
 
- public:
-  GODummyPipe(GODefinitionFile* organfile, GORank* rank,
-              unsigned midi_key_number);
+public:
+  GODummyPipe(
+    GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number);
 
-  void Load(GOConfigReader& cfg, wxString group, wxString prefix);
+  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
 };
 
 #endif

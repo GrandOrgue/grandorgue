@@ -18,22 +18,22 @@ class GOTemperament;
 class GOTemperamentUser;
 
 class GOTemperamentList {
- private:
+private:
   ptr_vector<GOTemperament> m_Temperaments;
   ptr_vector<GOTemperamentUser> m_UserTemperaments;
 
- public:
+public:
   GOTemperamentList();
   ~GOTemperamentList();
 
-  void Load(GOConfigReader& cfg);
-  void Save(GOConfigWriter& cfg);
-  ptr_vector<GOTemperamentUser>& GetUserTemperaments();
+  void Load(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
+  ptr_vector<GOTemperamentUser> &GetUserTemperaments();
 
   void InitTemperaments();
 
-  const GOTemperament& GetTemperament(wxString Name);
-  const GOTemperament& GetTemperament(unsigned index);
+  const GOTemperament &GetTemperament(wxString Name);
+  const GOTemperament &GetTemperament(unsigned index);
   unsigned GetTemperamentIndex(wxString name);
   const wxString GetTemperamentName(unsigned index);
   unsigned GetTemperamentCount();

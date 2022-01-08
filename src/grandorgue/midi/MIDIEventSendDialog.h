@@ -21,23 +21,23 @@ class wxStaticText;
 class MIDIEventRecvDialog;
 
 class MIDIEventSendDialog : public wxPanel {
- private:
-  GOConfig& m_config;
-  GOMidiSender* m_original;
-  MIDIEventRecvDialog* m_recv;
+private:
+  GOConfig &m_config;
+  GOMidiSender *m_original;
+  MIDIEventRecvDialog *m_recv;
   GOMidiSenderData m_midi;
-  GOChoice<midi_send_message_type>* m_eventtype;
+  GOChoice<midi_send_message_type> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
-  wxStaticText* m_KeyLabel;
-  wxSpinCtrl* m_key;
-  wxStaticText* m_LowValueLabel;
-  wxSpinCtrl* m_LowValue;
-  wxStaticText* m_HighValueLabel;
-  wxSpinCtrl* m_HighValue;
-  wxStaticText* m_StartLabel;
-  wxSpinCtrl* m_StartValue;
-  wxStaticText* m_LengthLabel;
-  wxSpinCtrl* m_LengthValue;
+  wxStaticText *m_KeyLabel;
+  wxSpinCtrl *m_key;
+  wxStaticText *m_LowValueLabel;
+  wxSpinCtrl *m_LowValue;
+  wxStaticText *m_HighValueLabel;
+  wxSpinCtrl *m_HighValue;
+  wxStaticText *m_StartLabel;
+  wxSpinCtrl *m_StartValue;
+  wxStaticText *m_LengthLabel;
+  wxSpinCtrl *m_LengthValue;
   wxButton *m_new, *m_delete, *m_copy;
   int m_current;
 
@@ -45,13 +45,13 @@ class MIDIEventSendDialog : public wxPanel {
   void LoadEvent();
   MIDI_SEND_EVENT CopyEvent();
 
-  void OnNewClick(wxCommandEvent& event);
-  void OnDeleteClick(wxCommandEvent& event);
-  void OnEventChange(wxCommandEvent& event);
-  void OnTypeChange(wxCommandEvent& event);
-  void OnCopyClick(wxCommandEvent& event);
+  void OnNewClick(wxCommandEvent &event);
+  void OnDeleteClick(wxCommandEvent &event);
+  void OnEventChange(wxCommandEvent &event);
+  void OnTypeChange(wxCommandEvent &event);
+  void OnCopyClick(wxCommandEvent &event);
 
- protected:
+protected:
   enum {
     ID_EVENT_NO = 200,
     ID_EVENT_NEW,
@@ -67,9 +67,12 @@ class MIDIEventSendDialog : public wxPanel {
     ID_COPY
   };
 
- public:
-  MIDIEventSendDialog(wxWindow* parent, GOMidiSender* event,
-                      MIDIEventRecvDialog* recv, GOConfig& settings);
+public:
+  MIDIEventSendDialog(
+    wxWindow *parent,
+    GOMidiSender *event,
+    MIDIEventRecvDialog *recv,
+    GOConfig &settings);
   ~MIDIEventSendDialog();
 
   void DoApply();

@@ -22,15 +22,15 @@ class GOSoundSampler;
 typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
 
 class GOTremulant : public GODrawstop, private GOCacheObject {
- private:
+private:
   static const struct IniFileEnumEntry m_tremulant_types[];
   GOTremulantType m_TremulantType;
   int m_Period;
   int m_StartRate;
   int m_StopRate;
   int m_AmpModDepth;
-  GOSoundProvider* m_TremProvider;
-  GOSoundSampler* m_PlaybackHandle;
+  GOSoundProvider *m_TremProvider;
+  GOSoundSampler *m_PlaybackHandle;
   uint64_t m_LastStop;
   int m_SamplerGroupID;
 
@@ -40,18 +40,18 @@ class GOTremulant : public GODrawstop, private GOCacheObject {
 
   void Initialize();
   void LoadData();
-  bool LoadCache(GOCache& cache);
-  bool SaveCache(GOCacheWriter& cache);
-  void UpdateHash(GOHash& hash);
-  const wxString& GetLoadTitle();
+  bool LoadCache(GOCache &cache);
+  bool SaveCache(GOCacheWriter &cache);
+  void UpdateHash(GOHash &hash);
+  const wxString &GetLoadTitle();
 
   void AbortPlayback();
   void StartPlayback();
 
- public:
-  GOTremulant(GODefinitionFile* organfile);
+public:
+  GOTremulant(GODefinitionFile *organfile);
   ~GOTremulant();
-  void Load(GOConfigReader& cfg, wxString group, int sampler_group_id);
+  void Load(GOConfigReader &cfg, wxString group, int sampler_group_id);
   GOTremulantType GetTremulantType();
 
   wxString GetMidiType();

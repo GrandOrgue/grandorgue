@@ -15,21 +15,21 @@
 class GOFile;
 
 class GOConfigFileReader {
- private:
-  std::map<wxString, std::map<wxString, wxString> > m_Entries;
+private:
+  std::map<wxString, std::map<wxString, wxString>> m_Entries;
   wxString m_Hash;
 
-  wxString GetNextLine(const wxString& buffer, unsigned& pos);
+  wxString GetNextLine(const wxString &buffer, unsigned &pos);
 
- public:
+public:
   GOConfigFileReader();
   ~GOConfigFileReader();
 
-  bool Read(GOFile* file);
+  bool Read(GOFile *file);
   bool Read(wxString filename);
   wxString GetHash();
 
-  const std::map<wxString, std::map<wxString, wxString> >& GetContent();
+  const std::map<wxString, std::map<wxString, wxString>> &GetContent();
   wxString getEntry(wxString group, wxString name);
 };
 

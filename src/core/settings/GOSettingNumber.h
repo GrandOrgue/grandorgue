@@ -10,27 +10,33 @@
 
 #include "settings/GOSetting.h"
 
-template <class T>
-class GOSettingNumber : private GOSetting {
- private:
+template <class T> class GOSettingNumber : private GOSetting {
+private:
   T m_Value;
   T m_MinValue;
   T m_MaxValue;
   T m_DefaultValue;
 
-  void Load(GOConfigReader& cfg);
-  void Save(GOConfigWriter& cfg);
+  void Load(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
 
- protected:
+protected:
   virtual T validate(T value) {
-    if (value <= m_MinValue) value = m_MinValue;
-    if (value >= m_MaxValue) value = m_MaxValue;
+    if (value <= m_MinValue)
+      value = m_MinValue;
+    if (value >= m_MaxValue)
+      value = m_MaxValue;
     return value;
   }
 
- public:
-  GOSettingNumber(GOSettingStore* store, wxString group, wxString name,
-                  T min_value, T max_value, T default_value);
+public:
+  GOSettingNumber(
+    GOSettingStore *store,
+    wxString group,
+    wxString name,
+    T min_value,
+    T max_value,
+    T default_value);
 
   void setDefaultValue(T default_value);
 

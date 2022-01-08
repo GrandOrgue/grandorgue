@@ -12,18 +12,18 @@
 #include "GOGUIControl.h"
 
 class GOGUIImage : public GOGUIControl {
- protected:
+protected:
   GOBitmap m_Bitmap;
   unsigned m_TileOffsetX;
   unsigned m_TileOffsetY;
 
- public:
-  GOGUIImage(GOGUIPanel* panel);
+public:
+  GOGUIImage(GOGUIPanel *panel);
 
-  void Load(GOConfigReader& cfg, wxString group);
+  void Load(GOConfigReader &cfg, wxString group);
 
-  void PrepareDraw(double scale, GOBitmap* background);
-  void Draw(GODC& dc);
+  void PrepareDraw(double scale, GOBitmap *background);
+  void Draw(GODC &dc);
 };
 
 #endif

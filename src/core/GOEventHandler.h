@@ -11,10 +11,10 @@
 class GOMidiEvent;
 
 class GOEventHandler {
- public:
+public:
   virtual ~GOEventHandler() {}
 
-  virtual void ProcessMidi(const GOMidiEvent& event) = 0;
+  virtual void ProcessMidi(const GOMidiEvent &event) = 0;
   virtual void HandleKey(int key) = 0;
 };
 

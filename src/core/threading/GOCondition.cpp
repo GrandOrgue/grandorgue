@@ -9,7 +9,7 @@
 
 #include "threading_impl.h"
 
-const char* const UNKNOWN_WAITER_INFO = "UnknownWaiter";
+const char *const UNKNOWN_WAITER_INFO = "UnknownWaiter";
 
 #define WAITER_INFO(waiterInfo) (waiterInfo ? waiterInfo : UNKNOWN_WAITER_INFO)
 
@@ -22,22 +22,22 @@ const char* const UNKNOWN_WAITER_INFO = "UnknownWaiter";
  */
 
 unsigned compose_result(bool isSignalReceived, bool isMutexLocked) {
-  return (isSignalReceived ? GOCondition::SIGNAL_RECEIVED : 0) |
-         (isMutexLocked ? GOCondition::MUTEX_LOCKED : 0);
+  return (isSignalReceived ? GOCondition::SIGNAL_RECEIVED : 0)
+    | (isMutexLocked ? GOCondition::MUTEX_LOCKED : 0);
 }
 
 #if defined GO_STD_MUTEX
-GOCondition::GOCondition(GOMutex& mutex) : r_mutex(mutex.GetTimedMutex()) {}
+GOCondition::GOCondition(GOMutex &mutex) : r_mutex(mutex.GetTimedMutex()) {}
 
 GOCondition::~GOCondition() {}
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo,
-                             GOThread*) {
+unsigned
+GOCondition::DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *) {
   bool isSignalReceived;
 
   if (isWithTimeout)
-    isSignalReceived = m_condition.wait_for(r_mutex, THREADING_WAIT_TIMEOUT) !=
-                       std::cv_status::timeout;
+    isSignalReceived = m_condition.wait_for(r_mutex, THREADING_WAIT_TIMEOUT)
+      != std::cv_status::timeout;
   else {
     m_condition.wait(r_mutex);
     isSignalReceived = true;
@@ -50,17 +50,17 @@ void GOCondition::Signal() { m_condition.notify_one(); }
 void GOCondition::Broadcast() { m_condition.notify_all(); }
 #elif defined WX_MUTEX
 
-GOCondition::GOCondition(GOMutex& mutex) : m_condition(mutex.m_Mutex) {}
+GOCondition::GOCondition(GOMutex &mutex) : m_condition(mutex.m_Mutex) {}
 
 GOCondition::~GOCondition() {}
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo,
-                             GOThread*) {
+unsigned
+GOCondition::DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *) {
   bool isSignalReceived;
 
   if (isWithTimeout)
-    isSignalReceived =
-        m_condition.WaitTimeout(WAIT_TIMEOUT_MS) != wxCOND_TIMEOUT;
+    isSignalReceived
+      = m_condition.WaitTimeout(WAIT_TIMEOUT_MS) != wxCOND_TIMEOUT;
   else {
     m_condition.Wait();
     rc = true;
@@ -74,14 +74,15 @@ void GOCondition::Broadcast() { m_condition.Broadcast(); }
 
 #else
 
-GOCondition::GOCondition(GOMutex& mutex) : m_Waiters(0), m_Mutex(mutex) {}
+GOCondition::GOCondition(GOMutex &mutex) : m_Waiters(0), m_Mutex(mutex) {}
 
 GOCondition::~GOCondition() {
-  while (m_Waiters > 0) Signal();
+  while (m_Waiters > 0)
+    Signal();
 }
 
-unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo,
-                             GOThread* pThread) {
+unsigned GOCondition::DoWait(
+  bool isWithTimeout, const char *waiterInfo, GOThread *pThread) {
   m_Waiters.fetch_add(1);
   m_Mutex.Unlock();
 
@@ -93,14 +94,17 @@ unsigned GOCondition::DoWait(bool isWithTimeout, const char* waiterInfo,
 
   do {
     isMutexLocked = m_Mutex.LockOrStop(waiterInfo, pThread);
-    if (isMutexLocked) break;
+    if (isMutexLocked)
+      break;
 
     // a timeout occured
     if (isFirstTime && waiterInfo) {
       wxLogWarning(
-          "GOCondition::Wait: unable to restore lock on the condition mutex "
-          "%p:%p for %s",
-          this, &m_Mutex, wxString(WAITER_INFO(waiterInfo)));
+        "GOCondition::Wait: unable to restore lock on the condition mutex "
+        "%p:%p for %s",
+        this,
+        &m_Mutex,
+        wxString(WAITER_INFO(waiterInfo)));
       isFirstTime = false;
     }
   } while (pThread == NULL || !pThread->ShouldStop());
@@ -129,20 +133,22 @@ void GOCondition::Broadcast() {
 
 #endif
 
-unsigned GOCondition::WaitOrStop(const char* waiterInfo, GOThread* pThread) {
+unsigned GOCondition::WaitOrStop(const char *waiterInfo, GOThread *pThread) {
   unsigned rc = 0;
   bool isFirstTime = true;
 
   while (pThread == NULL || !pThread->ShouldStop()) {
     rc = DoWait(pThread != NULL, waiterInfo, pThread);
 
-    if (rc & SIGNAL_RECEIVED) break;
+    if (rc & SIGNAL_RECEIVED)
+      break;
 
     // timeout occured
     if (isFirstTime && waiterInfo) {
       wxLogWarning(
-          "GOCondition::WaitOrStop: timeout while %s waited for condition %p",
-          wxString(WAITER_INFO(waiterInfo)), this);
+        "GOCondition::WaitOrStop: timeout while %s waited for condition %p",
+        wxString(WAITER_INFO(waiterInfo)),
+        this);
       isFirstTime = false;
     }
   }

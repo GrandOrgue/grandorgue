@@ -11,11 +11,11 @@
 #include "GOMutex.h"
 
 class GOMutexLocker {
- private:
-  GOMutex& m_Mutex;
+private:
+  GOMutex &m_Mutex;
   bool m_Locked;
 
- public:
+public:
   /**
    * Lock the mutex
    * When try_lock = true or pThread is not null then the mutex may be not
@@ -30,8 +30,11 @@ class GOMutexLocker {
    * when pThread->ShouldStop()
    */
 
-  GOMutexLocker(GOMutex& mutex, bool try_lock = false,
-                const char* lockerInfo = NULL, GOThread* pThread = NULL)
+  GOMutexLocker(
+    GOMutex &mutex,
+    bool try_lock = false,
+    const char *lockerInfo = NULL,
+    GOThread *pThread = NULL)
       : m_Mutex(mutex), m_Locked(false) {
     if (try_lock)
       m_Locked = m_Mutex.TryLock(lockerInfo);
@@ -44,23 +47,26 @@ class GOMutexLocker {
   }
 
   ~GOMutexLocker() {
-    if (m_Locked) m_Mutex.Unlock();
+    if (m_Locked)
+      m_Mutex.Unlock();
   }
 
-  bool TryLock(const char* lockerInfo = NULL) {
-    if (!m_Locked) m_Locked = m_Mutex.TryLock(lockerInfo);
+  bool TryLock(const char *lockerInfo = NULL) {
+    if (!m_Locked)
+      m_Locked = m_Mutex.TryLock(lockerInfo);
     return m_Locked;
   }
 
   bool IsLocked() const { return m_Locked; }
 
   void Unlock() {
-    if (m_Locked) m_Mutex.Unlock();
+    if (m_Locked)
+      m_Mutex.Unlock();
     m_Locked = false;
   }
 
-  GOMutexLocker(const GOMutexLocker&) = delete;
-  GOMutexLocker& operator=(const GOMutexLocker&) = delete;
+  GOMutexLocker(const GOMutexLocker &) = delete;
+  GOMutexLocker &operator=(const GOMutexLocker &) = delete;
 };
 
 #endif

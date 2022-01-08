@@ -17,10 +17,14 @@ GOTemperament::GOTemperament(wxString name, wxString title, wxString group)
 
 GOTemperament::~GOTemperament() {}
 
-float GOTemperament::GetOffset(bool ignorepitch, unsigned midi_number,
-                               unsigned wav_midi_number, float wav_pitch_fract,
-                               float harmonic_number, float pitch_correction,
-                               float default_tuning) const {
+float GOTemperament::GetOffset(
+  bool ignorepitch,
+  unsigned midi_number,
+  unsigned wav_midi_number,
+  float wav_pitch_fract,
+  float harmonic_number,
+  float pitch_correction,
+  float default_tuning) const {
   return 0;
 }
 

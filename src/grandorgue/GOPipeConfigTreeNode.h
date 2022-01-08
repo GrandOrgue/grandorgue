@@ -14,21 +14,23 @@
 
 class GOPipeConfigTreeNode : public GOPipeConfigNode,
                              private GOPipeUpdateCallback {
- private:
-  std::vector<GOPipeConfigNode*> m_Childs;
-  GOPipeUpdateCallback* m_Callback;
+private:
+  std::vector<GOPipeConfigNode *> m_Childs;
+  GOPipeUpdateCallback *m_Callback;
 
   void UpdateAmplitude();
   void UpdateTuning();
   void UpdateAudioGroup();
 
- public:
-  GOPipeConfigTreeNode(GOPipeConfigNode* parent, GODefinitionFile* organfile,
-                       GOPipeUpdateCallback* callback);
+public:
+  GOPipeConfigTreeNode(
+    GOPipeConfigNode *parent,
+    GODefinitionFile *organfile,
+    GOPipeUpdateCallback *callback);
 
-  void AddChild(GOPipeConfigNode* node);
+  void AddChild(GOPipeConfigNode *node);
   unsigned GetChildCount();
-  GOPipeConfigNode* GetChild(unsigned index);
+  GOPipeConfigNode *GetChild(unsigned index);
   GOSampleStatistic GetStatistic();
 };
 

@@ -14,11 +14,11 @@ class GOConfigReader;
 class GOConfigWriter;
 
 class GOTemperamentUser : public GOTemperamentCent {
- public:
+public:
   GOTemperamentUser(wxString name, wxString title, wxString group);
-  GOTemperamentUser(GOConfigReader& cfg, wxString group);
+  GOTemperamentUser(GOConfigReader &cfg, wxString group);
 
-  void Save(GOConfigWriter& cfg, wxString group);
+  void Save(GOConfigWriter &cfg, wxString group);
 
   float GetNoteOffset(unsigned note);
   void SetNoteOffset(unsigned note, float offset);

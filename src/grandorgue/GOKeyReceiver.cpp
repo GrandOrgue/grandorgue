@@ -11,25 +11,25 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOKeyReceiver::GOKeyReceiver(GODefinitionFile* organfile,
-                             KEY_RECEIVER_TYPE type)
+GOKeyReceiver::GOKeyReceiver(
+  GODefinitionFile *organfile, KEY_RECEIVER_TYPE type)
     : GOKeyReceiverData(type), m_organfile(organfile) {}
 
-void GOKeyReceiver::Load(GOConfigReader& cfg, wxString group) {
+void GOKeyReceiver::Load(GOConfigReader &cfg, wxString group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
-    m_ShortcutKey =
-        cfg.ReadInteger(CMBSetting, group, wxT("PlusKey"), 0, 255, false, 0);
-    m_MinusKey =
-        cfg.ReadInteger(CMBSetting, group, wxT("MinusKey"), 0, 255, false, 0);
+    m_ShortcutKey
+      = cfg.ReadInteger(CMBSetting, group, wxT("PlusKey"), 0, 255, false, 0);
+    m_MinusKey
+      = cfg.ReadInteger(CMBSetting, group, wxT("MinusKey"), 0, 255, false, 0);
   } else {
-    m_ShortcutKey = cfg.ReadInteger(ODFSetting, group, wxT("ShortcutKey"), 0,
-                                    255, false, m_ShortcutKey);
-    m_ShortcutKey = cfg.ReadInteger(CMBSetting, group, wxT("ShortcutKey"), 0,
-                                    255, false, m_ShortcutKey);
+    m_ShortcutKey = cfg.ReadInteger(
+      ODFSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
+    m_ShortcutKey = cfg.ReadInteger(
+      CMBSetting, group, wxT("ShortcutKey"), 0, 255, false, m_ShortcutKey);
   }
 }
 
-void GOKeyReceiver::Save(GOConfigWriter& cfg, wxString group) {
+void GOKeyReceiver::Save(GOConfigWriter &cfg, wxString group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
     cfg.WriteInteger(group, wxT("PlusKey"), m_ShortcutKey);
     cfg.WriteInteger(group, wxT("MinusKey"), m_MinusKey);
@@ -39,12 +39,15 @@ void GOKeyReceiver::Save(GOConfigWriter& cfg, wxString group) {
 }
 
 KEY_MATCH_TYPE GOKeyReceiver::Match(unsigned key) {
-  if (m_ShortcutKey == key) return KEY_MATCH;
-  if (m_MinusKey == key) return KEY_MATCH_MINUS;
+  if (m_ShortcutKey == key)
+    return KEY_MATCH;
+  if (m_MinusKey == key)
+    return KEY_MATCH_MINUS;
   return KEY_MATCH_NONE;
 }
 
-void GOKeyReceiver::Assign(const GOKeyReceiverData& data) {
-  *(GOKeyReceiverData*)this = data;
-  if (m_organfile) m_organfile->Modified();
+void GOKeyReceiver::Assign(const GOKeyReceiverData &data) {
+  *(GOKeyReceiverData *)this = data;
+  if (m_organfile)
+    m_organfile->Modified();
 }

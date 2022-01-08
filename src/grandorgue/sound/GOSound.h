@@ -34,8 +34,8 @@ class GOConfig;
 
 class GOSound {
   class GOSoundOutput {
-   public:
-    GOSoundPort* port;
+  public:
+    GOSoundPort *port;
     GOMutex mutex;
     GOCondition condition;
     bool wait;
@@ -47,13 +47,13 @@ class GOSound {
       waiting = false;
     }
 
-    GOSoundOutput(const GOSoundOutput& old) : condition(mutex) {
+    GOSoundOutput(const GOSoundOutput &old) : condition(mutex) {
       port = old.port;
       wait = old.wait;
       waiting = old.waiting;
     }
 
-    const GOSoundOutput& operator=(const GOSoundOutput& old) {
+    const GOSoundOutput &operator=(const GOSoundOutput &old) {
       port = old.port;
       wait = old.wait;
       waiting = old.waiting;
@@ -61,7 +61,7 @@ class GOSound {
     }
   };
 
- private:
+private:
   bool m_open;
 
   GOMutex m_lock;
@@ -79,13 +79,13 @@ class GOSound {
 
   wxString m_defaultAudioDevice;
 
-  GODefinitionFile* m_organfile;
+  GODefinitionFile *m_organfile;
   GOSoundRecorder m_AudioRecorder;
 
   GOSoundEngine m_SoundEngine;
   ptr_vector<GOSoundThread> m_Threads;
 
-  GOConfig& m_config;
+  GOConfig &m_config;
 
   GOMidi m_midi;
 
@@ -104,8 +104,8 @@ class GOSound {
   void StartStreams();
   void UpdateMeter();
 
- public:
-  GOSound(GOConfig& settings);
+public:
+  GOSound(GOConfig &settings);
   ~GOSound();
 
   bool AssureSoundIsOpen();
@@ -114,22 +114,22 @@ class GOSound {
   wxString getLastErrorMessage() const { return m_LastErrorMessage; }
   wxString getState();
 
-  GOConfig& GetSettings();
+  GOConfig &GetSettings();
 
-  void AssignOrganFile(GODefinitionFile* organfile);
-  GODefinitionFile* GetOrganFile();
+  void AssignOrganFile(GODefinitionFile *organfile);
+  GODefinitionFile *GetOrganFile();
 
   void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
-  std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig& portsConfig);
-  const wxString GetDefaultAudioDevice(const GOPortsConfig& portsConfig);
+  std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
+  const wxString GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
 
-  GOMidi& GetMidi();
+  GOMidi &GetMidi();
 
-  GOSoundEngine& GetEngine();
+  GOSoundEngine &GetEngine();
 
-  bool AudioCallback(unsigned dev_index, float* outputBuffer,
-                     unsigned int nFrames);
+  bool
+  AudioCallback(unsigned dev_index, float *outputBuffer, unsigned int nFrames);
 };
 
 #endif

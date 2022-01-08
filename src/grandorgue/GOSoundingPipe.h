@@ -20,8 +20,8 @@ class GOSoundingPipe : public GOPipe,
                        private GOCacheObject,
                        private GOPipeUpdateCallback,
                        private GOPipeWindchestCallback {
- private:
-  GOSoundSampler* m_Sampler;
+private:
+  GOSoundSampler *m_Sampler;
   uint64_t m_LastStop;
   int m_Instances;
   bool m_Tremulant;
@@ -49,17 +49,17 @@ class GOSoundingPipe : public GOPipe,
   void SetOn(unsigned velocity);
   void SetOff();
   void Change(unsigned velocity, unsigned old_velocity);
-  GOSoundProvider* GetSoundProvider();
+  GOSoundProvider *GetSoundProvider();
   void Validate();
 
-  void LoadAttack(GOConfigReader& cfg, wxString group, wxString prefix);
+  void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);
 
   void Initialize();
   void LoadData();
-  bool LoadCache(GOCache& cache);
-  bool SaveCache(GOCacheWriter& cache);
-  void UpdateHash(GOHash& hash);
-  const wxString& GetLoadTitle();
+  bool LoadCache(GOCache &cache);
+  bool SaveCache(GOCacheWriter &cache);
+  void UpdateHash(GOHash &hash);
+  const wxString &GetLoadTitle();
 
   void SetTremulant(bool on);
 
@@ -70,16 +70,23 @@ class GOSoundingPipe : public GOPipe,
   void AbortPlayback();
   void PreparePlayback();
 
- public:
-  GOSoundingPipe(GODefinitionFile* organfile, GORank* rank, bool percussive,
-                 int sampler_group_id, unsigned midi_key_number,
-                 unsigned harmonic_number, float pitch_correction,
-                 float min_volume, float max_volume, bool retune);
+public:
+  GOSoundingPipe(
+    GODefinitionFile *organfile,
+    GORank *rank,
+    bool percussive,
+    int sampler_group_id,
+    unsigned midi_key_number,
+    unsigned harmonic_number,
+    float pitch_correction,
+    float min_volume,
+    float max_volume,
+    bool retune);
 
-  void Init(GOConfigReader& cfg, wxString group, wxString prefix,
-            wxString filename);
-  void Load(GOConfigReader& cfg, wxString group, wxString prefix);
-  void SetTemperament(const GOTemperament& temperament);
+  void
+  Init(GOConfigReader &cfg, wxString group, wxString prefix, wxString filename);
+  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
+  void SetTemperament(const GOTemperament &temperament);
 };
 
 #endif

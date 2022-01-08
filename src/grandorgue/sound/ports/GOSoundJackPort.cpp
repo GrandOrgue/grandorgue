@@ -25,16 +25,16 @@ GOSoundJackPort::~GOSoundJackPort() { Close(); }
 static const jack_options_t JACK_OPTIONS = JackNullOption;
 static const char *CLIENT_NAME = "GrandOrgueAudio";
 
-void GOSoundJackPort::JackLatencyCallback(jack_latency_callback_mode_t mode,
-                                          void *data) {
+void GOSoundJackPort::JackLatencyCallback(
+  jack_latency_callback_mode_t mode, void *data) {
   if (mode == JackPlaybackLatency) {
     GOSoundJackPort *const jp = (GOSoundJackPort *)data;
 
     if (jp->m_Channels) {
       jack_latency_range_t range;
 
-      jack_port_get_latency_range(jp->m_JackOutputPorts[0], JackPlaybackLatency,
-                                  &range);
+      jack_port_get_latency_range(
+        jp->m_JackOutputPorts[0], JackPlaybackLatency, &range);
       jp->SetActualLatency(range.min / (double)jp->m_SampleRate);
       wxLogDebug("JACK actual latency set to %d ms", jp->m_ActualLatency);
     }
@@ -49,9 +49,9 @@ int GOSoundJackPort::JackProcessCallback(jack_nframes_t nFrames, void *data) {
     const unsigned int nc = port->m_Channels;
 
     for (unsigned int i = 0; i < nc; i++) {
-      jack_default_audio_sample_t *out =
-          (jack_default_audio_sample_t *)jack_port_get_buffer(
-              port->m_JackOutputPorts[i], nFrames);
+      jack_default_audio_sample_t *out
+        = (jack_default_audio_sample_t *)jack_port_get_buffer(
+          port->m_JackOutputPorts[i], nFrames);
 
       if (port->m_IsStarted) {
         // copy samples from the interleaved port->m_GoBuffer to the non
@@ -83,16 +83,17 @@ void GOSoundJackPort::Open() {
 
   jack_status_t jack_status;
 
-  m_JackClient =
-      jack_client_open(CLIENT_NAME, JACK_OPTIONS, &jack_status, NULL);
+  m_JackClient
+    = jack_client_open(CLIENT_NAME, JACK_OPTIONS, &jack_status, NULL);
 
   if (!m_JackClient) {
     if (jack_status & JackServerFailed)
       throw wxString::Format("Unable to connect to a JACK server");
-    throw wxString::Format("jack_client_open() failed, status = 0x%2.0x",
-                           jack_status);
+    throw wxString::Format(
+      "jack_client_open() failed, status = 0x%2.0x", jack_status);
   }
-  if (jack_status & JackServerStarted) wxLogDebug("JACK server started");
+  if (jack_status & JackServerStarted)
+    wxLogDebug("JACK server started");
   if (jack_status & JackNameNotUnique)
     wxLogDebug("Unique name `%s' assigned", jack_get_client_name(m_JackClient));
 
@@ -101,14 +102,16 @@ void GOSoundJackPort::Open() {
 
   if (sample_rate != m_SampleRate)
     throw wxString::Format(
-        "Device %s wants a different sample rate: %d.\nPlease adjust the "
-        "GrandOrgue audio settings.",
-        m_Name, sample_rate);
+      "Device %s wants a different sample rate: %d.\nPlease adjust the "
+      "GrandOrgue audio settings.",
+      m_Name,
+      sample_rate);
   if (samples_per_buffer != m_SamplesPerBuffer)
     throw wxString::Format(
-        "Device %s wants a different samples per buffer settings: %d.\nPlease "
-        "adjust the GrandOrgue audio settings.",
-        m_Name, samples_per_buffer);
+      "Device %s wants a different samples per buffer settings: %d.\nPlease "
+      "adjust the GrandOrgue audio settings.",
+      m_Name,
+      samples_per_buffer);
 
   char port_name[32];
 
@@ -116,9 +119,8 @@ void GOSoundJackPort::Open() {
     m_JackOutputPorts = new jack_port_t *[m_Channels];
     for (unsigned int i = 0; i < m_Channels; i++) {
       sprintf(port_name, "out_%d", i);
-      m_JackOutputPorts[i] =
-          jack_port_register(m_JackClient, port_name, JACK_DEFAULT_AUDIO_TYPE,
-                             JackPortIsOutput, 0);
+      m_JackOutputPorts[i] = jack_port_register(
+        m_JackClient, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
       if (m_JackOutputPorts[i] == NULL)
         throw wxString::Format("No more JACK ports available");
     }
@@ -144,7 +146,7 @@ void GOSoundJackPort::StartStream() {
 
 wxString GOSoundJackPort::getName() {
   return GOSoundPortFactory::getInstance().ComposeDeviceName(
-      PORT_NAME, wxEmptyString, "Native Output");
+    PORT_NAME, wxEmptyString, "Native Output");
 }
 #endif /* GO_USE_JACK */
 
@@ -171,21 +173,21 @@ void GOSoundJackPort::Close() {
 
 static const wxString OLD_STYLE_NAME = wxT("Jack Output");
 
-GOSoundPort *GOSoundJackPort::create(const GOPortsConfig &portsConfig,
-                                     GOSound *sound, wxString name) {
+GOSoundPort *GOSoundJackPort::create(
+  const GOPortsConfig &portsConfig, GOSound *sound, wxString name) {
 #if defined(GO_USE_JACK)
   const wxString devName = getName();
 
-  if (portsConfig.IsEnabled(PORT_NAME) &&
-      (name == devName || devName + GOPortFactory::c_NameDelim == name ||
-       name == OLD_STYLE_NAME))
+  if (
+    portsConfig.IsEnabled(PORT_NAME)
+    && (name == devName || devName + GOPortFactory::c_NameDelim == name || name == OLD_STYLE_NAME))
     return new GOSoundJackPort(sound, devName);
 #endif
   return NULL;
 }
 
-void GOSoundJackPort::addDevices(const GOPortsConfig &portsConfig,
-                                 std::vector<GOSoundDevInfo> &result) {
+void GOSoundJackPort::addDevices(
+  const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &result) {
 #if defined(GO_USE_JACK)
   if (portsConfig.IsEnabled(PORT_NAME)) {
     GOSoundDevInfo info;

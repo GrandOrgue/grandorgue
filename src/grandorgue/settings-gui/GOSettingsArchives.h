@@ -22,18 +22,18 @@ class GOSettingsArchives : public wxPanel {
     ID_DEL,
   };
 
- private:
-  GOConfig& m_config;
-  GOSettingsOrgan& m_Organs;
-  wxListView* m_Archives;
-  wxButton* m_Del;
+private:
+  GOConfig &m_config;
+  GOSettingsOrgan &m_Organs;
+  wxListView *m_Archives;
+  wxButton *m_Del;
 
-  void OnArchiveSelected(wxListEvent& event);
-  void OnDel(wxCommandEvent& event);
+  void OnArchiveSelected(wxListEvent &event);
+  void OnDel(wxCommandEvent &event);
 
- public:
-  GOSettingsArchives(GOConfig& settings, GOSettingsOrgan& organs,
-                     wxWindow* parent);
+public:
+  GOSettingsArchives(
+    GOConfig &settings, GOSettingsOrgan &organs, wxWindow *parent);
 
   void Save();
 

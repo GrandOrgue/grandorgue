@@ -13,23 +13,23 @@ class wxFile;
 class wxInputStream;
 
 class GOCache {
-  wxInputStream* m_stream;
-  wxInputStream* m_fstream;
-  wxInputStream* m_zstream;
-  GOMemoryPool& m_pool;
+  wxInputStream *m_stream;
+  wxInputStream *m_fstream;
+  wxInputStream *m_zstream;
+  GOMemoryPool &m_pool;
   bool m_Mapable;
   bool m_OK;
 
- public:
-  GOCache(wxFile& cache_file, GOMemoryPool& pool);
+public:
+  GOCache(wxFile &cache_file, GOMemoryPool &pool);
   virtual ~GOCache();
 
   bool ReadHeader();
   void FreeCacheFile();
 
-  bool Read(void* data, unsigned length);
+  bool Read(void *data, unsigned length);
   /* Allocate and read a block written by WriteBlock */
-  void* ReadBlock(unsigned length);
+  void *ReadBlock(unsigned length);
 
   void Close();
 };

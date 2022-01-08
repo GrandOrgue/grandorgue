@@ -18,36 +18,38 @@ class GOSoundReverb;
 class GOConfig;
 
 class GOSoundOutputWorkItem : public GOSoundWorkItem, public GOSoundBufferItem {
- private:
+private:
   std::vector<float> m_ScaleFactors;
-  std::vector<GOSoundBufferItem*> m_Outputs;
+  std::vector<GOSoundBufferItem *> m_Outputs;
   unsigned m_OutputCount;
   std::vector<float> m_MeterInfo;
-  GOSoundReverb* m_Reverb;
+  GOSoundReverb *m_Reverb;
   GOMutex m_Mutex;
   unsigned m_Done;
   volatile bool m_Stop;
 
- public:
-  GOSoundOutputWorkItem(unsigned channels, std::vector<float> scale_factors,
-                        unsigned samples_per_buffer);
+public:
+  GOSoundOutputWorkItem(
+    unsigned channels,
+    std::vector<float> scale_factors,
+    unsigned samples_per_buffer);
   ~GOSoundOutputWorkItem();
 
-  void SetOutputs(std::vector<GOSoundBufferItem*> outputs);
+  void SetOutputs(std::vector<GOSoundBufferItem *> outputs);
 
   unsigned GetGroup();
   unsigned GetCost();
   bool GetRepeat();
-  void Run(GOSoundThread* pThread = nullptr);
+  void Run(GOSoundThread *pThread = nullptr);
   void Exec();
-  void Finish(bool stop, GOSoundThread* pThread = nullptr);
+  void Finish(bool stop, GOSoundThread *pThread = nullptr);
 
   void Clear();
   void Reset();
 
-  void SetupReverb(GOConfig& settings);
+  void SetupReverb(GOConfig &settings);
 
-  const std::vector<float>& GetMeterInfo();
+  const std::vector<float> &GetMeterInfo();
   void ResetMeterInfo();
 };
 

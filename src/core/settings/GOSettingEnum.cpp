@@ -11,28 +11,31 @@
 #include "config/GOConfigWriter.h"
 
 template <class T>
-GOSettingEnum<T>::GOSettingEnum(GOSettingStore* store, wxString group,
-                                wxString name,
-                                const struct IniFileEnumEntry* entries,
-                                unsigned count, T default_value)
-    : GOSetting(store, group, name),
-      m_Value(default_value),
-      m_DefaultValue(default_value),
-      m_Entries(entries),
-      m_Count(count) {}
+GOSettingEnum<T>::GOSettingEnum(
+  GOSettingStore *store,
+  wxString group,
+  wxString name,
+  const struct IniFileEnumEntry *entries,
+  unsigned count,
+  T default_value)
+    : GOSetting(store, group, name), m_Value(default_value),
+      m_DefaultValue(default_value), m_Entries(entries), m_Count(count) {}
 
-template <class T>
-void GOSettingEnum<T>::Load(GOConfigReader& cfg) {
-  (*this)((T)cfg.ReadEnum(CMBSetting, m_Group, m_Name, m_Entries, m_Count,
-                          false, (int)m_DefaultValue));
+template <class T> void GOSettingEnum<T>::Load(GOConfigReader &cfg) {
+  (*this)((T)cfg.ReadEnum(
+    CMBSetting,
+    m_Group,
+    m_Name,
+    m_Entries,
+    m_Count,
+    false,
+    (int)m_DefaultValue));
 }
 
-template <class T>
-void GOSettingEnum<T>::Save(GOConfigWriter& cfg) {
+template <class T> void GOSettingEnum<T>::Save(GOConfigWriter &cfg) {
   cfg.WriteEnum(m_Group, m_Name, (int)m_Value, m_Entries, m_Count);
 }
 
-template <class T>
-void GOSettingEnum<T>::setDefaultValue(T default_value) {
+template <class T> void GOSettingEnum<T>::setDefaultValue(T default_value) {
   m_DefaultValue = default_value;
 }

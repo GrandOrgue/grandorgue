@@ -12,51 +12,49 @@
 
 #include <atomic>
 
-template <class T>
-class atomic {
- private:
+template <class T> class atomic {
+private:
   std::atomic<T> m_Value;
 
- public:
+public:
   atomic() : m_Value() {}
 
-  atomic(const T& val) : m_Value(val) {}
+  atomic(const T &val) : m_Value(val) {}
 
-  atomic(const atomic<T>& val) : m_Value(val.m_Value) {}
+  atomic(const atomic<T> &val) : m_Value(val.m_Value) {}
 
-  T operator=(const T& val) {
+  T operator=(const T &val) {
     m_Value = val;
     return val;
   }
 
   operator T() const { return m_Value; }
 
-  T exchange(const T& val) { return m_Value.exchange(val); }
+  T exchange(const T &val) { return m_Value.exchange(val); }
 
-  bool compare_exchange(T& expected, T new_value) {
+  bool compare_exchange(T &expected, T new_value) {
     return m_Value.compare_exchange_strong(expected, new_value);
   }
 
-  T fetch_add(const T& value) { return m_Value.fetch_add(value); }
+  T fetch_add(const T &value) { return m_Value.fetch_add(value); }
 };
 #else
 
 #include <wx/thread.h>
 
-template <class T>
-class atomic {
- private:
+template <class T> class atomic {
+private:
   wxCriticalSection m_Lock;
   T m_Value;
 
- public:
+public:
   atomic() {}
 
-  atomic(const T& val) { m_Value = val; }
+  atomic(const T &val) { m_Value = val; }
 
-  atomic(const atomic<T>& val) { m_Value = val.m_Value; }
+  atomic(const atomic<T> &val) { m_Value = val.m_Value; }
 
-  T operator=(const T& val) {
+  T operator=(const T &val) {
     wxCriticalSectionLocker m_Locker(m_Lock);
     m_Value = val;
     return val;
@@ -64,14 +62,14 @@ class atomic {
 
   operator T() const { return m_Value; }
 
-  T exchange(const T& val) {
+  T exchange(const T &val) {
     wxCriticalSectionLocker m_Locker(m_Lock);
     T current = m_Value;
     m_Value = val;
     return current;
   }
 
-  bool compare_exchange(T& expected, T new_value) {
+  bool compare_exchange(T &expected, T new_value) {
     wxCriticalSectionLocker m_Locker(m_Lock);
 
     if (m_Value == expected) {
@@ -83,7 +81,7 @@ class atomic {
     }
   }
 
-  T fetch_add(const T& value) {
+  T fetch_add(const T &value) {
     wxCriticalSectionLocker m_Locker(m_Lock);
     T current = m_Value;
     m_Value += value;
@@ -95,14 +93,12 @@ class atomic {
 typedef atomic<unsigned> atomic_uint;
 typedef atomic<int> atomic_int;
 
-template <class T>
-inline T load_once(const T& var) {
-  return *(const volatile T*)&var;
+template <class T> inline T load_once(const T &var) {
+  return *(const volatile T *)&var;
 }
 
-template <class T>
-inline void store_once(T& var, const T val) {
-  *(const volatile T*)&var = val;
+template <class T> inline void store_once(T &var, const T val) {
+  *(const volatile T *)&var = val;
 }
 
 #endif

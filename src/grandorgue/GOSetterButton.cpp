@@ -11,8 +11,8 @@
 
 #include "GOSetterButtonCallback.h"
 
-GOSetterButton::GOSetterButton(GODefinitionFile* organfile,
-                               GOSetterButtonCallback* setter, bool Pushbutton)
+GOSetterButton::GOSetterButton(
+  GODefinitionFile *organfile, GOSetterButtonCallback *setter, bool Pushbutton)
     : GOButton(organfile, MIDI_RECV_SETTER, Pushbutton), m_setter(setter) {}
 
 void GOSetterButton::Push() {
@@ -23,7 +23,8 @@ void GOSetterButton::Push() {
 }
 
 void GOSetterButton::Set(bool on) {
-  if (IsEngaged() == on) return;
+  if (IsEngaged() == on)
+    return;
   m_setter->SetterButtonChanged(this);
   Display(on);
 }

@@ -14,16 +14,16 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUIMetronomePanel : public GOGUIPanelCreator {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
 
-  GOGUIPanel* CreateMetronomePanel(GOConfigReader& cfg);
+  GOGUIPanel *CreateMetronomePanel(GOConfigReader &cfg);
 
- public:
-  GOGUIMetronomePanel(GODefinitionFile* organfile);
+public:
+  GOGUIMetronomePanel(GODefinitionFile *organfile);
   virtual ~GOGUIMetronomePanel();
 
-  void CreatePanels(GOConfigReader& cfg);
+  void CreatePanels(GOConfigReader &cfg);
 };
 
 #endif

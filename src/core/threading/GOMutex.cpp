@@ -11,7 +11,7 @@
 
 #define GO_PRINTCONTENTION 0
 
-static const char* const UNKNOWN_LOCKER_INFO = "UnknownLocker";
+static const char *const UNKNOWN_LOCKER_INFO = "UnknownLocker";
 
 #define LOCKER_INFO(lockerInfo) (lockerInfo ? lockerInfo : UNKNOWN_LOCKER_INFO)
 
@@ -78,8 +78,10 @@ bool GOMutex::DoLock(bool isWithTimeout) {
 #endif
     isLocked = m_Wait.Wait(isWithTimeout);
 #if GO_PRINTCONTENTION
-    wxLogWarning(wxT("Mutex::end_wait %p", isLocked = % s), this,
-                 isLocked ? "true" : "false");
+    wxLogWarning(
+      wxT("Mutex::end_wait %p", isLocked = % s),
+      this,
+      isLocked ? "true" : "false");
 #endif
   }
   return isLocked;
@@ -90,7 +92,8 @@ void GOMutex::DoUnlock() {
 
   int value = m_Lock.fetch_add(-1);
 
-  if (value > 1) m_Wait.Wakeup();
+  if (value > 1)
+    m_Wait.Wakeup();
 }
 
 bool GOMutex::DoTryLock() {
@@ -105,7 +108,7 @@ bool GOMutex::DoTryLock() {
 
 #endif
 
-bool GOMutex::LockOrStop(const char* lockerInfo, GOThread* pThread) {
+bool GOMutex::LockOrStop(const char *lockerInfo, GOThread *pThread) {
   bool isLocked = false;
 
   if (pThread != NULL) {
@@ -114,20 +117,22 @@ bool GOMutex::LockOrStop(const char* lockerInfo, GOThread* pThread) {
     while (!pThread->ShouldStop() && !isLocked) {
       isLocked = DoLock(true);
       if (!isLocked && isFirstTime) {
-        const char* currentLockerInfo = m_LockerInfo;
+        const char *currentLockerInfo = m_LockerInfo;
 
         wxLogWarning(
-            "GOMutex: timeout when locking mutex %p; currentLocker=%s "
-            "newLocker=%s",
-            this, wxString(currentLockerInfo),
-            wxString(LOCKER_INFO(lockerInfo)));
+          "GOMutex: timeout when locking mutex %p; currentLocker=%s "
+          "newLocker=%s",
+          this,
+          wxString(currentLockerInfo),
+          wxString(LOCKER_INFO(lockerInfo)));
         isFirstTime = false;
       }
     }
   } else
     isLocked = DoLock(false);
 
-  if (isLocked) m_LockerInfo = LOCKER_INFO(lockerInfo);
+  if (isLocked)
+    m_LockerInfo = LOCKER_INFO(lockerInfo);
   return isLocked;
 }
 
@@ -136,9 +141,10 @@ void GOMutex::Unlock() {
   DoUnlock();
 }
 
-bool GOMutex::TryLock(const char* lockerInfo) {
+bool GOMutex::TryLock(const char *lockerInfo) {
   bool isLocked = DoTryLock();
 
-  if (isLocked) m_LockerInfo = LOCKER_INFO(lockerInfo);
+  if (isLocked)
+    m_LockerInfo = LOCKER_INFO(lockerInfo);
   return isLocked;
 }

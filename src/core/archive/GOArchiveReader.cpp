@@ -17,7 +17,7 @@
 #include "GOHash.h"
 #include "GOZipFormat.h"
 
-GOArchiveReader::GOArchiveReader(wxFile& file) : m_File(file) {}
+GOArchiveReader::GOArchiveReader(wxFile &file) : m_File(file) {}
 
 GOArchiveReader::~GOArchiveReader() {}
 
@@ -29,7 +29,7 @@ bool GOArchiveReader::Seek(size_t offset) {
   return true;
 }
 
-bool GOArchiveReader::Read(void* buf, size_t len) {
+bool GOArchiveReader::Read(void *buf, size_t len) {
   if ((size_t)m_File.Read(buf, len) != len) {
     wxLogError(_("Read from the archive failed (%d bytes)"), len);
     return false;
@@ -37,15 +37,18 @@ bool GOArchiveReader::Read(void* buf, size_t len) {
   return true;
 }
 
-bool GOArchiveReader::GenerateFileHash(wxString& id) {
+bool GOArchiveReader::GenerateFileHash(wxString &id) {
   unsigned length = m_File.Length();
   GOHash hash;
   char buf[4096];
-  if (!Seek(0)) return false;
+  if (!Seek(0))
+    return false;
   for (unsigned pos = 0; pos < length; pos += sizeof(buf)) {
     size_t l = length - pos;
-    if (l > sizeof(buf)) l = sizeof(buf);
-    if (!Read(buf, l)) return false;
+    if (l > sizeof(buf))
+      l = sizeof(buf);
+    if (!Read(buf, l))
+      return false;
     hash.Update(buf, l);
   }
   id = hash.getStringHash();
@@ -61,7 +64,8 @@ uint32_t GOArchiveReader::CalculateCrc(size_t offset, size_t length) {
   uint32_t crc = crc32(0, Z_NULL, 0);
   while (length > 0) {
     size_t len = length;
-    if (len > sizeof(buf)) len = sizeof(buf);
+    if (len > sizeof(buf))
+      len = sizeof(buf);
     if (!Read(buf, len)) {
       wxLogError(_("Reading data for CRC failed"));
       return 0;
@@ -72,32 +76,35 @@ uint32_t GOArchiveReader::CalculateCrc(size_t offset, size_t length) {
   return crc;
 }
 
-size_t GOArchiveReader::ExtractU64(void* ptr) {
-  GOUInt64LE* p = (GOUInt64LE*)ptr;
+size_t GOArchiveReader::ExtractU64(void *ptr) {
+  GOUInt64LE *p = (GOUInt64LE *)ptr;
   return *p;
 }
 
-size_t GOArchiveReader::ExtractU32(void* ptr) {
-  GOUInt32LE* p = (GOUInt32LE*)ptr;
+size_t GOArchiveReader::ExtractU32(void *ptr) {
+  GOUInt32LE *p = (GOUInt32LE *)ptr;
   return *p;
 }
 
-bool GOArchiveReader::ReadFileRecord(size_t central_offset,
-                                     GOZipCentralHeader& central,
-                                     std::vector<GOArchiveEntry>& entries) {
-  GOBuffer<uint8_t> central_buf(central.name_length + central.extra_length +
-                                central.comment_length);
-  if (!Seek(central_offset + sizeof(central))) return false;
-  if (!Read(central_buf.get(), central_buf.GetSize())) return false;
+bool GOArchiveReader::ReadFileRecord(
+  size_t central_offset,
+  GOZipCentralHeader &central,
+  std::vector<GOArchiveEntry> &entries) {
+  GOBuffer<uint8_t> central_buf(
+    central.name_length + central.extra_length + central.comment_length);
+  if (!Seek(central_offset + sizeof(central)))
+    return false;
+  if (!Read(central_buf.get(), central_buf.GetSize()))
+    return false;
   size_t central_uncompressed_size = central.uncompressed_size;
   size_t central_compressed_size = central.compressed_size;
   size_t local_offset = central.offset;
   size_t central_disk_number = central.disk_number;
   {
-    uint8_t* extra_ptr = central_buf.get() + central.name_length;
+    uint8_t *extra_ptr = central_buf.get() + central.name_length;
     size_t len = central.extra_length;
     while (len > 0) {
-      GOZipHeaderExtraRecord extra = *(GOZipHeaderExtraRecord*)extra_ptr;
+      GOZipHeaderExtraRecord extra = *(GOZipHeaderExtraRecord *)extra_ptr;
       if (len < sizeof(extra)) {
         wxLogError(_("Incomplete central directory extra record"));
         return false;
@@ -107,7 +114,7 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
         return false;
       }
       if (extra.type == 0x0001) {
-        uint8_t* zip64_central = extra_ptr + sizeof(extra);
+        uint8_t *zip64_central = extra_ptr + sizeof(extra);
         size_t zip64_central_size = extra.size;
         if (central_uncompressed_size == 0xffffffff) {
           if (zip64_central_size < 8) {
@@ -147,19 +154,18 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
         }
         if (zip64_central_size != 0) {
           wxLogError(
-              _("Excess information in zip64 extendend information record"));
+            _("Excess information in zip64 extendend information record"));
           return false;
         }
-      } else if (extra.type == 0x0009 || extra.type == 0x000a ||
-                 extra.type == 0x000c || extra.type == 0x000d ||
-                 extra.type == 0x0065 || extra.type == 0x0065 ||
-                 extra.type == 0x2605 || extra.type == 0x2705 ||
-                 extra.type == 0x2805 || extra.type == 0x6375 ||
-                 extra.type == 0x7075 || extra.type == 0xa220 ||
-                 extra.type == 0x5455 || extra.type == 0x7875) {
+      } else if (
+        extra.type == 0x0009 || extra.type == 0x000a || extra.type == 0x000c
+        || extra.type == 0x000d || extra.type == 0x0065 || extra.type == 0x0065
+        || extra.type == 0x2605 || extra.type == 0x2705 || extra.type == 0x2805
+        || extra.type == 0x6375 || extra.type == 0x7075 || extra.type == 0xa220
+        || extra.type == 0x5455 || extra.type == 0x7875) {
       } else {
-        wxLogError(_("Unknown extendend information %04x"),
-                   (unsigned)extra.type);
+        wxLogError(
+          _("Unknown extendend information %04x"), (unsigned)extra.type);
       }
       len -= sizeof(extra) + extra.size;
       extra_ptr += sizeof(extra) + extra.size;
@@ -174,26 +180,30 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
     wxLogError(_("Invalid local header offset"));
     return false;
   }
-  if (!Seek(local_offset)) return false;
-  if (!Read(&local, sizeof(local))) return false;
+  if (!Seek(local_offset))
+    return false;
+  if (!Read(&local, sizeof(local)))
+    return false;
   if (local.signature != ZIP_LOCAL_HEADER) {
     wxLogError(_("Missing local header"));
     return false;
   }
-  if (local_offset + local.name_length + local.extra_length + sizeof(local) >
-      central_offset) {
+  if (
+    local_offset + local.name_length + local.extra_length + sizeof(local)
+    > central_offset) {
     wxLogError(_("Incomplete local record"));
     return false;
   }
   GOBuffer<uint8_t> local_buf(local.name_length + local.extra_length);
-  if (!Read(local_buf.get(), local_buf.GetSize())) return false;
+  if (!Read(local_buf.get(), local_buf.GetSize()))
+    return false;
   size_t local_uncompressed_size = local.uncompressed_size;
   size_t local_compressed_size = local.compressed_size;
   {
-    uint8_t* extra_ptr = local_buf.get() + local.name_length;
+    uint8_t *extra_ptr = local_buf.get() + local.name_length;
     size_t len = local.extra_length;
     while (len > 0) {
-      GOZipHeaderExtraRecord extra = *(GOZipHeaderExtraRecord*)extra_ptr;
+      GOZipHeaderExtraRecord extra = *(GOZipHeaderExtraRecord *)extra_ptr;
       if (len < sizeof(extra)) {
         wxLogError(_("Incomplete central directory extra record"));
         return false;
@@ -203,7 +213,7 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
         return false;
       }
       if (extra.type == 0x0001) {
-        uint8_t* zip64_local = extra_ptr + sizeof(extra);
+        uint8_t *zip64_local = extra_ptr + sizeof(extra);
         size_t zip64_local_size = extra.size;
         if (local_uncompressed_size == 0xffffffff) {
           if (zip64_local_size < 8) {
@@ -225,42 +235,42 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
         }
         if (zip64_local_size != 0) {
           wxLogError(
-              _("Excess information in zip64 extendend information record"));
+            _("Excess information in zip64 extendend information record"));
           return false;
         }
-      } else if (extra.type == 0x0009 || extra.type == 0x000a ||
-                 extra.type == 0x000c || extra.type == 0x000d ||
-                 extra.type == 0x0065 || extra.type == 0x0065 ||
-                 extra.type == 0x2605 || extra.type == 0x2705 ||
-                 extra.type == 0x2805 || extra.type == 0x6375 ||
-                 extra.type == 0x7075 || extra.type == 0xa220 ||
-                 extra.type == 0x5455 || extra.type == 0x7875) {
+      } else if (
+        extra.type == 0x0009 || extra.type == 0x000a || extra.type == 0x000c
+        || extra.type == 0x000d || extra.type == 0x0065 || extra.type == 0x0065
+        || extra.type == 0x2605 || extra.type == 0x2705 || extra.type == 0x2805
+        || extra.type == 0x6375 || extra.type == 0x7075 || extra.type == 0xa220
+        || extra.type == 0x5455 || extra.type == 0x7875) {
       } else {
-        wxLogError(_("Unknown extendend information %04x"),
-                   (unsigned)extra.type);
+        wxLogError(
+          _("Unknown extendend information %04x"), (unsigned)extra.type);
       }
       len -= sizeof(extra) + extra.size;
       extra_ptr += sizeof(extra) + extra.size;
     }
   }
-  if (local.version_extract != central.version_extract ||
-      local.flags != central.flags ||
-      local.compression != central.compression ||
-      local.modification_date != central.modification_date ||
-      local.modification_time != central.modification_time ||
-      local.crc != central.crc ||
-      local_uncompressed_size != central_uncompressed_size ||
-      local_compressed_size != central_compressed_size ||
-      local.name_length != central.name_length ||
-      memcmp(local_buf.get(), central_buf.get(), local.name_length)) {
+  if (
+    local.version_extract != central.version_extract
+    || local.flags != central.flags || local.compression != central.compression
+    || local.modification_date != central.modification_date
+    || local.modification_time != central.modification_time
+    || local.crc != central.crc
+    || local_uncompressed_size != central_uncompressed_size
+    || local_compressed_size != central_compressed_size
+    || local.name_length != central.name_length
+    || memcmp(local_buf.get(), central_buf.get(), local.name_length)) {
     wxLogError(_("Mismatch of local and central header"));
   }
   if (local.version_extract > 45) {
     wxLogError(_("ZIP uses not supported features"));
     return false;
   }
-  if (local.compression != 0 ||
-      central_uncompressed_size != central_compressed_size) {
+  if (
+    local.compression != 0
+    || central_uncompressed_size != central_compressed_size) {
     wxLogError(_("Only stored compression supported"));
     return false;
   }
@@ -269,14 +279,15 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
     return false;
   }
   bool utf = local.flags & 0x0800;
-  if (local_offset + central_uncompressed_size + local.name_length +
-          local.extra_length + sizeof(local) >
-      central_offset) {
+  if (
+    local_offset + central_uncompressed_size + local.name_length
+      + local.extra_length + sizeof(local)
+    > central_offset) {
     wxLogError(_("Incomplete file content"));
     return false;
   }
   static wxCSConv localConv(wxFONTENCODING_CP437);
-  const wxMBConv* conv;
+  const wxMBConv *conv;
   if (utf)
     conv = &wxConvUTF8;
   else
@@ -302,8 +313,8 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
       (name.length() >= 3 && name[name.length() - 1] == wxT('.') &&
        name[name.length() - 2] == wxT('.') &&
        name[name.length() - 3] == wxT('/'))) {
-    wxLogError(_("File name '%s' contains invalid path seperators"),
-               name.c_str());
+    wxLogError(
+      _("File name '%s' contains invalid path seperators"), name.c_str());
     return false;
   }
   if (name[name.length() - 1] == wxT('/')) {
@@ -319,8 +330,8 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
   GOArchiveEntry e;
   e.name = name;
   e.name.Replace(wxT("/"), wxT("\\"));
-  e.offset =
-      local_offset + local.name_length + local.extra_length + sizeof(local);
+  e.offset
+    = local_offset + local.name_length + local.extra_length + sizeof(local);
   e.len = central_uncompressed_size;
   entries.push_back(e);
   if (CalculateCrc(e.offset, e.len) != central.crc)
@@ -329,16 +340,20 @@ bool GOArchiveReader::ReadFileRecord(size_t central_offset,
 }
 
 bool GOArchiveReader::ReadCentralDirectory(
-    size_t offset, size_t entry_count, size_t length,
-    std::vector<GOArchiveEntry>& entries) {
+  size_t offset,
+  size_t entry_count,
+  size_t length,
+  std::vector<GOArchiveEntry> &entries) {
   while (entry_count > 0) {
     GOZipCentralHeader record;
     if (length < sizeof(record)) {
       wxLogError(_("Incomplete central directory entry"));
       return false;
     }
-    if (!Seek(offset)) return false;
-    if (!Read(&record, sizeof(record))) return false;
+    if (!Seek(offset))
+      return false;
+    if (!Read(&record, sizeof(record)))
+      return false;
     size_t len = sizeof(record);
     len += record.name_length + record.extra_length + record.comment_length;
     if (record.signature != ZIP_CENTRAL_DIRECTORY_HEADER) {
@@ -349,7 +364,8 @@ bool GOArchiveReader::ReadCentralDirectory(
       wxLogError(_("Incomplete central directory entry"));
       return false;
     }
-    if (!ReadFileRecord(offset, record, entries)) return false;
+    if (!ReadFileRecord(offset, record, entries))
+      return false;
     offset += len;
     length -= len;
     entry_count--;
@@ -361,24 +377,29 @@ bool GOArchiveReader::ReadCentralDirectory(
   return true;
 }
 
-bool GOArchiveReader::ReadEnd64Record(size_t offset, GOZipEnd64Record& record) {
-  if (12 + record.size < sizeof(record)) return false;
+bool GOArchiveReader::ReadEnd64Record(size_t offset, GOZipEnd64Record &record) {
+  if (12 + record.size < sizeof(record))
+    return false;
 
   size_t size = 12 + record.size - sizeof(record);
   offset += sizeof(record);
   while (size > 0) {
     GOZipEnd64BlockHeader header;
-    if (size < sizeof(header)) return false;
-    if (!Seek(offset)) return false;
-    if (!Read(&header, sizeof(header))) return false;
-    if (size < sizeof(header) + header.size) return false;
+    if (size < sizeof(header))
+      return false;
+    if (!Seek(offset))
+      return false;
+    if (!Read(&header, sizeof(header)))
+      return false;
+    if (size < sizeof(header) + header.size)
+      return false;
     size -= sizeof(header) + header.size;
     offset += sizeof(header) + header.size;
   }
   return true;
 }
 
-bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries) {
+bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry> &entries) {
   GOZipEndRecord record;
   GOZipEnd64Locator locator;
   GOZipEnd64Record record64;
@@ -389,15 +410,21 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries) {
       wxLogError(_("No end record found"));
       return false;
     }
-    if (!Seek(pos - i - sizeof(record))) return false;
-    if (!Read(&record, sizeof(record))) return false;
-    if (record.signature != ZIP_END_RECORD) continue;
-    if (record.comment_len != i) continue;
+    if (!Seek(pos - i - sizeof(record)))
+      return false;
+    if (!Read(&record, sizeof(record)))
+      return false;
+    if (record.signature != ZIP_END_RECORD)
+      continue;
+    if (record.comment_len != i)
+      continue;
     pos -= i + sizeof(record);
 
     if (pos > sizeof(locator)) {
-      if (!Seek(pos - sizeof(locator))) return false;
-      if (!Read(&locator, sizeof(locator))) return false;
+      if (!Seek(pos - sizeof(locator)))
+        return false;
+      if (!Read(&locator, sizeof(locator)))
+        return false;
       if (locator.signature == ZIP_END64_LOCATOR) {
         zip64 = true;
         if (locator.disk_count != 1 || locator.end_record_disk != 0) {
@@ -408,8 +435,10 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries) {
           wxLogError(_("Invalid offset in Zip64 end locator"));
           return false;
         }
-        if (!Seek(locator.end_record_offset)) return false;
-        if (!Read(&record64, sizeof(record64))) return false;
+        if (!Seek(locator.end_record_offset))
+          return false;
+        if (!Read(&record64, sizeof(record64)))
+          return false;
         if (record64.signature != ZIP_END64_RECORD) {
           wxLogError(_("Zip64 end record not found"));
           return false;
@@ -423,11 +452,14 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries) {
     size_t directory_size = record.directory_size;
     size_t directory_offset = record.directory_offset;
     if (zip64) {
-      if (current_disk == 0xffff) current_disk = record64.current_disk;
-      if (directory_disk == 0xffff) directory_disk = record64.directory_disk;
+      if (current_disk == 0xffff)
+        current_disk = record64.current_disk;
+      if (directory_disk == 0xffff)
+        directory_disk = record64.directory_disk;
       if (entry_count_disk == 0xffff)
         entry_count_disk = record64.entry_count_disk;
-      if (entry_count == 0xffff) entry_count = record64.entry_count;
+      if (entry_count == 0xffff)
+        entry_count = record64.entry_count;
       if (directory_size == 0xffffffff)
         directory_size = record64.directory_size;
       if (directory_offset == 0xffffffff)
@@ -437,8 +469,9 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries) {
         wxLogError(_("ZIP64 uses not supported features"));
         return false;
       }
-      if (record64.size + locator.end_record_offset + 12 >= pos ||
-          !ReadEnd64Record(locator.end_record_offset, record64)) {
+      if (
+        record64.size + locator.end_record_offset + 12 >= pos
+        || !ReadEnd64Record(locator.end_record_offset, record64)) {
         wxLogError(_("Malformed zip64 end record"));
         return false;
       }
@@ -448,19 +481,21 @@ bool GOArchiveReader::ReadEndRecord(std::vector<GOArchiveEntry>& entries) {
       wxLogError(_("Only non-splitted ZIP archives are supported"));
       return false;
     }
-    return ReadCentralDirectory(directory_offset, entry_count, directory_size,
-                                entries);
+    return ReadCentralDirectory(
+      directory_offset, entry_count, directory_size, entries);
   }
   wxLogError(_("No end record found"));
   return false;
 }
 
-bool GOArchiveReader::ListContent(wxString& id,
-                                  std::vector<GOArchiveEntry>& entries) {
+bool GOArchiveReader::ListContent(
+  wxString &id, std::vector<GOArchiveEntry> &entries) {
   entries.clear();
-  if (!GenerateFileHash(id)) return false;
+  if (!GenerateFileHash(id))
+    return false;
 
-  if (!ReadEndRecord(entries)) return false;
+  if (!ReadEndRecord(entries))
+    return false;
 
   return true;
 }

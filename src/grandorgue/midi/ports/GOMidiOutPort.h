@@ -17,14 +17,18 @@
 class GOMidiEvent;
 
 class GOMidiOutPort : public GOMidiPort {
- protected:
+protected:
   GOMidiOutputMerger m_merger;
 
-  virtual void SendData(std::vector<unsigned char>& msg) = 0;
+  virtual void SendData(std::vector<unsigned char> &msg) = 0;
 
- public:
-  GOMidiOutPort(GOMidi* midi, const wxString& portName, const wxString& apiName,
-                const wxString& deviceName, const wxString& fullName);
+public:
+  GOMidiOutPort(
+    GOMidi *midi,
+    const wxString &portName,
+    const wxString &apiName,
+    const wxString &deviceName,
+    const wxString &fullName);
 
   virtual ~GOMidiOutPort();
 
@@ -32,7 +36,7 @@ class GOMidiOutPort : public GOMidiPort {
 
   virtual bool Open();
 
-  void Send(const GOMidiEvent& e);
+  void Send(const GOMidiEvent &e);
 };
 
 #endif

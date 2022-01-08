@@ -9,7 +9,7 @@
 #define GOCOMBINATIONELEMENT_H
 
 class GOCombinationElement {
- public:
+public:
   virtual ~GOCombinationElement() {}
 
   virtual bool GetCombinationState() const = 0;

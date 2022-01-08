@@ -19,11 +19,11 @@ enum class MIDI_BIT_STATE {
   MIDI_BIT_NOT_PRESENT
 };
 
-uint8_t GORodgersChecksum(const std::vector<uint8_t>& msg, unsigned start,
-                          unsigned len);
+uint8_t GORodgersChecksum(
+  const std::vector<uint8_t> &msg, unsigned start, unsigned len);
 
-MIDI_BIT_STATE GORodgersGetBit(unsigned stop, unsigned offset,
-                               const std::vector<uint8_t> data);
-unsigned GORodgersSetBit(unsigned stop, bool state, std::vector<uint8_t>& data);
+MIDI_BIT_STATE GORodgersGetBit(
+  unsigned stop, unsigned offset, const std::vector<uint8_t> data);
+unsigned GORodgersSetBit(unsigned stop, bool state, std::vector<uint8_t> &data);
 
 #endif

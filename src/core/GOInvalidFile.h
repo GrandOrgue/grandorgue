@@ -11,11 +11,11 @@
 #include "GOFile.h"
 
 class GOInvalidFile : public GOFile {
- private:
+private:
   wxString m_Name;
 
- public:
-  GOInvalidFile(const wxString& name);
+public:
+  GOInvalidFile(const wxString &name);
 
   bool isValid();
   size_t GetSize();
@@ -24,7 +24,7 @@ class GOInvalidFile : public GOFile {
 
   bool Open();
   void Close();
-  size_t Read(void* buffer, size_t len);
+  size_t Read(void *buffer, size_t len);
 };
 
 #endif

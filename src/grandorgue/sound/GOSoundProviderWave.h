@@ -65,36 +65,67 @@ typedef struct {
 class GOSoundProviderWave : public GOSoundProvider {
   unsigned GetBytesPerSample(unsigned bits_per_sample);
 
-  void CreateAttack(const char* data, GOWave& wave, int attack_start,
-                    std::vector<GO_WAVE_LOOP> loop_list, int sample_group,
-                    unsigned bits_per_sample, unsigned channels, bool compress,
-                    loop_load_type loop_mode, bool percussive,
-                    unsigned min_attack_velocity,
-                    unsigned loop_crossfade_length, unsigned max_released_time);
-  void CreateRelease(const char* data, GOWave& wave, int sample_group,
-                     unsigned max_playback_time, int cue_point, int release_end,
-                     unsigned bits_per_sample, unsigned channels,
-                     bool compress);
-  void ProcessFile(const GOFilename& filename, std::vector<GO_WAVE_LOOP> loops,
-                   bool is_attack, bool is_release, int sample_group,
-                   unsigned max_playback_time, int attack_start, int cue_point,
-                   int release_end, unsigned bits_per_sample, int load_channels,
-                   bool compress, loop_load_type loop_mode, bool percussive,
-                   unsigned min_attack_velocity, bool use_pitch,
-                   unsigned loop_crossfade_length, unsigned max_released_time);
-  void LoadPitch(const GOFilename& filename);
+  void CreateAttack(
+    const char *data,
+    GOWave &wave,
+    int attack_start,
+    std::vector<GO_WAVE_LOOP> loop_list,
+    int sample_group,
+    unsigned bits_per_sample,
+    unsigned channels,
+    bool compress,
+    loop_load_type loop_mode,
+    bool percussive,
+    unsigned min_attack_velocity,
+    unsigned loop_crossfade_length,
+    unsigned max_released_time);
+  void CreateRelease(
+    const char *data,
+    GOWave &wave,
+    int sample_group,
+    unsigned max_playback_time,
+    int cue_point,
+    int release_end,
+    unsigned bits_per_sample,
+    unsigned channels,
+    bool compress);
+  void ProcessFile(
+    const GOFilename &filename,
+    std::vector<GO_WAVE_LOOP> loops,
+    bool is_attack,
+    bool is_release,
+    int sample_group,
+    unsigned max_playback_time,
+    int attack_start,
+    int cue_point,
+    int release_end,
+    unsigned bits_per_sample,
+    int load_channels,
+    bool compress,
+    loop_load_type loop_mode,
+    bool percussive,
+    unsigned min_attack_velocity,
+    bool use_pitch,
+    unsigned loop_crossfade_length,
+    unsigned max_released_time);
+  void LoadPitch(const GOFilename &filename);
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 
- public:
-  GOSoundProviderWave(GOMemoryPool& pool);
+public:
+  GOSoundProviderWave(GOMemoryPool &pool);
 
-  void LoadFromFile(std::vector<attack_load_info> attacks,
-                    std::vector<release_load_info> releases,
-                    unsigned bits_per_sample, int channels, bool compress,
-                    loop_load_type loop_mode, unsigned attack_load,
-                    unsigned release_load, int midi_key_number,
-                    unsigned loop_crossfade_length,
-                    unsigned release_crossfase_length);
+  void LoadFromFile(
+    std::vector<attack_load_info> attacks,
+    std::vector<release_load_info> releases,
+    unsigned bits_per_sample,
+    int channels,
+    bool compress,
+    loop_load_type loop_mode,
+    unsigned attack_load,
+    unsigned release_load,
+    int midi_key_number,
+    unsigned loop_crossfade_length,
+    unsigned release_crossfase_length);
   void SetAmplitude(float fixed_amplitude, float gain);
 };
 

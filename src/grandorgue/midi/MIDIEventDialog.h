@@ -23,26 +23,31 @@ class MIDIEventRecvDialog;
 class MIDIEventSendDialog;
 
 class MIDIEventDialog : public wxPropertySheetDialog, public GOView {
- private:
-  MIDIEventRecvDialog* m_recvPage;
-  MIDIEventSendDialog* m_sendPage;
-  MIDIEventSendDialog* m_sendDivisionPage;
-  MIDIEventKeyDialog* m_keyPage;
+private:
+  MIDIEventRecvDialog *m_recvPage;
+  MIDIEventSendDialog *m_sendPage;
+  MIDIEventSendDialog *m_sendDivisionPage;
+  MIDIEventKeyDialog *m_keyPage;
 
   void DoApply();
 
-  void OnApply(wxCommandEvent& event);
-  void OnOK(wxCommandEvent& event);
-  void OnCancel(wxCommandEvent& event);
+  void OnApply(wxCommandEvent &event);
+  void OnOK(wxCommandEvent &event);
+  void OnCancel(wxCommandEvent &event);
 
- public:
-  MIDIEventDialog(GODocumentBase* doc, wxWindow* parent, wxString title,
-                  GOConfig& settings, GOMidiReceiverBase* event,
-                  GOMidiSender* sender, GOKeyReceiver* key,
-                  GOMidiSender* division = NULL);
+public:
+  MIDIEventDialog(
+    GODocumentBase *doc,
+    wxWindow *parent,
+    wxString title,
+    GOConfig &settings,
+    GOMidiReceiverBase *event,
+    GOMidiSender *sender,
+    GOKeyReceiver *key,
+    GOMidiSender *division = NULL);
   ~MIDIEventDialog();
 
-  void RegisterMIDIListener(GOMidi* midi);
+  void RegisterMIDIListener(GOMidi *midi);
 
   DECLARE_EVENT_TABLE()
 };

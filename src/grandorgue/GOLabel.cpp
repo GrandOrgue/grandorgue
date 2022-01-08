@@ -13,10 +13,8 @@
 #include "GODocument.h"
 #include "config/GOConfig.h"
 
-GOLabel::GOLabel(GODefinitionFile* organfile)
-    : m_Name(),
-      m_Content(),
-      m_organfile(organfile),
+GOLabel::GOLabel(GODefinitionFile *organfile)
+    : m_Name(), m_Content(), m_organfile(organfile),
       m_sender(organfile, MIDI_SEND_LABEL) {
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);
@@ -24,27 +22,27 @@ GOLabel::GOLabel(GODefinitionFile* organfile)
 
 GOLabel::~GOLabel() {}
 
-void GOLabel::Init(GOConfigReader& cfg, wxString group, wxString name) {
+void GOLabel::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
   m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOLabel::Load(GOConfigReader& cfg, wxString group, wxString name) {
+void GOLabel::Load(GOConfigReader &cfg, wxString group, wxString name) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
   m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOLabel::Save(GOConfigWriter& cfg) {
+void GOLabel::Save(GOConfigWriter &cfg) {
   m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-const wxString& GOLabel::GetName() { return m_Name; }
+const wxString &GOLabel::GetName() { return m_Name; }
 
-const wxString& GOLabel::GetContent() { return m_Content; }
+const wxString &GOLabel::GetContent() { return m_Content; }
 
 void GOLabel::SetContent(wxString name) {
   m_Content = name;
@@ -68,12 +66,13 @@ wxString GOLabel::GetMidiType() { return _("Label"); }
 wxString GOLabel::GetMidiName() { return GetName(); }
 
 void GOLabel::ShowConfigDialog() {
-  wxString title =
-      wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(),
-                       GetMidiName().c_str());
+  wxString title = wxString::Format(
+    _("Midi-Settings for %s - %s"),
+    GetMidiType().c_str(),
+    GetMidiName().c_str());
 
-  m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, NULL, &m_sender,
-                                                  NULL);
+  m_organfile->GetDocument()->ShowMIDIEventDialog(
+    this, title, NULL, &m_sender, NULL);
 }
 
 wxString GOLabel::GetElementStatus() { return m_Content; }

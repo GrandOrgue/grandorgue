@@ -12,12 +12,12 @@
 #include "threading/atomic.h"
 
 class GOSoundSamplerList {
- private:
-  atomic<GOSoundSampler*> m_GetList;
-  atomic<GOSoundSampler*> m_PutList;
+private:
+  atomic<GOSoundSampler *> m_GetList;
+  atomic<GOSoundSampler *> m_PutList;
   atomic_uint m_PutCount;
 
- public:
+public:
   GOSoundSamplerList() { Clear(); }
 
   void Clear() {
@@ -26,20 +26,22 @@ class GOSoundSamplerList {
     m_PutCount = 0;
   }
 
-  GOSoundSampler* Peek() { return m_GetList; }
+  GOSoundSampler *Peek() { return m_GetList; }
 
-  GOSoundSampler* Get() {
+  GOSoundSampler *Get() {
     do {
-      GOSoundSampler* sampler = m_GetList;
-      if (!sampler) return NULL;
-      GOSoundSampler* next = sampler->next;
-      if (m_GetList.compare_exchange(sampler, next)) return sampler;
+      GOSoundSampler *sampler = m_GetList;
+      if (!sampler)
+        return NULL;
+      GOSoundSampler *next = sampler->next;
+      if (m_GetList.compare_exchange(sampler, next))
+        return sampler;
     } while (true);
   }
 
-  void Put(GOSoundSampler* sampler) {
+  void Put(GOSoundSampler *sampler) {
     do {
-      GOSoundSampler* current = m_PutList;
+      GOSoundSampler *current = m_PutList;
       sampler->next = current;
       if (m_PutList.compare_exchange(current, sampler)) {
         m_PutCount.fetch_add(1);
@@ -51,17 +53,19 @@ class GOSoundSamplerList {
   unsigned GetCount() { return m_PutCount; }
 
   void Move() {
-    GOSoundSampler* sampler;
+    GOSoundSampler *sampler;
     do {
       sampler = m_PutList;
-      if (m_PutList.compare_exchange(sampler, NULL)) break;
+      if (m_PutList.compare_exchange(sampler, NULL))
+        break;
     } while (true);
     m_PutCount.exchange(0);
 
-    if (!sampler) return;
+    if (!sampler)
+      return;
     do {
-      GOSoundSampler* current = m_GetList;
-      GOSoundSampler* next = sampler;
+      GOSoundSampler *current = m_GetList;
+      GOSoundSampler *next = sampler;
       if (current) {
         while (next) {
           if (next->next)
@@ -72,8 +76,10 @@ class GOSoundSamplerList {
           }
         }
       }
-      if (m_GetList.compare_exchange(current, sampler)) return;
-      if (next) next->next = NULL;
+      if (m_GetList.compare_exchange(current, sampler))
+        return;
+      if (next)
+        next->next = NULL;
     } while (true);
   }
 };

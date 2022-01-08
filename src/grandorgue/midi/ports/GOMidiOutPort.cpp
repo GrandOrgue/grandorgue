@@ -11,10 +11,12 @@
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiMap.h"
 
-GOMidiOutPort::GOMidiOutPort(GOMidi* midi, const wxString& portName,
-                             const wxString& apiName,
-                             const wxString& deviceName,
-                             const wxString& fullName)
+GOMidiOutPort::GOMidiOutPort(
+  GOMidi *midi,
+  const wxString &portName,
+  const wxString &apiName,
+  const wxString &deviceName,
+  const wxString &fullName)
     : GOMidiPort(midi, portName, apiName, deviceName, fullName), m_merger() {}
 
 GOMidiOutPort::~GOMidiOutPort() {}
@@ -24,14 +26,17 @@ bool GOMidiOutPort::Open() {
   return m_IsActive;
 }
 
-void GOMidiOutPort::Send(const GOMidiEvent& e) {
-  if (!IsActive()) return;
+void GOMidiOutPort::Send(const GOMidiEvent &e) {
+  if (!IsActive())
+    return;
   if (GetID() == e.GetDevice() || e.GetDevice() == 0) {
     GOMidiEvent e1 = e;
-    if (!m_merger.Process(e1)) return;
+    if (!m_merger.Process(e1))
+      return;
     std::vector<std::vector<unsigned char>> msg;
     e1.ToMidi(msg, m_midi->GetMidiMap());
-    for (unsigned i = 0; i < msg.size(); i++) SendData(msg[i]);
+    for (unsigned i = 0; i < msg.size(); i++)
+      SendData(msg[i]);
   }
 }
 

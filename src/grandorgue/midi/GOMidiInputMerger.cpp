@@ -23,14 +23,16 @@ void GOMidiMerger::Clear() {
   m_Rpn = false;
 }
 
-bool GOMidiMerger::Process(GOMidiEvent& e) {
-  if (e.GetMidiType() == MIDI_CTRL_CHANGE &&
-      e.GetKey() == MIDI_CTRL_BANK_SELECT_MSB) {
+bool GOMidiMerger::Process(GOMidiEvent &e) {
+  if (
+    e.GetMidiType() == MIDI_CTRL_CHANGE
+    && e.GetKey() == MIDI_CTRL_BANK_SELECT_MSB) {
     m_BankMsb[e.GetChannel() - 1] = e.GetValue();
     return false;
   }
-  if (e.GetMidiType() == MIDI_CTRL_CHANGE &&
-      e.GetKey() == MIDI_CTRL_BANK_SELECT_LSB) {
+  if (
+    e.GetMidiType() == MIDI_CTRL_CHANGE
+    && e.GetKey() == MIDI_CTRL_BANK_SELECT_LSB) {
     m_BankLsb[e.GetChannel() - 1] = e.GetValue();
     return false;
   }
@@ -55,20 +57,23 @@ bool GOMidiMerger::Process(GOMidiEvent& e) {
     return false;
   }
   if (e.GetMidiType() == MIDI_PGM_CHANGE)
-    e.SetKey(((e.GetKey() - 1) | (m_BankLsb[e.GetChannel() - 1] << 7) |
-              (m_BankMsb[e.GetChannel() - 1] << 14)) +
-             1);
+    e.SetKey(
+      ((e.GetKey() - 1) | (m_BankLsb[e.GetChannel() - 1] << 7)
+       | (m_BankMsb[e.GetChannel() - 1] << 14))
+      + 1);
 
-  if (e.GetMidiType() == MIDI_CTRL_CHANGE &&
-      e.GetKey() == MIDI_CTRL_DATA_ENTRY) {
+  if (
+    e.GetMidiType() == MIDI_CTRL_CHANGE && e.GetKey() == MIDI_CTRL_DATA_ENTRY) {
     if (m_Rpn) {
       e.SetMidiType(MIDI_RPN);
-      e.SetKey((m_RpnLsb[e.GetChannel() - 1] << 0) |
-               (m_RpnMsb[e.GetChannel() - 1] << 7));
+      e.SetKey(
+        (m_RpnLsb[e.GetChannel() - 1] << 0)
+        | (m_RpnMsb[e.GetChannel() - 1] << 7));
     } else {
       e.SetMidiType(MIDI_NRPN);
-      e.SetKey((m_NrpnLsb[e.GetChannel() - 1] << 0) |
-               (m_NrpnMsb[e.GetChannel() - 1] << 7));
+      e.SetKey(
+        (m_NrpnLsb[e.GetChannel() - 1] << 0)
+        | (m_NrpnMsb[e.GetChannel() - 1] << 7));
     }
   }
 

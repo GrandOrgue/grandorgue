@@ -11,7 +11,7 @@
 #include <stddef.h>
 
 class GOSampleStatistic {
- private:
+private:
   bool m_Valid;
   size_t m_MemorySize;
   size_t m_EndSegmentSize;
@@ -22,12 +22,12 @@ class GOSampleStatistic {
 
   void Prepare();
 
- public:
+public:
   GOSampleStatistic();
   ~GOSampleStatistic();
 
   void Init();
-  void Cumulate(const GOSampleStatistic& stat);
+  void Cumulate(const GOSampleStatistic &stat);
 
   void SetMemorySize(size_t size);
   void SetEndSegmentSize(size_t size);

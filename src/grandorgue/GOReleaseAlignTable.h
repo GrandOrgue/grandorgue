@@ -18,25 +18,28 @@ typedef struct audio_section_stream_s audio_section_stream;
 #define PHASE_ALIGN_MIN_FREQUENCY 20 /* Hertz */
 
 class GOReleaseAlignTable {
- private:
+private:
   int m_PhaseAlignMaxAmplitude;
   int m_PhaseAlignMaxDerivative;
   int m_PositionEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
 
- public:
+public:
   GOReleaseAlignTable();
   ~GOReleaseAlignTable();
 
   bool Load(GOCache &cache);
   bool Save(GOCacheWriter &cache);
 
-  void ComputeTable(const GOAudioSection &m_release,
-                    int phase_align_max_amplitude,
-                    int phase_align_max_derivative, unsigned int sample_rate,
-                    unsigned start_position);
+  void ComputeTable(
+    const GOAudioSection &m_release,
+    int phase_align_max_amplitude,
+    int phase_align_max_derivative,
+    unsigned int sample_rate,
+    unsigned start_position);
 
-  void SetupRelease(audio_section_stream &release_sampler,
-                    const audio_section_stream &old_sampler) const;
+  void SetupRelease(
+    audio_section_stream &release_sampler,
+    const audio_section_stream &old_sampler) const;
 };
 
 #endif /* GORELEASEALIGNTABLE_H_ */

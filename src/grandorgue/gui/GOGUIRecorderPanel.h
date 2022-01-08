@@ -14,16 +14,16 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUIRecorderPanel : public GOGUIPanelCreator {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
 
-  GOGUIPanel* CreateRecorderPanel(GOConfigReader& cfg);
+  GOGUIPanel *CreateRecorderPanel(GOConfigReader &cfg);
 
- public:
-  GOGUIRecorderPanel(GODefinitionFile* organfile);
+public:
+  GOGUIRecorderPanel(GODefinitionFile *organfile);
   virtual ~GOGUIRecorderPanel();
 
-  void CreatePanels(GOConfigReader& cfg);
+  void CreatePanels(GOConfigReader &cfg);
 };
 
 #endif

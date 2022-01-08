@@ -22,18 +22,18 @@ class GOSettingsMidiMessage : public wxPanel {
     ID_PROPERTIES,
   };
 
- private:
-  GOConfig& m_config;
-  GOMidi& m_midi;
-  wxListView* m_Events;
-  wxButton* m_Properties;
+private:
+  GOConfig &m_config;
+  GOMidi &m_midi;
+  wxListView *m_Events;
+  wxButton *m_Properties;
 
-  void OnEventsClick(wxListEvent& event);
-  void OnEventsDoubleClick(wxListEvent& event);
-  void OnProperties(wxCommandEvent& event);
+  void OnEventsClick(wxListEvent &event);
+  void OnEventsDoubleClick(wxListEvent &event);
+  void OnProperties(wxCommandEvent &event);
 
- public:
-  GOSettingsMidiMessage(GOConfig& settings, GOMidi& midi, wxWindow* parent);
+public:
+  GOSettingsMidiMessage(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
   DECLARE_EVENT_TABLE()
 };

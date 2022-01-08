@@ -15,18 +15,18 @@ class GOConfigWriter;
 class GOSetting;
 
 class GOSettingStore {
- private:
-  std::vector<GOSetting*> m_SettingList;
+private:
+  std::vector<GOSetting *> m_SettingList;
 
- protected:
-  void Load(GOConfigReader& cfg);
-  void Save(GOConfigWriter& cfg);
+protected:
+  void Load(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
 
- public:
+public:
   GOSettingStore();
   virtual ~GOSettingStore();
 
-  void AddSetting(GOSetting* setting);
+  void AddSetting(GOSetting *setting);
 };
 
 #endif

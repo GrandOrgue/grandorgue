@@ -15,16 +15,16 @@
 class GOSoundScheduler;
 
 class GOSoundThread : public GOThread {
- private:
-  GOSoundScheduler* m_Scheduler;
+private:
+  GOSoundScheduler *m_Scheduler;
 
   GOMutex m_Mutex;
   GOCondition m_Condition;
 
   void Entry();
 
- public:
-  GOSoundThread(GOSoundScheduler* scheduler);
+public:
+  GOSoundThread(GOSoundScheduler *scheduler);
 
   void Run();
   void Delete();

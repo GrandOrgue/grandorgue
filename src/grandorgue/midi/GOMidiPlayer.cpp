@@ -24,35 +24,29 @@ enum {
 };
 
 const struct ElementListEntry GOMidiPlayer::m_element_types[] = {
-    {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true},
-    {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true},
-    {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true},
-    {wxT(""), -1, false, false},
+  {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true},
+  {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true},
+  {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true},
+  {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry* GOMidiPlayer::GetButtonList() {
+const struct ElementListEntry *GOMidiPlayer::GetButtonList() {
   return m_element_types;
 }
 
-GOMidiPlayer::GOMidiPlayer(GODefinitionFile* organfile)
-    : m_organfile(organfile),
-      m_content(),
-      m_PlayingTime(organfile),
-      m_Start(0),
-      m_PlayingSeconds(0),
-      m_Speed(1),
-      m_IsPlaying(false),
-      m_Pause(false) {
+GOMidiPlayer::GOMidiPlayer(GODefinitionFile *organfile)
+    : m_organfile(organfile), m_content(), m_PlayingTime(organfile), m_Start(0),
+      m_PlayingSeconds(0), m_Speed(1), m_IsPlaying(false), m_Pause(false) {
   CreateButtons(m_organfile);
   Clear();
   m_DeviceID = m_organfile->GetSettings().GetMidiMap().GetDeviceByString(
-      _("GrandOrgue MIDI Player"));
+    _("GrandOrgue MIDI Player"));
   UpdateDisplay();
 }
 
 GOMidiPlayer::~GOMidiPlayer() { StopPlaying(); }
 
-void GOMidiPlayer::Load(GOConfigReader& cfg) {
+void GOMidiPlayer::Load(GOConfigReader &cfg) {
   m_button[ID_MIDI_PLAYER_PLAY]->Init(cfg, wxT("MidiPlayerPlay"), _("PLAY"));
   m_button[ID_MIDI_PLAYER_STOP]->Init(cfg, wxT("MidiPlayerStop"), _("STOP"));
   m_button[ID_MIDI_PLAYER_PAUSE]->Init(cfg, wxT("MidiPlayerPause"), _("PAUSE"));
@@ -61,17 +55,17 @@ void GOMidiPlayer::Load(GOConfigReader& cfg) {
 
 void GOMidiPlayer::ButtonChanged(int id) {
   switch (id) {
-    case ID_MIDI_PLAYER_STOP:
-      StopPlaying();
-      break;
+  case ID_MIDI_PLAYER_STOP:
+    StopPlaying();
+    break;
 
-    case ID_MIDI_PLAYER_PLAY:
-      Play();
-      break;
+  case ID_MIDI_PLAYER_PLAY:
+    Play();
+    break;
 
-    case ID_MIDI_PLAYER_PAUSE:
-      Pause();
-      break;
+  case ID_MIDI_PLAYER_PAUSE:
+    Pause();
+    break;
   }
 }
 
@@ -80,25 +74,34 @@ void GOMidiPlayer::Clear() {
   m_content.Clear();
 }
 
-void GOMidiPlayer::LoadFile(const wxString& filename, unsigned manuals,
-                            bool pedal) {
+void GOMidiPlayer::LoadFile(
+  const wxString &filename, unsigned manuals, bool pedal) {
   Clear();
   GOMidiFileReader reader(m_organfile->GetSettings().GetMidiMap());
   if (!reader.Open(filename)) {
-    GOMessageBox(wxString::Format(_("Failed to load %s"), filename.c_str()),
-                 _("MIDI Player"), wxOK | wxICON_ERROR, NULL);
+    GOMessageBox(
+      wxString::Format(_("Failed to load %s"), filename.c_str()),
+      _("MIDI Player"),
+      wxOK | wxICON_ERROR,
+      NULL);
     return;
   }
-  if (!m_content.Load(reader, m_organfile->GetSettings().GetMidiMap(), manuals,
-                      pedal)) {
+  if (!m_content.Load(
+        reader, m_organfile->GetSettings().GetMidiMap(), manuals, pedal)) {
     m_content.Clear();
-    GOMessageBox(wxString::Format(_("Failed to load %s"), filename.c_str()),
-                 _("MIDI Player"), wxOK | wxICON_ERROR, NULL);
+    GOMessageBox(
+      wxString::Format(_("Failed to load %s"), filename.c_str()),
+      _("MIDI Player"),
+      wxOK | wxICON_ERROR,
+      NULL);
     return;
   }
   if (!reader.Close()) {
-    GOMessageBox(wxString::Format(_("Failed to decode %s"), filename.c_str()),
-                 _("MIDI Player"), wxOK | wxICON_ERROR, NULL);
+    GOMessageBox(
+      wxString::Format(_("Failed to decode %s"), filename.c_str()),
+      _("MIDI Player"),
+      wxOK | wxICON_ERROR,
+      NULL);
     return;
   }
 }
@@ -121,7 +124,8 @@ void GOMidiPlayer::Play() {
 }
 
 void GOMidiPlayer::Pause() {
-  if (!m_IsPlaying) return;
+  if (!m_IsPlaying)
+    return;
   if (m_Pause) {
     m_Pause = false;
     m_button[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
@@ -164,13 +168,16 @@ void GOMidiPlayer::UpdateDisplay() {
   else if (!IsPlaying())
     m_PlayingTime.SetContent(_("-:--:--"));
   else
-    m_PlayingTime.SetContent(
-        wxString::Format(_("%d:%02d:%02d"), m_PlayingSeconds / 3600,
-                         (m_PlayingSeconds / 60) % 60, m_PlayingSeconds % 60));
+    m_PlayingTime.SetContent(wxString::Format(
+      _("%d:%02d:%02d"),
+      m_PlayingSeconds / 3600,
+      (m_PlayingSeconds / 60) % 60,
+      m_PlayingSeconds % 60));
 }
 
 void GOMidiPlayer::HandleTimer() {
-  if (!m_IsPlaying) return;
+  if (!m_IsPlaying)
+    return;
   GOTime now = wxGetLocalTimeMillis();
   if (m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000 <= now) {
     m_PlayingSeconds++;
@@ -196,13 +203,15 @@ void GOMidiPlayer::HandleTimer() {
   } while (true);
 }
 
-GOEnclosure* GOMidiPlayer::GetEnclosure(const wxString& name, bool is_panel) {
+GOEnclosure *GOMidiPlayer::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabel* GOMidiPlayer::GetLabel(const wxString& name, bool is_panel) {
-  if (is_panel) return NULL;
+GOLabel *GOMidiPlayer::GetLabel(const wxString &name, bool is_panel) {
+  if (is_panel)
+    return NULL;
 
-  if (name == wxT("MidiPlayerLabel")) return &m_PlayingTime;
+  if (name == wxT("MidiPlayerLabel"))
+    return &m_PlayingTime;
   return NULL;
 }

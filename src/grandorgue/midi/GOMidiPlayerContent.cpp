@@ -25,8 +25,8 @@ void GOMidiPlayerContent::Reset() { m_Pos = 0; }
 
 bool GOMidiPlayerContent::IsLoaded() { return m_Events.size() > 0; }
 
-void GOMidiPlayerContent::ReadFileContent(GOMidiFileReader& reader,
-                                          std::vector<GOMidiEvent>& events) {
+void GOMidiPlayerContent::ReadFileContent(
+  GOMidiFileReader &reader, std::vector<GOMidiEvent> &events) {
   unsigned pos = 0;
   GOMidiEvent e;
   while (reader.ReadEvent(e)) {
@@ -44,8 +44,8 @@ void GOMidiPlayerContent::ReadFileContent(GOMidiFileReader& reader,
   }
 }
 
-void GOMidiPlayerContent::SetupManual(GOMidiMap& map, unsigned channel,
-                                      wxString ID) {
+void GOMidiPlayerContent::SetupManual(
+  GOMidiMap &map, unsigned channel, wxString ID) {
   GOMidiEvent e;
   e.SetTime(0);
 
@@ -62,8 +62,8 @@ void GOMidiPlayerContent::SetupManual(GOMidiMap& map, unsigned channel,
   m_Events.push_back(e);
 }
 
-bool GOMidiPlayerContent::Load(GOMidiFileReader& reader, GOMidiMap& map,
-                               unsigned manuals, bool pedal) {
+bool GOMidiPlayerContent::Load(
+  GOMidiFileReader &reader, GOMidiMap &map, unsigned manuals, bool pedal) {
   Clear();
   std::vector<GOMidiEvent> events;
   ReadFileContent(reader, events);
@@ -79,15 +79,17 @@ bool GOMidiPlayerContent::Load(GOMidiFileReader& reader, GOMidiMap& map,
 
     for (unsigned i = 1; i <= manuals; i++)
       SetupManual(map, i, wxString::Format(wxT("M%d"), i));
-    if (pedal) SetupManual(map, manuals + 1, wxString::Format(wxT("M%d"), 0));
+    if (pedal)
+      SetupManual(map, manuals + 1, wxString::Format(wxT("M%d"), 0));
   }
   for (unsigned i = 0; i < events.size(); i++)
-    if (merger.Process(events[i])) m_Events.push_back(events[i]);
+    if (merger.Process(events[i]))
+      m_Events.push_back(events[i]);
 
   return true;
 }
 
-const GOMidiEvent& GOMidiPlayerContent::GetCurrentEvent() {
+const GOMidiEvent &GOMidiPlayerContent::GetCurrentEvent() {
   return m_Events[m_Pos];
 }
 

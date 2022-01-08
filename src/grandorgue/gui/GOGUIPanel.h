@@ -31,55 +31,59 @@ class GODefinitionFile;
 #define GOBitmapPrefix "../GO:"
 
 class GOGUIPanel : private GOSaveableObject {
- private:
-  void ReadSizeInfoFromCfg(GOConfigReader& cfg, bool isOpenByDefault);
+private:
+  void ReadSizeInfoFromCfg(GOConfigReader &cfg, bool isOpenByDefault);
 
- protected:
-  GODefinitionFile* m_organfile;
-  GOGUIMouseStateTracker& m_MouseState;
+protected:
+  GODefinitionFile *m_organfile;
+  GOGUIMouseStateTracker &m_MouseState;
   ptr_vector<GOGUIControl> m_controls;
   std::vector<GOBitmap> m_WoodImages;
   unsigned m_BackgroundControls;
   wxString m_Name;
   wxString m_GroupName;
-  GOGUIDisplayMetrics* m_metrics;
-  GOGUILayoutEngine* m_layout;
-  GOPanelView* m_view;
+  GOGUIDisplayMetrics *m_metrics;
+  GOGUILayoutEngine *m_layout;
+  GOPanelView *m_view;
   wxRect m_rect;
   int m_DisplayNum;
   bool m_IsMaximized;
   bool m_InitialOpenWindow;
 
-  void LoadControl(GOGUIControl* control, GOConfigReader& cfg, wxString group);
-  void LoadBackgroundControl(GOGUIControl* control, GOConfigReader& cfg,
-                             wxString group);
-  void Save(GOConfigWriter& cfg);
+  void LoadControl(GOGUIControl *control, GOConfigReader &cfg, wxString group);
+  void LoadBackgroundControl(
+    GOGUIControl *control, GOConfigReader &cfg, wxString group);
+  void Save(GOConfigWriter &cfg);
 
-  GOGUIControl* CreateGUIElement(GOConfigReader& cfg, wxString group);
+  GOGUIControl *CreateGUIElement(GOConfigReader &cfg, wxString group);
 
-  void SendMousePress(int x, int y, bool right, GOGUIMouseState& state);
+  void SendMousePress(int x, int y, bool right, GOGUIMouseState &state);
 
- public:
-  GOGUIPanel(GODefinitionFile* organfile);
+public:
+  GOGUIPanel(GODefinitionFile *organfile);
   virtual ~GOGUIPanel();
-  void Init(GOConfigReader& cfg, GOGUIDisplayMetrics* metrics, wxString name,
-            wxString group, wxString group_name = wxT(""));
-  void Load(GOConfigReader& cfg, wxString group);
+  void Init(
+    GOConfigReader &cfg,
+    GOGUIDisplayMetrics *metrics,
+    wxString name,
+    wxString group,
+    wxString group_name = wxT(""));
+  void Load(GOConfigReader &cfg, wxString group);
   void Layout();
 
-  void SetView(GOPanelView* view);
+  void SetView(GOPanelView *view);
 
-  GODefinitionFile* GetOrganFile();
-  const wxString& GetGroup() { return m_group; }
-  const wxString& GetName();
-  const wxString& GetGroupName();
-  void AddEvent(GOGUIControl* control);
-  void AddControl(GOGUIControl* control);
-  GOGUIDisplayMetrics* GetDisplayMetrics();
-  GOGUILayoutEngine* GetLayoutEngine();
-  void PrepareDraw(double scale, GOBitmap* background);
-  void Draw(GODC& dc);
-  const GOBitmap& GetWood(unsigned which);
+  GODefinitionFile *GetOrganFile();
+  const wxString &GetGroup() { return m_group; }
+  const wxString &GetName();
+  const wxString &GetGroupName();
+  void AddEvent(GOGUIControl *control);
+  void AddControl(GOGUIControl *control);
+  GOGUIDisplayMetrics *GetDisplayMetrics();
+  GOGUILayoutEngine *GetLayoutEngine();
+  void PrepareDraw(double scale, GOBitmap *background);
+  void Draw(GODC &dc);
+  const GOBitmap &GetWood(unsigned which);
   GOBitmap LoadBitmap(wxString filename, wxString maskname);
   void HandleKey(int key);
   void HandleMousePress(int x, int y, bool right);

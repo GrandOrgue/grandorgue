@@ -27,11 +27,11 @@ class GOEnclosure : private GOEventHandler,
                     private GOSaveableObject,
                     private GOPlaybackStateHandler,
                     public GOMidiConfigurator {
- private:
+private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOKeyReceiver m_shortcut;
-  GODefinitionFile* m_organfile;
+  GODefinitionFile *m_organfile;
   int m_AmpMinimumLevel;
   int m_MIDIInputNumber;
   int m_MIDIValue;
@@ -39,24 +39,24 @@ class GOEnclosure : private GOEventHandler,
   bool m_Displayed1;
   bool m_Displayed2;
 
-  void ProcessMidi(const GOMidiEvent& event);
+  void ProcessMidi(const GOMidiEvent &event);
   void HandleKey(int key);
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
   void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
   void PrepareRecording();
 
- public:
-  GOEnclosure(GODefinitionFile* organfile);
+public:
+  GOEnclosure(GODefinitionFile *organfile);
   virtual ~GOEnclosure();
-  void Init(GOConfigReader& cfg, wxString group, wxString Name,
-            unsigned def_value);
-  void Load(GOConfigReader& cfg, wxString group, int enclosure_nb);
+  void
+  Init(GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value);
+  void Load(GOConfigReader &cfg, wxString group, int enclosure_nb);
   void Set(int n);
-  const wxString& GetName();
+  const wxString &GetName();
   int GetValue();
   int GetMIDIInputNumber();
   float GetAttenuation();

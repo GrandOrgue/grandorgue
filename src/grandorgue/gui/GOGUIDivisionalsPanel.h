@@ -14,16 +14,16 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUIDivisionalsPanel : public GOGUIPanelCreator {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
 
-  GOGUIPanel* CreateDivisionalsPanel(GOConfigReader& cfg);
+  GOGUIPanel *CreateDivisionalsPanel(GOConfigReader &cfg);
 
- public:
-  GOGUIDivisionalsPanel(GODefinitionFile* organfile);
+public:
+  GOGUIDivisionalsPanel(GODefinitionFile *organfile);
   virtual ~GOGUIDivisionalsPanel();
 
-  void CreatePanels(GOConfigReader& cfg);
+  void CreatePanels(GOConfigReader &cfg);
 };
 
 #endif

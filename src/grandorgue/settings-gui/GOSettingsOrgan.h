@@ -29,29 +29,29 @@ class GOSettingsOrgan : public wxPanel {
     ID_PROPERTIES,
   };
 
- private:
-  GOConfig& m_config;
-  GOMidi& m_midi;
-  wxListView* m_Organs;
-  wxButton* m_Up;
-  wxButton* m_Down;
-  wxButton* m_Top;
-  wxButton* m_Del;
-  wxButton* m_Properties;
+private:
+  GOConfig &m_config;
+  GOMidi &m_midi;
+  wxListView *m_Organs;
+  wxButton *m_Up;
+  wxButton *m_Down;
+  wxButton *m_Top;
+  wxButton *m_Del;
+  wxButton *m_Properties;
 
-  void OnOrganSelected(wxListEvent& event);
-  void OnUp(wxCommandEvent& event);
-  void OnDown(wxCommandEvent& event);
-  void OnTop(wxCommandEvent& event);
-  void OnDel(wxCommandEvent& event);
-  void OnProperties(wxCommandEvent& event);
+  void OnOrganSelected(wxListEvent &event);
+  void OnUp(wxCommandEvent &event);
+  void OnDown(wxCommandEvent &event);
+  void OnTop(wxCommandEvent &event);
+  void OnDel(wxCommandEvent &event);
+  void OnProperties(wxCommandEvent &event);
 
   void MoveOrgan(long from, long to);
 
- public:
-  GOSettingsOrgan(GOConfig& settings, GOMidi& midi, wxWindow* parent);
+public:
+  GOSettingsOrgan(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
-  std::vector<const GOOrgan*> GetOrgans();
+  std::vector<const GOOrgan *> GetOrgans();
 
   void Save();
 

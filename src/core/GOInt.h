@@ -12,7 +12,7 @@
 #include <wx/defs.h>
 
 class GOIntHelper {
- public:
+public:
   static uint8_t swap_value(uint8_t val) { return val; }
 
   static int8_t swap_value(int8_t val) { return val; }
@@ -36,9 +36,8 @@ class GOIntHelper {
 
 #pragma pack(push, 1)
 
-template <typename A, bool enable_swap, A swap_func(A)>
-class GOInt {
- private:
+template <typename A, bool enable_swap, A swap_func(A)> class GOInt {
+private:
   A m_Value;
 
   A swap(A val) const {
@@ -50,7 +49,7 @@ class GOInt {
 
   void assign(A val) { m_Value = swap(val); }
 
- public:
+public:
   GOInt(A val = 0) { assign(val); }
 
   operator A() const { return swap(m_Value); }
@@ -66,39 +65,39 @@ typedef GOInt<uint8_t, false, GOIntHelper::swap_value> GOUInt8;
 
 typedef GOInt<int16_t, false, GOIntHelper::swap_value> GOInt16;
 typedef GOInt<int16_t, GOIntHelper::isBigEndian(), GOIntHelper::swap_value>
-    GOInt16LE;
+  GOInt16LE;
 typedef GOInt<int16_t, GOIntHelper::isLittleEndian(), GOIntHelper::swap_value>
-    GOInt16BE;
+  GOInt16BE;
 typedef GOInt<uint16_t, false, GOIntHelper::swap_value> GOUInt16;
 typedef GOInt<uint16_t, GOIntHelper::isBigEndian(), GOIntHelper::swap_value>
-    GOUInt16LE;
+  GOUInt16LE;
 typedef GOInt<uint16_t, GOIntHelper::isLittleEndian(), GOIntHelper::swap_value>
-    GOUInt16BE;
+  GOUInt16BE;
 
 typedef GOInt<int32_t, false, GOIntHelper::swap_value> GOInt32;
 typedef GOInt<int32_t, GOIntHelper::isBigEndian(), GOIntHelper::swap_value>
-    GOInt32LE;
+  GOInt32LE;
 typedef GOInt<int32_t, GOIntHelper::isLittleEndian(), GOIntHelper::swap_value>
-    GOInt32BE;
+  GOInt32BE;
 typedef GOInt<uint32_t, false, GOIntHelper::swap_value> GOUInt32;
 typedef GOInt<uint32_t, GOIntHelper::isBigEndian(), GOIntHelper::swap_value>
-    GOUInt32LE;
+  GOUInt32LE;
 typedef GOInt<uint32_t, GOIntHelper::isLittleEndian(), GOIntHelper::swap_value>
-    GOUInt32BE;
+  GOUInt32BE;
 
 typedef GOInt<int64_t, false, GOIntHelper::swap_value> GOInt64;
 typedef GOInt<int64_t, GOIntHelper::isBigEndian(), GOIntHelper::swap_value>
-    GOInt64LE;
+  GOInt64LE;
 typedef GOInt<int64_t, GOIntHelper::isLittleEndian(), GOIntHelper::swap_value>
-    GOInt64BE;
+  GOInt64BE;
 typedef GOInt<uint64_t, false, GOIntHelper::swap_value> GOUInt64;
 typedef GOInt<uint64_t, GOIntHelper::isBigEndian(), GOIntHelper::swap_value>
-    GOUInt64LE;
+  GOUInt64LE;
 typedef GOInt<uint64_t, GOIntHelper::isLittleEndian(), GOIntHelper::swap_value>
-    GOUInt64BE;
+  GOUInt64BE;
 
 class GOInt24 {
- private:
+private:
   uint16_t lo;
   int8_t hi;
 
@@ -107,7 +106,7 @@ class GOInt24 {
     hi = (value >> 16) & 0xff;
   }
 
- public:
+public:
   GOInt24(int val = 0) { assign(val); }
 
   operator int() { return ((hi << 16) | lo); }
@@ -119,7 +118,7 @@ class GOInt24 {
 };
 
 class GOInt24LE {
- private:
+private:
   uint8_t lo, mi;
   int8_t hi;
 
@@ -129,7 +128,7 @@ class GOInt24LE {
     hi = (value >> 16) & 0xff;
   }
 
- public:
+public:
   GOInt24LE(int val = 0) { assign(val); }
 
   operator int() { return ((hi << 16) | (mi << 8) | lo); }

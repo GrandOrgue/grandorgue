@@ -16,12 +16,12 @@
 #include "GOInvalidFile.h"
 #include "threading/GOMutexLocker.h"
 
-GOArchive::GOArchive(const GOSettingDirectory& cachePath)
+GOArchive::GOArchive(const GOSettingDirectory &cachePath)
     : m_CachePath(cachePath), m_ID(), m_Dependencies(), m_Entries(), m_Path() {}
 
 GOArchive::~GOArchive() { Close(); }
 
-bool GOArchive::OpenArchive(const wxString& path) {
+bool GOArchive::OpenArchive(const wxString &path) {
   m_Entries.clear();
   m_Path = path;
   if (!m_File.Open(path, wxFile::read)) {
@@ -30,7 +30,8 @@ bool GOArchive::OpenArchive(const wxString& path) {
   }
   {
     GOArchiveIndex index(m_CachePath, m_Path);
-    if (index.ReadIndex(m_ID, m_Entries)) return true;
+    if (index.ReadIndex(m_ID, m_Entries))
+      return true;
   }
 
   GOArchiveReader reader(m_File);
@@ -49,37 +50,40 @@ void GOArchive::Close() {
   m_Entries.clear();
 }
 
-bool GOArchive::containsFile(const wxString& name) {
+bool GOArchive::containsFile(const wxString &name) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
-    if (m_Entries[i].name == name) return true;
+    if (m_Entries[i].name == name)
+      return true;
   return false;
 }
 
-GOFile* GOArchive::OpenFile(const wxString& name) {
+GOFile *GOArchive::OpenFile(const wxString &name) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
     if (m_Entries[i].name == name) {
-      return new GOArchiveEntryFile(this, m_Entries[i].name,
-                                    m_Entries[i].offset, m_Entries[i].len);
+      return new GOArchiveEntryFile(
+        this, m_Entries[i].name, m_Entries[i].offset, m_Entries[i].len);
     }
   return new GOInvalidFile(name);
 }
 
-size_t GOArchive::ReadContent(void* buffer, size_t offset, size_t len) {
+size_t GOArchive::ReadContent(void *buffer, size_t offset, size_t len) {
   GOMutexLocker lock(m_Mutex);
   ssize_t pos = m_File.Seek(offset);
-  if (pos != (ssize_t)offset) return 0;
+  if (pos != (ssize_t)offset)
+    return 0;
   ssize_t l = m_File.Read(buffer, len);
-  if (l == wxInvalidOffset) return 0;
+  if (l == wxInvalidOffset)
+    return 0;
   return l;
 }
 
-const wxString& GOArchive::GetArchiveID() { return m_ID; }
-const wxString& GOArchive::GetPath() { return m_Path; }
+const wxString &GOArchive::GetArchiveID() { return m_ID; }
+const wxString &GOArchive::GetPath() { return m_Path; }
 
-const std::vector<wxString>& GOArchive::GetDependencies() const {
+const std::vector<wxString> &GOArchive::GetDependencies() const {
   return m_Dependencies;
 }
 
-void GOArchive::SetDependencies(const std::vector<wxString>& dependencies) {
+void GOArchive::SetDependencies(const std::vector<wxString> &dependencies) {
   m_Dependencies = dependencies;
 }

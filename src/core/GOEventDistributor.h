@@ -22,50 +22,50 @@ class GOPlaybackStateHandler;
 class GOSaveableObject;
 
 class GOEventDistributor {
- private:
-  std::vector<GOEventHandler*> m_handler;
-  std::vector<GOControlChangedHandler*> m_ControlChangedHandler;
-  std::vector<GOPlaybackStateHandler*> m_PlaybackStateHandler;
-  std::vector<GOSaveableObject*> m_SaveableObjects;
-  std::vector<GOMidiConfigurator*> m_MidiConfigurator;
-  std::vector<GOCacheObject*> m_CacheObjects;
+private:
+  std::vector<GOEventHandler *> m_handler;
+  std::vector<GOControlChangedHandler *> m_ControlChangedHandler;
+  std::vector<GOPlaybackStateHandler *> m_PlaybackStateHandler;
+  std::vector<GOSaveableObject *> m_SaveableObjects;
+  std::vector<GOMidiConfigurator *> m_MidiConfigurator;
+  std::vector<GOCacheObject *> m_CacheObjects;
 
- protected:
+protected:
   void Cleanup();
 
-  void SendMidi(const GOMidiEvent& event);
+  void SendMidi(const GOMidiEvent &event);
 
-  void ReadCombinations(GOConfigReader& cfg);
-  void Save(GOConfigWriter& cfg);
+  void ReadCombinations(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
 
   void ResolveReferences();
-  void UpdateHash(GOHash& hash);
+  void UpdateHash(GOHash &hash);
 
   void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
   void PrepareRecording();
 
- public:
+public:
   GOEventDistributor();
   ~GOEventDistributor();
 
-  void RegisterEventHandler(GOEventHandler* handler);
-  void RegisterPlaybackStateHandler(GOPlaybackStateHandler* handler);
-  void RegisterControlChangedHandler(GOControlChangedHandler* handler);
-  void RegisterCacheObject(GOCacheObject* obj);
-  void RegisterSaveableObject(GOSaveableObject* obj);
-  void RegisterMidiConfigurator(GOMidiConfigurator* obj);
+  void RegisterEventHandler(GOEventHandler *handler);
+  void RegisterPlaybackStateHandler(GOPlaybackStateHandler *handler);
+  void RegisterControlChangedHandler(GOControlChangedHandler *handler);
+  void RegisterCacheObject(GOCacheObject *obj);
+  void RegisterSaveableObject(GOSaveableObject *obj);
+  void RegisterMidiConfigurator(GOMidiConfigurator *obj);
 
   unsigned GetMidiConfiguratorCount();
-  GOMidiConfigurator* GetMidiConfigurator(unsigned index);
+  GOMidiConfigurator *GetMidiConfigurator(unsigned index);
 
   void HandleKey(int key);
 
   unsigned GetCacheObjectCount();
-  GOCacheObject* GetCacheObject(unsigned index);
+  GOCacheObject *GetCacheObject(unsigned index);
 
-  void ControlChanged(void* control);
+  void ControlChanged(void *control);
 };
 
 #endif

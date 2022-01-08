@@ -13,16 +13,16 @@
 #include "GODrawStop.h"
 
 class GODivisionalCoupler : public GODrawstop {
- private:
+private:
   bool m_BiDirectionalCoupling;
   std::vector<unsigned> m_manuals;
 
   void ChangeState(bool on);
   void SetupCombinationState();
 
- public:
-  GODivisionalCoupler(GODefinitionFile* organfile);
-  void Load(GOConfigReader& cfg, wxString group);
+public:
+  GODivisionalCoupler(GODefinitionFile *organfile);
+  void Load(GOConfigReader &cfg, wxString group);
 
   unsigned GetNumberOfManuals();
   unsigned GetManual(unsigned index);

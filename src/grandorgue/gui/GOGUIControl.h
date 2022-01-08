@@ -24,31 +24,31 @@ class GODC;
 
 class GOGUIControl : private GOSaveableObject,
                      protected GOControlChangedHandler {
- protected:
-  GOGUIPanel* m_panel;
-  GOGUIDisplayMetrics* m_metrics;
-  GOGUILayoutEngine* m_layout;
-  void* m_control;
+protected:
+  GOGUIPanel *m_panel;
+  GOGUIDisplayMetrics *m_metrics;
+  GOGUILayoutEngine *m_layout;
+  void *m_control;
   wxRect m_BoundingRect;
   bool m_DrawPending;
 
-  void Init(GOConfigReader& cfg, wxString group);
-  void Save(GOConfigWriter& cfg);
+  void Init(GOConfigReader &cfg, wxString group);
+  void Save(GOConfigWriter &cfg);
 
-  void ControlChanged(void* control);
+  void ControlChanged(void *control);
 
- public:
-  GOGUIControl(GOGUIPanel* panel, void* control);
+public:
+  GOGUIControl(GOGUIPanel *panel, void *control);
   virtual ~GOGUIControl();
 
-  virtual void Load(GOConfigReader& cfg, wxString group);
+  virtual void Load(GOConfigReader &cfg, wxString group);
   virtual void Layout();
 
-  virtual void PrepareDraw(double scale, GOBitmap* background);
-  virtual void Draw(GODC& dc);
-  virtual const wxRect& GetBoundingRect();
-  virtual bool HandleMousePress(int x, int y, bool right,
-                                GOGUIMouseState& state);
+  virtual void PrepareDraw(double scale, GOBitmap *background);
+  virtual void Draw(GODC &dc);
+  virtual const wxRect &GetBoundingRect();
+  virtual bool
+  HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
   virtual bool HandleMouseScroll(int x, int y, int amount);
 };
 

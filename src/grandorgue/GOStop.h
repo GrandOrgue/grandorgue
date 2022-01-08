@@ -17,9 +17,9 @@
 class GORank;
 
 class GOStop : public GODrawstop {
- private:
+private:
   typedef struct {
-    GORank* Rank;
+    GORank *Rank;
     unsigned StopID;
     unsigned FirstAccessibleKeyNumber;
     unsigned FirstPipeNumber;
@@ -39,10 +39,10 @@ class GOStop : public GODrawstop {
   void PreparePlayback();
   void StartPlayback();
 
- public:
-  GOStop(GODefinitionFile* organfile, unsigned first_midi_note_number);
-  GORank* GetRank(unsigned index);
-  void Load(GOConfigReader& cfg, wxString group);
+public:
+  GOStop(GODefinitionFile *organfile, unsigned first_midi_note_number);
+  GORank *GetRank(unsigned index);
+  void Load(GOConfigReader &cfg, wxString group);
   void SetKey(unsigned note, unsigned velocity);
   ~GOStop(void);
 

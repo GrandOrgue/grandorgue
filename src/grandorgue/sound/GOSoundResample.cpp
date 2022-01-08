@@ -54,15 +54,15 @@ create_sinc_filter
 }
 #endif
 
-static void apply_lanczos_window(float* buffer, const unsigned length) {
+static void apply_lanczos_window(float *buffer, const unsigned length) {
   const int ldec = ((int)length) - 1;
   for (int i = 0; i <= ldec; i++) {
     buffer[i] *= sinc((2 * i - ldec) / (double)ldec);
   }
 }
 
-static void create_nyquist_filter(float* output, unsigned subfilter_taps,
-                                  unsigned nb_subfilters) {
+static void create_nyquist_filter(
+  float *output, unsigned subfilter_taps, unsigned nb_subfilters) {
   int i;
   const int filter_length = (int)(subfilter_taps * nb_subfilters);
   const double inv_taps = 1.0 / nb_subfilters;
@@ -75,21 +75,26 @@ static void create_nyquist_filter(float* output, unsigned subfilter_taps,
 
 #include <stdio.h>
 
-void resampler_coefs_init(struct resampler_coefs_s* resampler_coefs,
-                          const unsigned input_sample_rate,
-                          interpolation_type interpolation) {
+void resampler_coefs_init(
+  struct resampler_coefs_s *resampler_coefs,
+  const unsigned input_sample_rate,
+  interpolation_type interpolation) {
   float temp[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
 
 #if 1
   create_nyquist_filter(temp, SUBFILTER_TAPS, UPSAMPLE_FACTOR);
 #else
-  static const double generalised_max_frequency =
-      ((double)UPSAMPLE_FACTOR / (double)MAX_POSITIVE_FACTOR);
-  const double cutoff_frequency =
-      ((double)input_sample_rate / 2.0) * generalised_max_frequency;
-  create_sinc_filter(temp, UPSAMPLE_FACTOR * SUBFILTER_TAPS,
-                     cutoff_frequency / 2, cutoff_frequency,
-                     input_sample_rate * UPSAMPLE_FACTOR, UPSAMPLE_FACTOR);
+  static const double generalised_max_frequency
+    = ((double)UPSAMPLE_FACTOR / (double)MAX_POSITIVE_FACTOR);
+  const double cutoff_frequency
+    = ((double)input_sample_rate / 2.0) * generalised_max_frequency;
+  create_sinc_filter(
+    temp,
+    UPSAMPLE_FACTOR * SUBFILTER_TAPS,
+    cutoff_frequency / 2,
+    cutoff_frequency,
+    input_sample_rate * UPSAMPLE_FACTOR,
+    UPSAMPLE_FACTOR);
 #endif
 
   apply_lanczos_window(temp, UPSAMPLE_FACTOR * SUBFILTER_TAPS);
@@ -98,8 +103,8 @@ void resampler_coefs_init(struct resampler_coefs_s* resampler_coefs,
    * arrays. */
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
     for (unsigned j = 0; j < SUBFILTER_TAPS; j++) {
-      resampler_coefs->coefs[i * SUBFILTER_TAPS + ((SUBFILTER_TAPS - 1) - j)] =
-          temp[j * UPSAMPLE_FACTOR + i];
+      resampler_coefs->coefs[i * SUBFILTER_TAPS + ((SUBFILTER_TAPS - 1) - j)]
+        = temp[j * UPSAMPLE_FACTOR + i];
     }
   }
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
@@ -109,19 +114,24 @@ void resampler_coefs_init(struct resampler_coefs_s* resampler_coefs,
   resampler_coefs->interpolation = interpolation;
 }
 
-float* resample_block(float* data, unsigned& len, unsigned from_samplerate,
-                      unsigned to_samplerate) {
+float *resample_block(
+  float *data,
+  unsigned &len,
+  unsigned from_samplerate,
+  unsigned to_samplerate) {
   struct resampler_coefs_s coefs;
   float factor = ((float)from_samplerate) / to_samplerate;
   resampler_coefs_init(&coefs, to_samplerate, GO_POLYPHASE_INTERPOLATION);
-  const float* coef = coefs.coefs;
+  const float *coef = coefs.coefs;
   unsigned new_len = ceil(len / factor);
   unsigned position_index = 0;
   unsigned position_fraction = 0;
   unsigned increment_fraction = factor * UPSAMPLE_FACTOR;
-  if (!new_len) return NULL;
-  float* out = (float*)malloc(sizeof(float) * new_len);
-  if (!out) return NULL;
+  if (!new_len)
+    return NULL;
+  float *out = (float *)malloc(sizeof(float) * new_len);
+  if (!out)
+    return NULL;
 
   for (unsigned i = 0; i < new_len;
        ++i, position_fraction += increment_fraction) {
@@ -131,8 +141,8 @@ float* resample_block(float* data, unsigned& len, unsigned from_samplerate,
     float out2 = 0.0f;
     float out3 = 0.0f;
     float out4 = 0.0f;
-    const float* coef_set = &coef[position_fraction << SUBFILTER_BITS];
-    float* in_set = &data[position_index];
+    const float *coef_set = &coef[position_fraction << SUBFILTER_BITS];
+    float *in_set = &data[position_index];
     for (unsigned j = 0; j < SUBFILTER_TAPS; j += 4) {
       out1 += in_set[j] * coef_set[j];
       out2 += in_set[j + 1] * coef_set[j + 1];

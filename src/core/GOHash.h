@@ -17,20 +17,20 @@ typedef struct _GOHashType {
 } GOHashType;
 
 class GOHash {
- private:
+private:
   SHA_CTX m_ctx;
   GOHashType m_Hash;
   bool m_Done;
 
- public:
+public:
   GOHash();
   ~GOHash();
 
-  const GOHashType& getHash();
+  const GOHashType &getHash();
   wxString getStringHash();
 
-  void Update(const void* data, unsigned len);
-  void Update(const wxString& str);
+  void Update(const void *data, unsigned len);
+  void Update(const wxString &str);
   void Update(signed int value);
   void Update(unsigned int value);
   void Update(signed long value);

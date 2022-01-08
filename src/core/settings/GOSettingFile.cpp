@@ -9,12 +9,13 @@
 
 #include <wx/filename.h>
 
-GOSettingFile::GOSettingFile(GOSettingStore* store, wxString group,
-                             wxString name, wxString default_value)
+GOSettingFile::GOSettingFile(
+  GOSettingStore *store, wxString group, wxString name, wxString default_value)
     : GOSettingString(store, group, name, default_value) {}
 
 wxString GOSettingFile::validate(wxString value) {
-  if (value == wxEmptyString || !wxFileExists(value)) value = getDefaultValue();
+  if (value == wxEmptyString || !wxFileExists(value))
+    value = getDefaultValue();
   wxFileName file(value);
   file.MakeAbsolute();
   value = file.GetFullPath();

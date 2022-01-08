@@ -27,8 +27,8 @@ class GOButton : private GOEventHandler,
                  protected GOSaveableObject,
                  protected GOPlaybackStateHandler,
                  public GOMidiConfigurator {
- protected:
-  GODefinitionFile* m_organfile;
+protected:
+  GODefinitionFile *m_organfile;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOKeyReceiver m_shortcut;
@@ -39,25 +39,25 @@ class GOButton : private GOEventHandler,
   bool m_DisplayInInvertedState;
   bool m_ReadOnly;
 
-  void ProcessMidi(const GOMidiEvent& event);
+  void ProcessMidi(const GOMidiEvent &event);
   void HandleKey(int key);
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
   void AbortPlayback();
   void StartPlayback();
   void PreparePlayback();
   void PrepareRecording();
 
- public:
-  GOButton(GODefinitionFile* organfile, MIDI_RECEIVER_TYPE midi_type,
-           bool pushbutton);
+public:
+  GOButton(
+    GODefinitionFile *organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
   virtual ~GOButton();
-  void Init(GOConfigReader& cfg, wxString group, wxString name);
-  void Load(GOConfigReader& cfg, wxString group);
+  void Init(GOConfigReader &cfg, wxString group, wxString name);
+  void Load(GOConfigReader &cfg, wxString group);
   bool IsDisplayed();
   bool IsReadOnly();
-  const wxString& GetName();
+  const wxString &GetName();
 
   virtual void Push();
   virtual void Set(bool on);

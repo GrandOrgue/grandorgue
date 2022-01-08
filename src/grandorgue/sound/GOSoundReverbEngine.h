@@ -13,16 +13,16 @@
 class GOSoundReverbPartition;
 
 class GOSoundReverbEngine {
- private:
+private:
   ptr_vector<GOSoundReverbPartition> m_Partitions;
 
- public:
+public:
   GOSoundReverbEngine(unsigned samples_per_buffer);
   ~GOSoundReverbEngine();
 
   void Reset();
-  void Process(float* output_buf, const float* input_buf, unsigned len);
-  void AddIR(const float* data, unsigned pos, unsigned len);
+  void Process(float *output_buf, const float *input_buf, unsigned len);
+  void AddIR(const float *data, unsigned pos, unsigned len);
 };
 
 #endif

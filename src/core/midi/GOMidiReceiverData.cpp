@@ -16,7 +16,7 @@ MIDI_RECEIVER_TYPE GOMidiReceiverData::GetType() const { return m_type; }
 
 unsigned GOMidiReceiverData::GetEventCount() const { return m_events.size(); }
 
-MIDI_MATCH_EVENT& GOMidiReceiverData::GetEvent(unsigned index) {
+MIDI_MATCH_EVENT &GOMidiReceiverData::GetEvent(unsigned index) {
   return m_events[index];
 }
 

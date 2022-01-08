@@ -14,14 +14,14 @@ GOTimer::GOTimer() : wxTimer(), m_Entries() {}
 
 GOTimer::~GOTimer() { wxTimer::Stop(); }
 
-void GOTimer::SetRelativeTimer(GOTime time, GOTimerCallback* callback,
-                               unsigned interval) {
+void GOTimer::SetRelativeTimer(
+  GOTime time, GOTimerCallback *callback, unsigned interval) {
   time += wxGetLocalTimeMillis();
   SetTimer(time, callback, interval);
 }
 
-void GOTimer::SetTimer(GOTime time, GOTimerCallback* callback,
-                       unsigned interval) {
+void GOTimer::SetTimer(
+  GOTime time, GOTimerCallback *callback, unsigned interval) {
   GOTimerEntry e;
   e.time = time;
   e.callback = callback;
@@ -32,27 +32,32 @@ void GOTimer::SetTimer(GOTime time, GOTimerCallback* callback,
       m_Entries[i] = e;
       added = true;
     }
-  if (!added) m_Entries.push_back(e);
+  if (!added)
+    m_Entries.push_back(e);
 
   GOMutexLocker locker(m_Lock, true);
-  if (locker.IsLocked()) Schedule();
+  if (locker.IsLocked())
+    Schedule();
 }
 
-void GOTimer::UpdateInterval(GOTimerCallback* callback, unsigned interval) {
+void GOTimer::UpdateInterval(GOTimerCallback *callback, unsigned interval) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
-    if (m_Entries[i].callback == callback) m_Entries[i].interval = interval;
+    if (m_Entries[i].callback == callback)
+      m_Entries[i].interval = interval;
 }
 
-void GOTimer::DeleteTimer(GOTimerCallback* callback) {
+void GOTimer::DeleteTimer(GOTimerCallback *callback) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
-    if (m_Entries[i].callback == callback) m_Entries[i].callback = NULL;
+    if (m_Entries[i].callback == callback)
+      m_Entries[i].callback = NULL;
 }
 
 void GOTimer::Schedule() {
   GOTime next = -1;
   for (unsigned i = 0; i < m_Entries.size(); i++)
     if (m_Entries[i].callback) {
-      if (next == -1 || next > m_Entries[i].time) next = m_Entries[i].time;
+      if (next == -1 || next > m_Entries[i].time)
+        next = m_Entries[i].time;
     }
   if (next != -1) {
     GOTime now = wxGetLocalTimeMillis();

@@ -13,15 +13,16 @@
 #include "GOGUIMouseState.h"
 
 class GOGUIMouseStateTracker {
- private:
+private:
   std::vector<GOGUIMouseState> m_states;
 
- public:
-  GOGUIMouseState& GetMouseState() { return GetState(this); }
+public:
+  GOGUIMouseState &GetMouseState() { return GetState(this); }
 
-  GOGUIMouseState& GetState(void* id) {
+  GOGUIMouseState &GetState(void *id) {
     for (unsigned i = 0; i < m_states.size(); i++)
-      if (m_states[i].GetSequence() == id) return m_states[i];
+      if (m_states[i].GetSequence() == id)
+        return m_states[i];
 
     GOGUIMouseState tmp;
     tmp.SetSequence(id);
@@ -31,7 +32,7 @@ class GOGUIMouseStateTracker {
 
   void ReleaseMouseState() { ReleaseState(this); }
 
-  void ReleaseState(void* id) {
+  void ReleaseState(void *id) {
     for (unsigned i = 0; i < m_states.size(); i++)
       if (m_states[i].GetSequence() == id) {
         m_states[i].clear();

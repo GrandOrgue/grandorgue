@@ -11,7 +11,7 @@
 class GOSampleStatistic;
 
 class GOStatisticCallback {
- public:
+public:
   virtual ~GOStatisticCallback() {}
 
   virtual GOSampleStatistic GetStatistic() = 0;

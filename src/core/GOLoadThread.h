@@ -19,17 +19,17 @@ class GOEventDistributor;
 class GOMemoryPool;
 
 class GOLoadThread : private GOThread {
- private:
-  GOEventDistributor& m_Objects;
-  atomic_uint& m_Pos;
-  GOMemoryPool& m_pool;
+private:
+  GOEventDistributor &m_Objects;
+  atomic_uint &m_Pos;
+  GOMemoryPool &m_pool;
   wxString m_Error;
   bool m_OutOfMemory;
 
   void Entry();
 
- public:
-  GOLoadThread(GOEventDistributor& objs, GOMemoryPool& pool, atomic_uint& pos);
+public:
+  GOLoadThread(GOEventDistributor &objs, GOMemoryPool &pool, atomic_uint &pos);
   ~GOLoadThread();
 
   void Run();

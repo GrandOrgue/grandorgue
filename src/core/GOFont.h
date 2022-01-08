@@ -12,17 +12,17 @@
 #include <wx/string.h>
 
 class GOFont {
- private:
+private:
   wxFont m_Font;
   wxFont m_ScaledFont;
   wxString m_Name;
   unsigned m_Points;
   double m_Scale;
 
- public:
+public:
   GOFont();
 
-  void SetName(const wxString& name);
+  void SetName(const wxString &name);
   void SetPoints(unsigned points);
   wxFont GetFont(double scale);
 };

@@ -50,11 +50,12 @@ struct resampler_coefs_s {
   interpolation_type interpolation;
 };
 
-void resampler_coefs_init(struct resampler_coefs_s* resampler_coefs,
-                          const unsigned input_sample_rate,
-                          interpolation_type interpolation);
+void resampler_coefs_init(
+  struct resampler_coefs_s *resampler_coefs,
+  const unsigned input_sample_rate,
+  interpolation_type interpolation);
 
-float* resample_block(float* data, unsigned& len, unsigned from_samplerate,
-                      unsigned to_samplerate);
+float *resample_block(
+  float *data, unsigned &len, unsigned from_samplerate, unsigned to_samplerate);
 
 #endif /* GOSOUNDRESAMPLE_H_ */

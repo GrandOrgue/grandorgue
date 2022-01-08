@@ -12,22 +12,24 @@
 #include "GOBitmap.h"
 #include "GOFont.h"
 
-GODC::GODC(wxDC* dc, double scale, double fontScale)
+GODC::GODC(wxDC *dc, double scale, double fontScale)
     : m_DC(dc), m_Scale(scale), m_FontScale(fontScale) {}
 
-wxRect GODC::ScaleRect(const wxRect& rect) {
-  return wxRect(rect.GetX() * m_Scale + 0.5, rect.GetY() * m_Scale + 0.5,
-                rect.GetWidth() * m_Scale + 0.5,
-                rect.GetHeight() * m_Scale + 0.5);
+wxRect GODC::ScaleRect(const wxRect &rect) {
+  return wxRect(
+    rect.GetX() * m_Scale + 0.5,
+    rect.GetY() * m_Scale + 0.5,
+    rect.GetWidth() * m_Scale + 0.5,
+    rect.GetHeight() * m_Scale + 0.5);
 }
 
-void GODC::DrawBitmap(GOBitmap& bitmap, const wxRect& target) {
+void GODC::DrawBitmap(GOBitmap &bitmap, const wxRect &target) {
   unsigned xpos = target.GetX() * m_Scale + 0.5;
   unsigned ypos = target.GetY() * m_Scale + 0.5;
   m_DC->DrawBitmap(bitmap.GetBitmap(), xpos, ypos, true);
 }
 
-wxString GODC::WrapText(const wxString& string, unsigned width) {
+wxString GODC::WrapText(const wxString &string, unsigned width) {
   wxString str, line, work;
   wxCoord cx, cy;
 
@@ -41,7 +43,8 @@ wxString GODC::WrapText(const wxString& string, unsigned width) {
         maybreak = true;
     }
     if (maybreak || i == string.Length()) {
-      if (!work.Length()) continue;
+      if (!work.Length())
+        continue;
       m_DC->GetTextExtent(line + wxT(' ') + work, &cx, &cy);
       if (cx > (int)width) {
         if (!str.Length())
@@ -72,12 +75,17 @@ wxString GODC::WrapText(const wxString& string, unsigned width) {
   return str;
 }
 
-void GODC::DrawText(const wxString& text, const wxRect& rect,
-                    const wxColour& color, GOFont& font, unsigned text_width,
-                    bool align_top) {
+void GODC::DrawText(
+  const wxString &text,
+  const wxRect &rect,
+  const wxColour &color,
+  GOFont &font,
+  unsigned text_width,
+  bool align_top) {
   m_DC->SetTextForeground(color);
   m_DC->SetFont(font.GetFont(m_Scale * m_FontScale));
   m_DC->DrawLabel(
-      WrapText(text, m_Scale * text_width), ScaleRect(rect),
-      (align_top ? 0 : wxALIGN_CENTER_VERTICAL) | wxALIGN_CENTER_HORIZONTAL);
+    WrapText(text, m_Scale * text_width),
+    ScaleRect(rect),
+    (align_top ? 0 : wxALIGN_CENTER_VERTICAL) | wxALIGN_CENTER_HORIZONTAL);
 }

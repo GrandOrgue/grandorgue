@@ -10,12 +10,13 @@
 
 #include <wx/choice.h>
 
-template <class T>
-class GOChoice : public wxChoice {
- public:
-  GOChoice(wxWindow *parent, wxWindowID id,
-           const wxPoint &pos = wxDefaultPosition,
-           const wxSize &size = wxDefaultSize)
+template <class T> class GOChoice : public wxChoice {
+public:
+  GOChoice(
+    wxWindow *parent,
+    wxWindowID id,
+    const wxPoint &pos = wxDefaultPosition,
+    const wxSize &size = wxDefaultSize)
       : wxChoice(parent, id, pos, size) {}
 
   int Append(const wxString &item, const T value) {
@@ -29,7 +30,8 @@ class GOChoice : public wxChoice {
   void SetCurrentSelection(const T value) {
     SetSelection(0);
     for (unsigned i = 0; i < GetCount(); i++)
-      if ((void *)value == GetClientData(i)) SetSelection(i);
+      if ((void *)value == GetClientData(i))
+        SetSelection(i);
   }
 };
 

@@ -14,12 +14,8 @@
 #include "GOSaveableObject.h"
 
 GOEventDistributor::GOEventDistributor()
-    : m_handler(),
-      m_ControlChangedHandler(),
-      m_PlaybackStateHandler(),
-      m_SaveableObjects(),
-      m_MidiConfigurator(),
-      m_CacheObjects() {}
+    : m_handler(), m_ControlChangedHandler(), m_PlaybackStateHandler(),
+      m_SaveableObjects(), m_MidiConfigurator(), m_CacheObjects() {}
 
 GOEventDistributor::~GOEventDistributor() {}
 
@@ -31,29 +27,29 @@ void GOEventDistributor::Cleanup() {
   m_CacheObjects.clear();
 }
 
-void GOEventDistributor::RegisterEventHandler(GOEventHandler* handler) {
+void GOEventDistributor::RegisterEventHandler(GOEventHandler *handler) {
   m_handler.push_back(handler);
 }
 
-void GOEventDistributor::RegisterCacheObject(GOCacheObject* obj) {
+void GOEventDistributor::RegisterCacheObject(GOCacheObject *obj) {
   m_CacheObjects.push_back(obj);
 }
 
-void GOEventDistributor::RegisterSaveableObject(GOSaveableObject* obj) {
+void GOEventDistributor::RegisterSaveableObject(GOSaveableObject *obj) {
   m_SaveableObjects.push_back(obj);
 }
 
-void GOEventDistributor::RegisterMidiConfigurator(GOMidiConfigurator* obj) {
+void GOEventDistributor::RegisterMidiConfigurator(GOMidiConfigurator *obj) {
   m_MidiConfigurator.push_back(obj);
 }
 
 void GOEventDistributor::RegisterPlaybackStateHandler(
-    GOPlaybackStateHandler* handler) {
+  GOPlaybackStateHandler *handler) {
   m_PlaybackStateHandler.push_back(handler);
 }
 
 void GOEventDistributor::RegisterControlChangedHandler(
-    GOControlChangedHandler* handler) {
+  GOControlChangedHandler *handler) {
   m_ControlChangedHandler.push_back(handler);
 }
 
@@ -61,25 +57,26 @@ unsigned GOEventDistributor::GetMidiConfiguratorCount() {
   return m_MidiConfigurator.size();
 }
 
-GOMidiConfigurator* GOEventDistributor::GetMidiConfigurator(unsigned index) {
+GOMidiConfigurator *GOEventDistributor::GetMidiConfigurator(unsigned index) {
   return m_MidiConfigurator[index];
 }
 
-void GOEventDistributor::SendMidi(const GOMidiEvent& event) {
+void GOEventDistributor::SendMidi(const GOMidiEvent &event) {
   for (unsigned i = 0; i < m_handler.size(); i++)
     m_handler[i]->ProcessMidi(event);
 }
 
 void GOEventDistributor::HandleKey(int key) {
-  for (unsigned i = 0; i < m_handler.size(); i++) m_handler[i]->HandleKey(key);
+  for (unsigned i = 0; i < m_handler.size(); i++)
+    m_handler[i]->HandleKey(key);
 }
 
-void GOEventDistributor::ReadCombinations(GOConfigReader& cfg) {
+void GOEventDistributor::ReadCombinations(GOConfigReader &cfg) {
   for (unsigned i = 0; i < m_SaveableObjects.size(); i++)
     m_SaveableObjects[i]->LoadCombination(cfg);
 }
 
-void GOEventDistributor::Save(GOConfigWriter& cfg) {
+void GOEventDistributor::Save(GOConfigWriter &cfg) {
   for (unsigned i = 0; i < m_SaveableObjects.size(); i++)
     m_SaveableObjects[i]->Save(cfg);
 }
@@ -89,7 +86,7 @@ void GOEventDistributor::ResolveReferences() {
     m_CacheObjects[i]->Initialize();
 }
 
-void GOEventDistributor::UpdateHash(GOHash& hash) {
+void GOEventDistributor::UpdateHash(GOHash &hash) {
   for (unsigned i = 0; i < m_CacheObjects.size(); i++)
     m_CacheObjects[i]->UpdateHash(hash);
 }
@@ -98,7 +95,7 @@ unsigned GOEventDistributor::GetCacheObjectCount() {
   return m_CacheObjects.size();
 }
 
-GOCacheObject* GOEventDistributor::GetCacheObject(unsigned index) {
+GOCacheObject *GOEventDistributor::GetCacheObject(unsigned index) {
   if (index < m_CacheObjects.size())
     return m_CacheObjects[index];
   else
@@ -125,8 +122,9 @@ void GOEventDistributor::PrepareRecording() {
     m_PlaybackStateHandler[i]->PrepareRecording();
 }
 
-void GOEventDistributor::ControlChanged(void* control) {
-  if (!control) return;
+void GOEventDistributor::ControlChanged(void *control) {
+  if (!control)
+    return;
   for (unsigned i = 0; i < m_ControlChangedHandler.size(); i++)
     m_ControlChangedHandler[i]->ControlChanged(control);
 }

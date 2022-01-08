@@ -20,7 +20,7 @@ class GOSoundBufferItem;
 struct struct_WAVE;
 
 class GOSoundRecorder : public GOSoundWorkItem {
- private:
+private:
   wxFile m_file;
   GOMutex m_lock;
   GOMutex m_Mutex;
@@ -33,15 +33,14 @@ class GOSoundRecorder : public GOSoundWorkItem {
   bool m_Recording;
   bool m_Done;
   volatile bool m_Stop;
-  std::vector<GOSoundBufferItem*> m_Outputs;
-  char* m_Buffer;
+  std::vector<GOSoundBufferItem *> m_Outputs;
+  char *m_Buffer;
 
   void SetupBuffer();
-  template <class T>
-  void ConvertData();
+  template <class T> void ConvertData();
   struct_WAVE generateHeader(unsigned datasize);
 
- public:
+public:
   GOSoundRecorder();
   virtual ~GOSoundRecorder();
 
@@ -51,13 +50,13 @@ class GOSoundRecorder : public GOSoundWorkItem {
   void SetSampleRate(unsigned sample_rate);
   /* 1 = 8 bit, 2 = 16 bit, 3 = 24 bit, 4 = float */
   void SetBytesPerSample(unsigned value);
-  void SetOutputs(std::vector<GOSoundBufferItem*> outputs,
-                  unsigned samples_per_buffer);
+  void SetOutputs(
+    std::vector<GOSoundBufferItem *> outputs, unsigned samples_per_buffer);
 
   unsigned GetGroup();
   unsigned GetCost();
   bool GetRepeat();
-  void Run(GOSoundThread* thread = nullptr);
+  void Run(GOSoundThread *thread = nullptr);
   void Exec();
 
   void Clear();

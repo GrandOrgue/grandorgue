@@ -27,33 +27,33 @@ class GOSettingsReverb;
 class GOSettingsTemperaments;
 
 class GOSettingsDialog : public wxPropertySheetDialog {
- private:
+private:
   enum { ID_REASONS = 100 };
 
-  GOSound& m_Sound;
+  GOSound &m_Sound;
   bool m_ReasonsAlreadyShown;
-  SettingsReasons* m_Reasons;
-  GOSettingsOption* m_OptionsPage;
-  GOSettingsDefaults* m_DefaultsPage;
-  GOSettingsAudioOutput* m_OutputPage;
-  GOSettingsReverb* m_ReverbPage;
-  GOSettingsAudioGroup* m_GroupPage;
-  GOSettingsOrgan* m_OrganPage;
-  SettingsMidiDevices* m_MidiDevicePage;
-  GOSettingsTemperaments* m_TemperamentsPage;
-  GOSettingsMidiMessage* m_MidiMessagePage;
-  GOSettingsArchives* m_ArchivePage;
+  SettingsReasons *m_Reasons;
+  GOSettingsOption *m_OptionsPage;
+  GOSettingsDefaults *m_DefaultsPage;
+  GOSettingsAudioOutput *m_OutputPage;
+  GOSettingsReverb *m_ReverbPage;
+  GOSettingsAudioGroup *m_GroupPage;
+  GOSettingsOrgan *m_OrganPage;
+  SettingsMidiDevices *m_MidiDevicePage;
+  GOSettingsTemperaments *m_TemperamentsPage;
+  GOSettingsMidiMessage *m_MidiMessagePage;
+  GOSettingsArchives *m_ArchivePage;
 
-  void OnShow(wxShowEvent&);
+  void OnShow(wxShowEvent &);
 
   bool DoApply();
 
-  void OnApply(wxCommandEvent& event);
-  void OnOK(wxCommandEvent& event);
-  void OnHelp(wxCommandEvent& event);
-  void OnReasons(wxCommandEvent& event);
+  void OnApply(wxCommandEvent &event);
+  void OnOK(wxCommandEvent &event);
+  void OnHelp(wxCommandEvent &event);
+  void OnReasons(wxCommandEvent &event);
 
- public:
+public:
   // the order must be the same as the order of pages
   typedef enum {
     PAGE_OPTIONS = 0,
@@ -68,7 +68,7 @@ class GOSettingsDialog : public wxPropertySheetDialog {
     PAGE_ORGAN_PACKAGES
   } PageSelector;
 
-  GOSettingsDialog(wxWindow* parent, GOSound& sound, SettingsReasons* reasons);
+  GOSettingsDialog(wxWindow *parent, GOSound &sound, SettingsReasons *reasons);
 
   bool NeedReload();
   bool NeedRestart();

@@ -28,25 +28,25 @@ struct ElementListEntry {
 };
 
 class GOElementCreator : private GOSetterButtonCallback {
- private:
-  void SetterButtonChanged(GOSetterButton* button);
+private:
+  void SetterButtonChanged(GOSetterButton *button);
 
- protected:
+protected:
   ptr_vector<GOSetterButton> m_button;
 
-  virtual const struct ElementListEntry* GetButtonList() = 0;
+  virtual const struct ElementListEntry *GetButtonList() = 0;
   virtual void ButtonChanged(int id) = 0;
-  void CreateButtons(GODefinitionFile* organfile);
+  void CreateButtons(GODefinitionFile *organfile);
 
- public:
+public:
   GOElementCreator();
   virtual ~GOElementCreator();
 
-  virtual void Load(GOConfigReader& cfg) = 0;
+  virtual void Load(GOConfigReader &cfg) = 0;
 
-  virtual GOEnclosure* GetEnclosure(const wxString& name, bool is_panel) = 0;
-  virtual GOLabel* GetLabel(const wxString& name, bool is_panel) = 0;
-  virtual GOButton* GetButton(const wxString& name, bool is_panel);
+  virtual GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) = 0;
+  virtual GOLabel *GetLabel(const wxString &name, bool is_panel) = 0;
+  virtual GOButton *GetButton(const wxString &name, bool is_panel);
 };
 
 #endif

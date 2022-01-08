@@ -14,7 +14,7 @@
 #include "config/GOConfigFileWriter.h"
 #include "config/GOConfigReader.h"
 
-GOConfigWriter::GOConfigWriter(GOConfigFileWriter& cfg, bool prefix)
+GOConfigWriter::GOConfigWriter(GOConfigFileWriter &cfg, bool prefix)
     : m_ConfigFile(cfg), m_Prefix(prefix) {}
 
 void GOConfigWriter::WriteString(wxString group, wxString key, wxString value) {
@@ -35,16 +35,19 @@ void GOConfigWriter::WriteFloat(wxString group, wxString key, float value) {
   WriteString(group, key, str);
 }
 
-void GOConfigWriter::WriteEnum(wxString group, wxString key, int value,
-                               const struct IniFileEnumEntry* entry,
-                               unsigned count) {
+void GOConfigWriter::WriteEnum(
+  wxString group,
+  wxString key,
+  int value,
+  const struct IniFileEnumEntry *entry,
+  unsigned count) {
   for (unsigned i = 0; i < count; i++)
     if (entry[i].value == value) {
       WriteString(group, key, entry[i].name);
       return;
     }
-  wxLogError(_("Invalid enum value for /%s/%s: %d"), group.c_str(), key.c_str(),
-             value);
+  wxLogError(
+    _("Invalid enum value for /%s/%s: %d"), group.c_str(), key.c_str(), value);
 }
 
 void GOConfigWriter::WriteBoolean(wxString group, wxString key, bool value) {

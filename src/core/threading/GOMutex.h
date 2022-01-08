@@ -20,7 +20,7 @@
 #include "GOThread.h"
 
 class GOMutex {
- private:
+private:
 #if defined GO_STD_MUTEX
   std::timed_mutex m_mutex;
 #elif defined WX_MUTEX
@@ -30,28 +30,28 @@ class GOMutex {
   atomic_int m_Lock;
 #endif
 
-  const char* volatile m_LockerInfo;
+  const char *volatile m_LockerInfo;
 
-  GOMutex(const GOMutex&) = delete;
-  const GOMutex& operator=(const GOMutex&) = delete;
+  GOMutex(const GOMutex &) = delete;
+  const GOMutex &operator=(const GOMutex &) = delete;
 
   bool DoLock(bool isWithTimeout);
   bool DoTryLock();
   void DoUnlock();
 
- public:
+public:
   GOMutex();
   ~GOMutex();
 
 #if defined GO_STD_MUTEX
-  std::timed_mutex& GetTimedMutex() { return m_mutex; };
+  std::timed_mutex &GetTimedMutex() { return m_mutex; };
 #endif
 
-  bool LockOrStop(const char* lockerInfo = NULL, GOThread* pThread = NULL);
-  void Lock(const char* lockerInfo = NULL) { LockOrStop(lockerInfo, NULL); }
+  bool LockOrStop(const char *lockerInfo = NULL, GOThread *pThread = NULL);
+  void Lock(const char *lockerInfo = NULL) { LockOrStop(lockerInfo, NULL); }
   void Unlock();
-  bool TryLock(const char* lockerInfo = NULL);
-  const char* GetLockerInfo() const { return m_LockerInfo; }
+  bool TryLock(const char *lockerInfo = NULL);
+  const char *GetLockerInfo() const { return m_LockerInfo; }
 };
 
 #endif /* GOMUTEX_H */

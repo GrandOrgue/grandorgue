@@ -16,14 +16,14 @@ class GOConfigReader;
 class GOConfigWriter;
 
 class GOPiston : public GOPushbutton, private GOControlChangedHandler {
- private:
-  GOButton* drawstop;
+private:
+  GOButton *drawstop;
 
-  void ControlChanged(void* control);
+  void ControlChanged(void *control);
 
- public:
-  GOPiston(GODefinitionFile* organfile);
-  void Load(GOConfigReader& cfg, wxString group);
+public:
+  GOPiston(GODefinitionFile *organfile);
+  void Load(GOConfigReader &cfg, wxString group);
   void Push();
 
   wxString GetMidiType();

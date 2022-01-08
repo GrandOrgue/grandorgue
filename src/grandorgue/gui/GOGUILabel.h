@@ -17,10 +17,10 @@
 class GOLabel;
 
 class GOGUILabel : public GOGUIControl {
- private:
+private:
   int m_DispXpos;
   int m_DispYpos;
-  GOLabel* m_Label;
+  GOLabel *m_Label;
   GOBitmap m_Bitmap;
   unsigned m_FontSize;
   wxString m_FontName;
@@ -32,16 +32,21 @@ class GOGUILabel : public GOGUIControl {
   unsigned m_TileOffsetX;
   unsigned m_TileOffsetY;
 
- public:
-  GOGUILabel(GOGUIPanel* panel, GOLabel* label);
-  void Init(GOConfigReader& cfg, wxString group, unsigned x_pos = 0,
-            unsigned y_pos = 0, wxString name = wxT(""), unsigned imageno = 1);
-  void Load(GOConfigReader& cfg, wxString group);
+public:
+  GOGUILabel(GOGUIPanel *panel, GOLabel *label);
+  void Init(
+    GOConfigReader &cfg,
+    wxString group,
+    unsigned x_pos = 0,
+    unsigned y_pos = 0,
+    wxString name = wxT(""),
+    unsigned imageno = 1);
+  void Load(GOConfigReader &cfg, wxString group);
   void Layout();
 
-  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
-  void PrepareDraw(double scale, GOBitmap* background);
-  void Draw(GODC& dc);
+  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
+  void PrepareDraw(double scale, GOBitmap *background);
+  void Draw(GODC &dc);
 };
 
 #endif

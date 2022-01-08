@@ -30,9 +30,9 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
     unsigned key;
   } midi_map;
 
- private:
-  GODefinitionFile* m_organfile;
-  GOMidiMap& m_Map;
+private:
+  GODefinitionFile *m_organfile;
+  GOMidiMap &m_Map;
   GOLabel m_RecordingTime;
   unsigned m_RecordSeconds;
   unsigned m_NextChannel;
@@ -49,7 +49,7 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
   GOTime m_Last;
 
   static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry* GetButtonList();
+  const struct ElementListEntry *GetButtonList();
 
   void ButtonChanged(int id);
 
@@ -59,22 +59,22 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
   void Ensure(unsigned length);
   void Flush();
   void EncodeLength(unsigned len);
-  void Write(const void* data, unsigned len);
-  void WriteEvent(GOMidiEvent& e);
-  void SendEvent(GOMidiEvent& e);
+  void Write(const void *data, unsigned len);
+  void WriteEvent(GOMidiEvent &e);
+  void SendEvent(GOMidiEvent &e);
   bool SetupMapping(unsigned element, bool isNRPN);
 
- public:
-  GOMidiRecorder(GODefinitionFile* organfile);
+public:
+  GOMidiRecorder(GODefinitionFile *organfile);
   ~GOMidiRecorder();
 
-  void SetOutputDevice(const wxString& device_id);
-  void PreconfigureMapping(const wxString& element, bool isNRPN);
-  void PreconfigureMapping(const wxString& element, bool isNRPN,
-                           const wxString& reference);
+  void SetOutputDevice(const wxString &device_id);
+  void PreconfigureMapping(const wxString &element, bool isNRPN);
+  void PreconfigureMapping(
+    const wxString &element, bool isNRPN, const wxString &reference);
   void SetSamplesetId(unsigned id1, unsigned id2);
 
-  void SendMidiRecorderMessage(GOMidiEvent& e);
+  void SendMidiRecorderMessage(GOMidiEvent &e);
 
   void Clear();
 
@@ -82,9 +82,9 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
   bool IsRecording();
   void StopRecording();
 
-  void Load(GOConfigReader& cfg);
-  GOEnclosure* GetEnclosure(const wxString& name, bool is_panel);
-  GOLabel* GetLabel(const wxString& name, bool is_panel);
+  void Load(GOConfigReader &cfg);
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
+  GOLabel *GetLabel(const wxString &name, bool is_panel);
 };
 
 #endif

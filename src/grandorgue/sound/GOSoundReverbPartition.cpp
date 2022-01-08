@@ -12,29 +12,19 @@
 
 #include <algorithm>
 
-GOSoundReverbPartition::GOSoundReverbPartition(unsigned size, unsigned cnt,
-                                               unsigned start_pos)
-    : m_PartitionSize(size),
-      m_PartitionCount(cnt),
-      m_fftwTmpReal(0),
-      m_fftwTmpComplex(0),
-      m_TimeToFreq(0),
-      m_FreqToTime(0),
-      m_Input(0),
-      m_Output(0),
-      m_InputPos(start_pos),
-      m_InputStartPos(start_pos),
-      m_OutputPos(0),
-      m_InputHistory(),
-      m_IRData(),
-      m_InputHistoryPos(0) {
+GOSoundReverbPartition::GOSoundReverbPartition(
+  unsigned size, unsigned cnt, unsigned start_pos)
+    : m_PartitionSize(size), m_PartitionCount(cnt), m_fftwTmpReal(0),
+      m_fftwTmpComplex(0), m_TimeToFreq(0), m_FreqToTime(0), m_Input(0),
+      m_Output(0), m_InputPos(start_pos), m_InputStartPos(start_pos),
+      m_OutputPos(0), m_InputHistory(), m_IRData(), m_InputHistoryPos(0) {
   m_fftwTmpReal = new float[m_PartitionSize * 2];
   m_fftwTmpComplex = new fftwf_complex[m_PartitionSize + 1];
 
-  m_TimeToFreq = fftwf_plan_dft_r2c_1d(2 * m_PartitionSize, m_fftwTmpReal,
-                                       m_fftwTmpComplex, FFTW_ESTIMATE);
-  m_FreqToTime = fftwf_plan_dft_c2r_1d(2 * m_PartitionSize, m_fftwTmpComplex,
-                                       m_fftwTmpReal, FFTW_ESTIMATE);
+  m_TimeToFreq = fftwf_plan_dft_r2c_1d(
+    2 * m_PartitionSize, m_fftwTmpReal, m_fftwTmpComplex, FFTW_ESTIMATE);
+  m_FreqToTime = fftwf_plan_dft_c2r_1d(
+    2 * m_PartitionSize, m_fftwTmpComplex, m_fftwTmpReal, FFTW_ESTIMATE);
   assert(m_TimeToFreq);
   assert(m_FreqToTime);
 
@@ -44,18 +34,25 @@ GOSoundReverbPartition::GOSoundReverbPartition(unsigned size, unsigned cnt,
   for (unsigned i = 0; i < m_PartitionCount; i++)
     m_InputHistory.push_back(new fftwf_complex[m_PartitionSize + 1]);
 
-  for (unsigned i = 0; i < m_PartitionCount; i++) m_IRData.push_back(NULL);
+  for (unsigned i = 0; i < m_PartitionCount; i++)
+    m_IRData.push_back(NULL);
 
   Reset();
 }
 
 GOSoundReverbPartition::~GOSoundReverbPartition() {
-  if (m_TimeToFreq) fftwf_destroy_plan(m_TimeToFreq);
-  if (m_FreqToTime) fftwf_destroy_plan(m_FreqToTime);
-  if (m_fftwTmpReal) delete[] m_fftwTmpReal;
-  if (m_fftwTmpComplex) delete[] m_fftwTmpComplex;
-  if (m_Input) delete[] m_Input;
-  if (m_Output) delete[] m_Output;
+  if (m_TimeToFreq)
+    fftwf_destroy_plan(m_TimeToFreq);
+  if (m_FreqToTime)
+    fftwf_destroy_plan(m_FreqToTime);
+  if (m_fftwTmpReal)
+    delete[] m_fftwTmpReal;
+  if (m_fftwTmpComplex)
+    delete[] m_fftwTmpComplex;
+  if (m_Input)
+    delete[] m_Input;
+  if (m_Output)
+    delete[] m_Output;
 }
 
 void GOSoundReverbPartition::Reset() {
@@ -69,15 +66,15 @@ void GOSoundReverbPartition::Reset() {
     ZeroComplex(m_InputHistory[i], m_PartitionSize + 1);
 }
 
-void GOSoundReverbPartition::ZeroComplex(fftwf_complex* data, unsigned len) {
+void GOSoundReverbPartition::ZeroComplex(fftwf_complex *data, unsigned len) {
   for (unsigned i = 0; i < len; i++) {
     data[i][0] = 0;
     data[i][1] = 0;
   }
 }
 
-void GOSoundReverbPartition::Process(float* output_buf, const float* input_buf,
-                                     unsigned len) {
+void GOSoundReverbPartition::Process(
+  float *output_buf, const float *input_buf, unsigned len) {
   unsigned in_pos = 0, out_pos = 0;
   while (in_pos < len) {
     while (m_OutputPos < m_PartitionSize && out_pos < len)
@@ -88,17 +85,21 @@ void GOSoundReverbPartition::Process(float* output_buf, const float* input_buf,
 
     if (m_InputPos == m_PartitionSize) {
       std::copy(m_Input, m_Input + m_PartitionSize, m_fftwTmpReal);
-      std::fill(m_fftwTmpReal + m_PartitionSize,
-                m_fftwTmpReal + 2 * m_PartitionSize, 0);
+      std::fill(
+        m_fftwTmpReal + m_PartitionSize,
+        m_fftwTmpReal + 2 * m_PartitionSize,
+        0);
       fftwf_execute(m_TimeToFreq);
-      memcpy(m_InputHistory[m_InputHistoryPos], m_fftwTmpComplex,
-             (m_PartitionSize + 1) * sizeof(fftwf_complex));
+      memcpy(
+        m_InputHistory[m_InputHistoryPos],
+        m_fftwTmpComplex,
+        (m_PartitionSize + 1) * sizeof(fftwf_complex));
 
       ZeroComplex(m_fftwTmpComplex, m_PartitionSize + 1);
       for (unsigned i = 0, j = m_InputHistoryPos; i < m_IRData.size(); i++) {
         if (m_IRData[i]) {
-          const fftwf_complex* ir = m_IRData[i];
-          const fftwf_complex* in = m_InputHistory[j];
+          const fftwf_complex *ir = m_IRData[i];
+          const fftwf_complex *in = m_InputHistory[j];
 
           for (unsigned k = 0; k <= m_PartitionSize; k++) {
             m_fftwTmpComplex[k][0] += in[k][0] * ir[k][0] - in[k][1] * ir[k][1];
@@ -114,9 +115,10 @@ void GOSoundReverbPartition::Process(float* output_buf, const float* input_buf,
 
       for (unsigned i = 0; i < m_PartitionSize; i++)
         m_Output[i] = m_Output[i + m_PartitionSize] + m_fftwTmpReal[i];
-      std::copy(m_fftwTmpReal + m_PartitionSize,
-                m_fftwTmpReal + 2 * m_PartitionSize,
-                m_Output + m_PartitionSize);
+      std::copy(
+        m_fftwTmpReal + m_PartitionSize,
+        m_fftwTmpReal + 2 * m_PartitionSize,
+        m_Output + m_PartitionSize);
 
       m_InputHistoryPos = (m_InputHistoryPos + 1) % m_PartitionCount;
       m_OutputPos = 0;
@@ -129,12 +131,13 @@ unsigned GOSoundReverbPartition::GetLength() {
   return m_PartitionSize * m_PartitionCount;
 }
 
-void GOSoundReverbPartition::AddIR(const float* data, unsigned pos,
-                                   unsigned len, unsigned offset) {
+void GOSoundReverbPartition::AddIR(
+  const float *data, unsigned pos, unsigned len, unsigned offset) {
   for (unsigned i = 0; i < m_PartitionCount; i++) {
     unsigned minpos = offset + i * m_PartitionSize;
     unsigned maxpos = offset + (i + 1) * m_PartitionSize;
-    if (pos + len < minpos || pos >= maxpos) continue;
+    if (pos + len < minpos || pos >= maxpos)
+      continue;
     std::fill(m_fftwTmpReal, m_fftwTmpReal + 2 * m_PartitionSize, 0);
     unsigned startpos = minpos < pos ? pos : minpos;
     unsigned endpos = pos + len > maxpos ? maxpos : pos + len;

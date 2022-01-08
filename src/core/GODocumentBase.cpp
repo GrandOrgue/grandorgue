@@ -13,13 +13,14 @@ GODocumentBase::GODocumentBase() : m_Windows() {}
 
 GODocumentBase::~GODocumentBase() {}
 
-bool GODocumentBase::WindowExists(WindowType type, void* data) {
+bool GODocumentBase::WindowExists(WindowType type, void *data) {
   for (unsigned i = 0; i < m_Windows.size(); i++)
-    if (m_Windows[i].type == type && m_Windows[i].data == data) return true;
+    if (m_Windows[i].type == type && m_Windows[i].data == data)
+      return true;
   return false;
 }
 
-bool GODocumentBase::showWindow(WindowType type, void* data) {
+bool GODocumentBase::showWindow(WindowType type, void *data) {
   for (unsigned i = 0; i < m_Windows.size(); i++)
     if (m_Windows[i].type == type && m_Windows[i].data == data) {
       m_Windows[i].window->ShowView();
@@ -28,8 +29,8 @@ bool GODocumentBase::showWindow(WindowType type, void* data) {
   return false;
 }
 
-void GODocumentBase::registerWindow(WindowType type, void* data,
-                                    GOView* window) {
+void GODocumentBase::registerWindow(
+  WindowType type, void *data, GOView *window) {
   WindowInfo info;
   info.type = type;
   info.data = data;
@@ -38,7 +39,7 @@ void GODocumentBase::registerWindow(WindowType type, void* data,
   window->ShowView();
 }
 
-void GODocumentBase::unregisterWindow(GOView* window) {
+void GODocumentBase::unregisterWindow(GOView *window) {
   for (unsigned i = 0; i < m_Windows.size(); i++)
     if (m_Windows[i].window == window) {
       m_Windows.erase(m_Windows.begin() + i);
@@ -48,12 +49,13 @@ void GODocumentBase::unregisterWindow(GOView* window) {
 
 void GODocumentBase::SyncState() {
   for (unsigned i = 0; i < m_Windows.size(); i++)
-    if (m_Windows[i].data) m_Windows[i].window->SyncState();
+    if (m_Windows[i].data)
+      m_Windows[i].window->SyncState();
 }
 
 void GODocumentBase::CloseWindows() {
   while (m_Windows.size() > 0) {
-    GOView* wnd = m_Windows[0].window;
+    GOView *wnd = m_Windows[0].window;
     m_Windows.erase(m_Windows.begin());
     wnd->RemoveView();
   }

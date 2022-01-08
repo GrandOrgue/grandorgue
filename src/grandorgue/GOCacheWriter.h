@@ -11,17 +11,17 @@
 class wxOutputStream;
 
 class GOCacheWriter {
-  wxOutputStream* m_zstream;
-  wxOutputStream* m_stream;
+  wxOutputStream *m_zstream;
+  wxOutputStream *m_stream;
 
- public:
-  GOCacheWriter(wxOutputStream& stream, bool compressed);
+public:
+  GOCacheWriter(wxOutputStream &stream, bool compressed);
   virtual ~GOCacheWriter();
 
   bool WriteHeader();
-  bool Write(const void* data, unsigned length);
+  bool Write(const void *data, unsigned length);
   /* Write an bigger malloced block */
-  bool WriteBlock(const void* data, unsigned length);
+  bool WriteBlock(const void *data, unsigned length);
 
   void Close();
 };

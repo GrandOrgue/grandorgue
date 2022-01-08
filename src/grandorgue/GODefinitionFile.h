@@ -54,8 +54,8 @@ class GODefinitionFile : public GOEventDistributor,
                          public GOModel {
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
- private:
-  GODocument* m_doc;
+private:
+  GODocument *m_doc;
   wxString m_odf;
   wxString m_ArchiveID;
   wxString m_hash;
@@ -64,10 +64,10 @@ class GODefinitionFile : public GOEventDistributor,
   wxString m_SettingFilename;
   wxString m_ODFHash;
   bool m_Cacheable;
-  GOSetter* m_setter;
-  GOAudioRecorder* m_AudioRecorder;
-  GOMidiPlayer* m_MidiPlayer;
-  GOMidiRecorder* m_MidiRecorder;
+  GOSetter *m_setter;
+  GOAudioRecorder *m_AudioRecorder;
+  GOMidiPlayer *m_MidiPlayer;
+  GOMidiRecorder *m_MidiRecorder;
   int m_volume;
   bool m_IgnorePitch;
   wxString m_Temperament;
@@ -93,8 +93,8 @@ class GODefinitionFile : public GOEventDistributor,
   ptr_vector<GOArchive> m_archives;
   GOStringBoolMap m_UsedSections;
 
-  GOSoundEngine* m_soundengine;
-  GOMidi* m_midi;
+  GOSoundEngine *m_soundengine;
+  GOMidi *m_midi;
   std::vector<bool> m_MidiSamplesetMatch;
   int m_SampleSetId1, m_SampleSetId2;
   GOGUIMouseStateTracker m_MouseState;
@@ -102,17 +102,17 @@ class GODefinitionFile : public GOEventDistributor,
   GOMemoryPool m_pool;
   GOBitmapCache m_bitmaps;
   GOPipeConfigTreeNode m_PipeConfig;
-  GOConfig& m_config;
+  GOConfig &m_config;
   GOCombinationDefinition m_GeneralTemplate;
   GOLabel m_PitchLabel;
   GOLabel m_TemperamentLabel;
   GOMainWindowData m_MainWindowData;
 
-  void ReadOrganFile(GOConfigReader& cfg);
+  void ReadOrganFile(GOConfigReader &cfg);
   GOHashType GenerateCacheHash();
   wxString GenerateSettingFileName();
   wxString GenerateCacheFileName();
-  void SetTemperament(const GOTemperament& temperament);
+  void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
 
   void UpdateAmplitude();
@@ -121,58 +121,60 @@ class GODefinitionFile : public GOEventDistributor,
 
   wxString GetOrganHash();
 
-  bool LoadArchive(wxString ID, wxString& name,
-                   const wxString& parentID = wxEmptyString);
+  bool LoadArchive(
+    wxString ID, wxString &name, const wxString &parentID = wxEmptyString);
   void CloseArchives();
 
- public:
-  GODefinitionFile(GODocument* doc, GOConfig& settings);
-  wxString Load(GOProgressDialog* dlg, const GOOrgan& organ,
-                const wxString& cmb = wxEmptyString);
-  void LoadCombination(const wxString& cmb);
+public:
+  GODefinitionFile(GODocument *doc, GOConfig &settings);
+  wxString Load(
+    GOProgressDialog *dlg,
+    const GOOrgan &organ,
+    const wxString &cmb = wxEmptyString);
+  void LoadCombination(const wxString &cmb);
   bool Save();
-  bool Export(const wxString& cmb);
+  bool Export(const wxString &cmb);
   bool CachePresent();
   bool IsCacheable();
-  bool UpdateCache(GOProgressDialog* dlg, bool compress);
+  bool UpdateCache(GOProgressDialog *dlg, bool compress);
   void DeleteCache();
   void DeleteSettings();
   ;
   void Abort();
-  void PreparePlayback(GOSoundEngine* engine, GOMidi* midi,
-                       GOSoundRecorder* recorder);
+  void PreparePlayback(
+    GOSoundEngine *engine, GOMidi *midi, GOSoundRecorder *recorder);
   void PrepareRecording();
   void Update();
   void Reset();
-  void ProcessMidi(const GOMidiEvent& event);
+  void ProcessMidi(const GOMidiEvent &event);
   void AllNotesOff();
   void Modified();
-  GODocument* GetDocument();
+  GODocument *GetDocument();
   ~GODefinitionFile(void);
 
   /* Access to internal ODF objects */
-  GOSetter* GetSetter();
-  GOGUIPanel* GetPanel(unsigned index);
+  GOSetter *GetSetter();
+  GOGUIPanel *GetPanel(unsigned index);
   unsigned GetPanelCount();
-  void AddPanel(GOGUIPanel* panel);
-  GOMemoryPool& GetMemoryPool();
-  GOConfig& GetSettings();
-  GOBitmapCache& GetBitmapCache();
-  GOPipeConfigNode& GetPipeConfig();
+  void AddPanel(GOGUIPanel *panel);
+  GOMemoryPool &GetMemoryPool();
+  GOConfig &GetSettings();
+  GOBitmapCache &GetBitmapCache();
+  GOPipeConfigNode &GetPipeConfig();
   void SetTemperament(wxString name);
   wxString GetTemperament();
   void MarkSectionInUse(wxString name);
 
   bool useArchives();
-  GOArchive* findArchive(const wxString& name);
+  GOArchive *findArchive(const wxString &name);
 
   int GetRecorderElementID(wxString name);
-  GOCombinationDefinition& GetGeneralTemplate();
-  GOLabel* GetPitchLabel();
-  GOLabel* GetTemperamentLabel();
-  GOMainWindowData* GetMainWindowData();
+  GOCombinationDefinition &GetGeneralTemplate();
+  GOLabel *GetPitchLabel();
+  GOLabel *GetTemperamentLabel();
+  GOMainWindowData *GetMainWindowData();
 
-  void LoadMIDIFile(const wxString& filename);
+  void LoadMIDIFile(const wxString &filename);
 
   /* ODF general properties */
   bool DivisionalsStoreIntermanualCouplers();
@@ -187,9 +189,9 @@ class GODefinitionFile : public GOEventDistributor,
   void SetIgnorePitch(bool ignorepitch);
   bool GetIgnorePitch();
 
-  GOEnclosure* GetEnclosure(const wxString& name, bool is_panel = false);
-  GOLabel* GetLabel(const wxString& name, bool is_panel = false);
-  GOButton* GetButton(const wxString& name, bool is_panel = false);
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel = false);
+  GOLabel *GetLabel(const wxString &name, bool is_panel = false);
+  GOButton *GetButton(const wxString &name, bool is_panel = false);
 
   /* TODO: can somebody figure out what this thing is */
   bool IsCustomized();
@@ -203,27 +205,31 @@ class GODefinitionFile : public GOEventDistributor,
   const wxString GetCacheFilename();
 
   /* Organ and Building general information */
-  const wxString& GetChurchName();
-  const wxString& GetChurchAddress();
-  const wxString& GetOrganBuilder();
-  const wxString& GetOrganBuildDate();
-  const wxString& GetOrganComments();
-  const wxString& GetRecordingDetails();
-  const wxString& GetInfoFilename();
+  const wxString &GetChurchName();
+  const wxString &GetChurchAddress();
+  const wxString &GetOrganBuilder();
+  const wxString &GetOrganBuildDate();
+  const wxString &GetOrganComments();
+  const wxString &GetRecordingDetails();
+  const wxString &GetInfoFilename();
 
-  GOSoundSampler* StartSample(const GOSoundProvider* pipe, int sampler_group_id,
-                              unsigned audio_group, unsigned velocity,
-                              unsigned delay, uint64_t last_stop);
-  uint64_t StopSample(const GOSoundProvider* pipe, GOSoundSampler* handle);
-  void SwitchSample(const GOSoundProvider* pipe, GOSoundSampler* handle);
-  void UpdateVelocity(const GOSoundProvider* pipe, GOSoundSampler* handle,
-                      unsigned velocity);
+  GOSoundSampler *StartSample(
+    const GOSoundProvider *pipe,
+    int sampler_group_id,
+    unsigned audio_group,
+    unsigned velocity,
+    unsigned delay,
+    uint64_t last_stop);
+  uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
+  void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
+  void UpdateVelocity(
+    const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity);
 
-  void SendMidiMessage(GOMidiEvent& e);
-  void SendMidiRecorderMessage(GOMidiEvent& e);
-  GOMidi* GetMidi();
+  void SendMidiMessage(GOMidiEvent &e);
+  void SendMidiRecorderMessage(GOMidiEvent &e);
+  GOMidi *GetMidi();
 
-  GOGUIMouseStateTracker& GetMouseStateTracker();
+  GOGUIMouseStateTracker &GetMouseStateTracker();
 
   /* For testing only */
   void SetODFPath(wxString path);

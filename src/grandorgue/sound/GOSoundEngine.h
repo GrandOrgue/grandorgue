@@ -29,13 +29,13 @@ class GOConfig;
 
 typedef struct {
   unsigned channels;
-  std::vector<std::vector<float> > scale_factors;
+  std::vector<std::vector<float>> scale_factors;
 } GOAudioOutputConfiguration;
 
 class GOSoundSampler;
 
 class GOSoundEngine {
- private:
+private:
   unsigned m_PolyphonySoftLimit;
   bool m_PolyphonyLimiting;
   bool m_ScaledReleases;
@@ -56,8 +56,8 @@ class GOSoundEngine {
   ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
   ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
   ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
-  GOSoundRecorder* m_AudioRecorder;
-  GOSoundReleaseWorkItem* m_ReleaseProcessor;
+  GOSoundRecorder *m_AudioRecorder;
+  GOSoundReleaseWorkItem *m_ReleaseProcessor;
   std::unique_ptr<GOSoundTouchWorkItem> m_TouchProcessor;
 
   GOSoundScheduler m_Scheduler;
@@ -71,20 +71,20 @@ class GOSoundEngine {
      0 detached release
      1 .. n Windchests
   */
-  void StartSampler(GOSoundSampler* sampler, int sampler_group_id,
-                    unsigned audio_group);
-  void CreateReleaseSampler(GOSoundSampler* sampler);
-  void SwitchAttackSampler(GOSoundSampler* sampler);
+  void StartSampler(
+    GOSoundSampler *sampler, int sampler_group_id, unsigned audio_group);
+  void CreateReleaseSampler(GOSoundSampler *sampler);
+  void SwitchAttackSampler(GOSoundSampler *sampler);
   float GetRandomFactor();
 
- public:
+public:
   GOSoundEngine();
   ~GOSoundEngine();
   void Reset();
-  void Setup(GODefinitionFile* organ_file, unsigned release_count = 1);
+  void Setup(GODefinitionFile *organ_file, unsigned release_count = 1);
   void ClearSetup();
   void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
-  void SetupReverb(GOConfig& settings);
+  void SetupReverb(GOConfig &settings);
   void SetVolume(int volume);
   void SetSampleRate(unsigned sample_rate);
   void SetSamplesPerBuffer(unsigned sample_per_buffer);
@@ -99,27 +99,31 @@ class GOSoundEngine {
   void SetScaledReleases(bool enable);
   void SetRandomizeSpeaking(bool enable);
   void SetReleaseLength(unsigned reverb);
-  const std::vector<double>& GetMeterInfo();
-  void SetAudioRecorder(GOSoundRecorder* recorder, bool downmix);
+  const std::vector<double> &GetMeterInfo();
+  void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 
-  GOSoundSampler* StartSample(const GOSoundProvider* pipe, int sampler_group_id,
-                              unsigned audio_group, unsigned velocity,
-                              unsigned delay, uint64_t last_stop);
-  uint64_t StopSample(const GOSoundProvider* pipe, GOSoundSampler* handle);
-  void SwitchSample(const GOSoundProvider* pipe, GOSoundSampler* handle);
-  void UpdateVelocity(const GOSoundProvider* pipe, GOSoundSampler* handle,
-                      unsigned velocity);
+  GOSoundSampler *StartSample(
+    const GOSoundProvider *pipe,
+    int sampler_group_id,
+    unsigned audio_group,
+    unsigned velocity,
+    unsigned delay,
+    uint64_t last_stop);
+  uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
+  void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
+  void UpdateVelocity(
+    const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity);
 
-  void GetAudioOutput(float* output_buffer, unsigned n_frames,
-                      unsigned audio_output, bool last);
+  void GetAudioOutput(
+    float *output_buffer, unsigned n_frames, unsigned audio_output, bool last);
   void NextPeriod();
-  GOSoundScheduler& GetScheduler();
+  GOSoundScheduler &GetScheduler();
 
-  bool ProcessSampler(float* buffer, GOSoundSampler* sampler, unsigned n_frames,
-                      float volume);
-  void ProcessRelease(GOSoundSampler* sampler);
-  void PassSampler(GOSoundSampler* sampler);
-  void ReturnSampler(GOSoundSampler* sampler);
+  bool ProcessSampler(
+    float *buffer, GOSoundSampler *sampler, unsigned n_frames, float volume);
+  void ProcessRelease(GOSoundSampler *sampler);
+  void PassSampler(GOSoundSampler *sampler);
+  void ReturnSampler(GOSoundSampler *sampler);
   float GetGain();
   uint64_t GetTime() const { return m_CurrentTime; }
 };

@@ -13,10 +13,8 @@
 #include "config/GOConfigFileReader.h"
 
 GOConfigReaderDB::GOConfigReaderDB(bool case_sensitive)
-    : m_CaseSensitive(case_sensitive),
-      m_ODF(1000),
-      m_ODF_LC(1000),
-      m_CMB(100) {}
+    : m_CaseSensitive(case_sensitive), m_ODF(1000), m_ODF_LC(1000), m_CMB(100) {
+}
 
 GOConfigReaderDB::~GOConfigReaderDB() {}
 
@@ -43,30 +41,34 @@ void GOConfigReaderDB::ReportUnused() {
   }
 }
 
-bool GOConfigReaderDB::ReadData(GOConfigFileReader& ODF, GOSettingType type,
-                                bool handle_prefix) {
-  const std::map<wxString, std::map<wxString, wxString> >& entries =
-      ODF.GetContent();
+bool GOConfigReaderDB::ReadData(
+  GOConfigFileReader &ODF, GOSettingType type, bool handle_prefix) {
+  const std::map<wxString, std::map<wxString, wxString>> &entries
+    = ODF.GetContent();
   bool changed = false;
 
-  for (std::map<wxString, std::map<wxString, wxString> >::const_iterator i =
-           entries.begin();
-       i != entries.end(); i++) {
-    const std::map<wxString, wxString>& g = i->second;
+  for (std::map<wxString, std::map<wxString, wxString>>::const_iterator i
+       = entries.begin();
+       i != entries.end();
+       i++) {
+    const std::map<wxString, wxString> &g = i->second;
     wxString group = i->first;
 
     if (!handle_prefix || group.StartsWith(wxT("_"))) {
-      if (handle_prefix) group = group.Mid(1);
+      if (handle_prefix)
+        group = group.Mid(1);
 
       for (std::map<wxString, wxString>::const_iterator j = g.begin();
-           j != g.end(); j++) {
-        const wxString& key = j->first;
-        const wxString& value = j->second;
+           j != g.end();
+           j++) {
+        const wxString &key = j->first;
+        const wxString &value = j->second;
         wxString k = group + wxT('/') + key;
 
         if (type == ODFSetting) {
           AddEntry(m_ODF, k, value);
-          if (!m_CaseSensitive) AddEntry(m_ODF_LC, k.Lower(), value);
+          if (!m_CaseSensitive)
+            AddEntry(m_ODF_LC, k.Lower(), value);
           m_ODFUsed[k] = false;
         } else {
           AddEntry(m_CMB, k, value);
@@ -85,8 +87,8 @@ void GOConfigReaderDB::ClearCMB() {
   m_CMBUsed.clear();
 }
 
-void GOConfigReaderDB::AddEntry(GOStringHashMap& hash, wxString key,
-                                wxString value) {
+void GOConfigReaderDB::AddEntry(
+  GOStringHashMap &hash, wxString key, wxString value) {
   GOStringHashMap::iterator i = hash.find(key);
   if (i != hash.end()) {
     wxLogWarning(_("Duplicate entry: %s"), key.c_str());
@@ -94,8 +96,8 @@ void GOConfigReaderDB::AddEntry(GOStringHashMap& hash, wxString key,
   hash[key] = value;
 }
 
-bool GOConfigReaderDB::GetString(GOSettingType type, wxString group,
-                                 wxString key, wxString& value) {
+bool GOConfigReaderDB::GetString(
+  GOSettingType type, wxString group, wxString key, wxString &value) {
   wxString index = group + wxT("/") + key;
   if (type == CMBSetting) {
     m_CMBUsed[index] = true;
@@ -116,8 +118,10 @@ bool GOConfigReaderDB::GetString(GOSettingType type, wxString group,
   if (type == ODFSetting && !m_CaseSensitive) {
     GOStringHashMap::iterator i = m_ODF_LC.find(index.Lower());
     if (i != m_ODF.end()) {
-      wxLogWarning(_("Incorrect case for section '%s' entry '%s'"),
-                   group.c_str(), key.c_str());
+      wxLogWarning(
+        _("Incorrect case for section '%s' entry '%s'"),
+        group.c_str(),
+        key.c_str());
       value = i->second;
       return true;
     }

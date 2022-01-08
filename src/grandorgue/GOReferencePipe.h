@@ -12,25 +12,25 @@
 #include "GOPipe.h"
 
 class GOReferencePipe : public GOPipe, private GOCacheObject {
- private:
-  GOPipe* m_Reference;
+private:
+  GOPipe *m_Reference;
   unsigned m_ReferenceID;
   wxString m_Filename;
 
   void Initialize();
   void LoadData();
-  bool LoadCache(GOCache& cache);
-  bool SaveCache(GOCacheWriter& cache);
-  void UpdateHash(GOHash& hash);
-  const wxString& GetLoadTitle();
+  bool LoadCache(GOCache &cache);
+  bool SaveCache(GOCacheWriter &cache);
+  void UpdateHash(GOHash &hash);
+  const wxString &GetLoadTitle();
 
   void Change(unsigned velocity, unsigned old_velocity);
 
- public:
-  GOReferencePipe(GODefinitionFile* organfile, GORank* rank,
-                  unsigned midi_key_number);
+public:
+  GOReferencePipe(
+    GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number);
 
-  void Load(GOConfigReader& cfg, wxString group, wxString prefix);
+  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
 };
 
 #endif

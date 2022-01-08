@@ -25,21 +25,21 @@ class GOSound;
 class GODefinitionFile;
 
 class GODocument : public GODocumentBase, protected GOMidiCallback {
- private:
+private:
   GOMutex m_lock;
   bool m_OrganFileReady;
-  GODefinitionFile* m_organfile;
-  GOSound& m_sound;
+  GODefinitionFile *m_organfile;
+  GOSound &m_sound;
   GOMidiListener m_listener;
   bool m_modified;
 
-  void OnMidiEvent(const GOMidiEvent& event);
+  void OnMidiEvent(const GOMidiEvent &event);
 
   void SyncState();
   void CloseOrgan();
 
- public:
-  GODocument(GOSound* sound);
+public:
+  GODocument(GOSound *sound);
   ~GODocument();
 
   bool IsModified();
@@ -47,20 +47,24 @@ class GODocument : public GODocumentBase, protected GOMidiCallback {
 
   void ShowPanel(unsigned id);
   void ShowOrganDialog();
-  void ShowMIDIEventDialog(void* element, wxString title,
-                           GOMidiReceiverBase* event, GOMidiSender* sender,
-                           GOKeyReceiver* key, GOMidiSender* division = NULL);
+  void ShowMIDIEventDialog(
+    void *element,
+    wxString title,
+    GOMidiReceiverBase *event,
+    GOMidiSender *sender,
+    GOKeyReceiver *key,
+    GOMidiSender *division = NULL);
   void ShowMidiList();
 
-  bool Load(GOProgressDialog* dlg, const GOOrgan& organ);
+  bool Load(GOProgressDialog *dlg, const GOOrgan &organ);
   bool Save();
-  bool Export(const wxString& cmb);
-  bool Import(GOProgressDialog* dlg, const GOOrgan& organ, const wxString& cmb);
-  bool ImportCombination(const wxString& cmb);
-  bool Revert(GOProgressDialog* dlg);
-  bool UpdateCache(GOProgressDialog* dlg, bool compress);
+  bool Export(const wxString &cmb);
+  bool Import(GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb);
+  bool ImportCombination(const wxString &cmb);
+  bool Revert(GOProgressDialog *dlg);
+  bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
-  GODefinitionFile* GetOrganFile();
+  GODefinitionFile *GetOrganFile();
 };
 
 #endif

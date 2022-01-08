@@ -11,20 +11,24 @@
 #include <wx/string.h>
 
 class GOTemperament {
- protected:
+protected:
   wxString m_Group;
   wxString m_Name;
   wxString m_Title;
 
- public:
+public:
   GOTemperament(wxString name, wxString group = wxEmptyString);
   GOTemperament(wxString name, wxString title, wxString group);
   virtual ~GOTemperament();
 
-  virtual float GetOffset(bool ignorepitch, unsigned midi_number,
-                          unsigned wav_midi_number, float wav_pitch_fract,
-                          float harmonic_number, float pitch_correction,
-                          float default_tuning) const;
+  virtual float GetOffset(
+    bool ignorepitch,
+    unsigned midi_number,
+    unsigned wav_midi_number,
+    float wav_pitch_fract,
+    float harmonic_number,
+    float pitch_correction,
+    float default_tuning) const;
   wxString GetName() const;
   wxString GetTitle() const;
   wxString GetGroup() const;

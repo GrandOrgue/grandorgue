@@ -10,7 +10,7 @@
 #include "GOMemoryPool.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundTouchWorkItem::GOSoundTouchWorkItem(GOMemoryPool& pool)
+GOSoundTouchWorkItem::GOSoundTouchWorkItem(GOMemoryPool &pool)
     : m_Pool(pool), m_Stop(false) {}
 
 unsigned GOSoundTouchWorkItem::GetGroup() { return TOUCH; }
@@ -19,7 +19,7 @@ unsigned GOSoundTouchWorkItem::GetCost() { return 0; }
 
 bool GOSoundTouchWorkItem::GetRepeat() { return false; }
 
-void GOSoundTouchWorkItem::Run(GOSoundThread* thread) {
+void GOSoundTouchWorkItem::Run(GOSoundThread *thread) {
   GOMutexLocker locker(m_Mutex);
   m_Pool.TouchMemory(m_Stop);
 }

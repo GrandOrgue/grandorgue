@@ -16,7 +16,7 @@
 class GOManual;
 
 class GOGUIManual : public GOGUIControl {
- private:
+private:
   typedef struct {
     unsigned MidiNumber;
     bool IsSharp;
@@ -26,23 +26,23 @@ class GOGUIManual : public GOGUIControl {
     GOBitmap OffBitmap;
   } KeyInfo;
 
-  GOManual* m_manual;
+  GOManual *m_manual;
   unsigned m_ManualNumber;
   std::vector<KeyInfo> m_Keys;
 
- public:
-  GOGUIManual(GOGUIPanel* panel, GOManual* manual, unsigned manual_number);
+public:
+  GOGUIManual(GOGUIPanel *panel, GOManual *manual, unsigned manual_number);
 
   bool IsSharp(unsigned key);
   unsigned GetKeyCount();
 
-  void Init(GOConfigReader& cfg, wxString group);
-  void Load(GOConfigReader& cfg, wxString group);
+  void Init(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, wxString group);
   void Layout();
 
-  void PrepareDraw(double scale, GOBitmap* background);
-  void Draw(GODC& dc);
-  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
+  void PrepareDraw(double scale, GOBitmap *background);
+  void Draw(GODC &dc);
+  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
 };
 
 #endif

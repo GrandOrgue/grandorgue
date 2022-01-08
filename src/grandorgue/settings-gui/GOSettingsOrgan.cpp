@@ -26,15 +26,18 @@ EVT_BUTTON(ID_DEL, GOSettingsOrgan::OnDel)
 EVT_BUTTON(ID_PROPERTIES, GOSettingsOrgan::OnProperties)
 END_EVENT_TABLE()
 
-GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi,
-                                 wxWindow* parent)
+GOSettingsOrgan::GOSettingsOrgan(
+  GOConfig &settings, GOMidi &midi, wxWindow *parent)
     : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
-  wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 
-  m_Organs =
-      new wxListView(this, ID_ORGANS, wxDefaultPosition, wxSize(100, 200),
-                     wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
+  m_Organs = new wxListView(
+    this,
+    ID_ORGANS,
+    wxDefaultPosition,
+    wxSize(100, 200),
+    wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
   m_Organs->InsertColumn(0, _("Church"));
   m_Organs->InsertColumn(1, _("Builder"));
   m_Organs->InsertColumn(2, _("Recording"));
@@ -43,7 +46,7 @@ GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi,
   m_Organs->InsertColumn(5, _("ODF Path"));
   topSizer->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
 
-  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   m_Properties = new wxButton(this, ID_PROPERTIES, _("P&roperties..."));
   m_Down = new wxButton(this, ID_DOWN, _("&Down"));
   m_Up = new wxButton(this, ID_UP, _("&Up"));
@@ -57,18 +60,19 @@ GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi,
   topSizer->Add(buttonSizer, 0, wxALL, 5);
 
   for (unsigned i = 0; i < m_config.GetOrganList().size(); i++) {
-    GOOrgan* o = m_config.GetOrganList()[i];
+    GOOrgan *o = m_config.GetOrganList()[i];
     wxString title = o->GetChurchName();
-    if (!o->IsUsable(m_config)) title = _("MISSING - ") + title;
+    if (!o->IsUsable(m_config))
+      title = _("MISSING - ") + title;
     m_Organs->InsertItem(i, title);
     m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
     m_Organs->SetItem(i, 1, o->GetOrganBuilder());
     m_Organs->SetItem(i, 2, o->GetRecordingDetail());
     m_Organs->SetItem(
-        i, 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
+      i, 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
     m_Organs->SetItem(i, 5, o->GetODFPath());
     if (o->GetArchiveID() != wxEmptyString) {
-      const GOArchiveFile* a = m_config.GetArchiveByID(o->GetArchiveID());
+      const GOArchiveFile *a = m_config.GetArchiveByID(o->GetArchiveID());
       m_Organs->SetItem(i, 4, a ? a->GetName() : o->GetArchiveID());
     }
   }
@@ -91,7 +95,7 @@ GOSettingsOrgan::GOSettingsOrgan(GOConfig& settings, GOMidi& midi,
   topSizer->Fit(this);
 }
 
-void GOSettingsOrgan::OnOrganSelected(wxListEvent& event) {
+void GOSettingsOrgan::OnOrganSelected(wxListEvent &event) {
   long index = m_Organs->GetFirstSelected();
   m_Del->Enable();
   m_Properties->Enable();
@@ -102,8 +106,9 @@ void GOSettingsOrgan::OnOrganSelected(wxListEvent& event) {
     m_Top->Enable();
     m_Up->Enable();
   }
-  if (m_Organs->GetItemCount() > 1 && index >= 0 &&
-      index + 1 < m_Organs->GetItemCount())
+  if (
+    m_Organs->GetItemCount() > 1 && index >= 0
+    && index + 1 < m_Organs->GetItemCount())
     m_Down->Enable();
   else
     m_Down->Disable();
@@ -116,7 +121,8 @@ void GOSettingsOrgan::MoveOrgan(long from, long to) {
   m_Organs->GetItem(item);
   item.SetId(to);
   m_Organs->InsertItem(item);
-  if (to < from) from++;
+  if (to < from)
+    from++;
   for (unsigned i = 0; i < 6; i++) {
     item.SetId(from);
     item.SetColumn(i);
@@ -129,24 +135,28 @@ void GOSettingsOrgan::MoveOrgan(long from, long to) {
   m_Organs->Select(to);
 }
 
-void GOSettingsOrgan::OnUp(wxCommandEvent& event) {
+void GOSettingsOrgan::OnUp(wxCommandEvent &event) {
   MoveOrgan(m_Organs->GetFirstSelected(), m_Organs->GetFirstSelected() - 1);
 }
 
-void GOSettingsOrgan::OnDown(wxCommandEvent& event) {
+void GOSettingsOrgan::OnDown(wxCommandEvent &event) {
   MoveOrgan(m_Organs->GetFirstSelected(), m_Organs->GetFirstSelected() + 1);
 }
 
-void GOSettingsOrgan::OnTop(wxCommandEvent& event) {
+void GOSettingsOrgan::OnTop(wxCommandEvent &event) {
   MoveOrgan(m_Organs->GetFirstSelected(), 0);
 }
 
-void GOSettingsOrgan::OnDel(wxCommandEvent& event) {
-  if (wxMessageBox(
-          wxString::Format(
-              _("Do you want to remove %s?"),
-              m_Organs->GetItemText(m_Organs->GetFirstSelected()).c_str()),
-          _("Organs"), wxYES_NO | wxICON_EXCLAMATION, this) == wxYES) {
+void GOSettingsOrgan::OnDel(wxCommandEvent &event) {
+  if (
+    wxMessageBox(
+      wxString::Format(
+        _("Do you want to remove %s?"),
+        m_Organs->GetItemText(m_Organs->GetFirstSelected()).c_str()),
+      _("Organs"),
+      wxYES_NO | wxICON_EXCLAMATION,
+      this)
+    == wxYES) {
     m_Organs->DeleteItem(m_Organs->GetFirstSelected());
     m_Up->Disable();
     m_Down->Disable();
@@ -156,36 +166,44 @@ void GOSettingsOrgan::OnDel(wxCommandEvent& event) {
   }
 }
 
-void GOSettingsOrgan::OnProperties(wxCommandEvent& event) {
-  GOOrgan* o = (GOOrgan*)m_Organs->GetItemData(m_Organs->GetFirstSelected());
-  MIDIEventDialog dlg(NULL, this,
-                      wxString::Format(_("MIDI settings for organ %s"),
-                                       o->GetChurchName().c_str()),
-                      m_config, &o->GetMIDIReceiver(), NULL, NULL);
+void GOSettingsOrgan::OnProperties(wxCommandEvent &event) {
+  GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(m_Organs->GetFirstSelected());
+  MIDIEventDialog dlg(
+    NULL,
+    this,
+    wxString::Format(
+      _("MIDI settings for organ %s"), o->GetChurchName().c_str()),
+    m_config,
+    &o->GetMIDIReceiver(),
+    NULL,
+    NULL);
   dlg.RegisterMIDIListener(&m_midi);
   dlg.ShowModal();
   m_Organs->SetItem(
-      m_Organs->GetFirstSelected(), 3,
-      o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
+    m_Organs->GetFirstSelected(),
+    3,
+    o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
 }
 
-std::vector<const GOOrgan*> GOSettingsOrgan::GetOrgans() {
-  std::vector<const GOOrgan*> list;
+std::vector<const GOOrgan *> GOSettingsOrgan::GetOrgans() {
+  std::vector<const GOOrgan *> list;
   for (long j = 0; j < m_Organs->GetItemCount(); j++)
-    list.push_back((const GOOrgan*)m_Organs->GetItemData(j));
+    list.push_back((const GOOrgan *)m_Organs->GetItemData(j));
   return list;
 }
 
 void GOSettingsOrgan::Save() {
-  ptr_vector<GOOrgan>& list = m_config.GetOrganList();
+  ptr_vector<GOOrgan> &list = m_config.GetOrganList();
   for (unsigned i = 0; i < list.size(); i++) {
     bool found = false;
     for (long j = 0; j < m_Organs->GetItemCount(); j++)
-      if (m_Organs->GetItemData(j) == (wxUIntPtr)list[i]) found = true;
-    if (!found) delete list[i];
+      if (m_Organs->GetItemData(j) == (wxUIntPtr)list[i])
+        found = true;
+    if (!found)
+      delete list[i];
     list[i] = 0;
   }
   list.clear();
   for (long i = 0; i < m_Organs->GetItemCount(); i++)
-    list.push_back((GOOrgan*)m_Organs->GetItemData(i));
+    list.push_back((GOOrgan *)m_Organs->GetItemData(i));
 }

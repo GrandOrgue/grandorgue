@@ -13,8 +13,8 @@
 class wxImage;
 
 class GOBitmap {
- private:
-  wxImage* m_img;
+private:
+  wxImage *m_img;
   wxBitmap m_bmp;
   double m_Scale;
   int m_ResultWidth;
@@ -22,21 +22,25 @@ class GOBitmap {
   unsigned m_ResultXOffset;
   unsigned m_ResultYOffset;
 
-  void ScaleBMP(wxImage& img, double scale, const wxRect& rect,
-                GOBitmap* background);
+  void ScaleBMP(
+    wxImage &img, double scale, const wxRect &rect, GOBitmap *background);
 
- public:
+public:
   GOBitmap();
-  GOBitmap(wxImage* img);
+  GOBitmap(wxImage *img);
 
-  void PrepareBitmap(double scale, const wxRect& rect, GOBitmap* background);
-  void PrepareTileBitmap(double scale, const wxRect& rect, unsigned xo,
-                         unsigned yo, GOBitmap* background);
+  void PrepareBitmap(double scale, const wxRect &rect, GOBitmap *background);
+  void PrepareTileBitmap(
+    double scale,
+    const wxRect &rect,
+    unsigned xo,
+    unsigned yo,
+    GOBitmap *background);
 
   unsigned GetWidth();
   unsigned GetHeight();
 
-  const wxBitmap& GetBitmap();
+  const wxBitmap &GetBitmap();
 };
 
 #endif

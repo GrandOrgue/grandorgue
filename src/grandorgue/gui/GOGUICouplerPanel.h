@@ -14,16 +14,16 @@ class GOGUIPanel;
 class GODefinitionFile;
 
 class GOGUICouplerPanel : public GOGUIPanelCreator {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
 
-  GOGUIPanel* CreateCouplerPanel(GOConfigReader& cfg, unsigned manual_nr);
+  GOGUIPanel *CreateCouplerPanel(GOConfigReader &cfg, unsigned manual_nr);
 
- public:
-  GOGUICouplerPanel(GODefinitionFile* organfile);
+public:
+  GOGUICouplerPanel(GODefinitionFile *organfile);
   ~GOGUICouplerPanel();
 
-  void CreatePanels(GOConfigReader& cfg);
+  void CreatePanels(GOConfigReader &cfg);
 };
 
 #endif

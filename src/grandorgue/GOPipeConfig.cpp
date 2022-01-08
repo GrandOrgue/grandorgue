@@ -11,112 +11,146 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOPipeConfig::GOPipeConfig(GODefinitionFile* organfile,
-                           GOPipeUpdateCallback* callback)
-    : m_OrganFile(organfile),
-      m_Callback(callback),
-      m_Group(),
-      m_NamePrefix(),
-      m_AudioGroup(),
-      m_Amplitude(0),
-      m_DefaultAmplitude(0),
-      m_Gain(0),
-      m_DefaultGain(0),
-      m_Tuning(0),
-      m_DefaultTuning(0),
-      m_Delay(0),
-      m_DefaultDelay(0),
-      m_BitsPerSample(-1),
-      m_Compress(-1),
-      m_Channels(-1),
-      m_LoopLoad(-1),
-      m_AttackLoad(-1),
-      m_ReleaseLoad(-1) {}
+GOPipeConfig::GOPipeConfig(
+  GODefinitionFile *organfile, GOPipeUpdateCallback *callback)
+    : m_OrganFile(organfile), m_Callback(callback), m_Group(), m_NamePrefix(),
+      m_AudioGroup(), m_Amplitude(0), m_DefaultAmplitude(0), m_Gain(0),
+      m_DefaultGain(0), m_Tuning(0), m_DefaultTuning(0), m_Delay(0),
+      m_DefaultDelay(0), m_BitsPerSample(-1), m_Compress(-1), m_Channels(-1),
+      m_LoopLoad(-1), m_AttackLoad(-1), m_ReleaseLoad(-1) {}
 
-void GOPipeConfig::Init(GOConfigReader& cfg, wxString group, wxString prefix) {
+void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
   m_Group = group;
   m_NamePrefix = prefix;
-  m_AudioGroup =
-      cfg.ReadString(CMBSetting, group, prefix + wxT("AudioGroup"), false);
+  m_AudioGroup
+    = cfg.ReadString(CMBSetting, group, prefix + wxT("AudioGroup"), false);
   m_DefaultAmplitude = 100;
-  m_Amplitude = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Amplitude"), 0,
-                              1000, false, m_DefaultAmplitude);
+  m_Amplitude = cfg.ReadFloat(
+    CMBSetting,
+    group,
+    prefix + wxT("Amplitude"),
+    0,
+    1000,
+    false,
+    m_DefaultAmplitude);
   m_DefaultGain = 0;
-  m_Gain = cfg.ReadFloat(CMBSetting, group, prefix + wxT("UserGain"), -120, 40,
-                         false, m_DefaultGain);
+  m_Gain = cfg.ReadFloat(
+    CMBSetting,
+    group,
+    prefix + wxT("UserGain"),
+    -120,
+    40,
+    false,
+    m_DefaultGain);
   m_DefaultTuning = 0;
-  m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1800,
-                           1800, false, m_DefaultTuning);
+  m_Tuning = cfg.ReadFloat(
+    CMBSetting,
+    group,
+    prefix + wxT("Tuning"),
+    -1800,
+    1800,
+    false,
+    m_DefaultTuning);
   m_DefaultDelay = 0;
-  m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000,
-                            false, m_DefaultDelay);
-  m_BitsPerSample =
-      cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"),
-                      -1, 24, false, -1);
-  if (m_BitsPerSample < 8 || m_BitsPerSample > 24) m_BitsPerSample = -1;
+  m_Delay = cfg.ReadInteger(
+    CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
+  m_BitsPerSample = cfg.ReadInteger(
+    CMBSetting,
+    m_Group,
+    m_NamePrefix + wxT("BitsPerSample"),
+    -1,
+    24,
+    false,
+    -1);
+  if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
+    m_BitsPerSample = -1;
   m_Compress = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
   m_Channels = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
   m_LoopLoad = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
   m_AttackLoad = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
   m_ReleaseLoad = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
 }
 
-void GOPipeConfig::Load(GOConfigReader& cfg, wxString group, wxString prefix) {
+void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
   m_Group = group;
   m_NamePrefix = prefix;
-  m_AudioGroup =
-      cfg.ReadString(CMBSetting, group, prefix + wxT("AudioGroup"), false);
+  m_AudioGroup
+    = cfg.ReadString(CMBSetting, group, prefix + wxT("AudioGroup"), false);
   m_DefaultAmplitude = cfg.ReadFloat(
-      ODFSetting, group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
-  m_Amplitude = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Amplitude"), 0,
-                              1000, false, m_DefaultAmplitude);
-  m_DefaultGain = cfg.ReadFloat(ODFSetting, group, prefix + wxT("Gain"), -120,
-                                40, false, 0);
-  m_Gain = cfg.ReadFloat(CMBSetting, group, prefix + wxT("UserGain"), -120, 40,
-                         false, m_DefaultGain);
+    ODFSetting, group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
+  m_Amplitude = cfg.ReadFloat(
+    CMBSetting,
+    group,
+    prefix + wxT("Amplitude"),
+    0,
+    1000,
+    false,
+    m_DefaultAmplitude);
+  m_DefaultGain = cfg.ReadFloat(
+    ODFSetting, group, prefix + wxT("Gain"), -120, 40, false, 0);
+  m_Gain = cfg.ReadFloat(
+    CMBSetting,
+    group,
+    prefix + wxT("UserGain"),
+    -120,
+    40,
+    false,
+    m_DefaultGain);
   m_DefaultTuning = cfg.ReadFloat(
-      ODFSetting, group, prefix + wxT("PitchTuning"), -1800, 1800, false, 0);
-  m_Tuning = cfg.ReadFloat(CMBSetting, group, prefix + wxT("Tuning"), -1800,
-                           1800, false, m_DefaultTuning);
+    ODFSetting, group, prefix + wxT("PitchTuning"), -1800, 1800, false, 0);
+  m_Tuning = cfg.ReadFloat(
+    CMBSetting,
+    group,
+    prefix + wxT("Tuning"),
+    -1800,
+    1800,
+    false,
+    m_DefaultTuning);
   m_DefaultDelay = cfg.ReadInteger(
-      ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
-  m_Delay = cfg.ReadInteger(CMBSetting, group, prefix + wxT("Delay"), 0, 10000,
-                            false, m_DefaultDelay);
-  m_BitsPerSample =
-      cfg.ReadInteger(CMBSetting, m_Group, m_NamePrefix + wxT("BitsPerSample"),
-                      -1, 24, false, -1);
-  if (m_BitsPerSample < 8 || m_BitsPerSample > 24) m_BitsPerSample = -1;
+    ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
+  m_Delay = cfg.ReadInteger(
+    CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
+  m_BitsPerSample = cfg.ReadInteger(
+    CMBSetting,
+    m_Group,
+    m_NamePrefix + wxT("BitsPerSample"),
+    -1,
+    24,
+    false,
+    -1);
+  if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
+    m_BitsPerSample = -1;
   m_Compress = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
   m_Channels = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
   m_LoopLoad = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
   m_AttackLoad = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
   m_ReleaseLoad = cfg.ReadInteger(
-      CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
+    CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
 }
 
-void GOPipeConfig::Save(GOConfigWriter& cfg) {
+void GOPipeConfig::Save(GOConfigWriter &cfg) {
   cfg.WriteString(m_Group, m_NamePrefix + wxT("AudioGroup"), m_AudioGroup);
   cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Amplitude"), m_Amplitude);
   cfg.WriteFloat(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
   cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Delay"), m_Delay);
-  cfg.WriteInteger(m_Group, m_NamePrefix + wxT("BitsPerSample"),
-                   m_BitsPerSample);
+  cfg.WriteInteger(
+    m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Channels"), m_Channels);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
@@ -124,11 +158,11 @@ void GOPipeConfig::Save(GOConfigWriter& cfg) {
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
 }
 
-GOPipeUpdateCallback* GOPipeConfig::GetCallback() { return m_Callback; }
+GOPipeUpdateCallback *GOPipeConfig::GetCallback() { return m_Callback; }
 
-const wxString& GOPipeConfig::GetAudioGroup() { return m_AudioGroup; }
+const wxString &GOPipeConfig::GetAudioGroup() { return m_AudioGroup; }
 
-void GOPipeConfig::SetAudioGroup(const wxString& str) {
+void GOPipeConfig::SetAudioGroup(const wxString &str) {
   m_AudioGroup = str;
   m_OrganFile->Modified();
   m_Callback->UpdateAudioGroup();
@@ -159,8 +193,10 @@ float GOPipeConfig::GetTuning() { return m_Tuning; }
 float GOPipeConfig::GetDefaultTuning() { return m_DefaultTuning; }
 
 void GOPipeConfig::SetTuning(float cent) {
-  if (cent < -1800) cent = -1800;
-  if (cent > 1800) cent = 1800;
+  if (cent < -1800)
+    cent = -1800;
+  if (cent > 1800)
+    cent = 1800;
   m_Tuning = cent;
   m_OrganFile->Modified();
   m_Callback->UpdateTuning();

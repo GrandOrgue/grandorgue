@@ -14,16 +14,16 @@ class GOConfigReader;
 class GOConfigWriter;
 
 class GOSaveableObject {
- protected:
+protected:
   wxString m_group;
 
- public:
+public:
   GOSaveableObject() : m_group() {}
 
   virtual ~GOSaveableObject() {}
 
-  virtual void Save(GOConfigWriter& cfg) = 0;
-  virtual void LoadCombination(GOConfigReader& cfg) {}
+  virtual void Save(GOConfigWriter &cfg) = 0;
+  virtual void LoadCombination(GOConfigReader &cfg) {}
 };
 
 #endif

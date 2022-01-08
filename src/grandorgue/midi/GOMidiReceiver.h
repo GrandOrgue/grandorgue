@@ -13,22 +13,22 @@
 class GODefinitionFile;
 
 class GOMidiReceiver : public GOMidiReceiverBase {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   int m_Index;
 
- protected:
-  void Preconfigure(GOConfigReader& cfg, wxString group);
+protected:
+  void Preconfigure(GOConfigReader &cfg, wxString group);
   int GetTranspose();
 
- public:
-  GOMidiReceiver(GODefinitionFile* organfile, MIDI_RECEIVER_TYPE type);
+public:
+  GOMidiReceiver(GODefinitionFile *organfile, MIDI_RECEIVER_TYPE type);
 
-  void Load(GOConfigReader& cfg, wxString group, GOMidiMap& map);
+  void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
 
   void SetIndex(int index);
 
-  void Assign(const GOMidiReceiverData& data);
+  void Assign(const GOMidiReceiverData &data);
 };
 
 #endif

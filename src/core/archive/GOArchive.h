@@ -20,32 +20,32 @@ class GOSettingDirectory;
 typedef struct _GOArchiveEntry GOArchiveEntry;
 
 class GOArchive {
- private:
+private:
   GOMutex m_Mutex;
-  const GOSettingDirectory& m_CachePath;
+  const GOSettingDirectory &m_CachePath;
   wxString m_ID;
   std::vector<wxString> m_Dependencies;
   std::vector<GOArchiveEntry> m_Entries;
   wxFile m_File;
   wxString m_Path;
 
- public:
-  GOArchive(const GOSettingDirectory& cachePath);
+public:
+  GOArchive(const GOSettingDirectory &cachePath);
   ~GOArchive();
 
-  bool OpenArchive(const wxString& path);
+  bool OpenArchive(const wxString &path);
   void Close();
 
-  bool containsFile(const wxString& name);
-  GOFile* OpenFile(const wxString& name);
+  bool containsFile(const wxString &name);
+  GOFile *OpenFile(const wxString &name);
 
-  size_t ReadContent(void* buffer, size_t offset, size_t len);
+  size_t ReadContent(void *buffer, size_t offset, size_t len);
 
-  const wxString& GetArchiveID();
-  const wxString& GetPath();
+  const wxString &GetArchiveID();
+  const wxString &GetPath();
 
-  const std::vector<wxString>& GetDependencies() const;
-  void SetDependencies(const std::vector<wxString>& dependencies);
+  const std::vector<wxString> &GetDependencies() const;
+  void SetDependencies(const std::vector<wxString> &dependencies);
 };
 
 #endif

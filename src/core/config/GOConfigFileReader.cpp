@@ -22,15 +22,16 @@ GOConfigFileReader::~GOConfigFileReader() {}
 
 wxString GOConfigFileReader::GetHash() { return m_Hash; }
 
-const std::map<wxString, std::map<wxString, wxString> >&
+const std::map<wxString, std::map<wxString, wxString>> &
 GOConfigFileReader::GetContent() {
   return m_Entries;
 }
 
-wxString GOConfigFileReader::GetNextLine(const wxString& buffer,
-                                         unsigned& pos) {
+wxString
+GOConfigFileReader::GetNextLine(const wxString &buffer, unsigned &pos) {
   int newpos = buffer.find(wxT("\n"), pos);
-  if (newpos < (int)pos) newpos = buffer.Len();
+  if (newpos < (int)pos)
+    newpos = buffer.Len();
   wxString line = buffer.Mid(pos, newpos - pos);
   pos = newpos + 1;
   if (line.Len() > 0 && line[line.Len() - 1] == wxT('\r'))
@@ -39,10 +40,11 @@ wxString GOConfigFileReader::GetNextLine(const wxString& buffer,
 }
 
 wxString GOConfigFileReader::getEntry(wxString group, wxString name) {
-  std::map<wxString, std::map<wxString, wxString> >::const_iterator i =
-      m_Entries.find(group);
-  if (i == m_Entries.end()) return wxEmptyString;
-  const std::map<wxString, wxString>& g = i->second;
+  std::map<wxString, std::map<wxString, wxString>>::const_iterator i
+    = m_Entries.find(group);
+  if (i == m_Entries.end())
+    return wxEmptyString;
+  const std::map<wxString, wxString> &g = i->second;
   std::map<wxString, wxString>::const_iterator j = g.find(name);
   if (j == g.end())
     return wxEmptyString;
@@ -55,7 +57,7 @@ bool GOConfigFileReader::Read(wxString filename) {
   return Read(&file);
 }
 
-bool GOConfigFileReader::Read(GOFile* file) {
+bool GOConfigFileReader::Read(GOFile *file) {
   m_Entries.clear();
 
   if (!file->Open()) {
@@ -66,8 +68,8 @@ bool GOConfigFileReader::Read(GOFile* file) {
   try {
     data.resize(file->GetSize());
   } catch (GOOutOfMemory e) {
-    wxLogError(_("Failed to load file '%s' into the memory"),
-               file->GetName().c_str());
+    wxLogError(
+      _("Failed to load file '%s' into the memory"), file->GetName().c_str());
     file->Close();
     return false;
   }
@@ -88,9 +90,9 @@ bool GOConfigFileReader::Read(GOFile* file) {
     }
   }
 
-  wxMBConv* conv;
+  wxMBConv *conv;
   wxCSConv isoConv(wxT("ISO-8859-1"));
-  uint8_t* dataPtr = data.get();
+  uint8_t *dataPtr = data.get();
   size_t length = data.GetCount();
   if (length >= 3 && data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF) {
     conv = &wxConvUTF8;
@@ -98,7 +100,7 @@ bool GOConfigFileReader::Read(GOFile* file) {
     length -= 3;
   } else
     conv = &isoConv;
-  wxString input((const char*)dataPtr, *conv, length);
+  wxString input((const char *)dataPtr, *conv, length);
   data.free();
   if (length && input.Len() == 0) {
     wxLogError(_("Failed to decode file '%s'"), file->GetName().c_str());
@@ -107,30 +109,32 @@ bool GOConfigFileReader::Read(GOFile* file) {
 
   unsigned pos = 0;
   wxString group;
-  std::map<wxString, wxString>* grp = NULL;
+  std::map<wxString, wxString> *grp = NULL;
   unsigned lineno = 0;
 
   while (pos < input.Len()) {
     wxString line = GetNextLine(input, pos);
     lineno++;
 
-    if (line == wxEmptyString) continue;
-    if (line.Len() >= 1 && line[0] == wxT(';')) continue;
+    if (line == wxEmptyString)
+      continue;
+    if (line.Len() >= 1 && line[0] == wxT(';'))
+      continue;
     if (line.Len() > 1 && line[0] == wxT('[')) {
       if (line[line.Len() - 1] != wxT(']')) {
         line = line.Trim();
         if (line[line.Len() - 1] != wxT(']')) {
-          wxLogError(_("Invalid Config entry at line %d: %s"), lineno,
-                     line.c_str());
+          wxLogError(
+            _("Invalid Config entry at line %d: %s"), lineno, line.c_str());
           continue;
         }
-        wxLogError(_("Invalid section start at line %d: %s"), lineno,
-                   line.c_str());
+        wxLogError(
+          _("Invalid section start at line %d: %s"), lineno, line.c_str());
       }
       group = line.Mid(1, line.Len() - 2);
       if (m_Entries.find(group) != m_Entries.end()) {
-        wxLogWarning(_("Duplicate group at line %d: %s"), lineno,
-                     group.c_str());
+        wxLogWarning(
+          _("Duplicate group at line %d: %s"), lineno, group.c_str());
       }
       grp = &m_Entries[group];
     } else {
@@ -140,14 +144,17 @@ bool GOConfigFileReader::Read(GOFile* file) {
       }
       int datapos = line.find(wxT("="), 0);
       if (datapos <= 0) {
-        wxLogError(_("Invalid Config entry at line %d: %s"), lineno,
-                   line.c_str());
+        wxLogError(
+          _("Invalid Config entry at line %d: %s"), lineno, line.c_str());
         continue;
       }
       wxString name = line.Mid(0, datapos);
       if (grp->find(name) != grp->end()) {
-        wxLogWarning(_("Duplicate entry in section %s at line %d: %s"),
-                     group.c_str(), lineno, name.c_str());
+        wxLogWarning(
+          _("Duplicate entry in section %s at line %d: %s"),
+          group.c_str(),
+          lineno,
+          name.c_str());
       }
       (*grp)[name] = line.Mid(datapos + 1);
     }

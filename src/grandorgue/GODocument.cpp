@@ -25,11 +25,8 @@
 #include "sound/GOSound.h"
 #include "threading/GOMutexLocker.h"
 
-GODocument::GODocument(GOSound* sound)
-    : m_OrganFileReady(false),
-      m_organfile(NULL),
-      m_sound(*sound),
-      m_listener(),
+GODocument::GODocument(GOSound *sound)
+    : m_OrganFileReady(false), m_organfile(NULL), m_sound(*sound), m_listener(),
       m_modified(false) {
   m_listener.Register(&m_sound.GetMidi());
 }
@@ -43,12 +40,12 @@ bool GODocument::IsModified() { return m_modified; }
 
 void GODocument::Modify(bool modified) { m_modified = modified; }
 
-bool GODocument::Load(GOProgressDialog* dlg, const GOOrgan& organ) {
+bool GODocument::Load(GOProgressDialog *dlg, const GOOrgan &organ) {
   return Import(dlg, organ, wxEmptyString);
 }
 
-bool GODocument::Import(GOProgressDialog* dlg, const GOOrgan& organ,
-                        const wxString& cmb) {
+bool GODocument::Import(
+  GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb) {
   wxBusyCursor busy;
 
   CloseOrgan();
@@ -78,13 +75,14 @@ bool GODocument::Import(GOProgressDialog* dlg, const GOOrgan& organ,
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
   for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
-    if (m_organfile->GetPanel(i)->InitialOpenWindow()) ShowPanel(i);
+    if (m_organfile->GetPanel(i)->InitialOpenWindow())
+      ShowPanel(i);
   if (!m_organfile->GetMainWindowData()->GetWindowSize().IsEmpty()) {
-    GOFrame* const frame = dynamic_cast<GOFrame*>(wxTheApp->GetTopWindow());
+    GOFrame *const frame = dynamic_cast<GOFrame *>(wxTheApp->GetTopWindow());
 
     if (frame)
       frame->ApplyRectFromSettings(
-          m_organfile->GetMainWindowData()->GetWindowSize());
+        m_organfile->GetMainWindowData()->GetWindowSize());
   }
 
   m_sound.AssignOrganFile(m_organfile);
@@ -101,38 +99,41 @@ bool GODocument::Import(GOProgressDialog* dlg, const GOOrgan& organ,
   return true;
 }
 
-bool GODocument::ImportCombination(const wxString& cmb) {
-  if (!m_organfile) return false;
+bool GODocument::ImportCombination(const wxString &cmb) {
+  if (!m_organfile)
+    return false;
   m_organfile->LoadCombination(cmb);
   m_organfile->Modified();
   return true;
 }
 
-bool GODocument::UpdateCache(GOProgressDialog* dlg, bool compress) {
-  if (!m_organfile) return false;
+bool GODocument::UpdateCache(GOProgressDialog *dlg, bool compress) {
+  if (!m_organfile)
+    return false;
   return m_organfile->UpdateCache(dlg, compress);
 }
 
 void GODocument::ShowPanel(unsigned id) {
-  GOGUIPanel* panel = m_organfile->GetPanel(id);
+  GOGUIPanel *panel = m_organfile->GetPanel(id);
 
   if (!showWindow(GODocument::PANEL, panel)) {
-    registerWindow(GODocument::PANEL, panel,
-                   GOPanelView::createWithFrame(this, panel));
+    registerWindow(
+      GODocument::PANEL, panel, GOPanelView::createWithFrame(this, panel));
   }
 }
 
 void GODocument::SyncState() {
   m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
   m_organfile->GetMainWindowData()->SetWindowSize(
-      wxTheApp->GetTopWindow()->GetRect());
+    wxTheApp->GetTopWindow()->GetRect());
   for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
     m_organfile->GetPanel(i)->SetInitialOpenWindow(false);
   GODocumentBase::SyncState();
 }
 
-bool GODocument::Revert(GOProgressDialog* dlg) {
-  if (m_organfile) m_organfile->DeleteSettings();
+bool GODocument::Revert(GOProgressDialog *dlg) {
+  if (m_organfile)
+    m_organfile->DeleteSettings();
   Modify(false);
   return Load(dlg, m_organfile->GetOrganInfo());
 }
@@ -142,7 +143,7 @@ bool GODocument::Save() {
   return m_organfile->Save();
 }
 
-bool GODocument::Export(const wxString& cmb) {
+bool GODocument::Export(const wxString &cmb) {
   SyncState();
   return m_organfile->Export(cmb);
 }
@@ -166,38 +167,49 @@ void GODocument::CloseOrgan() {
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
-GODefinitionFile* GODocument::GetOrganFile() { return m_organfile; }
+GODefinitionFile *GODocument::GetOrganFile() { return m_organfile; }
 
-void GODocument::OnMidiEvent(const GOMidiEvent& event) {
+void GODocument::OnMidiEvent(const GOMidiEvent &event) {
   GOMutexLocker locker(m_lock);
 
-  if (!m_OrganFileReady) return;
+  if (!m_OrganFileReady)
+    return;
 
-  if (m_organfile) m_organfile->ProcessMidi(event);
+  if (m_organfile)
+    m_organfile->ProcessMidi(event);
 }
 
 void GODocument::ShowOrganDialog() {
   if (!showWindow(GODocument::ORGAN_DIALOG, NULL) && m_organfile) {
-    registerWindow(GODocument::ORGAN_DIALOG, NULL,
-                   new OrganDialog(this, NULL, m_organfile));
+    registerWindow(
+      GODocument::ORGAN_DIALOG, NULL, new OrganDialog(this, NULL, m_organfile));
   }
 }
 
 void GODocument::ShowMidiList() {
   if (!showWindow(GODocument::MIDI_LIST, NULL) && m_organfile) {
-    registerWindow(GODocument::MIDI_LIST, NULL,
-                   new MIDIList(this, NULL, m_organfile));
+    registerWindow(
+      GODocument::MIDI_LIST, NULL, new MIDIList(this, NULL, m_organfile));
   }
 }
 
-void GODocument::ShowMIDIEventDialog(void* element, wxString title,
-                                     GOMidiReceiverBase* event,
-                                     GOMidiSender* sender, GOKeyReceiver* key,
-                                     GOMidiSender* division) {
+void GODocument::ShowMIDIEventDialog(
+  void *element,
+  wxString title,
+  GOMidiReceiverBase *event,
+  GOMidiSender *sender,
+  GOKeyReceiver *key,
+  GOMidiSender *division) {
   if (!showWindow(GODocument::MIDI_EVENT, element) && m_organfile) {
-    MIDIEventDialog* dlg =
-        new MIDIEventDialog(this, NULL, title, m_organfile->GetSettings(),
-                            event, sender, key, division);
+    MIDIEventDialog *dlg = new MIDIEventDialog(
+      this,
+      NULL,
+      title,
+      m_organfile->GetSettings(),
+      event,
+      sender,
+      key,
+      division);
     dlg->RegisterMIDIListener(m_organfile->GetMidi());
     registerWindow(GODocument::MIDI_EVENT, element, dlg);
   }

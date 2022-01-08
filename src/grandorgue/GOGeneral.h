@@ -14,15 +14,17 @@
 class GOConfigReader;
 
 class GOGeneral : public GOPushbutton {
- private:
+private:
   GOFrameGeneral m_general;
 
- public:
-  GOGeneral(GOCombinationDefinition& general_template,
-            GODefinitionFile* organfile, bool is_setter);
-  void Load(GOConfigReader& cfg, wxString group);
+public:
+  GOGeneral(
+    GOCombinationDefinition &general_template,
+    GODefinitionFile *organfile,
+    bool is_setter);
+  void Load(GOConfigReader &cfg, wxString group);
   void Push();
-  GOFrameGeneral& GetGeneral();
+  GOFrameGeneral &GetGeneral();
 
   wxString GetMidiType();
 };

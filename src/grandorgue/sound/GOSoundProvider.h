@@ -32,7 +32,7 @@ typedef struct {
 } release_section_info;
 
 class GOSoundProvider : public GOStatisticCallback {
- protected:
+protected:
   unsigned m_MidiKeyNumber;
   float m_MidiPitchFract;
   float m_Gain;
@@ -42,28 +42,28 @@ class GOSoundProvider : public GOStatisticCallback {
   std::vector<attack_section_info> m_AttackInfo;
   ptr_vector<GOAudioSection> m_Release;
   std::vector<release_section_info> m_ReleaseInfo;
-  GOMemoryPool& m_pool;
+  GOMemoryPool &m_pool;
   void ComputeReleaseAlignmentInfo();
   float m_VelocityVolumeBase;
   float m_VelocityVolumeIncrement;
   unsigned m_ReleaseCrossfadeLength;
 
- public:
-  GOSoundProvider(GOMemoryPool& pool);
+public:
+  GOSoundProvider(GOMemoryPool &pool);
   virtual ~GOSoundProvider();
 
   void ClearData();
 
-  virtual bool LoadCache(GOCache& cache);
-  virtual bool SaveCache(GOCacheWriter& cache);
+  virtual bool LoadCache(GOCache &cache);
+  virtual bool SaveCache(GOCacheWriter &cache);
 
   void UseSampleGroup(unsigned sample_group);
   void SetVelocityParameter(float min_volume, float max_volume);
 
-  const GOAudioSection* GetRelease(const audio_section_stream* handle,
-                                   double playback_time) const;
-  const GOAudioSection* GetAttack(unsigned velocity,
-                                  unsigned released_time) const;
+  const GOAudioSection *
+  GetRelease(const audio_section_stream *handle, double playback_time) const;
+  const GOAudioSection *
+  GetAttack(unsigned velocity, unsigned released_time) const;
   float GetGain() const;
   int IsOneshot() const;
 

@@ -18,21 +18,11 @@
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 
-GORank::GORank(GODefinitionFile* organfile)
-    : m_organfile(organfile),
-      m_Name(),
-      m_Pipes(),
-      m_StopCount(0),
-      m_Velocity(),
-      m_Velocities(),
-      m_FirstMidiNoteNumber(0),
-      m_Percussive(false),
-      m_WindchestGroup(0),
-      m_HarmonicNumber(8),
-      m_PitchCorrection(0),
-      m_MinVolume(100),
-      m_MaxVolume(100),
-      m_RetuneRank(true),
+GORank::GORank(GODefinitionFile *organfile)
+    : m_organfile(organfile), m_Name(), m_Pipes(), m_StopCount(0), m_Velocity(),
+      m_Velocities(), m_FirstMidiNoteNumber(0), m_Percussive(false),
+      m_WindchestGroup(0), m_HarmonicNumber(8), m_PitchCorrection(0),
+      m_MinVolume(100), m_MaxVolume(100), m_RetuneRank(true),
       m_sender(organfile, MIDI_SEND_MANUAL),
       m_PipeConfig(NULL, organfile, NULL) {
   m_organfile->RegisterMidiConfigurator(this);
@@ -48,8 +38,12 @@ void GORank::Resize() {
     m_Velocities[i].resize(m_StopCount);
 }
 
-void GORank::Init(GOConfigReader& cfg, wxString group, wxString name,
-                  int first_midi_note_number, unsigned windchest_nr) {
+void GORank::Init(
+  GOConfigReader &cfg,
+  wxString group,
+  wxString name,
+  int first_midi_note_number,
+  unsigned windchest_nr) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
 
@@ -65,45 +59,54 @@ void GORank::Init(GOConfigReader& cfg, wxString group, wxString name,
   m_MaxVolume = 100;
   m_RetuneRank = false;
 
-  GOWindchest* windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
+  GOWindchest *windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
   windchest->AddRank(this);
   m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
   m_Pipes.clear();
-  m_sender.Load(cfg, group + wxT("Rank"),
-                m_organfile->GetSettings().GetMidiMap());
+  m_sender.Load(
+    cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
   m_PipeConfig.SetName(GetName());
   Resize();
 }
 
-void GORank::Load(GOConfigReader& cfg, wxString group,
-                  int first_midi_note_number) {
+void GORank::Load(
+  GOConfigReader &cfg, wxString group, int first_midi_note_number) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
 
-  m_FirstMidiNoteNumber =
-      cfg.ReadInteger(ODFSetting, group, wxT("FirstMidiNoteNumber"), 0, 256,
-                      first_midi_note_number < 0, first_midi_note_number);
+  m_FirstMidiNoteNumber = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    wxT("FirstMidiNoteNumber"),
+    0,
+    256,
+    first_midi_note_number < 0,
+    first_midi_note_number);
   m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 
-  unsigned number_of_logical_pipes =
-      cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
+  unsigned number_of_logical_pipes
+    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
   m_PipeConfig.Load(cfg, group, wxEmptyString);
-  m_WindchestGroup = cfg.ReadInteger(ODFSetting, group, wxT("WindchestGroup"),
-                                     1, m_organfile->GetWindchestGroupCount());
+  m_WindchestGroup = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    wxT("WindchestGroup"),
+    1,
+    m_organfile->GetWindchestGroupCount());
   m_Percussive = cfg.ReadBoolean(ODFSetting, group, wxT("Percussive"));
-  m_HarmonicNumber = cfg.ReadInteger(ODFSetting, group, wxT("HarmonicNumber"),
-                                     1, 1024, false, 8);
-  m_PitchCorrection = cfg.ReadFloat(ODFSetting, group, wxT("PitchCorrection"),
-                                    -1800, 1800, false, 0);
-  m_MinVolume = cfg.ReadFloat(ODFSetting, group, wxT("MinVelocityVolume"), 0,
-                              1000, false, 100);
-  m_MaxVolume = cfg.ReadFloat(ODFSetting, group, wxT("MaxVelocityVolume"), 0,
-                              1000, false, 100);
-  m_RetuneRank =
-      cfg.ReadBoolean(ODFSetting, group, wxT("AcceptsRetuning"), false, true);
+  m_HarmonicNumber = cfg.ReadInteger(
+    ODFSetting, group, wxT("HarmonicNumber"), 1, 1024, false, 8);
+  m_PitchCorrection = cfg.ReadFloat(
+    ODFSetting, group, wxT("PitchCorrection"), -1800, 1800, false, 0);
+  m_MinVolume = cfg.ReadFloat(
+    ODFSetting, group, wxT("MinVelocityVolume"), 0, 1000, false, 100);
+  m_MaxVolume = cfg.ReadFloat(
+    ODFSetting, group, wxT("MaxVelocityVolume"), 0, 1000, false, 100);
+  m_RetuneRank
+    = cfg.ReadBoolean(ODFSetting, group, wxT("AcceptsRetuning"), false, true);
 
-  GOWindchest* windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
+  GOWindchest *windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
   windchest->AddRank(this);
   m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
@@ -114,42 +117,50 @@ void GORank::Load(GOConfigReader& cfg, wxString group,
     wxString name = cfg.ReadStringTrim(ODFSetting, group, buffer);
     if (name == wxT("DUMMY")) {
       m_Pipes.push_back(
-          new GODummyPipe(m_organfile, this, m_FirstMidiNoteNumber + i));
+        new GODummyPipe(m_organfile, this, m_FirstMidiNoteNumber + i));
     } else if (name.StartsWith(wxT("REF:"))) {
       m_Pipes.push_back(
-          new GOReferencePipe(m_organfile, this, m_FirstMidiNoteNumber + i));
+        new GOReferencePipe(m_organfile, this, m_FirstMidiNoteNumber + i));
     } else {
       m_Pipes.push_back(new GOSoundingPipe(
-          m_organfile, this, m_Percussive, m_WindchestGroup,
-          m_FirstMidiNoteNumber + i, m_HarmonicNumber, m_PitchCorrection,
-          m_MinVolume, m_MaxVolume, m_RetuneRank));
+        m_organfile,
+        this,
+        m_Percussive,
+        m_WindchestGroup,
+        m_FirstMidiNoteNumber + i,
+        m_HarmonicNumber,
+        m_PitchCorrection,
+        m_MinVolume,
+        m_MaxVolume,
+        m_RetuneRank));
     }
     m_Pipes[i]->Load(cfg, group, buffer);
   }
-  m_sender.Load(cfg, group + wxT("Rank"),
-                m_organfile->GetSettings().GetMidiMap());
+  m_sender.Load(
+    cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
   m_PipeConfig.SetName(GetName());
   Resize();
 }
 
-void GORank::AddPipe(GOPipe* pipe) {
+void GORank::AddPipe(GOPipe *pipe) {
   m_Pipes.push_back(pipe);
   Resize();
 }
 
-void GORank::Save(GOConfigWriter& cfg) {
-  m_sender.Save(cfg, m_group + wxT("Rank"),
-                m_organfile->GetSettings().GetMidiMap());
+void GORank::Save(GOConfigWriter &cfg) {
+  m_sender.Save(
+    cfg, m_group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
 }
 
-unsigned GORank::RegisterStop(GOStop* stop) {
+unsigned GORank::RegisterStop(GOStop *stop) {
   unsigned id = m_StopCount++;
   Resize();
   return id;
 }
 
 void GORank::SetKey(int note, unsigned velocity, unsigned stopID) {
-  if (note < 0 || note >= (int)m_Pipes.size()) return;
+  if (note < 0 || note >= (int)m_Pipes.size())
+    return;
 
   if (m_Velocities[note][stopID] <= velocity && velocity <= m_Velocity[note]) {
     m_Velocities[note][stopID] = velocity;
@@ -168,15 +179,15 @@ void GORank::SetKey(int note, unsigned velocity, unsigned stopID) {
   m_Pipes[note]->Set(m_Velocity[note]);
 }
 
-GOPipe* GORank::GetPipe(unsigned index) { return m_Pipes[index]; }
+GOPipe *GORank::GetPipe(unsigned index) { return m_Pipes[index]; }
 
 unsigned GORank::GetPipeCount() { return m_Pipes.size(); }
 
-const wxString& GORank::GetName() { return m_Name; }
+const wxString &GORank::GetName() { return m_Name; }
 
-GOPipeConfigNode& GORank::GetPipeConfig() { return m_PipeConfig; }
+GOPipeConfigNode &GORank::GetPipeConfig() { return m_PipeConfig; }
 
-void GORank::SetTemperament(const GOTemperament& temperament) {
+void GORank::SetTemperament(const GOTemperament &temperament) {
   for (unsigned j = 0; j < m_Pipes.size(); j++)
     m_Pipes[j]->SetTemperament(temperament);
 }
@@ -185,7 +196,8 @@ void GORank::AbortPlayback() { m_sender.SetName(wxEmptyString); }
 
 void GORank::PreparePlayback() {
   m_sender.ResetKey();
-  for (unsigned i = 0; i < m_Velocity.size(); i++) m_Velocity[i] = 0;
+  for (unsigned i = 0; i < m_Velocity.size(); i++)
+    m_Velocity[i] = 0;
   for (unsigned i = 0; i < m_Velocities.size(); i++)
     for (unsigned j = 0; j < m_Velocities[i].size(); j++)
       m_Velocities[i][j] = 0;
@@ -205,12 +217,13 @@ wxString GORank::GetMidiType() { return _("Rank"); }
 wxString GORank::GetMidiName() { return m_Name; }
 
 void GORank::ShowConfigDialog() {
-  wxString title =
-      wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(),
-                       GetMidiName().c_str());
+  wxString title = wxString::Format(
+    _("Midi-Settings for %s - %s"),
+    GetMidiType().c_str(),
+    GetMidiName().c_str());
 
-  m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, NULL, &m_sender,
-                                                  NULL, NULL);
+  m_organfile->GetDocument()->ShowMIDIEventDialog(
+    this, title, NULL, &m_sender, NULL, NULL);
 }
 
 wxString GORank::GetElementStatus() { return _("-"); }

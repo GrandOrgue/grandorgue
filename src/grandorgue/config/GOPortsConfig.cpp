@@ -7,8 +7,8 @@
 
 #include "GOPortsConfig.h"
 
-int GOPortsConfig::Find(const wxString &portName,
-                        const wxString &apiName) const {
+int GOPortsConfig::Find(
+  const wxString &portName, const wxString &apiName) const {
   int res = -1;
 
   for (size_t i = 0, l = m_PortApiConfigs.size(); i < l; i++) {
@@ -22,8 +22,8 @@ int GOPortsConfig::Find(const wxString &portName,
   return res;
 }
 
-void GOPortsConfig::SetConfigEnabled(const wxString &portName,
-                                     const wxString &apiName, bool isEnabled) {
+void GOPortsConfig::SetConfigEnabled(
+  const wxString &portName, const wxString &apiName, bool isEnabled) {
   const PortApiConfig c(portName, apiName, isEnabled);
   const int i = Find(portName, apiName);
 
@@ -33,8 +33,8 @@ void GOPortsConfig::SetConfigEnabled(const wxString &portName,
     m_PortApiConfigs.push_back(c);
 }
 
-bool GOPortsConfig::IsConfigEnabled(const wxString &portName,
-                                    const wxString &apiName) const {
+bool GOPortsConfig::IsConfigEnabled(
+  const wxString &portName, const wxString &apiName) const {
   const int i = Find(portName, apiName);
 
   return (i < 0) || m_PortApiConfigs[i].m_IsEnabled;

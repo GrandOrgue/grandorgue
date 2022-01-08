@@ -11,8 +11,8 @@
 
 #include "GOPath.h"
 
-GOSettingDirectory::GOSettingDirectory(GOSettingStore* store, wxString group,
-                                       wxString name, wxString default_value)
+GOSettingDirectory::GOSettingDirectory(
+  GOSettingStore *store, wxString group, wxString name, wxString default_value)
     : GOSettingString(store, group, name, default_value) {}
 
 wxString GOSettingDirectory::validate(wxString value) {

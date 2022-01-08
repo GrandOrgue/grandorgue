@@ -15,28 +15,26 @@
 #include "config/GOConfigWriter.h"
 
 const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
-    {wxT("Input"), FUNCTION_INPUT}, {wxT("And"), FUNCTION_AND},
-    {wxT("Or"), FUNCTION_OR},       {wxT("Not"), FUNCTION_NOT},
-    {wxT("Nand"), FUNCTION_NAND},   {wxT("Nor"), FUNCTION_NOR},
-    {wxT("Xor"), FUNCTION_XOR},
+  {wxT("Input"), FUNCTION_INPUT},
+  {wxT("And"), FUNCTION_AND},
+  {wxT("Or"), FUNCTION_OR},
+  {wxT("Not"), FUNCTION_NOT},
+  {wxT("Nand"), FUNCTION_NAND},
+  {wxT("Nor"), FUNCTION_NOR},
+  {wxT("Xor"), FUNCTION_XOR},
 };
 
-GODrawstop::GODrawstop(GODefinitionFile* organfile)
-    : GOButton(organfile, MIDI_RECV_DRAWSTOP, false),
-      m_Type(FUNCTION_INPUT),
-      m_GCState(0),
-      m_ActiveState(false),
-      m_CombinationState(false),
-      m_ControlledDrawstops(),
-      m_ControllingDrawstops(),
-      m_StoreDivisional(false),
-      m_StoreGeneral(false) {}
+GODrawstop::GODrawstop(GODefinitionFile *organfile)
+    : GOButton(organfile, MIDI_RECV_DRAWSTOP, false), m_Type(FUNCTION_INPUT),
+      m_GCState(0), m_ActiveState(false), m_CombinationState(false),
+      m_ControlledDrawstops(), m_ControllingDrawstops(),
+      m_StoreDivisional(false), m_StoreGeneral(false) {}
 
-void GODrawstop::RegisterControlled(GODrawstop* sw) {
+void GODrawstop::RegisterControlled(GODrawstop *sw) {
   m_ControlledDrawstops.push_back(sw);
 }
 
-void GODrawstop::Init(GOConfigReader& cfg, wxString group, wxString name) {
+void GODrawstop::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_Type = FUNCTION_INPUT;
   m_Engaged = cfg.ReadBoolean(CMBSetting, group, wxT("DefaultToEngaged"));
   m_GCState = 0;
@@ -45,42 +43,57 @@ void GODrawstop::Init(GOConfigReader& cfg, wxString group, wxString name) {
   GOButton::Init(cfg, group, name);
 }
 
-void GODrawstop::Load(GOConfigReader& cfg, wxString group) {
+void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
   m_Type = (GOFunctionType)cfg.ReadEnum(
-      ODFSetting, group, wxT("Function"), m_function_types,
-      sizeof(m_function_types) / sizeof(m_function_types[0]), false,
-      FUNCTION_INPUT);
+    ODFSetting,
+    group,
+    wxT("Function"),
+    m_function_types,
+    sizeof(m_function_types) / sizeof(m_function_types[0]),
+    false,
+    FUNCTION_INPUT);
 
   if (m_Type == FUNCTION_INPUT) {
     m_Engaged = cfg.ReadBoolean(ODFSetting, group, wxT("DefaultToEngaged"));
-    m_Engaged = cfg.ReadBoolean(CMBSetting, group, wxT("DefaultToEngaged"),
-                                false, m_Engaged);
-    m_GCState =
-        cfg.ReadInteger(ODFSetting, group, wxT("GCState"), -1, 1, false, 0);
+    m_Engaged = cfg.ReadBoolean(
+      CMBSetting, group, wxT("DefaultToEngaged"), false, m_Engaged);
+    m_GCState
+      = cfg.ReadInteger(ODFSetting, group, wxT("GCState"), -1, 1, false, 0);
   } else {
     m_ReadOnly = true;
     unsigned cnt = 0;
     bool unique = true;
     if (m_Type == FUNCTION_NOT)
       cnt = 1;
-    else if (m_Type == FUNCTION_AND || m_Type == FUNCTION_OR ||
-             m_Type == FUNCTION_NAND || m_Type == FUNCTION_NOR ||
-             m_Type == FUNCTION_XOR) {
-      cnt = cfg.ReadInteger(ODFSetting, group, wxT("SwitchCount"), 1,
-                            m_organfile->GetSwitchCount(), true, 1);
+    else if (
+      m_Type == FUNCTION_AND || m_Type == FUNCTION_OR || m_Type == FUNCTION_NAND
+      || m_Type == FUNCTION_NOR || m_Type == FUNCTION_XOR) {
+      cnt = cfg.ReadInteger(
+        ODFSetting,
+        group,
+        wxT("SwitchCount"),
+        1,
+        m_organfile->GetSwitchCount(),
+        true,
+        1);
     }
     for (unsigned i = 0; i < cnt; i++) {
-      unsigned no = cfg.ReadInteger(ODFSetting, group,
-                                    wxString::Format(wxT("Switch%03d"), i + 1),
-                                    1, m_organfile->GetSwitchCount(), true, 1);
-      GODrawstop* s = m_organfile->GetSwitch(no - 1);
+      unsigned no = cfg.ReadInteger(
+        ODFSetting,
+        group,
+        wxString::Format(wxT("Switch%03d"), i + 1),
+        1,
+        m_organfile->GetSwitchCount(),
+        true,
+        1);
+      GODrawstop *s = m_organfile->GetSwitch(no - 1);
       for (unsigned j = 0; j < m_ControllingDrawstops.size(); j++)
         if (unique && m_ControllingDrawstops[j] == s)
-          throw wxString::Format(_("Switch %d already assigned to %s"), no,
-                                 group.c_str());
-      if (s == (GODrawstop*)this)
-        throw wxString::Format(_("Drawstop %s can't reference to itself"),
-                               group.c_str());
+          throw wxString::Format(
+            _("Switch %d already assigned to %s"), no, group.c_str());
+      if (s == (GODrawstop *)this)
+        throw wxString::Format(
+          _("Drawstop %s can't reference to itself"), group.c_str());
       s->RegisterControlled(this);
       m_ControllingDrawstops.push_back(s);
     }
@@ -89,31 +102,35 @@ void GODrawstop::Load(GOConfigReader& cfg, wxString group) {
   GOButton::Load(cfg, group);
   SetupCombinationState();
   m_StoreDivisional = cfg.ReadBoolean(
-      ODFSetting, group, wxT("StoreInDivisional"), false, m_StoreDivisional);
-  m_StoreGeneral = cfg.ReadBoolean(ODFSetting, group, wxT("StoreInGeneral"),
-                                   false, m_StoreGeneral);
+    ODFSetting, group, wxT("StoreInDivisional"), false, m_StoreDivisional);
+  m_StoreGeneral = cfg.ReadBoolean(
+    ODFSetting, group, wxT("StoreInGeneral"), false, m_StoreGeneral);
 }
 
-void GODrawstop::Save(GOConfigWriter& cfg) {
+void GODrawstop::Save(GOConfigWriter &cfg) {
   if (!IsReadOnly())
     cfg.WriteBoolean(m_group, wxT("DefaultToEngaged"), IsEngaged());
   GOButton::Save(cfg);
 }
 
 void GODrawstop::Set(bool on) {
-  if (IsEngaged() == on) return;
+  if (IsEngaged() == on)
+    return;
   Display(on);
   SetState(on);
 }
 
 void GODrawstop::Reset() {
-  if (IsReadOnly()) return;
-  if (m_GCState < 0) return;
+  if (IsReadOnly())
+    return;
+  if (m_GCState < 0)
+    return;
   Set(m_GCState > 0 ? true : false);
 }
 
 void GODrawstop::SetState(bool on) {
-  if (IsActive() == on) return;
+  if (IsActive() == on)
+    return;
   if (IsReadOnly()) {
     Display(on);
   }
@@ -124,7 +141,8 @@ void GODrawstop::SetState(bool on) {
 }
 
 void GODrawstop::SetCombination(bool on) {
-  if (IsReadOnly()) return;
+  if (IsReadOnly())
+    return;
   m_CombinationState = on;
   Set(on);
 }
@@ -139,43 +157,43 @@ void GODrawstop::PreparePlayback() {
 void GODrawstop::Update() {
   bool state;
   switch (m_Type) {
-    case FUNCTION_INPUT:
-      SetState(IsEngaged());
-      break;
+  case FUNCTION_INPUT:
+    SetState(IsEngaged());
+    break;
 
-    case FUNCTION_AND:
-    case FUNCTION_NAND:
-      state = true;
-      for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-        state = state && m_ControllingDrawstops[i]->IsActive();
-      if (m_Type == FUNCTION_NAND)
-        SetState(!state);
-      else
-        SetState(state);
-      break;
-
-    case FUNCTION_OR:
-    case FUNCTION_NOR:
-      state = false;
-      for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-        state = state || m_ControllingDrawstops[i]->IsActive();
-      if (m_Type == FUNCTION_NOR)
-        SetState(!state);
-      else
-        SetState(state);
-      break;
-
-    case FUNCTION_XOR:
-      state = false;
-      for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-        state = state != m_ControllingDrawstops[i]->IsActive();
-      SetState(state);
-      break;
-
-    case FUNCTION_NOT:
-      state = m_ControllingDrawstops[0]->IsActive();
+  case FUNCTION_AND:
+  case FUNCTION_NAND:
+    state = true;
+    for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+      state = state && m_ControllingDrawstops[i]->IsActive();
+    if (m_Type == FUNCTION_NAND)
       SetState(!state);
-      break;
+    else
+      SetState(state);
+    break;
+
+  case FUNCTION_OR:
+  case FUNCTION_NOR:
+    state = false;
+    for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+      state = state || m_ControllingDrawstops[i]->IsActive();
+    if (m_Type == FUNCTION_NOR)
+      SetState(!state);
+    else
+      SetState(state);
+    break;
+
+  case FUNCTION_XOR:
+    state = false;
+    for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
+      state = state != m_ControllingDrawstops[i]->IsActive();
+    SetState(state);
+    break;
+
+  case FUNCTION_NOT:
+    state = m_ControllingDrawstops[0]->IsActive();
+    SetState(!state);
+    break;
   }
 }
 

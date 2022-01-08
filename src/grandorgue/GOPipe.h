@@ -20,13 +20,13 @@ class GOTemperament;
 class GODefinitionFile;
 
 class GOPipe : private GOPlaybackStateHandler {
- private:
+private:
   unsigned m_Velocity;
   std::vector<unsigned> m_Velocities;
 
- protected:
-  GODefinitionFile* m_organfile;
-  GORank* m_Rank;
+protected:
+  GODefinitionFile *m_organfile;
+  GORank *m_Rank;
   unsigned m_MidiKeyNumber;
 
   virtual void Change(unsigned velocity, unsigned old_velocity) = 0;
@@ -36,13 +36,13 @@ class GOPipe : private GOPlaybackStateHandler {
   void PreparePlayback();
   void PrepareRecording();
 
- public:
-  GOPipe(GODefinitionFile* organfile, GORank* rank, unsigned midi_key_number);
+public:
+  GOPipe(GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number);
   virtual ~GOPipe();
-  virtual void Load(GOConfigReader& cfg, wxString group, wxString prefix) = 0;
+  virtual void Load(GOConfigReader &cfg, wxString group, wxString prefix) = 0;
   void Set(unsigned velocity, unsigned referenceID = 0);
-  unsigned RegisterReference(GOPipe* pipe);
-  virtual void SetTemperament(const GOTemperament& temperament);
+  unsigned RegisterReference(GOPipe *pipe);
+  virtual void SetTemperament(const GOTemperament &temperament);
 };
 
 #endif

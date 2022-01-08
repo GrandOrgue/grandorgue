@@ -20,26 +20,26 @@ class GOTimerCallback;
 class GOTimer : private wxTimer {
   typedef struct {
     GOTime time;
-    GOTimerCallback* callback;
+    GOTimerCallback *callback;
     unsigned interval;
   } GOTimerEntry;
 
- private:
+private:
   std::vector<GOTimerEntry> m_Entries;
   GOMutex m_Lock;
 
   void Schedule();
   void Notify();
 
- public:
+public:
   GOTimer();
   ~GOTimer();
 
-  void SetTimer(GOTime time, GOTimerCallback* callback, unsigned interval = 0);
-  void SetRelativeTimer(GOTime time, GOTimerCallback* callback,
-                        unsigned interval = 0);
-  void UpdateInterval(GOTimerCallback* callback, unsigned interval);
-  void DeleteTimer(GOTimerCallback* callback);
+  void SetTimer(GOTime time, GOTimerCallback *callback, unsigned interval = 0);
+  void SetRelativeTimer(
+    GOTime time, GOTimerCallback *callback, unsigned interval = 0);
+  void UpdateInterval(GOTimerCallback *callback, unsigned interval);
+  void DeleteTimer(GOTimerCallback *callback);
 };
 
 #endif

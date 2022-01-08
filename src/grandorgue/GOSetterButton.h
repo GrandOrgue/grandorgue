@@ -13,12 +13,14 @@
 class GOSetterButtonCallback;
 
 class GOSetterButton : public GOButton {
- protected:
-  GOSetterButtonCallback* m_setter;
+protected:
+  GOSetterButtonCallback *m_setter;
 
- public:
-  GOSetterButton(GODefinitionFile* organfile, GOSetterButtonCallback* setter,
-                 bool Pushbutton);
+public:
+  GOSetterButton(
+    GODefinitionFile *organfile,
+    GOSetterButtonCallback *setter,
+    bool Pushbutton);
   void Push(void);
   void Set(bool on);
 

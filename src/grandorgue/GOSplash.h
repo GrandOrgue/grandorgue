@@ -14,36 +14,36 @@
 #include <wx/timer.h>
 
 class GOSplashBitmap : public wxControl {
- private:
+private:
   wxBitmap m_Bitmap;
 
-  void OnPaint(wxPaintEvent& event);
-  void OnClick(wxMouseEvent& event);
-  void OnKey(wxKeyEvent& event);
+  void OnPaint(wxPaintEvent &event);
+  void OnClick(wxMouseEvent &event);
+  void OnKey(wxKeyEvent &event);
 
- public:
-  GOSplashBitmap(wxWindow* parent, wxWindowID id, wxBitmap& bitmap);
+public:
+  GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap &bitmap);
 
   DECLARE_EVENT_TABLE()
 };
 
 class GOSplash : private wxDialog {
- private:
-  GOSplashBitmap* m_Image;
+private:
+  GOSplashBitmap *m_Image;
   wxTimer m_Timer;
   bool m_hasTimeout;
 
-  GOSplash(bool has_timeout, wxWindow* parent, wxWindowID id);
+  GOSplash(bool has_timeout, wxWindow *parent, wxWindowID id);
   ~GOSplash();
 
-  void OnShowWindow(wxShowEvent& event);
-  void OnCloseWindow(wxCloseEvent& event);
-  void OnNotify(wxTimerEvent& event);
+  void OnShowWindow(wxShowEvent &event);
+  void OnCloseWindow(wxCloseEvent &event);
+  void OnNotify(wxTimerEvent &event);
 
-  void DrawText(wxBitmap& bitmap);
+  void DrawText(wxBitmap &bitmap);
 
- public:
-  static void DoSplash(bool hasTimeout, wxWindow* parent);
+public:
+  static void DoSplash(bool hasTimeout, wxWindow *parent);
 
   DECLARE_EVENT_TABLE()
 };

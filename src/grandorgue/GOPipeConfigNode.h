@@ -15,29 +15,31 @@ class GOSampleStatistic;
 class GOStatisticCallback;
 
 class GOPipeConfigNode : private GOSaveableObject {
- private:
-  GODefinitionFile* m_organfile;
-  GOPipeConfigNode* m_parent;
+private:
+  GODefinitionFile *m_organfile;
+  GOPipeConfigNode *m_parent;
   GOPipeConfig m_PipeConfig;
-  GOStatisticCallback* m_StatisticCallback;
+  GOStatisticCallback *m_StatisticCallback;
   wxString m_Name;
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
- public:
-  GOPipeConfigNode(GOPipeConfigNode* parent, GODefinitionFile* organfile,
-                   GOPipeUpdateCallback* callback,
-                   GOStatisticCallback* statistic);
+public:
+  GOPipeConfigNode(
+    GOPipeConfigNode *parent,
+    GODefinitionFile *organfile,
+    GOPipeUpdateCallback *callback,
+    GOStatisticCallback *statistic);
   virtual ~GOPipeConfigNode();
 
-  void SetParent(GOPipeConfigNode* parent);
-  void Init(GOConfigReader& cfg, wxString group, wxString prefix);
-  void Load(GOConfigReader& cfg, wxString group, wxString prefix);
+  void SetParent(GOPipeConfigNode *parent);
+  void Init(GOConfigReader &cfg, wxString group, wxString prefix);
+  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
 
-  const wxString& GetName();
+  const wxString &GetName();
   void SetName(wxString name);
 
-  GOPipeConfig& GetPipeConfig();
+  GOPipeConfig &GetPipeConfig();
 
   void ModifyTuning(float diff);
 
@@ -56,9 +58,9 @@ class GOPipeConfigNode : private GOSaveableObject {
   unsigned GetEffectiveReleaseLoad();
   unsigned GetEffectiveChannels();
 
-  virtual void AddChild(GOPipeConfigNode* node);
+  virtual void AddChild(GOPipeConfigNode *node);
   virtual unsigned GetChildCount();
-  virtual GOPipeConfigNode* GetChild(unsigned index);
+  virtual GOPipeConfigNode *GetChild(unsigned index);
   virtual GOSampleStatistic GetStatistic();
 };
 

@@ -19,26 +19,26 @@ class GODefinitionFile;
 struct IniFileEnumEntry;
 
 class GOMidiSender : public GOMidiSenderData {
- private:
+private:
   static const struct IniFileEnumEntry m_MidiTypes[];
-  GODefinitionFile* m_organfile;
+  GODefinitionFile *m_organfile;
   int m_ElementID;
 
- public:
-  GOMidiSender(GODefinitionFile* organfile, MIDI_SENDER_TYPE type);
+public:
+  GOMidiSender(GODefinitionFile *organfile, MIDI_SENDER_TYPE type);
   ~GOMidiSender();
 
   void SetElementID(int id);
 
-  void Load(GOConfigReader& cfg, wxString group, GOMidiMap& map);
-  void Save(GOConfigWriter& cfg, wxString group, GOMidiMap& map);
+  void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
+  void Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map);
 
   void SetDisplay(bool state);
   void SetKey(unsigned key, unsigned velocity);
   void ResetKey();
   void SetValue(unsigned value);
-  void SetLabel(const wxString& text);
-  void SetName(const wxString& text);
+  void SetLabel(const wxString &text);
+  void SetName(const wxString &text);
 
   bool HasChannel(midi_send_message_type type);
   bool HasKey(midi_send_message_type type);
@@ -52,7 +52,7 @@ class GOMidiSender : public GOMidiSenderData {
   unsigned StartLimit(midi_send_message_type type);
   unsigned LengthLimit(midi_send_message_type type);
 
-  void Assign(const GOMidiSenderData& data);
+  void Assign(const GOMidiSenderData &data);
 };
 
 #endif

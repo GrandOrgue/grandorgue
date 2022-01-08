@@ -22,27 +22,27 @@ class GODefinitionFile;
 class GOLabel : private GOSaveableObject,
                 private GOPlaybackStateHandler,
                 public GOMidiConfigurator {
- protected:
+protected:
   wxString m_Name;
   wxString m_Content;
   wxString m_group;
-  GODefinitionFile* m_organfile;
+  GODefinitionFile *m_organfile;
   GOMidiSender m_sender;
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
   void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
   void PrepareRecording();
 
- public:
-  GOLabel(GODefinitionFile* organfile);
+public:
+  GOLabel(GODefinitionFile *organfile);
   virtual ~GOLabel();
-  void Init(GOConfigReader& cfg, wxString group, wxString name);
-  void Load(GOConfigReader& cfg, wxString group, wxString name);
-  const wxString& GetName();
-  const wxString& GetContent();
+  void Init(GOConfigReader &cfg, wxString group, wxString name);
+  void Load(GOConfigReader &cfg, wxString group, wxString name);
+  const wxString &GetName();
+  const wxString &GetContent();
   void SetContent(wxString name);
 
   wxString GetMidiType();

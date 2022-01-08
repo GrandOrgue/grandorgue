@@ -13,18 +13,18 @@ class GOMidiCallback;
 class GOMidiEvent;
 
 class GOMidiListener {
-  GOMidiCallback* m_Callback;
-  GOMidi* m_midi;
+  GOMidiCallback *m_Callback;
+  GOMidi *m_midi;
 
- public:
+public:
   GOMidiListener();
   virtual ~GOMidiListener();
 
-  void SetCallback(GOMidiCallback* callback);
-  void Register(GOMidi* midi);
+  void SetCallback(GOMidiCallback *callback);
+  void Register(GOMidi *midi);
   void Unregister();
 
-  void Send(const GOMidiEvent& event);
+  void Send(const GOMidiEvent &event);
 };
 
 #endif

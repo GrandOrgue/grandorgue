@@ -9,7 +9,7 @@
 #define GOPLAYBACKSTATEHANDLER_H
 
 class GOPlaybackStateHandler {
- public:
+public:
   virtual ~GOPlaybackStateHandler() {}
 
   virtual void AbortPlayback() = 0;

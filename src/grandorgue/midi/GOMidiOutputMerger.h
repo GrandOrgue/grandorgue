@@ -17,20 +17,20 @@
 class GOMidiOutputEvent;
 
 class GOMidiOutputMerger {
- private:
+private:
   typedef struct {
     midi_message_type type;
     int key;
     wxString content;
   } GOMidiOutputMergerHWState;
   std::vector<GOMidiOutputMergerHWState> m_HWState;
-  std::vector<std::vector<uint8_t> > m_RodgersState;
+  std::vector<std::vector<uint8_t>> m_RodgersState;
 
- public:
+public:
   GOMidiOutputMerger();
 
   void Clear();
-  bool Process(GOMidiEvent& e);
+  bool Process(GOMidiEvent &e);
 };
 
 #endif

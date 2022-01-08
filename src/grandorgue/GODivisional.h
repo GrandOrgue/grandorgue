@@ -15,22 +15,31 @@ class GOConfigReader;
 class GOConfigWriter;
 
 class GODivisional : public GOPushbutton, public GOCombination {
- protected:
+protected:
   int m_DivisionalNumber;
   unsigned m_ManualNumber;
   bool m_IsSetter;
 
   bool PushLocal();
 
- public:
-  GODivisional(GODefinitionFile* organfile,
-               GOCombinationDefinition& divisional_template, bool is_setter);
-  void Init(GOConfigReader& cfg, wxString group, int manualNumber,
-            int divisionalNumber, wxString name);
-  void Load(GOConfigReader& cfg, wxString group, int manualNumber,
-            int divisionalNumber);
-  void LoadCombination(GOConfigReader& cfg);
-  void Save(GOConfigWriter& cfg);
+public:
+  GODivisional(
+    GODefinitionFile *organfile,
+    GOCombinationDefinition &divisional_template,
+    bool is_setter);
+  void Init(
+    GOConfigReader &cfg,
+    wxString group,
+    int manualNumber,
+    int divisionalNumber,
+    wxString name);
+  void Load(
+    GOConfigReader &cfg,
+    wxString group,
+    int manualNumber,
+    int divisionalNumber);
+  void LoadCombination(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
   void Push();
 
   wxString GetMidiType();

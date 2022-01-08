@@ -17,10 +17,10 @@
 class GOButton;
 
 class GOGUIButton : public GOGUIControl {
- protected:
+protected:
   bool m_IsPiston;
   bool m_DispKeyLabelOnLeft;
-  GOButton* m_Button;
+  GOButton *m_Button;
   wxRect m_MouseRect;
   unsigned m_Radius;
   GOBitmap m_OnBitmap;
@@ -37,17 +37,21 @@ class GOGUIButton : public GOGUIControl {
   unsigned m_TileOffsetX;
   unsigned m_TileOffsetY;
 
- public:
-  GOGUIButton(GOGUIPanel* panel, GOButton* control, bool is_piston = false);
+public:
+  GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston = false);
 
-  void Init(GOConfigReader& cfg, wxString group, unsigned x_pos, unsigned y_pos,
-            unsigned image = 0);
-  void Load(GOConfigReader& cfg, wxString group);
+  void Init(
+    GOConfigReader &cfg,
+    wxString group,
+    unsigned x_pos,
+    unsigned y_pos,
+    unsigned image = 0);
+  void Load(GOConfigReader &cfg, wxString group);
   void Layout();
 
-  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
-  void PrepareDraw(double scale, GOBitmap* background);
-  void Draw(GODC& dc);
+  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
+  void PrepareDraw(double scale, GOBitmap *background);
+  void Draw(GODC &dc);
 };
 
 #endif

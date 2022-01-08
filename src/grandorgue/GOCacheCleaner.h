@@ -12,14 +12,14 @@ class GOConfig;
 class wxArrayString;
 
 class GOCacheCleaner {
- private:
-  GOConfig& m_config;
+private:
+  GOConfig &m_config;
 
   wxArrayString GetOrganIDList();
   wxArrayString GetArchiveIDList();
 
- public:
-  GOCacheCleaner(GOConfig& settings);
+public:
+  GOCacheCleaner(GOConfig &settings);
   ~GOCacheCleaner();
 
   void Cleanup();

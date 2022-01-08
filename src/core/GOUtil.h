@@ -12,8 +12,8 @@
 #include <wx/string.h>
 
 wxString formatCDDouble(double value);
-bool parseCDouble(double& result, wxString value);
-bool parseLong(long& result, wxString value);
-bool parseColor(wxColour& result, wxString value);
+bool parseCDouble(double &result, wxString value);
+bool parseLong(long &result, wxString value);
+bool parseColor(wxColour &result, wxString value);
 
 #endif

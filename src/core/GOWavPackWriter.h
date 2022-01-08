@@ -13,23 +13,27 @@
 #include "GOBuffer.h"
 
 class GOWavPackWriter {
- private:
+private:
   GOBuffer<uint8_t> m_Output;
-  WavpackContext* m_Context;
+  WavpackContext *m_Context;
 
-  bool Write(void* data, int32_t count);
-  static int WriteCallback(void* id, void* data, int32_t bcount);
+  bool Write(void *data, int32_t count);
+  static int WriteCallback(void *id, void *data, int32_t bcount);
   bool Close();
 
- public:
+public:
   GOWavPackWriter();
   ~GOWavPackWriter();
 
-  bool Init(unsigned channels, unsigned bitsPerSample, unsigned bytesPerSample,
-            unsigned sampleRate, unsigned sampleCount);
-  bool AddWrapper(GOBuffer<uint8_t>& header);
-  bool AddSampleData(GOBuffer<int32_t>& sampleData);
-  bool GetResult(GOBuffer<uint8_t>& result);
+  bool Init(
+    unsigned channels,
+    unsigned bitsPerSample,
+    unsigned bytesPerSample,
+    unsigned sampleRate,
+    unsigned sampleCount);
+  bool AddWrapper(GOBuffer<uint8_t> &header);
+  bool AddSampleData(GOBuffer<int32_t> &sampleData);
+  bool GetResult(GOBuffer<uint8_t> &result);
 };
 
 #endif

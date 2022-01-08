@@ -23,34 +23,34 @@ typedef struct _GOArchiveEntry {
 } GOArchiveEntry;
 
 class GOArchiveIndex {
- private:
-  const GOSettingDirectory& m_CachePath;
+private:
+  const GOSettingDirectory &m_CachePath;
   wxString m_Path;
   wxFile m_File;
 
   GOHashType GenerateHash();
   wxString GenerateIndexFilename();
 
-  bool Write(const void* buf, unsigned len);
-  bool Read(void* buf, unsigned len);
+  bool Write(const void *buf, unsigned len);
+  bool Read(void *buf, unsigned len);
 
-  bool WriteString(const wxString& str);
-  bool ReadString(wxString& str);
+  bool WriteString(const wxString &str);
+  bool ReadString(wxString &str);
 
-  bool WriteEntry(const GOArchiveEntry& e);
-  bool ReadEntry(GOArchiveEntry& e);
+  bool WriteEntry(const GOArchiveEntry &e);
+  bool ReadEntry(GOArchiveEntry &e);
 
-  bool ReadContent(wxString& id, std::vector<GOArchiveEntry>& entries);
-  bool WriteContent(const wxString& id,
-                    const std::vector<GOArchiveEntry>& entries);
+  bool ReadContent(wxString &id, std::vector<GOArchiveEntry> &entries);
+  bool
+  WriteContent(const wxString &id, const std::vector<GOArchiveEntry> &entries);
 
- public:
-  GOArchiveIndex(const GOSettingDirectory& cachePath, const wxString& path);
+public:
+  GOArchiveIndex(const GOSettingDirectory &cachePath, const wxString &path);
   ~GOArchiveIndex();
 
-  bool ReadIndex(wxString& id, std::vector<GOArchiveEntry>& entries);
-  bool WriteIndex(const wxString& id,
-                  const std::vector<GOArchiveEntry>& entries);
+  bool ReadIndex(wxString &id, std::vector<GOArchiveEntry> &entries);
+  bool
+  WriteIndex(const wxString &id, const std::vector<GOArchiveEntry> &entries);
 };
 
 #endif

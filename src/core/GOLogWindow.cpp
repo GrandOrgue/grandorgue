@@ -25,23 +25,31 @@ EVT_MENU(wxID_COPY, GOLogWindow::OnCopy)
 EVT_MENU(wxID_CLEAR, GOLogWindow::OnClear)
 END_EVENT_TABLE()
 
-GOLogWindow::GOLogWindow(wxWindow* parent, wxWindowID id, const wxString& title,
-                         const wxPoint& pos, const wxSize& size, long style)
+GOLogWindow::GOLogWindow(
+  wxWindow *parent,
+  wxWindowID id,
+  const wxString &title,
+  const wxPoint &pos,
+  const wxSize &size,
+  long style)
     : wxFrame(parent, id, title, pos, size, style) {
   m_List = new wxListCtrl(
-      this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-      wxBORDER_SIMPLE | wxLC_REPORT | wxLC_NO_HEADER | wxLC_SINGLE_SEL);
+    this,
+    wxID_ANY,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxBORDER_SIMPLE | wxLC_REPORT | wxLC_NO_HEADER | wxLC_SINGLE_SEL);
   m_List->InsertColumn(0, wxT("Message"));
   m_List->InsertColumn(1, wxT("Time"));
 
   const int img_size = 16;
-  wxImageList* imgs = new wxImageList(img_size, img_size);
-  imgs->Add(wxArtProvider::GetBitmap(wxART_ERROR, wxART_MESSAGE_BOX,
-                                     wxSize(img_size, img_size)));
-  imgs->Add(wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX,
-                                     wxSize(img_size, img_size)));
-  imgs->Add(wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_MESSAGE_BOX,
-                                     wxSize(img_size, img_size)));
+  wxImageList *imgs = new wxImageList(img_size, img_size);
+  imgs->Add(wxArtProvider::GetBitmap(
+    wxART_ERROR, wxART_MESSAGE_BOX, wxSize(img_size, img_size)));
+  imgs->Add(wxArtProvider::GetBitmap(
+    wxART_WARNING, wxART_MESSAGE_BOX, wxSize(img_size, img_size)));
+  imgs->Add(wxArtProvider::GetBitmap(
+    wxART_INFORMATION, wxART_MESSAGE_BOX, wxSize(img_size, img_size)));
   m_List->AssignImageList(imgs, wxIMAGE_LIST_SMALL);
 
   m_List->SetColumnWidth(0, wxLIST_AUTOSIZE);
@@ -50,7 +58,7 @@ GOLogWindow::GOLogWindow(wxWindow* parent, wxWindowID id, const wxString& title,
 
 GOLogWindow::~GOLogWindow() {}
 
-void GOLogWindow::OnCopy(wxCommandEvent& event) {
+void GOLogWindow::OnCopy(wxCommandEvent &event) {
   wxString text;
   for (long i = m_List->GetItemCount() - 1; i >= 0; i--) {
     wxListItem i1, i2;
@@ -62,8 +70,8 @@ void GOLogWindow::OnCopy(wxCommandEvent& event) {
     i2.SetMask(wxLIST_MASK_TEXT);
     m_List->GetItem(i1);
     m_List->GetItem(i2);
-    text += wxString::Format(_("%s: %s\n"), i1.GetText().c_str(),
-                             i2.GetText().c_str());
+    text += wxString::Format(
+      _("%s: %s\n"), i1.GetText().c_str(), i2.GetText().c_str());
   }
 
   if (wxTheClipboard->Open()) {
@@ -72,7 +80,7 @@ void GOLogWindow::OnCopy(wxCommandEvent& event) {
   }
 }
 
-void GOLogWindow::OnPopup(wxContextMenuEvent& event) {
+void GOLogWindow::OnPopup(wxContextMenuEvent &event) {
   wxMenu popup;
   popup.Append(wxID_CLEAR, _("&Clear"), wxEmptyString, wxITEM_NORMAL);
   popup.AppendSeparator();
@@ -80,9 +88,9 @@ void GOLogWindow::OnPopup(wxContextMenuEvent& event) {
   PopupMenu(&popup);
 }
 
-void GOLogWindow::OnClear(wxCommandEvent& event) { m_List->DeleteAllItems(); }
+void GOLogWindow::OnClear(wxCommandEvent &event) { m_List->DeleteAllItems(); }
 
-void GOLogWindow::OnLog(wxCommandEvent& event) {
+void GOLogWindow::OnLog(wxCommandEvent &event) {
   wxDateTime time((time_t)event.GetTimestamp());
   wxString timestr = time.Format();
 
@@ -92,28 +100,29 @@ void GOLogWindow::OnLog(wxCommandEvent& event) {
   m_List->SetColumnWidth(0, wxLIST_AUTOSIZE);
   m_List->SetColumnWidth(1, wxLIST_AUTOSIZE);
 
-  if (!IsShown()) Show();
+  if (!IsShown())
+    Show();
 }
 
-void GOLogWindow::OnCloseWindow(wxCloseEvent& event) {
+void GOLogWindow::OnCloseWindow(wxCloseEvent &event) {
   Show(false);
   m_List->DeleteAllItems();
 }
 
-void GOLogWindow::LogMsg(wxLogLevel level, const wxString& msg,
-                         time_t timestamp) {
+void GOLogWindow::LogMsg(
+  wxLogLevel level, const wxString &msg, time_t timestamp) {
   static unsigned count = 0;
   int l;
   switch (level) {
-    case wxLOG_FatalError:
-    case wxLOG_Error:
-      l = 0;
-      break;
-    case wxLOG_Warning:
-      l = 1;
-      break;
-    default:
-      l = 2;
+  case wxLOG_FatalError:
+  case wxLOG_Error:
+    l = 0;
+    break;
+  case wxLOG_Warning:
+    l = 1;
+    break;
+  default:
+    l = 2;
   }
   wxCommandEvent e(wxEVT_ADD_LOG_MESSAGE, 0);
   e.SetString(msg);
@@ -121,5 +130,6 @@ void GOLogWindow::LogMsg(wxLogLevel level, const wxString& msg,
   e.SetTimestamp(timestamp);
   GetEventHandler()->AddPendingEvent(e);
   count++;
-  if ((count % 100) == 0) wxTheApp->Yield(true);
+  if ((count % 100) == 0)
+    wxTheApp->Yield(true);
 }

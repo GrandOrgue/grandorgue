@@ -17,21 +17,26 @@ class wxColour;
 class wxRect;
 
 class GODC {
- private:
-  wxDC* m_DC;
+private:
+  wxDC *m_DC;
   double m_Scale;
   double m_FontScale;
 
-  wxString WrapText(const wxString& string, unsigned width);
+  wxString WrapText(const wxString &string, unsigned width);
 
- public:
-  GODC(wxDC* dc, double scale, double fontScale);
+public:
+  GODC(wxDC *dc, double scale, double fontScale);
 
-  void DrawBitmap(GOBitmap& bitmap, const wxRect& target);
-  void DrawText(const wxString& text, const wxRect& rect, const wxColour& color,
-                GOFont& font, unsigned text_width, bool top = false);
+  void DrawBitmap(GOBitmap &bitmap, const wxRect &target);
+  void DrawText(
+    const wxString &text,
+    const wxRect &rect,
+    const wxColour &color,
+    GOFont &font,
+    unsigned text_width,
+    bool top = false);
 
-  wxRect ScaleRect(const wxRect& rect);
+  wxRect ScaleRect(const wxRect &rect);
 };
 
 #endif

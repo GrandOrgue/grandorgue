@@ -15,15 +15,15 @@ class GOCacheWriter;
 class GOHash;
 
 class GOCacheObject {
- public:
+public:
   virtual ~GOCacheObject() {}
 
   virtual void Initialize() = 0;
   virtual void LoadData() = 0;
-  virtual bool LoadCache(GOCache& cache) = 0;
-  virtual bool SaveCache(GOCacheWriter& cache) = 0;
-  virtual void UpdateHash(GOHash& hash) = 0;
-  virtual const wxString& GetLoadTitle() = 0;
+  virtual bool LoadCache(GOCache &cache) = 0;
+  virtual bool SaveCache(GOCacheWriter &cache) = 0;
+  virtual void UpdateHash(GOHash &hash) = 0;
+  virtual const wxString &GetLoadTitle() = 0;
 };
 
 #endif

@@ -34,23 +34,23 @@ class GOSettingsReverb : public wxPanel {
     ID_GAIN_SPIN,
   };
 
- private:
-  GOConfig& m_config;
-  wxCheckBox* m_Enabled;
-  wxCheckBox* m_Direct;
-  wxFilePickerCtrl* m_File;
-  wxStaticText* m_FileName;
-  wxChoice* m_Channel;
-  wxSpinCtrl* m_StartOffset;
-  wxSpinCtrl* m_Length;
-  wxSpinCtrl* m_Delay;
-  wxTextCtrl* m_Gain;
-  wxSpinButton* m_GainSpin;
+private:
+  GOConfig &m_config;
+  wxCheckBox *m_Enabled;
+  wxCheckBox *m_Direct;
+  wxFilePickerCtrl *m_File;
+  wxStaticText *m_FileName;
+  wxChoice *m_Channel;
+  wxSpinCtrl *m_StartOffset;
+  wxSpinCtrl *m_Length;
+  wxSpinCtrl *m_Delay;
+  wxTextCtrl *m_Gain;
+  wxSpinButton *m_GainSpin;
 
-  void OnEnabled(wxCommandEvent& event);
-  void OnFileChanged(wxFileDirPickerEvent& e);
-  void OnGainSpinChanged(wxSpinEvent& e);
-  void OnGainChanged(wxCommandEvent& e);
+  void OnEnabled(wxCommandEvent &event);
+  void OnFileChanged(wxFileDirPickerEvent &e);
+  void OnGainSpinChanged(wxSpinEvent &e);
+  void OnGainChanged(wxCommandEvent &e);
 
   void UpdateFile();
   void UpdateLimits();
@@ -58,8 +58,8 @@ class GOSettingsReverb : public wxPanel {
 
   bool Validate();
 
- public:
-  GOSettingsReverb(GOConfig& settings, wxWindow* parent);
+public:
+  GOSettingsReverb(GOConfig &settings, wxWindow *parent);
 
   void Save();
 

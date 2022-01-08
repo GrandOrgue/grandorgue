@@ -21,8 +21,8 @@ typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
 class GOSetter : private GOPlaybackStateHandler,
                  private GOControlChangedHandler,
                  public GOElementCreator {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   unsigned m_pos;
   unsigned m_bank;
   unsigned m_crescendopos;
@@ -43,24 +43,24 @@ class GOSetter : private GOPlaybackStateHandler,
   void Crescendo(int pos, bool force = false);
 
   static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry* GetButtonList();
+  const struct ElementListEntry *GetButtonList();
 
   void ButtonChanged(int id);
 
-  void ControlChanged(void* control);
+  void ControlChanged(void *control);
 
   void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
   void PrepareRecording();
 
- public:
-  GOSetter(GODefinitionFile* organfile);
+public:
+  GOSetter(GODefinitionFile *organfile);
   virtual ~GOSetter();
 
-  void Load(GOConfigReader& cfg);
-  GOEnclosure* GetEnclosure(const wxString& name, bool is_panel);
-  GOLabel* GetLabel(const wxString& name, bool is_panel);
+  void Load(GOConfigReader &cfg);
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
+  GOLabel *GetLabel(const wxString &name, bool is_panel);
 
   void Update();
 

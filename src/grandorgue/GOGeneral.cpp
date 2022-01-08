@@ -9,18 +9,20 @@
 
 #include <wx/intl.h>
 
-GOGeneral::GOGeneral(GOCombinationDefinition& general_template,
-                     GODefinitionFile* organfile, bool is_setter)
+GOGeneral::GOGeneral(
+  GOCombinationDefinition &general_template,
+  GODefinitionFile *organfile,
+  bool is_setter)
     : GOPushbutton(organfile),
       m_general(general_template, organfile, is_setter) {}
 
-void GOGeneral::Load(GOConfigReader& cfg, wxString group) {
+void GOGeneral::Load(GOConfigReader &cfg, wxString group) {
   m_general.Load(cfg, group);
   GOPushbutton::Load(cfg, group);
 }
 
 void GOGeneral::Push() { m_general.Push(); }
 
-GOFrameGeneral& GOGeneral::GetGeneral() { return m_general; }
+GOFrameGeneral &GOGeneral::GetGeneral() { return m_general; }
 
 wxString GOGeneral::GetMidiType() { return _("General"); }

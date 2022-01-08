@@ -13,7 +13,7 @@
 #include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundThread::GOSoundThread(GOSoundScheduler* scheduler)
+GOSoundThread::GOSoundThread(GOSoundScheduler *scheduler)
     : GOThread(), m_Scheduler(scheduler), m_Condition(m_Mutex) {
   wxLogDebug(wxT("Create Thread"));
 }
@@ -23,19 +23,23 @@ void GOSoundThread::Entry() {
     bool shouldStop = false;
 
     do {
-      GOSoundWorkItem* next = m_Scheduler->GetNextGroup();
+      GOSoundWorkItem *next = m_Scheduler->GetNextGroup();
 
-      if (next == NULL) break;
+      if (next == NULL)
+        break;
       next->Run(this);
       shouldStop = ShouldStop();
     } while (!shouldStop);
 
-    if (shouldStop) break;
+    if (shouldStop)
+      break;
 
     GOMutexLocker lock(m_Mutex, false, "GOSoundThread::Entry", this);
 
-    if (!lock.IsLocked() || ShouldStop()) break;
-    if (!m_Condition.WaitOrStop("GOSoundThread::Entry")) break;
+    if (!lock.IsLocked() || ShouldStop())
+      break;
+    if (!m_Condition.WaitOrStop("GOSoundThread::Entry"))
+      break;
   }
   return;
 }

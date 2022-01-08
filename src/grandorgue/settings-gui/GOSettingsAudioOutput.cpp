@@ -22,7 +22,7 @@
 #include "sound/ports/GOSoundPortFactory.h"
 
 class AudioItemData : public wxTreeItemData {
- public:
+public:
   typedef enum { ROOT_NODE, AUDIO_NODE, CHANNEL_NODE, GROUP_NODE } node_type;
 
   AudioItemData() {
@@ -34,7 +34,7 @@ class AudioItemData : public wxTreeItemData {
     volume = -121;
   }
 
-  AudioItemData(const wxString& device_name, unsigned desired_latency) {
+  AudioItemData(const wxString &device_name, unsigned desired_latency) {
     type = AUDIO_NODE;
     name = device_name;
     channel = 0;
@@ -52,7 +52,7 @@ class AudioItemData : public wxTreeItemData {
     volume = -121;
   }
 
-  AudioItemData(const wxString& group_name, bool left_channel, float vol) {
+  AudioItemData(const wxString &group_name, bool left_channel, float vol) {
     type = GROUP_NODE;
     name = group_name;
     channel = 0;
@@ -78,44 +78,53 @@ EVT_BUTTON(ID_OUTPUT_PROPERTIES, GOSettingsAudioOutput::OnOutputProperties)
 EVT_BUTTON(ID_OUTPUT_DEFAULT, GOSettingsAudioOutput::OnOutputDefault)
 END_EVENT_TABLE()
 
-GOSettingsAudioOutput::GOSettingsAudioOutput(GOSound& sound,
-                                             GOAudioGroupCallback& callback,
-                                             wxWindow* parent)
+GOSettingsAudioOutput::GOSettingsAudioOutput(
+  GOSound &sound, GOAudioGroupCallback &callback, wxWindow *parent)
     : wxPanel(parent, wxID_ANY),
-      GOSettingsPorts(this, GOSoundPortFactory::getInstance(),
-                      _("Sound &ports")),
-      m_Sound(sound),
-      m_config(sound.GetSettings()),
-      m_GroupCallback(callback) {
-  wxBoxSizer* const item0 = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer* item1 = new wxBoxSizer(wxHORIZONTAL);
+      GOSettingsPorts(
+        this, GOSoundPortFactory::getInstance(), _("Sound &ports")),
+      m_Sound(sound), m_config(sound.GetSettings()), m_GroupCallback(callback) {
+  wxBoxSizer *const item0 = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *item1 = new wxBoxSizer(wxHORIZONTAL);
   wxArrayString choices;
-  wxBoxSizer* item2 =
-      new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
-  wxFlexGridSizer* grid = new wxFlexGridSizer(2, 5, 5);
+  wxBoxSizer *item2
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
+  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
 
   choices.clear();
   choices.push_back(wxT("44100"));
   choices.push_back(wxT("48000"));
   choices.push_back(wxT("96000"));
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Sample Rate:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE, wxDefaultPosition,
-                                        wxDefaultSize, choices),
-            0, wxALL);
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Samples per buffer:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_SamplesPerBuffer =
-                new wxSpinCtrl(this, ID_SAMPLES_PER_BUFFER, wxEmptyString,
-                               wxDefaultPosition, wxDefaultSize),
-            0, wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Sample Rate:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_SampleRate = new wxChoice(
+      this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices),
+    0,
+    wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Samples per buffer:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_SamplesPerBuffer = new wxSpinCtrl(
+      this,
+      ID_SAMPLES_PER_BUFFER,
+      wxEmptyString,
+      wxDefaultPosition,
+      wxDefaultSize),
+    0,
+    wxALL);
   m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
   m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
 
   m_SampleRate->Select(0);
   for (unsigned i = 0; i < m_SampleRate->GetCount(); i++)
-    if (wxString::Format(wxT("%d"), m_config.SampleRate()) ==
-        m_SampleRate->GetString(i))
+    if (
+      wxString::Format(wxT("%d"), m_config.SampleRate())
+      == m_SampleRate->GetString(i))
       m_SampleRate->Select(i);
 
   item2->Add(grid, 0, wxEXPAND | wxALL, 5);
@@ -125,12 +134,16 @@ GOSettingsAudioOutput::GOSettingsAudioOutput(GOSound& sound,
   item0->Add(item1, 1, wxEXPAND | wxALL, 5);
 
   item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
-  m_AudioOutput = new wxTreeCtrl(this, ID_OUTPUT_LIST, wxDefaultPosition,
-                                 wxDefaultSize, wxTR_HAS_BUTTONS | wxTR_SINGLE);
+  m_AudioOutput = new wxTreeCtrl(
+    this,
+    ID_OUTPUT_LIST,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTR_HAS_BUTTONS | wxTR_SINGLE);
   item2->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
   item2->AddSpacer(5);
 
-  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   buttonSizer->AddSpacer(5);
   m_Change = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
   m_Add = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
@@ -148,25 +161,26 @@ GOSettingsAudioOutput::GOSettingsAudioOutput(GOSound& sound,
 
   m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
 
-  std::vector<GOAudioDeviceConfig> audio_config =
-      m_Sound.GetSettings().GetAudioDeviceConfig();
+  std::vector<GOAudioDeviceConfig> audio_config
+    = m_Sound.GetSettings().GetAudioDeviceConfig();
   for (unsigned i = 0; i < audio_config.size(); i++) {
-    wxTreeItemId audio =
-        AddDeviceNode(audio_config[i].name, audio_config[i].desired_latency);
+    wxTreeItemId audio
+      = AddDeviceNode(audio_config[i].name, audio_config[i].desired_latency);
     for (unsigned j = 0; j < audio_config[i].channels; j++) {
       wxTreeItemId channel = AddChannelNode(audio, j);
-      if (j >= audio_config[i].scale_factors.size()) continue;
+      if (j >= audio_config[i].scale_factors.size())
+        continue;
       for (unsigned k = 0; k < audio_config[i].scale_factors[j].size(); k++) {
         if (audio_config[i].scale_factors[j][k].left >= -120) {
           wxTreeItemId group;
-          group = AddGroupNode(channel,
-                               audio_config[i].scale_factors[j][k].name, true);
+          group = AddGroupNode(
+            channel, audio_config[i].scale_factors[j][k].name, true);
           UpdateVolume(group, audio_config[i].scale_factors[j][k].left);
         }
         if (audio_config[i].scale_factors[j][k].right >= -120) {
           wxTreeItemId group;
-          group = AddGroupNode(channel,
-                               audio_config[i].scale_factors[j][k].name, false);
+          group = AddGroupNode(
+            channel, audio_config[i].scale_factors[j][k].name, false);
           UpdateVolume(group, audio_config[i].scale_factors[j][k].right);
         }
       }
@@ -183,18 +197,19 @@ GOSettingsAudioOutput::GOSettingsAudioOutput(GOSound& sound,
   UpdateButtons();
 }
 
-AudioItemData* GOSettingsAudioOutput::GetObject(const wxTreeItemId& id) {
-  if (!id.IsOk()) return NULL;
-  return (AudioItemData*)m_AudioOutput->GetItemData(id);
+AudioItemData *GOSettingsAudioOutput::GetObject(const wxTreeItemId &id) {
+  if (!id.IsOk())
+    return NULL;
+  return (AudioItemData *)m_AudioOutput->GetItemData(id);
 }
 
-wxTreeItemId GOSettingsAudioOutput::GetDeviceNode(const wxString& name) {
+wxTreeItemId GOSettingsAudioOutput::GetDeviceNode(const wxString &name) {
   wxTreeItemIdValue i;
   wxTreeItemId current;
   wxTreeItemId root = m_AudioOutput->GetRootItem();
   current = m_AudioOutput->GetFirstChild(root, i);
   while (current.IsOk()) {
-    AudioItemData* data = (AudioItemData*)m_AudioOutput->GetItemData(current);
+    AudioItemData *data = (AudioItemData *)m_AudioOutput->GetItemData(current);
     if (data && data->type == AudioItemData::AUDIO_NODE && data->name == name)
       return current;
     current = m_AudioOutput->GetNextChild(root, i);
@@ -202,31 +217,32 @@ wxTreeItemId GOSettingsAudioOutput::GetDeviceNode(const wxString& name) {
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::GetChannelNode(const wxTreeItemId& audio,
-                                                   unsigned channel) {
+wxTreeItemId GOSettingsAudioOutput::GetChannelNode(
+  const wxTreeItemId &audio, unsigned channel) {
   wxTreeItemIdValue i;
   wxTreeItemId current;
   current = m_AudioOutput->GetFirstChild(audio, i);
   while (current.IsOk()) {
-    AudioItemData* data = (AudioItemData*)m_AudioOutput->GetItemData(current);
-    if (data && data->type == AudioItemData::CHANNEL_NODE &&
-        data->channel == channel)
+    AudioItemData *data = (AudioItemData *)m_AudioOutput->GetItemData(current);
+    if (
+      data && data->type == AudioItemData::CHANNEL_NODE
+      && data->channel == channel)
       return current;
     current = m_AudioOutput->GetNextChild(audio, i);
   }
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::GetGroupNode(const wxTreeItemId& channel,
-                                                 const wxString& name,
-                                                 bool left) {
+wxTreeItemId GOSettingsAudioOutput::GetGroupNode(
+  const wxTreeItemId &channel, const wxString &name, bool left) {
   wxTreeItemIdValue i;
   wxTreeItemId current;
   current = m_AudioOutput->GetFirstChild(channel, i);
   while (current.IsOk()) {
-    AudioItemData* data = (AudioItemData*)m_AudioOutput->GetItemData(current);
-    if (data && data->type == AudioItemData::GROUP_NODE && data->name == name &&
-        data->left == left)
+    AudioItemData *data = (AudioItemData *)m_AudioOutput->GetItemData(current);
+    if (
+      data && data->type == AudioItemData::GROUP_NODE && data->name == name
+      && data->left == left)
       return current;
     current = m_AudioOutput->GetNextChild(channel, i);
   }
@@ -237,69 +253,78 @@ wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(wxString name) {
   return AddDeviceNode(name, m_Sound.GetSettings().GetDefaultLatency());
 }
 
-wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(wxString name,
-                                                  unsigned desired_latency) {
+wxTreeItemId
+GOSettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_latency) {
   wxTreeItemId current;
   if (name == wxEmptyString) {
     name = m_Sound.GetDefaultAudioDevice(RenewPortsConfig());
   }
   current = GetDeviceNode(name);
-  if (current.IsOk()) return current;
-  current =
-      m_AudioOutput->AppendItem(m_AudioOutput->GetRootItem(), wxEmptyString, -1,
-                                -1, new AudioItemData(name, desired_latency));
+  if (current.IsOk())
+    return current;
+  current = m_AudioOutput->AppendItem(
+    m_AudioOutput->GetRootItem(),
+    wxEmptyString,
+    -1,
+    -1,
+    new AudioItemData(name, desired_latency));
   UpdateDevice(current);
   m_AudioOutput->Expand(current);
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::AddChannelNode(const wxTreeItemId& audio,
-                                                   unsigned channel) {
+wxTreeItemId GOSettingsAudioOutput::AddChannelNode(
+  const wxTreeItemId &audio, unsigned channel) {
   wxTreeItemId current;
   current = GetChannelNode(audio, channel);
-  if (current.IsOk()) return current;
+  if (current.IsOk())
+    return current;
   current = m_AudioOutput->AppendItem(
-      audio, wxString::Format(_("Channel %d"), channel + 1), -1, -1,
-      new AudioItemData(channel));
+    audio,
+    wxString::Format(_("Channel %d"), channel + 1),
+    -1,
+    -1,
+    new AudioItemData(channel));
   m_AudioOutput->Expand(current);
   m_AudioOutput->Expand(audio);
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::AddGroupNode(const wxTreeItemId& channel,
-                                                 const wxString& name,
-                                                 bool left) {
+wxTreeItemId GOSettingsAudioOutput::AddGroupNode(
+  const wxTreeItemId &channel, const wxString &name, bool left) {
   wxTreeItemId current;
   current = GetGroupNode(channel, name, left);
-  if (current.IsOk()) return current;
-  current = m_AudioOutput->AppendItem(channel, name, -1, -1,
-                                      new AudioItemData(name, left, -121));
+  if (current.IsOk())
+    return current;
+  current = m_AudioOutput->AppendItem(
+    channel, name, -1, -1, new AudioItemData(name, left, -121));
   m_AudioOutput->Expand(current);
   m_AudioOutput->Expand(channel);
   UpdateVolume(current, -121);
   return current;
 }
 
-void GOSettingsAudioOutput::UpdateDevice(const wxTreeItemId& dev) {
-  AudioItemData* data = GetObject(dev);
-  wxString text = wxString::Format(_("Device: %s [%d ms requested]"),
-                                   data->name.c_str(), data->latency);
+void GOSettingsAudioOutput::UpdateDevice(const wxTreeItemId &dev) {
+  AudioItemData *data = GetObject(dev);
+  wxString text = wxString::Format(
+    _("Device: %s [%d ms requested]"), data->name.c_str(), data->latency);
   m_AudioOutput->SetItemText(dev, text);
 }
 
-void GOSettingsAudioOutput::UpdateVolume(const wxTreeItemId& group,
-                                         float volume) {
-  AudioItemData* data = GetObject(group);
+void GOSettingsAudioOutput::UpdateVolume(
+  const wxTreeItemId &group, float volume) {
+  AudioItemData *data = GetObject(group);
   wxString name = wxString::Format(
-      data->left ? _("%s - left") : _("%s - right"), data->name.c_str());
-  if (volume < -121.0 || volume > 40.0) volume = 0;
+    data->left ? _("%s - left") : _("%s - right"), data->name.c_str());
+  if (volume < -121.0 || volume > 40.0)
+    volume = 0;
   data->volume = volume;
   if (volume >= -120)
     m_AudioOutput->SetItemText(
-        group, wxString::Format(_("%s: %f dB"), name.c_str(), volume));
+      group, wxString::Format(_("%s: %f dB"), name.c_str(), volume));
   else
-    m_AudioOutput->SetItemText(group,
-                               wxString::Format(_("%s: mute"), name.c_str()));
+    m_AudioOutput->SetItemText(
+      group, wxString::Format(_("%s: mute"), name.c_str()));
 }
 
 void GOSettingsAudioOutput::AssureDeviceList() {
@@ -312,7 +337,7 @@ void GOSettingsAudioOutput::AssureDeviceList() {
 }
 
 std::vector<wxString> GOSettingsAudioOutput::GetRemainingAudioDevices(
-    const wxTreeItemId* ignoreItem) {
+  const wxTreeItemId *ignoreItem) {
   AssureDeviceList();
 
   std::vector<wxString> result;
@@ -320,19 +345,20 @@ std::vector<wxString> GOSettingsAudioOutput::GetRemainingAudioDevices(
   for (unsigned i = 0; i < m_DeviceList.size(); i++) {
     const wxTreeItemId item = GetDeviceNode(m_DeviceList[i].name);
 
-    if (!item.IsOk() ||
-        (ignoreItem != NULL && item.GetID() == ignoreItem->GetID()))
+    if (
+      !item.IsOk()
+      || (ignoreItem != NULL && item.GetID() == ignoreItem->GetID()))
       result.push_back(m_DeviceList[i].name);
   }
   return result;
 }
 
-std::vector<std::pair<wxString, bool> >
-GOSettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId& channel) {
-  std::vector<std::pair<wxString, bool> > result;
+std::vector<std::pair<wxString, bool>>
+GOSettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId &channel) {
+  std::vector<std::pair<wxString, bool>> result;
   std::vector<wxString> groups = m_GroupCallback.GetGroups();
   for (unsigned i = 0; i < groups.size(); i++) {
-    const wxString& name = groups[i];
+    const wxString &name = groups[i];
     if (!GetGroupNode(channel, name, true).IsOk())
       result.push_back(std::pair<wxString, bool>(name, true));
     if (!GetGroupNode(channel, name, false).IsOk())
@@ -343,7 +369,7 @@ GOSettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId& channel) {
 
 void GOSettingsAudioOutput::UpdateButtons() {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
-  AudioItemData* data = GetObject(selection);
+  AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
     /*
     bool enable = false;
@@ -357,8 +383,8 @@ void GOSettingsAudioOutput::UpdateButtons() {
     m_Add->Enable();
     m_Properties->Enable();
     m_Change->Enable();
-    if (m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) >
-        1)
+    if (
+      m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) > 1)
       m_Del->Enable();
     else
       m_Del->Disable();
@@ -369,8 +395,9 @@ void GOSettingsAudioOutput::UpdateButtons() {
       m_Add->Enable();
     else
       m_Add->Disable();
-    if (m_AudioOutput->GetLastChild(m_AudioOutput->GetItemParent(selection)) ==
-        selection) {
+    if (
+      m_AudioOutput->GetLastChild(m_AudioOutput->GetItemParent(selection))
+      == selection) {
       if (data->channel > 0)
         m_Del->Enable();
       else
@@ -395,13 +422,13 @@ void GOSettingsAudioOutput::UpdateButtons() {
   }
 }
 
-void GOSettingsAudioOutput::OnOutputChanged(wxTreeEvent& event) {
+void GOSettingsAudioOutput::OnOutputChanged(wxTreeEvent &event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputAdd(wxCommandEvent& event) {
+void GOSettingsAudioOutput::OnOutputAdd(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
-  AudioItemData* data = GetObject(selection);
+  AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
     unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
     /*
@@ -410,43 +437,48 @@ void GOSettingsAudioOutput::OnOutputAdd(wxCommandEvent& event) {
                     if (channels < m_DeviceList[i].channels) */
     AddChannelNode(selection, channels);
   } else if (data && data->type == AudioItemData::CHANNEL_NODE) {
-    std::vector<std::pair<wxString, bool> > groups;
+    std::vector<std::pair<wxString, bool>> groups;
     wxArrayString names;
     int index;
     groups = GetRemainingAudioGroups(selection);
     for (unsigned i = 0; i < groups.size(); i++)
-      names.Add(
-          wxString::Format(groups[i].second ? _("%s - left") : _("%s - right"),
-                           groups[i].first.c_str()));
-    index = wxGetSingleChoiceIndex(_("Add new audio group"),
-                                   _("New audio group"), names, this);
-    if (index == -1) return;
-    wxTreeItemId id =
-        AddGroupNode(selection, groups[index].first, groups[index].second);
+      names.Add(wxString::Format(
+        groups[i].second ? _("%s - left") : _("%s - right"),
+        groups[i].first.c_str()));
+    index = wxGetSingleChoiceIndex(
+      _("Add new audio group"), _("New audio group"), names, this);
+    if (index == -1)
+      return;
+    wxTreeItemId id
+      = AddGroupNode(selection, groups[index].first, groups[index].second);
     UpdateVolume(id, 0);
   } else if (data && data->type == AudioItemData::ROOT_NODE) {
     int index;
     wxArrayString devs;
     std::vector<wxString> devices = GetRemainingAudioDevices(NULL);
-    for (unsigned i = 0; i < devices.size(); i++) devs.Add(devices[i]);
-    index = wxGetSingleChoiceIndex(_("Add new audio device"),
-                                   _("New audio device"), devs, this);
-    if (index == -1) return;
+    for (unsigned i = 0; i < devices.size(); i++)
+      devs.Add(devices[i]);
+    index = wxGetSingleChoiceIndex(
+      _("Add new audio device"), _("New audio device"), devs, this);
+    if (index == -1)
+      return;
     wxMessageBox(
-        _("Using more than one audio interface is currently not supported."),
-        _("Warning"), wxOK | wxICON_WARNING, this);
+      _("Using more than one audio interface is currently not supported."),
+      _("Warning"),
+      wxOK | wxICON_WARNING,
+      this);
     wxTreeItemId audio = AddDeviceNode(devices[index]);
     AddChannelNode(audio, 0);
   }
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputDel(wxCommandEvent& event) {
+void GOSettingsAudioOutput::OnOutputDel(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
-  AudioItemData* data = GetObject(selection);
+  AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
-    if (m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) >
-        1)
+    if (
+      m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) > 1)
       m_AudioOutput->Delete(selection);
   } else if (data && data->type == AudioItemData::CHANNEL_NODE) {
     m_AudioOutput->Delete(selection);
@@ -456,9 +488,9 @@ void GOSettingsAudioOutput::OnOutputDel(wxCommandEvent& event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent& event) {
+void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
-  AudioItemData* data = GetObject(selection);
+  AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
     int index;
     wxArrayString devs;
@@ -470,21 +502,29 @@ void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent& event) {
       const wxString devName = devices[i];
 
       devs.Add(devName);
-      if (devName == data->name) initialSelection = i;
+      if (devName == data->name)
+        initialSelection = i;
     }
-    index = wxGetSingleChoiceIndex(_("Change audio device"),
-                                   _("Change audio device"), devs,
-                                   initialSelection, this);
-    if (index <= -1 || devs[index] == data->name) return;
+    index = wxGetSingleChoiceIndex(
+      _("Change audio device"),
+      _("Change audio device"),
+      devs,
+      initialSelection,
+      this);
+    if (index <= -1 || devs[index] == data->name)
+      return;
     unsigned channels = m_AudioOutput->GetChildrenCount(selection, false);
     bool error = false;
     for (unsigned i = 0; i < m_DeviceList.size(); i++)
       if (m_DeviceList[i].name == devs[index])
-        if (channels > m_DeviceList[i].channels) error = true;
+        if (channels > m_DeviceList[i].channels)
+          error = true;
     if (error) {
       wxMessageBox(
-          _("Too many audio channels configured for the new audio interface"),
-          _("Error"), wxOK | wxICON_ERROR, this);
+        _("Too many audio channels configured for the new audio interface"),
+        _("Error"),
+        wxOK | wxICON_ERROR,
+        this);
       return;
     }
     data->name = devs[index];
@@ -492,18 +532,19 @@ void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent& event) {
     UpdateDevice(selection);
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
     int index;
-    std::vector<std::pair<wxString, bool> > groups;
+    std::vector<std::pair<wxString, bool>> groups;
     wxArrayString names;
     groups = GetRemainingAudioGroups(m_AudioOutput->GetItemParent(selection));
-    groups.insert(groups.begin(),
-                  std::pair<wxString, bool>(data->name, data->left));
+    groups.insert(
+      groups.begin(), std::pair<wxString, bool>(data->name, data->left));
     for (unsigned i = 0; i < groups.size(); i++)
-      names.Add(
-          wxString::Format(groups[i].second ? _("%s - left") : _("%s - right"),
-                           groups[i].first.c_str()));
-    index = wxGetSingleChoiceIndex(_("Change audio group"),
-                                   _("Change audio group"), names, this);
-    if (index == -1 || index == 0) return;
+      names.Add(wxString::Format(
+        groups[i].second ? _("%s - left") : _("%s - right"),
+        groups[i].first.c_str()));
+    index = wxGetSingleChoiceIndex(
+      _("Change audio group"), _("Change audio group"), names, this);
+    if (index == -1 || index == 0)
+      return;
     data->name = groups[index].first;
     data->left = groups[index].second;
     UpdateVolume(selection, data->volume);
@@ -511,27 +552,37 @@ void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent& event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputProperties(wxCommandEvent& event) {
+void GOSettingsAudioOutput::OnOutputProperties(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
-  AudioItemData* data = GetObject(selection);
+  AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
     int latency = data->latency;
-    latency =
-        wxGetNumberFromUser(_("Desired output latency"), _("Desired latency:"),
-                            _("Audio device settings"), latency, 0, 999, this);
-    if (latency == -1) return;
+    latency = wxGetNumberFromUser(
+      _("Desired output latency"),
+      _("Desired latency:"),
+      _("Audio device settings"),
+      latency,
+      0,
+      999,
+      this);
+    if (latency == -1)
+      return;
     data->latency = latency;
     UpdateDevice(selection);
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
-    wxString current =
-        wxString::Format(wxT("%f"), data->volume >= -120 ? data->volume : -120);
-    current = wxGetTextFromUser(_("Please enter new volume in dB:"),
-                                _("Change audio group"), current);
-    if (current == wxEmptyString) return;
+    wxString current
+      = wxString::Format(wxT("%f"), data->volume >= -120 ? data->volume : -120);
+    current = wxGetTextFromUser(
+      _("Please enter new volume in dB:"), _("Change audio group"), current);
+    if (current == wxEmptyString)
+      return;
     double volume;
     if (!current.ToDouble(&volume) || volume < -120.0 || volume > 40.0) {
-      wxMessageBox(_("Please enter a volume between -120 and 40 dB"),
-                   _("Error"), wxOK | wxICON_ERROR, this);
+      wxMessageBox(
+        _("Please enter a volume between -120 and 40 dB"),
+        _("Error"),
+        wxOK | wxICON_ERROR,
+        this);
       return;
     }
     data->volume = volume;
@@ -540,10 +591,15 @@ void GOSettingsAudioOutput::OnOutputProperties(wxCommandEvent& event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputDefault(wxCommandEvent& event) {
-  if (wxMessageBox(_("Should the audio config be reverted to the default "
-                     "stereo configuration?"),
-                   _("Revert"), wxYES_NO, this) == wxNO)
+void GOSettingsAudioOutput::OnOutputDefault(wxCommandEvent &event) {
+  if (
+    wxMessageBox(
+      _("Should the audio config be reverted to the default "
+        "stereo configuration?"),
+      _("Revert"),
+      wxYES_NO,
+      this)
+    == wxNO)
     return;
   wxTreeItemId root = m_AudioOutput->GetRootItem();
   wxTreeItemId audio, channel, group;
@@ -552,7 +608,7 @@ void GOSettingsAudioOutput::OnOutputDefault(wxCommandEvent& event) {
   audio = m_AudioOutput->GetFirstChild(root, i);
   while (audio.IsOk()) {
     if (dev_name == wxEmptyString)
-      dev_name = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->name;
+      dev_name = ((AudioItemData *)m_AudioOutput->GetItemData(audio))->name;
     audio = m_AudioOutput->GetNextChild(root, i);
   }
   m_AudioOutput->DeleteChildren(root);
@@ -597,9 +653,9 @@ void GOSettingsAudioOutput::Save() {
   audio = m_AudioOutput->GetFirstChild(root, i);
   while (audio.IsOk()) {
     GOAudioDeviceConfig conf;
-    conf.name = ((AudioItemData*)m_AudioOutput->GetItemData(audio))->name;
-    conf.desired_latency =
-        ((AudioItemData*)m_AudioOutput->GetItemData(audio))->latency;
+    conf.name = ((AudioItemData *)m_AudioOutput->GetItemData(audio))->name;
+    conf.desired_latency
+      = ((AudioItemData *)m_AudioOutput->GetItemData(audio))->latency;
     conf.channels = m_AudioOutput->GetChildrenCount(audio, false);
     conf.scale_factors.resize(conf.channels);
 
@@ -608,7 +664,8 @@ void GOSettingsAudioOutput::Save() {
     while (channel.IsOk()) {
       group = m_AudioOutput->GetFirstChild(channel, k);
       while (group.IsOk()) {
-        AudioItemData* data = (AudioItemData*)m_AudioOutput->GetItemData(group);
+        AudioItemData *data
+          = (AudioItemData *)m_AudioOutput->GetItemData(group);
         bool found = false;
 
         for (unsigned l = 0; l < conf.scale_factors[channel_id].size(); l++)

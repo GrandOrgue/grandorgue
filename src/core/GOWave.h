@@ -22,7 +22,7 @@ typedef struct GO_WAVE_LOOP {
 } GO_WAVE_LOOP;
 
 class GOWave {
- private:
+private:
   GOBuffer<uint8_t> m_SampleData;
   unsigned m_BytesPerSample;
   unsigned m_SampleRate;
@@ -35,15 +35,13 @@ class GOWave {
   std::vector<GO_WAVE_LOOP> m_Loops;
 
   void SetInvalid();
-  void LoadFormatChunk(const uint8_t* ptr, unsigned long length);
-  void LoadCueChunk(const uint8_t* ptr, unsigned long length);
-  void LoadSamplerChunk(const uint8_t* ptr, unsigned long length);
-  template <class T>
-  static void writeNext(uint8_t*& output, const T& value);
-  template <class T>
-  static T readNext(const uint8_t*& input);
+  void LoadFormatChunk(const uint8_t *ptr, unsigned long length);
+  void LoadCueChunk(const uint8_t *ptr, unsigned long length);
+  void LoadSamplerChunk(const uint8_t *ptr, unsigned long length);
+  template <class T> static void writeNext(uint8_t *&output, const T &value);
+  template <class T> static T readNext(const uint8_t *&input);
 
- public:
+public:
   typedef enum {
     SF_SIGNEDBYTE_8 = 8,
     SF_SIGNEDSHORT_9 = 9,
@@ -68,9 +66,9 @@ class GOWave {
   GOWave();
   ~GOWave();
 
-  void Open(GOFile* file);
-  void Open(const GOBuffer<uint8_t>& content);
-  bool Save(GOBuffer<uint8_t>& buf);
+  void Open(GOFile *file);
+  void Open(const GOBuffer<uint8_t> &content);
+  bool Save(GOBuffer<uint8_t> &buf);
   void Close();
 
   /* GetChannels()
@@ -85,8 +83,8 @@ class GOWave {
   unsigned GetReleaseMarkerPosition() const;
 
   unsigned GetNbLoops() const;
-  const GO_WAVE_LOOP& GetLoop(unsigned idx) const;
-  const GO_WAVE_LOOP& GetLongestLoop() const;
+  const GO_WAVE_LOOP &GetLoop(unsigned idx) const;
+  const GO_WAVE_LOOP &GetLongestLoop() const;
 
   /* GetLength()
    * Returns the number of blocks in the wave file (there are *channel*
@@ -99,16 +97,19 @@ class GOWave {
    * Reads all of the samples in the wave file into destBuffer at the
    * specified read format and sample rate.
    */
-  void ReadSamples(void* dest_buffer, GOWave::SAMPLE_FORMAT read_format,
-                   unsigned sample_rate, int channels) const;
+  void ReadSamples(
+    void *dest_buffer,
+    GOWave::SAMPLE_FORMAT read_format,
+    unsigned sample_rate,
+    int channels) const;
 
   unsigned GetSampleRate() const;
   unsigned GetBitsPerSample() const;
   unsigned GetMidiNote() const;
   float GetPitchFract() const;
 
-  static bool IsWave(const GOBuffer<uint8_t>& data);
-  static bool IsWaveFile(const GOBuffer<uint8_t>& data);
+  static bool IsWave(const GOBuffer<uint8_t> &data);
+  static bool IsWaveFile(const GOBuffer<uint8_t> &data);
 };
 
 #endif /* GOWAVE_H */

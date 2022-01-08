@@ -11,7 +11,7 @@
 #include "sound/GOSoundEngine.h"
 
 GOSoundReleaseWorkItem::GOSoundReleaseWorkItem(
-    GOSoundEngine& sound_engine, ptr_vector<GOSoundGroupWorkItem>& audio_groups)
+  GOSoundEngine &sound_engine, ptr_vector<GOSoundGroupWorkItem> &audio_groups)
     : m_engine(sound_engine), m_AudioGroups(audio_groups), m_Stop(false) {}
 
 unsigned GOSoundReleaseWorkItem::GetGroup() { return RELEASE; }
@@ -28,17 +28,18 @@ void GOSoundReleaseWorkItem::Reset() {
   m_WaitCnt = 0;
 }
 
-void GOSoundReleaseWorkItem::Add(GOSoundSampler* sampler) {
+void GOSoundReleaseWorkItem::Add(GOSoundSampler *sampler) {
   m_List.Put(sampler);
 }
 
-void GOSoundReleaseWorkItem::Run(GOSoundThread* pThread) {
-  GOSoundSampler* sampler;
+void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread) {
+  GOSoundSampler *sampler;
   do {
     while ((sampler = m_List.Get())) {
       m_Cnt.fetch_add(1);
       m_engine.ProcessRelease(sampler);
-      if (m_Stop && m_Cnt > 10) break;
+      if (m_Stop && m_Cnt > 10)
+        break;
     }
     unsigned wait = m_WaitCnt;
     if (wait < m_AudioGroups.size()) {
@@ -51,6 +52,7 @@ void GOSoundReleaseWorkItem::Run(GOSoundThread* pThread) {
 void GOSoundReleaseWorkItem::Exec() {
   m_Stop = true;
   Run();
-  GOSoundSampler* sampler;
-  while ((sampler = m_List.Get())) m_engine.PassSampler(sampler);
+  GOSoundSampler *sampler;
+  while ((sampler = m_List.Get()))
+    m_engine.PassSampler(sampler);
 }

@@ -28,22 +28,25 @@
 #include <vector>
 
 class GOTool : public wxAppConsole {
- private:
+private:
   wxLocale m_locale;
   static const wxCmdLineEntryDesc m_cmdLineDesc[];
 
   bool OnInit();
   int OnRun();
-  void OnInitCmdLine(wxCmdLineParser& parser);
-  bool OnCmdLineParsed(wxCmdLineParser& parser);
+  void OnInitCmdLine(wxCmdLineParser &parser);
+  bool OnCmdLineParsed(wxCmdLineParser &parser);
 
-  bool CmdLineCreate(wxCmdLineParser& parser);
+  bool CmdLineCreate(wxCmdLineParser &parser);
 
-  bool CreateOrganPackage(wxString organPackage, wxString title,
-                          wxString inputDirectory, std::vector<wxString> odfs,
-                          std::vector<wxString> packages);
+  bool CreateOrganPackage(
+    wxString organPackage,
+    wxString title,
+    wxString inputDirectory,
+    std::vector<wxString> odfs,
+    std::vector<wxString> packages);
 
- public:
+public:
   GOTool();
 };
 

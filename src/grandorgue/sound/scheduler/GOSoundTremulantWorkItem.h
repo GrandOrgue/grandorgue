@@ -15,30 +15,31 @@
 class GOSoundEngine;
 
 class GOSoundTremulantWorkItem : public GOSoundWorkItem {
- private:
-  GOSoundEngine& m_engine;
+private:
+  GOSoundEngine &m_engine;
   GOSoundSamplerList m_Samplers;
   GOMutex m_Mutex;
   float m_Volume;
   unsigned m_SamplesPerBuffer;
   bool m_Done;
 
- public:
-  GOSoundTremulantWorkItem(GOSoundEngine& sound_engine,
-                           unsigned samples_per_buffer);
+public:
+  GOSoundTremulantWorkItem(
+    GOSoundEngine &sound_engine, unsigned samples_per_buffer);
 
   unsigned GetGroup();
   unsigned GetCost();
   bool GetRepeat();
-  void Run(GOSoundThread* thread = nullptr);
+  void Run(GOSoundThread *thread = nullptr);
   void Exec();
 
   void Reset();
   void Clear();
-  void Add(GOSoundSampler* sampler);
+  void Add(GOSoundSampler *sampler);
 
   float GetVolume() {
-    if (!m_Done) Run();
+    if (!m_Done)
+      Run();
     return m_Volume;
   }
 };

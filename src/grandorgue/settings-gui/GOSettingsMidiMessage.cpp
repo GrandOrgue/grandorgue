@@ -21,22 +21,28 @@ EVT_LIST_ITEM_ACTIVATED(ID_EVENTS, GOSettingsMidiMessage::OnEventsDoubleClick)
 EVT_BUTTON(ID_PROPERTIES, GOSettingsMidiMessage::OnProperties)
 END_EVENT_TABLE()
 
-GOSettingsMidiMessage::GOSettingsMidiMessage(GOConfig& settings, GOMidi& midi,
-                                             wxWindow* parent)
+GOSettingsMidiMessage::GOSettingsMidiMessage(
+  GOConfig &settings, GOMidi &midi, wxWindow *parent)
     : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
-  wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
   topSizer->Add(
-      new wxStaticText(this, wxID_ANY,
-                       _("Attention:\nThese initial midi settings only affect "
-                         "the first load of a organ.\nRight-click on manuals, "
-                         "stops, ... to do further changes.")),
-      0, wxALL);
+    new wxStaticText(
+      this,
+      wxID_ANY,
+      _("Attention:\nThese initial midi settings only affect "
+        "the first load of a organ.\nRight-click on manuals, "
+        "stops, ... to do further changes.")),
+    0,
+    wxALL);
   topSizer->AddSpacer(5);
 
-  m_Events =
-      new wxListView(this, ID_EVENTS, wxDefaultPosition, wxDefaultSize,
-                     wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
+  m_Events = new wxListView(
+    this,
+    ID_EVENTS,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
   m_Events->InsertColumn(0, _("Group"));
   m_Events->InsertColumn(1, _("Element"));
   m_Events->InsertColumn(2, _("MIDI Event"));
@@ -46,7 +52,7 @@ GOSettingsMidiMessage::GOSettingsMidiMessage(GOConfig& settings, GOMidi& midi,
   topSizer->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
 
   for (unsigned i = 0; i < m_config.GetEventCount(); i++) {
-    GOMidiReceiverBase* recv = m_config.GetMidiEvent(i);
+    GOMidiReceiverBase *recv = m_config.GetMidiEvent(i);
     m_Events->InsertItem(i, m_config.GetEventGroup(i));
     m_Events->SetItemPtrData(i, (wxUIntPtr)recv);
     m_Events->SetItem(i, 1, m_config.GetEventTitle(i));
@@ -62,26 +68,31 @@ GOSettingsMidiMessage::GOSettingsMidiMessage(GOConfig& settings, GOMidi& midi,
   m_Events->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
 }
 
-void GOSettingsMidiMessage::OnEventsClick(wxListEvent& event) {
+void GOSettingsMidiMessage::OnEventsClick(wxListEvent &event) {
   m_Properties->Enable();
 }
 
-void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent& event) {
+void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent &event) {
   m_Properties->Enable();
   int index = m_Events->GetFirstSelected();
 
-  GOMidiReceiverBase* recv =
-      (GOMidiReceiverBase*)m_Events->GetItemData(m_Events->GetFirstSelected());
-  MIDIEventDialog dlg(NULL, this,
-                      wxString::Format(_("Initial MIDI settings for %s"),
-                                       m_config.GetEventTitle(index).c_str()),
-                      m_config, recv, NULL, NULL);
+  GOMidiReceiverBase *recv
+    = (GOMidiReceiverBase *)m_Events->GetItemData(m_Events->GetFirstSelected());
+  MIDIEventDialog dlg(
+    NULL,
+    this,
+    wxString::Format(
+      _("Initial MIDI settings for %s"), m_config.GetEventTitle(index).c_str()),
+    m_config,
+    recv,
+    NULL,
+    NULL);
   dlg.RegisterMIDIListener(&m_midi);
   dlg.ShowModal();
   m_Events->SetItem(index, 2, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
 }
 
-void GOSettingsMidiMessage::OnProperties(wxCommandEvent& event) {
+void GOSettingsMidiMessage::OnProperties(wxCommandEvent &event) {
   wxListEvent listevent;
   OnEventsDoubleClick(listevent);
 }

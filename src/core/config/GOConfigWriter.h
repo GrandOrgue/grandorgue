@@ -14,17 +14,21 @@ class GOConfigFileWriter;
 struct IniFileEnumEntry;
 
 class GOConfigWriter {
- private:
-  GOConfigFileWriter& m_ConfigFile;
+private:
+  GOConfigFileWriter &m_ConfigFile;
   bool m_Prefix;
 
- public:
-  GOConfigWriter(GOConfigFileWriter& cfg, bool prefix);
+public:
+  GOConfigWriter(GOConfigFileWriter &cfg, bool prefix);
 
   void WriteString(wxString group, wxString key, wxString value);
   void WriteInteger(wxString group, wxString key, int value);
-  void WriteEnum(wxString group, wxString key, int value,
-                 const struct IniFileEnumEntry* entry, unsigned count);
+  void WriteEnum(
+    wxString group,
+    wxString key,
+    int value,
+    const struct IniFileEnumEntry *entry,
+    unsigned count);
   void WriteFloat(wxString group, wxString key, float value);
   void WriteBoolean(wxString group, wxString key, bool value);
 };

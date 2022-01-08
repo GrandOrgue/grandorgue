@@ -23,19 +23,18 @@ EVT_BUTTON(ID_ADD, GOSettingsTemperaments::OnAdd)
 EVT_BUTTON(ID_DEL, GOSettingsTemperaments::OnDel)
 END_EVENT_TABLE()
 
-GOSettingsTemperaments::GOSettingsTemperaments(GOConfig& settings,
-                                               wxWindow* parent)
-    : wxPanel(parent, wxID_ANY),
-      m_Temperaments(settings.GetTemperaments()),
+GOSettingsTemperaments::GOSettingsTemperaments(
+  GOConfig &settings, wxWindow *parent)
+    : wxPanel(parent, wxID_ANY), m_Temperaments(settings.GetTemperaments()),
       m_Ptrs() {
-  wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 
   m_List = new wxGrid(this, ID_LIST, wxDefaultPosition, wxSize(400, 200));
   m_List->CreateGrid(0, 14);
   topSizer->Add(m_List, 1, wxEXPAND | wxALL, 5);
 
-  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   m_Add = new wxButton(this, ID_ADD, _("&Add"));
   m_Del = new wxButton(this, ID_DEL, _("&Delete"));
   buttonSizer->Add(m_Add, 0, wxALIGN_LEFT | wxALL, 5);
@@ -68,7 +67,7 @@ GOSettingsTemperaments::GOSettingsTemperaments(GOConfig& settings,
   m_List->SetDefaultEditor(new wxGridCellFloatEditor(8, 3));
 
   for (unsigned i = 0; i < m_Temperaments.GetUserTemperaments().size(); i++) {
-    GOTemperamentUser* t = m_Temperaments.GetUserTemperaments()[i];
+    GOTemperamentUser *t = m_Temperaments.GetUserTemperaments()[i];
 
     unsigned row = m_List->GetNumberRows();
     m_Ptrs.push_back(t);
@@ -78,8 +77,8 @@ GOSettingsTemperaments::GOSettingsTemperaments(GOConfig& settings,
     m_List->SetCellValue(row, 1, t->GetTitle());
     m_List->SetCellEditor(row, 1, new wxGridCellTextEditor());
     for (unsigned i = 0; i < 12; i++)
-      m_List->SetCellValue(row, 2 + i,
-                           wxString::Format(wxT("%.03f"), t->GetNoteOffset(i)));
+      m_List->SetCellValue(
+        row, 2 + i, wxString::Format(wxT("%.03f"), t->GetNoteOffset(i)));
   }
 
   m_List->EnableEditing(true);
@@ -93,7 +92,7 @@ GOSettingsTemperaments::GOSettingsTemperaments(GOConfig& settings,
   Update();
 }
 
-void GOSettingsTemperaments::OnAdd(wxCommandEvent& event) {
+void GOSettingsTemperaments::OnAdd(wxCommandEvent &event) {
   unsigned row = m_List->GetNumberRows();
   m_Ptrs.push_back(NULL);
   m_List->AppendRows(1);
@@ -106,14 +105,14 @@ void GOSettingsTemperaments::OnAdd(wxCommandEvent& event) {
   Update();
 }
 
-void GOSettingsTemperaments::OnDel(wxCommandEvent& event) {
+void GOSettingsTemperaments::OnDel(wxCommandEvent &event) {
   unsigned row = m_List->GetGridCursorRow();
   m_List->DeleteRows(row, 1);
   m_Ptrs.erase(m_Ptrs.begin() + row);
   Update();
 }
 
-void GOSettingsTemperaments::OnListSelected(wxGridEvent& event) {
+void GOSettingsTemperaments::OnListSelected(wxGridEvent &event) {
   event.Skip();
   Update();
 }
@@ -130,13 +129,15 @@ void GOSettingsTemperaments::Update() {
 }
 
 void GOSettingsTemperaments::Save() {
-  ptr_vector<GOTemperamentUser>& list = m_Temperaments.GetUserTemperaments();
+  ptr_vector<GOTemperamentUser> &list = m_Temperaments.GetUserTemperaments();
   for (unsigned i = 0; i < list.size(); i++) {
     bool found = false;
     for (unsigned j = 0; j < m_Ptrs.size(); j++)
-      if (m_Ptrs[j] == list[i]) found = true;
+      if (m_Ptrs[j] == list[i])
+        found = true;
 
-    if (!found) delete list[i];
+    if (!found)
+      delete list[i];
     list[i] = 0;
   }
   list.clear();
@@ -144,8 +145,9 @@ void GOSettingsTemperaments::Save() {
   for (unsigned i = 0; i < m_Ptrs.size(); i++) {
     if (!m_Ptrs[i])
       m_Ptrs[i] = new GOTemperamentUser(
-          wxString::Format(wxT("UserTemperament%d-%d"), time, i),
-          m_List->GetCellValue(i, 1), m_List->GetCellValue(i, 0));
+        wxString::Format(wxT("UserTemperament%d-%d"), time, i),
+        m_List->GetCellValue(i, 1),
+        m_List->GetCellValue(i, 0));
 
     m_Ptrs[i]->SetTitle(m_List->GetCellValue(i, 1));
     m_Ptrs[i]->SetGroup(m_List->GetCellValue(i, 0));

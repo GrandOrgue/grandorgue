@@ -12,7 +12,7 @@
 static bool hasPortsPopulated = false;
 static std::vector<wxString> portNames;
 
-const std::vector<wxString>& GOMidiPortFactory::GetPortNames() const {
+const std::vector<wxString> &GOMidiPortFactory::GetPortNames() const {
   if (!hasPortsPopulated) {
     portNames.push_back(GOMidiRtPortFactory::PORT_NAME);
     hasPortsPopulated = true;
@@ -20,32 +20,34 @@ const std::vector<wxString>& GOMidiPortFactory::GetPortNames() const {
   return portNames;
 }
 
-const std::vector<wxString>& GOMidiPortFactory::GetPortApiNames(
-    const wxString& portName) const {
+const std::vector<wxString> &
+GOMidiPortFactory::GetPortApiNames(const wxString &portName) const {
   if (portName == GOMidiRtPortFactory::PORT_NAME)
     return GOMidiRtPortFactory::getApis();
-  else  // old-style name
+  else // old-style name
     return c_NoApis;
 }
 
 static GOMidiPortFactory instance;
 
-GOMidiPortFactory& GOMidiPortFactory::getInstance() { return instance; }
+GOMidiPortFactory &GOMidiPortFactory::getInstance() { return instance; }
 
-void GOMidiPortFactory::addMissingInDevices(GOMidi* midi,
-                                            const GOPortsConfig& portsConfig,
-                                            ptr_vector<GOMidiPort>& ports) {
+void GOMidiPortFactory::addMissingInDevices(
+  GOMidi *midi,
+  const GOPortsConfig &portsConfig,
+  ptr_vector<GOMidiPort> &ports) {
   if (portsConfig.IsEnabled(GOMidiRtPortFactory::PORT_NAME))
-    GOMidiRtPortFactory::getInstance()->addMissingInDevices(midi, portsConfig,
-                                                            ports);
+    GOMidiRtPortFactory::getInstance()->addMissingInDevices(
+      midi, portsConfig, ports);
 }
 
-void GOMidiPortFactory::addMissingOutDevices(GOMidi* midi,
-                                             const GOPortsConfig& portsConfig,
-                                             ptr_vector<GOMidiPort>& ports) {
+void GOMidiPortFactory::addMissingOutDevices(
+  GOMidi *midi,
+  const GOPortsConfig &portsConfig,
+  ptr_vector<GOMidiPort> &ports) {
   if (portsConfig.IsEnabled(GOMidiRtPortFactory::PORT_NAME))
-    GOMidiRtPortFactory::getInstance()->addMissingOutDevices(midi, portsConfig,
-                                                             ports);
+    GOMidiRtPortFactory::getInstance()->addMissingOutDevices(
+      midi, portsConfig, ports);
 }
 
 void GOMidiPortFactory::terminate() {

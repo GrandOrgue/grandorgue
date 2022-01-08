@@ -22,19 +22,19 @@ class GOMetronome : private GOTimerCallback,
                     private GOPlaybackStateHandler,
                     private GOSaveableObject,
                     public GOElementCreator {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   unsigned m_BPM;
   unsigned m_MeasureLength;
   unsigned m_Pos;
   bool m_Running;
   GOLabel m_BPMDisplay;
   GOLabel m_MeasureDisplay;
-  GORank* m_rank;
+  GORank *m_rank;
   unsigned m_StopID;
 
   static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry* GetButtonList();
+  const struct ElementListEntry *GetButtonList();
 
   void HandleTimer();
 
@@ -45,7 +45,7 @@ class GOMetronome : private GOTimerCallback,
   void StartPlayback();
   void PrepareRecording();
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
   void StartTimer();
   void StopTimer();
@@ -53,14 +53,14 @@ class GOMetronome : private GOTimerCallback,
   void UpdateBPM(int val);
   void UpdateMeasure(int val);
 
- public:
-  GOMetronome(GODefinitionFile* organfile);
+public:
+  GOMetronome(GODefinitionFile *organfile);
   virtual ~GOMetronome();
 
-  void Load(GOConfigReader& cfg);
+  void Load(GOConfigReader &cfg);
 
-  GOEnclosure* GetEnclosure(const wxString& name, bool is_panel);
-  GOLabel* GetLabel(const wxString& name, bool is_panel);
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
+  GOLabel *GetLabel(const wxString &name, bool is_panel);
 };
 
 #endif

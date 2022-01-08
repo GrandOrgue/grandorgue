@@ -7,24 +7,26 @@
 
 #include "GOMidiDeviceConfig.h"
 
-GOMidiDeviceConfig::GOMidiDeviceConfig(const wxString& logicalName,
-                                       const wxString& regEx, bool isEnabled,
-                                       const wxString& physicalName)
-    : m_LogicalName(logicalName),
-      m_IsEnabled(isEnabled),
+GOMidiDeviceConfig::GOMidiDeviceConfig(
+  const wxString &logicalName,
+  const wxString &regEx,
+  bool isEnabled,
+  const wxString &physicalName)
+    : m_LogicalName(logicalName), m_IsEnabled(isEnabled),
       m_PhysicalName(physicalName) {
   SetRegEx(regEx);
 }
 
-void GOMidiDeviceConfig::SetRegEx(const wxString& regEx) {
+void GOMidiDeviceConfig::SetRegEx(const wxString &regEx) {
   if (regEx != m_RegEx) {
-    if (p_CompiledRegEx) delete p_CompiledRegEx;
+    if (p_CompiledRegEx)
+      delete p_CompiledRegEx;
     m_RegEx = regEx;
     p_CompiledRegEx = regEx.IsEmpty() ? NULL : new wxRegEx(regEx);
   }
 }
 
-void GOMidiDeviceConfig::Assign(const GOMidiDeviceConfig& src) {
+void GOMidiDeviceConfig::Assign(const GOMidiDeviceConfig &src) {
   m_LogicalName = src.m_LogicalName;
   SetRegEx(src.m_RegEx);
   m_IsEnabled = src.m_IsEnabled;
@@ -33,8 +35,8 @@ void GOMidiDeviceConfig::Assign(const GOMidiDeviceConfig& src) {
   p_OutputDevice = NULL;
 }
 
-bool GOMidiDeviceConfig::DoesMatch(const wxString& physicalName) {
-  return (p_CompiledRegEx && p_CompiledRegEx->IsValid() &&
-          p_CompiledRegEx->Matches(physicalName)) ||
-         m_LogicalName == physicalName;
+bool GOMidiDeviceConfig::DoesMatch(const wxString &physicalName) {
+  return (p_CompiledRegEx && p_CompiledRegEx->IsValid()
+          && p_CompiledRegEx->Matches(physicalName))
+    || m_LogicalName == physicalName;
 }

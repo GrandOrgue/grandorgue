@@ -51,7 +51,8 @@ void SHA1_Init(SHA_CTX *ctx) {
   ctx->H[3] = 0x10325476;
   ctx->H[4] = 0xc3d2e1f0;
 
-  for (i = 0; i < 80; i++) ctx->W[i] = 0;
+  for (i = 0; i < 80; i++)
+    ctx->W[i] = 0;
 }
 
 void SHA1_Update(SHA_CTX *ctx, const void *_dataIn, int len) {
@@ -89,7 +90,8 @@ void SHA1_Final(unsigned char hashout[20], SHA_CTX *ctx) {
   padlen[6] = (unsigned char)((ctx->sizeLo >> 8) & 255);
   padlen[7] = (unsigned char)((ctx->sizeLo >> 0) & 255);
   SHA1_Update(ctx, &pad0x80, 1);
-  while (ctx->lenW != 56) SHA1_Update(ctx, &pad0x00, 1);
+  while (ctx->lenW != 56)
+    SHA1_Update(ctx, &pad0x00, 1);
   SHA1_Update(ctx, padlen, 8);
 
   /* Output hash
@@ -113,7 +115,7 @@ static void shaHashBlock(SHA_CTX *ctx) {
 
   for (t = 16; t <= 79; t++)
     ctx->W[t] = SHA_ROT(
-        ctx->W[t - 3] ^ ctx->W[t - 8] ^ ctx->W[t - 14] ^ ctx->W[t - 16], 1);
+      ctx->W[t - 3] ^ ctx->W[t - 8] ^ ctx->W[t - 14] ^ ctx->W[t - 16], 1);
 
   A = ctx->H[0];
   B = ctx->H[1];
@@ -138,8 +140,8 @@ static void shaHashBlock(SHA_CTX *ctx) {
     A = TEMP;
   }
   for (t = 40; t <= 59; t++) {
-    TEMP =
-        SHA_ROT(A, 5) + ((B & C) | (D & (B | C))) + E + ctx->W[t] + 0x8f1bbcdc;
+    TEMP
+      = SHA_ROT(A, 5) + ((B & C) | (D & (B | C))) + E + ctx->W[t] + 0x8f1bbcdc;
     E = D;
     D = C;
     C = SHA_ROT(B, 30);

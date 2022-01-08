@@ -17,8 +17,8 @@
 class GOSound;
 
 class GOSoundPort {
- protected:
-  GOSound* m_Sound;
+protected:
+  GOSound *m_Sound;
   unsigned m_Index;
   bool m_IsOpen;
   wxString m_Name;
@@ -29,19 +29,23 @@ class GOSoundPort {
   int m_ActualLatency;
 
   void SetActualLatency(double latency);
-  bool AudioCallback(float* outputBuffer, unsigned int nFrames);
+  bool AudioCallback(float *outputBuffer, unsigned int nFrames);
 
- public:
-  GOSoundPort(GOSound* sound, wxString name);
+public:
+  GOSoundPort(GOSound *sound, wxString name);
   virtual ~GOSoundPort();
 
-  void Init(unsigned channels, unsigned sample_rate,
-            unsigned samples_per_buffer, unsigned latency, unsigned index);
+  void Init(
+    unsigned channels,
+    unsigned sample_rate,
+    unsigned samples_per_buffer,
+    unsigned latency,
+    unsigned index);
   virtual void Open() = 0;
   virtual void StartStream() = 0;
   virtual void Close() = 0;
 
-  const wxString& GetName();
+  const wxString &GetName();
 
   wxString getPortState();
 };

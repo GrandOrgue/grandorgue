@@ -13,30 +13,30 @@
 class GOView;
 
 class GODocumentBase {
- public:
+public:
   typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
 
- private:
+private:
   typedef struct {
     WindowType type;
-    void* data;
-    GOView* window;
+    void *data;
+    GOView *window;
   } WindowInfo;
 
   std::vector<WindowInfo> m_Windows;
 
- protected:
+protected:
   void SyncState();
   void CloseWindows();
 
- public:
+public:
   GODocumentBase();
   ~GODocumentBase();
 
-  bool WindowExists(WindowType type, void* data);
-  bool showWindow(WindowType type, void* data);
-  void registerWindow(WindowType type, void* data, GOView* window);
-  void unregisterWindow(GOView* window);
+  bool WindowExists(WindowType type, void *data);
+  bool showWindow(WindowType type, void *data);
+  void registerWindow(WindowType type, void *data, GOView *window);
+  void unregisterWindow(GOView *window);
 };
 
 #endif

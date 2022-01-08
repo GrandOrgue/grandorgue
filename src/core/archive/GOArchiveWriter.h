@@ -16,21 +16,21 @@
 #include "GOZipFormat.h"
 
 class GOArchiveWriter {
- private:
+private:
   wxFile m_File;
   size_t m_Offset;
   GOBuffer<uint8_t> m_directory;
   unsigned m_Entries;
   std::vector<wxString> m_Names;
 
-  bool Write(const void* data, size_t size);
+  bool Write(const void *data, size_t size);
 
- public:
+public:
   GOArchiveWriter();
   ~GOArchiveWriter();
 
   bool Open(wxString filename);
-  bool Add(wxString name, const GOBuffer<uint8_t>& content);
+  bool Add(wxString name, const GOBuffer<uint8_t> &content);
   bool Close();
 };
 

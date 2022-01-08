@@ -16,11 +16,11 @@ class wxFile;
 
 class GOMemoryPool {
   GOMutex m_mutex;
-  std::set<void*> m_PoolAllocs;
-  char* m_PoolStart;
-  char* m_PoolPtr;
-  char* m_PoolEnd;
-  char* m_CacheStart;
+  std::set<void *> m_PoolAllocs;
+  char *m_PoolStart;
+  char *m_PoolPtr;
+  char *m_PoolEnd;
+  char *m_CacheStart;
   size_t m_PoolSize;
   size_t m_PoolLimit;
   size_t m_PoolIncrement;
@@ -35,27 +35,27 @@ class GOMemoryPool {
   void InitPool();
   void GrowPool(size_t size);
   void FreePool();
-  void* PoolAlloc(size_t length);
-  void AddPoolAlloc(void* data);
+  void *PoolAlloc(size_t length);
+  void AddPoolAlloc(void *data);
 
   static size_t GetVMALimit();
   static size_t GetSystemMemory();
   void CalculatePoolLimit();
   bool AllocatePool();
-  bool InMemoryPool(void* ptr);
+  bool InMemoryPool(void *ptr);
 
- public:
+public:
   GOMemoryPool();
   ~GOMemoryPool();
   void SetMemoryLimit(size_t limit);
-  void TouchMemory(bool& stop);
+  void TouchMemory(bool &stop);
 
-  void* Alloc(size_t length, bool final);
-  void* MoveToPool(void* data, size_t length);
-  void Free(void* data);
+  void *Alloc(size_t length, bool final);
+  void *MoveToPool(void *data, size_t length);
+  void Free(void *data);
 
-  void* GetCacheData(size_t offset, size_t length);
-  bool SetCacheFile(wxFile& cache_file);
+  void *GetCacheData(size_t offset, size_t length);
+  bool SetCacheFile(wxFile &cache_file);
   void FreeCacheFile();
 
   bool IsPoolFull();

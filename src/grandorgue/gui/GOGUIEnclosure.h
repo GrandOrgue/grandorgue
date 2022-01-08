@@ -19,8 +19,8 @@
 class GOEnclosure;
 
 class GOGUIEnclosure : public GOGUIControl {
- private:
-  GOEnclosure* m_enclosure;
+private:
+  GOEnclosure *m_enclosure;
   unsigned m_FontSize;
   wxString m_FontName;
   GOFont m_Font;
@@ -35,16 +35,16 @@ class GOGUIEnclosure : public GOGUIControl {
   unsigned m_TileOffsetY;
   std::vector<GOBitmap> m_Bitmaps;
 
- public:
-  GOGUIEnclosure(GOGUIPanel* panel, GOEnclosure* control);
+public:
+  GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control);
 
-  void Init(GOConfigReader& cfg, wxString group);
-  void Load(GOConfigReader& cfg, wxString group);
+  void Init(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, wxString group);
   void Layout();
 
-  void PrepareDraw(double scale, GOBitmap* background);
-  void Draw(GODC& dc);
-  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState& state);
+  void PrepareDraw(double scale, GOBitmap *background);
+  void Draw(GODC &dc);
+  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
   bool HandleMouseScroll(int x, int y, int amount);
 };
 

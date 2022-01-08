@@ -16,7 +16,7 @@ typedef struct {
 } GOShortcutKey;
 
 unsigned GetShortcutKeyCount();
-const GOShortcutKey* GetShortcutKeys();
+const GOShortcutKey *GetShortcutKeys();
 
 int WXKtoVK(int what);
 

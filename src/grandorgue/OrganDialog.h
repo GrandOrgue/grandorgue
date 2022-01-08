@@ -30,42 +30,42 @@ class wxTreeEvent;
 class wxTreeItemId;
 
 class OrganDialog : public wxDialog, public GOView {
- private:
-  GODefinitionFile* m_organfile;
-  wxTreeCtrl* m_Tree;
-  wxTextCtrl* m_Amplitude;
-  wxSpinButton* m_AmplitudeSpin;
-  wxTextCtrl* m_Gain;
-  wxSpinButton* m_GainSpin;
-  wxTextCtrl* m_Tuning;
-  wxSpinButton* m_TuningSpin;
-  wxTextCtrl* m_Delay;
-  wxSpinButton* m_DelaySpin;
-  wxComboBox* m_AudioGroup;
+private:
+  GODefinitionFile *m_organfile;
+  wxTreeCtrl *m_Tree;
+  wxTextCtrl *m_Amplitude;
+  wxSpinButton *m_AmplitudeSpin;
+  wxTextCtrl *m_Gain;
+  wxSpinButton *m_GainSpin;
+  wxTextCtrl *m_Tuning;
+  wxSpinButton *m_TuningSpin;
+  wxTextCtrl *m_Delay;
+  wxSpinButton *m_DelaySpin;
+  wxComboBox *m_AudioGroup;
   wxString m_LastAudioGroup;
-  wxChoice* m_BitsPerSample;
+  wxChoice *m_BitsPerSample;
   int m_LastBitsPerSample;
-  wxChoice* m_Channels;
+  wxChoice *m_Channels;
   int m_LastChannels;
-  wxChoice* m_Compress;
+  wxChoice *m_Compress;
   int m_LastCompress;
-  wxChoice* m_LoopLoad;
+  wxChoice *m_LoopLoad;
   int m_LastLoopLoad;
-  wxChoice* m_AttackLoad;
+  wxChoice *m_AttackLoad;
   int m_LastAttackLoad;
-  wxChoice* m_ReleaseLoad;
+  wxChoice *m_ReleaseLoad;
   int m_LastReleaseLoad;
-  wxStaticText* m_MemoryDisplay;
-  wxStaticText* m_BitDisplay;
-  wxButton* m_Apply;
-  wxButton* m_Reset;
-  wxButton* m_Default;
-  wxButton* m_AudioGroupAssistant;
-  wxButton* m_Collapse;
-  wxCheckBox* m_IgnorePitch;
-  OrganTreeItemData* m_Last;
+  wxStaticText *m_MemoryDisplay;
+  wxStaticText *m_BitDisplay;
+  wxButton *m_Apply;
+  wxButton *m_Reset;
+  wxButton *m_Default;
+  wxButton *m_AudioGroupAssistant;
+  wxButton *m_Collapse;
+  wxCheckBox *m_IgnorePitch;
+  OrganTreeItemData *m_Last;
   unsigned m_LoadChangeCnt;
-  wxDialog* m_ModalDialog;
+  wxDialog *m_ModalDialog;
   bool m_Destroying;
   bool m_DestroyPending;
 
@@ -74,40 +74,40 @@ class OrganDialog : public wxDialog, public GOView {
   void Load();
   bool Changed();
   void Modified();
-  void SetEmpty(wxChoice* choice);
-  void RemoveEmpty(wxChoice* choice);
-  void UpdateAudioGroup(std::vector<wxString> audio_group, unsigned& pos,
-                        wxTreeItemId item);
-  void FillTree(wxTreeItemId parent, GOPipeConfigNode& config);
+  void SetEmpty(wxChoice *choice);
+  void RemoveEmpty(wxChoice *choice);
+  void UpdateAudioGroup(
+    std::vector<wxString> audio_group, unsigned &pos, wxTreeItemId item);
+  void FillTree(wxTreeItemId parent, GOPipeConfigNode &config);
   void CloseTree(wxTreeItemId parent);
 
-  void OnTreeChanging(wxTreeEvent& e);
-  void OnTreeChanged(wxTreeEvent& e);
-  void OnTreeUpdated(wxCommandEvent& e);
-  void OnAmplitudeSpinChanged(wxSpinEvent& e);
-  void OnAmplitudeChanged(wxCommandEvent& e);
-  void OnGainSpinChanged(wxSpinEvent& e);
-  void OnGainChanged(wxCommandEvent& e);
-  void OnTuningSpinChanged(wxSpinEvent& e);
-  void OnTuningChanged(wxCommandEvent& e);
-  void OnDelaySpinChanged(wxSpinEvent& e);
-  void OnDelayChanged(wxCommandEvent& e);
-  void OnAudioGroupChanged(wxCommandEvent& e);
-  void OnBitsPerSampleChanged(wxCommandEvent& e);
-  void OnCompressChanged(wxCommandEvent& e);
-  void OnChannelsChanged(wxCommandEvent& e);
-  void OnLoopLoadChanged(wxCommandEvent& e);
-  void OnAttackLoadChanged(wxCommandEvent& e);
-  void OnReleaseLoadChanged(wxCommandEvent& e);
-  void OnEventApply(wxCommandEvent& e);
-  void OnEventReset(wxCommandEvent& e);
-  void OnEventDefault(wxCommandEvent& e);
-  void OnOK(wxCommandEvent& event);
-  void OnCancel(wxCommandEvent& event);
-  void OnAudioGroupAssitant(wxCommandEvent& e);
-  void OnCollapse(wxCommandEvent& e);
+  void OnTreeChanging(wxTreeEvent &e);
+  void OnTreeChanged(wxTreeEvent &e);
+  void OnTreeUpdated(wxCommandEvent &e);
+  void OnAmplitudeSpinChanged(wxSpinEvent &e);
+  void OnAmplitudeChanged(wxCommandEvent &e);
+  void OnGainSpinChanged(wxSpinEvent &e);
+  void OnGainChanged(wxCommandEvent &e);
+  void OnTuningSpinChanged(wxSpinEvent &e);
+  void OnTuningChanged(wxCommandEvent &e);
+  void OnDelaySpinChanged(wxSpinEvent &e);
+  void OnDelayChanged(wxCommandEvent &e);
+  void OnAudioGroupChanged(wxCommandEvent &e);
+  void OnBitsPerSampleChanged(wxCommandEvent &e);
+  void OnCompressChanged(wxCommandEvent &e);
+  void OnChannelsChanged(wxCommandEvent &e);
+  void OnLoopLoadChanged(wxCommandEvent &e);
+  void OnAttackLoadChanged(wxCommandEvent &e);
+  void OnReleaseLoadChanged(wxCommandEvent &e);
+  void OnEventApply(wxCommandEvent &e);
+  void OnEventReset(wxCommandEvent &e);
+  void OnEventDefault(wxCommandEvent &e);
+  void OnOK(wxCommandEvent &event);
+  void OnCancel(wxCommandEvent &event);
+  void OnAudioGroupAssitant(wxCommandEvent &e);
+  void OnCollapse(wxCommandEvent &e);
 
- protected:
+protected:
   enum {
     ID_EVENT_TREE = 200,
     ID_EVENT_APPLY,
@@ -133,9 +133,9 @@ class OrganDialog : public wxDialog, public GOView {
     ID_EVENT_COMPRESS
   };
 
- public:
-  OrganDialog(GODocumentBase* doc, wxWindow* parent,
-              GODefinitionFile* organfile);
+public:
+  OrganDialog(
+    GODocumentBase *doc, wxWindow *parent, GODefinitionFile *organfile);
   ~OrganDialog();
 
   bool Destroy();

@@ -13,19 +13,19 @@
 #include <vector>
 
 class GOMidiMap {
- private:
+private:
   std::vector<wxString> m_DeviceMap;
   std::vector<wxString> m_ElementMap;
 
- public:
+public:
   GOMidiMap();
   ~GOMidiMap();
 
-  unsigned GetDeviceByString(const wxString& str);
-  const wxString& GetDeviceByID(unsigned id);
+  unsigned GetDeviceByString(const wxString &str);
+  const wxString &GetDeviceByID(unsigned id);
 
-  unsigned GetElementByString(const wxString& str);
-  const wxString& GetElementByID(unsigned id);
+  unsigned GetElementByString(const wxString &str);
+  const wxString &GetElementByID(unsigned id);
 };
 
 #endif

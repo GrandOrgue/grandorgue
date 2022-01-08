@@ -19,36 +19,36 @@ class wxStatusBar;
 class wxTextCtrl;
 
 class GOSettingsMidiMatchDialog : public wxDialog {
- private:
+private:
   enum { ID_LOGICAL_NAME = 200, ID_REGEX };
 
   // for checking for logical name uniqueness
-  std::vector<GOMidiDeviceConfig*>* p_OtherDevices;
+  std::vector<GOMidiDeviceConfig *> *p_OtherDevices;
 
   wxString m_PhysicalName;
 
-  wxTextCtrl* t_PhysicalName;
-  wxTextCtrl* t_LogicalName;
-  wxTextCtrl* t_regex;
+  wxTextCtrl *t_PhysicalName;
+  wxTextCtrl *t_LogicalName;
+  wxTextCtrl *t_regex;
 
-  wxStatusBar* m_StatusBar;
+  wxStatusBar *m_StatusBar;
 
-  bool ValidateLogicalName(wxString& errMsg);
-  bool ValidateRegex(wxString& errMsg);
+  bool ValidateLogicalName(wxString &errMsg);
+  bool ValidateRegex(wxString &errMsg);
 
-  void OnLogicalNameChanged(wxCommandEvent& event);
-  void OnRegexChanged(wxCommandEvent& event);
-  void OnHelp(wxCommandEvent& event);
+  void OnLogicalNameChanged(wxCommandEvent &event);
+  void OnRegexChanged(wxCommandEvent &event);
+  void OnHelp(wxCommandEvent &event);
 
- public:
+public:
   GOSettingsMidiMatchDialog(
-      wxWindow* parent, std::vector<GOMidiDeviceConfig*>* otherDevices = NULL);
+    wxWindow *parent, std::vector<GOMidiDeviceConfig *> *otherDevices = NULL);
 
-  void FillWith(const GOMidiDeviceConfig& devConf);
+  void FillWith(const GOMidiDeviceConfig &devConf);
 
   virtual bool Validate();
 
-  void SaveTo(GOMidiDeviceConfig& devConf);
+  void SaveTo(GOMidiDeviceConfig &devConf);
 
   DECLARE_EVENT_TABLE()
 };

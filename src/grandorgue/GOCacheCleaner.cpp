@@ -18,13 +18,13 @@
 #include "config/GOConfig.h"
 #include "ptrvector.h"
 
-GOCacheCleaner::GOCacheCleaner(GOConfig& settings) : m_config(settings) {}
+GOCacheCleaner::GOCacheCleaner(GOConfig &settings) : m_config(settings) {}
 
 GOCacheCleaner::~GOCacheCleaner() {}
 
 wxArrayString GOCacheCleaner::GetOrganIDList() {
   wxArrayString list;
-  const ptr_vector<GOOrgan>& organs = m_config.GetOrganList();
+  const ptr_vector<GOOrgan> &organs = m_config.GetOrganList();
   for (unsigned i = 0; i < organs.size(); i++)
     list.Add(organs[i]->GetOrganHash());
   return list;
@@ -32,14 +32,15 @@ wxArrayString GOCacheCleaner::GetOrganIDList() {
 
 wxArrayString GOCacheCleaner::GetArchiveIDList() {
   wxArrayString list;
-  const ptr_vector<GOArchiveFile>& archives = m_config.GetArchiveList();
+  const ptr_vector<GOArchiveFile> &archives = m_config.GetArchiveList();
   for (unsigned i = 0; i < archives.size(); i++)
     list.Add(archives[i]->GetArchiveHash());
   return list;
 }
 
 void GOCacheCleaner::Cleanup() {
-  if (!m_config.ManageCache()) return;
+  if (!m_config.ManageCache())
+    return;
 
   wxDir dir(m_config.UserCachePath());
   if (!dir.IsOpened()) {
@@ -51,7 +52,8 @@ void GOCacheCleaner::Cleanup() {
   wxArrayString archives = GetArchiveIDList();
 
   wxString name;
-  if (!dir.GetFirst(&name)) return;
+  if (!dir.GetFirst(&name))
+    return;
   do {
     wxFileName fn(name);
     if (fn.GetExt() == wxT("idx")) {

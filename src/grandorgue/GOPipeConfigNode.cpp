@@ -12,44 +12,45 @@
 #include "GOStatisticCallback.h"
 #include "config/GOConfig.h"
 
-GOPipeConfigNode::GOPipeConfigNode(GOPipeConfigNode* parent,
-                                   GODefinitionFile* organfile,
-                                   GOPipeUpdateCallback* callback,
-                                   GOStatisticCallback* statistic)
-    : m_organfile(organfile),
-      m_parent(parent),
-      m_PipeConfig(organfile, callback),
-      m_StatisticCallback(statistic),
+GOPipeConfigNode::GOPipeConfigNode(
+  GOPipeConfigNode *parent,
+  GODefinitionFile *organfile,
+  GOPipeUpdateCallback *callback,
+  GOStatisticCallback *statistic)
+    : m_organfile(organfile), m_parent(parent),
+      m_PipeConfig(organfile, callback), m_StatisticCallback(statistic),
       m_Name() {
-  if (m_parent) m_parent->AddChild(this);
+  if (m_parent)
+    m_parent->AddChild(this);
 }
 
 GOPipeConfigNode::~GOPipeConfigNode() {}
 
-void GOPipeConfigNode::SetParent(GOPipeConfigNode* parent) {
+void GOPipeConfigNode::SetParent(GOPipeConfigNode *parent) {
   m_parent = parent;
-  if (m_parent) m_parent->AddChild(this);
+  if (m_parent)
+    m_parent->AddChild(this);
 }
 
-const wxString& GOPipeConfigNode::GetName() { return m_Name; }
+const wxString &GOPipeConfigNode::GetName() { return m_Name; }
 
 void GOPipeConfigNode::SetName(wxString name) { m_Name = name; }
 
-void GOPipeConfigNode::Init(GOConfigReader& cfg, wxString group,
-                            wxString prefix) {
+void GOPipeConfigNode::Init(
+  GOConfigReader &cfg, wxString group, wxString prefix) {
   m_organfile->RegisterSaveableObject(this);
   m_PipeConfig.Init(cfg, group, prefix);
 }
 
-void GOPipeConfigNode::Load(GOConfigReader& cfg, wxString group,
-                            wxString prefix) {
+void GOPipeConfigNode::Load(
+  GOConfigReader &cfg, wxString group, wxString prefix) {
   m_organfile->RegisterSaveableObject(this);
   m_PipeConfig.Load(cfg, group, prefix);
 }
 
-void GOPipeConfigNode::Save(GOConfigWriter& cfg) { m_PipeConfig.Save(cfg); }
+void GOPipeConfigNode::Save(GOConfigWriter &cfg) { m_PipeConfig.Save(cfg); }
 
-GOPipeConfig& GOPipeConfigNode::GetPipeConfig() { return m_PipeConfig; }
+GOPipeConfig &GOPipeConfigNode::GetPipeConfig() { return m_PipeConfig; }
 
 void GOPipeConfigNode::ModifyTuning(float diff) {
   m_PipeConfig.SetTuning(m_PipeConfig.GetTuning() + diff);
@@ -57,8 +58,8 @@ void GOPipeConfigNode::ModifyTuning(float diff) {
 
 float GOPipeConfigNode::GetEffectiveAmplitude() {
   if (m_parent)
-    return m_PipeConfig.GetAmplitude() * m_parent->GetEffectiveAmplitude() /
-           100.0;
+    return m_PipeConfig.GetAmplitude() * m_parent->GetEffectiveAmplitude()
+      / 100.0;
   else
     return m_PipeConfig.GetAmplitude() / 100.0;
 }
@@ -119,7 +120,8 @@ bool GOPipeConfigNode::GetEffectiveCompress() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
-  if (m_PipeConfig.GetLoopLoad() != -1) return m_PipeConfig.GetLoopLoad();
+  if (m_PipeConfig.GetLoopLoad() != -1)
+    return m_PipeConfig.GetLoopLoad();
   if (m_parent)
     return m_parent->GetEffectiveLoopLoad();
   else
@@ -127,7 +129,8 @@ unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
-  if (m_PipeConfig.GetAttackLoad() != -1) return m_PipeConfig.GetAttackLoad();
+  if (m_PipeConfig.GetAttackLoad() != -1)
+    return m_PipeConfig.GetAttackLoad();
   if (m_parent)
     return m_parent->GetEffectiveAttackLoad();
   else
@@ -135,7 +138,8 @@ unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
-  if (m_PipeConfig.GetReleaseLoad() != -1) return m_PipeConfig.GetReleaseLoad();
+  if (m_PipeConfig.GetReleaseLoad() != -1)
+    return m_PipeConfig.GetReleaseLoad();
   if (m_parent)
     return m_parent->GetEffectiveReleaseLoad();
   else
@@ -143,7 +147,8 @@ unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
 }
 
 unsigned GOPipeConfigNode::GetEffectiveChannels() {
-  if (m_PipeConfig.GetChannels() != -1) return m_PipeConfig.GetChannels();
+  if (m_PipeConfig.GetChannels() != -1)
+    return m_PipeConfig.GetChannels();
   if (m_parent)
     return m_parent->GetEffectiveChannels();
   else
@@ -151,12 +156,13 @@ unsigned GOPipeConfigNode::GetEffectiveChannels() {
 }
 
 GOSampleStatistic GOPipeConfigNode::GetStatistic() {
-  if (m_StatisticCallback) return m_StatisticCallback->GetStatistic();
+  if (m_StatisticCallback)
+    return m_StatisticCallback->GetStatistic();
   return GOSampleStatistic();
 }
 
 unsigned GOPipeConfigNode::GetChildCount() { return 0; }
 
-GOPipeConfigNode* GOPipeConfigNode::GetChild(unsigned index) { return NULL; }
+GOPipeConfigNode *GOPipeConfigNode::GetChild(unsigned index) { return NULL; }
 
-void GOPipeConfigNode::AddChild(GOPipeConfigNode* node) {}
+void GOPipeConfigNode::AddChild(GOPipeConfigNode *node) {}

@@ -14,7 +14,7 @@
 #include "GOCombinationElement.h"
 
 class GODrawstop : public GOButton, public GOCombinationElement {
- public:
+public:
   typedef enum {
     FUNCTION_INPUT,
     FUNCTION_AND,
@@ -25,16 +25,16 @@ class GODrawstop : public GOButton, public GOCombinationElement {
     FUNCTION_NOR
   } GOFunctionType;
 
- private:
+private:
   static const struct IniFileEnumEntry m_function_types[];
   GOFunctionType m_Type;
   int m_GCState;
   bool m_ActiveState;
   bool m_CombinationState;
-  std::vector<GODrawstop*> m_ControlledDrawstops;
-  std::vector<GODrawstop*> m_ControllingDrawstops;
+  std::vector<GODrawstop *> m_ControlledDrawstops;
+  std::vector<GODrawstop *> m_ControllingDrawstops;
 
- protected:
+protected:
   bool m_StoreDivisional;
   bool m_StoreGeneral;
 
@@ -42,15 +42,15 @@ class GODrawstop : public GOButton, public GOCombinationElement {
   virtual void ChangeState(bool on) = 0;
   virtual void SetupCombinationState() = 0;
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
   void PreparePlayback();
 
- public:
-  GODrawstop(GODefinitionFile* organfile);
-  void Init(GOConfigReader& cfg, wxString group, wxString name);
-  void Load(GOConfigReader& cfg, wxString group);
-  void RegisterControlled(GODrawstop* sw);
+public:
+  GODrawstop(GODefinitionFile *organfile);
+  void Init(GOConfigReader &cfg, wxString group, wxString name);
+  void Load(GOConfigReader &cfg, wxString group);
+  void RegisterControlled(GODrawstop *sw);
   virtual void Set(bool on);
   virtual void Update();
   void Reset();

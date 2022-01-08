@@ -12,15 +12,15 @@
 #include "ptrvector.h"
 
 class GOSoundReverbPartition {
- private:
+private:
   unsigned m_PartitionSize;
   unsigned m_PartitionCount;
-  float* m_fftwTmpReal;
-  fftwf_complex* m_fftwTmpComplex;
+  float *m_fftwTmpReal;
+  fftwf_complex *m_fftwTmpComplex;
   fftwf_plan m_TimeToFreq;
   fftwf_plan m_FreqToTime;
-  float* m_Input;
-  float* m_Output;
+  float *m_Input;
+  float *m_Output;
   unsigned m_InputPos;
   unsigned m_InputStartPos;
   unsigned m_OutputPos;
@@ -28,15 +28,15 @@ class GOSoundReverbPartition {
   ptr_vector<fftwf_complex> m_IRData;
   unsigned m_InputHistoryPos;
 
-  void ZeroComplex(fftwf_complex* data, unsigned len);
+  void ZeroComplex(fftwf_complex *data, unsigned len);
 
- public:
+public:
   GOSoundReverbPartition(unsigned size, unsigned cnt, unsigned start_pos);
   ~GOSoundReverbPartition();
 
   void Reset();
-  void Process(float* output_buf, const float* input_buf, unsigned len);
-  void AddIR(const float* data, unsigned pos, unsigned len, unsigned offset);
+  void Process(float *output_buf, const float *input_buf, unsigned len);
+  void AddIR(const float *data, unsigned pos, unsigned len, unsigned offset);
   unsigned GetLength();
 };
 

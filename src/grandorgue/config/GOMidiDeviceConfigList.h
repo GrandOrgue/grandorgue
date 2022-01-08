@@ -20,12 +20,12 @@ class GOMidiDeviceConfigList
 // we can't use std::vector<GOMidiDeviceConfig> because it does not keep
 // the references to it's elements unchanged
 {
- private:
+private:
   ptr_vector<GOMidiDeviceConfig> m_list;
   wxString m_GroupName;
 
- public:
-  GOMidiDeviceConfigList(const wxString& groupName = wxEmptyString)
+public:
+  GOMidiDeviceConfigList(const wxString &groupName = wxEmptyString)
       : m_GroupName(groupName) {}
 
   void Clear() { m_list.clear(); }
@@ -38,14 +38,14 @@ class GOMidiDeviceConfigList
     return m_list.end();
   }
 
-  GOMidiDeviceConfig* FindByLogicalName(const wxString& logicalName) const;
+  GOMidiDeviceConfig *FindByLogicalName(const wxString &logicalName) const;
 
   /**
    * find device config by it's physical name.
    * If found, returns the reference to it in and sets m_PhysicalNameMatchedWith
    * If not found, returns NULL
    **/
-  GOMidiDeviceConfig* FindByPhysicalName(const wxString& physicalName) const;
+  GOMidiDeviceConfig *FindByPhysicalName(const wxString &physicalName) const;
 
   /**
    * Remove the device from the list that has the logical name specified
@@ -54,15 +54,15 @@ class GOMidiDeviceConfigList
    * @param protectList - the list of physical names to keep
    */
   void RemoveByLogicalNameOutOf(
-      const wxString& logicalName,
-      const GOMidiDeviceConfig::RefVector& protectList);
+    const wxString &logicalName,
+    const GOMidiDeviceConfig::RefVector &protectList);
 
   /**
    * If devConfSrc.p_OutputDevice is set than fill devConfDst.p_OutputDevice
    * with a device with the same logical name in this list
    **/
-  void MapOutputDevice(const GOMidiDeviceConfig& devConfSrc,
-                       GOMidiDeviceConfig& devConfDst) const;
+  void MapOutputDevice(
+    const GOMidiDeviceConfig &devConfSrc, GOMidiDeviceConfig &devConfDst) const;
 
   /**
    * Add a midi device config to the list
@@ -70,8 +70,9 @@ class GOMidiDeviceConfigList
    * @param outputList the list for finding output device by name
    * @return the reference to the new device
    **/
-  GOMidiDeviceConfig* Append(const GOMidiDeviceConfig& devConf,
-                             const GOMidiDeviceConfigList* outputList = NULL);
+  GOMidiDeviceConfig *Append(
+    const GOMidiDeviceConfig &devConf,
+    const GOMidiDeviceConfigList *outputList = NULL);
 
   /**
    * Add a midi device to the list
@@ -81,11 +82,13 @@ class GOMidiDeviceConfigList
    * @param physicalName the physicalName this device is matched with
    * @return the reference to the new device
    **/
-  GOMidiDeviceConfig* Append(const wxString& logicalName, const wxString& regEx,
-                             bool isEnabled,
-                             const wxString& physicalName = wxEmptyString) {
+  GOMidiDeviceConfig *Append(
+    const wxString &logicalName,
+    const wxString &regEx,
+    bool isEnabled,
+    const wxString &physicalName = wxEmptyString) {
     return Append(
-        GOMidiDeviceConfig(logicalName, regEx, isEnabled, physicalName));
+      GOMidiDeviceConfig(logicalName, regEx, isEnabled, physicalName));
   }
 
   /**
@@ -95,15 +98,16 @@ class GOMidiDeviceConfigList
    *   when !=NULL then load input devices. Search outputDevice among this list
    *   when NULL then load output devices without additional search
    */
-  void Load(GOConfigReader& cfg,
-            const GOMidiDeviceConfigList* outputMidiDevices = NULL);
+  void Load(
+    GOConfigReader &cfg,
+    const GOMidiDeviceConfigList *outputMidiDevices = NULL);
 
   /**
    * Save the list to the configuration file
    * @param cfg - the config file
    * @param isInput - whether to save input devices (they have more attributes)
    */
-  void Save(GOConfigWriter& cfg, const bool isInput = false);
+  void Save(GOConfigWriter &cfg, const bool isInput = false);
 };
 
 #endif /* GOMIDIDEVICECONFIGLIST_H */

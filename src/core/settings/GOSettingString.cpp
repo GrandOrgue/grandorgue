@@ -10,17 +10,16 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOSettingString::GOSettingString(GOSettingStore* store, wxString group,
-                                 wxString name, wxString default_value)
-    : GOSetting(store, group, name),
-      m_Value(default_value),
+GOSettingString::GOSettingString(
+  GOSettingStore *store, wxString group, wxString name, wxString default_value)
+    : GOSetting(store, group, name), m_Value(default_value),
       m_DefaultValue(default_value) {}
 
-void GOSettingString::Load(GOConfigReader& cfg) {
+void GOSettingString::Load(GOConfigReader &cfg) {
   (*this)(cfg.ReadString(CMBSetting, m_Group, m_Name, false, m_DefaultValue));
 }
 
-void GOSettingString::Save(GOConfigWriter& cfg) {
+void GOSettingString::Save(GOConfigWriter &cfg) {
   cfg.WriteString(m_Group, m_Name, m_Value);
 }
 

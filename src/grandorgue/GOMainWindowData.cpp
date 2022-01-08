@@ -11,30 +11,32 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOMainWindowData::GOMainWindowData(GODefinitionFile* organfile)
+GOMainWindowData::GOMainWindowData(GODefinitionFile *organfile)
     : m_organfile(organfile) {}
 
 GOMainWindowData::~GOMainWindowData() {}
 
-void GOMainWindowData::Load(GOConfigReader& cfg, wxString group) {
+void GOMainWindowData::Load(GOConfigReader &cfg, wxString group) {
   m_organfile->RegisterSaveableObject(this);
-  int x = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowX"), -20, 10000,
-                          false, 0);
-  int y = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowY"), -20, 10000,
-                          false, 0);
-  int w = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowWidth"), 0, 10000,
-                          false, 0);
-  int h = cfg.ReadInteger(CMBSetting, m_group, wxT("WindowHeight"), 0, 10000,
-                          false, 0);
+  int x = cfg.ReadInteger(
+    CMBSetting, m_group, wxT("WindowX"), -20, 10000, false, 0);
+  int y = cfg.ReadInteger(
+    CMBSetting, m_group, wxT("WindowY"), -20, 10000, false, 0);
+  int w = cfg.ReadInteger(
+    CMBSetting, m_group, wxT("WindowWidth"), 0, 10000, false, 0);
+  int h = cfg.ReadInteger(
+    CMBSetting, m_group, wxT("WindowHeight"), 0, 10000, false, 0);
   m_size = wxRect(x, y, w, h);
 }
 
-void GOMainWindowData::Save(GOConfigWriter& cfg) {
+void GOMainWindowData::Save(GOConfigWriter &cfg) {
   wxRect size = m_size;
   int x = size.GetLeft();
   int y = size.GetTop();
-  if (x < -20) x = -20;
-  if (y < -20) y = -20;
+  if (x < -20)
+    x = -20;
+  if (y < -20)
+    y = -20;
   cfg.WriteInteger(m_group, wxT("WindowX"), x);
   cfg.WriteInteger(m_group, wxT("WindowY"), y);
   cfg.WriteInteger(m_group, wxT("WindowWidth"), size.GetWidth());

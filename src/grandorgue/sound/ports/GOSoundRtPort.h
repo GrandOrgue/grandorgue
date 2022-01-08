@@ -13,32 +13,36 @@
 #include "sound/GOSoundDevInfo.h"
 
 class GOSoundRtPort : public GOSoundPort {
- private:
-  RtAudio* m_rtApi;
+private:
+  RtAudio *m_rtApi;
   unsigned m_nBuffers;
 
-  static int Callback(void* outputBuffer, void* inputBuffer,
-                      unsigned int nFrames, double streamTime,
-                      RtAudioStreamStatus status, void* userData);
+  static int Callback(
+    void *outputBuffer,
+    void *inputBuffer,
+    unsigned int nFrames,
+    double streamTime,
+    RtAudioStreamStatus status,
+    void *userData);
 
-  static wxString getName(RtAudio* rtApi, unsigned index);
+  static wxString getName(RtAudio *rtApi, unsigned index);
 
- public:
+public:
   static const wxString PORT_NAME;
 
   // rtApi to be deleted in the destructor
-  GOSoundRtPort(GOSound* sound, RtAudio* rtApi, wxString name);
+  GOSoundRtPort(GOSound *sound, RtAudio *rtApi, wxString name);
   ~GOSoundRtPort();
 
   void Open();
   void StartStream();
   void Close();
 
-  static const std::vector<wxString>& getApis();
-  static GOSoundPort* create(const GOPortsConfig& portsConfig, GOSound* sound,
-                             wxString name);
-  static void addDevices(const GOPortsConfig& portsConfig,
-                         std::vector<GOSoundDevInfo>& list);
+  static const std::vector<wxString> &getApis();
+  static GOSoundPort *
+  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+  static void addDevices(
+    const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
 };
 
 #endif

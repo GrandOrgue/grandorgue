@@ -27,13 +27,17 @@
 class TestApp : public wxApp {
   wxMilliClock_t getCPUTime();
 
- public:
+public:
   TestApp();
   bool OnInit();
   int OnRun();
-  void RunTest(unsigned bits_per_sample, bool compress,
-               unsigned sample_instances, unsigned sample_rate,
-               unsigned interpolation, unsigned samples_per_frame);
+  void RunTest(
+    unsigned bits_per_sample,
+    bool compress,
+    unsigned sample_instances,
+    unsigned sample_rate,
+    unsigned interpolation,
+    unsigned samples_per_frame);
 };
 
 DECLARE_APP(TestApp)
@@ -54,28 +58,32 @@ wxMilliClock_t TestApp::getCPUTime() {
   return wxGetLocalTimeMillis();
 }
 
-void TestApp::RunTest(unsigned bits_per_sample, bool compress,
-                      unsigned sample_instances, unsigned sample_rate,
-                      unsigned interpolation, unsigned samples_per_frame) {
+void TestApp::RunTest(
+  unsigned bits_per_sample,
+  bool compress,
+  unsigned sample_instances,
+  unsigned sample_rate,
+  unsigned interpolation,
+  unsigned samples_per_frame) {
   try {
     GOConfig settings(wxT("perftest"));
-    GODefinitionFile* organfile = new GODefinitionFile(NULL, settings);
+    GODefinitionFile *organfile = new GODefinitionFile(NULL, settings);
     organfile->SetODFPath(argv[1]);
     organfile->AddWindchest(new GOWindchest(organfile));
-    GOSoundEngine* engine = new GOSoundEngine();
+    GOSoundEngine *engine = new GOSoundEngine();
     GOSoundRecorder recorder;
 
     try {
       ptr_vector<GOSoundProvider> pipes;
       for (unsigned i = 0; i < sample_instances; i++) {
-        GOSoundProviderWave* w =
-            new GOSoundProviderWave(organfile->GetMemoryPool());
+        GOSoundProviderWave *w
+          = new GOSoundProviderWave(organfile->GetMemoryPool());
         w->SetAmplitude(102, 0);
         std::vector<release_load_info> release;
         std::vector<attack_load_info> attack;
         attack_load_info ainfo;
-        ainfo.filename.Assign(wxString::Format(wxT("%02d.wav"), i % 3),
-                              organfile);
+        ainfo.filename.Assign(
+          wxString::Format(wxT("%02d.wav"), i % 3), organfile);
         ainfo.sample_group = -1;
         ainfo.load_release = true;
         ainfo.percussive = false;
@@ -86,8 +94,18 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress,
         ainfo.release_end = -1;
         ainfo.loops.clear();
         attack.push_back(ainfo);
-        w->LoadFromFile(attack, release, bits_per_sample, 2, compress,
-                        LOOP_LOAD_ALL, 1, 1, -1, 0, 0);
+        w->LoadFromFile(
+          attack,
+          release,
+          bits_per_sample,
+          2,
+          compress,
+          LOOP_LOAD_ALL,
+          1,
+          1,
+          -1,
+          0,
+          0);
         pipes.push_back(w);
       }
       engine->SetSamplesPerBuffer(samples_per_frame);
@@ -114,12 +132,13 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress,
 
       engine->Setup(organfile);
 
-      std::vector<GO_SAMPLER*> handles;
+      std::vector<GO_SAMPLER *> handles;
       float output_buffer[samples_per_frame * 2];
 
       for (unsigned i = 0; i < pipes.size(); i++) {
-        GO_SAMPLER* handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
-        if (handle) handles.push_back(handle);
+        GO_SAMPLER *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
+        if (handle)
+          handles.push_back(handle);
       }
 
       wxMilliClock_t start = getCPUTime();
@@ -137,15 +156,20 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress,
         diff = end - start;
       } while (diff < 30000);
 
-      float playback_time =
-          blocks * (double)samples_per_frame / engine->GetSampleRate();
-      wxLogError(wxT("%d sampler, %f seconds, %d bits, %d, %s, %s, %d block: "
-                     "%d ms cpu time, limit: %f"),
-                 pipes.size(), playback_time, bits_per_sample, sample_rate,
-                 compress ? wxT("Y") : wxT("N"),
-                 interpolation == 0 ? wxT("Linear") : wxT("Polyphase"),
-                 samples_per_frame, diff.ToLong(),
-                 playback_time * 1000.0 * pipes.size() / diff.ToLong());
+      float playback_time
+        = blocks * (double)samples_per_frame / engine->GetSampleRate();
+      wxLogError(
+        wxT("%d sampler, %f seconds, %d bits, %d, %s, %s, %d block: "
+            "%d ms cpu time, limit: %f"),
+        pipes.size(),
+        playback_time,
+        bits_per_sample,
+        sample_rate,
+        compress ? wxT("Y") : wxT("N"),
+        interpolation == 0 ? wxT("Linear") : wxT("Polyphase"),
+        samples_per_frame,
+        diff.ToLong(),
+        playback_time * 1000.0 * pipes.size() / diff.ToLong());
 
       pipes.clear();
     } catch (wxString msg) {
@@ -160,7 +184,7 @@ void TestApp::RunTest(unsigned bits_per_sample, bool compress,
 }
 
 bool TestApp::OnInit() {
-  wxLog* logger = new wxLogStream(&std::cout);
+  wxLog *logger = new wxLogStream(&std::cout);
   wxLog::SetActiveTarget(logger);
   wxImage::AddHandler(new wxJPEGHandler);
   wxImage::AddHandler(new wxGIFHandler);

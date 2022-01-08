@@ -23,40 +23,40 @@ class GODefinitionFile;
 class wxMidiEvent;
 
 class GOMidi : public wxEvtHandler {
- private:
-  GOConfig& m_config;
+private:
+  GOConfig &m_config;
 
   ptr_vector<GOMidiPort> m_midi_in_devices;
   ptr_vector<GOMidiPort> m_midi_out_devices;
 
   int m_transpose;
-  std::vector<GOMidiListener*> m_Listeners;
+  std::vector<GOMidiListener *> m_Listeners;
   GOMidiPortFactory m_MidiFactory;
-  void OnMidiEvent(wxMidiEvent& event);
+  void OnMidiEvent(wxMidiEvent &event);
 
- public:
-  GOMidi(GOConfig& settings);
+public:
+  GOMidi(GOConfig &settings);
   ~GOMidi();
 
   void Open();
-  void UpdateDevices(const GOPortsConfig& portsConfig);
+  void UpdateDevices(const GOPortsConfig &portsConfig);
 
-  void Recv(const GOMidiEvent& e);
-  void Send(const GOMidiEvent& e);
+  void Recv(const GOMidiEvent &e);
+  void Send(const GOMidiEvent &e);
 
-  const ptr_vector<GOMidiPort>& GetInDevices() const {
+  const ptr_vector<GOMidiPort> &GetInDevices() const {
     return m_midi_in_devices;
   }
-  const ptr_vector<GOMidiPort>& GetOutDevices() const {
+  const ptr_vector<GOMidiPort> &GetOutDevices() const {
     return m_midi_out_devices;
   }
   bool HasActiveDevice();
   int GetTranspose();
   void SetTranspose(int transpose);
-  void Register(GOMidiListener* listener);
-  void Unregister(GOMidiListener* listener);
+  void Register(GOMidiListener *listener);
+  void Unregister(GOMidiListener *listener);
 
-  GOMidiMap& GetMidiMap();
+  GOMidiMap &GetMidiMap();
 
   DECLARE_EVENT_TABLE()
 };

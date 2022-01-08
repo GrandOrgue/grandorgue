@@ -23,13 +23,13 @@ class GODefinitionFile;
 class GORank : private GOSaveableObject,
                public GOMidiConfigurator,
                private GOPlaybackStateHandler {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   wxString m_Name;
   ptr_vector<GOPipe> m_Pipes;
   unsigned m_StopCount;
   std::vector<unsigned> m_Velocity;
-  std::vector<std::vector<unsigned> > m_Velocities;
+  std::vector<std::vector<unsigned>> m_Velocities;
   unsigned m_FirstMidiNoteNumber;
   bool m_Percussive;
   unsigned m_WindchestGroup;
@@ -43,27 +43,31 @@ class GORank : private GOSaveableObject,
 
   void Resize();
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
   void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
   void PrepareRecording();
 
- public:
-  GORank(GODefinitionFile* organfile);
+public:
+  GORank(GODefinitionFile *organfile);
   ~GORank();
-  void Init(GOConfigReader& cfg, wxString group, wxString name,
-            int first_midi_note_number, unsigned windchest);
-  void Load(GOConfigReader& cfg, wxString group, int first_midi_note_number);
-  void AddPipe(GOPipe* pipe);
-  unsigned RegisterStop(GOStop* stop);
+  void Init(
+    GOConfigReader &cfg,
+    wxString group,
+    wxString name,
+    int first_midi_note_number,
+    unsigned windchest);
+  void Load(GOConfigReader &cfg, wxString group, int first_midi_note_number);
+  void AddPipe(GOPipe *pipe);
+  unsigned RegisterStop(GOStop *stop);
   void SetKey(int note, unsigned velocity, unsigned stopID);
-  GOPipe* GetPipe(unsigned index);
+  GOPipe *GetPipe(unsigned index);
   unsigned GetPipeCount();
-  GOPipeConfigNode& GetPipeConfig();
-  void SetTemperament(const GOTemperament& temperament);
-  const wxString& GetName();
+  GOPipeConfigNode &GetPipeConfig();
+  void SetTemperament(const GOTemperament &temperament);
+  const wxString &GetName();
 
   wxString GetMidiType();
   wxString GetMidiName();

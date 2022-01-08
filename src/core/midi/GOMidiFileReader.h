@@ -17,8 +17,8 @@ class GOMidiEvent;
 class GOMidiMap;
 
 class GOMidiFileReader {
- private:
-  GOMidiMap& m_Map;
+private:
+  GOMidiMap &m_Map;
   GOBuffer<uint8_t> m_Data;
   unsigned m_Tracks;
   float m_Speed;
@@ -33,12 +33,12 @@ class GOMidiFileReader {
   bool StartTrack();
   unsigned DecodeTime();
 
- public:
-  GOMidiFileReader(GOMidiMap& map);
+public:
+  GOMidiFileReader(GOMidiMap &map);
   ~GOMidiFileReader();
 
   bool Open(wxString filename);
-  bool ReadEvent(GOMidiEvent& e);
+  bool ReadEvent(GOMidiEvent &e);
   bool Close();
 };
 

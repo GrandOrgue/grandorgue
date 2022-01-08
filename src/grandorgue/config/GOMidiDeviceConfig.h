@@ -14,11 +14,11 @@
 #include <vector>
 
 class GOMidiDeviceConfig {
- private:
-  wxRegEx* p_CompiledRegEx = NULL;
+private:
+  wxRegEx *p_CompiledRegEx = NULL;
 
- public:
-  typedef std::vector<GOMidiDeviceConfig*> RefVector;
+public:
+  typedef std::vector<GOMidiDeviceConfig *> RefVector;
 
   wxString m_LogicalName;
   wxString m_RegEx;
@@ -26,23 +26,24 @@ class GOMidiDeviceConfig {
 
   // Midi-in only
   int m_ChannelShift = 0;
-  GOMidiDeviceConfig* p_OutputDevice = NULL;
+  GOMidiDeviceConfig *p_OutputDevice = NULL;
 
   // matchingResult. Not saved, only in memory
   wxString m_PhysicalName;
 
-  GOMidiDeviceConfig(const wxString& logicalName,
-                     const wxString& regEx = wxEmptyString,
-                     bool isEnabled = true,
-                     const wxString& physicalName = wxEmptyString);
+  GOMidiDeviceConfig(
+    const wxString &logicalName,
+    const wxString &regEx = wxEmptyString,
+    bool isEnabled = true,
+    const wxString &physicalName = wxEmptyString);
 
-  void Assign(const GOMidiDeviceConfig& src);
+  void Assign(const GOMidiDeviceConfig &src);
 
-  GOMidiDeviceConfig(const GOMidiDeviceConfig& src) { Assign(src); }
+  GOMidiDeviceConfig(const GOMidiDeviceConfig &src) { Assign(src); }
 
-  void SetRegEx(const wxString& regEx);
+  void SetRegEx(const wxString &regEx);
 
-  bool DoesMatch(const wxString& physicalName);
+  bool DoesMatch(const wxString &physicalName);
 };
 
 #endif /* GOMIDIDEVICECONFIG_H */

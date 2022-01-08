@@ -11,12 +11,15 @@
 #include "settings/GOSettingString.h"
 
 class GOSettingDirectory : public GOSettingString {
- protected:
+protected:
   wxString validate(wxString value);
 
- public:
-  GOSettingDirectory(GOSettingStore* store, wxString group, wxString name,
-                     wxString default_value);
+public:
+  GOSettingDirectory(
+    GOSettingStore *store,
+    wxString group,
+    wxString name,
+    wxString default_value);
 };
 
 #endif

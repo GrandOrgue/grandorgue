@@ -13,13 +13,10 @@
 #include "GORank.h"
 #include "config/GOConfigReader.h"
 
-GOStop::GOStop(GODefinitionFile* organfile, unsigned first_midi_note_number)
-    : GODrawstop(organfile),
-      m_RankInfo(0),
-      m_KeyVelocity(0),
+GOStop::GOStop(GODefinitionFile *organfile, unsigned first_midi_note_number)
+    : GODrawstop(organfile), m_RankInfo(0), m_KeyVelocity(0),
       m_FirstMidiNoteNumber(first_midi_note_number),
-      m_FirstAccessiblePipeLogicalKeyNumber(0),
-      m_NumberOfAccessiblePipes(0) {}
+      m_FirstAccessiblePipeLogicalKeyNumber(0), m_NumberOfAccessiblePipes(0) {}
 
 unsigned GOStop::IsAuto() const {
   /* m_auto seems to state that if a stop only has 1 note, the note isn't
@@ -28,34 +25,49 @@ unsigned GOStop::IsAuto() const {
   return (m_RankInfo.size() == 1 && m_RankInfo[0].Rank->GetPipeCount() == 1);
 }
 
-void GOStop::Load(GOConfigReader& cfg, wxString group) {
+void GOStop::Load(GOConfigReader &cfg, wxString group) {
   unsigned number_of_ranks = cfg.ReadInteger(
-      ODFSetting, group, wxT("NumberOfRanks"), 0, 999, false, 0);
+    ODFSetting, group, wxT("NumberOfRanks"), 0, 999, false, 0);
 
   m_FirstAccessiblePipeLogicalKeyNumber = cfg.ReadInteger(
-      ODFSetting, group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1, 128);
+    ODFSetting, group, wxT("FirstAccessiblePipeLogicalKeyNumber"), 1, 128);
   m_NumberOfAccessiblePipes = cfg.ReadInteger(
-      ODFSetting, group, wxT("NumberOfAccessiblePipes"), 1, 192);
+    ODFSetting, group, wxT("NumberOfAccessiblePipes"), 1, 192);
 
   if (number_of_ranks) {
     for (unsigned i = 0; i < number_of_ranks; i++) {
       RankInfo info;
-      unsigned no = cfg.ReadInteger(ODFSetting, group,
-                                    wxString::Format(wxT("Rank%03d"), i + 1), 1,
-                                    m_organfile->GetODFRankCount());
+      unsigned no = cfg.ReadInteger(
+        ODFSetting,
+        group,
+        wxString::Format(wxT("Rank%03d"), i + 1),
+        1,
+        m_organfile->GetODFRankCount());
       info.Rank = m_organfile->GetRank(no - 1);
       info.FirstPipeNumber = cfg.ReadInteger(
-          ODFSetting, group,
-          wxString::Format(wxT("Rank%03dFirstPipeNumber"), i + 1), 1,
-          info.Rank->GetPipeCount(), false, 1);
+        ODFSetting,
+        group,
+        wxString::Format(wxT("Rank%03dFirstPipeNumber"), i + 1),
+        1,
+        info.Rank->GetPipeCount(),
+        false,
+        1);
       info.PipeCount = cfg.ReadInteger(
-          ODFSetting, group, wxString::Format(wxT("Rank%03dPipeCount"), i + 1),
-          1, info.Rank->GetPipeCount() - info.FirstPipeNumber + 1, false,
-          info.Rank->GetPipeCount() - info.FirstPipeNumber + 1);
+        ODFSetting,
+        group,
+        wxString::Format(wxT("Rank%03dPipeCount"), i + 1),
+        1,
+        info.Rank->GetPipeCount() - info.FirstPipeNumber + 1,
+        false,
+        info.Rank->GetPipeCount() - info.FirstPipeNumber + 1);
       info.FirstAccessibleKeyNumber = cfg.ReadInteger(
-          ODFSetting, group,
-          wxString::Format(wxT("Rank%03dFirstAccessibleKeyNumber"), i + 1), 1,
-          m_NumberOfAccessiblePipes, false, 1);
+        ODFSetting,
+        group,
+        wxString::Format(wxT("Rank%03dFirstAccessibleKeyNumber"), i + 1),
+        1,
+        m_NumberOfAccessiblePipes,
+        false,
+        1);
       info.StopID = info.Rank->RegisterStop(this);
       m_RankInfo.push_back(info);
     }
@@ -64,55 +76,66 @@ void GOStop::Load(GOConfigReader& cfg, wxString group) {
     info.Rank = new GORank(m_organfile);
     m_organfile->AddRank(info.Rank);
     info.FirstPipeNumber = cfg.ReadInteger(
-        ODFSetting, group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, 192);
+      ODFSetting, group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, 192);
     info.FirstAccessibleKeyNumber = 1;
     info.PipeCount = m_NumberOfAccessiblePipes;
-    info.Rank->Load(cfg, group,
-                    m_FirstMidiNoteNumber - info.FirstPipeNumber +
-                        info.FirstAccessibleKeyNumber +
-                        m_FirstAccessiblePipeLogicalKeyNumber - 1);
+    info.Rank->Load(
+      cfg,
+      group,
+      m_FirstMidiNoteNumber - info.FirstPipeNumber
+        + info.FirstAccessibleKeyNumber + m_FirstAccessiblePipeLogicalKeyNumber
+        - 1);
     info.StopID = info.Rank->RegisterStop(this);
     m_RankInfo.push_back(info);
   }
 
   m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
-  m_StoreDivisional =
-      m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_StoreGeneral =
-      m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreDivisional
+    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreGeneral
+    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 
   GODrawstop::Load(cfg, group);
 }
 
 void GOStop::SetupCombinationState() {
-  m_StoreDivisional =
-      m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_StoreGeneral =
-      m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreDivisional
+    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreGeneral
+    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 void GOStop::SetRankKey(unsigned key, unsigned velocity) {
   for (unsigned j = 0; j < m_RankInfo.size(); j++) {
-    if (key + 1 < m_RankInfo[j].FirstAccessibleKeyNumber ||
-        key >= m_RankInfo[j].FirstAccessibleKeyNumber + m_RankInfo[j].PipeCount)
+    if (
+      key + 1 < m_RankInfo[j].FirstAccessibleKeyNumber
+      || key
+        >= m_RankInfo[j].FirstAccessibleKeyNumber + m_RankInfo[j].PipeCount)
       continue;
-    m_RankInfo[j].Rank->SetKey(key + m_RankInfo[j].FirstPipeNumber -
-                                   m_RankInfo[j].FirstAccessibleKeyNumber,
-                               velocity, m_RankInfo[j].StopID);
+    m_RankInfo[j].Rank->SetKey(
+      key + m_RankInfo[j].FirstPipeNumber
+        - m_RankInfo[j].FirstAccessibleKeyNumber,
+      velocity,
+      m_RankInfo[j].StopID);
   }
 }
 
 void GOStop::SetKey(unsigned note, unsigned velocity) {
-  if (note < m_FirstAccessiblePipeLogicalKeyNumber ||
-      note >= m_FirstAccessiblePipeLogicalKeyNumber + m_NumberOfAccessiblePipes)
+  if (
+    note < m_FirstAccessiblePipeLogicalKeyNumber
+    || note
+      >= m_FirstAccessiblePipeLogicalKeyNumber + m_NumberOfAccessiblePipes)
     return;
-  if (IsAuto()) return;
+  if (IsAuto())
+    return;
   note -= m_FirstAccessiblePipeLogicalKeyNumber;
 
-  if (m_KeyVelocity[note] == velocity) return;
+  if (m_KeyVelocity[note] == velocity)
+    return;
   m_KeyVelocity[note] = velocity;
-  if (IsActive()) SetRankKey(note, m_KeyVelocity[note]);
+  if (IsActive())
+    SetRankKey(note, m_KeyVelocity[note]);
 }
 
 void GOStop::ChangeState(bool on) {
@@ -127,7 +150,8 @@ void GOStop::ChangeState(bool on) {
 GOStop::~GOStop(void) {}
 
 void GOStop::AbortPlayback() {
-  if (IsAuto()) Set(false);
+  if (IsAuto())
+    Set(false);
   GOButton::AbortPlayback();
 }
 
@@ -141,9 +165,10 @@ void GOStop::PreparePlayback() {
 void GOStop::StartPlayback() {
   GODrawstop::StartPlayback();
 
-  if (IsAuto() && IsActive()) SetRankKey(0, 0x7f);
+  if (IsAuto() && IsActive())
+    SetRankKey(0, 0x7f);
 }
 
-GORank* GOStop::GetRank(unsigned index) { return m_RankInfo[index].Rank; }
+GORank *GOStop::GetRank(unsigned index) { return m_RankInfo[index].Rank; }
 
 wxString GOStop::GetMidiType() { return _("Stop"); }

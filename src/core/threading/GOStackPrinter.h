@@ -13,25 +13,30 @@
 
 #if wxUSE_STACKWALKER
 class GOStackPrinter : public wxStackWalker {
-  void* m_ptr;
+  void *m_ptr;
 
-  GOStackPrinter(void* p) { m_ptr = p; }
+  GOStackPrinter(void *p) { m_ptr = p; }
 
-  void OnStackFrame(const wxStackFrame& frame) {
-    wxLogWarning(wxT("%p: [%2d] %s(%p)\t%s:%d"), m_ptr, frame.GetLevel(),
-                 frame.GetName().c_str(), frame.GetAddress(),
-                 frame.GetFileName().c_str(), frame.GetLine());
+  void OnStackFrame(const wxStackFrame &frame) {
+    wxLogWarning(
+      wxT("%p: [%2d] %s(%p)\t%s:%d"),
+      m_ptr,
+      frame.GetLevel(),
+      frame.GetName().c_str(),
+      frame.GetAddress(),
+      frame.GetFileName().c_str(),
+      frame.GetLine());
   }
 
- public:
-  static void printStack(void* p) {
+public:
+  static void printStack(void *p) {
     GOStackPrinter print(p);
     print.Walk();
   }
 };
 #else
 class GOStackPrinter {
- public:
+public:
   static void printStack(void *p) {}
 };
 #endif

@@ -14,16 +14,16 @@
 #include "sound/GOSoundDevInfo.h"
 
 class GOSoundPortFactory : public GOPortFactory {
- public:
-  const std::vector<wxString>& GetPortNames() const;
-  const std::vector<wxString>& GetPortApiNames(const wxString& portName) const;
+public:
+  const std::vector<wxString> &GetPortNames() const;
+  const std::vector<wxString> &GetPortApiNames(const wxString &portName) const;
 
-  static std::vector<GOSoundDevInfo> getDeviceList(
-      const GOPortsConfig& portsConfig);
-  static GOSoundPort* create(const GOPortsConfig& portsConfig, GOSound* sound,
-                             wxString name);
+  static std::vector<GOSoundDevInfo>
+  getDeviceList(const GOPortsConfig &portsConfig);
+  static GOSoundPort *
+  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
 
-  static GOSoundPortFactory& getInstance();
+  static GOSoundPortFactory &getInstance();
   static void terminate();
 };
 

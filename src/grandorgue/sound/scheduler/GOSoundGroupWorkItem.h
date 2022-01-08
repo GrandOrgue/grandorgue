@@ -18,8 +18,8 @@
 class GOSoundEngine;
 
 class GOSoundGroupWorkItem : public GOSoundWorkItem, public GOSoundBufferItem {
- private:
-  GOSoundEngine& m_engine;
+private:
+  GOSoundEngine &m_engine;
   GOSoundSamplerList m_Active;
   GOSoundSamplerList m_Release;
   GOMutex m_Mutex;
@@ -28,23 +28,23 @@ class GOSoundGroupWorkItem : public GOSoundWorkItem, public GOSoundBufferItem {
   unsigned m_Done;
   volatile bool m_Stop;
 
-  void ProcessList(GOSoundSamplerList& list, bool toDropOld,
-                   float* output_buffer);
+  void
+  ProcessList(GOSoundSamplerList &list, bool toDropOld, float *output_buffer);
 
- public:
-  GOSoundGroupWorkItem(GOSoundEngine& sound_engine,
-                       unsigned samples_per_buffer);
+public:
+  GOSoundGroupWorkItem(
+    GOSoundEngine &sound_engine, unsigned samples_per_buffer);
 
   unsigned GetGroup();
   unsigned GetCost();
   bool GetRepeat();
-  void Run(GOSoundThread* pThread = nullptr);
+  void Run(GOSoundThread *pThread = nullptr);
   void Exec();
-  void Finish(bool stop, GOSoundThread* pThread = nullptr);
+  void Finish(bool stop, GOSoundThread *pThread = nullptr);
 
   void Reset();
   void Clear();
-  void Add(GOSoundSampler* sampler);
+  void Add(GOSoundSampler *sampler);
   void WaitAndClear();
 };
 

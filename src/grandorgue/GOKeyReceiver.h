@@ -17,18 +17,18 @@ class GOConfigWriter;
 class GODefinitionFile;
 
 class GOKeyReceiver : public GOKeyReceiverData {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
 
- public:
-  GOKeyReceiver(GODefinitionFile* organfile, KEY_RECEIVER_TYPE type);
+public:
+  GOKeyReceiver(GODefinitionFile *organfile, KEY_RECEIVER_TYPE type);
 
-  void Load(GOConfigReader& cfg, wxString group);
-  void Save(GOConfigWriter& cfg, wxString group);
+  void Load(GOConfigReader &cfg, wxString group);
+  void Save(GOConfigWriter &cfg, wxString group);
 
   KEY_MATCH_TYPE Match(unsigned key);
 
-  void Assign(const GOKeyReceiverData& data);
+  void Assign(const GOKeyReceiverData &data);
 };
 
 #endif

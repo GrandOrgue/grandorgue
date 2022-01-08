@@ -15,11 +15,11 @@ GOMidiListener::GOMidiListener() : m_Callback(NULL), m_midi(NULL) {}
 
 GOMidiListener::~GOMidiListener() { Unregister(); }
 
-void GOMidiListener::SetCallback(GOMidiCallback* callback) {
+void GOMidiListener::SetCallback(GOMidiCallback *callback) {
   m_Callback = callback;
 }
 
-void GOMidiListener::Register(GOMidi* midi) {
+void GOMidiListener::Register(GOMidi *midi) {
   Unregister();
   if (midi) {
     m_midi = midi;
@@ -28,10 +28,12 @@ void GOMidiListener::Register(GOMidi* midi) {
 }
 
 void GOMidiListener::Unregister() {
-  if (m_midi) m_midi->Unregister(this);
+  if (m_midi)
+    m_midi->Unregister(this);
   m_midi = NULL;
 }
 
-void GOMidiListener::Send(const GOMidiEvent& event) {
-  if (m_Callback) m_Callback->OnMidiEvent(event);
+void GOMidiListener::Send(const GOMidiEvent &event) {
+  if (m_Callback)
+    m_Callback->OnMidiEvent(event);
 }

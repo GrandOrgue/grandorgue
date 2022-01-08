@@ -17,9 +17,9 @@ class GOConfigWriter;
 class GODefinitionFile;
 
 class GOPipeConfig {
- private:
-  GODefinitionFile* m_OrganFile;
-  GOPipeUpdateCallback* m_Callback;
+private:
+  GODefinitionFile *m_OrganFile;
+  GOPipeUpdateCallback *m_Callback;
   wxString m_Group;
   wxString m_NamePrefix;
   wxString m_AudioGroup;
@@ -38,14 +38,14 @@ class GOPipeConfig {
   int m_AttackLoad;
   int m_ReleaseLoad;
 
- public:
-  GOPipeConfig(GODefinitionFile* organfile, GOPipeUpdateCallback* callback);
+public:
+  GOPipeConfig(GODefinitionFile *organfile, GOPipeUpdateCallback *callback);
 
-  void Init(GOConfigReader& cfg, wxString group, wxString prefix);
-  void Load(GOConfigReader& cfg, wxString group, wxString prefix);
-  void Save(GOConfigWriter& cfg);
+  void Init(GOConfigReader &cfg, wxString group, wxString prefix);
+  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
+  void Save(GOConfigWriter &cfg);
 
-  GOPipeUpdateCallback* GetCallback();
+  GOPipeUpdateCallback *GetCallback();
 
   float GetAmplitude();
   float GetDefaultAmplitude();
@@ -63,8 +63,8 @@ class GOPipeConfig {
   unsigned GetDefaultDelay();
   void SetDelay(unsigned delay);
 
-  const wxString& GetAudioGroup();
-  void SetAudioGroup(const wxString& str);
+  const wxString &GetAudioGroup();
+  void SetAudioGroup(const wxString &str);
 
   int GetBitsPerSample();
   void SetBitsPerSample(int value);

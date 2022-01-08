@@ -11,10 +11,10 @@
 class GOConfigReader;
 
 class GOGUIPanelCreator {
- public:
+public:
   virtual ~GOGUIPanelCreator() {}
 
-  virtual void CreatePanels(GOConfigReader& cfg) = 0;
+  virtual void CreatePanels(GOConfigReader &cfg) = 0;
 };
 
 #endif

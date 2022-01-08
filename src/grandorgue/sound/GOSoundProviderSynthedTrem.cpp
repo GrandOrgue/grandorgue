@@ -11,7 +11,7 @@
 #include "GOMemoryPool.h"
 #include "GOSoundAudioSection.h"
 
-GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOMemoryPool& pool)
+GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOMemoryPool &pool)
     : GOSoundProvider(pool) {
   m_Gain = 1.0f;
 }
@@ -21,13 +21,15 @@ inline short SynthTrem(double amp, double angle) {
 }
 
 inline short SynthTrem(double amp, double angle, double fade) {
-  if (fade > 1.0) fade = 1.0;
-  if (fade < 0.0) fade = 0.0;
+  if (fade > 1.0)
+    fade = 1.0;
+  if (fade < 0.0)
+    fade = 0.0;
   return (short)(fade * amp * sin(angle));
 }
 
-void GOSoundProviderSynthedTrem::Create(int period, int start_rate,
-                                        int stop_rate, int amp_mod_depth) {
+void GOSoundProviderSynthedTrem::Create(
+  int period, int start_rate, int stop_rate, int amp_mod_depth) {
   ClearData();
 
   const double trem_freq = 1000.0 / period;
@@ -36,8 +38,8 @@ void GOSoundProviderSynthedTrem::Create(int period, int start_rate,
   const unsigned attack_samples = sample_freq / start_rate;
   const unsigned loop_samples = sample_freq / trem_freq;
   const unsigned release_samples = sample_freq / stop_rate;
-  const unsigned total_samples =
-      attack_samples + loop_samples + release_samples;
+  const unsigned total_samples
+    = attack_samples + loop_samples + release_samples;
 
   /* Synthesize tremulant */
   const double pi = 3.14159265358979323846;
@@ -47,7 +49,7 @@ void GOSoundProviderSynthedTrem::Create(int period, int start_rate,
 
   GOBuffer<int16_t> data(total_samples);
 
-  int16_t* write_iterator = data.get();
+  int16_t *write_iterator = data.get();
 
   /* Synthesize attack */
   double trem_fade = 0.0;
@@ -85,8 +87,15 @@ void GOSoundProviderSynthedTrem::Create(int period, int start_rate,
   attack_info.max_released_time = -1;
   m_AttackInfo.push_back(attack_info);
   m_Attack.push_back(new GOAudioSection(m_pool));
-  m_Attack[0]->Setup(data.get(), GOWave::SF_SIGNEDSHORT_16, 1, sample_freq,
-                     trem_loop.end_sample, &trem_loops, false, 0);
+  m_Attack[0]->Setup(
+    data.get(),
+    GOWave::SF_SIGNEDSHORT_16,
+    1,
+    sample_freq,
+    trem_loop.end_sample,
+    &trem_loops,
+    false,
+    0);
 
   /* Release section */
   release_section_info release_info;
@@ -94,9 +103,15 @@ void GOSoundProviderSynthedTrem::Create(int period, int start_rate,
   release_info.max_playback_time = -1;
   m_ReleaseInfo.push_back(release_info);
   m_Release.push_back(new GOAudioSection(m_pool));
-  m_Release[0]->Setup(data.get() + attack_samples + loop_samples,
-                      GOWave::SF_SIGNEDSHORT_16, 1, sample_freq,
-                      release_samples, NULL, false, 0);
+  m_Release[0]->Setup(
+    data.get() + attack_samples + loop_samples,
+    GOWave::SF_SIGNEDSHORT_16,
+    1,
+    sample_freq,
+    release_samples,
+    NULL,
+    false,
+    0);
 
   ComputeReleaseAlignmentInfo();
 }

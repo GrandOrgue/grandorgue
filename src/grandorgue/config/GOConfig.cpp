@@ -40,126 +40,158 @@ static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
 
 const GOMidiSetting GOConfig::m_MIDISettings[] = {
-    {MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal")},
-    {MIDI_RECV_MANUAL, 2, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 1")},
-    {MIDI_RECV_MANUAL, 3, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 2")},
-    {MIDI_RECV_MANUAL, 4, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 3")},
-    {MIDI_RECV_MANUAL, 5, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 4")},
-    {MIDI_RECV_MANUAL, 6, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 5")},
-    {MIDI_RECV_ENCLOSURE, 1, wxTRANSLATE("Enclosures"),
-     wxTRANSLATE("Enclosure 1")},
-    {MIDI_RECV_ENCLOSURE, 2, wxTRANSLATE("Enclosures"),
-     wxTRANSLATE("Enclosure 2")},
-    {MIDI_RECV_ENCLOSURE, 3, wxTRANSLATE("Enclosures"),
-     wxTRANSLATE("Enclosure 3")},
-    {MIDI_RECV_ENCLOSURE, 4, wxTRANSLATE("Enclosures"),
-     wxTRANSLATE("Enclosure 4")},
-    {MIDI_RECV_ENCLOSURE, 5, wxTRANSLATE("Enclosures"),
-     wxTRANSLATE("Enclosure 5")},
-    {MIDI_RECV_ENCLOSURE, 6, wxTRANSLATE("Enclosures"),
-     wxTRANSLATE("Enclosure 6")},
-    {MIDI_RECV_SETTER, 0, wxTRANSLATE("Sequencer"),
-     wxTRANSLATE("Previous Memory")},
-    {MIDI_RECV_SETTER, 1, wxTRANSLATE("Sequencer"), wxTRANSLATE("Next Memory")},
-    {MIDI_RECV_SETTER, 2, wxTRANSLATE("Sequencer"), wxTRANSLATE("Memory Set")},
-    {MIDI_RECV_SETTER, 3, wxTRANSLATE("Sequencer"), wxTRANSLATE("Current")},
-    {MIDI_RECV_SETTER, 4, wxTRANSLATE("Sequencer"), wxTRANSLATE("G.C.")},
-    {MIDI_RECV_SETTER, 5, wxTRANSLATE("Sequencer"), wxTRANSLATE("-10")},
-    {MIDI_RECV_SETTER, 6, wxTRANSLATE("Sequencer"), wxTRANSLATE("+10")},
-    {MIDI_RECV_SETTER, 7, wxTRANSLATE("Sequencer"), wxTRANSLATE("__0")},
-    {MIDI_RECV_SETTER, 8, wxTRANSLATE("Sequencer"), wxTRANSLATE("__1")},
-    {MIDI_RECV_SETTER, 9, wxTRANSLATE("Sequencer"), wxTRANSLATE("__2")},
-    {MIDI_RECV_SETTER, 10, wxTRANSLATE("Sequencer"), wxTRANSLATE("__3")},
-    {MIDI_RECV_SETTER, 11, wxTRANSLATE("Sequencer"), wxTRANSLATE("__4")},
-    {MIDI_RECV_SETTER, 12, wxTRANSLATE("Sequencer"), wxTRANSLATE("__5")},
-    {MIDI_RECV_SETTER, 13, wxTRANSLATE("Sequencer"), wxTRANSLATE("__6")},
-    {MIDI_RECV_SETTER, 14, wxTRANSLATE("Sequencer"), wxTRANSLATE("__7")},
-    {MIDI_RECV_SETTER, 15, wxTRANSLATE("Sequencer"), wxTRANSLATE("__8")},
-    {MIDI_RECV_SETTER, 16, wxTRANSLATE("Sequencer"), wxTRANSLATE("__9")},
-    {MIDI_RECV_SETTER, 17, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("-1 Cent")},
-    {MIDI_RECV_SETTER, 18, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("+1 Cent")},
-    {MIDI_RECV_SETTER, 19, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("-100 Cent")},
-    {MIDI_RECV_SETTER, 20, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("+100 Cent")},
-    {MIDI_RECV_SETTER, 21, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("Prev temperament")},
-    {MIDI_RECV_SETTER, 22, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("Next temperament")},
-    {MIDI_RECV_SETTER, 23, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("Transpose -")},
-    {MIDI_RECV_SETTER, 24, wxTRANSLATE("Master Controls"),
-     wxTRANSLATE("Transpose +")},
-    {MIDI_RECV_SETTER, 25, wxTRANSLATE("Metronome"), wxTRANSLATE("On")},
-    {MIDI_RECV_SETTER, 26, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM +")},
-    {MIDI_RECV_SETTER, 27, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM -")},
-    {MIDI_RECV_SETTER, 28, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure -")},
-    {MIDI_RECV_SETTER, 29, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure +")},
+  {MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal")},
+  {MIDI_RECV_MANUAL, 2, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 1")},
+  {MIDI_RECV_MANUAL, 3, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 2")},
+  {MIDI_RECV_MANUAL, 4, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 3")},
+  {MIDI_RECV_MANUAL, 5, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 4")},
+  {MIDI_RECV_MANUAL, 6, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 5")},
+  {MIDI_RECV_ENCLOSURE,
+   1,
+   wxTRANSLATE("Enclosures"),
+   wxTRANSLATE("Enclosure 1")},
+  {MIDI_RECV_ENCLOSURE,
+   2,
+   wxTRANSLATE("Enclosures"),
+   wxTRANSLATE("Enclosure 2")},
+  {MIDI_RECV_ENCLOSURE,
+   3,
+   wxTRANSLATE("Enclosures"),
+   wxTRANSLATE("Enclosure 3")},
+  {MIDI_RECV_ENCLOSURE,
+   4,
+   wxTRANSLATE("Enclosures"),
+   wxTRANSLATE("Enclosure 4")},
+  {MIDI_RECV_ENCLOSURE,
+   5,
+   wxTRANSLATE("Enclosures"),
+   wxTRANSLATE("Enclosure 5")},
+  {MIDI_RECV_ENCLOSURE,
+   6,
+   wxTRANSLATE("Enclosures"),
+   wxTRANSLATE("Enclosure 6")},
+  {MIDI_RECV_SETTER,
+   0,
+   wxTRANSLATE("Sequencer"),
+   wxTRANSLATE("Previous Memory")},
+  {MIDI_RECV_SETTER, 1, wxTRANSLATE("Sequencer"), wxTRANSLATE("Next Memory")},
+  {MIDI_RECV_SETTER, 2, wxTRANSLATE("Sequencer"), wxTRANSLATE("Memory Set")},
+  {MIDI_RECV_SETTER, 3, wxTRANSLATE("Sequencer"), wxTRANSLATE("Current")},
+  {MIDI_RECV_SETTER, 4, wxTRANSLATE("Sequencer"), wxTRANSLATE("G.C.")},
+  {MIDI_RECV_SETTER, 5, wxTRANSLATE("Sequencer"), wxTRANSLATE("-10")},
+  {MIDI_RECV_SETTER, 6, wxTRANSLATE("Sequencer"), wxTRANSLATE("+10")},
+  {MIDI_RECV_SETTER, 7, wxTRANSLATE("Sequencer"), wxTRANSLATE("__0")},
+  {MIDI_RECV_SETTER, 8, wxTRANSLATE("Sequencer"), wxTRANSLATE("__1")},
+  {MIDI_RECV_SETTER, 9, wxTRANSLATE("Sequencer"), wxTRANSLATE("__2")},
+  {MIDI_RECV_SETTER, 10, wxTRANSLATE("Sequencer"), wxTRANSLATE("__3")},
+  {MIDI_RECV_SETTER, 11, wxTRANSLATE("Sequencer"), wxTRANSLATE("__4")},
+  {MIDI_RECV_SETTER, 12, wxTRANSLATE("Sequencer"), wxTRANSLATE("__5")},
+  {MIDI_RECV_SETTER, 13, wxTRANSLATE("Sequencer"), wxTRANSLATE("__6")},
+  {MIDI_RECV_SETTER, 14, wxTRANSLATE("Sequencer"), wxTRANSLATE("__7")},
+  {MIDI_RECV_SETTER, 15, wxTRANSLATE("Sequencer"), wxTRANSLATE("__8")},
+  {MIDI_RECV_SETTER, 16, wxTRANSLATE("Sequencer"), wxTRANSLATE("__9")},
+  {MIDI_RECV_SETTER,
+   17,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("-1 Cent")},
+  {MIDI_RECV_SETTER,
+   18,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("+1 Cent")},
+  {MIDI_RECV_SETTER,
+   19,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("-100 Cent")},
+  {MIDI_RECV_SETTER,
+   20,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("+100 Cent")},
+  {MIDI_RECV_SETTER,
+   21,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("Prev temperament")},
+  {MIDI_RECV_SETTER,
+   22,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("Next temperament")},
+  {MIDI_RECV_SETTER,
+   23,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("Transpose -")},
+  {MIDI_RECV_SETTER,
+   24,
+   wxTRANSLATE("Master Controls"),
+   wxTRANSLATE("Transpose +")},
+  {MIDI_RECV_SETTER, 25, wxTRANSLATE("Metronome"), wxTRANSLATE("On")},
+  {MIDI_RECV_SETTER, 26, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM +")},
+  {MIDI_RECV_SETTER, 27, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM -")},
+  {MIDI_RECV_SETTER, 28, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure -")},
+  {MIDI_RECV_SETTER, 29, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure +")},
 };
 
 const struct IniFileEnumEntry GOConfig::m_InitialLoadTypes[] = {
-    {wxT("N"), (int)GOInitialLoadType::LOAD_NONE},
-    {wxT("Y"), (int)GOInitialLoadType::LOAD_LAST_USED},
-    {wxT("First"), (int)GOInitialLoadType::LOAD_FIRST},
+  {wxT("N"), (int)GOInitialLoadType::LOAD_NONE},
+  {wxT("Y"), (int)GOInitialLoadType::LOAD_LAST_USED},
+  {wxT("First"), (int)GOInitialLoadType::LOAD_FIRST},
 };
 
 GOConfig::GOConfig(wxString instance)
-    : m_InstanceName(instance),
-      m_ResourceDir(),
-      m_AudioGroups(),
-      m_AudioDeviceConfig(),
-      m_MIDIEvents(),
-      m_MainWindowX(0),
-      m_MainWindowY(0),
-      m_MainWindowWidth(0),
-      m_MainWindowHeight(0),
+    : m_InstanceName(instance), m_ResourceDir(), m_AudioGroups(),
+      m_AudioDeviceConfig(), m_MIDIEvents(), m_MainWindowX(0), m_MainWindowY(0),
+      m_MainWindowWidth(0), m_MainWindowHeight(0),
       UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
       UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
       Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
-      ReleaseConcurrency(this, wxT("General"), wxT("ReleaseConcurrency"), 1,
-                         MAX_CPU, 1),
-      LoadConcurrency(this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU,
-                      1),
-      InterpolationType(this, wxT("General"), wxT("InterpolationType"), 0, 1,
-                        0),
-      WaveFormatBytesPerSample(this, wxT("General"), wxT("WaveFormat"), 1, 4,
-                               4),
+      ReleaseConcurrency(
+        this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
+      LoadConcurrency(
+        this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
+      InterpolationType(
+        this, wxT("General"), wxT("InterpolationType"), 0, 1, 0),
+      WaveFormatBytesPerSample(
+        this, wxT("General"), wxT("WaveFormat"), 1, 4, 4),
       RecordDownmix(this, wxT("General"), wxT("RecordDownmix"), false),
       AttackLoad(this, wxT("General"), wxT("AttackLoad"), 0, 1, 1),
       LoopLoad(this, wxT("General"), wxT("LoopLoad"), 0, 2, 2),
       ReleaseLoad(this, wxT("General"), wxT("ReleaseLoad"), 0, 1, 1),
       ManageCache(this, wxT("General"), wxT("ManageCache"), true),
       CompressCache(this, wxT("General"), wxT("CompressCache"), false),
-      LoadLastFile(this, wxT("General"), wxT("LoadLastFile"),
-                   m_InitialLoadTypes,
-                   sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]),
-                   GOInitialLoadType::LOAD_LAST_USED),
+      LoadLastFile(
+        this,
+        wxT("General"),
+        wxT("LoadLastFile"),
+        m_InitialLoadTypes,
+        sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]),
+        GOInitialLoadType::LOAD_LAST_USED),
       ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
       LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
-      LosslessCompression(this, wxT("General"), wxT("LosslessCompression"),
-                          false),
+      LosslessCompression(
+        this, wxT("General"), wxT("LosslessCompression"), false),
       ManagePolyphony(this, wxT("General"), wxT("ManagePolyphony"), true),
       ScaleRelease(this, wxT("General"), wxT("ScaleRelease"), true),
       RandomizeSpeaking(this, wxT("General"), wxT("RandomizeSpeaking"), true),
       ReverbEnabled(this, wxT("Reverb"), wxT("ReverbEnabled"), false),
       ReverbDirect(this, wxT("Reverb"), wxT("ReverbDirect"), true),
       ReverbChannel(this, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, 1),
-      ReverbStartOffset(this, wxT("Reverb"), wxT("ReverbStartOffset"), 0,
-                        MAX_SAMPLE_LENGTH, 0),
+      ReverbStartOffset(
+        this, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, 0),
       ReverbLen(this, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, 0),
       ReverbDelay(this, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, 0),
       ReverbGain(this, wxT("Reverb"), wxT("ReverbGain"), 0, 50, 1),
       ReverbFile(this, wxT("Reverb"), wxT("ReverbFile"), wxEmptyString),
-      MemoryLimit(this, wxT("General"), wxT("MemoryLimit"), 0, 1024 * 1024,
-                  GOMemoryPool::GetSystemMemoryLimit()),
-      SamplesPerBuffer(this, wxT("General"), wxT("SamplesPerBuffer"), 1,
-                       MAX_FRAME_SIZE, 1024),
+      MemoryLimit(
+        this,
+        wxT("General"),
+        wxT("MemoryLimit"),
+        0,
+        1024 * 1024,
+        GOMemoryPool::GetSystemMemoryLimit()),
+      SamplesPerBuffer(
+        this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
       SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),
       Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
-      PolyphonyLimit(this, wxT("General"), wxT("PolyphonyLimit"), 0,
-                     MAX_POLYPHONY, 2048),
+      PolyphonyLimit(
+        this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
       Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
       ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
       LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
@@ -169,37 +201,34 @@ GOConfig::GOConfig(wxString instance)
       MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
       IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
       IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
-      MidiRecorderOutputDevice(this, MIDI_OUT, wxT("MIDIRecorderDevice"),
-                               wxEmptyString),
+      MidiRecorderOutputDevice(
+        this, MIDI_OUT, wxT("MIDIRecorderDevice"), wxEmptyString),
       OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
-      OrganPackagePath(this, wxT("General"), wxT("OrganPackagePath"),
-                       wxEmptyString),
+      OrganPackagePath(
+        this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
       SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
-      AudioRecorderPath(this, wxT("General"), wxT("AudioRecorder"),
-                        wxEmptyString),
-      MidiRecorderPath(this, wxT("General"), wxT("MIDIRecorderPath"),
-                       wxEmptyString),
-      MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"),
-                     wxEmptyString),
-      m_MidiIn(MIDI_IN),
-      m_MidiOut(MIDI_OUT) {
-  m_ConfigFileName = GOStdPath::GetConfigDir() +
-                     wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig") +
-                     m_InstanceName;
+      AudioRecorderPath(
+        this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
+      MidiRecorderPath(
+        this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
+      MidiPlayerPath(
+        this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString),
+      m_MidiIn(MIDI_IN), m_MidiOut(MIDI_OUT) {
+  m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
+    + wxT("GrandOrgueConfig") + m_InstanceName;
   for (unsigned i = 0; i < GetEventCount(); i++)
     m_MIDIEvents.push_back(new GOMidiReceiverBase(m_MIDISettings[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
-  UserSettingPath.setDefaultValue(GOStdPath::GetConfigDir() +
-                                  wxFileName::GetPathSeparator() +
-                                  wxT("GrandOrgueData") + m_InstanceName);
-  UserCachePath.setDefaultValue(GOStdPath::GetCacheDir() +
-                                wxFileName::GetPathSeparator() +
-                                wxT("GrandOrgueCache") + m_InstanceName);
+  UserSettingPath.setDefaultValue(
+    GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
+    + wxT("GrandOrgueData") + m_InstanceName);
+  UserCachePath.setDefaultValue(
+    GOStdPath::GetCacheDir() + wxFileName::GetPathSeparator()
+    + wxT("GrandOrgueCache") + m_InstanceName);
 
-  wxString docdir = GOStdPath::GetDocumentDir() +
-                    wxFileName::GetPathSeparator() + _("GrandOrgue") +
-                    wxFileName::GetPathSeparator();
+  wxString docdir = GOStdPath::GetDocumentDir() + wxFileName::GetPathSeparator()
+    + _("GrandOrgue") + wxFileName::GetPathSeparator();
   OrganPath.setDefaultValue(docdir + _("Organs"));
   OrganPackagePath.setDefaultValue(docdir + _("Organ packages"));
   SettingPath.setDefaultValue(docdir + _("Settings"));
@@ -210,35 +239,42 @@ GOConfig::GOConfig(wxString instance)
 
 GOConfig::~GOConfig() { Flush(); }
 
-void load_ports_config(GOConfigReader& cfg, const wxString& groupName,
-                       const GOPortFactory& factory,
-                       GOPortsConfig& portsConfig) {
+void load_ports_config(
+  GOConfigReader &cfg,
+  const wxString &groupName,
+  const GOPortFactory &factory,
+  GOPortsConfig &portsConfig) {
   portsConfig.Clear();
-  for (const wxString& portName : factory.GetPortNames()) {
-    const bool isPortEnabled =
-        cfg.ReadBoolean(CMBSetting, groupName, portName + ENABLED, false, true);
+  for (const wxString &portName : factory.GetPortNames()) {
+    const bool isPortEnabled
+      = cfg.ReadBoolean(CMBSetting, groupName, portName + ENABLED, false, true);
     const wxString prefix = portName + ".";
 
     portsConfig.SetConfigEnabled(portName, isPortEnabled);
 
-    for (const wxString& apiName : factory.GetPortApiNames(portName))
+    for (const wxString &apiName : factory.GetPortApiNames(portName))
       portsConfig.SetConfigEnabled(
-          portName, apiName,
-          cfg.ReadBoolean(CMBSetting, groupName, prefix + apiName + ENABLED,
-                          false, true));
+        portName,
+        apiName,
+        cfg.ReadBoolean(
+          CMBSetting, groupName, prefix + apiName + ENABLED, false, true));
   }
 }
 
-void save_ports_config(GOConfigWriter& cfg, const wxString& groupName,
-                       const GOPortFactory& factory,
-                       const GOPortsConfig& portsConfig) {
-  for (const wxString& portName : factory.GetPortNames()) {
-    cfg.WriteBoolean(groupName, portName + ENABLED,
-                     portsConfig.IsConfigEnabled(portName));
+void save_ports_config(
+  GOConfigWriter &cfg,
+  const wxString &groupName,
+  const GOPortFactory &factory,
+  const GOPortsConfig &portsConfig) {
+  for (const wxString &portName : factory.GetPortNames()) {
+    cfg.WriteBoolean(
+      groupName, portName + ENABLED, portsConfig.IsConfigEnabled(portName));
     const wxString prefix = portName + ".";
-    for (const wxString& apiName : factory.GetPortApiNames(portName))
-      cfg.WriteBoolean(groupName, prefix + apiName + ENABLED,
-                       portsConfig.IsConfigEnabled(portName, apiName));
+    for (const wxString &apiName : factory.GetPortApiNames(portName))
+      cfg.WriteBoolean(
+        groupName,
+        prefix + apiName + ENABLED,
+        portsConfig.IsConfigEnabled(portName, apiName));
   }
 }
 
@@ -248,9 +284,9 @@ void GOConfig::Load() {
     if (!cfg_file.Read(m_ConfigFileName))
       wxLogError(_("Unable to read '%s'"), m_ConfigFileName.c_str());
   } else {
-    wxString fileName = wxStandardPaths::Get().GetUserDataDir() +
-                        wxFileName::GetPathSeparator() +
-                        wxT("GrandOrgueConfig") + m_InstanceName;
+    wxString fileName = wxStandardPaths::Get().GetUserDataDir()
+      + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig")
+      + m_InstanceName;
     if (wxFileExists(fileName))
       if (!cfg_file.Read(fileName))
         wxLogError(_("Unable to read '%s'"), fileName.c_str());
@@ -263,64 +299,73 @@ void GOConfig::Load() {
 
     GOOrganList::Load(cfg, m_MidiMap);
 
-    m_MainWindowX = cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowX"),
-                                    -32000, 32000, false, 0);
-    m_MainWindowY = cfg.ReadInteger(CMBSetting, wxT("UI"), wxT("MainWindowY"),
-                                    -32000, 32000, false, 0);
+    m_MainWindowX = cfg.ReadInteger(
+      CMBSetting, wxT("UI"), wxT("MainWindowX"), -32000, 32000, false, 0);
+    m_MainWindowY = cfg.ReadInteger(
+      CMBSetting, wxT("UI"), wxT("MainWindowY"), -32000, 32000, false, 0);
     m_MainWindowWidth = (unsigned)cfg.ReadInteger(
-        CMBSetting, wxT("UI"), wxT("MainWindowWidth"), 0, 32000, false, 0);
+      CMBSetting, wxT("UI"), wxT("MainWindowWidth"), 0, 32000, false, 0);
     m_MainWindowHeight = (unsigned)cfg.ReadInteger(
-        CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
+      CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
 
     m_Temperaments.InitTemperaments();
     m_Temperaments.Load(cfg);
 
     m_AudioGroups.clear();
-    unsigned count = cfg.ReadInteger(CMBSetting, wxT("AudioGroups"), COUNT, 0,
-                                     200, false, 0);
+    unsigned count = cfg.ReadInteger(
+      CMBSetting, wxT("AudioGroups"), COUNT, 0, 200, false, 0);
     for (unsigned i = 0; i < count; i++)
-      m_AudioGroups.push_back(
-          cfg.ReadString(CMBSetting, wxT("AudioGroups"),
-                         wxString::Format(wxT("Name%03d"), i + 1), false,
-                         wxString::Format(_("Audio group %d"), i + 1)));
+      m_AudioGroups.push_back(cfg.ReadString(
+        CMBSetting,
+        wxT("AudioGroups"),
+        wxString::Format(wxT("Name%03d"), i + 1),
+        false,
+        wxString::Format(_("Audio group %d"), i + 1)));
     if (!m_AudioGroups.size())
       m_AudioGroups.push_back(_("Default audio group"));
 
-    load_ports_config(cfg, SOUND_PORTS, GOSoundPortFactory::getInstance(),
-                      m_SoundPortsConfig);
+    load_ports_config(
+      cfg, SOUND_PORTS, GOSoundPortFactory::getInstance(), m_SoundPortsConfig);
 
     m_AudioDeviceConfig.clear();
-    count = cfg.ReadInteger(CMBSetting, wxT("AudioDevices"), COUNT, 0, 200,
-                            false, 0);
+    count = cfg.ReadInteger(
+      CMBSetting, wxT("AudioDevices"), COUNT, 0, 200, false, 0);
     for (unsigned i = 0; i < count; i++) {
       GOAudioDeviceConfig conf;
-      conf.name =
-          cfg.ReadString(CMBSetting, wxT("AudioDevices"),
-                         wxString::Format(wxT("Device%03dName"), i + 1));
+      conf.name = cfg.ReadString(
+        CMBSetting,
+        wxT("AudioDevices"),
+        wxString::Format(wxT("Device%03dName"), i + 1));
       conf.channels = cfg.ReadInteger(
-          CMBSetting, wxT("AudioDevices"),
-          wxString::Format(wxT("Device%03dChannelCount"), i + 1), 0, 200);
-      conf.desired_latency =
-          cfg.ReadInteger(CMBSetting, wxT("AudioDevices"),
-                          wxString::Format(wxT("Device%03dLatency"), i + 1), 0,
-                          999, false, GetDefaultLatency());
+        CMBSetting,
+        wxT("AudioDevices"),
+        wxString::Format(wxT("Device%03dChannelCount"), i + 1),
+        0,
+        200);
+      conf.desired_latency = cfg.ReadInteger(
+        CMBSetting,
+        wxT("AudioDevices"),
+        wxString::Format(wxT("Device%03dLatency"), i + 1),
+        0,
+        999,
+        false,
+        GetDefaultLatency());
       conf.scale_factors.resize(conf.channels);
       for (unsigned j = 0; j < conf.channels; j++) {
-        wxString prefix =
-            wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
-        unsigned group_count =
-            cfg.ReadInteger(CMBSetting, wxT("AudioDevices"),
-                            prefix + wxT("GroupCount"), 0, 200);
+        wxString prefix
+          = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
+        unsigned group_count = cfg.ReadInteger(
+          CMBSetting, wxT("AudioDevices"), prefix + wxT("GroupCount"), 0, 200);
         for (unsigned k = 0; k < group_count; k++) {
           GOAudioGroupOutputConfig group;
           wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
 
-          group.name =
-              cfg.ReadString(CMBSetting, wxT("AudioDevices"), p + wxT("Name"));
-          group.left = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"),
-                                     p + wxT("Left"), -121.0, 40);
-          group.right = cfg.ReadFloat(CMBSetting, wxT("AudioDevices"),
-                                      p + wxT("Right"), -121.0, 40);
+          group.name
+            = cfg.ReadString(CMBSetting, wxT("AudioDevices"), p + wxT("Name"));
+          group.left = cfg.ReadFloat(
+            CMBSetting, wxT("AudioDevices"), p + wxT("Left"), -121.0, 40);
+          group.right = cfg.ReadFloat(
+            CMBSetting, wxT("AudioDevices"), p + wxT("Right"), -121.0, 40);
 
           conf.scale_factors[j].push_back(group);
         }
@@ -328,25 +373,29 @@ void GOConfig::Load() {
       m_AudioDeviceConfig.push_back(conf);
     }
 
-    load_ports_config(cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(),
-                      m_MidiPortsConfig);
+    load_ports_config(
+      cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(), m_MidiPortsConfig);
 
     for (unsigned i = 0; i < GetEventCount(); i++)
       m_MIDIEvents[i]->Load(cfg, GetEventSection(i), m_MidiMap);
 
     long cpus = wxThread::GetCPUCount();
-    if (cpus == -1) cpus = 4;
-    if (cpus > MAX_CPU) cpus = MAX_CPU;
-    if (cpus == 0) cpus = 1;
+    if (cpus == -1)
+      cpus = 4;
+    if (cpus > MAX_CPU)
+      cpus = MAX_CPU;
+    if (cpus == 0)
+      cpus = 1;
 
     Concurrency.setDefaultValue(cpus);
     ReleaseConcurrency.setDefaultValue(cpus);
     LoadConcurrency.setDefaultValue(cpus);
     PolyphonyLimit.setDefaultValue(cpus * 725),
 
-        GOSettingStore::Load(cfg);
+      GOSettingStore::Load(cfg);
 
-    if (Concurrency() == 0) Concurrency(1);
+    if (Concurrency() == 0)
+      Concurrency(1);
 
     m_MidiOut.Load(cfg);
     m_MidiIn.Load(cfg, &m_MidiOut);
@@ -384,17 +433,18 @@ int GOConfig::GetLanguageId() const {
   const wxString langCode = LanguageCode();
 
   if (!langCode.IsEmpty()) {
-    const wxLanguageInfo* const langInfo = wxLocale::FindLanguageInfo(langCode);
+    const wxLanguageInfo *const langInfo = wxLocale::FindLanguageInfo(langCode);
 
-    if (langInfo != NULL) langId = langInfo->Language;
+    if (langInfo != NULL)
+      langId = langInfo->Language;
   }
   return langId;
 }
 
 void GOConfig::SetLanguageId(int langId) {
-  LanguageCode(langId == wxLANGUAGE_DEFAULT
-                   ? wxString(wxEmptyString)
-                   : wxLocale::GetLanguageCanonicalName(langId));
+  LanguageCode(
+    langId == wxLANGUAGE_DEFAULT ? wxString(wxEmptyString)
+                                 : wxLocale::GetLanguageCanonicalName(langId));
 }
 
 unsigned GOConfig::GetEventCount() {
@@ -404,19 +454,18 @@ unsigned GOConfig::GetEventCount() {
 wxString GOConfig::GetEventSection(unsigned index) {
   assert(index < GetEventCount());
   switch (m_MIDISettings[index].type) {
-    case MIDI_RECV_ENCLOSURE:
-      return wxString::Format(wxT("Enclosure%03d"),
-                              m_MIDISettings[index].index);
+  case MIDI_RECV_ENCLOSURE:
+    return wxString::Format(wxT("Enclosure%03d"), m_MIDISettings[index].index);
 
-    case MIDI_RECV_MANUAL:
-      return wxString::Format(wxT("Manual%03d"), m_MIDISettings[index].index);
+  case MIDI_RECV_MANUAL:
+    return wxString::Format(wxT("Manual%03d"), m_MIDISettings[index].index);
 
-    case MIDI_RECV_SETTER:
-      return wxString::Format(wxT("Setter%03d"), m_MIDISettings[index].index);
+  case MIDI_RECV_SETTER:
+    return wxString::Format(wxT("Setter%03d"), m_MIDISettings[index].index);
 
-    default:
-      assert(false);
-      return wxEmptyString;
+  default:
+    assert(false);
+    return wxEmptyString;
   }
 }
 
@@ -430,13 +479,13 @@ wxString GOConfig::GetEventTitle(unsigned index) {
   return wxGetTranslation(m_MIDISettings[index].name);
 }
 
-GOMidiReceiverBase* GOConfig::GetMidiEvent(unsigned index) {
+GOMidiReceiverBase *GOConfig::GetMidiEvent(unsigned index) {
   assert(index < GetEventCount());
   return m_MIDIEvents[index];
 }
 
-GOMidiReceiverBase* GOConfig::FindMidiEvent(MIDI_RECEIVER_TYPE type,
-                                            unsigned index) {
+GOMidiReceiverBase *
+GOConfig::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index) {
   for (unsigned i = 0; i < GetEventCount(); i++)
     if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
       return m_MIDIEvents[i];
@@ -529,57 +578,61 @@ m_MidiOut.end(); it++) list.push_back(it->first); return list;
 }
  */
 
-const std::vector<wxString>& GOConfig::GetAudioGroups() {
+const std::vector<wxString> &GOConfig::GetAudioGroups() {
   return m_AudioGroups;
 }
 
-void GOConfig::SetAudioGroups(const std::vector<wxString>& audio_groups) {
-  if (!audio_groups.size()) return;
+void GOConfig::SetAudioGroups(const std::vector<wxString> &audio_groups) {
+  if (!audio_groups.size())
+    return;
   m_AudioGroups = audio_groups;
 }
 
-unsigned GOConfig::GetAudioGroupId(const wxString& str) {
+unsigned GOConfig::GetAudioGroupId(const wxString &str) {
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
-    if (m_AudioGroups[i] == str) return i;
+    if (m_AudioGroups[i] == str)
+      return i;
   return 0;
 }
 
-int GOConfig::GetStrictAudioGroupId(const wxString& str) {
+int GOConfig::GetStrictAudioGroupId(const wxString &str) {
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
-    if (m_AudioGroups[i] == str) return i;
+    if (m_AudioGroups[i] == str)
+      return i;
   return -1;
 }
 
-const std::vector<GOAudioDeviceConfig>& GOConfig::GetAudioDeviceConfig() {
+const std::vector<GOAudioDeviceConfig> &GOConfig::GetAudioDeviceConfig() {
   return m_AudioDeviceConfig;
 }
 
 void GOConfig::SetAudioDeviceConfig(
-    const std::vector<GOAudioDeviceConfig>& config) {
-  if (!config.size()) return;
+  const std::vector<GOAudioDeviceConfig> &config) {
+  if (!config.size())
+    return;
   m_AudioDeviceConfig = config;
 }
 
 const unsigned GOConfig::GetTotalAudioChannels() const {
   unsigned channels = 0;
 
-  for (const GOAudioDeviceConfig& deviceConfig : m_AudioDeviceConfig)
+  for (const GOAudioDeviceConfig &deviceConfig : m_AudioDeviceConfig)
     channels += deviceConfig.channels;
   return channels;
 }
 
 unsigned GOConfig::GetDefaultLatency() { return 50; }
 
-GOMidiMap& GOConfig::GetMidiMap() { return m_MidiMap; }
+GOMidiMap &GOConfig::GetMidiMap() { return m_MidiMap; }
 
-GOTemperamentList& GOConfig::GetTemperaments() { return m_Temperaments; }
+GOTemperamentList &GOConfig::GetTemperaments() { return m_Temperaments; }
 
 wxRect GOConfig::GetMainWindowRect() {
-  return wxRect(m_MainWindowX, m_MainWindowY, m_MainWindowWidth,
-                m_MainWindowHeight);
+  return wxRect(
+    m_MainWindowX, m_MainWindowY, m_MainWindowWidth, m_MainWindowHeight);
 }
 
-void GOConfig::SetMainWindowRect(const wxRect& rect) {
+void GOConfig::SetMainWindowRect(const wxRect &rect) {
   m_MainWindowX = rect.x;
   m_MainWindowY = rect.y;
   m_MainWindowWidth = rect.width;
@@ -606,44 +659,57 @@ void GOConfig::Flush() {
     m_MIDIEvents[i]->Save(cfg, GetEventSection(i), m_MidiMap);
 
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
-    cfg.WriteString(wxT("AudioGroups"),
-                    wxString::Format(wxT("Name%03d"), i + 1), m_AudioGroups[i]);
+    cfg.WriteString(
+      wxT("AudioGroups"),
+      wxString::Format(wxT("Name%03d"), i + 1),
+      m_AudioGroups[i]);
   cfg.WriteInteger(wxT("AudioGroups"), COUNT, m_AudioGroups.size());
 
-  save_ports_config(cfg, SOUND_PORTS, GOSoundPortFactory::getInstance(),
-                    m_SoundPortsConfig);
+  save_ports_config(
+    cfg, SOUND_PORTS, GOSoundPortFactory::getInstance(), m_SoundPortsConfig);
 
   for (unsigned i = 0; i < m_AudioDeviceConfig.size(); i++) {
-    cfg.WriteString(wxT("AudioDevices"),
-                    wxString::Format(wxT("Device%03dName"), i + 1),
-                    m_AudioDeviceConfig[i].name);
-    cfg.WriteInteger(wxT("AudioDevices"),
-                     wxString::Format(wxT("Device%03dChannelCount"), i + 1),
-                     m_AudioDeviceConfig[i].channels);
-    cfg.WriteInteger(wxT("AudioDevices"),
-                     wxString::Format(wxT("Device%03dLatency"), i + 1),
-                     m_AudioDeviceConfig[i].desired_latency);
+    cfg.WriteString(
+      wxT("AudioDevices"),
+      wxString::Format(wxT("Device%03dName"), i + 1),
+      m_AudioDeviceConfig[i].name);
+    cfg.WriteInteger(
+      wxT("AudioDevices"),
+      wxString::Format(wxT("Device%03dChannelCount"), i + 1),
+      m_AudioDeviceConfig[i].channels);
+    cfg.WriteInteger(
+      wxT("AudioDevices"),
+      wxString::Format(wxT("Device%03dLatency"), i + 1),
+      m_AudioDeviceConfig[i].desired_latency);
     for (unsigned j = 0; j < m_AudioDeviceConfig[i].channels; j++) {
-      wxString prefix =
-          wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
-      cfg.WriteInteger(wxT("AudioDevices"), prefix + wxT("GroupCount"),
-                       m_AudioDeviceConfig[i].scale_factors[j].size());
+      wxString prefix
+        = wxString::Format(wxT("Device%03dChannel%03d"), i + 1, j + 1);
+      cfg.WriteInteger(
+        wxT("AudioDevices"),
+        prefix + wxT("GroupCount"),
+        m_AudioDeviceConfig[i].scale_factors[j].size());
       for (unsigned k = 0; k < m_AudioDeviceConfig[i].scale_factors[j].size();
            k++) {
         wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
-        cfg.WriteString(wxT("AudioDevices"), p + wxT("Name"),
-                        m_AudioDeviceConfig[i].scale_factors[j][k].name);
-        cfg.WriteFloat(wxT("AudioDevices"), p + wxT("Left"),
-                       m_AudioDeviceConfig[i].scale_factors[j][k].left);
-        cfg.WriteFloat(wxT("AudioDevices"), p + wxT("Right"),
-                       m_AudioDeviceConfig[i].scale_factors[j][k].right);
+        cfg.WriteString(
+          wxT("AudioDevices"),
+          p + wxT("Name"),
+          m_AudioDeviceConfig[i].scale_factors[j][k].name);
+        cfg.WriteFloat(
+          wxT("AudioDevices"),
+          p + wxT("Left"),
+          m_AudioDeviceConfig[i].scale_factors[j][k].left);
+        cfg.WriteFloat(
+          wxT("AudioDevices"),
+          p + wxT("Right"),
+          m_AudioDeviceConfig[i].scale_factors[j][k].right);
       }
     }
   }
   cfg.WriteInteger(wxT("AudioDevices"), COUNT, m_AudioDeviceConfig.size());
 
-  save_ports_config(cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(),
-                    m_MidiPortsConfig);
+  save_ports_config(
+    cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(), m_MidiPortsConfig);
 
   m_MidiOut.Save(cfg, false);
   m_MidiIn.Save(cfg, true);
@@ -656,5 +722,6 @@ void GOConfig::Flush() {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
     return;
   }
-  if (!GORenameFile(tmp_name, m_ConfigFileName)) return;
+  if (!GORenameFile(tmp_name, m_ConfigFileName))
+    return;
 }

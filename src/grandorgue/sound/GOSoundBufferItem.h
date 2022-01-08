@@ -11,20 +11,20 @@
 class GOSoundThread;
 
 class GOSoundBufferItem {
- protected:
+protected:
   unsigned m_SamplesPerBuffer;
   unsigned m_Channels;
 
- public:
+public:
   GOSoundBufferItem(unsigned samples_per_buffer, unsigned channels)
       : m_SamplesPerBuffer(samples_per_buffer), m_Channels(channels) {
     m_Buffer = new float[m_SamplesPerBuffer * m_Channels];
   }
   virtual ~GOSoundBufferItem() { delete[] m_Buffer; }
 
-  virtual void Finish(bool stop, GOSoundThread* pThread = nullptr) = 0;
+  virtual void Finish(bool stop, GOSoundThread *pThread = nullptr) = 0;
 
-  float* m_Buffer;
+  float *m_Buffer;
 
   unsigned GetSamplesPerBuffer() { return m_SamplesPerBuffer; }
 

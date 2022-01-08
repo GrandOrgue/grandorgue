@@ -13,8 +13,8 @@
 class GOMidi;
 
 class GOMidiPort {
- protected:
-  GOMidi* m_midi;
+protected:
+  GOMidi *m_midi;
   bool m_IsActive;
 
   wxString m_PortName;
@@ -27,20 +27,26 @@ class GOMidiPort {
   static const wxString GetClientName();
   virtual const wxString GetMyNativePortName() const = 0;
 
- public:
-  GOMidiPort(GOMidi* midi, const wxString& portName, const wxString& apiName,
-             const wxString& deviceName, const wxString& fullName);
+public:
+  GOMidiPort(
+    GOMidi *midi,
+    const wxString &portName,
+    const wxString &apiName,
+    const wxString &deviceName,
+    const wxString &fullName);
   virtual ~GOMidiPort() {}
 
-  const wxString& GetPortName() const { return m_PortName; }
-  const wxString& GetApiName() const { return m_ApiName; }
-  const wxString& GetDeviceName() const { return m_DeviceName; }
-  const wxString& GetName() const { return m_FullName; }
+  const wxString &GetPortName() const { return m_PortName; }
+  const wxString &GetApiName() const { return m_ApiName; }
+  const wxString &GetDeviceName() const { return m_DeviceName; }
+  const wxString &GetName() const { return m_FullName; }
   bool IsToUse() const;
   virtual const wxString GetDefaultLogicalName() const { return m_FullName; }
   virtual const wxString GetDefaultRegEx() const { return wxEmptyString; }
-  bool IsEqualTo(const wxString& portName, const wxString& apiName,
-                 const wxString& deviceName) const;
+  bool IsEqualTo(
+    const wxString &portName,
+    const wxString &apiName,
+    const wxString &deviceName) const;
   unsigned GetID() const { return m_ID; }
   bool IsActive() const { return m_IsActive; }
 

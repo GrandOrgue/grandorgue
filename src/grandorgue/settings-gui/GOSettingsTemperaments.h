@@ -26,21 +26,21 @@ class GOSettingsTemperaments : public wxPanel {
     ID_DEL,
   };
 
- private:
-  GOTemperamentList& m_Temperaments;
-  std::vector<GOTemperamentUser*> m_Ptrs;
-  wxGrid* m_List;
-  wxButton* m_Add;
-  wxButton* m_Del;
+private:
+  GOTemperamentList &m_Temperaments;
+  std::vector<GOTemperamentUser *> m_Ptrs;
+  wxGrid *m_List;
+  wxButton *m_Add;
+  wxButton *m_Del;
 
-  void OnListSelected(wxGridEvent& event);
-  void OnAdd(wxCommandEvent& event);
-  void OnDel(wxCommandEvent& event);
+  void OnListSelected(wxGridEvent &event);
+  void OnAdd(wxCommandEvent &event);
+  void OnDel(wxCommandEvent &event);
 
   void Update();
 
- public:
-  GOSettingsTemperaments(GOConfig& settings, wxWindow* parent);
+public:
+  GOSettingsTemperaments(GOConfig &settings, wxWindow *parent);
 
   void Save();
 

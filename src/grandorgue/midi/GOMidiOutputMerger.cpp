@@ -16,13 +16,15 @@ void GOMidiOutputMerger::Clear() {
   m_RodgersState.clear();
 }
 
-bool GOMidiOutputMerger::Process(GOMidiEvent& e) {
-  if (e.GetMidiType() == MIDI_SYSEX_HW_STRING ||
-      e.GetMidiType() == MIDI_SYSEX_HW_LCD) {
+bool GOMidiOutputMerger::Process(GOMidiEvent &e) {
+  if (
+    e.GetMidiType() == MIDI_SYSEX_HW_STRING
+    || e.GetMidiType() == MIDI_SYSEX_HW_LCD) {
     unsigned item = 0;
     while (item < m_HWState.size()) {
-      if (m_HWState[item].type == e.GetMidiType() &&
-          m_HWState[item].key == e.GetKey())
+      if (
+        m_HWState[item].type == e.GetMidiType()
+        && m_HWState[item].key == e.GetKey())
         break;
       item++;
     }
@@ -36,16 +38,17 @@ bool GOMidiOutputMerger::Process(GOMidiEvent& e) {
         s.content = wxString(wxT(' '), 32);
       m_HWState.push_back(s);
     }
-    GOMidiOutputMergerHWState& s = m_HWState[item];
+    GOMidiOutputMergerHWState &s = m_HWState[item];
     for (unsigned i = e.GetValue(), j = 0;
-         i < s.content.length() && j < e.GetString().length(); i++, j++)
+         i < s.content.length() && j < e.GetString().length();
+         i++, j++)
       s.content[i] = e.GetString()[j];
     e.SetString(s.content);
   }
   if (e.GetMidiType() == MIDI_SYSEX_RODGERS_STOP_CHANGE) {
     if ((unsigned)e.GetChannel() >= m_RodgersState.size())
       m_RodgersState.resize(e.GetChannel() + 1);
-    std::vector<uint8_t>& data = m_RodgersState[e.GetChannel()];
+    std::vector<uint8_t> &data = m_RodgersState[e.GetChannel()];
     unsigned offset = GORodgersSetBit(e.GetKey(), e.GetValue(), data);
     std::vector<uint8_t> out(1);
     out[0] = data[offset];

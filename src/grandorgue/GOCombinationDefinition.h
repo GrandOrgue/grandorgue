@@ -18,7 +18,7 @@ class GOManual;
 class GODefinitionFile;
 
 class GOCombinationDefinition {
- public:
+public:
   typedef enum {
     COMBINATION_STOP = 0,
     COMBINATION_COUPLER = 1,
@@ -32,22 +32,26 @@ class GOCombinationDefinition {
     unsigned index;
     bool store_unconditional;
     wxString group;
-    GOCombinationElement* control;
+    GOCombinationElement *control;
   } CombinationSlot;
 
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   std::vector<CombinationSlot> m_Content;
 
-  void AddGeneral(GODrawstop* control, CombinationType type, int manual,
-                  unsigned index);
-  void AddDivisional(GODrawstop* control, CombinationType type, int manual,
-                     unsigned index);
-  void Add(GODrawstop* control, CombinationType type, int manual,
-           unsigned index, bool store_unconditional);
+  void AddGeneral(
+    GODrawstop *control, CombinationType type, int manual, unsigned index);
+  void AddDivisional(
+    GODrawstop *control, CombinationType type, int manual, unsigned index);
+  void Add(
+    GODrawstop *control,
+    CombinationType type,
+    int manual,
+    unsigned index,
+    bool store_unconditional);
 
- public:
-  GOCombinationDefinition(GODefinitionFile* organfile);
+public:
+  GOCombinationDefinition(GODefinitionFile *organfile);
   ~GOCombinationDefinition();
 
   void InitGeneral();
@@ -55,7 +59,7 @@ class GOCombinationDefinition {
 
   int findEntry(CombinationType type, int manual, unsigned index);
 
-  const std::vector<CombinationSlot>& GetCombinationElements();
+  const std::vector<CombinationSlot> &GetCombinationElements();
 };
 
 #endif

@@ -15,31 +15,33 @@
 DECLARE_LOCAL_EVENT_TYPE(wxEVT_MIDI_ACTION, -1)
 
 class wxMidiEvent : public wxEvent {
- private:
+private:
   GOMidiEvent m_midi;
 
- public:
+public:
   wxMidiEvent(int id = 0, wxEventType type = wxEVT_MIDI_ACTION);
-  wxMidiEvent(const GOMidiEvent& e, int id = 0,
-              wxEventType type = wxEVT_MIDI_ACTION);
-  wxMidiEvent(const wxMidiEvent& e);
+  wxMidiEvent(
+    const GOMidiEvent &e, int id = 0, wxEventType type = wxEVT_MIDI_ACTION);
+  wxMidiEvent(const wxMidiEvent &e);
 
-  void SetMidiEvent(const GOMidiEvent& e) { m_midi = e; }
+  void SetMidiEvent(const GOMidiEvent &e) { m_midi = e; }
 
-  const GOMidiEvent& GetMidiEvent() const { return m_midi; }
+  const GOMidiEvent &GetMidiEvent() const { return m_midi; }
 
-  wxEvent* Clone() const;
+  wxEvent *Clone() const;
 
   DECLARE_DYNAMIC_CLASS(wxMidiEvent)
 };
 
-typedef void (wxEvtHandler::*wxMidiEventFunction)(wxMidiEvent&);
+typedef void (wxEvtHandler::*wxMidiEventFunction)(wxMidiEvent &);
 
-#define EVT_MIDI(fn)                                             \
-  DECLARE_EVENT_TABLE_ENTRY(                                     \
-      wxEVT_MIDI_ACTION, wxID_ANY, wxID_ANY,                     \
-      (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent( \
-          wxMidiEventFunction, &fn),                             \
-      (wxObject*)NULL),
+#define EVT_MIDI(fn)                                                           \
+  DECLARE_EVENT_TABLE_ENTRY(                                                   \
+    wxEVT_MIDI_ACTION,                                                         \
+    wxID_ANY,                                                                  \
+    wxID_ANY,                                                                  \
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(                 \
+      wxMidiEventFunction, &fn),                                               \
+    (wxObject *)NULL),
 
 #endif

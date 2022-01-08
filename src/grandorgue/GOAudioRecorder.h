@@ -18,35 +18,35 @@ class GODefinitionFile;
 class GOSoundRecorder;
 
 class GOAudioRecorder : public GOElementCreator, private GOTimerCallback {
- private:
-  GODefinitionFile* m_organfile;
-  GOSoundRecorder* m_recorder;
+private:
+  GODefinitionFile *m_organfile;
+  GOSoundRecorder *m_recorder;
   GOLabel m_RecordingTime;
   unsigned m_RecordSeconds;
   wxString m_Filename;
   bool m_DoRename;
 
   static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry* GetButtonList();
+  const struct ElementListEntry *GetButtonList();
 
   void ButtonChanged(int id);
 
   void UpdateDisplay();
   void HandleTimer();
 
- public:
-  GOAudioRecorder(GODefinitionFile* organfile);
+public:
+  GOAudioRecorder(GODefinitionFile *organfile);
   ~GOAudioRecorder();
 
-  void SetAudioRecorder(GOSoundRecorder* recorder);
+  void SetAudioRecorder(GOSoundRecorder *recorder);
 
   void StartRecording(bool rename);
   bool IsRecording();
   void StopRecording();
 
-  void Load(GOConfigReader& cfg);
-  GOEnclosure* GetEnclosure(const wxString& name, bool is_panel);
-  GOLabel* GetLabel(const wxString& name, bool is_panel);
+  void Load(GOConfigReader &cfg);
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
+  GOLabel *GetLabel(const wxString &name, bool is_panel);
 };
 
 #endif

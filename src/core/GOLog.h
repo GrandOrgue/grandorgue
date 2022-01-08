@@ -13,14 +13,14 @@
 class GOLogWindow;
 
 class GOLog : public wxLog {
- private:
-  GOLogWindow* m_LogWindow;
+private:
+  GOLogWindow *m_LogWindow;
 
- protected:
-  void DoLogTextAtLevel(wxLogLevel level, const wxString& msg);
+protected:
+  void DoLogTextAtLevel(wxLogLevel level, const wxString &msg);
 
- public:
-  GOLog(wxWindow* parent);
+public:
+  GOLog(wxWindow *parent);
   virtual ~GOLog();
 };
 

@@ -13,24 +13,24 @@
 #include <vector>
 
 class GOPortsConfig {
- private:
+private:
   struct PortApiConfig {
     wxString m_PortName;
     wxString m_ApiName;
     bool m_IsEnabled;
 
-    PortApiConfig(const wxString &portName, const wxString &apiName,
-                  bool isEnabled)
+    PortApiConfig(
+      const wxString &portName, const wxString &apiName, bool isEnabled)
         : m_PortName(portName), m_ApiName(apiName), m_IsEnabled(isEnabled) {}
 
     bool operator==(const PortApiConfig &other) const {
-      return m_PortName == other.m_PortName && m_ApiName == other.m_ApiName &&
-             m_IsEnabled == other.m_IsEnabled;
+      return m_PortName == other.m_PortName && m_ApiName == other.m_ApiName
+        && m_IsEnabled == other.m_IsEnabled;
     }
 
     bool operator!=(const PortApiConfig &other) const {
-      return m_PortName != other.m_PortName || m_ApiName != other.m_ApiName ||
-             m_IsEnabled != other.m_IsEnabled;
+      return m_PortName != other.m_PortName || m_ApiName != other.m_ApiName
+        || m_IsEnabled != other.m_IsEnabled;
     }
   };
 
@@ -38,7 +38,7 @@ class GOPortsConfig {
 
   int Find(const wxString &portName, const wxString &apiName) const;
 
- public:
+public:
   GOPortsConfig() {}
   GOPortsConfig(const GOPortsConfig &src)
       : m_PortApiConfigs(src.m_PortApiConfigs) {}
@@ -55,8 +55,8 @@ class GOPortsConfig {
     m_PortApiConfigs = src.m_PortApiConfigs;
   }
 
-  void SetConfigEnabled(const wxString &portName, const wxString &apiName,
-                        bool isEnabled);
+  void SetConfigEnabled(
+    const wxString &portName, const wxString &apiName, bool isEnabled);
 
   void SetConfigEnabled(const wxString &portName, bool isEnabled) {
     SetConfigEnabled(portName, wxEmptyString, isEnabled);
@@ -71,8 +71,8 @@ class GOPortsConfig {
 
   // for using
   bool IsEnabled(const wxString &portName, const wxString &apiName) const {
-    return IsConfigEnabled(portName, wxEmptyString) &&
-           IsConfigEnabled(portName, apiName);
+    return IsConfigEnabled(portName, wxEmptyString)
+      && IsConfigEnabled(portName, apiName);
   }
 
   bool IsEnabled(const wxString &portName) const {

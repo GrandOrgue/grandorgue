@@ -19,53 +19,48 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOOrgan::GOOrgan(wxString odf, wxString archive, wxString church_name,
-                 wxString organ_builder, wxString recording_detail)
-    : m_ODF(odf),
-      m_ChurchName(church_name),
-      m_OrganBuilder(organ_builder),
-      m_RecordingDetail(recording_detail),
-      m_ArchiveID(archive),
-      m_NamesInitialized(true),
-      m_midi(MIDI_RECV_ORGAN) {
+GOOrgan::GOOrgan(
+  wxString odf,
+  wxString archive,
+  wxString church_name,
+  wxString organ_builder,
+  wxString recording_detail)
+    : m_ODF(odf), m_ChurchName(church_name), m_OrganBuilder(organ_builder),
+      m_RecordingDetail(recording_detail), m_ArchiveID(archive),
+      m_NamesInitialized(true), m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
 GOOrgan::GOOrgan(wxString odf)
-    : m_ODF(odf),
-      m_ChurchName(),
-      m_OrganBuilder(),
-      m_RecordingDetail(),
-      m_ArchiveID(),
-      m_NamesInitialized(false),
-      m_midi(MIDI_RECV_ORGAN) {
+    : m_ODF(odf), m_ChurchName(), m_OrganBuilder(), m_RecordingDetail(),
+      m_ArchiveID(), m_NamesInitialized(false), m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
-GOOrgan::GOOrgan(GOConfigReader& cfg, wxString group, GOMidiMap& map)
+GOOrgan::GOOrgan(GOConfigReader &cfg, wxString group, GOMidiMap &map)
     : m_midi(MIDI_RECV_ORGAN) {
   m_ODF = cfg.ReadString(CMBSetting, group, wxT("ODFPath"));
   m_ChurchName = cfg.ReadString(CMBSetting, group, wxT("ChurchName"));
   m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));
   m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
   m_ArchiveID = cfg.ReadString(CMBSetting, group, wxT("Archiv"), false);
-  m_LastUse = cfg.ReadInteger(CMBSetting, group, wxT("LastUse"), 0, INT_MAX,
-                              false, wxGetUTCTime());
+  m_LastUse = cfg.ReadInteger(
+    CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
   m_NamesInitialized = true;
   m_midi.Load(cfg, group, map);
 }
 
 GOOrgan::~GOOrgan() {}
 
-void GOOrgan::Update(const GOOrgan& organ) {
+void GOOrgan::Update(const GOOrgan &organ) {
   if (m_NamesInitialized) {
     if (m_ChurchName != organ.m_ChurchName)
       wxLogError(_("Organ %s changed its name"), m_ChurchName.c_str());
     if (m_OrganBuilder != organ.m_OrganBuilder)
       wxLogError(_("Organ %s changed its organ builder"), m_ChurchName.c_str());
     if (m_RecordingDetail != organ.m_RecordingDetail)
-      wxLogError(_("Organ %s changed its recording details"),
-                 m_ChurchName.c_str());
+      wxLogError(
+        _("Organ %s changed its recording details"), m_ChurchName.c_str());
   }
   m_NamesInitialized = true;
   m_ChurchName = organ.m_ChurchName;
@@ -74,28 +69,28 @@ void GOOrgan::Update(const GOOrgan& organ) {
   m_LastUse = wxGetUTCTime();
 }
 
-const wxString& GOOrgan::GetODFPath() const { return m_ODF; }
+const wxString &GOOrgan::GetODFPath() const { return m_ODF; }
 
-const wxString& GOOrgan::GetChurchName() const { return m_ChurchName; }
+const wxString &GOOrgan::GetChurchName() const { return m_ChurchName; }
 
-const wxString& GOOrgan::GetOrganBuilder() const { return m_OrganBuilder; }
+const wxString &GOOrgan::GetOrganBuilder() const { return m_OrganBuilder; }
 
-const wxString& GOOrgan::GetRecordingDetail() const {
+const wxString &GOOrgan::GetRecordingDetail() const {
   return m_RecordingDetail;
 }
 
-const wxString& GOOrgan::GetArchiveID() const { return m_ArchiveID; }
+const wxString &GOOrgan::GetArchiveID() const { return m_ArchiveID; }
 
-GOMidiReceiverBase& GOOrgan::GetMIDIReceiver() { return m_midi; }
+GOMidiReceiverBase &GOOrgan::GetMIDIReceiver() { return m_midi; }
 
 const wxString GOOrgan::GetUITitle() const {
-  return wxString::Format(_("%s, %s"), m_ChurchName.c_str(),
-                          m_OrganBuilder.c_str());
+  return wxString::Format(
+    _("%s, %s"), m_ChurchName.c_str(), m_OrganBuilder.c_str());
 }
 
 long GOOrgan::GetLastUse() const { return m_LastUse; }
 
-void GOOrgan::Save(GOConfigWriter& cfg, wxString group, GOMidiMap& map) {
+void GOOrgan::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
   cfg.WriteString(group, wxT("ODFPath"), m_ODF);
   cfg.WriteString(group, wxT("ChurchName"), m_ChurchName);
   cfg.WriteString(group, wxT("OrganBuilder"), m_OrganBuilder);
@@ -106,21 +101,22 @@ void GOOrgan::Save(GOConfigWriter& cfg, wxString group, GOMidiMap& map) {
   m_midi.Save(cfg, group, map);
 }
 
-bool GOOrgan::Match(const GOMidiEvent& e) {
+bool GOOrgan::Match(const GOMidiEvent &e) {
   switch (m_midi.Match(e)) {
-    case MIDI_MATCH_CHANGE:
-    case MIDI_MATCH_ON:
-      return true;
+  case MIDI_MATCH_CHANGE:
+  case MIDI_MATCH_ON:
+    return true;
 
-    default:
-      return false;
+  default:
+    return false;
   }
 }
 
-bool GOOrgan::IsUsable(const GOOrganList& organs) const {
+bool GOOrgan::IsUsable(const GOOrganList &organs) const {
   if (m_ArchiveID != wxEmptyString) {
-    const GOArchiveFile* archive = organs.GetArchiveByID(m_ArchiveID, true);
-    if (!archive) return false;
+    const GOArchiveFile *archive = organs.GetArchiveByID(m_ArchiveID, true);
+    if (!archive)
+      return false;
     return archive->IsComplete(organs);
   } else
     return wxFileExists(m_ODF);

@@ -14,7 +14,8 @@ GOSampleStatistic::GOSampleStatistic() : m_Valid(false) {}
 GOSampleStatistic::~GOSampleStatistic() {}
 
 void GOSampleStatistic::Prepare() {
-  if (!m_Valid) Init();
+  if (!m_Valid)
+    Init();
 }
 
 void GOSampleStatistic::Init() {
@@ -27,8 +28,9 @@ void GOSampleStatistic::Init() {
   m_AllocatedSamples = 0;
 }
 
-void GOSampleStatistic::Cumulate(const GOSampleStatistic& stat) {
-  if (!stat.IsValid()) return;
+void GOSampleStatistic::Cumulate(const GOSampleStatistic &stat) {
+  if (!stat.IsValid())
+    return;
   Prepare();
   m_MemorySize += stat.m_MemorySize;
   m_EndSegmentSize += stat.m_EndSegmentSize;
@@ -54,10 +56,12 @@ void GOSampleStatistic::SetEndSegmentSize(size_t size) {
   m_EndSegmentSize = size;
 }
 
-void GOSampleStatistic::SetBitsPerSample(unsigned bits, unsigned samples,
-                                         unsigned max_value) {
-  if (bits < m_MinBitsPerSample) m_MinBitsPerSample = bits;
-  if (bits > m_MaxBitsPerSample) m_MaxBitsPerSample = bits;
+void GOSampleStatistic::SetBitsPerSample(
+  unsigned bits, unsigned samples, unsigned max_value) {
+  if (bits < m_MinBitsPerSample)
+    m_MinBitsPerSample = bits;
+  if (bits > m_MaxBitsPerSample)
+    m_MaxBitsPerSample = bits;
   m_UsedBits = samples * (size_t)max_value;
   m_AllocatedSamples = samples;
 }

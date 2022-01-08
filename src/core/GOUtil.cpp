@@ -7,8 +7,17 @@
 
 #include "GOUtil.h"
 
-static wxChar digits[] = {wxT('0'), wxT('1'), wxT('2'), wxT('3'), wxT('4'),
-                          wxT('5'), wxT('6'), wxT('7'), wxT('8'), wxT('9')};
+static wxChar digits[] = {
+  wxT('0'),
+  wxT('1'),
+  wxT('2'),
+  wxT('3'),
+  wxT('4'),
+  wxT('5'),
+  wxT('6'),
+  wxT('7'),
+  wxT('8'),
+  wxT('9')};
 
 wxString formatCDDouble(double value) {
   wxString result = wxEmptyString;
@@ -35,7 +44,8 @@ wxString formatCDDouble(double value) {
   if (value >= 5) {
     int pos = result.length() - 1;
     while (pos >= 0 && (result[pos] == wxT('9') || result[pos] == wxT('.'))) {
-      if (result[pos] == wxT('9')) result[pos] = wxT('0');
+      if (result[pos] == wxT('9'))
+        result[pos] = wxT('0');
       pos--;
     }
     if (pos < 0)
@@ -48,7 +58,7 @@ wxString formatCDDouble(double value) {
   return result;
 }
 
-bool parseCDouble(double& result, wxString value) {
+bool parseCDouble(double &result, wxString value) {
   bool sign = false;
   unsigned pos;
   double shift = 0.1;
@@ -57,26 +67,31 @@ bool parseCDouble(double& result, wxString value) {
     sign = true;
     value = value.Mid(1);
   }
-  if (value.length() < 1) return false;
+  if (value.length() < 1)
+    return false;
   for (pos = 0; pos < value.length(); pos++) {
     if (value[pos] == wxT('.')) {
-      if (pos == 0) return false;
+      if (pos == 0)
+        return false;
       pos++;
       break;
     }
-    if (value[pos] < wxT('0') || wxT('9') < value[pos]) return false;
+    if (value[pos] < wxT('0') || wxT('9') < value[pos])
+      return false;
     result = result * 10 + (value[pos] - wxT('0'));
   }
   for (; pos < value.length(); pos++) {
-    if (value[pos] < wxT('0') || wxT('9') < value[pos]) return false;
+    if (value[pos] < wxT('0') || wxT('9') < value[pos])
+      return false;
     result = result + shift * (value[pos] - wxT('0'));
     shift = shift / 10;
   }
-  if (sign) result = -result;
+  if (sign)
+    result = -result;
   return true;
 }
 
-bool parseLong(long& result, wxString value) {
+bool parseLong(long &result, wxString value) {
   bool sign = false;
   unsigned pos = 0;
   result = 0;
@@ -87,16 +102,19 @@ bool parseLong(long& result, wxString value) {
     } else if (value[0] == wxT('+'))
       pos = 1;
   }
-  if (value.length() < pos + 1) return false;
+  if (value.length() < pos + 1)
+    return false;
   for (; pos < value.length(); pos++) {
-    if (value[pos] < wxT('0') || wxT('9') < value[pos]) return false;
+    if (value[pos] < wxT('0') || wxT('9') < value[pos])
+      return false;
     result = result * 10 + (value[pos] - wxT('0'));
   }
-  if (sign) result = -result;
+  if (sign)
+    result = -result;
   return true;
 }
 
-bool parseColor(wxColour& result, wxString value) {
+bool parseColor(wxColour &result, wxString value) {
   if (value.length() == 7 && value[0] == wxT('#')) {
     unsigned r = 0, g = 0, b = 0;
 

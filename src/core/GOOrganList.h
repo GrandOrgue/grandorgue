@@ -19,29 +19,29 @@ class GOMidiMap;
 class GOOrgan;
 
 class GOOrganList {
- private:
+private:
   ptr_vector<GOOrgan> m_OrganList;
   ptr_vector<GOArchiveFile> m_ArchiveList;
 
- protected:
-  void Load(GOConfigReader& cfg, GOMidiMap& map);
-  void Save(GOConfigWriter& cfg, GOMidiMap& map);
+protected:
+  void Load(GOConfigReader &cfg, GOMidiMap &map);
+  void Save(GOConfigWriter &cfg, GOMidiMap &map);
 
- public:
+public:
   GOOrganList();
   ~GOOrganList();
 
-  void AddOrgan(const GOOrgan& organ);
-  const ptr_vector<GOOrgan>& GetOrganList() const;
-  ptr_vector<GOOrgan>& GetOrganList();
-  std::vector<const GOOrgan*> GetLRUOrganList();
+  void AddOrgan(const GOOrgan &organ);
+  const ptr_vector<GOOrgan> &GetOrganList() const;
+  ptr_vector<GOOrgan> &GetOrganList();
+  std::vector<const GOOrgan *> GetLRUOrganList();
 
-  void AddArchive(const GOArchiveFile& archive);
-  ptr_vector<GOArchiveFile>& GetArchiveList();
-  const ptr_vector<GOArchiveFile>& GetArchiveList() const;
-  const GOArchiveFile* GetArchiveByID(const wxString& id,
-                                      bool useable = false) const;
-  const GOArchiveFile* GetArchiveByPath(const wxString& path) const;
+  void AddArchive(const GOArchiveFile &archive);
+  ptr_vector<GOArchiveFile> &GetArchiveList();
+  const ptr_vector<GOArchiveFile> &GetArchiveList() const;
+  const GOArchiveFile *
+  GetArchiveByID(const wxString &id, bool useable = false) const;
+  const GOArchiveFile *GetArchiveByPath(const wxString &path) const;
 };
 
 #endif

@@ -15,22 +15,22 @@
 class GODefinitionFile;
 
 class wxStaticLink : public wxStaticText {
- private:
+private:
   wxString m_url;
 
-  void OnClick(wxMouseEvent& event);
+  void OnClick(wxMouseEvent &event);
 
- public:
-  wxStaticLink(wxWindow* parent, const wxString& label, const wxString& url);
+public:
+  wxStaticLink(wxWindow *parent, const wxString &label, const wxString &url);
   DECLARE_EVENT_TABLE()
 };
 
 class GOProperties : public wxDialog {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
 
- public:
-  GOProperties(GODefinitionFile* organfile, wxWindow* parent);
+public:
+  GOProperties(GODefinitionFile *organfile, wxWindow *parent);
   ~GOProperties(void);
 };
 

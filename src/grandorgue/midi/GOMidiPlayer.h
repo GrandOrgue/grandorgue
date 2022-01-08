@@ -24,8 +24,8 @@ class GOMidiFileReader;
 class GODefinitionFile;
 
 class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   GOMidiPlayerContent m_content;
   GOLabel m_PlayingTime;
   GOTime m_Start;
@@ -36,19 +36,19 @@ class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
   unsigned m_DeviceID;
 
   static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry* GetButtonList();
+  const struct ElementListEntry *GetButtonList();
 
   void ButtonChanged(int id);
 
   void UpdateDisplay();
   void HandleTimer();
 
- public:
-  GOMidiPlayer(GODefinitionFile* organfile);
+public:
+  GOMidiPlayer(GODefinitionFile *organfile);
   ~GOMidiPlayer();
 
   void Clear();
-  void LoadFile(const wxString& filename, unsigned manuals, bool pedal);
+  void LoadFile(const wxString &filename, unsigned manuals, bool pedal);
   bool IsLoaded();
 
   void Play();
@@ -56,9 +56,9 @@ class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
   void StopPlaying();
   bool IsPlaying();
 
-  void Load(GOConfigReader& cfg);
-  GOEnclosure* GetEnclosure(const wxString& name, bool is_panel);
-  GOLabel* GetLabel(const wxString& name, bool is_panel);
+  void Load(GOConfigReader &cfg);
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
+  GOLabel *GetLabel(const wxString &name, bool is_panel);
 };
 
 #endif

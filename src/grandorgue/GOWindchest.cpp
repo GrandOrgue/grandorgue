@@ -15,19 +15,14 @@
 #include "GOTremulant.h"
 #include "config/GOConfigReader.h"
 
-GOWindchest::GOWindchest(GODefinitionFile* organfile)
-    : m_organfile(organfile),
-      m_Name(),
-      m_Volume(1),
-      m_enclosure(0),
-      m_tremulant(0),
-      m_ranks(0),
-      m_pipes(0),
+GOWindchest::GOWindchest(GODefinitionFile *organfile)
+    : m_organfile(organfile), m_Name(), m_Volume(1), m_enclosure(0),
+      m_tremulant(0), m_ranks(0), m_pipes(0),
       m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL) {
   m_organfile->RegisterPlaybackStateHandler(this);
 }
 
-void GOWindchest::Init(GOConfigReader& cfg, wxString group, wxString name) {
+void GOWindchest::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_enclosure.resize(0);
   m_tremulant.resize(0);
   m_Name = name;
@@ -35,36 +30,46 @@ void GOWindchest::Init(GOConfigReader& cfg, wxString group, wxString name) {
   m_PipeConfig.SetName(GetName());
 }
 
-void GOWindchest::Load(GOConfigReader& cfg, wxString group, unsigned index) {
-  unsigned NumberOfEnclosures =
-      cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0,
-                      m_organfile->GetEnclosureCount());
-  unsigned NumberOfTremulants =
-      cfg.ReadInteger(ODFSetting, group, wxT("NumberOfTremulants"), 0,
-                      m_organfile->GetTremulantCount());
+void GOWindchest::Load(GOConfigReader &cfg, wxString group, unsigned index) {
+  unsigned NumberOfEnclosures = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    wxT("NumberOfEnclosures"),
+    0,
+    m_organfile->GetEnclosureCount());
+  unsigned NumberOfTremulants = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    wxT("NumberOfTremulants"),
+    0,
+    m_organfile->GetTremulantCount());
 
   m_enclosure.resize(0);
   for (unsigned i = 0; i < NumberOfEnclosures; i++) {
     wxString buffer;
     buffer.Printf(wxT("Enclosure%03d"), i + 1);
     m_enclosure.push_back(m_organfile->GetEnclosureElement(
-        cfg.ReadInteger(ODFSetting, group, buffer, 1,
-                        m_organfile->GetEnclosureCount()) -
-        1));
+      cfg.ReadInteger(
+        ODFSetting, group, buffer, 1, m_organfile->GetEnclosureCount())
+      - 1));
   }
 
   m_tremulant.resize(0);
   for (unsigned i = 0; i < NumberOfTremulants; i++) {
     wxString buffer;
     buffer.Printf(wxT("Tremulant%03d"), i + 1);
-    m_tremulant.push_back(cfg.ReadInteger(ODFSetting, group, buffer, 1,
-                                          m_organfile->GetTremulantCount()) -
-                          1);
+    m_tremulant.push_back(
+      cfg.ReadInteger(
+        ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount())
+      - 1);
   }
 
-  m_Name =
-      cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), false,
-                             wxString::Format(_("Windchest %d"), index + 1));
+  m_Name = cfg.ReadStringNotEmpty(
+    ODFSetting,
+    group,
+    wxT("Name"),
+    false,
+    wxString::Format(_("Windchest %d"), index + 1));
   m_PipeConfig.Init(cfg, group, wxEmptyString);
   m_PipeConfig.SetName(GetName());
 }
@@ -84,27 +89,28 @@ unsigned GOWindchest::GetTremulantId(unsigned no) { return m_tremulant[no]; }
 
 unsigned GOWindchest::GetRankCount() { return m_ranks.size(); }
 
-GORank* GOWindchest::GetRank(unsigned index) { return m_ranks[index]; }
+GORank *GOWindchest::GetRank(unsigned index) { return m_ranks[index]; }
 
-void GOWindchest::AddRank(GORank* rank) { m_ranks.push_back(rank); }
+void GOWindchest::AddRank(GORank *rank) { m_ranks.push_back(rank); }
 
-void GOWindchest::AddPipe(GOPipeWindchestCallback* pipe) {
+void GOWindchest::AddPipe(GOPipeWindchestCallback *pipe) {
   m_pipes.push_back(pipe);
 }
 
-void GOWindchest::AddEnclosure(GOEnclosure* enclosure) {
+void GOWindchest::AddEnclosure(GOEnclosure *enclosure) {
   m_enclosure.push_back(enclosure);
 }
 
-const wxString& GOWindchest::GetName() { return m_Name; }
+const wxString &GOWindchest::GetName() { return m_Name; }
 
-GOPipeConfigNode& GOWindchest::GetPipeConfig() { return m_PipeConfig; }
+GOPipeConfigNode &GOWindchest::GetPipeConfig() { return m_PipeConfig; }
 
-void GOWindchest::UpdateTremulant(GOTremulant* tremulant) {
+void GOWindchest::UpdateTremulant(GOTremulant *tremulant) {
   for (unsigned i = 0; i < m_tremulant.size(); i++)
     if (tremulant == m_organfile->GetTremulant(m_tremulant[i])) {
-      GOTremulant* t = m_organfile->GetTremulant(m_tremulant[i]);
-      if (t->GetTremulantType() != GOWavTrem) continue;
+      GOTremulant *t = m_organfile->GetTremulant(m_tremulant[i]);
+      if (t->GetTremulantType() != GOWavTrem)
+        continue;
       bool on = t->IsActive();
       for (unsigned j = 0; j < m_pipes.size(); j++)
         m_pipes[j]->SetTremulant(on);

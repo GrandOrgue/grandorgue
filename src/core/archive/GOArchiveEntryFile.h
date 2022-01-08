@@ -13,16 +13,16 @@
 class GOArchive;
 
 class GOArchiveEntryFile : public GOFile {
- private:
-  GOArchive* m_archiv;
+private:
+  GOArchive *m_archiv;
   wxString m_Name;
   size_t m_Offset;
   size_t m_Length;
   size_t m_Pos;
 
- public:
-  GOArchiveEntryFile(GOArchive* archive, const wxString& name, size_t offset,
-                     size_t len);
+public:
+  GOArchiveEntryFile(
+    GOArchive *archive, const wxString &name, size_t offset, size_t len);
 
   size_t GetSize();
   const wxString GetName();
@@ -30,7 +30,7 @@ class GOArchiveEntryFile : public GOFile {
 
   bool Open();
   void Close();
-  size_t Read(void* buffer, size_t len);
+  size_t Read(void *buffer, size_t len);
 };
 
 #endif

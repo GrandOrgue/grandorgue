@@ -27,20 +27,20 @@ class GOSettingsDefaults : public wxPanel {
     ID_VOLUME,
   };
 
- private:
-  GOConfig& m_config;
-  wxDirPickerCtrl* m_OrganPath;
-  wxDirPickerCtrl* m_OrganPackagePath;
-  wxDirPickerCtrl* m_SettingPath;
-  wxDirPickerCtrl* m_AudioRecorderPath;
-  wxDirPickerCtrl* m_MidiRecorderPath;
-  wxDirPickerCtrl* m_MidiPlayerPath;
-  wxSpinCtrl* m_MetronomeMeasure;
-  wxSpinCtrl* m_MetronomeBPM;
-  wxSpinCtrl* m_Volume;
+private:
+  GOConfig &m_config;
+  wxDirPickerCtrl *m_OrganPath;
+  wxDirPickerCtrl *m_OrganPackagePath;
+  wxDirPickerCtrl *m_SettingPath;
+  wxDirPickerCtrl *m_AudioRecorderPath;
+  wxDirPickerCtrl *m_MidiRecorderPath;
+  wxDirPickerCtrl *m_MidiPlayerPath;
+  wxSpinCtrl *m_MetronomeMeasure;
+  wxSpinCtrl *m_MetronomeBPM;
+  wxSpinCtrl *m_Volume;
 
- public:
-  GOSettingsDefaults(GOConfig& settings, wxWindow* parent);
+public:
+  GOSettingsDefaults(GOConfig &settings, wxWindow *parent);
 
   void Save();
 };

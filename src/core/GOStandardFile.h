@@ -13,15 +13,15 @@
 #include "GOFile.h"
 
 class GOStandardFile : public GOFile {
- private:
+private:
   wxString m_Path;
   wxString m_Name;
   wxFile m_File;
   size_t m_Size;
 
- public:
-  GOStandardFile(const wxString& path);
-  GOStandardFile(const wxString& path, const wxString& name);
+public:
+  GOStandardFile(const wxString &path);
+  GOStandardFile(const wxString &path, const wxString &name);
   ~GOStandardFile();
 
   size_t GetSize();
@@ -30,7 +30,7 @@ class GOStandardFile : public GOFile {
 
   bool Open();
   void Close();
-  size_t Read(void* buffer, size_t len);
+  size_t Read(void *buffer, size_t len);
 };
 
 #endif

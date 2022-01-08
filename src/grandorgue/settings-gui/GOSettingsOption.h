@@ -11,8 +11,7 @@
 #include <wx/panel.h>
 
 enum class GOInitialLoadType;
-template <class T>
-class GOChoice;
+template <class T> class GOChoice;
 class GOConfig;
 class wxCheckBox;
 class wxChoice;
@@ -46,31 +45,31 @@ class GOSettingsOption : public wxPanel {
     ID_LANGUAGE
   };
 
- private:
-  GOConfig& m_config;
-  wxChoice* m_Concurrency;
-  wxChoice* m_ReleaseConcurrency;
-  wxChoice* m_LoadConcurrency;
-  wxChoice* m_WaveFormat;
-  wxCheckBox* m_LosslessCompression;
-  wxCheckBox* m_Limit;
-  wxCheckBox* m_CompressCache;
-  wxCheckBox* m_ManageCache;
-  GOChoice<GOInitialLoadType>* m_LoadLastFile;
-  wxCheckBox* m_Scale;
-  wxCheckBox* m_Random;
-  wxCheckBox* m_ODFCheck;
-  wxCheckBox* m_RecordDownmix;
-  wxDirPickerCtrl* m_SettingsPath;
-  wxDirPickerCtrl* m_CachePath;
-  wxChoice* m_BitsPerSample;
-  wxChoice* m_LoopLoad;
-  wxChoice* m_AttackLoad;
-  wxChoice* m_ReleaseLoad;
-  wxChoice* m_Channels;
-  wxChoice* m_Interpolation;
-  wxSpinCtrl* m_MemoryLimit;
-  wxChoice* m_Language;
+private:
+  GOConfig &m_config;
+  wxChoice *m_Concurrency;
+  wxChoice *m_ReleaseConcurrency;
+  wxChoice *m_LoadConcurrency;
+  wxChoice *m_WaveFormat;
+  wxCheckBox *m_LosslessCompression;
+  wxCheckBox *m_Limit;
+  wxCheckBox *m_CompressCache;
+  wxCheckBox *m_ManageCache;
+  GOChoice<GOInitialLoadType> *m_LoadLastFile;
+  wxCheckBox *m_Scale;
+  wxCheckBox *m_Random;
+  wxCheckBox *m_ODFCheck;
+  wxCheckBox *m_RecordDownmix;
+  wxDirPickerCtrl *m_SettingsPath;
+  wxDirPickerCtrl *m_CachePath;
+  wxChoice *m_BitsPerSample;
+  wxChoice *m_LoopLoad;
+  wxChoice *m_AttackLoad;
+  wxChoice *m_ReleaseLoad;
+  wxChoice *m_Channels;
+  wxChoice *m_Interpolation;
+  wxSpinCtrl *m_MemoryLimit;
+  wxChoice *m_Language;
 
   wxString m_OldLanguageCode;
   unsigned m_OldChannels;
@@ -80,8 +79,8 @@ class GOSettingsOption : public wxPanel {
   unsigned m_OldAttackLoad;
   unsigned m_OldReleaseLoad;
 
- public:
-  GOSettingsOption(GOConfig& settings, wxWindow* parent);
+public:
+  GOSettingsOption(GOConfig &settings, wxWindow *parent);
 
   bool NeedReload();
   bool NeedRestart();

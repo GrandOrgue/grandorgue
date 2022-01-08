@@ -19,30 +19,35 @@ EVT_BUTTON(wxID_OK, MIDIEventDialog::OnOK)
 EVT_BUTTON(wxID_CANCEL, MIDIEventDialog::OnCancel)
 END_EVENT_TABLE()
 
-MIDIEventDialog::MIDIEventDialog(GODocumentBase* doc, wxWindow* parent,
-                                 wxString title, GOConfig& settings,
-                                 GOMidiReceiverBase* event,
-                                 GOMidiSender* sender, GOKeyReceiver* key,
-                                 GOMidiSender* division)
-    : wxPropertySheetDialog(parent, wxID_ANY, title, wxDefaultPosition,
-                            wxDefaultSize,
-                            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-      GOView(doc, this),
-      m_recvPage(NULL),
-      m_sendPage(NULL),
-      m_sendDivisionPage(NULL),
-      m_keyPage(NULL) {
+MIDIEventDialog::MIDIEventDialog(
+  GODocumentBase *doc,
+  wxWindow *parent,
+  wxString title,
+  GOConfig &settings,
+  GOMidiReceiverBase *event,
+  GOMidiSender *sender,
+  GOKeyReceiver *key,
+  GOMidiSender *division)
+    : wxPropertySheetDialog(
+      parent,
+      wxID_ANY,
+      title,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+      GOView(doc, this), m_recvPage(NULL), m_sendPage(NULL),
+      m_sendDivisionPage(NULL), m_keyPage(NULL) {
   CreateButtons(wxOK | wxCANCEL);
 
-  wxBookCtrlBase* notebook = GetBookCtrl();
+  wxBookCtrlBase *notebook = GetBookCtrl();
 
   if (event) {
     m_recvPage = new MIDIEventRecvDialog(notebook, event, settings);
     notebook->AddPage(m_recvPage, _("Receive"));
   }
   if (sender) {
-    m_sendPage =
-        new MIDIEventSendDialog(notebook, sender, m_recvPage, settings);
+    m_sendPage
+      = new MIDIEventSendDialog(notebook, sender, m_recvPage, settings);
     notebook->AddPage(m_sendPage, _("Send"));
   }
   if (key) {
@@ -50,8 +55,8 @@ MIDIEventDialog::MIDIEventDialog(GODocumentBase* doc, wxWindow* parent,
     notebook->AddPage(m_keyPage, _("Shortcut"));
   }
   if (division) {
-    m_sendDivisionPage =
-        new MIDIEventSendDialog(notebook, division, m_recvPage, settings);
+    m_sendDivisionPage
+      = new MIDIEventSendDialog(notebook, division, m_recvPage, settings);
     notebook->AddPage(m_sendDivisionPage, _("Send Division Output"));
   }
 
@@ -60,22 +65,27 @@ MIDIEventDialog::MIDIEventDialog(GODocumentBase* doc, wxWindow* parent,
 
 MIDIEventDialog::~MIDIEventDialog() {}
 
-void MIDIEventDialog::RegisterMIDIListener(GOMidi* midi) {
-  if (m_recvPage) m_recvPage->RegisterMIDIListener(midi);
+void MIDIEventDialog::RegisterMIDIListener(GOMidi *midi) {
+  if (m_recvPage)
+    m_recvPage->RegisterMIDIListener(midi);
 }
 
-void MIDIEventDialog::OnApply(wxCommandEvent& event) { DoApply(); }
+void MIDIEventDialog::OnApply(wxCommandEvent &event) { DoApply(); }
 
-void MIDIEventDialog::OnOK(wxCommandEvent& event) {
+void MIDIEventDialog::OnOK(wxCommandEvent &event) {
   DoApply();
   Destroy();
 }
 
-void MIDIEventDialog::OnCancel(wxCommandEvent& event) { Destroy(); }
+void MIDIEventDialog::OnCancel(wxCommandEvent &event) { Destroy(); }
 
 void MIDIEventDialog::DoApply() {
-  if (m_recvPage) m_recvPage->DoApply();
-  if (m_sendPage) m_sendPage->DoApply();
-  if (m_sendDivisionPage) m_sendDivisionPage->DoApply();
-  if (m_keyPage) m_keyPage->DoApply();
+  if (m_recvPage)
+    m_recvPage->DoApply();
+  if (m_sendPage)
+    m_sendPage->DoApply();
+  if (m_sendDivisionPage)
+    m_sendDivisionPage->DoApply();
+  if (m_keyPage)
+    m_keyPage->DoApply();
 }

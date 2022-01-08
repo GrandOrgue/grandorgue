@@ -35,20 +35,20 @@ class GOManual : private GOEventHandler,
                  private GOSaveableObject,
                  private GOPlaybackStateHandler,
                  public GOMidiConfigurator {
- private:
+private:
   wxString m_group;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOMidiSender m_division;
-  GODefinitionFile* m_organfile;
-  std::vector<GOCoupler*> m_InputCouplers;
+  GODefinitionFile *m_organfile;
+  std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */
   std::vector<unsigned> m_KeyVelocity;
   /* Internal state affected by couplers */
   std::vector<unsigned> m_RemoteVelocity;
   std::vector<unsigned> m_Velocity;
   std::vector<unsigned> m_DivisionState;
-  std::vector<std::vector<unsigned> > m_Velocities;
+  std::vector<std::vector<unsigned>> m_Velocities;
   unsigned m_MidiMap[128];
   unsigned m_manual_number;
   unsigned m_first_accessible_logical_key_nb;
@@ -73,25 +73,29 @@ class GOManual : private GOEventHandler,
 
   void Resize();
 
-  void ProcessMidi(const GOMidiEvent& event);
+  void ProcessMidi(const GOMidiEvent &event);
   void HandleKey(int key);
   void SetOutput(unsigned note, unsigned velocity);
 
-  void Save(GOConfigWriter& cfg);
+  void Save(GOConfigWriter &cfg);
 
   void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
   void PrepareRecording();
 
- public:
-  GOManual(GODefinitionFile* organfile);
-  void Init(GOConfigReader& cfg, wxString group, int manualNumber,
-            unsigned first_midi, unsigned keys);
-  void Load(GOConfigReader& cfg, wxString group, int manualNumber);
-  unsigned RegisterCoupler(GOCoupler* coupler);
-  void SetKey(unsigned note, unsigned velocity, GOCoupler* prev,
-              unsigned couplerID);
+public:
+  GOManual(GODefinitionFile *organfile);
+  void Init(
+    GOConfigReader &cfg,
+    wxString group,
+    int manualNumber,
+    unsigned first_midi,
+    unsigned keys);
+  void Load(GOConfigReader &cfg, wxString group, int manualNumber);
+  unsigned RegisterCoupler(GOCoupler *coupler);
+  void
+  SetKey(unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);
   void Set(unsigned note, unsigned velocity);
   void SetUnisonOff(bool on);
   void Update();
@@ -108,21 +112,21 @@ class GOManual : private GOEventHandler,
   bool IsKeyDown(unsigned midiNoteNumber);
 
   unsigned GetStopCount();
-  GOStop* GetStop(unsigned index);
+  GOStop *GetStop(unsigned index);
   unsigned GetCouplerCount();
   unsigned GetODFCouplerCount();
-  GOCoupler* GetCoupler(unsigned index);
-  void AddCoupler(GOCoupler* coupler);
+  GOCoupler *GetCoupler(unsigned index);
+  void AddCoupler(GOCoupler *coupler);
   unsigned GetDivisionalCount();
-  GODivisional* GetDivisional(unsigned index);
-  void AddDivisional(GODivisional* divisional);
+  GODivisional *GetDivisional(unsigned index);
+  void AddDivisional(GODivisional *divisional);
   unsigned GetTremulantCount();
-  GOTremulant* GetTremulant(unsigned index);
+  GOTremulant *GetTremulant(unsigned index);
   unsigned GetSwitchCount();
-  GOSwitch* GetSwitch(unsigned index);
+  GOSwitch *GetSwitch(unsigned index);
 
-  GOCombinationDefinition& GetDivisionalTemplate();
-  const wxString& GetName();
+  GOCombinationDefinition &GetDivisionalTemplate();
+  const wxString &GetName();
   bool IsDisplayed();
 
   wxString GetMidiType();

@@ -34,30 +34,33 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts {
     ID_RECORDERDEVICE,
   };
 
- private:
-  GOConfig& m_config;
-  GOMidi& m_Midi;
+private:
+  GOConfig &m_config;
+  GOMidi &m_Midi;
 
   GOSettingsMidiDeviceList m_InDevices;
   GOSettingsMidiDeviceList m_OutDevices;
 
-  wxCheckBox* m_AutoAddInput;
-  wxCheckBox* m_CheckOnStartup;
-  wxButton* m_InProperties;
-  wxButton* m_InOutDevice;
-  wxChoice* m_RecorderDevice;
+  wxCheckBox *m_AutoAddInput;
+  wxCheckBox *m_CheckOnStartup;
+  wxButton *m_InProperties;
+  wxButton *m_InOutDevice;
+  wxChoice *m_RecorderDevice;
 
-  void RenewDevices(const GOPortsConfig& portsConfig,
-                    const bool isToAutoAddInput);
-  void OnPortChanged(const wxString& portName, const wxString apiName,
-                     bool oldEnabled, bool newEnabled);
-  void OnInDevicesClick(wxCommandEvent& event);
-  void OnInOutDeviceClick(wxCommandEvent& event);
-  void OnInChannelShiftClick(wxCommandEvent& event);
-  void OnOutDevicesClick(wxCommandEvent& event);
+  void
+  RenewDevices(const GOPortsConfig &portsConfig, const bool isToAutoAddInput);
+  void OnPortChanged(
+    const wxString &portName,
+    const wxString apiName,
+    bool oldEnabled,
+    bool newEnabled);
+  void OnInDevicesClick(wxCommandEvent &event);
+  void OnInOutDeviceClick(wxCommandEvent &event);
+  void OnInChannelShiftClick(wxCommandEvent &event);
+  void OnOutDevicesClick(wxCommandEvent &event);
 
- public:
-  SettingsMidiDevices(GOConfig& settings, GOMidi& midi, wxWindow* parent);
+public:
+  SettingsMidiDevices(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
   void Save();
 

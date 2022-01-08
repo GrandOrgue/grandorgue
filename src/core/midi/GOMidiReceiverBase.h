@@ -17,7 +17,7 @@ class GOMidiMap;
 struct IniFileEnumEntry;
 
 class GOMidiReceiverBase : public GOMidiReceiverData {
- private:
+private:
   typedef struct {
     unsigned device;
     int channel;
@@ -29,28 +29,28 @@ class GOMidiReceiverBase : public GOMidiReceiverData {
   std::vector<GOTime> m_last;
   std::vector<midi_internal_match> m_Internal;
 
-  MIDI_MATCH_TYPE debounce(const GOMidiEvent& e, MIDI_MATCH_TYPE event,
-                           unsigned index);
+  MIDI_MATCH_TYPE
+  debounce(const GOMidiEvent &e, MIDI_MATCH_TYPE event, unsigned index);
   void deleteInternal(unsigned device);
   unsigned createInternal(unsigned device);
 
- protected:
-  virtual void Preconfigure(GOConfigReader& cfg, wxString group);
+protected:
+  virtual void Preconfigure(GOConfigReader &cfg, wxString group);
   virtual int GetTranspose();
 
- public:
+public:
   GOMidiReceiverBase(MIDI_RECEIVER_TYPE type);
 
-  virtual void Load(GOConfigReader& cfg, wxString group, GOMidiMap& map);
-  void Save(GOConfigWriter& cfg, wxString group, GOMidiMap& map);
+  virtual void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
+  void Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map);
   void PreparePlayback();
 
   void SetElementID(int id);
 
-  MIDI_MATCH_TYPE Match(const GOMidiEvent& e);
-  MIDI_MATCH_TYPE Match(const GOMidiEvent& e, int& value);
-  MIDI_MATCH_TYPE Match(const GOMidiEvent& e, const unsigned midi_map[128],
-                        int& key, int& value);
+  MIDI_MATCH_TYPE Match(const GOMidiEvent &e);
+  MIDI_MATCH_TYPE Match(const GOMidiEvent &e, int &value);
+  MIDI_MATCH_TYPE Match(
+    const GOMidiEvent &e, const unsigned midi_map[128], int &key, int &value);
 
   bool HasDebounce(midi_match_message_type type);
   bool HasChannel(midi_match_message_type type);
@@ -63,7 +63,7 @@ class GOMidiReceiverBase : public GOMidiReceiverData {
   unsigned LowerValueLimit(midi_match_message_type type);
   unsigned UpperValueLimit(midi_match_message_type type);
 
-  virtual void Assign(const GOMidiReceiverData& data);
+  virtual void Assign(const GOMidiReceiverData &data);
 };
 
 #endif

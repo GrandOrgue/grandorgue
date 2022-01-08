@@ -13,16 +13,16 @@ GOSettingStore::GOSettingStore() : m_SettingList() {}
 
 GOSettingStore::~GOSettingStore() {}
 
-void GOSettingStore::AddSetting(GOSetting* setting) {
+void GOSettingStore::AddSetting(GOSetting *setting) {
   m_SettingList.push_back(setting);
 }
 
-void GOSettingStore::Load(GOConfigReader& cfg) {
+void GOSettingStore::Load(GOConfigReader &cfg) {
   for (unsigned i = 0; i < m_SettingList.size(); i++)
     m_SettingList[i]->Load(cfg);
 }
 
-void GOSettingStore::Save(GOConfigWriter& cfg) {
+void GOSettingStore::Save(GOConfigWriter &cfg) {
   for (unsigned i = 0; i < m_SettingList.size(); i++)
     m_SettingList[i]->Save(cfg);
 }

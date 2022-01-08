@@ -19,7 +19,7 @@ GOSoundReverbEngine::GOSoundReverbEngine(unsigned samples_per_buffer)
     m_Partitions.push_back(new GOSoundReverbPartition(512, 6, 64));
     m_Partitions.push_back(new GOSoundReverbPartition(2048, 6, 64 + 256));
     m_Partitions.push_back(
-        new GOSoundReverbPartition(8192, 121, 64 + 256 + 1024));
+      new GOSoundReverbPartition(8192, 121, 64 + 256 + 1024));
   } else if (samples_per_buffer < 256) {
     m_Partitions.push_back(new GOSoundReverbPartition(128, 7, 0));
     m_Partitions.push_back(new GOSoundReverbPartition(512, 6, 0));
@@ -44,17 +44,18 @@ GOSoundReverbEngine::GOSoundReverbEngine(unsigned samples_per_buffer)
 GOSoundReverbEngine::~GOSoundReverbEngine() {}
 
 void GOSoundReverbEngine::Reset() {
-  for (unsigned i = 0; i < m_Partitions.size(); i++) m_Partitions[i]->Reset();
+  for (unsigned i = 0; i < m_Partitions.size(); i++)
+    m_Partitions[i]->Reset();
 }
 
-void GOSoundReverbEngine::Process(float* output_buf, const float* input_buf,
-                                  unsigned len) {
+void GOSoundReverbEngine::Process(
+  float *output_buf, const float *input_buf, unsigned len) {
   std::fill(output_buf, output_buf + len, 0);
   for (unsigned i = 0; i < m_Partitions.size(); i++)
     m_Partitions[i]->Process(output_buf, input_buf, len);
 }
 
-void GOSoundReverbEngine::AddIR(const float* data, unsigned pos, unsigned len) {
+void GOSoundReverbEngine::AddIR(const float *data, unsigned pos, unsigned len) {
   unsigned offset = 0;
   for (unsigned i = 0; i < m_Partitions.size(); i++) {
     m_Partitions[i]->AddIR(data, pos, len, offset);

@@ -7,7 +7,7 @@
 
 #include "GOInvalidFile.h"
 
-GOInvalidFile::GOInvalidFile(const wxString& name) : m_Name(name) {}
+GOInvalidFile::GOInvalidFile(const wxString &name) : m_Name(name) {}
 
 const wxString GOInvalidFile::GetName() { return m_Name; }
 
@@ -20,4 +20,4 @@ size_t GOInvalidFile::GetSize() { return 0; }
 bool GOInvalidFile::Open() { return false; }
 void GOInvalidFile::Close() {}
 
-size_t GOInvalidFile::Read(void* buffer, size_t len) { return 0; }
+size_t GOInvalidFile::Read(void *buffer, size_t len) { return 0; }

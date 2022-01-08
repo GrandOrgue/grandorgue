@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-int main(int ac, const char* ag[]) {
+int main(int ac, const char *ag[]) {
   FILE *in, *out;
   unsigned char c;
   unsigned pos = 0;
@@ -34,14 +34,18 @@ int main(int ac, const char* ag[]) {
   while (fread(&c, 1, 1, in) == 1) {
     pos++;
     fprintf(out, "  0x%02x,", c);
-    if (!(pos % 16)) fprintf(out, "\n");
+    if (!(pos % 16))
+      fprintf(out, "\n");
   }
   fprintf(out, "\n};\n\n");
 
   fprintf(out, "wxImage GetImage_%s()\n", ag[3]);
   fprintf(out, "{\n");
-  fprintf(out, "\tstatic wxMemoryInputStream is(image_%s, sizeof(image_%s));\n",
-          ag[3], ag[3]);
+  fprintf(
+    out,
+    "\tstatic wxMemoryInputStream is(image_%s, sizeof(image_%s));\n",
+    ag[3],
+    ag[3]);
   fprintf(out, "\tstatic wxImage image(is, wxBITMAP_TYPE_ANY, -1);\n");
   fprintf(out, "\treturn image;\n");
   fprintf(out, "}\n");

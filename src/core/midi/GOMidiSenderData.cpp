@@ -16,7 +16,7 @@ MIDI_SENDER_TYPE GOMidiSenderData::GetType() const { return m_type; }
 
 unsigned GOMidiSenderData::GetEventCount() const { return m_events.size(); }
 
-MIDI_SEND_EVENT& GOMidiSenderData::GetEvent(unsigned index) {
+MIDI_SEND_EVENT &GOMidiSenderData::GetEvent(unsigned index) {
   return m_events[index];
 }
 

@@ -15,7 +15,7 @@ class GOGUIEnclosure;
 class GOGUIManual;
 
 class GOGUILayoutEngine {
- public:
+public:
   typedef struct {
     unsigned width;
     unsigned height;
@@ -25,11 +25,11 @@ class GOGUILayoutEngine {
     int piston_y;
   } MANUAL_RENDER_INFO;
 
- protected:
-  GOGUIDisplayMetrics& m_metrics;
+protected:
+  GOGUIDisplayMetrics &m_metrics;
   std::vector<MANUAL_RENDER_INFO> m_ManualRenderInfo;
-  std::vector<GOGUIEnclosure*> m_Enclosures;
-  std::vector<GOGUIManual*> m_Manuals;
+  std::vector<GOGUIEnclosure *> m_Enclosures;
+  std::vector<GOGUIManual *> m_Manuals;
 
   /* values computed on screen update */
   int m_HackY;
@@ -37,20 +37,18 @@ class GOGUILayoutEngine {
   int m_CenterY;
   int m_CenterWidth;
 
- public:
-  GOGUILayoutEngine(GOGUIDisplayMetrics& metrics);
+public:
+  GOGUILayoutEngine(GOGUIDisplayMetrics &metrics);
   virtual ~GOGUILayoutEngine();
 
-  virtual void GetDrawstopBlitPosition(const int drawstopRow,
-                                       const int drawstopCol, int& blitX,
-                                       int& blitY);
-  virtual void GetPushbuttonBlitPosition(const int buttonRow,
-                                         const int buttonCol, int& blitX,
-                                         int& blitY);
+  virtual void GetDrawstopBlitPosition(
+    const int drawstopRow, const int drawstopCol, int &blitX, int &blitY);
+  virtual void GetPushbuttonBlitPosition(
+    const int buttonRow, const int buttonCol, int &blitX, int &blitY);
 
   virtual unsigned GetEnclosuresWidth();
   virtual int GetEnclosureY();
-  virtual int GetEnclosureX(const GOGUIEnclosure* enclosure);
+  virtual int GetEnclosureX(const GOGUIEnclosure *enclosure);
 
   virtual int GetJambLeftRightWidth();
   virtual unsigned GetJambLeftRightHeight();
@@ -71,11 +69,11 @@ class GOGUILayoutEngine {
   virtual int GetCenterX();
   virtual int GetHackY();
 
-  virtual const MANUAL_RENDER_INFO& GetManualRenderInfo(
-      const unsigned manual_nb) const;
+  virtual const MANUAL_RENDER_INFO &
+  GetManualRenderInfo(const unsigned manual_nb) const;
 
-  void RegisterEnclosure(GOGUIEnclosure* enclosure);
-  void RegisterManual(GOGUIManual* manual);
+  void RegisterEnclosure(GOGUIEnclosure *enclosure);
+  void RegisterManual(GOGUIManual *manual);
   unsigned GetManualNumber();
 
   virtual void Update();

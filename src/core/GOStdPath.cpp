@@ -18,9 +18,9 @@ wxString GOStdPath::GetBaseDir() {
 
 void GOStdPath::InitLocaleDir() {
 #ifndef __WXMAC__
-  wxLocale::AddCatalogLookupPathPrefix(GetBaseDir() + wxFILE_SEP_PATH +
-                                       wxT("share") + wxFILE_SEP_PATH +
-                                       wxT("locale"));
+  wxLocale::AddCatalogLookupPathPrefix(
+    GetBaseDir() + wxFILE_SEP_PATH + wxT("share") + wxFILE_SEP_PATH
+    + wxT("locale"));
 #endif
 #if wxCHECK_VERSION(3, 1, 1)
   wxStandardPaths::Get().UseAppInfo(wxStandardPaths::AppInfo_AppName);
@@ -32,8 +32,8 @@ wxString GOStdPath::GetResourceDir() {
 #ifdef __WXMAC__
   return wxStandardPaths::Get().GetResourcesDir();
 #else
-  return GetBaseDir() + wxFILE_SEP_PATH + wxT("share") + wxFILE_SEP_PATH +
-         wxT("GrandOrgue");
+  return GetBaseDir() + wxFILE_SEP_PATH + wxT("share") + wxFILE_SEP_PATH
+    + wxT("GrandOrgue");
 #endif
 }
 

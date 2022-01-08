@@ -15,17 +15,12 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOEnclosure::GOEnclosure(GODefinitionFile* organfile)
+GOEnclosure::GOEnclosure(GODefinitionFile *organfile)
     : m_midi(organfile, MIDI_RECV_ENCLOSURE),
       m_sender(organfile, MIDI_SEND_ENCLOSURE),
-      m_shortcut(organfile, KEY_RECV_ENCLOSURE),
-      m_organfile(organfile),
-      m_AmpMinimumLevel(0),
-      m_MIDIInputNumber(0),
-      m_MIDIValue(0),
-      m_Name(),
-      m_Displayed1(false),
-      m_Displayed2(false) {
+      m_shortcut(organfile, KEY_RECV_ENCLOSURE), m_organfile(organfile),
+      m_AmpMinimumLevel(0), m_MIDIInputNumber(0), m_MIDIValue(0), m_Name(),
+      m_Displayed1(false), m_Displayed2(false) {
   m_organfile->RegisterEventHandler(this);
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);
@@ -33,31 +28,31 @@ GOEnclosure::GOEnclosure(GODefinitionFile* organfile)
 
 GOEnclosure::~GOEnclosure() {}
 
-void GOEnclosure::Init(GOConfigReader& cfg, wxString group, wxString Name,
-                       unsigned def_value) {
+void GOEnclosure::Init(
+  GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = Name;
-  Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false,
-                      def_value));
+  Set(cfg.ReadInteger(
+    CMBSetting, m_group, wxT("Value"), 0, 127, false, def_value));
   m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
   m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
   m_shortcut.Load(cfg, m_group);
   m_AmpMinimumLevel = 1;
 }
 
-void GOEnclosure::Load(GOConfigReader& cfg, wxString group, int enclosure_nb) {
+void GOEnclosure::Load(GOConfigReader &cfg, wxString group, int enclosure_nb) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = cfg.ReadStringNotEmpty(ODFSetting, m_group, wxT("Name"));
-  m_Displayed1 =
-      cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
-  m_Displayed2 =
-      cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, false);
-  m_AmpMinimumLevel =
-      cfg.ReadInteger(ODFSetting, m_group, wxT("AmpMinimumLevel"), 0, 100);
-  m_MIDIInputNumber = cfg.ReadInteger(ODFSetting, m_group,
-                                      wxT("MIDIInputNumber"), 0, 200, false, 0);
+  m_Displayed1
+    = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
+  m_Displayed2
+    = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, false);
+  m_AmpMinimumLevel
+    = cfg.ReadInteger(ODFSetting, m_group, wxT("AmpMinimumLevel"), 0, 100);
+  m_MIDIInputNumber = cfg.ReadInteger(
+    ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, 127));
   m_midi.SetIndex(enclosure_nb);
   m_midi.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
@@ -65,7 +60,7 @@ void GOEnclosure::Load(GOConfigReader& cfg, wxString group, int enclosure_nb) {
   m_shortcut.Load(cfg, m_group);
 }
 
-void GOEnclosure::Save(GOConfigWriter& cfg) {
+void GOEnclosure::Save(GOConfigWriter &cfg) {
   m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
   m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
   m_shortcut.Save(cfg, m_group);
@@ -73,8 +68,10 @@ void GOEnclosure::Save(GOConfigWriter& cfg) {
 }
 
 void GOEnclosure::Set(int n) {
-  if (n < 0) n = 0;
-  if (n > 127) n = 127;
+  if (n < 0)
+    n = 0;
+  if (n > 127)
+    n = 127;
   m_MIDIValue = n;
   m_sender.SetValue(m_MIDIValue);
   m_organfile->UpdateVolume();
@@ -85,35 +82,35 @@ int GOEnclosure::GetMIDIInputNumber() { return m_MIDIInputNumber; }
 
 float GOEnclosure::GetAttenuation() {
   static const float scale = 1.0 / 12700.0;
-  return (float)(m_MIDIValue * (100 - m_AmpMinimumLevel) +
-                 127 * m_AmpMinimumLevel) *
-         scale;
+  return (float)(m_MIDIValue * (100 - m_AmpMinimumLevel) + 127 * m_AmpMinimumLevel)
+    * scale;
 }
 
 void GOEnclosure::Scroll(bool scroll_up) {
   Set(m_MIDIValue + (scroll_up ? 4 : -4));
 }
 
-void GOEnclosure::ProcessMidi(const GOMidiEvent& event) {
+void GOEnclosure::ProcessMidi(const GOMidiEvent &event) {
   int value;
-  if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE) Set(value);
+  if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
+    Set(value);
 }
 
 void GOEnclosure::HandleKey(int key) {
   switch (m_shortcut.Match(key)) {
-    case KEY_MATCH:
-      Set(m_MIDIValue + 8);
-      break;
+  case KEY_MATCH:
+    Set(m_MIDIValue + 8);
+    break;
 
-    case KEY_MATCH_MINUS:
-      Set(m_MIDIValue - 8);
-      break;
-    default:
-      break;
+  case KEY_MATCH_MINUS:
+    Set(m_MIDIValue - 8);
+    break;
+  default:
+    break;
   }
 }
 
-const wxString& GOEnclosure::GetName() { return m_Name; }
+const wxString &GOEnclosure::GetName() { return m_Name; }
 
 int GOEnclosure::GetValue() { return m_MIDIValue; }
 
@@ -148,12 +145,13 @@ wxString GOEnclosure::GetMidiType() { return _("Enclosure"); }
 wxString GOEnclosure::GetMidiName() { return GetName(); }
 
 void GOEnclosure::ShowConfigDialog() {
-  wxString title =
-      wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType().c_str(),
-                       GetMidiName().c_str());
+  wxString title = wxString::Format(
+    _("Midi-Settings for %s - %s"),
+    GetMidiType().c_str(),
+    GetMidiName().c_str());
 
-  m_organfile->GetDocument()->ShowMIDIEventDialog(this, title, &m_midi,
-                                                  &m_sender, &m_shortcut);
+  m_organfile->GetDocument()->ShowMIDIEventDialog(
+    this, title, &m_midi, &m_sender, &m_shortcut);
 }
 
 wxString GOEnclosure::GetElementStatus() {
@@ -168,6 +166,8 @@ std::vector<wxString> GOEnclosure::GetElementActions() {
 }
 
 void GOEnclosure::TriggerElementActions(unsigned no) {
-  if (no == 0) Scroll(false);
-  if (no == 1) Scroll(true);
+  if (no == 0)
+    Scroll(false);
+  if (no == 1)
+    Scroll(true);
 }

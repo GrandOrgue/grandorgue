@@ -10,21 +10,24 @@
 
 #include "settings/GOSetting.h"
 
-template <class T>
-class GOSettingEnum : private GOSetting {
- private:
+template <class T> class GOSettingEnum : private GOSetting {
+private:
   T m_Value;
   T m_DefaultValue;
-  const struct IniFileEnumEntry* m_Entries;
+  const struct IniFileEnumEntry *m_Entries;
   unsigned m_Count;
 
-  void Load(GOConfigReader& cfg);
-  void Save(GOConfigWriter& cfg);
+  void Load(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
 
- public:
-  GOSettingEnum(GOSettingStore* store, wxString group, wxString name,
-                const struct IniFileEnumEntry* entries, unsigned count,
-                T default_value);
+public:
+  GOSettingEnum(
+    GOSettingStore *store,
+    wxString group,
+    wxString name,
+    const struct IniFileEnumEntry *entries,
+    unsigned count,
+    T default_value);
 
   void setDefaultValue(T default_value);
 

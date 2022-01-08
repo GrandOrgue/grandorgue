@@ -12,25 +12,31 @@
 #include "GODefinitionFile.h"
 #include "config/GOConfigReader.h"
 
-GODivisionalCoupler::GODivisionalCoupler(GODefinitionFile* organfile)
+GODivisionalCoupler::GODivisionalCoupler(GODefinitionFile *organfile)
     : GODrawstop(organfile), m_BiDirectionalCoupling(false), m_manuals(0) {}
 
-void GODivisionalCoupler::Load(GOConfigReader& cfg, wxString group) {
+void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
   wxString buffer;
 
-  m_BiDirectionalCoupling =
-      cfg.ReadBoolean(ODFSetting, group, wxT("BiDirectionalCoupling"));
-  unsigned NumberOfManuals =
-      cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1,
-                      m_organfile->GetManualAndPedalCount() -
-                          m_organfile->GetFirstManualIndex() + 1);
+  m_BiDirectionalCoupling
+    = cfg.ReadBoolean(ODFSetting, group, wxT("BiDirectionalCoupling"));
+  unsigned NumberOfManuals = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    wxT("NumberOfManuals"),
+    1,
+    m_organfile->GetManualAndPedalCount() - m_organfile->GetFirstManualIndex()
+      + 1);
 
   m_manuals.resize(0);
   for (unsigned i = 0; i < NumberOfManuals; i++) {
     buffer.Printf(wxT("Manual%03d"), i + 1);
-    m_manuals.push_back(cfg.ReadInteger(ODFSetting, group, buffer,
-                                        m_organfile->GetFirstManualIndex(),
-                                        m_organfile->GetManualAndPedalCount()));
+    m_manuals.push_back(cfg.ReadInteger(
+      ODFSetting,
+      group,
+      buffer,
+      m_organfile->GetFirstManualIndex(),
+      m_organfile->GetManualAndPedalCount()));
   }
   GODrawstop::Load(cfg, group);
 }

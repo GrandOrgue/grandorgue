@@ -30,28 +30,31 @@ GOReleaseAlignTable::~GOReleaseAlignTable() {}
 bool GOReleaseAlignTable::Load(GOCache &cache) {
   if (!cache.Read(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude)))
     return false;
-  if (!cache.Read(&m_PhaseAlignMaxDerivative,
-                  sizeof(m_PhaseAlignMaxDerivative)))
+  if (!cache.Read(
+        &m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative)))
     return false;
-  if (!cache.Read(&m_PositionEntries, sizeof(m_PositionEntries))) return false;
+  if (!cache.Read(&m_PositionEntries, sizeof(m_PositionEntries)))
+    return false;
   return true;
 }
 
 bool GOReleaseAlignTable::Save(GOCacheWriter &cache) {
   if (!cache.Write(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude)))
     return false;
-  if (!cache.Write(&m_PhaseAlignMaxDerivative,
-                   sizeof(m_PhaseAlignMaxDerivative)))
+  if (!cache.Write(
+        &m_PhaseAlignMaxDerivative, sizeof(m_PhaseAlignMaxDerivative)))
     return false;
-  if (!cache.Write(&m_PositionEntries, sizeof(m_PositionEntries))) return false;
+  if (!cache.Write(&m_PositionEntries, sizeof(m_PositionEntries)))
+    return false;
   return true;
 }
 
-void GOReleaseAlignTable::ComputeTable(const GOAudioSection &release,
-                                       int phase_align_max_amplitude,
-                                       int phase_align_max_derivative,
-                                       unsigned int sample_rate,
-                                       unsigned start_position) {
+void GOReleaseAlignTable::ComputeTable(
+  const GOAudioSection &release,
+  int phase_align_max_amplitude,
+  int phase_align_max_derivative,
+  unsigned int sample_rate,
+  unsigned start_position) {
   DecompressionCache cache;
   InitDecompressionCache(cache);
 
@@ -74,8 +77,8 @@ void GOReleaseAlignTable::ComputeTable(const GOAudioSection &release,
     return;
   /* If number of samples in the release is not enough to fill the release
    * table, abort - release alignment probably wont help. */
-  if (required_search_len <
-      PHASE_ALIGN_AMPLITUDES * PHASE_ALIGN_DERIVATIVES * 2)
+  if (
+    required_search_len < PHASE_ALIGN_AMPLITUDES * PHASE_ALIGN_DERIVATIVES * 2)
     return;
 
   /* Generate the release table using the small portion of the release... */
@@ -94,25 +97,27 @@ void GOReleaseAlignTable::ComputeTable(const GOAudioSection &release,
 
     /* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
     int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
-    int derivIndex =
-        (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative);
+    int derivIndex
+      = (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative);
 
     /* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
     int f_mod = f + m_PhaseAlignMaxAmplitude - 1;
-    int ampIndex =
-        (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
+    int ampIndex
+      = (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
 
     /* Store this release point if it was not already found */
     assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
     assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-    derivIndex = (derivIndex < 0) ? 0
-                                  : ((derivIndex >= PHASE_ALIGN_DERIVATIVES)
-                                         ? PHASE_ALIGN_DERIVATIVES - 1
-                                         : derivIndex);
-    ampIndex = (ampIndex < 0) ? 0
-                              : ((ampIndex >= PHASE_ALIGN_AMPLITUDES)
-                                     ? PHASE_ALIGN_AMPLITUDES - 1
-                                     : ampIndex);
+    derivIndex = (derivIndex < 0)
+      ? 0
+      : (
+        (derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES - 1
+                                                : derivIndex);
+    ampIndex = (ampIndex < 0)
+      ? 0
+      : (
+        (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
+                                             : ampIndex);
     if (!found[derivIndex][ampIndex]) {
       m_PositionEntries[derivIndex][ampIndex] = i + 1 + start_position;
       found[derivIndex][ampIndex] = true;
@@ -147,12 +152,15 @@ void GOReleaseAlignTable::ComputeTable(const GOAudioSection &release,
                k++) {
             foundsecond = true;
             int sl = (l + 1) / 2;
-            if ((l & 1) == 0) sl = -sl;
+            if ((l & 1) == 0)
+              sl = -sl;
             int sk = (k + 2) / 2;
-            if ((k & 1) == 0) sk = -sk;
-            if ((i + sl < PHASE_ALIGN_DERIVATIVES) && (i + sl >= 0) &&
-                (j + sk < PHASE_ALIGN_AMPLITUDES) && (j + sk >= 0) &&
-                (found[i + sl][j + sk])) {
+            if ((k & 1) == 0)
+              sk = -sk;
+            if (
+              (i + sl < PHASE_ALIGN_DERIVATIVES) && (i + sl >= 0)
+              && (j + sk < PHASE_ALIGN_AMPLITUDES) && (j + sk >= 0)
+              && (found[i + sl][j + sk])) {
               m_PositionEntries[i][j] = m_PositionEntries[i + sl][j + sk];
             } else {
               foundsecond = false;
@@ -165,8 +173,8 @@ void GOReleaseAlignTable::ComputeTable(const GOAudioSection &release,
 }
 
 void GOReleaseAlignTable::SetupRelease(
-    audio_section_stream &release_sampler,
-    const audio_section_stream &old_sampler) const {
+  audio_section_stream &release_sampler,
+  const audio_section_stream &old_sampler) const {
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
   GOAudioSection::GetHistory(&old_sampler, history);
 
@@ -183,27 +191,28 @@ void GOReleaseAlignTable::SetupRelease(
   v_mod += (m_PhaseAlignMaxDerivative - 1);
   f_mod += (m_PhaseAlignMaxAmplitude - 1);
 
-  int derivIndex =
-      m_PhaseAlignMaxDerivative
-          ? (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative)
-          : PHASE_ALIGN_DERIVATIVES / 2;
+  int derivIndex = m_PhaseAlignMaxDerivative
+    ? (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative)
+    : PHASE_ALIGN_DERIVATIVES / 2;
 
   /* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-  int ampIndex = m_PhaseAlignMaxAmplitude ? (PHASE_ALIGN_AMPLITUDES * f_mod) /
-                                                (2 * m_PhaseAlignMaxAmplitude)
-                                          : PHASE_ALIGN_AMPLITUDES / 2;
+  int ampIndex = m_PhaseAlignMaxAmplitude
+    ? (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude)
+    : PHASE_ALIGN_AMPLITUDES / 2;
 
   /* Store this release point if it was not already found */
   assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
   assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-  derivIndex = (derivIndex < 0) ? 0
-                                : ((derivIndex >= PHASE_ALIGN_DERIVATIVES)
-                                       ? PHASE_ALIGN_DERIVATIVES - 1
-                                       : derivIndex);
-  ampIndex = (ampIndex < 0) ? 0
-                            : ((ampIndex >= PHASE_ALIGN_AMPLITUDES)
-                                   ? PHASE_ALIGN_AMPLITUDES - 1
-                                   : ampIndex);
+  derivIndex = (derivIndex < 0)
+    ? 0
+    : (
+      (derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES - 1
+                                              : derivIndex);
+  ampIndex = (ampIndex < 0)
+    ? 0
+    : (
+      (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
+                                           : ampIndex);
   release_sampler.position_index = m_PositionEntries[derivIndex][ampIndex];
 
 #ifndef NDEBUG

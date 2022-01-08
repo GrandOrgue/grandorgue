@@ -16,9 +16,9 @@
 class GOSoundWorkItem;
 
 class GOSoundScheduler {
- private:
-  std::vector<GOSoundWorkItem*> m_Work;
-  std::vector<GOSoundWorkItem**> m_WorkItems;
+private:
+  std::vector<GOSoundWorkItem *> m_Work;
+  std::vector<GOSoundWorkItem **> m_WorkItems;
   atomic_uint m_NextItem;
   unsigned m_ItemCount;
   unsigned m_RepeatCount;
@@ -28,14 +28,14 @@ class GOSoundScheduler {
   void Unlock();
   void Update();
 
-  bool CompareItem(GOSoundWorkItem* a, GOSoundWorkItem* b);
-  void SortList(std::vector<GOSoundWorkItem*>& list);
-  void ResetList(std::vector<GOSoundWorkItem*>& list);
-  void AddList(GOSoundWorkItem* item, std::vector<GOSoundWorkItem*>& list);
-  void RemoveList(GOSoundWorkItem* item, std::vector<GOSoundWorkItem*>& list);
-  void ExecList(std::vector<GOSoundWorkItem*>& list);
+  bool CompareItem(GOSoundWorkItem *a, GOSoundWorkItem *b);
+  void SortList(std::vector<GOSoundWorkItem *> &list);
+  void ResetList(std::vector<GOSoundWorkItem *> &list);
+  void AddList(GOSoundWorkItem *item, std::vector<GOSoundWorkItem *> &list);
+  void RemoveList(GOSoundWorkItem *item, std::vector<GOSoundWorkItem *> &list);
+  void ExecList(std::vector<GOSoundWorkItem *> &list);
 
- public:
+public:
   GOSoundScheduler();
   ~GOSoundScheduler();
 
@@ -44,10 +44,10 @@ class GOSoundScheduler {
   void Clear();
   void Reset();
   void Exec();
-  void Add(GOSoundWorkItem* item);
-  void Remove(GOSoundWorkItem* item);
+  void Add(GOSoundWorkItem *item);
+  void Remove(GOSoundWorkItem *item);
 
-  GOSoundWorkItem* GetNextGroup();
+  GOSoundWorkItem *GetNextGroup();
 };
 
 #endif

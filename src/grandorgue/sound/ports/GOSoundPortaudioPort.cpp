@@ -12,33 +12,36 @@
 const wxString GOSoundPortaudioPort::PORT_NAME = wxT("Pa");
 
 wxString GOSoundPortaudioPort::getLastError(PaError error) {
-  const char* errText = NULL;
+  const char *errText = NULL;
 
-  if (error == paUnanticipatedHostError ||
-      error ==
-          paInternalError  // workaround of
-                           // https://github.com/PortAudio/portaudio/issues/620
+  if (
+    error == paUnanticipatedHostError
+    || error
+      == paInternalError // workaround of
+                         // https://github.com/PortAudio/portaudio/issues/620
   ) {
-    const PaHostErrorInfo* const pErrInfo = Pa_GetLastHostErrorInfo();
+    const PaHostErrorInfo *const pErrInfo = Pa_GetLastHostErrorInfo();
 
-    if (pErrInfo != NULL && pErrInfo->errorText != NULL &&
-        strlen(pErrInfo->errorText))
+    if (
+      pErrInfo != NULL && pErrInfo->errorText != NULL
+      && strlen(pErrInfo->errorText))
       errText = pErrInfo->errorText;
   }
-  if (errText == NULL) errText = Pa_GetErrorText(error);
+  if (errText == NULL)
+    errText = Pa_GetErrorText(error);
   return wxGetTranslation(wxString::FromAscii(errText));
 }
 
-GOSoundPortaudioPort::GOSoundPortaudioPort(GOSound* sound, wxString name)
+GOSoundPortaudioPort::GOSoundPortaudioPort(GOSound *sound, wxString name)
     : GOSoundPort(sound, name), m_stream(0) {}
 
 GOSoundPortaudioPort::~GOSoundPortaudioPort() { Close(); }
 
 wxString GOSoundPortaudioPort::getName(unsigned index) {
-  const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
-  const PaHostApiInfo* api = Pa_GetHostApiInfo(info->hostApi);
+  const PaDeviceInfo *info = Pa_GetDeviceInfo(index);
+  const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
   return GOSoundPortFactory::getInstance().ComposeDeviceName(
-      PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
+    PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
 }
 
 void GOSoundPortaudioPort::Open() {
@@ -52,14 +55,24 @@ void GOSoundPortaudioPort::Open() {
   stream_parameters.hostApiSpecificStreamInfo = NULL;
 
   for (int i = 0; i < Pa_GetDeviceCount(); i++)
-    if (getName(i) == m_Name) stream_parameters.device = i;
+    if (getName(i) == m_Name)
+      stream_parameters.device = i;
 
   PaError error;
-  error = Pa_OpenStream(&m_stream, NULL, &stream_parameters, m_SampleRate,
-                        m_SamplesPerBuffer, paNoFlag, &Callback, this);
+  error = Pa_OpenStream(
+    &m_stream,
+    NULL,
+    &stream_parameters,
+    m_SampleRate,
+    m_SamplesPerBuffer,
+    paNoFlag,
+    &Callback,
+    this);
   if (error != paNoError)
-    throw wxString::Format(_("Open of the audio stream for %s failed: %s"),
-                           m_Name.c_str(), getLastError(error));
+    throw wxString::Format(
+      _("Open of the audio stream for %s failed: %s"),
+      m_Name.c_str(),
+      getLastError(error));
   m_IsOpen = true;
 }
 
@@ -70,28 +83,33 @@ void GOSoundPortaudioPort::StartStream() {
   PaError error;
   error = Pa_StartStream(m_stream);
   if (error != paNoError)
-    throw wxString::Format(_("Start of audio stream of %s failed: %s"),
-                           m_Name.c_str(), getLastError(error));
+    throw wxString::Format(
+      _("Start of audio stream of %s failed: %s"),
+      m_Name.c_str(),
+      getLastError(error));
 
-  const struct PaStreamInfo* info = Pa_GetStreamInfo(m_stream);
+  const struct PaStreamInfo *info = Pa_GetStreamInfo(m_stream);
   SetActualLatency(info->outputLatency);
 }
 
 void GOSoundPortaudioPort::Close() {
-  if (!m_stream || !m_IsOpen) return;
+  if (!m_stream || !m_IsOpen)
+    return;
   Pa_StopStream(m_stream);
   Pa_CloseStream(m_stream);
   m_stream = 0;
   m_IsOpen = false;
 }
 
-int GOSoundPortaudioPort::Callback(const void* input, void* output,
-                                   unsigned long frameCount,
-                                   const PaStreamCallbackTimeInfo* timeInfo,
-                                   PaStreamCallbackFlags statusFlags,
-                                   void* userData) {
-  GOSoundPortaudioPort* port = (GOSoundPortaudioPort*)userData;
-  if (port->AudioCallback((float*)output, frameCount))
+int GOSoundPortaudioPort::Callback(
+  const void *input,
+  void *output,
+  unsigned long frameCount,
+  const PaStreamCallbackTimeInfo *timeInfo,
+  PaStreamCallbackFlags statusFlags,
+  void *userData) {
+  GOSoundPortaudioPort *port = (GOSoundPortaudioPort *)userData;
+  if (port->AudioCallback((float *)output, frameCount))
     return paContinue;
   else
     return paAbort;
@@ -99,10 +117,10 @@ int GOSoundPortaudioPort::Callback(const void* input, void* output,
 
 // for compatibility with old settings
 wxString get_oldstyle_name(unsigned index) {
-  const PaDeviceInfo* info = Pa_GetDeviceInfo(index);
-  const PaHostApiInfo* api = Pa_GetHostApiInfo(info->hostApi);
-  return wxGetTranslation(wxString::FromAscii(api->name)) +
-         wxString(_(" (PA): ")) + wxString(info->name);
+  const PaDeviceInfo *info = Pa_GetDeviceInfo(index);
+  const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
+  return wxGetTranslation(wxString::FromAscii(api->name))
+    + wxString(_(" (PA): ")) + wxString(info->name);
 }
 
 static bool has_initialised = false;
@@ -121,28 +139,30 @@ void GOSoundPortaudioPort::terminate() {
   }
 }
 
-GOSoundPort* GOSoundPortaudioPort::create(const GOPortsConfig& portsConfig,
-                                          GOSound* sound, wxString name) {
+GOSoundPort *GOSoundPortaudioPort::create(
+  const GOPortsConfig &portsConfig, GOSound *sound, wxString name) {
   if (portsConfig.IsEnabled(PORT_NAME)) {
     assure_initialised();
     for (int i = 0; i < Pa_GetDeviceCount(); i++) {
       wxString devName = getName(i);
 
-      if (devName == name || devName + GOPortFactory::c_NameDelim == name ||
-          get_oldstyle_name(i) == name)
+      if (
+        devName == name || devName + GOPortFactory::c_NameDelim == name
+        || get_oldstyle_name(i) == name)
         return new GOSoundPortaudioPort(sound, devName);
     }
   }
   return NULL;
 }
 
-void GOSoundPortaudioPort::addDevices(const GOPortsConfig& portsConfig,
-                                      std::vector<GOSoundDevInfo>& result) {
+void GOSoundPortaudioPort::addDevices(
+  const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &result) {
   if (portsConfig.IsEnabled(PORT_NAME)) {
     assure_initialised();
     for (int i = 0; i < Pa_GetDeviceCount(); i++) {
-      const PaDeviceInfo* dev_info = Pa_GetDeviceInfo(i);
-      if (dev_info->maxOutputChannels < 1) continue;
+      const PaDeviceInfo *dev_info = Pa_GetDeviceInfo(i);
+      if (dev_info->maxOutputChannels < 1)
+        continue;
 
       GOSoundDevInfo info;
       info.channels = dev_info->maxOutputChannels;

@@ -40,7 +40,7 @@ typedef struct {
   wxString name;
   unsigned channels;
   unsigned desired_latency;
-  std::vector<std::vector<GOAudioGroupOutputConfig> > scale_factors;
+  std::vector<std::vector<GOAudioGroupOutputConfig>> scale_factors;
 } GOAudioDeviceConfig;
 
 typedef struct {
@@ -53,7 +53,7 @@ typedef struct {
 enum class GOInitialLoadType { LOAD_NONE, LOAD_LAST_USED, LOAD_FIRST };
 
 class GOConfig : public GOSettingStore, public GOOrganList {
- private:
+private:
   wxString m_InstanceName;
   wxString m_ConfigFileName;
   wxString m_ResourceDir;
@@ -75,7 +75,7 @@ class GOConfig : public GOSettingStore, public GOOrganList {
 
   wxString GetEventSection(unsigned index);
 
- public:
+public:
   GOConfig(wxString instance);
   ~GOConfig();
 
@@ -123,17 +123,21 @@ class GOConfig : public GOSettingStore, public GOOrganList {
   GOSettingString LanguageCode;
 
   class GOSettingUnsignedBit : public GOSettingUnsigned {
-   protected:
+  protected:
     unsigned validate(unsigned value) {
       return GOSettingUnsigned::validate(value - value % 4);
     }
 
-   public:
-    GOSettingUnsignedBit(GOSettingStore* store, wxString group, wxString name,
-                         unsigned min_value, unsigned max_value,
-                         unsigned default_value)
-        : GOSettingUnsigned(store, group, name, min_value, max_value,
-                            default_value) {}
+  public:
+    GOSettingUnsignedBit(
+      GOSettingStore *store,
+      wxString group,
+      wxString name,
+      unsigned min_value,
+      unsigned max_value,
+      unsigned default_value)
+        : GOSettingUnsigned(
+          store, group, name, min_value, max_value, default_value) {}
 
   } BitsPerSample;
   GOSettingInteger Transpose;
@@ -166,8 +170,8 @@ class GOConfig : public GOSettingStore, public GOOrganList {
   unsigned GetEventCount();
   wxString GetEventGroup(unsigned index);
   wxString GetEventTitle(unsigned index);
-  GOMidiReceiverBase* GetMidiEvent(unsigned index);
-  GOMidiReceiverBase* FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
+  GOMidiReceiverBase *GetMidiEvent(unsigned index);
+  GOMidiReceiverBase *FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
 
   /*
   bool GetMidiInState(wxString device, bool isEnabledByDefault);
@@ -183,36 +187,36 @@ class GOConfig : public GOSettingStore, public GOOrganList {
   std::vector<wxString> GetMidiOutDeviceList();
    */
 
-  const std::vector<wxString>& GetAudioGroups();
-  void SetAudioGroups(const std::vector<wxString>& audio_groups);
-  unsigned GetAudioGroupId(const wxString& str);
-  int GetStrictAudioGroupId(const wxString& str);
+  const std::vector<wxString> &GetAudioGroups();
+  void SetAudioGroups(const std::vector<wxString> &audio_groups);
+  unsigned GetAudioGroupId(const wxString &str);
+  int GetStrictAudioGroupId(const wxString &str);
 
-  const GOPortsConfig& GetSoundPortsConfig() const {
+  const GOPortsConfig &GetSoundPortsConfig() const {
     return m_SoundPortsConfig;
   }
 
-  void SetSoundPortsConfig(const GOPortsConfig& portsConfig) {
+  void SetSoundPortsConfig(const GOPortsConfig &portsConfig) {
     m_SoundPortsConfig = portsConfig;
   }
 
-  const std::vector<GOAudioDeviceConfig>& GetAudioDeviceConfig();
+  const std::vector<GOAudioDeviceConfig> &GetAudioDeviceConfig();
   const unsigned GetTotalAudioChannels() const;
-  void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig>& config);
+  void SetAudioDeviceConfig(const std::vector<GOAudioDeviceConfig> &config);
   unsigned GetDefaultLatency();
 
-  const GOPortsConfig& GetMidiPortsConfig() const { return m_MidiPortsConfig; }
+  const GOPortsConfig &GetMidiPortsConfig() const { return m_MidiPortsConfig; }
 
-  void SetMidiPortsConfig(const GOPortsConfig& portsConfig) {
+  void SetMidiPortsConfig(const GOPortsConfig &portsConfig) {
     m_MidiPortsConfig = portsConfig;
   }
 
-  GOMidiMap& GetMidiMap();
+  GOMidiMap &GetMidiMap();
 
-  GOTemperamentList& GetTemperaments();
+  GOTemperamentList &GetTemperaments();
 
   wxRect GetMainWindowRect();
-  void SetMainWindowRect(const wxRect& rect);
+  void SetMainWindowRect(const wxRect &rect);
 
   void Flush();
 };

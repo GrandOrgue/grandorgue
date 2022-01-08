@@ -13,25 +13,29 @@
 
 #include "config/GOConfig.h"
 
-GOSettingsDefaults::GOSettingsDefaults(GOConfig& settings, wxWindow* parent)
+GOSettingsDefaults::GOSettingsDefaults(GOConfig &settings, wxWindow *parent)
     : wxPanel(parent, wxID_ANY), m_config(settings) {
-  wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer* item0 = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *item0 = new wxBoxSizer(wxHORIZONTAL);
 
-  wxBoxSizer* item9 = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *item9 = new wxBoxSizer(wxVERTICAL);
   item0->Add(item9, 0, wxEXPAND | wxALL, 0);
-  wxFlexGridSizer* grid;
-  wxBoxSizer* item6;
+  wxFlexGridSizer *grid;
+  wxBoxSizer *item6;
 
   grid = new wxFlexGridSizer(2, 5, 5);
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Volume"));
   item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Volume:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_Volume = new wxSpinCtrl(this, ID_VOLUME, wxEmptyString,
-                                      wxDefaultPosition, wxDefaultSize),
-            0, wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Volume:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_Volume = new wxSpinCtrl(
+      this, ID_VOLUME, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+    0,
+    wxALL);
   m_Volume->SetRange(-120, 20);
 
   m_Volume->SetValue(m_config.Volume());
@@ -41,20 +45,30 @@ GOSettingsDefaults::GOSettingsDefaults(GOConfig& settings, wxWindow* parent)
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Metronome"));
   item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("BPM:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
   grid->Add(
-      m_MetronomeBPM = new wxSpinCtrl(this, ID_METRONOME_BPM, wxEmptyString,
-                                      wxDefaultPosition, wxDefaultSize),
-      0, wxALL);
+    new wxStaticText(this, wxID_ANY, _("BPM:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_MetronomeBPM = new wxSpinCtrl(
+      this, ID_METRONOME_BPM, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+    0,
+    wxALL);
   m_MetronomeBPM->SetRange(1, 500);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Ticks per Measure:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_MetronomeMeasure =
-                new wxSpinCtrl(this, ID_METRONOME_MEASURE, wxEmptyString,
-                               wxDefaultPosition, wxDefaultSize),
-            0, wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Ticks per Measure:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_MetronomeMeasure = new wxSpinCtrl(
+      this,
+      ID_METRONOME_MEASURE,
+      wxEmptyString,
+      wxDefaultPosition,
+      wxDefaultSize),
+    0,
+    wxALL);
   m_MetronomeMeasure->SetRange(0, 32);
 
   m_MetronomeBPM->SetValue(m_config.MetronomeBPM());
@@ -69,58 +83,101 @@ GOSettingsDefaults::GOSettingsDefaults(GOConfig& settings, wxWindow* parent)
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Paths"));
   item9->Add(item6, 1, wxEXPAND | wxALL, 5);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Sampleset directory:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_OrganPath = new wxDirPickerCtrl(
-                this, ID_ORGAN_PATH, wxEmptyString,
-                _("Select directory for your samplesets"), wxDefaultPosition,
-                wxDefaultSize, wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-            1, wxEXPAND | wxALL);
-
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Organ package directory:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
   grid->Add(
-      m_OrganPackagePath = new wxDirPickerCtrl(
-          this, ID_ORGANPACKAGE_PATH, wxEmptyString,
-          _("Select directory for your organ packages"), wxDefaultPosition,
-          wxDefaultSize, wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-      1, wxEXPAND | wxALL);
+    new wxStaticText(this, wxID_ANY, _("Sampleset directory:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_OrganPath = new wxDirPickerCtrl(
+      this,
+      ID_ORGAN_PATH,
+      wxEmptyString,
+      _("Select directory for your samplesets"),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
+    1,
+    wxEXPAND | wxALL);
 
   grid->Add(
-      new wxStaticText(this, wxID_ANY, _("Setting import/export directory:")),
-      0, wxALL | wxALIGN_CENTER_VERTICAL);
+    new wxStaticText(this, wxID_ANY, _("Organ package directory:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
   grid->Add(
-      m_SettingPath = new wxDirPickerCtrl(
-          this, ID_SETTING_PATH, wxEmptyString,
-          _("Select directory for setting import/export"), wxDefaultPosition,
-          wxDefaultSize, wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-      1, wxEXPAND | wxALL);
+    m_OrganPackagePath = new wxDirPickerCtrl(
+      this,
+      ID_ORGANPACKAGE_PATH,
+      wxEmptyString,
+      _("Select directory for your organ packages"),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
+    1,
+    wxEXPAND | wxALL);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Audio recording directory:")),
-            0, wxALL | wxALIGN_CENTER_VERTICAL);
   grid->Add(
-      m_AudioRecorderPath = new wxDirPickerCtrl(
-          this, ID_AUDIO_RECORDER_PATH, wxEmptyString,
-          _("Select directory for your audio recordings"), wxDefaultPosition,
-          wxDefaultSize, wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-      1, wxEXPAND | wxALL);
-
-  grid->Add(new wxStaticText(this, wxID_ANY, _("MIDI recording directory:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
+    new wxStaticText(this, wxID_ANY, _("Setting import/export directory:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
   grid->Add(
-      m_MidiRecorderPath = new wxDirPickerCtrl(
-          this, ID_MIDI_RECORDER_PATH, wxEmptyString,
-          _("Select directory for your MIDI recording"), wxDefaultPosition,
-          wxDefaultSize, wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-      1, wxEXPAND | wxALL);
+    m_SettingPath = new wxDirPickerCtrl(
+      this,
+      ID_SETTING_PATH,
+      wxEmptyString,
+      _("Select directory for setting import/export"),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
+    1,
+    wxEXPAND | wxALL);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Midi player directory:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_MidiPlayerPath = new wxDirPickerCtrl(
-                this, ID_MIDI_PLAYER_PATH, wxEmptyString,
-                _("Select directory for the MIDI player"), wxDefaultPosition,
-                wxDefaultSize, wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-            1, wxEXPAND | wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Audio recording directory:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_AudioRecorderPath = new wxDirPickerCtrl(
+      this,
+      ID_AUDIO_RECORDER_PATH,
+      wxEmptyString,
+      _("Select directory for your audio recordings"),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
+    1,
+    wxEXPAND | wxALL);
+
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("MIDI recording directory:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_MidiRecorderPath = new wxDirPickerCtrl(
+      this,
+      ID_MIDI_RECORDER_PATH,
+      wxEmptyString,
+      _("Select directory for your MIDI recording"),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
+    1,
+    wxEXPAND | wxALL);
+
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Midi player directory:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_MidiPlayerPath = new wxDirPickerCtrl(
+      this,
+      ID_MIDI_PLAYER_PATH,
+      wxEmptyString,
+      _("Select directory for the MIDI player"),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
+    1,
+    wxEXPAND | wxALL);
 
   item6->Add(grid, 1, wxEXPAND | wxALL, 5);
 

@@ -46,7 +46,7 @@ typedef enum {
 #define MIDI_CTRL_NOTES_OFF 123
 
 class GOMidiEvent {
- private:
+private:
   midi_message_type m_miditype;
   int m_channel, m_key, m_value;
   unsigned m_device;
@@ -54,9 +54,9 @@ class GOMidiEvent {
   wxString m_string;
   std::vector<uint8_t> m_data;
 
- public:
+public:
   GOMidiEvent();
-  GOMidiEvent(const GOMidiEvent& e);
+  GOMidiEvent(const GOMidiEvent &e);
 
   midi_message_type GetMidiType() const { return m_miditype; }
   void SetMidiType(midi_message_type t) { m_miditype = t; }
@@ -77,18 +77,18 @@ class GOMidiEvent {
   GOTime GetTime() const { return m_time; }
   void SetTime(GOTime t) { m_time = t; }
 
-  const wxString& GetString() const { return m_string; }
-  void SetString(const wxString& str) { m_string = str; }
-  void SetString(const wxString& str, unsigned length);
+  const wxString &GetString() const { return m_string; }
+  void SetString(const wxString &str) { m_string = str; }
+  void SetString(const wxString &str, unsigned length);
 
-  const std::vector<uint8_t>& GetData() const { return m_data; }
-  void SetData(const std::vector<uint8_t>& data) { m_data = data; }
+  const std::vector<uint8_t> &GetData() const { return m_data; }
+  void SetData(const std::vector<uint8_t> &data) { m_data = data; }
 
-  void FromMidi(const std::vector<unsigned char>& msg, GOMidiMap& map);
-  void ToMidi(std::vector<std::vector<unsigned char>>& msg,
-              GOMidiMap& map) const;
+  void FromMidi(const std::vector<unsigned char> &msg, GOMidiMap &map);
+  void
+  ToMidi(std::vector<std::vector<unsigned char>> &msg, GOMidiMap &map) const;
 
-  wxString ToString(GOMidiMap& map) const;
+  wxString ToString(GOMidiMap &map) const;
 };
 
 #endif

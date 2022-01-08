@@ -11,10 +11,8 @@
 #include "GOGUIPanel.h"
 #include "config/GOConfigReader.h"
 
-GOGUIControl::GOGUIControl(GOGUIPanel* panel, void* control)
-    : m_panel(panel),
-      m_control(control),
-      m_BoundingRect(0, 0, 0, 0),
+GOGUIControl::GOGUIControl(GOGUIPanel *panel, void *control)
+    : m_panel(panel), m_control(control), m_BoundingRect(0, 0, 0, 0),
       m_DrawPending(false) {
   m_metrics = panel->GetDisplayMetrics();
   m_layout = panel->GetLayoutEngine();
@@ -23,21 +21,21 @@ GOGUIControl::GOGUIControl(GOGUIPanel* panel, void* control)
 
 GOGUIControl::~GOGUIControl() {}
 
-void GOGUIControl::Init(GOConfigReader& cfg, wxString group) {
+void GOGUIControl::Init(GOConfigReader &cfg, wxString group) {
   m_panel->GetOrganFile()->RegisterSaveableObject(this);
   m_group = group;
 }
 
-void GOGUIControl::Load(GOConfigReader& cfg, wxString group) {
+void GOGUIControl::Load(GOConfigReader &cfg, wxString group) {
   m_panel->GetOrganFile()->RegisterSaveableObject(this);
   m_group = group;
 }
 
 void GOGUIControl::Layout() {}
 
-void GOGUIControl::Save(GOConfigWriter& cfg) {}
+void GOGUIControl::Save(GOConfigWriter &cfg) {}
 
-void GOGUIControl::ControlChanged(void* control) {
+void GOGUIControl::ControlChanged(void *control) {
   if (control == m_control)
     if (!m_DrawPending) {
       m_DrawPending = true;
@@ -45,15 +43,15 @@ void GOGUIControl::ControlChanged(void* control) {
     }
 }
 
-void GOGUIControl::PrepareDraw(double scale, GOBitmap* background) {}
+void GOGUIControl::PrepareDraw(double scale, GOBitmap *background) {}
 
-void GOGUIControl::Draw(GODC& dc) { m_DrawPending = false; }
+void GOGUIControl::Draw(GODC &dc) { m_DrawPending = false; }
 
-bool GOGUIControl::HandleMousePress(int x, int y, bool right,
-                                    GOGUIMouseState& state) {
+bool GOGUIControl::HandleMousePress(
+  int x, int y, bool right, GOGUIMouseState &state) {
   return false;
 }
 
 bool GOGUIControl::HandleMouseScroll(int x, int y, int amount) { return false; }
 
-const wxRect& GOGUIControl::GetBoundingRect() { return m_BoundingRect; }
+const wxRect &GOGUIControl::GetBoundingRect() { return m_BoundingRect; }

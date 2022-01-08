@@ -11,12 +11,12 @@
 #include "GODrawStop.h"
 
 class GOSwitch : public GODrawstop {
- protected:
+protected:
   void ChangeState(bool);
   void SetupCombinationState();
 
- public:
-  GOSwitch(GODefinitionFile* organfile);
+public:
+  GOSwitch(GODefinitionFile *organfile);
   ~GOSwitch();
 
   wxString GetMidiType();

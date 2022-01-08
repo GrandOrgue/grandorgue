@@ -12,17 +12,20 @@
 #include "RtMidi.h"
 
 class GOMidiRtOutPort : public GOMidiOutPort {
- protected:
+protected:
   RtMidi::Api m_api;
-  RtMidiOut* m_port;
+  RtMidiOut *m_port;
 
   void Close(bool isToFreePort);
 
-  void SendData(std::vector<unsigned char>& msg);
+  void SendData(std::vector<unsigned char> &msg);
 
- public:
-  GOMidiRtOutPort(GOMidi* midi, RtMidi::Api api, const wxString& deviceName,
-                  const wxString& fullName);
+public:
+  GOMidiRtOutPort(
+    GOMidi *midi,
+    RtMidi::Api api,
+    const wxString &deviceName,
+    const wxString &fullName);
   ~GOMidiRtOutPort();
 
   virtual const wxString GetDefaultLogicalName() const;

@@ -23,7 +23,7 @@ class GOWindchest;
 class GODefinitionFile;
 
 class GOModel {
- protected:
+protected:
   ptr_vector<GOWindchest> m_windchest;
   ptr_vector<GOManual> m_manual;
   ptr_vector<GOEnclosure> m_enclosure;
@@ -37,46 +37,46 @@ class GOModel {
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;
 
-  void Load(GOConfigReader& cfg, GODefinitionFile* organfile);
+  void Load(GOConfigReader &cfg, GODefinitionFile *organfile);
 
- public:
+public:
   GOModel();
   ~GOModel();
 
-  void UpdateTremulant(GOTremulant* tremulant);
+  void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();
 
   unsigned GetWindchestGroupCount();
-  unsigned AddWindchest(GOWindchest* windchest);
-  GOWindchest* GetWindchest(unsigned index);
+  unsigned AddWindchest(GOWindchest *windchest);
+  GOWindchest *GetWindchest(unsigned index);
 
-  GOEnclosure* GetEnclosureElement(unsigned index);
+  GOEnclosure *GetEnclosureElement(unsigned index);
   unsigned GetEnclosureCount();
-  unsigned AddEnclosure(GOEnclosure* enclosure);
+  unsigned AddEnclosure(GOEnclosure *enclosure);
 
   unsigned GetSwitchCount();
-  GOSwitch* GetSwitch(unsigned index);
+  GOSwitch *GetSwitch(unsigned index);
 
   unsigned GetTremulantCount();
-  GOTremulant* GetTremulant(unsigned index);
+  GOTremulant *GetTremulant(unsigned index);
 
   unsigned GetManualAndPedalCount();
   unsigned GetODFManualCount();
   unsigned GetFirstManualIndex();
-  GOManual* GetManual(unsigned index);
+  GOManual *GetManual(unsigned index);
 
-  GORank* GetRank(unsigned index);
+  GORank *GetRank(unsigned index);
   unsigned GetODFRankCount();
-  void AddRank(GORank* rank);
+  void AddRank(GORank *rank);
 
   unsigned GetNumberOfReversiblePistons();
-  GOPiston* GetPiston(unsigned index);
+  GOPiston *GetPiston(unsigned index);
 
   unsigned GetDivisionalCouplerCount();
-  GODivisionalCoupler* GetDivisionalCoupler(unsigned index);
+  GODivisionalCoupler *GetDivisionalCoupler(unsigned index);
 
   unsigned GetGeneralCount();
-  GOGeneral* GetGeneral(unsigned index);
+  GOGeneral *GetGeneral(unsigned index);
 
   unsigned GetStopCount();
   unsigned GetCouplerCount();

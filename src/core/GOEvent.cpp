@@ -18,57 +18,52 @@ DEFINE_LOCAL_EVENT_TYPE(wxEVT_WINTITLE)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_SHOWMSG)
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_RENAMEFILE)
 
-wxMsgBoxEvent::wxMsgBoxEvent(const wxString& title, const wxString& text,
-                             long style)
+wxMsgBoxEvent::wxMsgBoxEvent(
+  const wxString &title, const wxString &text, long style)
     : wxEvent(0, wxEVT_SHOWMSG), m_Title(title), m_Text(text), m_Style(style) {}
 
-wxMsgBoxEvent::wxMsgBoxEvent(const wxMsgBoxEvent& e)
+wxMsgBoxEvent::wxMsgBoxEvent(const wxMsgBoxEvent &e)
     : wxEvent(e), m_Title(e.m_Title), m_Text(e.m_Text), m_Style(e.m_Style) {}
 
-wxEvent* wxMsgBoxEvent::Clone() const { return new wxMsgBoxEvent(*this); }
+wxEvent *wxMsgBoxEvent::Clone() const { return new wxMsgBoxEvent(*this); }
 
-const wxString& wxMsgBoxEvent::getTitle() { return m_Title; }
+const wxString &wxMsgBoxEvent::getTitle() { return m_Title; }
 
-const wxString& wxMsgBoxEvent::getText() { return m_Text; }
+const wxString &wxMsgBoxEvent::getText() { return m_Text; }
 
 long wxMsgBoxEvent::getStyle() { return m_Style; }
 
 IMPLEMENT_DYNAMIC_CLASS(wxMsgBoxEvent, wxEvent)
 
-wxRenameFileEvent::wxRenameFileEvent(const wxString& filename,
-                                     const wxString& directory,
-                                     const wxString& filter)
-    : wxEvent(0, wxEVT_RENAMEFILE),
-      m_Filename(filename),
-      m_Directory(directory),
-      m_Filter(filter) {}
+wxRenameFileEvent::wxRenameFileEvent(
+  const wxString &filename, const wxString &directory, const wxString &filter)
+    : wxEvent(0, wxEVT_RENAMEFILE), m_Filename(filename),
+      m_Directory(directory), m_Filter(filter) {}
 
-wxRenameFileEvent::wxRenameFileEvent(const wxRenameFileEvent& e)
-    : wxEvent(e),
-      m_Filename(e.m_Filename),
-      m_Directory(e.m_Directory),
+wxRenameFileEvent::wxRenameFileEvent(const wxRenameFileEvent &e)
+    : wxEvent(e), m_Filename(e.m_Filename), m_Directory(e.m_Directory),
       m_Filter(e.m_Filter) {}
 
-wxEvent* wxRenameFileEvent::Clone() const {
+wxEvent *wxRenameFileEvent::Clone() const {
   return new wxRenameFileEvent(*this);
 }
 
-const wxString& wxRenameFileEvent::getFilename() { return m_Filename; }
+const wxString &wxRenameFileEvent::getFilename() { return m_Filename; }
 
-const wxString& wxRenameFileEvent::getDirectory() { return m_Directory; }
+const wxString &wxRenameFileEvent::getDirectory() { return m_Directory; }
 
-const wxString& wxRenameFileEvent::getFilter() { return m_Filter; }
+const wxString &wxRenameFileEvent::getFilter() { return m_Filter; }
 
 IMPLEMENT_DYNAMIC_CLASS(wxRenameFileEvent, wxEvent)
 
-void GOMessageBox(const wxString& text, const wxString title, long style,
-                  wxWindow* parent) {
+void GOMessageBox(
+  const wxString &text, const wxString title, long style, wxWindow *parent) {
   wxMsgBoxEvent event(title, text, style);
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
-void GOAskRenameFile(const wxString& file, const wxString directory,
-                     const wxString& filter) {
+void GOAskRenameFile(
+  const wxString &file, const wxString directory, const wxString &filter) {
   wxRenameFileEvent event(file, directory, filter);
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }

@@ -21,29 +21,29 @@
 #include "GOThread.h"
 
 class GOCondition {
- public:
+public:
   enum { SIGNAL_RECEIVED = 0x1, MUTEX_LOCKED = 0x2 };
 
- private:
+private:
 #if defined GO_STD_MUTEX
-  std::timed_mutex& r_mutex;
+  std::timed_mutex &r_mutex;
   std::condition_variable_any m_condition;
 #elif defined WX_MUTEX
   wxCondition m_condition;
 #else
   atomic_int m_Waiters;
   GOWaitQueue m_Wait;
-  GOMutex& m_Mutex;
+  GOMutex &m_Mutex;
 #endif
 
-  GOCondition(const GOCondition&) = delete;
-  const GOCondition& operator=(const GOCondition&) = delete;
+  GOCondition(const GOCondition &) = delete;
+  const GOCondition &operator=(const GOCondition &) = delete;
 
-  unsigned DoWait(bool isWithTimeout, const char* waiterInfo,
-                  GOThread* pThread);
+  unsigned
+  DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *pThread);
 
- public:
-  GOCondition(GOMutex& mutex);
+public:
+  GOCondition(GOMutex &mutex);
   ~GOCondition();
 
   /**
@@ -52,7 +52,7 @@ class GOCondition {
    * After return tries to reaqquire mutex lock
    * @return the bit combination of SIGNAL_RECEIVED and MUTEX_RELOCKED
    */
-  unsigned WaitOrStop(const char* waiterInfo = NULL, GOThread* pThread = NULL);
+  unsigned WaitOrStop(const char *waiterInfo = NULL, GOThread *pThread = NULL);
   void Wait() { WaitOrStop(NULL, NULL); }
   void Signal();
   void Broadcast();

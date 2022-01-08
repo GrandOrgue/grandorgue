@@ -12,22 +12,19 @@
 
 #include "sound/GOSound.h"
 
-GOSoundPort::GOSoundPort(GOSound* sound, wxString name)
-    : m_Sound(sound),
-      m_Index(0),
-      m_IsOpen(false),
-      m_Name(name),
-      m_Channels(0),
-      m_SamplesPerBuffer(0),
-      m_SampleRate(0),
-      m_Latency(0),
+GOSoundPort::GOSoundPort(GOSound *sound, wxString name)
+    : m_Sound(sound), m_Index(0), m_IsOpen(false), m_Name(name), m_Channels(0),
+      m_SamplesPerBuffer(0), m_SampleRate(0), m_Latency(0),
       m_ActualLatency(-1) {}
 
 GOSoundPort::~GOSoundPort() {}
 
-void GOSoundPort::Init(unsigned channels, unsigned sample_rate,
-                       unsigned samples_per_buffer, unsigned latency,
-                       unsigned index) {
+void GOSoundPort::Init(
+  unsigned channels,
+  unsigned sample_rate,
+  unsigned samples_per_buffer,
+  unsigned latency,
+  unsigned index) {
   m_Index = index;
   m_Channels = channels;
   m_SampleRate = sample_rate;
@@ -43,11 +40,11 @@ void GOSoundPort::SetActualLatency(double latency) {
   m_ActualLatency = latency * 1000;
 }
 
-bool GOSoundPort::AudioCallback(float* outputBuffer, unsigned int nFrames) {
+bool GOSoundPort::AudioCallback(float *outputBuffer, unsigned int nFrames) {
   return m_Sound->AudioCallback(m_Index, outputBuffer, nFrames);
 }
 
-const wxString& GOSoundPort::GetName() { return m_Name; }
+const wxString &GOSoundPort::GetName() { return m_Name; }
 wxString GOSoundPort::getPortState() {
   if (m_ActualLatency < 0)
     return wxString::Format(_("%s: unknown"), GetName().c_str());

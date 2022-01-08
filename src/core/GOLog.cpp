@@ -9,7 +9,7 @@
 
 #include "GOLogWindow.h"
 
-GOLog::GOLog(wxWindow* parent) : m_LogWindow(NULL) {
+GOLog::GOLog(wxWindow *parent) : m_LogWindow(NULL) {
   m_LogWindow = new GOLogWindow(parent, wxID_ANY, _("Log messages"));
 }
 
@@ -19,6 +19,7 @@ GOLog::~GOLog() {
   }
 }
 
-void GOLog::DoLogTextAtLevel(wxLogLevel level, const wxString& msg) {
-  if (m_LogWindow) m_LogWindow->LogMsg(level, msg, time(0));
+void GOLog::DoLogTextAtLevel(wxLogLevel level, const wxString &msg) {
+  if (m_LogWindow)
+    m_LogWindow->LogMsg(level, msg, time(0));
 }

@@ -10,11 +10,10 @@
 
 #include <wx/string.h>
 
-template <class T>
-class GOBuffer;
+template <class T> class GOBuffer;
 
 class GOFile {
- public:
+public:
   virtual ~GOFile() {}
 
   virtual size_t GetSize() = 0;
@@ -23,16 +22,15 @@ class GOFile {
 
   virtual bool Open() = 0;
   virtual void Close() = 0;
-  virtual size_t Read(void* buffer, size_t len) = 0;
+  virtual size_t Read(void *buffer, size_t len) = 0;
 
-  template <class T>
-  bool Read(GOBuffer<T>& buf) {
+  template <class T> bool Read(GOBuffer<T> &buf) {
     return Read(buf.get(), buf.GetSize()) == buf.GetSize();
   }
 
-  template <class T>
-  bool ReadContent(GOBuffer<T>& buf) {
-    if (!Open()) return false;
+  template <class T> bool ReadContent(GOBuffer<T> &buf) {
+    if (!Open())
+      return false;
     if (GetSize() % sizeof(T)) {
       Close();
       return false;

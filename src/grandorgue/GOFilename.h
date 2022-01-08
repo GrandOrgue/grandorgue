@@ -18,23 +18,23 @@ class GOHash;
 class GODefinitionFile;
 
 class GOFilename {
- private:
+private:
   wxString m_Name;
   wxString m_Path;
-  GOArchive* m_Archiv;
+  GOArchive *m_Archiv;
   bool m_Hash;
 
-  void SetPath(const wxString& base, const wxString& path);
+  void SetPath(const wxString &base, const wxString &path);
 
- public:
+public:
   GOFilename();
 
-  void Assign(const wxString& name, GODefinitionFile* organfile);
-  void AssignResource(const wxString& name, GODefinitionFile* organfile);
-  void AssignAbsolute(const wxString& path);
+  void Assign(const wxString &name, GODefinitionFile *organfile);
+  void AssignResource(const wxString &name, GODefinitionFile *organfile);
+  void AssignAbsolute(const wxString &path);
 
-  const wxString& GetTitle() const;
-  void Hash(GOHash& hash) const;
+  const wxString &GetTitle() const;
+  void Hash(GOHash &hash) const;
 
   std::unique_ptr<GOFile> Open() const;
 };

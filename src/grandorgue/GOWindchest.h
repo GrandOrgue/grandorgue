@@ -23,14 +23,14 @@ class GOTremulant;
 class GODefinitionFile;
 
 class GOWindchest : private GOPlaybackStateHandler {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   wxString m_Name;
   float m_Volume;
-  std::vector<GOEnclosure*> m_enclosure;
+  std::vector<GOEnclosure *> m_enclosure;
   std::vector<unsigned> m_tremulant;
-  std::vector<GORank*> m_ranks;
-  std::vector<GOPipeWindchestCallback*> m_pipes;
+  std::vector<GORank *> m_ranks;
+  std::vector<GOPipeWindchestCallback *> m_pipes;
   GOPipeConfigTreeNode m_PipeConfig;
 
   void AbortPlayback();
@@ -38,23 +38,23 @@ class GOWindchest : private GOPlaybackStateHandler {
   void PreparePlayback();
   void PrepareRecording();
 
- public:
-  GOWindchest(GODefinitionFile* organfile);
+public:
+  GOWindchest(GODefinitionFile *organfile);
 
-  void Init(GOConfigReader& cfg, wxString group, wxString name);
-  void Load(GOConfigReader& cfg, wxString group, unsigned index);
-  void UpdateTremulant(GOTremulant* tremulant);
+  void Init(GOConfigReader &cfg, wxString group, wxString name);
+  void Load(GOConfigReader &cfg, wxString group, unsigned index);
+  void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();
   float GetVolume();
   unsigned GetTremulantCount();
   unsigned GetTremulantId(unsigned index);
   unsigned GetRankCount();
-  GORank* GetRank(unsigned index);
-  void AddRank(GORank* rank);
-  void AddPipe(GOPipeWindchestCallback* pipe);
-  void AddEnclosure(GOEnclosure* enclosure);
-  const wxString& GetName();
-  GOPipeConfigNode& GetPipeConfig();
+  GORank *GetRank(unsigned index);
+  void AddRank(GORank *rank);
+  void AddPipe(GOPipeWindchestCallback *pipe);
+  void AddEnclosure(GOEnclosure *enclosure);
+  const wxString &GetName();
+  GOPipeConfigNode &GetPipeConfig();
 };
 
 #endif /* GOWINDCHEST_H_ */

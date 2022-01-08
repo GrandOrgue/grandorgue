@@ -13,20 +13,20 @@ class Convproc;
 class GOConfig;
 
 class GOSoundReverb {
- private:
+private:
   unsigned m_channels;
   ptr_vector<Convproc> m_engine;
 
   void Cleanup();
 
- public:
+public:
   GOSoundReverb(unsigned channels);
   virtual ~GOSoundReverb();
 
   void Reset();
-  void Setup(GOConfig& settings);
+  void Setup(GOConfig &settings);
 
-  void Process(float* output_buffer, unsigned n_frames);
+  void Process(float *output_buffer, unsigned n_frames);
 };
 
 #endif

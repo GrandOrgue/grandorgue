@@ -49,23 +49,25 @@ void GOSoundScheduler::Update() {
   SortList(m_Work);
   for (unsigned i = 0; i < m_Work.size();) {
     unsigned cnt = 1;
-    while (i + cnt < m_Work.size() &&
-           m_Work[i]->GetGroup() == m_Work[i + cnt]->GetGroup())
+    while (i + cnt < m_Work.size()
+           && m_Work[i]->GetGroup() == m_Work[i + cnt]->GetGroup())
       cnt++;
     unsigned rcnt = m_Work[i]->GetRepeat() ? m_RepeatCount : 1;
     for (unsigned j = 0; j < rcnt; j++)
-      for (unsigned k = 0; k < cnt; k++) m_WorkItems.push_back(&m_Work[i + k]);
+      for (unsigned k = 0; k < cnt; k++)
+        m_WorkItems.push_back(&m_Work[i + k]);
     i += cnt;
   }
 }
 
-void GOSoundScheduler::AddList(GOSoundWorkItem* item,
-                               std::vector<GOSoundWorkItem*>& list) {
+void GOSoundScheduler::AddList(
+  GOSoundWorkItem *item, std::vector<GOSoundWorkItem *> &list) {
   list.push_back(item);
 }
 
-void GOSoundScheduler::Add(GOSoundWorkItem* item) {
-  if (!item) return;
+void GOSoundScheduler::Add(GOSoundWorkItem *item) {
+  if (!item)
+    return;
   item->Clear();
   GOMutexLocker lock(m_Mutex);
   Lock();
@@ -74,41 +76,46 @@ void GOSoundScheduler::Add(GOSoundWorkItem* item) {
   Unlock();
 }
 
-void GOSoundScheduler::RemoveList(GOSoundWorkItem* item,
-                                  std::vector<GOSoundWorkItem*>& list) {
+void GOSoundScheduler::RemoveList(
+  GOSoundWorkItem *item, std::vector<GOSoundWorkItem *> &list) {
   for (unsigned i = 0; i < list.size(); i++)
-    if (list[i] == item) list[i] = nullptr;
+    if (list[i] == item)
+      list[i] = nullptr;
 }
 
-void GOSoundScheduler::Remove(GOSoundWorkItem* item) {
+void GOSoundScheduler::Remove(GOSoundWorkItem *item) {
   GOMutexLocker lock(m_Mutex);
   RemoveList(item, m_Work);
 }
 
-bool GOSoundScheduler::CompareItem(GOSoundWorkItem* a, GOSoundWorkItem* b) {
+bool GOSoundScheduler::CompareItem(GOSoundWorkItem *a, GOSoundWorkItem *b) {
   if (a && b) {
-    if (a->GetGroup() > b->GetGroup()) return true;
-    if (a->GetCost() < b->GetCost()) return true;
+    if (a->GetGroup() > b->GetGroup())
+      return true;
+    if (a->GetCost() < b->GetCost())
+      return true;
     return false;
   }
-  if (!a && b) return true;
+  if (!a && b)
+    return true;
   return false;
 }
 
-void GOSoundScheduler::SortList(std::vector<GOSoundWorkItem*>& list) {
+void GOSoundScheduler::SortList(std::vector<GOSoundWorkItem *> &list) {
   for (unsigned i = 0; i + 1 < list.size(); i++) {
     for (unsigned j = i; j > 0 && CompareItem(list[j], list[j + 1]); j--) {
-      GOSoundWorkItem* tmp = list[j];
+      GOSoundWorkItem *tmp = list[j];
       list[j] = list[j + 1];
       list[j + 1] = tmp;
     }
   }
 }
 
-void GOSoundScheduler::ResetList(std::vector<GOSoundWorkItem*>& list) {
+void GOSoundScheduler::ResetList(std::vector<GOSoundWorkItem *> &list) {
   SortList(list);
   for (unsigned i = 0; i < list.size(); i++)
-    if (list[i]) list[i]->Reset();
+    if (list[i])
+      list[i]->Reset();
 }
 
 void GOSoundScheduler::Reset() {
@@ -117,9 +124,10 @@ void GOSoundScheduler::Reset() {
   m_NextItem.exchange(0);
 }
 
-void GOSoundScheduler::ExecList(std::vector<GOSoundWorkItem*>& list) {
+void GOSoundScheduler::ExecList(std::vector<GOSoundWorkItem *> &list) {
   for (unsigned i = 0; i < list.size(); i++)
-    if (list[i]) list[i]->Exec();
+    if (list[i])
+      list[i]->Exec();
 }
 
 void GOSoundScheduler::Exec() {
@@ -127,11 +135,13 @@ void GOSoundScheduler::Exec() {
   ExecList(m_Work);
 }
 
-GOSoundWorkItem* GOSoundScheduler::GetNextGroup() {
+GOSoundWorkItem *GOSoundScheduler::GetNextGroup() {
   do {
     unsigned next = m_NextItem.fetch_add(1);
-    if (next >= m_ItemCount) return nullptr;
-    GOSoundWorkItem* item = *m_WorkItems[next];
-    if (item) return item;
+    if (next >= m_ItemCount)
+      return nullptr;
+    GOSoundWorkItem *item = *m_WorkItems[next];
+    if (item)
+      return item;
   } while (true);
 }

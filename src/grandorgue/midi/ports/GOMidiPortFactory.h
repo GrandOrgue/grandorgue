@@ -17,18 +17,20 @@
 class GOMidi;
 
 class GOMidiPortFactory : public GOPortFactory {
- public:
-  virtual const std::vector<wxString>& GetPortNames() const;
-  virtual const std::vector<wxString>& GetPortApiNames(
-      const wxString& portName) const;
+public:
+  virtual const std::vector<wxString> &GetPortNames() const;
+  virtual const std::vector<wxString> &
+  GetPortApiNames(const wxString &portName) const;
 
-  static GOMidiPortFactory& getInstance();
-  static void addMissingInDevices(GOMidi* midi,
-                                  const GOPortsConfig& portsConfig,
-                                  ptr_vector<GOMidiPort>& ports);
-  static void addMissingOutDevices(GOMidi* midi,
-                                   const GOPortsConfig& portsConfig,
-                                   ptr_vector<GOMidiPort>& ports);
+  static GOMidiPortFactory &getInstance();
+  static void addMissingInDevices(
+    GOMidi *midi,
+    const GOPortsConfig &portsConfig,
+    ptr_vector<GOMidiPort> &ports);
+  static void addMissingOutDevices(
+    GOMidi *midi,
+    const GOPortsConfig &portsConfig,
+    ptr_vector<GOMidiPort> &ports);
   static void terminate();
 };
 

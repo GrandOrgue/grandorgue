@@ -9,10 +9,11 @@
 
 #include "GODocumentBase.h"
 
-GOView::GOView(GODocumentBase* doc, wxWindow* wnd) : m_doc(doc), m_wnd(wnd) {}
+GOView::GOView(GODocumentBase *doc, wxWindow *wnd) : m_doc(doc), m_wnd(wnd) {}
 
 GOView::~GOView() {
-  if (m_doc) m_doc->unregisterWindow(this);
+  if (m_doc)
+    m_doc->unregisterWindow(this);
   m_doc = NULL;
 }
 

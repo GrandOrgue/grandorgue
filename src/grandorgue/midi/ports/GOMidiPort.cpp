@@ -14,15 +14,14 @@ static wxString GRANDORGUE = wxT("GrandOrgue");
 
 const wxString GOMidiPort::GetClientName() { return GRANDORGUE; }
 
-GOMidiPort::GOMidiPort(GOMidi* midi, const wxString& portName,
-                       const wxString& apiName, const wxString& deviceName,
-                       const wxString& fullName)
-    : m_midi(midi),
-      m_IsActive(false),
-      m_PortName(portName),
-      m_ApiName(apiName),
-      m_DeviceName(deviceName),
-      m_FullName(fullName) {
+GOMidiPort::GOMidiPort(
+  GOMidi *midi,
+  const wxString &portName,
+  const wxString &apiName,
+  const wxString &deviceName,
+  const wxString &fullName)
+    : m_midi(midi), m_IsActive(false), m_PortName(portName), m_ApiName(apiName),
+      m_DeviceName(deviceName), m_FullName(fullName) {
   m_ID = m_midi->GetMidiMap().GetDeviceByString(GetName());
 }
 
@@ -30,8 +29,10 @@ bool GOMidiPort::IsToUse() const {
   return m_DeviceName.Find(GetClientName()) == wxNOT_FOUND;
 }
 
-bool GOMidiPort::IsEqualTo(const wxString& portName, const wxString& apiName,
-                           const wxString& deviceName) const {
-  return m_PortName == portName && m_ApiName == apiName &&
-         m_DeviceName == deviceName;
+bool GOMidiPort::IsEqualTo(
+  const wxString &portName,
+  const wxString &apiName,
+  const wxString &deviceName) const {
+  return m_PortName == portName && m_ApiName == apiName
+    && m_DeviceName == deviceName;
 }

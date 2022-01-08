@@ -12,28 +12,31 @@
 #include "threading/atomic.h"
 
 class GOSoundSimpleSamplerList {
- private:
-  atomic<GOSoundSampler*> m_List;
+private:
+  atomic<GOSoundSampler *> m_List;
 
- public:
+public:
   GOSoundSimpleSamplerList() { Clear(); }
 
   void Clear() { m_List = 0; }
 
-  GOSoundSampler* Get() {
+  GOSoundSampler *Get() {
     do {
-      GOSoundSampler* sampler = m_List;
-      if (!sampler) return NULL;
-      GOSoundSampler* next = sampler->next;
-      if (m_List.compare_exchange(sampler, next)) return sampler;
+      GOSoundSampler *sampler = m_List;
+      if (!sampler)
+        return NULL;
+      GOSoundSampler *next = sampler->next;
+      if (m_List.compare_exchange(sampler, next))
+        return sampler;
     } while (true);
   }
 
-  void Put(GOSoundSampler* sampler) {
+  void Put(GOSoundSampler *sampler) {
     do {
-      GOSoundSampler* current = m_List;
+      GOSoundSampler *current = m_List;
       sampler->next = current;
-      if (m_List.compare_exchange(current, sampler)) return;
+      if (m_List.compare_exchange(current, sampler))
+        return;
     } while (true);
   }
 };

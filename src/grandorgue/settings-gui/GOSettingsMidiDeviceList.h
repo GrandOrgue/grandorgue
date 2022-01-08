@@ -18,45 +18,48 @@
 #include "ptrvector.h"
 
 class GOSettingsMidiDeviceList {
- private:
-  wxWindow* m_parent;
-  const ptr_vector<GOMidiPort>& m_Ports;
-  GOMidiDeviceConfigList& m_ConfList;
+private:
+  wxWindow *m_parent;
+  const ptr_vector<GOMidiPort> &m_Ports;
+  GOMidiDeviceConfigList &m_ConfList;
   GOMidiDeviceConfig::RefVector m_ListedConfs;
-  wxCheckListBox* m_LbDevices;
-  wxButton* m_BMatching;
+  wxCheckListBox *m_LbDevices;
+  wxButton *m_BMatching;
 
   // temporary storage for configs when edited
   GOMidiDeviceConfigList m_ConfListTmp;
 
   void ClearDevices();
 
-  void OnChecked(wxCommandEvent& event);
-  void OnMatchingClick(wxCommandEvent& event);
+  void OnChecked(wxCommandEvent &event);
+  void OnMatchingClick(wxCommandEvent &event);
 
- public:
-  GOSettingsMidiDeviceList(const ptr_vector<GOMidiPort>& ports,
-                           GOMidiDeviceConfigList& configListPersist,
-                           wxWindow* parent, wxWindowID id);
+public:
+  GOSettingsMidiDeviceList(
+    const ptr_vector<GOMidiPort> &ports,
+    GOMidiDeviceConfigList &configListPersist,
+    wxWindow *parent,
+    wxWindowID id);
 
-  wxCheckListBox* GetListbox() const { return m_LbDevices; }
-  wxButton* GetMatchingButton() const { return m_BMatching; }
+  wxCheckListBox *GetListbox() const { return m_LbDevices; }
+  wxButton *GetMatchingButton() const { return m_BMatching; }
 
   void Init();
 
-  void RefreshDevices(const GOPortsConfig& portsConfig,
-                      const bool isToAutoEnable,
-                      const GOSettingsMidiDeviceList* pOutDevList = NULL);
+  void RefreshDevices(
+    const GOPortsConfig &portsConfig,
+    const bool isToAutoEnable,
+    const GOSettingsMidiDeviceList *pOutDevList = NULL);
 
   unsigned GetDeviceCount() const;
-  GOMidiDeviceConfig& GetDeviceConf(unsigned i) const {
+  GOMidiDeviceConfig &GetDeviceConf(unsigned i) const {
     return *m_ListedConfs[i];
   }
-  GOMidiDeviceConfig& GetSelectedDeviceConf() const;
+  GOMidiDeviceConfig &GetSelectedDeviceConf() const;
 
-  void OnSelected(wxCommandEvent& event);
+  void OnSelected(wxCommandEvent &event);
 
-  void Save(const GOSettingsMidiDeviceList* pOutDevList = NULL);
+  void Save(const GOSettingsMidiDeviceList *pOutDevList = NULL);
 };
 
 #endif /* GOSETTINGSMIDIDEVICELIST_H */

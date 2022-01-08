@@ -28,56 +28,86 @@ EVT_TEXT(ID_GAIN, GOSettingsReverb::OnGainChanged)
 EVT_SPIN(ID_GAIN_SPIN, GOSettingsReverb::OnGainSpinChanged)
 END_EVENT_TABLE()
 
-GOSettingsReverb::GOSettingsReverb(GOConfig& settings, wxWindow* parent)
+GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
     : wxPanel(parent, wxID_ANY), m_config(settings) {
-  wxBoxSizer* topSizer = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 
-  topSizer->Add(m_Enabled = new wxCheckBox(this, ID_ENABLED,
-                                           _("Enable Convolution Reverb"),
-                                           wxDefaultPosition, wxDefaultSize));
+  topSizer->Add(
+    m_Enabled = new wxCheckBox(
+      this,
+      ID_ENABLED,
+      _("Enable Convolution Reverb"),
+      wxDefaultPosition,
+      wxDefaultSize));
 
-  wxFlexGridSizer* grid = new wxFlexGridSizer(2, 5, 5);
-  wxBoxSizer* item6 =
-      new wxStaticBoxSizer(wxVERTICAL, this, _("&Convolution reverb"));
+  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
+  wxBoxSizer *item6
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("&Convolution reverb"));
   topSizer->Add(item6, 0, wxEXPAND | wxALL, 5);
 
   m_File = new wxFilePickerCtrl(
-      this, ID_FILE, wxEmptyString, _("Select an impulse file"), _("*.wav"),
-      wxDefaultPosition, wxDefaultSize, wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
-  wxBoxSizer* box2 = new wxBoxSizer(wxHORIZONTAL);
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Impulse response:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
+    this,
+    ID_FILE,
+    wxEmptyString,
+    _("Select an impulse file"),
+    _("*.wav"),
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
+  wxBoxSizer *box2 = new wxBoxSizer(wxHORIZONTAL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Impulse response:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
   m_FileName = new wxStaticText(this, wxID_ANY, wxEmptyString);
   box2->Add(m_File);
   box2->Add(m_FileName);
   grid->Add(box2);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Delay (ms):")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_Delay = new wxSpinCtrl(this, ID_DELAY, wxEmptyString,
-                                     wxDefaultPosition, wxDefaultSize),
-            0, wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Delay (ms):")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_Delay = new wxSpinCtrl(
+      this, ID_DELAY, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+    0,
+    wxALL);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Start offset:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_StartOffset = new wxSpinCtrl(this, ID_START_OFFSET, wxEmptyString,
-                                           wxDefaultPosition, wxDefaultSize),
-            0, wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Start offset:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_StartOffset = new wxSpinCtrl(
+      this, ID_START_OFFSET, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+    0,
+    wxALL);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Length:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_Length = new wxSpinCtrl(this, ID_LENGTH, wxEmptyString,
-                                      wxDefaultPosition, wxDefaultSize),
-            0, wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Length:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_Length = new wxSpinCtrl(
+      this, ID_LENGTH, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+    0,
+    wxALL);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Channel:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_Channel = new wxChoice(this, ID_CHANNEL, wxDefaultPosition,
-                                     wxDefaultSize),
-            0, wxALL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Channel:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_Channel
+    = new wxChoice(this, ID_CHANNEL, wxDefaultPosition, wxDefaultSize),
+    0,
+    wxALL);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Gain:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Gain:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
   box2 = new wxBoxSizer(wxHORIZONTAL);
   m_Gain = new wxTextCtrl(this, ID_GAIN, wxEmptyString);
   m_GainSpin = new wxSpinButton(this, ID_GAIN_SPIN);
@@ -85,10 +115,13 @@ GOSettingsReverb::GOSettingsReverb(GOConfig& settings, wxWindow* parent)
   box2->Add(m_GainSpin);
   grid->Add(box2);
 
-  grid->Add(new wxStaticText(this, wxID_ANY, _("Direct Sound:")), 0,
-            wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(m_Direct = new wxCheckBox(this, ID_DIRECT, _("Add dirac pulse"),
-                                      wxDefaultPosition, wxDefaultSize));
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Direct Sound:")),
+    0,
+    wxALL | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_Direct = new wxCheckBox(
+      this, ID_DIRECT, _("Add dirac pulse"), wxDefaultPosition, wxDefaultSize));
 
   item6->Add(grid, 0, wxEXPAND | wxALL, 5);
 
@@ -142,8 +175,11 @@ void GOSettingsReverb::UpdateLimits() {
     m_StartOffset->SetRange(0, wav.GetLength());
     m_Length->SetRange(0, wav.GetLength());
   } catch (wxString error) {
-    wxMessageBox(error + _("\n\nPlease select a valid impulse response file"),
-                 _("Reverb error"), wxOK | wxICON_ERROR, this);
+    wxMessageBox(
+      error + _("\n\nPlease select a valid impulse response file"),
+      _("Reverb error"),
+      wxOK | wxICON_ERROR,
+      this);
   }
 }
 
@@ -177,31 +213,38 @@ void GOSettingsReverb::UpdateEnabled() {
   }
 }
 
-void GOSettingsReverb::OnEnabled(wxCommandEvent& event) {
+void GOSettingsReverb::OnEnabled(wxCommandEvent &event) {
   if (m_Enabled->GetValue())
-    wxMessageBox(_("This feature is currently not supported."), _("Warning"),
-                 wxOK | wxICON_WARNING, this);
+    wxMessageBox(
+      _("This feature is currently not supported."),
+      _("Warning"),
+      wxOK | wxICON_WARNING,
+      this);
   UpdateEnabled();
 }
 
-void GOSettingsReverb::OnFileChanged(wxFileDirPickerEvent& e) { UpdateFile(); }
+void GOSettingsReverb::OnFileChanged(wxFileDirPickerEvent &e) { UpdateFile(); }
 
-void GOSettingsReverb::OnGainSpinChanged(wxSpinEvent& e) {
+void GOSettingsReverb::OnGainSpinChanged(wxSpinEvent &e) {
   m_Gain->ChangeValue(
-      wxString::Format(wxT("%f"), (float)(m_GainSpin->GetValue() / 20.0)));
+    wxString::Format(wxT("%f"), (float)(m_GainSpin->GetValue() / 20.0)));
 }
 
-void GOSettingsReverb::OnGainChanged(wxCommandEvent& e) {
+void GOSettingsReverb::OnGainChanged(wxCommandEvent &e) {
   double gain;
-  if (m_Gain->GetValue().ToDouble(&gain)) m_GainSpin->SetValue(gain * 20);
+  if (m_Gain->GetValue().ToDouble(&gain))
+    m_GainSpin->SetValue(gain * 20);
 }
 
 bool GOSettingsReverb::Validate() {
   if (m_Enabled->GetValue()) {
     if (!wxFileExists(m_File->GetPath())) {
-      wxMessageBox(wxString::Format(_("Impulse response file '%s' not found"),
-                                    m_File->GetPath().c_str()),
-                   _("Warning"), wxOK | wxICON_WARNING, this);
+      wxMessageBox(
+        wxString::Format(
+          _("Impulse response file '%s' not found"), m_File->GetPath().c_str()),
+        _("Warning"),
+        wxOK | wxICON_WARNING,
+        this);
       return false;
     }
   }
@@ -217,5 +260,6 @@ void GOSettingsReverb::Save() {
   m_config.ReverbStartOffset(m_StartOffset->GetValue());
   m_config.ReverbChannel(m_Channel->GetSelection() + 1);
   double gain;
-  if (m_Gain->GetValue().ToDouble(&gain)) m_config.ReverbGain(gain);
+  if (m_Gain->GetValue().ToDouble(&gain))
+    m_config.ReverbGain(gain);
 }

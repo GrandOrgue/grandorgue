@@ -20,13 +20,16 @@ BEGIN_EVENT_TABLE(GOPanelView, wxScrolledWindow)
 EVT_SIZE(GOPanelView::OnSize)
 END_EVENT_TABLE()
 
-GOPanelView* GOPanelView::createWithFrame(GODocumentBase* doc,
-                                          GOGUIPanel* panel) {
-  wxFrame* frame =
-      new wxFrame(NULL, -1, panel->GetName(), wxDefaultPosition, wxDefaultSize,
-                  wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION |
-                      wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE |
-                      wxMAXIMIZE_BOX);
+GOPanelView *
+GOPanelView::createWithFrame(GODocumentBase *doc, GOGUIPanel *panel) {
+  wxFrame *frame = new wxFrame(
+    NULL,
+    -1,
+    panel->GetName(),
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX
+      | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE | wxMAXIMIZE_BOX);
   // By adding wxMAXIMIZE_BOX, maximize (on Windows, Linux) will work, but only
   // fill the screen if it is smaller than the maximum allowed frame size.
   // We probably should change this to add black borders to it. Also, for these
@@ -38,16 +41,13 @@ GOPanelView* GOPanelView::createWithFrame(GODocumentBase* doc,
   return new GOPanelView(doc, panel, frame);
 }
 
-GOPanelView::GOPanelView(GODocumentBase* doc, GOGUIPanel* panel,
-                         wxWindow* parent)
-    : wxScrolledWindow(parent),
-      GOView(doc, parent),
-      m_panelwidget(NULL),
-      m_panel(panel),
-      m_TopWindow(dynamic_cast<wxTopLevelWindow*>(parent)) {
-  wxWindow* frame = parent;
+GOPanelView::GOPanelView(
+  GODocumentBase *doc, GOGUIPanel *panel, wxWindow *parent)
+    : wxScrolledWindow(parent), GOView(doc, parent), m_panelwidget(NULL),
+      m_panel(panel), m_TopWindow(dynamic_cast<wxTopLevelWindow *>(parent)) {
+  wxWindow *frame = parent;
 
-  GOGUIPanelWidget* panelwidget = new GOGUIPanelWidget(panel, this);
+  GOGUIPanelWidget *panelwidget = new GOGUIPanelWidget(panel, this);
 
   // Set maximum size to the size the window would have with scaling 100%
   // However, still within the default maximum limits, whatever those may be
@@ -70,7 +70,8 @@ GOPanelView::GOPanelView(GODocumentBase* doc, GOGUIPanel* panel,
 
   // If both width and height are set, set position and size of the window
   // E.g. in case of corrupted preferences, this might not be the case
-  if (savedRect.GetWidth() && savedRect.GetHeight()) frame->SetSize(savedRect);
+  if (savedRect.GetWidth() && savedRect.GetHeight())
+    frame->SetSize(savedRect);
 
   // However, even if this worked, we cannot be sure that the window is now
   // fully within the client area of an existing display.
@@ -79,8 +80,8 @@ GOPanelView::GOPanelView(GODocumentBase* doc, GOGUIPanel* panel,
   // if it does not exist anymore, the client area of the default display
   int const savedDisplayNum = panel->GetDisplayNum();
   int nr = savedDisplayNum >= 0 && savedDisplayNum < (int)wxDisplay::GetCount()
-               ? savedDisplayNum
-               : wxDisplay::GetFromWindow(frame);
+    ? savedDisplayNum
+    : wxDisplay::GetFromWindow(frame);
   wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
   wxRect max = display.GetClientArea();
   // If our current window is within this area, all is fine
@@ -88,12 +89,14 @@ GOPanelView::GOPanelView(GODocumentBase* doc, GOGUIPanel* panel,
   if (!max.Contains(current)) {
     // Otherwise, check and correct width and height,
     // and place the frame at the center of the Client Area of the display
-    if (current.GetWidth() > max.GetWidth()) current.SetWidth(max.GetWidth());
+    if (current.GetWidth() > max.GetWidth())
+      current.SetWidth(max.GetWidth());
     if (current.GetHeight() > max.GetHeight())
       current.SetHeight(max.GetHeight());
     frame->SetSize(current.CenterIn(max, wxBOTH));
   }
-  if (m_TopWindow && panel->IsMaximized()) m_TopWindow->Maximize(true);
+  if (m_TopWindow && panel->IsMaximized())
+    m_TopWindow->Maximize(true);
 
   m_panelwidget = panelwidget;
 
@@ -124,16 +127,18 @@ GOPanelView::GOPanelView(GODocumentBase* doc, GOGUIPanel* panel,
 }
 
 GOPanelView::~GOPanelView() {
-  if (m_panel) m_panel->SetView(NULL);
+  if (m_panel)
+    m_panel->SetView(NULL);
 }
 
 void GOPanelView::RemoveView() {
-  if (m_panel) m_panel->SetView(NULL);
+  if (m_panel)
+    m_panel->SetView(NULL);
   m_panel = NULL;
   GOView::RemoveView();
 }
 
-void GOPanelView::AddEvent(GOGUIControl* control) {
+void GOPanelView::AddEvent(GOGUIControl *control) {
   wxCommandEvent event(wxEVT_GOCONTROL, 0);
   event.SetClientData(control);
   m_panelwidget->GetEventHandler()->AddPendingEvent(event);
@@ -170,7 +175,8 @@ void GOPanelView::SyncState() {
 }
 
 bool GOPanelView::Destroy() {
-  if (m_panel) m_panel->SetView(NULL);
+  if (m_panel)
+    m_panel->SetView(NULL);
   return wxScrolledWindow::Destroy();
 }
 
@@ -179,7 +185,7 @@ void GOPanelView::Raise() {
   m_panelwidget->CallAfter(&GOGUIPanelWidget::Focus);
 }
 
-void GOPanelView::OnSize(wxSizeEvent& event) {
+void GOPanelView::OnSize(wxSizeEvent &event) {
   if (m_panelwidget) {
     wxSize max = event.GetSize();
     max = m_panelwidget->UpdateSize(max);

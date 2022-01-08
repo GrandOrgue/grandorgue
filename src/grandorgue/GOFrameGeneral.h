@@ -18,17 +18,19 @@ class GOConfigWriter;
 class GODefinitionFile;
 
 class GOFrameGeneral : public GOCombination, private GOSaveableObject {
- private:
-  GODefinitionFile* m_organfile;
+private:
+  GODefinitionFile *m_organfile;
   bool m_IsSetter;
 
-  void Save(GOConfigWriter& cfg);
-  void LoadCombination(GOConfigReader& cfg);
+  void Save(GOConfigWriter &cfg);
+  void LoadCombination(GOConfigReader &cfg);
 
- public:
-  GOFrameGeneral(GOCombinationDefinition& general_template,
-                 GODefinitionFile* organfile, bool is_setter);
-  void Load(GOConfigReader& cfg, wxString group);
+public:
+  GOFrameGeneral(
+    GOCombinationDefinition &general_template,
+    GODefinitionFile *organfile,
+    bool is_setter);
+  void Load(GOConfigReader &cfg, wxString group);
   void Push();
 };
 
