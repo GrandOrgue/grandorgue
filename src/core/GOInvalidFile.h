@@ -1,30 +1,30 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOINVALIDFILE_H
 #define GOINVALIDFILE_H
 
 #include "GOFile.h"
 
-class GOInvalidFile : public GOFile
-{
-private:
-	wxString m_Name;
-	
-public:
-	GOInvalidFile(const wxString& name);
+class GOInvalidFile : public GOFile {
+ private:
+  wxString m_Name;
 
-	bool isValid();
-	size_t GetSize();
-	const wxString GetName();
-	const wxString GetPath();
+ public:
+  GOInvalidFile(const wxString& name);
 
-	bool Open();
-	void Close();
-	size_t Read(void * buffer, size_t len);
+  bool isValid();
+  size_t GetSize();
+  const wxString GetName();
+  const wxString GetPath();
+
+  bool Open();
+  void Close();
+  size_t Read(void* buffer, size_t len);
 };
 
 #endif

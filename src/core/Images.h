@@ -1,15 +1,16 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GO_IMAGES_H /* using IMAGES_H causes a preprocessor conflict */
 #define GO_IMAGES_H
 
 class wxImage;
 
-#define DECLARE_IMAGE(A) wxImage GetImage_ ## A ();
+#define DECLARE_IMAGE(A) wxImage GetImage_##A();
 
 DECLARE_IMAGE(gauge);
 DECLARE_IMAGE(help);

@@ -1,30 +1,31 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOMIDIMAP_H
 #define GOMIDIMAP_H
 
 #include <wx/string.h>
+
 #include <vector>
 
-class GOMidiMap
-{
-private:
-	std::vector<wxString> m_DeviceMap;
-	std::vector<wxString> m_ElementMap;
+class GOMidiMap {
+ private:
+  std::vector<wxString> m_DeviceMap;
+  std::vector<wxString> m_ElementMap;
 
-public:
-	GOMidiMap();
-	~GOMidiMap();
+ public:
+  GOMidiMap();
+  ~GOMidiMap();
 
-	unsigned GetDeviceByString(const wxString& str);
-	const wxString& GetDeviceByID(unsigned id);
+  unsigned GetDeviceByString(const wxString& str);
+  const wxString& GetDeviceByID(unsigned id);
 
-	unsigned GetElementByString(const wxString& str);
-	const wxString& GetElementByID(unsigned id);
+  unsigned GetElementByString(const wxString& str);
+  const wxString& GetElementByID(unsigned id);
 };
 
 #endif

@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSETTINGSMIDIDEVICELIST_H
 #define GOSETTINGSMIDIDEVICELIST_H
@@ -11,16 +12,13 @@
 #include <wx/checklst.h>
 #include <wx/window.h>
 
-#include "ptrvector.h"
-
-#include "midi/ports/GOMidiPort.h"
-
 #include "config/GOMidiDeviceConfigList.h"
 #include "config/GOPortsConfig.h"
+#include "midi/ports/GOMidiPort.h"
+#include "ptrvector.h"
 
-class GOSettingsMidiDeviceList
-{
-private:
+class GOSettingsMidiDeviceList {
+ private:
   wxWindow* m_parent;
   const ptr_vector<GOMidiPort>& m_Ports;
   GOMidiDeviceConfigList& m_ConfList;
@@ -36,27 +34,24 @@ private:
   void OnChecked(wxCommandEvent& event);
   void OnMatchingClick(wxCommandEvent& event);
 
-public:
-  GOSettingsMidiDeviceList(
-    const ptr_vector<GOMidiPort>& ports,
-    GOMidiDeviceConfigList& configListPersist,
-    wxWindow* parent,
-    wxWindowID id
-  );
+ public:
+  GOSettingsMidiDeviceList(const ptr_vector<GOMidiPort>& ports,
+                           GOMidiDeviceConfigList& configListPersist,
+                           wxWindow* parent, wxWindowID id);
 
   wxCheckListBox* GetListbox() const { return m_LbDevices; }
   wxButton* GetMatchingButton() const { return m_BMatching; }
 
   void Init();
 
-  void RefreshDevices(
-    const GOPortsConfig& portsConfig,
-    const bool isToAutoEnable,
-    const GOSettingsMidiDeviceList* pOutDevList = NULL
-  );
+  void RefreshDevices(const GOPortsConfig& portsConfig,
+                      const bool isToAutoEnable,
+                      const GOSettingsMidiDeviceList* pOutDevList = NULL);
 
   unsigned GetDeviceCount() const;
-  GOMidiDeviceConfig& GetDeviceConf(unsigned i) const { return *m_ListedConfs[i]; }
+  GOMidiDeviceConfig& GetDeviceConf(unsigned i) const {
+    return *m_ListedConfs[i];
+  }
   GOMidiDeviceConfig& GetSelectedDeviceConf() const;
 
   void OnSelected(wxCommandEvent& event);
@@ -64,6 +59,4 @@ public:
   void Save(const GOSettingsMidiDeviceList* pOutDevList = NULL);
 };
 
-
 #endif /* GOSETTINGSMIDIDEVICELIST_H */
-

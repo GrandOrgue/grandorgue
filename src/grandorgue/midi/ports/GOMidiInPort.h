@@ -1,41 +1,34 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOMIDIINPORT_H
 #define GOMIDIINPORT_H
 
+#include "GOMidiPort.h"
+#include "midi/GOMidiInputMerger.h"
 #include "ptrvector.h"
 
-#include "GOMidiPort.h"
+class GOMidiInPort : public GOMidiPort {
+ protected:
+  GOMidiMerger m_merger;
+  int m_ChannelShift;
 
-#include "midi/GOMidiInputMerger.h"
+  virtual const wxString GetMyNativePortName() const;
 
-class GOMidiInPort: public GOMidiPort
-{
-protected:
-	GOMidiMerger m_merger;
-	int m_ChannelShift;
+  void Receive(const std::vector<unsigned char> msg);
 
-	virtual const wxString GetMyNativePortName() const;
+ public:
+  GOMidiInPort(GOMidi* midi, const wxString& portName, const wxString& apiName,
+               const wxString& deviceName, const wxString& fullName);
 
-	void Receive(const std::vector<unsigned char> msg);
+  virtual ~GOMidiInPort();
 
-public:
-	GOMidiInPort(
-	  GOMidi* midi,
-	  const wxString& portName,
-	  const wxString& apiName,
-	  const wxString& deviceName,
-	  const wxString& fullName
-	);
-
-	virtual ~GOMidiInPort();
-
-	virtual bool Open(int channel_shift);
-	bool Open() { return Open(0); }
+  virtual bool Open(int channel_shift);
+  bool Open() { return Open(0); }
 };
 
 #endif

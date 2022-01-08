@@ -29,34 +29,34 @@
 class GOFile;
 class GOOrgan;
 
-class GOArchiveCreator
-{
-private:
-	GOOrganList m_OrganList;
-	GOArchiveManager m_Manager;
-	GOArchiveWriter m_Output;
-	std::vector<const GOArchiveFile*> m_packageIDs;
-	ptr_vector<GOArchive> m_packages;
-	ptr_vector<GOOrgan> m_organs;
-	std::vector<wxString> m_OrganPaths;
-	wxString m_PackageTitle;
+class GOArchiveCreator {
+ private:
+  GOOrganList m_OrganList;
+  GOArchiveManager m_Manager;
+  GOArchiveWriter m_Output;
+  std::vector<const GOArchiveFile*> m_packageIDs;
+  ptr_vector<GOArchive> m_packages;
+  ptr_vector<GOOrgan> m_organs;
+  std::vector<wxString> m_OrganPaths;
+  wxString m_PackageTitle;
 
-	std::unique_ptr<GOFile> findPackageFile(const wxString& name);
-	bool writePackageIndex();
-	bool checkExtension(const wxString& name, wxString ext);
-	bool storeFile(const wxString& name, const GOBuffer<uint8_t>& data);
-	bool addOrganData(unsigned idx, GOFile* file);
-	bool compressData(const wxString& name, const wxString& ext, GOBuffer<uint8_t>& data);
+  std::unique_ptr<GOFile> findPackageFile(const wxString& name);
+  bool writePackageIndex();
+  bool checkExtension(const wxString& name, wxString ext);
+  bool storeFile(const wxString& name, const GOBuffer<uint8_t>& data);
+  bool addOrganData(unsigned idx, GOFile* file);
+  bool compressData(const wxString& name, const wxString& ext,
+                    GOBuffer<uint8_t>& data);
 
-public:
-	GOArchiveCreator(const GOSettingDirectory& cacheDir);
-	~GOArchiveCreator();
+ public:
+  GOArchiveCreator(const GOSettingDirectory& cacheDir);
+  ~GOArchiveCreator();
 
-	bool CreatePackage(const wxString& path, const wxString title);
-	bool AddPackage(const wxString& path);
-	void AddOrgan(const wxString& path);
-	bool AddDirectory(const wxString& path);
-	bool FinishPackage();
+  bool CreatePackage(const wxString& path, const wxString title);
+  bool AddPackage(const wxString& path);
+  void AddOrgan(const wxString& path);
+  bool AddDirectory(const wxString& path);
+  bool FinishPackage();
 };
 
 #endif

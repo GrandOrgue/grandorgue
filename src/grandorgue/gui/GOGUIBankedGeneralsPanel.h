@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOGUIBANKEDGENERALSPANEL_H
 #define GOGUIBANKEDGENERALSPANEL_H
@@ -12,18 +13,17 @@
 class GOGUIPanel;
 class GODefinitionFile;
 
-class GOGUIBankedGeneralsPanel : public GOGUIPanelCreator
-{
-private:
-	GODefinitionFile* m_organfile;
+class GOGUIBankedGeneralsPanel : public GOGUIPanelCreator {
+ private:
+  GODefinitionFile* m_organfile;
 
-	GOGUIPanel* CreateBankedGeneralsPanel(GOConfigReader& cfg);
+  GOGUIPanel* CreateBankedGeneralsPanel(GOConfigReader& cfg);
 
-public:
-	GOGUIBankedGeneralsPanel(GODefinitionFile* organfile);
-	virtual ~GOGUIBankedGeneralsPanel();
+ public:
+  GOGUIBankedGeneralsPanel(GODefinitionFile* organfile);
+  virtual ~GOGUIBankedGeneralsPanel();
 
-	void CreatePanels(GOConfigReader& cfg);
+  void CreatePanels(GOConfigReader& cfg);
 };
 
 #endif

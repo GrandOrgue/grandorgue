@@ -1,29 +1,29 @@
-/* 
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is SHA 180-1 Reference Implementation (Compact version)
- * 
+ *
  * The Initial Developer of the Original Code is Paul Kocher of
- * Cryptography Research.  Portions created by Paul Kocher are 
+ * Cryptography Research.  Portions created by Paul Kocher are
  * Copyright (C) 1995-9 by Cryptography Research, Inc.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
  *
  *     Paul Kocher
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -51,13 +51,11 @@ void SHA1_Init(SHA_CTX *ctx) {
   ctx->H[3] = 0x10325476;
   ctx->H[4] = 0xc3d2e1f0;
 
-  for (i = 0; i < 80; i++)
-    ctx->W[i] = 0;
+  for (i = 0; i < 80; i++) ctx->W[i] = 0;
 }
 
-
 void SHA1_Update(SHA_CTX *ctx, const void *_dataIn, int len) {
-  const unsigned char *dataIn = (const unsigned char*)_dataIn;
+  const unsigned char *dataIn = (const unsigned char *)_dataIn;
   int i;
 
   /* Read the data into W and process blocks as they get full
@@ -73,7 +71,6 @@ void SHA1_Update(SHA_CTX *ctx, const void *_dataIn, int len) {
     ctx->sizeHi += (ctx->sizeLo < 8);
   }
 }
-
 
 void SHA1_Final(unsigned char hashout[20], SHA_CTX *ctx) {
   unsigned char pad0x80 = 0x80;
@@ -92,8 +89,7 @@ void SHA1_Final(unsigned char hashout[20], SHA_CTX *ctx) {
   padlen[6] = (unsigned char)((ctx->sizeLo >> 8) & 255);
   padlen[7] = (unsigned char)((ctx->sizeLo >> 0) & 255);
   SHA1_Update(ctx, &pad0x80, 1);
-  while (ctx->lenW != 56)
-    SHA1_Update(ctx, &pad0x00, 1);
+  while (ctx->lenW != 56) SHA1_Update(ctx, &pad0x00, 1);
   SHA1_Update(ctx, padlen, 8);
 
   /* Output hash
@@ -109,16 +105,15 @@ void SHA1_Final(unsigned char hashout[20], SHA_CTX *ctx) {
   SHA1_Init(ctx);
 }
 
-
-#define SHA_ROT(X,n) (((X) << (n)) | ((X) >> (32-(n))))
+#define SHA_ROT(X, n) (((X) << (n)) | ((X) >> (32 - (n))))
 
 static void shaHashBlock(SHA_CTX *ctx) {
   int t;
-  unsigned int A,B,C,D,E,TEMP;
+  unsigned int A, B, C, D, E, TEMP;
 
   for (t = 16; t <= 79; t++)
-    ctx->W[t] =
-      SHA_ROT(ctx->W[t-3] ^ ctx->W[t-8] ^ ctx->W[t-14] ^ ctx->W[t-16], 1);
+    ctx->W[t] = SHA_ROT(
+        ctx->W[t - 3] ^ ctx->W[t - 8] ^ ctx->W[t - 14] ^ ctx->W[t - 16], 1);
 
   A = ctx->H[0];
   B = ctx->H[1];
@@ -127,20 +122,37 @@ static void shaHashBlock(SHA_CTX *ctx) {
   E = ctx->H[4];
 
   for (t = 0; t <= 19; t++) {
-    TEMP = SHA_ROT(A,5) + (((C^D)&B)^D)     + E + ctx->W[t] + 0x5a827999;
-    E = D; D = C; C = SHA_ROT(B, 30); B = A; A = TEMP;
+    TEMP = SHA_ROT(A, 5) + (((C ^ D) & B) ^ D) + E + ctx->W[t] + 0x5a827999;
+    E = D;
+    D = C;
+    C = SHA_ROT(B, 30);
+    B = A;
+    A = TEMP;
   }
   for (t = 20; t <= 39; t++) {
-    TEMP = SHA_ROT(A,5) + (B^C^D)           + E + ctx->W[t] + 0x6ed9eba1;
-    E = D; D = C; C = SHA_ROT(B, 30); B = A; A = TEMP;
+    TEMP = SHA_ROT(A, 5) + (B ^ C ^ D) + E + ctx->W[t] + 0x6ed9eba1;
+    E = D;
+    D = C;
+    C = SHA_ROT(B, 30);
+    B = A;
+    A = TEMP;
   }
   for (t = 40; t <= 59; t++) {
-    TEMP = SHA_ROT(A,5) + ((B&C)|(D&(B|C))) + E + ctx->W[t] + 0x8f1bbcdc;
-    E = D; D = C; C = SHA_ROT(B, 30); B = A; A = TEMP;
+    TEMP =
+        SHA_ROT(A, 5) + ((B & C) | (D & (B | C))) + E + ctx->W[t] + 0x8f1bbcdc;
+    E = D;
+    D = C;
+    C = SHA_ROT(B, 30);
+    B = A;
+    A = TEMP;
   }
   for (t = 60; t <= 79; t++) {
-    TEMP = SHA_ROT(A,5) + (B^C^D)           + E + ctx->W[t] + 0xca62c1d6;
-    E = D; D = C; C = SHA_ROT(B, 30); B = A; A = TEMP;
+    TEMP = SHA_ROT(A, 5) + (B ^ C ^ D) + E + ctx->W[t] + 0xca62c1d6;
+    E = D;
+    D = C;
+    C = SHA_ROT(B, 30);
+    B = A;
+    A = TEMP;
   }
 
   ctx->H[0] += A;
@@ -149,4 +161,3 @@ static void shaHashBlock(SHA_CTX *ctx) {
   ctx->H[3] += D;
   ctx->H[4] += E;
 }
-

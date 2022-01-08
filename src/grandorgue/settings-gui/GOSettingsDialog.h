@@ -1,14 +1,16 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSETTINGSDIALOG_H
 #define GOSETTINGSDIALOG_H
 
-#include <vector>
 #include <wx/propdlg.h>
+
+#include <vector>
 
 #include "GOSettingsReason.h"
 
@@ -24,16 +26,13 @@ class GOSettingsOrgan;
 class GOSettingsReverb;
 class GOSettingsTemperaments;
 
-class GOSettingsDialog : public wxPropertySheetDialog
-{
-private:
-  enum {
-    ID_REASONS = 100
-  };
-  
+class GOSettingsDialog : public wxPropertySheetDialog {
+ private:
+  enum { ID_REASONS = 100 };
+
   GOSound& m_Sound;
   bool m_ReasonsAlreadyShown;
-  SettingsReasons *m_Reasons;
+  SettingsReasons* m_Reasons;
   GOSettingsOption* m_OptionsPage;
   GOSettingsDefaults* m_DefaultsPage;
   GOSettingsAudioOutput* m_OutputPage;
@@ -45,7 +44,7 @@ private:
   GOSettingsMidiMessage* m_MidiMessagePage;
   GOSettingsArchives* m_ArchivePage;
 
-  void OnShow(wxShowEvent &);
+  void OnShow(wxShowEvent&);
 
   bool DoApply();
 
@@ -54,7 +53,7 @@ private:
   void OnHelp(wxCommandEvent& event);
   void OnReasons(wxCommandEvent& event);
 
-public:
+ public:
   // the order must be the same as the order of pages
   typedef enum {
     PAGE_OPTIONS = 0,
@@ -68,14 +67,13 @@ public:
     PAGE_INIT_MIDI_CONFIG,
     PAGE_ORGAN_PACKAGES
   } PageSelector;
-  
-  GOSettingsDialog(wxWindow* parent, GOSound& sound, SettingsReasons *reasons);
+
+  GOSettingsDialog(wxWindow* parent, GOSound& sound, SettingsReasons* reasons);
 
   bool NeedReload();
   bool NeedRestart();
-  
+
   DECLARE_EVENT_TABLE()
 };
-
 
 #endif

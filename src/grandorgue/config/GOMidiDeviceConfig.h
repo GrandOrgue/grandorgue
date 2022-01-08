@@ -1,23 +1,23 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOMIDIDEVICECONFIG_H
 #define GOMIDIDEVICECONFIG_H
 
-#include <vector>
-
 #include <wx/regex.h>
 #include <wx/string.h>
 
-class GOMidiDeviceConfig
-{
-private:
+#include <vector>
+
+class GOMidiDeviceConfig {
+ private:
   wxRegEx* p_CompiledRegEx = NULL;
 
-public:
+ public:
   typedef std::vector<GOMidiDeviceConfig*> RefVector;
 
   wxString m_LogicalName;
@@ -31,12 +31,10 @@ public:
   // matchingResult. Not saved, only in memory
   wxString m_PhysicalName;
 
-  GOMidiDeviceConfig(
-    const wxString& logicalName,
-    const wxString& regEx = wxEmptyString,
-    bool isEnabled = true,
-    const wxString& physicalName = wxEmptyString
-  );
+  GOMidiDeviceConfig(const wxString& logicalName,
+                     const wxString& regEx = wxEmptyString,
+                     bool isEnabled = true,
+                     const wxString& physicalName = wxEmptyString);
 
   void Assign(const GOMidiDeviceConfig& src);
 

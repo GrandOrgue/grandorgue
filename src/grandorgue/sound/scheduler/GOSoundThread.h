@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSOUNDTHREAD_H
 #define GOSOUNDTHREAD_H
@@ -13,22 +14,21 @@
 
 class GOSoundScheduler;
 
-class GOSoundThread : public GOThread
-{
-private:
-	GOSoundScheduler* m_Scheduler;
+class GOSoundThread : public GOThread {
+ private:
+  GOSoundScheduler* m_Scheduler;
 
-	GOMutex m_Mutex;
-	GOCondition m_Condition;
+  GOMutex m_Mutex;
+  GOCondition m_Condition;
 
-	void Entry();
+  void Entry();
 
-public:
-	GOSoundThread(GOSoundScheduler* scheduler);
+ public:
+  GOSoundThread(GOSoundScheduler* scheduler);
 
-	void Run();
-	void Delete();
-	void Wakeup();
+  void Run();
+  void Delete();
+  void Wakeup();
 };
 
 #endif

@@ -1,14 +1,16 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSETTINGSTEMPERAMENTS_H
 #define GOSETTINGSTEMPERAMENTS_H
 
-#include <vector>
 #include <wx/panel.h>
+
+#include <vector>
 
 class GOConfig;
 class GOTemperamentList;
@@ -17,32 +19,32 @@ class wxButton;
 class wxGrid;
 class wxGridEvent;
 
-class GOSettingsTemperaments : public wxPanel
-{
-	enum {
-		ID_LIST,
-		ID_ADD,
-		ID_DEL,
-	};
-private:
-	GOTemperamentList& m_Temperaments;
-	std::vector<GOTemperamentUser*> m_Ptrs;
-	wxGrid* m_List;
-	wxButton* m_Add;
-	wxButton* m_Del;
+class GOSettingsTemperaments : public wxPanel {
+  enum {
+    ID_LIST,
+    ID_ADD,
+    ID_DEL,
+  };
 
-	void OnListSelected(wxGridEvent& event);
-	void OnAdd(wxCommandEvent& event);
-	void OnDel(wxCommandEvent& event);
+ private:
+  GOTemperamentList& m_Temperaments;
+  std::vector<GOTemperamentUser*> m_Ptrs;
+  wxGrid* m_List;
+  wxButton* m_Add;
+  wxButton* m_Del;
 
-	void Update();
+  void OnListSelected(wxGridEvent& event);
+  void OnAdd(wxCommandEvent& event);
+  void OnDel(wxCommandEvent& event);
 
-public:
-	GOSettingsTemperaments(GOConfig& settings, wxWindow* parent);
+  void Update();
 
-	void Save();
-	
-	DECLARE_EVENT_TABLE()
+ public:
+  GOSettingsTemperaments(GOConfig& settings, wxWindow* parent);
+
+  void Save();
+
+  DECLARE_EVENT_TABLE()
 };
 
 #endif

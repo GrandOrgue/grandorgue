@@ -30,19 +30,18 @@ class GOLog;
 class GOSound;
 class GOConfig;
 
-class GOApp : public wxApp
-{
-private:
+class GOApp : public wxApp {
+ private:
   bool m_Restart;
-  
-  virtual void MacOpenFile(const wxString &fileName);
+
+  virtual void MacOpenFile(const wxString& fileName);
   bool OnInit();
   int OnRun();
   int OnExit();
   void OnInitCmdLine(wxCmdLineParser& parser);
   bool OnCmdLineParsed(wxCmdLineParser& parser);
 
-protected:
+ protected:
   GOFrame* m_Frame;
   wxLocale m_locale;
   GOConfig* m_config;
@@ -51,13 +50,12 @@ protected:
   wxString m_FileName;
   wxString m_InstanceName;
 
-  static const wxCmdLineEntryDesc m_cmdLineDesc [];
+  static const wxCmdLineEntryDesc m_cmdLineDesc[];
 
-public:
+ public:
   GOApp();
   void SetRestart();
 };
-
 
 DECLARE_APP(GOApp)
 

@@ -1,61 +1,40 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOGUIMOUSESTATE_H
 #define GOGUIMOUSESTATE_H
 
 class GOGUIMouseState {
-	void * m_sequence;
-	void * m_control;
-	unsigned m_index;
+  void* m_sequence;
+  void* m_control;
+  unsigned m_index;
 
-public:
-	GOGUIMouseState()
-	{
-		m_sequence = 0;
-		clear();
-	}
+ public:
+  GOGUIMouseState() {
+    m_sequence = 0;
+    clear();
+  }
 
-	void clear()
-	{
-		m_control = 0;
-		m_index = 0;
-	}
+  void clear() {
+    m_control = 0;
+    m_index = 0;
+  }
 
-	void* GetSequence()
-	{
-		return m_sequence;
-	}
+  void* GetSequence() { return m_sequence; }
 
-	void* GetControl()
-	{
-		return m_control;
-	}
+  void* GetControl() { return m_control; }
 
-	unsigned GetIndex()
-	{
-		return m_index;
-	}
+  unsigned GetIndex() { return m_index; }
 
-	void SetSequence(void* sequence)
-	{
-		m_sequence = sequence;
-	}
+  void SetSequence(void* sequence) { m_sequence = sequence; }
 
-	void SetControl(void* control)
-	{
-		m_control = control;
-	}
+  void SetControl(void* control) { m_control = control; }
 
-	void SetIndex(unsigned index)
-	{
-		m_index = index;
-	}
-
+  void SetIndex(unsigned index) { m_index = index; }
 };
-
 
 #endif

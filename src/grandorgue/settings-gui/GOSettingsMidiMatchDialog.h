@@ -1,15 +1,16 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSETTINGSMIDIMATCHDIALOG_H
 #define GOSETTINGSMIDIMATCHDIALOG_H
 
-#include <vector>
-
 #include <wx/dialog.h>
+
+#include <vector>
 
 #include "config/GOMidiDeviceConfig.h"
 
@@ -17,15 +18,11 @@ class wxCheckListBox;
 class wxStatusBar;
 class wxTextCtrl;
 
-class GOSettingsMidiMatchDialog: public wxDialog
-{
-private:
-  enum {
-    ID_LOGICAL_NAME = 200,
-    ID_REGEX
-  };
+class GOSettingsMidiMatchDialog : public wxDialog {
+ private:
+  enum { ID_LOGICAL_NAME = 200, ID_REGEX };
 
-    // for checking for logical name uniqueness
+  // for checking for logical name uniqueness
   std::vector<GOMidiDeviceConfig*>* p_OtherDevices;
 
   wxString m_PhysicalName;
@@ -43,10 +40,9 @@ private:
   void OnRegexChanged(wxCommandEvent& event);
   void OnHelp(wxCommandEvent& event);
 
-public:
+ public:
   GOSettingsMidiMatchDialog(
-    wxWindow* parent, std::vector<GOMidiDeviceConfig*>* otherDevices = NULL
-  );
+      wxWindow* parent, std::vector<GOMidiDeviceConfig*>* otherDevices = NULL);
 
   void FillWith(const GOMidiDeviceConfig& devConf);
 

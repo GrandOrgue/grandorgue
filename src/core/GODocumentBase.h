@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GODOCUMENTBASE_H
 #define GODOCUMENTBASE_H
@@ -11,31 +12,31 @@
 
 class GOView;
 
-class GODocumentBase
-{
-public:
-	typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
-private:
-	typedef struct {
-		WindowType type;
-		void* data;
-		GOView* window;
-	} WindowInfo;
+class GODocumentBase {
+ public:
+  typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
 
-	std::vector<WindowInfo> m_Windows;
+ private:
+  typedef struct {
+    WindowType type;
+    void* data;
+    GOView* window;
+  } WindowInfo;
 
-protected:
-	void SyncState();
-	void CloseWindows();
+  std::vector<WindowInfo> m_Windows;
 
-public:
-	GODocumentBase();
-	~GODocumentBase();
+ protected:
+  void SyncState();
+  void CloseWindows();
 
-	bool WindowExists(WindowType type, void* data);
-	bool showWindow(WindowType type, void* data);
-	void registerWindow(WindowType type, void* data, GOView *window);
-	void unregisterWindow(GOView* window);
+ public:
+  GODocumentBase();
+  ~GODocumentBase();
+
+  bool WindowExists(WindowType type, void* data);
+  bool showWindow(WindowType type, void* data);
+  void registerWindow(WindowType type, void* data, GOView* window);
+  void unregisterWindow(GOView* window);
 };
 
 #endif

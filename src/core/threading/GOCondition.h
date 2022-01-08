@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOCONDITION_H
 #define GOCONDITION_H
@@ -12,24 +13,20 @@
 #elif defined WX_MUTEX
 #include <wx/thread.h>
 #else
-#include "atomic.h"
 #include "GOWaitQueue.h"
+#include "atomic.h"
 #endif
 
 #include "GOMutex.h"
 #include "GOThread.h"
 
-class GOCondition
-{
-public:
-  enum {
-    SIGNAL_RECEIVED = 0x1,
-    MUTEX_LOCKED = 0x2
-  };
+class GOCondition {
+ public:
+  enum { SIGNAL_RECEIVED = 0x1, MUTEX_LOCKED = 0x2 };
 
-private:
+ private:
 #if defined GO_STD_MUTEX
-  std::timed_mutex &r_mutex;
+  std::timed_mutex& r_mutex;
   std::condition_variable_any m_condition;
 #elif defined WX_MUTEX
   wxCondition m_condition;
@@ -42,8 +39,10 @@ private:
   GOCondition(const GOCondition&) = delete;
   const GOCondition& operator=(const GOCondition&) = delete;
 
-  unsigned DoWait(bool isWithTimeout, const char* waiterInfo, GOThread *pThread);
-public:
+  unsigned DoWait(bool isWithTimeout, const char* waiterInfo,
+                  GOThread* pThread);
+
+ public:
   GOCondition(GOMutex& mutex);
   ~GOCondition();
 

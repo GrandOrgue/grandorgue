@@ -22,13 +22,15 @@
 #ifndef GOFRAME_H
 #define GOFRAME_H
 
+#include <wx/dcmemory.h>
+#include <wx/frame.h>
+
+#include <vector>
+
 #include "GOEvent.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
-#include <vector>
-#include <wx/dcmemory.h>
-#include <wx/frame.h>
 
 class GOApp;
 class GODocument;
@@ -41,10 +43,9 @@ class wxGaugeAudio;
 class wxHtmlHelpController;
 class wxSpinCtrl;
 
-class GOFrame: public wxFrame, protected GOMidiCallback
-{
-private:
-  GOApp &m_App;
+class GOFrame : public wxFrame, protected GOMidiCallback {
+ private:
+  GOApp& m_App;
   GOMutex m_mutex;
   wxMenu* m_file_menu;
   wxMenu* m_audio_menu;
@@ -54,7 +55,7 @@ private:
   wxMenu* m_temperament_menu;
   GODocument* m_doc;
   wxHtmlHelpController* m_Help;
-  wxGaugeAudio *m_SamplerUsage;
+  wxGaugeAudio* m_SamplerUsage;
   wxControl* m_VolumeControl;
   std::vector<wxGaugeAudio*> m_VolumeGauge;
   wxSpinCtrl* m_Transpose;
@@ -69,13 +70,13 @@ private:
   wxString m_Label;
   bool m_MidiMonitor;
   bool m_isMeterReady;
-  
+
   // to avoid event processing when the settings dialog is open
   bool m_InSettings;
   wxEventType m_AfterSettingsEventType;
   int m_AfterSettingsEventId;
   GOOrgan* p_AfterSettingsEventOrgan;
-  
+
   void InitHelp();
   void UpdatePanelMenu();
   void UpdateFavoritesMenu();
@@ -114,9 +115,8 @@ private:
   void OnAudioMemset(wxCommandEvent& event);
   void OnAudioState(wxCommandEvent& event);
 
-  void SetEventAfterSettings(
-    wxEventType eventType, int eventId, GOOrgan* pOrganFile=NULL
-  );
+  void SetEventAfterSettings(wxEventType eventType, int eventId,
+                             GOOrgan* pOrganFile = NULL);
 
   void OnSettings(wxCommandEvent& event);
   void OnMidiLoad(wxCommandEvent& event);
@@ -161,8 +161,10 @@ private:
   void LoadFirstOrgan();
   void SendLoadOrgan(const GOOrgan& organ);
 
-public:
-  GOFrame(GOApp &app, wxFrame *frame, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long type, GOSound& sound);
+ public:
+  GOFrame(GOApp& app, wxFrame* frame, wxWindowID id, const wxString& title,
+          const wxPoint& pos, const wxSize& size, const long type,
+          GOSound& sound);
   virtual ~GOFrame(void);
 
   void Init(wxString filename);

@@ -1,87 +1,88 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOPIPECONFIG_H
 #define GOPIPECONFIG_H
 
-#include "GOPipeUpdateCallback.h"
 #include <wx/string.h>
+
+#include "GOPipeUpdateCallback.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GODefinitionFile;
 
-class GOPipeConfig
-{
-private:
-	GODefinitionFile* m_OrganFile;
-	GOPipeUpdateCallback* m_Callback;
-	wxString m_Group;
-	wxString m_NamePrefix;
-	wxString m_AudioGroup;
-	float m_Amplitude;
-	float m_DefaultAmplitude;
-	float m_Gain;
-	float m_DefaultGain;
-	float m_Tuning;
-	float m_DefaultTuning;
-	unsigned m_Delay;
-	unsigned m_DefaultDelay;
-	int m_BitsPerSample;
-	int m_Compress;
-	int m_Channels;
-	int m_LoopLoad;
-	int m_AttackLoad;
-	int m_ReleaseLoad;
+class GOPipeConfig {
+ private:
+  GODefinitionFile* m_OrganFile;
+  GOPipeUpdateCallback* m_Callback;
+  wxString m_Group;
+  wxString m_NamePrefix;
+  wxString m_AudioGroup;
+  float m_Amplitude;
+  float m_DefaultAmplitude;
+  float m_Gain;
+  float m_DefaultGain;
+  float m_Tuning;
+  float m_DefaultTuning;
+  unsigned m_Delay;
+  unsigned m_DefaultDelay;
+  int m_BitsPerSample;
+  int m_Compress;
+  int m_Channels;
+  int m_LoopLoad;
+  int m_AttackLoad;
+  int m_ReleaseLoad;
 
-public:
-	GOPipeConfig(GODefinitionFile* organfile, GOPipeUpdateCallback* callback);
+ public:
+  GOPipeConfig(GODefinitionFile* organfile, GOPipeUpdateCallback* callback);
 
-	void Init(GOConfigReader& cfg, wxString group, wxString prefix);
-	void Load(GOConfigReader& cfg, wxString group, wxString prefix);
-	void Save(GOConfigWriter& cfg);
+  void Init(GOConfigReader& cfg, wxString group, wxString prefix);
+  void Load(GOConfigReader& cfg, wxString group, wxString prefix);
+  void Save(GOConfigWriter& cfg);
 
-	GOPipeUpdateCallback* GetCallback();
+  GOPipeUpdateCallback* GetCallback();
 
-	float GetAmplitude();
-	float GetDefaultAmplitude();
-	void SetAmplitude(float amp);
+  float GetAmplitude();
+  float GetDefaultAmplitude();
+  void SetAmplitude(float amp);
 
-	float GetGain();
-	float GetDefaultGain();
-	void SetGain(float gain);
+  float GetGain();
+  float GetDefaultGain();
+  void SetGain(float gain);
 
-	float GetTuning();
-	float GetDefaultTuning();
-	void SetTuning(float cent);
+  float GetTuning();
+  float GetDefaultTuning();
+  void SetTuning(float cent);
 
-	unsigned GetDelay();
-	unsigned GetDefaultDelay();
-	void SetDelay(unsigned delay);
+  unsigned GetDelay();
+  unsigned GetDefaultDelay();
+  void SetDelay(unsigned delay);
 
-	const wxString& GetAudioGroup();
-	void SetAudioGroup(const wxString& str);
+  const wxString& GetAudioGroup();
+  void SetAudioGroup(const wxString& str);
 
-	int GetBitsPerSample();
-	void SetBitsPerSample(int value);
+  int GetBitsPerSample();
+  void SetBitsPerSample(int value);
 
-	int GetCompress();
-	void SetCompress(int value);
+  int GetCompress();
+  void SetCompress(int value);
 
-	int GetChannels();
-	void SetChannels(int value);
+  int GetChannels();
+  void SetChannels(int value);
 
-	int GetLoopLoad();
-	void SetLoopLoad(int value);
+  int GetLoopLoad();
+  void SetLoopLoad(int value);
 
-	int GetAttackLoad();
-	void SetAttackLoad(int value);
+  int GetAttackLoad();
+  void SetAttackLoad(int value);
 
-	int GetReleaseLoad();
-	void SetReleaseLoad(int value);
+  int GetReleaseLoad();
+  void SetReleaseLoad(int value);
 };
 
 #endif
