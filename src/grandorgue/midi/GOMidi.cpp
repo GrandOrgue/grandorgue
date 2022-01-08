@@ -20,10 +20,10 @@ EVT_MIDI(GOMidi::OnMidiEvent)
 END_EVENT_TABLE()
 
 GOMidi::GOMidi(GOConfig &settings)
-    : m_config(settings),
-      m_midi_in_devices(),
-      m_midi_out_devices(),
-      m_Listeners() {}
+  : m_config(settings),
+    m_midi_in_devices(),
+    m_midi_out_devices(),
+    m_Listeners() {}
 
 void GOMidi::UpdateDevices(const GOPortsConfig &portsConfig) {
   m_MidiFactory.addMissingInDevices(this, portsConfig, m_midi_in_devices);

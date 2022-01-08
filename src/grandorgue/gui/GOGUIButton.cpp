@@ -18,22 +18,22 @@
 #include "gui/GOGUIMouseState.h"
 
 GOGUIButton::GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston)
-    : GOGUIControl(panel, control),
-      m_IsPiston(is_piston),
-      m_DispKeyLabelOnLeft(true),
-      m_Button(control),
-      m_MouseRect(),
-      m_Radius(0),
-      m_FontSize(0),
-      m_FontName(),
-      m_TextColor(0, 0, 0),
-      m_Text(),
-      m_TextRect(),
-      m_TextWidth(0),
-      m_DispCol(0),
-      m_DispRow(0),
-      m_TileOffsetX(0),
-      m_TileOffsetY(0) {}
+  : GOGUIControl(panel, control),
+    m_IsPiston(is_piston),
+    m_DispKeyLabelOnLeft(true),
+    m_Button(control),
+    m_MouseRect(),
+    m_Radius(0),
+    m_FontSize(0),
+    m_FontName(),
+    m_TextColor(0, 0, 0),
+    m_Text(),
+    m_TextRect(),
+    m_TextWidth(0),
+    m_DispCol(0),
+    m_DispRow(0),
+    m_TileOffsetX(0),
+    m_TileOffsetY(0) {}
 
 void GOGUIButton::Init(
   GOConfigReader &cfg,

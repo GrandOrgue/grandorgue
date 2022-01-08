@@ -14,7 +14,7 @@
 #include "threading/GOMutexLocker.h"
 
 GOSoundSamplerPool::GOSoundSamplerPool()
-    : m_SamplerCount(0), m_UsageLimit(0), m_AvailableSamplers(), m_Samplers() {
+  : m_SamplerCount(0), m_UsageLimit(0), m_AvailableSamplers(), m_Samplers() {
   ReturnAll();
 }
 

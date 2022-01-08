@@ -10,10 +10,10 @@
 #include <wx/intl.h>
 
 GOTemperament::GOTemperament(wxString name, wxString group)
-    : m_Group(group), m_Name(name), m_Title(wxGetTranslation(name)) {}
+  : m_Group(group), m_Name(name), m_Title(wxGetTranslation(name)) {}
 
 GOTemperament::GOTemperament(wxString name, wxString title, wxString group)
-    : m_Group(group), m_Name(name), m_Title(title) {}
+  : m_Group(group), m_Name(name), m_Title(title) {}
 
 GOTemperament::~GOTemperament() {}
 

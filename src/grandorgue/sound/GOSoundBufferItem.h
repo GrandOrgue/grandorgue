@@ -17,7 +17,7 @@ class GOSoundBufferItem {
 
  public:
   GOSoundBufferItem(unsigned samples_per_buffer, unsigned channels)
-      : m_SamplesPerBuffer(samples_per_buffer), m_Channels(channels) {
+    : m_SamplesPerBuffer(samples_per_buffer), m_Channels(channels) {
     m_Buffer = new float[m_SamplesPerBuffer * m_Channels];
   }
   virtual ~GOSoundBufferItem() { delete[] m_Buffer; }

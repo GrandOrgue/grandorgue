@@ -21,7 +21,7 @@ class GOPortsConfig {
 
     PortApiConfig(
       const wxString &portName, const wxString &apiName, bool isEnabled)
-        : m_PortName(portName), m_ApiName(apiName), m_IsEnabled(isEnabled) {}
+      : m_PortName(portName), m_ApiName(apiName), m_IsEnabled(isEnabled) {}
 
     bool operator==(const PortApiConfig &other) const {
       return m_PortName == other.m_PortName && m_ApiName == other.m_ApiName
@@ -41,7 +41,7 @@ class GOPortsConfig {
  public:
   GOPortsConfig() {}
   GOPortsConfig(const GOPortsConfig &src)
-      : m_PortApiConfigs(src.m_PortApiConfigs) {}
+    : m_PortApiConfigs(src.m_PortApiConfigs) {}
 
   bool operator==(const GOPortsConfig &other) const {
     return m_PortApiConfigs == other.m_PortApiConfigs;

@@ -13,7 +13,7 @@
 #include "GOFont.h"
 
 GODC::GODC(wxDC *dc, double scale, double fontScale)
-    : m_DC(dc), m_Scale(scale), m_FontScale(fontScale) {}
+  : m_DC(dc), m_Scale(scale), m_FontScale(fontScale) {}
 
 wxRect GODC::ScaleRect(const wxRect &rect) {
   return wxRect(

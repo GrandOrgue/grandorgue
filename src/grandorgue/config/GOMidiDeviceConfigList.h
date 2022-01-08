@@ -26,7 +26,7 @@ class GOMidiDeviceConfigList
 
  public:
   GOMidiDeviceConfigList(const wxString &groupName = wxEmptyString)
-      : m_GroupName(groupName) {}
+    : m_GroupName(groupName) {}
 
   void Clear() { m_list.clear(); }
 

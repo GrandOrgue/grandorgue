@@ -14,7 +14,7 @@
 const wxString GOSoundJackPort::PORT_NAME = wxT("Jack");
 
 GOSoundJackPort::GOSoundJackPort(GOSound *sound, wxString name)
-    : GOSoundPort(sound, name) {}
+  : GOSoundPort(sound, name) {}
 
 GOSoundJackPort::~GOSoundJackPort() { Close(); }
 

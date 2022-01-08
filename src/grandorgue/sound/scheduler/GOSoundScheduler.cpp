@@ -11,7 +11,7 @@
 #include "threading/GOMutexLocker.h"
 
 GOSoundScheduler::GOSoundScheduler()
-    : m_Work(), m_WorkItems(), m_ItemCount(0), m_RepeatCount(0) {}
+  : m_Work(), m_WorkItems(), m_ItemCount(0), m_RepeatCount(0) {}
 
 GOSoundScheduler::~GOSoundScheduler() {
   GOMutexLocker lock(m_Mutex);

@@ -23,12 +23,12 @@ static std::vector<RtMidi::Api> apis;
 static bool hasApisPopulated = false;
 
 GOMidiRtPortFactory::GOMidiRtPortFactory()
-    : m_AlsaDevnamePattern("([^:]+):([^:]+) ([0-9]+:[0-9]+)"),
-      // Client Name:Port Name ClientNum:PortNum
-      m_JackDevnamePattern(
-        "Midi-Bridge:([^:]+):\\(([a-z]+)_([0-9]+)\\) ([^:-]+)(-[0-9]+)?$"),
-      // Midi-Bridge:Client Name:(direction_num)) Port Name{-Num}
-      m_WinMmDevnamePattern("([^:]+) ([0-9]+)$")
+  : m_AlsaDevnamePattern("([^:]+):([^:]+) ([0-9]+:[0-9]+)"),
+    // Client Name:Port Name ClientNum:PortNum
+    m_JackDevnamePattern(
+      "Midi-Bridge:([^:]+):\\(([a-z]+)_([0-9]+)\\) ([^:-]+)(-[0-9]+)?$"),
+    // Midi-Bridge:Client Name:(direction_num)) Port Name{-Num}
+    m_WinMmDevnamePattern("([^:]+) ([0-9]+)$")
 // Device Name PortNum
 {
   if (!hasApisPopulated) {

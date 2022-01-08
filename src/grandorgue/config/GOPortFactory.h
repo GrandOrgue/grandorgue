@@ -25,7 +25,7 @@ class GOPortFactory {
 
    public:
     NameParser(const wxString &name)
-        : m_Name(name), m_Pos(name.IsEmpty() ? wxString::npos : 0) {}
+      : m_Name(name), m_Pos(name.IsEmpty() ? wxString::npos : 0) {}
     NameParser(const NameParser &src) : m_Name(src.m_Name), m_Pos(src.m_Pos) {}
 
     const wxString &GetOrigName() const { return m_Name; }

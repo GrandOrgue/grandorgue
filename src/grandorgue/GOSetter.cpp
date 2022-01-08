@@ -243,21 +243,21 @@ const struct ElementListEntry *GOSetter::GetButtonList() {
 }
 
 GOSetter::GOSetter(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_pos(0),
-      m_bank(0),
-      m_crescendopos(0),
-      m_crescendobank(0),
-      m_framegeneral(0),
-      m_general(0),
-      m_crescendo(0),
-      m_PosDisplay(organfile),
-      m_BankDisplay(organfile),
-      m_CrescendoDisplay(organfile),
-      m_TransposeDisplay(organfile),
-      m_NameDisplay(organfile),
-      m_swell(organfile),
-      m_SetterType(SETTER_REGULAR) {
+  : m_organfile(organfile),
+    m_pos(0),
+    m_bank(0),
+    m_crescendopos(0),
+    m_crescendobank(0),
+    m_framegeneral(0),
+    m_general(0),
+    m_crescendo(0),
+    m_PosDisplay(organfile),
+    m_BankDisplay(organfile),
+    m_CrescendoDisplay(organfile),
+    m_TransposeDisplay(organfile),
+    m_NameDisplay(organfile),
+    m_swell(organfile),
+    m_SetterType(SETTER_REGULAR) {
   CreateButtons(m_organfile);
 
   m_button[ID_SETTER_PREV]->SetPreconfigIndex(0);

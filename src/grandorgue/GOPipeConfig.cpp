@@ -13,25 +13,25 @@
 
 GOPipeConfig::GOPipeConfig(
   GODefinitionFile *organfile, GOPipeUpdateCallback *callback)
-    : m_OrganFile(organfile),
-      m_Callback(callback),
-      m_Group(),
-      m_NamePrefix(),
-      m_AudioGroup(),
-      m_Amplitude(0),
-      m_DefaultAmplitude(0),
-      m_Gain(0),
-      m_DefaultGain(0),
-      m_Tuning(0),
-      m_DefaultTuning(0),
-      m_Delay(0),
-      m_DefaultDelay(0),
-      m_BitsPerSample(-1),
-      m_Compress(-1),
-      m_Channels(-1),
-      m_LoopLoad(-1),
-      m_AttackLoad(-1),
-      m_ReleaseLoad(-1) {}
+  : m_OrganFile(organfile),
+    m_Callback(callback),
+    m_Group(),
+    m_NamePrefix(),
+    m_AudioGroup(),
+    m_Amplitude(0),
+    m_DefaultAmplitude(0),
+    m_Gain(0),
+    m_DefaultGain(0),
+    m_Tuning(0),
+    m_DefaultTuning(0),
+    m_Delay(0),
+    m_DefaultDelay(0),
+    m_BitsPerSample(-1),
+    m_Compress(-1),
+    m_Channels(-1),
+    m_LoopLoad(-1),
+    m_AttackLoad(-1),
+    m_ReleaseLoad(-1) {}
 
 void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
   m_Group = group;

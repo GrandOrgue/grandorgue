@@ -38,14 +38,14 @@
 #include "config/GOConfigWriter.h"
 
 GOArchiveCreator::GOArchiveCreator(const GOSettingDirectory &cacheDir)
-    : m_OrganList(),
-      m_Manager(m_OrganList, cacheDir),
-      m_Output(),
-      m_packageIDs(),
-      m_packages(),
-      m_organs(),
-      m_OrganPaths(),
-      m_PackageTitle() {}
+  : m_OrganList(),
+    m_Manager(m_OrganList, cacheDir),
+    m_Output(),
+    m_packageIDs(),
+    m_packages(),
+    m_organs(),
+    m_OrganPaths(),
+    m_PackageTitle() {}
 
 GOArchiveCreator::~GOArchiveCreator() {}
 

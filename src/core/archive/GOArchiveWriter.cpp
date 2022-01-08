@@ -10,7 +10,7 @@
 #include <zlib.h>
 
 GOArchiveWriter::GOArchiveWriter()
-    : m_Offset(0), m_directory(0), m_Entries(0), m_Names() {}
+  : m_Offset(0), m_directory(0), m_Entries(0), m_Names() {}
 
 GOArchiveWriter::~GOArchiveWriter() { Close(); }
 

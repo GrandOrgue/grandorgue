@@ -20,18 +20,18 @@
 #include "config/GOConfigReader.h"
 
 GOModel::GOModel()
-    : m_windchest(),
-      m_manual(),
-      m_enclosure(),
-      m_switches(),
-      m_tremulant(),
-      m_ranks(),
-      m_piston(),
-      m_divisionalcoupler(),
-      m_general(),
-      m_FirstManual(0),
-      m_ODFManualCount(0),
-      m_ODFRankCount(0) {}
+  : m_windchest(),
+    m_manual(),
+    m_enclosure(),
+    m_switches(),
+    m_tremulant(),
+    m_ranks(),
+    m_piston(),
+    m_divisionalcoupler(),
+    m_general(),
+    m_FirstManual(0),
+    m_ODFManualCount(0),
+    m_ODFRankCount(0) {}
 
 GOModel::~GOModel() {}
 

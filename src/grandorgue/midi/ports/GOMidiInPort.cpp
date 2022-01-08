@@ -19,9 +19,9 @@ GOMidiInPort::GOMidiInPort(
   const wxString &apiName,
   const wxString &deviceName,
   const wxString &fullName)
-    : GOMidiPort(midi, portName, apiName, deviceName, fullName),
-      m_merger(),
-      m_ChannelShift(0) {}
+  : GOMidiPort(midi, portName, apiName, deviceName, fullName),
+    m_merger(),
+    m_ChannelShift(0) {}
 
 GOMidiInPort::~GOMidiInPort() {}
 

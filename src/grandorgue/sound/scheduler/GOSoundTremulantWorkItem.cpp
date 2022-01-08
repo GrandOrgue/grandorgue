@@ -12,10 +12,10 @@
 
 GOSoundTremulantWorkItem::GOSoundTremulantWorkItem(
   GOSoundEngine &sound_engine, unsigned samples_per_buffer)
-    : m_engine(sound_engine),
-      m_Volume(0),
-      m_SamplesPerBuffer(samples_per_buffer),
-      m_Done(false) {}
+  : m_engine(sound_engine),
+    m_Volume(0),
+    m_SamplesPerBuffer(samples_per_buffer),
+    m_Done(false) {}
 
 void GOSoundTremulantWorkItem::Reset() {
   GOMutexLocker locker(m_Mutex);

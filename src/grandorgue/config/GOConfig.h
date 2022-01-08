@@ -136,8 +136,8 @@ class GOConfig : public GOSettingStore, public GOOrganList {
       unsigned min_value,
       unsigned max_value,
       unsigned default_value)
-        : GOSettingUnsigned(
-          store, group, name, min_value, max_value, default_value) {}
+      : GOSettingUnsigned(
+        store, group, name, min_value, max_value, default_value) {}
 
   } BitsPerSample;
   GOSettingInteger Transpose;

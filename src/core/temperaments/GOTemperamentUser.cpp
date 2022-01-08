@@ -12,10 +12,10 @@
 
 GOTemperamentUser::GOTemperamentUser(
   wxString name, wxString title, wxString group)
-    : GOTemperamentCent(name, title, group) {}
+  : GOTemperamentCent(name, title, group) {}
 
 GOTemperamentUser::GOTemperamentUser(GOConfigReader &cfg, wxString group)
-    : GOTemperamentCent(wxEmptyString, wxEmptyString, wxEmptyString) {
+  : GOTemperamentCent(wxEmptyString, wxEmptyString, wxEmptyString) {
   m_Name = cfg.ReadString(CMBSetting, group, wxT("Name"));
   m_Title = cfg.ReadString(CMBSetting, group, wxT("Title"));
   m_Group = cfg.ReadString(CMBSetting, group, wxT("Group"));

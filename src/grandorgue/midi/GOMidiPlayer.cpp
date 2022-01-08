@@ -35,14 +35,14 @@ const struct ElementListEntry *GOMidiPlayer::GetButtonList() {
 }
 
 GOMidiPlayer::GOMidiPlayer(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_content(),
-      m_PlayingTime(organfile),
-      m_Start(0),
-      m_PlayingSeconds(0),
-      m_Speed(1),
-      m_IsPlaying(false),
-      m_Pause(false) {
+  : m_organfile(organfile),
+    m_content(),
+    m_PlayingTime(organfile),
+    m_Start(0),
+    m_PlayingSeconds(0),
+    m_Speed(1),
+    m_IsPlaying(false),
+    m_Pause(false) {
   CreateButtons(m_organfile);
   Clear();
   m_DeviceID = m_organfile->GetSettings().GetMidiMap().GetDeviceByString(

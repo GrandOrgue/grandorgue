@@ -15,7 +15,7 @@
 
 GOMidiReceiver::GOMidiReceiver(
   GODefinitionFile *organfile, MIDI_RECEIVER_TYPE type)
-    : GOMidiReceiverBase(type), m_organfile(organfile), m_Index(-1) {}
+  : GOMidiReceiverBase(type), m_organfile(organfile), m_Index(-1) {}
 
 void GOMidiReceiver::SetIndex(int index) { m_Index = index; }
 void GOMidiReceiver::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {

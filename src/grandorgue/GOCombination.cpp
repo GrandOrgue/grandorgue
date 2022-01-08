@@ -15,10 +15,10 @@
 
 GOCombination::GOCombination(
   GOCombinationDefinition &combination_template, GODefinitionFile *organfile)
-    : m_OrganFile(organfile),
-      m_Template(combination_template),
-      m_State(0),
-      m_Protected(false) {}
+  : m_OrganFile(organfile),
+    m_Template(combination_template),
+    m_State(0),
+    m_Protected(false) {}
 
 GOCombination::~GOCombination() {}
 

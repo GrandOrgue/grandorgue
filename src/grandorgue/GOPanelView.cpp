@@ -43,11 +43,11 @@ GOPanelView *GOPanelView::createWithFrame(
 
 GOPanelView::GOPanelView(
   GODocumentBase *doc, GOGUIPanel *panel, wxWindow *parent)
-    : wxScrolledWindow(parent),
-      GOView(doc, parent),
-      m_panelwidget(NULL),
-      m_panel(panel),
-      m_TopWindow(dynamic_cast<wxTopLevelWindow *>(parent)) {
+  : wxScrolledWindow(parent),
+    GOView(doc, parent),
+    m_panelwidget(NULL),
+    m_panel(panel),
+    m_TopWindow(dynamic_cast<wxTopLevelWindow *>(parent)) {
   wxWindow *frame = parent;
 
   GOGUIPanelWidget *panelwidget = new GOGUIPanelWidget(panel, this);

@@ -32,7 +32,7 @@ wxString GOSoundPortaudioPort::getLastError(PaError error) {
 }
 
 GOSoundPortaudioPort::GOSoundPortaudioPort(GOSound *sound, wxString name)
-    : GOSoundPort(sound, name), m_stream(0) {}
+  : GOSoundPort(sound, name), m_stream(0) {}
 
 GOSoundPortaudioPort::~GOSoundPortaudioPort() { Close(); }
 

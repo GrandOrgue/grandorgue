@@ -8,7 +8,7 @@
 #include "GOKeyReceiverData.h"
 
 GOKeyReceiverData::GOKeyReceiverData(KEY_RECEIVER_TYPE type)
-    : m_type(type), m_ShortcutKey(0), m_MinusKey(0) {}
+  : m_type(type), m_ShortcutKey(0), m_MinusKey(0) {}
 
 GOKeyReceiverData::~GOKeyReceiverData() {}
 

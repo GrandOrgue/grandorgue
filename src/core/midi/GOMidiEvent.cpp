@@ -13,23 +13,23 @@
 #include "GORodgers.h"
 
 GOMidiEvent::GOMidiEvent()
-    : m_miditype(MIDI_NONE),
-      m_channel(-1),
-      m_key(-1),
-      m_value(-1),
-      m_time(0),
-      m_string(),
-      m_data() {}
+  : m_miditype(MIDI_NONE),
+    m_channel(-1),
+    m_key(-1),
+    m_value(-1),
+    m_time(0),
+    m_string(),
+    m_data() {}
 
 GOMidiEvent::GOMidiEvent(const GOMidiEvent &e)
-    : m_miditype(e.m_miditype),
-      m_channel(e.m_channel),
-      m_key(e.m_key),
-      m_value(e.m_value),
-      m_device(e.m_device),
-      m_time(e.m_time),
-      m_string(e.m_string.Clone()),
-      m_data(e.m_data) {}
+  : m_miditype(e.m_miditype),
+    m_channel(e.m_channel),
+    m_key(e.m_key),
+    m_value(e.m_value),
+    m_device(e.m_device),
+    m_time(e.m_time),
+    m_string(e.m_string.Clone()),
+    m_data(e.m_data) {}
 
 void GOMidiEvent::SetString(const wxString &str, unsigned length) {
   unsigned len = str.length();

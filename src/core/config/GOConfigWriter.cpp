@@ -15,7 +15,7 @@
 #include "config/GOConfigReader.h"
 
 GOConfigWriter::GOConfigWriter(GOConfigFileWriter &cfg, bool prefix)
-    : m_ConfigFile(cfg), m_Prefix(prefix) {}
+  : m_ConfigFile(cfg), m_Prefix(prefix) {}
 
 void GOConfigWriter::WriteString(wxString group, wxString key, wxString value) {
   if (m_Prefix)

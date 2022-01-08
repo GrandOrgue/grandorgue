@@ -14,7 +14,7 @@
 #include "config/GOConfigWriter.h"
 
 GOMidiReceiverBase::GOMidiReceiverBase(MIDI_RECEIVER_TYPE type)
-    : GOMidiReceiverData(type), m_ElementID(-1), m_last(), m_Internal() {}
+  : GOMidiReceiverData(type), m_ElementID(-1), m_last(), m_Internal() {}
 
 void GOMidiReceiverBase::SetElementID(int id) { m_ElementID = id; }
 

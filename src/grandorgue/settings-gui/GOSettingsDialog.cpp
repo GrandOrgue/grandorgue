@@ -38,16 +38,16 @@ END_EVENT_TABLE()
 
 GOSettingsDialog::GOSettingsDialog(
   wxWindow *win, GOSound &sound, SettingsReasons *reasons)
-    : wxPropertySheetDialog(
-      win,
-      wxID_ANY,
-      _("Program Settings"),
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
-      m_Sound(sound),
-      m_ReasonsAlreadyShown(false),
-      m_Reasons(reasons) {
+  : wxPropertySheetDialog(
+    win,
+    wxID_ANY,
+    _("Program Settings"),
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
+    m_Sound(sound),
+    m_ReasonsAlreadyShown(false),
+    m_Reasons(reasons) {
   wxBookCtrlBase *notebook = GetBookCtrl();
 
   m_MidiDevicePage = new SettingsMidiDevices(

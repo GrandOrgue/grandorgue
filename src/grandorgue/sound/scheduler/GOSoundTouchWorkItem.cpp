@@ -11,7 +11,7 @@
 #include "threading/GOMutexLocker.h"
 
 GOSoundTouchWorkItem::GOSoundTouchWorkItem(GOMemoryPool &pool)
-    : m_Pool(pool), m_Stop(false) {}
+  : m_Pool(pool), m_Stop(false) {}
 
 unsigned GOSoundTouchWorkItem::GetGroup() { return TOUCH; }
 

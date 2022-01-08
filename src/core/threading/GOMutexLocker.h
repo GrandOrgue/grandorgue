@@ -35,7 +35,7 @@ class GOMutexLocker {
     bool try_lock = false,
     const char *lockerInfo = NULL,
     GOThread *pThread = NULL)
-      : m_Mutex(mutex), m_Locked(false) {
+    : m_Mutex(mutex), m_Locked(false) {
     if (try_lock)
       m_Locked = m_Mutex.TryLock(lockerInfo);
     else if (pThread != NULL)

@@ -17,7 +17,7 @@ GOMidiOutPort::GOMidiOutPort(
   const wxString &apiName,
   const wxString &deviceName,
   const wxString &fullName)
-    : GOMidiPort(midi, portName, apiName, deviceName, fullName), m_merger() {}
+  : GOMidiPort(midi, portName, apiName, deviceName, fullName), m_merger() {}
 
 GOMidiOutPort::~GOMidiOutPort() {}
 

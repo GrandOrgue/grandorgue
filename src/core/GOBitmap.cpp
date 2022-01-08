@@ -12,20 +12,20 @@
 #include <wx/image.h>
 
 GOBitmap::GOBitmap()
-    : m_img(NULL),
-      m_Scale(0),
-      m_ResultWidth(0),
-      m_ResultHeight(0),
-      m_ResultXOffset(0),
-      m_ResultYOffset(0) {}
+  : m_img(NULL),
+    m_Scale(0),
+    m_ResultWidth(0),
+    m_ResultHeight(0),
+    m_ResultXOffset(0),
+    m_ResultYOffset(0) {}
 
 GOBitmap::GOBitmap(wxImage *img)
-    : m_img(img),
-      m_Scale(0),
-      m_ResultWidth(0),
-      m_ResultHeight(0),
-      m_ResultXOffset(0),
-      m_ResultYOffset(0) {}
+  : m_img(img),
+    m_Scale(0),
+    m_ResultWidth(0),
+    m_ResultHeight(0),
+    m_ResultXOffset(0),
+    m_ResultYOffset(0) {}
 
 void GOBitmap::ScaleBMP(
   wxImage &img, double scale, const wxRect &rect, GOBitmap *background) {

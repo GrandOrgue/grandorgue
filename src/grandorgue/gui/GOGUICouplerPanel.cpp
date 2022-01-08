@@ -20,7 +20,7 @@
 #include "GOManual.h"
 
 GOGUICouplerPanel::GOGUICouplerPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUICouplerPanel::~GOGUICouplerPanel() {}
 

@@ -16,16 +16,16 @@
 #include "config/GOConfigWriter.h"
 
 GOEnclosure::GOEnclosure(GODefinitionFile *organfile)
-    : m_midi(organfile, MIDI_RECV_ENCLOSURE),
-      m_sender(organfile, MIDI_SEND_ENCLOSURE),
-      m_shortcut(organfile, KEY_RECV_ENCLOSURE),
-      m_organfile(organfile),
-      m_AmpMinimumLevel(0),
-      m_MIDIInputNumber(0),
-      m_MIDIValue(0),
-      m_Name(),
-      m_Displayed1(false),
-      m_Displayed2(false) {
+  : m_midi(organfile, MIDI_RECV_ENCLOSURE),
+    m_sender(organfile, MIDI_SEND_ENCLOSURE),
+    m_shortcut(organfile, KEY_RECV_ENCLOSURE),
+    m_organfile(organfile),
+    m_AmpMinimumLevel(0),
+    m_MIDIInputNumber(0),
+    m_MIDIValue(0),
+    m_Name(),
+    m_Displayed1(false),
+    m_Displayed2(false) {
   m_organfile->RegisterEventHandler(this);
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);

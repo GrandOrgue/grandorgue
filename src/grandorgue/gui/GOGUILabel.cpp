@@ -17,19 +17,19 @@
 #include "config/GOConfigReader.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabel *label)
-    : GOGUIControl(panel, label),
-      m_DispXpos(0),
-      m_DispYpos(0),
-      m_Label(label),
-      m_Bitmap(),
-      m_FontSize(0),
-      m_FontName(),
-      m_Text(),
-      m_TextColor(0, 0, 0),
-      m_TextRect(),
-      m_TextWidth(0),
-      m_TileOffsetX(0),
-      m_TileOffsetY(0) {}
+  : GOGUIControl(panel, label),
+    m_DispXpos(0),
+    m_DispYpos(0),
+    m_Label(label),
+    m_Bitmap(),
+    m_FontSize(0),
+    m_FontName(),
+    m_Text(),
+    m_TextColor(0, 0, 0),
+    m_TextRect(),
+    m_TextWidth(0),
+    m_TileOffsetX(0),
+    m_TileOffsetY(0) {}
 
 void GOGUILabel::Init(
   GOConfigReader &cfg,

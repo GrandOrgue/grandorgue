@@ -16,14 +16,14 @@
 #include "config/GOConfigReader.h"
 
 GOWindchest::GOWindchest(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_Name(),
-      m_Volume(1),
-      m_enclosure(0),
-      m_tremulant(0),
-      m_ranks(0),
-      m_pipes(0),
-      m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL) {
+  : m_organfile(organfile),
+    m_Name(),
+    m_Volume(1),
+    m_enclosure(0),
+    m_tremulant(0),
+    m_ranks(0),
+    m_pipes(0),
+    m_PipeConfig(&organfile->GetPipeConfig(), organfile, NULL) {
   m_organfile->RegisterPlaybackStateHandler(this);
 }
 

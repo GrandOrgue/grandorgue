@@ -14,12 +14,12 @@
 #include "config/GOConfigReader.h"
 
 GOStop::GOStop(GODefinitionFile *organfile, unsigned first_midi_note_number)
-    : GODrawstop(organfile),
-      m_RankInfo(0),
-      m_KeyVelocity(0),
-      m_FirstMidiNoteNumber(first_midi_note_number),
-      m_FirstAccessiblePipeLogicalKeyNumber(0),
-      m_NumberOfAccessiblePipes(0) {}
+  : GODrawstop(organfile),
+    m_RankInfo(0),
+    m_KeyVelocity(0),
+    m_FirstMidiNoteNumber(first_midi_note_number),
+    m_FirstAccessiblePipeLogicalKeyNumber(0),
+    m_NumberOfAccessiblePipes(0) {}
 
 unsigned GOStop::IsAuto() const {
   /* m_auto seems to state that if a stop only has 1 note, the note isn't

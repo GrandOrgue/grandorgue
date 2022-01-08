@@ -136,91 +136,88 @@ const struct IniFileEnumEntry GOConfig::m_InitialLoadTypes[] = {
 };
 
 GOConfig::GOConfig(wxString instance)
-    : m_InstanceName(instance),
-      m_ResourceDir(),
-      m_AudioGroups(),
-      m_AudioDeviceConfig(),
-      m_MIDIEvents(),
-      m_MainWindowX(0),
-      m_MainWindowY(0),
-      m_MainWindowWidth(0),
-      m_MainWindowHeight(0),
-      UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
-      UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
-      Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
-      ReleaseConcurrency(
-        this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
-      LoadConcurrency(
-        this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
-      InterpolationType(
-        this, wxT("General"), wxT("InterpolationType"), 0, 1, 0),
-      WaveFormatBytesPerSample(
-        this, wxT("General"), wxT("WaveFormat"), 1, 4, 4),
-      RecordDownmix(this, wxT("General"), wxT("RecordDownmix"), false),
-      AttackLoad(this, wxT("General"), wxT("AttackLoad"), 0, 1, 1),
-      LoopLoad(this, wxT("General"), wxT("LoopLoad"), 0, 2, 2),
-      ReleaseLoad(this, wxT("General"), wxT("ReleaseLoad"), 0, 1, 1),
-      ManageCache(this, wxT("General"), wxT("ManageCache"), true),
-      CompressCache(this, wxT("General"), wxT("CompressCache"), false),
-      LoadLastFile(
-        this,
-        wxT("General"),
-        wxT("LoadLastFile"),
-        m_InitialLoadTypes,
-        sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]),
-        GOInitialLoadType::LOAD_LAST_USED),
-      ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
-      LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
-      LosslessCompression(
-        this, wxT("General"), wxT("LosslessCompression"), false),
-      ManagePolyphony(this, wxT("General"), wxT("ManagePolyphony"), true),
-      ScaleRelease(this, wxT("General"), wxT("ScaleRelease"), true),
-      RandomizeSpeaking(this, wxT("General"), wxT("RandomizeSpeaking"), true),
-      ReverbEnabled(this, wxT("Reverb"), wxT("ReverbEnabled"), false),
-      ReverbDirect(this, wxT("Reverb"), wxT("ReverbDirect"), true),
-      ReverbChannel(this, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, 1),
-      ReverbStartOffset(
-        this, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, 0),
-      ReverbLen(this, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, 0),
-      ReverbDelay(this, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, 0),
-      ReverbGain(this, wxT("Reverb"), wxT("ReverbGain"), 0, 50, 1),
-      ReverbFile(this, wxT("Reverb"), wxT("ReverbFile"), wxEmptyString),
-      MemoryLimit(
-        this,
-        wxT("General"),
-        wxT("MemoryLimit"),
-        0,
-        1024 * 1024,
-        GOMemoryPool::GetSystemMemoryLimit()),
-      SamplesPerBuffer(
-        this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
-      SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),
-      Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
-      PolyphonyLimit(
-        this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
-      Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
-      ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
-      LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
-      BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
-      Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
-      MetronomeMeasure(this, wxT("Metronome"), wxT("Measure"), 0, 32, 4),
-      MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
-      IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
-      IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
-      MidiRecorderOutputDevice(
-        this, MIDI_OUT, wxT("MIDIRecorderDevice"), wxEmptyString),
-      OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
-      OrganPackagePath(
-        this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
-      SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
-      AudioRecorderPath(
-        this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
-      MidiRecorderPath(
-        this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
-      MidiPlayerPath(
-        this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString),
-      m_MidiIn(MIDI_IN),
-      m_MidiOut(MIDI_OUT) {
+  : m_InstanceName(instance),
+    m_ResourceDir(),
+    m_AudioGroups(),
+    m_AudioDeviceConfig(),
+    m_MIDIEvents(),
+    m_MainWindowX(0),
+    m_MainWindowY(0),
+    m_MainWindowWidth(0),
+    m_MainWindowHeight(0),
+    UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
+    UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
+    Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
+    ReleaseConcurrency(
+      this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
+    LoadConcurrency(
+      this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
+    InterpolationType(this, wxT("General"), wxT("InterpolationType"), 0, 1, 0),
+    WaveFormatBytesPerSample(this, wxT("General"), wxT("WaveFormat"), 1, 4, 4),
+    RecordDownmix(this, wxT("General"), wxT("RecordDownmix"), false),
+    AttackLoad(this, wxT("General"), wxT("AttackLoad"), 0, 1, 1),
+    LoopLoad(this, wxT("General"), wxT("LoopLoad"), 0, 2, 2),
+    ReleaseLoad(this, wxT("General"), wxT("ReleaseLoad"), 0, 1, 1),
+    ManageCache(this, wxT("General"), wxT("ManageCache"), true),
+    CompressCache(this, wxT("General"), wxT("CompressCache"), false),
+    LoadLastFile(
+      this,
+      wxT("General"),
+      wxT("LoadLastFile"),
+      m_InitialLoadTypes,
+      sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]),
+      GOInitialLoadType::LOAD_LAST_USED),
+    ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
+    LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
+    LosslessCompression(
+      this, wxT("General"), wxT("LosslessCompression"), false),
+    ManagePolyphony(this, wxT("General"), wxT("ManagePolyphony"), true),
+    ScaleRelease(this, wxT("General"), wxT("ScaleRelease"), true),
+    RandomizeSpeaking(this, wxT("General"), wxT("RandomizeSpeaking"), true),
+    ReverbEnabled(this, wxT("Reverb"), wxT("ReverbEnabled"), false),
+    ReverbDirect(this, wxT("Reverb"), wxT("ReverbDirect"), true),
+    ReverbChannel(this, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, 1),
+    ReverbStartOffset(
+      this, wxT("Reverb"), wxT("ReverbStartOffset"), 0, MAX_SAMPLE_LENGTH, 0),
+    ReverbLen(this, wxT("Reverb"), wxT("ReverbLen"), 0, MAX_SAMPLE_LENGTH, 0),
+    ReverbDelay(this, wxT("Reverb"), wxT("ReverbDelay"), 0, 10000, 0),
+    ReverbGain(this, wxT("Reverb"), wxT("ReverbGain"), 0, 50, 1),
+    ReverbFile(this, wxT("Reverb"), wxT("ReverbFile"), wxEmptyString),
+    MemoryLimit(
+      this,
+      wxT("General"),
+      wxT("MemoryLimit"),
+      0,
+      1024 * 1024,
+      GOMemoryPool::GetSystemMemoryLimit()),
+    SamplesPerBuffer(
+      this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
+    SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),
+    Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
+    PolyphonyLimit(
+      this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
+    Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
+    ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
+    LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
+    BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
+    Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
+    MetronomeMeasure(this, wxT("Metronome"), wxT("Measure"), 0, 32, 4),
+    MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
+    IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
+    IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
+    MidiRecorderOutputDevice(
+      this, MIDI_OUT, wxT("MIDIRecorderDevice"), wxEmptyString),
+    OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
+    OrganPackagePath(
+      this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
+    SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
+    AudioRecorderPath(
+      this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
+    MidiRecorderPath(
+      this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
+    MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString),
+    m_MidiIn(MIDI_IN),
+    m_MidiOut(MIDI_OUT) {
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueConfig") + m_InstanceName;
   for (unsigned i = 0; i < GetEventCount(); i++)

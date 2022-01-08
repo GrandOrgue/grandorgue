@@ -24,7 +24,7 @@ END_EVENT_TABLE()
 
 GOSettingsArchives::GOSettingsArchives(
   GOConfig &settings, GOSettingsOrgan &organs, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY), m_config(settings), m_Organs(organs) {
+  : wxPanel(parent, wxID_ANY), m_config(settings), m_Organs(organs) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 

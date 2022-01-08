@@ -34,12 +34,12 @@ END_EVENT_TABLE()
 
 GOGUIPanelWidget::GOGUIPanelWidget(
   GOGUIPanel *panel, wxWindow *parent, wxWindowID id)
-    : wxPanel(parent, id),
-      m_panel(panel),
-      m_BGInit(false),
-      m_Background(&m_BGImage),
-      m_Scale(1),
-      m_FontScale(1) {
+  : wxPanel(parent, id),
+    m_panel(panel),
+    m_BGInit(false),
+    m_Background(&m_BGImage),
+    m_Scale(1),
+    m_FontScale(1) {
   initFont();
   SetLabel(m_panel->GetName());
   m_ClientBitmap.Create(

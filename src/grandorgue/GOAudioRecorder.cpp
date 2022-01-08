@@ -38,12 +38,12 @@ const struct ElementListEntry *GOAudioRecorder::GetButtonList() {
 }
 
 GOAudioRecorder::GOAudioRecorder(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_recorder(NULL),
-      m_RecordingTime(organfile),
-      m_RecordSeconds(0),
-      m_Filename(),
-      m_DoRename(false) {
+  : m_organfile(organfile),
+    m_recorder(NULL),
+    m_RecordingTime(organfile),
+    m_RecordSeconds(0),
+    m_Filename(),
+    m_DoRename(false) {
   CreateButtons(m_organfile);
   UpdateDisplay();
 }

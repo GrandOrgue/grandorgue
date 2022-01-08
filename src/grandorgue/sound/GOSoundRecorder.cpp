@@ -27,16 +27,16 @@ struct struct_WAVE {
 #pragma pack(pop)
 
 GOSoundRecorder::GOSoundRecorder()
-    : m_file(),
-      m_lock(),
-      m_SampleRate(0),
-      m_Channels(2),
-      m_BytesPerSample(4),
-      m_BufferSize(0),
-      m_BufferPos(0),
-      m_SamplesPerBuffer(1024),
-      m_Recording(false),
-      m_Buffer(0) {
+  : m_file(),
+    m_lock(),
+    m_SampleRate(0),
+    m_Channels(2),
+    m_BytesPerSample(4),
+    m_BufferSize(0),
+    m_BufferPos(0),
+    m_SamplesPerBuffer(1024),
+    m_Recording(false),
+    m_Buffer(0) {
   SetupBuffer();
 }
 

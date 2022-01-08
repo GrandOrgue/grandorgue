@@ -8,7 +8,7 @@
 #include "GOMidiSenderData.h"
 
 GOMidiSenderData::GOMidiSenderData(MIDI_SENDER_TYPE type)
-    : m_type(type), m_events() {}
+  : m_type(type), m_events() {}
 
 GOMidiSenderData::~GOMidiSenderData() {}
 

@@ -21,7 +21,7 @@
 #include "sound/GOSoundDefs.h"
 
 GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY), m_config(settings) {
+  : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxArrayString choices;
 
   m_OldChannels = m_config.LoadChannels();

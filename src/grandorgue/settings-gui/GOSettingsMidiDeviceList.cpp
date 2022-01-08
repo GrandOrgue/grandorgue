@@ -14,7 +14,7 @@ GOSettingsMidiDeviceList::GOSettingsMidiDeviceList(
   GOMidiDeviceConfigList &configListPersist,
   wxWindow *parent,
   wxWindowID id)
-    : m_parent(parent), m_Ports(ports), m_ConfList(configListPersist) {
+  : m_parent(parent), m_Ports(ports), m_ConfList(configListPersist) {
   m_LbDevices
     = new wxCheckListBox(parent, id, wxDefaultPosition, wxSize(100, 100));
   m_LbDevices->Bind(

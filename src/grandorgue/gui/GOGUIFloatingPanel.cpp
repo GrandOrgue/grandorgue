@@ -23,7 +23,7 @@
 #include "GOWindchest.h"
 
 GOGUIFloatingPanel::GOGUIFloatingPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUIFloatingPanel::~GOGUIFloatingPanel() {}
 

@@ -14,20 +14,20 @@
 
 GOSoundReverbPartition::GOSoundReverbPartition(
   unsigned size, unsigned cnt, unsigned start_pos)
-    : m_PartitionSize(size),
-      m_PartitionCount(cnt),
-      m_fftwTmpReal(0),
-      m_fftwTmpComplex(0),
-      m_TimeToFreq(0),
-      m_FreqToTime(0),
-      m_Input(0),
-      m_Output(0),
-      m_InputPos(start_pos),
-      m_InputStartPos(start_pos),
-      m_OutputPos(0),
-      m_InputHistory(),
-      m_IRData(),
-      m_InputHistoryPos(0) {
+  : m_PartitionSize(size),
+    m_PartitionCount(cnt),
+    m_fftwTmpReal(0),
+    m_fftwTmpComplex(0),
+    m_TimeToFreq(0),
+    m_FreqToTime(0),
+    m_Input(0),
+    m_Output(0),
+    m_InputPos(start_pos),
+    m_InputStartPos(start_pos),
+    m_OutputPos(0),
+    m_InputHistory(),
+    m_IRData(),
+    m_InputHistoryPos(0) {
   m_fftwTmpReal = new float[m_PartitionSize * 2];
   m_fftwTmpComplex = new fftwf_complex[m_PartitionSize + 1];
 

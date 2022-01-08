@@ -12,10 +12,10 @@
 #include "config/GOConfigReader.h"
 
 GOGUIControl::GOGUIControl(GOGUIPanel *panel, void *control)
-    : m_panel(panel),
-      m_control(control),
-      m_BoundingRect(0, 0, 0, 0),
-      m_DrawPending(false) {
+  : m_panel(panel),
+    m_control(control),
+    m_BoundingRect(0, 0, 0, 0),
+    m_DrawPending(false) {
   m_metrics = panel->GetDisplayMetrics();
   m_layout = panel->GetLayoutEngine();
   m_panel->GetOrganFile()->RegisterControlChangedHandler(this);

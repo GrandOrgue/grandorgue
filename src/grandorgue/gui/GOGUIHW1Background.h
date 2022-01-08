@@ -20,7 +20,7 @@ class GOGUIHW1Background : public GOGUIControl {
     GOBitmap bmp;
 
     GOBackgroundImage(wxRect Rect, const GOBitmap &Bmp)
-        : rect(Rect), bmp(Bmp) {}
+      : rect(Rect), bmp(Bmp) {}
   };
 
  private:

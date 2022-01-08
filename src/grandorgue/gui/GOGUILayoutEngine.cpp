@@ -14,14 +14,14 @@
 #include "GOGUIManual.h"
 
 GOGUILayoutEngine::GOGUILayoutEngine(GOGUIDisplayMetrics &metrics)
-    : m_metrics(metrics),
-      m_ManualRenderInfo(),
-      m_Enclosures(),
-      m_Manuals(),
-      m_HackY(0),
-      m_EnclosureY(0),
-      m_CenterY(0),
-      m_CenterWidth(0) {}
+  : m_metrics(metrics),
+    m_ManualRenderInfo(),
+    m_Enclosures(),
+    m_Manuals(),
+    m_HackY(0),
+    m_EnclosureY(0),
+    m_CenterY(0),
+    m_CenterWidth(0) {}
 
 GOGUILayoutEngine::~GOGUILayoutEngine() {}
 

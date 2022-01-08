@@ -26,11 +26,11 @@
 #include "threading/GOMutexLocker.h"
 
 GODocument::GODocument(GOSound *sound)
-    : m_OrganFileReady(false),
-      m_organfile(NULL),
-      m_sound(*sound),
-      m_listener(),
-      m_modified(false) {
+  : m_OrganFileReady(false),
+    m_organfile(NULL),
+    m_sound(*sound),
+    m_listener(),
+    m_modified(false) {
   m_listener.Register(&m_sound.GetMidi());
 }
 

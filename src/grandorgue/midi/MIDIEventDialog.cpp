@@ -28,18 +28,18 @@ MIDIEventDialog::MIDIEventDialog(
   GOMidiSender *sender,
   GOKeyReceiver *key,
   GOMidiSender *division)
-    : wxPropertySheetDialog(
-      parent,
-      wxID_ANY,
-      title,
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-      GOView(doc, this),
-      m_recvPage(NULL),
-      m_sendPage(NULL),
-      m_sendDivisionPage(NULL),
-      m_keyPage(NULL) {
+  : wxPropertySheetDialog(
+    parent,
+    wxID_ANY,
+    title,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+    GOView(doc, this),
+    m_recvPage(NULL),
+    m_sendPage(NULL),
+    m_sendDivisionPage(NULL),
+    m_keyPage(NULL) {
   CreateButtons(wxOK | wxCANCEL);
 
   wxBookCtrlBase *notebook = GetBookCtrl();

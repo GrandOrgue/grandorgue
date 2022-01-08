@@ -70,22 +70,22 @@ END_EVENT_TABLE()
 
 OrganDialog::OrganDialog(
   GODocumentBase *doc, wxWindow *parent, GODefinitionFile *organfile)
-    : wxDialog(
-      parent,
-      wxID_ANY,
-      _("Organ settings"),
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-      GOView(doc, this),
-      m_organfile(organfile),
-      m_Apply(NULL),
-      m_Reset(NULL),
-      m_Last(NULL),
-      m_LoadChangeCnt(0),
-      m_ModalDialog(NULL),
-      m_Destroying(false),
-      m_DestroyPending(false) {
+  : wxDialog(
+    parent,
+    wxID_ANY,
+    _("Organ settings"),
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+    GOView(doc, this),
+    m_organfile(organfile),
+    m_Apply(NULL),
+    m_Reset(NULL),
+    m_Last(NULL),
+    m_LoadChangeCnt(0),
+    m_ModalDialog(NULL),
+    m_Destroying(false),
+    m_DestroyPending(false) {
   wxArrayString choices;
 
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);

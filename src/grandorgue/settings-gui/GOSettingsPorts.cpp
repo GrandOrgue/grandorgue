@@ -66,7 +66,7 @@ void GOSettingsPorts::OnPortItemChecked(wxTreeListEvent &event) {
 
 GOSettingsPorts::GOSettingsPorts(
   wxWindow *parent, const GOPortFactory &portFactory, const wxString &name)
-    : m_PortFactory(portFactory) {
+  : m_PortFactory(portFactory) {
   m_PortsSizer = new wxStaticBoxSizer(wxVERTICAL, parent, name);
   m_Ports = new wxTreeListCtrl(
     parent,

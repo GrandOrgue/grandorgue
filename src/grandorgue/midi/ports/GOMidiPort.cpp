@@ -20,12 +20,12 @@ GOMidiPort::GOMidiPort(
   const wxString &apiName,
   const wxString &deviceName,
   const wxString &fullName)
-    : m_midi(midi),
-      m_IsActive(false),
-      m_PortName(portName),
-      m_ApiName(apiName),
-      m_DeviceName(deviceName),
-      m_FullName(fullName) {
+  : m_midi(midi),
+    m_IsActive(false),
+    m_PortName(portName),
+    m_ApiName(apiName),
+    m_DeviceName(deviceName),
+    m_FullName(fullName) {
   m_ID = m_midi->GetMidiMap().GetDeviceByString(GetName());
 }
 

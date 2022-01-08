@@ -12,7 +12,7 @@
 #include "GOSoundAudioSection.h"
 
 GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOMemoryPool &pool)
-    : GOSoundProvider(pool) {
+  : GOSoundProvider(pool) {
   m_Gain = 1.0f;
 }
 

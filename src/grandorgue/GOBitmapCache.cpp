@@ -145,7 +145,7 @@ BITMAP_LIST
   RegisterBitmap(new wxImage(A##_r), wxT(GOBitmapPrefix B));
 
 GOBitmapCache::GOBitmapCache(GODefinitionFile *organfile)
-    : m_organfile(organfile), m_Bitmaps(), m_Filenames(), m_Masknames() {
+  : m_organfile(organfile), m_Bitmaps(), m_Filenames(), m_Masknames() {
   BITMAP_LIST;
 }
 

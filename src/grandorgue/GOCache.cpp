@@ -15,12 +15,12 @@
 #include "go_defs.h"
 
 GOCache::GOCache(wxFile &cache_file, GOMemoryPool &pool)
-    : m_stream(0),
-      m_fstream(0),
-      m_zstream(0),
-      m_pool(pool),
-      m_Mapable(false),
-      m_OK(false) {
+  : m_stream(0),
+    m_fstream(0),
+    m_zstream(0),
+    m_pool(pool),
+    m_Mapable(false),
+    m_OK(false) {
   int magic;
 
   m_stream = m_fstream = new wxFileInputStream(cache_file);

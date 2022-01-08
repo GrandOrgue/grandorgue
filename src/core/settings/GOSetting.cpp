@@ -10,7 +10,7 @@
 #include "settings/GOSettingStore.h"
 
 GOSetting::GOSetting(GOSettingStore *store, wxString group, wxString name)
-    : m_Group(group), m_Name(name) {
+  : m_Group(group), m_Name(name) {
   if (store) store->AddSetting(this);
 }
 

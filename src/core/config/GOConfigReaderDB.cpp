@@ -13,10 +13,7 @@
 #include "config/GOConfigFileReader.h"
 
 GOConfigReaderDB::GOConfigReaderDB(bool case_sensitive)
-    : m_CaseSensitive(case_sensitive),
-      m_ODF(1000),
-      m_ODF_LC(1000),
-      m_CMB(100) {}
+  : m_CaseSensitive(case_sensitive), m_ODF(1000), m_ODF_LC(1000), m_CMB(100) {}
 
 GOConfigReaderDB::~GOConfigReaderDB() {}
 

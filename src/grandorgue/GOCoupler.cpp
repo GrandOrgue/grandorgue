@@ -15,27 +15,27 @@
 #include "config/GOConfigReader.h"
 
 GOCoupler::GOCoupler(GODefinitionFile *organfile, unsigned sourceManual)
-    : GODrawstop(organfile),
-      m_UnisonOff(false),
-      m_CoupleToSubsequentUnisonIntermanualCouplers(false),
-      m_CoupleToSubsequentUpwardIntermanualCouplers(false),
-      m_CoupleToSubsequentDownwardIntermanualCouplers(false),
-      m_CoupleToSubsequentUpwardIntramanualCouplers(false),
-      m_CoupleToSubsequentDownwardIntramanualCouplers(false),
-      m_CouplerType(COUPLER_NORMAL),
-      m_SourceManual(sourceManual),
-      m_CouplerID(0),
-      m_DestinationManual(0),
-      m_DestinationKeyshift(0),
-      m_Keyshift(0),
-      m_KeyVelocity(0),
-      m_InternalVelocity(0),
-      m_OutVelocity(0),
-      m_CurrentTone(-1),
-      m_LastTone(-1),
-      m_FirstMidiNote(0),
-      m_FirstLogicalKey(0),
-      m_NumberOfKeys(127) {}
+  : GODrawstop(organfile),
+    m_UnisonOff(false),
+    m_CoupleToSubsequentUnisonIntermanualCouplers(false),
+    m_CoupleToSubsequentUpwardIntermanualCouplers(false),
+    m_CoupleToSubsequentDownwardIntermanualCouplers(false),
+    m_CoupleToSubsequentUpwardIntramanualCouplers(false),
+    m_CoupleToSubsequentDownwardIntramanualCouplers(false),
+    m_CouplerType(COUPLER_NORMAL),
+    m_SourceManual(sourceManual),
+    m_CouplerID(0),
+    m_DestinationManual(0),
+    m_DestinationKeyshift(0),
+    m_Keyshift(0),
+    m_KeyVelocity(0),
+    m_InternalVelocity(0),
+    m_OutVelocity(0),
+    m_CurrentTone(-1),
+    m_LastTone(-1),
+    m_FirstMidiNote(0),
+    m_FirstLogicalKey(0),
+    m_NumberOfKeys(127) {}
 
 void GOCoupler::PreparePlayback() {
   GODrawstop::PreparePlayback();

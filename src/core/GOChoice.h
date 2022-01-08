@@ -18,7 +18,7 @@ class GOChoice : public wxChoice {
     wxWindowID id,
     const wxPoint &pos = wxDefaultPosition,
     const wxSize &size = wxDefaultSize)
-      : wxChoice(parent, id, pos, size) {}
+    : wxChoice(parent, id, pos, size) {}
 
   int Append(const wxString &item, const T value) {
     return wxChoice::Append(item, (void *)value);

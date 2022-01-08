@@ -21,14 +21,14 @@ END_EVENT_TABLE()
 
 OrganSelectDialog::OrganSelectDialog(
   wxWindow *parent, wxString title, const GOOrganList &organList)
-    : wxDialog(
-      NULL,
-      wxID_ANY,
-      title,
-      wxDefaultPosition,
-      wxSize(600, 480),
-      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
-      m_OrganList(organList) {
+  : wxDialog(
+    NULL,
+    wxID_ANY,
+    title,
+    wxDefaultPosition,
+    wxSize(600, 480),
+    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
+    m_OrganList(organList) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 

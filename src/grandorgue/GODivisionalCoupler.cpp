@@ -13,7 +13,7 @@
 #include "config/GOConfigReader.h"
 
 GODivisionalCoupler::GODivisionalCoupler(GODefinitionFile *organfile)
-    : GODrawstop(organfile), m_BiDirectionalCoupling(false), m_manuals(0) {}
+  : GODrawstop(organfile), m_BiDirectionalCoupling(false), m_manuals(0) {}
 
 void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
   wxString buffer;

@@ -8,10 +8,10 @@
 #include "GOStandardFile.h"
 
 GOStandardFile::GOStandardFile(const wxString &path)
-    : m_Path(path), m_Name(path), m_Size(0) {}
+  : m_Path(path), m_Name(path), m_Size(0) {}
 
 GOStandardFile::GOStandardFile(const wxString &path, const wxString &name)
-    : m_Path(path), m_Name(name), m_Size(0) {}
+  : m_Path(path), m_Name(name), m_Size(0) {}
 
 GOStandardFile::~GOStandardFile() { Close(); }
 

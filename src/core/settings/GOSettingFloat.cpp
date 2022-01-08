@@ -17,11 +17,11 @@ GOSettingFloat::GOSettingFloat(
   float min_value,
   float max_value,
   float default_value)
-    : GOSetting(store, group, name),
-      m_Value(default_value),
-      m_MinValue(min_value),
-      m_MaxValue(max_value),
-      m_DefaultValue(default_value) {}
+  : GOSetting(store, group, name),
+    m_Value(default_value),
+    m_MinValue(min_value),
+    m_MaxValue(max_value),
+    m_DefaultValue(default_value) {}
 
 void GOSettingFloat::Load(GOConfigReader &cfg) {
   (*this)(cfg.ReadFloat(

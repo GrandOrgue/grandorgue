@@ -27,7 +27,7 @@
 #define DLG_MAX_VALUE 0x10000
 
 GOProgressDialog::GOProgressDialog()
-    : m_dlg(NULL), m_last(0), m_const(0), m_value(0), m_max(0) {}
+  : m_dlg(NULL), m_last(0), m_const(0), m_value(0), m_max(0) {}
 
 GOProgressDialog::~GOProgressDialog() {
   if (m_dlg) m_dlg->Destroy();

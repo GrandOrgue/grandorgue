@@ -15,7 +15,7 @@
 
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
   GOConfigReader &ini, GODefinitionFile *organfile, GOGUISetterType type)
-    : GOGUIDisplayMetrics() {
+  : GOGUIDisplayMetrics() {
   unsigned x_size, y_size;
   int drawstop_rows, drawstop_cols;
   int button_rows, button_cols;

@@ -28,17 +28,17 @@ float Convproc::_mac_cost = 1.0f;
 float Convproc::_fft_cost = 5.0f;
 
 Convproc::Convproc(void)
-    : _state(ST_IDLE),
-      _options(0),
-      _skipcnt(0),
-      _density(0),
-      _ninp(0),
-      _nout(0),
-      _quantum(0),
-      _minpart(0),
-      _maxpart(0),
-      _nlevels(0),
-      _latecnt(0) {
+  : _state(ST_IDLE),
+    _options(0),
+    _skipcnt(0),
+    _density(0),
+    _ninp(0),
+    _nout(0),
+    _quantum(0),
+    _minpart(0),
+    _maxpart(0),
+    _nlevels(0),
+    _latecnt(0) {
   memset(_inpbuff, 0, MAXINP * sizeof(float *));
   memset(_outbuff, 0, MAXOUT * sizeof(float *));
   memset(_convlev, 0, MAXLEV * sizeof(Convlevel *));
@@ -324,17 +324,17 @@ void Convproc::print(FILE *F) {
 typedef float FV4 __attribute__((vector_size(16)));
 
 Convlevel::Convlevel(void)
-    : _stat(ST_IDLE),
-      _npar(0),
-      _parsize(0),
-      _options(0),
-      _inp_list(0),
-      _out_list(0),
-      _plan_r2c(0),
-      _plan_c2r(0),
-      _time_data(0),
-      _prep_data(0),
-      _freq_data(0) {}
+  : _stat(ST_IDLE),
+    _npar(0),
+    _parsize(0),
+    _options(0),
+    _inp_list(0),
+    _out_list(0),
+    _plan_r2c(0),
+    _plan_c2r(0),
+    _time_data(0),
+    _prep_data(0),
+    _freq_data(0) {}
 
 Convlevel::~Convlevel(void) { cleanup(); }
 

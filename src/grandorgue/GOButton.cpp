@@ -16,16 +16,16 @@
 
 GOButton::GOButton(
   GODefinitionFile *organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton)
-    : m_organfile(organfile),
-      m_midi(organfile, midi_type),
-      m_sender(organfile, MIDI_SEND_BUTTON),
-      m_shortcut(organfile, KEY_RECV_BUTTON),
-      m_Pushbutton(pushbutton),
-      m_Displayed(false),
-      m_Name(),
-      m_Engaged(false),
-      m_DisplayInInvertedState(false),
-      m_ReadOnly(false) {
+  : m_organfile(organfile),
+    m_midi(organfile, midi_type),
+    m_sender(organfile, MIDI_SEND_BUTTON),
+    m_shortcut(organfile, KEY_RECV_BUTTON),
+    m_Pushbutton(pushbutton),
+    m_Displayed(false),
+    m_Name(),
+    m_Engaged(false),
+    m_DisplayInInvertedState(false),
+    m_ReadOnly(false) {
   m_organfile->RegisterEventHandler(this);
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);

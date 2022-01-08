@@ -9,7 +9,7 @@
 
 GODummyPipe::GODummyPipe(
   GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number)
-    : GOPipe(organfile, rank, midi_key_number) {}
+  : GOPipe(organfile, rank, midi_key_number) {}
 
 void GODummyPipe::Load(GOConfigReader &cfg, wxString group, wxString prefix) {}
 

@@ -8,7 +8,7 @@
 #include "GOMidiReceiverData.h"
 
 GOMidiReceiverData::GOMidiReceiverData(MIDI_RECEIVER_TYPE type)
-    : m_type(type), m_events(0) {}
+  : m_type(type), m_events(0) {}
 
 GOMidiReceiverData::~GOMidiReceiverData() {}
 

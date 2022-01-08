@@ -18,18 +18,18 @@
 #include "gui/GOGUIPanel.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)
-    : GOGUIControl(panel, control),
-      m_enclosure(control),
-      m_FontSize(0),
-      m_FontName(),
-      m_TextColor(0, 0, 0),
-      m_Text(),
-      m_TextWidth(0),
-      m_MouseAxisStart(0),
-      m_MouseAxisEnd(0),
-      m_TileOffsetX(0),
-      m_TileOffsetY(0),
-      m_Bitmaps(0) {
+  : GOGUIControl(panel, control),
+    m_enclosure(control),
+    m_FontSize(0),
+    m_FontName(),
+    m_TextColor(0, 0, 0),
+    m_Text(),
+    m_TextWidth(0),
+    m_MouseAxisStart(0),
+    m_MouseAxisEnd(0),
+    m_TileOffsetX(0),
+    m_TileOffsetY(0),
+    m_Bitmaps(0) {
   m_layout->RegisterEnclosure(this);
 }
 

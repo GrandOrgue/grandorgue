@@ -14,7 +14,7 @@
 #include "config/GOConfigReaderDB.h"
 
 GOConfigReader::GOConfigReader(GOConfigReaderDB &cfg, bool strict)
-    : m_Strict(strict), m_Config(cfg) {}
+  : m_Strict(strict), m_Config(cfg) {}
 
 bool GOConfigReader::Read(
   GOSettingType type,

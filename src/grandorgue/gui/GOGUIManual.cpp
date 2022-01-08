@@ -20,10 +20,10 @@
 
 GOGUIManual::GOGUIManual(
   GOGUIPanel *panel, GOManual *manual, unsigned manual_number)
-    : GOGUIControl(panel, manual),
-      m_manual(manual),
-      m_ManualNumber(manual_number),
-      m_Keys() {
+  : GOGUIControl(panel, manual),
+    m_manual(manual),
+    m_ManualNumber(manual_number),
+    m_Keys() {
   m_layout->RegisterManual(this);
 }
 

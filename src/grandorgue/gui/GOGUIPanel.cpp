@@ -41,20 +41,20 @@
 constexpr static int windowLimit = 10000;
 
 GOGUIPanel::GOGUIPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_MouseState(organfile->GetMouseStateTracker()),
-      m_controls(0),
-      m_WoodImages(0),
-      m_BackgroundControls(0),
-      m_Name(),
-      m_GroupName(),
-      m_metrics(0),
-      m_layout(0),
-      m_view(0),
-      m_rect(0, 0, 0, 0),
-      m_DisplayNum(-1),
-      m_IsMaximized(false),
-      m_InitialOpenWindow(false) {
+  : m_organfile(organfile),
+    m_MouseState(organfile->GetMouseStateTracker()),
+    m_controls(0),
+    m_WoodImages(0),
+    m_BackgroundControls(0),
+    m_Name(),
+    m_GroupName(),
+    m_metrics(0),
+    m_layout(0),
+    m_view(0),
+    m_rect(0, 0, 0, 0),
+    m_DisplayNum(-1),
+    m_IsMaximized(false),
+    m_InitialOpenWindow(false) {
   for (unsigned i = 0; i < 64; i++)
     m_WoodImages.push_back(LoadBitmap(
       wxString::Format(wxT(GOBitmapPrefix "wood%02d"), i + 1), wxEmptyString));

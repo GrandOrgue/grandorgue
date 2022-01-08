@@ -32,7 +32,7 @@ GOLogWindow::GOLogWindow(
   const wxPoint &pos,
   const wxSize &size,
   long style)
-    : wxFrame(parent, id, title, pos, size, style) {
+  : wxFrame(parent, id, title, pos, size, style) {
   m_List = new wxListCtrl(
     this,
     wxID_ANY,

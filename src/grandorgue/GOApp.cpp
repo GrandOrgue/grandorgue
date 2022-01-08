@@ -31,14 +31,14 @@
 IMPLEMENT_APP(GOApp)
 
 GOApp::GOApp()
-    : m_Restart(false),
-      m_Frame(NULL),
-      m_locale(),
-      m_config(NULL),
-      m_soundSystem(NULL),
-      m_Log(NULL),
-      m_FileName(),
-      m_InstanceName() {}
+  : m_Restart(false),
+    m_Frame(NULL),
+    m_locale(),
+    m_config(NULL),
+    m_soundSystem(NULL),
+    m_Log(NULL),
+    m_FileName(),
+    m_InstanceName() {}
 
 const wxCmdLineEntryDesc GOApp::m_cmdLineDesc[] = {
   {wxCMD_LINE_SWITCH,

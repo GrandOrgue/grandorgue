@@ -11,11 +11,11 @@
 
 GOArchiveEntryFile::GOArchiveEntryFile(
   GOArchive *archive, const wxString &name, size_t offset, size_t len)
-    : m_archiv(archive),
-      m_Name(name),
-      m_Offset(offset),
-      m_Length(len),
-      m_Pos(0) {}
+  : m_archiv(archive),
+    m_Name(name),
+    m_Offset(offset),
+    m_Length(len),
+    m_Pos(0) {}
 
 size_t GOArchiveEntryFile::GetSize() { return m_Length; }
 

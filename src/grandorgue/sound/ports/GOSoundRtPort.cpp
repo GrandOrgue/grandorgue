@@ -15,7 +15,7 @@
 const wxString GOSoundRtPort::PORT_NAME = wxT("Rt");
 
 GOSoundRtPort::GOSoundRtPort(GOSound *sound, RtAudio *rtApi, wxString name)
-    : GOSoundPort(sound, name), m_rtApi(rtApi), m_nBuffers(0) {}
+  : GOSoundPort(sound, name), m_rtApi(rtApi), m_nBuffers(0) {}
 
 GOSoundRtPort::~GOSoundRtPort() {
   Close();

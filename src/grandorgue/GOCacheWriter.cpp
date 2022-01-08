@@ -12,7 +12,7 @@
 #include "go_defs.h"
 
 GOCacheWriter::GOCacheWriter(wxOutputStream &stream, bool compressed)
-    : m_zstream(0), m_stream(&stream) {
+  : m_zstream(0), m_stream(&stream) {
   if (compressed) {
     m_zstream = new wxZlibOutputStream(stream);
     m_stream = m_zstream;

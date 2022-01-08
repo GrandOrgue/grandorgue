@@ -13,15 +13,15 @@
 #include "sound/GOSound.h"
 
 GOSoundPort::GOSoundPort(GOSound *sound, wxString name)
-    : m_Sound(sound),
-      m_Index(0),
-      m_IsOpen(false),
-      m_Name(name),
-      m_Channels(0),
-      m_SamplesPerBuffer(0),
-      m_SampleRate(0),
-      m_Latency(0),
-      m_ActualLatency(-1) {}
+  : m_Sound(sound),
+    m_Index(0),
+    m_IsOpen(false),
+    m_Name(name),
+    m_Channels(0),
+    m_SamplesPerBuffer(0),
+    m_SampleRate(0),
+    m_Latency(0),
+    m_ActualLatency(-1) {}
 
 GOSoundPort::~GOSoundPort() {}
 

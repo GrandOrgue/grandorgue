@@ -26,14 +26,14 @@ END_EVENT_TABLE()
 
 MIDIList::MIDIList(
   GODocumentBase *doc, wxWindow *parent, GOEventDistributor *midi_elements)
-    : wxDialog(
-      parent,
-      wxID_ANY,
-      _("MIDI Objects"),
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-      GOView(doc, this) {
+  : wxDialog(
+    parent,
+    wxID_ANY,
+    _("MIDI Objects"),
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+    GOView(doc, this) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 

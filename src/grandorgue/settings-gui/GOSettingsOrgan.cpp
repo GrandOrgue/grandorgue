@@ -28,7 +28,7 @@ END_EVENT_TABLE()
 
 GOSettingsOrgan::GOSettingsOrgan(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
+  : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 

@@ -20,7 +20,7 @@
 #include "config/GOConfigReader.h"
 
 GOPiston::GOPiston(GODefinitionFile *organfile)
-    : GOPushbutton(organfile), drawstop(NULL) {
+  : GOPushbutton(organfile), drawstop(NULL) {
   m_organfile->RegisterControlChangedHandler(this);
 }
 

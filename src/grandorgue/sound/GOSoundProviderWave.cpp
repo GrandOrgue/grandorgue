@@ -17,7 +17,7 @@
 #include "GOWave.h"
 
 GOSoundProviderWave::GOSoundProviderWave(GOMemoryPool &pool)
-    : GOSoundProvider(pool) {}
+  : GOSoundProvider(pool) {}
 
 void GOSoundProviderWave::SetAmplitude(float fixed_amplitude, float gain) {
   /* Amplitude is the combination of global amplitude volume and the stop

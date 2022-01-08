@@ -11,7 +11,7 @@
 
 GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(
   GOConfigReader &ini, wxString group)
-    : GOGUIDisplayMetrics() {
+  : GOGUIDisplayMetrics() {
   if (group.IsEmpty()) group = wxT("Organ");
 
   m_DispScreenSizeHoriz

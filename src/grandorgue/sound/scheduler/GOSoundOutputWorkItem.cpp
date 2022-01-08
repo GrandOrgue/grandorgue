@@ -15,13 +15,13 @@ GOSoundOutputWorkItem::GOSoundOutputWorkItem(
   unsigned channels,
   std::vector<float> scale_factors,
   unsigned samples_per_buffer)
-    : GOSoundBufferItem(samples_per_buffer, channels),
-      m_ScaleFactors(scale_factors),
-      m_Outputs(),
-      m_OutputCount(0),
-      m_MeterInfo(channels),
-      m_Reverb(0),
-      m_Done(false) {
+  : GOSoundBufferItem(samples_per_buffer, channels),
+    m_ScaleFactors(scale_factors),
+    m_Outputs(),
+    m_OutputCount(0),
+    m_MeterInfo(channels),
+    m_Reverb(0),
+    m_Done(false) {
   m_Reverb = new GOSoundReverb(m_Channels);
 }
 

@@ -11,7 +11,7 @@
 
 GOSettingFile::GOSettingFile(
   GOSettingStore *store, wxString group, wxString name, wxString default_value)
-    : GOSettingString(store, group, name, default_value) {}
+  : GOSettingString(store, group, name, default_value) {}
 
 wxString GOSettingFile::validate(wxString value) {
   if (value == wxEmptyString || !wxFileExists(value)) value = getDefaultValue();

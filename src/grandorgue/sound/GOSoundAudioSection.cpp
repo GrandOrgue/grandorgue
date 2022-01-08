@@ -30,10 +30,10 @@ static unsigned limited_diff(unsigned a, unsigned b) {
 }
 
 GOAudioSection::GOAudioSection(GOMemoryPool &pool)
-    : m_Data(NULL),
-      m_ReleaseAligner(NULL),
-      m_ReleaseStartSegment(0),
-      m_Pool(pool) {
+  : m_Data(NULL),
+    m_ReleaseAligner(NULL),
+    m_ReleaseStartSegment(0),
+    m_Pool(pool) {
   ClearData();
 }
 

@@ -80,12 +80,11 @@ END_EVENT_TABLE()
 
 GOSettingsAudioOutput::GOSettingsAudioOutput(
   GOSound &sound, GOAudioGroupCallback &callback, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY),
-      GOSettingsPorts(
-        this, GOSoundPortFactory::getInstance(), _("Sound &ports")),
-      m_Sound(sound),
-      m_config(sound.GetSettings()),
-      m_GroupCallback(callback) {
+  : wxPanel(parent, wxID_ANY),
+    GOSettingsPorts(this, GOSoundPortFactory::getInstance(), _("Sound &ports")),
+    m_Sound(sound),
+    m_config(sound.GetSettings()),
+    m_GroupCallback(callback) {
   wxBoxSizer *const item0 = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *item1 = new wxBoxSizer(wxHORIZONTAL);
   wxArrayString choices;

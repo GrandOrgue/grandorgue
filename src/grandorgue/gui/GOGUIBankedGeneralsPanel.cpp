@@ -17,7 +17,7 @@
 #include "GOGUISetterDisplayMetrics.h"
 
 GOGUIBankedGeneralsPanel::GOGUIBankedGeneralsPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUIBankedGeneralsPanel::~GOGUIBankedGeneralsPanel() {}
 

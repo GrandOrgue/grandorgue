@@ -15,15 +15,15 @@
 #include "GOMidiFile.h"
 
 GOMidiFileReader::GOMidiFileReader(GOMidiMap &map)
-    : m_Map(map),
-      m_Data(),
-      m_Tracks(0),
-      m_Speed(0),
-      m_Pos(0),
-      m_TrackEnd(0),
-      m_LastTime(0),
-      m_PPQ(0),
-      m_Tempo(0) {}
+  : m_Map(map),
+    m_Data(),
+    m_Tracks(0),
+    m_Speed(0),
+    m_Pos(0),
+    m_TrackEnd(0),
+    m_LastTime(0),
+    m_PPQ(0),
+    m_Tempo(0) {}
 
 GOMidiFileReader::~GOMidiFileReader() { m_Data.free(); }
 

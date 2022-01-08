@@ -14,7 +14,7 @@
 #include "threading/GOMutexLocker.h"
 
 GOSoundThread::GOSoundThread(GOSoundScheduler *scheduler)
-    : GOThread(), m_Scheduler(scheduler), m_Condition(m_Mutex) {
+  : GOThread(), m_Scheduler(scheduler), m_Condition(m_Mutex) {
   wxLogDebug(wxT("Create Thread"));
 }
 

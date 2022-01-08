@@ -24,14 +24,14 @@ END_EVENT_TABLE()
 
 GOSettingsMidiMatchDialog::GOSettingsMidiMatchDialog(
   wxWindow *parent, std::vector<GOMidiDeviceConfig *> *otherDevices)
-    : wxDialog(
-      parent,
-      wxID_ANY,
-      _("MIDI device matching properties"),
-      wxDefaultPosition,
-      wxSize(400, -1),
-      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
-      p_OtherDevices(otherDevices) {
+  : wxDialog(
+    parent,
+    wxID_ANY,
+    _("MIDI device matching properties"),
+    wxDefaultPosition,
+    wxSize(400, -1),
+    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
+    p_OtherDevices(otherDevices) {
   wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
 
   wxFlexGridSizer *const mainSizer = new wxFlexGridSizer(2);

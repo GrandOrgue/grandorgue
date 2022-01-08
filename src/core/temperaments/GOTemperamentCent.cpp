@@ -11,7 +11,7 @@
 
 GOTemperamentCent::GOTemperamentCent(
   wxString name, wxString title, wxString group)
-    : GOTemperament(name, title, group) {
+  : GOTemperament(name, title, group) {
   m_Tuning[0] = 0;
   m_Tuning[1] = 0;
   m_Tuning[2] = 0;
@@ -40,7 +40,7 @@ GOTemperamentCent::GOTemperamentCent(
   float i10,
   float i11,
   float i12)
-    : GOTemperament(name) {
+  : GOTemperament(name) {
   m_Tuning[0] = i1;
   m_Tuning[1] = i2;
   m_Tuning[2] = i3;
@@ -70,7 +70,7 @@ GOTemperamentCent::GOTemperamentCent(
   float i10,
   float i11,
   float i12)
-    : GOTemperament(name, group) {
+  : GOTemperament(name, group) {
   m_Tuning[0] = i1;
   m_Tuning[1] = i2;
   m_Tuning[2] = i3;

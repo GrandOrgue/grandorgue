@@ -19,22 +19,22 @@
 #include "config/GOConfigReader.h"
 
 GORank::GORank(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_Name(),
-      m_Pipes(),
-      m_StopCount(0),
-      m_Velocity(),
-      m_Velocities(),
-      m_FirstMidiNoteNumber(0),
-      m_Percussive(false),
-      m_WindchestGroup(0),
-      m_HarmonicNumber(8),
-      m_PitchCorrection(0),
-      m_MinVolume(100),
-      m_MaxVolume(100),
-      m_RetuneRank(true),
-      m_sender(organfile, MIDI_SEND_MANUAL),
-      m_PipeConfig(NULL, organfile, NULL) {
+  : m_organfile(organfile),
+    m_Name(),
+    m_Pipes(),
+    m_StopCount(0),
+    m_Velocity(),
+    m_Velocities(),
+    m_FirstMidiNoteNumber(0),
+    m_Percussive(false),
+    m_WindchestGroup(0),
+    m_HarmonicNumber(8),
+    m_PitchCorrection(0),
+    m_MinVolume(100),
+    m_MaxVolume(100),
+    m_RetuneRank(true),
+    m_sender(organfile, MIDI_SEND_MANUAL),
+    m_PipeConfig(NULL, organfile, NULL) {
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);
 }

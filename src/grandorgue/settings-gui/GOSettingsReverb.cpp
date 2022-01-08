@@ -29,7 +29,7 @@ EVT_SPIN(ID_GAIN_SPIN, GOSettingsReverb::OnGainSpinChanged)
 END_EVENT_TABLE()
 
 GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY), m_config(settings) {
+  : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 
   topSizer->Add(

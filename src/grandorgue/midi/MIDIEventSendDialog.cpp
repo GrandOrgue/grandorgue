@@ -29,11 +29,11 @@ MIDIEventSendDialog::MIDIEventSendDialog(
   GOMidiSender *event,
   MIDIEventRecvDialog *recv,
   GOConfig &settings)
-    : wxPanel(parent, wxID_ANY),
-      m_config(settings),
-      m_original(event),
-      m_recv(recv),
-      m_midi(*event) {
+  : wxPanel(parent, wxID_ANY),
+    m_config(settings),
+    m_original(event),
+    m_recv(recv),
+    m_midi(*event) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxFlexGridSizer *sizer = new wxFlexGridSizer(2, 5, 5);
   topSizer->Add(sizer, 0, wxALL, 6);

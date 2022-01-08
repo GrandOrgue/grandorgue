@@ -13,7 +13,7 @@
 
 GOKeyReceiver::GOKeyReceiver(
   GODefinitionFile *organfile, KEY_RECEIVER_TYPE type)
-    : GOKeyReceiverData(type), m_organfile(organfile) {}
+  : GOKeyReceiverData(type), m_organfile(organfile) {}
 
 void GOKeyReceiver::Load(GOConfigReader &cfg, wxString group) {
   if (m_type == KEY_RECV_ENCLOSURE) {

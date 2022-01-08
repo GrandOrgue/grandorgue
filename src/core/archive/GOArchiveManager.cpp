@@ -24,7 +24,7 @@
 
 GOArchiveManager::GOArchiveManager(
   GOOrganList &OrganList, const GOSettingDirectory &CacheDir)
-    : m_OrganList(OrganList), m_CacheDir(CacheDir) {}
+  : m_OrganList(OrganList), m_CacheDir(CacheDir) {}
 
 GOArchiveManager::~GOArchiveManager() {}
 

@@ -14,12 +14,12 @@
 
 GOLoadThread::GOLoadThread(
   GOEventDistributor &objs, GOMemoryPool &pool, atomic_uint &pos)
-    : GOThread(),
-      m_Objects(objs),
-      m_Pos(pos),
-      m_pool(pool),
-      m_Error(),
-      m_OutOfMemory(false) {}
+  : GOThread(),
+    m_Objects(objs),
+    m_Pos(pos),
+    m_pool(pool),
+    m_Error(),
+    m_OutOfMemory(false) {}
 
 GOLoadThread::~GOLoadThread() { Stop(); }
 

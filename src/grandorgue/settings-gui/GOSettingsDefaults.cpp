@@ -14,7 +14,7 @@
 #include "config/GOConfig.h"
 
 GOSettingsDefaults::GOSettingsDefaults(GOConfig &settings, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY), m_config(settings) {
+  : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *item0 = new wxBoxSizer(wxHORIZONTAL);
 

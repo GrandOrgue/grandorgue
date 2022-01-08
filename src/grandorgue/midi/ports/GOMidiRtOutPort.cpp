@@ -17,14 +17,14 @@ GOMidiRtOutPort::GOMidiRtOutPort(
   RtMidi::Api api,
   const wxString &deviceName,
   const wxString &fullName)
-    : GOMidiOutPort(
-      midi,
-      GOMidiRtPortFactory::PORT_NAME,
-      GOMidiRtPortFactory::getApiName(api),
-      deviceName,
-      fullName),
-      m_api(api),
-      m_port(NULL) {}
+  : GOMidiOutPort(
+    midi,
+    GOMidiRtPortFactory::PORT_NAME,
+    GOMidiRtPortFactory::getApiName(api),
+    deviceName,
+    fullName),
+    m_api(api),
+    m_port(NULL) {}
 
 GOMidiRtOutPort::~GOMidiRtOutPort() { Close(true); }
 

@@ -17,10 +17,10 @@ EVT_PAINT(wxGaugeAudio::OnPaint)
 END_EVENT_TABLE()
 
 wxGaugeAudio::wxGaugeAudio(wxWindow *parent, wxWindowID id, const wxPoint &pos)
-    : wxControl(parent, id, pos, wxSize(73, 11), wxNO_BORDER),
-      m_Value(0),
-      m_Clip(false),
-      m_Update(false) {
+  : wxControl(parent, id, pos, wxSize(73, 11), wxNO_BORDER),
+    m_Value(0),
+    m_Clip(false),
+    m_Update(false) {
   m_gauge = wxBitmap(GetImage_gauge());
   m_gaugedc.SelectObject(m_gauge);
 }

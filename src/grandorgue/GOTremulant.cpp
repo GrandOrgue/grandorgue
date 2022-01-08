@@ -27,16 +27,16 @@ const struct IniFileEnumEntry GOTremulant::m_tremulant_types[] = {
 };
 
 GOTremulant::GOTremulant(GODefinitionFile *organfile)
-    : GODrawstop(organfile),
-      m_TremulantType(GOSynthTrem),
-      m_Period(0),
-      m_StartRate(0),
-      m_StopRate(0),
-      m_AmpModDepth(0),
-      m_TremProvider(NULL),
-      m_PlaybackHandle(0),
-      m_LastStop(0),
-      m_SamplerGroupID(0) {}
+  : GODrawstop(organfile),
+    m_TremulantType(GOSynthTrem),
+    m_Period(0),
+    m_StartRate(0),
+    m_StopRate(0),
+    m_AmpModDepth(0),
+    m_TremProvider(NULL),
+    m_PlaybackHandle(0),
+    m_LastStop(0),
+    m_SamplerGroupID(0) {}
 
 GOTremulant::~GOTremulant() { DELETE_AND_NULL(m_TremProvider); }
 

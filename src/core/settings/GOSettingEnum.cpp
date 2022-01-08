@@ -18,11 +18,11 @@ GOSettingEnum<T>::GOSettingEnum(
   const struct IniFileEnumEntry *entries,
   unsigned count,
   T default_value)
-    : GOSetting(store, group, name),
-      m_Value(default_value),
-      m_DefaultValue(default_value),
-      m_Entries(entries),
-      m_Count(count) {}
+  : GOSetting(store, group, name),
+    m_Value(default_value),
+    m_DefaultValue(default_value),
+    m_Entries(entries),
+    m_Count(count) {}
 
 template <class T>
 void GOSettingEnum<T>::Load(GOConfigReader &cfg) {

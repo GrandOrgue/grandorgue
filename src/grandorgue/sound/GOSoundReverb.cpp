@@ -19,7 +19,7 @@
 #include "contrib/zita-convolver.h"
 
 GOSoundReverb::GOSoundReverb(unsigned channels)
-    : m_channels(channels), m_engine() {}
+  : m_channels(channels), m_engine() {}
 
 GOSoundReverb::~GOSoundReverb() { Cleanup(); }
 

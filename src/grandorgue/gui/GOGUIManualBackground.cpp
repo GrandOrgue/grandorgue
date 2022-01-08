@@ -16,7 +16,7 @@
 
 GOGUIManualBackground::GOGUIManualBackground(
   GOGUIPanel *panel, unsigned manual_number)
-    : GOGUIControl(panel, NULL), m_ManualNumber(manual_number) {}
+  : GOGUIControl(panel, NULL), m_ManualNumber(manual_number) {}
 
 void GOGUIManualBackground::Init(GOConfigReader &cfg, wxString group) {
   GOGUIControl::Init(cfg, group);

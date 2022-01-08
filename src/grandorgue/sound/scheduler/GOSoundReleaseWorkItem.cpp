@@ -12,7 +12,7 @@
 
 GOSoundReleaseWorkItem::GOSoundReleaseWorkItem(
   GOSoundEngine &sound_engine, ptr_vector<GOSoundGroupWorkItem> &audio_groups)
-    : m_engine(sound_engine), m_AudioGroups(audio_groups), m_Stop(false) {}
+  : m_engine(sound_engine), m_AudioGroups(audio_groups), m_Stop(false) {}
 
 unsigned GOSoundReleaseWorkItem::GetGroup() { return RELEASE; }
 

@@ -25,18 +25,18 @@
   } while (0)
 
 GOSoundProvider::GOSoundProvider(GOMemoryPool &pool)
-    : m_MidiKeyNumber(0),
-      m_MidiPitchFract(0),
-      m_Tuning(1),
-      m_SampleGroup(0),
-      m_Attack(),
-      m_AttackInfo(),
-      m_Release(),
-      m_ReleaseInfo(),
-      m_pool(pool),
-      m_VelocityVolumeBase(1),
-      m_VelocityVolumeIncrement(0),
-      m_ReleaseCrossfadeLength(184) {
+  : m_MidiKeyNumber(0),
+    m_MidiPitchFract(0),
+    m_Tuning(1),
+    m_SampleGroup(0),
+    m_Attack(),
+    m_AttackInfo(),
+    m_Release(),
+    m_ReleaseInfo(),
+    m_pool(pool),
+    m_VelocityVolumeBase(1),
+    m_VelocityVolumeIncrement(0),
+    m_ReleaseCrossfadeLength(184) {
   m_Gain = 0.0f;
 }
 

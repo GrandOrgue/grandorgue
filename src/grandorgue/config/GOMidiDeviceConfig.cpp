@@ -12,9 +12,9 @@ GOMidiDeviceConfig::GOMidiDeviceConfig(
   const wxString &regEx,
   bool isEnabled,
   const wxString &physicalName)
-    : m_LogicalName(logicalName),
-      m_IsEnabled(isEnabled),
-      m_PhysicalName(physicalName) {
+  : m_LogicalName(logicalName),
+    m_IsEnabled(isEnabled),
+    m_PhysicalName(physicalName) {
   SetRegEx(regEx);
 }
 

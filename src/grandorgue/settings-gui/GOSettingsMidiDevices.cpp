@@ -29,13 +29,13 @@ END_EVENT_TABLE()
 
 SettingsMidiDevices::SettingsMidiDevices(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY),
-      GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("Midi &ports")),
-      m_config(settings),
-      m_Midi(midi),
-      m_InDevices(m_Midi.GetInDevices(), m_config.m_MidiIn, this, ID_INDEVICES),
-      m_OutDevices(
-        m_Midi.GetOutDevices(), m_config.m_MidiOut, this, ID_OUTDEVICES) {
+  : wxPanel(parent, wxID_ANY),
+    GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("Midi &ports")),
+    m_config(settings),
+    m_Midi(midi),
+    m_InDevices(m_Midi.GetInDevices(), m_config.m_MidiIn, this, ID_INDEVICES),
+    m_OutDevices(
+      m_Midi.GetOutDevices(), m_config.m_MidiOut, this, ID_OUTDEVICES) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *box1 = new wxBoxSizer(wxHORIZONTAL);
 

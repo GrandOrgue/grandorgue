@@ -12,7 +12,7 @@
 #include "GOSoundReverbPartition.h"
 
 GOSoundReverbEngine::GOSoundReverbEngine(unsigned samples_per_buffer)
-    : m_Partitions() {
+  : m_Partitions() {
   if (samples_per_buffer < 128) {
     m_Partitions.push_back(new GOSoundReverbPartition(64, 3, 0));
     m_Partitions.push_back(new GOSoundReverbPartition(128, 6, 0));

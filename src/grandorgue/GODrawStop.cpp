@@ -25,15 +25,15 @@ const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
 };
 
 GODrawstop::GODrawstop(GODefinitionFile *organfile)
-    : GOButton(organfile, MIDI_RECV_DRAWSTOP, false),
-      m_Type(FUNCTION_INPUT),
-      m_GCState(0),
-      m_ActiveState(false),
-      m_CombinationState(false),
-      m_ControlledDrawstops(),
-      m_ControllingDrawstops(),
-      m_StoreDivisional(false),
-      m_StoreGeneral(false) {}
+  : GOButton(organfile, MIDI_RECV_DRAWSTOP, false),
+    m_Type(FUNCTION_INPUT),
+    m_GCState(0),
+    m_ActiveState(false),
+    m_CombinationState(false),
+    m_ControlledDrawstops(),
+    m_ControllingDrawstops(),
+    m_StoreDivisional(false),
+    m_StoreGeneral(false) {}
 
 void GODrawstop::RegisterControlled(GODrawstop *sw) {
   m_ControlledDrawstops.push_back(sw);

@@ -17,7 +17,7 @@
 #include "GOGUISetterDisplayMetrics.h"
 
 GOGUIMetronomePanel::GOGUIMetronomePanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUIMetronomePanel::~GOGUIMetronomePanel() {}
 

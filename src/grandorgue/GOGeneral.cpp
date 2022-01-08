@@ -13,8 +13,8 @@ GOGeneral::GOGeneral(
   GOCombinationDefinition &general_template,
   GODefinitionFile *organfile,
   bool is_setter)
-    : GOPushbutton(organfile),
-      m_general(general_template, organfile, is_setter) {}
+  : GOPushbutton(organfile),
+    m_general(general_template, organfile, is_setter) {}
 
 void GOGeneral::Load(GOConfigReader &cfg, wxString group) {
   m_general.Load(cfg, group);

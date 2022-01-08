@@ -16,7 +16,7 @@
 #include "midi/GOMidiMap.h"
 
 GOMidiSender::GOMidiSender(GODefinitionFile *organfile, MIDI_SENDER_TYPE type)
-    : GOMidiSenderData(type), m_organfile(organfile), m_ElementID(-1) {}
+  : GOMidiSenderData(type), m_organfile(organfile), m_ElementID(-1) {}
 
 GOMidiSender::~GOMidiSender() {}
 

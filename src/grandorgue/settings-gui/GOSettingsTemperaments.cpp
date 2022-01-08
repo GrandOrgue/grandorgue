@@ -25,9 +25,9 @@ END_EVENT_TABLE()
 
 GOSettingsTemperaments::GOSettingsTemperaments(
   GOConfig &settings, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY),
-      m_Temperaments(settings.GetTemperaments()),
-      m_Ptrs() {
+  : wxPanel(parent, wxID_ANY),
+    m_Temperaments(settings.GetTemperaments()),
+    m_Ptrs() {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 

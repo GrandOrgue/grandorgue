@@ -18,7 +18,7 @@ END_EVENT_TABLE()
 
 wxStaticLink::wxStaticLink(
   wxWindow *parent, const wxString &label, const wxString &url)
-    : wxStaticText(parent, wxID_ANY, label) {
+  : wxStaticText(parent, wxID_ANY, label) {
   SetForegroundColour(*wxBLUE);
   wxFont font = GetFont();
   font.SetWeight(wxFONTWEIGHT_BOLD);
@@ -53,8 +53,8 @@ bool GOPropertiesTest(const wxString &what) {
 }
 
 GOProperties::GOProperties(GODefinitionFile *organfile, wxWindow *win)
-    : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties")),
-      m_organfile(organfile) {
+  : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties")),
+    m_organfile(organfile) {
   wxASSERT(organfile);
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);

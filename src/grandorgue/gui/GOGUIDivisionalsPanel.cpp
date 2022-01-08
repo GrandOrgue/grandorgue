@@ -20,7 +20,7 @@
 #include "GOManual.h"
 
 GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUIDivisionalsPanel::~GOGUIDivisionalsPanel() {}
 

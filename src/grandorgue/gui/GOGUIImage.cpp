@@ -13,7 +13,7 @@
 #include "config/GOConfigReader.h"
 
 GOGUIImage::GOGUIImage(GOGUIPanel *panel)
-    : GOGUIControl(panel, NULL), m_TileOffsetX(0), m_TileOffsetY(0) {}
+  : GOGUIControl(panel, NULL), m_TileOffsetX(0), m_TileOffsetY(0) {}
 
 void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
   GOGUIControl::Load(cfg, group);

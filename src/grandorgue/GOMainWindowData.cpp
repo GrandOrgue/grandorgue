@@ -12,7 +12,7 @@
 #include "config/GOConfigWriter.h"
 
 GOMainWindowData::GOMainWindowData(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOMainWindowData::~GOMainWindowData() {}
 

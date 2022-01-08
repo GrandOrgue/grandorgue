@@ -31,19 +31,19 @@
 static inline void touchMemory(const char *pos) { load_once(*pos); }
 
 GOMemoryPool::GOMemoryPool()
-    : m_PoolStart(0),
-      m_PoolPtr(0),
-      m_PoolEnd(0),
-      m_CacheStart(0),
-      m_PoolSize(0),
-      m_PoolLimit(0),
-      m_PageSize(4096),
-      m_CacheSize(0),
-      m_MallocSize(0),
-      m_MemoryLimit(0),
-      m_AllocError(0),
-      m_TouchPos(0),
-      m_TouchCache(false) {
+  : m_PoolStart(0),
+    m_PoolPtr(0),
+    m_PoolEnd(0),
+    m_CacheStart(0),
+    m_PoolSize(0),
+    m_PoolLimit(0),
+    m_PageSize(4096),
+    m_CacheSize(0),
+    m_MallocSize(0),
+    m_MemoryLimit(0),
+    m_AllocError(0),
+    m_TouchPos(0),
+    m_TouchCache(false) {
   InitPool();
 }
 

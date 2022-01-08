@@ -21,12 +21,11 @@ EVT_TOGGLEBUTTON(ID_LISTEN_MINUS, MIDIEventKeyDialog::OnMinusListenClick)
 END_EVENT_TABLE()
 
 MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event)
-    : wxPanel(
-      parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
-      m_original(event),
-      m_key(*event),
-      m_keyminusselect(NULL),
-      m_minuslisten(NULL) {
+  : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
+    m_original(event),
+    m_key(*event),
+    m_keyminusselect(NULL),
+    m_minuslisten(NULL) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 
   wxBoxSizer *sizer = new wxStaticBoxSizer(

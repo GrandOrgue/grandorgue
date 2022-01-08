@@ -18,7 +18,7 @@
 
 GOArchiveIndex::GOArchiveIndex(
   const GOSettingDirectory &cachePath, const wxString &path)
-    : m_CachePath(cachePath), m_Path(path), m_File() {}
+  : m_CachePath(cachePath), m_Path(path), m_File() {}
 
 GOArchiveIndex::~GOArchiveIndex() { m_File.Close(); }
 

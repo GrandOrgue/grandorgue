@@ -22,9 +22,9 @@ GOFrameGeneral::GOFrameGeneral(
   GOCombinationDefinition &general_template,
   GODefinitionFile *organfile,
   bool is_setter)
-    : GOCombination(general_template, organfile),
-      m_organfile(organfile),
-      m_IsSetter(is_setter) {}
+  : GOCombination(general_template, organfile),
+    m_organfile(organfile),
+    m_IsSetter(is_setter) {}
 
 void GOFrameGeneral::Load(GOConfigReader &cfg, wxString group) {
   m_organfile->RegisterSaveableObject(this);

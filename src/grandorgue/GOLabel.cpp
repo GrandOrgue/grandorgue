@@ -14,10 +14,10 @@
 #include "config/GOConfig.h"
 
 GOLabel::GOLabel(GODefinitionFile *organfile)
-    : m_Name(),
-      m_Content(),
-      m_organfile(organfile),
-      m_sender(organfile, MIDI_SEND_LABEL) {
+  : m_Name(),
+    m_Content(),
+    m_organfile(organfile),
+    m_sender(organfile, MIDI_SEND_LABEL) {
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);
 }

@@ -16,11 +16,11 @@ static const char *const UNKNOWN_LOCKER_INFO = "UnknownLocker";
 #define LOCKER_INFO(lockerInfo) (lockerInfo ? lockerInfo : UNKNOWN_LOCKER_INFO)
 
 GOMutex::GOMutex()
-    :
+  :
 #if !defined GO_STD_MUTEX && !defined WX_MUTEX
-      m_Lock(0),
+    m_Lock(0),
 #endif
-      m_LockerInfo(NULL) {
+    m_LockerInfo(NULL) {
 }
 
 GOMutex::~GOMutex() {}

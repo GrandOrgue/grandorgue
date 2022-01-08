@@ -42,21 +42,21 @@ const struct ElementListEntry *GOMidiRecorder::GetButtonList() {
 }
 
 GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_Map(organfile->GetSettings().GetMidiMap()),
-      m_RecordingTime(organfile),
-      m_RecordSeconds(0),
-      m_NextChannel(0),
-      m_NextNRPN(0),
-      m_Mappings(),
-      m_Preconfig(),
-      m_OutputDevice(0),
-      m_file(),
-      m_Filename(),
-      m_DoRename(false),
-      m_BufferPos(0),
-      m_FileLength(0),
-      m_Last(0) {
+  : m_organfile(organfile),
+    m_Map(organfile->GetSettings().GetMidiMap()),
+    m_RecordingTime(organfile),
+    m_RecordSeconds(0),
+    m_NextChannel(0),
+    m_NextNRPN(0),
+    m_Mappings(),
+    m_Preconfig(),
+    m_OutputDevice(0),
+    m_file(),
+    m_Filename(),
+    m_DoRename(false),
+    m_BufferPos(0),
+    m_FileLength(0),
+    m_Last(0) {
   CreateButtons(m_organfile);
   Clear();
   UpdateDisplay();

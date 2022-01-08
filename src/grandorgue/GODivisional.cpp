@@ -21,11 +21,11 @@ GODivisional::GODivisional(
   GODefinitionFile *organfile,
   GOCombinationDefinition &divisional_template,
   bool is_setter)
-    : GOPushbutton(organfile),
-      GOCombination(divisional_template, organfile),
-      m_DivisionalNumber(0),
-      m_ManualNumber(1),
-      m_IsSetter(is_setter) {}
+  : GOPushbutton(organfile),
+    GOCombination(divisional_template, organfile),
+    m_DivisionalNumber(0),
+    m_ManualNumber(1),
+    m_IsSetter(is_setter) {}
 
 void GODivisional::Init(
   GOConfigReader &cfg,

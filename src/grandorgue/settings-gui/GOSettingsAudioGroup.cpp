@@ -23,7 +23,7 @@ EVT_BUTTON(ID_AUDIOGROUP_CHANGE, GOSettingsAudioGroup::OnGroupChange)
 END_EVENT_TABLE()
 
 GOSettingsAudioGroup::GOSettingsAudioGroup(GOConfig &settings, wxWindow *parent)
-    : wxPanel(parent, wxID_ANY), m_config(settings) {
+  : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
 

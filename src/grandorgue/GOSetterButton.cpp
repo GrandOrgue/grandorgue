@@ -13,7 +13,7 @@
 
 GOSetterButton::GOSetterButton(
   GODefinitionFile *organfile, GOSetterButtonCallback *setter, bool Pushbutton)
-    : GOButton(organfile, MIDI_RECV_SETTER, Pushbutton), m_setter(setter) {}
+  : GOButton(organfile, MIDI_RECV_SETTER, Pushbutton), m_setter(setter) {}
 
 void GOSetterButton::Push() {
   if (m_Pushbutton)

@@ -13,7 +13,7 @@
 #include "GOGUIPanel.h"
 
 GOGUIHW1Background::GOGUIHW1Background(GOGUIPanel *panel)
-    : GOGUIControl(panel, NULL), m_Images() {}
+  : GOGUIControl(panel, NULL), m_Images() {}
 
 void GOGUIHW1Background::Init(GOConfigReader &cfg, wxString group) {
   GOGUIControl::Init(cfg, group);

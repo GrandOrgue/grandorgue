@@ -17,7 +17,7 @@
 #include "GOGUISetterDisplayMetrics.h"
 
 GOGUIMasterPanel::GOGUIMasterPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUIMasterPanel::~GOGUIMasterPanel() {}
 

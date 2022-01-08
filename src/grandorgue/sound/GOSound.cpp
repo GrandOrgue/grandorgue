@@ -22,17 +22,17 @@
 #include "threading/GOMutexLocker.h"
 
 GOSound::GOSound(GOConfig &settings)
-    : m_open(false),
-      logSoundErrors(true),
-      m_AudioOutputs(),
-      m_WaitCount(),
-      m_CalcCount(),
-      m_SamplesPerBuffer(0),
-      meter_counter(0),
-      m_defaultAudioDevice(),
-      m_organfile(0),
-      m_config(settings),
-      m_midi(settings) {}
+  : m_open(false),
+    logSoundErrors(true),
+    m_AudioOutputs(),
+    m_WaitCount(),
+    m_CalcCount(),
+    m_SamplesPerBuffer(0),
+    meter_counter(0),
+    m_defaultAudioDevice(),
+    m_organfile(0),
+    m_config(settings),
+    m_midi(settings) {}
 
 GOSound::~GOSound() {
   CloseSound();

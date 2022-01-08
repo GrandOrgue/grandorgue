@@ -17,7 +17,7 @@
 #include "GOGUISetterDisplayMetrics.h"
 
 GOGUISequencerPanel::GOGUISequencerPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUISequencerPanel::~GOGUISequencerPanel() {}
 

@@ -44,15 +44,15 @@ const struct ElementListEntry *GOMetronome::GetButtonList() {
 }
 
 GOMetronome::GOMetronome(GODefinitionFile *organfile)
-    : m_organfile(organfile),
-      m_BPM(80),
-      m_MeasureLength(4),
-      m_Pos(0),
-      m_Running(false),
-      m_BPMDisplay(organfile),
-      m_MeasureDisplay(organfile),
-      m_rank(NULL),
-      m_StopID(0) {
+  : m_organfile(organfile),
+    m_BPM(80),
+    m_MeasureLength(4),
+    m_Pos(0),
+    m_Running(false),
+    m_BPMDisplay(organfile),
+    m_MeasureDisplay(organfile),
+    m_rank(NULL),
+    m_StopID(0) {
   CreateButtons(m_organfile);
 
   m_button[ID_METRONOME_ON]->SetPreconfigIndex(25);

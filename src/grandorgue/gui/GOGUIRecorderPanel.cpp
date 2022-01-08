@@ -17,7 +17,7 @@
 #include "GOGUISetterDisplayMetrics.h"
 
 GOGUIRecorderPanel::GOGUIRecorderPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUIRecorderPanel::~GOGUIRecorderPanel() {}
 

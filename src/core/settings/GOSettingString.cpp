@@ -12,9 +12,9 @@
 
 GOSettingString::GOSettingString(
   GOSettingStore *store, wxString group, wxString name, wxString default_value)
-    : GOSetting(store, group, name),
-      m_Value(default_value),
-      m_DefaultValue(default_value) {}
+  : GOSetting(store, group, name),
+    m_Value(default_value),
+    m_DefaultValue(default_value) {}
 
 void GOSettingString::Load(GOConfigReader &cfg) {
   (*this)(cfg.ReadString(CMBSetting, m_Group, m_Name, false, m_DefaultValue));

@@ -13,9 +13,9 @@ GOPipeConfigTreeNode::GOPipeConfigTreeNode(
   GOPipeConfigNode *parent,
   GODefinitionFile *organfile,
   GOPipeUpdateCallback *callback)
-    : GOPipeConfigNode(parent, organfile, this, NULL),
-      m_Childs(),
-      m_Callback(callback) {}
+  : GOPipeConfigNode(parent, organfile, this, NULL),
+    m_Childs(),
+    m_Callback(callback) {}
 
 void GOPipeConfigTreeNode::AddChild(GOPipeConfigNode *node) {
   m_Childs.push_back(node);

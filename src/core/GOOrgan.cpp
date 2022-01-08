@@ -25,29 +25,29 @@ GOOrgan::GOOrgan(
   wxString church_name,
   wxString organ_builder,
   wxString recording_detail)
-    : m_ODF(odf),
-      m_ChurchName(church_name),
-      m_OrganBuilder(organ_builder),
-      m_RecordingDetail(recording_detail),
-      m_ArchiveID(archive),
-      m_NamesInitialized(true),
-      m_midi(MIDI_RECV_ORGAN) {
+  : m_ODF(odf),
+    m_ChurchName(church_name),
+    m_OrganBuilder(organ_builder),
+    m_RecordingDetail(recording_detail),
+    m_ArchiveID(archive),
+    m_NamesInitialized(true),
+    m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
 GOOrgan::GOOrgan(wxString odf)
-    : m_ODF(odf),
-      m_ChurchName(),
-      m_OrganBuilder(),
-      m_RecordingDetail(),
-      m_ArchiveID(),
-      m_NamesInitialized(false),
-      m_midi(MIDI_RECV_ORGAN) {
+  : m_ODF(odf),
+    m_ChurchName(),
+    m_OrganBuilder(),
+    m_RecordingDetail(),
+    m_ArchiveID(),
+    m_NamesInitialized(false),
+    m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
 GOOrgan::GOOrgan(GOConfigReader &cfg, wxString group, GOMidiMap &map)
-    : m_midi(MIDI_RECV_ORGAN) {
+  : m_midi(MIDI_RECV_ORGAN) {
   m_ODF = cfg.ReadString(CMBSetting, group, wxT("ODFPath"));
   m_ChurchName = cfg.ReadString(CMBSetting, group, wxT("ChurchName"));
   m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));

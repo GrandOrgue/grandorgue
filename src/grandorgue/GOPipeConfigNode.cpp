@@ -17,11 +17,11 @@ GOPipeConfigNode::GOPipeConfigNode(
   GODefinitionFile *organfile,
   GOPipeUpdateCallback *callback,
   GOStatisticCallback *statistic)
-    : m_organfile(organfile),
-      m_parent(parent),
-      m_PipeConfig(organfile, callback),
-      m_StatisticCallback(statistic),
-      m_Name() {
+  : m_organfile(organfile),
+    m_parent(parent),
+    m_PipeConfig(organfile, callback),
+    m_StatisticCallback(statistic),
+    m_Name() {
   if (m_parent) m_parent->AddChild(this);
 }
 

@@ -16,7 +16,7 @@
 #include "GOTremulant.h"
 
 GOCombinationDefinition::GOCombinationDefinition(GODefinitionFile *organfile)
-    : m_organfile(organfile), m_Content(0) {}
+  : m_organfile(organfile), m_Content(0) {}
 
 GOCombinationDefinition::~GOCombinationDefinition() {}
 

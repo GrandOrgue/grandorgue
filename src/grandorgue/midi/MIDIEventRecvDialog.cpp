@@ -31,13 +31,13 @@ END_EVENT_TABLE()
 
 MIDIEventRecvDialog::MIDIEventRecvDialog(
   wxWindow *parent, GOMidiReceiverBase *event, GOConfig &settings)
-    : wxPanel(parent, wxID_ANY),
-      m_config(settings),
-      m_original(event),
-      m_midi(*event),
-      m_listener(),
-      m_ListenState(0),
-      m_Timer(this, ID_TIMER) {
+  : wxPanel(parent, wxID_ANY),
+    m_config(settings),
+    m_original(event),
+    m_midi(*event),
+    m_listener(),
+    m_ListenState(0),
+    m_Timer(this, ID_TIMER) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxFlexGridSizer *sizer = new wxFlexGridSizer(2, 5, 5);
   topSizer->Add(sizer, 0, wxALL, 6);

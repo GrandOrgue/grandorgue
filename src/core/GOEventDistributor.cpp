@@ -14,12 +14,12 @@
 #include "GOSaveableObject.h"
 
 GOEventDistributor::GOEventDistributor()
-    : m_handler(),
-      m_ControlChangedHandler(),
-      m_PlaybackStateHandler(),
-      m_SaveableObjects(),
-      m_MidiConfigurator(),
-      m_CacheObjects() {}
+  : m_handler(),
+    m_ControlChangedHandler(),
+    m_PlaybackStateHandler(),
+    m_SaveableObjects(),
+    m_MidiConfigurator(),
+    m_CacheObjects() {}
 
 GOEventDistributor::~GOEventDistributor() {}
 

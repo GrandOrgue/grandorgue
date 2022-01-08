@@ -14,12 +14,12 @@
 #include "GOAlloc.h"
 
 GOWavPack::GOWavPack(const GOBuffer<uint8_t> &file)
-    : m_data(file),
-      m_Samples(),
-      m_Wrapper(),
-      m_pos(0),
-      m_OrigDataLen(0),
-      m_context(0) {}
+  : m_data(file),
+    m_Samples(),
+    m_Wrapper(),
+    m_pos(0),
+    m_OrigDataLen(0),
+    m_context(0) {}
 
 GOWavPack::~GOWavPack() {
   m_Samples.free();

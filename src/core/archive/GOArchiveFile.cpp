@@ -23,11 +23,11 @@ GOArchiveFile::GOArchiveFile(
   wxString name,
   const std::vector<wxString> &dependencies,
   const std::vector<wxString> &dependency_titles)
-    : m_ID(id),
-      m_Path(path),
-      m_Name(name),
-      m_Dependencies(dependencies),
-      m_DependencyTitles(dependency_titles) {
+  : m_ID(id),
+    m_Path(path),
+    m_Name(name),
+    m_Dependencies(dependencies),
+    m_DependencyTitles(dependency_titles) {
   m_FileID = GetCurrentFileID();
 }
 

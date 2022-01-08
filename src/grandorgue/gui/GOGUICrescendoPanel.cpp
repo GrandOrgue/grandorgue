@@ -18,7 +18,7 @@
 #include "GOGUISetterDisplayMetrics.h"
 
 GOGUICrescendoPanel::GOGUICrescendoPanel(GODefinitionFile *organfile)
-    : m_organfile(organfile) {}
+  : m_organfile(organfile) {}
 
 GOGUICrescendoPanel::~GOGUICrescendoPanel() {}
 

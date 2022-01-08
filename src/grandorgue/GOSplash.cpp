@@ -23,8 +23,8 @@ END_EVENT_TABLE()
 
 GOSplashBitmap::GOSplashBitmap(
   wxWindow *parent, wxWindowID id, wxBitmap &bitmap)
-    : wxControl(parent, id, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
-      m_Bitmap(bitmap) {}
+  : wxControl(parent, id, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
+    m_Bitmap(bitmap) {}
 
 void GOSplashBitmap::OnPaint(wxPaintEvent &event) {
   wxPaintDC dc(this);
@@ -45,15 +45,15 @@ EVT_CLOSE(GOSplash::OnCloseWindow)
 END_EVENT_TABLE()
 
 GOSplash::GOSplash(bool has_timeout, wxWindow *parent, wxWindowID id)
-    : wxDialog(
-      parent,
-      id,
-      wxEmptyString,
-      wxPoint(0, 0),
-      wxSize(100, 100),
-      wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
-      m_Timer(this, GO_SPLASH_TIMER_ID),
-      m_hasTimeout(has_timeout) {
+  : wxDialog(
+    parent,
+    id,
+    wxEmptyString,
+    wxPoint(0, 0),
+    wxSize(100, 100),
+    wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
+    m_Timer(this, GO_SPLASH_TIMER_ID),
+    m_hasTimeout(has_timeout) {
   SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
   wxBitmap bitmap = GetImage_Splash();
   DrawText(bitmap);
