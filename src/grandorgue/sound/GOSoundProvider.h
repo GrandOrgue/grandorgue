@@ -60,10 +60,10 @@ public:
   void UseSampleGroup(unsigned sample_group);
   void SetVelocityParameter(float min_volume, float max_volume);
 
-  const GOAudioSection *
-  GetRelease(const audio_section_stream *handle, double playback_time) const;
-  const GOAudioSection *
-  GetAttack(unsigned velocity, unsigned released_time) const;
+  const GOAudioSection *GetRelease(
+    const audio_section_stream *handle, double playback_time) const;
+  const GOAudioSection *GetAttack(
+    unsigned velocity, unsigned released_time) const;
   float GetGain() const;
   int IsOneshot() const;
 

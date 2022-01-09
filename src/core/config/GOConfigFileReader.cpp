@@ -22,13 +22,13 @@ GOConfigFileReader::~GOConfigFileReader() {}
 
 wxString GOConfigFileReader::GetHash() { return m_Hash; }
 
-const std::map<wxString, std::map<wxString, wxString>> &
-GOConfigFileReader::GetContent() {
+const std::map<wxString, std::map<wxString, wxString>>
+  &GOConfigFileReader::GetContent() {
   return m_Entries;
 }
 
-wxString
-GOConfigFileReader::GetNextLine(const wxString &buffer, unsigned &pos) {
+wxString GOConfigFileReader::GetNextLine(
+  const wxString &buffer, unsigned &pos) {
   int newpos = buffer.find(wxT("\n"), pos);
   if (newpos < (int)pos)
     newpos = buffer.Len();

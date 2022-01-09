@@ -83,8 +83,8 @@ public:
     float max_volume,
     bool retune);
 
-  void
-  Init(GOConfigReader &cfg, wxString group, wxString prefix, wxString filename);
+  void Init(
+    GOConfigReader &cfg, wxString group, wxString prefix, wxString filename);
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);
   void SetTemperament(const GOTemperament &temperament);
 };

@@ -82,8 +82,8 @@ ptr_vector<GOArchiveFile> &GOOrganList::GetArchiveList() {
   return m_ArchiveList;
 }
 
-const GOArchiveFile *
-GOOrganList::GetArchiveByID(const wxString &id, bool useable) const {
+const GOArchiveFile *GOOrganList::GetArchiveByID(
+  const wxString &id, bool useable) const {
   for (unsigned i = 0; i < m_ArchiveList.size(); i++)
     if (m_ArchiveList[i]->GetID() == id)
       if (!useable || m_ArchiveList[i]->IsUsable(*this))

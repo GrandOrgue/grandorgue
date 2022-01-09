@@ -128,8 +128,8 @@ public:
 
   GOSoundEngine &GetEngine();
 
-  bool
-  AudioCallback(unsigned dev_index, float *outputBuffer, unsigned int nFrames);
+  bool AudioCallback(
+    unsigned dev_index, float *outputBuffer, unsigned int nFrames);
 };
 
 #endif

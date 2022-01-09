@@ -94,8 +94,8 @@ public:
     unsigned keys);
   void Load(GOConfigReader &cfg, wxString group, int manualNumber);
   unsigned RegisterCoupler(GOCoupler *coupler);
-  void
-  SetKey(unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);
+  void SetKey(
+    unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);
   void Set(unsigned note, unsigned velocity);
   void SetUnisonOff(bool on);
   void Update();

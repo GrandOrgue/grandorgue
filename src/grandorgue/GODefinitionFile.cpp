@@ -759,8 +759,8 @@ bool GODefinitionFile::Export(const wxString &cmb) {
   return true;
 }
 
-GOEnclosure *
-GODefinitionFile::GetEnclosure(const wxString &name, bool is_panel) {
+GOEnclosure *GODefinitionFile::GetEnclosure(
+  const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
     GOEnclosure *c = m_elementcreators[i]->GetEnclosure(name, is_panel);
     if (c)

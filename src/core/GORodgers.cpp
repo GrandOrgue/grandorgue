@@ -31,8 +31,8 @@ GORodgersGetBit(
   else
     return MIDI_BIT_STATE::MIDI_BIT_CLEAR;
 }
-unsigned
-GORodgersSetBit(unsigned stop, bool state, std::vector<uint8_t> &data) {
+unsigned GORodgersSetBit(
+  unsigned stop, bool state, std::vector<uint8_t> &data) {
   unsigned offset = stop / 7;
   unsigned bit = stop - offset * 7;
   if (data.size() <= offset)

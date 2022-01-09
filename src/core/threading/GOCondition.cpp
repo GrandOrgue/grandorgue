@@ -31,8 +31,8 @@ GOCondition::GOCondition(GOMutex &mutex) : r_mutex(mutex.GetTimedMutex()) {}
 
 GOCondition::~GOCondition() {}
 
-unsigned
-GOCondition::DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *) {
+unsigned GOCondition::DoWait(
+  bool isWithTimeout, const char *waiterInfo, GOThread *) {
   bool isSignalReceived;
 
   if (isWithTimeout)
@@ -54,8 +54,8 @@ GOCondition::GOCondition(GOMutex &mutex) : m_condition(mutex.m_Mutex) {}
 
 GOCondition::~GOCondition() {}
 
-unsigned
-GOCondition::DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *) {
+unsigned GOCondition::DoWait(
+  bool isWithTimeout, const char *waiterInfo, GOThread *) {
   bool isSignalReceived;
 
   if (isWithTimeout)

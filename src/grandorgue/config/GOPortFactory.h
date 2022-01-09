@@ -41,8 +41,8 @@ public:
   bool IsToUsePortName() const { return GetPortNames().size() > 1; }
 
   virtual const std::vector<wxString> &GetPortNames() const = 0;
-  virtual const std::vector<wxString> &
-  GetPortApiNames(const wxString &portName) const = 0;
+  virtual const std::vector<wxString> &GetPortApiNames(
+    const wxString &portName) const = 0;
 
   wxString ComposeDeviceName(
     wxString const &portName, wxString const &apiName, wxString const &devName);

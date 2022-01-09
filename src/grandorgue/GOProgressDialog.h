@@ -38,8 +38,8 @@ public:
   GOProgressDialog();
   ~GOProgressDialog();
 
-  void
-  Setup(long max, const wxString &title, const wxString &msg = wxEmptyString);
+  void Setup(
+    long max, const wxString &title, const wxString &msg = wxEmptyString);
   void Reset(long max, const wxString &msg = wxEmptyString);
 
   bool Update(unsigned value, const wxString &msg);

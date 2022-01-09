@@ -34,11 +34,11 @@ public:
   ~GOConfigReaderDB();
   void ReportUnused();
   void ClearCMB();
-  bool
-  ReadData(GOConfigFileReader &ODF, GOSettingType type, bool handle_prefix);
+  bool ReadData(
+    GOConfigFileReader &ODF, GOSettingType type, bool handle_prefix);
 
-  bool
-  GetString(GOSettingType type, wxString group, wxString key, wxString &value);
+  bool GetString(
+    GOSettingType type, wxString group, wxString key, wxString &value);
 };
 
 #endif

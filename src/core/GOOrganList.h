@@ -39,8 +39,8 @@ public:
   void AddArchive(const GOArchiveFile &archive);
   ptr_vector<GOArchiveFile> &GetArchiveList();
   const ptr_vector<GOArchiveFile> &GetArchiveList() const;
-  const GOArchiveFile *
-  GetArchiveByID(const wxString &id, bool useable = false) const;
+  const GOArchiveFile *GetArchiveByID(
+    const wxString &id, bool useable = false) const;
   const GOArchiveFile *GetArchiveByPath(const wxString &path) const;
 };
 

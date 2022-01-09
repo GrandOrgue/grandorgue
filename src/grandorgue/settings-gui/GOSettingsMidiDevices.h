@@ -47,8 +47,8 @@ private:
   wxButton *m_InOutDevice;
   wxChoice *m_RecorderDevice;
 
-  void
-  RenewDevices(const GOPortsConfig &portsConfig, const bool isToAutoAddInput);
+  void RenewDevices(
+    const GOPortsConfig &portsConfig, const bool isToAutoAddInput);
   void OnPortChanged(
     const wxString &portName,
     const wxString apiName,

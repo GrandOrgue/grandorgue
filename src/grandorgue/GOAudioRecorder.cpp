@@ -81,8 +81,8 @@ void GOAudioRecorder::ButtonChanged(int id) {
   }
 }
 
-GOEnclosure *
-GOAudioRecorder::GetEnclosure(const wxString &name, bool is_panel) {
+GOEnclosure *GOAudioRecorder::GetEnclosure(
+  const wxString &name, bool is_panel) {
   return NULL;
 }
 

@@ -28,8 +28,8 @@ private:
   unsigned m_Done;
   volatile bool m_Stop;
 
-  void
-  ProcessList(GOSoundSamplerList &list, bool toDropOld, float *output_buffer);
+  void ProcessList(
+    GOSoundSamplerList &list, bool toDropOld, float *output_buffer);
 
 public:
   GOSoundGroupWorkItem(

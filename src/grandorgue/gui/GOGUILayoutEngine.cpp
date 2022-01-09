@@ -321,8 +321,8 @@ void GOGUILayoutEngine::Update() {
     m_CenterY -= 8;
 }
 
-const GOGUILayoutEngine::MANUAL_RENDER_INFO &
-GOGUILayoutEngine::GetManualRenderInfo(const unsigned manual_nb) const {
+const GOGUILayoutEngine::MANUAL_RENDER_INFO &GOGUILayoutEngine::
+  GetManualRenderInfo(const unsigned manual_nb) const {
   assert(manual_nb < m_ManualRenderInfo.size());
   return m_ManualRenderInfo[manual_nb];
 }

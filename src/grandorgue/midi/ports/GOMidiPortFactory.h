@@ -19,8 +19,8 @@ class GOMidi;
 class GOMidiPortFactory : public GOPortFactory {
 public:
   virtual const std::vector<wxString> &GetPortNames() const;
-  virtual const std::vector<wxString> &
-  GetPortApiNames(const wxString &portName) const;
+  virtual const std::vector<wxString> &GetPortApiNames(
+    const wxString &portName) const;
 
   static GOMidiPortFactory &getInstance();
   static void addMissingInDevices(

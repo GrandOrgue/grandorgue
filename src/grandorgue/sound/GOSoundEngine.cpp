@@ -600,8 +600,8 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
   }
 }
 
-uint64_t
-GOSoundEngine::StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle) {
+uint64_t GOSoundEngine::StopSample(
+  const GOSoundProvider *pipe, GOSoundSampler *handle) {
   assert(handle);
   assert(pipe);
 

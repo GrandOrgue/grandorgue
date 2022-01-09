@@ -81,8 +81,8 @@ void GOArchiveCreator::AddOrgan(const wxString &path) {
   m_OrganPaths.push_back(name);
 }
 
-std::unique_ptr<GOFile>
-GOArchiveCreator::findPackageFile(const wxString &name) {
+std::unique_ptr<GOFile> GOArchiveCreator::findPackageFile(
+  const wxString &name) {
   for (unsigned i = 0; i < m_packages.size(); i++) {
     if (m_packages[i]->containsFile(name))
       return std::unique_ptr<GOFile>(m_packages[i]->OpenFile(name));

@@ -488,8 +488,8 @@ GOMidiReceiverBase *GOConfig::GetMidiEvent(unsigned index) {
   return m_MIDIEvents[index];
 }
 
-GOMidiReceiverBase *
-GOConfig::FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index) {
+GOMidiReceiverBase *GOConfig::FindMidiEvent(
+  MIDI_RECEIVER_TYPE type, unsigned index) {
   for (unsigned i = 0; i < GetEventCount(); i++)
     if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
       return m_MIDIEvents[i];

@@ -40,8 +40,8 @@ public:
   void Process(unsigned n_blocks, float *buffer, float volume);
 };
 
-inline GOSoundFader::FaderState
-GOSoundFader::SetupProcess(unsigned n_blocks, float volume) {
+inline GOSoundFader::FaderState GOSoundFader::SetupProcess(
+  unsigned n_blocks, float volume) {
   volume *= m_VelocityVolume;
 
   if (m_last_volume < 0) {
@@ -80,8 +80,8 @@ GOSoundFader::SetupProcess(unsigned n_blocks, float volume) {
   return {gain, gain_delta};
 }
 
-inline void
-GOSoundFader::ProcessData(FaderState &state, unsigned n_blocks, float *buffer) {
+inline void GOSoundFader::ProcessData(
+  FaderState &state, unsigned n_blocks, float *buffer) {
   if (state.gain_delta) {
     for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
       buffer[0] *= state.gain;
@@ -96,8 +96,8 @@ GOSoundFader::ProcessData(FaderState &state, unsigned n_blocks, float *buffer) {
   }
 }
 
-inline void
-GOSoundFader::Process(unsigned n_blocks, float *buffer, float volume) {
+inline void GOSoundFader::Process(
+  unsigned n_blocks, float *buffer, float volume) {
   FaderState state = SetupProcess(n_blocks, volume);
   ProcessData(state, n_blocks, buffer);
 }

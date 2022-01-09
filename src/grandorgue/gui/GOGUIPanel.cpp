@@ -690,8 +690,8 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
   ReadSizeInfoFromCfg(cfg, is_main_panel);
 }
 
-GOGUIControl *
-GOGUIPanel::CreateGUIElement(GOConfigReader &cfg, wxString group) {
+GOGUIControl *GOGUIPanel::CreateGUIElement(
+  GOConfigReader &cfg, wxString group) {
   wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
 
   GOButton *button = m_organfile->GetButton(type, true);

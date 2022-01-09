@@ -254,8 +254,8 @@ wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(wxString name) {
   return AddDeviceNode(name, m_Sound.GetSettings().GetDefaultLatency());
 }
 
-wxTreeItemId
-GOSettingsAudioOutput::AddDeviceNode(wxString name, unsigned desired_latency) {
+wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(
+  wxString name, unsigned desired_latency) {
   wxTreeItemId current;
   if (name == wxEmptyString) {
     name = m_Sound.GetDefaultAudioDevice(RenewPortsConfig());
@@ -354,8 +354,8 @@ std::vector<wxString> GOSettingsAudioOutput::GetRemainingAudioDevices(
   return result;
 }
 
-std::vector<std::pair<wxString, bool>>
-GOSettingsAudioOutput::GetRemainingAudioGroups(const wxTreeItemId &channel) {
+std::vector<std::pair<wxString, bool>> GOSettingsAudioOutput::
+  GetRemainingAudioGroups(const wxTreeItemId &channel) {
   std::vector<std::pair<wxString, bool>> result;
   std::vector<wxString> groups = m_GroupCallback.GetGroups();
   for (unsigned i = 0; i < groups.size(); i++) {

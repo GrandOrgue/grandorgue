@@ -26,8 +26,8 @@ const std::vector<wxString> &GOSoundPortFactory::GetPortNames() const {
   return portNames;
 }
 
-const std::vector<wxString> &
-GOSoundPortFactory::GetPortApiNames(const wxString &portName) const {
+const std::vector<wxString> &GOSoundPortFactory::GetPortApiNames(
+  const wxString &portName) const {
   if (portName == GOSoundPortaudioPort::PORT_NAME)
     return GOSoundPortaudioPort::getApis();
   else if (portName == GOSoundRtPort::PORT_NAME)
@@ -71,8 +71,8 @@ GOSoundPort *GOSoundPortFactory::create(
   return port;
 }
 
-std::vector<GOSoundDevInfo>
-GOSoundPortFactory::getDeviceList(const GOPortsConfig &portsConfig) {
+std::vector<GOSoundDevInfo> GOSoundPortFactory::getDeviceList(
+  const GOPortsConfig &portsConfig) {
   std::vector<GOSoundDevInfo> result;
 
   if (portsConfig.IsEnabled(GOSoundPortaudioPort::PORT_NAME))

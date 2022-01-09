@@ -457,8 +457,8 @@ inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
   return NULL;
 }
 
-inline unsigned
-GOAudioSection::PickEndSegment(unsigned start_segment_index) const {
+inline unsigned GOAudioSection::PickEndSegment(
+  unsigned start_segment_index) const {
   const unsigned x = abs(rand());
   for (unsigned i = 0; i < m_EndSegments.size(); i++) {
     const unsigned idx = (i + x) % m_EndSegments.size();
@@ -949,8 +949,8 @@ void GOAudioSection::SetupStreamAlignment(
   }
 }
 
-unsigned
-GOAudioSection::GetMargin(bool compressed, interpolation_type interpolation) {
+unsigned GOAudioSection::GetMargin(
+  bool compressed, interpolation_type interpolation) {
   if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed)
     return POLYPHASE_READAHEAD;
   else if (compressed)

@@ -114,8 +114,8 @@ void GOCombinationDefinition::InitDivisional(unsigned manual_number) {
       associatedManual->GetSwitch(i), COMBINATION_SWITCH, manual_number, i + 1);
 }
 
-const std::vector<GOCombinationDefinition::CombinationSlot> &
-GOCombinationDefinition::GetCombinationElements() {
+const std::vector<GOCombinationDefinition::CombinationSlot>
+  &GOCombinationDefinition::GetCombinationElements() {
   return m_Content;
 }
 

@@ -39,8 +39,8 @@ private:
   GOCondition(const GOCondition &) = delete;
   const GOCondition &operator=(const GOCondition &) = delete;
 
-  unsigned
-  DoWait(bool isWithTimeout, const char *waiterInfo, GOThread *pThread);
+  unsigned DoWait(
+    bool isWithTimeout, const char *waiterInfo, GOThread *pThread);
 
 public:
   GOCondition(GOMutex &mutex);

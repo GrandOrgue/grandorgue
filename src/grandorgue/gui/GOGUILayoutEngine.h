@@ -69,8 +69,8 @@ public:
   virtual int GetCenterX();
   virtual int GetHackY();
 
-  virtual const MANUAL_RENDER_INFO &
-  GetManualRenderInfo(const unsigned manual_nb) const;
+  virtual const MANUAL_RENDER_INFO &GetManualRenderInfo(
+    const unsigned manual_nb) const;
 
   void RegisterEnclosure(GOGUIEnclosure *enclosure);
   void RegisterManual(GOGUIManual *manual);

@@ -11,8 +11,8 @@
 #include "config/GOConfigWriter.h"
 #include "go_limits.h"
 
-GOMidiDeviceConfig *
-GOMidiDeviceConfigList::FindByLogicalName(const wxString &logicalName) const {
+GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByLogicalName(
+  const wxString &logicalName) const {
   GOMidiDeviceConfig *res = NULL;
 
   for (GOMidiDeviceConfig *pDevConf : m_list)
@@ -23,8 +23,8 @@ GOMidiDeviceConfigList::FindByLogicalName(const wxString &logicalName) const {
   return res;
 }
 
-GOMidiDeviceConfig *
-GOMidiDeviceConfigList::FindByPhysicalName(const wxString &physicalName) const {
+GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByPhysicalName(
+  const wxString &physicalName) const {
   GOMidiDeviceConfig *res = NULL;
   GOMidiDeviceConfig *candidate = NULL;
 

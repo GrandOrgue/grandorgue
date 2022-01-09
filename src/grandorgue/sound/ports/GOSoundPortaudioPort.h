@@ -40,8 +40,8 @@ public:
   static const std::vector<wxString> &getApis() {
     return GOSoundPortFactory::c_NoApis;
   }
-  static GOSoundPort *
-  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+  static GOSoundPort *create(
+    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
   static void terminate();

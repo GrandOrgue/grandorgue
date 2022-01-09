@@ -36,8 +36,8 @@ private:
   bool m_IsOpen = false;
   bool m_IsStarted = false;
 
-  static void
-  JackLatencyCallback(jack_latency_callback_mode_t mode, void *data);
+  static void JackLatencyCallback(
+    jack_latency_callback_mode_t mode, void *data);
   static int JackProcessCallback(jack_nframes_t nFrames, void *data);
   static void JackShutdownCallback(void *data);
 
@@ -54,8 +54,8 @@ public:
   static const std::vector<wxString> &getApis() {
     return GOSoundPortFactory::c_NoApis;
   }
-  static GOSoundPort *
-  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+  static GOSoundPort *create(
+    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
 };

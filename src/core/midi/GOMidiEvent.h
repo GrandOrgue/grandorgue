@@ -85,8 +85,8 @@ public:
   void SetData(const std::vector<uint8_t> &data) { m_data = data; }
 
   void FromMidi(const std::vector<unsigned char> &msg, GOMidiMap &map);
-  void
-  ToMidi(std::vector<std::vector<unsigned char>> &msg, GOMidiMap &map) const;
+  void ToMidi(
+    std::vector<std::vector<unsigned char>> &msg, GOMidiMap &map) const;
 
   wxString ToString(GOMidiMap &map) const;
 };

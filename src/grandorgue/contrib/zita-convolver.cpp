@@ -772,8 +772,8 @@ void Convlevel::print(FILE *F) {
     _npar);
 }
 
-Macnode *
-Convlevel::findmacnode(unsigned int inp, unsigned int out, bool create) {
+Macnode *Convlevel::findmacnode(
+  unsigned int inp, unsigned int out, bool create) {
   unsigned int i;
   Inpnode *X;
   Outnode *Y;

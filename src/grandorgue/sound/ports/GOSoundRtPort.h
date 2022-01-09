@@ -39,8 +39,8 @@ public:
   void Close();
 
   static const std::vector<wxString> &getApis();
-  static GOSoundPort *
-  create(const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+  static GOSoundPort *create(
+    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
 };

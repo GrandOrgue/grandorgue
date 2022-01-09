@@ -41,16 +41,16 @@ private:
   bool ReadEntry(GOArchiveEntry &e);
 
   bool ReadContent(wxString &id, std::vector<GOArchiveEntry> &entries);
-  bool
-  WriteContent(const wxString &id, const std::vector<GOArchiveEntry> &entries);
+  bool WriteContent(
+    const wxString &id, const std::vector<GOArchiveEntry> &entries);
 
 public:
   GOArchiveIndex(const GOSettingDirectory &cachePath, const wxString &path);
   ~GOArchiveIndex();
 
   bool ReadIndex(wxString &id, std::vector<GOArchiveEntry> &entries);
-  bool
-  WriteIndex(const wxString &id, const std::vector<GOArchiveEntry> &entries);
+  bool WriteIndex(
+    const wxString &id, const std::vector<GOArchiveEntry> &entries);
 };
 
 #endif

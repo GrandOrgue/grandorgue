@@ -20,8 +20,8 @@ BEGIN_EVENT_TABLE(GOPanelView, wxScrolledWindow)
 EVT_SIZE(GOPanelView::OnSize)
 END_EVENT_TABLE()
 
-GOPanelView *
-GOPanelView::createWithFrame(GODocumentBase *doc, GOGUIPanel *panel) {
+GOPanelView *GOPanelView::createWithFrame(
+  GODocumentBase *doc, GOGUIPanel *panel) {
   wxFrame *frame = new wxFrame(
     NULL,
     -1,

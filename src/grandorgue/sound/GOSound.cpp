@@ -259,8 +259,8 @@ void GOSound::SetLogSoundErrorMessages(bool settingsDialogVisible) {
   logSoundErrors = settingsDialogVisible;
 }
 
-std::vector<GOSoundDevInfo>
-GOSound::GetAudioDevices(const GOPortsConfig &portsConfig) {
+std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
+  const GOPortsConfig &portsConfig) {
   // Getting a device list tries to open and close each device
   // Because some devices (ex. ASIO) cann't be open more than once
   // then close the current audio device
@@ -276,8 +276,8 @@ GOSound::GetAudioDevices(const GOPortsConfig &portsConfig) {
   return list;
 }
 
-const wxString
-GOSound::GetDefaultAudioDevice(const GOPortsConfig &portsConfig) {
+const wxString GOSound::GetDefaultAudioDevice(
+  const GOPortsConfig &portsConfig) {
   if (m_defaultAudioDevice.IsEmpty())
     GetAudioDevices(portsConfig);
   return m_defaultAudioDevice;

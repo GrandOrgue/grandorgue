@@ -47,8 +47,8 @@ public:
   virtual void PrepareDraw(double scale, GOBitmap *background);
   virtual void Draw(GODC &dc);
   virtual const wxRect &GetBoundingRect();
-  virtual bool
-  HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
+  virtual bool HandleMousePress(
+    int x, int y, bool right, GOGUIMouseState &state);
   virtual bool HandleMouseScroll(int x, int y, int amount);
 };
 

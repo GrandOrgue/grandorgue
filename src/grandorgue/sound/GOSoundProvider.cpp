@@ -184,8 +184,8 @@ float GOSoundProvider::GetVelocityVolume(unsigned velocity) const {
   return m_VelocityVolumeBase + (velocity * m_VelocityVolumeIncrement);
 }
 
-const GOAudioSection *
-GOSoundProvider::GetAttack(unsigned velocity, unsigned released_time) const {
+const GOAudioSection *GOSoundProvider::GetAttack(
+  unsigned velocity, unsigned released_time) const {
   const unsigned x = abs(rand());
   int best_match = -1;
   for (unsigned i = 0; i < m_Attack.size(); i++) {
