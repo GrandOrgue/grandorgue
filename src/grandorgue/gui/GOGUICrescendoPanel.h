@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOGUICRESCENDOPANEL_H
 #define GOGUICRESCENDOPANEL_H
@@ -12,18 +13,17 @@
 class GOGUIPanel;
 class GODefinitionFile;
 
-class GOGUICrescendoPanel : public GOGUIPanelCreator
-{
+class GOGUICrescendoPanel : public GOGUIPanelCreator {
 private:
-	GODefinitionFile* m_organfile;
+  GODefinitionFile *m_organfile;
 
-	GOGUIPanel* CreateCrescendoPanel(GOConfigReader& cfg);
+  GOGUIPanel *CreateCrescendoPanel(GOConfigReader &cfg);
 
 public:
-	GOGUICrescendoPanel(GODefinitionFile* organfile);
-	virtual ~GOGUICrescendoPanel();
+  GOGUICrescendoPanel(GODefinitionFile *organfile);
+  virtual ~GOGUICrescendoPanel();
 
-	void CreatePanels(GOConfigReader& cfg);
+  void CreatePanels(GOConfigReader &cfg);
 };
 
 #endif

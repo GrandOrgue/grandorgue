@@ -1,3 +1,4 @@
+- Added automatic formatting code with pre-commit and clang-format
 # 3.5.0 (2022-01-05)
 - Added default regex patterns for matching MIDI devices with alsa, jack and winmm https://github.com/GrandOrgue/grandorgue/issues/885
 - Added capability of matching MIDI devices with regex expressions https://github.com/GrandOrgue/grandorgue/issues/885

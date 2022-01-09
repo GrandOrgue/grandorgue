@@ -22,10 +22,10 @@
 #ifndef GOSOUNDRESAMPLE_H_
 #define GOSOUNDRESAMPLE_H_
 
-#define SUBFILTER_BITS            (3U)
-#define SUBFILTER_TAPS            (1U << SUBFILTER_BITS)
-#define UPSAMPLE_BITS             (13U)
-#define UPSAMPLE_FACTOR           (1U << UPSAMPLE_BITS)
+#define SUBFILTER_BITS (3U)
+#define SUBFILTER_TAPS (1U << SUBFILTER_BITS)
+#define UPSAMPLE_BITS (13U)
+#define UPSAMPLE_FACTOR (1U << UPSAMPLE_BITS)
 
 /* This factor must not be exceeded in the downsampler and it MUST be
  * greater than UPSAMPLE_FACTOR.
@@ -37,28 +37,25 @@
  * The roll off characteristic starts at:
  *  (UPSAMPLE_FACTOR * sample_rate) / (MAX_POSITIVE_FACTOR * 2) ~ 18kHz at
  * 48 kHz. */
-#define MAX_POSITIVE_FACTOR       (2663U)
+#define MAX_POSITIVE_FACTOR (2663U)
 
-typedef enum
-{
-	GO_LINEAR_INTERPOLATION = 0,
-	GO_POLYPHASE_INTERPOLATION = 1,
+typedef enum {
+  GO_LINEAR_INTERPOLATION = 0,
+  GO_POLYPHASE_INTERPOLATION = 1,
 } interpolation_type;
 
-struct resampler_coefs_s
-{
-	float coefs[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
-	float linear[UPSAMPLE_FACTOR][2];
-	interpolation_type interpolation;
+struct resampler_coefs_s {
+  float coefs[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
+  float linear[UPSAMPLE_FACTOR][2];
+  interpolation_type interpolation;
 };
 
-void
-resampler_coefs_init
-	(struct resampler_coefs_s   *resampler_coefs
-	,const unsigned              input_sample_rate
-	,interpolation_type          interpolation
-	);
+void resampler_coefs_init(
+  struct resampler_coefs_s *resampler_coefs,
+  const unsigned input_sample_rate,
+  interpolation_type interpolation);
 
-float* resample_block(float* data, unsigned& len, unsigned from_samplerate, unsigned to_samplerate);
+float *resample_block(
+  float *data, unsigned &len, unsigned from_samplerate, unsigned to_samplerate);
 
 #endif /* GOSOUNDRESAMPLE_H_ */

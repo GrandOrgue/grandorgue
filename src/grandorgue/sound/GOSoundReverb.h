@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSOUNDREVERB_H
 #define GOSOUNDREVERB_H
@@ -11,22 +12,21 @@
 class Convproc;
 class GOConfig;
 
-class GOSoundReverb
-{
+class GOSoundReverb {
 private:
-	unsigned m_channels;
-	ptr_vector<Convproc> m_engine;
+  unsigned m_channels;
+  ptr_vector<Convproc> m_engine;
 
-	void Cleanup();
+  void Cleanup();
 
 public:
-	GOSoundReverb(unsigned channels);
-	virtual ~GOSoundReverb();
+  GOSoundReverb(unsigned channels);
+  virtual ~GOSoundReverb();
 
-	void Reset();
-	void Setup(GOConfig& settings);
+  void Reset();
+  void Setup(GOConfig &settings);
 
-	void Process(float *output_buffer, unsigned n_frames);
+  void Process(float *output_buffer, unsigned n_frames);
 };
 
 #endif

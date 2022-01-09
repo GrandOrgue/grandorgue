@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSETTINGSTORE_H
 #define GOSETTINGSTORE_H
@@ -13,20 +14,19 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOSetting;
 
-class GOSettingStore
-{
+class GOSettingStore {
 private:
-	std::vector<GOSetting*> m_SettingList;
+  std::vector<GOSetting *> m_SettingList;
 
 protected:
-	void Load(GOConfigReader& cfg);
-	void Save(GOConfigWriter& cfg);
+  void Load(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
 
 public:
-	GOSettingStore();
-	virtual ~GOSettingStore();
+  GOSettingStore();
+  virtual ~GOSettingStore();
 
-	void AddSetting(GOSetting* setting);
+  void AddSetting(GOSetting *setting);
 };
 
 #endif

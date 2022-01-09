@@ -1,23 +1,24 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOSOUNDPORT_H
 #define GOSOUNDPORT_H
 
-#include "config/GOPortsConfig.h"
-
 #include <wx/string.h>
+
 #include <vector>
+
+#include "config/GOPortsConfig.h"
 
 class GOSound;
 
-class GOSoundPort
-{
+class GOSoundPort {
 protected:
-  GOSound* m_Sound;
+  GOSound *m_Sound;
   unsigned m_Index;
   bool m_IsOpen;
   wxString m_Name;
@@ -28,18 +29,23 @@ protected:
   int m_ActualLatency;
 
   void SetActualLatency(double latency);
-  bool AudioCallback(float* outputBuffer, unsigned int nFrames);
+  bool AudioCallback(float *outputBuffer, unsigned int nFrames);
 
 public:
-  GOSoundPort(GOSound* sound, wxString name);
+  GOSoundPort(GOSound *sound, wxString name);
   virtual ~GOSoundPort();
 
-  void Init(unsigned channels, unsigned sample_rate, unsigned samples_per_buffer, unsigned latency, unsigned index);
+  void Init(
+    unsigned channels,
+    unsigned sample_rate,
+    unsigned samples_per_buffer,
+    unsigned latency,
+    unsigned index);
   virtual void Open() = 0;
   virtual void StartStream() = 0;
   virtual void Close() = 0;
 
-  const wxString& GetName();
+  const wxString &GetName();
 
   wxString getPortState();
 };

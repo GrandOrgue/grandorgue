@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOMUTEX_H
 #define GOMUTEX_H
@@ -12,14 +13,13 @@
 #elif WX_MUTEX
 #include <wx/thread.h>
 #else
-#include "atomic.h"
 #include "GOWaitQueue.h"
+#include "atomic.h"
 #endif
 
 #include "GOThread.h"
 
-class GOMutex
-{
+class GOMutex {
 private:
 #if defined GO_STD_MUTEX
   std::timed_mutex m_mutex;
@@ -29,12 +29,12 @@ private:
   GOWaitQueue m_Wait;
   atomic_int m_Lock;
 #endif
-  
-  const char* volatile m_LockerInfo;
 
-  GOMutex(const GOMutex&) = delete;
-  const GOMutex& operator=(const GOMutex&) = delete;
-  
+  const char *volatile m_LockerInfo;
+
+  GOMutex(const GOMutex &) = delete;
+  const GOMutex &operator=(const GOMutex &) = delete;
+
   bool DoLock(bool isWithTimeout);
   bool DoTryLock();
   void DoUnlock();
@@ -44,15 +44,14 @@ public:
   ~GOMutex();
 
 #if defined GO_STD_MUTEX
-  std::timed_mutex& GetTimedMutex() { return m_mutex; };
+  std::timed_mutex &GetTimedMutex() { return m_mutex; };
 #endif
 
-  bool LockOrStop(const char* lockerInfo = NULL, GOThread *pThread = NULL);
-  void Lock(const char* lockerInfo = NULL) { LockOrStop(lockerInfo, NULL); }
+  bool LockOrStop(const char *lockerInfo = NULL, GOThread *pThread = NULL);
+  void Lock(const char *lockerInfo = NULL) { LockOrStop(lockerInfo, NULL); }
   void Unlock();
-  bool TryLock(const char* lockerInfo = NULL);
-  const char* GetLockerInfo() const { return m_LockerInfo; }
+  bool TryLock(const char *lockerInfo = NULL);
+  const char *GetLockerInfo() const { return m_LockerInfo; }
 };
 
 #endif /* GOMUTEX_H */
-

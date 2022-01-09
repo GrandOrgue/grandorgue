@@ -1,658 +1,602 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #include "GOWave.h"
 
-#include "GOFile.h"
-#include "GOWaveTypes.h"
-#include "GOWavPack.h"
-#include "GOWavPackWriter.h"
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 
-void GOWave::SetInvalid()
-{
-	m_SampleData.free();
-	m_Channels = 0;
-	m_BytesPerSample = 0;
-	m_SampleRate = 0;
-	m_MidiNote = 0;
-	m_PitchFract = 0;
-	m_CuePoint = -1;
-	m_hasRelease = false;
-	m_isPacked = false;
-	m_Loops.clear();
+#include "GOFile.h"
+#include "GOWavPack.h"
+#include "GOWavPackWriter.h"
+#include "GOWaveTypes.h"
+
+void GOWave::SetInvalid() {
+  m_SampleData.free();
+  m_Channels = 0;
+  m_BytesPerSample = 0;
+  m_SampleRate = 0;
+  m_MidiNote = 0;
+  m_PitchFract = 0;
+  m_CuePoint = -1;
+  m_hasRelease = false;
+  m_isPacked = false;
+  m_Loops.clear();
 }
 
-GOWave::GOWave() :
-	m_Loops()
-{
-	/* Start up the waveform in an invalid state */
-	SetInvalid();
+GOWave::GOWave() : m_Loops() {
+  /* Start up the waveform in an invalid state */
+  SetInvalid();
 }
 
-GOWave::~GOWave()
-{
-	/* Close and free any currently open wave data */
-	Close();
+GOWave::~GOWave() {
+  /* Close and free any currently open wave data */
+  Close();
 }
 
-void GOWave::LoadFormatChunk(const uint8_t* ptr, unsigned long length)
-{
-	/* FIXME: This could be done much more elequently */
-	/* Ensure format chunk size is 16 (basic wave
-	 * format chunk... no extensible data... and
-	 * that the format tag is 1 */
-	if (length < sizeof(GO_WAVEFORMATPCM))
-		throw (wxString)_("< Invalid WAVE format chunk");
+void GOWave::LoadFormatChunk(const uint8_t *ptr, unsigned long length) {
+  /* FIXME: This could be done much more elequently */
+  /* Ensure format chunk size is 16 (basic wave
+   * format chunk... no extensible data... and
+   * that the format tag is 1 */
+  if (length < sizeof(GO_WAVEFORMATPCM))
+    throw(wxString) _("< Invalid WAVE format chunk");
 
-	GO_WAVEFORMATPCMEX* format = (GO_WAVEFORMATPCMEX*)ptr;
-	unsigned formatCode = format->wf.wf.wFormatTag;
-	if (formatCode != 1 && formatCode != 3)
-		throw (wxString)_("< Unsupported PCM format");
+  GO_WAVEFORMATPCMEX *format = (GO_WAVEFORMATPCMEX *)ptr;
+  unsigned formatCode = format->wf.wf.wFormatTag;
+  if (formatCode != 1 && formatCode != 3)
+    throw(wxString) _("< Unsupported PCM format");
 
-	m_Channels = format->wf.wf.nChannels;
-	m_SampleRate = format->wf.wf.nSamplesPerSec;
+  m_Channels = format->wf.wf.nChannels;
+  m_SampleRate = format->wf.wf.nSamplesPerSec;
 
-	unsigned bitsPerSample = format->wf.wBitsPerSample;
-	if (bitsPerSample % 8)
-		throw (wxString)_("< Bits per sample must be a multiple of 8 in this implementation");
-	m_BytesPerSample = bitsPerSample / 8;
+  unsigned bitsPerSample = format->wf.wBitsPerSample;
+  if (bitsPerSample % 8)
+    throw(wxString)
+      _("< Bits per sample must be a multiple of 8 in this implementation");
+  m_BytesPerSample = bitsPerSample / 8;
 
-	if (formatCode == 3 && m_BytesPerSample != 4)
-		throw (wxString)_("< Only 32bit IEEE float samples supported");
-	else if (formatCode == 1 && m_BytesPerSample > 3)
-		throw (wxString)_("< Unsupport PCM bit size");
+  if (formatCode == 3 && m_BytesPerSample != 4)
+    throw(wxString) _("< Only 32bit IEEE float samples supported");
+  else if (formatCode == 1 && m_BytesPerSample > 3)
+    throw(wxString) _("< Unsupport PCM bit size");
 }
 
-void GOWave::LoadCueChunk(const uint8_t* ptr, unsigned long length)
-{
-	if (length < sizeof(GO_WAVECUECHUNK))
-		throw (wxString)_("< Invalid CUE chunk in");
+void GOWave::LoadCueChunk(const uint8_t *ptr, unsigned long length) {
+  if (length < sizeof(GO_WAVECUECHUNK))
+    throw(wxString) _("< Invalid CUE chunk in");
 
-	GO_WAVECUECHUNK* cue = (GO_WAVECUECHUNK*)ptr;
-	unsigned nbPoints = cue->dwCuePoints;
-	if (length < sizeof(GO_WAVECUECHUNK) + sizeof(GO_WAVECUEPOINT) * nbPoints)
-		throw (wxString)_("< Invalid CUE chunk in");
+  GO_WAVECUECHUNK *cue = (GO_WAVECUECHUNK *)ptr;
+  unsigned nbPoints = cue->dwCuePoints;
+  if (length < sizeof(GO_WAVECUECHUNK) + sizeof(GO_WAVECUEPOINT) * nbPoints)
+    throw(wxString) _("< Invalid CUE chunk in");
 
-	GO_WAVECUEPOINT* points = (GO_WAVECUEPOINT*)(ptr + sizeof(GO_WAVECUECHUNK));
-	m_hasRelease = (nbPoints > 0);
-	if (m_hasRelease)
-		m_CuePoint = 0;
-	for (unsigned k = 0; k < nbPoints; k++)
-	{
-		assert(m_Channels != 0);
-		unsigned position = points[k].dwSampleOffset;
-		if (position > m_CuePoint)
-			m_CuePoint = position;
-	}
+  GO_WAVECUEPOINT *points = (GO_WAVECUEPOINT *)(ptr + sizeof(GO_WAVECUECHUNK));
+  m_hasRelease = (nbPoints > 0);
+  if (m_hasRelease)
+    m_CuePoint = 0;
+  for (unsigned k = 0; k < nbPoints; k++) {
+    assert(m_Channels != 0);
+    unsigned position = points[k].dwSampleOffset;
+    if (position > m_CuePoint)
+      m_CuePoint = position;
+  }
 }
 
-void GOWave::LoadSamplerChunk(const uint8_t* ptr, unsigned long length)
-{
-	if (length < sizeof(GO_WAVESAMPLERCHUNK))
-		throw (wxString)_("< Invalid SMPL chunk in");
+void GOWave::LoadSamplerChunk(const uint8_t *ptr, unsigned long length) {
+  if (length < sizeof(GO_WAVESAMPLERCHUNK))
+    throw(wxString) _("< Invalid SMPL chunk in");
 
-	GO_WAVESAMPLERCHUNK* sampler = (GO_WAVESAMPLERCHUNK*)ptr;
-	unsigned numberOfLoops = sampler->cSampleLoops;
-	if (length < sizeof(GO_WAVESAMPLERCHUNK) + sizeof(GO_WAVESAMPLERLOOP) * numberOfLoops)
-		throw (wxString)_("<Invalid SMPL chunk in");
+  GO_WAVESAMPLERCHUNK *sampler = (GO_WAVESAMPLERCHUNK *)ptr;
+  unsigned numberOfLoops = sampler->cSampleLoops;
+  if (
+    length
+    < sizeof(GO_WAVESAMPLERCHUNK) + sizeof(GO_WAVESAMPLERLOOP) * numberOfLoops)
+    throw(wxString) _("<Invalid SMPL chunk in");
 
-	GO_WAVESAMPLERLOOP* loops = (GO_WAVESAMPLERLOOP*)(ptr + sizeof(GO_WAVESAMPLERCHUNK));
-	m_Loops.clear();
-	for (unsigned k = 0; k < numberOfLoops; k++)
-	{
-		GO_WAVE_LOOP l;
-		l.start_sample = loops[k].dwStart;
-		l.end_sample = loops[k].dwEnd;
-		m_Loops.push_back(l);
-	}
+  GO_WAVESAMPLERLOOP *loops
+    = (GO_WAVESAMPLERLOOP *)(ptr + sizeof(GO_WAVESAMPLERCHUNK));
+  m_Loops.clear();
+  for (unsigned k = 0; k < numberOfLoops; k++) {
+    GO_WAVE_LOOP l;
+    l.start_sample = loops[k].dwStart;
+    l.end_sample = loops[k].dwEnd;
+    m_Loops.push_back(l);
+  }
 
-	m_MidiNote = sampler->dwMIDIUnityNote;
-	m_PitchFract = sampler->dwMIDIPitchFraction / (double)UINT_MAX * 100.0;
+  m_MidiNote = sampler->dwMIDIUnityNote;
+  m_PitchFract = sampler->dwMIDIPitchFraction / (double)UINT_MAX * 100.0;
 }
 
-void GOWave::Open(GOFile* file)
-{
-	if (!file->Open())
-	{
-		wxString message;
-		message.Printf(_("Failed to open file '%s'"), file->GetName().c_str());
-		throw message;
-	}
-	// Allocate memory for wave and read it.
-	GOBuffer<uint8_t> content(file->GetSize());
-	if (!file->Read(content))
-	{
-		wxString message;
-		message.Printf(_("Failed to read file '%s'\n"), file->GetName().c_str());
-		throw message;
-	}
+void GOWave::Open(GOFile *file) {
+  if (!file->Open()) {
+    wxString message;
+    message.Printf(_("Failed to open file '%s'"), file->GetName().c_str());
+    throw message;
+  }
+  // Allocate memory for wave and read it.
+  GOBuffer<uint8_t> content(file->GetSize());
+  if (!file->Read(content)) {
+    wxString message;
+    message.Printf(_("Failed to read file '%s'\n"), file->GetName().c_str());
+    throw message;
+  }
 
-	file->Close();
-	Open(content);
+  file->Close();
+  Open(content);
 }
 
-void GOWave::Open(const GOBuffer <uint8_t>& content)
-{
-	/* Close any currently open wave data */
-	Close();
+void GOWave::Open(const GOBuffer<uint8_t> &content) {
+  /* Close any currently open wave data */
+  Close();
 
-	GOBuffer<uint8_t> buf;
-	size_t offset = 0;
-	size_t start = 0;
-	size_t origDataLen = 0;
-	try
-	{
-		if (content.GetSize() < 12)
-			throw (wxString)_("< Not a RIFF file");
+  GOBuffer<uint8_t> buf;
+  size_t offset = 0;
+  size_t start = 0;
+  size_t origDataLen = 0;
+  try {
+    if (content.GetSize() < 12)
+      throw(wxString) _("< Not a RIFF file");
 
-		const uint8_t* ptr = content.get();
-		unsigned length = content.GetSize();
+    const uint8_t *ptr = content.get();
+    unsigned length = content.GetSize();
 
-		if (GOWavPack::IsWavPack(content))
-		{
-			GOWavPack pack(content);
-			if (!pack.Unpack())
-				throw (wxString)_("Failed to decode WavePack data");
+    if (GOWavPack::IsWavPack(content)) {
+      GOWavPack pack(content);
+      if (!pack.Unpack())
+        throw(wxString) _("Failed to decode WavePack data");
 
-			m_SampleData = pack.GetSamples();
+      m_SampleData = pack.GetSamples();
 
-			buf = pack.GetWrapper();
-			ptr = buf.get();
-			length = buf.GetSize();
-			offset = 0;
-			m_isPacked = true;
-			origDataLen = pack.GetOrigDataLen();
-		}
+      buf = pack.GetWrapper();
+      ptr = buf.get();
+      length = buf.GetSize();
+      offset = 0;
+      m_isPacked = true;
+      origDataLen = pack.GetOrigDataLen();
+    }
 
-		/* Read the header, get it's size and make sure that it makes sense. */
-		GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)(ptr + offset);
-		unsigned long riffChunkSize = riffHeader->dwSize;
+    /* Read the header, get it's size and make sure that it makes sense. */
+    GO_WAVECHUNKHEADER *riffHeader = (GO_WAVECHUNKHEADER *)(ptr + offset);
+    unsigned long riffChunkSize = riffHeader->dwSize;
 
-		/* Pribac compatibility */
-		if (riffHeader->fccChunk != WAVE_TYPE_RIFF)
-		{
-			throw (wxString)_("< Invalid RIFF file");
-		}
-		offset += sizeof(GO_WAVECHUNKHEADER);
+    /* Pribac compatibility */
+    if (riffHeader->fccChunk != WAVE_TYPE_RIFF) {
+      throw(wxString) _("< Invalid RIFF file");
+    }
+    offset += sizeof(GO_WAVECHUNKHEADER);
 
-		/* Make sure this is a RIFF/WAVE file */
-		GO_WAVETYPEFIELD* riffIdent = (GO_WAVETYPEFIELD*)(ptr + offset);
-		if (*riffIdent != WAVE_TYPE_WAVE)
-			throw (wxString)_("< Invalid RIFF/WAVE file");
-		offset += sizeof(GO_WAVETYPEFIELD);
+    /* Make sure this is a RIFF/WAVE file */
+    GO_WAVETYPEFIELD *riffIdent = (GO_WAVETYPEFIELD *)(ptr + offset);
+    if (*riffIdent != WAVE_TYPE_WAVE)
+      throw(wxString) _("< Invalid RIFF/WAVE file");
+    offset += sizeof(GO_WAVETYPEFIELD);
 
-		if (m_isPacked)
-		{
-			if (riffChunkSize < origDataLen)
-				throw (wxString)_("Inconsitant WavPack file");
-			riffChunkSize -= origDataLen;
-		}
+    if (m_isPacked) {
+      if (riffChunkSize < origDataLen)
+        throw(wxString) _("Inconsitant WavPack file");
+      riffChunkSize -= origDataLen;
+    }
 
-		/* This is a bit more leaniant than the original code... it will
-		 * truncate the usable size of the file if the size on disk is larger
-		 * than the size of the RIFF chunk */
-		if ((unsigned long)length > riffChunkSize + 8 + start)
-			length = riffChunkSize + 8 + start;
+    /* This is a bit more leaniant than the original code... it will
+     * truncate the usable size of the file if the size on disk is larger
+     * than the size of the RIFF chunk */
+    if ((unsigned long)length > riffChunkSize + 8 + start)
+      length = riffChunkSize + 8 + start;
 
-		bool hasFormat = false;
-		/* Find required chunks... */
-		for (; offset + 8 <= length;)
-		{
+    bool hasFormat = false;
+    /* Find required chunks... */
+    for (; offset + 8 <= length;) {
+      /* Check for word alignment as per RIFF spec */
+      assert((offset & 1) == 0);
 
-			/* Check for word alignment as per RIFF spec */
-			assert((offset & 1) == 0);
+      /* Read chunk header */
+      GO_WAVECHUNKHEADER *header = (GO_WAVECHUNKHEADER *)(ptr + offset);
+      unsigned long size = header->dwSize;
+      offset += sizeof(GO_WAVECHUNKHEADER);
 
-			/* Read chunk header */
-			GO_WAVECHUNKHEADER* header = (GO_WAVECHUNKHEADER*)(ptr + offset);
-			unsigned long size = header->dwSize;
-			offset += sizeof(GO_WAVECHUNKHEADER);
+      if (header->fccChunk == WAVE_TYPE_DATA) {
+        if (!hasFormat)
+          throw(wxString)
+            _("< Malformed wave file. Format chunk must preceed data chunk.");
 
-			if (header->fccChunk == WAVE_TYPE_DATA)
-			{
-				if (!hasFormat)
-					throw (wxString)_("< Malformed wave file. Format chunk must preceed data chunk.");
+        if (m_isPacked)
+          size = 0;
+        else {
+          m_SampleData.free();
+          m_SampleData.Append(ptr + offset, size);
+        }
+      }
+      if (header->fccChunk == WAVE_TYPE_FMT) {
+        hasFormat = true;
+        LoadFormatChunk(ptr + offset, size);
+      }
+      if (header->fccChunk == WAVE_TYPE_CUE) /* This used to only work if !load
+                                                m_pipe_percussive[i] */
+        LoadCueChunk(ptr + offset, size);
+      if (header->fccChunk == WAVE_TYPE_SAMPLE) /* This used to only work if
+                                                   !load m_pipe_percussive[i] */
+        LoadSamplerChunk(ptr + offset, size);
 
-				if (m_isPacked)
-					size = 0;
-				else
-				{
-					m_SampleData.free();
-					m_SampleData.Append(ptr + offset, size);
-				}
-			}
-			if (header->fccChunk == WAVE_TYPE_FMT)
-			{
-				hasFormat = true;
-				LoadFormatChunk(ptr + offset, size);
-			}
-			if (header->fccChunk == WAVE_TYPE_CUE) /* This used to only work if !load m_pipe_percussive[i] */
-				LoadCueChunk(ptr + offset, size);
-			if (header->fccChunk == WAVE_TYPE_SAMPLE) /* This used to only work if !load m_pipe_percussive[i] */
-				LoadSamplerChunk(ptr + offset, size);
+      /* Move to next chunk respecting word alignment */
+      offset += size + (size & 1);
+    }
 
-			/* Move to next chunk respecting word alignment */
-			offset += size + (size & 1);
+    if (offset != length)
+      throw(wxString) _("<Invalid WAV file");
+    if (!m_SampleData.get() || !m_SampleData.GetSize())
+      throw(wxString) _("No samples found");
 
-		}
+    // learning lesson: never ever trust the range values of outside sources to
+    // be correct!
+    for (unsigned int i = 0; i < m_Loops.size(); i++) {
+      if (
+        (m_Loops[i].start_sample >= m_Loops[i].end_sample)
+        || (m_Loops[i].start_sample >= GetLength())
+        || (m_Loops[i].end_sample >= GetLength())
+        || (m_Loops[i].end_sample == 0)) {
+        wxLogError(wxT("Invalid loop"));
+        m_Loops.erase(m_Loops.begin() + i);
+      }
+    }
+  } catch (wxString msg) {
+    wxLogError(_("unhandled exception: %s\n"), msg.c_str());
 
-		if (offset != length)
-			throw (wxString)_("<Invalid WAV file");
-		if (!m_SampleData.get() || !m_SampleData.GetSize())
-			throw (wxString)_("No samples found");
+    /* Free any memory that was allocated by chunk loading procedures */
+    Close();
 
-		// learning lesson: never ever trust the range values of outside sources to be correct!
-		for (unsigned int i = 0; i < m_Loops.size(); i++)
-		{
-			if ((m_Loops[i].start_sample >= m_Loops[i].end_sample) ||
-			    (m_Loops[i].start_sample >= GetLength()) ||
-			    (m_Loops[i].end_sample >= GetLength()) ||
-				(m_Loops[i].end_sample == 0))
-			{
-				wxLogError(wxT("Invalid loop"));
-				m_Loops.erase(m_Loops.begin() + i);
-			}
-		}
-	}
-	catch (wxString msg)
-	{
-		wxLogError(_("unhandled exception: %s\n"), msg.c_str());
+    /* Rethrow the exception */
+    throw;
+  } catch (...) {
+    /* Free any memory that was allocated by chunk loading procedures */
+    Close();
 
-		/* Free any memory that was allocated by chunk loading procedures */
-		Close();
-
-		/* Rethrow the exception */
-		throw;
-	}
-	catch (...)
-	{
-		/* Free any memory that was allocated by chunk loading procedures */
-		Close();
-
-		/* Rethrow the exception */
-		throw;
-	}
+    /* Rethrow the exception */
+    throw;
+  }
 }
 
-void GOWave::Close()
-{
-	/* Free the wave data if it has been alloc'ed */
-	m_SampleData.free();
+void GOWave::Close() {
+  /* Free the wave data if it has been alloc'ed */
+  m_SampleData.free();
 
-	/* Set the wave to the invalid state.  */
-	SetInvalid();
+  /* Set the wave to the invalid state.  */
+  SetInvalid();
 }
 
-unsigned GOWave::GetBitsPerSample() const
-{
-	return m_BytesPerSample * 8;
+unsigned GOWave::GetBitsPerSample() const { return m_BytesPerSample * 8; }
+
+unsigned GOWave::GetChannels() const { return m_Channels; }
+
+bool GOWave::HasReleaseMarker() const { return m_hasRelease; }
+
+unsigned GOWave::GetReleaseMarkerPosition() const {
+  /* release = dwSampleOffset from cue chunk. This is a byte offset into
+   * the data chunk. Compute this to a block start
+   */
+  return m_CuePoint;
 }
 
-unsigned GOWave::GetChannels() const
-{
-	return m_Channels;
+const GO_WAVE_LOOP &GOWave::GetLongestLoop() const {
+  if (m_Loops.size() < 1)
+    throw(wxString) _("wave does not contain loops");
+
+  assert(m_Loops[0].end_sample > m_Loops[0].start_sample);
+  unsigned lidx = 0;
+  for (unsigned int i = 1; i < m_Loops.size(); i++) {
+    assert(m_Loops[i].end_sample > m_Loops[i].start_sample);
+    if (
+      (m_Loops[i].end_sample - m_Loops[i].start_sample)
+      > (m_Loops[lidx].end_sample - m_Loops[lidx].start_sample))
+      lidx = i;
+  }
+
+  return m_Loops[lidx];
 }
 
-bool GOWave::HasReleaseMarker() const
-{
-	return m_hasRelease;
+unsigned GOWave::GetLength() const {
+  if (m_isPacked)
+    return m_SampleData.GetSize() / (4 * m_Channels);
+  /* return number of samples in the stream */
+  assert((m_SampleData.GetSize() % (m_BytesPerSample * m_Channels)) == 0);
+  return m_SampleData.GetSize() / (m_BytesPerSample * m_Channels);
 }
 
-unsigned GOWave::GetReleaseMarkerPosition() const
-{
-	/* release = dwSampleOffset from cue chunk. This is a byte offset into
-	 * the data chunk. Compute this to a block start
-	 */
-	return m_CuePoint;
+template <class T> void GOWave::writeNext(uint8_t *&output, const T &value) {
+  *(T *)output = value;
+  output += sizeof(T);
 }
 
-const GO_WAVE_LOOP& GOWave::GetLongestLoop() const
-{
-	if (m_Loops.size() < 1)
-		throw (wxString)_("wave does not contain loops");
-
-	assert(m_Loops[0].end_sample > m_Loops[0].start_sample);
-	unsigned lidx = 0;
-	for (unsigned int i = 1; i < m_Loops.size(); i++)
-	{
-		assert(m_Loops[i].end_sample > m_Loops[i].start_sample);
-		if ((m_Loops[i].end_sample - m_Loops[i].start_sample) >
-			(m_Loops[lidx].end_sample - m_Loops[lidx].start_sample))
-			lidx = i;
-	}
-
-	return m_Loops[lidx];
+template <class T> T GOWave::readNext(const uint8_t *&input) {
+  T val = *(T *)input;
+  input += sizeof(T);
+  return val;
 }
 
-unsigned GOWave::GetLength() const
-{
-	if (m_isPacked)
-		return m_SampleData.GetSize() / (4 * m_Channels);
-	/* return number of samples in the stream */
-	assert((m_SampleData.GetSize() % (m_BytesPerSample * m_Channels)) == 0);
-	return m_SampleData.GetSize() / (m_BytesPerSample * m_Channels);
+void GOWave::ReadSamples(
+  void *dest_buffer /** Pointer to received sample data */
+  ,
+  GOWave::SAMPLE_FORMAT read_format /** Format of the above buffer */
+  ,
+  unsigned sample_rate /** Sample rate to read data at */
+  ,
+  int return_channels /** number of channels to return or if negative,
+                         specific channel as mono*/
+) const {
+  if (m_SampleRate != sample_rate)
+    throw(wxString) _("bad format!");
+
+  if (m_BytesPerSample < 1 || m_BytesPerSample > 4)
+    throw(wxString) _("Unsupported format");
+
+  unsigned select_channel = 0;
+  if (return_channels < 0) {
+    if ((unsigned)-return_channels > m_Channels)
+      throw(wxString) _("Unsupported channel number");
+    select_channel = -return_channels;
+  } else if (m_Channels != (unsigned)return_channels && return_channels != 1)
+    throw(wxString) _("Unsupported channel count");
+
+  unsigned merge_count = 1;
+  /* need reduce stereo to mono ? */
+  if (m_Channels != (unsigned)return_channels && return_channels == 1)
+    merge_count = m_Channels;
+  if (select_channel != 0)
+    merge_count = m_Channels;
+
+  const uint8_t *input = m_SampleData.get();
+  uint8_t *output = (uint8_t *)dest_buffer;
+
+  unsigned len = m_Channels * GetLength() / merge_count;
+  for (unsigned i = 0; i < len; i++) {
+    int value
+      = 0; /* Value will be stored with 24 fractional bits of precision */
+    for (unsigned j = 0; j < merge_count; j++) {
+      int val; /* Value will be stored with 24 fractional bits of precision */
+      if (m_isPacked && m_BytesPerSample != 4) {
+        val = readNext<int32_t>(input);
+        switch (m_BytesPerSample) {
+        case 1:
+          val <<= 16;
+          break;
+        case 2:
+          val <<= 8;
+          break;
+        }
+      } else {
+        switch (m_BytesPerSample) {
+        case 1:
+          val = readNext<GOInt8>(input) - 0x80;
+          val <<= 16;
+          break;
+        case 2:
+          val = readNext<GOInt16LE>(input);
+          val <<= 8;
+          break;
+        case 3:
+          val = readNext<GOInt24LE>(input);
+          break;
+        case 4:
+          val = readNext<float>(input) * (float)(1 << 23);
+          break;
+        default:
+          throw(wxString) _("bad format!");
+        }
+      }
+
+      if (select_channel && select_channel != j + 1)
+        continue;
+      value += val;
+    }
+    if (select_channel == 0 && merge_count > 1)
+      value = value / (int)merge_count;
+
+    switch (read_format) {
+    case SF_SIGNEDBYTE_8:
+      writeNext<GOInt8>(output, value >> 16);
+      break;
+    case SF_SIGNEDSHORT_9:
+      writeNext<GOInt16>(output, value >> 15);
+      break;
+    case SF_SIGNEDSHORT_10:
+      writeNext<GOInt16>(output, value >> 14);
+      break;
+    case SF_SIGNEDSHORT_11:
+      writeNext<GOInt16>(output, value >> 13);
+      break;
+    case SF_SIGNEDSHORT_12:
+      writeNext<GOInt16>(output, value >> 12);
+      break;
+    case SF_SIGNEDSHORT_13:
+      writeNext<GOInt16>(output, value >> 11);
+      break;
+    case SF_SIGNEDSHORT_14:
+      writeNext<GOInt16>(output, value >> 10);
+      break;
+    case SF_SIGNEDSHORT_15:
+      writeNext<GOInt16>(output, value >> 9);
+      break;
+    case SF_SIGNEDSHORT_16:
+      writeNext<GOInt16>(output, value >> 8);
+      break;
+    case SF_SIGNEDINT24_17:
+      writeNext<GOInt24>(output, value >> 7);
+      break;
+    case SF_SIGNEDINT24_18:
+      writeNext<GOInt24>(output, value >> 6);
+      break;
+    case SF_SIGNEDINT24_19:
+      writeNext<GOInt24>(output, value >> 5);
+      break;
+    case SF_SIGNEDINT24_20:
+      writeNext<GOInt24>(output, value >> 4);
+      break;
+    case SF_SIGNEDINT24_21:
+      writeNext<GOInt24>(output, value >> 3);
+      break;
+    case SF_SIGNEDINT24_22:
+      writeNext<GOInt24>(output, value >> 2);
+      break;
+    case SF_SIGNEDINT24_23:
+      writeNext<GOInt24>(output, value >> 1);
+      break;
+    case SF_SIGNEDINT24_24:
+      writeNext<GOInt24>(output, value);
+      break;
+    case SF_IEEE_FLOAT:
+      writeNext<float>(output, value / (float)(1 << 23));
+      break;
+    default:
+      throw(wxString) _("bad return format!");
+    }
+  }
 }
 
-template<class T>
-void GOWave::writeNext(uint8_t*& output, const T& value)
-{
-	*(T*)output = value;
-	output += sizeof(T);
+unsigned GOWave::GetNbLoops() const { return m_Loops.size(); }
+
+const GO_WAVE_LOOP &GOWave::GetLoop(unsigned idx) const {
+  assert(idx < m_Loops.size());
+  return m_Loops[idx];
 }
 
-template<class T>
-T GOWave::readNext(const uint8_t*& input)
-{
-	T val = *(T*)input;
-	input += sizeof(T);
-	return val;
+unsigned GOWave::GetSampleRate() const { return m_SampleRate; }
+
+unsigned GOWave::GetMidiNote() const { return m_MidiNote; }
+
+float GOWave::GetPitchFract() const { return m_PitchFract; }
+
+bool GOWave::IsWave(const GOBuffer<uint8_t> &data) {
+  if (data.GetSize() < 12)
+    return false;
+  GO_WAVECHUNKHEADER *riffHeader = (GO_WAVECHUNKHEADER *)data.get();
+  if (riffHeader->fccChunk != WAVE_TYPE_RIFF)
+    return false;
+  GO_WAVETYPEFIELD *riffIdent
+    = (GO_WAVETYPEFIELD *)(data.get() + sizeof(GO_WAVECHUNKHEADER));
+  return *riffIdent == WAVE_TYPE_WAVE;
 }
 
-void GOWave::ReadSamples
-	(void* dest_buffer                        /** Pointer to received sample data */
-	,GOWave::SAMPLE_FORMAT read_format    /** Format of the above buffer */
-	,unsigned sample_rate                     /** Sample rate to read data at */
-	,int return_channels                      /** number of channels to return or if negative, specific channel as mono*/
-	) const
-{
-	if (m_SampleRate != sample_rate)
-		throw (wxString)_("bad format!");
-
-	if (m_BytesPerSample < 1 || m_BytesPerSample > 4)
-		throw (wxString)_("Unsupported format");
-
-	unsigned select_channel = 0;
-	if (return_channels < 0)
-	{
-		if ((unsigned)-return_channels > m_Channels)
-			throw (wxString)_("Unsupported channel number");
-		select_channel = -return_channels;
-	}
-	else if (m_Channels != (unsigned)return_channels && return_channels != 1)
-		throw (wxString)_("Unsupported channel count");
-
-	unsigned merge_count = 1;
-	/* need reduce stereo to mono ? */
-	if (m_Channels != (unsigned)return_channels && return_channels == 1)
-		merge_count = m_Channels;
-	if (select_channel != 0)
-		merge_count = m_Channels;
-
-	const uint8_t* input  = m_SampleData.get();
-	uint8_t* output = (uint8_t*)dest_buffer;
-
-	unsigned len = m_Channels * GetLength() / merge_count;
-	for(unsigned i = 0; i < len; i++)
-	{
-		int value = 0; /* Value will be stored with 24 fractional bits of precision */
-		for (unsigned j = 0; j < merge_count; j++)
-		{
-			int val; /* Value will be stored with 24 fractional bits of precision */
-			if (m_isPacked && m_BytesPerSample != 4)
-			{
-				val = readNext<int32_t>(input);
-				switch(m_BytesPerSample)
-				{
-				case 1:
-					val <<= 16;
-					break;
-				case 2:
-					val <<= 8;
-					break;
-				}
-			}
-			else
-			{
-				switch(m_BytesPerSample)
-				{
-				case 1:
-					val = readNext<GOInt8>(input) - 0x80;
-					val <<= 16;
-					break;
-				case 2:
-					val = readNext<GOInt16LE>(input);
-					val <<= 8;
-					break;
-				case 3:
-					val = readNext<GOInt24LE>(input);
-					break;
-				case 4:
-					val = readNext<float>(input) * (float)(1 << 23);
-					break;
-				default:
-					throw (wxString)_("bad format!");
-				}
-			}
-
-			if (select_channel && select_channel != j + 1)
-				continue;
-			value += val;
-		}
-		if (select_channel == 0 && merge_count > 1)
-			value = value / (int)merge_count;
-
-		switch (read_format)
-		{
-		case SF_SIGNEDBYTE_8:
-			writeNext<GOInt8>(output, value >> 16);
-			break;
-		case SF_SIGNEDSHORT_9:
-			writeNext<GOInt16>(output, value >> 15);
-			break;
-		case SF_SIGNEDSHORT_10:
-			writeNext<GOInt16>(output, value >> 14);
-			break;
-		case SF_SIGNEDSHORT_11:
-			writeNext<GOInt16>(output, value >> 13);
-			break;
-		case SF_SIGNEDSHORT_12:
-			writeNext<GOInt16>(output, value >> 12);
-			break;
-		case SF_SIGNEDSHORT_13:
-			writeNext<GOInt16>(output, value >> 11);
-			break;
-		case SF_SIGNEDSHORT_14:
-			writeNext<GOInt16>(output, value >> 10);
-			break;
-		case SF_SIGNEDSHORT_15:
-			writeNext<GOInt16>(output, value >> 9);
-			break;
-		case SF_SIGNEDSHORT_16:
-			writeNext<GOInt16>(output, value >> 8);
-			break;
-		case SF_SIGNEDINT24_17:
-			writeNext<GOInt24>(output, value >> 7);
-			break;
-		case SF_SIGNEDINT24_18:
-			writeNext<GOInt24>(output, value >> 6);
-			break;
-		case SF_SIGNEDINT24_19:
-			writeNext<GOInt24>(output, value >> 5);
-			break;
-		case SF_SIGNEDINT24_20:
-			writeNext<GOInt24>(output, value >> 4);
-			break;
-		case SF_SIGNEDINT24_21:
-			writeNext<GOInt24>(output, value >> 3);
-			break;
-		case SF_SIGNEDINT24_22:
-			writeNext<GOInt24>(output, value >> 2);
-			break;
-		case SF_SIGNEDINT24_23:
-			writeNext<GOInt24>(output, value >> 1);
-			break;
-		case SF_SIGNEDINT24_24:
-			writeNext<GOInt24>(output, value);
-			break;
-		case SF_IEEE_FLOAT:
-			writeNext<float>(output, value / (float)(1 << 23));
-			break;
-		default:
-			throw (wxString)_("bad return format!");
-		}
-	}
+bool GOWave::IsWaveFile(const GOBuffer<uint8_t> &data) {
+  return IsWave(data) || GOWavPack::IsWavPack(data);
 }
 
-unsigned GOWave::GetNbLoops() const
-{
-	return m_Loops.size();
-}
+bool GOWave::Save(GOBuffer<uint8_t> &buf) {
+  GOBuffer<uint8_t> header(sizeof(GO_WAVECHUNKHEADER));
+  GO_WAVETYPEFIELD wav = WAVE_TYPE_WAVE;
+  header.Append((const uint8_t *)&wav, sizeof(wav));
+  GO_WAVECHUNKHEADER head;
+  GO_WAVEFORMATPCM fmt;
+  fmt.wf.wFormatTag = m_BytesPerSample == 4 ? 3 : 1;
+  fmt.wf.nChannels = GetChannels();
+  fmt.wf.nSamplesPerSec = GetSampleRate();
+  fmt.wf.nAvgBytesPerSec = GetSampleRate() * GetChannels() * m_BytesPerSample;
+  fmt.wf.nBlockAlign = GetChannels() * m_BytesPerSample;
+  fmt.wBitsPerSample = GetBitsPerSample();
+  head.fccChunk = WAVE_TYPE_FMT;
+  head.dwSize = sizeof(fmt);
+  header.Append((const uint8_t *)&head, sizeof(head));
+  header.Append((const uint8_t *)&fmt, sizeof(fmt));
 
-const GO_WAVE_LOOP& GOWave::GetLoop(unsigned idx) const
-{
-	assert(idx < m_Loops.size());
-	return m_Loops[idx];
-}
+  if (m_CuePoint != (unsigned)-1) {
+    GO_WAVECUECHUNK cue;
+    cue.dwCuePoints = 1;
 
-unsigned GOWave::GetSampleRate() const
-{
-	return m_SampleRate;
-}
+    GO_WAVECUEPOINT point;
+    point.dwName = 1;
+    point.dwPosition = 0;
+    point.fccChunk = WAVE_TYPE_DATA;
+    point.dwChunkStart = 0;
+    point.dwBlockStart = 0;
+    point.dwSampleOffset = m_CuePoint;
 
-unsigned GOWave::GetMidiNote() const
-{
-	return m_MidiNote;
-}
+    head.fccChunk = WAVE_TYPE_CUE;
+    head.dwSize = sizeof(cue) + sizeof(point);
 
-float GOWave::GetPitchFract() const
-{
-	return m_PitchFract;
-}
+    header.Append((const uint8_t *)&head, sizeof(head));
+    header.Append((const uint8_t *)&cue, sizeof(cue));
+    header.Append((const uint8_t *)&point, sizeof(point));
+  }
+  if (m_MidiNote != 0 || m_PitchFract != 0 || m_Loops.size() > 0) {
+    GO_WAVESAMPLERLOOP loop;
+    GOBuffer<uint8_t> loops;
+    for (unsigned i = 0; i < m_Loops.size(); i++) {
+      loop.dwIdentifier = i;
+      loop.dwType = 0;
+      loop.dwStart = m_Loops[i].start_sample;
+      loop.dwEnd = m_Loops[i].end_sample;
+      loop.dwFraction = 0;
+      loop.dwPlayCount = 0;
+      loops.Append((const uint8_t *)&loop, sizeof(loop));
+    }
+    GO_WAVESAMPLERCHUNK smpl;
+    smpl.dwManufacturer = 0;
+    smpl.dwProduct = 0;
+    smpl.dwSamplePeriod = 1000000000.0 / m_SampleRate;
+    smpl.dwMIDIUnityNote = m_MidiNote;
+    smpl.dwMIDIPitchFraction = m_PitchFract / 100.0 * UINT_MAX;
+    smpl.dwSMPTEFormat = 0;
+    smpl.dwSMPTEOffset = 0;
+    smpl.cSampleLoops = m_Loops.size();
+    smpl.cbSamplerData = 0;
+    head.fccChunk = WAVE_TYPE_SAMPLE;
+    head.dwSize = sizeof(smpl) + loops.GetSize();
+    header.Append((const uint8_t *)&head, sizeof(head));
+    header.Append((const uint8_t *)&smpl, sizeof(smpl));
+    header.Append(loops);
+  }
 
-bool GOWave::IsWave(const GOBuffer<uint8_t>& data)
-{
-	if (data.GetSize() < 12)
-		return false;
-	GO_WAVECHUNKHEADER* riffHeader = (GO_WAVECHUNKHEADER*)data.get();
-	if (riffHeader->fccChunk != WAVE_TYPE_RIFF)
-		return false;
-	GO_WAVETYPEFIELD* riffIdent = (GO_WAVETYPEFIELD*)(data.get() + sizeof(GO_WAVECHUNKHEADER));
-	return *riffIdent == WAVE_TYPE_WAVE;
-}
+  head.fccChunk = WAVE_TYPE_DATA;
+  head.dwSize = m_BytesPerSample * GetChannels() * GetLength();
+  header.Append((const uint8_t *)&head, sizeof(head));
 
-bool GOWave::IsWaveFile(const GOBuffer<uint8_t>& data)
-{
-	return IsWave(data) || GOWavPack::IsWavPack(data);
-}
+  GO_WAVECHUNKHEADER *start = (GO_WAVECHUNKHEADER *)header.get();
+  start->fccChunk = WAVE_TYPE_RIFF;
+  start->dwSize = header.GetSize() - sizeof(GO_WAVECHUNKHEADER)
+    + GetLength() * m_BytesPerSample * GetChannels();
 
-bool GOWave::Save(GOBuffer<uint8_t>& buf)
-{
-	GOBuffer<uint8_t> header(sizeof(GO_WAVECHUNKHEADER));
-	GO_WAVETYPEFIELD wav = WAVE_TYPE_WAVE;
-	header.Append((const uint8_t*)&wav, sizeof(wav));
-	GO_WAVECHUNKHEADER head;
-	GO_WAVEFORMATPCM fmt;
-	fmt.wf.wFormatTag = m_BytesPerSample == 4 ? 3 : 1;
-	fmt.wf.nChannels = GetChannels();
-	fmt.wf.nSamplesPerSec = GetSampleRate();
-	fmt.wf.nAvgBytesPerSec = GetSampleRate() * GetChannels() * m_BytesPerSample;
-	fmt.wf.nBlockAlign = GetChannels() * m_BytesPerSample;
-	fmt.wBitsPerSample = GetBitsPerSample();
-	head.fccChunk = WAVE_TYPE_FMT;
-	head.dwSize = sizeof(fmt);
-	header.Append((const uint8_t*)&head, sizeof(head));
-	header.Append((const uint8_t*)&fmt, sizeof(fmt));
+  GOBuffer<int32_t> data(GetLength() * GetChannels());
+  if (m_isPacked)
+    memcpy(data.get(), m_SampleData.get(), data.GetSize());
+  else {
+    const uint8_t *input = m_SampleData.get();
+    for (unsigned i = 0; i < GetLength() * GetChannels(); i++) {
+      int32_t val;
+      switch (m_BytesPerSample) {
+      case 1:
+        val = readNext<GOInt8>(input) - 0x80;
+        break;
+      case 2:
+        val = readNext<GOInt16LE>(input);
+        break;
+      case 3:
+        val = readNext<GOInt24LE>(input);
+        break;
+      case 4:
+        val = readNext<int32_t>(input);
+        break;
+      default:
+        throw(wxString) _("bad format!");
+      }
+      data[i] = val;
+    }
+  }
 
-	if (m_CuePoint != (unsigned)-1)
-	{
-		GO_WAVECUECHUNK cue;
-		cue.dwCuePoints = 1;
-
-		GO_WAVECUEPOINT point;
-		point.dwName = 1;
-		point.dwPosition = 0;
-		point.fccChunk = WAVE_TYPE_DATA;
-		point.dwChunkStart = 0;
-		point.dwBlockStart = 0;
-		point.dwSampleOffset = m_CuePoint;
-
-		head.fccChunk = WAVE_TYPE_CUE;
-		head.dwSize = sizeof(cue) + sizeof(point);
-
-		header.Append((const uint8_t*)&head, sizeof(head));
-		header.Append((const uint8_t*)&cue, sizeof(cue));
-		header.Append((const uint8_t*)&point, sizeof(point));
-	}
-	if (m_MidiNote != 0 || m_PitchFract != 0 || m_Loops.size() > 0)
-	{
-		GO_WAVESAMPLERLOOP loop;
-		GOBuffer<uint8_t> loops;
-		for(unsigned i = 0; i < m_Loops.size(); i++)
-		{
-			loop.dwIdentifier = i;
-			loop.dwType = 0;
-			loop.dwStart = m_Loops[i].start_sample;
-			loop.dwEnd = m_Loops[i].end_sample;
-			loop.dwFraction = 0;
-			loop.dwPlayCount = 0;
-			loops.Append((const uint8_t*)&loop, sizeof(loop));
-		}
-		GO_WAVESAMPLERCHUNK smpl;
-		smpl.dwManufacturer = 0;
-		smpl.dwProduct = 0;
-		smpl.dwSamplePeriod = 1000000000.0 / m_SampleRate;
-		smpl.dwMIDIUnityNote = m_MidiNote;
-		smpl.dwMIDIPitchFraction = m_PitchFract / 100.0 * UINT_MAX;
-		smpl.dwSMPTEFormat = 0;
-		smpl.dwSMPTEOffset = 0;
-		smpl.cSampleLoops = m_Loops.size();
-		smpl.cbSamplerData = 0;
-		head.fccChunk = WAVE_TYPE_SAMPLE;
-		head.dwSize = sizeof(smpl) + loops.GetSize();
-		header.Append((const uint8_t*)&head, sizeof(head));
-		header.Append((const uint8_t*)&smpl, sizeof(smpl));
-		header.Append(loops);
-	}
-
-	head.fccChunk = WAVE_TYPE_DATA;
-	head.dwSize = m_BytesPerSample * GetChannels() * GetLength();
-	header.Append((const uint8_t*)&head, sizeof(head));
-
-	GO_WAVECHUNKHEADER* start = (GO_WAVECHUNKHEADER*)header.get();
-	start->fccChunk = WAVE_TYPE_RIFF;
-	start->dwSize = header.GetSize() - sizeof(GO_WAVECHUNKHEADER) + GetLength() * m_BytesPerSample * GetChannels();
-
-	GOBuffer<int32_t> data(GetLength() * GetChannels());
-	if (m_isPacked)
-		memcpy(data.get(), m_SampleData.get(), data.GetSize());
-	else
-	{
-		const uint8_t* input  = m_SampleData.get();
-		for(unsigned i = 0; i < GetLength() * GetChannels(); i++)
-		{
-			int32_t val;
-			switch(m_BytesPerSample)
-			{
-			case 1:
-				val = readNext<GOInt8>(input) - 0x80;
-				break;
-			case 2:
-				val = readNext<GOInt16LE>(input);
-				break;
-			case 3:
-				val = readNext<GOInt24LE>(input);
-				break;
-			case 4:
-				val = readNext<int32_t>(input);
-				break;
-			default:
-				throw (wxString)_("bad format!");
-			}
-			data[i] = val;
-		}
-	}
-
-	GOWavPackWriter pack;
-	if (!pack.Init(GetChannels(), GetBitsPerSample(), m_BytesPerSample, GetSampleRate(), GetLength()))
-		return false;
-	if (!pack.AddWrapper(header))
-		return false;
-	if (!pack.AddSampleData(data))
-		return false;
-	return pack.GetResult(buf);
+  GOWavPackWriter pack;
+  if (!pack.Init(
+        GetChannels(),
+        GetBitsPerSample(),
+        m_BytesPerSample,
+        GetSampleRate(),
+        GetLength()))
+    return false;
+  if (!pack.AddWrapper(header))
+    return false;
+  if (!pack.AddSampleData(data))
+    return false;
+  return pack.GetResult(buf);
 }

@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOGUISEQUENCERPANEL_H
 #define GOGUISEQUENCERPANEL_H
@@ -12,18 +13,17 @@
 class GOGUIPanel;
 class GODefinitionFile;
 
-class GOGUISequencerPanel : public GOGUIPanelCreator
-{
+class GOGUISequencerPanel : public GOGUIPanelCreator {
 private:
-	GODefinitionFile* m_organfile;
+  GODefinitionFile *m_organfile;
 
-	GOGUIPanel* CreateSequencerPanel(GOConfigReader& cfg);
+  GOGUIPanel *CreateSequencerPanel(GOConfigReader &cfg);
 
 public:
-	GOGUISequencerPanel(GODefinitionFile* organfile);
-	virtual ~GOGUISequencerPanel();
+  GOGUISequencerPanel(GODefinitionFile *organfile);
+  virtual ~GOGUISequencerPanel();
 
-	void CreatePanels(GOConfigReader& cfg);
+  void CreatePanels(GOConfigReader &cfg);
 };
 
 #endif

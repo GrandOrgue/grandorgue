@@ -1,8 +1,9 @@
 /*
-* Copyright 2006 Milan Digital Audio LLC
-* Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
-* License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-*/
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
 
 #ifndef GOPROPERTIES_H
 #define GOPROPERTIES_H
@@ -13,26 +14,24 @@
 
 class GODefinitionFile;
 
-class wxStaticLink : public wxStaticText
-{
+class wxStaticLink : public wxStaticText {
 private:
-	wxString m_url;
+  wxString m_url;
 
-	void OnClick(wxMouseEvent& event);
+  void OnClick(wxMouseEvent &event);
 
 public:
-	wxStaticLink(wxWindow* parent, const wxString& label, const wxString& url);
-	DECLARE_EVENT_TABLE()
+  wxStaticLink(wxWindow *parent, const wxString &label, const wxString &url);
+  DECLARE_EVENT_TABLE()
 };
 
-class GOProperties : public wxDialog
-{
+class GOProperties : public wxDialog {
 private:
-	GODefinitionFile* m_organfile;
+  GODefinitionFile *m_organfile;
 
 public:
-	GOProperties(GODefinitionFile* organfile, wxWindow* parent);
-	~GOProperties(void);
+  GOProperties(GODefinitionFile *organfile, wxWindow *parent);
+  ~GOProperties(void);
 };
 
 #endif

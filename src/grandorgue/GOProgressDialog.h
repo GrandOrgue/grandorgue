@@ -26,23 +26,23 @@
 
 class wxProgressDialog;
 
-class GOProgressDialog
-{
+class GOProgressDialog {
 private:
-	wxProgressDialog* m_dlg;
-	long m_last;
-	long m_const;
-	long m_value;
-	long m_max;
+  wxProgressDialog *m_dlg;
+  long m_last;
+  long m_const;
+  long m_value;
+  long m_max;
 
 public:
-	GOProgressDialog();
-	~GOProgressDialog();
+  GOProgressDialog();
+  ~GOProgressDialog();
 
-	void Setup(long max, const wxString& title, const wxString& msg = wxEmptyString);
-	void Reset(long max, const wxString& msg = wxEmptyString);
+  void Setup(
+    long max, const wxString &title, const wxString &msg = wxEmptyString);
+  void Reset(long max, const wxString &msg = wxEmptyString);
 
-	bool Update(unsigned value, const wxString& msg);
+  bool Update(unsigned value, const wxString &msg);
 };
 
 #endif
