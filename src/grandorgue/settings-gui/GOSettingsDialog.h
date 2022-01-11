@@ -20,7 +20,7 @@ class GOSettingsAudioGroup;
 class GOSettingsAudioOutput;
 class SettingsMidiDevices;
 class GOSettingsMidiMessage;
-class GOSettingsOption;
+class GOSettingsOptions;
 class GOSettingsDefaults;
 class GOSettingsOrgan;
 class GOSettingsReverb;
@@ -33,7 +33,7 @@ private:
   GOSound &m_Sound;
   bool m_ReasonsAlreadyShown;
   SettingsReasons *m_Reasons;
-  GOSettingsOption *m_OptionsPage;
+  GOSettingsOptions *m_OptionsPage;
   GOSettingsDefaults *m_DefaultsPage;
   GOSettingsAudioOutput *m_OutputPage;
   GOSettingsReverb *m_ReverbPage;

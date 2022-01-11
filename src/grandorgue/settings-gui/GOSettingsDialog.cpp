@@ -52,7 +52,7 @@ GOSettingsDialog::GOSettingsDialog(
 
   m_MidiDevicePage = new SettingsMidiDevices(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_OptionsPage = new GOSettingsOption(m_Sound.GetSettings(), notebook);
+  m_OptionsPage = new GOSettingsOptions(m_Sound.GetSettings(), notebook);
   m_OrganPage
     = new GOSettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
   m_ArchivePage

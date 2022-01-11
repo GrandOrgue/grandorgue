@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSETTINGSOPTION_H
-#define GOSETTINGSOPTION_H
+#ifndef GOSETTINGSOPTIONS_H
+#define GOSETTINGSOPTIONS_H
 
 #include <wx/panel.h>
 
@@ -18,7 +18,7 @@ class wxChoice;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
-class GOSettingsOption : public wxPanel {
+class GOSettingsOptions : public wxPanel {
   enum {
     ID_WAVE_FORMAT = 200,
     ID_CONCURRENCY,
@@ -80,7 +80,7 @@ private:
   unsigned m_OldReleaseLoad;
 
 public:
-  GOSettingsOption(GOConfig &settings, wxWindow *parent);
+  GOSettingsOptions(GOConfig &settings, wxWindow *parent);
 
   bool NeedReload();
   bool NeedRestart();

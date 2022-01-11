@@ -20,7 +20,7 @@
 #include "go_limits.h"
 #include "sound/GOSoundDefs.h"
 
-GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
+GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxArrayString choices;
 
@@ -385,7 +385,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   topSizer->Fit(this);
 }
 
-void GOSettingsOption::Save() {
+void GOSettingsOptions::Save() {
   if (
     m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
     wxMessageBox(
@@ -425,7 +425,7 @@ void GOSettingsOption::Save() {
   m_config.LanguageCode(langData->GetData());
 }
 
-bool GOSettingsOption::NeedReload() {
+bool GOSettingsOptions::NeedReload() {
   return m_OldLosslessCompression != m_config.LosslessCompression()
     || m_OldBitsPerSample != m_config.BitsPerSample()
     || m_OldLoopLoad != m_config.LoopLoad()
@@ -434,6 +434,6 @@ bool GOSettingsOption::NeedReload() {
     || m_OldChannels != m_config.LoadChannels();
 }
 
-bool GOSettingsOption::NeedRestart() {
+bool GOSettingsOptions::NeedRestart() {
   return m_OldLanguageCode != m_config.LanguageCode();
 }
