@@ -157,7 +157,6 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
   m_AudioRecorderPath->SetPath(m_config.AudioRecorderPath());
   m_MidiRecorderPath->SetPath(m_config.MidiRecorderPath());
   m_MidiPlayerPath->SetPath(m_config.MidiPlayerPath());
-
 }
 
 void GOSettingsPaths::Save() {
