@@ -31,8 +31,6 @@ class GOSettingsOptions : public wxPanel {
     ID_SCALE_RELEASE,
     ID_LOAD_LAST_FILE,
     ID_RANDOMIZE,
-    ID_SETTINGS_DIR,
-    ID_CACHE_DIR,
     ID_BITS_PER_SAMPLE,
     ID_LOOP_LOAD,
     ID_ATTACK_LOAD,
@@ -42,7 +40,10 @@ class GOSettingsOptions : public wxPanel {
     ID_MEMORY_LIMIT,
     ID_ODF_CHECK,
     ID_RECORD_DOWNMIX,
-    ID_LANGUAGE
+    ID_VOLUME,
+    ID_LANGUAGE,
+    ID_METRONOME_MEASURE,
+    ID_METRONOME_BPM,
   };
 
 private:
@@ -60,8 +61,7 @@ private:
   wxCheckBox *m_Random;
   wxCheckBox *m_ODFCheck;
   wxCheckBox *m_RecordDownmix;
-  wxDirPickerCtrl *m_SettingsPath;
-  wxDirPickerCtrl *m_CachePath;
+  wxSpinCtrl *m_Volume;
   wxChoice *m_BitsPerSample;
   wxChoice *m_LoopLoad;
   wxChoice *m_AttackLoad;
@@ -70,6 +70,8 @@ private:
   wxChoice *m_Interpolation;
   wxSpinCtrl *m_MemoryLimit;
   wxChoice *m_Language;
+  wxSpinCtrl *m_MetronomeMeasure;
+  wxSpinCtrl *m_MetronomeBPM;
 
   wxString m_OldLanguageCode;
   unsigned m_OldChannels;

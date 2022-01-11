@@ -79,7 +79,7 @@ public:
   GOConfig(wxString instance);
   ~GOConfig();
 
-  GOSettingDirectory UserSettingPath;
+  GOSettingDirectory OrganSettingsPath;
   GOSettingDirectory UserCachePath;
 
   GOSettingUnsigned Concurrency;

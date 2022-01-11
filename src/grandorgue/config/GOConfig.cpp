@@ -145,7 +145,7 @@ GOConfig::GOConfig(wxString instance)
     m_MainWindowY(0),
     m_MainWindowWidth(0),
     m_MainWindowHeight(0),
-    UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
+    OrganSettingsPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
     UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
     Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
     ReleaseConcurrency(
@@ -224,7 +224,7 @@ GOConfig::GOConfig(wxString instance)
     m_MIDIEvents.push_back(new GOMidiReceiverBase(m_MIDISettings[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
-  UserSettingPath.setDefaultValue(
+  OrganSettingsPath.setDefaultValue(
     GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueData") + m_InstanceName);
   UserCachePath.setDefaultValue(

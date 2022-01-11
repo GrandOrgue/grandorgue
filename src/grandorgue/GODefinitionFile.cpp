@@ -290,7 +290,7 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
 wxString GODefinitionFile::GetOrganHash() { return m_hash; }
 
 wxString GODefinitionFile::GenerateSettingFileName() {
-  return m_config.UserSettingPath() + wxFileName::GetPathSeparator()
+  return m_config.OrganSettingsPath() + wxFileName::GetPathSeparator()
     + GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_config.Preset());
 }
 
