@@ -21,7 +21,7 @@
 #include "GOSettingsDefaults.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
-#include "GOSettingsOption.h"
+#include "GOSettingsOptions.h"
 #include "GOSettingsOrgan.h"
 #include "GOSettingsReverb.h"
 #include "GOSettingsTemperaments.h"

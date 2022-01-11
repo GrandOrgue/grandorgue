@@ -83,7 +83,7 @@ settings-gui/GOSettingsMidiDevices.cpp
 settings-gui/GOSettingsMidiMatchDialog.cpp
 settings-gui/GOSettingsMidiMessage.cpp
 settings-gui/GOSettingsPorts.cpp
-settings-gui/GOSettingsOption.cpp
+settings-gui/GOSettingsOptions.cpp
 settings-gui/GOSettingsOrgan.cpp
 settings-gui/GOSettingsReverb.cpp
 settings-gui/GOSettingsTemperaments.cpp
