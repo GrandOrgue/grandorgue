@@ -18,7 +18,7 @@
 #include "GOSettingsArchives.h"
 #include "GOSettingsAudioGroup.h"
 #include "GOSettingsAudioOutput.h"
-#include "GOSettingsDefaults.h"
+#include "GOSettingsPaths.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
 #include "GOSettingsOptions.h"
@@ -64,10 +64,10 @@ GOSettingsDialog::GOSettingsDialog(
   m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
   m_TemperamentsPage
     = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
-  m_DefaultsPage = new GOSettingsDefaults(m_Sound.GetSettings(), notebook);
+  m_PathsPage = new GOSettingsPaths(m_Sound.GetSettings(), notebook);
 
   notebook->AddPage(m_OptionsPage, _("Options"));
-  notebook->AddPage(m_DefaultsPage, _("Defaults and Initial Settings"));
+  notebook->AddPage(m_PathsPage, _("Paths"));
   notebook->AddPage(m_OutputPage, _("Audio Output"));
   notebook->AddPage(m_ReverbPage, _("Reverb"));
   notebook->AddPage(m_GroupPage, _("Audio Groups"));
@@ -135,7 +135,7 @@ bool GOSettingsDialog::DoApply() {
   m_OutputPage->Save();
   m_ReverbPage->Save();
   m_TemperamentsPage->Save();
-  m_DefaultsPage->Save();
+  m_PathsPage->Save();
 
   return true;
 }

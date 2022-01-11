@@ -76,12 +76,12 @@ midi/MIDIEventKeyDialog.cpp
 settings-gui/GOSettingsArchives.cpp
 settings-gui/GOSettingsAudioGroup.cpp
 settings-gui/GOSettingsAudioOutput.cpp
-settings-gui/GOSettingsDefaults.cpp
 settings-gui/GOSettingsDialog.cpp
 settings-gui/GOSettingsMidiDeviceList.cpp
 settings-gui/GOSettingsMidiDevices.cpp
 settings-gui/GOSettingsMidiMatchDialog.cpp
 settings-gui/GOSettingsMidiMessage.cpp
+settings-gui/GOSettingsPaths.cpp
 settings-gui/GOSettingsPorts.cpp
 settings-gui/GOSettingsOptions.cpp
 settings-gui/GOSettingsOrgan.cpp

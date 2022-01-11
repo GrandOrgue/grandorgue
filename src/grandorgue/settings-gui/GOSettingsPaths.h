@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSETTINGSDEFAULTS_H
-#define GOSETTINGSDEFAULTS_H
+#ifndef GOSETTINGSPATHS_H
+#define GOSETTINGSPATHS_H
 
 #include <wx/panel.h>
 
@@ -14,7 +14,7 @@ class GOConfig;
 class wxDirPickerCtrl;
 class wxSpinCtrl;
 
-class GOSettingsDefaults : public wxPanel {
+class GOSettingsPaths : public wxPanel {
   enum {
     ID_ORGAN_SETTINGS_PATH = 200,
     ID_ORGAN_CACHE_PATH,
@@ -38,7 +38,7 @@ private:
   wxDirPickerCtrl *m_MidiPlayerPath;
 
 public:
-  GOSettingsDefaults(GOConfig &settings, wxWindow *parent);
+  GOSettingsPaths(GOConfig &settings, wxWindow *parent);
 
   void Save();
 };

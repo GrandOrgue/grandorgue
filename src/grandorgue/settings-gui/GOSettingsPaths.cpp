@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSettingsDefaults.h"
+#include "GOSettingsPaths.h"
 
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
@@ -14,7 +14,7 @@
 
 #include "config/GOConfig.h"
 
-GOSettingsDefaults::GOSettingsDefaults(GOConfig &settings, wxWindow *parent)
+GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
   : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxFlexGridSizer *const grid = new wxFlexGridSizer(1, 5, 5);
   grid->AddGrowableCol(0, 1);
@@ -160,7 +160,7 @@ GOSettingsDefaults::GOSettingsDefaults(GOConfig &settings, wxWindow *parent)
 
 }
 
-void GOSettingsDefaults::Save() {
+void GOSettingsPaths::Save() {
   m_config.OrganSettingsPath(m_OrganSettingsPath->GetPath());
   m_config.UserCachePath(m_CachePath->GetPath());
   m_config.OrganPath(m_OrganPath->GetPath());
