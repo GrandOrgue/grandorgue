@@ -146,7 +146,7 @@ GOConfig::GOConfig(wxString instance)
     m_MainWindowWidth(0),
     m_MainWindowHeight(0),
     OrganSettingsPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
-    UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
+    OrganCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
     Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
     ReleaseConcurrency(
       this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
@@ -210,7 +210,7 @@ GOConfig::GOConfig(wxString instance)
     OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
     OrganPackagePath(
       this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
-    SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
+    ExportImportPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
     AudioRecorderPath(
       this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
     MidiRecorderPath(
@@ -227,7 +227,7 @@ GOConfig::GOConfig(wxString instance)
   OrganSettingsPath.setDefaultValue(
     GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueData") + m_InstanceName);
-  UserCachePath.setDefaultValue(
+  OrganCachePath.setDefaultValue(
     GOStdPath::GetCacheDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueCache") + m_InstanceName);
 
@@ -235,7 +235,7 @@ GOConfig::GOConfig(wxString instance)
     + _("GrandOrgue") + wxFileName::GetPathSeparator();
   OrganPath.setDefaultValue(docdir + _("Organs"));
   OrganPackagePath.setDefaultValue(docdir + _("Organ packages"));
-  SettingPath.setDefaultValue(docdir + _("Settings"));
+  ExportImportPath.setDefaultValue(docdir + _("Settings"));
   AudioRecorderPath.setDefaultValue(docdir + _("Audio recordings"));
   MidiRecorderPath.setDefaultValue(docdir + _("MIDI recordings"));
   MidiPlayerPath.setDefaultValue(docdir + _("MIDI recordings"));

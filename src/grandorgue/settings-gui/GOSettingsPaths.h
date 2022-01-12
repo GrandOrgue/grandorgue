@@ -12,30 +12,19 @@
 
 class GOConfig;
 class wxDirPickerCtrl;
-class wxSpinCtrl;
 
 class GOSettingsPaths : public wxPanel {
-  enum {
-    ID_ORGAN_SETTINGS_PATH = 200,
-    ID_ORGAN_CACHE_PATH,
-    ID_ORGAN_PATH,
-    ID_ORGANPACKAGE_PATH,
-    ID_SETTING_PATH,
-    ID_AUDIO_RECORDER_PATH,
-    ID_MIDI_RECORDER_PATH,
-    ID_MIDI_PLAYER_PATH,
-  };
-
 private:
   GOConfig &m_config;
-  wxDirPickerCtrl *m_OrganSettingsPath;
-  wxDirPickerCtrl *m_CachePath;
-  wxDirPickerCtrl *m_OrganPath;
-  wxDirPickerCtrl *m_OrganPackagePath;
-  wxDirPickerCtrl *m_SettingPath;
-  wxDirPickerCtrl *m_AudioRecorderPath;
-  wxDirPickerCtrl *m_MidiRecorderPath;
-  wxDirPickerCtrl *m_MidiPlayerPath;
+
+  wxDirPickerCtrl *m_Samplesets;
+  wxDirPickerCtrl *m_OrganPackages;
+  wxDirPickerCtrl *m_OrganCache;
+  wxDirPickerCtrl *m_OrganSettings;
+  wxDirPickerCtrl *m_ExportImport;
+  wxDirPickerCtrl *m_AudioRecorder;
+  wxDirPickerCtrl *m_MidiRecorder;
+  wxDirPickerCtrl *m_MidiPlayer;
 
 public:
   GOSettingsPaths(GOConfig &settings, wxWindow *parent);

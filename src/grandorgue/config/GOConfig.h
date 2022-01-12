@@ -80,7 +80,7 @@ public:
   ~GOConfig();
 
   GOSettingDirectory OrganSettingsPath;
-  GOSettingDirectory UserCachePath;
+  GOSettingDirectory OrganCachePath;
 
   GOSettingUnsigned Concurrency;
   GOSettingUnsigned ReleaseConcurrency;
@@ -151,7 +151,7 @@ public:
 
   GOSettingDirectory OrganPath;
   GOSettingDirectory OrganPackagePath;
-  GOSettingDirectory SettingPath;
+  GOSettingDirectory ExportImportPath;
   GOSettingDirectory AudioRecorderPath;
   GOSettingDirectory MidiRecorderPath;
   GOSettingDirectory MidiPlayerPath;

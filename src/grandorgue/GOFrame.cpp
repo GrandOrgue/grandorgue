@@ -484,7 +484,7 @@ void GOFrame::Init(wxString filename) {
     event.SetClientData(pReasons);
     GetEventHandler()->AddPendingEvent(event);
   }
-  GOArchiveManager manager(m_config, m_config.UserCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath);
   manager.RegisterPackageDirectory(m_config.GetPackageDirectory());
   manager.RegisterPackageDirectory(m_config.OrganPackagePath());
   if (!filename.IsEmpty())
@@ -825,7 +825,7 @@ void GOFrame::OnImportSettings(wxCommandEvent &event) {
   wxFileDialog dlg(
     this,
     _("Import Settings"),
-    m_config.SettingPath(),
+    m_config.ExportImportPath(),
     wxEmptyString,
     _("Settings files (*.cmb)|*.cmb"),
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -847,7 +847,7 @@ void GOFrame::OnImportCombinations(wxCommandEvent &event) {
   wxFileDialog dlg(
     this,
     _("Import Combinations"),
-    m_config.SettingPath(),
+    m_config.ExportImportPath(),
     wxEmptyString,
     _("Settings files (*.cmb)|*.cmb"),
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -864,7 +864,7 @@ void GOFrame::OnExport(wxCommandEvent &event) {
   wxFileDialog dlg(
     this,
     _("Export Settings"),
-    m_config.SettingPath(),
+    m_config.ExportImportPath(),
     wxEmptyString,
     _("Settings files (*.cmb)|*.cmb"),
     wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
@@ -1029,7 +1029,7 @@ void GOFrame::OnSettings(wxCommandEvent &event) {
   GOSettingsDialog dialog(this, m_Sound, pReasons);
 
   if (dialog.ShowModal() == wxID_OK) {
-    GOArchiveManager manager(m_config, m_config.UserCachePath);
+    GOArchiveManager manager(m_config, m_config.OrganCachePath);
     manager.RegisterPackageDirectory(m_config.OrganPackagePath());
 
     UpdateVolumeControlWithSettings();
@@ -1245,7 +1245,7 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
 }
 
 bool GOFrame::InstallOrganPackage(wxString name) {
-  GOArchiveManager manager(m_config, m_config.UserCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath);
   wxString result = manager.InstallPackage(name);
   if (result != wxEmptyString) {
     GOMessageBox(result, _("Error"), wxOK | wxICON_ERROR, this);
