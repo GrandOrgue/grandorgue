@@ -49,6 +49,6 @@ wxString GOStdPath::GetGrandOrgueDir() {
   return GetDocumentDir() + wxFileName::GetPathSeparator() + _("GrandOrgue");
 }
 
-wxString GOStdPath::GetGrandOrgueDir(const wxString &subdir) {
+wxString GOStdPath::GetGrandOrgueSubDir(const wxString &subdir) {
   return GetGrandOrgueDir() + wxFileName::GetPathSeparator() + subdir;
 }

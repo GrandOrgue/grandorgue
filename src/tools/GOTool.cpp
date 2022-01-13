@@ -211,7 +211,7 @@ bool GOTool::CreateOrganPackage(
     NULL, wxEmptyString, wxEmptyString, wxEmptyString);
 
   cacheDir(
-    GOStdPath::GetGrandOrgueDir("ToolCache"));
+    GOStdPath::GetGrandOrgueSubDir("ToolCache"));
 
   GOArchiveCreator archiveCreator(cacheDir);
   
