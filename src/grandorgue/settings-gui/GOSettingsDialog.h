@@ -17,7 +17,7 @@
 class GOSound;
 class GOSettingsArchives;
 class GOSettingsAudioGroup;
-class GOSettingsAudioOutput;
+class GOSettingsAudio;
 class SettingsMidiDevices;
 class GOSettingsMidiMessage;
 class GOSettingsOptions;
@@ -35,7 +35,7 @@ private:
   SettingsReasons *m_Reasons;
   GOSettingsOptions *m_OptionsPage;
   GOSettingsPaths *m_PathsPage;
-  GOSettingsAudioOutput *m_OutputPage;
+  GOSettingsAudio *m_AudioPage;
   GOSettingsReverb *m_ReverbPage;
   GOSettingsAudioGroup *m_GroupPage;
   GOSettingsOrgan *m_OrganPage;

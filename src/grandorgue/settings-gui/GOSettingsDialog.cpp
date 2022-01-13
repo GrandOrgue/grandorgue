@@ -60,7 +60,7 @@ GOSettingsDialog::GOSettingsDialog(
   m_MidiMessagePage = new GOSettingsMidiMessage(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
   m_GroupPage = new GOSettingsAudioGroup(m_Sound.GetSettings(), notebook);
-  m_OutputPage = new GOSettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
+  m_AudioPage = new GOSettingsAudio(m_Sound, *m_GroupPage, notebook);
   m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
   m_TemperamentsPage
     = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
@@ -68,7 +68,7 @@ GOSettingsDialog::GOSettingsDialog(
 
   notebook->AddPage(m_OptionsPage, _("Options"));
   notebook->AddPage(m_PathsPage, _("Paths"));
-  notebook->AddPage(m_OutputPage, _("Audio Output"));
+  notebook->AddPage(m_AudioPage, _("Audio"));
   notebook->AddPage(m_ReverbPage, _("Reverb"));
   notebook->AddPage(m_GroupPage, _("Audio Groups"));
   notebook->AddPage(m_OrganPage, _("Organs"));
@@ -132,7 +132,7 @@ bool GOSettingsDialog::DoApply() {
   m_OrganPage->Save();
   m_ArchivePage->Save();
   m_GroupPage->Save();
-  m_OutputPage->Save();
+  m_AudioPage->Save();
   m_ReverbPage->Save();
   m_TemperamentsPage->Save();
   m_PathsPage->Save();
