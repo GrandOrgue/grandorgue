@@ -17,7 +17,7 @@
 #include "GOEvent.h"
 #include "GOSettingsArchives.h"
 #include "GOSettingsAudioGroup.h"
-#include "GOSettingsAudioOutput.h"
+#include "GOSettingsAudio.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
 #include "GOSettingsOptions.h"

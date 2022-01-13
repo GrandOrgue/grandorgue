@@ -75,7 +75,7 @@ midi/MIDIEventSendDialog.cpp
 midi/MIDIEventKeyDialog.cpp
 settings-gui/GOSettingsArchives.cpp
 settings-gui/GOSettingsAudioGroup.cpp
-settings-gui/GOSettingsAudioOutput.cpp
+settings-gui/GOSettingsAudio.cpp
 settings-gui/GOSettingsDialog.cpp
 settings-gui/GOSettingsMidiDeviceList.cpp
 settings-gui/GOSettingsMidiDevices.cpp

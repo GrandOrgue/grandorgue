@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSettingsAudioOutput.h"
+#include "GOSettingsAudio.h"
 
 #include <wx/arrstr.h>
 #include <wx/button.h>

@@ -357,8 +357,8 @@
           </df>
           <df name="settings-gui">
             <in>GOSettingsArchives.cpp</in>
+            <in>GOSettingsAudio.cpp</in>
             <in>GOSettingsAudioGroup.cpp</in>
-            <in>GOSettingsAudioOutput.cpp</in>
             <in>GOSettingsDialog.cpp</in>
             <in>GOSettingsMidiDeviceList.cpp</in>
             <in>GOSettingsMidiDevices.cpp</in>
@@ -9951,7 +9951,7 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/settings-gui/GOSettingsAudioGroup.cpp"
+      <item path="../../src/grandorgue/settings-gui/GOSettingsAudio.cpp"
             ex="false"
             tool="1"
             flavor2="8">
@@ -9978,7 +9978,7 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/settings-gui/GOSettingsAudioOutput.cpp"
+      <item path="../../src/grandorgue/settings-gui/GOSettingsAudioGroup.cpp"
             ex="false"
             tool="1"
             flavor2="8">
