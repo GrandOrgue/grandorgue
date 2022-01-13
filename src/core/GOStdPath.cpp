@@ -45,10 +45,10 @@ wxString GOStdPath::GetDocumentDir() {
   return wxStandardPaths::Get().GetDocumentsDir();
 }
 
-wxString GOStdPath::GetCacheDir() {
-#if wxCHECK_VERSION(3, 1, 1)
-  return wxStandardPaths::Get().GetUserDir(wxStandardPaths::Dir_Cache);
-#else
-  return wxStandardPaths::Get().GetUserConfigDir();
-#endif
+wxString GOStdPath::GetGrandOrgueDir() {
+  return GetDocumentDir() + wxFileName::GetPathSeparator() + _("GrandOrgue");
+}
+
+wxString GOStdPath::GetGrandOrgueDir(const wxString &subdir) {
+  return GetGrandOrgueDir() + wxFileName::GetPathSeparator() + subdir;
 }
