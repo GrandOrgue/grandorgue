@@ -225,20 +225,20 @@ GOConfig::GOConfig(wxString instance)
   m_ResourceDir = GOStdPath::GetResourceDir();
 
   UserSettingPath.setDefaultValue(
-    GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
-    + wxT("GrandOrgueData") + m_InstanceName);
+    GOStdPath::GetGrandOrgueSubDir(wxT("Data") + m_InstanceName));
   UserCachePath.setDefaultValue(
-    GOStdPath::GetCacheDir() + wxFileName::GetPathSeparator()
-    + wxT("GrandOrgueCache") + m_InstanceName);
+    GOStdPath::GetGrandOrgueSubDir(wxT("Cache") + m_InstanceName));
 
-  wxString docdir = GOStdPath::GetDocumentDir() + wxFileName::GetPathSeparator()
-    + _("GrandOrgue") + wxFileName::GetPathSeparator();
-  OrganPath.setDefaultValue(docdir + _("Organs"));
-  OrganPackagePath.setDefaultValue(docdir + _("Organ packages"));
-  SettingPath.setDefaultValue(docdir + _("Settings"));
-  AudioRecorderPath.setDefaultValue(docdir + _("Audio recordings"));
-  MidiRecorderPath.setDefaultValue(docdir + _("MIDI recordings"));
-  MidiPlayerPath.setDefaultValue(docdir + _("MIDI recordings"));
+  OrganPath.setDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
+  OrganPackagePath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(_("Organ packages")));
+  SettingPath.setDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Settings")));
+  AudioRecorderPath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(_("Audio recordings")));
+  MidiRecorderPath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(_("MIDI recordings")));
+  MidiPlayerPath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(_("MIDI recordings")));
 }
 
 GOConfig::~GOConfig() { Flush(); }

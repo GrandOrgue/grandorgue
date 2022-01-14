@@ -209,11 +209,11 @@ bool GOTool::CreateOrganPackage(
   std::vector<wxString> packages) {
   GOSettingDirectory cacheDir(
     NULL, wxEmptyString, wxEmptyString, wxEmptyString);
-  cacheDir(
-    GOStdPath::GetCacheDir() + wxFileName::GetPathSeparator()
-    + wxT("GrandOrgueToolCache"));
+
+  cacheDir(GOStdPath::GetGrandOrgueSubDir("ToolCache"));
 
   GOArchiveCreator archiveCreator(cacheDir);
+
   for (unsigned i = 0; i < packages.size(); i++)
     if (!archiveCreator.AddPackage(packages[i])) {
       wxLogError(_("Failed to open archive %s"), packages[i].c_str());
