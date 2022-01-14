@@ -85,12 +85,20 @@ GOSettingsAudio::GOSettingsAudio(
     m_Sound(sound),
     m_config(sound.GetSettings()),
     m_GroupCallback(callback) {
-  wxBoxSizer *const item0 = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer *item1 = new wxBoxSizer(wxHORIZONTAL);
-  wxArrayString choices;
-  wxBoxSizer *item2
+  wxBoxSizer *const boxRoot = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *const boxUpper = new wxBoxSizer(wxHORIZONTAL);
+
+  wxBoxSizer *const boxAudioGroups
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("Audio Groups"));
+
+  boxUpper->Add(boxAudioGroups, 1, wxEXPAND | wxALL, 5);
+
+  wxBoxSizer *const boxUpperRight = new wxBoxSizer(wxVERTICAL);
+
+  wxBoxSizer *const boxSound
     = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
   wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
+  wxArrayString choices;
 
   choices.clear();
   choices.push_back(wxT("44100"));
@@ -121,6 +129,43 @@ GOSettingsAudio::GOSettingsAudio(
   m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
   m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
 
+  boxSound->Add(grid, 1, wxEXPAND | wxALL, 5);
+  boxUpperRight->Add(boxSound, 0, wxEXPAND | wxALL, 5);
+  boxUpperRight->Add(GetPortsBox(), 1, wxEXPAND | wxALL, 5);
+  boxUpper->Add(boxUpperRight, 1, wxEXPAND);
+  boxRoot->Add(boxUpper, 3, wxEXPAND);
+
+  wxBoxSizer *const boxMap
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
+
+  m_AudioOutput = new wxTreeCtrl(
+    this,
+    ID_OUTPUT_LIST,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTR_HAS_BUTTONS | wxTR_SINGLE);
+  boxMap->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
+  boxMap->AddSpacer(5);
+
+  wxBoxSizer *boxMapButtons = new wxBoxSizer(wxHORIZONTAL);
+
+  m_Change = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
+  m_Add = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
+  m_Del = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
+  m_Properties = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
+  m_Default = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
+  boxMapButtons->Add(m_Add, 0, wxALL, 5);
+  boxMapButtons->Add(m_Del, 0, wxALL, 5);
+  boxMapButtons->Add(m_Change, wxALL, 5);
+  boxMapButtons->Add(m_Properties, 0, wxALL, 5);
+  boxMapButtons->Add(m_Default, 0, wxALL, 5);
+  boxMap->Add(boxMapButtons, 0, wxALL, 5);
+
+  boxRoot->Add(boxMap, 4, wxEXPAND | wxALL, 5);
+
+  this->SetSizer(boxRoot);
+  boxRoot->Fit(this);
+
   m_SampleRate->Select(0);
   for (unsigned i = 0; i < m_SampleRate->GetCount(); i++)
     if (
@@ -128,40 +173,8 @@ GOSettingsAudio::GOSettingsAudio(
       == m_SampleRate->GetString(i))
       m_SampleRate->Select(i);
 
-  item2->Add(grid, 0, wxEXPAND | wxALL, 5);
-  item1->Add(item2, 0, wxALL | wxALIGN_TOP, 5);
-
-  item1->Add(GetPortsBox(), 1, wxEXPAND | wxALL, 5);
-  item0->Add(item1, 1, wxEXPAND | wxALL, 5);
-
-  item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
-  m_AudioOutput = new wxTreeCtrl(
-    this,
-    ID_OUTPUT_LIST,
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxTR_HAS_BUTTONS | wxTR_SINGLE);
-  item2->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
-  item2->AddSpacer(5);
-
-  wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  buttonSizer->AddSpacer(5);
-  m_Change = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
-  m_Add = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
-  m_Del = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
-  m_Properties = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
-  m_Default = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
-
-  buttonSizer->Add(m_Add, 0, wxALL, 5);
-  buttonSizer->Add(m_Del, 0, wxALL, 5);
-  buttonSizer->Add(m_Change, wxALL, 5);
-  buttonSizer->Add(m_Properties, 0, wxALL, 5);
-  buttonSizer->Add(m_Default, 0, wxALL, 5);
-  item2->Add(buttonSizer, 0, wxALL, 5);
-  item0->Add(item2, 2, wxEXPAND | wxALL, 5);
-
+  FillPortsWith(sound.GetSettings().GetSoundPortsConfig());
   m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
-
   std::vector<GOAudioDeviceConfig> audio_config
     = m_Sound.GetSettings().GetAudioDeviceConfig();
   for (unsigned i = 0; i < audio_config.size(); i++) {
@@ -187,14 +200,7 @@ GOSettingsAudio::GOSettingsAudio(
       }
     }
   }
-
   m_AudioOutput->ExpandAll();
-
-  // topSizer->AddSpacer(5);
-  this->SetSizer(item0);
-  item0->Fit(this);
-
-  FillPortsWith(sound.GetSettings().GetSoundPortsConfig());
   UpdateButtons();
 }
 
@@ -312,8 +318,7 @@ void GOSettingsAudio::UpdateDevice(const wxTreeItemId &dev) {
   m_AudioOutput->SetItemText(dev, text);
 }
 
-void GOSettingsAudio::UpdateVolume(
-  const wxTreeItemId &group, float volume) {
+void GOSettingsAudio::UpdateVolume(const wxTreeItemId &group, float volume) {
   AudioItemData *data = GetObject(group);
   wxString name = wxString::Format(
     data->left ? _("%s - left") : _("%s - right"), data->name.c_str());
@@ -354,8 +359,8 @@ std::vector<wxString> GOSettingsAudio::GetRemainingAudioDevices(
   return result;
 }
 
-std::vector<std::pair<wxString, bool>> GOSettingsAudio::
-  GetRemainingAudioGroups(const wxTreeItemId &channel) {
+std::vector<std::pair<wxString, bool>> GOSettingsAudio::GetRemainingAudioGroups(
+  const wxTreeItemId &channel) {
   std::vector<std::pair<wxString, bool>> result;
   std::vector<wxString> groups = m_GroupCallback.GetGroups();
   for (unsigned i = 0; i < groups.size(); i++) {
@@ -423,9 +428,7 @@ void GOSettingsAudio::UpdateButtons() {
   }
 }
 
-void GOSettingsAudio::OnOutputChanged(wxTreeEvent &event) {
-  UpdateButtons();
-}
+void GOSettingsAudio::OnOutputChanged(wxTreeEvent &event) { UpdateButtons(); }
 
 void GOSettingsAudio::OnOutputAdd(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
