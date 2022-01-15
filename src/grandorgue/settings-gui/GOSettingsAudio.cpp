@@ -146,6 +146,7 @@ GOSettingsAudio::GOSettingsAudio(
   boxSound->Add(gridOutput, 1, wxEXPAND | wxALL, 5);
   gridRoot->Add(
     boxSound, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND | wxALL, 5);
+
   gridRoot->Add(
     GetPortsBox(), wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND | wxALL, 5);
 
@@ -181,8 +182,8 @@ GOSettingsAudio::GOSettingsAudio(
 
   gridRoot->Add(
     boxMap, wxGBPosition(2, 0), wxGBSpan(1, 2), wxEXPAND | wxALL, 5);
-  gridRoot->AddGrowableRow(1, 2);
-  gridRoot->AddGrowableRow(2, 3);
+  gridRoot->AddGrowableRow(1, 1);
+  gridRoot->AddGrowableRow(2, 1);
   gridRoot->AddGrowableCol(0, 1);
 
   this->SetSizer(gridRoot);
