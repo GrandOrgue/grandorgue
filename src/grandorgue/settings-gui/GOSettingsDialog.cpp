@@ -20,7 +20,7 @@
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
 #include "GOSettingsOptions.h"
-#include "GOSettingsOrgan.h"
+#include "GOSettingsOrgans.h"
 #include "GOSettingsPaths.h"
 #include "GOSettingsReverb.h"
 #include "GOSettingsTemperaments.h"

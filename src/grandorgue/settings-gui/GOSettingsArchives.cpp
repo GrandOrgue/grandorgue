@@ -13,7 +13,7 @@
 #include <wx/sizer.h>
 
 #include "GOOrgan.h"
-#include "GOSettingsOrgan.h"
+#include "GOSettingsOrgans.h"
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfig.h"
 
