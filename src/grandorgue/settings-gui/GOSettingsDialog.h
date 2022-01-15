@@ -37,7 +37,6 @@ private:
   GOSettingsPaths *m_PathsPage;
   GOSettingsAudio *m_AudioPage;
   GOSettingsReverb *m_ReverbPage;
-  GOSettingsAudioGroup *m_GroupPage;
   GOSettingsOrgan *m_OrganPage;
   SettingsMidiDevices *m_MidiDevicePage;
   GOSettingsTemperaments *m_TemperamentsPage;

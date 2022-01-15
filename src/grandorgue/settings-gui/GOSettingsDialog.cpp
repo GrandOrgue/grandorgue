@@ -17,7 +17,6 @@
 #include "GOEvent.h"
 #include "GOSettingsArchives.h"
 #include "GOSettingsAudio.h"
-#include "GOSettingsAudioGroup.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
 #include "GOSettingsOptions.h"
@@ -59,8 +58,7 @@ GOSettingsDialog::GOSettingsDialog(
     = new GOSettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
   m_MidiMessagePage = new GOSettingsMidiMessage(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_GroupPage = new GOSettingsAudioGroup(m_Sound.GetSettings(), notebook);
-  m_AudioPage = new GOSettingsAudio(m_Sound, *m_GroupPage, notebook);
+  m_AudioPage = new GOSettingsAudio(m_Sound.GetSettings(), m_Sound, notebook);
   m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
   m_TemperamentsPage
     = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
@@ -70,7 +68,6 @@ GOSettingsDialog::GOSettingsDialog(
   notebook->AddPage(m_PathsPage, _("Paths"));
   notebook->AddPage(m_AudioPage, _("Audio"));
   notebook->AddPage(m_ReverbPage, _("Reverb"));
-  notebook->AddPage(m_GroupPage, _("Audio Groups"));
   notebook->AddPage(m_OrganPage, _("Organs"));
   notebook->AddPage(m_MidiDevicePage, _("MIDI Devices"));
   notebook->AddPage(m_TemperamentsPage, _("Temperaments"));
@@ -131,7 +128,6 @@ bool GOSettingsDialog::DoApply() {
   m_OptionsPage->Save();
   m_OrganPage->Save();
   m_ArchivePage->Save();
-  m_GroupPage->Save();
   m_AudioPage->Save();
   m_ReverbPage->Save();
   m_TemperamentsPage->Save();

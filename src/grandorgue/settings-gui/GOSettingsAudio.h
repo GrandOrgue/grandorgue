@@ -17,11 +17,11 @@
 
 #include <vector>
 
-#include "GOSettingsAudioGroup.h"
-#include "GOSettingsPorts.h"
 #include "config/GOConfig.h"
 #include "sound/GOSoundDevInfo.h"
 #include "sound/ports/GOSoundPort.h"
+
+#include "GOSettingsPorts.h"
 
 class wxButton;
 class wxListBox;
@@ -46,9 +46,8 @@ class GOSettingsAudio : public wxPanel, GOSettingsPorts {
   };
 
 private:
-  GOSound &m_Sound;
   GOConfig &m_config;
-  GOAudioGroupCallback &m_GroupCallback;
+  GOSound &m_Sound;
 
   wxListBox *m_AudioGroups;
   wxButton *m_AddGroup;
@@ -89,6 +88,11 @@ private:
   std::vector<std::pair<wxString, bool>> GetRemainingAudioGroups(
     const wxTreeItemId &channel);
 
+  void OnGroup(wxCommandEvent &event);
+  void OnGroupAdd(wxCommandEvent &event);
+  void OnGroupDel(wxCommandEvent &event);
+  void OnGroupRename(wxCommandEvent &event);
+
   void OnOutputChanged(wxTreeEvent &event);
   void OnOutputAdd(wxCommandEvent &event);
   void OnOutputDel(wxCommandEvent &event);
@@ -97,8 +101,7 @@ private:
   void OnOutputDefault(wxCommandEvent &event);
 
 public:
-  GOSettingsAudio(
-    GOSound &sound, GOAudioGroupCallback &callback, wxWindow *parent);
+  GOSettingsAudio(GOConfig &config, GOSound &sound, wxWindow *parent);
 
   void Save();
 
