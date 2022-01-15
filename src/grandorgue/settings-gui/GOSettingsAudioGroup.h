@@ -32,14 +32,14 @@ class GOSettingsAudioGroup : public wxPanel, public GOAudioGroupCallback {
 private:
   GOConfig &m_config;
   wxListBox *m_AudioGroups;
-  wxButton *m_Add;
-  wxButton *m_Del;
-  wxButton *m_Change;
+  wxButton *m_AddGroup;
+  wxButton *m_DelGroup;
+  wxButton *m_RenameGroup;
 
   void OnGroup(wxCommandEvent &event);
   void OnGroupAdd(wxCommandEvent &event);
   void OnGroupDel(wxCommandEvent &event);
-  void OnGroupChange(wxCommandEvent &event);
+  void OnGroupRename(wxCommandEvent &event);
 
 public:
   GOSettingsAudioGroup(GOConfig &settings, wxWindow *parent);

@@ -16,10 +16,10 @@
 
 BEGIN_EVENT_TABLE(GOSettingsAudioGroup, wxPanel)
 EVT_LISTBOX(ID_AUDIOGROUP_LIST, GOSettingsAudioGroup::OnGroup)
-EVT_LISTBOX_DCLICK(ID_AUDIOGROUP_LIST, GOSettingsAudioGroup::OnGroupChange)
+EVT_LISTBOX_DCLICK(ID_AUDIOGROUP_LIST, GOSettingsAudioGroup::OnGroupRename)
 EVT_BUTTON(ID_AUDIOGROUP_ADD, GOSettingsAudioGroup::OnGroupAdd)
 EVT_BUTTON(ID_AUDIOGROUP_DEL, GOSettingsAudioGroup::OnGroupDel)
-EVT_BUTTON(ID_AUDIOGROUP_CHANGE, GOSettingsAudioGroup::OnGroupChange)
+EVT_BUTTON(ID_AUDIOGROUP_CHANGE, GOSettingsAudioGroup::OnGroupRename)
 END_EVENT_TABLE()
 
 GOSettingsAudioGroup::GOSettingsAudioGroup(GOConfig &settings, wxWindow *parent)
@@ -39,15 +39,15 @@ GOSettingsAudioGroup::GOSettingsAudioGroup(GOConfig &settings, wxWindow *parent)
 
   wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   buttonSizer->AddSpacer(5);
-  m_Change = new wxButton(this, ID_AUDIOGROUP_CHANGE, _("Rename"));
-  m_Change->Disable();
-  m_Add = new wxButton(this, ID_AUDIOGROUP_ADD, _("&Add"));
-  m_Del = new wxButton(this, ID_AUDIOGROUP_DEL, _("&Delete"));
-  m_Del->Disable();
+  m_RenameGroup = new wxButton(this, ID_AUDIOGROUP_CHANGE, _("Rename"));
+  m_RenameGroup->Disable();
+  m_AddGroup = new wxButton(this, ID_AUDIOGROUP_ADD, _("&Add"));
+  m_DelGroup = new wxButton(this, ID_AUDIOGROUP_DEL, _("&Delete"));
+  m_DelGroup->Disable();
 
-  buttonSizer->Add(m_Add, 0, wxALL, 5);
-  buttonSizer->Add(m_Del, 0, wxALL, 5);
-  buttonSizer->Add(m_Change, 0, wxALL, 5);
+  buttonSizer->Add(m_AddGroup, 0, wxALL, 5);
+  buttonSizer->Add(m_DelGroup, 0, wxALL, 5);
+  buttonSizer->Add(m_RenameGroup, 0, wxALL, 5);
   topSizer->Add(buttonSizer, 0, wxALL, 5);
 
   std::vector<wxString> audio_groups = m_config.GetAudioGroups();
@@ -61,14 +61,14 @@ GOSettingsAudioGroup::GOSettingsAudioGroup(GOConfig &settings, wxWindow *parent)
 
 void GOSettingsAudioGroup::OnGroup(wxCommandEvent &event) {
   if (m_AudioGroups->GetSelection() != wxNOT_FOUND)
-    m_Change->Enable();
+    m_RenameGroup->Enable();
   else
-    m_Change->Disable();
+    m_RenameGroup->Disable();
 
   if (m_AudioGroups->GetCount() > 1)
-    m_Del->Enable();
+    m_DelGroup->Enable();
   else
-    m_Del->Disable();
+    m_DelGroup->Disable();
 }
 
 void GOSettingsAudioGroup::OnGroupAdd(wxCommandEvent &event) {
@@ -85,7 +85,7 @@ void GOSettingsAudioGroup::OnGroupDel(wxCommandEvent &event) {
   m_AudioGroups->SetSelection(0);
 }
 
-void GOSettingsAudioGroup::OnGroupChange(wxCommandEvent &event) {
+void GOSettingsAudioGroup::OnGroupRename(wxCommandEvent &event) {
   int index = m_AudioGroups->GetSelection();
   wxString str = wxGetTextFromUser(
                    _("Audio group name"),

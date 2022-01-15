@@ -10,6 +10,8 @@
 #include <wx/arrstr.h>
 #include <wx/button.h>
 #include <wx/choicdlg.h>
+#include <wx/gbsizer.h>
+#include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/numdlg.h>
@@ -85,58 +87,67 @@ GOSettingsAudio::GOSettingsAudio(
     m_Sound(sound),
     m_config(sound.GetSettings()),
     m_GroupCallback(callback) {
-  wxBoxSizer *const boxRoot = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer *const boxUpper = new wxBoxSizer(wxHORIZONTAL);
+  wxGridBagSizer *const gridRoot = new wxGridBagSizer(0, 0);
 
   wxBoxSizer *const boxAudioGroups
     = new wxStaticBoxSizer(wxVERTICAL, this, _("Audio Groups"));
+  wxGridBagSizer *gridGroups = new wxGridBagSizer(0, 0);
 
-  boxUpper->Add(boxAudioGroups, 1, wxEXPAND | wxALL, 5);
+  m_AudioGroups = new wxListBox(
+    this,
+    ID_AUDIOGROUP_LIST,
+    wxDefaultPosition,
+    wxDefaultSize,
+    0,
+    NULL,
+    wxLB_SINGLE | wxLB_NEEDED_SB);
+  gridGroups->Add(m_AudioGroups, wxGBPosition(0, 0), wxGBSpan(1, 4), wxEXPAND);
+  m_AddGroup = new wxButton(this, ID_AUDIOGROUP_ADD, _("&Add"));
+  gridGroups->Add(m_AddGroup, wxGBPosition(1, 0), wxDefaultSpan, wxALL, 5);
+  m_DelGroup = new wxButton(this, ID_AUDIOGROUP_DEL, _("&Delete"));
+  m_DelGroup->Disable();
+  gridGroups->Add(m_DelGroup, wxGBPosition(1, 1), wxDefaultSpan, wxALL, 5);
+  m_RenameGroup = new wxButton(this, ID_AUDIOGROUP_RENAME, _("Rename"));
+  m_RenameGroup->Disable();
+  gridGroups->Add(m_RenameGroup, wxGBPosition(1, 2), wxDefaultSpan, wxALL, 5);
 
-  wxBoxSizer *const boxUpperRight = new wxBoxSizer(wxVERTICAL);
+  gridGroups->AddGrowableRow(0, 1);
+  gridGroups->AddGrowableCol(3, 1);
+  boxAudioGroups->Add(gridGroups, 1, wxEXPAND);
+
+  gridRoot->Add(
+    boxAudioGroups, wxGBPosition(0, 0), wxGBSpan(2, 1), wxEXPAND | wxALL, 5);
 
   wxBoxSizer *const boxSound
-    = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
-  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
-  wxArrayString choices;
+    = new wxStaticBoxSizer(wxHORIZONTAL, this, _("&Sound output"));
+  wxFlexGridSizer *gridOutput = new wxFlexGridSizer(2, 5, 5);
 
-  choices.clear();
-  choices.push_back(wxT("44100"));
-  choices.push_back(wxT("48000"));
-  choices.push_back(wxT("96000"));
-  grid->Add(
+  gridOutput->Add(
     new wxStaticText(this, wxID_ANY, _("Sample Rate:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(
-    m_SampleRate = new wxChoice(
-      this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices),
-    0,
-    wxALL);
-  grid->Add(
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  gridOutput->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE));
+  gridOutput->Add(
     new wxStaticText(this, wxID_ANY, _("Samples per buffer:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  gridOutput->Add(
     m_SamplesPerBuffer = new wxSpinCtrl(
       this,
       ID_SAMPLES_PER_BUFFER,
       wxEmptyString,
       wxDefaultPosition,
-      wxDefaultSize),
-    0,
-    wxALL);
-  m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
-  m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
+      wxSize(130, wxDefaultCoord)));
 
-  boxSound->Add(grid, 1, wxEXPAND | wxALL, 5);
-  boxUpperRight->Add(boxSound, 0, wxEXPAND | wxALL, 5);
-  boxUpperRight->Add(GetPortsBox(), 1, wxEXPAND | wxALL, 5);
-  boxUpper->Add(boxUpperRight, 1, wxEXPAND);
-  boxRoot->Add(boxUpper, 3, wxEXPAND);
+  boxSound->Add(gridOutput, 1, wxEXPAND | wxALL, 5);
+  gridRoot->Add(
+    boxSound, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND | wxALL, 5);
+  gridRoot->Add(
+    GetPortsBox(), wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND | wxALL, 5);
 
   wxBoxSizer *const boxMap
     = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
+  wxGridBagSizer *gridMap = new wxGridBagSizer(0, 0);
 
   m_AudioOutput = new wxTreeCtrl(
     this,
@@ -144,34 +155,46 @@ GOSettingsAudio::GOSettingsAudio(
     wxDefaultPosition,
     wxDefaultSize,
     wxTR_HAS_BUTTONS | wxTR_SINGLE);
-  boxMap->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
-  boxMap->AddSpacer(5);
+  gridMap->Add(
+    m_AudioOutput,
+    wxGBPosition(0, 0),
+    wxGBSpan(1, 6),
+    wxEXPAND | wxLEFT | wxRIGHT,
+    5);
+  m_AddMap = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
+  gridMap->Add(m_AddMap, wxGBPosition(1, 0), wxDefaultSpan, wxALL, 5);
+  m_DelMap = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
+  gridMap->Add(m_DelMap, wxGBPosition(1, 1), wxDefaultSpan, wxALL, 5);
+  m_ChangeMap = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
+  gridMap->Add(m_ChangeMap, wxGBPosition(1, 2), wxDefaultSpan, wxALL, 5);
+  m_PropertiesMap = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
+  gridMap->Add(m_PropertiesMap, wxGBPosition(1, 3), wxDefaultSpan, wxALL, 5);
+  m_DefaultMap = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
+  gridMap->Add(m_DefaultMap, wxGBPosition(1, 4), wxDefaultSpan, wxALL, 5);
+  gridMap->AddGrowableRow(0, 1);
+  gridMap->AddGrowableCol(5, 1);
+  boxMap->Add(gridMap, 1, wxEXPAND);
 
-  wxBoxSizer *boxMapButtons = new wxBoxSizer(wxHORIZONTAL);
+  gridRoot->Add(
+    boxMap, wxGBPosition(2, 0), wxGBSpan(1, 2), wxEXPAND | wxALL, 5);
+  gridRoot->AddGrowableRow(1, 2);
+  gridRoot->AddGrowableRow(2, 3);
+  gridRoot->AddGrowableCol(0, 1);
 
-  m_Change = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
-  m_Add = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
-  m_Del = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
-  m_Properties = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
-  m_Default = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
-  boxMapButtons->Add(m_Add, 0, wxALL, 5);
-  boxMapButtons->Add(m_Del, 0, wxALL, 5);
-  boxMapButtons->Add(m_Change, wxALL, 5);
-  boxMapButtons->Add(m_Properties, 0, wxALL, 5);
-  boxMapButtons->Add(m_Default, 0, wxALL, 5);
-  boxMap->Add(boxMapButtons, 0, wxALL, 5);
+  this->SetSizer(gridRoot);
+  gridRoot->Fit(this);
 
-  boxRoot->Add(boxMap, 4, wxEXPAND | wxALL, 5);
-
-  this->SetSizer(boxRoot);
-  boxRoot->Fit(this);
-
+  m_SampleRate->Append(wxT("44100"));
+  m_SampleRate->Append(wxT("48000"));
+  m_SampleRate->Append(wxT("96000"));
   m_SampleRate->Select(0);
   for (unsigned i = 0; i < m_SampleRate->GetCount(); i++)
     if (
       wxString::Format(wxT("%d"), m_config.SampleRate())
       == m_SampleRate->GetString(i))
       m_SampleRate->Select(i);
+  m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
+  m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
 
   FillPortsWith(sound.GetSettings().GetSoundPortsConfig());
   m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
@@ -386,45 +409,45 @@ void GOSettingsAudio::UpdateButtons() {
             m_Add->Disable();
 
      */
-    m_Add->Enable();
-    m_Properties->Enable();
-    m_Change->Enable();
+    m_AddMap->Enable();
+    m_PropertiesMap->Enable();
+    m_ChangeMap->Enable();
     if (
       m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) > 1)
-      m_Del->Enable();
+      m_DelMap->Enable();
     else
-      m_Del->Disable();
+      m_DelMap->Disable();
   } else if (data && data->type == AudioItemData::CHANNEL_NODE) {
-    m_Properties->Disable();
-    m_Change->Disable();
+    m_PropertiesMap->Disable();
+    m_ChangeMap->Disable();
     if (GetRemainingAudioGroups(selection).size())
-      m_Add->Enable();
+      m_AddMap->Enable();
     else
-      m_Add->Disable();
+      m_AddMap->Disable();
     if (
       m_AudioOutput->GetLastChild(m_AudioOutput->GetItemParent(selection))
       == selection) {
       if (data->channel > 0)
-        m_Del->Enable();
+        m_DelMap->Enable();
       else
-        m_Del->Disable();
+        m_DelMap->Disable();
     } else
-      m_Del->Disable();
+      m_DelMap->Disable();
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
-    m_Properties->Enable();
-    m_Change->Enable();
-    m_Add->Disable();
-    m_Del->Enable();
+    m_PropertiesMap->Enable();
+    m_ChangeMap->Enable();
+    m_AddMap->Disable();
+    m_DelMap->Enable();
   } else if (data && data->type == AudioItemData::ROOT_NODE) {
-    m_Properties->Disable();
-    m_Change->Disable();
-    m_Add->Enable();
-    m_Del->Disable();
+    m_PropertiesMap->Disable();
+    m_ChangeMap->Disable();
+    m_AddMap->Enable();
+    m_DelMap->Disable();
   } else {
-    m_Properties->Disable();
-    m_Change->Disable();
-    m_Add->Disable();
-    m_Del->Disable();
+    m_PropertiesMap->Disable();
+    m_ChangeMap->Disable();
+    m_AddMap->Disable();
+    m_DelMap->Disable();
   }
 }
 

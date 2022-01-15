@@ -23,20 +23,26 @@
 #include "sound/GOSoundDevInfo.h"
 #include "sound/ports/GOSoundPort.h"
 
+class wxButton;
+class wxListBox;
 class AudioItemData;
 class GOSound;
 
 class GOSettingsAudio : public wxPanel, GOSettingsPorts {
   enum {
-    ID_OUTPUT_LIST = 200,
+    ID_AUDIOGROUP_LIST = 200,
+    ID_AUDIOGROUP_ADD,
+    ID_AUDIOGROUP_DEL,
+    ID_AUDIOGROUP_RENAME,
+    ID_SAMPLE_RATE,
+    ID_SAMPLES_PER_BUFFER,
+    ID_SOND_PORTS,
+    ID_OUTPUT_LIST,
     ID_OUTPUT_ADD,
     ID_OUTPUT_DEL,
     ID_OUTPUT_CHANGE,
     ID_OUTPUT_PROPERTIES,
     ID_OUTPUT_DEFAULT,
-    ID_SOND_PORTS,
-    ID_SAMPLE_RATE,
-    ID_SAMPLES_PER_BUFFER
   };
 
 private:
@@ -44,15 +50,20 @@ private:
   GOConfig &m_config;
   GOAudioGroupCallback &m_GroupCallback;
 
+  wxListBox *m_AudioGroups;
+  wxButton *m_AddGroup;
+  wxButton *m_DelGroup;
+  wxButton *m_RenameGroup;
+
   wxChoice *m_SampleRate;
   wxSpinCtrl *m_SamplesPerBuffer;
 
   wxTreeCtrl *m_AudioOutput;
-  wxButton *m_Add;
-  wxButton *m_Del;
-  wxButton *m_Change;
-  wxButton *m_Properties;
-  wxButton *m_Default;
+  wxButton *m_AddMap;
+  wxButton *m_DelMap;
+  wxButton *m_ChangeMap;
+  wxButton *m_PropertiesMap;
+  wxButton *m_DefaultMap;
 
   GOPortsConfig m_PortsConfigPopulatedWith;
   std::vector<GOSoundDevInfo> m_DeviceList;
