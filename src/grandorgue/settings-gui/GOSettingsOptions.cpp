@@ -20,6 +20,8 @@
 #include "go_limits.h"
 #include "sound/GOSoundDefs.h"
 
+const wxSize SPINCTRL_SIZE(120, wxDefaultCoord);
+
 GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxArrayString choices;
@@ -139,7 +141,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Interpolation:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Interpolation = new wxChoice(
       this, ID_INTERPOLATION, wxDefaultPosition, wxDefaultSize, choices),
@@ -152,7 +154,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Number of CPU cores:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Concurrency = new wxChoice(
       this, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices),
@@ -165,7 +167,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Workload distribution:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_ReleaseConcurrency = new wxChoice(
       this, ID_RELEASE_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices),
@@ -178,7 +180,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Cores used at loadtime:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_LoadConcurrency = new wxChoice(
       this, ID_LOAD_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices),
@@ -193,7 +195,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Recorder WAV Format:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_WaveFormat = new wxChoice(
       this, ID_WAVE_FORMAT, wxDefaultPosition, wxDefaultSize, choices),
@@ -213,10 +215,10 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Volume:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Volume = new wxSpinCtrl(
-      this, ID_VOLUME, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+      this, ID_VOLUME, wxEmptyString, wxDefaultPosition, SPINCTRL_SIZE),
     0,
     wxALL);
   m_Volume->SetRange(-120, 20);
@@ -254,7 +256,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Load &stereo samples in:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Channels = new wxChoice(
       this, ID_CHANNELS, wxDefaultPosition, wxDefaultSize, choices),
@@ -267,7 +269,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Sample size:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_BitsPerSample = new wxChoice(
       this, ID_BITS_PER_SAMPLE, wxDefaultPosition, wxDefaultSize, choices),
@@ -281,7 +283,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Loop loading:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_LoopLoad = new wxChoice(
       this, ID_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices),
@@ -294,7 +296,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Attack loading:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_AttackLoad = new wxChoice(
       this, ID_ATTACK_LOAD, wxDefaultPosition, wxDefaultSize, choices),
@@ -307,7 +309,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Release loading:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_ReleaseLoad = new wxChoice(
       this, ID_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices),
@@ -317,10 +319,14 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Memory Limit (MB):")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_MemoryLimit = new wxSpinCtrl(
-      this, ID_MEMORY_LIMIT, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+      this,
+      ID_MEMORY_LIMIT,
+      wxEmptyString,
+      wxDefaultPosition,
+      wxSize(150, wxDefaultCoord)),
     0,
     wxALL);
   m_MemoryLimit->SetRange(0, 1024 * 1024);
@@ -361,10 +367,10 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("BPM:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_MetronomeBPM = new wxSpinCtrl(
-      this, ID_METRONOME_BPM, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+      this, ID_METRONOME_BPM, wxEmptyString, wxDefaultPosition, SPINCTRL_SIZE),
     0,
     wxALL);
   m_MetronomeBPM->SetRange(1, 500);
@@ -372,14 +378,14 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Ticks per Measure:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_MetronomeMeasure = new wxSpinCtrl(
       this,
       ID_METRONOME_MEASURE,
       wxEmptyString,
       wxDefaultPosition,
-      wxDefaultSize),
+      SPINCTRL_SIZE),
     0,
     wxALL);
   m_MetronomeMeasure->SetRange(0, 32);
