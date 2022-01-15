@@ -94,7 +94,7 @@ GOSettingsAudio::GOSettingsAudio(
   wxGridBagSizer *const gridRoot = new wxGridBagSizer(0, 0);
 
   wxBoxSizer *const boxAudioGroups
-    = new wxStaticBoxSizer(wxVERTICAL, this, _("Audio Groups"));
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("Audio groups"));
   wxGridBagSizer *gridGroups = new wxGridBagSizer(0, 0);
 
   m_AudioGroups = new wxListBox(

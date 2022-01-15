@@ -33,7 +33,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
   wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *const boxOrgans
-    = new wxStaticBoxSizer(wxVERTICAL, this, _("Registered Organs"));
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("Registered organs"));
 
   m_Organs = new wxListView(
     this,

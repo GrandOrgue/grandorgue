@@ -209,7 +209,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     wxEXPAND | wxALL,
     5);
 
-  item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Default Volume"));
+  item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Default volume"));
   grid = new wxFlexGridSizer(2, 5, 5);
 
   grid->Add(
