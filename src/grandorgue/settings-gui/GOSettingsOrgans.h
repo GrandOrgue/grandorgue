@@ -5,12 +5,10 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSETTINGSORGAN_H
-#define GOSETTINGSORGAN_H
+#ifndef GOSETTINGSORGANS_H
+#define GOSETTINGSORGANS_H
 
 #include <wx/panel.h>
-
-#include <vector>
 
 class GOMidi;
 class GOOrgan;
@@ -19,39 +17,45 @@ class wxButton;
 class wxListEvent;
 class wxListView;
 
-class GOSettingsOrgan : public wxPanel {
+class GOSettingsOrgans : public wxPanel {
   enum {
-    ID_ORGANS,
-    ID_DEL,
-    ID_UP,
-    ID_DOWN,
-    ID_TOP,
-    ID_PROPERTIES,
+    ID_ORGANS = 200,
+    ID_ORGAN_DEL,
+    ID_ORGAN_DOWN,
+    ID_ORGAN_UP,
+    ID_ORGAN_TOP,
+    ID_ORGAN_PROPERTIES,
+    ID_PACKAGES,
+    ID_PACKAGE_DEL,
   };
 
 private:
   GOConfig &m_config;
   GOMidi &m_midi;
-  wxListView *m_Organs;
-  wxButton *m_Up;
-  wxButton *m_Down;
-  wxButton *m_Top;
-  wxButton *m_Del;
-  wxButton *m_Properties;
 
-  void OnOrganSelected(wxListEvent &event);
-  void OnUp(wxCommandEvent &event);
-  void OnDown(wxCommandEvent &event);
-  void OnTop(wxCommandEvent &event);
-  void OnDel(wxCommandEvent &event);
-  void OnProperties(wxCommandEvent &event);
+  wxListView *m_Organs;
+  wxButton *m_OrganDown;
+  wxButton *m_OrganUp;
+  wxButton *m_OrganTop;
+  wxButton *m_OrganDel;
+  wxButton *m_OrganProperties;
+  wxListView *m_Packages;
+  wxButton *m_PackageDel;
 
   void MoveOrgan(long from, long to);
 
-public:
-  GOSettingsOrgan(GOConfig &settings, GOMidi &midi, wxWindow *parent);
+  void OnOrganSelected(wxListEvent &event);
+  void OnOrganUp(wxCommandEvent &event);
+  void OnOrganDown(wxCommandEvent &event);
+  void OnOrganTop(wxCommandEvent &event);
+  void OnOrganDel(wxCommandEvent &event);
+  void OnOrganProperties(wxCommandEvent &event);
 
-  std::vector<const GOOrgan *> GetOrgans();
+  void OnPackageSelected(wxListEvent &event);
+  void OnPackageDel(wxCommandEvent &event);
+
+public:
+  GOSettingsOrgans(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
   void Save();
 

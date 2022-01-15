@@ -15,7 +15,6 @@
 #include <wx/sizer.h>
 
 #include "GOEvent.h"
-#include "GOSettingsArchives.h"
 #include "GOSettingsAudio.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
@@ -61,12 +60,9 @@ GOSettingsDialog::GOSettingsDialog(
   m_MidiMessagePage = new GOSettingsMidiMessage(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
   notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Setup"));
-  m_OrganPage
-    = new GOSettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  notebook->AddPage(m_OrganPage, _("Organs"));
-  m_ArchivePage
-    = new GOSettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
-  notebook->AddPage(m_ArchivePage, _("Organ Packages"));
+  m_OrgansPage
+    = new GOSettingsOrgans(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+  notebook->AddPage(m_OrgansPage, _("Organs"));
   m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
   notebook->AddPage(m_ReverbPage, _("Reverb"));
   m_TemperamentsPage
@@ -123,14 +119,13 @@ bool GOSettingsDialog::DoApply() {
   if (!(this->Validate()))
     return false;
 
-  m_MidiDevicePage->Save();
   m_OptionsPage->Save();
-  m_OrganPage->Save();
-  m_ArchivePage->Save();
+  m_PathsPage->Save();
   m_AudioPage->Save();
+  m_MidiDevicePage->Save();
+  m_OrgansPage->Save();
   m_ReverbPage->Save();
   m_TemperamentsPage->Save();
-  m_PathsPage->Save();
 
   return true;
 }

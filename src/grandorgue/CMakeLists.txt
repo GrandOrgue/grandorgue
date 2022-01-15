@@ -73,7 +73,6 @@ midi/MIDIEventDialog.cpp
 midi/MIDIEventRecvDialog.cpp
 midi/MIDIEventSendDialog.cpp
 midi/MIDIEventKeyDialog.cpp
-settings-gui/GOSettingsArchives.cpp
 settings-gui/GOSettingsAudio.cpp
 settings-gui/GOSettingsDialog.cpp
 settings-gui/GOSettingsMidiDeviceList.cpp

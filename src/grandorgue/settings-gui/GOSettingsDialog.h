@@ -15,14 +15,13 @@
 #include "GOSettingsReason.h"
 
 class GOSound;
-class GOSettingsArchives;
 class GOSettingsAudioGroup;
 class GOSettingsAudio;
 class SettingsMidiDevices;
 class GOSettingsMidiMessage;
 class GOSettingsOptions;
 class GOSettingsPaths;
-class GOSettingsOrgan;
+class GOSettingsOrgans;
 class GOSettingsReverb;
 class GOSettingsTemperaments;
 
@@ -36,12 +35,11 @@ private:
   GOSettingsOptions *m_OptionsPage;
   GOSettingsPaths *m_PathsPage;
   GOSettingsAudio *m_AudioPage;
-  GOSettingsReverb *m_ReverbPage;
-  GOSettingsOrgan *m_OrganPage;
   SettingsMidiDevices *m_MidiDevicePage;
-  GOSettingsTemperaments *m_TemperamentsPage;
   GOSettingsMidiMessage *m_MidiMessagePage;
-  GOSettingsArchives *m_ArchivePage;
+  GOSettingsOrgans *m_OrgansPage;
+  GOSettingsReverb *m_ReverbPage;
+  GOSettingsTemperaments *m_TemperamentsPage;
 
   void OnShow(wxShowEvent &);
 
