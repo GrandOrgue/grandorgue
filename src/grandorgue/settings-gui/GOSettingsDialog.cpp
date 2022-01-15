@@ -49,30 +49,29 @@ GOSettingsDialog::GOSettingsDialog(
     m_Reasons(reasons) {
   wxBookCtrlBase *notebook = GetBookCtrl();
 
+  m_OptionsPage = new GOSettingsOptions(m_Sound.GetSettings(), notebook);
+  notebook->AddPage(m_OptionsPage, _("Options"));
+  m_PathsPage = new GOSettingsPaths(m_Sound.GetSettings(), notebook);
+  notebook->AddPage(m_PathsPage, _("Paths"));
+  m_AudioPage = new GOSettingsAudio(m_Sound.GetSettings(), m_Sound, notebook);
+  notebook->AddPage(m_AudioPage, _("Audio"));
   m_MidiDevicePage = new SettingsMidiDevices(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_OptionsPage = new GOSettingsOptions(m_Sound.GetSettings(), notebook);
-  m_OrganPage
-    = new GOSettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_ArchivePage
-    = new GOSettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
+  notebook->AddPage(m_MidiDevicePage, _("MIDI Devices"));
   m_MidiMessagePage = new GOSettingsMidiMessage(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_AudioPage = new GOSettingsAudio(m_Sound.GetSettings(), m_Sound, notebook);
+  notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Setup"));
+  m_OrganPage
+    = new GOSettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+  notebook->AddPage(m_OrganPage, _("Organs"));
+  m_ArchivePage
+    = new GOSettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
+  notebook->AddPage(m_ArchivePage, _("Organ Packages"));
   m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
+  notebook->AddPage(m_ReverbPage, _("Reverb"));
   m_TemperamentsPage
     = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
-  m_PathsPage = new GOSettingsPaths(m_Sound.GetSettings(), notebook);
-
-  notebook->AddPage(m_OptionsPage, _("Options"));
-  notebook->AddPage(m_PathsPage, _("Paths"));
-  notebook->AddPage(m_AudioPage, _("Audio"));
-  notebook->AddPage(m_ReverbPage, _("Reverb"));
-  notebook->AddPage(m_OrganPage, _("Organs"));
-  notebook->AddPage(m_MidiDevicePage, _("MIDI Devices"));
   notebook->AddPage(m_TemperamentsPage, _("Temperaments"));
-  notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
-  notebook->AddPage(m_ArchivePage, _("Organ Packages"));
 
   bool hasReasons = reasons && reasons->size();
 
