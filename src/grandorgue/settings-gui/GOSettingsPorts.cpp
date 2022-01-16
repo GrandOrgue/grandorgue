@@ -69,7 +69,7 @@ void GOSettingsPorts::OnPortItemChecked(wxTreeListEvent &event) {
 GOSettingsPorts::GOSettingsPorts(
   wxWindow *parent, const GOPortFactory &portFactory, const wxString &name)
   : m_PortFactory(portFactory) {
-  m_PortsSizer = new wxStaticBoxSizer(wxVERTICAL, parent, name);
+  m_PortsSizer = new wxStaticBoxSizer(wxHORIZONTAL, parent, name);
   m_Ports = new wxTreeListCtrl(
     parent,
     wxID_ANY,
@@ -79,7 +79,7 @@ GOSettingsPorts::GOSettingsPorts(
   m_Ports->AppendColumn(wxEmptyString);
   m_Ports->Bind(
     wxEVT_TREELIST_ITEM_CHECKED, &GOSettingsPorts::OnPortItemChecked, this);
-  m_PortsSizer->Add(m_Ports, 1, wxEXPAND | wxALIGN_LEFT);
+  m_PortsSizer->Add(m_Ports, 1, wxEXPAND);
 }
 
 GOSettingsPorts::~GOSettingsPorts() {

@@ -290,18 +290,18 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
 wxString GODefinitionFile::GetOrganHash() { return m_hash; }
 
 wxString GODefinitionFile::GenerateSettingFileName() {
-  return m_config.UserSettingPath() + wxFileName::GetPathSeparator()
+  return m_config.OrganSettingsPath() + wxFileName::GetPathSeparator()
     + GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_config.Preset());
 }
 
 wxString GODefinitionFile::GenerateCacheFileName() {
-  return m_config.UserCachePath() + wxFileName::GetPathSeparator()
+  return m_config.OrganCachePath() + wxFileName::GetPathSeparator()
     + GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_config.Preset());
 }
 
 bool GODefinitionFile::LoadArchive(
   wxString ID, wxString &name, const wxString &parentID) {
-  GOArchiveManager manager(m_config, m_config.UserCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath);
   GOArchive *archive = manager.LoadArchive(ID);
   if (archive) {
     m_archives.push_back(archive);

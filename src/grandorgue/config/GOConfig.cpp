@@ -145,8 +145,8 @@ GOConfig::GOConfig(wxString instance)
     m_MainWindowY(0),
     m_MainWindowWidth(0),
     m_MainWindowHeight(0),
-    UserSettingPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
-    UserCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
+    OrganSettingsPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
+    OrganCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
     Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
     ReleaseConcurrency(
       this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
@@ -210,7 +210,7 @@ GOConfig::GOConfig(wxString instance)
     OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
     OrganPackagePath(
       this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
-    SettingPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
+    ExportImportPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
     AudioRecorderPath(
       this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
     MidiRecorderPath(
@@ -224,15 +224,15 @@ GOConfig::GOConfig(wxString instance)
     m_MIDIEvents.push_back(new GOMidiReceiverBase(m_MIDISettings[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
-  UserSettingPath.setDefaultValue(
-    GOStdPath::GetGrandOrgueSubDir(wxT("Data") + m_InstanceName));
-  UserCachePath.setDefaultValue(
-    GOStdPath::GetGrandOrgueSubDir(wxT("Cache") + m_InstanceName));
-
   OrganPath.setDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
   OrganPackagePath.setDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Organ packages")));
-  SettingPath.setDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Settings")));
+  OrganCachePath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(wxT("Cache") + m_InstanceName));
+  OrganSettingsPath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(wxT("Data") + m_InstanceName));
+  ExportImportPath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(_("Settings")));
   AudioRecorderPath.setDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Audio recordings")));
   MidiRecorderPath.setDefaultValue(

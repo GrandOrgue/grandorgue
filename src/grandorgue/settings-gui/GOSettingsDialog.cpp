@@ -15,14 +15,12 @@
 #include <wx/sizer.h>
 
 #include "GOEvent.h"
-#include "GOSettingsArchives.h"
-#include "GOSettingsAudioGroup.h"
-#include "GOSettingsAudioOutput.h"
-#include "GOSettingsDefaults.h"
+#include "GOSettingsAudio.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
-#include "GOSettingsOption.h"
-#include "GOSettingsOrgan.h"
+#include "GOSettingsOptions.h"
+#include "GOSettingsOrgans.h"
+#include "GOSettingsPaths.h"
 #include "GOSettingsReverb.h"
 #include "GOSettingsTemperaments.h"
 #include "go_ids.h"
@@ -50,32 +48,26 @@ GOSettingsDialog::GOSettingsDialog(
     m_Reasons(reasons) {
   wxBookCtrlBase *notebook = GetBookCtrl();
 
+  m_OptionsPage = new GOSettingsOptions(m_Sound.GetSettings(), notebook);
+  notebook->AddPage(m_OptionsPage, _("Options"));
+  m_PathsPage = new GOSettingsPaths(m_Sound.GetSettings(), notebook);
+  notebook->AddPage(m_PathsPage, _("Paths"));
+  m_AudioPage = new GOSettingsAudio(m_Sound.GetSettings(), m_Sound, notebook);
+  notebook->AddPage(m_AudioPage, _("Audio"));
   m_MidiDevicePage = new SettingsMidiDevices(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_OptionsPage = new GOSettingsOption(m_Sound.GetSettings(), notebook);
-  m_OrganPage
-    = new GOSettingsOrgan(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_ArchivePage
-    = new GOSettingsArchives(m_Sound.GetSettings(), *m_OrganPage, notebook);
+  notebook->AddPage(m_MidiDevicePage, _("MIDI Devices"));
   m_MidiMessagePage = new GOSettingsMidiMessage(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  m_GroupPage = new GOSettingsAudioGroup(m_Sound.GetSettings(), notebook);
-  m_OutputPage = new GOSettingsAudioOutput(m_Sound, *m_GroupPage, notebook);
+  notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Setup"));
+  m_OrgansPage
+    = new GOSettingsOrgans(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+  notebook->AddPage(m_OrgansPage, _("Organs"));
   m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
+  notebook->AddPage(m_ReverbPage, _("Reverb"));
   m_TemperamentsPage
     = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
-  m_DefaultsPage = new GOSettingsDefaults(m_Sound.GetSettings(), notebook);
-
-  notebook->AddPage(m_OptionsPage, _("Options"));
-  notebook->AddPage(m_DefaultsPage, _("Defaults and Initial Settings"));
-  notebook->AddPage(m_OutputPage, _("Audio Output"));
-  notebook->AddPage(m_ReverbPage, _("Reverb"));
-  notebook->AddPage(m_GroupPage, _("Audio Groups"));
-  notebook->AddPage(m_OrganPage, _("Organs"));
-  notebook->AddPage(m_MidiDevicePage, _("MIDI Devices"));
   notebook->AddPage(m_TemperamentsPage, _("Temperaments"));
-  notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Configuration"));
-  notebook->AddPage(m_ArchivePage, _("Organ Packages"));
 
   bool hasReasons = reasons && reasons->size();
 
@@ -127,15 +119,13 @@ bool GOSettingsDialog::DoApply() {
   if (!(this->Validate()))
     return false;
 
-  m_MidiDevicePage->Save();
   m_OptionsPage->Save();
-  m_OrganPage->Save();
-  m_ArchivePage->Save();
-  m_GroupPage->Save();
-  m_OutputPage->Save();
+  m_PathsPage->Save();
+  m_AudioPage->Save();
+  m_MidiDevicePage->Save();
+  m_OrgansPage->Save();
   m_ReverbPage->Save();
   m_TemperamentsPage->Save();
-  m_DefaultsPage->Save();
 
   return true;
 }

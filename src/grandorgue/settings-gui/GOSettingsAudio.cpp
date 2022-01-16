@@ -5,11 +5,13 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSettingsAudioOutput.h"
+#include "GOSettingsAudio.h"
 
 #include <wx/arrstr.h>
 #include <wx/button.h>
 #include <wx/choicdlg.h>
+#include <wx/gbsizer.h>
+#include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/numdlg.h>
@@ -69,99 +71,142 @@ public:
   float volume;
 };
 
-BEGIN_EVENT_TABLE(GOSettingsAudioOutput, wxPanel)
-EVT_TREE_SEL_CHANGED(ID_OUTPUT_LIST, GOSettingsAudioOutput::OnOutputChanged)
-EVT_BUTTON(ID_OUTPUT_ADD, GOSettingsAudioOutput::OnOutputAdd)
-EVT_BUTTON(ID_OUTPUT_DEL, GOSettingsAudioOutput::OnOutputDel)
-EVT_BUTTON(ID_OUTPUT_CHANGE, GOSettingsAudioOutput::OnOutputChange)
-EVT_BUTTON(ID_OUTPUT_PROPERTIES, GOSettingsAudioOutput::OnOutputProperties)
-EVT_BUTTON(ID_OUTPUT_DEFAULT, GOSettingsAudioOutput::OnOutputDefault)
+BEGIN_EVENT_TABLE(GOSettingsAudio, wxPanel)
+EVT_LISTBOX(ID_AUDIOGROUP_LIST, GOSettingsAudio::OnGroup)
+EVT_LISTBOX_DCLICK(ID_AUDIOGROUP_LIST, GOSettingsAudio::OnGroupRename)
+EVT_BUTTON(ID_AUDIOGROUP_ADD, GOSettingsAudio::OnGroupAdd)
+EVT_BUTTON(ID_AUDIOGROUP_DEL, GOSettingsAudio::OnGroupDel)
+EVT_BUTTON(ID_AUDIOGROUP_RENAME, GOSettingsAudio::OnGroupRename)
+EVT_TREE_SEL_CHANGED(ID_OUTPUT_LIST, GOSettingsAudio::OnOutputChanged)
+EVT_BUTTON(ID_OUTPUT_ADD, GOSettingsAudio::OnOutputAdd)
+EVT_BUTTON(ID_OUTPUT_DEL, GOSettingsAudio::OnOutputDel)
+EVT_BUTTON(ID_OUTPUT_CHANGE, GOSettingsAudio::OnOutputChange)
+EVT_BUTTON(ID_OUTPUT_PROPERTIES, GOSettingsAudio::OnOutputProperties)
+EVT_BUTTON(ID_OUTPUT_DEFAULT, GOSettingsAudio::OnOutputDefault)
 END_EVENT_TABLE()
 
-GOSettingsAudioOutput::GOSettingsAudioOutput(
-  GOSound &sound, GOAudioGroupCallback &callback, wxWindow *parent)
+GOSettingsAudio::GOSettingsAudio(
+  GOConfig &config, GOSound &sound, wxWindow *parent)
   : wxPanel(parent, wxID_ANY),
     GOSettingsPorts(this, GOSoundPortFactory::getInstance(), _("Sound &ports")),
-    m_Sound(sound),
-    m_config(sound.GetSettings()),
-    m_GroupCallback(callback) {
-  wxBoxSizer *const item0 = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer *item1 = new wxBoxSizer(wxHORIZONTAL);
-  wxArrayString choices;
-  wxBoxSizer *item2
-    = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound output"));
-  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
+    m_config(config),
+    m_Sound(sound) {
+  wxGridBagSizer *const gridRoot = new wxGridBagSizer(0, 0);
 
-  choices.clear();
-  choices.push_back(wxT("44100"));
-  choices.push_back(wxT("48000"));
-  choices.push_back(wxT("96000"));
-  grid->Add(
+  wxBoxSizer *const boxAudioGroups
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("Audio groups"));
+  wxGridBagSizer *gridGroups = new wxGridBagSizer(0, 0);
+
+  m_AudioGroups = new wxListBox(
+    this,
+    ID_AUDIOGROUP_LIST,
+    wxDefaultPosition,
+    wxDefaultSize,
+    0,
+    NULL,
+    wxLB_SINGLE | wxLB_NEEDED_SB);
+  gridGroups->Add(m_AudioGroups, wxGBPosition(0, 0), wxGBSpan(1, 4), wxEXPAND);
+  m_AddGroup = new wxButton(this, ID_AUDIOGROUP_ADD, _("&Add"));
+  gridGroups->Add(m_AddGroup, wxGBPosition(1, 0), wxDefaultSpan, wxALL, 5);
+  m_DelGroup = new wxButton(this, ID_AUDIOGROUP_DEL, _("&Delete"));
+  m_DelGroup->Disable();
+  gridGroups->Add(m_DelGroup, wxGBPosition(1, 1), wxDefaultSpan, wxALL, 5);
+  m_RenameGroup = new wxButton(this, ID_AUDIOGROUP_RENAME, _("Rename"));
+  m_RenameGroup->Disable();
+  gridGroups->Add(m_RenameGroup, wxGBPosition(1, 2), wxDefaultSpan, wxALL, 5);
+
+  gridGroups->AddGrowableRow(0, 1);
+  gridGroups->AddGrowableCol(3, 1);
+  boxAudioGroups->Add(gridGroups, 1, wxEXPAND);
+
+  gridRoot->Add(
+    boxAudioGroups, wxGBPosition(0, 0), wxGBSpan(2, 1), wxEXPAND | wxALL, 5);
+
+  wxBoxSizer *const boxSound
+    = new wxStaticBoxSizer(wxHORIZONTAL, this, _("&Sound output"));
+  wxFlexGridSizer *gridOutput = new wxFlexGridSizer(2, 5, 5);
+
+  gridOutput->Add(
     new wxStaticText(this, wxID_ANY, _("Sample Rate:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(
-    m_SampleRate = new wxChoice(
-      this, ID_SAMPLE_RATE, wxDefaultPosition, wxDefaultSize, choices),
-    0,
-    wxALL);
-  grid->Add(
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  gridOutput->Add(m_SampleRate = new wxChoice(this, ID_SAMPLE_RATE));
+  gridOutput->Add(
     new wxStaticText(this, wxID_ANY, _("Samples per buffer:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  gridOutput->Add(
     m_SamplesPerBuffer = new wxSpinCtrl(
       this,
       ID_SAMPLES_PER_BUFFER,
       wxEmptyString,
       wxDefaultPosition,
-      wxDefaultSize),
-    0,
-    wxALL);
-  m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
-  m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
+      wxSize(130, wxDefaultCoord)));
 
-  m_SampleRate->Select(0);
-  for (unsigned i = 0; i < m_SampleRate->GetCount(); i++)
-    if (
-      wxString::Format(wxT("%d"), m_config.SampleRate())
-      == m_SampleRate->GetString(i))
-      m_SampleRate->Select(i);
+  boxSound->Add(gridOutput, 1, wxEXPAND | wxALL, 5);
+  gridRoot->Add(
+    boxSound, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND | wxALL, 5);
 
-  item2->Add(grid, 0, wxEXPAND | wxALL, 5);
-  item1->Add(item2, 0, wxALL | wxALIGN_TOP, 5);
+  gridRoot->Add(
+    GetPortsBox(), wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND | wxALL, 5);
 
-  item1->Add(GetPortsBox(), 1, wxEXPAND | wxALL, 5);
-  item0->Add(item1, 1, wxEXPAND | wxALL, 5);
+  wxBoxSizer *const boxMap
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
+  wxGridBagSizer *gridMap = new wxGridBagSizer(0, 0);
 
-  item2 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
   m_AudioOutput = new wxTreeCtrl(
     this,
     ID_OUTPUT_LIST,
     wxDefaultPosition,
     wxDefaultSize,
     wxTR_HAS_BUTTONS | wxTR_SINGLE);
-  item2->Add(m_AudioOutput, 1, wxALIGN_LEFT | wxEXPAND);
-  item2->AddSpacer(5);
+  gridMap->Add(
+    m_AudioOutput,
+    wxGBPosition(0, 0),
+    wxGBSpan(1, 6),
+    wxEXPAND | wxLEFT | wxRIGHT,
+    5);
+  m_AddMap = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
+  gridMap->Add(m_AddMap, wxGBPosition(1, 0), wxDefaultSpan, wxALL, 5);
+  m_DelMap = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
+  gridMap->Add(m_DelMap, wxGBPosition(1, 1), wxDefaultSpan, wxALL, 5);
+  m_ChangeMap = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
+  gridMap->Add(m_ChangeMap, wxGBPosition(1, 2), wxDefaultSpan, wxALL, 5);
+  m_PropertiesMap = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
+  gridMap->Add(m_PropertiesMap, wxGBPosition(1, 3), wxDefaultSpan, wxALL, 5);
+  m_DefaultMap = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
+  gridMap->Add(m_DefaultMap, wxGBPosition(1, 4), wxDefaultSpan, wxALL, 5);
+  gridMap->AddGrowableRow(0, 1);
+  gridMap->AddGrowableCol(5, 1);
+  boxMap->Add(gridMap, 1, wxEXPAND);
 
-  wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  buttonSizer->AddSpacer(5);
-  m_Change = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
-  m_Add = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
-  m_Del = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
-  m_Properties = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
-  m_Default = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
+  gridRoot->Add(
+    boxMap, wxGBPosition(2, 0), wxGBSpan(1, 2), wxEXPAND | wxALL, 5);
+  gridRoot->AddGrowableRow(1, 1);
+  gridRoot->AddGrowableRow(2, 1);
+  gridRoot->AddGrowableCol(0, 1);
 
-  buttonSizer->Add(m_Add, 0, wxALL, 5);
-  buttonSizer->Add(m_Del, 0, wxALL, 5);
-  buttonSizer->Add(m_Change, wxALL, 5);
-  buttonSizer->Add(m_Properties, 0, wxALL, 5);
-  buttonSizer->Add(m_Default, 0, wxALL, 5);
-  item2->Add(buttonSizer, 0, wxALL, 5);
-  item0->Add(item2, 2, wxEXPAND | wxALL, 5);
+  this->SetSizer(gridRoot);
+  gridRoot->Fit(this);
 
+  std::vector<wxString> audio_groups = m_config.GetAudioGroups();
+  for (unsigned i = 0; i < audio_groups.size(); i++)
+    m_AudioGroups->Append(audio_groups[i]);
+
+  m_SampleRate->Append(wxT("44100"));
+  m_SampleRate->Append(wxT("48000"));
+  m_SampleRate->Append(wxT("96000"));
+  m_SampleRate->Select(0);
+  for (unsigned i = 0; i < m_SampleRate->GetCount(); i++)
+    if (
+      wxString::Format(wxT("%d"), m_config.SampleRate())
+      == m_SampleRate->GetString(i))
+      m_SampleRate->Select(i);
+  m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
+  m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
+
+  FillPortsWith(sound.GetSettings().GetSoundPortsConfig());
   m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
-
   std::vector<GOAudioDeviceConfig> audio_config
     = m_Sound.GetSettings().GetAudioDeviceConfig();
   for (unsigned i = 0; i < audio_config.size(); i++) {
@@ -187,24 +232,17 @@ GOSettingsAudioOutput::GOSettingsAudioOutput(
       }
     }
   }
-
   m_AudioOutput->ExpandAll();
-
-  // topSizer->AddSpacer(5);
-  this->SetSizer(item0);
-  item0->Fit(this);
-
-  FillPortsWith(sound.GetSettings().GetSoundPortsConfig());
   UpdateButtons();
 }
 
-AudioItemData *GOSettingsAudioOutput::GetObject(const wxTreeItemId &id) {
+AudioItemData *GOSettingsAudio::GetObject(const wxTreeItemId &id) {
   if (!id.IsOk())
     return NULL;
   return (AudioItemData *)m_AudioOutput->GetItemData(id);
 }
 
-wxTreeItemId GOSettingsAudioOutput::GetDeviceNode(const wxString &name) {
+wxTreeItemId GOSettingsAudio::GetDeviceNode(const wxString &name) {
   wxTreeItemIdValue i;
   wxTreeItemId current;
   wxTreeItemId root = m_AudioOutput->GetRootItem();
@@ -218,7 +256,7 @@ wxTreeItemId GOSettingsAudioOutput::GetDeviceNode(const wxString &name) {
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::GetChannelNode(
+wxTreeItemId GOSettingsAudio::GetChannelNode(
   const wxTreeItemId &audio, unsigned channel) {
   wxTreeItemIdValue i;
   wxTreeItemId current;
@@ -234,7 +272,7 @@ wxTreeItemId GOSettingsAudioOutput::GetChannelNode(
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::GetGroupNode(
+wxTreeItemId GOSettingsAudio::GetGroupNode(
   const wxTreeItemId &channel, const wxString &name, bool left) {
   wxTreeItemIdValue i;
   wxTreeItemId current;
@@ -250,11 +288,11 @@ wxTreeItemId GOSettingsAudioOutput::GetGroupNode(
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(wxString name) {
+wxTreeItemId GOSettingsAudio::AddDeviceNode(wxString name) {
   return AddDeviceNode(name, m_Sound.GetSettings().GetDefaultLatency());
 }
 
-wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(
+wxTreeItemId GOSettingsAudio::AddDeviceNode(
   wxString name, unsigned desired_latency) {
   wxTreeItemId current;
   if (name == wxEmptyString) {
@@ -274,7 +312,7 @@ wxTreeItemId GOSettingsAudioOutput::AddDeviceNode(
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::AddChannelNode(
+wxTreeItemId GOSettingsAudio::AddChannelNode(
   const wxTreeItemId &audio, unsigned channel) {
   wxTreeItemId current;
   current = GetChannelNode(audio, channel);
@@ -291,7 +329,7 @@ wxTreeItemId GOSettingsAudioOutput::AddChannelNode(
   return current;
 }
 
-wxTreeItemId GOSettingsAudioOutput::AddGroupNode(
+wxTreeItemId GOSettingsAudio::AddGroupNode(
   const wxTreeItemId &channel, const wxString &name, bool left) {
   wxTreeItemId current;
   current = GetGroupNode(channel, name, left);
@@ -305,15 +343,14 @@ wxTreeItemId GOSettingsAudioOutput::AddGroupNode(
   return current;
 }
 
-void GOSettingsAudioOutput::UpdateDevice(const wxTreeItemId &dev) {
+void GOSettingsAudio::UpdateDevice(const wxTreeItemId &dev) {
   AudioItemData *data = GetObject(dev);
   wxString text = wxString::Format(
     _("Device: %s [%d ms requested]"), data->name.c_str(), data->latency);
   m_AudioOutput->SetItemText(dev, text);
 }
 
-void GOSettingsAudioOutput::UpdateVolume(
-  const wxTreeItemId &group, float volume) {
+void GOSettingsAudio::UpdateVolume(const wxTreeItemId &group, float volume) {
   AudioItemData *data = GetObject(group);
   wxString name = wxString::Format(
     data->left ? _("%s - left") : _("%s - right"), data->name.c_str());
@@ -328,7 +365,7 @@ void GOSettingsAudioOutput::UpdateVolume(
       group, wxString::Format(_("%s: mute"), name.c_str()));
 }
 
-void GOSettingsAudioOutput::AssureDeviceList() {
+void GOSettingsAudio::AssureDeviceList() {
   const GOPortsConfig portsConfig(RenewPortsConfig());
 
   if (m_PortsConfigPopulatedWith != portsConfig) {
@@ -337,7 +374,7 @@ void GOSettingsAudioOutput::AssureDeviceList() {
   }
 }
 
-std::vector<wxString> GOSettingsAudioOutput::GetRemainingAudioDevices(
+std::vector<wxString> GOSettingsAudio::GetRemainingAudioDevices(
   const wxTreeItemId *ignoreItem) {
   AssureDeviceList();
 
@@ -354,12 +391,13 @@ std::vector<wxString> GOSettingsAudioOutput::GetRemainingAudioDevices(
   return result;
 }
 
-std::vector<std::pair<wxString, bool>> GOSettingsAudioOutput::
-  GetRemainingAudioGroups(const wxTreeItemId &channel) {
+std::vector<std::pair<wxString, bool>> GOSettingsAudio::GetRemainingAudioGroups(
+  const wxTreeItemId &channel) {
   std::vector<std::pair<wxString, bool>> result;
-  std::vector<wxString> groups = m_GroupCallback.GetGroups();
-  for (unsigned i = 0; i < groups.size(); i++) {
-    const wxString &name = groups[i];
+
+  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++) {
+    const wxString &name = m_AudioGroups->GetString(i);
+
     if (!GetGroupNode(channel, name, true).IsOk())
       result.push_back(std::pair<wxString, bool>(name, true));
     if (!GetGroupNode(channel, name, false).IsOk())
@@ -367,8 +405,49 @@ std::vector<std::pair<wxString, bool>> GOSettingsAudioOutput::
   }
   return result;
 }
+void GOSettingsAudio::OnGroup(wxCommandEvent &event) {
+  if (m_AudioGroups->GetSelection() != wxNOT_FOUND)
+    m_RenameGroup->Enable();
+  else
+    m_RenameGroup->Disable();
 
-void GOSettingsAudioOutput::UpdateButtons() {
+  if (m_AudioGroups->GetCount() > 1)
+    m_DelGroup->Enable();
+  else
+    m_DelGroup->Disable();
+}
+
+void GOSettingsAudio::OnGroupAdd(wxCommandEvent &event) {
+  wxString str
+    = wxGetTextFromUser(_("New audio group name"), _("Audio groups")).Trim();
+  if (str != wxEmptyString)
+    if (m_AudioGroups->FindString(str) == wxNOT_FOUND)
+      m_AudioGroups->Append(str);
+}
+
+void GOSettingsAudio::OnGroupDel(wxCommandEvent &event) {
+  if (m_AudioGroups->GetCount() > 1)
+    m_AudioGroups->Delete(m_AudioGroups->GetSelection());
+  m_AudioGroups->SetSelection(0);
+}
+
+void GOSettingsAudio::OnGroupRename(wxCommandEvent &event) {
+  int index = m_AudioGroups->GetSelection();
+  wxString str = wxGetTextFromUser(
+                   _("Audio group name"),
+                   _("Audio groups"),
+                   m_AudioGroups->GetString(index))
+                   .Trim();
+  if (str != wxEmptyString) {
+    int idx = m_AudioGroups->FindString(str);
+    if (idx == wxNOT_FOUND)
+      m_AudioGroups->SetString(index, str);
+    else if (idx != index)
+      m_AudioGroups->Delete(index);
+  }
+}
+
+void GOSettingsAudio::UpdateButtons() {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
   AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
@@ -381,53 +460,51 @@ void GOSettingsAudioOutput::UpdateButtons() {
             m_Add->Disable();
 
      */
-    m_Add->Enable();
-    m_Properties->Enable();
-    m_Change->Enable();
+    m_AddMap->Enable();
+    m_PropertiesMap->Enable();
+    m_ChangeMap->Enable();
     if (
       m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) > 1)
-      m_Del->Enable();
+      m_DelMap->Enable();
     else
-      m_Del->Disable();
+      m_DelMap->Disable();
   } else if (data && data->type == AudioItemData::CHANNEL_NODE) {
-    m_Properties->Disable();
-    m_Change->Disable();
+    m_PropertiesMap->Disable();
+    m_ChangeMap->Disable();
     if (GetRemainingAudioGroups(selection).size())
-      m_Add->Enable();
+      m_AddMap->Enable();
     else
-      m_Add->Disable();
+      m_AddMap->Disable();
     if (
       m_AudioOutput->GetLastChild(m_AudioOutput->GetItemParent(selection))
       == selection) {
       if (data->channel > 0)
-        m_Del->Enable();
+        m_DelMap->Enable();
       else
-        m_Del->Disable();
+        m_DelMap->Disable();
     } else
-      m_Del->Disable();
+      m_DelMap->Disable();
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
-    m_Properties->Enable();
-    m_Change->Enable();
-    m_Add->Disable();
-    m_Del->Enable();
+    m_PropertiesMap->Enable();
+    m_ChangeMap->Enable();
+    m_AddMap->Disable();
+    m_DelMap->Enable();
   } else if (data && data->type == AudioItemData::ROOT_NODE) {
-    m_Properties->Disable();
-    m_Change->Disable();
-    m_Add->Enable();
-    m_Del->Disable();
+    m_PropertiesMap->Disable();
+    m_ChangeMap->Disable();
+    m_AddMap->Enable();
+    m_DelMap->Disable();
   } else {
-    m_Properties->Disable();
-    m_Change->Disable();
-    m_Add->Disable();
-    m_Del->Disable();
+    m_PropertiesMap->Disable();
+    m_ChangeMap->Disable();
+    m_AddMap->Disable();
+    m_DelMap->Disable();
   }
 }
 
-void GOSettingsAudioOutput::OnOutputChanged(wxTreeEvent &event) {
-  UpdateButtons();
-}
+void GOSettingsAudio::OnOutputChanged(wxTreeEvent &event) { UpdateButtons(); }
 
-void GOSettingsAudioOutput::OnOutputAdd(wxCommandEvent &event) {
+void GOSettingsAudio::OnOutputAdd(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
   AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
@@ -474,7 +551,7 @@ void GOSettingsAudioOutput::OnOutputAdd(wxCommandEvent &event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputDel(wxCommandEvent &event) {
+void GOSettingsAudio::OnOutputDel(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
   AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
@@ -489,7 +566,7 @@ void GOSettingsAudioOutput::OnOutputDel(wxCommandEvent &event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent &event) {
+void GOSettingsAudio::OnOutputChange(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
   AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
@@ -553,7 +630,7 @@ void GOSettingsAudioOutput::OnOutputChange(wxCommandEvent &event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputProperties(wxCommandEvent &event) {
+void GOSettingsAudio::OnOutputProperties(wxCommandEvent &event) {
   wxTreeItemId selection = m_AudioOutput->GetSelection();
   AudioItemData *data = GetObject(selection);
   if (data && data->type == AudioItemData::AUDIO_NODE) {
@@ -592,7 +669,7 @@ void GOSettingsAudioOutput::OnOutputProperties(wxCommandEvent &event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::OnOutputDefault(wxCommandEvent &event) {
+void GOSettingsAudio::OnOutputDefault(wxCommandEvent &event) {
   if (
     wxMessageBox(
       _("Should the audio config be reverted to the default "
@@ -614,20 +691,18 @@ void GOSettingsAudioOutput::OnOutputDefault(wxCommandEvent &event) {
   }
   m_AudioOutput->DeleteChildren(root);
 
-  std::vector<wxString> groups = m_GroupCallback.GetGroups();
-
   audio = AddDeviceNode(dev_name);
   channel = AddChannelNode(audio, 0);
 
-  for (unsigned i = 0; i < groups.size(); i++) {
-    group = AddGroupNode(channel, groups[i], true);
+  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++) {
+    group = AddGroupNode(channel, m_AudioGroups->GetString(i), true);
     UpdateVolume(group, 0);
   }
 
   channel = AddChannelNode(audio, 1);
 
-  for (unsigned i = 0; i < groups.size(); i++) {
-    group = AddGroupNode(channel, groups[i], false);
+  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++) {
+    group = AddGroupNode(channel, m_AudioGroups->GetString(i), false);
     UpdateVolume(group, 0);
   }
 
@@ -635,7 +710,13 @@ void GOSettingsAudioOutput::OnOutputDefault(wxCommandEvent &event) {
   UpdateButtons();
 }
 
-void GOSettingsAudioOutput::Save() {
+void GOSettingsAudio::Save() {
+  std::vector<wxString> audioGroups;
+
+  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++)
+    audioGroups.push_back(m_AudioGroups->GetString(i));
+  m_config.SetAudioGroups(audioGroups);
+
   unsigned long sample_rate;
 
   if (m_SampleRate->GetStringSelection().ToULong(&sample_rate))

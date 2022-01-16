@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSettingsOption.h"
+#include "GOSettingsOptions.h"
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -20,7 +20,9 @@
 #include "go_limits.h"
 #include "sound/GOSoundDefs.h"
 
-GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
+const wxSize SPINCTRL_SIZE(120, wxDefaultCoord);
+
+GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   : wxPanel(parent, wxID_ANY), m_config(settings) {
   wxArrayString choices;
 
@@ -139,7 +141,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Interpolation:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Interpolation = new wxChoice(
       this, ID_INTERPOLATION, wxDefaultPosition, wxDefaultSize, choices),
@@ -152,7 +154,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Number of CPU cores:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Concurrency = new wxChoice(
       this, ID_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices),
@@ -165,7 +167,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Workload distribution:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_ReleaseConcurrency = new wxChoice(
       this, ID_RELEASE_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices),
@@ -178,7 +180,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Cores used at loadtime:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_LoadConcurrency = new wxChoice(
       this, ID_LOAD_CONCURRENCY, wxDefaultPosition, wxDefaultSize, choices),
@@ -193,7 +195,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Recorder WAV Format:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_WaveFormat = new wxChoice(
       this, ID_WAVE_FORMAT, wxDefaultPosition, wxDefaultSize, choices),
@@ -207,6 +209,23 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
     wxEXPAND | wxALL,
     5);
 
+  item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Default volume"));
+  grid = new wxFlexGridSizer(2, 5, 5);
+
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Volume:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  grid->Add(
+    m_Volume = new wxSpinCtrl(
+      this, ID_VOLUME, wxEmptyString, wxDefaultPosition, SPINCTRL_SIZE),
+    0,
+    wxALL);
+  m_Volume->SetRange(-120, 20);
+  m_Volume->SetValue(m_config.Volume());
+  item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+  item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
   m_Interpolation->Select(m_config.InterpolationType());
   m_Concurrency->Select(m_config.Concurrency() - 1);
   m_ReleaseConcurrency->Select(m_config.ReleaseConcurrency() - 1);
@@ -215,44 +234,6 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   m_RecordDownmix->SetValue(m_config.RecordDownmix());
 
   item9 = new wxBoxSizer(wxVERTICAL);
-  item6 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("&Paths"));
-  grid = new wxFlexGridSizer(1, 5, 5);
-  grid->AddGrowableCol(0, 1);
-  grid->Add(
-    new wxStaticText(this, wxID_ANY, _("Settings store:")),
-    0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(
-    m_SettingsPath = new wxDirPickerCtrl(
-      this,
-      ID_SETTINGS_DIR,
-      wxEmptyString,
-      _("Select directory for settings store"),
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-    1,
-    wxEXPAND | wxALL);
-  grid->Add(
-    new wxStaticText(this, wxID_ANY, _("Cache store:")),
-    0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  grid->Add(
-    m_CachePath = new wxDirPickerCtrl(
-      this,
-      ID_CACHE_DIR,
-      wxEmptyString,
-      _("Select directory for cache store"),
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxDIRP_DEFAULT_STYLE | wxDIRP_DIR_MUST_EXIST),
-    1,
-    wxEXPAND | wxALL);
-  m_SettingsPath->SetPath(m_config.UserSettingPath());
-  m_CachePath->SetPath(m_config.UserCachePath());
-
-  item6->Add(grid, 1, wxEXPAND | wxALL, 5);
-  item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sample loading"));
   item9->Add(item6, 0, wxEXPAND | wxALL, 5);
@@ -275,7 +256,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Load &stereo samples in:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Channels = new wxChoice(
       this, ID_CHANNELS, wxDefaultPosition, wxDefaultSize, choices),
@@ -288,7 +269,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Sample size:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_BitsPerSample = new wxChoice(
       this, ID_BITS_PER_SAMPLE, wxDefaultPosition, wxDefaultSize, choices),
@@ -302,7 +283,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Loop loading:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_LoopLoad = new wxChoice(
       this, ID_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices),
@@ -315,7 +296,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Attack loading:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_AttackLoad = new wxChoice(
       this, ID_ATTACK_LOAD, wxDefaultPosition, wxDefaultSize, choices),
@@ -328,7 +309,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Release loading:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_ReleaseLoad = new wxChoice(
       this, ID_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices),
@@ -338,10 +319,14 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Memory Limit (MB):")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_MemoryLimit = new wxSpinCtrl(
-      this, ID_MEMORY_LIMIT, wxEmptyString, wxDefaultPosition, wxDefaultSize),
+      this,
+      ID_MEMORY_LIMIT,
+      wxEmptyString,
+      wxDefaultPosition,
+      wxSize(150, wxDefaultCoord)),
     0,
     wxALL);
   m_MemoryLimit->SetRange(0, 1024 * 1024);
@@ -377,6 +362,39 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
     5);
   m_ODFCheck->SetValue(m_config.ODFCheck());
 
+  item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Metronome"));
+  grid = new wxFlexGridSizer(2, 5, 5);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("BPM:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  grid->Add(
+    m_MetronomeBPM = new wxSpinCtrl(
+      this, ID_METRONOME_BPM, wxEmptyString, wxDefaultPosition, SPINCTRL_SIZE),
+    0,
+    wxALL);
+  m_MetronomeBPM->SetRange(1, 500);
+
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Ticks per Measure:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  grid->Add(
+    m_MetronomeMeasure = new wxSpinCtrl(
+      this,
+      ID_METRONOME_MEASURE,
+      wxEmptyString,
+      wxDefaultPosition,
+      SPINCTRL_SIZE),
+    0,
+    wxALL);
+  m_MetronomeMeasure->SetRange(0, 32);
+
+  m_MetronomeBPM->SetValue(m_config.MetronomeBPM());
+  m_MetronomeMeasure->SetValue(m_config.MetronomeMeasure());
+  item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+  item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+
   item0->Add(item9, 1, wxEXPAND | wxALL, 0);
 
   topSizer->Add(item0, 0, wxEXPAND | wxALL, 5);
@@ -385,7 +403,7 @@ GOSettingsOption::GOSettingsOption(GOConfig &settings, wxWindow *parent)
   topSizer->Fit(this);
 }
 
-void GOSettingsOption::Save() {
+void GOSettingsOptions::Save() {
   if (
     m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
     wxMessageBox(
@@ -402,14 +420,13 @@ void GOSettingsOption::Save() {
   m_config.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
   m_config.ODFCheck(m_ODFCheck->IsChecked());
   m_config.RecordDownmix(m_RecordDownmix->IsChecked());
+  m_config.Volume(m_Volume->GetValue());
   m_config.ScaleRelease(m_Scale->IsChecked());
   m_config.RandomizeSpeaking(m_Random->IsChecked());
   m_config.Concurrency(m_Concurrency->GetSelection() + 1);
   m_config.ReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
   m_config.LoadConcurrency(m_LoadConcurrency->GetSelection());
   m_config.WaveFormatBytesPerSample(m_WaveFormat->GetSelection() + 1);
-  m_config.UserSettingPath(m_SettingsPath->GetPath());
-  m_config.UserCachePath(m_CachePath->GetPath());
   m_config.BitsPerSample(m_BitsPerSample->GetSelection() * 4 + 8);
   m_config.LoopLoad(m_LoopLoad->GetSelection());
   m_config.AttackLoad(m_AttackLoad->GetSelection());
@@ -417,6 +434,8 @@ void GOSettingsOption::Save() {
   m_config.LoadChannels(m_Channels->GetSelection());
   m_config.InterpolationType(m_Interpolation->GetSelection());
   m_config.MemoryLimit(m_MemoryLimit->GetValue());
+  m_config.MetronomeBPM(m_MetronomeBPM->GetValue());
+  m_config.MetronomeMeasure(m_MetronomeMeasure->GetValue());
 
   // Language
   const wxStringClientData *const langData
@@ -425,7 +444,7 @@ void GOSettingsOption::Save() {
   m_config.LanguageCode(langData->GetData());
 }
 
-bool GOSettingsOption::NeedReload() {
+bool GOSettingsOptions::NeedReload() {
   return m_OldLosslessCompression != m_config.LosslessCompression()
     || m_OldBitsPerSample != m_config.BitsPerSample()
     || m_OldLoopLoad != m_config.LoopLoad()
@@ -434,6 +453,6 @@ bool GOSettingsOption::NeedReload() {
     || m_OldChannels != m_config.LoadChannels();
 }
 
-bool GOSettingsOption::NeedRestart() {
+bool GOSettingsOptions::NeedRestart() {
   return m_OldLanguageCode != m_config.LanguageCode();
 }

@@ -79,8 +79,8 @@ public:
   GOConfig(wxString instance);
   ~GOConfig();
 
-  GOSettingDirectory UserSettingPath;
-  GOSettingDirectory UserCachePath;
+  GOSettingDirectory OrganSettingsPath;
+  GOSettingDirectory OrganCachePath;
 
   GOSettingUnsigned Concurrency;
   GOSettingUnsigned ReleaseConcurrency;
@@ -151,7 +151,7 @@ public:
 
   GOSettingDirectory OrganPath;
   GOSettingDirectory OrganPackagePath;
-  GOSettingDirectory SettingPath;
+  GOSettingDirectory ExportImportPath;
   GOSettingDirectory AudioRecorderPath;
   GOSettingDirectory MidiRecorderPath;
   GOSettingDirectory MidiPlayerPath;

@@ -15,14 +15,13 @@
 #include "GOSettingsReason.h"
 
 class GOSound;
-class GOSettingsArchives;
 class GOSettingsAudioGroup;
-class GOSettingsAudioOutput;
+class GOSettingsAudio;
 class SettingsMidiDevices;
 class GOSettingsMidiMessage;
-class GOSettingsOption;
-class GOSettingsDefaults;
-class GOSettingsOrgan;
+class GOSettingsOptions;
+class GOSettingsPaths;
+class GOSettingsOrgans;
 class GOSettingsReverb;
 class GOSettingsTemperaments;
 
@@ -33,16 +32,14 @@ private:
   GOSound &m_Sound;
   bool m_ReasonsAlreadyShown;
   SettingsReasons *m_Reasons;
-  GOSettingsOption *m_OptionsPage;
-  GOSettingsDefaults *m_DefaultsPage;
-  GOSettingsAudioOutput *m_OutputPage;
-  GOSettingsReverb *m_ReverbPage;
-  GOSettingsAudioGroup *m_GroupPage;
-  GOSettingsOrgan *m_OrganPage;
+  GOSettingsOptions *m_OptionsPage;
+  GOSettingsPaths *m_PathsPage;
+  GOSettingsAudio *m_AudioPage;
   SettingsMidiDevices *m_MidiDevicePage;
-  GOSettingsTemperaments *m_TemperamentsPage;
   GOSettingsMidiMessage *m_MidiMessagePage;
-  GOSettingsArchives *m_ArchivePage;
+  GOSettingsOrgans *m_OrgansPage;
+  GOSettingsReverb *m_ReverbPage;
+  GOSettingsTemperaments *m_TemperamentsPage;
 
   void OnShow(wxShowEvent &);
 

@@ -38,13 +38,20 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
       ID_ENABLED,
       _("Enable Convolution Reverb"),
       wxDefaultPosition,
-      wxDefaultSize));
+      wxDefaultSize),
+    0,
+    wxALL,
+    5);
 
-  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
-  wxBoxSizer *item6
+  wxBoxSizer *boxReverb
     = new wxStaticBoxSizer(wxVERTICAL, this, _("&Convolution reverb"));
-  topSizer->Add(item6, 0, wxEXPAND | wxALL, 5);
+  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
 
+  grid->AddGrowableCol(1, 1);
+  grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Impulse response:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   m_File = new wxFilePickerCtrl(
     this,
     ID_FILE,
@@ -53,21 +60,13 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
     _("*.wav"),
     wxDefaultPosition,
     wxDefaultSize,
-    wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
-  wxBoxSizer *box2 = new wxBoxSizer(wxHORIZONTAL);
-  grid->Add(
-    new wxStaticText(this, wxID_ANY, _("Impulse response:")),
-    0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  m_FileName = new wxStaticText(this, wxID_ANY, wxEmptyString);
-  box2->Add(m_File);
-  box2->Add(m_FileName);
-  grid->Add(box2);
+    wxFLP_USE_TEXTCTRL | wxFLP_OPEN | wxFLP_FILE_MUST_EXIST | wxFLP_SMALL);
+  grid->Add(m_File, 1, wxEXPAND);
 
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Delay (ms):")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Delay = new wxSpinCtrl(
       this, ID_DELAY, wxEmptyString, wxDefaultPosition, wxDefaultSize),
@@ -77,7 +76,7 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Start offset:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_StartOffset = new wxSpinCtrl(
       this, ID_START_OFFSET, wxEmptyString, wxDefaultPosition, wxDefaultSize),
@@ -87,7 +86,7 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Length:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Length = new wxSpinCtrl(
       this, ID_LENGTH, wxEmptyString, wxDefaultPosition, wxDefaultSize),
@@ -97,7 +96,7 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Channel:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Channel
     = new wxChoice(this, ID_CHANNEL, wxDefaultPosition, wxDefaultSize),
@@ -107,8 +106,10 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Gain:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
-  box2 = new wxBoxSizer(wxHORIZONTAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+
+  wxSizer *box2 = new wxBoxSizer(wxHORIZONTAL);
+
   m_Gain = new wxTextCtrl(this, ID_GAIN, wxEmptyString);
   m_GainSpin = new wxSpinButton(this, ID_GAIN_SPIN);
   box2->Add(m_Gain);
@@ -118,15 +119,16 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Direct Sound:")),
     0,
-    wxALL | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
     m_Direct = new wxCheckBox(
       this, ID_DIRECT, _("Add dirac pulse"), wxDefaultPosition, wxDefaultSize));
 
-  item6->Add(grid, 0, wxEXPAND | wxALL, 5);
+  boxReverb->Add(grid, 0, wxEXPAND | wxALL, 5);
 
-  topSizer->AddSpacer(5);
+  topSizer->Add(boxReverb, 0, wxEXPAND | wxALL, 5);
   this->SetSizer(topSizer);
+  topSizer->Fit(this);
 
   m_GainSpin->SetRange(1, 1000);
   m_Delay->SetRange(0, 10000);
@@ -138,7 +140,6 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
   m_Length->SetRange(0, m_config.ReverbLen());
 
   m_File->SetPath(m_config.ReverbFile());
-  m_FileName->SetLabel(m_File->GetPath());
   UpdateLimits();
 
   m_Gain->ChangeValue(wxString::Format(wxT("%f"), m_config.ReverbGain()));
@@ -148,8 +149,6 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
   m_Channel->SetSelection(m_config.ReverbChannel() - 1);
   m_Direct->SetValue(m_config.ReverbDirect());
   m_Delay->SetValue(m_config.ReverbDelay());
-
-  topSizer->Fit(this);
 }
 
 void GOSettingsReverb::UpdateLimits() {
@@ -160,7 +159,6 @@ void GOSettingsReverb::UpdateLimits() {
     return;
   }
   GOWave wav;
-  m_FileName->SetLabel(m_File->GetPath());
   try {
     GOStandardFile file(m_File->GetPath());
     wav.Open(&file);

@@ -42,7 +42,7 @@ void GOCacheCleaner::Cleanup() {
   if (!m_config.ManageCache())
     return;
 
-  wxDir dir(m_config.UserCachePath());
+  wxDir dir(m_config.OrganCachePath());
   if (!dir.IsOpened()) {
     wxLogError(_("Failed to read cache directory"));
     return;

@@ -39,7 +39,6 @@ private:
   wxCheckBox *m_Enabled;
   wxCheckBox *m_Direct;
   wxFilePickerCtrl *m_File;
-  wxStaticText *m_FileName;
   wxChoice *m_Channel;
   wxSpinCtrl *m_StartOffset;
   wxSpinCtrl *m_Length;

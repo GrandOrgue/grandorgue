@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSETTINGSAUDIOOUTPUT_H
-#define GOSETTINGSAUDIOOUTPUT_H
+#ifndef GOSETTINGSAUDIO_H
+#define GOSETTINGSAUDIO_H
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -17,42 +17,52 @@
 
 #include <vector>
 
-#include "GOSettingsAudioGroup.h"
-#include "GOSettingsPorts.h"
 #include "config/GOConfig.h"
 #include "sound/GOSoundDevInfo.h"
 #include "sound/ports/GOSoundPort.h"
 
+#include "GOSettingsPorts.h"
+
+class wxButton;
+class wxListBox;
 class AudioItemData;
 class GOSound;
 
-class GOSettingsAudioOutput : public wxPanel, GOSettingsPorts {
+class GOSettingsAudio : public wxPanel, GOSettingsPorts {
   enum {
-    ID_OUTPUT_LIST = 200,
+    ID_AUDIOGROUP_LIST = 200,
+    ID_AUDIOGROUP_ADD,
+    ID_AUDIOGROUP_DEL,
+    ID_AUDIOGROUP_RENAME,
+    ID_SAMPLE_RATE,
+    ID_SAMPLES_PER_BUFFER,
+    ID_SOND_PORTS,
+    ID_OUTPUT_LIST,
     ID_OUTPUT_ADD,
     ID_OUTPUT_DEL,
     ID_OUTPUT_CHANGE,
     ID_OUTPUT_PROPERTIES,
     ID_OUTPUT_DEFAULT,
-    ID_SOND_PORTS,
-    ID_SAMPLE_RATE,
-    ID_SAMPLES_PER_BUFFER
   };
 
 private:
-  GOSound &m_Sound;
   GOConfig &m_config;
-  GOAudioGroupCallback &m_GroupCallback;
+  GOSound &m_Sound;
+
+  wxListBox *m_AudioGroups;
+  wxButton *m_AddGroup;
+  wxButton *m_DelGroup;
+  wxButton *m_RenameGroup;
 
   wxChoice *m_SampleRate;
   wxSpinCtrl *m_SamplesPerBuffer;
 
   wxTreeCtrl *m_AudioOutput;
-  wxButton *m_Add;
-  wxButton *m_Del;
-  wxButton *m_Change;
-  wxButton *m_Properties;
-  wxButton *m_Default;
+  wxButton *m_AddMap;
+  wxButton *m_DelMap;
+  wxButton *m_ChangeMap;
+  wxButton *m_PropertiesMap;
+  wxButton *m_DefaultMap;
 
   GOPortsConfig m_PortsConfigPopulatedWith;
   std::vector<GOSoundDevInfo> m_DeviceList;
@@ -78,6 +88,11 @@ private:
   std::vector<std::pair<wxString, bool>> GetRemainingAudioGroups(
     const wxTreeItemId &channel);
 
+  void OnGroup(wxCommandEvent &event);
+  void OnGroupAdd(wxCommandEvent &event);
+  void OnGroupDel(wxCommandEvent &event);
+  void OnGroupRename(wxCommandEvent &event);
+
   void OnOutputChanged(wxTreeEvent &event);
   void OnOutputAdd(wxCommandEvent &event);
   void OnOutputDel(wxCommandEvent &event);
@@ -86,8 +101,7 @@ private:
   void OnOutputDefault(wxCommandEvent &event);
 
 public:
-  GOSettingsAudioOutput(
-    GOSound &sound, GOAudioGroupCallback &callback, wxWindow *parent);
+  GOSettingsAudio(GOConfig &config, GOSound &sound, wxWindow *parent);
 
   void Save();
 
