@@ -77,10 +77,18 @@ void MIDIEventDialog::OnApply(wxCommandEvent &event) { DoApply(); }
 
 void MIDIEventDialog::OnOK(wxCommandEvent &event) {
   DoApply();
-  Destroy();
+  if (HasDocument()) {
+    Destroy();
+  } else
+    EndModal(wxID_OK);
 }
 
-void MIDIEventDialog::OnCancel(wxCommandEvent &event) { Destroy(); }
+void MIDIEventDialog::OnCancel(wxCommandEvent &event) {
+  if (HasDocument())
+    Destroy();
+  else
+    EndModal(wxID_CANCEL);
+}
 
 void MIDIEventDialog::DoApply() {
   if (m_recvPage)

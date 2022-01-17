@@ -21,6 +21,8 @@ public:
   GOView(GODocumentBase *doc, wxWindow *wnd);
   virtual ~GOView();
 
+  bool HasDocument() const { return m_doc != NULL; }
+
   virtual void RemoveView();
   void ShowView();
 
