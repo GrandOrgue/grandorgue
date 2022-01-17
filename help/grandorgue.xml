@@ -4608,7 +4608,7 @@ role="strong">STOP</emphasis> buttton is depressed.
             <primary>Add audio channel</primary>
           </indexterm>
           <para>This feature is available when a <emphasis role="bold">Device:</emphasis> node is selected in the tree. The <emphasis>Add</emphasis> button becomes active only if the number of channels currently defined for that device is less than the device's maximum number of channels.</para>
-          <para>The <emphasis>Add</emphasis> button adds a new channel which is numbered with the next channel number. The new channel needs further configuration (audio groups) to be usable. See <link linkend="audiogroups" os="">Managing Audio Groups</link> for further information on that topic.</para>
+          <para>The <emphasis>Add</emphasis> button adds a new channel which is numbered with the next channel number. The new channel needs further configuration (audio groups) to be usable. See <link linkend="audiogroupstab" os="">Managing Audio Groups</link> for further information on that topic.</para>
           <note>
             <simpara>Only trial and error can determine which GrandOrgue channel is linked to each real-world audio channel.</simpara>
           </note>
