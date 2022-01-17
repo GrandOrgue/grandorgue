@@ -84,7 +84,7 @@ GOSettingsDialog::GOSettingsDialog(
       pReasonBtn->Disable();
 
     pButtonSizer->Insert(
-      3, pReasonBtn, wxSizerFlags().Border(wxLEFT | wxRIGHT, 20));
+      3, pReasonBtn, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 10);
     GetInnerSizer()->Add(
       pButtonSizer, wxSizerFlags().Expand().Border(wxALL, 2));
     GetInnerSizer()->AddSpacer(2);
