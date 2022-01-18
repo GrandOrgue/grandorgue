@@ -77,9 +77,9 @@ void MIDIEventDialog::OnApply(wxCommandEvent &event) { DoApply(); }
 
 void MIDIEventDialog::OnOK(wxCommandEvent &event) {
   DoApply();
-  if (HasDocument()) {
+  if (HasDocument())
     Destroy();
-  } else
+  else
     EndModal(wxID_OK);
 }
 
