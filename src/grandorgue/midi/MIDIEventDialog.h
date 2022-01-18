@@ -38,6 +38,11 @@ private:
 public:
   MIDIEventDialog(
     GODocumentBase *doc,
+    /*
+      if doc != NULL then the dialog is auto destroyed when closed
+      if doc == NULL then the caller should call ShowModal() and then should
+      call Destroy() if needed
+    */
     wxWindow *parent,
     wxString title,
     GOConfig &settings,
