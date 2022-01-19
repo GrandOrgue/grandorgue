@@ -2970,20 +2970,20 @@ msgstr "Chemins"
 msgid "Audio"
 msgstr "Audio"
 
-msgid "Reverb"
-msgstr "Réverbération"
-
 msgid "MIDI Devices"
-msgstr "Interfaces MIDI"
-
-msgid "Temperaments"
-msgstr "Tempéraments"
+msgstr "Périphériques MIDI"
 
 msgid "Initial MIDI"
-msgstr "Config.MIDI initiale"
+msgstr "MIDI initial"
 
 msgid "Organs"
 msgstr "Orgues"
+
+msgid "Reverb"
+msgstr "Réverbération"
+
+msgid "Temperaments"
+msgstr "Tempéraments"
 
 msgid ""
 "Some changed settings effect unless the sample set is reloaded.\n"
