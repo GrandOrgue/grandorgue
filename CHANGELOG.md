@@ -1,6 +1,7 @@
+- Updating French translation https://github.com/GrandOrgue/grandorgue/discussions/934
 # 3.6.0 (2022-01-19)
 - Fixed crash under OSx when closing a MIDI event dialog opened from a Settings window https://github.com/GrandOrgue/grandorgue/issues/966
-- Reorganised tabs and their layouuts of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/948
+- Reorganised tabs and their layouts of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/948
 - Changed default organ cache and organ settings directories to ones inside the GrandOrgue directory https://github.com/GrandOrgue/grandorgue/discussions/934
 - Added automatic formatting code with pre-commit and clang-format https://github.com/GrandOrgue/grandorgue/issues/918
 # 3.5.0 (2022-01-05)
