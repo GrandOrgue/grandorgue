@@ -4811,15 +4811,15 @@ Recorder-generated output. The selected device must be activeted in the
       it.</simpara></note>
     </sect1>
     <sect1 id="initialconfiguration">
-      <title>Initial Midi Setup tab</title>
+      <title>Initial Midi tab</title>
       <indexterm>
-        <primary>Initial Midi Setup</primary>
+        <primary>Initial Midi</primary>
       </indexterm>
       <figure>
-        <title>Initial Midi Setup tab</title>
+        <title>Initial Midi tab</title>
         <mediaobject>
           <imageobject>
-            <imagedata scalefit="1" width="100%" fileref="images/settings_initial_midi_setup.png"/>
+            <imagedata scalefit="1" width="100%" fileref="images/settings_initial_midi.png"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -5887,8 +5887,7 @@ ignore the computer and concentrate on his playing.
       <para>
 Master controls are specific to the console hardware. As such, their  MIDI
 configuration can also be defined in the <emphasis>Midi &amp; Audio
-settings</emphasis>, <link linkend="initialconfiguration">Initial Midi
-Configuration</link> tab.
+settings</emphasis>, <link linkend="initialconfiguration">Initial Midi</link> tab.
       </para>
       <sect2>
         <title>Tuning</title>

@@ -59,7 +59,7 @@ GOSettingsDialog::GOSettingsDialog(
   notebook->AddPage(m_MidiDevicePage, _("MIDI Devices"));
   m_MidiMessagePage = new GOSettingsMidiMessage(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  notebook->AddPage(m_MidiMessagePage, _("Initial MIDI Setup"));
+  notebook->AddPage(m_MidiMessagePage, _("Initial MIDI"));
   m_OrgansPage
     = new GOSettingsOrgans(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
   notebook->AddPage(m_OrgansPage, _("Organs"));
