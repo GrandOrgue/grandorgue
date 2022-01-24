@@ -2964,26 +2964,26 @@ msgstr "Paramètres du programme"
 msgid "Options"
 msgstr ""
 
-msgid "Defaults and Initial Settings"
-msgstr "Valeurs initiales et paramètres par défaut"
+msgid "Paths"
+msgstr "Chemins"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "MIDI Devices"
+msgstr "Périphériques MIDI"
+
+msgid "Initial MIDI"
+msgstr "MIDI initial"
+
+msgid "Organs"
+msgstr "Orgues"
 
 msgid "Reverb"
 msgstr "Réverbération"
 
-msgid "Audio Groups"
-msgstr "Groupes Audio"
-
-msgid "MIDI Devices"
-msgstr "Interfaces MIDI"
-
 msgid "Temperaments"
 msgstr "Tempéraments"
-
-msgid "Initial MIDI Configuration"
-msgstr "Configuration MIDI initiale"
-
-msgid "Organ Packages"
-msgstr "Paquets d'orgue"
 
 msgid ""
 "Some changed settings effect unless the sample set is reloaded.\n"
