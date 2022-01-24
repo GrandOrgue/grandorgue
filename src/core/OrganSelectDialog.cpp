@@ -71,8 +71,7 @@ OrganSelectDialog::OrganSelectDialog(
   topSizer->Add(
     CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
 
-  SetSizer(topSizer);
-  Layout();
+  SetSizerAndFit(topSizer);
 }
 
 void OrganSelectDialog::OnOK(wxCommandEvent &event) {

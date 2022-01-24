@@ -1,3 +1,4 @@
+- Fixed size of the Load organ dialog https://github.com/GrandOrgue/grandorgue/issues/963
 # 3.6.0 (2022-01-19)
 - Fixed crash under OSx when closing a MIDI event dialog opened from a Settings window https://github.com/GrandOrgue/grandorgue/issues/966
 - Reorganised tabs and their layouuts of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/948
