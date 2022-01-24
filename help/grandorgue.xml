@@ -4139,6 +4139,9 @@ are <link linkend="save">saved</link> to settings files.
       </sect2>
     </sect1>
     <sect1>
+      <indexterm>
+        <primary>Paths</primary>
+      </indexterm>
       <title>Paths tab</title>
       <figure>
         <title>Paths tab</title>
@@ -5093,7 +5096,7 @@ recorded release tail of wet samples.
     </sect1>
     <sect1 id="temperamentTab">
       <title>Temperaments tab</title>
-      <indexterm><primary>Temperament</primary></indexterm>
+      <indexterm><primary>Temperaments</primary></indexterm>
       <indexterm><primary>User-defined Temperament</primary></indexterm>
       <figure>
         <title>User-defined Temperaments</title>
@@ -5921,10 +5924,10 @@ current preset file.
         <note><title>Reminder</title><simpara>The tuning unit is 1/100th of a semitone. The allowed range is {-1200, +1200 }, i.e. {-1, +1} octave. A semitone is 100 tuning units.</simpara></note>
       </sect2>
       <sect2>
-        <title>Temperaments</title>
+        <title>Temperament</title>
         <para>
 The second row controls the ability to navigate the temperaments list. The temperament selection in the master controls panels is mirrored in the
-<link linkend="temperamentsMenu">Temperaments</link> menu item of the <emphasis>Audio/Midi</emphasis> menu.
+<link linkend="temperamentsMenu">Temperament</link> menu item of the <emphasis>Audio/Midi</emphasis> menu.
         </para>
         <informaltable frame="none">
           <tgroup cols="2">
