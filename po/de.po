@@ -69,6 +69,9 @@ msgstr "Ü&ber"
 msgid "&Add"
 msgstr "&Hinzufügen"
 
+msgid "Audio"
+msgstr "***"
+
 msgid "&Audio/Midi"
 msgstr "&Audio/Midi"
 
@@ -83,6 +86,9 @@ msgstr "&Faltungshall"
 
 msgid "&Data:"
 msgstr "&Daten:"
+
+msgid "&Default volume"
+msgstr "***"
 
 msgid "&Delete"
 msgstr "&Löschen"
@@ -120,8 +126,17 @@ msgstr "Warte auf Ereignis"
 msgid "&Lowest key:"
 msgstr "&Tiefste Taste:"
 
+msgid "&Mapping output"
+msgstr "***"
+
 msgid "&Memory Level"
 msgstr "&Speicherebene"
+
+msgid "&Midi properties"
+msgstr "***"
+
+msgid "&MIDI-Output-Device..."
+msgstr "***"
 
 msgid "&Off Value:"
 msgstr "&Endwert"
@@ -548,6 +563,12 @@ msgstr "Audio-Gruppe %d"
 msgid "Audio group name"
 msgstr "Neuer Audio-Gruppenname"
 
+msgid "Audio recording:"
+msgstr "***"
+
+msgid "Auto add new devices"
+msgstr "***"
+
 msgid "&Settings..."
 msgstr "&Einstellungen..."
 
@@ -615,9 +636,6 @@ msgstr "Cachedatei hat eine falsche Prüfsumme. Cache wird ignoriert."
 msgid "Cache load failure: %s"
 msgstr "Cache Ladefehler: %s"
 
-msgid "Cache store:"
-msgstr "Cache abspeichern:"
-
 msgid "Can't read from a callback stream"
 msgstr "Kann nicht lesen von einem callback stream"
 
@@ -663,6 +681,9 @@ msgstr "Kanal:"
 msgid "Chaumont"
 msgstr "Chaumont"
 
+msgid "Check on startup"
+msgstr "***"
+
 msgid "Choose a file"
 msgstr "Datei auswählen"
 
@@ -704,6 +725,9 @@ msgstr "Core"
 
 msgid "Core Audio"
 msgstr "Core Audio"
+
+msgid "Cores used at loadtime:"
+msgstr "***"
 
 msgid "Corrette (1753)"
 msgstr "Corrette (1753)"
@@ -859,6 +883,9 @@ msgstr "Ereignis"
 
 msgid "Event-&No"
 msgstr "Ereignis-&Nr"
+
+msgid "Export/import:"
+msgstr "***"
 
 msgid "Export Settings"
 msgstr "&Einstellungen exportieren"
@@ -1078,8 +1105,8 @@ msgstr "Einstellungen importieren"
 msgid "Impulse response:"
 msgstr "Impulsantwort"
 
-msgid "Initial MIDI Configuration"
-msgstr "Initiale MIDI Konfiguration"
+msgid "Initial MIDI"
+msgstr "Initiale MIDI"
 
 msgid "Input overflowed"
 msgstr "Eingabeüberlauf"
@@ -1289,6 +1316,9 @@ msgstr "MIDI Ereignis"
 msgid "MIDI Messages"
 msgstr "MIDI Nachrichten"
 
+msgid "MIDI recording:"
+msgstr "***"
+
 msgid "MME"
 msgstr "MME"
 
@@ -1337,6 +1367,9 @@ msgstr "Master"
 msgid "Master Controls"
 msgstr "Master Regler"
 
+msgid "Matching..."
+msgstr "***"
+
 msgid "Max"
 msgstr "Max"
 
@@ -1368,6 +1401,12 @@ msgstr "Mersenne's getestet mitteltönig 1"
 
 msgid "Program Settings"
 msgstr "Programmeinstellungen"
+
+msgid "Midi player:"
+msgstr "***"
+
+msgid "Midi &ports"
+msgstr "***"
 
 msgid "Midi-Settings for Button - "
 msgstr "MIDI Einstellung für Knopf - "
@@ -1447,6 +1486,9 @@ msgstr "Norden"
 msgid "Number %s contains locale dependent floating point"
 msgstr "Nummer %s enthält lokal abhängiges Fließkomma"
 
+msgid "Number of CPU cores:"
+msgstr "***"
+
 msgid "O"
 msgstr "O"
 
@@ -1475,14 +1517,26 @@ msgstr "Orgel &Eigenschaften..."
 msgid "Organ Doc"
 msgstr "Orgel-Dokument"
 
+msgid "Organ packages"
+msgstr "***"
+
+msgid "Organ packages:"
+msgstr "***"
+
 msgid "Organ Properties"
 msgstr "Orgel-Eigenschaften"
 
 msgid "Organ View"
 msgstr "Orgelansicht"
 
+msgid "Organ cache:"
+msgstr "***"
+
 msgid "Organ settings"
 msgstr "Orgel-Einstellungen"
+
+msgid "Organ settings:"
+msgstr "Orgeln-Einstellungen:"
 
 msgid "Organs"
 msgstr "Orgeln"
@@ -1524,6 +1578,9 @@ msgstr "P"
 msgid "P&roperties..."
 msgstr "E&igenschaften..."
 
+msgid "Packages"
+msgstr "***"
+
 msgid "Panic"
 msgstr "Panik"
 
@@ -1532,6 +1589,9 @@ msgstr "von übergeordneten Element"
 
 msgid "Parsing sample set definition file"
 msgstr "Analysiere ODF"
+
+msgid "Paths"
+msgstr "***"
 
 msgid "Please apply changes first"
 msgstr "Bitte Änderungen zuerst \"anwenden\"."
@@ -1613,6 +1673,9 @@ msgstr "&Neu laden"
 msgid "Ready!"
 msgstr "Bereit!"
 
+msgid "Reason"
+msgstr "***"
+
 msgid "Receive"
 msgstr "Empfangen"
 
@@ -1621,6 +1684,9 @@ msgstr "Aufnahmeformat WAV:"
 
 msgid "Recording Details"
 msgstr "Aufnahmedetails"
+
+msgid "Registered organs"
+msgstr "***"
 
 msgid "Regular"
 msgstr "Regulär"
@@ -1691,6 +1757,9 @@ msgstr "Samplegröße:"
 msgid "Samples per buffer:"
 msgstr "Samples pro Puffer:"
 
+msgid "Samplesets:"
+msgstr "***"
+
 msgid "Sauveur (Memoires 1701)"
 msgstr "Sauveur (Memoires 1701)"
 
@@ -1732,20 +1801,38 @@ msgstr "Eine Impulsdatei auswählen"
 msgid "Select directory for cache store"
 msgstr "Verzeichnis zum Speichern der Cachedateien auswählen"
 
+msgid "Select directory for setting import/export"
+msgstr "***"
+
 msgid "Select directory for settings store"
 msgstr "Verzeichnis zum Speichern der Einstellungen auswählen"
 
+msgid "Select directory for the MIDI player"
+msgstr "***"
+
+msgid "Select directory for your audio recordings"
+msgstr "***"
+
+msgid "Select directory for your MIDI recording"
+msgstr "***"
+
+msgid "Select directory for your organ packages"
+msgstr "***"
+
+msgid "Select directory for your samplesets"
+msgstr "***"
+
 msgid "Send"
 msgstr "Senden"
+
+msgid "Send MIDI Recorder Output Stream to:"
+msgstr "***"
 
 msgid "Settings"
 msgstr "Einstellungen"
 
 msgid "Settings files (*.cmb)|*.cmb"
 msgstr "Einstellungsdateien (*.cmb)|*.cmb"
-
-msgid "Settings store:"
-msgstr "Einstellungen abspeichern:"
 
 msgid "Shortcut"
 msgstr "Kurzbefehl"
@@ -1776,6 +1863,9 @@ msgstr "Sorge, 1744 (B)"
 
 msgid "Sorge, 1758"
 msgstr "Sorge, 1758"
+
+msgid "Sound &ports"
+msgstr "***"
 
 msgid "Stade St. Cosmae"
 msgstr "Stade St. Cosmae"
@@ -1958,6 +2048,9 @@ msgstr "Windows Menu"
 
 msgid "Windows right"
 msgstr "Windows rechts"
+
+msgid "Workload distribution:"
+msgstr "***"
 
 msgid "X"
 msgstr "X"
