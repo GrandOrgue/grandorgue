@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-02-18 09:03+0100\n"
-"PO-Revision-Date: 2013-02-16 13:30+0100\n"
+"PO-Revision-Date: 2022-01-26 13:30+0100\n"
 "Last-Translator: Michael P. Schmidt\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -431,7 +431,7 @@ msgid "< Unsupport PCM bit size"
 msgstr "< Nicht unterstützte PCM Bitrate"
 
 msgid "< Unsupported PCM format"
-msgstr "< Nicht unterstützes PCM Format"
+msgstr "< Nicht unterstütztes PCM Format"
 
 msgid "<Invalid SMPL chunk in"
 msgstr "<Ungültiger SMPL chunk in"
@@ -545,7 +545,7 @@ msgstr "Audio Ausgabe"
 
 #, c-format
 msgid "Audio callback of %u blocks requested. Must be divisible by %u."
-msgstr "Audio callback von %u Blöcken angefordert. Muß teilbar sein durch %u."
+msgstr "Audio callback von %u Blöcken angefordert. Muss teilbar sein durch %u."
 
 msgid "Audio device settings"
 msgstr "Audio Einstellungen"
@@ -1055,7 +1055,7 @@ msgid "H"
 msgstr "H"
 
 msgid "H&ighest velocity:"
-msgstr "H&öchste Empfindlichkeit:"
+msgstr "G&rößte Anschlagstärke:"
 
 msgid "Harpsichord/Piano/Monochord"
 msgstr "Harpsichord/Piano/Monochord"
@@ -1317,7 +1317,7 @@ msgid "MIDI Messages"
 msgstr "MIDI Nachrichten"
 
 msgid "MIDI recording:"
-msgstr "***"
+msgstr "MIDI Aufnahme:"
 
 msgid "MME"
 msgstr "MME"
@@ -1368,7 +1368,7 @@ msgid "Master Controls"
 msgstr "Master Regler"
 
 msgid "Matching..."
-msgstr "***"
+msgstr "Abstimmung..."
 
 msgid "Max"
 msgstr "Max"
@@ -1381,7 +1381,7 @@ msgstr "Speicherlimit (MB)"
 
 #, c-format
 msgid "Memory mapping of the cache file failed with error code %d"
-msgstr "Memory Mapping der Cache-Datei fehlgeschlagen mit Fehlercode %d"
+msgstr "Speicherzuordnung der Cache-Datei fehlgeschlagen mit Fehlercode %d"
 
 #, c-format
 msgid "Memory pool is full: %llu of %llu used"
@@ -1403,10 +1403,10 @@ msgid "Program Settings"
 msgstr "Programmeinstellungen"
 
 msgid "Midi player:"
-msgstr "***"
+msgstr "MIDI-Player:"
 
 msgid "Midi &ports"
-msgstr "***"
+msgstr "MIDI-&Anschlüsse"
 
 msgid "Midi-Settings for Button - "
 msgstr "MIDI Einstellung für Knopf - "
@@ -1487,7 +1487,7 @@ msgid "Number %s contains locale dependent floating point"
 msgstr "Nummer %s enthält lokal abhängiges Fließkomma"
 
 msgid "Number of CPU cores:"
-msgstr "***"
+msgstr "Anzahl der CPU-Kerne:"
 
 msgid "O"
 msgstr "O"
@@ -1512,16 +1512,16 @@ msgid "Organ"
 msgstr "Orgel"
 
 msgid "Organ &Properties"
-msgstr "Orgel &Eigenschaften..."
+msgstr "Orgel &Eigenschaften"
 
 msgid "Organ Doc"
 msgstr "Orgel-Dokument"
 
 msgid "Organ packages"
-msgstr "***"
+msgstr "Orgel-Pakete"
 
 msgid "Organ packages:"
-msgstr "***"
+msgstr "Orgel-Pakete:"
 
 msgid "Organ Properties"
 msgstr "Orgel-Eigenschaften"
@@ -1530,13 +1530,13 @@ msgid "Organ View"
 msgstr "Orgelansicht"
 
 msgid "Organ cache:"
-msgstr "***"
+msgstr "Orgel-Cache:"
 
 msgid "Organ settings"
 msgstr "Orgel-Einstellungen"
 
 msgid "Organ settings:"
-msgstr "Orgeln-Einstellungen:"
+msgstr "Orgel-Einstellungen:"
 
 msgid "Organs"
 msgstr "Orgeln"
@@ -1579,19 +1579,19 @@ msgid "P&roperties..."
 msgstr "E&igenschaften..."
 
 msgid "Packages"
-msgstr "***"
+msgstr "Pakete"
 
 msgid "Panic"
 msgstr "Panik"
 
 msgid "Parent default"
-msgstr "von übergeordneten Element"
+msgstr "von übergeordnetem Element"
 
 msgid "Parsing sample set definition file"
 msgstr "Analysiere ODF"
 
 msgid "Paths"
-msgstr "***"
+msgstr "Pfade"
 
 msgid "Please apply changes first"
 msgstr "Bitte Änderungen zuerst \"anwenden\"."
@@ -1665,7 +1665,7 @@ msgid "Ramos de Pareja 1482 - Monochord"
 msgstr "Ramos de Pareja 1482 - Monochord"
 
 msgid "Randomize pipe speaking"
-msgstr "Zufälliges Pfeifenansprechen"
+msgstr "Zufällige Pfeifenverstimmung"
 
 msgid "Re&load"
 msgstr "&Neu laden"
@@ -1674,7 +1674,7 @@ msgid "Ready!"
 msgstr "Bereit!"
 
 msgid "Reason"
-msgstr "***"
+msgstr "Grund"
 
 msgid "Receive"
 msgstr "Empfangen"
@@ -1686,7 +1686,7 @@ msgid "Recording Details"
 msgstr "Aufnahmedetails"
 
 msgid "Registered organs"
-msgstr "***"
+msgstr "Registrierte Orgeln"
 
 msgid "Regular"
 msgstr "Regulär"
@@ -1758,7 +1758,7 @@ msgid "Samples per buffer:"
 msgstr "Samples pro Puffer:"
 
 msgid "Samplesets:"
-msgstr "***"
+msgstr "Samplesets:"
 
 msgid "Sauveur (Memoires 1701)"
 msgstr "Sauveur (Memoires 1701)"
@@ -1802,31 +1802,31 @@ msgid "Select directory for cache store"
 msgstr "Verzeichnis zum Speichern der Cachedateien auswählen"
 
 msgid "Select directory for setting import/export"
-msgstr "***"
+msgstr "Verzeichnis für den Import/Export von Einstellungen auswählen"
 
 msgid "Select directory for settings store"
 msgstr "Verzeichnis zum Speichern der Einstellungen auswählen"
 
 msgid "Select directory for the MIDI player"
-msgstr "***"
+msgstr "Verzeichnis für den MIDI-Player auswählen"
 
 msgid "Select directory for your audio recordings"
-msgstr "***"
+msgstr "Verzeichnis für die Audio-Aufnahmen auswählen"
 
 msgid "Select directory for your MIDI recording"
-msgstr "***"
+msgstr "Verzeichnis für die MIDI-Aufnahmen auswählen"
 
 msgid "Select directory for your organ packages"
-msgstr "***"
+msgstr "Verzeichnis für die Orgel-Pakete auswählen"
 
 msgid "Select directory for your samplesets"
-msgstr "***"
+msgstr "Verzeichnis für die Samplesets auswählen"
 
 msgid "Send"
 msgstr "Senden"
 
 msgid "Send MIDI Recorder Output Stream to:"
-msgstr "***"
+msgstr "MIDI-Recorder-Ausgangsstream senden an:"
 
 msgid "Settings"
 msgstr "Einstellungen"
@@ -1847,10 +1847,10 @@ msgid ""
 "\n"
 "Would you like to reload the sample set now?"
 msgstr ""
-"Einige veränderte Einstellung werden erst übernommen, wenndas Sampleset "
+"Einige veränderte Einstellung werden erst übernommen, wenn das Sampleset "
 "wieder neu geladen wird.\n"
 "\n"
-"Möchten Sie das Sampleset nun neu laden?"
+"Möchten Sie das Sampleset jetzt neu laden?"
 
 msgid "Sorge Monochord (1756)"
 msgstr "Sorge Monochord (1756)"
