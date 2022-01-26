@@ -70,7 +70,7 @@ msgid "&Add"
 msgstr "&Hinzufügen"
 
 msgid "Audio"
-msgstr "***"
+msgstr "Audio"
 
 msgid "&Audio/Midi"
 msgstr "&Audio/Midi"
@@ -88,7 +88,7 @@ msgid "&Data:"
 msgstr "&Daten:"
 
 msgid "&Default volume"
-msgstr "***"
+msgstr "Standardlautstärke"
 
 msgid "&Delete"
 msgstr "&Löschen"
@@ -127,16 +127,16 @@ msgid "&Lowest key:"
 msgstr "&Tiefste Taste:"
 
 msgid "&Mapping output"
-msgstr "***"
+msgstr "&Ausgabezuordnung"
 
 msgid "&Memory Level"
 msgstr "&Speicherebene"
 
 msgid "&Midi properties"
-msgstr "***"
+msgstr "&Midi Eigenschaften"
 
 msgid "&MIDI-Output-Device..."
-msgstr "***"
+msgstr "&MIDI-Ausgabegerät..."
 
 msgid "&Off Value:"
 msgstr "&Endwert"
@@ -459,7 +459,7 @@ msgstr ""
 "Ein Kanal-Offset erlaubt den Gebrauch von zwei\n"
 "MIDI-Adaptern mit sich störenden MIDI Kanälen.\n"
 "Zum Beispiel, die Anwendung eines Kanal-Offset\n"
-"von 8 bei einem MIDI Adapter bewirkt, daß\n"
+"von 8 bei einem MIDI Adapter bewirkt, dass\n"
 "Adapter Kanal 1 als Kanal 9 erscheint,\n"
 "Kanal 2 erscheint als Kanal 10, und so weiter."
 
@@ -553,7 +553,7 @@ msgstr "Audio Einstellungen"
 #, c-format
 msgid "Audio engine wants frame size of %u blocks which is indivisible by %u."
 msgstr ""
-"Audio engine benötigt Frame-Größe von %u Blöcken, welche unteilbar sind "
+"Audio-Engine benötigt Frame-Größe von %u Blöcken, welche unteilbar sind "
 "durch %u."
 
 #, c-format
@@ -564,10 +564,10 @@ msgid "Audio group name"
 msgstr "Neuer Audio-Gruppenname"
 
 msgid "Audio recording:"
-msgstr "***"
+msgstr "Audio-Aufnahme:"
 
 msgid "Auto add new devices"
-msgstr "***"
+msgstr "Neue Geräte automatisch hinzufügen"
 
 msgid "&Settings..."
 msgstr "&Einstellungen..."
@@ -637,16 +637,16 @@ msgid "Cache load failure: %s"
 msgstr "Cache Ladefehler: %s"
 
 msgid "Can't read from a callback stream"
-msgstr "Kann nicht lesen von einem callback stream"
+msgstr "Aus einem Callback-Stream kann nicht gelesen werden"
 
 msgid "Can't read from an output only stream"
-msgstr "Kann nicht lesen von einem output only stream"
+msgstr "Aus einem Nur-Ausgabe-Stream kann nicht gelesen werden"
 
 msgid "Can't write to a callback stream"
-msgstr "Kann nicht schreiben auf einen callback stream"
+msgstr "Es kann nicht in einen Callback-Stream geschrieben werden"
 
 msgid "Can't write to an input only stream"
-msgstr "Kann nicht schreiben auf einen input only stream"
+msgstr "Es kann nicht in einen Nur-Eingabe-Stream geschrieben werden"
 
 #, c-format
 msgid ""
@@ -682,7 +682,7 @@ msgid "Chaumont"
 msgstr "Chaumont"
 
 msgid "Check on startup"
-msgstr "***"
+msgstr "Beim Start prüfen"
 
 msgid "Choose a file"
 msgstr "Datei auswählen"
@@ -711,7 +711,7 @@ msgid ""
 "ASIO is a trademark and software of Steinberg Media Technologies GmbH."
 msgstr ""
 "Copyright 2006 Milan Digital Audio LLC\n"
-"Copyright 2009-2019 GrandOrgue contributors\n"
+"Copyright 2009-2019 GrandOrgue Mitwirkende\n"
 "\n"
 "Für dieses Programm besteht keinerlei Garantie.\n"
 "\n"
@@ -727,7 +727,7 @@ msgid "Core Audio"
 msgstr "Core Audio"
 
 msgid "Cores used at loadtime:"
-msgstr "***"
+msgstr "CPU-Kerne beim Laden:"
 
 msgid "Corrette (1753)"
 msgstr "Corrette (1753)"
@@ -802,7 +802,7 @@ msgstr "Erwartete Ausgabelatenz"
 
 #, c-format
 msgid "Device %s wants a different frame count: %d"
-msgstr "Gerät %s benötigt anderen frame count: %d"
+msgstr "Gerät %s benötigt eine andere Frameanzahl: %d"
 
 msgid "Device unavailable"
 msgstr "Gerät nicht verfügbar"
@@ -885,7 +885,7 @@ msgid "Event-&No"
 msgstr "Ereignis-&Nr"
 
 msgid "Export/import:"
-msgstr "***"
+msgstr "Export/Import:"
 
 msgid "Export Settings"
 msgstr "&Einstellungen exportieren"
@@ -1137,7 +1137,7 @@ msgstr "Ungültige Farbe in Abschnitt '%s' Eintrag '%s': %s"
 
 #, c-format
 msgid "Invalid combination entry %s in %s"
-msgstr "Ungültige Kombinations-Eintrag %s in %s"
+msgstr "Ungültiger Kombinations-Eintrag %s in %s"
 
 msgid "Invalid device"
 msgstr "Ungültiges Gerät"
@@ -1160,7 +1160,7 @@ msgstr "Ungültiger Fließkomma-Wert in Abschnitt '%s' Eintrag '%s': %s"
 
 #, c-format
 msgid "Invalid font size at section '%s' entry '%s': %s"
-msgstr "Ungültige Schriftartgröße in Abschnitt '%s' Eintrag '%s': %s"
+msgstr "Ungültige Schriftgröße in Abschnitt '%s' Eintrag '%s': %s"
 
 msgid "Invalid host API"
 msgstr "Ungültige Host-API"
