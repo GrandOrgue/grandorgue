@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-02-18 09:03+0100\n"
-"PO-Revision-Date: 2022-01-26 16:10+0100\n"
+"PO-Revision-Date: 2022-01-26 18:15+0100\n"
 "Last-Translator: Michael P. Schmidt\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -133,7 +133,7 @@ msgid "&Memory Level"
 msgstr "&Speicherebene"
 
 msgid "&Midi properties"
-msgstr "&Midi Eigenschaften"
+msgstr "&MIDI Eigenschaften"
 
 msgid "&MIDI-Output-Device..."
 msgstr "&MIDI-Ausgabegerät..."
@@ -256,7 +256,7 @@ msgid "1/4 comma variants"
 msgstr "1/4 Komma Variante"
 
 msgid "1/4-comma equal beating fifths"
-msgstr "1/4-Komma gleichstufige Quinte"
+msgstr "1/4-Komma gleichschwebende Quinte"
 
 msgid "1/4-comma meantone approximation"
 msgstr "1/4-Komma mitteltönig angenähert"
@@ -870,10 +870,10 @@ msgid "Enclosure 6"
 msgstr "Schweller 6"
 
 msgid "Equal beating Victorian piano temperament"
-msgstr "Gleichstufige Victorianische Piano Stimmung"
+msgstr "Gleichschwebende Victorianische Piano Stimmung"
 
 msgid "Equal temperament"
-msgstr "gleichstufige Stimmung"
+msgstr "Gleichstufige Stimmung"
 
 msgid "Error"
 msgstr "Fehler"
@@ -882,7 +882,7 @@ msgid "Event"
 msgstr "Ereignis"
 
 msgid "Event-&No"
-msgstr "Ereignis-&Nr"
+msgstr "Ereignis-&Nr.:"
 
 msgid "Export/import:"
 msgstr "Export/Import:"
@@ -1034,7 +1034,7 @@ msgid "Gain is invalid"
 msgstr "Verstärkung ist ungültig"
 
 msgid "Gain:"
-msgstr "Verstärkung"
+msgstr "Verstärkung:"
 
 msgid "Ganassi (Sylvestro) - 1543"
 msgstr "Ganassi (Sylvestro) - 1543"
@@ -1076,7 +1076,7 @@ msgid "Host API not found"
 msgstr "Host API nicht gefunden"
 
 msgid "Hummel's quasi-equal temperament (1829)"
-msgstr "Hummel's quasi-equal temperament (1829)"
+msgstr "Hummel's quasi-gleichstufige Stimmung (1829)"
 
 msgid "I"
 msgstr "I"
@@ -1103,10 +1103,10 @@ msgid "Import Settings"
 msgstr "Einstellungen importieren"
 
 msgid "Impulse response:"
-msgstr "Impulsantwort"
+msgstr "Impulsantwort:"
 
 msgid "Initial MIDI"
-msgstr "Initiale MIDI"
+msgstr "Initiales MIDI"
 
 msgid "Input overflowed"
 msgstr "Eingabeüberlauf"
@@ -1241,7 +1241,7 @@ msgid "L"
 msgstr "L"
 
 msgid "L&owest velocity:"
-msgstr "K&leinste Anschlagstärke"
+msgstr "K&leinste Anschlagstärke:"
 
 msgid "Lambert (1774) 1/7 comma"
 msgstr "Lambert (1774) 1/7 Komma"
@@ -1284,7 +1284,7 @@ msgid "Log messages"
 msgstr "Log Nachrichten"
 
 msgid "Longest loop"
-msgstr "Längster Loop"
+msgstr "Längste Schleife"
 
 msgid "Lossless compression"
 msgstr "Verlustfreie Komprimierung"
@@ -1317,7 +1317,7 @@ msgid "MIDI Messages"
 msgstr "MIDI Nachrichten"
 
 msgid "MIDI recording:"
-msgstr "MIDI Aufnahme:"
+msgstr "MIDI-Aufnahme:"
 
 msgid "MME"
 msgstr "MME"
@@ -1899,7 +1899,7 @@ msgid ""
 "The ODF contains GrandOrgue 0.2 styled saved settings. Should they be "
 "imported?"
 msgstr ""
-"Die ODF beinhaltet GrandOrgue 0.2 Einstellungen. Sollen diese geladen werden?"
+"Das ODF beinhaltet GrandOrgue 0.2 Einstellungen. Sollen diese geladen werden?"
 
 msgid "The cache for this organ is outdated. Please update or delete it."
 msgstr ""
