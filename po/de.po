@@ -1121,7 +1121,7 @@ msgid "Internal PortAudio error"
 msgstr "Interner PortAudio Fehler"
 
 msgid "Interpolation:"
-msgstr "Annäherung:"
+msgstr "Interpolationsmethode:"
 
 #, c-format
 msgid "Invalid Config entry at line %d: %s"
