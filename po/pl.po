@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-02-18 09:03+0100\n"
-"PO-Revision-Date: 2013-02-16 13:30+0100\n"
-"Last-Translator: Romuald Milewski <rommil67@gmail.com>\n"
+"PO-Revision-Date: 2022-01-27 23:03+0300\n"
+"Last-Translator: Oleg Samarin <osamarin68@gmail.com>\n"
 "Language-Team: Polish <rommil67@gmail.com>\n"
 "Language: pl\n "
 "MIME-Version: 1.0\n"
@@ -69,6 +69,9 @@ msgstr "&O"
 msgid "&Add"
 msgstr "&Dodaj"
 
+msgid "Audio"
+msgstr "Audio"
+
 msgid "&Audio/Midi"
 msgstr "&Audio/Midi"
 
@@ -86,6 +89,9 @@ msgstr "&Dane:"
 
 msgid "&Delete"
 msgstr "&Usuń"
+
+msgid "&Default volume"
+msgstr "&Domyślna głośność"
 
 msgid "&Device:"
 msgstr "&Urządenia:"
@@ -129,8 +135,17 @@ msgstr "Wczytaj\tCtrl+L"
 msgid "&Lowest key:"
 msgstr "&Najniższy klawisz:"
 
+msgid "&Mapping output"
+msgstr "Mapowanie wyjścia"
+
 msgid "&Memory Level"
 msgstr "&Poziom pamięci"
+
+msgid "&Midi properties"
+msgstr "Właściwości MIDI"
+
+msgid "&MIDI-Output-Device..."
+msgstr "Urządzenie wyjściowe..."
 
 msgid "&Off Value:"
 msgstr "&Wartośc końcowa"
@@ -530,7 +545,7 @@ msgstr "Zastosuj"
 msgid "Attack loading:"
 msgstr "Ładowanie ataku:"
 
-msgid "Audio Groups"
+msgid "Audio groups"
 msgstr "Grupy audio"
 
 msgid "Audio Output"
@@ -556,6 +571,15 @@ msgstr "Grupa audio %d"
 msgid "Audio group name"
 msgstr "Nazwa grupy audio"
 
+msgid "Audio recording:"
+msgstr "Nagrywanie audio"
+
+msgid "Auto add new devices"
+msgstr "Auto dodawać nowe urządzenia"
+
+msgid "Automatically manage cache"
+msgstr "Auto zarządzanie pamięcią podręczną"
+
 msgid "&Settings..."
 msgstr "&Ustawienia..."
 
@@ -564,6 +588,9 @@ msgstr "B"
 
 msgid "BAS"
 msgstr "BAS"
+
+msgid "BPM:"
+msgstr "Uderzeń na minutę:"
 
 msgid "Bach (Bradley Lehman)"
 msgstr "Bach (Bradley Lehman)"
@@ -623,9 +650,6 @@ msgstr "Plik pamięci podręcznej ma nieprawidłową sumę kontrolną. Pamięć 
 msgid "Cache load failure: %s"
 msgstr "Błąd ładowania pamięci podręcznej: %s"
 
-msgid "Cache store:"
-msgstr "Zapisz pamięć podręczną"
-
 msgid "Can't read from a callback stream"
 msgstr "Nie można odczytać ze strumienia wywołań zwrotnych"
 
@@ -671,6 +695,9 @@ msgstr "Kanal:"
 msgid "Chaumont"
 msgstr "Chaumont"
 
+msgid "Check on startup"
+msgstr "Sprawdzać przy starcie"
+
 msgid "Choose a file"
 msgstr "Wybierz plik"
 
@@ -712,6 +739,9 @@ msgstr "Core"
 
 msgid "Core Audio"
 msgstr "Core Audio"
+
+msgid "Cores used at loadtime:"
+msgstr "Rdzenie używane w czasie ładowania:"
 
 msgid "Corrette (1753)"
 msgstr "Corrette (1753)"
@@ -800,7 +830,7 @@ msgid "Device: %s (%d ms)"
 msgstr "Urzadzenie: %s (%d ms)"
 
 msgid "Direct Sound:"
-msgstr "Direct Sound:"
+msgstr "Bezpośredni dźwięk:"
 
 msgid "DirectSound"
 msgstr "DirectSound"
@@ -867,6 +897,9 @@ msgstr "Zdarzenie"
 
 msgid "Event-&No"
 msgstr "Zdarzenie-&Nr"
+
+msgid "Export/import:"
+msgstr "Eksport/import:"
 
 msgid "Export Settings"
 msgstr "Eksport ustawień"
@@ -1086,8 +1119,8 @@ msgstr "Importuj ustawienia"
 msgid "Impulse response:"
 msgstr "Odpowiedź impulsowa:"
 
-msgid "Initial MIDI Configuration"
-msgstr "Initial MIDI Configuration"
+msgid "Initial MIDI"
+msgstr "MIDI początkowe"
 
 msgid "Input overflowed"
 msgstr "Przepełnienie danych wejściowych"
@@ -1264,6 +1297,9 @@ msgstr "Wczytuję..."
 msgid "Log messages"
 msgstr "Log komunikatów"
 
+msgid "Loop loading:"
+msgstr "Ładowanie pętle"
+
 msgid "Longest loop"
 msgstr "Najdłuższa pętla"
 
@@ -1296,6 +1332,9 @@ msgstr "Zdarzenia MIDI"
 
 msgid "MIDI Messages"
 msgstr "Komunikaty MIDI"
+
+msgid "MIDI recording:"
+msgstr "Zapis MIDI"
 
 msgid "MME"
 msgstr "MME"
@@ -1345,6 +1384,9 @@ msgstr "Master"
 msgid "Master Controls"
 msgstr "Master Controls"
 
+msgid "Matching..."
+msgstr "Dopasowanie..."
+
 msgid "Max"
 msgstr "Max"
 
@@ -1374,8 +1416,17 @@ msgstr "Mersenne Spinett 2"
 msgid "Mersenne's Improved Meantone 1"
 msgstr "Mersenne's getestet mitteltönig 1"
 
+msgid "Perform strict ODF"
+msgstr "Przeprowadzić ścisłą kontrolę ODF"
+
 msgid "Program Settings"
 msgstr "Ustawienia programu"
+
+msgid "Midi player:"
+msgstr "Odtwarzacz MIDI:"
+
+msgid "Midi &ports"
+msgstr "Porty MIDI"
 
 msgid "Midi-Settings for Button - "
 msgstr "Ustawienia MIDI dla przycisku - "
@@ -1455,6 +1506,9 @@ msgstr "Północ"
 msgid "Number %s contains locale dependent floating point"
 msgstr "Liczba %s zawiera lokalnie zależną liczbę zmiennoprzecinkową"
 
+msgid "Number of CPU cores:"
+msgstr "Ilość rdzeni CPU:"
+
 msgid "O"
 msgstr "O"
 
@@ -1480,6 +1534,12 @@ msgstr "Organy"
 msgid "Organ &Properties"
 msgstr "&Właściwości organów."
 
+msgid "Organ packages"
+msgstr "Pakiety organowy"
+
+msgid "Organ packages:"
+msgstr "Pakiety organowy:"
+
 msgid "Organ Doc"
 msgstr "Dokument organowy"
 
@@ -1489,8 +1549,14 @@ msgstr "Właściwości organów"
 msgid "Organ View"
 msgstr "Widok"
 
+msgid "Organ cache:"
+msgstr "Pamięć podręczna organów:"
+
 msgid "Organ settings"
 msgstr "Ustawienia organów"
+
+msgid "Organ settings:"
+msgstr "Ustawienia organów:"
 
 msgid "Organs"
 msgstr "Organy"
@@ -1532,6 +1598,9 @@ msgstr "P"
 msgid "P&roperties..."
 msgstr "W&łaściwości..."
 
+msgid "Packages"
+msgstr "Pakiety"
+
 msgid "Panic"
 msgstr "Panika"
 
@@ -1540,6 +1609,9 @@ msgstr "Nadrzędna wartośc domyślna"
 
 msgid "Parsing sample set definition file"
 msgstr "Analizuj ODF"
+
+msgid "Paths"
+msgstr "Ścieżki"
 
 msgid "Please apply changes first"
 msgstr "Najpierw zastosuj zmiany "
@@ -1617,6 +1689,12 @@ msgstr "Przeład&uj"
 msgid "Ready!"
 msgstr "Gotowy!"
 
+msgid "Reason"
+msgstr "Przyczyna"
+
+msgid "Record stereo downmix"
+msgstr "Nagrywać dźwięk wielokanałowy w stereo"
+
 msgid "Receive"
 msgstr "Odbierz"
 
@@ -1625,6 +1703,9 @@ msgstr "Nagrywaj w formacie WAV:"
 
 msgid "Recording Details"
 msgstr "Szczegóły nagrywania"
+
+msgid "Registered organs"
+msgstr "Zarejestrowane organy"
 
 msgid "Regular"
 msgstr "Zwykły"
@@ -1676,6 +1757,9 @@ msgstr "Ładowanie sampli"
 msgid "Sample Size:"
 msgstr "Rozmiar sampli:"
 
+msgid "Sample Rate:"
+msgstr "Częstotliwość sampli:"
+
 msgid "Sample channels:"
 msgstr "kanał sampli:"
 
@@ -1694,6 +1778,9 @@ msgstr "Rozmiar sampli:"
 
 msgid "Samples per buffer:"
 msgstr "Sampli na bufor:"
+
+msgid "Samplesets:"
+msgstr "Zestawy próbek:"
 
 msgid "Sauveur (Memoires 1701)"
 msgstr "Sauveur (Memoires 1701)"
@@ -1736,20 +1823,38 @@ msgstr "Wybierz plik pulsu"
 msgid "Select directory for cache store"
 msgstr "Wybierz folder do przechowywania pamięci podręczne"
 
+msgid "Select directory for setting import/export"
+msgstr "Wybierz folder do eksporta/importa ustawień"
+
 msgid "Select directory for settings store"
 msgstr "Wybierz folder do przechowywania ustawień"
 
+msgid "Select directory for the MIDI player"
+msgstr "Wybierz folder do odtwarzacza MIDI"
+
+msgid "Select directory for your audio recordings"
+msgstr "Wybierz folder do nagrań audio"
+
+msgid "Select directory for your MIDI recording"
+msgstr "Wybierz folder do nagrań MIDI"
+
+msgid "Select directory for your organ packages"
+msgstr "Wybierz folder do pakietów organowych"
+
+msgid "Select directory for your samplesets"
+msgstr "Wybierz folder do zestawów próbek"
+
 msgid "Send"
 msgstr "Wyślij"
+
+msgid "Send MIDI Recorder Output Stream to:"
+msgstr "Wyślij strumień wyjściowy rejestratora MIDI do:"
 
 msgid "Settings"
 msgstr "Ustawienia"
 
 msgid "Settings files (*.cmb)|*.cmb"
 msgstr "Pliki ustawień (*.cmb)|*.cmb"
-
-msgid "Settings store:"
-msgstr "Zapisz ustawienia:"
 
 msgid "Shortcut"
 msgstr "Skrót"
@@ -1781,6 +1886,9 @@ msgstr "Sorge, 1744 (B)"
 
 msgid "Sorge, 1758"
 msgstr "Sorge, 1758"
+
+msgid "Sound &ports"
+msgstr "Porty dźwięku"
 
 msgid "Stade St. Cosmae"
 msgstr "Stade St. Cosmae"
@@ -1834,6 +1942,9 @@ msgstr "Ta funkcja nie jest obecnie obsługiwana."
 
 msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
 msgstr "Thomas/Philpott 1829/1881 Orgel, St. Jansklooster"
+
+msgid "Ticks per Measure:"
+msgstr "Uderzeń na takt:"
 
 msgid "Title"
 msgstr "Tytuł"
@@ -1916,6 +2027,9 @@ msgstr "Victorianische temperament 1885"
 msgid "Volume"
 msgstr "Głośność"
 
+msgid "Volume:"
+msgstr "Głośność:"
+
 msgid "W"
 msgstr "W"
 
@@ -1964,6 +2078,9 @@ msgstr "Windows menu"
 
 msgid "Windows right"
 msgstr "Windows right"
+
+msgid "Workload distribution:"
+msgstr "Rozkład obciążenia:"
 
 msgid "X"
 msgstr "X"
@@ -2061,6 +2178,9 @@ msgstr "na licencji GNU GPLv2 (lub nowszej)"
 
 msgid "menu"
 msgstr "meni"
+
+msgid "Metronome"
+msgstr "Taktomierz"
 
 msgid "multiply"
 msgstr "pomnóż"
