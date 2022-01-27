@@ -575,7 +575,7 @@ msgid "Audio recording:"
 msgstr "Nagrywanie audio"
 
 msgid "Auto add new devices"
-msgstr "Auto dodawać nowe urządzenia"
+msgstr "Auto dodawanie nowych urządzeń"
 
 msgid "Automatically manage cache"
 msgstr "Auto zarządzanie pamięcią podręczną"
@@ -696,7 +696,7 @@ msgid "Chaumont"
 msgstr "Chaumont"
 
 msgid "Check on startup"
-msgstr "Sprawdzać przy starcie"
+msgstr "Sprawdzanie przy starcie"
 
 msgid "Choose a file"
 msgstr "Wybierz plik"
@@ -1298,7 +1298,7 @@ msgid "Log messages"
 msgstr "Log komunikatów"
 
 msgid "Loop loading:"
-msgstr "Ładowanie pętle"
+msgstr "Ładowanie pętli"
 
 msgid "Longest loop"
 msgstr "Najdłuższa pętla"
@@ -1417,7 +1417,7 @@ msgid "Mersenne's Improved Meantone 1"
 msgstr "Mersenne's getestet mitteltönig 1"
 
 msgid "Perform strict ODF"
-msgstr "Przeprowadzić ścisłą kontrolę ODF"
+msgstr "Przeprowadzanie ścisłej kontroli ODF"
 
 msgid "Program Settings"
 msgstr "Ustawienia programu"
@@ -1507,7 +1507,7 @@ msgid "Number %s contains locale dependent floating point"
 msgstr "Liczba %s zawiera lokalnie zależną liczbę zmiennoprzecinkową"
 
 msgid "Number of CPU cores:"
-msgstr "Ilość rdzeni CPU:"
+msgstr "Liczba rdzeni CPU:"
 
 msgid "O"
 msgstr "O"
@@ -1535,10 +1535,10 @@ msgid "Organ &Properties"
 msgstr "&Właściwości organów."
 
 msgid "Organ packages"
-msgstr "Pakiety organowy"
+msgstr "Pakiety organowe"
 
 msgid "Organ packages:"
-msgstr "Pakiety organowy:"
+msgstr "Pakiety organowe:"
 
 msgid "Organ Doc"
 msgstr "Dokument organowy"
@@ -1693,7 +1693,7 @@ msgid "Reason"
 msgstr "Przyczyna"
 
 msgid "Record stereo downmix"
-msgstr "Nagrywać dźwięk wielokanałowy w stereo"
+msgstr "Nagrywanie dźwięku wielokanałowego w stereo"
 
 msgid "Receive"
 msgstr "Odbierz"
@@ -1824,7 +1824,7 @@ msgid "Select directory for cache store"
 msgstr "Wybierz folder do przechowywania pamięci podręczne"
 
 msgid "Select directory for setting import/export"
-msgstr "Wybierz folder do eksporta/importa ustawień"
+msgstr "Wybierz folder do importu/eksportu ustawień"
 
 msgid "Select directory for settings store"
 msgstr "Wybierz folder do przechowywania ustawień"
@@ -1848,7 +1848,7 @@ msgid "Send"
 msgstr "Wyślij"
 
 msgid "Send MIDI Recorder Output Stream to:"
-msgstr "Wyślij strumień wyjściowy rejestratora MIDI do:"
+msgstr "Wysyłanie strumienia wyjściowego rejestratora MIDI do:"
 
 msgid "Settings"
 msgstr "Ustawienia"
@@ -2180,7 +2180,7 @@ msgid "menu"
 msgstr "meni"
 
 msgid "Metronome"
-msgstr "Taktomierz"
+msgstr "Metronom"
 
 msgid "multiply"
 msgstr "pomnóż"
