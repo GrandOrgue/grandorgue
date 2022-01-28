@@ -1758,7 +1758,7 @@ msgid "Sample Size:"
 msgstr "Rozmiar sampli:"
 
 msgid "Sample Rate:"
-msgstr "Częstotliwość sampli:"
+msgstr "Częstotliwość próbkowania:"
 
 msgid "Sample channels:"
 msgstr "kanał sampli:"
@@ -1777,7 +1777,7 @@ msgid "Sample size:"
 msgstr "Rozmiar sampli:"
 
 msgid "Samples per buffer:"
-msgstr "Sampli na bufor:"
+msgstr "Próbek na bufor:"
 
 msgid "Samplesets:"
 msgstr "Zestawy próbek:"
