@@ -9,6 +9,7 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/gbsizer.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
@@ -37,50 +38,55 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     m_original(event),
     m_recv(recv),
     m_midi(*event) {
-  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(2, 5, 5);
-  topSizer->Add(sizer, 0, wxALL, 6);
+  wxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
+  wxGridBagSizer *const grid = new wxGridBagSizer(5, 5);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("Event-&No")),
-    0,
+    wxGBPosition(0, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
   wxBoxSizer *box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+
   m_eventno = new wxChoice(this, ID_EVENT_NO);
-  box->Add(m_eventno, 1, wxEXPAND);
+  box->Add(m_eventno, 1, wxRIGHT, 5);
   m_new = new wxButton(this, ID_EVENT_NEW, _("New"));
+  box->Add(m_new, 0, wxLEFT | wxRIGHT, 5);
   m_delete = new wxButton(this, ID_EVENT_DELETE, _("Delete"));
-  box->Add(m_new, 0);
-  box->Add(m_delete, 0);
+  box->Add(m_delete, 0, wxLEFT | wxRIGHT, 5);
+  grid->Add(box, wxGBPosition(0, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Device:")),
-    0,
+    wxGBPosition(1, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
   m_device = new wxChoice(this, ID_EVENT);
-  sizer->Add(m_device, 1, wxEXPAND);
+  grid->Add(m_device, wxGBPosition(1, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Event:")),
-    0,
+    wxGBPosition(2, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
   m_eventtype = new GOChoice<GOMidiSendMessageType>(this, ID_EVENT);
-  sizer->Add(m_eventtype, 1, wxEXPAND);
+  grid->Add(m_eventtype, wxGBPosition(2, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Channel:")),
-    0,
+    wxGBPosition(3, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
   m_channel = new wxChoice(this, ID_CHANNEL);
-  sizer->Add(m_channel, 1, wxEXPAND);
+  grid->Add(m_channel, wxGBPosition(3, 1));
 
   m_KeyLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_KeyLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_KeyLabel,
+    wxGBPosition(4, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_key = new wxSpinCtrl(
     this,
     ID_KEY,
@@ -90,12 +96,14 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  sizer->Add(m_key, 0);
+  grid->Add(m_key, wxGBPosition(4, 1));
 
   m_LowValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_LowValueLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+  grid->Add(
+    m_LowValueLabel,
+    wxGBPosition(5, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_LowValue = new wxSpinCtrl(
     this,
     ID_LOW_VALUE,
@@ -105,9 +113,13 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_LowValue, 0);
+  grid->Add(m_LowValue, wxGBPosition(5, 1));
   m_HighValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  box->Add(m_HighValueLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+  grid->Add(
+    m_HighValueLabel,
+    wxGBPosition(5, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_HighValue = new wxSpinCtrl(
     this,
     ID_HIGH_VALUE,
@@ -117,12 +129,14 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_HighValue, 0);
+  grid->Add(m_HighValue, wxGBPosition(5, 3));
 
   m_StartLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_StartLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+  grid->Add(
+    m_StartLabel,
+    wxGBPosition(6, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_StartValue = new wxSpinCtrl(
     this,
     ID_START,
@@ -132,9 +146,13 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_StartValue, 0);
+  grid->Add(m_StartValue, wxGBPosition(6, 1));
   m_LengthLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  box->Add(m_LengthLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+  grid->Add(
+    m_LengthLabel,
+    wxGBPosition(6, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_LengthValue = new wxSpinCtrl(
     this,
     ID_LENGTH,
@@ -144,13 +162,17 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_LengthValue, 0);
+  grid->Add(m_LengthValue, wxGBPosition(6, 3));
 
+  grid->AddGrowableCol(4, 1);
+  topSizer->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+  box = new wxBoxSizer(wxHORIZONTAL);
   m_copy = new wxButton(this, ID_COPY, _("&Copy current receive event"));
   if (!m_recv)
     m_copy->Disable();
-  sizer->Add(new wxBoxSizer(wxVERTICAL), 0, wxTOP, 5);
-  sizer->Add(m_copy, 0, wxTOP, 5);
+  box->Add(m_copy, 0, wxALL, 5);
+  topSizer->Add(box, 0, wxEXPAND | wxALL, 5);
 
   SetSizer(topSizer);
 
