@@ -30,9 +30,10 @@ EVT_CHOICE(ID_EVENT, MIDIEventRecvDialog::OnTypeChange)
 END_EVENT_TABLE()
 
 MIDIEventRecvDialog::MIDIEventRecvDialog(
-  wxWindow *parent, GOMidiReceiverBase *event, GOConfig &settings)
+  wxWindow *parent, GOMidiReceiverBase *event, GOConfig &config)
   : wxPanel(parent, wxID_ANY),
-    m_config(settings),
+    m_MidiIn(config.m_MidiIn),
+    m_MidiMap(config.GetMidiMap()),
     m_original(event),
     m_midi(*event),
     m_listener(),
@@ -69,7 +70,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     0,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-  m_eventtype = new GOChoice<midi_match_message_type>(this, ID_EVENT);
+  m_eventtype = new GOChoice<GOMidiReceiveMessageType>(this, ID_EVENT);
   sizer->Add(m_eventtype, 1, wxEXPAND);
 
   sizer->Add(
@@ -186,7 +187,7 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
 
   m_device->Append(_("Any device"));
 
-  for (GOMidiDeviceConfig *pDevConf : m_config.m_MidiIn)
+  for (GOMidiDeviceConfig *pDevConf : m_MidiIn)
     m_device->Append(pDevConf->m_LogicalName);
 
   m_channel->Append(_("Any channel"));
@@ -303,7 +304,7 @@ void MIDIEventRecvDialog::DoApply() {
 }
 
 void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent &event) {
-  midi_match_message_type type = m_eventtype->GetCurrentSelection();
+  GOMidiReceiveMessageType type = m_eventtype->GetCurrentSelection();
   if (m_original->HasChannel(type))
     m_channel->Enable();
   else
@@ -427,10 +428,10 @@ void MIDIEventRecvDialog::LoadEvent() {
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
     wxString buffer;
     wxString device;
-    if (m_midi.GetEvent(i).device == 0)
+    if (m_midi.GetEvent(i).deviceId == 0)
       device = _("Any device");
     else
-      device = m_config.GetMidiMap().GetDeviceByID(m_midi.GetEvent(i).device);
+      device = m_MidiMap.GetDeviceLogicalNameById(m_midi.GetEvent(i).deviceId);
     buffer.Printf(_("%d (%s)"), i + 1, device.c_str());
     m_eventno->Append(buffer);
   }
@@ -440,7 +441,7 @@ void MIDIEventRecvDialog::LoadEvent() {
   else
     m_delete->Disable();
 
-  MIDI_MATCH_EVENT &e = m_midi.GetEvent(m_current);
+  GOMidiReceiveEvent &e = m_midi.GetEvent(m_current);
 
   m_eventtype->SetCurrentSelection(e.type);
 
@@ -449,7 +450,8 @@ void MIDIEventRecvDialog::LoadEvent() {
 
   m_device->SetSelection(0);
   for (unsigned i = 1; i < m_device->GetCount(); i++)
-    if (m_config.GetMidiMap().GetDeviceByID(e.device) == m_device->GetString(i))
+    if (
+      m_MidiMap.GetDeviceLogicalNameById(e.deviceId) == m_device->GetString(i))
       m_device->SetSelection(i);
 
   m_channel->SetSelection(0);
@@ -466,13 +468,13 @@ void MIDIEventRecvDialog::LoadEvent() {
   m_Debounce->SetValue(e.debounce_time);
 }
 
-MIDI_MATCH_EVENT MIDIEventRecvDialog::GetCurrentEvent() {
-  MIDI_MATCH_EVENT e;
+GOMidiReceiveEvent MIDIEventRecvDialog::GetCurrentEvent() {
+  GOMidiReceiveEvent e;
   if (m_device->GetSelection() == 0)
-    e.device = 0;
+    e.deviceId = 0;
   else
-    e.device
-      = m_config.GetMidiMap().GetDeviceByString(m_device->GetStringSelection());
+    e.deviceId
+      = m_MidiMap.GetDeviceIdByLogicalName(m_device->GetStringSelection());
 
   e.type = m_eventtype->GetCurrentSelection();
   if (m_channel->GetSelection() == 0)
@@ -672,9 +674,9 @@ void MIDIEventRecvDialog::DetectEvent() {
         if (m_midi.GetType() == MIDI_RECV_MANUAL) {
           if (on.GetMidiType() != MIDI_NOTE)
             continue;
-          MIDI_MATCH_EVENT &e = m_midi.GetEvent(m_current);
+          GOMidiReceiveEvent &e = m_midi.GetEvent(m_current);
           e.type = MIDI_M_NOTE;
-          e.device = on.GetDevice();
+          e.deviceId = on.GetDevice();
           e.channel = on.GetChannel();
           e.low_key = on.GetKey();
           e.high_key = off.GetKey();
@@ -703,7 +705,7 @@ void MIDIEventRecvDialog::DetectEvent() {
         if (on.GetKey() != off.GetKey() && !is_range)
           continue;
         if (m_midi.GetType() == MIDI_RECV_ENCLOSURE) {
-          MIDI_MATCH_EVENT &e = m_midi.GetEvent(m_current);
+          GOMidiReceiveEvent &e = m_midi.GetEvent(m_current);
           unsigned low = off.GetValue();
           unsigned high = on.GetValue();
           int key = on.GetKey();
@@ -726,7 +728,7 @@ void MIDIEventRecvDialog::DetectEvent() {
           default:
             continue;
           }
-          e.device = on.GetDevice();
+          e.deviceId = on.GetDevice();
           e.channel = on.GetChannel();
           e.key = key;
           e.low_key = 0;
@@ -737,7 +739,7 @@ void MIDIEventRecvDialog::DetectEvent() {
           StopListen();
           return;
         }
-        MIDI_MATCH_EVENT &e = m_midi.GetEvent(m_current);
+        GOMidiReceiveEvent &e = m_midi.GetEvent(m_current);
         unsigned low = 0;
         unsigned high = 1;
         int key = on.GetKey();
@@ -844,7 +846,7 @@ void MIDIEventRecvDialog::DetectEvent() {
         default:
           continue;
         }
-        e.device = on.GetDevice();
+        e.deviceId = on.GetDevice();
         e.channel = on.GetChannel();
         e.key = key;
         e.low_key = 0;
@@ -859,7 +861,7 @@ void MIDIEventRecvDialog::DetectEvent() {
     }
   }
 
-  MIDI_MATCH_EVENT &e = m_midi.GetEvent(m_current);
+  GOMidiReceiveEvent &e = m_midi.GetEvent(m_current);
   GOMidiEvent &event = m_OnList[0];
   unsigned low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
   unsigned high_value = (m_midi.GetType() == MIDI_RECV_MANUAL
@@ -907,7 +909,7 @@ void MIDIEventRecvDialog::DetectEvent() {
   default:
     e.type = MIDI_M_NONE;
   }
-  e.device = event.GetDevice();
+  e.deviceId = event.GetDevice();
   e.channel = event.GetChannel();
   if (m_midi.GetType() != MIDI_RECV_MANUAL)
     e.key = event.GetKey();

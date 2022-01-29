@@ -51,7 +51,7 @@ protected:
 
 public:
   GOButton(
-    GODefinitionFile *organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton);
+    GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton);
   virtual ~GOButton();
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);

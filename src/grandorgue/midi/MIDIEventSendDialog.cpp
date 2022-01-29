@@ -13,8 +13,9 @@
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
-#include "MIDIEventRecvDialog.h"
 #include "config/GOConfig.h"
+
+#include "MIDIEventRecvDialog.h"
 
 BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 EVT_BUTTON(ID_EVENT_NEW, MIDIEventSendDialog::OnNewClick)
@@ -28,9 +29,11 @@ MIDIEventSendDialog::MIDIEventSendDialog(
   wxWindow *parent,
   GOMidiSender *event,
   MIDIEventRecvDialog *recv,
-  GOConfig &settings)
+  GOConfig &config)
   : wxPanel(parent, wxID_ANY),
-    m_config(settings),
+    m_MidiIn(config.m_MidiIn),
+    m_MidiOut(config.m_MidiOut),
+    m_MidiMap(config.GetMidiMap()),
     m_original(event),
     m_recv(recv),
     m_midi(*event) {
@@ -65,7 +68,7 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     0,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-  m_eventtype = new GOChoice<midi_send_message_type>(this, ID_EVENT);
+  m_eventtype = new GOChoice<GOMidiSendMessageType>(this, ID_EVENT);
   sizer->Add(m_eventtype, 1, wxEXPAND);
 
   sizer->Add(
@@ -153,7 +156,7 @@ MIDIEventSendDialog::MIDIEventSendDialog(
 
   m_device->Append(_("Any device"));
 
-  for (const GOMidiDeviceConfig *pDevConf : m_config.m_MidiOut)
+  for (const GOMidiDeviceConfig *pDevConf : m_MidiOut)
     m_device->Append(pDevConf->m_LogicalName);
 
   for (unsigned int i = 1; i <= 16; i++)
@@ -242,7 +245,7 @@ void MIDIEventSendDialog::DoApply() {
 }
 
 void MIDIEventSendDialog::OnTypeChange(wxCommandEvent &event) {
-  midi_send_message_type type = m_eventtype->GetCurrentSelection();
+  GOMidiSendMessageType type = m_eventtype->GetCurrentSelection();
   if (m_original->HasChannel(type))
     m_channel->Enable();
   else
@@ -343,10 +346,10 @@ void MIDIEventSendDialog::LoadEvent() {
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
     wxString buffer;
     wxString device;
-    if (m_midi.GetEvent(i).device == 0)
+    if (m_midi.GetEvent(i).deviceId == 0)
       device = _("Any device");
     else
-      device = m_config.GetMidiMap().GetDeviceByID(m_midi.GetEvent(i).device);
+      device = m_MidiMap.GetDeviceLogicalNameById(m_midi.GetEvent(i).deviceId);
     buffer.Printf(_("%d (%s)"), i + 1, device.c_str());
     m_eventno->Append(buffer);
   }
@@ -356,7 +359,7 @@ void MIDIEventSendDialog::LoadEvent() {
   else
     m_delete->Disable();
 
-  MIDI_SEND_EVENT &e = m_midi.GetEvent(m_current);
+  GOMidiSendEvent &e = m_midi.GetEvent(m_current);
 
   m_eventtype->SetCurrentSelection(e.type);
 
@@ -365,7 +368,8 @@ void MIDIEventSendDialog::LoadEvent() {
 
   m_device->SetSelection(0);
   for (unsigned i = 1; i < m_device->GetCount(); i++)
-    if (m_config.GetMidiMap().GetDeviceByID(e.device) == m_device->GetString(i))
+    if (
+      m_MidiMap.GetDeviceLogicalNameById(e.deviceId) == m_device->GetString(i))
       m_device->SetSelection(i);
 
   m_channel->SetSelection(e.channel - 1);
@@ -377,12 +381,12 @@ void MIDIEventSendDialog::LoadEvent() {
 }
 
 void MIDIEventSendDialog::StoreEvent() {
-  MIDI_SEND_EVENT &e = m_midi.GetEvent(m_current);
+  GOMidiSendEvent &e = m_midi.GetEvent(m_current);
   if (m_device->GetSelection() == 0)
-    e.device = 0;
+    e.deviceId = 0;
   else
-    e.device
-      = m_config.GetMidiMap().GetDeviceByString(m_device->GetStringSelection());
+    e.deviceId
+      = m_MidiMap.GetDeviceIdByLogicalName(m_device->GetStringSelection());
 
   e.type = m_eventtype->GetCurrentSelection();
   e.channel = m_channel->GetSelection() + 1;
@@ -416,24 +420,24 @@ void MIDIEventSendDialog::OnCopyClick(wxCommandEvent &event) {
   LoadEvent();
 }
 
-MIDI_SEND_EVENT MIDIEventSendDialog::CopyEvent() {
-  MIDI_MATCH_EVENT recv = m_recv->GetCurrentEvent();
+GOMidiSendEvent MIDIEventSendDialog::CopyEvent() {
+  GOMidiReceiveEvent recv = m_recv->GetCurrentEvent();
 
-  MIDI_SEND_EVENT e;
-  e.device = 0;
+  GOMidiSendEvent e;
+  e.deviceId = 0;
   e.type = MIDI_S_NONE;
   e.channel = 1;
   e.key = 1;
   e.low_value = 0;
   e.high_value = 127;
 
-  const GOMidiDeviceConfig *pInDev = m_config.m_MidiIn.FindByLogicalName(
-    m_config.GetMidiMap().GetDeviceByID(recv.device));
+  const GOMidiDeviceConfig *pInDev = m_MidiIn.FindByLogicalName(
+    m_MidiMap.GetDeviceLogicalNameById(recv.deviceId));
   const GOMidiDeviceConfig *pOutDev = pInDev ? pInDev->p_OutputDevice : NULL;
 
   if (!pOutDev)
     return e;
-  e.device = m_config.GetMidiMap().GetDeviceByString(pOutDev->m_LogicalName);
+  e.deviceId = m_MidiMap.GetDeviceIdByLogicalName(pOutDev->m_LogicalName);
   if (m_midi.GetType() == MIDI_SEND_MANUAL) {
     if (
       recv.type == MIDI_M_NOTE || recv.type == MIDI_M_NOTE_NO_VELOCITY

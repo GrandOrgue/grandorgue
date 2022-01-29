@@ -13,20 +13,26 @@
 #include "GOChoice.h"
 #include "GOMidiSender.h"
 
-class GOConfig;
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
 class wxStaticText;
+
+class GOConfig;
+class GOMidiDeviceConfigList;
+class GOMidiMap;
 class MIDIEventRecvDialog;
 
 class MIDIEventSendDialog : public wxPanel {
 private:
-  GOConfig &m_config;
+  GOMidiDeviceConfigList &m_MidiIn;
+  GOMidiDeviceConfigList &m_MidiOut;
+  GOMidiMap &m_MidiMap;
+
   GOMidiSender *m_original;
   MIDIEventRecvDialog *m_recv;
   GOMidiSenderData m_midi;
-  GOChoice<midi_send_message_type> *m_eventtype;
+  GOChoice<GOMidiSendMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
   wxStaticText *m_KeyLabel;
   wxSpinCtrl *m_key;
@@ -43,7 +49,7 @@ private:
 
   void StoreEvent();
   void LoadEvent();
-  MIDI_SEND_EVENT CopyEvent();
+  GOMidiSendEvent CopyEvent();
 
   void OnNewClick(wxCommandEvent &event);
   void OnDeleteClick(wxCommandEvent &event);
@@ -72,7 +78,7 @@ public:
     wxWindow *parent,
     GOMidiSender *event,
     MIDIEventRecvDialog *recv,
-    GOConfig &settings);
+    GOConfig &config);
   ~MIDIEventSendDialog();
 
   void DoApply();

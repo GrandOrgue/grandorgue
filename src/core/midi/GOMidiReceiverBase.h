@@ -29,8 +29,8 @@ private:
   std::vector<GOTime> m_last;
   std::vector<midi_internal_match> m_Internal;
 
-  MIDI_MATCH_TYPE
-  debounce(const GOMidiEvent &e, MIDI_MATCH_TYPE event, unsigned index);
+  GOMidiMatchType debounce(
+    const GOMidiEvent &e, GOMidiMatchType event, unsigned index);
   void deleteInternal(unsigned device);
   unsigned createInternal(unsigned device);
 
@@ -39,7 +39,7 @@ protected:
   virtual int GetTranspose();
 
 public:
-  GOMidiReceiverBase(MIDI_RECEIVER_TYPE type);
+  GOMidiReceiverBase(GOMidiReceiverType type);
 
   virtual void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map);
@@ -47,21 +47,21 @@ public:
 
   void SetElementID(int id);
 
-  MIDI_MATCH_TYPE Match(const GOMidiEvent &e);
-  MIDI_MATCH_TYPE Match(const GOMidiEvent &e, int &value);
-  MIDI_MATCH_TYPE Match(
+  GOMidiMatchType Match(const GOMidiEvent &e);
+  GOMidiMatchType Match(const GOMidiEvent &e, int &value);
+  GOMidiMatchType Match(
     const GOMidiEvent &e, const unsigned midi_map[128], int &key, int &value);
 
-  bool HasDebounce(midi_match_message_type type);
-  bool HasChannel(midi_match_message_type type);
-  bool HasKey(midi_match_message_type type);
-  bool HasLowKey(midi_match_message_type type);
-  bool HasHighKey(midi_match_message_type type);
-  bool HasLowerLimit(midi_match_message_type type);
-  bool HasUpperLimit(midi_match_message_type type);
-  unsigned KeyLimit(midi_match_message_type type);
-  unsigned LowerValueLimit(midi_match_message_type type);
-  unsigned UpperValueLimit(midi_match_message_type type);
+  bool HasDebounce(GOMidiReceiveMessageType type);
+  bool HasChannel(GOMidiReceiveMessageType type);
+  bool HasKey(GOMidiReceiveMessageType type);
+  bool HasLowKey(GOMidiReceiveMessageType type);
+  bool HasHighKey(GOMidiReceiveMessageType type);
+  bool HasLowerLimit(GOMidiReceiveMessageType type);
+  bool HasUpperLimit(GOMidiReceiveMessageType type);
+  unsigned KeyLimit(GOMidiReceiveMessageType type);
+  unsigned LowerValueLimit(GOMidiReceiveMessageType type);
+  unsigned UpperValueLimit(GOMidiReceiveMessageType type);
 
   virtual void Assign(const GOMidiReceiverData &data);
 };

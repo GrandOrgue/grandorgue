@@ -21,8 +21,8 @@ public:
   GOMidiMap();
   ~GOMidiMap();
 
-  unsigned GetDeviceByString(const wxString &str);
-  const wxString &GetDeviceByID(unsigned id);
+  unsigned GetDeviceIdByLogicalName(const wxString &str);
+  const wxString &GetDeviceLogicalNameById(unsigned id);
 
   unsigned GetElementByString(const wxString &str);
   const wxString &GetElementByID(unsigned id);

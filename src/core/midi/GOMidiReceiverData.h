@@ -19,7 +19,7 @@ typedef enum {
   MIDI_RECV_MANUAL,
   MIDI_RECV_SETTER,
   MIDI_RECV_ORGAN,
-} MIDI_RECEIVER_TYPE;
+} GOMidiReceiverType;
 
 typedef enum {
   MIDI_MATCH_NONE,
@@ -27,7 +27,7 @@ typedef enum {
   MIDI_MATCH_OFF,
   MIDI_MATCH_CHANGE,
   MIDI_MATCH_RESET,
-} MIDI_MATCH_TYPE;
+} GOMidiMatchType;
 
 typedef enum {
   MIDI_M_NONE,
@@ -66,11 +66,11 @@ typedef enum {
   MIDI_M_NOTE_NO_VELOCITY,
   MIDI_M_NOTE_SHORT_OCTAVE,
   MIDI_M_NOTE_NORMAL,
-} midi_match_message_type;
+} GOMidiReceiveMessageType;
 
 typedef struct {
-  unsigned device;
-  midi_match_message_type type;
+  unsigned deviceId;
+  GOMidiReceiveMessageType type;
   int channel;
   int key;
   int low_key;
@@ -78,21 +78,21 @@ typedef struct {
   int low_value;
   int high_value;
   unsigned debounce_time;
-} MIDI_MATCH_EVENT;
+} GOMidiReceiveEvent;
 
 class GOMidiReceiverData {
 protected:
-  MIDI_RECEIVER_TYPE m_type;
-  std::vector<MIDI_MATCH_EVENT> m_events;
+  GOMidiReceiverType m_type;
+  std::vector<GOMidiReceiveEvent> m_events;
 
 public:
-  GOMidiReceiverData(MIDI_RECEIVER_TYPE type);
+  GOMidiReceiverData(GOMidiReceiverType type);
   virtual ~GOMidiReceiverData();
 
-  MIDI_RECEIVER_TYPE GetType() const;
+  GOMidiReceiverType GetType() const;
 
   unsigned GetEventCount() const;
-  MIDI_MATCH_EVENT &GetEvent(unsigned index);
+  GOMidiReceiveEvent &GetEvent(unsigned index);
   unsigned AddNewEvent();
   void DeleteEvent(unsigned index);
 };

@@ -7,21 +7,21 @@
 
 #include "GOMidiReceiverData.h"
 
-GOMidiReceiverData::GOMidiReceiverData(MIDI_RECEIVER_TYPE type)
+GOMidiReceiverData::GOMidiReceiverData(GOMidiReceiverType type)
   : m_type(type), m_events(0) {}
 
 GOMidiReceiverData::~GOMidiReceiverData() {}
 
-MIDI_RECEIVER_TYPE GOMidiReceiverData::GetType() const { return m_type; }
+GOMidiReceiverType GOMidiReceiverData::GetType() const { return m_type; }
 
 unsigned GOMidiReceiverData::GetEventCount() const { return m_events.size(); }
 
-MIDI_MATCH_EVENT &GOMidiReceiverData::GetEvent(unsigned index) {
+GOMidiReceiveEvent &GOMidiReceiverData::GetEvent(unsigned index) {
   return m_events[index];
 }
 
 unsigned GOMidiReceiverData::AddNewEvent() {
-  MIDI_MATCH_EVENT m = {0, MIDI_M_NONE, -1, 0};
+  GOMidiReceiveEvent m = {0, MIDI_M_NONE, -1, 0};
   m_events.push_back(m);
   return m_events.size() - 1;
 }

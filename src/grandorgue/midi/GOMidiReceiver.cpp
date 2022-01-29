@@ -14,7 +14,7 @@
 #include "config/GOConfigReader.h"
 
 GOMidiReceiver::GOMidiReceiver(
-  GODefinitionFile *organfile, MIDI_RECEIVER_TYPE type)
+  GODefinitionFile *organfile, GOMidiReceiverType type)
   : GOMidiReceiverBase(type), m_organfile(organfile), m_Index(-1) {}
 
 void GOMidiReceiver::SetIndex(int index) { m_Index = index; }
