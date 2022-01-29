@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-12-08 14:07+0100\n"
-"PO-Revision-Date: 2015-12-20 14:02+0100\n"
-"Last-Translator: Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>\n"
+"PO-Revision-Date: 2022-01-28 21:52+0300\n"
+"Last-Translator: Oleg Samarin <osamarin68@gmail.com>\n"
 "Language-Team: Spanish <carlosarturoguerra@gmail.com>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
@@ -154,10 +154,13 @@ msgid "&Convolution reverb"
 msgstr "&Reverberación de convolución"
 
 msgid "&Data:"
-msgstr ""
+msgstr "&Datos"
 
 msgid "&Debounce time(ms):"
-msgstr ""
+msgstr "Tiempo de rebote (ms):"
+
+msgid "&Default volume"
+msgstr "Volumen predeterminado"
 
 msgid "&Delete"
 msgstr "&Eliminar"
@@ -218,6 +221,15 @@ msgstr "&Tecla más grave:"
 
 msgid "&MIDI-note:"
 msgstr "&Nota-MIDI:"
+
+msgid "&Midi properties"
+msgstr "Propiedades de MIDI"
+
+msgid "&MIDI-Output-Device..."
+msgstr "Dispositivo de salida..."
+
+msgid "&Mapping output"
+msgstr "Trazado de salida"
 
 msgid "&Memory Level"
 msgstr "&Nivel de memoria"
@@ -662,8 +674,8 @@ msgstr ""
 "carga de un órgano.\n"
 "Haz click derecho en manuales, registros... para más cambios."
 
-msgid "Audio Groups"
-msgstr "Grupos de Audio"
+msgid "Audio"
+msgstr "Audio"
 
 msgid "Audio Output"
 msgstr "Salida de audio"
@@ -692,11 +704,14 @@ msgstr "Grupo de audio:"
 msgid "Audio groups"
 msgstr "Grupos de audio"
 
-msgid "Audio recording directory:"
-msgstr "Directorio de grabaciones de audio:"
+msgid "Audio recording"
+msgstr "Grabacione de audio"
 
-msgid "Audio recordings"
-msgstr "Grabaciones de audio"
+msgid "Audio recording:"
+msgstr "Grabación audio:"
+
+msgid "Auto add new devices"
+msgstr "Auto añadir nuevos dispositivos"
 
 msgid "&Settings..."
 msgstr "Conf&iguración..."
@@ -799,9 +814,6 @@ msgstr "Fallo al cargar caché: %s"
 msgid "Cache load failure: Failed to read %s from cache."
 msgstr "Fallo al cargar caché: Falló al leer %s desde caché."
 
-msgid "Cache store:"
-msgstr "Almacén del caché:"
-
 msgid "Can't read from a callback stream"
 msgstr "No se puede leer desde el flujo callback"
 
@@ -843,6 +855,9 @@ msgstr "Canal:"
 
 msgid "Chaumont"
 msgstr "Chaumont"
+
+msgid "Check on startup"
+msgstr "Verificar en inicio"
 
 # The word "Church" is used in the program as "place" where is the original pipe organ, in organ Load dialog. So I translate it as "Lugar" ("place")
 msgid "Church"
@@ -888,6 +903,9 @@ msgstr ""
 
 msgid "Core Audio"
 msgstr ""
+
+msgid "Cores used at loadtime:"
+msgstr "Núcleos utilizados en la carga:"
 
 msgid "Corrette (1753)"
 msgstr "Corrette (1753)"
@@ -1129,6 +1147,9 @@ msgstr ""
 
 msgid "Excess information in zip64 extendend information record"
 msgstr ""
+
+msgid "Export/import:"
+msgstr "Exportación/Importación:"
 
 msgid "Export Settings"
 msgstr "Exportar Configuraciones"
@@ -1518,8 +1539,8 @@ msgstr "Información"
 msgid "InfoFilename does not point to a html file"
 msgstr "InfoFilename no apunta a un archivo html"
 
-msgid "Initial MIDI Configuration"
-msgstr "Configuración MIDI inicial"
+msgid "Initial MIDI"
+msgstr "MIDI inicial"
 
 #, c-format
 msgid "Initial MIDI settings for %s"
@@ -1797,6 +1818,12 @@ msgstr "Objetos MIDI"
 msgid "MIDI Player"
 msgstr "Reproductor MIDI"
 
+msgid "MIDI player:"
+msgstr "Reproductor MIDI:"
+
+msgid "Midi &ports"
+msgstr "MIDI puertos"
+
 msgid "MIDI file type 0 only supports one track"
 msgstr "El archivo MIDI tipo 0 sólo soporta una pista"
 
@@ -1809,8 +1836,8 @@ msgstr "El archivo MIDI tipo 2 no está soportado"
 msgid "MIDI header missing"
 msgstr "Falta la cabecera MIDI"
 
-msgid "MIDI recording directory:"
-msgstr "Directorio de grabaciones MIDI:"
+msgid "MIDI recording:"
+msgstr "Grabación MIDI:"
 
 msgid "MIDI recordings"
 msgstr "Grabaciones MIDI"
@@ -1908,6 +1935,9 @@ msgstr ""
 
 msgid "Master Controls"
 msgstr "Controles maestros"
+
+msgid "Matching..."
+msgstr "Correspondiente..."
 
 msgid "Max"
 msgstr "Max"
@@ -2096,6 +2126,9 @@ msgstr ""
 msgid "Number %s contains locale dependent floating point"
 msgstr ""
 
+msgid "Number of CPU cores:"
+msgstr "Cantidad de núcleos de CPU:"
+
 msgid "O"
 msgstr "O"
 
@@ -2160,6 +2193,9 @@ msgstr "Paquetes de órgano"
 msgid "Organ Properties"
 msgstr "Propiedades del órgano"
 
+msgid "Organ cache:"
+msgstr "Caché de órganos:"
+
 msgid "Organ dialog"
 msgstr "Diálogo del órgano"
 
@@ -2179,8 +2215,14 @@ msgstr "Directorio de paquetes del órgano:"
 msgid "Organ packages"
 msgstr "Paquetes de órganos"
 
+msgid "Organ packages:"
+msgstr "Paquetes de órganos:"
+
 msgid "Organ settings"
 msgstr "Configuraciones del órgano"
+
+msgid "Organ settings:"
+msgstr "Configuraciones de órganos:"
 
 msgid "Organs"
 msgstr "Órganos"
@@ -2227,6 +2269,9 @@ msgstr "P"
 msgid "P&roperties..."
 msgstr "P&ropiedades..."
 
+msgid "Packages"
+msgstr "Paquetes"
+
 msgid "Panic"
 msgstr "Pánico"
 
@@ -2241,6 +2286,9 @@ msgstr "Analizando el archivo de definición del set de muestras"
 
 msgid "Path"
 msgstr "Ruta"
+
+msgid "Paths"
+msgstr "Rutas"
 
 msgid "Pedal"
 msgstr "Pedal"
@@ -2382,7 +2430,7 @@ msgid "Ramos de Pareja 1482 - Monochord"
 msgstr "Ramos de Pareja 1482 - Monocordio"
 
 msgid "Randomize pipe speaking"
-msgstr ""
+msgstr "Aleatorizar el tono de las pipas"
 
 msgid "Rank"
 msgstr "Fila"
@@ -2394,14 +2442,17 @@ msgstr "Recargar"
 msgid "Read from the archive failed (%d bytes)"
 msgstr "Ha fallado la lectura desde el archivo (%d bytes)"
 
+msgid "Reason"
+msgstr "Razón"
+
 msgid "Receive"
 msgstr "Recibir"
 
 msgid "Record stereo downmix"
-msgstr ""
+msgstr "Grabar multicanal en estéreo"
 
 msgid "Recorder WAV Format:"
-msgstr ""
+msgstr "Grabación en formato WAV:"
 
 msgid "Recording"
 msgstr "Grabación"
@@ -2412,17 +2463,20 @@ msgstr "Detalles de la grabación"
 msgid "ReferencePipe without Reference"
 msgstr ""
 
+msgid "Registered organs"
+msgstr "Órganos registrados"
+
 msgid "Regular"
 msgstr ""
 
 msgid "Release Concurrency Level:"
-msgstr ""
+msgstr "Nivel de simultaneidad de decaimientos:"
 
 msgid "Release loading:"
 msgstr "Cargar decaimiento:"
 
 msgid "Release sample scaling"
-msgstr ""
+msgstr "Escalado de muestras de decaimiento"
 
 msgid "Release tail length"
 msgstr "Longitud de la cola de decaimiento"
@@ -2482,7 +2536,7 @@ msgid "Sample Size:"
 msgstr "Tamaño de muestra:"
 
 msgid "Sample channels:"
-msgstr ""
+msgstr "Canalos de muestra:"
 
 msgid "Sample format not supported"
 msgstr "Formato de muestra no soportado"
@@ -2500,8 +2554,8 @@ msgstr "Tamaño de la muestra:"
 msgid "Samples per buffer:"
 msgstr "Muestras por buffer:"
 
-msgid "Sampleset directory:"
-msgstr "Directorio del sets de muestras:"
+msgid "Samplesets:"
+msgstr "Sets de muestras:"
 
 msgid "Sauveur (Memoires 1701)"
 msgstr "Sauveur (Memoires 1701)"
@@ -2593,8 +2647,8 @@ msgstr "Enviar"
 msgid "Send Division Output"
 msgstr ""
 
-msgid "Send MIDI Recorder Output Stream to "
-msgstr "Enviar Flujo de Output de la Grabadora MIDI a "
+msgid "Send MIDI Recorder Output Stream to:"
+msgstr "Enviar Flujo de Output de la Grabadora MIDI a:"
 
 msgid "Sequencer"
 msgstr "Secuenciador"
@@ -2610,9 +2664,6 @@ msgstr "Configuraciones"
 
 msgid "Settings files (*.cmb)|*.cmb"
 msgstr "Archivos de configuraciones (*.cmb)|*.cmb"
-
-msgid "Settings store:"
-msgstr "Almacén de configuraciones:"
 
 msgid "Shortcut"
 msgstr ""
@@ -2659,6 +2710,9 @@ msgstr "Sorge, 1758"
 
 msgid "Sound output"
 msgstr "Salida de sonido"
+
+msgid "Sound &ports"
+msgstr "Puertos de sonido"
 
 msgid "Stade St. Cosmae"
 msgstr "Stade St. Cosmae"
@@ -2966,6 +3020,9 @@ msgstr "Menú de Windows"
 
 msgid "Windows right"
 msgstr "Windows derecha"
+
+msgid "Workload distribution:"
+msgstr "Distribución de cargas:"
 
 msgid "X"
 msgstr "X"
