@@ -1,4 +1,5 @@
 - Updating French, German, Polish, Spanish and Swedish translations of the Settings Dialog https://github.com/GrandOrgue/grandorgue/discussions/934
+- Switched to RtMidi 5.0.0
 - Switched to RtAudio 5.2.0
 - Fixed processing of debounce time for Bx Controller events https://github.com/GrandOrgue/grandorgue/issues/967
 - Fixed size of the Load organ dialog https://github.com/GrandOrgue/grandorgue/issues/963
