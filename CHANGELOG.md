@@ -1,9 +1,10 @@
+- Updating French, German, Polish, Spanish and Swedish translations of the Settings Dialog https://github.com/GrandOrgue/grandorgue/discussions/934
 - Switched to RtAudio 5.2.0
 - Fixed processing of debounce time for Bx Controller events https://github.com/GrandOrgue/grandorgue/issues/967
 - Fixed size of the Load organ dialog https://github.com/GrandOrgue/grandorgue/issues/963
 # 3.6.0 (2022-01-19)
 - Fixed crash under OSx when closing a MIDI event dialog opened from a Settings window https://github.com/GrandOrgue/grandorgue/issues/966
-- Reorganised tabs and their layouuts of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/948
+- Reorganised tabs and their layouts of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/948
 - Changed default organ cache and organ settings directories to ones inside the GrandOrgue directory https://github.com/GrandOrgue/grandorgue/discussions/934
 - Added automatic formatting code with pre-commit and clang-format https://github.com/GrandOrgue/grandorgue/issues/918
 # 3.5.0 (2022-01-05)

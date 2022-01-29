@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-07-20 18:27+0200\n"
-"PO-Revision-Date: 2015-11-27 09:03+0100\n"
-"Last-Translator: astazou <astazou@sourceforge.net>\n"
+"PO-Revision-Date: 2022-01-27 20:50+0300\n"
+"Last-Translator: Oleg Samarin <osamarin68@gmail.com>\n"
 "Language-Team: French <jeanluc@derouineau.com>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -1339,9 +1339,6 @@ msgstr "P/Mesure +"
 
 msgid "GrandOrgue"
 msgstr ""
-
-msgid "Organs"
-msgstr "Orgues"
 
 msgid "Organ packages"
 msgstr "Paquets d'orgue"
@@ -2919,71 +2916,35 @@ msgstr "Pulsations/mn:"
 msgid "Ticks per Measure:"
 msgstr "Temps par mesure:"
 
-msgid "&Paths"
-msgstr "&Chemins d'accès"
-
-msgid "Sampleset directory:"
-msgstr "Dossier des banques de sons:"
-
-msgid "Select directory for your samplesets"
-msgstr "Choisir le dossier pour vos banques de sons"
-
-msgid "Organ package directory:"
-msgstr "Dossier des paquets d'orgue:"
-
-msgid "Select directory for your organ packages"
-msgstr "Choisir le dossier de vos paquets d'orgue"
-
-msgid "Setting import/export directory:"
-msgstr "Dossier d'import/export des paramètres:"
-
-msgid "Select directory for setting import/export"
-msgstr "Choisir le dossier de stockage des paramètres exportés"
-
-msgid "Audio recording directory:"
-msgstr "Dossier des enregistrements audio:"
-
-msgid "Select directory for your audio recordings"
-msgstr "Choisir le dossier pour les enregistrements audio"
-
-msgid "MIDI recording directory:"
-msgstr "Dossier des enregistrements MIDI:"
-
-msgid "Select directory for your MIDI recording"
-msgstr "Choisir le dossier pour les enregistrements MIDI"
-
-msgid "Midi player directory:"
-msgstr "Dossier du séquenceur MIDI:"
-
-msgid "Select directory for the MIDI player"
-msgstr "Choisir le dossier pour le séquenceur MIDI"
-
 msgid "Program Settings"
 msgstr "Paramètres du programme"
 
 msgid "Options"
 msgstr ""
 
-msgid "Defaults and Initial Settings"
-msgstr "Valeurs initiales et paramètres par défaut"
+msgid "Paths"
+msgstr "Chemins"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "MIDI Devices"
+msgstr "Périphériques MIDI"
+
+msgid "Initial MIDI"
+msgstr "MIDI initial"
+
+msgid "Organs"
+msgstr "Orgues"
 
 msgid "Reverb"
 msgstr "Réverbération"
 
-msgid "Audio Groups"
-msgstr "Groupes Audio"
-
-msgid "MIDI Devices"
-msgstr "Interfaces MIDI"
-
 msgid "Temperaments"
 msgstr "Tempéraments"
 
-msgid "Initial MIDI Configuration"
-msgstr "Configuration MIDI initiale"
-
-msgid "Organ Packages"
-msgstr "Paquets d'orgue"
+msgid "Reason"
+msgstr "Raison"
 
 msgid ""
 "Some changed settings effect unless the sample set is reloaded.\n"
@@ -3001,11 +2962,17 @@ msgstr "&Interfaces d'entrée MIDI"
 msgid "A&dvanced..."
 msgstr "Mo&de Expert"
 
+msgid "&MIDI-Output-Device..."
+msgstr "Sortie &MIDI pour..."
+
+msgid "Matching..."
+msgstr "Correspondance..."
+
 msgid "MIDI &output devices"
 msgstr "Interfaces de s&ortie MIDI"
 
-msgid "Send MIDI Recorder Output Stream to "
-msgstr "Envoyer la sortie de l'enregistreur MIDI à "
+msgid "Send MIDI Recorder Output Stream to:"
+msgstr "Envoyer le flux de sortie de l'enregistreur à:"
 
 msgid "No device"
 msgstr "Pas d'interface"
@@ -3085,8 +3052,17 @@ msgstr "Polyphase"
 msgid "Interpolation:"
 msgstr "Méthode interpolation:"
 
-msgid "Concurrency Level:"
-msgstr "Nombre de tâches parallèles:"
+msgid "Number of CPU cores:"
+msgstr "Nombre de cœurs de CPU:"
+
+msgid "Workload distribution:"
+msgstr "Répartition de charge:"
+
+msgid "Cores used at loadtime:"
+msgstr "Cœurs pendant le chargement:"
+
+msgid "&Default volume"
+msgstr "Volume par défaut"
 
 msgid "Release Concurrency Level:"
 msgstr "Nombre de tâches pour laché note:"
@@ -3112,18 +3088,6 @@ msgstr "Format WAV de l'enregistreur:"
 msgid "Record stereo downmix"
 msgstr "Réduire l'enregistrement à la stéréo"
 
-msgid "Settings store:"
-msgstr "Dossier de stockage des paramètres:"
-
-msgid "Select directory for settings store"
-msgstr "Choisir le dossier de stockage des paramètres"
-
-msgid "Cache store:"
-msgstr "Dossier de stockage des fichiers cache"
-
-msgid "Select directory for cache store"
-msgstr "Choisir le dossier de stockage des fichiers cache"
-
 msgid "&Sample loading"
 msgstr "&Chargement des échantillons:"
 
@@ -3139,6 +3103,54 @@ msgstr "Taille des échantillons:"
 msgid "Memory Limit (MB):"
 msgstr "Limite mémoire (Mo):"
 
+msgid "Samplesets:"
+msgstr "Banques de sons:"
+
+msgid "Select directory for your samplesets"
+msgstr "Choisir le dossier pour vos banques de sons"
+
+msgid "Organ packages:"
+msgstr "Paquets d'orgues:"
+
+msgid "Select directory for your organ packages"
+msgstr "Choisir le dossier de vos paquets d'orgue"
+
+msgid "Organ cache:"
+msgstr "Cache d'orgues:"
+
+msgid "Select directory for cache store"
+msgstr "Choisir le dossier de stockage des fichiers cache"
+
+msgid "Organ settings:"
+msgstr "Paramètres d'orgues:"
+
+msgid "Select directory for settings store"
+msgstr "Choisir le dossier de stockage des paramètres"
+
+msgid "Export/import:"
+msgstr "Exportation/importation:"
+
+msgid "Select directory for setting import/export"
+msgstr "Choisir le dossier de stockage des paramètres exportés"
+
+msgid "Audio recording:"
+msgstr "Enregistrements audio:"
+
+msgid "Select directory for your audio recordings"
+msgstr "Choisir le dossier pour les enregistrements audio"
+
+msgid "MIDI recording:"
+msgstr "Enregistrements MIDI:"
+
+msgid "Select directory for your MIDI recording"
+msgstr "Choisir le dossier pour les enregistrements MIDI"
+
+msgid "Midi player:"
+msgstr "Séquenceur MIDI:"
+
+msgid "Select directory for the MIDI player"
+msgstr "Choisir le dossier pour le séquenceur MIDI"
+
 msgid "&Sound output"
 msgstr "Interface de &Sortie"
 
@@ -3148,6 +3160,24 @@ msgstr "Taux d'échantillonage:"
 msgid "Samples per buffer:"
 msgstr "Echantillons par buffer:"
 
+msgid "Sound &ports"
+msgstr "Ports audio"
+
+msgid "&Mapping output"
+msgstr "&Mappage des sorties"
+
+msgid "&Midi properties"
+msgstr "Propriétés MIDI"
+
+msgid "Auto add new devices"
+msgstr "Ajout automatique des nouveaux périphériques"
+
+msgid "Check on startup"
+msgstr "Vérifier au démarrage"
+
+msgid "Midi &ports"
+msgstr "Ports MIDI"
+
 msgid "&Cache"
 msgstr ""
 
@@ -3155,7 +3185,7 @@ msgid "Compress cache"
 msgstr "Compression du cache"
 
 msgid "Automatically manage cache"
-msgstr "Gérer automatiquement le cache de l'orgue lors du chargement"
+msgstr "Gérer automatiquement lors du chargement"
 
 msgid "Perform strict ODF"
 msgstr "Analyse stricte des fichiers ODF"
@@ -3172,6 +3202,12 @@ msgstr "Taux d'échantillonage invalide"
 
 msgid "MIDI"
 msgstr ""
+
+msgid "Registered organs"
+msgstr "Orgues disponibles"
+
+msgid "Packages"
+msgstr "Paquets"
 
 msgid "&Down"
 msgstr "&Bas"
