@@ -81,6 +81,7 @@ public:
     GOConfig &config);
   ~MIDIEventSendDialog();
 
+  bool Validate(wxString &errMsg);
   void DoApply();
 
   DECLARE_EVENT_TABLE()
