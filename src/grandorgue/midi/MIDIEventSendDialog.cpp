@@ -119,7 +119,8 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     m_HighValueLabel,
     wxGBPosition(5, 2),
     wxDefaultSpan,
-    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT,
+    5);
   m_HighValue = new wxSpinCtrl(
     this,
     ID_HIGH_VALUE,
@@ -152,7 +153,8 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     m_LengthLabel,
     wxGBPosition(6, 2),
     wxDefaultSpan,
-    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT,
+    5);
   m_LengthValue = new wxSpinCtrl(
     this,
     ID_LENGTH,
