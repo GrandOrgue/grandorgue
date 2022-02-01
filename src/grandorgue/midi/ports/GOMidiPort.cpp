@@ -25,9 +25,7 @@ GOMidiPort::GOMidiPort(
     m_PortName(portName),
     m_ApiName(apiName),
     m_DeviceName(deviceName),
-    m_FullName(fullName) {
-  m_ID = m_midi->GetMidiMap().GetDeviceIdByLogicalName(GetName());
-}
+    m_FullName(fullName) {}
 
 bool GOMidiPort::IsToUse() const {
   return m_DeviceName.Find(GetClientName()) == wxNOT_FOUND;
@@ -39,4 +37,9 @@ bool GOMidiPort::IsEqualTo(
   const wxString &deviceName) const {
   return m_PortName == portName && m_ApiName == apiName
     && m_DeviceName == deviceName;
+}
+
+bool GOMidiPort::Open(unsigned id) {
+  m_ID = id;
+  return true;
 }

@@ -32,7 +32,7 @@ public:
   virtual const wxString GetDefaultLogicalName() const;
   virtual const wxString GetDefaultRegEx() const;
 
-  bool Open(int channel_shift = 0);
+  bool Open(unsigned id, int channel_shift = 0);
   void Close() { Close(true); }
 };
 

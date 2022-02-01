@@ -31,8 +31,8 @@ public:
 
   virtual ~GOMidiInPort();
 
-  virtual bool Open(int channel_shift);
-  bool Open() { return Open(0); }
+  virtual bool Open(unsigned id, int channel_shift);
+  bool Open(unsigned id) { return Open(id, 0); }
 };
 
 #endif

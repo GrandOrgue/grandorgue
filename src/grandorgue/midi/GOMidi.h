@@ -25,6 +25,7 @@ class wxMidiEvent;
 class GOMidi : public wxEvtHandler {
 private:
   GOConfig &m_config;
+  GOMidiMap &m_MidiMap;
 
   ptr_vector<GOMidiPort> m_midi_in_devices;
   ptr_vector<GOMidiPort> m_midi_out_devices;
@@ -56,7 +57,7 @@ public:
   void Register(GOMidiListener *listener);
   void Unregister(GOMidiListener *listener);
 
-  GOMidiMap &GetMidiMap();
+  GOMidiMap &GetMidiMap() { return m_MidiMap; }
 
   DECLARE_EVENT_TABLE()
 };

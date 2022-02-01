@@ -21,7 +21,8 @@ GOMidiOutPort::GOMidiOutPort(
 
 GOMidiOutPort::~GOMidiOutPort() {}
 
-bool GOMidiOutPort::Open() {
+bool GOMidiOutPort::Open(unsigned id) {
+  GOMidiPort::Open(id);
   m_merger.Clear();
   return m_IsActive;
 }

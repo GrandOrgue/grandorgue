@@ -19,11 +19,8 @@ BEGIN_EVENT_TABLE(GOMidi, wxEvtHandler)
 EVT_MIDI(GOMidi::OnMidiEvent)
 END_EVENT_TABLE()
 
-GOMidi::GOMidi(GOConfig &settings)
-  : m_config(settings),
-    m_midi_in_devices(),
-    m_midi_out_devices(),
-    m_Listeners() {}
+GOMidi::GOMidi(GOConfig &config)
+  : m_config(config), m_MidiMap(config.GetMidiMap()) {}
 
 void GOMidi::UpdateDevices(const GOPortsConfig &portsConfig) {
   m_MidiFactory.addMissingInDevices(this, portsConfig, m_midi_in_devices);
@@ -59,7 +56,10 @@ void GOMidi::Open() {
           physicalName);
     }
     if (pDevConf && pDevConf->m_IsEnabled)
-      ((GOMidiInPort *)pPort)->Open(pDevConf->m_ChannelShift);
+      ((GOMidiInPort *)pPort)
+        ->Open(
+          m_MidiMap.GetDeviceIdByLogicalName(pDevConf->m_LogicalName),
+          pDevConf->m_ChannelShift);
     else
       pPort->Close();
   }
@@ -72,7 +72,7 @@ void GOMidi::Open() {
       && portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
       && (devConf = m_config.m_MidiOut.FindByPhysicalName(pPort->GetName()))
       && devConf->m_IsEnabled)
-      pPort->Open();
+      pPort->Open(m_MidiMap.GetDeviceIdByLogicalName(devConf->m_LogicalName));
     else
       pPort->Close();
   }
@@ -123,5 +123,3 @@ void GOMidi::Unregister(GOMidiListener *listener) {
       m_Listeners[i] = NULL;
     }
 }
-
-GOMidiMap &GOMidi::GetMidiMap() { return m_config.GetMidiMap(); }

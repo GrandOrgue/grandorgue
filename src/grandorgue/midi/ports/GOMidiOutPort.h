@@ -34,7 +34,7 @@ public:
 
   virtual const wxString GetMyNativePortName() const;
 
-  virtual bool Open();
+  virtual bool Open(unsigned id);
 
   void Send(const GOMidiEvent &e);
 };

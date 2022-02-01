@@ -1,3 +1,4 @@
+- Fixed matching midi events with midi devices https://github.com/GrandOrgue/grandorgue/issues/1000
 # 3.6.1 (2022-01-29)
 - Updating French, German, Polish, Spanish and Swedish translations of the Settings Dialog https://github.com/GrandOrgue/grandorgue/discussions/934
 - Switched to RtMidi 5.0.0
