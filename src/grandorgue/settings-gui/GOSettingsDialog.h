@@ -54,15 +54,13 @@ public:
   // the order must be the same as the order of pages
   typedef enum {
     PAGE_OPTIONS = 0,
-    PAGE_DEFAULTS,
-    PAGE_AUDIO_OUTPUT,
-    PAGE_REVERB,
-    PAGE_AUDIO_GROUPS,
-    PAGE_ORGANS,
+    PAGE_PATHS,
+    PAGE_AUDIO,
     PAGE_MIDI_DEVICES,
-    PAGE_TEMPERAMENTS,
-    PAGE_INIT_MIDI_CONFIG,
-    PAGE_ORGAN_PACKAGES
+    PAGE_INITIAL_MIDI,
+    PAGE_ORGANS,
+    PAGE_REVERB,
+    PAGE_TEMPERAMENTS
   } PageSelector;
 
   GOSettingsDialog(wxWindow *parent, GOSound &sound, SettingsReasons *reasons);

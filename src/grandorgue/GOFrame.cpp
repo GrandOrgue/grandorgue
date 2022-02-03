@@ -466,7 +466,7 @@ void GOFrame::Init(wxString filename) {
 
   if (soundProblems)
     settingsReasons.push_back(GOSettingsReason(
-      m_Sound.getLastErrorMessage(), GOSettingsDialog::PAGE_AUDIO_OUTPUT));
+      m_Sound.getLastErrorMessage(), GOSettingsDialog::PAGE_AUDIO));
   m_Sound.SetLogSoundErrorMessages(true);
 
   bool midiProblems

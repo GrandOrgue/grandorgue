@@ -1,6 +1,7 @@
+- Fixed automatic opening the Reverb settings page when there were no active midi devices https://github.com/GrandOrgue/grandorgue/issues/1002
 - Fixed matching midi events with midi devices https://github.com/GrandOrgue/grandorgue/issues/1000
 # 3.6.1 (2022-01-29)
-- Updating French, German, Polish, Spanish and Swedish translations of the Settings Dialog https://github.com/GrandOrgue/grandorgue/discussions/934
+- Updated French, German, Polish, Spanish and Swedish translations of the Settings Dialog https://github.com/GrandOrgue/grandorgue/discussions/934
 - Switched to RtMidi 5.0.0
 - Switched to RtAudio 5.2.0
 - Fixed processing of debounce time for Bx Controller events https://github.com/GrandOrgue/grandorgue/issues/967
