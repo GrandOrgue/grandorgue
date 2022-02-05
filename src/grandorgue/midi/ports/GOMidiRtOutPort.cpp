@@ -38,7 +38,7 @@ const wxString GOMidiRtOutPort::GetDefaultRegEx() const {
     m_api, GetDeviceName(), GetName());
 }
 
-bool GOMidiRtOutPort::Open() {
+bool GOMidiRtOutPort::Open(unsigned id) {
   Close(false);
   if (!m_port)
     try {
@@ -61,7 +61,7 @@ bool GOMidiRtOutPort::Open() {
     wxString error = wxString::FromAscii(e.getMessage().c_str());
     wxLogError(_("RtMidi error: %s"), error.c_str());
   }
-  return GOMidiOutPort::Open();
+  return GOMidiOutPort::Open(id);
 }
 
 void GOMidiRtOutPort::Close(bool isToFreePort) {

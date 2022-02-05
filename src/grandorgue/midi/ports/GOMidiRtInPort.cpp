@@ -38,7 +38,7 @@ const wxString GOMidiRtInPort::GetDefaultRegEx() const {
     m_api, GetDeviceName(), GetName());
 }
 
-bool GOMidiRtInPort::Open(int channel_shift) {
+bool GOMidiRtInPort::Open(unsigned id, int channel_shift) {
   Close(false);
   if (!m_port)
     try {
@@ -63,7 +63,7 @@ bool GOMidiRtInPort::Open(int channel_shift) {
     wxString error = wxString::FromAscii(e.getMessage().c_str());
     wxLogError(_("RtMidi error: %s"), error.c_str());
   }
-  return GOMidiInPort::Open(channel_shift);
+  return GOMidiInPort::Open(id, channel_shift);
 }
 
 void GOMidiRtInPort::Close(bool isToFreePort) {

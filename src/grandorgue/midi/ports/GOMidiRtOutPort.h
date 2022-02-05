@@ -31,7 +31,7 @@ public:
   virtual const wxString GetDefaultLogicalName() const;
   virtual const wxString GetDefaultRegEx() const;
 
-  bool Open();
+  bool Open(unsigned id);
   void Close() { Close(true); }
 };
 

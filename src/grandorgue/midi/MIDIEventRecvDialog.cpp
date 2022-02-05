@@ -448,11 +448,19 @@ void MIDIEventRecvDialog::LoadEvent() {
   wxCommandEvent event;
   OnTypeChange(event);
 
+  // Select current device
   m_device->SetSelection(0);
-  for (unsigned i = 1; i < m_device->GetCount(); i++)
-    if (
-      m_MidiMap.GetDeviceLogicalNameById(e.deviceId) == m_device->GetString(i))
-      m_device->SetSelection(i);
+  if (e.deviceId > 0) {
+    const wxString &eventDeviceLogicalName
+      = m_MidiMap.GetDeviceLogicalNameById(e.deviceId);
+
+    for (unsigned i = 1; i < m_device->GetCount(); i++) {
+      const wxString &deviceLogicalName = m_device->GetString(i);
+
+      if (deviceLogicalName == eventDeviceLogicalName)
+        m_device->SetSelection(i);
+    }
+  }
 
   m_channel->SetSelection(0);
   if (e.channel == -1)

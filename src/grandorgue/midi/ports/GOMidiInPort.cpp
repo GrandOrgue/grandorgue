@@ -46,7 +46,8 @@ void GOMidiInPort::Receive(const std::vector<unsigned char> msg) {
   m_midi->Recv(e);
 }
 
-bool GOMidiInPort::Open(int channel_shift) {
+bool GOMidiInPort::Open(unsigned id, int channel_shift) {
+  GOMidiPort::Open(id);
   m_ChannelShift = channel_shift;
   m_merger.Clear();
 

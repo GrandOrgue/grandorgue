@@ -22,7 +22,8 @@ protected:
   wxString m_DeviceName;
   wxString m_FullName;
 
-  unsigned m_ID;
+  // only open ports have m_ID > 0
+  unsigned m_ID = 0;
 
   static const wxString GetClientName();
   virtual const wxString GetMyNativePortName() const = 0;
@@ -50,8 +51,8 @@ public:
   unsigned GetID() const { return m_ID; }
   bool IsActive() const { return m_IsActive; }
 
-  virtual bool Open() = 0;
-  virtual void Close() = 0;
+  virtual bool Open(unsigned id);
+  virtual void Close() { m_ID = 0; }
 };
 
 #endif /* GOMIDIPORT_H */
