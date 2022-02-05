@@ -84,7 +84,7 @@ bool MIDIEventDialog::Validate() {
     !notValidTab && m_sendDivisionPage && !m_sendDivisionPage->Validate(errMsg))
     notValidTab = m_sendPage;
 
-  // Distplay the tab that has problems
+  // Display the tab that has problems
   if (notValidTab) {
     wxBookCtrlBase *const notebook = GetBookCtrl();
     const int notValidPageId = notebook->FindPage(notValidTab);
