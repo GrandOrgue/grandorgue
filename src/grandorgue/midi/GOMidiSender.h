@@ -25,7 +25,7 @@ private:
   int m_ElementID;
 
 public:
-  GOMidiSender(GODefinitionFile *organfile, MIDI_SENDER_TYPE type);
+  GOMidiSender(GODefinitionFile *organfile, GOMidiSenderType type);
   ~GOMidiSender();
 
   void SetElementID(int id);
@@ -40,17 +40,17 @@ public:
   void SetLabel(const wxString &text);
   void SetName(const wxString &text);
 
-  bool HasChannel(midi_send_message_type type);
-  bool HasKey(midi_send_message_type type);
-  bool HasLowValue(midi_send_message_type type);
-  bool HasHighValue(midi_send_message_type type);
-  bool HasStart(midi_send_message_type type);
-  bool HasLength(midi_send_message_type type);
-  unsigned KeyLimit(midi_send_message_type type);
-  unsigned LowValueLimit(midi_send_message_type type);
-  unsigned HighValueLimit(midi_send_message_type type);
-  unsigned StartLimit(midi_send_message_type type);
-  unsigned LengthLimit(midi_send_message_type type);
+  bool HasChannel(GOMidiSendMessageType type);
+  bool HasKey(GOMidiSendMessageType type);
+  bool HasLowValue(GOMidiSendMessageType type);
+  bool HasHighValue(GOMidiSendMessageType type);
+  bool HasStart(GOMidiSendMessageType type);
+  bool HasLength(GOMidiSendMessageType type);
+  unsigned KeyLimit(GOMidiSendMessageType type);
+  unsigned LowValueLimit(GOMidiSendMessageType type);
+  unsigned HighValueLimit(GOMidiSendMessageType type);
+  unsigned StartLimit(GOMidiSendMessageType type);
+  unsigned LengthLimit(GOMidiSendMessageType type);
 
   void Assign(const GOMidiSenderData &data);
 };

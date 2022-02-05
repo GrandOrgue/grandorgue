@@ -17,12 +17,12 @@ GOMidiMap::GOMidiMap() : m_DeviceMap(), m_ElementMap() {
 
 GOMidiMap::~GOMidiMap() {}
 
-const wxString &GOMidiMap::GetDeviceByID(unsigned id) {
+const wxString &GOMidiMap::GetDeviceLogicalNameById(unsigned id) {
   assert(id <= m_DeviceMap.size());
   return m_DeviceMap[id];
 }
 
-unsigned GOMidiMap::GetDeviceByString(const wxString &str) {
+unsigned GOMidiMap::GetDeviceIdByLogicalName(const wxString &str) {
   for (unsigned i = 0; i < m_DeviceMap.size(); i++)
     if (m_DeviceMap[i] == str)
       return i;

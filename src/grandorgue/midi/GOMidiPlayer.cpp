@@ -45,7 +45,7 @@ GOMidiPlayer::GOMidiPlayer(GODefinitionFile *organfile)
     m_Pause(false) {
   CreateButtons(m_organfile);
   Clear();
-  m_DeviceID = m_organfile->GetSettings().GetMidiMap().GetDeviceByString(
+  m_DeviceID = m_organfile->GetSettings().GetMidiMap().GetDeviceIdByLogicalName(
     _("GrandOrgue MIDI Player"));
   UpdateDisplay();
 }

@@ -44,7 +44,7 @@ typedef struct {
 } GOAudioDeviceConfig;
 
 typedef struct {
-  MIDI_RECEIVER_TYPE type;
+  GOMidiReceiverType type;
   unsigned index;
   const wxString group;
   const wxString name;
@@ -171,7 +171,7 @@ public:
   wxString GetEventGroup(unsigned index);
   wxString GetEventTitle(unsigned index);
   GOMidiReceiverBase *GetMidiEvent(unsigned index);
-  GOMidiReceiverBase *FindMidiEvent(MIDI_RECEIVER_TYPE type, unsigned index);
+  GOMidiReceiverBase *FindMidiEvent(GOMidiReceiverType type, unsigned index);
 
   /*
   bool GetMidiInState(wxString device, bool isEnabledByDefault);

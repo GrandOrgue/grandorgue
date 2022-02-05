@@ -22,7 +22,7 @@ protected:
   int GetTranspose();
 
 public:
-  GOMidiReceiver(GODefinitionFile *organfile, MIDI_RECEIVER_TYPE type);
+  GOMidiReceiver(GODefinitionFile *organfile, GOMidiReceiverType type);
 
   void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
 

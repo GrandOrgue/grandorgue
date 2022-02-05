@@ -26,7 +26,7 @@ GOMidiPort::GOMidiPort(
     m_ApiName(apiName),
     m_DeviceName(deviceName),
     m_FullName(fullName) {
-  m_ID = m_midi->GetMidiMap().GetDeviceByString(GetName());
+  m_ID = m_midi->GetMidiMap().GetDeviceIdByLogicalName(GetName());
 }
 
 bool GOMidiPort::IsToUse() const {

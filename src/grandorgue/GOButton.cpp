@@ -15,7 +15,7 @@
 #include "config/GOConfigReader.h"
 
 GOButton::GOButton(
-  GODefinitionFile *organfile, MIDI_RECEIVER_TYPE midi_type, bool pushbutton)
+  GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton)
   : m_organfile(organfile),
     m_midi(organfile, midi_type),
     m_sender(organfile, MIDI_SEND_BUTTON),

@@ -15,7 +15,7 @@ typedef enum {
   MIDI_SEND_LABEL,
   MIDI_SEND_ENCLOSURE,
   MIDI_SEND_MANUAL,
-} MIDI_SENDER_TYPE;
+} GOMidiSenderType;
 
 typedef enum {
   MIDI_S_NONE,
@@ -42,32 +42,32 @@ typedef enum {
   MIDI_S_HW_STRING,
   MIDI_S_HW_LCD,
   MIDI_S_RODGERS_STOP_CHANGE,
-} midi_send_message_type;
+} GOMidiSendMessageType;
 
 typedef struct {
-  unsigned device;
-  midi_send_message_type type;
+  unsigned deviceId;
+  GOMidiSendMessageType type;
   unsigned channel;
   unsigned key;
   unsigned low_value;
   unsigned high_value;
   unsigned start;
   unsigned length;
-} MIDI_SEND_EVENT;
+} GOMidiSendEvent;
 
 class GOMidiSenderData {
 protected:
-  MIDI_SENDER_TYPE m_type;
-  std::vector<MIDI_SEND_EVENT> m_events;
+  GOMidiSenderType m_type;
+  std::vector<GOMidiSendEvent> m_events;
 
 public:
-  GOMidiSenderData(MIDI_SENDER_TYPE type);
+  GOMidiSenderData(GOMidiSenderType type);
   virtual ~GOMidiSenderData();
 
-  MIDI_SENDER_TYPE GetType() const;
+  GOMidiSenderType GetType() const;
 
   unsigned GetEventCount() const;
-  MIDI_SEND_EVENT &GetEvent(unsigned index);
+  GOMidiSendEvent &GetEvent(unsigned index);
   unsigned AddNewEvent();
   void DeleteEvent(unsigned index);
 };

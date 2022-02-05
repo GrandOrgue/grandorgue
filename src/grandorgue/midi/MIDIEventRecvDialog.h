@@ -8,30 +8,35 @@
 #ifndef MIDIEVENTRECVDIALOG_H_
 #define MIDIEVENTRECVDIALOG_H_
 
+#include <vector>
+
 #include <wx/panel.h>
 #include <wx/timer.h>
 
-#include <vector>
-
-#include "GOChoice.h"
-#include "GOMidiListener.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiReceiverBase.h"
 
-class GOConfig;
+#include "GOChoice.h"
+#include "GOMidiListener.h"
+
 class wxButton;
 class wxChoice;
 class wxSpinCtrl;
 class wxStaticText;
 class wxToggleButton;
 
+class GOConfig;
+class GOMidiDeviceConfigList;
+
 class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback {
 private:
-  GOConfig &m_config;
+  GOMidiDeviceConfigList &m_MidiIn;
+  GOMidiMap &m_MidiMap;
+
   GOMidiReceiverBase *m_original;
   GOMidiReceiverData m_midi;
   GOMidiListener m_listener;
-  GOChoice<midi_match_message_type> *m_eventtype;
+  GOChoice<GOMidiReceiveMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
   wxStaticText *m_DataLabel;
   wxSpinCtrl *m_data;
@@ -90,12 +95,12 @@ protected:
 
 public:
   MIDIEventRecvDialog(
-    wxWindow *parent, GOMidiReceiverBase *event, GOConfig &settings);
+    wxWindow *parent, GOMidiReceiverBase *event, GOConfig &config);
   ~MIDIEventRecvDialog();
   void RegisterMIDIListener(GOMidi *midi);
 
   void DoApply();
-  MIDI_MATCH_EVENT GetCurrentEvent();
+  GOMidiReceiveEvent GetCurrentEvent();
 
   DECLARE_EVENT_TABLE()
 };
