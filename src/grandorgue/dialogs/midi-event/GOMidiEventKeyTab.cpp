@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "MIDIEventKeyDialog.h"
+#include "GOMidiEventKeyTab.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>

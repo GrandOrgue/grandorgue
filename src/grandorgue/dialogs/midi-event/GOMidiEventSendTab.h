@@ -10,8 +10,9 @@
 
 #include <wx/panel.h>
 
+#include "midi/GOMidiSender.h"
+
 #include "GOChoice.h"
-#include "GOMidiSender.h"
 
 class wxButton;
 class wxChoice;

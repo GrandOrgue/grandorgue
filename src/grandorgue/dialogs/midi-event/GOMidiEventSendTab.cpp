@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "MIDIEventSendDialog.h"
+#include "GOMidiEventSendTab.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -16,7 +16,7 @@
 
 #include "config/GOConfig.h"
 
-#include "MIDIEventRecvDialog.h"
+#include "GOMidiEventRecvTab.h"
 
 BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
 EVT_BUTTON(ID_EVENT_NEW, MIDIEventSendDialog::OnNewClick)

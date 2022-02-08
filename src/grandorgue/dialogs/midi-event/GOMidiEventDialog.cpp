@@ -5,14 +5,14 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "MIDIEventDialog.h"
+#include "GOMidiEventDialog.h"
 
 #include <wx/bookctrl.h>
 #include <wx/msgdlg.h>
 
-#include "MIDIEventKeyDialog.h"
-#include "MIDIEventRecvDialog.h"
-#include "MIDIEventSendDialog.h"
+#include "GOMidiEventKeyTab.h"
+#include "GOMidiEventRecvTab.h"
+#include "GOMidiEventSendTab.h"
 
 BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
 EVT_BUTTON(wxID_APPLY, MIDIEventDialog::OnApply)

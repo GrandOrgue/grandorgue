@@ -15,7 +15,7 @@
 #include "GOOrgan.h"
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfig.h"
-#include "midi/MIDIEventDialog.h"
+#include "dialogs/midi-event/GOMidiEventDialog.h"
 
 BEGIN_EVENT_TABLE(GOSettingsOrgans, wxPanel)
 EVT_LIST_ITEM_SELECTED(ID_ORGANS, GOSettingsOrgans::OnOrganSelected)

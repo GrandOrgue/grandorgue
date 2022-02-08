@@ -9,21 +9,22 @@
 
 #include <wx/app.h>
 
+#include "config/GOConfig.h"
+#include "dialogs/GOOrganDialog.h"
+#include "dialogs/midi-event/GOMidiEventDialog.h"
+#include "gui/GOGUIPanel.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/MIDIList.h"
+#include "sound/GOSound.h"
+#include "threading/GOMutexLocker.h"
+
 #include "GODefinitionFile.h"
 #include "GOEvent.h"
 #include "GOFrame.h"
 #include "GOOrgan.h"
 #include "GOPanelView.h"
 #include "GOView.h"
-#include "OrganDialog.h"
-#include "config/GOConfig.h"
 #include "go_ids.h"
-#include "gui/GOGUIPanel.h"
-#include "midi/GOMidiEvent.h"
-#include "midi/MIDIEventDialog.h"
-#include "midi/MIDIList.h"
-#include "sound/GOSound.h"
-#include "threading/GOMutexLocker.h"
 
 GODocument::GODocument(GOSound *sound)
   : m_OrganFileReady(false),

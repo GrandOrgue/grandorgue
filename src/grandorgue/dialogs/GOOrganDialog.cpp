@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "OrganDialog.h"
+#include "GOOrganDialog.h"
 
 #include <wx/button.h>
 #include <wx/checkbox.h>

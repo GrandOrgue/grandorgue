@@ -14,10 +14,10 @@
 #include <wx/timer.h>
 
 #include "midi/GOMidiCallback.h"
+#include "midi/GOMidiListener.h"
 #include "midi/GOMidiReceiverBase.h"
 
 #include "GOChoice.h"
-#include "GOMidiListener.h"
 
 class wxButton;
 class wxChoice;

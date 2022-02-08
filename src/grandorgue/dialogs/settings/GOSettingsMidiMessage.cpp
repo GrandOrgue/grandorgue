@@ -13,7 +13,7 @@
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
-#include "midi/MIDIEventDialog.h"
+#include "dialogs/midi-event/GOMidiEventDialog.h"
 
 BEGIN_EVENT_TABLE(GOSettingsMidiMessage, wxPanel)
 EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiMessage::OnEventsClick)
