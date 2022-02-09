@@ -186,7 +186,9 @@ void GODocument::OnMidiEvent(const GOMidiEvent &event) {
 void GODocument::ShowOrganDialog() {
   if (!showWindow(GODocument::ORGAN_DIALOG, NULL) && m_organfile) {
     registerWindow(
-      GODocument::ORGAN_DIALOG, NULL, new OrganDialog(this, NULL, m_organfile));
+      GODocument::ORGAN_DIALOG,
+      NULL,
+      new GOOrganDialog(this, NULL, m_organfile));
   }
 }
 

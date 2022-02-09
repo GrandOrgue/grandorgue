@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef ORGANDIALOG_H_
-#define ORGANDIALOG_H_
+#ifndef GOORGANDIALOG_H
+#define GOORGANDIALOG_H
 
 #include <wx/dialog.h>
 
@@ -29,7 +29,7 @@ class wxTreeCtrl;
 class wxTreeEvent;
 class wxTreeItemId;
 
-class OrganDialog : public wxDialog, public GOView {
+class GOOrganDialog : public wxDialog, public GOView {
 private:
   GODefinitionFile *m_organfile;
   wxTreeCtrl *m_Tree;
@@ -134,9 +134,9 @@ protected:
   };
 
 public:
-  OrganDialog(
+  GOOrganDialog(
     GODocumentBase *doc, wxWindow *parent, GODefinitionFile *organfile);
-  ~OrganDialog();
+  ~GOOrganDialog();
 
   bool Destroy();
 
