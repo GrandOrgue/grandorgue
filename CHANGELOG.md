@@ -1,3 +1,4 @@
+# 3.6.2 (2022-02-09)
 - Fixed "Copy current receive event" in the Midi Event Send dialog https://github.com/GrandOrgue/grandorgue/issues/985
 - Fixed automatic opening the Reverb settings page when there were no active midi devices https://github.com/GrandOrgue/grandorgue/issues/1002
 - Fixed matching midi events with midi devices https://github.com/GrandOrgue/grandorgue/issues/1000
