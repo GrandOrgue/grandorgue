@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef MIDIEVENTDIALOG_H_
-#define MIDIEVENTDIALOG_H_
+#ifndef GOMIDIEVENTDIALOG_H
+#define GOMIDIEVENTDIALOG_H
 
 #include <wx/propdlg.h>
 

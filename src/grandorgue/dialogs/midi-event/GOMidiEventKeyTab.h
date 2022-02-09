@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef MIDIEVENTKEYDIALOG_H_
-#define MIDIEVENTKEYDIALOG_H_
+#ifndef GOMIDIEVENTKEYTAB_H
+#define GOMIDIEVENTKEYTAB_H
 
 #include <wx/panel.h>
 

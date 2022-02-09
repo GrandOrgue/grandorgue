@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef MIDIEVENTRECVDIALOG_H_
-#define MIDIEVENTRECVDIALOG_H_
+#ifndef GOMIDIEVENTRECVTAB_H
+#define GOMIDIEVENTRECVTAB_H
 
 #include <vector>
 
