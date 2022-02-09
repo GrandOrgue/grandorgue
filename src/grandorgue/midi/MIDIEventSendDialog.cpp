@@ -9,6 +9,7 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/gbsizer.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
@@ -37,50 +38,55 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     m_original(event),
     m_recv(recv),
     m_midi(*event) {
-  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(2, 5, 5);
-  topSizer->Add(sizer, 0, wxALL, 6);
+  wxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
+  wxGridBagSizer *const grid = new wxGridBagSizer(5, 5);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("Event-&No")),
-    0,
+    wxGBPosition(0, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
   wxBoxSizer *box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+
   m_eventno = new wxChoice(this, ID_EVENT_NO);
-  box->Add(m_eventno, 1, wxEXPAND);
+  box->Add(m_eventno, 1, wxRIGHT, 5);
   m_new = new wxButton(this, ID_EVENT_NEW, _("New"));
+  box->Add(m_new, 0, wxLEFT | wxRIGHT, 5);
   m_delete = new wxButton(this, ID_EVENT_DELETE, _("Delete"));
-  box->Add(m_new, 0);
-  box->Add(m_delete, 0);
+  box->Add(m_delete, 0, wxLEFT | wxRIGHT, 5);
+  grid->Add(box, wxGBPosition(0, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Device:")),
-    0,
+    wxGBPosition(1, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
   m_device = new wxChoice(this, ID_EVENT);
-  sizer->Add(m_device, 1, wxEXPAND);
+  grid->Add(m_device, wxGBPosition(1, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Event:")),
-    0,
+    wxGBPosition(2, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
   m_eventtype = new GOChoice<GOMidiSendMessageType>(this, ID_EVENT);
-  sizer->Add(m_eventtype, 1, wxEXPAND);
+  grid->Add(m_eventtype, wxGBPosition(2, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Channel:")),
-    0,
+    wxGBPosition(3, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
   m_channel = new wxChoice(this, ID_CHANNEL);
-  sizer->Add(m_channel, 1, wxEXPAND);
+  grid->Add(m_channel, wxGBPosition(3, 1));
 
   m_KeyLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_KeyLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_KeyLabel,
+    wxGBPosition(4, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_key = new wxSpinCtrl(
     this,
     ID_KEY,
@@ -90,12 +96,14 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  sizer->Add(m_key, 0);
+  grid->Add(m_key, wxGBPosition(4, 1));
 
   m_LowValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_LowValueLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+  grid->Add(
+    m_LowValueLabel,
+    wxGBPosition(5, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_LowValue = new wxSpinCtrl(
     this,
     ID_LOW_VALUE,
@@ -105,9 +113,14 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_LowValue, 0);
+  grid->Add(m_LowValue, wxGBPosition(5, 1));
   m_HighValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  box->Add(m_HighValueLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+  grid->Add(
+    m_HighValueLabel,
+    wxGBPosition(5, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT,
+    5);
   m_HighValue = new wxSpinCtrl(
     this,
     ID_HIGH_VALUE,
@@ -117,12 +130,14 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_HighValue, 0);
+  grid->Add(m_HighValue, wxGBPosition(5, 3));
 
   m_StartLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_StartLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+  grid->Add(
+    m_StartLabel,
+    wxGBPosition(6, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_StartValue = new wxSpinCtrl(
     this,
     ID_START,
@@ -132,9 +147,14 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_StartValue, 0);
+  grid->Add(m_StartValue, wxGBPosition(6, 1));
   m_LengthLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  box->Add(m_LengthLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+  grid->Add(
+    m_LengthLabel,
+    wxGBPosition(6, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT,
+    5);
   m_LengthValue = new wxSpinCtrl(
     this,
     ID_LENGTH,
@@ -144,13 +164,17 @@ MIDIEventSendDialog::MIDIEventSendDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_LengthValue, 0);
+  grid->Add(m_LengthValue, wxGBPosition(6, 3));
 
+  grid->AddGrowableCol(4, 1);
+  topSizer->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+  box = new wxBoxSizer(wxHORIZONTAL);
   m_copy = new wxButton(this, ID_COPY, _("&Copy current receive event"));
   if (!m_recv)
     m_copy->Disable();
-  sizer->Add(new wxBoxSizer(wxVERTICAL), 0, wxTOP, 5);
-  sizer->Add(m_copy, 0, wxTOP, 5);
+  box->Add(m_copy, 0, wxALL, 5);
+  topSizer->Add(box, 0, wxEXPAND | wxALL, 5);
 
   SetSizer(topSizer);
 
@@ -228,9 +252,30 @@ MIDIEventSendDialog::MIDIEventSendDialog(
 
 MIDIEventSendDialog::~MIDIEventSendDialog() {}
 
-void MIDIEventSendDialog::DoApply() {
+bool MIDIEventSendDialog::Validate(wxString &errMsg) {
   StoreEvent();
 
+  bool isValid = true;
+
+  for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
+    const GOMidiSendEvent &e = m_midi.GetEvent(i);
+
+    if (e.type != MIDI_S_NONE && !e.deviceId) {
+      errMsg = _("Output device is not selected.\n"
+                 "Select one, set the type to None or delete this event.");
+      m_current = i;
+      LoadEvent();
+      isValid = false;
+      break;
+    }
+  }
+  return isValid;
+}
+
+void MIDIEventSendDialog::DoApply() {
+  // Assume that Validate() has been called and it returned true
+
+  // Delete empty events.
   bool empty_event;
   do {
     empty_event = false;
@@ -240,6 +285,7 @@ void MIDIEventSendDialog::DoApply() {
         empty_event = true;
       }
   } while (empty_event);
+  // The event with index 0 is also deleted so the dialog can't be used more
 
   m_original->Assign(m_midi);
 }
@@ -372,7 +418,7 @@ void MIDIEventSendDialog::LoadEvent() {
       m_MidiMap.GetDeviceLogicalNameById(e.deviceId) == m_device->GetString(i))
       m_device->SetSelection(i);
 
-  m_channel->SetSelection(e.channel - 1);
+  m_channel->SetSelection(e.channel > 0 && e.channel <= 16 ? e.channel - 1 : 0);
   m_key->SetValue(e.key);
   m_LowValue->SetValue(e.low_value);
   m_HighValue->SetValue(e.high_value);
@@ -422,23 +468,27 @@ void MIDIEventSendDialog::OnCopyClick(wxCommandEvent &event) {
 
 GOMidiSendEvent MIDIEventSendDialog::CopyEvent() {
   GOMidiReceiveEvent recv = m_recv->GetCurrentEvent();
-
   GOMidiSendEvent e;
-  e.deviceId = 0;
+
+  // try to fill e.deviceId as the id of the bound output device of the input
+  // device
+  const GOMidiDeviceConfig *pInDev = recv.deviceId
+    ? m_MidiIn.FindByLogicalName(
+      m_MidiMap.GetDeviceLogicalNameById(recv.deviceId))
+    : NULL;
+  const GOMidiDeviceConfig *pOutDev = pInDev ? pInDev->p_OutputDevice : NULL;
+
+  e.deviceId
+    = pOutDev ? m_MidiMap.GetDeviceIdByLogicalName(pOutDev->m_LogicalName) : 0;
+
   e.type = MIDI_S_NONE;
   e.channel = 1;
   e.key = 1;
   e.low_value = 0;
   e.high_value = 127;
 
-  const GOMidiDeviceConfig *pInDev = m_MidiIn.FindByLogicalName(
-    m_MidiMap.GetDeviceLogicalNameById(recv.deviceId));
-  const GOMidiDeviceConfig *pOutDev = pInDev ? pInDev->p_OutputDevice : NULL;
-
-  if (!pOutDev)
-    return e;
-  e.deviceId = m_MidiMap.GetDeviceIdByLogicalName(pOutDev->m_LogicalName);
-  if (m_midi.GetType() == MIDI_SEND_MANUAL) {
+  switch (m_midi.GetType()) {
+  case MIDI_SEND_MANUAL:
     if (
       recv.type == MIDI_M_NOTE || recv.type == MIDI_M_NOTE_NO_VELOCITY
       || recv.type == MIDI_M_NOTE_SHORT_OCTAVE
@@ -449,9 +499,8 @@ GOMidiSendEvent MIDIEventSendDialog::CopyEvent() {
       e.low_value = recv.low_value ? recv.low_value - 1 : 0;
       e.high_value = recv.high_value;
     }
-    return e;
-  }
-  if (m_midi.GetType() == MIDI_SEND_ENCLOSURE) {
+    break;
+  case MIDI_SEND_ENCLOSURE:
     e.channel = recv.channel;
     e.key = recv.key;
     e.low_value = recv.low_value;
@@ -463,35 +512,35 @@ GOMidiSendEvent MIDIEventSendDialog::CopyEvent() {
       e.type = MIDI_S_NRPN;
     else if (recv.type == MIDI_M_RPN)
       e.type = MIDI_S_RPN;
+    break;
+  default:
+    e.channel = recv.channel;
+    e.key = recv.key;
+    e.low_value = recv.low_value;
 
-    return e;
+    if (recv.type == MIDI_M_NOTE)
+      e.type = MIDI_S_NOTE;
+    else if (recv.type == MIDI_M_CTRL_CHANGE)
+      e.type = MIDI_S_CTRL;
+    else if (recv.type == MIDI_M_NRPN)
+      e.type = MIDI_S_NRPN;
+    else if (recv.type == MIDI_M_RPN)
+      e.type = MIDI_S_RPN;
+    else if (recv.type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE)
+      e.type = MIDI_S_RODGERS_STOP_CHANGE;
+    else if (recv.type == MIDI_M_RPN_RANGE) {
+      e.type = MIDI_S_RPN_RANGE;
+      e.high_value = recv.high_value;
+    } else if (recv.type == MIDI_M_NRPN_RANGE) {
+      e.type = MIDI_S_NRPN_RANGE;
+      e.high_value = recv.high_value;
+    } else if (recv.type == MIDI_M_PGM_RANGE) {
+      e.type = MIDI_S_PGM_RANGE;
+      e.high_value = recv.high_value;
+    }
   }
-
-  e.channel = recv.channel;
-  e.key = recv.key;
-  e.low_value = recv.low_value;
-  e.high_value = 127;
-
-  if (recv.type == MIDI_M_NOTE)
-    e.type = MIDI_S_NOTE;
-  else if (recv.type == MIDI_M_CTRL_CHANGE)
-    e.type = MIDI_S_CTRL;
-  else if (recv.type == MIDI_M_NRPN)
-    e.type = MIDI_S_NRPN;
-  else if (recv.type == MIDI_M_RPN)
-    e.type = MIDI_S_RPN;
-  else if (recv.type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE)
-    e.type = MIDI_S_RODGERS_STOP_CHANGE;
-  else if (recv.type == MIDI_M_RPN_RANGE) {
-    e.type = MIDI_S_RPN_RANGE;
-    e.high_value = recv.high_value;
-  } else if (recv.type == MIDI_M_NRPN_RANGE) {
-    e.type = MIDI_S_NRPN_RANGE;
-    e.high_value = recv.high_value;
-  } else if (recv.type == MIDI_M_PGM_RANGE) {
-    e.type = MIDI_S_PGM_RANGE;
-    e.high_value = recv.high_value;
-  }
+  if (e.channel <= 0)
+    e.channel = 1;
 
   return e;
 }

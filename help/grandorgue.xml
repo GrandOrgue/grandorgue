@@ -977,6 +977,26 @@ effectively deleted when the OK button is pressed.
             </note>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>Copy&#160;current&#160;receive&#160;event</term>
+          <listitem>
+	    <simpara>
+	      This button copies the values of the current Receive event
+	      selected on the Receive page to the current event on the Send page.
+	    </simpara>
+	    <simpara>
+	      If the receive event contains a correct input device specified,
+	      then GrandOrgue takes the output device set to this input device
+	      with the MIDI-Output-Device button on the <link
+  linkend="mididevicestab">Midi Devices Tab</link> of the Program Settings window.
+	    </simpara>
+	    <simpara>
+	      If an output device has not been set for this input device then
+	      GrandOrgue sets "Any Device" value. The user have to select an
+	      output device manually.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
       </variablelist>
     </sect1>
     <sect1>
@@ -4703,7 +4723,14 @@ the same channel.
 	    default. Therefore it is possible to use the same MIDI
 	    channel on multiple interfaces without configuring any
 	    channel offset.</simpara></note>
-	    <term>Matching</term>
+	    <para>
+	      <indexterm>
+		<primary>MIDI-Output-Device</primary>
+	      </indexterm>
+	      The <emphasis>MIDI-Output-Device</emphasis> button allows to
+	      select an output device where GrandOrgue will send midi all events
+	      received from this input device
+	    </para>
 	    <para>
 	      The <emphasis>Matching</emphasis> button allows to change the way
 	      Grandorgue recognises the midi device

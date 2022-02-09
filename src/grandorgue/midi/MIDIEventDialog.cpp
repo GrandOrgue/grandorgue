@@ -8,6 +8,7 @@
 #include "MIDIEventDialog.h"
 
 #include <wx/bookctrl.h>
+#include <wx/msgdlg.h>
 
 #include "MIDIEventKeyDialog.h"
 #include "MIDIEventRecvDialog.h"
@@ -73,14 +74,44 @@ void MIDIEventDialog::RegisterMIDIListener(GOMidi *midi) {
     m_recvPage->RegisterMIDIListener(midi);
 }
 
-void MIDIEventDialog::OnApply(wxCommandEvent &event) { DoApply(); }
+bool MIDIEventDialog::Validate() {
+  wxWindow *notValidTab = NULL;
+  wxString errMsg;
+
+  if (!notValidTab && m_sendPage && !m_sendPage->Validate(errMsg))
+    notValidTab = m_sendPage;
+  if (
+    !notValidTab && m_sendDivisionPage && !m_sendDivisionPage->Validate(errMsg))
+    notValidTab = m_sendPage;
+
+  // Display the tab that has problems
+  if (notValidTab) {
+    wxBookCtrlBase *const notebook = GetBookCtrl();
+    const int notValidPageId = notebook->FindPage(notValidTab);
+
+    if (notValidPageId != wxNOT_FOUND)
+      notebook->SetSelection(notValidPageId);
+    if (!errMsg.IsEmpty())
+      wxMessageBox(
+        errMsg, _("Invalid MIDI event"), wxOK | wxCENTRE | wxICON_ERROR);
+  }
+
+  return !notValidTab;
+}
+
+void MIDIEventDialog::OnApply(wxCommandEvent &event) {
+  if (Validate())
+    DoApply();
+}
 
 void MIDIEventDialog::OnOK(wxCommandEvent &event) {
-  DoApply();
-  if (HasDocument())
-    Destroy();
-  else
-    EndModal(wxID_OK);
+  if (Validate()) {
+    DoApply();
+    if (HasDocument())
+      Destroy();
+    else
+      EndModal(wxID_OK);
+  }
 }
 
 void MIDIEventDialog::OnCancel(wxCommandEvent &event) {

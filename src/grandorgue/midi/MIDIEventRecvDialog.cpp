@@ -9,6 +9,7 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/gbsizer.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
@@ -39,51 +40,56 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     m_listener(),
     m_ListenState(0),
     m_Timer(this, ID_TIMER) {
-  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-  wxFlexGridSizer *sizer = new wxFlexGridSizer(2, 5, 5);
-  topSizer->Add(sizer, 0, wxALL, 6);
+  wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
+  wxGridBagSizer *const grid = new wxGridBagSizer(5, 5);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("Event-&No")),
-    0,
+    wxGBPosition(0, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
   wxBoxSizer *box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
-  m_eventno = new wxChoice(this, ID_EVENT_NO);
-  box->Add(m_eventno, 1, wxEXPAND);
-  m_new = new wxButton(this, ID_EVENT_NEW, _("New"));
-  m_delete = new wxButton(this, ID_EVENT_DELETE, _("Delete"));
-  box->Add(m_new, 0);
-  box->Add(m_delete, 0);
 
-  sizer->Add(
+  m_eventno = new wxChoice(this, ID_EVENT_NO);
+  box->Add(m_eventno, 1, wxRIGHT, 5);
+  m_new = new wxButton(this, ID_EVENT_NEW, _("New"));
+  box->Add(m_new, 0, wxLEFT | wxRIGHT, 5);
+  m_delete = new wxButton(this, ID_EVENT_DELETE, _("Delete"));
+  box->Add(m_delete, 0, wxLEFT | wxRIGHT, 5);
+  grid->Add(box, wxGBPosition(0, 1), wxGBSpan(1, 4), wxEXPAND);
+
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Device:")),
-    0,
+    wxGBPosition(1, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
   m_device = new wxChoice(this, ID_EVENT);
-  sizer->Add(m_device, 1, wxEXPAND);
+  grid->Add(m_device, wxGBPosition(1, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Event:")),
-    0,
+    wxGBPosition(2, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
   m_eventtype = new GOChoice<GOMidiReceiveMessageType>(this, ID_EVENT);
-  sizer->Add(m_eventtype, 1, wxEXPAND);
+  grid->Add(m_eventtype, wxGBPosition(2, 1), wxGBSpan(1, 4), wxEXPAND);
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Channel:")),
-    0,
+    wxGBPosition(3, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
   m_channel = new wxChoice(this, ID_CHANNEL);
-  box->Add(m_channel, 0);
+  grid->Add(m_channel, wxGBPosition(3, 1));
 
   m_DataLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  box->Add(m_DataLabel, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 15);
+  grid->Add(
+    m_DataLabel,
+    wxGBPosition(3, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_data = new wxSpinCtrl(
     this,
     ID_CHANNEL,
@@ -93,14 +99,13 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     wxSP_ARROW_KEYS,
     -11,
     127);
-  box->Add(m_data, 0);
+  grid->Add(m_data, wxGBPosition(3, 3));
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Lowest key:")),
-    0,
+    wxGBPosition(4, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
   m_LowKey = new wxSpinCtrl(
     this,
     ID_LOW_KEY,
@@ -110,12 +115,13 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_LowKey, 0);
-  box->Add(
+  grid->Add(m_LowKey, wxGBPosition(4, 1));
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Highest key:")),
-    0,
-    wxLEFT | wxALIGN_CENTER_VERTICAL,
-    15);
+    wxGBPosition(4, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT,
+    5);
   m_HighKey = new wxSpinCtrl(
     this,
     ID_HIGH_KEY,
@@ -125,12 +131,14 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_HighKey, 0);
+  grid->Add(m_HighKey, wxGBPosition(4, 3));
 
   m_LowValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_LowValueLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+  grid->Add(
+    m_LowValueLabel,
+    wxGBPosition(5, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_LowValue = new wxSpinCtrl(
     this,
     ID_LOW_VALUE,
@@ -140,9 +148,14 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_LowValue, 0);
+  grid->Add(m_LowValue, wxGBPosition(5, 1));
   m_HighValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
-  box->Add(m_HighValueLabel, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  grid->Add(
+    m_HighValueLabel,
+    wxGBPosition(5, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT,
+    5);
   m_HighValue = new wxSpinCtrl(
     this,
     ID_HIGH_VALUE,
@@ -152,15 +165,13 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     wxSP_ARROW_KEYS,
     0,
     127);
-  box->Add(m_HighValue, 0);
+  grid->Add(m_HighValue, wxGBPosition(5, 3));
 
-  sizer->Add(
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("&Debounce time(ms):")),
-    0,
-    wxLEFT | wxALIGN_CENTER_VERTICAL,
-    15);
-  box = new wxBoxSizer(wxHORIZONTAL);
-  sizer->Add(box);
+    wxGBPosition(6, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_Debounce = new wxSpinCtrl(
     this,
     ID_DEBOUNCE,
@@ -170,18 +181,23 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
     wxSP_ARROW_KEYS,
     0,
     3000);
-  box->Add(m_Debounce, 0);
+  grid->Add(m_Debounce, wxGBPosition(6, 1));
 
+  grid->AddGrowableCol(4, 1);
+  topSizer->Add(grid, 0, wxEXPAND | wxALL, 5);
+
+  box = new wxBoxSizer(wxHORIZONTAL);
   m_ListenSimple
     = new wxToggleButton(this, ID_LISTEN_SIMPLE, _("&Listen for Event"));
-  sizer->Add(m_ListenSimple, 0, wxTOP, 5);
+  box->Add(m_ListenSimple, 0, wxALL, 5);
   m_ListenAdvanced = new wxToggleButton(
     this, ID_LISTEN_ADVANCED, _("&Detect complex MIDI setup"));
-  sizer->Add(m_ListenAdvanced, 0, wxTOP, 5);
+  box->Add(m_ListenAdvanced, 0, wxALL, 5);
 
-  sizer->Add(new wxStaticText(this, wxID_ANY, wxEmptyString));
+  topSizer->Add(box, 0, wxEXPAND | wxALL, 5);
+
   m_ListenInstructions = new wxStaticText(this, wxID_ANY, wxT(""));
-  sizer->Add(m_ListenInstructions, 0, wxTOP, 5);
+  topSizer->Add(m_ListenInstructions, 0, wxEXPAND | wxALL, 5);
 
   SetSizer(topSizer);
 

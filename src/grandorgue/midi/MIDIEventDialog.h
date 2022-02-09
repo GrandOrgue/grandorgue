@@ -29,6 +29,7 @@ private:
   MIDIEventSendDialog *m_sendDivisionPage;
   MIDIEventKeyDialog *m_keyPage;
 
+  bool Validate();
   void DoApply();
 
   void OnApply(wxCommandEvent &event);
