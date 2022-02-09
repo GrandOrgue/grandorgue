@@ -15,7 +15,7 @@
 class wxChoice;
 class wxToggleButton;
 
-class MIDIEventKeyDialog : public wxPanel {
+class GOMidiEventKeyTab : public wxPanel {
 private:
   GOKeyReceiver *m_original;
   GOKeyReceiverData m_key;
@@ -40,8 +40,8 @@ protected:
   };
 
 public:
-  MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event);
-  ~MIDIEventKeyDialog();
+  GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event);
+  ~GOMidiEventKeyTab();
 
   void DoApply();
 

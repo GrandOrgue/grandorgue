@@ -207,7 +207,7 @@ void GODocument::ShowMIDIEventDialog(
   GOKeyReceiver *key,
   GOMidiSender *division) {
   if (!showWindow(GODocument::MIDI_EVENT, element) && m_organfile) {
-    MIDIEventDialog *dlg = new MIDIEventDialog(
+    GOMidiEventDialog *dlg = new GOMidiEventDialog(
       this,
       NULL,
       title,

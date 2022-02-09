@@ -223,7 +223,7 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
 
 void GOSettingsOrgans::OnOrganProperties(wxCommandEvent &event) {
   GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(m_Organs->GetFirstSelected());
-  MIDIEventDialog dlg(
+  GOMidiEventDialog dlg(
     NULL,
     this,
     wxString::Format(

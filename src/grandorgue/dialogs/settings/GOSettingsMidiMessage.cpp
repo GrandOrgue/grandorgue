@@ -78,7 +78,7 @@ void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent &event) {
 
   GOMidiReceiverBase *recv
     = (GOMidiReceiverBase *)m_Events->GetItemData(m_Events->GetFirstSelected());
-  MIDIEventDialog dlg(
+  GOMidiEventDialog dlg(
     NULL,
     this,
     wxString::Format(

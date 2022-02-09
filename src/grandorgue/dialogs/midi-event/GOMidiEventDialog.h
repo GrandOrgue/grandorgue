@@ -18,16 +18,16 @@ class GOMidiListener;
 class GOMidiReceiverBase;
 class GOMidiSender;
 class GOConfig;
-class MIDIEventKeyDialog;
-class MIDIEventRecvDialog;
-class MIDIEventSendDialog;
+class GOMidiEventKeyTab;
+class GOMidiEventRecvTab;
+class GOMidiEventSendTab;
 
-class MIDIEventDialog : public wxPropertySheetDialog, public GOView {
+class GOMidiEventDialog : public wxPropertySheetDialog, public GOView {
 private:
-  MIDIEventRecvDialog *m_recvPage;
-  MIDIEventSendDialog *m_sendPage;
-  MIDIEventSendDialog *m_sendDivisionPage;
-  MIDIEventKeyDialog *m_keyPage;
+  GOMidiEventRecvTab *m_recvPage;
+  GOMidiEventSendTab *m_sendPage;
+  GOMidiEventSendTab *m_sendDivisionPage;
+  GOMidiEventKeyTab *m_keyPage;
 
   bool Validate();
   void DoApply();
@@ -37,7 +37,7 @@ private:
   void OnCancel(wxCommandEvent &event);
 
 public:
-  MIDIEventDialog(
+  GOMidiEventDialog(
     GODocumentBase *doc,
     /*
       if doc != NULL then the dialog is auto destroyed when closed
@@ -51,7 +51,7 @@ public:
     GOMidiSender *sender,
     GOKeyReceiver *key,
     GOMidiSender *division = NULL);
-  ~MIDIEventDialog();
+  ~GOMidiEventDialog();
 
   void RegisterMIDIListener(GOMidi *midi);
 

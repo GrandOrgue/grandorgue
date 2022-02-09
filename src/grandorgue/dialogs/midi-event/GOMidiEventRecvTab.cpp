@@ -20,17 +20,17 @@
 #include "config/GOConfig.h"
 #include "midi/GOMidiEvent.h"
 
-BEGIN_EVENT_TABLE(MIDIEventRecvDialog, wxPanel)
-EVT_TOGGLEBUTTON(ID_LISTEN_SIMPLE, MIDIEventRecvDialog::OnListenSimpleClick)
-EVT_TOGGLEBUTTON(ID_LISTEN_ADVANCED, MIDIEventRecvDialog::OnListenAdvancedClick)
-EVT_TIMER(ID_TIMER, MIDIEventRecvDialog::OnTimer)
-EVT_BUTTON(ID_EVENT_NEW, MIDIEventRecvDialog::OnNewClick)
-EVT_BUTTON(ID_EVENT_DELETE, MIDIEventRecvDialog::OnDeleteClick)
-EVT_CHOICE(ID_EVENT_NO, MIDIEventRecvDialog::OnEventChange)
-EVT_CHOICE(ID_EVENT, MIDIEventRecvDialog::OnTypeChange)
+BEGIN_EVENT_TABLE(GOMidiEventRecvTab, wxPanel)
+EVT_TOGGLEBUTTON(ID_LISTEN_SIMPLE, GOMidiEventRecvTab::OnListenSimpleClick)
+EVT_TOGGLEBUTTON(ID_LISTEN_ADVANCED, GOMidiEventRecvTab::OnListenAdvancedClick)
+EVT_TIMER(ID_TIMER, GOMidiEventRecvTab::OnTimer)
+EVT_BUTTON(ID_EVENT_NEW, GOMidiEventRecvTab::OnNewClick)
+EVT_BUTTON(ID_EVENT_DELETE, GOMidiEventRecvTab::OnDeleteClick)
+EVT_CHOICE(ID_EVENT_NO, GOMidiEventRecvTab::OnEventChange)
+EVT_CHOICE(ID_EVENT, GOMidiEventRecvTab::OnTypeChange)
 END_EVENT_TABLE()
 
-MIDIEventRecvDialog::MIDIEventRecvDialog(
+GOMidiEventRecvTab::GOMidiEventRecvTab(
   wxWindow *parent, GOMidiReceiverBase *event, GOConfig &config)
   : wxPanel(parent, wxID_ANY),
     m_MidiIn(config.m_MidiIn),
@@ -296,14 +296,14 @@ MIDIEventRecvDialog::MIDIEventRecvDialog(
   topSizer->Fit(this);
 }
 
-MIDIEventRecvDialog::~MIDIEventRecvDialog() { StopListen(); }
+GOMidiEventRecvTab::~GOMidiEventRecvTab() { StopListen(); }
 
-void MIDIEventRecvDialog::RegisterMIDIListener(GOMidi *midi) {
+void GOMidiEventRecvTab::RegisterMIDIListener(GOMidi *midi) {
   if (midi)
     m_listener.Register(midi);
 }
 
-void MIDIEventRecvDialog::DoApply() {
+void GOMidiEventRecvTab::DoApply() {
   StoreEvent();
 
   bool empty_event;
@@ -319,7 +319,7 @@ void MIDIEventRecvDialog::DoApply() {
   m_original->Assign(m_midi);
 }
 
-void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent &event) {
+void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {
   GOMidiReceiveMessageType type = m_eventtype->GetCurrentSelection();
   if (m_original->HasChannel(type))
     m_channel->Enable();
@@ -439,7 +439,7 @@ void MIDIEventRecvDialog::OnTypeChange(wxCommandEvent &event) {
   Layout();
 }
 
-void MIDIEventRecvDialog::LoadEvent() {
+void GOMidiEventRecvTab::LoadEvent() {
   m_eventno->Clear();
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
     wxString buffer;
@@ -492,7 +492,7 @@ void MIDIEventRecvDialog::LoadEvent() {
   m_Debounce->SetValue(e.debounce_time);
 }
 
-GOMidiReceiveEvent MIDIEventRecvDialog::GetCurrentEvent() {
+GOMidiReceiveEvent GOMidiEventRecvTab::GetCurrentEvent() {
   GOMidiReceiveEvent e;
   if (m_device->GetSelection() == 0)
     e.deviceId = 0;
@@ -515,43 +515,43 @@ GOMidiReceiveEvent MIDIEventRecvDialog::GetCurrentEvent() {
   return e;
 }
 
-void MIDIEventRecvDialog::StoreEvent() {
+void GOMidiEventRecvTab::StoreEvent() {
   m_midi.GetEvent(m_current) = GetCurrentEvent();
 }
 
-void MIDIEventRecvDialog::OnNewClick(wxCommandEvent &event) {
+void GOMidiEventRecvTab::OnNewClick(wxCommandEvent &event) {
   StoreEvent();
   m_current = m_midi.AddNewEvent();
   LoadEvent();
 }
 
-void MIDIEventRecvDialog::OnDeleteClick(wxCommandEvent &event) {
+void GOMidiEventRecvTab::OnDeleteClick(wxCommandEvent &event) {
   m_midi.DeleteEvent(m_current);
   m_current = 0;
   LoadEvent();
 }
 
-void MIDIEventRecvDialog::OnEventChange(wxCommandEvent &event) {
+void GOMidiEventRecvTab::OnEventChange(wxCommandEvent &event) {
   StoreEvent();
   m_current = m_eventno->GetSelection();
   LoadEvent();
 }
 
-void MIDIEventRecvDialog::OnListenSimpleClick(wxCommandEvent &event) {
+void GOMidiEventRecvTab::OnListenSimpleClick(wxCommandEvent &event) {
   if (m_ListenSimple->GetValue())
     StartListen(false);
   else
     StopListen();
 }
 
-void MIDIEventRecvDialog::OnListenAdvancedClick(wxCommandEvent &event) {
+void GOMidiEventRecvTab::OnListenAdvancedClick(wxCommandEvent &event) {
   if (m_ListenAdvanced->GetValue())
     StartListen(true);
   else
     StopListen();
 }
 
-void MIDIEventRecvDialog::OnTimer(wxTimerEvent &event) {
+void GOMidiEventRecvTab::OnTimer(wxTimerEvent &event) {
   if (m_ListenState == 2) {
     wxString label;
     switch (m_midi.GetType()) {
@@ -573,7 +573,7 @@ void MIDIEventRecvDialog::OnTimer(wxTimerEvent &event) {
     DetectEvent();
 }
 
-void MIDIEventRecvDialog::OnMidiEvent(const GOMidiEvent &event) {
+void GOMidiEventRecvTab::OnMidiEvent(const GOMidiEvent &event) {
   switch (event.GetMidiType()) {
   case MIDI_NOTE:
   case MIDI_CTRL_CHANGE:
@@ -605,7 +605,7 @@ void MIDIEventRecvDialog::OnMidiEvent(const GOMidiEvent &event) {
   }
 }
 
-void MIDIEventRecvDialog::StartListen(bool type) {
+void GOMidiEventRecvTab::StartListen(bool type) {
   this->SetCursor(wxCursor(wxCURSOR_WAIT));
   m_listener.SetCallback(this);
   if (!type)
@@ -637,7 +637,7 @@ void MIDIEventRecvDialog::StartListen(bool type) {
   }
 }
 
-void MIDIEventRecvDialog::StopListen() {
+void GOMidiEventRecvTab::StopListen() {
   m_listener.SetCallback(NULL);
   m_Timer.Stop();
   this->SetCursor(wxCursor(wxCURSOR_ARROW));
@@ -651,7 +651,7 @@ void MIDIEventRecvDialog::StopListen() {
   m_OffList.clear();
 }
 
-bool MIDIEventRecvDialog::SimilarEvent(
+bool GOMidiEventRecvTab::SimilarEvent(
   const GOMidiEvent &e1, const GOMidiEvent &e2) {
   if (e1.GetDevice() != e2.GetDevice())
     return false;
@@ -673,7 +673,7 @@ bool MIDIEventRecvDialog::SimilarEvent(
   return false;
 }
 
-void MIDIEventRecvDialog::DetectEvent() {
+void GOMidiEventRecvTab::DetectEvent() {
   if (m_ListenState == 3) {
     for (unsigned i = 0; i < m_OnList.size(); i++) {
       if (i + 1 < m_OnList.size()) {

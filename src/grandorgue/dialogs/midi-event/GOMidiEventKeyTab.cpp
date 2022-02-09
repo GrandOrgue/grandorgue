@@ -15,12 +15,12 @@
 
 #include "GOKeyConvert.h"
 
-BEGIN_EVENT_TABLE(MIDIEventKeyDialog, wxPanel)
-EVT_TOGGLEBUTTON(ID_LISTEN, MIDIEventKeyDialog::OnListenClick)
-EVT_TOGGLEBUTTON(ID_LISTEN_MINUS, MIDIEventKeyDialog::OnMinusListenClick)
+BEGIN_EVENT_TABLE(GOMidiEventKeyTab, wxPanel)
+EVT_TOGGLEBUTTON(ID_LISTEN, GOMidiEventKeyTab::OnListenClick)
+EVT_TOGGLEBUTTON(ID_LISTEN_MINUS, GOMidiEventKeyTab::OnMinusListenClick)
 END_EVENT_TABLE()
 
-MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event)
+GOMidiEventKeyTab::GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event)
   : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
     m_original(event),
     m_key(*event),
@@ -64,9 +64,9 @@ MIDIEventKeyDialog::MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event)
   topSizer->Fit(this);
 }
 
-MIDIEventKeyDialog::~MIDIEventKeyDialog() {}
+GOMidiEventKeyTab::~GOMidiEventKeyTab() {}
 
-void MIDIEventKeyDialog::FillKeylist(wxChoice *select, unsigned shortcut) {
+void GOMidiEventKeyTab::FillKeylist(wxChoice *select, unsigned shortcut) {
   const GOShortcutKey *keys = GetShortcutKeys();
   unsigned count = GetShortcutKeyCount();
   select->Append(_("None"), (void *)0);
@@ -78,7 +78,7 @@ void MIDIEventKeyDialog::FillKeylist(wxChoice *select, unsigned shortcut) {
   }
 }
 
-void MIDIEventKeyDialog::DoApply() {
+void GOMidiEventKeyTab::DoApply() {
   const GOShortcutKey *key = (const GOShortcutKey *)m_keyselect->GetClientData(
     m_keyselect->GetSelection());
   if (!key)
@@ -96,37 +96,37 @@ void MIDIEventKeyDialog::DoApply() {
   m_original->Assign(m_key);
 }
 
-void MIDIEventKeyDialog::Listen(bool enable) {
+void GOMidiEventKeyTab::Listen(bool enable) {
   if (enable) {
     this->SetCursor(wxCursor(wxCURSOR_WAIT));
     m_listen->GetEventHandler()->Connect(
       wxEVT_KEY_DOWN,
-      wxKeyEventHandler(MIDIEventKeyDialog::OnKeyDown),
+      wxKeyEventHandler(GOMidiEventKeyTab::OnKeyDown),
       NULL,
       this);
     if (m_minuslisten)
       m_minuslisten->GetEventHandler()->Connect(
         wxEVT_KEY_DOWN,
-        wxKeyEventHandler(MIDIEventKeyDialog::OnKeyDown),
+        wxKeyEventHandler(GOMidiEventKeyTab::OnKeyDown),
         NULL,
         this);
   } else {
     m_listen->GetEventHandler()->Disconnect(
       wxEVT_KEY_DOWN,
-      wxKeyEventHandler(MIDIEventKeyDialog::OnKeyDown),
+      wxKeyEventHandler(GOMidiEventKeyTab::OnKeyDown),
       NULL,
       this);
     if (m_minuslisten)
       m_minuslisten->GetEventHandler()->Disconnect(
         wxEVT_KEY_DOWN,
-        wxKeyEventHandler(MIDIEventKeyDialog::OnKeyDown),
+        wxKeyEventHandler(GOMidiEventKeyTab::OnKeyDown),
         NULL,
         this);
     this->SetCursor(wxCursor(wxCURSOR_ARROW));
   }
 }
 
-void MIDIEventKeyDialog::OnKeyDown(wxKeyEvent &event) {
+void GOMidiEventKeyTab::OnKeyDown(wxKeyEvent &event) {
   unsigned code = WXKtoVK(event.GetKeyCode());
   if (code) {
     wxChoice *select = m_keyselect;
@@ -147,7 +147,7 @@ void MIDIEventKeyDialog::OnKeyDown(wxKeyEvent &event) {
     event.Skip();
 }
 
-void MIDIEventKeyDialog::OnListenClick(wxCommandEvent &event) {
+void GOMidiEventKeyTab::OnListenClick(wxCommandEvent &event) {
   if (m_minuslisten && m_minuslisten->GetValue()) {
     Listen(false);
     m_minuslisten->SetValue(false);
@@ -159,7 +159,7 @@ void MIDIEventKeyDialog::OnListenClick(wxCommandEvent &event) {
   }
 }
 
-void MIDIEventKeyDialog::OnMinusListenClick(wxCommandEvent &event) {
+void GOMidiEventKeyTab::OnMinusListenClick(wxCommandEvent &event) {
   if (m_listen->GetValue()) {
     Listen(false);
     m_listen->SetValue(false);

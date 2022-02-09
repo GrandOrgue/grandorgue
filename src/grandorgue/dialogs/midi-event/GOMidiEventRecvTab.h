@@ -28,7 +28,7 @@ class wxToggleButton;
 class GOConfig;
 class GOMidiDeviceConfigList;
 
-class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback {
+class GOMidiEventRecvTab : public wxPanel, protected GOMidiCallback {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiMap &m_MidiMap;
@@ -94,9 +94,9 @@ protected:
   };
 
 public:
-  MIDIEventRecvDialog(
+  GOMidiEventRecvTab(
     wxWindow *parent, GOMidiReceiverBase *event, GOConfig &config);
-  ~MIDIEventRecvDialog();
+  ~GOMidiEventRecvTab();
   void RegisterMIDIListener(GOMidi *midi);
 
   void DoApply();
