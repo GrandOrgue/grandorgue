@@ -8,26 +8,14 @@
 #ifndef GOSPLASH_H
 #define GOSPLASH_H
 
-#include <wx/bitmap.h>
-#include <wx/control.h>
 #include <wx/dialog.h>
 #include <wx/timer.h>
 
-class GOSplashBitmap : public wxControl {
-private:
-  wxBitmap m_Bitmap;
+#include "common/GODialogCloser.h"
 
-  void OnPaint(wxPaintEvent &event);
-  void OnClick(wxMouseEvent &event);
-  void OnKey(wxKeyEvent &event);
+class GOSplashBitmap;
 
-public:
-  GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap &bitmap);
-
-  DECLARE_EVENT_TABLE()
-};
-
-class GOSplash : private wxDialog {
+class GOSplash : private wxDialog, private GODialogCloser {
 private:
   GOSplashBitmap *m_Image;
   wxTimer m_Timer;
@@ -36,8 +24,9 @@ private:
   GOSplash(bool has_timeout, wxWindow *parent, wxWindowID id);
   ~GOSplash();
 
-  void OnShowWindow(wxShowEvent &event);
-  void OnCloseWindow(wxCloseEvent &event);
+  void OnShow() override;
+  void OnCloseWindow(wxCloseEvent &event) override;
+
   void OnNotify(wxTimerEvent &event);
 
   void DrawText(wxBitmap &bitmap);

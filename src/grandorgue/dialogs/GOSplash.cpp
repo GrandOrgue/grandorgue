@@ -15,6 +15,20 @@
 #include "Images.h"
 #include "go_defs.h"
 
+class GOSplashBitmap : public wxControl {
+private:
+  wxBitmap m_Bitmap;
+
+  void OnPaint(wxPaintEvent &event);
+  void OnClick(wxMouseEvent &event);
+  void OnKey(wxKeyEvent &event);
+
+public:
+  GOSplashBitmap(wxWindow *parent, wxWindowID id, wxBitmap &bitmap);
+
+  DECLARE_EVENT_TABLE()
+};
+
 BEGIN_EVENT_TABLE(GOSplashBitmap, wxControl)
 EVT_PAINT(GOSplashBitmap::OnPaint)
 EVT_LEFT_DOWN(GOSplashBitmap::OnClick)
@@ -39,9 +53,7 @@ void GOSplashBitmap::OnKey(wxKeyEvent &event) { GetParent()->Close(true); }
 #define GO_SPLASH_TIMEOUT_LENGTH (3000)
 
 BEGIN_EVENT_TABLE(GOSplash, wxDialog)
-EVT_SHOW(GOSplash::OnShowWindow)
 EVT_TIMER(GO_SPLASH_TIMER_ID, GOSplash::OnNotify)
-EVT_CLOSE(GOSplash::OnCloseWindow)
 END_EVENT_TABLE()
 
 GOSplash::GOSplash(bool has_timeout, wxWindow *parent, wxWindowID id)
@@ -52,6 +64,7 @@ GOSplash::GOSplash(bool has_timeout, wxWindow *parent, wxWindowID id)
     wxPoint(0, 0),
     wxSize(100, 100),
     wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP),
+    GODialogCloser(this),
     m_Timer(this, GO_SPLASH_TIMER_ID),
     m_hasTimeout(has_timeout) {
   SetExtraStyle(GetExtraStyle() | wxWS_EX_TRANSIENT);
@@ -129,7 +142,8 @@ void GOSplash::DrawText(wxBitmap &bitmap) {
 
 GOSplash::~GOSplash() { m_Timer.Stop(); }
 
-void GOSplash::OnShowWindow(wxShowEvent &event) {
+void GOSplash::OnShow() {
+  GODialogCloser::OnShow();
   if (m_hasTimeout)
     m_Timer.Start(GO_SPLASH_TIMEOUT_LENGTH, true);
   m_Image->SetFocus();
@@ -138,21 +152,16 @@ void GOSplash::OnShowWindow(wxShowEvent &event) {
 
 void GOSplash::OnNotify(wxTimerEvent &WXUNUSED(event)) { Close(true); }
 
-void GOSplash::OnCloseWindow(wxCloseEvent &WXUNUSED(event)) {
+void GOSplash::OnCloseWindow(wxCloseEvent &event) {
   m_Timer.Stop();
-  if (m_hasTimeout)
-    Destroy();
-  else
-    EndModal(wxID_OK);
+  GODialogCloser::OnCloseWindow(event);
 }
 
 void GOSplash::DoSplash(bool hasTimeout, wxWindow *parent) {
   GOSplash *const splash = new GOSplash(hasTimeout, parent, wxID_ANY);
 
   if (hasTimeout)
-    splash->Show();
-  else {
-    splash->ShowModal();
-    splash->Destroy();
-  }
+    splash->ShowAdvanced(true);
+  else
+    splash->ShowModalAdvanced(true);
 }
