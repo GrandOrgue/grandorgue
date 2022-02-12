@@ -3541,7 +3541,7 @@ the name <emphasis>GrandOrgueConfig</emphasis> becomes <emphasis><emphasis role=
     <sect1>
       <title>Options tab</title>
       <indexterm>
-        <primary>Options</primary>
+        <primary>Settings.Options</primary>
       </indexterm>
       <figure id="optionstab">
         <title>Options</title>
@@ -4160,7 +4160,7 @@ are <link linkend="save">saved</link> to settings files.
     </sect1>
     <sect1>
       <indexterm>
-        <primary>Paths</primary>
+        <primary>Settings.Paths</primary>
       </indexterm>
       <title>Paths tab</title>
       <figure>
@@ -4276,7 +4276,7 @@ role="strong">STOP</emphasis> buttton is depressed.
     <sect1>
       <title>Audio tab</title>
       <indexterm>
-        <primary>Audio</primary>
+        <primary>Settings.Audio</primary>
       </indexterm>
       <figure>
         <title>Audio tab</title>
@@ -4648,7 +4648,7 @@ role="strong">STOP</emphasis> buttton is depressed.
     <sect1 id="mididevicestab">
       <title>MIDI Devices tab</title>
       <indexterm>
-        <primary>MIDI Devices</primary>
+        <primary>Settings.MidiDevices</primary>
       </indexterm>
       <figure>
         <title>MIDI devices options</title>
@@ -4843,7 +4843,7 @@ Recorder-generated output. The selected device must be activeted in the
     <sect1 id="initialconfiguration">
       <title>Initial Midi tab</title>
       <indexterm>
-        <primary>Initial Midi</primary>
+        <primary>Settings.InitialMidi</primary>
       </indexterm>
       <figure>
         <title>Initial Midi tab</title>
@@ -4950,7 +4950,7 @@ MIDI settings work properly.
     <sect1>
       <title>Organs tab</title>
       <indexterm>
-        <primary>Organs</primary>
+        <primary>Settings.Organs</primary>
       </indexterm>
       <indexterm>
       <primary>Known Organs List</primary>
@@ -5038,7 +5038,7 @@ MIDI settings work properly.
       <title>Reverb tab</title>
       <indexterm><primary>Convolution Reverberation</primary></indexterm>
       <indexterm><primary>Reverberation</primary></indexterm>
-      <indexterm><primary>Reverb</primary></indexterm>
+      <indexterm><primary>Settings.Reverb</primary></indexterm>
       <figure>
         <title>Reverberation options</title>
         <mediaobject>
@@ -5123,7 +5123,7 @@ recorded release tail of wet samples.
     </sect1>
     <sect1 id="temperamentTab">
       <title>Temperaments tab</title>
-      <indexterm><primary>Temperaments</primary></indexterm>
+      <indexterm><primary>Settings.Temperaments</primary></indexterm>
       <indexterm><primary>User-defined Temperament</primary></indexterm>
       <figure>
         <title>User-defined Temperaments</title>
