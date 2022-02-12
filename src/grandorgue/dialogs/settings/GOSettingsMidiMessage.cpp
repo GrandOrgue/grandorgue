@@ -13,7 +13,7 @@
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
-#include "midi/MIDIEventDialog.h"
+#include "dialogs/midi-event/GOMidiEventDialog.h"
 
 BEGIN_EVENT_TABLE(GOSettingsMidiMessage, wxPanel)
 EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiMessage::OnEventsClick)
@@ -78,7 +78,7 @@ void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent &event) {
 
   GOMidiReceiverBase *recv
     = (GOMidiReceiverBase *)m_Events->GetItemData(m_Events->GetFirstSelected());
-  MIDIEventDialog dlg(
+  GOMidiEventDialog dlg(
     NULL,
     this,
     wxString::Format(

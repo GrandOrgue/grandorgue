@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GRANDORGUEPROGRESSDIALOG_H
-#define GRANDORGUEPROGRESSDIALOG_H
+#ifndef GOPROGRESSDIALOG_H
+#define GOPROGRESSDIALOG_H
 
 #include <wx/string.h>
 

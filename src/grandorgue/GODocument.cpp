@@ -9,21 +9,22 @@
 
 #include <wx/app.h>
 
+#include "config/GOConfig.h"
+#include "dialogs/GOOrganDialog.h"
+#include "dialogs/midi-event/GOMidiEventDialog.h"
+#include "gui/GOGUIPanel.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/MIDIList.h"
+#include "sound/GOSound.h"
+#include "threading/GOMutexLocker.h"
+
 #include "GODefinitionFile.h"
 #include "GOEvent.h"
 #include "GOFrame.h"
 #include "GOOrgan.h"
 #include "GOPanelView.h"
 #include "GOView.h"
-#include "OrganDialog.h"
-#include "config/GOConfig.h"
 #include "go_ids.h"
-#include "gui/GOGUIPanel.h"
-#include "midi/GOMidiEvent.h"
-#include "midi/MIDIEventDialog.h"
-#include "midi/MIDIList.h"
-#include "sound/GOSound.h"
-#include "threading/GOMutexLocker.h"
 
 GODocument::GODocument(GOSound *sound)
   : m_OrganFileReady(false),
@@ -185,7 +186,9 @@ void GODocument::OnMidiEvent(const GOMidiEvent &event) {
 void GODocument::ShowOrganDialog() {
   if (!showWindow(GODocument::ORGAN_DIALOG, NULL) && m_organfile) {
     registerWindow(
-      GODocument::ORGAN_DIALOG, NULL, new OrganDialog(this, NULL, m_organfile));
+      GODocument::ORGAN_DIALOG,
+      NULL,
+      new GOOrganDialog(this, NULL, m_organfile));
   }
 }
 
@@ -204,7 +207,7 @@ void GODocument::ShowMIDIEventDialog(
   GOKeyReceiver *key,
   GOMidiSender *division) {
   if (!showWindow(GODocument::MIDI_EVENT, element) && m_organfile) {
-    MIDIEventDialog *dlg = new MIDIEventDialog(
+    GOMidiEventDialog *dlg = new GOMidiEventDialog(
       this,
       NULL,
       title,

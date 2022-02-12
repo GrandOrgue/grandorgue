@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef MIDIEVENTKEYDIALOG_H_
-#define MIDIEVENTKEYDIALOG_H_
+#ifndef GOMIDIEVENTKEYTAB_H
+#define GOMIDIEVENTKEYTAB_H
 
 #include <wx/panel.h>
 
@@ -15,7 +15,7 @@
 class wxChoice;
 class wxToggleButton;
 
-class MIDIEventKeyDialog : public wxPanel {
+class GOMidiEventKeyTab : public wxPanel {
 private:
   GOKeyReceiver *m_original;
   GOKeyReceiverData m_key;
@@ -40,8 +40,8 @@ protected:
   };
 
 public:
-  MIDIEventKeyDialog(wxWindow *parent, GOKeyReceiver *event);
-  ~MIDIEventKeyDialog();
+  GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event);
+  ~GOMidiEventKeyTab();
 
   void DoApply();
 

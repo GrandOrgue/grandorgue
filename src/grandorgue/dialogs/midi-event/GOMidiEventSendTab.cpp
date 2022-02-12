@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "MIDIEventSendDialog.h"
+#include "GOMidiEventSendTab.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -16,20 +16,20 @@
 
 #include "config/GOConfig.h"
 
-#include "MIDIEventRecvDialog.h"
+#include "GOMidiEventRecvTab.h"
 
-BEGIN_EVENT_TABLE(MIDIEventSendDialog, wxPanel)
-EVT_BUTTON(ID_EVENT_NEW, MIDIEventSendDialog::OnNewClick)
-EVT_BUTTON(ID_EVENT_DELETE, MIDIEventSendDialog::OnDeleteClick)
-EVT_BUTTON(ID_COPY, MIDIEventSendDialog::OnCopyClick)
-EVT_CHOICE(ID_EVENT_NO, MIDIEventSendDialog::OnEventChange)
-EVT_CHOICE(ID_EVENT, MIDIEventSendDialog::OnTypeChange)
+BEGIN_EVENT_TABLE(GOMidiEventSendTab, wxPanel)
+EVT_BUTTON(ID_EVENT_NEW, GOMidiEventSendTab::OnNewClick)
+EVT_BUTTON(ID_EVENT_DELETE, GOMidiEventSendTab::OnDeleteClick)
+EVT_BUTTON(ID_COPY, GOMidiEventSendTab::OnCopyClick)
+EVT_CHOICE(ID_EVENT_NO, GOMidiEventSendTab::OnEventChange)
+EVT_CHOICE(ID_EVENT, GOMidiEventSendTab::OnTypeChange)
 END_EVENT_TABLE()
 
-MIDIEventSendDialog::MIDIEventSendDialog(
+GOMidiEventSendTab::GOMidiEventSendTab(
   wxWindow *parent,
   GOMidiSender *event,
-  MIDIEventRecvDialog *recv,
+  GOMidiEventRecvTab *recv,
   GOConfig &config)
   : wxPanel(parent, wxID_ANY),
     m_MidiIn(config.m_MidiIn),
@@ -250,9 +250,9 @@ MIDIEventSendDialog::MIDIEventSendDialog(
   topSizer->Fit(this);
 }
 
-MIDIEventSendDialog::~MIDIEventSendDialog() {}
+GOMidiEventSendTab::~GOMidiEventSendTab() {}
 
-bool MIDIEventSendDialog::Validate(wxString &errMsg) {
+bool GOMidiEventSendTab::Validate(wxString &errMsg) {
   StoreEvent();
 
   bool isValid = true;
@@ -272,7 +272,7 @@ bool MIDIEventSendDialog::Validate(wxString &errMsg) {
   return isValid;
 }
 
-void MIDIEventSendDialog::DoApply() {
+void GOMidiEventSendTab::DoApply() {
   // Assume that Validate() has been called and it returned true
 
   // Delete empty events.
@@ -290,7 +290,7 @@ void MIDIEventSendDialog::DoApply() {
   m_original->Assign(m_midi);
 }
 
-void MIDIEventSendDialog::OnTypeChange(wxCommandEvent &event) {
+void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
   GOMidiSendMessageType type = m_eventtype->GetCurrentSelection();
   if (m_original->HasChannel(type))
     m_channel->Enable();
@@ -387,7 +387,7 @@ void MIDIEventSendDialog::OnTypeChange(wxCommandEvent &event) {
   Layout();
 }
 
-void MIDIEventSendDialog::LoadEvent() {
+void GOMidiEventSendTab::LoadEvent() {
   m_eventno->Clear();
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
     wxString buffer;
@@ -426,7 +426,7 @@ void MIDIEventSendDialog::LoadEvent() {
   m_LengthValue->SetValue(e.length);
 }
 
-void MIDIEventSendDialog::StoreEvent() {
+void GOMidiEventSendTab::StoreEvent() {
   GOMidiSendEvent &e = m_midi.GetEvent(m_current);
   if (m_device->GetSelection() == 0)
     e.deviceId = 0;
@@ -443,30 +443,30 @@ void MIDIEventSendDialog::StoreEvent() {
   e.length = m_LengthValue->GetValue();
 }
 
-void MIDIEventSendDialog::OnNewClick(wxCommandEvent &event) {
+void GOMidiEventSendTab::OnNewClick(wxCommandEvent &event) {
   StoreEvent();
   m_current = m_midi.AddNewEvent();
   LoadEvent();
 }
 
-void MIDIEventSendDialog::OnDeleteClick(wxCommandEvent &event) {
+void GOMidiEventSendTab::OnDeleteClick(wxCommandEvent &event) {
   m_midi.DeleteEvent(m_current);
   m_current = 0;
   LoadEvent();
 }
 
-void MIDIEventSendDialog::OnEventChange(wxCommandEvent &event) {
+void GOMidiEventSendTab::OnEventChange(wxCommandEvent &event) {
   StoreEvent();
   m_current = m_eventno->GetSelection();
   LoadEvent();
 }
 
-void MIDIEventSendDialog::OnCopyClick(wxCommandEvent &event) {
+void GOMidiEventSendTab::OnCopyClick(wxCommandEvent &event) {
   m_midi.GetEvent(m_current) = CopyEvent();
   LoadEvent();
 }
 
-GOMidiSendEvent MIDIEventSendDialog::CopyEvent() {
+GOMidiSendEvent GOMidiEventSendTab::CopyEvent() {
   GOMidiReceiveEvent recv = m_recv->GetCurrentEvent();
   GOMidiSendEvent e;
 

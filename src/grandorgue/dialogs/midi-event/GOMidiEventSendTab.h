@@ -5,13 +5,14 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef MIDIEVENTSENDDIALOG_H_
-#define MIDIEVENTSENDDIALOG_H_
+#ifndef GOMIDIEVENTSENDTAB_H
+#define GOMIDIEVENTSENDTAB_H
 
 #include <wx/panel.h>
 
+#include "midi/GOMidiSender.h"
+
 #include "GOChoice.h"
-#include "GOMidiSender.h"
 
 class wxButton;
 class wxChoice;
@@ -21,16 +22,16 @@ class wxStaticText;
 class GOConfig;
 class GOMidiDeviceConfigList;
 class GOMidiMap;
-class MIDIEventRecvDialog;
+class GOMidiEventRecvTab;
 
-class MIDIEventSendDialog : public wxPanel {
+class GOMidiEventSendTab : public wxPanel {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiDeviceConfigList &m_MidiOut;
   GOMidiMap &m_MidiMap;
 
   GOMidiSender *m_original;
-  MIDIEventRecvDialog *m_recv;
+  GOMidiEventRecvTab *m_recv;
   GOMidiSenderData m_midi;
   GOChoice<GOMidiSendMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
@@ -74,12 +75,12 @@ protected:
   };
 
 public:
-  MIDIEventSendDialog(
+  GOMidiEventSendTab(
     wxWindow *parent,
     GOMidiSender *event,
-    MIDIEventRecvDialog *recv,
+    GOMidiEventRecvTab *recv,
     GOConfig &config);
-  ~MIDIEventSendDialog();
+  ~GOMidiEventSendTab();
 
   bool Validate(wxString &errMsg);
   void DoApply();

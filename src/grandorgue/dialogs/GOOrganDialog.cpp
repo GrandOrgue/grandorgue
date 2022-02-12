@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "OrganDialog.h"
+#include "GOOrganDialog.h"
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -40,35 +40,35 @@ public:
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_TREE_UPDATED)
 
-BEGIN_EVENT_TABLE(OrganDialog, wxDialog)
-EVT_BUTTON(ID_EVENT_APPLY, OrganDialog::OnEventApply)
-EVT_BUTTON(ID_EVENT_RESET, OrganDialog::OnEventReset)
-EVT_BUTTON(ID_EVENT_DEFAULT, OrganDialog::OnEventDefault)
-EVT_BUTTON(wxID_OK, OrganDialog::OnOK)
-EVT_BUTTON(wxID_CANCEL, OrganDialog::OnCancel)
-EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, OrganDialog::OnTreeChanging)
-EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, OrganDialog::OnTreeChanged)
-EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, OrganDialog::OnTreeUpdated)
-EVT_TEXT(ID_EVENT_AMPLITUDE, OrganDialog::OnAmplitudeChanged)
-EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, OrganDialog::OnAmplitudeSpinChanged)
-EVT_TEXT(ID_EVENT_GAIN, OrganDialog::OnGainChanged)
-EVT_SPIN(ID_EVENT_GAIN_SPIN, OrganDialog::OnGainSpinChanged)
-EVT_TEXT(ID_EVENT_TUNING, OrganDialog::OnTuningChanged)
-EVT_SPIN(ID_EVENT_TUNING_SPIN, OrganDialog::OnTuningSpinChanged)
-EVT_TEXT(ID_EVENT_DELAY, OrganDialog::OnDelayChanged)
-EVT_SPIN(ID_EVENT_DELAY_SPIN, OrganDialog::OnDelaySpinChanged)
-EVT_TEXT(ID_EVENT_AUDIO_GROUP, OrganDialog::OnAudioGroupChanged)
-EVT_BUTTON(ID_EVENT_AUDIO_GROUP_ASSISTANT, OrganDialog::OnAudioGroupAssitant)
-EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, OrganDialog::OnBitsPerSampleChanged)
-EVT_CHOICE(ID_EVENT_COMPRESS, OrganDialog::OnCompressChanged)
-EVT_CHOICE(ID_EVENT_CHANNELS, OrganDialog::OnChannelsChanged)
-EVT_CHOICE(ID_EVENT_LOOP_LOAD, OrganDialog::OnLoopLoadChanged)
-EVT_CHOICE(ID_EVENT_ATTACK_LOAD, OrganDialog::OnAttackLoadChanged)
-EVT_CHOICE(ID_EVENT_RELEASE_LOAD, OrganDialog::OnReleaseLoadChanged)
-EVT_BUTTON(ID_EVENT_COLLAPSE, OrganDialog::OnCollapse)
+BEGIN_EVENT_TABLE(GOOrganDialog, wxDialog)
+EVT_BUTTON(ID_EVENT_APPLY, GOOrganDialog::OnEventApply)
+EVT_BUTTON(ID_EVENT_RESET, GOOrganDialog::OnEventReset)
+EVT_BUTTON(ID_EVENT_DEFAULT, GOOrganDialog::OnEventDefault)
+EVT_BUTTON(wxID_OK, GOOrganDialog::OnOK)
+EVT_BUTTON(wxID_CANCEL, GOOrganDialog::OnCancel)
+EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, GOOrganDialog::OnTreeChanging)
+EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganDialog::OnTreeChanged)
+EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganDialog::OnTreeUpdated)
+EVT_TEXT(ID_EVENT_AMPLITUDE, GOOrganDialog::OnAmplitudeChanged)
+EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, GOOrganDialog::OnAmplitudeSpinChanged)
+EVT_TEXT(ID_EVENT_GAIN, GOOrganDialog::OnGainChanged)
+EVT_SPIN(ID_EVENT_GAIN_SPIN, GOOrganDialog::OnGainSpinChanged)
+EVT_TEXT(ID_EVENT_TUNING, GOOrganDialog::OnTuningChanged)
+EVT_SPIN(ID_EVENT_TUNING_SPIN, GOOrganDialog::OnTuningSpinChanged)
+EVT_TEXT(ID_EVENT_DELAY, GOOrganDialog::OnDelayChanged)
+EVT_SPIN(ID_EVENT_DELAY_SPIN, GOOrganDialog::OnDelaySpinChanged)
+EVT_TEXT(ID_EVENT_AUDIO_GROUP, GOOrganDialog::OnAudioGroupChanged)
+EVT_BUTTON(ID_EVENT_AUDIO_GROUP_ASSISTANT, GOOrganDialog::OnAudioGroupAssitant)
+EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, GOOrganDialog::OnBitsPerSampleChanged)
+EVT_CHOICE(ID_EVENT_COMPRESS, GOOrganDialog::OnCompressChanged)
+EVT_CHOICE(ID_EVENT_CHANNELS, GOOrganDialog::OnChannelsChanged)
+EVT_CHOICE(ID_EVENT_LOOP_LOAD, GOOrganDialog::OnLoopLoadChanged)
+EVT_CHOICE(ID_EVENT_ATTACK_LOAD, GOOrganDialog::OnAttackLoadChanged)
+EVT_CHOICE(ID_EVENT_RELEASE_LOAD, GOOrganDialog::OnReleaseLoadChanged)
+EVT_BUTTON(ID_EVENT_COLLAPSE, GOOrganDialog::OnCollapse)
 END_EVENT_TABLE()
 
-OrganDialog::OrganDialog(
+GOOrganDialog::GOOrganDialog(
   GODocumentBase *doc, wxWindow *parent, GODefinitionFile *organfile)
   : wxDialog(
     parent,
@@ -354,9 +354,9 @@ OrganDialog::OrganDialog(
   topSizer->Fit(this);
 }
 
-OrganDialog::~OrganDialog() {}
+GOOrganDialog::~GOOrganDialog() {}
 
-bool OrganDialog::CloseModal() {
+bool GOOrganDialog::CloseModal() {
   if (m_DestroyPending) {
     wxDialog::Destroy();
     return true;
@@ -372,7 +372,7 @@ bool OrganDialog::CloseModal() {
   return false;
 }
 
-bool OrganDialog::Destroy() {
+bool GOOrganDialog::Destroy() {
   Hide();
   m_Destroying = true;
   if (CloseModal())
@@ -380,14 +380,14 @@ bool OrganDialog::Destroy() {
   return wxDialog::Destroy();
 }
 
-void OrganDialog::SetEmpty(wxChoice *choice) {
+void GOOrganDialog::SetEmpty(wxChoice *choice) {
   int index = choice->FindString(wxEmptyString);
   if (index == wxNOT_FOUND)
     index = choice->Append(wxEmptyString);
   choice->SetSelection(index);
 }
 
-void OrganDialog::RemoveEmpty(wxChoice *choice) {
+void GOOrganDialog::RemoveEmpty(wxChoice *choice) {
   int sel = choice->GetSelection();
   int index = choice->FindString(wxEmptyString);
   if (index != wxNOT_FOUND)
@@ -395,7 +395,7 @@ void OrganDialog::RemoveEmpty(wxChoice *choice) {
   choice->SetSelection(sel);
 }
 
-void OrganDialog::Load() {
+void GOOrganDialog::Load() {
   wxArrayTreeItemIds entries;
 
   m_Tree->GetSelections(entries);
@@ -581,95 +581,95 @@ void OrganDialog::Load() {
   }
 }
 
-void OrganDialog::OnAmplitudeSpinChanged(wxSpinEvent &e) {
+void GOOrganDialog::OnAmplitudeSpinChanged(wxSpinEvent &e) {
   m_Amplitude->ChangeValue(
     wxString::Format(wxT("%f"), (float)m_AmplitudeSpin->GetValue()));
   m_Amplitude->MarkDirty();
   Modified();
 }
 
-void OrganDialog::OnAmplitudeChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnAmplitudeChanged(wxCommandEvent &e) {
   double amp;
   if (m_Amplitude->GetValue().ToDouble(&amp))
     m_AmplitudeSpin->SetValue(amp);
   Modified();
 }
 
-void OrganDialog::OnGainSpinChanged(wxSpinEvent &e) {
+void GOOrganDialog::OnGainSpinChanged(wxSpinEvent &e) {
   m_Gain->ChangeValue(
     wxString::Format(wxT("%f"), (float)m_GainSpin->GetValue()));
   m_Gain->MarkDirty();
   Modified();
 }
 
-void OrganDialog::OnGainChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnGainChanged(wxCommandEvent &e) {
   double gain;
   if (m_Gain->GetValue().ToDouble(&gain))
     m_GainSpin->SetValue(gain);
   Modified();
 }
 
-void OrganDialog::OnTuningSpinChanged(wxSpinEvent &e) {
+void GOOrganDialog::OnTuningSpinChanged(wxSpinEvent &e) {
   m_Tuning->ChangeValue(
     wxString::Format(wxT("%f"), (float)m_TuningSpin->GetValue()));
   m_Tuning->MarkDirty();
   Modified();
 }
 
-void OrganDialog::OnTuningChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnTuningChanged(wxCommandEvent &e) {
   double tuning;
   if (m_Tuning->GetValue().ToDouble(&tuning))
     m_TuningSpin->SetValue(tuning);
   Modified();
 }
 
-void OrganDialog::OnDelaySpinChanged(wxSpinEvent &e) {
+void GOOrganDialog::OnDelaySpinChanged(wxSpinEvent &e) {
   m_Delay->ChangeValue(
     wxString::Format(wxT("%u"), (unsigned)m_DelaySpin->GetValue()));
   m_Delay->MarkDirty();
   Modified();
 }
 
-void OrganDialog::OnDelayChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnDelayChanged(wxCommandEvent &e) {
   long delay;
   if (m_Delay->GetValue().ToLong(&delay))
     m_DelaySpin->SetValue(delay);
   Modified();
 }
 
-void OrganDialog::OnAudioGroupChanged(wxCommandEvent &e) { Modified(); }
+void GOOrganDialog::OnAudioGroupChanged(wxCommandEvent &e) { Modified(); }
 
-void OrganDialog::OnBitsPerSampleChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnBitsPerSampleChanged(wxCommandEvent &e) {
   RemoveEmpty(m_BitsPerSample);
   Modified();
 }
 
-void OrganDialog::OnCompressChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnCompressChanged(wxCommandEvent &e) {
   RemoveEmpty(m_Compress);
   Modified();
 }
 
-void OrganDialog::OnChannelsChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnChannelsChanged(wxCommandEvent &e) {
   RemoveEmpty(m_Channels);
   Modified();
 }
 
-void OrganDialog::OnLoopLoadChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnLoopLoadChanged(wxCommandEvent &e) {
   RemoveEmpty(m_LoopLoad);
   Modified();
 }
 
-void OrganDialog::OnAttackLoadChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnAttackLoadChanged(wxCommandEvent &e) {
   RemoveEmpty(m_AttackLoad);
   Modified();
 }
 
-void OrganDialog::OnReleaseLoadChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnReleaseLoadChanged(wxCommandEvent &e) {
   RemoveEmpty(m_ReleaseLoad);
   Modified();
 }
 
-bool OrganDialog::Changed() {
+bool GOOrganDialog::Changed() {
   bool changed = false;
   if (m_Amplitude->IsModified())
     changed = true;
@@ -697,14 +697,14 @@ bool OrganDialog::Changed() {
   return changed;
 }
 
-void OrganDialog::Modified() {
+void GOOrganDialog::Modified() {
   if (m_Reset)
     m_Reset->Enable();
   if (m_Apply)
     m_Apply->Enable();
 }
 
-void OrganDialog::FillTree(wxTreeItemId parent, GOPipeConfigNode &config) {
+void GOOrganDialog::FillTree(wxTreeItemId parent, GOPipeConfigNode &config) {
   wxTreeItemData *data = new OrganTreeItemData(config);
   wxTreeItemId e;
   if (!parent.IsOk())
@@ -716,12 +716,12 @@ void OrganDialog::FillTree(wxTreeItemId parent, GOPipeConfigNode &config) {
   m_Tree->Expand(e);
 }
 
-void OrganDialog::FillTree() {
+void GOOrganDialog::FillTree() {
   wxTreeItemId id_root;
   FillTree(id_root, m_organfile->GetPipeConfig());
 }
 
-void OrganDialog::OnEventApply(wxCommandEvent &e) {
+void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
   double amp, gain, tuning;
   long delay;
 
@@ -821,12 +821,12 @@ void OrganDialog::OnEventApply(wxCommandEvent &e) {
   m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
 }
 
-void OrganDialog::OnEventReset(wxCommandEvent &e) {
+void GOOrganDialog::OnEventReset(wxCommandEvent &e) {
   m_Last = NULL;
   Load();
 }
 
-void OrganDialog::OnEventDefault(wxCommandEvent &e) {
+void GOOrganDialog::OnEventDefault(wxCommandEvent &e) {
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);
 
@@ -851,7 +851,7 @@ void OrganDialog::OnEventDefault(wxCommandEvent &e) {
   Load();
 }
 
-void OrganDialog::OnTreeChanging(wxTreeEvent &e) {
+void GOOrganDialog::OnTreeChanging(wxTreeEvent &e) {
   if (Changed()) {
     GOMessageBox(
       _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
@@ -859,7 +859,7 @@ void OrganDialog::OnTreeChanging(wxTreeEvent &e) {
   }
 }
 
-void OrganDialog::OnTreeChanged(wxTreeEvent &e) {
+void GOOrganDialog::OnTreeChanged(wxTreeEvent &e) {
   wxArrayTreeItemIds entries;
   if (m_LoadChangeCnt)
     return;
@@ -895,9 +895,9 @@ void OrganDialog::OnTreeChanged(wxTreeEvent &e) {
   GetEventHandler()->AddPendingEvent(event);
 }
 
-void OrganDialog::OnTreeUpdated(wxCommandEvent &e) { Load(); }
+void GOOrganDialog::OnTreeUpdated(wxCommandEvent &e) { Load(); }
 
-void OrganDialog::OnOK(wxCommandEvent &event) {
+void GOOrganDialog::OnOK(wxCommandEvent &event) {
   if (Changed()) {
     GOMessageBox(
       _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
@@ -909,9 +909,9 @@ void OrganDialog::OnOK(wxCommandEvent &event) {
   Destroy();
 }
 
-void OrganDialog::OnCancel(wxCommandEvent &event) { Destroy(); }
+void GOOrganDialog::OnCancel(wxCommandEvent &event) { Destroy(); }
 
-void OrganDialog::UpdateAudioGroup(
+void GOOrganDialog::UpdateAudioGroup(
   std::vector<wxString> audio_group, unsigned &pos, wxTreeItemId item) {
   OrganTreeItemData *e = (OrganTreeItemData *)m_Tree->GetItemData(item);
   if (e) {
@@ -929,7 +929,7 @@ void OrganDialog::UpdateAudioGroup(
   }
 }
 
-void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
+void GOOrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
   if (Changed()) {
     GOMessageBox(
       _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
@@ -968,7 +968,7 @@ void OrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
   Load();
 }
 
-void OrganDialog::CloseTree(wxTreeItemId parent) {
+void GOOrganDialog::CloseTree(wxTreeItemId parent) {
   m_Tree->Collapse(parent);
   wxTreeItemIdValue it;
   for (wxTreeItemId child = m_Tree->GetFirstChild(parent, it); child.IsOk();
@@ -976,7 +976,7 @@ void OrganDialog::CloseTree(wxTreeItemId parent) {
     CloseTree(child);
 }
 
-void OrganDialog::OnCollapse(wxCommandEvent &e) {
+void GOOrganDialog::OnCollapse(wxCommandEvent &e) {
   if (Changed()) {
     GOMessageBox(
       _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);

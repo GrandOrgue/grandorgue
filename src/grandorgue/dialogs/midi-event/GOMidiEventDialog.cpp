@@ -5,22 +5,22 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "MIDIEventDialog.h"
+#include "GOMidiEventDialog.h"
 
 #include <wx/bookctrl.h>
 #include <wx/msgdlg.h>
 
-#include "MIDIEventKeyDialog.h"
-#include "MIDIEventRecvDialog.h"
-#include "MIDIEventSendDialog.h"
+#include "GOMidiEventKeyTab.h"
+#include "GOMidiEventRecvTab.h"
+#include "GOMidiEventSendTab.h"
 
-BEGIN_EVENT_TABLE(MIDIEventDialog, wxPropertySheetDialog)
-EVT_BUTTON(wxID_APPLY, MIDIEventDialog::OnApply)
-EVT_BUTTON(wxID_OK, MIDIEventDialog::OnOK)
-EVT_BUTTON(wxID_CANCEL, MIDIEventDialog::OnCancel)
+BEGIN_EVENT_TABLE(GOMidiEventDialog, wxPropertySheetDialog)
+EVT_BUTTON(wxID_APPLY, GOMidiEventDialog::OnApply)
+EVT_BUTTON(wxID_OK, GOMidiEventDialog::OnOK)
+EVT_BUTTON(wxID_CANCEL, GOMidiEventDialog::OnCancel)
 END_EVENT_TABLE()
 
-MIDIEventDialog::MIDIEventDialog(
+GOMidiEventDialog::GOMidiEventDialog(
   GODocumentBase *doc,
   wxWindow *parent,
   wxString title,
@@ -46,35 +46,34 @@ MIDIEventDialog::MIDIEventDialog(
   wxBookCtrlBase *notebook = GetBookCtrl();
 
   if (event) {
-    m_recvPage = new MIDIEventRecvDialog(notebook, event, settings);
+    m_recvPage = new GOMidiEventRecvTab(notebook, event, settings);
     notebook->AddPage(m_recvPage, _("Receive"));
   }
   if (sender) {
-    m_sendPage
-      = new MIDIEventSendDialog(notebook, sender, m_recvPage, settings);
+    m_sendPage = new GOMidiEventSendTab(notebook, sender, m_recvPage, settings);
     notebook->AddPage(m_sendPage, _("Send"));
   }
   if (key) {
-    m_keyPage = new MIDIEventKeyDialog(notebook, key);
+    m_keyPage = new GOMidiEventKeyTab(notebook, key);
     notebook->AddPage(m_keyPage, _("Shortcut"));
   }
   if (division) {
     m_sendDivisionPage
-      = new MIDIEventSendDialog(notebook, division, m_recvPage, settings);
+      = new GOMidiEventSendTab(notebook, division, m_recvPage, settings);
     notebook->AddPage(m_sendDivisionPage, _("Send Division Output"));
   }
 
   LayoutDialog();
 }
 
-MIDIEventDialog::~MIDIEventDialog() {}
+GOMidiEventDialog::~GOMidiEventDialog() {}
 
-void MIDIEventDialog::RegisterMIDIListener(GOMidi *midi) {
+void GOMidiEventDialog::RegisterMIDIListener(GOMidi *midi) {
   if (m_recvPage)
     m_recvPage->RegisterMIDIListener(midi);
 }
 
-bool MIDIEventDialog::Validate() {
+bool GOMidiEventDialog::Validate() {
   wxWindow *notValidTab = NULL;
   wxString errMsg;
 
@@ -99,12 +98,12 @@ bool MIDIEventDialog::Validate() {
   return !notValidTab;
 }
 
-void MIDIEventDialog::OnApply(wxCommandEvent &event) {
+void GOMidiEventDialog::OnApply(wxCommandEvent &event) {
   if (Validate())
     DoApply();
 }
 
-void MIDIEventDialog::OnOK(wxCommandEvent &event) {
+void GOMidiEventDialog::OnOK(wxCommandEvent &event) {
   if (Validate()) {
     DoApply();
     if (HasDocument())
@@ -114,14 +113,14 @@ void MIDIEventDialog::OnOK(wxCommandEvent &event) {
   }
 }
 
-void MIDIEventDialog::OnCancel(wxCommandEvent &event) {
+void GOMidiEventDialog::OnCancel(wxCommandEvent &event) {
   if (HasDocument())
     Destroy();
   else
     EndModal(wxID_CANCEL);
 }
 
-void MIDIEventDialog::DoApply() {
+void GOMidiEventDialog::DoApply() {
   if (m_recvPage)
     m_recvPage->DoApply();
   if (m_sendPage)

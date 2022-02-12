@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef MIDIEVENTRECVDIALOG_H_
-#define MIDIEVENTRECVDIALOG_H_
+#ifndef GOMIDIEVENTRECVTAB_H
+#define GOMIDIEVENTRECVTAB_H
 
 #include <vector>
 
@@ -14,10 +14,10 @@
 #include <wx/timer.h>
 
 #include "midi/GOMidiCallback.h"
+#include "midi/GOMidiListener.h"
 #include "midi/GOMidiReceiverBase.h"
 
 #include "GOChoice.h"
-#include "GOMidiListener.h"
 
 class wxButton;
 class wxChoice;
@@ -28,7 +28,7 @@ class wxToggleButton;
 class GOConfig;
 class GOMidiDeviceConfigList;
 
-class MIDIEventRecvDialog : public wxPanel, protected GOMidiCallback {
+class GOMidiEventRecvTab : public wxPanel, protected GOMidiCallback {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiMap &m_MidiMap;
@@ -94,9 +94,9 @@ protected:
   };
 
 public:
-  MIDIEventRecvDialog(
+  GOMidiEventRecvTab(
     wxWindow *parent, GOMidiReceiverBase *event, GOConfig &config);
-  ~MIDIEventRecvDialog();
+  ~GOMidiEventRecvTab();
   void RegisterMIDIListener(GOMidi *midi);
 
   void DoApply();
