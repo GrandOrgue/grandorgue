@@ -30,6 +30,7 @@ config/GOMidiDeviceConfigList.cpp
 config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
 contrib/zita-convolver.cpp
+dialogs/common/GODialogCloser.cpp
 dialogs/midi-event/GOMidiEventDialog.cpp
 dialogs/midi-event/GOMidiEventKeyTab.cpp
 dialogs/midi-event/GOMidiEventRecvTab.cpp
