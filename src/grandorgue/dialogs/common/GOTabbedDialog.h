@@ -43,6 +43,10 @@ public:
   const wxString &GetCurrTabName() const;
   void NavigateToTab(const wxString &tabName);
 
+  virtual bool TransferDataToWindow() override;
+  virtual bool Validate() override;
+  virtual bool TransferDataFromWindow() override;
+
   DECLARE_EVENT_TABLE()
 };
 

@@ -193,7 +193,9 @@ GOSettingsAudio::GOSettingsAudio(
   gridRoot->AddGrowableCol(0, 1);
 
   SetSizerAndFit(gridRoot);
+}
 
+bool GOSettingsAudio::TransferDataToWindow() {
   std::vector<wxString> audio_groups = m_config.GetAudioGroups();
   for (unsigned i = 0; i < audio_groups.size(); i++)
     m_AudioGroups->Append(audio_groups[i]);
@@ -239,6 +241,7 @@ GOSettingsAudio::GOSettingsAudio(
   }
   m_AudioOutput->ExpandAll();
   UpdateButtons();
+  return true;
 }
 
 AudioItemData *GOSettingsAudio::GetObject(const wxTreeItemId &id) {
@@ -715,7 +718,7 @@ void GOSettingsAudio::OnOutputDefault(wxCommandEvent &event) {
   UpdateButtons();
 }
 
-void GOSettingsAudio::Save() {
+bool GOSettingsAudio::TransferDataFromWindow() {
   std::vector<wxString> audioGroups;
 
   for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++)
@@ -788,4 +791,5 @@ void GOSettingsAudio::Save() {
     audio = m_AudioOutput->GetNextChild(root, i);
   }
   m_Sound.GetSettings().SetAudioDeviceConfig(audio_config);
+  return true;
 }
