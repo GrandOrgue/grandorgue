@@ -8,9 +8,7 @@
 #ifndef GOSETTINGSDIALOG_H
 #define GOSETTINGSDIALOG_H
 
-#include <wx/propdlg.h>
-
-#include <vector>
+#include "dialogs/common/GOTabbedDialog.h"
 
 #include "GOSettingsReason.h"
 
@@ -25,11 +23,22 @@ class GOSettingsOrgans;
 class GOSettingsReverb;
 class GOSettingsTemperaments;
 
-class GOSettingsDialog : public wxPropertySheetDialog {
+class GOSettingsDialog : public GOTabbedDialog {
+public:
+  static const wxString PAGE_OPTIONS;
+  static const wxString PAGE_PATHS;
+  static const wxString PAGE_AUDIO;
+  static const wxString PAGE_MIDI_DEVICES;
+  static const wxString PAGE_INITIAL_MIDI;
+  static const wxString PAGE_ORGANS;
+  static const wxString PAGE_REVERB;
+  static const wxString PAGE_TEMPERAMENTS;
+
 private:
   enum { ID_REASONS = 100 };
 
   GOSound &m_Sound;
+
   bool m_ReasonsAlreadyShown;
   SettingsReasons *m_Reasons;
   GOSettingsOptions *m_OptionsPage;
@@ -41,28 +50,13 @@ private:
   GOSettingsReverb *m_ReverbPage;
   GOSettingsTemperaments *m_TemperamentsPage;
 
-  void OnShow(wxShowEvent &);
+  void OnShow() override;
 
-  bool DoApply();
+  bool TransferDataFromWindow() override;
 
-  void OnApply(wxCommandEvent &event);
-  void OnOK(wxCommandEvent &event);
-  void OnHelp(wxCommandEvent &event);
   void OnReasons(wxCommandEvent &event);
 
 public:
-  // the order must be the same as the order of pages
-  typedef enum {
-    PAGE_OPTIONS = 0,
-    PAGE_PATHS,
-    PAGE_AUDIO,
-    PAGE_MIDI_DEVICES,
-    PAGE_INITIAL_MIDI,
-    PAGE_ORGANS,
-    PAGE_REVERB,
-    PAGE_TEMPERAMENTS
-  } PageSelector;
-
   GOSettingsDialog(wxWindow *parent, GOSound &sound, SettingsReasons *reasons);
 
   bool NeedReload();
