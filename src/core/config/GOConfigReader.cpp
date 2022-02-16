@@ -171,12 +171,63 @@ bool GOConfigReader::ReadBoolean(
   throw error;
 }
 
-wxColour GOConfigReader::ReadColor(
+GOLogicalColour GOConfigReader::ReadColor(
   GOSettingType type, wxString group, wxString key, bool required) {
   return ReadColor(type, group, key, required, wxT("BLACK"));
 }
 
-wxColour GOConfigReader::ReadColor(
+bool parseColor(GOLogicalColour &result, wxString value) {
+  if (value.length() == 7 && value[0] == wxT('#')) {
+    unsigned r = 0, g = 0, b = 0;
+
+    if (wxT('0') <= value[1] && value[1] <= wxT('9'))
+      r = r * 10 + (value[1] - wxT('0'));
+    else if (wxT('A') <= value[1] && value[1] <= wxT('F'))
+      r = r * 10 + (value[1] - wxT('A')) + 10;
+    else
+      return false;
+    if (wxT('0') <= value[2] && value[2] <= wxT('9'))
+      r = r * 10 + (value[2] - wxT('0'));
+    else if (wxT('A') <= value[2] && value[2] <= wxT('F'))
+      r = r * 10 + (value[2] - wxT('A')) + 10;
+    else
+      return false;
+
+    if (wxT('0') <= value[3] && value[3] <= wxT('9'))
+      g = g * 10 + (value[3] - wxT('0'));
+    else if (wxT('A') <= value[3] && value[3] <= wxT('F'))
+      g = g * 10 + (value[3] - wxT('A')) + 10;
+    else
+      return false;
+    if (wxT('0') <= value[4] && value[4] <= wxT('9'))
+      g = g * 10 + (value[4] - wxT('0'));
+    else if (wxT('A') <= value[4] && value[4] <= wxT('F'))
+      g = g * 10 + (value[4] - wxT('A')) + 10;
+    else
+      return false;
+
+    if (wxT('0') <= value[5] && value[5] <= wxT('9'))
+      b = b * 10 + (value[5] - wxT('0'));
+    else if (wxT('A') <= value[5] && value[5] <= wxT('F'))
+      b = b * 10 + (value[5] - wxT('A')) + 10;
+    else
+      return false;
+    if (wxT('0') <= value[6] && value[6] <= wxT('9'))
+      b = b * 10 + (value[6] - wxT('0'));
+    else if (wxT('A') <= value[6] && value[6] <= wxT('F'))
+      b = b * 10 + (value[6] - wxT('A')) + 10;
+    else
+      return false;
+
+    result.m_red = r;
+    result.m_green = g;
+    result.m_blue = b;
+    return true;
+  }
+  return false;
+}
+
+GOLogicalColour GOConfigReader::ReadColor(
   GOSettingType type,
   wxString group,
   wxString key,
@@ -198,41 +249,41 @@ wxColour GOConfigReader::ReadColor(
   value.MakeUpper();
 
   if (value == wxT("BLACK"))
-    return wxColour(0x00, 0x00, 0x00);
+    return GOLogicalColour(0x00, 0x00, 0x00);
   else if (value == wxT("BLUE"))
-    return wxColour(0x00, 0x00, 0xFF);
+    return GOLogicalColour(0x00, 0x00, 0xFF);
   else if (value == wxT("DARK BLUE"))
-    return wxColour(0x00, 0x00, 0x80);
+    return GOLogicalColour(0x00, 0x00, 0x80);
   else if (value == wxT("GREEN"))
-    return wxColour(0x00, 0xFF, 0x00);
+    return GOLogicalColour(0x00, 0xFF, 0x00);
   else if (value == wxT("DARK GREEN"))
-    return wxColour(0x00, 0x80, 0x00);
+    return GOLogicalColour(0x00, 0x80, 0x00);
   else if (value == wxT("CYAN"))
-    return wxColour(0x00, 0xFF, 0xFF);
+    return GOLogicalColour(0x00, 0xFF, 0xFF);
   else if (value == wxT("DARK CYAN"))
-    return wxColour(0x00, 0x80, 0x80);
+    return GOLogicalColour(0x00, 0x80, 0x80);
   else if (value == wxT("RED"))
-    return wxColour(0xFF, 0x00, 0x00);
+    return GOLogicalColour(0xFF, 0x00, 0x00);
   else if (value == wxT("DARK RED"))
-    return wxColour(0x80, 0x00, 0x00);
+    return GOLogicalColour(0x80, 0x00, 0x00);
   else if (value == wxT("MAGENTA"))
-    return wxColour(0xFF, 0x00, 0xFF);
+    return GOLogicalColour(0xFF, 0x00, 0xFF);
   else if (value == wxT("DARK MAGENTA"))
-    return wxColour(0x80, 0x00, 0x80);
+    return GOLogicalColour(0x80, 0x00, 0x80);
   else if (value == wxT("YELLOW"))
-    return wxColour(0xFF, 0xFF, 0x00);
+    return GOLogicalColour(0xFF, 0xFF, 0x00);
   else if (value == wxT("DARK YELLOW"))
-    return wxColour(0x80, 0x80, 0x00);
+    return GOLogicalColour(0x80, 0x80, 0x00);
   else if (value == wxT("LIGHT GREY"))
-    return wxColour(0xC0, 0xC0, 0xC0);
+    return GOLogicalColour(0xC0, 0xC0, 0xC0);
   else if (value == wxT("DARK GREY"))
-    return wxColour(0x80, 0x80, 0x80);
+    return GOLogicalColour(0x80, 0x80, 0x80);
   else if (value == wxT("WHITE"))
-    return wxColour(0xFF, 0xFF, 0xFF);
+    return GOLogicalColour(0xFF, 0xFF, 0xFF);
   else if (value == wxT("BROWN"))
-    return wxColour(0xA5, 0x2A, 0x2A);
+    return GOLogicalColour(0xA5, 0x2A, 0x2A);
 
-  wxColour colour;
+  GOLogicalColour colour;
   if (parseColor(colour, value))
     return colour;
 

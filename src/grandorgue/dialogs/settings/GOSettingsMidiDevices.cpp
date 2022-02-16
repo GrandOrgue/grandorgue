@@ -206,7 +206,7 @@ void SettingsMidiDevices::OnOutDevicesClick(wxCommandEvent &event) {
   m_OutDevices.OnSelected(event);
 }
 
-void SettingsMidiDevices::Save() {
+bool SettingsMidiDevices::TransferDataFromWindow() {
   m_config.IsToAutoAddMidi(m_AutoAddInput->IsChecked());
   m_config.IsToCheckMidiOnStart(m_CheckOnStartup->IsChecked());
   m_config.SetMidiPortsConfig(RenewPortsConfig());
@@ -220,4 +220,5 @@ void SettingsMidiDevices::Save() {
   else
     m_config.MidiRecorderOutputDevice(
       m_OutDevices.GetDeviceConf(iRec - 1).m_LogicalName);
+  return true;
 }

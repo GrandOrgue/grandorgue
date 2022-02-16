@@ -14,7 +14,6 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
-#include "GOEvent.h"
 #include "GOSettingsAudio.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiMessage.h"
@@ -26,56 +25,52 @@
 #include "go_ids.h"
 #include "sound/GOSound.h"
 
-BEGIN_EVENT_TABLE(GOSettingsDialog, wxPropertySheetDialog)
-EVT_SHOW(GOSettingsDialog::OnShow)
-EVT_BUTTON(wxID_APPLY, GOSettingsDialog::OnApply)
-EVT_BUTTON(wxID_OK, GOSettingsDialog::OnOK)
-EVT_BUTTON(wxID_HELP, GOSettingsDialog::OnHelp)
+BEGIN_EVENT_TABLE(GOSettingsDialog, GOTabbedDialog)
 EVT_BUTTON(ID_REASONS, GOSettingsDialog::OnReasons)
 END_EVENT_TABLE()
 
+const wxString GOSettingsDialog::PAGE_OPTIONS = wxT("Options");
+const wxString GOSettingsDialog::PAGE_PATHS = wxT("Paths");
+const wxString GOSettingsDialog::PAGE_AUDIO = wxT("Audio");
+const wxString GOSettingsDialog::PAGE_MIDI_DEVICES = wxT("MidiDevices");
+const wxString GOSettingsDialog::PAGE_INITIAL_MIDI = wxT("InitialMidi");
+const wxString GOSettingsDialog::PAGE_ORGANS = wxT("Organs");
+const wxString GOSettingsDialog::PAGE_REVERB = wxT("Reverb");
+const wxString GOSettingsDialog::PAGE_TEMPERAMENTS = wxT("Temperaments");
+
 GOSettingsDialog::GOSettingsDialog(
   wxWindow *win, GOSound &sound, SettingsReasons *reasons)
-  : wxPropertySheetDialog(
-    win,
-    wxID_ANY,
-    _("Program Settings"),
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
+  : GOTabbedDialog(win, "Settings", _("Program Settings"), wxDIALOG_NO_PARENT),
     m_Sound(sound),
     m_ReasonsAlreadyShown(false),
     m_Reasons(reasons) {
-  wxBookCtrlBase *notebook = GetBookCtrl();
+  wxBookCtrlBase *notebook = GetBook();
 
   m_OptionsPage = new GOSettingsOptions(m_Sound.GetSettings(), notebook);
-  notebook->AddPage(m_OptionsPage, _("Options"));
+  AddTab(m_OptionsPage, PAGE_OPTIONS, _("Options"));
   m_PathsPage = new GOSettingsPaths(m_Sound.GetSettings(), notebook);
-  notebook->AddPage(m_PathsPage, _("Paths"));
+  AddTab(m_PathsPage, PAGE_PATHS, _("Paths"));
   m_AudioPage = new GOSettingsAudio(m_Sound.GetSettings(), m_Sound, notebook);
-  notebook->AddPage(m_AudioPage, _("Audio"));
+  AddTab(m_AudioPage, PAGE_AUDIO, _("Audio"));
   m_MidiDevicePage = new SettingsMidiDevices(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  notebook->AddPage(m_MidiDevicePage, _("MIDI Devices"));
+  AddTab(m_MidiDevicePage, PAGE_MIDI_DEVICES, _("MIDI Devices"));
   m_MidiMessagePage = new GOSettingsMidiMessage(
     m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  notebook->AddPage(m_MidiMessagePage, _("Initial MIDI"));
+  AddTab(m_MidiMessagePage, PAGE_INITIAL_MIDI, _("Initial MIDI"));
   m_OrgansPage
     = new GOSettingsOrgans(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  notebook->AddPage(m_OrgansPage, _("Organs"));
+  AddTab(m_OrgansPage, PAGE_ORGANS, _("Organs"));
   m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
-  notebook->AddPage(m_ReverbPage, _("Reverb"));
+  AddTab(m_ReverbPage, PAGE_REVERB, _("Reverb"));
   m_TemperamentsPage
     = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
-  notebook->AddPage(m_TemperamentsPage, _("Temperaments"));
+  AddTab(m_TemperamentsPage, PAGE_TEMPERAMENTS, _("Temperaments"));
 
   bool hasReasons = reasons && reasons->size();
 
-  notebook->SetSelection(
-    hasReasons ? reasons->operator[](0).m_SettingsPageNum : 0);
-
   // add a custom button 'Reason into the space of the standard dialog button
-  wxSizer *const pButtonSizer = CreateButtonSizer(wxOK | wxCANCEL | wxHELP);
+  wxSizer *const pButtonSizer = GetButtonSizer();
 
   if (pButtonSizer) {
     wxButton *const pReasonBtn = new wxButton(this, ID_REASONS, _("Reason"));
@@ -85,15 +80,15 @@ GOSettingsDialog::GOSettingsDialog(
 
     pButtonSizer->Insert(
       3, pReasonBtn, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 10);
-    GetInnerSizer()->Add(
-      pButtonSizer, wxSizerFlags().Expand().Border(wxALL, 2));
-    GetInnerSizer()->AddSpacer(2);
   }
-
   LayoutDialog();
+
+  if (hasReasons)
+    NavigateToTab((*reasons)[0].m_SettingsPageName);
 }
 
-void GOSettingsDialog::OnShow(wxShowEvent &) {
+void GOSettingsDialog::OnShow() {
+  GOTabbedDialog::OnShow();
   if (!m_ReasonsAlreadyShown && m_Reasons && m_Reasons->size()) {
     wxCommandEvent event(wxEVT_BUTTON, ID_REASONS);
 
@@ -102,48 +97,19 @@ void GOSettingsDialog::OnShow(wxShowEvent &) {
   m_ReasonsAlreadyShown = true;
 }
 
-void GOSettingsDialog::OnApply(wxCommandEvent &event) { DoApply(); }
-
-void GOSettingsDialog::OnHelp(wxCommandEvent &event) {
-  wxCommandEvent help(wxEVT_SHOWHELP, 0);
-  help.SetString(GetBookCtrl()->GetPageText(GetBookCtrl()->GetSelection()));
-  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
-}
-
-void GOSettingsDialog::OnOK(wxCommandEvent &event) {
-  if (DoApply())
-    event.Skip();
-}
-
-bool GOSettingsDialog::DoApply() {
-  if (!(this->Validate()))
-    return false;
-
-  m_OptionsPage->Save();
-  m_PathsPage->Save();
-  m_AudioPage->Save();
-  m_MidiDevicePage->Save();
-  m_OrgansPage->Save();
-  m_ReverbPage->Save();
-  m_TemperamentsPage->Save();
-
-  return true;
-}
-
 void GOSettingsDialog::OnReasons(wxCommandEvent &event) {
   unsigned nReasons = m_Reasons ? (unsigned)m_Reasons->size() : 0;
 
   if (nReasons) {
-    wxBookCtrlBase *const notebook = GetBookCtrl();
-    const int currPageNum = notebook->GetSelection();
+    const wxString &currPageName = GetCurrTabName();
     wxArrayString reasonStrs;
     unsigned currReasonIndex = 0;
 
     for (unsigned i = 0; i < nReasons; i++) {
-      const GOSettingsReason &reason(m_Reasons->operator[](i));
+      const GOSettingsReason &reason((*m_Reasons)[i]);
 
       reasonStrs.Add(reason.m_ReasonMessage);
-      if ((int)reason.m_SettingsPageNum == currPageNum)
+      if (reason.m_SettingsPageName == currPageName)
         currReasonIndex = i;
     }
 
@@ -151,8 +117,7 @@ void GOSettingsDialog::OnReasons(wxCommandEvent &event) {
       wxEmptyString, _("Settings Reason"), reasonStrs, currReasonIndex, this);
 
     if (index >= 0)
-      GetBookCtrl()->SetSelection(
-        m_Reasons->operator[](index).m_SettingsPageNum);
+      NavigateToTab((*m_Reasons)[index].m_SettingsPageName);
   }
 }
 
