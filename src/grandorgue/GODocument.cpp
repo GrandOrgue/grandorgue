@@ -10,11 +10,12 @@
 #include <wx/app.h>
 
 #include "config/GOConfig.h"
+#include "dialogs/GOMidiListDialog.h"
 #include "dialogs/GOOrganDialog.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
+#include "document-base/GOView.h"
 #include "gui/GOGUIPanel.h"
 #include "midi/GOMidiEvent.h"
-#include "midi/MIDIList.h"
 #include "sound/GOSound.h"
 #include "threading/GOMutexLocker.h"
 
@@ -23,7 +24,6 @@
 #include "GOFrame.h"
 #include "GOOrgan.h"
 #include "GOPanelView.h"
-#include "GOView.h"
 #include "go_ids.h"
 
 GODocument::GODocument(GOSound *sound)
@@ -195,7 +195,9 @@ void GODocument::ShowOrganDialog() {
 void GODocument::ShowMidiList() {
   if (!showWindow(GODocument::MIDI_LIST, NULL) && m_organfile) {
     registerWindow(
-      GODocument::MIDI_LIST, NULL, new MIDIList(this, NULL, m_organfile));
+      GODocument::MIDI_LIST,
+      NULL,
+      new GOMidiListDialog(this, NULL, m_organfile));
   }
 }
 

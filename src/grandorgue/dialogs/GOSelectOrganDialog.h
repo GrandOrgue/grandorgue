@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef ORGANSELECTDIALOG_H_
-#define ORGANSELECTDIALOG_H_
+#ifndef GOSELECTORGANDIALOG_H_
+#define GOSELECTORGANDIALOG_H_
 
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
@@ -14,7 +14,7 @@
 class GOOrgan;
 class GOOrganList;
 
-class OrganSelectDialog : public wxDialog {
+class GOSelectOrganDialog : public wxDialog {
 private:
   const GOOrganList &m_OrganList;
   wxListView *m_Organs;
@@ -25,7 +25,7 @@ private:
   void OnDoubleClick(wxListEvent &event);
 
 public:
-  OrganSelectDialog(
+  GOSelectOrganDialog(
     wxWindow *parent, wxString title, const GOOrganList &organList);
 
   const GOOrgan *GetSelection();
