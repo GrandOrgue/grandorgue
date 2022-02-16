@@ -163,7 +163,7 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
   m_MidiPlayer->SetPath(m_config.MidiPlayerPath());
 }
 
-void GOSettingsPaths::Save() {
+bool GOSettingsPaths::TransferDataFromWindow() {
   m_config.OrganPath(m_Samplesets->GetPath());
   m_config.OrganPackagePath(m_OrganPackages->GetPath());
   m_config.OrganCachePath(m_OrganCache->GetPath());
@@ -172,4 +172,5 @@ void GOSettingsPaths::Save() {
   m_config.AudioRecorderPath(m_AudioRecorder->GetPath());
   m_config.MidiRecorderPath(m_MidiRecorder->GetPath());
   m_config.MidiPlayerPath(m_MidiPlayer->GetPath());
+  return true;
 }

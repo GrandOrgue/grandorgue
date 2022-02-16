@@ -78,7 +78,7 @@ void GOMidiEventKeyTab::FillKeylist(wxChoice *select, unsigned shortcut) {
   }
 }
 
-void GOMidiEventKeyTab::DoApply() {
+bool GOMidiEventKeyTab::TransferDataFromWindow() {
   const GOShortcutKey *key = (const GOShortcutKey *)m_keyselect->GetClientData(
     m_keyselect->GetSelection());
   if (!key)
@@ -94,6 +94,7 @@ void GOMidiEventKeyTab::DoApply() {
       m_key.SetMinusKey(key->key_code);
   }
   m_original->Assign(m_key);
+  return true;
 }
 
 void GOMidiEventKeyTab::Listen(bool enable) {
