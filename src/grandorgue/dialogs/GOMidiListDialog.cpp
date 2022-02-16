@@ -5,26 +5,28 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "MIDIList.h"
+#include "GOMidiListDialog.h"
 
 #include <wx/button.h>
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 
+#include "midi/GOMidiConfigurator.h"
+
 #include "GOEvent.h"
 #include "GOEventDistributor.h"
-#include "GOMidiConfigurator.h"
 
-BEGIN_EVENT_TABLE(MIDIList, wxDialog)
-EVT_LIST_ITEM_SELECTED(ID_LIST, MIDIList::OnObjectClick)
-EVT_LIST_ITEM_ACTIVATED(ID_LIST, MIDIList::OnObjectDoubleClick)
-EVT_BUTTON(ID_STATUS, MIDIList::OnStatus)
-EVT_BUTTON(ID_EDIT, MIDIList::OnEdit)
-EVT_BUTTON(wxID_OK, MIDIList::OnOK)
-EVT_COMMAND_RANGE(ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, MIDIList::OnButton)
+BEGIN_EVENT_TABLE(GOMidiListDialog, wxDialog)
+EVT_LIST_ITEM_SELECTED(ID_LIST, GOMidiListDialog::OnObjectClick)
+EVT_LIST_ITEM_ACTIVATED(ID_LIST, GOMidiListDialog::OnObjectDoubleClick)
+EVT_BUTTON(ID_STATUS, GOMidiListDialog::OnStatus)
+EVT_BUTTON(ID_EDIT, GOMidiListDialog::OnEdit)
+EVT_BUTTON(wxID_OK, GOMidiListDialog::OnOK)
+EVT_COMMAND_RANGE(
+  ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, GOMidiListDialog::OnButton)
 END_EVENT_TABLE()
 
-MIDIList::MIDIList(
+GOMidiListDialog::GOMidiListDialog(
   GODocumentBase *doc, wxWindow *parent, GOEventDistributor *midi_elements)
   : wxDialog(
     parent,
@@ -82,15 +84,15 @@ MIDIList::MIDIList(
   topSizer->Fit(this);
 }
 
-MIDIList::~MIDIList() {}
+GOMidiListDialog::~GOMidiListDialog() {}
 
-void MIDIList::OnButton(wxCommandEvent &event) {
+void GOMidiListDialog::OnButton(wxCommandEvent &event) {
   GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
     m_Objects->GetFirstSelected());
   obj->TriggerElementActions(event.GetId() - ID_BUTTON);
 }
 
-void MIDIList::OnStatus(wxCommandEvent &event) {
+void GOMidiListDialog::OnStatus(wxCommandEvent &event) {
   GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
     m_Objects->GetFirstSelected());
   wxString status = obj->GetElementStatus();
@@ -100,9 +102,9 @@ void MIDIList::OnStatus(wxCommandEvent &event) {
     wxOK);
 }
 
-void MIDIList::OnOK(wxCommandEvent &event) { Destroy(); }
+void GOMidiListDialog::OnOK(wxCommandEvent &event) { Destroy(); }
 
-void MIDIList::OnObjectClick(wxListEvent &event) {
+void GOMidiListDialog::OnObjectClick(wxListEvent &event) {
   m_Edit->Enable();
   m_Status->Enable();
   GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
@@ -117,13 +119,13 @@ void MIDIList::OnObjectClick(wxListEvent &event) {
   Layout();
 }
 
-void MIDIList::OnObjectDoubleClick(wxListEvent &event) {
+void GOMidiListDialog::OnObjectDoubleClick(wxListEvent &event) {
   GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
     m_Objects->GetFirstSelected());
   obj->ShowConfigDialog();
 }
 
-void MIDIList::OnEdit(wxCommandEvent &event) {
+void GOMidiListDialog::OnEdit(wxCommandEvent &event) {
   wxListEvent listevent;
   OnObjectDoubleClick(listevent);
 }

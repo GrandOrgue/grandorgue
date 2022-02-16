@@ -403,7 +403,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   topSizer->Fit(this);
 }
 
-void GOSettingsOptions::Save() {
+bool GOSettingsOptions::TransferDataFromWindow() {
   if (
     m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
     wxMessageBox(
@@ -442,6 +442,7 @@ void GOSettingsOptions::Save() {
     = (wxStringClientData *)m_Language->GetClientObject(
       m_Language->GetSelection());
   m_config.LanguageCode(langData->GetData());
+  return true;
 }
 
 bool GOSettingsOptions::NeedReload() {
