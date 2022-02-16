@@ -3,8 +3,9 @@
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(${CMAKE_SOURCE_DIR}/cmake/ConvertImages.cmake)
-include_directories(${wxWidgets_INCLUDE_DIRS})
-include(UsewxWidgets)
+
+find_package(wxWidgets REQUIRED core base)
+include(${wxWidgets_USE_FILE})
 
 set(IMAGE_LIST)
 CONVERTIMAGE(IMAGE_LIST gauge.gif)

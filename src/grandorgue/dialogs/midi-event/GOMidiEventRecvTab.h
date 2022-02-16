@@ -99,7 +99,7 @@ public:
   ~GOMidiEventRecvTab();
   void RegisterMIDIListener(GOMidi *midi);
 
-  void DoApply();
+  virtual bool TransferDataFromWindow() override;
   GOMidiReceiveEvent GetCurrentEvent();
 
   DECLARE_EVENT_TABLE()

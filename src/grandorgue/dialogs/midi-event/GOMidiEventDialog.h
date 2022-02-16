@@ -10,7 +10,8 @@
 
 #include <wx/propdlg.h>
 
-#include "GOView.h"
+#include "dialogs/common/GOTabbedDialog.h"
+#include "document-base/GOView.h"
 
 class GOKeyReceiver;
 class GOMidi;
@@ -22,19 +23,12 @@ class GOMidiEventKeyTab;
 class GOMidiEventRecvTab;
 class GOMidiEventSendTab;
 
-class GOMidiEventDialog : public wxPropertySheetDialog, public GOView {
+class GOMidiEventDialog : public GOTabbedDialog, public GOView {
 private:
   GOMidiEventRecvTab *m_recvPage;
   GOMidiEventSendTab *m_sendPage;
   GOMidiEventSendTab *m_sendDivisionPage;
   GOMidiEventKeyTab *m_keyPage;
-
-  bool Validate();
-  void DoApply();
-
-  void OnApply(wxCommandEvent &event);
-  void OnOK(wxCommandEvent &event);
-  void OnCancel(wxCommandEvent &event);
 
 public:
   GOMidiEventDialog(
@@ -51,11 +45,8 @@ public:
     GOMidiSender *sender,
     GOKeyReceiver *key,
     GOMidiSender *division = NULL);
-  ~GOMidiEventDialog();
 
   void RegisterMIDIListener(GOMidi *midi);
-
-  DECLARE_EVENT_TABLE()
 };
 
 #endif /* MIDIEVENTDIALOG_H_ */
