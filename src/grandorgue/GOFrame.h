@@ -39,7 +39,7 @@ class GOOrgan;
 class GOConfig;
 class GOSound;
 class wxChoice;
-class wxGaugeAudio;
+class GOAudioGauge;
 class wxHtmlHelpController;
 class wxSpinCtrl;
 
@@ -55,9 +55,9 @@ private:
   wxMenu *m_temperament_menu;
   GODocument *m_doc;
   wxHtmlHelpController *m_Help;
-  wxGaugeAudio *m_SamplerUsage;
+  GOAudioGauge *m_SamplerUsage;
   wxControl *m_VolumeControl;
-  std::vector<wxGaugeAudio *> m_VolumeGauge;
+  std::vector<GOAudioGauge *> m_VolumeGauge;
   wxSpinCtrl *m_Transpose;
   wxChoice *m_ReleaseLength;
   wxSpinCtrl *m_Polyphony;

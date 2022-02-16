@@ -303,7 +303,7 @@ void GOMidiEventRecvTab::RegisterMIDIListener(GOMidi *midi) {
     m_listener.Register(midi);
 }
 
-void GOMidiEventRecvTab::DoApply() {
+bool GOMidiEventRecvTab::TransferDataFromWindow() {
   StoreEvent();
 
   bool empty_event;
@@ -317,6 +317,7 @@ void GOMidiEventRecvTab::DoApply() {
   } while (empty_event);
 
   m_original->Assign(m_midi);
+  return true;
 }
 
 void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {

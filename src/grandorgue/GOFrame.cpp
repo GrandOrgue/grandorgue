@@ -25,6 +25,7 @@
 #include "archive/GOArchiveManager.h"
 #include "config/GOConfig.h"
 #include "dialogs/GOProgressDialog.h"
+#include "dialogs/GOSelectOrganDialog.h"
 #include "dialogs/GOSplash.h"
 #include "dialogs/settings/GOSettingsDialog.h"
 #include "dialogs/settings/GOSettingsReason.h"
@@ -36,6 +37,7 @@
 #include "threading/GOMutexLocker.h"
 
 #include "GOApp.h"
+#include "GOAudioGauge.h"
 #include "GOCacheCleaner.h"
 #include "GODefinitionFile.h"
 #include "GODocument.h"
@@ -46,10 +48,8 @@
 #include "GOSetter.h"
 #include "GOStdPath.h"
 #include "Images.h"
-#include "OrganSelectDialog.h"
 #include "go_ids.h"
 #include "go_limits.h"
-#include "wxGaugeAudio.h"
 
 BEGIN_EVENT_TABLE(GOFrame, wxFrame)
 EVT_MSGBOX(GOFrame::OnMsgBox)
@@ -346,7 +346,7 @@ GOFrame::GOFrame(
     MAX_POLYPHONY);
   tb->AddControl(m_Polyphony);
 
-  m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
+  m_SamplerUsage = new GOAudioGauge(tb, wxID_ANY, wxDefaultPosition);
   tb->AddControl(m_SamplerUsage);
   m_Polyphony->SetValue(m_config.PolyphonyLimit());
 
@@ -403,8 +403,8 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
         vsizer = new wxBoxSizer(wxVERTICAL);
         sizer->Add(vsizer);
       }
-      wxGaugeAudio *gauge
-        = new wxGaugeAudio(m_VolumeControl, wxID_ANY, wxDefaultPosition);
+      GOAudioGauge *gauge
+        = new GOAudioGauge(m_VolumeControl, wxID_ANY, wxDefaultPosition);
       m_VolumeGauge.push_back(gauge);
       vsizer->Add(gauge, 0, wxFIXED_MINSIZE);
     }
@@ -509,8 +509,46 @@ void GOFrame::Init(wxString filename) {
   clean.Cleanup();
 }
 
+/*
+ * The standard wxHtmlHelpController can not bring the help above a modal dialog
+ * under linux. This class creates wxHtmlHelpFrame with wxTOPLEVEL_EX_DIALOG
+ * extra style for being able to do this.
+ */
+class GOHelpController : public wxHtmlHelpController {
+public:
+  GOHelpController(int style) : wxHtmlHelpController(style | wxHF_FRAME) {}
+
+  wxHtmlHelpFrame *CreateHelpFrame(wxHtmlHelpData *data) override;
+};
+
+/*
+ * Borrowed from
+ * https://github.com/wxWidgets/wxWidgets/blob/master/src/html/helpctrl.cpp
+ * with adding SetExtraStyle(wxTOPLEVEL_EX_DIALOG);
+ */
+wxHtmlHelpFrame *GOHelpController::CreateHelpFrame(wxHtmlHelpData *data) {
+  wxHtmlHelpFrame *frame = new wxHtmlHelpFrame(data);
+  frame->SetExtraStyle(frame->GetExtraStyle() | wxTOPLEVEL_EX_DIALOG);
+  frame->SetController(this);
+  frame->SetTitleFormat(m_titleFormat);
+  frame->Create(
+    m_parentWindow,
+    -1,
+    wxEmptyString,
+    m_FrameStyle
+#if wxUSE_CONFIG
+    ,
+    m_Config,
+    m_ConfigRoot
+#endif // wxUSE_CONFIG
+  );
+  frame->SetShouldPreventAppExit(m_shouldPreventAppExit);
+  m_helpFrame = frame;
+  return frame;
+};
+
 void GOFrame::InitHelp() {
-  m_Help = new wxHtmlHelpController(
+  m_Help = new GOHelpController(
     wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK
     | wxHF_FLAT_TOOLBAR);
 
@@ -780,7 +818,7 @@ void GOFrame::OnLoadRecent(wxCommandEvent &event) {
 }
 
 void GOFrame::OnLoad(wxCommandEvent &event) {
-  OrganSelectDialog dlg(this, _("Select organ to load"), m_config);
+  GOSelectOrganDialog dlg(this, _("Select organ to load"), m_config);
   if (dlg.ShowModal() != wxID_OK)
     return;
   Open(*dlg.GetSelection());

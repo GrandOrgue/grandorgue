@@ -10,7 +10,7 @@
 
 #include <wx/string.h>
 
-#include "GODocumentBase.h"
+#include "document-base/GODocumentBase.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
