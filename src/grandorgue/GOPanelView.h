@@ -11,7 +11,7 @@
 #include <wx/scrolwin.h>
 #include <wx/toplevel.h>
 
-#include "GOView.h"
+#include "document-base/GOView.h"
 
 class GOGUIControl;
 class GOGUIPanel;

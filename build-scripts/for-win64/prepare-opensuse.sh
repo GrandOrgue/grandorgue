@@ -11,5 +11,5 @@ sudo zypper --gpg-auto-import-keys refresh
 sudo zypper install -y mingw32-cross-nsis mingw64-cross-binutils mingw64-cross-gcc mingw64-cross-gcc-c++ mingw64-cross-pkg-config \
     mingw64-fftw3 mingw64-fftw3-devel mingw64-filesystem mingw64-jack mingw64-jack-devel mingw64-libgnurx-devel mingw64-libgnurx0 \
     mingw64-wavpack mingw64-wavpack-devel mingw64-wxWidgets-3_0-devel mingw64-wxWidgets-3_0-lang mingw64-zlib-devel mingw64-zlib1 \
-    ImageMagick
+    ImageMagick zip
 

@@ -29,7 +29,7 @@ private:
 public:
   GOSettingsPaths(GOConfig &settings, wxWindow *parent);
 
-  void Save();
+  virtual bool TransferDataFromWindow() override;
 };
 
 #endif
