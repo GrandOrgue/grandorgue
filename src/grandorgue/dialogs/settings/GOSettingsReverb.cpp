@@ -249,7 +249,7 @@ bool GOSettingsReverb::Validate() {
   return wxPanel::Validate();
 }
 
-void GOSettingsReverb::Save() {
+bool GOSettingsReverb::TransferDataFromWindow() {
   m_config.ReverbEnabled(m_Enabled->IsChecked());
   m_config.ReverbDirect(m_Direct->IsChecked());
   m_config.ReverbFile(m_File->GetPath());
@@ -260,4 +260,5 @@ void GOSettingsReverb::Save() {
   double gain;
   if (m_Gain->GetValue().ToDouble(&gain))
     m_config.ReverbGain(gain);
+  return true;
 }
