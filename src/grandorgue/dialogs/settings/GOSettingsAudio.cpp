@@ -71,6 +71,17 @@ public:
   float volume;
 };
 
+/* implementation of wxTreeCtrl that allows resizing beyong the size of all
+ * items */
+class AudioTreeCtrl : public wxTreeCtrl {
+public:
+  AudioTreeCtrl(wxWindow *parent, int id, const wxSize &minSize)
+    : wxTreeCtrl(
+      parent, id, wxDefaultPosition, minSize, wxTR_HAS_BUTTONS | wxTR_SINGLE) {}
+
+  virtual wxSize DoGetBestSize() const override { return GetMinSize(); }
+};
+
 BEGIN_EVENT_TABLE(GOSettingsAudio, wxPanel)
 EVT_LISTBOX(ID_AUDIOGROUP_LIST, GOSettingsAudio::OnGroup)
 EVT_LISTBOX_DCLICK(ID_AUDIOGROUP_LIST, GOSettingsAudio::OnGroupRename)
@@ -154,12 +165,7 @@ GOSettingsAudio::GOSettingsAudio(
     = new wxStaticBoxSizer(wxVERTICAL, this, _("&Mapping output"));
   wxGridBagSizer *gridMap = new wxGridBagSizer(0, 0);
 
-  m_AudioOutput = new wxTreeCtrl(
-    this,
-    ID_OUTPUT_LIST,
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxTR_HAS_BUTTONS | wxTR_SINGLE);
+  m_AudioOutput = new AudioTreeCtrl(this, ID_OUTPUT_LIST, wxDefaultSize);
   gridMap->Add(
     m_AudioOutput,
     wxGBPosition(0, 0),
@@ -183,11 +189,10 @@ GOSettingsAudio::GOSettingsAudio(
   gridRoot->Add(
     boxMap, wxGBPosition(2, 0), wxGBSpan(1, 2), wxEXPAND | wxALL, 5);
   gridRoot->AddGrowableRow(1, 1);
-  gridRoot->AddGrowableRow(2, 1);
+  gridRoot->AddGrowableRow(2, 3);
   gridRoot->AddGrowableCol(0, 1);
 
-  this->SetSizer(gridRoot);
-  gridRoot->Fit(this);
+  SetSizerAndFit(gridRoot);
 
   std::vector<wxString> audio_groups = m_config.GetAudioGroups();
   for (unsigned i = 0; i < audio_groups.size(); i++)
@@ -205,7 +210,7 @@ GOSettingsAudio::GOSettingsAudio(
   m_SamplesPerBuffer->SetRange(1, MAX_FRAME_SIZE);
   m_SamplesPerBuffer->SetValue(m_config.SamplesPerBuffer());
 
-  FillPortsWith(sound.GetSettings().GetSoundPortsConfig());
+  FillPortsWith(m_config.GetSoundPortsConfig());
   m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
   std::vector<GOAudioDeviceConfig> audio_config
     = m_Sound.GetSettings().GetAudioDeviceConfig();

@@ -509,8 +509,46 @@ void GOFrame::Init(wxString filename) {
   clean.Cleanup();
 }
 
+/*
+ * The standard wxHtmlHelpController can not bring the help above a modal dialog
+ * under linux. This class creates wxHtmlHelpFrame with wxTOPLEVEL_EX_DIALOG
+ * extra style for being able to do this.
+ */
+class GOHelpController : public wxHtmlHelpController {
+public:
+  GOHelpController(int style) : wxHtmlHelpController(style | wxHF_FRAME) {}
+
+  wxHtmlHelpFrame *CreateHelpFrame(wxHtmlHelpData *data) override;
+};
+
+/*
+ * Borrowed from
+ * https://github.com/wxWidgets/wxWidgets/blob/master/src/html/helpctrl.cpp
+ * with adding SetExtraStyle(wxTOPLEVEL_EX_DIALOG);
+ */
+wxHtmlHelpFrame *GOHelpController::CreateHelpFrame(wxHtmlHelpData *data) {
+  wxHtmlHelpFrame *frame = new wxHtmlHelpFrame(data);
+  frame->SetExtraStyle(frame->GetExtraStyle() | wxTOPLEVEL_EX_DIALOG);
+  frame->SetController(this);
+  frame->SetTitleFormat(m_titleFormat);
+  frame->Create(
+    m_parentWindow,
+    -1,
+    wxEmptyString,
+    m_FrameStyle
+#if wxUSE_CONFIG
+    ,
+    m_Config,
+    m_ConfigRoot
+#endif // wxUSE_CONFIG
+  );
+  frame->SetShouldPreventAppExit(m_shouldPreventAppExit);
+  m_helpFrame = frame;
+  return frame;
+};
+
 void GOFrame::InitHelp() {
-  m_Help = new wxHtmlHelpController(
+  m_Help = new GOHelpController(
     wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK
     | wxHF_FLAT_TOOLBAR);
 
