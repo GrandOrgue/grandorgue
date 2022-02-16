@@ -153,9 +153,9 @@ void GOApp::MacOpenFile(const wxString &filename) {
 int GOApp::OnRun() { return wxApp::OnRun(); }
 
 int GOApp::OnExit() {
+  wxLog::SetActiveTarget(NULL);
   delete m_soundSystem;
   delete m_config;
-  wxLog::SetActiveTarget(NULL);
   delete m_Log;
 
   int rc = wxApp::OnExit();
