@@ -24,25 +24,18 @@ archive/GOArchiveEntryFile.cpp
 archive/GOArchiveManager.cpp
 archive/GOArchiveReader.cpp
 archive/GOArchiveWriter.cpp
-GOBitmap.cpp
 GOCompress.cpp
 config/GOConfigFileReader.cpp
 config/GOConfigFileWriter.cpp
 config/GOConfigReader.cpp
 config/GOConfigReaderDB.cpp
 config/GOConfigWriter.cpp
-GODC.cpp
-GODocumentBase.cpp
-GOEvent.cpp
 GOEventDistributor.cpp
-GOFont.cpp
 GOHash.cpp
 GOInvalidFile.cpp
 GOKeyConvert.cpp
 GOKeyReceiverData.cpp
 GOLoadThread.cpp
-GOLog.cpp
-GOLogWindow.cpp
 GOMemoryPool.cpp
 midi/GOMidiEvent.cpp
 midi/GOMidiFileReader.cpp
@@ -72,15 +65,11 @@ temperaments/GOTemperamentList.cpp
 temperaments/GOTemperamentUser.cpp
 GOTimer.cpp
 GOUtil.cpp
-GOView.cpp
 GOWave.cpp
 GOWavPack.cpp
 GOWavPackWriter.cpp
-midi/MIDIList.cpp
-OrganSelectDialog.cpp
-wxGaugeAudio.cpp
 )
 
 BUILD_LIBRARY(GrandOrgueCore ${src})
-target_link_libraries(GrandOrgueCore GrandOrgueImages ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(GrandOrgueCore ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES} ${ZLIB_LIBRARIES})
 link_directories(${wxWidgets_LIBRARY_DIRS} ${WAVPACK_LIBDIR} ${ZLIB_LIBDIR})

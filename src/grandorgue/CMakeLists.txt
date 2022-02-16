@@ -13,6 +13,9 @@ add_option(-msse3)
 
 add_option(-mstackrealign)
 
+find_package(wxWidgets REQUIRED html net adv core base)
+include(${wxWidgets_USE_FILE})
+
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
@@ -20,8 +23,6 @@ include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${JACK_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-include(UsewxWidgets)
 
 set(grandorgue_src
 config/GOConfig.cpp
@@ -31,6 +32,7 @@ config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
 contrib/zita-convolver.cpp
 dialogs/common/GODialogCloser.cpp
+dialogs/common/GOTabbedDialog.cpp
 dialogs/midi-event/GOMidiEventDialog.cpp
 dialogs/midi-event/GOMidiEventKeyTab.cpp
 dialogs/midi-event/GOMidiEventRecvTab.cpp
@@ -47,9 +49,13 @@ dialogs/settings/GOSettingsOptions.cpp
 dialogs/settings/GOSettingsOrgans.cpp
 dialogs/settings/GOSettingsReverb.cpp
 dialogs/settings/GOSettingsTemperaments.cpp
+dialogs/GOMidiListDialog.cpp
 dialogs/GOOrganDialog.cpp
 dialogs/GOProgressDialog.cpp
+dialogs/GOSelectOrganDialog.cpp
 dialogs/GOSplash.cpp
+document-base/GODocumentBase.cpp
+document-base/GOView.cpp
 gui/GOGUIBankedGeneralsPanel.cpp
 gui/GOGUIButton.cpp
 gui/GOGUICrescendoPanel.cpp
@@ -114,26 +120,33 @@ sound/GOSoundReverbPartition.cpp
 sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
 sound/GOSound.cpp
+GOAudioGauge.cpp
 GOAudioRecorder.cpp
 GOCache.cpp
 GOCacheCleaner.cpp
 GOCacheWriter.cpp
 GOCombinationDefinition.cpp
 GOCombination.cpp
+GOBitmap.cpp
 GOBitmapCache.cpp
 GOButton.cpp
 GOCoupler.cpp
+GODC.cpp
 GODivisional.cpp
 GODivisionalCoupler.cpp
 GODummyPipe.cpp
 GODrawStop.cpp
 GOElementCreator.cpp
 GOEnclosure.cpp
+GOEvent.cpp
 GOFilename.cpp
+GOFont.cpp
 GOFrameGeneral.cpp
 GOGeneral.cpp
 GOKeyReceiver.cpp
 GOLabel.cpp
+GOLog.cpp
+GOLogWindow.cpp
 GOManual.cpp
 GOMetronome.cpp
 GOMainWindowData.cpp

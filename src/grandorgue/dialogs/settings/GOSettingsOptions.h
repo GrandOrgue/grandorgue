@@ -87,7 +87,7 @@ public:
   bool NeedReload();
   bool NeedRestart();
 
-  void Save();
+  virtual bool TransferDataFromWindow() override;
 };
 
 #endif
