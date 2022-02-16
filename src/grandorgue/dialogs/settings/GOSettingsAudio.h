@@ -103,7 +103,8 @@ private:
 public:
   GOSettingsAudio(GOConfig &config, GOSound &sound, wxWindow *parent);
 
-  void Save();
+  virtual bool TransferDataToWindow() override;
+  virtual bool TransferDataFromWindow() override;
 
   DECLARE_EVENT_TABLE()
 };
