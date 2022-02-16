@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "GOView.h"
+#include "document-base/GOView.h"
 
 class GOPipeConfigNode;
 class GODefinitionFile;

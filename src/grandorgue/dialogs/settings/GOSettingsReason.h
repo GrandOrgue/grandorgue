@@ -7,10 +7,11 @@
 
 struct GOSettingsReason {
   const wxString m_ReasonMessage;
-  const size_t m_SettingsPageNum;
+  const wxString m_SettingsPageName;
 
-  GOSettingsReason(wxString reasonMessage, size_t settingsPageNum)
-    : m_ReasonMessage(reasonMessage), m_SettingsPageNum(settingsPageNum) {}
+  GOSettingsReason(
+    const wxString &reasonMessage, const wxString &settingsPageName)
+    : m_ReasonMessage(reasonMessage), m_SettingsPageName(settingsPageName) {}
 };
 
 typedef std::vector<GOSettingsReason> SettingsReasons;

@@ -7,14 +7,16 @@
 
 #include "GOGUILabel.h"
 
+#include "config/GOConfig.h"
+#include "config/GOConfigReader.h"
+
 #include "GODC.h"
 #include "GODefinitionFile.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOLabel.h"
-#include "config/GOConfig.h"
-#include "config/GOConfigReader.h"
+#include "go_gui_utils.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabel *label)
   : GOGUIControl(panel, label),
@@ -132,8 +134,8 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       0);
   }
 
-  m_TextColor = cfg.ReadColor(
-    ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK"));
+  m_TextColor = logicalToWxColour(cfg.ReadColor(
+    ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK")));
   m_FontSize = cfg.ReadFontSize(
     ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
   m_FontName = cfg.ReadStringTrim(
