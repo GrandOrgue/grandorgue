@@ -129,7 +129,7 @@ void GOSettingsTemperaments::Update() {
     m_Add->Disable();
 }
 
-void GOSettingsTemperaments::Save() {
+bool GOSettingsTemperaments::TransferDataFromWindow() {
   ptr_vector<GOTemperamentUser> &list = m_Temperaments.GetUserTemperaments();
   for (unsigned i = 0; i < list.size(); i++) {
     bool found = false;
@@ -157,4 +157,5 @@ void GOSettingsTemperaments::Save() {
 
     list.push_back(m_Ptrs[i]);
   }
+  return true;
 }

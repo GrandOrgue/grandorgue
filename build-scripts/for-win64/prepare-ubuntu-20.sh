@@ -4,7 +4,7 @@ set -e
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
-  docbook-xsl xsltproc gettext po4a imagemagick \
+  docbook-xsl xsltproc gettext po4a imagemagick zip \
   libz-mingw-w64-dev
 
 mkdir -p deb

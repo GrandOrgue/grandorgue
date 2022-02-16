@@ -62,7 +62,7 @@ private:
 public:
   SettingsMidiDevices(GOConfig &settings, GOMidi &midi, wxWindow *parent);
 
-  void Save();
+  virtual bool TransferDataFromWindow() override;
 
   DECLARE_EVENT_TABLE()
 };
