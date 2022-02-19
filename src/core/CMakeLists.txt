@@ -74,8 +74,6 @@ GOUtil.cpp
 GOWave.cpp
 GOWavPack.cpp
 GOWavPackWriter.cpp
-OrganSelectDialog.cpp
-wxGaugeAudio.cpp
 )
 
 BUILD_LIBRARY(GrandOrgueCore ${src})

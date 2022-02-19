@@ -51,6 +51,7 @@ dialogs/settings/GOSettingsTemperaments.cpp
 dialogs/GOMidiListDialog.cpp
 dialogs/GOOrganDialog.cpp
 dialogs/GOProgressDialog.cpp
+dialogs/GOSelectOrganDialog.cpp
 dialogs/GOSplash.cpp
 document-base/GODocumentBase.cpp
 document-base/GOView.cpp
@@ -118,6 +119,7 @@ sound/GOSoundReverbPartition.cpp
 sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
 sound/GOSound.cpp
+GOAudioGauge.cpp
 GOAudioRecorder.cpp
 GOCache.cpp
 GOCacheCleaner.cpp
