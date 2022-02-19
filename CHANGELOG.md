@@ -1,4 +1,5 @@
-- Added Help button on the MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/1001
+- Fixed console output of GrandOrgueTool under windows https://github.com/GrandOrgue/grandorgue/issues/949
+- Added the Help button on the MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/1001
 - Fixed covering the help window opened from a modal dialog under linux https://github.com/GrandOrgue/grandorgue/issues/1004
 - Fixed size of the Setting dialog if a lot of audio channels exist https://github.com/GrandOrgue/grandorgue/issues/1034
 - Fixed navigation from the Setting dialog pages to help with non-english language https://github.com/GrandOrgue/grandorgue/issues/1003
