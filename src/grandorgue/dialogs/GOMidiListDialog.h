@@ -5,21 +5,21 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef MIDILIST_H
-#define MIDILIST_H
-
-#include <wx/dialog.h>
+#ifndef GOMIDILISTDIALOG_H
+#define GOMIDILISTDIALOG_H
 
 #include <vector>
 
-#include "GOView.h"
+#include <wx/dialog.h>
+
+#include "document-base/GOView.h"
 
 class GOEventDistributor;
 class wxButton;
 class wxListEvent;
 class wxListView;
 
-class MIDIList : public wxDialog, public GOView {
+class GOMidiListDialog : public wxDialog, public GOView {
 private:
   wxListView *m_Objects;
   wxButton *m_Edit;
@@ -42,9 +42,9 @@ private:
   void OnButton(wxCommandEvent &event);
 
 public:
-  MIDIList(
+  GOMidiListDialog(
     GODocumentBase *doc, wxWindow *parent, GOEventDistributor *midi_elements);
-  ~MIDIList();
+  ~GOMidiListDialog();
 
   DECLARE_EVENT_TABLE()
 };
