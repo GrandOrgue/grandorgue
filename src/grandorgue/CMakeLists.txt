@@ -13,6 +13,9 @@ add_option(-msse3)
 
 add_option(-mstackrealign)
 
+find_package(wxWidgets REQUIRED html net adv core base)
+include(${wxWidgets_USE_FILE})
+
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_CURRENT_SOURCE_DIR}/contrib ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
@@ -20,8 +23,6 @@ include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${JACK_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-include(UsewxWidgets)
 
 set(grandorgue_src
 config/GOConfig.cpp
