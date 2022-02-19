@@ -5,13 +5,13 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef WXGAUGEAUDIO_H
-#define WXGAUGEAUDIO_H
+#ifndef GOAUDIOGAUGE_H
+#define GOAUDIOGAUGE_H
 
 #include <wx/control.h>
 #include <wx/dcmemory.h>
 
-class wxGaugeAudio : public wxControl {
+class GOAudioGauge : public wxControl {
 private:
   int m_Value;
   bool m_Clip;
@@ -23,9 +23,9 @@ private:
   void Update();
 
 public:
-  wxGaugeAudio(
+  GOAudioGauge(
     wxWindow *parent, wxWindowID id, const wxPoint &pos = wxDefaultPosition);
-  ~wxGaugeAudio(void);
+  ~GOAudioGauge(void);
 
   void SetValue(int what);
   void ResetClip();
