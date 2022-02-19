@@ -35,18 +35,18 @@ GOMidiEventDialog::GOMidiEventDialog(
     AddTab(m_recvPage, "Receive", _("Receive"));
   }
   if (sender) {
-    m_sendPage = new GOMidiEventSendTab(notebook, sender, m_recvPage, settings);
-    AddTab(m_sendPage, "Send", _("Send"));
+    m_sendPage
+      = new GOMidiEventSendTab(this, _("Send"), sender, m_recvPage, settings);
+    AddTab(m_sendPage);
   }
   if (key) {
     m_keyPage = new GOMidiEventKeyTab(notebook, key);
     AddTab(m_keyPage, "Shortcut", _("Shortcut"));
   }
   if (division) {
-    m_sendDivisionPage
-      = new GOMidiEventSendTab(notebook, division, m_recvPage, settings);
-    notebook->AddPage(m_sendDivisionPage, _("Send Division Output"));
-    AddTab(m_sendDivisionPage, "SendDivisionOutput", _("Send Division Output"));
+    m_sendDivisionPage = new GOMidiEventSendTab(
+      this, _("Send Division Output"), division, m_recvPage, settings);
+    AddTab(m_sendDivisionPage);
   }
 
   LayoutDialog();

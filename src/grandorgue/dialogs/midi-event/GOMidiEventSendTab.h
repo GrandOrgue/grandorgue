@@ -8,8 +8,7 @@
 #ifndef GOMIDIEVENTSENDTAB_H
 #define GOMIDIEVENTSENDTAB_H
 
-#include <wx/panel.h>
-
+#include "dialogs/common/GODialogTab.h"
 #include "midi/GOMidiSender.h"
 
 #include "GOChoice.h"
@@ -23,8 +22,9 @@ class GOConfig;
 class GOMidiDeviceConfigList;
 class GOMidiMap;
 class GOMidiEventRecvTab;
+class GOTabbedDialog;
 
-class GOMidiEventSendTab : public wxPanel {
+class GOMidiEventSendTab : public GODialogTab {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiDeviceConfigList &m_MidiOut;
@@ -76,7 +76,8 @@ protected:
 
 public:
   GOMidiEventSendTab(
-    wxWindow *parent,
+    GOTabbedDialog *pDlg,
+    const wxString &label,
     GOMidiSender *event,
     GOMidiEventRecvTab *recv,
     GOConfig &config);

@@ -18,6 +18,8 @@ class wxBookCtrlBase;
 class wxPanel;
 class wxSizer;
 
+class GODialogTab;
+
 class GOTabbedDialog : public wxPropertySheetDialog, public GODialogCloser {
 private:
   const wxString m_name;
@@ -34,13 +36,16 @@ protected:
     const wxString &title, // translated
     long addStyle = 0);
 
-  wxBookCtrlBase *GetBook() const { return p_book; }
   wxSizer *GetButtonSizer() const { return p_ButtonSizer; }
 
   void AddTab(wxPanel *tab, const wxString &tabName, const wxString &tabTitle);
+  void AddTab(GODialogTab *tab);
 
 public:
   const wxString &GetCurrTabName() const;
+
+  wxBookCtrlBase *GetBook() const { return p_book; }
+
   void NavigateToTab(const wxString &tabName);
 
   virtual bool TransferDataToWindow() override;

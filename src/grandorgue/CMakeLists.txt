@@ -31,6 +31,7 @@ config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
 contrib/zita-convolver.cpp
 dialogs/common/GODialogCloser.cpp
+dialogs/common/GODialogTab.cpp
 dialogs/common/GOTabbedDialog.cpp
 dialogs/midi-event/GOMidiEventDialog.cpp
 dialogs/midi-event/GOMidiEventKeyTab.cpp

@@ -7,16 +7,15 @@
 
 #include "GOMidiEventSendTab.h"
 
-#include <wx/bookctrl.h>
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/gbsizer.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
+#include "dialogs/common/GOTabbedDialog.h"
 
 #include "GOMidiEventRecvTab.h"
 
@@ -29,11 +28,12 @@ EVT_CHOICE(ID_EVENT, GOMidiEventSendTab::OnTypeChange)
 END_EVENT_TABLE()
 
 GOMidiEventSendTab::GOMidiEventSendTab(
-  wxWindow *parent,
+  GOTabbedDialog *pDlg,
+  const wxString &label,
   GOMidiSender *event,
   GOMidiEventRecvTab *recv,
   GOConfig &config)
-  : wxPanel(parent, wxID_ANY),
+  : GODialogTab(pDlg, "Send", label),
     m_MidiIn(config.m_MidiIn),
     m_MidiOut(config.m_MidiOut),
     m_MidiMap(config.GetMidiMap()),
@@ -265,23 +265,10 @@ bool GOMidiEventSendTab::Validate() {
     if (e.type != MIDI_S_NONE && !e.deviceId) {
       m_current = i;
       LoadEvent();
-
-      // select the current tab
-      wxBookCtrlBase *const pBook = dynamic_cast<wxBookCtrlBase *>(GetParent());
-
-      if (pBook) {
-        int nTab = pBook->FindPage(this);
-
-        if (nTab != wxNOT_FOUND)
-          pBook->SetSelection(nTab);
-      }
-
-      wxMessageBox(
-        _("Output device is not selected.\n"
-          "Select one, set the type to None or delete this event."),
+      ShowErrorMessage(
         _("Invalid MIDI event"),
-        wxOK | wxCENTRE | wxICON_ERROR);
-
+        _("Output device is not selected.\n"
+          "Select one, set the type to None or delete this event."));
       isValid = false;
       break;
     }
