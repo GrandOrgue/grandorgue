@@ -7,9 +7,11 @@
 
 #include "GOMidiEventSendTab.h"
 
+#include <wx/bookctrl.h>
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/gbsizer.h>
+#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
@@ -252,19 +254,34 @@ GOMidiEventSendTab::GOMidiEventSendTab(
 
 GOMidiEventSendTab::~GOMidiEventSendTab() {}
 
-bool GOMidiEventSendTab::Validate(wxString &errMsg) {
-  StoreEvent();
-
+bool GOMidiEventSendTab::Validate() {
   bool isValid = true;
+
+  StoreEvent();
 
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
     const GOMidiSendEvent &e = m_midi.GetEvent(i);
 
     if (e.type != MIDI_S_NONE && !e.deviceId) {
-      errMsg = _("Output device is not selected.\n"
-                 "Select one, set the type to None or delete this event.");
       m_current = i;
       LoadEvent();
+
+      // select the current tab
+      wxBookCtrlBase *const pBook = dynamic_cast<wxBookCtrlBase *>(GetParent());
+
+      if (pBook) {
+        int nTab = pBook->FindPage(this);
+
+        if (nTab != wxNOT_FOUND)
+          pBook->SetSelection(nTab);
+      }
+
+      wxMessageBox(
+        _("Output device is not selected.\n"
+          "Select one, set the type to None or delete this event."),
+        _("Invalid MIDI event"),
+        wxOK | wxCENTRE | wxICON_ERROR);
+
       isValid = false;
       break;
     }
@@ -272,7 +289,7 @@ bool GOMidiEventSendTab::Validate(wxString &errMsg) {
   return isValid;
 }
 
-void GOMidiEventSendTab::DoApply() {
+bool GOMidiEventSendTab::TransferDataFromWindow() {
   // Assume that Validate() has been called and it returned true
 
   // Delete empty events.
@@ -288,6 +305,7 @@ void GOMidiEventSendTab::DoApply() {
   // The event with index 0 is also deleted so the dialog can't be used more
 
   m_original->Assign(m_midi);
+  return true;
 }
 
 void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {

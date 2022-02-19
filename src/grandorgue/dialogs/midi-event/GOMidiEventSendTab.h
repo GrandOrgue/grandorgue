@@ -82,8 +82,8 @@ public:
     GOConfig &config);
   ~GOMidiEventSendTab();
 
-  bool Validate(wxString &errMsg);
-  void DoApply();
+  bool Validate() override;
+  virtual bool TransferDataFromWindow() override;
 
   DECLARE_EVENT_TABLE()
 };
