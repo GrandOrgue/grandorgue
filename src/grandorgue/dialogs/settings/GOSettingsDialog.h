@@ -52,8 +52,6 @@ private:
 
   void OnShow() override;
 
-  bool TransferDataFromWindow() override;
-
   void OnReasons(wxCommandEvent &event);
 
 public:

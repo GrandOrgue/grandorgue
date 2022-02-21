@@ -97,17 +97,6 @@ void GOSettingsDialog::OnShow() {
   m_ReasonsAlreadyShown = true;
 }
 
-bool GOSettingsDialog::TransferDataFromWindow() {
-  m_OptionsPage->Save();
-  m_PathsPage->Save();
-  m_AudioPage->Save();
-  m_MidiDevicePage->Save();
-  m_OrgansPage->Save();
-  m_ReverbPage->Save();
-  m_TemperamentsPage->Save();
-  return true;
-}
-
 void GOSettingsDialog::OnReasons(wxCommandEvent &event) {
   unsigned nReasons = m_Reasons ? (unsigned)m_Reasons->size() : 0;
 
