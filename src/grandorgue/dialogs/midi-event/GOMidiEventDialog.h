@@ -10,7 +10,7 @@
 
 #include <wx/propdlg.h>
 
-#include "GOView.h"
+#include "document-base/GOView.h"
 
 class GOKeyReceiver;
 class GOMidi;

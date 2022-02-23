@@ -48,9 +48,12 @@ dialogs/settings/GOSettingsOptions.cpp
 dialogs/settings/GOSettingsOrgans.cpp
 dialogs/settings/GOSettingsReverb.cpp
 dialogs/settings/GOSettingsTemperaments.cpp
+dialogs/GOMidiListDialog.cpp
 dialogs/GOOrganDialog.cpp
 dialogs/GOProgressDialog.cpp
 dialogs/GOSplash.cpp
+document-base/GODocumentBase.cpp
+document-base/GOView.cpp
 gui/GOGUIBankedGeneralsPanel.cpp
 gui/GOGUIButton.cpp
 gui/GOGUICrescendoPanel.cpp
