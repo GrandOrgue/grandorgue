@@ -32,7 +32,6 @@ config/GOConfigReader.cpp
 config/GOConfigReaderDB.cpp
 config/GOConfigWriter.cpp
 GODC.cpp
-GODocumentBase.cpp
 GOEvent.cpp
 GOEventDistributor.cpp
 GOFont.cpp
@@ -72,11 +71,9 @@ temperaments/GOTemperamentList.cpp
 temperaments/GOTemperamentUser.cpp
 GOTimer.cpp
 GOUtil.cpp
-GOView.cpp
 GOWave.cpp
 GOWavPack.cpp
 GOWavPackWriter.cpp
-midi/MIDIList.cpp
 OrganSelectDialog.cpp
 wxGaugeAudio.cpp
 )
