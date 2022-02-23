@@ -1,3 +1,6 @@
+- Added Help button on the MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/1001
+- Fixed covering the help window opened from a modal dialog under linux https://github.com/GrandOrgue/grandorgue/issues/1004
+- Fixed size of the Setting dialog if a lot of audio channels exist https://github.com/GrandOrgue/grandorgue/issues/1034
 - Fixed navigation from the Setting dialog pages to help with non-english language https://github.com/GrandOrgue/grandorgue/issues/1003
 # 3.6.2 (2022-02-09)
 - Fixed "Copy current receive event" in the Midi Event Send dialog https://github.com/GrandOrgue/grandorgue/issues/985

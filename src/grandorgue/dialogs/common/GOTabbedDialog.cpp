@@ -14,6 +14,7 @@
 #include <wx/panel.h>
 #include <wx/sizer.h>
 
+#include "GODialogTab.h"
 #include "GOEvent.h"
 
 BEGIN_EVENT_TABLE(GOTabbedDialog, wxPropertySheetDialog)
@@ -35,6 +36,7 @@ GOTabbedDialog::GOTabbedDialog(
     GODialogCloser(this),
     m_name(name) {
   p_book = GetBookCtrl();
+  p_book->SetExtraStyle(p_book->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
   p_ButtonSizer = CreateButtonSizer(wxOK | wxCANCEL | wxHELP);
   GetInnerSizer()->Add(p_ButtonSizer, 0, wxEXPAND | wxALL, 5);
 }
@@ -43,6 +45,10 @@ void GOTabbedDialog::AddTab(
   wxPanel *tab, const wxString &tabName, const wxString &tabTitle) {
   m_TabNames.push_back(tabName);
   p_book->AddPage(tab, tabTitle);
+}
+
+void GOTabbedDialog::AddTab(GODialogTab *tab) {
+  AddTab(tab, tab->GetName(), tab->GetLabel());
 }
 
 void GOTabbedDialog::OnHelp(wxCommandEvent &event) {
@@ -64,4 +70,14 @@ void GOTabbedDialog::NavigateToTab(const wxString &tabName) {
 
   if (ptr != end) // found
     p_book->SetSelection(ptr - begin);
+}
+
+bool GOTabbedDialog::TransferDataToWindow() {
+  return p_book->TransferDataToWindow();
+}
+
+bool GOTabbedDialog::Validate() { return p_book->Validate(); }
+
+bool GOTabbedDialog::TransferDataFromWindow() {
+  return p_book->TransferDataFromWindow();
 }

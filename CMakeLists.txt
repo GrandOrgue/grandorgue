@@ -191,7 +191,7 @@ pkg_check_modules(ZLIB REQUIRED zlib)
 
 pkg_check_modules(WAVPACK REQUIRED wavpack)
 
-find_package(wxWidgets REQUIRED html net adv core base)
+find_package(wxWidgets REQUIRED base)
 message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
 message(STATUS "  wxWidgets Debug?            : ${wxWidgets_USE_DEBUG}")
 message(STATUS "  wxWidgets Static linking    : ${wxWidgets_USE_STATIC}")

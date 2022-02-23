@@ -11,11 +11,12 @@
 
 #include "GODC.h"
 #include "GOEnclosure.h"
+#include "GOGUIDisplayMetrics.h"
+#include "GOGUILayoutEngine.h"
+#include "GOGUIMouseState.h"
+#include "GOGUIPanel.h"
 #include "config/GOConfigReader.h"
-#include "gui/GOGUIDisplayMetrics.h"
-#include "gui/GOGUILayoutEngine.h"
-#include "gui/GOGUIMouseState.h"
-#include "gui/GOGUIPanel.h"
+#include "go_gui_utils.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)
   : GOGUIControl(panel, control),
@@ -180,8 +181,8 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
     false,
     0);
 
-  m_TextColor = cfg.ReadColor(
-    ODFSetting, group, wxT("DispLabelColour"), false, wxT("White"));
+  m_TextColor = logicalToWxColour(cfg.ReadColor(
+    ODFSetting, group, wxT("DispLabelColour"), false, wxT("White")));
   m_FontSize = cfg.ReadFontSize(
     ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("7"));
   m_FontName = cfg.ReadStringTrim(
