@@ -1,3 +1,14 @@
+- Added distribution of GrandOrguePerfTest in the GrandOrgue package https://github.com/GrandOrgue/grandorgue/issues/868
+- Added the image file name to messages on loading this image https://github.com/GrandOrgue/grandorgue/issues/1063
+- Fixed allowing to select disabled devices in the Midi Event Dialog https://github.com/GrandOrgue/grandorgue/issues/1044
+- Fixed limits for PGM numbers of the Cx Program Change Range midi event https://github.com/GrandOrgue/grandorgue/issues/1058
+- Clarified the guide how to obtain submodule sources manually in the BUILD.md https://github.com/GrandOrgue/grandorgue/issues/1062
+# 3.6.3 (2022-03-02)
+- Added the wave file name to an error message related to a certain sample file https://github.com/GrandOrgue/grandorgue/discussions/1055
+- Fixed console output of GrandOrgueTool under windows https://github.com/GrandOrgue/grandorgue/issues/949
+- Added the Help button on the MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/1001
+- Fixed covering the help window opened from a modal dialog under linux https://github.com/GrandOrgue/grandorgue/issues/1004
+- Fixed size of the Setting dialog if a lot of audio channels exist https://github.com/GrandOrgue/grandorgue/issues/1034
 - Fixed navigation from the Setting dialog pages to help with non-english language https://github.com/GrandOrgue/grandorgue/issues/1003
 # 3.6.2 (2022-02-09)
 - Fixed "Copy current receive event" in the Midi Event Send dialog https://github.com/GrandOrgue/grandorgue/issues/985

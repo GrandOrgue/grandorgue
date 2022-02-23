@@ -10,24 +10,27 @@
 
 #include <wx/gdicmn.h>
 
+#include "GOLogicalRect.h"
 #include "GOSaveableObject.h"
 
 class GODefinitionFile;
 
 class GOMainWindowData : private GOSaveableObject {
 protected:
-  GODefinitionFile *m_organfile;
-  wxRect m_size;
-
-  void Save(GOConfigWriter &cfg);
+  GODefinitionFile *p_organFile;
+  GOLogicalRect m_rect;
 
 public:
-  GOMainWindowData(GODefinitionFile *m_organfile);
-  virtual ~GOMainWindowData();
-  void Load(GOConfigReader &cfg, wxString group);
+  GOMainWindowData(GODefinitionFile *pOrganFile, const wxString &group)
+    : p_organFile(pOrganFile) {
+    m_group = group;
+  }
+  virtual ~GOMainWindowData() {}
 
-  wxRect GetWindowSize();
-  void SetWindowSize(wxRect rect);
+  void Load(GOConfigReader &cfg);
+  const GOLogicalRect &GetWindowRect() const { return m_rect; }
+  void SetWindowRect(const GOLogicalRect &rect) { m_rect = rect; }
+  void Save(GOConfigWriter &cfg);
 };
 
 #endif

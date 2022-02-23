@@ -10,9 +10,13 @@
 GOMidiDeviceConfig::GOMidiDeviceConfig(
   const wxString &logicalName,
   const wxString &regEx,
+  const wxString portName,
+  const wxString apiName,
   bool isEnabled,
   const wxString &physicalName)
   : m_LogicalName(logicalName),
+    m_PortName(portName),
+    m_ApiName(apiName),
     m_IsEnabled(isEnabled),
     m_PhysicalName(physicalName) {
   SetRegEx(regEx);
@@ -29,6 +33,8 @@ void GOMidiDeviceConfig::SetRegEx(const wxString &regEx) {
 
 void GOMidiDeviceConfig::Assign(const GOMidiDeviceConfig &src) {
   m_LogicalName = src.m_LogicalName;
+  m_PortName = src.m_PortName;
+  m_ApiName = src.m_ApiName;
   SetRegEx(src.m_RegEx);
   m_IsEnabled = src.m_IsEnabled;
   m_ChannelShift = src.m_ChannelShift;

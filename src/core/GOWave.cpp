@@ -114,24 +114,22 @@ void GOWave::LoadSamplerChunk(const uint8_t *ptr, unsigned long length) {
 }
 
 void GOWave::Open(GOFile *file) {
-  if (!file->Open()) {
-    wxString message;
-    message.Printf(_("Failed to open file '%s'"), file->GetName().c_str());
-    throw message;
-  }
+  const wxString fileName = file->GetName();
+
+  if (!file->Open())
+    throw wxString::Format(_("Failed to open file '%s'"), fileName);
+
   // Allocate memory for wave and read it.
   GOBuffer<uint8_t> content(file->GetSize());
-  if (!file->Read(content)) {
-    wxString message;
-    message.Printf(_("Failed to read file '%s'\n"), file->GetName().c_str());
-    throw message;
-  }
+
+  if (!file->Read(content))
+    throw wxString::Format(_("Failed to read file '%s'"), fileName);
 
   file->Close();
-  Open(content);
+  Open(content, fileName);
 }
 
-void GOWave::Open(const GOBuffer<uint8_t> &content) {
+void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
   /* Close any currently open wave data */
   Close();
 
@@ -141,7 +139,7 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
   size_t origDataLen = 0;
   try {
     if (content.GetSize() < 12)
-      throw(wxString) _("< Not a RIFF file");
+      throw wxString::Format(_("Not a RIFF file: %s"), fileName);
 
     const uint8_t *ptr = content.get();
     unsigned length = content.GetSize();
@@ -149,7 +147,8 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
     if (GOWavPack::IsWavPack(content)) {
       GOWavPack pack(content);
       if (!pack.Unpack())
-        throw(wxString) _("Failed to decode WavePack data");
+        throw wxString::Format(
+          _("Failed to decode WavePack data: %s"), fileName);
 
       m_SampleData = pack.GetSamples();
 
@@ -166,20 +165,19 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
     unsigned long riffChunkSize = riffHeader->dwSize;
 
     /* Pribac compatibility */
-    if (riffHeader->fccChunk != WAVE_TYPE_RIFF) {
-      throw(wxString) _("< Invalid RIFF file");
-    }
+    if (riffHeader->fccChunk != WAVE_TYPE_RIFF)
+      throw wxString::Format(_("Invalid RIFF file: %s"), fileName);
     offset += sizeof(GO_WAVECHUNKHEADER);
 
     /* Make sure this is a RIFF/WAVE file */
     GO_WAVETYPEFIELD *riffIdent = (GO_WAVETYPEFIELD *)(ptr + offset);
     if (*riffIdent != WAVE_TYPE_WAVE)
-      throw(wxString) _("< Invalid RIFF/WAVE file");
+      throw wxString::Format(_("Invalid RIFF/WAVE file: %s"), fileName);
     offset += sizeof(GO_WAVETYPEFIELD);
 
     if (m_isPacked) {
       if (riffChunkSize < origDataLen)
-        throw(wxString) _("Inconsitant WavPack file");
+        throw wxString::Format(_("Inconsitant WavPack file: %s"), fileName);
       riffChunkSize -= origDataLen;
     }
 
@@ -202,8 +200,10 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
 
       if (header->fccChunk == WAVE_TYPE_DATA) {
         if (!hasFormat)
-          throw(wxString)
-            _("< Malformed wave file. Format chunk must preceed data chunk.");
+          throw wxString::Format(
+            _("Malformed wave file '%s'. Format chunk must preceed data "
+              "chunk."),
+            fileName);
 
         if (m_isPacked)
           size = 0;
@@ -228,9 +228,9 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
     }
 
     if (offset != length)
-      throw(wxString) _("<Invalid WAV file");
+      throw wxString::Format(_("Invalid WAV file: %s"), fileName);
     if (!m_SampleData.get() || !m_SampleData.GetSize())
-      throw(wxString) _("No samples found");
+      throw wxString::Format(_("No samples found: %s"), fileName);
 
     // learning lesson: never ever trust the range values of outside sources to
     // be correct!
@@ -240,12 +240,12 @@ void GOWave::Open(const GOBuffer<uint8_t> &content) {
         || (m_Loops[i].start_sample >= GetLength())
         || (m_Loops[i].end_sample >= GetLength())
         || (m_Loops[i].end_sample == 0)) {
-        wxLogError(wxT("Invalid loop"));
+        wxLogError(_("Invalid loop in the file: %s\n"), fileName);
         m_Loops.erase(m_Loops.begin() + i);
       }
     }
   } catch (wxString msg) {
-    wxLogError(_("unhandled exception: %s\n"), msg.c_str());
+    wxLogError(_("unhandled exception: %s\n"), msg);
 
     /* Free any memory that was allocated by chunk loading procedures */
     Close();

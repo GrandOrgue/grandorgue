@@ -8,8 +8,9 @@
 #ifndef GOCONFIGREADER_H
 #define GOCONFIGREADER_H
 
-#include <wx/colour.h>
 #include <wx/string.h>
+
+#include "GOLogicalColour.h"
 
 class GOConfigReaderDB;
 
@@ -43,9 +44,9 @@ public:
     wxString key,
     bool required,
     bool defaultValue);
-  wxColour ReadColor(
+  GOLogicalColour ReadColor(
     GOSettingType type, wxString group, wxString key, bool required = true);
-  wxColour ReadColor(
+  GOLogicalColour ReadColor(
     GOSettingType type,
     wxString group,
     wxString key,

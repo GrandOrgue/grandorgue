@@ -27,10 +27,12 @@
 
 #include <vector>
 
-#include "GOEvent.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
+
+#include "GOEvent.h"
+#include "GOResizable.h"
 
 class GOApp;
 class GODocument;
@@ -39,11 +41,11 @@ class GOOrgan;
 class GOConfig;
 class GOSound;
 class wxChoice;
-class wxGaugeAudio;
+class GOAudioGauge;
 class wxHtmlHelpController;
 class wxSpinCtrl;
 
-class GOFrame : public wxFrame, protected GOMidiCallback {
+class GOFrame : public wxFrame, public GOResizable, protected GOMidiCallback {
 private:
   GOApp &m_App;
   GOMutex m_mutex;
@@ -55,9 +57,9 @@ private:
   wxMenu *m_temperament_menu;
   GODocument *m_doc;
   wxHtmlHelpController *m_Help;
-  wxGaugeAudio *m_SamplerUsage;
+  GOAudioGauge *m_SamplerUsage;
   wxControl *m_VolumeControl;
-  std::vector<wxGaugeAudio *> m_VolumeGauge;
+  std::vector<GOAudioGauge *> m_VolumeGauge;
   wxSpinCtrl *m_Transpose;
   wxChoice *m_ReleaseLength;
   wxSpinCtrl *m_Polyphony;
@@ -180,7 +182,8 @@ public:
 
   void SendLoadFile(wxString filename);
 
-  void ApplyRectFromSettings(wxRect rect);
+  virtual GOLogicalRect GetPosSize() const override;
+  virtual void SetPosSize(const GOLogicalRect &rect) override;
 
   DECLARE_EVENT_TABLE()
 };

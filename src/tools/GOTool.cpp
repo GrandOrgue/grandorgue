@@ -15,7 +15,7 @@
 #include "go_defs.h"
 #include "settings/GOSettingDirectory.h"
 
-IMPLEMENT_APP(GOTool)
+IMPLEMENT_APP_CONSOLE(GOTool)
 
 const wxCmdLineEntryDesc GOTool::m_cmdLineDesc[] = {
   {wxCMD_LINE_SWITCH,

@@ -15,6 +15,7 @@
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
+#include "dialogs/common/GOTabbedDialog.h"
 
 #include "GOMidiEventRecvTab.h"
 
@@ -27,11 +28,12 @@ EVT_CHOICE(ID_EVENT, GOMidiEventSendTab::OnTypeChange)
 END_EVENT_TABLE()
 
 GOMidiEventSendTab::GOMidiEventSendTab(
-  wxWindow *parent,
+  GOTabbedDialog *pDlg,
+  const wxString &label,
   GOMidiSender *event,
   GOMidiEventRecvTab *recv,
   GOConfig &config)
-  : wxPanel(parent, wxID_ANY),
+  : GODialogTab(pDlg, "Send", label),
     m_MidiIn(config.m_MidiIn),
     m_MidiOut(config.m_MidiOut),
     m_MidiMap(config.GetMidiMap()),
@@ -178,10 +180,14 @@ GOMidiEventSendTab::GOMidiEventSendTab(
 
   SetSizer(topSizer);
 
-  m_device->Append(_("Any device"));
+  const GOPortsConfig &portsConfig = config.GetMidiPortsConfig();
 
+  m_device->Append(_("Any device"));
   for (const GOMidiDeviceConfig *pDevConf : m_MidiOut)
-    m_device->Append(pDevConf->m_LogicalName);
+    if (
+      portsConfig.IsEnabled(pDevConf->m_PortName, pDevConf->m_ApiName)
+      && pDevConf->m_IsEnabled)
+      m_device->Append(pDevConf->m_LogicalName);
 
   for (unsigned int i = 1; i <= 16; i++)
     m_channel->Append(wxString::Format(wxT("%d"), i));
@@ -252,19 +258,21 @@ GOMidiEventSendTab::GOMidiEventSendTab(
 
 GOMidiEventSendTab::~GOMidiEventSendTab() {}
 
-bool GOMidiEventSendTab::Validate(wxString &errMsg) {
-  StoreEvent();
-
+bool GOMidiEventSendTab::Validate() {
   bool isValid = true;
+
+  StoreEvent();
 
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
     const GOMidiSendEvent &e = m_midi.GetEvent(i);
 
     if (e.type != MIDI_S_NONE && !e.deviceId) {
-      errMsg = _("Output device is not selected.\n"
-                 "Select one, set the type to None or delete this event.");
       m_current = i;
       LoadEvent();
+      ShowErrorMessage(
+        _("Invalid MIDI event"),
+        _("Output device is not selected.\n"
+          "Select one, set the type to None or delete this event."));
       isValid = false;
       break;
     }
@@ -272,7 +280,7 @@ bool GOMidiEventSendTab::Validate(wxString &errMsg) {
   return isValid;
 }
 
-void GOMidiEventSendTab::DoApply() {
+bool GOMidiEventSendTab::TransferDataFromWindow() {
   // Assume that Validate() has been called and it returned true
 
   // Delete empty events.
@@ -288,6 +296,7 @@ void GOMidiEventSendTab::DoApply() {
   // The event with index 0 is also deleted so the dialog can't be used more
 
   m_original->Assign(m_midi);
+  return true;
 }
 
 void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {

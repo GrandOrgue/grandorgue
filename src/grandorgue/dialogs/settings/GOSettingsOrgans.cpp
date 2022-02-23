@@ -298,7 +298,7 @@ void GOSettingsOrgans::OnPackageDel(wxCommandEvent &event) {
   m_PackageDel->Disable();
 }
 
-void GOSettingsOrgans::Save() {
+bool GOSettingsOrgans::TransferDataFromWindow() {
   ptr_vector<GOOrgan> &listOrgans = m_config.GetOrganList();
   for (unsigned i = 0; i < listOrgans.size(); i++) {
     bool found = false;
@@ -326,4 +326,5 @@ void GOSettingsOrgans::Save() {
   listPackages.clear();
   for (long i = 0; i < m_Packages->GetItemCount(); i++)
     listPackages.push_back((GOArchiveFile *)m_Packages->GetItemData(i));
+  return true;
 }

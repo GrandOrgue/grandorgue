@@ -20,6 +20,13 @@ GOLog::~GOLog() {
 }
 
 void GOLog::DoLogTextAtLevel(wxLogLevel level, const wxString &msg) {
-  if (m_LogWindow)
-    m_LogWindow->LogMsg(level, msg, time(0));
+  if (m_LogWindow) {
+    wxString resultMsg = msg;
+
+    if (!m_CurrentFileName.IsEmpty())
+      resultMsg
+        = resultMsg + wxString::Format(_("; FileName=%s"), m_CurrentFileName);
+
+    m_LogWindow->LogMsg(level, resultMsg, time(0));
+  }
 }

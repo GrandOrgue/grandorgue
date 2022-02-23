@@ -43,7 +43,7 @@ public:
   GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event);
   ~GOMidiEventKeyTab();
 
-  void DoApply();
+  virtual bool TransferDataFromWindow() override;
 
   DECLARE_EVENT_TABLE()
 };

@@ -851,6 +851,7 @@ Midi Event Editor is invoked by right-clicking on the element.
     </para> 
     <sect1>
       <title>Receive</title>
+      <indexterm><primary>MidiEvent.Receive</primary></indexterm>
       <figure><title>Midi received event</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_receive.png" /></imageobject></mediaobject></figure>
       <para>This tab configures which MIDI events will drive the console element.</para>
       <para>
@@ -924,6 +925,7 @@ instructions are displayed in the space above the OK / Cancel buttons.
     </sect1>
     <sect1>
       <title>Send</title>
+      <indexterm><primary>MidiEvent.Send</primary></indexterm>
       <figure><title>Midi sent event</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_send.png" /></imageobject></mediaobject></figure>
       <para>This tab configures which MIDI events are sent from the console element.</para>
       <para>
@@ -1001,6 +1003,7 @@ effectively deleted when the OK button is pressed.
     </sect1>
     <sect1>
       <title>Keyboard shortcut</title>
+      <indexterm><primary>MidiEvent.Shortcut</primary></indexterm>
       <figure><title>Keyboard shortcut</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_shortcut.png" /></imageobject></mediaobject></figure>
       <para>This tab is displayed only for enclosures, drawstops and buttons.</para>
       <variablelist>

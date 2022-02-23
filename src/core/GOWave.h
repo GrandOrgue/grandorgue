@@ -67,7 +67,7 @@ public:
   ~GOWave();
 
   void Open(GOFile *file);
-  void Open(const GOBuffer<uint8_t> &content);
+  void Open(const GOBuffer<uint8_t> &content, const wxString fileName);
   bool Save(GOBuffer<uint8_t> &buf);
   void Close();
 

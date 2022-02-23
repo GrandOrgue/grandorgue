@@ -25,6 +25,7 @@
 #include "archive/GOArchiveManager.h"
 #include "config/GOConfig.h"
 #include "dialogs/GOProgressDialog.h"
+#include "dialogs/GOSelectOrganDialog.h"
 #include "dialogs/GOSplash.h"
 #include "dialogs/settings/GOSettingsDialog.h"
 #include "dialogs/settings/GOSettingsReason.h"
@@ -36,20 +37,20 @@
 #include "threading/GOMutexLocker.h"
 
 #include "GOApp.h"
+#include "GOAudioGauge.h"
 #include "GOCacheCleaner.h"
 #include "GODefinitionFile.h"
 #include "GODocument.h"
 #include "GOEvent.h"
+#include "GOLogicalRect.h"
 #include "GOOrgan.h"
 #include "GOPath.h"
 #include "GOProperties.h"
 #include "GOSetter.h"
 #include "GOStdPath.h"
 #include "Images.h"
-#include "OrganSelectDialog.h"
 #include "go_ids.h"
 #include "go_limits.h"
-#include "wxGaugeAudio.h"
 
 BEGIN_EVENT_TABLE(GOFrame, wxFrame)
 EVT_MSGBOX(GOFrame::OnMsgBox)
@@ -346,7 +347,7 @@ GOFrame::GOFrame(
     MAX_POLYPHONY);
   tb->AddControl(m_Polyphony);
 
-  m_SamplerUsage = new wxGaugeAudio(tb, wxID_ANY, wxDefaultPosition);
+  m_SamplerUsage = new GOAudioGauge(tb, wxID_ANY, wxDefaultPosition);
   tb->AddControl(m_SamplerUsage);
   m_Polyphony->SetValue(m_config.PolyphonyLimit());
 
@@ -369,7 +370,7 @@ GOFrame::GOFrame(
 
   UpdateSize();
 
-  ApplyRectFromSettings(m_config.GetMainWindowRect());
+  SetPosSize(m_config.GetMainWindowRect());
 
   m_listener.Register(&m_Sound.GetMidi());
   m_isMeterReady = true;
@@ -403,8 +404,8 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
         vsizer = new wxBoxSizer(wxVERTICAL);
         sizer->Add(vsizer);
       }
-      wxGaugeAudio *gauge
-        = new wxGaugeAudio(m_VolumeControl, wxID_ANY, wxDefaultPosition);
+      GOAudioGauge *gauge
+        = new GOAudioGauge(m_VolumeControl, wxID_ANY, wxDefaultPosition);
       m_VolumeGauge.push_back(gauge);
       vsizer->Add(gauge, 0, wxFIXED_MINSIZE);
     }
@@ -432,10 +433,22 @@ void GOFrame::UpdateSize() {
   SetMaxSize(wxSize(frameSize.GetWidth() * 4, frameSize.GetHeight()));
 }
 
-void GOFrame::ApplyRectFromSettings(wxRect rect) {
-  if (rect.width && rect.height) { // settings are valid
-    wxRect minSize(GetMinSize());
-    wxRect maxSize(GetMaxSize());
+GOLogicalRect GOFrame::GetPosSize() const {
+  GOLogicalRect lRect;
+  const wxRect gRect(GetRect());
+
+  lRect.x = gRect.x;
+  lRect.y = gRect.y;
+  lRect.width = gRect.width;
+  lRect.height = gRect.height;
+  return lRect;
+}
+
+void GOFrame::SetPosSize(const GOLogicalRect &lRect) {
+  if (lRect.width && lRect.height) { // settings are valid
+    wxRect rect(lRect.x, lRect.y, lRect.width, lRect.height);
+    const wxRect minSize(GetMinSize());
+    const wxRect maxSize(GetMaxSize());
 
     if (rect.width < minSize.width)
       rect.width = minSize.width;
@@ -509,8 +522,46 @@ void GOFrame::Init(wxString filename) {
   clean.Cleanup();
 }
 
+/*
+ * The standard wxHtmlHelpController can not bring the help above a modal dialog
+ * under linux. This class creates wxHtmlHelpFrame with wxTOPLEVEL_EX_DIALOG
+ * extra style for being able to do this.
+ */
+class GOHelpController : public wxHtmlHelpController {
+public:
+  GOHelpController(int style) : wxHtmlHelpController(style | wxHF_FRAME) {}
+
+  wxHtmlHelpFrame *CreateHelpFrame(wxHtmlHelpData *data) override;
+};
+
+/*
+ * Borrowed from
+ * https://github.com/wxWidgets/wxWidgets/blob/master/src/html/helpctrl.cpp
+ * with adding SetExtraStyle(wxTOPLEVEL_EX_DIALOG);
+ */
+wxHtmlHelpFrame *GOHelpController::CreateHelpFrame(wxHtmlHelpData *data) {
+  wxHtmlHelpFrame *frame = new wxHtmlHelpFrame(data);
+  frame->SetExtraStyle(frame->GetExtraStyle() | wxTOPLEVEL_EX_DIALOG);
+  frame->SetController(this);
+  frame->SetTitleFormat(m_titleFormat);
+  frame->Create(
+    m_parentWindow,
+    -1,
+    wxEmptyString,
+    m_FrameStyle
+#if wxUSE_CONFIG
+    ,
+    m_Config,
+    m_ConfigRoot
+#endif // wxUSE_CONFIG
+  );
+  frame->SetShouldPreventAppExit(m_shouldPreventAppExit);
+  m_helpFrame = frame;
+  return frame;
+};
+
 void GOFrame::InitHelp() {
-  m_Help = new wxHtmlHelpController(
+  m_Help = new GOHelpController(
     wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK
     | wxHF_FLAT_TOOLBAR);
 
@@ -557,7 +608,7 @@ void GOFrame::Open(const GOOrgan &organ) {
   if (!m_locker.IsLocked())
     return;
   GOProgressDialog dlg;
-  m_doc = new GODocument(&m_Sound);
+  m_doc = new GODocument(this, &m_Sound);
   m_doc->Load(&dlg, organ);
   UpdatePanelMenu();
 }
@@ -780,7 +831,7 @@ void GOFrame::OnLoadRecent(wxCommandEvent &event) {
 }
 
 void GOFrame::OnLoad(wxCommandEvent &event) {
-  OrganSelectDialog dlg(this, _("Select organ to load"), m_config);
+  GOSelectOrganDialog dlg(this, _("Select organ to load"), m_config);
   if (dlg.ShowModal() != wxID_OK)
     return;
   Open(*dlg.GetSelection());
@@ -1034,7 +1085,7 @@ void GOFrame::OnSettings(wxCommandEvent &event) {
     manager.RegisterPackageDirectory(m_config.OrganPackagePath());
 
     UpdateVolumeControlWithSettings();
-    m_config.SetMainWindowRect(GetRect());
+    m_config.SetMainWindowRect(GetPosSize());
 
     // because the sound settings might be changed, close sound.
     // It will reopened later

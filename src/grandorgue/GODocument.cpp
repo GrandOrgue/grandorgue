@@ -10,11 +10,12 @@
 #include <wx/app.h>
 
 #include "config/GOConfig.h"
+#include "dialogs/GOMidiListDialog.h"
 #include "dialogs/GOOrganDialog.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
+#include "document-base/GOView.h"
 #include "gui/GOGUIPanel.h"
 #include "midi/GOMidiEvent.h"
-#include "midi/MIDIList.h"
 #include "sound/GOSound.h"
 #include "threading/GOMutexLocker.h"
 
@@ -23,13 +24,14 @@
 #include "GOFrame.h"
 #include "GOOrgan.h"
 #include "GOPanelView.h"
-#include "GOView.h"
+#include "GOResizable.h"
 #include "go_ids.h"
 
-GODocument::GODocument(GOSound *sound)
-  : m_OrganFileReady(false),
-    m_organfile(NULL),
+GODocument::GODocument(GOResizable *pMainWindow, GOSound *sound)
+  : p_MainWindow(pMainWindow),
     m_sound(*sound),
+    m_OrganFileReady(false),
+    m_organfile(NULL),
     m_listener(),
     m_modified(false) {
   m_listener.Register(&m_sound.GetMidi());
@@ -81,13 +83,11 @@ bool GODocument::Import(
   for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
     if (m_organfile->GetPanel(i)->InitialOpenWindow())
       ShowPanel(i);
-  if (!m_organfile->GetMainWindowData()->GetWindowSize().IsEmpty()) {
-    GOFrame *const frame = dynamic_cast<GOFrame *>(wxTheApp->GetTopWindow());
 
-    if (frame)
-      frame->ApplyRectFromSettings(
-        m_organfile->GetMainWindowData()->GetWindowSize());
-  }
+  const GOLogicalRect &mRect(m_organfile->GetMainWindowData()->GetWindowRect());
+
+  if (!mRect.IsEmpty() && p_MainWindow)
+    p_MainWindow->SetPosSize(mRect);
 
   m_sound.AssignOrganFile(m_organfile);
   m_OrganFileReady = true;
@@ -128,8 +128,8 @@ void GODocument::ShowPanel(unsigned id) {
 
 void GODocument::SyncState() {
   m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
-  m_organfile->GetMainWindowData()->SetWindowSize(
-    wxTheApp->GetTopWindow()->GetRect());
+  if (p_MainWindow)
+    p_MainWindow->SetPosSize(p_MainWindow->GetPosSize());
   for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
     m_organfile->GetPanel(i)->SetInitialOpenWindow(false);
   GODocumentBase::SyncState();
@@ -195,7 +195,9 @@ void GODocument::ShowOrganDialog() {
 void GODocument::ShowMidiList() {
   if (!showWindow(GODocument::MIDI_LIST, NULL) && m_organfile) {
     registerWindow(
-      GODocument::MIDI_LIST, NULL, new MIDIList(this, NULL, m_organfile));
+      GODocument::MIDI_LIST,
+      NULL,
+      new GOMidiListDialog(this, NULL, m_organfile));
   }
 }
 

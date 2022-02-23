@@ -9,13 +9,15 @@
 
 #include <wx/intl.h>
 
+#include "config/GOConfigReader.h"
+
 #include "GOButton.h"
 #include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
+#include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "config/GOConfigReader.h"
-#include "gui/GOGUIMouseState.h"
+#include "go_gui_utils.h"
 
 GOGUIButton::GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston)
   : GOGUIControl(panel, control),
@@ -114,8 +116,8 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
   m_IsPiston = cfg.ReadBoolean(
     ODFSetting, group, wxT("DisplayAsPiston"), false, m_IsPiston);
 
-  m_TextColor = cfg.ReadColor(
-    ODFSetting, group, wxT("DispLabelColour"), false, wxT("Dark Red"));
+  m_TextColor = logicalToWxColour(cfg.ReadColor(
+    ODFSetting, group, wxT("DispLabelColour"), false, wxT("Dark Red")));
   m_FontSize = cfg.ReadFontSize(
     ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
   m_FontName = cfg.ReadStringTrim(

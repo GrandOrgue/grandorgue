@@ -106,8 +106,6 @@ void GOReleaseAlignTable::ComputeTable(
       = (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
 
     /* Store this release point if it was not already found */
-    assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-    assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
     derivIndex = (derivIndex < 0)
       ? 0
       : (
@@ -118,6 +116,8 @@ void GOReleaseAlignTable::ComputeTable(
       : (
         (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
                                              : ampIndex);
+    assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
+    assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
     if (!found[derivIndex][ampIndex]) {
       m_PositionEntries[derivIndex][ampIndex] = i + 1 + start_position;
       found[derivIndex][ampIndex] = true;

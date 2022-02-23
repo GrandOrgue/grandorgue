@@ -201,10 +201,14 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
 
   SetSizer(topSizer);
 
-  m_device->Append(_("Any device"));
+  const GOPortsConfig &portsConfig = config.GetMidiPortsConfig();
 
+  m_device->Append(_("Any device"));
   for (GOMidiDeviceConfig *pDevConf : m_MidiIn)
-    m_device->Append(pDevConf->m_LogicalName);
+    if (
+      portsConfig.IsEnabled(pDevConf->m_PortName, pDevConf->m_ApiName)
+      && pDevConf->m_IsEnabled)
+      m_device->Append(pDevConf->m_LogicalName);
 
   m_channel->Append(_("Any channel"));
   for (unsigned int i = 1; i <= 16; i++)
@@ -303,7 +307,7 @@ void GOMidiEventRecvTab::RegisterMIDIListener(GOMidi *midi) {
     m_listener.Register(midi);
 }
 
-void GOMidiEventRecvTab::DoApply() {
+bool GOMidiEventRecvTab::TransferDataFromWindow() {
   StoreEvent();
 
   bool empty_event;
@@ -317,6 +321,7 @@ void GOMidiEventRecvTab::DoApply() {
   } while (empty_event);
 
   m_original->Assign(m_midi);
+  return true;
 }
 
 void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {

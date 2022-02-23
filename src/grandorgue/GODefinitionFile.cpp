@@ -117,7 +117,7 @@ GODefinitionFile::GODefinitionFile(GODocument *doc, GOConfig &settings)
     m_GeneralTemplate(this),
     m_PitchLabel(this),
     m_TemperamentLabel(this),
-    m_MainWindowData(this) {
+    m_MainWindowData(this, wxT("MainWindow")) {
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
@@ -252,7 +252,7 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
   m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
   m_TemperamentLabel.Load(
     cfg, wxT("SetterMasterTemperament"), _("temperament"));
-  m_MainWindowData.Load(cfg, wxT("MainWindow"));
+  m_MainWindowData.Load(cfg);
 
   m_panels.resize(0);
   m_panels.push_back(new GOGUIPanel(this));

@@ -22,6 +22,8 @@ public:
 
   wxString m_LogicalName;
   wxString m_RegEx;
+  wxString m_PortName;
+  wxString m_ApiName;
   bool m_IsEnabled;
 
   // Midi-in only
@@ -34,6 +36,8 @@ public:
   GOMidiDeviceConfig(
     const wxString &logicalName,
     const wxString &regEx = wxEmptyString,
+    const wxString portName = wxEmptyString,
+    const wxString apiName = wxEmptyString,
     bool isEnabled = true,
     const wxString &physicalName = wxEmptyString);
 

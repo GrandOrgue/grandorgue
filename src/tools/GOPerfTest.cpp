@@ -5,30 +5,34 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
+#include <iostream>
+
 #include <wx/app.h>
+#include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/stopwatch.h>
 
-#include <iostream>
+#include "ptrvector.h"
+
+#include "config/GOConfig.h"
+#include "sound/GOSoundEngine.h"
+#include "sound/GOSoundProviderWave.h"
+#include "sound/GOSoundRecorder.h"
 
 #include "GODefinitionFile.h"
-#include "GOSoundEngine.h"
-#include "GOSoundProviderWave.h"
-#include "GOSoundRecorder.h"
+#include "GOStdPath.h"
 #include "GOWindchest.h"
-#include "ptrvector.h"
-#include "settings/GOSettings.h"
 
 #ifdef __linux__
 #include <sys/resource.h>
 #include <sys/time.h>
 #endif
 
-class TestApp : public wxApp {
+class GOPerfTestApp : public wxApp {
   wxMilliClock_t getCPUTime();
 
 public:
-  TestApp();
+  GOPerfTestApp();
   bool OnInit();
   int OnRun();
   void RunTest(
@@ -40,12 +44,12 @@ public:
     unsigned samples_per_frame);
 };
 
-DECLARE_APP(TestApp)
-IMPLEMENT_APP_CONSOLE(TestApp)
+DECLARE_APP(GOPerfTestApp)
+IMPLEMENT_APP_CONSOLE(GOPerfTestApp)
 
-TestApp::TestApp() {}
+GOPerfTestApp::GOPerfTestApp() {}
 
-wxMilliClock_t TestApp::getCPUTime() {
+wxMilliClock_t GOPerfTestApp::getCPUTime() {
 #ifdef __linux__
   struct rusage usage;
   if (!getrusage(RUSAGE_SELF, &usage)) {
@@ -58,7 +62,7 @@ wxMilliClock_t TestApp::getCPUTime() {
   return wxGetLocalTimeMillis();
 }
 
-void TestApp::RunTest(
+void GOPerfTestApp::RunTest(
   unsigned bits_per_sample,
   bool compress,
   unsigned sample_instances,
@@ -68,7 +72,11 @@ void TestApp::RunTest(
   try {
     GOConfig settings(wxT("perftest"));
     GODefinitionFile *organfile = new GODefinitionFile(NULL, settings);
-    organfile->SetODFPath(argv[1]);
+    const wxString testsDir = argc >= 2 ? argv[1]
+                                        : GOStdPath::GetResourceDir()
+        + wxFileName::GetPathSeparator() + "perftests";
+
+    organfile->SetODFPath(testsDir);
     organfile->AddWindchest(new GOWindchest(organfile));
     GOSoundEngine *engine = new GOSoundEngine();
     GOSoundRecorder recorder;
@@ -132,11 +140,11 @@ void TestApp::RunTest(
 
       engine->Setup(organfile);
 
-      std::vector<GO_SAMPLER *> handles;
+      std::vector<GOSoundSampler *> handles;
       float output_buffer[samples_per_frame * 2];
 
       for (unsigned i = 0; i < pipes.size(); i++) {
-        GO_SAMPLER *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
+        GOSoundSampler *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
         if (handle)
           handles.push_back(handle);
       }
@@ -159,14 +167,14 @@ void TestApp::RunTest(
       float playback_time
         = blocks * (double)samples_per_frame / engine->GetSampleRate();
       wxLogError(
-        wxT("%d sampler, %f seconds, %d bits, %d, %s, %s, %d block: "
-            "%d ms cpu time, limit: %f"),
+        wxT("%u sampler, %f seconds, %u bits, %u, %s, %s, %u block: "
+            "%ld ms cpu time, limit: %f"),
         pipes.size(),
         playback_time,
         bits_per_sample,
         sample_rate,
-        compress ? wxT("Y") : wxT("N"),
-        interpolation == 0 ? wxT("Linear") : wxT("Polyphase"),
+        wxString(compress ? wxT("Y") : wxT("N")),
+        wxString(interpolation == 0 ? wxT("Linear") : wxT("Polyphase")),
         samples_per_frame,
         diff.ToLong(),
         playback_time * 1000.0 * pipes.size() / diff.ToLong());
@@ -183,7 +191,7 @@ void TestApp::RunTest(
   }
 }
 
-bool TestApp::OnInit() {
+bool GOPerfTestApp::OnInit() {
   wxLog *logger = new wxLogStream(&std::cout);
   wxLog::SetActiveTarget(logger);
   wxImage::AddHandler(new wxJPEGHandler);
@@ -192,14 +200,14 @@ bool TestApp::OnInit() {
   wxImage::AddHandler(new wxBMPHandler);
   wxImage::AddHandler(new wxICOHandler);
 
-  if (argc != 2) {
-    wxLogError(wxT("Usage: perftest test-data-directory"));
+  if (argc > 2) {
+    wxLogError(wxT("Usage: perftest [test-data-directory]"));
     return false;
   }
   return true;
 }
 
-int TestApp::OnRun() {
+int GOPerfTestApp::OnRun() {
   const int samplers = 300;
   RunTest(8, true, samplers, 44100, 0, 128);
   RunTest(8, false, samplers, 44100, 0, 128);

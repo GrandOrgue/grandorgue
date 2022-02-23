@@ -23,9 +23,11 @@ else ()
 endif ()
 
 BUILD_EXECUTABLE(GrandOrgueTool)
-target_link_libraries(GrandOrgueTool golib)
+target_link_libraries(GrandOrgueTool GrandOrgueCore)
 
-add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
-target_link_libraries(perftest golib)
+add_executable(GrandOrguePerfTest GOPerfTest.cpp)
+BUILD_EXECUTABLE(GrandOrguePerfTest)
+target_include_directories(GrandOrguePerfTest PUBLIC ${CMAKE_SOURCE_DIR}/src/grandorgue)
+target_link_libraries(GrandOrguePerfTest golib)
 
-add_custom_target(runperftest COMMAND perftest "${CMAKE_SOURCE_DIR}/tests" DEPENDS perftest)
+add_custom_target(runperftest COMMAND GrandOrguePerfTest "${CMAKE_SOURCE_DIR}/tests" DEPENDS GrandOrguePerfTest)
