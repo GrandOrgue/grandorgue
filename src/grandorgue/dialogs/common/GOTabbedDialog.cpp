@@ -14,6 +14,7 @@
 #include <wx/panel.h>
 #include <wx/sizer.h>
 
+#include "GODialogTab.h"
 #include "GOEvent.h"
 
 BEGIN_EVENT_TABLE(GOTabbedDialog, wxPropertySheetDialog)
@@ -44,6 +45,10 @@ void GOTabbedDialog::AddTab(
   wxPanel *tab, const wxString &tabName, const wxString &tabTitle) {
   m_TabNames.push_back(tabName);
   p_book->AddPage(tab, tabTitle);
+}
+
+void GOTabbedDialog::AddTab(GODialogTab *tab) {
+  AddTab(tab, tab->GetName(), tab->GetLabel());
 }
 
 void GOTabbedDialog::OnHelp(wxCommandEvent &event) {
