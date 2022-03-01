@@ -1,3 +1,4 @@
+- Added the wave file name to an error message related to a certain sample file https://github.com/GrandOrgue/grandorgue/discussions/1055
 - Fixed console output of GrandOrgueTool under windows https://github.com/GrandOrgue/grandorgue/issues/949
 - Added the Help button on the MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/1001
 - Fixed covering the help window opened from a modal dialog under linux https://github.com/GrandOrgue/grandorgue/issues/1004

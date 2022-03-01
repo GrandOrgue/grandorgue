@@ -276,7 +276,7 @@ bool GOArchiveCreator::compressData(
   if (GOWave::IsWaveFile(data)) {
     GOWave wav;
     try {
-      wav.Open(data);
+      wav.Open(data, name);
     } catch (wxString error) {
       wxLogError(
         _("Failed to read wav file %s: %s"), name.c_str(), error.c_str());
