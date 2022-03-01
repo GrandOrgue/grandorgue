@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "OrganSelectDialog.h"
+#include "GOSelectOrganDialog.h"
 
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
@@ -14,12 +14,12 @@
 #include "GOOrganList.h"
 #include "archive/GOArchiveFile.h"
 
-BEGIN_EVENT_TABLE(OrganSelectDialog, wxDialog)
-EVT_BUTTON(wxID_OK, OrganSelectDialog::OnOK)
-EVT_LIST_ITEM_ACTIVATED(ID_ORGANS, OrganSelectDialog::OnDoubleClick)
+BEGIN_EVENT_TABLE(GOSelectOrganDialog, wxDialog)
+EVT_BUTTON(wxID_OK, GOSelectOrganDialog::OnOK)
+EVT_LIST_ITEM_ACTIVATED(ID_ORGANS, GOSelectOrganDialog::OnDoubleClick)
 END_EVENT_TABLE()
 
-OrganSelectDialog::OrganSelectDialog(
+GOSelectOrganDialog::GOSelectOrganDialog(
   wxWindow *parent, wxString title, const GOOrganList &organList)
   : wxDialog(
     NULL,
@@ -74,7 +74,7 @@ OrganSelectDialog::OrganSelectDialog(
   SetSizerAndFit(topSizer);
 }
 
-void OrganSelectDialog::OnOK(wxCommandEvent &event) {
+void GOSelectOrganDialog::OnOK(wxCommandEvent &event) {
   if (m_Organs->GetItemData(m_Organs->GetFirstSelected()) == 0) {
     wxMessageBox(
       _("Please select an organ"), _("Error"), wxOK | wxICON_ERROR, this);
@@ -83,11 +83,11 @@ void OrganSelectDialog::OnOK(wxCommandEvent &event) {
   EndModal(wxID_OK);
 }
 
-const GOOrgan *OrganSelectDialog::GetSelection() {
+const GOOrgan *GOSelectOrganDialog::GetSelection() {
   return (const GOOrgan *)m_Organs->GetItemData(m_Organs->GetFirstSelected());
 }
 
-void OrganSelectDialog::OnDoubleClick(wxListEvent &event) {
+void GOSelectOrganDialog::OnDoubleClick(wxListEvent &event) {
   wxCommandEvent e;
   OnOK(event);
 }

@@ -9,6 +9,8 @@
 
 #include "config/GOConfigReader.h"
 
+#include "go_gui_utils.h"
+
 GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(
   GOConfigReader &ini, wxString group)
   : GOGUIDisplayMetrics() {
@@ -33,8 +35,8 @@ GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(
     = ini.ReadStringTrim(ODFSetting, group, wxT("DispControlLabelFont"));
   m_DispShortcutKeyLabelFont
     = ini.ReadStringTrim(ODFSetting, group, wxT("DispShortcutKeyLabelFont"));
-  m_DispShortcutKeyLabelColour
-    = ini.ReadColor(ODFSetting, group, wxT("DispShortcutKeyLabelColour"));
+  m_DispShortcutKeyLabelColour = logicalToWxColour(
+    ini.ReadColor(ODFSetting, group, wxT("DispShortcutKeyLabelColour")));
   m_DispGroupLabelFont
     = ini.ReadStringTrim(ODFSetting, group, wxT("DispGroupLabelFont"));
   m_DispDrawstopCols

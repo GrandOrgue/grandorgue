@@ -5,18 +5,18 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "wxGaugeAudio.h"
+#include "GOAudioGauge.h"
 
 #include <wx/dcclient.h>
 #include <wx/image.h>
 
 #include "Images.h"
 
-BEGIN_EVENT_TABLE(wxGaugeAudio, wxControl)
-EVT_PAINT(wxGaugeAudio::OnPaint)
+BEGIN_EVENT_TABLE(GOAudioGauge, wxControl)
+EVT_PAINT(GOAudioGauge::OnPaint)
 END_EVENT_TABLE()
 
-wxGaugeAudio::wxGaugeAudio(wxWindow *parent, wxWindowID id, const wxPoint &pos)
+GOAudioGauge::GOAudioGauge(wxWindow *parent, wxWindowID id, const wxPoint &pos)
   : wxControl(parent, id, pos, wxSize(73, 11), wxNO_BORDER),
     m_Value(0),
     m_Clip(false),
@@ -25,9 +25,9 @@ wxGaugeAudio::wxGaugeAudio(wxWindow *parent, wxWindowID id, const wxPoint &pos)
   m_gaugedc.SelectObject(m_gauge);
 }
 
-wxGaugeAudio::~wxGaugeAudio(void) {}
+GOAudioGauge::~GOAudioGauge(void) {}
 
-void wxGaugeAudio::OnPaint(wxPaintEvent &event) {
+void GOAudioGauge::OnPaint(wxPaintEvent &event) {
   wxPaintDC dc(this);
   m_Update = false;
   int split = (m_Value + 1) << 1;
@@ -37,7 +37,7 @@ void wxGaugeAudio::OnPaint(wxPaintEvent &event) {
   dc.Blit(66, 0, 7, 11, &m_gaugedc, 66, m_Clip ? 11 : 0);
 }
 
-void wxGaugeAudio::SetValue(int what) {
+void GOAudioGauge::SetValue(int what) {
   if (what < 0)
     what = 0;
   if (what > 32) {
@@ -51,14 +51,14 @@ void wxGaugeAudio::SetValue(int what) {
   }
 }
 
-void wxGaugeAudio::ResetClip() {
+void GOAudioGauge::ResetClip() {
   if (m_Clip) {
     m_Clip = false;
     Update();
   }
 }
 
-void wxGaugeAudio::Update() {
+void GOAudioGauge::Update() {
   if (m_Update)
     return;
   m_Update = true;
