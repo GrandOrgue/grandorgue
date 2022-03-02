@@ -23,7 +23,7 @@ else ()
 endif ()
 
 BUILD_EXECUTABLE(GrandOrgueTool)
-target_link_libraries(GrandOrgueTool golib)
+target_link_libraries(GrandOrgueTool GrandOrgueCore)
 
 add_executable(perftest EXCLUDE_FROM_ALL perftest.cpp)
 target_link_libraries(perftest golib)
