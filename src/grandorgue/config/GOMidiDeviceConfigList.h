@@ -43,9 +43,13 @@ public:
   /**
    * find device config by it's physical name.
    * If found, returns the reference to it in and sets m_PhysicalNameMatchedWith
+   * and updates m_PortName and m_ApiName,
    * If not found, returns NULL
    **/
-  GOMidiDeviceConfig *FindByPhysicalName(const wxString &physicalName) const;
+  GOMidiDeviceConfig *FindByPhysicalName(
+    const wxString &physicalName,
+    const wxString &portName,
+    const wxString &apiName) const;
 
   /**
    * Remove the device from the list that has the logical name specified
@@ -85,10 +89,12 @@ public:
   GOMidiDeviceConfig *Append(
     const wxString &logicalName,
     const wxString &regEx,
+    const wxString &portName,
+    const wxString &apiName,
     bool isEnabled,
     const wxString &physicalName = wxEmptyString) {
-    return Append(
-      GOMidiDeviceConfig(logicalName, regEx, isEnabled, physicalName));
+    return Append(GOMidiDeviceConfig(
+      logicalName, regEx, portName, apiName, isEnabled, physicalName));
   }
 
   /**

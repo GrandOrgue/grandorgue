@@ -24,7 +24,9 @@ GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByLogicalName(
 }
 
 GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByPhysicalName(
-  const wxString &physicalName) const {
+  const wxString &physicalName,
+  const wxString &portName,
+  const wxString &apiName) const {
   GOMidiDeviceConfig *res = NULL;
   GOMidiDeviceConfig *candidate = NULL;
 
@@ -44,6 +46,10 @@ GOMidiDeviceConfig *GOMidiDeviceConfigList::FindByPhysicalName(
   if (!res && candidate) {
     candidate->m_PhysicalName = physicalName;
     res = candidate;
+  }
+  if (res) {
+    res->m_PortName = portName;
+    res->m_ApiName = apiName;
   }
   return res;
 }
@@ -114,6 +120,8 @@ static const wxString COUNT = wxT("Count");
 static const wxString DEVICE03D = wxT("Device%03d");
 static const wxString DEVICE03D_ENABLED = wxT("Device%03dEnabled");
 static const wxString DEVICE03D_REGEX = wxT("Device%03dRegEx");
+static const wxString DEVICE03D_PORT_NAME = wxT("Device%03dPortName");
+static const wxString DEVICE03D_API_NAME = wxT("Device%03dApiName");
 static const wxString DEVICE03D_SHIFT = wxT("Device%03dShift");
 static const wxString DEVICE03D_OUTPUT_DEVICE = wxT("Device%03dOutputDevice");
 
@@ -131,6 +139,16 @@ void GOMidiDeviceConfigList::Load(
         m_GroupName,
         wxString::Format(DEVICE03D_REGEX, i),
         false), // regEx
+      cfg.ReadString(
+        CMBSetting,
+        m_GroupName,
+        wxString::Format(DEVICE03D_PORT_NAME, i),
+        false), // portName
+      cfg.ReadString(
+        CMBSetting,
+        m_GroupName,
+        wxString::Format(DEVICE03D_API_NAME, i),
+        false), // apiName
       cfg.ReadBoolean(
         CMBSetting,
         m_GroupName,
@@ -164,6 +182,12 @@ void GOMidiDeviceConfigList::Save(GOConfigWriter &cfg, const bool isInput) {
       m_GroupName, wxString::Format(DEVICE03D, i), devConf->m_LogicalName);
     cfg.WriteString(
       m_GroupName, wxString::Format(DEVICE03D_REGEX, i), devConf->m_RegEx);
+    cfg.WriteString(
+      m_GroupName,
+      wxString::Format(DEVICE03D_PORT_NAME, i),
+      devConf->m_PortName);
+    cfg.WriteString(
+      m_GroupName, wxString::Format(DEVICE03D_API_NAME, i), devConf->m_ApiName);
     cfg.WriteBoolean(
       m_GroupName,
       wxString::Format(DEVICE03D_ENABLED, i),
