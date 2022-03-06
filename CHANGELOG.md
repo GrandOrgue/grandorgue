@@ -1,3 +1,4 @@
+- Fixed limits for PGM numbers of the Cx Program Change Range midi event https://github.com/GrandOrgue/grandorgue/issues/1058
 - Clarified the guide how to obtain submodule sources manually in the BUILD.md https://github.com/GrandOrgue/grandorgue/issues/1062
 # 3.6.3 (2022-03-02)
 - Added the wave file name to an error message related to a certain sample file https://github.com/GrandOrgue/grandorgue/discussions/1055

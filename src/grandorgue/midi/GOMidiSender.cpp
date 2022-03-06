@@ -61,20 +61,23 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
       group,
       wxString::Format(wxT("MIDISendDevice%03d"), i + 1),
       false));
-    m_events[i].type = (GOMidiSendMessageType)cfg.ReadEnum(
+
+    const GOMidiSendMessageType eventType = (GOMidiSendMessageType)cfg.ReadEnum(
       CMBSetting,
       group,
       wxString::Format(wxT("MIDISendEventType%03d"), i + 1),
       m_MidiTypes,
       sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
-    if (HasChannel(m_events[i].type))
+
+    m_events[i].type = eventType;
+    if (HasChannel(eventType))
       m_events[i].channel = cfg.ReadInteger(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendChannel%03d"), i + 1),
         1,
         16);
-    if (HasKey(m_events[i].type))
+    if (HasKey(eventType))
       m_events[i].key = cfg.ReadInteger(
         CMBSetting,
         group,
@@ -82,27 +85,27 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         0,
         0x200000);
 
-    if (HasLowValue(m_events[i].type))
+    if (HasLowValue(eventType))
       m_events[i].low_value = cfg.ReadInteger(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendLowValue%03d"), i + 1),
         0,
-        0x3fff,
+        LowValueLimit(eventType),
         false,
         0);
 
-    if (HasHighValue(m_events[i].type))
+    if (HasHighValue(eventType))
       m_events[i].high_value = cfg.ReadInteger(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendHighValue%03d"), i + 1),
         0,
-        0x3fff,
+        HighValueLimit(eventType),
         false,
         0x7f);
 
-    if (HasStart(m_events[i].type))
+    if (HasStart(eventType))
       m_events[i].start = cfg.ReadInteger(
         CMBSetting,
         group,
@@ -111,7 +114,7 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         0x1f,
         false,
         0);
-    if (HasLength(m_events[i].type))
+    if (HasLength(eventType))
       m_events[i].length = cfg.ReadInteger(
         CMBSetting,
         group,
@@ -119,7 +122,7 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         0,
         0x1f,
         false,
-        LengthLimit(m_events[i].type));
+        LengthLimit(eventType));
   }
 }
 
