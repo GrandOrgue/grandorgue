@@ -40,18 +40,20 @@ void GOMidi::Open() {
   UpdateDevices(portsConfig);
 
   for (GOMidiPort *pPort : m_midi_in_devices) {
+    const wxString &portName = pPort->GetPortName();
+    const wxString &apiName = pPort->GetApiName();
     GOMidiDeviceConfig *pDevConf = NULL;
 
-    if (
-      pPort->IsToUse()
-      && portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())) {
+    if (pPort->IsToUse() && portsConfig.IsEnabled(portName, apiName)) {
       const wxString &physicalName = pPort->GetName();
 
-      pDevConf = midiIn.FindByPhysicalName(physicalName);
+      pDevConf = midiIn.FindByPhysicalName(physicalName, portName, apiName);
       if (!pDevConf && isToAutoAdd)
         pDevConf = midiIn.Append(
           pPort->GetDefaultLogicalName(),
           pPort->GetDefaultRegEx(),
+          portName,
+          apiName,
           true,
           physicalName);
     }
@@ -65,12 +67,13 @@ void GOMidi::Open() {
   }
 
   for (GOMidiPort *pPort : m_midi_out_devices) {
+    const wxString &portName = pPort->GetPortName();
+    const wxString &apiName = pPort->GetApiName();
     GOMidiDeviceConfig *devConf;
 
     if (
-      pPort->IsToUse()
-      && portsConfig.IsEnabled(pPort->GetPortName(), pPort->GetApiName())
-      && (devConf = m_config.m_MidiOut.FindByPhysicalName(pPort->GetName()))
+      pPort->IsToUse() && portsConfig.IsEnabled(portName, apiName)
+      && (devConf = m_config.m_MidiOut.FindByPhysicalName(pPort->GetName(), portName, apiName))
       && devConf->m_IsEnabled)
       pPort->Open(m_MidiMap.GetDeviceIdByLogicalName(devConf->m_LogicalName));
     else

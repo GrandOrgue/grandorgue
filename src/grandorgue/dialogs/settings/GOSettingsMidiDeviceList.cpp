@@ -43,15 +43,16 @@ void GOSettingsMidiDeviceList::RefreshDevices(
   const bool isToAutoEnable,
   const GOSettingsMidiDeviceList *pOutDevList) {
   ClearDevices();
-  for (GOMidiPort *port : m_Ports)
-    if (
-      port->IsToUse()
-      && portsConfig.IsEnabled(port->GetPortName(), port->GetApiName())) {
+  for (GOMidiPort *port : m_Ports) {
+    const wxString &portName = port->GetPortName();
+    const wxString &apiName = port->GetApiName();
+
+    if (port->IsToUse() && portsConfig.IsEnabled(portName, apiName)) {
       const wxString physicalName = port->GetName();
       GOMidiDeviceConfig *const pConf
-        = m_ConfList.FindByPhysicalName(physicalName);
+        = m_ConfList.FindByPhysicalName(physicalName, portName, apiName);
       GOMidiDeviceConfig *pConfTmp
-        = m_ConfListTmp.FindByPhysicalName(physicalName);
+        = m_ConfListTmp.FindByPhysicalName(physicalName, portName, apiName);
 
       if (!pConfTmp)
         pConfTmp = pConf ? m_ConfListTmp.Append(
@@ -59,6 +60,8 @@ void GOSettingsMidiDeviceList::RefreshDevices(
                          : m_ConfListTmp.Append(
                            port->GetDefaultLogicalName(),
                            port->GetDefaultRegEx(),
+                           portName,
+                           apiName,
                            isToAutoEnable,
                            physicalName);
 
@@ -69,6 +72,7 @@ void GOSettingsMidiDeviceList::RefreshDevices(
       if (pConfTmp->m_IsEnabled)
         m_LbDevices->Check(i);
     }
+  }
 }
 
 unsigned GOSettingsMidiDeviceList::GetDeviceCount() const {
@@ -104,8 +108,10 @@ void GOSettingsMidiDeviceList::OnMatchingClick(wxCommandEvent &event) {
 void GOSettingsMidiDeviceList::Save(
   const GOSettingsMidiDeviceList *pOutDevList) {
   for (GOMidiDeviceConfig *pDevConfTmp : m_ListedConfs) {
-    GOMidiDeviceConfig *pDevConf
-      = m_ConfList.FindByPhysicalName(pDevConfTmp->m_PhysicalName);
+    GOMidiDeviceConfig *pDevConf = m_ConfList.FindByPhysicalName(
+      pDevConfTmp->m_PhysicalName,
+      pDevConfTmp->m_PortName,
+      pDevConfTmp->m_ApiName);
     const GOMidiDeviceConfigList *pOutConfList
       = pOutDevList ? &pOutDevList->m_ConfList : NULL;
 

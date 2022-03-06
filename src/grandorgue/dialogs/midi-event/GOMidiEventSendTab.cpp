@@ -180,10 +180,14 @@ GOMidiEventSendTab::GOMidiEventSendTab(
 
   SetSizer(topSizer);
 
-  m_device->Append(_("Any device"));
+  const GOPortsConfig &portsConfig = config.GetMidiPortsConfig();
 
+  m_device->Append(_("Any device"));
   for (const GOMidiDeviceConfig *pDevConf : m_MidiOut)
-    m_device->Append(pDevConf->m_LogicalName);
+    if (
+      portsConfig.IsEnabled(pDevConf->m_PortName, pDevConf->m_ApiName)
+      && pDevConf->m_IsEnabled)
+      m_device->Append(pDevConf->m_LogicalName);
 
   for (unsigned int i = 1; i <= 16; i++)
     m_channel->Append(wxString::Format(wxT("%d"), i));
