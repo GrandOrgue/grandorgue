@@ -5,19 +5,21 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
+#include <iostream>
+
 #include <wx/app.h>
 #include <wx/image.h>
 #include <wx/stopwatch.h>
 
-#include <iostream>
+#include "ptrvector.h"
+
+#include "config/GOConfig.h"
+#include "sound/GOSoundEngine.h"
+#include "sound/GOSoundProviderWave.h"
+#include "sound/GOSoundRecorder.h"
 
 #include "GODefinitionFile.h"
-#include "GOSoundEngine.h"
-#include "GOSoundProviderWave.h"
-#include "GOSoundRecorder.h"
 #include "GOWindchest.h"
-#include "ptrvector.h"
-#include "settings/GOSettings.h"
 
 #ifdef __linux__
 #include <sys/resource.h>
@@ -132,11 +134,11 @@ void TestApp::RunTest(
 
       engine->Setup(organfile);
 
-      std::vector<GO_SAMPLER *> handles;
+      std::vector<GOSoundSampler *> handles;
       float output_buffer[samples_per_frame * 2];
 
       for (unsigned i = 0; i < pipes.size(); i++) {
-        GO_SAMPLER *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
+        GOSoundSampler *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
         if (handle)
           handles.push_back(handle);
       }
@@ -159,14 +161,14 @@ void TestApp::RunTest(
       float playback_time
         = blocks * (double)samples_per_frame / engine->GetSampleRate();
       wxLogError(
-        wxT("%d sampler, %f seconds, %d bits, %d, %s, %s, %d block: "
-            "%d ms cpu time, limit: %f"),
+        wxT("%u sampler, %f seconds, %u bits, %u, %s, %s, %u block: "
+            "%ld ms cpu time, limit: %f"),
         pipes.size(),
         playback_time,
         bits_per_sample,
         sample_rate,
-        compress ? wxT("Y") : wxT("N"),
-        interpolation == 0 ? wxT("Linear") : wxT("Polyphase"),
+        wxString(compress ? wxT("Y") : wxT("N")),
+        wxString(interpolation == 0 ? wxT("Linear") : wxT("Polyphase")),
         samples_per_frame,
         diff.ToLong(),
         playback_time * 1000.0 * pipes.size() / diff.ToLong());

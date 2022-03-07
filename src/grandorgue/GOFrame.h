@@ -27,10 +27,12 @@
 
 #include <vector>
 
-#include "GOEvent.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
+
+#include "GOEvent.h"
+#include "GOResizable.h"
 
 class GOApp;
 class GODocument;
@@ -43,7 +45,7 @@ class GOAudioGauge;
 class wxHtmlHelpController;
 class wxSpinCtrl;
 
-class GOFrame : public wxFrame, protected GOMidiCallback {
+class GOFrame : public wxFrame, public GOResizable, protected GOMidiCallback {
 private:
   GOApp &m_App;
   GOMutex m_mutex;
@@ -180,7 +182,8 @@ public:
 
   void SendLoadFile(wxString filename);
 
-  void ApplyRectFromSettings(wxRect rect);
+  virtual GOLogicalRect GetPosSize() const override;
+  virtual void SetPosSize(const GOLogicalRect &rect) override;
 
   DECLARE_EVENT_TABLE()
 };

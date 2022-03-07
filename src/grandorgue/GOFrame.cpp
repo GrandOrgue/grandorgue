@@ -42,6 +42,7 @@
 #include "GODefinitionFile.h"
 #include "GODocument.h"
 #include "GOEvent.h"
+#include "GOLogicalRect.h"
 #include "GOOrgan.h"
 #include "GOPath.h"
 #include "GOProperties.h"
@@ -369,7 +370,7 @@ GOFrame::GOFrame(
 
   UpdateSize();
 
-  ApplyRectFromSettings(m_config.GetMainWindowRect());
+  SetPosSize(m_config.GetMainWindowRect());
 
   m_listener.Register(&m_Sound.GetMidi());
   m_isMeterReady = true;
@@ -432,10 +433,22 @@ void GOFrame::UpdateSize() {
   SetMaxSize(wxSize(frameSize.GetWidth() * 4, frameSize.GetHeight()));
 }
 
-void GOFrame::ApplyRectFromSettings(wxRect rect) {
-  if (rect.width && rect.height) { // settings are valid
-    wxRect minSize(GetMinSize());
-    wxRect maxSize(GetMaxSize());
+GOLogicalRect GOFrame::GetPosSize() const {
+  GOLogicalRect lRect;
+  const wxRect gRect(GetRect());
+
+  lRect.x = gRect.x;
+  lRect.y = gRect.y;
+  lRect.width = gRect.width;
+  lRect.height = gRect.height;
+  return lRect;
+}
+
+void GOFrame::SetPosSize(const GOLogicalRect &lRect) {
+  if (lRect.width && lRect.height) { // settings are valid
+    wxRect rect(lRect.x, lRect.y, lRect.width, lRect.height);
+    const wxRect minSize(GetMinSize());
+    const wxRect maxSize(GetMaxSize());
 
     if (rect.width < minSize.width)
       rect.width = minSize.width;
@@ -595,7 +608,7 @@ void GOFrame::Open(const GOOrgan &organ) {
   if (!m_locker.IsLocked())
     return;
   GOProgressDialog dlg;
-  m_doc = new GODocument(&m_Sound);
+  m_doc = new GODocument(this, &m_Sound);
   m_doc->Load(&dlg, organ);
   UpdatePanelMenu();
 }
@@ -1072,7 +1085,7 @@ void GOFrame::OnSettings(wxCommandEvent &event) {
     manager.RegisterPackageDirectory(m_config.OrganPackagePath());
 
     UpdateVolumeControlWithSettings();
-    m_config.SetMainWindowRect(GetRect());
+    m_config.SetMainWindowRect(GetPosSize());
 
     // because the sound settings might be changed, close sound.
     // It will reopened later
