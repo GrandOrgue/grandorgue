@@ -16,12 +16,20 @@ class GOLog : public wxLog {
 private:
   GOLogWindow *m_LogWindow;
 
+  wxString m_CurrentFileName;
+
 protected:
   void DoLogTextAtLevel(wxLogLevel level, const wxString &msg);
 
 public:
   GOLog(wxWindow *parent);
   virtual ~GOLog();
+
+  const wxString &GetCurrentFileName() const { return m_CurrentFileName; }
+  void SetCurrentFileName(const wxString &fileName) {
+    m_CurrentFileName = fileName;
+  }
+  void ClearCurrentFileName() { m_CurrentFileName = wxEmptyString; }
 };
 
 #endif

@@ -15,6 +15,7 @@
 #include "GODefinitionFile.h"
 #include "GOFile.h"
 #include "GOFilename.h"
+#include "GOLog.h"
 #include "Images.h"
 
 #define BITMAP_LIST                                                            \
@@ -158,18 +159,34 @@ void GOBitmapCache::RegisterBitmap(
   m_Masknames.push_back(maskname);
 }
 
-bool GOBitmapCache::loadFile(wxImage &img, wxString filename) {
-  GOFilename name;
-  name.Assign(filename, m_organfile);
-  std::unique_ptr<GOFile> file = name.Open();
+bool GOBitmapCache::loadFile(wxImage &img, const wxString &filename) {
+  bool result;
+  GOLog *const log = dynamic_cast<GOLog *>(wxLog::GetActiveTarget());
 
-  GOBuffer<char> data;
-  if (!file->ReadContent(data))
-    return false;
+  if (log)
+    log->SetCurrentFileName(filename);
 
-  wxMemoryInputStream is(data.get(), data.GetSize());
-  bool result = img.LoadFile(is, wxBITMAP_TYPE_ANY, -1);
+  try {
+    GOFilename name;
+    name.Assign(filename, m_organfile);
 
+    std::unique_ptr<GOFile> file = name.Open();
+    GOBuffer<char> data;
+
+    result = file->ReadContent(data);
+    if (result) {
+      wxMemoryInputStream is(data.get(), data.GetSize());
+
+      result = img.LoadFile(is, wxBITMAP_TYPE_ANY, -1);
+    }
+
+    if (log)
+      log->ClearCurrentFileName();
+  } catch (...) {
+    if (log)
+      log->ClearCurrentFileName();
+    throw;
+  }
   return result;
 }
 
