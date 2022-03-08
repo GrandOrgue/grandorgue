@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include <wx/app.h>
+#include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/stopwatch.h>
 
@@ -19,6 +20,7 @@
 #include "sound/GOSoundRecorder.h"
 
 #include "GODefinitionFile.h"
+#include "GOStdPath.h"
 #include "GOWindchest.h"
 
 #ifdef __linux__
@@ -26,11 +28,11 @@
 #include <sys/time.h>
 #endif
 
-class TestApp : public wxApp {
+class GOPerfTestApp : public wxApp {
   wxMilliClock_t getCPUTime();
 
 public:
-  TestApp();
+  GOPerfTestApp();
   bool OnInit();
   int OnRun();
   void RunTest(
@@ -42,12 +44,12 @@ public:
     unsigned samples_per_frame);
 };
 
-DECLARE_APP(TestApp)
-IMPLEMENT_APP_CONSOLE(TestApp)
+DECLARE_APP(GOPerfTestApp)
+IMPLEMENT_APP_CONSOLE(GOPerfTestApp)
 
-TestApp::TestApp() {}
+GOPerfTestApp::GOPerfTestApp() {}
 
-wxMilliClock_t TestApp::getCPUTime() {
+wxMilliClock_t GOPerfTestApp::getCPUTime() {
 #ifdef __linux__
   struct rusage usage;
   if (!getrusage(RUSAGE_SELF, &usage)) {
@@ -60,7 +62,7 @@ wxMilliClock_t TestApp::getCPUTime() {
   return wxGetLocalTimeMillis();
 }
 
-void TestApp::RunTest(
+void GOPerfTestApp::RunTest(
   unsigned bits_per_sample,
   bool compress,
   unsigned sample_instances,
@@ -70,7 +72,11 @@ void TestApp::RunTest(
   try {
     GOConfig settings(wxT("perftest"));
     GODefinitionFile *organfile = new GODefinitionFile(NULL, settings);
-    organfile->SetODFPath(argv[1]);
+    const wxString testsDir = argc >= 2 ? argv[1]
+                                        : GOStdPath::GetResourceDir()
+        + wxFileName::GetPathSeparator() + "perftests";
+
+    organfile->SetODFPath(testsDir);
     organfile->AddWindchest(new GOWindchest(organfile));
     GOSoundEngine *engine = new GOSoundEngine();
     GOSoundRecorder recorder;
@@ -185,7 +191,7 @@ void TestApp::RunTest(
   }
 }
 
-bool TestApp::OnInit() {
+bool GOPerfTestApp::OnInit() {
   wxLog *logger = new wxLogStream(&std::cout);
   wxLog::SetActiveTarget(logger);
   wxImage::AddHandler(new wxJPEGHandler);
@@ -194,14 +200,14 @@ bool TestApp::OnInit() {
   wxImage::AddHandler(new wxBMPHandler);
   wxImage::AddHandler(new wxICOHandler);
 
-  if (argc != 2) {
-    wxLogError(wxT("Usage: perftest test-data-directory"));
+  if (argc > 2) {
+    wxLogError(wxT("Usage: perftest [test-data-directory]"));
     return false;
   }
   return true;
 }
 
-int TestApp::OnRun() {
+int GOPerfTestApp::OnRun() {
   const int samplers = 300;
   RunTest(8, true, samplers, 44100, 0, 128);
   RunTest(8, false, samplers, 44100, 0, 128);
