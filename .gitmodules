@@ -10,4 +10,4 @@
 	url = https://github.com/PortAudio/portaudio.git
 [submodule "submodules/ZitaConvolver"]
 	path = submodules/ZitaConvolver
-	url = https://salsa.debian.org/multimedia-team/zita-convolver
+	url = https://github.com/oleg68/ZitaConvolver.git
