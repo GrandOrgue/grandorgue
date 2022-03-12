@@ -7,42 +7,26 @@
 
 #include "GOMainWindowData.h"
 
-#include "GODefinitionFile.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOMainWindowData::GOMainWindowData(GODefinitionFile *organfile)
-  : m_organfile(organfile) {}
+#include "GODefinitionFile.h"
 
-GOMainWindowData::~GOMainWindowData() {}
-
-void GOMainWindowData::Load(GOConfigReader &cfg, wxString group) {
-  m_organfile->RegisterSaveableObject(this);
-  int x = cfg.ReadInteger(
+void GOMainWindowData::Load(GOConfigReader &cfg) {
+  p_organFile->RegisterSaveableObject(this);
+  m_rect.x = cfg.ReadInteger(
     CMBSetting, m_group, wxT("WindowX"), -20, 10000, false, 0);
-  int y = cfg.ReadInteger(
+  m_rect.y = cfg.ReadInteger(
     CMBSetting, m_group, wxT("WindowY"), -20, 10000, false, 0);
-  int w = cfg.ReadInteger(
+  m_rect.width = cfg.ReadInteger(
     CMBSetting, m_group, wxT("WindowWidth"), 0, 10000, false, 0);
-  int h = cfg.ReadInteger(
+  m_rect.height = cfg.ReadInteger(
     CMBSetting, m_group, wxT("WindowHeight"), 0, 10000, false, 0);
-  m_size = wxRect(x, y, w, h);
 }
 
 void GOMainWindowData::Save(GOConfigWriter &cfg) {
-  wxRect size = m_size;
-  int x = size.GetLeft();
-  int y = size.GetTop();
-  if (x < -20)
-    x = -20;
-  if (y < -20)
-    y = -20;
-  cfg.WriteInteger(m_group, wxT("WindowX"), x);
-  cfg.WriteInteger(m_group, wxT("WindowY"), y);
-  cfg.WriteInteger(m_group, wxT("WindowWidth"), size.GetWidth());
-  cfg.WriteInteger(m_group, wxT("WindowHeight"), size.GetHeight());
+  cfg.WriteInteger(m_group, wxT("WindowX"), std::max(m_rect.x, -20));
+  cfg.WriteInteger(m_group, wxT("WindowY"), std::max(m_rect.y, -20));
+  cfg.WriteInteger(m_group, wxT("WindowWidth"), m_rect.width);
+  cfg.WriteInteger(m_group, wxT("WindowHeight"), m_rect.height);
 }
-
-wxRect GOMainWindowData::GetWindowSize() { return m_size; }
-
-void GOMainWindowData::SetWindowSize(wxRect rect) { m_size = rect; }

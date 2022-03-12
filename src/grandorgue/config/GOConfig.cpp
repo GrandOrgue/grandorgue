@@ -141,10 +141,6 @@ GOConfig::GOConfig(wxString instance)
     m_AudioGroups(),
     m_AudioDeviceConfig(),
     m_MIDIEvents(),
-    m_MainWindowX(0),
-    m_MainWindowY(0),
-    m_MainWindowWidth(0),
-    m_MainWindowHeight(0),
     OrganSettingsPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
     OrganCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
     Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
@@ -303,13 +299,13 @@ void GOConfig::Load() {
 
     GOOrganList::Load(cfg, m_MidiMap);
 
-    m_MainWindowX = cfg.ReadInteger(
+    m_MainWindowRect.x = cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowX"), -32000, 32000, false, 0);
-    m_MainWindowY = cfg.ReadInteger(
+    m_MainWindowRect.y = cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowY"), -32000, 32000, false, 0);
-    m_MainWindowWidth = (unsigned)cfg.ReadInteger(
+    m_MainWindowRect.width = (unsigned)cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowWidth"), 0, 32000, false, 0);
-    m_MainWindowHeight = (unsigned)cfg.ReadInteger(
+    m_MainWindowRect.height = (unsigned)cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
 
     m_Temperaments.InitTemperaments();
@@ -631,18 +627,6 @@ GOMidiMap &GOConfig::GetMidiMap() { return m_MidiMap; }
 
 GOTemperamentList &GOConfig::GetTemperaments() { return m_Temperaments; }
 
-wxRect GOConfig::GetMainWindowRect() {
-  return wxRect(
-    m_MainWindowX, m_MainWindowY, m_MainWindowWidth, m_MainWindowHeight);
-}
-
-void GOConfig::SetMainWindowRect(const wxRect &rect) {
-  m_MainWindowX = rect.x;
-  m_MainWindowY = rect.y;
-  m_MainWindowWidth = rect.width;
-  m_MainWindowHeight = rect.height;
-}
-
 void GOConfig::Flush() {
   wxString tmp_name = m_ConfigFileName + wxT(".new");
   GOConfigFileWriter cfg_file;
@@ -650,12 +634,11 @@ void GOConfig::Flush() {
 
   GOSettingStore::Save(cfg);
   GOOrganList::Save(cfg, m_MidiMap);
-  ;
 
-  cfg.WriteInteger(wxT("UI"), wxT("MainWindowX"), m_MainWindowX);
-  cfg.WriteInteger(wxT("UI"), wxT("MainWindowY"), m_MainWindowY);
-  cfg.WriteInteger(wxT("UI"), wxT("MainWindowWidth"), m_MainWindowWidth);
-  cfg.WriteInteger(wxT("UI"), wxT("MainWindowHeight"), m_MainWindowHeight);
+  cfg.WriteInteger(wxT("UI"), wxT("MainWindowX"), m_MainWindowRect.x);
+  cfg.WriteInteger(wxT("UI"), wxT("MainWindowY"), m_MainWindowRect.y);
+  cfg.WriteInteger(wxT("UI"), wxT("MainWindowWidth"), m_MainWindowRect.width);
+  cfg.WriteInteger(wxT("UI"), wxT("MainWindowHeight"), m_MainWindowRect.height);
 
   m_Temperaments.Save(cfg);
 

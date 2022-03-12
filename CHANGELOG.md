@@ -1,3 +1,4 @@
+- Added distribution of GrandOrguePerfTest in the GrandOrgue package https://github.com/GrandOrgue/grandorgue/issues/868
 - Added the image file name to messages on loading this image https://github.com/GrandOrgue/grandorgue/issues/1063
 - Fixed allowing to select disabled devices in the Midi Event Dialog https://github.com/GrandOrgue/grandorgue/issues/1044
 - Fixed limits for PGM numbers of the Cx Program Change Range midi event https://github.com/GrandOrgue/grandorgue/issues/1058

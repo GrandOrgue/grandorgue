@@ -209,6 +209,7 @@ add_subdirectory(po)
 add_subdirectory(help)
 add_subdirectory(sounds)
 add_subdirectory(packages)
+add_subdirectory(perftests)
 add_subdirectory(resources)
 
 

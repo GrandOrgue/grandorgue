@@ -14,12 +14,8 @@
 #include <map>
 #include <vector>
 
-#include "GOMidiDeviceConfigList.h"
-#include "GOOrganList.h"
-#include "GOPortsConfig.h"
 #include "midi/GOMidiMap.h"
 #include "midi/GOMidiReceiverBase.h"
-#include "ptrvector.h"
 #include "settings/GOSettingBool.h"
 #include "settings/GOSettingDirectory.h"
 #include "settings/GOSettingEnum.h"
@@ -29,6 +25,12 @@
 #include "settings/GOSettingStore.h"
 #include "settings/GOSettingString.h"
 #include "temperaments/GOTemperamentList.h"
+
+#include "GOLogicalRect.h"
+#include "GOMidiDeviceConfigList.h"
+#include "GOOrganList.h"
+#include "GOPortsConfig.h"
+#include "ptrvector.h"
 
 typedef struct {
   wxString name;
@@ -65,10 +67,8 @@ private:
   ptr_vector<GOMidiReceiverBase> m_MIDIEvents;
   GOMidiMap m_MidiMap;
   GOTemperamentList m_Temperaments;
-  int m_MainWindowX;
-  int m_MainWindowY;
-  unsigned m_MainWindowWidth;
-  unsigned m_MainWindowHeight;
+
+  GOLogicalRect m_MainWindowRect;
 
   static const GOMidiSetting m_MIDISettings[];
   static const struct IniFileEnumEntry m_InitialLoadTypes[];
@@ -215,8 +215,8 @@ public:
 
   GOTemperamentList &GetTemperaments();
 
-  wxRect GetMainWindowRect();
-  void SetMainWindowRect(const wxRect &rect);
+  const GOLogicalRect &GetMainWindowRect() const { return m_MainWindowRect; }
+  void SetMainWindowRect(const GOLogicalRect &rect) { m_MainWindowRect = rect; }
 
   void Flush();
 };

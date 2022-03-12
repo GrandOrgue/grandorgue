@@ -15,21 +15,25 @@
 #include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
 
+class GODefinitionFile;
 class GOKeyReceiver;
 class GOMidiEvent;
 class GOMidiReceiverBase;
 class GOMidiSender;
 class GOOrgan;
 class GOProgressDialog;
+class GOResizable;
 class GOSound;
-class GODefinitionFile;
 
 class GODocument : public GODocumentBase, protected GOMidiCallback {
 private:
+  GOResizable *p_MainWindow;
+  GOSound &m_sound;
+
   GOMutex m_lock;
   bool m_OrganFileReady;
   GODefinitionFile *m_organfile;
-  GOSound &m_sound;
+
   GOMidiListener m_listener;
   bool m_modified;
 
@@ -39,7 +43,7 @@ private:
   void CloseOrgan();
 
 public:
-  GODocument(GOSound *sound);
+  GODocument(GOResizable *pMainWindow, GOSound *sound);
   ~GODocument();
 
   bool IsModified();
