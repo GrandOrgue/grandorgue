@@ -12,11 +12,12 @@
 
 #include <algorithm>
 
+#include "zita-convolver.h"
+
 #include "GOSoundResample.h"
 #include "GOStandardFile.h"
 #include "GOWave.h"
 #include "config/GOConfig.h"
-#include "contrib/zita-convolver.h"
 
 GOSoundReverb::GOSoundReverb(unsigned channels)
   : m_channels(channels), m_engine() {}
@@ -49,7 +50,13 @@ void GOSoundReverb::Setup(GOConfig &settings) {
   try {
     for (unsigned i = 0; i < m_engine.size(); i++)
       if (m_engine[i]->configure(
-            1, 1, 1000000, settings.SamplesPerBuffer(), val, Convproc::MAXPART))
+            1,
+            1,
+            1000000,
+            settings.SamplesPerBuffer(),
+            val,
+            Convproc::MAXPART,
+            1))
         throw(wxString) _("Invalid reverb configuration (samples per buffer)");
 
     GOWave wav;
@@ -74,6 +81,13 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       data[i] *= gain;
     if (len >= offset + settings.ReverbLen() && settings.ReverbLen())
       len = offset + settings.ReverbLen();
+    wxLogMessage(
+      "GOSoundReverb::Setup before resample: offset=%u, len=%u, "
+      "wav.GetSampleRate()=%u, settings.SampleRate()=%u",
+      offset,
+      len,
+      wav.GetSampleRate(),
+      settings.SampleRate());
     if (wav.GetSampleRate() != settings.SampleRate()) {
       float *new_data
         = resample_block(data, len, wav.GetSampleRate(), settings.SampleRate());
@@ -83,6 +97,13 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       data = new_data;
       offset = (offset * settings.SampleRate()) / (float)wav.GetSampleRate();
     }
+    wxLogMessage(
+      "GOSoundReverb::Setup after resample: offset=%u, len=%u, "
+      "wav.GetSampleRate()=%u, settings.SampleRate()=%u",
+      offset,
+      len,
+      wav.GetSampleRate(),
+      settings.SampleRate());
     unsigned delay = (settings.SampleRate() * settings.ReverbDelay()) / 1000;
     for (unsigned i = 0; i < m_channels; i++) {
       float *d = data + offset;
@@ -116,17 +137,32 @@ void GOSoundReverb::Process(float *output_buffer, unsigned n_frames) {
     return;
 
   for (unsigned i = 0; i < m_channels; i++) {
-    float *ptr = m_engine[i]->inpdata(0);
-    for (unsigned j = 0; j < n_frames; j++)
-      ptr[j] = output_buffer[i + m_channels * j];
-  }
+    float *const pGoData = output_buffer + i;
+    // because output_buffer is interleaved
+    Convproc *const pConvProc = m_engine[i];
 
-  for (unsigned i = 0; i < m_engine.size(); i++)
-    m_engine[i]->process();
+    if (pConvProc->state() != Convproc::ST_WAIT)
+      pConvProc->check_stop();
 
-  for (unsigned i = 0; i < m_channels; i++) {
-    float *ptr = m_engine[i]->outdata(0);
-    for (unsigned j = 0; j < n_frames; j++)
-      output_buffer[i + m_channels * j] = ptr[j];
+    if (pConvProc->state() == Convproc::ST_PROC) {
+      // fill the convolver input buffer with the GO data
+      float *pGoFrom = pGoData;
+      float *pConvTo = pConvProc->inpdata(0);
+
+      for (unsigned j = 0; j < n_frames; j++) {
+        *(pConvTo++) = *pGoFrom;
+        pGoFrom += m_channels;
+      }
+      pConvProc->process(false);
+
+      // fill the GO buffer with the convolver output
+      float *pGoTo = pGoData;
+      float *pConvFrom = pConvProc->outdata(0);
+
+      for (unsigned j = 0; j < n_frames; j++) {
+        *pGoTo = *(pConvFrom++);
+        pGoTo += m_channels;
+      }
+    }
   }
 }
