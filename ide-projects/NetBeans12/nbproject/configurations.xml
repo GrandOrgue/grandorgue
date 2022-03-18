@@ -733,6 +733,11 @@
         <df name="RtMidi">
           <in>RtMidi.cpp</in>
         </df>
+        <df name="ZitaConvolver">
+          <df name="source">
+            <in>zita-convolver.cc</in>
+          </df>
+        </df>
       </df>
     </df>
     <df root="../.." name="1">
@@ -5440,6 +5445,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5496,6 +5502,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5560,6 +5567,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5612,6 +5620,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5672,6 +5681,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5733,6 +5743,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5787,6 +5798,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5848,6 +5860,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5903,6 +5916,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -5962,6 +5976,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6021,6 +6036,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6081,6 +6097,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6133,6 +6150,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6204,6 +6222,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6265,6 +6284,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6325,6 +6345,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6396,6 +6417,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6456,6 +6478,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6510,6 +6533,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6566,6 +6590,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6630,6 +6655,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6682,6 +6708,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6747,6 +6774,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6798,6 +6826,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6868,6 +6897,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6929,6 +6959,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -6982,6 +7013,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7042,6 +7074,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7102,6 +7135,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7154,6 +7188,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7209,6 +7244,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7269,6 +7305,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7330,6 +7367,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7394,6 +7432,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7451,6 +7490,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7509,6 +7549,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7565,6 +7606,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7625,6 +7667,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7687,6 +7730,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7741,6 +7785,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7799,6 +7844,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7847,6 +7893,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK</Elem>
             <Elem>WXUSINGDLL</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7888,6 +7935,7 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK</Elem>
             <Elem>WXUSINGDLL</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7927,6 +7975,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -7983,6 +8032,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8045,6 +8095,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8105,6 +8156,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8160,6 +8212,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8221,6 +8274,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8277,6 +8331,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8343,6 +8398,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8400,6 +8456,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8456,6 +8513,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8517,6 +8575,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8577,6 +8636,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -8662,7 +8722,6 @@
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/unix</pElem>
             <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include/stddef.h</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
@@ -10818,6 +10877,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -10874,6 +10934,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -10935,6 +10996,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -10991,6 +11053,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -11046,6 +11109,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -11104,6 +11168,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -11163,6 +11228,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -11208,6 +11274,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -11271,6 +11338,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -11364,6 +11432,7 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
@@ -12679,13 +12748,36 @@
         </ccTool>
       </item>
       <item path="../../src/tools/GOPerfTest.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/core</pElem>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/tools</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/tools</pElem>
           </incDir>
         </ccTool>
@@ -12716,33 +12808,6 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/tools</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
-            <Elem>__DBL_IS_IEC_60559__=2</Elem>
-            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
-            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
-            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
-            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
-            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
-            <Elem>__FLT_IS_IEC_60559__=2</Elem>
-            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
-            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
-            <Elem>__GNUC__=11</Elem>
-            <Elem>__GNUG__=11</Elem>
-            <Elem>__GXX_ABI_VERSION=1016</Elem>
-            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STDCPP_THREADS__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="11.2.1 20220127 (Red Hat 11.2.1-9)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_allocation.c"
@@ -12750,7 +12815,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12774,7 +12848,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12798,7 +12881,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12824,8 +12916,14 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12849,7 +12947,15 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12874,9 +12980,16 @@
             flavor2="3">
         <cTool flags="1">
           <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12902,8 +13015,15 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12929,8 +13049,14 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12954,7 +13080,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -12980,6 +13115,8 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
         </cTool>
       </item>
@@ -13002,6 +13139,12 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/PortAudio/src/common</pElem>
+            <pElem>../../submodules/PortAudio/src/os/unix</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
         </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/os/unix/pa_unix_util.c"
@@ -13010,7 +13153,11 @@
             flavor2="3">
         <cTool flags="1">
           <incDir>
+            <pElem>../../submodules/PortAudio/src/os/unix</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/PortAudio/src/common</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
         </cTool>
       </item>
@@ -13023,6 +13170,13 @@
       </item>
       <item path="../../submodules/RtMidi/RtMidi.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="../../submodules/ZitaConvolver/source/zita-convolver.cc"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
         </ccTool>
       </item>
       <item path="/usr/share/cmake/Modules/CMakeCCompilerABI.c"
@@ -13705,10 +13859,31 @@
       <folder path="0/src/tools">
         <ccTool>
           <preprocessorList>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=11</Elem>
+            <Elem>__GNUG__=11</Elem>
+            <Elem>__GXX_ABI_VERSION=1016</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="11.2.1 20220127 (Red Hat 11.2.1-9)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -13748,11 +13923,9 @@
             <Elem>__GNUG__=11</Elem>
             <Elem>__GXX_ABI_VERSION=1016</Elem>
             <Elem>__LDBL_IS_IEC_60559__=2</Elem>
-            <Elem>__LINUX_ALSA__=1</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__STDCPP_THREADS__=1</Elem>
             <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__UNIX_JACK__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="11.2.1 20220127 (Red Hat 11.2.1-9)"</Elem>
             <Elem>__cplusplus=201103L</Elem>
@@ -13832,6 +14005,10 @@
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/rt/rtaudio</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__LINUX_ALSA__=1</Elem>
+            <Elem>__UNIX_JACK__=1</Elem>
+          </preprocessorList>
         </ccTool>
       </folder>
       <folder path="0/submodules/RtMidi">
@@ -13849,6 +14026,26 @@
           </incDir>
           <preprocessorList>
             <Elem>HAVE_GET_CLIENT_INFO_CARD=1</Elem>
+            <Elem>__LINUX_ALSA__=1</Elem>
+            <Elem>__UNIX_JACK__=1</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/submodules/ZitaConvolver">
+        <ccTool>
+          <incDir>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__WXGTK__=1</Elem>
           </preprocessorList>
         </ccTool>
       </folder>

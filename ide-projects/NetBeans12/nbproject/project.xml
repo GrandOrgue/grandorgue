@@ -5,7 +5,7 @@
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
             <name>GrandOrgue</name>
             <c-extensions>c</c-extensions>
-            <cpp-extensions>cpp,cxx</cpp-extensions>
+            <cpp-extensions>cc,cpp,cxx</cpp-extensions>
             <header-extensions>h,hxx,linux</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>

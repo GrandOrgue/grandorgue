@@ -8,3 +8,6 @@
 [submodule "submodules/PortAudio"]
 	path = submodules/PortAudio
 	url = https://github.com/PortAudio/portaudio.git
+[submodule "submodules/ZitaConvolver"]
+	path = submodules/ZitaConvolver
+	url = https://github.com/GrandOrgue/ZitaConvolver.git
