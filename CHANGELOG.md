@@ -1,3 +1,4 @@
+- Updated the copyright headers in the source code
 - Switched ZitaConvolver to an external source https://github.com/GrandOrgue/grandorgue/issues/983
 - Added distribution of GrandOrguePerfTest in the GrandOrgue package https://github.com/GrandOrgue/grandorgue/issues/868
 - Added the image file name to messages on loading this image https://github.com/GrandOrgue/grandorgue/issues/1063
