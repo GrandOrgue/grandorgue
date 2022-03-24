@@ -16,9 +16,10 @@ add_option(-mstackrealign)
 find_package(wxWidgets REQUIRED html net adv core base)
 include(${wxWidgets_USE_FILE})
 
-include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
+include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
+include_directories(${ZITACONVOLVER_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${JACK_INCLUDE_DIRS})
@@ -30,7 +31,6 @@ config/GOMidiDeviceConfig.cpp
 config/GOMidiDeviceConfigList.cpp
 config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
-${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source/zita-convolver.cc
 dialogs/common/GODialogCloser.cpp
 dialogs/common/GODialogTab.cpp
 dialogs/common/GOTabbedDialog.cpp
@@ -175,8 +175,12 @@ GODocument.cpp
 GOPanelView.cpp
 )
 
+if (USE_INTERNAL_ZITACONVOLVER)
+  list(APPEND grandorgue_src ${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source/zita-convolver.cc)
+endif()
+
 add_library(golib STATIC ${grandorgue_src})
-set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES})
+set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES})
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR})
 target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
 link_directories(${go_libdir})

@@ -1,3 +1,4 @@
+- Added support for building against system-wide ZitaConvolver library
 # 3.6.4 (2022-03-18)
 - Updated the copyright headers in the source code
 - Switched ZitaConvolver to an external source https://github.com/GrandOrgue/grandorgue/issues/983
