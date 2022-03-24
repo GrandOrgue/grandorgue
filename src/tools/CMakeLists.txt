@@ -31,3 +31,7 @@ target_include_directories(GrandOrguePerfTest PUBLIC ${CMAKE_SOURCE_DIR}/src/gra
 target_link_libraries(GrandOrguePerfTest golib)
 
 add_custom_target(runperftest COMMAND GrandOrguePerfTest "${CMAKE_SOURCE_DIR}/tests" DEPENDS GrandOrguePerfTest)
+
+if (GO_USE_JACK STREQUAL "ON")
+   target_link_libraries(GrandOrguePerfTest PkgConfig::JACK)
+endif ()
