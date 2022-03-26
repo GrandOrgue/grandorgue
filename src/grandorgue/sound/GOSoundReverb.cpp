@@ -81,6 +81,7 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       data[i] *= gain;
     if (len >= offset + settings.ReverbLen() && settings.ReverbLen())
       len = offset + settings.ReverbLen();
+    /*
     wxLogMessage(
       "GOSoundReverb::Setup before resample: offset=%u, len=%u, "
       "wav.GetSampleRate()=%u, settings.SampleRate()=%u",
@@ -88,6 +89,7 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       len,
       wav.GetSampleRate(),
       settings.SampleRate());
+     */
     if (wav.GetSampleRate() != settings.SampleRate()) {
       float *new_data
         = resample_block(data, len, wav.GetSampleRate(), settings.SampleRate());
@@ -97,6 +99,7 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       data = new_data;
       offset = (offset * settings.SampleRate()) / (float)wav.GetSampleRate();
     }
+    /*
     wxLogMessage(
       "GOSoundReverb::Setup after resample: offset=%u, len=%u, "
       "wav.GetSampleRate()=%u, settings.SampleRate()=%u",
@@ -104,6 +107,7 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       len,
       wav.GetSampleRate(),
       settings.SampleRate());
+     */
     unsigned delay = (settings.SampleRate() * settings.ReverbDelay()) / 1000;
     for (unsigned i = 0; i < m_channels; i++) {
       float *d = data + offset;
