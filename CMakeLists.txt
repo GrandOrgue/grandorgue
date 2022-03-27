@@ -61,6 +61,7 @@ option(RTMIDI_USE_MM          "Enable RtMidi support for MM (Windows only)" ON)
 option(USE_INTERNAL_RTAUDIO   "Use builtin RtAudio/RtMidi sources" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)
 option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
+option(USE_INTERNAL_ZITACONVOLVER "Use builtin Zita Convolver sources" ON)
 option(GO_USE_JACK	      "Use native Jack output" ON)
 if (WIN32 OR APPLE)
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" ON)
@@ -182,6 +183,15 @@ if (USE_INTERNAL_PORTAUDIO)
   set(PORTAUDIO_LIBRARIES PortAudio)
 else()
   pkg_check_modules(PORTAUDIO REQUIRED portaudio-2.0)
+endif()
+
+# include zitaconvolver
+if (USE_INTERNAL_ZITACONVOLVER)
+  set(ZITACONVOLVER_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source)
+  set(ZITACONVOLVER_LIBRARIES "")
+else()
+  set(ZITACONVOLVER_INCLUDE_DIRS "")
+  set(ZITACONVOLVER_LIBRARIES zita-convolver)
 endif()
 
 # include FFTW
