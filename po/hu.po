@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-02-21 09:27+0100\n"
-"PO-Revision-Date: 2022-02-21 10:00+0100\n"
+"POT-Creation-Date: 2022-03-28 08:45+0200\n"
+"PO-Revision-Date: 2022-03-28 08:58+0200\n"
 "Last-Translator: Kerkovits Krisztián\n"
 "Language-Team: Hungarian <kerkovitskrisztian@gmail.com>\n"
 "Language: hu\n"
@@ -17,26 +17,498 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: _\n"
-"X-Poedit-SearchPath-0: src\n"
-"X-Poedit-SearchPath-1: resources/GrandOrgue.desktop.in\n"
+"X-Poedit-KeywordsList: _;wxTRANSLATE\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: src/core/GOLog.cpp:13
-msgid "Log messages"
-msgstr "Naplóbejegyzések"
+#: resources/GrandOrgue.appdata.xml:30 src/core/GOStdPath.cpp:49
+#: src/grandorgue/GOFrame.cpp:1016 src/grandorgue/GOFrame.cpp:1113
+msgid "GrandOrgue"
+msgstr "GrandOrgue"
 
-#: src/core/GOLogWindow.cpp:74
-#, c-format
-msgid "%s: %s\n"
-msgstr "%s: %s\n"
+#: resources/GrandOrgue.appdata.xml:31
+msgid "Pipe organ simulator"
+msgstr "Sípos orgona szimulátor"
 
-#: src/core/GOLogWindow.cpp:85
-msgid "&Clear"
-msgstr "&Kiürít"
+#: resources/GrandOrgue.appdata.xml:35
+msgid ""
+"GrandOrgue is a virtual pipe organ sample player application supporting a "
+"HW1 compatible file format."
+msgstr ""
+"A GrandOrgue egy virtuális sípos orgona lejátszó, amely a HW1-gyel "
+"kompatibilis fájlformátumot támogat."
 
-#: src/core/GOLogWindow.cpp:87
-msgid "C&opy"
-msgstr "&Másol"
+#: src/core/GOKeyConvert.cpp:13
+msgid "back"
+msgstr "vissza"
+
+#: src/core/GOKeyConvert.cpp:14
+msgid "tab"
+msgstr "tabulátor"
+
+#: src/core/GOKeyConvert.cpp:15
+msgid "return"
+msgstr "enter"
+
+#: src/core/GOKeyConvert.cpp:16
+msgid "alt"
+msgstr "alt"
+
+#: src/core/GOKeyConvert.cpp:17
+msgid "control"
+msgstr "control"
+
+#: src/core/GOKeyConvert.cpp:18
+msgid "menu"
+msgstr "menü"
+
+#: src/core/GOKeyConvert.cpp:19
+msgid "pause"
+msgstr "szünet"
+
+#: src/core/GOKeyConvert.cpp:20
+msgid "capital"
+msgstr "nagy"
+
+#: src/core/GOKeyConvert.cpp:21
+msgid "escape"
+msgstr "escape"
+
+#: src/core/GOKeyConvert.cpp:22
+msgid "space"
+msgstr "szóköz"
+
+#: src/core/GOKeyConvert.cpp:23
+msgid "pageup"
+msgstr "pageup"
+
+#: src/core/GOKeyConvert.cpp:24
+msgid "pagedown"
+msgstr "pagedown"
+
+#: src/core/GOKeyConvert.cpp:25
+msgid "end"
+msgstr "vége"
+
+#: src/core/GOKeyConvert.cpp:26
+msgid "home"
+msgstr "kezdőlap"
+
+#: src/core/GOKeyConvert.cpp:27
+msgid "left"
+msgstr "bal"
+
+#: src/core/GOKeyConvert.cpp:28
+msgid "up"
+msgstr "föl"
+
+#: src/core/GOKeyConvert.cpp:29
+msgid "right"
+msgstr "jobb"
+
+#: src/core/GOKeyConvert.cpp:30
+msgid "down"
+msgstr "le"
+
+#: src/core/GOKeyConvert.cpp:31
+msgid "select"
+msgstr "kiválaszt"
+
+#: src/core/GOKeyConvert.cpp:32
+msgid "print"
+msgstr "nyomtat"
+
+#: src/core/GOKeyConvert.cpp:33
+msgid "execute"
+msgstr "futtat"
+
+#: src/core/GOKeyConvert.cpp:34
+msgid "snapshot"
+msgstr "pillanatkép"
+
+#: src/core/GOKeyConvert.cpp:35
+msgid "insert"
+msgstr "beszúr"
+
+#: src/core/GOKeyConvert.cpp:36
+msgid "delete"
+msgstr "töröl"
+
+#: src/core/GOKeyConvert.cpp:37 src/grandorgue/GOApp.cpp:46
+#: src/tools/GOTool.cpp:23
+msgid "help"
+msgstr "súgó"
+
+#: src/core/GOKeyConvert.cpp:38
+msgid "0"
+msgstr "0"
+
+#: src/core/GOKeyConvert.cpp:39
+msgid "1"
+msgstr "1"
+
+#: src/core/GOKeyConvert.cpp:40
+msgid "2"
+msgstr "2"
+
+#: src/core/GOKeyConvert.cpp:41
+msgid "3"
+msgstr "3"
+
+#: src/core/GOKeyConvert.cpp:42 src/grandorgue/gui/GOGUICouplerPanel.cpp:118
+msgid "4"
+msgstr "4"
+
+#: src/core/GOKeyConvert.cpp:43
+msgid "5"
+msgstr "5"
+
+#: src/core/GOKeyConvert.cpp:44
+msgid "6"
+msgstr "6"
+
+#: src/core/GOKeyConvert.cpp:45
+msgid "7"
+msgstr "7"
+
+#: src/core/GOKeyConvert.cpp:46 src/grandorgue/gui/GOGUICouplerPanel.cpp:97
+msgid "8"
+msgstr "8"
+
+#: src/core/GOKeyConvert.cpp:47
+msgid "9"
+msgstr "9"
+
+#: src/core/GOKeyConvert.cpp:48 src/grandorgue/GOSetter.cpp:359
+msgid "A"
+msgstr "A"
+
+#: src/core/GOKeyConvert.cpp:49 src/grandorgue/GOSetter.cpp:360
+msgid "B"
+msgstr "B"
+
+#: src/core/GOKeyConvert.cpp:50 src/grandorgue/GOSetter.cpp:361
+msgid "C"
+msgstr "C"
+
+#: src/core/GOKeyConvert.cpp:51 src/grandorgue/GOSetter.cpp:362
+msgid "D"
+msgstr "D"
+
+#: src/core/GOKeyConvert.cpp:52
+msgid "E"
+msgstr "E"
+
+#: src/core/GOKeyConvert.cpp:53
+msgid "F"
+msgstr "F"
+
+#: src/core/GOKeyConvert.cpp:54
+msgid "G"
+msgstr "G"
+
+#: src/core/GOKeyConvert.cpp:55
+msgid "H"
+msgstr "H"
+
+#: src/core/GOKeyConvert.cpp:56
+msgid "I"
+msgstr "I"
+
+#: src/core/GOKeyConvert.cpp:57
+msgid "J"
+msgstr "J"
+
+#: src/core/GOKeyConvert.cpp:58
+msgid "K"
+msgstr "K"
+
+#: src/core/GOKeyConvert.cpp:59
+msgid "L"
+msgstr "L"
+
+#: src/core/GOKeyConvert.cpp:60
+msgid "M"
+msgstr "M"
+
+#: src/core/GOKeyConvert.cpp:61
+msgid "N"
+msgstr "N"
+
+#: src/core/GOKeyConvert.cpp:62
+msgid "O"
+msgstr "O"
+
+#: src/core/GOKeyConvert.cpp:63
+msgid "P"
+msgstr "P"
+
+#: src/core/GOKeyConvert.cpp:64
+msgid "Q"
+msgstr "Q"
+
+#: src/core/GOKeyConvert.cpp:65
+msgid "R"
+msgstr "R"
+
+#: src/core/GOKeyConvert.cpp:66
+msgid "S"
+msgstr "S"
+
+#: src/core/GOKeyConvert.cpp:67
+msgid "T"
+msgstr "T"
+
+#: src/core/GOKeyConvert.cpp:68
+msgid "U"
+msgstr "U"
+
+#: src/core/GOKeyConvert.cpp:69
+msgid "V"
+msgstr "V"
+
+#: src/core/GOKeyConvert.cpp:70
+msgid "W"
+msgstr "W"
+
+#: src/core/GOKeyConvert.cpp:71
+msgid "X"
+msgstr "X"
+
+#: src/core/GOKeyConvert.cpp:72
+msgid "Y"
+msgstr "Y"
+
+#: src/core/GOKeyConvert.cpp:73
+msgid "Z"
+msgstr "Z"
+
+#: src/core/GOKeyConvert.cpp:74
+msgid "Windows left"
+msgstr "Windows bal"
+
+#: src/core/GOKeyConvert.cpp:75
+msgid "Windows right"
+msgstr "Windows jobb"
+
+#: src/core/GOKeyConvert.cpp:76
+msgid "Windows menu"
+msgstr "Windows menü"
+
+#: src/core/GOKeyConvert.cpp:77
+msgid "numpad 0"
+msgstr "numerikus 0"
+
+#: src/core/GOKeyConvert.cpp:78
+msgid "numpad 1"
+msgstr "numerikus 1"
+
+#: src/core/GOKeyConvert.cpp:79
+msgid "numpad 2"
+msgstr "numerikus 2"
+
+#: src/core/GOKeyConvert.cpp:80
+msgid "numpad 3"
+msgstr "numerikus 3"
+
+#: src/core/GOKeyConvert.cpp:81
+msgid "numpad 4"
+msgstr "numerikus 4"
+
+#: src/core/GOKeyConvert.cpp:82
+msgid "numpad 5"
+msgstr "numerikus 5"
+
+#: src/core/GOKeyConvert.cpp:83
+msgid "numpad 6"
+msgstr "numerikus 6"
+
+#: src/core/GOKeyConvert.cpp:84
+msgid "numpad 7"
+msgstr "numerikus 7"
+
+#: src/core/GOKeyConvert.cpp:85
+msgid "numpad 8"
+msgstr "numerikus 8"
+
+#: src/core/GOKeyConvert.cpp:86
+msgid "numpad 9"
+msgstr "numerikus 9"
+
+#: src/core/GOKeyConvert.cpp:87
+msgid "multiply"
+msgstr "szoroz"
+
+#: src/core/GOKeyConvert.cpp:88
+msgid "add"
+msgstr "összead"
+
+#: src/core/GOKeyConvert.cpp:89
+msgid "seperator"
+msgstr "elválasztó"
+
+#: src/core/GOKeyConvert.cpp:90
+msgid "subtract"
+msgstr "kivon"
+
+#: src/core/GOKeyConvert.cpp:91
+msgid "decimal"
+msgstr "tizedes"
+
+#: src/core/GOKeyConvert.cpp:92
+msgid "divide"
+msgstr "oszt"
+
+#: src/core/GOKeyConvert.cpp:93
+msgid "F1"
+msgstr "F1"
+
+#: src/core/GOKeyConvert.cpp:94
+msgid "F2"
+msgstr "F2"
+
+#: src/core/GOKeyConvert.cpp:95
+msgid "F3"
+msgstr "F3"
+
+#: src/core/GOKeyConvert.cpp:96
+msgid "F4"
+msgstr "F4"
+
+#: src/core/GOKeyConvert.cpp:97
+msgid "F5"
+msgstr "F5"
+
+#: src/core/GOKeyConvert.cpp:98
+msgid "F6"
+msgstr "F6"
+
+#: src/core/GOKeyConvert.cpp:99
+msgid "F7"
+msgstr "F7"
+
+#: src/core/GOKeyConvert.cpp:100
+msgid "F8"
+msgstr "F8"
+
+#: src/core/GOKeyConvert.cpp:101
+msgid "F9"
+msgstr "F9"
+
+#: src/core/GOKeyConvert.cpp:102
+msgid "F10"
+msgstr "F10"
+
+#: src/core/GOKeyConvert.cpp:103
+msgid "F11"
+msgstr "F11"
+
+#: src/core/GOKeyConvert.cpp:104
+msgid "F12"
+msgstr "F12"
+
+#: src/core/GOKeyConvert.cpp:105
+msgid "F13"
+msgstr "F13"
+
+#: src/core/GOKeyConvert.cpp:106
+msgid "F14"
+msgstr "F14"
+
+#: src/core/GOKeyConvert.cpp:107
+msgid "F15"
+msgstr "F15"
+
+#: src/core/GOKeyConvert.cpp:108
+msgid "F16"
+msgstr "F16"
+
+#: src/core/GOKeyConvert.cpp:109
+msgid "F17"
+msgstr "F17"
+
+#: src/core/GOKeyConvert.cpp:110
+msgid "F18"
+msgstr "F18"
+
+#: src/core/GOKeyConvert.cpp:111
+msgid "F19"
+msgstr "F19"
+
+#: src/core/GOKeyConvert.cpp:112
+msgid "F20"
+msgstr "F20"
+
+#: src/core/GOKeyConvert.cpp:113
+msgid "F21"
+msgstr "F21"
+
+#: src/core/GOKeyConvert.cpp:114
+msgid "F22"
+msgstr "F22"
+
+#: src/core/GOKeyConvert.cpp:115
+msgid "F23"
+msgstr "F23"
+
+#: src/core/GOKeyConvert.cpp:116
+msgid "F24"
+msgstr "F24"
+
+#: src/core/GOKeyConvert.cpp:117
+msgid "numlock"
+msgstr "numlock"
+
+#: src/core/GOKeyConvert.cpp:118
+msgid "scroll"
+msgstr "görget"
+
+#: src/core/GOKeyConvert.cpp:119
+msgid ":"
+msgstr ":"
+
+#: src/core/GOKeyConvert.cpp:120
+msgid "numpad equal"
+msgstr "numerikus egyenlő"
+
+#: src/core/GOKeyConvert.cpp:121
+msgid ","
+msgstr ","
+
+#: src/core/GOKeyConvert.cpp:122
+msgid "_"
+msgstr "_"
+
+#: src/core/GOKeyConvert.cpp:123
+msgid "."
+msgstr ","
+
+#: src/core/GOKeyConvert.cpp:124
+msgid "?"
+msgstr "?"
+
+#: src/core/GOKeyConvert.cpp:125
+msgid "\""
+msgstr "\""
+
+#: src/core/GOKeyConvert.cpp:126
+msgid "{"
+msgstr "{"
+
+#: src/core/GOKeyConvert.cpp:127
+msgid "|"
+msgstr "|"
+
+#: src/core/GOKeyConvert.cpp:128
+msgid "}"
+msgstr "}"
+
+#: src/core/GOKeyConvert.cpp:129
+msgid "#"
+msgstr "#"
+
+#: src/core/GOKeyConvert.cpp:130
+msgid "`"
+msgstr "`"
 
 #: src/core/GOMemoryPool.cpp:85
 #, c-format
@@ -89,16 +561,11 @@ msgstr "'%s' törlése sikertelen"
 
 #: src/core/GOPath.cpp:49 src/grandorgue/GODefinitionFile.cpp:751
 #: src/grandorgue/GODefinitionFile.cpp:755
-#: src/grandorgue/config/GOConfig.cpp:722
-#: src/grandorgue/config/GOConfig.cpp:726
+#: src/grandorgue/config/GOConfig.cpp:705
+#: src/grandorgue/config/GOConfig.cpp:709
 #, c-format
 msgid "Could not write to '%s'"
 msgstr "'%s' írása sikertelen"
-
-#: src/core/GOStdPath.cpp:49 src/grandorgue/GOFrame.cpp:965
-#: src/grandorgue/GOFrame.cpp:1062
-msgid "GrandOrgue"
-msgstr "GrandOrgue"
 
 #: src/core/GOWave.cpp:48
 msgid "< Invalid WAVE format chunk"
@@ -132,47 +599,60 @@ msgstr "< SMPL blokk érvénytelen"
 msgid "<Invalid SMPL chunk in"
 msgstr "<SMPL blokk érvénytelen"
 
-#: src/core/GOWave.cpp:119 src/core/config/GOConfigFileReader.cpp:64
+#: src/core/GOWave.cpp:120 src/core/config/GOConfigFileReader.cpp:64
 #, c-format
 msgid "Failed to open file '%s'"
 msgstr "'%s' megnyitása meghiúsult"
 
-#: src/core/GOWave.cpp:126
+#: src/core/GOWave.cpp:126 src/core/config/GOConfigFileReader.cpp:78
 #, c-format
-msgid "Failed to read file '%s'\n"
-msgstr "%s beolvasása meghiúsult\n"
+msgid "Failed to read file '%s'"
+msgstr "'%s' beolvasása meghiúsult"
 
-#: src/core/GOWave.cpp:144
-msgid "< Not a RIFF file"
-msgstr "< Nem RIFF-fájl"
+#: src/core/GOWave.cpp:142
+#, c-format
+msgid "Not a RIFF file: %s"
+msgstr "Nem RIFF-fájl: %s"
 
-#: src/core/GOWave.cpp:152
-msgid "Failed to decode WavePack data"
-msgstr "WavePack dekódolása meghiúsult"
+#: src/core/GOWave.cpp:151
+#, c-format
+msgid "Failed to decode WavePack data: %s"
+msgstr "WavePack dekódolása meghiúsult: %s"
 
-#: src/core/GOWave.cpp:170
-msgid "< Invalid RIFF file"
-msgstr "< Érvénytelen RIFF-fájl"
+#: src/core/GOWave.cpp:169
+#, c-format
+msgid "Invalid RIFF file: %s"
+msgstr "Érvénytelen RIFF-fájl: %s"
 
-#: src/core/GOWave.cpp:177
-msgid "< Invalid RIFF/WAVE file"
-msgstr "< Érvénytelen RIFF/WAVE-fájl"
+#: src/core/GOWave.cpp:175
+#, c-format
+msgid "Invalid RIFF/WAVE file: %s"
+msgstr "Érvénytelen RIFF/WAVE-fájl : %s"
 
-#: src/core/GOWave.cpp:182
-msgid "Inconsitant WavPack file"
-msgstr "Hibás WawPack-fájl"
+#: src/core/GOWave.cpp:180
+#, c-format
+msgid "Inconsitant WavPack file: %s"
+msgstr "Inkonzisztens WawPack-fájl: %s"
 
-#: src/core/GOWave.cpp:206
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
-msgstr "< Hibás fájl. A formátumnak az adat előtt kellene lennie."
+#: src/core/GOWave.cpp:204
+#, c-format
+msgid "Malformed wave file '%s'. Format chunk must preceed data chunk."
+msgstr "A '%s' wave-fájl hibásl. A formátumnak az adat előtt kellene lennie."
 
 #: src/core/GOWave.cpp:231
-msgid "<Invalid WAV file"
-msgstr "<Érvénytelen WAV-fájl"
+#, c-format
+msgid "Invalid WAV file: %s"
+msgstr "Érvénytelen WAV-fájl: %s"
 
 #: src/core/GOWave.cpp:233
-msgid "No samples found"
-msgstr "Nincsenek minták"
+#, c-format
+msgid "No samples found: %s"
+msgstr "Nincsenek minták: %s"
+
+#: src/core/GOWave.cpp:243
+#, c-format
+msgid "Invalid loop in the file: %s\n"
+msgstr "Érvénytelen ciklus a fájlban: %s\n"
 
 #: src/core/GOWave.cpp:248
 #, c-format
@@ -202,53 +682,6 @@ msgstr "Nem támogatott csatornamennyiség"
 #: src/core/GOWave.cpp:455
 msgid "bad return format!"
 msgstr "rossz visszatérési formátum!"
-
-# The word "Church" is used in the program as "place" where is the original pipe organ, in organ Load dialog. So I translate it as "Lugar" ("place")
-#: src/core/OrganSelectDialog.cpp:41
-#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:44
-msgid "Church"
-msgstr "Templom"
-
-#: src/core/OrganSelectDialog.cpp:42 src/grandorgue/GOProperties.cpp:76
-#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:45
-msgid "Builder"
-msgstr "Építő"
-
-#: src/core/OrganSelectDialog.cpp:43
-#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:46
-msgid "Recording"
-msgstr "Felvétel"
-
-#: src/core/OrganSelectDialog.cpp:44
-#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:48
-msgid "Organ package"
-msgstr "Orgonacsomag"
-
-#: src/core/OrganSelectDialog.cpp:45 src/grandorgue/GOProperties.cpp:158
-#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:49
-msgid "ODF Path"
-msgstr "ODF elérési út"
-
-#: src/core/OrganSelectDialog.cpp:80
-msgid "Please select an organ"
-msgstr "Válasszon orgonát"
-
-#: src/core/OrganSelectDialog.cpp:80 src/grandorgue/GOFrame.cpp:880
-#: src/grandorgue/GOFrame.cpp:893 src/grandorgue/GOFrame.cpp:924
-#: src/grandorgue/GOFrame.cpp:1252 src/grandorgue/dialogs/GOOrganDialog.cpp:735
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:742
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:749
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:757
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:857
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:903
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:935
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:955
-#: src/grandorgue/dialogs/GOOrganDialog.cpp:982
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:608
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:666
-#: src/grandorgue/sound/GOSound.cpp:159
-msgid "Error"
-msgstr "Hiba"
 
 #: src/core/archive/GOArchive.cpp:28 src/core/archive/GOArchiveIndex.cpp:141
 #, c-format
@@ -559,11 +992,6 @@ msgstr "Csak az egységes ZIP-archívumok támogatottak"
 msgid "Failed to load file '%s' into the memory"
 msgstr "'%s' betöltése a memóriába meghiúsult"
 
-#: src/core/config/GOConfigFileReader.cpp:78
-#, c-format
-msgid "Failed to read file '%s'"
-msgstr "'%s' beolvasása meghiúsult"
-
 #: src/core/config/GOConfigFileReader.cpp:88
 #, c-format
 msgid "Failed to decompress file '%s'"
@@ -606,12 +1034,12 @@ msgid "Missing required value section '%s' entry '%s'"
 msgstr "A '%s' szakasz '%s' kötelező értéke hiányzik"
 
 #: src/core/config/GOConfigReader.cpp:92 src/core/config/GOConfigReader.cpp:144
-#: src/core/config/GOConfigReader.cpp:192
-#: src/core/config/GOConfigReader.cpp:274
-#: src/core/config/GOConfigReader.cpp:360
-#: src/core/config/GOConfigReader.cpp:421
-#: src/core/config/GOConfigReader.cpp:470
-#: src/core/config/GOConfigReader.cpp:523
+#: src/core/config/GOConfigReader.cpp:243
+#: src/core/config/GOConfigReader.cpp:325
+#: src/core/config/GOConfigReader.cpp:411
+#: src/core/config/GOConfigReader.cpp:472
+#: src/core/config/GOConfigReader.cpp:521
+#: src/core/config/GOConfigReader.cpp:574
 #, c-format
 msgid "Trailing whitespace at section '%s' entry '%s': %s"
 msgstr "A '%s' szakasz '%s' értéke szóközzel zárul: %s"
@@ -631,52 +1059,52 @@ msgstr "Furcsa logikai érték a '%s' szakaszban, a '%s' értékben: %s"
 msgid "Invalid boolean value at section '%s' entry '%s': %s"
 msgstr "Érvénytelen logikai a '%s' szakaszban, a '%s' értékben: %s"
 
-#: src/core/config/GOConfigReader.cpp:241
+#: src/core/config/GOConfigReader.cpp:292
 #, c-format
 msgid "Invalid color at section '%s' entry '%s': %s"
 msgstr "Érvénytelen szín a '%s' szakaszban, a '%s' értékben: %s"
 
-#: src/core/config/GOConfigReader.cpp:287
-#: src/core/config/GOConfigReader.cpp:296
+#: src/core/config/GOConfigReader.cpp:338
+#: src/core/config/GOConfigReader.cpp:347
 #, c-format
 msgid "Invalid integer value at section '%s' entry '%s': %s"
 msgstr "Érvénytelen egész a '%s' szakaszban, a '%s' értékben: %s"
 
-#: src/core/config/GOConfigReader.cpp:307
+#: src/core/config/GOConfigReader.cpp:358
 #, c-format
 msgid "Out of range value at section '%s' entry '%s': %d"
 msgstr "Tartományon kívüli érték a '%s' szakaszban, a '%s' értékben: %d"
 
-#: src/core/config/GOConfigReader.cpp:370
+#: src/core/config/GOConfigReader.cpp:421
 #, c-format
 msgid "Number %s contains locale dependent floating point"
 msgstr "%s szám helyi beállítású tizedesvesszőt használ"
 
-#: src/core/config/GOConfigReader.cpp:376
+#: src/core/config/GOConfigReader.cpp:427
 #, c-format
 msgid "Invalid float value at section '%s' entry '%s': %s"
 msgstr "Érvénytelen lebegőpontos a '%s' szakaszban, a '%s' értékben: %s"
 
-#: src/core/config/GOConfigReader.cpp:388
+#: src/core/config/GOConfigReader.cpp:439
 #, c-format
 msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Tartományon kívüli érték a '%s' szakaszban, a '%s' értékben: %f"
 
-#: src/core/config/GOConfigReader.cpp:445
+#: src/core/config/GOConfigReader.cpp:496
 #, c-format
 msgid "Invalid size at section '%s' entry '%s': %s"
 msgstr "Érvénytelen méret a '%s' szakaszban, a '%s' értékben: %s"
 
-#: src/core/config/GOConfigReader.cpp:492
+#: src/core/config/GOConfigReader.cpp:543
 #, c-format
 msgid "Invalid font size at section '%s' entry '%s': %s"
 msgstr "Érvénytelen betűméret a '%s' szakaszban, a '%s' értékben: %s"
 
-#: src/core/config/GOConfigReader.cpp:513
+#: src/core/config/GOConfigReader.cpp:564
 msgid "Invalid enum default value"
 msgstr "Érvénytelen alapértelmezett érték"
 
-#: src/core/config/GOConfigReader.cpp:535
+#: src/core/config/GOConfigReader.cpp:586
 #, c-format
 msgid "Invalid enum value at section '%s' entry '%s': %s"
 msgstr "Érvénytelen érték a '%s' szakaszban, a '%s' értékben: %s"
@@ -803,7 +1231,7 @@ msgid "Failed to open %s"
 msgstr "%s megnyitása meghiúsult"
 
 #: src/core/midi/GOMidiFileReader.cpp:41
-#: src/grandorgue/sound/GOSoundReverb.cpp:67
+#: src/grandorgue/sound/GOSoundReverb.cpp:74
 msgid "Out of memory"
 msgstr "Memória betelt"
 
@@ -906,71 +1334,478 @@ msgstr "Hiba a sáv dekódolásakor"
 msgid "Garbage detected in the MIDI file"
 msgstr "Hiba van a MIDI-állományban"
 
-#: src/core/midi/MIDIList.cpp:32
-msgid "MIDI Objects"
-msgstr "MIDI-objektumok"
+#: src/core/temperaments/GOTemperamentList.cpp:114
+msgid "Original temperament"
+msgstr "Eredeti hangolás"
 
-#: src/core/midi/MIDIList.cpp:46
-msgid "Type"
-msgstr "Típus"
+#: src/core/temperaments/GOTemperamentList.cpp:116
+msgid "Equal temperament"
+msgstr "Temperált"
 
-#: src/core/midi/MIDIList.cpp:47
-#: src/grandorgue/dialogs/settings/GOSettingsMidiMessage.cpp:47
-msgid "Element"
-msgstr "Elem"
-
-#: src/core/midi/MIDIList.cpp:60
-msgid "C&onfigure..."
-msgstr "B&eállítás..."
-
-#: src/core/midi/MIDIList.cpp:63
-msgid "&Status"
-msgstr "&Állapot"
-
-#: src/core/midi/MIDIList.cpp:66 src/grandorgue/GOFrame.cpp:226
-msgid "&Close"
-msgstr "&Bezár"
-
-#: src/core/midi/MIDIList.cpp:98
-#, c-format
-msgid "Status: %s"
-msgstr "Állapot: %s"
-
-#: src/core/midi/MIDIList.cpp:99
-msgid " "
-msgstr " "
+#: src/core/temperaments/GOTemperamentList.cpp:131
+msgid "1/4 comma meantone (Aaron 1523)"
+msgstr "1/4 komma középhangolású (Aaron 1523)"
 
 #: src/core/temperaments/GOTemperamentList.cpp:146
 msgid "1/4 comma variants"
 msgstr "1/4 komma változatok"
 
+#: src/core/temperaments/GOTemperamentList.cpp:148
+msgid "1/4-comma meantone approximation"
+msgstr "1/4 komma középhangolású közelítés"
+
+#: src/core/temperaments/GOTemperamentList.cpp:163
+msgid "1/4-comma equal beating fifths"
+msgstr "1/4 komma egyenlő kvintek"
+
+#: src/core/temperaments/GOTemperamentList.cpp:178
+msgid "Alexander Metcalf Fisher"
+msgstr "Alexander Metcalf Fisher"
+
+#: src/core/temperaments/GOTemperamentList.cpp:193
+msgid "Chaumont"
+msgstr "Chaumont"
+
+#: src/core/temperaments/GOTemperamentList.cpp:208
+msgid "Corrette (1753)"
+msgstr "Corrette (1753)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:223
+msgid "Couperin"
+msgstr "Couperin"
+
+#: src/core/temperaments/GOTemperamentList.cpp:238
+msgid "d'Alembert modified meantone (1726)"
+msgstr "d'Alembert módosított középhangolású (1726)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:253
+msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
+msgstr "Ferdinand Bossard (1743/44) Klosterkirche Muri"
+
+#: src/core/temperaments/GOTemperamentList.cpp:268
+msgid "Fisk-Vogel: Memorial Church at Stanford"
+msgstr "Fisk-Vogel: Stanfordi Templom"
+
+#: src/core/temperaments/GOTemperamentList.cpp:283
+msgid "Mersenne's Improved Meantone 1"
+msgstr "Mersenne fejlesztett középhangolású 1"
+
+#: src/core/temperaments/GOTemperamentList.cpp:298
+msgid "Rameau bemols"
+msgstr "Rameau bemols"
+
+#: src/core/temperaments/GOTemperamentList.cpp:313
+msgid "Rameau dieses"
+msgstr "Rameau dieses"
+
+#: src/core/temperaments/GOTemperamentList.cpp:328
+msgid "Rameau's modified meantone temperament (1725)"
+msgstr "Rameau's módosított középhangolású (1725)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:343
+msgid "Rameau Nouveau Systeme (1726)"
+msgstr "Rameau Nouveau Systeme (1726)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:358
+msgid "Stade St. Cosmae"
+msgstr "Stade St. Cosmae"
+
 #: src/core/temperaments/GOTemperamentList.cpp:373
 msgid "1/5 comma"
 msgstr "1/5 komma"
+
+#: src/core/temperaments/GOTemperamentList.cpp:375
+msgid "1/5-comma meantone (Verheijen)"
+msgstr "1/5 komma középhangolású (Verheijen)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:390
+msgid "Holden (John) 1770"
+msgstr "Holden (John) 1770"
+
+#: src/core/temperaments/GOTemperamentList.cpp:405
+msgid "Scheffer (1748) modified, Sweden"
+msgstr "Scheffer (1748) módosított, Svédország"
+
+#: src/core/temperaments/GOTemperamentList.cpp:420
+msgid "Keller (Gottfried) 1707"
+msgstr "Keller (Gottfried) 1707"
+
+#: src/core/temperaments/GOTemperamentList.cpp:435
+msgid "Schnitger organ St. Jakobi, Hamburg "
+msgstr "Schnitger orgona St. Jakobi, Hamburg "
 
 #: src/core/temperaments/GOTemperamentList.cpp:450
 msgid "1/6 comma"
 msgstr "1/6 komma"
 
+#: src/core/temperaments/GOTemperamentList.cpp:452
+msgid "1/6-comma meantone"
+msgstr "1/6 komma középhangolású"
+
+#: src/core/temperaments/GOTemperamentList.cpp:467
+msgid "1/6-comma (bemols)"
+msgstr "1/6 komma (bemols)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:482
+msgid "1/6-comma (dieses)"
+msgstr "1/6 komma (dieses)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:497
+msgid "1/6-comma equal beating fifths"
+msgstr "1/6 komma egyenlő kvintek"
+
+#: src/core/temperaments/GOTemperamentList.cpp:512
+msgid "1/6-comma, wolf over 4 fifths"
+msgstr "1/6 komma, farkashangköz 4 kvinten"
+
+#: src/core/temperaments/GOTemperamentList.cpp:527
+msgid "Freytag Organ Bellingwolde 1798/2002"
+msgstr "Freytag Organ Bellingwolde 1798/2002"
+
+#: src/core/temperaments/GOTemperamentList.cpp:542
+msgid "G. Silbermann nr 2"
+msgstr "G. Silbermann nr 2"
+
+#: src/core/temperaments/GOTemperamentList.cpp:557
+msgid "Sauveur (Memoires 1701)"
+msgstr "Sauveur (Memoires 1701)"
+
 #: src/core/temperaments/GOTemperamentList.cpp:572
 msgid "Various comma"
 msgstr "Vegyes kommák"
 
+#: src/core/temperaments/GOTemperamentList.cpp:574
+msgid "3/14-comma meantone (Giordano Riccati, 1762)"
+msgstr "3/14-komma középhangolású (Giordano Riccati, 1762)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:589
+msgid "Lambert (1774) 1/7 comma"
+msgstr "Lambert (1774) 1/7-komma"
+
+#: src/core/temperaments/GOTemperamentList.cpp:604
+msgid "Variable meantone 1"
+msgstr "1. változó középhangolású"
+
+#: src/core/temperaments/GOTemperamentList.cpp:619
+msgid "Variable meantone 2"
+msgstr "2. változó középhangolású"
+
+#: src/core/temperaments/GOTemperamentList.cpp:634
+msgid "Variable meantone 3"
+msgstr "3. változó középhangolású"
+
+#: src/core/temperaments/GOTemperamentList.cpp:649
+msgid "Variable meantone 4"
+msgstr "4. változó középhangolású"
+
+#: src/core/temperaments/GOTemperamentList.cpp:664
+msgid "William Holder equal beating (1694)"
+msgstr "William Holder egyenlő hangközű (1694)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:679
+msgid "Zarlino (1558) 2/7-comma meantone"
+msgstr "Zarlino (1558) 2/7-komma középhangolású"
+
 #: src/core/temperaments/GOTemperamentList.cpp:694
+#: src/core/temperaments/GOTemperamentList.cpp:696
 msgid "Pythagorean"
 msgstr "Pitagóraszi"
+
+#: src/core/temperaments/GOTemperamentList.cpp:711
+msgid "Boulliau (1373)/Mersenne 1636. "
+msgstr "Boulliau (1373)/Mersenne 1636. "
+
+#: src/core/temperaments/GOTemperamentList.cpp:726
+msgid "De Caus (1615)"
+msgstr "De Caus (1615)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:741
+msgid "Grammateus (1518)"
+msgstr "Grammateus (1518)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:756
+msgid "Henri Arnaut De Zwolle. (1436)."
+msgstr "Henri Arnaut De Zwolle. (1436)."
+
+#: src/core/temperaments/GOTemperamentList.cpp:771
+msgid "Sauveur 1702"
+msgstr "Sauveur 1702"
 
 #: src/core/temperaments/GOTemperamentList.cpp:786
 msgid "Other just"
 msgstr "Egyéb természetes"
 
+#: src/core/temperaments/GOTemperamentList.cpp:788
+msgid "Pure Major"
+msgstr "Tiszta dúr hármas"
+
+#: src/core/temperaments/GOTemperamentList.cpp:803
+msgid "Pure Minor"
+msgstr "Tiszta moll hármas"
+
+#: src/core/temperaments/GOTemperamentList.cpp:818
+msgid "Smith's (Robert) Equal Harmony 1749"
+msgstr "Smith's (Robert) Equal Harmony 1749"
+
 #: src/core/temperaments/GOTemperamentList.cpp:833
 msgid "Well tempered"
 msgstr "Jól temperált"
 
+#: src/core/temperaments/GOTemperamentList.cpp:835
+msgid "Bach (Bradley Lehman)"
+msgstr "Bach (Bradley Lehman)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:850
+msgid "Barca 1786"
+msgstr "Barca 1786"
+
+#: src/core/temperaments/GOTemperamentList.cpp:865
+msgid "Bethisy temperament ordinaire (1764)"
+msgstr "Bethisy temperament ordinaire (1764)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:880
+msgid "Freres Jullien Organ, France (1690)"
+msgstr "Freres Jullien orgona, Franciaország (1690)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:895
+msgid "Ganassi (Sylvestro) - 1543"
+msgstr "Ganassi (Sylvestro) - 1543"
+
+#: src/core/temperaments/GOTemperamentList.cpp:910
+msgid "Gottfried Silbermann nr 1"
+msgstr "Gottfried Silbermann nr 1"
+
+#: src/core/temperaments/GOTemperamentList.cpp:925
+msgid "Heun (Jan) 1805"
+msgstr "Heun (Jan) 1805"
+
+#: src/core/temperaments/GOTemperamentList.cpp:940
+msgid "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+msgstr "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+
+#: src/core/temperaments/GOTemperamentList.cpp:955
+msgid "Kellner's Bach tuning"
+msgstr "Kellner Bach-hangolása"
+
+#: src/core/temperaments/GOTemperamentList.cpp:970
+msgid "Kepler's choice system (1619)"
+msgstr "Kepler-féle rendszer (1619)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:985
+msgid "Kirnberger III"
+msgstr "Kirnberger III"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1000
+msgid "Koenig, Balthasar Organ Nederehe 1714"
+msgstr "Koenig, Balthasar orgona Nederehe 1714"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1015
+msgid "Mercadier's well-temperament"
+msgstr "Mercadier jól temperament"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1030
+msgid "Malerbi's well-temperament nr 1 (1794)"
+msgstr "Malerbi jól temperált nr 1 (1794)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1045
+msgid "Mark Lindley, Grosvenor Chapel, London"
+msgstr "Mark Lindley, Grosvenor Chapel, London"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1060
+msgid "Marpurg nr 1"
+msgstr "Marpurg nr 1"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1075
+msgid "Marpurg nr 2"
+msgstr "Marpurg nr 2"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1090
+msgid "Marpurg nr 3"
+msgstr "Marpurg nr 3"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1105
+msgid "Marpurg nr 4"
+msgstr "Marpurg nr 4"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1120
+msgid "Marpurg nr 5"
+msgstr "Marpurg nr 5"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1135
+msgid "Marpurg nr 7"
+msgstr "Marpurg nr 7"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1150
+msgid "Marpurg nr 8"
+msgstr "Marpurg nr 8"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1165
+msgid "Marpurg nr 9"
+msgstr "Marpurg nr 9"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1180
+msgid "Marpurg nr 11"
+msgstr "Marpurg nr 11"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1195
+msgid "Marpurg nr 12"
+msgstr "Marpurg nr 12"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1210
+msgid "Mod. Silbermann nr 2"
+msgstr "Mód. Silbermann nr 2"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1225
+msgid "Neidhardt I (1724)"
+msgstr "Neidhardt I (1724)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1240
+msgid "Neidhardt II (1724)"
+msgstr "Neidhardt II (1724)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1255
+msgid "Neidhardt III (1724)"
+msgstr "Neidhardt III (1724)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1270
+msgid "Norden"
+msgstr "Norden"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1285
+msgid "Prelleur (Peter) 1731"
+msgstr "Prelleur (Peter) 1731"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1300
+msgid "Rousseau's temperament (1768)"
+msgstr "Rousseau's temperament (1768)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1315
+msgid "Schlick (Arnolt), 1511"
+msgstr "Schlick (Arnolt), 1511"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1330
+msgid "Schlick: 1555"
+msgstr "Schlick: 1555"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1345
+msgid "Schlick's (1991)"
+msgstr "Schlick (1991)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1360
+msgid "Sorge, 1744 (A)"
+msgstr "Sorge, 1744 (A)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1375
+msgid "Sorge, 1744 (B)"
+msgstr "Sorge, 1744 (B)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1390
+msgid "Sorge, 1758"
+msgstr "Sorge, 1758"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1405
+msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
+msgstr "Thomas/Philpott 1829/1881 orgona, St. Jansklooster"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1420
+msgid "Valotti"
+msgstr "Valotti"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1435
+msgid "Wegscheider 20 note"
+msgstr "Wegscheider 20 hang"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1450
+msgid "Werckmeister III"
+msgstr "Werckmeister III"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1465
+msgid "Werckmeister 4 (1691)"
+msgstr "Werckmeister 4 (1691)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1480
+msgid "Werckmeister 5 (1691)"
+msgstr "Werckmeister 5 (1691)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1495
+msgid "Werckmeister 6"
+msgstr "Werckmeister 6"
+
 #: src/core/temperaments/GOTemperamentList.cpp:1510
 msgid "Harpsichord/Piano/Monochord"
 msgstr "Csembaló/Zongora/Monochord"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1512
+msgid "Agricola's Monochord, Rudimenta musices (1539)"
+msgstr "Agricola's Monochord, Rudimenta musices (1539)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1527
+msgid "Bermudo (1555) "
+msgstr "Bermudo (1555) "
+
+#: src/core/temperaments/GOTemperamentList.cpp:1542
+msgid "d'Alembert's: John Sankey's Scarlatti"
+msgstr "d'Alembert's: John Sankey's Scarlatti"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1557
+msgid "Equal beating Victorian piano temperament"
+msgstr "Egyenlő közű viktoriánus zongorahangolás"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1572
+msgid "Hummel's quasi-equal temperament (1829)"
+msgstr "Hummel-féle kvázi-temperált (1829)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1587
+msgid "Mersenne spinet 1"
+msgstr "Mersenne spinet 1"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1602
+msgid "Mersenne spinet 2"
+msgstr "Mersenne spinet 2"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1617
+msgid "Ramos de Pareja 1482 - Monochord"
+msgstr "Ramos de Pareja 1482 - Monochord"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1632
+msgid "Sauveur harpsichord 1697"
+msgstr "Sauveur csembaló 1697"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1647
+msgid "Sorge Monochord (1756)"
+msgstr "Sorge Monochord (1756)"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1662
+msgid "Stevin (Simon), monochord 1585"
+msgstr "Stevin (Simon), monochord 1585"
+
+#: src/core/temperaments/GOTemperamentList.cpp:1677
+msgid "Victorian temperament 1885"
+msgstr "Viktoriánus hangolás 1885"
+
+#: src/grandorgue/GOApp.cpp:45 src/tools/GOTool.cpp:22
+msgid "h"
+msgstr "h"
+
+#: src/grandorgue/GOApp.cpp:47 src/tools/GOTool.cpp:24
+msgid "displays help on the command line parameters"
+msgstr "súgó a parancssori kapcsolókról"
+
+#: src/grandorgue/GOApp.cpp:51 src/tools/GOTool.cpp:40
+msgid "i"
+msgstr "i"
+
+#: src/grandorgue/GOApp.cpp:52
+msgid "instance"
+msgstr "példány"
+
+#: src/grandorgue/GOApp.cpp:53
+msgid "specifiy GrandOrgue instance name"
+msgstr "adja meg a GrandOrguepéldány nevét"
+
+#: src/grandorgue/GOApp.cpp:59
+msgid "organ file"
+msgstr "orgonafájl"
 
 #: src/grandorgue/GOApp.cpp:66
 #, c-format
@@ -1027,12 +1862,12 @@ msgstr "WAV-hang (*.wav)|*.wav"
 msgid "%Y-%m-%d-%H-%M-%S.%l.wav"
 msgstr "%Y-%m-%d-%H-%M-%S.%l.wav"
 
-#: src/grandorgue/GOBitmapCache.cpp:185 src/grandorgue/GOBitmapCache.cpp:190
+#: src/grandorgue/GOBitmapCache.cpp:202 src/grandorgue/GOBitmapCache.cpp:207
 #, c-format
 msgid "Failed to open the graphic '%s'"
 msgstr "'%s' ábra megnyitása meghiúsult"
 
-#: src/grandorgue/GOBitmapCache.cpp:196
+#: src/grandorgue/GOBitmapCache.cpp:213
 #, c-format
 msgid "bitmap size of '%s' does not match mask '%s'"
 msgstr "'%s' rasztermérete nem illik '%s' maszkhoz"
@@ -1045,13 +1880,13 @@ msgid "Midi-Settings for %s - %s"
 msgstr "MIDI-beállítások: %s – %s"
 
 #: src/grandorgue/GOButton.cpp:180 src/grandorgue/GOMetronome.cpp:88
-#: src/grandorgue/GOSetter.cpp:379 src/grandorgue/midi/GOMidiSender.cpp:466
-#: src/grandorgue/midi/GOMidiSender.cpp:475
+#: src/grandorgue/GOSetter.cpp:379 src/grandorgue/midi/GOMidiSender.cpp:469
+#: src/grandorgue/midi/GOMidiSender.cpp:478
 msgid "ON"
 msgstr "BE"
 
-#: src/grandorgue/GOButton.cpp:180 src/grandorgue/midi/GOMidiSender.cpp:466
-#: src/grandorgue/midi/GOMidiSender.cpp:475
+#: src/grandorgue/GOButton.cpp:180 src/grandorgue/midi/GOMidiSender.cpp:469
+#: src/grandorgue/midi/GOMidiSender.cpp:478
 msgid "OFF"
 msgstr "KI"
 
@@ -1107,8 +1942,8 @@ msgstr "Mintadefiníció értelmezése"
 #: src/grandorgue/GODefinitionFile.cpp:406
 #: src/grandorgue/GODefinitionFile.cpp:411
 #: src/grandorgue/GODefinitionFile.cpp:615
-#: src/grandorgue/config/GOConfig.cpp:289
-#: src/grandorgue/config/GOConfig.cpp:296
+#: src/grandorgue/config/GOConfig.cpp:285
+#: src/grandorgue/config/GOConfig.cpp:292
 #, c-format
 msgid "Unable to read '%s'"
 msgstr "'%s' olvasása lehetetlen"
@@ -1166,7 +2001,7 @@ msgstr ""
 #: src/grandorgue/GODefinitionFile.cpp:524
 #: src/grandorgue/GODefinitionFile.cpp:571
 #: src/grandorgue/GODefinitionFile.cpp:594
-#: src/grandorgue/GODefinitionFile.cpp:648 src/grandorgue/GODocument.cpp:62
+#: src/grandorgue/GODefinitionFile.cpp:648 src/grandorgue/GODocument.cpp:64
 msgid "Load error"
 msgstr "Betöltési hiba"
 
@@ -1180,7 +2015,7 @@ msgid "The cache for this organ is outdated. Please update or delete it."
 msgstr "Ennek az orgonának a gyorsítótára elavult. Frissítse vagy törölje!"
 
 #: src/grandorgue/GODefinitionFile.cpp:543
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:550
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:553
 #: src/grandorgue/dialogs/settings/GOSettingsOptions.cpp:412
 #: src/grandorgue/dialogs/settings/GOSettingsReverb.cpp:218
 #: src/grandorgue/dialogs/settings/GOSettingsReverb.cpp:243
@@ -1313,257 +2148,296 @@ msgstr "'%s' állomány nem létezik"
 msgid "Filename '%s' contains non-portable directory seperator /"
 msgstr "'%s' fájlnév a / portolhatatlan elválasztót tartalmazza"
 
-#: src/grandorgue/GOFrame.cpp:174
+#: src/grandorgue/GOFrame.cpp:175
 #, c-format
 msgid "Preset %d"
 msgstr "%d. előbeállítás"
 
-#: src/grandorgue/GOFrame.cpp:179
+#: src/grandorgue/GOFrame.cpp:180
 msgid "&Load\tCtrl+L"
 msgstr "&Betöltés\tCtrl+L"
 
-#: src/grandorgue/GOFrame.cpp:180
+#: src/grandorgue/GOFrame.cpp:181
 msgid "&Favorites"
 msgstr "&Kedvencek"
 
-#: src/grandorgue/GOFrame.cpp:182
+#: src/grandorgue/GOFrame.cpp:183
 msgid "&Open\tCtrl+O"
 msgstr "&Megnyitás\tCtrl+O"
 
-#: src/grandorgue/GOFrame.cpp:183
+#: src/grandorgue/GOFrame.cpp:184
 msgid "Open &Recent"
 msgstr "&Legutóbbiak"
 
-#: src/grandorgue/GOFrame.cpp:186
+#: src/grandorgue/GOFrame.cpp:187
 msgid "&Install organ package\tCtrl+I"
 msgstr "&Orgonacsomag telepítése\tCtrl+I"
 
-#: src/grandorgue/GOFrame.cpp:191
+#: src/grandorgue/GOFrame.cpp:192
 msgid "Organ &Properties"
 msgstr "Orgona&tulajdonságok"
 
-#: src/grandorgue/GOFrame.cpp:193
+#: src/grandorgue/GOFrame.cpp:194
 msgid "Pr&eset"
 msgstr "&Előbeállítás"
 
-#: src/grandorgue/GOFrame.cpp:196
+#: src/grandorgue/GOFrame.cpp:197
 msgid "&Save\tCtrl+S"
 msgstr "&Mentés\tCtrl+S"
 
-#: src/grandorgue/GOFrame.cpp:198
+#: src/grandorgue/GOFrame.cpp:199
 msgid "&Update Cache..."
 msgstr "Gyorsítótár &frissítése..."
 
-#: src/grandorgue/GOFrame.cpp:200
+#: src/grandorgue/GOFrame.cpp:201
 msgid "Delete &Cache..."
 msgstr "&Gyorsítótár törlése..."
 
-#: src/grandorgue/GOFrame.cpp:203
+#: src/grandorgue/GOFrame.cpp:204
 msgid "Re&load"
 msgstr "&Újratölt"
 
-#: src/grandorgue/GOFrame.cpp:205
+#: src/grandorgue/GOFrame.cpp:206
 msgid "Reset to &Defaults"
 msgstr "&Alapértelmezett visszaállítása"
 
-#: src/grandorgue/GOFrame.cpp:209
+#: src/grandorgue/GOFrame.cpp:210
 msgid "&Import Settings"
 msgstr "&Beállítások importálása"
 
-#: src/grandorgue/GOFrame.cpp:214
+#: src/grandorgue/GOFrame.cpp:215
 msgid "Import &Combinations"
 msgstr "&Kombinációk importálása"
 
-#: src/grandorgue/GOFrame.cpp:219
+#: src/grandorgue/GOFrame.cpp:220
 msgid "&Export Settings/Combinations"
 msgstr "Beállítások és kombinációk &exportálása"
 
 #: src/grandorgue/GOFrame.cpp:227
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:68
+msgid "&Close"
+msgstr "&Bezár"
+
+#: src/grandorgue/GOFrame.cpp:228
 msgid "E&xit"
 msgstr "&Kilép"
 
-#: src/grandorgue/GOFrame.cpp:232
+#: src/grandorgue/GOFrame.cpp:233
 msgid "&Temperament"
 msgstr "&Hangolás"
 
-#: src/grandorgue/GOFrame.cpp:234
+#: src/grandorgue/GOFrame.cpp:235
 msgid "&Organ settings"
 msgstr "&Orgonabeállítások"
 
-#: src/grandorgue/GOFrame.cpp:236
+#: src/grandorgue/GOFrame.cpp:237
 msgid "M&idi Objects"
 msgstr "M&idi-objektumok"
 
-#: src/grandorgue/GOFrame.cpp:239
+#: src/grandorgue/GOFrame.cpp:240
 msgid "&Sound Output State"
 msgstr "&Hangkimenet állapota"
 
-#: src/grandorgue/GOFrame.cpp:242 src/grandorgue/GOFrame.cpp:355
+#: src/grandorgue/GOFrame.cpp:243 src/grandorgue/GOFrame.cpp:356
 msgid "&Panic\tEscape"
 msgstr "&Pánik\tEscape"
 
-#: src/grandorgue/GOFrame.cpp:244 src/grandorgue/GOFrame.cpp:257
+#: src/grandorgue/GOFrame.cpp:245 src/grandorgue/GOFrame.cpp:258
 msgid "&Memory Set\tShift"
 msgstr "&Memória beállítás\tShift"
 
-#: src/grandorgue/GOFrame.cpp:247
+#: src/grandorgue/GOFrame.cpp:248
 msgid "Load &MIDI\tCtrl+P"
 msgstr "&MIDI betöltés\tCtrl+P"
 
-#: src/grandorgue/GOFrame.cpp:249
+#: src/grandorgue/GOFrame.cpp:250
 msgid "&Log MIDI events"
 msgstr "MIDI-események &naplózása"
 
-#: src/grandorgue/GOFrame.cpp:252
+#: src/grandorgue/GOFrame.cpp:253
 msgid "&Help\tF1"
 msgstr "&Súgó\tF1"
 
-#: src/grandorgue/GOFrame.cpp:253
+#: src/grandorgue/GOFrame.cpp:254
 msgid "&About"
 msgstr "&Névjegy"
 
-#: src/grandorgue/GOFrame.cpp:259
+#: src/grandorgue/GOFrame.cpp:260 src/grandorgue/config/GOConfig.cpp:78
 msgid "Memory Set"
 msgstr "Memória beállítás"
 
-#: src/grandorgue/GOFrame.cpp:263
+#: src/grandorgue/GOFrame.cpp:264
 msgid "&Memory Level"
 msgstr "&Memória szint"
 
-#: src/grandorgue/GOFrame.cpp:265
+#: src/grandorgue/GOFrame.cpp:266
 msgid "Memory Level"
 msgstr "Memória szint"
 
-#: src/grandorgue/GOFrame.cpp:280
+#: src/grandorgue/GOFrame.cpp:281
 msgid "&Volume"
 msgstr "&Hangerő"
 
-#: src/grandorgue/GOFrame.cpp:280
+#: src/grandorgue/GOFrame.cpp:281
 msgid "Volume"
 msgstr "Hangerő"
 
-#: src/grandorgue/GOFrame.cpp:299
+#: src/grandorgue/GOFrame.cpp:300
 msgid "&Release tail length"
 msgstr "&Fölengedés hossza"
 
-#: src/grandorgue/GOFrame.cpp:301
+#: src/grandorgue/GOFrame.cpp:302
 msgid "Release tail length"
 msgstr "Fölengedés hossza"
 
-#: src/grandorgue/GOFrame.cpp:304
+#: src/grandorgue/GOFrame.cpp:305
 msgid "Max"
 msgstr "Legtöbb"
 
-#: src/grandorgue/GOFrame.cpp:306
+#: src/grandorgue/GOFrame.cpp:307
 #, c-format
 msgid "%d ms"
 msgstr "%d ms"
 
-#: src/grandorgue/GOFrame.cpp:316
+#: src/grandorgue/GOFrame.cpp:317
 msgid "&Transpose"
 msgstr "&Transzponál"
 
-#: src/grandorgue/GOFrame.cpp:318
+#: src/grandorgue/GOFrame.cpp:319
 msgid "Transpose"
 msgstr "Transzponál"
 
-#: src/grandorgue/GOFrame.cpp:334
+#: src/grandorgue/GOFrame.cpp:335
 msgid "&Polyphony"
 msgstr "&Polifónia"
 
-#: src/grandorgue/GOFrame.cpp:336
+#: src/grandorgue/GOFrame.cpp:337
 msgid "Polyphony"
 msgstr "Polifónia"
 
-#: src/grandorgue/GOFrame.cpp:357
+#: src/grandorgue/GOFrame.cpp:358
 msgid "Panic"
 msgstr "Pánik"
 
-#: src/grandorgue/GOFrame.cpp:363
+#: src/grandorgue/GOFrame.cpp:364
 msgid "&File"
 msgstr "&Fájl"
 
-#: src/grandorgue/GOFrame.cpp:364
+#: src/grandorgue/GOFrame.cpp:365
 msgid "&Audio/Midi"
 msgstr "&Hang/Midi"
 
-#: src/grandorgue/GOFrame.cpp:365
+#: src/grandorgue/GOFrame.cpp:366
 msgid "&Panel"
 msgstr "&Lap"
 
-#: src/grandorgue/GOFrame.cpp:366
+#: src/grandorgue/GOFrame.cpp:367
 msgid "&Help"
 msgstr "&Súgó"
 
-#: src/grandorgue/GOFrame.cpp:478
+#: src/grandorgue/GOFrame.cpp:491
 msgid "No active MIDI input devices"
 msgstr "Nincs aktív MIDI bemeneti eszköz"
 
-#: src/grandorgue/GOFrame.cpp:535
+#: src/grandorgue/GOFrame.cpp:586
 #, c-format
 msgid "Using helpfile %s (search path: %s)"
 msgstr "%s súgófájl használatban (keresés helye: %s)"
 
-#: src/grandorgue/GOFrame.cpp:620 src/grandorgue/GOFrame.cpp:636
+#: src/grandorgue/GOFrame.cpp:671 src/grandorgue/GOFrame.cpp:687
 #, c-format
 msgid "&%d: %s"
 msgstr "&%d: %s"
 
-#: src/grandorgue/GOFrame.cpp:783
+#: src/grandorgue/GOFrame.cpp:834
 msgid "Select organ to load"
 msgstr "Válasszon orgonát"
 
-#: src/grandorgue/GOFrame.cpp:792
+#: src/grandorgue/GOFrame.cpp:843
 msgid "Open organ"
 msgstr "Orgona megnyitása"
 
-#: src/grandorgue/GOFrame.cpp:795
+#: src/grandorgue/GOFrame.cpp:846
 msgid "Sample set definition files (*.organ)|*.organ"
 msgstr "Hangminta definíció (*.organ)|*.organ"
 
-#: src/grandorgue/GOFrame.cpp:805 src/grandorgue/GOFrame.cpp:814
+#: src/grandorgue/GOFrame.cpp:856 src/grandorgue/GOFrame.cpp:865
 msgid "Install organ package"
 msgstr "Orgonacsomag telepítése"
 
-#: src/grandorgue/GOFrame.cpp:808
+#: src/grandorgue/GOFrame.cpp:859
 msgid "Organ package (*.orgue)|*.orgue"
 msgstr "Orgonacsomag (*.orgue)|*.orgue"
 
-#: src/grandorgue/GOFrame.cpp:813
+#: src/grandorgue/GOFrame.cpp:864
 msgid "The organ package has been registered"
 msgstr "Orgonacsomag regisztrálva"
 
-#: src/grandorgue/GOFrame.cpp:828
+#: src/grandorgue/GOFrame.cpp:879
 msgid "Import Settings"
 msgstr "Beállítások importálása"
 
-#: src/grandorgue/GOFrame.cpp:831 src/grandorgue/GOFrame.cpp:853
-#: src/grandorgue/GOFrame.cpp:870
+#: src/grandorgue/GOFrame.cpp:882 src/grandorgue/GOFrame.cpp:904
+#: src/grandorgue/GOFrame.cpp:921
 msgid "Settings files (*.cmb)|*.cmb"
 msgstr "Beállítások (*.cmb)|*.cmb"
 
-#: src/grandorgue/GOFrame.cpp:850
+#: src/grandorgue/GOFrame.cpp:901
 msgid "Import Combinations"
 msgstr "Kombinációk importálása"
 
-#: src/grandorgue/GOFrame.cpp:867
+#: src/grandorgue/GOFrame.cpp:918
 msgid "Export Settings"
 msgstr "Beállítások exportálása"
 
-#: src/grandorgue/GOFrame.cpp:879
+#: src/grandorgue/GOFrame.cpp:930
 #, c-format
 msgid "Failed to export settings to '%s'"
 msgstr "Beállítások exportálása '%s'-be meghiúsult"
 
-#: src/grandorgue/GOFrame.cpp:892
+#: src/grandorgue/GOFrame.cpp:931 src/grandorgue/GOFrame.cpp:944
+#: src/grandorgue/GOFrame.cpp:975 src/grandorgue/GOFrame.cpp:1303
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:735
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:742
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:749
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:757
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:857
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:903
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:935
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:955
+#: src/grandorgue/dialogs/GOOrganDialog.cpp:982
+#: src/grandorgue/dialogs/GOSelectOrganDialog.cpp:80
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:611
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:669
+#: src/grandorgue/sound/GOSound.cpp:159
+msgid "Error"
+msgstr "Hiba"
+
+#: src/grandorgue/GOFrame.cpp:943
 msgid "Failed to save the organ setting"
 msgstr "Orgonabeállítás mentése meghiúsult"
 
-#: src/grandorgue/GOFrame.cpp:922 src/grandorgue/GOFrame.cpp:924
+#: src/grandorgue/GOFrame.cpp:952
+msgid "KB"
+msgstr "KB"
+
+#: src/grandorgue/GOFrame.cpp:952
+msgid "MB"
+msgstr "MB"
+
+#: src/grandorgue/GOFrame.cpp:952
+msgid "GB"
+msgstr "GB"
+
+#: src/grandorgue/GOFrame.cpp:952
+msgid "TB"
+msgstr "TB"
+
+#: src/grandorgue/GOFrame.cpp:973 src/grandorgue/GOFrame.cpp:975
 msgid "Creating the cache failed"
 msgstr "Gyorsítótár létrehozása meghiúsult"
 
-#: src/grandorgue/GOFrame.cpp:963
+#: src/grandorgue/GOFrame.cpp:1014
 msgid ""
 "Any customizations you have saved to this\n"
 "organ definition file will be lost!\n"
@@ -1575,15 +2449,15 @@ msgstr ""
 "\n"
 "Visszaáll az alapértelmezettre és újratölt?"
 
-#: src/grandorgue/GOFrame.cpp:996
+#: src/grandorgue/GOFrame.cpp:1047
 msgid "Load MIDI file"
 msgstr "MIDI betöltés"
 
-#: src/grandorgue/GOFrame.cpp:999
+#: src/grandorgue/GOFrame.cpp:1050
 msgid "MID files (*.mid)|*.mid"
 msgstr "MID-hang (*.mid)|*.mid"
 
-#: src/grandorgue/GOFrame.cpp:1059
+#: src/grandorgue/GOFrame.cpp:1110
 msgid ""
 "Some changed settings effect unless the sample set is reloaded.\n"
 "\n"
@@ -1593,23 +2467,23 @@ msgstr ""
 "\n"
 "Most akarja újratölteni a hangmintát?"
 
-#: src/grandorgue/GOFrame.cpp:1090
+#: src/grandorgue/GOFrame.cpp:1141
 msgid "Sound output"
 msgstr "Hangkimenet"
 
-#: src/grandorgue/GOFrame.cpp:1107
+#: src/grandorgue/GOFrame.cpp:1158
 msgid "User Interface"
 msgstr "Felhasználói felület"
 
-#: src/grandorgue/GOFrame.cpp:1206
+#: src/grandorgue/GOFrame.cpp:1257
 msgid "MIDI event: "
 msgstr "MIDI-esemény: "
 
-#: src/grandorgue/GOFrame.cpp:1222
+#: src/grandorgue/GOFrame.cpp:1273
 msgid " - "
 msgstr " – "
 
-#: src/grandorgue/GOFrame.cpp:1234
+#: src/grandorgue/GOFrame.cpp:1285
 msgid "Save as"
 msgstr "Mentés másként"
 
@@ -1620,6 +2494,28 @@ msgstr "Generálkombináció"
 #: src/grandorgue/GOLabel.cpp:66
 msgid "Label"
 msgstr "Címke"
+
+#: src/grandorgue/GOLog.cpp:13
+msgid "Log messages"
+msgstr "Naplóbejegyzések"
+
+#: src/grandorgue/GOLog.cpp:28
+#, c-format
+msgid "; FileName=%s"
+msgstr "; FájlNév=%s"
+
+#: src/grandorgue/GOLogWindow.cpp:74
+#, c-format
+msgid "%s: %s\n"
+msgstr "%s: %s\n"
+
+#: src/grandorgue/GOLogWindow.cpp:85
+msgid "&Clear"
+msgstr "&Kiürít"
+
+#: src/grandorgue/GOLogWindow.cpp:87
+msgid "C&opy"
+msgstr "&Másol"
 
 #: src/grandorgue/GOManual.cpp:78
 #, c-format
@@ -1651,12 +2547,12 @@ msgid "-1"
 msgstr "–1"
 
 #: src/grandorgue/GOMetronome.cpp:93 src/grandorgue/GOSetter.cpp:339
-#: src/grandorgue/GOSetter.cpp:368
+#: src/grandorgue/GOSetter.cpp:368 src/grandorgue/config/GOConfig.cpp:82
 msgid "+10"
 msgstr "+10"
 
 #: src/grandorgue/GOMetronome.cpp:94 src/grandorgue/GOSetter.cpp:336
-#: src/grandorgue/GOSetter.cpp:365
+#: src/grandorgue/GOSetter.cpp:365 src/grandorgue/config/GOConfig.cpp:81
 msgid "-10"
 msgstr "–10"
 
@@ -1669,6 +2565,11 @@ msgid "Metronom measure"
 msgstr "Metronóm ütem"
 
 #: src/grandorgue/GOMetronome.cpp:102 src/grandorgue/GOMetronome.cpp:106
+#: src/grandorgue/config/GOConfig.cpp:125
+#: src/grandorgue/config/GOConfig.cpp:126
+#: src/grandorgue/config/GOConfig.cpp:127
+#: src/grandorgue/config/GOConfig.cpp:128
+#: src/grandorgue/config/GOConfig.cpp:129
 #: src/grandorgue/gui/GOGUIMetronomePanel.cpp:34
 msgid "Metronome"
 msgstr "Metronóm"
@@ -1707,6 +2608,12 @@ msgstr "Cím"
 #: src/grandorgue/GOProperties.cpp:68
 msgid "Address"
 msgstr "Hely"
+
+#: src/grandorgue/GOProperties.cpp:76
+#: src/grandorgue/dialogs/GOSelectOrganDialog.cpp:42
+#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:45
+msgid "Builder"
+msgstr "Építő"
 
 #: src/grandorgue/GOProperties.cpp:84
 msgid "Build Date"
@@ -1751,6 +2658,12 @@ msgstr "%.3f MB"
 msgid "Memory pool size"
 msgstr "Memória mérete"
 
+#: src/grandorgue/GOProperties.cpp:158
+#: src/grandorgue/dialogs/GOSelectOrganDialog.cpp:45
+#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:49
+msgid "ODF Path"
+msgstr "ODF elérési út"
+
 #: src/grandorgue/GORank.cpp:225
 msgid "Rank"
 msgstr "Regiszter"
@@ -1784,6 +2697,7 @@ msgid "+100"
 msgstr "+100"
 
 #: src/grandorgue/GOSetter.cpp:341 src/grandorgue/GOSetter.cpp:358
+#: src/grandorgue/config/GOConfig.cpp:79
 msgid "Current"
 msgstr "Aktuális"
 
@@ -1791,7 +2705,7 @@ msgstr "Aktuális"
 msgid "000"
 msgstr "000"
 
-#: src/grandorgue/GOSetter.cpp:343
+#: src/grandorgue/GOSetter.cpp:343 src/grandorgue/config/GOConfig.cpp:80
 msgid "G.C."
 msgstr "G.T."
 
@@ -1817,7 +2731,7 @@ msgstr "Beszúr"
 
 #: src/grandorgue/GOSetter.cpp:351
 #: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:58
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:56
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:58
 msgid "Delete"
 msgstr "Töröl"
 
@@ -1828,22 +2742,6 @@ msgstr "<"
 #: src/grandorgue/GOSetter.cpp:356 src/grandorgue/GOSetter.cpp:373
 msgid ">"
 msgstr ">"
-
-#: src/grandorgue/GOSetter.cpp:359
-msgid "A"
-msgstr "A"
-
-#: src/grandorgue/GOSetter.cpp:360
-msgid "B"
-msgstr "B"
-
-#: src/grandorgue/GOSetter.cpp:361
-msgid "C"
-msgstr "C"
-
-#: src/grandorgue/GOSetter.cpp:362
-msgid "D"
-msgstr "D"
 
 #: src/grandorgue/GOSetter.cpp:378
 msgid "Save"
@@ -1950,38 +2848,251 @@ msgstr "Tremoló"
 msgid "Windchest %d"
 msgstr "%d. szélláda"
 
-#: src/grandorgue/config/GOConfig.cpp:227
+#: src/grandorgue/config/GOConfig.cpp:43 src/grandorgue/config/GOConfig.cpp:44
+#: src/grandorgue/config/GOConfig.cpp:45 src/grandorgue/config/GOConfig.cpp:46
+#: src/grandorgue/config/GOConfig.cpp:47 src/grandorgue/config/GOConfig.cpp:48
+msgid "Manuals"
+msgstr "Manuálok"
+
+#: src/grandorgue/config/GOConfig.cpp:43
+msgid "Pedal"
+msgstr "Pedál"
+
+#: src/grandorgue/config/GOConfig.cpp:44
+msgid "Manual 1"
+msgstr "1. Manuál"
+
+#: src/grandorgue/config/GOConfig.cpp:45
+msgid "Manual 2"
+msgstr "2. Manuál"
+
+#: src/grandorgue/config/GOConfig.cpp:46
+msgid "Manual 3"
+msgstr "3. Manuál"
+
+#: src/grandorgue/config/GOConfig.cpp:47
+msgid "Manual 4"
+msgstr "4. Manuál"
+
+#: src/grandorgue/config/GOConfig.cpp:48
+msgid "Manual 5"
+msgstr "5. Manuál"
+
+#: src/grandorgue/config/GOConfig.cpp:51 src/grandorgue/config/GOConfig.cpp:55
+#: src/grandorgue/config/GOConfig.cpp:59 src/grandorgue/config/GOConfig.cpp:63
+#: src/grandorgue/config/GOConfig.cpp:67 src/grandorgue/config/GOConfig.cpp:71
+msgid "Enclosures"
+msgstr "Redőnyök"
+
+#: src/grandorgue/config/GOConfig.cpp:52
+msgid "Enclosure 1"
+msgstr "1. Redőny"
+
+#: src/grandorgue/config/GOConfig.cpp:56
+msgid "Enclosure 2"
+msgstr "2. Redőny"
+
+#: src/grandorgue/config/GOConfig.cpp:60
+msgid "Enclosure 3"
+msgstr "3. Redőny"
+
+#: src/grandorgue/config/GOConfig.cpp:64
+msgid "Enclosure 4"
+msgstr "4. Redőny"
+
+#: src/grandorgue/config/GOConfig.cpp:68
+msgid "Enclosure 5"
+msgstr "5. Redőny"
+
+#: src/grandorgue/config/GOConfig.cpp:72
+msgid "Enclosure 6"
+msgstr "6. Redőny"
+
+#: src/grandorgue/config/GOConfig.cpp:75 src/grandorgue/config/GOConfig.cpp:77
+#: src/grandorgue/config/GOConfig.cpp:78 src/grandorgue/config/GOConfig.cpp:79
+#: src/grandorgue/config/GOConfig.cpp:80 src/grandorgue/config/GOConfig.cpp:81
+#: src/grandorgue/config/GOConfig.cpp:82 src/grandorgue/config/GOConfig.cpp:83
+#: src/grandorgue/config/GOConfig.cpp:84 src/grandorgue/config/GOConfig.cpp:85
+#: src/grandorgue/config/GOConfig.cpp:86 src/grandorgue/config/GOConfig.cpp:87
+#: src/grandorgue/config/GOConfig.cpp:88 src/grandorgue/config/GOConfig.cpp:89
+#: src/grandorgue/config/GOConfig.cpp:90 src/grandorgue/config/GOConfig.cpp:91
+#: src/grandorgue/config/GOConfig.cpp:92
+msgid "Sequencer"
+msgstr "Szekvencer"
+
+#: src/grandorgue/config/GOConfig.cpp:76
+msgid "Previous Memory"
+msgstr "Előző tárolt"
+
+#: src/grandorgue/config/GOConfig.cpp:77
+msgid "Next Memory"
+msgstr "Következő tárolt"
+
+#: src/grandorgue/config/GOConfig.cpp:83
+msgid "__0"
+msgstr "__0"
+
+#: src/grandorgue/config/GOConfig.cpp:84
+msgid "__1"
+msgstr "__1"
+
+#: src/grandorgue/config/GOConfig.cpp:85
+msgid "__2"
+msgstr "__2"
+
+#: src/grandorgue/config/GOConfig.cpp:86
+msgid "__3"
+msgstr "__3"
+
+#: src/grandorgue/config/GOConfig.cpp:87
+msgid "__4"
+msgstr "__4"
+
+#: src/grandorgue/config/GOConfig.cpp:88
+msgid "__5"
+msgstr "__5"
+
+#: src/grandorgue/config/GOConfig.cpp:89
+msgid "__6"
+msgstr "__6"
+
+#: src/grandorgue/config/GOConfig.cpp:90
+msgid "__7"
+msgstr "__7"
+
+#: src/grandorgue/config/GOConfig.cpp:91
+msgid "__8"
+msgstr "__8"
+
+#: src/grandorgue/config/GOConfig.cpp:92
+msgid "__9"
+msgstr "__9"
+
+#: src/grandorgue/config/GOConfig.cpp:95 src/grandorgue/config/GOConfig.cpp:99
+#: src/grandorgue/config/GOConfig.cpp:103
+#: src/grandorgue/config/GOConfig.cpp:107
+#: src/grandorgue/config/GOConfig.cpp:111
+#: src/grandorgue/config/GOConfig.cpp:115
+#: src/grandorgue/config/GOConfig.cpp:119
+#: src/grandorgue/config/GOConfig.cpp:123
+#: src/grandorgue/gui/GOGUIMasterPanel.cpp:34
+msgid "Master Controls"
+msgstr "Központi szabályozók"
+
+#: src/grandorgue/config/GOConfig.cpp:96
+msgid "-1 Cent"
+msgstr "–1 cent"
+
+#: src/grandorgue/config/GOConfig.cpp:100
+msgid "+1 Cent"
+msgstr "+1 cent"
+
+#: src/grandorgue/config/GOConfig.cpp:104
+msgid "-100 Cent"
+msgstr "–100 cent"
+
+#: src/grandorgue/config/GOConfig.cpp:108
+msgid "+100 Cent"
+msgstr "+100 cent"
+
+#: src/grandorgue/config/GOConfig.cpp:112
+msgid "Prev temperament"
+msgstr "Előző hangolás"
+
+#: src/grandorgue/config/GOConfig.cpp:116
+msgid "Next temperament"
+msgstr "Következő hangolás"
+
+#: src/grandorgue/config/GOConfig.cpp:120
+msgid "Transpose -"
+msgstr "Transzponál -"
+
+#: src/grandorgue/config/GOConfig.cpp:124
+msgid "Transpose +"
+msgstr "Transzponál +"
+
+#: src/grandorgue/config/GOConfig.cpp:125
+msgid "On"
+msgstr "Be"
+
+#: src/grandorgue/config/GOConfig.cpp:126
+msgid "BPM +"
+msgstr "Gyorsít"
+
+#: src/grandorgue/config/GOConfig.cpp:127
+msgid "BPM -"
+msgstr "Lassít"
+
+#: src/grandorgue/config/GOConfig.cpp:128
+msgid "Measure -"
+msgstr "Ütem -"
+
+#: src/grandorgue/config/GOConfig.cpp:129
+msgid "Measure +"
+msgstr "Ütem +"
+
+#: src/grandorgue/config/GOConfig.cpp:223
 #: src/grandorgue/dialogs/settings/GOSettingsDialog.cpp:63
 #: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:211
 msgid "Organs"
 msgstr "Orgonák"
 
-#: src/grandorgue/config/GOConfig.cpp:229
+#: src/grandorgue/config/GOConfig.cpp:225
 msgid "Organ packages"
 msgstr "Orgonacsomagok"
 
-#: src/grandorgue/config/GOConfig.cpp:235
+#: src/grandorgue/config/GOConfig.cpp:231
 #: src/grandorgue/dialogs/GOOrganDialog.cpp:122
 msgid "Settings"
 msgstr "Beállítások"
 
-#: src/grandorgue/config/GOConfig.cpp:237
+#: src/grandorgue/config/GOConfig.cpp:233
 msgid "Audio recordings"
 msgstr "Hangfelvételek"
 
-#: src/grandorgue/config/GOConfig.cpp:239
-#: src/grandorgue/config/GOConfig.cpp:241
+#: src/grandorgue/config/GOConfig.cpp:235
+#: src/grandorgue/config/GOConfig.cpp:237
 msgid "MIDI recordings"
 msgstr "MIDI-felvételek"
 
-#: src/grandorgue/config/GOConfig.cpp:327
+#: src/grandorgue/config/GOConfig.cpp:323
 #, c-format
 msgid "Audio group %d"
 msgstr "Audió csoport %d"
 
-#: src/grandorgue/config/GOConfig.cpp:329
+#: src/grandorgue/config/GOConfig.cpp:325
 msgid "Default audio group"
 msgstr "Alapértelmezett audió csoport"
+
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:34
+msgid "MIDI Objects"
+msgstr "MIDI-objektumok"
+
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:48
+msgid "Type"
+msgstr "Típus"
+
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:49
+#: src/grandorgue/dialogs/settings/GOSettingsMidiMessage.cpp:47
+msgid "Element"
+msgstr "Elem"
+
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:62
+msgid "C&onfigure..."
+msgstr "B&eállítás..."
+
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:65
+msgid "&Status"
+msgstr "&Állapot"
+
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:100
+#, c-format
+msgid "Status: %s"
+msgstr "Állapot: %s"
+
+#: src/grandorgue/dialogs/GOMidiListDialog.cpp:101
+msgid " "
+msgstr " "
 
 #: src/grandorgue/dialogs/GOOrganDialog.cpp:76
 msgid "Organ settings"
@@ -2211,6 +3322,26 @@ msgstr "Orgona ablak"
 msgid "No audio group selected"
 msgstr "Nincs audió csoport kiválasztva"
 
+# The word "Church" is used in the program as "place" where is the original pipe organ, in organ Load dialog. So I translate it as "Lugar" ("place")
+#: src/grandorgue/dialogs/GOSelectOrganDialog.cpp:41
+#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:44
+msgid "Church"
+msgstr "Templom"
+
+#: src/grandorgue/dialogs/GOSelectOrganDialog.cpp:43
+#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:46
+msgid "Recording"
+msgstr "Felvétel"
+
+#: src/grandorgue/dialogs/GOSelectOrganDialog.cpp:44
+#: src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp:48
+msgid "Organ package"
+msgstr "Orgonacsomag"
+
+#: src/grandorgue/dialogs/GOSelectOrganDialog.cpp:80
+msgid "Please select an organ"
+msgstr "Válasszon orgonát"
+
 #: src/grandorgue/dialogs/GOSplash.cpp:104
 msgid "virtual pipe organ simulator"
 msgstr "virtuális sípos orgona szimulátor"
@@ -2241,25 +3372,21 @@ msgstr ""
 "a Steinberg ASIO SDK, Version 2.3.3. alkalmazásával.\n"
 "Az ASIO a Steinberg Media Technologies GmbH védjegye és szoftvere."
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:50
+#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:35
 msgid "Receive"
 msgstr "Fogad"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:54
+#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:39
 msgid "Send"
 msgstr "Küld"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:58
+#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:44
 msgid "Shortcut"
 msgstr "Billentyűparancs"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:63
+#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:48
 msgid "Send Division Output"
 msgstr "Mű kimenetének küldése"
-
-#: src/grandorgue/dialogs/midi-event/GOMidiEventDialog.cpp:95
-msgid "Invalid MIDI event"
-msgstr "Érvénytelen MIDI-esemény"
 
 #: src/grandorgue/dialogs/midi-event/GOMidiEventKeyTab.cpp:34
 msgid "&Plus-Shortcut:"
@@ -2284,27 +3411,27 @@ msgid "None"
 msgstr "Nincs"
 
 #: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:47
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:45
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:47
 msgid "Event-&No"
 msgstr "Esemény&szám"
 
 #: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:56
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:54
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:56
 msgid "New"
 msgstr "Új"
 
 #: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:63
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:61
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:63
 msgid "&Device:"
 msgstr "&Eszköz:"
 
 #: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:72
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:69
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:71
 msgid "&Event:"
 msgstr "&Esemény:"
 
 #: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:80
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:77
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:79
 msgid "&Channel:"
 msgstr "&Csatorna:"
 
@@ -2324,370 +3451,374 @@ msgstr "&Visszaverődés ideje(ms):"
 msgid "&Detect complex MIDI setup"
 msgstr "&Bonyolult MIDI-beállítás felismerése"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:204
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:448
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:181
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:396
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:206
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:453
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:185
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:405
 msgid "Any device"
 msgstr "Bármilyen eszköz"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:209
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:213
 msgid "Any channel"
 msgstr "Bármilyen csatorna"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:214
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:190
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:218
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:196
 msgid "(none)"
 msgstr "(nincs)"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:216
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:194
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:220
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:200
 msgid "9x Note"
 msgstr "9x Hang"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:220
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:224
 msgid "9x Note On Toggle"
 msgstr "9x Hang bekapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:221
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:225
 msgid "9x Note Off Toggle"
 msgstr "9x Hang kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:222
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:226
 msgid "9x Note On/Off Toggle"
 msgstr "9x Hang be/kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:225
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:204
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:229
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:210
 msgid "Bx Controller"
 msgstr "Bx vezérlő"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:229
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:233
 msgid "Bx Controller On Toggle"
 msgstr "Bx vezérlő bekapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:230
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:234
 msgid "Bx Controller Off Toggle"
 msgstr "Bx vezérlő kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:232
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:236
 msgid "Bx Controller On/Off Toggle"
 msgstr "Bx vezérlő be/kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:237
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:241
 msgid "Cx Program Change"
 msgstr "Cx Program váltás"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:239
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:196
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:243
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:202
 msgid "9x Note without Velocity"
 msgstr "9x Hang billentés nélkül"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:241
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:245
 msgid "9x Note short octave at low key"
 msgstr "9x Hang hiányos oktáv az alsó billentyűnél"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:242
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:246
 msgid "9x Note without map"
 msgstr "9x Hang leképezés nélkül"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:246
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:216
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:250
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:222
 msgid "RPN"
 msgstr "RPN"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:247
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:217
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:251
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:223
 msgid "NRPN"
 msgstr "NRPN"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:248
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:218
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:252
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:224
 msgid "Cx Program Change Range"
 msgstr "Cx Program váltás tartomány"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:253
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:257
 msgid "RPN On Toggle"
 msgstr "RPN bekapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:254
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:258
 msgid "RPN Off Toggle"
 msgstr "RPN kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:255
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:259
 msgid "RPN On/Off Toggle"
 msgstr "RPN be/kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:256
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:260
 msgid "NRPN On Toggle"
 msgstr "NRPN bekapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:257
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:261
 msgid "NRPN Off Toggle"
 msgstr "NRPN kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:258
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:262
 msgid "NRPN On/Off Toggle"
 msgstr "NRPN be/kikapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:259
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:225
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:263
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:231
 msgid "RPN Range"
 msgstr "RPN tartomány"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:260
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:226
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:264
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:232
 msgid "NRPN Range"
 msgstr "NRPN tartomány"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:266
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:270
 msgid "Ctrl Change Bitfield"
 msgstr "Vezérlő váltás bit"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:268
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:272
 msgid "Bx Ctrl Change Fixed Value"
 msgstr "Bx vezérlő váltás rögzített érték"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:270
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:274
 msgid "Bx Ctrl Change Fixed On Value Toggle"
 msgstr "Bx vezérlő váltás rögzített be érték"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:272
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:276
 msgid "Bx Ctrl Change Fixed Off Value Toggle"
 msgstr "Bx vezérlő váltás rögzített ki érték"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:274
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:278
 msgid "Bx Ctrl Change Fixed On/Off Value Toggle"
 msgstr "Bx vezérlő váltás rögzített be/ki érték"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:276
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:280
 msgid "Sys Ex Johannus 9 bytes"
 msgstr "Sys Ex Johannus 9 bájt"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:278
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:282
 msgid "Sys Ex Johannus 11 bytes"
 msgstr "Sys Ex Johannus 11 bájt"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:279
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:283
 msgid "Sys Ex Viscount"
 msgstr "Sys Ex Viscount"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:281
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:285
 msgid "Sys Ex Viscount Toggle"
 msgstr "Sys Ex Viscount kapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:283
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:287
 msgid "Sys Ex Rogers Stop Change"
 msgstr "Sys Ex Rogers Stop Change"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:285
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:289
 msgid "Sys Ex Ahlborn-Galanti"
 msgstr "Sys Ex Ahlborn-Galanti"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:287
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:291
 msgid "Sys Ex Ahlborn-Galanti Toggle"
 msgstr "Sys Ex Ahlborn-Galanti kapcsoló"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:360
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:365
 msgid "L&owest velocity:"
 msgstr "Legkisebb sebesség:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:361
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:366
 msgid "H&ighest velocity:"
 msgstr "Legnagyobb sebesség:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:362
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:367
 msgid "&Transpose:"
 msgstr "&Transzponál:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:365
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:370
 msgid "&Bit number:"
 msgstr "&Bitszám:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:370
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:375
 msgid "&Off value:"
 msgstr "&Ki érték:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:372
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:327
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:377
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:336
 msgid "&Lower PGM number:"
 msgstr "&Alsó PGM szám:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:374
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:329
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:379
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:338
 msgid "&Off RPN number:"
 msgstr "&Ki RPN-száma:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:376
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:331
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:381
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:340
 msgid "&Off NRPN number:"
 msgstr "&Ki NRPN-száma:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:378
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:428
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:375
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:383
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:433
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:384
 msgid "&Value:"
 msgstr "&Érték:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:380
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:385
 msgid "L&ower bank:"
 msgstr "&Alsó bank:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:382
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:333
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:387
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:342
 msgid "&Stop number:"
 msgstr "&Regiszter szám:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:384
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:389
 msgid "L&ower limit:"
 msgstr "&Alsó határ:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:390
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:343
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:395
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:352
 msgid "&On value:"
 msgstr "&Be érték:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:392
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:337
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:397
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:346
 msgid "&Upper PGM number:"
 msgstr "&Fölső PGM szám:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:394
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:339
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:399
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:348
 msgid "&On RPN number:"
 msgstr "&Be RPN-száma:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:396
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:341
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:401
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:350
 msgid "&On NRPN number:"
 msgstr "&Be NRPN-száma:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:398
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:403
 msgid "&Upper bank:"
 msgstr "&Fölső bank:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:400
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:405
 msgid "&Upper limit:"
 msgstr "&Fölső határ:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:412
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:354
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:417
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:363
 msgid "&Controller-No:"
 msgstr "&Vezérlő száma:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:423
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:363
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:428
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:372
 msgid "&Parameter-No:"
 msgstr "&Paraméterszám:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:432
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:379
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:437
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:388
 msgid "&Device number:"
 msgstr "&Eszközszám:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:436
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:441
 msgid "&Data:"
 msgstr "&Adat:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:451
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:399
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:456
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:408
 #, c-format
 msgid "%d (%s)"
 msgstr "%d (%s)"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:559
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:564
 msgid "Please press the highest key with minimal velocity"
 msgstr "Nyomja meg a legmagasabb billentyűt a legkisebb sebességgel"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:563
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:568
 msgid "Please fully close the enclosure"
 msgstr "Zárja be teljesen a redőnyt"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:567
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:572
 msgid "Please toggle it again (to off state, if possible)"
 msgstr "Kapcsolja ismét (ha lehet, akkor ki)"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:618
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:623
 msgid "Please press the MIDI element"
 msgstr "Nyomja meg a MIDI-elemet"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:625
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:630
 msgid "Please press the lowest key with minimal velocity"
 msgstr "Nyomja meg a legmélyebb billentyűt a legkisebb sebességgel"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:629
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:634
 msgid "Please fully open the enclosure"
 msgstr "Nyissa ki teljesen a redőnyt"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:633
+#: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:638
 msgid "Please toggle it (to on state, if possible)"
 msgstr "Kapcsolja át (ha lehet, akkor be)"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:173
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:175
 msgid "&Copy current receive event"
 msgstr "&Fogadott esemény másolása"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:198
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:204
 msgid "9x Note On"
 msgstr "9x Hang be"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:199
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:205
 msgid "9x Note Off"
 msgstr "9x Hang ki"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:206
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:212
 msgid "Bx Controller On"
 msgstr "Bx vezérlő be"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:207
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:213
 msgid "Bx Controller Off"
 msgstr "Bx vezérlő ki"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:210
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:216
 msgid "Cx Program Change On"
 msgstr "Cx Program váltás be"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:211
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:217
 msgid "Cx Program Change Off"
 msgstr "Cx Program váltás ki"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:221
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:227
 msgid "RPN On"
 msgstr "RPN be"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:222
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:228
 msgid "RPN Off"
 msgstr "RPN ki"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:223
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:229
 msgid "NRPN On"
 msgstr "NRPN be"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:224
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:230
 msgid "NRPN Off"
 msgstr "NRPN ki"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:231
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:237
 msgid "SYSEX Hauptwerk 32 Byte LCD Value"
 msgstr "SYSEX Hauptwerk 32 Byte LCD Value"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:233
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:239
 msgid "SYSEX Hauptwerk 16 Byte String Value"
 msgstr "SYSEX Hauptwerk 16 Byte String Value"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:236
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:242
 msgid "SYSEX Hauptwerk 32 Byte LCD Name"
 msgstr "SYSEX Hauptwerk 32 Byte LCD Name"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:238
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:244
 msgid "SYSEX Hauptwerk 16 Byte String Name"
 msgstr "SYSEX Hauptwerk 16 Byte String Name"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:241
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:247
 msgid "SYSEX Rogers Stop Change"
 msgstr "SYSEX Rogers Stop Change"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:264
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:273
+msgid "Invalid MIDI event"
+msgstr "Érvénytelen MIDI-esemény"
+
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:274
 msgid ""
 "Output device is not selected.\n"
 "Select one, set the type to None or delete this event."
@@ -2695,31 +3826,31 @@ msgstr ""
 "Nem választott kimeneti eszközt.\n"
 "Válasszon egyet, állítsa a típust Nincs-re vagy törölje az eseményt!"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:325
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:334
 msgid "&Color:"
 msgstr "&Szín:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:335
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:344
 msgid "&Off Value:"
 msgstr "&Ki érték:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:348
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:357
 msgid "&MIDI-note:"
 msgstr "&MIDI-hang:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:370
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:379
 msgid "&ID:"
 msgstr "&Azonosító:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:383
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:392
 msgid "&CTRL/PGM:"
 msgstr "&CTRL/PGM:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:385
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:394
 msgid "&Start-Position:"
 msgstr "&Kiindulási hely:"
 
-#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:386
+#: src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp:395
 msgid "&Length:"
 msgstr "&Hossz:"
 
@@ -2728,8 +3859,8 @@ msgid "Sound &ports"
 msgstr "Hang&portok"
 
 #: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:108
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:427
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:443
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:430
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:446
 msgid "Audio groups"
 msgstr "Audió csoportok"
 
@@ -2779,118 +3910,118 @@ msgstr "Tulajdonságok"
 msgid "Revert to Default"
 msgstr "Alapértelmezettre vissza"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:214
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:216
 msgid "Audio Output"
 msgstr "Hangkimenet"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:328
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:331
 #, c-format
 msgid "Channel %d"
 msgstr "%d. csatorna"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:354
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:357
 #, c-format
 msgid "Device: %s [%d ms requested]"
 msgstr "Eszköz: %s [%d ms igényelve]"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:361
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:529
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:625
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:364
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:532
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:628
 #, c-format
 msgid "%s - left"
 msgstr "%s - bal"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:361
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:529
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:625
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:364
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:532
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:628
 #, c-format
 msgid "%s - right"
 msgstr "%s - jobb"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:367
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:370
 #, c-format
 msgid "%s: %f dB"
 msgstr "%s: %f dB"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:370
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:373
 #, c-format
 msgid "%s: mute"
 msgstr "%s: némít"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:427
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:430
 msgid "New audio group name"
 msgstr "Új audió csoport neve"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:442
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:445
 msgid "Audio group name"
 msgstr "Audió csoport neve"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:532
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:535
 msgid "Add new audio group"
 msgstr "Új audió csoport hozzáadása"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:532
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:535
 msgid "New audio group"
 msgstr "Új audió csoport"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:545
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:548
 msgid "Add new audio device"
 msgstr "Új hangeszköz hozzáadása"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:545
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:548
 msgid "New audio device"
 msgstr "Új hangeszköz"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:549
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:552
 msgid "Using more than one audio interface is currently not supported."
 msgstr "Több, mint egy audió interfész használata még nem támogatott."
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:592
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:593
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:595
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:596
 msgid "Change audio device"
 msgstr "Hangeszköz váltás"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:607
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:610
 msgid "Too many audio channels configured for the new audio interface"
 msgstr "Túl sok csatorna lett beállítva az új audió interfészhez"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:628
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:659
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:631
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:662
 msgid "Change audio group"
 msgstr "Audió csoport váltás"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:644
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:647
 msgid "Desired output latency"
 msgstr "Kívánt kimeneti késés"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:645
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:648
 msgid "Desired latency:"
 msgstr "Kívánt késés:"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:646
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:649
 msgid "Audio device settings"
 msgstr "Hangeszköz beállítások"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:659
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:662
 msgid "Please enter new volume in dB:"
 msgstr "Üsse be az új hangerőt dB-ben:"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:665
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:668
 msgid "Please enter a volume between -120 and 40 dB"
 msgstr "Üssön be egy hangerőt –120 és 40 dB között"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:680
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:683
 msgid ""
 "Should the audio config be reverted to the default stereo configuration?"
 msgstr ""
 "A hangbeállítások vissza legyenek állítva az alapérzelmezett sztereó "
 "beállításokra?"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:682
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:685
 msgid "Revert"
 msgstr "Visszaállít"
 
-#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:730
+#: src/grandorgue/dialogs/settings/GOSettingsAudio.cpp:733
 msgid "Invalid sample rate"
 msgstr "Érvénytelen mintavételi sűrűség"
 
@@ -2930,7 +4061,7 @@ msgstr "Hangolások"
 msgid "Reason"
 msgstr "Reason"
 
-#: src/grandorgue/dialogs/settings/GOSettingsDialog.cpp:128
+#: src/grandorgue/dialogs/settings/GOSettingsDialog.cpp:117
 msgid "Settings Reason"
 msgstr "Reason beállítások"
 
@@ -3457,6 +4588,7 @@ msgid "Impulse response file '%s' not found"
 msgstr "'%s' impulzus visszhang fájl hiányzik"
 
 #: src/grandorgue/dialogs/settings/GOSettingsTemperaments.cpp:47
+#: src/tools/GOTool.cpp:28
 msgid "c"
 msgstr "c"
 
@@ -3516,9 +4648,9 @@ msgstr "Felhasználói hangolás"
 msgid "Generals"
 msgstr "Generálkombinációk"
 
-#: src/grandorgue/gui/GOGUIButton.cpp:88 src/grandorgue/gui/GOGUIButton.cpp:246
-#: src/grandorgue/gui/GOGUIEnclosure.cpp:53
-#: src/grandorgue/gui/GOGUIEnclosure.cpp:128
+#: src/grandorgue/gui/GOGUIButton.cpp:90 src/grandorgue/gui/GOGUIButton.cpp:248
+#: src/grandorgue/gui/GOGUIEnclosure.cpp:54
+#: src/grandorgue/gui/GOGUIEnclosure.cpp:129
 #: src/grandorgue/gui/GOGUIManual.cpp:109
 #: src/grandorgue/gui/GOGUIManual.cpp:301
 #, c-format
@@ -3535,16 +4667,8 @@ msgid "16"
 msgstr "16"
 
 #: src/grandorgue/gui/GOGUICouplerPanel.cpp:97
-msgid "8"
-msgstr "8"
-
-#: src/grandorgue/gui/GOGUICouplerPanel.cpp:97
 msgid "U.O."
 msgstr "NÉMA"
-
-#: src/grandorgue/gui/GOGUICouplerPanel.cpp:118
-msgid "4"
-msgstr "4"
 
 #: src/grandorgue/gui/GOGUICouplerPanel.cpp:139
 msgid "BAS"
@@ -3579,10 +4703,6 @@ msgstr "redőny hiánzik"
 #, c-format
 msgid "Manual key %d outside of the bounding box"
 msgstr "%d billentyű kilóg a képernyőről"
-
-#: src/grandorgue/gui/GOGUIMasterPanel.cpp:34
-msgid "Master Controls"
-msgstr "Központi szabályozók"
 
 #: src/grandorgue/gui/GOGUIPanel.cpp:185 src/grandorgue/gui/GOGUIPanel.cpp:312
 #: src/grandorgue/gui/GOGUIPanel.cpp:686
@@ -3662,8 +4782,8 @@ msgstr "%Y-%m-%d-%H-%M-%S.%l.wav"
 msgid "Unable to open file %s for writing"
 msgstr "%s megnyitása írásra lehetetlen"
 
-#: src/grandorgue/midi/GOMidiSender.cpp:626
-#: src/grandorgue/midi/GOMidiSender.cpp:636
+#: src/grandorgue/midi/GOMidiSender.cpp:629
+#: src/grandorgue/midi/GOMidiSender.cpp:639
 #, c-format
 msgid "%d %%"
 msgstr "%d %%"
@@ -3766,19 +4886,19 @@ msgstr "%s állomány betöltése"
 msgid "caught exception: %s\n"
 msgstr "kezelt kivétel: %s\n"
 
-#: src/grandorgue/sound/GOSoundReverb.cpp:53
+#: src/grandorgue/sound/GOSoundReverb.cpp:60
 msgid "Invalid reverb configuration (samples per buffer)"
 msgstr "Érvénytelen visszhangbeállítás (minták pufferenként)"
 
-#: src/grandorgue/sound/GOSoundReverb.cpp:63
+#: src/grandorgue/sound/GOSoundReverb.cpp:70
 msgid "Invalid reverb start offset"
 msgstr "Visszhang kezdetének eltolása érvénytelen"
 
-#: src/grandorgue/sound/GOSoundReverb.cpp:81
+#: src/grandorgue/sound/GOSoundReverb.cpp:95
 msgid "Resampling failed"
 msgstr "Újramintavételezés meghiúsult"
 
-#: src/grandorgue/sound/GOSoundReverb.cpp:102
+#: src/grandorgue/sound/GOSoundReverb.cpp:123
 #, c-format
 msgid "Reverb load error: %s"
 msgstr "Visszhang betöltési hiba: %s"
@@ -3853,6 +4973,118 @@ msgstr "%s eszköz mintavételi sűrűsége megváltozott"
 msgid "<unknown> %d"
 msgstr "<ismeretlen> %d"
 
+#: src/tools/GOTool.cpp:29
+msgid "create"
+msgstr "készít"
+
+#: src/tools/GOTool.cpp:30
+msgid "create an organ package"
+msgstr "orgonacsomag készítése"
+
+#: src/tools/GOTool.cpp:34
+msgid "o"
+msgstr "o"
+
+#: src/tools/GOTool.cpp:35
+msgid "organ-package"
+msgstr "orgonacsomag"
+
+#: src/tools/GOTool.cpp:36
+msgid "specifiy generated organ package filename"
+msgstr "adja meg a készítendő orgonacsomag fájlnevét"
+
+#: src/tools/GOTool.cpp:41
+msgid "input-directory"
+msgstr "bemeneti könyvtár"
+
+#: src/tools/GOTool.cpp:42
+msgid "specifiy input directory"
+msgstr "adja meg a bemeneti könyvtárat"
+
+#: src/tools/GOTool.cpp:46
+msgid "t"
+msgstr "t"
+
+#: src/tools/GOTool.cpp:47
+msgid "title"
+msgstr "cím"
+
+#: src/tools/GOTool.cpp:48
+msgid "organ package title"
+msgstr "orgonacsomag címe"
+
+#: src/tools/GOTool.cpp:52
+msgid "p1"
+msgstr "p1"
+
+#: src/tools/GOTool.cpp:54 src/tools/GOTool.cpp:60 src/tools/GOTool.cpp:66
+#: src/tools/GOTool.cpp:72 src/tools/GOTool.cpp:78
+msgid "depend on organ package"
+msgstr "orgonacsomagtól függ"
+
+#: src/tools/GOTool.cpp:58
+msgid "p2"
+msgstr "p2"
+
+#: src/tools/GOTool.cpp:64
+msgid "p3"
+msgstr "p3"
+
+#: src/tools/GOTool.cpp:70
+msgid "p4"
+msgstr "p4"
+
+#: src/tools/GOTool.cpp:76
+msgid "p5"
+msgstr "p5"
+
+#: src/tools/GOTool.cpp:82
+msgid "o1"
+msgstr "o1"
+
+#: src/tools/GOTool.cpp:84 src/tools/GOTool.cpp:90 src/tools/GOTool.cpp:96
+#: src/tools/GOTool.cpp:102 src/tools/GOTool.cpp:108 src/tools/GOTool.cpp:114
+#: src/tools/GOTool.cpp:120 src/tools/GOTool.cpp:126 src/tools/GOTool.cpp:132
+#: src/tools/GOTool.cpp:138
+msgid "provide odf-file-name"
+msgstr "adja meg az odf fájlnevét"
+
+#: src/tools/GOTool.cpp:88
+msgid "o2"
+msgstr "o2"
+
+#: src/tools/GOTool.cpp:94
+msgid "o3"
+msgstr "o3"
+
+#: src/tools/GOTool.cpp:100
+msgid "o4"
+msgstr "o4"
+
+#: src/tools/GOTool.cpp:106
+msgid "o5"
+msgstr "o5"
+
+#: src/tools/GOTool.cpp:112
+msgid "o6"
+msgstr "o6"
+
+#: src/tools/GOTool.cpp:118
+msgid "o7"
+msgstr "o7"
+
+#: src/tools/GOTool.cpp:124
+msgid "o8"
+msgstr "o8"
+
+#: src/tools/GOTool.cpp:130
+msgid "o9"
+msgstr "o9"
+
+#: src/tools/GOTool.cpp:136
+msgid "o10"
+msgstr "o10"
+
 #: src/tools/GOTool.cpp:156
 #, c-format
 msgid "GrandOrgueTool %s"
@@ -3876,7 +5108,7 @@ msgstr "Nincs cím megadva"
 
 #: src/tools/GOTool.cpp:196
 msgid "organ package creation failed"
-msgstr "orgonacsomag készítésemeghiúsult"
+msgstr "orgonacsomag készítése meghiúsult"
 
 #: src/tools/GOTool.cpp:219
 #, c-format
