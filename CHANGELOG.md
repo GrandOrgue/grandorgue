@@ -1,4 +1,5 @@
-- Added support for building against system-wide ZitaConvolver library
+- Fixed hang on reopening sound device (exit from settings, Panic) while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983
+- Added support for building against system-wide ZitaConvolver library https://github.com/GrandOrgue/grandorgue/issues/1095
 # 3.6.4 (2022-03-18)
 - Updated the copyright headers in the source code
 - Switched ZitaConvolver to an external source https://github.com/GrandOrgue/grandorgue/issues/983
