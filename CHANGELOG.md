@@ -1,3 +1,4 @@
+- Fixed sound distortion while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983
 - Fixed hang on reopening sound device (exit from settings, Panic) while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983
 - Added support for building against system-wide ZitaConvolver library https://github.com/GrandOrgue/grandorgue/issues/1095
 # 3.6.4 (2022-03-18)
