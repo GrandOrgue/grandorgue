@@ -146,14 +146,16 @@ float *resample_block(
     unsigned max_i = len - position_index;
 
     for (unsigned j = 0; j < SUBFILTER_TAPS; j += 4) {
-      if (j < max_i)
-        out1 += in_set[j] * coef_set[j];
-      if (j + 1 < max_i)
-        out2 += in_set[j + 1] * coef_set[j + 1];
-      if (j + 2 < max_i)
-        out3 += in_set[j + 2] * coef_set[j + 2];
-      if (j + 3 < max_i)
-        out4 += in_set[j + 3] * coef_set[j + 3];
+      unsigned k = j;
+
+      if (k < max_i)
+        out1 += in_set[k] * coef_set[k];
+      if (++k < max_i)
+        out2 += in_set[k] * coef_set[k];
+      if (++k < max_i)
+        out3 += in_set[k] * coef_set[k];
+      if (++k < max_i)
+        out4 += in_set[k] * coef_set[k];
     }
     out[i] = out1 + out2 + out3 + out4;
   }
