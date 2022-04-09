@@ -129,7 +129,7 @@ void GODocument::ShowPanel(unsigned id) {
 void GODocument::SyncState() {
   m_organfile->SetVolume(m_sound.GetEngine().GetVolume());
   if (p_MainWindow)
-    p_MainWindow->SetPosSize(p_MainWindow->GetPosSize());
+    m_organfile->GetMainWindowData()->SetWindowRect(p_MainWindow->GetPosSize());
   for (unsigned i = 0; i < m_organfile->GetPanelCount(); i++)
     m_organfile->GetPanel(i)->SetInitialOpenWindow(false);
   GODocumentBase::SyncState();
