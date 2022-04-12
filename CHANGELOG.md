@@ -1,3 +1,4 @@
+# 3.6.5 (2022-04-13)
 - Fixed not saving the main window position and size in organ settings https://github.com/GrandOrgue/grandorgue/issues/1093
 - Fixed sound distortion while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983
 - Fixed hang on reopening sound device (exit from settings, Panic) while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983
