@@ -263,6 +263,7 @@ bool GOMidiEventSendTab::Validate() {
 
   StoreEvent();
 
+  /*
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
     const GOMidiSendEvent &e = m_midi.GetEvent(i);
 
@@ -277,6 +278,7 @@ bool GOMidiEventSendTab::Validate() {
       break;
     }
   }
+  */
   return isValid;
 }
 
