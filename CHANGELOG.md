@@ -1,3 +1,4 @@
+- Fixed setting up output midi events for all devices https://github.com/GrandOrgue/grandorgue/issues/1097
 # 3.6.5 (2022-04-13)
 - Fixed not saving the main window position and size in organ settings https://github.com/GrandOrgue/grandorgue/issues/1093
 - Fixed sound distortion while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983

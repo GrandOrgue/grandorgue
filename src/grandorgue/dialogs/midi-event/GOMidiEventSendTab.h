@@ -83,7 +83,6 @@ public:
     GOConfig &config);
   ~GOMidiEventSendTab();
 
-  bool Validate() override;
   virtual bool TransferDataFromWindow() override;
 
   DECLARE_EVENT_TABLE()

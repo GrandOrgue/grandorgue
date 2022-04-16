@@ -258,30 +258,9 @@ GOMidiEventSendTab::GOMidiEventSendTab(
 
 GOMidiEventSendTab::~GOMidiEventSendTab() {}
 
-bool GOMidiEventSendTab::Validate() {
-  bool isValid = true;
-
-  StoreEvent();
-
-  for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
-    const GOMidiSendEvent &e = m_midi.GetEvent(i);
-
-    if (e.type != MIDI_S_NONE && !e.deviceId) {
-      m_current = i;
-      LoadEvent();
-      ShowErrorMessage(
-        _("Invalid MIDI event"),
-        _("Output device is not selected.\n"
-          "Select one, set the type to None or delete this event."));
-      isValid = false;
-      break;
-    }
-  }
-  return isValid;
-}
-
 bool GOMidiEventSendTab::TransferDataFromWindow() {
-  // Assume that Validate() has been called and it returned true
+  // save the current event being edited
+  StoreEvent();
 
   // Delete empty events.
   bool empty_event;
