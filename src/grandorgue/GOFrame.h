@@ -99,7 +99,7 @@ private:
   void OnInstall(wxCommandEvent &event);
   void OnOpen(wxCommandEvent &event);
   void OnSave(wxCommandEvent &event);
-  void OnClose(wxCommandEvent &event);
+  void OnMenuClose(wxCommandEvent &event);
   void OnExit(wxCommandEvent &event);
   void OnImportSettings(wxCommandEvent &event);
   void OnImportCombinations(wxCommandEvent &event);
@@ -155,7 +155,7 @@ private:
   void OnMsgBox(wxMsgBoxEvent &event);
   void OnRenameFile(wxRenameFileEvent &event);
 
-  bool DoClose();
+  bool CloseOrgan();
   void Open(const GOOrgan &organ);
 
   bool InstallOrganPackage(wxString name);
@@ -176,7 +176,7 @@ public:
   virtual ~GOFrame(void);
 
   void Init(wxString filename);
-  bool Close();
+  bool CloseProgram();
 
   void DoSplash(bool timeout = true);
 

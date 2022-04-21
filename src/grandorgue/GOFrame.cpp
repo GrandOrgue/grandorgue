@@ -66,7 +66,7 @@ EVT_MENU(ID_FILE_INSTALL, GOFrame::OnInstall)
 EVT_MENU_RANGE(ID_LOAD_FAV_FIRST, ID_LOAD_FAV_LAST, GOFrame::OnLoadFavorite)
 EVT_MENU_RANGE(ID_LOAD_LRU_FIRST, ID_LOAD_LRU_LAST, GOFrame::OnLoadRecent)
 EVT_MENU(ID_FILE_SAVE, GOFrame::OnSave)
-EVT_MENU(ID_FILE_CLOSE, GOFrame::OnClose)
+EVT_MENU(ID_FILE_CLOSE, GOFrame::OnMenuClose)
 EVT_MENU(ID_FILE_EXIT, GOFrame::OnExit)
 EVT_MENU(ID_FILE_RELOAD, GOFrame::OnReload)
 EVT_MENU(ID_FILE_REVERT, GOFrame::OnRevert)
@@ -589,7 +589,7 @@ void GOFrame::InitHelp() {
   m_Help->AddBook(result);
 }
 
-bool GOFrame::DoClose() {
+bool GOFrame::CloseOrgan() {
   if (!m_doc)
     return true;
   GOMutexLocker m_locker(m_mutex, true);
@@ -602,7 +602,7 @@ bool GOFrame::DoClose() {
 }
 
 void GOFrame::Open(const GOOrgan &organ) {
-  if (!DoClose())
+  if (!CloseOrgan())
     return;
   GOMutexLocker m_locker(m_mutex, true);
   if (!m_locker.IsLocked())
@@ -987,26 +987,26 @@ void GOFrame::OnReload(wxCommandEvent &event) {
   if (!doc || !doc->GetOrganFile())
     return;
   GOOrgan organ = doc->GetOrganFile()->GetOrganInfo();
-  if (!DoClose())
+  if (!CloseOrgan())
     return;
   Open(organ);
 }
 
-void GOFrame::OnClose(wxCommandEvent &event) {
+void GOFrame::OnMenuClose(wxCommandEvent &event) {
   GODocument *doc = GetDocument();
   if (!doc)
     return;
-  DoClose();
+  CloseOrgan();
 }
 
-void GOFrame::OnExit(wxCommandEvent &event) { Close(); }
+void GOFrame::OnExit(wxCommandEvent &event) { CloseProgram(); }
 
-bool GOFrame::Close() {
+bool GOFrame::CloseProgram() {
   Destroy();
   return true;
 }
 
-void GOFrame::OnCloseWindow(wxCloseEvent &event) { Close(); }
+void GOFrame::OnCloseWindow(wxCloseEvent &event) { CloseProgram(); }
 
 void GOFrame::OnRevert(wxCommandEvent &event) {
   if (
