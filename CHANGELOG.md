@@ -1,3 +1,4 @@
+# 3.6.6 (2022-04-29)
 - Fixed help issues https://github.com/GrandOrgue/grandorgue/issues/1066
 - Fixed saving organ settings on closing an organ or on finishing GrandOrgue https://github.com/GrandOrgue/grandorgue/issues/1069
 - Fixed setting up output midi events for all devices https://github.com/GrandOrgue/grandorgue/issues/1097
