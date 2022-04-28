@@ -1,7 +1,6 @@
 #include "GOHelpRequestor.h"
 
 #include <wx/event.h>
-#include <wx/log.h>
 
 #include "GOHelpController.h"
 #include "GOStdPath.h"
