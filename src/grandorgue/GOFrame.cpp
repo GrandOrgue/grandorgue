@@ -7,10 +7,10 @@
 
 #include "GOFrame.h"
 
+#include <wx/choice.h>
 #include <wx/display.h>
 #include <wx/fileconf.h>
 #include <wx/filedlg.h>
-#include <wx/html/helpctrl.h>
 #include <wx/icon.h>
 #include <wx/image.h>
 #include <wx/menu.h>
@@ -30,6 +30,7 @@
 #include "dialogs/settings/GOSettingsDialog.h"
 #include "dialogs/settings/GOSettingsReason.h"
 #include "gui/GOGUIPanel.h"
+#include "help/GOHelpRequestor.h"
 #include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
 #include "sound/GOSound.h"
@@ -47,7 +48,6 @@
 #include "GOPath.h"
 #include "GOProperties.h"
 #include "GOSetter.h"
-#include "GOStdPath.h"
 #include "Images.h"
 #include "go_ids.h"
 #include "go_limits.h"
@@ -86,7 +86,6 @@ EVT_MENU(ID_SETTINGS, GOFrame::OnSettings)
 EVT_MENU(ID_MIDI_LOAD, GOFrame::OnMidiLoad)
 EVT_MENU(wxID_HELP, GOFrame::OnHelp)
 EVT_MENU(wxID_ABOUT, GOFrame::OnHelpAbout)
-EVT_COMMAND(0, wxEVT_SHOWHELP, GOFrame::OnShowHelp)
 EVT_COMMAND(0, wxEVT_WINTITLE, GOFrame::OnSetTitle)
 EVT_MENU(ID_VOLUME, GOFrame::OnSettingsVolume)
 EVT_MENU(ID_POLYPHONY, GOFrame::OnSettingsPolyphony)
@@ -125,13 +124,13 @@ GOFrame::GOFrame(
   const long type,
   GOSound &sound)
   : wxFrame(frame, id, title, pos, size, type),
+    GOHelpRequestor(this),
     m_App(app),
     m_file_menu(NULL),
     m_panel_menu(NULL),
     m_favorites_menu(NULL),
     m_recent_menu(NULL),
     m_doc(NULL),
-    m_Help(NULL),
     m_SamplerUsage(NULL),
     m_VolumeControl(NULL),
     m_VolumeGauge(),
@@ -154,8 +153,6 @@ GOFrame::GOFrame(
   wxIcon icon;
   icon.CopyFromBitmap(GetImage_GOIcon());
   SetIcon(icon);
-
-  InitHelp();
 
   wxArrayString choices;
 
@@ -383,10 +380,6 @@ GOFrame::~GOFrame() {
     m_doc = NULL;
   }
   m_listener.SetCallback(NULL);
-  if (m_Help) {
-    delete m_Help;
-    m_Help = NULL;
-  }
 }
 
 bool GOFrame::AdjustVolumeControlWithSettings() {
@@ -520,73 +513,6 @@ void GOFrame::Init(wxString filename) {
   m_listener.SetCallback(this);
   GOCacheCleaner clean(m_config);
   clean.Cleanup();
-}
-
-/*
- * The standard wxHtmlHelpController can not bring the help above a modal dialog
- * under linux. This class creates wxHtmlHelpFrame with wxTOPLEVEL_EX_DIALOG
- * extra style for being able to do this.
- */
-class GOHelpController : public wxHtmlHelpController {
-public:
-  GOHelpController(int style) : wxHtmlHelpController(style | wxHF_FRAME) {}
-
-  wxHtmlHelpFrame *CreateHelpFrame(wxHtmlHelpData *data) override;
-};
-
-/*
- * Borrowed from
- * https://github.com/wxWidgets/wxWidgets/blob/master/src/html/helpctrl.cpp
- * with adding SetExtraStyle(wxTOPLEVEL_EX_DIALOG);
- */
-wxHtmlHelpFrame *GOHelpController::CreateHelpFrame(wxHtmlHelpData *data) {
-  wxHtmlHelpFrame *frame = new wxHtmlHelpFrame(data);
-  frame->SetExtraStyle(frame->GetExtraStyle() | wxTOPLEVEL_EX_DIALOG);
-  frame->SetController(this);
-  frame->SetTitleFormat(m_titleFormat);
-  frame->Create(
-    m_parentWindow,
-    -1,
-    wxEmptyString,
-    m_FrameStyle
-#if wxUSE_CONFIG
-    ,
-    m_Config,
-    m_ConfigRoot
-#endif // wxUSE_CONFIG
-  );
-  frame->SetShouldPreventAppExit(m_shouldPreventAppExit);
-  m_helpFrame = frame;
-  return frame;
-};
-
-void GOFrame::InitHelp() {
-  m_Help = new GOHelpController(
-    wxHF_CONTENTS | wxHF_INDEX | wxHF_SEARCH | wxHF_ICONS_BOOK
-    | wxHF_FLAT_TOOLBAR);
-
-  wxString result;
-  wxString lang = wxGetLocale()->GetCanonicalName();
-
-  wxString searchpath;
-  searchpath.Append(
-    GOStdPath::GetResourceDir() + wxFILE_SEP_PATH + wxT("help"));
-
-  if (!wxFindFileInPath(
-        &result, searchpath, wxT("GrandOrgue_") + lang + wxT(".htb"))) {
-    if (lang.Find(wxT('_')))
-      lang = lang.Left(lang.Find(wxT('_')));
-    if (!wxFindFileInPath(
-          &result, searchpath, wxT("GrandOrgue_") + lang + wxT(".htb"))) {
-      if (!wxFindFileInPath(&result, searchpath, wxT("GrandOrgue.htb")))
-        result = wxT("GrandOrgue.htb");
-    }
-  }
-  wxLogDebug(
-    _("Using helpfile %s (search path: %s)"),
-    result.c_str(),
-    searchpath.c_str());
-  m_Help->AddBook(result);
 }
 
 bool GOFrame::CloseOrgan(bool isForce) {
@@ -1184,13 +1110,7 @@ void GOFrame::OnMidiList(wxCommandEvent &event) {
 }
 
 void GOFrame::OnHelp(wxCommandEvent &event) {
-  wxCommandEvent help(wxEVT_SHOWHELP, 0);
-  help.SetString(_("User Interface"));
-  ProcessEvent(help);
-}
-
-void GOFrame::OnShowHelp(wxCommandEvent &event) {
-  m_Help->Display(event.GetString());
+  GOHelpRequestor::DisplayHelp(_("User Interface"), false);
 }
 
 void GOFrame::OnSettingsVolume(wxCommandEvent &event) {

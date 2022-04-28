@@ -80,6 +80,8 @@ gui/GOGUIPanel.cpp
 gui/GOGUIPanelWidget.cpp
 gui/GOGUIRecorderPanel.cpp
 gui/GOGUISequencerPanel.cpp
+help/GOHelpController.cpp
+help/GOHelpRequestor.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp
 midi/ports/GOMidiPort.cpp

@@ -27,6 +27,7 @@
 
 #include <vector>
 
+#include "help/GOHelpRequestor.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
@@ -45,7 +46,10 @@ class GOAudioGauge;
 class wxHtmlHelpController;
 class wxSpinCtrl;
 
-class GOFrame : public wxFrame, public GOResizable, protected GOMidiCallback {
+class GOFrame : public wxFrame,
+                private GOHelpRequestor,
+                public GOResizable,
+                protected GOMidiCallback {
 private:
   GOApp &m_App;
   GOMutex m_mutex;
@@ -56,7 +60,6 @@ private:
   wxMenu *m_recent_menu;
   wxMenu *m_temperament_menu;
   GODocument *m_doc;
-  wxHtmlHelpController *m_Help;
   GOAudioGauge *m_SamplerUsage;
   wxControl *m_VolumeControl;
   std::vector<GOAudioGauge *> m_VolumeGauge;
@@ -79,7 +82,6 @@ private:
   int m_AfterSettingsEventId;
   GOOrgan *p_AfterSettingsEventOrgan;
 
-  void InitHelp();
   void UpdatePanelMenu();
   void UpdateFavoritesMenu();
   void UpdateRecentMenu();
@@ -128,7 +130,6 @@ private:
   void OnTemperament(wxCommandEvent &event);
   void OnHelp(wxCommandEvent &event);
   void OnHelpAbout(wxCommandEvent &event);
-  void OnShowHelp(wxCommandEvent &event);
 
   void OnSettingsVolume(wxCommandEvent &event);
   void OnSettingsPolyphony(wxCommandEvent &event);
