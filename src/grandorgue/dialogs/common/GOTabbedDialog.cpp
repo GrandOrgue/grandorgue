@@ -14,6 +14,8 @@
 #include <wx/panel.h>
 #include <wx/sizer.h>
 
+#include "help/GOHelpRequestor.h"
+
 #include "GODialogTab.h"
 #include "GOEvent.h"
 
@@ -52,10 +54,7 @@ void GOTabbedDialog::AddTab(GODialogTab *tab) {
 }
 
 void GOTabbedDialog::OnHelp(wxCommandEvent &event) {
-  wxCommandEvent help(wxEVT_SHOWHELP, 0);
-
-  help.SetString(m_name + "." + GetCurrTabName());
-  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
+  GOHelpRequestor::DisplayHelp(m_name + "." + GetCurrTabName(), IsModal());
 }
 
 const wxString &GOTabbedDialog::GetCurrTabName() const {
