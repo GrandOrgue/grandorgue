@@ -1,3 +1,4 @@
+- Fixed saving organ settings on closing an organ or on finishing GrandOrgue https://github.com/GrandOrgue/grandorgue/issues/1069
 - Fixed setting up output midi events for all devices https://github.com/GrandOrgue/grandorgue/issues/1097
 # 3.6.5 (2022-04-13)
 - Fixed not saving the main window position and size in organ settings https://github.com/GrandOrgue/grandorgue/issues/1093

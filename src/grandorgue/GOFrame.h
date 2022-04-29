@@ -155,7 +155,8 @@ private:
   void OnMsgBox(wxMsgBoxEvent &event);
   void OnRenameFile(wxRenameFileEvent &event);
 
-  bool CloseOrgan();
+  bool CloseOrgan(bool isForce = false);
+  bool CloseProgram(bool isForce = false);
   void Open(const GOOrgan &organ);
 
   bool InstallOrganPackage(wxString name);
@@ -176,7 +177,6 @@ public:
   virtual ~GOFrame(void);
 
   void Init(wxString filename);
-  bool CloseProgram();
 
   void DoSplash(bool timeout = true);
 

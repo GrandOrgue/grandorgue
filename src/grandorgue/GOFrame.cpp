@@ -589,20 +589,45 @@ void GOFrame::InitHelp() {
   m_Help->AddBook(result);
 }
 
-bool GOFrame::CloseOrgan() {
-  if (!m_doc)
-    return true;
-  GOMutexLocker m_locker(m_mutex, true);
-  if (!m_locker.IsLocked())
-    return false;
-  delete m_doc;
-  m_doc = NULL;
-  UpdatePanelMenu();
-  return true;
+bool GOFrame::CloseOrgan(bool isForce) {
+  bool isClosed = true;
+
+  if (m_doc) {
+    if (m_doc->IsModified()) {
+      int choice = isForce ? wxYES
+                           : wxMessageBox(
+                             _("The organ settings have been modified\n"
+                               "Do you want to save them?"),
+                             _("Save organ settings"),
+                             wxYES_NO | wxCANCEL | wxCENTRE,
+                             this);
+
+      switch (choice) {
+      case wxYES:
+        isClosed = m_doc->Save();
+        break;
+      case wxCANCEL:
+        isClosed = false;
+        break;
+      }
+    }
+
+    if (isClosed) {
+      GOMutexLocker m_locker(m_mutex, true);
+
+      if (m_locker.IsLocked()) {
+        delete m_doc;
+        m_doc = NULL;
+        UpdatePanelMenu();
+      } else
+        isClosed = false;
+    }
+  }
+  return isClosed;
 }
 
 void GOFrame::Open(const GOOrgan &organ) {
-  if (!CloseOrgan())
+  if (!CloseOrgan(false))
     return;
   GOMutexLocker m_locker(m_mutex, true);
   if (!m_locker.IsLocked())
@@ -987,7 +1012,7 @@ void GOFrame::OnReload(wxCommandEvent &event) {
   if (!doc || !doc->GetOrganFile())
     return;
   GOOrgan organ = doc->GetOrganFile()->GetOrganInfo();
-  if (!CloseOrgan())
+  if (!CloseOrgan(false))
     return;
   Open(organ);
 }
@@ -996,17 +1021,22 @@ void GOFrame::OnMenuClose(wxCommandEvent &event) {
   GODocument *doc = GetDocument();
   if (!doc)
     return;
-  CloseOrgan();
+  CloseOrgan(false);
+}
+
+bool GOFrame::CloseProgram(bool isForce) {
+  bool isClosed = CloseOrgan(isForce);
+
+  if (isClosed)
+    Destroy();
+  return isClosed;
 }
 
 void GOFrame::OnExit(wxCommandEvent &event) { CloseProgram(); }
 
-bool GOFrame::CloseProgram() {
-  Destroy();
-  return true;
+void GOFrame::OnCloseWindow(wxCloseEvent &event) {
+  CloseProgram(!event.CanVeto());
 }
-
-void GOFrame::OnCloseWindow(wxCloseEvent &event) { CloseProgram(); }
 
 void GOFrame::OnRevert(wxCommandEvent &event) {
   if (
