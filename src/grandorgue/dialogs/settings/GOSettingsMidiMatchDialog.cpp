@@ -14,7 +14,7 @@
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 
-#include "GOEvent.h"
+#include "help/GOHelpRequestor.h"
 
 BEGIN_EVENT_TABLE(GOSettingsMidiMatchDialog, wxDialog)
 EVT_TEXT(ID_LOGICAL_NAME, GOSettingsMidiMatchDialog::OnLogicalNameChanged)
@@ -149,9 +149,7 @@ void GOSettingsMidiMatchDialog::OnRegexChanged(wxCommandEvent &event) {
 }
 
 void GOSettingsMidiMatchDialog::OnHelp(wxCommandEvent &event) {
-  wxCommandEvent help(wxEVT_SHOWHELP, 0);
-  help.SetString("MIDI Matching");
-  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(help);
+  GOHelpRequestor::DisplayHelp("MIDI Matching", IsModal());
 }
 
 bool GOSettingsMidiMatchDialog::Validate() {
