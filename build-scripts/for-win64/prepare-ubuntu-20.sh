@@ -1,11 +1,12 @@
 #!/bin/bash
 
 set -e
-sudo apt update
-sudo DEBIAN_FRONTEND=noninteractive apt install -y \
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
-  docbook-xsl xsltproc gettext po4a imagemagick zip \
-  libz-mingw-w64-dev
+  docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \
+  wine32 winbind
 
 mkdir -p deb
 pushd deb
@@ -34,4 +35,26 @@ if [ ! -d /usr/local/asio-sdk ]; then
 	rm -rf $DL_DIR
 	SDK_DIR=`ls -1d /usr/local/asiosdk* | tail -1`
 	sudo ln -sf `basename $SDK_DIR` /usr/local/asio-sdk
+fi
+
+# download VC for wine
+if [ ! -d /usr/local/share/wine/msvc ]; then
+	DL_DIR=`mktemp -d -t vc.XXX`
+	wget -O $DL_DIR/VC2019.zip https://github.com/GrandOrgue/DockerMsvcCpp/releases/download/0.1/VC2019.zip
+	sudo mkdir -p /usr/local/share/wine/msvc.tmp
+	sudo rm -rf /usr/local/share/wine/msvc.tmp/*
+	sudo unzip -d /usr/local/share/wine/msvc.tmp $DL_DIR/VC2019.zip
+	rm -rf $DL_DIR
+	sudo mv /usr/local/share/wine/msvc.tmp /usr/local/share/wine/msvc
+fi
+
+# download cv2pdb
+if [ ! -d /usr/local/share/wine/cv2pdb ]; then
+	DL_DIR=`mktemp -d -t cv2pdb.XXX`
+	wget -O $DL_DIR/cv2pdb-0.51.zip https://github.com/rainers/cv2pdb/releases/download/v0.51/cv2pdb-0.51.zip
+	sudo mkdir -p /usr/local/share/wine/cv2pdb.tmp
+	sudo rm -rf /usr/local/share/wine/cv2pdb.tmp/*
+	sudo unzip -d /usr/local/share/wine/cv2pdb.tmp $DL_DIR/cv2pdb-0.51.zip
+	rm -rf $DL_DIR
+	sudo mv /usr/local/share/wine/cv2pdb.tmp /usr/local/share/wine/cv2pdb
 fi
