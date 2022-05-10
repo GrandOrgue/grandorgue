@@ -11,7 +11,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get --allow-downgrades -y install  libpc
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
-  docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev wine32
+  docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \
+  wine32 winbind
 
 mkdir -p deb
 pushd deb
