@@ -3,10 +3,15 @@
 set -e
 sudo dpkg --add-architecture i386
 sudo apt-get update
+
+# remove an odd version of ibpcre2-8-0 that prevents installing wine32
+# determine the required version of ibpcre2-8-0
+LIBPCRE_VERSION=`apt-cache policy libpcre2-8-0:i386 | awk '/Candidate:/ { print $2; }'`
+sudo DEBIAN_FRONTEND=noninteractive apt-get --allow-downgrades -y install  libpcre2-8-0=$LIBPCRE_VERSION
+
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
-  docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \
-  wine32 winbind
+  docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev wine32
 
 mkdir -p deb
 pushd deb
