@@ -65,23 +65,13 @@ GO_WIN_PRMS="-DCMAKE_SYSTEM_NAME=Windows \
   -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
   -DCMAKE_VERBOSE_MAKEFILE=ON \
   -DRTAUDIO_USE_ASIO=ON -DASIO_SDK_DIR=/usr/local/asio-sdk \
+  -DVC_PATH=/usr/local/share/wine/msvc/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86 \
+  -DCV2PDB_EXE=/usr/local/share/wine/cv2pdb/cv2pdb.exe \
   -DIMPORT_EXECUTABLES=../build-tools/ImportExecutables.cmake"
 GO_PRMS="-DGO_USE_JACK=ON $CMAKE_VERSION_PRMS"
 
 cmake -DINSTALL_DEPEND=ON $MINGW_PRMS $GO_WIN_PRMS $GO_PRMS . $SRC_DIR
 make $PARALLEL_PRMS VERBOSE=1 package
-
-#build debug symbols
-mkdir -p pdb
-export WINEPATH=Z:/usr/local/share/wine/msvc/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86
-wine /usr/local/share/wine/cv2pdb/cv2pdb.exe bin/GrandOrgue.exe /tmp/GrandOrgue.exe pdb/GrandOrgue.pdb
-wine /usr/local/share/wine/cv2pdb/cv2pdb.exe bin/GrandOrguePerfTest.exe /tmp/GrandOrguePerfTest.exe pdb/GrandOrguePerfTest.pdb
-wine /usr/local/share/wine/cv2pdb/cv2pdb.exe bin/GrandOrgueTool.exe /tmp/GrandOrgueTool.exe pdb/GrandOrgueTool.pdb
-wine /usr/local/share/wine/cv2pdb/cv2pdb.exe bin/libGrandOrgueCore.dll /tmp/libGrandOrgueCore.dll pdb/libGrandOrgueCore.pdb
-
-pushd pdb
-zip ../grandorgue-debug-$1-$2.windows.x86_64.zip *
-popd
 
 popd
 
