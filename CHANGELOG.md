@@ -1,3 +1,4 @@
+# 3.6.7 (2022-05-15)
 - Added publishing debug symbols on windows builds https://github.com/GrandOrgue/grandorgue/issues/853
 # 3.6.6 (2022-04-29)
 - Fixed help issues https://github.com/GrandOrgue/grandorgue/issues/1066
