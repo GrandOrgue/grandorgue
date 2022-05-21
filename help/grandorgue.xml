@@ -5393,6 +5393,15 @@ Within  windchests, the ranks are ordered as found in the definition file.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>Default for All</term>
+          <listitem>
+            <simpara>
+	      This button restores the setting values for the selected element
+	      and all its child elements from the organ definition file.
+	    </simpara>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Reset</term>
           <listitem>
             <simpara>This button is grayed out until a value is modified. It restores all previously applied values.</simpara>
