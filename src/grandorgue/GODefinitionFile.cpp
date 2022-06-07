@@ -867,7 +867,7 @@ void GODefinitionFile::UpdateTuning() {
     wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
 }
 
-void GrandOrgueFile::UpdateReleaseTruncationLength()
+void GODefinitionFile::UpdateReleaseTruncationLength()
 {
 }
 
