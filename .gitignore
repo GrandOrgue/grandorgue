@@ -1,4 +1,5 @@
 /bin/
+/build/
 /CPackConfig.cmake
 /CPackSourceConfig.cmake
 /ImportExecutables.cmake
@@ -15,7 +16,6 @@
 /src/core/GrandOrgueDef.h/
 /src/images/*.cpp
 
-/build-for/
 /ide-projects/NetBeans12/nbproject/private/
 
 *.a

@@ -1,0 +1,12 @@
+---
+Language:        Cpp
+# BasedOnStyle:  Google
+AlignAfterOpenBracket: AlwaysBreak
+AlignOperands:   false
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: All
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+PenaltyReturnTypeOnItsOwnLine: 1000

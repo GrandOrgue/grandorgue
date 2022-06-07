@@ -16,15 +16,15 @@ fi
 
 PARALLEL_PRMS="-j$(nproc)"
 
-mkdir -p build-for/build-tools
-pushd build-for/build-tools
+mkdir -p build/build-tools
+pushd build/build-tools
 rm -rf *
 cmake $SRC_DIR/src/build
 make
 popd
 
-mkdir -p build-for/win64
-pushd build-for/win64
+mkdir -p build/win64
+pushd build/win64
 
 rm -rf *
 export LANG=C
@@ -40,19 +40,23 @@ fi
 PKG_CONFIG_PATH=$MINGW_DIR/lib/pkgconfig; export PKG_CONFIG_PATH;
 WX_CONFIG=$MINGW_DIR/bin/wx-config; export WX_CONFIG
 
+CC_EXE=/usr/bin/x86_64-w64-mingw32-gcc-posix
+[ -f $CC_EXE ] || CC_EXE=/usr/bin/x86_64-w64-mingw32-gcc
+
 CPP_EXE=/usr/bin/x86_64-w64-mingw32-g++-posix
 [ -f $CPP_EXE ] || CPP_EXE=/usr/bin/x86_64-w64-mingw32-g++
 
-LIBRARY_PATH=$MINGW_DIR/lib
-MINGW_PRMS="-DCMAKE_C_COMPILER=/usr/bin/x86_64-w64-mingw32-gcc \
-  -DCMAKE_LIBRARY_PATH=$LIBRARY_PATH \
+LIBRARY_PATH="$MINGW_DIR/lib"
+MINGW_PRMS="-DCMAKE_C_COMPILER=$CC_EXE \
   -DCMAKE_CXX_COMPILER=$CPP_EXE \
   -DCMAKE_RC_COMPILER=/usr/bin/x86_64-w64-mingw32-windres"
 
 # additional dir for finding dlls. Only for debian-based
 CPP_DLL_DIR=$(dirname $($CPP_EXE -v 2>&1 | grep COLLECT_LTO_WRAPPER= | sed 's/COLLECT_LTO_WRAPPER=//; s:-win32/:-posix/:'))
 [[ ! -f $MINGW_DIR/bin/libstdc++-6.dll ]] && [[ -d "$CPP_DLL_DIR" ]] && MINGW_PRMS="$MINGW_PRMS -DDEPEND_ADD_DIRS=$CPP_DLL_DIR"
-  
+
+MINGW_PRMS="$MINGW_PRMS -DCMAKE_LIBRARY_PATH=$CPP_DLL_DIR;$LIBRARY_PATH"
+
 GO_WIN_PRMS="-DCMAKE_SYSTEM_NAME=Windows \
   -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
   -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
@@ -61,6 +65,8 @@ GO_WIN_PRMS="-DCMAKE_SYSTEM_NAME=Windows \
   -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
   -DCMAKE_VERBOSE_MAKEFILE=ON \
   -DRTAUDIO_USE_ASIO=ON -DASIO_SDK_DIR=/usr/local/asio-sdk \
+  -DVC_PATH=/usr/local/share/wine/msvc/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86 \
+  -DCV2PDB_EXE=/usr/local/share/wine/cv2pdb/cv2pdb.exe \
   -DIMPORT_EXECUTABLES=../build-tools/ImportExecutables.cmake"
 GO_PRMS="-DGO_USE_JACK=ON $CMAKE_VERSION_PRMS"
 

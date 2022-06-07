@@ -58,8 +58,10 @@ option(RTMIDI_USE_CORE        "Enable RtMidi support for Core Audio (OS X only)"
 option(RTMIDI_USE_JACK        "Enable RtMidi support for Jack" ON)
 option(RTMIDI_USE_ALSA        "Enable RtMidi support for ALSA (Linux only)" ON)
 option(RTMIDI_USE_MM          "Enable RtMidi support for MM (Windows only)" ON)
+option(USE_INTERNAL_RTAUDIO   "Use builtin RtAudio/RtMidi sources" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)
 option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
+option(USE_INTERNAL_ZITACONVOLVER "Use builtin Zita Convolver sources" ON)
 option(GO_USE_JACK	      "Use native Jack output" ON)
 if (WIN32 OR APPLE)
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" ON)
@@ -115,6 +117,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 # setup compiler flags for debug vs release compiles
 add_option(-Wall)
+add_definitions(-DGO_STD_MUTEX)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
 else()
@@ -130,44 +133,65 @@ if (RTAUDIO_USE_JACK OR RTMIDI_USE_JACK OR GO_USE_JACK)
   pkg_check_modules(JACK REQUIRED IMPORTED_TARGET jack)
 endif()
 
+# Add ASIO variable
+if(WIN32 AND RTAUDIO_USE_ASIO)
+  add_definitions(-DASIO_INCLUDED)
+endif()
+
 if(RTAUDIO_USE_ASIO AND NOT ASIO_SDK_DIR)
   set(ASIO_SDK_DIR "${CMAKE_SOURCE_DIR}/ext/rt/asio")
 endif()
 
 # include RtAudio
-if(NOT RTAUDIO_SRC_DIR)
-  set(RTAUDIO_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtAudio")
-  if(NOT EXISTS "${RTAUDIO_SRC_DIR}/RtAudio.h")
-    message(
-      FATAL_ERROR 
-      "${RTAUDIO_SRC_DIR}/RtAudio.h file does not exist."
-      "Possible the RtAudio submodule has not been updated."
-      "Try to execute 'git submodule update --init --recursive' in the source directory"
-    )
+if (USE_INTERNAL_RTAUDIO)
+  if(NOT RTAUDIO_SRC_DIR)
+    set(RTAUDIO_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtAudio")
+    if(NOT EXISTS "${RTAUDIO_SRC_DIR}/RtAudio.h")
+      message(
+        FATAL_ERROR 
+        "${RTAUDIO_SRC_DIR}/RtAudio.h file does not exist."
+        "Possible the RtAudio submodule has not been updated."
+        "Try to execute 'git submodule update --init --recursive' in the source directory"
+      )
+    endif()
   endif()
-endif()
-if(NOT RTMIDI_SRC_DIR)
-  set(RTMIDI_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtMidi")
-  if(NOT EXISTS "${RTMIDI_SRC_DIR}/RtMidi.h")
-    message(
-      FATAL_ERROR 
-      "${RTMIDI_SRC_DIR}/RtMidi.h file does not exist."
-      "Possible the RtMidi submodule has not been updated."
-      "Try to execute 'git submodule update --init --recursive' in the source directory"
-    )
+  if(NOT RTMIDI_SRC_DIR)
+    set(RTMIDI_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/RtMidi")
+    if(NOT EXISTS "${RTMIDI_SRC_DIR}/RtMidi.h")
+      message(
+        FATAL_ERROR 
+        "${RTMIDI_SRC_DIR}/RtMidi.h file does not exist."
+        "Possible the RtMidi submodule has not been updated."
+        "Try to execute 'git submodule update --init --recursive' in the source directory"
+      )
+    endif()
   endif()
+  add_subdirectory(src/rt)
+  set(RT_LIBRARIES RtAudio RtMidi)
+  set(RT_INCLUDE_DIRS ${RTMIDI_SRC_DIR} ${RTAUDIO_SRC_DIR})
+else()
+  pkg_check_modules(RTAUDIO REQUIRED rtaudio)
+  pkg_check_modules(RTMIDI REQUIRED rtmidi)
+  set(RT_LIBRARIES ${RTAUDIO_LIBRARIES} ${RTMIDI_LIBRARIES})
+  set(RT_INCLUDE_DIRS ${RTMIDI_INCLUDE_DIRS} ${RTAUDIO_INCLUDE_DIRS})
 endif()
-add_subdirectory(src/rt)
-set(RT_LIBRARIES RtAudio RtMidi)
-set(RT_INCLUDE_DIRS ${RTMIDI_SRC_DIR} ${RTAUDIO_SRC_DIR})
 
 # include portaudio
 if (USE_INTERNAL_PORTAUDIO)
+  set(PORTAUDIO_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/submodules/PortAudio/include)
   add_subdirectory(src/portaudio)
-  set(PORTAUDIO_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/src/portaudio/include)
   set(PORTAUDIO_LIBRARIES PortAudio)
 else()
   pkg_check_modules(PORTAUDIO REQUIRED portaudio-2.0)
+endif()
+
+# include zitaconvolver
+if (USE_INTERNAL_ZITACONVOLVER)
+  set(ZITACONVOLVER_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source)
+  set(ZITACONVOLVER_LIBRARIES "")
+else()
+  set(ZITACONVOLVER_INCLUDE_DIRS "")
+  set(ZITACONVOLVER_LIBRARIES zita-convolver)
 endif()
 
 # include FFTW
@@ -177,7 +201,7 @@ pkg_check_modules(ZLIB REQUIRED zlib)
 
 pkg_check_modules(WAVPACK REQUIRED wavpack)
 
-find_package(wxWidgets REQUIRED html net adv core base)
+find_package(wxWidgets REQUIRED base)
 message(STATUS "  wxWidgets Unicode?          : ${wxWidgets_USE_UNICODE}")
 message(STATUS "  wxWidgets Debug?            : ${wxWidgets_USE_DEBUG}")
 message(STATUS "  wxWidgets Static linking    : ${wxWidgets_USE_STATIC}")
@@ -190,10 +214,12 @@ add_subdirectory(src/build)
 add_subdirectory(src/images)
 add_subdirectory(src/core)
 add_subdirectory(src/grandorgue)
+add_subdirectory(src/tools)
 add_subdirectory(po)
 add_subdirectory(help)
 add_subdirectory(sounds)
 add_subdirectory(packages)
+add_subdirectory(perftests)
 add_subdirectory(resources)
 
 
@@ -214,7 +240,7 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 set(CPACK_PACKAGE_CONTACT "osamarin68@gmail.com")
 set(CPACK_PACKAGE_EXECUTABLES "GrandOrgue" "GrandOrgue")
 
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build-for/")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/" "/build/")
 
 # components
 set(CPACK_COMPONENTS_ALL Unspecified resources demo)

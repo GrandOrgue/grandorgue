@@ -1,4 +1,65 @@
 - Added release truncation controls to ODF and Organ Settings panel. https://github.com/GrandOrgue/grandorgue/discussions/680
+- Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1129
+# 3.6.7 (2022-05-15)
+- Added publishing debug symbols on windows builds https://github.com/GrandOrgue/grandorgue/issues/853
+# 3.6.6 (2022-04-29)
+- Fixed help issues https://github.com/GrandOrgue/grandorgue/issues/1066
+- Fixed saving organ settings on closing an organ or on finishing GrandOrgue https://github.com/GrandOrgue/grandorgue/issues/1069
+- Fixed setting up output midi events for all devices https://github.com/GrandOrgue/grandorgue/issues/1097
+# 3.6.5 (2022-04-13)
+- Fixed not saving the main window position and size in organ settings https://github.com/GrandOrgue/grandorgue/issues/1093
+- Fixed sound distortion while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983
+- Fixed hang on reopening sound device (exit from settings, Panic) while a reveberation is active https://github.com/GrandOrgue/grandorgue/issues/983
+- Added support for building against system-wide ZitaConvolver library https://github.com/GrandOrgue/grandorgue/issues/1095
+# 3.6.4 (2022-03-18)
+- Updated the copyright headers in the source code
+- Switched ZitaConvolver to an external source https://github.com/GrandOrgue/grandorgue/issues/983
+- Added distribution of GrandOrguePerfTest in the GrandOrgue package https://github.com/GrandOrgue/grandorgue/issues/868
+- Added the image file name to messages on loading this image https://github.com/GrandOrgue/grandorgue/issues/1063
+- Fixed allowing to select disabled devices in the Midi Event Dialog https://github.com/GrandOrgue/grandorgue/issues/1044
+- Fixed limits for PGM numbers of the Cx Program Change Range midi event https://github.com/GrandOrgue/grandorgue/issues/1058
+- Clarified the guide how to obtain submodule sources manually in the BUILD.md https://github.com/GrandOrgue/grandorgue/issues/1062
+# 3.6.3 (2022-03-02)
+- Added the wave file name to an error message related to a certain sample file https://github.com/GrandOrgue/grandorgue/discussions/1055
+- Fixed console output of GrandOrgueTool under windows https://github.com/GrandOrgue/grandorgue/issues/949
+- Added the Help button on the MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/1001
+- Fixed covering the help window opened from a modal dialog under linux https://github.com/GrandOrgue/grandorgue/issues/1004
+- Fixed size of the Setting dialog if a lot of audio channels exist https://github.com/GrandOrgue/grandorgue/issues/1034
+- Fixed navigation from the Setting dialog pages to help with non-english language https://github.com/GrandOrgue/grandorgue/issues/1003
+# 3.6.2 (2022-02-09)
+- Fixed "Copy current receive event" in the Midi Event Send dialog https://github.com/GrandOrgue/grandorgue/issues/985
+- Fixed automatic opening the Reverb settings page when there were no active midi devices https://github.com/GrandOrgue/grandorgue/issues/1002
+- Fixed matching midi events with midi devices https://github.com/GrandOrgue/grandorgue/issues/1000
+# 3.6.1 (2022-01-29)
+- Updated French, German, Polish, Spanish and Swedish translations of the Settings Dialog https://github.com/GrandOrgue/grandorgue/discussions/934
+- Switched to RtMidi 5.0.0
+- Switched to RtAudio 5.2.0
+- Fixed processing of debounce time for Bx Controller events https://github.com/GrandOrgue/grandorgue/issues/967
+- Fixed size of the Load organ dialog https://github.com/GrandOrgue/grandorgue/issues/963
+# 3.6.0 (2022-01-19)
+- Fixed crash under OSx when closing a MIDI event dialog opened from a Settings window https://github.com/GrandOrgue/grandorgue/issues/966
+- Reorganised tabs and their layouts of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/948
+- Changed default organ cache and organ settings directories to ones inside the GrandOrgue directory https://github.com/GrandOrgue/grandorgue/discussions/934
+- Added automatic formatting code with pre-commit and clang-format https://github.com/GrandOrgue/grandorgue/issues/918
+# 3.5.0 (2022-01-05)
+- Added default regex patterns for matching MIDI devices with alsa, jack and winmm https://github.com/GrandOrgue/grandorgue/issues/885
+- Added capability of matching MIDI devices with regex expressions https://github.com/GrandOrgue/grandorgue/issues/885
+- Added a setting option whether to check for existence of active midi devices on startup https://github.com/GrandOrgue/grandorgue/issues/796
+- Added capability of switching auto enabling of new midi devices on/off https://github.com/GrandOrgue/grandorgue/issues/703
+- Added capability of enabling and disabling particular MIDI APIs https://github.com/GrandOrgue/grandorgue/issues/703
+- Added support for building against system-wide RtAudio and RtMidi libraries
+# 3.4.4 (2021-11-27)
+- Fixed crash after loading an organ several times https://github.com/GrandOrgue/grandorgue/issues/707
+# 3.4.3 (2021-11-22)
+- Fixed hang after changing the audio device https://github.com/GrandOrgue/grandorgue/issues/701
+- Fixed a possible crash when playing with shared pipes https://github.com/GrandOrgue/grandorgue/issues/847
+# 3.4.2 (2021-11-14)
+- Added ASIO logo to About splash screen https://github.com/GrandOrgue/grandorgue/issues/823
+- Upgraded PortAudio Library to the latest stable release, v19.7.0. The upgraded library corrects PortAudio errors in GrandOrgue on macOS 11.
+- Restructured the source code directory tree https://github.com/GrandOrgue/grandorgue/issues/834
+- Renamed the source code files to have the single GO prefix https://github.com/GrandOrgue/grandorgue/issues/816
+- Added implementation of the threading primitives with standard C++11 ones https://github.com/GrandOrgue/grandorgue/issues/817
+- Changed build default directory to 'build' https://github.com/GrandOrgue/grandorgue/issues/843
 # 3.4.1 (2021-11-02)
 - Changed log error to warning when importing combinations https://github.com/GrandOrgue/grandorgue/issues/809
 - Eased restrictions on importing .cmb settings https://github.com/GrandOrgue/grandorgue/issues/807

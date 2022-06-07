@@ -31,7 +31,7 @@ function(BUILD_LIBRARY TARGET)
 
   install(
     TARGETS ${TARGET} 
-    RUNTIME DESTINATION ${LIBINSTDIR} LIBRARY DESTINATION ${LIBINSTDIR} 
+    RUNTIME DESTINATION ${LIBINSTDIR} LIBRARY DESTINATION ${LIBINSTDIR}
     NAMELINK_SKIP
     # these permissions required for building rmp on debian/ubuntu
     # otherwise Autoprov doesn't work
@@ -39,4 +39,20 @@ function(BUILD_LIBRARY TARGET)
       GROUP_EXECUTE GROUP_READ
       WORLD_EXECUTE WORLD_READ
   )
+
+  if(CV2PDB_EXE)
+    add_custom_command(
+      OUTPUT "${LIBDIR}/lib${TARGET}.pdb"
+      DEPENDS ${TARGET}
+      COMMAND
+	${CMAKE_COMMAND}
+	  -E env "WINEPATH=Z:${VC_PATH}"
+	  wine "${CV2PDB_EXE}"
+	  "$<TARGET_FILE:${TARGET}>"
+	  "${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_PREFIX:${TARGET}>$<TARGET_FILE_BASE_NAME:${TARGET}>-tmp$<TARGET_FILE_SUFFIX:${TARGET}>"
+	  "${LIBDIR}/lib${TARGET}.pdb"
+    )
+    add_custom_target(lib${TARGET}.pdb ALL DEPENDS "${LIBDIR}/lib${TARGET}.pdb")
+    install(FILES "${LIBDIR}/lib${TARGET}.pdb" DESTINATION "${LIBINSTDIR}")
+  endif()
 endfunction()

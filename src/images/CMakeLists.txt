@@ -1,10 +1,11 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2021 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(${CMAKE_SOURCE_DIR}/cmake/ConvertImages.cmake)
-include_directories(${wxWidgets_INCLUDE_DIRS})
-include(UsewxWidgets)
+
+find_package(wxWidgets REQUIRED core base)
+include(${wxWidgets_USE_FILE})
 
 set(IMAGE_LIST)
 CONVERTIMAGE(IMAGE_LIST gauge.gif)
@@ -23,6 +24,7 @@ CONVERTIMAGE(IMAGE_LIST save.png)
 CONVERTIMAGE(IMAGE_LIST settings.png)
 CONVERTIMAGE(IMAGE_LIST volume.png)
 CONVERTIMAGE(IMAGE_LIST Splash.jpg)
+CONVERTIMAGE(IMAGE_LIST ASIO.jpg)
 CONVERTIMAGE(IMAGE_LIST "${RESOURCEDIR}/GOIcon.ico")
 CONVERTIMAGE(IMAGE_LIST ManualCBlackDown.png)
 CONVERTIMAGE(IMAGE_LIST ManualCBlackUp.png)

@@ -22,8 +22,10 @@ You can download the source code archive from GitHub
 2. Unpack this archive to some directory
 
 3. Download external submodules
-    1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) end extract it's contents to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
-    2. `RtMidi`: Download [the source archive](https://github.com/thestk/rtmidi/archive/refs/heads/master.zip) and extract it's contents to the ``submodules/RtMidi`` subdirectory of GrandOrgue source tree.
+    1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) end extract the contents of the ``rtaudio-master`` subdirectory from the archive to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
+    2. `RtMidi`: Download [the source archive](https://github.com/thestk/rtmidi/archive/refs/heads/master.zip) and extract the contents of the ``rtmidi-master`` subdirectory from the archive to the ``submodules/RtMidi`` subdirectory of GrandOrgue source tree.
+    3. `PortAudio`: Download [the source archive](https://github.com/PortAudio/portaudio/archive/refs/heads/master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/PortAudio`` subdirectory of GrandOrgue source tree.
+    4. `ZitaConvolver`: Download the source archive](https://salsa.debian.org/multimedia-team/zita-convolver/-/archive/master/zita-convolver-master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/ZitaConvolver`` subdirectory of GrandOrgue source tree.
 
 ## Building for Linux on Linux
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
@@ -81,7 +83,7 @@ You can download the source code archive from GitHub
         <GO source tree>/build-scripts/for-linux/build-on-linux.sh
         ```
 
-        The built packages will appear in the build-for/linux subdirectory of current directory, the executables - in build-for/linux/bin
+        The built packages will appear in the build/linux subdirectory of current directory, the executables - in build/linux/bin
 
 ## Building AppImage for Linux on Linux (x86_64, without jack support)
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
@@ -152,7 +154,7 @@ You can download the source code archive from GitHub
         <GO source tree>/build-scripts/for-appimage-x86_64/build-on-linux.sh
         ```
 
-        The built appimage will appear in the build-for/appimage-x86_64 subdirectory of current directory
+        The built appimage will appear in the build/appimage-x86_64 subdirectory of current directory
 
 ## Building for OS X on OS X
 1. Prequisites:
@@ -209,7 +211,7 @@ You can download the source code archive from GitHub
         <GO source tree>/build-scripts/for-osx/build-on-osx.sh
 	    ```
 
-        The built package will appear in the build-for/osx subdirectory of current directory, 
+        The built package will appear in the build/osx subdirectory of current directory, 
 
 ## Cross-building for Windows-64 bit on Linux
 
@@ -308,4 +310,4 @@ Assume you have the GrandOrgue source extracted to GrandOrgue directory
     GrandOrgue/build-scripts/for-win64/build-on-linux.sh
     ```
 
-    Windows executables will appear in the build-for/win64 subdirectory of the current directory
+    Windows executables will appear in the build/win64 subdirectory of the current directory

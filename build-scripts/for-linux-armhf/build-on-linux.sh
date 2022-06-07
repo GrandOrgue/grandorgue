@@ -17,16 +17,16 @@ fi
 PARALLEL_PRMS="-j$(nproc)"
 
 # Build imageconverter
-mkdir -p build-for/build-tools
-pushd build-for/build-tools
+mkdir -p build/build-tools
+pushd build/build-tools
 rm -rf *
 cmake $SRC_DIR/src/build
 make
 popd
 
 # Build for armhf
-mkdir -p build-for/linux-armhf
-pushd build-for/linux-armhf
+mkdir -p build/linux-armhf
+pushd build/linux-armhf
 rm -rf *
 export LANG=C
 export PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/pkgconfig
