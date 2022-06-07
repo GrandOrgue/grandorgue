@@ -26,6 +26,8 @@ GOPipeConfig::GOPipeConfig(
     m_DefaultTuning(0),
     m_Delay(0),
     m_DefaultDelay(0),
+    m_ReleaseTruncationLength(0),
+    m_DefaultReleaseTruncationLength(0),
     m_BitsPerSample(-1),
     m_Compress(-1),
     m_Channels(-1),
@@ -68,6 +70,9 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
   m_DefaultDelay = 0;
   m_Delay = cfg.ReadInteger(
     CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
+  m_DefaultReleaseTruncationLength = 0;
+  m_ReleaseTruncationLength = cfg.ReadInteger(
+    CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 100000, false, m_DefaultReleaseTruncationLength);
   m_BitsPerSample = cfg.ReadInteger(
     CMBSetting,
     m_Group,
@@ -90,6 +95,7 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
     CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
+  m_Callback->UpdateReleaseTruncationLength();
   m_Callback->UpdateAudioGroup();
 }
 
@@ -132,6 +138,13 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
     ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
   m_Delay = cfg.ReadInteger(
     CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
+  /* Release Sample Truncation Settings
+  * Default Settings Pulled from ODF. Numeric Range = 0-100000. If no value exists in ODF, default value = 0.  */
+  m_DefaultReleaseTruncationLength = cfg.ReadInteger(
+	ODFSetting, group, prefix + wxT("ReleaseTruncation"), 0, 100000, false, 0);
+  /* Pulls Settings Set by User in GUI Organ Settings Panel. */
+  m_ReleaseTruncationLength = cfg.ReadInteger(
+	CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 100000, false, m_DefaultReleaseTruncationLength);
   m_BitsPerSample = cfg.ReadInteger(
     CMBSetting,
     m_Group,
@@ -154,6 +167,7 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
     CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
+  m_Callback->UpdateReleaseTruncationLength();
   m_Callback->UpdateAudioGroup();
 }
 
@@ -163,6 +177,7 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
   cfg.WriteFloat(m_Group, m_NamePrefix + wxT("UserGain"), m_Gain);
   cfg.WriteFloat(m_Group, m_NamePrefix + wxT("Tuning"), m_Tuning);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Delay"), m_Delay);
+  cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseTruncationLength"), m_ReleaseTruncationLength);
   cfg.WriteInteger(
     m_Group, m_NamePrefix + wxT("BitsPerSample"), m_BitsPerSample);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("Compress"), m_Compress);
@@ -223,6 +238,24 @@ unsigned GOPipeConfig::GetDefaultDelay() { return m_DefaultDelay; }
 void GOPipeConfig::SetDelay(unsigned delay) {
   m_Delay = delay;
   m_OrganFile->Modified();
+}
+
+unsigned GOrguePipeConfig::GetReleaseTruncationLength()
+{
+  return m_ReleaseTruncationLength;
+}
+
+unsigned GOrguePipeConfig::GetDefaultReleaseTruncationLength()
+{
+  return m_DefaultReleaseTruncationLength;
+}
+
+void GOrguePipeConfig::SetReleaseTruncationLength(unsigned truncation)
+{
+  m_ReleaseTruncationLength = truncation;
+  m_OrganFile->Modified();
+  // Call items must be listed in GOrguePipeUpdateCallback.h in the "core" folder.
+  m_Callback->UpdateReleaseTruncationLength();
 }
 
 int GOPipeConfig::GetBitsPerSample() { return m_BitsPerSample; }

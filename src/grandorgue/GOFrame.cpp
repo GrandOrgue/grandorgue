@@ -135,6 +135,7 @@ GOFrame::GOFrame(
     m_VolumeControl(NULL),
     m_VolumeGauge(),
     m_Transpose(NULL),
+		// Identifer for the release truncation length value set in toolbar
     m_ReleaseLength(NULL),
     m_Polyphony(NULL),
     m_SetterPosition(NULL),
@@ -292,6 +293,7 @@ GOFrame::GOFrame(
   tb->AddControl(m_VolumeControl);
   m_Volume->SetValue(m_config.Volume());
 
+  /* Toolbar Release Length Truncation Mechanism */
   tb->AddTool(
     ID_RELEASELENGTH,
     _("&Release tail length"),
@@ -1154,6 +1156,8 @@ void GOFrame::OnSettingsTranspose(wxCommandEvent &event) {
     doc->GetOrganFile()->GetSetter()->SetTranspose(n);
 }
 
+/*  Toolbar Release Length Truncation Mechanism
+ *  m_ReleaseLength Links to GOSoundEngine.cpp */
 void GOFrame::OnSettingsReleaseLength(wxCommandEvent &event) {
   m_config.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
   m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());

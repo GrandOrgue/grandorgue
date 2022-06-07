@@ -41,6 +41,14 @@ void GOPipeConfigTreeNode::UpdateTuning() {
     m_Callback->UpdateTuning();
 }
 
+void GOrguePipeConfigTreeNode::UpdateReleaseTruncationLength()
+{
+	for(unsigned i = 0; i < m_Childs.size(); i++)
+		m_Childs[i]->GetPipeConfig().GetCallback()->UpdateReleaseTruncationLength();
+	if (m_Callback)
+		m_Callback->UpdateReleaseTruncationLength();
+}
+
 void GOPipeConfigTreeNode::UpdateAudioGroup() {
   for (unsigned i = 0; i < m_Childs.size(); i++)
     m_Childs[i]->GetPipeConfig().GetCallback()->UpdateAudioGroup();

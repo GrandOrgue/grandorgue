@@ -94,6 +94,15 @@ unsigned GOPipeConfigNode::GetEffectiveDelay() {
     return m_PipeConfig.GetDelay();
 }
 
+// Calculate the final amplitude value of a pipe, by summing child and rank values
+unsigned GOrguePipeConfigNode::GetEffectiveReleaseTruncationLength()
+{
+  if (m_parent)
+    return m_PipeConfig.GetReleaseTruncationLength() + m_parent->GetEffectiveReleaseTruncationLength();
+  else
+    return m_PipeConfig.GetReleaseTruncationLength();
+}
+
 wxString GOPipeConfigNode::GetEffectiveAudioGroup() {
   if (m_PipeConfig.GetAudioGroup() != wxEmptyString)
     return m_PipeConfig.GetAudioGroup();
