@@ -538,9 +538,14 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
            * time_to_full_reverb is around 350 ms for an organ with a release
            * length of 1 second or less, time_to_full_reverb is around 100 ms
            * time_to_full_reverb is linear in between */
+					unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
           int time_to_full_reverb = ((60 * release_section->GetLength())
                                      / release_section->GetSampleRate())
             + 40;
+					/* If (Pipe999ReleaseTruncationLength) release truncation length values exist in organ settings or ODF... */
+					if (truncation_fade_len > 0 && truncation_fade_len < time_to_full_reverb)
+						time_to_full_reverb = truncation_fade_len;
+					
           if (time_to_full_reverb > 350)
             time_to_full_reverb = 350;
           if (time_to_full_reverb < 100)
@@ -556,17 +561,29 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
           }
         }
       }
-      unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
-      new_sampler->fader.NewAttacking(
-        gain_target, cross_fade_len, m_SampleRate);
 
-      if (m_ReleaseLength > 0) {
-        if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
-          gain_decay_length = m_ReleaseLength;
-      }
+			unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
+			unsigned truncation_fade_len = this_pipe->GetReleaseTruncationLength();
+			new_sampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
 
-      if (gain_decay_length > 0)
-        new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);
+			/*
+			 * Algorithm Determines Which Release Truncation or Scaling Method to activate. */
+
+			// If release length set in GO GUI toolbar is larger than 0...
+      			if (m_ReleaseLength > 0)
+			{
+				// If Gain Decay Length is greater than toolbar value, or equal to 0, gain_decay_length = toolbar value.
+			if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
+					gain_decay_length = m_ReleaseLength;
+			}
+			// If truncation values exist and release scaling has not been enabled, gain_decay_length = truncation value.
+			if (truncation_fade_len > 0 && (gain_decay_length == 0 || truncation_fade_len < gain_decay_length))
+			{
+				gain_decay_length = truncation_fade_len;
+			}
+
+			if (gain_decay_length > 0)
+				new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);
 
       if (
         m_ReleaseAlignmentEnabled

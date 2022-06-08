@@ -125,8 +125,10 @@ public:
     unsigned release_load,
     int midi_key_number,
     unsigned loop_crossfade_length,
-    unsigned release_crossfase_length);
+    unsigned release_crossfase_length,
+		unsigned release_truncation_length);
   void SetAmplitude(float fixed_amplitude, float gain);
+	void SetReleaseTruncationLength(unsigned truncation);
 };
 
 #endif /* GOSOUNDPROVIDERWAVE_H_ */

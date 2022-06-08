@@ -98,7 +98,12 @@ public:
   int GetVolume() const;
   void SetScaledReleases(bool enable);
   void SetRandomizeSpeaking(bool enable);
-  void SetReleaseLength(unsigned reverb);
+/* Set Release Length Truncation for Toolbar */
+	void SetReleaseLength(unsigned reverb);
+	/* Get Release Length Truncation Mechanism Value for ODF/Organ Settings Panel */
+	int GetReleaseTruncationLength();
+	/* Set Release Length Truncation Mechanism Value for ODF/Organ Settings Panel */
+	void SetReleaseTruncationLength(unsigned truncation);
   const std::vector<double> &GetMeterInfo();
   void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 

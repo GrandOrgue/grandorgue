@@ -47,6 +47,7 @@ protected:
   float m_VelocityVolumeBase;
   float m_VelocityVolumeIncrement;
   unsigned m_ReleaseCrossfadeLength;
+	unsigned m_ReleaseTruncationLength;
 
 public:
   GOSoundProvider(GOMemoryPool &pool);
@@ -73,6 +74,7 @@ public:
   unsigned GetMidiKeyNumber() const;
   float GetMidiPitchFract() const;
   unsigned GetReleaseCrossfadeLength() const;
+	unsigned GetReleaseTruncationLength() const;
 
   float GetVelocityVolume(unsigned velocity) const;
 
