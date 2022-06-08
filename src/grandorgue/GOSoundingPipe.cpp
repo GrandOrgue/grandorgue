@@ -475,9 +475,9 @@ void GOSoundingPipe::UpdateAmplitude() {
     m_PipeConfig.GetEffectiveAmplitude(), m_PipeConfig.GetEffectiveGain());
 }
 
-void GOrgueSoundingPipe::UpdateReleaseTruncationLength()
-{
-	m_SoundProvider.SetReleaseTruncationLength(m_PipeConfig.GetEffectiveReleaseTruncationLength());
+void GOSoundingPipe::UpdateReleaseTruncationLength() {
+	m_SoundProvider.SetReleaseTruncationLength(
+		m_PipeConfig.GetEffectiveReleaseTruncationLength());
 }
 
 void GOSoundingPipe::UpdateTuning() {

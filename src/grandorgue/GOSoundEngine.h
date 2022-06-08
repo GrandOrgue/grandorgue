@@ -12,7 +12,7 @@
 #include "GOSoundSamplerPool.h"
 #include <vector>
 
-class GOrgueWindchest;
+class GOWindchest;
 class GOSoundProvider;
 class GOSoundRecorder;
 class GOSoundGroupWorkItem;
@@ -23,7 +23,7 @@ class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
 class GOSoundWorkItem;
 class GrandOrgueFile;
-class GOrgueSettings;
+class GOSettings;
 
 typedef struct
 {
@@ -47,13 +47,13 @@ private:
 	unsigned                      m_ReleaseLength;
 	/* Release Length Truncation Mechanism for ODF/Organ Settings Panel */
 	unsigned                      m_ReleaseTruncationLength;
-	unsigned m_SamplesPerBuffer;
+	unsigned                      m_SamplesPerBuffer;
 	float                         m_Gain;
 	unsigned                      m_SampleRate;
 	uint64_t                      m_CurrentTime;
 	GOSoundSamplerPool            m_SamplerPool;
 	unsigned                      m_AudioGroupCount;
-	unsigned m_UsedPolyphony;
+	unsigned                      m_UsedPolyphony;
 	unsigned                      m_WorkerSlots;
 	std::vector<double> m_MeterInfo;
 	ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
@@ -88,7 +88,7 @@ public:
 	void Setup(GrandOrgueFile* organ_file, unsigned release_count = 1);
 	void ClearSetup();
 	void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
-	void SetupReverb(GOrgueSettings& settings);
+	void SetupReverb(GOSettings& settings);
 	void SetVolume(int volume);
 	void SetSampleRate(unsigned sample_rate);
 	void SetSamplesPerBuffer(unsigned sample_per_buffer);

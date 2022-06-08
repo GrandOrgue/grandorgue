@@ -240,21 +240,21 @@ void GOPipeConfig::SetDelay(unsigned delay) {
   m_OrganFile->Modified();
 }
 
-unsigned GOrguePipeConfig::GetReleaseTruncationLength()
+unsigned GOPipeConfig::GetReleaseTruncationLength()
 {
   return m_ReleaseTruncationLength;
 }
 
-unsigned GOrguePipeConfig::GetDefaultReleaseTruncationLength()
+unsigned GOPipeConfig::GetDefaultReleaseTruncationLength()
 {
   return m_DefaultReleaseTruncationLength;
 }
 
-void GOrguePipeConfig::SetReleaseTruncationLength(unsigned truncation)
+void GOPipeConfig::SetReleaseTruncationLength(unsigned truncation)
 {
   m_ReleaseTruncationLength = truncation;
   m_OrganFile->Modified();
-  // Call items must be listed in GOrguePipeUpdateCallback.h in the "core" folder.
+  // Call items must be listed in GOPipeUpdateCallback.h in the "core" folder.
   m_Callback->UpdateReleaseTruncationLength();
 }
 

@@ -41,7 +41,7 @@ void GOPipeConfigTreeNode::UpdateTuning() {
     m_Callback->UpdateTuning();
 }
 
-void GOrguePipeConfigTreeNode::UpdateReleaseTruncationLength()
+void GOPipeConfigTreeNode::UpdateReleaseTruncationLength()
 {
 	for(unsigned i = 0; i < m_Childs.size(); i++)
 		m_Childs[i]->GetPipeConfig().GetCallback()->UpdateReleaseTruncationLength();

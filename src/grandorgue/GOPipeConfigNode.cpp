@@ -95,7 +95,7 @@ unsigned GOPipeConfigNode::GetEffectiveDelay() {
 }
 
 // Calculate the final amplitude value of a pipe, by summing child and rank values
-unsigned GOrguePipeConfigNode::GetEffectiveReleaseTruncationLength()
+unsigned GOPipeConfigNode::GetEffectiveReleaseTruncationLength()
 {
   if (m_parent)
     return m_PipeConfig.GetReleaseTruncationLength() + m_parent->GetEffectiveReleaseTruncationLength();
