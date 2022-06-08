@@ -171,8 +171,7 @@ unsigned GOSoundProvider::GetReleaseCrossfadeLength() const {
   return m_ReleaseCrossfadeLength;
 }
 
-unsigned GOSoundProvider::GetReleaseTruncationLength() const
-{
+unsigned GOSoundProvider::GetReleaseTruncationLength() const {
 	return m_ReleaseTruncationLength;
 }
 

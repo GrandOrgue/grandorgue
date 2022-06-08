@@ -240,18 +240,15 @@ void GOPipeConfig::SetDelay(unsigned delay) {
   m_OrganFile->Modified();
 }
 
-unsigned GOPipeConfig::GetReleaseTruncationLength()
-{
+unsigned GOPipeConfig::GetReleaseTruncationLength() {
   return m_ReleaseTruncationLength;
 }
 
-unsigned GOPipeConfig::GetDefaultReleaseTruncationLength()
-{
+unsigned GOPipeConfig::GetDefaultReleaseTruncationLength() {
   return m_DefaultReleaseTruncationLength;
 }
 
-void GOPipeConfig::SetReleaseTruncationLength(unsigned truncation)
-{
+void GOPipeConfig::SetReleaseTruncationLength(unsigned truncation) {
   m_ReleaseTruncationLength = truncation;
   m_OrganFile->Modified();
   // Call items must be listed in GOPipeUpdateCallback.h in the "core" folder.

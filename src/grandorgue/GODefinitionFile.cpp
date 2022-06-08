@@ -867,9 +867,7 @@ void GODefinitionFile::UpdateTuning() {
     wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
 }
 
-void GODefinitionFile::UpdateReleaseTruncationLength()
-{
-}
+void GODefinitionFile::UpdateReleaseTruncationLength() {}
 
 void GODefinitionFile::UpdateAudioGroup() {}
 

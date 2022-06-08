@@ -181,6 +181,7 @@ GOOrganDialog::GOOrganDialog(
   grid->Add(box2);
   m_DelaySpin->SetRange(0, 10000);
 
+// Release Truncation Mechanism
 	grid->Add
 		(new wxStaticText(scroll, wxID_ANY, _("Rel. Truncation (ms):")),
 		0,
@@ -563,7 +564,7 @@ void GOOrganDialog::Load() {
   float gain = m_Last->config->GetGain();
   float tuning = m_Last->config->GetTuning();
   unsigned delay = m_Last->config->GetDelay();
-	unsigned = m_Last->config->GetReleaseTruncationLength();
+	unsigned truncation = m_Last->config->GetReleaseTruncationLength();
 
 
   if (entries.size() == 1)
@@ -672,7 +673,8 @@ void GOOrganDialog::OnDelayChanged(wxCommandEvent &e) {
 
 void GOOrganDialog::OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e)
 {
-	m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), (unsigned)m_ReleaseTruncationLengthSpin->GetValue()));
+	m_ReleaseTruncationLength->ChangeValue(
+		wxString::Format(wxT("%u"), (unsigned)m_ReleaseTruncationLengthSpin->GetValue()));
 	m_ReleaseTruncationLength->MarkDirty();
 	Modified();
 }
@@ -681,7 +683,7 @@ void GOOrganDialog::OnReleaseTruncationLengthChanged(wxCommandEvent &e)
 {
 	long truncation;
 	if (m_ReleaseTruncationLength->GetValue().ToLong(&truncation))
-   		m_ReleaseTruncationLengthSpin->SetValue(truncation);
+   		
 	Modified();
 }
 
@@ -872,10 +874,10 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     m_Delay->DiscardEdits(); // workaround of osx implementation bug
                              // https://github.com/oleg68/GrandOrgue/issues/87
   }
-	if (m_ReleaseTruncationLength->IsModified())
-	{
+	if (m_ReleaseTruncationLength->IsModified()) {
 		m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%lu"), truncation));
-		m_ReleaseTruncationLength->DiscardEdits(); // workaround of osx implementation bug https://github.com/oleg68/GrandOrgue/issues/87
+		m_ReleaseTruncationLength->DiscardEdits(); // workaround of osx implementation bug
+																							 // https://github.com/oleg68/GrandOrgue/issues/87
 	}	
   m_LastAudioGroup = m_AudioGroup->GetValue();
   m_LastBitsPerSample = m_BitsPerSample->GetSelection();
