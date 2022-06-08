@@ -60,6 +60,8 @@ EVT_TEXT(ID_EVENT_TUNING, GOOrganDialog::OnTuningChanged)
 EVT_SPIN(ID_EVENT_TUNING_SPIN, GOOrganDialog::OnTuningSpinChanged)
 EVT_TEXT(ID_EVENT_DELAY, GOOrganDialog::OnDelayChanged)
 EVT_SPIN(ID_EVENT_DELAY_SPIN, GOOrganDialog::OnDelaySpinChanged)
+EVT_TEXT(ID_EVENT_RELEASE_TRUNCATION_LENGTH, GOOrganDialog::OnReleaseTruncationLengthChanged)
+EVT_SPIN(ID_EVENT_RELEASE_TRUNCATION_LENGTH_SPIN, GOOrganDialog::OnReleaseTruncationLengthSpinChanged)
 EVT_TEXT(ID_EVENT_AUDIO_GROUP, GOOrganDialog::OnAudioGroupChanged)
 EVT_BUTTON(ID_EVENT_AUDIO_GROUP_ASSISTANT, GOOrganDialog::OnAudioGroupAssitant)
 EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, GOOrganDialog::OnBitsPerSampleChanged)
@@ -178,6 +180,19 @@ GOOrganDialog::GOOrganDialog(
   box2->Add(m_DelaySpin);
   grid->Add(box2);
   m_DelaySpin->SetRange(0, 10000);
+
+	grid->Add
+		(new wxStaticText(scroll, wxID_ANY, _("Rel. Truncation (ms):")),
+		0,
+		wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
+		5);
+	box2 = new wxBoxSizer(wxHORIZONTAL);
+	m_ReleaseTruncationLength = new wxTextCtrl(scroll, ID_EVENT_RELEASE_TRUNCATION_LENGTH, wxEmptyString);
+	m_ReleaseTruncationLengthSpin = new wxSpinButton(scroll, ID_EVENT_RELEASE_TRUNCATION_LENGTH_SPIN);
+	box2->Add(m_ReleaseTruncationLength);
+	box2->Add(m_ReleaseTruncationLengthSpin);
+	grid->Add(box2);
+	m_ReleaseTruncationLengthSpin->SetRange(0, 100000);
 
   grid->Add(
     new wxStaticText(scroll, wxID_ANY, _("Audio group:")),
@@ -455,6 +470,9 @@ void GOOrganDialog::Load() {
     m_Delay->ChangeValue(wxEmptyString);
     m_Delay->Disable();
     m_DelaySpin->Disable();
+		m_ReleaseTruncationLength->ChangeValue(wxEmptyString);
+		m_ReleaseTruncationLength->Disable();
+		m_ReleaseTruncationLengthSpin->Disable();		
     m_AudioGroup->Disable();
     m_BitsPerSample->Disable();
     m_Compress->Disable();
@@ -480,6 +498,8 @@ void GOOrganDialog::Load() {
       m_Tuning->ChangeValue(wxEmptyString);
     if (!m_Delay->IsModified())
       m_Delay->ChangeValue(wxEmptyString);
+		if (!m_ReleaseTruncationLength->IsModified())
+  			m_ReleaseTruncationLength->ChangeValue(wxEmptyString);		
     if (m_AudioGroup->GetValue() == m_LastAudioGroup) {
       m_AudioGroup->SetValue(wxT(" "));
       m_LastAudioGroup = m_AudioGroup->GetValue();
@@ -527,6 +547,8 @@ void GOOrganDialog::Load() {
   m_TuningSpin->Enable();
   m_Delay->Enable();
   m_DelaySpin->Enable();
+	m_ReleaseTruncationLength->Enable();
+  m_ReleaseTruncationLengthSpin->Enable();
   m_AudioGroup->Enable();
   m_BitsPerSample->Enable();
   m_Compress->Enable();
@@ -541,6 +563,8 @@ void GOOrganDialog::Load() {
   float gain = m_Last->config->GetGain();
   float tuning = m_Last->config->GetTuning();
   unsigned delay = m_Last->config->GetDelay();
+	unsigned  = m_Last->config->GetReleaseTruncationLength();
+
 
   if (entries.size() == 1)
     m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
@@ -554,6 +578,9 @@ void GOOrganDialog::Load() {
   if (entries.size() == 1)
     m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
   m_DelaySpin->SetValue(delay);
+  if (entries.size() == 1)
+		m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), truncation));
+		m_ReleaseTruncationLengthSpin->SetValue(truncation);	
   if (entries.size() == 1) {
     m_AudioGroup->SetValue(m_Last->config->GetAudioGroup());
 
@@ -643,6 +670,21 @@ void GOOrganDialog::OnDelayChanged(wxCommandEvent &e) {
   Modified();
 }
 
+void OrganDialog::OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e)
+{
+	m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), (unsigned)m_ReleaseTruncationLengthSpin->GetValue()));
+	m_ReleaseTruncationLength->MarkDirty();
+	Modified();
+}
+
+void OrganDialog::OnReleaseTruncationLengthChanged(wxCommandEvent &e)
+{
+	long truncation;
+	if (m_ReleaseTruncationLength->GetValue().ToLong(&truncation))
+   		m_ReleaseTruncationLengthSpin->SetValue(truncation);
+	Modified();
+}
+
 void GOOrganDialog::OnAudioGroupChanged(wxCommandEvent &e) { Modified(); }
 
 void GOOrganDialog::OnBitsPerSampleChanged(wxCommandEvent &e) {
@@ -685,6 +727,8 @@ bool GOOrganDialog::Changed() {
     changed = true;
   if (m_Delay->IsModified())
     changed = true;
+ 	if (m_ReleaseTruncationLength->IsModified())
+		changed = true;
   if (m_AudioGroup->GetValue() != m_LastAudioGroup)
     changed = true;
   if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -729,7 +773,7 @@ void GOOrganDialog::FillTree() {
 
 void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
   double amp, gain, tuning;
-  long delay;
+  long delay, truncation;
 
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);
@@ -764,6 +808,14 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     return;
   }
 
+	if (!m_ReleaseTruncationLength->GetValue().ToLong(&truncation) &&
+	    (m_ReleaseTruncationLength->IsModified() &&
+	     (truncation < 0 || truncation > 100000)))
+	{
+		GOMessageBox(_("Release truncation value is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+		return;
+	}	
+
   for (unsigned i = 0; i < entries.size(); i++) {
     OrganTreeItemData *e = (OrganTreeItemData *)m_Tree->GetItemData(entries[i]);
     if (!e)
@@ -776,6 +828,8 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
       e->config->SetTuning(tuning);
     if (m_Delay->IsModified())
       e->config->SetDelay(delay);
+		if (m_ReleaseTruncationLength->IsModified())
+  		e->config->SetReleaseTruncationLength(truncation);
     if (m_AudioGroup->GetValue() != m_LastAudioGroup)
       e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
     if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
@@ -818,6 +872,11 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     m_Delay->DiscardEdits(); // workaround of osx implementation bug
                              // https://github.com/oleg68/GrandOrgue/issues/87
   }
+	if (m_ReleaseTruncationLength->IsModified())
+	{
+		m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%lu"), truncation));
+		m_ReleaseTruncationLength->DiscardEdits(); // workaround of osx implementation bug https://github.com/oleg68/GrandOrgue/issues/87
+	}	
   m_LastAudioGroup = m_AudioGroup->GetValue();
   m_LastBitsPerSample = m_BitsPerSample->GetSelection();
   m_LastCompress = m_Compress->GetSelection();
@@ -871,7 +930,8 @@ void GOOrganDialog::ResetSelectedToDefault(bool isForChildren) {
     e->config->SetGain(e->config->GetDefaultGain());
     e->config->SetTuning(e->config->GetDefaultTuning());
     e->config->SetDelay(e->config->GetDefaultDelay());
-    e->config->SetAudioGroup(wxEmptyString);
+		e->config->SetReleaseTruncationLength(e->config->GetDefaultReleaseTruncationLength());    
+		e->config->SetAudioGroup(wxEmptyString);
     e->config->SetBitsPerSample(-1);
     e->config->SetCompress(-1);
     e->config->SetChannels(-1);
