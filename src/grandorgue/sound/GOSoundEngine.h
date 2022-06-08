@@ -43,6 +43,7 @@ private:
   bool m_RandomizeSpeaking;
   int m_Volume;
   unsigned m_ReleaseLength;
+  unsigned m_ReleaseTruncationLength;
   unsigned m_SamplesPerBuffer;
   float m_Gain;
   unsigned m_SampleRate;

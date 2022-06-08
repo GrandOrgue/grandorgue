@@ -148,6 +148,9 @@ void GOSoundEngine::SetRandomizeSpeaking(bool enable) {
   m_RandomizeSpeaking = enable;
 }
 
+/* Set Release Length Truncation for Toolbar */
+void SetReleaseLength(unsigned reverb);
+
 float GOSoundEngine::GetRandomFactor() {
   if (m_RandomizeSpeaking) {
     const double factor = (pow(2, 1.0 / 1200.0) - 1) / (RAND_MAX / 2);
