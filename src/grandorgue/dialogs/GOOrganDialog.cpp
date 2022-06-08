@@ -563,7 +563,7 @@ void GOOrganDialog::Load() {
   float gain = m_Last->config->GetGain();
   float tuning = m_Last->config->GetTuning();
   unsigned delay = m_Last->config->GetDelay();
-	unsigned  = m_Last->config->GetReleaseTruncationLength();
+	unsigned = m_Last->config->GetReleaseTruncationLength();
 
 
   if (entries.size() == 1)
@@ -670,14 +670,14 @@ void GOOrganDialog::OnDelayChanged(wxCommandEvent &e) {
   Modified();
 }
 
-void OrganDialog::OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e)
+void GOOrganDialog::OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e)
 {
 	m_ReleaseTruncationLength->ChangeValue(wxString::Format(wxT("%u"), (unsigned)m_ReleaseTruncationLengthSpin->GetValue()));
 	m_ReleaseTruncationLength->MarkDirty();
 	Modified();
 }
 
-void OrganDialog::OnReleaseTruncationLengthChanged(wxCommandEvent &e)
+void GOOrganDialog::OnReleaseTruncationLengthChanged(wxCommandEvent &e)
 {
 	long truncation;
 	if (m_ReleaseTruncationLength->GetValue().ToLong(&truncation))
