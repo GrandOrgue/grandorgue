@@ -99,7 +99,7 @@ public:
   int GetVolume() const;
   void SetScaledReleases(bool enable);
   void SetRandomizeSpeaking(bool enable);
-/* Set Release Length Truncation for Toolbar */
+  /* Set Release Length Truncation for Toolbar */
 	void SetReleaseLength(unsigned reverb);
 	/* Get Release Length Truncation Mechanism Value for ODF/Organ Settings Panel */
 	int GetReleaseTruncationLength();

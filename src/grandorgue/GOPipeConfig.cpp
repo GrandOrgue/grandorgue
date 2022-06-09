@@ -141,10 +141,10 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
   /* Release Sample Truncation Settings
   * Default Settings Pulled from ODF. Numeric Range = 0-100000. If no value exists in ODF, default value = 0.  */
   m_DefaultReleaseTruncationLength = cfg.ReadInteger(
-	ODFSetting, group, prefix + wxT("ReleaseTruncation"), 0, 100000, false, 0);
+	  ODFSetting, group, prefix + wxT("ReleaseTruncation"), 0, 100000, false, 0);
   /* Pulls Settings Set by User in GUI Organ Settings Panel. */
   m_ReleaseTruncationLength = cfg.ReadInteger(
-	CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 100000, false, m_DefaultReleaseTruncationLength);
+	  CMBSetting, group, prefix + wxT("ReleaseTruncationLength"), 0, 100000, false, m_DefaultReleaseTruncationLength);
   m_BitsPerSample = cfg.ReadInteger(
     CMBSetting,
     m_Group,
