@@ -1,3 +1,4 @@
+- Added release truncation controls to ODF and Organ Settings panel. https://github.com/GrandOrgue/grandorgue/discussions/680
 - Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1129
 # 3.6.7 (2022-05-15)
 - Added publishing debug symbols on windows builds https://github.com/GrandOrgue/grandorgue/issues/853

@@ -49,6 +49,7 @@ public:
   float GetDefaultTuning();
 
   unsigned GetEffectiveDelay();
+	unsigned GetEffectiveReleaseTruncationLength();
   wxString GetEffectiveAudioGroup();
 
   unsigned GetEffectiveBitsPerSample();

@@ -21,6 +21,7 @@ private:
   void UpdateAmplitude();
   void UpdateTuning();
   void UpdateAudioGroup();
+  void UpdateReleaseTruncationLength();
 
 public:
   GOPipeConfigTreeNode(

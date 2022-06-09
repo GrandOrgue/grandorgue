@@ -87,6 +87,7 @@ void GOPerfTestApp::RunTest(
         GOSoundProviderWave *w
           = new GOSoundProviderWave(organfile->GetMemoryPool());
         w->SetAmplitude(102, 0);
+        w->SetReleaseTruncationLength(0);
         std::vector<release_load_info> release;
         std::vector<attack_load_info> attack;
         attack_load_info ainfo;
@@ -113,7 +114,8 @@ void GOPerfTestApp::RunTest(
           1,
           -1,
           0,
-          0);
+          0,
+					0);
         pipes.push_back(w);
       }
       engine->SetSamplesPerBuffer(samples_per_frame);

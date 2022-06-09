@@ -40,6 +40,8 @@ private:
   wxSpinButton *m_TuningSpin;
   wxTextCtrl *m_Delay;
   wxSpinButton *m_DelaySpin;
+	wxTextCtrl* m_ReleaseTruncationLength;
+	wxSpinButton* m_ReleaseTruncationLengthSpin;
   wxComboBox *m_AudioGroup;
   wxString m_LastAudioGroup;
   wxChoice *m_BitsPerSample;
@@ -93,6 +95,8 @@ private:
   void OnTuningChanged(wxCommandEvent &e);
   void OnDelaySpinChanged(wxSpinEvent &e);
   void OnDelayChanged(wxCommandEvent &e);
+	void OnReleaseTruncationLengthSpinChanged(wxSpinEvent& e);
+	void OnReleaseTruncationLengthChanged(wxCommandEvent &e);
   void OnAudioGroupChanged(wxCommandEvent &e);
   void OnBitsPerSampleChanged(wxCommandEvent &e);
   void OnCompressChanged(wxCommandEvent &e);
@@ -126,6 +130,8 @@ protected:
     ID_EVENT_TUNING_SPIN,
     ID_EVENT_DELAY,
     ID_EVENT_DELAY_SPIN,
+		ID_EVENT_RELEASE_TRUNCATION_LENGTH,
+		ID_EVENT_RELEASE_TRUNCATION_LENGTH_SPIN,
     ID_EVENT_AUDIO_GROUP,
     ID_EVENT_IGNORE_PITCH,
     ID_EVENT_LOOP_LOAD,

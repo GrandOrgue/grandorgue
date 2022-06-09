@@ -31,6 +31,8 @@ private:
   float m_DefaultTuning;
   unsigned m_Delay;
   unsigned m_DefaultDelay;
+  int m_ReleaseTruncationLength;
+  int m_DefaultReleaseTruncationLength;
   int m_BitsPerSample;
   int m_Compress;
   int m_Channels;
@@ -62,6 +64,10 @@ public:
   unsigned GetDelay();
   unsigned GetDefaultDelay();
   void SetDelay(unsigned delay);
+
+	unsigned GetReleaseTruncationLength();
+	unsigned GetDefaultReleaseTruncationLength();
+	void SetReleaseTruncationLength(unsigned truncation);
 
   const wxString &GetAudioGroup();
   void SetAudioGroup(const wxString &str);
