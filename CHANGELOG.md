@@ -1,3 +1,6 @@
+- Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1129
+# 3.6.7 (2022-05-15)
+- Added publishing debug symbols on windows builds https://github.com/GrandOrgue/grandorgue/issues/853
 # 3.6.6 (2022-04-29)
 - Fixed help issues https://github.com/GrandOrgue/grandorgue/issues/1066
 - Fixed saving organ settings on closing an organ or on finishing GrandOrgue https://github.com/GrandOrgue/grandorgue/issues/1069

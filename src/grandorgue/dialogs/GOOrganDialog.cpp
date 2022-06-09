@@ -7,6 +7,8 @@
 
 #include "GOOrganDialog.h"
 
+#include <unordered_set>
+
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choicdlg.h>
@@ -44,6 +46,7 @@ BEGIN_EVENT_TABLE(GOOrganDialog, wxDialog)
 EVT_BUTTON(ID_EVENT_APPLY, GOOrganDialog::OnEventApply)
 EVT_BUTTON(ID_EVENT_RESET, GOOrganDialog::OnEventReset)
 EVT_BUTTON(ID_EVENT_DEFAULT, GOOrganDialog::OnEventDefault)
+EVT_BUTTON(ID_EVENT_DEFAULT_ALL, GOOrganDialog::OnEventDefaultAll)
 EVT_BUTTON(wxID_OK, GOOrganDialog::OnOK)
 EVT_BUTTON(wxID_CANCEL, GOOrganDialog::OnCancel)
 EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, GOOrganDialog::OnTreeChanging)
@@ -298,7 +301,10 @@ GOOrganDialog::GOOrganDialog(
   m_Apply = new wxButton(scroll, ID_EVENT_APPLY, _("Apply"));
   m_Reset = new wxButton(scroll, ID_EVENT_RESET, _("Reset"));
   m_Default = new wxButton(scroll, ID_EVENT_DEFAULT, _("Default"));
+  m_DefaultAll
+    = new wxButton(scroll, ID_EVENT_DEFAULT_ALL, _("Default for All"));
   buttons->Add(m_Default);
+  buttons->Add(m_DefaultAll);
   buttons->Add(m_Reset);
   buttons->Add(m_Apply);
   settingSizer->Add(buttons);
@@ -826,14 +832,41 @@ void GOOrganDialog::OnEventReset(wxCommandEvent &e) {
   Load();
 }
 
-void GOOrganDialog::OnEventDefault(wxCommandEvent &e) {
+void GOOrganDialog::ResetSelectedToDefault(bool isForChildren) {
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);
 
-  for (unsigned i = 0; i < entries.size(); i++) {
-    OrganTreeItemData *e = (OrganTreeItemData *)m_Tree->GetItemData(entries[i]);
-    if (!e)
-      continue;
+  std::unordered_set<OrganTreeItemData *> oiSet;
+
+  // Fill idSet with entries
+  for (const wxTreeItemId id : entries) {
+    OrganTreeItemData *p = (OrganTreeItemData *)m_Tree->GetItemData(id);
+
+    if (p)
+      oiSet.insert(p);
+  }
+
+  // add the children
+  if (isForChildren) {
+    // entries.size() it may not be precalculated because it is increased
+    for (unsigned i = 0; i < entries.size(); i++) {
+      const wxTreeItemId id = entries[i];
+      wxTreeItemIdValue cookie;
+
+      for (wxTreeItemId c = m_Tree->GetFirstChild(id, cookie); c.IsOk();
+           c = m_Tree->GetNextChild(id, cookie)) {
+        OrganTreeItemData *p = (OrganTreeItemData *)m_Tree->GetItemData(c);
+
+        if (p && oiSet.find(p) == oiSet.end()) {
+          oiSet.insert(p);
+          entries.push_back(c);
+          // c's children will be scanned later in the loop
+        }
+      }
+    }
+  }
+
+  for (OrganTreeItemData *e : oiSet) {
     e->config->SetAmplitude(e->config->GetDefaultAmplitude());
     e->config->SetGain(e->config->GetDefaultGain());
     e->config->SetTuning(e->config->GetDefaultTuning());
@@ -849,6 +882,14 @@ void GOOrganDialog::OnEventDefault(wxCommandEvent &e) {
 
   m_Last = NULL;
   Load();
+}
+
+void GOOrganDialog::OnEventDefault(wxCommandEvent &e) {
+  ResetSelectedToDefault(false);
+}
+
+void GOOrganDialog::OnEventDefaultAll(wxCommandEvent &e) {
+  ResetSelectedToDefault(true);
 }
 
 void GOOrganDialog::OnTreeChanging(wxTreeEvent &e) {

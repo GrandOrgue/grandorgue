@@ -8,9 +8,8 @@
 #ifndef GOORGANDIALOG_H
 #define GOORGANDIALOG_H
 
-#include <wx/dialog.h>
-
 #include <vector>
+#include <wx/dialog.h>
 
 #include "document-base/GOView.h"
 
@@ -60,6 +59,7 @@ private:
   wxButton *m_Apply;
   wxButton *m_Reset;
   wxButton *m_Default;
+  wxButton *m_DefaultAll;
   wxButton *m_AudioGroupAssistant;
   wxButton *m_Collapse;
   wxCheckBox *m_IgnorePitch;
@@ -80,6 +80,7 @@ private:
     std::vector<wxString> audio_group, unsigned &pos, wxTreeItemId item);
   void FillTree(wxTreeItemId parent, GOPipeConfigNode &config);
   void CloseTree(wxTreeItemId parent);
+  void ResetSelectedToDefault(bool isForChildren);
 
   void OnTreeChanging(wxTreeEvent &e);
   void OnTreeChanged(wxTreeEvent &e);
@@ -102,6 +103,7 @@ private:
   void OnEventApply(wxCommandEvent &e);
   void OnEventReset(wxCommandEvent &e);
   void OnEventDefault(wxCommandEvent &e);
+  void OnEventDefaultAll(wxCommandEvent &e);
   void OnOK(wxCommandEvent &event);
   void OnCancel(wxCommandEvent &event);
   void OnAudioGroupAssitant(wxCommandEvent &e);
@@ -115,6 +117,7 @@ protected:
     ID_EVENT_AUDIO_GROUP_ASSISTANT,
     ID_EVENT_COLLAPSE,
     ID_EVENT_DEFAULT,
+    ID_EVENT_DEFAULT_ALL,
     ID_EVENT_AMPLITUDE,
     ID_EVENT_AMPLITUDE_SPIN,
     ID_EVENT_GAIN,
