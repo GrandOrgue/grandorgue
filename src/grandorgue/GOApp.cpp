@@ -119,11 +119,10 @@ bool GOApp::OnInit() {
     return false;
 
   m_config = new GOConfig(m_InstanceName);
-  m_config->Load();
-
   GOStdPath::InitLocaleDir();
   m_locale.Init(m_config->GetLanguageId());
   m_locale.AddCatalog(wxT("GrandOrgue"));
+  m_config->Load();
 
   m_soundSystem = new GOSound(*m_config);
 
