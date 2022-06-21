@@ -228,33 +228,36 @@ bool GOSettingsOrgans::TransferDataToWindow() {
 
 void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
   const int currOrganIndex = event.GetIndex();
-  const GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
-  const bool isPackage = !o->GetArchiveID().IsEmpty();
-  const GOArchiveFile *a
-    = isPackage ? m_config.GetArchiveByPath(o->GetArchivePath()) : NULL;
-  wxString archiveInfo = EMPTY_STRING;
 
-  if (a) {
-    if (!a->IsUsable(m_config))
-      archiveInfo = _("MISSING - ");
-    else if (!a->IsComplete(m_config)) {
-      archiveInfo = _("INCOMPLETE - ");
+  if (currOrganIndex >= 0) {
+    const GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
+    const bool isPackage = !o->GetArchiveID().IsEmpty();
+    const GOArchiveFile *a
+      = isPackage ? m_config.GetArchiveByPath(o->GetArchivePath()) : NULL;
+    wxString archiveInfo = EMPTY_STRING;
 
-      for (unsigned i = 0; i < a->GetDependencies().size(); i++)
-        if (!m_config.GetArchiveByID(a->GetDependencies()[i], true))
-          archiveInfo += wxString::Format(
-            _("requires '%s' "), a->GetDependencyTitles()[i]);
+    if (a) {
+      if (!a->IsUsable(m_config))
+        archiveInfo = _("MISSING - ");
+      else if (!a->IsComplete(m_config)) {
+        archiveInfo = _("INCOMPLETE - ");
+
+        for (unsigned i = 0; i < a->GetDependencies().size(); i++)
+          if (!m_config.GetArchiveByID(a->GetDependencies()[i], true))
+            archiveInfo += wxString::Format(
+              _("requires '%s' "), a->GetDependencyTitles()[i]);
+      }
     }
-  }
 
-  m_Builder->ChangeValue(o->GetOrganBuilder());
-  m_Recording->ChangeValue(o->GetRecordingDetail());
-  m_OrganHash->ChangeValue(o->GetOrganHash());
-  m_PackageId->ChangeValue(o->GetArchiveID());
-  m_PackageName->ChangeValue(a ? a->GetName() : EMPTY_STRING);
-  m_PathInPackage->ChangeValue(isPackage ? o->GetODFPath() : EMPTY_STRING);
-  m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
-  m_PackageInfo->ChangeValue(archiveInfo);
+    m_Builder->ChangeValue(o->GetOrganBuilder());
+    m_Recording->ChangeValue(o->GetRecordingDetail());
+    m_OrganHash->ChangeValue(o->GetOrganHash());
+    m_PackageId->ChangeValue(o->GetArchiveID());
+    m_PackageName->ChangeValue(a ? a->GetName() : EMPTY_STRING);
+    m_PathInPackage->ChangeValue(isPackage ? o->GetODFPath() : EMPTY_STRING);
+    m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
+    m_PackageInfo->ChangeValue(archiveInfo);
+  }
 }
 
 void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) {
