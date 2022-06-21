@@ -337,6 +337,7 @@ wxString GODefinitionFile::Load(
         organ.GetArchiveID().c_str());
     GOArchive *main = m_archives[0];
     m_ArchiveID = main->GetArchiveID();
+    m_ArchivePath = main->GetPath();
 
     for (unsigned i = 0; i < main->GetDependencies().size(); i++) {
       if (!LoadArchive(main->GetDependencies()[i], name))
@@ -892,6 +893,7 @@ GOOrgan GODefinitionFile::GetOrganInfo() {
   return GOOrgan(
     GetODFFilename(),
     m_ArchiveID,
+    m_ArchivePath,
     GetChurchName(),
     GetOrganBuilder(),
     GetRecordingDetails());

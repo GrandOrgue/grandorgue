@@ -42,6 +42,8 @@ public:
   const GOArchiveFile *GetArchiveByID(
     const wxString &id, bool useable = false) const;
   const GOArchiveFile *GetArchiveByPath(const wxString &path) const;
+
+  void AddOrgansFromArchives();
 };
 
 #endif

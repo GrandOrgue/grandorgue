@@ -106,3 +106,29 @@ void GOOrganList::AddArchive(const GOArchiveFile &archive) {
     }
   m_ArchiveList.push_back(new GOArchiveFile(archive));
 }
+
+void GOOrganList::AddOrgansFromArchives() {
+  for (const GOArchiveFile *pA : m_ArchiveList) {
+    const wxString &archivePath = pA->GetPath();
+    const wxString &archiveId = pA->GetID();
+
+    GOOrgan *pOMatchedByPath = NULL;
+    GOOrgan *pOMatchedById = NULL;
+
+    for (GOOrgan *pO : m_OrganList) {
+      if (pO->GetArchivePath() == archivePath) {
+        pOMatchedByPath = pO;
+        break;
+      }
+      if (!pOMatchedById && pO->GetArchiveID() == archiveId)
+        pOMatchedById = pO;
+    }
+    if (!pOMatchedByPath) {
+      if (pOMatchedById)
+        pOMatchedById->SetArchivePath(archivePath);
+      else {
+        // to do: add an organ
+      }
+    }
+  }
+}

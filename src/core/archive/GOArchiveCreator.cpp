@@ -265,6 +265,7 @@ bool GOArchiveCreator::addOrganData(unsigned idx, GOFile *file) {
   m_organs[idx] = new GOOrgan(
     m_OrganPaths[idx],
     wxEmptyString,
+    wxEmptyString,
     church_name,
     organ_builder,
     recording_details);

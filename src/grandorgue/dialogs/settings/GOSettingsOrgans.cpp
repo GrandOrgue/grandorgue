@@ -7,47 +7,174 @@
 
 #include "GOSettingsOrgans.h"
 
+#include <algorithm>
+#include <set>
+#include <unordered_map>
+
 #include <wx/button.h>
+#include <wx/gbsizer.h>
 #include <wx/listctrl.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 
 #include "GOOrgan.h"
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfig.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 
+static wxString EMPTY_STRING = wxEmptyString;
+
 BEGIN_EVENT_TABLE(GOSettingsOrgans, wxPanel)
+EVT_LIST_ITEM_FOCUSED(ID_ORGANS, GOSettingsOrgans::OnOrganFocused)
 EVT_LIST_ITEM_SELECTED(ID_ORGANS, GOSettingsOrgans::OnOrganSelected)
+EVT_LIST_ITEM_DESELECTED(ID_ORGANS, GOSettingsOrgans::OnOrganSelected)
 EVT_BUTTON(ID_ORGAN_UP, GOSettingsOrgans::OnOrganUp)
 EVT_BUTTON(ID_ORGAN_DOWN, GOSettingsOrgans::OnOrganDown)
 EVT_BUTTON(ID_ORGAN_TOP, GOSettingsOrgans::OnOrganTop)
 EVT_BUTTON(ID_ORGAN_DEL, GOSettingsOrgans::OnOrganDel)
 EVT_BUTTON(ID_ORGAN_PROPERTIES, GOSettingsOrgans::OnOrganProperties)
-EVT_LIST_ITEM_SELECTED(ID_PACKAGES, GOSettingsOrgans::OnPackageSelected)
-EVT_BUTTON(ID_PACKAGE_DEL, GOSettingsOrgans::OnPackageDel)
 END_EVENT_TABLE()
 
 GOSettingsOrgans::GOSettingsOrgans(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
-  : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
+  : wxPanel(parent, wxID_ANY),
+    m_config(settings),
+    m_midi(midi),
+    m_OrigOrganList(m_config.GetOrganList()) {
   wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer *const boxOrgans
-    = new wxStaticBoxSizer(wxVERTICAL, this, _("Registered organs"));
+  wxGridBagSizer *const gbSizer = new wxGridBagSizer(5, 5);
 
   m_Organs = new wxListView(
     this,
     ID_ORGANS,
     wxDefaultPosition,
-    wxSize(100, 200),
-    wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
-  m_Organs->InsertColumn(0, _("Church"));
-  m_Organs->InsertColumn(1, _("Builder"));
-  m_Organs->InsertColumn(2, _("Recording"));
-  m_Organs->InsertColumn(3, _("MIDI"));
-  m_Organs->InsertColumn(4, _("Organ package"));
-  m_Organs->InsertColumn(5, _("ODF Path"));
-  boxOrgans->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
+    //    wxSize(400, 200),
+    wxDefaultSize,
+    wxLC_REPORT | wxLC_HRULES | wxLC_VRULES);
+  m_Organs->InsertColumn(0, _("Name"));
+  m_Organs->InsertColumn(1, _("MIDI"));
+  m_Organs->InsertColumn(2, _("Path"));
+  m_Organs->SetColumnWidth(0, 200);
+  m_Organs->SetColumnWidth(1, 50);
+  m_Organs->SetColumnWidth(2, 0);
+  m_Organs->SetColumnWidth(2, 300);
+
+  gbSizer->Add(
+    m_Organs, wxGBPosition(0, 0), wxGBSpan(1, 4), wxALL | wxEXPAND, 5);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Builder:")),
+    wxGBPosition(1, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_Builder = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_Builder, wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Recording:")),
+    wxGBPosition(2, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_Recording = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_Recording, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Organ Hash:")),
+    wxGBPosition(3, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_OrganHash = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_OrganHash, wxGBPosition(3, 1), wxDefaultSpan, wxEXPAND);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Package Id:")),
+    wxGBPosition(4, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_PackageId = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_PackageId, wxGBPosition(4, 1), wxDefaultSpan, wxEXPAND);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Pakage Name:")),
+    wxGBPosition(1, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_PackageName = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_PackageName, wxGBPosition(1, 3), wxDefaultSpan, wxEXPAND);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Path in the Pakage:")),
+    wxGBPosition(2, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_PathInPackage = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_PathInPackage, wxGBPosition(2, 3), wxDefaultSpan, wxEXPAND);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Package Hash:")),
+    wxGBPosition(3, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_PackageHash = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_PackageHash, wxGBPosition(3, 3), wxDefaultSpan, wxEXPAND);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Package Info:")),
+    wxGBPosition(4, 2),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_PackageInfo = new wxTextCtrl(
+    this,
+    wxID_ANY,
+    wxEmptyString,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxTE_READONLY);
+  gbSizer->Add(m_PackageInfo, wxGBPosition(4, 3), wxDefaultSpan, wxEXPAND);
 
   wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   m_OrganProperties
@@ -61,163 +188,277 @@ GOSettingsOrgans::GOSettingsOrgans(
   buttonSizer->Add(m_OrganTop, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_OrganDel, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_OrganProperties, 0, wxALIGN_LEFT | wxALL, 5);
-  boxOrgans->Add(buttonSizer, 0, wxALL, 5);
+  gbSizer->Add(buttonSizer, wxGBPosition(5, 0), wxGBSpan(1, 4), wxALL);
 
-  topSizer->Add(boxOrgans, 1, wxEXPAND | wxALL, 5);
+  gbSizer->AddGrowableCol(1, 1);
+  gbSizer->AddGrowableCol(3, 1);
+  gbSizer->AddGrowableRow(0, 1);
+  topSizer->Add(gbSizer, 1, wxEXPAND | wxALL, 5);
 
-  wxBoxSizer *const boxPackages
-    = new wxStaticBoxSizer(wxVERTICAL, this, _("Packages"));
+  SetSizerAndFit(topSizer);
+}
 
-  m_Packages = new wxListView(
-    this,
-    ID_PACKAGES,
-    wxDefaultPosition,
-    wxSize(100, 200),
-    wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
-  m_Packages->InsertColumn(0, _("Name"));
-  m_Packages->InsertColumn(1, _("Path"));
-  m_Packages->InsertColumn(2, _("ID"));
-  m_Packages->InsertColumn(3, _("Info"));
-  boxPackages->Add(m_Packages, 1, wxEXPAND | wxALL, 5);
-
-  buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  m_PackageDel = new wxButton(this, ID_PACKAGE_DEL, _("&Delete"));
-  buttonSizer->Add(m_PackageDel, 0, wxALIGN_LEFT | wxALL, 5);
-  boxPackages->Add(buttonSizer, 0, wxALL, 5);
-
-  topSizer->Add(boxPackages, 1, wxEXPAND | wxALL, 5);
-
-  this->SetSizer(topSizer);
-  topSizer->Fit(this);
-
-  for (unsigned i = 0; i < m_config.GetOrganList().size(); i++) {
-    GOOrgan *o = m_config.GetOrganList()[i];
+bool GOSettingsOrgans::TransferDataToWindow() {
+  m_config.AddOrgansFromArchives();
+  for (unsigned i = 0; i < m_OrigOrganList.size(); i++) {
+    GOOrgan *o = m_OrigOrganList[i];
     wxString title = o->GetChurchName();
+
     if (!o->IsUsable(m_config))
       title = _("MISSING - ") + title;
     m_Organs->InsertItem(i, title);
     m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
-    m_Organs->SetItem(i, 1, o->GetOrganBuilder());
-    m_Organs->SetItem(i, 2, o->GetRecordingDetail());
     m_Organs->SetItem(
-      i, 3, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
-    m_Organs->SetItem(i, 5, o->GetODFPath());
-    if (o->GetArchiveID() != wxEmptyString) {
-      const GOArchiveFile *a = m_config.GetArchiveByID(o->GetArchiveID());
-      m_Organs->SetItem(i, 4, a ? a->GetName() : o->GetArchiveID());
-    }
-  }
-  if (m_Organs->GetItemCount()) {
-    m_Organs->SetColumnWidth(0, 150);
-    m_Organs->SetColumnWidth(1, 150);
-    m_Organs->SetColumnWidth(2, 250);
-    m_Organs->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
-    m_Organs->SetColumnWidth(4, wxLIST_AUTOSIZE);
-    m_Organs->SetColumnWidth(5, wxLIST_AUTOSIZE);
+      i, 1, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
+    m_Organs->SetItem(
+      i,
+      2,
+      o->GetArchiveID().IsEmpty() ? o->GetODFPath() : o->GetArchivePath());
   }
   m_OrganUp->Disable();
   m_OrganDown->Disable();
   m_OrganTop->Disable();
   m_OrganDel->Disable();
   m_OrganProperties->Disable();
+  m_PackageList.clear();
+  for (GOArchiveFile *pOrigPackage : m_config.GetArchiveList())
+    m_PackageList.push_back(pOrigPackage);
+  return true;
+}
 
-  for (unsigned i = 0; i < m_config.GetArchiveList().size(); i++) {
-    GOArchiveFile *a = m_config.GetArchiveList()[i];
-    wxString title = a->GetName();
-    wxString info = wxEmptyString;
+void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
+  const int currOrganIndex = event.GetIndex();
+  const GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
+  const bool isPackage = !o->GetArchiveID().IsEmpty();
+  const GOArchiveFile *a
+    = isPackage ? m_config.GetArchiveByPath(o->GetArchivePath()) : NULL;
+  wxString archiveInfo = EMPTY_STRING;
+
+  if (a) {
     if (!a->IsUsable(m_config))
-      title = _("MISSING - ") + title;
+      archiveInfo = _("MISSING - ");
     else if (!a->IsComplete(m_config)) {
-      title = _("INCOMPLETE - ") + title;
+      archiveInfo = _("INCOMPLETE - ");
+
       for (unsigned i = 0; i < a->GetDependencies().size(); i++)
         if (!m_config.GetArchiveByID(a->GetDependencies()[i], true))
-          info += wxString::Format(
+          archiveInfo += wxString::Format(
             _("requires '%s' "), a->GetDependencyTitles()[i]);
     }
-    m_Packages->InsertItem(i, title);
-    m_Packages->SetItemPtrData(i, (wxUIntPtr)a);
-    m_Packages->SetItem(i, 1, a->GetPath());
-    m_Packages->SetItem(i, 2, a->GetID());
-    m_Packages->SetItem(i, 3, info);
   }
 
-  if (m_Packages->GetItemCount()) {
-    m_Packages->SetColumnWidth(0, wxLIST_AUTOSIZE);
-    m_Packages->SetColumnWidth(1, wxLIST_AUTOSIZE);
-    m_Packages->SetColumnWidth(2, wxLIST_AUTOSIZE);
-    m_Packages->SetColumnWidth(3, wxLIST_AUTOSIZE);
-  }
-  m_PackageDel->Disable();
+  m_Builder->ChangeValue(o->GetOrganBuilder());
+  m_Recording->ChangeValue(o->GetRecordingDetail());
+  m_OrganHash->ChangeValue(o->GetOrganHash());
+  m_PackageId->ChangeValue(o->GetArchiveID());
+  m_PackageName->ChangeValue(a ? a->GetName() : EMPTY_STRING);
+  m_PathInPackage->ChangeValue(isPackage ? o->GetODFPath() : EMPTY_STRING);
+  m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
+  m_PackageInfo->ChangeValue(archiveInfo);
 }
 
 void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) {
-  long index = m_Organs->GetFirstSelected();
-  m_OrganDel->Enable();
+  long iFirstSelected = m_Organs->GetFirstSelected();
+
+  // find the last selected organ
+  long iLastSelected = -1;
+
+  for (long i = iFirstSelected; i >= 0; i = m_Organs->GetNextSelected(i))
+    iLastSelected = i;
+
+  if (iFirstSelected >= 0)
+    m_OrganDel->Enable();
+  else
+    m_OrganDel->Disable();
+
   m_OrganProperties->Enable();
-  if (index <= 0) {
+  if (iFirstSelected <= 0) {
     m_OrganTop->Disable();
     m_OrganUp->Disable();
   } else {
     m_OrganTop->Enable();
     m_OrganUp->Enable();
   }
-  if (
-    m_Organs->GetItemCount() > 1 && index >= 0
-    && index + 1 < m_Organs->GetItemCount())
+  if (iLastSelected >= 0 && iLastSelected + 1 < m_Organs->GetItemCount())
     m_OrganDown->Enable();
   else
     m_OrganDown->Disable();
 }
 
-void GOSettingsOrgans::MoveOrgan(long from, long to) {
-  wxListItem item;
-  item.SetId(from);
-  item.SetMask(-1);
-  m_Organs->GetItem(item);
-  item.SetId(to);
-  m_Organs->InsertItem(item);
-  if (to < from)
-    from++;
-  for (unsigned i = 0; i < 6; i++) {
-    item.SetId(from);
-    item.SetColumn(i);
-    m_Organs->GetItem(item);
-    item.SetId(to);
-    m_Organs->SetItem(item);
+GOSettingsOrgans::OrganRecs GOSettingsOrgans::GetCurrentOrganRecs() {
+  OrganRecs recs;
+  const long iFocused = m_Organs->GetFocusedItem();
+
+  for (long l = m_Organs->GetItemCount(), i = 0; i < l; i++)
+    recs.push_back(
+      {(const GOOrgan *)m_Organs->GetItemData(i), false, i == iFocused});
+  for (long i = m_Organs->GetFirstSelected(); i >= 0;
+       i = m_Organs->GetNextSelected(i))
+    recs[i].is_selected = true;
+  return recs;
+}
+
+using OrganToLongMap = std::unordered_map<const GOOrgan *, long>;
+
+int wxCALLBACK
+organ_ord_compare_callback(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData) {
+  const OrganToLongMap *ord = (const OrganToLongMap *)sortData;
+  long i1 = ord->at((const GOOrgan *)item1);
+  long i2 = ord->at((const GOOrgan *)item2);
+
+  return i1 < i2 ? -1 : i1 > i2 ? 1 : 0;
+}
+
+void GOSettingsOrgans::ReorderOrgans(const OrganRecs &newSortedRecs) {
+  const int l = newSortedRecs.size();
+  OrganToLongMap newOrd;
+
+  for (int i = 0; i < l; i++)
+    newOrd[newSortedRecs[i].p_organ] = i;
+  m_Organs->SortItems(organ_ord_compare_callback, (wxIntPtr)&newOrd);
+
+  // restore selection and the focus
+  for (int i = 0; i < l; i++) {
+    const OrganRec &rec = newSortedRecs[i];
+
+    m_Organs->Select(i, rec.is_selected);
+    if (rec.is_focused)
+      m_Organs->Focus(i);
   }
-  m_Organs->SetItemPtrData(to, m_Organs->GetItemData(from));
-  m_Organs->DeleteItem(from);
-  m_Organs->Select(to);
 }
 
 void GOSettingsOrgans::OnOrganUp(wxCommandEvent &event) {
-  MoveOrgan(m_Organs->GetFirstSelected(), m_Organs->GetFirstSelected() - 1);
+  OrganRecs recs(GetCurrentOrganRecs());
+  const int l = recs.size();
+
+  if (l && !recs[0].is_selected)
+    for (int i = 1; i < l; i++) {
+      OrganRec &rec = recs[i];
+
+      if (rec.is_selected)
+        std::swap(rec, recs[i - 1]);
+    }
+  ReorderOrgans(recs);
 }
 
 void GOSettingsOrgans::OnOrganDown(wxCommandEvent &event) {
-  MoveOrgan(m_Organs->GetFirstSelected(), m_Organs->GetFirstSelected() + 1);
+  OrganRecs recs(GetCurrentOrganRecs());
+  const int l = recs.size();
+
+  if (l && !recs[l - 1].is_selected)
+    for (int i = l - 2; i >= 0; i--) {
+      OrganRec &rec = recs[i];
+
+      if (rec.is_selected)
+        std::swap(rec, recs[i + 1]);
+    }
+  ReorderOrgans(recs);
 }
 
 void GOSettingsOrgans::OnOrganTop(wxCommandEvent &event) {
-  MoveOrgan(m_Organs->GetFirstSelected(), 0);
+  OrganRecs oldRecs(GetCurrentOrganRecs());
+  OrganRecs newRecs;
+
+  // add all selected to the new order
+  std::copy_if(
+    oldRecs.begin(),
+    oldRecs.end(),
+    std::back_inserter(newRecs),
+    [](OrganRec &rec) { return rec.is_selected; });
+
+  // add all unselected to the new order
+  std::copy_if(
+    oldRecs.begin(),
+    oldRecs.end(),
+    std::back_inserter(newRecs),
+    [](OrganRec &rec) { return !rec.is_selected; });
+  ReorderOrgans(newRecs);
 }
 
+static wxString NAMES_DELIM = ", ";
+
 void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
-  if (
-    wxMessageBox(
-      wxString::Format(
-        _("Do you want to remove %s?"),
-        m_Organs->GetItemText(m_Organs->GetFirstSelected()).c_str()),
-      _("Organs"),
-      wxYES_NO | wxICON_EXCLAMATION,
-      this)
-    == wxYES) {
-    m_Organs->DeleteItem(m_Organs->GetFirstSelected());
-    m_OrganUp->Disable();
-    m_OrganDown->Disable();
-    m_OrganTop->Disable();
-    m_OrganDel->Disable();
-    m_OrganProperties->Disable();
+  std::set<long> selectedItemSet;
+  std::vector<long> selectedItems;
+  wxString organNames;
+
+  for (long i = m_Organs->GetFirstSelected(); i >= 0;
+       i = m_Organs->GetNextSelected(i)) {
+    selectedItems.push_back(i);
+    selectedItemSet.insert(i);
+    organNames += (organNames.IsEmpty() ? EMPTY_STRING : NAMES_DELIM)
+      + m_Organs->GetItemText(i);
+  }
+
+  if (selectedItems.size()) {
+    // find all package paths are still used by the remaining organs
+    std::set<wxString> packagePathsUsed;
+
+    for (long l = m_Organs->GetItemCount(), i = 0; i < l; i++)
+      if (selectedItemSet.find(i) == selectedItemSet.end()) { // not selected
+        const wxString &pkgPath
+          = ((GOOrgan *)m_Organs->GetItemData(i))->GetArchivePath();
+
+        if (!pkgPath.IsEmpty())
+          packagePathsUsed.insert(pkgPath);
+      }
+
+    // find all package ids that are still used
+    std::set<wxString> packageIdsUsed;
+
+    for (const GOArchiveFile *pA : m_PackageList)
+      if (packagePathsUsed.find(pA->GetPath()) != packagePathsUsed.end())
+        for (const wxString &depId : pA->GetDependencies())
+          packageIdsUsed.insert(depId);
+
+    // find all packages that are not used anymore and will be removed
+    std::set<GOArchiveFile *> packagesToDelete;
+    wxString packageNamesToDelete;
+
+    for (GOArchiveFile *pA : m_PackageList)
+      if (
+        packagePathsUsed.find(pA->GetPath()) == packagePathsUsed.end()
+        && packageIdsUsed.find(pA->GetID()) == packageIdsUsed.end()) {
+        packagesToDelete.insert(pA);
+        packageNamesToDelete
+          += (packageNamesToDelete.IsEmpty() ? EMPTY_STRING : NAMES_DELIM)
+          + pA->GetName();
+      }
+
+    wxString addDelMessage = packageNamesToDelete.IsEmpty()
+      ? EMPTY_STRING
+      : wxString::Format(
+        _("\n(The following packages will also be deleted: %s)"),
+        packageNamesToDelete);
+
+    if (
+      wxMessageBox(
+        wxString::Format(
+          _("Do you want to remove %s%s?"), organNames, addDelMessage),
+        _("Organs"),
+        wxYES_NO | wxICON_EXCLAMATION,
+        this)
+      == wxYES) {
+      // do actual deleting
+
+      for (int i = selectedItems.size() - 1; i >= 0; i--)
+        m_Organs->DeleteItem(selectedItems[i]);
+
+      m_PackageList.erase(
+        std::remove_if(
+          m_PackageList.begin(),
+          m_PackageList.end(),
+          [&](GOArchiveFile *pA) {
+            return packagesToDelete.find(pA) != packagesToDelete.end();
+          }),
+        m_PackageList.end());
+
+      m_OrganUp->Disable();
+      m_OrganDown->Disable();
+      m_OrganTop->Disable();
+      m_OrganDel->Disable();
+      m_OrganProperties->Disable();
+    }
   }
 }
 
@@ -240,91 +481,36 @@ void GOSettingsOrgans::OnOrganProperties(wxCommandEvent &event) {
     o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
 }
 
-void GOSettingsOrgans::OnPackageSelected(wxListEvent &event) {
-  m_PackageDel->Enable();
-}
-
-void GOSettingsOrgans::OnPackageDel(wxCommandEvent &event) {
-  const GOArchiveFile *a = (const GOArchiveFile *)m_Packages->GetItemData(
-    m_Packages->GetFirstSelected());
-
-  for (long i = 0; i < m_Packages->GetItemCount(); i++) {
-    const GOArchiveFile *a1 = (const GOArchiveFile *)m_Packages->GetItemData(i);
-    if (a == a1)
-      continue;
-    if (!a1->IsUsable(m_config))
-      continue;
-    if (a->GetID() == a1->GetID()) {
-      m_Packages->DeleteItem(m_Packages->GetFirstSelected());
-      m_PackageDel->Disable();
-      return;
-    }
-  }
-
-  for (unsigned l = m_Organs->GetItemCount(), i = 0; i < l; i++) {
-    const GOOrgan *pOrgan = (const GOOrgan *)m_Organs->GetItemData(i);
-
-    if (pOrgan->GetArchiveID() == a->GetID()) {
-      wxMessageBox(
-        wxString::Format(
-          _("'%s' is still used by the organ '%s'"),
-          a->GetName().c_str(),
-          pOrgan->GetChurchName()),
-        _("Delete package"),
-        wxOK | wxICON_ERROR,
-        this);
-      return;
-    }
-  }
-  for (long i = 0; i < m_Packages->GetItemCount(); i++) {
-    const GOArchiveFile *a1 = (const GOArchiveFile *)m_Packages->GetItemData(i);
-    if (a == a1)
-      continue;
-    for (unsigned j = 0; j < a1->GetDependencies().size(); j++) {
-      if (a->GetID() == a1->GetDependencies()[j]) {
-        wxMessageBox(
-          wxString::Format(
-            _("'%s' is still used by the package '%s'"),
-            a->GetName().c_str(),
-            a1->GetName()),
-          _("Delete package"),
-          wxOK | wxICON_ERROR,
-          this);
-        return;
-      }
-    }
-  }
-  m_Packages->DeleteItem(m_Packages->GetFirstSelected());
-  m_PackageDel->Disable();
-}
-
 bool GOSettingsOrgans::TransferDataFromWindow() {
-  ptr_vector<GOOrgan> &listOrgans = m_config.GetOrganList();
-  for (unsigned i = 0; i < listOrgans.size(); i++) {
+  for (unsigned i = 0; i < m_OrigOrganList.size(); i++) {
     bool found = false;
     for (long j = 0; j < m_Organs->GetItemCount(); j++)
-      if (m_Organs->GetItemData(j) == (wxUIntPtr)listOrgans[i])
+      if (m_Organs->GetItemData(j) == (wxUIntPtr)m_OrigOrganList[i])
         found = true;
     if (!found)
-      delete listOrgans[i];
-    listOrgans[i] = 0;
+      delete m_OrigOrganList[i];
+    m_OrigOrganList[i] = NULL;
   }
-  listOrgans.clear();
+  m_OrigOrganList.clear();
   for (long i = 0; i < m_Organs->GetItemCount(); i++)
-    listOrgans.push_back((GOOrgan *)m_Organs->GetItemData(i));
+    m_OrigOrganList.push_back((GOOrgan *)m_Organs->GetItemData(i));
 
-  ptr_vector<GOArchiveFile> &listPackages = m_config.GetArchiveList();
-  for (unsigned i = 0; i < listPackages.size(); i++) {
-    bool found = false;
-    for (long j = 0; j < m_Packages->GetItemCount(); j++)
-      if (m_Packages->GetItemData(j) == (wxUIntPtr)listPackages[i])
-        found = true;
-    if (!found)
-      delete listPackages[i];
-    listPackages[i] = 0;
+  ptr_vector<GOArchiveFile> &origPackageList = m_config.GetArchiveList();
+
+  for (unsigned n = origPackageList.size(), i = 0; i < n; i++) {
+    GOArchiveFile *&origPackage = origPackageList[i];
+
+    if (
+      std::find(m_PackageList.begin(), m_PackageList.end(), origPackage)
+      == m_PackageList.end()) {
+      delete origPackage;
+      origPackage = NULL;
+    }
   }
-  listPackages.clear();
-  for (long i = 0; i < m_Packages->GetItemCount(); i++)
-    listPackages.push_back((GOArchiveFile *)m_Packages->GetItemData(i));
+  origPackageList.clear();
+  for (GOArchiveFile *newArch : m_PackageList)
+    origPackageList.push_back(newArch);
+  std::cout << "GOSettingsOrgans::TransferDataFromWindow origPackageList.size="
+            << origPackageList.size() << std::endl;
   return true;
 }

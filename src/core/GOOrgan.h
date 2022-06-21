@@ -24,6 +24,7 @@ private:
   wxString m_OrganBuilder;
   wxString m_RecordingDetail;
   wxString m_ArchiveID;
+  wxString m_ArchivePath;
   bool m_NamesInitialized;
   long m_LastUse;
   GOMidiReceiverBase m_midi;
@@ -32,6 +33,7 @@ public:
   GOOrgan(
     wxString odf,
     wxString archive,
+    wxString archivePath,
     wxString church_name,
     wxString organ_builder,
     wxString recording_detail);
@@ -48,6 +50,7 @@ public:
   const wxString &GetOrganBuilder() const;
   const wxString &GetRecordingDetail() const;
   const wxString &GetArchiveID() const;
+  const wxString &GetArchivePath() const { return m_ArchivePath; }
   const wxString GetOrganHash() const;
   long GetLastUse() const;
   const wxString GetUITitle() const;
@@ -56,6 +59,11 @@ public:
   bool Match(const GOMidiEvent &e);
 
   bool IsUsable(const GOOrganList &organs) const;
+
+  // temporary
+  void SetArchivePath(const wxString &archivePath) {
+    m_ArchivePath = archivePath;
+  }
 };
 
 #endif

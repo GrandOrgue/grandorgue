@@ -84,8 +84,13 @@ bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
       wxString RecordingDetails
         = cfg.ReadString(CMBSetting, group, wxT("RecordingDetails"), false);
       if (InstallOrgans)
-        organs.push_back(
-          GOOrgan(odf, id, ChurchName, OrganBuilder, RecordingDetails));
+        organs.push_back(GOOrgan(
+          odf,
+          id,
+          archive->GetPath(),
+          ChurchName,
+          OrganBuilder,
+          RecordingDetails));
     }
 
     GOArchiveFile a(
