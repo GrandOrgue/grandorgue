@@ -29,7 +29,7 @@ class GOSettingsOrgans : public wxPanel {
     ID_ORGAN_DOWN,
     ID_ORGAN_UP,
     ID_ORGAN_TOP,
-    ID_ORGAN_PROPERTIES
+    ID_ORGAN_MIDI
   };
 
 private:
@@ -59,7 +59,7 @@ private:
   wxButton *m_OrganUp;
   wxButton *m_OrganTop;
   wxButton *m_OrganDel;
-  wxButton *m_OrganProperties;
+  wxButton *m_OrganMidi;
 
   OrganRecs GetCurrentOrganRecs();
   void ReorderOrgans(const OrganRecs &newSortedRecs);
@@ -71,7 +71,7 @@ private:
   void OnOrganDown(wxCommandEvent &event);
   void OnOrganTop(wxCommandEvent &event);
   void OnOrganDel(wxCommandEvent &event);
-  void OnOrganProperties(wxCommandEvent &event);
+  void OnOrganMidi(wxCommandEvent &event);
 
 public:
   GOSettingsOrgans(GOConfig &settings, GOMidi &midi, wxWindow *parent);

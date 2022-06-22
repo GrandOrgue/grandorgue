@@ -34,7 +34,7 @@ EVT_BUTTON(ID_ORGAN_UP, GOSettingsOrgans::OnOrganUp)
 EVT_BUTTON(ID_ORGAN_DOWN, GOSettingsOrgans::OnOrganDown)
 EVT_BUTTON(ID_ORGAN_TOP, GOSettingsOrgans::OnOrganTop)
 EVT_BUTTON(ID_ORGAN_DEL, GOSettingsOrgans::OnOrganDel)
-EVT_BUTTON(ID_ORGAN_PROPERTIES, GOSettingsOrgans::OnOrganProperties)
+EVT_BUTTON(ID_ORGAN_MIDI, GOSettingsOrgans::OnOrganMidi)
 END_EVENT_TABLE()
 
 GOSettingsOrgans::GOSettingsOrgans(
@@ -177,8 +177,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PackageInfo, wxGBPosition(4, 3), wxDefaultSpan, wxEXPAND);
 
   wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  m_OrganProperties
-    = new wxButton(this, ID_ORGAN_PROPERTIES, _("P&roperties..."));
+  m_OrganMidi = new wxButton(this, ID_ORGAN_MIDI, _("&MIDI..."));
   m_OrganDown = new wxButton(this, ID_ORGAN_DOWN, _("&Down"));
   m_OrganUp = new wxButton(this, ID_ORGAN_UP, _("&Up"));
   m_OrganTop = new wxButton(this, ID_ORGAN_TOP, _("&Top"));
@@ -187,7 +186,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   buttonSizer->Add(m_OrganUp, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_OrganTop, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_OrganDel, 0, wxALIGN_LEFT | wxALL, 5);
-  buttonSizer->Add(m_OrganProperties, 0, wxALIGN_LEFT | wxALL, 5);
+  buttonSizer->Add(m_OrganMidi, 0, wxALIGN_LEFT | wxALL, 5);
   gbSizer->Add(buttonSizer, wxGBPosition(5, 0), wxGBSpan(1, 4), wxALL);
 
   gbSizer->AddGrowableCol(1, 1);
@@ -219,7 +218,7 @@ bool GOSettingsOrgans::TransferDataToWindow() {
   m_OrganDown->Disable();
   m_OrganTop->Disable();
   m_OrganDel->Disable();
-  m_OrganProperties->Disable();
+  m_OrganMidi->Disable();
   m_PackageList.clear();
   for (GOArchiveFile *pOrigPackage : m_config.GetArchiveList())
     m_PackageList.push_back(pOrigPackage);
@@ -257,7 +256,9 @@ void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
     m_PathInPackage->ChangeValue(isPackage ? o->GetODFPath() : EMPTY_STRING);
     m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
     m_PackageInfo->ChangeValue(archiveInfo);
-  }
+    m_OrganMidi->Enable();
+  } else
+    m_OrganMidi->Disable();
 }
 
 void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) {
@@ -274,7 +275,6 @@ void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) {
   else
     m_OrganDel->Disable();
 
-  m_OrganProperties->Enable();
   if (iFirstSelected <= 0) {
     m_OrganTop->Disable();
     m_OrganUp->Disable();
@@ -460,12 +460,12 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
       m_OrganDown->Disable();
       m_OrganTop->Disable();
       m_OrganDel->Disable();
-      m_OrganProperties->Disable();
+      m_OrganMidi->Disable();
     }
   }
 }
 
-void GOSettingsOrgans::OnOrganProperties(wxCommandEvent &event) {
+void GOSettingsOrgans::OnOrganMidi(wxCommandEvent &event) {
   GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(m_Organs->GetFirstSelected());
   GOMidiEventDialog dlg(
     NULL,
@@ -505,15 +505,12 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
 
     if (
       std::find(m_PackageList.begin(), m_PackageList.end(), origPackage)
-      == m_PackageList.end()) {
+      == m_PackageList.end())
       delete origPackage;
-      origPackage = NULL;
-    }
+    origPackage = NULL; // for preventing deleting during clear()
   }
   origPackageList.clear();
   for (GOArchiveFile *newArch : m_PackageList)
     origPackageList.push_back(newArch);
-  std::cout << "GOSettingsOrgans::TransferDataFromWindow origPackageList.size="
-            << origPackageList.size() << std::endl;
   return true;
 }
