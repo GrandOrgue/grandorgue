@@ -29,7 +29,9 @@ class GOSettingsOrgans : public wxPanel {
     ID_ORGAN_DOWN,
     ID_ORGAN_UP,
     ID_ORGAN_TOP,
-    ID_ORGAN_MIDI
+    ID_ORGAN_MIDI,
+    ID_DEL_CACHE,
+    ID_DEL_PRESET
   };
 
 private:
@@ -60,10 +62,14 @@ private:
   wxButton *m_OrganTop;
   wxButton *m_OrganDel;
   wxButton *m_OrganMidi;
+  wxButton *m_DelCache;
+  wxButton *m_DelPreset;
 
   OrganRecs GetCurrentOrganRecs();
   void ReorderOrgans(const OrganRecs &newSortedRecs);
   void MoveOrgan(long from, long to);
+  void DeleteCache(const GOOrgan *pOrgan);
+  void DeletePresets(const GOOrgan *pOrgan, bool toAsk);
 
   void OnOrganFocused(wxListEvent &event);
   void OnOrganSelected(wxListEvent &event);
@@ -72,6 +78,8 @@ private:
   void OnOrganTop(wxCommandEvent &event);
   void OnOrganDel(wxCommandEvent &event);
   void OnOrganMidi(wxCommandEvent &event);
+  void OnDelCache(wxCommandEvent &event);
+  void OnDelPreset(wxCommandEvent &event);
 
 public:
   GOSettingsOrgans(GOConfig &settings, GOMidi &midi, wxWindow *parent);

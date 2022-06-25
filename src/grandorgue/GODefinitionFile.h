@@ -214,6 +214,9 @@ public:
   const wxString &GetRecordingDetails();
   const wxString &GetInfoFilename();
 
+  static wxString GetSettingFilePattern(const wxString &organHash);
+  static wxString GetCacheFilePattern(const wxString &organHash);
+
   GOSoundSampler *StartSample(
     const GOSoundProvider *pipe,
     int sampler_group_id,

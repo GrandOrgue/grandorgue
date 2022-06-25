@@ -12,8 +12,11 @@
 #include <unordered_map>
 
 #include <wx/button.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
 #include <wx/gbsizer.h>
 #include <wx/listctrl.h>
+#include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -23,6 +26,8 @@
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfig.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
+
+#include "GODefinitionFile.h"
 
 static wxString EMPTY_STRING = wxEmptyString;
 
@@ -35,6 +40,8 @@ EVT_BUTTON(ID_ORGAN_DOWN, GOSettingsOrgans::OnOrganDown)
 EVT_BUTTON(ID_ORGAN_TOP, GOSettingsOrgans::OnOrganTop)
 EVT_BUTTON(ID_ORGAN_DEL, GOSettingsOrgans::OnOrganDel)
 EVT_BUTTON(ID_ORGAN_MIDI, GOSettingsOrgans::OnOrganMidi)
+EVT_BUTTON(ID_DEL_CACHE, GOSettingsOrgans::OnDelCache)
+EVT_BUTTON(ID_DEL_PRESET, GOSettingsOrgans::OnDelPreset)
 END_EVENT_TABLE()
 
 GOSettingsOrgans::GOSettingsOrgans(
@@ -189,6 +196,13 @@ GOSettingsOrgans::GOSettingsOrgans(
   buttonSizer->Add(m_OrganMidi, 0, wxALIGN_LEFT | wxALL, 5);
   gbSizer->Add(buttonSizer, wxGBPosition(5, 0), wxGBSpan(1, 4), wxALL);
 
+  buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+  m_DelCache = new wxButton(this, ID_DEL_CACHE, _("Delete &Cache"));
+  m_DelPreset = new wxButton(this, ID_DEL_PRESET, _("Delete &Preset"));
+  buttonSizer->Add(m_DelCache, 0, wxALIGN_LEFT | wxALL, 5);
+  buttonSizer->Add(m_DelPreset, 0, wxALIGN_LEFT | wxALL, 5);
+  gbSizer->Add(buttonSizer, wxGBPosition(6, 0), wxGBSpan(1, 4), wxALL);
+
   gbSizer->AddGrowableCol(1, 1);
   gbSizer->AddGrowableCol(3, 1);
   gbSizer->AddGrowableRow(0, 1);
@@ -257,8 +271,13 @@ void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
     m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
     m_PackageInfo->ChangeValue(archiveInfo);
     m_OrganMidi->Enable();
-  } else
+    m_DelCache->Enable();
+    m_DelPreset->Enable();
+  } else {
     m_OrganMidi->Disable();
+    m_DelCache->Disable();
+    m_DelPreset->Disable();
+  }
 }
 
 void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) {
@@ -466,33 +485,113 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
 }
 
 void GOSettingsOrgans::OnOrganMidi(wxCommandEvent &event) {
-  GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(m_Organs->GetFirstSelected());
-  GOMidiEventDialog dlg(
-    NULL,
-    this,
-    wxString::Format(
-      _("MIDI settings for organ %s"), o->GetChurchName().c_str()),
-    m_config,
-    &o->GetMIDIReceiver(),
-    NULL,
-    NULL);
-  dlg.RegisterMIDIListener(&m_midi);
-  dlg.ShowModal();
-  m_Organs->SetItem(
-    m_Organs->GetFirstSelected(),
-    3,
-    o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
+  const int currOrganIndex = m_Organs->GetFocusedItem();
+
+  if (currOrganIndex >= 0) {
+    GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
+    GOMidiEventDialog dlg(
+      NULL,
+      this,
+      wxString::Format(
+        _("MIDI settings for organ %s"), o->GetChurchName().c_str()),
+      m_config,
+      &o->GetMIDIReceiver(),
+      NULL,
+      NULL);
+
+    dlg.RegisterMIDIListener(&m_midi);
+    dlg.ShowModal();
+    m_Organs->SetItem(
+      m_Organs->GetFirstSelected(),
+      3,
+      o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
+  }
+}
+
+void delete_files_by_pattern(const wxString &dirPath, const wxString &pattern) {
+  wxDir dir(dirPath);
+
+  if (dir.IsOpened()) {
+    const wxString fileNamePrefix = dirPath + wxFileName::GetPathSeparator();
+    wxString fileName;
+
+    for (bool exists = dir.GetFirst(&fileName, pattern); exists;
+         exists = dir.GetNext(&fileName)) {
+      wxString fullName = fileNamePrefix + fileName;
+
+      if (!wxRemoveFile(fullName))
+        wxLogError(_("Unable to delete file %s"), fullName);
+    }
+  }
+}
+
+void GOSettingsOrgans::DeleteCache(const GOOrgan *pOrgan) {
+  const wxString organHash = pOrgan->GetOrganHash();
+
+  if (!organHash.IsEmpty())
+    delete_files_by_pattern(
+      m_config.OrganCachePath(),
+      GODefinitionFile::GetCacheFilePattern(organHash));
+}
+
+void GOSettingsOrgans::DeletePresets(const GOOrgan *pOrgan, bool toAsk) {
+  const wxString organHash = pOrgan->GetOrganHash();
+
+  if (
+    ! organHash.IsEmpty() && (
+      ! toAsk
+      || wxMessageBox(
+        wxString::Format(
+          _("Do you want to all presets for the organ %s?"), pOrgan->GetChurchName()),
+	_("Delete organ settings"),
+	wxYES_NO | wxICON_EXCLAMATION,
+	this
+      ) == wxYES
+    )
+  )
+    delete_files_by_pattern(
+      m_config.OrganSettingsPath(),
+      GODefinitionFile::GetSettingFilePattern(organHash));
+}
+
+void GOSettingsOrgans::OnDelCache(wxCommandEvent &event) {
+  const int currOrganIndex = m_Organs->GetFocusedItem();
+
+  if (currOrganIndex >= 0) {
+    GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
+
+    if (o)
+      DeleteCache(o);
+  }
+}
+
+void GOSettingsOrgans::OnDelPreset(wxCommandEvent &event) {
+  const int currOrganIndex = m_Organs->GetFocusedItem();
+
+  if (currOrganIndex >= 0) {
+    GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
+
+    if (o)
+      DeletePresets(o, true);
+  }
 }
 
 bool GOSettingsOrgans::TransferDataFromWindow() {
   for (unsigned i = 0; i < m_OrigOrganList.size(); i++) {
+    GOOrgan *&pOrgan = m_OrigOrganList[i];
     bool found = false;
+
     for (long j = 0; j < m_Organs->GetItemCount(); j++)
-      if (m_Organs->GetItemData(j) == (wxUIntPtr)m_OrigOrganList[i])
+      if (m_Organs->GetItemData(j) == (wxUIntPtr)pOrgan)
         found = true;
-    if (!found)
-      delete m_OrigOrganList[i];
-    m_OrigOrganList[i] = NULL;
+    if (!found) {
+      // actually delete the organ
+
+      DeleteCache(pOrgan);
+      DeletePresets(pOrgan, false);
+      delete pOrgan;
+    }
+    pOrgan = NULL;
   }
   m_OrigOrganList.clear();
   for (long i = 0; i < m_Organs->GetItemCount(); i++)

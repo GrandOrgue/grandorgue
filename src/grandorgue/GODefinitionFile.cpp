@@ -295,6 +295,14 @@ wxString GODefinitionFile::GenerateSettingFileName() {
     + GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_config.Preset());
 }
 
+wxString GODefinitionFile::GetSettingFilePattern(const wxString &organHash) {
+  return organHash + wxT("-*.cmb");
+}
+
+wxString GODefinitionFile::GetCacheFilePattern(const wxString &organHash) {
+  return organHash + wxT("-*.cache");
+}
+
 wxString GODefinitionFile::GenerateCacheFileName() {
   return m_config.OrganCachePath() + wxFileName::GetPathSeparator()
     + GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_config.Preset());
