@@ -75,8 +75,9 @@ private:
   wxButton *m_DelPreset;
 
   GOArchiveFile *GetPkgByPath(const wxString &path) const;
-  OrganRecs GetCurrentOrganRecs();
+  void RefreshFocused();
   void RefreshButtons();
+  OrganRecs GetCurrentOrganRecs();
   void ReorderOrgans(const OrganRecs &newSortedRecs);
   void ReplaceOrganPath(const long index, const wxString &newPath);
   void DeleteCache(const GOOrgan *pOrgan);

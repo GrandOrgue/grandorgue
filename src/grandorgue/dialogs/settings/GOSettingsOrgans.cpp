@@ -249,8 +249,8 @@ GOArchiveFile *GOSettingsOrgans::GetPkgByPath(const wxString &path) const {
   return iter == m_PackagesByPath.end() ? NULL : iter->second;
 }
 
-void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
-  const int currOrganIndex = event.GetIndex();
+void GOSettingsOrgans::RefreshFocused() {
+  const int currOrganIndex = m_Organs->GetFocusedItem();
 
   if (currOrganIndex >= 0) {
     const GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
@@ -281,6 +281,10 @@ void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
     m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
     m_PackageInfo->ChangeValue(archiveInfo);
   }
+}
+
+void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
+  RefreshFocused();
   RefreshButtons();
 }
 
@@ -615,8 +619,10 @@ void GOSettingsOrgans::OnOrganRelocate(wxCommandEvent &event) {
             if (pO->GetArchivePath() == oldPath)
               ReplaceOrganPath(i, newPath);
           }
-        } else
+        } else {
           ReplaceOrganPath(currOrganIndex, newPath);
+          RefreshFocused();
+        }
       }
     }
   }
@@ -633,7 +639,9 @@ void delete_files_by_pattern(const wxString &dirPath, const wxString &pattern) {
          exists = dir.GetNext(&fileName)) {
       wxString fullName = fileNamePrefix + fileName;
 
-      if (!wxRemoveFile(fullName))
+      if (wxRemoveFile(fullName))
+        wxLogInfo(_("Delete file %s"), fullName);
+      else
         wxLogError(_("Unable to delete file %s"), fullName);
     }
   }
@@ -658,7 +666,9 @@ void rename_files_by_pattern(
       wxString newName
         = fileNamePrefix + newPrefix + fileName.Mid(oldPrefixLen);
 
-      if (!wxRenameFile(oldName, newName, false))
+      if (wxRenameFile(oldName, newName, false))
+        wxLogInfo(_("Renamed file %s to %s"), oldName, newName);
+      else
         wxLogError(_("Unable to rename file %s to %s"), oldName, newName);
     }
   }
@@ -714,18 +724,41 @@ void GOSettingsOrgans::OnDelPreset(wxCommandEvent &event) {
 }
 
 bool GOSettingsOrgans::TransferDataFromWindow() {
+  std::set<const GOOrgan *> newOrgans;
+  std::unordered_map<wxString, wxString, wxStringHash, wxStringEqual>
+    hashesToRename;
+
+  for (long i = 0; i < m_Organs->GetItemCount(); i++) {
+    const GOOrgan *pOrgan = (const GOOrgan *)m_Organs->GetItemData(i);
+    auto itOldHash = m_OldHashes.find(pOrgan);
+
+    newOrgans.insert(pOrgan);
+    if (itOldHash != m_OldHashes.end())
+      hashesToRename[itOldHash->second] = pOrgan->GetOrganHash();
+  }
+
   for (unsigned i = 0; i < m_OrigOrganList.size(); i++) {
     GOOrgan *&pOrgan = m_OrigOrganList[i];
-    bool found = false;
 
-    for (long j = 0; j < m_Organs->GetItemCount(); j++)
-      if (m_Organs->GetItemData(j) == (wxUIntPtr)pOrgan)
-        found = true;
-    if (!found) {
+    if (newOrgans.find(pOrgan) == newOrgans.end()) {
       // actually delete the organ
+      auto itHashToRename = hashesToRename.find(pOrgan->GetOrganHash());
 
-      DeleteCache(pOrgan);
-      DeletePresets(pOrgan, false);
+      if (itHashToRename == hashesToRename.end()) {
+        DeleteCache(pOrgan);
+        DeletePresets(pOrgan, false);
+      } else {
+        rename_files_by_pattern(
+          m_config.OrganCachePath(),
+          GODefinitionFile::GetCacheFilePattern(wxEmptyString),
+          itHashToRename->first,
+          itHashToRename->second);
+        rename_files_by_pattern(
+          m_config.OrganSettingsPath(),
+          GODefinitionFile::GetSettingFilePattern(wxEmptyString),
+          itHashToRename->first,
+          itHashToRename->second);
+      }
       delete pOrgan;
     }
     pOrgan = NULL;
@@ -735,21 +768,6 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
     GOOrgan *pOrgan = (GOOrgan *)m_Organs->GetItemData(i);
 
     m_OrigOrganList.push_back(pOrgan);
-
-    auto hashIter = m_OldHashes.find(pOrgan);
-
-    if (hashIter != m_OldHashes.end()) {
-      rename_files_by_pattern(
-        m_config.OrganCachePath(),
-        GODefinitionFile::GetCacheFilePattern(wxEmptyString),
-        hashIter->second,
-        pOrgan->GetOrganHash());
-      rename_files_by_pattern(
-        m_config.OrganSettingsPath(),
-        GODefinitionFile::GetSettingFilePattern(wxEmptyString),
-        hashIter->second,
-        pOrgan->GetOrganHash());
-    }
   }
 
   for (unsigned n = m_OrigPackageList.size(), i = 0; i < n; i++) {
