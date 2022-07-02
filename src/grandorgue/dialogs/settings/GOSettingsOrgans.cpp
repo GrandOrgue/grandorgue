@@ -9,10 +9,10 @@
 
 #include <algorithm>
 #include <set>
-#include <unordered_map>
 
 #include <wx/button.h>
 #include <wx/dir.h>
+#include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/gbsizer.h>
 #include <wx/listctrl.h>
@@ -26,6 +26,7 @@
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfig.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
+#include "files/GOStdFileName.h"
 
 #include "GODefinitionFile.h"
 
@@ -40,6 +41,7 @@ EVT_BUTTON(ID_ORGAN_DOWN, GOSettingsOrgans::OnOrganDown)
 EVT_BUTTON(ID_ORGAN_TOP, GOSettingsOrgans::OnOrganTop)
 EVT_BUTTON(ID_ORGAN_DEL, GOSettingsOrgans::OnOrganDel)
 EVT_BUTTON(ID_ORGAN_MIDI, GOSettingsOrgans::OnOrganMidi)
+EVT_BUTTON(ID_ORGAN_RELOCATE, GOSettingsOrgans::OnOrganRelocate)
 EVT_BUTTON(ID_DEL_CACHE, GOSettingsOrgans::OnDelCache)
 EVT_BUTTON(ID_DEL_PRESET, GOSettingsOrgans::OnDelPreset)
 END_EVENT_TABLE()
@@ -49,7 +51,11 @@ GOSettingsOrgans::GOSettingsOrgans(
   : wxPanel(parent, wxID_ANY),
     m_config(settings),
     m_midi(midi),
-    m_OrigOrganList(m_config.GetOrganList()) {
+    m_OrigOrganList(settings.GetOrganList()),
+    m_OrigPackageList(settings.GetArchiveList())
+// m_PackagesByPath({}),
+// m_OldHashes({})
+{
   wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
   wxGridBagSizer *const gbSizer = new wxGridBagSizer(5, 5);
 
@@ -184,23 +190,25 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PackageInfo, wxGBPosition(4, 3), wxDefaultSpan, wxEXPAND);
 
   wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  m_OrganMidi = new wxButton(this, ID_ORGAN_MIDI, _("&MIDI..."));
   m_OrganDown = new wxButton(this, ID_ORGAN_DOWN, _("&Down"));
   m_OrganUp = new wxButton(this, ID_ORGAN_UP, _("&Up"));
   m_OrganTop = new wxButton(this, ID_ORGAN_TOP, _("&Top"));
-  m_OrganDel = new wxButton(this, ID_ORGAN_DEL, _("&Delete"));
+  m_OrganMidi = new wxButton(this, ID_ORGAN_MIDI, _("&MIDI..."));
+  m_OrganRelocate = new wxButton(this, ID_ORGAN_RELOCATE, _("&Relocate..."));
   buttonSizer->Add(m_OrganDown, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_OrganUp, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_OrganTop, 0, wxALIGN_LEFT | wxALL, 5);
-  buttonSizer->Add(m_OrganDel, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_OrganMidi, 0, wxALIGN_LEFT | wxALL, 5);
+  buttonSizer->Add(m_OrganRelocate, 0, wxALIGN_LEFT | wxALL, 5);
   gbSizer->Add(buttonSizer, wxGBPosition(5, 0), wxGBSpan(1, 4), wxALL);
 
   buttonSizer = new wxBoxSizer(wxHORIZONTAL);
   m_DelCache = new wxButton(this, ID_DEL_CACHE, _("Delete &Cache"));
   m_DelPreset = new wxButton(this, ID_DEL_PRESET, _("Delete &Preset"));
+  m_OrganDel = new wxButton(this, ID_ORGAN_DEL, _("&Delete"));
   buttonSizer->Add(m_DelCache, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_DelPreset, 0, wxALIGN_LEFT | wxALL, 5);
+  buttonSizer->Add(m_OrganDel, 0, wxALIGN_LEFT | wxALL, 5);
   gbSizer->Add(buttonSizer, wxGBPosition(6, 0), wxGBSpan(1, 4), wxALL);
 
   gbSizer->AddGrowableCol(1, 1);
@@ -228,15 +236,17 @@ bool GOSettingsOrgans::TransferDataToWindow() {
       2,
       o->GetArchiveID().IsEmpty() ? o->GetODFPath() : o->GetArchivePath());
   }
-  m_OrganUp->Disable();
-  m_OrganDown->Disable();
-  m_OrganTop->Disable();
-  m_OrganDel->Disable();
-  m_OrganMidi->Disable();
-  m_PackageList.clear();
-  for (GOArchiveFile *pOrigPackage : m_config.GetArchiveList())
-    m_PackageList.push_back(pOrigPackage);
+  m_PackagesByPath.clear();
+  for (GOArchiveFile *pPackage : m_OrigPackageList)
+    m_PackagesByPath[pPackage->GetPath()] = pPackage;
+  RefreshButtons();
   return true;
+}
+
+GOArchiveFile *GOSettingsOrgans::GetPkgByPath(const wxString &path) const {
+  const auto iter = m_PackagesByPath.find(path);
+
+  return iter == m_PackagesByPath.end() ? NULL : iter->second;
 }
 
 void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
@@ -246,7 +256,7 @@ void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
     const GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
     const bool isPackage = !o->GetArchiveID().IsEmpty();
     const GOArchiveFile *a
-      = isPackage ? m_config.GetArchiveByPath(o->GetArchivePath()) : NULL;
+      = isPackage ? GetPkgByPath(o->GetArchivePath()) : NULL;
     wxString archiveInfo = EMPTY_STRING;
 
     if (a) {
@@ -270,42 +280,11 @@ void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
     m_PathInPackage->ChangeValue(isPackage ? o->GetODFPath() : EMPTY_STRING);
     m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
     m_PackageInfo->ChangeValue(archiveInfo);
-    m_OrganMidi->Enable();
-    m_DelCache->Enable();
-    m_DelPreset->Enable();
-  } else {
-    m_OrganMidi->Disable();
-    m_DelCache->Disable();
-    m_DelPreset->Disable();
   }
+  RefreshButtons();
 }
 
-void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) {
-  long iFirstSelected = m_Organs->GetFirstSelected();
-
-  // find the last selected organ
-  long iLastSelected = -1;
-
-  for (long i = iFirstSelected; i >= 0; i = m_Organs->GetNextSelected(i))
-    iLastSelected = i;
-
-  if (iFirstSelected >= 0)
-    m_OrganDel->Enable();
-  else
-    m_OrganDel->Disable();
-
-  if (iFirstSelected <= 0) {
-    m_OrganTop->Disable();
-    m_OrganUp->Disable();
-  } else {
-    m_OrganTop->Enable();
-    m_OrganUp->Enable();
-  }
-  if (iLastSelected >= 0 && iLastSelected + 1 < m_Organs->GetItemCount())
-    m_OrganDown->Enable();
-  else
-    m_OrganDown->Disable();
-}
+void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) { RefreshButtons(); }
 
 GOSettingsOrgans::OrganRecs GOSettingsOrgans::GetCurrentOrganRecs() {
   OrganRecs recs;
@@ -318,6 +297,44 @@ GOSettingsOrgans::OrganRecs GOSettingsOrgans::GetCurrentOrganRecs() {
        i = m_Organs->GetNextSelected(i))
     recs[i].is_selected = true;
   return recs;
+}
+
+void GOSettingsOrgans::RefreshButtons() {
+  if (m_Organs->GetFocusedItem() >= 0) {
+    m_OrganMidi->Enable();
+  } else {
+    m_OrganMidi->Disable();
+  }
+
+  long iFirstSelected = m_Organs->GetFirstSelected();
+
+  // find the last selected organ
+  long iLastSelected = -1;
+
+  for (long i = iFirstSelected; i >= 0; i = m_Organs->GetNextSelected(i))
+    iLastSelected = i;
+
+  if (iFirstSelected >= 0) {
+    m_OrganDel->Enable();
+    m_DelCache->Enable();
+    m_DelPreset->Enable();
+  } else {
+    m_OrganDel->Disable();
+    m_DelCache->Disable();
+    m_DelPreset->Disable();
+  }
+
+  if (iFirstSelected <= 0) {
+    m_OrganTop->Disable();
+    m_OrganUp->Disable();
+  } else {
+    m_OrganTop->Enable();
+    m_OrganUp->Enable();
+  }
+  if (iLastSelected >= 0 && iLastSelected + 1 < m_Organs->GetItemCount())
+    m_OrganDown->Enable();
+  else
+    m_OrganDown->Disable();
 }
 
 using OrganToLongMap = std::unordered_map<const GOOrgan *, long>;
@@ -428,23 +445,23 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
     // find all package ids that are still used
     std::set<wxString> packageIdsUsed;
 
-    for (const GOArchiveFile *pA : m_PackageList)
-      if (packagePathsUsed.find(pA->GetPath()) != packagePathsUsed.end())
-        for (const wxString &depId : pA->GetDependencies())
+    for (const auto &pP : m_PackagesByPath)
+      if (packagePathsUsed.find(pP.first) != packagePathsUsed.end())
+        for (const wxString &depId : pP.second->GetDependencies())
           packageIdsUsed.insert(depId);
 
     // find all packages that are not used anymore and will be removed
     std::set<GOArchiveFile *> packagesToDelete;
     wxString packageNamesToDelete;
 
-    for (GOArchiveFile *pA : m_PackageList)
+    for (const auto &pP : m_PackagesByPath)
       if (
-        packagePathsUsed.find(pA->GetPath()) == packagePathsUsed.end()
-        && packageIdsUsed.find(pA->GetID()) == packageIdsUsed.end()) {
-        packagesToDelete.insert(pA);
+        packagePathsUsed.find(pP.first) == packagePathsUsed.end()
+        && packageIdsUsed.find(pP.second->GetID()) == packageIdsUsed.end()) {
+        packagesToDelete.insert(pP.second);
         packageNamesToDelete
           += (packageNamesToDelete.IsEmpty() ? EMPTY_STRING : NAMES_DELIM)
-          + pA->GetName();
+          + pP.second->GetName();
       }
 
     wxString addDelMessage = packageNamesToDelete.IsEmpty()
@@ -463,23 +480,30 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
       == wxYES) {
       // do actual deleting
 
-      for (int i = selectedItems.size() - 1; i >= 0; i--)
-        m_Organs->DeleteItem(selectedItems[i]);
+      for (int i = selectedItems.size() - 1; i >= 0; i--) {
+        const long j = selectedItems[i];
+        GOOrgan *pOrgan = (GOOrgan *)m_Organs->GetItemData(j);
 
-      m_PackageList.erase(
-        std::remove_if(
-          m_PackageList.begin(),
-          m_PackageList.end(),
-          [&](GOArchiveFile *pA) {
-            return packagesToDelete.find(pA) != packagesToDelete.end();
-          }),
-        m_PackageList.end());
+        m_Organs->DeleteItem(j);
+        if (
+          std::find(m_OrigOrganList.begin(), m_OrigOrganList.end(), pOrgan)
+          == m_OrigOrganList.end())
+          // this organ has been relocated from the original path. Delete it
+          delete pOrgan;
+        // otherwise it will be deleted on OK and want be deleted on Cancel
+      }
 
-      m_OrganUp->Disable();
-      m_OrganDown->Disable();
-      m_OrganTop->Disable();
-      m_OrganDel->Disable();
-      m_OrganMidi->Disable();
+      // delete the packages that are not existing among the original packages
+      for (GOArchiveFile *pA : packagesToDelete) {
+        if (
+          std::find(m_OrigPackageList.begin(), m_OrigPackageList.end(), pA)
+          == m_OrigPackageList.end()) {
+          delete pA;
+        }
+        m_PackagesByPath.erase(pA->GetPath());
+      }
+
+      RefreshButtons();
     }
   }
 }
@@ -502,9 +526,99 @@ void GOSettingsOrgans::OnOrganMidi(wxCommandEvent &event) {
     dlg.RegisterMIDIListener(&m_midi);
     dlg.ShowModal();
     m_Organs->SetItem(
-      m_Organs->GetFirstSelected(),
-      3,
+      currOrganIndex,
+      1,
       o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
+  }
+}
+
+void GOSettingsOrgans::ReplaceOrganPath(
+  const long index, const wxString &newPath) {
+  GOOrgan *pOrgan = (GOOrgan *)m_Organs->GetItemData(index);
+  auto oldHashEntry = m_OldHashes.find(pOrgan);
+  const wxString oldHash = oldHashEntry == m_OldHashes.end()
+    ? pOrgan->GetOrganHash() // the first relocating of this organ
+    : oldHashEntry->second;  // this organ has already been relocated. Use the
+                             // original hash
+  GOOrgan *pNewOrgan = new GOOrgan(*pOrgan);
+
+  if (pOrgan->GetArchiveID().IsEmpty())
+    pNewOrgan->SetODFPath(newPath);
+  else
+    pNewOrgan->SetArchivePath(newPath);
+  m_Organs->SetItemPtrData(index, (wxUIntPtr)pNewOrgan);
+  m_Organs->SetItem(index, 2, newPath);
+
+  // save data for renaming cache and presets on TransferDataFromWindow
+  if (pNewOrgan->GetOrganHash() != oldHash)
+    m_OldHashes.insert({pNewOrgan, oldHash});
+
+  // delete pOrgan if it was created during a previous relocate
+  if (
+    std::find(m_OrigOrganList.begin(), m_OrigOrganList.end(), pOrgan)
+    == m_OrigOrganList.end())
+    delete pOrgan;
+}
+
+void GOSettingsOrgans::OnOrganRelocate(wxCommandEvent &event) {
+  const int currOrganIndex = m_Organs->GetFocusedItem();
+
+  if (currOrganIndex >= 0) {
+    GOOrgan *pOrgan = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
+    const bool isArchive = !pOrgan->GetArchiveID().IsEmpty();
+    const wxString oldPath
+      = isArchive ? pOrgan->GetArchivePath() : pOrgan->GetODFPath();
+    const wxFileName oldFileName(oldPath);
+    const wxString &wildcard = isArchive
+      ? GOStdFileName::getPackageDlgWildcard()
+      : GOStdFileName::getOdfDlgWildcard();
+
+    // select new filename
+    wxFileDialog dlg(
+      this,
+      _("Relocate organ path"),
+      oldFileName.GetPath(),
+      oldFileName.GetFullName(),
+      wildcard,
+      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (dlg.ShowModal() == wxID_OK) {
+      const wxString newPath = dlg.GetPath();
+
+      if (newPath != oldPath) {
+        if (isArchive) {
+          GOArchiveFile *pOldPkg = GetPkgByPath(oldPath);
+          GOArchiveFile *pNewPkg = GetPkgByPath(newPath);
+
+          m_PackagesByPath.erase(oldPath);
+
+          if (!pNewPkg && pOldPkg) {
+            // the package with the new path is not on file yet. Create and
+            // replace it
+            pNewPkg = new GOArchiveFile(*pOldPkg);
+
+            pNewPkg->SetPath(newPath);
+            m_PackagesByPath[newPath] = pNewPkg;
+          }
+
+          // delete pOldPkg if it has been created in this dialog
+          if (
+            std::find(
+              m_OrigPackageList.begin(), m_OrigPackageList.end(), pOldPkg)
+            == m_OrigPackageList.end())
+            delete pOldPkg;
+
+          // switch other organs from the same package to the new archive
+          for (long l = m_Organs->GetItemCount(), i = 0; i < l; i++) {
+            GOOrgan *pO = (GOOrgan *)m_Organs->GetItemData(i);
+
+            if (pO->GetArchivePath() == oldPath)
+              ReplaceOrganPath(i, newPath);
+          }
+        } else
+          ReplaceOrganPath(currOrganIndex, newPath);
+      }
+    }
   }
 }
 
@@ -521,6 +635,31 @@ void delete_files_by_pattern(const wxString &dirPath, const wxString &pattern) {
 
       if (!wxRemoveFile(fullName))
         wxLogError(_("Unable to delete file %s"), fullName);
+    }
+  }
+}
+
+void rename_files_by_pattern(
+  const wxString &dirPath,
+  const wxString &suffixPattern,
+  const wxString &oldPrefix,
+  const wxString &newPrefix) {
+  wxDir dir(dirPath);
+
+  if (dir.IsOpened()) {
+    const size_t oldPrefixLen = oldPrefix.Length();
+    const wxString fileNamePrefix = dirPath + wxFileName::GetPathSeparator();
+    const wxString pattern = oldPrefix + suffixPattern;
+    wxString fileName;
+
+    for (bool exists = dir.GetFirst(&fileName, pattern); exists;
+         exists = dir.GetNext(&fileName)) {
+      wxString oldName = fileNamePrefix + fileName;
+      wxString newName
+        = fileNamePrefix + newPrefix + fileName.Mid(oldPrefixLen);
+
+      if (!wxRenameFile(oldName, newName, false))
+        wxLogError(_("Unable to rename file %s to %s"), oldName, newName);
     }
   }
 }
@@ -555,24 +694,22 @@ void GOSettingsOrgans::DeletePresets(const GOOrgan *pOrgan, bool toAsk) {
 }
 
 void GOSettingsOrgans::OnDelCache(wxCommandEvent &event) {
-  const int currOrganIndex = m_Organs->GetFocusedItem();
+  for (long i = m_Organs->GetFirstSelected(); i >= 0;
+       i = m_Organs->GetNextSelected(i)) {
+    const GOOrgan *pOrgan = (const GOOrgan *)m_Organs->GetItemData(i);
 
-  if (currOrganIndex >= 0) {
-    GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
-
-    if (o)
-      DeleteCache(o);
+    if (pOrgan)
+      DeleteCache(pOrgan);
   }
 }
 
 void GOSettingsOrgans::OnDelPreset(wxCommandEvent &event) {
-  const int currOrganIndex = m_Organs->GetFocusedItem();
+  for (long i = m_Organs->GetFirstSelected(); i >= 0;
+       i = m_Organs->GetNextSelected(i)) {
+    const GOOrgan *pOrgan = (const GOOrgan *)m_Organs->GetItemData(i);
 
-  if (currOrganIndex >= 0) {
-    GOOrgan *o = (GOOrgan *)m_Organs->GetItemData(currOrganIndex);
-
-    if (o)
-      DeletePresets(o, true);
+    if (pOrgan)
+      DeletePresets(pOrgan, true);
   }
 }
 
@@ -594,22 +731,36 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
     pOrgan = NULL;
   }
   m_OrigOrganList.clear();
-  for (long i = 0; i < m_Organs->GetItemCount(); i++)
-    m_OrigOrganList.push_back((GOOrgan *)m_Organs->GetItemData(i));
+  for (long i = 0; i < m_Organs->GetItemCount(); i++) {
+    GOOrgan *pOrgan = (GOOrgan *)m_Organs->GetItemData(i);
 
-  ptr_vector<GOArchiveFile> &origPackageList = m_config.GetArchiveList();
+    m_OrigOrganList.push_back(pOrgan);
 
-  for (unsigned n = origPackageList.size(), i = 0; i < n; i++) {
-    GOArchiveFile *&origPackage = origPackageList[i];
+    auto hashIter = m_OldHashes.find(pOrgan);
 
-    if (
-      std::find(m_PackageList.begin(), m_PackageList.end(), origPackage)
-      == m_PackageList.end())
+    if (hashIter != m_OldHashes.end()) {
+      rename_files_by_pattern(
+        m_config.OrganCachePath(),
+        GODefinitionFile::GetCacheFilePattern(wxEmptyString),
+        hashIter->second,
+        pOrgan->GetOrganHash());
+      rename_files_by_pattern(
+        m_config.OrganSettingsPath(),
+        GODefinitionFile::GetSettingFilePattern(wxEmptyString),
+        hashIter->second,
+        pOrgan->GetOrganHash());
+    }
+  }
+
+  for (unsigned n = m_OrigPackageList.size(), i = 0; i < n; i++) {
+    GOArchiveFile *&origPackage = m_OrigPackageList[i];
+
+    if (!GetPkgByPath(origPackage->GetPath()))
       delete origPackage;
     origPackage = NULL; // for preventing deleting during clear()
   }
-  origPackageList.clear();
-  for (GOArchiveFile *newArch : m_PackageList)
-    origPackageList.push_back(newArch);
+  m_OrigPackageList.clear();
+  for (const auto &it : m_PackagesByPath)
+    m_OrigPackageList.push_back(it.second);
   return true;
 }

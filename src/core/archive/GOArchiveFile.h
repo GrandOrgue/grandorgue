@@ -42,6 +42,7 @@ public:
 
   const wxString &GetID() const;
   const wxString &GetPath() const;
+  const void SetPath(const wxString &newPath) { m_Path = newPath; }
   const wxString &GetName() const;
   const wxString &GetFileID() const;
   const wxString GetArchiveHash() const;

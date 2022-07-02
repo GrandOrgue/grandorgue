@@ -8,6 +8,9 @@
 #ifndef GOSETTINGSORGANS_H
 #define GOSETTINGSORGANS_H
 
+#include <unordered_map>
+
+#include <wx/hashset.h>
 #include <wx/panel.h>
 
 #include "ptrvector.h"
@@ -30,6 +33,7 @@ class GOSettingsOrgans : public wxPanel {
     ID_ORGAN_UP,
     ID_ORGAN_TOP,
     ID_ORGAN_MIDI,
+    ID_ORGAN_RELOCATE,
     ID_DEL_CACHE,
     ID_DEL_PRESET
   };
@@ -45,7 +49,11 @@ private:
   GOConfig &m_config;
   GOMidi &m_midi;
   ptr_vector<GOOrgan> &m_OrigOrganList;
-  std::vector<GOArchiveFile *> m_PackageList;
+  ptr_vector<GOArchiveFile> &m_OrigPackageList;
+  std::
+    unordered_map<const wxString, GOArchiveFile *, wxStringHash, wxStringEqual>
+      m_PackagesByPath;
+  std::unordered_map<const GOOrgan *, wxString> m_OldHashes;
 
   wxListView *m_Organs;
   wxTextCtrl *m_Builder;
@@ -62,12 +70,15 @@ private:
   wxButton *m_OrganTop;
   wxButton *m_OrganDel;
   wxButton *m_OrganMidi;
+  wxButton *m_OrganRelocate;
   wxButton *m_DelCache;
   wxButton *m_DelPreset;
 
+  GOArchiveFile *GetPkgByPath(const wxString &path) const;
   OrganRecs GetCurrentOrganRecs();
+  void RefreshButtons();
   void ReorderOrgans(const OrganRecs &newSortedRecs);
-  void MoveOrgan(long from, long to);
+  void ReplaceOrganPath(const long index, const wxString &newPath);
   void DeleteCache(const GOOrgan *pOrgan);
   void DeletePresets(const GOOrgan *pOrgan, bool toAsk);
 
@@ -78,6 +89,7 @@ private:
   void OnOrganTop(wxCommandEvent &event);
   void OnOrganDel(wxCommandEvent &event);
   void OnOrganMidi(wxCommandEvent &event);
+  void OnOrganRelocate(wxCommandEvent &event);
   void OnDelCache(wxCommandEvent &event);
   void OnDelPreset(wxCommandEvent &event);
 

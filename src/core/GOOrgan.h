@@ -46,11 +46,15 @@ public:
   void Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map);
 
   const wxString &GetODFPath() const;
+  void SetODFPath(const wxString &newPath) { m_ODF = newPath; }
   const wxString &GetChurchName() const;
   const wxString &GetOrganBuilder() const;
   const wxString &GetRecordingDetail() const;
   const wxString &GetArchiveID() const;
   const wxString &GetArchivePath() const { return m_ArchivePath; }
+  void SetArchivePath(const wxString &archivePath) {
+    m_ArchivePath = archivePath;
+  }
   const wxString GetOrganHash() const;
   long GetLastUse() const;
   const wxString GetUITitle() const;
@@ -59,11 +63,6 @@ public:
   bool Match(const GOMidiEvent &e);
 
   bool IsUsable(const GOOrganList &organs) const;
-
-  // temporary
-  void SetArchivePath(const wxString &archivePath) {
-    m_ArchivePath = archivePath;
-  }
 };
 
 #endif
