@@ -4971,31 +4971,35 @@ MIDI settings work properly.
 	<para>All organs successfully loaded via the <link linkend="file_open">File/Open</link> menu item are automatically registered in this list.</para>
 	<para>
 	  An additional information about each organ is shown on the bottom part of this tab
-	  when the user selects it in the list
+	  when the user selects it in the list.
 	</para>
 	<para>
-	  Some organs were registered from an Organ Packages (.orgue file). 
+	  Organs can be registered in multiple ways. When a user opens an .organ
+	  file first time, the organ is registered. When the user installs an
+	  organ packages (.orgue) file, all organs presenting in the package are
+	  registered. Also .orgue packages placed in the packages directory are
+	  read upon GrandOrgue startup and all their organs are also registered
 	</para>
 	<para>
   This list provides for the lists displayed in the <link linkend="file_load">File/Load</link>, <link linkend="file_recent">File/Open Recent</link>
   and <link linkend="file_recent">File/Favorites</link> menu items.
 	</para>
-	<para>The buttons are grayed out until some lines are selected in the list.</para>
+	<para>The buttons are grayed out until at least one line is selected in the list.</para>
 	<para>
   The organs order on this tab is reproduced as is in the <link linkend="file_load">File/Load</link>
   menu whereas only the 10 first entries are displayed in the <link linkend="file_recent">File/Favorites</link> menu.
 	</para>
 	<sect3>
 	  <title>Down</title>
-	  <para>This button moves the selected entries down one position. It is grayed out if the selected line is last in the list.</para>
+	  <para>This button moves the selected entry/entries down one position. It is grayed out if the selected line is last in the list.</para>
 	</sect3>
 	<sect3>
 	  <title>Up</title>
-	  <para>This button moves the selected entries up one position. It is grayed out if the selected line is first in the list.</para>
+	  <para>This button moves the selected entry/entries up one position. It is grayed out if the selected line is first in the list.</para>
 	</sect3>
 	<sect3>
 	  <title>Top</title>
-	  <para>This button moves the selected entries to the first position in the list. It is grayed out if a selected line is first in the list.</para>
+	  <para>This button moves the selected entry/entries to the first position in the list. It is grayed out if a selected line is first in the list.</para>
 	</sect3>
 	<sect3>
 	  <title>MIDI...</title>
@@ -5012,16 +5016,16 @@ MIDI settings work properly.
 	  <title>Relocate</title>
 	  <para>
 	    This button opens a file choosing dialog for specifying the new
-	    path to the file the organ was opened from. It is usefull after
+	    path to the file the organ was opened from. It is useful after
 	    moving the organ files to another directory, and the orignal path is
-	    no more valid
+	    no longer valid
 	  </para>
 	</sect3>
 	<sect3>
 	  <title>Delete Cache</title>
 	  <para>
 	    This button removes all cache files for this organs.
-	    The cache may be recreated later automatically or with the "Update Cache" menu entry
+	    The cache may be recreated later automatically or with the "Update Cache" menu entry.
 	  </para>
 	</sect3>
 	<sect3>
@@ -5037,7 +5041,7 @@ MIDI settings work properly.
 	  <para>
   This button removes a line from the list. GrandOrgue deregisters this organ.
   <note><simpara>If a cache or presets were saved and/or the samples were cached, the files are <emphasis role="strong">ALSO</emphasis> deleted from disk.</simpara></note>
-  <note><simpara>The sample set files of the packahe .orgue file are <emphasis role="strong">NOT</emphasis> deleted from disk.</simpara></note>
+  <note><simpara>The sample set files of the package .orgue file are <emphasis role="strong">NOT</emphasis> deleted from disk.</simpara></note>
 	  </para>
 	</sect3>
       </sect2>
