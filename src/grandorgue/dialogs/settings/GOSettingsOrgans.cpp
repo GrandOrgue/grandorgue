@@ -52,10 +52,7 @@ GOSettingsOrgans::GOSettingsOrgans(
     m_config(settings),
     m_midi(midi),
     m_OrigOrganList(settings.GetOrganList()),
-    m_OrigPackageList(settings.GetArchiveList())
-// m_PackagesByPath({}),
-// m_OldHashes({})
-{
+    m_OrigPackageList(settings.GetArchiveList()) {
   wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
   wxGridBagSizer *const gbSizer = new wxGridBagSizer(5, 5);
 
@@ -134,7 +131,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PackageId, wxGBPosition(4, 1), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Pakage Name:")),
+    new wxStaticText(this, wxID_ANY, _("Package Name:")),
     wxGBPosition(1, 2),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -148,7 +145,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PackageName, wxGBPosition(1, 3), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Path in the Pakage:")),
+    new wxStaticText(this, wxID_ANY, _("Path in the Package:")),
     wxGBPosition(2, 2),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -162,7 +159,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PathInPackage, wxGBPosition(2, 3), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Package Hash:")),
+    new wxStaticText(this, wxID_ANY, _("Package hash:")),
     wxGBPosition(3, 2),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -176,7 +173,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PackageHash, wxGBPosition(3, 3), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Package Info:")),
+    new wxStaticText(this, wxID_ANY, _("Package info:")),
     wxGBPosition(4, 2),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -203,8 +200,8 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(buttonSizer, wxGBPosition(5, 0), wxGBSpan(1, 4), wxALL);
 
   buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  m_DelCache = new wxButton(this, ID_DEL_CACHE, _("Delete &Cache"));
-  m_DelPreset = new wxButton(this, ID_DEL_PRESET, _("Delete &Preset"));
+  m_DelCache = new wxButton(this, ID_DEL_CACHE, _("Delete &cache(s)"));
+  m_DelPreset = new wxButton(this, ID_DEL_PRESET, _("Delete &preset(s)"));
   m_OrganDel = new wxButton(this, ID_ORGAN_DEL, _("&Delete"));
   buttonSizer->Add(m_DelCache, 0, wxALIGN_LEFT | wxALL, 5);
   buttonSizer->Add(m_DelPreset, 0, wxALIGN_LEFT | wxALL, 5);
@@ -691,7 +688,7 @@ void GOSettingsOrgans::DeletePresets(const GOOrgan *pOrgan, bool toAsk) {
       ! toAsk
       || wxMessageBox(
         wxString::Format(
-          _("Do you want to all presets for the organ %s?"), pOrgan->GetChurchName()),
+          _("Do you want to delete all presets for the organ %s?"), pOrgan->GetChurchName()),
 	_("Delete organ settings"),
 	wxYES_NO | wxICON_EXCLAMATION,
 	this
