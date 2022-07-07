@@ -4976,7 +4976,7 @@ MIDI settings work properly.
 	<para>
 	  Organs can be registered in multiple ways. When a user opens an .organ
 	  file first time, the organ is registered. When the user installs an
-	  organ packages (.orgue) file, all organs presenting in the package are
+	  organ package (.orgue) file, all organs present in the package are
 	  registered. Also .orgue packages placed in the packages directory are
 	  read upon GrandOrgue startup and all their organs are also registered.
 	</para>
