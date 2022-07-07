@@ -541,8 +541,9 @@ void GOSettingsOrgans::ReplaceOrganPath(
     ? pOrgan->GetOrganHash()
     // the first relocating of this organ
     : oldHashEntry->second;
-    // this organ has already been relocated. Use the
-    // original hash
+  // Otherwise this organ has already been relocated. Use the
+  // original hash
+
   GOOrgan *pNewOrgan = new GOOrgan(*pOrgan);
 
   if (pOrgan->GetArchiveID().IsEmpty())
