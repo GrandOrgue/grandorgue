@@ -3445,10 +3445,10 @@ sends the label contents following the Hauptwerk&#8482; standards.
     <para>
 This schema describes the close relations that exist between the real-world audio hardware capablities
 and the sample set disposition as provided by the sample set designer.
-For illustration, the free sampleset of Bureå Church is customized to build a totally different spatial disposition. Here are the assumptions:
+For illustration, the free sampleset of BureÃ¥ Church is customized to build a totally different spatial disposition. Here are the assumptions:
     </para>
     <itemizedlist mark="bullet">
-    <listitem><simpara>The organ has a main case and a separate choir (RückPositiv) case in the organist's back</simpara></listitem>
+    <listitem><simpara>The organ has a main case and a separate choir (RÃ¼ckPositiv) case in the organist's back</simpara></listitem>
     <listitem><simpara>The console is embedded facing the main case, therefore the main case sounds "front" and the choir case sounds "rear"</simpara></listitem>
     <listitem><simpara>The organ has 2 pedal turrets on the far left and right sides of the main case</simpara></listitem>
     <listitem><simpara>The organ has an echo keyboard in the basement of the main case</simpara></listitem>
@@ -3479,7 +3479,7 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
     <itemizedlist>
       <listitem>
         <simpara>
-          sound the Choir (Svällverk) through the rear speakers, full volume
+          sound the Choir (SvÃ¤llverk) through the rear speakers, full volume
         </simpara>
       </listitem>
       <listitem>
@@ -3489,7 +3489,7 @@ For illustration, the free sampleset of Bureå Church is customized to build a to
       </listitem>
       <listitem>
         <simpara>
-          sound the Echo (Bröstverk) through the front speakers, softened volume
+          sound the Echo (BrÃ¶stverk) through the front speakers, softened volume
         </simpara>
       </listitem>
       <listitem>
@@ -4970,7 +4970,7 @@ MIDI settings work properly.
 	<para>This tab manages the <emphasis>known organs list</emphasis>.</para>
 	<para>All organs successfully loaded via the <link linkend="file_open">File/Open</link> menu item are automatically registered in this list.</para>
 	<para>
-	  An additional information about each organ is shown on the bottom part of this tab
+	  Additional information about each organ is shown on the bottom part of this tab
 	  when the user selects it in the list.
 	</para>
 	<para>
@@ -4978,7 +4978,7 @@ MIDI settings work properly.
 	  file first time, the organ is registered. When the user installs an
 	  organ packages (.orgue) file, all organs presenting in the package are
 	  registered. Also .orgue packages placed in the packages directory are
-	  read upon GrandOrgue startup and all their organs are also registered
+	  read upon GrandOrgue startup and all their organs are also registered.
 	</para>
 	<para>
   This list provides for the lists displayed in the <link linkend="file_load">File/Load</link>, <link linkend="file_recent">File/Open Recent</link>
@@ -5018,22 +5018,22 @@ MIDI settings work properly.
 	    This button opens a file choosing dialog for specifying the new
 	    path to the file the organ was opened from. It is useful after
 	    moving the organ files to another directory, and the orignal path is
-	    no longer valid
+	    no longer valid.
 	  </para>
 	</sect3>
 	<sect3>
 	  <title>Delete Cache</title>
 	  <para>
-	    This button removes all cache files for this organs.
+	    This button removes all cache files for the selected organ(s).
 	    The cache may be recreated later automatically or with the "Update Cache" menu entry.
 	  </para>
 	</sect3>
 	<sect3>
 	  <title>Delete Presets</title>
 	  <para>
-	    This button removes all setting files for this organs that were
+	    This button removes all setting files for the selected organ(s) that were
 	    saved with the Save menu entry. All the user settings for the organ
-	    will be lost
+	    will be lost.
 	  </para>
 	</sect3>
 	<sect3>
@@ -5466,7 +5466,7 @@ All other menu items (above <emphasis>Coupler</emphasis>) are defined within
 the loaded sampleset and should be documented in the sampleset's specific user
 manual (if any). They usually are referred to as <emphasis>Custom Panels</emphasis>.
     </para>
-    <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from Piteå Music School sampleset.</para>
+    <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from PiteÃ¥ Music School sampleset.</para>
     <mediaobject><imageobject><imagedata fileref="images/pitea_panel_menu.png" /></imageobject></mediaobject>
     <sect1 id="couplers">
       <title>Coupler</title>

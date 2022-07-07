@@ -60,7 +60,6 @@ GOSettingsOrgans::GOSettingsOrgans(
     this,
     ID_ORGANS,
     wxDefaultPosition,
-    //    wxSize(400, 200),
     wxDefaultSize,
     wxLC_REPORT | wxLC_HRULES | wxLC_VRULES);
   m_Organs->InsertColumn(0, _("Name"));
@@ -103,7 +102,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_Recording, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Organ Hash:")),
+    new wxStaticText(this, wxID_ANY, _("Organ hash:")),
     wxGBPosition(3, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -117,7 +116,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_OrganHash, wxGBPosition(3, 1), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Package Id:")),
+    new wxStaticText(this, wxID_ANY, _("Package id:")),
     wxGBPosition(4, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -131,7 +130,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PackageId, wxGBPosition(4, 1), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Package Name:")),
+    new wxStaticText(this, wxID_ANY, _("Package name:")),
     wxGBPosition(1, 2),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -145,7 +144,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   gbSizer->Add(m_PackageName, wxGBPosition(1, 3), wxDefaultSpan, wxEXPAND);
 
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Path in the Package:")),
+    new wxStaticText(this, wxID_ANY, _("Path in package:")),
     wxGBPosition(2, 2),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -435,7 +434,8 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
     std::set<wxString> packagePathsUsed;
 
     for (long l = m_Organs->GetItemCount(), i = 0; i < l; i++)
-      if (selectedItemSet.find(i) == selectedItemSet.end()) { // not selected
+      if (selectedItemSet.find(i) == selectedItemSet.end()) {
+        // not selected
         const wxString &pkgPath
           = ((GOOrgan *)m_Organs->GetItemData(i))->GetArchivePath();
 
@@ -538,9 +538,11 @@ void GOSettingsOrgans::ReplaceOrganPath(
   GOOrgan *pOrgan = (GOOrgan *)m_Organs->GetItemData(index);
   auto oldHashEntry = m_OldHashes.find(pOrgan);
   const wxString oldHash = oldHashEntry == m_OldHashes.end()
-    ? pOrgan->GetOrganHash() // the first relocating of this organ
-    : oldHashEntry->second;  // this organ has already been relocated. Use the
-                             // original hash
+    ? pOrgan->GetOrganHash()
+    // the first relocating of this organ
+    : oldHashEntry->second;
+    // this organ has already been relocated. Use the
+    // original hash
   GOOrgan *pNewOrgan = new GOOrgan(*pOrgan);
 
   if (pOrgan->GetArchiveID().IsEmpty())
@@ -772,7 +774,8 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
 
     if (!GetPkgByPath(origPackage->GetPath()))
       delete origPackage;
-    origPackage = NULL; // for preventing deleting during clear()
+    // for preventing double deleting during clear()
+    origPackage = NULL;
   }
   m_OrigPackageList.clear();
   for (const auto &it : m_PackagesByPath)
