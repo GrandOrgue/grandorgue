@@ -219,7 +219,7 @@ GOFrame::GOFrame(
     wxITEM_NORMAL);
   m_file_menu->AppendSeparator();
   m_file_menu->Append(
-    ID_SETTINGS, _("&Settings..."), wxEmptyString, wxITEM_NORMAL);
+    ID_SETTINGS, wxT("&Settings..."), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->AppendSeparator();
   m_file_menu->Append(ID_FILE_CLOSE, _("&Close"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->Append(ID_FILE_EXIT, _("E&xit"), wxEmptyString, wxITEM_NORMAL);
@@ -671,7 +671,7 @@ void GOFrame::UpdateTemperamentMenu() {
       }
     }
     wxMenuItem *e = menu->Append(
-      ID_TEMPERAMENT_0 + i, wxGetTranslation(t.GetTitle()), wxEmptyString, wxITEM_CHECK);
+      ID_TEMPERAMENT_0 + i, t.GetTitle(), wxEmptyString, wxITEM_CHECK);
     e->Enable(organfile);
     e->Check(t.GetName() == temperament);
   }
