@@ -92,7 +92,7 @@ float GOEnclosure::GetAttenuation() {
 }
 
 void GOEnclosure::Scroll(bool scroll_up) {
-  Set(m_MIDIValue + (scroll_up ? 3 : -3));
+  Set(m_MIDIValue + (scroll_up ? 4 : -4));
 }
 
 void GOEnclosure::ProcessMidi(const GOMidiEvent &event) {

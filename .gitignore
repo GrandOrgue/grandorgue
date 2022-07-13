@@ -26,6 +26,3 @@ Makefile
 /_CPack_Packages/
 
 
-/.vscode/
-/src/.vscode/
-/src/grandorgue/goSrc.code-workspace
