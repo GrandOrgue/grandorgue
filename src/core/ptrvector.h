@@ -69,6 +69,14 @@ public:
   typename std::vector<T *>::const_iterator end() const noexcept {
     return std::vector<T *>::end();
   }
+
+  typename std::vector<T *>::iterator begin() noexcept {
+    return std::vector<T *>::begin();
+  }
+
+  typename std::vector<T *>::iterator end() noexcept {
+    return std::vector<T *>::end();
+  }
 };
 
 #endif

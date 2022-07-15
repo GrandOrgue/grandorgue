@@ -9,6 +9,7 @@
 #define GOSETTINGSORGANS_H
 
 #include <unordered_map>
+#include <unordered_set>
 
 #include <wx/hashset.h>
 #include <wx/panel.h>
@@ -39,21 +40,45 @@ class GOSettingsOrgans : public wxPanel {
   };
 
 private:
-  struct OrganRec {
-    const GOOrgan *p_organ;
+  struct PackageSlot {
+    GOArchiveFile *p_OrigPkg;
+    GOArchiveFile *p_CurrentPkg;
+    bool is_present;
+
+    PackageSlot(GOArchiveFile *pPkg)
+      : p_OrigPkg(pPkg), p_CurrentPkg(pPkg), is_present(true) {}
+  };
+  using PackageSlotSet = std::unordered_set<const PackageSlot *>;
+  struct OrganSlot {
+    GOOrgan *p_OrigOrgan;
+    GOOrgan *p_CurrentOrgan;
+    bool is_packaged;
+    wxString m_CurrentPath;
+    bool is_AnyCacheExisting;
+    bool is_AnyPresetExisting;
+    PackageSlot *p_PackageSlot;
+    bool is_present;
+  };
+  using OrganSlotToLongMap
+    = std::unordered_map<const GOSettingsOrgans::OrganSlot *, long>;
+  struct VisibleOrganRec {
+    const OrganSlot *p_OrganSlot;
     bool is_selected;
     bool is_focused;
   };
-  using OrganRecs = std::vector<OrganRec>;
+  using VisibleOrganRecs = std::vector<VisibleOrganRec>;
 
   GOConfig &m_config;
   GOMidi &m_midi;
   ptr_vector<GOOrgan> &m_OrigOrganList;
   ptr_vector<GOArchiveFile> &m_OrigPackageList;
-  std::
-    unordered_map<const wxString, GOArchiveFile *, wxStringHash, wxStringEqual>
-      m_PackagesByPath;
-  std::unordered_map<const GOOrgan *, wxString> m_OldHashes;
+
+  std::vector<PackageSlot> m_PackageSlots;
+  std::unordered_map<const wxString, PackageSlot *, wxStringHash, wxStringEqual>
+    m_PackageSlotByPath;
+  std::vector<OrganSlot> m_OrganSlots;
+  std::unordered_map<const wxString, OrganSlot *, wxStringHash, wxStringEqual>
+    m_OrganSlotByPath;
 
   wxListView *m_Organs;
   wxTextCtrl *m_Builder;
@@ -74,14 +99,17 @@ private:
   wxButton *m_DelCache;
   wxButton *m_DelPreset;
 
-  GOArchiveFile *GetPkgByPath(const wxString &path) const;
+  PackageSlotSet GetUsedPackages(
+    std::unordered_set<long> itemsToExtract = std::unordered_set<long>());
   void RefreshFocused();
   void RefreshButtons();
-  OrganRecs GetCurrentOrganRecs();
-  void ReorderOrgans(const OrganRecs &newSortedRecs);
+  VisibleOrganRecs GetCurrentOrganRecs();
+
+  static int wxCALLBACK
+  organOrdCompareCallback(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
+
+  void ReorderOrgans(const VisibleOrganRecs &newSortedRecs);
   void ReplaceOrganPath(const long index, const wxString &newPath);
-  void DeleteCache(const GOOrgan *pOrgan);
-  void DeletePresets(const GOOrgan *pOrgan, bool toAsk);
 
   void OnOrganFocused(wxListEvent &event);
   void OnOrganSelected(wxListEvent &event);

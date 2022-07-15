@@ -329,6 +329,8 @@
             <in>GOView.cpp</in>
           </df>
           <df name="files">
+            <in>GOFileWildcard.cpp</in>
+            <in>GOFileWildcard.h</in>
             <in>GOStdFileName.cpp</in>
             <in>GOStdFileName.h</in>
           </df>
@@ -3193,6 +3195,16 @@
             flavor2="8">
         <ccTool flags="5">
         </ccTool>
+      </item>
+      <item path="../../src/grandorgue/files/GOFileWildcard.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/files/GOFileWildcard.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/grandorgue/files/GOStdFileName.cpp"
             ex="false"
@@ -10347,6 +10359,16 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
+      </item>
+      <item path="../../src/grandorgue/files/GOFileWildcard.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/files/GOFileWildcard.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/grandorgue/files/GOStdFileName.cpp"
             ex="false"

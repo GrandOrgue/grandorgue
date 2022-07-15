@@ -25,6 +25,7 @@
 #include "config/GOConfigWriter.h"
 #include "contrib/sha1.h"
 #include "dialogs/GOProgressDialog.h"
+#include "files/GOStdFileName.h"
 #include "gui/GOGUIBankedGeneralsPanel.h"
 #include "gui/GOGUICouplerPanel.h"
 #include "gui/GOGUICrescendoPanel.h"
@@ -292,20 +293,12 @@ wxString GODefinitionFile::GetOrganHash() { return m_hash; }
 
 wxString GODefinitionFile::GenerateSettingFileName() {
   return m_config.OrganSettingsPath() + wxFileName::GetPathSeparator()
-    + GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_config.Preset());
-}
-
-wxString GODefinitionFile::GetSettingFilePattern(const wxString &organHash) {
-  return organHash + wxT("-*.cmb");
-}
-
-wxString GODefinitionFile::GetCacheFilePattern(const wxString &organHash) {
-  return organHash + wxT("-*.cache");
+    + GOStdFileName::composeSettingFileName(GetOrganHash(), m_config.Preset());
 }
 
 wxString GODefinitionFile::GenerateCacheFileName() {
   return m_config.OrganCachePath() + wxFileName::GetPathSeparator()
-    + GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_config.Preset());
+    + GOStdFileName::composeCacheFileName(GetOrganHash(), m_config.Preset());
 }
 
 bool GODefinitionFile::LoadArchive(
