@@ -331,12 +331,6 @@
             <in>GODocumentBase.cpp</in>
             <in>GOView.cpp</in>
           </df>
-          <df name="files">
-            <in>GOFileWildcard.cpp</in>
-            <in>GOFileWildcard.h</in>
-            <in>GOStdFileName.cpp</in>
-            <in>GOStdFileName.h</in>
-          </df>
           <df name="gui">
             <in>GOGUIBankedGeneralsPanel.cpp</in>
             <in>GOGUIButton.cpp</in>
@@ -4139,21 +4133,17 @@
             flavor2="8">
         <ccTool flags="5">
           <incDir>
-            <pElem>../../src/core</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/core</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
             <pElem>../../submodules/RtAudio</pElem>
             <pElem>../../submodules/PortAudio/include</pElem>
             <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsPorts.cpp"
@@ -4233,20 +4223,6 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/document-base/GOView.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="5">
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/files/GOFileWildcard.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="8">
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/files/GOStdFileName.cpp"
             ex="false"
             tool="1"
             flavor2="8">
@@ -5961,26 +5937,6 @@
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/document-base">
-        <ccTool>
-          <incDir>
-            <pElem>../../src/core</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/core</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/files">
         <ccTool>
           <incDir>
             <pElem>../../src/core</pElem>
@@ -11461,26 +11417,6 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
-      </item>
-      <item path="../../src/grandorgue/files/GOFileWildcard.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../src/grandorgue/files/GOFileWildcard.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/grandorgue/files/GOStdFileName.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../src/grandorgue/files/GOStdFileName.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../src/grandorgue/gui/GOGUIBankedGeneralsPanel.cpp"
             ex="false"

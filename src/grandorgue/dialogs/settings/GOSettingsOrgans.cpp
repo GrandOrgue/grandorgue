@@ -583,27 +583,55 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
         wxString::Format(
           _("Do you want to delete organs%s%s?"), organNames, addDelMessage),
         _("Delete Organs"),
-        wxYES_NO | wxICON_EXCLAMATION,
+        wxYES_NO | wxICON_QUESTION,
         this)
       == wxYES) {
-      // do actual deleting
+      // check if the package paths are outside the package directories
 
-      for (int i = selectedItems.size() - 1; i >= 0; i--) {
-        const long j = selectedItems[i];
-        OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(j);
+      const wxString autoPkgDir = m_config.OrganPackagePath();
 
-        m_Organs->DeleteItem(j);
-        pOrganSlot->is_present = false;
-        m_OrganSlotByPath.erase(pOrganSlot->m_CurrentPath);
-      }
-
-      // delete the packages that are not existing among the original packages
+      packageNamesToDelete.Clear();
       for (PackageSlot *pkgSlot : packagesToDelete) {
-        pkgSlot->is_present = false;
-        m_PackageSlotByPath.erase(pkgSlot->p_CurrentPkg->GetPath());
+        const wxString pkgDir
+          = wxFileName(pkgSlot->p_CurrentPkg->GetPath()).GetPath();
+
+        if (pkgDir == autoPkgDir)
+          packageNamesToDelete
+            += pkgSlot->p_CurrentPkg->GetName() + NAMES_DELIM;
       }
 
-      RefreshFocused();
+      if (
+        packageNamesToDelete.IsEmpty()
+        || wxMessageBox(
+             wxString::Format(
+               _("The following organ packages\n"
+                 "%s are in the Packages directory and will be registered "
+                 "automatically\n"
+                 "upon next GrandOrgue restart. Do you really want to "
+                 "unregister them?"),
+               packageNamesToDelete),
+             _("Delete Organ Packages"),
+             wxYES_NO | wxICON_QUESTION,
+             this)
+          == wxYES) {
+        // do actual deleting
+        for (int i = selectedItems.size() - 1; i >= 0; i--) {
+          const long j = selectedItems[i];
+          OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(j);
+
+          m_Organs->DeleteItem(j);
+          pOrganSlot->is_present = false;
+          m_OrganSlotByPath.erase(pOrganSlot->m_CurrentPath);
+        }
+
+        // delete the packages that are not existing among the original packages
+        for (PackageSlot *pkgSlot : packagesToDelete) {
+          pkgSlot->is_present = false;
+          m_PackageSlotByPath.erase(pkgSlot->p_CurrentPkg->GetPath());
+        }
+
+        RefreshFocused();
+      }
     }
   }
 }
