@@ -27,6 +27,7 @@ class GOConfig;
 class GOOrgan;
 
 class GOSettingsOrgans : public wxPanel {
+public:
   enum {
     ID_ORGANS = 200,
     ID_ORGAN_DEL,

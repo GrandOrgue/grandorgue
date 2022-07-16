@@ -13,8 +13,9 @@
 #include <set>
 #include <unordered_set>
 
-#include <wx-3.0/wx/dir.h>
+#include <wx/accel.h>
 #include <wx/button.h>
+#include <wx/dir.h>
 #include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/gbsizer.h>
@@ -50,6 +51,9 @@ EVT_BUTTON(ID_DEL_CACHE, GOSettingsOrgans::OnDelCache)
 EVT_BUTTON(ID_DEL_PRESET, GOSettingsOrgans::OnDelPreset)
 END_EVENT_TABLE()
 
+static const wxAcceleratorEntry ACCEL_ORGAN_DEL(
+  wxACCEL_NORMAL, WXK_DELETE, GOSettingsOrgans::ID_ORGAN_DEL);
+
 GOSettingsOrgans::GOSettingsOrgans(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
   : wxPanel(parent, wxID_ANY),
@@ -73,6 +77,8 @@ GOSettingsOrgans::GOSettingsOrgans(
   m_Organs->SetColumnWidth(1, 50);
   m_Organs->SetColumnWidth(2, 0);
   m_Organs->SetColumnWidth(2, 300);
+
+  m_Organs->GetAcceleratorTable()->Add(ACCEL_ORGAN_DEL);
 
   gbSizer->Add(
     m_Organs, wxGBPosition(0, 0), wxGBSpan(1, 4), wxALL | wxEXPAND, 5);
@@ -576,7 +582,7 @@ void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
       wxMessageBox(
         wxString::Format(
           _("Do you want to delete organs%s%s?"), organNames, addDelMessage),
-        _("Organs"),
+        _("Delete Organs"),
         wxYES_NO | wxICON_EXCLAMATION,
         this)
       == wxYES) {

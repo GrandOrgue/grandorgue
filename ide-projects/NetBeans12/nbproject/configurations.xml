@@ -3986,21 +3986,17 @@
             flavor2="8">
         <ccTool flags="5">
           <incDir>
-            <pElem>../../src/core</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/core</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
             <pElem>../../submodules/RtAudio</pElem>
             <pElem>../../submodules/PortAudio/include</pElem>
             <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiDeviceList.cpp"
