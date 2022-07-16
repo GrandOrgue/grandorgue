@@ -53,6 +53,7 @@ END_EVENT_TABLE()
 
 static const wxAcceleratorEntry ACCEL_ORGAN_DEL(
   wxACCEL_NORMAL, WXK_DELETE, GOSettingsOrgans::ID_ORGAN_DEL);
+static const wxAcceleratorTable ACCELS_ORGANS(1, &ACCEL_ORGAN_DEL);
 
 GOSettingsOrgans::GOSettingsOrgans(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
@@ -78,7 +79,7 @@ GOSettingsOrgans::GOSettingsOrgans(
   m_Organs->SetColumnWidth(2, 0);
   m_Organs->SetColumnWidth(2, 300);
 
-  m_Organs->GetAcceleratorTable()->Add(ACCEL_ORGAN_DEL);
+  m_Organs->SetAcceleratorTable(ACCELS_ORGANS);
 
   gbSizer->Add(
     m_Organs, wxGBPosition(0, 0), wxGBSpan(1, 4), wxALL | wxEXPAND, 5);
