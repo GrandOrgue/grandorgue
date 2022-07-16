@@ -4981,14 +4981,71 @@ MIDI settings work properly.
 	  read upon GrandOrgue startup and all their organs are also registered.
 	</para>
 	<para>
-  This list provides for the lists displayed in the <link linkend="file_load">File/Load</link>, <link linkend="file_recent">File/Open Recent</link>
-  and <link linkend="file_recent">File/Favorites</link> menu items.
+	  This list provides for the lists displayed in the
+	  <link linkend="file_load">File/Load</link>,
+	  <link linkend="file_recent">File/Open Recent</link>
+	  and <link linkend="file_recent">File/Favorites</link> menu items.
 	</para>
 	<para>The buttons are grayed out until at least one line is selected in the list.</para>
 	<para>
   The organs order on this tab is reproduced as is in the <link linkend="file_load">File/Load</link>
   menu whereas only the 10 first entries are displayed in the <link linkend="file_recent">File/Favorites</link> menu.
 	</para>
+	<sect3>
+	  <title>Name</title>
+	  <para>The name of the organ from its ODF.</para>
+	</sect3>
+	<sect3>
+	  <title>MIDI</title>
+	  <para>
+	    Yes - some MIDI event has been assigned to this organ.
+	  </para>
+	  <para>
+	    No - no MIDI events have been assigned to this organ.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Path</title>
+	  <para>For the packaged organs - the filesystem path to the its .orgue file.</para>
+	  <para>For the not packaged organs - the filesystem path to the its ODF file.</para>
+	</sect3>
+	<sect3>
+	  <title>Builder, Recording</title>
+	  <para>The contents of the corresponding fields from the ODF.</para>
+	</sect3>
+	<sect3>
+	  <title>Organ hash</title>
+	  <para>A calculated string used for composing the cache and preset filenames.</para>
+	</sect3>
+	<sect3>
+	  <title>Package id</title>
+	  <para>Only for packaged organs. A special string used for matching between organs and organ packages.</para>
+	</sect3>
+	<sect3>
+	  <title>Package name</title>
+	  <para>Only for packaged organs. The name of the organ package.
+	    It is often equals to the name of the packaged organ, but may differ from it.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Path in package</title>
+	  <para>
+	    Only for packaged organs. The relative path to the ODF in the package. One package may contain
+	    several organs with different ODF paths.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Package hash</title>
+	  <para>Only for packaged organs. The calculated string used for
+	    composing the name of the index file in the Cache directory.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Package info</title>
+	  <para>
+	    Only for packaged organs. Additional information about the organ package.
+	  </para>
+	</sect3>
 	<sect3>
 	  <title>Down</title>
 	  <para>This button moves the selected entry/entries down one position. It is grayed out if the selected line is last in the list.</para>
@@ -5025,6 +5082,7 @@ MIDI settings work properly.
 	  <title>Delete Cache</title>
 	  <para>
 	    This button removes all cache files for the selected organ(s).
+	    The cache files are deleted only when the user saves the settings.
 	    The cache may be recreated later automatically or with the "Update Cache" menu entry.
 	  </para>
 	</sect3>
@@ -5034,6 +5092,7 @@ MIDI settings work properly.
 	    This button removes all setting files for the selected organ(s) that were
 	    saved with the Save menu entry. All the user settings for the organ
 	    will be lost.
+	    The cache files are deleted only when the user saves the settings.
 	  </para>
 	</sect3>
 	<sect3>
