@@ -20,6 +20,7 @@ private:
 public:
   static const wxString SETTING_FILE_EXT;
   static const wxString CACHE_FILE_EXT;
+  static const wxString INDEX_FILE_EXT;
 
 private:
   static wxString composeOrganFileName(
@@ -40,6 +41,7 @@ public:
   static const wxString &getPackageDlgWildcard();
 
   static wxString extractOrganHash(const wxString &fullFileName);
+  static wxString extractIndexHash(const wxString &fullFileName);
   static wxString composeCacheFilePattern(const wxString &organHash) {
     return composeOrganFilePattern(organHash, CACHE_FILE_EXT);
   }
@@ -49,6 +51,13 @@ public:
   static wxString composeCacheFileName(
     const wxString &organHash, const unsigned presetNum) {
     return composeOrganFileName(organHash, presetNum, CACHE_FILE_EXT);
+  }
+  static wxString composeIndexFilePattern() {
+    return composeOrganFileName(
+      universal_wildcard, wxEmptyString, INDEX_FILE_EXT);
+  }
+  static wxString composeIndexFileName(const wxString &packageHash) {
+    return composeOrganFileName(packageHash, wxEmptyString, INDEX_FILE_EXT);
   }
   static wxString composeSettingFilePattern(const wxString &organHash) {
     return composeOrganFilePattern(organHash, SETTING_FILE_EXT);
@@ -60,6 +69,9 @@ public:
     const wxString &organHash, const unsigned presetNum) {
     return composeOrganFileName(organHash, presetNum, SETTING_FILE_EXT);
   }
+
+  static wxString composeFullPath(
+    const wxString &dirPath, const wxString &fileName);
 };
 
 #endif /* GOSTDFILENAME_H */

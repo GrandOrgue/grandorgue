@@ -49,7 +49,7 @@ private:
     const wxString &name, const wxString &ext, GOBuffer<uint8_t> &data);
 
 public:
-  GOArchiveCreator(const GOSettingDirectory &cacheDir);
+  GOArchiveCreator(const wxString &cacheDir);
   ~GOArchiveCreator();
 
   bool CreatePackage(const wxString &path, const wxString title);

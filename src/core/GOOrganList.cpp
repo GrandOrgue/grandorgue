@@ -63,15 +63,20 @@ std::vector<const GOOrgan *> GOOrganList::GetLRUOrganList() {
   return lru;
 }
 
-void GOOrganList::AddOrgan(const GOOrgan &organ) {
-  for (unsigned i = 0; i < m_OrganList.size(); i++)
+void GOOrganList::AddOrgan(const GOOrgan &newOrgan) {
+  for (GOOrgan *pExOrgan : m_OrganList)
     if (
-      organ.GetODFPath() == m_OrganList[i]->GetODFPath()
-      && organ.GetArchiveID() == m_OrganList[i]->GetArchiveID()) {
-      m_OrganList[i]->Update(organ);
+      pExOrgan->GetODFPath() == newOrgan.GetODFPath()
+      && pExOrgan->GetArchiveID() == newOrgan.GetArchiveID()
+      && (
+	pExOrgan->GetArchivePath().IsEmpty() 
+	|| pExOrgan->GetArchivePath() == newOrgan.GetArchivePath()
+      )
+    ) {
+      pExOrgan->Update(newOrgan);
       return;
     }
-  m_OrganList.push_back(new GOOrgan(organ));
+  m_OrganList.push_back(new GOOrgan(newOrgan));
 }
 
 const ptr_vector<GOArchiveFile> &GOOrganList::GetArchiveList() const {
@@ -116,19 +121,20 @@ void GOOrganList::AddOrgansFromArchives() {
     GOOrgan *pOMatchedById = NULL;
 
     for (GOOrgan *pO : m_OrganList) {
-      if (pO->GetArchivePath() == archivePath) {
+      const wxString &organArchivePath = pO->GetArchivePath();
+
+      if (organArchivePath == archivePath) {
         pOMatchedByPath = pO;
         break;
       }
-      if (!pOMatchedById && pO->GetArchiveID() == archiveId)
+      if (
+        !pOMatchedById && organArchivePath.IsEmpty()
+        && pO->GetArchiveID() == archiveId)
         pOMatchedById = pO;
     }
     if (!pOMatchedByPath) {
       if (pOMatchedById)
         pOMatchedById->SetArchivePath(archivePath);
-      else {
-        // to do: add an organ
-      }
     }
   }
 }

@@ -7,6 +7,7 @@
 const wxString GOStdFileName::universal_wildcard = wxT("*");
 const wxString GOStdFileName::SETTING_FILE_EXT = wxT("cmb");
 const wxString GOStdFileName::CACHE_FILE_EXT = wxT("cache");
+const wxString GOStdFileName::INDEX_FILE_EXT = wxT("idx");
 
 static wxString odf_dlg_wildcard;
 static wxString package_dlg_wildcard;
@@ -23,11 +24,19 @@ const wxString &GOStdFileName::getPackageDlgWildcard() {
   return package_dlg_wildcard;
 }
 
+static wxString WX_EMPTY_STRING = wxEmptyString;
+static wxString WX_DASH = wxT("-");
+
 wxString GOStdFileName::composeOrganFileName(
   const wxString &organHash,
   const wxString presetStr,
   const wxString &extension) {
-  return wxString::Format("%s-%s.%s", organHash, presetStr, extension);
+  return wxString::Format(
+    "%s%s%s.%s",
+    organHash,
+    presetStr.IsEmpty() ? WX_EMPTY_STRING : WX_DASH,
+    presetStr,
+    extension);
 }
 
 wxString GOStdFileName::composeOrganFileName(
@@ -39,11 +48,16 @@ wxString GOStdFileName::composeOrganFileName(
 }
 
 wxString GOStdFileName::extractOrganHash(const wxString &fullFileName) {
-  const wxString fileName = wxFileName(fullFileName).GetFullName();
-  wxRegEx regEx("([[:xdigit:]]+)-([[:digit:]]+)\\.([[:alpha:]]+)");
+  const wxString shortName = wxFileName(fullFileName).GetName();
+  wxRegEx regEx("([[:xdigit:]]+)(-[[:digit:]]+)?");
   wxString res;
 
-  if (regEx.Matches(fileName))
-    res = regEx.GetMatch(fileName, 1);
+  if (regEx.Matches(shortName))
+    res = regEx.GetMatch(shortName, 1);
   return res;
+}
+
+wxString GOStdFileName::composeFullPath(
+  const wxString &dirPath, const wxString &fileName) {
+  return wxFileName(dirPath, fileName).GetFullPath();
 }

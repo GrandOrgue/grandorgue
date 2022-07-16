@@ -212,7 +212,7 @@ bool GOTool::CreateOrganPackage(
 
   cacheDir(GOStdPath::GetGrandOrgueSubDir("ToolCache"));
 
-  GOArchiveCreator archiveCreator(cacheDir);
+  GOArchiveCreator archiveCreator(cacheDir());
 
   for (unsigned i = 0; i < packages.size(); i++)
     if (!archiveCreator.AddPackage(packages[i])) {

@@ -303,7 +303,7 @@ wxString GODefinitionFile::GenerateCacheFileName() {
 
 bool GODefinitionFile::LoadArchive(
   wxString ID, wxString &name, const wxString &parentID) {
-  GOArchiveManager manager(m_config, m_config.OrganCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath());
   GOArchive *archive = manager.LoadArchive(ID);
   if (archive) {
     m_archives.push_back(archive);

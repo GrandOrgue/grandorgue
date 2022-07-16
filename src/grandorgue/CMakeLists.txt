@@ -57,7 +57,6 @@ dialogs/GOSelectOrganDialog.cpp
 dialogs/GOSplash.cpp
 document-base/GODocumentBase.cpp
 document-base/GOView.cpp
-files/GOStdFileName.cpp
 gui/GOGUIBankedGeneralsPanel.cpp
 gui/GOGUIButton.cpp
 gui/GOGUICrescendoPanel.cpp

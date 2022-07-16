@@ -16,7 +16,7 @@
 #include "GOInvalidFile.h"
 #include "threading/GOMutexLocker.h"
 
-GOArchive::GOArchive(const GOSettingDirectory &cachePath)
+GOArchive::GOArchive(const wxString &cachePath)
   : m_CachePath(cachePath), m_ID(), m_Dependencies(), m_Entries(), m_Path() {}
 
 GOArchive::~GOArchive() { Close(); }

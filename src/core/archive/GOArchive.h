@@ -16,13 +16,12 @@
 #include "threading/GOMutex.h"
 
 class GOFile;
-class GOSettingDirectory;
 typedef struct _GOArchiveEntry GOArchiveEntry;
 
 class GOArchive {
 private:
   GOMutex m_Mutex;
-  const GOSettingDirectory &m_CachePath;
+  wxString m_CachePath;
   wxString m_ID;
   std::vector<wxString> m_Dependencies;
   std::vector<GOArchiveEntry> m_Entries;
@@ -30,7 +29,7 @@ private:
   wxString m_Path;
 
 public:
-  GOArchive(const GOSettingDirectory &cachePath);
+  GOArchive(const wxString &cachePath);
   ~GOArchive();
 
   bool OpenArchive(const wxString &path);

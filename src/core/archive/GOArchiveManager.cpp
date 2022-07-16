@@ -12,24 +12,26 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "config/GOConfigFileReader.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigReaderDB.h"
+
 #include "GOArchive.h"
 #include "GOArchiveFile.h"
 #include "GOFile.h"
 #include "GOOrgan.h"
 #include "GOOrganList.h"
 #include "GOPath.h"
-#include "config/GOConfigFileReader.h"
-#include "config/GOConfigReader.h"
-#include "config/GOConfigReaderDB.h"
 
 GOArchiveManager::GOArchiveManager(
-  GOOrganList &OrganList, const GOSettingDirectory &CacheDir)
-  : m_OrganList(OrganList), m_CacheDir(CacheDir) {}
+  GOOrganList &OrganList, const wxString &cacheDir)
+  : m_OrganList(OrganList), m_CacheDir(cacheDir) {}
 
 GOArchiveManager::~GOArchiveManager() {}
 
 GOArchive *GOArchiveManager::OpenArchive(const wxString &path) {
   GOArchive *archive = new GOArchive(m_CacheDir);
+
   if (!archive->OpenArchive(path)) {
     delete archive;
     return NULL;

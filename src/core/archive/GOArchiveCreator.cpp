@@ -37,7 +37,7 @@
 #include "config/GOConfigFileWriter.h"
 #include "config/GOConfigWriter.h"
 
-GOArchiveCreator::GOArchiveCreator(const GOSettingDirectory &cacheDir)
+GOArchiveCreator::GOArchiveCreator(const wxString &cacheDir)
   : m_OrganList(),
     m_Manager(m_OrganList, cacheDir),
     m_Output(),

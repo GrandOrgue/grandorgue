@@ -32,6 +32,7 @@
 #include "files/GOStdFileName.h"
 
 #include "GODefinitionFile.h"
+#include "archive/GOArchiveIndex.h"
 
 static const wxString EMPTY_STRING = wxEmptyString;
 
@@ -388,7 +389,7 @@ void GOSettingsOrgans::RefreshFocused() {
   m_PackageId->ChangeValue(o ? o->GetArchiveID() : EMPTY_STRING);
   m_PackageName->ChangeValue(a ? a->GetName() : EMPTY_STRING);
   m_PathInPackage->ChangeValue(isPackage && o ? o->GetODFPath() : EMPTY_STRING);
-  m_PackageHash->ChangeValue(a ? a->GetFileID() : EMPTY_STRING);
+  m_PackageHash->ChangeValue(a ? a->GetArchiveHash() : EMPTY_STRING);
   m_PackageInfo->ChangeValue(archiveInfo);
 }
 
@@ -806,6 +807,18 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
     m_OrigOrganList.push_back(pOrganSlot->p_CurrentOrgan);
   }
 
+  StringToStringMap
+    indicesToKeep; // the old hash -> the new hash; may be the same
+
+  // populate indicesToKeep
+  for (const PackageSlot &pkgSlot : m_PackageSlots)
+    if (pkgSlot.is_present) {
+      const wxString oldHash = pkgSlot.p_OrigPkg->GetArchiveHash();
+      const wxString newHash = pkgSlot.p_CurrentPkg->GetArchiveHash();
+
+      indicesToKeep[oldHash] = newHash;
+    }
+
   // delete or replace extra packages
   for (int i = m_OrigPackageList.size() - 1; i >= 0; i--) {
     PackageSlot &pkgSlot = m_PackageSlots[i];
@@ -820,7 +833,7 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
     }
   }
 
-  // keep/delete/rename cache and preset files
+  // keep/delete/rename cache and preset and index files
   keep_delete_rename_hash_files(
     m_config.OrganCachePath(),
     GOStdFileName::composeCacheFilePattern(),
@@ -829,6 +842,10 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
     m_config.OrganSettingsPath(),
     GOStdFileName::composeSettingFilePattern(),
     presetsToKeep);
+  keep_delete_rename_hash_files(
+    m_config.OrganCachePath(),
+    GOStdFileName::composeIndexFilePattern(),
+    indicesToKeep);
 
   return true;
 }

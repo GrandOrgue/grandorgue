@@ -48,6 +48,13 @@ GOArchiveFile::GOArchiveFile(GOConfigReader &cfg, wxString group) {
 
 GOArchiveFile::~GOArchiveFile() {}
 
+wxString GOArchiveFile::getArchiveHash(const wxString &path) {
+  GOHash hash;
+
+  hash.Update(path);
+  return hash.getStringHash();
+}
+
 void GOArchiveFile::Save(GOConfigWriter &cfg, wxString group) {
   cfg.WriteString(group, wxT("ID"), m_ID);
   cfg.WriteString(group, wxT("Path"), m_Path);
@@ -117,10 +124,4 @@ bool GOArchiveFile::IsComplete(const GOOrganList &organs) const {
       return false;
   }
   return true;
-}
-
-const wxString GOArchiveFile::GetArchiveHash() const {
-  GOHash hash;
-  hash.Update(m_Path);
-  return hash.getStringHash();
 }
