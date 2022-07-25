@@ -110,14 +110,17 @@ private:
   organOrdCompareCallback(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
 
   void ReorderOrgans(const VisibleOrganRecs &newSortedRecs);
+  void DelSelectedOrgans();
   void ReplaceOrganPath(const long index, const wxString &newPath);
+
+  void OnCharHook(wxKeyEvent &ev);
 
   void OnOrganFocused(wxListEvent &event);
   void OnOrganSelected(wxListEvent &event);
   void OnOrganUp(wxCommandEvent &event);
   void OnOrganDown(wxCommandEvent &event);
   void OnOrganTop(wxCommandEvent &event);
-  void OnOrganDel(wxCommandEvent &event);
+  void OnOrganDel(wxCommandEvent &event) { DelSelectedOrgans(); }
   void OnOrganMidi(wxCommandEvent &event);
   void OnOrganRelocate(wxCommandEvent &event);
   void OnDelCache(wxCommandEvent &event);

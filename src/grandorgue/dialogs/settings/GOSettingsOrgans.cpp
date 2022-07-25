@@ -13,7 +13,6 @@
 #include <set>
 #include <unordered_set>
 
-#include <wx/accel.h>
 #include <wx/button.h>
 #include <wx/dir.h>
 #include <wx/filedlg.h>
@@ -41,6 +40,7 @@ BEGIN_EVENT_TABLE(GOSettingsOrgans, wxPanel)
 EVT_LIST_ITEM_FOCUSED(ID_ORGANS, GOSettingsOrgans::OnOrganFocused)
 EVT_LIST_ITEM_SELECTED(ID_ORGANS, GOSettingsOrgans::OnOrganSelected)
 EVT_LIST_ITEM_DESELECTED(ID_ORGANS, GOSettingsOrgans::OnOrganSelected)
+EVT_CHAR_HOOK(GOSettingsOrgans::OnCharHook)
 EVT_BUTTON(ID_ORGAN_UP, GOSettingsOrgans::OnOrganUp)
 EVT_BUTTON(ID_ORGAN_DOWN, GOSettingsOrgans::OnOrganDown)
 EVT_BUTTON(ID_ORGAN_TOP, GOSettingsOrgans::OnOrganTop)
@@ -50,10 +50,6 @@ EVT_BUTTON(ID_ORGAN_RELOCATE, GOSettingsOrgans::OnOrganRelocate)
 EVT_BUTTON(ID_DEL_CACHE, GOSettingsOrgans::OnDelCache)
 EVT_BUTTON(ID_DEL_PRESET, GOSettingsOrgans::OnDelPreset)
 END_EVENT_TABLE()
-
-static const wxAcceleratorEntry ACCEL_ORGAN_DEL(
-  wxACCEL_NORMAL, WXK_DELETE, GOSettingsOrgans::ID_ORGAN_DEL);
-static const wxAcceleratorTable ACCELS_ORGANS(1, &ACCEL_ORGAN_DEL);
 
 GOSettingsOrgans::GOSettingsOrgans(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
@@ -78,8 +74,6 @@ GOSettingsOrgans::GOSettingsOrgans(
   m_Organs->SetColumnWidth(1, 50);
   m_Organs->SetColumnWidth(2, 0);
   m_Organs->SetColumnWidth(2, 300);
-
-  m_Organs->SetAcceleratorTable(ACCELS_ORGANS);
 
   gbSizer->Add(
     m_Organs, wxGBPosition(0, 0), wxGBSpan(1, 4), wxALL | wxEXPAND, 5);
@@ -400,6 +394,13 @@ void GOSettingsOrgans::RefreshFocused() {
   m_PackageInfo->ChangeValue(archiveInfo);
 }
 
+void GOSettingsOrgans::OnCharHook(wxKeyEvent &ev) {
+  if (ev.GetKeyCode() == WXK_DELETE && !ev.HasAnyModifiers())
+    DelSelectedOrgans();
+  else
+    ev.Skip(true);
+}
+
 void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
   RefreshFocused();
   RefreshButtons();
@@ -495,57 +496,9 @@ void GOSettingsOrgans::ReorderOrgans(const VisibleOrganRecs &newSortedRecs) {
   }
 }
 
-void GOSettingsOrgans::OnOrganUp(wxCommandEvent &event) {
-  VisibleOrganRecs recs(GetCurrentOrganRecs());
-  const int l = recs.size();
-
-  if (l && !recs[0].is_selected)
-    for (int i = 1; i < l; i++) {
-      VisibleOrganRec &rec = recs[i];
-
-      if (rec.is_selected)
-        std::swap(rec, recs[i - 1]);
-    }
-  ReorderOrgans(recs);
-}
-
-void GOSettingsOrgans::OnOrganDown(wxCommandEvent &event) {
-  VisibleOrganRecs recs(GetCurrentOrganRecs());
-  const int l = recs.size();
-
-  if (l && !recs[l - 1].is_selected)
-    for (int i = l - 2; i >= 0; i--) {
-      VisibleOrganRec &rec = recs[i];
-
-      if (rec.is_selected)
-        std::swap(rec, recs[i + 1]);
-    }
-  ReorderOrgans(recs);
-}
-
-void GOSettingsOrgans::OnOrganTop(wxCommandEvent &event) {
-  VisibleOrganRecs oldRecs(GetCurrentOrganRecs());
-  VisibleOrganRecs newRecs;
-
-  // add all selected to the new order
-  std::copy_if(
-    oldRecs.begin(),
-    oldRecs.end(),
-    std::back_inserter(newRecs),
-    [](VisibleOrganRec &rec) { return rec.is_selected; });
-
-  // add all unselected to the new order
-  std::copy_if(
-    oldRecs.begin(),
-    oldRecs.end(),
-    std::back_inserter(newRecs),
-    [](VisibleOrganRec &rec) { return !rec.is_selected; });
-  ReorderOrgans(newRecs);
-}
-
 static wxString NAMES_DELIM = "\n";
 
-void GOSettingsOrgans::OnOrganDel(wxCommandEvent &event) {
+void GOSettingsOrgans::DelSelectedOrgans() {
   std::unordered_set<long> selectedItemSet;
   std::vector<long> selectedItems;
   wxString organNames;
@@ -687,6 +640,54 @@ void GOSettingsOrgans::ReplaceOrganPath(
     pOrganSlot->m_CurrentPath = newPath;
     m_OrganSlotByPath[newPath] = pOrganSlot;
   }
+}
+
+void GOSettingsOrgans::OnOrganUp(wxCommandEvent &event) {
+  VisibleOrganRecs recs(GetCurrentOrganRecs());
+  const int l = recs.size();
+
+  if (l && !recs[0].is_selected)
+    for (int i = 1; i < l; i++) {
+      VisibleOrganRec &rec = recs[i];
+
+      if (rec.is_selected)
+        std::swap(rec, recs[i - 1]);
+    }
+  ReorderOrgans(recs);
+}
+
+void GOSettingsOrgans::OnOrganDown(wxCommandEvent &event) {
+  VisibleOrganRecs recs(GetCurrentOrganRecs());
+  const int l = recs.size();
+
+  if (l && !recs[l - 1].is_selected)
+    for (int i = l - 2; i >= 0; i--) {
+      VisibleOrganRec &rec = recs[i];
+
+      if (rec.is_selected)
+        std::swap(rec, recs[i + 1]);
+    }
+  ReorderOrgans(recs);
+}
+
+void GOSettingsOrgans::OnOrganTop(wxCommandEvent &event) {
+  VisibleOrganRecs oldRecs(GetCurrentOrganRecs());
+  VisibleOrganRecs newRecs;
+
+  // add all selected to the new order
+  std::copy_if(
+    oldRecs.begin(),
+    oldRecs.end(),
+    std::back_inserter(newRecs),
+    [](VisibleOrganRec &rec) { return rec.is_selected; });
+
+  // add all unselected to the new order
+  std::copy_if(
+    oldRecs.begin(),
+    oldRecs.end(),
+    std::back_inserter(newRecs),
+    [](VisibleOrganRec &rec) { return !rec.is_selected; });
+  ReorderOrgans(newRecs);
 }
 
 void GOSettingsOrgans::OnOrganRelocate(wxCommandEvent &event) {
