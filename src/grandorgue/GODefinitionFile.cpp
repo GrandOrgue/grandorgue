@@ -25,6 +25,7 @@
 #include "config/GOConfigWriter.h"
 #include "contrib/sha1.h"
 #include "dialogs/GOProgressDialog.h"
+#include "files/GOStdFileName.h"
 #include "gui/GOGUIBankedGeneralsPanel.h"
 #include "gui/GOGUICouplerPanel.h"
 #include "gui/GOGUICrescendoPanel.h"
@@ -292,17 +293,17 @@ wxString GODefinitionFile::GetOrganHash() { return m_hash; }
 
 wxString GODefinitionFile::GenerateSettingFileName() {
   return m_config.OrganSettingsPath() + wxFileName::GetPathSeparator()
-    + GetOrganHash() + wxString::Format(wxT("-%d.cmb"), m_config.Preset());
+    + GOStdFileName::composeSettingFileName(GetOrganHash(), m_config.Preset());
 }
 
 wxString GODefinitionFile::GenerateCacheFileName() {
   return m_config.OrganCachePath() + wxFileName::GetPathSeparator()
-    + GetOrganHash() + wxString::Format(wxT("-%d.cache"), m_config.Preset());
+    + GOStdFileName::composeCacheFileName(GetOrganHash(), m_config.Preset());
 }
 
 bool GODefinitionFile::LoadArchive(
   wxString ID, wxString &name, const wxString &parentID) {
-  GOArchiveManager manager(m_config, m_config.OrganCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath());
   GOArchive *archive = manager.LoadArchive(ID);
   if (archive) {
     m_archives.push_back(archive);
@@ -337,6 +338,7 @@ wxString GODefinitionFile::Load(
         organ.GetArchiveID().c_str());
     GOArchive *main = m_archives[0];
     m_ArchiveID = main->GetArchiveID();
+    m_ArchivePath = main->GetPath();
 
     for (unsigned i = 0; i < main->GetDependencies().size(); i++) {
       if (!LoadArchive(main->GetDependencies()[i], name))
@@ -892,6 +894,7 @@ GOOrgan GODefinitionFile::GetOrganInfo() {
   return GOOrgan(
     GetODFFilename(),
     m_ArchiveID,
+    m_ArchivePath,
     GetChurchName(),
     GetOrganBuilder(),
     GetRecordingDetails());

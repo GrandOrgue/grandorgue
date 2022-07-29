@@ -37,7 +37,7 @@
 #include "config/GOConfigFileWriter.h"
 #include "config/GOConfigWriter.h"
 
-GOArchiveCreator::GOArchiveCreator(const GOSettingDirectory &cacheDir)
+GOArchiveCreator::GOArchiveCreator(const wxString &cacheDir)
   : m_OrganList(),
     m_Manager(m_OrganList, cacheDir),
     m_Output(),
@@ -264,6 +264,7 @@ bool GOArchiveCreator::addOrganData(unsigned idx, GOFile *file) {
     recording_details = it->second;
   m_organs[idx] = new GOOrgan(
     m_OrganPaths[idx],
+    wxEmptyString,
     wxEmptyString,
     church_name,
     organ_builder,

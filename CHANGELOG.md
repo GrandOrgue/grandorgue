@@ -1,4 +1,6 @@
-- Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1129
+- Deleting an organ in the Organ tab of the Settings dialog causes also deleting it's cache and all it's presets https://github.com/GrandOrgue/grandorgue/issues/1049
+- Reorganised the Organs tab of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1119
+- Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1119
 # 3.6.7 (2022-05-15)
 - Added publishing debug symbols on windows builds https://github.com/GrandOrgue/grandorgue/issues/853
 # 3.6.6 (2022-04-29)

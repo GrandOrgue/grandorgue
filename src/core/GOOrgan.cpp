@@ -22,6 +22,7 @@
 GOOrgan::GOOrgan(
   wxString odf,
   wxString archive,
+  wxString archivePath,
   wxString church_name,
   wxString organ_builder,
   wxString recording_detail)
@@ -30,19 +31,14 @@ GOOrgan::GOOrgan(
     m_OrganBuilder(organ_builder),
     m_RecordingDetail(recording_detail),
     m_ArchiveID(archive),
+    m_ArchivePath(archivePath),
     m_NamesInitialized(true),
     m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
 GOOrgan::GOOrgan(wxString odf)
-  : m_ODF(odf),
-    m_ChurchName(),
-    m_OrganBuilder(),
-    m_RecordingDetail(),
-    m_ArchiveID(),
-    m_NamesInitialized(false),
-    m_midi(MIDI_RECV_ORGAN) {
+  : m_ODF(odf), m_NamesInitialized(false), m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
@@ -53,6 +49,7 @@ GOOrgan::GOOrgan(GOConfigReader &cfg, wxString group, GOMidiMap &map)
   m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));
   m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
   m_ArchiveID = cfg.ReadString(CMBSetting, group, wxT("Archiv"), false);
+  m_ArchivePath = cfg.ReadString(CMBSetting, group, wxT("ArchivePath"), false);
   m_LastUse = cfg.ReadInteger(
     CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
   m_NamesInitialized = true;
@@ -104,8 +101,10 @@ void GOOrgan::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
   cfg.WriteString(group, wxT("ChurchName"), m_ChurchName);
   cfg.WriteString(group, wxT("OrganBuilder"), m_OrganBuilder);
   cfg.WriteString(group, wxT("RecordingDetail"), m_RecordingDetail);
-  if (m_ArchiveID != wxEmptyString)
+  if (m_ArchiveID != wxEmptyString) {
     cfg.WriteString(group, wxT("Archiv"), m_ArchiveID);
+    cfg.WriteString(group, wxT("ArchivePath"), m_ArchivePath);
+  }
   cfg.WriteInteger(group, wxT("LastUse"), m_LastUse);
   m_midi.Save(cfg, group, map);
 }

@@ -29,6 +29,7 @@
 #include "dialogs/GOSplash.h"
 #include "dialogs/settings/GOSettingsDialog.h"
 #include "dialogs/settings/GOSettingsReason.h"
+#include "files/GOStdFileName.h"
 #include "gui/GOGUIPanel.h"
 #include "help/GOHelpRequestor.h"
 #include "midi/GOMidi.h"
@@ -491,7 +492,7 @@ void GOFrame::Init(wxString filename) {
     event.SetClientData(pReasons);
     GetEventHandler()->AddPendingEvent(event);
   }
-  GOArchiveManager manager(m_config, m_config.OrganCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath());
   manager.RegisterPackageDirectory(m_config.GetPackageDirectory());
   manager.RegisterPackageDirectory(m_config.OrganPackagePath());
   if (!filename.IsEmpty())
@@ -794,7 +795,7 @@ void GOFrame::OnOpen(wxCommandEvent &event) {
     _("Open organ"),
     m_config.OrganPath(),
     wxEmptyString,
-    _("Sample set definition files (*.organ)|*.organ"),
+    GOStdFileName::getOdfDlgWildcard(),
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dlg.ShowModal() == wxID_OK) {
     Open(GOOrgan(dlg.GetPath()));
@@ -807,7 +808,7 @@ void GOFrame::OnInstall(wxCommandEvent &event) {
     _("Install organ package"),
     m_config.OrganPath(),
     wxEmptyString,
-    _("Organ package (*.orgue)|*.orgue"),
+    GOStdFileName::getPackageDlgWildcard(),
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dlg.ShowModal() == wxID_OK)
     if (InstallOrganPackage(dlg.GetPath())) {
@@ -1037,7 +1038,7 @@ void GOFrame::OnSettings(wxCommandEvent &event) {
   GOSettingsDialog dialog(this, m_Sound, pReasons);
 
   if (dialog.ShowModal() == wxID_OK) {
-    GOArchiveManager manager(m_config, m_config.OrganCachePath);
+    GOArchiveManager manager(m_config, m_config.OrganCachePath());
     manager.RegisterPackageDirectory(m_config.OrganPackagePath());
 
     UpdateVolumeControlWithSettings();
@@ -1247,7 +1248,7 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
 }
 
 bool GOFrame::InstallOrganPackage(wxString name) {
-  GOArchiveManager manager(m_config, m_config.OrganCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath());
   wxString result = manager.InstallPackage(name);
   if (result != wxEmptyString) {
     GOMessageBox(result, _("Error"), wxOK | wxICON_ERROR, this);

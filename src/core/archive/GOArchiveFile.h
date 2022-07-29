@@ -35,6 +35,8 @@ public:
   GOArchiveFile(GOConfigReader &cfg, wxString group);
   virtual ~GOArchiveFile();
 
+  static wxString getArchiveHash(const wxString &path);
+
   void Update(const GOArchiveFile &archive);
   wxString GetCurrentFileID() const;
 
@@ -42,9 +44,10 @@ public:
 
   const wxString &GetID() const;
   const wxString &GetPath() const;
+  const void SetPath(const wxString &newPath) { m_Path = newPath; }
   const wxString &GetName() const;
   const wxString &GetFileID() const;
-  const wxString GetArchiveHash() const;
+  const wxString GetArchiveHash() const { return getArchiveHash(m_Path); }
   const std::vector<wxString> &GetDependencies() const;
   const std::vector<wxString> &GetDependencyTitles() const;
 

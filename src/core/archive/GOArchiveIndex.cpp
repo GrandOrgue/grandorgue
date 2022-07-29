@@ -10,24 +10,23 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
+#include "files/GOStdFileName.h"
+
+#include "GOArchiveFile.h"
 #include "GOHash.h"
-#include "settings/GOSettingDirectory.h"
 
 /* Value which is used to identify a valid cache index file. */
 #define GRANDORGUE_INDEX_MAGIC 0x43214321
 
-GOArchiveIndex::GOArchiveIndex(
-  const GOSettingDirectory &cachePath, const wxString &path)
+GOArchiveIndex::GOArchiveIndex(const wxString &cachePath, const wxString &path)
   : m_CachePath(cachePath), m_Path(path), m_File() {}
 
 GOArchiveIndex::~GOArchiveIndex() { m_File.Close(); }
 
 wxString GOArchiveIndex::GenerateIndexFilename() {
-  GOHash hash;
-  hash.Update(m_Path);
-
-  return m_CachePath() + wxFileName::GetPathSeparator() + hash.getStringHash()
-    + wxT(".idx");
+  return GOStdFileName::composeFullPath(
+    m_CachePath,
+    GOStdFileName::composeIndexFileName(GOArchiveFile::getArchiveHash(m_Path)));
 }
 
 GOHashType GOArchiveIndex::GenerateHash() {

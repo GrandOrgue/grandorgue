@@ -11,21 +11,20 @@
 class GOArchive;
 class GOOrganList;
 class GOConfig;
-class GOSettingDirectory;
 
 #include <wx/string.h>
 
 class GOArchiveManager {
 private:
   GOOrganList &m_OrganList;
-  const GOSettingDirectory &m_CacheDir;
+  wxString m_CacheDir;
 
   GOArchive *OpenArchive(const wxString &path);
   bool ReadIndex(GOArchive *archive, bool InstallOrgans = false);
   wxString InstallPackage(const wxString &path, const wxString &last_id);
 
 public:
-  GOArchiveManager(GOOrganList &OrganList, const GOSettingDirectory &CacheDir);
+  GOArchiveManager(GOOrganList &OrganList, const wxString &cacheDir);
   ~GOArchiveManager();
 
   GOArchive *LoadArchive(const wxString &id);

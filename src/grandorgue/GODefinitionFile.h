@@ -58,6 +58,7 @@ private:
   GODocument *m_doc;
   wxString m_odf;
   wxString m_ArchiveID;
+  wxString m_ArchivePath;
   wxString m_hash;
   wxString m_path;
   wxString m_CacheFilename;

@@ -237,7 +237,8 @@ GOConfig::GOConfig(wxString instance)
     GOStdPath::GetGrandOrgueSubDir(_("MIDI recordings")));
 }
 
-GOConfig::~GOConfig() { Flush(); }
+GOConfig::~GOConfig() { /* Flush(); */
+}
 
 void load_ports_config(
   GOConfigReader &cfg,
