@@ -308,9 +308,9 @@ void GOConfig::Load() {
       CMBSetting, wxT("UI"), wxT("MainWindowWidth"), 0, 32000, false, 0);
     m_MainWindowRect.height = (unsigned)cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
-    
+
     GOStdPath::InitLocaleDir();
-    m_locale.Init(m_config->GetLanguageId());
+    m_locale.Init(GetLanguageId());
     m_locale.AddCatalog(wxT("GrandOrgue"));
 
     m_Temperaments.InitTemperaments();
