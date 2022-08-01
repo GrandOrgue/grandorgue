@@ -141,6 +141,7 @@ GOConfig::GOConfig(wxString instance)
     m_AudioGroups(),
     m_AudioDeviceConfig(),
     m_MIDIEvents(),
+    m_locale(),
     OrganSettingsPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
     OrganCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
     Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
@@ -307,6 +308,10 @@ void GOConfig::Load() {
       CMBSetting, wxT("UI"), wxT("MainWindowWidth"), 0, 32000, false, 0);
     m_MainWindowRect.height = (unsigned)cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
+    
+    GOStdPath::InitLocaleDir();
+    m_locale.Init(m_config->GetLanguageId());
+    m_locale.AddCatalog(wxT("GrandOrgue"));
 
     m_Temperaments.InitTemperaments();
     m_Temperaments.Load(cfg);
