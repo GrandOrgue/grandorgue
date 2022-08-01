@@ -33,7 +33,6 @@ IMPLEMENT_APP(GOApp)
 GOApp::GOApp()
   : m_Restart(false),
     m_Frame(NULL),
-    m_locale(),
     m_config(NULL),
     m_soundSystem(NULL),
     m_Log(NULL),
@@ -119,9 +118,6 @@ bool GOApp::OnInit() {
     return false;
 
   m_config = new GOConfig(m_InstanceName);
-  GOStdPath::InitLocaleDir();
-  m_locale.Init(m_config->GetLanguageId());
-  m_locale.AddCatalog(wxT("GrandOrgue"));
   m_config->Load();
 
   m_soundSystem = new GOSound(*m_config);
