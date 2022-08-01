@@ -9,6 +9,7 @@
 #define GOCONFIG_H
 
 #include <wx/gdicmn.h>
+#include <wx/intl.h>
 #include <wx/string.h>
 
 #include <map>
@@ -59,6 +60,7 @@ private:
   wxString m_InstanceName;
   wxString m_ConfigFileName;
   wxString m_ResourceDir;
+  wxLocale m_locale;
   std::vector<wxString> m_AudioGroups;
   GOPortsConfig m_SoundPortsConfig;
   std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
