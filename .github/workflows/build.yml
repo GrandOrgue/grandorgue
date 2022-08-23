@@ -90,7 +90,7 @@ jobs:
             prepare: "ubuntu-18"
             build_on: linux
 
-          - run_on: macos-10.15
+          - run_on: macos-11
             for: osx
             prepare: osx
             build_on: osx
