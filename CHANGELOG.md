@@ -1,3 +1,5 @@
+# 3.7.0 (2022-08-11)
+- Fixed packaging for OSx https://github.com/GrandOrgue/grandorgue/issues/1135
 - Deleting an organ in the Organ tab of the Settings dialog causes also deleting it's cache and all it's presets https://github.com/GrandOrgue/grandorgue/issues/1049
 - Reorganised the Organs tab of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1119
 - Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1119
