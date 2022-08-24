@@ -94,6 +94,8 @@ ELSE()
   IF (WIN32)
     SET(LIBINSTDIR "bin")
   ELSE ()
+    # See https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html for
+    # the purpose of this module
     include(GNUInstallDirs)
     SET(LIBINSTDIR "${CMAKE_INSTALL_LIBDIR}" CACHE STRING "library directory")
   ENDIF ()
