@@ -53,10 +53,11 @@ bool GODocument::Load(GOProgressDialog *dlg, const GOOrgan &organ) {
 bool GODocument::Import(
   GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb) {
   wxBusyCursor busy;
+  GOConfig &cfg = m_sound.GetSettings();
 
   CloseOrgan();
   Modify(false);
-  m_organfile = new GODefinitionFile(this, m_sound.GetSettings());
+  m_organfile = new GODefinitionFile(this, cfg);
   wxString error = m_organfile->Load(dlg, organ, cmb);
   if (!error.IsEmpty()) {
     if (error != wxT("!")) {
@@ -74,6 +75,11 @@ bool GODocument::Import(
 
     m_sound.GetEngine().SetVolume(m_organfile->GetVolume());
   }
+
+  const unsigned releaseTail = m_organfile->GetReleaseTail();
+
+  cfg.ReleaseLength(releaseTail);
+  m_sound.GetEngine().SetReleaseLength(releaseTail);
   m_sound.GetSettings().Flush();
 
   wxCommandEvent event(wxEVT_WINTITLE, 0);

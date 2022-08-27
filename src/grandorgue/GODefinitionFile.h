@@ -72,6 +72,7 @@ private:
   int m_volume;
   bool m_IgnorePitch;
   wxString m_Temperament;
+  unsigned m_releaseTail = 0;
 
   bool m_b_customized;
   bool m_DivisionalsStoreIntermanualCouplers;
@@ -189,6 +190,9 @@ public:
 
   void SetIgnorePitch(bool ignorepitch);
   bool GetIgnorePitch();
+
+  unsigned GetReleaseTail() const { return m_releaseTail; }
+  void SetReleaseTail(unsigned releaseTail);
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel = false);
   GOLabel *GetLabel(const wxString &name, bool is_panel = false);
