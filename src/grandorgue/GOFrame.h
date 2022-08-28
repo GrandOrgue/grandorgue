@@ -82,6 +82,7 @@ private:
   int m_AfterSettingsEventId;
   GOOrgan *p_AfterSettingsEventOrgan;
 
+  void UpdateReleaseLength();
   void UpdatePanelMenu();
   void UpdateFavoritesMenu();
   void UpdateRecentMenu();
