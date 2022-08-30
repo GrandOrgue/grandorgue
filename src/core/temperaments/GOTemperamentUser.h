@@ -15,7 +15,8 @@ class GOConfigWriter;
 
 class GOTemperamentUser : public GOTemperamentCent {
 public:
-  GOTemperamentUser(wxString name, wxString title, wxString group);
+  GOTemperamentUser(
+    wxString name, wxString title, wxString group, wxString groupTitle);
   GOTemperamentUser(GOConfigReader &cfg, wxString group);
 
   void Save(GOConfigWriter &cfg, wxString group);

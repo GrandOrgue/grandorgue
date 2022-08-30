@@ -10,10 +10,14 @@
 #include <wx/intl.h>
 
 GOTemperament::GOTemperament(wxString name, wxString group)
-  : m_Group(group), m_Name(name), m_Title(wxEmptyString) {}
+  : m_Group(group),
+    m_GroupTitle(wxEmptyString),
+    m_Name(name),
+    m_Title(wxEmptyString) {}
 
-GOTemperament::GOTemperament(wxString name, wxString title, wxString group)
-  : m_Group(group), m_Name(name), m_Title(title) {}
+GOTemperament::GOTemperament(
+  wxString name, wxString title, wxString group, wxString groupTitle)
+  : m_Group(group), m_GroupTitle(groupTitle), m_Name(name), m_Title(title) {}
 
 GOTemperament::~GOTemperament() {}
 
@@ -35,3 +39,7 @@ wxString GOTemperament::GetTitle() const {
 }
 
 wxString GOTemperament::GetGroup() const { return m_Group; }
+
+wxString GOTemperament::GetGroupTitle() const {
+  return m_GroupTitle.IsEmpty() ? wxGetTranslation(m_Group) : m_GroupTitle;
+}

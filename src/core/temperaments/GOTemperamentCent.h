@@ -44,7 +44,8 @@ public:
     float i10,
     float i11,
     float i12);
-  GOTemperamentCent(wxString name, wxString title, wxString group);
+  GOTemperamentCent(
+    wxString name, wxString title, wxString group, wxString groupTitle);
 
   virtual float GetOffset(
     bool ignorepitch,
