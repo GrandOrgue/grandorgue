@@ -20,7 +20,7 @@ GOTemperamentUser::GOTemperamentUser(GOConfigReader &cfg, wxString group)
   m_Name = cfg.ReadString(CMBSetting, group, wxT("Name"));
   m_Title = cfg.ReadString(CMBSetting, group, wxT("Title"));
   m_Group = cfg.ReadString(CMBSetting, group, wxT("Group"));
-  m_GroupTitle = cfg.ReadString(CMBSetting, group, wxT("GroupTitle"), false);
+  m_GroupTitle = m_Group;
   for (unsigned i = 0; i < 12; i++)
     m_Tuning[i] = cfg.ReadFloat(
       CMBSetting, group, wxString::Format(wxT("Offset%d"), i), -1200, 1200);
@@ -30,7 +30,6 @@ void GOTemperamentUser::Save(GOConfigWriter &cfg, wxString group) {
   cfg.WriteString(group, wxT("Name"), m_Name);
   cfg.WriteString(group, wxT("Title"), m_Title);
   cfg.WriteString(group, wxT("Group"), m_Group);
-  cfg.WriteString(group, wxT("GroupTitle"), m_GroupTitle);
   for (unsigned i = 0; i < 12; i++)
     cfg.WriteFloat(group, wxString::Format(wxT("Offset%d"), i), m_Tuning[i]);
 }
