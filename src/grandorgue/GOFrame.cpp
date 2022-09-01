@@ -662,7 +662,7 @@ void GOFrame::UpdateTemperamentMenu() {
        i++) {
     const GOTemperament &t = m_config.GetTemperaments().GetTemperament(i);
     wxMenu *menu;
-    wxString group = t.GetGroup();
+    wxString group = t.GetGroupTitle();
     if (group == wxEmptyString)
       menu = m_temperament_menu;
     else {

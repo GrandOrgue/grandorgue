@@ -1,3 +1,4 @@
+- Fixed translation of temperaments' names https://github.com/GrandOrgue/grandorgue/issues/1104
 - Fixed saving ReleaseTail https://github.com/GrandOrgue/grandorgue/issues/1161
 - Moved build for OsX to OsX 11 https://github.com/GrandOrgue/grandorgue/discussions/1149
 # 3.7.0 (2022-08-11)

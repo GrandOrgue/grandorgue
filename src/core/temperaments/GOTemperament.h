@@ -13,12 +13,14 @@
 class GOTemperament {
 protected:
   wxString m_Group;
+  wxString m_GroupTitle;
   wxString m_Name;
   wxString m_Title;
 
 public:
   GOTemperament(wxString name, wxString group = wxEmptyString);
-  GOTemperament(wxString name, wxString title, wxString group);
+  GOTemperament(
+    wxString name, wxString title, wxString group, wxString groupTitle);
   virtual ~GOTemperament();
 
   virtual float GetOffset(
@@ -32,6 +34,7 @@ public:
   wxString GetName() const;
   wxString GetTitle() const;
   wxString GetGroup() const;
+  wxString GetGroupTitle() const;
 };
 
 #endif

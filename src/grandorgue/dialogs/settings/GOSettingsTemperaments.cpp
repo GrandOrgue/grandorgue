@@ -148,6 +148,7 @@ bool GOSettingsTemperaments::TransferDataFromWindow() {
       m_Ptrs[i] = new GOTemperamentUser(
         wxString::Format(wxT("UserTemperament%d-%d"), time, i),
         m_List->GetCellValue(i, 1),
+        m_List->GetCellValue(i, 0),
         m_List->GetCellValue(i, 0));
 
     m_Ptrs[i]->SetTitle(m_List->GetCellValue(i, 1));
