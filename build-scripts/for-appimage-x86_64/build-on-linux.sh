@@ -29,6 +29,7 @@ make -k $PARALLEL_PRMS
 make install DESTDIR=AppDir
 
 # initialize AppDir and build AppImage
+export DEPLOY_GTK_VERSION=3 APPIMAGE_EXTRACT_AND_RUN=1
 linuxdeploy-x86_64.AppImage --appdir AppDir --plugin gtk
 appimagetool-x86_64.AppImage --no-appstream AppDir grandorgue-$1-$2.x86_64.AppImage
 
