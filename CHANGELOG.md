@@ -1,3 +1,4 @@
+- Fixed building appimage in an ubuntu container
 # 3.7.1 (2022-09-02)
 - Fixed translation of temperaments' names https://github.com/GrandOrgue/grandorgue/issues/1104
 - Fixed saving ReleaseTail https://github.com/GrandOrgue/grandorgue/issues/1161
