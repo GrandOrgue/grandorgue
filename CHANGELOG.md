@@ -1,3 +1,4 @@
+- Fixed rebuilding the cache every time upon the appimage starts https://github.com/GrandOrgue/grandorgue/issues/1174
 - Fixed building appimage in an ubuntu container
 # 3.7.1 (2022-09-02)
 - Fixed translation of temperaments' names https://github.com/GrandOrgue/grandorgue/issues/1104
