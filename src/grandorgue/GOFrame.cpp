@@ -306,9 +306,8 @@ GOFrame::GOFrame(
   m_ReleaseLength = new wxChoice(
     tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
   tb->AddControl(m_ReleaseLength);
-  unsigned n = m_config.ReleaseLength();
-  m_ReleaseLength->SetSelection(n / 50);
-  m_Sound.GetEngine().SetReleaseLength(n);
+  m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
+  UpdateReleaseLength();
 
   tb->AddTool(
     ID_TRANSPOSE,
@@ -456,6 +455,12 @@ void GOFrame::SetPosSize(const GOLogicalRect &lRect) {
   }
 }
 
+void GOFrame::UpdateReleaseLength() {
+  unsigned n = m_config.ReleaseLength();
+
+  m_ReleaseLength->SetSelection(n / 50);
+}
+
 void GOFrame::UpdateVolumeControlWithSettings() {
   m_isMeterReady = false;
   if (AdjustVolumeControlWithSettings())
@@ -562,6 +567,7 @@ void GOFrame::Open(const GOOrgan &organ) {
   GOProgressDialog dlg;
   m_doc = new GODocument(this, &m_Sound);
   m_doc->Load(&dlg, organ);
+  UpdateReleaseLength();
   UpdatePanelMenu();
 }
 
@@ -656,7 +662,7 @@ void GOFrame::UpdateTemperamentMenu() {
        i++) {
     const GOTemperament &t = m_config.GetTemperaments().GetTemperament(i);
     wxMenu *menu;
-    wxString group = t.GetGroup();
+    wxString group = t.GetGroupTitle();
     if (group == wxEmptyString)
       menu = m_temperament_menu;
     else {
@@ -1158,6 +1164,8 @@ void GOFrame::OnSettingsTranspose(wxCommandEvent &event) {
 void GOFrame::OnSettingsReleaseLength(wxCommandEvent &event) {
   m_config.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
   m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
+  if (m_doc && m_doc->GetOrganFile())
+    m_doc->GetOrganFile()->SetReleaseTail(m_config.ReleaseLength());
 }
 
 void GOFrame::OnHelpAbout(wxCommandEvent &event) { DoSplash(false); }

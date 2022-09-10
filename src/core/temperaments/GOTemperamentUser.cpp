@@ -11,14 +11,16 @@
 #include "config/GOConfigWriter.h"
 
 GOTemperamentUser::GOTemperamentUser(
-  wxString name, wxString title, wxString group)
-  : GOTemperamentCent(name, title, group) {}
+  wxString name, wxString title, wxString group, wxString groupTitle)
+  : GOTemperamentCent(name, title, group, groupTitle) {}
 
 GOTemperamentUser::GOTemperamentUser(GOConfigReader &cfg, wxString group)
-  : GOTemperamentCent(wxEmptyString, wxEmptyString, wxEmptyString) {
+  : GOTemperamentCent(
+    wxEmptyString, wxEmptyString, wxEmptyString, wxEmptyString) {
   m_Name = cfg.ReadString(CMBSetting, group, wxT("Name"));
   m_Title = cfg.ReadString(CMBSetting, group, wxT("Title"));
   m_Group = cfg.ReadString(CMBSetting, group, wxT("Group"));
+  m_GroupTitle = m_Group;
   for (unsigned i = 0; i < 12; i++)
     m_Tuning[i] = cfg.ReadFloat(
       CMBSetting, group, wxString::Format(wxT("Offset%d"), i), -1200, 1200);

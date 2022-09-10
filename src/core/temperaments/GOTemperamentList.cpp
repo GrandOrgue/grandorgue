@@ -143,7 +143,7 @@ void GOTemperamentList::InitTemperaments() {
     17.1,
     -6.85));
 
-  group = _("1/4 comma variants");
+  group = wxTRANSLATE("1/4 comma variants");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("1/4-comma meantone approximation"),
     group,
@@ -370,7 +370,7 @@ void GOTemperamentList::InitTemperaments() {
     6.35471,
     -6.84315));
 
-  group = _("1/5 comma");
+  group = wxTRANSLATE("1/5 comma");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("1/5-comma meantone (Verheijen)"),
     group,
@@ -447,7 +447,7 @@ void GOTemperamentList::InitTemperaments() {
     7.43,
     -4.69));
 
-  group = _("1/6 comma");
+  group = wxTRANSLATE("1/6 comma");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("1/6-comma meantone"),
     group,
@@ -569,7 +569,7 @@ void GOTemperamentList::InitTemperaments() {
     9.09,
     -3.64));
 
-  group = _("Various comma");
+  group = wxTRANSLATE("Various comma");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("3/14-comma meantone (Giordano Riccati, 1762)"),
     group,
@@ -691,7 +691,7 @@ void GOTemperamentList::InitTemperaments() {
     20.95,
     -8.38));
 
-  group = _("Pythagorean");
+  group = wxTRANSLATE("Pythagorean");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("Pythagorean"),
     group,
@@ -783,7 +783,7 @@ void GOTemperamentList::InitTemperaments() {
     33.24,
     3.91));
 
-  group = _("Other just");
+  group = wxTRANSLATE("Other just");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("Pure Major"),
     group,
@@ -830,7 +830,7 @@ void GOTemperamentList::InitTemperaments() {
     20.11,
     -8.04));
 
-  group = _("Well tempered");
+  group = wxTRANSLATE("Well tempered");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("Bach (Bradley Lehman)"),
     group,
@@ -1507,7 +1507,7 @@ void GOTemperamentList::InitTemperaments() {
     6.81,
     3.91));
 
-  group = _("Harpsichord/Piano/Monochord");
+  group = wxTRANSLATE("Harpsichord/Piano/Monochord");
   m_Temperaments.push_back(new GOTemperamentCent(
     wxTRANSLATE("Agricola's Monochord, Rudimenta musices (1539)"),
     group,

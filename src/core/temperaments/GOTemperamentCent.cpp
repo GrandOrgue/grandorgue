@@ -10,8 +10,8 @@
 #include <math.h>
 
 GOTemperamentCent::GOTemperamentCent(
-  wxString name, wxString title, wxString group)
-  : GOTemperament(name, title, group) {
+  wxString name, wxString title, wxString group, wxString groupTitle)
+  : GOTemperament(name, title, group, groupTitle) {
   m_Tuning[0] = 0;
   m_Tuning[1] = 0;
   m_Tuning[2] = 0;

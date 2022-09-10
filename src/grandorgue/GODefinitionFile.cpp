@@ -212,6 +212,14 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
   m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
   m_IgnorePitch
     = cfg.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
+  m_releaseTail = (unsigned)cfg.ReadInteger(
+    CMBSetting,
+    group,
+    wxT("ReleaseTail"),
+    0,
+    3000,
+    false,
+    m_config.ReleaseLength());
 
   GOModel::Load(cfg, this);
   wxString buffer;
@@ -746,6 +754,7 @@ bool GODefinitionFile::Export(const wxString &cmb) {
 
   cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
   cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
+  cfg.WriteInteger(wxT("Organ"), wxT("ReleaseTail"), (int)m_releaseTail);
 
   GOEventDistributor::Save(cfg);
 
@@ -799,6 +808,11 @@ int GODefinitionFile::GetVolume() { return m_volume; }
 void GODefinitionFile::SetIgnorePitch(bool ignore) { m_IgnorePitch = ignore; }
 
 bool GODefinitionFile::GetIgnorePitch() { return m_IgnorePitch; }
+
+void GODefinitionFile::SetReleaseTail(unsigned releaseTail) {
+  m_releaseTail = releaseTail;
+  Modified();
+}
 
 bool GODefinitionFile::DivisionalsStoreIntermanualCouplers() {
   return m_DivisionalsStoreIntermanualCouplers;
