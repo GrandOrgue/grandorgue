@@ -1,3 +1,4 @@
+- Added capability of switching between the Override and the Add crescendo mode https://github.com/GrandOrgue/grandorgue/issues/1170
 - Fixed rebuilding the cache every time upon the appimage starts https://github.com/GrandOrgue/grandorgue/issues/1174
 - Fixed building appimage in an ubuntu container
 # 3.7.1 (2022-09-02)

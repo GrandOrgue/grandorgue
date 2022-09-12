@@ -31,7 +31,7 @@ public:
     GODefinitionFile *organfile,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
-  void Push();
+  void Push(ExtraElementsSet const *extraSet = nullptr);
 };
 
 #endif /* GOFRAMEGENERAL_H */

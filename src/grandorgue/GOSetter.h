@@ -8,11 +8,16 @@
 #ifndef GOSETTER_H
 #define GOSETTER_H
 
+#include "ptrvector.h"
+
+#include "GOCombination.h"
 #include "GOControlChangedHandler.h"
 #include "GOElementCreator.h"
 #include "GOEnclosure.h"
 #include "GOLabel.h"
 #include "GOPlaybackStateHandler.h"
+
+#define N_CRESCENDOS 4
 
 class GOFrameGeneral;
 
@@ -20,7 +25,8 @@ typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
 
 class GOSetter : private GOPlaybackStateHandler,
                  private GOControlChangedHandler,
-                 public GOElementCreator {
+                 public GOElementCreator,
+                 public GOSaveableObject {
 private:
   GODefinitionFile *m_organfile;
   unsigned m_pos;
@@ -30,6 +36,8 @@ private:
   ptr_vector<GOFrameGeneral> m_framegeneral;
   ptr_vector<GOFrameGeneral> m_general;
   ptr_vector<GOFrameGeneral> m_crescendo;
+  std::vector<GOCombination::ExtraElementsSet> m_CrescendoExtraSets;
+  bool m_CrescendoAddMode[N_CRESCENDOS];
   GOLabel m_PosDisplay;
   GOLabel m_BankDisplay;
   GOLabel m_CrescendoDisplay;
@@ -59,6 +67,7 @@ public:
   virtual ~GOSetter();
 
   void Load(GOConfigReader &cfg);
+  void Save(GOConfigWriter &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
   GOLabel *GetLabel(const wxString &name, bool is_panel);
 

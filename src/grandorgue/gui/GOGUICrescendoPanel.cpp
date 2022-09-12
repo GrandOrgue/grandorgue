@@ -69,6 +69,11 @@ GOGUIPanel *GOGUICrescendoPanel::CreateCrescendoPanel(GOConfigReader &cfg) {
   button->Init(cfg, wxT("SetterCrescendoFull"), 7, 100);
   panel->AddControl(button);
 
+  button = new GOGUIButton(
+    panel, m_organfile->GetButton(wxT("CrescendoOverride")), false);
+  button->Init(cfg, wxT("CrescendoOverride"), 8, 100);
+  panel->AddControl(button);
+
   button
     = new GOGUIButton(panel, m_organfile->GetButton(wxT("CrescendoA")), false);
   button->Init(cfg, wxT("SetterCrescendoA"), 1, 101);
