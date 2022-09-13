@@ -17,7 +17,12 @@
 #include "archive/GOArchive.h"
 #include "config/GOConfig.h"
 
-GOFilename::GOFilename() : m_Name(), m_Path(), m_Archiv(NULL), m_Hash(true) {}
+GOFilename::GOFilename()
+  : m_Name(),
+    m_Path(),
+    m_Archiv(NULL),
+    m_ToHashSizeTime(true),
+    m_ToHashPath(true) {}
 
 const wxString &GOFilename::GetTitle() const { return m_Name; }
 
@@ -27,9 +32,9 @@ void GOFilename::Hash(GOHash &hash) const {
     hash.Update(m_Name);
     return;
   }
-  hash.Update(m_Path);
+  hash.Update(m_ToHashPath ? m_Path : m_Name);
   wxFileName path_name(m_Path);
-  if (!m_Hash)
+  if (!m_ToHashSizeTime)
     return;
   uint64_t size = path_name.GetSize().GetValue();
   uint64_t time = path_name.GetModificationTime().GetTicks();
@@ -61,7 +66,7 @@ void GOFilename::SetPath(const wxString &base, const wxString &file) {
   }
   if (!wxFileExists(temp)) {
     wxLogError(_("File '%s' does not exists"), file.c_str());
-    m_Hash = false;
+    m_ToHashSizeTime = false;
   }
   m_Path = temp;
 }
@@ -88,12 +93,13 @@ void GOFilename::Assign(const wxString &name, GODefinitionFile *organfile) {
 void GOFilename::AssignResource(
   const wxString &name, GODefinitionFile *organfile) {
   m_Name = name;
-  m_Hash = false;
+  m_ToHashSizeTime = false;
+  m_ToHashPath = false;
   SetPath(organfile->GetSettings().GetResourceDirectory(), name);
 }
 
 void GOFilename::AssignAbsolute(const wxString &path) {
   m_Name = path;
   m_Path = path;
-  m_Hash = false;
+  m_ToHashSizeTime = false;
 }

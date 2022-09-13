@@ -22,7 +22,8 @@ private:
   wxString m_Name;
   wxString m_Path;
   GOArchive *m_Archiv;
-  bool m_Hash;
+  bool m_ToHashSizeTime;
+  bool m_ToHashPath;
 
   void SetPath(const wxString &base, const wxString &path);
 
