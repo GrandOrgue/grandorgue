@@ -301,6 +301,8 @@ GOSetter::GOSetter(GODefinitionFile *organfile)
 
 GOSetter::~GOSetter() {}
 
+static const wxString OVERRIDE_MODE = wxT("OverrideMode");
+
 void GOSetter::Load(GOConfigReader &cfg) {
   m_organfile->RegisterSaveableObject(this);
 
@@ -327,10 +329,10 @@ void GOSetter::Load(GOConfigReader &cfg) {
     buffer.Printf(wxT("SetterCrescendo%d"), i);
 
     bool defaultAddMode
-      = cfg.ReadBoolean(ODFSetting, buffer, wxT("AddMode"), false, false);
+      = cfg.ReadBoolean(ODFSetting, buffer, OVERRIDE_MODE, false, true);
 
-    m_CrescendoAddMode[i] = cfg.ReadBoolean(
-      CMBSetting, buffer, wxT("AddMode"), false, defaultAddMode);
+    m_CrescendoOverrideMode[i] = cfg.ReadBoolean(
+      CMBSetting, buffer, OVERRIDE_MODE, false, defaultAddMode);
   }
   for (unsigned i = 0; i < N_CRESCENDOS * CRESCENDO_STEPS; i++) {
     m_crescendo.push_back(
@@ -377,7 +379,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Init(
     cfg, wxT("SetterCrescendoOverride"), _("Override"));
   m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
-    !m_CrescendoAddMode[m_crescendobank]);
+    m_CrescendoOverrideMode[m_crescendobank]);
 
   m_button[ID_SETTER_PITCH_M1]->Init(cfg, wxT("SetterPitchM1"), _("-1"));
   m_button[ID_SETTER_PITCH_M10]->Init(cfg, wxT("SetterPitchM10"), _("-10"));
@@ -431,8 +433,8 @@ void GOSetter::Save(GOConfigWriter &cfg) {
   for (unsigned i = 0; i < N_CRESCENDOS; i++) {
     cfg.WriteBoolean(
       wxString::Format(wxT("SetterCrescendo%d"), i),
-      wxT("AddMode"),
-      m_CrescendoAddMode[i]);
+      OVERRIDE_MODE,
+      m_CrescendoOverrideMode[i]);
   }
   // another objects are saveble themself so they are saved separatelly
 }
@@ -589,11 +591,10 @@ void GOSetter::ButtonChanged(int id) {
 
   case ID_SETTER_CRESCENDO_OVERRIDE: {
     GOButton *btn = m_button[ID_SETTER_CRESCENDO_OVERRIDE];
-    bool oldIsOverride = btn->IsEngaged();
+    bool newIsOverride = !btn->IsEngaged();
 
-    m_CrescendoAddMode[m_crescendobank]
-      = oldIsOverride; // addMode == !isOverride
-    btn->Display(!oldIsOverride);
+    m_CrescendoOverrideMode[m_crescendobank] = newIsOverride;
+    btn->Display(newIsOverride);
   } break;
 
   case ID_SETTER_PITCH_M1:
@@ -708,7 +709,7 @@ void GOSetter::SetCrescendoType(unsigned no) {
   m_button[ID_SETTER_CRESCENDO_C]->Display(no == 2);
   m_button[ID_SETTER_CRESCENDO_D]->Display(no == 3);
   m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
-    !m_CrescendoAddMode[m_crescendobank]);
+    m_CrescendoOverrideMode[m_crescendobank]);
 }
 
 void GOSetter::ResetDisplay() {
@@ -762,7 +763,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
   if (pos == m_crescendopos)
     return;
 
-  bool crescendoAddMode = m_CrescendoAddMode[m_crescendobank];
+  bool crescendoAddMode = !m_CrescendoOverrideMode[m_crescendobank];
 
   while (pos > m_crescendopos) {
     const unsigned oldIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;

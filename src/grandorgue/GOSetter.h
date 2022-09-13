@@ -37,7 +37,7 @@ private:
   ptr_vector<GOFrameGeneral> m_general;
   ptr_vector<GOFrameGeneral> m_crescendo;
   std::vector<GOCombination::ExtraElementsSet> m_CrescendoExtraSets;
-  bool m_CrescendoAddMode[N_CRESCENDOS];
+  bool m_CrescendoOverrideMode[N_CRESCENDOS];
   GOLabel m_PosDisplay;
   GOLabel m_BankDisplay;
   GOLabel m_CrescendoDisplay;
