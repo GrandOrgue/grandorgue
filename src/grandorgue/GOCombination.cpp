@@ -39,6 +39,18 @@ int GOCombination::GetState(unsigned no) { return m_State[no]; }
 
 void GOCombination::SetState(unsigned no, int value) { m_State[no] = value; }
 
+void GOCombination::GetExtraSetState(
+  GOCombination::ExtraElementsSet &extraSet) {
+  const std::vector<GOCombinationDefinition::CombinationSlot> &elements
+    = m_Template.GetCombinationElements();
+
+  extraSet.clear();
+  for (unsigned i = 0; i < elements.size(); i++) {
+    if (m_State[i] == 0 && elements[i].control->GetCombinationState())
+      extraSet.insert(i);
+  }
+}
+
 void GOCombination::UpdateState() {
   const std::vector<GOCombinationDefinition::CombinationSlot> &elements
     = m_Template.GetCombinationElements();
@@ -54,7 +66,7 @@ void GOCombination::UpdateState() {
 
 GOCombinationDefinition *GOCombination::GetTemplate() { return &m_Template; }
 
-bool GOCombination::PushLocal() {
+bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
   bool used = false;
   const std::vector<GOCombinationDefinition::CombinationSlot> &elements
     = m_Template.GetCombinationElements();
@@ -104,7 +116,9 @@ bool GOCombination::PushLocal() {
     }
   } else {
     for (unsigned i = 0; i < elements.size(); i++) {
-      if (m_State[i] != -1) {
+      if (
+        m_State[i] != -1
+        && (!extraSet || extraSet->find(i) == extraSet->end())) {
         elements[i].control->SetCombination(m_State[i] == 1);
         used |= m_State[i] == 1;
       }

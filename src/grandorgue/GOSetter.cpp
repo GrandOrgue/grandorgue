@@ -115,6 +115,7 @@ enum {
   ID_SETTER_CRESCENDO_B,
   ID_SETTER_CRESCENDO_C,
   ID_SETTER_CRESCENDO_D,
+  ID_SETTER_CRESCENDO_OVERRIDE,
 
   ID_SETTER_TEMPERAMENT_PREV,
   ID_SETTER_TEMPERAMENT_NEXT,
@@ -235,6 +236,7 @@ const struct ElementListEntry GOSetter::m_element_types[] = {
   {wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV, true, true},
   {wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT, true, true},
   {wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT, true, true},
+  {wxT("CrescendoOverride"), ID_SETTER_CRESCENDO_OVERRIDE, true, true},
   {wxT(""), -1, false, false},
 };
 
@@ -299,7 +301,11 @@ GOSetter::GOSetter(GODefinitionFile *organfile)
 
 GOSetter::~GOSetter() {}
 
+static const wxString OVERRIDE_MODE = wxT("OverrideMode");
+
 void GOSetter::Load(GOConfigReader &cfg) {
+  m_organfile->RegisterSaveableObject(this);
+
   wxString buffer;
 
   m_framegeneral.resize(0);
@@ -319,9 +325,19 @@ void GOSetter::Load(GOConfigReader &cfg) {
   }
 
   m_crescendo.resize(0);
-  for (unsigned i = 0; i < 4 * CRESCENDO_STEPS; i++) {
+  for (unsigned i = 0; i < N_CRESCENDOS; i++) {
+    buffer.Printf(wxT("SetterCrescendo%d"), i);
+
+    bool defaultAddMode
+      = cfg.ReadBoolean(ODFSetting, buffer, OVERRIDE_MODE, false, true);
+
+    m_CrescendoOverrideMode[i] = cfg.ReadBoolean(
+      CMBSetting, buffer, OVERRIDE_MODE, false, defaultAddMode);
+  }
+  for (unsigned i = 0; i < N_CRESCENDOS * CRESCENDO_STEPS; i++) {
     m_crescendo.push_back(
       new GOFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile, true));
+    m_CrescendoExtraSets.emplace_back();
     buffer.Printf(
       wxT("SetterCrescendo%d_%03d"),
       (i / CRESCENDO_STEPS) + 1,
@@ -360,6 +376,10 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_button[ID_SETTER_CRESCENDO_B]->Init(cfg, wxT("SetterCrescendoB"), _("B"));
   m_button[ID_SETTER_CRESCENDO_C]->Init(cfg, wxT("SetterCrescendoC"), _("C"));
   m_button[ID_SETTER_CRESCENDO_D]->Init(cfg, wxT("SetterCrescendoD"), _("D"));
+  m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Init(
+    cfg, wxT("SetterCrescendoOverride"), _("Override"));
+  m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
+    m_CrescendoOverrideMode[m_crescendobank]);
 
   m_button[ID_SETTER_PITCH_M1]->Init(cfg, wxT("SetterPitchM1"), _("-1"));
   m_button[ID_SETTER_PITCH_M10]->Init(cfg, wxT("SetterPitchM10"), _("-10"));
@@ -407,6 +427,16 @@ void GOSetter::Load(GOConfigReader &cfg) {
     cfg, wxT("SetterGeneralPrev"), _("Prev"));
   m_button[ID_SETTER_GENERAL_NEXT]->Init(
     cfg, wxT("SetterGeneralNext"), _("Next"));
+}
+
+void GOSetter::Save(GOConfigWriter &cfg) {
+  for (unsigned i = 0; i < N_CRESCENDOS; i++) {
+    cfg.WriteBoolean(
+      wxString::Format(wxT("SetterCrescendo%d"), i),
+      OVERRIDE_MODE,
+      m_CrescendoOverrideMode[i]);
+  }
+  // another objects are saveble themself so they are saved separatelly
 }
 
 void GOSetter::ButtonChanged(int id) {
@@ -559,6 +589,14 @@ void GOSetter::ButtonChanged(int id) {
     m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
     break;
 
+  case ID_SETTER_CRESCENDO_OVERRIDE: {
+    GOButton *btn = m_button[ID_SETTER_CRESCENDO_OVERRIDE];
+    bool newIsOverride = !btn->IsEngaged();
+
+    m_CrescendoOverrideMode[m_crescendobank] = newIsOverride;
+    btn->Display(newIsOverride);
+  } break;
+
   case ID_SETTER_PITCH_M1:
     m_organfile->GetPipeConfig().ModifyTuning(-1);
     break;
@@ -670,6 +708,8 @@ void GOSetter::SetCrescendoType(unsigned no) {
   m_button[ID_SETTER_CRESCENDO_B]->Display(no == 1);
   m_button[ID_SETTER_CRESCENDO_C]->Display(no == 2);
   m_button[ID_SETTER_CRESCENDO_D]->Display(no == 3);
+  m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
+    m_CrescendoOverrideMode[m_crescendobank]);
 }
 
 void GOSetter::ResetDisplay() {
@@ -723,12 +763,28 @@ void GOSetter::Crescendo(int newpos, bool force) {
   if (pos == m_crescendopos)
     return;
 
+  bool crescendoAddMode = !m_CrescendoOverrideMode[m_crescendobank];
+
   while (pos > m_crescendopos) {
-    m_crescendo[++m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
+    const unsigned oldIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;
+    const unsigned newIdx = oldIdx + 1;
+
+    if (crescendoAddMode)
+      m_crescendo[oldIdx]->GetExtraSetState(m_CrescendoExtraSets[oldIdx]);
+    else
+      m_CrescendoExtraSets[oldIdx].clear();
+    ++m_crescendopos;
+    m_crescendo[newIdx]->Push(
+      crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr);
   }
 
   while (pos < m_crescendopos) {
-    m_crescendo[--m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
+    --m_crescendopos;
+
+    const unsigned newIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;
+
+    m_crescendo[newIdx]->Push(
+      crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr);
   }
 
   wxString buffer;

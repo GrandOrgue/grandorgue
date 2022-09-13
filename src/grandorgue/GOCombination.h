@@ -8,12 +8,16 @@
 #ifndef GOCOMBINATION_H
 #define GOCOMBINATION_H
 
+#include <unordered_set>
 #include <vector>
 
 class GOCombinationDefinition;
 class GODefinitionFile;
 
 class GOCombination {
+public:
+  using ExtraElementsSet = std::unordered_set<unsigned>;
+
 private:
   GODefinitionFile *m_OrganFile;
 
@@ -23,7 +27,7 @@ protected:
   bool m_Protected;
 
   void UpdateState();
-  virtual bool PushLocal();
+  virtual bool PushLocal(ExtraElementsSet const *extraSet = nullptr);
 
 public:
   GOCombination(
@@ -31,6 +35,7 @@ public:
   virtual ~GOCombination();
   int GetState(unsigned no);
   void SetState(unsigned no, int value);
+  void GetExtraSetState(ExtraElementsSet &extraSet);
   void Copy(GOCombination *combination);
   void Clear();
   GOCombinationDefinition *GetTemplate();
