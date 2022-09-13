@@ -31,7 +31,13 @@ public:
     GODefinitionFile *organfile,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
-  void Push();
+
+  /*
+   * Activate this combination
+   * If extraSet is passed then not to disable stops that are present in
+   * extraSet
+   */
+  void Push(ExtraElementsSet const *extraSet = nullptr);
 };
 
 #endif /* GOFRAMEGENERAL_H */

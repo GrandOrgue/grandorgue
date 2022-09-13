@@ -4219,9 +4219,7 @@ are <link linkend="save">saved</link> to settings files.
 This is the folder where GrandOrgue looks for organ package files. Any organ
 package file dropped in this folder will be automatically searched for Organ
 Definition Files on next GrandOrgue run and any ODF found in the package file
-will be added to the <link linkend="knownorgans">known organs list</link>. The
-package itself will be registered in the <link linkend="known_packages_list">
-known packages list</link>.
+will be added to the <link linkend="knownorgans">known organs list</link>.
 		</entry>
 	      </row>
 	      <row id="cachestore">
@@ -4229,13 +4227,13 @@ known packages list</link>.
 		<entry>This selects the directory where cache files are stored.</entry>
 		<entry>Default: <emphasis>Cache</emphasis></entry>
 	      </row>
-	      <sect2 id="settingsstore">
+	      <row id="settingsstore">
 		<entry><emphasis role="strong">Organ settings</emphasis></entry>
 		<entry>
 		  This selects the directory where preset files are stored.
 		</entry>
 		<entry>Default: <emphasis>Data</emphasis></entry>
-	      </sect2>
+	      </row>
 	      <row>
 		<entry><emphasis role="strong">Export/Import</emphasis></entry>
 		<entry>
@@ -5676,6 +5674,15 @@ for more information.
         	<term>C</term>
         	<term>D</term>
         	<listitem><simpara>Select the crescendo bank to use. The current bank is highlighted</simpara></listitem>
+        </varlistentry>
+        <varlistentry id="crescendoopmodes">
+        	<term>Override</term>
+                <listitem>
+                    <simpara>Switches the crescendo operational mode between the Override and the Add one.</simpara>
+                    <simpara>The mode determines how the crescendo enables/disables stops when the crescendo level is changed.</simpara>
+                    <simpara>In the Override mode all stops enabled by the user are forgotten and only the stops defined for the crescendo level are enabled.</simpara>
+                    <simpara>In the Add mode the stops enabled by the user are remains unchanged. Only the new stops defined for the crescendo level are enabled or disabled/</simpara>
+                </listitem>
         </varlistentry>
         <varlistentry>
         	<term>&lt;</term>
@@ -10259,6 +10266,26 @@ influences this windchest.
 (integer 1 - tremulant count, required) Number of a tremulant, which
 influences this windchest.
      </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Crescendo objects</title>
+      <para>
+Crescendo objects represent a crescendo bank. The number of crescendo banks are always 4: from 0 to 3
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>OverrideMode</term>
+          <listitem>
+            <para>
+              (boolean, default: true) The crescendo mode: how the crescendo operates with stops enabled by the user.
+            </para>
+            <para>true - Override mode</para>
+            <para>true - Add mode</para>
+            <para>The differnence between these modes are described at <link
+linkend="crescendoopmodes">Crescendo operational modes</link></para>
           </listitem>
         </varlistentry>
       </variablelist>

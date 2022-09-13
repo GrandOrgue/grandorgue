@@ -380,8 +380,8 @@ void GOFrameGeneral::LoadCombination(GOConfigReader &cfg) {
   }
 }
 
-void GOFrameGeneral::Push() {
-  bool used = GOCombination::PushLocal();
+void GOFrameGeneral::Push(ExtraElementsSet const *extraSet) {
+  bool used = GOCombination::PushLocal(extraSet);
 
   for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++) {
     GOGeneral *general = m_organfile->GetGeneral(k);
