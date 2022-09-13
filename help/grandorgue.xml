@@ -5677,6 +5677,15 @@ for more information.
         	<term>D</term>
         	<listitem><simpara>Select the crescendo bank to use. The current bank is highlighted</simpara></listitem>
         </varlistentry>
+        <varlistentry id="crescendoopmodes">
+        	<term>Override</term>
+                <listitem>
+                    <simpara>Switches the crescendo operational mode between the Override and the Add one.</simpara>
+                    <simpara>The mode determines how the crescendo enables/disables stops when the crescendo level is changed.</simpara>
+                    <simpara>In the Override mode all stops enabled by the user are forgotten and only the stops defined for the crescendo level are enabled.</simpara>
+                    <simpara>In the Add mode the stops enabled by the user are remains unchanged. Only the new stops defined for the crescendo level are enabled or disabled/</simpara>
+                </listitem>
+        </varlistentry>
         <varlistentry>
         	<term>&lt;</term>
           <listitem><simpara>
@@ -10259,6 +10268,26 @@ influences this windchest.
 (integer 1 - tremulant count, required) Number of a tremulant, which
 influences this windchest.
      </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </sect1>
+    <sect1>
+      <title>Crescendo objects</title>
+      <para>
+Crescendo objects represent a crescendo bank. The number of crescendo banks are always 4: from 0 to 3
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>OverrideMode</term>
+          <listitem>
+            <para>
+              (boolean, default: true) The crescendo mode: how the crescendo operates with stops enabled by the user.
+            </para>
+            <para>true - Override mode</para>
+            <para>true - Add mode</para>
+            <para>The differnence between these modes are described at <link
+linkend="crescendoopmodes">Crescendo operational modes</link></para>
           </listitem>
         </varlistentry>
       </variablelist>
