@@ -4219,9 +4219,7 @@ are <link linkend="save">saved</link> to settings files.
 This is the folder where GrandOrgue looks for organ package files. Any organ
 package file dropped in this folder will be automatically searched for Organ
 Definition Files on next GrandOrgue run and any ODF found in the package file
-will be added to the <link linkend="knownorgans">known organs list</link>. The
-package itself will be registered in the <link linkend="known_packages_list">
-known packages list</link>.
+will be added to the <link linkend="knownorgans">known organs list</link>.
 		</entry>
 	      </row>
 	      <row id="cachestore">
@@ -4229,13 +4227,13 @@ known packages list</link>.
 		<entry>This selects the directory where cache files are stored.</entry>
 		<entry>Default: <emphasis>Cache</emphasis></entry>
 	      </row>
-	      <sect2 id="settingsstore">
+	      <row id="settingsstore">
 		<entry><emphasis role="strong">Organ settings</emphasis></entry>
 		<entry>
 		  This selects the directory where preset files are stored.
 		</entry>
 		<entry>Default: <emphasis>Data</emphasis></entry>
-	      </sect2>
+	      </row>
 	      <row>
 		<entry><emphasis role="strong">Export/Import</emphasis></entry>
 		<entry>
