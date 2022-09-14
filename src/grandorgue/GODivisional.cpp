@@ -389,7 +389,7 @@ bool GODivisional::PushLocal() {
 
   for (unsigned k = 0; k < associatedManual->GetDivisionalCount(); k++) {
     GODivisional *divisional = associatedManual->GetDivisional(k);
-    divisional->Display(divisional == this && used);
+    divisional->Display(divisional == this);
   }
   return used;
 }
