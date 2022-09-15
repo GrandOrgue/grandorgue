@@ -10,8 +10,11 @@
 #include <wx/image.h>
 
 #include "combinations/GOSetter.h"
-#include "combinations/gui/GODivisionalButton.h"
-#include "combinations/gui/GOGeneralButton.h"
+#include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/control/GOGeneralButtonControl.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
+#include "control/GOPistonControl.h"
 
 #include "GOCoupler.h"
 #include "GODC.h"
@@ -31,13 +34,10 @@
 #include "GOGUIPanelWidget.h"
 #include "GOManual.h"
 #include "GOPanelView.h"
-#include "GOPiston.h"
 #include "GOStop.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 #include "Images.h"
-#include "config/GOConfigReader.h"
-#include "config/GOConfigWriter.h"
 
 constexpr static int windowLimit = 10000;
 
@@ -695,7 +695,7 @@ GOGUIControl *GOGUIPanel::CreateGUIElement(
   GOConfigReader &cfg, wxString group) {
   wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
 
-  GOButton *button = m_organfile->GetButton(type, true);
+  GOButtonControl *button = m_organfile->GetButton(type, true);
   if (button)
     return new GOGUIButton(this, button, false);
 

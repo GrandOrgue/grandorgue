@@ -8,13 +8,13 @@
 #ifndef GOSETTERBUTTONCALLBACK_H
 #define GOSETTERBUTTONCALLBACK_H
 
-class GOSetterButton;
+class GOSetterButtonControl;
 
 class GOSetterButtonCallback {
 public:
   virtual ~GOSetterButtonCallback() {}
 
-  virtual void SetterButtonChanged(GOSetterButton *button) = 0;
+  virtual void SetterButtonChanged(GOSetterButtonControl *button) = 0;
 };
 
 #endif

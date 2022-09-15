@@ -7,7 +7,7 @@
 
 #include "GOElementCreator.h"
 
-#include "combinations/gui/GOSetterButton.h"
+#include "combinations/control/GOSetterButtonControl.h"
 
 GOElementCreator::GOElementCreator() : m_button() {}
 
@@ -21,11 +21,12 @@ void GOElementCreator::CreateButtons(GODefinitionFile *organfile) {
     if (m_button.size() <= (unsigned)entries[i].value)
       m_button.resize(entries[i].value + 1);
     m_button[entries[i].value]
-      = new GOSetterButton(organfile, this, entries[i].is_pushbutton);
+      = new GOSetterButtonControl(organfile, this, entries[i].is_pushbutton);
   }
 }
 
-GOButton *GOElementCreator::GetButton(const wxString &name, bool is_panel) {
+GOButtonControl *GOElementCreator::GetButton(
+  const wxString &name, bool is_panel) {
   const struct ElementListEntry *entries = GetButtonList();
   for (unsigned i = 0;
        entries[i].name != wxEmptyString && entries[i].value >= 0;
@@ -39,7 +40,7 @@ GOButton *GOElementCreator::GetButton(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-void GOElementCreator::SetterButtonChanged(GOSetterButton *button) {
+void GOElementCreator::SetterButtonChanged(GOSetterButtonControl *button) {
   for (unsigned i = 0; i < m_button.size(); i++)
     if (m_button[i] == button)
       ButtonChanged(i);

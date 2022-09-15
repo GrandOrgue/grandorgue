@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "combinations/gui/GODivisionalButton.h"
+#include "combinations/control/GODivisionalButtonControl.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 
@@ -217,8 +217,8 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   GetDivisionalTemplate().InitDivisional(m_manual_number);
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nb_divisionals; i++) {
-    m_divisionals.push_back(
-      new GODivisionalButton(m_organfile, GetDivisionalTemplate(), false));
+    m_divisionals.push_back(new GODivisionalButtonControl(
+      m_organfile, GetDivisionalTemplate(), false));
     buffer.Printf(wxT("Divisional%03d"), i + 1);
     buffer.Printf(
       wxT("Divisional%03d"),
@@ -357,12 +357,12 @@ void GOManual::AddCoupler(GOCoupler *coupler) { m_couplers.push_back(coupler); }
 
 unsigned GOManual::GetDivisionalCount() { return m_divisionals.size(); }
 
-GODivisionalButton *GOManual::GetDivisional(unsigned index) {
+GODivisionalButtonControl *GOManual::GetDivisional(unsigned index) {
   assert(index < m_divisionals.size());
   return m_divisionals[index];
 }
 
-void GOManual::AddDivisional(GODivisionalButton *divisional) {
+void GOManual::AddDivisional(GODivisionalButtonControl *divisional) {
   m_divisionals.push_back(divisional);
 }
 

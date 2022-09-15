@@ -25,7 +25,7 @@ const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
 };
 
 GODrawstop::GODrawstop(GODefinitionFile *organfile)
-  : GOButton(organfile, MIDI_RECV_DRAWSTOP, false),
+  : GOButtonControl(organfile, MIDI_RECV_DRAWSTOP, false),
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
     m_ActiveState(false),
@@ -45,7 +45,7 @@ void GODrawstop::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_GCState = 0;
   m_StoreDivisional = true;
   m_StoreGeneral = true;
-  GOButton::Init(cfg, group, name);
+  GOButtonControl::Init(cfg, group, name);
 }
 
 void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
@@ -104,7 +104,7 @@ void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
     }
   }
 
-  GOButton::Load(cfg, group);
+  GOButtonControl::Load(cfg, group);
   SetupCombinationState();
   m_StoreDivisional = cfg.ReadBoolean(
     ODFSetting, group, wxT("StoreInDivisional"), false, m_StoreDivisional);
@@ -115,7 +115,7 @@ void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
 void GODrawstop::Save(GOConfigWriter &cfg) {
   if (!IsReadOnly())
     cfg.WriteBoolean(m_group, wxT("DefaultToEngaged"), IsEngaged());
-  GOButton::Save(cfg);
+  GOButtonControl::Save(cfg);
 }
 
 void GODrawstop::Set(bool on) {
@@ -155,7 +155,7 @@ void GODrawstop::SetCombination(bool on) {
 bool GODrawstop::IsActive() const { return m_ActiveState; }
 
 void GODrawstop::PreparePlayback() {
-  GOButton::PreparePlayback();
+  GOButtonControl::PreparePlayback();
   Update();
 }
 

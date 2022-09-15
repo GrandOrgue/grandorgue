@@ -7,14 +7,14 @@
 
 #include "GOModel.h"
 
-#include "combinations/gui/GOGeneralButton.h"
+#include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigReader.h"
+#include "control/GOPistonControl.h"
 
 #include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
 #include "GOEnclosure.h"
 #include "GOManual.h"
-#include "GOPiston.h"
 #include "GORank.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
@@ -117,7 +117,7 @@ void GOModel::Load(GOConfigReader &cfg, GODefinitionFile *organfile) {
     ODFSetting, group, wxT("NumberOfReversiblePistons"), 0, 32);
   m_piston.resize(0);
   for (unsigned i = 0; i < NumberOfReversiblePistons; i++) {
-    m_piston.push_back(new GOPiston(organfile));
+    m_piston.push_back(new GOPistonControl(organfile));
     m_piston[i]->Load(
       cfg, wxString::Format(wxT("ReversiblePiston%03d"), i + 1));
   }
@@ -136,8 +136,8 @@ void GOModel::Load(GOConfigReader &cfg, GODefinitionFile *organfile) {
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfGenerals"), 0, 99);
   m_general.resize(0);
   for (unsigned i = 0; i < NumberOfGenerals; i++) {
-    m_general.push_back(
-      new GOGeneralButton(organfile->GetGeneralTemplate(), organfile, false));
+    m_general.push_back(new GOGeneralButtonControl(
+      organfile->GetGeneralTemplate(), organfile, false));
     m_general[i]->Load(cfg, wxString::Format(wxT("General%03d"), i + 1));
   }
 }
@@ -225,7 +225,7 @@ void GOModel::AddRank(GORank *rank) { m_ranks.push_back(rank); }
 
 unsigned GOModel::GetNumberOfReversiblePistons() { return m_piston.size(); }
 
-GOPiston *GOModel::GetPiston(unsigned index) { return m_piston[index]; }
+GOPistonControl *GOModel::GetPiston(unsigned index) { return m_piston[index]; }
 
 unsigned GOModel::GetDivisionalCouplerCount() {
   return m_divisionalcoupler.size();
@@ -237,6 +237,6 @@ GODivisionalCoupler *GOModel::GetDivisionalCoupler(unsigned index) {
 
 unsigned GOModel::GetGeneralCount() { return m_general.size(); }
 
-GOGeneralButton *GOModel::GetGeneral(unsigned index) {
+GOGeneralButtonControl *GOModel::GetGeneral(unsigned index) {
   return m_general[index];
 }

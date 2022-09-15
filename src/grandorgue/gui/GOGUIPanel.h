@@ -23,7 +23,7 @@ class GOGUIMouseStateTracker;
 class GOGUIPanelWidget;
 class GOConfigReader;
 class GOConfigWriter;
-class GOButton;
+class GOButtonControl;
 class GODC;
 class GOPanelView;
 class GODefinitionFile;

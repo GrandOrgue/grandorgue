@@ -5,24 +5,24 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOGeneralButton.h"
+#include "GOGeneralButtonControl.h"
 
 #include <wx/intl.h>
 
-GOGeneralButton::GOGeneralButton(
+GOGeneralButtonControl::GOGeneralButtonControl(
   GOCombinationDefinition &general_template,
   GODefinitionFile *organfile,
   bool is_setter)
-  : GOPushbutton(organfile),
+  : GOPushbuttonControl(organfile),
     m_general(general_template, organfile, is_setter) {}
 
-void GOGeneralButton::Load(GOConfigReader &cfg, wxString group) {
+void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
   m_general.Load(cfg, group);
-  GOPushbutton::Load(cfg, group);
+  GOPushbuttonControl::Load(cfg, group);
 }
 
-void GOGeneralButton::Push() { m_general.Push(); }
+void GOGeneralButtonControl::Push() { m_general.Push(); }
 
-GOGeneralCombination &GOGeneralButton::GetGeneral() { return m_general; }
+GOGeneralCombination &GOGeneralButtonControl::GetGeneral() { return m_general; }
 
-wxString GOGeneralButton::GetMidiType() { return _("General"); }
+wxString GOGeneralButtonControl::GetMidiType() { return _("General"); }

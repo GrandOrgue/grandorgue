@@ -5,14 +5,14 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOPUSHBUTTON_H
-#define GOPUSHBUTTON_H
+#ifndef GOPUSHBUTTONCONTROL_H
+#define GOPUSHBUTTONCONTROL_H
 
-#include "GOButton.h"
+#include "GOButtonControl.h"
 
-class GOPushbutton : public GOButton {
+class GOPushbuttonControl : public GOButtonControl {
 public:
-  GOPushbutton(GODefinitionFile *organfile);
+  GOPushbuttonControl(GODefinitionFile *organfile);
 };
 
 #endif

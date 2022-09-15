@@ -10,8 +10,8 @@
 #include <wx/intl.h>
 
 #include "config/GOConfigReader.h"
+#include "control/GOButtonControl.h"
 
-#include "GOButton.h"
 #include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
@@ -19,7 +19,8 @@
 #include "GOGUIPanel.h"
 #include "go_gui_utils.h"
 
-GOGUIButton::GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston)
+GOGUIButton::GOGUIButton(
+  GOGUIPanel *panel, GOButtonControl *control, bool is_piston)
   : GOGUIControl(panel, control),
     m_IsPiston(is_piston),
     m_DispKeyLabelOnLeft(true),

@@ -11,7 +11,7 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#include "combinations/gui/GOSetterButton.h"
+#include "combinations/control/GOSetterButtonControl.h"
 #include "combinations/model/GOGeneralCombination.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
@@ -591,7 +591,7 @@ void GOSetter::ButtonChanged(int id) {
     break;
 
   case ID_SETTER_CRESCENDO_OVERRIDE: {
-    GOButton *btn = m_button[ID_SETTER_CRESCENDO_OVERRIDE];
+    GOButtonControl *btn = m_button[ID_SETTER_CRESCENDO_OVERRIDE];
     bool newIsOverride = !btn->IsEngaged();
 
     m_CrescendoOverrideMode[m_crescendobank] = newIsOverride;

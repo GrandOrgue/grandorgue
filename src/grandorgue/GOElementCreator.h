@@ -14,10 +14,10 @@
 #include "ptrvector.h"
 
 class GOConfigReader;
-class GOButton;
+class GOButtonControl;
 class GOEnclosure;
 class GOLabel;
-class GOSetterButton;
+class GOSetterButtonControl;
 class GODefinitionFile;
 
 struct ElementListEntry {
@@ -29,10 +29,10 @@ struct ElementListEntry {
 
 class GOElementCreator : private GOSetterButtonCallback {
 private:
-  void SetterButtonChanged(GOSetterButton *button);
+  void SetterButtonChanged(GOSetterButtonControl *button);
 
 protected:
-  ptr_vector<GOSetterButton> m_button;
+  ptr_vector<GOSetterButtonControl> m_button;
 
   virtual const struct ElementListEntry *GetButtonList() = 0;
   virtual void ButtonChanged(int id) = 0;
@@ -46,7 +46,7 @@ public:
 
   virtual GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) = 0;
   virtual GOLabel *GetLabel(const wxString &name, bool is_panel) = 0;
-  virtual GOButton *GetButton(const wxString &name, bool is_panel);
+  virtual GOButtonControl *GetButton(const wxString &name, bool is_panel);
 };
 
 #endif

@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOPiston.h"
+#include "GOPistonControl.h"
 
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -19,12 +19,12 @@
 #include "GOTremulant.h"
 #include "config/GOConfigReader.h"
 
-GOPiston::GOPiston(GODefinitionFile *organfile)
-  : GOPushbutton(organfile), drawstop(NULL) {
+GOPistonControl::GOPistonControl(GODefinitionFile *organfile)
+  : GOPushbuttonControl(organfile), drawstop(NULL) {
   m_organfile->RegisterControlChangedHandler(this);
 }
 
-void GOPiston::Load(GOConfigReader &cfg, wxString group) {
+void GOPistonControl::Load(GOConfigReader &cfg, wxString group) {
   int i, j;
   wxString type = cfg.ReadStringTrim(ODFSetting, group, wxT("ObjectType"));
   type.MakeUpper();
@@ -84,15 +84,15 @@ void GOPiston::Load(GOConfigReader &cfg, wxString group) {
     wxLogError(
       _("Reversible piston connect to a read-only object: %s"), group.c_str());
 
-  GOPushbutton::Load(cfg, group);
+  GOPushbuttonControl::Load(cfg, group);
   ControlChanged(drawstop);
 }
 
-void GOPiston::ControlChanged(void *control) {
+void GOPistonControl::ControlChanged(void *control) {
   if (control == drawstop)
     Display(drawstop->IsEngaged() ^ drawstop->DisplayInverted());
 }
 
-void GOPiston::Push() { this->drawstop->Push(); }
+void GOPistonControl::Push() { this->drawstop->Push(); }
 
-wxString GOPiston::GetMidiType() { return _("Piston"); }
+wxString GOPistonControl::GetMidiType() { return _("Piston"); }

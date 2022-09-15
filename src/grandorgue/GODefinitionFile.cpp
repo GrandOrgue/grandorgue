@@ -18,8 +18,8 @@
 #include "archive/GOArchiveFile.h"
 #include "archive/GOArchiveManager.h"
 #include "combinations/GOSetter.h"
-#include "combinations/gui/GODivisionalButton.h"
-#include "combinations/gui/GOGeneralButton.h"
+#include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigFileReader.h"
 #include "config/GOConfigFileWriter.h"
@@ -27,6 +27,7 @@
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
 #include "contrib/sha1.h"
+#include "control/GOPushbuttonControl.h"
 #include "dialogs/GOProgressDialog.h"
 #include "files/GOStdFileName.h"
 #include "gui/GOGUIBankedGeneralsPanel.h"
@@ -65,7 +66,6 @@
 #include "GOMetronome.h"
 #include "GOOrgan.h"
 #include "GOPath.h"
-#include "GOPushbutton.h"
 #include "GORank.h"
 #include "GOReleaseAlignTable.h"
 #include "GOSoundingPipe.h"
@@ -790,9 +790,10 @@ GOLabel *GODefinitionFile::GetLabel(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOButton *GODefinitionFile::GetButton(const wxString &name, bool is_panel) {
+GOButtonControl *GODefinitionFile::GetButton(
+  const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
-    GOButton *c = m_elementcreators[i]->GetButton(name, is_panel);
+    GOButtonControl *c = m_elementcreators[i]->GetButton(name, is_panel);
     if (c)
       return c;
   }

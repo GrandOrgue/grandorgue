@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOPushbutton.h"
+#include "GOPushbuttonControl.h"
 
-GOPushbutton::GOPushbutton(GODefinitionFile *organfile)
-  : GOButton(organfile, MIDI_RECV_BUTTON, true) {}
+GOPushbuttonControl::GOPushbuttonControl(GODefinitionFile *organfile)
+  : GOButtonControl(organfile, MIDI_RECV_BUTTON, true) {}

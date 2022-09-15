@@ -13,9 +13,9 @@
 class GOConfigReader;
 class GODivisionalCoupler;
 class GOEnclosure;
-class GOGeneralButton;
+class GOGeneralButtonControl;
 class GOManual;
-class GOPiston;
+class GOPistonControl;
 class GORank;
 class GOSwitch;
 class GOTremulant;
@@ -30,9 +30,9 @@ protected:
   ptr_vector<GOSwitch> m_switches;
   ptr_vector<GOTremulant> m_tremulant;
   ptr_vector<GORank> m_ranks;
-  ptr_vector<GOPiston> m_piston;
+  ptr_vector<GOPistonControl> m_piston;
   ptr_vector<GODivisionalCoupler> m_divisionalcoupler;
-  ptr_vector<GOGeneralButton> m_general;
+  ptr_vector<GOGeneralButtonControl> m_general;
   unsigned m_FirstManual;
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;
@@ -70,13 +70,13 @@ public:
   void AddRank(GORank *rank);
 
   unsigned GetNumberOfReversiblePistons();
-  GOPiston *GetPiston(unsigned index);
+  GOPistonControl *GetPiston(unsigned index);
 
   unsigned GetDivisionalCouplerCount();
   GODivisionalCoupler *GetDivisionalCoupler(unsigned index);
 
   unsigned GetGeneralCount();
-  GOGeneralButton *GetGeneral(unsigned index);
+  GOGeneralButtonControl *GetGeneral(unsigned index);
 
   unsigned GetStopCount();
   unsigned GetCouplerCount();

@@ -26,9 +26,9 @@ include_directories(${JACK_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(grandorgue_src
-combinations/gui/GODivisionalButton.cpp
-combinations/gui/GOGeneralButton.cpp
-combinations/gui/GOSetterButton.cpp
+combinations/control/GODivisionalButtonControl.cpp
+combinations/control/GOGeneralButtonControl.cpp
+combinations/control/GOSetterButtonControl.cpp
 combinations/model/GOCombination.cpp
 combinations/model/GOGeneralCombination.cpp
 combinations/GOCombinationDefinition.cpp
@@ -38,6 +38,9 @@ config/GOMidiDeviceConfig.cpp
 config/GOMidiDeviceConfigList.cpp
 config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
+control/GOButtonControl.cpp
+control/GOPistonControl.cpp
+control/GOPushbuttonControl.cpp
 dialogs/common/GODialogCloser.cpp
 dialogs/common/GODialogTab.cpp
 dialogs/common/GOTabbedDialog.cpp
@@ -137,7 +140,6 @@ GOCacheCleaner.cpp
 GOCacheWriter.cpp
 GOBitmap.cpp
 GOBitmapCache.cpp
-GOButton.cpp
 GOCoupler.cpp
 GODC.cpp
 GODivisionalCoupler.cpp
@@ -160,9 +162,7 @@ GOPipe.cpp
 GOPipeConfig.cpp
 GOPipeConfigNode.cpp
 GOPipeConfigTreeNode.cpp
-GOPiston.cpp
 GOProperties.cpp
-GOPushbutton.cpp
 GORank.cpp
 GOReferencePipe.cpp
 GOReleaseAlignTable.cpp

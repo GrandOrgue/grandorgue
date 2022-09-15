@@ -5,28 +5,29 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSetterButton.h"
+#include "GOSetterButtonControl.h"
 
 #include <wx/intl.h>
 
 #include "GOSetterButtonCallback.h"
 
-GOSetterButton::GOSetterButton(
+GOSetterButtonControl::GOSetterButtonControl(
   GODefinitionFile *organfile, GOSetterButtonCallback *setter, bool Pushbutton)
-  : GOButton(organfile, MIDI_RECV_SETTER, Pushbutton), m_setter(setter) {}
+  : GOButtonControl(organfile, MIDI_RECV_SETTER, Pushbutton),
+    m_setter(setter) {}
 
-void GOSetterButton::Push() {
+void GOSetterButtonControl::Push() {
   if (m_Pushbutton)
     m_setter->SetterButtonChanged(this);
   else
-    GOButton::Push();
+    GOButtonControl::Push();
 }
 
-void GOSetterButton::Set(bool on) {
+void GOSetterButtonControl::Set(bool on) {
   if (IsEngaged() == on)
     return;
   m_setter->SetterButtonChanged(this);
   Display(on);
 }
 
-wxString GOSetterButton::GetMidiType() { return _("Button"); }
+wxString GOSetterButtonControl::GetMidiType() { return _("Button"); }

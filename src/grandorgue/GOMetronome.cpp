@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "combinations/gui/GOSetterButton.h"
+#include "combinations/control/GOSetterButtonControl.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"

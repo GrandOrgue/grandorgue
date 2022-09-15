@@ -30,7 +30,7 @@ class GOGUIPanel;
 class GOGUIPanelCreator;
 class GOArchive;
 class GOAudioRecorder;
-class GOButton;
+class GOButtonControl;
 class GOCache;
 class GOElementCreator;
 class GOMidi;
@@ -197,7 +197,7 @@ public:
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel = false);
   GOLabel *GetLabel(const wxString &name, bool is_panel = false);
-  GOButton *GetButton(const wxString &name, bool is_panel = false);
+  GOButtonControl *GetButton(const wxString &name, bool is_panel = false);
 
   /* TODO: can somebody figure out what this thing is */
   bool IsCustomized();

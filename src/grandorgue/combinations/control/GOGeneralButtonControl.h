@@ -5,21 +5,20 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOGENERALBUTTON_H
-#define GOGENERALBUTTON_H
+#ifndef GOGENERALBUTTONCONTROL_H
+#define GOGENERALBUTTONCONTROL_H
 
 #include "combinations/model/GOGeneralCombination.h"
-
-#include "GOPushbutton.h"
+#include "control/GOPushbuttonControl.h"
 
 class GOConfigReader;
 
-class GOGeneralButton : public GOPushbutton {
+class GOGeneralButtonControl : public GOPushbuttonControl {
 private:
   GOGeneralCombination m_general;
 
 public:
-  GOGeneralButton(
+  GOGeneralButtonControl(
     GOCombinationDefinition &general_template,
     GODefinitionFile *organfile,
     bool is_setter);

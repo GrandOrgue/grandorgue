@@ -25,7 +25,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOCoupler;
-class GODivisionalButton;
+class GODivisionalButtonControl;
 class GOMidiEvent;
 class GOStop;
 class GOSwitch;
@@ -67,7 +67,7 @@ private:
 
   ptr_vector<GOStop> m_stops;
   ptr_vector<GOCoupler> m_couplers;
-  ptr_vector<GODivisionalButton> m_divisionals;
+  ptr_vector<GODivisionalButtonControl> m_divisionals;
   unsigned m_ODFCouplerCount;
   bool m_displayed;
   GOCombinationDefinition m_DivisionalTemplate;
@@ -119,8 +119,8 @@ public:
   GOCoupler *GetCoupler(unsigned index);
   void AddCoupler(GOCoupler *coupler);
   unsigned GetDivisionalCount();
-  GODivisionalButton *GetDivisional(unsigned index);
-  void AddDivisional(GODivisionalButton *divisional);
+  GODivisionalButtonControl *GetDivisional(unsigned index);
+  void AddDivisional(GODivisionalButtonControl *divisional);
   unsigned GetTremulantCount();
   GOTremulant *GetTremulant(unsigned index);
   unsigned GetSwitchCount();

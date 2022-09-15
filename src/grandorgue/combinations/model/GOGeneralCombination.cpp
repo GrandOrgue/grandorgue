@@ -11,8 +11,8 @@
 #include <wx/log.h>
 
 #include "combinations/GOSetter.h"
-#include "combinations/gui/GODivisionalButton.h"
-#include "combinations/gui/GOGeneralButton.h"
+#include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
@@ -385,7 +385,7 @@ void GOGeneralCombination::Push(ExtraElementsSet const *extraSet) {
   bool used = GOCombination::PushLocal(extraSet);
 
   for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++) {
-    GOGeneralButton *general = m_organfile->GetGeneral(k);
+    GOGeneralButtonControl *general = m_organfile->GetGeneral(k);
     general->Display(&general->GetGeneral() == this && used);
   }
 
