@@ -5,26 +5,27 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOGENERAL_H
-#define GOGENERAL_H
+#ifndef GOGENERALBUTTON_H
+#define GOGENERALBUTTON_H
 
-#include "GOFrameGeneral.h"
+#include "combinations/model/GOGeneralCombination.h"
+
 #include "GOPushbutton.h"
 
 class GOConfigReader;
 
-class GOGeneral : public GOPushbutton {
+class GOGeneralButton : public GOPushbutton {
 private:
-  GOFrameGeneral m_general;
+  GOGeneralCombination m_general;
 
 public:
-  GOGeneral(
+  GOGeneralButton(
     GOCombinationDefinition &general_template,
     GODefinitionFile *organfile,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
   void Push();
-  GOFrameGeneral &GetGeneral();
+  GOGeneralCombination &GetGeneral();
 
   wxString GetMidiType();
 };
