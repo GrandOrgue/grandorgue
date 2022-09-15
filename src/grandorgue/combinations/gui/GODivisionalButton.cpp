@@ -5,19 +5,21 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GODivisional.h"
+#include "GODivisionalButton.h"
 
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "GODefinitionFile.h"
-#include "GODivisionalCoupler.h"
-#include "GOManual.h"
-#include "GOSetter.h"
+#include "combinations/GOSetter.h"
+
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GODivisional::GODivisional(
+#include "GODefinitionFile.h"
+#include "GODivisionalCoupler.h"
+#include "GOManual.h"
+
+GODivisionalButton::GODivisionalButton(
   GODefinitionFile *organfile,
   GOCombinationDefinition &divisional_template,
   bool is_setter)
@@ -27,7 +29,7 @@ GODivisional::GODivisional(
     m_ManualNumber(1),
     m_IsSetter(is_setter) {}
 
-void GODivisional::Init(
+void GODivisionalButton::Init(
   GOConfigReader &cfg,
   wxString group,
   int manualNumber,
@@ -43,7 +45,7 @@ void GODivisional::Init(
   GOPushbutton::Init(cfg, group, name);
 }
 
-void GODivisional::Load(
+void GODivisionalButton::Load(
   GOConfigReader &cfg, wxString group, int manualNumber, int divisionalNumber) {
   m_DivisionalNumber = divisionalNumber;
   m_ManualNumber = manualNumber;
@@ -186,7 +188,7 @@ void GODivisional::Load(
   }
 }
 
-void GODivisional::LoadCombination(GOConfigReader &cfg) {
+void GODivisionalButton::LoadCombination(GOConfigReader &cfg) {
   GOSettingType type = CMBSetting;
   GOManual *associatedManual = m_organfile->GetManual(m_ManualNumber);
   if (!m_IsSetter)
@@ -330,7 +332,7 @@ void GODivisional::LoadCombination(GOConfigReader &cfg) {
   }
 }
 
-void GODivisional::Save(GOConfigWriter &cfg) {
+void GODivisionalButton::Save(GOConfigWriter &cfg) {
   wxString buffer;
   const std::vector<GOCombinationDefinition::CombinationSlot> &elements
     = m_Template.GetCombinationElements();
@@ -383,18 +385,18 @@ void GODivisional::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
 }
 
-bool GODivisional::PushLocal() {
+bool GODivisionalButton::PushLocal() {
   bool used = GOCombination::PushLocal();
   GOManual *associatedManual = m_organfile->GetManual(m_ManualNumber);
 
   for (unsigned k = 0; k < associatedManual->GetDivisionalCount(); k++) {
-    GODivisional *divisional = associatedManual->GetDivisional(k);
+    GODivisionalButton *divisional = associatedManual->GetDivisional(k);
     divisional->Display(divisional == this);
   }
   return used;
 }
 
-void GODivisional::Push() {
+void GODivisionalButton::Push() {
   PushLocal();
 
   /* only use divisional couples, if not in setter mode */
@@ -429,4 +431,4 @@ void GODivisional::Push() {
   }
 }
 
-wxString GODivisional::GetMidiType() { return _("Divisional"); }
+wxString GODivisionalButton::GetMidiType() { return _("Divisional"); }

@@ -11,13 +11,14 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#include "GODefinitionFile.h"
-#include "GOEvent.h"
-#include "GOFrameGeneral.h"
-#include "GOSetterButton.h"
+#include "combinations/gui/GOSetterButton.h"
+#include "combinations/model/GOGeneralCombination.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+
+#include "GODefinitionFile.h"
+#include "GOEvent.h"
 #include "go_ids.h"
 
 #define FRAME_GENERALS 1000
@@ -310,16 +311,16 @@ void GOSetter::Load(GOConfigReader &cfg) {
 
   m_framegeneral.resize(0);
   for (unsigned i = 0; i < FRAME_GENERALS; i++) {
-    m_framegeneral.push_back(
-      new GOFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile, true));
+    m_framegeneral.push_back(new GOGeneralCombination(
+      m_organfile->GetGeneralTemplate(), m_organfile, true));
     buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
     m_framegeneral[i]->Load(cfg, buffer);
   }
 
   m_general.resize(0);
   for (unsigned i = 0; i < GENERALS * GENERAL_BANKS; i++) {
-    m_general.push_back(
-      new GOFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile, true));
+    m_general.push_back(new GOGeneralCombination(
+      m_organfile->GetGeneralTemplate(), m_organfile, true));
     buffer.Printf(wxT("SetterGeneral%03d"), i + 1);
     m_general[i]->Load(cfg, buffer);
   }
@@ -335,8 +336,8 @@ void GOSetter::Load(GOConfigReader &cfg) {
       CMBSetting, buffer, OVERRIDE_MODE, false, defaultAddMode);
   }
   for (unsigned i = 0; i < N_CRESCENDOS * CRESCENDO_STEPS; i++) {
-    m_crescendo.push_back(
-      new GOFrameGeneral(m_organfile->GetGeneralTemplate(), m_organfile, true));
+    m_crescendo.push_back(new GOGeneralCombination(
+      m_organfile->GetGeneralTemplate(), m_organfile, true));
     m_CrescendoExtraSets.emplace_back();
     buffer.Printf(
       wxT("SetterCrescendo%d_%03d"),

@@ -7,11 +7,12 @@
 
 #include "GOCombination.h"
 
-#include "GOCombinationDefinition.h"
+#include "combinations/GOCombinationDefinition.h"
+#include "combinations/GOSetter.h"
+
 #include "GOCombinationElement.h"
 #include "GODefinitionFile.h"
 #include "GODrawStop.h"
-#include "GOSetter.h"
 
 GOCombination::GOCombination(
   GOCombinationDefinition &combination_template, GODefinitionFile *organfile)

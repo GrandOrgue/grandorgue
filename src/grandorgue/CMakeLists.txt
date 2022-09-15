@@ -26,6 +26,13 @@ include_directories(${JACK_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(grandorgue_src
+combinations/gui/GODivisionalButton.cpp
+combinations/gui/GOGeneralButton.cpp
+combinations/gui/GOSetterButton.cpp
+combinations/model/GOCombination.cpp
+combinations/model/GOGeneralCombination.cpp
+combinations/GOCombinationDefinition.cpp
+combinations/GOSetter.cpp
 config/GOConfig.cpp
 config/GOMidiDeviceConfig.cpp
 config/GOMidiDeviceConfigList.cpp
@@ -128,14 +135,11 @@ GOAudioRecorder.cpp
 GOCache.cpp
 GOCacheCleaner.cpp
 GOCacheWriter.cpp
-GOCombinationDefinition.cpp
-GOCombination.cpp
 GOBitmap.cpp
 GOBitmapCache.cpp
 GOButton.cpp
 GOCoupler.cpp
 GODC.cpp
-GODivisional.cpp
 GODivisionalCoupler.cpp
 GODummyPipe.cpp
 GODrawStop.cpp
@@ -144,8 +148,6 @@ GOEnclosure.cpp
 GOEvent.cpp
 GOFilename.cpp
 GOFont.cpp
-GOFrameGeneral.cpp
-GOGeneral.cpp
 GOKeyReceiver.cpp
 GOLabel.cpp
 GOLog.cpp
@@ -164,8 +166,6 @@ GOPushbutton.cpp
 GORank.cpp
 GOReferencePipe.cpp
 GOReleaseAlignTable.cpp
-GOSetter.cpp
-GOSetterButton.cpp
 GOSoundingPipe.cpp
 GOStop.cpp
 GOTremulant.cpp

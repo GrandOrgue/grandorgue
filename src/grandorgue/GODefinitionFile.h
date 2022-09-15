@@ -13,8 +13,10 @@
 
 #include <vector>
 
+#include "combinations/GOCombinationDefinition.h"
+#include "gui/GOGUIMouseStateTracker.h"
+
 #include "GOBitmapCache.h"
-#include "GOCombinationDefinition.h"
 #include "GOEventDistributor.h"
 #include "GOLabel.h"
 #include "GOMainWindowData.h"
@@ -22,7 +24,6 @@
 #include "GOModel.h"
 #include "GOPipeConfigTreeNode.h"
 #include "GOTimer.h"
-#include "gui/GOGUIMouseStateTracker.h"
 #include "ptrvector.h"
 
 class GOGUIPanel;

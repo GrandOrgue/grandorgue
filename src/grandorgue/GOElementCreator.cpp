@@ -7,7 +7,7 @@
 
 #include "GOElementCreator.h"
 
-#include "GOSetterButton.h"
+#include "combinations/gui/GOSetterButton.h"
 
 GOElementCreator::GOElementCreator() : m_button() {}
 

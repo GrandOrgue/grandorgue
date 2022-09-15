@@ -9,10 +9,13 @@
 
 #include <wx/image.h>
 
+#include "combinations/GOSetter.h"
+#include "combinations/gui/GODivisionalButton.h"
+#include "combinations/gui/GOGeneralButton.h"
+
 #include "GOCoupler.h"
 #include "GODC.h"
 #include "GODefinitionFile.h"
-#include "GODivisional.h"
 #include "GODivisionalCoupler.h"
 #include "GOGUIButton.h"
 #include "GOGUIControl.h"
@@ -26,11 +29,9 @@
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanelWidget.h"
-#include "GOGeneral.h"
 #include "GOManual.h"
 #include "GOPanelView.h"
 #include "GOPiston.h"
-#include "GOSetter.h"
 #include "GOStop.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"

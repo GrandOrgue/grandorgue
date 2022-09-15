@@ -12,7 +12,8 @@
 
 #include <vector>
 
-#include "GOCombinationDefinition.h"
+#include "combinations/GOCombinationDefinition.h"
+
 #include "GOEventHandler.h"
 #include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
@@ -24,7 +25,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOCoupler;
-class GODivisional;
+class GODivisionalButton;
 class GOMidiEvent;
 class GOStop;
 class GOSwitch;
@@ -66,7 +67,7 @@ private:
 
   ptr_vector<GOStop> m_stops;
   ptr_vector<GOCoupler> m_couplers;
-  ptr_vector<GODivisional> m_divisionals;
+  ptr_vector<GODivisionalButton> m_divisionals;
   unsigned m_ODFCouplerCount;
   bool m_displayed;
   GOCombinationDefinition m_DivisionalTemplate;
@@ -118,8 +119,8 @@ public:
   GOCoupler *GetCoupler(unsigned index);
   void AddCoupler(GOCoupler *coupler);
   unsigned GetDivisionalCount();
-  GODivisional *GetDivisional(unsigned index);
-  void AddDivisional(GODivisional *divisional);
+  GODivisionalButton *GetDivisional(unsigned index);
+  void AddDivisional(GODivisionalButton *divisional);
   unsigned GetTremulantCount();
   GOTremulant *GetTremulant(unsigned index);
   unsigned GetSwitchCount();

@@ -9,13 +9,14 @@
 
 #include <wx/intl.h>
 
-#include "GOCoupler.h"
-#include "GODefinitionFile.h"
-#include "GODivisional.h"
-#include "GODocument.h"
-#include "GOStop.h"
+#include "combinations/gui/GODivisionalButton.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
+
+#include "GOCoupler.h"
+#include "GODefinitionFile.h"
+#include "GODocument.h"
+#include "GOStop.h"
 
 GOManual::GOManual(GODefinitionFile *organfile)
   : m_group(wxT("---")),
@@ -217,7 +218,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nb_divisionals; i++) {
     m_divisionals.push_back(
-      new GODivisional(m_organfile, GetDivisionalTemplate(), false));
+      new GODivisionalButton(m_organfile, GetDivisionalTemplate(), false));
     buffer.Printf(wxT("Divisional%03d"), i + 1);
     buffer.Printf(
       wxT("Divisional%03d"),
@@ -356,12 +357,12 @@ void GOManual::AddCoupler(GOCoupler *coupler) { m_couplers.push_back(coupler); }
 
 unsigned GOManual::GetDivisionalCount() { return m_divisionals.size(); }
 
-GODivisional *GOManual::GetDivisional(unsigned index) {
+GODivisionalButton *GOManual::GetDivisional(unsigned index) {
   assert(index < m_divisionals.size());
   return m_divisionals[index];
 }
 
-void GOManual::AddDivisional(GODivisional *divisional) {
+void GOManual::AddDivisional(GODivisionalButton *divisional) {
   m_divisionals.push_back(divisional);
 }
 

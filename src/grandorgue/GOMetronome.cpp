@@ -9,14 +9,15 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
-#include "GORank.h"
-#include "GOSetterButton.h"
-#include "GOSoundingPipe.h"
-#include "GOWindchest.h"
+#include "combinations/gui/GOSetterButton.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+
+#include "GODefinitionFile.h"
+#include "GORank.h"
+#include "GOSoundingPipe.h"
+#include "GOWindchest.h"
 
 enum {
   ID_METRONOME_ON = 0,

@@ -9,13 +9,14 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
-#include "GOEvent.h"
-#include "GOSetterButton.h"
+#include "combinations/gui/GOSetterButton.h"
 #include "config/GOConfig.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiFileReader.h"
 #include "midi/GOMidiMap.h"
+
+#include "GODefinitionFile.h"
+#include "GOEvent.h"
 
 enum {
   ID_MIDI_PLAYER_PLAY = 0,

@@ -12,14 +12,15 @@
 #include <wx/log.h>
 #include <wx/stopwatch.h>
 
+#include "combinations/gui/GOSetterButton.h"
+#include "config/GOConfig.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiFile.h"
+
 #include "GODefinitionFile.h"
 #include "GOEvent.h"
 #include "GOMidi.h"
 #include "GOPath.h"
-#include "GOSetterButton.h"
-#include "config/GOConfig.h"
-#include "midi/GOMidiEvent.h"
-#include "midi/GOMidiFile.h"
 
 enum {
   ID_MIDI_RECORDER_RECORD = 0,

@@ -5,20 +5,21 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOFrameGeneral.h"
+#include "GOGeneralCombination.h"
 
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "GODefinitionFile.h"
-#include "GODivisional.h"
-#include "GOGeneral.h"
-#include "GOManual.h"
-#include "GOSetter.h"
+#include "combinations/GOSetter.h"
+#include "combinations/gui/GODivisionalButton.h"
+#include "combinations/gui/GOGeneralButton.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOFrameGeneral::GOFrameGeneral(
+#include "GODefinitionFile.h"
+#include "GOManual.h"
+
+GOGeneralCombination::GOGeneralCombination(
   GOCombinationDefinition &general_template,
   GODefinitionFile *organfile,
   bool is_setter)
@@ -26,7 +27,7 @@ GOFrameGeneral::GOFrameGeneral(
     m_organfile(organfile),
     m_IsSetter(is_setter) {}
 
-void GOFrameGeneral::Load(GOConfigReader &cfg, wxString group) {
+void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
 
@@ -199,7 +200,7 @@ void GOFrameGeneral::Load(GOConfigReader &cfg, wxString group) {
   }
 }
 
-void GOFrameGeneral::LoadCombination(GOConfigReader &cfg) {
+void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
   GOSettingType type = CMBSetting;
   if (!m_IsSetter)
     if (
@@ -380,11 +381,11 @@ void GOFrameGeneral::LoadCombination(GOConfigReader &cfg) {
   }
 }
 
-void GOFrameGeneral::Push(ExtraElementsSet const *extraSet) {
+void GOGeneralCombination::Push(ExtraElementsSet const *extraSet) {
   bool used = GOCombination::PushLocal(extraSet);
 
   for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++) {
-    GOGeneral *general = m_organfile->GetGeneral(k);
+    GOGeneralButton *general = m_organfile->GetGeneral(k);
     general->Display(&general->GetGeneral() == this && used);
   }
 
@@ -399,7 +400,7 @@ void GOFrameGeneral::Push(ExtraElementsSet const *extraSet) {
   m_organfile->GetSetter()->ResetDisplay();
 }
 
-void GOFrameGeneral::Save(GOConfigWriter &cfg) {
+void GOGeneralCombination::Save(GOConfigWriter &cfg) {
   UpdateState();
   const std::vector<GOCombinationDefinition::CombinationSlot> &elements
     = m_Template.GetCombinationElements();

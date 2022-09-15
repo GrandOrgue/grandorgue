@@ -7,17 +7,18 @@
 
 #include "GOModel.h"
 
+#include "combinations/gui/GOGeneralButton.h"
+#include "config/GOConfigReader.h"
+
 #include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
 #include "GOEnclosure.h"
-#include "GOGeneral.h"
 #include "GOManual.h"
 #include "GOPiston.h"
 #include "GORank.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 #include "GOWindchest.h"
-#include "config/GOConfigReader.h"
 
 GOModel::GOModel()
   : m_windchest(),
@@ -136,7 +137,7 @@ void GOModel::Load(GOConfigReader &cfg, GODefinitionFile *organfile) {
   m_general.resize(0);
   for (unsigned i = 0; i < NumberOfGenerals; i++) {
     m_general.push_back(
-      new GOGeneral(organfile->GetGeneralTemplate(), organfile, false));
+      new GOGeneralButton(organfile->GetGeneralTemplate(), organfile, false));
     m_general[i]->Load(cfg, wxString::Format(wxT("General%03d"), i + 1));
   }
 }
@@ -236,4 +237,6 @@ GODivisionalCoupler *GOModel::GetDivisionalCoupler(unsigned index) {
 
 unsigned GOModel::GetGeneralCount() { return m_general.size(); }
 
-GOGeneral *GOModel::GetGeneral(unsigned index) { return m_general[index]; }
+GOGeneralButton *GOModel::GetGeneral(unsigned index) {
+  return m_general[index];
+}

@@ -10,7 +10,8 @@
 
 #include "ptrvector.h"
 
-#include "GOCombination.h"
+#include "model/GOCombination.h"
+
 #include "GOControlChangedHandler.h"
 #include "GOElementCreator.h"
 #include "GOEnclosure.h"
@@ -19,7 +20,7 @@
 
 #define N_CRESCENDOS 4
 
-class GOFrameGeneral;
+class GOGeneralCombination;
 
 typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
 
@@ -33,9 +34,9 @@ private:
   unsigned m_bank;
   unsigned m_crescendopos;
   unsigned m_crescendobank;
-  ptr_vector<GOFrameGeneral> m_framegeneral;
-  ptr_vector<GOFrameGeneral> m_general;
-  ptr_vector<GOFrameGeneral> m_crescendo;
+  ptr_vector<GOGeneralCombination> m_framegeneral;
+  ptr_vector<GOGeneralCombination> m_general;
+  ptr_vector<GOGeneralCombination> m_crescendo;
   std::vector<GOCombination::ExtraElementsSet> m_CrescendoExtraSets;
   bool m_CrescendoOverrideMode[N_CRESCENDOS];
   GOLabel m_PosDisplay;

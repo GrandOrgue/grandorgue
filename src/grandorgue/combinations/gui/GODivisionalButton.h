@@ -5,16 +5,17 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GODIVISIONAL_H
-#define GODIVISIONAL_H
+#ifndef GODIVISIONALBUTTON_H
+#define GODIVISIONALBUTTON_H
 
-#include "GOCombination.h"
+#include "combinations/model/GOCombination.h"
+
 #include "GOPushbutton.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 
-class GODivisional : public GOPushbutton, public GOCombination {
+class GODivisionalButton : public GOPushbutton, public GOCombination {
 protected:
   int m_DivisionalNumber;
   unsigned m_ManualNumber;
@@ -23,7 +24,7 @@ protected:
   bool PushLocal();
 
 public:
-  GODivisional(
+  GODivisionalButton(
     GODefinitionFile *organfile,
     GOCombinationDefinition &divisional_template,
     bool is_setter);

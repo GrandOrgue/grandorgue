@@ -13,7 +13,7 @@
 class GOConfigReader;
 class GODivisionalCoupler;
 class GOEnclosure;
-class GOGeneral;
+class GOGeneralButton;
 class GOManual;
 class GOPiston;
 class GORank;
@@ -32,7 +32,7 @@ protected:
   ptr_vector<GORank> m_ranks;
   ptr_vector<GOPiston> m_piston;
   ptr_vector<GODivisionalCoupler> m_divisionalcoupler;
-  ptr_vector<GOGeneral> m_general;
+  ptr_vector<GOGeneralButton> m_general;
   unsigned m_FirstManual;
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;
@@ -76,7 +76,7 @@ public:
   GODivisionalCoupler *GetDivisionalCoupler(unsigned index);
 
   unsigned GetGeneralCount();
-  GOGeneral *GetGeneral(unsigned index);
+  GOGeneralButton *GetGeneral(unsigned index);
 
   unsigned GetStopCount();
   unsigned GetCouplerCount();

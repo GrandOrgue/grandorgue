@@ -9,8 +9,9 @@
 
 #include <wx/intl.h>
 
+#include "combinations/gui/GODivisionalButton.h"
+
 #include "GODefinitionFile.h"
-#include "GODivisional.h"
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
@@ -80,8 +81,8 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
     panel->AddControl(PosDisplay);
 
     for (unsigned j = 0; j < 10; j++) {
-      GODivisional *divisional
-        = new GODivisional(m_organfile, manual->GetDivisionalTemplate(), true);
+      GODivisionalButton *divisional = new GODivisionalButton(
+        m_organfile, manual->GetDivisionalTemplate(), true);
       divisional->Init(
         cfg,
         wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),

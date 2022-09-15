@@ -10,8 +10,9 @@
 
 #include <wx/string.h>
 
+#include "combinations/model/GOCombinationElement.h"
+
 #include "GOButton.h"
-#include "GOCombinationElement.h"
 
 class GODrawstop : public GOButton, public GOCombinationElement {
 public:
