@@ -9,7 +9,7 @@
 #define GOPISTON_H
 
 #include "GOControlChangedHandler.h"
-#include "GOPushbutton.h"
+#include "GOPushbuttonControl.h"
 
 class GOButton;
 class GOConfigReader;
