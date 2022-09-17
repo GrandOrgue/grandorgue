@@ -10,8 +10,8 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 
-#include "combinations/control/GOSetterButtonControl.h"
 #include "config/GOConfig.h"
+#include "control/GOCallbackButtonControl.h"
 #include "sound/GOSoundRecorder.h"
 
 #include "GODefinitionFile.h"

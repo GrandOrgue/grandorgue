@@ -12,8 +12,8 @@
 #include <wx/log.h>
 #include <wx/stopwatch.h>
 
-#include "combinations/control/GOSetterButtonControl.h"
 #include "config/GOConfig.h"
+#include "control/GOCallbackButtonControl.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiFile.h"
 

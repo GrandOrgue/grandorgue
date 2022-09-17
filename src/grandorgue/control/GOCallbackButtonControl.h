@@ -5,19 +5,19 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSETTERBUTTONCONTROL_H
-#define GOSETTERBUTTONCONTROL_H
+#ifndef GOCALLBACKBUTTONCONTROL_H
+#define GOCALLBACKBUTTONCONTROL_H
 
-#include "control/GOButtonControl.h"
+#include "GOButtonControl.h"
 
 class GOButtonCallback;
 
-class GOSetterButtonControl : public GOButtonControl {
+class GOCallbackButtonControl : public GOButtonControl {
 protected:
-  GOButtonCallback *m_setter;
+  GOButtonCallback *m_callback;
 
 public:
-  GOSetterButtonControl(
+  GOCallbackButtonControl(
     GODefinitionFile *organfile, GOButtonCallback *setter, bool Pushbutton);
   void Push(void);
   void Set(bool on);

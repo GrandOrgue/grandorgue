@@ -11,11 +11,11 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#include "combinations/control/GOSetterButtonControl.h"
 #include "combinations/model/GOGeneralCombination.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "control/GOCallbackButtonControl.h"
 
 #include "GODefinitionFile.h"
 #include "GOEvent.h"

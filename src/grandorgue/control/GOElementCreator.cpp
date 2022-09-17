@@ -7,7 +7,7 @@
 
 #include "GOElementCreator.h"
 
-#include "combinations/control/GOSetterButtonControl.h"
+#include "GOCallbackButtonControl.h"
 
 GOElementCreator::GOElementCreator() : m_button() {}
 
@@ -21,7 +21,7 @@ void GOElementCreator::CreateButtons(GODefinitionFile *organfile) {
     if (m_button.size() <= (unsigned)entries[i].value)
       m_button.resize(entries[i].value + 1);
     m_button[entries[i].value]
-      = new GOSetterButtonControl(organfile, this, entries[i].is_pushbutton);
+      = new GOCallbackButtonControl(organfile, this, entries[i].is_pushbutton);
   }
 }
 

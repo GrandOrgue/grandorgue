@@ -28,7 +28,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(grandorgue_src
 combinations/control/GODivisionalButtonControl.cpp
 combinations/control/GOGeneralButtonControl.cpp
-combinations/control/GOSetterButtonControl.cpp
 combinations/model/GOCombination.cpp
 combinations/model/GOGeneralCombination.cpp
 combinations/GOCombinationDefinition.cpp
@@ -39,6 +38,7 @@ config/GOMidiDeviceConfigList.cpp
 config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
 control/GOButtonControl.cpp
+control/GOCallbackButtonControl.cpp
 control/GOElementCreator.cpp
 control/GOPistonControl.cpp
 control/GOPushbuttonControl.cpp
