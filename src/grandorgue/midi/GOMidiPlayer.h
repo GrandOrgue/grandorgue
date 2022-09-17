@@ -36,8 +36,8 @@ private:
   bool m_Pause;
   unsigned m_DeviceID;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct GOElementCreator::ElementListEntry m_element_types[];
+  const struct GOElementCreator::ElementListEntry *GetButtonList();
 
   void ButtonChanged(int id);
 

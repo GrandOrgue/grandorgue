@@ -40,7 +40,7 @@ GOButtonControl *GOElementCreator::GetButton(
   return NULL;
 }
 
-void GOElementCreator::SetterButtonChanged(GOSetterButtonControl *button) {
+void GOElementCreator::ButtonStateChanged(GOButtonControl *button) {
   for (unsigned i = 0; i < m_button.size(); i++)
     if (m_button[i] == button)
       ButtonChanged(i);

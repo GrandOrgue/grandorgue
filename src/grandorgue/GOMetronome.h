@@ -34,8 +34,8 @@ private:
   GORank *m_rank;
   unsigned m_StopID;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct GOElementCreator::ElementListEntry m_element_types[];
+  const struct GOElementCreator::ElementListEntry *GetButtonList();
 
   void HandleTimer();
 

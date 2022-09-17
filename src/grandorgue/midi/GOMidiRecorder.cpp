@@ -28,17 +28,20 @@ enum {
   ID_MIDI_RECORDER_RECORD_RENAME,
 };
 
-const struct ElementListEntry GOMidiRecorder::m_element_types[] = {
-  {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true},
-  {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true},
-  {wxT("MidiRecorderRecordRename"),
-   ID_MIDI_RECORDER_RECORD_RENAME,
-   false,
-   true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ElementListEntry
+  GOMidiRecorder::m_element_types[]
+  = {
+    {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true},
+    {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true},
+    {wxT("MidiRecorderRecordRename"),
+     ID_MIDI_RECORDER_RECORD_RENAME,
+     false,
+     true},
+    {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry *GOMidiRecorder::GetButtonList() {
+const struct GOElementCreator::ElementListEntry *GOMidiRecorder::
+  GetButtonList() {
   return m_element_types;
 }
 

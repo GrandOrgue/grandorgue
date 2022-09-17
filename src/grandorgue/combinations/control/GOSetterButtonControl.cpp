@@ -12,13 +12,13 @@
 #include "control/GOButtonCallback.h"
 
 GOSetterButtonControl::GOSetterButtonControl(
-  GODefinitionFile *organfile, GOSetterButtonCallback *setter, bool Pushbutton)
+  GODefinitionFile *organfile, GOButtonCallback *setter, bool Pushbutton)
   : GOButtonControl(organfile, MIDI_RECV_SETTER, Pushbutton),
     m_setter(setter) {}
 
 void GOSetterButtonControl::Push() {
   if (m_Pushbutton)
-    m_setter->SetterButtonChanged(this);
+    m_setter->ButtonStateChanged(this);
   else
     GOButtonControl::Push();
 }
@@ -26,7 +26,7 @@ void GOSetterButtonControl::Push() {
 void GOSetterButtonControl::Set(bool on) {
   if (IsEngaged() == on)
     return;
-  m_setter->SetterButtonChanged(this);
+  m_setter->ButtonStateChanged(this);
   Display(on);
 }
 

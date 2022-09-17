@@ -133,7 +133,7 @@ enum {
   ID_SETTER_ON,
 };
 
-const struct ElementListEntry GOSetter::m_element_types[] = {
+const struct GOElementCreator::ElementListEntry GOSetter::m_element_types[] = {
   {wxT("Prev"), ID_SETTER_PREV, true, true},
   {wxT("Next"), ID_SETTER_NEXT, true, true},
   {wxT("Set"), ID_SETTER_SET, true, false},
@@ -241,7 +241,7 @@ const struct ElementListEntry GOSetter::m_element_types[] = {
   {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry *GOSetter::GetButtonList() {
+const struct GOElementCreator::ElementListEntry *GOSetter::GetButtonList() {
   return m_element_types;
 }
 

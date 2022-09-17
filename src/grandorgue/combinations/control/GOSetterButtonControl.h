@@ -10,17 +10,15 @@
 
 #include "control/GOButtonControl.h"
 
-class GOSetterButtonCallback;
+class GOButtonCallback;
 
 class GOSetterButtonControl : public GOButtonControl {
 protected:
-  GOSetterButtonCallback *m_setter;
+  GOButtonCallback *m_setter;
 
 public:
   GOSetterButtonControl(
-    GODefinitionFile *organfile,
-    GOSetterButtonCallback *setter,
-    bool Pushbutton);
+    GODefinitionFile *organfile, GOButtonCallback *setter, bool Pushbutton);
   void Push(void);
   void Set(bool on);
 

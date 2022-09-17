@@ -13,26 +13,22 @@
 #include "GOButtonCallback.h"
 #include "ptrvector.h"
 
-class GOConfigReader;
 class GOButtonControl;
+class GOConfigReader;
+class GODefinitionFile;
 class GOEnclosure;
 class GOLabel;
-class GOSetterButtonControl;
-class GODefinitionFile;
 
-struct ElementListEntry {
-  wxString name;
-  int value;
-  bool is_public;
-  bool is_pushbutton;
-};
-
-class GOElementCreator : private GOSetterButtonCallback {
-private:
-  void SetterButtonChanged(GOSetterButtonControl *button);
-
+class GOElementCreator : private GOButtonCallback {
 protected:
-  ptr_vector<GOSetterButtonControl> m_button;
+  struct ElementListEntry {
+    wxString name;
+    int value;
+    bool is_public;
+    bool is_pushbutton;
+  };
+
+  ptr_vector<GOButtonControl> m_button;
 
   virtual const struct ElementListEntry *GetButtonList() = 0;
   virtual void ButtonChanged(int id) = 0;
@@ -47,6 +43,8 @@ public:
   virtual GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) = 0;
   virtual GOLabel *GetLabel(const wxString &name, bool is_panel) = 0;
   virtual GOButtonControl *GetButton(const wxString &name, bool is_panel);
+
+  void ButtonStateChanged(GOButtonControl *button);
 };
 
 #endif

@@ -24,17 +24,20 @@ enum {
   ID_AUDIO_RECORDER_RECORD_RENAME,
 };
 
-const struct ElementListEntry GOAudioRecorder::m_element_types[] = {
-  {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true},
-  {wxT("AudioRecorderStop"), ID_AUDIO_RECORDER_STOP, false, true},
-  {wxT("AudioRecorderRecordRename"),
-   ID_AUDIO_RECORDER_RECORD_RENAME,
-   false,
-   true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ElementListEntry
+  GOAudioRecorder::m_element_types[]
+  = {
+    {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true},
+    {wxT("AudioRecorderStop"), ID_AUDIO_RECORDER_STOP, false, true},
+    {wxT("AudioRecorderRecordRename"),
+     ID_AUDIO_RECORDER_RECORD_RENAME,
+     false,
+     true},
+    {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry *GOAudioRecorder::GetButtonList() {
+const struct GOElementCreator::ElementListEntry *GOAudioRecorder::
+  GetButtonList() {
   return m_element_types;
 }
 
