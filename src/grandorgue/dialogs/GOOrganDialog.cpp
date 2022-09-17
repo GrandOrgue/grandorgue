@@ -309,7 +309,7 @@ GOOrganDialog::GOOrganDialog(
   buttons->Add(m_Apply);
   settingSizer->Add(buttons);
 
-  box1 = new wxStaticBoxSizer(wxVERTICAL, scroll, _("Sample informations"));
+  box1 = new wxStaticBoxSizer(wxVERTICAL, scroll, _("Sample information"));
   grid = new wxFlexGridSizer(2, 5, 5);
   box1->Add(grid, 0, wxEXPAND | wxALL, 5);
   settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);

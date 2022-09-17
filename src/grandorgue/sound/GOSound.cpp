@@ -136,7 +136,7 @@ void GOSound::OpenSound() {
         = GOSoundPortFactory::create(portsConfig, this, name);
       if (!m_AudioOutputs[i].port)
         throw wxString::Format(
-          _("Output device %s not found - no sound output will occure"),
+          _("Output device %s not found - no sound output will occur"),
           name.c_str());
 
       m_AudioOutputs[i].port->Init(

@@ -60,7 +60,7 @@ void GOSoundProviderWave::CreateAttack(
       loop_list[i].start_sample >= wave.GetLength()
       || loop_list[i].start_sample >= loop_list[i].end_sample
       || loop_list[i].end_sample >= wave.GetLength())
-      throw(wxString) _("Invalid loop defintion");
+      throw(wxString) _("Invalid loop definition");
     if (
       loop_crossfade_length
       && loop_list[i].start_sample + REMAINING_AFTER_CROSSFADE

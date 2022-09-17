@@ -201,7 +201,7 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
       if (header->fccChunk == WAVE_TYPE_DATA) {
         if (!hasFormat)
           throw wxString::Format(
-            _("Malformed wave file '%s'. Format chunk must preceed data "
+            _("Malformed wave file '%s'. Format chunk must precede data "
               "chunk."),
             fileName);
 

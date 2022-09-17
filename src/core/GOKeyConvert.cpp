@@ -86,7 +86,7 @@ static GOShortcutKey shortcuts[] = {
   {wxTRANSLATE("numpad 9"), 105},
   {wxTRANSLATE("multiply"), 106},
   {wxTRANSLATE("add"), 107},
-  {wxTRANSLATE("seperator"), 108},
+  {wxTRANSLATE("separator"), 108},
   {wxTRANSLATE("subtract"), 109},
   {wxTRANSLATE("decimal"), 110},
   {wxTRANSLATE("divide"), 111},

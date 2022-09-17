@@ -182,7 +182,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
         GOGUIControl *control = CreateGUIElement(cfg, buffer);
         if (!control)
           throw(wxString) wxString::Format(
-            _("Unkown SetterElement in section %s"), buffer.c_str());
+            _("Unknown SetterElement in section %s"), buffer.c_str());
         LoadControl(control, cfg, buffer);
       }
     }
@@ -309,7 +309,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
       GOGUIControl *control = CreateGUIElement(cfg, panel_prefix + buffer);
       if (!control)
         throw(wxString) wxString::Format(
-          _("Unkown SetterElement in section %s"),
+          _("Unknown SetterElement in section %s"),
           (panel_prefix + buffer).c_str());
       LoadControl(control, cfg, panel_prefix + buffer);
     }
@@ -683,7 +683,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
       GOGUIControl *control = CreateGUIElement(cfg, buffer);
       if (!control)
         throw(wxString) wxString::Format(
-          _("Unkown SetterElement in section %s"), buffer.c_str());
+          _("Unknown SetterElement in section %s"), buffer.c_str());
       LoadControl(control, cfg, buffer);
     }
   }
