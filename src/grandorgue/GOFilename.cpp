@@ -76,7 +76,7 @@ void GOFilename::Assign(const wxString &name, GODefinitionFile *organfile) {
   if (
     organfile->GetSettings().ODFCheck() && name.Find(wxT('/')) != wxNOT_FOUND) {
     wxLogWarning(
-      _("Filename '%s' contains non-portable directory seperator /"),
+      _("Filename '%s' contains non-portable directory separator /"),
       name.c_str());
   }
   if (organfile->useArchives()) {

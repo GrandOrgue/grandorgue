@@ -1,3 +1,5 @@
+# 3.8.0 (2022-09-15)
+- Fixed setting an empty stop set to a divisional combination https://github.com/GrandOrgue/grandorgue/issues/1068
 - Added capability of switching between the Override and the Add crescendo mode https://github.com/GrandOrgue/grandorgue/issues/1170
 - Fixed rebuilding the cache every time upon the appimage starts https://github.com/GrandOrgue/grandorgue/issues/1174
 - Fixed building appimage in an ubuntu container
@@ -434,7 +436,7 @@
 # 0.3.1.2214 (2016-12-04)
 - Remove wx2.8 code
 # 0.3.1.2213 (2016-12-04)
-- Prepare for a seperate cache directory
+- Prepare for a separate cache directory
 # 0.3.1.2212 (2016-12-04)
 - Fix reverb threading issues
 # 0.3.1.2211 (2016-12-04)
@@ -450,7 +452,7 @@
 # 0.3.1.2206 (2016-12-01)
 - Add MIDI file content storage object
 # 0.3.1.2205 (2016-12-01)
-- seperate SYSEX from manual MIDI assignment
+- separate SYSEX from manual MIDI assignment
 # 0.3.1.2204 (2016-11-25)
 - Remove unreferenced cache files
 # 0.3.1.2203 (2016-11-25)
@@ -544,7 +546,7 @@
 # 0.3.1.2163 (2016-09-13)
 - Fix build errors
 # 0.3.1.2162 (2016-09-12)
-- Split resources into a seperate package
+- Split resources into a separate package
 # 0.3.1.2161 (2016-09-12)
 - Create portable windows package
 # 0.3.1.2160 (2016-09-12)
@@ -727,7 +729,7 @@
 # 0.3.1.2072 (2016-01-07)
 - Add clear command
 # 0.3.1.2071 (2016-01-03)
-- seperate event mapping
+- separate event mapping
 # 0.3.1.2070 (2016-01-03)
 - Unify event writing
 # 0.3.1.2069 (2016-01-03)
@@ -955,7 +957,7 @@
 # 0.3.1.1960 (2015-09-23)
 - Move cmake external libary handling
 # 0.3.1.1959 (2015-09-23)
-- Seperate cmake image conversion macros
+- Separate cmake image conversion macros
 # 0.3.1.1958 (2015-09-23)
 - Refactor cmake po macros
 # 0.3.1.1957 (2015-09-19)
@@ -1340,11 +1342,11 @@
 # 0.3.1.1769 (2014-11-04)
 - Merge RtMidi error callback
 # 0.3.1.1768 (2014-11-04)
-- Merge seperate RtAudio/RtMidi error classes
+- Merge separate RtAudio/RtMidi error classes
 # 0.3.1.1767 (2014-11-04)
 - Refactor sound output
 # 0.3.1.1766 (2014-11-04)
-- Seperate internal audio device information
+- Separate internal audio device information
 # 0.3.1.1765 (2014-11-04)
 - Remove not used return type
 # 0.3.1.1764 (2014-11-04)
@@ -1452,11 +1454,11 @@
 # 0.3.1.1720 (2014-07-22)
 - Help Update: MIDI event editor - Drawstop/Pushbutton specifics
 # 0.3.1.1719 (2014-07-18)
-- Make ODF path seperator check strict mode only
+- Make ODF path separator check strict mode only
 # 0.3.1.1718 (2014-07-18)
 - Allow disabling sample loading to aid ODF development
 # 0.3.1.1717 (2014-07-17)
-- Seperate layout engine
+- Separate layout engine
 # 0.3.1.1716 (2014-07-17)
 - DisplayMetrics don't depend on organ file
 # 0.3.1.1715 (2014-07-17)
@@ -1464,7 +1466,7 @@
 # 0.3.1.1714 (2014-07-17)
 - Use wxString::Format
 # 0.3.1.1713 (2014-07-17)
-- Check for a invalid directory seperator
+- Check for a invalid directory separator
 # 0.3.1.1712 (2014-07-17)
 - Fix manual background
 # 0.3.1.1711 (2014-07-15)
@@ -1492,7 +1494,7 @@
 # 0.3.1.1700 (2014-07-07)
 - Pass variables by reference
 # 0.3.1.1699 (2014-07-07)
-- seperate access of calculated metrics
+- separate access of calculated metrics
 # 0.3.1.1698 (2014-07-07)
 - Pass button configuration via Init
 # 0.3.1.1697 (2014-07-07)
@@ -1524,7 +1526,7 @@
 # 0.3.1.1684 (2014-05-04)
 - Lockless sampler list handling
 # 0.3.1.1683 (2014-05-04)
-- Seperate tremulant processing
+- Separate tremulant processing
 # 0.3.1.1682 (2014-05-03)
 - fix OS X installer containing a wrong copy of the demo organ
 # 0.3.1.1681 (2014-05-03)
@@ -1708,7 +1710,7 @@
 # 0.3.1.1592 (2014-02-09)
 - /usr/share/appdata must be owned by a package
 # 0.3.1.1591 (2014-02-09)
-- Seperate reverb processing for the individual channels
+- Separate reverb processing for the individual channels
 # 0.3.1.1590 (2014-02-09)
 - Rework end segement pointer
 # 0.3.1.1589 (2014-02-09)
@@ -1742,7 +1744,7 @@
 # 0.3.1.1575 (2014-02-02)
 - Don't build all object for perftest and GO twice
 # 0.3.1.1574 (2014-02-02)
-- Seperate internal midi event from wxEvent
+- Separate internal midi event from wxEvent
 # 0.3.1.1573 (2014-02-01)
 - Don't store device id as string
 # 0.3.1.1572 (2014-02-01)
@@ -2034,7 +2036,7 @@
 # 0.3.1.1429 (2013-11-22)
 - Correct ODF reference
 # 0.3.1.1428 (2013-11-22)
-- Allow to specifiy trigger value for buttons
+- Allow to specify trigger value for buttons
 # 0.3.1.1427 (2013-11-22)
 - Improve MIDI dialog
 # 0.3.1.1426 (2013-11-22)
@@ -2165,7 +2167,7 @@
 # 0.3.1.1369 (2013-10-23)
 - Rework MIDI handling
 # 0.3.1.1368 (2013-10-22)
-- Specifiy parent for MessageBox
+- Specify parent for MessageBox
 # 0.3.1.1367 (2013-10-18)
 - Update demo organ (http://www.magle.dk/music-forums/18709-grandorgue-rev-1331-demo-4.html)
 # 0.3.1.1366 (2013-09-29)
@@ -2316,7 +2318,7 @@
 # 0.3.1.1294 (2013-04-27)
 - Don't call back from widget into the view
 # 0.3.1.1293 (2013-04-27)
-- Seperate panel from the panel widget
+- Separate panel from the panel widget
 # 0.3.1.1292 (2013-04-27)
 - Access frame via view
 # 0.3.1.1291 (2013-04-27)
@@ -2469,7 +2471,7 @@
 # 0.3.1.1218 (2013-01-27)
 - Update copyright
 # 0.3.1.1217 (2013-01-21)
-- Allow to build built tool seperatly
+- Allow to build built tool separately
 # 0.3.1.1216 (2013-01-19)
 - Remove HauptwerkOrganFileFormatVersion from documentation
 # 0.3.1.1215 (2013-01-19)
@@ -2677,7 +2679,7 @@
 # 0.3.1.1114 (2012-10-28)
 - Correct spec file
 # 0.3.1.1113 (2012-10-28)
-- Allow to specifiy revision via CMake parameter
+- Allow to specify revision via CMake parameter
 # 0.3.1.1112 (2012-10-27)
 - Adapt for wx2.9
 # 0.3.1.1111 (2012-10-27)
@@ -2813,7 +2815,7 @@
 # 0.3.1.1046 (2012-07-06)
 - Document building the wxWidgets translations
 # 0.3.1.1045 (2012-07-06)
-- Seperate ODF settings from user settings
+- Separate ODF settings from user settings
 # 0.3.1.1044 (2012-07-06)
 - Check for invalid boolean values
 # 0.3.1.1043 (2012-07-06)
@@ -2837,9 +2839,9 @@
 # 0.3.1.1034 (2012-07-06)
 - Lock contention debugger
 # 0.3.1.1033 (2012-06-27)
-- Allow to specificy GC state
+- Allow to specify GC state
 # 0.3.1.1032 (2012-06-27)
-- Allow to specifiy a mouse rectangle for manual keys
+- Allow to specify a mouse rectangle for manual keys
 # 0.3.1.1031 (2012-06-25)
 - fix an installer issue placing the english translation in the wrong place
 # 0.3.1.1030 (2012-06-24)
@@ -3572,7 +3574,7 @@
 # 0.3.1.670 (2011-12-24)
 - Recommend mingw-w64 instead of mingw
 # 0.3.1.669 (2011-12-24)
-- Seperate cache directory from settings directory to allow an easier backup for users
+- Separate cache directory from settings directory to allow an easier backup for users
 # 0.3.1.668 (2011-12-24)
 - Add missing path translation
 # 0.3.1.667 (2011-12-24)

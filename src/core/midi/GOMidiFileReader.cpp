@@ -80,7 +80,7 @@ bool GOMidiFileReader::Open(wxString filename) {
     return false;
 
   default:
-    wxLogError(_("Unkown MIDI file type %d"), (int)h->type);
+    wxLogError(_("Unknown MIDI file type %d"), (int)h->type);
     return false;
   }
   m_Tempo = 0x7A120; // 120 BPM

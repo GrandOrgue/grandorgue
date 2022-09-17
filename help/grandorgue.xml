@@ -8738,7 +8738,7 @@ to override X position for button
           <term>PositionY</term>
           <listitem>
             <para>
-(integer 0 - panel height, default: according to defintions above) Allow
+(integer 0 - panel height, default: according to definitions above) Allow
 to override Y position for button
      </para>
           </listitem>
@@ -9080,7 +9080,7 @@ ignored.
           <listitem>
             <para>
 (string, default: use internal bitmap according to DispImageNum)
-Specifiy the file name of an image to use as on bitmap.  If the bitmap
+Specify the file name of an image to use as on bitmap.  If the bitmap
 contains a mask for transparency, it will be used.
      </para>
           </listitem>
@@ -9090,7 +9090,7 @@ contains a mask for transparency, it will be used.
           <listitem>
             <para>
 (string, default: use internal bitmap according to DispImageNum)
-Specifiy the file name of an image to use as off bitmap. If the bitmap
+Specify the file name of an image to use as off bitmap. If the bitmap
 contains a mask for transparency, it will be used. The size must match
 the on bitmap.
      </para>

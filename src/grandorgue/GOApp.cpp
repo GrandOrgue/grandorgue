@@ -50,7 +50,7 @@ const wxCmdLineEntryDesc GOApp::m_cmdLineDesc[] = {
   {wxCMD_LINE_OPTION,
    wxTRANSLATE("i"),
    wxTRANSLATE("instance"),
-   wxTRANSLATE("specifiy GrandOrgue instance name"),
+   wxTRANSLATE("specify GrandOrgue instance name"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
   {wxCMD_LINE_PARAM,
