@@ -69,6 +69,7 @@ else ()
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" OFF)
 endif ()
 option(GO_SEPARATE_LINUX_PACKAGES "Generate separate linux packages for resources and demo" OFF)
+option(USE_BUILD_SYSTEM_LIBDIR "Use build system (distro-specific) libdir (Linux only)" OFF)
 
 # only use options supported by the compiler
 include(CheckIncludeFileCXX)
@@ -93,11 +94,13 @@ ELSE()
   set(BININSTDIR "bin")
   IF (WIN32)
     SET(LIBINSTDIR "bin")
-  ELSE ()
+    ELSEIF (USE_BUILD_SYSTEM_LIBDIR)
     # See https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html for
     # the purpose of this module
     include(GNUInstallDirs)
     SET(LIBINSTDIR "${CMAKE_INSTALL_LIBDIR}" CACHE STRING "library directory")
+  ELSE ()
+    SET(LIBINSTDIR "lib" CACHE STRING "library directory")
   ENDIF ()
   SET(RESOURCEINSTDIR "share/${PROJECT_NAME}")
   SET(RPATH_PREFIX "$ORIGIN")
