@@ -314,7 +314,7 @@ bool GOArchiveReader::ReadFileRecord(
        name[name.length() - 2] == wxT('.') &&
        name[name.length() - 3] == wxT('/'))) {
     wxLogError(
-      _("File name '%s' contains invalid path seperators"), name.c_str());
+      _("File name '%s' contains invalid path separators"), name.c_str());
     return false;
   }
   if (name[name.length() - 1] == wxT('/')) {
