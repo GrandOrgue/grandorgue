@@ -8,7 +8,8 @@
 #ifndef GOMETRONOME_H
 #define GOMETRONOME_H
 
-#include "GOElementCreator.h"
+#include "control/GOElementCreator.h"
+
 #include "GOLabel.h"
 #include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"

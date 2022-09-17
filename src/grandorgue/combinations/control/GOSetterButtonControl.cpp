@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "GOSetterButtonCallback.h"
+#include "control/GOButtonCallback.h"
 
 GOSetterButtonControl::GOSetterButtonControl(
   GODefinitionFile *organfile, GOSetterButtonCallback *setter, bool Pushbutton)

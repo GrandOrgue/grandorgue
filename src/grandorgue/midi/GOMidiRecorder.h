@@ -13,7 +13,8 @@
 
 #include <vector>
 
-#include "GOElementCreator.h"
+#include "control/GOElementCreator.h"
+
 #include "GOLabel.h"
 #include "GOTime.h"
 #include "GOTimerCallback.h"

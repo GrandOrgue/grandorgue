@@ -10,7 +10,8 @@
 
 #include <wx/string.h>
 
-#include "GOElementCreator.h"
+#include "control/GOElementCreator.h"
+
 #include "GOLabel.h"
 #include "GOTimerCallback.h"
 

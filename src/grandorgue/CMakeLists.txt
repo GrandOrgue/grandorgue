@@ -39,6 +39,7 @@ config/GOMidiDeviceConfigList.cpp
 config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
 control/GOButtonControl.cpp
+control/GOElementCreator.cpp
 control/GOPistonControl.cpp
 control/GOPushbuttonControl.cpp
 dialogs/common/GODialogCloser.cpp
@@ -145,7 +146,6 @@ GODC.cpp
 GODivisionalCoupler.cpp
 GODummyPipe.cpp
 GODrawStop.cpp
-GOElementCreator.cpp
 GOEnclosure.cpp
 GOEvent.cpp
 GOFilename.cpp

@@ -10,7 +10,7 @@
 
 #include <wx/string.h>
 
-#include "GOSetterButtonCallback.h"
+#include "GOButtonCallback.h"
 #include "ptrvector.h"
 
 class GOConfigReader;

@@ -10,10 +10,10 @@
 
 #include "ptrvector.h"
 
+#include "control/GOElementCreator.h"
 #include "model/GOCombination.h"
 
 #include "GOControlChangedHandler.h"
-#include "GOElementCreator.h"
 #include "GOEnclosure.h"
 #include "GOLabel.h"
 #include "GOPlaybackStateHandler.h"

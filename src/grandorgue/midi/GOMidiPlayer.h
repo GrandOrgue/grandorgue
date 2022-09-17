@@ -13,11 +13,12 @@
 
 #include <vector>
 
-#include "GOElementCreator.h"
+#include "control/GOElementCreator.h"
+#include "midi/GOMidiPlayerContent.h"
+
 #include "GOLabel.h"
 #include "GOTime.h"
 #include "GOTimerCallback.h"
-#include "midi/GOMidiPlayerContent.h"
 
 class GOMidiEvent;
 class GOMidiFileReader;
