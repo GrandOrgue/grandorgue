@@ -94,7 +94,7 @@ ELSE()
   set(BININSTDIR "bin")
   IF (WIN32)
     SET(LIBINSTDIR "bin")
-    ELSEIF (USE_BUILD_SYSTEM_LIBDIR)
+  ELSEIF (USE_BUILD_SYSTEM_LIBDIR)
     # See https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html for
     # the purpose of this module
     include(GNUInstallDirs)
