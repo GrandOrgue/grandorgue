@@ -7,9 +7,10 @@
 
 #include "GOLoadThread.h"
 
+#include "control/GOEventDistributor.h"
+
 #include "GOAlloc.h"
 #include "GOCacheObject.h"
-#include "GOEventDistributor.h"
 #include "GOMemoryPool.h"
 
 GOLoadThread::GOLoadThread(
