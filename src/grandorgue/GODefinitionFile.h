@@ -13,18 +13,19 @@
 
 #include <vector>
 
+#include "ptrvector.h"
+
 #include "combinations/GOCombinationDefinition.h"
+#include "control/GOEventDistributor.h"
 #include "gui/GOGUIMouseStateTracker.h"
 
 #include "GOBitmapCache.h"
-#include "GOEventDistributor.h"
 #include "GOLabel.h"
 #include "GOMainWindowData.h"
 #include "GOMemoryPool.h"
 #include "GOModel.h"
 #include "GOPipeConfigTreeNode.h"
 #include "GOTimer.h"
-#include "ptrvector.h"
 
 class GOGUIPanel;
 class GOGUIPanelCreator;

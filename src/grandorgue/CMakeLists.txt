@@ -40,6 +40,7 @@ config/GOPortFactory.cpp
 control/GOButtonControl.cpp
 control/GOCallbackButtonControl.cpp
 control/GOElementCreator.cpp
+control/GOEventDistributor.cpp
 control/GOPistonControl.cpp
 control/GOPushbuttonControl.cpp
 dialogs/common/GODialogCloser.cpp
@@ -152,6 +153,7 @@ GOFilename.cpp
 GOFont.cpp
 GOKeyReceiver.cpp
 GOLabel.cpp
+GOLoadThread.cpp
 GOLog.cpp
 GOLogWindow.cpp
 GOManual.cpp
