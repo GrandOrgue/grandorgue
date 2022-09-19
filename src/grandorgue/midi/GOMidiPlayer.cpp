@@ -24,7 +24,8 @@ enum {
   ID_MIDI_PLAYER_PAUSE,
 };
 
-const struct GOElementCreator::ElementListEntry GOMidiPlayer::m_element_types[]
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOMidiPlayer::m_element_types[]
   = {
     {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true},
     {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true},
@@ -32,7 +33,8 @@ const struct GOElementCreator::ElementListEntry GOMidiPlayer::m_element_types[]
     {wxT(""), -1, false, false},
 };
 
-const struct GOElementCreator::ElementListEntry *GOMidiPlayer::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOMidiPlayer::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 

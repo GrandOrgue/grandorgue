@@ -21,7 +21,7 @@ class GOLabel;
 
 class GOElementCreator : private GOButtonCallback {
 protected:
-  struct ElementListEntry {
+  struct ButtonDefinitionEntry {
     wxString name;
     int value;
     bool is_public;
@@ -30,7 +30,7 @@ protected:
 
   ptr_vector<GOButtonControl> m_button;
 
-  virtual const struct ElementListEntry *GetButtonList() = 0;
+  virtual const struct ButtonDefinitionEntry *GetButtonDefinitionList() = 0;
   virtual void ButtonChanged(int id) = 0;
   void CreateButtons(GODefinitionFile *organfile);
 

@@ -14,7 +14,7 @@ GOElementCreator::GOElementCreator() : m_button() {}
 GOElementCreator::~GOElementCreator() {}
 
 void GOElementCreator::CreateButtons(GODefinitionFile *organfile) {
-  const struct ElementListEntry *entries = GetButtonList();
+  const struct ButtonDefinitionEntry *entries = GetButtonDefinitionList();
   for (unsigned i = 0;
        entries[i].name != wxEmptyString && entries[i].value >= 0;
        i++) {
@@ -27,7 +27,7 @@ void GOElementCreator::CreateButtons(GODefinitionFile *organfile) {
 
 GOButtonControl *GOElementCreator::GetButtonControl(
   const wxString &name, bool is_panel) {
-  const struct ElementListEntry *entries = GetButtonList();
+  const struct ButtonDefinitionEntry *entries = GetButtonDefinitionList();
   for (unsigned i = 0;
        entries[i].name != wxEmptyString && entries[i].value >= 0;
        i++)

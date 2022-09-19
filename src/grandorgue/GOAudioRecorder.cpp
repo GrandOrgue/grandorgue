@@ -24,7 +24,7 @@ enum {
   ID_AUDIO_RECORDER_RECORD_RENAME,
 };
 
-const struct GOElementCreator::ElementListEntry
+const struct GOElementCreator::ButtonDefinitionEntry
   GOAudioRecorder::m_element_types[]
   = {
     {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true},
@@ -36,8 +36,8 @@ const struct GOElementCreator::ElementListEntry
     {wxT(""), -1, false, false},
 };
 
-const struct GOElementCreator::ElementListEntry *GOAudioRecorder::
-  GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOAudioRecorder::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 

@@ -28,7 +28,7 @@ enum {
   ID_MIDI_RECORDER_RECORD_RENAME,
 };
 
-const struct GOElementCreator::ElementListEntry
+const struct GOElementCreator::ButtonDefinitionEntry
   GOMidiRecorder::m_element_types[]
   = {
     {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true},
@@ -40,8 +40,8 @@ const struct GOElementCreator::ElementListEntry
     {wxT(""), -1, false, false},
 };
 
-const struct GOElementCreator::ElementListEntry *GOMidiRecorder::
-  GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOMidiRecorder::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 

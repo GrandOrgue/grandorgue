@@ -49,8 +49,9 @@ private:
   unsigned m_FileLength;
   GOTime m_Last;
 
-  static const struct GOElementCreator::ElementListEntry m_element_types[];
-  const struct GOElementCreator::ElementListEntry *GetButtonList();
+  static const struct GOElementCreator::ButtonDefinitionEntry m_element_types[];
+  const struct GOElementCreator::ButtonDefinitionEntry *
+  GetButtonDefinitionList();
 
   void ButtonChanged(int id);
 

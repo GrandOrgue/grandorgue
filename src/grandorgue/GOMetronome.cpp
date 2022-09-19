@@ -29,7 +29,8 @@ enum {
   ID_METRONOME_BEAT_M10,
 };
 
-const struct GOElementCreator::ElementListEntry GOMetronome::m_element_types[]
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOMetronome::m_element_types[]
   = {
     {wxT("MetronomeOn"), ID_METRONOME_ON, false, false},
     {wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false, true},
@@ -41,7 +42,8 @@ const struct GOElementCreator::ElementListEntry GOMetronome::m_element_types[]
     {wxT(""), -1, false, false},
 };
 
-const struct GOElementCreator::ElementListEntry *GOMetronome::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOMetronome::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 

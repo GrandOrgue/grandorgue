@@ -27,8 +27,8 @@ private:
   wxString m_Filename;
   bool m_DoRename;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct ButtonDefinitionEntry m_element_types[];
+  const struct ButtonDefinitionEntry *GetButtonDefinitionList();
 
   void ButtonChanged(int id);
 

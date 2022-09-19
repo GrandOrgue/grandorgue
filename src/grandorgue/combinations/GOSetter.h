@@ -51,8 +51,8 @@ private:
   void SetCrescendoType(unsigned no);
   void Crescendo(int pos, bool force = false);
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct ButtonDefinitionEntry m_element_types[];
+  const struct ButtonDefinitionEntry *GetButtonDefinitionList();
 
   void ButtonChanged(int id);
 
