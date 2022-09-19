@@ -790,10 +790,10 @@ GOLabel *GODefinitionFile::GetLabel(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOButtonControl *GODefinitionFile::GetButton(
+GOButtonControl *GODefinitionFile::GetButtonControl(
   const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
-    GOButtonControl *c = m_elementcreators[i]->GetButton(name, is_panel);
+    GOButtonControl *c = m_elementcreators[i]->GetButtonControl(name, is_panel);
     if (c)
       return c;
   }

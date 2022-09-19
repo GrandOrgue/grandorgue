@@ -4657,27 +4657,48 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -4720,27 +4741,44 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -4892,27 +4930,48 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOCoupler.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -4955,27 +5014,58 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/files</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/archive</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/contrib</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>../../src/grandorgue/midi/ports</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -4983,27 +5073,45 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5011,27 +5119,56 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>../../src/grandorgue/midi/ports</pElem>
+            <pElem>../../src/grandorgue/sound/ports</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/help</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5039,27 +5176,45 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5132,27 +5287,48 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5195,27 +5371,49 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/archive</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core/contrib</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5254,27 +5452,59 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOFrame.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/help</pElem>
+            <pElem>../../src/core/archive</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/core/files</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/grandorgue/midi/ports</pElem>
+            <pElem>../../src/grandorgue/sound/ports</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5282,52 +5512,89 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOLabel.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5335,27 +5602,38 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5436,52 +5714,92 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOManual.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5489,52 +5807,93 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOModel.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>/usr/include/wx-3.0/wx/wxcrtbase.h</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5580,27 +5939,43 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOPipe.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5608,27 +5983,44 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5636,27 +6028,46 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5726,52 +6137,72 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GORank.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5779,27 +6210,45 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5845,77 +6294,135 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core/contrib</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOStop.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOSwitch.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5923,27 +6430,46 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5951,27 +6477,45 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -5979,60 +6523,125 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/GOSetter.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GODivisionalButtonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GOGeneralButtonControl.cpp"
@@ -6057,17 +6666,12 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX=1</Elem>
-            <Elem>GO_USE_JACK=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__SSE3__=1</Elem>
             <Elem>__STRICT_ANSI__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201103L</Elem>
             <Elem>__cpp_constexpr=200704L</Elem>
             <Elem>__cpp_range_based_for=200907L</Elem>
@@ -6094,20 +6698,64 @@
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_STD_MUTEX</Elem>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOGeneralCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOConfig.cpp"
@@ -6204,80 +6852,142 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOCallbackButtonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOElementCreator.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOEventDistributor.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOLoadThread.cpp"
@@ -6298,26 +7008,54 @@
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_STD_MUTEX</Elem>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPistonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPushbuttonControl.cpp"
@@ -6340,9 +7078,47 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/dialogs/GOMidiListDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
             <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
@@ -6359,59 +7135,54 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/dialogs/GOMidiListDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
       <item path="../../src/grandorgue/dialogs/GOOrganDialog.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx/wxcrtbase.h</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -6595,8 +7366,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/grandorgue/dialogs/common</pElem>
@@ -6612,19 +7381,6 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/midi-event/GOMidiEventKeyTab.cpp"
@@ -6633,8 +7389,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/core</pElem>
@@ -6646,46 +7400,34 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp"
@@ -6694,8 +7436,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/grandorgue/config</pElem>
@@ -6713,19 +7453,6 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsAudio.cpp"
@@ -6734,8 +7461,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/grandorgue/config</pElem>
@@ -6765,8 +7490,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/grandorgue/dialogs/common</pElem>
@@ -6816,8 +7539,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/grandorgue/config</pElem>
@@ -6839,8 +7560,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/grandorgue/config</pElem>
@@ -6885,8 +7604,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/meta</pElem>
@@ -6907,8 +7624,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/grandorgue/dialogs/common</pElem>
@@ -6954,8 +7669,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core/settings</pElem>
@@ -6997,27 +7710,51 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/archive</pElem>
+            <pElem>../../src/core/files</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -7027,8 +7764,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/meta</pElem>
@@ -7071,8 +7806,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/grandorgue/config</pElem>
@@ -7111,8 +7844,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core/settings</pElem>
@@ -7155,8 +7886,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/core</pElem>
@@ -7223,18 +7952,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7243,18 +7975,20 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7263,18 +7997,22 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7283,18 +8021,22 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7303,18 +8045,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7325,8 +8070,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/gui</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
@@ -7336,42 +8079,29 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX=1</Elem>
-            <Elem>GO_USE_JACK=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIDivisionalsPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7380,18 +8110,20 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7400,18 +8132,23 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7420,18 +8157,17 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7442,8 +8178,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/gui</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core/config</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
@@ -7455,42 +8189,24 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX=1</Elem>
-            <Elem>GO_USE_JACK=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIImage.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7499,18 +8215,25 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7519,18 +8242,17 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7539,18 +8261,22 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7559,18 +8285,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7579,18 +8308,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7599,18 +8331,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7619,18 +8354,26 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7639,18 +8382,18 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7659,18 +8402,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7679,18 +8425,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7699,18 +8448,22 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
         </ccTool>
@@ -7775,19 +8528,6 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiInputMerger.cpp"
@@ -7807,19 +8547,6 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiListener.cpp"
@@ -7843,19 +8570,6 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiOutputMerger.cpp"
@@ -7875,46 +8589,34 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiPlayer.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiPlayerContent.cpp"
@@ -7934,100 +8636,91 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiReceiver.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/settings</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiRecorder.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/midi/ports</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiSender.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/ports/GOMidiInPort.cpp"
@@ -8181,27 +8874,51 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/sound/ports</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/midi/ports</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -8248,27 +8965,45 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -9726,13 +10461,28 @@
         </ccTool>
       </item>
       <item path="../../src/tools/GOPerfTest.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/core</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/sound/scheduler</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core/settings</pElem>
+            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/tools</pElem>
           </incDir>
         </ccTool>
@@ -9740,8 +10490,6 @@
       <item path="../../src/tools/GOTool.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/tools</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/core/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx/unix</pElem>
             <pElem>../../src/core</pElem>
@@ -9755,23 +10503,6 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/tools</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_allocation.c"
@@ -9779,7 +10510,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9792,7 +10532,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9805,7 +10554,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9818,7 +10576,15 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9831,7 +10597,15 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9844,7 +10618,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9857,7 +10640,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9870,7 +10662,15 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9883,7 +10683,16 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
           <preprocessorList>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
+            <Elem>PA_USE_ALSA=1</Elem>
+            <Elem>PA_USE_JACK=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__GNUC_MINOR__=2</Elem>
             <Elem>__REGISTER_PREFIX__=</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
@@ -9896,13 +10705,10 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>HAVE_SYS_SOUNDCARD_H</Elem>
-            <Elem>PA_USE_ALSA</Elem>
-            <Elem>PA_USE_JACK</Elem>
-            <Elem>_REENTRANT</Elem>
-          </preprocessorList>
+          <incDir>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../build/current/src/portaudio</pElem>
+          </incDir>
         </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/hostapi/alsa/pa_linux_alsa.c"
@@ -10179,30 +10985,34 @@
       <folder path="0/src/grandorgue/combinations">
         <ccTool>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__WXGTK__=1</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/combinations/model">
         <ccTool>
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/combinations/model</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/config">
@@ -10235,12 +11045,12 @@
       <folder path="0/src/grandorgue/control">
         <ccTool>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__WXGTK__=1</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -10273,14 +11083,37 @@
       </folder>
       <folder path="0/src/grandorgue/dialogs/midi-event">
         <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
             <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
             <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/dialogs/settings">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+          </incDir>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/document-base">
@@ -10317,13 +11150,28 @@
       </folder>
       <folder path="0/src/grandorgue/gui">
         <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/gui</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+          </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GO_USE_JACK=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -10362,7 +11210,18 @@
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
             <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
             <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -10372,19 +11231,6 @@
             <pElem>../../src/grandorgue/midi/ports</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__SSE3__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-          </preprocessorList>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/sound/ports">
@@ -10628,12 +11474,27 @@
       </folder>
       <folder path="0/src/tools">
         <ccTool>
+          <incDir>
+            <pElem>../../src/tools</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+          </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>WXUSINGDLL</Elem>
+            <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__GNUC_MINOR__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__cpp_range_based_for=200907L</Elem>
+            <Elem>__cpp_static_assert=200410L</Elem>
+            <Elem>__cpp_unicode_characters=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </folder>

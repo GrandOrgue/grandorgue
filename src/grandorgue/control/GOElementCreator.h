@@ -42,7 +42,8 @@ public:
 
   virtual GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) = 0;
   virtual GOLabel *GetLabel(const wxString &name, bool is_panel) = 0;
-  virtual GOButtonControl *GetButton(const wxString &name, bool is_panel);
+  virtual GOButtonControl *GetButtonControl(
+    const wxString &name, bool is_panel);
 
   void ButtonStateChanged(GOButtonControl *button);
 };

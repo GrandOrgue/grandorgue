@@ -18,7 +18,7 @@ protected:
 
 public:
   GOCallbackButtonControl(
-    GODefinitionFile *organfile, GOButtonCallback *setter, bool Pushbutton);
+    GODefinitionFile *organfile, GOButtonCallback *callback, bool Pushbutton);
   void Push(void);
   void Set(bool on);
 

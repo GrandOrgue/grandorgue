@@ -695,7 +695,7 @@ GOGUIControl *GOGUIPanel::CreateGUIElement(
   GOConfigReader &cfg, wxString group) {
   wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
 
-  GOButtonControl *button = m_organfile->GetButton(type, true);
+  GOButtonControl *button = m_organfile->GetButtonControl(type, true);
   if (button)
     return new GOGUIButton(this, button, false);
 

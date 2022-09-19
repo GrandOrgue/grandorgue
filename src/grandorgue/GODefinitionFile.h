@@ -198,7 +198,8 @@ public:
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel = false);
   GOLabel *GetLabel(const wxString &name, bool is_panel = false);
-  GOButtonControl *GetButton(const wxString &name, bool is_panel = false);
+  GOButtonControl *GetButtonControl(
+    const wxString &name, bool is_panel = false);
 
   /* TODO: can somebody figure out what this thing is */
   bool IsCustomized();

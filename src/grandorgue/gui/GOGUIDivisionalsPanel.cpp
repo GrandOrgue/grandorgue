@@ -41,24 +41,28 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
   back->Init(cfg, wxT("SetterDivisionals"));
   panel->AddControl(back);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Set")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Set")), false);
   button->Init(cfg, wxT("SetterGeneralsSet"), 1, 100);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("Regular")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Regular")), false);
   button->Init(cfg, wxT("SetterGerneralsRegular"), 3, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scope")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scope")), false);
   button->Init(cfg, wxT("SetterGeneralsScope"), 4, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scoped")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scoped")), false);
   button->Init(cfg, wxT("SetterGeneralsScoped"), 5, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Full")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Full")), false);
   button->Init(cfg, wxT("SetterGeneralsFull"), 7, 100);
   panel->AddControl(button);
 

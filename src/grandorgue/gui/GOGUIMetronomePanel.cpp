@@ -37,13 +37,13 @@ GOGUIPanel *GOGUIMetronomePanel::CreateMetronomePanel(GOConfigReader &cfg) {
   back->Init(cfg, wxT("Metronome"));
   panel->AddControl(back);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("MetronomeOn")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("MetronomeOn")), false);
   button->Init(cfg, wxT("MetronomeOn"), 1, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MetronomeMeasureM1")), false);
+    panel, m_organfile->GetButtonControl(wxT("MetronomeMeasureM1")), false);
   button->Init(cfg, wxT("MetronomeMM1"), 3, 100);
   panel->AddControl(button);
 
@@ -53,17 +53,17 @@ GOGUIPanel *GOGUIMetronomePanel::CreateMetronomePanel(GOConfigReader &cfg) {
   panel->AddControl(PosDisplay);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MetronomeMeasureP1")), false);
+    panel, m_organfile->GetButtonControl(wxT("MetronomeMeasureP1")), false);
   button->Init(cfg, wxT("MetronomeMP1"), 5, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MetronomeBpmM10")), false);
+    panel, m_organfile->GetButtonControl(wxT("MetronomeBpmM10")), false);
   button->Init(cfg, wxT("MetronomeBPMM10"), 1, 101);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MetronomeBpmM1")), false);
+    panel, m_organfile->GetButtonControl(wxT("MetronomeBpmM1")), false);
   button->Init(cfg, wxT("MetronomeBPMM1"), 2, 101);
   panel->AddControl(button);
 
@@ -73,12 +73,12 @@ GOGUIPanel *GOGUIMetronomePanel::CreateMetronomePanel(GOConfigReader &cfg) {
   panel->AddControl(PosDisplay);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MetronomeBpmP1")), false);
+    panel, m_organfile->GetButtonControl(wxT("MetronomeBpmP1")), false);
   button->Init(cfg, wxT("MetronomeBPMP1"), 4, 101);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MetronomeBpmP10")), false);
+    panel, m_organfile->GetButtonControl(wxT("MetronomeBpmP10")), false);
   button->Init(cfg, wxT("MetronomeBPMP10"), 5, 101);
   panel->AddControl(button);
 

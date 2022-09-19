@@ -12,9 +12,9 @@
 #include "control/GOButtonCallback.h"
 
 GOCallbackButtonControl::GOCallbackButtonControl(
-  GODefinitionFile *organfile, GOButtonCallback *setter, bool Pushbutton)
+  GODefinitionFile *organfile, GOButtonCallback *callback, bool Pushbutton)
   : GOButtonControl(organfile, MIDI_RECV_SETTER, Pushbutton),
-    m_callback(setter) {}
+    m_callback(callback) {}
 
 void GOCallbackButtonControl::Push() {
   if (m_Pushbutton)

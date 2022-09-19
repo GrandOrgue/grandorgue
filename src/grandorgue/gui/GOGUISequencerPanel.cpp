@@ -42,84 +42,102 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   PosDisplay->Init(cfg, wxT("SetterCurrentPosition"), 350, 10);
   panel->AddControl(PosDisplay);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("Current")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Current")), false);
   button->Init(cfg, wxT("SetterCurrent"), 1, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("M100")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("M100")), false);
   button->Init(cfg, wxT("SetterM100"), 2, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("M10")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("M10")), false);
   button->Init(cfg, wxT("SetterM10"), 3, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("M1")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("M1")), false);
   button->Init(cfg, wxT("SetterM1"), 4, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Prev")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Prev")), false);
   button->Init(cfg, wxT("SetterPrev"), 5, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Next")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Next")), false);
   button->Init(cfg, wxT("SetterNext"), 6, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("P1")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("P1")), false);
   button->Init(cfg, wxT("SetterP1"), 7, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("P10")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("P10")), false);
   button->Init(cfg, wxT("SetterP10"), 8, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("P100")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("P100")), false);
   button->Init(cfg, wxT("SetterP100"), 9, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Home")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Home")), false);
   button->Init(cfg, wxT("SetterHome"), 10, 100);
   panel->AddControl(button);
 
   for (unsigned i = 0; i < 10; i++) {
     button = new GOGUIButton(
-      panel, m_organfile->GetButton(wxString::Format(wxT("L%d"), i)), false);
+      panel,
+      m_organfile->GetButtonControl(wxString::Format(wxT("L%d"), i)),
+      false);
     button->Init(cfg, wxString::Format(wxT("SetterL%d"), i), i + 1, 101);
     panel->AddControl(button);
   }
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Set")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Set")), false);
   button->Init(cfg, wxT("SetterSet"), 1, 102);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("Regular")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Regular")), false);
   button->Init(cfg, wxT("SetterRegular"), 3, 102);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scope")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scope")), false);
   button->Init(cfg, wxT("SetterScope"), 4, 102);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scoped")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scoped")), false);
   button->Init(cfg, wxT("SetterScoped"), 5, 102);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Full")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Full")), false);
   button->Init(cfg, wxT("SetterFull"), 7, 102);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("GC")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("GC")), false);
   button->Init(cfg, wxT("SetterGC"), 8, 102);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Insert")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Insert")), false);
   button->Init(cfg, wxT("SetterInsert"), 9, 102);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Delete")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Delete")), false);
   button->Init(cfg, wxT("SetterDelete"), 10, 102);
   panel->AddControl(button);
 
