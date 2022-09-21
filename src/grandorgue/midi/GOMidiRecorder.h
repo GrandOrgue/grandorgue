@@ -14,8 +14,8 @@
 #include <vector>
 
 #include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
 
-#include "GOLabel.h"
 #include "GOTime.h"
 #include "GOTimerCallback.h"
 #include "ptrvector.h"
@@ -34,7 +34,7 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
 private:
   GODefinitionFile *m_organfile;
   GOMidiMap &m_Map;
-  GOLabel m_RecordingTime;
+  GOLabelControl m_RecordingTime;
   unsigned m_RecordSeconds;
   unsigned m_NextChannel;
   unsigned m_NextNRPN;
@@ -86,7 +86,7 @@ public:
 
   void Load(GOConfigReader &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabel(const wxString &name, bool is_panel);
 };
 
 #endif

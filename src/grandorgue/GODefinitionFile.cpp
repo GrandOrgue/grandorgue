@@ -781,9 +781,10 @@ GOEnclosure *GODefinitionFile::GetEnclosure(
   return NULL;
 }
 
-GOLabel *GODefinitionFile::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GODefinitionFile::GetLabel(
+  const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
-    GOLabel *c = m_elementcreators[i]->GetLabel(name, is_panel);
+    GOLabelControl *c = m_elementcreators[i]->GetLabel(name, is_panel);
     if (c)
       return c;
   }
@@ -1118,9 +1119,11 @@ GOCombinationDefinition &GODefinitionFile::GetGeneralTemplate() {
   return m_GeneralTemplate;
 }
 
-GOLabel *GODefinitionFile::GetPitchLabel() { return &m_PitchLabel; }
+GOLabelControl *GODefinitionFile::GetPitchLabel() { return &m_PitchLabel; }
 
-GOLabel *GODefinitionFile::GetTemperamentLabel() { return &m_TemperamentLabel; }
+GOLabelControl *GODefinitionFile::GetTemperamentLabel() {
+  return &m_TemperamentLabel;
+}
 
 GOMainWindowData *GODefinitionFile::GetMainWindowData() {
   return &m_MainWindowData;

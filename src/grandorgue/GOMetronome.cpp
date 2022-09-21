@@ -238,7 +238,7 @@ GOEnclosure *GOMetronome::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabel *GOMetronome::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOMetronome::GetLabel(const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 

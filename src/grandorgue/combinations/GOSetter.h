@@ -12,10 +12,10 @@
 
 #include "control/GOControlChangedHandler.h"
 #include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
 #include "model/GOCombination.h"
 
 #include "GOEnclosure.h"
-#include "GOLabel.h"
 #include "GOPlaybackStateHandler.h"
 
 #define N_CRESCENDOS 4
@@ -39,11 +39,11 @@ private:
   ptr_vector<GOGeneralCombination> m_crescendo;
   std::vector<GOCombination::ExtraElementsSet> m_CrescendoExtraSets;
   bool m_CrescendoOverrideMode[N_CRESCENDOS];
-  GOLabel m_PosDisplay;
-  GOLabel m_BankDisplay;
-  GOLabel m_CrescendoDisplay;
-  GOLabel m_TransposeDisplay;
-  GOLabel m_NameDisplay;
+  GOLabelControl m_PosDisplay;
+  GOLabelControl m_BankDisplay;
+  GOLabelControl m_CrescendoDisplay;
+  GOLabelControl m_TransposeDisplay;
+  GOLabelControl m_NameDisplay;
   GOEnclosure m_swell;
   SetterType m_SetterType;
 
@@ -70,7 +70,7 @@ public:
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabel(const wxString &name, bool is_panel);
 
   void Update();
 

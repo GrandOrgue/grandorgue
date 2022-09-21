@@ -17,10 +17,10 @@
 
 #include "combinations/GOCombinationDefinition.h"
 #include "control/GOEventDistributor.h"
+#include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseStateTracker.h"
 
 #include "GOBitmapCache.h"
-#include "GOLabel.h"
 #include "GOMainWindowData.h"
 #include "GOMemoryPool.h"
 #include "GOModel.h"
@@ -108,8 +108,8 @@ private:
   GOPipeConfigTreeNode m_PipeConfig;
   GOConfig &m_config;
   GOCombinationDefinition m_GeneralTemplate;
-  GOLabel m_PitchLabel;
-  GOLabel m_TemperamentLabel;
+  GOLabelControl m_PitchLabel;
+  GOLabelControl m_TemperamentLabel;
   GOMainWindowData m_MainWindowData;
 
   void ReadOrganFile(GOConfigReader &cfg);
@@ -174,8 +174,8 @@ public:
 
   int GetRecorderElementID(wxString name);
   GOCombinationDefinition &GetGeneralTemplate();
-  GOLabel *GetPitchLabel();
-  GOLabel *GetTemperamentLabel();
+  GOLabelControl *GetPitchLabel();
+  GOLabelControl *GetTemperamentLabel();
   GOMainWindowData *GetMainWindowData();
 
   void LoadMIDIFile(const wxString &filename);
@@ -197,7 +197,7 @@ public:
   void SetReleaseTail(unsigned releaseTail);
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel = false);
-  GOLabel *GetLabel(const wxString &name, bool is_panel = false);
+  GOLabelControl *GetLabel(const wxString &name, bool is_panel = false);
   GOButtonControl *GetButtonControl(
     const wxString &name, bool is_panel = false);
 

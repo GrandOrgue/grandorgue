@@ -699,7 +699,7 @@ GOGUIControl *GOGUIPanel::CreateGUIElement(
   if (button)
     return new GOGUIButton(this, button, false);
 
-  GOLabel *label = m_organfile->GetLabel(type, true);
+  GOLabelControl *label = m_organfile->GetLabel(type, true);
   if (label)
     return new GOGUILabel(this, label);
 

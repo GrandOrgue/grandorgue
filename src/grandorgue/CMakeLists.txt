@@ -41,6 +41,7 @@ control/GOButtonControl.cpp
 control/GOCallbackButtonControl.cpp
 control/GOElementCreator.cpp
 control/GOEventDistributor.cpp
+control/GOLabelControl.cpp
 control/GOPistonControl.cpp
 control/GOPushbuttonControl.cpp
 dialogs/common/GODialogCloser.cpp
@@ -152,7 +153,6 @@ GOEvent.cpp
 GOFilename.cpp
 GOFont.cpp
 GOKeyReceiver.cpp
-GOLabel.cpp
 GOLoadThread.cpp
 GOLog.cpp
 GOLogWindow.cpp

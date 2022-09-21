@@ -9,8 +9,8 @@
 #define GOMETRONOME_H
 
 #include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
 
-#include "GOLabel.h"
 #include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
 #include "GOTimerCallback.h"
@@ -29,8 +29,8 @@ private:
   unsigned m_MeasureLength;
   unsigned m_Pos;
   bool m_Running;
-  GOLabel m_BPMDisplay;
-  GOLabel m_MeasureDisplay;
+  GOLabelControl m_BPMDisplay;
+  GOLabelControl m_MeasureDisplay;
   GORank *m_rank;
   unsigned m_StopID;
 
@@ -62,7 +62,7 @@ public:
   void Load(GOConfigReader &cfg);
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabel(const wxString &name, bool is_panel);
 };
 
 #endif

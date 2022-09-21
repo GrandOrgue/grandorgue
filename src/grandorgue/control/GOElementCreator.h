@@ -17,7 +17,7 @@ class GOButtonControl;
 class GOConfigReader;
 class GODefinitionFile;
 class GOEnclosure;
-class GOLabel;
+class GOLabelControl;
 
 class GOElementCreator : private GOButtonCallback {
 protected:
@@ -41,7 +41,7 @@ public:
   virtual void Load(GOConfigReader &cfg) = 0;
 
   virtual GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) = 0;
-  virtual GOLabel *GetLabel(const wxString &name, bool is_panel) = 0;
+  virtual GOLabelControl *GetLabel(const wxString &name, bool is_panel) = 0;
   virtual GOButtonControl *GetButtonControl(
     const wxString &name, bool is_panel);
 
