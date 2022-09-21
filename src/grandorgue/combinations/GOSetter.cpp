@@ -265,35 +265,35 @@ GOSetter::GOSetter(GODefinitionFile *organfile)
     m_SetterType(SETTER_REGULAR) {
   CreateButtons(m_organfile);
 
-  m_button[ID_SETTER_PREV]->SetPreconfigIndex(0);
-  m_button[ID_SETTER_NEXT]->SetPreconfigIndex(1);
-  m_button[ID_SETTER_SET]->SetPreconfigIndex(2);
-  m_button[ID_SETTER_CURRENT]->SetPreconfigIndex(3);
-  m_button[ID_SETTER_GC]->SetPreconfigIndex(4);
-  m_button[ID_SETTER_M10]->SetPreconfigIndex(5);
-  m_button[ID_SETTER_P10]->SetPreconfigIndex(6);
-  m_button[ID_SETTER_L0]->SetPreconfigIndex(7);
-  m_button[ID_SETTER_L1]->SetPreconfigIndex(8);
-  m_button[ID_SETTER_L2]->SetPreconfigIndex(9);
-  m_button[ID_SETTER_L3]->SetPreconfigIndex(10);
-  m_button[ID_SETTER_L4]->SetPreconfigIndex(11);
-  m_button[ID_SETTER_L5]->SetPreconfigIndex(12);
-  m_button[ID_SETTER_L6]->SetPreconfigIndex(13);
-  m_button[ID_SETTER_L7]->SetPreconfigIndex(14);
-  m_button[ID_SETTER_L8]->SetPreconfigIndex(15);
-  m_button[ID_SETTER_L9]->SetPreconfigIndex(16);
-  m_button[ID_SETTER_PITCH_M1]->SetPreconfigIndex(17);
-  m_button[ID_SETTER_PITCH_P1]->SetPreconfigIndex(18);
-  m_button[ID_SETTER_PITCH_M100]->SetPreconfigIndex(19);
-  m_button[ID_SETTER_PITCH_P100]->SetPreconfigIndex(20);
-  m_button[ID_SETTER_TEMPERAMENT_PREV]->SetPreconfigIndex(21);
-  m_button[ID_SETTER_TEMPERAMENT_NEXT]->SetPreconfigIndex(22);
-  m_button[ID_SETTER_TRANSPOSE_DOWN]->SetPreconfigIndex(23);
-  m_button[ID_SETTER_TRANSPOSE_UP]->SetPreconfigIndex(24);
+  m_buttons[ID_SETTER_PREV]->SetPreconfigIndex(0);
+  m_buttons[ID_SETTER_NEXT]->SetPreconfigIndex(1);
+  m_buttons[ID_SETTER_SET]->SetPreconfigIndex(2);
+  m_buttons[ID_SETTER_CURRENT]->SetPreconfigIndex(3);
+  m_buttons[ID_SETTER_GC]->SetPreconfigIndex(4);
+  m_buttons[ID_SETTER_M10]->SetPreconfigIndex(5);
+  m_buttons[ID_SETTER_P10]->SetPreconfigIndex(6);
+  m_buttons[ID_SETTER_L0]->SetPreconfigIndex(7);
+  m_buttons[ID_SETTER_L1]->SetPreconfigIndex(8);
+  m_buttons[ID_SETTER_L2]->SetPreconfigIndex(9);
+  m_buttons[ID_SETTER_L3]->SetPreconfigIndex(10);
+  m_buttons[ID_SETTER_L4]->SetPreconfigIndex(11);
+  m_buttons[ID_SETTER_L5]->SetPreconfigIndex(12);
+  m_buttons[ID_SETTER_L6]->SetPreconfigIndex(13);
+  m_buttons[ID_SETTER_L7]->SetPreconfigIndex(14);
+  m_buttons[ID_SETTER_L8]->SetPreconfigIndex(15);
+  m_buttons[ID_SETTER_L9]->SetPreconfigIndex(16);
+  m_buttons[ID_SETTER_PITCH_M1]->SetPreconfigIndex(17);
+  m_buttons[ID_SETTER_PITCH_P1]->SetPreconfigIndex(18);
+  m_buttons[ID_SETTER_PITCH_M100]->SetPreconfigIndex(19);
+  m_buttons[ID_SETTER_PITCH_P100]->SetPreconfigIndex(20);
+  m_buttons[ID_SETTER_TEMPERAMENT_PREV]->SetPreconfigIndex(21);
+  m_buttons[ID_SETTER_TEMPERAMENT_NEXT]->SetPreconfigIndex(22);
+  m_buttons[ID_SETTER_TRANSPOSE_DOWN]->SetPreconfigIndex(23);
+  m_buttons[ID_SETTER_TRANSPOSE_UP]->SetPreconfigIndex(24);
 
-  m_button[ID_SETTER_PREV]->SetShortcutKey(37);
-  m_button[ID_SETTER_NEXT]->SetShortcutKey(39);
-  m_button[ID_SETTER_CURRENT]->SetShortcutKey(40);
+  m_buttons[ID_SETTER_PREV]->SetShortcutKey(37);
+  m_buttons[ID_SETTER_NEXT]->SetShortcutKey(39);
+  m_buttons[ID_SETTER_CURRENT]->SetShortcutKey(40);
 
   SetSetterType(m_SetterType);
   SetCrescendoType(m_crescendobank);
@@ -348,59 +348,60 @@ void GOSetter::Load(GOConfigReader &cfg) {
     m_crescendo[i]->Load(cfg, buffer);
   }
 
-  m_button[ID_SETTER_PREV]->Init(cfg, wxT("SetterPrev"), _("Previous"));
-  m_button[ID_SETTER_NEXT]->Init(cfg, wxT("SetterNext"), _("Next"));
-  m_button[ID_SETTER_SET]->Init(cfg, wxT("SetterSet"), _("Set"));
-  m_button[ID_SETTER_M1]->Init(cfg, wxT("SetterM1"), _("-1"));
-  m_button[ID_SETTER_M10]->Init(cfg, wxT("SetterM10"), _("-10"));
-  m_button[ID_SETTER_M100]->Init(cfg, wxT("SetterM100"), _("-100"));
-  m_button[ID_SETTER_P1]->Init(cfg, wxT("SetterP1"), _("+1"));
-  m_button[ID_SETTER_P10]->Init(cfg, wxT("SetterP10"), _("+10"));
-  m_button[ID_SETTER_P100]->Init(cfg, wxT("SetterP100"), _("+100"));
-  m_button[ID_SETTER_CURRENT]->Init(cfg, wxT("SetterCurrent"), _("Current"));
-  m_button[ID_SETTER_HOME]->Init(cfg, wxT("SetterHome"), _("000"));
-  m_button[ID_SETTER_GC]->Init(cfg, wxT("SetterGC"), _("G.C."));
+  m_buttons[ID_SETTER_PREV]->Init(cfg, wxT("SetterPrev"), _("Previous"));
+  m_buttons[ID_SETTER_NEXT]->Init(cfg, wxT("SetterNext"), _("Next"));
+  m_buttons[ID_SETTER_SET]->Init(cfg, wxT("SetterSet"), _("Set"));
+  m_buttons[ID_SETTER_M1]->Init(cfg, wxT("SetterM1"), _("-1"));
+  m_buttons[ID_SETTER_M10]->Init(cfg, wxT("SetterM10"), _("-10"));
+  m_buttons[ID_SETTER_M100]->Init(cfg, wxT("SetterM100"), _("-100"));
+  m_buttons[ID_SETTER_P1]->Init(cfg, wxT("SetterP1"), _("+1"));
+  m_buttons[ID_SETTER_P10]->Init(cfg, wxT("SetterP10"), _("+10"));
+  m_buttons[ID_SETTER_P100]->Init(cfg, wxT("SetterP100"), _("+100"));
+  m_buttons[ID_SETTER_CURRENT]->Init(cfg, wxT("SetterCurrent"), _("Current"));
+  m_buttons[ID_SETTER_HOME]->Init(cfg, wxT("SetterHome"), _("000"));
+  m_buttons[ID_SETTER_GC]->Init(cfg, wxT("SetterGC"), _("G.C."));
 
-  m_button[ID_SETTER_REGULAR]->Init(cfg, wxT("SetterRegular"), _("Regular"));
-  m_button[ID_SETTER_SCOPE]->Init(cfg, wxT("SetterScope"), _("Scope"));
-  m_button[ID_SETTER_SCOPED]->Init(cfg, wxT("SetterScoped"), _("Scoped"));
-  m_button[ID_SETTER_FULL]->Init(cfg, wxT("SetterFull"), _("Full"));
+  m_buttons[ID_SETTER_REGULAR]->Init(cfg, wxT("SetterRegular"), _("Regular"));
+  m_buttons[ID_SETTER_SCOPE]->Init(cfg, wxT("SetterScope"), _("Scope"));
+  m_buttons[ID_SETTER_SCOPED]->Init(cfg, wxT("SetterScoped"), _("Scoped"));
+  m_buttons[ID_SETTER_FULL]->Init(cfg, wxT("SetterFull"), _("Full"));
 
-  m_button[ID_SETTER_INSERT]->Init(cfg, wxT("SetterInsert"), _("Insert"));
-  m_button[ID_SETTER_DELETE]->Init(cfg, wxT("SetterDelete"), _("Delete"));
+  m_buttons[ID_SETTER_INSERT]->Init(cfg, wxT("SetterInsert"), _("Insert"));
+  m_buttons[ID_SETTER_DELETE]->Init(cfg, wxT("SetterDelete"), _("Delete"));
 
-  m_button[ID_SETTER_CRESCENDO_PREV]->Init(
+  m_buttons[ID_SETTER_CRESCENDO_PREV]->Init(
     cfg, wxT("SetterCrescendoPrev"), _("<"));
-  m_button[ID_SETTER_CRESCENDO_NEXT]->Init(
+  m_buttons[ID_SETTER_CRESCENDO_NEXT]->Init(
     cfg, wxT("SetterCrescendoNext"), _(">"));
-  m_button[ID_SETTER_CRESCENDO_CURRENT]->Init(
+  m_buttons[ID_SETTER_CRESCENDO_CURRENT]->Init(
     cfg, wxT("SetterCrescendoCurrent"), _("Current"));
-  m_button[ID_SETTER_CRESCENDO_A]->Init(cfg, wxT("SetterCrescendoA"), _("A"));
-  m_button[ID_SETTER_CRESCENDO_B]->Init(cfg, wxT("SetterCrescendoB"), _("B"));
-  m_button[ID_SETTER_CRESCENDO_C]->Init(cfg, wxT("SetterCrescendoC"), _("C"));
-  m_button[ID_SETTER_CRESCENDO_D]->Init(cfg, wxT("SetterCrescendoD"), _("D"));
-  m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Init(
+  m_buttons[ID_SETTER_CRESCENDO_A]->Init(cfg, wxT("SetterCrescendoA"), _("A"));
+  m_buttons[ID_SETTER_CRESCENDO_B]->Init(cfg, wxT("SetterCrescendoB"), _("B"));
+  m_buttons[ID_SETTER_CRESCENDO_C]->Init(cfg, wxT("SetterCrescendoC"), _("C"));
+  m_buttons[ID_SETTER_CRESCENDO_D]->Init(cfg, wxT("SetterCrescendoD"), _("D"));
+  m_buttons[ID_SETTER_CRESCENDO_OVERRIDE]->Init(
     cfg, wxT("SetterCrescendoOverride"), _("Override"));
-  m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
+  m_buttons[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
     m_CrescendoOverrideMode[m_crescendobank]);
 
-  m_button[ID_SETTER_PITCH_M1]->Init(cfg, wxT("SetterPitchM1"), _("-1"));
-  m_button[ID_SETTER_PITCH_M10]->Init(cfg, wxT("SetterPitchM10"), _("-10"));
-  m_button[ID_SETTER_PITCH_M100]->Init(cfg, wxT("SetterPitchM100"), _("-100"));
-  m_button[ID_SETTER_PITCH_P1]->Init(cfg, wxT("SetterPitchP1"), _("+1"));
-  m_button[ID_SETTER_PITCH_P10]->Init(cfg, wxT("SetterPitchP10"), _("+10"));
-  m_button[ID_SETTER_PITCH_P100]->Init(cfg, wxT("SetterPitchP100"), _("+100"));
-  m_button[ID_SETTER_TEMPERAMENT_PREV]->Init(
+  m_buttons[ID_SETTER_PITCH_M1]->Init(cfg, wxT("SetterPitchM1"), _("-1"));
+  m_buttons[ID_SETTER_PITCH_M10]->Init(cfg, wxT("SetterPitchM10"), _("-10"));
+  m_buttons[ID_SETTER_PITCH_M100]->Init(cfg, wxT("SetterPitchM100"), _("-100"));
+  m_buttons[ID_SETTER_PITCH_P1]->Init(cfg, wxT("SetterPitchP1"), _("+1"));
+  m_buttons[ID_SETTER_PITCH_P10]->Init(cfg, wxT("SetterPitchP10"), _("+10"));
+  m_buttons[ID_SETTER_PITCH_P100]->Init(cfg, wxT("SetterPitchP100"), _("+100"));
+  m_buttons[ID_SETTER_TEMPERAMENT_PREV]->Init(
     cfg, wxT("SetterTemperamentPrev"), _("<"));
-  m_button[ID_SETTER_TEMPERAMENT_NEXT]->Init(
+  m_buttons[ID_SETTER_TEMPERAMENT_NEXT]->Init(
     cfg, wxT("SetterTemperamentNext"), _(">"));
-  m_button[ID_SETTER_TRANSPOSE_DOWN]->Init(
+  m_buttons[ID_SETTER_TRANSPOSE_DOWN]->Init(
     cfg, wxT("SetterTransposeDown"), _("-"));
-  m_button[ID_SETTER_TRANSPOSE_UP]->Init(cfg, wxT("SetterTransposeUp"), _("+"));
+  m_buttons[ID_SETTER_TRANSPOSE_UP]->Init(
+    cfg, wxT("SetterTransposeUp"), _("+"));
 
-  m_button[ID_SETTER_SAVE]->Init(cfg, wxT("SetterSave"), _("Save"));
-  m_button[ID_SETTER_ON]->Init(cfg, wxT("SetterOn"), _("ON"));
-  m_button[ID_SETTER_ON]->Display(true);
+  m_buttons[ID_SETTER_SAVE]->Init(cfg, wxT("SetterSave"), _("Save"));
+  m_buttons[ID_SETTER_ON]->Init(cfg, wxT("SetterOn"), _("ON"));
+  m_buttons[ID_SETTER_ON]->Display(true);
 
   m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"), 0);
 
@@ -416,7 +417,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
     wxString buffer;
     buffer.Printf(_("__%d"), i);
     group.Printf(wxT("SetterL%d"), i);
-    m_button[ID_SETTER_L0 + i]->Init(cfg, group, buffer);
+    m_buttons[ID_SETTER_L0 + i]->Init(cfg, group, buffer);
   }
 
   for (unsigned i = 0; i < GENERALS; i++) {
@@ -424,11 +425,11 @@ void GOSetter::Load(GOConfigReader &cfg) {
     wxString buffer;
     buffer.Printf(_("%d"), i + 1);
     group.Printf(wxT("SetterGeneral%d"), i);
-    m_button[ID_SETTER_GENERAL00 + i]->Init(cfg, group, buffer);
+    m_buttons[ID_SETTER_GENERAL00 + i]->Init(cfg, group, buffer);
   }
-  m_button[ID_SETTER_GENERAL_PREV]->Init(
+  m_buttons[ID_SETTER_GENERAL_PREV]->Init(
     cfg, wxT("SetterGeneralPrev"), _("Prev"));
-  m_button[ID_SETTER_GENERAL_NEXT]->Init(
+  m_buttons[ID_SETTER_GENERAL_NEXT]->Init(
     cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
@@ -554,7 +555,7 @@ void GOSetter::ButtonChanged(int id) {
   case ID_SETTER_GENERAL49:
     m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push();
     ResetDisplay();
-    m_button[id]->Display(true);
+    m_buttons[id]->Display(true);
     break;
   case ID_SETTER_GENERAL_PREV:
   case ID_SETTER_GENERAL_NEXT:
@@ -593,7 +594,7 @@ void GOSetter::ButtonChanged(int id) {
     break;
 
   case ID_SETTER_CRESCENDO_OVERRIDE: {
-    GOButtonControl *btn = m_button[ID_SETTER_CRESCENDO_OVERRIDE];
+    GOButtonControl *btn = m_buttons[ID_SETTER_CRESCENDO_OVERRIDE];
     bool newIsOverride = !btn->IsEngaged();
 
     m_CrescendoOverrideMode[m_crescendobank] = newIsOverride;
@@ -678,15 +679,17 @@ void GOSetter::PrepareRecording() {}
 
 void GOSetter::Update() {}
 
-bool GOSetter::IsSetterActive() { return m_button[ID_SETTER_SET]->IsEngaged(); }
-
-bool GOSetter::StoreInvisibleObjects() {
-  return m_button[ID_SETTER_FULL]->IsEngaged();
+bool GOSetter::IsSetterActive() {
+  return m_buttons[ID_SETTER_SET]->IsEngaged();
 }
 
-void GOSetter::SetterActive(bool on) { m_button[ID_SETTER_SET]->Set(on); }
+bool GOSetter::StoreInvisibleObjects() {
+  return m_buttons[ID_SETTER_FULL]->IsEngaged();
+}
 
-void GOSetter::ToggleSetter() { m_button[ID_SETTER_SET]->Push(); }
+void GOSetter::SetterActive(bool on) { m_buttons[ID_SETTER_SET]->Set(on); }
+
+void GOSetter::ToggleSetter() { m_buttons[ID_SETTER_SET]->Push(); }
 
 void GOSetter::Next() { SetPosition(m_pos + 1); }
 
@@ -700,27 +703,27 @@ SetterType GOSetter::GetSetterType() { return m_SetterType; }
 
 void GOSetter::SetSetterType(SetterType type) {
   m_SetterType = type;
-  m_button[ID_SETTER_REGULAR]->Display(type == SETTER_REGULAR);
-  m_button[ID_SETTER_SCOPE]->Display(type == SETTER_SCOPE);
-  m_button[ID_SETTER_SCOPED]->Display(type == SETTER_SCOPED);
+  m_buttons[ID_SETTER_REGULAR]->Display(type == SETTER_REGULAR);
+  m_buttons[ID_SETTER_SCOPE]->Display(type == SETTER_SCOPE);
+  m_buttons[ID_SETTER_SCOPED]->Display(type == SETTER_SCOPED);
 }
 
 void GOSetter::SetCrescendoType(unsigned no) {
   m_crescendobank = no;
-  m_button[ID_SETTER_CRESCENDO_A]->Display(no == 0);
-  m_button[ID_SETTER_CRESCENDO_B]->Display(no == 1);
-  m_button[ID_SETTER_CRESCENDO_C]->Display(no == 2);
-  m_button[ID_SETTER_CRESCENDO_D]->Display(no == 3);
-  m_button[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
+  m_buttons[ID_SETTER_CRESCENDO_A]->Display(no == 0);
+  m_buttons[ID_SETTER_CRESCENDO_B]->Display(no == 1);
+  m_buttons[ID_SETTER_CRESCENDO_C]->Display(no == 2);
+  m_buttons[ID_SETTER_CRESCENDO_D]->Display(no == 3);
+  m_buttons[ID_SETTER_CRESCENDO_OVERRIDE]->Display(
     m_CrescendoOverrideMode[m_crescendobank]);
 }
 
 void GOSetter::ResetDisplay() {
-  m_button[ID_SETTER_HOME]->Display(false);
+  m_buttons[ID_SETTER_HOME]->Display(false);
   for (unsigned i = 0; i < 10; i++)
-    m_button[ID_SETTER_L0 + i]->Display(false);
+    m_buttons[ID_SETTER_L0 + i]->Display(false);
   for (unsigned i = 0; i < GENERALS; i++)
-    m_button[ID_SETTER_GENERAL00 + i]->Display(false);
+    m_buttons[ID_SETTER_GENERAL00 + i]->Display(false);
 }
 
 void GOSetter::UpdatePosition(int pos) {
@@ -739,11 +742,11 @@ void GOSetter::SetPosition(int pos, bool push) {
   if (push) {
     m_framegeneral[m_pos]->Push();
 
-    m_button[ID_SETTER_HOME]->Display(m_pos == 0);
+    m_buttons[ID_SETTER_HOME]->Display(m_pos == 0);
     for (unsigned i = 0; i < 10; i++)
-      m_button[ID_SETTER_L0 + i]->Display((m_pos % 10) == i);
+      m_buttons[ID_SETTER_L0 + i]->Display((m_pos % 10) == i);
     for (unsigned i = 0; i < GENERALS; i++)
-      m_button[ID_SETTER_GENERAL00 + i]->Display(false);
+      m_buttons[ID_SETTER_GENERAL00 + i]->Display(false);
   }
 
   buffer.Printf(wxT("%03d"), m_pos);
@@ -817,7 +820,7 @@ void GOSetter::SetTranspose(int value) {
 }
 
 void GOSetter::UpdateModified(bool modified) {
-  m_button[ID_SETTER_SAVE]->Display(modified);
+  m_buttons[ID_SETTER_SAVE]->Display(modified);
 }
 
 GOEnclosure *GOSetter::GetEnclosure(const wxString &name, bool is_panel) {

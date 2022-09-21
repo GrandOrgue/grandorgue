@@ -28,7 +28,7 @@ protected:
     bool is_pushbutton;
   };
 
-  ptr_vector<GOButtonControl> m_button;
+  ptr_vector<GOButtonControl> m_buttons;
 
   virtual const struct ButtonDefinitionEntry *GetButtonDefinitionList() = 0;
   virtual void ButtonChanged(int id) = 0;

@@ -69,11 +69,11 @@ GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
 GOMidiRecorder::~GOMidiRecorder() { StopRecording(); }
 
 void GOMidiRecorder::Load(GOConfigReader &cfg) {
-  m_button[ID_MIDI_RECORDER_RECORD]->Init(
+  m_buttons[ID_MIDI_RECORDER_RECORD]->Init(
     cfg, wxT("MidiRecorderRecord"), _("REC"));
-  m_button[ID_MIDI_RECORDER_STOP]->Init(
+  m_buttons[ID_MIDI_RECORDER_STOP]->Init(
     cfg, wxT("MidiRecorderStop"), _("STOP"));
-  m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Init(
+  m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Init(
     cfg, wxT("MidiRecorderRecordRename"), _("REC File"));
   m_RecordingTime.Init(cfg, wxT("MidiRecordTime"), _("MIDI recording time"));
 }
@@ -301,8 +301,8 @@ void GOMidiRecorder::UpdateDisplay() {
 }
 
 void GOMidiRecorder::StopRecording() {
-  m_button[ID_MIDI_RECORDER_RECORD]->Display(false);
-  m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
+  m_buttons[ID_MIDI_RECORDER_RECORD]->Display(false);
+  m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
   m_organfile->DeleteTimer(this);
   if (!IsRecording())
     return;
@@ -360,9 +360,9 @@ void GOMidiRecorder::StartRecording(bool rename) {
 
   m_Last = wxGetLocalTimeMillis();
   if (m_DoRename)
-    m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
+    m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
   else
-    m_button[ID_MIDI_RECORDER_RECORD]->Display(true);
+    m_buttons[ID_MIDI_RECORDER_RECORD]->Display(true);
   m_organfile->PrepareRecording();
 
   m_RecordSeconds = 0;

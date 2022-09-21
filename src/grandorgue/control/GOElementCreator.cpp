@@ -9,7 +9,7 @@
 
 #include "GOCallbackButtonControl.h"
 
-GOElementCreator::GOElementCreator() : m_button() {}
+GOElementCreator::GOElementCreator() : m_buttons() {}
 
 GOElementCreator::~GOElementCreator() {}
 
@@ -18,9 +18,9 @@ void GOElementCreator::CreateButtons(GODefinitionFile *organfile) {
   for (unsigned i = 0;
        entries[i].name != wxEmptyString && entries[i].value >= 0;
        i++) {
-    if (m_button.size() <= (unsigned)entries[i].value)
-      m_button.resize(entries[i].value + 1);
-    m_button[entries[i].value]
+    if (m_buttons.size() <= (unsigned)entries[i].value)
+      m_buttons.resize(entries[i].value + 1);
+    m_buttons[entries[i].value]
       = new GOCallbackButtonControl(organfile, this, entries[i].is_pushbutton);
   }
 }
@@ -34,14 +34,14 @@ GOButtonControl *GOElementCreator::GetButtonControl(
     if (name == entries[i].name) {
       if (is_panel && !entries[i].is_public)
         return NULL;
-      return m_button[entries[i].value];
+      return m_buttons[entries[i].value];
     }
 
   return NULL;
 }
 
 void GOElementCreator::ButtonStateChanged(GOButtonControl *button) {
-  for (unsigned i = 0; i < m_button.size(); i++)
-    if (m_button[i] == button)
+  for (unsigned i = 0; i < m_buttons.size(); i++)
+    if (m_buttons[i] == button)
       ButtonChanged(i);
 }

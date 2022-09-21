@@ -60,11 +60,11 @@ void GOAudioRecorder::SetAudioRecorder(GOSoundRecorder *recorder) {
 }
 
 void GOAudioRecorder::Load(GOConfigReader &cfg) {
-  m_button[ID_AUDIO_RECORDER_RECORD]->Init(
+  m_buttons[ID_AUDIO_RECORDER_RECORD]->Init(
     cfg, wxT("AudioRecorderRecord"), _("REC"));
-  m_button[ID_AUDIO_RECORDER_STOP]->Init(
+  m_buttons[ID_AUDIO_RECORDER_STOP]->Init(
     cfg, wxT("AudioRecorderStop"), _("STOP"));
-  m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Init(
+  m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Init(
     cfg, wxT("AudioRecorderRecordRename"), _("REC File"));
   m_RecordingTime.Init(cfg, wxT("AudioRecordTime"), _("Audio recording time"));
 }
@@ -115,8 +115,8 @@ void GOAudioRecorder::UpdateDisplay() {
 }
 
 void GOAudioRecorder::StopRecording() {
-  m_button[ID_AUDIO_RECORDER_RECORD]->Display(false);
-  m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
+  m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(false);
+  m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
   m_organfile->DeleteTimer(this);
   if (!IsRecording())
     return;
@@ -148,9 +148,9 @@ void GOAudioRecorder::StartRecording(bool rename) {
     return;
 
   if (m_DoRename)
-    m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);
+    m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);
   else
-    m_button[ID_AUDIO_RECORDER_RECORD]->Display(true);
+    m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(true);
 
   m_RecordSeconds = 0;
   UpdateDisplay();
