@@ -784,7 +784,7 @@ GOEnclosure *GODefinitionFile::GetEnclosure(
 GOLabelControl *GODefinitionFile::GetLabel(
   const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
-    GOLabelControl *c = m_elementcreators[i]->GetLabel(name, is_panel);
+    GOLabelControl *c = m_elementcreators[i]->GetLabelControl(name, is_panel);
     if (c)
       return c;
   }

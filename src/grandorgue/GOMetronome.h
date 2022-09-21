@@ -62,7 +62,7 @@ public:
   void Load(GOConfigReader &cfg);
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabelControl *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 };
 
 #endif

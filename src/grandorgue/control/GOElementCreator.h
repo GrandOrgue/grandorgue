@@ -41,7 +41,8 @@ public:
   virtual void Load(GOConfigReader &cfg) = 0;
 
   virtual GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) = 0;
-  virtual GOLabelControl *GetLabel(const wxString &name, bool is_panel) = 0;
+  virtual GOLabelControl *GetLabelControl(const wxString &name, bool is_panel)
+    = 0;
   virtual GOButtonControl *GetButtonControl(
     const wxString &name, bool is_panel);
 

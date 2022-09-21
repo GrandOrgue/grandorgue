@@ -830,7 +830,7 @@ GOEnclosure *GOSetter::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabelControl *GOSetter::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOSetter::GetLabelControl(const wxString &name, bool is_panel) {
   if (name == wxT("Label") || name == wxT("SequencerLabel"))
     return &m_PosDisplay;
 

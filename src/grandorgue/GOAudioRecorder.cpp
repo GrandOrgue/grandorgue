@@ -90,7 +90,8 @@ GOEnclosure *GOAudioRecorder::GetEnclosure(
   return NULL;
 }
 
-GOLabelControl *GOAudioRecorder::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOAudioRecorder::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 

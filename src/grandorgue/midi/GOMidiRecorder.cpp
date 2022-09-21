@@ -374,7 +374,8 @@ GOEnclosure *GOMidiRecorder::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabelControl *GOMidiRecorder::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOMidiRecorder::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 

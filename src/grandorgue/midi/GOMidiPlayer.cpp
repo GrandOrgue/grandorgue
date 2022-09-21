@@ -218,7 +218,8 @@ GOEnclosure *GOMidiPlayer::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabelControl *GOMidiPlayer::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOMidiPlayer::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 
