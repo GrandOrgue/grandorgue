@@ -7,9 +7,9 @@
 
 #include "GOCombination.h"
 
-#include "combinations/GOCombinationDefinition.h"
 #include "combinations/GOSetter.h"
 
+#include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
 #include "GODefinitionFile.h"
 #include "GODrawStop.h"

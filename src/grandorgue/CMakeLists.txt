@@ -29,8 +29,9 @@ set(grandorgue_src
 combinations/control/GODivisionalButtonControl.cpp
 combinations/control/GOGeneralButtonControl.cpp
 combinations/model/GOCombination.cpp
+combinations/model/GOCombinationDefinition.cpp
 combinations/model/GOGeneralCombination.cpp
-combinations/GOCombinationDefinition.cpp
+
 combinations/GOSetter.cpp
 config/GOConfig.cpp
 config/GOMidiDeviceConfig.cpp

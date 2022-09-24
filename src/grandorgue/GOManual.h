@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "combinations/GOCombinationDefinition.h"
+#include "combinations/model/GOCombinationDefinition.h"
 
 #include "GOEventHandler.h"
 #include "GOPlaybackStateHandler.h"

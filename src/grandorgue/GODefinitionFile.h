@@ -15,7 +15,7 @@
 
 #include "ptrvector.h"
 
-#include "combinations/GOCombinationDefinition.h"
+#include "combinations/model/GOCombinationDefinition.h"
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseStateTracker.h"
