@@ -24,15 +24,15 @@ class GODefinitionFile;
 
 class GOModel {
 protected:
-  ptr_vector<GOWindchest> m_windchest;
-  ptr_vector<GOManual> m_manual;
-  ptr_vector<GOEnclosure> m_enclosure;
+  ptr_vector<GOWindchest> m_windchests;
+  ptr_vector<GOManual> m_manuals;
+  ptr_vector<GOEnclosure> m_enclosures;
   ptr_vector<GOSwitch> m_switches;
-  ptr_vector<GOTremulant> m_tremulant;
+  ptr_vector<GOTremulant> m_tremulants;
   ptr_vector<GORank> m_ranks;
-  ptr_vector<GOPistonControl> m_piston;
-  ptr_vector<GODivisionalCoupler> m_divisionalcoupler;
-  ptr_vector<GOGeneralButtonControl> m_general;
+  ptr_vector<GOPistonControl> m_pistons;
+  ptr_vector<GODivisionalCoupler> m_DivisionalCoupler;
+  ptr_vector<GOGeneralButtonControl> m_generals;
   unsigned m_FirstManual;
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;

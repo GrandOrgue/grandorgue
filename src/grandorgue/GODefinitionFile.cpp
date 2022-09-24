@@ -224,16 +224,16 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
   GOModel::Load(cfg, this);
   wxString buffer;
 
-  for (unsigned i = 0; i < m_enclosure.size(); i++)
-    m_enclosure[i]->SetElementID(
+  for (unsigned i = 0; i < m_enclosures.size(); i++)
+    m_enclosures[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("E%d"), i)));
 
   for (unsigned i = 0; i < m_switches.size(); i++)
     m_switches[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("S%d"), i)));
 
-  for (unsigned i = 0; i < m_tremulant.size(); i++)
-    m_tremulant[i]->SetElementID(
+  for (unsigned i = 0; i < m_tremulants.size(); i++)
+    m_tremulants[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 
   m_setter = new GOSetter(this);
@@ -280,8 +280,8 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
     m_panels[i]->Layout();
 
   m_GeneralTemplate.InitGeneral();
-  for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-    m_manual[i]->GetDivisionalTemplate().InitDivisional(i);
+  for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
+    m_manuals[i]->GetDivisionalTemplate().InitDivisional(i);
 
   m_PipeConfig.SetName(GetChurchName());
   ReadCombinations(cfg);
@@ -713,8 +713,8 @@ GODefinitionFile::~GODefinitionFile(void) {
   CloseArchives();
   Cleanup();
   // Just to be sure, that the sound providers are freed before the pool
-  m_manual.clear();
-  m_tremulant.clear();
+  m_manuals.clear();
+  m_tremulants.clear();
   m_ranks.clear();
 }
 
@@ -1034,14 +1034,14 @@ void GODefinitionFile::Update() {
   for (unsigned i = 0; i < m_switches.size(); i++)
     m_switches[i]->Update();
 
-  for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-    m_manual[i]->Update();
+  for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
+    m_manuals[i]->Update();
 
-  for (unsigned i = 0; i < m_tremulant.size(); i++)
-    m_tremulant[i]->Update();
+  for (unsigned i = 0; i < m_tremulants.size(); i++)
+    m_tremulants[i]->Update();
 
-  for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
-    m_divisionalcoupler[i]->Update();
+  for (unsigned i = 0; i < m_DivisionalCoupler.size(); i++)
+    m_DivisionalCoupler[i]->Update();
 
   m_setter->Update();
 }
