@@ -20,7 +20,7 @@ class GOGUIButton : public GOGUIControl {
 protected:
   bool m_IsPiston;
   bool m_DispKeyLabelOnLeft;
-  GOButtonControl *m_Button;
+  GOButtonControl *m_ButtonControl;
   wxRect m_MouseRect;
   unsigned m_Radius;
   GOBitmap m_OnBitmap;
