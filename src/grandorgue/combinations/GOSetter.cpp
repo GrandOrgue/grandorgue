@@ -443,7 +443,7 @@ void GOSetter::Save(GOConfigWriter &cfg) {
   // another objects are saveble themself so they are saved separatelly
 }
 
-void GOSetter::ButtonChanged(int id) {
+void GOSetter::ButtonStateChanged(int id) {
   switch (id) {
   case ID_SETTER_PREV:
     Prev();

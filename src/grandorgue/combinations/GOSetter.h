@@ -54,7 +54,7 @@ private:
   static const struct ButtonDefinitionEntry m_element_types[];
   const struct ButtonDefinitionEntry *GetButtonDefinitionList();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id);
 
   void ControlChanged(void *control);
 

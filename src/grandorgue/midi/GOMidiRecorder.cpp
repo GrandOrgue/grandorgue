@@ -78,7 +78,7 @@ void GOMidiRecorder::Load(GOConfigReader &cfg) {
   m_RecordingTime.Init(cfg, wxT("MidiRecordTime"), _("MIDI recording time"));
 }
 
-void GOMidiRecorder::ButtonChanged(int id) {
+void GOMidiRecorder::ButtonStateChanged(int id) {
   switch (id) {
   case ID_MIDI_RECORDER_STOP:
     StopRecording();

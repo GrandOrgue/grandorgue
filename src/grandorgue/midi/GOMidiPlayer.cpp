@@ -64,7 +64,7 @@ void GOMidiPlayer::Load(GOConfigReader &cfg) {
   m_PlayingTime.Init(cfg, wxT("MidiPlayerTime"), _("MIDI playing time"));
 }
 
-void GOMidiPlayer::ButtonChanged(int id) {
+void GOMidiPlayer::ButtonStateChanged(int id) {
   switch (id) {
   case ID_MIDI_PLAYER_STOP:
     StopPlaying();
