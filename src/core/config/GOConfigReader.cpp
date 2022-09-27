@@ -355,9 +355,9 @@ int GOConfigReader::ReadInteger(
 
   wxString error;
   error.Printf(
-    _("Out of range value at section '%s' entry '%s': %d"),
-    group.c_str(),
-    key.c_str(),
+    _("Out of range value at section '%s' entry '%s': %ld"),
+    group,
+    key,
     retval);
   throw error;
 }
