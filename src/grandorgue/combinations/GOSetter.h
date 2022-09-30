@@ -10,16 +10,17 @@
 
 #include "ptrvector.h"
 
-#include "GOCombination.h"
-#include "GOControlChangedHandler.h"
-#include "GOElementCreator.h"
+#include "control/GOControlChangedHandler.h"
+#include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
+#include "model/GOCombination.h"
+
 #include "GOEnclosure.h"
-#include "GOLabel.h"
 #include "GOPlaybackStateHandler.h"
 
 #define N_CRESCENDOS 4
 
-class GOFrameGeneral;
+class GOGeneralCombination;
 
 typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
 
@@ -33,16 +34,16 @@ private:
   unsigned m_bank;
   unsigned m_crescendopos;
   unsigned m_crescendobank;
-  ptr_vector<GOFrameGeneral> m_framegeneral;
-  ptr_vector<GOFrameGeneral> m_general;
-  ptr_vector<GOFrameGeneral> m_crescendo;
+  ptr_vector<GOGeneralCombination> m_framegeneral;
+  ptr_vector<GOGeneralCombination> m_general;
+  ptr_vector<GOGeneralCombination> m_crescendo;
   std::vector<GOCombination::ExtraElementsSet> m_CrescendoExtraSets;
   bool m_CrescendoOverrideMode[N_CRESCENDOS];
-  GOLabel m_PosDisplay;
-  GOLabel m_BankDisplay;
-  GOLabel m_CrescendoDisplay;
-  GOLabel m_TransposeDisplay;
-  GOLabel m_NameDisplay;
+  GOLabelControl m_PosDisplay;
+  GOLabelControl m_BankDisplay;
+  GOLabelControl m_CrescendoDisplay;
+  GOLabelControl m_TransposeDisplay;
+  GOLabelControl m_NameDisplay;
   GOEnclosure m_swell;
   SetterType m_SetterType;
 
@@ -50,10 +51,10 @@ private:
   void SetCrescendoType(unsigned no);
   void Crescendo(int pos, bool force = false);
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct ButtonDefinitionEntry m_element_types[];
+  const struct ButtonDefinitionEntry *GetButtonDefinitionList();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id);
 
   void ControlChanged(void *control);
 
@@ -69,7 +70,7 @@ public:
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 
   void Update();
 

@@ -5,24 +5,25 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOPISTON_H
-#define GOPISTON_H
+#ifndef GOPISTONCONTROL_H
+#define GOPISTONCONTROL_H
 
 #include "GOControlChangedHandler.h"
-#include "GOPushbutton.h"
+#include "GOPushbuttonControl.h"
 
-class GOButton;
+class GOButtonControl;
 class GOConfigReader;
 class GOConfigWriter;
 
-class GOPiston : public GOPushbutton, private GOControlChangedHandler {
+class GOPistonControl : public GOPushbuttonControl,
+                        private GOControlChangedHandler {
 private:
-  GOButton *drawstop;
+  GOButtonControl *drawstop;
 
   void ControlChanged(void *control);
 
 public:
-  GOPiston(GODefinitionFile *organfile);
+  GOPistonControl(GODefinitionFile *organfile);
   void Load(GOConfigReader &cfg, wxString group);
   void Push();
 

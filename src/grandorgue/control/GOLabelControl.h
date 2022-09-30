@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOLABEL_H
-#define GOLABEL_H
+#ifndef GOLABELCONTROL_H
+#define GOLABELCONTROL_H
 
 #include <wx/string.h>
 
@@ -19,9 +19,9 @@ class GOConfigReader;
 class GOConfigWriter;
 class GODefinitionFile;
 
-class GOLabel : private GOSaveableObject,
-                private GOPlaybackStateHandler,
-                public GOMidiConfigurator {
+class GOLabelControl : private GOSaveableObject,
+                       private GOPlaybackStateHandler,
+                       public GOMidiConfigurator {
 protected:
   wxString m_Name;
   wxString m_Content;
@@ -37,8 +37,8 @@ protected:
   void PrepareRecording();
 
 public:
-  GOLabel(GODefinitionFile *organfile);
-  virtual ~GOLabel();
+  GOLabelControl(GODefinitionFile *organfile);
+  virtual ~GOLabelControl();
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group, wxString name);
   const wxString &GetName();

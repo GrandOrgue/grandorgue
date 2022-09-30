@@ -9,13 +9,14 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
-#include "GOEvent.h"
-#include "GOSetterButton.h"
 #include "config/GOConfig.h"
+#include "control/GOCallbackButtonControl.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiFileReader.h"
 #include "midi/GOMidiMap.h"
+
+#include "GODefinitionFile.h"
+#include "GOEvent.h"
 
 enum {
   ID_MIDI_PLAYER_PLAY = 0,
@@ -23,14 +24,17 @@ enum {
   ID_MIDI_PLAYER_PAUSE,
 };
 
-const struct ElementListEntry GOMidiPlayer::m_element_types[] = {
-  {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true},
-  {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true},
-  {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOMidiPlayer::m_element_types[]
+  = {
+    {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true},
+    {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true},
+    {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true},
+    {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry *GOMidiPlayer::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOMidiPlayer::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 
@@ -53,13 +57,14 @@ GOMidiPlayer::GOMidiPlayer(GODefinitionFile *organfile)
 GOMidiPlayer::~GOMidiPlayer() { StopPlaying(); }
 
 void GOMidiPlayer::Load(GOConfigReader &cfg) {
-  m_button[ID_MIDI_PLAYER_PLAY]->Init(cfg, wxT("MidiPlayerPlay"), _("PLAY"));
-  m_button[ID_MIDI_PLAYER_STOP]->Init(cfg, wxT("MidiPlayerStop"), _("STOP"));
-  m_button[ID_MIDI_PLAYER_PAUSE]->Init(cfg, wxT("MidiPlayerPause"), _("PAUSE"));
+  m_buttons[ID_MIDI_PLAYER_PLAY]->Init(cfg, wxT("MidiPlayerPlay"), _("PLAY"));
+  m_buttons[ID_MIDI_PLAYER_STOP]->Init(cfg, wxT("MidiPlayerStop"), _("STOP"));
+  m_buttons[ID_MIDI_PLAYER_PAUSE]->Init(
+    cfg, wxT("MidiPlayerPause"), _("PAUSE"));
   m_PlayingTime.Init(cfg, wxT("MidiPlayerTime"), _("MIDI playing time"));
 }
 
-void GOMidiPlayer::ButtonChanged(int id) {
+void GOMidiPlayer::ButtonStateChanged(int id) {
   switch (id) {
   case ID_MIDI_PLAYER_STOP:
     StopPlaying();
@@ -122,7 +127,7 @@ void GOMidiPlayer::Play() {
   m_IsPlaying = IsLoaded();
   m_Pause = false;
   if (m_IsPlaying) {
-    m_button[ID_MIDI_PLAYER_PLAY]->Display(true);
+    m_buttons[ID_MIDI_PLAYER_PLAY]->Display(true);
     UpdateDisplay();
     HandleTimer();
   } else
@@ -134,12 +139,12 @@ void GOMidiPlayer::Pause() {
     return;
   if (m_Pause) {
     m_Pause = false;
-    m_button[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
+    m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
     m_Start = wxGetLocalTimeMillis() - m_Start;
     HandleTimer();
   } else {
     m_Pause = true;
-    m_button[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
+    m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
     m_Start = wxGetLocalTimeMillis() - m_Start;
     m_organfile->DeleteTimer(this);
   }
@@ -160,8 +165,8 @@ void GOMidiPlayer::StopPlaying() {
   }
 
   m_IsPlaying = false;
-  m_button[ID_MIDI_PLAYER_PLAY]->Display(false);
-  m_button[ID_MIDI_PLAYER_PAUSE]->Display(false);
+  m_buttons[ID_MIDI_PLAYER_PLAY]->Display(false);
+  m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(false);
   UpdateDisplay();
   m_organfile->DeleteTimer(this);
 }
@@ -213,7 +218,8 @@ GOEnclosure *GOMidiPlayer::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabel *GOMidiPlayer::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOMidiPlayer::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 

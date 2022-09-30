@@ -14,13 +14,13 @@
 #include "GOFont.h"
 #include "GOGUIControl.h"
 
-class GOButton;
+class GOButtonControl;
 
 class GOGUIButton : public GOGUIControl {
 protected:
   bool m_IsPiston;
   bool m_DispKeyLabelOnLeft;
-  GOButton *m_Button;
+  GOButtonControl *m_ButtonControl;
   wxRect m_MouseRect;
   unsigned m_Radius;
   GOBitmap m_OnBitmap;
@@ -38,7 +38,8 @@ protected:
   unsigned m_TileOffsetY;
 
 public:
-  GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston = false);
+  GOGUIButton(
+    GOGUIPanel *panel, GOButtonControl *control, bool is_piston = false);
 
   void Init(
     GOConfigReader &cfg,

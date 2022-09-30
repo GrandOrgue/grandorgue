@@ -50,12 +50,10 @@ temperaments/GOTemperamentCent.cpp
 temperaments/GOTemperamentList.cpp
 temperaments/GOTemperamentUser.cpp
 GOCompress.cpp
-GOEventDistributor.cpp
 GOHash.cpp
 GOInvalidFile.cpp
 GOKeyConvert.cpp
 GOKeyReceiverData.cpp
-GOLoadThread.cpp
 GOMemoryPool.cpp
 GOOrgan.cpp
 GOOrganList.cpp

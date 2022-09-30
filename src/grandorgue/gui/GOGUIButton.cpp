@@ -10,8 +10,8 @@
 #include <wx/intl.h>
 
 #include "config/GOConfigReader.h"
+#include "control/GOButtonControl.h"
 
-#include "GOButton.h"
 #include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
@@ -19,11 +19,12 @@
 #include "GOGUIPanel.h"
 #include "go_gui_utils.h"
 
-GOGUIButton::GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston)
+GOGUIButton::GOGUIButton(
+  GOGUIPanel *panel, GOButtonControl *control, bool is_piston)
   : GOGUIControl(panel, control),
     m_IsPiston(is_piston),
     m_DispKeyLabelOnLeft(true),
-    m_Button(control),
+    m_ButtonControl(control),
     m_MouseRect(),
     m_Radius(0),
     m_FontSize(0),
@@ -51,20 +52,20 @@ void GOGUIButton::Init(
   m_TextColor = wxColour(0x80, 0x00, 0x00);
   m_FontSize = 9;
   m_FontName = wxT("");
-  m_Text = m_Button->GetName();
+  m_Text = m_ButtonControl->GetName();
 
   int x, y, w, h;
 
   wxString off_mask_file, on_mask_file;
   wxString on_file, off_file;
   if (m_IsPiston) {
-    int DispImageNum = image ? image : m_Button->IsReadOnly() ? 3 : 1;
+    int DispImageNum = image ? image : m_ButtonControl->IsReadOnly() ? 3 : 1;
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "piston%02d_off"), DispImageNum);
     on_file
       = wxString::Format(wxT(GOBitmapPrefix "piston%02d_on"), DispImageNum);
   } else {
-    int DispImageNum = image ? image : m_Button->IsReadOnly() ? 4 : 1;
+    int DispImageNum = image ? image : m_ButtonControl->IsReadOnly() ? 4 : 1;
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_off"), DispImageNum);
     on_file
@@ -123,7 +124,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
   m_FontName = cfg.ReadStringTrim(
     ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
   m_Text = cfg.ReadString(
-    ODFSetting, group, wxT("DispLabelText"), false, m_Button->GetName());
+    ODFSetting, group, wxT("DispLabelText"), false, m_ButtonControl->GetName());
 
   int x, y, w, h;
 
@@ -140,7 +141,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       1,
       5,
       false,
-      m_Button->IsReadOnly() ? 3 : 1);
+      m_ButtonControl->IsReadOnly() ? 3 : 1);
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "piston%02d_off"), DispImageNum);
     on_file
@@ -170,7 +171,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       1,
       6,
       false,
-      m_Button->IsReadOnly() ? 4 : 1);
+      m_ButtonControl->IsReadOnly() ? 4 : 1);
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_off"), DispImageNum);
     on_file
@@ -385,16 +386,16 @@ bool GOGUIButton::HandleMousePress(
       return false;
   }
   if (right) {
-    m_Button->ShowConfigDialog();
+    m_ButtonControl->ShowConfigDialog();
     return true;
   } else {
     if (state.GetControl() == this)
       return true;
     state.SetControl(this);
-    if (m_Button->IsReadOnly())
+    if (m_ButtonControl->IsReadOnly())
       return true;
 
-    m_Button->Push();
+    m_ButtonControl->Push();
     return true;
   }
 }
@@ -407,7 +408,8 @@ void GOGUIButton::PrepareDraw(double scale, GOBitmap *background) {
 }
 
 void GOGUIButton::Draw(GODC &dc) {
-  GOBitmap &bmp = m_Button->DisplayInverted() ^ m_Button->IsEngaged()
+  GOBitmap &bmp
+    = m_ButtonControl->DisplayInverted() ^ m_ButtonControl->IsEngaged()
     ? m_OnBitmap
     : m_OffBitmap;
   dc.DrawBitmap(bmp, m_BoundingRect);

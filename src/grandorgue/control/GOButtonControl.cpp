@@ -5,16 +5,16 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOButton.h"
-
 #include <wx/intl.h>
+
+#include "config/GOConfig.h"
+#include "config/GOConfigReader.h"
+#include "control/GOButtonControl.h"
 
 #include "GODefinitionFile.h"
 #include "GODocument.h"
-#include "config/GOConfig.h"
-#include "config/GOConfigReader.h"
 
-GOButton::GOButton(
+GOButtonControl::GOButtonControl(
   GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton)
   : m_organfile(organfile),
     m_midi(organfile, midi_type),
@@ -31,9 +31,9 @@ GOButton::GOButton(
   m_organfile->RegisterPlaybackStateHandler(this);
 }
 
-GOButton::~GOButton() {}
+GOButtonControl::~GOButtonControl() {}
 
-void GOButton::Init(GOConfigReader &cfg, wxString group, wxString name) {
+void GOButtonControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
@@ -46,7 +46,7 @@ void GOButton::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOButton::Load(GOConfigReader &cfg, wxString group) {
+void GOButtonControl::Load(GOConfigReader &cfg, wxString group) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true);
@@ -61,7 +61,7 @@ void GOButton::Load(GOConfigReader &cfg, wxString group) {
   m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOButton::Save(GOConfigWriter &cfg) {
+void GOButtonControl::Save(GOConfigWriter &cfg) {
   if (!m_ReadOnly) {
     m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
     m_shortcut.Save(cfg, m_group);
@@ -69,13 +69,13 @@ void GOButton::Save(GOConfigWriter &cfg) {
   m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-bool GOButton::IsDisplayed() { return m_Displayed; }
+bool GOButtonControl::IsDisplayed() { return m_Displayed; }
 
-bool GOButton::IsReadOnly() { return m_ReadOnly; }
+bool GOButtonControl::IsReadOnly() { return m_ReadOnly; }
 
-const wxString &GOButton::GetName() { return m_Name; }
+const wxString &GOButtonControl::GetName() { return m_Name; }
 
-void GOButton::HandleKey(int key) {
+void GOButtonControl::HandleKey(int key) {
   if (m_ReadOnly)
     return;
   switch (m_shortcut.Match(key)) {
@@ -88,29 +88,29 @@ void GOButton::HandleKey(int key) {
   }
 }
 
-void GOButton::Push() {
+void GOButtonControl::Push() {
   if (m_ReadOnly)
     return;
   Set(m_Engaged ^ true);
 }
 
-void GOButton::Set(bool on) {}
+void GOButtonControl::Set(bool on) {}
 
-void GOButton::AbortPlayback() {
+void GOButtonControl::AbortPlayback() {
   m_sender.SetDisplay(false);
   m_sender.SetName(wxEmptyString);
 }
 
-void GOButton::PreparePlayback() {
+void GOButtonControl::PreparePlayback() {
   m_midi.PreparePlayback();
   m_sender.SetName(m_Name);
 }
 
-void GOButton::StartPlayback() {}
+void GOButtonControl::StartPlayback() {}
 
-void GOButton::PrepareRecording() { m_sender.SetDisplay(m_Engaged); }
+void GOButtonControl::PrepareRecording() { m_sender.SetDisplay(m_Engaged); }
 
-void GOButton::ProcessMidi(const GOMidiEvent &event) {
+void GOButtonControl::ProcessMidi(const GOMidiEvent &event) {
   if (m_ReadOnly)
     return;
   switch (m_midi.Match(event)) {
@@ -135,7 +135,7 @@ void GOButton::ProcessMidi(const GOMidiEvent &event) {
   }
 }
 
-void GOButton::Display(bool onoff) {
+void GOButtonControl::Display(bool onoff) {
   if (m_Engaged == onoff)
     return;
   m_sender.SetDisplay(onoff);
@@ -143,24 +143,30 @@ void GOButton::Display(bool onoff) {
   m_organfile->ControlChanged(this);
 }
 
-bool GOButton::IsEngaged() const { return m_Engaged; }
+bool GOButtonControl::IsEngaged() const { return m_Engaged; }
 
-bool GOButton::DisplayInverted() const { return m_DisplayInInvertedState; }
+bool GOButtonControl::DisplayInverted() const {
+  return m_DisplayInInvertedState;
+}
 
-void GOButton::SetElementID(int id) {
+void GOButtonControl::SetElementID(int id) {
   if (!m_ReadOnly) {
     m_midi.SetElementID(id);
     m_sender.SetElementID(id);
   }
 }
 
-void GOButton::SetShortcutKey(unsigned key) { m_shortcut.SetShortcut(key); }
+void GOButtonControl::SetShortcutKey(unsigned key) {
+  m_shortcut.SetShortcut(key);
+}
 
-void GOButton::SetPreconfigIndex(unsigned index) { m_midi.SetIndex(index); }
+void GOButtonControl::SetPreconfigIndex(unsigned index) {
+  m_midi.SetIndex(index);
+}
 
-wxString GOButton::GetMidiName() { return GetName(); }
+wxString GOButtonControl::GetMidiName() { return GetName(); }
 
-void GOButton::ShowConfigDialog() {
+void GOButtonControl::ShowConfigDialog() {
   wxString title = wxString::Format(
     _("Midi-Settings for %s - %s"),
     GetMidiType().c_str(),
@@ -177,15 +183,17 @@ void GOButton::ShowConfigDialog() {
     this, title, midi, &m_sender, key);
 }
 
-wxString GOButton::GetElementStatus() { return m_Engaged ? _("ON") : _("OFF"); }
+wxString GOButtonControl::GetElementStatus() {
+  return m_Engaged ? _("ON") : _("OFF");
+}
 
-std::vector<wxString> GOButton::GetElementActions() {
+std::vector<wxString> GOButtonControl::GetElementActions() {
   std::vector<wxString> actions;
   actions.push_back(_("trigger"));
   return actions;
 }
 
-void GOButton::TriggerElementActions(unsigned no) {
+void GOButtonControl::TriggerElementActions(unsigned no) {
   if (no == 0)
     Push();
 }

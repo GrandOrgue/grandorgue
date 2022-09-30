@@ -5,16 +5,16 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSETTERBUTTONCALLBACK_H
-#define GOSETTERBUTTONCALLBACK_H
+#ifndef GOBUTTONCALLBACK_H
+#define GOBUTTONCALLBACK_H
 
-class GOSetterButton;
+class GOButtonControl;
 
-class GOSetterButtonCallback {
+class GOButtonCallback {
 public:
-  virtual ~GOSetterButtonCallback() {}
+  virtual ~GOButtonCallback() {}
 
-  virtual void SetterButtonChanged(GOSetterButton *button) = 0;
+  virtual void ButtonStateChanged(GOButtonControl *button) = 0;
 };
 
 #endif

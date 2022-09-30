@@ -116,7 +116,7 @@ void GOTremulant::ChangeState(bool on) {
 void GOTremulant::AbortPlayback() {
   m_PlaybackHandle = NULL;
   m_LastStop = 0;
-  GOButton::AbortPlayback();
+  GOButtonControl::AbortPlayback();
 }
 
 void GOTremulant::StartPlayback() {

@@ -9,8 +9,9 @@
 
 #include <wx/intl.h>
 
+#include "combinations/control/GODivisionalButtonControl.h"
+
 #include "GODefinitionFile.h"
-#include "GODivisional.h"
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
@@ -40,24 +41,28 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
   back->Init(cfg, wxT("SetterDivisionals"));
   panel->AddControl(back);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Set")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Set")), false);
   button->Init(cfg, wxT("SetterGeneralsSet"), 1, 100);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("Regular")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Regular")), false);
   button->Init(cfg, wxT("SetterGerneralsRegular"), 3, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scope")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scope")), false);
   button->Init(cfg, wxT("SetterGeneralsScope"), 4, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scoped")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scoped")), false);
   button->Init(cfg, wxT("SetterGeneralsScoped"), 5, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Full")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Full")), false);
   button->Init(cfg, wxT("SetterGeneralsFull"), 7, 100);
   panel->AddControl(button);
 
@@ -80,8 +85,8 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
     panel->AddControl(PosDisplay);
 
     for (unsigned j = 0; j < 10; j++) {
-      GODivisional *divisional
-        = new GODivisional(m_organfile, manual->GetDivisionalTemplate(), true);
+      GODivisionalButtonControl *divisional = new GODivisionalButtonControl(
+        m_organfile, manual->GetDivisionalTemplate(), true);
       divisional->Init(
         cfg,
         wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),

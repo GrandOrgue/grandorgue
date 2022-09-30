@@ -10,12 +10,13 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 
+#include "config/GOConfig.h"
+#include "control/GOCallbackButtonControl.h"
+#include "sound/GOSoundRecorder.h"
+
 #include "GODefinitionFile.h"
 #include "GOEvent.h"
 #include "GOPath.h"
-#include "GOSetterButton.h"
-#include "config/GOConfig.h"
-#include "sound/GOSoundRecorder.h"
 
 enum {
   ID_AUDIO_RECORDER_RECORD = 0,
@@ -23,17 +24,20 @@ enum {
   ID_AUDIO_RECORDER_RECORD_RENAME,
 };
 
-const struct ElementListEntry GOAudioRecorder::m_element_types[] = {
-  {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true},
-  {wxT("AudioRecorderStop"), ID_AUDIO_RECORDER_STOP, false, true},
-  {wxT("AudioRecorderRecordRename"),
-   ID_AUDIO_RECORDER_RECORD_RENAME,
-   false,
-   true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOAudioRecorder::m_element_types[]
+  = {
+    {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true},
+    {wxT("AudioRecorderStop"), ID_AUDIO_RECORDER_STOP, false, true},
+    {wxT("AudioRecorderRecordRename"),
+     ID_AUDIO_RECORDER_RECORD_RENAME,
+     false,
+     true},
+    {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry *GOAudioRecorder::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOAudioRecorder::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 
@@ -56,16 +60,16 @@ void GOAudioRecorder::SetAudioRecorder(GOSoundRecorder *recorder) {
 }
 
 void GOAudioRecorder::Load(GOConfigReader &cfg) {
-  m_button[ID_AUDIO_RECORDER_RECORD]->Init(
+  m_buttons[ID_AUDIO_RECORDER_RECORD]->Init(
     cfg, wxT("AudioRecorderRecord"), _("REC"));
-  m_button[ID_AUDIO_RECORDER_STOP]->Init(
+  m_buttons[ID_AUDIO_RECORDER_STOP]->Init(
     cfg, wxT("AudioRecorderStop"), _("STOP"));
-  m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Init(
+  m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Init(
     cfg, wxT("AudioRecorderRecordRename"), _("REC File"));
   m_RecordingTime.Init(cfg, wxT("AudioRecordTime"), _("Audio recording time"));
 }
 
-void GOAudioRecorder::ButtonChanged(int id) {
+void GOAudioRecorder::ButtonStateChanged(int id) {
   switch (id) {
   case ID_AUDIO_RECORDER_STOP:
     StopRecording();
@@ -86,7 +90,8 @@ GOEnclosure *GOAudioRecorder::GetEnclosure(
   return NULL;
 }
 
-GOLabel *GOAudioRecorder::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOAudioRecorder::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 
@@ -111,8 +116,8 @@ void GOAudioRecorder::UpdateDisplay() {
 }
 
 void GOAudioRecorder::StopRecording() {
-  m_button[ID_AUDIO_RECORDER_RECORD]->Display(false);
-  m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
+  m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(false);
+  m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
   m_organfile->DeleteTimer(this);
   if (!IsRecording())
     return;
@@ -144,9 +149,9 @@ void GOAudioRecorder::StartRecording(bool rename) {
     return;
 
   if (m_DoRename)
-    m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);
+    m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);
   else
-    m_button[ID_AUDIO_RECORDER_RECORD]->Display(true);
+    m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(true);
 
   m_RecordSeconds = 0;
   UpdateDisplay();

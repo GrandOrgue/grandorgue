@@ -9,10 +9,16 @@
 
 #include <wx/image.h>
 
+#include "combinations/GOSetter.h"
+#include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/control/GOGeneralButtonControl.h"
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
+#include "control/GOPistonControl.h"
+
 #include "GOCoupler.h"
 #include "GODC.h"
 #include "GODefinitionFile.h"
-#include "GODivisional.h"
 #include "GODivisionalCoupler.h"
 #include "GOGUIButton.h"
 #include "GOGUIControl.h"
@@ -26,17 +32,12 @@
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanelWidget.h"
-#include "GOGeneral.h"
 #include "GOManual.h"
 #include "GOPanelView.h"
-#include "GOPiston.h"
-#include "GOSetter.h"
 #include "GOStop.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 #include "Images.h"
-#include "config/GOConfigReader.h"
-#include "config/GOConfigWriter.h"
 
 constexpr static int windowLimit = 10000;
 
@@ -694,11 +695,11 @@ GOGUIControl *GOGUIPanel::CreateGUIElement(
   GOConfigReader &cfg, wxString group) {
   wxString type = cfg.ReadString(ODFSetting, group, wxT("Type"), true);
 
-  GOButton *button = m_organfile->GetButton(type, true);
+  GOButtonControl *button = m_organfile->GetButtonControl(type, true);
   if (button)
     return new GOGUIButton(this, button, false);
 
-  GOLabel *label = m_organfile->GetLabel(type, true);
+  GOLabelControl *label = m_organfile->GetLabel(type, true);
   if (label)
     return new GOGUILabel(this, label);
 

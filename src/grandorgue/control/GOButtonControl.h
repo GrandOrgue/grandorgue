@@ -5,28 +5,29 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOBUTTON_H
-#define GOBUTTON_H
+#ifndef GOBUTTONCONTROL_H
+#define GOBUTTONCONTROL_H
 
 #include <wx/string.h>
+
+#include "midi/GOMidiConfigurator.h"
+#include "midi/GOMidiReceiver.h"
+#include "midi/GOMidiSender.h"
 
 #include "GOEventHandler.h"
 #include "GOKeyReceiver.h"
 #include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
-#include "midi/GOMidiConfigurator.h"
-#include "midi/GOMidiReceiver.h"
-#include "midi/GOMidiSender.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiEvent;
 class GODefinitionFile;
 
-class GOButton : private GOEventHandler,
-                 protected GOSaveableObject,
-                 protected GOPlaybackStateHandler,
-                 public GOMidiConfigurator {
+class GOButtonControl : private GOEventHandler,
+                        protected GOSaveableObject,
+                        protected GOPlaybackStateHandler,
+                        public GOMidiConfigurator {
 protected:
   GODefinitionFile *m_organfile;
   GOMidiReceiver m_midi;
@@ -50,9 +51,9 @@ protected:
   void PrepareRecording();
 
 public:
-  GOButton(
+  GOButtonControl(
     GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton);
-  virtual ~GOButton();
+  virtual ~GOButtonControl();
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   bool IsDisplayed();

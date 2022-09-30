@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOLabel.h"
+#include "GOLabelControl.h"
 
 #include <wx/intl.h>
 
@@ -13,7 +13,7 @@
 #include "GODocument.h"
 #include "config/GOConfig.h"
 
-GOLabel::GOLabel(GODefinitionFile *organfile)
+GOLabelControl::GOLabelControl(GODefinitionFile *organfile)
   : m_Name(),
     m_Content(),
     m_organfile(organfile),
@@ -22,52 +22,52 @@ GOLabel::GOLabel(GODefinitionFile *organfile)
   m_organfile->RegisterPlaybackStateHandler(this);
 }
 
-GOLabel::~GOLabel() {}
+GOLabelControl::~GOLabelControl() {}
 
-void GOLabel::Init(GOConfigReader &cfg, wxString group, wxString name) {
+void GOLabelControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
   m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOLabel::Load(GOConfigReader &cfg, wxString group, wxString name) {
+void GOLabelControl::Load(GOConfigReader &cfg, wxString group, wxString name) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
   m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOLabel::Save(GOConfigWriter &cfg) {
+void GOLabelControl::Save(GOConfigWriter &cfg) {
   m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
 }
 
-const wxString &GOLabel::GetName() { return m_Name; }
+const wxString &GOLabelControl::GetName() { return m_Name; }
 
-const wxString &GOLabel::GetContent() { return m_Content; }
+const wxString &GOLabelControl::GetContent() { return m_Content; }
 
-void GOLabel::SetContent(wxString name) {
+void GOLabelControl::SetContent(wxString name) {
   m_Content = name;
   m_sender.SetLabel(m_Content);
   m_organfile->ControlChanged(this);
 }
 
-void GOLabel::AbortPlayback() {
+void GOLabelControl::AbortPlayback() {
   m_sender.SetLabel(wxEmptyString);
   m_sender.SetName(wxEmptyString);
 }
 
-void GOLabel::PreparePlayback() { m_sender.SetName(m_Name); }
+void GOLabelControl::PreparePlayback() { m_sender.SetName(m_Name); }
 
-void GOLabel::StartPlayback() {}
+void GOLabelControl::StartPlayback() {}
 
-void GOLabel::PrepareRecording() { m_sender.SetLabel(m_Content); }
+void GOLabelControl::PrepareRecording() { m_sender.SetLabel(m_Content); }
 
-wxString GOLabel::GetMidiType() { return _("Label"); }
+wxString GOLabelControl::GetMidiType() { return _("Label"); }
 
-wxString GOLabel::GetMidiName() { return GetName(); }
+wxString GOLabelControl::GetMidiName() { return GetName(); }
 
-void GOLabel::ShowConfigDialog() {
+void GOLabelControl::ShowConfigDialog() {
   wxString title = wxString::Format(
     _("Midi-Settings for %s - %s"),
     GetMidiType().c_str(),
@@ -77,13 +77,13 @@ void GOLabel::ShowConfigDialog() {
     this, title, NULL, &m_sender, NULL);
 }
 
-wxString GOLabel::GetElementStatus() { return m_Content; }
+wxString GOLabelControl::GetElementStatus() { return m_Content; }
 
-std::vector<wxString> GOLabel::GetElementActions() {
+std::vector<wxString> GOLabelControl::GetElementActions() {
   std::vector<wxString> actions;
   return actions;
 }
 
-void GOLabel::TriggerElementActions(unsigned no) {
+void GOLabelControl::TriggerElementActions(unsigned no) {
   // Never called
 }

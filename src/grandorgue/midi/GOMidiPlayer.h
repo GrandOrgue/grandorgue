@@ -13,11 +13,12 @@
 
 #include <vector>
 
-#include "GOElementCreator.h"
-#include "GOLabel.h"
+#include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
+#include "midi/GOMidiPlayerContent.h"
+
 #include "GOTime.h"
 #include "GOTimerCallback.h"
-#include "midi/GOMidiPlayerContent.h"
 
 class GOMidiEvent;
 class GOMidiFileReader;
@@ -27,7 +28,7 @@ class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
 private:
   GODefinitionFile *m_organfile;
   GOMidiPlayerContent m_content;
-  GOLabel m_PlayingTime;
+  GOLabelControl m_PlayingTime;
   GOTime m_Start;
   unsigned m_PlayingSeconds;
   float m_Speed;
@@ -35,10 +36,11 @@ private:
   bool m_Pause;
   unsigned m_DeviceID;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct GOElementCreator::ButtonDefinitionEntry m_element_types[];
+  const struct GOElementCreator::ButtonDefinitionEntry *
+  GetButtonDefinitionList();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id);
 
   void UpdateDisplay();
   void HandleTimer();
@@ -58,7 +60,7 @@ public:
 
   void Load(GOConfigReader &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 };
 
 #endif

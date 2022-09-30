@@ -10,8 +10,9 @@
 
 #include <wx/string.h>
 
-#include "GOElementCreator.h"
-#include "GOLabel.h"
+#include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
+
 #include "GOTimerCallback.h"
 
 class GODefinitionFile;
@@ -21,15 +22,15 @@ class GOAudioRecorder : public GOElementCreator, private GOTimerCallback {
 private:
   GODefinitionFile *m_organfile;
   GOSoundRecorder *m_recorder;
-  GOLabel m_RecordingTime;
+  GOLabelControl m_RecordingTime;
   unsigned m_RecordSeconds;
   wxString m_Filename;
   bool m_DoRename;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct ButtonDefinitionEntry m_element_types[];
+  const struct ButtonDefinitionEntry *GetButtonDefinitionList();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id);
 
   void UpdateDisplay();
   void HandleTimer();
@@ -46,7 +47,7 @@ public:
 
   void Load(GOConfigReader &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 };
 
 #endif

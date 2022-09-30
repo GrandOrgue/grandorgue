@@ -8,8 +8,9 @@
 #ifndef GOMETRONOME_H
 #define GOMETRONOME_H
 
-#include "GOElementCreator.h"
-#include "GOLabel.h"
+#include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
+
 #include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
 #include "GOTimerCallback.h"
@@ -28,17 +29,18 @@ private:
   unsigned m_MeasureLength;
   unsigned m_Pos;
   bool m_Running;
-  GOLabel m_BPMDisplay;
-  GOLabel m_MeasureDisplay;
+  GOLabelControl m_BPMDisplay;
+  GOLabelControl m_MeasureDisplay;
   GORank *m_rank;
   unsigned m_StopID;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct GOElementCreator::ButtonDefinitionEntry m_element_types[];
+  const struct GOElementCreator::ButtonDefinitionEntry *
+  GetButtonDefinitionList();
 
   void HandleTimer();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id);
 
   void AbortPlayback();
   void PreparePlayback();
@@ -60,7 +62,7 @@ public:
   void Load(GOConfigReader &cfg);
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 };
 
 #endif

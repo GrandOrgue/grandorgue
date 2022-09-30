@@ -42,17 +42,19 @@ GOGUIPanel *GOGUIRecorderPanel::CreateRecorderPanel(GOConfigReader &cfg) {
   panel->AddControl(label);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("AudioRecorderRecord")), false);
+    panel, m_organfile->GetButtonControl(wxT("AudioRecorderRecord")), false);
   button->Init(cfg, wxT("MidiRecorderRecord"), 2, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("AudioRecorderStop")), false);
+    panel, m_organfile->GetButtonControl(wxT("AudioRecorderStop")), false);
   button->Init(cfg, wxT("MidiRecorderStop"), 3, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("AudioRecorderRecordRename")), false);
+    panel,
+    m_organfile->GetButtonControl(wxT("AudioRecorderRecordRename")),
+    false);
   button->Init(cfg, wxT("MidiRecorderRecordRename"), 4, 100);
   panel->AddControl(button);
 
@@ -66,17 +68,19 @@ GOGUIPanel *GOGUIRecorderPanel::CreateRecorderPanel(GOConfigReader &cfg) {
   panel->AddControl(label);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MidiRecorderRecord")), false);
+    panel, m_organfile->GetButtonControl(wxT("MidiRecorderRecord")), false);
   button->Init(cfg, wxT("MidiRecorderRecord"), 2, 101);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MidiRecorderStop")), false);
+    panel, m_organfile->GetButtonControl(wxT("MidiRecorderStop")), false);
   button->Init(cfg, wxT("MidiRecorderStop"), 3, 101);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MidiRecorderRecordRename")), false);
+    panel,
+    m_organfile->GetButtonControl(wxT("MidiRecorderRecordRename")),
+    false);
   button->Init(cfg, wxT("MidiRecorderRecordRename"), 4, 101);
   panel->AddControl(button);
 
@@ -90,17 +94,17 @@ GOGUIPanel *GOGUIRecorderPanel::CreateRecorderPanel(GOConfigReader &cfg) {
   panel->AddControl(label);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MidiPlayerPlay")), false);
+    panel, m_organfile->GetButtonControl(wxT("MidiPlayerPlay")), false);
   button->Init(cfg, wxT("MidiPlayerPlay"), 2, 102);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MidiPlayerStop")), false);
+    panel, m_organfile->GetButtonControl(wxT("MidiPlayerStop")), false);
   button->Init(cfg, wxT("MidiPlayerStop"), 3, 102);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("MidiPlayerPause")), false);
+    panel, m_organfile->GetButtonControl(wxT("MidiPlayerPause")), false);
   button->Init(cfg, wxT("MidiPlayerPause"), 4, 102);
   panel->AddControl(button);
 

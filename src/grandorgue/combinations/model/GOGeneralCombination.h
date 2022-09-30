@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOFRAMEGENERAL_H
-#define GOFRAMEGENERAL_H
+#ifndef GOGENERALCOMBINATION_H
+#define GOGENERALCOMBINATION_H
 
 #include <wx/string.h>
 
@@ -17,7 +17,7 @@ class GOConfigReader;
 class GOConfigWriter;
 class GODefinitionFile;
 
-class GOFrameGeneral : public GOCombination, private GOSaveableObject {
+class GOGeneralCombination : public GOCombination, private GOSaveableObject {
 private:
   GODefinitionFile *m_organfile;
   bool m_IsSetter;
@@ -26,7 +26,7 @@ private:
   void LoadCombination(GOConfigReader &cfg);
 
 public:
-  GOFrameGeneral(
+  GOGeneralCombination(
     GOCombinationDefinition &general_template,
     GODefinitionFile *organfile,
     bool is_setter);
@@ -40,4 +40,4 @@ public:
   void Push(ExtraElementsSet const *extraSet = nullptr);
 };
 
-#endif /* GOFRAMEGENERAL_H */
+#endif /* GOGENERALCOMBINATION_H */

@@ -11,7 +11,8 @@
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
-#include "GOControlChangedHandler.h"
+#include "control/GOControlChangedHandler.h"
+
 #include "GOSaveableObject.h"
 
 class GOGUIDisplayMetrics;

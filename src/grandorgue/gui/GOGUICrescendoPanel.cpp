@@ -48,64 +48,68 @@ GOGUIPanel *GOGUICrescendoPanel::CreateCrescendoPanel(GOConfigReader &cfg) {
   PosDisplay->Init(cfg, wxT("SetterCrescendoPosition"), 350, 10);
   panel->AddControl(PosDisplay);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Set")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Set")), false);
   button->Init(cfg, wxT("SetterCrescendoSet"), 1, 100);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("Regular")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Regular")), false);
   button->Init(cfg, wxT("SetterCrescendoRegular"), 3, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scope")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scope")), false);
   button->Init(cfg, wxT("SetterCrescendoScope"), 4, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scoped")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scoped")), false);
   button->Init(cfg, wxT("SetterCrescendoScoped"), 5, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Full")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Full")), false);
   button->Init(cfg, wxT("SetterCrescendoFull"), 7, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("CrescendoOverride")), false);
+    panel, m_organfile->GetButtonControl(wxT("CrescendoOverride")), false);
   button->Init(cfg, wxT("CrescendoOverride"), 8, 100);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("CrescendoA")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("CrescendoA")), false);
   button->Init(cfg, wxT("SetterCrescendoA"), 1, 101);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("CrescendoB")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("CrescendoB")), false);
   button->Init(cfg, wxT("SetterCrescendoB"), 2, 101);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("CrescendoC")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("CrescendoC")), false);
   button->Init(cfg, wxT("SetterCrescendoC"), 3, 101);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("CrescendoD")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("CrescendoD")), false);
   button->Init(cfg, wxT("SetterCrescendoD"), 4, 101);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("CrescendoPrev")), false);
+    panel, m_organfile->GetButtonControl(wxT("CrescendoPrev")), false);
   button->Init(cfg, wxT("SetterCrescendoPrev"), 6, 101);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("CrescendoCurrent")), false);
+    panel, m_organfile->GetButtonControl(wxT("CrescendoCurrent")), false);
   button->Init(cfg, wxT("SetterCrescendoCurrent"), 7, 101);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButton(wxT("CrescendoNext")), false);
+    panel, m_organfile->GetButtonControl(wxT("CrescendoNext")), false);
   button->Init(cfg, wxT("SetterCrescendoNext"), 8, 101);
   panel->AddControl(button);
 

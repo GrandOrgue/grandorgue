@@ -11,10 +11,10 @@
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 
+#include "control/GOEventDistributor.h"
 #include "midi/GOMidiConfigurator.h"
 
 #include "GOEvent.h"
-#include "GOEventDistributor.h"
 
 BEGIN_EVENT_TABLE(GOMidiListDialog, wxDialog)
 EVT_LIST_ITEM_SELECTED(ID_LIST, GOMidiListDialog::OnObjectClick)

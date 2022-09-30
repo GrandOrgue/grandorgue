@@ -10,10 +10,10 @@
 
 #include <wx/string.h>
 
-#include "GOButton.h"
-#include "GOCombinationElement.h"
+#include "combinations/model/GOCombinationElement.h"
+#include "control/GOButtonControl.h"
 
-class GODrawstop : public GOButton, public GOCombinationElement {
+class GODrawstop : public GOButtonControl, public GOCombinationElement {
 public:
   typedef enum {
     FUNCTION_INPUT,

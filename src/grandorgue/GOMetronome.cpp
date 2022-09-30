@@ -9,14 +9,15 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
-#include "GORank.h"
-#include "GOSetterButton.h"
-#include "GOSoundingPipe.h"
-#include "GOWindchest.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "control/GOCallbackButtonControl.h"
+
+#include "GODefinitionFile.h"
+#include "GORank.h"
+#include "GOSoundingPipe.h"
+#include "GOWindchest.h"
 
 enum {
   ID_METRONOME_ON = 0,
@@ -28,18 +29,21 @@ enum {
   ID_METRONOME_BEAT_M10,
 };
 
-const struct ElementListEntry GOMetronome::m_element_types[] = {
-  {wxT("MetronomeOn"), ID_METRONOME_ON, false, false},
-  {wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false, true},
-  {wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false, true},
-  {wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false, true},
-  {wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false, true},
-  {wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false, true},
-  {wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false, true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOMetronome::m_element_types[]
+  = {
+    {wxT("MetronomeOn"), ID_METRONOME_ON, false, false},
+    {wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false, true},
+    {wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false, true},
+    {wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false, true},
+    {wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false, true},
+    {wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false, true},
+    {wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false, true},
+    {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry *GOMetronome::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOMetronome::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 
@@ -55,11 +59,11 @@ GOMetronome::GOMetronome(GODefinitionFile *organfile)
     m_StopID(0) {
   CreateButtons(m_organfile);
 
-  m_button[ID_METRONOME_ON]->SetPreconfigIndex(25);
-  m_button[ID_METRONOME_MEASURE_P1]->SetPreconfigIndex(28);
-  m_button[ID_METRONOME_MEASURE_M1]->SetPreconfigIndex(29);
-  m_button[ID_METRONOME_BEAT_P1]->SetPreconfigIndex(26);
-  m_button[ID_METRONOME_BEAT_M1]->SetPreconfigIndex(27);
+  m_buttons[ID_METRONOME_ON]->SetPreconfigIndex(25);
+  m_buttons[ID_METRONOME_MEASURE_P1]->SetPreconfigIndex(28);
+  m_buttons[ID_METRONOME_MEASURE_M1]->SetPreconfigIndex(29);
+  m_buttons[ID_METRONOME_BEAT_P1]->SetPreconfigIndex(26);
+  m_buttons[ID_METRONOME_BEAT_M1]->SetPreconfigIndex(27);
 
   m_organfile->RegisterPlaybackStateHandler(this);
 }
@@ -85,13 +89,13 @@ void GOMetronome::Load(GOConfigReader &cfg) {
     false,
     m_organfile->GetSettings().MetronomeMeasure());
 
-  m_button[ID_METRONOME_ON]->Init(cfg, wxT("MetronomeOn"), _("ON"));
-  m_button[ID_METRONOME_MEASURE_P1]->Init(cfg, wxT("MetronomeMP1"), _("+1"));
-  m_button[ID_METRONOME_MEASURE_M1]->Init(cfg, wxT("MetronomeMM1"), _("-1"));
-  m_button[ID_METRONOME_BEAT_P1]->Init(cfg, wxT("MetronomeBPMP1"), _("+1"));
-  m_button[ID_METRONOME_BEAT_M1]->Init(cfg, wxT("MetronomeBPMM1"), _("-1"));
-  m_button[ID_METRONOME_BEAT_P10]->Init(cfg, wxT("MetronomeBPMP10"), _("+10"));
-  m_button[ID_METRONOME_BEAT_M10]->Init(cfg, wxT("MetronomeBPMM10"), _("-10"));
+  m_buttons[ID_METRONOME_ON]->Init(cfg, wxT("MetronomeOn"), _("ON"));
+  m_buttons[ID_METRONOME_MEASURE_P1]->Init(cfg, wxT("MetronomeMP1"), _("+1"));
+  m_buttons[ID_METRONOME_MEASURE_M1]->Init(cfg, wxT("MetronomeMM1"), _("-1"));
+  m_buttons[ID_METRONOME_BEAT_P1]->Init(cfg, wxT("MetronomeBPMP1"), _("+1"));
+  m_buttons[ID_METRONOME_BEAT_M1]->Init(cfg, wxT("MetronomeBPMM1"), _("-1"));
+  m_buttons[ID_METRONOME_BEAT_P10]->Init(cfg, wxT("MetronomeBPMP10"), _("+10"));
+  m_buttons[ID_METRONOME_BEAT_M10]->Init(cfg, wxT("MetronomeBPMM10"), _("-10"));
 
   m_BPMDisplay.Init(cfg, wxT("MetronomeBPM"), _("Metronome BPM"));
   m_MeasureDisplay.Init(cfg, wxT("MetronomeMeasure"), _("Metronom measure"));
@@ -128,7 +132,7 @@ void GOMetronome::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, wxT("MeasureLength"), m_MeasureLength);
 }
 
-void GOMetronome::ButtonChanged(int id) {
+void GOMetronome::ButtonStateChanged(int id) {
   switch (id) {
   case ID_METRONOME_ON:
     if (m_Running)
@@ -188,7 +192,7 @@ void GOMetronome::UpdateMeasure(int val) {
 void GOMetronome::UpdateState() {
   m_BPMDisplay.SetContent(wxString::Format(_("%d BPM"), m_BPM));
   m_MeasureDisplay.SetContent(wxString::Format(_("%d"), m_MeasureLength));
-  m_button[ID_METRONOME_ON]->Display(m_Running);
+  m_buttons[ID_METRONOME_ON]->Display(m_Running);
 }
 
 void GOMetronome::StartTimer() {
@@ -234,7 +238,8 @@ GOEnclosure *GOMetronome::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabel *GOMetronome::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOMetronome::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 

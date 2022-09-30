@@ -14,13 +14,13 @@
 #include "GOFont.h"
 #include "GOGUIControl.h"
 
-class GOLabel;
+class GOLabelControl;
 
 class GOGUILabel : public GOGUIControl {
 private:
   int m_DispXpos;
   int m_DispYpos;
-  GOLabel *m_Label;
+  GOLabelControl *m_Label;
   GOBitmap m_Bitmap;
   unsigned m_FontSize;
   wxString m_FontName;
@@ -33,7 +33,7 @@ private:
   unsigned m_TileOffsetY;
 
 public:
-  GOGUILabel(GOGUIPanel *panel, GOLabel *label);
+  GOGUILabel(GOGUIPanel *panel, GOLabelControl *label);
   void Init(
     GOConfigReader &cfg,
     wxString group,

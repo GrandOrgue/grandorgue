@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include "archive/GOArchiveManager.h"
+#include "combinations/GOSetter.h"
 #include "config/GOConfig.h"
 #include "dialogs/GOProgressDialog.h"
 #include "dialogs/GOSelectOrganDialog.h"
@@ -48,7 +49,6 @@
 #include "GOOrgan.h"
 #include "GOPath.h"
 #include "GOProperties.h"
-#include "GOSetter.h"
 #include "Images.h"
 #include "go_ids.h"
 #include "go_limits.h"

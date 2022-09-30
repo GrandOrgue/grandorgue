@@ -12,14 +12,15 @@
 #include <wx/log.h>
 #include <wx/stopwatch.h>
 
+#include "config/GOConfig.h"
+#include "control/GOCallbackButtonControl.h"
+#include "midi/GOMidiEvent.h"
+#include "midi/GOMidiFile.h"
+
 #include "GODefinitionFile.h"
 #include "GOEvent.h"
 #include "GOMidi.h"
 #include "GOPath.h"
-#include "GOSetterButton.h"
-#include "config/GOConfig.h"
-#include "midi/GOMidiEvent.h"
-#include "midi/GOMidiFile.h"
 
 enum {
   ID_MIDI_RECORDER_RECORD = 0,
@@ -27,17 +28,20 @@ enum {
   ID_MIDI_RECORDER_RECORD_RENAME,
 };
 
-const struct ElementListEntry GOMidiRecorder::m_element_types[] = {
-  {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true},
-  {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true},
-  {wxT("MidiRecorderRecordRename"),
-   ID_MIDI_RECORDER_RECORD_RENAME,
-   false,
-   true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOMidiRecorder::m_element_types[]
+  = {
+    {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true},
+    {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true},
+    {wxT("MidiRecorderRecordRename"),
+     ID_MIDI_RECORDER_RECORD_RENAME,
+     false,
+     true},
+    {wxT(""), -1, false, false},
 };
 
-const struct ElementListEntry *GOMidiRecorder::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOMidiRecorder::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 
@@ -65,16 +69,16 @@ GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
 GOMidiRecorder::~GOMidiRecorder() { StopRecording(); }
 
 void GOMidiRecorder::Load(GOConfigReader &cfg) {
-  m_button[ID_MIDI_RECORDER_RECORD]->Init(
+  m_buttons[ID_MIDI_RECORDER_RECORD]->Init(
     cfg, wxT("MidiRecorderRecord"), _("REC"));
-  m_button[ID_MIDI_RECORDER_STOP]->Init(
+  m_buttons[ID_MIDI_RECORDER_STOP]->Init(
     cfg, wxT("MidiRecorderStop"), _("STOP"));
-  m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Init(
+  m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Init(
     cfg, wxT("MidiRecorderRecordRename"), _("REC File"));
   m_RecordingTime.Init(cfg, wxT("MidiRecordTime"), _("MIDI recording time"));
 }
 
-void GOMidiRecorder::ButtonChanged(int id) {
+void GOMidiRecorder::ButtonStateChanged(int id) {
   switch (id) {
   case ID_MIDI_RECORDER_STOP:
     StopRecording();
@@ -297,8 +301,8 @@ void GOMidiRecorder::UpdateDisplay() {
 }
 
 void GOMidiRecorder::StopRecording() {
-  m_button[ID_MIDI_RECORDER_RECORD]->Display(false);
-  m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
+  m_buttons[ID_MIDI_RECORDER_RECORD]->Display(false);
+  m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
   m_organfile->DeleteTimer(this);
   if (!IsRecording())
     return;
@@ -356,9 +360,9 @@ void GOMidiRecorder::StartRecording(bool rename) {
 
   m_Last = wxGetLocalTimeMillis();
   if (m_DoRename)
-    m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
+    m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
   else
-    m_button[ID_MIDI_RECORDER_RECORD]->Display(true);
+    m_buttons[ID_MIDI_RECORDER_RECORD]->Display(true);
   m_organfile->PrepareRecording();
 
   m_RecordSeconds = 0;
@@ -370,7 +374,8 @@ GOEnclosure *GOMidiRecorder::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabel *GOMidiRecorder::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOMidiRecorder::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 

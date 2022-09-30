@@ -17,6 +17,9 @@
 #include "archive/GOArchive.h"
 #include "archive/GOArchiveFile.h"
 #include "archive/GOArchiveManager.h"
+#include "combinations/GOSetter.h"
+#include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigFileReader.h"
 #include "config/GOConfigFileWriter.h"
@@ -24,6 +27,8 @@
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
 #include "contrib/sha1.h"
+#include "control/GOElementCreator.h"
+#include "control/GOPushbuttonControl.h"
 #include "dialogs/GOProgressDialog.h"
 #include "files/GOStdFileName.h"
 #include "gui/GOGUIBankedGeneralsPanel.h"
@@ -49,25 +54,20 @@
 #include "GOCache.h"
 #include "GOCacheWriter.h"
 #include "GOCoupler.h"
-#include "GODivisional.h"
 #include "GODivisionalCoupler.h"
 #include "GODocument.h"
-#include "GOElementCreator.h"
 #include "GOEnclosure.h"
 #include "GOEvent.h"
 #include "GOFile.h"
 #include "GOFilename.h"
-#include "GOGeneral.h"
 #include "GOHash.h"
 #include "GOLoadThread.h"
 #include "GOManual.h"
 #include "GOMetronome.h"
 #include "GOOrgan.h"
 #include "GOPath.h"
-#include "GOPushbutton.h"
 #include "GORank.h"
 #include "GOReleaseAlignTable.h"
-#include "GOSetter.h"
 #include "GOSoundingPipe.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
@@ -224,16 +224,16 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
   GOModel::Load(cfg, this);
   wxString buffer;
 
-  for (unsigned i = 0; i < m_enclosure.size(); i++)
-    m_enclosure[i]->SetElementID(
+  for (unsigned i = 0; i < m_enclosures.size(); i++)
+    m_enclosures[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("E%d"), i)));
 
   for (unsigned i = 0; i < m_switches.size(); i++)
     m_switches[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("S%d"), i)));
 
-  for (unsigned i = 0; i < m_tremulant.size(); i++)
-    m_tremulant[i]->SetElementID(
+  for (unsigned i = 0; i < m_tremulants.size(); i++)
+    m_tremulants[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 
   m_setter = new GOSetter(this);
@@ -280,8 +280,8 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
     m_panels[i]->Layout();
 
   m_GeneralTemplate.InitGeneral();
-  for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-    m_manual[i]->GetDivisionalTemplate().InitDivisional(i);
+  for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
+    m_manuals[i]->GetDivisionalTemplate().InitDivisional(i);
 
   m_PipeConfig.SetName(GetChurchName());
   ReadCombinations(cfg);
@@ -713,8 +713,8 @@ GODefinitionFile::~GODefinitionFile(void) {
   CloseArchives();
   Cleanup();
   // Just to be sure, that the sound providers are freed before the pool
-  m_manual.clear();
-  m_tremulant.clear();
+  m_manuals.clear();
+  m_tremulants.clear();
   m_ranks.clear();
 }
 
@@ -781,18 +781,20 @@ GOEnclosure *GODefinitionFile::GetEnclosure(
   return NULL;
 }
 
-GOLabel *GODefinitionFile::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GODefinitionFile::GetLabel(
+  const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
-    GOLabel *c = m_elementcreators[i]->GetLabel(name, is_panel);
+    GOLabelControl *c = m_elementcreators[i]->GetLabelControl(name, is_panel);
     if (c)
       return c;
   }
   return NULL;
 }
 
-GOButton *GODefinitionFile::GetButton(const wxString &name, bool is_panel) {
+GOButtonControl *GODefinitionFile::GetButtonControl(
+  const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
-    GOButton *c = m_elementcreators[i]->GetButton(name, is_panel);
+    GOButtonControl *c = m_elementcreators[i]->GetButtonControl(name, is_panel);
     if (c)
       return c;
   }
@@ -1032,14 +1034,14 @@ void GODefinitionFile::Update() {
   for (unsigned i = 0; i < m_switches.size(); i++)
     m_switches[i]->Update();
 
-  for (unsigned i = m_FirstManual; i < m_manual.size(); i++)
-    m_manual[i]->Update();
+  for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
+    m_manuals[i]->Update();
 
-  for (unsigned i = 0; i < m_tremulant.size(); i++)
-    m_tremulant[i]->Update();
+  for (unsigned i = 0; i < m_tremulants.size(); i++)
+    m_tremulants[i]->Update();
 
-  for (unsigned i = 0; i < m_divisionalcoupler.size(); i++)
-    m_divisionalcoupler[i]->Update();
+  for (unsigned i = 0; i < m_DivisionalCoupler.size(); i++)
+    m_DivisionalCoupler[i]->Update();
 
   m_setter->Update();
 }
@@ -1117,9 +1119,11 @@ GOCombinationDefinition &GODefinitionFile::GetGeneralTemplate() {
   return m_GeneralTemplate;
 }
 
-GOLabel *GODefinitionFile::GetPitchLabel() { return &m_PitchLabel; }
+GOLabelControl *GODefinitionFile::GetPitchLabel() { return &m_PitchLabel; }
 
-GOLabel *GODefinitionFile::GetTemperamentLabel() { return &m_TemperamentLabel; }
+GOLabelControl *GODefinitionFile::GetTemperamentLabel() {
+  return &m_TemperamentLabel;
+}
 
 GOMainWindowData *GODefinitionFile::GetMainWindowData() {
   return &m_MainWindowData;

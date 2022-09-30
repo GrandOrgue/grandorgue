@@ -43,41 +43,46 @@ GOGUIPanel *GOGUIBankedGeneralsPanel::CreateBankedGeneralsPanel(
   BankDisplay->Init(cfg, wxT("SetterGeneralBank"), 260, 20);
   panel->AddControl(BankDisplay);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("GeneralPrev")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("GeneralPrev")), false);
   button->Init(cfg, wxT("SetterGerneralsPrev"), 3, 100);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("GeneralNext")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("GeneralNext")), false);
   button->Init(cfg, wxT("SetterGerneralsNext"), 5, 100);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Set")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Set")), false);
   button->Init(cfg, wxT("SetterGeneralsSet"), 1, 101);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButton(wxT("Regular")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Regular")), false);
   button->Init(cfg, wxT("SetterGerneralsRegular"), 3, 101);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scope")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scope")), false);
   button->Init(cfg, wxT("SetterGeneralsScope"), 4, 101);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Scoped")), false);
+  button = new GOGUIButton(
+    panel, m_organfile->GetButtonControl(wxT("Scoped")), false);
   button->Init(cfg, wxT("SetterGeneralsScoped"), 5, 101);
   panel->AddControl(button);
 
-  button = new GOGUIButton(panel, m_organfile->GetButton(wxT("Full")), false);
+  button
+    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Full")), false);
   button->Init(cfg, wxT("SetterGeneralsFull"), 7, 101);
   panel->AddControl(button);
 
   for (unsigned i = 0; i < 50; i++) {
     button = new GOGUIButton(
       panel,
-      m_organfile->GetButton(wxString::Format(wxT("General%02d"), i + 1)),
+      m_organfile->GetButtonControl(
+        wxString::Format(wxT("General%02d"), i + 1)),
       true);
     button->Init(
       cfg,

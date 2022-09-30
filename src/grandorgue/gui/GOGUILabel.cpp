@@ -9,16 +9,16 @@
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
+#include "control/GOLabelControl.h"
 
 #include "GODC.h"
 #include "GODefinitionFile.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
-#include "GOLabel.h"
 #include "go_gui_utils.h"
 
-GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabel *label)
+GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabelControl *label)
   : GOGUIControl(panel, label),
     m_DispXpos(0),
     m_DispYpos(0),
