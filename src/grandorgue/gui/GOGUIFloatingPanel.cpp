@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/GODivisionalSetter.h"
 
 #include "GODefinitionFile.h"
 #include "GOEnclosure.h"
@@ -63,25 +63,18 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
     manual->Init(cfg, group);
     panel->AddControl(manual);
 
+    /*
     for (unsigned j = 0; j < 10; j++) {
-      GODivisionalButtonControl *divisional = new GODivisionalButtonControl(
-        m_organfile, m_organfile->GetManual(i)->GetDivisionalTemplate(), true);
-      divisional->Init(
-        cfg,
-        wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),
-        i,
-        100 + j,
-        wxString::Format(wxT("%d"), j + 1));
-      m_organfile->GetManual(i)->AddDivisional(divisional);
+      wxString buttonName = GODivisionalSetter::GetDivisionalButtonName(i, j);
+      GOButtonControl *const divisional
+        = m_organfile->GetButtonControl(buttonName, false);
 
       GOGUIButton *button = new GOGUIButton(panel, divisional, true);
       button->Init(
-        cfg,
-        wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),
-        j + 1,
-        i - m_organfile->GetODFManualCount());
+        cfg, buttonName, j + 1, i - m_organfile->GetODFManualCount());
       panel->AddControl(button);
     }
+    */
   }
 
   GOEnclosure *master_enc = new GOEnclosure(m_organfile);

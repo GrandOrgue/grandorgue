@@ -25,7 +25,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOCoupler;
-class GODivisionalButtonControl;
+class GOButtonControl;
 class GOMidiEvent;
 class GOStop;
 class GOSwitch;
@@ -67,8 +67,9 @@ private:
 
   ptr_vector<GOStop> m_stops;
   ptr_vector<GOCoupler> m_couplers;
-  ptr_vector<GODivisionalButtonControl> m_divisionals;
+  std::vector<GOButtonControl *> m_divisionals;
   unsigned m_ODFCouplerCount;
+  unsigned m_NDivisionals;
   bool m_displayed;
   GOCombinationDefinition m_DivisionalTemplate;
 
@@ -94,6 +95,7 @@ public:
     unsigned first_midi,
     unsigned keys);
   void Load(GOConfigReader &cfg, wxString group, int manualNumber);
+  void InitDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);
   void SetKey(
     unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);
@@ -119,8 +121,8 @@ public:
   GOCoupler *GetCoupler(unsigned index);
   void AddCoupler(GOCoupler *coupler);
   unsigned GetDivisionalCount();
-  GODivisionalButtonControl *GetDivisional(unsigned index);
-  void AddDivisional(GODivisionalButtonControl *divisional);
+  GOButtonControl *GetDivisional(unsigned index);
+  void AddDivisional(GOButtonControl *divisional);
   unsigned GetTremulantCount();
   GOTremulant *GetTremulant(unsigned index);
   unsigned GetSwitchCount();

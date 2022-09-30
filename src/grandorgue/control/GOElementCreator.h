@@ -20,7 +20,7 @@ class GOEnclosure;
 class GOLabelControl;
 
 class GOElementCreator : private GOButtonCallback {
-protected:
+public:
   struct ButtonDefinitionEntry {
     wxString name;
     int value;
@@ -28,6 +28,7 @@ protected:
     bool is_pushbutton;
   };
 
+protected:
   ptr_vector<GOButtonControl> m_buttons;
 
   virtual const struct ButtonDefinitionEntry *GetButtonDefinitionList() = 0;

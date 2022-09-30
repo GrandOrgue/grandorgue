@@ -36,7 +36,9 @@ GOGUIButton::GOGUIButton(
     m_DispCol(0),
     m_DispRow(0),
     m_TileOffsetX(0),
-    m_TileOffsetY(0) {}
+    m_TileOffsetY(0) {
+  assert(control);
+}
 
 void GOGUIButton::Init(
   GOConfigReader &cfg,

@@ -57,6 +57,7 @@ public:
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   bool IsDisplayed();
+  void SetDisplayed(bool displayed) { m_Displayed = displayed; }
   bool IsReadOnly();
   const wxString &GetName();
 

@@ -33,6 +33,7 @@ class GOArchive;
 class GOAudioRecorder;
 class GOButtonControl;
 class GOCache;
+class GODivisionalSetter;
 class GOElementCreator;
 class GOMidi;
 class GOMidiEvent;
@@ -68,6 +69,7 @@ private:
   wxString m_ODFHash;
   bool m_Cacheable;
   GOSetter *m_setter;
+  GODivisionalSetter *m_DivisionalSetter;
   GOAudioRecorder *m_AudioRecorder;
   GOMidiPlayer *m_MidiPlayer;
   GOMidiRecorder *m_MidiRecorder;

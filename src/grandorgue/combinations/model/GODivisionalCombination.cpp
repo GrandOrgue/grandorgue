@@ -5,13 +5,12 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GODivisionalButtonControl.h"
+#include "GODivisionalCombination.h"
 
 #include <wx/intl.h>
 #include <wx/log.h>
 
 #include "combinations/GOSetter.h"
-
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
@@ -19,43 +18,54 @@
 #include "GODivisionalCoupler.h"
 #include "GOManual.h"
 
-GODivisionalButtonControl::GODivisionalButtonControl(
+GODivisionalCombination::GODivisionalCombination(
   GODefinitionFile *organfile,
   GOCombinationDefinition &divisional_template,
   bool is_setter)
-  : GOPushbuttonControl(organfile),
-    GOCombination(divisional_template, organfile),
+  : GOCombination(divisional_template, organfile),
+    m_organfile(organfile),
     m_DivisionalNumber(0),
     m_ManualNumber(1),
     m_IsSetter(is_setter) {}
 
-void GODivisionalButtonControl::Init(
-  GOConfigReader &cfg,
-  wxString group,
-  int manualNumber,
-  int divisionalNumber,
-  wxString name) {
-  m_DivisionalNumber = divisionalNumber;
+void GODivisionalCombination::Init(
+  const wxString &group, int manualNumber, int divisionalNumber) {
+  m_group = group;
   m_ManualNumber = manualNumber;
-
-  m_midi.SetIndex(manualNumber);
-
+  m_DivisionalNumber = divisionalNumber;
   m_Protected = false;
-
-  GOPushbuttonControl::Init(cfg, group, name);
 }
 
-void GODivisionalButtonControl::Load(
+static const wxString WX_NUMBER_OF_STOPS = wxT("NumberOfStops");
+
+int read_number_of_stops(
+  GOSettingType settingType,
+  GOConfigReader &cfg,
+  const wxString &group,
+  unsigned maxStopN,
+  bool isRequired) {
+  return cfg.ReadInteger(
+    settingType,
+    group,
+    WX_NUMBER_OF_STOPS,
+    0,
+    maxStopN,
+    isRequired,
+    isRequired ? 0 : -1);
+}
+
+bool is_cmb_on_file(
+  GOSettingType settingType, GOConfigReader &cfg, const wxString &group) {
+  int nOfStops = read_number_of_stops(settingType, cfg, group, 999, false);
+
+  return nOfStops != -1;
+}
+
+void GODivisionalCombination::Load(
   GOConfigReader &cfg, wxString group, int manualNumber, int divisionalNumber) {
-  m_DivisionalNumber = divisionalNumber;
-  m_ManualNumber = manualNumber;
-
-  m_midi.SetIndex(manualNumber);
-
+  Init(group, manualNumber, divisionalNumber);
   m_Protected
     = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);
-
-  GOPushbuttonControl::Load(cfg, group);
 
   if (!m_IsSetter) {
     /* skip ODF settings */
@@ -64,14 +74,8 @@ void GODivisionalButtonControl::Load(
     int pos;
     std::vector<bool> used(m_State.size());
     GOManual *associatedManual = m_organfile->GetManual(m_ManualNumber);
-    unsigned NumberOfStops = cfg.ReadInteger(
-      ODFSetting,
-      m_group,
-      wxT("NumberOfStops"),
-      0,
-      associatedManual->GetStopCount(),
-      true,
-      0);
+    unsigned NumberOfStops = (unsigned)read_number_of_stops(
+      ODFSetting, cfg, m_group, associatedManual->GetStopCount(), true);
     unsigned NumberOfCouplers = cfg.ReadInteger(
       ODFSetting,
       m_group,
@@ -188,30 +192,15 @@ void GODivisionalButtonControl::Load(
   }
 }
 
-void GODivisionalButtonControl::LoadCombination(GOConfigReader &cfg) {
+void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
   GOSettingType type = CMBSetting;
   GOManual *associatedManual = m_organfile->GetManual(m_ManualNumber);
   if (!m_IsSetter)
-    if (
-      cfg.ReadInteger(
-        CMBSetting,
-        m_group,
-        wxT("NumberOfStops"),
-        -1,
-        associatedManual->GetStopCount(),
-        false,
-        -1)
-      == -1)
+    if (read_number_of_stops(type, cfg, m_group, 999, false) == -1)
       type = ODFSetting;
   wxString buffer;
-  unsigned NumberOfStops = cfg.ReadInteger(
-    type,
-    m_group,
-    wxT("NumberOfStops"),
-    0,
-    associatedManual->GetStopCount(),
-    true,
-    0);
+  unsigned NumberOfStops = read_number_of_stops(
+    type, cfg, m_group, associatedManual->GetStopCount(), true);
   unsigned NumberOfCouplers = cfg.ReadInteger(
     type,
     m_group,
@@ -332,12 +321,11 @@ void GODivisionalButtonControl::LoadCombination(GOConfigReader &cfg) {
   }
 }
 
-void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
+void GODivisionalCombination::Save(GOConfigWriter &cfg) {
   wxString buffer;
   const std::vector<GOCombinationDefinition::CombinationSlot> &elements
     = m_Template.GetCombinationElements();
 
-  GOPushbuttonControl::Save(cfg);
   UpdateState();
 
   unsigned stop_count = 0;
@@ -379,24 +367,19 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
     }
   }
 
-  cfg.WriteInteger(m_group, wxT("NumberOfStops"), stop_count);
+  cfg.WriteInteger(m_group, WX_NUMBER_OF_STOPS, stop_count);
   cfg.WriteInteger(m_group, wxT("NumberOfCouplers"), coupler_count);
   cfg.WriteInteger(m_group, wxT("NumberOfTremulants"), tremulant_count);
   cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
 }
 
-bool GODivisionalButtonControl::PushLocal() {
+bool GODivisionalCombination::PushLocal() {
   bool used = GOCombination::PushLocal();
-  GOManual *associatedManual = m_organfile->GetManual(m_ManualNumber);
 
-  for (unsigned k = 0; k < associatedManual->GetDivisionalCount(); k++) {
-    GODivisionalButtonControl *divisional = associatedManual->GetDivisional(k);
-    divisional->Display(divisional == this);
-  }
   return used;
 }
 
-void GODivisionalButtonControl::Push() {
+void GODivisionalCombination::Push() {
   PushLocal();
 
   /* only use divisional couples, if not in setter mode */
@@ -415,7 +398,7 @@ void GODivisionalButtonControl::Push() {
       for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
         m_organfile->GetManual(coupler->GetManual(j))
           ->GetDivisional(m_DivisionalNumber)
-          ->PushLocal();
+          ->Push();
 
       if (coupler->IsBidirectional()) {
         for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++) {
@@ -423,7 +406,7 @@ void GODivisionalButtonControl::Push() {
             break;
           m_organfile->GetManual(coupler->GetManual(j))
             ->GetDivisional(m_DivisionalNumber)
-            ->PushLocal();
+            ->Push();
         }
       }
       break;
@@ -431,4 +414,23 @@ void GODivisionalButtonControl::Push() {
   }
 }
 
-wxString GODivisionalButtonControl::GetMidiType() { return _("Divisional"); }
+wxString GODivisionalCombination::GetMidiType() { return _("Divisional"); }
+
+GODivisionalCombination *GODivisionalCombination::LoadFrom(
+  GODefinitionFile *organfile,
+  GOConfigReader &cfg,
+  GOCombinationDefinition &divisionalTemplate,
+  const wxString &group,
+  int manualNumber,
+  int divisionalNumber) {
+  GODivisionalCombination *pCmb = nullptr;
+
+  if (
+    is_cmb_on_file(ODFSetting, cfg, group)
+    || is_cmb_on_file(CMBSetting, cfg, group)) {
+    pCmb = new GODivisionalCombination(organfile, divisionalTemplate, false);
+    pCmb->Load(cfg, group, manualNumber, divisionalNumber);
+    pCmb->LoadCombination(cfg);
+  }
+  return pCmb;
+}

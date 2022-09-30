@@ -10,7 +10,6 @@
 #include <wx/image.h>
 
 #include "combinations/GOSetter.h"
-#include "combinations/control/GODivisionalButtonControl.h"
 #include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"

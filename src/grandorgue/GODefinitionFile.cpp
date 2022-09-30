@@ -18,7 +18,6 @@
 #include "archive/GOArchiveFile.h"
 #include "archive/GOArchiveManager.h"
 #include "combinations/GOSetter.h"
-#include "combinations/control/GODivisionalButtonControl.h"
 #include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigFileReader.h"
@@ -72,6 +71,7 @@
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 #include "GOWindchest.h"
+#include "combinations/GODivisionalSetter.h"
 
 GODefinitionFile::GODefinitionFile(GODocument *doc, GOConfig &settings)
   : m_doc(doc),
@@ -238,6 +238,8 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
 
   m_setter = new GOSetter(this);
   m_elementcreators.push_back(m_setter);
+  m_DivisionalSetter = new GODivisionalSetter(this);
+  m_elementcreators.push_back(m_DivisionalSetter);
   m_AudioRecorder = new GOAudioRecorder(this);
   m_MidiRecorder = new GOMidiRecorder(this);
   m_MidiPlayer = new GOMidiPlayer(this);
@@ -257,6 +259,9 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
 
   for (unsigned i = 0; i < m_elementcreators.size(); i++)
     m_elementcreators[i]->Load(cfg);
+
+  for (unsigned int i = m_FirstManual; i < m_ODFManualCount; i++)
+    m_manuals[i]->InitDivisionals(cfg);
 
   m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
   m_TemperamentLabel.Load(
