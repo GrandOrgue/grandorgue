@@ -381,20 +381,25 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
   }
 }
 
-void GOGeneralCombination::Push(ExtraElementsSet const *extraSet) {
-  GOCombination::PushLocal(extraSet);
+void GOGeneralCombination::Push(
+  ExtraElementsSet const *extraSet, bool isFromCrescendo) {
+  bool used = GOCombination::PushLocal(extraSet);
 
-  for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++) {
-    GOGeneralButtonControl *general = m_organfile->GetGeneral(k);
-    general->Display(&general->GetGeneral() == this);
-  }
+  if (!isFromCrescendo || !extraSet) { // Crescendo in add mode: not to switch
+                                       // off combination
+                                       // buttons
+    for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++) {
+      GOGeneralButtonControl *general = m_organfile->GetGeneral(k);
+      general->Display(&general->GetGeneral() == this);
+    }
 
-  for (unsigned j = m_organfile->GetFirstManualIndex();
-       j <= m_organfile->GetManualAndPedalCount();
-       j++) {
-    for (unsigned k = 0; k < m_organfile->GetManual(j)->GetDivisionalCount();
-         k++)
-      m_organfile->GetManual(j)->GetDivisional(k)->Display(false);
+    for (unsigned j = m_organfile->GetFirstManualIndex();
+         j <= m_organfile->GetManualAndPedalCount();
+         j++) {
+      for (unsigned k = 0; k < m_organfile->GetManual(j)->GetDivisionalCount();
+           k++)
+        m_organfile->GetManual(j)->GetDivisional(k)->Display(false);
+    }
   }
 
   m_organfile->GetSetter()->ResetDisplay();

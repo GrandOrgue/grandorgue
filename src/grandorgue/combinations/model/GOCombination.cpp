@@ -52,6 +52,18 @@ void GOCombination::GetExtraSetState(
   }
 }
 
+void GOCombination::GetEnabledElements(
+  GOCombination::ExtraElementsSet &enabledElements) {
+  const std::vector<GOCombinationDefinition::CombinationSlot> &elements
+    = m_Template.GetCombinationElements();
+
+  enabledElements.clear();
+  for (unsigned i = 0; i < elements.size(); i++) {
+    if (m_State[i] > 0)
+      enabledElements.insert(i);
+  }
+}
+
 void GOCombination::UpdateState() {
   const std::vector<GOCombinationDefinition::CombinationSlot> &elements
     = m_Template.GetCombinationElements();
