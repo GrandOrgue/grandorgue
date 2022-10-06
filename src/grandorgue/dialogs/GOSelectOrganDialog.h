@@ -28,6 +28,8 @@ public:
   GOSelectOrganDialog(
     wxWindow *parent, wxString title, const GOOrganList &organList);
 
+  bool TransferDataToWindow() override;
+
   const GOOrgan *GetSelection();
 
   DECLARE_EVENT_TABLE()
