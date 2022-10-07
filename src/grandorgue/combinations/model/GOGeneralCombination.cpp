@@ -382,11 +382,11 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
 }
 
 void GOGeneralCombination::Push(ExtraElementsSet const *extraSet) {
-  bool used = GOCombination::PushLocal(extraSet);
+  GOCombination::PushLocal(extraSet);
 
   for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++) {
     GOGeneralButtonControl *general = m_organfile->GetGeneral(k);
-    general->Display(&general->GetGeneral() == this && used);
+    general->Display(&general->GetGeneral() == this);
   }
 
   for (unsigned j = m_organfile->GetFirstManualIndex();
