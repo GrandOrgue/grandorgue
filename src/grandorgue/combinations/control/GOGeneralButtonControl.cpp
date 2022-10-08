@@ -9,6 +9,10 @@
 
 #include <wx/intl.h>
 
+#include "combinations/GOSetter.h"
+
+#include "GODefinitionFile.h"
+
 GOGeneralButtonControl::GOGeneralButtonControl(
   GOCombinationDefinition &general_template,
   GODefinitionFile *organfile,
@@ -21,7 +25,11 @@ void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
   GOPushbuttonControl::Load(cfg, group);
 }
 
-void GOGeneralButtonControl::Push() { m_general.Push(); }
+void GOGeneralButtonControl::Push() {
+  GOCombination::ExtraElementsSet elementSet;
+
+  m_general.Push(m_organfile->GetSetter()->GetCrescendoAddSet(elementSet));
+}
 
 GOGeneralCombination &GOGeneralButtonControl::GetGeneral() { return m_general; }
 

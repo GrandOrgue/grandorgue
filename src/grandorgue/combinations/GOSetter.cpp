@@ -444,6 +444,8 @@ void GOSetter::Save(GOConfigWriter &cfg) {
 }
 
 void GOSetter::ButtonStateChanged(int id) {
+  GOCombination::ExtraElementsSet elementSet;
+
   switch (id) {
   case ID_SETTER_PREV:
     Prev();
@@ -553,7 +555,8 @@ void GOSetter::ButtonStateChanged(int id) {
   case ID_SETTER_GENERAL47:
   case ID_SETTER_GENERAL48:
   case ID_SETTER_GENERAL49:
-    m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push();
+    m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push(
+      GetCrescendoAddSet(elementSet));
     ResetDisplay();
     m_buttons[id]->Display(true);
     break;
@@ -718,6 +721,18 @@ void GOSetter::SetCrescendoType(unsigned no) {
     m_CrescendoOverrideMode[m_crescendobank]);
 }
 
+const GOCombination::ExtraElementsSet *GOSetter::GetCrescendoAddSet(
+  GOCombination::ExtraElementsSet &elementSet) {
+  const GOCombination::ExtraElementsSet *pResElementSet = nullptr;
+
+  if (!m_CrescendoOverrideMode[m_crescendobank]) {
+    m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]
+      ->GetEnabledElements(elementSet);
+    pResElementSet = &elementSet;
+  }
+  return pResElementSet;
+}
+
 void GOSetter::ResetDisplay() {
   m_buttons[ID_SETTER_HOME]->Display(false);
   for (unsigned i = 0; i < 10; i++)
@@ -740,7 +755,9 @@ void GOSetter::SetPosition(int pos, bool push) {
     pos -= m_framegeneral.size();
   m_pos = pos;
   if (push) {
-    m_framegeneral[m_pos]->Push();
+    GOCombination::ExtraElementsSet elementSet;
+
+    m_framegeneral[m_pos]->Push(GetCrescendoAddSet(elementSet));
 
     m_buttons[ID_SETTER_HOME]->Display(m_pos == 0);
     for (unsigned i = 0; i < 10; i++)
@@ -781,7 +798,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
       m_CrescendoExtraSets[oldIdx].clear();
     ++m_crescendopos;
     m_crescendo[newIdx]->Push(
-      crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr);
+      crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr, true);
   }
 
   while (pos < m_crescendopos) {
@@ -790,7 +807,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
     const unsigned newIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;
 
     m_crescendo[newIdx]->Push(
-      crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr);
+      crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr, true);
   }
 
   wxString buffer;

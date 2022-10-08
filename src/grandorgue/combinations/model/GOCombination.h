@@ -36,6 +36,8 @@ public:
   int GetState(unsigned no);
   void SetState(unsigned no, int value);
   void GetExtraSetState(ExtraElementsSet &extraSet);
+  void GetEnabledElements(GOCombination::ExtraElementsSet &enabledElements);
+
   void Copy(GOCombination *combination);
   void Clear();
   GOCombinationDefinition *GetTemplate();

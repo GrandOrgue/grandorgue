@@ -80,6 +80,14 @@ public:
   void SetterActive(bool on);
   SetterType GetSetterType();
 
+  /*
+   * If current crescendo is in override mode then returns nullptr
+   * If current crescendo is in add mode then fills elementSet and returns a
+   * pointer to it
+   */
+  const GOCombination::ExtraElementsSet *GetCrescendoAddSet(
+    GOCombination::ExtraElementsSet &elementSet);
+
   void Next();
   void Prev();
   void Push();

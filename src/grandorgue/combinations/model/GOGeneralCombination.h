@@ -36,8 +36,11 @@ public:
    * Activate this combination
    * If extraSet is passed then not to disable stops that are present in
    * extraSet
+   * If isFromCrescendo and extraSet is passed then does not depress other
+   * buttons
    */
-  void Push(ExtraElementsSet const *extraSet = nullptr);
+  void Push(
+    ExtraElementsSet const *extraSet = nullptr, bool isFromCrescendo = false);
 };
 
 #endif /* GOGENERALCOMBINATION_H */
