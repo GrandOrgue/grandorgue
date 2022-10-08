@@ -40,12 +40,12 @@ GOSelectOrganDialog::GOSelectOrganDialog(
     wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
   m_Organs->InsertColumn(0, _("Church"));
   m_Organs->InsertColumn(1, _("Organ package"));
-  m_Organs->InsertColumn(2, _("ODF Path"));
+  m_Organs->InsertColumn(2, _("Organ path"));
   topSizer->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
 
   m_Organs->SetColumnWidth(0, 150);
   m_Organs->SetColumnWidth(1, 150);
-  m_Organs->SetColumnWidth(2, 200);
+  m_Organs->SetColumnWidth(2, 300);
 
   topSizer->AddSpacer(5);
   topSizer->Add(
@@ -59,13 +59,17 @@ bool GOSelectOrganDialog::TransferDataToWindow() {
     const GOOrgan *o = m_OrganList.GetOrganList()[j];
 
     if (o->IsUsable(m_OrganList)) {
+      const bool isArchive = o->GetArchiveID() != wxEmptyString;
+
       m_Organs->InsertItem(i, o->GetChurchName());
       m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
-      if (o->GetArchiveID() != wxEmptyString) {
+      if (isArchive) {
         const GOArchiveFile *a = m_OrganList.GetArchiveByID(o->GetArchiveID());
+
         m_Organs->SetItem(i, 1, a ? a->GetName() : o->GetArchiveID());
       }
-      m_Organs->SetItem(i, 2, o->GetODFPath());
+      m_Organs->SetItem(
+        i, 2, isArchive ? o->GetArchivePath() : o->GetODFPath());
       i++;
     }
   }
