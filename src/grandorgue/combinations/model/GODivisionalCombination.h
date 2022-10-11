@@ -49,6 +49,7 @@ public:
     GOConfigReader &cfg,
     GOCombinationDefinition &divisional_template,
     const wxString &group,
+    const wxString &readGroup,
     int manualNumber,
     int divisionalNumber);
 };

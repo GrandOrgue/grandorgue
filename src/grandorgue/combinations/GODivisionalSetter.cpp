@@ -136,6 +136,8 @@ void GODivisionalSetter::Load(GOConfigReader &cfg) {
     unsigned manualIndex = m_FirstManualIndex + manualN;
     GOLabelControl *const pL = m_BankLabels[manualIndex - m_FirstManualIndex];
     const wxString labelName = GetDivisionalBankLabelName(manualIndex);
+    GOManual *pManual = m_organfile->GetManual(manualIndex);
+    unsigned nLegacyDivisionals = pManual->GetDeclaredDivisionalCount();
 
     pL->Init(
       cfg,
@@ -149,7 +151,14 @@ void GODivisionalSetter::Load(GOConfigReader &cfg) {
       wxString buttonName = GetDivisionalButtonName(manualIndex, j);
       GOButtonControl *const divisional = GetButtonControl(buttonName, false);
 
-      divisional->Init(cfg, buttonName, wxString::Format(wxT("%d"), j + 1));
+      if (j < nLegacyDivisionals) {
+        const wxString legacyGroup = pManual->GetLegacyDivisionalGroup(cfg, j);
+
+        divisional->Load(cfg, legacyGroup);
+        divisional->SetGroup(buttonName);
+      } else
+        divisional->Init(cfg, buttonName, wxString::Format(wxT("%d"), j + 1));
+      divisional->Load(cfg, buttonName);
       divisional->SetDisplayed(true);
     }
 
@@ -182,26 +191,33 @@ void GODivisionalSetter::ClearCombinations() {
   }
 }
 
+static const wxString WX_EMPTY_STRING = wxEmptyString;
+
 void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
   ClearCombinations();
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     unsigned manualIndex = m_FirstManualIndex + manualN;
     DivisionalMap &divMap = m_DivisionalMaps[manualN];
-    GOCombinationDefinition &cmbTemplate
-      = m_organfile->GetManual(manualIndex)->GetDivisionalTemplate();
+    GOManual *pManual = m_organfile->GetManual(manualIndex);
+    unsigned nLegacyDivisionals = pManual->GetDeclaredDivisionalCount();
+    GOCombinationDefinition &cmbTemplate = pManual->GetDivisionalTemplate();
 
     for (unsigned nDivisionals = N_DIVISIONALS * DIVISIONAL_BANKS,
                   divisionalIndex = 0;
          divisionalIndex < nDivisionals;
          divisionalIndex++) {
-      GODivisionalCombination *const pCmb = GODivisionalCombination::LoadFrom(
+      wxString legacyGroupName = divisionalIndex < nLegacyDivisionals
+        ? pManual->GetLegacyDivisionalGroup(cfg, divisionalIndex)
+        : WX_EMPTY_STRING;
+
+      GODivisionalCombination *pCmb = GODivisionalCombination::LoadFrom(
         m_organfile,
         cfg,
         cmbTemplate,
         GetDivisionalButtonName(manualIndex, divisionalIndex),
+        legacyGroupName,
         manualIndex,
         divisionalIndex);
-
       if (pCmb)
         divMap[divisionalIndex] = pCmb;
     }

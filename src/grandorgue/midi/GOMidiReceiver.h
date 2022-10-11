@@ -24,7 +24,7 @@ protected:
 public:
   GOMidiReceiver(GODefinitionFile *organfile, GOMidiReceiverType type);
 
-  void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
+  void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 
   void SetIndex(int index);
 

@@ -25,7 +25,7 @@ class GOMidiEvent;
 class GODefinitionFile;
 
 class GOButtonControl : private GOEventHandler,
-                        protected GOSaveableObject,
+                        public GOSaveableObject,
                         protected GOPlaybackStateHandler,
                         public GOMidiConfigurator {
 protected:
@@ -54,8 +54,8 @@ public:
   GOButtonControl(
     GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton);
   virtual ~GOButtonControl();
-  void Init(GOConfigReader &cfg, wxString group, wxString name);
-  void Load(GOConfigReader &cfg, wxString group);
+  void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
+  void Load(GOConfigReader &cfg, const wxString &group);
   bool IsDisplayed();
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }
   bool IsReadOnly();

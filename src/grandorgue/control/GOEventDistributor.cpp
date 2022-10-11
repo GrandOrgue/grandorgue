@@ -42,7 +42,10 @@ void GOEventDistributor::RegisterCacheObject(GOCacheObject *obj) {
 }
 
 void GOEventDistributor::RegisterSaveableObject(GOSaveableObject *obj) {
-  m_SaveableObjects.push_back(obj);
+  if (
+    std::find(m_SaveableObjects.begin(), m_SaveableObjects.end(), obj)
+    == m_SaveableObjects.end())
+    m_SaveableObjects.push_back(obj);
 }
 
 void GOEventDistributor::UnregisterSaveableObject(GOSaveableObject *obj) {

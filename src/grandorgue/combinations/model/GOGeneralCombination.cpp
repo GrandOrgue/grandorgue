@@ -382,7 +382,7 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
 
 void GOGeneralCombination::Push(
   ExtraElementsSet const *extraSet, bool isFromCrescendo) {
-  bool used = GOCombination::PushLocal(extraSet);
+  GOCombination::PushLocal(extraSet);
 
   if (!isFromCrescendo || !extraSet) { // Crescendo in add mode: not to switch
                                        // off combination
@@ -395,7 +395,8 @@ void GOGeneralCombination::Push(
     for (unsigned j = m_organfile->GetFirstManualIndex();
          j <= m_organfile->GetManualAndPedalCount();
          j++) {
-      for (unsigned k = 0; k < m_organfile->GetManual(j)->GetDivisionalCount();
+      for (unsigned k = 0;
+           k < m_organfile->GetManual(j)->GetExistingDivisionalCount();
            k++)
         m_organfile->GetManual(j)->GetDivisional(k)->Display(false);
     }

@@ -95,6 +95,16 @@ public:
     unsigned first_midi,
     unsigned keys);
   void Load(GOConfigReader &cfg, wxString group, int manualNumber);
+
+  /**
+   * GrandOrgue before 3.9.0 was reading and saving divisional combinations
+   * in global DivisionalXXX sections. Now it reads them from
+   * SetterMMMDivisionalXXX
+   * @param cfg the configuration to read from
+   * @param divisionalIndex the number of divisional from 0
+   * @return the name of the global section from ODF file
+   */
+  wxString GetLegacyDivisionalGroup(GOConfigReader &cfg, int divisionalIndex);
   void InitDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);
   void SetKey(
@@ -120,7 +130,8 @@ public:
   unsigned GetODFCouplerCount();
   GOCoupler *GetCoupler(unsigned index);
   void AddCoupler(GOCoupler *coupler);
-  unsigned GetDivisionalCount();
+  unsigned GetDeclaredDivisionalCount() const { return m_NDivisionals; }
+  unsigned GetExistingDivisionalCount() const { return m_divisionals.size(); }
   GOButtonControl *GetDivisional(unsigned index);
   void AddDivisional(GOButtonControl *divisional);
   unsigned GetTremulantCount();

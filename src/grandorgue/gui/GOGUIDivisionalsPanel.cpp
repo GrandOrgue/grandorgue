@@ -93,7 +93,7 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
       GOButtonControl *const divisional
         = m_organfile->GetButtonControl(buttonName, false);
 
-      manual->AddDivisional(divisional);
+      // manual->AddDivisional(divisional);
 
       button = new GOGUIButton(panel, divisional, true);
       button->Init(cfg, buttonName, j + 3, 100 + i);

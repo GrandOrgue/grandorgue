@@ -421,16 +421,28 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
   GOConfigReader &cfg,
   GOCombinationDefinition &divisionalTemplate,
   const wxString &group,
+  const wxString &readGroup,
   int manualNumber,
   int divisionalNumber) {
   GODivisionalCombination *pCmb = nullptr;
+  bool isCmbOnFile = is_cmb_on_file(ODFSetting, cfg, group)
+    || is_cmb_on_file(CMBSetting, cfg, group);
+  bool isCmbOnReadGroup = !readGroup.IsEmpty()
+    && (is_cmb_on_file(ODFSetting, cfg, readGroup) || is_cmb_on_file(CMBSetting, cfg, readGroup));
 
-  if (
-    is_cmb_on_file(ODFSetting, cfg, group)
-    || is_cmb_on_file(CMBSetting, cfg, group)) {
+  if (isCmbOnFile || isCmbOnReadGroup) {
     pCmb = new GODivisionalCombination(organfile, divisionalTemplate, false);
-    pCmb->Load(cfg, group, manualNumber, divisionalNumber);
+    pCmb->Load(
+      cfg,
+      isCmbOnReadGroup ? readGroup : group,
+      manualNumber,
+      divisionalNumber);
     pCmb->LoadCombination(cfg);
+    if (isCmbOnReadGroup) {  // The combination was loaded from the legacy group
+      pCmb->m_group = group; // It will be saved to the normal group
+      if (isCmbOnFile)       // Load the overriden combination
+        pCmb->LoadCombination(cfg);
+    }
   }
   return pCmb;
 }
