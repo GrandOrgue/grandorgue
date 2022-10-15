@@ -1,3 +1,4 @@
+- Renamed audio ports: Pa to PortAudio and Rt to RtAudio https://github.com/GrandOrgue/grandorgue/issues/1216
 - Fixed size of the Organ Selection Dialog https://github.com/GrandOrgue/grandorgue/issues/1215
 - Fixed generals buttons behaviour with the crescendo in add mode https://github.com/GrandOrgue/grandorgue/issues/1209
 - Fixed an empty stop set to a general combination https://github.com/GrandOrgue/grandorgue/issues/1212

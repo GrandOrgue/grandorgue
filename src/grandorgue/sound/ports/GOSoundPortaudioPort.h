@@ -29,6 +29,7 @@ private:
 
 public:
   static const wxString PORT_NAME;
+  static const wxString PORT_NAME_OLD;
 
   GOSoundPortaudioPort(GOSound *sound, wxString name);
   virtual ~GOSoundPortaudioPort();

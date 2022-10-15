@@ -12,7 +12,8 @@
 
 #include "GOSoundPortFactory.h"
 
-const wxString GOSoundRtPort::PORT_NAME = wxT("Rt");
+const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
+const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
 
 GOSoundRtPort::GOSoundRtPort(GOSound *sound, RtAudio *rtApi, wxString name)
   : GOSoundPort(sound, name), m_rtApi(rtApi), m_nBuffers(0) {}
@@ -139,7 +140,8 @@ int GOSoundRtPort::Callback(
     return 1;
 }
 
-wxString GOSoundRtPort::getName(RtAudio *rt_api, unsigned index) {
+wxString compose_device_name(
+  const wxString &prefix, RtAudio *rt_api, unsigned index) {
   wxString apiName = RtAudio::getApiName(rt_api->getCurrentApi());
   wxString devName;
 
@@ -152,7 +154,11 @@ wxString GOSoundRtPort::getName(RtAudio *rt_api, unsigned index) {
     devName = wxString::Format(_("<unknown> %d"), index);
   }
   return GOSoundPortFactory::getInstance().ComposeDeviceName(
-    PORT_NAME, apiName, devName);
+    prefix, apiName, devName);
+}
+
+wxString GOSoundRtPort::getName(RtAudio *rt_api, unsigned index) {
+  return compose_device_name(PORT_NAME, rt_api, index);
 }
 
 wxString get_oldstyle_name(RtAudio::Api api, RtAudio *rt_api, unsigned index) {
@@ -225,7 +231,10 @@ GOSoundPort *GOSoundRtPort::create(
     try {
       GOSoundPortFactory::NameParser parser(name);
       const wxString subsysName = parser.nextComp();
-      wxString apiName = subsysName == PORT_NAME ? parser.nextComp() : wxT("");
+      wxString apiName
+        = (subsysName == PORT_NAME || subsysName == PORT_NAME_OLD)
+        ? parser.nextComp()
+        : wxT("");
 
       std::vector<RtAudio::Api> rtaudio_apis;
       RtAudio::getCompiledApi(rtaudio_apis);
@@ -248,7 +257,8 @@ GOSoundPort *GOSoundRtPort::create(
 
               if (
                 devName == name || devName + GOPortFactory::c_NameDelim == name
-                || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, rtApi, i) == name)) {
+                || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, rtApi, i) == name)
+                || compose_device_name(PORT_NAME_OLD, rtApi, i) == name) {
                 port = new GOSoundRtPort(sound, rtApi, devName);
                 break;
               }
