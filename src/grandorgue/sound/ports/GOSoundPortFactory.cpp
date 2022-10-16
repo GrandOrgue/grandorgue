@@ -47,9 +47,13 @@ GOSoundPort *GOSoundPortFactory::create(
   wxString subsysName = parser.nextComp();
   unsigned short subsysMask; // possible subsystems matching with the name
 
-  if (subsysName == GOSoundPortaudioPort::PORT_NAME)
+  if (
+    subsysName == GOSoundPortaudioPort::PORT_NAME
+    || subsysName == GOSoundPortaudioPort::PORT_NAME_OLD)
     subsysMask = SUBSYS_PA_BIT;
-  else if (subsysName == GOSoundRtPort::PORT_NAME)
+  else if (
+    subsysName == GOSoundRtPort::PORT_NAME
+    || subsysName == GOSoundRtPort::PORT_NAME_OLD)
     subsysMask = SUBSYS_RT_BIT;
   else if (subsysName == GOSoundJackPort::PORT_NAME)
     subsysMask = SUBSYS_JACK_BIT;

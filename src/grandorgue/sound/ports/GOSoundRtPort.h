@@ -29,6 +29,7 @@ private:
 
 public:
   static const wxString PORT_NAME;
+  static const wxString PORT_NAME_OLD;
 
   // rtApi to be deleted in the destructor
   GOSoundRtPort(GOSound *sound, RtAudio *rtApi, wxString name);

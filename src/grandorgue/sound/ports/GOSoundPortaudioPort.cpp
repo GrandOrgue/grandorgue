@@ -9,7 +9,8 @@
 
 #include <wx/intl.h>
 
-const wxString GOSoundPortaudioPort::PORT_NAME = wxT("Pa");
+const wxString GOSoundPortaudioPort::PORT_NAME = wxT("PortAudio");
+const wxString GOSoundPortaudioPort::PORT_NAME_OLD = wxT("Pa");
 
 wxString GOSoundPortaudioPort::getLastError(PaError error) {
   const char *errText = NULL;
@@ -37,11 +38,15 @@ GOSoundPortaudioPort::GOSoundPortaudioPort(GOSound *sound, wxString name)
 
 GOSoundPortaudioPort::~GOSoundPortaudioPort() { Close(); }
 
-wxString GOSoundPortaudioPort::getName(unsigned index) {
+wxString compose_device_name(const wxString &prefix, unsigned index) {
   const PaDeviceInfo *info = Pa_GetDeviceInfo(index);
   const PaHostApiInfo *api = Pa_GetHostApiInfo(info->hostApi);
   return GOSoundPortFactory::getInstance().ComposeDeviceName(
-    PORT_NAME, wxString::FromAscii(api->name), wxString(info->name));
+    prefix, wxString::FromAscii(api->name), wxString(info->name));
+}
+
+wxString GOSoundPortaudioPort::getName(unsigned index) {
+  return compose_device_name(PORT_NAME, index);
 }
 
 void GOSoundPortaudioPort::Open() {
@@ -148,7 +153,8 @@ GOSoundPort *GOSoundPortaudioPort::create(
 
       if (
         devName == name || devName + GOPortFactory::c_NameDelim == name
-        || get_oldstyle_name(i) == name)
+        || get_oldstyle_name(i) == name
+        || compose_device_name(PORT_NAME_OLD, i) == name)
         return new GOSoundPortaudioPort(sound, devName);
     }
   }
