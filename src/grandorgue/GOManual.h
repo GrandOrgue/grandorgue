@@ -25,7 +25,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOCoupler;
-class GOButtonControl;
+class GODivisionalButtonControl;
 class GOMidiEvent;
 class GOStop;
 class GOSwitch;
@@ -67,7 +67,7 @@ private:
 
   ptr_vector<GOStop> m_stops;
   ptr_vector<GOCoupler> m_couplers;
-  std::vector<GOButtonControl *> m_divisionals;
+  std::vector<GODivisionalButtonControl *> m_divisionals;
   unsigned m_ODFCouplerCount;
   unsigned m_NDivisionals;
   bool m_displayed;
@@ -132,8 +132,7 @@ public:
   void AddCoupler(GOCoupler *coupler);
   unsigned GetDeclaredDivisionalCount() const { return m_NDivisionals; }
   unsigned GetExistingDivisionalCount() const { return m_divisionals.size(); }
-  GOButtonControl *GetDivisional(unsigned index);
-  void AddDivisional(GOButtonControl *divisional);
+  GODivisionalButtonControl *GetDivisional(unsigned index);
   unsigned GetTremulantCount();
   GOTremulant *GetTremulant(unsigned index);
   unsigned GetSwitchCount();

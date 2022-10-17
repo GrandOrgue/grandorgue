@@ -10,6 +10,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "combinations/control/GODivisionalButtonControl.h"
+
 #include "combinations/GOSetter.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
@@ -24,8 +26,8 @@ GODivisionalCombination::GODivisionalCombination(
   bool is_setter)
   : GOCombination(divisional_template, organfile),
     m_organfile(organfile),
-    m_DivisionalNumber(0),
     m_ManualNumber(1),
+    m_DivisionalNumber(0),
     m_IsSetter(is_setter) {}
 
 void GODivisionalCombination::Init(
@@ -373,14 +375,8 @@ void GODivisionalCombination::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
 }
 
-bool GODivisionalCombination::PushLocal() {
-  bool used = GOCombination::PushLocal();
-
-  return used;
-}
-
-void GODivisionalCombination::Push() {
-  PushLocal();
+void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
+  PushLocal(extraSet);
 
   /* only use divisional couples, if not in setter mode */
   if (m_organfile->GetSetter()->IsSetterActive())

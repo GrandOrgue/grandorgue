@@ -9,7 +9,8 @@
 
 #include <wx/intl.h>
 
-// #include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/control/GODivisionalButtonControl.h"
+
 #include "combinations/GODivisionalSetter.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
@@ -239,16 +240,17 @@ wxString GOManual::GetLegacyDivisionalGroup(
 }
 
 void GOManual::InitDivisionals(GOConfigReader &cfg) {
+  GOCombinationDefinition &divisionalTemplate = GetDivisionalTemplate();
 
-  GetDivisionalTemplate().InitDivisional(m_manual_number);
+  divisionalTemplate.InitDivisional(m_manual_number);
   m_divisionals.resize(0);
   for (unsigned i = 0; i < m_NDivisionals; i++) {
-    wxString legacyGroup = GetLegacyDivisionalGroup(cfg, i);
+    const wxString legacyGroup = GetLegacyDivisionalGroup(cfg, i);
+    GODivisionalButtonControl *pDivisionalControl
+      = new GODivisionalButtonControl(m_organfile, divisionalTemplate, false);
 
-    m_organfile->MarkSectionInUse(
-      legacyGroup); // mark the legacy combination as read
-    m_divisionals.push_back(m_organfile->GetButtonControl(
-      GODivisionalSetter::GetDivisionalButtonName(m_manual_number, i), false));
+    m_divisionals.push_back(pDivisionalControl);
+    pDivisionalControl->Load(cfg, legacyGroup, m_manual_number, i);
   }
 }
 
@@ -368,13 +370,9 @@ GOCoupler *GOManual::GetCoupler(unsigned index) {
 
 void GOManual::AddCoupler(GOCoupler *coupler) { m_couplers.push_back(coupler); }
 
-GOButtonControl *GOManual::GetDivisional(unsigned index) {
+GODivisionalButtonControl *GOManual::GetDivisional(unsigned index) {
   assert(index < m_divisionals.size());
   return m_divisionals[index];
-}
-
-void GOManual::AddDivisional(GOButtonControl *divisional) {
-  m_divisionals.push_back(divisional);
 }
 
 GOCombinationDefinition &GOManual::GetDivisionalTemplate() {

@@ -206,9 +206,10 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
                   divisionalIndex = 0;
          divisionalIndex < nDivisionals;
          divisionalIndex++) {
-      wxString legacyGroupName = divisionalIndex < nLegacyDivisionals
-        ? pManual->GetLegacyDivisionalGroup(cfg, divisionalIndex)
-        : WX_EMPTY_STRING;
+      wxString legacyGroupName
+        = /* divisionalIndex < nLegacyDivisionals
+? pManual->GetLegacyDivisionalGroup(cfg, divisionalIndex)
+: */ WX_EMPTY_STRING;
 
       GODivisionalCombination *pCmb = GODivisionalCombination::LoadFrom(
         m_organfile,

@@ -27,6 +27,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(grandorgue_src
 combinations/control/GOGeneralButtonControl.cpp
+combinations/control/GODivisionalButtonControl.cpp
 combinations/model/GOCombination.cpp
 combinations/model/GOCombinationDefinition.cpp
 combinations/model/GODivisionalCombination.cpp

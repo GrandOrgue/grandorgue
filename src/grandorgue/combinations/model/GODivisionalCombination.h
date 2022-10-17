@@ -20,17 +20,18 @@ class GODivisionalCombination : public GOCombination {
 protected:
   GODefinitionFile *m_organfile;
   wxString m_group;
-  int m_DivisionalNumber;
   unsigned m_ManualNumber;
+  int m_DivisionalNumber;
   bool m_IsSetter;
-
-  bool PushLocal();
 
 public:
   GODivisionalCombination(
     GODefinitionFile *organfile,
     GOCombinationDefinition &divisionalTemplate,
     bool isSetter);
+
+  unsigned GetManualNumber() const { return m_ManualNumber; }
+  int GetDivisionalNumber() const { return m_DivisionalNumber; }
 
   void Init(const wxString &group, int manualNumber, int divisionalNumber);
   void Load(
@@ -40,7 +41,7 @@ public:
     int divisionalNumber);
   void LoadCombination(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
-  void Push();
+  void Push(ExtraElementsSet const *extraSet = nullptr);
 
   wxString GetMidiType();
 
