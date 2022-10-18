@@ -260,9 +260,6 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++)
     m_elementcreators[i]->Load(cfg);
 
-  for (unsigned int i = m_FirstManual; i < m_ODFManualCount; i++)
-    m_manuals[i]->InitDivisionals(cfg);
-
   m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
   m_TemperamentLabel.Load(
     cfg, wxT("SetterMasterTemperament"), _("temperament"));

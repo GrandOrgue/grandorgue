@@ -57,7 +57,7 @@ void GODivisionalButtonControl::Push() {
 
   m_divisional.Push(pAddSet);
 
-  for (unsigned l = pManual->GetExistingDivisionalCount(), k = 0; k < l; k++) {
+  for (unsigned l = pManual->GetDivisionalCount(), k = 0; k < l; k++) {
     GODivisionalButtonControl *pDivisionalControl = pManual->GetDivisional(k);
 
     pDivisionalControl->Display(pDivisionalControl == this);

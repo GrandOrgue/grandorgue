@@ -269,8 +269,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
             buffer);
         }
 
-      for (unsigned j = 0;
-           j < m_organfile->GetManual(i)->GetExistingDivisionalCount();
+      for (unsigned j = 0; j < m_organfile->GetManual(i)->GetDivisionalCount();
            j++)
         if (m_organfile->GetManual(i)->GetDivisional(j)->IsDisplayed()) {
           wxString buffer = wxString::Format(wxT("Divisional%03d"), j + 1);
@@ -515,7 +514,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
         panel_group,
         buffer,
         1,
-        m_organfile->GetManual(manual_nb)->GetDeclaredDivisionalCount());
+        m_organfile->GetManual(manual_nb)->GetDivisionalCount());
       buffer = wxString::Format(wxT("Divisional%03d"), j + 1);
       LoadControl(
         new GOGUIButton(
@@ -559,7 +558,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
         buffer,
         wxT("Divisional"),
         1,
-        m_organfile->GetManual(manual_nb)->GetDeclaredDivisionalCount());
+        m_organfile->GetManual(manual_nb)->GetDivisionalCount());
       LoadControl(
         new GOGUIButton(
           this,

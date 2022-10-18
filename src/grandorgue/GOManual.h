@@ -67,9 +67,8 @@ private:
 
   ptr_vector<GOStop> m_stops;
   ptr_vector<GOCoupler> m_couplers;
-  std::vector<GODivisionalButtonControl *> m_divisionals;
+  ptr_vector<GODivisionalButtonControl> m_divisionals;
   unsigned m_ODFCouplerCount;
-  unsigned m_NDivisionals;
   bool m_displayed;
   GOCombinationDefinition m_DivisionalTemplate;
 
@@ -95,17 +94,6 @@ public:
     unsigned first_midi,
     unsigned keys);
   void Load(GOConfigReader &cfg, wxString group, int manualNumber);
-
-  /**
-   * GrandOrgue before 3.9.0 was reading and saving divisional combinations
-   * in global DivisionalXXX sections. Now it reads them from
-   * SetterMMMDivisionalXXX
-   * @param cfg the configuration to read from
-   * @param divisionalIndex the number of divisional from 0
-   * @return the name of the global section from ODF file
-   */
-  wxString GetLegacyDivisionalGroup(GOConfigReader &cfg, int divisionalIndex);
-  void InitDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);
   void SetKey(
     unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);
@@ -130,9 +118,9 @@ public:
   unsigned GetODFCouplerCount();
   GOCoupler *GetCoupler(unsigned index);
   void AddCoupler(GOCoupler *coupler);
-  unsigned GetDeclaredDivisionalCount() const { return m_NDivisionals; }
-  unsigned GetExistingDivisionalCount() const { return m_divisionals.size(); }
+  unsigned GetDivisionalCount();
   GODivisionalButtonControl *GetDivisional(unsigned index);
+  void AddDivisional(GODivisionalButtonControl *divisional);
   unsigned GetTremulantCount();
   GOTremulant *GetTremulant(unsigned index);
   unsigned GetSwitchCount();

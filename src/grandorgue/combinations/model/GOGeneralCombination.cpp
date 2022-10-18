@@ -396,8 +396,7 @@ void GOGeneralCombination::Push(
     for (unsigned j = m_organfile->GetFirstManualIndex();
          j <= m_organfile->GetManualAndPedalCount();
          j++) {
-      for (unsigned k = 0;
-           k < m_organfile->GetManual(j)->GetExistingDivisionalCount();
+      for (unsigned k = 0; k < m_organfile->GetManual(j)->GetDivisionalCount();
            k++)
         m_organfile->GetManual(j)->GetDivisional(k)->Display(false);
     }

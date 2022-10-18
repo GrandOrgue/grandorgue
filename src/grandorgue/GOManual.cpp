@@ -10,8 +10,6 @@
 #include <wx/intl.h>
 
 #include "combinations/control/GODivisionalButtonControl.h"
-
-#include "combinations/GODivisionalSetter.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 
@@ -133,7 +131,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 999);
   m_ODFCouplerCount = cfg.ReadInteger(
     ODFSetting, group, wxT("NumberOfCouplers"), 0, 999, false);
-  m_NDivisionals = cfg.ReadInteger(
+  unsigned nb_divisionals = cfg.ReadInteger(
     ODFSetting, group, wxT("NumberOfDivisionals"), 0, 999, false);
   unsigned nb_tremulants = cfg.ReadInteger(
     ODFSetting,
@@ -216,6 +214,18 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     m_switch_ids.push_back(new_id);
   }
 
+  GetDivisionalTemplate().InitDivisional(m_manual_number);
+  m_divisionals.resize(0);
+  for (unsigned i = 0; i < nb_divisionals; i++) {
+    m_divisionals.push_back(new GODivisionalButtonControl(
+      m_organfile, GetDivisionalTemplate(), false));
+    buffer.Printf(wxT("Divisional%03d"), i + 1);
+    buffer.Printf(
+      wxT("Divisional%03d"),
+      cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
+    m_organfile->MarkSectionInUse(buffer);
+    m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
+  }
   m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
   m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
   m_division.Load(
@@ -227,31 +237,6 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   Resize();
   m_KeyVelocity.resize(m_nb_accessible_keys);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
-}
-
-wxString GOManual::GetLegacyDivisionalGroup(
-  GOConfigReader &cfg, int divisionalIndex) {
-  wxString divisionalKey
-    = wxString::Format(wxT("Divisional%03d"), divisionalIndex + 1);
-  int globalDivisionalNumber
-    = cfg.ReadInteger(ODFSetting, m_group, divisionalKey, 1, 999);
-
-  return wxString::Format(wxT("Divisional%03d"), globalDivisionalNumber);
-}
-
-void GOManual::InitDivisionals(GOConfigReader &cfg) {
-  GOCombinationDefinition &divisionalTemplate = GetDivisionalTemplate();
-
-  divisionalTemplate.InitDivisional(m_manual_number);
-  m_divisionals.resize(0);
-  for (unsigned i = 0; i < m_NDivisionals; i++) {
-    const wxString legacyGroup = GetLegacyDivisionalGroup(cfg, i);
-    GODivisionalButtonControl *pDivisionalControl
-      = new GODivisionalButtonControl(m_organfile, divisionalTemplate, false);
-
-    m_divisionals.push_back(pDivisionalControl);
-    pDivisionalControl->Load(cfg, legacyGroup, m_manual_number, i);
-  }
 }
 
 void GOManual::SetOutput(unsigned note, unsigned velocity) {
@@ -370,9 +355,15 @@ GOCoupler *GOManual::GetCoupler(unsigned index) {
 
 void GOManual::AddCoupler(GOCoupler *coupler) { m_couplers.push_back(coupler); }
 
+unsigned GOManual::GetDivisionalCount() { return m_divisionals.size(); }
+
 GODivisionalButtonControl *GOManual::GetDivisional(unsigned index) {
   assert(index < m_divisionals.size());
   return m_divisionals[index];
+}
+
+void GOManual::AddDivisional(GODivisionalButtonControl *divisional) {
+  m_divisionals.push_back(divisional);
 }
 
 GOCombinationDefinition &GOManual::GetDivisionalTemplate() {
@@ -494,7 +485,7 @@ void GOManual::HandleKey(int key) {}
 void GOManual::Reset() {
   for (unsigned j = 0; j < GetCouplerCount(); j++)
     GetCoupler(j)->Reset();
-  for (unsigned j = 0; j < m_NDivisionals; j++)
+  for (unsigned j = 0; j < GetDivisionalCount(); j++)
     GetDivisional(j)->Display(false);
 
   if (GetStopCount() == 1 && !GetStop(0)->IsDisplayed())
