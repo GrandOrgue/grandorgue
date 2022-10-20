@@ -7071,33 +7071,33 @@ attributes of a label.
           </listitem>
         </varlistentry>
 	<varlistentry>
-	  <term>XXXDivisionalYYY</term>
+	  <term>SetterXXXDivisionalYYY</term>
 	  <listitem>
 	    <para>
 	      Represents a divisional button YYY (000 means 1, 001 - 2 etc) for
-	      the manual YYY (000 - Pedal, 001 - the first manual, etc). The
+	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
 	      section must contain the GUI attributes of a button (displayed as
 	      button per default).
 	    </para>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>XXXDivisionalPrevBank, XXXDivisionalNextBank</term>
+	  <term>SetterXXXDivisionalPrevBank, SetterXXXDivisionalNextBank</term>
 	  <listitem>
 	    <para>
 	      Represents a button swittching the current bank of divisionals for
-	      the manual YYY (000 - Pedal, 001 - the first manual, etc). The
+	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
 	      section must contain the GUI attributes of a button (displayed as
 	      button per default).
 	    </para>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>XXXDivisionalBank</term>
+	  <term>SetterXXXDivisionalBank</term>
 	  <listitem>
 	    <para>
 	      Represents a label showing the current bank of divisionals for
-	      the manual YYY (000 - Pedal, 001 - the first manual, etc). The
+	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
 	      section must contain the GUI attributes of a label.
 	    </para>
 	  </listitem>
