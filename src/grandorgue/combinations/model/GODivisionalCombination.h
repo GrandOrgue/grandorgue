@@ -20,7 +20,7 @@ class GODivisionalCombination : public GOCombination {
 protected:
   GODefinitionFile *m_organfile;
   wxString m_group;
-  unsigned m_ManualNumber;
+  unsigned m_odfManualNumber;
   int m_DivisionalNumber;
   bool m_IsSetter;
 
@@ -30,7 +30,7 @@ public:
     GOCombinationDefinition &divisionalTemplate,
     bool isSetter);
 
-  unsigned GetManualNumber() const { return m_ManualNumber; }
+  unsigned GetManualNumber() const { return m_odfManualNumber; }
   int GetDivisionalNumber() const { return m_DivisionalNumber; }
 
   void Init(const wxString &group, int manualNumber, int divisionalNumber);
@@ -39,17 +39,23 @@ public:
     wxString group,
     int manualNumber,
     int divisionalNumber);
+  // It does not inherit GOSaveableOblect because
+  // GOdivisionalSetter::LoadCombination creates the combinations dynamically
   void LoadCombination(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
   void Push(ExtraElementsSet const *extraSet = nullptr);
 
   wxString GetMidiType();
 
+  // checks if the combination exists in the config file
+  // returns the loaded combination if it exists else returns nullptr
   static GODivisionalCombination *LoadFrom(
     GODefinitionFile *organfile,
     GOConfigReader &cfg,
     GOCombinationDefinition &divisional_template,
     const wxString &group,
+    // for compatibility with the old preset: load the combination with the old
+    // group name
     const wxString &readGroup,
     int manualNumber,
     int divisionalNumber);
