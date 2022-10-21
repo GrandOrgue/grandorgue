@@ -31,13 +31,14 @@ enum {
 const struct GOElementCreator::ButtonDefinitionEntry
   GOMidiRecorder::m_element_types[]
   = {
-    {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true},
-    {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true},
+    {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true, false},
+    {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true, false},
     {wxT("MidiRecorderRecordRename"),
      ID_MIDI_RECORDER_RECORD_RENAME,
      false,
-     true},
-    {wxT(""), -1, false, false},
+     true,
+     false},
+    {wxT(""), -1, false, false, false},
 };
 
 const struct GOElementCreator::ButtonDefinitionEntry *GOMidiRecorder::

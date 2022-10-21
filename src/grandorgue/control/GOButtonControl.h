@@ -39,6 +39,7 @@ protected:
   bool m_Engaged;
   bool m_DisplayInInvertedState;
   bool m_ReadOnly;
+  bool m_IsPiston;
 
   void ProcessMidi(const GOMidiEvent &event);
   void HandleKey(int key);
@@ -52,7 +53,10 @@ protected:
 
 public:
   GOButtonControl(
-    GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton);
+    GODefinitionFile *organfile,
+    GOMidiReceiverType midi_type,
+    bool pushbutton,
+    bool isPiston = false);
   virtual ~GOButtonControl();
   void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
   void Load(GOConfigReader &cfg, const wxString &group);
@@ -60,6 +64,7 @@ public:
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }
   bool IsReadOnly();
   const wxString &GetName();
+  bool IsPiston() const { return m_IsPiston; }
 
   virtual void Push();
   virtual void Set(bool on);

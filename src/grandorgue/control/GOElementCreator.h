@@ -26,6 +26,7 @@ public:
     int value;
     bool is_public;
     bool is_pushbutton;
+    bool is_piston;
   };
 
 protected:

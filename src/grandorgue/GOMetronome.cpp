@@ -32,14 +32,14 @@ enum {
 const struct GOElementCreator::ButtonDefinitionEntry
   GOMetronome::m_element_types[]
   = {
-    {wxT("MetronomeOn"), ID_METRONOME_ON, false, false},
-    {wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false, true},
-    {wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false, true},
-    {wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false, true},
-    {wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false, true},
-    {wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false, true},
-    {wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false, true},
-    {wxT(""), -1, false, false},
+    {wxT("MetronomeOn"), ID_METRONOME_ON, false, false, false},
+    {wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false, true, false},
+    {wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false, true, false},
+    {wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false, true, false},
+    {wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false, true, false},
+    {wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false, true, false},
+    {wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false, true, false},
+    {wxT(""), -1, false, false, false},
 };
 
 const struct GOElementCreator::ButtonDefinitionEntry *GOMetronome::

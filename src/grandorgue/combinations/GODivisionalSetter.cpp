@@ -54,6 +54,7 @@ void fill_button_definition(
   pb->value = currId++;
   pb->is_public = true;
   pb->is_pushbutton = true;
+  pb->is_piston = true;
   pb++;
 }
 

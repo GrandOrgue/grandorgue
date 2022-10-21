@@ -15,7 +15,10 @@
 #include "GODocument.h"
 
 GOButtonControl::GOButtonControl(
-  GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton)
+  GODefinitionFile *organfile,
+  GOMidiReceiverType midi_type,
+  bool pushbutton,
+  bool isPiston)
   : m_organfile(organfile),
     m_midi(organfile, midi_type),
     m_sender(organfile, MIDI_SEND_BUTTON),
@@ -25,7 +28,8 @@ GOButtonControl::GOButtonControl(
     m_Name(),
     m_Engaged(false),
     m_DisplayInInvertedState(false),
-    m_ReadOnly(false) {
+    m_ReadOnly(false),
+    m_IsPiston(isPiston) {
   m_organfile->RegisterEventHandler(this);
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);
