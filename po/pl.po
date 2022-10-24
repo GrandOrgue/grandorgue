@@ -423,7 +423,7 @@ msgstr "< Nieprawidłowy fragment SMPL "
 msgid "< Invalid WAVE format chunk"
 msgstr "< Nieprawidłowy fragment formatu WAVE"
 
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgid "< Malformed wave file. Format chunk must precede data chunk."
 msgstr "< Zniekształcony plik wave. Fragment formatu musi poprzedzać fragment danych.."
 
 msgid "< More than 2 channels in"
@@ -1186,7 +1186,7 @@ msgstr "Nieprawidłowa nazwa instancji"
 msgid "Invalid integer value at section '%s' entry '%s': %s"
 msgstr "Nieprawidłowa wartość całkowita w sekcji '%s' wpis '%s': %s"
 
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Nieprawidłowa definicja pętli"
 
 msgid "Invalid number of channels"
@@ -1586,7 +1586,7 @@ msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Wartość poza zakresem w sekcji '%s' wpis '%s': %f"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr "Nie znaleziono urządzenia wyjściowego %s - dźwięk nie będzie odtwarzany"
 
 msgid "Output underflowed"
@@ -2215,7 +2215,7 @@ msgstr "przewiń"
 msgid "select"
 msgstr "wybierz"
 
-msgid "seperator"
+msgid "separator"
 msgstr "separator"
 
 msgid "settingsdialog.."
@@ -2227,7 +2227,7 @@ msgstr "zrzut ekranu"
 msgid "space"
 msgstr "spacja"
 
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "określ nazwę instancji GrandOrgue"
 
 msgid "subtract"

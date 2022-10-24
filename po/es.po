@@ -539,7 +539,7 @@ msgstr ""
 msgid "< Invalid WAVE format chunk"
 msgstr ""
 
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgid "< Malformed wave file. Format chunk must precede data chunk."
 msgstr ""
 
 msgid "< More than 2 channels in"
@@ -1331,11 +1331,11 @@ msgid "File belongs to a different organ: %s"
 msgstr ""
 
 #, c-format
-msgid "File name '%s' contains invalid path seperators"
+msgid "File name '%s' contains invalid path separators"
 msgstr ""
 
 #, c-format
-msgid "Filename '%s' contains non-portable directory seperator /"
+msgid "Filename '%s' contains non-portable directory separator /"
 msgstr ""
 
 #, c-format
@@ -1632,7 +1632,7 @@ msgstr ""
 msgid "Invalid local header offset"
 msgstr ""
 
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Definición de bucle no válida"
 
 msgid "Invalid number of channels"
@@ -2255,7 +2255,7 @@ msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Valor fuera de rango en la sección '%s' entrada '%s': %f"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr ""
 "Dispositivo de salida %s no encontrado - no tendrá lugar ninguna salida de "
 "sonido"
@@ -2893,11 +2893,11 @@ msgid "Unknown: "
 msgstr "Desconocido: "
 
 #, c-format
-msgid "Unkown MIDI file type %d"
+msgid "Unknown MIDI file type %d"
 msgstr "Tipo de archivo MIDI %d desconocido"
 
 #, c-format
-msgid "Unkown SetterElement in section %s"
+msgid "Unknown SetterElement in section %s"
 msgstr "SetterElement desconocido en la sección %s"
 
 msgid "Unsupported channel count"
@@ -3315,7 +3315,7 @@ msgstr ""
 msgid "select"
 msgstr "seleccionar"
 
-msgid "seperator"
+msgid "separator"
 msgstr "separador"
 
 msgid "snapshot"
@@ -3324,7 +3324,7 @@ msgstr "instantánea"
 msgid "space"
 msgstr "espacio"
 
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "especificar nombre de instancia de GrandOrgue"
 
 msgid "subtract"
