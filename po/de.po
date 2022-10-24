@@ -1390,11 +1390,11 @@ msgid "File '%s' does not exists"
 msgstr ""
 
 #, c-format
-msgid "File name '%s' contains invalid path seperators"
+msgid "File name '%s' contains invalid path separators"
 msgstr ""
 
 #, c-format
-msgid "Filename '%s' contains non-portable directory seperator /"
+msgid "Filename '%s' contains non-portable directory separator /"
 msgstr ""
 
 #, c-format
@@ -1677,7 +1677,7 @@ msgstr "Ungültiger Eintrag ausgewählt: %s"
 msgid "Invalid local header offset"
 msgstr "Ungültige Kopfzeilen-Weite"
 
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Ungültige Loop-Definition"
 
 #, c-format
@@ -1920,7 +1920,7 @@ msgid "Malformed MIDI header"
 msgstr "Ungültiger MIDI-Kopf"
 
 #, c-format
-msgid "Malformed wave file '%s'. Format chunk must preceed data chunk."
+msgid "Malformed wave file '%s'. Format chunk must precede data chunk."
 msgstr ""
 " Fehlerhafte wave Datei %s. Formatchunk muss dem Datenchunk vorausgehen."
 
@@ -2355,7 +2355,7 @@ msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Werteüberschreitung in Abschnitt '%s' Eintrag '%s': %f"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr "Ausgabegerät %s nicht gefunden - Klang wird nicht ausgegeben"
 
 msgid "P"
@@ -2685,7 +2685,7 @@ msgstr "Samplegröße:"
 msgid "Sample channels:"
 msgstr "Samplekanäle:"
 
-msgid "Sample informations"
+msgid "Sample information"
 msgstr "Sample-Information"
 
 #, c-format
@@ -3059,11 +3059,11 @@ msgid "Unknown filetype %s"
 msgstr ""
 
 #, c-format
-msgid "Unkown MIDI file type %d"
+msgid "Unknown MIDI file type %d"
 msgstr ""
 
 #, c-format
-msgid "Unkown SetterElement in section %s"
+msgid "Unknown SetterElement in section %s"
 msgstr ""
 
 msgid "Unsupported channel count"
@@ -3587,7 +3587,7 @@ msgstr "Rollen"
 msgid "select"
 msgstr "Auswählen"
 
-msgid "seperator"
+msgid "separator"
 msgstr "Trennzeichen"
 
 msgid "sequencer position"
@@ -3599,13 +3599,13 @@ msgstr "Schnappschuß"
 msgid "space"
 msgstr "Leerzeichen"
 
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "setzt GrandOrgue Instanznamen"
 
-msgid "specifiy generated organ package filename"
+msgid "specify generated organ package filename"
 msgstr "Dateiname des Orgelpakets festlegen"
 
-msgid "specifiy input directory"
+msgid "specify input directory"
 msgstr ""
 
 msgid "subtract"

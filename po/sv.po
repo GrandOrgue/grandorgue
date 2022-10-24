@@ -613,7 +613,7 @@ msgstr "< Ogiltig SMPL chunk in"
 msgid "< Invalid WAVE format chunk"
 msgstr "< Ogiltig WAVE format chunk"
 
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgid "< Malformed wave file. Format chunk must precede data chunk."
 msgstr "< Missformad wave fil. Format chunk måste föregå data chunk."
 
 msgid "< More than 2 channels in"
@@ -1427,11 +1427,11 @@ msgid "File '%s' does not exists"
 msgstr "Fil '%s' finns ej"
 
 #, c-format
-msgid "File name '%s' contains invalid path seperators"
+msgid "File name '%s' contains invalid path separators"
 msgstr "Filnamn '%s' innehåller felaktig sökvägsavgränsare"
 
 #, c-format
-msgid "Filename '%s' contains non-portable directory seperator /"
+msgid "Filename '%s' contains non-portable directory separator /"
 msgstr "Filnamn '%s' innehåller icke portabel sökvägsavgränsare /"
 
 #, c-format
@@ -1700,7 +1700,7 @@ msgstr "Felaktigt föremål valt: %s"
 msgid "Invalid local header offset"
 msgstr "Felaktig lokal rubrikförskjutning"
 
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Felaktig loopdefinition"
 
 msgid "Invalid object type for reversible piston"
@@ -2365,7 +2365,7 @@ msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %f"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr "Enhet %s hittades ej - ingen ljudutmatning kommer att ske"
 
 msgid "P"
@@ -2691,7 +2691,7 @@ msgstr "Samplingsstorlek:"
 msgid "Sample channels:"
 msgstr "Samlingskanaler:"
 
-msgid "Sample informations"
+msgid "Sample information"
 msgstr "Samplingsinformation"
 
 #, c-format
@@ -3066,11 +3066,11 @@ msgid "Unknown filetype %s"
 msgstr "Okänd filtyp %s"
 
 #, c-format
-msgid "Unkown MIDI file type %d"
+msgid "Unknown MIDI file type %d"
 msgstr "Okänd MIDI filtyp %d"
 
 #, c-format
-msgid "Unkown SetterElement in section %s"
+msgid "Unknown SetterElement in section %s"
 msgstr "Okänt SetterElement i avdelning %s"
 
 msgid "Unsupported channel count"
@@ -3597,8 +3597,8 @@ msgstr "scroll"
 msgid "select"
 msgstr "select"
 
-msgid "seperator"
-msgstr "seperator"
+msgid "separator"
+msgstr "separator"
 
 msgid "sequencer position"
 msgstr "sequencerposition"
@@ -3609,13 +3609,13 @@ msgstr "snapshot"
 msgid "space"
 msgstr "mellanslag"
 
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "ange GrandOrgue-instansnamn"
 
-msgid "specifiy generated organ package filename"
+msgid "specify generated organ package filename"
 msgstr "ange det skapade orgelpaketets filnamn"
 
-msgid "specifiy input directory"
+msgid "specify input directory"
 msgstr "ange inmatningskatalog"
 
 msgid "subtract"

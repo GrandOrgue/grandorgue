@@ -342,7 +342,7 @@ msgid "add"
 msgstr "összead"
 
 #: src/core/GOKeyConvert.cpp:89
-msgid "seperator"
+msgid "separator"
 msgstr "elválasztó"
 
 #: src/core/GOKeyConvert.cpp:90
@@ -634,7 +634,7 @@ msgstr "Inkonzisztens WawPack-fájl: %s"
 
 #: src/core/GOWave.cpp:204
 #, c-format
-msgid "Malformed wave file '%s'. Format chunk must preceed data chunk."
+msgid "Malformed wave file '%s'. Format chunk must precede data chunk."
 msgstr "A '%s' wave-fájl hibás. A formátumnak az adat előtt kellene lennie."
 
 #: src/core/GOWave.cpp:231
@@ -917,7 +917,7 @@ msgstr "Ismeretlen tulajdonságok"
 
 #: src/core/archive/GOArchiveReader.cpp:317
 #, c-format
-msgid "File name '%s' contains invalid path seperators"
+msgid "File name '%s' contains invalid path separators"
 msgstr "'%s' fájlnév elérési útjában érvénytelen az elválasztó"
 
 #: src/core/archive/GOArchiveReader.cpp:322
@@ -1251,7 +1251,7 @@ msgstr "MIDI 2 nem támogatott"
 
 #: src/core/midi/GOMidiFileReader.cpp:83
 #, c-format
-msgid "Unkown MIDI file type %d"
+msgid "Unknown MIDI file type %d"
 msgstr "%d MIDI-típus ismeretlen"
 
 #: src/core/midi/GOMidiFileReader.cpp:106
@@ -1785,7 +1785,7 @@ msgid "instance"
 msgstr "példány"
 
 #: src/grandorgue/GOApp.cpp:53
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "adja meg a GrandOrgue példány nevét"
 
 #: src/grandorgue/GOApp.cpp:59
@@ -2113,7 +2113,7 @@ msgstr "'%s' állomány nem létezik"
 
 #: src/grandorgue/GOFilename.cpp:74
 #, c-format
-msgid "Filename '%s' contains non-portable directory seperator /"
+msgid "Filename '%s' contains non-portable directory separator /"
 msgstr "'%s' fájlnév a / portolhatatlan elválasztót tartalmazza"
 
 #: src/grandorgue/GOFrame.cpp:173
@@ -3195,7 +3195,7 @@ msgid "Default for All"
 msgstr "Minden alapértelmezett"
 
 #: src/grandorgue/dialogs/GOOrganDialog.cpp:312
-msgid "Sample informations"
+msgid "Sample information"
 msgstr "Minta információ"
 
 #: src/grandorgue/dialogs/GOOrganDialog.cpp:318
@@ -4711,7 +4711,7 @@ msgstr "%d billentyű kilóg a képernyőről"
 #: src/grandorgue/gui/GOGUIPanel.cpp:185 src/grandorgue/gui/GOGUIPanel.cpp:312
 #: src/grandorgue/gui/GOGUIPanel.cpp:686
 #, c-format
-msgid "Unkown SetterElement in section %s"
+msgid "Unknown SetterElement in section %s"
 msgstr "%s szakaszban ismeretlen beállító"
 
 #: src/grandorgue/gui/GOGUIRecorderPanel.cpp:34
@@ -4809,7 +4809,7 @@ msgstr "RtMidi hiba: %s"
 
 #: src/grandorgue/sound/GOSound.cpp:139
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr "%s kimeneti eszköz hiányzik – nem lesz hangkimenet"
 
 #: src/grandorgue/sound/GOSound.cpp:174
@@ -4856,7 +4856,7 @@ msgid "Mixing of percussive and non-percussive samples in one pipe not allowed"
 msgstr "Tilos ugyanazon síphoz ütős és nem ütős mintákat keverni"
 
 #: src/grandorgue/sound/GOSoundProviderWave.cpp:63
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Érvénytelen ciklusdefiníció"
 
 #: src/grandorgue/sound/GOSoundProviderWave.cpp:69
@@ -4990,7 +4990,7 @@ msgid "organ-package"
 msgstr "orgonacsomag"
 
 #: src/tools/GOTool.cpp:36
-msgid "specifiy generated organ package filename"
+msgid "specify generated organ package filename"
 msgstr "adja meg a készítendő orgonacsomag fájlnevét"
 
 #: src/tools/GOTool.cpp:41
@@ -4998,7 +4998,7 @@ msgid "input-directory"
 msgstr "bemeneti könyvtár"
 
 #: src/tools/GOTool.cpp:42
-msgid "specifiy input directory"
+msgid "specify input directory"
 msgstr "adja meg a bemeneti könyvtárat"
 
 #: src/tools/GOTool.cpp:46
