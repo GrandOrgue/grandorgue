@@ -279,18 +279,8 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
       continue;
     }
 
-    if (msg[0] == 0xFF && msg[1] == 0x51 && msg[2] == 0x03) {
-      unsigned tempo = (msg[3] << 16) | (msg[4] << 8) | (msg[5]);
-
-      m_CurrentSpeed = tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
-
-      if (!m_IsFirstTrackComplete) {
-        // fill out the tempo map
-        m_TempoMap[m_LastTime] = m_CurrentSpeed;
-      }
-
-      continue;
-    } else if (
+    // Look up the tempo map: should we change the tempo?
+    if (
       m_IsFirstTrackComplete && m_CurrentSpeedTo >= 0
       && m_LastTime >= m_CurrentSpeedTo) {
       // inherit tempo changes from the first track
@@ -305,6 +295,19 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
       m_CurrentSpeed = mapIter->second;
       mapIter++; // to the next tempo change
       m_CurrentSpeedTo = mapIter != m_TempoMap.end() ? mapIter->first : -1;
+    }
+
+    // try to process tempo changes from the current track of the midi file
+    if (msg[0] == 0xFF && msg[1] == 0x51 && msg[2] == 0x03) {
+      unsigned tempo = (msg[3] << 16) | (msg[4] << 8) | (msg[5]);
+
+      m_CurrentSpeed = tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
+
+      if (!m_IsFirstTrackComplete) {
+        // fill out the tempo map
+        m_TempoMap[m_LastTime] = m_CurrentSpeed;
+      }
+      continue;
     }
 
     e.FromMidi(msg, m_Map);
