@@ -27,10 +27,10 @@ enum {
 const struct GOElementCreator::ButtonDefinitionEntry
   GOMidiPlayer::m_element_types[]
   = {
-    {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true},
-    {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true},
-    {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true},
-    {wxT(""), -1, false, false},
+    {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true, false},
+    {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true, false},
+    {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true, false},
+    {wxT(""), -1, false, false, false},
 };
 
 const struct GOElementCreator::ButtonDefinitionEntry *GOMidiPlayer::

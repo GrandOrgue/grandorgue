@@ -55,6 +55,7 @@ public:
   void RegisterControlChangedHandler(GOControlChangedHandler *handler);
   void RegisterCacheObject(GOCacheObject *obj);
   void RegisterSaveableObject(GOSaveableObject *obj);
+  void UnregisterSaveableObject(GOSaveableObject *obj);
   void RegisterMidiConfigurator(GOMidiConfigurator *obj);
 
   unsigned GetMidiConfiguratorCount();

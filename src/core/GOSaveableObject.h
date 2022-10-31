@@ -22,6 +22,9 @@ public:
 
   virtual ~GOSaveableObject() {}
 
+  const wxString &GetGroup() const { return m_group; }
+  void SetGroup(const wxString &group) { m_group = group; }
+
   virtual void Save(GOConfigWriter &cfg) = 0;
   virtual void LoadCombination(GOConfigReader &cfg) {}
 };

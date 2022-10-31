@@ -9,7 +9,9 @@
 
 #include <wx/intl.h>
 
-#include "combinations/control/GODivisionalButtonControl.h"
+// #include "combinations/control/GODivisionalButtonControl.h"
+#include "combinations/GODivisionalSetter.h"
+#include "control/GOButtonControl.h"
 
 #include "GODefinitionFile.h"
 #include "GOGUIButton.h"
@@ -66,14 +68,16 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
   button->Init(cfg, wxT("SetterGeneralsFull"), 7, 100);
   panel->AddControl(button);
 
-  panel->GetLayoutEngine()->Update();
+  GOGUILayoutEngine *const pLayout = panel->GetLayoutEngine();
+
+  pLayout->Update();
   for (unsigned int i = m_organfile->GetFirstManualIndex();
        i < m_organfile->GetODFManualCount();
        i++) {
     int x, y;
     GOManual *manual = m_organfile->GetManual(i);
 
-    panel->GetLayoutEngine()->GetPushbuttonBlitPosition(100 + i, 1, x, y);
+    pLayout->GetPushbuttonBlitPosition(100 + i, 1, x, y);
 
     GOGUILabel *PosDisplay = new GOGUILabel(panel, NULL);
     PosDisplay->Init(
@@ -85,24 +89,42 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
     panel->AddControl(PosDisplay);
 
     for (unsigned j = 0; j < 10; j++) {
-      GODivisionalButtonControl *divisional = new GODivisionalButtonControl(
-        m_organfile, manual->GetDivisionalTemplate(), true);
-      divisional->Init(
-        cfg,
-        wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),
-        i,
-        100 + j,
-        wxString::Format(wxT("%d"), j + 1));
-      manual->AddDivisional(divisional);
+      wxString buttonName = GODivisionalSetter::GetDivisionalButtonName(i, j);
+      GOButtonControl *const divisional
+        = m_organfile->GetButtonControl(buttonName, false);
+
+      // manual->AddDivisional(divisional);
 
       button = new GOGUIButton(panel, divisional, true);
-      button->Init(
-        cfg,
-        wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),
-        j + 3,
-        100 + i);
+      button->Init(cfg, buttonName, j + 3, 100 + i);
       panel->AddControl(button);
     }
+
+    wxString labelName = GODivisionalSetter::GetDivisionalBankLabelName(i);
+    GOGUILabel *bankDisplay
+      = new GOGUILabel(panel, m_organfile->GetLabel(labelName));
+
+    pLayout->GetPushbuttonBlitPosition(100 + i, 13, x, y);
+    bankDisplay->Init(cfg, labelName, x, y);
+    panel->AddControl(bankDisplay);
+
+    wxString divisionalPrevName
+      = GODivisionalSetter::GetDivisionalBankPrevLabelName(i);
+    GOButtonControl *const divisionalPrev
+      = m_organfile->GetButtonControl(divisionalPrevName, false);
+
+    button = new GOGUIButton(panel, divisionalPrev, true);
+    button->Init(cfg, divisionalPrevName, 15, 100 + i);
+    panel->AddControl(button);
+
+    wxString divisionalNextName
+      = GODivisionalSetter::GetDivisionalBankNextLabelName(i);
+    GOButtonControl *const divisionalNext
+      = m_organfile->GetButtonControl(divisionalNextName, false);
+
+    button = new GOGUIButton(panel, divisionalNext, true);
+    button->Init(cfg, divisionalNextName, 16, 100 + i);
+    panel->AddControl(button);
   }
   return panel;
 }

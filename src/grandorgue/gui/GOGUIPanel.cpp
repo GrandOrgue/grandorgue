@@ -697,7 +697,7 @@ GOGUIControl *GOGUIPanel::CreateGUIElement(
 
   GOButtonControl *button = m_organfile->GetButtonControl(type, true);
   if (button)
-    return new GOGUIButton(this, button, false);
+    return new GOGUIButton(this, button, button->IsPiston());
 
   GOLabelControl *label = m_organfile->GetLabel(type, true);
   if (label)

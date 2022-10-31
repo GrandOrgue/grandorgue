@@ -5716,7 +5716,7 @@ values set in the <link linkend="midieventeditor">MIDI event editor</link>
       <title>Divisionals</title>
       <mediaobject><imageobject><imagedata fileref="images/panel_divisionals.png" /></imageobject></mediaobject>
       <para>
-GrandOrgue automatically adds a set of 10 divisional combination stores to each
+GrandOrgue automatically adds a set of 20 banks of 10 divisional combination stores to each
 keyboard or pedal board found in the Organ Definition file. This enables the
 user to take advantage of "modern" accessories even when the sampleset doesn't
 provide them.
@@ -5733,9 +5733,32 @@ provide them.
         	<term>Full</term>
         	<listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
         </varlistentry>
+        <varlistentry>
+        	<term>1</term>
+        	<term>2</term>
+        	<term>3</term>
+        	<term>4</term>
+        	<term>5</term>
+        	<term>6</term>
+        	<term>7</term>
+        	<term>8</term>
+        	<term>9</term>
+        	<term>10</term>
+        	<listitem><simpara>Enable the N-combination stored in the current bank.</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Label in between</term>
+          <listitem><simpara>Displays the current bank for the division. Values are letters from A to T. It is an "active" label, and as such supports a <link linkend="activelabel">Midi send</link> configuration</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+        	<term>-</term>
+        	<term>+</term>
+        	<listitem><simpara>Switch current bank for the division to the previous and to the next</simpara></listitem>
+        </varlistentry>
       </variablelist>
       <note><title>Notes</title>
         <itemizedlist>
+          <listitem><simpara>A division burtton changes it's state after pressing only if there is combination stored to it or the Set button is active.</simpara></listitem>
           <listitem><simpara>All buttons in this panel are enabled for a <link linkend="midieventeditor">Midi Event</link> configuration.</simpara></listitem>
           <listitem><simpara>All configuration done on this panel can be <link linkend="save">saved</link> to the current preset number. If not, GrandOrgue always asks to save on sampleset unloading.</simpara></listitem>
         </itemizedlist>
@@ -7047,6 +7070,38 @@ attributes of a label.
      </para>
           </listitem>
         </varlistentry>
+	<varlistentry>
+	  <term>SetterXXXDivisionalYYY</term>
+	  <listitem>
+	    <para>
+	      Represents a divisional button YYY (000 means 1, 001 - 2 etc) for
+	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
+	      section must contain the GUI attributes of a button (displayed as
+	      button per default).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>SetterXXXDivisionalPrevBank, SetterXXXDivisionalNextBank</term>
+	  <listitem>
+	    <para>
+	      Represents a button swittching the current bank of divisionals for
+	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
+	      section must contain the GUI attributes of a button (displayed as
+	      button per default).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>SetterXXXDivisionalBank</term>
+	  <listitem>
+	    <para>
+	      Represents a label showing the current bank of divisionals for
+	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
+	      section must contain the GUI attributes of a label.
+	    </para>
+	  </listitem>
+	</varlistentry>
         <varlistentry>
           <term>Label</term>
           <listitem>

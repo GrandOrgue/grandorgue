@@ -8,42 +8,41 @@
 #ifndef GODIVISIONALBUTTONCONTROL_H
 #define GODIVISIONALBUTTONCONTROL_H
 
-#include "combinations/model/GOCombination.h"
+#include "combinations/model/GODivisionalCombination.h"
 #include "control/GOPushbuttonControl.h"
 
 class GOConfigReader;
-class GOConfigWriter;
 
-class GODivisionalButtonControl : public GOPushbuttonControl,
-                                  public GOCombination {
-protected:
-  int m_DivisionalNumber;
-  unsigned m_ManualNumber;
-  bool m_IsSetter;
-
-  bool PushLocal();
+class GODivisionalButtonControl : public GOPushbuttonControl {
+private:
+  GODivisionalCombination m_divisional;
 
 public:
   GODivisionalButtonControl(
     GODefinitionFile *organfile,
-    GOCombinationDefinition &divisional_template,
-    bool is_setter);
+    GOCombinationDefinition &divisionalTemplate,
+    bool isSetter);
+
+  GODivisionalCombination &GetGeneral() { return m_divisional; }
+  wxString GetMidiType() override;
+
   void Init(
     GOConfigReader &cfg,
-    wxString group,
+    const wxString &group,
     int manualNumber,
     int divisionalNumber,
-    wxString name);
+    const wxString &name);
+
   void Load(
     GOConfigReader &cfg,
-    wxString group,
+    const wxString &group,
     int manualNumber,
     int divisionalNumber);
+
   void LoadCombination(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
-  void Push();
 
-  wxString GetMidiType();
+  void Push();
 };
 
-#endif
+#endif /* GODIVISIONALBUTTONCONTROL_H */

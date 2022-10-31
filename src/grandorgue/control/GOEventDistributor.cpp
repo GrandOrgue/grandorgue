@@ -7,6 +7,8 @@
 
 #include "GOEventDistributor.h"
 
+#include <algorithm>
+
 #include "GOCacheObject.h"
 #include "GOControlChangedHandler.h"
 #include "GOEventHandler.h"
@@ -40,7 +42,19 @@ void GOEventDistributor::RegisterCacheObject(GOCacheObject *obj) {
 }
 
 void GOEventDistributor::RegisterSaveableObject(GOSaveableObject *obj) {
-  m_SaveableObjects.push_back(obj);
+  if (
+    std::find(m_SaveableObjects.begin(), m_SaveableObjects.end(), obj)
+    == m_SaveableObjects.end())
+    m_SaveableObjects.push_back(obj);
+}
+
+void GOEventDistributor::UnregisterSaveableObject(GOSaveableObject *obj) {
+  auto it = std::find(m_SaveableObjects.begin(), m_SaveableObjects.end(), obj);
+
+  if (it != m_SaveableObjects.end()) {
+    *it = nullptr;
+    m_SaveableObjects.erase(it);
+  }
 }
 
 void GOEventDistributor::RegisterMidiConfigurator(GOMidiConfigurator *obj) {

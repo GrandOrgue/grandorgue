@@ -1,0 +1,116 @@
+/*
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
+
+#ifndef GODIVISIONALSETTER_H
+#define GODIVISIONALSETTER_H
+
+#include <map>
+#include <unordered_map>
+
+#include <wx/hashset.h>
+
+#include "ptrvector.h"
+
+#include "control/GOElementCreator.h"
+
+#include "GOSaveableObject.h"
+
+class GODefinitionFile;
+class GODivisionalCombination;
+class GOLabelControl;
+
+class GODivisionalSetter : public GOElementCreator, GOSaveableObject {
+private:
+  // Maps combination numbers to defined combinations
+  // The first bank (A) has numbers from 0 to 9, the second one - from 10 to 19
+  // If some number is absent then the combination is not defined yet
+  using DivisionalMap = std::map<unsigned, GODivisionalCombination *>;
+
+  GODefinitionFile *m_organfile;
+
+  // the setter starts manuals from 0 but m_organfile may start from
+  // m_FirstManualIndex
+  unsigned m_FirstManualIndex;
+  // the maximal manual index in odf + 1
+  unsigned m_OdfManualCount;
+  // the actual number of manuals. m_OdfManualCount = m_NManuals +
+  // m_FirstManualIndex
+  unsigned m_NManuals;
+  // Button definitions for creating button controls
+  ButtonDefinitionEntry *m_ButtonDefinitions;
+  // Labels displaying the current bank for each manual
+  ptr_vector<GOLabelControl> m_BankLabels;
+  // The same labels for searching by Setter element name
+  std::
+    unordered_map<const wxString, GOLabelControl *, wxStringHash, wxStringEqual>
+      m_BankLabelsByName;
+  // current bank numbers for each manual. 0 - A, 1 - B, etc
+  std::vector<unsigned> m_manualBanks;
+  // All combinations for all nanuals
+  std::vector<DivisionalMap> m_DivisionalMaps;
+
+  // update the current bank on the m_BankLabels[manualN]
+  void UpdateBankDisplay(unsigned manualN);
+  // delete all combinations from m_DivisionalMaps
+  void ClearCombinations();
+
+protected:
+  // called from GOElementCreator::CreateButtons()
+  const struct GOElementCreator::ButtonDefinitionEntry *
+  GetButtonDefinitionList() override;
+
+  // called on pressing any button. id is mapped to manualN and divisionalN
+  void ButtonStateChanged(int id) override;
+
+public:
+  // calculates the setter element name for a divisional button
+  static wxString GetDivisionalButtonName(
+    unsigned manualIndex, unsigned divisionalIndex);
+  // calculates the setter element name for the nank label
+  static wxString GetDivisionalBankLabelName(unsigned manualIndex);
+  // calculates the setter element name for the prev-bank button
+  static wxString GetDivisionalBankPrevLabelName(unsigned manualIndex);
+  // calculates the setter element name for the next-bank button
+  static wxString GetDivisionalBankNextLabelName(unsigned manualIndex);
+
+  GODivisionalSetter(GODefinitionFile *organfile);
+  virtual ~GODivisionalSetter();
+
+  // saves all combinations to the preset file
+  virtual void Save(GOConfigWriter &cfg) override;
+  // loads combinations from the preset file
+  virtual void LoadCombination(GOConfigReader &cfg) override;
+  // loads definitions of all buttons
+  virtual void Load(GOConfigReader &cfg) override;
+
+  // it is not used but it is required to be as it is declared in
+  // GOElementCreator
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) override {
+    return nullptr;
+  }
+
+  // returns a label by the setter element name. Only current bank labels
+  GOLabelControl *GetLabelControl(
+    const wxString &name, bool is_panel) override {
+    return m_BankLabelsByName[name];
+  }
+
+  // Activates the combination for the manual as the button divisionalN is
+  // pressed. Current bank is taken into account.
+  // manualN, and divisionalN start with 0
+  void SwitchDivisionalTo(unsigned manualN, unsigned divisionalN);
+
+  // Activate the previous bank for the manual if it exists.
+  // manualN starts with 0
+  void SwitchBankToPrev(unsigned manualN);
+
+  // Activate the next bank for the manual if it exists
+  // manualN starts with 0
+  void SwitchBankToNext(unsigned manualN);
+};
+
+#endif /* GODIVISIONALSETTER_H */

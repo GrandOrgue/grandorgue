@@ -40,11 +40,11 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
     break;
 
   case GOGUI_SETTER_DIVISIONALS:
-    x_size = 600;
+    x_size = 720;
     y_size = 40 * organfile->GetODFManualCount() + 140;
     drawstop_rows = 1;
     drawstop_cols = 7;
-    button_cols = 13;
+    button_cols = 16;
     button_rows = organfile->GetODFManualCount();
     break;
 

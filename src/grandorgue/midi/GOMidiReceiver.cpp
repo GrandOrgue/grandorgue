@@ -18,13 +18,14 @@ GOMidiReceiver::GOMidiReceiver(
   : GOMidiReceiverBase(type), m_organfile(organfile), m_Index(-1) {}
 
 void GOMidiReceiver::SetIndex(int index) { m_Index = index; }
-void GOMidiReceiver::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
+void GOMidiReceiver::Load(
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
   if (m_organfile && !m_organfile->GetSettings().ODFCheck()) {
     /* Skip old style entries */
     if (m_type == MIDI_RECV_DRAWSTOP)
       cfg.ReadInteger(
         ODFSetting, group, wxT("StopControlMIDIKeyNumber"), -1, 127, false);
-    if (m_type == MIDI_RECV_BUTTON)
+    if (m_type == MIDI_RECV_BUTTON || m_type == MIDI_RECV_SETTER)
       cfg.ReadInteger(
         ODFSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
   }

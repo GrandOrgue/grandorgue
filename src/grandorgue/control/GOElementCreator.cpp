@@ -20,8 +20,8 @@ void GOElementCreator::CreateButtons(GODefinitionFile *organfile) {
        i++) {
     if (m_buttons.size() <= (unsigned)entries[i].value)
       m_buttons.resize(entries[i].value + 1);
-    m_buttons[entries[i].value]
-      = new GOCallbackButtonControl(organfile, this, entries[i].is_pushbutton);
+    m_buttons[entries[i].value] = new GOCallbackButtonControl(
+      organfile, this, entries[i].is_pushbutton, entries[i].is_piston);
   }
 }
 

@@ -53,6 +53,7 @@ void GOModel::Load(GOConfigReader &cfg, GODefinitionFile *organfile) {
   m_manuals.resize(m_FirstManual); // Add empty slot for pedal, if necessary
   for (unsigned int i = m_FirstManual; i < m_ODFManualCount; i++)
     m_manuals.push_back(new GOManual(organfile));
+
   for (unsigned int i = 0; i < 4; i++)
     m_manuals.push_back(new GOManual(organfile));
 

@@ -15,7 +15,10 @@
 #include "GODocument.h"
 
 GOButtonControl::GOButtonControl(
-  GODefinitionFile *organfile, GOMidiReceiverType midi_type, bool pushbutton)
+  GODefinitionFile *organfile,
+  GOMidiReceiverType midi_type,
+  bool pushbutton,
+  bool isPiston)
   : m_organfile(organfile),
     m_midi(organfile, midi_type),
     m_sender(organfile, MIDI_SEND_BUTTON),
@@ -25,7 +28,8 @@ GOButtonControl::GOButtonControl(
     m_Name(),
     m_Engaged(false),
     m_DisplayInInvertedState(false),
-    m_ReadOnly(false) {
+    m_ReadOnly(false),
+    m_IsPiston(isPiston) {
   m_organfile->RegisterEventHandler(this);
   m_organfile->RegisterMidiConfigurator(this);
   m_organfile->RegisterPlaybackStateHandler(this);
@@ -33,7 +37,8 @@ GOButtonControl::GOButtonControl(
 
 GOButtonControl::~GOButtonControl() {}
 
-void GOButtonControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
+void GOButtonControl::Init(
+  GOConfigReader &cfg, const wxString &group, const wxString &name) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
@@ -46,19 +51,22 @@ void GOButtonControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
 }
 
-void GOButtonControl::Load(GOConfigReader &cfg, wxString group) {
+void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
   m_organfile->RegisterSaveableObject(this);
   m_group = group;
-  m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true);
+  m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true, m_Name);
   m_Displayed
     = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
   m_DisplayInInvertedState = cfg.ReadBoolean(
     ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
+
+  GOMidiMap &midiMap = m_organfile->GetSettings().GetMidiMap();
+
   if (!m_ReadOnly) {
-    m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+    m_midi.Load(cfg, group, midiMap);
     m_shortcut.Load(cfg, group);
   }
-  m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, group, midiMap);
 }
 
 void GOButtonControl::Save(GOConfigWriter &cfg) {

@@ -383,7 +383,7 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
 
 void GOGeneralCombination::Push(
   ExtraElementsSet const *extraSet, bool isFromCrescendo) {
-  bool used = GOCombination::PushLocal(extraSet);
+  GOCombination::PushLocal(extraSet);
 
   if (!isFromCrescendo || !extraSet) { // Crescendo in add mode: not to switch
                                        // off combination
