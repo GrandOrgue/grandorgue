@@ -77,6 +77,7 @@ GOSettingsPorts::GOSettingsPorts(
     wxDefaultSize,
     wxTL_SINGLE | wxTL_CHECKBOX | wxTL_NO_HEADER);
   m_Ports->AppendColumn(wxEmptyString);
+  m_Ports->SetColumnWidth(0, 200);
   m_Ports->Bind(
     wxEVT_TREELIST_ITEM_CHECKED, &GOSettingsPorts::OnPortItemChecked, this);
   m_PortsSizer->Add(m_Ports, 1, wxEXPAND);
