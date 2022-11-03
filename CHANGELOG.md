@@ -1,3 +1,4 @@
+# 3.9.0 (2022-11-03)
 - Fixed playing multitrack midi files with changes of tempo https://github.com/GrandOrgue/grandorgue/discussions/1225
 - Fixed displaying audio ports on OSx https://github.com/GrandOrgue/grandorgue/issues/1216
 - Added divisional combination banks https://github.com/GrandOrgue/grandorgue/issues/708
