@@ -240,7 +240,12 @@
             <in>GOMidiMap.cpp</in>
             <in>GOMidiReceiverBase.cpp</in>
             <in>GOMidiReceiverData.cpp</in>
+            <in>GOMidiReceiverEvent.cpp</in>
+            <in>GOMidiReceiverEvent.h</in>
+            <in>GOMidiReceiverMessageType.h</in>
             <in>GOMidiSenderData.cpp</in>
+            <in>GOMidiSenderEvent.h</in>
+            <in>GOMidiSenderMessageType.h</in>
             <in>GOMidiWXEvent.cpp</in>
           </df>
           <df name="settings">
@@ -2553,12 +2558,37 @@
         <ccTool flags="4">
         </ccTool>
       </item>
+      <item path="../../src/core/midi/GOMidiReceiverEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/core/midi/GOMidiReceiverEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/core/midi/GOMidiReceiverMessageType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/core/midi/GOMidiSenderData.cpp"
             ex="false"
             tool="1"
             flavor2="8">
         <ccTool flags="4">
         </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiSenderEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/core/midi/GOMidiSenderMessageType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/core/midi/GOMidiWXEvent.cpp"
             ex="false"
@@ -7623,6 +7653,21 @@
           </incDir>
         </ccTool>
       </item>
+      <item path="../../src/core/midi/GOMidiReceiverEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/core/midi/GOMidiReceiverEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/core/midi/GOMidiReceiverMessageType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/core/midi/GOMidiSenderData.cpp"
             ex="false"
             tool="1"
@@ -7639,6 +7684,16 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
         </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiSenderEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/core/midi/GOMidiSenderMessageType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/core/midi/GOMidiWXEvent.cpp"
             ex="false"

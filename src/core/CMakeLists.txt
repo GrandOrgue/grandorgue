@@ -30,6 +30,7 @@ midi/GOMidiFileReader.cpp
 midi/GOMidiMap.cpp
 midi/GOMidiReceiverBase.cpp
 midi/GOMidiReceiverData.cpp
+midi/GOMidiReceiverEvent.cpp
 midi/GOMidiSenderData.cpp
 midi/GOMidiWXEvent.cpp
 settings/GOSetting.cpp
