@@ -12,7 +12,7 @@
 #include <wx/stattext.h>
 #include <wx/string.h>
 
-class GODefinitionFile;
+class GOOrganController;
 
 class wxStaticLink : public wxStaticText {
 private:
@@ -27,10 +27,10 @@ public:
 
 class GOProperties : public wxDialog {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
 public:
-  GOProperties(GODefinitionFile *organfile, wxWindow *parent);
+  GOProperties(GOOrganController *organController, wxWindow *parent);
   ~GOProperties(void);
 };
 

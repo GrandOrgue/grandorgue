@@ -30,7 +30,7 @@ class GOMidiEvent;
 class GOStop;
 class GOSwitch;
 class GOTremulant;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOManual : private GOEventHandler,
                  private GOSaveableObject,
@@ -41,7 +41,7 @@ private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOMidiSender m_division;
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */
   std::vector<unsigned> m_KeyVelocity;
@@ -86,7 +86,7 @@ private:
   void PrepareRecording();
 
 public:
-  GOManual(GODefinitionFile *organfile);
+  GOManual(GOOrganController *organController);
   void Init(
     GOConfigReader &cfg,
     wxString group,

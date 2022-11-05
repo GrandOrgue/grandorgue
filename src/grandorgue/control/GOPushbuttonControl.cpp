@@ -7,5 +7,5 @@
 
 #include "GOPushbuttonControl.h"
 
-GOPushbuttonControl::GOPushbuttonControl(GODefinitionFile *organfile)
-  : GOButtonControl(organfile, MIDI_RECV_BUTTON, true) {}
+GOPushbuttonControl::GOPushbuttonControl(GOOrganController *organController)
+  : GOButtonControl(organController, MIDI_RECV_BUTTON, true) {}

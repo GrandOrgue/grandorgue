@@ -15,17 +15,17 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiMap;
-class GODefinitionFile;
+class GOOrganController;
 struct IniFileEnumEntry;
 
 class GOMidiSender : public GOMidiSenderData {
 private:
   static const struct IniFileEnumEntry m_MidiTypes[];
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   int m_ElementID;
 
 public:
-  GOMidiSender(GODefinitionFile *organfile, GOMidiSenderType type);
+  GOMidiSender(GOOrganController *organController, GOMidiSenderType type);
   ~GOMidiSender();
 
   void SetElementID(int id);

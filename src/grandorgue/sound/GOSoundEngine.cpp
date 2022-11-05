@@ -206,7 +206,7 @@ void GOSoundEngine::ClearSetup() {
 }
 
 void GOSoundEngine::Setup(
-  GODefinitionFile *organ_file, unsigned release_count) {
+  GOOrganController *organ_file, unsigned release_count) {
   m_Scheduler.Clear();
   if (release_count < 1)
     release_count = 1;

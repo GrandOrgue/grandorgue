@@ -12,14 +12,14 @@
 #include <vector>
 
 class GOCombinationDefinition;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOCombination {
 public:
   using ExtraElementsSet = std::unordered_set<unsigned>;
 
 private:
-  GODefinitionFile *m_OrganFile;
+  GOOrganController *m_OrganFile;
 
 protected:
   GOCombinationDefinition &m_Template;
@@ -31,7 +31,8 @@ protected:
 
 public:
   GOCombination(
-    GOCombinationDefinition &combination_template, GODefinitionFile *organfile);
+    GOCombinationDefinition &combination_template,
+    GOOrganController *organController);
   virtual ~GOCombination();
   int GetState(unsigned no);
   void SetState(unsigned no, int value);

@@ -20,7 +20,7 @@ class GORank;
 class GOSwitch;
 class GOTremulant;
 class GOWindchest;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOModel {
 protected:
@@ -37,7 +37,7 @@ protected:
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;
 
-  void Load(GOConfigReader &cfg, GODefinitionFile *organfile);
+  void Load(GOConfigReader &cfg, GOOrganController *organController);
 
 public:
   GOModel();

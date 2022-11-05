@@ -19,7 +19,7 @@
 
 #include "GOSaveableObject.h"
 
-class GODefinitionFile;
+class GOOrganController;
 class GODivisionalCombination;
 class GOLabelControl;
 
@@ -30,9 +30,9 @@ private:
   // If some number is absent then the combination is not defined yet
   using DivisionalMap = std::map<unsigned, GODivisionalCombination *>;
 
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
-  // the setter starts manuals from 0 but m_organfile may start from
+  // the setter starts manuals from 0 but m_OrganController may start from
   // m_FirstManualIndex
   unsigned m_FirstManualIndex;
   // the maximal manual index in odf + 1
@@ -77,7 +77,7 @@ public:
   // calculates the setter element name for the next-bank button
   static wxString GetDivisionalBankNextLabelName(unsigned manualIndex);
 
-  GODivisionalSetter(GODefinitionFile *organfile);
+  GODivisionalSetter(GOOrganController *organController);
   virtual ~GODivisionalSetter();
 
   // saves all combinations to the preset file

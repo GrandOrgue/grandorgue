@@ -49,7 +49,7 @@ private:
   void StartPlayback();
 
 public:
-  GOTremulant(GODefinitionFile *organfile);
+  GOTremulant(GOOrganController *organController);
   ~GOTremulant();
   void Load(GOConfigReader &cfg, wxString group, int sampler_group_id);
   GOTremulantType GetTremulantType();

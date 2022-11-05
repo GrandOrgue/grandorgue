@@ -15,7 +15,7 @@
 #include "GOOrganController.h"
 
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
-  GOConfigReader &ini, GODefinitionFile *organfile, GOGUISetterType type)
+  GOConfigReader &ini, GOOrganController *organController, GOGUISetterType type)
   : GOGUIDisplayMetrics() {
   unsigned x_size, y_size;
   int drawstop_rows, drawstop_cols;
@@ -42,31 +42,32 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
 
   case GOGUI_SETTER_DIVISIONALS:
     x_size = 720;
-    y_size = 40 * organfile->GetODFManualCount() + 140;
+    y_size = 40 * organController->GetODFManualCount() + 140;
     drawstop_rows = 1;
     drawstop_cols = 7;
     button_cols = 16;
-    button_rows = organfile->GetODFManualCount();
+    button_rows = organController->GetODFManualCount();
     break;
 
   case GOGUI_SETTER_COUPLER:
     x_size = 500;
-    y_size = 20 + 80 * organfile->GetODFManualCount();
-    drawstop_rows = organfile->GetODFManualCount();
+    y_size = 20 + 80 * organController->GetODFManualCount();
+    drawstop_rows = organController->GetODFManualCount();
     drawstop_cols = 6;
     button_cols = 10;
     button_rows = 0;
     break;
 
   case GOGUI_SETTER_FLOATING:
-    x_size = 40
+    x_size
+      = 40
       + std::max(
-               10
-                 * organfile->GetManual(organfile->GetODFManualCount())
-                     ->GetLogicalKeyCount(),
-               (unsigned)10 * 40);
-    y_size = (organfile->GetManualAndPedalCount()
-              - organfile->GetODFManualCount() + 1)
+          10
+            * organController->GetManual(organController->GetODFManualCount())
+                ->GetLogicalKeyCount(),
+          (unsigned)10 * 40);
+    y_size = (organController->GetManualAndPedalCount()
+              - organController->GetODFManualCount() + 1)
         * 60
       + 160;
     drawstop_rows = 0;

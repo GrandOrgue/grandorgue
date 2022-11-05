@@ -16,7 +16,7 @@ class GOStatisticCallback;
 
 class GOPipeConfigNode : private GOSaveableObject {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOPipeConfigNode *m_parent;
   GOPipeConfig m_PipeConfig;
   GOStatisticCallback *m_StatisticCallback;
@@ -27,7 +27,7 @@ private:
 public:
   GOPipeConfigNode(
     GOPipeConfigNode *parent,
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     GOPipeUpdateCallback *callback,
     GOStatisticCallback *statistic);
   virtual ~GOPipeConfigNode();

@@ -16,8 +16,9 @@
 #include "GODivisionalCoupler.h"
 #include "GOOrganController.h"
 
-GOCombinationDefinition::GOCombinationDefinition(GODefinitionFile *organfile)
-  : m_organfile(organfile), m_Content(0) {}
+GOCombinationDefinition::GOCombinationDefinition(
+  GOOrganController *organController)
+  : m_OrganController(organController), m_Content(0) {}
 
 GOCombinationDefinition::~GOCombinationDefinition() {}
 
@@ -48,48 +49,54 @@ void GOCombinationDefinition::Add(
   if (manual == -1)
     def.group = wxEmptyString;
   else
-    def.group = m_organfile->GetManual(manual)->GetName();
+    def.group = m_OrganController->GetManual(manual)->GetName();
   m_Content.push_back(def);
 }
 
 void GOCombinationDefinition::InitGeneral() {
   m_Content.resize(0);
 
-  for (unsigned j = m_organfile->GetFirstManualIndex();
-       j <= m_organfile->GetManualAndPedalCount();
+  for (unsigned j = m_OrganController->GetFirstManualIndex();
+       j <= m_OrganController->GetManualAndPedalCount();
        j++) {
-    for (unsigned i = 0; i < m_organfile->GetManual(j)->GetStopCount(); i++)
+    for (unsigned i = 0; i < m_OrganController->GetManual(j)->GetStopCount();
+         i++)
       AddGeneral(
-        m_organfile->GetManual(j)->GetStop(i), COMBINATION_STOP, j, i + 1);
+        m_OrganController->GetManual(j)->GetStop(i),
+        COMBINATION_STOP,
+        j,
+        i + 1);
   }
 
-  for (unsigned j = m_organfile->GetFirstManualIndex();
-       j <= m_organfile->GetManualAndPedalCount();
+  for (unsigned j = m_OrganController->GetFirstManualIndex();
+       j <= m_OrganController->GetManualAndPedalCount();
        j++) {
-    for (unsigned i = 0; i < m_organfile->GetManual(j)->GetCouplerCount(); i++)
+    for (unsigned i = 0; i < m_OrganController->GetManual(j)->GetCouplerCount();
+         i++)
       AddGeneral(
-        m_organfile->GetManual(j)->GetCoupler(i),
+        m_OrganController->GetManual(j)->GetCoupler(i),
         COMBINATION_COUPLER,
         j,
         i + 1);
   }
 
-  for (unsigned i = 0; i < m_organfile->GetTremulantCount(); i++)
-    AddGeneral(m_organfile->GetTremulant(i), COMBINATION_TREMULANT, -1, i + 1);
-
-  for (unsigned i = 0; i < m_organfile->GetSwitchCount(); i++)
-    AddGeneral(m_organfile->GetSwitch(i), COMBINATION_SWITCH, -1, i + 1);
-
-  for (unsigned i = 0; i < m_organfile->GetDivisionalCouplerCount(); i++)
+  for (unsigned i = 0; i < m_OrganController->GetTremulantCount(); i++)
     AddGeneral(
-      m_organfile->GetDivisionalCoupler(i),
+      m_OrganController->GetTremulant(i), COMBINATION_TREMULANT, -1, i + 1);
+
+  for (unsigned i = 0; i < m_OrganController->GetSwitchCount(); i++)
+    AddGeneral(m_OrganController->GetSwitch(i), COMBINATION_SWITCH, -1, i + 1);
+
+  for (unsigned i = 0; i < m_OrganController->GetDivisionalCouplerCount(); i++)
+    AddGeneral(
+      m_OrganController->GetDivisionalCoupler(i),
       COMBINATION_DIVISIONALCOUPLER,
       -1,
       i + 1);
 }
 
 void GOCombinationDefinition::InitDivisional(unsigned manual_number) {
-  GOManual *associatedManual = m_organfile->GetManual(manual_number);
+  GOManual *associatedManual = m_OrganController->GetManual(manual_number);
   m_Content.resize(0);
 
   for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)

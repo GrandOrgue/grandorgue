@@ -22,14 +22,14 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiEvent;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOButtonControl : private GOEventHandler,
                         public GOSaveableObject,
                         protected GOPlaybackStateHandler,
                         public GOMidiConfigurator {
 protected:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOKeyReceiver m_shortcut;
@@ -53,7 +53,7 @@ protected:
 
 public:
   GOButtonControl(
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     GOMidiReceiverType midi_type,
     bool pushbutton,
     bool isPiston = false);

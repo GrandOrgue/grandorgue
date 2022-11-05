@@ -71,13 +71,13 @@ void GOPerfTestApp::RunTest(
   unsigned samples_per_frame) {
   try {
     GOConfig settings(wxT("perftest"));
-    GODefinitionFile *organfile = new GODefinitionFile(NULL, settings);
+    GOOrganController *organController = new GOOrganController(NULL, settings);
     const wxString testsDir = argc >= 2 ? argv[1]
                                         : GOStdPath::GetResourceDir()
         + wxFileName::GetPathSeparator() + "perftests";
 
-    organfile->SetODFPath(testsDir);
-    organfile->AddWindchest(new GOWindchest(organfile));
+    organController->SetODFPath(testsDir);
+    organController->AddWindchest(new GOWindchest(organController));
     GOSoundEngine *engine = new GOSoundEngine();
     GOSoundRecorder recorder;
 
@@ -85,13 +85,13 @@ void GOPerfTestApp::RunTest(
       ptr_vector<GOSoundProvider> pipes;
       for (unsigned i = 0; i < sample_instances; i++) {
         GOSoundProviderWave *w
-          = new GOSoundProviderWave(organfile->GetMemoryPool());
+          = new GOSoundProviderWave(organController->GetMemoryPool());
         w->SetAmplitude(102, 0);
         std::vector<release_load_info> release;
         std::vector<attack_load_info> attack;
         attack_load_info ainfo;
         ainfo.filename.Assign(
-          wxString::Format(wxT("%02d.wav"), i % 3), organfile);
+          wxString::Format(wxT("%02d.wav"), i % 3), organController);
         ainfo.sample_group = -1;
         ainfo.load_release = true;
         ainfo.percussive = false;
@@ -138,7 +138,7 @@ void GOPerfTestApp::RunTest(
       engine->SetAudioOutput(engine_config);
       engine->SetAudioRecorder(&recorder, false);
 
-      engine->Setup(organfile);
+      engine->Setup(organController);
 
       std::vector<GOSoundSampler *> handles;
       float output_buffer[samples_per_frame * 2];
@@ -185,7 +185,7 @@ void GOPerfTestApp::RunTest(
     }
 
     delete engine;
-    delete organfile;
+    delete organController;
   } catch (wxString msg) {
     wxLogError(wxT("Error: %s"), msg.c_str());
   }

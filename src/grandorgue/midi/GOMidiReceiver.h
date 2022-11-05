@@ -10,11 +10,11 @@
 
 #include "midi/GOMidiReceiverBase.h"
 
-class GODefinitionFile;
+class GOOrganController;
 
 class GOMidiReceiver : public GOMidiReceiverBase {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   int m_Index;
 
 protected:
@@ -22,7 +22,7 @@ protected:
   int GetTranspose();
 
 public:
-  GOMidiReceiver(GODefinitionFile *organfile, GOMidiReceiverType type);
+  GOMidiReceiver(GOOrganController *organController, GOMidiReceiverType type);
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 

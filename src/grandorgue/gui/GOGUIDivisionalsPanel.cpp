@@ -21,60 +21,60 @@
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
 
-GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GODefinitionFile *organfile)
-  : m_organfile(organfile) {}
+GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GOOrganController *organController)
+  : m_OrganController(organController) {}
 
 GOGUIDivisionalsPanel::~GOGUIDivisionalsPanel() {}
 
 void GOGUIDivisionalsPanel::CreatePanels(GOConfigReader &cfg) {
-  m_organfile->AddPanel(CreateDivisionalsPanel(cfg));
+  m_OrganController->AddPanel(CreateDivisionalsPanel(cfg));
 }
 
 GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
   GOGUIButton *button;
 
-  GOGUIPanel *panel = new GOGUIPanel(m_organfile);
-  GOGUIDisplayMetrics *metrics
-    = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_DIVISIONALS);
+  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
+    cfg, m_OrganController, GOGUI_SETTER_DIVISIONALS);
   panel->Init(cfg, metrics, _("Divisionals"), wxT("SetterDivisionalPanel"));
 
   GOGUIHW1Background *back = new GOGUIHW1Background(panel);
   back->Init(cfg, wxT("SetterDivisionals"));
   panel->AddControl(back);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Set")), false);
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(wxT("Set")), false);
   button->Init(cfg, wxT("SetterGeneralsSet"), 1, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButtonControl(wxT("Regular")), false);
+    panel, m_OrganController->GetButtonControl(wxT("Regular")), false);
   button->Init(cfg, wxT("SetterGerneralsRegular"), 3, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButtonControl(wxT("Scope")), false);
+    panel, m_OrganController->GetButtonControl(wxT("Scope")), false);
   button->Init(cfg, wxT("SetterGeneralsScope"), 4, 100);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_organfile->GetButtonControl(wxT("Scoped")), false);
+    panel, m_OrganController->GetButtonControl(wxT("Scoped")), false);
   button->Init(cfg, wxT("SetterGeneralsScoped"), 5, 100);
   panel->AddControl(button);
 
-  button
-    = new GOGUIButton(panel, m_organfile->GetButtonControl(wxT("Full")), false);
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(wxT("Full")), false);
   button->Init(cfg, wxT("SetterGeneralsFull"), 7, 100);
   panel->AddControl(button);
 
   GOGUILayoutEngine *const pLayout = panel->GetLayoutEngine();
 
   pLayout->Update();
-  for (unsigned int i = m_organfile->GetFirstManualIndex();
-       i < m_organfile->GetODFManualCount();
+  for (unsigned int i = m_OrganController->GetFirstManualIndex();
+       i < m_OrganController->GetODFManualCount();
        i++) {
     int x, y;
-    GOManual *manual = m_organfile->GetManual(i);
+    GOManual *manual = m_OrganController->GetManual(i);
 
     pLayout->GetPushbuttonBlitPosition(100 + i, 1, x, y);
 
@@ -90,7 +90,7 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
     for (unsigned j = 0; j < 10; j++) {
       wxString buttonName = GODivisionalSetter::GetDivisionalButtonName(i, j);
       GOButtonControl *const divisional
-        = m_organfile->GetButtonControl(buttonName, false);
+        = m_OrganController->GetButtonControl(buttonName, false);
 
       // manual->AddDivisional(divisional);
 
@@ -101,7 +101,7 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
 
     wxString labelName = GODivisionalSetter::GetDivisionalBankLabelName(i);
     GOGUILabel *bankDisplay
-      = new GOGUILabel(panel, m_organfile->GetLabel(labelName));
+      = new GOGUILabel(panel, m_OrganController->GetLabel(labelName));
 
     pLayout->GetPushbuttonBlitPosition(100 + i, 13, x, y);
     bankDisplay->Init(cfg, labelName, x, y);
@@ -110,7 +110,7 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
     wxString divisionalPrevName
       = GODivisionalSetter::GetDivisionalBankPrevLabelName(i);
     GOButtonControl *const divisionalPrev
-      = m_organfile->GetButtonControl(divisionalPrevName, false);
+      = m_OrganController->GetButtonControl(divisionalPrevName, false);
 
     button = new GOGUIButton(panel, divisionalPrev, true);
     button->Init(cfg, divisionalPrevName, 15, 100 + i);
@@ -119,7 +119,7 @@ GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
     wxString divisionalNextName
       = GODivisionalSetter::GetDivisionalBankNextLabelName(i);
     GOButtonControl *const divisionalNext
-      = m_organfile->GetButtonControl(divisionalNextName, false);
+      = m_OrganController->GetButtonControl(divisionalNextName, false);
 
     button = new GOGUIButton(panel, divisionalNext, true);
     button->Init(cfg, divisionalNextName, 16, 100 + i);

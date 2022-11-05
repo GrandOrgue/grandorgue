@@ -28,7 +28,7 @@ private:
 
 public:
   GOReferencePipe(
-    GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number);
+    GOOrganController *organController, GORank *rank, unsigned midi_key_number);
 
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);
 };

@@ -71,31 +71,33 @@ void GOFilename::SetPath(const wxString &base, const wxString &file) {
   m_Path = temp;
 }
 
-void GOFilename::Assign(const wxString &name, GODefinitionFile *organfile) {
+void GOFilename::Assign(
+  const wxString &name, GOOrganController *organController) {
   m_Name = name;
   if (
-    organfile->GetSettings().ODFCheck() && name.Find(wxT('/')) != wxNOT_FOUND) {
+    organController->GetSettings().ODFCheck()
+    && name.Find(wxT('/')) != wxNOT_FOUND) {
     wxLogWarning(
       _("Filename '%s' contains non-portable directory separator /"),
       name.c_str());
   }
-  if (organfile->useArchives()) {
+  if (organController->useArchives()) {
     m_Path = wxEmptyString;
-    m_Archiv = organfile->findArchive(name);
+    m_Archiv = organController->findArchive(name);
     if (!m_Archiv) {
       wxLogError(_("File '%s' does not exists"), name.c_str());
     }
     return;
   }
-  SetPath(organfile->GetODFPath(), name);
+  SetPath(organController->GetODFPath(), name);
 }
 
 void GOFilename::AssignResource(
-  const wxString &name, GODefinitionFile *organfile) {
+  const wxString &name, GOOrganController *organController) {
   m_Name = name;
   m_ToHashSizeTime = false;
   m_ToHashPath = false;
-  SetPath(organfile->GetSettings().GetResourceDirectory(), name);
+  SetPath(organController->GetSettings().GetResourceDirectory(), name);
 }
 
 void GOFilename::AssignAbsolute(const wxString &path) {

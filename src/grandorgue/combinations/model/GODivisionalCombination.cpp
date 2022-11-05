@@ -21,11 +21,11 @@
 #include "GOOrganController.h"
 
 GODivisionalCombination::GODivisionalCombination(
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   GOCombinationDefinition &divisional_template,
   bool is_setter)
-  : GOCombination(divisional_template, organfile),
-    m_organfile(organfile),
+  : GOCombination(divisional_template, organController),
+    m_OrganController(organController),
     m_odfManualNumber(1),
     m_DivisionalNumber(0),
     m_IsSetter(is_setter) {}
@@ -68,7 +68,8 @@ void GODivisionalCombination::Load(
     wxString buffer;
     int pos;
     std::vector<bool> used(m_State.size());
-    GOManual *associatedManual = m_organfile->GetManual(m_odfManualNumber);
+    GOManual *associatedManual
+      = m_OrganController->GetManual(m_odfManualNumber);
     unsigned NumberOfStops = (unsigned)read_number_of_stops(
       ODFSetting, cfg, m_group, associatedManual->GetStopCount(), true);
     unsigned NumberOfCouplers = cfg.ReadInteger(
@@ -77,23 +78,23 @@ void GODivisionalCombination::Load(
       wxT("NumberOfCouplers"),
       0,
       associatedManual->GetODFCouplerCount(),
-      m_organfile->DivisionalsStoreIntermanualCouplers()
-        || m_organfile->DivisionalsStoreIntramanualCouplers(),
+      m_OrganController->DivisionalsStoreIntermanualCouplers()
+        || m_OrganController->DivisionalsStoreIntramanualCouplers(),
       0);
     unsigned NumberOfTremulants = cfg.ReadInteger(
       ODFSetting,
       m_group,
       wxT("NumberOfTremulants"),
       0,
-      m_organfile->GetTremulantCount(),
-      m_organfile->DivisionalsStoreTremulants(),
+      m_OrganController->GetTremulantCount(),
+      m_OrganController->DivisionalsStoreTremulants(),
       0);
     unsigned NumberOfSwitches = cfg.ReadInteger(
       ODFSetting,
       m_group,
       wxT("NumberOfSwitches"),
       0,
-      m_organfile->GetSwitchCount(),
+      m_OrganController->GetSwitchCount(),
       false,
       0);
 
@@ -193,7 +194,7 @@ void GODivisionalCombination::Load(
 
 void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
   GOSettingType type = CMBSetting;
-  GOManual *associatedManual = m_organfile->GetManual(m_odfManualNumber);
+  GOManual *associatedManual = m_OrganController->GetManual(m_odfManualNumber);
   if (!m_IsSetter)
     if (read_number_of_stops(type, cfg, m_group, 999, false) == -1)
       type = ODFSetting;
@@ -207,23 +208,23 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
     0,
     type == CMBSetting ? associatedManual->GetCouplerCount()
                        : associatedManual->GetODFCouplerCount(),
-    m_organfile->DivisionalsStoreIntermanualCouplers()
-      || m_organfile->DivisionalsStoreIntramanualCouplers(),
+    m_OrganController->DivisionalsStoreIntermanualCouplers()
+      || m_OrganController->DivisionalsStoreIntramanualCouplers(),
     0);
   unsigned NumberOfTremulants = cfg.ReadInteger(
     type,
     m_group,
     wxT("NumberOfTremulants"),
     0,
-    m_organfile->GetTremulantCount(),
-    m_organfile->DivisionalsStoreTremulants(),
+    m_OrganController->GetTremulantCount(),
+    m_OrganController->DivisionalsStoreTremulants(),
     0);
   unsigned NumberOfSwitches = cfg.ReadInteger(
     type,
     m_group,
     wxT("NumberOfSwitches"),
     0,
-    m_organfile->GetSwitchCount(),
+    m_OrganController->GetSwitchCount(),
     false,
     0);
 
@@ -378,11 +379,12 @@ void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
   PushLocal(extraSet);
 
   /* only use divisional couples, if not in setter mode */
-  if (m_organfile->GetSetter()->IsSetterActive())
+  if (m_OrganController->GetSetter()->IsSetterActive())
     return;
 
-  for (unsigned k = 0; k < m_organfile->GetDivisionalCouplerCount(); k++) {
-    GODivisionalCoupler *coupler = m_organfile->GetDivisionalCoupler(k);
+  for (unsigned k = 0; k < m_OrganController->GetDivisionalCouplerCount();
+       k++) {
+    GODivisionalCoupler *coupler = m_OrganController->GetDivisionalCoupler(k);
     if (!coupler->IsEngaged())
       continue;
 
@@ -391,7 +393,7 @@ void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
         continue;
 
       for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
-        m_organfile->GetManual(coupler->GetManual(j))
+        m_OrganController->GetManual(coupler->GetManual(j))
           ->GetDivisional(m_DivisionalNumber)
           ->Push();
 
@@ -399,7 +401,7 @@ void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
         for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++) {
           if (coupler->GetManual(j) == m_odfManualNumber)
             break;
-          m_organfile->GetManual(coupler->GetManual(j))
+          m_OrganController->GetManual(coupler->GetManual(j))
             ->GetDivisional(m_DivisionalNumber)
             ->Push();
         }
@@ -420,7 +422,7 @@ bool is_cmb_on_file(
 }
 
 GODivisionalCombination *GODivisionalCombination::LoadFrom(
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   GOConfigReader &cfg,
   GOCombinationDefinition &divisionalTemplate,
   const wxString &group,
@@ -434,7 +436,8 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
     && (is_cmb_on_file(ODFSetting, cfg, readGroup) || is_cmb_on_file(CMBSetting, cfg, readGroup));
 
   if (isCmbOnFile || isCmbOnReadGroup) {
-    pCmb = new GODivisionalCombination(organfile, divisionalTemplate, false);
+    pCmb
+      = new GODivisionalCombination(organController, divisionalTemplate, false);
     pCmb->Load(
       cfg,
       isCmbOnReadGroup ? readGroup : group,

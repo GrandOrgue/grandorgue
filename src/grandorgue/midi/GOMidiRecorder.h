@@ -22,7 +22,7 @@
 
 class GOMidiEvent;
 class GOMidiMap;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
   typedef struct {
@@ -32,7 +32,7 @@ class GOMidiRecorder : public GOElementCreator, private GOTimerCallback {
   } midi_map;
 
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOMidiMap &m_Map;
   GOLabelControl m_RecordingTime;
   unsigned m_RecordSeconds;
@@ -67,7 +67,7 @@ private:
   bool SetupMapping(unsigned element, bool isNRPN);
 
 public:
-  GOMidiRecorder(GODefinitionFile *organfile);
+  GOMidiRecorder(GOOrganController *organController);
   ~GOMidiRecorder();
 
   void SetOutputDevice(const wxString &device_id);

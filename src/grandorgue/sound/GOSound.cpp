@@ -30,7 +30,7 @@ GOSound::GOSound(GOConfig &settings)
     m_SamplesPerBuffer(0),
     meter_counter(0),
     m_defaultAudioDevice(),
-    m_organfile(0),
+    m_OrganController(0),
     m_config(settings),
     m_midi(settings) {}
 
@@ -118,8 +118,8 @@ void GOSound::OpenSound() {
   m_SoundEngine.SetupReverb(m_config);
   m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
 
-  if (m_organfile)
-    m_SoundEngine.Setup(m_organfile, m_config.ReleaseConcurrency());
+  if (m_OrganController)
+    m_SoundEngine.Setup(m_OrganController, m_config.ReleaseConcurrency());
   else
     m_SoundEngine.ClearSetup();
 
@@ -152,8 +152,9 @@ void GOSound::OpenSound() {
     StartThreads();
     m_open = true;
 
-    if (m_organfile)
-      m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
+    if (m_OrganController)
+      m_OrganController->PreparePlayback(
+        &GetEngine(), &GetMidi(), &m_AudioRecorder);
   } catch (wxString &msg) {
     if (logSoundErrors)
       GOMessageBox(msg, _("Error"), wxOK | wxICON_ERROR, NULL);
@@ -211,8 +212,8 @@ void GOSound::CloseSound() {
     }
   }
 
-  if (m_organfile)
-    m_organfile->Abort();
+  if (m_OrganController)
+    m_OrganController->Abort();
   ResetMeters();
   m_AudioOutputs.clear();
   m_open = false;
@@ -229,8 +230,8 @@ void GOSound::AssureSoundIsClosed() {
     CloseSound();
 }
 
-void GOSound::AssignOrganFile(GODefinitionFile *organfile) {
-  if (organfile == m_organfile)
+void GOSound::AssignOrganFile(GOOrganController *organController) {
+  if (organController == m_OrganController)
     return;
 
   GOMutexLocker locker(m_lock);
@@ -238,22 +239,23 @@ void GOSound::AssignOrganFile(GODefinitionFile *organfile) {
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
     multi.Add(m_AudioOutputs[i].mutex);
 
-  if (m_organfile) {
-    m_organfile->Abort();
+  if (m_OrganController) {
+    m_OrganController->Abort();
     m_SoundEngine.ClearSetup();
   }
 
-  m_organfile = organfile;
+  m_OrganController = organController;
 
-  if (m_organfile && m_AudioOutputs.size()) {
-    m_SoundEngine.Setup(organfile, m_config.ReleaseConcurrency());
-    m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
+  if (m_OrganController && m_AudioOutputs.size()) {
+    m_SoundEngine.Setup(organController, m_config.ReleaseConcurrency());
+    m_OrganController->PreparePlayback(
+      &GetEngine(), &GetMidi(), &m_AudioRecorder);
   }
 }
 
 GOConfig &GOSound::GetSettings() { return m_config; }
 
-GODefinitionFile *GOSound::GetOrganFile() { return m_organfile; }
+GOOrganController *GOSound::GetOrganFile() { return m_OrganController; }
 
 void GOSound::SetLogSoundErrorMessages(bool settingsDialogVisible) {
   logSoundErrors = settingsDialogVisible;

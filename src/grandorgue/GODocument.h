@@ -15,7 +15,7 @@
 #include "midi/GOMidiListener.h"
 #include "threading/GOMutex.h"
 
-class GODefinitionFile;
+class GOOrganController;
 class GOKeyReceiver;
 class GOMidiEvent;
 class GOMidiReceiverBase;
@@ -32,7 +32,7 @@ private:
 
   GOMutex m_lock;
   bool m_OrganFileReady;
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
   GOMidiListener m_listener;
   bool m_modified;
@@ -68,7 +68,7 @@ public:
   bool Revert(GOProgressDialog *dlg);
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
-  GODefinitionFile *GetOrganFile();
+  GOOrganController *GetOrganFile();
 };
 
 #endif

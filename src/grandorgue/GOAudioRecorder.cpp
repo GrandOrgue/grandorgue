@@ -42,14 +42,14 @@ const struct GOElementCreator::ButtonDefinitionEntry *GOAudioRecorder::
   return m_element_types;
 }
 
-GOAudioRecorder::GOAudioRecorder(GODefinitionFile *organfile)
-  : m_organfile(organfile),
+GOAudioRecorder::GOAudioRecorder(GOOrganController *organController)
+  : m_OrganController(organController),
     m_recorder(NULL),
-    m_RecordingTime(organfile),
+    m_RecordingTime(organController),
     m_RecordSeconds(0),
     m_Filename(),
     m_DoRename(false) {
-  CreateButtons(m_organfile);
+  CreateButtons(m_OrganController);
   UpdateDisplay();
 }
 
@@ -119,7 +119,7 @@ void GOAudioRecorder::UpdateDisplay() {
 void GOAudioRecorder::StopRecording() {
   m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(false);
   m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
-  m_organfile->DeleteTimer(this);
+  m_OrganController->DeleteTimer(this);
   if (!IsRecording())
     return;
 
@@ -130,17 +130,17 @@ void GOAudioRecorder::StopRecording() {
   } else
     GOAskRenameFile(
       m_Filename,
-      m_organfile->GetSettings().AudioRecorderPath(),
+      m_OrganController->GetSettings().AudioRecorderPath(),
       _("WAV files (*.wav)|*.wav"));
   UpdateDisplay();
 }
 
 void GOAudioRecorder::StartRecording(bool rename) {
   StopRecording();
-  if (!m_organfile)
+  if (!m_OrganController)
     return;
 
-  m_Filename = m_organfile->GetSettings().AudioRecorderPath()
+  m_Filename = m_OrganController->GetSettings().AudioRecorderPath()
     + wxFileName::GetPathSeparator()
     + wxDateTime::UNow().Format(_("%Y-%m-%d-%H-%M-%S.%l.wav"));
   m_DoRename = rename;
@@ -156,7 +156,7 @@ void GOAudioRecorder::StartRecording(bool rename) {
 
   m_RecordSeconds = 0;
   UpdateDisplay();
-  m_organfile->SetRelativeTimer(1000, this, 1000);
+  m_OrganController->SetRelativeTimer(1000, this, 1000);
 }
 
 void GOAudioRecorder::HandleTimer() {

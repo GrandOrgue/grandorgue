@@ -15,11 +15,11 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOGeneralCombination : public GOCombination, private GOSaveableObject {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   bool m_IsSetter;
 
   void Save(GOConfigWriter &cfg);
@@ -28,7 +28,7 @@ private:
 public:
   GOGeneralCombination(
     GOCombinationDefinition &general_template,
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
 

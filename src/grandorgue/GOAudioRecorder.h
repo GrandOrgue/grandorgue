@@ -15,12 +15,12 @@
 
 #include "GOTimerCallback.h"
 
-class GODefinitionFile;
+class GOOrganController;
 class GOSoundRecorder;
 
 class GOAudioRecorder : public GOElementCreator, private GOTimerCallback {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOSoundRecorder *m_recorder;
   GOLabelControl m_RecordingTime;
   unsigned m_RecordSeconds;
@@ -36,7 +36,7 @@ private:
   void HandleTimer();
 
 public:
-  GOAudioRecorder(GODefinitionFile *organfile);
+  GOAudioRecorder(GOOrganController *organController);
   ~GOAudioRecorder();
 
   void SetAudioRecorder(GOSoundRecorder *recorder);

@@ -15,7 +15,7 @@
 class GOArchive;
 class GOFile;
 class GOHash;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOFilename {
 private:
@@ -30,8 +30,8 @@ private:
 public:
   GOFilename();
 
-  void Assign(const wxString &name, GODefinitionFile *organfile);
-  void AssignResource(const wxString &name, GODefinitionFile *organfile);
+  void Assign(const wxString &name, GOOrganController *organController);
+  void AssignResource(const wxString &name, GOOrganController *organController);
   void AssignAbsolute(const wxString &path);
 
   const wxString &GetTitle() const;

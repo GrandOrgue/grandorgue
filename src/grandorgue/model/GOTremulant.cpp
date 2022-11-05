@@ -26,8 +26,8 @@ const struct IniFileEnumEntry GOTremulant::m_tremulant_types[] = {
   {wxT("Wave"), GOWavTrem},
 };
 
-GOTremulant::GOTremulant(GODefinitionFile *organfile)
-  : GODrawstop(organfile),
+GOTremulant::GOTremulant(GOOrganController *organController)
+  : GODrawstop(organController),
     m_TremulantType(GOSynthTrem),
     m_Period(0),
     m_StartRate(0),
@@ -67,7 +67,7 @@ void GOTremulant::Load(
     GOSynthTrem);
   if (m_TremulantType == GOSynthTrem) {
     m_TremProvider
-      = new GOSoundProviderSynthedTrem(m_organfile->GetMemoryPool()),
+      = new GOSoundProviderSynthedTrem(m_OrganController->GetMemoryPool()),
       m_Period = cfg.ReadLong(ODFSetting, group, wxT("Period"), 32, 441000);
     m_StartRate = cfg.ReadInteger(ODFSetting, group, wxT("StartRate"), 1, 100);
     m_StopRate = cfg.ReadInteger(ODFSetting, group, wxT("StopRate"), 1, 100);
@@ -77,14 +77,15 @@ void GOTremulant::Load(
     m_PlaybackHandle = 0;
   }
   GODrawstop::Load(cfg, group);
-  m_organfile->RegisterCacheObject(this);
+  m_OrganController->RegisterCacheObject(this);
 }
 
 void GOTremulant::SetupCombinationState() {
-  m_StoreDivisional = m_organfile->DivisionalsStoreTremulants()
-    && (m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
-  m_StoreGeneral
-    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreDivisional = m_OrganController->DivisionalsStoreTremulants()
+    && (m_OrganController->CombinationsStoreNonDisplayedDrawstops()
+        || IsDisplayed());
+  m_StoreGeneral = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
+    || IsDisplayed();
 }
 
 void GOTremulant::InitSoundProvider() {
@@ -99,17 +100,18 @@ void GOTremulant::ChangeState(bool on) {
   if (m_TremulantType == GOSynthTrem) {
     if (on) {
       assert(m_SamplerGroupID < 0);
-      m_PlaybackHandle = m_organfile->StartSample(
+      m_PlaybackHandle = m_OrganController->StartSample(
         m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, m_LastStop);
       on = (m_PlaybackHandle != NULL);
     } else {
       assert(m_PlaybackHandle);
-      m_LastStop = m_organfile->StopSample(m_TremProvider, m_PlaybackHandle);
+      m_LastStop
+        = m_OrganController->StopSample(m_TremProvider, m_PlaybackHandle);
       m_PlaybackHandle = NULL;
     }
   }
   if (m_TremulantType == GOWavTrem) {
-    m_organfile->UpdateTremulant(this);
+    m_OrganController->UpdateTremulant(this);
   }
 }
 
@@ -124,11 +126,11 @@ void GOTremulant::StartPlayback() {
 
   if (IsActive() && m_TremulantType == GOSynthTrem) {
     assert(m_SamplerGroupID < 0);
-    m_PlaybackHandle = m_organfile->StartSample(
+    m_PlaybackHandle = m_OrganController->StartSample(
       m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, 0);
   }
   if (m_TremulantType == GOWavTrem) {
-    m_organfile->UpdateTremulant(this);
+    m_OrganController->UpdateTremulant(this);
   }
 }
 

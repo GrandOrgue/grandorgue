@@ -12,7 +12,7 @@
 
 class GOPushbuttonControl : public GOButtonControl {
 public:
-  GOPushbuttonControl(GODefinitionFile *organfile);
+  GOPushbuttonControl(GOOrganController *organController);
 };
 
 #endif

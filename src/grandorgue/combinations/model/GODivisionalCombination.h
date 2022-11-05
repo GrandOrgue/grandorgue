@@ -14,11 +14,11 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GODefinitionFile;
+class GOOrganController;
 
 class GODivisionalCombination : public GOCombination {
 protected:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   wxString m_group;
   unsigned m_odfManualNumber;
   int m_DivisionalNumber;
@@ -26,7 +26,7 @@ protected:
 
 public:
   GODivisionalCombination(
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     GOCombinationDefinition &divisionalTemplate,
     bool isSetter);
 
@@ -50,7 +50,7 @@ public:
   // checks if the combination exists in the config file
   // returns the loaded combination if it exists else returns nullptr
   static GODivisionalCombination *LoadFrom(
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     GOConfigReader &cfg,
     GOCombinationDefinition &divisional_template,
     const wxString &group,

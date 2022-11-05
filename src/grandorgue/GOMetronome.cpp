@@ -47,17 +47,17 @@ const struct GOElementCreator::ButtonDefinitionEntry *GOMetronome::
   return m_element_types;
 }
 
-GOMetronome::GOMetronome(GODefinitionFile *organfile)
-  : m_organfile(organfile),
+GOMetronome::GOMetronome(GOOrganController *organController)
+  : m_OrganController(organController),
     m_BPM(80),
     m_MeasureLength(4),
     m_Pos(0),
     m_Running(false),
-    m_BPMDisplay(organfile),
-    m_MeasureDisplay(organfile),
+    m_BPMDisplay(organController),
+    m_MeasureDisplay(organController),
     m_rank(NULL),
     m_StopID(0) {
-  CreateButtons(m_organfile);
+  CreateButtons(m_OrganController);
 
   m_buttons[ID_METRONOME_ON]->SetPreconfigIndex(25);
   m_buttons[ID_METRONOME_MEASURE_P1]->SetPreconfigIndex(28);
@@ -65,7 +65,7 @@ GOMetronome::GOMetronome(GODefinitionFile *organfile)
   m_buttons[ID_METRONOME_BEAT_P1]->SetPreconfigIndex(26);
   m_buttons[ID_METRONOME_BEAT_M1]->SetPreconfigIndex(27);
 
-  m_organfile->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterPlaybackStateHandler(this);
 }
 
 GOMetronome::~GOMetronome() { StopTimer(); }
@@ -79,7 +79,7 @@ void GOMetronome::Load(GOConfigReader &cfg) {
     1,
     500,
     false,
-    m_organfile->GetSettings().MetronomeBPM());
+    m_OrganController->GetSettings().MetronomeBPM());
   m_MeasureLength = cfg.ReadInteger(
     CMBSetting,
     m_group,
@@ -87,7 +87,7 @@ void GOMetronome::Load(GOConfigReader &cfg) {
     0,
     32,
     false,
-    m_organfile->GetSettings().MetronomeMeasure());
+    m_OrganController->GetSettings().MetronomeMeasure());
 
   m_buttons[ID_METRONOME_ON]->Init(cfg, wxT("MetronomeOn"), _("ON"));
   m_buttons[ID_METRONOME_MEASURE_P1]->Init(cfg, wxT("MetronomeMP1"), _("+1"));
@@ -100,25 +100,25 @@ void GOMetronome::Load(GOConfigReader &cfg) {
   m_BPMDisplay.Init(cfg, wxT("MetronomeBPM"), _("Metronome BPM"));
   m_MeasureDisplay.Init(cfg, wxT("MetronomeMeasure"), _("Metronom measure"));
 
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
 
-  GOWindchest *windchest = new GOWindchest(m_organfile);
+  GOWindchest *windchest = new GOWindchest(m_OrganController);
   windchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
-  unsigned samplegroup = m_organfile->AddWindchest(windchest);
+  unsigned samplegroup = m_OrganController->AddWindchest(windchest);
 
-  m_rank = new GORank(m_organfile);
+  m_rank = new GORank(m_OrganController);
   m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, samplegroup);
   m_StopID = m_rank->RegisterStop(NULL);
-  m_organfile->AddRank(m_rank);
+  m_OrganController->AddRank(m_rank);
 
   GOSoundingPipe *pipe;
   pipe = new GOSoundingPipe(
-    m_organfile, m_rank, true, samplegroup, 36, 8, 0, 100, 100, false);
+    m_OrganController, m_rank, true, samplegroup, 36, 8, 0, 100, 100, false);
   m_rank->AddPipe(pipe);
   pipe->Init(
     cfg, wxT("MetronomSounds"), wxT("A"), wxT("sounds\\metronome\\beat.wv"));
   pipe = new GOSoundingPipe(
-    m_organfile, m_rank, true, samplegroup, 37, 8, 0, 100, 100, false);
+    m_OrganController, m_rank, true, samplegroup, 37, 8, 0, 100, 100, false);
   m_rank->AddPipe(pipe);
   pipe->Init(
     cfg,
@@ -175,7 +175,7 @@ void GOMetronome::UpdateBPM(int val) {
   if (m_BPM > 500)
     m_BPM = 500;
   if (m_Running)
-    m_organfile->UpdateInterval(this, 60000 / m_BPM);
+    m_OrganController->UpdateInterval(this, 60000 / m_BPM);
   UpdateState();
 }
 
@@ -200,11 +200,11 @@ void GOMetronome::StartTimer() {
   m_Pos = 0;
   m_Running = true;
   UpdateState();
-  m_organfile->SetTimer(0, this, 60000 / m_BPM);
+  m_OrganController->SetTimer(0, this, 60000 / m_BPM);
 }
 
 void GOMetronome::StopTimer() {
-  m_organfile->DeleteTimer(this);
+  m_OrganController->DeleteTimer(this);
   m_Running = false;
   UpdateState();
 }

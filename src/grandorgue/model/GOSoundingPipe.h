@@ -72,7 +72,7 @@ private:
 
 public:
   GOSoundingPipe(
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     GORank *rank,
     bool percussive,
     int sampler_group_id,

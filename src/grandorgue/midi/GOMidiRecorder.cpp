@@ -46,10 +46,10 @@ const struct GOElementCreator::ButtonDefinitionEntry *GOMidiRecorder::
   return m_element_types;
 }
 
-GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
-  : m_organfile(organfile),
-    m_Map(organfile->GetSettings().GetMidiMap()),
-    m_RecordingTime(organfile),
+GOMidiRecorder::GOMidiRecorder(GOOrganController *organController)
+  : m_OrganController(organController),
+    m_Map(organController->GetSettings().GetMidiMap()),
+    m_RecordingTime(organController),
     m_RecordSeconds(0),
     m_NextChannel(0),
     m_NextNRPN(0),
@@ -62,7 +62,7 @@ GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
     m_BufferPos(0),
     m_FileLength(0),
     m_Last(0) {
-  CreateButtons(m_organfile);
+  CreateButtons(m_OrganController);
   Clear();
   UpdateDisplay();
 }
@@ -102,7 +102,7 @@ void GOMidiRecorder::SetOutputDevice(const wxString &device_id) {
 void GOMidiRecorder::SendEvent(GOMidiEvent &e) {
   e.SetDevice(m_OutputDevice);
   if (m_OutputDevice)
-    m_organfile->SendMidiMessage(e);
+    m_OrganController->SendMidiMessage(e);
   if (IsRecording())
     WriteEvent(e);
 }
@@ -304,7 +304,7 @@ void GOMidiRecorder::UpdateDisplay() {
 void GOMidiRecorder::StopRecording() {
   m_buttons[ID_MIDI_RECORDER_RECORD]->Display(false);
   m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
-  m_organfile->DeleteTimer(this);
+  m_OrganController->DeleteTimer(this);
   if (!IsRecording())
     return;
   const unsigned char end[4] = {0x01, 0xFF, 0x2F, 0x00};
@@ -322,7 +322,7 @@ void GOMidiRecorder::StopRecording() {
   } else
     GOAskRenameFile(
       m_Filename,
-      m_organfile->GetSettings().MidiRecorderPath(),
+      m_OrganController->GetSettings().MidiRecorderPath(),
       _("MIDI files (*.mid)|*.mid"));
   UpdateDisplay();
 }
@@ -332,10 +332,10 @@ void GOMidiRecorder::StartRecording(bool rename) {
   MIDIFileHeader t = {{'M', 'T', 'r', 'k'}, 0};
 
   StopRecording();
-  if (!m_organfile)
+  if (!m_OrganController)
     return;
 
-  m_Filename = m_organfile->GetSettings().MidiRecorderPath()
+  m_Filename = m_OrganController->GetSettings().MidiRecorderPath()
     + wxFileName::GetPathSeparator()
     + wxDateTime::UNow().Format(_("%Y-%m-%d-%H-%M-%S.%l.mid"));
   m_DoRename = rename;
@@ -351,7 +351,7 @@ void GOMidiRecorder::StartRecording(bool rename) {
   Write(&h, sizeof(h));
   Write(&t, sizeof(t));
 
-  wxString s = m_organfile->GetChurchName();
+  wxString s = m_OrganController->GetChurchName();
   wxCharBuffer b = s.ToAscii();
   unsigned len = s.length();
   unsigned char th[] = {0x00, 0xFF, 0x04};
@@ -364,11 +364,11 @@ void GOMidiRecorder::StartRecording(bool rename) {
     m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
   else
     m_buttons[ID_MIDI_RECORDER_RECORD]->Display(true);
-  m_organfile->PrepareRecording();
+  m_OrganController->PrepareRecording();
 
   m_RecordSeconds = 0;
   UpdateDisplay();
-  m_organfile->SetRelativeTimer(1000, this, 1000);
+  m_OrganController->SetRelativeTimer(1000, this, 1000);
 }
 
 GOEnclosure *GOMidiRecorder::GetEnclosure(const wxString &name, bool is_panel) {

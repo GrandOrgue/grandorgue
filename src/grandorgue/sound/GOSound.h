@@ -24,7 +24,7 @@
 #include "threading/GOMutex.h"
 #include "threading/atomic.h"
 
-class GODefinitionFile;
+class GOOrganController;
 class GOMidi;
 class GOSoundThread;
 class GOSoundPort;
@@ -79,7 +79,7 @@ private:
 
   wxString m_defaultAudioDevice;
 
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOSoundRecorder m_AudioRecorder;
 
   GOSoundEngine m_SoundEngine;
@@ -116,8 +116,8 @@ public:
 
   GOConfig &GetSettings();
 
-  void AssignOrganFile(GODefinitionFile *organfile);
-  GODefinitionFile *GetOrganFile();
+  void AssignOrganFile(GOOrganController *organController);
+  GOOrganController *GetOrganFile();
 
   void SetLogSoundErrorMessages(bool settingsDialogVisible);
 

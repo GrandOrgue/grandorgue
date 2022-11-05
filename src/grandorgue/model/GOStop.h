@@ -40,7 +40,7 @@ private:
   void StartPlayback();
 
 public:
-  GOStop(GODefinitionFile *organfile, unsigned first_midi_note_number);
+  GOStop(GOOrganController *organController, unsigned first_midi_note_number);
   GORank *GetRank(unsigned index);
   void Load(GOConfigReader &cfg, wxString group);
   void SetKey(unsigned note, unsigned velocity);

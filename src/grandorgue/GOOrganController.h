@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GODEFINITIONFILE_H
-#define GODEFINITIONFILE_H
+#ifndef GOORGANCONTROLLER_H
+#define GOORGANCONTROLLER_H
 
 #include <wx/hashmap.h>
 #include <wx/string.h>
@@ -51,10 +51,10 @@ class GOSoundRecorder;
 class GOSoundSampler;
 typedef struct _GOHashType GOHashType;
 
-class GODefinitionFile : public GOEventDistributor,
-                         private GOPipeUpdateCallback,
-                         public GOTimer,
-                         public GOModel {
+class GOOrganController : public GOEventDistributor,
+                          private GOPipeUpdateCallback,
+                          public GOTimer,
+                          public GOModel {
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
 private:
@@ -132,7 +132,7 @@ private:
   void CloseArchives();
 
 public:
-  GODefinitionFile(GODocument *doc, GOConfig &settings);
+  GOOrganController(GODocument *doc, GOConfig &settings);
   wxString Load(
     GOProgressDialog *dlg,
     const GOOrgan &organ,
@@ -156,7 +156,7 @@ public:
   void AllNotesOff();
   void Modified();
   GODocument *GetDocument();
-  ~GODefinitionFile(void);
+  ~GOOrganController(void);
 
   /* Access to internal ODF objects */
   GOSetter *GetSetter();

@@ -22,11 +22,11 @@
 
 class GOMidiEvent;
 class GOMidiFileReader;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOMidiPlayerContent m_content;
   GOLabelControl m_PlayingTime;
   GOTime m_Start;
@@ -46,7 +46,7 @@ private:
   void HandleTimer();
 
 public:
-  GOMidiPlayer(GODefinitionFile *organfile);
+  GOMidiPlayer(GOOrganController *organController);
   ~GOMidiPlayer();
 
   void Clear();
