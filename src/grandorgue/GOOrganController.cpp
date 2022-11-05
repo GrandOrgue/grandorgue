@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 #include <math.h>
 #include <wx/filename.h>

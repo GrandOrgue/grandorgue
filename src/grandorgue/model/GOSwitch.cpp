@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GOSwitch::GOSwitch(GODefinitionFile *organfile) : GODrawstop(organfile) {}
 

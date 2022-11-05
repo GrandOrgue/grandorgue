@@ -19,10 +19,10 @@
 #include "sound/GOSound.h"
 #include "threading/GOMutexLocker.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
 #include "GOFrame.h"
 #include "GOOrgan.h"
+#include "GOOrganController.h"
 #include "GOPanelView.h"
 #include "GOResizable.h"
 #include "go_ids.h"

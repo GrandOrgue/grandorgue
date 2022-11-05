@@ -10,7 +10,7 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 void GOMainWindowData::Load(GOConfigReader &cfg) {
   p_organFile->RegisterSaveableObject(this);

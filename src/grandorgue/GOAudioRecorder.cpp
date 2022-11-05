@@ -14,8 +14,8 @@
 #include "control/GOCallbackButtonControl.h"
 #include "sound/GOSoundRecorder.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "GOPath.h"
 
 enum {

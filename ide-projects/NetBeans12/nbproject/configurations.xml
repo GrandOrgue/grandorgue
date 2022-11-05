@@ -448,7 +448,6 @@
           <in>GOCacheWriter.cpp</in>
           <in>GOCoupler.cpp</in>
           <in>GODC.cpp</in>
-          <in>GODefinitionFile.cpp</in>
           <in>GODivisionalCoupler.cpp</in>
           <in>GODivisionalCoupler.h</in>
           <in>GODocument.cpp</in>
@@ -463,6 +462,7 @@
           <in>GOLogWindow.cpp</in>
           <in>GOMainWindowData.cpp</in>
           <in>GOMetronome.cpp</in>
+          <in>GOOrganController.cpp</in>
           <in>GOPanelView.cpp</in>
           <in>GOPipeConfig.cpp</in>
           <in>GOPipeConfigNode.cpp</in>
@@ -2754,13 +2754,6 @@
         <ccTool flags="5">
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/GODefinitionFile.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="5">
-        </ccTool>
-      </item>
       <item path="../../src/grandorgue/GODivisionalCoupler.cpp"
             ex="false"
             tool="1"
@@ -2834,6 +2827,13 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOMetronome.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="5">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/GOOrganController.cpp"
             ex="false"
             tool="1"
             flavor2="8">
@@ -8654,33 +8654,6 @@
           </incDir>
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/GODefinitionFile.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
       <item path="../../src/grandorgue/GODivisionalCoupler.h"
             ex="false"
             tool="3"
@@ -8944,6 +8917,33 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOMetronome.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="5">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/GOOrganController.cpp"
             ex="false"
             tool="1"
             flavor2="8">

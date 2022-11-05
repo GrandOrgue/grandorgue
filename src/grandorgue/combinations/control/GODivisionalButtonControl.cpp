@@ -12,7 +12,7 @@
 #include "combinations/GOSetter.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GODivisionalButtonControl::GODivisionalButtonControl(
   GODefinitionFile *organfile,

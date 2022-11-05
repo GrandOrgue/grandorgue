@@ -17,8 +17,8 @@
 #include "model/GOTremulant.h"
 
 #include "GOCoupler.h"
-#include "GODefinitionFile.h"
 #include "GODrawStop.h"
+#include "GOOrganController.h"
 
 GOPistonControl::GOPistonControl(GODefinitionFile *organfile)
   : GOPushbuttonControl(organfile), drawstop(NULL) {

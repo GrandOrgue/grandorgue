@@ -11,8 +11,8 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "GOSoundDefs.h"
 #include "config/GOConfig.h"
 #include "midi/GOMidi.h"

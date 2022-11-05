@@ -10,7 +10,7 @@
 #include <wx/sizer.h>
 #include <wx/statline.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 BEGIN_EVENT_TABLE(wxStaticLink, wxStaticText)
 EVT_LEFT_UP(wxStaticLink::OnClick)

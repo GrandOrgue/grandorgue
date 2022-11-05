@@ -22,7 +22,6 @@
 
 #include "GOCoupler.h"
 #include "GODC.h"
-#include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
 #include "GOGUIButton.h"
 #include "GOGUIControl.h"
@@ -36,6 +35,7 @@
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanelWidget.h"
+#include "GOOrganController.h"
 #include "GOPanelView.h"
 #include "Images.h"
 

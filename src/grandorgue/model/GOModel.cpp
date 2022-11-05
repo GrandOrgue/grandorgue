@@ -11,10 +11,10 @@
 #include "config/GOConfigReader.h"
 #include "control/GOPistonControl.h"
 
-#include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
 #include "GOEnclosure.h"
 #include "GOManual.h"
+#include "GOOrganController.h"
 #include "GORank.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"

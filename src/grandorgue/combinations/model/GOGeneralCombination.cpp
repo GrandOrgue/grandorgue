@@ -17,7 +17,7 @@
 #include "config/GOConfigWriter.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GOGeneralCombination::GOGeneralCombination(
   GOCombinationDefinition &general_template,

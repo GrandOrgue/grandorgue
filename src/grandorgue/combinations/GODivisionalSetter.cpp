@@ -15,7 +15,7 @@
 #include "model/GODivisionalCombination.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "GOSetter.h"
 
 #define DIVISIONAL_BANKS 20

@@ -13,13 +13,13 @@
 #include "control/GOButtonControl.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOOrganController.h"
 
 GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GODefinitionFile *organfile)
   : m_organfile(organfile) {}

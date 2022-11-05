@@ -7,8 +7,8 @@
 
 #include "GOGUIControl.h"
 
-#include "GODefinitionFile.h"
 #include "GOGUIPanel.h"
+#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 
 GOGUIControl::GOGUIControl(GOGUIPanel *panel, void *control)

@@ -7,7 +7,7 @@
 
 #include "GOKeyReceiver.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 

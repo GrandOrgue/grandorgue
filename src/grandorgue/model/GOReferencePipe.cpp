@@ -10,8 +10,8 @@
 #include <wx/intl.h>
 #include <wx/tokenzr.h>
 
-#include "GODefinitionFile.h"
 #include "GOManual.h"
+#include "GOOrganController.h"
 #include "GORank.h"
 #include "GOStop.h"
 #include "config/GOConfigReader.h"

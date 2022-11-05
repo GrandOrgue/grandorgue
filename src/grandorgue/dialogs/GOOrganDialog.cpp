@@ -26,8 +26,8 @@
 #include "model/GORank.h"
 #include "model/GOWindchest.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "GOSampleStatistic.h"
 
 class OrganTreeItemData : public wxTreeItemData {

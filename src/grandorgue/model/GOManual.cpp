@@ -14,8 +14,8 @@
 #include "config/GOConfigReader.h"
 
 #include "GOCoupler.h"
-#include "GODefinitionFile.h"
 #include "GODocument.h"
+#include "GOOrganController.h"
 #include "GOStop.h"
 
 GOManual::GOManual(GODefinitionFile *organfile)

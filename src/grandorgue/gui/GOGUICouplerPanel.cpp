@@ -12,13 +12,13 @@
 #include "model/GOManual.h"
 
 #include "GOCoupler.h"
-#include "GODefinitionFile.h"
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOOrganController.h"
 
 GOGUICouplerPanel::GOGUICouplerPanel(GODefinitionFile *organfile)
   : m_organfile(organfile) {}

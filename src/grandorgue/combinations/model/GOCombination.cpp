@@ -11,8 +11,8 @@
 
 #include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
-#include "GODefinitionFile.h"
 #include "GODrawStop.h"
+#include "GOOrganController.h"
 
 GOCombination::GOCombination(
   GOCombinationDefinition &combination_template, GODefinitionFile *organfile)

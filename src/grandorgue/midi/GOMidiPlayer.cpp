@@ -15,8 +15,8 @@
 #include "midi/GOMidiFileReader.h"
 #include "midi/GOMidiMap.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 
 enum {
   ID_MIDI_PLAYER_PLAY = 0,

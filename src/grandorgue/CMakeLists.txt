@@ -170,12 +170,12 @@ GOLog.cpp
 GOLogWindow.cpp
 GOMetronome.cpp
 GOMainWindowData.cpp
+GOOrganController.cpp
 GOPipeConfig.cpp
 GOPipeConfigNode.cpp
 GOPipeConfigTreeNode.cpp
 GOProperties.cpp
 GOReleaseAlignTable.cpp
-GODefinitionFile.cpp
 GOFrame.cpp
 GODocument.cpp
 GOPanelView.cpp

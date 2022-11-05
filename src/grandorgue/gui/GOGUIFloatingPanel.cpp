@@ -14,7 +14,6 @@
 #include "model/GOManual.h"
 #include "model/GOWindchest.h"
 
-#include "GODefinitionFile.h"
 #include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
@@ -22,6 +21,7 @@
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOOrganController.h"
 
 GOGUIFloatingPanel::GOGUIFloatingPanel(GODefinitionFile *organfile)
   : m_organfile(organfile) {}

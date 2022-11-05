@@ -9,8 +9,8 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
 #include "GOEnclosure.h"
+#include "GOOrganController.h"
 #include "GOPipeWindchestCallback.h"
 #include "GOTremulant.h"
 #include "config/GOConfigReader.h"

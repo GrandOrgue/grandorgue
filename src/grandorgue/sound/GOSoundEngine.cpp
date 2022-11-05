@@ -16,8 +16,8 @@
 #include "sound/scheduler/GOSoundTremulantWorkItem.h"
 #include "sound/scheduler/GOSoundWindchestWorkItem.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "GOReleaseAlignTable.h"
 #include "GOSoundProvider.h"
 #include "GOSoundRecorder.h"

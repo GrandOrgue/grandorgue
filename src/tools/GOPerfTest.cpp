@@ -20,7 +20,7 @@
 #include "sound/GOSoundProviderWave.h"
 #include "sound/GOSoundRecorder.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "GOStdPath.h"
 
 #ifdef __linux__

@@ -9,13 +9,13 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
 #include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOOrganController.h"
 
 GOGUICrescendoPanel::GOGUICrescendoPanel(GODefinitionFile *organfile)
   : m_organfile(organfile) {}

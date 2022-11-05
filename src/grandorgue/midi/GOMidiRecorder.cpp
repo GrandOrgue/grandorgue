@@ -17,9 +17,9 @@
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiFile.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
 #include "GOMidi.h"
+#include "GOOrganController.h"
 #include "GOPath.h"
 
 enum {

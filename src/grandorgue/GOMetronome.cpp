@@ -17,7 +17,7 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOWindchest.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 enum {
   ID_METRONOME_ON = 0,

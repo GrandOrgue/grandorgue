@@ -9,9 +9,9 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
 #include "GODocument.h"
 #include "GODummyPipe.h"
+#include "GOOrganController.h"
 #include "GOReferencePipe.h"
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"

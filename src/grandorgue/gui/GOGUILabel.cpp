@@ -12,10 +12,10 @@
 #include "control/GOLabelControl.h"
 
 #include "GODC.h"
-#include "GODefinitionFile.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
+#include "GOOrganController.h"
 #include "go_gui_utils.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabelControl *label)

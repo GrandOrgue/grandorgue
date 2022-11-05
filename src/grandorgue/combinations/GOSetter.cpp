@@ -17,8 +17,8 @@
 #include "config/GOConfigWriter.h"
 #include "control/GOCallbackButtonControl.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "go_ids.h"
 
 #define FRAME_GENERALS 1000

@@ -9,8 +9,8 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
 #include "GODocument.h"
+#include "GOOrganController.h"
 #include "config/GOConfig.h"
 
 GOLabelControl::GOLabelControl(GODefinitionFile *organfile)

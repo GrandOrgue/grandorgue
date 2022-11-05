@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 
 GODivisionalCoupler::GODivisionalCoupler(GODefinitionFile *organfile)

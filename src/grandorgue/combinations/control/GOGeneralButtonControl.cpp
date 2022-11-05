@@ -11,7 +11,7 @@
 
 #include "combinations/GOSetter.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GOGeneralButtonControl::GOGeneralButtonControl(
   GOCombinationDefinition &general_template,

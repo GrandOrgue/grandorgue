@@ -11,8 +11,8 @@
 #include "config/GOConfigReader.h"
 #include "control/GOButtonControl.h"
 
-#include "GODefinitionFile.h"
 #include "GODocument.h"
+#include "GOOrganController.h"
 
 GOButtonControl::GOButtonControl(
   GODefinitionFile *organfile,

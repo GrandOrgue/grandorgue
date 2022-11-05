@@ -10,9 +10,9 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-#include "GODefinitionFile.h"
 #include "GOHash.h"
 #include "GOInvalidFile.h"
+#include "GOOrganController.h"
 #include "GOStandardFile.h"
 #include "archive/GOArchive.h"
 #include "config/GOConfig.h"

@@ -12,10 +12,10 @@
 #include <wx/mstream.h>
 
 #include "GOBuffer.h"
-#include "GODefinitionFile.h"
 #include "GOFile.h"
 #include "GOFilename.h"
 #include "GOLog.h"
+#include "GOOrganController.h"
 #include "Images.h"
 
 #define BITMAP_LIST                                                            \

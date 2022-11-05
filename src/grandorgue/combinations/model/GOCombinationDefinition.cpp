@@ -13,8 +13,8 @@
 #include "model/GOTremulant.h"
 
 #include "GOCoupler.h"
-#include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
+#include "GOOrganController.h"
 
 GOCombinationDefinition::GOCombinationDefinition(GODefinitionFile *organfile)
   : m_organfile(organfile), m_Content(0) {}

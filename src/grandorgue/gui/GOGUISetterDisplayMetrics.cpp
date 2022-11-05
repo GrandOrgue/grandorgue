@@ -12,7 +12,7 @@
 #include "config/GOConfigReader.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
   GOConfigReader &ini, GODefinitionFile *organfile, GOGUISetterType type)

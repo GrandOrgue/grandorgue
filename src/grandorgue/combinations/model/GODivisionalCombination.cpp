@@ -17,8 +17,8 @@
 #include "config/GOConfigWriter.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
+#include "GOOrganController.h"
 
 GODivisionalCombination::GODivisionalCombination(
   GODefinitionFile *organfile,

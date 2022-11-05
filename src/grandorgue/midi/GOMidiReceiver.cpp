@@ -12,7 +12,7 @@
 #include "model/GOEnclosure.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GOMidiReceiver::GOMidiReceiver(
   GODefinitionFile *organfile, GOMidiReceiverType type)

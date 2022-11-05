@@ -11,8 +11,8 @@
 #include <wx/log.h>
 
 #include "GOAlloc.h"
-#include "GODefinitionFile.h"
 #include "GOHash.h"
+#include "GOOrganController.h"
 #include "GOPath.h"
 #include "GORank.h"
 #include "GOWindchest.h"

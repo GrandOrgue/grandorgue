@@ -9,12 +9,12 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOOrganController.h"
 
 GOGUIRecorderPanel::GOGUIRecorderPanel(GODefinitionFile *organfile)
   : m_organfile(organfile) {}
