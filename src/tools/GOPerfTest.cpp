@@ -15,13 +15,13 @@
 #include "ptrvector.h"
 
 #include "config/GOConfig.h"
+#include "model/GOWindchest.h"
 #include "sound/GOSoundEngine.h"
 #include "sound/GOSoundProviderWave.h"
 #include "sound/GOSoundRecorder.h"
 
 #include "GODefinitionFile.h"
 #include "GOStdPath.h"
-#include "GOWindchest.h"
 
 #ifdef __linux__
 #include <sys/resource.h>

@@ -22,12 +22,13 @@
 #include <wx/stattext.h>
 #include <wx/treectrl.h>
 
+#include "config/GOConfig.h"
+#include "model/GORank.h"
+#include "model/GOWindchest.h"
+
 #include "GODefinitionFile.h"
 #include "GOEvent.h"
-#include "GORank.h"
 #include "GOSampleStatistic.h"
-#include "GOWindchest.h"
-#include "config/GOConfig.h"
 
 class OrganTreeItemData : public wxTreeItemData {
 public:

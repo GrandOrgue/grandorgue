@@ -15,9 +15,9 @@
 #include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "model/GOManual.h"
 
 #include "GODefinitionFile.h"
-#include "GOManual.h"
 
 GOGeneralCombination::GOGeneralCombination(
   GOCombinationDefinition &general_template,

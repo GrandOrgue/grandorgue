@@ -7,10 +7,11 @@
 
 #include "GOSoundWindchestWorkItem.h"
 
-#include "GOSoundTremulantWorkItem.h"
-#include "GOWindchest.h"
+#include "model/GOWindchest.h"
 #include "sound/GOSoundEngine.h"
 #include "threading/GOMutexLocker.h"
+
+#include "GOSoundTremulantWorkItem.h"
 
 GOSoundWindchestWorkItem::GOSoundWindchestWorkItem(
   GOSoundEngine &sound_engine, GOWindchest *windchest)
