@@ -1,3 +1,4 @@
+- Fixed enclosure value calculation https://github.com/GrandOrgue/grandorgue/issues/1203
 - Fixed controlling stops with a touchscreen on Raspberry Pi https://github.com/GrandOrgue/grandorgue/issues/1208
 # 3.9.0 (2022-11-03)
 - Fixed playing multitrack midi files with changes of tempo https://github.com/GrandOrgue/grandorgue/discussions/1225
