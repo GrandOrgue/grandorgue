@@ -20,6 +20,14 @@ struct GOMidiReceiverEvent {
   int low_value;
   int high_value;
   unsigned debounce_time;
+
+  /**
+   * Convert a source midi value (from low_value to high_value) to a normalised
+   *   one (from 0 to 127)
+   * @param srcValue - source midi value (from low_value to high_value)
+   * @return normalised midi value (from 0 to 127)
+   */
+  int GetNormalisedValue(int srcValue);
 };
 
 #endif /* GOMIDIRECEIVEREVENT_H */

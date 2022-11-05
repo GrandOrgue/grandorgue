@@ -555,15 +555,8 @@ GOMidiMatchType GOMidiReceiverBase::Match(
           value = e.GetValue() ? 127 : 0;
           if (e.GetMidiType() == MIDI_AFTERTOUCH)
             continue;
-        } else {
-          value = e.GetValue() - m_events[i].low_value;
-          value *= 127
-            / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        }
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
+        } else
+          value = m_events[i].GetNormalisedValue(e.GetValue());
         if (m_events[i].low_value <= m_events[i].high_value) {
           if (e.GetValue() < m_events[i].low_value)
             return MIDI_MATCH_OFF;
@@ -594,40 +587,19 @@ GOMidiMatchType GOMidiReceiverBase::Match(
         m_events[i].type == MIDI_M_CTRL_CHANGE
         && e.GetMidiType() == MIDI_CTRL_CHANGE
         && m_events[i].key == e.GetKey()) {
-        value = e.GetValue();
-        value = value - m_events[i].low_value;
-        value *= 127
-          / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
+        value = m_events[i].GetNormalisedValue(e.GetValue());
         return MIDI_MATCH_CHANGE;
       }
       if (
         m_events[i].type == MIDI_M_RPN && e.GetMidiType() == MIDI_RPN
         && m_events[i].key == e.GetKey()) {
-        value = e.GetValue();
-        value = value - m_events[i].low_value;
-        value *= 127
-          / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
+        value = m_events[i].GetNormalisedValue(e.GetValue());
         return MIDI_MATCH_CHANGE;
       }
       if (
         m_events[i].type == MIDI_M_NRPN && e.GetMidiType() == MIDI_NRPN
         && m_events[i].key == e.GetKey()) {
-        value = e.GetValue();
-        value = value - m_events[i].low_value;
-        value *= 127
-          / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
+        value = m_events[i].GetNormalisedValue(e.GetValue());
         return MIDI_MATCH_CHANGE;
       }
       if (
@@ -637,14 +609,7 @@ GOMidiMatchType GOMidiReceiverBase::Match(
           (m_events[i].low_value <= e.GetKey()
            && e.GetKey() <= m_events[i].high_value)
           || (m_events[i].high_value <= e.GetKey() && e.GetKey() <= m_events[i].low_value)) {
-          value = e.GetKey();
-          value = value - m_events[i].low_value;
-          value *= 127
-            / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-          if (value < 0)
-            value = 0;
-          if (value > 127)
-            value = 127;
+          value = m_events[i].GetNormalisedValue(e.GetValue());
           return MIDI_MATCH_CHANGE;
         }
       continue;
