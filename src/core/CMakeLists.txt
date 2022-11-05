@@ -43,7 +43,6 @@ settings/GOSettingStore.cpp
 settings/GOSettingString.cpp
 threading/GOCondition.cpp
 threading/GOMutex.cpp
-threading/GOWaitQueue.cpp
 threading/GOThread.cpp
 threading/threading_impl.cpp
 temperaments/GOTemperament.cpp
