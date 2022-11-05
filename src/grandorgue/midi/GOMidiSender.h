@@ -40,17 +40,17 @@ public:
   void SetLabel(const wxString &text);
   void SetName(const wxString &text);
 
-  bool HasChannel(GOMidiSendMessageType type);
-  bool HasKey(GOMidiSendMessageType type);
-  bool HasLowValue(GOMidiSendMessageType type);
-  bool HasHighValue(GOMidiSendMessageType type);
-  bool HasStart(GOMidiSendMessageType type);
-  bool HasLength(GOMidiSendMessageType type);
-  unsigned KeyLimit(GOMidiSendMessageType type);
-  unsigned LowValueLimit(GOMidiSendMessageType type);
-  unsigned HighValueLimit(GOMidiSendMessageType type);
-  unsigned StartLimit(GOMidiSendMessageType type);
-  unsigned LengthLimit(GOMidiSendMessageType type);
+  bool HasChannel(GOMidiSenderMessageType type);
+  bool HasKey(GOMidiSenderMessageType type);
+  bool HasLowValue(GOMidiSenderMessageType type);
+  bool HasHighValue(GOMidiSenderMessageType type);
+  bool HasStart(GOMidiSenderMessageType type);
+  bool HasLength(GOMidiSenderMessageType type);
+  unsigned KeyLimit(GOMidiSenderMessageType type);
+  unsigned LowValueLimit(GOMidiSenderMessageType type);
+  unsigned HighValueLimit(GOMidiSenderMessageType type);
+  unsigned StartLimit(GOMidiSenderMessageType type);
+  unsigned LengthLimit(GOMidiSenderMessageType type);
 
   void Assign(const GOMidiSenderData &data);
 };

@@ -33,7 +33,7 @@ private:
   GOMidiSender *m_original;
   GOMidiEventRecvTab *m_recv;
   GOMidiSenderData m_midi;
-  GOChoice<GOMidiSendMessageType> *m_eventtype;
+  GOChoice<GOMidiSenderMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
   wxStaticText *m_KeyLabel;
   wxSpinCtrl *m_key;
@@ -50,7 +50,7 @@ private:
 
   void StoreEvent();
   void LoadEvent();
-  GOMidiSendEvent CopyEvent();
+  GOMidiSenderEvent CopyEvent();
 
   void OnNewClick(wxCommandEvent &event);
   void OnDeleteClick(wxCommandEvent &event);

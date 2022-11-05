@@ -16,12 +16,12 @@ GOMidiReceiverType GOMidiReceiverData::GetType() const { return m_type; }
 
 unsigned GOMidiReceiverData::GetEventCount() const { return m_events.size(); }
 
-GOMidiReceiveEvent &GOMidiReceiverData::GetEvent(unsigned index) {
+GOMidiReceiverEvent &GOMidiReceiverData::GetEvent(unsigned index) {
   return m_events[index];
 }
 
 unsigned GOMidiReceiverData::AddNewEvent() {
-  GOMidiReceiveEvent m = {0, MIDI_M_NONE, -1, 0};
+  GOMidiReceiverEvent m = {0, MIDI_M_NONE, -1, 0};
   m_events.push_back(m);
   return m_events.size() - 1;
 }
