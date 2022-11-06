@@ -7,10 +7,13 @@
 
 #include "GOMidiReceiverEvent.h"
 
+#include <math.h>
+
 int GOMidiReceiverEvent::GetNormalisedValue(int srcValue) {
   int value = srcValue - low_value;
 
-  value *= 127 / (high_value - low_value + 0.00000001);
+  if (high_value > low_value)
+    value = round(value * (float)127 / (high_value - low_value));
   if (value < 0)
     value = 0;
   if (value > 127)
