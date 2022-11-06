@@ -119,7 +119,7 @@ jobs:
       run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
 
     - name: Upload result
-      uses: nanoufo/action-upload-artifacts-and-release-assets@v1.4
+      uses: nanoufo/action-upload-artifacts-and-release-assets@v1.5
       with:
         path: |
           ${{github.workspace}}/build/${{ matrix.for }}/grandorgue*${{needs.calc_ver.outputs.full_ver}}*
