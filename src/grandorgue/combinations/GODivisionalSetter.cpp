@@ -13,9 +13,9 @@
 #include "control/GOButtonControl.h"
 #include "control/GOLabelControl.h"
 #include "model/GODivisionalCombination.h"
+#include "model/GOManual.h"
 
 #include "GODefinitionFile.h"
-#include "GOManual.h"
 #include "GOSetter.h"
 
 #define DIVISIONAL_BANKS 20

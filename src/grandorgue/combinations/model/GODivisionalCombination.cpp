@@ -15,10 +15,10 @@
 #include "combinations/GOSetter.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "model/GOManual.h"
 
 #include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
-#include "GOManual.h"
 
 GODivisionalCombination::GODivisionalCombination(
   GODefinitionFile *organfile,

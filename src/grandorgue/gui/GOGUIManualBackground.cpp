@@ -7,12 +7,13 @@
 
 #include "GOGUIManualBackground.h"
 
+#include "config/GOConfigReader.h"
+#include "model/GOManual.h"
+
 #include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
-#include "GOManual.h"
-#include "config/GOConfigReader.h"
 
 GOGUIManualBackground::GOGUIManualBackground(
   GOGUIPanel *panel, unsigned manual_number)

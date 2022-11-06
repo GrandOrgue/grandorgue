@@ -10,13 +10,14 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "config/GOConfigReader.h"
+#include "model/GOManual.h"
+
 #include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
+#include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "GOManual.h"
-#include "config/GOConfigReader.h"
-#include "gui/GOGUIMouseState.h"
 
 GOGUIManual::GOGUIManual(
   GOGUIPanel *panel, GOManual *manual, unsigned manual_number)

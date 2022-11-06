@@ -9,9 +9,10 @@
 
 #include <algorithm>
 
-#include "GODefinitionFile.h"
-#include "GOManual.h"
 #include "config/GOConfigReader.h"
+#include "model/GOManual.h"
+
+#include "GODefinitionFile.h"
 
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
   GOConfigReader &ini, GODefinitionFile *organfile, GOGUISetterType type)

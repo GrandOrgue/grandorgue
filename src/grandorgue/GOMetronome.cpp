@@ -13,11 +13,11 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "control/GOCallbackButtonControl.h"
+#include "model/GORank.h"
+#include "model/GOSoundingPipe.h"
+#include "model/GOWindchest.h"
 
 #include "GODefinitionFile.h"
-#include "GORank.h"
-#include "GOSoundingPipe.h"
-#include "GOWindchest.h"
 
 enum {
   ID_METRONOME_ON = 0,

@@ -7,13 +7,14 @@
 
 #include "GOCombinationDefinition.h"
 
+#include "model/GOManual.h"
+#include "model/GOStop.h"
+#include "model/GOSwitch.h"
+#include "model/GOTremulant.h"
+
 #include "GOCoupler.h"
 #include "GODefinitionFile.h"
 #include "GODivisionalCoupler.h"
-#include "GOManual.h"
-#include "GOStop.h"
-#include "GOSwitch.h"
-#include "GOTremulant.h"
 
 GOCombinationDefinition::GOCombinationDefinition(GODefinitionFile *organfile)
   : m_organfile(organfile), m_Content(0) {}

@@ -10,9 +10,9 @@
 #include "wx/intl.h"
 
 #include "combinations/GOSetter.h"
+#include "model/GOManual.h"
 
 #include "GODefinitionFile.h"
-#include "GOManual.h"
 
 GODivisionalButtonControl::GODivisionalButtonControl(
   GODefinitionFile *organfile,

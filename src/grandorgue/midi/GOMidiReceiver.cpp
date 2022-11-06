@@ -7,11 +7,12 @@
 
 #include "GOMidiReceiver.h"
 
-#include "GODefinitionFile.h"
-#include "GOEnclosure.h"
-#include "GOManual.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
+#include "model/GOEnclosure.h"
+#include "model/GOManual.h"
+
+#include "GODefinitionFile.h"
 
 GOMidiReceiver::GOMidiReceiver(
   GODefinitionFile *organfile, GOMidiReceiverType type)
