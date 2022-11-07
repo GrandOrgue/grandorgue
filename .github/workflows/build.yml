@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3.1.0
+      uses: actions/checkout@v3
 
     - name: Set git tags and compose RELNOTES.md
       shell: bash
@@ -107,7 +107,7 @@ jobs:
 
     runs-on: ${{ matrix.run_on }}
     steps:
-    - uses: actions/checkout@v3.1.0
+    - uses: actions/checkout@v3
       with:
         submodules: true
     
