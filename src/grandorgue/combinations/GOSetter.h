@@ -14,8 +14,8 @@
 #include "control/GOElementCreator.h"
 #include "control/GOLabelControl.h"
 #include "model/GOCombination.h"
+#include "model/GOEnclosure.h"
 
-#include "GOEnclosure.h"
 #include "GOPlaybackStateHandler.h"
 
 #define N_CRESCENDOS 4

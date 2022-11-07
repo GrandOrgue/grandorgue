@@ -10,14 +10,15 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "config/GOConfigReader.h"
+#include "model/GOManual.h"
+#include "model/GOStop.h"
+#include "model/GOSwitch.h"
+#include "model/GOTremulant.h"
+
 #include "GOCoupler.h"
 #include "GODefinitionFile.h"
 #include "GODrawStop.h"
-#include "GOManual.h"
-#include "GOStop.h"
-#include "GOSwitch.h"
-#include "GOTremulant.h"
-#include "config/GOConfigReader.h"
 
 GOPistonControl::GOPistonControl(GODefinitionFile *organfile)
   : GOPushbuttonControl(organfile), drawstop(NULL) {

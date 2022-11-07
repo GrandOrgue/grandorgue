@@ -72,7 +72,7 @@ GOMidiEventSendTab::GOMidiEventSendTab(
     wxGBPosition(2, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  m_eventtype = new GOChoice<GOMidiSendMessageType>(this, ID_EVENT);
+  m_eventtype = new GOChoice<GOMidiSenderMessageType>(this, ID_EVENT);
   grid->Add(m_eventtype, wxGBPosition(2, 1), wxGBSpan(1, 4), wxEXPAND);
 
   grid->Add(
@@ -279,7 +279,7 @@ bool GOMidiEventSendTab::TransferDataFromWindow() {
 }
 
 void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
-  GOMidiSendMessageType type = m_eventtype->GetCurrentSelection();
+  GOMidiSenderMessageType type = m_eventtype->GetCurrentSelection();
   if (m_original->HasChannel(type))
     m_channel->Enable();
   else
@@ -393,7 +393,7 @@ void GOMidiEventSendTab::LoadEvent() {
   else
     m_delete->Disable();
 
-  GOMidiSendEvent &e = m_midi.GetEvent(m_current);
+  GOMidiSenderEvent &e = m_midi.GetEvent(m_current);
 
   m_eventtype->SetCurrentSelection(e.type);
 
@@ -415,7 +415,7 @@ void GOMidiEventSendTab::LoadEvent() {
 }
 
 void GOMidiEventSendTab::StoreEvent() {
-  GOMidiSendEvent &e = m_midi.GetEvent(m_current);
+  GOMidiSenderEvent &e = m_midi.GetEvent(m_current);
   if (m_device->GetSelection() == 0)
     e.deviceId = 0;
   else
@@ -454,9 +454,9 @@ void GOMidiEventSendTab::OnCopyClick(wxCommandEvent &event) {
   LoadEvent();
 }
 
-GOMidiSendEvent GOMidiEventSendTab::CopyEvent() {
-  GOMidiReceiveEvent recv = m_recv->GetCurrentEvent();
-  GOMidiSendEvent e;
+GOMidiSenderEvent GOMidiEventSendTab::CopyEvent() {
+  GOMidiReceiverEvent recv = m_recv->GetCurrentEvent();
+  GOMidiSenderEvent e;
 
   // try to fill e.deviceId as the id of the bound output device of the input
   // device

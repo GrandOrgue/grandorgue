@@ -15,6 +15,10 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "control/GOPistonControl.h"
+#include "model/GOManual.h"
+#include "model/GOStop.h"
+#include "model/GOSwitch.h"
+#include "model/GOTremulant.h"
 
 #include "GOCoupler.h"
 #include "GODC.h"
@@ -32,11 +36,7 @@
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanelWidget.h"
-#include "GOManual.h"
 #include "GOPanelView.h"
-#include "GOStop.h"
-#include "GOSwitch.h"
-#include "GOTremulant.h"
 #include "Images.h"
 
 constexpr static int windowLimit = 10000;

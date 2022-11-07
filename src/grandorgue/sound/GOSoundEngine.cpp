@@ -7,20 +7,21 @@
 
 #include "GOSoundEngine.h"
 
-#include "GODefinitionFile.h"
-#include "GOEvent.h"
-#include "GOPipe.h"
-#include "GOReleaseAlignTable.h"
-#include "GOSoundProvider.h"
-#include "GOSoundRecorder.h"
-#include "GOSoundSampler.h"
-#include "GOWindchest.h"
+#include "model/GOPipe.h"
+#include "model/GOWindchest.h"
 #include "sound/scheduler/GOSoundGroupWorkItem.h"
 #include "sound/scheduler/GOSoundOutputWorkItem.h"
 #include "sound/scheduler/GOSoundReleaseWorkItem.h"
 #include "sound/scheduler/GOSoundTouchWorkItem.h"
 #include "sound/scheduler/GOSoundTremulantWorkItem.h"
 #include "sound/scheduler/GOSoundWindchestWorkItem.h"
+
+#include "GODefinitionFile.h"
+#include "GOEvent.h"
+#include "GOReleaseAlignTable.h"
+#include "GOSoundProvider.h"
+#include "GOSoundRecorder.h"
+#include "GOSoundSampler.h"
 
 GOSoundEngine::GOSoundEngine()
   : m_PolyphonyLimiting(true),

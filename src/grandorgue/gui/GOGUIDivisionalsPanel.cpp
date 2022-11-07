@@ -9,9 +9,9 @@
 
 #include <wx/intl.h>
 
-// #include "combinations/control/GODivisionalButtonControl.h"
 #include "combinations/GODivisionalSetter.h"
 #include "control/GOButtonControl.h"
+#include "model/GOManual.h"
 
 #include "GODefinitionFile.h"
 #include "GOGUIButton.h"
@@ -20,7 +20,6 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GOManual.h"
 
 GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GODefinitionFile *organfile)
   : m_organfile(organfile) {}

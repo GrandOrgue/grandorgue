@@ -9,10 +9,11 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
-#include "GOManual.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
+#include "model/GOManual.h"
+
+#include "GODefinitionFile.h"
 
 GOCoupler::GOCoupler(GODefinitionFile *organfile, unsigned sourceManual)
   : GODrawstop(organfile),

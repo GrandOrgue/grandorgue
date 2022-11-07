@@ -9,13 +9,14 @@
 
 #include <wx/intl.h>
 
+#include "config/GOConfigReader.h"
+#include "model/GOEnclosure.h"
+
 #include "GODC.h"
-#include "GOEnclosure.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "config/GOConfigReader.h"
 #include "go_gui_utils.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)

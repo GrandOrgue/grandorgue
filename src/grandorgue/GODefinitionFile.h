@@ -19,11 +19,11 @@
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseStateTracker.h"
+#include "model/GOModel.h"
 
 #include "GOBitmapCache.h"
 #include "GOMainWindowData.h"
 #include "GOMemoryPool.h"
-#include "GOModel.h"
 #include "GOPipeConfigTreeNode.h"
 #include "GOTimer.h"
 

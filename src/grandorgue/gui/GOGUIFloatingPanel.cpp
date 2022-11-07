@@ -10,9 +10,11 @@
 #include <wx/intl.h>
 
 #include "combinations/GODivisionalSetter.h"
+#include "model/GOEnclosure.h"
+#include "model/GOManual.h"
+#include "model/GOWindchest.h"
 
 #include "GODefinitionFile.h"
-#include "GOEnclosure.h"
 #include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
@@ -20,8 +22,6 @@
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GOManual.h"
-#include "GOWindchest.h"
 
 GOGUIFloatingPanel::GOGUIFloatingPanel(GODefinitionFile *organfile)
   : m_organfile(organfile) {}
