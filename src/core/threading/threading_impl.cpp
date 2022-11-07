@@ -7,7 +7,4 @@
 
 #include "threading_impl.h"
 
-#if defined GO_STD_MUTEX
-#include <chrono>
 std::chrono::milliseconds const THREADING_WAIT_TIMEOUT(WAIT_TIMEOUT_MS);
-#endif

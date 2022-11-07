@@ -82,8 +82,6 @@ include(${CMAKE_SOURCE_DIR}/cmake/BuildLibrary.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/BuildExecutable.cmake)
 
 add_cxx_option(-std=c++11)
-CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
-CHECK_INCLUDE_FILE_CXX(mutex HAVE_MUTEX)
 
 IF (APPLE)
   set(BININSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
@@ -123,7 +121,6 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 # setup compiler flags for debug vs release compiles
 add_option(-Wall)
-add_definitions(-DGO_STD_MUTEX)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
 else()
