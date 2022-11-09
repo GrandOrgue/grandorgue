@@ -1,3 +1,4 @@
+# 3.9.1 (2022-11-14)
 - Fixed crash on loading an organ without a pedal https://github.com/GrandOrgue/grandorgue/issues/1249
 - Fixed SYSEX Hauptwerk max. length in MIDI event editor https://github.com/GrandOrgue/grandorgue/issues/1207
 - Fixed enclosure value calculation https://github.com/GrandOrgue/grandorgue/issues/1203
