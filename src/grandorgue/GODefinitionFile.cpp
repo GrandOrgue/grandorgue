@@ -928,10 +928,6 @@ GOMemoryPool &GODefinitionFile::GetMemoryPool() { return m_pool; }
 
 GOConfig &GODefinitionFile::GetSettings() { return m_config; }
 
-GOGUIMouseStateTracker &GODefinitionFile::GetMouseStateTracker() {
-  return m_MouseState;
-}
-
 GOBitmapCache &GODefinitionFile::GetBitmapCache() { return m_bitmaps; }
 
 GOSoundSampler *GODefinitionFile::StartSample(

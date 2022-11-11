@@ -43,7 +43,7 @@ constexpr static int windowLimit = 10000;
 
 GOGUIPanel::GOGUIPanel(GODefinitionFile *organfile)
   : m_organfile(organfile),
-    m_MouseState(organfile->GetMouseStateTracker()),
+    m_MouseState(organfile->GetMouseState()),
     m_controls(0),
     m_WoodImages(0),
     m_BackgroundControls(0),
@@ -830,13 +830,13 @@ void GOGUIPanel::SendMousePress(
 
 void GOGUIPanel::HandleMousePress(int x, int y, bool right) {
   GOGUIMouseState tmp;
-  GOGUIMouseState &state = right ? tmp : m_MouseState.GetMouseState();
+  GOGUIMouseState &state = right ? tmp : m_MouseState;
   SendMousePress(x, y, right, state);
 }
 
 void GOGUIPanel::HandleMouseRelease(bool right) {
   if (!right)
-    m_MouseState.ReleaseMouseState();
+    m_MouseState.clear();
 }
 
 void GOGUIPanel::HandleMouseScroll(int x, int y, int amount) {

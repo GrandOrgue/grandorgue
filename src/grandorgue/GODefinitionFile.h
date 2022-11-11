@@ -18,7 +18,7 @@
 #include "combinations/model/GOCombinationDefinition.h"
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
-#include "gui/GOGUIMouseStateTracker.h"
+#include "gui/GOGUIMouseState.h"
 #include "model/GOModel.h"
 
 #include "GOBitmapCache.h"
@@ -103,7 +103,7 @@ private:
   GOMidi *m_midi;
   std::vector<bool> m_MidiSamplesetMatch;
   int m_SampleSetId1, m_SampleSetId2;
-  GOGUIMouseStateTracker m_MouseState;
+  GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
   GOBitmapCache m_bitmaps;
@@ -239,7 +239,7 @@ public:
   void SendMidiRecorderMessage(GOMidiEvent &e);
   GOMidi *GetMidi();
 
-  GOGUIMouseStateTracker &GetMouseStateTracker();
+  GOGUIMouseState &GetMouseState() { return m_MouseState; }
 
   /* For testing only */
   void SetODFPath(wxString path);

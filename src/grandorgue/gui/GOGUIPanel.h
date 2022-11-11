@@ -19,7 +19,6 @@ class GOGUIControl;
 class GOGUIDisplayMetrics;
 class GOGUILayoutEngine;
 class GOGUIMouseState;
-class GOGUIMouseStateTracker;
 class GOGUIPanelWidget;
 class GOConfigReader;
 class GOConfigWriter;
@@ -36,7 +35,7 @@ private:
 
 protected:
   GODefinitionFile *m_organfile;
-  GOGUIMouseStateTracker &m_MouseState;
+  GOGUIMouseState &m_MouseState;
   ptr_vector<GOGUIControl> m_controls;
   std::vector<GOBitmap> m_WoodImages;
   unsigned m_BackgroundControls;
