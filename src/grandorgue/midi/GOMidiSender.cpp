@@ -294,9 +294,9 @@ unsigned GOMidiSender::StartLimit(GOMidiSenderMessageType type) {
 
 unsigned GOMidiSender::LengthLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_HW_NAME_STRING || type == MIDI_S_HW_STRING)
-    return 15;
+    return 16;
   if (type == MIDI_S_HW_NAME_LCD || type == MIDI_S_HW_LCD)
-    return 31;
+    return 32;
   return 0x00;
 }
 
