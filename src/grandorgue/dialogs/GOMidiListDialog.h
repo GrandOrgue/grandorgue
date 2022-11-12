@@ -14,10 +14,11 @@
 
 #include "document-base/GOView.h"
 
-class GOEventDistributor;
 class wxButton;
 class wxListEvent;
 class wxListView;
+
+class GOMidiConfigurator;
 
 class GOMidiListDialog : public wxDialog, public GOView {
 private:
@@ -43,7 +44,9 @@ private:
 
 public:
   GOMidiListDialog(
-    GODocumentBase *doc, wxWindow *parent, GOEventDistributor *midi_elements);
+    GODocumentBase *doc,
+    wxWindow *parent,
+    const std::vector<GOMidiConfigurator *> &midi_elements);
   ~GOMidiListDialog();
 
   DECLARE_EVENT_TABLE()

@@ -11,7 +11,6 @@
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 
-#include "control/GOEventDistributor.h"
 #include "midi/GOMidiConfigurator.h"
 
 #include "GOEvent.h"
@@ -27,7 +26,9 @@ EVT_COMMAND_RANGE(
 END_EVENT_TABLE()
 
 GOMidiListDialog::GOMidiListDialog(
-  GODocumentBase *doc, wxWindow *parent, GOEventDistributor *midi_elements)
+  GODocumentBase *doc,
+  wxWindow *parent,
+  const std::vector<GOMidiConfigurator *> &midi_elements)
   : wxDialog(
     parent,
     wxID_ANY,
@@ -69,8 +70,9 @@ GOMidiListDialog::GOMidiListDialog(
   buttons->Add(close);
   topSizer->Add(buttons, 0, wxALIGN_RIGHT | wxALL, 1);
 
-  for (unsigned i = 0; i < midi_elements->GetMidiConfiguratorCount(); i++) {
-    GOMidiConfigurator *obj = midi_elements->GetMidiConfigurator(i);
+  for (unsigned i = 0; i < midi_elements.size(); i++) {
+    GOMidiConfigurator *obj = midi_elements[i];
+
     m_Objects->InsertItem(i, obj->GetMidiType());
     m_Objects->SetItemPtrData(i, (wxUIntPtr)obj);
     m_Objects->SetItem(i, 1, obj->GetMidiName());

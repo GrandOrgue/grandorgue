@@ -205,7 +205,8 @@ void GODocument::ShowMidiList() {
     registerWindow(
       GODocument::MIDI_LIST,
       NULL,
-      new GOMidiListDialog(this, NULL, m_OrganController));
+      new GOMidiListDialog(
+        this, NULL, m_OrganController->GetMidiConfigurators()));
   }
 }
 

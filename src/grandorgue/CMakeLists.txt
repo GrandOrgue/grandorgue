@@ -116,6 +116,7 @@ midi/GOMidiReceiver.cpp
 midi/GOMidiRecorder.cpp
 model/GODummyPipe.cpp
 model/GOEnclosure.cpp
+model/GOEventHandlerList.cpp
 model/GOManual.cpp
 model/GOModel.cpp
 model/GOPipe.cpp
