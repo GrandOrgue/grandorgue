@@ -112,7 +112,7 @@ GODivisionalSetter::GODivisionalSetter(GODefinitionFile *organfile)
   // callback
   CreateButtons(organfile);
 
-  for (unsigned manualIndex = 0; manualIndex < m_NManuals; manualIndex++) {
+  for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);
     m_BankLabels.push_back(new GOLabelControl(organfile));
     m_DivisionalMaps.emplace_back();
@@ -206,9 +206,9 @@ static const wxString WX_EMPTY_STRING = wxEmptyString;
 void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
   ClearCombinations();
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
-    unsigned manualIndex = m_FirstManualIndex + manualN;
+    unsigned odfManualIndex = m_FirstManualIndex + manualN;
     DivisionalMap &divMap = m_DivisionalMaps[manualN];
-    GOManual *pManual = m_organfile->GetManual(manualIndex);
+    GOManual *pManual = m_organfile->GetManual(odfManualIndex);
     GOCombinationDefinition &cmbTemplate = pManual->GetDivisionalTemplate();
 
     for (unsigned nDivisionals = N_DIVISIONALS * DIVISIONAL_BANKS,
@@ -220,9 +220,9 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
         m_organfile,
         cfg,
         cmbTemplate,
-        GetDivisionalButtonName(manualIndex, divisionalIndex),
+        GetDivisionalButtonName(odfManualIndex, divisionalIndex),
         WX_EMPTY_STRING, // legacyGroupName is not used yet
-        manualIndex,
+        odfManualIndex,
         divisionalIndex);
       // if the combination is not defined then pCmb == NULL
 
