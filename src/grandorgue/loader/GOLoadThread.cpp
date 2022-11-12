@@ -8,9 +8,9 @@
 #include "GOLoadThread.h"
 
 #include "control/GOEventDistributor.h"
+#include "model/GOCacheObject.h"
 
 #include "GOAlloc.h"
-#include "GOCacheObject.h"
 #include "GOMemoryPool.h"
 
 GOLoadThread::GOLoadThread(

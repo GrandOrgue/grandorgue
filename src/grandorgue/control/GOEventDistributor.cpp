@@ -9,7 +9,8 @@
 
 #include <algorithm>
 
-#include "GOCacheObject.h"
+#include "model/GOCacheObject.h"
+
 #include "GOControlChangedHandler.h"
 #include "GOEventHandler.h"
 #include "GOPlaybackStateHandler.h"
