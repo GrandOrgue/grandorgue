@@ -110,17 +110,6 @@ void GOEventDistributor::UpdateHash(GOHash &hash) {
     m_CacheObjects[i]->UpdateHash(hash);
 }
 
-unsigned GOEventDistributor::GetCacheObjectCount() {
-  return m_CacheObjects.size();
-}
-
-GOCacheObject *GOEventDistributor::GetCacheObject(unsigned index) {
-  if (index < m_CacheObjects.size())
-    return m_CacheObjects[index];
-  else
-    return NULL;
-}
-
 void GOEventDistributor::AbortPlayback() {
   for (unsigned i = 0; i < m_PlaybackStateHandler.size(); i++)
     m_PlaybackStateHandler[i]->AbortPlayback();

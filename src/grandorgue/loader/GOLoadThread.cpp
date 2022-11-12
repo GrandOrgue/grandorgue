@@ -7,18 +7,17 @@
 
 #include "GOLoadThread.h"
 
-#include "control/GOEventDistributor.h"
 #include "model/GOCacheObject.h"
 
 #include "GOAlloc.h"
+#include "GOCacheObjectDistributor.h"
 #include "GOMemoryPool.h"
 
 GOLoadThread::GOLoadThread(
-  GOEventDistributor &objs, GOMemoryPool &pool, atomic_uint &pos)
+  GOMemoryPool &pool, GOCacheObjectDistributor &distributor)
   : GOThread(),
-    m_Objects(objs),
-    m_Pos(pos),
     m_pool(pool),
+    m_distributor(distributor),
     m_Error(),
     m_OutOfMemory(false) {}
 
@@ -38,9 +37,9 @@ void GOLoadThread::Entry() {
   while (!ShouldStop()) {
     if (m_pool.IsPoolFull())
       return;
-    unsigned pos = m_Pos.fetch_add(1);
     try {
-      GOCacheObject *obj = m_Objects.GetCacheObject(pos);
+      GOCacheObject *obj = m_distributor.fetchNext();
+
       if (!obj)
         return;
       obj->LoadData();

@@ -488,10 +488,11 @@ wxString GOOrganController::Load(
     ResolveReferences();
 
     /* Figure out list of pipes to load */
-    dlg->Reset(GetCacheObjectCount());
-    /* Load pipes */
-    atomic_uint nb_loaded_obj(0);
+    GOCacheObjectDistributor objectDistributor(GetCacheObjects());
 
+    dlg->Reset(objectDistributor.GetNObjects());
+
+    /* Load pipes */
     if (wxFileExists(m_CacheFilename)) {
       wxFile cache_file(m_CacheFilename);
       GOCache reader(cache_file, m_pool);
@@ -516,7 +517,8 @@ wxString GOOrganController::Load(
       if (cache_ok) {
         try {
           while (true) {
-            GOCacheObject *obj = GetCacheObject(nb_loaded_obj);
+            GOCacheObject *obj = objectDistributor.fetchNext();
+
             if (!obj)
               break;
             if (!obj->LoadCache(reader)) {
@@ -526,8 +528,7 @@ wxString GOOrganController::Load(
                 obj->GetLoadTitle().c_str());
               break;
             }
-            nb_loaded_obj.fetch_add(1);
-            if (!dlg->Update(nb_loaded_obj, obj->GetLoadTitle())) {
+            if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
               dummy.free();
               SetTemperament(m_Temperament);
               GOMessageBox(
@@ -540,7 +541,7 @@ wxString GOOrganController::Load(
               return wxEmptyString;
             }
           }
-          if (nb_loaded_obj >= GetCacheObjectCount())
+          if (objectDistributor.IsComplete())
             m_Cacheable = true;
         } catch (wxString msg) {
           cache_ok = false;
@@ -563,18 +564,16 @@ wxString GOOrganController::Load(
     if (!cache_ok) {
       ptr_vector<GOLoadThread> threads;
       for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
-        threads.push_back(new GOLoadThread(*this, m_pool, nb_loaded_obj));
+        threads.push_back(new GOLoadThread(m_pool, objectDistributor));
 
       for (unsigned i = 0; i < threads.size(); i++)
         threads[i]->Run();
 
-      for (unsigned pos = nb_loaded_obj.fetch_add(1); true;
-           pos = nb_loaded_obj.fetch_add(1)) {
-        GOCacheObject *obj = GetCacheObject(pos);
-        if (!obj)
-          break;
+      GOCacheObject *obj;
+
+      while ((obj = objectDistributor.fetchNext())) {
         obj->LoadData();
-        if (!dlg->Update(nb_loaded_obj, obj->GetLoadTitle())) {
+        if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
           dummy.free();
           SetTemperament(m_Temperament);
           GOMessageBox(
@@ -590,10 +589,8 @@ wxString GOOrganController::Load(
 
       for (unsigned i = 0; i < threads.size(); i++)
         threads[i]->checkResult();
-
-      if (nb_loaded_obj >= GetCacheObjectCount())
+      if (objectDistributor.IsComplete())
         m_Cacheable = true;
-
       if (m_config.ManageCache() && m_Cacheable)
         UpdateCache(dlg, m_config.CompressCache());
     }
@@ -665,10 +662,11 @@ bool GOOrganController::CachePresent() { return wxFileExists(m_CacheFilename); }
 
 bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
   DeleteCache();
-  /* Figure out the list of pipes to save */
-  unsigned nb_saved_objs = 0;
 
-  dlg->Setup(GetCacheObjectCount(), _("Creating sample cache"));
+  /* Figure out the list of pipes to save */
+  GOCacheObjectDistributor objectDistributor(GetCacheObjects());
+
+  dlg->Setup(objectDistributor.GetNObjects(), _("Creating sample cache"));
 
   wxFileOutputStream file(m_CacheFilename);
   GOCacheWriter writer(file, compress);
@@ -681,7 +679,8 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
     cache_save_ok = false;
 
   for (unsigned i = 0; cache_save_ok; i++) {
-    GOCacheObject *obj = GetCacheObject(i);
+    GOCacheObject *obj = objectDistributor.fetchNext();
+
     if (!obj)
       break;
     if (!obj->SaveCache(writer)) {
@@ -689,9 +688,7 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
       wxLogError(
         _("Save of %s to the cache failed"), obj->GetLoadTitle().c_str());
     }
-    nb_saved_objs++;
-
-    if (!dlg->Update(nb_saved_objs, obj->GetLoadTitle())) {
+    if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
       writer.Close();
       DeleteCache();
       return false;
