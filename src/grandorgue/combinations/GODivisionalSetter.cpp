@@ -94,16 +94,17 @@ GODivisionalSetter::GODivisionalSetter(GODefinitionFile *organfile)
   unsigned currId = ID_DIVISIONAL01 + ID_FIRST;
 
   // construct button definitions
-  for (unsigned manualIndex = m_FirstManualIndex; manualIndex < m_NManuals;
-       manualIndex++) {
+  for (unsigned odfManualIndex = m_FirstManualIndex;
+       odfManualIndex < m_OdfManualCount;
+       odfManualIndex++) {
     for (unsigned divisionalIndex = 0; divisionalIndex < N_DIVISIONALS;
          divisionalIndex++)
       fill_button_definition(
-        GetDivisionalButtonName(manualIndex, divisionalIndex), pb, currId);
+        GetDivisionalButtonName(odfManualIndex, divisionalIndex), pb, currId);
     fill_button_definition(
-      GetDivisionalBankPrevLabelName(manualIndex), pb, currId);
+      GetDivisionalBankPrevLabelName(odfManualIndex), pb, currId);
     fill_button_definition(
-      GetDivisionalBankNextLabelName(manualIndex), pb, currId);
+      GetDivisionalBankNextLabelName(odfManualIndex), pb, currId);
   }
   *pb = final_button_definition_entry;
 
@@ -111,8 +112,7 @@ GODivisionalSetter::GODivisionalSetter(GODefinitionFile *organfile)
   // callback
   CreateButtons(organfile);
 
-  for (unsigned manualIndex = m_FirstManualIndex; manualIndex < m_NManuals;
-       manualIndex++) {
+  for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);
     m_BankLabels.push_back(new GOLabelControl(organfile));
     m_DivisionalMaps.emplace_back();
@@ -160,10 +160,11 @@ void GODivisionalSetter::Load(GOConfigReader &cfg) {
     m_BankLabelsByName[labelName] = pL;
 
     // init the divisional buttons
-    for (unsigned j = 0; j < 10; j++) {
+    for (unsigned j = 0; j < N_DIVISIONALS; j++) {
       wxString buttonName = GetDivisionalButtonName(odfManualIndex, j);
       GOButtonControl *const divisional = GetButtonControl(buttonName, false);
 
+      assert(divisional);
       divisional->Init(cfg, buttonName, wxString::Format(wxT("%d"), j + 1));
       divisional->Load(cfg, buttonName);
       divisional->SetDisplayed(true);
@@ -184,7 +185,7 @@ void GODivisionalSetter::Load(GOConfigReader &cfg) {
     divisionalNext->Init(cfg, buttonNextName, wxT("+"));
 
     // display the initial bank
-    UpdateBankDisplay(odfManualIndex);
+    UpdateBankDisplay(manualN);
   }
 }
 
@@ -205,9 +206,9 @@ static const wxString WX_EMPTY_STRING = wxEmptyString;
 void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
   ClearCombinations();
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
-    unsigned manualIndex = m_FirstManualIndex + manualN;
+    unsigned odfManualIndex = m_FirstManualIndex + manualN;
     DivisionalMap &divMap = m_DivisionalMaps[manualN];
-    GOManual *pManual = m_organfile->GetManual(manualIndex);
+    GOManual *pManual = m_organfile->GetManual(odfManualIndex);
     GOCombinationDefinition &cmbTemplate = pManual->GetDivisionalTemplate();
 
     for (unsigned nDivisionals = N_DIVISIONALS * DIVISIONAL_BANKS,
@@ -219,9 +220,9 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
         m_organfile,
         cfg,
         cmbTemplate,
-        GetDivisionalButtonName(manualIndex, divisionalIndex),
+        GetDivisionalButtonName(odfManualIndex, divisionalIndex),
         WX_EMPTY_STRING, // legacyGroupName is not used yet
-        manualIndex,
+        odfManualIndex,
         divisionalIndex);
       // if the combination is not defined then pCmb == NULL
 
