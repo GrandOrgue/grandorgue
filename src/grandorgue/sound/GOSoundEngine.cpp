@@ -206,22 +206,22 @@ void GOSoundEngine::ClearSetup() {
 }
 
 void GOSoundEngine::Setup(
-  GOOrganController *organ_file, unsigned release_count) {
+  GOOrganController *organController, unsigned release_count) {
   m_Scheduler.Clear();
   if (release_count < 1)
     release_count = 1;
   m_Scheduler.SetRepeatCount(release_count);
   m_Tremulants.clear();
-  for (unsigned i = 0; i < organ_file->GetTremulantCount(); i++)
+  for (unsigned i = 0; i < organController->GetTremulantCount(); i++)
     m_Tremulants.push_back(
       new GOSoundTremulantWorkItem(*this, m_SamplesPerBuffer));
   m_Windchests.clear();
   m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, NULL));
-  for (unsigned i = 0; i < organ_file->GetWindchestGroupCount(); i++)
+  for (unsigned i = 0; i < organController->GetWindchestGroupCount(); i++)
     m_Windchests.push_back(
-      new GOSoundWindchestWorkItem(*this, organ_file->GetWindchest(i)));
+      new GOSoundWindchestWorkItem(*this, organController->GetWindchest(i)));
   m_TouchProcessor = std::unique_ptr<GOSoundTouchWorkItem>(
-    new GOSoundTouchWorkItem(organ_file->GetMemoryPool()));
+    new GOSoundTouchWorkItem(organController->GetMemoryPool()));
   m_HasBeenSetup = true;
   Reset();
 }

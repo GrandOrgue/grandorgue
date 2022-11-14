@@ -81,7 +81,7 @@ public:
   GOSoundEngine();
   ~GOSoundEngine();
   void Reset();
-  void Setup(GOOrganController *organ_file, unsigned release_count = 1);
+  void Setup(GOOrganController *organController, unsigned release_count = 1);
   void ClearSetup();
   void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
   void SetupReverb(GOConfig &settings);
