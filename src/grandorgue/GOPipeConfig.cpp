@@ -7,13 +7,13 @@
 
 #include "GOPipeConfig.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
 GOPipeConfig::GOPipeConfig(
-  GODefinitionFile *organfile, GOPipeUpdateCallback *callback)
-  : m_OrganFile(organfile),
+  GOOrganController *organController, GOPipeUpdateCallback *callback)
+  : m_OrganFile(organController),
     m_Callback(callback),
     m_Group(),
     m_NamePrefix(),

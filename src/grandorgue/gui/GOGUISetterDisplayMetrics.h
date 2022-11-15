@@ -23,12 +23,14 @@ typedef enum {
 } GOGUISetterType;
 
 class GOConfigReader;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOGUISetterDisplayMetrics : public GOGUIDisplayMetrics {
 public:
   GOGUISetterDisplayMetrics(
-    GOConfigReader &ini, GODefinitionFile *organfile, GOGUISetterType type);
+    GOConfigReader &ini,
+    GOOrganController *organController,
+    GOGUISetterType type);
 };
 
 #endif

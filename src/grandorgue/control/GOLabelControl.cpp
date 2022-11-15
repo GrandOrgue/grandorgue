@@ -9,37 +9,37 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
 #include "GODocument.h"
+#include "GOOrganController.h"
 #include "config/GOConfig.h"
 
-GOLabelControl::GOLabelControl(GODefinitionFile *organfile)
+GOLabelControl::GOLabelControl(GOOrganController *organController)
   : m_Name(),
     m_Content(),
-    m_organfile(organfile),
-    m_sender(organfile, MIDI_SEND_LABEL) {
-  m_organfile->RegisterMidiConfigurator(this);
-  m_organfile->RegisterPlaybackStateHandler(this);
+    m_OrganController(organController),
+    m_sender(organController, MIDI_SEND_LABEL) {
+  m_OrganController->RegisterMidiConfigurator(this);
+  m_OrganController->RegisterPlaybackStateHandler(this);
 }
 
 GOLabelControl::~GOLabelControl() {}
 
 void GOLabelControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
-  m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
 }
 
 void GOLabelControl::Load(GOConfigReader &cfg, wxString group, wxString name) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
-  m_sender.Load(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
 }
 
 void GOLabelControl::Save(GOConfigWriter &cfg) {
-  m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+  m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
 }
 
 const wxString &GOLabelControl::GetName() { return m_Name; }
@@ -49,7 +49,7 @@ const wxString &GOLabelControl::GetContent() { return m_Content; }
 void GOLabelControl::SetContent(wxString name) {
   m_Content = name;
   m_sender.SetLabel(m_Content);
-  m_organfile->ControlChanged(this);
+  m_OrganController->ControlChanged(this);
 }
 
 void GOLabelControl::AbortPlayback() {
@@ -73,7 +73,7 @@ void GOLabelControl::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_organfile->GetDocument()->ShowMIDIEventDialog(
+  m_OrganController->GetDocument()->ShowMIDIEventDialog(
     this, title, NULL, &m_sender, NULL);
 }
 

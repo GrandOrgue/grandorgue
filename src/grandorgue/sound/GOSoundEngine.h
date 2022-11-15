@@ -24,7 +24,7 @@ class GOSoundTouchWorkItem;
 class GOSoundTremulantWorkItem;
 class GOSoundWindchestWorkItem;
 class GOSoundWorkItem;
-class GODefinitionFile;
+class GOOrganController;
 class GOConfig;
 
 typedef struct {
@@ -81,7 +81,7 @@ public:
   GOSoundEngine();
   ~GOSoundEngine();
   void Reset();
-  void Setup(GODefinitionFile *organ_file, unsigned release_count = 1);
+  void Setup(GOOrganController *organController, unsigned release_count = 1);
   void ClearSetup();
   void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
   void SetupReverb(GOConfig &settings);

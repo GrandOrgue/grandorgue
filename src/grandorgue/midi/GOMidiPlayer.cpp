@@ -15,8 +15,8 @@
 #include "midi/GOMidiFileReader.h"
 #include "midi/GOMidiMap.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 
 enum {
   ID_MIDI_PLAYER_PLAY = 0,
@@ -38,19 +38,20 @@ const struct GOElementCreator::ButtonDefinitionEntry *GOMidiPlayer::
   return m_element_types;
 }
 
-GOMidiPlayer::GOMidiPlayer(GODefinitionFile *organfile)
-  : m_organfile(organfile),
+GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
+  : m_OrganController(organController),
     m_content(),
-    m_PlayingTime(organfile),
+    m_PlayingTime(organController),
     m_Start(0),
     m_PlayingSeconds(0),
     m_Speed(1),
     m_IsPlaying(false),
     m_Pause(false) {
-  CreateButtons(m_organfile);
+  CreateButtons(m_OrganController);
   Clear();
-  m_DeviceID = m_organfile->GetSettings().GetMidiMap().GetDeviceIdByLogicalName(
-    _("GrandOrgue MIDI Player"));
+  m_DeviceID
+    = m_OrganController->GetSettings().GetMidiMap().GetDeviceIdByLogicalName(
+      _("GrandOrgue MIDI Player"));
   UpdateDisplay();
 }
 
@@ -88,7 +89,7 @@ void GOMidiPlayer::Clear() {
 void GOMidiPlayer::LoadFile(
   const wxString &filename, unsigned manuals, bool pedal) {
   Clear();
-  GOMidiFileReader reader(m_organfile->GetSettings().GetMidiMap());
+  GOMidiFileReader reader(m_OrganController->GetSettings().GetMidiMap());
   if (!reader.Open(filename)) {
     GOMessageBox(
       wxString::Format(_("Failed to load %s"), filename.c_str()),
@@ -98,7 +99,10 @@ void GOMidiPlayer::LoadFile(
     return;
   }
   if (!m_content.Load(
-        reader, m_organfile->GetSettings().GetMidiMap(), manuals, pedal)) {
+        reader,
+        m_OrganController->GetSettings().GetMidiMap(),
+        manuals,
+        pedal)) {
     m_content.Clear();
     GOMessageBox(
       wxString::Format(_("Failed to load %s"), filename.c_str()),
@@ -146,7 +150,7 @@ void GOMidiPlayer::Pause() {
     m_Pause = true;
     m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
     m_Start = wxGetLocalTimeMillis() - m_Start;
-    m_organfile->DeleteTimer(this);
+    m_OrganController->DeleteTimer(this);
   }
 }
 
@@ -160,7 +164,7 @@ void GOMidiPlayer::StopPlaying() {
       e.SetValue(0);
       e.SetDevice(m_DeviceID);
       e.SetTime(wxGetLocalTimeMillis());
-      m_organfile->ProcessMidi(e);
+      m_OrganController->ProcessMidi(e);
     }
   }
 
@@ -168,7 +172,7 @@ void GOMidiPlayer::StopPlaying() {
   m_buttons[ID_MIDI_PLAYER_PLAY]->Display(false);
   m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(false);
   UpdateDisplay();
-  m_organfile->DeleteTimer(this);
+  m_OrganController->DeleteTimer(this);
 }
 
 bool GOMidiPlayer::IsPlaying() { return m_IsPlaying; }
@@ -203,12 +207,12 @@ void GOMidiPlayer::HandleTimer() {
       }
       e.SetDevice(m_DeviceID);
       e.SetTime(wxGetLocalTimeMillis());
-      m_organfile->ProcessMidi(e);
+      m_OrganController->ProcessMidi(e);
     } else {
       GOTime next = e.GetTime() * m_Speed + m_Start;
       if (next > m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000)
         next = m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000;
-      m_organfile->SetTimer(next, this);
+      m_OrganController->SetTimer(next, this);
       return;
     }
   } while (true);

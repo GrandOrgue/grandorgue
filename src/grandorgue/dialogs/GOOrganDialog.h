@@ -14,7 +14,7 @@
 #include "document-base/GOView.h"
 
 class GOPipeConfigNode;
-class GODefinitionFile;
+class GOOrganController;
 class OrganTreeItemData;
 class wxButton;
 class wxCheckBox;
@@ -30,7 +30,7 @@ class wxTreeItemId;
 
 class GOOrganDialog : public wxDialog, public GOView {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   wxTreeCtrl *m_Tree;
   wxTextCtrl *m_Amplitude;
   wxSpinButton *m_AmplitudeSpin;
@@ -138,7 +138,7 @@ protected:
 
 public:
   GOOrganDialog(
-    GODocumentBase *doc, wxWindow *parent, GODefinitionFile *organfile);
+    GODocumentBase *doc, wxWindow *parent, GOOrganController *organController);
   ~GOOrganDialog();
 
   bool Destroy();

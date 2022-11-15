@@ -17,8 +17,8 @@
 #include "config/GOConfigWriter.h"
 #include "control/GOCallbackButtonControl.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "go_ids.h"
 
 #define FRAME_GENERALS 1000
@@ -247,8 +247,8 @@ const struct GOElementCreator::ButtonDefinitionEntry *GOSetter::
   return m_element_types;
 }
 
-GOSetter::GOSetter(GODefinitionFile *organfile)
-  : m_organfile(organfile),
+GOSetter::GOSetter(GOOrganController *organController)
+  : m_OrganController(organController),
     m_pos(0),
     m_bank(0),
     m_crescendopos(0),
@@ -256,14 +256,14 @@ GOSetter::GOSetter(GODefinitionFile *organfile)
     m_framegeneral(0),
     m_general(0),
     m_crescendo(0),
-    m_PosDisplay(organfile),
-    m_BankDisplay(organfile),
-    m_CrescendoDisplay(organfile),
-    m_TransposeDisplay(organfile),
-    m_NameDisplay(organfile),
-    m_swell(organfile),
+    m_PosDisplay(organController),
+    m_BankDisplay(organController),
+    m_CrescendoDisplay(organController),
+    m_TransposeDisplay(organController),
+    m_NameDisplay(organController),
+    m_swell(organController),
     m_SetterType(SETTER_REGULAR) {
-  CreateButtons(m_organfile);
+  CreateButtons(m_OrganController);
 
   m_buttons[ID_SETTER_PREV]->SetPreconfigIndex(0);
   m_buttons[ID_SETTER_NEXT]->SetPreconfigIndex(1);
@@ -298,8 +298,8 @@ GOSetter::GOSetter(GODefinitionFile *organfile)
   SetSetterType(m_SetterType);
   SetCrescendoType(m_crescendobank);
 
-  m_organfile->RegisterPlaybackStateHandler(this);
-  m_organfile->RegisterControlChangedHandler(this);
+  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterControlChangedHandler(this);
 }
 
 GOSetter::~GOSetter() {}
@@ -307,14 +307,14 @@ GOSetter::~GOSetter() {}
 static const wxString OVERRIDE_MODE = wxT("OverrideMode");
 
 void GOSetter::Load(GOConfigReader &cfg) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
 
   wxString buffer;
 
   m_framegeneral.resize(0);
   for (unsigned i = 0; i < FRAME_GENERALS; i++) {
     m_framegeneral.push_back(new GOGeneralCombination(
-      m_organfile->GetGeneralTemplate(), m_organfile, true));
+      m_OrganController->GetGeneralTemplate(), m_OrganController, true));
     buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
     m_framegeneral[i]->Load(cfg, buffer);
   }
@@ -322,7 +322,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_general.resize(0);
   for (unsigned i = 0; i < GENERALS * GENERAL_BANKS; i++) {
     m_general.push_back(new GOGeneralCombination(
-      m_organfile->GetGeneralTemplate(), m_organfile, true));
+      m_OrganController->GetGeneralTemplate(), m_OrganController, true));
     buffer.Printf(wxT("SetterGeneral%03d"), i + 1);
     m_general[i]->Load(cfg, buffer);
   }
@@ -339,7 +339,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   }
   for (unsigned i = 0; i < N_CRESCENDOS * CRESCENDO_STEPS; i++) {
     m_crescendo.push_back(new GOGeneralCombination(
-      m_organfile->GetGeneralTemplate(), m_organfile, true));
+      m_OrganController->GetGeneralTemplate(), m_OrganController, true));
     m_CrescendoExtraSets.emplace_back();
     buffer.Printf(
       wxT("SetterCrescendo%d_%03d"),
@@ -478,7 +478,7 @@ void GOSetter::ButtonStateChanged(int id) {
     SetPosition(0, false);
     break;
   case ID_SETTER_GC:
-    m_organfile->Reset();
+    m_OrganController->Reset();
     break;
   case ID_SETTER_CURRENT:
     SetPosition(m_pos);
@@ -605,46 +605,51 @@ void GOSetter::ButtonStateChanged(int id) {
   } break;
 
   case ID_SETTER_PITCH_M1:
-    m_organfile->GetPipeConfig().ModifyTuning(-1);
+    m_OrganController->GetPipeConfig().ModifyTuning(-1);
     break;
   case ID_SETTER_PITCH_M10:
-    m_organfile->GetPipeConfig().ModifyTuning(-10);
+    m_OrganController->GetPipeConfig().ModifyTuning(-10);
     break;
   case ID_SETTER_PITCH_M100:
-    m_organfile->GetPipeConfig().ModifyTuning(-100);
+    m_OrganController->GetPipeConfig().ModifyTuning(-100);
     break;
   case ID_SETTER_PITCH_P1:
-    m_organfile->GetPipeConfig().ModifyTuning(1);
+    m_OrganController->GetPipeConfig().ModifyTuning(1);
     break;
   case ID_SETTER_PITCH_P10:
-    m_organfile->GetPipeConfig().ModifyTuning(10);
+    m_OrganController->GetPipeConfig().ModifyTuning(10);
     break;
   case ID_SETTER_PITCH_P100:
-    m_organfile->GetPipeConfig().ModifyTuning(100);
+    m_OrganController->GetPipeConfig().ModifyTuning(100);
     break;
   case ID_SETTER_SAVE:
-    m_organfile->Save();
+    m_OrganController->Save();
     break;
 
   case ID_SETTER_TEMPERAMENT_NEXT:
   case ID_SETTER_TEMPERAMENT_PREV: {
     unsigned index
-      = m_organfile->GetSettings().GetTemperaments().GetTemperamentIndex(
-        m_organfile->GetTemperament());
-    index += m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
+      = m_OrganController->GetSettings().GetTemperaments().GetTemperamentIndex(
+        m_OrganController->GetTemperament());
+    index += m_OrganController->GetSettings()
+               .GetTemperaments()
+               .GetTemperamentCount();
     if (id == ID_SETTER_TEMPERAMENT_NEXT)
       index++;
     else
       index--;
     index = index
-      % m_organfile->GetSettings().GetTemperaments().GetTemperamentCount();
-    m_organfile->SetTemperament(
-      m_organfile->GetSettings().GetTemperaments().GetTemperamentName(index));
+      % m_OrganController->GetSettings()
+          .GetTemperaments()
+          .GetTemperamentCount();
+    m_OrganController->SetTemperament(
+      m_OrganController->GetSettings().GetTemperaments().GetTemperamentName(
+        index));
   } break;
 
   case ID_SETTER_TRANSPOSE_DOWN:
   case ID_SETTER_TRANSPOSE_UP: {
-    int value = m_organfile->GetSettings().Transpose();
+    int value = m_OrganController->GetSettings().Transpose();
     if (id == ID_SETTER_TRANSPOSE_UP)
       value++;
     else
@@ -661,7 +666,7 @@ void GOSetter::PreparePlayback() {
   buffer.Printf(wxT("%03d"), m_pos);
   m_PosDisplay.SetContent(buffer);
 
-  m_NameDisplay.SetContent(m_organfile->GetChurchName());
+  m_NameDisplay.SetContent(m_OrganController->GetChurchName());
 
   wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
   event.SetInt(m_pos);
@@ -822,17 +827,17 @@ void GOSetter::ControlChanged(void *control) {
 
 void GOSetter::UpdateTranspose() {
   m_TransposeDisplay.SetContent(
-    wxString::Format(wxT("%d"), m_organfile->GetSettings().Transpose()));
+    wxString::Format(wxT("%d"), m_OrganController->GetSettings().Transpose()));
 }
 
 void GOSetter::SetTranspose(int value) {
-  if (m_organfile->GetSettings().Transpose() != value) {
+  if (m_OrganController->GetSettings().Transpose() != value) {
     wxCommandEvent event(wxEVT_SETVALUE, ID_METER_TRANSPOSE_SPIN);
     event.SetInt(value);
     wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
   }
-  m_organfile->GetSettings().Transpose(value);
-  m_organfile->AllNotesOff();
+  m_OrganController->GetSettings().Transpose(value);
+  m_OrganController->AllNotesOff();
   UpdateTranspose();
 }
 
@@ -858,10 +863,10 @@ GOLabelControl *GOSetter::GetLabelControl(const wxString &name, bool is_panel) {
     return &m_BankDisplay;
 
   if (name == wxT("PitchLabel"))
-    return m_organfile->GetPitchLabel();
+    return m_OrganController->GetPitchLabel();
 
   if (name == wxT("TemperamentLabel"))
-    return m_organfile->GetTemperamentLabel();
+    return m_OrganController->GetTemperamentLabel();
 
   if (name == wxT("TransposeLabel"))
     return &m_TransposeDisplay;

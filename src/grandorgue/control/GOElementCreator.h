@@ -15,7 +15,7 @@
 
 class GOButtonControl;
 class GOConfigReader;
-class GODefinitionFile;
+class GOOrganController;
 class GOEnclosure;
 class GOLabelControl;
 
@@ -34,7 +34,7 @@ protected:
 
   virtual const struct ButtonDefinitionEntry *GetButtonDefinitionList() = 0;
   virtual void ButtonStateChanged(int id) = 0;
-  void CreateButtons(GODefinitionFile *organfile);
+  void CreateButtons(GOOrganController *organController);
 
 public:
   GOElementCreator();

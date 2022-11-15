@@ -17,14 +17,14 @@
 
 class GOMidiEvent;
 class GORank;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOMetronome : private GOTimerCallback,
                     private GOPlaybackStateHandler,
                     private GOSaveableObject,
                     public GOElementCreator {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   unsigned m_BPM;
   unsigned m_MeasureLength;
   unsigned m_Pos;
@@ -56,7 +56,7 @@ private:
   void UpdateMeasure(int val);
 
 public:
-  GOMetronome(GODefinitionFile *organfile);
+  GOMetronome(GOOrganController *organController);
   virtual ~GOMetronome();
 
   void Load(GOConfigReader &cfg);

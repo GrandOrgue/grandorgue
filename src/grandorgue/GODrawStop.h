@@ -47,7 +47,7 @@ protected:
   void PreparePlayback();
 
 public:
-  GODrawstop(GODefinitionFile *organfile);
+  GODrawstop(GOOrganController *organController);
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   void RegisterControlled(GODrawstop *sw);

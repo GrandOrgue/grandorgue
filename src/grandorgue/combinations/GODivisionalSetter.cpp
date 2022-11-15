@@ -15,7 +15,7 @@
 #include "model/GODivisionalCombination.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "GOSetter.h"
 
 #define DIVISIONAL_BANKS 20
@@ -82,10 +82,10 @@ wxString GODivisionalSetter::GetDivisionalBankNextLabelName(
   return wxString::Format(wxT("Setter%03dDivisionalNextBank"), manualIndex);
 }
 
-GODivisionalSetter::GODivisionalSetter(GODefinitionFile *organfile)
-  : m_organfile(organfile),
-    m_FirstManualIndex(m_organfile->GetFirstManualIndex()),
-    m_OdfManualCount(m_organfile->GetODFManualCount()),
+GODivisionalSetter::GODivisionalSetter(GOOrganController *organController)
+  : m_OrganController(organController),
+    m_FirstManualIndex(m_OrganController->GetFirstManualIndex()),
+    m_OdfManualCount(m_OrganController->GetODFManualCount()),
     m_NManuals(m_OdfManualCount - m_FirstManualIndex),
     // additional 1 element for the end mark
     m_ButtonDefinitions(new ButtonDefinitionEntry[N_BUTTONS * m_NManuals + 1]) {
@@ -110,11 +110,11 @@ GODivisionalSetter::GODivisionalSetter(GODefinitionFile *organfile)
 
   // create button conrols for all buttons. It calls the GetButtonDefinitionList
   // callback
-  CreateButtons(organfile);
+  CreateButtons(organController);
 
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);
-    m_BankLabels.push_back(new GOLabelControl(organfile));
+    m_BankLabels.push_back(new GOLabelControl(organController));
     m_DivisionalMaps.emplace_back();
   }
 }
@@ -123,7 +123,7 @@ GODivisionalSetter::~GODivisionalSetter() {
   ClearCombinations();
   m_BankLabelsByName.clear();
   delete[] m_ButtonDefinitions;
-  m_organfile->UnregisterSaveableObject(this);
+  m_OrganController->UnregisterSaveableObject(this);
 }
 
 void GODivisionalSetter::UpdateBankDisplay(unsigned manualN) {
@@ -141,7 +141,7 @@ void GODivisionalSetter::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalSetter::Load(GOConfigReader &cfg) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_BankLabelsByName.clear();
 
   // load for all manuals
@@ -156,7 +156,7 @@ void GODivisionalSetter::Load(GOConfigReader &cfg) {
       labelName,
       wxString::Format(
         _("divisional bank for %s"),
-        m_organfile->GetManual(odfManualIndex)->GetName()));
+        m_OrganController->GetManual(odfManualIndex)->GetName()));
     m_BankLabelsByName[labelName] = pL;
 
     // init the divisional buttons
@@ -208,7 +208,7 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     unsigned odfManualIndex = m_FirstManualIndex + manualN;
     DivisionalMap &divMap = m_DivisionalMaps[manualN];
-    GOManual *pManual = m_organfile->GetManual(odfManualIndex);
+    GOManual *pManual = m_OrganController->GetManual(odfManualIndex);
     GOCombinationDefinition &cmbTemplate = pManual->GetDivisionalTemplate();
 
     for (unsigned nDivisionals = N_DIVISIONALS * DIVISIONAL_BANKS,
@@ -217,7 +217,7 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
          divisionalIndex++) {
       // try to load the combination
       GODivisionalCombination *pCmb = GODivisionalCombination::LoadFrom(
-        m_organfile,
+        m_OrganController,
         cfg,
         cmbTemplate,
         GetDivisionalButtonName(odfManualIndex, divisionalIndex),
@@ -243,13 +243,13 @@ void GODivisionalSetter::SwitchDivisionalTo(
     bool isExist = divMap.find(divisionalIdx) != divMap.end();
     GODivisionalCombination *pCmb = isExist ? divMap[divisionalIdx] : nullptr;
 
-    if (!isExist && m_organfile->GetSetter()->IsSetterActive()) {
+    if (!isExist && m_OrganController->GetSetter()->IsSetterActive()) {
       // create a new combination
       const unsigned manualIndex = m_FirstManualIndex + manualN;
       GOCombinationDefinition &divTemplate
-        = m_organfile->GetManual(manualIndex)->GetDivisionalTemplate();
+        = m_OrganController->GetManual(manualIndex)->GetDivisionalTemplate();
 
-      pCmb = new GODivisionalCombination(m_organfile, divTemplate, true);
+      pCmb = new GODivisionalCombination(m_OrganController, divTemplate, true);
       pCmb->Init(
         GetDivisionalButtonName(manualIndex, divisionalIdx),
         manualIndex,

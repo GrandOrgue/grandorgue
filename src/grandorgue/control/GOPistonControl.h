@@ -23,7 +23,7 @@ private:
   void ControlChanged(void *control);
 
 public:
-  GOPistonControl(GODefinitionFile *organfile);
+  GOPistonControl(GOOrganController *organController);
   void Load(GOConfigReader &cfg, wxString group);
   void Push();
 

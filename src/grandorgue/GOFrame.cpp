@@ -42,11 +42,11 @@
 #include "GOApp.h"
 #include "GOAudioGauge.h"
 #include "GOCacheCleaner.h"
-#include "GODefinitionFile.h"
 #include "GODocument.h"
 #include "GOEvent.h"
 #include "GOLogicalRect.h"
 #include "GOOrgan.h"
+#include "GOOrganController.h"
 #include "GOPath.h"
 #include "GOProperties.h"
 #include "Images.h"
@@ -582,9 +582,9 @@ void GOFrame::OnPanel(wxCommandEvent &event) {
 
 void GOFrame::UpdatePanelMenu() {
   GODocument *doc = GetDocument();
-  GODefinitionFile *organfile = doc ? doc->GetOrganFile() : NULL;
-  unsigned panelcount = (organfile && organfile->GetPanelCount())
-    ? organfile->GetPanelCount()
+  GOOrganController *organController = doc ? doc->GetOrganFile() : NULL;
+  unsigned panelcount = (organController && organController->GetPanelCount())
+    ? organController->GetPanelCount()
     : 0;
   panelcount = std::min(panelcount, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
@@ -593,7 +593,7 @@ void GOFrame::UpdatePanelMenu() {
       m_panel_menu->FindItemByPosition(m_panel_menu->GetMenuItemCount() - 1));
 
   for (unsigned i = 0; i < panelcount; i++) {
-    GOGUIPanel *panel = organfile->GetPanel(i);
+    GOGUIPanel *panel = organController->GetPanel(i);
     wxMenu *menu = NULL;
     if (panel->GetGroupName() == wxEmptyString)
       menu = m_panel_menu;
@@ -648,10 +648,10 @@ void GOFrame::UpdateRecentMenu() {
 
 void GOFrame::UpdateTemperamentMenu() {
   GODocument *doc = GetDocument();
-  GODefinitionFile *organfile = doc ? doc->GetOrganFile() : NULL;
+  GOOrganController *organController = doc ? doc->GetOrganFile() : NULL;
   wxString temperament = wxEmptyString;
-  if (organfile)
-    temperament = organfile->GetTemperament();
+  if (organController)
+    temperament = organController->GetTemperament();
 
   while (m_temperament_menu->GetMenuItemCount() > 0)
     m_temperament_menu->Destroy(m_temperament_menu->FindItemByPosition(
@@ -679,7 +679,7 @@ void GOFrame::UpdateTemperamentMenu() {
     }
     wxMenuItem *e = menu->Append(
       ID_TEMPERAMENT_0 + i, t.GetTitle(), wxEmptyString, wxITEM_CHECK);
-    e->Enable(organfile);
+    e->Enable(organController);
     e->Check(t.GetName() == temperament);
   }
 }
@@ -717,7 +717,7 @@ void GOFrame::OnMeters(wxCommandEvent &event) {
 
 void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
   GODocument *doc = GetDocument();
-  GODefinitionFile *organfile = doc ? doc->GetOrganFile() : NULL;
+  GOOrganController *organController = doc ? doc->GetOrganFile() : NULL;
 
   if (ID_PRESET_0 <= event.GetId() && event.GetId() <= ID_PRESET_LAST) {
     event.Check(m_config.Preset() == (unsigned)(event.GetId() - ID_PRESET_0));
@@ -726,8 +726,8 @@ void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
 
   if (event.GetId() == ID_AUDIO_MEMSET)
     event.Check(
-      organfile && organfile->GetSetter()
-      && organfile->GetSetter()->IsSetterActive());
+      organController && organController->GetSetter()
+      && organController->GetSetter()->IsSetterActive());
   else if (event.GetId() == ID_ORGAN_EDIT)
     event.Check(doc && doc->WindowExists(GODocument::ORGAN_DIALOG, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
@@ -736,15 +736,15 @@ void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
     event.Check(m_MidiMonitor);
 
   if (event.GetId() == ID_FILE_CACHE_DELETE)
-    event.Enable(organfile && organfile->CachePresent());
+    event.Enable(organController && organController->CachePresent());
   else if (event.GetId() == ID_FILE_CACHE)
-    event.Enable(organfile && organfile->IsCacheable());
+    event.Enable(organController && organController->IsCacheable());
   else if (event.GetId() == ID_MIDI_MONITOR)
     event.Enable(true);
   else
     event.Enable(
-      organfile
-      && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
+      organController
+      && (event.GetId() == ID_FILE_REVERT ? organController->IsCustomized() : true));
 }
 
 void GOFrame::OnPreset(wxCommandEvent &event) {

@@ -20,7 +20,7 @@ private:
 public:
   GOGeneralButtonControl(
     GOCombinationDefinition &general_template,
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
   void Push();

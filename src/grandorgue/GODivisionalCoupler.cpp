@@ -9,11 +9,11 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 
-GODivisionalCoupler::GODivisionalCoupler(GODefinitionFile *organfile)
-  : GODrawstop(organfile), m_BiDirectionalCoupling(false), m_manuals(0) {}
+GODivisionalCoupler::GODivisionalCoupler(GOOrganController *organController)
+  : GODrawstop(organController), m_BiDirectionalCoupling(false), m_manuals(0) {}
 
 void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
   wxString buffer;
@@ -25,8 +25,8 @@ void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("NumberOfManuals"),
     1,
-    m_organfile->GetManualAndPedalCount() - m_organfile->GetFirstManualIndex()
-      + 1);
+    m_OrganController->GetManualAndPedalCount()
+      - m_OrganController->GetFirstManualIndex() + 1);
 
   m_manuals.resize(0);
   for (unsigned i = 0; i < NumberOfManuals; i++) {
@@ -35,15 +35,15 @@ void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
       ODFSetting,
       group,
       buffer,
-      m_organfile->GetFirstManualIndex(),
-      m_organfile->GetManualAndPedalCount()));
+      m_OrganController->GetFirstManualIndex(),
+      m_OrganController->GetManualAndPedalCount()));
   }
   GODrawstop::Load(cfg, group);
 }
 
 void GODivisionalCoupler::SetupCombinationState() {
   m_StoreDivisional = false;
-  m_StoreGeneral = m_organfile->GeneralsStoreDivisionalCouplers();
+  m_StoreGeneral = m_OrganController->GeneralsStoreDivisionalCouplers();
 }
 
 void GODivisionalCoupler::ChangeState(bool on) {}

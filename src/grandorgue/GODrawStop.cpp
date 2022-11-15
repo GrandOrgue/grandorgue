@@ -13,7 +13,7 @@
 #include "config/GOConfigWriter.h"
 #include "model/GOSwitch.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
   {wxT("Input"), FUNCTION_INPUT},
@@ -25,8 +25,8 @@ const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
   {wxT("Xor"), FUNCTION_XOR},
 };
 
-GODrawstop::GODrawstop(GODefinitionFile *organfile)
-  : GOButtonControl(organfile, MIDI_RECV_DRAWSTOP, false),
+GODrawstop::GODrawstop(GOOrganController *organController)
+  : GOButtonControl(organController, MIDI_RECV_DRAWSTOP, false),
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
     m_ActiveState(false),
@@ -79,7 +79,7 @@ void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
         group,
         wxT("SwitchCount"),
         1,
-        m_organfile->GetSwitchCount(),
+        m_OrganController->GetSwitchCount(),
         true,
         1);
     }
@@ -89,10 +89,10 @@ void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
         group,
         wxString::Format(wxT("Switch%03d"), i + 1),
         1,
-        m_organfile->GetSwitchCount(),
+        m_OrganController->GetSwitchCount(),
         true,
         1);
-      GODrawstop *s = m_organfile->GetSwitch(no - 1);
+      GODrawstop *s = m_OrganController->GetSwitch(no - 1);
       for (unsigned j = 0; j < m_ControllingDrawstops.size(); j++)
         if (unique && m_ControllingDrawstops[j] == s)
           throw wxString::Format(

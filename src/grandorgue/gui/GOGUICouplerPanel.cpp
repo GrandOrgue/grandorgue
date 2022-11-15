@@ -12,33 +12,33 @@
 #include "model/GOManual.h"
 
 #include "GOCoupler.h"
-#include "GODefinitionFile.h"
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
+#include "GOOrganController.h"
 
-GOGUICouplerPanel::GOGUICouplerPanel(GODefinitionFile *organfile)
-  : m_organfile(organfile) {}
+GOGUICouplerPanel::GOGUICouplerPanel(GOOrganController *organController)
+  : m_OrganController(organController) {}
 
 GOGUICouplerPanel::~GOGUICouplerPanel() {}
 
 void GOGUICouplerPanel::CreatePanels(GOConfigReader &cfg) {
-  for (unsigned i = m_organfile->GetFirstManualIndex();
-       i <= m_organfile->GetManualAndPedalCount();
+  for (unsigned i = m_OrganController->GetFirstManualIndex();
+       i <= m_OrganController->GetManualAndPedalCount();
        i++)
-    m_organfile->AddPanel(CreateCouplerPanel(cfg, i));
+    m_OrganController->AddPanel(CreateCouplerPanel(cfg, i));
 }
 
 GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
   GOConfigReader &cfg, unsigned manual_nr) {
-  GOManual *manual = m_organfile->GetManual(manual_nr);
+  GOManual *manual = m_OrganController->GetManual(manual_nr);
 
-  GOGUIPanel *panel = new GOGUIPanel(m_organfile);
-  GOGUIDisplayMetrics *metrics
-    = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_COUPLER);
+  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
+    cfg, m_OrganController, GOGUI_SETTER_COUPLER);
   panel->Init(
     cfg,
     metrics,
@@ -51,11 +51,11 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
   panel->AddControl(back);
 
   panel->GetLayoutEngine()->Update();
-  for (unsigned int i = m_organfile->GetFirstManualIndex();
-       i < m_organfile->GetODFManualCount();
+  for (unsigned int i = m_OrganController->GetFirstManualIndex();
+       i < m_OrganController->GetODFManualCount();
        i++) {
     int x, y;
-    GOManual *dest_manual = m_organfile->GetManual(i);
+    GOManual *dest_manual = m_OrganController->GetManual(i);
     GOCoupler *coupler;
     GOGUIButton *button;
 
@@ -70,7 +70,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       dest_manual->GetName());
     panel->AddControl(PosDisplay);
 
-    coupler = new GOCoupler(m_organfile, manual_nr);
+    coupler = new GOCoupler(m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i),
@@ -80,7 +80,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       -12,
       i,
       GOCoupler::COUPLER_NORMAL);
-    coupler->SetElementID(m_organfile->GetRecorderElementID(
+    coupler->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("S%dM%dC16"), manual_nr, i)));
     manual->AddCoupler(coupler);
     button = new GOGUIButton(panel, coupler, false);
@@ -91,7 +91,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_organfile, manual_nr);
+    coupler = new GOCoupler(m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i),
@@ -101,7 +101,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       0,
       i,
       GOCoupler::COUPLER_NORMAL);
-    coupler->SetElementID(m_organfile->GetRecorderElementID(
+    coupler->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("S%dM%dC8"), manual_nr, i)));
     manual->AddCoupler(coupler);
     button = new GOGUIButton(panel, coupler, false);
@@ -112,7 +112,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_organfile, manual_nr);
+    coupler = new GOCoupler(m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i),
@@ -122,7 +122,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       12,
       i,
       GOCoupler::COUPLER_NORMAL);
-    coupler->SetElementID(m_organfile->GetRecorderElementID(
+    coupler->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("S%dM%dC4"), manual_nr, i)));
     manual->AddCoupler(coupler);
     button = new GOGUIButton(panel, coupler, false);
@@ -133,7 +133,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_organfile, manual_nr);
+    coupler = new GOCoupler(m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i),
@@ -143,7 +143,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       0,
       i,
       GOCoupler::COUPLER_BASS);
-    coupler->SetElementID(m_organfile->GetRecorderElementID(
+    coupler->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("S%dM%dCB"), manual_nr, i)));
     manual->AddCoupler(coupler);
     button = new GOGUIButton(panel, coupler, false);
@@ -154,7 +154,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_organfile, manual_nr);
+    coupler = new GOCoupler(m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i),
@@ -164,7 +164,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       0,
       i,
       GOCoupler::COUPLER_MELODY);
-    coupler->SetElementID(m_organfile->GetRecorderElementID(
+    coupler->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("S%dM%dCM"), manual_nr, i)));
     manual->AddCoupler(coupler);
     button = new GOGUIButton(panel, coupler, false);

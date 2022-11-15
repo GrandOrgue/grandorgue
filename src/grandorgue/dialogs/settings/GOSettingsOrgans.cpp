@@ -31,7 +31,7 @@
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "files/GOStdFileName.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "archive/GOArchiveIndex.h"
 
 static const wxString EMPTY_STRING = wxEmptyString;

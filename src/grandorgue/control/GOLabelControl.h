@@ -17,7 +17,7 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOLabelControl : private GOSaveableObject,
                        private GOPlaybackStateHandler,
@@ -26,7 +26,7 @@ protected:
   wxString m_Name;
   wxString m_Content;
   wxString m_group;
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOMidiSender m_sender;
 
   void Save(GOConfigWriter &cfg);
@@ -37,7 +37,7 @@ protected:
   void PrepareRecording();
 
 public:
-  GOLabelControl(GODefinitionFile *organfile);
+  GOLabelControl(GOOrganController *organController);
   virtual ~GOLabelControl();
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group, wxString name);

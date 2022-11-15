@@ -14,16 +14,16 @@
 #include "config/GOConfigReader.h"
 
 #include "GOCoupler.h"
-#include "GODefinitionFile.h"
 #include "GODocument.h"
+#include "GOOrganController.h"
 #include "GOStop.h"
 
-GOManual::GOManual(GODefinitionFile *organfile)
+GOManual::GOManual(GOOrganController *organController)
   : m_group(wxT("---")),
-    m_midi(organfile, MIDI_RECV_MANUAL),
-    m_sender(organfile, MIDI_SEND_MANUAL),
-    m_division(organfile, MIDI_SEND_MANUAL),
-    m_organfile(organfile),
+    m_midi(organController, MIDI_RECV_MANUAL),
+    m_sender(organController, MIDI_SEND_MANUAL),
+    m_division(organController, MIDI_SEND_MANUAL),
+    m_OrganController(organController),
     m_InputCouplers(),
     m_KeyVelocity(0),
     m_RemoteVelocity(),
@@ -45,11 +45,11 @@ GOManual::GOManual(GODefinitionFile *organfile)
     m_divisionals(0),
     m_ODFCouplerCount(0),
     m_displayed(false),
-    m_DivisionalTemplate(organfile) {
+    m_DivisionalTemplate(organController) {
   m_InputCouplers.push_back(NULL);
-  m_organfile->RegisterEventHandler(this);
-  m_organfile->RegisterMidiConfigurator(this);
-  m_organfile->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterEventHandler(this);
+  m_OrganController->RegisterMidiConfigurator(this);
+  m_OrganController->RegisterPlaybackStateHandler(this);
 }
 
 unsigned GOManual::RegisterCoupler(GOCoupler *coupler) {
@@ -73,11 +73,11 @@ void GOManual::Init(
   int manualNumber,
   unsigned first_midi,
   unsigned keys) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
   m_name = wxString::Format(
     _("Coupling manual %d"),
-    manualNumber - m_organfile->GetODFManualCount() + 1);
+    manualNumber - m_OrganController->GetODFManualCount() + 1);
   m_nb_logical_keys = keys;
   m_first_accessible_logical_key_nb = 1;
   m_first_accessible_key_midi_note_nb = first_midi;
@@ -94,12 +94,14 @@ void GOManual::Init(
   m_tremulant_ids.resize(0);
   m_switch_ids.resize(0);
   m_divisionals.resize(0);
-  m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
-  m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+  m_midi.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
   m_division.Load(
-    cfg, group + wxT("Division"), m_organfile->GetSettings().GetMidiMap());
+    cfg,
+    group + wxT("Division"),
+    m_OrganController->GetSettings().GetMidiMap());
 
-  SetElementID(m_organfile->GetRecorderElementID(
+  SetElementID(m_OrganController->GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
 
   Resize();
@@ -108,7 +110,7 @@ void GOManual::Init(
 }
 
 void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
   m_name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"));
   m_nb_logical_keys
@@ -138,14 +140,14 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     group,
     wxT("NumberOfTremulants"),
     0,
-    m_organfile->GetTremulantCount(),
+    m_OrganController->GetTremulantCount(),
     false);
   unsigned nb_switches = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("NumberOfSwitches"),
     0,
-    m_organfile->GetSwitchCount(),
+    m_OrganController->GetSwitchCount(),
     false);
   m_manual_number = manualNumber;
 
@@ -166,25 +168,25 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   m_stops.resize(0);
   for (unsigned i = 0; i < nb_stops; i++) {
     m_stops.push_back(
-      new GOStop(m_organfile, GetFirstLogicalKeyMIDINoteNumber()));
+      new GOStop(m_OrganController, GetFirstLogicalKeyMIDINoteNumber()));
     buffer.Printf(wxT("Stop%03d"), i + 1);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
-    m_organfile->MarkSectionInUse(buffer);
+    m_OrganController->MarkSectionInUse(buffer);
     m_stops[i]->Load(cfg, buffer);
-    m_stops[i]->SetElementID(m_organfile->GetRecorderElementID(
+    m_stops[i]->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
   }
 
   m_couplers.resize(0);
   for (unsigned i = 0; i < m_ODFCouplerCount; i++) {
-    m_couplers.push_back(new GOCoupler(m_organfile, m_manual_number));
+    m_couplers.push_back(new GOCoupler(m_OrganController, m_manual_number));
     buffer.Printf(wxT("Coupler%03d"), i + 1);
     buffer.Printf(
       wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
-    m_organfile->MarkSectionInUse(buffer);
+    m_OrganController->MarkSectionInUse(buffer);
     m_couplers[i]->Load(cfg, buffer);
-    m_couplers[i]->SetElementID(m_organfile->GetRecorderElementID(
+    m_couplers[i]->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("M%dC%d"), m_manual_number, i)));
   }
 
@@ -192,7 +194,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   for (unsigned i = 0; i < nb_tremulants; i++) {
     buffer.Printf(wxT("Tremulant%03d"), i + 1);
     unsigned new_id = cfg.ReadInteger(
-      ODFSetting, group, buffer, 1, m_organfile->GetTremulantCount());
+      ODFSetting, group, buffer, 1, m_OrganController->GetTremulantCount());
     for (unsigned j = 0; j < m_tremulant_ids.size(); j++)
       if (m_tremulant_ids[j] == new_id)
         throw wxString::Format(
@@ -206,7 +208,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   for (unsigned i = 0; i < nb_switches; i++) {
     buffer.Printf(wxT("Switch%03d"), i + 1);
     unsigned new_id = cfg.ReadInteger(
-      ODFSetting, group, buffer, 1, m_organfile->GetSwitchCount());
+      ODFSetting, group, buffer, 1, m_OrganController->GetSwitchCount());
     for (unsigned j = 0; j < m_switch_ids.size(); j++)
       if (m_switch_ids[j] == new_id)
         throw wxString::Format(
@@ -218,20 +220,22 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nb_divisionals; i++) {
     m_divisionals.push_back(new GODivisionalButtonControl(
-      m_organfile, GetDivisionalTemplate(), false));
+      m_OrganController, GetDivisionalTemplate(), false));
     buffer.Printf(wxT("Divisional%03d"), i + 1);
     buffer.Printf(
       wxT("Divisional%03d"),
       cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
-    m_organfile->MarkSectionInUse(buffer);
+    m_OrganController->MarkSectionInUse(buffer);
     m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
   }
-  m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
-  m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+  m_midi.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
   m_division.Load(
-    cfg, group + wxT("Division"), m_organfile->GetSettings().GetMidiMap());
+    cfg,
+    group + wxT("Division"),
+    m_OrganController->GetSettings().GetMidiMap());
 
-  SetElementID(m_organfile->GetRecorderElementID(
+  SetElementID(m_OrganController->GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
 
   Resize();
@@ -283,7 +287,7 @@ void GOManual::SetKey(
   if (
     m_first_accessible_logical_key_nb <= note + 1
     && note <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
-    m_organfile->ControlChanged(this);
+    m_OrganController->ControlChanged(this);
 }
 
 void GOManual::Set(unsigned note, unsigned velocity) {
@@ -374,14 +378,14 @@ unsigned GOManual::GetTremulantCount() { return m_tremulant_ids.size(); }
 
 GOTremulant *GOManual::GetTremulant(unsigned index) {
   assert(index < m_tremulant_ids.size());
-  return m_organfile->GetTremulant(m_tremulant_ids[index] - 1);
+  return m_OrganController->GetTremulant(m_tremulant_ids[index] - 1);
 }
 
 unsigned GOManual::GetSwitchCount() { return m_switch_ids.size(); }
 
 GOSwitch *GOManual::GetSwitch(unsigned index) {
   assert(index < m_switch_ids.size());
-  return m_organfile->GetSwitch(m_switch_ids[index] - 1);
+  return m_OrganController->GetSwitch(m_switch_ids[index] - 1);
 }
 
 void GOManual::AllNotesOff() {
@@ -410,10 +414,12 @@ bool GOManual::IsKeyDown(unsigned midiNoteNumber) {
 bool GOManual::IsDisplayed() { return m_displayed; }
 
 void GOManual::Save(GOConfigWriter &cfg) {
-  m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
-  m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+  m_midi.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
   m_division.Save(
-    cfg, m_group + wxT("Division"), m_organfile->GetSettings().GetMidiMap());
+    cfg,
+    m_group + wxT("Division"),
+    m_OrganController->GetSettings().GetMidiMap());
 }
 
 void GOManual::AbortPlayback() {
@@ -510,7 +516,7 @@ void GOManual::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_organfile->GetDocument()->ShowMIDIEventDialog(
+  m_OrganController->GetDocument()->ShowMIDIEventDialog(
     this, title, &m_midi, &m_sender, NULL, &m_division);
 }
 

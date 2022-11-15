@@ -19,7 +19,7 @@ class GOMidiPort;
 class GOMidiListener;
 class GOMidiMap;
 class GOConfig;
-class GODefinitionFile;
+class GOOrganController;
 class wxMidiEvent;
 
 class GOMidi : public wxEvtHandler {

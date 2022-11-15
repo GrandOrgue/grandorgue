@@ -9,17 +9,17 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "GORank.h"
 
 GOPipe::GOPipe(
-  GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number)
+  GOOrganController *organController, GORank *rank, unsigned midi_key_number)
   : m_Velocity(0),
     m_Velocities(1),
-    m_organfile(organfile),
+    m_OrganController(organController),
     m_Rank(rank),
     m_MidiKeyNumber(midi_key_number) {
-  m_organfile->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterPlaybackStateHandler(this);
 }
 
 GOPipe::~GOPipe() {}

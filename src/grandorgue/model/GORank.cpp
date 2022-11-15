@@ -9,17 +9,17 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
 #include "GODocument.h"
 #include "GODummyPipe.h"
+#include "GOOrganController.h"
 #include "GOReferencePipe.h"
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 
-GORank::GORank(GODefinitionFile *organfile)
-  : m_organfile(organfile),
+GORank::GORank(GOOrganController *organController)
+  : m_OrganController(organController),
     m_Name(),
     m_Pipes(),
     m_StopCount(0),
@@ -33,10 +33,10 @@ GORank::GORank(GODefinitionFile *organfile)
     m_MinVolume(100),
     m_MaxVolume(100),
     m_RetuneRank(true),
-    m_sender(organfile, MIDI_SEND_MANUAL),
-    m_PipeConfig(NULL, organfile, NULL) {
-  m_organfile->RegisterMidiConfigurator(this);
-  m_organfile->RegisterPlaybackStateHandler(this);
+    m_sender(organController, MIDI_SEND_MANUAL),
+    m_PipeConfig(NULL, organController, NULL) {
+  m_OrganController->RegisterMidiConfigurator(this);
+  m_OrganController->RegisterPlaybackStateHandler(this);
 }
 
 GORank::~GORank() {}
@@ -54,7 +54,7 @@ void GORank::Init(
   wxString name,
   int first_midi_note_number,
   unsigned windchest_nr) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
 
   m_FirstMidiNoteNumber = first_midi_note_number;
@@ -69,20 +69,21 @@ void GORank::Init(
   m_MaxVolume = 100;
   m_RetuneRank = false;
 
-  GOWindchest *windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
+  GOWindchest *windchest
+    = m_OrganController->GetWindchest(m_WindchestGroup - 1);
   windchest->AddRank(this);
   m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
   m_Pipes.clear();
   m_sender.Load(
-    cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
+    cfg, group + wxT("Rank"), m_OrganController->GetSettings().GetMidiMap());
   m_PipeConfig.SetName(GetName());
   Resize();
 }
 
 void GORank::Load(
   GOConfigReader &cfg, wxString group, int first_midi_note_number) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
 
   m_FirstMidiNoteNumber = cfg.ReadInteger(
@@ -103,7 +104,7 @@ void GORank::Load(
     group,
     wxT("WindchestGroup"),
     1,
-    m_organfile->GetWindchestGroupCount());
+    m_OrganController->GetWindchestGroupCount());
   m_Percussive = cfg.ReadBoolean(ODFSetting, group, wxT("Percussive"));
   m_HarmonicNumber = cfg.ReadInteger(
     ODFSetting, group, wxT("HarmonicNumber"), 1, 1024, false, 8);
@@ -116,7 +117,8 @@ void GORank::Load(
   m_RetuneRank
     = cfg.ReadBoolean(ODFSetting, group, wxT("AcceptsRetuning"), false, true);
 
-  GOWindchest *windchest = m_organfile->GetWindchest(m_WindchestGroup - 1);
+  GOWindchest *windchest
+    = m_OrganController->GetWindchest(m_WindchestGroup - 1);
   windchest->AddRank(this);
   m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
@@ -127,13 +129,13 @@ void GORank::Load(
     wxString name = cfg.ReadStringTrim(ODFSetting, group, buffer);
     if (name == wxT("DUMMY")) {
       m_Pipes.push_back(
-        new GODummyPipe(m_organfile, this, m_FirstMidiNoteNumber + i));
+        new GODummyPipe(m_OrganController, this, m_FirstMidiNoteNumber + i));
     } else if (name.StartsWith(wxT("REF:"))) {
-      m_Pipes.push_back(
-        new GOReferencePipe(m_organfile, this, m_FirstMidiNoteNumber + i));
+      m_Pipes.push_back(new GOReferencePipe(
+        m_OrganController, this, m_FirstMidiNoteNumber + i));
     } else {
       m_Pipes.push_back(new GOSoundingPipe(
-        m_organfile,
+        m_OrganController,
         this,
         m_Percussive,
         m_WindchestGroup,
@@ -147,7 +149,7 @@ void GORank::Load(
     m_Pipes[i]->Load(cfg, group, buffer);
   }
   m_sender.Load(
-    cfg, group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
+    cfg, group + wxT("Rank"), m_OrganController->GetSettings().GetMidiMap());
   m_PipeConfig.SetName(GetName());
   Resize();
 }
@@ -159,7 +161,7 @@ void GORank::AddPipe(GOPipe *pipe) {
 
 void GORank::Save(GOConfigWriter &cfg) {
   m_sender.Save(
-    cfg, m_group + wxT("Rank"), m_organfile->GetSettings().GetMidiMap());
+    cfg, m_group + wxT("Rank"), m_OrganController->GetSettings().GetMidiMap());
 }
 
 unsigned GORank::RegisterStop(GOStop *stop) {
@@ -232,7 +234,7 @@ void GORank::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_organfile->GetDocument()->ShowMIDIEventDialog(
+  m_OrganController->GetDocument()->ShowMIDIEventDialog(
     this, title, NULL, &m_sender, NULL, NULL);
 }
 

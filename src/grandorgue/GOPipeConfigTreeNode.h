@@ -25,7 +25,7 @@ private:
 public:
   GOPipeConfigTreeNode(
     GOPipeConfigNode *parent,
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     GOPipeUpdateCallback *callback);
 
   void AddChild(GOPipeConfigNode *node);

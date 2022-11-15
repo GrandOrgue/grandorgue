@@ -13,15 +13,15 @@
 #include "GOLogicalRect.h"
 #include "GOSaveableObject.h"
 
-class GODefinitionFile;
+class GOOrganController;
 
 class GOMainWindowData : private GOSaveableObject {
 protected:
-  GODefinitionFile *p_organFile;
+  GOOrganController *p_organFile;
   GOLogicalRect m_rect;
 
 public:
-  GOMainWindowData(GODefinitionFile *pOrganFile, const wxString &group)
+  GOMainWindowData(GOOrganController *pOrganFile, const wxString &group)
     : p_organFile(pOrganFile) {
     m_group = group;
   }

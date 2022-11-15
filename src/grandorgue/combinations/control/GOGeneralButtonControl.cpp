@@ -11,14 +11,14 @@
 
 #include "combinations/GOSetter.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GOGeneralButtonControl::GOGeneralButtonControl(
   GOCombinationDefinition &general_template,
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   bool is_setter)
-  : GOPushbuttonControl(organfile),
-    m_general(general_template, organfile, is_setter) {}
+  : GOPushbuttonControl(organController),
+    m_general(general_template, organController, is_setter) {}
 
 void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
   m_general.Load(cfg, group);
@@ -28,7 +28,8 @@ void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
 void GOGeneralButtonControl::Push() {
   GOCombination::ExtraElementsSet elementSet;
 
-  m_general.Push(m_organfile->GetSetter()->GetCrescendoAddSet(elementSet));
+  m_general.Push(
+    m_OrganController->GetSetter()->GetCrescendoAddSet(elementSet));
 }
 
 GOGeneralCombination &GOGeneralButtonControl::GetGeneral() { return m_general; }

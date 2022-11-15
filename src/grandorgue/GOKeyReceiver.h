@@ -14,14 +14,14 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOKeyReceiver : public GOKeyReceiverData {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
 public:
-  GOKeyReceiver(GODefinitionFile *organfile, KEY_RECEIVER_TYPE type);
+  GOKeyReceiver(GOOrganController *organController, KEY_RECEIVER_TYPE type);
 
   void Load(GOConfigReader &cfg, wxString group);
   void Save(GOConfigWriter &cfg, wxString group);

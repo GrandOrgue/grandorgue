@@ -8,8 +8,8 @@
 #include "GODummyPipe.h"
 
 GODummyPipe::GODummyPipe(
-  GODefinitionFile *organfile, GORank *rank, unsigned midi_key_number)
-  : GOPipe(organfile, rank, midi_key_number) {}
+  GOOrganController *organController, GORank *rank, unsigned midi_key_number)
+  : GOPipe(organController, rank, midi_key_number) {}
 
 void GODummyPipe::Load(GOConfigReader &cfg, wxString group, wxString prefix) {}
 

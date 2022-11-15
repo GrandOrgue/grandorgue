@@ -15,7 +15,7 @@
 #include <wx/stattext.h>
 #include <wx/tglbtn.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "GORodgers.h"
 #include "config/GOConfig.h"
 #include "midi/GOMidiEvent.h"

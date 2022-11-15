@@ -17,18 +17,18 @@
 #include "config/GOConfigWriter.h"
 #include "model/GOManual.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 GOGeneralCombination::GOGeneralCombination(
   GOCombinationDefinition &general_template,
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   bool is_setter)
-  : GOCombination(general_template, organfile),
-    m_organfile(organfile),
+  : GOCombination(general_template, organController),
+    m_OrganController(organController),
     m_IsSetter(is_setter) {}
 
 void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
 
   m_Protected
@@ -45,25 +45,25 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
       m_group,
       wxT("NumberOfStops"),
       0,
-      m_organfile->GetStopCount());
+      m_OrganController->GetStopCount());
     unsigned NumberOfCouplers = cfg.ReadInteger(
       ODFSetting,
       m_group,
       wxT("NumberOfCouplers"),
       0,
-      m_organfile->GetODFCouplerCount());
+      m_OrganController->GetODFCouplerCount());
     unsigned NumberOfTremulants = cfg.ReadInteger(
       ODFSetting,
       m_group,
       wxT("NumberOfTremulants"),
       0,
-      m_organfile->GetTremulantCount());
+      m_OrganController->GetTremulantCount());
     unsigned NumberOfSwitches = cfg.ReadInteger(
       ODFSetting,
       m_group,
       wxT("NumberOfSwitches"),
       0,
-      m_organfile->GetSwitchCount(),
+      m_OrganController->GetSwitchCount(),
       false,
       0);
     unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(
@@ -71,8 +71,8 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
       m_group,
       wxT("NumberOfDivisionalCouplers"),
       0,
-      m_organfile->GetDivisionalCouplerCount(),
-      m_organfile->GeneralsStoreDivisionalCouplers());
+      m_OrganController->GetDivisionalCouplerCount(),
+      m_OrganController->GeneralsStoreDivisionalCouplers());
 
     for (unsigned i = 0; i < NumberOfStops; i++) {
       buffer.Printf(wxT("StopManual%03d"), i + 1);
@@ -80,10 +80,10 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
         ODFSetting,
         m_group,
         buffer,
-        m_organfile->GetFirstManualIndex(),
-        m_organfile->GetManualAndPedalCount());
+        m_OrganController->GetFirstManualIndex(),
+        m_OrganController->GetManualAndPedalCount());
       buffer.Printf(wxT("StopNumber%03d"), i + 1);
-      unsigned cnt = m_organfile->GetManual(m)->GetStopCount();
+      unsigned cnt = m_OrganController->GetManual(m)->GetStopCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
       pos = m_Template.findEntry(
         GOCombinationDefinition::COMBINATION_STOP, m, abs(s));
@@ -109,10 +109,10 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
         ODFSetting,
         m_group,
         buffer,
-        m_organfile->GetFirstManualIndex(),
-        m_organfile->GetManualAndPedalCount());
+        m_OrganController->GetFirstManualIndex(),
+        m_OrganController->GetManualAndPedalCount());
       buffer.Printf(wxT("CouplerNumber%03d"), i + 1);
-      unsigned cnt = m_organfile->GetManual(m)->GetODFCouplerCount();
+      unsigned cnt = m_OrganController->GetManual(m)->GetODFCouplerCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
       pos = m_Template.findEntry(
         GOCombinationDefinition::COMBINATION_COUPLER, m, abs(s));
@@ -134,7 +134,7 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
 
     for (unsigned i = 0; i < NumberOfTremulants; i++) {
       buffer.Printf(wxT("TremulantNumber%03d"), i + 1);
-      unsigned cnt = m_organfile->GetTremulantCount();
+      unsigned cnt = m_OrganController->GetTremulantCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
       pos = m_Template.findEntry(
         GOCombinationDefinition::COMBINATION_TREMULANT, -1, abs(s));
@@ -156,7 +156,7 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
 
     for (unsigned i = 0; i < NumberOfSwitches; i++) {
       buffer.Printf(wxT("SwitchNumber%03d"), i + 1);
-      unsigned cnt = m_organfile->GetSwitchCount();
+      unsigned cnt = m_OrganController->GetSwitchCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
       pos = m_Template.findEntry(
         GOCombinationDefinition::COMBINATION_SWITCH, -1, abs(s));
@@ -178,7 +178,7 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
 
     for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++) {
       buffer.Printf(wxT("DivisionalCouplerNumber%03d"), i + 1);
-      unsigned cnt = m_organfile->GetDivisionalCouplerCount();
+      unsigned cnt = m_OrganController->GetDivisionalCouplerCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
       pos = m_Template.findEntry(
         GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER, -1, abs(s));
@@ -209,33 +209,33 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
         m_group,
         wxT("NumberOfStops"),
         -1,
-        m_organfile->GetStopCount(),
+        m_OrganController->GetStopCount(),
         false,
         -1)
       == -1)
       type = ODFSetting;
   wxString buffer;
   unsigned NumberOfStops = cfg.ReadInteger(
-    type, m_group, wxT("NumberOfStops"), 0, m_organfile->GetStopCount());
+    type, m_group, wxT("NumberOfStops"), 0, m_OrganController->GetStopCount());
   unsigned NumberOfCouplers = cfg.ReadInteger(
     type,
     m_group,
     wxT("NumberOfCouplers"),
     0,
-    type == CMBSetting ? m_organfile->GetCouplerCount()
-                       : m_organfile->GetODFCouplerCount());
+    type == CMBSetting ? m_OrganController->GetCouplerCount()
+                       : m_OrganController->GetODFCouplerCount());
   unsigned NumberOfTremulants = cfg.ReadInteger(
     type,
     m_group,
     wxT("NumberOfTremulants"),
     0,
-    m_organfile->GetTremulantCount());
+    m_OrganController->GetTremulantCount());
   unsigned NumberOfSwitches = cfg.ReadInteger(
     type,
     m_group,
     wxT("NumberOfSwitches"),
     0,
-    m_organfile->GetSwitchCount(),
+    m_OrganController->GetSwitchCount(),
     false,
     0);
   unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(
@@ -243,8 +243,8 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
     m_group,
     wxT("NumberOfDivisionalCouplers"),
     0,
-    m_organfile->GetDivisionalCouplerCount(),
-    m_organfile->GeneralsStoreDivisionalCouplers());
+    m_OrganController->GetDivisionalCouplerCount(),
+    m_OrganController->GeneralsStoreDivisionalCouplers());
 
   int pos;
   UpdateState();
@@ -257,11 +257,11 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
       type,
       m_group,
       buffer,
-      m_organfile->GetFirstManualIndex(),
-      m_organfile->GetManualAndPedalCount());
+      m_OrganController->GetFirstManualIndex(),
+      m_OrganController->GetManualAndPedalCount());
     buffer.Printf(wxT("StopNumber%03d"), i + 1);
     /*
-    unsigned cnt = m_organfile->GetManual(m)->GetStopCount();
+    unsigned cnt = m_OrganController->GetManual(m)->GetStopCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
      */
     int s = cfg.ReadInteger(type, m_group, buffer, -999, 999);
@@ -289,12 +289,12 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
       type,
       m_group,
       buffer,
-      m_organfile->GetFirstManualIndex(),
-      m_organfile->GetManualAndPedalCount());
+      m_OrganController->GetFirstManualIndex(),
+      m_OrganController->GetManualAndPedalCount());
     buffer.Printf(wxT("CouplerNumber%03d"), i + 1);
     unsigned cnt = type == CMBSetting
-      ? m_organfile->GetManual(m)->GetCouplerCount()
-      : m_organfile->GetManual(m)->GetODFCouplerCount();
+      ? m_OrganController->GetManual(m)->GetCouplerCount()
+      : m_OrganController->GetManual(m)->GetODFCouplerCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
     pos = m_Template.findEntry(
       GOCombinationDefinition::COMBINATION_COUPLER, m, abs(s));
@@ -316,7 +316,7 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
 
   for (unsigned i = 0; i < NumberOfTremulants; i++) {
     buffer.Printf(wxT("TremulantNumber%03d"), i + 1);
-    unsigned cnt = m_organfile->GetTremulantCount();
+    unsigned cnt = m_OrganController->GetTremulantCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
     pos = m_Template.findEntry(
       GOCombinationDefinition::COMBINATION_TREMULANT, -1, abs(s));
@@ -338,7 +338,7 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
 
   for (unsigned i = 0; i < NumberOfSwitches; i++) {
     buffer.Printf(wxT("SwitchNumber%03d"), i + 1);
-    unsigned cnt = m_organfile->GetSwitchCount();
+    unsigned cnt = m_OrganController->GetSwitchCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
     pos = m_Template.findEntry(
       GOCombinationDefinition::COMBINATION_SWITCH, -1, abs(s));
@@ -360,7 +360,7 @@ void GOGeneralCombination::LoadCombination(GOConfigReader &cfg) {
 
   for (unsigned i = 0; i < NumberOfDivisionalCouplers; i++) {
     buffer.Printf(wxT("DivisionalCouplerNumber%03d"), i + 1);
-    unsigned cnt = m_organfile->GetDivisionalCouplerCount();
+    unsigned cnt = m_OrganController->GetDivisionalCouplerCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
     pos = m_Template.findEntry(
       GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER, -1, abs(s));
@@ -388,21 +388,22 @@ void GOGeneralCombination::Push(
   if (!isFromCrescendo || !extraSet) { // Crescendo in add mode: not to switch
                                        // off combination
                                        // buttons
-    for (unsigned k = 0; k < m_organfile->GetGeneralCount(); k++) {
-      GOGeneralButtonControl *general = m_organfile->GetGeneral(k);
+    for (unsigned k = 0; k < m_OrganController->GetGeneralCount(); k++) {
+      GOGeneralButtonControl *general = m_OrganController->GetGeneral(k);
       general->Display(&general->GetGeneral() == this);
     }
 
-    for (unsigned j = m_organfile->GetFirstManualIndex();
-         j <= m_organfile->GetManualAndPedalCount();
+    for (unsigned j = m_OrganController->GetFirstManualIndex();
+         j <= m_OrganController->GetManualAndPedalCount();
          j++) {
-      for (unsigned k = 0; k < m_organfile->GetManual(j)->GetDivisionalCount();
+      for (unsigned k = 0;
+           k < m_OrganController->GetManual(j)->GetDivisionalCount();
            k++)
-        m_organfile->GetManual(j)->GetDivisional(k)->Display(false);
+        m_OrganController->GetManual(j)->GetDivisional(k)->Display(false);
     }
   }
 
-  m_organfile->GetSetter()->ResetDisplay();
+  m_OrganController->GetSetter()->ResetDisplay();
 }
 
 void GOGeneralCombination::Save(GOConfigWriter &cfg) {

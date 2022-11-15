@@ -11,18 +11,18 @@
 #include "config/GOConfigReader.h"
 #include "control/GOButtonControl.h"
 
-#include "GODefinitionFile.h"
 #include "GODocument.h"
+#include "GOOrganController.h"
 
 GOButtonControl::GOButtonControl(
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : m_organfile(organfile),
-    m_midi(organfile, midi_type),
-    m_sender(organfile, MIDI_SEND_BUTTON),
-    m_shortcut(organfile, KEY_RECV_BUTTON),
+  : m_OrganController(organController),
+    m_midi(organController, midi_type),
+    m_sender(organController, MIDI_SEND_BUTTON),
+    m_shortcut(organController, KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
     m_Name(),
@@ -30,29 +30,29 @@ GOButtonControl::GOButtonControl(
     m_DisplayInInvertedState(false),
     m_ReadOnly(false),
     m_IsPiston(isPiston) {
-  m_organfile->RegisterEventHandler(this);
-  m_organfile->RegisterMidiConfigurator(this);
-  m_organfile->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterEventHandler(this);
+  m_OrganController->RegisterMidiConfigurator(this);
+  m_OrganController->RegisterPlaybackStateHandler(this);
 }
 
 GOButtonControl::~GOButtonControl() {}
 
 void GOButtonControl::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
   m_Displayed = false;
   m_DisplayInInvertedState = false;
   if (!m_ReadOnly) {
-    m_midi.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+    m_midi.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
     m_shortcut.Load(cfg, group);
   }
-  m_sender.Load(cfg, group, m_organfile->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
 }
 
 void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_group = group;
   m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true, m_Name);
   m_Displayed
@@ -60,7 +60,7 @@ void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
   m_DisplayInInvertedState = cfg.ReadBoolean(
     ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 
-  GOMidiMap &midiMap = m_organfile->GetSettings().GetMidiMap();
+  GOMidiMap &midiMap = m_OrganController->GetSettings().GetMidiMap();
 
   if (!m_ReadOnly) {
     m_midi.Load(cfg, group, midiMap);
@@ -71,10 +71,10 @@ void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
 
 void GOButtonControl::Save(GOConfigWriter &cfg) {
   if (!m_ReadOnly) {
-    m_midi.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+    m_midi.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
     m_shortcut.Save(cfg, m_group);
   }
-  m_sender.Save(cfg, m_group, m_organfile->GetSettings().GetMidiMap());
+  m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
 }
 
 bool GOButtonControl::IsDisplayed() { return m_Displayed; }
@@ -148,7 +148,7 @@ void GOButtonControl::Display(bool onoff) {
     return;
   m_sender.SetDisplay(onoff);
   m_Engaged = onoff;
-  m_organfile->ControlChanged(this);
+  m_OrganController->ControlChanged(this);
 }
 
 bool GOButtonControl::IsEngaged() const { return m_Engaged; }
@@ -187,7 +187,7 @@ void GOButtonControl::ShowConfigDialog() {
     key = NULL;
   }
 
-  m_organfile->GetDocument()->ShowMIDIEventDialog(
+  m_OrganController->GetDocument()->ShowMIDIEventDialog(
     this, title, midi, &m_sender, key);
 }
 

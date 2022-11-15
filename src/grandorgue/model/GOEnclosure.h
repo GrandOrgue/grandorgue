@@ -21,7 +21,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiEvent;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOEnclosure : private GOEventHandler,
                     private GOSaveableObject,
@@ -31,7 +31,7 @@ private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOKeyReceiver m_shortcut;
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   int m_AmpMinimumLevel;
   int m_MIDIInputNumber;
   int m_MIDIValue;
@@ -50,7 +50,7 @@ private:
   void PrepareRecording();
 
 public:
-  GOEnclosure(GODefinitionFile *organfile);
+  GOEnclosure(GOOrganController *organController);
   virtual ~GOEnclosure();
   void Init(
     GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value);

@@ -11,16 +11,16 @@
 #include "gui/GOGUIPanelCreator.h"
 
 class GOGUIPanel;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOGUICrescendoPanel : public GOGUIPanelCreator {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
   GOGUIPanel *CreateCrescendoPanel(GOConfigReader &cfg);
 
 public:
-  GOGUICrescendoPanel(GODefinitionFile *organfile);
+  GOGUICrescendoPanel(GOOrganController *organController);
   virtual ~GOGUICrescendoPanel();
 
   void CreatePanels(GOConfigReader &cfg);

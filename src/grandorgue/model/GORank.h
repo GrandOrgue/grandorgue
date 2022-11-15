@@ -18,13 +18,13 @@
 class GOPipe;
 class GOStop;
 class GOTemperament;
-class GODefinitionFile;
+class GOOrganController;
 
 class GORank : private GOSaveableObject,
                public GOMidiConfigurator,
                private GOPlaybackStateHandler {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   wxString m_Name;
   ptr_vector<GOPipe> m_Pipes;
   unsigned m_StopCount;
@@ -51,7 +51,7 @@ private:
   void PrepareRecording();
 
 public:
-  GORank(GODefinitionFile *organfile);
+  GORank(GOOrganController *organController);
   ~GORank();
   void Init(
     GOConfigReader &cfg,

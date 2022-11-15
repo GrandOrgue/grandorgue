@@ -26,8 +26,8 @@
 #include "model/GORank.h"
 #include "model/GOWindchest.h"
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "GOSampleStatistic.h"
 
 class OrganTreeItemData : public wxTreeItemData {
@@ -73,7 +73,7 @@ EVT_BUTTON(ID_EVENT_COLLAPSE, GOOrganDialog::OnCollapse)
 END_EVENT_TABLE()
 
 GOOrganDialog::GOOrganDialog(
-  GODocumentBase *doc, wxWindow *parent, GODefinitionFile *organfile)
+  GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
   : wxDialog(
     parent,
     wxID_ANY,
@@ -82,7 +82,7 @@ GOOrganDialog::GOOrganDialog(
     wxDefaultSize,
     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
     GOView(doc, this),
-    m_organfile(organfile),
+    m_OrganController(organController),
     m_Apply(NULL),
     m_Reset(NULL),
     m_Last(NULL),
@@ -189,7 +189,7 @@ GOOrganDialog::GOOrganDialog(
   grid->Add(m_AudioGroup);
   m_AudioGroup->Append(wxEmptyString);
   std::vector<wxString> audio_groups
-    = m_organfile->GetSettings().GetAudioGroups();
+    = m_OrganController->GetSettings().GetAudioGroups();
   for (unsigned i = 0; i < audio_groups.size(); i++)
     m_AudioGroup->Append(audio_groups[i]);
 
@@ -341,7 +341,7 @@ GOOrganDialog::GOOrganDialog(
     0,
     wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  if (m_organfile->GetIgnorePitch())
+  if (m_OrganController->GetIgnorePitch())
     m_IgnorePitch->SetValue(true);
 
   settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
@@ -725,7 +725,7 @@ void GOOrganDialog::FillTree(wxTreeItemId parent, GOPipeConfigNode &config) {
 
 void GOOrganDialog::FillTree() {
   wxTreeItemId id_root;
-  FillTree(id_root, m_organfile->GetPipeConfig());
+  FillTree(id_root, m_OrganController->GetPipeConfig());
 }
 
 void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
@@ -945,9 +945,9 @@ void GOOrganDialog::OnOK(wxCommandEvent &event) {
       _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
   }
-  m_organfile->SetIgnorePitch(m_IgnorePitch->GetValue());
-  m_organfile->SetTemperament(m_organfile->GetTemperament());
-  m_organfile->Modified();
+  m_OrganController->SetIgnorePitch(m_IgnorePitch->GetValue());
+  m_OrganController->SetTemperament(m_OrganController->GetTemperament());
+  m_OrganController->Modified();
   Destroy();
 }
 
@@ -979,7 +979,7 @@ void GOOrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
   }
   wxArrayString strs;
   std::vector<wxString> group_list
-    = m_organfile->GetSettings().GetAudioGroups();
+    = m_OrganController->GetSettings().GetAudioGroups();
   for (unsigned i = 0; i < group_list.size(); i++)
     strs.Add(group_list[i]);
 

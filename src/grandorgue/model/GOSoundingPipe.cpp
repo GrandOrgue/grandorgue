@@ -11,8 +11,8 @@
 #include <wx/log.h>
 
 #include "GOAlloc.h"
-#include "GODefinitionFile.h"
 #include "GOHash.h"
+#include "GOOrganController.h"
 #include "GOPath.h"
 #include "GORank.h"
 #include "GOWindchest.h"
@@ -22,7 +22,7 @@
 #include "temperaments/GOTemperament.h"
 
 GOSoundingPipe::GOSoundingPipe(
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   GORank *rank,
   bool percussive,
   int sampler_group_id,
@@ -32,7 +32,7 @@ GOSoundingPipe::GOSoundingPipe(
   float min_volume,
   float max_volume,
   bool retune)
-  : GOPipe(organfile, rank, midi_key_number),
+  : GOPipe(organController, rank, midi_key_number),
     m_Sampler(NULL),
     m_LastStop(0),
     m_Instances(0),
@@ -52,14 +52,15 @@ GOSoundingPipe::GOSoundingPipe(
     m_MaxVolume(max_volume),
     m_SampleMidiKeyNumber(-1),
     m_RetunePipe(retune),
-    m_SoundProvider(organfile->GetMemoryPool()),
-    m_PipeConfig(&rank->GetPipeConfig(), organfile, this, &m_SoundProvider) {}
+    m_SoundProvider(organController->GetMemoryPool()),
+    m_PipeConfig(
+      &rank->GetPipeConfig(), organController, this, &m_SoundProvider) {}
 
 void GOSoundingPipe::LoadAttack(
   GOConfigReader &cfg, wxString group, wxString prefix) {
   attack_load_info ainfo;
   ainfo.filename.Assign(
-    cfg.ReadStringTrim(ODFSetting, group, prefix), m_organfile);
+    cfg.ReadStringTrim(ODFSetting, group, prefix), m_OrganController);
   ainfo.sample_group = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
   ainfo.load_release = cfg.ReadBoolean(
@@ -130,17 +131,17 @@ void GOSoundingPipe::LoadAttack(
 
 void GOSoundingPipe::Init(
   GOConfigReader &cfg, wxString group, wxString prefix, wxString filename) {
-  m_organfile->RegisterCacheObject(this);
+  m_OrganController->RegisterCacheObject(this);
   m_Filename = filename;
   m_PipeConfig.Init(cfg, group, prefix);
   m_SampleMidiKeyNumber = -1;
   m_LoopCrossfadeLength = 0;
   m_ReleaseCrossfadeLength = 0;
   UpdateAmplitude();
-  m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+  m_OrganController->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
   attack_load_info ainfo;
-  ainfo.filename.AssignResource(m_Filename, m_organfile);
+  ainfo.filename.AssignResource(m_Filename, m_OrganController);
   ainfo.sample_group = -1;
   ainfo.load_release = !m_Percussive;
   ainfo.percussive = m_Percussive;
@@ -159,7 +160,7 @@ void GOSoundingPipe::Init(
 
 void GOSoundingPipe::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  m_organfile->RegisterCacheObject(this);
+  m_OrganController->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   m_PipeConfig.Load(cfg, group, prefix);
   m_HarmonicNumber = cfg.ReadInteger(
@@ -183,7 +184,7 @@ void GOSoundingPipe::Load(
     group,
     prefix + wxT("WindchestGroup"),
     1,
-    m_organfile->GetWindchestGroupCount(),
+    m_OrganController->GetWindchestGroupCount(),
     false,
     m_SamplerGroupID);
   m_Percussive = cfg.ReadBoolean(
@@ -203,7 +204,7 @@ void GOSoundingPipe::Load(
   m_RetunePipe = cfg.ReadBoolean(
     ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
   UpdateAmplitude();
-  m_organfile->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+  m_OrganController->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
   LoadAttack(cfg, group, prefix);
 
@@ -219,7 +220,7 @@ void GOSoundingPipe::Load(
     wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
 
     rinfo.filename.Assign(
-      cfg.ReadStringTrim(ODFSetting, group, p), m_organfile);
+      cfg.ReadStringTrim(ODFSetting, group, p), m_OrganController);
     rinfo.sample_group = cfg.ReadInteger(
       ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
     rinfo.max_playback_time = cfg.ReadInteger(
@@ -341,7 +342,7 @@ void GOSoundingPipe::Initialize() {}
 const wxString &GOSoundingPipe::GetLoadTitle() { return m_Filename; }
 
 void GOSoundingPipe::Validate() {
-  if (!m_organfile->GetSettings().ODFCheck())
+  if (!m_OrganController->GetSettings().ODFCheck())
     return;
 
   if (!m_PipeConfig.GetEffectiveChannels())
@@ -419,14 +420,14 @@ void GOSoundingPipe::SetTremulant(bool on) {
       m_Tremulant = true;
       m_SoundProvider.UseSampleGroup(1);
       if (m_Sampler)
-        m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
+        m_OrganController->SwitchSample(GetSoundProvider(), m_Sampler);
     }
   } else {
     if (m_Tremulant) {
       m_Tremulant = false;
       m_SoundProvider.UseSampleGroup(0);
       if (m_Sampler)
-        m_organfile->SwitchSample(GetSoundProvider(), m_Sampler);
+        m_OrganController->SwitchSample(GetSoundProvider(), m_Sampler);
     }
   }
 }
@@ -434,7 +435,7 @@ void GOSoundingPipe::SetTremulant(bool on) {
 GOSoundProvider *GOSoundingPipe::GetSoundProvider() { return &m_SoundProvider; }
 
 void GOSoundingPipe::SetOn(unsigned velocity) {
-  m_Sampler = m_organfile->StartSample(
+  m_Sampler = m_OrganController->StartSample(
     GetSoundProvider(),
     m_SamplerGroupID,
     m_AudioGroupID,
@@ -450,7 +451,7 @@ void GOSoundingPipe::SetOn(unsigned velocity) {
 void GOSoundingPipe::SetOff() {
   m_Instances--;
   if (m_Sampler) {
-    m_LastStop = m_organfile->StopSample(GetSoundProvider(), m_Sampler);
+    m_LastStop = m_OrganController->StopSample(GetSoundProvider(), m_Sampler);
     m_Sampler = 0;
   }
 }
@@ -461,7 +462,7 @@ void GOSoundingPipe::Change(unsigned velocity, unsigned last_velocity) {
   else if (m_Instances && !velocity)
     SetOff();
   else if (m_Sampler && last_velocity != velocity)
-    m_organfile->UpdateVelocity(GetSoundProvider(), m_Sampler, velocity);
+    m_OrganController->UpdateVelocity(GetSoundProvider(), m_Sampler, velocity);
 }
 
 void GOSoundingPipe::UpdateAmplitude() {
@@ -475,7 +476,7 @@ void GOSoundingPipe::UpdateTuning() {
 }
 
 void GOSoundingPipe::UpdateAudioGroup() {
-  m_AudioGroupID = m_organfile->GetSettings().GetAudioGroupId(
+  m_AudioGroupID = m_OrganController->GetSettings().GetAudioGroupId(
     m_PipeConfig.GetEffectiveAudioGroup());
 }
 
@@ -484,7 +485,7 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
     m_TemperamentOffset = 0;
   else
     m_TemperamentOffset = temperament.GetOffset(
-      m_organfile->GetIgnorePitch(),
+      m_OrganController->GetIgnorePitch(),
       m_MidiKeyNumber,
       m_SoundProvider.GetMidiKeyNumber(),
       m_SoundProvider.GetMidiPitchFract(),

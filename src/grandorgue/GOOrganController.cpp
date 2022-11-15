@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 #include <math.h>
 #include <wx/filename.h>
@@ -73,7 +73,7 @@
 #include "GOPath.h"
 #include "GOReleaseAlignTable.h"
 
-GODefinitionFile::GODefinitionFile(GODocument *doc, GOConfig &settings)
+GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
   : m_doc(doc),
     m_odf(),
     m_ArchiveID(),
@@ -122,9 +122,9 @@ GODefinitionFile::GODefinitionFile(GODocument *doc, GOConfig &settings)
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
-bool GODefinitionFile::IsCacheable() { return m_Cacheable; }
+bool GOOrganController::IsCacheable() { return m_Cacheable; }
 
-GOHashType GODefinitionFile::GenerateCacheHash() {
+GOHashType GOOrganController::GenerateCacheHash() {
   GOHash hash;
   UpdateHash(hash);
   hash.Update(sizeof(GOAudioSection));
@@ -141,7 +141,7 @@ GOHashType GODefinitionFile::GenerateCacheHash() {
   return hash.getHash();
 }
 
-void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
+void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   wxString group = wxT("Organ");
 
   /* load church info */
@@ -299,19 +299,19 @@ void GODefinitionFile::ReadOrganFile(GOConfigReader &cfg) {
     | (result.hash[7] & 0x7F);
 }
 
-wxString GODefinitionFile::GetOrganHash() { return m_hash; }
+wxString GOOrganController::GetOrganHash() { return m_hash; }
 
-wxString GODefinitionFile::GenerateSettingFileName() {
+wxString GOOrganController::GenerateSettingFileName() {
   return m_config.OrganSettingsPath() + wxFileName::GetPathSeparator()
     + GOStdFileName::composeSettingFileName(GetOrganHash(), m_config.Preset());
 }
 
-wxString GODefinitionFile::GenerateCacheFileName() {
+wxString GOOrganController::GenerateCacheFileName() {
   return m_config.OrganCachePath() + wxFileName::GetPathSeparator()
     + GOStdFileName::composeCacheFileName(GetOrganHash(), m_config.Preset());
 }
 
-bool GODefinitionFile::LoadArchive(
+bool GOOrganController::LoadArchive(
   wxString ID, wxString &name, const wxString &parentID) {
   GOArchiveManager manager(m_config, m_config.OrganCachePath());
   GOArchive *archive = manager.LoadArchive(ID);
@@ -332,7 +332,7 @@ bool GODefinitionFile::LoadArchive(
   return false;
 }
 
-wxString GODefinitionFile::Load(
+wxString GOOrganController::Load(
   GOProgressDialog *dlg, const GOOrgan &organ, const wxString &file2) {
   GOFilename odf_name;
 
@@ -619,7 +619,7 @@ wxString GODefinitionFile::Load(
   return wxEmptyString;
 }
 
-void GODefinitionFile::LoadCombination(const wxString &file) {
+void GOOrganController::LoadCombination(const wxString &file) {
   try {
     GOConfigFileReader odf_ini_file;
 
@@ -661,9 +661,9 @@ void GODefinitionFile::LoadCombination(const wxString &file) {
   }
 }
 
-bool GODefinitionFile::CachePresent() { return wxFileExists(m_CacheFilename); }
+bool GOOrganController::CachePresent() { return wxFileExists(m_CacheFilename); }
 
-bool GODefinitionFile::UpdateCache(GOProgressDialog *dlg, bool compress) {
+bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
   DeleteCache();
   /* Figure out the list of pipes to save */
   unsigned nb_saved_objs = 0;
@@ -706,12 +706,12 @@ bool GODefinitionFile::UpdateCache(GOProgressDialog *dlg, bool compress) {
   return true;
 }
 
-void GODefinitionFile::DeleteCache() {
+void GOOrganController::DeleteCache() {
   if (CachePresent())
     wxRemoveFile(m_CacheFilename);
 }
 
-GODefinitionFile::~GODefinitionFile(void) {
+GOOrganController::~GOOrganController(void) {
   CloseArchives();
   Cleanup();
   // Just to be sure, that the sound providers are freed before the pool
@@ -720,14 +720,14 @@ GODefinitionFile::~GODefinitionFile(void) {
   m_ranks.clear();
 }
 
-void GODefinitionFile::CloseArchives() {
+void GOOrganController::CloseArchives() {
   for (unsigned i = 0; i < m_archives.size(); i++)
     m_archives[i]->Close();
 }
 
-void GODefinitionFile::DeleteSettings() { wxRemoveFile(m_SettingFilename); }
+void GOOrganController::DeleteSettings() { wxRemoveFile(m_SettingFilename); }
 
-bool GODefinitionFile::Save() {
+bool GOOrganController::Save() {
   if (!Export(m_SettingFilename))
     return false;
   m_doc->Modify(false);
@@ -735,7 +735,7 @@ bool GODefinitionFile::Save() {
   return true;
 }
 
-bool GODefinitionFile::Export(const wxString &cmb) {
+bool GOOrganController::Export(const wxString &cmb) {
   wxString fn = cmb;
   wxString tmp_name = fn + wxT(".new");
   wxString buffer;
@@ -773,7 +773,7 @@ bool GODefinitionFile::Export(const wxString &cmb) {
   return true;
 }
 
-GOEnclosure *GODefinitionFile::GetEnclosure(
+GOEnclosure *GOOrganController::GetEnclosure(
   const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
     GOEnclosure *c = m_elementcreators[i]->GetEnclosure(name, is_panel);
@@ -783,7 +783,7 @@ GOEnclosure *GODefinitionFile::GetEnclosure(
   return NULL;
 }
 
-GOLabelControl *GODefinitionFile::GetLabel(
+GOLabelControl *GOOrganController::GetLabel(
   const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
     GOLabelControl *c = m_elementcreators[i]->GetLabelControl(name, is_panel);
@@ -793,7 +793,7 @@ GOLabelControl *GODefinitionFile::GetLabel(
   return NULL;
 }
 
-GOButtonControl *GODefinitionFile::GetButtonControl(
+GOButtonControl *GOOrganController::GetButtonControl(
   const wxString &name, bool is_panel) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++) {
     GOButtonControl *c = m_elementcreators[i]->GetButtonControl(name, is_panel);
@@ -803,74 +803,78 @@ GOButtonControl *GODefinitionFile::GetButtonControl(
   return NULL;
 }
 
-GODocument *GODefinitionFile::GetDocument() { return m_doc; }
+GODocument *GOOrganController::GetDocument() { return m_doc; }
 
-void GODefinitionFile::SetVolume(int volume) { m_volume = volume; }
+void GOOrganController::SetVolume(int volume) { m_volume = volume; }
 
-int GODefinitionFile::GetVolume() { return m_volume; }
+int GOOrganController::GetVolume() { return m_volume; }
 
-void GODefinitionFile::SetIgnorePitch(bool ignore) { m_IgnorePitch = ignore; }
+void GOOrganController::SetIgnorePitch(bool ignore) { m_IgnorePitch = ignore; }
 
-bool GODefinitionFile::GetIgnorePitch() { return m_IgnorePitch; }
+bool GOOrganController::GetIgnorePitch() { return m_IgnorePitch; }
 
-void GODefinitionFile::SetReleaseTail(unsigned releaseTail) {
+void GOOrganController::SetReleaseTail(unsigned releaseTail) {
   m_releaseTail = releaseTail;
   Modified();
 }
 
-bool GODefinitionFile::DivisionalsStoreIntermanualCouplers() {
+bool GOOrganController::DivisionalsStoreIntermanualCouplers() {
   return m_DivisionalsStoreIntermanualCouplers;
 }
 
-bool GODefinitionFile::DivisionalsStoreIntramanualCouplers() {
+bool GOOrganController::DivisionalsStoreIntramanualCouplers() {
   return m_DivisionalsStoreIntramanualCouplers;
 }
 
-bool GODefinitionFile::DivisionalsStoreTremulants() {
+bool GOOrganController::DivisionalsStoreTremulants() {
   return m_DivisionalsStoreTremulants;
 }
 
-bool GODefinitionFile::CombinationsStoreNonDisplayedDrawstops() {
+bool GOOrganController::CombinationsStoreNonDisplayedDrawstops() {
   return m_CombinationsStoreNonDisplayedDrawstops;
 }
 
-bool GODefinitionFile::GeneralsStoreDivisionalCouplers() {
+bool GOOrganController::GeneralsStoreDivisionalCouplers() {
   return m_GeneralsStoreDivisionalCouplers;
 }
 
-GOSetter *GODefinitionFile::GetSetter() { return m_setter; }
+GOSetter *GOOrganController::GetSetter() { return m_setter; }
 
-GOGUIPanel *GODefinitionFile::GetPanel(unsigned index) {
+GOGUIPanel *GOOrganController::GetPanel(unsigned index) {
   return m_panels[index];
 }
 
-unsigned GODefinitionFile::GetPanelCount() { return m_panels.size(); }
+unsigned GOOrganController::GetPanelCount() { return m_panels.size(); }
 
-void GODefinitionFile::AddPanel(GOGUIPanel *panel) {
+void GOOrganController::AddPanel(GOGUIPanel *panel) {
   m_panels.push_back(panel);
 }
 
-const wxString &GODefinitionFile::GetChurchName() { return m_ChurchName; }
+const wxString &GOOrganController::GetChurchName() { return m_ChurchName; }
 
-const wxString &GODefinitionFile::GetChurchAddress() { return m_ChurchAddress; }
+const wxString &GOOrganController::GetChurchAddress() {
+  return m_ChurchAddress;
+}
 
-const wxString &GODefinitionFile::GetOrganBuilder() { return m_OrganBuilder; }
+const wxString &GOOrganController::GetOrganBuilder() { return m_OrganBuilder; }
 
-const wxString &GODefinitionFile::GetOrganBuildDate() {
+const wxString &GOOrganController::GetOrganBuildDate() {
   return m_OrganBuildDate;
 }
 
-const wxString &GODefinitionFile::GetOrganComments() { return m_OrganComments; }
+const wxString &GOOrganController::GetOrganComments() {
+  return m_OrganComments;
+}
 
-const wxString &GODefinitionFile::GetRecordingDetails() {
+const wxString &GOOrganController::GetRecordingDetails() {
   return m_RecordingDetails;
 }
 
-const wxString &GODefinitionFile::GetInfoFilename() { return m_InfoFilename; }
+const wxString &GOOrganController::GetInfoFilename() { return m_InfoFilename; }
 
-bool GODefinitionFile::useArchives() { return m_archives.size() > 0; }
+bool GOOrganController::useArchives() { return m_archives.size() > 0; }
 
-GOArchive *GODefinitionFile::findArchive(const wxString &name) {
+GOArchive *GOOrganController::findArchive(const wxString &name) {
   for (unsigned i = 0; i < m_archives.size(); i++) {
     if (m_archives[i]->containsFile(name))
       return m_archives[i];
@@ -878,24 +882,24 @@ GOArchive *GODefinitionFile::findArchive(const wxString &name) {
   return NULL;
 }
 
-GOPipeConfigNode &GODefinitionFile::GetPipeConfig() { return m_PipeConfig; }
+GOPipeConfigNode &GOOrganController::GetPipeConfig() { return m_PipeConfig; }
 
-void GODefinitionFile::UpdateAmplitude() {}
+void GOOrganController::UpdateAmplitude() {}
 
-void GODefinitionFile::UpdateTuning() {
+void GOOrganController::UpdateTuning() {
   m_PitchLabel.SetContent(
     wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
 }
 
-void GODefinitionFile::UpdateAudioGroup() {}
+void GOOrganController::UpdateAudioGroup() {}
 
-bool GODefinitionFile::IsCustomized() { return m_b_customized; }
+bool GOOrganController::IsCustomized() { return m_b_customized; }
 
-const wxString GODefinitionFile::GetODFFilename() { return m_odf; }
+const wxString GOOrganController::GetODFFilename() { return m_odf; }
 
-const wxString GODefinitionFile::GetODFPath() { return m_path.c_str(); }
+const wxString GOOrganController::GetODFPath() { return m_path.c_str(); }
 
-const wxString GODefinitionFile::GetOrganPathInfo() {
+const wxString GOOrganController::GetOrganPathInfo() {
   if (m_ArchiveID == wxEmptyString)
     return GetODFFilename();
   const GOArchiveFile *archive = m_config.GetArchiveByID(m_ArchiveID);
@@ -908,7 +912,7 @@ const wxString GODefinitionFile::GetOrganPathInfo() {
   return name;
 }
 
-GOOrgan GODefinitionFile::GetOrganInfo() {
+GOOrgan GOOrganController::GetOrganInfo() {
   return GOOrgan(
     GetODFFilename(),
     m_ArchiveID,
@@ -918,19 +922,19 @@ GOOrgan GODefinitionFile::GetOrganInfo() {
     GetRecordingDetails());
 }
 
-const wxString GODefinitionFile::GetSettingFilename() {
+const wxString GOOrganController::GetSettingFilename() {
   return m_SettingFilename;
 }
 
-const wxString GODefinitionFile::GetCacheFilename() { return m_CacheFilename; }
+const wxString GOOrganController::GetCacheFilename() { return m_CacheFilename; }
 
-GOMemoryPool &GODefinitionFile::GetMemoryPool() { return m_pool; }
+GOMemoryPool &GOOrganController::GetMemoryPool() { return m_pool; }
 
-GOConfig &GODefinitionFile::GetSettings() { return m_config; }
+GOConfig &GOOrganController::GetSettings() { return m_config; }
 
-GOBitmapCache &GODefinitionFile::GetBitmapCache() { return m_bitmaps; }
+GOBitmapCache &GOOrganController::GetBitmapCache() { return m_bitmaps; }
 
-GOSoundSampler *GODefinitionFile::StartSample(
+GOSoundSampler *GOOrganController::StartSample(
   const GOSoundProvider *pipe,
   int sampler_group_id,
   unsigned audio_group,
@@ -943,43 +947,43 @@ GOSoundSampler *GODefinitionFile::StartSample(
     pipe, sampler_group_id, audio_group, velocity, delay, last_stop);
 }
 
-uint64_t GODefinitionFile::StopSample(
+uint64_t GOOrganController::StopSample(
   const GOSoundProvider *pipe, GOSoundSampler *handle) {
   if (m_soundengine)
     return m_soundengine->StopSample(pipe, handle);
   return 0;
 }
 
-void GODefinitionFile::SwitchSample(
+void GOOrganController::SwitchSample(
   const GOSoundProvider *pipe, GOSoundSampler *handle) {
   if (m_soundengine)
     m_soundengine->SwitchSample(pipe, handle);
 }
 
-void GODefinitionFile::UpdateVelocity(
+void GOOrganController::UpdateVelocity(
   const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity) {
   if (m_soundengine)
     m_soundengine->UpdateVelocity(pipe, handle, velocity);
 }
 
-void GODefinitionFile::SendMidiMessage(GOMidiEvent &e) {
+void GOOrganController::SendMidiMessage(GOMidiEvent &e) {
   if (m_midi)
     m_midi->Send(e);
 }
 
-void GODefinitionFile::SendMidiRecorderMessage(GOMidiEvent &e) {
+void GOOrganController::SendMidiRecorderMessage(GOMidiEvent &e) {
   if (m_MidiRecorder)
     m_MidiRecorder->SendMidiRecorderMessage(e);
 }
 
-GOMidi *GODefinitionFile::GetMidi() { return m_midi; }
+GOMidi *GOOrganController::GetMidi() { return m_midi; }
 
-void GODefinitionFile::LoadMIDIFile(wxString const &filename) {
+void GOOrganController::LoadMIDIFile(wxString const &filename) {
   m_MidiPlayer->LoadFile(
     filename, GetODFManualCount() - 1, GetFirstManualIndex() == 0);
 }
 
-void GODefinitionFile::Abort() {
+void GOOrganController::Abort() {
   m_soundengine = NULL;
 
   GOEventDistributor::AbortPlayback();
@@ -991,14 +995,14 @@ void GODefinitionFile::Abort() {
   m_midi = NULL;
 }
 
-void GODefinitionFile::PreconfigRecorder() {
+void GOOrganController::PreconfigRecorder() {
   for (unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++) {
     wxString id = wxString::Format(wxT("M%d"), i);
     m_MidiRecorder->PreconfigureMapping(id, false);
   }
 }
 
-void GODefinitionFile::PreparePlayback(
+void GOOrganController::PreparePlayback(
   GOSoundEngine *engine, GOMidi *midi, GOSoundRecorder *recorder) {
   m_soundengine = engine;
   m_midi = midi;
@@ -1019,7 +1023,7 @@ void GODefinitionFile::PreparePlayback(
   GOEventDistributor::PrepareRecording();
 }
 
-void GODefinitionFile::PrepareRecording() {
+void GOOrganController::PrepareRecording() {
   m_MidiRecorder->Clear();
   PreconfigRecorder();
   m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
@@ -1028,7 +1032,7 @@ void GODefinitionFile::PrepareRecording() {
   GOEventDistributor::PrepareRecording();
 }
 
-void GODefinitionFile::Update() {
+void GOOrganController::Update() {
   for (unsigned i = 0; i < m_switches.size(); i++)
     m_switches[i]->Update();
 
@@ -1044,7 +1048,7 @@ void GODefinitionFile::Update() {
   m_setter->Update();
 }
 
-void GODefinitionFile::ProcessMidi(const GOMidiEvent &event) {
+void GOOrganController::ProcessMidi(const GOMidiEvent &event) {
   if (event.GetMidiType() == MIDI_RESET) {
     Reset();
     return;
@@ -1070,7 +1074,7 @@ void GODefinitionFile::ProcessMidi(const GOMidiEvent &event) {
   GOEventDistributor::SendMidi(event);
 }
 
-void GODefinitionFile::Reset() {
+void GOOrganController::Reset() {
   for (unsigned l = 0; l < GetSwitchCount(); l++)
     GetSwitch(l)->Reset();
   for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
@@ -1084,53 +1088,53 @@ void GODefinitionFile::Reset() {
   m_setter->ResetDisplay();
 }
 
-void GODefinitionFile::SetTemperament(const GOTemperament &temperament) {
+void GOOrganController::SetTemperament(const GOTemperament &temperament) {
   m_TemperamentLabel.SetContent(wxGetTranslation(temperament.GetName()));
   for (unsigned k = 0; k < m_ranks.size(); k++)
     m_ranks[k]->SetTemperament(temperament);
 }
 
-void GODefinitionFile::SetTemperament(wxString name) {
+void GOOrganController::SetTemperament(wxString name) {
   const GOTemperament &temperament
     = m_config.GetTemperaments().GetTemperament(name);
   m_Temperament = temperament.GetName();
   SetTemperament(temperament);
 }
 
-wxString GODefinitionFile::GetTemperament() { return m_Temperament; }
+wxString GOOrganController::GetTemperament() { return m_Temperament; }
 
-void GODefinitionFile::AllNotesOff() {
+void GOOrganController::AllNotesOff() {
   for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
     GetManual(k)->AllNotesOff();
 }
 
-void GODefinitionFile::Modified() {
+void GOOrganController::Modified() {
   m_doc->Modify(true);
   m_setter->UpdateModified(true);
 }
 
-int GODefinitionFile::GetRecorderElementID(wxString name) {
+int GOOrganController::GetRecorderElementID(wxString name) {
   return m_config.GetMidiMap().GetElementByString(name);
 }
 
-GOCombinationDefinition &GODefinitionFile::GetGeneralTemplate() {
+GOCombinationDefinition &GOOrganController::GetGeneralTemplate() {
   return m_GeneralTemplate;
 }
 
-GOLabelControl *GODefinitionFile::GetPitchLabel() { return &m_PitchLabel; }
+GOLabelControl *GOOrganController::GetPitchLabel() { return &m_PitchLabel; }
 
-GOLabelControl *GODefinitionFile::GetTemperamentLabel() {
+GOLabelControl *GOOrganController::GetTemperamentLabel() {
   return &m_TemperamentLabel;
 }
 
-GOMainWindowData *GODefinitionFile::GetMainWindowData() {
+GOMainWindowData *GOOrganController::GetMainWindowData() {
   return &m_MainWindowData;
 }
 
-void GODefinitionFile::MarkSectionInUse(wxString name) {
+void GOOrganController::MarkSectionInUse(wxString name) {
   if (m_UsedSections[name])
     throw wxString::Format(_("Section %s already in use"), name.c_str());
   m_UsedSections[name] = true;
 }
 
-void GODefinitionFile::SetODFPath(wxString path) { m_path = path; }
+void GOOrganController::SetODFPath(wxString path) { m_path = path; }

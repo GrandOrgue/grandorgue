@@ -10,7 +10,7 @@
 #include <wx/sizer.h>
 #include <wx/statline.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
 BEGIN_EVENT_TABLE(wxStaticLink, wxStaticText)
 EVT_LEFT_UP(wxStaticLink::OnClick)
@@ -54,61 +54,64 @@ bool GOPropertiesTest(const wxString &what) {
     && what.CmpNoCase(wxT("N/A"));
 }
 
-GOProperties::GOProperties(GODefinitionFile *organfile, wxWindow *win)
+GOProperties::GOProperties(GOOrganController *organController, wxWindow *win)
   : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties")),
-    m_organfile(organfile) {
-  wxASSERT(organfile);
+    m_OrganController(organController) {
+  wxASSERT(organController);
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
   sizer->Add(GOPropertiesText(this, 0, _("Title")), 0);
   sizer->Add(
-    GOPropertiesText(this, 300, m_organfile->GetChurchName()), 0, wxLEFT, 10);
-  if (GOPropertiesTest(m_organfile->GetChurchAddress())) {
+    GOPropertiesText(this, 300, m_OrganController->GetChurchName()),
+    0,
+    wxLEFT,
+    10);
+  if (GOPropertiesTest(m_OrganController->GetChurchAddress())) {
     sizer->Add(GOPropertiesText(this, 0, _("Address")), 0, wxTOP, 5);
     sizer->Add(
-      GOPropertiesText(this, 300, m_organfile->GetChurchAddress()),
+      GOPropertiesText(this, 300, m_OrganController->GetChurchAddress()),
       0,
       wxLEFT,
       10);
   }
-  if (GOPropertiesTest(m_organfile->GetOrganBuilder())) {
+  if (GOPropertiesTest(m_OrganController->GetOrganBuilder())) {
     sizer->Add(GOPropertiesText(this, 0, _("Builder")), 0, wxTOP, 5);
     sizer->Add(
-      GOPropertiesText(this, 300, m_organfile->GetOrganBuilder()),
+      GOPropertiesText(this, 300, m_OrganController->GetOrganBuilder()),
       0,
       wxLEFT,
       10);
   }
-  if (GOPropertiesTest(m_organfile->GetOrganBuildDate())) {
+  if (GOPropertiesTest(m_OrganController->GetOrganBuildDate())) {
     sizer->Add(GOPropertiesText(this, 0, _("Build Date")), 0, wxTOP, 5);
     sizer->Add(
-      GOPropertiesText(this, 300, m_organfile->GetOrganBuildDate()),
+      GOPropertiesText(this, 300, m_OrganController->GetOrganBuildDate()),
       0,
       wxLEFT,
       10);
   }
-  if (GOPropertiesTest(m_organfile->GetRecordingDetails())) {
+  if (GOPropertiesTest(m_OrganController->GetRecordingDetails())) {
     sizer->Add(GOPropertiesText(this, 0, _("Recording Details")), 0, wxTOP, 5);
     sizer->Add(
-      GOPropertiesText(this, 300, m_organfile->GetRecordingDetails()),
+      GOPropertiesText(this, 300, m_OrganController->GetRecordingDetails()),
       0,
       wxLEFT,
       10);
   }
-  if (GOPropertiesTest(m_organfile->GetOrganComments())) {
+  if (GOPropertiesTest(m_OrganController->GetOrganComments())) {
     sizer->Add(GOPropertiesText(this, 0, _("Other Comments")), 0, wxTOP, 5);
     sizer->Add(
-      GOPropertiesText(this, 300, m_organfile->GetOrganComments()),
+      GOPropertiesText(this, 300, m_OrganController->GetOrganComments()),
       0,
       wxLEFT,
       10);
   }
 
-  if (!m_organfile->GetInfoFilename().IsEmpty())
+  if (!m_OrganController->GetInfoFilename().IsEmpty())
     sizer->Add(
       new wxStaticLink(
-        this, _("More Information"), m_organfile->GetInfoFilename()),
+        this, _("More Information"), m_OrganController->GetInfoFilename()),
       0,
       wxTOP | wxALIGN_CENTER_HORIZONTAL,
       5);
@@ -119,9 +122,10 @@ GOProperties::GOProperties(GODefinitionFile *organfile, wxWindow *win)
   sizer->Add(
     GOPropertiesText(this, 0, _("Allocated sample memory")), 0, wxTOP, 5);
   float size, size1;
-  size1 = m_organfile->GetMemoryPool().GetAllocSize() / (1024.0 * 1024.0);
-  size = m_organfile->GetMemoryPool().GetMemoryLimit() / (1024.0 * 1024.0);
-  if (m_organfile->GetMemoryPool().GetMemoryLimit() > 0)
+  size1 = m_OrganController->GetMemoryPool().GetAllocSize() / (1024.0 * 1024.0);
+  size
+    = m_OrganController->GetMemoryPool().GetMemoryLimit() / (1024.0 * 1024.0);
+  if (m_OrganController->GetMemoryPool().GetMemoryLimit() > 0)
     sizer->Add(
       GOPropertiesText(
         this, 0, wxString::Format(_("%.3f MB of %.3f MB"), size1, size)),
@@ -138,7 +142,7 @@ GOProperties::GOProperties(GODefinitionFile *organfile, wxWindow *win)
 
   sizer->Add(
     GOPropertiesText(this, 0, _("Mapped memory of the cache")), 0, wxTOP, 5);
-  size = m_organfile->GetMemoryPool().GetMappedSize() / (1024.0 * 1024.0);
+  size = m_OrganController->GetMemoryPool().GetMappedSize() / (1024.0 * 1024.0);
   sizer->Add(
     GOPropertiesText(this, 0, wxString::Format(_("%.3f MB"), size)),
     0,
@@ -146,8 +150,8 @@ GOProperties::GOProperties(GODefinitionFile *organfile, wxWindow *win)
     5);
 
   sizer->Add(GOPropertiesText(this, 0, _("Memory pool size")), 0, wxTOP, 5);
-  size1 = m_organfile->GetMemoryPool().GetPoolUsage() / (1024.0 * 1024.0);
-  size = m_organfile->GetMemoryPool().GetPoolSize() / (1024.0 * 1024.0);
+  size1 = m_OrganController->GetMemoryPool().GetPoolUsage() / (1024.0 * 1024.0);
+  size = m_OrganController->GetMemoryPool().GetPoolSize() / (1024.0 * 1024.0);
   sizer->Add(
     GOPropertiesText(
       this, 0, wxString::Format(_("%.3f MB of %.3f MB"), size1, size)),
@@ -157,7 +161,7 @@ GOProperties::GOProperties(GODefinitionFile *organfile, wxWindow *win)
 
   sizer->Add(GOPropertiesText(this, 0, _("ODF Path")), 0, wxTOP, 5);
   sizer->Add(
-    GOPropertiesText(this, 300, m_organfile->GetOrganPathInfo()),
+    GOPropertiesText(this, 300, m_OrganController->GetOrganPathInfo()),
     0,
     wxLEFT,
     10);

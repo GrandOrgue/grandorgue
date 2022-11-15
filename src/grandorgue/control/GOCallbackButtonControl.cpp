@@ -12,11 +12,11 @@
 #include "control/GOButtonCallback.h"
 
 GOCallbackButtonControl::GOCallbackButtonControl(
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   GOButtonCallback *callback,
   bool isPushbutton,
   bool isPiston)
-  : GOButtonControl(organfile, MIDI_RECV_SETTER, isPushbutton, isPiston),
+  : GOButtonControl(organController, MIDI_RECV_SETTER, isPushbutton, isPiston),
     m_callback(callback) {}
 
 void GOCallbackButtonControl::Push() {

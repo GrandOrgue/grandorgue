@@ -13,11 +13,11 @@
 #include "GOBitmap.h"
 #include "ptrvector.h"
 
-class GODefinitionFile;
+class GOOrganController;
 
 class GOBitmapCache {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   ptr_vector<wxImage> m_Bitmaps;
   std::vector<wxString> m_Filenames;
   std::vector<wxString> m_Masknames;
@@ -25,7 +25,7 @@ private:
   bool loadFile(wxImage &img, const wxString &filename);
 
 public:
-  GOBitmapCache(GODefinitionFile *organfile);
+  GOBitmapCache(GOOrganController *organController);
   virtual ~GOBitmapCache();
 
   void RegisterBitmap(

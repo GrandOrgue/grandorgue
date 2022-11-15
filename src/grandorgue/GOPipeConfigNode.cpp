@@ -7,19 +7,19 @@
 
 #include "GOPipeConfigNode.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "GOSampleStatistic.h"
 #include "GOStatisticCallback.h"
 #include "config/GOConfig.h"
 
 GOPipeConfigNode::GOPipeConfigNode(
   GOPipeConfigNode *parent,
-  GODefinitionFile *organfile,
+  GOOrganController *organController,
   GOPipeUpdateCallback *callback,
   GOStatisticCallback *statistic)
-  : m_organfile(organfile),
+  : m_OrganController(organController),
     m_parent(parent),
-    m_PipeConfig(organfile, callback),
+    m_PipeConfig(organController, callback),
     m_StatisticCallback(statistic),
     m_Name() {
   if (m_parent)
@@ -40,13 +40,13 @@ void GOPipeConfigNode::SetName(wxString name) { m_Name = name; }
 
 void GOPipeConfigNode::Init(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_PipeConfig.Init(cfg, group, prefix);
 }
 
 void GOPipeConfigNode::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  m_organfile->RegisterSaveableObject(this);
+  m_OrganController->RegisterSaveableObject(this);
   m_PipeConfig.Load(cfg, group, prefix);
 }
 
@@ -109,7 +109,7 @@ unsigned GOPipeConfigNode::GetEffectiveBitsPerSample() {
   if (m_parent)
     return m_parent->GetEffectiveBitsPerSample();
   else
-    return m_organfile->GetSettings().BitsPerSample();
+    return m_OrganController->GetSettings().BitsPerSample();
 }
 
 bool GOPipeConfigNode::GetEffectiveCompress() {
@@ -118,7 +118,7 @@ bool GOPipeConfigNode::GetEffectiveCompress() {
   if (m_parent)
     return m_parent->GetEffectiveCompress();
   else
-    return m_organfile->GetSettings().LosslessCompression();
+    return m_OrganController->GetSettings().LosslessCompression();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
@@ -127,7 +127,7 @@ unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
   if (m_parent)
     return m_parent->GetEffectiveLoopLoad();
   else
-    return m_organfile->GetSettings().LoopLoad();
+    return m_OrganController->GetSettings().LoopLoad();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
@@ -136,7 +136,7 @@ unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
   if (m_parent)
     return m_parent->GetEffectiveAttackLoad();
   else
-    return m_organfile->GetSettings().AttackLoad();
+    return m_OrganController->GetSettings().AttackLoad();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
@@ -145,7 +145,7 @@ unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
   if (m_parent)
     return m_parent->GetEffectiveReleaseLoad();
   else
-    return m_organfile->GetSettings().ReleaseLoad();
+    return m_OrganController->GetSettings().ReleaseLoad();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveChannels() {
@@ -154,7 +154,7 @@ unsigned GOPipeConfigNode::GetEffectiveChannels() {
   if (m_parent)
     return m_parent->GetEffectiveChannels();
   else
-    return m_organfile->GetSettings().LoadChannels();
+    return m_OrganController->GetSettings().LoadChannels();
 }
 
 GOSampleStatistic GOPipeConfigNode::GetStatistic() {

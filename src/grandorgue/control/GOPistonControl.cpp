@@ -17,12 +17,12 @@
 #include "model/GOTremulant.h"
 
 #include "GOCoupler.h"
-#include "GODefinitionFile.h"
 #include "GODrawStop.h"
+#include "GOOrganController.h"
 
-GOPistonControl::GOPistonControl(GODefinitionFile *organfile)
-  : GOPushbuttonControl(organfile), drawstop(NULL) {
-  m_organfile->RegisterControlChangedHandler(this);
+GOPistonControl::GOPistonControl(GOOrganController *organController)
+  : GOPushbuttonControl(organController), drawstop(NULL) {
+  m_OrganController->RegisterControlChangedHandler(this);
 }
 
 void GOPistonControl::Load(GOConfigReader &cfg, wxString group) {
@@ -35,49 +35,49 @@ void GOPistonControl::Load(GOConfigReader &cfg, wxString group) {
       ODFSetting,
       group,
       wxT("ManualNumber"),
-      m_organfile->GetFirstManualIndex(),
-      m_organfile->GetODFManualCount() - 1);
+      m_OrganController->GetFirstManualIndex(),
+      m_OrganController->GetODFManualCount() - 1);
     j = cfg.ReadInteger(
           ODFSetting,
           group,
           wxT("ObjectNumber"),
           1,
-          m_organfile->GetManual(i)->GetStopCount())
+          m_OrganController->GetManual(i)->GetStopCount())
       - 1;
-    drawstop = m_organfile->GetManual(i)->GetStop(j);
+    drawstop = m_OrganController->GetManual(i)->GetStop(j);
   } else if (type == wxT("COUPLER")) {
     i = cfg.ReadInteger(
       ODFSetting,
       group,
       wxT("ManualNumber"),
-      m_organfile->GetFirstManualIndex(),
-      m_organfile->GetODFManualCount() - 1);
+      m_OrganController->GetFirstManualIndex(),
+      m_OrganController->GetODFManualCount() - 1);
     j = cfg.ReadInteger(
           ODFSetting,
           group,
           wxT("ObjectNumber"),
           1,
-          m_organfile->GetManual(i)->GetODFCouplerCount())
+          m_OrganController->GetManual(i)->GetODFCouplerCount())
       - 1;
-    drawstop = m_organfile->GetManual(i)->GetCoupler(j);
+    drawstop = m_OrganController->GetManual(i)->GetCoupler(j);
   } else if (type == wxT("TREMULANT")) {
     j = cfg.ReadInteger(
           ODFSetting,
           group,
           wxT("ObjectNumber"),
           1,
-          m_organfile->GetTremulantCount())
+          m_OrganController->GetTremulantCount())
       - 1;
-    drawstop = m_organfile->GetTremulant(j);
+    drawstop = m_OrganController->GetTremulant(j);
   } else if (type == wxT("SWITCH")) {
     j = cfg.ReadInteger(
           ODFSetting,
           group,
           wxT("ObjectNumber"),
           1,
-          m_organfile->GetSwitchCount())
+          m_OrganController->GetSwitchCount())
       - 1;
-    drawstop = m_organfile->GetSwitch(j);
+    drawstop = m_OrganController->GetSwitch(j);
   } else
     throw wxString::Format(_("Invalid object type for reversible piston"));
 

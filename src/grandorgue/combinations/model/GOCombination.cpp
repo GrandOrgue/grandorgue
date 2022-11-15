@@ -11,12 +11,13 @@
 
 #include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
-#include "GODefinitionFile.h"
 #include "GODrawStop.h"
+#include "GOOrganController.h"
 
 GOCombination::GOCombination(
-  GOCombinationDefinition &combination_template, GODefinitionFile *organfile)
-  : m_OrganFile(organfile),
+  GOCombinationDefinition &combination_template,
+  GOOrganController *organController)
+  : m_OrganFile(organController),
     m_Template(combination_template),
     m_State(0),
     m_Protected(false) {}

@@ -11,16 +11,16 @@
 #include "gui/GOGUIPanelCreator.h"
 
 class GOGUIPanel;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOGUICouplerPanel : public GOGUIPanelCreator {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
   GOGUIPanel *CreateCouplerPanel(GOConfigReader &cfg, unsigned manual_nr);
 
 public:
-  GOGUICouplerPanel(GODefinitionFile *organfile);
+  GOGUICouplerPanel(GOOrganController *organController);
   ~GOGUICouplerPanel();
 
   void CreatePanels(GOConfigReader &cfg);

@@ -19,7 +19,7 @@ private:
 
 public:
   GODivisionalButtonControl(
-    GODefinitionFile *organfile,
+    GOOrganController *organController,
     GOCombinationDefinition &divisionalTemplate,
     bool isSetter);
 

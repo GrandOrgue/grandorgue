@@ -16,7 +16,7 @@ protected:
   void SetupCombinationState();
 
 public:
-  GOSwitch(GODefinitionFile *organfile);
+  GOSwitch(GOOrganController *organController);
   ~GOSwitch();
 
   wxString GetMidiType();

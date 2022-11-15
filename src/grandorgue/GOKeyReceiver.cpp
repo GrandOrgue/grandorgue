@@ -7,13 +7,13 @@
 
 #include "GOKeyReceiver.h"
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
 GOKeyReceiver::GOKeyReceiver(
-  GODefinitionFile *organfile, KEY_RECEIVER_TYPE type)
-  : GOKeyReceiverData(type), m_organfile(organfile) {}
+  GOOrganController *organController, KEY_RECEIVER_TYPE type)
+  : GOKeyReceiverData(type), m_OrganController(organController) {}
 
 void GOKeyReceiver::Load(GOConfigReader &cfg, wxString group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
@@ -48,6 +48,6 @@ KEY_MATCH_TYPE GOKeyReceiver::Match(unsigned key) {
 
 void GOKeyReceiver::Assign(const GOKeyReceiverData &data) {
   *(GOKeyReceiverData *)this = data;
-  if (m_organfile)
-    m_organfile->Modified();
+  if (m_OrganController)
+    m_OrganController->Modified();
 }

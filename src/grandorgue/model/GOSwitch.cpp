@@ -9,9 +9,10 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
+#include "GOOrganController.h"
 
-GOSwitch::GOSwitch(GODefinitionFile *organfile) : GODrawstop(organfile) {}
+GOSwitch::GOSwitch(GOOrganController *organController)
+  : GODrawstop(organController) {}
 
 GOSwitch::~GOSwitch() {}
 
@@ -19,9 +20,10 @@ void GOSwitch::ChangeState(bool on) {}
 
 void GOSwitch::SetupCombinationState() {
   m_StoreDivisional
-    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_StoreGeneral
-    = m_organfile->CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+    = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
+    || IsDisplayed();
+  m_StoreGeneral = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
+    || IsDisplayed();
 }
 
 wxString GOSwitch::GetMidiType() { return _("Drawstop"); }
