@@ -74,7 +74,8 @@
 #include "GOReleaseAlignTable.h"
 
 GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
-  : m_doc(doc),
+  : GOEventDistributor(this),
+    m_doc(doc),
     m_odf(),
     m_ArchiveID(),
     m_hash(),

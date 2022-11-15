@@ -10,29 +10,17 @@
 
 #include <vector>
 
-class GOCacheObject;
 class GOConfigReader;
 class GOConfigWriter;
-class GOControlChangedHandler;
-class GOEventHandler;
+class GOEventHandlerList;
 class GOHash;
-class GOMidiConfigurator;
 class GOMidiEvent;
-class GOPlaybackStateHandler;
-class GOSaveableObject;
 
 class GOEventDistributor {
 private:
-  std::vector<GOEventHandler *> m_handler;
-  std::vector<GOControlChangedHandler *> m_ControlChangedHandler;
-  std::vector<GOPlaybackStateHandler *> m_PlaybackStateHandler;
-  std::vector<GOSaveableObject *> m_SaveableObjects;
-  std::vector<GOMidiConfigurator *> m_MidiConfigurator;
-  std::vector<GOCacheObject *> m_CacheObjects;
+  GOEventHandlerList *p_model;
 
 protected:
-  void Cleanup();
-
   void SendMidi(const GOMidiEvent &event);
 
   void ReadCombinations(GOConfigReader &cfg);
@@ -41,32 +29,16 @@ protected:
   void ResolveReferences();
   void UpdateHash(GOHash &hash);
 
-  void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
+  void AbortPlayback();
   void PrepareRecording();
 
 public:
-  GOEventDistributor();
-  ~GOEventDistributor();
-
-  const std::vector<GOCacheObject *> &GetCacheObjects() const {
-    return m_CacheObjects;
-  }
-
-  void RegisterEventHandler(GOEventHandler *handler);
-  void RegisterPlaybackStateHandler(GOPlaybackStateHandler *handler);
-  void RegisterControlChangedHandler(GOControlChangedHandler *handler);
-  void RegisterCacheObject(GOCacheObject *obj);
-  void RegisterSaveableObject(GOSaveableObject *obj);
-  void UnregisterSaveableObject(GOSaveableObject *obj);
-  void RegisterMidiConfigurator(GOMidiConfigurator *obj);
-
-  unsigned GetMidiConfiguratorCount();
-  GOMidiConfigurator *GetMidiConfigurator(unsigned index);
+  GOEventDistributor(GOEventHandlerList *pModel) { p_model = pModel; }
+  ~GOEventDistributor() { p_model = nullptr; }
 
   void HandleKey(int key);
-
   void ControlChanged(void *control);
 };
 

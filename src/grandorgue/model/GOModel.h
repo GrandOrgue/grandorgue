@@ -10,6 +10,8 @@
 
 #include "ptrvector.h"
 
+#include "GOEventHandlerList.h"
+
 class GOConfigReader;
 class GODivisionalCoupler;
 class GOEnclosure;
@@ -22,7 +24,7 @@ class GOTremulant;
 class GOWindchest;
 class GOOrganController;
 
-class GOModel {
+class GOModel : public GOEventHandlerList {
 protected:
   ptr_vector<GOWindchest> m_windchests;
   ptr_vector<GOManual> m_manuals;

@@ -23,7 +23,10 @@ private:
   wxString m_Error;
   bool m_OutOfMemory;
 
-  void Entry();
+  /* the main loading loop. It takes objects from the m_CacheObjects
+   * concurrently with other threads loads them
+   */
+  void Entry() override;
 
 public:
   GOLoadThread(GOMemoryPool &pool, GOCacheObjectDistributor &distributor);
