@@ -13,13 +13,12 @@
 #include "GORank.h"
 
 GOPipe::GOPipe(
-  GOOrganController *organController, GORank *rank, unsigned midi_key_number)
+  GOEventHandlerList *handlerList, GORank *rank, unsigned midi_key_number)
   : m_Velocity(0),
     m_Velocities(1),
-    m_OrganController(organController),
     m_Rank(rank),
     m_MidiKeyNumber(midi_key_number) {
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  handlerList->RegisterPlaybackStateHandler(this);
 }
 
 GOPipe::~GOPipe() {}
