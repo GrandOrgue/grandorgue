@@ -42,19 +42,18 @@ protected:
   std::vector<attack_section_info> m_AttackInfo;
   ptr_vector<GOAudioSection> m_Release;
   std::vector<release_section_info> m_ReleaseInfo;
-  GOMemoryPool &m_pool;
   void ComputeReleaseAlignmentInfo();
   float m_VelocityVolumeBase;
   float m_VelocityVolumeIncrement;
   unsigned m_ReleaseCrossfadeLength;
 
 public:
-  GOSoundProvider(GOMemoryPool &pool);
+  GOSoundProvider();
   virtual ~GOSoundProvider();
 
   void ClearData();
 
-  virtual bool LoadCache(GOCache &cache);
+  virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache);
   virtual bool SaveCache(GOCacheWriter &cache);
 
   void UseSampleGroup(unsigned sample_group);

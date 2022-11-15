@@ -12,9 +12,9 @@
 
 class GOSoundProviderSynthedTrem : public GOSoundProvider {
 public:
-  GOSoundProviderSynthedTrem(GOMemoryPool &pool);
+  GOSoundProviderSynthedTrem();
 
-  void Create(int period, int start_rate, int stop_rate, int amp_mod_depth);
+  void Create(GOMemoryPool &pool, int period, int start_rate, int stop_rate, int amp_mod_depth);
 };
 
 #endif /* GOSOUNDPROVIDERSYNTHEDTREM_H_ */

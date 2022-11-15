@@ -21,13 +21,13 @@ private:
   wxString m_Filename;
 
   void Initialize();
-  void LoadData();
-  bool LoadCache(GOCache &cache);
-  bool SaveCache(GOCacheWriter &cache);
+  void LoadData(GOMemoryPool &pool) override {}
+  bool LoadCache(GOMemoryPool &pool, GOCache &cache) override { return true; }
+  bool SaveCache(GOCacheWriter &cache) override { return true; }
   void UpdateHash(GOHash &hash);
   const wxString &GetLoadTitle();
 
-  void Change(unsigned velocity, unsigned old_velocity);
+  void Change(unsigned velocity, unsigned old_velocity) override;
 
 public:
   GOReferencePipe(GOModel *model, GORank *rank, unsigned midi_key_number);

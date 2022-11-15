@@ -798,7 +798,8 @@
         <element flagsID="4" commonFlags="-std=c++11 -O3 -ffast-math -fPIC"/>
         <element flagsID="5" commonFlags="-std=c++11 -O3 -ffast-math -msse3"/>
         <element flagsID="6" commonFlags="-std=c++11 -fPIC"/>
-        <element flagsID="7" commonFlags="-std=c++14"/>
+        <element flagsID="7" commonFlags="-std=c++11 -msse3"/>
+        <element flagsID="8" commonFlags="-std=c++14"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
@@ -813,7 +814,6 @@
               <pElem>../../build/current/src/core/go_defs.h</pElem>
             </incDir>
             <preprocessorList>
-              <Elem>NDEBUG</Elem>
               <Elem>WXUSINGDLL</Elem>
               <Elem>_FILE_OFFSET_BITS=64</Elem>
               <Elem>_REENTRANT</Elem>
@@ -835,7 +835,7 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="7">
+        <ccTool flags="8">
         </ccTool>
       </item>
       <item path="../../build/current/src/images/ASIO.cpp"
@@ -2524,6 +2524,9 @@
       </item>
       <item path="../../src/grandorgue/GOApp.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOAudioGauge.cpp"
@@ -2536,6 +2539,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2543,7 +2547,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOBitmap.cpp" ex="false" tool="1" flavor2="8">
@@ -2553,6 +2557,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2560,7 +2565,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOCache.cpp" ex="false" tool="1" flavor2="8">
@@ -2570,6 +2575,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2583,6 +2589,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2596,11 +2603,12 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOCoupler.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODC.cpp" ex="false" tool="1" flavor2="8">
@@ -2610,6 +2618,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2617,21 +2626,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODocument.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODrawStop.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOEvent.cpp" ex="false" tool="1" flavor2="8">
@@ -2641,6 +2650,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2648,7 +2658,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOFont.cpp" ex="false" tool="1" flavor2="8">
@@ -2658,18 +2668,19 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOFrame.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOKeyReceiver.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOLoadThread.cpp"
@@ -2677,6 +2688,9 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOLog.cpp" ex="false" tool="1" flavor2="8">
@@ -2686,6 +2700,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2699,6 +2714,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2706,21 +2722,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOMetronome.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOOrganController.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOPanelView.cpp"
@@ -2733,6 +2749,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2740,34 +2757,28 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOPipeConfigNode.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOPipeConfigTreeNode.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-          </preprocessorList>
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOProperties.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOReleaseAlignTable.cpp"
@@ -2780,6 +2791,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2787,56 +2799,56 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/GOSetter.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GODivisionalButtonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GOGeneralButtonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOCombinationDefinition.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GODivisionalCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOGeneralCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOConfig.cpp"
@@ -2878,7 +2890,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOCallbackButtonControl.cpp"
@@ -2886,6 +2898,9 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOElementCreator.cpp"
@@ -2893,27 +2908,30 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOEventDistributor.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOLabelControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPistonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPushbuttonControl.cpp"
@@ -2921,6 +2939,9 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOMidiListDialog.cpp"
@@ -2928,13 +2949,16 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOOrganDialog.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOProgressDialog.cpp"
@@ -2947,6 +2971,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2960,6 +2985,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2973,6 +2999,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3007,6 +3034,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3020,6 +3048,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3027,7 +3056,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp"
@@ -3040,6 +3069,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3053,6 +3083,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3066,6 +3097,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3079,6 +3111,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3092,6 +3125,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3105,6 +3139,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3118,6 +3153,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3131,6 +3167,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3138,7 +3175,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsPaths.cpp"
@@ -3151,6 +3188,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3164,6 +3202,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3177,6 +3216,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3190,6 +3230,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3211,7 +3252,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIButton.cpp"
@@ -3219,27 +3260,30 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUICouplerPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUICrescendoPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIDisplayMetrics.cpp"
@@ -3252,6 +3296,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3259,7 +3304,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIEnclosure.cpp"
@@ -3267,13 +3312,16 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIFloatingPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIHW1Background.cpp"
@@ -3286,6 +3334,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3299,6 +3348,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3312,6 +3362,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3319,7 +3370,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUILayoutEngine.cpp"
@@ -3332,6 +3383,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3340,6 +3392,9 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIManualBackground.cpp"
@@ -3347,27 +3402,30 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIMasterPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIMetronomePanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIPanelWidget.cpp"
@@ -3380,6 +3438,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3387,21 +3446,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUISequencerPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUISetterDisplayMetrics.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/help/GOHelpController.cpp"
@@ -3418,6 +3477,13 @@
         <ccTool flags="5">
         </ccTool>
       </item>
+      <item path="../../src/grandorgue/loader/GOLoadThread.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="7">
+        </ccTool>
+      </item>
       <item path="../../src/grandorgue/midi/GOMidi.cpp"
             ex="false"
             tool="1"
@@ -3428,6 +3494,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3441,6 +3508,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3454,6 +3522,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3467,6 +3536,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3474,7 +3544,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiPlayerContent.cpp"
@@ -3487,6 +3557,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3494,21 +3565,21 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiRecorder.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiSender.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/ports/GOMidiInPort.cpp"
@@ -3564,14 +3635,14 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOEnclosure.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOEventHandlerList.cpp"
@@ -3579,83 +3650,86 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
+          <preprocessorList>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOManual.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOModel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOPipe.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GORank.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOReferencePipe.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOSoundingPipe.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOStop.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOSwitch.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOTremulant.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOWindchest.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSound.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundAudioSection.cpp"
@@ -3668,6 +3742,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3675,46 +3750,28 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProvider.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-          </preprocessorList>
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProviderSynthedTrem.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-          </preprocessorList>
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProviderWave.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-          </preprocessorList>
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundRecorder.cpp"
@@ -3727,6 +3784,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3740,6 +3798,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3753,6 +3812,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3766,6 +3826,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3779,6 +3840,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3792,6 +3854,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3840,6 +3903,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3853,6 +3917,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3866,6 +3931,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3879,6 +3945,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3892,6 +3959,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3905,6 +3973,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3918,6 +3987,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -3925,7 +3995,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA00.cpp" ex="false" tool="1" flavor2="8">
@@ -4848,7 +4918,7 @@
         </ccTool>
       </item>
       <item path="../../src/tools/GOPerfTest.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue</pElem>
@@ -4877,6 +4947,7 @@
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -4996,13 +5067,6 @@
         <ccTool flags="5">
         </ccTool>
       </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/loader/GOLoadThread.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="5">
-        </ccTool>
-      </item>
       <item path="/usr/share/cmake/Modules/CMakeCCompilerABI.c"
             ex="false"
             tool="0"
@@ -5012,7 +5076,7 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="7">
+        <ccTool flags="8">
         </ccTool>
       </item>
       <folder path="0/build">
@@ -5048,6 +5112,7 @@
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
             <Elem>GrandOrgueImages_EXPORTS=1</Elem>
+            <Elem>NDEBUG</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__WXGTK__=1</Elem>
@@ -5130,6 +5195,7 @@
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5151,6 +5217,7 @@
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5180,6 +5247,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5190,6 +5258,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5200,6 +5269,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5210,6 +5280,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5220,6 +5291,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5230,6 +5302,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5276,6 +5349,7 @@
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
             <Elem>GrandOrgueImages_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__DBL_NORM_MAX__=double(1.79769313486231570814527423731704357e+308L)</Elem>
@@ -5378,6 +5452,7 @@
             <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
+            <Elem>NDEBUG</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -5442,6 +5517,7 @@
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5505,6 +5581,7 @@
             <Elem>GO_STD_MUTEX</Elem>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </folder>

@@ -24,7 +24,7 @@
     }                                                                          \
   } while (0)
 
-GOSoundProvider::GOSoundProvider(GOMemoryPool &pool)
+GOSoundProvider::GOSoundProvider()
   : m_MidiKeyNumber(0),
     m_MidiPitchFract(0),
     m_Tuning(1),
@@ -33,7 +33,6 @@ GOSoundProvider::GOSoundProvider(GOMemoryPool &pool)
     m_AttackInfo(),
     m_Release(),
     m_ReleaseInfo(),
-    m_pool(pool),
     m_VelocityVolumeBase(1),
     m_VelocityVolumeIncrement(0),
     m_ReleaseCrossfadeLength(184) {
@@ -49,7 +48,7 @@ void GOSoundProvider::ClearData() {
   m_ReleaseInfo.clear();
 }
 
-bool GOSoundProvider::LoadCache(GOCache &cache) {
+bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   if (!cache.Read(&m_MidiKeyNumber, sizeof(m_MidiKeyNumber)))
     return false;
   if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
@@ -65,7 +64,7 @@ bool GOSoundProvider::LoadCache(GOCache &cache) {
     if (!cache.Read(&info, sizeof(info)))
       return false;
     m_AttackInfo.push_back(info);
-    m_Attack.push_back(new GOAudioSection(m_pool));
+    m_Attack.push_back(new GOAudioSection(pool));
     if (!m_Attack[i]->LoadCache(cache))
       return false;
   }
@@ -78,7 +77,7 @@ bool GOSoundProvider::LoadCache(GOCache &cache) {
     if (!cache.Read(&info, sizeof(info)))
       return false;
     m_ReleaseInfo.push_back(info);
-    m_Release.push_back(new GOAudioSection(m_pool));
+    m_Release.push_back(new GOAudioSection(pool));
     if (!m_Release[i]->LoadCache(cache))
       return false;
   }

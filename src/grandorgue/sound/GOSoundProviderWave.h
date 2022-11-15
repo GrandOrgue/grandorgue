@@ -66,6 +66,7 @@ class GOSoundProviderWave : public GOSoundProvider {
   unsigned GetBytesPerSample(unsigned bits_per_sample);
 
   void CreateAttack(
+    GOMemoryPool &pool,
     const char *data,
     GOWave &wave,
     int attack_start,
@@ -79,7 +80,9 @@ class GOSoundProviderWave : public GOSoundProvider {
     unsigned min_attack_velocity,
     unsigned loop_crossfade_length,
     unsigned max_released_time);
+  
   void CreateRelease(
+    GOMemoryPool &pool,
     const char *data,
     GOWave &wave,
     int sample_group,
@@ -89,7 +92,9 @@ class GOSoundProviderWave : public GOSoundProvider {
     unsigned bits_per_sample,
     unsigned channels,
     bool compress);
+  
   void ProcessFile(
+    GOMemoryPool &pool,
     const GOFilename &filename,
     std::vector<GO_WAVE_LOOP> loops,
     bool is_attack,
@@ -108,13 +113,13 @@ class GOSoundProviderWave : public GOSoundProvider {
     bool use_pitch,
     unsigned loop_crossfade_length,
     unsigned max_released_time);
+  
   void LoadPitch(const GOFilename &filename);
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 
 public:
-  GOSoundProviderWave(GOMemoryPool &pool);
-
   void LoadFromFile(
+    GOMemoryPool &pool,
     std::vector<attack_load_info> attacks,
     std::vector<release_load_info> releases,
     unsigned bits_per_sample,

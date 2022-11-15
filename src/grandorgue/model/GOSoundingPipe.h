@@ -15,6 +15,8 @@
 #include "GOPipeConfigNode.h"
 #include "GOPipeWindchestCallback.h"
 
+class GOMemoryPool;
+class GOOrganController;
 class GOSoundSampler;
 
 class GOSoundingPipe : public GOPipe,
@@ -57,8 +59,8 @@ private:
   void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);
 
   void Initialize();
-  void LoadData();
-  bool LoadCache(GOCache &cache);
+  void LoadData(GOMemoryPool &pool) override;
+  bool LoadCache(GOMemoryPool &pool, GOCache &cache) override;
   bool SaveCache(GOCacheWriter &cache);
   void UpdateHash(GOHash &hash);
   const wxString &GetLoadTitle();

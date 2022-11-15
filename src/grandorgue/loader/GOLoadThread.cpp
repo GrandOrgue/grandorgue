@@ -42,7 +42,7 @@ void GOLoadThread::Entry() {
 
       if (!obj)
         return;
-      obj->LoadData();
+      obj->LoadData(m_pool);
     } catch (GOOutOfMemory e) {
       m_OutOfMemory = true;
       return;

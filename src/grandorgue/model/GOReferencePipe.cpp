@@ -57,13 +57,7 @@ void GOReferencePipe::Initialize() {
   m_ReferenceID = m_Reference->RegisterReference(this);
 }
 
-bool GOReferencePipe::LoadCache(GOCache &cache) { return true; }
-
-bool GOReferencePipe::SaveCache(GOCacheWriter &cache) { return true; }
-
 void GOReferencePipe::UpdateHash(GOHash &hash) {}
-
-void GOReferencePipe::LoadData() {}
 
 const wxString &GOReferencePipe::GetLoadTitle() { return m_Filename; }
 
