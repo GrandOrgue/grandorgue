@@ -50,6 +50,10 @@ public:
   GOEventDistributor();
   ~GOEventDistributor();
 
+  const std::vector<GOCacheObject *> &GetCacheObjects() const {
+    return m_CacheObjects;
+  }
+
   void RegisterEventHandler(GOEventHandler *handler);
   void RegisterPlaybackStateHandler(GOPlaybackStateHandler *handler);
   void RegisterControlChangedHandler(GOControlChangedHandler *handler);
@@ -62,9 +66,6 @@ public:
   GOMidiConfigurator *GetMidiConfigurator(unsigned index);
 
   void HandleKey(int key);
-
-  unsigned GetCacheObjectCount();
-  GOCacheObject *GetCacheObject(unsigned index);
 
   void ControlChanged(void *control);
 };

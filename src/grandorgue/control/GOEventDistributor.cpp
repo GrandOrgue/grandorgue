@@ -9,7 +9,8 @@
 
 #include <algorithm>
 
-#include "GOCacheObject.h"
+#include "model/GOCacheObject.h"
+
 #include "GOControlChangedHandler.h"
 #include "GOEventHandler.h"
 #include "GOPlaybackStateHandler.h"
@@ -107,17 +108,6 @@ void GOEventDistributor::ResolveReferences() {
 void GOEventDistributor::UpdateHash(GOHash &hash) {
   for (unsigned i = 0; i < m_CacheObjects.size(); i++)
     m_CacheObjects[i]->UpdateHash(hash);
-}
-
-unsigned GOEventDistributor::GetCacheObjectCount() {
-  return m_CacheObjects.size();
-}
-
-GOCacheObject *GOEventDistributor::GetCacheObject(unsigned index) {
-  if (index < m_CacheObjects.size())
-    return m_CacheObjects[index];
-  else
-    return NULL;
 }
 
 void GOEventDistributor::AbortPlayback() {

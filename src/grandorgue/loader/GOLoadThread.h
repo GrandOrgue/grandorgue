@@ -9,27 +9,24 @@
 #define GOLOADTHREAD_H
 
 #include <wx/string.h>
-#include <wx/thread.h>
 
 #include "threading/GOThread.h"
-#include "threading/atomic.h"
 
-class GOCacheObject;
-class GOEventDistributor;
+#include "GOCacheObjectDistributor.h"
+
 class GOMemoryPool;
 
 class GOLoadThread : private GOThread {
 private:
-  GOEventDistributor &m_Objects;
-  atomic_uint &m_Pos;
   GOMemoryPool &m_pool;
+  GOCacheObjectDistributor &m_distributor;
   wxString m_Error;
   bool m_OutOfMemory;
 
   void Entry();
 
 public:
-  GOLoadThread(GOEventDistributor &objs, GOMemoryPool &pool, atomic_uint &pos);
+  GOLoadThread(GOMemoryPool &pool, GOCacheObjectDistributor &distributor);
   ~GOLoadThread();
 
   void Run();
