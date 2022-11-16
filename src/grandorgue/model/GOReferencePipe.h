@@ -11,8 +11,11 @@
 #include "GOCacheObject.h"
 #include "GOPipe.h"
 
+class GOModel;
+
 class GOReferencePipe : public GOPipe, private GOCacheObject {
 private:
+  GOModel *m_model;
   GOPipe *m_Reference;
   unsigned m_ReferenceID;
   wxString m_Filename;
@@ -27,8 +30,7 @@ private:
   void Change(unsigned velocity, unsigned old_velocity);
 
 public:
-  GOReferencePipe(
-    GOOrganController *organController, GORank *rank, unsigned midi_key_number);
+  GOReferencePipe(GOModel *model, GORank *rank, unsigned midi_key_number);
 
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);
 };

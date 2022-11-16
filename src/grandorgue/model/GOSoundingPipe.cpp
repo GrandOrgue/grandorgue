@@ -33,6 +33,7 @@ GOSoundingPipe::GOSoundingPipe(
   float max_volume,
   bool retune)
   : GOPipe(organController, rank, midi_key_number),
+    m_OrganController(organController),
     m_Sampler(NULL),
     m_LastStop(0),
     m_Instances(0),

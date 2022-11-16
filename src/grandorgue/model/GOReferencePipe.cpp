@@ -10,22 +10,25 @@
 #include <wx/intl.h>
 #include <wx/tokenzr.h>
 
+#include "config/GOConfigReader.h"
+
 #include "GOManual.h"
+#include "GOModel.h"
 #include "GOOrganController.h"
 #include "GORank.h"
 #include "GOStop.h"
-#include "config/GOConfigReader.h"
 
 GOReferencePipe::GOReferencePipe(
-  GOOrganController *organController, GORank *rank, unsigned midi_key_number)
-  : GOPipe(organController, rank, midi_key_number),
+  GOModel *model, GORank *rank, unsigned midi_key_number)
+  : GOPipe(model, rank, midi_key_number),
+    m_model(model),
     m_Reference(NULL),
     m_ReferenceID(0),
     m_Filename() {}
 
 void GOReferencePipe::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  m_OrganController->RegisterCacheObject(this);
+  m_model->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   if (!m_Filename.StartsWith(wxT("REF:")))
     throw(wxString) _("ReferencePipe without Reference");
@@ -43,15 +46,14 @@ void GOReferencePipe::Initialize() {
     || !strs[2].ToULong(&pipe))
     throw(wxString) _("Invalid reference ") + m_Filename;
   if (
-    (manual < m_OrganController->GetFirstManualIndex())
-    || (manual >= m_OrganController->GetODFManualCount()) || (stop <= 0)
-    || (stop > m_OrganController->GetManual(manual)->GetStopCount()) || (pipe <= 0)
-    || (pipe > m_OrganController->GetManual(manual)->GetStop(stop - 1)->GetRank(0)->GetPipeCount()))
+    (manual < m_model->GetFirstManualIndex())
+    || (manual >= m_model->GetODFManualCount()) || (stop <= 0)
+    || (stop > m_model->GetManual(manual)->GetStopCount()) || (pipe <= 0)
+    || (pipe > m_model->GetManual(manual)->GetStop(stop - 1)->GetRank(0)->GetPipeCount()))
     throw(wxString) _("Invalid reference ") + m_Filename;
-  m_Reference = m_OrganController->GetManual(manual)
-                  ->GetStop(stop - 1)
-                  ->GetRank(0)
-                  ->GetPipe(pipe - 1);
+  m_Reference
+    = m_model->GetManual(manual)->GetStop(stop - 1)->GetRank(0)->GetPipe(
+      pipe - 1);
   m_ReferenceID = m_Reference->RegisterReference(this);
 }
 

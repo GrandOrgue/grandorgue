@@ -8,11 +8,12 @@
 #ifndef GOSOUNDINGPIPE_H
 #define GOSOUNDINGPIPE_H
 
+#include "sound/GOSoundProviderWave.h"
+
 #include "GOCacheObject.h"
 #include "GOPipe.h"
 #include "GOPipeConfigNode.h"
 #include "GOPipeWindchestCallback.h"
-#include "sound/GOSoundProviderWave.h"
 
 class GOSoundSampler;
 
@@ -21,6 +22,7 @@ class GOSoundingPipe : public GOPipe,
                        private GOPipeUpdateCallback,
                        private GOPipeWindchestCallback {
 private:
+  GOOrganController *m_OrganController;
   GOSoundSampler *m_Sampler;
   uint64_t m_LastStop;
   int m_Instances;

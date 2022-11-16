@@ -16,7 +16,7 @@ private:
 
 public:
   GODummyPipe(
-    GOOrganController *organController, GORank *rank, unsigned midi_key_number);
+    GOEventHandlerList *handlerList, GORank *rank, unsigned midi_key_number);
 
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);
 };
