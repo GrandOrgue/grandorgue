@@ -80,7 +80,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     unsigned min_attack_velocity,
     unsigned loop_crossfade_length,
     unsigned max_released_time);
-  
+
   void CreateRelease(
     GOMemoryPool &pool,
     const char *data,
@@ -92,7 +92,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     unsigned bits_per_sample,
     unsigned channels,
     bool compress);
-  
+
   void ProcessFile(
     GOMemoryPool &pool,
     const GOFilename &filename,
@@ -113,7 +113,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     bool use_pitch,
     unsigned loop_crossfade_length,
     unsigned max_released_time);
-  
+
   void LoadPitch(const GOFilename &filename);
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 

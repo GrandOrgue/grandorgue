@@ -66,8 +66,7 @@ void GOTremulant::Load(
     false,
     GOSynthTrem);
   if (m_TremulantType == GOSynthTrem) {
-    m_TremProvider
-      = new GOSoundProviderSynthedTrem();
+    m_TremProvider = new GOSoundProviderSynthedTrem();
     m_Period = cfg.ReadLong(ODFSetting, group, wxT("Period"), 32, 441000);
     m_StartRate = cfg.ReadInteger(ODFSetting, group, wxT("StartRate"), 1, 100);
     m_StopRate = cfg.ReadInteger(ODFSetting, group, wxT("StopRate"), 1, 100);

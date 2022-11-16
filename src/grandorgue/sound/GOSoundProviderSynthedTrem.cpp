@@ -11,9 +11,7 @@
 #include "GOMemoryPool.h"
 #include "GOSoundAudioSection.h"
 
-GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem() {
-  m_Gain = 1.0f;
-}
+GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem() { m_Gain = 1.0f; }
 
 inline short SynthTrem(double amp, double angle) {
   return (short)(amp * sin(angle));
@@ -28,7 +26,11 @@ inline short SynthTrem(double amp, double angle, double fade) {
 }
 
 void GOSoundProviderSynthedTrem::Create(
-  GOMemoryPool &pool, int period, int start_rate, int stop_rate, int amp_mod_depth) {
+  GOMemoryPool &pool,
+  int period,
+  int start_rate,
+  int stop_rate,
+  int amp_mod_depth) {
   ClearData();
 
   const double trem_freq = 1000.0 / period;

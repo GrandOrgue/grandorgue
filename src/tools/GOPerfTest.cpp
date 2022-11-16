@@ -84,9 +84,10 @@ void GOPerfTestApp::RunTest(
     try {
       ptr_vector<GOSoundProvider> pipes;
       for (unsigned i = 0; i < sample_instances; i++) {
-        GOSoundProviderWave *w
-          = new GOSoundProviderWave();
+        GOSoundProviderWave *w = new GOSoundProviderWave();
+
         w->SetAmplitude(102, 0);
+
         std::vector<release_load_info> release;
         std::vector<attack_load_info> attack;
         attack_load_info ainfo;
