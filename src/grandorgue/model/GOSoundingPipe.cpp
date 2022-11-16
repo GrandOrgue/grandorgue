@@ -55,7 +55,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_MaxVolume(max_volume),
     m_SampleMidiKeyNumber(-1),
     m_RetunePipe(retune),
-    m_PipeConfig(
+    m_PipeConfigNode(
       &rank->GetPipeConfig(), organController, this, &m_SoundProvider) {}
 
 void GOSoundingPipe::LoadAttack(
@@ -135,7 +135,7 @@ void GOSoundingPipe::Init(
   GOConfigReader &cfg, wxString group, wxString prefix, wxString filename) {
   m_OrganController->RegisterCacheObject(this);
   m_Filename = filename;
-  m_PipeConfig.Init(cfg, group, prefix);
+  m_PipeConfigNode.Init(cfg, group, prefix);
   m_SampleMidiKeyNumber = -1;
   m_LoopCrossfadeLength = 0;
   m_ReleaseCrossfadeLength = 0;
@@ -156,7 +156,7 @@ void GOSoundingPipe::Init(
   m_AttackInfo.push_back(ainfo);
 
   m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
-  m_PipeConfig.SetName(
+  m_PipeConfigNode.SetName(
     wxString::Format(_("%d: %s"), m_MidiKeyNumber, m_Filename.c_str()));
 }
 
@@ -164,7 +164,7 @@ void GOSoundingPipe::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
   m_OrganController->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
-  m_PipeConfig.Load(cfg, group, prefix);
+  m_PipeConfigNode.Load(cfg, group, prefix);
   m_HarmonicNumber = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -246,7 +246,7 @@ void GOSoundingPipe::Load(
   m_MaxVolume = cfg.ReadFloat(
     ODFSetting, group, wxT("MaxVelocityVolume"), 0, 1000, false, m_MaxVolume);
   m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
-  m_PipeConfig.SetName(
+  m_PipeConfigNode.SetName(
     wxString::Format(_("%d: %s"), m_MidiKeyNumber, m_Filename.c_str()));
 }
 
@@ -256,12 +256,12 @@ void GOSoundingPipe::LoadData(GOMemoryPool &pool) {
       pool,
       m_AttackInfo,
       m_ReleaseInfo,
-      m_PipeConfig.GetEffectiveBitsPerSample(),
-      m_PipeConfig.GetEffectiveChannels(),
-      m_PipeConfig.GetEffectiveCompress(),
-      (loop_load_type)m_PipeConfig.GetEffectiveLoopLoad(),
-      m_PipeConfig.GetEffectiveAttackLoad(),
-      m_PipeConfig.GetEffectiveReleaseLoad(),
+      m_PipeConfigNode.GetEffectiveBitsPerSample(),
+      m_PipeConfigNode.GetEffectiveChannels(),
+      m_PipeConfigNode.GetEffectiveCompress(),
+      (loop_load_type)m_PipeConfigNode.GetEffectiveLoopLoad(),
+      m_PipeConfigNode.GetEffectiveAttackLoad(),
+      m_PipeConfigNode.GetEffectiveReleaseLoad(),
       m_SampleMidiKeyNumber,
       m_LoopCrossfadeLength,
       m_ReleaseCrossfadeLength);
@@ -303,12 +303,12 @@ bool GOSoundingPipe::SaveCache(GOCacheWriter &cache) {
 
 void GOSoundingPipe::UpdateHash(GOHash &hash) {
   hash.Update(m_Filename);
-  hash.Update(m_PipeConfig.GetEffectiveBitsPerSample());
-  hash.Update(m_PipeConfig.GetEffectiveCompress());
-  hash.Update(m_PipeConfig.GetEffectiveChannels());
-  hash.Update(m_PipeConfig.GetEffectiveLoopLoad());
-  hash.Update(m_PipeConfig.GetEffectiveAttackLoad());
-  hash.Update(m_PipeConfig.GetEffectiveReleaseLoad());
+  hash.Update(m_PipeConfigNode.GetEffectiveBitsPerSample());
+  hash.Update(m_PipeConfigNode.GetEffectiveCompress());
+  hash.Update(m_PipeConfigNode.GetEffectiveChannels());
+  hash.Update(m_PipeConfigNode.GetEffectiveLoopLoad());
+  hash.Update(m_PipeConfigNode.GetEffectiveAttackLoad());
+  hash.Update(m_PipeConfigNode.GetEffectiveReleaseLoad());
   hash.Update(m_SampleMidiKeyNumber);
   hash.Update(m_LoopCrossfadeLength);
   hash.Update(m_ReleaseCrossfadeLength);
@@ -348,7 +348,7 @@ void GOSoundingPipe::Validate() {
   if (!m_OrganController->GetSettings().ODFCheck())
     return;
 
-  if (!m_PipeConfig.GetEffectiveChannels())
+  if (!m_PipeConfigNode.GetEffectiveChannels())
     return;
 
   if (m_SoundProvider.checkForMissingAttack()) {
@@ -395,8 +395,8 @@ void GOSoundingPipe::Validate() {
   else
     offset = m_SoundProvider.GetMidiKeyNumber()
       + log(8.0 / m_HarmonicNumber) * (12.0 / log(2))
-      - (m_SoundProvider.GetMidiPitchFract() - m_PipeConfig.GetDefaultTuning()
-         + m_PitchCorrection)
+      - (m_SoundProvider.GetMidiPitchFract()
+         - m_PipeConfigNode.GetDefaultTuning() + m_PitchCorrection)
         / 100.0
       - m_MidiKeyNumber;
   if (offset < -18 || offset > 18) {
@@ -443,7 +443,7 @@ void GOSoundingPipe::SetOn(unsigned velocity) {
     m_SamplerGroupID,
     m_AudioGroupID,
     velocity,
-    m_PipeConfig.GetEffectiveDelay(),
+    m_PipeConfigNode.GetEffectiveDelay(),
     m_LastStop);
   if (m_Sampler)
     m_Instances++;
@@ -470,17 +470,18 @@ void GOSoundingPipe::Change(unsigned velocity, unsigned last_velocity) {
 
 void GOSoundingPipe::UpdateAmplitude() {
   m_SoundProvider.SetAmplitude(
-    m_PipeConfig.GetEffectiveAmplitude(), m_PipeConfig.GetEffectiveGain());
+    m_PipeConfigNode.GetEffectiveAmplitude(),
+    m_PipeConfigNode.GetEffectiveGain());
 }
 
 void GOSoundingPipe::UpdateTuning() {
   m_SoundProvider.SetTuning(
-    m_PipeConfig.GetEffectiveTuning() + m_TemperamentOffset);
+    m_PipeConfigNode.GetEffectiveTuning() + m_TemperamentOffset);
 }
 
 void GOSoundingPipe::UpdateAudioGroup() {
   m_AudioGroupID = m_OrganController->GetSettings().GetAudioGroupId(
-    m_PipeConfig.GetEffectiveAudioGroup());
+    m_PipeConfigNode.GetEffectiveAudioGroup());
 }
 
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
@@ -494,7 +495,7 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
       m_SoundProvider.GetMidiPitchFract(),
       m_HarmonicNumber,
       m_PitchCorrection,
-      m_PipeConfig.GetDefaultTuning());
+      m_PipeConfigNode.GetDefaultTuning());
   UpdateTuning();
 }
 

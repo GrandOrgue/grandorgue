@@ -48,7 +48,7 @@ private:
   int m_SampleMidiKeyNumber;
   bool m_RetunePipe;
   GOSoundProviderWave m_SoundProvider;
-  GOPipeConfigNode m_PipeConfig;
+  GOPipeConfigNode m_PipeConfigNode;
 
   void SetOn(unsigned velocity);
   void SetOff();
