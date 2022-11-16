@@ -75,6 +75,7 @@
 
 GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
   : GOEventDistributor(this),
+    GOModel(settings),
     m_doc(doc),
     m_odf(),
     m_ArchiveID(),
