@@ -20,11 +20,11 @@
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
 #include "model/GOModel.h"
+#include "model/pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOBitmapCache.h"
 #include "GOMainWindowData.h"
 #include "GOMemoryPool.h"
-#include "GOPipeConfigTreeNode.h"
 #include "GOTimer.h"
 
 class GOGUIPanel;

@@ -114,6 +114,9 @@ midi/GOMidiPlayerContent.cpp
 midi/GOMidiSender.cpp
 midi/GOMidiReceiver.cpp
 midi/GOMidiRecorder.cpp
+model/pipe-config/GOPipeConfig.cpp
+model/pipe-config/GOPipeConfigNode.cpp
+model/pipe-config/GOPipeConfigTreeNode.cpp
 model/GODummyPipe.cpp
 model/GOEnclosure.cpp
 model/GOEventHandlerList.cpp
@@ -172,9 +175,6 @@ GOLogWindow.cpp
 GOMetronome.cpp
 GOMainWindowData.cpp
 GOOrganController.cpp
-GOPipeConfig.cpp
-GOPipeConfigNode.cpp
-GOPipeConfigTreeNode.cpp
 GOProperties.cpp
 GOReleaseAlignTable.cpp
 GOFrame.cpp

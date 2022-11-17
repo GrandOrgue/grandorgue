@@ -12,7 +12,8 @@
 
 #include <vector>
 
-#include "GOPipeConfigTreeNode.h"
+#include "pipe-config/GOPipeConfigTreeNode.h"
+
 #include "GOPlaybackStateHandler.h"
 
 class GOConfigReader;

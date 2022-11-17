@@ -9,11 +9,12 @@
 
 #include <wx/intl.h>
 
+#include "config/GOConfigReader.h"
+
 #include "GOEnclosure.h"
 #include "GOOrganController.h"
 #include "GOPipeWindchestCallback.h"
 #include "GOTremulant.h"
-#include "config/GOConfigReader.h"
 
 GOWindchest::GOWindchest(GOOrganController *organController)
   : m_OrganController(organController),
