@@ -240,6 +240,7 @@
             <in>GOMidiMap.cpp</in>
             <in>GOMidiReceiverBase.cpp</in>
             <in>GOMidiReceiverData.cpp</in>
+            <in>GOMidiReceiverEvent.cpp</in>
             <in>GOMidiReceiverMessageType.h</in>
             <in>GOMidiSenderData.cpp</in>
             <in>GOMidiSenderEvent.h</in>
@@ -274,7 +275,6 @@
           <in>GOInvalidFile.cpp</in>
           <in>GOKeyConvert.cpp</in>
           <in>GOKeyReceiverData.cpp</in>
-          <in>GOLoadThread.cpp</in>
           <in>GOMemoryPool.cpp</in>
           <in>GOOrgan.cpp</in>
           <in>GOOrganList.cpp</in>
@@ -411,6 +411,11 @@
             <in>GOMidiSender.cpp</in>
           </df>
           <df name="model">
+            <df name="pipe-config">
+              <in>GOPipeConfig.cpp</in>
+              <in>GOPipeConfigNode.cpp</in>
+              <in>GOPipeConfigTreeNode.cpp</in>
+            </df>
             <in>GODummyPipe.cpp</in>
             <in>GOEnclosure.cpp</in>
             <in>GOEventHandlerList.cpp</in>
@@ -482,9 +487,6 @@
           <in>GOMetronome.cpp</in>
           <in>GOOrganController.cpp</in>
           <in>GOPanelView.cpp</in>
-          <in>GOPipeConfig.cpp</in>
-          <in>GOPipeConfigNode.cpp</in>
-          <in>GOPipeConfigTreeNode.cpp</in>
           <in>GOProperties.cpp</in>
           <in>GOReleaseAlignTable.cpp</in>
         </df>
@@ -790,23 +792,20 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <flagsDictionary>
-        <element flagsID="0" commonFlags="-O3 -g -ffast-math"/>
-        <element flagsID="1" commonFlags="-mtune=generic -march=x86-64 -std=c++11"/>
-        <element flagsID="2"
-                 commonFlags="-mtune=generic -march=x86-64 -std=c++11 -fPIC"/>
-        <element flagsID="3" commonFlags="-std=c++11 -O3 -ffast-math"/>
-        <element flagsID="4" commonFlags="-std=c++11 -O3 -ffast-math -fPIC"/>
-        <element flagsID="5" commonFlags="-std=c++11 -O3 -ffast-math -msse3"/>
-        <element flagsID="6" commonFlags="-std=c++11 -fPIC"/>
-        <element flagsID="7" commonFlags="-std=c++11 -msse3"/>
-        <element flagsID="8" commonFlags="-std=c++14"/>
+        <element flagsID="0" commonFlags="-mtune=generic -march=x86-64 -std=c++11"/>
+        <element flagsID="1" commonFlags="-std=c++11"/>
+        <element flagsID="2" commonFlags="-std=c++11 -O3 -ffast-math -fPIC"/>
+        <element flagsID="3" commonFlags="-std=c++11 -O3 -ffast-math -msse3"/>
+        <element flagsID="4" commonFlags="-std=c++11 -fPIC"/>
+        <element flagsID="5" commonFlags="-std=c++11 -msse3"/>
+        <element flagsID="6" commonFlags="-std=c++14"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
       <makefileType>
         <makeTool>
           <buildCommandWorkingDir>../../build/current</buildCommandWorkingDir>
-          <buildCommand>${MAKE} -f Makefile -j 16</buildCommand>
+          <buildCommand>${MAKE} -f Makefile -j 16 -k</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath>../../build/current/bin/GrandOrgue</executablePath>
           <ccTool flags="5">
@@ -816,7 +815,6 @@
             <preprocessorList>
               <Elem>WXUSINGDLL</Elem>
               <Elem>_FILE_OFFSET_BITS=64</Elem>
-              <Elem>_REENTRANT</Elem>
               <Elem>__WXGTK__</Elem>
             </preprocessorList>
           </ccTool>
@@ -835,7 +833,7 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="8">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../build/current/src/images/ASIO.cpp"
@@ -2141,23 +2139,91 @@
         </ccTool>
       </item>
       <item path="../../src/build/imageconverter.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
+        <ccTool flags="1">
         </ccTool>
       </item>
       <item path="../../src/core/GOCompress.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOHash.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOInvalidFile.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOKeyConvert.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOKeyReceiverData.cpp"
@@ -2165,56 +2231,95 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOLoadThread.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="2">
           <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>../../src/core/threading</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_STD_MUTEX=1</Elem>
-            <Elem>GrandOrgueCore_EXPORTS=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
-            <Elem>__GNUC_MINOR__=2</Elem>
-            <Elem>__PIC__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-1)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__cpp_range_based_for=200907L</Elem>
-            <Elem>__cpp_static_assert=200410L</Elem>
-            <Elem>__cpp_unicode_characters=200704L</Elem>
-            <Elem>__pic__=2</Elem>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOMemoryPool.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/GOOrgan.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/GOOrganList.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/GOPath.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GORodgers.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOSampleStatistic.cpp"
@@ -2222,34 +2327,159 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOStandardFile.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOStdPath.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOTimer.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/GOUtil.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOWavPack.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOWavPackWriter.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOWave.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchive.cpp"
@@ -2257,6 +2487,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveCreator.cpp"
@@ -2264,6 +2500,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveEntryFile.cpp"
@@ -2271,6 +2513,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveFile.cpp"
@@ -2278,6 +2526,23 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveIndex.cpp"
@@ -2285,6 +2550,23 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveManager.cpp"
@@ -2292,6 +2574,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveReader.cpp"
@@ -2299,6 +2587,23 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveWriter.cpp"
@@ -2306,6 +2611,23 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/config/GOConfigFileReader.cpp"
@@ -2359,6 +2681,23 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiFileReader.cpp"
@@ -2366,10 +2705,44 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiMap.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiReceiverBase.cpp"
@@ -2377,6 +2750,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiReceiverData.cpp"
@@ -2384,6 +2763,25 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/core/midi/GOMidiReceiverEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiSenderData.cpp"
@@ -2391,6 +2789,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiWXEvent.cpp"
@@ -2398,6 +2802,23 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/settings/GOSetting.cpp"
@@ -2489,6 +2910,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/threading/GOMutex.cpp"
@@ -2496,6 +2923,12 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/core/threading/GOThread.cpp"
@@ -2503,15 +2936,48 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/threading/GOWaitQueue.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="4">
+        <ccTool flags="2">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>GO_STD_MUTEX</Elem>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -2520,13 +2986,16 @@
             tool="1"
             flavor2="8">
         <ccTool flags="4">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOApp.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOAudioGauge.cpp"
@@ -2534,49 +3003,28 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOAudioRecorder.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOBitmap.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOBitmapCache.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOCache.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOCacheCleaner.cpp"
@@ -2584,13 +3032,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOCacheWriter.cpp"
@@ -2598,96 +3039,68 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOCoupler.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODC.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODivisionalCoupler.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODocument.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODrawStop.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOEvent.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOFilename.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOFont.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOFrame.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOKeyReceiver.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOLoadThread.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="5">
+        <ccTool flags="3">
           <preprocessorList>
             <Elem>NDEBUG</Elem>
           </preprocessorList>
@@ -2695,13 +3108,6 @@
       </item>
       <item path="../../src/grandorgue/GOLog.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOLogWindow.cpp"
@@ -2709,34 +3115,27 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOMainWindowData.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOMetronome.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOOrganController.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOPanelView.cpp"
@@ -2744,41 +3143,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/GOPipeConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="7">
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/GOPipeConfigNode.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="7">
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/GOPipeConfigTreeNode.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOProperties.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOReleaseAlignTable.cpp"
@@ -2786,69 +3157,62 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/GODivisionalSetter.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/GOSetter.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GODivisionalButtonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GOGeneralButtonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOCombinationDefinition.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GODivisionalCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOGeneralCombination.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOConfig.cpp"
@@ -2890,7 +3254,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOCallbackButtonControl.cpp"
@@ -2898,9 +3262,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOElementCreator.cpp"
@@ -2908,30 +3269,27 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOEventDistributor.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOLabelControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPistonControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPushbuttonControl.cpp"
@@ -2939,9 +3297,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOMidiListDialog.cpp"
@@ -2949,16 +3304,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOOrganDialog.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOProgressDialog.cpp"
@@ -2966,13 +3318,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOSelectOrganDialog.cpp"
@@ -2980,13 +3325,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOSplash.cpp"
@@ -2994,13 +3332,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/common/GODialogCloser.cpp"
@@ -3029,13 +3360,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/midi-event/GOMidiEventKeyTab.cpp"
@@ -3043,20 +3367,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/midi-event/GOMidiEventSendTab.cpp"
@@ -3064,13 +3381,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsAudio.cpp"
@@ -3078,13 +3388,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsDialog.cpp"
@@ -3092,13 +3395,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiDeviceList.cpp"
@@ -3106,13 +3402,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiDevices.cpp"
@@ -3120,13 +3409,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiMatchDialog.cpp"
@@ -3134,13 +3416,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiMessage.cpp"
@@ -3148,13 +3423,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsOptions.cpp"
@@ -3162,20 +3430,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsPaths.cpp"
@@ -3183,13 +3444,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsPorts.cpp"
@@ -3197,13 +3451,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsReverb.cpp"
@@ -3211,13 +3458,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsTemperaments.cpp"
@@ -3225,13 +3465,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/document-base/GODocumentBase.cpp"
@@ -3252,7 +3485,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIButton.cpp"
@@ -3260,30 +3493,27 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIControl.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUICouplerPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUICrescendoPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIDisplayMetrics.cpp"
@@ -3291,20 +3521,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIDivisionalsPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIEnclosure.cpp"
@@ -3312,16 +3535,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIFloatingPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIHW1Background.cpp"
@@ -3329,13 +3549,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIHW1DisplayMetrics.cpp"
@@ -3343,13 +3556,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIImage.cpp"
@@ -3357,20 +3563,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUILabel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUILayoutEngine.cpp"
@@ -3378,13 +3577,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIManual.cpp"
@@ -3392,9 +3584,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIManualBackground.cpp"
@@ -3402,30 +3591,27 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIMasterPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIMetronomePanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIPanelWidget.cpp"
@@ -3433,34 +3619,27 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUIRecorderPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUISequencerPanel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/GOGUISetterDisplayMetrics.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/help/GOHelpController.cpp"
@@ -3481,7 +3660,7 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidi.cpp"
@@ -3489,13 +3668,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiInputMerger.cpp"
@@ -3503,13 +3675,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiListener.cpp"
@@ -3517,13 +3682,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiOutputMerger.cpp"
@@ -3531,20 +3689,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiPlayer.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiPlayerContent.cpp"
@@ -3552,34 +3703,27 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiReceiver.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiRecorder.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiSender.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/ports/GOMidiInPort.cpp"
@@ -3635,14 +3779,14 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOEnclosure.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOEventHandlerList.cpp"
@@ -3650,86 +3794,104 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <preprocessorList>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOManual.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOModel.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOPipe.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GORank.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOReferencePipe.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOSoundingPipe.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOStop.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOSwitch.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOTremulant.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOWindchest.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/model/pipe-config/GOPipeConfig.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="5">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/model/pipe-config/GOPipeConfigNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="5">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/model/pipe-config/GOPipeConfigTreeNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSound.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundAudioSection.cpp"
@@ -3737,41 +3899,34 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundEngine.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProvider.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProviderSynthedTrem.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProviderWave.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundRecorder.cpp"
@@ -3779,13 +3934,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundResample.cpp"
@@ -3793,13 +3941,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundReverb.cpp"
@@ -3807,13 +3948,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundReverbEngine.cpp"
@@ -3821,13 +3955,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundReverbPartition.cpp"
@@ -3835,13 +3962,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundSamplerPool.cpp"
@@ -3849,13 +3969,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/ports/GOSoundJackPort.cpp"
@@ -3898,13 +4011,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundOutputWorkItem.cpp"
@@ -3912,13 +4018,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundReleaseWorkItem.cpp"
@@ -3926,13 +4025,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundScheduler.cpp"
@@ -3940,13 +4032,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundThread.cpp"
@@ -3954,13 +4039,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundTouchWorkItem.cpp"
@@ -3968,13 +4046,6 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundTremulantWorkItem.cpp"
@@ -3982,865 +4053,858 @@
             tool="1"
             flavor2="8">
         <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundWindchestWorkItem.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA00.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA01.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA02.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA03.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA04.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA05.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA06.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA07.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA08.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA09.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA10.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA11.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA12.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA13.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA14.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureA15.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB00.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB01.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB02.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB03.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB04.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB05.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB06.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB07.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB08.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB09.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB10.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB11.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB12.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB13.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB14.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureB15.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC00.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC01.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC02.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC03.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC04.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC05.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC06.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC07.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC08.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC09.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC10.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC11.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC12.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC13.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC14.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureC15.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD00.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD01.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD02.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD03.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD04.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD05.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD06.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD07.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD08.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD09.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD10.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD11.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD12.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD13.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD14.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/EnclosureD15.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/GOIcon.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualCBlackDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualCBlackUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualCWhiteDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualCWhiteUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualCWoodDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualCWoodUp.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualDBlackDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualDBlackUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualDWhiteDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualDWhiteUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualDWoodDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualDWoodUp.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualEBlackDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualEBlackUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualEWhiteDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualEWhiteUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualEWoodDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualEWoodUp.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualNaturalBlackDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualNaturalBlackUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualNaturalWhiteDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualNaturalWhiteUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualNaturalWoodDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualNaturalWoodUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualSharpBlackDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualSharpBlackUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualSharpWhiteDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualSharpWhiteUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualSharpWoodDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/ManualSharpWoodUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalNaturalBlackDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalNaturalBlackUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalNaturalWoodDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalNaturalWoodUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalSharpBlackDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalSharpBlackUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalSharpWoodDown.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/PedalSharpWoodUp.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Splash.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood01.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood03.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood05.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood07.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood09.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood11.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood13.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood15.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood17.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood19.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood21.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood23.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood25.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood27.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood29.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood31.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood33.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood35.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood37.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood39.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood41.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood43.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood45.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood47.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood49.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood51.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood53.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood55.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood57.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood59.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood61.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/Wood63.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop01off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop01on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop02off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop02on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop03off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop03on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop04off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop04on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop05off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop05on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop06off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/drawstop06on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/gauge.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/help.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label01.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label02.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label03.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label04.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label05.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label06.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label07.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label08.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label09.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label10.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label11.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/label12.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/memory.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/open.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/panic.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston01off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston01on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston02off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston02on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston03off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston03on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston04off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston04on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston05off.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/piston05on.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/polyphony.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/properties.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/record.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/reload.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/reverb.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/save.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/set.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/settings.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/transpose.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/images/volume.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="6">
+        <ccTool flags="4">
         </ccTool>
       </item>
       <item path="../../src/portaudio/common/pa_allocation.c"
@@ -4914,11 +4978,11 @@
             flavor2="3">
       </item>
       <item path="../../src/rt/rtmidi/RtMidi.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
+        <ccTool flags="0">
         </ccTool>
       </item>
       <item path="../../src/tools/GOPerfTest.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="7">
+        <ccTool flags="5">
           <incDir>
             <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue</pElem>
@@ -4941,13 +5005,10 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
-            <pElem>../../build/current/src/core</pElem>
             <pElem>../../build/current/src/tools</pElem>
           </incDir>
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -4955,109 +5016,81 @@
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_converters.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_cpuload.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_debugprint.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_dither.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_front.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_process.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_ringbuffer.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_stream.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_trace.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/hostapi/alsa/pa_linux_alsa.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/hostapi/jack/pa_jack.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/os/unix/pa_unix_hostapis.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/os/unix/pa_unix_util.c"
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
-        </cTool>
       </item>
       <item path="../../submodules/RtAudio/RtAudio.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="3">
+        <ccTool flags="1">
         </ccTool>
       </item>
       <item path="../../submodules/RtMidi/RtMidi.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
+        <ccTool flags="1">
         </ccTool>
       </item>
       <item path="../../submodules/ZitaConvolver/source/zita-convolver.cc"
@@ -5076,7 +5109,7 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="8">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <folder path="0/build">
@@ -5110,9 +5143,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
             <Elem>GrandOrgueImages_EXPORTS=1</Elem>
-            <Elem>NDEBUG</Elem>
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__WXGTK__=1</Elem>
@@ -5126,6 +5157,8 @@
           </incDir>
           <preprocessorList>
             <Elem>GO_STD_MUTEX=1</Elem>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -5189,17 +5222,22 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
-            <pElem>../../build/current/src/core</pElem>
             <pElem>../../build/current/src/build</pElem>
           </incDir>
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
       <folder path="0/src/core">
+        <ccTool>
+          <preprocessorList>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/config">
         <ccTool>
           <incDir>
             <pElem>../../src/grandorgue/resource</pElem>
@@ -5216,8 +5254,91 @@
           </incDir>
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/contrib">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/files">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/settings">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/temperaments">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/core</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5237,72 +5358,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/config">
-        <ccTool>
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/dialogs/common">
-        <ccTool>
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/document-base">
-        <ccTool>
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/help">
-        <ccTool>
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/midi/ports">
-        <ccTool>
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/sound/ports">
-        <ccTool>
-          <incDir>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5453,6 +5509,7 @@
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
             <Elem>NDEBUG</Elem>
+            <Elem>_REENTRANT</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
@@ -5482,6 +5539,13 @@
           </preprocessorList>
         </ccTool>
       </folder>
+      <folder path="0/src/tools">
+        <ccTool>
+          <preprocessorList>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
       <folder path="0/submodules">
         <cTool>
           <incDir>
@@ -5492,7 +5556,6 @@
           </incDir>
           <preprocessorList>
             <Elem>HAVE_SYS_SOUNDCARD_H</Elem>
-            <Elem>NDEBUG</Elem>
             <Elem>PA_USE_ALSA</Elem>
             <Elem>PA_USE_JACK</Elem>
             <Elem>_REENTRANT</Elem>
@@ -5516,8 +5579,7 @@
           </incDir>
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
-            <Elem>GrandOrgueCore_EXPORTS</Elem>
-            <Elem>NDEBUG</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -5582,6 +5644,7 @@
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
             <Elem>NDEBUG</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -7233,29 +7296,6 @@
         <ccTool flags="3">
           <incDir>
             <pElem>../../src/core</pElem>
-            <pElem>../../build/current/src/core</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="../../src/core/GOLoadThread.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="3">
-          <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../src/core/threading</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
         </ccTool>
@@ -9117,86 +9157,6 @@
             <pElem>../../src/core</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/GOPipeConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/GOPipeConfigNode.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="5">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/GOPipeConfigTreeNode.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
