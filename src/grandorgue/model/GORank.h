@@ -8,12 +8,14 @@
 #ifndef GORANK_H
 #define GORANK_H
 
-#include "GOPipeConfigTreeNode.h"
-#include "GOPlaybackStateHandler.h"
-#include "GOSaveableObject.h"
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiSender.h"
+#include "pipe-config/GOPipeConfigTreeNode.h"
+
 #include "ptrvector.h"
+
+#include "GOPlaybackStateHandler.h"
+#include "GOSaveableObject.h"
 
 class GOPipe;
 class GOStop;

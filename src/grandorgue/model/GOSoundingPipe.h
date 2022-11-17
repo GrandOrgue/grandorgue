@@ -8,11 +8,11 @@
 #ifndef GOSOUNDINGPIPE_H
 #define GOSOUNDINGPIPE_H
 
+#include "pipe-config/GOPipeConfigNode.h"
 #include "sound/GOSoundProviderWave.h"
 
 #include "GOCacheObject.h"
 #include "GOPipe.h"
-#include "GOPipeConfigNode.h"
 #include "GOPipeWindchestCallback.h"
 
 class GOSoundSampler;
