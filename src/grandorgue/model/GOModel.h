@@ -12,6 +12,7 @@
 
 #include "GOEventHandlerList.h"
 
+class GOConfig;
 class GOConfigReader;
 class GODivisionalCoupler;
 class GOEnclosure;
@@ -25,6 +26,9 @@ class GOWindchest;
 class GOOrganController;
 
 class GOModel : public GOEventHandlerList {
+private:
+  const GOConfig &m_config;
+
 protected:
   ptr_vector<GOWindchest> m_windchests;
   ptr_vector<GOManual> m_manuals;
@@ -42,8 +46,10 @@ protected:
   void Load(GOConfigReader &cfg, GOOrganController *organController);
 
 public:
-  GOModel();
+  GOModel(const GOConfig &config);
   ~GOModel();
+
+  const GOConfig &GetConfig() const { return m_config; }
 
   void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();

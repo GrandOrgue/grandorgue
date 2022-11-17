@@ -20,16 +20,8 @@
 #include "GOTremulant.h"
 #include "GOWindchest.h"
 
-GOModel::GOModel()
-  : m_windchests(),
-    m_manuals(),
-    m_enclosures(),
-    m_switches(),
-    m_tremulants(),
-    m_ranks(),
-    m_pistons(),
-    m_DivisionalCoupler(),
-    m_generals(),
+GOModel::GOModel(const GOConfig &config)
+  : m_config(config),
     m_FirstManual(0),
     m_ODFManualCount(0),
     m_ODFRankCount(0) {}
