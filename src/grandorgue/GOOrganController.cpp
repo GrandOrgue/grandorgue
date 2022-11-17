@@ -522,7 +522,7 @@ wxString GOOrganController::Load(
 
             if (!obj)
               break;
-            if (!obj->LoadCache(reader)) {
+            if (!obj->LoadCache(m_pool, reader)) {
               cache_ok = false;
               wxLogError(
                 _("Cache load failure: Failed to read %s from cache."),
@@ -573,7 +573,7 @@ wxString GOOrganController::Load(
       GOCacheObject *obj;
 
       while ((obj = objectDistributor.fetchNext())) {
-        obj->LoadData();
+        obj->LoadData(m_pool);
         if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
           dummy.free();
           SetTemperament(m_Temperament);

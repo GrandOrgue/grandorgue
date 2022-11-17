@@ -84,9 +84,10 @@ void GOPerfTestApp::RunTest(
     try {
       ptr_vector<GOSoundProvider> pipes;
       for (unsigned i = 0; i < sample_instances; i++) {
-        GOSoundProviderWave *w
-          = new GOSoundProviderWave(organController->GetMemoryPool());
+        GOSoundProviderWave *w = new GOSoundProviderWave();
+
         w->SetAmplitude(102, 0);
+
         std::vector<release_load_info> release;
         std::vector<attack_load_info> attack;
         attack_load_info ainfo;
@@ -103,6 +104,7 @@ void GOPerfTestApp::RunTest(
         ainfo.loops.clear();
         attack.push_back(ainfo);
         w->LoadFromFile(
+          organController->GetMemoryPool(),
           attack,
           release,
           bits_per_sample,

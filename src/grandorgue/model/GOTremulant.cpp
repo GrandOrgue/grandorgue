@@ -42,10 +42,10 @@ GOTremulant::~GOTremulant() { DELETE_AND_NULL(m_TremProvider); }
 
 void GOTremulant::Initialize() {}
 
-void GOTremulant::LoadData() { InitSoundProvider(); }
+void GOTremulant::LoadData(GOMemoryPool &pool) { InitSoundProvider(pool); }
 
-bool GOTremulant::LoadCache(GOCache &cache) {
-  InitSoundProvider();
+bool GOTremulant::LoadCache(GOMemoryPool &pool, GOCache &cache) {
+  InitSoundProvider(pool);
   return true;
 }
 
@@ -66,9 +66,8 @@ void GOTremulant::Load(
     false,
     GOSynthTrem);
   if (m_TremulantType == GOSynthTrem) {
-    m_TremProvider
-      = new GOSoundProviderSynthedTrem(m_OrganController->GetMemoryPool()),
-      m_Period = cfg.ReadLong(ODFSetting, group, wxT("Period"), 32, 441000);
+    m_TremProvider = new GOSoundProviderSynthedTrem();
+    m_Period = cfg.ReadLong(ODFSetting, group, wxT("Period"), 32, 441000);
     m_StartRate = cfg.ReadInteger(ODFSetting, group, wxT("StartRate"), 1, 100);
     m_StopRate = cfg.ReadInteger(ODFSetting, group, wxT("StopRate"), 1, 100);
     m_AmpModDepth
@@ -88,10 +87,10 @@ void GOTremulant::SetupCombinationState() {
     || IsDisplayed();
 }
 
-void GOTremulant::InitSoundProvider() {
+void GOTremulant::InitSoundProvider(GOMemoryPool &pool) {
   if (m_TremulantType == GOSynthTrem) {
     ((GOSoundProviderSynthedTrem *)m_TremProvider)
-      ->Create(m_Period, m_StartRate, m_StopRate, m_AmpModDepth);
+      ->Create(pool, m_Period, m_StartRate, m_StopRate, m_AmpModDepth);
     assert(!m_TremProvider->IsOneshot());
   }
 }

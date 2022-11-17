@@ -7,9 +7,8 @@
 
 #include "GOEventDistributor.h"
 
-#include "model/GOEventHandlerList.h"
-
 #include "model/GOCacheObject.h"
+#include "model/GOEventHandlerList.h"
 
 #include "GOControlChangedHandler.h"
 #include "GOEventHandler.h"

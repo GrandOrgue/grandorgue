@@ -16,8 +16,9 @@
 class GOSoundProvider;
 class GOConfigReader;
 class GOConfigWriter;
-struct IniFileEnumEntry;
+class GOMemoryPool;
 class GOSoundSampler;
+struct IniFileEnumEntry;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
 
@@ -34,13 +35,13 @@ private:
   uint64_t m_LastStop;
   int m_SamplerGroupID;
 
-  void InitSoundProvider();
+  void InitSoundProvider(GOMemoryPool &pool);
   void ChangeState(bool on);
   void SetupCombinationState();
 
   void Initialize();
-  void LoadData();
-  bool LoadCache(GOCache &cache);
+  void LoadData(GOMemoryPool &pool);
+  bool LoadCache(GOMemoryPool &pool, GOCache &cache);
   bool SaveCache(GOCacheWriter &cache);
   void UpdateHash(GOHash &hash);
   const wxString &GetLoadTitle();

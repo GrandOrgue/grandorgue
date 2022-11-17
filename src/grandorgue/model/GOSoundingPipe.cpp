@@ -10,16 +10,18 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "config/GOConfig.h"
+#include "config/GOConfigReader.h"
+#include "temperaments/GOTemperament.h"
+
 #include "GOAlloc.h"
 #include "GOHash.h"
 #include "GOOrganController.h"
 #include "GOPath.h"
 #include "GORank.h"
 #include "GOWindchest.h"
-#include "config/GOConfig.h"
-#include "config/GOConfigReader.h"
+
 #include "go_limits.h"
-#include "temperaments/GOTemperament.h"
 
 GOSoundingPipe::GOSoundingPipe(
   GOOrganController *organController,
@@ -53,7 +55,6 @@ GOSoundingPipe::GOSoundingPipe(
     m_MaxVolume(max_volume),
     m_SampleMidiKeyNumber(-1),
     m_RetunePipe(retune),
-    m_SoundProvider(organController->GetMemoryPool()),
     m_PipeConfig(
       &rank->GetPipeConfig(), organController, this, &m_SoundProvider) {}
 
@@ -249,9 +250,10 @@ void GOSoundingPipe::Load(
     wxString::Format(_("%d: %s"), m_MidiKeyNumber, m_Filename.c_str()));
 }
 
-void GOSoundingPipe::LoadData() {
+void GOSoundingPipe::LoadData(GOMemoryPool &pool) {
   try {
     m_SoundProvider.LoadFromFile(
+      pool,
       m_AttackInfo,
       m_ReleaseInfo,
       m_PipeConfig.GetEffectiveBitsPerSample(),
@@ -280,9 +282,9 @@ void GOSoundingPipe::LoadData() {
   }
 }
 
-bool GOSoundingPipe::LoadCache(GOCache &cache) {
+bool GOSoundingPipe::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   try {
-    bool result = m_SoundProvider.LoadCache(cache);
+    bool result = m_SoundProvider.LoadCache(pool, cache);
     if (result)
       Validate();
     return result;
