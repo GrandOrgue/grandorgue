@@ -21,7 +21,7 @@
 #include "GOTremulant.h"
 #include "GOWindchest.h"
 
-GOModel::GOModel(const GOConfig &config)
+GOOrganModel::GOOrganModel(const GOConfig &config)
   : m_config(config),
     m_OrganModelModified(false),
     m_ModificationListener(nullptr),
@@ -29,9 +29,10 @@ GOModel::GOModel(const GOConfig &config)
     m_ODFManualCount(0),
     m_ODFRankCount(0) {}
 
-GOModel::~GOModel() {}
+GOOrganModel::~GOOrganModel() {}
 
-void GOModel::Load(GOConfigReader &cfg, GOOrganController *organController) {
+void GOOrganModel::Load(
+  GOConfigReader &cfg, GOOrganController *organController) {
   wxString group = wxT("Organ");
   unsigned NumberOfWindchestGroups
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 50);
@@ -139,7 +140,7 @@ void GOModel::Load(GOConfigReader &cfg, GOOrganController *organController) {
   }
 }
 
-void GOModel::SetOrganModelModified(bool modified) {
+void GOOrganModel::SetOrganModelModified(bool modified) {
   if (modified != m_OrganModelModified) {
     m_OrganModelModified = modified;
     if (m_ModificationListener)
@@ -147,101 +148,105 @@ void GOModel::SetOrganModelModified(bool modified) {
   }
 }
 
-void GOModel::UpdateTremulant(GOTremulant *tremulant) {
+void GOOrganModel::UpdateTremulant(GOTremulant *tremulant) {
   for (unsigned i = 0; i < m_windchests.size(); i++)
     m_windchests[i]->UpdateTremulant(tremulant);
 }
 
-void GOModel::UpdateVolume() {
+void GOOrganModel::UpdateVolume() {
   for (unsigned i = 0; i < m_windchests.size(); i++)
     m_windchests[i]->UpdateVolume();
 }
 
-GOWindchest *GOModel::GetWindchest(unsigned index) {
+GOWindchest *GOOrganModel::GetWindchest(unsigned index) {
   return m_windchests[index];
 }
 
-unsigned GOModel::GetWindchestGroupCount() { return m_windchests.size(); }
+unsigned GOOrganModel::GetWindchestGroupCount() { return m_windchests.size(); }
 
-unsigned GOModel::AddWindchest(GOWindchest *windchest) {
+unsigned GOOrganModel::AddWindchest(GOWindchest *windchest) {
   m_windchests.push_back(windchest);
   return m_windchests.size();
 }
 
-unsigned GOModel::GetManualAndPedalCount() {
+unsigned GOOrganModel::GetManualAndPedalCount() {
   if (!m_manuals.size())
     return 0;
   return m_manuals.size() - 1;
 }
 
-unsigned GOModel::GetODFManualCount() { return m_ODFManualCount; }
+unsigned GOOrganModel::GetODFManualCount() { return m_ODFManualCount; }
 
-unsigned GOModel::GetFirstManualIndex() { return m_FirstManual; }
+unsigned GOOrganModel::GetFirstManualIndex() { return m_FirstManual; }
 
-GOManual *GOModel::GetManual(unsigned index) { return m_manuals[index]; }
+GOManual *GOOrganModel::GetManual(unsigned index) { return m_manuals[index]; }
 
-unsigned GOModel::GetStopCount() {
+unsigned GOOrganModel::GetStopCount() {
   unsigned cnt = 0;
   for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
     cnt += m_manuals[i]->GetStopCount();
   return cnt;
 }
 
-unsigned GOModel::GetCouplerCount() {
+unsigned GOOrganModel::GetCouplerCount() {
   unsigned cnt = 0;
   for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
     cnt += m_manuals[i]->GetCouplerCount();
   return cnt;
 }
 
-unsigned GOModel::GetODFCouplerCount() {
+unsigned GOOrganModel::GetODFCouplerCount() {
   unsigned cnt = 0;
   for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
     cnt += m_manuals[i]->GetODFCouplerCount();
   return cnt;
 }
 
-GOEnclosure *GOModel::GetEnclosureElement(unsigned index) {
+GOEnclosure *GOOrganModel::GetEnclosureElement(unsigned index) {
   return m_enclosures[index];
 }
 
-unsigned GOModel::GetEnclosureCount() { return m_enclosures.size(); }
+unsigned GOOrganModel::GetEnclosureCount() { return m_enclosures.size(); }
 
-unsigned GOModel::AddEnclosure(GOEnclosure *enclosure) {
+unsigned GOOrganModel::AddEnclosure(GOEnclosure *enclosure) {
   m_enclosures.push_back(enclosure);
   return m_enclosures.size() - 1;
 }
 
-unsigned GOModel::GetSwitchCount() { return m_switches.size(); }
+unsigned GOOrganModel::GetSwitchCount() { return m_switches.size(); }
 
-GOSwitch *GOModel::GetSwitch(unsigned index) { return m_switches[index]; }
+GOSwitch *GOOrganModel::GetSwitch(unsigned index) { return m_switches[index]; }
 
-unsigned GOModel::GetTremulantCount() { return m_tremulants.size(); }
+unsigned GOOrganModel::GetTremulantCount() { return m_tremulants.size(); }
 
-GOTremulant *GOModel::GetTremulant(unsigned index) {
+GOTremulant *GOOrganModel::GetTremulant(unsigned index) {
   return m_tremulants[index];
 }
 
-GORank *GOModel::GetRank(unsigned index) { return m_ranks[index]; }
+GORank *GOOrganModel::GetRank(unsigned index) { return m_ranks[index]; }
 
-unsigned GOModel::GetODFRankCount() { return m_ODFRankCount; }
+unsigned GOOrganModel::GetODFRankCount() { return m_ODFRankCount; }
 
-void GOModel::AddRank(GORank *rank) { m_ranks.push_back(rank); }
+void GOOrganModel::AddRank(GORank *rank) { m_ranks.push_back(rank); }
 
-unsigned GOModel::GetNumberOfReversiblePistons() { return m_pistons.size(); }
+unsigned GOOrganModel::GetNumberOfReversiblePistons() {
+  return m_pistons.size();
+}
 
-GOPistonControl *GOModel::GetPiston(unsigned index) { return m_pistons[index]; }
+GOPistonControl *GOOrganModel::GetPiston(unsigned index) {
+  return m_pistons[index];
+}
 
-unsigned GOModel::GetDivisionalCouplerCount() {
+unsigned GOOrganModel::GetDivisionalCouplerCount() {
   return m_DivisionalCoupler.size();
 }
 
-GODivisionalCoupler *GOModel::GetDivisionalCoupler(unsigned index) {
+GODivisionalCoupler *GOOrganModel::GetDivisionalCoupler(unsigned index) {
   return m_DivisionalCoupler[index];
 }
 
-unsigned GOModel::GetGeneralCount() { return m_generals.size(); }
+unsigned GOOrganModel::GetGeneralCount() { return m_generals.size(); }
 
-GOGeneralButtonControl *GOModel::GetGeneral(unsigned index) {
+GOGeneralButtonControl *GOOrganModel::GetGeneral(unsigned index) {
   return m_generals[index];
 }

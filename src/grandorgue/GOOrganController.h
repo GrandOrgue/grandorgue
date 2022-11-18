@@ -55,7 +55,7 @@ typedef struct _GOHashType GOHashType;
 class GOOrganController : public GOEventDistributor,
                           private GOPipeUpdateCallback,
                           public GOTimer,
-                          public GOModel,
+                          public GOOrganModel,
                           public GOModificationListener {
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 

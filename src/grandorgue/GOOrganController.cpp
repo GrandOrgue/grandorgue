@@ -75,7 +75,7 @@
 
 GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
   : GOEventDistributor(this),
-    GOModel(settings),
+    GOOrganModel(settings),
     m_doc(doc),
     m_odf(),
     m_ArchiveID(),
@@ -122,7 +122,7 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_PitchLabel(this),
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {
-  GOModel::SetModificationListener(this);
+  GOOrganModel::SetModificationListener(this);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
@@ -133,7 +133,7 @@ GOOrganController::~GOOrganController() {
   m_manuals.clear();
   m_tremulants.clear();
   m_ranks.clear();
-  GOModel::SetModificationListener(nullptr);
+  GOOrganModel::SetModificationListener(nullptr);
 }
 
 void GOOrganController::SetOrganModified(bool modified) {
@@ -255,7 +255,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     false,
     m_config.ReleaseLength());
 
-  GOModel::Load(cfg, this);
+  GOOrganModel::Load(cfg, this);
   wxString buffer;
 
   for (unsigned i = 0; i < m_enclosures.size(); i++)
