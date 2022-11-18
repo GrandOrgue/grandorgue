@@ -14,11 +14,11 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOOrganController;
+class GOModel;
 
 class GOPipeConfig {
 private:
-  GOOrganController *m_OrganFile;
+  GOModel *m_OrganModel;
   GOPipeUpdateCallback *m_Callback;
   wxString m_Group;
   wxString m_NamePrefix;
@@ -39,8 +39,7 @@ private:
   int m_ReleaseLoad;
 
 public:
-  GOPipeConfig(
-    GOOrganController *organController, GOPipeUpdateCallback *callback);
+  GOPipeConfig(GOModel *organModel, GOPipeUpdateCallback *callback);
 
   void Init(GOConfigReader &cfg, wxString group, wxString prefix);
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);

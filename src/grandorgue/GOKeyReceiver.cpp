@@ -49,5 +49,5 @@ KEY_MATCH_TYPE GOKeyReceiver::Match(unsigned key) {
 void GOKeyReceiver::Assign(const GOKeyReceiverData &data) {
   *(GOKeyReceiverData *)this = data;
   if (m_OrganController)
-    m_OrganController->Modified();
+    m_OrganController->SetOrganModified();
 }

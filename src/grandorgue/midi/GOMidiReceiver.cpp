@@ -70,5 +70,5 @@ int GOMidiReceiver::GetTranspose() {
 void GOMidiReceiver::Assign(const GOMidiReceiverData &data) {
   GOMidiReceiverBase::Assign(data);
   if (m_OrganController)
-    m_OrganController->Modified();
+    m_OrganController->SetOrganModified();
 }

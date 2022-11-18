@@ -34,7 +34,7 @@ void GOCombination::Copy(GOCombination *combination) {
   assert(GetTemplate() == combination->GetTemplate());
   m_State = combination->m_State;
   UpdateState();
-  m_OrganFile->Modified();
+  m_OrganFile->SetOrganModified();
 }
 
 int GOCombination::GetState(unsigned no) { return m_State[no]; }
@@ -101,7 +101,7 @@ bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
         } else
           m_State[i] = 0;
       }
-      m_OrganFile->Modified();
+      m_OrganFile->SetOrganModified();
     }
     if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_SCOPE) {
       for (unsigned i = 0; i < elements.size(); i++) {
@@ -115,7 +115,7 @@ bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
         } else
           m_State[i] = -1;
       }
-      m_OrganFile->Modified();
+      m_OrganFile->SetOrganModified();
     }
     if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_SCOPED) {
       for (unsigned i = 0; i < elements.size(); i++) {

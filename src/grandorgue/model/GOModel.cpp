@@ -14,6 +14,7 @@
 #include "GODivisionalCoupler.h"
 #include "GOEnclosure.h"
 #include "GOManual.h"
+#include "GOModificationListener.h"
 #include "GOOrganController.h"
 #include "GORank.h"
 #include "GOSwitch.h"
@@ -22,6 +23,8 @@
 
 GOModel::GOModel(const GOConfig &config)
   : m_config(config),
+    m_OrganModelModified(false),
+    m_ModificationListener(nullptr),
     m_FirstManual(0),
     m_ODFManualCount(0),
     m_ODFRankCount(0) {}
@@ -133,6 +136,14 @@ void GOModel::Load(GOConfigReader &cfg, GOOrganController *organController) {
     m_generals.push_back(new GOGeneralButtonControl(
       organController->GetGeneralTemplate(), organController, false));
     m_generals[i]->Load(cfg, wxString::Format(wxT("General%03d"), i + 1));
+  }
+}
+
+void GOModel::SetOrganModelModified(bool modified) {
+  if (modified != m_OrganModelModified) {
+    m_OrganModelModified = modified;
+    if (m_ModificationListener)
+      m_ModificationListener->OnIsModifiedChanged(modified);
   }
 }
 

@@ -32,8 +32,7 @@ GODocument::GODocument(GOResizable *pMainWindow, GOSound *sound)
     m_sound(*sound),
     m_OrganFileReady(false),
     m_OrganController(NULL),
-    m_listener(),
-    m_modified(false) {
+    m_listener() {
   m_listener.Register(&m_sound.GetMidi());
 }
 
@@ -42,9 +41,9 @@ GODocument::~GODocument() {
   CloseOrgan();
 }
 
-bool GODocument::IsModified() { return m_modified; }
-
-void GODocument::Modify(bool modified) { m_modified = modified; }
+bool GODocument::IsModified() const {
+  return m_OrganController && m_OrganController->IsOrganModified();
+}
 
 bool GODocument::Load(GOProgressDialog *dlg, const GOOrgan &organ) {
   return Import(dlg, organ, wxEmptyString);
@@ -56,7 +55,6 @@ bool GODocument::Import(
   GOConfig &cfg = m_sound.GetSettings();
 
   CloseOrgan();
-  Modify(false);
   m_OrganController = new GOOrganController(this, cfg);
   wxString error = m_OrganController->Load(dlg, organ, cmb);
   if (!error.IsEmpty()) {
@@ -99,7 +97,8 @@ bool GODocument::Import(
   m_sound.AssignOrganFile(m_OrganController);
   m_OrganFileReady = true;
   m_listener.SetCallback(this);
-  Modify(!cmb.IsEmpty());
+  if (!cmb.IsEmpty())
+    m_OrganController->SetOrganModified();
 
   /* The sound was open on GOFrame::Init.
    * m_sound.AssignOrganFile made all necessary for the new organController.
@@ -114,7 +113,7 @@ bool GODocument::ImportCombination(const wxString &cmb) {
   if (!m_OrganController)
     return false;
   m_OrganController->LoadCombination(cmb);
-  m_OrganController->Modified();
+  m_OrganController->SetOrganModified();
   return true;
 }
 
@@ -146,7 +145,6 @@ void GODocument::SyncState() {
 bool GODocument::Revert(GOProgressDialog *dlg) {
   if (m_OrganController)
     m_OrganController->DeleteSettings();
-  Modify(false);
   return Load(dlg, m_OrganController->GetOrganInfo());
 }
 

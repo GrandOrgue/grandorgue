@@ -421,6 +421,7 @@
             <in>GOEventHandlerList.cpp</in>
             <in>GOManual.cpp</in>
             <in>GOModel.cpp</in>
+            <in>GOModificationListener.h</in>
             <in>GOPipe.cpp</in>
             <in>GORank.cpp</in>
             <in>GOReferencePipe.cpp</in>
@@ -3809,6 +3810,11 @@
             flavor2="8">
         <ccTool flags="5">
         </ccTool>
+      </item>
+      <item path="../../src/grandorgue/model/GOModificationListener.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/grandorgue/model/GOPipe.cpp"
             ex="false"
@@ -11281,6 +11287,11 @@
             <Elem>__cpp_constexpr=200704L</Elem>
           </preprocessorList>
         </ccTool>
+      </item>
+      <item path="../../src/grandorgue/model/GOModificationListener.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/grandorgue/sound/GOSound.cpp"
             ex="false"

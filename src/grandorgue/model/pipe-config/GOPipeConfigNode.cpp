@@ -7,10 +7,11 @@
 
 #include "GOPipeConfigNode.h"
 
+#include "config/GOConfig.h"
+
 #include "GOOrganController.h"
 #include "GOSampleStatistic.h"
 #include "GOStatisticCallback.h"
-#include "config/GOConfig.h"
 
 GOPipeConfigNode::GOPipeConfigNode(
   GOPipeConfigNode *parent,

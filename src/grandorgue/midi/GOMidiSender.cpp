@@ -697,5 +697,5 @@ void GOMidiSender::SetName(const wxString &text) {
 void GOMidiSender::Assign(const GOMidiSenderData &data) {
   *(GOMidiSenderData *)this = data;
   if (m_OrganController)
-    m_OrganController->Modified();
+    m_OrganController->SetOrganModified();
 }

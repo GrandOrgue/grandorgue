@@ -18,16 +18,20 @@ class GODivisionalCoupler;
 class GOEnclosure;
 class GOGeneralButtonControl;
 class GOManual;
+class GOModificationListener;
+class GOOrganController;
 class GOPistonControl;
 class GORank;
 class GOSwitch;
 class GOTremulant;
 class GOWindchest;
-class GOOrganController;
 
 class GOModel : public GOEventHandlerList {
 private:
   const GOConfig &m_config;
+
+  bool m_OrganModelModified;
+  GOModificationListener *m_ModificationListener;
 
 protected:
   ptr_vector<GOWindchest> m_windchests;
@@ -50,6 +54,19 @@ public:
   ~GOModel();
 
   const GOConfig &GetConfig() const { return m_config; }
+
+  bool IsOrganModelModified() const { return m_OrganModelModified; }
+  void SetOrganModelModified(bool modified);
+  void SetOrganModelModified() { SetOrganModelModified(true); }
+  void ResetOrganModelModified() { SetOrganModelModified(false); }
+
+  GOModificationListener *GetModificationListener() const {
+    return m_ModificationListener;
+  }
+
+  void SetModificationListener(GOModificationListener *listener) {
+    m_ModificationListener = listener;
+  }
 
   void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();

@@ -947,7 +947,7 @@ void GOOrganDialog::OnOK(wxCommandEvent &event) {
   }
   m_OrganController->SetIgnorePitch(m_IgnorePitch->GetValue());
   m_OrganController->SetTemperament(m_OrganController->GetTemperament());
-  m_OrganController->Modified();
+  m_OrganController->SetOrganModified();
   Destroy();
 }
 

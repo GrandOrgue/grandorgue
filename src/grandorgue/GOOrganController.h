@@ -20,6 +20,7 @@
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
 #include "model/GOModel.h"
+#include "model/GOModificationListener.h"
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOBitmapCache.h"
@@ -54,7 +55,8 @@ typedef struct _GOHashType GOHashType;
 class GOOrganController : public GOEventDistributor,
                           private GOPipeUpdateCallback,
                           public GOTimer,
-                          public GOModel {
+                          public GOModel,
+                          public GOModificationListener {
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
 private:
@@ -79,6 +81,7 @@ private:
   unsigned m_releaseTail = 0;
 
   bool m_b_customized;
+  bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
   bool m_DivisionalsStoreIntermanualCouplers;
   bool m_DivisionalsStoreIntramanualCouplers;
   bool m_DivisionalsStoreTremulants;
@@ -114,6 +117,12 @@ private:
   GOLabelControl m_TemperamentLabel;
   GOMainWindowData m_MainWindowData;
 
+  // if modified changes m_IsOrganModified then make a side effect
+  void SetOrganModified(bool modified);
+  // Called when the IsModelModified changed
+  // if modified then sets m_IsOrganModified
+  void OnIsModifiedChanged(bool modified);
+
   void ReadOrganFile(GOConfigReader &cfg);
   GOHashType GenerateCacheHash();
   wxString GenerateSettingFileName();
@@ -133,6 +142,15 @@ private:
 
 public:
   GOOrganController(GODocument *doc, GOConfig &settings);
+  ~GOOrganController();
+
+  // Returns organ modification flag
+  bool IsOrganModified() const { return m_OrganModified; }
+  // Sets the organ modification flag
+  void SetOrganModified() { SetOrganModified(true); }
+  // Clears organ the modification flag
+  void ResetOrganModified();
+
   wxString Load(
     GOProgressDialog *dlg,
     const GOOrgan &organ,
@@ -145,7 +163,6 @@ public:
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
   void DeleteCache();
   void DeleteSettings();
-  ;
   void Abort();
   void PreparePlayback(
     GOSoundEngine *engine, GOMidi *midi, GOSoundRecorder *recorder);
@@ -154,9 +171,7 @@ public:
   void Reset();
   void ProcessMidi(const GOMidiEvent &event);
   void AllNotesOff();
-  void Modified();
   GODocument *GetDocument();
-  ~GOOrganController(void);
 
   /* Access to internal ODF objects */
   GOSetter *GetSetter();

@@ -35,7 +35,6 @@ private:
   GOOrganController *m_OrganController;
 
   GOMidiListener m_listener;
-  bool m_modified;
 
   void OnMidiEvent(const GOMidiEvent &event);
 
@@ -46,8 +45,7 @@ public:
   GODocument(GOResizable *pMainWindow, GOSound *sound);
   ~GODocument();
 
-  bool IsModified();
-  void Modify(bool modified);
+  bool IsModified() const;
 
   void ShowPanel(unsigned id);
   void ShowOrganDialog();

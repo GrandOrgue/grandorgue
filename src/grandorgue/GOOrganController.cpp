@@ -92,6 +92,7 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_volume(0),
     m_IgnorePitch(false),
     m_b_customized(false),
+    m_OrganModified(false),
     m_DivisionalsStoreIntermanualCouplers(false),
     m_DivisionalsStoreIntramanualCouplers(false),
     m_DivisionalsStoreTremulants(false),
@@ -121,7 +122,38 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_PitchLabel(this),
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {
+  GOModel::SetModificationListener(this);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
+}
+
+GOOrganController::~GOOrganController() {
+  CloseArchives();
+  GOEventHandlerList::Cleanup();
+  // Just to be sure, that the sound providers are freed before the pool
+  m_manuals.clear();
+  m_tremulants.clear();
+  m_ranks.clear();
+  GOModel::SetModificationListener(nullptr);
+}
+
+void GOOrganController::SetOrganModified(bool modified) {
+  if (modified != m_OrganModified) {
+    m_OrganModified = modified;
+    m_setter->UpdateModified(modified);
+  }
+}
+
+void GOOrganController::OnIsModifiedChanged(bool modified) {
+  if (modified) // If the organ model modified then the organ is also modified
+    SetOrganModified(true);
+  // else nothing because the organ may be modified without the model
+}
+
+void GOOrganController::ResetOrganModified() {
+  // if the whole organ mecomes not modified therefore the model becames
+  // not modified
+  ResetOrganModelModified();
+  SetOrganModified(false);
 }
 
 bool GOOrganController::IsCacheable() { return m_Cacheable; }
@@ -710,15 +742,6 @@ void GOOrganController::DeleteCache() {
     wxRemoveFile(m_CacheFilename);
 }
 
-GOOrganController::~GOOrganController(void) {
-  CloseArchives();
-  Cleanup();
-  // Just to be sure, that the sound providers are freed before the pool
-  m_manuals.clear();
-  m_tremulants.clear();
-  m_ranks.clear();
-}
-
 void GOOrganController::CloseArchives() {
   for (unsigned i = 0; i < m_archives.size(); i++)
     m_archives[i]->Close();
@@ -729,8 +752,7 @@ void GOOrganController::DeleteSettings() { wxRemoveFile(m_SettingFilename); }
 bool GOOrganController::Save() {
   if (!Export(m_SettingFilename))
     return false;
-  m_doc->Modify(false);
-  m_setter->UpdateModified(false);
+  ResetOrganModified();
   return true;
 }
 
@@ -814,7 +836,7 @@ bool GOOrganController::GetIgnorePitch() { return m_IgnorePitch; }
 
 void GOOrganController::SetReleaseTail(unsigned releaseTail) {
   m_releaseTail = releaseTail;
-  Modified();
+  SetOrganModified();
 }
 
 bool GOOrganController::DivisionalsStoreIntermanualCouplers() {
@@ -1105,11 +1127,6 @@ wxString GOOrganController::GetTemperament() { return m_Temperament; }
 void GOOrganController::AllNotesOff() {
   for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
     GetManual(k)->AllNotesOff();
-}
-
-void GOOrganController::Modified() {
-  m_doc->Modify(true);
-  m_setter->UpdateModified(true);
 }
 
 int GOOrganController::GetRecorderElementID(wxString name) {

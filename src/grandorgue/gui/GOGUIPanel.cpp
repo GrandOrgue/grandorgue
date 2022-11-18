@@ -851,7 +851,7 @@ void GOGUIPanel::Save(GOConfigWriter &cfg) {
     m_group, wxT("WindowHeight"), std::min(windowLimit, size.GetHeight()));
 }
 
-void GOGUIPanel::Modified() { m_OrganController->Modified(); }
+void GOGUIPanel::Modified() { m_OrganController->SetOrganModified(); }
 
 void GOGUIPanel::HandleKey(int key) {
   switch (key) {
