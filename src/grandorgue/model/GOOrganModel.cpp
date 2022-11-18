@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOModel.h"
+#include "GOOrganModel.h"
 
 #include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigReader.h"

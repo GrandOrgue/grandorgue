@@ -19,8 +19,8 @@
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
-#include "model/GOModel.h"
 #include "model/GOModificationListener.h"
+#include "model/GOOrganModel.h"
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOBitmapCache.h"
