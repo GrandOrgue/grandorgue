@@ -150,7 +150,7 @@ void GOOrganController::OnIsModifiedChanged(bool modified) {
 }
 
 void GOOrganController::ResetOrganModified() {
-  // if the whole organ mecomes not modified therefore the model becames
+  // if the whole organ becomes not modified then the model also becomes
   // not modified
   ResetOrganModelModified();
   SetOrganModified(false);
@@ -1038,7 +1038,7 @@ void GOOrganController::PreparePlayback(
   m_MidiSamplesetMatch.clear();
   GOEventDistributor::PreparePlayback();
 
-  m_setter->UpdateModified(m_doc->IsModified());
+  m_setter->UpdateModified(m_OrganModified);
 
   GOEventDistributor::StartPlayback();
   GOEventDistributor::PrepareRecording();

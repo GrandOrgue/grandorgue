@@ -148,7 +148,7 @@ public:
   bool IsOrganModified() const { return m_OrganModified; }
   // Sets the organ modification flag
   void SetOrganModified() { SetOrganModified(true); }
-  // Clears organ the modification flag
+  // Clears the organ modification flag
   void ResetOrganModified();
 
   wxString Load(
