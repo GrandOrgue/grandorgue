@@ -11,9 +11,9 @@
 
 GOPipeConfigTreeNode::GOPipeConfigTreeNode(
   GOPipeConfigNode *parent,
-  GOOrganController *organController,
+  GOOrganModel *organModel,
   GOPipeUpdateCallback *callback)
-  : GOPipeConfigNode(parent, organController, this, NULL),
+  : GOPipeConfigNode(parent, organModel, this, NULL),
     m_Childs(),
     m_Callback(callback) {}
 
