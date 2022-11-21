@@ -7,13 +7,12 @@
 
 #include "GOPipeConfig.h"
 
-#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "model/GOModel.h"
 
-GOPipeConfig::GOPipeConfig(
-  GOOrganController *organController, GOPipeUpdateCallback *callback)
-  : m_OrganFile(organController),
+GOPipeConfig::GOPipeConfig(GOModel *organModel, GOPipeUpdateCallback *callback)
+  : m_OrganModel(organModel),
     m_Callback(callback),
     m_Group(),
     m_NamePrefix(),
@@ -178,7 +177,7 @@ const wxString &GOPipeConfig::GetAudioGroup() { return m_AudioGroup; }
 
 void GOPipeConfig::SetAudioGroup(const wxString &str) {
   m_AudioGroup = str;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateAudioGroup();
 }
 
@@ -188,7 +187,7 @@ float GOPipeConfig::GetDefaultAmplitude() { return m_DefaultAmplitude; }
 
 void GOPipeConfig::SetAmplitude(float amp) {
   m_Amplitude = amp;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateAmplitude();
 }
 
@@ -198,7 +197,7 @@ float GOPipeConfig::GetDefaultGain() { return m_DefaultGain; }
 
 void GOPipeConfig::SetGain(float gain) {
   m_Gain = gain;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateAmplitude();
 }
 
@@ -212,7 +211,7 @@ void GOPipeConfig::SetTuning(float cent) {
   if (cent > 1800)
     cent = 1800;
   m_Tuning = cent;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateTuning();
 }
 
@@ -222,47 +221,47 @@ unsigned GOPipeConfig::GetDefaultDelay() { return m_DefaultDelay; }
 
 void GOPipeConfig::SetDelay(unsigned delay) {
   m_Delay = delay;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
 }
 
 int GOPipeConfig::GetBitsPerSample() { return m_BitsPerSample; }
 
 void GOPipeConfig::SetBitsPerSample(int value) {
   m_BitsPerSample = value;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
 }
 
 int GOPipeConfig::GetCompress() { return m_Compress; }
 
 void GOPipeConfig::SetCompress(int value) {
   m_Compress = value;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
 }
 
 int GOPipeConfig::GetChannels() { return m_Channels; }
 
 void GOPipeConfig::SetChannels(int value) {
   m_Channels = value;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
 }
 
 int GOPipeConfig::GetLoopLoad() { return m_LoopLoad; }
 
 void GOPipeConfig::SetLoopLoad(int value) {
   m_LoopLoad = value;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
 }
 
 int GOPipeConfig::GetAttackLoad() { return m_AttackLoad; }
 
 void GOPipeConfig::SetAttackLoad(int value) {
   m_AttackLoad = value;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
 }
 
 int GOPipeConfig::GetReleaseLoad() { return m_ReleaseLoad; }
 
 void GOPipeConfig::SetReleaseLoad(int value) {
   m_ReleaseLoad = value;
-  m_OrganFile->Modified();
+  m_OrganModel->SetOrganModelModified();
 }

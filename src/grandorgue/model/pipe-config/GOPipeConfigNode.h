@@ -11,6 +11,7 @@
 #include "GOPipeConfig.h"
 #include "GOSaveableObject.h"
 
+class GOOrganController;
 class GOSampleStatistic;
 class GOStatisticCallback;
 
