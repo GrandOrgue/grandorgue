@@ -9,9 +9,10 @@
 
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
-#include "model/GOModel.h"
+#include "model/GOOrganModel.h"
 
-GOPipeConfig::GOPipeConfig(GOModel *organModel, GOPipeUpdateCallback *callback)
+GOPipeConfig::GOPipeConfig(
+  GOOrganModel *organModel, GOPipeUpdateCallback *callback)
   : m_OrganModel(organModel),
     m_Callback(callback),
     m_Group(),

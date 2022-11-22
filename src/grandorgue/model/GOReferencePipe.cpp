@@ -13,13 +13,13 @@
 #include "config/GOConfigReader.h"
 
 #include "GOManual.h"
-#include "GOModel.h"
 #include "GOOrganController.h"
+#include "GOOrganModel.h"
 #include "GORank.h"
 #include "GOStop.h"
 
 GOReferencePipe::GOReferencePipe(
-  GOModel *model, GORank *rank, unsigned midi_key_number)
+  GOOrganModel *model, GORank *rank, unsigned midi_key_number)
   : GOPipe(model, rank, midi_key_number),
     m_model(model),
     m_Reference(NULL),

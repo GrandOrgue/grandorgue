@@ -19,8 +19,8 @@
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
-#include "model/GOModel.h"
 #include "model/GOModificationListener.h"
+#include "model/GOOrganModel.h"
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOBitmapCache.h"
@@ -55,7 +55,7 @@ typedef struct _GOHashType GOHashType;
 class GOOrganController : public GOEventDistributor,
                           private GOPipeUpdateCallback,
                           public GOTimer,
-                          public GOModel,
+                          public GOOrganModel,
                           public GOModificationListener {
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 

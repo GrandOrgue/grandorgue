@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMODEL_H
-#define GOMODEL_H
+#ifndef GOORGANMODEL_H
+#define GOORGANMODEL_H
 
 #include "ptrvector.h"
 
@@ -26,7 +26,7 @@ class GOSwitch;
 class GOTremulant;
 class GOWindchest;
 
-class GOModel : public GOEventHandlerList {
+class GOOrganModel : public GOEventHandlerList {
 private:
   const GOConfig &m_config;
 
@@ -50,8 +50,8 @@ protected:
   void Load(GOConfigReader &cfg, GOOrganController *organController);
 
 public:
-  GOModel(const GOConfig &config);
-  ~GOModel();
+  GOOrganModel(const GOConfig &config);
+  ~GOOrganModel();
 
   const GOConfig &GetConfig() const { return m_config; }
 

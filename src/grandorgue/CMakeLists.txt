@@ -121,7 +121,7 @@ model/GODummyPipe.cpp
 model/GOEnclosure.cpp
 model/GOEventHandlerList.cpp
 model/GOManual.cpp
-model/GOModel.cpp
+model/GOOrganModel.cpp
 model/GOPipe.cpp
 model/GORank.cpp
 model/GOReferencePipe.cpp
