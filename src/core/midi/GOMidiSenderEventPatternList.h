@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDISENDERDATA_H
-#define GOMIDISENDERDATA_H
+#ifndef GOMIDISENDEREVENTPATTERNLIST_H
+#define GOMIDISENDEREVENTPATTERNLIST_H
 
 #include <vector>
 

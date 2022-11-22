@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDIRECEIVERDATA_H
-#define GOMIDIRECEIVERDATA_H
+#ifndef GOMIDIRECEIVEREVENTPATTERNLIST_H
+#define GOMIDIRECEIVEREVENTPATTERNLIST_H
 
 #include <vector>
 
