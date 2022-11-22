@@ -12,7 +12,7 @@
 int GOMidiReceiverEvent::GetNormalisedValue(int srcValue) {
   int value = srcValue - low_value;
 
-  if (high_value > low_value)
+  if (high_value != low_value)
     value = round(value * (float)127 / (high_value - low_value));
   if (value < 0)
     value = 0;
