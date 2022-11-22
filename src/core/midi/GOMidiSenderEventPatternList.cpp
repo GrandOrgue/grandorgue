@@ -7,25 +7,31 @@
 
 #include "GOMidiSenderEventPatternList.h"
 
-GOMidiSenderData::GOMidiSenderData(GOMidiSenderType type)
+GOMidiSenderEventPatternList::GOMidiSenderEventPatternList(
+  GOMidiSenderType type)
   : m_type(type), m_events() {}
 
-GOMidiSenderData::~GOMidiSenderData() {}
+GOMidiSenderEventPatternList::~GOMidiSenderEventPatternList() {}
 
-GOMidiSenderType GOMidiSenderData::GetType() const { return m_type; }
+GOMidiSenderType GOMidiSenderEventPatternList::GetType() const {
+  return m_type;
+}
 
-unsigned GOMidiSenderData::GetEventCount() const { return m_events.size(); }
+unsigned GOMidiSenderEventPatternList::GetEventCount() const {
+  return m_events.size();
+}
 
-GOMidiSenderEvent &GOMidiSenderData::GetEvent(unsigned index) {
+GOMidiSenderEventPattern &GOMidiSenderEventPatternList::GetEvent(
+  unsigned index) {
   return m_events[index];
 }
 
-unsigned GOMidiSenderData::AddNewEvent() {
-  GOMidiSenderEvent m = {0, MIDI_S_NONE, 1, 1, 0, 127};
+unsigned GOMidiSenderEventPatternList::AddNewEvent() {
+  GOMidiSenderEventPattern m = {0, MIDI_S_NONE, 1, 1, 0, 127};
   m_events.push_back(m);
   return m_events.size() - 1;
 }
 
-void GOMidiSenderData::DeleteEvent(unsigned index) {
+void GOMidiSenderEventPatternList::DeleteEvent(unsigned index) {
   m_events.erase(m_events.begin() + index);
 }

@@ -18,7 +18,7 @@ class GOMidiMap;
 class GOOrganController;
 struct IniFileEnumEntry;
 
-class GOMidiSender : public GOMidiSenderData {
+class GOMidiSender : public GOMidiSenderEventPatternList {
 private:
   static const struct IniFileEnumEntry m_MidiTypes[];
   GOOrganController *m_OrganController;
@@ -52,7 +52,7 @@ public:
   unsigned StartLimit(GOMidiSenderMessageType type);
   unsigned LengthLimit(GOMidiSenderMessageType type);
 
-  void Assign(const GOMidiSenderData &data);
+  void Assign(const GOMidiSenderEventPatternList &data);
 };
 
 #endif

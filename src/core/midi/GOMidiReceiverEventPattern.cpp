@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-int GOMidiReceiverEvent::GetNormalisedValue(int srcValue) {
+int GOMidiReceiverEventPattern::GetNormalisedValue(int srcValue) {
   int value = srcValue - low_value;
 
   if (high_value != low_value)

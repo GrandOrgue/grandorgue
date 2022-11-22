@@ -17,7 +17,7 @@
 
 GOMidiSender::GOMidiSender(
   GOOrganController *organController, GOMidiSenderType type)
-  : GOMidiSenderData(type),
+  : GOMidiSenderEventPatternList(type),
     m_OrganController(organController),
     m_ElementID(-1) {}
 
@@ -694,8 +694,8 @@ void GOMidiSender::SetName(const wxString &text) {
   }
 }
 
-void GOMidiSender::Assign(const GOMidiSenderData &data) {
-  *(GOMidiSenderData *)this = data;
+void GOMidiSender::Assign(const GOMidiSenderEventPatternList &data) {
+  *(GOMidiSenderEventPatternList *)this = data;
   if (m_OrganController)
     m_OrganController->SetOrganModified();
 }

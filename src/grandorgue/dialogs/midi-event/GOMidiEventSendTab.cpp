@@ -393,7 +393,7 @@ void GOMidiEventSendTab::LoadEvent() {
   else
     m_delete->Disable();
 
-  GOMidiSenderEvent &e = m_midi.GetEvent(m_current);
+  GOMidiSenderEventPattern &e = m_midi.GetEvent(m_current);
 
   m_eventtype->SetCurrentSelection(e.type);
 
@@ -415,7 +415,7 @@ void GOMidiEventSendTab::LoadEvent() {
 }
 
 void GOMidiEventSendTab::StoreEvent() {
-  GOMidiSenderEvent &e = m_midi.GetEvent(m_current);
+  GOMidiSenderEventPattern &e = m_midi.GetEvent(m_current);
   if (m_device->GetSelection() == 0)
     e.deviceId = 0;
   else
@@ -454,9 +454,9 @@ void GOMidiEventSendTab::OnCopyClick(wxCommandEvent &event) {
   LoadEvent();
 }
 
-GOMidiSenderEvent GOMidiEventSendTab::CopyEvent() {
-  GOMidiReceiverEvent recv = m_recv->GetCurrentEvent();
-  GOMidiSenderEvent e;
+GOMidiSenderEventPattern GOMidiEventSendTab::CopyEvent() {
+  GOMidiReceiverEventPattern recv = m_recv->GetCurrentEvent();
+  GOMidiSenderEventPattern e;
 
   // try to fill e.deviceId as the id of the bound output device of the input
   // device

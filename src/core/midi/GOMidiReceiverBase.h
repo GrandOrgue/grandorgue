@@ -16,7 +16,7 @@ class GOMidiEvent;
 class GOMidiMap;
 struct IniFileEnumEntry;
 
-class GOMidiReceiverBase : public GOMidiReceiverData {
+class GOMidiReceiverBase : public GOMidiReceiverEventPatternList {
 private:
   typedef struct {
     unsigned device;
@@ -63,7 +63,7 @@ public:
   unsigned LowerValueLimit(GOMidiReceiverMessageType type);
   unsigned UpperValueLimit(GOMidiReceiverMessageType type);
 
-  virtual void Assign(const GOMidiReceiverData &data);
+  virtual void Assign(const GOMidiReceiverEventPatternList &data);
 };
 
 #endif

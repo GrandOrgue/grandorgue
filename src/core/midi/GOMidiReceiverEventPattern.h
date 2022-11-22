@@ -10,7 +10,7 @@
 
 #include "GOMidiReceiverMessageType.h"
 
-struct GOMidiReceiverEvent {
+struct GOMidiReceiverEventPattern {
   unsigned deviceId;
   GOMidiReceiverMessageType type;
   int channel;

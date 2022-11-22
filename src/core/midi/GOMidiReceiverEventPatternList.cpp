@@ -7,25 +7,31 @@
 
 #include "GOMidiReceiverEventPatternList.h"
 
-GOMidiReceiverData::GOMidiReceiverData(GOMidiReceiverType type)
+GOMidiReceiverEventPatternList::GOMidiReceiverEventPatternList(
+  GOMidiReceiverType type)
   : m_type(type), m_events(0) {}
 
-GOMidiReceiverData::~GOMidiReceiverData() {}
+GOMidiReceiverEventPatternList::~GOMidiReceiverEventPatternList() {}
 
-GOMidiReceiverType GOMidiReceiverData::GetType() const { return m_type; }
+GOMidiReceiverType GOMidiReceiverEventPatternList::GetType() const {
+  return m_type;
+}
 
-unsigned GOMidiReceiverData::GetEventCount() const { return m_events.size(); }
+unsigned GOMidiReceiverEventPatternList::GetEventCount() const {
+  return m_events.size();
+}
 
-GOMidiReceiverEvent &GOMidiReceiverData::GetEvent(unsigned index) {
+GOMidiReceiverEventPattern &GOMidiReceiverEventPatternList::GetEvent(
+  unsigned index) {
   return m_events[index];
 }
 
-unsigned GOMidiReceiverData::AddNewEvent() {
-  GOMidiReceiverEvent m = {0, MIDI_M_NONE, -1, 0};
+unsigned GOMidiReceiverEventPatternList::AddNewEvent() {
+  GOMidiReceiverEventPattern m = {0, MIDI_M_NONE, -1, 0};
   m_events.push_back(m);
   return m_events.size() - 1;
 }
 
-void GOMidiReceiverData::DeleteEvent(unsigned index) {
+void GOMidiReceiverEventPatternList::DeleteEvent(unsigned index) {
   m_events.erase(m_events.begin() + index);
 }
