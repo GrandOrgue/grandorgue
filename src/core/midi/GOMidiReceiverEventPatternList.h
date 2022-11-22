@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "GOMidiReceiverEvent.h"
+#include "GOMidiReceiverEventPattern.h"
 #include "GOTime.h"
 
 typedef enum {

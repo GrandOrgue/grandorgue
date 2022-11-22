@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOMidiReceiverEvent.h"
+#include "GOMidiReceiverEventPattern.h"
 
 #include <math.h>
 

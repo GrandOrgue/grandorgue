@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOMidiReceiverData.h"
+#include "GOMidiReceiverEventPatternList.h"
 
 GOMidiReceiverData::GOMidiReceiverData(GOMidiReceiverType type)
   : m_type(type), m_events(0) {}

@@ -8,7 +8,7 @@
 #ifndef GOMIDIRECEIVERBASE_H
 #define GOMIDIRECEIVERBASE_H
 
-#include "GOMidiReceiverData.h"
+#include "GOMidiReceiverEventPatternList.h"
 
 class GOConfigReader;
 class GOConfigWriter;

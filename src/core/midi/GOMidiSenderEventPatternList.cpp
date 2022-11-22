@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOMidiSenderData.h"
+#include "GOMidiSenderEventPatternList.h"
 
 GOMidiSenderData::GOMidiSenderData(GOMidiSenderType type)
   : m_type(type), m_events() {}

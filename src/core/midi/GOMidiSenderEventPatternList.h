@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "GOMidiSenderEvent.h"
+#include "GOMidiSenderEventPattern.h"
 
 typedef enum {
   MIDI_SEND_BUTTON,
