@@ -27,8 +27,7 @@ GOMidiSenderEventPattern &GOMidiSenderEventPatternList::GetEvent(
 }
 
 unsigned GOMidiSenderEventPatternList::AddNewEvent() {
-  GOMidiSenderEventPattern m = {0, MIDI_S_NONE, 1, 1, 0, 127};
-  m_events.push_back(m);
+  m_events.emplace_back();
   return m_events.size() - 1;
 }
 

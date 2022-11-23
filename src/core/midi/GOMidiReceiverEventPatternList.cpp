@@ -27,8 +27,7 @@ GOMidiReceiverEventPattern &GOMidiReceiverEventPatternList::GetEvent(
 }
 
 unsigned GOMidiReceiverEventPatternList::AddNewEvent() {
-  GOMidiReceiverEventPattern m = {0, MIDI_M_NONE, -1, 0};
-  m_events.push_back(m);
+  m_events.emplace_back();
   return m_events.size() - 1;
 }
 

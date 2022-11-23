@@ -536,9 +536,7 @@ void GOMidiSender::SetKey(unsigned key, unsigned velocity) {
       e.SetMidiType(MIDI_NOTE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(key);
-      e.SetValue(
-        m_events[i].low_value
-        + (velocity * (m_events[i].high_value - m_events[i].low_value)) / 0x7f);
+      e.SetValue(m_events[i].ConvertIntValueToDst(velocity));
       m_OrganController->SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_NOTE_NO_VELOCITY) {
@@ -569,13 +567,7 @@ void GOMidiSender::SetValue(unsigned value) {
       e.SetMidiType(MIDI_CTRL_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
-      unsigned val = m_events[i].low_value
-        + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
-      if (val < 0)
-        val = 0;
-      if (val > 0x7f)
-        val = 0x7f;
-      e.SetValue(val);
+      e.SetValue(m_events[i].ConvertIntValueToDst(value));
       m_OrganController->SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_RPN) {
@@ -584,13 +576,7 @@ void GOMidiSender::SetValue(unsigned value) {
       e.SetMidiType(MIDI_RPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
-      unsigned val = m_events[i].low_value
-        + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
-      if (val < 0)
-        val = 0;
-      if (val > 0x7f)
-        val = 0x7f;
-      e.SetValue(val);
+      e.SetValue(m_events[i].ConvertIntValueToDst(value));
       m_OrganController->SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_NRPN) {
@@ -599,13 +585,7 @@ void GOMidiSender::SetValue(unsigned value) {
       e.SetMidiType(MIDI_NRPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
-      unsigned val = m_events[i].low_value
-        + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
-      if (val < 0)
-        val = 0;
-      if (val > 0x7f)
-        val = 0x7f;
-      e.SetValue(val);
+      e.SetValue(m_events[i].ConvertIntValueToDst(value));
       m_OrganController->SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_PGM_RANGE) {
@@ -613,13 +593,7 @@ void GOMidiSender::SetValue(unsigned value) {
       e.SetDevice(m_events[i].deviceId);
       e.SetMidiType(MIDI_PGM_CHANGE);
       e.SetChannel(m_events[i].channel);
-      unsigned val = m_events[i].low_value
-        + ((m_events[i].high_value - m_events[i].low_value) * value) / 0x7f;
-      if (val < 0)
-        val = 0;
-      if (val > 0x7f)
-        val = 0x7f;
-      e.SetKey(val);
+      e.SetKey(m_events[i].ConvertIntValueToDst(value));
       m_OrganController->SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_HW_LCD) {

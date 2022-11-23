@@ -8,26 +8,32 @@
 #ifndef GOMIDIRECEIVEREVENTPATTERN_H
 #define GOMIDIRECEIVEREVENTPATTERN_H
 
+#include "GOMidiEventPattern.h"
 #include "GOMidiReceiverMessageType.h"
 
-struct GOMidiReceiverEventPattern {
-  unsigned deviceId;
-  GOMidiReceiverMessageType type;
-  int channel;
-  int key;
+struct GOMidiReceiverEventPattern : public GOMidiEventPattern {
+  GOMidiReceiverMessageType type = MIDI_M_NONE;
   int low_key;
   int high_key;
-  int low_value;
-  int high_value;
   unsigned debounce_time;
 
+  GOMidiReceiverEventPattern()
+    : GOMidiEventPattern(0, -1, 0),
+      type(MIDI_M_NONE),
+      low_key(0),
+      high_key(0),
+      debounce_time(0) {}
+
   /**
-   * Convert a source midi value (from low_value to high_value) to a normalised
-   *   one (from 0 to 127)
+   * Convert a source midi value (from low_value to high_value) to an internal
+   *   one (from MIN_VALUE to MAX_VALUE)
    * @param srcValue - source midi value (from low_value to high_value)
-   * @return normalised midi value (from 0 to 127)
+   * @return normalised midi value (from MIN_VALUE to MAX_VALUE)
    */
-  int GetNormalisedValue(int srcValue);
+  int ConvertSrcValueToInt(int srcValue) const {
+    return convertValueBetweenRanges(
+      srcValue, low_value, high_value, MIN_VALUE, MAX_VALUE);
+  }
 };
 
 #endif /* GOMIDIRECEIVEREVENTPATTERN_H */
