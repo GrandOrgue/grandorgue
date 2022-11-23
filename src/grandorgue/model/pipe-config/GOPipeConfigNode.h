@@ -11,13 +11,13 @@
 #include "GOPipeConfig.h"
 #include "GOSaveableObject.h"
 
-class GOOrganController;
+class GOOrganModel;
 class GOSampleStatistic;
 class GOStatisticCallback;
 
 class GOPipeConfigNode : private GOSaveableObject {
 private:
-  GOOrganController *m_OrganController;
+  GOOrganModel *m_OrganModel;
   GOPipeConfigNode *m_parent;
   GOPipeConfig m_PipeConfig;
   GOStatisticCallback *m_StatisticCallback;
@@ -28,7 +28,7 @@ private:
 public:
   GOPipeConfigNode(
     GOPipeConfigNode *parent,
-    GOOrganController *organController,
+    GOOrganModel *organModel,
     GOPipeUpdateCallback *callback,
     GOStatisticCallback *statistic);
   virtual ~GOPipeConfigNode();
