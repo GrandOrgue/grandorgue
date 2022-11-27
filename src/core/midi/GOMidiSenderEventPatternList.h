@@ -5,12 +5,12 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDISENDERDATA_H
-#define GOMIDISENDERDATA_H
+#ifndef GOMIDISENDEREVENTPATTERNLIST_H
+#define GOMIDISENDEREVENTPATTERNLIST_H
 
 #include <vector>
 
-#include "GOMidiSenderEvent.h"
+#include "GOMidiSenderEventPattern.h"
 
 typedef enum {
   MIDI_SEND_BUTTON,
@@ -19,19 +19,19 @@ typedef enum {
   MIDI_SEND_MANUAL,
 } GOMidiSenderType;
 
-class GOMidiSenderData {
+class GOMidiSenderEventPatternList {
 protected:
   GOMidiSenderType m_type;
-  std::vector<GOMidiSenderEvent> m_events;
+  std::vector<GOMidiSenderEventPattern> m_events;
 
 public:
-  GOMidiSenderData(GOMidiSenderType type);
-  virtual ~GOMidiSenderData();
+  GOMidiSenderEventPatternList(GOMidiSenderType type);
+  virtual ~GOMidiSenderEventPatternList();
 
   GOMidiSenderType GetType() const;
 
   unsigned GetEventCount() const;
-  GOMidiSenderEvent &GetEvent(unsigned index);
+  GOMidiSenderEventPattern &GetEvent(unsigned index);
   unsigned AddNewEvent();
   void DeleteEvent(unsigned index);
 };

@@ -34,7 +34,7 @@ private:
   GOMidiMap &m_MidiMap;
 
   GOMidiReceiverBase *m_original;
-  GOMidiReceiverData m_midi;
+  GOMidiReceiverEventPatternList m_midi;
   GOMidiListener m_listener;
   GOChoice<GOMidiReceiverMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
@@ -100,7 +100,7 @@ public:
   void RegisterMIDIListener(GOMidi *midi);
 
   virtual bool TransferDataFromWindow() override;
-  GOMidiReceiverEvent GetCurrentEvent();
+  GOMidiReceiverEventPattern GetCurrentEvent();
 
   DECLARE_EVENT_TABLE()
 };

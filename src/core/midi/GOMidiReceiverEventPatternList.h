@@ -5,12 +5,12 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDIRECEIVERDATA_H
-#define GOMIDIRECEIVERDATA_H
+#ifndef GOMIDIRECEIVEREVENTPATTERNLIST_H
+#define GOMIDIRECEIVEREVENTPATTERNLIST_H
 
 #include <vector>
 
-#include "GOMidiReceiverEvent.h"
+#include "GOMidiReceiverEventPattern.h"
 #include "GOTime.h"
 
 typedef enum {
@@ -30,19 +30,19 @@ typedef enum {
   MIDI_MATCH_RESET,
 } GOMidiMatchType;
 
-class GOMidiReceiverData {
+class GOMidiReceiverEventPatternList {
 protected:
   GOMidiReceiverType m_type;
-  std::vector<GOMidiReceiverEvent> m_events;
+  std::vector<GOMidiReceiverEventPattern> m_events;
 
 public:
-  GOMidiReceiverData(GOMidiReceiverType type);
-  virtual ~GOMidiReceiverData();
+  GOMidiReceiverEventPatternList(GOMidiReceiverType type);
+  virtual ~GOMidiReceiverEventPatternList();
 
   GOMidiReceiverType GetType() const;
 
   unsigned GetEventCount() const;
-  GOMidiReceiverEvent &GetEvent(unsigned index);
+  GOMidiReceiverEventPattern &GetEvent(unsigned index);
   unsigned AddNewEvent();
   void DeleteEvent(unsigned index);
 };

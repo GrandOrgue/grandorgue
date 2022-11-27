@@ -5,12 +5,12 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDISENDEREVENT_H
-#define GOMIDISENDEREVENT_H
+#ifndef GOMIDISENDEREVENTPATTERN_H
+#define GOMIDISENDEREVENTPATTERN_H
 
 #include "GOMidiSenderMessageType.h"
 
-struct GOMidiSenderEvent {
+struct GOMidiSenderEventPattern {
   unsigned deviceId;
   GOMidiSenderMessageType type;
   unsigned channel;
@@ -21,4 +21,4 @@ struct GOMidiSenderEvent {
   unsigned length;
 };
 
-#endif /* GOMIDISENDEREVENT_H */
+#endif /* GOMIDISENDEREVENTPATTERN_H */

@@ -5,12 +5,12 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDIRECEIVEREVENT_H
-#define GOMIDIRECEIVEREVENT_H
+#ifndef GOMIDIRECEIVEREVENTPATTERN_H
+#define GOMIDIRECEIVEREVENTPATTERN_H
 
 #include "GOMidiReceiverMessageType.h"
 
-struct GOMidiReceiverEvent {
+struct GOMidiReceiverEventPattern {
   unsigned deviceId;
   GOMidiReceiverMessageType type;
   int channel;
@@ -30,4 +30,4 @@ struct GOMidiReceiverEvent {
   int GetNormalisedValue(int srcValue);
 };
 
-#endif /* GOMIDIRECEIVEREVENT_H */
+#endif /* GOMIDIRECEIVEREVENTPATTERN_H */

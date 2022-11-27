@@ -14,7 +14,10 @@
 #include "config/GOConfigWriter.h"
 
 GOMidiReceiverBase::GOMidiReceiverBase(GOMidiReceiverType type)
-  : GOMidiReceiverData(type), m_ElementID(-1), m_last(), m_Internal() {}
+  : GOMidiReceiverEventPatternList(type),
+    m_ElementID(-1),
+    m_last(),
+    m_Internal() {}
 
 void GOMidiReceiverBase::SetElementID(int id) { m_ElementID = id; }
 
@@ -900,8 +903,8 @@ GOMidiMatchType GOMidiReceiverBase::Match(
   return MIDI_MATCH_NONE;
 }
 
-void GOMidiReceiverBase::Assign(const GOMidiReceiverData &data) {
-  *(GOMidiReceiverData *)this = data;
+void GOMidiReceiverBase::Assign(const GOMidiReceiverEventPatternList &data) {
+  *(GOMidiReceiverEventPatternList *)this = data;
 }
 
 void GOMidiReceiverBase::PreparePlayback() { m_Internal.resize(0); }

@@ -28,7 +28,7 @@ public:
 
   void SetIndex(int index);
 
-  void Assign(const GOMidiReceiverData &data);
+  void Assign(const GOMidiReceiverEventPatternList &data);
 };
 
 #endif
