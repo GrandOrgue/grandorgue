@@ -77,8 +77,10 @@ void GOEnclosure::Set(int n) {
     n = 0;
   if (n > 127)
     n = 127;
-  m_MIDIValue = n;
-  m_sender.SetValue(m_MIDIValue);
+  if (n != m_MIDIValue) {
+    m_MIDIValue = n;
+    m_sender.SetValue(m_MIDIValue);
+  }
   m_OrganController->UpdateVolume();
   m_OrganController->ControlChanged(this);
 }
