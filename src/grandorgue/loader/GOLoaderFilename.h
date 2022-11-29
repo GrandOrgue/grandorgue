@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOFILENAME_H
-#define GOFILENAME_H
+#ifndef GOLOADERFILENAME_H
+#define GOLOADERFILENAME_H
 
 #include <wx/string.h>
 
@@ -17,7 +17,7 @@ class GOFile;
 class GOHash;
 class GOOrganController;
 
-class GOFilename {
+class GOLoaderFilename {
 private:
   wxString m_Name;
   wxString m_Path;
@@ -28,7 +28,7 @@ private:
   void SetPath(const wxString &base, const wxString &path);
 
 public:
-  GOFilename();
+  GOLoaderFilename();
 
   void Assign(const wxString &name, GOOrganController *organController);
   void AssignResource(const wxString &name, GOOrganController *organController);

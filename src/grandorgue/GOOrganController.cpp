@@ -203,7 +203,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     else
       m_InfoFilename = wxEmptyString;
   } else {
-    GOFilename fname;
+    GOLoaderFilename fname;
     fname.Assign(info_filename, this);
     std::unique_ptr<GOFile> file = fname.Open();
     fn = info_filename;
@@ -368,7 +368,7 @@ bool GOOrganController::LoadArchive(
 
 wxString GOOrganController::Load(
   GOProgressDialog *dlg, const GOOrgan &organ, const wxString &file2) {
-  GOFilename odf_name;
+  GOLoaderFilename odf_name;
 
   if (organ.GetArchiveID() != wxEmptyString) {
     dlg->Setup(1, _("Loading sample set"), _("Parsing organ packages"));

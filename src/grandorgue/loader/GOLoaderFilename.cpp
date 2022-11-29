@@ -17,16 +17,16 @@
 #include "archive/GOArchive.h"
 #include "config/GOConfig.h"
 
-GOFilename::GOFilename()
+GOLoaderFilename::GOLoaderFilename()
   : m_Name(),
     m_Path(),
     m_Archiv(NULL),
     m_ToHashSizeTime(true),
     m_ToHashPath(true) {}
 
-const wxString &GOFilename::GetTitle() const { return m_Name; }
+const wxString &GOLoaderFilename::GetTitle() const { return m_Name; }
 
-void GOFilename::Hash(GOHash &hash) const {
+void GOLoaderFilename::Hash(GOHash &hash) const {
   if (m_Archiv) {
     hash.Update(m_Archiv->GetArchiveID());
     hash.Update(m_Name);
@@ -42,7 +42,7 @@ void GOFilename::Hash(GOHash &hash) const {
   hash.Update(size);
 }
 
-std::unique_ptr<GOFile> GOFilename::Open() const {
+std::unique_ptr<GOFile> GOLoaderFilename::Open() const {
   if (m_Archiv)
     return (std::unique_ptr<GOFile>)m_Archiv->OpenFile(m_Name);
 
@@ -52,7 +52,7 @@ std::unique_ptr<GOFile> GOFilename::Open() const {
     return (std::unique_ptr<GOFile>)new GOInvalidFile(m_Name);
 }
 
-void GOFilename::SetPath(const wxString &base, const wxString &file) {
+void GOLoaderFilename::SetPath(const wxString &base, const wxString &file) {
   wxString temp = file;
   temp.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
   temp = base + wxFileName::GetPathSeparator() + temp;
@@ -71,7 +71,7 @@ void GOFilename::SetPath(const wxString &base, const wxString &file) {
   m_Path = temp;
 }
 
-void GOFilename::Assign(
+void GOLoaderFilename::Assign(
   const wxString &name, GOOrganController *organController) {
   m_Name = name;
   if (
@@ -92,7 +92,7 @@ void GOFilename::Assign(
   SetPath(organController->GetODFPath(), name);
 }
 
-void GOFilename::AssignResource(
+void GOLoaderFilename::AssignResource(
   const wxString &name, GOOrganController *organController) {
   m_Name = name;
   m_ToHashSizeTime = false;
@@ -100,7 +100,7 @@ void GOFilename::AssignResource(
   SetPath(organController->GetSettings().GetResourceDirectory(), name);
 }
 
-void GOFilename::AssignAbsolute(const wxString &path) {
+void GOLoaderFilename::AssignAbsolute(const wxString &path) {
   m_Name = path;
   m_Path = path;
   m_ToHashSizeTime = false;
