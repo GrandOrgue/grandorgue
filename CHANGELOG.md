@@ -1,3 +1,4 @@
+- Fixed sending incorrect midi values from an enclosure https://github.com/GrandOrgue/grandorgue/issues/1267
 - Fixed not sending midi events from pushbuttons, including GC https://github.com/GrandOrgue/grandorgue/issues/1220
 - Fixed sending a midi event from an enclosure when it's value is not changed https://github.com/GrandOrgue/grandorgue/issues/1206
 - Fixed processing enclosures with high value is less than low value https://github.com/GrandOrgue/grandorgue/issues/1266

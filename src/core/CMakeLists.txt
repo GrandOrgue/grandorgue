@@ -28,8 +28,8 @@ files/GOStdFileName.cpp
 midi/GOMidiEvent.cpp
 midi/GOMidiFileReader.cpp
 midi/GOMidiMap.cpp
+midi/GOMidiEventPattern.cpp
 midi/GOMidiReceiverBase.cpp
-midi/GOMidiReceiverEventPattern.cpp
 midi/GOMidiReceiverEventPatternList.cpp
 midi/GOMidiSenderEventPatternList.cpp
 midi/GOMidiWXEvent.cpp
