@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOFilename.h"
+#include "GOLoaderFilename.h"
 
 #include <wx/filename.h>
 #include <wx/log.h>

@@ -12,7 +12,8 @@
 
 #include <vector>
 
-#include "GOFilename.h"
+#include "loader/GOLoaderFilename.h"
+
 #include "GOSoundProvider.h"
 
 class GOWave;

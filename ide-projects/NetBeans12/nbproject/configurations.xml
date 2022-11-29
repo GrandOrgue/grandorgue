@@ -390,6 +390,7 @@
           </df>
           <df name="loader">
             <in>GOLoadThread.cpp</in>
+            <in>GOLoaderFilename.cpp</in>
           </df>
           <df name="midi">
             <df name="ports">
@@ -10387,6 +10388,13 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/loader/GOLoadThread.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="7">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/loader/GOLoaderFilename.cpp"
             ex="false"
             tool="1"
             flavor2="8">
