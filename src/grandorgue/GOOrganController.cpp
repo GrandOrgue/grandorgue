@@ -16,7 +16,6 @@
 
 #include "archive/GOArchive.h"
 #include "archive/GOArchiveFile.h"
-#include "archive/GOArchiveManager.h"
 #include "combinations/GODivisionalSetter.h"
 #include "combinations/GOSetter.h"
 #include "combinations/control/GOGeneralButtonControl.h"
@@ -80,7 +79,6 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_odf(),
     m_ArchiveID(),
     m_hash(),
-    m_path(),
     m_CacheFilename(),
     m_SettingFilename(),
     m_ODFHash(),
@@ -108,7 +106,6 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_panels(),
     m_panelcreators(),
     m_elementcreators(),
-    m_archives(),
     m_UsedSections(),
     m_soundengine(0),
     m_midi(0),
@@ -127,7 +124,7 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
 }
 
 GOOrganController::~GOOrganController() {
-  CloseArchives();
+  m_FileStore.CloseArchives();
   GOEventHandlerList::Cleanup();
   // Just to be sure, that the sound providers are freed before the pool
   m_manuals.clear();
@@ -198,19 +195,20 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     /* Resolve organ file path */
     fn = GetODFFilename();
     fn.SetExt(wxT("html"));
-    if (fn.FileExists() && !useArchives())
+    if (fn.FileExists() && !m_FileStore.AreArchivesUsed())
       m_InfoFilename = fn.GetFullPath();
     else
       m_InfoFilename = wxEmptyString;
   } else {
     GOLoaderFilename fname;
-    fname.Assign(info_filename, this);
+
+    fname.Assign(m_FileStore, info_filename);
     std::unique_ptr<GOFile> file = fname.Open();
     fn = info_filename;
     if (
       file->isValid()
       && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm"))) {
-      if (fn.FileExists() && !useArchives())
+      if (fn.FileExists() && !m_FileStore.AreArchivesUsed())
         m_InfoFilename = fn.GetFullPath();
       else
         m_InfoFilename = wxEmptyString;
@@ -345,60 +343,27 @@ wxString GOOrganController::GenerateCacheFileName() {
     + GOStdFileName::composeCacheFileName(GetOrganHash(), m_config.Preset());
 }
 
-bool GOOrganController::LoadArchive(
-  wxString ID, wxString &name, const wxString &parentID) {
-  GOArchiveManager manager(m_config, m_config.OrganCachePath());
-  GOArchive *archive = manager.LoadArchive(ID);
-  if (archive) {
-    m_archives.push_back(archive);
-    return true;
-  }
-  name = wxEmptyString;
-  const GOArchiveFile *a = m_config.GetArchiveByID(ID);
-  if (a)
-    name = a->GetName();
-  else if (parentID != wxEmptyString) {
-    a = m_config.GetArchiveByID(parentID);
-    for (unsigned i = 0; i < a->GetDependencies().size(); i++)
-      if (a->GetDependencies()[i] == ID)
-        name = a->GetDependencyTitles()[i];
-  }
-  return false;
-}
-
 wxString GOOrganController::Load(
   GOProgressDialog *dlg, const GOOrgan &organ, const wxString &file2) {
   GOLoaderFilename odf_name;
 
-  if (organ.GetArchiveID() != wxEmptyString) {
+  m_ArchiveID = organ.GetArchiveID();
+  if (m_ArchiveID != wxEmptyString) {
     dlg->Setup(1, _("Loading sample set"), _("Parsing organ packages"));
-    wxString name;
-    m_archives.clear();
 
-    if (!LoadArchive(organ.GetArchiveID(), name))
-      return wxString::Format(
-        _("Failed to open organ package '%s' (%s)"),
-        name.c_str(),
-        organ.GetArchiveID().c_str());
-    GOArchive *main = m_archives[0];
-    m_ArchiveID = main->GetArchiveID();
-    m_ArchivePath = main->GetPath();
+    wxString errMsg;
 
-    for (unsigned i = 0; i < main->GetDependencies().size(); i++) {
-      if (!LoadArchive(main->GetDependencies()[i], name))
-        return wxString::Format(
-          _("Failed to open organ package '%s' (%s)"),
-          name.c_str(),
-          organ.GetArchiveID().c_str());
-    }
+    if (!m_FileStore.LoadArchives(
+          m_config, m_config.OrganCachePath(), organ.GetArchiveID(), errMsg))
+      return errMsg;
+
     m_odf = organ.GetODFPath();
-    m_path = "";
-    odf_name.Assign(m_odf, this);
+    odf_name.Assign(m_FileStore, m_odf);
   } else {
     wxString file = organ.GetODFPath();
     m_odf = GONormalizePath(file);
-    m_path = GOGetPath(m_odf);
     odf_name.AssignAbsolute(m_odf);
+    m_FileStore.SetDirectory(GOGetPath(m_odf));
   }
   m_hash = organ.GetOrganHash();
   dlg->Setup(
@@ -430,13 +395,14 @@ wxString GOOrganController::Load(
       m_b_customized = true;
     } else {
       wxString bundledSettingsFile = m_odf.BeforeLast('.') + wxT(".cmb");
-      if (!useArchives()) {
+      if (!m_FileStore.AreArchivesUsed()) {
         if (wxFileExists(bundledSettingsFile)) {
           setting_file = bundledSettingsFile;
           m_b_customized = true;
         }
       } else {
-        if (findArchive(m_odf)->containsFile(bundledSettingsFile)) {
+        if (m_FileStore.FindArchiveContaining(m_odf)->containsFile(
+              bundledSettingsFile)) {
           setting_file = bundledSettingsFile;
           m_b_customized = true;
           can_read_cmb_directly = false;
@@ -453,7 +419,8 @@ wxString GOOrganController::Load(
         return error;
       }
     } else {
-      if (!extra_odf_config.Read(findArchive(m_odf)->OpenFile(setting_file))) {
+      if (!extra_odf_config.Read(
+            m_FileStore.FindArchiveContaining(m_odf)->OpenFile(setting_file))) {
         error.Printf(_("Unable to read '%s'"), setting_file.c_str());
         return error;
       }
@@ -571,7 +538,7 @@ wxString GOOrganController::Load(
                 _("Load error"),
                 wxOK | wxICON_ERROR,
                 NULL);
-              CloseArchives();
+              m_FileStore.CloseArchives();
               return wxEmptyString;
             }
           }
@@ -616,7 +583,7 @@ wxString GOOrganController::Load(
             _("Load error"),
             wxOK | wxICON_ERROR,
             NULL);
-          CloseArchives();
+          m_FileStore.CloseArchives();
           return wxEmptyString;
         }
       }
@@ -637,7 +604,7 @@ wxString GOOrganController::Load(
       _("Load error"),
       wxOK | wxICON_ERROR,
       NULL);
-    CloseArchives();
+    m_FileStore.CloseArchives();
     return wxEmptyString;
   } catch (wxString error_) {
     dummy.free();
@@ -645,8 +612,7 @@ wxString GOOrganController::Load(
   }
   dummy.free();
 
-  CloseArchives();
-
+  m_FileStore.CloseArchives();
   return wxEmptyString;
 }
 
@@ -740,11 +706,6 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
 void GOOrganController::DeleteCache() {
   if (CachePresent())
     wxRemoveFile(m_CacheFilename);
-}
-
-void GOOrganController::CloseArchives() {
-  for (unsigned i = 0; i < m_archives.size(); i++)
-    m_archives[i]->Close();
 }
 
 void GOOrganController::DeleteSettings() { wxRemoveFile(m_SettingFilename); }
@@ -893,16 +854,6 @@ const wxString &GOOrganController::GetRecordingDetails() {
 
 const wxString &GOOrganController::GetInfoFilename() { return m_InfoFilename; }
 
-bool GOOrganController::useArchives() { return m_archives.size() > 0; }
-
-GOArchive *GOOrganController::findArchive(const wxString &name) {
-  for (unsigned i = 0; i < m_archives.size(); i++) {
-    if (m_archives[i]->containsFile(name))
-      return m_archives[i];
-  }
-  return NULL;
-}
-
 GOPipeConfigNode &GOOrganController::GetPipeConfig() { return m_PipeConfig; }
 
 void GOOrganController::UpdateAmplitude() {}
@@ -917,8 +868,6 @@ void GOOrganController::UpdateAudioGroup() {}
 bool GOOrganController::IsCustomized() { return m_b_customized; }
 
 const wxString GOOrganController::GetODFFilename() { return m_odf; }
-
-const wxString GOOrganController::GetODFPath() { return m_path.c_str(); }
 
 const wxString GOOrganController::GetOrganPathInfo() {
   if (m_ArchiveID == wxEmptyString)
@@ -1152,5 +1101,3 @@ void GOOrganController::MarkSectionInUse(wxString name) {
     throw wxString::Format(_("Section %s already in use"), name.c_str());
   m_UsedSections[name] = true;
 }
-
-void GOOrganController::SetODFPath(wxString path) { m_path = path; }

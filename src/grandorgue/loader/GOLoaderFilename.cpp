@@ -10,12 +10,13 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-#include "GOHash.h"
-#include "GOInvalidFile.h"
-#include "GOOrganController.h"
-#include "GOStandardFile.h"
 #include "archive/GOArchive.h"
 #include "config/GOConfig.h"
+#include "loader/GOFileStore.h"
+
+#include "GOHash.h"
+#include "GOInvalidFile.h"
+#include "GOStandardFile.h"
 
 GOLoaderFilename::GOLoaderFilename()
   : m_Name(),
@@ -72,25 +73,25 @@ void GOLoaderFilename::SetPath(const wxString &base, const wxString &file) {
 }
 
 void GOLoaderFilename::Assign(
-  const wxString &name, GOOrganController *organController) {
+  const GOFileStore &fileStore, const wxString &name) {
   m_Name = name;
-  if (organController->useArchives()) {
+  if (fileStore.AreArchivesUsed()) {
     m_Path = wxEmptyString;
-    m_Archiv = organController->findArchive(name);
+    m_Archiv = fileStore.FindArchiveContaining(name);
     if (!m_Archiv) {
       wxLogError(_("File '%s' does not exists"), name.c_str());
     }
     return;
   }
-  SetPath(organController->GetODFPath(), name);
+  SetPath(fileStore.GetDirectory(), name);
 }
 
 void GOLoaderFilename::AssignResource(
-  const wxString &name, GOOrganController *organController) {
+  const wxString &resourceDirectory, const wxString &name) {
   m_Name = name;
   m_ToHashSizeTime = false;
   m_ToHashPath = false;
-  SetPath(organController->GetSettings().GetResourceDirectory(), name);
+  SetPath(resourceDirectory, name);
 }
 
 void GOLoaderFilename::AssignAbsolute(const wxString &path) {

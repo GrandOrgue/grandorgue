@@ -493,10 +493,6 @@ GOMidiReceiverBase *GOConfig::FindMidiEvent(
   return NULL;
 }
 
-const wxString GOConfig::GetResourceDirectory() {
-  return m_ResourceDir.c_str();
-}
-
 const wxString GOConfig::GetPackageDirectory() {
   return m_ResourceDir + wxFileName::GetPathSeparator() + wxT("packages");
 }

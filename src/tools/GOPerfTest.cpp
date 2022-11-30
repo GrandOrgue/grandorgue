@@ -76,7 +76,7 @@ void GOPerfTestApp::RunTest(
                                         : GOStdPath::GetResourceDir()
         + wxFileName::GetPathSeparator() + "perftests";
 
-    organController->SetODFPath(testsDir);
+    organController->InitOrganDirectory(testsDir);
     organController->AddWindchest(new GOWindchest(organController));
     GOSoundEngine *engine = new GOSoundEngine();
     GOSoundRecorder recorder;
@@ -92,7 +92,8 @@ void GOPerfTestApp::RunTest(
         std::vector<attack_load_info> attack;
         attack_load_info ainfo;
         ainfo.filename.Assign(
-          wxString::Format(wxT("%02d.wav"), i % 3), organController);
+          organController->GetFileStore(),
+          wxString::Format(wxT("%02d.wav"), i % 3));
         ainfo.sample_group = -1;
         ainfo.load_release = true;
         ainfo.percussive = false;

@@ -8,11 +8,10 @@
 #ifndef GOARCHIVEMANAGER_H
 #define GOARCHIVEMANAGER_H
 
+#include <wx/string.h>
+
 class GOArchive;
 class GOOrganList;
-class GOConfig;
-
-#include <wx/string.h>
 
 class GOArchiveManager {
 private:
