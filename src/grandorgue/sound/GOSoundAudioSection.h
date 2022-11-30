@@ -202,7 +202,7 @@ public:
     unsigned pcm_data_channels,
     unsigned pcm_data_sample_rate,
     unsigned pcm_data_nb_samples,
-    const std::vector<GO_WAVE_LOOP> *loop_points,
+    const std::vector<GOWaveLoop> *loop_points,
     bool compress,
     unsigned crossfade_length);
 

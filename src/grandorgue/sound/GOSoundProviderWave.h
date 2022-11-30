@@ -15,9 +15,9 @@
 #include "loader/GOLoaderFilename.h"
 
 #include "GOSoundProvider.h"
+#include "GOWaveLoop.h"
 
 class GOWave;
-typedef struct GO_WAVE_LOOP GO_WAVE_LOOP;
 
 typedef enum {
   /* Only the first loop with the earliest endpoint is loaded. This will
@@ -71,7 +71,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     const char *data,
     GOWave &wave,
     int attack_start,
-    std::vector<GO_WAVE_LOOP> loop_list,
+    std::vector<GOWaveLoop> loop_list,
     int sample_group,
     unsigned bits_per_sample,
     unsigned channels,
@@ -97,7 +97,7 @@ class GOSoundProviderWave : public GOSoundProvider {
   void ProcessFile(
     GOMemoryPool &pool,
     const GOLoaderFilename &filename,
-    std::vector<GO_WAVE_LOOP> loops,
+    std::vector<GOWaveLoop> loops,
     bool is_attack,
     bool is_release,
     int sample_group,

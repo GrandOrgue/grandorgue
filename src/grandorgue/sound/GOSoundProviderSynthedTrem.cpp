@@ -77,10 +77,10 @@ void GOSoundProviderSynthedTrem::Create(
   }
 
   /* Attack sustain section */
-  GO_WAVE_LOOP trem_loop;
-  trem_loop.start_sample = attack_samples;
-  trem_loop.end_sample = (attack_samples + loop_samples) - 1;
-  std::vector<GO_WAVE_LOOP> trem_loops;
+  GOWaveLoop trem_loop;
+  trem_loop.m_StartPosition = attack_samples;
+  trem_loop.m_EndPosition = (attack_samples + loop_samples) - 1;
+  std::vector<GOWaveLoop> trem_loops;
   trem_loops.push_back(trem_loop);
   attack_section_info attack_info;
   attack_info.sample_group = -1;
@@ -93,7 +93,7 @@ void GOSoundProviderSynthedTrem::Create(
     GOWave::SF_SIGNEDSHORT_16,
     1,
     sample_freq,
-    trem_loop.end_sample,
+    trem_loop.m_EndPosition,
     &trem_loops,
     false,
     0);

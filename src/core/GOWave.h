@@ -13,13 +13,9 @@
 #include <vector>
 
 #include "GOBuffer.h"
+#include "GOWaveLoop.h"
 
 class GOFile;
-
-typedef struct GO_WAVE_LOOP {
-  unsigned start_sample;
-  unsigned end_sample;
-} GO_WAVE_LOOP;
 
 class GOWave {
 private:
@@ -32,7 +28,7 @@ private:
   float m_PitchFract;
   bool m_isPacked;
   bool m_hasRelease;
-  std::vector<GO_WAVE_LOOP> m_Loops;
+  std::vector<GOWaveLoop> m_Loops;
 
   void SetInvalid();
   void LoadFormatChunk(const uint8_t *ptr, unsigned long length);
@@ -83,8 +79,8 @@ public:
   unsigned GetReleaseMarkerPosition() const;
 
   unsigned GetNbLoops() const;
-  const GO_WAVE_LOOP &GetLoop(unsigned idx) const;
-  const GO_WAVE_LOOP &GetLongestLoop() const;
+  const GOWaveLoop &GetLoop(unsigned idx) const;
+  const GOWaveLoop &GetLongestLoop() const;
 
   /* GetLength()
    * Returns the number of blocks in the wave file (there are *channel*
