@@ -76,6 +76,8 @@ public:
     wxString key,
     bool required,
     wxString defaultValue);
+  wxString ReadFileName(
+    GOSettingType type, wxString group, wxString key, bool required = true);
   int ReadInteger(
     GOSettingType type,
     wxString group,

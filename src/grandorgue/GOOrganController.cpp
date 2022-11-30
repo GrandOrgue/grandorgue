@@ -192,7 +192,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   m_RecordingDetails
     = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"), false);
   wxString info_filename
-    = cfg.ReadStringTrim(ODFSetting, group, wxT("InfoFilename"), false);
+    = cfg.ReadFileName(ODFSetting, group, wxT("InfoFilename"), false);
   wxFileName fn;
   if (info_filename.IsEmpty()) {
     /* Resolve organ file path */
