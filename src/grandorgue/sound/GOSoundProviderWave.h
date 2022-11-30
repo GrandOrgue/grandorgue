@@ -66,7 +66,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     const char *data,
     GOWave &wave,
     int attack_start,
-    std::vector<GOWaveLoop> loop_list,
+    const std::vector<GOWaveLoop> *pSrcLoops,
     int sample_group,
     unsigned bits_per_sample,
     unsigned channels,
@@ -92,7 +92,7 @@ class GOSoundProviderWave : public GOSoundProvider {
   void ProcessFile(
     GOMemoryPool &pool,
     const GOLoaderFilename &filename,
-    std::vector<GOWaveLoop> loops,
+    const std::vector<GOWaveLoop> *loops,
     bool is_attack,
     bool is_release,
     int sample_group,
