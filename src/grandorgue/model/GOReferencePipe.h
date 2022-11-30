@@ -21,7 +21,7 @@ private:
   wxString m_Filename;
 
   void Initialize();
-  void LoadData(GOMemoryPool &pool) override {}
+  void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) override {}
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override { return true; }
   bool SaveCache(GOCacheWriter &cache) override { return true; }
   void UpdateHash(GOHash &hash);

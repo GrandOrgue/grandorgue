@@ -42,7 +42,9 @@ GOTremulant::~GOTremulant() { DELETE_AND_NULL(m_TremProvider); }
 
 void GOTremulant::Initialize() {}
 
-void GOTremulant::LoadData(GOMemoryPool &pool) { InitSoundProvider(pool); }
+void GOTremulant::LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) {
+  InitSoundProvider(pool);
+}
 
 bool GOTremulant::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   InitSoundProvider(pool);

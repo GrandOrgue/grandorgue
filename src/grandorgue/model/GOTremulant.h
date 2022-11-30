@@ -40,7 +40,7 @@ private:
   void SetupCombinationState();
 
   void Initialize();
-  void LoadData(GOMemoryPool &pool);
+  void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool);
   bool LoadCache(GOMemoryPool &pool, GOCache &cache);
   bool SaveCache(GOCacheWriter &cache);
   void UpdateHash(GOHash &hash);
