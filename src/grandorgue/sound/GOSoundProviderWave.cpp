@@ -372,17 +372,10 @@ void GOSoundProviderWave::LoadFromFile(
 
   try {
     for (unsigned i = 0; i < attacks.size(); i++) {
-      std::vector<GOWaveLoop> loops;
-      for (unsigned j = 0; j < attacks[i].loops.size(); j++) {
-        GOWaveLoop loop;
-        loop.m_StartPosition = attacks[i].loops[j].loop_start;
-        loop.m_EndPosition = attacks[i].loops[j].loop_end;
-        loops.push_back(loop);
-      }
       ProcessFile(
         pool,
         attacks[i].filename,
-        loops,
+        attacks[i].loops,
         true,
         attacks[i].load_release,
         attacks[i].sample_group,

@@ -109,8 +109,9 @@ void GOSoundingPipe::LoadAttack(
   unsigned loop_cnt = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("LoopCount"), 0, 100, false, 0);
   for (unsigned j = 0; j < loop_cnt; j++) {
-    loop_load_info linfo;
-    linfo.loop_start = cfg.ReadInteger(
+    GOWaveLoop linfo;
+
+    linfo.m_StartPosition = cfg.ReadInteger(
       ODFSetting,
       group,
       prefix + wxString::Format(wxT("Loop%03dStart"), j + 1),
@@ -118,11 +119,11 @@ void GOSoundingPipe::LoadAttack(
       MAX_SAMPLE_LENGTH,
       false,
       0);
-    linfo.loop_end = cfg.ReadInteger(
+    linfo.m_EndPosition = cfg.ReadInteger(
       ODFSetting,
       group,
       prefix + wxString::Format(wxT("Loop%03dEnd"), j + 1),
-      linfo.loop_start + 1,
+      linfo.m_StartPosition + 1,
       MAX_SAMPLE_LENGTH,
       true);
     ainfo.loops.push_back(linfo);
@@ -325,8 +326,8 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) {
     hash.Update(m_AttackInfo[i].attack_start);
     hash.Update(m_AttackInfo[i].release_end);
     for (unsigned j = 0; j < m_AttackInfo[i].loops.size(); j++) {
-      hash.Update(m_AttackInfo[i].loops[j].loop_start);
-      hash.Update(m_AttackInfo[i].loops[j].loop_end);
+      hash.Update(m_AttackInfo[i].loops[j].m_StartPosition);
+      hash.Update(m_AttackInfo[i].loops[j].m_EndPosition);
     }
   }
 

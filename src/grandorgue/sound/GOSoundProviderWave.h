@@ -37,11 +37,6 @@ typedef enum {
 } loop_load_type;
 
 typedef struct {
-  int loop_start;
-  int loop_end;
-} loop_load_info;
-
-typedef struct {
   GOLoaderFilename filename;
   int sample_group;
   bool load_release;
@@ -52,7 +47,7 @@ typedef struct {
   int attack_start;
   int cue_point;
   int release_end;
-  std::vector<loop_load_info> loops;
+    std::vector<GOWaveLoop> loops;
 } attack_load_info;
 
 typedef struct {
