@@ -43,6 +43,7 @@
 #include "gui/GOGUIRecorderPanel.h"
 #include "gui/GOGUISequencerPanel.h"
 #include "loader/GOLoadThread.h"
+#include "loader/GOLoaderFilename.h"
 #include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiPlayer.h"
@@ -66,7 +67,6 @@
 #include "GODocument.h"
 #include "GOEvent.h"
 #include "GOFile.h"
-#include "GOFilename.h"
 #include "GOHash.h"
 #include "GOMetronome.h"
 #include "GOOrgan.h"
@@ -203,7 +203,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     else
       m_InfoFilename = wxEmptyString;
   } else {
-    GOFilename fname;
+    GOLoaderFilename fname;
     fname.Assign(info_filename, this);
     std::unique_ptr<GOFile> file = fname.Open();
     fn = info_filename;
@@ -368,7 +368,7 @@ bool GOOrganController::LoadArchive(
 
 wxString GOOrganController::Load(
   GOProgressDialog *dlg, const GOOrgan &organ, const wxString &file2) {
-  GOFilename odf_name;
+  GOLoaderFilename odf_name;
 
   if (organ.GetArchiveID() != wxEmptyString) {
     dlg->Setup(1, _("Loading sample set"), _("Parsing organ packages"));

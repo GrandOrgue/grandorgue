@@ -97,6 +97,7 @@ gui/GOGUIRecorderPanel.cpp
 gui/GOGUISequencerPanel.cpp
 help/GOHelpController.cpp
 help/GOHelpRequestor.cpp
+loader/GOLoaderFilename.cpp
 loader/GOLoadThread.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp
@@ -167,7 +168,6 @@ GODC.cpp
 GODivisionalCoupler.cpp
 GODrawStop.cpp
 GOEvent.cpp
-GOFilename.cpp
 GOFont.cpp
 GOKeyReceiver.cpp
 GOLog.cpp

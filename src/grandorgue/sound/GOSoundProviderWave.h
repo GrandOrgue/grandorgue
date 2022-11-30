@@ -12,7 +12,8 @@
 
 #include <vector>
 
-#include "GOFilename.h"
+#include "loader/GOLoaderFilename.h"
+
 #include "GOSoundProvider.h"
 
 class GOWave;
@@ -41,7 +42,7 @@ typedef struct {
 } loop_load_info;
 
 typedef struct {
-  GOFilename filename;
+  GOLoaderFilename filename;
   int sample_group;
   bool load_release;
   bool percussive;
@@ -55,7 +56,7 @@ typedef struct {
 } attack_load_info;
 
 typedef struct {
-  GOFilename filename;
+  GOLoaderFilename filename;
   int sample_group;
   int max_playback_time;
   int cue_point;
@@ -95,7 +96,7 @@ class GOSoundProviderWave : public GOSoundProvider {
 
   void ProcessFile(
     GOMemoryPool &pool,
-    const GOFilename &filename,
+    const GOLoaderFilename &filename,
     std::vector<GO_WAVE_LOOP> loops,
     bool is_attack,
     bool is_release,
@@ -114,7 +115,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     unsigned loop_crossfade_length,
     unsigned max_released_time);
 
-  void LoadPitch(const GOFilename &filename);
+  void LoadPitch(const GOLoaderFilename &filename);
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 
 public:

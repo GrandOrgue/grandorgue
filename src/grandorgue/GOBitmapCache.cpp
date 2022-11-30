@@ -11,9 +11,10 @@
 #include <wx/intl.h>
 #include <wx/mstream.h>
 
+#include "loader/GOLoaderFilename.h"
+
 #include "GOBuffer.h"
 #include "GOFile.h"
-#include "GOFilename.h"
 #include "GOLog.h"
 #include "GOOrganController.h"
 #include "Images.h"
@@ -170,7 +171,7 @@ bool GOBitmapCache::loadFile(wxImage &img, const wxString &filename) {
     log->SetCurrentFileName(filename);
 
   try {
-    GOFilename name;
+    GOLoaderFilename name;
     name.Assign(filename, m_OrganController);
 
     std::unique_ptr<GOFile> file = name.Open();

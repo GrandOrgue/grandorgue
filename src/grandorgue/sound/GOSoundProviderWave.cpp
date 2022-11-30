@@ -166,7 +166,7 @@ void GOSoundProviderWave::CreateRelease(
     0);
 }
 
-void GOSoundProviderWave::LoadPitch(const GOFilename &filename) {
+void GOSoundProviderWave::LoadPitch(const GOLoaderFilename &filename) {
   wxLogDebug(_("Loading file %s"), filename.GetTitle().c_str());
 
   GOWave wave;
@@ -178,7 +178,7 @@ void GOSoundProviderWave::LoadPitch(const GOFilename &filename) {
 
 void GOSoundProviderWave::ProcessFile(
   GOMemoryPool &pool,
-  const GOFilename &filename,
+  const GOLoaderFilename &filename,
   std::vector<GO_WAVE_LOOP> loops,
   bool is_attack,
   bool is_release,
