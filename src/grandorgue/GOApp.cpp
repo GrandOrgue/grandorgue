@@ -154,6 +154,9 @@ int GOApp::OnRun() { return wxApp::OnRun(); }
 
 int GOApp::OnExit() {
   wxLog::SetActiveTarget(NULL);
+
+  wxApp::CleanUp(); // delete all GUI elements in order not to use m_soundSystem
+
   delete m_soundSystem;
   delete m_config;
   delete m_Log;
