@@ -36,15 +36,17 @@
 #include "GOResizable.h"
 
 class GOApp;
+class GOAudioGauge;
+class GOConfig;
 class GODocument;
 class GOMidiEvent;
 class GOOrgan;
-class GOConfig;
 class GOSound;
 class wxChoice;
-class GOAudioGauge;
 class wxHtmlHelpController;
 class wxSpinCtrl;
+class wxToolBar;
+class wxToolBarToolBase;
 
 class GOFrame : public wxFrame,
                 private GOHelpRequestor,
@@ -60,8 +62,10 @@ private:
   wxMenu *m_recent_menu;
   wxMenu *m_temperament_menu;
   GODocument *m_doc;
+  wxToolBar *m_ToolBar;
   GOAudioGauge *m_SamplerUsage;
   wxControl *m_VolumeControl;
+  wxToolBarToolBase *m_VolumeControlTool;
   std::vector<GOAudioGauge *> m_VolumeGauge;
   wxSpinCtrl *m_Transpose;
   wxChoice *m_ReleaseLength;
