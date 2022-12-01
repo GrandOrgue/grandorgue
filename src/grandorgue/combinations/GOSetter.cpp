@@ -477,9 +477,14 @@ void GOSetter::ButtonStateChanged(int id) {
   case ID_SETTER_HOME:
     SetPosition(0, false);
     break;
-  case ID_SETTER_GC:
+  case ID_SETTER_GC: {
+    GOButtonControl *pGc = m_buttons[ID_SETTER_GC];
+
+    pGc->Display(true);
     m_OrganController->Reset();
+    pGc->Display(false);
     break;
+  }
   case ID_SETTER_CURRENT:
     SetPosition(m_pos);
     break;

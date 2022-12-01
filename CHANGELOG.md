@@ -1,3 +1,4 @@
+- Fixed sending midi-off events from generals and another pushbuttons https://github.com/GrandOrgue/grandorgue/issues/1291
 - Fixed crashing on exit in some cases
 # 3.9.2 (2022-11-29)
 - Fixed sending incorrect midi values from an enclosure https://github.com/GrandOrgue/grandorgue/issues/1267

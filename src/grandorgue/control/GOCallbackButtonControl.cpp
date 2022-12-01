@@ -20,13 +20,9 @@ GOCallbackButtonControl::GOCallbackButtonControl(
     m_callback(callback) {}
 
 void GOCallbackButtonControl::Push() {
-  if (m_Pushbutton) {
-    // A PushButton goes enabled and then just disabled, so we send two midi
-    // events
-    m_sender.SetDisplay(true);
+  if (m_Pushbutton)
     m_callback->ButtonStateChanged(this);
-    m_sender.SetDisplay(false);
-  } else
+  else
     GOButtonControl::Push();
 }
 
