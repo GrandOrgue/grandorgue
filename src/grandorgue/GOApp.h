@@ -35,11 +35,12 @@ private:
   bool m_Restart;
 
   virtual void MacOpenFile(const wxString &fileName);
+  void OnInitCmdLine(wxCmdLineParser &parser);
+  bool OnCmdLineParsed(wxCmdLineParser &parser);
   bool OnInit();
   int OnRun();
   int OnExit();
-  void OnInitCmdLine(wxCmdLineParser &parser);
-  bool OnCmdLineParsed(wxCmdLineParser &parser);
+  virtual void CleanUp() override;
 
 protected:
   GOFrame *m_Frame;
