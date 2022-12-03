@@ -641,7 +641,7 @@ void GOAudioSection::Setup(
   const unsigned pcm_data_channels,
   const unsigned pcm_data_sample_rate,
   const unsigned pcm_data_nb_samples,
-  const std::vector<GO_WAVE_LOOP> *loop_points,
+  const std::vector<GOWaveLoop> *loop_points,
   bool compress,
   unsigned crossfade_length) {
   if (pcm_data_channels < 1 || pcm_data_channels > 2)
@@ -671,13 +671,13 @@ void GOAudioSection::Setup(
     for (unsigned i = 0; i < loop_points->size(); i++) {
       audio_start_data_segment start_seg;
       audio_end_data_segment end_seg;
-      const GO_WAVE_LOOP &loop = (*loop_points)[i];
+      const GOWaveLoop &loop = (*loop_points)[i];
       unsigned fade_len = crossfade_length;
-      if (loop.end_sample + 1 > min_reqd_samples)
-        min_reqd_samples = loop.end_sample + 1;
+      if (loop.m_EndPosition + 1 > min_reqd_samples)
+        min_reqd_samples = loop.m_EndPosition + 1;
 
-      start_seg.start_offset = loop.start_sample;
-      end_seg.end_offset = loop.end_sample;
+      start_seg.start_offset = loop.m_StartPosition;
+      end_seg.end_offset = loop.m_EndPosition;
       end_seg.next_start_segment_index = i + 1;
       const unsigned loop_length
         = 1 + end_seg.end_offset - start_seg.start_offset;
@@ -729,7 +729,7 @@ void GOAudioSection::Setup(
       loop_memcpy(
         ((unsigned char *)end_seg.end_data) + copy_len * m_BytesPerSample,
         ((const unsigned char *)pcm_data)
-          + loop.start_sample * m_BytesPerSample,
+          + loop.m_StartPosition * m_BytesPerSample,
         loop_length * m_BytesPerSample,
         (end_length - copy_len) * m_BytesPerSample);
       if (fade_len > 0)

@@ -37,7 +37,7 @@ void GOSoundProviderWave::CreateAttack(
   const char *data,
   GOWave &wave,
   int attack_start,
-  std::vector<GO_WAVE_LOOP> loop_list,
+  std::vector<GOWaveLoop> loop_list,
   int sample_group,
   unsigned bits_per_sample,
   unsigned channels,
@@ -47,7 +47,7 @@ void GOSoundProviderWave::CreateAttack(
   unsigned min_attack_velocity,
   unsigned loop_crossfade_length,
   unsigned max_released_time) {
-  std::vector<GO_WAVE_LOOP> loops;
+  std::vector<GOWaveLoop> loops;
   unsigned attack_pos = attack_start;
   if (loop_list.size() == 0)
     for (unsigned i = 0; i < wave.GetNbLoops(); i++)
@@ -55,15 +55,15 @@ void GOSoundProviderWave::CreateAttack(
 
   for (unsigned i = 0; i < loop_list.size(); i++) {
     if (
-      loop_list[i].start_sample >= wave.GetLength()
-      || loop_list[i].start_sample >= loop_list[i].end_sample
-      || loop_list[i].end_sample >= wave.GetLength())
+      loop_list[i].m_StartPosition >= wave.GetLength()
+      || loop_list[i].m_StartPosition >= loop_list[i].m_EndPosition
+      || loop_list[i].m_EndPosition >= wave.GetLength())
       throw(wxString) _("Invalid loop definition");
     if (
       loop_crossfade_length
-      && loop_list[i].start_sample + REMAINING_AFTER_CROSSFADE
+      && loop_list[i].m_StartPosition + REMAINING_AFTER_CROSSFADE
           + loop_crossfade_length
-        >= loop_list[i].end_sample)
+        >= loop_list[i].m_EndPosition)
       throw(wxString) _("Loop too short for a cross fade");
   }
 
@@ -71,14 +71,14 @@ void GOSoundProviderWave::CreateAttack(
     switch (loop_mode) {
     case LOOP_LOAD_ALL:
       for (unsigned i = 0; i < loop_list.size(); i++)
-        if (attack_pos <= loop_list[i].start_sample)
+        if (attack_pos <= loop_list[i].m_StartPosition)
           loops.push_back(loop_list[i]);
       break;
     case LOOP_LOAD_CONSERVATIVE: {
       unsigned cidx = 0;
       for (unsigned i = 1; i < loop_list.size(); i++)
-        if (loop_list[i].end_sample < loop_list[i].end_sample)
-          if (attack_pos <= loop_list[i].start_sample)
+        if (loop_list[i].m_EndPosition < loop_list[i].m_EndPosition)
+          if (attack_pos <= loop_list[i].m_StartPosition)
             cidx = i;
       loops.push_back(loop_list[cidx]);
     } break;
@@ -87,11 +87,11 @@ void GOSoundProviderWave::CreateAttack(
 
       unsigned lidx = 0;
       for (unsigned int i = 1; i < loop_list.size(); i++) {
-        assert(loop_list[i].end_sample > loop_list[i].start_sample);
+        assert(loop_list[i].m_EndPosition > loop_list[i].m_StartPosition);
         if (
-          (loop_list[i].end_sample - loop_list[i].start_sample)
-          > (loop_list[lidx].end_sample - loop_list[lidx].start_sample))
-          if (attack_pos <= loop_list[i].start_sample)
+          (loop_list[i].m_EndPosition - loop_list[i].m_StartPosition)
+          > (loop_list[lidx].m_EndPosition - loop_list[lidx].m_StartPosition))
+          if (attack_pos <= loop_list[i].m_StartPosition)
             lidx = i;
       }
       loops.push_back(loop_list[lidx]);
@@ -100,8 +100,8 @@ void GOSoundProviderWave::CreateAttack(
     if (loops.size() == 0)
       throw(wxString) _("No loop found");
     for (unsigned i = 0; i < loops.size(); i++) {
-      loops[i].start_sample -= attack_pos;
-      loops[i].end_sample -= attack_pos;
+      loops[i].m_StartPosition -= attack_pos;
+      loops[i].m_EndPosition -= attack_pos;
     }
   }
 
@@ -179,7 +179,7 @@ void GOSoundProviderWave::LoadPitch(const GOLoaderFilename &filename) {
 void GOSoundProviderWave::ProcessFile(
   GOMemoryPool &pool,
   const GOLoaderFilename &filename,
-  std::vector<GO_WAVE_LOOP> loops,
+  std::vector<GOWaveLoop> loops,
   bool is_attack,
   bool is_release,
   int sample_group,
@@ -372,11 +372,11 @@ void GOSoundProviderWave::LoadFromFile(
 
   try {
     for (unsigned i = 0; i < attacks.size(); i++) {
-      std::vector<GO_WAVE_LOOP> loops;
+      std::vector<GOWaveLoop> loops;
       for (unsigned j = 0; j < attacks[i].loops.size(); j++) {
-        GO_WAVE_LOOP loop;
-        loop.start_sample = attacks[i].loops[j].loop_start;
-        loop.end_sample = attacks[i].loops[j].loop_end;
+        GOWaveLoop loop;
+        loop.m_StartPosition = attacks[i].loops[j].loop_start;
+        loop.m_EndPosition = attacks[i].loops[j].loop_end;
         loops.push_back(loop);
       }
       ProcessFile(
@@ -403,7 +403,7 @@ void GOSoundProviderWave::LoadFromFile(
     }
 
     for (unsigned i = 0; i < releases.size(); i++) {
-      std::vector<GO_WAVE_LOOP> loops;
+      std::vector<GOWaveLoop> loops;
       ProcessFile(
         pool,
         releases[i].filename,

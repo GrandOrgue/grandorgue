@@ -103,9 +103,9 @@ void GOWave::LoadSamplerChunk(const uint8_t *ptr, unsigned long length) {
     = (GO_WAVESAMPLERLOOP *)(ptr + sizeof(GO_WAVESAMPLERCHUNK));
   m_Loops.clear();
   for (unsigned k = 0; k < numberOfLoops; k++) {
-    GO_WAVE_LOOP l;
-    l.start_sample = loops[k].dwStart;
-    l.end_sample = loops[k].dwEnd;
+    GOWaveLoop l;
+    l.m_StartPosition = loops[k].dwStart;
+    l.m_EndPosition = loops[k].dwEnd;
     m_Loops.push_back(l);
   }
 
@@ -236,10 +236,10 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
     // be correct!
     for (unsigned int i = 0; i < m_Loops.size(); i++) {
       if (
-        (m_Loops[i].start_sample >= m_Loops[i].end_sample)
-        || (m_Loops[i].start_sample >= GetLength())
-        || (m_Loops[i].end_sample >= GetLength())
-        || (m_Loops[i].end_sample == 0)) {
+        (m_Loops[i].m_StartPosition >= m_Loops[i].m_EndPosition)
+        || (m_Loops[i].m_StartPosition >= GetLength())
+        || (m_Loops[i].m_EndPosition >= GetLength())
+        || (m_Loops[i].m_EndPosition == 0)) {
         wxLogError(_("Invalid loop in the file: %s\n"), fileName);
         m_Loops.erase(m_Loops.begin() + i);
       }
@@ -282,17 +282,17 @@ unsigned GOWave::GetReleaseMarkerPosition() const {
   return m_CuePoint;
 }
 
-const GO_WAVE_LOOP &GOWave::GetLongestLoop() const {
+const GOWaveLoop &GOWave::GetLongestLoop() const {
   if (m_Loops.size() < 1)
     throw(wxString) _("wave does not contain loops");
 
-  assert(m_Loops[0].end_sample > m_Loops[0].start_sample);
+  assert(m_Loops[0].m_EndPosition > m_Loops[0].m_StartPosition);
   unsigned lidx = 0;
   for (unsigned int i = 1; i < m_Loops.size(); i++) {
-    assert(m_Loops[i].end_sample > m_Loops[i].start_sample);
+    assert(m_Loops[i].m_EndPosition > m_Loops[i].m_StartPosition);
     if (
-      (m_Loops[i].end_sample - m_Loops[i].start_sample)
-      > (m_Loops[lidx].end_sample - m_Loops[lidx].start_sample))
+      (m_Loops[i].m_EndPosition - m_Loops[i].m_StartPosition)
+      > (m_Loops[lidx].m_EndPosition - m_Loops[lidx].m_StartPosition))
       lidx = i;
   }
 
@@ -459,7 +459,7 @@ void GOWave::ReadSamples(
 
 unsigned GOWave::GetNbLoops() const { return m_Loops.size(); }
 
-const GO_WAVE_LOOP &GOWave::GetLoop(unsigned idx) const {
+const GOWaveLoop &GOWave::GetLoop(unsigned idx) const {
   assert(idx < m_Loops.size());
   return m_Loops[idx];
 }
@@ -527,8 +527,8 @@ bool GOWave::Save(GOBuffer<uint8_t> &buf) {
     for (unsigned i = 0; i < m_Loops.size(); i++) {
       loop.dwIdentifier = i;
       loop.dwType = 0;
-      loop.dwStart = m_Loops[i].start_sample;
-      loop.dwEnd = m_Loops[i].end_sample;
+      loop.dwStart = m_Loops[i].m_StartPosition;
+      loop.dwEnd = m_Loops[i].m_EndPosition;
       loop.dwFraction = 0;
       loop.dwPlayCount = 0;
       loops.Append((const uint8_t *)&loop, sizeof(loop));

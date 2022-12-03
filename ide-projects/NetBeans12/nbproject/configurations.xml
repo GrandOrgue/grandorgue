@@ -8662,27 +8662,27 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="0">
+        <ccTool flags="7">
           <incDir>
-            <pElem>../../src/grandorgue</pElem>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../src/grandorgue/sound</pElem>
-            <pElem>/usr/include/c++/12/bits</pElem>
-            <pElem>/usr/include/c++/12</pElem>
-            <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/12/debug</pElem>
-            <pElem>/usr/include/c++/12/ext</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/12/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/12/x86_64-redhat-linux</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/GODivisionalSetter.cpp"
@@ -15308,6 +15308,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
         </ccTool>
+      </item>
+      <item path="../../src/core/GOWaveLoop.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../src/core/archive/GOArchive.cpp"
             ex="false"
