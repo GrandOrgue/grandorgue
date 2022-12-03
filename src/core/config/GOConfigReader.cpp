@@ -123,6 +123,17 @@ wxString GOConfigReader::ReadStringNotEmpty(
   return ReadStringNotEmpty(type, group, key, required, wxT(""));
 }
 
+wxString GOConfigReader::ReadFileName(
+  GOSettingType type, wxString group, wxString key, bool required) {
+  const wxString fileName = ReadStringTrim(type, group, key, required);
+
+  if (m_Strict && fileName.Find(wxT('/')) != wxNOT_FOUND) {
+    wxLogWarning(
+      _("Filename '%s' contains non-portable directory separator /"), fileName);
+  }
+  return fileName;
+}
+
 bool GOConfigReader::ReadBoolean(
   GOSettingType type, wxString group, wxString key, bool required) {
   return ReadBoolean(type, group, key, required, false);

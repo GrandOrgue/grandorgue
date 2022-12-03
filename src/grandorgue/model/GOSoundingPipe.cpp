@@ -62,7 +62,7 @@ void GOSoundingPipe::LoadAttack(
   GOConfigReader &cfg, wxString group, wxString prefix) {
   attack_load_info ainfo;
   ainfo.filename.Assign(
-    cfg.ReadStringTrim(ODFSetting, group, prefix), m_OrganController);
+    cfg.ReadFileName(ODFSetting, group, prefix), m_OrganController);
   ainfo.sample_group = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
   ainfo.load_release = cfg.ReadBoolean(
@@ -222,7 +222,7 @@ void GOSoundingPipe::Load(
     wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
 
     rinfo.filename.Assign(
-      cfg.ReadStringTrim(ODFSetting, group, p), m_OrganController);
+      cfg.ReadFileName(ODFSetting, group, p), m_OrganController);
     rinfo.sample_group = cfg.ReadInteger(
       ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
     rinfo.max_playback_time = cfg.ReadInteger(

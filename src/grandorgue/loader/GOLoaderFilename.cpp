@@ -74,13 +74,6 @@ void GOLoaderFilename::SetPath(const wxString &base, const wxString &file) {
 void GOLoaderFilename::Assign(
   const wxString &name, GOOrganController *organController) {
   m_Name = name;
-  if (
-    organController->GetSettings().ODFCheck()
-    && name.Find(wxT('/')) != wxNOT_FOUND) {
-    wxLogWarning(
-      _("Filename '%s' contains non-portable directory separator /"),
-      name.c_str());
-  }
   if (organController->useArchives()) {
     m_Path = wxEmptyString;
     m_Archiv = organController->findArchive(name);
