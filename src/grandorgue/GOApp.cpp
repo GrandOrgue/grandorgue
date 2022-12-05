@@ -154,9 +154,6 @@ int GOApp::OnRun() { return wxApp::OnRun(); }
 
 int GOApp::OnExit() {
   wxLog::SetActiveTarget(NULL);
-  delete m_soundSystem;
-  delete m_config;
-  delete m_Log;
 
   int rc = wxApp::OnExit();
 
@@ -166,6 +163,26 @@ int GOApp::OnExit() {
     wxExecute(cmdargs);
   }
   return rc;
+}
+
+void GOApp::CleanUp() {
+  // Ensure that GOFrame and other objects are destroyed before deleting
+  wxApp::CleanUp();
+
+  // CleanUp() may be called even if OnInit() has not succeed, so we need to
+  // check
+  if (m_soundSystem) {
+    delete m_soundSystem;
+    m_soundSystem = nullptr;
+  }
+  if (m_config) {
+    delete m_config;
+    m_config = nullptr;
+  }
+  if (m_Log) {
+    delete m_Log;
+    m_Log = nullptr;
+  }
 }
 
 void GOApp::SetRestart() { m_Restart = true; }
