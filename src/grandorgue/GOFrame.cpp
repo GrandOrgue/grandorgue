@@ -393,7 +393,7 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
     int volCtlPos = m_ToolBar->GetToolPos(volCtlId);
 
     // OsX doesn't relayout the toolbar correctly after changing the size of
-    // a control so we need to remove it and reinsert it later
+    // a control so we need to remove it and to reinsert it later
     m_ToolBar->RemoveTool(volCtlId);
 
     m_VolumeGauge.clear();
