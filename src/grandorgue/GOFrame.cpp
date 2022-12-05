@@ -163,9 +163,6 @@ GOFrame::GOFrame(
 
   m_recent_menu = new wxMenu;
 
-  wxToolBar *tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
-  tb->SetToolBitmapSize(wxSize(16, 16));
-
   wxMenu *preset_menu = new wxMenu;
   for (unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
     preset_menu->Append(
@@ -250,21 +247,31 @@ GOFrame::GOFrame(
   wxMenu *help_menu = new wxMenu;
   help_menu->Append(wxID_HELP, _("&Help\tF1"), wxEmptyString, wxITEM_NORMAL);
   help_menu->Append(wxID_ABOUT, _("&About"), wxEmptyString, wxITEM_NORMAL);
+  m_panel_menu = new wxMenu();
 
-  tb->AddTool(
+  wxMenuBar *menu_bar = new wxMenuBar;
+  menu_bar->Append(m_file_menu, _("&File"));
+  menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
+  menu_bar->Append(m_panel_menu, _("&Panel"));
+  menu_bar->Append(help_menu, _("&Help"));
+  SetMenuBar(menu_bar);
+
+  m_ToolBar = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
+  m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
+  m_ToolBar->AddTool(
     ID_AUDIO_MEMSET,
     _("&Memory Set\tShift"),
     GetImage_set(),
     _("Memory Set"),
     wxITEM_CHECK);
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_MEMORY,
     _("&Memory Level"),
     GetImage_memory(),
     _("Memory Level"),
     wxITEM_NORMAL);
   m_SetterPosition = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_FRAME_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -272,13 +279,13 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     0,
     999);
-  tb->AddControl(m_SetterPosition);
+  m_ToolBar->AddControl(m_SetterPosition);
   m_SetterPosition->SetValue(0);
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
   m_Volume = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_AUDIO_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -286,14 +293,13 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     -120,
     20);
-  tb->AddControl(m_Volume);
-
-  m_VolumeControl = new wxControl(tb, wxID_ANY);
+  m_ToolBar->AddControl(m_Volume);
+  m_VolumeControl = new wxControl(m_ToolBar, wxID_ANY);
+  m_VolumeControlTool = m_ToolBar->AddControl(m_VolumeControl);
   AdjustVolumeControlWithSettings();
-  tb->AddControl(m_VolumeControl);
   m_Volume->SetValue(m_config.Volume());
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_RELEASELENGTH,
     _("&Release tail length"),
     GetImage_reverb(),
@@ -304,19 +310,23 @@ GOFrame::GOFrame(
   for (unsigned i = 1; i <= 60; i++)
     choices.push_back(wxString::Format(_("%d ms"), i * 50));
   m_ReleaseLength = new wxChoice(
-    tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
-  tb->AddControl(m_ReleaseLength);
+    m_ToolBar,
+    ID_RELEASELENGTH_SELECT,
+    wxDefaultPosition,
+    wxDefaultSize,
+    choices);
+  m_ToolBar->AddControl(m_ReleaseLength);
   m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
   UpdateReleaseLength();
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_TRANSPOSE,
     _("&Transpose"),
     GetImage_transpose(),
     _("Transpose"),
     wxITEM_NORMAL);
   m_Transpose = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_TRANSPOSE_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -324,17 +334,17 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     -11,
     11);
-  tb->AddControl(m_Transpose);
+  m_ToolBar->AddControl(m_Transpose);
   m_Transpose->SetValue(m_config.Transpose());
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_POLYPHONY,
     _("&Polyphony"),
     GetImage_polyphony(),
     _("Polyphony"),
     wxITEM_NORMAL);
   m_Polyphony = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_POLY_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -342,27 +352,19 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     1,
     MAX_POLYPHONY);
-  tb->AddControl(m_Polyphony);
+  m_ToolBar->AddControl(m_Polyphony);
 
-  m_SamplerUsage = new GOAudioGauge(tb, wxID_ANY, wxDefaultPosition);
-  tb->AddControl(m_SamplerUsage);
+  m_SamplerUsage = new GOAudioGauge(m_ToolBar, wxID_ANY, wxDefaultPosition);
+  m_ToolBar->AddControl(m_SamplerUsage);
   m_Polyphony->SetValue(m_config.PolyphonyLimit());
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_AUDIO_PANIC,
     _("&Panic\tEscape"),
     GetImage_panic(),
     _("Panic"),
     wxITEM_NORMAL);
 
-  m_panel_menu = new wxMenu();
-
-  wxMenuBar *menu_bar = new wxMenuBar;
-  menu_bar->Append(m_file_menu, _("&File"));
-  menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
-  menu_bar->Append(m_panel_menu, _("&Panel"));
-  menu_bar->Append(help_menu, _("&Help"));
-  SetMenuBar(menu_bar);
   SetAutoLayout(true);
 
   UpdateSize();
@@ -387,6 +389,13 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
   bool rc = false;
 
   if (count != m_VolumeGauge.size()) {
+    int volCtlId = m_VolumeControlTool->GetId();
+    int volCtlPos = m_ToolBar->GetToolPos(volCtlId);
+
+    // OsX doesn't relayout the toolbar correctly after changing the size of
+    // a control so we need to remove it and to reinsert it later
+    m_ToolBar->RemoveTool(volCtlId);
+
     m_VolumeGauge.clear();
     m_VolumeControl->DestroyChildren();
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -405,6 +414,10 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
 
     m_VolumeControl->SetSizer(sizer);
     sizer->Fit(m_VolumeControl);
+
+    // reinsert the control and relayout the toolbar
+    m_ToolBar->InsertTool(volCtlPos, m_VolumeControlTool);
+    m_ToolBar->Realize();
     rc = true;
   }
   return rc;
