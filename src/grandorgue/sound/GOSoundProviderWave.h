@@ -47,7 +47,7 @@ typedef struct {
   int attack_start;
   int cue_point;
   int release_end;
-    std::vector<GOWaveLoop> loops;
+  std::vector<GOWaveLoop> loops;
 } attack_load_info;
 
 typedef struct {
