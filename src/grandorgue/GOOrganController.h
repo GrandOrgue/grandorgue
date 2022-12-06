@@ -19,6 +19,7 @@
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
+#include "loader/GOFileStore.h"
 #include "model/GOModificationListener.h"
 #include "model/GOOrganModel.h"
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
@@ -65,7 +66,7 @@ private:
   wxString m_ArchiveID;
   wxString m_ArchivePath;
   wxString m_hash;
-  wxString m_path;
+  GOFileStore m_FileStore;
   wxString m_CacheFilename;
   wxString m_SettingFilename;
   wxString m_ODFHash;
@@ -99,7 +100,6 @@ private:
   ptr_vector<GOGUIPanel> m_panels;
   ptr_vector<GOGUIPanelCreator> m_panelcreators;
   ptr_vector<GOElementCreator> m_elementcreators;
-  ptr_vector<GOArchive> m_archives;
   GOStringBoolMap m_UsedSections;
 
   GOSoundEngine *m_soundengine;
@@ -136,10 +136,6 @@ private:
 
   wxString GetOrganHash();
 
-  bool LoadArchive(
-    wxString ID, wxString &name, const wxString &parentID = wxEmptyString);
-  void CloseArchives();
-
 public:
   GOOrganController(GODocument *doc, GOConfig &settings);
   ~GOOrganController();
@@ -150,6 +146,17 @@ public:
   void SetOrganModified() { SetOrganModified(true); }
   // Clears the organ modification flag
   void ResetOrganModified();
+
+  const GOFileStore &GetFileStore() const { return m_FileStore; }
+
+  /**
+   * Set the organ directory without providing any odf.
+   * Called only from GOPerfTest.
+   * @param dir the directory for loading objects from
+   */
+  void InitOrganDirectory(const wxString &dir) {
+    m_FileStore.SetDirectory(dir);
+  }
 
   wxString Load(
     GOProgressDialog *dlg,
@@ -186,9 +193,6 @@ public:
   wxString GetTemperament();
   void MarkSectionInUse(wxString name);
 
-  bool useArchives();
-  GOArchive *findArchive(const wxString &name);
-
   int GetRecorderElementID(wxString name);
   GOCombinationDefinition &GetGeneralTemplate();
   GOLabelControl *GetPitchLabel();
@@ -223,7 +227,6 @@ public:
 
   /* Filename of the organ definition used to load */
   const wxString GetODFFilename();
-  const wxString GetODFPath();
   const wxString GetOrganPathInfo();
   GOOrgan GetOrganInfo();
   const wxString GetSettingFilename();
@@ -255,9 +258,6 @@ public:
   GOMidi *GetMidi();
 
   GOGUIMouseState &GetMouseState() { return m_MouseState; }
-
-  /* For testing only */
-  void SetODFPath(wxString path);
 };
 
 #endif

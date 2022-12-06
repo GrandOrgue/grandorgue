@@ -164,7 +164,7 @@ public:
   int GetLanguageId() const;
   void SetLanguageId(int langId);
 
-  const wxString GetResourceDirectory();
+  const wxString &GetResourceDirectory() const { return m_ResourceDir; }
   const wxString GetPackageDirectory();
 
   unsigned GetEventCount();
