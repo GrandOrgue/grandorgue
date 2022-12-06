@@ -150,7 +150,8 @@ public:
   const GOFileStore &GetFileStore() const { return m_FileStore; }
 
   /**
-   * Set organ directory without lroviding any odf. Called only from GOPerfTest
+   * Set the organ directory without providing any odf.
+   * Called only from GOPerfTest.
    * @param dir the directory for loading objects from
    */
   void InitOrganDirectory(const wxString &dir) {
