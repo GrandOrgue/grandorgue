@@ -20,8 +20,12 @@ class GOOrganList;
  * It can be either a directory or a list of (dependent) archives
  */
 
+class GOConfig;
+
 class GOFileStore {
 private:
+  wxString m_ResourceDirectory;
+
   wxString m_directory;
   ptr_vector<GOArchive> m_archives;
   bool LoadArchive(
@@ -32,6 +36,9 @@ private:
     wxString &errMsg);
 
 public:
+  GOFileStore(const GOConfig &config);
+
+  const wxString &GetResourceDirectory() const { return m_ResourceDirectory; }
   const wxString &GetDirectory() const { return m_directory; }
   void SetDirectory(const wxString &directory);
   bool AreArchivesUsed() const { return m_archives.size() > 0; }

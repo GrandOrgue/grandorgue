@@ -12,8 +12,12 @@
 #include "archive/GOArchive.h"
 #include "archive/GOArchiveFile.h"
 #include "archive/GOArchiveManager.h"
+#include "config/GOConfig.h"
 
 #include "GOOrganList.h"
+
+GOFileStore::GOFileStore(const GOConfig &config)
+  : m_ResourceDirectory(config.GetResourceDirectory()) {}
 
 void GOFileStore::SetDirectory(const wxString &directory) {
   // we do not support if both m_directory and m_archives are filled
