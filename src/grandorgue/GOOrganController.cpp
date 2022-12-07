@@ -595,11 +595,7 @@ wxString GOOrganController::Load(
   } catch (const std::exception &e) {
     errMsg = e.what();
   } catch (...) { // We must not allow unhandled exceptions here
-    std::exception_ptr eptr = std::current_exception();
-
-    errMsg.Printf(
-      "Unknown exception: %s",
-      eptr ? eptr.__cxa_exception_type()->name() : "null");
+    errMsg.Printf("Unknown exception");
   }
   dummy.free();
   m_FileStore.CloseArchives();
