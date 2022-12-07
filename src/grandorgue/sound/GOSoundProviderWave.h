@@ -37,11 +37,6 @@ typedef enum {
 } loop_load_type;
 
 typedef struct {
-  int loop_start;
-  int loop_end;
-} loop_load_info;
-
-typedef struct {
   GOLoaderFilename filename;
   int sample_group;
   bool load_release;
@@ -52,7 +47,7 @@ typedef struct {
   int attack_start;
   int cue_point;
   int release_end;
-  std::vector<loop_load_info> loops;
+  std::vector<GOWaveLoop> loops;
 } attack_load_info;
 
 typedef struct {
@@ -71,7 +66,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     const char *data,
     GOWave &wave,
     int attack_start,
-    std::vector<GOWaveLoop> loop_list,
+    const std::vector<GOWaveLoop> *pSrcLoops,
     int sample_group,
     unsigned bits_per_sample,
     unsigned channels,
@@ -97,7 +92,7 @@ class GOSoundProviderWave : public GOSoundProvider {
   void ProcessFile(
     GOMemoryPool &pool,
     const GOLoaderFilename &filename,
-    std::vector<GOWaveLoop> loops,
+    const std::vector<GOWaveLoop> *loops,
     bool is_attack,
     bool is_release,
     int sample_group,

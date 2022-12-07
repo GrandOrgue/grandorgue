@@ -15309,8 +15309,6 @@
           </incDir>
         </ccTool>
       </item>
-      <item path="../../src/core/GOWaveLoop.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../src/core/archive/GOArchive.cpp"
             ex="false"
             tool="1"
