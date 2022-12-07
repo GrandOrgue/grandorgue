@@ -1,3 +1,4 @@
+- Fixed exit from GrandOrgue with an unhandled exception occurred on loading an organ
 - Fixed displaying output volume indicators on OSx https://github.com/GrandOrgue/grandorgue/issues/1255
 - Fixed sending midi-off events from generals and another pushbuttons https://github.com/GrandOrgue/grandorgue/issues/1291
 - Fixed crashing on exit in some cases
