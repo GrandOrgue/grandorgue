@@ -79,6 +79,7 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_odf(),
     m_ArchiveID(),
     m_hash(),
+    m_FileStore(settings),
     m_CacheFilename(),
     m_SettingFilename(),
     m_ODFHash(),
