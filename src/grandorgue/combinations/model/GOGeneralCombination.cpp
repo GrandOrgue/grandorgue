@@ -385,9 +385,10 @@ void GOGeneralCombination::Push(
   ExtraElementsSet const *extraSet, bool isFromCrescendo) {
   GOCombination::PushLocal(extraSet);
 
-  if (!isFromCrescendo || !extraSet) { // Crescendo in add mode: not to switch
-                                       // off combination
-                                       // buttons
+  if (!isFromCrescendo || !extraSet) { // Otherwise the rescendo in add mode:
+                                       // not to switch off combination buttons
+    m_OrganController->GetSetter()->ResetDisplay(); // disable buttons
+
     for (unsigned k = 0; k < m_OrganController->GetGeneralCount(); k++) {
       GOGeneralButtonControl *general = m_OrganController->GetGeneral(k);
       general->Display(&general->GetGeneral() == this);
@@ -402,8 +403,6 @@ void GOGeneralCombination::Push(
         m_OrganController->GetManual(j)->GetDivisional(k)->Display(false);
     }
   }
-
-  m_OrganController->GetSetter()->ResetDisplay();
 }
 
 void GOGeneralCombination::Save(GOConfigWriter &cfg) {
