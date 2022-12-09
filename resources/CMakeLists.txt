@@ -92,8 +92,9 @@ elseif(UNIX)
     MESSAGE(STATUS "Not build manpage - some programs are missing")
   endif()
 
-  install(FILES GrandOrgue.appdata.xml DESTINATION share/metainfo)
-
+  string(TIMESTAMP TODAY "%Y-%m-%d")
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgue.appdata.xml.in" "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.appdata.xml/GrandOrgue.appdata.xml")
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.appdata.xml/GrandOrgue.appdata.xml" DESTINATION share/metainfo)
 endif()
 
 ADD_CUSTOM_TARGET(resources ALL DEPENDS ${DEPLIST})
