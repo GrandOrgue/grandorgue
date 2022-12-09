@@ -169,7 +169,7 @@ void GOPerfTestApp::RunTest(
 
       float playback_time
         = blocks * (double)samples_per_frame / engine->GetSampleRate();
-      wxLogError(
+      wxLogMessage(
         wxT("%u sampler, %f seconds, %u bits, %u, %s, %s, %u block: "
             "%ld ms cpu time, limit: %f"),
         pipes.size(),
@@ -197,6 +197,7 @@ void GOPerfTestApp::RunTest(
 bool GOPerfTestApp::OnInit() {
   wxLog *logger = new wxLogStream(&std::cout);
   wxLog::SetActiveTarget(logger);
+  wxLog::SetLogLevel(wxLOG_Status);
   wxImage::AddHandler(new wxJPEGHandler);
   wxImage::AddHandler(new wxGIFHandler);
   wxImage::AddHandler(new wxPNGHandler);
