@@ -1,3 +1,4 @@
+# 3.9.3 (2022-12-09)
 - Fixed error messages of GrandOrguePerf https://github.com/GrandOrgue/grandorgue/issues/1280
 - Fixed exit from GrandOrgue with an unhandled exception occurred on loading an organ
 - Fixed displaying output volume indicators on OSx https://github.com/GrandOrgue/grandorgue/issues/1255
