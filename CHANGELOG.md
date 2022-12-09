@@ -1,5 +1,5 @@
 # 3.9.3 (2022-12-09)
-- Fixed an old version number in the gnome application metadata 
+- Fixed an old version number in the gnome application metadata https://github.com/GrandOrgue/grandorgue/issues/1304
 - Fixed switching off generals when using crescendo in not override mode https://github.com/GrandOrgue/grandorgue/issues/1299
 - Fixed error messages of GrandOrguePerf https://github.com/GrandOrgue/grandorgue/issues/1280
 - Fixed exit from GrandOrgue with an unhandled exception occurred on loading an organ
