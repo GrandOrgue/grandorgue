@@ -63,8 +63,7 @@
   </provides>
 
   <releases>
-    <release version="3.2.0-1" date="2021-09-27"></release>
-    <release version="0.3.1.2342-1" date="2021-09-14"></release>
+    <release version="@FULL_VERSION@" date="@TODAY@"></release>
   </releases>
 
   <content_rating type="oars-1.1" />
