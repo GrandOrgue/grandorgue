@@ -344,6 +344,8 @@ wxString GOOrganController::GenerateCacheFileName() {
     + GOStdFileName::composeCacheFileName(GetOrganHash(), m_config.Preset());
 }
 
+class GOLoadAborted : public std::exception {};
+
 wxString GOOrganController::Load(
   GOProgressDialog *dlg, const GOOrgan &organ, const wxString &file2) {
   GOLoaderFilename odf_name;
@@ -373,16 +375,16 @@ wxString GOOrganController::Load(
   m_CacheFilename = GenerateCacheFileName();
   m_Cacheable = false;
 
+  wxString errMsg;
+
   GOConfigFileReader odf_ini_file;
 
   if (!odf_ini_file.Read(odf_name.Open().get())) {
-    wxString error;
-    error.Printf(_("Unable to read '%s'"), odf_name.GetTitle().c_str());
-    return error;
+    errMsg.Printf(_("Unable to read '%s'"), odf_name.GetTitle().c_str());
+    return errMsg;
   }
 
   m_ODFHash = odf_ini_file.GetHash();
-  wxString error = wxT("!");
   m_b_customized = false;
   GOConfigReaderDB ini(m_config.ODFCheck());
   ini.ReadData(odf_ini_file, ODFSetting, false);
@@ -416,14 +418,14 @@ wxString GOOrganController::Load(
     GOConfigFileReader extra_odf_config;
     if (can_read_cmb_directly) {
       if (!extra_odf_config.Read(setting_file)) {
-        error.Printf(_("Unable to read '%s'"), setting_file.c_str());
-        return error;
+        errMsg.Printf(_("Unable to read '%s'"), setting_file.c_str());
+        return errMsg;
       }
     } else {
       if (!extra_odf_config.Read(
             m_FileStore.FindArchiveContaining(m_odf)->OpenFile(setting_file))) {
-        error.Printf(_("Unable to read '%s'"), setting_file.c_str());
-        return error;
+        errMsg.Printf(_("Unable to read '%s'"), setting_file.c_str());
+        return errMsg;
       }
     }
 
@@ -482,11 +484,9 @@ wxString GOOrganController::Load(
   GOBuffer<char> dummy;
 
   try {
-    dummy.resize(1024 * 1024 * 50);
-
-    wxString load_error;
     bool cache_ok = false;
 
+    dummy.resize(1024 * 1024 * 50);
     ResolveReferences();
 
     /* Figure out list of pipes to load */
@@ -530,18 +530,8 @@ wxString GOOrganController::Load(
                 obj->GetLoadTitle().c_str());
               break;
             }
-            if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
-              dummy.free();
-              SetTemperament(m_Temperament);
-              GOMessageBox(
-                _("Load aborted by the user - only parts of the "
-                  "organ are loaded."),
-                _("Load error"),
-                wxOK | wxICON_ERROR,
-                NULL);
-              m_FileStore.CloseArchives();
-              return wxEmptyString;
-            }
+            if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+              throw GOLoadAborted(); // Skip the rest of the loading code
           }
           if (objectDistributor.IsComplete())
             m_Cacheable = true;
@@ -576,18 +566,8 @@ wxString GOOrganController::Load(
 
       while ((obj = objectDistributor.fetchNext())) {
         obj->LoadData(m_FileStore, m_pool);
-        if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
-          dummy.free();
-          SetTemperament(m_Temperament);
-          GOMessageBox(
-            _("Load aborted by the user - only parts of the organ "
-              "are loaded."),
-            _("Load error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-          m_FileStore.CloseArchives();
-          return wxEmptyString;
-        }
+        if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+          throw GOLoadAborted(); // skip the rest of loading code
       }
 
       for (unsigned i = 0; i < threads.size(); i++)
@@ -597,25 +577,31 @@ wxString GOOrganController::Load(
       if (m_config.ManageCache() && m_Cacheable)
         UpdateCache(dlg, m_config.CompressCache());
     }
-    SetTemperament(m_Temperament);
-  } catch (GOOutOfMemory e) {
-    dummy.free();
+  } catch (const GOOutOfMemory &e) {
     GOMessageBox(
       _("Out of memory - only parts of the organ are loaded. Please "
         "reduce memory footprint via the sample loading settings."),
       _("Load error"),
       wxOK | wxICON_ERROR,
       NULL);
-    m_FileStore.CloseArchives();
-    return wxEmptyString;
-  } catch (wxString error_) {
-    dummy.free();
-    return error_;
+  } catch (const GOLoadAborted &) {
+    GOMessageBox(
+      _("Load aborted by the user - only parts of the organ are loaded."),
+      _("Load error"),
+      wxOK | wxICON_ERROR,
+      NULL);
+  } catch (const wxString &error_) {
+    errMsg = error_;
+  } catch (const std::exception &e) {
+    errMsg = e.what();
+  } catch (...) { // We must not allow unhandled exceptions here
+    errMsg.Printf("Unknown exception");
   }
   dummy.free();
-
   m_FileStore.CloseArchives();
-  return wxEmptyString;
+  if (errMsg.IsEmpty())
+    SetTemperament(m_Temperament);
+  return errMsg;
 }
 
 void GOOrganController::LoadCombination(const wxString &file) {
