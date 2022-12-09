@@ -254,7 +254,8 @@ void GOSoundingPipe::Load(
     wxString::Format(_("%d: %s"), m_MidiKeyNumber, m_Filename.c_str()));
 }
 
-void GOSoundingPipe::LoadData(GOMemoryPool &pool) {
+void GOSoundingPipe::LoadData(
+  const GOFileStore &fileStore, GOMemoryPool &pool) {
   try {
     m_SoundProvider.LoadFromFile(
       pool,

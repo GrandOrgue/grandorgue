@@ -59,7 +59,7 @@ private:
   void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);
 
   void Initialize();
-  void LoadData(GOMemoryPool &pool) override;
+  void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) override;
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override;
   bool SaveCache(GOCacheWriter &cache);
   void UpdateHash(GOHash &hash);

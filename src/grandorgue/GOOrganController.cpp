@@ -565,7 +565,8 @@ wxString GOOrganController::Load(
     if (!cache_ok) {
       ptr_vector<GOLoadThread> threads;
       for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
-        threads.push_back(new GOLoadThread(m_pool, objectDistributor));
+        threads.push_back(
+          new GOLoadThread(m_FileStore, m_pool, objectDistributor));
 
       for (unsigned i = 0; i < threads.size(); i++)
         threads[i]->Run();
@@ -573,7 +574,7 @@ wxString GOOrganController::Load(
       GOCacheObject *obj;
 
       while ((obj = objectDistributor.fetchNext())) {
-        obj->LoadData(m_pool);
+        obj->LoadData(m_FileStore, m_pool);
         if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
           dummy.free();
           SetTemperament(m_Temperament);

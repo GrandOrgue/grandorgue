@@ -14,8 +14,11 @@
 #include "GOMemoryPool.h"
 
 GOLoadThread::GOLoadThread(
-  GOMemoryPool &pool, GOCacheObjectDistributor &distributor)
+  const GOFileStore &fileStore,
+  GOMemoryPool &pool,
+  GOCacheObjectDistributor &distributor)
   : GOThread(),
+    m_FileStore(fileStore),
     m_pool(pool),
     m_distributor(distributor),
     m_Error(),
@@ -42,7 +45,7 @@ void GOLoadThread::Entry() {
 
       if (!obj)
         return;
-      obj->LoadData(m_pool);
+      obj->LoadData(m_FileStore, m_pool);
     } catch (GOOutOfMemory e) {
       m_OutOfMemory = true;
       return;

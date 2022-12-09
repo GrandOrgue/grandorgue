@@ -14,10 +14,12 @@
 
 #include "GOCacheObjectDistributor.h"
 
+class GOFileStore;
 class GOMemoryPool;
 
 class GOLoadThread : private GOThread {
 private:
+  const GOFileStore &m_FileStore;
   GOMemoryPool &m_pool;
   GOCacheObjectDistributor &m_distributor;
   wxString m_Error;
@@ -29,7 +31,10 @@ private:
   void Entry() override;
 
 public:
-  GOLoadThread(GOMemoryPool &pool, GOCacheObjectDistributor &distributor);
+  GOLoadThread(
+    const GOFileStore &fileStore,
+    GOMemoryPool &pool,
+    GOCacheObjectDistributor &distributor);
   ~GOLoadThread();
 
   void Run();

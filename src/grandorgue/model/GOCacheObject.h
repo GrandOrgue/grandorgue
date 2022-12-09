@@ -12,6 +12,7 @@
 
 class GOCache;
 class GOCacheWriter;
+class GOFileStore;
 class GOHash;
 class GOMemoryPool;
 
@@ -20,7 +21,7 @@ public:
   virtual ~GOCacheObject() {}
 
   virtual void Initialize() = 0;
-  virtual void LoadData(GOMemoryPool &pool) = 0;
+  virtual void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) = 0;
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache) = 0;
   virtual bool SaveCache(GOCacheWriter &cache) = 0;
   virtual void UpdateHash(GOHash &hash) = 0;
