@@ -77,7 +77,7 @@ bool GOFileStore::LoadArchives(
 }
 
 GOArchive *GOFileStore::FindArchiveContaining(const wxString fileName) const {
-  GOArchive *aFound;
+  GOArchive *aFound = nullptr;
 
   for (auto a : m_archives) {
     if (a->containsFile(fileName)) {
