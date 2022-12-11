@@ -1,3 +1,4 @@
+# 3.9.4 (2022-12-12)
 - Fixed starting 3.9.3 on Windows https://github.com/GrandOrgue/grandorgue/issues/1311
 # 3.9.3 (2022-12-09)
 - Fixed an old version number in the gnome application metadata https://github.com/GrandOrgue/grandorgue/issues/1304
