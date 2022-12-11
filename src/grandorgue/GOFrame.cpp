@@ -15,6 +15,7 @@
 #include <wx/image.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
+#include <wx/platinfo.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/splash.h>
@@ -389,12 +390,16 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
   bool rc = false;
 
   if (count != m_VolumeGauge.size()) {
+    const wxPortId portId = wxPlatformInfo::Get().GetPortId();
+    const bool isOsX = portId == wxPORT_COCOA || portId == wxPORT_OSX;
     int volCtlId = m_VolumeControlTool->GetId();
     int volCtlPos = m_ToolBar->GetToolPos(volCtlId);
 
     // OsX doesn't relayout the toolbar correctly after changing the size of
     // a control so we need to remove it and to reinsert it later
-    m_ToolBar->RemoveTool(volCtlId);
+    // But RemoveTool hangs on windows, so we do it only on OsX
+    if (isOsX)
+      m_ToolBar->RemoveTool(volCtlId);
 
     m_VolumeGauge.clear();
     m_VolumeControl->DestroyChildren();
@@ -415,8 +420,9 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
     m_VolumeControl->SetSizer(sizer);
     sizer->Fit(m_VolumeControl);
 
-    // reinsert the control and relayout the toolbar
-    m_ToolBar->InsertTool(volCtlPos, m_VolumeControlTool);
+    // reinsert the control and relayout the toolbar on OsX
+    if (isOsX)
+      m_ToolBar->InsertTool(volCtlPos, m_VolumeControlTool);
     m_ToolBar->Realize();
     rc = true;
   }
