@@ -9,50 +9,14 @@
 
 #include "model/GOCacheObject.h"
 
-#include "GOAlloc.h"
-#include "GOCacheObjectDistributor.h"
-#include "GOMemoryPool.h"
-
-GOLoadThread::GOLoadThread(
-  const GOFileStore &fileStore,
-  GOMemoryPool &pool,
-  GOCacheObjectDistributor &distributor)
-  : GOThread(),
-    m_FileStore(fileStore),
-    m_pool(pool),
-    m_distributor(distributor),
-    m_Error(),
-    m_OutOfMemory(false) {}
-
-GOLoadThread::~GOLoadThread() { Stop(); }
-
-void GOLoadThread::checkResult() {
+void GOLoadThread::CheckResult() {
   Wait();
-  if (m_Error != wxEmptyString)
-    throw m_Error;
-  if (m_OutOfMemory)
-    throw GOOutOfMemory();
+  AssertNoException();
 }
 
-void GOLoadThread::Run() { Start(); }
-
 void GOLoadThread::Entry() {
-  while (!ShouldStop()) {
-    if (m_pool.IsPoolFull())
-      return;
-    try {
-      GOCacheObject *obj = m_distributor.fetchNext();
+  GOCacheObject *obj = nullptr;
 
-      if (!obj)
-        return;
-      obj->LoadData(m_FileStore, m_pool);
-    } catch (GOOutOfMemory e) {
-      m_OutOfMemory = true;
-      return;
-    } catch (wxString error) {
-      m_Error = error;
-      return;
-    }
+  while (!ShouldStop() && LoadNextObject(obj)) {
   }
-  return;
 }
