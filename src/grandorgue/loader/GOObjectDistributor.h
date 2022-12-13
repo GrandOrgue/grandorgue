@@ -20,10 +20,14 @@ private:
   const std::vector<T *> &m_objects;
   const unsigned m_NObjects;
   std::atomic_uint m_pos;
+  volatile bool m_IsBroken;
 
 public:
   GOObjectDistributor(const std::vector<T *> &objects)
-    : m_objects(objects), m_NObjects(objects.size()), m_pos(0) {}
+    : m_objects(objects),
+      m_NObjects(objects.size()),
+      m_pos(0),
+      m_IsBroken(false) {}
 
   unsigned GetNObjects() const { return m_NObjects; }
   unsigned GetPos() const {
@@ -36,13 +40,25 @@ public:
 
   /**
    * The main method for fetching the next object. Each object can be fetched
-   * only once. Returns null when no unfetched objects exist
+   * only once. Returns nullptr when no unfetched objects exist or if m_IsBroken
    */
-  T *fetchNext() {
-    unsigned pos = m_pos.fetch_add(1);
+  T *FetchNext() {
+    T *obj = nullptr;
 
-    return pos < m_NObjects ? m_objects[pos] : nullptr;
+    if (!m_IsBroken) {
+      unsigned pos = m_pos.fetch_add(1);
+
+      if (pos < m_NObjects)
+        obj = m_objects[pos];
+    }
+    return obj;
   }
+
+  /**
+   * This method is called on any exception occured. It causes that all worker
+   * threads stop working immediate because they can not fetch more objects
+   */
+  void Break() { m_IsBroken = true; }
 };
 
 #endif /* GOBJECTDISTRIBUTOR_H */
