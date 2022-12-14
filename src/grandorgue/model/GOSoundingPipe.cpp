@@ -61,9 +61,7 @@ GOSoundingPipe::GOSoundingPipe(
 void GOSoundingPipe::LoadAttack(
   GOConfigReader &cfg, wxString group, wxString prefix) {
   attack_load_info ainfo;
-  ainfo.filename.Assign(
-    m_OrganController->GetFileStore(),
-    cfg.ReadFileName(ODFSetting, group, prefix));
+  ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
   ainfo.sample_group = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
   ainfo.load_release = cfg.ReadBoolean(
@@ -145,8 +143,7 @@ void GOSoundingPipe::Init(
   m_OrganController->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
   attack_load_info ainfo;
-  ainfo.filename.AssignResource(
-    m_OrganController->GetConfig().GetResourceDirectory(), m_Filename);
+  ainfo.filename.AssignResource(m_Filename);
   ainfo.sample_group = -1;
   ainfo.load_release = !m_Percussive;
   ainfo.percussive = m_Percussive;
@@ -224,9 +221,7 @@ void GOSoundingPipe::Load(
     release_load_info rinfo;
     wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
 
-    rinfo.filename.Assign(
-      m_OrganController->GetFileStore(),
-      cfg.ReadFileName(ODFSetting, group, p));
+    rinfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, p));
     rinfo.sample_group = cfg.ReadInteger(
       ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
     rinfo.max_playback_time = cfg.ReadInteger(
@@ -258,6 +253,7 @@ void GOSoundingPipe::LoadData(
   const GOFileStore &fileStore, GOMemoryPool &pool) {
   try {
     m_SoundProvider.LoadFromFile(
+      fileStore,
       pool,
       m_AttackInfo,
       m_ReleaseInfo,

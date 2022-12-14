@@ -8,36 +8,51 @@
 #ifndef GOLOADERFILENAME_H
 #define GOLOADERFILENAME_H
 
-#include <wx/string.h>
-
 #include <memory>
 
-class GOArchive;
+#include <wx/string.h>
+
 class GOFile;
 class GOFileStore;
 class GOHash;
 
+/**
+ * This class represent a referrence to a file in a virtual filesystem
+ * There are three virtual filesystem roots available:
+ *   - ODF: the file in the directory near the ODF file or in an
+ *     archive (in the main one or a referenced one). Usually for refs from ODF
+ *   - Resource: the file is somewhere in the resource directory near the
+ *     GrandOrgue executable. Usually for refs from GrandOrgue itself
+ *   - Absolute: the file is somewhere in the host filesystem. Usually for refs
+ *     from the config.
+ * The name consist of two parts: the root and the path inside the root.
+ * The file is actually searched during the Open().
+ */
+
 class GOLoaderFilename {
 private:
-  wxString m_Name;
-  wxString m_Path;
-  GOArchive *m_Archiv;
-  bool m_ToHashSizeTime;
-  bool m_ToHashPath;
+  enum RootKind { ROOT_UNKNOWN, ROOT_ODF, ROOT_RESOURCE, ROOT_ABSOLUTE };
 
-  void SetPath(const wxString &base, const wxString &path);
+  RootKind m_RootKind = ROOT_UNKNOWN;
+  wxString m_path; // relative the root
+
+  void Assign(const RootKind rootKind, const wxString &path);
 
 public:
-  GOLoaderFilename();
+  void Assign(const wxString &path) { Assign(ROOT_ODF, path); }
+  void AssignResource(const wxString &path) { Assign(ROOT_RESOURCE, path); }
+  void AssignAbsolute(const wxString &path) { Assign(ROOT_ABSOLUTE, path); }
 
-  void Assign(const GOFileStore &fileStore, const wxString &name);
-  void AssignResource(const wxString &resourceDirectory, const wxString &name);
-  void AssignAbsolute(const wxString &path);
-
-  const wxString &GetTitle() const;
+  const wxString &GetTitle() const { return m_path; }
   void Hash(GOHash &hash) const;
 
-  std::unique_ptr<GOFile> Open() const;
+  /**
+   * Opens Searches the file and opens it. If the file does not exist then
+   *   throws an exception
+   * @param fileStore a GOFileStore object for searching the file against
+   * @return a pointer to the GOFile
+   */
+  std::unique_ptr<GOFile> Open(const GOFileStore &fileStore) const;
 };
 
 #endif

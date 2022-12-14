@@ -203,8 +203,8 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   } else {
     GOLoaderFilename fname;
 
-    fname.Assign(m_FileStore, info_filename);
-    std::unique_ptr<GOFile> file = fname.Open();
+    fname.Assign(info_filename);
+    std::unique_ptr<GOFile> file = fname.Open(m_FileStore);
     fn = info_filename;
     if (
       file->isValid()
@@ -361,7 +361,7 @@ wxString GOOrganController::Load(
       return errMsg;
 
     m_odf = organ.GetODFPath();
-    odf_name.Assign(m_FileStore, m_odf);
+    odf_name.Assign(m_odf);
   } else {
     wxString file = organ.GetODFPath();
     m_odf = GONormalizePath(file);
@@ -379,7 +379,7 @@ wxString GOOrganController::Load(
 
   GOConfigFileReader odf_ini_file;
 
-  if (!odf_ini_file.Read(odf_name.Open().get())) {
+  if (!odf_ini_file.Read(odf_name.Open(m_FileStore).get())) {
     errMsg.Printf(_("Unable to read '%s'"), odf_name.GetTitle().c_str());
     return errMsg;
   }
