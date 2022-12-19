@@ -8,23 +8,12 @@
 #ifndef GOLOADTHREAD_H
 #define GOLOADTHREAD_H
 
-#include <wx/string.h>
-
 #include "threading/GOThread.h"
 
-#include "GOCacheObjectDistributor.h"
+#include "GOLoadWorker.h"
 
-class GOFileStore;
-class GOMemoryPool;
-
-class GOLoadThread : private GOThread {
+class GOLoadThread : private GOLoadWorker, private GOThread {
 private:
-  const GOFileStore &m_FileStore;
-  GOMemoryPool &m_pool;
-  GOCacheObjectDistributor &m_distributor;
-  wxString m_Error;
-  bool m_OutOfMemory;
-
   /* the main loading loop. It takes objects from the m_CacheObjects
    * concurrently with other threads loads them
    */
@@ -34,11 +23,12 @@ public:
   GOLoadThread(
     const GOFileStore &fileStore,
     GOMemoryPool &pool,
-    GOCacheObjectDistributor &distributor);
-  ~GOLoadThread();
+    GOCacheObjectDistributor &distributor)
+    : GOLoadWorker(fileStore, pool, distributor) {}
+  ~GOLoadThread() { Stop(); }
 
-  void Run();
-  void checkResult();
+  void Run() { Start(); }
+  void CheckResult();
 };
 
 #endif

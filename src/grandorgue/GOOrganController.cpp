@@ -554,28 +554,34 @@ wxString GOOrganController::Load(
     }
 
     if (!cache_ok) {
+      GOLoadWorker thisWorker(m_FileStore, m_pool, objectDistributor);
       ptr_vector<GOLoadThread> threads;
+
+      // Create and run additional worker threads
       for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
         threads.push_back(
           new GOLoadThread(m_FileStore, m_pool, objectDistributor));
-
       for (unsigned i = 0; i < threads.size(); i++)
         threads[i]->Run();
 
-      GOCacheObject *obj;
+      GOCacheObject *obj = nullptr;
 
-      while ((obj = objectDistributor.fetchNext())) {
-        obj->LoadData(m_FileStore, m_pool);
+      while (thisWorker.LoadNextObject(obj))
+        // show the progress and process possible Cancel
         if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
           throw GOLoadAborted(); // skip the rest of loading code
-      }
+      // rethrow exception if any occured in thisWorker.LoadNextObject
+      thisWorker.AssertNoException();
 
       for (unsigned i = 0; i < threads.size(); i++)
-        threads[i]->checkResult();
+        threads[i]->CheckResult();
       if (objectDistributor.IsComplete())
         m_Cacheable = true;
       if (m_config.ManageCache() && m_Cacheable)
         UpdateCache(dlg, m_config.CompressCache());
+
+      // Despite a possible exception automatic calling ~GOLoadThread from
+      // ~ptr_vector stops all additional worker threads
     }
   } catch (const GOOutOfMemory &e) {
     GOMessageBox(
