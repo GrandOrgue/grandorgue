@@ -10,7 +10,7 @@
 
 #include "GOFile.h"
 
-class GOInvalidFile : public GOFile {
+class GOInvalidFile : public GOOpenedFile {
 private:
   wxString m_Name;
 

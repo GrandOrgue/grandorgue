@@ -57,7 +57,7 @@ bool GOConfigFileReader::Read(wxString filename) {
   return Read(&file);
 }
 
-bool GOConfigFileReader::Read(GOFile *file) {
+bool GOConfigFileReader::Read(GOOpenedFile *file) {
   m_Entries.clear();
 
   if (!file->Open()) {

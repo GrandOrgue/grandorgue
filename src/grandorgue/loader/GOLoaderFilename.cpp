@@ -32,9 +32,9 @@ void GOLoaderFilename::Hash(GOHash &hash) const {
   hash.Update(m_path);
 }
 
-std::unique_ptr<GOFile> GOLoaderFilename::Open(
+std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
   const GOFileStore &fileStore) const {
-  GOFile *file;
+  GOOpenedFile *file;
 
   assert(m_RootKind != ROOT_UNKNOWN);
   if (m_RootKind == ROOT_ODF && fileStore.AreArchivesUsed()) {
@@ -63,5 +63,5 @@ std::unique_ptr<GOFile> GOLoaderFilename::Open(
       throw wxString::Format(_("File '%s' does not exists"), fullPath);
     file = new GOStandardFile(fullPath, m_path);
   }
-  return std::unique_ptr<GOFile>(file);
+  return std::unique_ptr<GOOpenedFile>(file);
 }

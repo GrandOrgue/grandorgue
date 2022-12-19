@@ -81,18 +81,18 @@ void GOArchiveCreator::AddOrgan(const wxString &path) {
   m_OrganPaths.push_back(name);
 }
 
-std::unique_ptr<GOFile> GOArchiveCreator::findPackageFile(
+std::unique_ptr<GOOpenedFile> GOArchiveCreator::findPackageFile(
   const wxString &name) {
   for (unsigned i = 0; i < m_packages.size(); i++) {
     if (m_packages[i]->containsFile(name))
-      return std::unique_ptr<GOFile>(m_packages[i]->OpenFile(name));
+      return std::unique_ptr<GOOpenedFile>(m_packages[i]->OpenFile(name));
   }
   return nullptr;
 }
 
 bool GOArchiveCreator::storeFile(
   const wxString &name, const GOBuffer<uint8_t> &data) {
-  std::unique_ptr<GOFile> archiveFile = findPackageFile(name);
+  std::unique_ptr<GOOpenedFile> archiveFile = findPackageFile(name);
   if (archiveFile && archiveFile->GetSize() == data.GetSize()) {
     GOBuffer<uint8_t> compare;
     if (!archiveFile->ReadContent(compare)) {
@@ -152,7 +152,7 @@ bool GOArchiveCreator::FinishPackage() {
   for (unsigned i = 0; i < m_organs.size(); i++) {
     if (m_organs[i])
       continue;
-    std::unique_ptr<GOFile> f = findPackageFile(m_OrganPaths[i]);
+    std::unique_ptr<GOOpenedFile> f = findPackageFile(m_OrganPaths[i]);
     if (!f) {
       wxLogError(
         _("organ definition %s not found in organ package"),
@@ -230,7 +230,7 @@ bool GOArchiveCreator::AddDirectory(const wxString &path) {
   return true;
 }
 
-bool GOArchiveCreator::addOrganData(unsigned idx, GOFile *file) {
+bool GOArchiveCreator::addOrganData(unsigned idx, GOOpenedFile *file) {
   GOConfigFileReader cfg;
   if (!cfg.Read(file)) {
     wxLogError(

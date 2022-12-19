@@ -40,7 +40,7 @@ GOArchive *GOArchiveManager::OpenArchive(const wxString &path) {
 }
 
 bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
-  GOFile *indexFile = archive->OpenFile(wxT("organindex.ini"));
+  GOOpenedFile *indexFile = archive->OpenFile(wxT("organindex.ini"));
   if (!indexFile)
     return false;
   GOConfigFileReader ini_file;

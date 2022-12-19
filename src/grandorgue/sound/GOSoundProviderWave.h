@@ -91,7 +91,7 @@ class GOSoundProviderWave : public GOSoundProvider {
 
   void ProcessFile(
     GOMemoryPool &pool,
-    GOFile *file,
+    GOOpenedFile *file,
     const std::vector<GOWaveLoop> *loops,
     bool is_attack,
     bool is_release,
@@ -110,7 +110,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     unsigned loop_crossfade_length,
     unsigned max_released_time);
 
-  void LoadPitch(GOFile *file);
+  void LoadPitch(GOOpenedFile *file);
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 
 public:

@@ -26,7 +26,7 @@
 #include "GOArchiveWriter.h"
 #include "GOOrganList.h"
 
-class GOFile;
+class GOOpenedFile;
 class GOOrgan;
 
 class GOArchiveCreator {
@@ -40,11 +40,11 @@ private:
   std::vector<wxString> m_OrganPaths;
   wxString m_PackageTitle;
 
-  std::unique_ptr<GOFile> findPackageFile(const wxString &name);
+  std::unique_ptr<GOOpenedFile> findPackageFile(const wxString &name);
   bool writePackageIndex();
   bool checkExtension(const wxString &name, wxString ext);
   bool storeFile(const wxString &name, const GOBuffer<uint8_t> &data);
-  bool addOrganData(unsigned idx, GOFile *file);
+  bool addOrganData(unsigned idx, GOOpenedFile *file);
   bool compressData(
     const wxString &name, const wxString &ext, GOBuffer<uint8_t> &data);
 

@@ -113,7 +113,7 @@ void GOWave::LoadSamplerChunk(const uint8_t *ptr, unsigned long length) {
   m_PitchFract = sampler->dwMIDIPitchFraction / (double)UINT_MAX * 100.0;
 }
 
-void GOWave::Open(GOFile *file) {
+void GOWave::Open(GOOpenedFile *file) {
   const wxString fileName = file->GetName();
 
   if (!file->Open())

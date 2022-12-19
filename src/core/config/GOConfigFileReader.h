@@ -12,7 +12,7 @@
 
 #include <map>
 
-class GOFile;
+class GOOpenedFile;
 
 class GOConfigFileReader {
 private:
@@ -25,7 +25,7 @@ public:
   GOConfigFileReader();
   ~GOConfigFileReader();
 
-  bool Read(GOFile *file);
+  bool Read(GOOpenedFile *file);
   bool Read(wxString filename);
   wxString GetHash();
 

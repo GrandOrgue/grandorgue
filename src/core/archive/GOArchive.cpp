@@ -57,7 +57,7 @@ bool GOArchive::containsFile(const wxString &name) {
   return false;
 }
 
-GOFile *GOArchive::OpenFile(const wxString &name) {
+GOOpenedFile *GOArchive::OpenFile(const wxString &name) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
     if (m_Entries[i].name == name) {
       return new GOArchiveEntryFile(

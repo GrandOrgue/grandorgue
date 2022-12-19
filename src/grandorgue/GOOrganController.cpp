@@ -204,7 +204,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     GOLoaderFilename fname;
 
     fname.Assign(info_filename);
-    std::unique_ptr<GOFile> file = fname.Open(m_FileStore);
+    std::unique_ptr<GOOpenedFile> file = fname.Open(m_FileStore);
     fn = info_filename;
     if (
       file->isValid()
