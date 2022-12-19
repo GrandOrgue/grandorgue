@@ -35,7 +35,7 @@ private:
 public:
   /**
    * Constructs a GOLoadWorker object
-   * @param distributor - the instacne of GOCacheObjectDistributor to take
+   * @param distributor - the instance of GOCacheObjectDistributor to take
    *  objects from
    * @param fileStore - passed to GOCacheObject::LoadData
    * @param pool - passed to GOCacheObject::LoadData
