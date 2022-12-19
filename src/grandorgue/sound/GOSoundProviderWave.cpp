@@ -10,8 +10,9 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "files/GOOpenedFile.h"
+
 #include "GOBuffer.h"
-#include "GOFile.h"
 #include "GOMemoryPool.h"
 #include "GOSoundAudioSection.h"
 #include "GOWave.h"

@@ -24,6 +24,8 @@ config/GOConfigReader.cpp
 config/GOConfigReaderDB.cpp
 config/GOConfigWriter.cpp
 contrib/sha1.cpp
+files/GOInvalidFile.cpp
+files/GOStandardFile.cpp
 files/GOStdFileName.cpp
 midi/GOMidiEvent.cpp
 midi/GOMidiFileReader.cpp
@@ -51,7 +53,6 @@ temperaments/GOTemperamentList.cpp
 temperaments/GOTemperamentUser.cpp
 GOCompress.cpp
 GOHash.cpp
-GOInvalidFile.cpp
 GOKeyConvert.cpp
 GOKeyReceiverData.cpp
 GOMemoryPool.cpp
@@ -60,7 +61,6 @@ GOOrganList.cpp
 GOPath.cpp
 GORodgers.cpp
 GOSampleStatistic.cpp
-GOStandardFile.cpp
 GOStdPath.cpp
 GOTimer.cpp
 GOUtil.cpp

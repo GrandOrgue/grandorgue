@@ -11,10 +11,10 @@
 #include <wx/log.h>
 
 #include "archive/GOArchive.h"
+#include "files/GOStandardFile.h"
 #include "loader/GOFileStore.h"
 
 #include "GOHash.h"
-#include "GOStandardFile.h"
 
 void GOLoaderFilename::Assign(const RootKind rootKind, const wxString &path) {
   wxFileName tmpPath(path);

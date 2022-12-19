@@ -5,25 +5,19 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSTANDARDFILE_H
-#define GOSTANDARDFILE_H
+#ifndef GOINVALIDFILE_H
+#define GOINVALIDFILE_H
 
-#include <wx/file.h>
+#include "GOOpenedFile.h"
 
-#include "GOFile.h"
-
-class GOStandardFile : public GOOpenedFile {
+class GOInvalidFile : public GOOpenedFile {
 private:
-  wxString m_Path;
   wxString m_Name;
-  wxFile m_File;
-  size_t m_Size;
 
 public:
-  GOStandardFile(const wxString &path);
-  GOStandardFile(const wxString &path, const wxString &name);
-  ~GOStandardFile();
+  GOInvalidFile(const wxString &name);
 
+  bool isValid();
   size_t GetSize();
   const wxString GetName();
   const wxString GetPath();

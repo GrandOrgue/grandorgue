@@ -11,7 +11,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "GOFile.h"
+#include "files/GOOpenedFile.h"
+
 #include "GOWavPack.h"
 #include "GOWavPackWriter.h"
 #include "GOWaveTypes.h"

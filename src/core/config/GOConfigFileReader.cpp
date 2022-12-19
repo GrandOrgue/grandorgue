@@ -11,10 +11,11 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "files/GOStandardFile.h"
+
 #include "GOBuffer.h"
 #include "GOCompress.h"
 #include "GOHash.h"
-#include "GOStandardFile.h"
 
 GOConfigFileReader::GOConfigFileReader() : m_Entries(), m_Hash() {}
 

@@ -8,7 +8,7 @@
 #ifndef GORUGEARCHIVEENTRYFILE_H
 #define GORUGEARCHIVEENTRYFILE_H
 
-#include "GOFile.h"
+#include "files/GOOpenedFile.h"
 
 class GOArchive;
 

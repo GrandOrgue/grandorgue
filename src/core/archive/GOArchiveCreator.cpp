@@ -26,16 +26,17 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "config/GOConfigFileReader.h"
+#include "config/GOConfigFileWriter.h"
+#include "config/GOConfigWriter.h"
+#include "files/GOStandardFile.h"
+
 #include "GOArchive.h"
 #include "GOArchiveFile.h"
 #include "GOCompress.h"
 #include "GOOrgan.h"
 #include "GOPath.h"
-#include "GOStandardFile.h"
 #include "GOWave.h"
-#include "config/GOConfigFileReader.h"
-#include "config/GOConfigFileWriter.h"
-#include "config/GOConfigWriter.h"
 
 GOArchiveCreator::GOArchiveCreator(const wxString &cacheDir)
   : m_OrganList(),

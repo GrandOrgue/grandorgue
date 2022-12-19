@@ -11,10 +11,10 @@
 #include <wx/intl.h>
 #include <wx/mstream.h>
 
+#include "files/GOOpenedFile.h"
 #include "loader/GOLoaderFilename.h"
 
 #include "GOBuffer.h"
-#include "GOFile.h"
 #include "GOLog.h"
 #include "GOOrganController.h"
 #include "Images.h"

@@ -10,11 +10,12 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "files/GOInvalidFile.h"
+#include "threading/GOMutexLocker.h"
+
 #include "GOArchiveEntryFile.h"
 #include "GOArchiveIndex.h"
 #include "GOArchiveReader.h"
-#include "GOInvalidFile.h"
-#include "threading/GOMutexLocker.h"
 
 GOArchive::GOArchive(const wxString &cachePath)
   : m_CachePath(cachePath), m_ID(), m_Dependencies(), m_Entries(), m_Path() {}

@@ -15,10 +15,10 @@
 #include "config/GOConfigFileReader.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
+#include "files/GOOpenedFile.h"
 
 #include "GOArchive.h"
 #include "GOArchiveFile.h"
-#include "GOFile.h"
 #include "GOOrgan.h"
 #include "GOOrganList.h"
 #include "GOPath.h"
