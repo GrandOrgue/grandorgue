@@ -14,6 +14,7 @@
 #include <wx/choicdlg.h>
 #include <wx/choice.h>
 #include <wx/combobox.h>
+#include <wx/gbsizer.h>
 #include <wx/log.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
@@ -122,84 +123,83 @@ GOOrganDialog::GOOrganDialog(
     wxDefaultSize,
     wxVSCROLL,
     wxT("scrolledWindow"));
+
   wxBoxSizer *settingSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *box1 = new wxStaticBoxSizer(wxVERTICAL, scroll, _("Settings"));
-  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
-  box1->Add(grid, 0, wxEXPAND | wxALL, 5);
-  settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
+  wxGridBagSizer *gb = new wxGridBagSizer(5, 5);
 
-  grid->Add(
+  gb->Add(
     new wxStaticText(scroll, wxID_ANY, _("Amplitude:")),
-    0,
+    wxGBPosition(0, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  wxBoxSizer *box2 = new wxBoxSizer(wxHORIZONTAL);
   m_Amplitude = new wxTextCtrl(scroll, ID_EVENT_AMPLITUDE, wxEmptyString);
+  gb->Add(m_Amplitude, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND);
   m_AmplitudeSpin = new wxSpinButton(scroll, ID_EVENT_AMPLITUDE_SPIN);
-  box2->Add(m_Amplitude);
-  box2->Add(m_AmplitudeSpin);
-  grid->Add(box2);
   m_AmplitudeSpin->SetRange(0, 1000);
+  gb->Add(m_AmplitudeSpin, wxGBPosition(0, 2), wxDefaultSpan);
 
-  grid->Add(
+  gb->Add(
     new wxStaticText(scroll, wxID_ANY, _("Gain (dB):")),
-    0,
+    wxGBPosition(1, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  box2 = new wxBoxSizer(wxHORIZONTAL);
   m_Gain = new wxTextCtrl(scroll, ID_EVENT_GAIN, wxEmptyString);
+  gb->Add(m_Gain, wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND);
   m_GainSpin = new wxSpinButton(scroll, ID_EVENT_GAIN_SPIN);
-  box2->Add(m_Gain);
-  box2->Add(m_GainSpin);
-  grid->Add(box2);
   m_GainSpin->SetRange(-120, 40);
+  gb->Add(m_GainSpin, wxGBPosition(1, 2), wxDefaultSpan);
 
-  grid->Add(
+  gb->Add(
     new wxStaticText(scroll, wxID_ANY, _("Tuning (Cent):")),
-    0,
+    wxGBPosition(2, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  box2 = new wxBoxSizer(wxHORIZONTAL);
   m_Tuning = new wxTextCtrl(scroll, ID_EVENT_TUNING, wxEmptyString);
+  gb->Add(m_Tuning, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND);
   m_TuningSpin = new wxSpinButton(scroll, ID_EVENT_TUNING_SPIN);
-  box2->Add(m_Tuning);
-  box2->Add(m_TuningSpin);
-  grid->Add(box2);
+  gb->Add(m_TuningSpin, wxGBPosition(2, 2));
   m_TuningSpin->SetRange(-1800, 1800);
 
-  grid->Add(
+  gb->Add(
     new wxStaticText(scroll, wxID_ANY, _("Tracker (ms):")),
-    0,
+    wxGBPosition(3, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  box2 = new wxBoxSizer(wxHORIZONTAL);
   m_Delay = new wxTextCtrl(scroll, ID_EVENT_DELAY, wxEmptyString);
+  gb->Add(m_Delay, wxGBPosition(3, 1), wxDefaultSpan, wxEXPAND);
   m_DelaySpin = new wxSpinButton(scroll, ID_EVENT_DELAY_SPIN);
-  box2->Add(m_Delay);
-  box2->Add(m_DelaySpin);
-  grid->Add(box2);
   m_DelaySpin->SetRange(0, 10000);
+  gb->Add(m_DelaySpin, wxGBPosition(3, 2), wxDefaultSpan);
 
-  grid->Add(
+  gb->Add(
     new wxStaticText(scroll, wxID_ANY, _("Audio group:")),
-    0,
+    wxGBPosition(4, 0),
+    wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
   m_AudioGroup = new wxComboBox(scroll, ID_EVENT_AUDIO_GROUP, wxEmptyString);
-  grid->Add(m_AudioGroup);
   m_AudioGroup->Append(wxEmptyString);
   std::vector<wxString> audio_groups
     = m_OrganController->GetSettings().GetAudioGroups();
   for (unsigned i = 0; i < audio_groups.size(); i++)
     m_AudioGroup->Append(audio_groups[i]);
-
   m_AudioGroup->SetValue(wxT(" "));
   m_LastAudioGroup = m_AudioGroup->GetValue();
+  gb->Add(m_AudioGroup, wxGBPosition(4, 1), wxGBSpan(1, 2), wxEXPAND);
+  gb->AddGrowableCol(1, 1);
+
+  box1->Add(gb, 0, wxEXPAND | wxALL, 5);
+  settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
   box1 = new wxStaticBoxSizer(wxVERTICAL, scroll, _("Sample Loading"));
-  grid = new wxFlexGridSizer(2, 5, 5);
-  box1->Add(grid, 0, wxEXPAND | wxALL, 5);
-  settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
+  wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
+
+  grid->AddGrowableCol(1, 1);
 
   choices.clear();
   choices.push_back(_("Parent default"));
@@ -216,7 +216,7 @@ GOOrganDialog::GOOrganDialog(
     wxDefaultPosition,
     wxDefaultSize,
     choices);
-  grid->Add(m_BitsPerSample);
+  grid->Add(m_BitsPerSample, 1, wxEXPAND);
 
   choices.clear();
   choices.push_back(_("Parent default"));
@@ -229,7 +229,7 @@ GOOrganDialog::GOOrganDialog(
     5);
   m_Compress = new wxChoice(
     scroll, ID_EVENT_COMPRESS, wxDefaultPosition, wxDefaultSize, choices);
-  grid->Add(m_Compress);
+  grid->Add(m_Compress, 1, wxEXPAND);
 
   choices.clear();
   choices.push_back(_("Parent default"));
@@ -243,7 +243,7 @@ GOOrganDialog::GOOrganDialog(
     5);
   m_Channels = new wxChoice(
     scroll, ID_EVENT_CHANNELS, wxDefaultPosition, wxDefaultSize, choices);
-  grid->Add(m_Channels);
+  grid->Add(m_Channels, 1, wxEXPAND);
 
   choices.clear();
   choices.push_back(_("Parent default"));
@@ -257,7 +257,7 @@ GOOrganDialog::GOOrganDialog(
     5);
   m_LoopLoad = new wxChoice(
     scroll, ID_EVENT_LOOP_LOAD, wxDefaultPosition, wxDefaultSize, choices);
-  grid->Add(m_LoopLoad);
+  grid->Add(m_LoopLoad, 1, wxEXPAND);
 
   choices.clear();
   choices.push_back(_("Parent default"));
@@ -270,7 +270,7 @@ GOOrganDialog::GOOrganDialog(
     5);
   m_AttackLoad = new wxChoice(
     scroll, ID_EVENT_ATTACK_LOAD, wxDefaultPosition, wxDefaultSize, choices);
-  grid->Add(m_AttackLoad);
+  grid->Add(m_AttackLoad, 1, wxEXPAND);
 
   choices.clear();
   choices.push_back(_("Parent default"));
@@ -283,7 +283,7 @@ GOOrganDialog::GOOrganDialog(
     5);
   m_ReleaseLoad = new wxChoice(
     scroll, ID_EVENT_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices);
-  grid->Add(m_ReleaseLoad);
+  grid->Add(m_ReleaseLoad, 1, wxEXPAND);
 
   m_BitsPerSample->SetSelection(wxNOT_FOUND);
   m_LastBitsPerSample = m_BitsPerSample->GetSelection();
@@ -297,6 +297,8 @@ GOOrganDialog::GOOrganDialog(
   m_LastAttackLoad = m_AttackLoad->GetSelection();
   m_ReleaseLoad->SetSelection(wxNOT_FOUND);
   m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
+  box1->Add(grid, 0, wxEXPAND | wxALL, 5);
+  settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
   wxBoxSizer *buttons = new wxBoxSizer(wxHORIZONTAL);
   m_Apply = new wxButton(scroll, ID_EVENT_APPLY, _("Apply"));
