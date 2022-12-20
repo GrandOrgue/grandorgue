@@ -346,7 +346,7 @@ void GOSoundingPipe::Initialize() {}
 const wxString &GOSoundingPipe::GetLoadTitle() { return m_Filename; }
 
 void GOSoundingPipe::Validate() {
-  if (!m_OrganController->GetSettings().ODFCheck())
+  if (!m_OrganController->GetConfig().ODFCheck())
     return;
 
   if (!m_PipeConfigNode.GetEffectiveChannels())
@@ -481,7 +481,7 @@ void GOSoundingPipe::UpdateTuning() {
 }
 
 void GOSoundingPipe::UpdateAudioGroup() {
-  m_AudioGroupID = m_OrganController->GetSettings().GetAudioGroupId(
+  m_AudioGroupID = m_OrganController->GetConfig().GetAudioGroupId(
     m_PipeConfigNode.GetEffectiveAudioGroup());
 }
 

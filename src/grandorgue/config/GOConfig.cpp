@@ -585,7 +585,7 @@ void GOConfig::SetAudioGroups(const std::vector<wxString> &audio_groups) {
   m_AudioGroups = audio_groups;
 }
 
-unsigned GOConfig::GetAudioGroupId(const wxString &str) {
+unsigned GOConfig::GetAudioGroupId(const wxString &str) const {
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
     if (m_AudioGroups[i] == str)
       return i;

@@ -189,7 +189,7 @@ public:
 
   const std::vector<wxString> &GetAudioGroups();
   void SetAudioGroups(const std::vector<wxString> &audio_groups);
-  unsigned GetAudioGroupId(const wxString &str);
+  unsigned GetAudioGroupId(const wxString &str) const;
   int GetStrictAudioGroupId(const wxString &str);
 
   const GOPortsConfig &GetSoundPortsConfig() const {
