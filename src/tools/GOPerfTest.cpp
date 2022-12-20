@@ -91,9 +91,7 @@ void GOPerfTestApp::RunTest(
         std::vector<release_load_info> release;
         std::vector<attack_load_info> attack;
         attack_load_info ainfo;
-        ainfo.filename.Assign(
-          organController->GetFileStore(),
-          wxString::Format(wxT("%02d.wav"), i % 3));
+        ainfo.filename.Assign(wxString::Format(wxT("%02d.wav"), i % 3));
         ainfo.sample_group = -1;
         ainfo.load_release = true;
         ainfo.percussive = false;
@@ -105,6 +103,7 @@ void GOPerfTestApp::RunTest(
         ainfo.loops.clear();
         attack.push_back(ainfo);
         w->LoadFromFile(
+          organController->GetFileStore(),
           organController->GetMemoryPool(),
           attack,
           release,

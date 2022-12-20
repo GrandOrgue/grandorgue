@@ -172,9 +172,9 @@ bool GOBitmapCache::loadFile(wxImage &img, const wxString &filename) {
 
   try {
     GOLoaderFilename name;
-    name.Assign(m_OrganController->GetFileStore(), filename);
+    name.Assign(filename);
 
-    std::unique_ptr<GOFile> file = name.Open();
+    std::unique_ptr<GOFile> file = name.Open(m_OrganController->GetFileStore());
     GOBuffer<char> data;
 
     result = file->ReadContent(data);
