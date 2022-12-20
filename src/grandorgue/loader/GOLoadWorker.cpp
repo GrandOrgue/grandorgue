@@ -30,7 +30,7 @@ bool GOLoadWorker::LoadNextObject(GOCacheObject *&obj) {
 
   if (
     !m_HasBeenException && !m_pool.IsPoolFull()
-    && (obj = m_distributor.fetchNext())) {
+    && (obj = m_distributor.FetchNext())) {
     assert(m_errMsg.IsEmpty()); // otherwise m_HasBeenException
     try {
       obj->LoadData(m_FileStore, m_pool);
@@ -50,6 +50,7 @@ bool GOLoadWorker::LoadNextObject(GOCacheObject *&obj) {
       if (!m_errMsg.IsEmpty())
         m_errMsg.Printf(
           _("Unable to load %s: %s"), obj->GetLoadTitle(), m_errMsg);
+      m_distributor.Break(); // force other workers to stop as soon as possible
     }
   }
   return isLoaded;

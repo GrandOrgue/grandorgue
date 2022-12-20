@@ -519,7 +519,7 @@ wxString GOOrganController::Load(
       if (cache_ok) {
         try {
           while (true) {
-            GOCacheObject *obj = objectDistributor.fetchNext();
+            GOCacheObject *obj = objectDistributor.FetchNext();
 
             if (!obj)
               break;
@@ -673,7 +673,7 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
     cache_save_ok = false;
 
   for (unsigned i = 0; cache_save_ok; i++) {
-    GOCacheObject *obj = objectDistributor.fetchNext();
+    GOCacheObject *obj = objectDistributor.FetchNext();
 
     if (!obj)
       break;
