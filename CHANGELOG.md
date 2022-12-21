@@ -1,3 +1,4 @@
+- Help errata, spell check and some cleanup
 - Fixed continuing loading an organ after an exception in one loading thread
 - Fixed size of text fields in the Organ Settings dialog on OsX https://github.com/GrandOrgue/grandorgue/issues/1315
 - Fixed missing the object filename in an error message if some exception occured when loading this object
