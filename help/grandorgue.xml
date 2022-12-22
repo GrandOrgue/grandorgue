@@ -3445,10 +3445,10 @@ sends the label contents following the Hauptwerk&#8482; standards.
     <para>
 This schema describes the close relations that exist between the real-world audio hardware capabilities
 and the sample set disposition as provided by the sample set designer.
-For illustration, the free sample set of Bureå Church is customized to build a totally different spatial disposition. Here are the assumptions:
+For illustration, the free sample set of BureÃ¥ Church is customized to build a totally different spatial disposition. Here are the assumptions:
     </para>
     <itemizedlist mark="bullet">
-    <listitem><simpara>The organ has a main case and a separate choir (RückPositiv) case in the organist's back</simpara></listitem>
+    <listitem><simpara>The organ has a main case and a separate choir (RÃ¼ckPositiv) case in the organist's back</simpara></listitem>
     <listitem><simpara>The console is embedded facing the main case, therefore the main case sounds "front" and the choir case sounds "rear"</simpara></listitem>
     <listitem><simpara>The organ has 2 pedal turrets on the far left and right sides of the main case</simpara></listitem>
     <listitem><simpara>The organ has an echo keyboard in the basement of the main case</simpara></listitem>
@@ -3479,7 +3479,7 @@ For illustration, the free sample set of Bureå Church is customized to build a t
     <itemizedlist>
       <listitem>
         <simpara>
-          sound the Choir (Svällverk) through the rear speakers, full volume
+          sound the Choir (SvÃ¤llverk) through the rear speakers, full volume
         </simpara>
       </listitem>
       <listitem>
@@ -3489,7 +3489,7 @@ For illustration, the free sample set of Bureå Church is customized to build a t
       </listitem>
       <listitem>
         <simpara>
-          sound the Echo (Bröstverk) through the front speakers, softened volume
+          sound the Echo (BrÃ¶stverk) through the front speakers, softened volume
         </simpara>
       </listitem>
       <listitem>
@@ -3528,7 +3528,7 @@ For illustration, the free sample set of Bureå Church is customized to build a t
           </row>
           <row>
             <entry>macOS:</entry>
-            <entry>$HOME/Library/Preferences/GrandOrgue and $HOME/Library/Preferences/GrandOrgueConfig.last</entry>
+            <entry>$HOME/Library/Preferences/GrandOrgue</entry>
           </row>
         </tbody>
       </tgroup>
@@ -5523,7 +5523,7 @@ All other menu items (above <emphasis>Coupler</emphasis>) are defined within
 the loaded sample set and should be documented in the sample set's specific user
 manual (if any). They usually are referred to as <emphasis>Custom Panels</emphasis>.
     </para>
-    <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from Piteå Music School sample set.</para>
+    <para>Custom Panel menu items can be organized in submenus as shown in this screen shot taken from PiteÃ¥ Music School sample set.</para>
     <mediaobject><imageobject><imagedata fileref="images/pitea_panel_menu.png" /></imageobject></mediaobject>
     <sect1 id="couplers">
       <title>Coupler</title>
