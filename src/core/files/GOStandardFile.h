@@ -10,9 +10,9 @@
 
 #include <wx/file.h>
 
-#include "GOFile.h"
+#include "GOOpenedFile.h"
 
-class GOStandardFile : public GOFile {
+class GOStandardFile : public GOOpenedFile {
 private:
   wxString m_Path;
   wxString m_Name;

@@ -15,7 +15,7 @@
 #include "GOBuffer.h"
 #include "GOWaveLoop.h"
 
-class GOFile;
+class GOOpenedFile;
 
 class GOWave {
 private:
@@ -62,7 +62,7 @@ public:
   GOWave();
   ~GOWave();
 
-  void Open(GOFile *file);
+  void Open(GOOpenedFile *file);
   void Open(const GOBuffer<uint8_t> &content, const wxString fileName);
   bool Save(GOBuffer<uint8_t> &buf);
   void Close();

@@ -14,8 +14,9 @@
 
 #include "zita-convolver.h"
 
+#include "files/GOStandardFile.h"
+
 #include "GOSoundResample.h"
-#include "GOStandardFile.h"
 #include "GOWave.h"
 #include "config/GOConfig.h"
 

@@ -10,8 +10,9 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "files/GOOpenedFile.h"
+
 #include "GOBuffer.h"
-#include "GOFile.h"
 #include "GOMemoryPool.h"
 #include "GOSoundAudioSection.h"
 #include "GOWave.h"
@@ -172,7 +173,7 @@ void GOSoundProviderWave::CreateRelease(
     0);
 }
 
-void GOSoundProviderWave::LoadPitch(GOFile *file) {
+void GOSoundProviderWave::LoadPitch(GOOpenedFile *file) {
   GOWave wave;
 
   wave.Open(file);
@@ -182,7 +183,7 @@ void GOSoundProviderWave::LoadPitch(GOFile *file) {
 
 void GOSoundProviderWave::ProcessFile(
   GOMemoryPool &pool,
-  GOFile *file,
+  GOOpenedFile *file,
   const std::vector<GOWaveLoop> *loops,
   bool is_attack,
   bool is_release,

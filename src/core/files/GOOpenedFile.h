@@ -5,16 +5,16 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOFILE_H
-#define GOFILE_H
+#ifndef GOOPENEDFILE_H
+#define GOOPENEDFILE_H
 
 #include <wx/string.h>
 
 template <class T> class GOBuffer;
 
-class GOFile {
+class GOOpenedFile {
 public:
-  virtual ~GOFile() {}
+  virtual ~GOOpenedFile() {}
 
   virtual size_t GetSize() = 0;
   virtual const wxString GetName() = 0;

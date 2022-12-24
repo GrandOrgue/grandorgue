@@ -17,9 +17,10 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
-#include "GOStandardFile.h"
-#include "GOWave.h"
 #include "config/GOConfig.h"
+#include "files/GOStandardFile.h"
+
+#include "GOWave.h"
 
 BEGIN_EVENT_TABLE(GOSettingsReverb, wxPanel)
 EVT_CHECKBOX(ID_ENABLED, GOSettingsReverb::OnEnabled)

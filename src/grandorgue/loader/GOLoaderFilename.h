@@ -12,7 +12,7 @@
 
 #include <wx/string.h>
 
-class GOFile;
+class GOOpenedFile;
 class GOFileStore;
 class GOHash;
 
@@ -52,7 +52,7 @@ public:
    * @param fileStore a GOFileStore object for searching the file against
    * @return a pointer to the GOFile
    */
-  std::unique_ptr<GOFile> Open(const GOFileStore &fileStore) const;
+  std::unique_ptr<GOOpenedFile> Open(const GOFileStore &fileStore) const;
 };
 
 #endif

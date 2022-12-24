@@ -10,11 +10,12 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "files/GOInvalidFile.h"
+#include "threading/GOMutexLocker.h"
+
 #include "GOArchiveEntryFile.h"
 #include "GOArchiveIndex.h"
 #include "GOArchiveReader.h"
-#include "GOInvalidFile.h"
-#include "threading/GOMutexLocker.h"
 
 GOArchive::GOArchive(const wxString &cachePath)
   : m_CachePath(cachePath), m_ID(), m_Dependencies(), m_Entries(), m_Path() {}
@@ -57,7 +58,7 @@ bool GOArchive::containsFile(const wxString &name) {
   return false;
 }
 
-GOFile *GOArchive::OpenFile(const wxString &name) {
+GOOpenedFile *GOArchive::OpenFile(const wxString &name) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
     if (m_Entries[i].name == name) {
       return new GOArchiveEntryFile(

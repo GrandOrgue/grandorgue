@@ -15,7 +15,7 @@
 
 #include "threading/GOMutex.h"
 
-class GOFile;
+class GOOpenedFile;
 typedef struct _GOArchiveEntry GOArchiveEntry;
 
 class GOArchive {
@@ -36,7 +36,7 @@ public:
   void Close();
 
   bool containsFile(const wxString &name);
-  GOFile *OpenFile(const wxString &name);
+  GOOpenedFile *OpenFile(const wxString &name);
 
   size_t ReadContent(void *buffer, size_t offset, size_t len);
 

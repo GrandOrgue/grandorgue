@@ -8,9 +8,9 @@
 #ifndef GOINVALIDFILE_H
 #define GOINVALIDFILE_H
 
-#include "GOFile.h"
+#include "GOOpenedFile.h"
 
-class GOInvalidFile : public GOFile {
+class GOInvalidFile : public GOOpenedFile {
 private:
   wxString m_Name;
 

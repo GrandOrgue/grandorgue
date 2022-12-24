@@ -8,11 +8,11 @@
 #ifndef GORUGEARCHIVEENTRYFILE_H
 #define GORUGEARCHIVEENTRYFILE_H
 
-#include "GOFile.h"
+#include "files/GOOpenedFile.h"
 
 class GOArchive;
 
-class GOArchiveEntryFile : public GOFile {
+class GOArchiveEntryFile : public GOOpenedFile {
 private:
   GOArchive *m_archiv;
   wxString m_Name;

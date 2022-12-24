@@ -15,10 +15,10 @@
 #include "config/GOConfigFileReader.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
+#include "files/GOOpenedFile.h"
 
 #include "GOArchive.h"
 #include "GOArchiveFile.h"
-#include "GOFile.h"
 #include "GOOrgan.h"
 #include "GOOrganList.h"
 #include "GOPath.h"
@@ -40,7 +40,7 @@ GOArchive *GOArchiveManager::OpenArchive(const wxString &path) {
 }
 
 bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
-  GOFile *indexFile = archive->OpenFile(wxT("organindex.ini"));
+  GOOpenedFile *indexFile = archive->OpenFile(wxT("organindex.ini"));
   if (!indexFile)
     return false;
   GOConfigFileReader ini_file;

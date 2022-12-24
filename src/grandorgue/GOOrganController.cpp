@@ -29,6 +29,7 @@
 #include "control/GOElementCreator.h"
 #include "control/GOPushbuttonControl.h"
 #include "dialogs/GOProgressDialog.h"
+#include "files/GOOpenedFile.h"
 #include "files/GOStdFileName.h"
 #include "gui/GOGUIBankedGeneralsPanel.h"
 #include "gui/GOGUICouplerPanel.h"
@@ -65,7 +66,6 @@
 #include "GODivisionalCoupler.h"
 #include "GODocument.h"
 #include "GOEvent.h"
-#include "GOFile.h"
 #include "GOHash.h"
 #include "GOMetronome.h"
 #include "GOOrgan.h"
@@ -204,7 +204,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     GOLoaderFilename fname;
 
     fname.Assign(info_filename);
-    std::unique_ptr<GOFile> file = fname.Open(m_FileStore);
+    std::unique_ptr<GOOpenedFile> file = fname.Open(m_FileStore);
     fn = info_filename;
     if (
       file->isValid()
