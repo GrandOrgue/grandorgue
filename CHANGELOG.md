@@ -1,4 +1,4 @@
-- Help: fixed errors, did spell check and some cleanup
+- Fixed typos and spelling errors in the Help
 - Fixed continuing loading an organ after an exception in one loading thread
 - Fixed size of text fields in the Organ Settings dialog on OsX https://github.com/GrandOrgue/grandorgue/issues/1315
 - Fixed missing the object filename in an error message if some exception occured when loading this object
