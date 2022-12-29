@@ -60,7 +60,7 @@ std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
     if (fullPath.IsEmpty())
       throw _("File name is empty");
     if (!wxFileExists(fullPath))
-      throw wxString::Format(_("File '%s' does not exists"), fullPath);
+      throw wxString::Format(_("File '%s' does not exist"), fullPath);
     file = new GOStandardFile(fullPath, m_path);
   }
   return std::unique_ptr<GOOpenedFile>(file);
