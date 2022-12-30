@@ -6351,10 +6351,10 @@ each other in regards to pitch, amplitude and other things. GrandOrgue
 only allows adjustments at pipe level.
       </para>
       <para>
-The samples in the format above may also be packed with wavpack
-http://www.wavpack.com/. GO only supports the WavPack V4 format
+The samples in the format above may also be packed with WavPack
+http://www.wavpack.com/. GO supports both the WavPack 4 and WavPack 5 formats,
 without hybrid compression and it must include all metadata. A good
-starting point for the wavpack compression options is
+starting point for the WavPack compression options is
 <emphasis>-x6</emphasis>
       </para>
     </sect1>
