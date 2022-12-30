@@ -7406,7 +7406,7 @@ Has the following attributes:
           <term>DispShortcutKeyLabelFont</term>
           <listitem>
             <para>
-(string, required) Name of the font for shortcut labels
+(string, required) Name of the font for shortcut labels - provided just for HW1 compatibility. DEPRECATED.
      </para>
           </listitem>
         </varlistentry>
@@ -7414,7 +7414,7 @@ Has the following attributes:
           <term>DispShortcutKeyLabelColour</term>
           <listitem>
             <para>
-(color, required) Color for shortcut labels
+(color, required) Color for shortcut labels - provided just for HW1 compatibility. DEPRECATED.
      </para>
           </listitem>
         </varlistentry>
