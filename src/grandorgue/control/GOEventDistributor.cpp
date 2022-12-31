@@ -37,7 +37,7 @@ void GOEventDistributor::Save(GOConfigWriter &cfg) {
 
 void GOEventDistributor::ResolveReferences() {
   for (auto obj : p_model->GetCacheObjects())
-    obj->Initialize();
+    obj->InitWithoutExc();
 }
 
 void GOEventDistributor::UpdateHash(GOHash &hash) {

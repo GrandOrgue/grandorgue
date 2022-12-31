@@ -17,12 +17,47 @@ class GOHash;
 class GOMemoryPool;
 
 class GOCacheObject {
-public:
-  virtual ~GOCacheObject() {}
+private:
+  bool m_IsReady = false;
+  wxString m_LoadError;
 
+  void InitBeforeLoad();
+
+protected:
   virtual void Initialize() = 0;
   virtual void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) = 0;
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache) = 0;
+
+public:
+  virtual ~GOCacheObject() {}
+
+  bool IsReady() const { return m_IsReady; }
+  const wxString &GetLoadError() const { return m_LoadError; }
+
+  /**
+   * Initialize the object with default values.
+   * Catches all exceptions except GOOutOfMemory.
+   * Returns whether it was initialised successfully .
+   * If no then GetLoadError returns the exception message.
+   */
+  bool InitWithoutExc();
+
+  /**
+   * Load the object from files.
+   * Catches all exceptions except GOOutOfMemory.
+   * Returns whether it was loaded successfully.
+   * If no then GetLoadError returns the exception message.
+   */
+  bool LoadFromFileWithoutExc(const GOFileStore &fileStore, GOMemoryPool &pool);
+
+  /**
+   * Load the object from the cache.
+   * Catches all exceptions except GOOutOfMemory.
+   * Returns whether it was loaded successfully.
+   * If no then GetLoadError returns the exception message.
+   */
+  bool LoadFromCacheWithoutExc(GOMemoryPool &pool, GOCache &cache);
+
   virtual bool SaveCache(GOCacheWriter &cache) = 0;
   virtual void UpdateHash(GOHash &hash) = 0;
   virtual const wxString &GetLoadTitle() = 0;

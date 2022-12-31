@@ -494,6 +494,8 @@ wxString GOOrganController::Load(
 
     dlg->Reset(objectDistributor.GetNObjects());
 
+    GOCacheObject *obj = nullptr;
+
     /* Load pipes */
     if (wxFileExists(m_CacheFilename)) {
       wxFile cache_file(m_CacheFilename);
@@ -516,29 +518,26 @@ wxString GOOrganController::Load(
         }
       }
 
-      if (cache_ok) {
-        try {
-          while (true) {
-            GOCacheObject *obj = objectDistributor.FetchNext();
+      GOCacheObject *obj = nullptr;
 
-            if (!obj)
-              break;
-            if (!obj->LoadCache(m_pool, reader)) {
-              cache_ok = false;
-              wxLogError(
-                _("Cache load failure: Failed to read %s from cache."),
-                obj->GetLoadTitle().c_str());
-              break;
-            }
-            if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
-              throw GOLoadAborted(); // Skip the rest of the loading code
+      if (cache_ok) {
+        while ((obj = objectDistributor.FetchNext())) {
+          if (!obj->LoadFromCacheWithoutExc(m_pool, reader)) {
+            wxLogWarning(
+              _("Cache load failure: Failed to read %s from cache: %s"),
+              obj->GetLoadTitle(),
+              obj->GetLoadError());
+            break;
           }
-          if (objectDistributor.IsComplete())
-            m_Cacheable = true;
-        } catch (wxString msg) {
-          cache_ok = false;
-          wxLogError(_("Cache load failure: %s"), msg.c_str());
+          if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+            throw GOLoadAborted(); // Skip the rest of the loading code
         }
+        if (!obj)
+          m_Cacheable = true;
+        else
+          // obj points to an object with a load error. We will try to load
+          // it from the file later
+          cache_ok = false;
       }
 
       if (!cache_ok && !m_config.ManageCache()) {
@@ -564,21 +563,35 @@ wxString GOOrganController::Load(
       for (unsigned i = 0; i < threads.size(); i++)
         threads[i]->Run();
 
-      GOCacheObject *obj = nullptr;
+      // try to load the object that we could not load from cache
+      if (obj)
+        thisWorker.LoadObjectNoExc(obj);
 
       while (thisWorker.LoadNextObject(obj))
         // show the progress and process possible Cancel
         if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
           throw GOLoadAborted(); // skip the rest of loading code
       // rethrow exception if any occured in thisWorker.LoadNextObject
-      thisWorker.AssertNoException();
+      bool wereExceptions = thisWorker.WereExceptions();
 
       for (unsigned i = 0; i < threads.size(); i++)
-        threads[i]->CheckResult();
-      if (objectDistributor.IsComplete())
-        m_Cacheable = true;
-      if (m_config.ManageCache() && m_Cacheable)
-        UpdateCache(dlg, m_config.CompressCache());
+        wereExceptions |= threads[i]->CheckExceptions();
+      if (wereExceptions) {
+        for (auto obj : GetCacheObjects()) {
+          if (!obj->IsReady())
+            wxLogError(
+              _("Unable to load %s: %s"),
+              obj->GetLoadTitle(),
+              obj->GetLoadError());
+        }
+        errMsg.Printf(
+          _("There are errors while loading the organ. See Log Messages."));
+      } else {
+        if (objectDistributor.IsComplete())
+          m_Cacheable = true;
+        if (m_config.ManageCache() && m_Cacheable)
+          UpdateCache(dlg, m_config.CompressCache());
+      }
 
       // Despite a possible exception automatic calling ~GOLoadThread from
       // ~ptr_vector stops all additional worker threads

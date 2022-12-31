@@ -28,7 +28,12 @@ public:
   ~GOLoadThread() { Stop(); }
 
   void Run() { Start(); }
-  void CheckResult();
+
+  /**
+   * Waits for completions
+   * @return true if any exceptions occured. Otherwise - false
+   */
+  bool CheckExceptions();
 };
 
 #endif
