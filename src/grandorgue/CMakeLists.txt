@@ -120,6 +120,7 @@ midi/GOMidiRecorder.cpp
 model/pipe-config/GOPipeConfig.cpp
 model/pipe-config/GOPipeConfigNode.cpp
 model/pipe-config/GOPipeConfigTreeNode.cpp
+model/GOCacheObject.cpp
 model/GODummyPipe.cpp
 model/GOEnclosure.cpp
 model/GOEventHandlerList.cpp

@@ -432,10 +432,6 @@ void GOSoundProviderWave::LoadFromFile(
       m_ReleaseCrossfadeLength = release_crossfase_length;
     else
       m_ReleaseCrossfadeLength = GetFaderLength(m_MidiKeyNumber);
-  } catch (wxString error) {
-    wxLogError(_("caught exception: %s\n"), error.c_str());
-    ClearData();
-    throw;
   } catch (...) {
     ClearData();
     throw;

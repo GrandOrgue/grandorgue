@@ -28,9 +28,8 @@ private:
   GOCacheObjectDistributor &m_distributor;
 
   GOCacheObject *m_LastObject;
-  bool m_HasBeenException; // any exception included GOOutOfMemory
+  bool m_WereExceptions; // any exception included GOOutOfMemory
   bool m_OutOfMemory;
-  wxString m_errMsg;
 
 public:
   /**
@@ -46,21 +45,29 @@ public:
     GOCacheObjectDistributor &distributor);
 
   /**
-   * Takes a next object from m_distributor that has not been taken by any
-   *   worker and loads it. If an exception occured then remembers it for
+   * Load the object. If an exception occured then remembers it for
+   *   future calls of AssertNoException(). Only GOOutOfMemory may be thrown,
+   *   all other exceptions are catched and remembered  for
    *   future calls of AssertNoException()
+   * @param obj - the object to loaded
+   */
+  void LoadObjectNoExc(GOCacheObject *obj);
+
+  /**
+   * Takes a next object from m_distributor that has not been taken by any
+   *   worker and loads it with LoadObjectNoExc.
    * @param obj - the object tried to be loaded
-   * @return true if the object has been loaded successfully
-   *   false if there are no more objects to load or there was an exception
+   * @return true if The loading may continue
+   *   false if there are no more objects to load or there was GOOutOfMemory
    */
   bool LoadNextObject(GOCacheObject *&obj);
 
   /**
-   * If there was an exception in LoadNextObject then throws wxString with the
-   *   error message or GOOutOfMemory
+   * If there was GOOutOfMemory then rethrows it
    * Otherwise does nothing
+   * @return whether any exceptions were occured
    */
-  void AssertNoException() const;
+  bool WereExceptions() const;
 };
 
 #endif /* GOLOADWORKER_H */

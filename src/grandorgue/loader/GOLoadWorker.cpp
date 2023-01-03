@@ -7,8 +7,6 @@
 
 #include "GOLoadWorker.h"
 
-#include <wx/intl.h>
-
 #include "model/GOCacheObject.h"
 
 #include "GOAlloc.h"
@@ -22,44 +20,27 @@ GOLoadWorker::GOLoadWorker(
   : m_FileStore(fileStore),
     m_pool(pool),
     m_distributor(distributor),
-    m_HasBeenException(false),
+    m_WereExceptions(false),
     m_OutOfMemory(false) {}
 
-bool GOLoadWorker::LoadNextObject(GOCacheObject *&obj) {
-  bool isLoaded = false;
-
-  if (
-    !m_HasBeenException && !m_pool.IsPoolFull()
-    && (obj = m_distributor.FetchNext())) {
-    assert(m_errMsg.IsEmpty()); // otherwise m_HasBeenException
-    try {
-      obj->LoadData(m_FileStore, m_pool);
-      isLoaded = true;
-    } catch (GOOutOfMemory e) {
-      m_OutOfMemory = true;
-    } catch (wxString error) {
-      m_errMsg = error;
-    } catch (const std::exception &e) {
-      m_errMsg = e.what();
-    } catch (...) { // We must not allow unhandled exceptions here
-      m_errMsg = _("Unknown exception");
-    }
-    if (!isLoaded) {
-      m_HasBeenException = true;
-      // add the object title to the error message
-      if (!m_errMsg.IsEmpty())
-        m_errMsg.Printf(
-          _("Unable to load %s: %s"), obj->GetLoadTitle(), m_errMsg);
-      m_distributor.Break(); // force other workers to stop as soon as possible
-    }
+void GOLoadWorker::LoadObjectNoExc(GOCacheObject *obj) {
+  try {
+    m_WereExceptions |= !obj->LoadFromFileWithoutExc(m_FileStore, m_pool);
+  } catch (GOOutOfMemory e) {
+    m_OutOfMemory = true;
+    m_WereExceptions = true;
   }
-  return isLoaded;
 }
 
-void GOLoadWorker::AssertNoException() const {
-  if (!m_errMsg.IsEmpty()) {
-    throw m_errMsg;
-  }
+bool GOLoadWorker::LoadNextObject(GOCacheObject *&obj) {
+  if (
+    !m_OutOfMemory && !m_pool.IsPoolFull() && (obj = m_distributor.FetchNext()))
+    LoadObjectNoExc(obj);
+  return obj && !m_OutOfMemory;
+}
+
+bool GOLoadWorker::WereExceptions() const {
   if (m_OutOfMemory)
     throw GOOutOfMemory();
+  return m_WereExceptions;
 }

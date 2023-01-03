@@ -9,9 +9,9 @@
 
 #include "model/GOCacheObject.h"
 
-void GOLoadThread::CheckResult() {
+bool GOLoadThread::CheckExceptions() {
   Wait();
-  AssertNoException();
+  return WereExceptions();
 }
 
 void GOLoadThread::Entry() {
