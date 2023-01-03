@@ -37,6 +37,7 @@ private:
   int m_LoopLoad;
   int m_AttackLoad;
   int m_ReleaseLoad;
+  int m_IgnorePitch;
 
 public:
   GOPipeConfig(GOOrganModel *organModel, GOPipeUpdateCallback *callback);
@@ -83,6 +84,9 @@ public:
 
   int GetReleaseLoad();
   void SetReleaseLoad(int value);
+
+  int IsIgnorePitch() const { return m_IgnorePitch; }
+  void SetIgnorePitch(int value);
 };
 
 #endif

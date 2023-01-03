@@ -30,7 +30,14 @@ public:
     const struct IniFileEnumEntry *entry,
     unsigned count);
   void WriteFloat(wxString group, wxString key, float value);
-  void WriteBoolean(wxString group, wxString key, bool value);
+  /**
+   * Saves 0 as N, 1 as Y. -1 is not saved at all
+   */
+  void WriteBooleanTriple(
+    const wxString &group, const wxString &key, int value);
+  void WriteBoolean(wxString group, wxString key, bool value) {
+    WriteBooleanTriple(group, key, (int)value);
+  }
 };
 
 #endif

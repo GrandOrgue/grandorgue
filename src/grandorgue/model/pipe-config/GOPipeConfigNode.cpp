@@ -164,6 +164,14 @@ GOSampleStatistic GOPipeConfigNode::GetStatistic() {
   return GOSampleStatistic();
 }
 
+bool GOPipeConfigNode::GetEffectiveIgnorePitch() {
+  const int thisConfigValue = m_PipeConfig.IsIgnorePitch();
+
+  return thisConfigValue != -1
+    ? (thisConfigValue)
+    : m_parent && m_parent->GetEffectiveIgnorePitch();
+}
+
 unsigned GOPipeConfigNode::GetChildCount() { return 0; }
 
 GOPipeConfigNode *GOPipeConfigNode::GetChild(unsigned index) { return NULL; }

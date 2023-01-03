@@ -58,6 +58,7 @@ public:
   unsigned GetEffectiveAttackLoad();
   unsigned GetEffectiveReleaseLoad();
   unsigned GetEffectiveChannels();
+  bool GetEffectiveIgnorePitch();
 
   virtual void AddChild(GOPipeConfigNode *node);
   virtual unsigned GetChildCount();

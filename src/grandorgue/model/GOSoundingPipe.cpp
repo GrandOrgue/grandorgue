@@ -490,7 +490,7 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
     m_TemperamentOffset = 0;
   else
     m_TemperamentOffset = temperament.GetOffset(
-      m_OrganController->GetIgnorePitch(),
+      m_PipeConfigNode.GetEffectiveIgnorePitch(),
       m_MidiKeyNumber,
       m_SoundProvider.GetMidiKeyNumber(),
       m_SoundProvider.GetMidiPitchFract(),

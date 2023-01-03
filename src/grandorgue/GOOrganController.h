@@ -77,7 +77,6 @@ private:
   GOMidiPlayer *m_MidiPlayer;
   GOMidiRecorder *m_MidiRecorder;
   int m_volume;
-  bool m_IgnorePitch;
   wxString m_Temperament;
   unsigned m_releaseTail = 0;
 
@@ -210,9 +209,6 @@ public:
 
   void SetVolume(int volume);
   int GetVolume();
-
-  void SetIgnorePitch(bool ignorepitch);
-  bool GetIgnorePitch();
 
   unsigned GetReleaseTail() const { return m_releaseTail; }
   void SetReleaseTail(unsigned releaseTail);
