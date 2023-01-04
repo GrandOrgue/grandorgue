@@ -18,9 +18,10 @@ private:
   std::vector<GOPipeConfigNode *> m_Childs;
   GOPipeUpdateCallback *m_Callback;
 
-  void UpdateAmplitude();
-  void UpdateTuning();
-  void UpdateAudioGroup();
+  void UpdateAmplitude() override;
+  void UpdateTuning() override;
+  void UpdateAudioGroup() override;
+  void UpdateReleaseTail() override;
 
 public:
   GOPipeConfigTreeNode(

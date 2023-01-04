@@ -48,6 +48,13 @@ void GOPipeConfigTreeNode::UpdateAudioGroup() {
     m_Callback->UpdateAudioGroup();
 }
 
+void GOPipeConfigTreeNode::UpdateReleaseTail() {
+  for (auto child : m_Childs)
+    child->GetPipeConfig().GetCallback()->UpdateReleaseTail();
+  if (m_Callback)
+    m_Callback->UpdateReleaseTail();
+}
+
 GOSampleStatistic GOPipeConfigTreeNode::GetStatistic() {
   GOSampleStatistic stat = GOPipeConfigNode::GetStatistic();
   for (unsigned i = 0; i < m_Childs.size(); i++)

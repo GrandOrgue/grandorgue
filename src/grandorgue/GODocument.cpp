@@ -74,11 +74,18 @@ bool GODocument::Import(
     m_sound.GetEngine().SetVolume(m_OrganController->GetVolume());
   }
 
-  const unsigned releaseTail = m_OrganController->GetReleaseTail();
+  // synchronize cfg.ReleaseTail with OrganReleaseTail.
+  unsigned cfgReleaseTail = cfg.ReleaseLength();
+  unsigned organReleaseTail
+    = m_OrganController->GetRootPipeConfigNode().GetEffectiveReleaseTail();
 
-  cfg.ReleaseLength(releaseTail);
-  m_sound.GetEngine().SetReleaseLength(releaseTail);
-  m_sound.GetSettings().Flush();
+  if (organReleaseTail) // organReleaseTail has the priority
+    cfg.ReleaseLength(organReleaseTail);
+  else if (cfgReleaseTail) {
+    m_OrganController->GetRootPipeConfigNode().GetPipeConfig().SetReleaseTail(
+      cfgReleaseTail);
+  }
+  cfg.Flush();
 
   wxCommandEvent event(wxEVT_WINTITLE, 0);
   event.SetString(m_OrganController->GetChurchName());
