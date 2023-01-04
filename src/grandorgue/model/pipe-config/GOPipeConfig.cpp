@@ -185,8 +185,8 @@ const wxString &GOPipeConfig::GetAudioGroup() { return m_AudioGroup; }
 
 void GOPipeConfig::SetAudioGroup(const wxString &str) {
   m_AudioGroup = str;
-  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateAudioGroup();
+  m_OrganModel->SetOrganModelModified();
 }
 
 float GOPipeConfig::GetAmplitude() { return m_Amplitude; }
@@ -195,8 +195,8 @@ float GOPipeConfig::GetDefaultAmplitude() { return m_DefaultAmplitude; }
 
 void GOPipeConfig::SetAmplitude(float amp) {
   m_Amplitude = amp;
-  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateAmplitude();
+  m_OrganModel->SetOrganModelModified();
 }
 
 float GOPipeConfig::GetGain() { return m_Gain; }
@@ -205,8 +205,8 @@ float GOPipeConfig::GetDefaultGain() { return m_DefaultGain; }
 
 void GOPipeConfig::SetGain(float gain) {
   m_Gain = gain;
-  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateAmplitude();
+  m_OrganModel->SetOrganModelModified();
 }
 
 float GOPipeConfig::GetTuning() { return m_Tuning; }

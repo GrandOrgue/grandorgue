@@ -727,7 +727,7 @@ void GOOrganDialog::FillTree(wxTreeItemId parent, GOPipeConfigNode &config) {
 
 void GOOrganDialog::FillTree() {
   wxTreeItemId id_root;
-  FillTree(id_root, m_OrganController->GetPipeConfig());
+  FillTree(id_root, m_OrganController->GetRootPipeConfigNode());
 }
 
 void GOOrganDialog::OnEventApply(wxCommandEvent &e) {

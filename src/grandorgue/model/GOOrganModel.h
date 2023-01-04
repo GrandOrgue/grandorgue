@@ -11,6 +11,7 @@
 #include "ptrvector.h"
 
 #include "GOEventHandlerList.h"
+#include "pipe-config/GOPipeConfigTreeNode.h"
 
 class GOConfig;
 class GOConfigReader;
@@ -29,6 +30,8 @@ class GOWindchest;
 class GOOrganModel : public GOEventHandlerList {
 private:
   const GOConfig &m_config;
+
+  GOPipeConfigTreeNode m_RootPipeConfigNode;
 
   bool m_OrganModelModified;
   GOModificationListener *m_ModificationListener;
@@ -54,6 +57,8 @@ public:
   ~GOOrganModel();
 
   const GOConfig &GetConfig() const { return m_config; }
+
+  GOPipeConfigNode &GetRootPipeConfigNode() { return m_RootPipeConfigNode; }
 
   bool IsOrganModelModified() const { return m_OrganModelModified; }
   void SetOrganModelModified(bool modified);

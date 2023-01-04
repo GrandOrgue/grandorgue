@@ -24,7 +24,8 @@ GOWindchest::GOWindchest(GOOrganController *organController)
     m_tremulant(0),
     m_ranks(0),
     m_pipes(0),
-    m_PipeConfig(&organController->GetPipeConfig(), organController, NULL) {
+    m_PipeConfig(
+      &organController->GetRootPipeConfigNode(), organController, NULL) {
   m_OrganController->RegisterPlaybackStateHandler(this);
 }
 

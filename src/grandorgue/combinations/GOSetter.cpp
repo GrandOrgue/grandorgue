@@ -610,22 +610,22 @@ void GOSetter::ButtonStateChanged(int id) {
   } break;
 
   case ID_SETTER_PITCH_M1:
-    m_OrganController->GetPipeConfig().ModifyTuning(-1);
+    m_OrganController->GetRootPipeConfigNode().ModifyTuning(-1);
     break;
   case ID_SETTER_PITCH_M10:
-    m_OrganController->GetPipeConfig().ModifyTuning(-10);
+    m_OrganController->GetRootPipeConfigNode().ModifyTuning(-10);
     break;
   case ID_SETTER_PITCH_M100:
-    m_OrganController->GetPipeConfig().ModifyTuning(-100);
+    m_OrganController->GetRootPipeConfigNode().ModifyTuning(-100);
     break;
   case ID_SETTER_PITCH_P1:
-    m_OrganController->GetPipeConfig().ModifyTuning(1);
+    m_OrganController->GetRootPipeConfigNode().ModifyTuning(1);
     break;
   case ID_SETTER_PITCH_P10:
-    m_OrganController->GetPipeConfig().ModifyTuning(10);
+    m_OrganController->GetRootPipeConfigNode().ModifyTuning(10);
     break;
   case ID_SETTER_PITCH_P100:
-    m_OrganController->GetPipeConfig().ModifyTuning(100);
+    m_OrganController->GetRootPipeConfigNode().ModifyTuning(100);
     break;
   case ID_SETTER_SAVE:
     m_OrganController->Save();
