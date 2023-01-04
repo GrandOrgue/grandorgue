@@ -36,6 +36,14 @@ private:
 public:
   GOConfigReader(GOConfigReaderDB &cfg, bool strict = true);
 
+  /**
+   * Reads a triple-value boolean (-1 - not defined, 0 - false, 1 - true)
+   */
+  int ReadBooleanTriple(
+    GOSettingType type,
+    const wxString &group,
+    const wxString &key,
+    bool required);
   bool ReadBoolean(
     GOSettingType type, wxString group, wxString key, bool required = true);
   bool ReadBoolean(

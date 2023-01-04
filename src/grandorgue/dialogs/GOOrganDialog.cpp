@@ -343,7 +343,7 @@ GOOrganDialog::GOOrganDialog(
     0,
     wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  if (m_OrganController->GetIgnorePitch())
+  if (m_OrganController->GetPipeConfig().GetEffectiveIgnorePitch())
     m_IgnorePitch->SetValue(true);
 
   settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
@@ -947,7 +947,14 @@ void GOOrganDialog::OnOK(wxCommandEvent &event) {
       _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
   }
-  m_OrganController->SetIgnorePitch(m_IgnorePitch->GetValue());
+  GOPipeConfig &rootPipeConfig(
+    m_OrganController->GetPipeConfig().GetPipeConfig());
+  bool newIgnorePitch = m_IgnorePitch->GetValue();
+
+  // for avoiding modification of rootPipeConfig when it is non necessary
+  if (newIgnorePitch != (rootPipeConfig.IsIgnorePitch() > 0))
+    m_OrganController->GetPipeConfig().GetPipeConfig().SetIgnorePitch(
+      newIgnorePitch);
   m_OrganController->SetTemperament(m_OrganController->GetTemperament());
   m_OrganController->SetOrganModified();
   Destroy();

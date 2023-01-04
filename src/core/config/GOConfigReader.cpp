@@ -139,15 +139,15 @@ bool GOConfigReader::ReadBoolean(
   return ReadBoolean(type, group, key, required, false);
 }
 
-bool GOConfigReader::ReadBoolean(
+int GOConfigReader::ReadBooleanTriple(
   GOSettingType type,
-  wxString group,
-  wxString key,
-  bool required,
-  bool defaultValue) {
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   wxString value;
+
   if (!Read(type, group, key, required, value))
-    return defaultValue;
+    return -1;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -159,9 +159,9 @@ bool GOConfigReader::ReadBoolean(
     value.Trim();
   }
   if (value == wxT("Y") || value == wxT("y"))
-    return true;
+    return 1;
   if (value == wxT("N") || value == wxT("n"))
-    return false;
+    return 0;
   value.MakeUpper();
   wxLogWarning(
     _("Strange boolean value for section '%s' entry '%s': %s"),
@@ -169,9 +169,9 @@ bool GOConfigReader::ReadBoolean(
     key.c_str(),
     value.c_str());
   if (value.Length() && value[0] == wxT('Y'))
-    return true;
+    return 1;
   else if (value.Length() && value[0] == wxT('N'))
-    return false;
+    return 0;
 
   wxString error;
   error.Printf(
@@ -180,6 +180,17 @@ bool GOConfigReader::ReadBoolean(
     key.c_str(),
     value.c_str());
   throw error;
+}
+
+bool GOConfigReader::ReadBoolean(
+  GOSettingType type,
+  wxString group,
+  wxString key,
+  bool required,
+  bool defaultValue) {
+  int tripleValue = ReadBooleanTriple(type, group, key, required);
+
+  return tripleValue < 0 ? defaultValue : (tripleValue);
 }
 
 GOLogicalColour GOConfigReader::ReadColor(

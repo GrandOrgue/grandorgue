@@ -50,7 +50,11 @@ void GOConfigWriter::WriteEnum(
     _("Invalid enum value for /%s/%s: %d"), group.c_str(), key.c_str(), value);
 }
 
-void GOConfigWriter::WriteBoolean(wxString group, wxString key, bool value) {
-  wxString str = value ? wxT("Y") : wxT("N");
-  WriteString(group, key, str);
+void GOConfigWriter::WriteBooleanTriple(
+  const wxString &group, const wxString &key, int value) {
+  if (value >= 0) {
+    wxString str = value ? wxT("Y") : wxT("N");
+
+    WriteString(group, key, str);
+  }
 }

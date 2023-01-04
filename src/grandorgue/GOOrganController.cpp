@@ -89,7 +89,6 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_MidiPlayer(NULL),
     m_MidiRecorder(NULL),
     m_volume(0),
-    m_IgnorePitch(false),
     m_b_customized(false),
     m_OrganModified(false),
     m_DivisionalsStoreIntermanualCouplers(false),
@@ -243,8 +242,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   if (m_volume > 20)
     m_volume = 0;
   m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
-  m_IgnorePitch
-    = cfg.ReadBoolean(CMBSetting, group, wxT("IgnorePitch"), false, false);
   m_releaseTail = (unsigned)cfg.ReadInteger(
     CMBSetting,
     group,
@@ -744,7 +741,6 @@ bool GOOrganController::Export(const wxString &cmb) {
   cfg.WriteInteger(wxT("Organ"), wxT("Volume"), m_volume);
 
   cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
-  cfg.WriteBoolean(wxT("Organ"), wxT("IgnorePitch"), m_IgnorePitch);
   cfg.WriteInteger(wxT("Organ"), wxT("ReleaseTail"), (int)m_releaseTail);
 
   GOEventDistributor::Save(cfg);
@@ -797,10 +793,6 @@ GODocument *GOOrganController::GetDocument() { return m_doc; }
 void GOOrganController::SetVolume(int volume) { m_volume = volume; }
 
 int GOOrganController::GetVolume() { return m_volume; }
-
-void GOOrganController::SetIgnorePitch(bool ignore) { m_IgnorePitch = ignore; }
-
-bool GOOrganController::GetIgnorePitch() { return m_IgnorePitch; }
 
 void GOOrganController::SetReleaseTail(unsigned releaseTail) {
   m_releaseTail = releaseTail;

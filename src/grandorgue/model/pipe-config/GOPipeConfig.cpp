@@ -31,7 +31,8 @@ GOPipeConfig::GOPipeConfig(
     m_Channels(-1),
     m_LoopLoad(-1),
     m_AttackLoad(-1),
-    m_ReleaseLoad(-1) {}
+    m_ReleaseLoad(-1),
+    m_IgnorePitch(-1) {}
 
 void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
   m_Group = group;
@@ -88,6 +89,8 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
     CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
   m_ReleaseLoad = cfg.ReadInteger(
     CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
+  m_IgnorePitch = cfg.ReadBooleanTriple(
+    CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
@@ -152,6 +155,8 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
     CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
   m_ReleaseLoad = cfg.ReadInteger(
     CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
+  m_IgnorePitch = cfg.ReadBooleanTriple(
+    CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
@@ -170,6 +175,8 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("LoopLoad"), m_LoopLoad);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("AttackLoad"), m_AttackLoad);
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
+  cfg.WriteBooleanTriple(
+    m_Group, m_NamePrefix + wxT("IgnorePitch"), m_IgnorePitch);
 }
 
 GOPipeUpdateCallback *GOPipeConfig::GetCallback() { return m_Callback; }
@@ -264,5 +271,10 @@ int GOPipeConfig::GetReleaseLoad() { return m_ReleaseLoad; }
 
 void GOPipeConfig::SetReleaseLoad(int value) {
   m_ReleaseLoad = value;
+  m_OrganModel->SetOrganModelModified();
+}
+
+void GOPipeConfig::SetIgnorePitch(int value) {
+  m_IgnorePitch = value;
   m_OrganModel->SetOrganModelModified();
 }
