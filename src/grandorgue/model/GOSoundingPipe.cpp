@@ -476,8 +476,11 @@ void GOSoundingPipe::UpdateAmplitude() {
 }
 
 void GOSoundingPipe::UpdateTuning() {
-  m_SoundProvider.SetTuning(
-    m_PipeConfigNode.GetEffectiveTuning() + m_TemperamentOffset);
+  if (m_OrganController->IsUsingOriginalTemperament())
+    m_SoundProvider.SetTuning(
+      m_PipeConfigNode.GetEffectiveTuning() + m_TemperamentOffset);
+  else
+    m_SoundProvider.SetTuning(m_TemperamentOffset);
 }
 
 void GOSoundingPipe::UpdateAudioGroup() {
