@@ -24,6 +24,7 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = 0;
   m_Tuning[10] = 0;
   m_Tuning[11] = 0;
+  m_respectPitchTuning = false;
 }
 
 GOTemperamentCent::GOTemperamentCent(
@@ -53,6 +54,7 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = i10;
   m_Tuning[10] = i11;
   m_Tuning[11] = i12;
+  m_respectPitchTuning = false;
 }
 
 GOTemperamentCent::GOTemperamentCent(
@@ -83,23 +85,10 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = i10;
   m_Tuning[10] = i11;
   m_Tuning[11] = i12;
+  m_respectPitchTuning = false;
 }
 
 float GOTemperamentCent::GetOffset(
-  bool ignorePitch,
-  unsigned midi_number,
-  unsigned wav_midi_number,
-  float wav_pitch_fract,
-  float harmonic_number,
-  float pitch_correction,
-  float default_tuning) const {
-  double concert_pitch_correction = 0;
-
-  if (!ignorePitch && wav_midi_number) {
-    concert_pitch_correction = (100.0 * wav_midi_number - 100.0 * midi_number
-                                + log(8.0 / harmonic_number) / log(2) * 1200)
-      + wav_pitch_fract;
-  }
-  return m_Tuning[midi_number % 12] - default_tuning - concert_pitch_correction
-    + pitch_correction;
+  unsigned index) const {
+  return m_Tuning[index];
 }

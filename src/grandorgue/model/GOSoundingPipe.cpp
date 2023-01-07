@@ -55,6 +55,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_MaxVolume(max_volume),
     m_SampleMidiKeyNumber(-1),
     m_RetunePipe(retune),
+	m_CurrentTempRespectPT(true),
     m_PipeConfigNode(
       &rank->GetPipeConfig(), organController, this, &m_SoundProvider) {}
 
@@ -476,11 +477,22 @@ void GOSoundingPipe::UpdateAmplitude() {
 }
 
 void GOSoundingPipe::UpdateTuning() {
-  if (m_OrganController->IsUsingOriginalTemperament())
+  float adjusted_pitch = 0;
+  double concert_pitch_correction = 0;
+
+  if (!m_PipeConfigNode.GetEffectiveIgnorePitch() && m_SoundProvider.GetMidiKeyNumber()) {
+    concert_pitch_correction = (100.0 * m_SoundProvider.GetMidiKeyNumber() - 100.0 * m_MidiKeyNumber
+                                + log(8.0 / m_HarmonicNumber) / log(2) * 1200)
+      + m_SoundProvider.GetMidiPitchFract();
+  }
+  adjusted_pitch =  m_TemperamentOffset - m_PipeConfigNode.GetDefaultTuning() - concert_pitch_correction
+    + m_PitchCorrection;
+
+  if (m_CurrentTempRespectPT)
     m_SoundProvider.SetTuning(
-      m_PipeConfigNode.GetEffectiveTuning() + m_TemperamentOffset);
+      m_PipeConfigNode.GetEffectiveTuning() + adjusted_pitch);
   else
-    m_SoundProvider.SetTuning(m_TemperamentOffset);
+    m_SoundProvider.SetTuning(adjusted_pitch);
 }
 
 void GOSoundingPipe::UpdateAudioGroup() {
@@ -489,17 +501,11 @@ void GOSoundingPipe::UpdateAudioGroup() {
 }
 
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
+  m_CurrentTempRespectPT = temperament.GetRespectPitchTuning();
   if (!m_RetunePipe)
     m_TemperamentOffset = 0;
   else
-    m_TemperamentOffset = temperament.GetOffset(
-      m_PipeConfigNode.GetEffectiveIgnorePitch(),
-      m_MidiKeyNumber,
-      m_SoundProvider.GetMidiKeyNumber(),
-      m_SoundProvider.GetMidiPitchFract(),
-      m_HarmonicNumber,
-      m_PitchCorrection,
-      m_PipeConfigNode.GetDefaultTuning());
+    m_TemperamentOffset = temperament.GetOffset(m_MidiKeyNumber % 12);
   UpdateTuning();
 }
 

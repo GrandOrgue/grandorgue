@@ -48,13 +48,7 @@ public:
     wxString name, wxString title, wxString group, wxString groupTitle);
 
   virtual float GetOffset(
-    bool ignorepitch,
-    unsigned midi_number,
-    unsigned wav_midi_number,
-    float wav_pitch_fract,
-    float harmonic_number,
-    float pitch_correction,
-    float default_tuning) const;
+    unsigned index) const;
 };
 
 #endif

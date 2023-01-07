@@ -16,6 +16,7 @@ protected:
   wxString m_GroupTitle;
   wxString m_Name;
   wxString m_Title;
+  bool m_respectPitchTuning;
 
 public:
   GOTemperament(wxString name, wxString group = wxEmptyString);
@@ -24,17 +25,12 @@ public:
   virtual ~GOTemperament();
 
   virtual float GetOffset(
-    bool ignorepitch,
-    unsigned midi_number,
-    unsigned wav_midi_number,
-    float wav_pitch_fract,
-    float harmonic_number,
-    float pitch_correction,
-    float default_tuning) const;
+    unsigned index) const;
   wxString GetName() const;
   wxString GetTitle() const;
   wxString GetGroup() const;
   wxString GetGroupTitle() const;
+  bool GetRespectPitchTuning() const;
 };
 
 #endif

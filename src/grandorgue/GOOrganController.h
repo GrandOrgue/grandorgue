@@ -77,7 +77,6 @@ private:
   int m_volume;
   wxString m_Temperament;
   unsigned m_releaseTail = 0;
-  bool m_usesOriginalTemperament;
 
   bool m_b_customized;
   float m_CurrentPitch; // organ pitch
@@ -248,8 +247,6 @@ public:
   GOMidi *GetMidi();
 
   GOGUIMouseState &GetMouseState() { return m_MouseState; }
-
-  bool IsUsingOriginalTemperament() { return m_usesOriginalTemperament; }
 };
 
 #endif

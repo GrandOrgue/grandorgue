@@ -13,22 +13,21 @@ GOTemperament::GOTemperament(wxString name, wxString group)
   : m_Group(group),
     m_GroupTitle(wxEmptyString),
     m_Name(name),
-    m_Title(wxEmptyString) {}
+    m_Title(wxEmptyString),
+	m_respectPitchTuning(true) {}
 
 GOTemperament::GOTemperament(
   wxString name, wxString title, wxString group, wxString groupTitle)
-  : m_Group(group), m_GroupTitle(groupTitle), m_Name(name), m_Title(title) {}
+  : m_Group(group),
+    m_GroupTitle(groupTitle),
+    m_Name(name),
+    m_Title(title),
+    m_respectPitchTuning(true) {}
 
 GOTemperament::~GOTemperament() {}
 
 float GOTemperament::GetOffset(
-  bool ignorepitch,
-  unsigned midi_number,
-  unsigned wav_midi_number,
-  float wav_pitch_fract,
-  float harmonic_number,
-  float pitch_correction,
-  float default_tuning) const {
+  unsigned index) const {
   return 0;
 }
 
@@ -42,4 +41,8 @@ wxString GOTemperament::GetGroup() const { return m_Group; }
 
 wxString GOTemperament::GetGroupTitle() const {
   return m_GroupTitle.IsEmpty() ? wxGetTranslation(m_Group) : m_GroupTitle;
+}
+
+bool GOTemperament::GetRespectPitchTuning() const {
+  return m_respectPitchTuning;
 }

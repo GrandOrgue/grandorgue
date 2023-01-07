@@ -1064,10 +1064,6 @@ void GOOrganController::SetTemperament(wxString name) {
   const GOTemperament &temperament
     = m_config.GetTemperaments().GetTemperament(name);
   m_Temperament = temperament.GetName();
-  if (m_Temperament == wxT("Original temperament"))
-    m_usesOriginalTemperament = true;
-  else
-    m_usesOriginalTemperament = false;
   SetTemperament(temperament);
 }
 
