@@ -47,8 +47,7 @@ public:
   GOTemperamentCent(
     wxString name, wxString title, wxString group, wxString groupTitle);
 
-  virtual float GetOffset(
-    unsigned index) const;
+  virtual float GetOffset(unsigned index) const;
 };
 
 #endif

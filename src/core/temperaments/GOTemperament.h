@@ -24,8 +24,7 @@ public:
     wxString name, wxString title, wxString group, wxString groupTitle);
   virtual ~GOTemperament();
 
-  virtual float GetOffset(
-    unsigned index) const;
+  virtual float GetOffset(unsigned index) const;
   wxString GetName() const;
   wxString GetTitle() const;
   wxString GetGroup() const;

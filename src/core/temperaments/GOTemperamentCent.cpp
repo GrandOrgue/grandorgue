@@ -88,7 +88,6 @@ GOTemperamentCent::GOTemperamentCent(
   m_respectPitchTuning = false;
 }
 
-float GOTemperamentCent::GetOffset(
-  unsigned index) const {
+float GOTemperamentCent::GetOffset(unsigned index) const {
   return m_Tuning[index];
 }

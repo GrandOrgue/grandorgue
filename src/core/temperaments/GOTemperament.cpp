@@ -14,7 +14,7 @@ GOTemperament::GOTemperament(wxString name, wxString group)
     m_GroupTitle(wxEmptyString),
     m_Name(name),
     m_Title(wxEmptyString),
-	m_respectPitchTuning(true) {}
+    m_respectPitchTuning(true) {}
 
 GOTemperament::GOTemperament(
   wxString name, wxString title, wxString group, wxString groupTitle)
@@ -26,10 +26,7 @@ GOTemperament::GOTemperament(
 
 GOTemperament::~GOTemperament() {}
 
-float GOTemperament::GetOffset(
-  unsigned index) const {
-  return 0;
-}
+float GOTemperament::GetOffset(unsigned index) const { return 0; }
 
 wxString GOTemperament::GetName() const { return m_Name; }
 
