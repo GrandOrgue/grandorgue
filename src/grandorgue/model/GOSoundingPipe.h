@@ -47,7 +47,7 @@ private:
   float m_MaxVolume;
   int m_SampleMidiKeyNumber;
   bool m_RetunePipe;
-  bool m_CurrentTempRespectPT;
+  bool m_IsTemperamentOriginalBased;
   GOSoundProviderWave m_SoundProvider;
   GOPipeConfigNode m_PipeConfigNode;
 

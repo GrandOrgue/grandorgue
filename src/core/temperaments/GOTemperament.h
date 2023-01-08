@@ -16,7 +16,7 @@ protected:
   wxString m_GroupTitle;
   wxString m_Name;
   wxString m_Title;
-  bool m_respectPitchTuning;
+  bool m_IsTemperamentOriginalBased; // To know how tuning should be handled
 
 public:
   GOTemperament(wxString name, wxString group = wxEmptyString);
@@ -29,7 +29,7 @@ public:
   wxString GetTitle() const;
   wxString GetGroup() const;
   wxString GetGroupTitle() const;
-  bool GetRespectPitchTuning() const;
+  bool GetIsTemperamentOriginalBased() const;
 };
 
 #endif

@@ -24,7 +24,7 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = 0;
   m_Tuning[10] = 0;
   m_Tuning[11] = 0;
-  m_respectPitchTuning = false;
+  m_IsTemperamentOriginalBased = false;
 }
 
 GOTemperamentCent::GOTemperamentCent(
@@ -54,7 +54,7 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = i10;
   m_Tuning[10] = i11;
   m_Tuning[11] = i12;
-  m_respectPitchTuning = false;
+  m_IsTemperamentOriginalBased = false;
 }
 
 GOTemperamentCent::GOTemperamentCent(
@@ -85,7 +85,7 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = i10;
   m_Tuning[10] = i11;
   m_Tuning[11] = i12;
-  m_respectPitchTuning = false;
+  m_IsTemperamentOriginalBased = false;
 }
 
 float GOTemperamentCent::GetOffset(unsigned index) const {

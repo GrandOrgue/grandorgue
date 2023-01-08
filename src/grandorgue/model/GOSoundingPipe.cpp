@@ -55,7 +55,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_MaxVolume(max_volume),
     m_SampleMidiKeyNumber(-1),
     m_RetunePipe(retune),
-    m_CurrentTempRespectPT(true),
+    m_IsTemperamentOriginalBased(true),
     m_PipeConfigNode(
       &rank->GetPipeConfig(), organController, this, &m_SoundProvider) {}
 
@@ -477,25 +477,28 @@ void GOSoundingPipe::UpdateAmplitude() {
 }
 
 void GOSoundingPipe::UpdateTuning() {
-  float adjusted_pitch = 0;
-  double concert_pitch_correction = 0;
+  float pitchAdjustment = 0;
 
-  if (
-    !m_PipeConfigNode.GetEffectiveIgnorePitch()
-    && m_SoundProvider.GetMidiKeyNumber()) {
-    concert_pitch_correction
-      = (100.0 * m_SoundProvider.GetMidiKeyNumber() - 100.0 * m_MidiKeyNumber
-         + log(8.0 / m_HarmonicNumber) / log(2) * 1200)
-      + m_SoundProvider.GetMidiPitchFract();
+  if (m_IsTemperamentOriginalBased) {
+    // For original temperament. Set pitchAdjustment from GetEffectiveTuning
+    pitchAdjustment = m_PipeConfigNode.GetEffectiveTuning();
+  } else {
+    // For any other temperament than original. Calculate pitchAdjustment by
+    // converting from the original temperament to the equal one before using
+    // temperament offset. Take PitchCorrection into account
+    double concert_pitch_correction = 0;
+
+    if (
+      !m_PipeConfigNode.GetEffectiveIgnorePitch()
+      && m_SoundProvider.GetMidiKeyNumber()) {
+      concert_pitch_correction
+        = (100.0 * m_SoundProvider.GetMidiKeyNumber() - 100.0 * m_MidiKeyNumber
+           + log(8.0 / m_HarmonicNumber) / log(2) * 1200)
+        + m_SoundProvider.GetMidiPitchFract();
+    }
+    pitchAdjustment = m_PitchCorrection - concert_pitch_correction;
   }
-  adjusted_pitch = m_TemperamentOffset - m_PipeConfigNode.GetDefaultTuning()
-    - concert_pitch_correction + m_PitchCorrection;
-
-  if (m_CurrentTempRespectPT) {
-    m_SoundProvider.SetTuning(
-      m_PipeConfigNode.GetEffectiveTuning() + adjusted_pitch);
-  } else
-    m_SoundProvider.SetTuning(adjusted_pitch);
+  m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }
 
 void GOSoundingPipe::UpdateAudioGroup() {
@@ -504,7 +507,7 @@ void GOSoundingPipe::UpdateAudioGroup() {
 }
 
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
-  m_CurrentTempRespectPT = temperament.GetRespectPitchTuning();
+  m_IsTemperamentOriginalBased = temperament.GetIsTemperamentOriginalBased();
   if (!m_RetunePipe)
     m_TemperamentOffset = 0;
   else
