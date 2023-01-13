@@ -149,7 +149,7 @@ void GOOrganController::OnIsModifiedChanged(bool modified) {
       m_PitchLabel.SetContent(wxString::Format(_("%f cent"), newPitch));
       m_CurrentPitch = newPitch;
     }
-    // If the organ model modified then the organ is also modified
+    // If the organ model is modified then the organ is also modified
     SetOrganModified(true);
   }
   // else nothing because the organ may be modified without the model
