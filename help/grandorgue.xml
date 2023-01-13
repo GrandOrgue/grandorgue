@@ -358,6 +358,19 @@ engaged states; divisional, general, and program combinations;
 volume spinner value; temperament setting; fine tuning data. Note that this is completely reversible using the <link linkend="resettodefaults">Reset to Defaults</link> option, and is the
 recommended method for most users.
           </para>
+          <para>
+            The size and the screen position of all organ GUI panels are saved
+            as well. When this organ is loaded again, all panels appear at the
+            same screen positions and with the same size as they were saved.
+          </para>
+          <note>
+            <simpara>
+              Restoring the panel size and position may work not correctly on
+              Linux with wayland windows system. If you need this feature, start
+              your linux session with x11 windows system before launching
+              GrandOrgue.
+            </simpara>
+          </note>
         </sect3>
         <sect3>
           <title>Update Cache</title>
@@ -982,22 +995,22 @@ effectively deleted when the OK button is pressed.
         <varlistentry>
           <term>Copy&#160;current&#160;receive&#160;event</term>
           <listitem>
-	    <simpara>
-	      This button copies the values of the current Receive event
-	      selected on the Receive page to the current event on the Send page.
-	    </simpara>
-	    <simpara>
-	      If the receive event contains a correct input device specified,
-	      then GrandOrgue takes the output device set to this input device
-	      with the MIDI-Output-Device button on the <link
+            <simpara>
+              This button copies the values of the current Receive event
+              selected on the Receive page to the current event on the Send page.
+            </simpara>
+            <simpara>
+              If the receive event contains a correct input device specified,
+              then GrandOrgue takes the output device set to this input device
+              with the MIDI-Output-Device button on the <link
   linkend="mididevicestab">MIDI Devices Tab</link> of the Program Settings window.
-	    </simpara>
-	    <simpara>
-	      If an output device has not been set for this input device then
-	      GrandOrgue sets "Any Device" value. The user have to select an
-	      output device manually.
-	    </simpara>
-	  </listitem>
+            </simpara>
+            <simpara>
+              If an output device has not been set for this input device then
+              GrandOrgue sets "Any Device" value. The user have to select an
+              output device manually.
+            </simpara>
+          </listitem>
         </varlistentry>
       </variablelist>
     </sect1>
@@ -3894,10 +3907,10 @@ useful for large sample sets.
           <para>Selects whether stereo samples are loaded in Mono or Stereo</para>
           <para>
 If set to Mono, all samples are loaded in Mono. When compression is disabled, this will save 50%, but when compression is enabled, much less will be saved because the compression is much less effective on monaural inputs.
-	  </para>
+          </para>
           <para>
 This setting can be set to don't load, if you want GrandOrgue to avoid loading any samples. Via <link linkend="organsettings">Organ Settings</link>, it is still possible to load only specific parts of the organ.
-	  </para>
+          </para>
           <variablelist>
             <varlistentry>
               <term>Memory</term>
@@ -4171,107 +4184,107 @@ are <link linkend="save">saved</link> to settings files.
         <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="images/settings_paths.png" /></imageobject></mediaobject>
       </figure>
       <para>
-	These text boxes provide default paths for various storage areas. They are
-	initialized to paths in the <emphasis>GrandOrgue</emphasis> relative
-	to the user's home folder, and their names are localized.
-	The <emphasis>...</emphasis> button located besides each text box
-	allows to change the value.
+        These text boxes provide default paths for various storage areas. They are
+        initialized to paths in the <emphasis>GrandOrgue</emphasis> relative
+        to the user's home folder, and their names are localized.
+        The <emphasis>...</emphasis> button located besides each text box
+        allows to change the value.
       </para>
       <para>
-	The location of the <emphasis>GrandOrgue</emphasis> directory depends on the operating system:
+        The location of the <emphasis>GrandOrgue</emphasis> directory depends on the operating system:
       </para>
       <informaltable frame="none">
-	<tgroup cols="2">
-	  <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
-	  <colspec colname="c2" colsep="0" rowsep="0"/>
-	  <tbody>
-	    <row>
-	      <entry><emphasis role="strong">Linux</emphasis></entry>
-	      <entry>$HOME/GrandOrgue/Organs</entry>
-	    </row>
-	    <row>
-	      <entry><emphasis role="strong">Windows</emphasis></entry>
-	      <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue</entry>
-	    </row>
-	    <row>
-	      <entry><emphasis role="strong">macOS</emphasis></entry>
-	      <entry>$HOME/Documents/GrandOrgue</entry>
-	    </row>
-	  </tbody>
-	</tgroup>
+        <tgroup cols="2">
+          <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
+          <colspec colname="c2" colsep="0" rowsep="0"/>
+          <tbody>
+            <row>
+              <entry><emphasis role="strong">Linux</emphasis></entry>
+              <entry>$HOME/GrandOrgue/Organs</entry>
+            </row>
+            <row>
+              <entry><emphasis role="strong">Windows</emphasis></entry>
+              <entry>%HOMEDRIVE%\%HOMEDIR%\Documents\GrandOrgue</entry>
+            </row>
+            <row>
+              <entry><emphasis role="strong">macOS</emphasis></entry>
+              <entry>$HOME/Documents/GrandOrgue</entry>
+            </row>
+          </tbody>
+        </tgroup>
       </informaltable>
       <sect2>
-	<title>Path usage</title>
-	<informaltable frame="none">
-	  <tgroup cols="3">
-	    <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
-	    <colspec colname="c2" colsep="0" rowsep="0"/>
-	    <colspec colname="c3" colsep="0" rowsep="0"/>
-	    <tbody>
-	      <row>
-		<entry><emphasis role="strong">Sample sets</emphasis></entry>
-		<entry>This is the folder where GrandOrgue looks for sample sets. It is opened when the <link linkend="file_open">File &gt; Open</link> menu item is selected.</entry>
-		<entry>Default: <emphasis>Organs</emphasis></entry>
-	      </row>
-	      <row>
-		<entry><emphasis role="strong">Organ packages</emphasis></entry>
-		<entry>
+        <title>Path usage</title>
+        <informaltable frame="none">
+          <tgroup cols="3">
+            <colspec colname="c1" colwidth="150px" colsep="0" rowsep="0"/>
+            <colspec colname="c2" colsep="0" rowsep="0"/>
+            <colspec colname="c3" colsep="0" rowsep="0"/>
+            <tbody>
+              <row>
+                <entry><emphasis role="strong">Sample sets</emphasis></entry>
+                <entry>This is the folder where GrandOrgue looks for sample sets. It is opened when the <link linkend="file_open">File &gt; Open</link> menu item is selected.</entry>
+                <entry>Default: <emphasis>Organs</emphasis></entry>
+              </row>
+              <row>
+                <entry><emphasis role="strong">Organ packages</emphasis></entry>
+                <entry>
 This is the folder where GrandOrgue looks for organ package files. Any organ
 package file dropped in this folder will be automatically searched for Organ
 Definition Files on next GrandOrgue run and any ODF found in the package file
 will be added to the <link linkend="knownorgans">known organs list</link>.
-		</entry>
-	      </row>
-	      <row id="cachestore">
-		<entry><emphasis role="strong">Organ cache</emphasis></entry>
-		<entry>This selects the directory where cache files are stored.</entry>
-		<entry>Default: <emphasis>Cache</emphasis></entry>
-	      </row>
-	      <row id="settingsstore">
-		<entry><emphasis role="strong">Organ settings</emphasis></entry>
-		<entry>
-		  This selects the directory where preset files are stored.
-		</entry>
-		<entry>Default: <emphasis>Data</emphasis></entry>
-	      </row>
-	      <row>
-		<entry><emphasis role="strong">Export/Import</emphasis></entry>
-		<entry>
+                </entry>
+              </row>
+              <row id="cachestore">
+                <entry><emphasis role="strong">Organ cache</emphasis></entry>
+                <entry>This selects the directory where cache files are stored.</entry>
+                <entry>Default: <emphasis>Cache</emphasis></entry>
+              </row>
+              <row id="settingsstore">
+                <entry><emphasis role="strong">Organ settings</emphasis></entry>
+                <entry>
+                  This selects the directory where preset files are stored.
+                </entry>
+                <entry>Default: <emphasis>Data</emphasis></entry>
+              </row>
+              <row>
+                <entry><emphasis role="strong">Export/Import</emphasis></entry>
+                <entry>
 This is the folder where GrandOrgue stores or looks for settings files. It is
 opened when one of the <link linkend="import_settings">File &gt; Import
 Settings</link>, <link linkend="import_comb">File &gt; Import Combinations</link>,
 <link linkend="export_settings">File &gt; Export Settings/Combinations</link> menu
 items is selected. This folder is usually different from the folder where
 GrandOrgue <link linkend="settingsstore">stores</link> preset files.
-		</entry>
-		<entry>Default: <emphasis>Settings</emphasis></entry>
-	      </row>
-	      <row>
-		<entry><emphasis role="strong">Audio recording</emphasis></entry>
-		<entry>
+                </entry>
+                <entry>Default: <emphasis>Settings</emphasis></entry>
+              </row>
+              <row>
+                <entry><emphasis role="strong">Audio recording</emphasis></entry>
+                <entry>
 This is the folder where GrandOrgue stores audio recording files. It is opened
 when the <link linkend="recorder">Audio Recorder</link> <emphasis
 role="strong">STOP</emphasis> button is depressed.
-		</entry>
-		<entry>Default: <emphasis>Audio recording</emphasis></entry>
-	      </row>
-	      <row>
-		<entry><emphasis role="strong">MIDI recording</emphasis></entry>
-		<entry>
+                </entry>
+                <entry>Default: <emphasis>Audio recording</emphasis></entry>
+              </row>
+              <row>
+                <entry><emphasis role="strong">MIDI recording</emphasis></entry>
+                <entry>
 This is the folder where GrandOrgue stores MIDI recording files. It is opened
 when the <link linkend="recorder">MIDI Recorder</link> <emphasis
 role="strong">STOP</emphasis> button is depressed.
-		</entry>
-		<entry>Default: <emphasis>MIDI recording</emphasis></entry>
-	      </row>
-	      <row>
-		<entry><emphasis role="strong">MIDI player</emphasis></entry>
-		<entry>This is the folder where GrandOrgue looks for MIDI recording files. It is opened when the <link linkend="PlayMidi">Audio/Midi &gt; Load MIDI</link> menu item is selected.</entry>
-		<entry>Default: <emphasis>MIDI player</emphasis></entry>
-	      </row>
-	    </tbody>
-	  </tgroup>
-	</informaltable>
+                </entry>
+                <entry>Default: <emphasis>MIDI recording</emphasis></entry>
+              </row>
+              <row>
+                <entry><emphasis role="strong">MIDI player</emphasis></entry>
+                <entry>This is the folder where GrandOrgue looks for MIDI recording files. It is opened when the <link linkend="PlayMidi">Audio/Midi &gt; Load MIDI</link> menu item is selected.</entry>
+                <entry>Default: <emphasis>MIDI player</emphasis></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
       </sect2>
     </sect1>
     <sect1>
@@ -4288,10 +4301,10 @@ role="strong">STOP</emphasis> button is depressed.
         </mediaobject>
       </figure>
       <para>
-	This dialog selects the audio output device and defines which channels
-	and audio groups the audio output is dispatched to, as well as audio
-	stream parameters in the Sound output frame and the selection of shown
-	devices/drivers in the Sound port frame.
+        This dialog selects the audio output device and defines which channels
+        and audio groups the audio output is dispatched to, as well as audio
+        stream parameters in the Sound output frame and the selection of shown
+        devices/drivers in the Sound port frame.
       </para>
       <informaltable frame="none">
         <tgroup cols="2">
@@ -4310,53 +4323,53 @@ role="strong">STOP</emphasis> button is depressed.
         </tgroup>
       </informaltable>
       <sect2 id="audiogroupstab">
-	<title>Audio groups frame</title>
-	<indexterm>
-	  <primary>Audio Groups</primary>
-	</indexterm>
-	<para>
-	  This frame allows to manage audio groups. As  said above, audio groups
-	  are name holders that are used to map the audio output
-	  of the individual pipe to definite parts of the audio system.
-	</para>
-	<para>
-	  The system requires at least one audio group, and is initialized
-	  with a default audio group named <emphasis>Default audio group</emphasis>.
-	</para>
-	<para>The <emphasis>Default audio group</emphasis> is <emphasis role="bold">always</emphasis> the first audio group in the list, so the <emphasis>Default audio group</emphasis> name can be changed at any time.</para>
-	<sect3 id="addaudiogroup">
-	  <title>Add</title>
-	  <indexterm>
-	    <primary>New audio group</primary>
-	  </indexterm>
-	  <para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.</para>
-	  <mediaobject>
-	    <imageobject>
-	      <imagedata scalefit="1" width="100%" fileref="images/new_audio_group.png"/>
-	    </imageobject>
-	  </mediaobject>
-	  <caution><simpara>If an audio group is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</simpara></caution>
-	</sect3>
-	<sect3>
-	  <title>Delete</title>
-	  <indexterm>
-	    <primary>Delete audio group</primary>
-	  </indexterm>
-	  <para>This feature is available when an audio group name is selected in the list. The <emphasis>Delete</emphasis> button is active. Push the button, the selected audio group is deleted.</para>
-	  <caution>
-	    <simpara>If the deleted audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</simpara>
-	  </caution>
-	</sect3>
-	<sect3>
-	  <title>Rename</title>
-	  <indexterm>
-	    <primary>Rename audio group</primary>
-	  </indexterm>
-	  <para>This feature is available when an audio group name is selected in the list. The <emphasis>Rename</emphasis> button is active. It opens the same dialog as in <link linkend="addaudiogroup">Add</link>, where the audio group's name can be changed.</para>
-	  <caution>
-	    <simpara>If the renamed audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</simpara>
-	  </caution>
-	</sect3>
+        <title>Audio groups frame</title>
+        <indexterm>
+          <primary>Audio Groups</primary>
+        </indexterm>
+        <para>
+          This frame allows to manage audio groups. As  said above, audio groups
+          are name holders that are used to map the audio output
+          of the individual pipe to definite parts of the audio system.
+        </para>
+        <para>
+          The system requires at least one audio group, and is initialized
+          with a default audio group named <emphasis>Default audio group</emphasis>.
+        </para>
+        <para>The <emphasis>Default audio group</emphasis> is <emphasis role="bold">always</emphasis> the first audio group in the list, so the <emphasis>Default audio group</emphasis> name can be changed at any time.</para>
+        <sect3 id="addaudiogroup">
+          <title>Add</title>
+          <indexterm>
+            <primary>New audio group</primary>
+          </indexterm>
+          <para>The <emphasis>Add</emphasis> button opens a dialog where one can type the new audio group name.</para>
+          <mediaobject>
+            <imageobject>
+              <imagedata scalefit="1" width="100%" fileref="images/new_audio_group.png"/>
+            </imageobject>
+          </mediaobject>
+          <caution><simpara>If an audio group is not used in the loaded sample set, it does add processing overhead, <emphasis role="bold">thus reducing polyphony</emphasis>, so adding unnecessary audio groups is not recommended.</simpara></caution>
+        </sect3>
+        <sect3>
+          <title>Delete</title>
+          <indexterm>
+            <primary>Delete audio group</primary>
+          </indexterm>
+          <para>This feature is available when an audio group name is selected in the list. The <emphasis>Delete</emphasis> button is active. Push the button, the selected audio group is deleted.</para>
+          <caution>
+            <simpara>If the deleted audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</simpara>
+          </caution>
+        </sect3>
+        <sect3>
+          <title>Rename</title>
+          <indexterm>
+            <primary>Rename audio group</primary>
+          </indexterm>
+          <para>This feature is available when an audio group name is selected in the list. The <emphasis>Rename</emphasis> button is active. It opens the same dialog as in <link linkend="addaudiogroup">Add</link>, where the audio group's name can be changed.</para>
+          <caution>
+            <simpara>If the renamed audio group is assigned to an organ element (<link linkend="organsettings">Organ Settings</link> dialog), all pipes routed to this audio group will be automatically routed to the default audio group.</simpara>
+          </caution>
+        </sect3>
       </sect2>
       <sect2>
         <title>Sound output frame</title>
@@ -4444,9 +4457,9 @@ role="strong">STOP</emphasis> button is depressed.
           <note>
             <simpara>This feature is closely related to the <link linkend="samplesperbuffer">samples per buffer</link> setting in the <emphasis>Options</emphasis> tab. Its behavior differs according to the chosen backend.</simpara>
           </note>
-	  <sect4>
-	    <title>Audio driver selection</title>
-	    <para>GrandOrgue feature two audio backends:</para>
+          <sect4>
+            <title>Audio driver selection</title>
+            <para>GrandOrgue feature two audio backends:</para>
             <informaltable frame="none">
               <tgroup cols="2">
                 <colspec colname="c1" colwidth="80px" colsep="0" rowsep="0"/>
@@ -4467,135 +4480,135 @@ role="strong">STOP</emphasis> button is depressed.
                 </tbody>
               </tgroup>
             </informaltable>
-	    <simpara>
-	      <emphasis>Audio/Sound Output State</emphasis> tries to
-	      displays <emphasis>actual</emphasis> latency. Note that
-	      the estimate can be based on numbers provided by the
-	      hardware and the drivers and may vary. RtAudio is more
-	      likely to display to low numbers.
-	    </simpara>
-	    <sect5>
-	      <title>Windows</title>
-	      <variablelist>
-		<varlistentry>
-		  <term>WDM/KS</term>
-		  <listitem>
-		    <para>
-		      This driver allows direct access to the Windows
-		      kernel driver<footnote><simpara>ASIO4ALL also
-		      uses that interface</simpara></footnote>. This
-		      is the recommended driver if there is no other
-		      software which blocks access to the kernel
-		      audio streams. It is supported only via PortAudio.
-		    </para>
-		  </listitem>
-		</varlistentry>
-		<varlistentry>
-		  <term>WASAPI</term>
-		  <listitem>
-		    <para>
-		      WASAPI support started with Window Vista. Use it if WDM/KS does not work for you. It is supported only via PortAudio.
-		    </para>
-		    <note><simpara>The sample rate of GrandOrgue must match the sample rate of the audio subsystem. So if WASAPI does not work, try a different sample rate in GrandOrgue.</simpara></note>
-		  </listitem>
-		</varlistentry>
-		<varlistentry>
-		  <term>DirectSound</term>
-		  <listitem>
-		    <para>
-		      Use it if WDM/KS and WASAPI does not work for you. It is supported via PortAudio and RtAudio.
-		    </para>
-		  </listitem>
-		</varlistentry>
-		<varlistentry>
-		  <term>WMME</term>
-		  <listitem>
-		    <para>
-		      This a classic, not low-latency audio API. Use it as last fallback. It is supported only via PortAudio.
-		    </para>
-		  </listitem>
-		</varlistentry>
-		<varlistentry>
-		  <term>ASIO</term>
-		  <listitem>
-		    <para>
-		      GrandOrgue can be compiled with ASIO support. It is supported via PortAudio and RtAudio.
-		    </para>
-		    <para>
-		      ASIO loads third party code into the GO process, so a bad ASIO driver can cause GO hangs.
-		    </para>
-		    <note><simpara>There is no reason to use ASIO4ALL,
-		    because it acts as a pass-through to the native kernel
-		    streaming APIs (e.g. WDM/KS) that GrandOrgue can use
-		    directly.</simpara></note>
-		  </listitem>
-		</varlistentry>
-		<varlistentry>
-		  <term>Jack</term>
-		  <listitem>
-		    <para>
-		      GrandOrgue can also be compiled with Jack Support on Windows. See the Linux Jack usage notes.
-		    </para>
-		  </listitem>
-		</varlistentry>
-	      </variablelist>
-	    </sect5>
-	    <sect5>
-	      <title>macOS</title>
-	      <variablelist>
-		<varlistentry>
-		  <term>CoreAudio</term>
-		  <listitem>
-		    <para>
-		      You can use the macOS native audio API CoreAudio via RtAudio as well as PulseAudio.
-		    </para>
-		  </listitem>
-		</varlistentry>
-		<varlistentry>
-		  <term>Jack</term>
-		  <listitem>
-		    <para>
-		      GrandOrgue can also be compiled with Jack Support on macOS. See the Linux Jack usage notes.
-		    </para>
-		  </listitem>
-		</varlistentry>
-	      </variablelist>
-	    </sect5>
-	    <sect5>
-	      <title>Linux</title>
-	      <variablelist>
-		<varlistentry>
-		  <term>ALSA</term>
-		  <listitem>
-		    <para>
-		      You can use the Linux native sound output either via RtAudio as well as via PortAudio. To allow direct hardware access, your Linux user account needs access to the sound card<footnote><simpara>that means being member of the <emphasis>audio</emphasis> group on many Linux distributions</simpara></footnote>.
-		    </para>
-		    <para>
-		      ALSA also provides "virtual" sound card entries. "default" routes the audio to the current default sound card and allows shared access.
-		      If the active sample rate on the hardware does not match the GrandOrgue sample rate, ALSA will start resampling, which will increase the CPU usage.
-		    </para>
-		    <note>
-		      <simpara>
-			Distributions often route the default audio via the PulseAudio daemon. If you don't want to use PulseAudio, you can start GrandOrgue via via pasuspender(1).
-		      </simpara>
-		    </note>
-		  </listitem>
-		</varlistentry>
-		<varlistentry>
-		  <term>Jack</term>
-		  <listitem>
-		    <para>
-		      You can connect to a Jack audio server either via RtAudio as well as PulseAudio. GrandOrgue also includes jack MIDI support, so will likely
-		      see MIDI devices twice (via jack as well as via the native OS APIs).
-		    </para>
-		    <para>
-		      GrandOrgue has support for the native audio APIs and jack adds complexity to the sound output stack. Therefore avoid running jack, unless you want to use GrandOrgue together with other jack applications.
-		    </para>
-		  </listitem>
-		</varlistentry>
-	      </variablelist>
-	    </sect5>
-	  </sect4>
+            <simpara>
+              <emphasis>Audio/Sound Output State</emphasis> tries to
+              displays <emphasis>actual</emphasis> latency. Note that
+              the estimate can be based on numbers provided by the
+              hardware and the drivers and may vary. RtAudio is more
+              likely to display to low numbers.
+            </simpara>
+            <sect5>
+              <title>Windows</title>
+              <variablelist>
+                <varlistentry>
+                  <term>WDM/KS</term>
+                  <listitem>
+                    <para>
+                      This driver allows direct access to the Windows
+                      kernel driver<footnote><simpara>ASIO4ALL also
+                      uses that interface</simpara></footnote>. This
+                      is the recommended driver if there is no other
+                      software which blocks access to the kernel
+                      audio streams. It is supported only via PortAudio.
+                    </para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>WASAPI</term>
+                  <listitem>
+                    <para>
+                      WASAPI support started with Window Vista. Use it if WDM/KS does not work for you. It is supported only via PortAudio.
+                    </para>
+                    <note><simpara>The sample rate of GrandOrgue must match the sample rate of the audio subsystem. So if WASAPI does not work, try a different sample rate in GrandOrgue.</simpara></note>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>DirectSound</term>
+                  <listitem>
+                    <para>
+                      Use it if WDM/KS and WASAPI does not work for you. It is supported via PortAudio and RtAudio.
+                    </para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>WMME</term>
+                  <listitem>
+                    <para>
+                      This a classic, not low-latency audio API. Use it as last fallback. It is supported only via PortAudio.
+                    </para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>ASIO</term>
+                  <listitem>
+                    <para>
+                      GrandOrgue can be compiled with ASIO support. It is supported via PortAudio and RtAudio.
+                    </para>
+                    <para>
+                      ASIO loads third party code into the GO process, so a bad ASIO driver can cause GO hangs.
+                    </para>
+                    <note><simpara>There is no reason to use ASIO4ALL,
+                    because it acts as a pass-through to the native kernel
+                    streaming APIs (e.g. WDM/KS) that GrandOrgue can use
+                    directly.</simpara></note>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>Jack</term>
+                  <listitem>
+                    <para>
+                      GrandOrgue can also be compiled with Jack Support on Windows. See the Linux Jack usage notes.
+                    </para>
+                  </listitem>
+                </varlistentry>
+              </variablelist>
+            </sect5>
+            <sect5>
+              <title>macOS</title>
+              <variablelist>
+                <varlistentry>
+                  <term>CoreAudio</term>
+                  <listitem>
+                    <para>
+                      You can use the macOS native audio API CoreAudio via RtAudio as well as PulseAudio.
+                    </para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>Jack</term>
+                  <listitem>
+                    <para>
+                      GrandOrgue can also be compiled with Jack Support on macOS. See the Linux Jack usage notes.
+                    </para>
+                  </listitem>
+                </varlistentry>
+              </variablelist>
+            </sect5>
+            <sect5>
+              <title>Linux</title>
+              <variablelist>
+                <varlistentry>
+                  <term>ALSA</term>
+                  <listitem>
+                    <para>
+                      You can use the Linux native sound output either via RtAudio as well as via PortAudio. To allow direct hardware access, your Linux user account needs access to the sound card<footnote><simpara>that means being member of the <emphasis>audio</emphasis> group on many Linux distributions</simpara></footnote>.
+                    </para>
+                    <para>
+                      ALSA also provides "virtual" sound card entries. "default" routes the audio to the current default sound card and allows shared access.
+                      If the active sample rate on the hardware does not match the GrandOrgue sample rate, ALSA will start resampling, which will increase the CPU usage.
+                    </para>
+                    <note>
+                      <simpara>
+                        Distributions often route the default audio via the PulseAudio daemon. If you don't want to use PulseAudio, you can start GrandOrgue via via pasuspender(1).
+                      </simpara>
+                    </note>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>Jack</term>
+                  <listitem>
+                    <para>
+                      You can connect to a Jack audio server either via RtAudio as well as PulseAudio. GrandOrgue also includes jack MIDI support, so will likely
+                      see MIDI devices twice (via jack as well as via the native OS APIs).
+                    </para>
+                    <para>
+                      GrandOrgue has support for the native audio APIs and jack adds complexity to the sound output stack. Therefore avoid running jack, unless you want to use GrandOrgue together with other jack applications.
+                    </para>
+                  </listitem>
+                </varlistentry>
+              </variablelist>
+            </sect5>
+          </sect4>
         </sect3>
         <sect3>
           <title>Revert to default</title>
@@ -4661,33 +4674,33 @@ role="strong">STOP</emphasis> button is depressed.
       </figure>
       <para>This tab shows all available MIDI devices.</para>
       <variablelist>
-	<varlistentry>
-	  <term>Auto add new devices</term>
-	  <listitem>
-	    <para>
-	      This checkbox controls whether any new input devices will be enabled
-	      automatically when GrandOrgue starts.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term>Check on startup</term>
-	  <listitem>
-	    <para>
-	      This checkbox controls whether to open the Program Settings dialog
-	      when GrandOrgue starts if no active MIDI devices can be found.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term>Midi ports</term>
-	  <listitem>
-	    <para>
-	      By checking or unchecking the MIDI ports it's possible to filter
-	      the list of MIDI devices used by GrandOrgue.
-	    </para>
-	  </listitem>
-	</varlistentry>
+        <varlistentry>
+          <term>Auto add new devices</term>
+          <listitem>
+            <para>
+              This checkbox controls whether any new input devices will be enabled
+              automatically when GrandOrgue starts.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Check on startup</term>
+          <listitem>
+            <para>
+              This checkbox controls whether to open the Program Settings dialog
+              when GrandOrgue starts if no active MIDI devices can be found.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Midi ports</term>
+          <listitem>
+            <para>
+              By checking or unchecking the MIDI ports it's possible to filter
+              the list of MIDI devices used by GrandOrgue.
+            </para>
+          </listitem>
+        </varlistentry>
         <varlistentry>
           <term>MIDI input devices</term>
           <listitem>
@@ -4696,132 +4709,132 @@ This checklist shows all available MIDI input interfaces. Selecting
 a device means that GrandOrgue will listen for incoming MIDI messages through
 that interface. This allows to listen to more than one device at a time; for
 example, to listen to both a controller and a sequencer or loopback device.
-	    </para>
-	    <para>
+            </para>
+            <para>
 The <indexterm><secondary>Advanced Properties</secondary></indexterm>
 <emphasis>Advanced</emphasis> button is grayed out unless an input channel is
 selected. It opens a dialog to set advanced properties of the selected input
 channel.
-	    </para>
-	    <figure>
-	      <title>MIDI input channel advanced properties</title>
-	      <mediaobject>
-		<imageobject>
-		  <imagedata fileref="images/midi_input_device_advanced_properties.png"/>
-		</imageobject>
-	      </mediaobject>
-	    </figure>
-	    <para>
+            </para>
+            <figure>
+              <title>MIDI input channel advanced properties</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata fileref="images/midi_input_device_advanced_properties.png"/>
+                </imageobject>
+              </mediaobject>
+            </figure>
+            <para>
 This allows the setting of a channel offset. A channel offset allows the use of
 two MIDI interfaces with conflicting MIDI channels. For example, applying a
 channel offset of 8 to one of the MIDI interfaces would cause that interface's
 channel 1 to appear as channel 9, channel 2 to appear as channel 10, and so on.
 This may be useful if you have multiple keyboards that are configured to use
 the same channel.
-	    </para>
-	    <note><simpara>GrandOrgue is capable of matching the MIDI
-	    interface and this is configured by the MIDI detection by
-	    default. Therefore it is possible to use the same MIDI
-	    channel on multiple interfaces without configuring any
-	    channel offset.</simpara></note>
-	    <para>
-	      <indexterm>
-		<primary>MIDI-Output-Device</primary>
-	      </indexterm>
-	      The <emphasis>MIDI-Output-Device</emphasis> button allows to
-	      select an output device where GrandOrgue will send MIDI all events
-	      received from this input device
-	    </para>
-	    <para>
-	      The <emphasis>Matching</emphasis> button allows to change the way
-	      Grandorgue recognizes the MIDI device
-	    </para>
-	    <indexterm>
-	      <primary>MIDI Matching</primary>
-	    </indexterm>
-	    <figure>
-	      <title>MIDI device matching properties</title>
-	      <mediaobject>
-		<imageobject>
-		  <imagedata fileref="images/midi_matching_editor.png"/>
-		</imageobject>
-	      </mediaobject>
-	    </figure>
-	    <variablelist>
-	      <varlistentry>
-		<term>Physical device name</term>
-		<listitem>
-		  <para>
-		  This is the name of MIDI device as it is reported by a MIDI port.
-		  A user can not alter it, but this name may be not persistent
-		  across reboots
-		  </para>
-		</listitem>
-	      </varlistentry>
-	      <varlistentry>
-		<term>Logical device name</term>
-		<listitem>
-		  <para>
-		    This is the name of MIDI device as it is presented to the user.
-		    By default it is the same name as the physical name, but
-		    the user is capable to set some another name
-		  </para>
-		  <note>
-		    <simpara>The logical device name must be unique</simpara>
-		  </note>
-		  <note>
-		    <simpara>
-		      If the user alters the logical name, a regex pattern must
-		      be provided so that GrandOrgue can find this device by its
-		      physical name.
-		    </simpara>
-		    <simpara>
-		      Specify there the most common part among the physical names
-		      of the device appear across reboots
-		    </simpara>
-		  </note>
-		</listitem>
-	      </varlistentry>
-	      <varlistentry>
-		<term>Physical name regex pattern</term>
-		<listitem>
-		  <para>
-		    This is a pattern that allows GrandOrgue to find this MIDI
-		    device with it's physical device name.
-		  </para>
-		  <para>
-		    The simplest pattern would be the most common part of the
-		    physical device name that is present always and it kept
-		    across reboots. More advanced regular expressions are also
-		    supported, look at
-		    <ulink url="https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions">
-		      the full syntax
-		    </ulink>
-		  </para>
-		  <para>
-		    By default the regex pattern is empty so the device can be
-		    found only if it's physical name is equal to it's logical name
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term>MIDI output devices</term>
-	  <listitem>
-	    <para>
+            </para>
+            <note><simpara>GrandOrgue is capable of matching the MIDI
+            interface and this is configured by the MIDI detection by
+            default. Therefore it is possible to use the same MIDI
+            channel on multiple interfaces without configuring any
+            channel offset.</simpara></note>
+            <para>
+              <indexterm>
+                <primary>MIDI-Output-Device</primary>
+              </indexterm>
+              The <emphasis>MIDI-Output-Device</emphasis> button allows to
+              select an output device where GrandOrgue will send MIDI all events
+              received from this input device
+            </para>
+            <para>
+              The <emphasis>Matching</emphasis> button allows to change the way
+              Grandorgue recognizes the MIDI device
+            </para>
+            <indexterm>
+              <primary>MIDI Matching</primary>
+            </indexterm>
+            <figure>
+              <title>MIDI device matching properties</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata fileref="images/midi_matching_editor.png"/>
+                </imageobject>
+              </mediaobject>
+            </figure>
+            <variablelist>
+              <varlistentry>
+                <term>Physical device name</term>
+                <listitem>
+                  <para>
+                  This is the name of MIDI device as it is reported by a MIDI port.
+                  A user can not alter it, but this name may be not persistent
+                  across reboots
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Logical device name</term>
+                <listitem>
+                  <para>
+                    This is the name of MIDI device as it is presented to the user.
+                    By default it is the same name as the physical name, but
+                    the user is capable to set some another name
+                  </para>
+                  <note>
+                    <simpara>The logical device name must be unique</simpara>
+                  </note>
+                  <note>
+                    <simpara>
+                      If the user alters the logical name, a regex pattern must
+                      be provided so that GrandOrgue can find this device by its
+                      physical name.
+                    </simpara>
+                    <simpara>
+                      Specify there the most common part among the physical names
+                      of the device appear across reboots
+                    </simpara>
+                  </note>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Physical name regex pattern</term>
+                <listitem>
+                  <para>
+                    This is a pattern that allows GrandOrgue to find this MIDI
+                    device with it's physical device name.
+                  </para>
+                  <para>
+                    The simplest pattern would be the most common part of the
+                    physical device name that is present always and it kept
+                    across reboots. More advanced regular expressions are also
+                    supported, look at
+                    <ulink url="https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions">
+                      the full syntax
+                    </ulink>
+                  </para>
+                  <para>
+                    By default the regex pattern is empty so the device can be
+                    found only if it's physical name is equal to it's logical name
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MIDI output devices</term>
+          <listitem>
+            <para>
 This checklist shows all available MIDI output interfaces. Selecting
 a device means that GrandOrgue will write MIDI information to external
 hardware. Possible uses are SAM or LED drivers for stop control feedback, or
 physical pipes drivers when digitally expanding a genuine pipe organ.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term>Send MIDI Recorder Output Stream</term>
-	  <listitem>
-	    <para>
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Send MIDI Recorder Output Stream</term>
+          <listitem>
+            <para>
 The dropdown labeled <emphasis>Send MIDI Recorder Output Stream to</emphasis>
 allows the user to pick a target output MIDI device to receive all
 Recorder-generated output. The selected device must be activated in the
@@ -4965,142 +4978,142 @@ MIDI settings work properly.
         </mediaobject>
       </figure>
       <sect2>
-	<para>This tab manages the <emphasis>known organs list</emphasis>.</para>
-	<para>All organs successfully loaded via the <link linkend="file_open">File/Open</link> menu item are automatically registered in this list.</para>
-	<para>
-	  Additional information about each organ is shown on the bottom part of this tab
-	  when the user selects it in the list.
-	</para>
-	<para>
-	  Organs can be registered in multiple ways. When a user opens an .organ
-	  file first time, the organ is registered. When the user installs an
-	  organ package (.orgue) file, all organs present in the package are
-	  registered. Also .orgue packages placed in the packages directory are
-	  read upon GrandOrgue startup and all their organs are also registered.
-	</para>
-	<para>
-	  This list provides for the lists displayed in the
-	  <link linkend="file_load">File/Load</link>,
-	  <link linkend="file_recent">File/Open Recent</link>
-	  and <link linkend="file_recent">File/Favorites</link> menu items.
-	</para>
-	<para>The buttons are grayed out until at least one line is selected in the list.</para>
-	<para>
+        <para>This tab manages the <emphasis>known organs list</emphasis>.</para>
+        <para>All organs successfully loaded via the <link linkend="file_open">File/Open</link> menu item are automatically registered in this list.</para>
+        <para>
+          Additional information about each organ is shown on the bottom part of this tab
+          when the user selects it in the list.
+        </para>
+        <para>
+          Organs can be registered in multiple ways. When a user opens an .organ
+          file first time, the organ is registered. When the user installs an
+          organ package (.orgue) file, all organs present in the package are
+          registered. Also .orgue packages placed in the packages directory are
+          read upon GrandOrgue startup and all their organs are also registered.
+        </para>
+        <para>
+          This list provides for the lists displayed in the
+          <link linkend="file_load">File/Load</link>,
+          <link linkend="file_recent">File/Open Recent</link>
+          and <link linkend="file_recent">File/Favorites</link> menu items.
+        </para>
+        <para>The buttons are grayed out until at least one line is selected in the list.</para>
+        <para>
   The organs order on this tab is reproduced as is in the <link linkend="file_load">File/Load</link>
   menu whereas only the 10 first entries are displayed in the <link linkend="file_recent">File/Favorites</link> menu.
-	</para>
-	<sect3>
-	  <title>Name</title>
-	  <para>The name of the organ from its ODF.</para>
-	</sect3>
-	<sect3>
-	  <title>MIDI</title>
-	  <para>
-	    Yes - some MIDI event has been assigned to this organ.
-	  </para>
-	  <para>
-	    No - no MIDI events have been assigned to this organ.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Path</title>
-	  <para>For the packaged organs - the filesystem path to the its .orgue file.</para>
-	  <para>For the not packaged organs - the filesystem path to the its ODF file.</para>
-	</sect3>
-	<sect3>
-	  <title>Builder, Recording</title>
-	  <para>The contents of the corresponding fields from the ODF.</para>
-	</sect3>
-	<sect3>
-	  <title>Organ hash</title>
-	  <para>A calculated string used for composing the cache and preset filenames.</para>
-	</sect3>
-	<sect3>
-	  <title>Package id</title>
-	  <para>Only for packaged organs. A special string used for matching between organs and organ packages.</para>
-	</sect3>
-	<sect3>
-	  <title>Package name</title>
-	  <para>Only for packaged organs. The name of the organ package.
-	    It is often equals to the name of the packaged organ, but may differ from it.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Path in package</title>
-	  <para>
-	    Only for packaged organs. The relative path to the ODF in the package. One package may contain
-	    several organs with different ODF paths.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Package hash</title>
-	  <para>Only for packaged organs. The calculated string used for
-	    composing the name of the index file in the Cache directory.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Package info</title>
-	  <para>
-	    Only for packaged organs. Additional information about the organ package.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Down</title>
-	  <para>This button moves the selected entry/entries down one position. It is grayed out if the selected line is last in the list.</para>
-	</sect3>
-	<sect3>
-	  <title>Up</title>
-	  <para>This button moves the selected entry/entries up one position. It is grayed out if the selected line is first in the list.</para>
-	</sect3>
-	<sect3>
-	  <title>Top</title>
-	  <para>This button moves the selected entry/entries to the first position in the list. It is grayed out if a selected line is first in the list.</para>
-	</sect3>
-	<sect3>
-	  <title>MIDI...</title>
-	  <para>
+        </para>
+        <sect3>
+          <title>Name</title>
+          <para>The name of the organ from its ODF.</para>
+        </sect3>
+        <sect3>
+          <title>MIDI</title>
+          <para>
+            Yes - some MIDI event has been assigned to this organ.
+          </para>
+          <para>
+            No - no MIDI events have been assigned to this organ.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Path</title>
+          <para>For the packaged organs - the filesystem path to the its .orgue file.</para>
+          <para>For the not packaged organs - the filesystem path to the its ODF file.</para>
+        </sect3>
+        <sect3>
+          <title>Builder, Recording</title>
+          <para>The contents of the corresponding fields from the ODF.</para>
+        </sect3>
+        <sect3>
+          <title>Organ hash</title>
+          <para>A calculated string used for composing the cache and preset filenames.</para>
+        </sect3>
+        <sect3>
+          <title>Package id</title>
+          <para>Only for packaged organs. A special string used for matching between organs and organ packages.</para>
+        </sect3>
+        <sect3>
+          <title>Package name</title>
+          <para>Only for packaged organs. The name of the organ package.
+            It is often equals to the name of the packaged organ, but may differ from it.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Path in package</title>
+          <para>
+            Only for packaged organs. The relative path to the ODF in the package. One package may contain
+            several organs with different ODF paths.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Package hash</title>
+          <para>Only for packaged organs. The calculated string used for
+            composing the name of the index file in the Cache directory.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Package info</title>
+          <para>
+            Only for packaged organs. Additional information about the organ package.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Down</title>
+          <para>This button moves the selected entry/entries down one position. It is grayed out if the selected line is last in the list.</para>
+        </sect3>
+        <sect3>
+          <title>Up</title>
+          <para>This button moves the selected entry/entries up one position. It is grayed out if the selected line is first in the list.</para>
+        </sect3>
+        <sect3>
+          <title>Top</title>
+          <para>This button moves the selected entry/entries to the first position in the list. It is grayed out if a selected line is first in the list.</para>
+        </sect3>
+        <sect3>
+          <title>MIDI...</title>
+          <para>
   This button opens the <link linkend="midieventeditor">MIDI Event Editor</link>
   to manage the MIDI event(s) which enable GrandOrgue to load a sample set when received.
-	  </para>
-	  <para>
+          </para>
+          <para>
   A use case of this feature can be: use a rotary selector that sends MIDI <emphasis role="bold">Program Change</emphasis>
   messages to easily switch between sample sets.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Relocate</title>
-	  <para>
-	    This button opens a file choosing dialog for specifying the new
-	    path to the file the organ was opened from. It is useful after
-	    moving the organ files to another directory, and the original path is
-	    no longer valid.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Delete Cache</title>
-	  <para>
-	    This button removes all cache files for the selected organ(s).
-	    The cache files are deleted only when the user saves the settings.
-	    The cache may be recreated later automatically or with the "Update Cache" menu entry.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Delete Presets</title>
-	  <para>
-	    This button removes all setting files for the selected organ(s) that were
-	    saved with the Save menu entry. All the user settings for the organ
-	    will be lost.
-	    The cache files are deleted only when the user saves the settings.
-	  </para>
-	</sect3>
-	<sect3>
-	  <title>Delete</title>
-	  <para>
+          </para>
+        </sect3>
+        <sect3>
+          <title>Relocate</title>
+          <para>
+            This button opens a file choosing dialog for specifying the new
+            path to the file the organ was opened from. It is useful after
+            moving the organ files to another directory, and the original path is
+            no longer valid.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Delete Cache</title>
+          <para>
+            This button removes all cache files for the selected organ(s).
+            The cache files are deleted only when the user saves the settings.
+            The cache may be recreated later automatically or with the "Update Cache" menu entry.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Delete Presets</title>
+          <para>
+            This button removes all setting files for the selected organ(s) that were
+            saved with the Save menu entry. All the user settings for the organ
+            will be lost.
+            The cache files are deleted only when the user saves the settings.
+          </para>
+        </sect3>
+        <sect3>
+          <title>Delete</title>
+          <para>
   This button removes a line from the list. GrandOrgue deregisters this organ.
   <note><simpara>If a cache or presets were saved and/or the samples were cached, the files are <emphasis role="strong">ALSO</emphasis> deleted from disk.</simpara></note>
   <note><simpara>The sample set files of the package .orgue file are <emphasis role="strong">NOT</emphasis> deleted from disk.</simpara></note>
-	  </para>
-	</sect3>
+          </para>
+        </sect3>
       </sect2>
     </sect1>
     <sect1>
@@ -5462,9 +5475,9 @@ Within  windchests, the ranks are ordered as found in the definition file.
           <term>Default for All</term>
           <listitem>
             <simpara>
-	      This button restores the setting values for the selected element
-	      and all its child elements from the organ definition file.
-	    </simpara>
+              This button restores the setting values for the selected element
+              and all its child elements from the organ definition file.
+            </simpara>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -5662,21 +5675,21 @@ for more information.
           <listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>Regular</term>
-        	<term>Scope</term>
-        	<term>Scoped</term>
-        	<term>Full</term>
-        	<listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
+                <term>Regular</term>
+                <term>Scope</term>
+                <term>Scoped</term>
+                <term>Full</term>
+                <listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>A</term>
-        	<term>B</term>
-        	<term>C</term>
-        	<term>D</term>
-        	<listitem><simpara>Select the crescendo bank to use. The current bank is highlighted</simpara></listitem>
+                <term>A</term>
+                <term>B</term>
+                <term>C</term>
+                <term>D</term>
+                <listitem><simpara>Select the crescendo bank to use. The current bank is highlighted</simpara></listitem>
         </varlistentry>
         <varlistentry id="crescendoopmodes">
-        	<term>Override</term>
+                <term>Override</term>
                 <listitem>
                     <simpara>Switches the crescendo operational mode between the Override and the Add one.</simpara>
                     <simpara>The mode determines how the crescendo enables/disables stops when the crescendo level is changed.</simpara>
@@ -5685,12 +5698,12 @@ for more information.
                 </listitem>
         </varlistentry>
         <varlistentry>
-        	<term>&lt;</term>
+                <term>&lt;</term>
           <listitem><simpara>
               Move to the previous step. While <link linkend="memoryset">setting</link>, store the state of drawstops and couplers (according to regular or scope/scoped) into the previous step.</simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>Current</term>
+                <term>Current</term>
           <listitem><simpara>
 While <link linkend="memoryset">setting</link>, store the state of drawstops and
 couplers (according to regular or scope/scoped) into the current crescendo
@@ -5698,11 +5711,11 @@ step, otherwise recall the current step's state.
           </simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>&gt;</term>
-        	<listitem><simpara>Move to the next step. While <link linkend="memoryset">setting</link>, store the state of drawstops and couplers (according to regular or scope/scoped) into the next step.</simpara></listitem>
+                <term>&gt;</term>
+                <listitem><simpara>Move to the next step. While <link linkend="memoryset">setting</link>, store the state of drawstops and couplers (according to regular or scope/scoped) into the next step.</simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>Crescendo shoe</term>
+                <term>Crescendo shoe</term>
           <listitem><simpara>
 This shoe controls the crescendo. It behaves like an <link
   linkend="expressionshoe">expression shoe</link>. If the physical console has
@@ -5723,37 +5736,37 @@ provide them.
       </para>
       <variablelist>
         <varlistentry>
-        	<term>Set</term>
-        	<listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
+                <term>Set</term>
+                <listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>Regular</term>
-        	<term>Scope</term>
-        	<term>Scoped</term>
-        	<term>Full</term>
-        	<listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
+                <term>Regular</term>
+                <term>Scope</term>
+                <term>Scoped</term>
+                <term>Full</term>
+                <listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>1</term>
-        	<term>2</term>
-        	<term>3</term>
-        	<term>4</term>
-        	<term>5</term>
-        	<term>6</term>
-        	<term>7</term>
-        	<term>8</term>
-        	<term>9</term>
-        	<term>10</term>
-        	<listitem><simpara>Enable the N-combination stored in the current bank.</simpara></listitem>
+                <term>1</term>
+                <term>2</term>
+                <term>3</term>
+                <term>4</term>
+                <term>5</term>
+                <term>6</term>
+                <term>7</term>
+                <term>8</term>
+                <term>9</term>
+                <term>10</term>
+                <listitem><simpara>Enable the N-combination stored in the current bank.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>Label in between</term>
           <listitem><simpara>Displays the current bank for the division. Values are letters from A to T. It is an "active" label, and as such supports a <link linkend="activelabel">MIDI send</link> configuration</simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>-</term>
-        	<term>+</term>
-        	<listitem><simpara>Switch current bank for the division to the previous and to the next</simpara></listitem>
+                <term>-</term>
+                <term>+</term>
+                <listitem><simpara>Switch current bank for the division to the previous and to the next</simpara></listitem>
         </varlistentry>
       </variablelist>
       <note><title>Notes</title>
@@ -5786,15 +5799,15 @@ accessories even when the sample set doesn't provide them.
           <listitem><simpara>Switch to the next generals bank</simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>Set</term>
-        	<listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
+                <term>Set</term>
+                <listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
         </varlistentry>
         <varlistentry>
-        	<term>Regular</term>
-        	<term>Scope</term>
-        	<term>Scoped</term>
-        	<term>Full</term>
-        	<listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
+                <term>Regular</term>
+                <term>Scope</term>
+                <term>Scoped</term>
+                <term>Full</term>
+                <listitem><simpara>See <link linkend="scope">Regular, Scope and Scoped, Full</link></simpara></listitem>
         </varlistentry>
       </variablelist>
       <note><title>Notes</title>
@@ -7070,38 +7083,38 @@ attributes of a label.
      </para>
           </listitem>
         </varlistentry>
-	<varlistentry>
-	  <term>SetterXXXDivisionalYYY</term>
-	  <listitem>
-	    <para>
-	      Represents a divisional button YYY (000 means 1, 001 - 2 etc) for
-	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
-	      section must contain the GUI attributes of a button (displayed as
-	      button per default).
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term>SetterXXXDivisionalPrevBank, SetterXXXDivisionalNextBank</term>
-	  <listitem>
-	    <para>
-	      Represents a button switching the current bank of divisionals for
-	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
-	      section must contain the GUI attributes of a button (displayed as
-	      button per default).
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term>SetterXXXDivisionalBank</term>
-	  <listitem>
-	    <para>
-	      Represents a label showing the current bank of divisionals for
-	      the manual XXX (000 - Pedal, 001 - the first manual, etc). The
-	      section must contain the GUI attributes of a label.
-	    </para>
-	  </listitem>
-	</varlistentry>
+        <varlistentry>
+          <term>SetterXXXDivisionalYYY</term>
+          <listitem>
+            <para>
+              Represents a divisional button YYY (000 means 1, 001 - 2 etc) for
+              the manual XXX (000 - Pedal, 001 - the first manual, etc). The
+              section must contain the GUI attributes of a button (displayed as
+              button per default).
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SetterXXXDivisionalPrevBank, SetterXXXDivisionalNextBank</term>
+          <listitem>
+            <para>
+              Represents a button switching the current bank of divisionals for
+              the manual XXX (000 - Pedal, 001 - the first manual, etc). The
+              section must contain the GUI attributes of a button (displayed as
+              button per default).
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SetterXXXDivisionalBank</term>
+          <listitem>
+            <para>
+              Represents a label showing the current bank of divisionals for
+              the manual XXX (000 - Pedal, 001 - the first manual, etc). The
+              section must contain the GUI attributes of a label.
+            </para>
+          </listitem>
+        </varlistentry>
         <varlistentry>
           <term>Label</term>
           <listitem>
@@ -9649,7 +9662,7 @@ velocity applied to the whole rank. 100 means no change.
 (boolean, default: true) Determines if the rank will be retuned
 according to the current temperament. Retuning should be only disabled
 for sound effects.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -9739,7 +9752,7 @@ part is loaded from the first attack sample.
             <para>
 (integer -1 - 100000, default: -1) maximum time since the last release of
 the key to be able to use that attack. -1 means infinite.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -9857,7 +9870,7 @@ for retuning to other temperaments.
 (boolean, default: rank setting) Determines if the pipe will be retuned
 according to the current temperament. Retuning should be only disabled
 for sound effects.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10068,7 +10081,7 @@ specified in samples.
             <para>
 (integer 0 - 120, default: 0) Crossfade length in ms between loop start and loop
 end. A cross fade requires enough samples before the start of the loop.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10077,7 +10090,7 @@ end. A cross fade requires enough samples before the start of the loop.
             <para>
 (integer 0 - 200, default: 0) Crossfade length in ms between loop and the
 release (or other attacks). 0 means automatic selection.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -10699,26 +10712,26 @@ values:
             <para>
 The section contains the GUI attributes of a divisional. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>Manual</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>Manual</term>
+                <listitem>
+                  <para>
 (valid manual number, required) Number of the manual.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	      <varlistentry>
-		<term>Divisional</term>
-		<listitem>
-		  <para>
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Divisional</term>
+                <listitem>
+                  <para>
 (valid divisional number, required) Number of the divisional on the
 manual.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10727,26 +10740,26 @@ manual.
             <para>
 The section contains the GUI attributes of a coupler. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>Manual</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>Manual</term>
+                <listitem>
+                  <para>
 (valid manual number, required) Number of the manual.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	      <varlistentry>
-		<term>Coupler</term>
-		<listitem>
-		  <para>
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Coupler</term>
+                <listitem>
+                  <para>
 (valid coupler number, required) Number of the coupler on the
 manual.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10755,26 +10768,26 @@ manual.
             <para>
 The section contains the GUI attributes of a stop. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>Manual</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>Manual</term>
+                <listitem>
+                  <para>
 (valid manual number, required) Number of the manual.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	      <varlistentry>
-		<term>Stop</term>
-		<listitem>
-		  <para>
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>Stop</term>
+                <listitem>
+                  <para>
 (valid stop number, required) Number of the stop on the
 manual.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10783,17 +10796,17 @@ manual.
             <para>
 The section contains the GUI attributes of an enclosure. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>Enclosure</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>Enclosure</term>
+                <listitem>
+                  <para>
 (valid enclosure number, required) Number of the enclosure.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10802,17 +10815,17 @@ it includes the following attributes:
             <para>
 The section contains the GUI attributes of a tremulant. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>Tremulant</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>Tremulant</term>
+                <listitem>
+                  <para>
 (valid tremulant number, required) Number of the tremulant.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10821,17 +10834,17 @@ it includes the following attributes:
             <para>
 The section contains the GUI attributes of a divisional coupler. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>DivisionalCoupler</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>DivisionalCoupler</term>
+                <listitem>
+                  <para>
 (valid divisional coupler number, required) Number of the divisional coupler.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10840,17 +10853,17 @@ it includes the following attributes:
             <para>
 The section contains the GUI attributes of a general. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>General</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>General</term>
+                <listitem>
+                  <para>
 (valid general number, required) Number of the general.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10859,17 +10872,17 @@ it includes the following attributes:
             <para>
 The section contains the GUI attributes of a reversible piston. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>ReversiblePiston</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>ReversiblePiston</term>
+                <listitem>
+                  <para>
 (valid reversible piston number, required) Number of the reversible piston.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10878,17 +10891,17 @@ it includes the following attributes:
             <para>
 The section contains the GUI attributes of a switch. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>Switch</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>Switch</term>
+                <listitem>
+                  <para>
 (valid switch number, required) Number of the switch.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10896,7 +10909,7 @@ it includes the following attributes:
           <listitem>
             <para>
 The section contains the GUI attributes of a label.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10905,17 +10918,17 @@ The section contains the GUI attributes of a label.
             <para>
 The section contains the GUI attributes of a manual. Additionally
 it includes the following attributes:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>Manual</term>
-		<listitem>
-		  <para>
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>Manual</term>
+                <listitem>
+                  <para>
 (valid manual number, required) Number of the manual.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10923,7 +10936,7 @@ it includes the following attributes:
           <listitem>
             <para>
 See the setter element section for further description.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -10972,7 +10985,7 @@ It has the same syntax rules as an organ definition file. The
           <listitem>
             <para>
 (string, required) Name of the organ package
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10982,7 +10995,7 @@ It has the same syntax rules as an organ definition file. The
 (integer 0 - 100, required) Number of organs installed by this
 package. The organs are defined in a section named
 <emphasis>Organ999</emphasis>.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -10992,7 +11005,7 @@ package. The organs are defined in a section named
 (integer 0 - 100, default: 0) Number of organs packages required by this
 organ package. The dependencies are defined in a section named
 <emphasis>Dependency999</emphasis>.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -11009,7 +11022,7 @@ The section has the following elements:
             <para>
 (string, required) ID of the package file, that should be searched for
 missing files.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -11017,7 +11030,7 @@ missing files.
           <listitem>
             <para>
 (string, required) Name of the package file.
-	    </para>
+            </para>
           </listitem>
         </varlistentry>
       </variablelist>

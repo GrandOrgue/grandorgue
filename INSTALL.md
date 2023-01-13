@@ -17,6 +17,9 @@ Installation of the program creates neither the configuration file nor directori
 
 ## Installation or upgrading on Linux
 
+x11 is recommended for running GrandOrgue. Some positioning/sizing may work not
+properly on wayland. See more [here](https://github.com/GrandOrgue/grandorgue/issues/1271).
+
 ### Run GrandOrgue on Linux directly from AppImage
 The GrandOrgue appimage is built for x86_64 architecture without jack support to maximize compatibility. This method does not require any installation of dependencies or GrandOrgue itself.
 
