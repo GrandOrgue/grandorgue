@@ -5303,7 +5303,6 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <title>Tuning</title>
         <para>This spinner allows to fine tune the pitch of the element. The unit is 1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning is cumulative from organ level down to pipe level.</para>
         <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
-        <para>The tuning adjustments provided here does <emphasis>only</emphasis> affect the Original temperament. If problems arise with tuning in other temperaments it's strongly advised that the sample set creator should be notified about the issue and urged to provide a fix.</para>
       </sect2>
       <sect2>
         <title>Tracker</title>
