@@ -485,7 +485,8 @@ void GOSoundingPipe::UpdateTuning() {
   } else {
     // For any other temperament than original. Calculate pitchAdjustment by
     // converting from the original temperament to the equal one before using
-    // temperament offset. Take PitchCorrection into account
+    // temperament offset. Take PitchCorrection into account. Also GUI tuning
+    // adjustments are added and ODF adjustments removed leaving difference.
     double concert_pitch_correction = 0;
 
     if (
@@ -496,7 +497,8 @@ void GOSoundingPipe::UpdateTuning() {
            + log(8.0 / m_HarmonicNumber) / log(2) * 1200)
         + m_SoundProvider.GetMidiPitchFract();
     }
-    pitchAdjustment = m_PitchCorrection - concert_pitch_correction;
+    pitchAdjustment = m_PipeConfigNode.GetEffectiveTuning() + m_PitchCorrection
+      - m_PipeConfigNode.GetDefaultTuning() - concert_pitch_correction;
   }
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }
