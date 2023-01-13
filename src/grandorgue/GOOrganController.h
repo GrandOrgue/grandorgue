@@ -22,7 +22,6 @@
 #include "loader/GOFileStore.h"
 #include "model/GOModificationListener.h"
 #include "model/GOOrganModel.h"
-#include "model/pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOBitmapCache.h"
 #include "GOMainWindowData.h"
@@ -54,7 +53,6 @@ class GOSoundSampler;
 typedef struct _GOHashType GOHashType;
 
 class GOOrganController : public GOEventDistributor,
-                          private GOPipeUpdateCallback,
                           public GOTimer,
                           public GOOrganModel,
                           public GOModificationListener {
@@ -81,6 +79,7 @@ private:
   unsigned m_releaseTail = 0;
 
   bool m_b_customized;
+  float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
   bool m_DivisionalsStoreIntermanualCouplers;
   bool m_DivisionalsStoreIntramanualCouplers;
@@ -109,7 +108,6 @@ private:
 
   GOMemoryPool m_pool;
   GOBitmapCache m_bitmaps;
-  GOPipeConfigTreeNode m_PipeConfig;
   GOConfig &m_config;
   GOCombinationDefinition m_GeneralTemplate;
   GOLabelControl m_PitchLabel;
@@ -128,10 +126,6 @@ private:
   wxString GenerateCacheFileName();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
-
-  void UpdateAmplitude();
-  void UpdateTuning();
-  void UpdateAudioGroup();
 
   wxString GetOrganHash();
 
@@ -187,7 +181,6 @@ public:
   GOMemoryPool &GetMemoryPool();
   GOConfig &GetSettings();
   GOBitmapCache &GetBitmapCache();
-  GOPipeConfigNode &GetPipeConfig();
   void SetTemperament(wxString name);
   wxString GetTemperament();
   void MarkSectionInUse(wxString name);

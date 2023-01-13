@@ -90,6 +90,7 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_MidiRecorder(NULL),
     m_volume(0),
     m_b_customized(false),
+    m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
     m_DivisionalsStoreIntermanualCouplers(false),
     m_DivisionalsStoreIntramanualCouplers(false),
@@ -113,7 +114,6 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_SampleSetId1(0),
     m_SampleSetId2(0),
     m_bitmaps(this),
-    m_PipeConfig(NULL, this, this),
     m_config(settings),
     m_GeneralTemplate(this),
     m_PitchLabel(this),
@@ -141,8 +141,17 @@ void GOOrganController::SetOrganModified(bool modified) {
 }
 
 void GOOrganController::OnIsModifiedChanged(bool modified) {
-  if (modified) // If the organ model modified then the organ is also modified
+  if (modified) {
+    // Update the pitch label if it has been changed
+    const float newPitch = GetRootPipeConfigNode().GetPipeConfig().GetTuning();
+
+    if (newPitch != m_CurrentPitch) {
+      m_PitchLabel.SetContent(wxString::Format(_("%f cent"), newPitch));
+      m_CurrentPitch = newPitch;
+    }
+    // If the organ model is modified then the organ is also modified
     SetOrganModified(true);
+  }
   // else nothing because the organ may be modified without the model
 }
 
@@ -222,7 +231,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   /* load basic organ information */
   unsigned NumberOfPanels
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
-  m_PipeConfig.Load(cfg, group, wxEmptyString);
   m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(
     ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
   m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(
@@ -315,7 +323,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   for (unsigned i = m_FirstManual; i < m_manuals.size(); i++)
     m_manuals[i]->GetDivisionalTemplate().InitDivisional(i);
 
-  m_PipeConfig.SetName(GetChurchName());
+  GetRootPipeConfigNode().SetName(GetChurchName());
   ReadCombinations(cfg);
 
   GOHash hash;
@@ -852,17 +860,6 @@ const wxString &GOOrganController::GetRecordingDetails() {
 }
 
 const wxString &GOOrganController::GetInfoFilename() { return m_InfoFilename; }
-
-GOPipeConfigNode &GOOrganController::GetPipeConfig() { return m_PipeConfig; }
-
-void GOOrganController::UpdateAmplitude() {}
-
-void GOOrganController::UpdateTuning() {
-  m_PitchLabel.SetContent(
-    wxString::Format(_("%f cent"), m_PipeConfig.GetPipeConfig().GetTuning()));
-}
-
-void GOOrganController::UpdateAudioGroup() {}
 
 bool GOOrganController::IsCustomized() { return m_b_customized; }
 

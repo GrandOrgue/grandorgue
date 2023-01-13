@@ -23,6 +23,7 @@
 
 GOOrganModel::GOOrganModel(const GOConfig &config)
   : m_config(config),
+    m_RootPipeConfigNode(nullptr, this, nullptr),
     m_OrganModelModified(false),
     m_ModificationListener(nullptr),
     m_FirstManual(0),
@@ -37,6 +38,7 @@ void GOOrganModel::Load(
   unsigned NumberOfWindchestGroups
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 50);
 
+  m_RootPipeConfigNode.Load(cfg, group, wxEmptyString);
   m_windchests.resize(0);
   for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
     m_windchests.push_back(new GOWindchest(organController));
@@ -141,11 +143,10 @@ void GOOrganModel::Load(
 }
 
 void GOOrganModel::SetOrganModelModified(bool modified) {
-  if (modified != m_OrganModelModified) {
+  if (modified != m_OrganModelModified)
     m_OrganModelModified = modified;
-    if (m_ModificationListener)
-      m_ModificationListener->OnIsModifiedChanged(modified);
-  }
+  if (modified && m_ModificationListener)
+    m_ModificationListener->OnIsModifiedChanged(modified);
 }
 
 void GOOrganModel::UpdateTremulant(GOTremulant *tremulant) {
