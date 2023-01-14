@@ -202,6 +202,13 @@ public:
   void SetVolume(int volume);
   int GetVolume();
 
+  unsigned GetReleaseTail() {
+    return GetRootPipeConfigNode().GetEffectiveReleaseTail();
+  }
+  void SetReleaseTail(unsigned releaseTail) {
+    GetRootPipeConfigNode().GetPipeConfig().SetReleaseTail(releaseTail);
+  }
+
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel = false);
   GOLabelControl *GetLabel(const wxString &name, bool is_panel = false);
   GOButtonControl *GetButtonControl(

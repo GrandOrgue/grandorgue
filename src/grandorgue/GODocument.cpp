@@ -76,15 +76,12 @@ bool GODocument::Import(
 
   // synchronize cfg.ReleaseTail with OrganReleaseTail.
   unsigned cfgReleaseTail = cfg.ReleaseLength();
-  unsigned organReleaseTail
-    = m_OrganController->GetRootPipeConfigNode().GetEffectiveReleaseTail();
+  unsigned organReleaseTail = m_OrganController->GetReleaseTail();
 
   if (organReleaseTail) // organReleaseTail has the priority
     cfg.ReleaseLength(organReleaseTail);
-  else if (cfgReleaseTail) {
-    m_OrganController->GetRootPipeConfigNode().GetPipeConfig().SetReleaseTail(
-      cfgReleaseTail);
-  }
+  else if (cfgReleaseTail)
+    m_OrganController->SetReleaseTail(cfgReleaseTail);
   cfg.Flush();
 
   wxCommandEvent event(wxEVT_WINTITLE, 0);
