@@ -16,20 +16,33 @@ protected:
   wxString m_GroupTitle;
   wxString m_Name;
   wxString m_Title;
-  bool m_IsTemperamentOriginalBased; // To know how tuning should be handled
+
+private:
+  bool
+    m_IsTemperamentOriginalBased; // Decides the base for GetOffset(): Original
+                                  // temperament or Equal temperament
 
 public:
-  GOTemperament(wxString name, wxString group = wxEmptyString);
   GOTemperament(
-    wxString name, wxString title, wxString group, wxString groupTitle);
+    wxString name, wxString group = wxEmptyString, bool isOriginalBased = true);
+  GOTemperament(
+    wxString name,
+    wxString title,
+    wxString group,
+    wxString groupTitle,
+    bool isOriginalBased = true);
   virtual ~GOTemperament();
 
+  // if m_IsTemperamentOriginalBased GetOffset() returns the deviation from
+  // original temperament else the deviation from equal temperament
   virtual float GetOffset(unsigned index) const;
   wxString GetName() const;
   wxString GetTitle() const;
   wxString GetGroup() const;
   wxString GetGroupTitle() const;
-  bool GetIsTemperamentOriginalBased() const;
+  bool IsTemperamentOriginalBased() const {
+    return m_IsTemperamentOriginalBased;
+  }
 };
 
 #endif

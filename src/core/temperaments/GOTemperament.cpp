@@ -9,20 +9,25 @@
 
 #include <wx/intl.h>
 
-GOTemperament::GOTemperament(wxString name, wxString group)
+GOTemperament::GOTemperament(
+  wxString name, wxString group, bool isOriginalBased)
   : m_Group(group),
     m_GroupTitle(wxEmptyString),
     m_Name(name),
     m_Title(wxEmptyString),
-    m_IsTemperamentOriginalBased(true) {}
+    m_IsTemperamentOriginalBased(isOriginalBased) {}
 
 GOTemperament::GOTemperament(
-  wxString name, wxString title, wxString group, wxString groupTitle)
+  wxString name,
+  wxString title,
+  wxString group,
+  wxString groupTitle,
+  bool isOriginalBased)
   : m_Group(group),
     m_GroupTitle(groupTitle),
     m_Name(name),
     m_Title(title),
-    m_IsTemperamentOriginalBased(true) {}
+    m_IsTemperamentOriginalBased(isOriginalBased) {}
 
 GOTemperament::~GOTemperament() {}
 
@@ -38,8 +43,4 @@ wxString GOTemperament::GetGroup() const { return m_Group; }
 
 wxString GOTemperament::GetGroupTitle() const {
   return m_GroupTitle.IsEmpty() ? wxGetTranslation(m_Group) : m_GroupTitle;
-}
-
-bool GOTemperament::GetIsTemperamentOriginalBased() const {
-  return m_IsTemperamentOriginalBased;
 }

@@ -1,4 +1,3 @@
-- Refactored tuning according to discussion in https://github.com/GrandOrgue/grandorgue/issues/1333
 - Fixed help: the wrong panal positioning on wayland was documented https://github.com/GrandOrgue/grandorgue/issues/1271
 - Fixed typos and spelling errors in the Help
 - Fixed continuing loading an organ after an exception in one loading thread

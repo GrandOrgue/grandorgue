@@ -11,7 +11,7 @@
 
 GOTemperamentCent::GOTemperamentCent(
   wxString name, wxString title, wxString group, wxString groupTitle)
-  : GOTemperament(name, title, group, groupTitle) {
+  : GOTemperament(name, title, group, groupTitle, false) {
   m_Tuning[0] = 0;
   m_Tuning[1] = 0;
   m_Tuning[2] = 0;
@@ -24,7 +24,6 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = 0;
   m_Tuning[10] = 0;
   m_Tuning[11] = 0;
-  m_IsTemperamentOriginalBased = false;
 }
 
 GOTemperamentCent::GOTemperamentCent(
@@ -41,7 +40,7 @@ GOTemperamentCent::GOTemperamentCent(
   float i10,
   float i11,
   float i12)
-  : GOTemperament(name) {
+  : GOTemperament(name, wxEmptyString, false) {
   m_Tuning[0] = i1;
   m_Tuning[1] = i2;
   m_Tuning[2] = i3;
@@ -54,7 +53,6 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = i10;
   m_Tuning[10] = i11;
   m_Tuning[11] = i12;
-  m_IsTemperamentOriginalBased = false;
 }
 
 GOTemperamentCent::GOTemperamentCent(
@@ -72,7 +70,7 @@ GOTemperamentCent::GOTemperamentCent(
   float i10,
   float i11,
   float i12)
-  : GOTemperament(name, group) {
+  : GOTemperament(name, group, false) {
   m_Tuning[0] = i1;
   m_Tuning[1] = i2;
   m_Tuning[2] = i3;
@@ -85,9 +83,4 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = i10;
   m_Tuning[10] = i11;
   m_Tuning[11] = i12;
-  m_IsTemperamentOriginalBased = false;
-}
-
-float GOTemperamentCent::GetOffset(unsigned index) const {
-  return m_Tuning[index];
 }

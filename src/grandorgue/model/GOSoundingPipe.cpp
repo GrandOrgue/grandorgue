@@ -509,7 +509,7 @@ void GOSoundingPipe::UpdateAudioGroup() {
 }
 
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
-  m_IsTemperamentOriginalBased = temperament.GetIsTemperamentOriginalBased();
+  m_IsTemperamentOriginalBased = temperament.IsTemperamentOriginalBased();
   if (!m_RetunePipe)
     m_TemperamentOffset = 0;
   else
