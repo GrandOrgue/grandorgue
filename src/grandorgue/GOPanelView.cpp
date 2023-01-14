@@ -85,18 +85,22 @@ GOPanelView::GOPanelView(
   int nr = savedDisplayNum >= 0 && savedDisplayNum < (int)wxDisplay::GetCount()
     ? savedDisplayNum
     : wxDisplay::GetFromWindow(frame);
-  wxDisplay display(nr != wxNOT_FOUND ? nr : 0);
-  wxRect max = display.GetClientArea();
-  // If our current window is within this area, all is fine
-  wxRect current = frame->GetRect();
-  if (!max.Contains(current)) {
-    // Otherwise, check and correct width and height,
-    // and place the frame at the center of the Client Area of the display
-    if (current.GetWidth() > max.GetWidth())
-      current.SetWidth(max.GetWidth());
-    if (current.GetHeight() > max.GetHeight())
-      current.SetHeight(max.GetHeight());
-    frame->SetSize(current.CenterIn(max, wxBOTH));
+
+  // Check if the window is visible. If not, center it at the first display
+  if (nr == wxNOT_FOUND) {
+    wxRect max = wxDisplay((unsigned)0).GetClientArea();
+    // If our current window is within this area, all is fine
+    wxRect current = frame->GetRect();
+
+    if (!max.Contains(current)) {
+      // Otherwise, check and correct width and height,
+      // and place the frame at the center of the Client Area of the display
+      if (current.GetWidth() > max.GetWidth())
+        current.SetWidth(max.GetWidth());
+      if (current.GetHeight() > max.GetHeight())
+        current.SetHeight(max.GetHeight());
+      frame->SetSize(current.CenterIn(max, wxBOTH));
+    }
   }
   if (m_TopWindow && panel->IsMaximized())
     m_TopWindow->Maximize(true);
