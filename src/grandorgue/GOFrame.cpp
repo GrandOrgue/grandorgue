@@ -1180,12 +1180,11 @@ void GOFrame::OnSettingsTranspose(wxCommandEvent &event) {
 }
 
 void GOFrame::OnSettingsReleaseLength(wxCommandEvent &event) {
-  m_config.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
+  unsigned newReleaseTail = m_ReleaseLength->GetSelection() * 50;
+
+  m_config.ReleaseLength(newReleaseTail);
   if (m_doc && m_doc->GetOrganFile())
-    m_doc->GetOrganFile()
-      ->GetRootPipeConfigNode()
-      .GetPipeConfig()
-      .SetReleaseTail(m_config.ReleaseLength());
+    m_doc->GetOrganFile()->SetReleaseTail(newReleaseTail);
 }
 
 void GOFrame::OnHelpAbout(wxCommandEvent &event) { DoSplash(false); }
