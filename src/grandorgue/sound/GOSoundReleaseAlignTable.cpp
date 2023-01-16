@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOReleaseAlignTable.h"
+#include "GOSoundReleaseAlignTable.h"
 
 #include <stdlib.h>
 
@@ -19,15 +19,15 @@
 #endif
 #endif
 
-GOReleaseAlignTable::GOReleaseAlignTable() {
+GOSoundReleaseAlignTable::GOSoundReleaseAlignTable() {
   memset(m_PositionEntries, 0, sizeof(m_PositionEntries));
   m_PhaseAlignMaxAmplitude = 0;
   m_PhaseAlignMaxDerivative = 0;
 }
 
-GOReleaseAlignTable::~GOReleaseAlignTable() {}
+GOSoundReleaseAlignTable::~GOSoundReleaseAlignTable() {}
 
-bool GOReleaseAlignTable::Load(GOCache &cache) {
+bool GOSoundReleaseAlignTable::Load(GOCache &cache) {
   if (!cache.Read(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude)))
     return false;
   if (!cache.Read(
@@ -38,7 +38,7 @@ bool GOReleaseAlignTable::Load(GOCache &cache) {
   return true;
 }
 
-bool GOReleaseAlignTable::Save(GOCacheWriter &cache) {
+bool GOSoundReleaseAlignTable::Save(GOCacheWriter &cache) {
   if (!cache.Write(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude)))
     return false;
   if (!cache.Write(
@@ -49,7 +49,7 @@ bool GOReleaseAlignTable::Save(GOCacheWriter &cache) {
   return true;
 }
 
-void GOReleaseAlignTable::ComputeTable(
+void GOSoundReleaseAlignTable::ComputeTable(
   const GOAudioSection &release,
   int phase_align_max_amplitude,
   int phase_align_max_derivative,
@@ -172,7 +172,7 @@ void GOReleaseAlignTable::ComputeTable(
       }
 }
 
-void GOReleaseAlignTable::SetupRelease(
+void GOSoundReleaseAlignTable::SetupRelease(
   audio_section_stream &release_sampler,
   const audio_section_stream &old_sampler) const {
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];

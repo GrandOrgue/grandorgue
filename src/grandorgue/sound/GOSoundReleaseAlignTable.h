@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GORELEASEALIGNTABLE_H_
-#define GORELEASEALIGNTABLE_H_
+#ifndef GOSOUNDRELEASEALIGNTABLE_H
+#define GOSOUNDRELEASEALIGNTABLE_H
 
 class GOAudioSection;
 class GOCache;
@@ -17,15 +17,15 @@ typedef struct audio_section_stream_s audio_section_stream;
 #define PHASE_ALIGN_AMPLITUDES 32
 #define PHASE_ALIGN_MIN_FREQUENCY 20 /* Hertz */
 
-class GOReleaseAlignTable {
+class GOSoundReleaseAlignTable {
 private:
   int m_PhaseAlignMaxAmplitude;
   int m_PhaseAlignMaxDerivative;
   int m_PositionEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
 
 public:
-  GOReleaseAlignTable();
-  ~GOReleaseAlignTable();
+  GOSoundReleaseAlignTable();
+  ~GOSoundReleaseAlignTable();
 
   bool Load(GOCache &cache);
   bool Save(GOCacheWriter &cache);
@@ -42,4 +42,4 @@ public:
     const audio_section_stream &old_sampler) const;
 };
 
-#endif /* GORELEASEALIGNTABLE_H_ */
+#endif /* GOSOUNDRELEASEALIGNTABLE_H */

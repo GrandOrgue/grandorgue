@@ -18,9 +18,9 @@
 
 #include "GOEvent.h"
 #include "GOOrganController.h"
-#include "GOReleaseAlignTable.h"
 #include "GOSoundProvider.h"
 #include "GOSoundRecorder.h"
+#include "GOSoundReleaseAlignTable.h"
 #include "GOSoundSampler.h"
 
 GOSoundEngine::GOSoundEngine()

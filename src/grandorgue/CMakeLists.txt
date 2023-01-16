@@ -153,6 +153,7 @@ sound/GOSoundProvider.cpp
 sound/GOSoundProviderSynthedTrem.cpp
 sound/GOSoundProviderWave.cpp
 sound/GOSoundRecorder.cpp
+sound/GOSoundReleaseAlignTable.cpp
 sound/GOSoundReverb.cpp
 sound/GOSoundReverbEngine.cpp
 sound/GOSoundReverbPartition.cpp
@@ -179,7 +180,6 @@ GOMetronome.cpp
 GOMainWindowData.cpp
 GOOrganController.cpp
 GOProperties.cpp
-GOReleaseAlignTable.cpp
 GOFrame.cpp
 GODocument.cpp
 GOPanelView.cpp

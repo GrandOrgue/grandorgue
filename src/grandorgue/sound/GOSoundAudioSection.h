@@ -21,7 +21,7 @@ class GOAudioSection;
 class GOCache;
 class GOCacheWriter;
 class GOMemoryPool;
-class GOReleaseAlignTable;
+class GOSoundReleaseAlignTable;
 class GOSampleStatistic;
 
 struct audio_section_stream_s;
@@ -144,7 +144,7 @@ private:
   unsigned char *m_Data;
 
   /* If this is a release section, it may contain an alignment table */
-  GOReleaseAlignTable *m_ReleaseAligner;
+  GOSoundReleaseAlignTable *m_ReleaseAligner;
   unsigned m_ReleaseStartSegment;
 
   /* Number of significant bits in the decoded sample data */
