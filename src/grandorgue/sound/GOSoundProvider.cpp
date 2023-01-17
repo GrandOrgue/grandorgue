@@ -12,9 +12,9 @@
 #include "GOCache.h"
 #include "GOCacheWriter.h"
 #include "GOMemoryPool.h"
-#include "GOReleaseAlignTable.h"
 #include "GOSampleStatistic.h"
 #include "GOSoundAudioSection.h"
+#include "GOSoundReleaseAlignTable.h"
 
 #define DELETE_AND_NULL(x)                                                     \
   do {                                                                         \

@@ -13,9 +13,9 @@
 #include "GOCache.h"
 #include "GOCacheWriter.h"
 #include "GOMemoryPool.h"
-#include "GOReleaseAlignTable.h"
 #include "GOSampleStatistic.h"
 #include "GOSoundCompress.h"
+#include "GOSoundReleaseAlignTable.h"
 #include "GOSoundResample.h"
 
 #ifndef M_PI
@@ -131,7 +131,7 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
     return false;
   m_ReleaseAligner = NULL;
   if (load_align_tracker) {
-    m_ReleaseAligner = new GOReleaseAlignTable();
+    m_ReleaseAligner = new GOSoundReleaseAlignTable();
     if (!m_ReleaseAligner->Load(cache))
       return false;
   }
@@ -939,7 +939,7 @@ void GOAudioSection::SetupStreamAlignment(
     m_ReleaseStartSegment = 0;
 
   if ((max_derivative != 0) && (max_amplitude != 0)) {
-    m_ReleaseAligner = new GOReleaseAlignTable();
+    m_ReleaseAligner = new GOSoundReleaseAlignTable();
     m_ReleaseAligner->ComputeTable(
       *this,
       max_amplitude,

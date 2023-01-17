@@ -56,6 +56,7 @@
 #include "model/GOTremulant.h"
 #include "model/GOWindchest.h"
 #include "sound/GOSoundEngine.h"
+#include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
 
 #include "GOAudioRecorder.h"
@@ -70,7 +71,6 @@
 #include "GOMetronome.h"
 #include "GOOrgan.h"
 #include "GOPath.h"
-#include "GOReleaseAlignTable.h"
 
 GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
   : GOEventDistributor(this),
@@ -169,7 +169,7 @@ GOHashType GOOrganController::GenerateCacheHash() {
   UpdateHash(hash);
   hash.Update(sizeof(GOAudioSection));
   hash.Update(sizeof(GOSoundingPipe));
-  hash.Update(sizeof(GOReleaseAlignTable));
+  hash.Update(sizeof(GOSoundReleaseAlignTable));
   hash.Update(BLOCK_HISTORY);
   hash.Update(MAX_READAHEAD);
   hash.Update(SHORT_LOOP_LENGTH);
