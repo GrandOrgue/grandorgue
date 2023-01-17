@@ -510,7 +510,7 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
               </imageobject>
             </mediaobject>
           </figure>
-          <para>The first menu item is always <emphasis>Original temperament</emphasis>, which allows the user to return to the tuning provided by the sample set creator.</para>
+          <para>The first menu item is always <emphasis>Original temperament</emphasis>, which allows the user to return to the tuning provided by the sample set creator, including whatever pitch adjustments the user has done via the <link linkend="organsettings">Organ Settings</link> dialog.</para>
           <para>The samples are retuned on the fly when playing. No additional disk storage is required.</para>
           <para>User temperaments that are added in the <link linkend="temperamentTab">Temperaments tab</link> are dynamically displayed at the end of this menu</para>
           <para/>

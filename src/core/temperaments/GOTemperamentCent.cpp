@@ -11,7 +11,7 @@
 
 GOTemperamentCent::GOTemperamentCent(
   wxString name, wxString title, wxString group, wxString groupTitle)
-  : GOTemperament(name, title, group, groupTitle) {
+  : GOTemperament(name, title, group, groupTitle, false) {
   m_Tuning[0] = 0;
   m_Tuning[1] = 0;
   m_Tuning[2] = 0;
@@ -40,7 +40,7 @@ GOTemperamentCent::GOTemperamentCent(
   float i10,
   float i11,
   float i12)
-  : GOTemperament(name) {
+  : GOTemperament(name, wxEmptyString, false) {
   m_Tuning[0] = i1;
   m_Tuning[1] = i2;
   m_Tuning[2] = i3;
@@ -70,7 +70,7 @@ GOTemperamentCent::GOTemperamentCent(
   float i10,
   float i11,
   float i12)
-  : GOTemperament(name, group) {
+  : GOTemperament(name, group, false) {
   m_Tuning[0] = i1;
   m_Tuning[1] = i2;
   m_Tuning[2] = i3;
@@ -83,23 +83,4 @@ GOTemperamentCent::GOTemperamentCent(
   m_Tuning[9] = i10;
   m_Tuning[10] = i11;
   m_Tuning[11] = i12;
-}
-
-float GOTemperamentCent::GetOffset(
-  bool ignorePitch,
-  unsigned midi_number,
-  unsigned wav_midi_number,
-  float wav_pitch_fract,
-  float harmonic_number,
-  float pitch_correction,
-  float default_tuning) const {
-  double concert_pitch_correction = 0;
-
-  if (!ignorePitch && wav_midi_number) {
-    concert_pitch_correction = (100.0 * wav_midi_number - 100.0 * midi_number
-                                + log(8.0 / harmonic_number) / log(2) * 1200)
-      + wav_pitch_fract;
-  }
-  return m_Tuning[midi_number % 12] - default_tuning - concert_pitch_correction
-    + pitch_correction;
 }

@@ -9,28 +9,29 @@
 
 #include <wx/intl.h>
 
-GOTemperament::GOTemperament(wxString name, wxString group)
+GOTemperament::GOTemperament(
+  wxString name, wxString group, bool isOriginalBased)
   : m_Group(group),
     m_GroupTitle(wxEmptyString),
     m_Name(name),
-    m_Title(wxEmptyString) {}
+    m_Title(wxEmptyString),
+    m_IsTemperamentOriginalBased(isOriginalBased) {}
 
 GOTemperament::GOTemperament(
-  wxString name, wxString title, wxString group, wxString groupTitle)
-  : m_Group(group), m_GroupTitle(groupTitle), m_Name(name), m_Title(title) {}
+  wxString name,
+  wxString title,
+  wxString group,
+  wxString groupTitle,
+  bool isOriginalBased)
+  : m_Group(group),
+    m_GroupTitle(groupTitle),
+    m_Name(name),
+    m_Title(title),
+    m_IsTemperamentOriginalBased(isOriginalBased) {}
 
 GOTemperament::~GOTemperament() {}
 
-float GOTemperament::GetOffset(
-  bool ignorepitch,
-  unsigned midi_number,
-  unsigned wav_midi_number,
-  float wav_pitch_fract,
-  float harmonic_number,
-  float pitch_correction,
-  float default_tuning) const {
-  return 0;
-}
+float GOTemperament::GetOffset(unsigned index) const { return 0; }
 
 wxString GOTemperament::GetName() const { return m_Name; }
 
