@@ -231,7 +231,6 @@ bool GOSoundEngine::ProcessSampler(
   GOSoundSampler *sampler,
   unsigned n_frames,
   float volume) {
-  const unsigned block_time = n_frames;
   float temp[n_frames * 2];
   const bool process_sampler = (sampler->time <= m_CurrentTime);
 
@@ -243,11 +242,6 @@ bool GOSoundEngine::ProcessSampler(
          sampler->drop_counter > 1))
       sampler->fader.StartDecay(
         370, m_SampleRate); /* Approx 0.37s at 44.1kHz */
-
-    if (
-      sampler->stop && sampler->stop <= m_CurrentTime
-      && sampler->stop - sampler->time <= block_time)
-      sampler->pipe = NULL;
 
     /* The decoded sampler frame will contain values containing
      * sampler->pipe_section->sample_bits worth of significant bits.
