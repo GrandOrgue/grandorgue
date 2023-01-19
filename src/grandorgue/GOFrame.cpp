@@ -964,9 +964,8 @@ void GOFrame::OnReload(wxCommandEvent &event) {
   if (organController) {
     GOOrgan organ = organController->GetOrganInfo();
 
-    if (!CloseOrgan(false))
-      return;
-    Open(organ);
+    if (CloseOrgan(false))
+      Open(organ);
   }
 }
 
