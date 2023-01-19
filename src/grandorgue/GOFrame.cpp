@@ -591,7 +591,7 @@ void GOFrame::Open(const GOOrgan &organ) {
 }
 
 GOOrganController *GOFrame::GetOrganController() const {
-  return m_doc ? m_doc->GetOrganFile() : nullptr;
+  return m_doc ? m_doc->GetOrganController() : nullptr;
 }
 
 void GOFrame::OnPanel(wxCommandEvent &event) {
@@ -1036,11 +1036,8 @@ void GOFrame::OnMidiLoad(wxCommandEvent &WXUNUSED(event)) {
   if (dlg.ShowModal() == wxID_OK) {
     GOOrganController *organController = GetOrganController();
 
-    if (organController) {
-      wxString filepath = dlg.GetPath();
-
-      organController->LoadMIDIFile(filepath);
-    }
+    if (organController)
+      organController->LoadMIDIFile(dlg.GetPath());
   }
 }
 
@@ -1188,8 +1185,11 @@ void GOFrame::OnSettingsTranspose(wxCommandEvent &event) {
 void GOFrame::OnSettingsReleaseLength(wxCommandEvent &event) {
   m_config.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
   m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
-  if (m_doc && m_doc->GetOrganFile())
-    m_doc->GetOrganFile()->SetReleaseTail(m_config.ReleaseLength());
+
+  GOOrganController *organController = GetOrganController();
+
+  if (organController)
+    organController->SetReleaseTail(m_config.ReleaseLength());
 }
 
 void GOFrame::OnHelpAbout(wxCommandEvent &event) { DoSplash(false); }
