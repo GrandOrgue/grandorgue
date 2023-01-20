@@ -29,7 +29,6 @@ GOSoundEngine::GOSoundEngine()
     m_ReleaseAlignmentEnabled(true),
     m_RandomizeSpeaking(true),
     m_Volume(-15),
-    m_ReleaseLength(0),
     m_SamplesPerBuffer(1),
     m_Gain(1),
     m_SampleRate(0),
@@ -113,10 +112,6 @@ unsigned GOSoundEngine::GetSampleRate() { return m_SampleRate; }
 void GOSoundEngine::SetHardPolyphony(unsigned polyphony) {
   m_SamplerPool.SetUsageLimit(polyphony);
   m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
-}
-
-void GOSoundEngine::SetReleaseLength(unsigned reverb) {
-  m_ReleaseLength = reverb;
 }
 
 void GOSoundEngine::SetPolyphonyLimiting(bool limiting) {
@@ -551,14 +546,17 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
           }
         }
       }
+
       unsigned cross_fade_len = this_pipe->GetReleaseCrossfadeLength();
+      const unsigned releaseLength = this_pipe->GetReleaseTail();
+
       new_sampler->fader.NewAttacking(
         gain_target, cross_fade_len, m_SampleRate);
 
-      if (m_ReleaseLength > 0) {
-        if (m_ReleaseLength < gain_decay_length || gain_decay_length == 0)
-          gain_decay_length = m_ReleaseLength;
-      }
+      if (
+        releaseLength > 0
+        && (releaseLength < gain_decay_length || gain_decay_length == 0))
+        gain_decay_length = releaseLength;
 
       if (gain_decay_length > 0)
         new_sampler->fader.StartDecay(gain_decay_length, m_SampleRate);

@@ -317,7 +317,6 @@ GOFrame::GOFrame(
     wxDefaultSize,
     choices);
   m_ToolBar->AddControl(m_ReleaseLength);
-  m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
   UpdateReleaseLength();
 
   m_ToolBar->AddTool(
@@ -1193,13 +1192,12 @@ void GOFrame::OnSettingsTranspose(wxCommandEvent &event) {
 }
 
 void GOFrame::OnSettingsReleaseLength(wxCommandEvent &event) {
-  m_config.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
-  m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
-
+  unsigned newReleaseTail = m_ReleaseLength->GetSelection() * 50;
   GOOrganController *organController = GetOrganController();
 
+  m_config.ReleaseLength(newReleaseTail);
   if (organController)
-    organController->SetReleaseTail(m_config.ReleaseLength());
+    organController->SetReleaseTail(newReleaseTail);
 }
 
 void GOFrame::OnHelpAbout(wxCommandEvent &event) { DoSplash(false); }

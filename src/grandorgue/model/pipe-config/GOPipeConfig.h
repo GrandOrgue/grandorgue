@@ -38,6 +38,7 @@ private:
   int m_AttackLoad;
   int m_ReleaseLoad;
   int m_IgnorePitch;
+  unsigned m_ReleaseTail; // the max release length in ms
 
 public:
   GOPipeConfig(GOOrganModel *organModel, GOPipeUpdateCallback *callback);
@@ -87,6 +88,9 @@ public:
 
   int IsIgnorePitch() const { return m_IgnorePitch; }
   void SetIgnorePitch(int value);
+
+  unsigned GetReleaseTail() const { return m_ReleaseTail; }
+  void SetReleaseTail(unsigned releaseTail);
 };
 
 #endif

@@ -11,6 +11,7 @@
 #include "GOPipeConfig.h"
 #include "GOSaveableObject.h"
 
+class GOConfig;
 class GOOrganModel;
 class GOSampleStatistic;
 class GOStatisticCallback;
@@ -18,6 +19,7 @@ class GOStatisticCallback;
 class GOPipeConfigNode : private GOSaveableObject {
 private:
   GOOrganModel *m_OrganModel;
+  const GOConfig &m_config;
   GOPipeConfigNode *m_parent;
   GOPipeConfig m_PipeConfig;
   GOStatisticCallback *m_StatisticCallback;
@@ -58,7 +60,8 @@ public:
   unsigned GetEffectiveAttackLoad();
   unsigned GetEffectiveReleaseLoad();
   unsigned GetEffectiveChannels();
-  bool GetEffectiveIgnorePitch();
+  bool GetEffectiveIgnorePitch() const;
+  unsigned GetEffectiveReleaseTail() const;
 
   virtual void AddChild(GOPipeConfigNode *node);
   virtual unsigned GetChildCount();

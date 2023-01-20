@@ -68,9 +68,10 @@ private:
 
   void SetTremulant(bool on);
 
-  void UpdateAmplitude();
-  void UpdateTuning();
-  void UpdateAudioGroup();
+  void UpdateAmplitude() override;
+  void UpdateTuning() override;
+  void UpdateAudioGroup() override;
+  void UpdateReleaseTail() override;
 
   void AbortPlayback();
   void PreparePlayback();

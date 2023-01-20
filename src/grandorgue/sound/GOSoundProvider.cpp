@@ -29,6 +29,7 @@ GOSoundProvider::GOSoundProvider()
     m_MidiPitchFract(0),
     m_Tuning(1),
     m_SampleGroup(0),
+    m_ReleaseTail(0),
     m_Attack(),
     m_AttackInfo(),
     m_Release(),

@@ -19,6 +19,7 @@ GOPipeConfigNode::GOPipeConfigNode(
   GOPipeUpdateCallback *callback,
   GOStatisticCallback *statistic)
   : m_OrganModel(organModel),
+    m_config(organModel->GetConfig()),
     m_parent(parent),
     m_PipeConfig(organModel, callback),
     m_StatisticCallback(statistic),
@@ -110,7 +111,7 @@ unsigned GOPipeConfigNode::GetEffectiveBitsPerSample() {
   if (m_parent)
     return m_parent->GetEffectiveBitsPerSample();
   else
-    return m_OrganModel->GetConfig().BitsPerSample();
+    return m_config.BitsPerSample();
 }
 
 bool GOPipeConfigNode::GetEffectiveCompress() {
@@ -119,7 +120,7 @@ bool GOPipeConfigNode::GetEffectiveCompress() {
   if (m_parent)
     return m_parent->GetEffectiveCompress();
   else
-    return m_OrganModel->GetConfig().LosslessCompression();
+    return m_config.LosslessCompression();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
@@ -128,7 +129,7 @@ unsigned GOPipeConfigNode::GetEffectiveLoopLoad() {
   if (m_parent)
     return m_parent->GetEffectiveLoopLoad();
   else
-    return m_OrganModel->GetConfig().LoopLoad();
+    return m_config.LoopLoad();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
@@ -137,7 +138,7 @@ unsigned GOPipeConfigNode::GetEffectiveAttackLoad() {
   if (m_parent)
     return m_parent->GetEffectiveAttackLoad();
   else
-    return m_OrganModel->GetConfig().AttackLoad();
+    return m_config.AttackLoad();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
@@ -146,7 +147,7 @@ unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() {
   if (m_parent)
     return m_parent->GetEffectiveReleaseLoad();
   else
-    return m_OrganModel->GetConfig().ReleaseLoad();
+    return m_config.ReleaseLoad();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveChannels() {
@@ -155,7 +156,7 @@ unsigned GOPipeConfigNode::GetEffectiveChannels() {
   if (m_parent)
     return m_parent->GetEffectiveChannels();
   else
-    return m_OrganModel->GetConfig().LoadChannels();
+    return m_config.LoadChannels();
 }
 
 GOSampleStatistic GOPipeConfigNode::GetStatistic() {
@@ -164,12 +165,22 @@ GOSampleStatistic GOPipeConfigNode::GetStatistic() {
   return GOSampleStatistic();
 }
 
-bool GOPipeConfigNode::GetEffectiveIgnorePitch() {
+bool GOPipeConfigNode::GetEffectiveIgnorePitch() const {
   const int thisConfigValue = m_PipeConfig.IsIgnorePitch();
 
   return thisConfigValue != -1
     ? (thisConfigValue)
     : m_parent && m_parent->GetEffectiveIgnorePitch();
+}
+
+unsigned GOPipeConfigNode::GetEffectiveReleaseTail() const {
+  unsigned releaseTail = m_parent ? m_parent->GetEffectiveReleaseTail() : 0;
+  const unsigned thisReleaseTail = m_PipeConfig.GetReleaseTail();
+
+  // Set releaseTail as minimum between the parent release tail and this one
+  if (thisReleaseTail && (!releaseTail || thisReleaseTail < releaseTail))
+    releaseTail = thisReleaseTail;
+  return releaseTail;
 }
 
 unsigned GOPipeConfigNode::GetChildCount() { return 0; }

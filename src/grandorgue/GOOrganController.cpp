@@ -250,14 +250,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   if (m_volume > 20)
     m_volume = 0;
   m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
-  m_releaseTail = (unsigned)cfg.ReadInteger(
-    CMBSetting,
-    group,
-    wxT("ReleaseTail"),
-    0,
-    3000,
-    false,
-    m_config.ReleaseLength());
 
   GOOrganModel::Load(cfg, this);
   wxString buffer;
@@ -749,7 +741,6 @@ bool GOOrganController::Export(const wxString &cmb) {
   cfg.WriteInteger(wxT("Organ"), wxT("Volume"), m_volume);
 
   cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
-  cfg.WriteInteger(wxT("Organ"), wxT("ReleaseTail"), (int)m_releaseTail);
 
   GOEventDistributor::Save(cfg);
 
@@ -801,11 +792,6 @@ GODocument *GOOrganController::GetDocument() { return m_doc; }
 void GOOrganController::SetVolume(int volume) { m_volume = volume; }
 
 int GOOrganController::GetVolume() { return m_volume; }
-
-void GOOrganController::SetReleaseTail(unsigned releaseTail) {
-  m_releaseTail = releaseTail;
-  SetOrganModified();
-}
 
 bool GOOrganController::DivisionalsStoreIntermanualCouplers() {
   return m_DivisionalsStoreIntermanualCouplers;

@@ -32,7 +32,8 @@ GOPipeConfig::GOPipeConfig(
     m_LoopLoad(-1),
     m_AttackLoad(-1),
     m_ReleaseLoad(-1),
-    m_IgnorePitch(-1) {}
+    m_IgnorePitch(-1),
+    m_ReleaseTail(0) {}
 
 void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
   m_Group = group;
@@ -91,6 +92,9 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
     CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
   m_IgnorePitch = cfg.ReadBooleanTriple(
     CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
+  m_ReleaseTail = (unsigned)cfg.ReadInteger(
+    CMBSetting, group, m_NamePrefix + wxT("ReleaseTail"), 0, 3000, false, 0);
+
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
@@ -157,9 +161,13 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
     CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
   m_IgnorePitch = cfg.ReadBooleanTriple(
     CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
+  m_ReleaseTail = (unsigned)cfg.ReadInteger(
+    CMBSetting, group, m_NamePrefix + wxT("ReleaseTail"), 0, 3000, false, 0);
+
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
+  m_Callback->UpdateReleaseTail();
 }
 
 void GOPipeConfig::Save(GOConfigWriter &cfg) {
@@ -177,6 +185,8 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_Group, m_NamePrefix + wxT("ReleaseLoad"), m_ReleaseLoad);
   cfg.WriteBooleanTriple(
     m_Group, m_NamePrefix + wxT("IgnorePitch"), m_IgnorePitch);
+  cfg.WriteInteger(
+    m_Group, m_NamePrefix + wxT("ReleaseTail"), (int)m_ReleaseTail);
 }
 
 GOPipeUpdateCallback *GOPipeConfig::GetCallback() { return m_Callback; }
@@ -219,8 +229,8 @@ void GOPipeConfig::SetTuning(float cent) {
   if (cent > 1800)
     cent = 1800;
   m_Tuning = cent;
-  m_OrganModel->SetOrganModelModified();
   m_Callback->UpdateTuning();
+  m_OrganModel->SetOrganModelModified();
 }
 
 unsigned GOPipeConfig::GetDelay() { return m_Delay; }
@@ -276,5 +286,11 @@ void GOPipeConfig::SetReleaseLoad(int value) {
 
 void GOPipeConfig::SetIgnorePitch(int value) {
   m_IgnorePitch = value;
+  m_OrganModel->SetOrganModelModified();
+}
+
+void GOPipeConfig::SetReleaseTail(unsigned releaseTail) {
+  m_ReleaseTail = releaseTail;
+  m_Callback->UpdateReleaseTail();
   m_OrganModel->SetOrganModelModified();
 }
