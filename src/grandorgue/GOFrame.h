@@ -99,8 +99,9 @@ private:
   // Returns the current open organ controller or nullptr
   GOOrganController *GetOrganController() const;
 
-  void OnMeters(wxCommandEvent &event);
+  bool LoadOrgan(const GOOrgan &organ, const wxString &cmb = wxEmptyString);
 
+  void OnMeters(wxCommandEvent &event);
   void OnLoadFile(wxCommandEvent &event);
   void OnLoad(wxCommandEvent &event);
   void OnLoadFavorite(wxCommandEvent &event);

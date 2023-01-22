@@ -577,17 +577,28 @@ bool GOFrame::CloseOrgan(bool isForce) {
   return isClosed;
 }
 
+bool GOFrame::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
+  bool retCode = false;
+
+  if (m_doc) {
+    GOProgressDialog dlg;
+
+    retCode = m_doc->LoadOrgan(&dlg, organ, cmb);
+    UpdateReleaseLength();
+    UpdatePanelMenu();
+  }
+  return retCode;
+}
+
 void GOFrame::Open(const GOOrgan &organ) {
-  if (!CloseOrgan(false))
-    return;
-  GOMutexLocker m_locker(m_mutex, true);
-  if (!m_locker.IsLocked())
-    return;
-  GOProgressDialog dlg;
-  m_doc = new GODocument(this, &m_Sound);
-  m_doc->Load(&dlg, organ);
-  UpdateReleaseLength();
-  UpdatePanelMenu();
+  if (CloseOrgan(false)) {
+    GOMutexLocker m_locker(m_mutex, true);
+
+    if (m_locker.IsLocked()) {
+      m_doc = new GODocument(this, &m_Sound);
+      LoadOrgan(organ);
+    }
+  }
 }
 
 GOOrganController *GOFrame::GetOrganController() const {
@@ -858,12 +869,12 @@ void GOFrame::OnImportSettings(wxCommandEvent &event) {
       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
     if (dlg.ShowModal() == wxID_OK) {
-      GOProgressDialog pdlg;
       GOOrgan organ = organController->GetOrganInfo();
       GOMutexLocker m_locker(m_mutex, true);
-      if (!m_locker.IsLocked())
-        return;
-      m_doc->Import(&pdlg, organ, dlg.GetPath());
+
+      if (m_locker.IsLocked()) {
+        LoadOrgan(organ, dlg.GetPath());
+      }
     }
   }
 }
@@ -970,9 +981,8 @@ void GOFrame::OnReload(wxCommandEvent &event) {
 }
 
 void GOFrame::OnMenuClose(wxCommandEvent &event) {
-  if (!m_doc)
-    return;
-  CloseOrgan(false);
+  if (m_doc)
+    CloseOrgan(false);
 }
 
 bool GOFrame::CloseProgram(bool isForce) {
@@ -998,10 +1008,11 @@ void GOFrame::OnRevert(wxCommandEvent &event) {
       wxYES_NO | wxICON_EXCLAMATION,
       this)
     == wxYES) {
-    if (m_doc) {
-      GOProgressDialog dlg;
+    GOOrganController *organController = GetOrganController();
 
-      m_doc->Revert(&dlg);
+    if (organController) {
+      organController->DeleteSettings();
+      LoadOrgan(organController->GetOrganInfo());
     }
   }
 }

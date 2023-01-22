@@ -45,11 +45,7 @@ bool GODocument::IsModified() const {
   return m_OrganController && m_OrganController->IsOrganModified();
 }
 
-bool GODocument::Load(GOProgressDialog *dlg, const GOOrgan &organ) {
-  return Import(dlg, organ, wxEmptyString);
-}
-
-bool GODocument::Import(
+bool GODocument::LoadOrgan(
   GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb) {
   wxBusyCursor busy;
   GOConfig &cfg = m_sound.GetSettings();
@@ -140,12 +136,6 @@ void GODocument::SyncState() {
   for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)
     m_OrganController->GetPanel(i)->SetInitialOpenWindow(false);
   GODocumentBase::SyncState();
-}
-
-bool GODocument::Revert(GOProgressDialog *dlg) {
-  if (m_OrganController)
-    m_OrganController->DeleteSettings();
-  return Load(dlg, m_OrganController->GetOrganInfo());
 }
 
 bool GODocument::Save() {
