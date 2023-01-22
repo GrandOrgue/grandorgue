@@ -66,7 +66,7 @@ public:
   bool Revert(GOProgressDialog *dlg);
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
-  GOOrganController *GetOrganFile();
+  GOOrganController *GetOrganController() const { return m_OrganController; }
 };
 
 #endif

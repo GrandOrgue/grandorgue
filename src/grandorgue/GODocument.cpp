@@ -177,8 +177,6 @@ void GODocument::CloseOrgan() {
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
-GOOrganController *GODocument::GetOrganFile() { return m_OrganController; }
-
 void GODocument::OnMidiEvent(const GOMidiEvent &event) {
   GOMutexLocker locker(m_lock);
 

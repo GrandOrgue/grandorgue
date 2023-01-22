@@ -41,6 +41,7 @@ class GOConfig;
 class GODocument;
 class GOMidiEvent;
 class GOOrgan;
+class GOOrganController;
 class GOSound;
 class wxChoice;
 class wxHtmlHelpController;
@@ -95,7 +96,8 @@ private:
   void UpdateSize();
   void UpdateVolumeControlWithSettings();
 
-  GODocument *GetDocument();
+  // Returns the current open organ controller or nullptr
+  GOOrganController *GetOrganController() const;
 
   void OnMeters(wxCommandEvent &event);
 
