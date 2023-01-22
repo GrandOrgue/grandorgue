@@ -42,6 +42,7 @@ class GODocument;
 class GOMidiEvent;
 class GOOrgan;
 class GOOrganController;
+class GOProgressDialog;
 class GOSound;
 class wxChoice;
 class wxHtmlHelpController;
