@@ -1,3 +1,4 @@
+# 3.9.5 (2022-01-23)
 - Fixed saving position when some panel is outside the screen area https://github.com/GrandOrgue/grandorgue/issues/1271
 - Fixed playing release samples for very short notes https://github.com/GrandOrgue/grandorgue/issues/1222
 - Fixed help: the wrong panel positioning on wayland was documented https://github.com/GrandOrgue/grandorgue/issues/1271
