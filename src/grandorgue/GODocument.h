@@ -58,12 +58,11 @@ public:
     GOMidiSender *division = NULL);
   void ShowMidiList();
 
-  bool Load(GOProgressDialog *dlg, const GOOrgan &organ);
   bool Save();
   bool Export(const wxString &cmb);
-  bool Import(GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb);
+  bool LoadOrgan(
+    GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb);
   bool ImportCombination(const wxString &cmb);
-  bool Revert(GOProgressDialog *dlg);
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
   GOOrganController *GetOrganController() const { return m_OrganController; }
