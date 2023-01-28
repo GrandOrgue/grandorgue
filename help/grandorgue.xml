@@ -6260,7 +6260,8 @@ UTF-8, if it starts with an appropriate byte order marker.
       </para>
       <para>
         Comments are any text from <emphasis>;</emphasis> to the end of line.
-        Empty lines or lines containing only comments are ignored.
+        Empty lines or lines containing only comments are ignored. 
+        Thus it's not possible to include <emphasis>;</emphasis> in any string
       </para>
       <para>
 Various settings are grouped in blocks. Each block is started with a
