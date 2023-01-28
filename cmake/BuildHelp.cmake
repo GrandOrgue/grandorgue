@@ -45,7 +45,7 @@ function(BUILD_HELPFILE xmlfile VARIANT)
     WORKING_DIRECTORY ${BUILDDIR} DEPENDS ${SRCDIR}/grandorgue.xsl ${xmlfile})
 
   ADD_CUSTOM_COMMAND(OUTPUT ${HELPDIR}/GrandOrgue${VARIANT}.htb COMMAND ${ZIP} 
-    ARGS -r --filesync ${HELPDIR}/GrandOrgue${VARIANT}.htb * WORKING_DIRECTORY ${BUILDDIR}
+    ARGS -r -X --filesync ${HELPDIR}/GrandOrgue${VARIANT}.htb * WORKING_DIRECTORY ${BUILDDIR}
     DEPENDS ${_ImgList} ${BUILDDIR}/GrandOrgue.hhp)
 
   INSTALL(FILES ${HELPDIR}/GrandOrgue${VARIANT}.htb DESTINATION ${HELPINSTDIR} COMPONENT resources)
