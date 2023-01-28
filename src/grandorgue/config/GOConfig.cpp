@@ -164,6 +164,7 @@ GOConfig::GOConfig(wxString instance)
       sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]),
       GOInitialLoadType::LOAD_LAST_USED),
     ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
+    ODFHw1Check(this, wxT("General"), wxT("ODFHw1Check"), false),
     LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
     LosslessCompression(
       this, wxT("General"), wxT("LosslessCompression"), false),
@@ -394,6 +395,10 @@ void GOConfig::Load() {
     PolyphonyLimit.setDefaultValue(cpus * 725),
 
       GOSettingStore::Load(cfg);
+
+    // Fill ODFHw1Check with ODFCheck by default
+    if (!ODFHw1Check.IsPresent())
+      ODFHw1Check(ODFCheck());
 
     if (Concurrency() == 0)
       Concurrency(1);

@@ -362,6 +362,14 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     5);
   m_ODFCheck->SetValue(m_config.ODFCheck());
 
+  item9->Add(
+    m_ODFHw1Check
+    = new wxCheckBox(this, ID_ODF_CHECK, _("Check ODF for HW1-compatibility")),
+    0,
+    wxEXPAND | wxALL,
+    5);
+  m_ODFHw1Check->SetValue(m_config.ODFHw1Check());
+
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Metronome"));
   grid = new wxFlexGridSizer(2, 5, 5);
   grid->Add(
@@ -419,6 +427,7 @@ bool GOSettingsOptions::TransferDataFromWindow() {
   m_config.ManageCache(m_ManageCache->IsChecked());
   m_config.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
   m_config.ODFCheck(m_ODFCheck->IsChecked());
+  m_config.ODFHw1Check(m_ODFHw1Check->IsChecked());
   m_config.RecordDownmix(m_RecordDownmix->IsChecked());
   m_config.Volume(m_Volume->GetValue());
   m_config.ScaleRelease(m_Scale->IsChecked());

@@ -14,10 +14,14 @@ GOSettingBool::GOSettingBool(
   GOSettingStore *store, wxString group, wxString name, bool default_value)
   : GOSetting(store, group, name),
     m_Value(default_value),
-    m_DefaultValue(default_value) {}
+    m_DefaultValue(default_value),
+    m_IsPresent(false) {}
 
 void GOSettingBool::Load(GOConfigReader &cfg) {
-  (*this)(cfg.ReadBoolean(CMBSetting, m_Group, m_Name, false, m_DefaultValue));
+  int tripleValue = cfg.ReadBooleanTriple(CMBSetting, m_Group, m_Name, false);
+
+  m_IsPresent = tripleValue >= 0;
+  (*this)(m_IsPresent ? bool(tripleValue) : m_DefaultValue);
 }
 
 void GOSettingBool::Save(GOConfigWriter &cfg) {

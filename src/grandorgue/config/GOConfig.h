@@ -98,6 +98,7 @@ public:
   GOSettingBool CompressCache;
   GOSettingEnum<GOInitialLoadType> LoadLastFile;
   GOSettingBool ODFCheck;
+  GOSettingBool ODFHw1Check;
 
   GOSettingUnsigned LoadChannels;
   GOSettingBool LosslessCompression;

@@ -13,8 +13,9 @@
 #include "GOUtil.h"
 #include "config/GOConfigReaderDB.h"
 
-GOConfigReader::GOConfigReader(GOConfigReaderDB &cfg, bool strict)
-  : m_Strict(strict), m_Config(cfg) {}
+GOConfigReader::GOConfigReader(
+  GOConfigReaderDB &cfg, bool strict, bool hw1Check)
+  : m_Config(cfg), m_Strict(strict), m_IsHw1Check(hw1Check) {}
 
 bool GOConfigReader::Read(
   GOSettingType type,
@@ -127,7 +128,7 @@ wxString GOConfigReader::ReadFileName(
   GOSettingType type, wxString group, wxString key, bool required) {
   const wxString fileName = ReadStringTrim(type, group, key, required);
 
-  if (m_Strict && fileName.Find(wxT('/')) != wxNOT_FOUND) {
+  if (m_IsHw1Check && fileName.Find(wxT('/')) != wxNOT_FOUND) {
     wxLogWarning(
       _("Filename '%s' contains non-portable directory separator /"), fileName);
   }

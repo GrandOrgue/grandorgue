@@ -14,6 +14,8 @@ class GOSettingBool : private GOSetting {
 private:
   bool m_Value;
   bool m_DefaultValue;
+  // whether the value was read from the setting or was set by default
+  bool m_IsPresent;
 
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
@@ -25,6 +27,7 @@ public:
   GOSettingBool(
     GOSettingStore *store, wxString group, wxString name, bool default_value);
 
+  bool IsPresent() const { return m_IsPresent; }
   void setDefaultValue(bool default_value);
 
   bool operator()() const;
