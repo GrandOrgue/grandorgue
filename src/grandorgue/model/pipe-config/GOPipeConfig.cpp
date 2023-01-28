@@ -23,7 +23,7 @@ GOPipeConfig::GOPipeConfig(
     m_Gain(0),
     m_DefaultGain(0),
     m_Tuning(0),
-    m_DefaultTuning(0),
+    m_PitchTuning(0),
     m_Delay(0),
     m_DefaultDelay(0),
     m_BitsPerSample(-1),
@@ -58,7 +58,7 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
     40,
     false,
     m_DefaultGain);
-  m_DefaultTuning = 0;
+  m_PitchTuning = 0;
   m_Tuning = cfg.ReadFloat(
     CMBSetting,
     group,
@@ -66,7 +66,7 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
     -1800,
     1800,
     false,
-    m_DefaultTuning);
+    m_PitchTuning);
   m_DefaultDelay = 0;
   m_Delay = cfg.ReadInteger(
     CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
@@ -125,7 +125,7 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
     40,
     false,
     m_DefaultGain);
-  m_DefaultTuning = cfg.ReadFloat(
+  m_PitchTuning = cfg.ReadFloat(
     ODFSetting, group, prefix + wxT("PitchTuning"), -1800, 1800, false, 0);
   m_Tuning = cfg.ReadFloat(
     CMBSetting,
@@ -134,7 +134,7 @@ void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
     -1800,
     1800,
     false,
-    m_DefaultTuning);
+    m_PitchTuning);
   m_DefaultDelay = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
   m_Delay = cfg.ReadInteger(
@@ -221,7 +221,7 @@ void GOPipeConfig::SetGain(float gain) {
 
 float GOPipeConfig::GetTuning() { return m_Tuning; }
 
-float GOPipeConfig::GetDefaultTuning() { return m_DefaultTuning; }
+float GOPipeConfig::GetPitchTuning() { return m_PitchTuning; }
 
 void GOPipeConfig::SetTuning(float cent) {
   if (cent < -1800)

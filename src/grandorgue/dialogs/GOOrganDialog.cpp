@@ -872,7 +872,7 @@ void GOOrganDialog::ResetSelectedToDefault(bool isForChildren) {
   for (OrganTreeItemData *e : oiSet) {
     e->config->SetAmplitude(e->config->GetDefaultAmplitude());
     e->config->SetGain(e->config->GetDefaultGain());
-    e->config->SetTuning(e->config->GetDefaultTuning());
+    e->config->SetTuning(e->config->GetPitchTuning());
     e->config->SetDelay(e->config->GetDefaultDelay());
     e->config->SetAudioGroup(wxEmptyString);
     e->config->SetBitsPerSample(-1);
