@@ -317,8 +317,7 @@ GOFrame::GOFrame(
     wxDefaultSize,
     choices);
   m_ToolBar->AddControl(m_ReleaseLength);
-  m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
-  UpdateReleaseLength();
+  UpdateReleaseLength(m_config.ReleaseLength());
 
   m_ToolBar->AddTool(
     ID_TRANSPOSE,
@@ -474,10 +473,16 @@ void GOFrame::SetPosSize(const GOLogicalRect &lRect) {
   }
 }
 
-void GOFrame::UpdateReleaseLength() {
-  unsigned n = m_config.ReleaseLength();
+void GOFrame::UpdateReleaseLength(unsigned releaseLength) {
+  GOOrganController *organController = GetOrganController();
+  int releaseLengthIndex = releaseLength / 50;
 
-  m_ReleaseLength->SetSelection(n / 50);
+  if (organController && organController->GetReleaseTail() != releaseLength)
+    organController->SetReleaseTail(releaseLength);
+  if (m_config.ReleaseLength() != releaseLength)
+    m_config.ReleaseLength(releaseLength);
+  if (m_ReleaseLength->GetSelection() != releaseLengthIndex)
+    m_ReleaseLength->SetSelection(releaseLengthIndex);
 }
 
 void GOFrame::UpdateVolumeControlWithSettings() {
@@ -584,8 +589,7 @@ bool GOFrame::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
     GOProgressDialog dlg;
 
     retCode = m_doc->LoadOrgan(&dlg, organ, cmb);
-    UpdateReleaseLength();
-    UpdatePanelMenu();
+    OnIsModifiedChanged(false);
   }
   return retCode;
 }
@@ -611,6 +615,14 @@ void GOFrame::OnPanel(wxCommandEvent &event) {
 
   if (organController && no < organController->GetPanelCount())
     m_doc->ShowPanel(no);
+}
+
+void GOFrame::OnIsModifiedChanged(bool modified) {
+  GOOrganController *organController = GetOrganController();
+
+  if (organController)
+    UpdateReleaseLength(organController->GetReleaseTail());
+  UpdatePanelMenu();
 }
 
 void GOFrame::UpdatePanelMenu() {
@@ -1193,13 +1205,7 @@ void GOFrame::OnSettingsTranspose(wxCommandEvent &event) {
 }
 
 void GOFrame::OnSettingsReleaseLength(wxCommandEvent &event) {
-  m_config.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
-  m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
-
-  GOOrganController *organController = GetOrganController();
-
-  if (organController)
-    organController->SetReleaseTail(m_config.ReleaseLength());
+  UpdateReleaseLength(m_ReleaseLength->GetSelection() * 50);
 }
 
 void GOFrame::OnHelpAbout(wxCommandEvent &event) { DoSplash(false); }

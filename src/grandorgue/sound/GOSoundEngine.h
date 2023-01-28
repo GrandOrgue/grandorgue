@@ -42,7 +42,6 @@ private:
   bool m_ReleaseAlignmentEnabled;
   bool m_RandomizeSpeaking;
   int m_Volume;
-  unsigned m_ReleaseLength;
   unsigned m_SamplesPerBuffer;
   float m_Gain;
   unsigned m_SampleRate;
@@ -98,7 +97,6 @@ public:
   int GetVolume() const;
   void SetScaledReleases(bool enable);
   void SetRandomizeSpeaking(bool enable);
-  void SetReleaseLength(unsigned reverb);
   const std::vector<double> &GetMeterInfo();
   void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 

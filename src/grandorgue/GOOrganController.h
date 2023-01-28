@@ -76,7 +76,6 @@ private:
   GOMidiRecorder *m_MidiRecorder;
   int m_volume;
   wxString m_Temperament;
-  unsigned m_releaseTail = 0;
 
   bool m_b_customized;
   float m_CurrentPitch; // organ pitch
@@ -203,8 +202,12 @@ public:
   void SetVolume(int volume);
   int GetVolume();
 
-  unsigned GetReleaseTail() const { return m_releaseTail; }
-  void SetReleaseTail(unsigned releaseTail);
+  unsigned GetReleaseTail() {
+    return GetRootPipeConfigNode().GetEffectiveReleaseTail();
+  }
+  void SetReleaseTail(unsigned releaseTail) {
+    GetRootPipeConfigNode().GetPipeConfig().SetReleaseTail(releaseTail);
+  }
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel = false);
   GOLabelControl *GetLabel(const wxString &name, bool is_panel = false);

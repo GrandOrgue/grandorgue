@@ -508,6 +508,10 @@ void GOSoundingPipe::UpdateAudioGroup() {
     m_PipeConfigNode.GetEffectiveAudioGroup());
 }
 
+void GOSoundingPipe::UpdateReleaseTail() {
+  m_SoundProvider.SetReleaseTail(m_PipeConfigNode.GetEffectiveReleaseTail());
+}
+
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
   m_IsTemperamentOriginalBased = temperament.IsTemperamentOriginalBased();
   if (!m_RetunePipe)

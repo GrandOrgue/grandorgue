@@ -38,6 +38,7 @@ protected:
   float m_Gain;
   float m_Tuning;
   bool m_SampleGroup;
+  unsigned m_ReleaseTail;
   ptr_vector<GOAudioSection> m_Attack;
   std::vector<attack_section_info> m_AttackInfo;
   ptr_vector<GOAudioSection> m_Release;
@@ -68,6 +69,8 @@ public:
 
   float GetTuning() const;
   void SetTuning(float cent);
+  unsigned GetReleaseTail() const { return m_ReleaseTail; }
+  void SetReleaseTail(unsigned releaseTail) { m_ReleaseTail = releaseTail; }
 
   unsigned GetMidiKeyNumber() const;
   float GetMidiPitchFract() const;
