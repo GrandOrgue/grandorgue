@@ -117,9 +117,13 @@ bool GOConfigFileReader::Read(GOOpenedFile *file) {
     wxString line = GetNextLine(input, pos);
     lineno++;
 
+    /* Skip the comment */
+    int semicolumnPos = line.find(wxT(";"), 0);
+
+    if (semicolumnPos >= 0)
+      line = line.substr(0, semicolumnPos).Trim();
+
     if (line == wxEmptyString)
-      continue;
-    if (line.Len() >= 1 && line[0] == wxT(';'))
       continue;
     if (line.Len() > 1 && line[0] == wxT('[')) {
       if (line[line.Len() - 1] != wxT(']')) {

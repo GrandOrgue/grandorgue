@@ -1,3 +1,4 @@
+- Added support of ODF comments from ';' at any position to the end of line https://github.com/GrandOrgue/grandorgue/issues/828
 # 3.9.5 (2022-01-23)
 - Fixed saving position when some panel is outside the screen area https://github.com/GrandOrgue/grandorgue/issues/1271
 - Fixed playing release samples for very short notes https://github.com/GrandOrgue/grandorgue/issues/1222
