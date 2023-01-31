@@ -42,7 +42,6 @@ private:
   unsigned m_HarmonicNumber;
   unsigned m_LoopCrossfadeLength;
   unsigned m_ReleaseCrossfadeLength;
-  float m_PitchCorrection;
   float m_MinVolume;
   float m_MaxVolume;
   int m_SampleMidiKeyNumber;
@@ -84,7 +83,6 @@ public:
     int sampler_group_id,
     unsigned midi_key_number,
     unsigned harmonic_number,
-    float pitch_correction,
     float min_volume,
     float max_volume,
     bool retune);

@@ -82,11 +82,19 @@ float GOPipeConfigNode::GetEffectiveTuning() {
     return m_PipeConfig.GetTuning();
 }
 
-float GOPipeConfigNode::GetEffectivePitchTuning() {
+float GOPipeConfigNode::GetEffectivePitchTuning() const {
   if (m_parent)
     return m_PipeConfig.GetPitchTuning() + m_parent->GetEffectivePitchTuning();
   else
     return m_PipeConfig.GetPitchTuning();
+}
+
+float GOPipeConfigNode::GetEffectivePitchCorrection() const {
+  float pitchCorrection = m_PipeConfig.GetPitchCorrection();
+
+  if (m_parent)
+    pitchCorrection += m_parent->GetEffectivePitchTuning();
+  return pitchCorrection;
 }
 
 unsigned GOPipeConfigNode::GetEffectiveDelay() {

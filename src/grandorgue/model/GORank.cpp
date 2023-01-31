@@ -29,7 +29,6 @@ GORank::GORank(GOOrganController *organController)
     m_Percussive(false),
     m_WindchestGroup(0),
     m_HarmonicNumber(8),
-    m_PitchCorrection(0),
     m_MinVolume(100),
     m_MaxVolume(100),
     m_RetuneRank(true),
@@ -64,7 +63,6 @@ void GORank::Init(
   m_WindchestGroup = windchest_nr;
   m_Percussive = false;
   m_HarmonicNumber = 8;
-  m_PitchCorrection = 0;
   m_MinVolume = 100;
   m_MaxVolume = 100;
   m_RetuneRank = false;
@@ -108,8 +106,6 @@ void GORank::Load(
   m_Percussive = cfg.ReadBoolean(ODFSetting, group, wxT("Percussive"));
   m_HarmonicNumber = cfg.ReadInteger(
     ODFSetting, group, wxT("HarmonicNumber"), 1, 1024, false, 8);
-  m_PitchCorrection = cfg.ReadFloat(
-    ODFSetting, group, wxT("PitchCorrection"), -1800, 1800, false, 0);
   m_MinVolume = cfg.ReadFloat(
     ODFSetting, group, wxT("MinVelocityVolume"), 0, 1000, false, 100);
   m_MaxVolume = cfg.ReadFloat(
@@ -141,7 +137,6 @@ void GORank::Load(
         m_WindchestGroup,
         m_FirstMidiNoteNumber + i,
         m_HarmonicNumber,
-        m_PitchCorrection,
         m_MinVolume,
         m_MaxVolume,
         m_RetuneRank));
