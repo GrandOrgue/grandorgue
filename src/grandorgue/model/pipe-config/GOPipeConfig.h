@@ -31,7 +31,8 @@ private:
   // ODF pitch tuning offset for using with auto-tuning
   float m_PitchCorrection;
   float m_Gain;
-  float m_Tuning;
+  float m_ManualTuning;
+  float m_AutoTuningCorrection;
   unsigned m_Delay;
   unsigned m_DefaultDelay;
   int m_BitsPerSample;
@@ -42,6 +43,8 @@ private:
   int m_ReleaseLoad;
   int m_IgnorePitch;
   unsigned m_ReleaseTail; // the max release length in ms
+
+  void ReadTuning(GOConfigReader &cfg, wxString group, wxString prefix);
 
 public:
   GOPipeConfig(GOOrganModel *organModel, GOPipeUpdateCallback *callback);
@@ -62,8 +65,10 @@ public:
 
   float GetPitchTuning() const { return m_PitchTuning; }
   float GetPitchCorrection() const { return m_PitchCorrection; }
-  float GetTuning();
-  void SetTuning(float cent);
+  float GetManualTuning() const { return m_ManualTuning; }
+  void SetManualTuning(float cent);
+  float GetAutoTuningCorrection() const { return m_AutoTuningCorrection; }
+  void SetAutoTuningCorrection(float cent);
 
   unsigned GetDelay();
   unsigned GetDefaultDelay();

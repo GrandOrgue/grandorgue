@@ -58,8 +58,13 @@ EVT_TEXT(ID_EVENT_AMPLITUDE, GOOrganDialog::OnAmplitudeChanged)
 EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, GOOrganDialog::OnAmplitudeSpinChanged)
 EVT_TEXT(ID_EVENT_GAIN, GOOrganDialog::OnGainChanged)
 EVT_SPIN(ID_EVENT_GAIN_SPIN, GOOrganDialog::OnGainSpinChanged)
-EVT_TEXT(ID_EVENT_TUNING, GOOrganDialog::OnTuningChanged)
-EVT_SPIN(ID_EVENT_TUNING_SPIN, GOOrganDialog::OnTuningSpinChanged)
+EVT_TEXT(ID_EVENT_MANUAL_TUNING, GOOrganDialog::OnManualTuningChanged)
+EVT_SPIN(ID_EVENT_MANUAL_TUNING_SPIN, GOOrganDialog::OnManualTuningSpinChanged)
+EVT_TEXT(
+  ID_EVENT_AUTO_TUNING_CORRECTION, GOOrganDialog::OnAutoTuningCorrectionChanged)
+EVT_SPIN(
+  ID_EVENT_AUTO_TUNING_CORRECTION_SPIN,
+  GOOrganDialog::OnAutoTuningCorrectionSpinChanged)
 EVT_TEXT(ID_EVENT_DELAY, GOOrganDialog::OnDelayChanged)
 EVT_SPIN(ID_EVENT_DELAY_SPIN, GOOrganDialog::OnDelaySpinChanged)
 EVT_TEXT(ID_EVENT_AUDIO_GROUP, GOOrganDialog::OnAudioGroupChanged)
@@ -153,32 +158,46 @@ GOOrganDialog::GOOrganDialog(
   gb->Add(m_GainSpin, wxGBPosition(1, 2), wxDefaultSpan);
 
   gb->Add(
-    new wxStaticText(scroll, wxID_ANY, _("Tuning (Cent):")),
+    new wxStaticText(scroll, wxID_ANY, _("Manual Tuning (Cent):")),
     wxGBPosition(2, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_Tuning = new wxTextCtrl(scroll, ID_EVENT_TUNING, wxEmptyString);
-  gb->Add(m_Tuning, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND);
-  m_TuningSpin = new wxSpinButton(scroll, ID_EVENT_TUNING_SPIN);
-  gb->Add(m_TuningSpin, wxGBPosition(2, 2));
-  m_TuningSpin->SetRange(-1800, 1800);
-
+  m_ManualTuning
+    = new wxTextCtrl(scroll, ID_EVENT_MANUAL_TUNING, wxEmptyString);
+  gb->Add(m_ManualTuning, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND);
+  m_ManualTuningSpin = new wxSpinButton(scroll, ID_EVENT_MANUAL_TUNING_SPIN);
+  m_ManualTuningSpin->SetRange(-1800, 1800);
+  gb->Add(m_ManualTuningSpin, wxGBPosition(2, 2));
   gb->Add(
-    new wxStaticText(scroll, wxID_ANY, _("Tracker (ms):")),
+    new wxStaticText(scroll, wxID_ANY, _("AutoTuning Correction (Cent):")),
     wxGBPosition(3, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
+  m_AutoTuningCorrection
+    = new wxTextCtrl(scroll, ID_EVENT_AUTO_TUNING_CORRECTION, wxEmptyString);
+  gb->Add(m_AutoTuningCorrection, wxGBPosition(3, 1), wxDefaultSpan, wxEXPAND);
+  m_AutoTuningCorrectionSpin
+    = new wxSpinButton(scroll, ID_EVENT_AUTO_TUNING_CORRECTION_SPIN);
+  m_AutoTuningCorrectionSpin->SetRange(-1800, 1800);
+  gb->Add(m_AutoTuningCorrectionSpin, wxGBPosition(3, 2));
+
+  gb->Add(
+    new wxStaticText(scroll, wxID_ANY, _("Tracker (ms):")),
+    wxGBPosition(4, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
+    5);
   m_Delay = new wxTextCtrl(scroll, ID_EVENT_DELAY, wxEmptyString);
-  gb->Add(m_Delay, wxGBPosition(3, 1), wxDefaultSpan, wxEXPAND);
+  gb->Add(m_Delay, wxGBPosition(4, 1), wxDefaultSpan, wxEXPAND);
   m_DelaySpin = new wxSpinButton(scroll, ID_EVENT_DELAY_SPIN);
   m_DelaySpin->SetRange(0, 10000);
-  gb->Add(m_DelaySpin, wxGBPosition(3, 2), wxDefaultSpan);
+  gb->Add(m_DelaySpin, wxGBPosition(4, 2), wxDefaultSpan);
 
   gb->Add(
     new wxStaticText(scroll, wxID_ANY, _("Audio group:")),
-    wxGBPosition(4, 0),
+    wxGBPosition(5, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
@@ -190,7 +209,7 @@ GOOrganDialog::GOOrganDialog(
     m_AudioGroup->Append(audio_groups[i]);
   m_AudioGroup->SetValue(wxT(" "));
   m_LastAudioGroup = m_AudioGroup->GetValue();
-  gb->Add(m_AudioGroup, wxGBPosition(4, 1), wxGBSpan(1, 2), wxEXPAND);
+  gb->Add(m_AudioGroup, wxGBPosition(5, 1), wxGBSpan(1, 2), wxEXPAND);
   gb->AddGrowableCol(1, 1);
 
   box1->Add(gb, 0, wxEXPAND | wxALL, 5);
@@ -452,9 +471,12 @@ void GOOrganDialog::Load() {
     m_Gain->ChangeValue(wxEmptyString);
     m_Gain->Disable();
     m_GainSpin->Disable();
-    m_Tuning->ChangeValue(wxEmptyString);
-    m_Tuning->Disable();
-    m_TuningSpin->Disable();
+    m_ManualTuning->ChangeValue(wxEmptyString);
+    m_ManualTuning->Disable();
+    m_ManualTuningSpin->Disable();
+    m_AutoTuningCorrection->ChangeValue(wxEmptyString);
+    m_AutoTuningCorrection->Disable();
+    m_AutoTuningCorrectionSpin->Disable();
     m_Delay->ChangeValue(wxEmptyString);
     m_Delay->Disable();
     m_DelaySpin->Disable();
@@ -479,8 +501,10 @@ void GOOrganDialog::Load() {
       m_Amplitude->ChangeValue(wxEmptyString);
     if (!m_Gain->IsModified())
       m_Gain->ChangeValue(wxEmptyString);
-    if (!m_Tuning->IsModified())
-      m_Tuning->ChangeValue(wxEmptyString);
+    if (!m_ManualTuning->IsModified())
+      m_ManualTuning->ChangeValue(wxEmptyString);
+    if (!m_AutoTuningCorrection->IsModified())
+      m_AutoTuningCorrection->ChangeValue(wxEmptyString);
     if (!m_Delay->IsModified())
       m_Delay->ChangeValue(wxEmptyString);
     if (m_AudioGroup->GetValue() == m_LastAudioGroup) {
@@ -526,8 +550,10 @@ void GOOrganDialog::Load() {
   m_AmplitudeSpin->Enable();
   m_Gain->Enable();
   m_GainSpin->Enable();
-  m_Tuning->Enable();
-  m_TuningSpin->Enable();
+  m_ManualTuning->Enable();
+  m_ManualTuningSpin->Enable();
+  m_AutoTuningCorrection->Enable();
+  m_AutoTuningCorrectionSpin->Enable();
   m_Delay->Enable();
   m_DelaySpin->Enable();
   m_AudioGroup->Enable();
@@ -542,7 +568,8 @@ void GOOrganDialog::Load() {
 
   float amplitude = m_Last->config->GetAmplitude();
   float gain = m_Last->config->GetGain();
-  float tuning = m_Last->config->GetTuning();
+  float manualTuning = m_Last->config->GetManualTuning();
+  float autoTuningCorrection = m_Last->config->GetAutoTuningCorrection();
   unsigned delay = m_Last->config->GetDelay();
 
   if (entries.size() == 1)
@@ -552,8 +579,12 @@ void GOOrganDialog::Load() {
     m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
   m_GainSpin->SetValue(gain);
   if (entries.size() == 1)
-    m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
-  m_TuningSpin->SetValue(tuning);
+    m_ManualTuning->ChangeValue(wxString::Format(wxT("%f"), manualTuning));
+  m_ManualTuningSpin->SetValue(manualTuning);
+  if (entries.size() == 1)
+    m_AutoTuningCorrection->ChangeValue(
+      wxString::Format(wxT("%f"), autoTuningCorrection));
+  m_AutoTuningCorrectionSpin->SetValue(autoTuningCorrection);
   if (entries.size() == 1)
     m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
   m_DelaySpin->SetValue(delay);
@@ -618,17 +649,33 @@ void GOOrganDialog::OnGainChanged(wxCommandEvent &e) {
   Modified();
 }
 
-void GOOrganDialog::OnTuningSpinChanged(wxSpinEvent &e) {
-  m_Tuning->ChangeValue(
-    wxString::Format(wxT("%f"), (float)m_TuningSpin->GetValue()));
-  m_Tuning->MarkDirty();
+void GOOrganDialog::OnManualTuningSpinChanged(wxSpinEvent &e) {
+  m_ManualTuning->ChangeValue(
+    wxString::Format(wxT("%f"), (float)m_ManualTuningSpin->GetValue()));
+  m_ManualTuning->MarkDirty();
   Modified();
 }
 
-void GOOrganDialog::OnTuningChanged(wxCommandEvent &e) {
+void GOOrganDialog::OnManualTuningChanged(wxCommandEvent &e) {
   double tuning;
-  if (m_Tuning->GetValue().ToDouble(&tuning))
-    m_TuningSpin->SetValue(tuning);
+
+  if (m_ManualTuning->GetValue().ToDouble(&tuning))
+    m_ManualTuningSpin->SetValue(tuning);
+  Modified();
+}
+
+void GOOrganDialog::OnAutoTuningCorrectionSpinChanged(wxSpinEvent &e) {
+  m_AutoTuningCorrection->ChangeValue(
+    wxString::Format(wxT("%f"), (float)m_AutoTuningCorrectionSpin->GetValue()));
+  m_AutoTuningCorrection->MarkDirty();
+  Modified();
+}
+
+void GOOrganDialog::OnAutoTuningCorrectionChanged(wxCommandEvent &e) {
+  double tuning;
+
+  if (m_AutoTuningCorrection->GetValue().ToDouble(&tuning))
+    m_AutoTuningCorrectionSpin->SetValue(tuning);
   Modified();
 }
 
@@ -684,7 +731,9 @@ bool GOOrganDialog::Changed() {
     changed = true;
   if (m_Gain->IsModified())
     changed = true;
-  if (m_Tuning->IsModified())
+  if (m_ManualTuning->IsModified())
+    changed = true;
+  if (m_AutoTuningCorrection->IsModified())
     changed = true;
   if (m_Delay->IsModified())
     changed = true;
@@ -731,7 +780,7 @@ void GOOrganDialog::FillTree() {
 }
 
 void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
-  double amp, gain, tuning;
+  double amp, gain, manualTuning, autoTuningCorrection;
   long delay;
 
   wxArrayTreeItemIds entries;
@@ -753,8 +802,15 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
   }
 
   if (
-    !m_Tuning->GetValue().ToDouble(&tuning)
-    && (m_Tuning->IsModified() && (tuning < -1800 || tuning > 1800))) {
+    !m_ManualTuning->GetValue().ToDouble(&manualTuning)
+    && (m_ManualTuning->IsModified() && (manualTuning < -1800 || manualTuning > 1800))) {
+    GOMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+    return;
+  }
+
+  if (
+    !m_AutoTuningCorrection->GetValue().ToDouble(&autoTuningCorrection)
+    && (m_AutoTuningCorrection->IsModified() && (autoTuningCorrection < -1800 || autoTuningCorrection > 1800))) {
     GOMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
   }
@@ -775,8 +831,10 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
       e->config->SetAmplitude(amp);
     if (m_Gain->IsModified())
       e->config->SetGain(gain);
-    if (m_Tuning->IsModified())
-      e->config->SetTuning(tuning);
+    if (m_ManualTuning->IsModified())
+      e->config->SetManualTuning(manualTuning);
+    if (m_AutoTuningCorrection->IsModified())
+      e->config->SetAutoTuningCorrection(autoTuningCorrection);
     if (m_Delay->IsModified())
       e->config->SetDelay(delay);
     if (m_AudioGroup->GetValue() != m_LastAudioGroup)
@@ -811,10 +869,18 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     m_Gain->DiscardEdits(); // workaround of osx implementation bug
                             // https://github.com/oleg68/GrandOrgue/issues/87
   }
-  if (m_Tuning->IsModified()) {
-    m_Tuning->ChangeValue(wxString::Format(wxT("%f"), tuning));
-    m_Tuning->DiscardEdits(); // workaround of osx implementation bug
-                              // https://github.com/oleg68/GrandOrgue/issues/87
+  if (m_ManualTuning->IsModified()) {
+    m_ManualTuning->ChangeValue(wxString::Format(wxT("%f"), manualTuning));
+    m_ManualTuning
+      ->DiscardEdits(); // workaround of osx implementation bug
+                        // https://github.com/oleg68/GrandOrgue/issues/87
+  }
+  if (m_AutoTuningCorrection->IsModified()) {
+    m_AutoTuningCorrection->ChangeValue(
+      wxString::Format(wxT("%f"), autoTuningCorrection));
+    m_AutoTuningCorrection
+      ->DiscardEdits(); // workaround of osx implementation bug
+                        // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_Delay->IsModified()) {
     m_Delay->ChangeValue(wxString::Format(wxT("%lu"), delay));
@@ -872,7 +938,8 @@ void GOOrganDialog::ResetSelectedToDefault(bool isForChildren) {
   for (OrganTreeItemData *e : oiSet) {
     e->config->SetAmplitude(e->config->GetDefaultAmplitude());
     e->config->SetGain(e->config->GetDefaultGain());
-    e->config->SetTuning(e->config->GetPitchTuning());
+    e->config->SetManualTuning(0);
+    e->config->SetAutoTuningCorrection(0);
     e->config->SetDelay(e->config->GetDefaultDelay());
     e->config->SetAudioGroup(wxEmptyString);
     e->config->SetBitsPerSample(-1);

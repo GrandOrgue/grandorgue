@@ -44,13 +44,15 @@ public:
 
   GOPipeConfig &GetPipeConfig();
 
-  void ModifyTuning(float diff);
+  void ModifyManualTuning(float diff);
+  void ModifyAutoTuningCorrection(float diff);
 
   float GetEffectiveAmplitude();
   float GetEffectiveGain();
-  float GetEffectiveTuning();
   float GetEffectivePitchTuning() const;
   float GetEffectivePitchCorrection() const;
+  float GetEffectiveManualTuning() const;
+  float GetEffectiveAutoTuningCorection() const;
 
   unsigned GetEffectiveDelay();
   wxString GetEffectiveAudioGroup();
