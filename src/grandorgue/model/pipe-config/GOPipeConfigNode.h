@@ -49,7 +49,7 @@ public:
   float GetEffectiveAmplitude();
   float GetEffectiveGain();
   float GetEffectiveTuning();
-  float GetDefaultTuning();
+  float GetEffectivePitchTuning();
 
   unsigned GetEffectiveDelay();
   wxString GetEffectiveAudioGroup();

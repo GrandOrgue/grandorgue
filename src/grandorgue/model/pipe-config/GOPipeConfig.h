@@ -27,8 +27,8 @@ private:
   float m_DefaultAmplitude;
   float m_Gain;
   float m_DefaultGain;
+  float m_PitchTuning;
   float m_Tuning;
-  float m_DefaultTuning;
   unsigned m_Delay;
   unsigned m_DefaultDelay;
   int m_BitsPerSample;
@@ -58,7 +58,7 @@ public:
   void SetGain(float gain);
 
   float GetTuning();
-  float GetDefaultTuning();
+  float GetPitchTuning();
   void SetTuning(float cent);
 
   unsigned GetDelay();

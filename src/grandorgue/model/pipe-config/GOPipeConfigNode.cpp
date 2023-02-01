@@ -82,11 +82,11 @@ float GOPipeConfigNode::GetEffectiveTuning() {
     return m_PipeConfig.GetTuning();
 }
 
-float GOPipeConfigNode::GetDefaultTuning() {
+float GOPipeConfigNode::GetEffectivePitchTuning() {
   if (m_parent)
-    return m_PipeConfig.GetDefaultTuning() + m_parent->GetDefaultTuning();
+    return m_PipeConfig.GetPitchTuning() + m_parent->GetEffectivePitchTuning();
   else
-    return m_PipeConfig.GetDefaultTuning();
+    return m_PipeConfig.GetPitchTuning();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveDelay() {

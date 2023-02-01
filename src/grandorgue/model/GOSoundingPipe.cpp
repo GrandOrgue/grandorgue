@@ -398,7 +398,7 @@ void GOSoundingPipe::Validate() {
     offset = m_SoundProvider.GetMidiKeyNumber()
       + log(8.0 / m_HarmonicNumber) * (12.0 / log(2))
       - (m_SoundProvider.GetMidiPitchFract()
-         - m_PipeConfigNode.GetDefaultTuning() + m_PitchCorrection)
+         - m_PipeConfigNode.GetEffectivePitchTuning() + m_PitchCorrection)
         / 100.0
       - m_MidiKeyNumber;
   if (offset < -18 || offset > 18) {
@@ -498,7 +498,7 @@ void GOSoundingPipe::UpdateTuning() {
         + m_SoundProvider.GetMidiPitchFract();
     }
     pitchAdjustment = m_PipeConfigNode.GetEffectiveTuning() + m_PitchCorrection
-      - m_PipeConfigNode.GetDefaultTuning() - concert_pitch_correction;
+      - m_PipeConfigNode.GetEffectivePitchTuning() - concert_pitch_correction;
   }
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }
