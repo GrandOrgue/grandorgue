@@ -60,6 +60,7 @@ private:
   wxCheckBox *m_Scale;
   wxCheckBox *m_Random;
   wxCheckBox *m_ODFCheck;
+  wxCheckBox *m_ODFHw1Check;
   wxCheckBox *m_RecordDownmix;
   wxSpinCtrl *m_Volume;
   wxChoice *m_BitsPerSample;

@@ -4164,6 +4164,13 @@ user experience.
         </note>
       </sect2>
       <sect2>
+        <title>Check ODF for HW1-compatibility</title>
+        <para>
+          This checkbox enables warnings when some ODF keys are not compatible with the Hauptwerk 1.
+	  For example, when file names contains the '/' separator.
+        </para>
+      </sect2>
+      <sect2>
         <title>Metronome</title>
         <para>
 These spinners provide default values for the number of beats per minute (BPM)
@@ -6271,11 +6278,18 @@ Each setting may only occur once. The content is case sensitive.
 No other elements are allowed in the file.
       </para>
       <para>
-File paths in this format are relative to the location of the organ
-file. The directory separator in these paths must be <emphasis>\</emphasis>. The paths
-should not contain <emphasis>/</emphasis>. The paths should be considered case sensitive,
-even if this is not enforced on all platforms.
+	File paths in this format are relative to the location of the organ
+	file. The directory separator in these paths may be
+	<emphasis>\</emphasis> or <emphasis>/</emphasis>. The paths should be
+	considered case sensitive, even if this is not enforced on all platforms.
       </para>
+      <caution>
+	<simpara>
+	  Hauptwerk only supports <emphasis>\</emphasis> as a directory
+	  separator. So use <emphasis>/</emphasis> only if you do not intend
+	  the ODF to be HW1-compatible.
+	</simpara>
+      </caution>
       <para>
 Boolean values are represented as <emphasis>Y</emphasis> for "true" and
 <emphasis>N</emphasis> for "false".

@@ -23,8 +23,9 @@ typedef enum { ODFSetting, CMBSetting } GOSettingType;
 
 class GOConfigReader {
 private:
-  bool m_Strict;
   GOConfigReaderDB &m_Config;
+  bool m_Strict;
+  bool m_IsHw1Check;
 
   bool Read(
     GOSettingType type,
@@ -34,7 +35,8 @@ private:
     wxString &value);
 
 public:
-  GOConfigReader(GOConfigReaderDB &cfg, bool strict = true);
+  GOConfigReader(
+    GOConfigReaderDB &cfg, bool strict = true, bool hw1Check = false);
 
   /**
    * Reads a triple-value boolean (-1 - not defined, 0 - false, 1 - true)

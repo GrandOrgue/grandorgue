@@ -465,7 +465,7 @@ wxString GOOrganController::Load(
   }
 
   try {
-    GOConfigReader cfg(ini, m_config.ODFCheck());
+    GOConfigReader cfg(ini, m_config.ODFCheck(), m_config.ODFHw1Check());
     /* skip informational items */
     cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), false);
     cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
