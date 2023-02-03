@@ -93,7 +93,7 @@ float GOPipeConfigNode::GetEffectivePitchCorrection() const {
   float pitchCorrection = m_PipeConfig.GetPitchCorrection();
 
   if (m_parent)
-    pitchCorrection += m_parent->GetEffectivePitchTuning();
+    pitchCorrection += m_parent->GetEffectivePitchCorrection();
   return pitchCorrection;
 }
 
