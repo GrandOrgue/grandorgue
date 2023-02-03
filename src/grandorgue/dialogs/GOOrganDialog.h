@@ -42,6 +42,8 @@ private:
   wxSpinButton *m_AutoTuningCorrectionSpin;
   wxTextCtrl *m_Delay;
   wxSpinButton *m_DelaySpin;
+  wxTextCtrl *m_ReleaseLength;
+  wxSpinButton *m_ReleaseLengthSpin;
   wxComboBox *m_AudioGroup;
   wxString m_LastAudioGroup;
   wxChoice *m_BitsPerSample;
@@ -132,6 +134,8 @@ protected:
     ID_EVENT_AUTO_TUNING_CORRECTION_SPIN,
     ID_EVENT_DELAY,
     ID_EVENT_DELAY_SPIN,
+    ID_EVENT_RELEASE_LENGTH,
+    ID_EVENT_RELEASE_LENGTH_SPIN,
     ID_EVENT_AUDIO_GROUP,
     ID_EVENT_IGNORE_PITCH,
     ID_EVENT_LOOP_LOAD,
