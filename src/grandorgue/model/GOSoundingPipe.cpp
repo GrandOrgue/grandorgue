@@ -472,7 +472,8 @@ void GOSoundingPipe::UpdateTuning() {
 
   if (m_IsTemperamentOriginalBased) {
     // For original temperament. Set pitchAdjustment from GetEffectiveTuning
-    pitchAdjustment = m_PipeConfigNode.GetEffectiveManualTuning();
+    pitchAdjustment = m_PipeConfigNode.GetEffectivePitchTuning()
+      + m_PipeConfigNode.GetEffectiveManualTuning();
   } else {
     // For any other temperament than original. Calculate pitchAdjustment by
     // converting from the original temperament to the equal one before using
@@ -488,9 +489,9 @@ void GOSoundingPipe::UpdateTuning() {
            + log(8.0 / m_HarmonicNumber) / log(2) * 1200)
         + m_SoundProvider.GetMidiPitchFract();
     }
-    pitchAdjustment = m_PipeConfigNode.GetEffectiveAutoTuningCorection()
-      + m_PipeConfigNode.GetEffectivePitchCorrection()
-      - m_PipeConfigNode.GetEffectivePitchTuning() - concert_pitch_correction;
+    pitchAdjustment = m_PipeConfigNode.GetEffectivePitchCorrection()
+      + m_PipeConfigNode.GetEffectiveAutoTuningCorection()
+      - concert_pitch_correction;
   }
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }
