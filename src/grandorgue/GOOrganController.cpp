@@ -140,6 +140,9 @@ void GOOrganController::SetOrganModified(bool modified) {
     m_OrganModified = modified;
     m_setter->UpdateModified(modified);
   }
+  if (m_OrganModificationListener)
+    // for reflecting model changes on GUI
+    m_OrganModificationListener->OnIsModifiedChanged(modified);
 }
 
 void GOOrganController::OnIsModifiedChanged(bool modified) {

@@ -80,6 +80,7 @@ private:
   bool m_b_customized;
   float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
+  GOModificationListener *m_OrganModificationListener;
   bool m_DivisionalsStoreIntermanualCouplers;
   bool m_DivisionalsStoreIntramanualCouplers;
   bool m_DivisionalsStoreTremulants;
@@ -134,6 +135,9 @@ public:
 
   // Returns organ modification flag
   bool IsOrganModified() const { return m_OrganModified; }
+  void SetOrganModificationListener(GOModificationListener *listener) {
+    m_OrganModificationListener = listener;
+  }
   // Sets the organ modification flag
   void SetOrganModified() { SetOrganModified(true); }
   // Clears the organ modification flag

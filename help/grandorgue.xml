@@ -5332,6 +5332,20 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <para>Tracker delay is cumulative from organ level down to pipe level.</para>
       </sect2>
       <sect2>
+        <title>Release Length</title>
+	<para>
+	  The release tail length control limits the duration the sound engine
+	  uses to play the release section of the sample. The values are: 0, and
+	  a range from 50 ms to 3000 ms by increments of 50 ms. 0 means playing
+	  the full release section without a limit.
+	</para>
+	<para>
+	  The organ-wide limit can be set also on the GrandOrgan toolbar. The
+	  limits of the lower levels may only decrease the limit of the upper
+	  levels.
+	</para>
+      </sect2>
+      <sect2>
         <title>Audio Group</title>
         <para>This dropdown selects which audio group the sound from the selected element is routed to</para>
         <para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>

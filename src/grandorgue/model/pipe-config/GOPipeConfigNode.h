@@ -35,6 +35,7 @@ public:
     GOStatisticCallback *statistic);
   virtual ~GOPipeConfigNode();
 
+  GOPipeConfigNode *GetParent() const { return m_parent; }
   void SetParent(GOPipeConfigNode *parent);
   void Init(GOConfigReader &cfg, wxString group, wxString prefix);
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);

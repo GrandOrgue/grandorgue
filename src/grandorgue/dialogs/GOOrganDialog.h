@@ -46,6 +46,8 @@ private:
   wxSpinButton *m_ReleaseLengthSpin;
   wxComboBox *m_AudioGroup;
   wxString m_LastAudioGroup;
+  wxCheckBox *m_IgnorePitch;
+  bool m_LastIgnorePitch;
   wxChoice *m_BitsPerSample;
   int m_LastBitsPerSample;
   wxChoice *m_Channels;
@@ -66,7 +68,6 @@ private:
   wxButton *m_DefaultAll;
   wxButton *m_AudioGroupAssistant;
   wxButton *m_Collapse;
-  wxCheckBox *m_IgnorePitch;
   OrganTreeItemData *m_Last;
   unsigned m_LoadChangeCnt;
   wxDialog *m_ModalDialog;
@@ -99,7 +100,10 @@ private:
   void OnAutoTuningCorrectionChanged(wxCommandEvent &e);
   void OnDelaySpinChanged(wxSpinEvent &e);
   void OnDelayChanged(wxCommandEvent &e);
+  void OnReleaseLengthSpinChanged(wxSpinEvent &e);
+  void OnReleaseLengthChanged(wxCommandEvent &e);
   void OnAudioGroupChanged(wxCommandEvent &e);
+  void OnIgnorePitchChanged(wxCommandEvent &e);
   void OnBitsPerSampleChanged(wxCommandEvent &e);
   void OnCompressChanged(wxCommandEvent &e);
   void OnChannelsChanged(wxCommandEvent &e);

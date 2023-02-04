@@ -572,6 +572,11 @@ bool GOFrame::CloseOrgan(bool isForce) {
       GOMutexLocker m_locker(m_mutex, true);
 
       if (m_locker.IsLocked()) {
+        GOOrganController *pOrgan = m_doc->GetOrganController();
+
+        if (pOrgan)
+          pOrgan->SetModificationListener(nullptr);
+
         delete m_doc;
         m_doc = NULL;
         UpdatePanelMenu();
@@ -590,6 +595,8 @@ bool GOFrame::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
 
     retCode = m_doc->LoadOrgan(&dlg, organ, cmb);
     OnIsModifiedChanged(false);
+    // for reflecting model changes
+    m_doc->GetOrganController()->SetOrganModificationListener(this);
   }
   return retCode;
 }
