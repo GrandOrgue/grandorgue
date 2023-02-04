@@ -25,9 +25,12 @@ private:
   wxString m_AudioGroup;
   float m_Amplitude;
   float m_DefaultAmplitude;
-  float m_Gain;
   float m_DefaultGain;
+  // ODF pitch tuning offset for using withot auto-tuning
   float m_PitchTuning;
+  // ODF pitch tuning offset for using with auto-tuning
+  float m_PitchCorrection;
+  float m_Gain;
   float m_Tuning;
   unsigned m_Delay;
   unsigned m_DefaultDelay;
@@ -57,8 +60,9 @@ public:
   float GetDefaultGain();
   void SetGain(float gain);
 
+  float GetPitchTuning() const { return m_PitchTuning; }
+  float GetPitchCorrection() const { return m_PitchCorrection; }
   float GetTuning();
-  float GetPitchTuning();
   void SetTuning(float cent);
 
   unsigned GetDelay();

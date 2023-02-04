@@ -30,7 +30,6 @@ GOSoundingPipe::GOSoundingPipe(
   int sampler_group_id,
   unsigned midi_key_number,
   unsigned harmonic_number,
-  float pitch_correction,
   float min_volume,
   float max_volume,
   bool retune)
@@ -50,7 +49,6 @@ GOSoundingPipe::GOSoundingPipe(
     m_HarmonicNumber(harmonic_number),
     m_LoopCrossfadeLength(0),
     m_ReleaseCrossfadeLength(0),
-    m_PitchCorrection(pitch_correction),
     m_MinVolume(min_volume),
     m_MaxVolume(max_volume),
     m_SampleMidiKeyNumber(-1),
@@ -174,14 +172,6 @@ void GOSoundingPipe::Load(
     1024,
     false,
     m_HarmonicNumber);
-  m_PitchCorrection = cfg.ReadFloat(
-    ODFSetting,
-    group,
-    prefix + wxT("PitchCorrection"),
-    -1800,
-    1800,
-    false,
-    m_PitchCorrection);
   m_SamplerGroupID = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -398,7 +388,8 @@ void GOSoundingPipe::Validate() {
     offset = m_SoundProvider.GetMidiKeyNumber()
       + log(8.0 / m_HarmonicNumber) * (12.0 / log(2))
       - (m_SoundProvider.GetMidiPitchFract()
-         - m_PipeConfigNode.GetEffectivePitchTuning() + m_PitchCorrection)
+         - m_PipeConfigNode.GetEffectivePitchTuning()
+         + m_PipeConfigNode.GetEffectivePitchCorrection())
         / 100.0
       - m_MidiKeyNumber;
   if (offset < -18 || offset > 18) {
@@ -497,7 +488,8 @@ void GOSoundingPipe::UpdateTuning() {
            + log(8.0 / m_HarmonicNumber) / log(2) * 1200)
         + m_SoundProvider.GetMidiPitchFract();
     }
-    pitchAdjustment = m_PipeConfigNode.GetEffectiveTuning() + m_PitchCorrection
+    pitchAdjustment = m_PipeConfigNode.GetEffectiveTuning()
+      + m_PipeConfigNode.GetEffectivePitchCorrection()
       - m_PipeConfigNode.GetEffectivePitchTuning() - concert_pitch_correction;
   }
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);

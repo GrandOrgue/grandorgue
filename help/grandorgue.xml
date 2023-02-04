@@ -7062,6 +7062,16 @@ number of cents.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>PitchTuning</term>
+          <listitem>
+            <para>
+(float -1800 - 1800, default: 0) Correction factor in cent for the pitch
+of the whole organ. This setting is used for retuning to other
+temperaments.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>TrackerDelay</term>
           <listitem>
             <para>
@@ -9630,7 +9640,7 @@ that rank.
           <listitem>
             <para>
 (float -1800 - 1800, default: 0) Correction factor in cent for the pitch
-specified in the sample. This setting is used for retuning to other
+of the rank. This setting is used for retuning to other
 temperaments.
      </para>
           </listitem>
@@ -9873,9 +9883,10 @@ fraction in the sample to 0.
           <term>Pipe999PitchCorrection</term>
           <listitem>
             <para>
-(float -1800 - 1800, default: rank pitch correction) Correction factor
-in cent for the pitch specified in the sample. This setting is used
-for retuning to other temperaments.
+	      (float -1800 - 1800, default: 0) Correction factor in cent for the
+	      pitch specified in the sample in addition to PitchCorrection of
+	      the whole organ, of the windchest and of the rank. This setting is
+	      used for retuning to other temperaments.
      </para>
           </listitem>
         </varlistentry>

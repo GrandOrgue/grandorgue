@@ -36,7 +36,6 @@ private:
   bool m_Percussive;
   unsigned m_WindchestGroup;
   unsigned m_HarmonicNumber;
-  float m_PitchCorrection;
   float m_MinVolume;
   float m_MaxVolume;
   bool m_RetuneRank;
