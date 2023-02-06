@@ -60,7 +60,7 @@ void GOPipeConfig::ReadTuning(
     -1800,
     1800,
     false,
-    legacyTuning - m_PitchTuning);
+    0);
 }
 
 void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
