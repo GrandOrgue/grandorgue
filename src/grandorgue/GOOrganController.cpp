@@ -356,7 +356,7 @@ wxString GOOrganController::Load(
     if (!m_FileStore.LoadArchives(
           m_config, m_config.OrganCachePath(), organ.GetArchiveID(), errMsg))
       return errMsg;
-
+    m_ArchivePath = organ.GetArchivePath();
     m_odf = organ.GetODFPath();
     odf_name.Assign(m_odf);
   } else {
