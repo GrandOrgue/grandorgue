@@ -1,3 +1,4 @@
+- Added new fields ManualTuning and AutoTuningCorrection of Organ Settings https://github.com/GrandOrgue/grandorgue/issues/1333
 - Fixed duplicating packaged organs in the organ list https://github.com/GrandOrgue/grandorgue/issues/1367
 - Fixed displaying a popup window when a cache had been created with another GO version https://github.com/GrandOrgue/grandorgue/issues/1363
 - Fixed not saving midi settings of divisional buttons https://github.com/GrandOrgue/grandorgue/issues/1350
