@@ -46,6 +46,7 @@ void GODivisionalButtonControl::LoadCombination(GOConfigReader &cfg) {
 }
 
 void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
+  GOPushbuttonControl::Save(cfg);
   m_divisional.Save(cfg);
 }
 
