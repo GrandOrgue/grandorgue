@@ -1,3 +1,4 @@
+- Fixed displaying a popup window when a cache had been created with another GO version https://github.com/GrandOrgue/grandorgue/issues/1363
 - Fixed not saving midi settings of divisional buttons https://github.com/GrandOrgue/grandorgue/issues/1350
 - Added PitchCorrection for organs and windchest. Pipe999PitchCorrection became additive to PitchCorrection of the rank, of the windchest and of the organ https://github.com/GrandOrgue/grandorgue/issues/1351
 - Added full support of '/' as the file sepearator in ODF unless 'Check ODF for HW1-compatibility' is set https://github.com/GrandOrgue/grandorgue/issues/827

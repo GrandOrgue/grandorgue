@@ -537,14 +537,9 @@ wxString GOOrganController::Load(
           cache_ok = false;
       }
 
-      if (!cache_ok && !m_config.ManageCache()) {
-        GOMessageBox(
-          _("The cache for this organ is outdated. Please update or "
-            "delete it."),
-          _("Warning"),
-          wxOK | wxICON_WARNING,
-          NULL);
-      }
+      if (!cache_ok && !m_config.ManageCache())
+        wxLogWarning(_(
+          "The cache for this organ is outdated. Please update or delete it."));
 
       reader.Close();
     }
