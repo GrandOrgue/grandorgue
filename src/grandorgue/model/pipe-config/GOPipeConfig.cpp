@@ -7,8 +7,6 @@
 
 #include "GOPipeConfig.h"
 
-#include <stdio.h>
-
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "model/GOOrganModel.h"
