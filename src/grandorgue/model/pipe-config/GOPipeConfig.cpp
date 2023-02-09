@@ -7,6 +7,8 @@
 
 #include "GOPipeConfig.h"
 
+#include <stdio.h>
+
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "model/GOOrganModel.h"
@@ -43,8 +45,10 @@ static const wxString WX_AUTO_TUNING_CORRECTION = wxT("AutoTuningCorrection");
 
 void GOPipeConfig::ReadTuning(
   GOConfigReader &cfg, wxString group, wxString prefix) {
+  // m_PitchTuning must be read before calling GOPipeConfig::ReadTuning
   float legacyTuning = cfg.ReadFloat(
-    CMBSetting, group, prefix + WX_TUNING, -1800, 1800, false, 0);
+    CMBSetting, group, prefix + WX_TUNING, -1800, 1800, false, m_PitchTuning);
+
   m_ManualTuning = cfg.ReadFloat(
     CMBSetting,
     group,
