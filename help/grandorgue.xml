@@ -5307,8 +5307,23 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective gain.</para>
       </sect2>
       <sect2>
-        <title>Tuning</title>
-        <para>This spinner allows to fine tune the pitch of the element. The unit is 1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning is cumulative from organ level down to pipe level.</para>
+        <title>ManualTuning</title>
+        <para>
+	  This spinner allows to fine tune the pitch of the element. The unit is
+	  1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning
+	  is cumulative from organ level down to pipe level. This value is used
+	  only with the original temperament.
+	</para>
+        <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
+      </sect2>
+      <sect2>
+        <title>AutoTuningCorrection</title>
+        <para>
+	  This spinner allows to fine tune the pitch of the element. The unit is
+	  1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning
+	  is cumulative from organ level down to pipe level. This value is used
+	  only with the non-original temperaments.
+	</para>
         <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
       </sect2>
       <sect2>

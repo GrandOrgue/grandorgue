@@ -36,8 +36,10 @@ private:
   wxSpinButton *m_AmplitudeSpin;
   wxTextCtrl *m_Gain;
   wxSpinButton *m_GainSpin;
-  wxTextCtrl *m_Tuning;
-  wxSpinButton *m_TuningSpin;
+  wxTextCtrl *m_ManualTuning;
+  wxSpinButton *m_ManualTuningSpin;
+  wxTextCtrl *m_AutoTuningCorrection;
+  wxSpinButton *m_AutoTuningCorrectionSpin;
   wxTextCtrl *m_Delay;
   wxSpinButton *m_DelaySpin;
   wxComboBox *m_AudioGroup;
@@ -89,8 +91,10 @@ private:
   void OnAmplitudeChanged(wxCommandEvent &e);
   void OnGainSpinChanged(wxSpinEvent &e);
   void OnGainChanged(wxCommandEvent &e);
-  void OnTuningSpinChanged(wxSpinEvent &e);
-  void OnTuningChanged(wxCommandEvent &e);
+  void OnManualTuningSpinChanged(wxSpinEvent &e);
+  void OnManualTuningChanged(wxCommandEvent &e);
+  void OnAutoTuningCorrectionSpinChanged(wxSpinEvent &e);
+  void OnAutoTuningCorrectionChanged(wxCommandEvent &e);
   void OnDelaySpinChanged(wxSpinEvent &e);
   void OnDelayChanged(wxCommandEvent &e);
   void OnAudioGroupChanged(wxCommandEvent &e);
@@ -122,8 +126,10 @@ protected:
     ID_EVENT_AMPLITUDE_SPIN,
     ID_EVENT_GAIN,
     ID_EVENT_GAIN_SPIN,
-    ID_EVENT_TUNING,
-    ID_EVENT_TUNING_SPIN,
+    ID_EVENT_MANUAL_TUNING,
+    ID_EVENT_MANUAL_TUNING_SPIN,
+    ID_EVENT_AUTO_TUNING_CORRECTION,
+    ID_EVENT_AUTO_TUNING_CORRECTION_SPIN,
     ID_EVENT_DELAY,
     ID_EVENT_DELAY_SPIN,
     ID_EVENT_AUDIO_GROUP,

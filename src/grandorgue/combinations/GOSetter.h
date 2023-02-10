@@ -30,6 +30,7 @@ class GOSetter : private GOPlaybackStateHandler,
                  public GOSaveableObject {
 private:
   GOOrganController *m_OrganController;
+
   unsigned m_pos;
   unsigned m_bank;
   unsigned m_crescendopos;

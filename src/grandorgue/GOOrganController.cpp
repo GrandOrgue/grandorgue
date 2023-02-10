@@ -143,7 +143,8 @@ void GOOrganController::SetOrganModified(bool modified) {
 void GOOrganController::OnIsModifiedChanged(bool modified) {
   if (modified) {
     // Update the pitch label if it has been changed
-    const float newPitch = GetRootPipeConfigNode().GetPipeConfig().GetTuning();
+    const float newPitch
+      = GetRootPipeConfigNode().GetPipeConfig().GetManualTuning();
 
     if (newPitch != m_CurrentPitch) {
       m_PitchLabel.SetContent(wxString::Format(_("%f cent"), newPitch));

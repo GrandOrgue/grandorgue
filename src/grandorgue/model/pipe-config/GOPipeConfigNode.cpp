@@ -56,8 +56,13 @@ void GOPipeConfigNode::Save(GOConfigWriter &cfg) { m_PipeConfig.Save(cfg); }
 
 GOPipeConfig &GOPipeConfigNode::GetPipeConfig() { return m_PipeConfig; }
 
-void GOPipeConfigNode::ModifyTuning(float diff) {
-  m_PipeConfig.SetTuning(m_PipeConfig.GetTuning() + diff);
+void GOPipeConfigNode::ModifyManualTuning(float diff) {
+  m_PipeConfig.SetManualTuning(m_PipeConfig.GetManualTuning() + diff);
+}
+
+void GOPipeConfigNode::ModifyAutoTuningCorrection(float diff) {
+  m_PipeConfig.SetAutoTuningCorrection(
+    m_PipeConfig.GetAutoTuningCorrection() + diff);
 }
 
 float GOPipeConfigNode::GetEffectiveAmplitude() {
@@ -75,18 +80,12 @@ float GOPipeConfigNode::GetEffectiveGain() {
     return m_PipeConfig.GetGain();
 }
 
-float GOPipeConfigNode::GetEffectiveTuning() {
-  if (m_parent)
-    return m_PipeConfig.GetTuning() + m_parent->GetEffectiveTuning();
-  else
-    return m_PipeConfig.GetTuning();
-}
-
 float GOPipeConfigNode::GetEffectivePitchTuning() const {
+  float pitchTuning = m_PipeConfig.GetPitchTuning();
+
   if (m_parent)
-    return m_PipeConfig.GetPitchTuning() + m_parent->GetEffectivePitchTuning();
-  else
-    return m_PipeConfig.GetPitchTuning();
+    pitchTuning += m_parent->GetEffectivePitchTuning();
+  return pitchTuning;
 }
 
 float GOPipeConfigNode::GetEffectivePitchCorrection() const {
@@ -95,6 +94,22 @@ float GOPipeConfigNode::GetEffectivePitchCorrection() const {
   if (m_parent)
     pitchCorrection += m_parent->GetEffectivePitchCorrection();
   return pitchCorrection;
+}
+
+float GOPipeConfigNode::GetEffectiveManualTuning() const {
+  float cents = m_PipeConfig.GetManualTuning();
+
+  if (m_parent)
+    cents += m_parent->GetEffectiveManualTuning();
+  return cents;
+}
+
+float GOPipeConfigNode::GetEffectiveAutoTuningCorection() const {
+  float cents = m_PipeConfig.GetAutoTuningCorrection();
+
+  if (m_parent)
+    cents += m_parent->GetEffectiveAutoTuningCorection();
+  return cents;
 }
 
 unsigned GOPipeConfigNode::GetEffectiveDelay() {
