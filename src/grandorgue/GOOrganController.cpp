@@ -59,6 +59,8 @@
 #include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
 
+#include "go_defs.h"
+
 #include "GOAudioRecorder.h"
 #include "GOBuffer.h"
 #include "GOCache.h"
@@ -73,6 +75,7 @@
 #include "GOPath.h"
 
 static const wxString WX_ORGAN = wxT("Organ");
+static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");
 
 GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
   : GOEventDistributor(this),
@@ -250,6 +253,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     wxT("CombinationsStoreNonDisplayedDrawstops"),
     false,
     true);
+  cfg.ReadString(CMBSetting, WX_ORGAN, WX_GRANDORGUE_VERSION, false);
   m_volume = cfg.ReadInteger(
     CMBSetting, WX_ORGAN, wxT("Volume"), -120, 100, false, m_config.Volume());
   if (m_volume > 20)
@@ -723,37 +727,33 @@ bool GOOrganController::Save() {
 }
 
 bool GOOrganController::Export(const wxString &cmb) {
-  wxString fn = cmb;
-  wxString tmp_name = fn + wxT(".new");
-  wxString buffer;
-  bool prefix = false;
-
   GOConfigFileWriter cfg_file;
-  m_b_customized = true;
+  GOConfigWriter cfg(cfg_file, false);
 
-  GOConfigWriter cfg(cfg_file, prefix);
+  m_b_customized = true;
   cfg.WriteString(WX_ORGAN, wxT("ODFHash"), m_ODFHash);
   cfg.WriteString(WX_ORGAN, wxT("ChurchName"), m_ChurchName);
   cfg.WriteString(WX_ORGAN, wxT("ChurchAddress"), m_ChurchAddress);
   cfg.WriteString(WX_ORGAN, wxT("ODFPath"), GetODFFilename());
   if (m_ArchiveID != wxEmptyString)
     cfg.WriteString(WX_ORGAN, wxT("ArchiveID"), m_ArchiveID);
-
+  cfg.WriteString(WX_ORGAN, WX_GRANDORGUE_VERSION, wxT(APP_VERSION));
   cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_volume);
-
   cfg.WriteString(WX_ORGAN, wxT("Temperament"), m_Temperament);
 
   GOEventDistributor::Save(cfg);
 
+  wxString tmp_name = cmb + wxT(".new");
+
   if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name)) {
-    wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
+    wxLogError(_("Could not write to '%s'"), tmp_name);
     return false;
   }
   if (!cfg_file.Save(tmp_name)) {
-    wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
+    wxLogError(_("Could not write to '%s'"), tmp_name);
     return false;
   }
-  if (!GORenameFile(tmp_name, fn))
+  if (!GORenameFile(tmp_name, cmb))
     return false;
   return true;
 }
