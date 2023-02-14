@@ -7263,7 +7263,7 @@ GUI attributes of a button (displayed as button per default).
           <listitem>
             <para>
 Buttons for the setter generals. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as piston per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7272,7 +7272,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 Buttons for switching banks of the setter generals. The section must
-contain the GUI attributes of a button (displayed as button per
+contain the GUI attributes of a button (displayed as piston per
 default).
      </para>
           </listitem>
