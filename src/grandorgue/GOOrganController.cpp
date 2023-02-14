@@ -72,6 +72,8 @@
 #include "GOOrgan.h"
 #include "GOPath.h"
 
+static const wxString WX_ORGAN = wxT("Organ");
+
 GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
   : GOEventDistributor(this),
     GOOrganModel(settings),
@@ -183,23 +185,21 @@ GOHashType GOOrganController::GenerateCacheHash() {
 }
 
 void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
-  wxString group = wxT("Organ");
-
   /* load church info */
   cfg.ReadString(
-    ODFSetting, group, wxT("HauptwerkOrganFileFormatVersion"), false);
-  m_ChurchName = cfg.ReadStringTrim(ODFSetting, group, wxT("ChurchName"));
-  m_ChurchAddress = cfg.ReadString(ODFSetting, group, wxT("ChurchAddress"));
+    ODFSetting, WX_ORGAN, wxT("HauptwerkOrganFileFormatVersion"), false);
+  m_ChurchName = cfg.ReadStringTrim(ODFSetting, WX_ORGAN, wxT("ChurchName"));
+  m_ChurchAddress = cfg.ReadString(ODFSetting, WX_ORGAN, wxT("ChurchAddress"));
   m_OrganBuilder
-    = cfg.ReadString(ODFSetting, group, wxT("OrganBuilder"), false);
+    = cfg.ReadString(ODFSetting, WX_ORGAN, wxT("OrganBuilder"), false);
   m_OrganBuildDate
-    = cfg.ReadString(ODFSetting, group, wxT("OrganBuildDate"), false);
+    = cfg.ReadString(ODFSetting, WX_ORGAN, wxT("OrganBuildDate"), false);
   m_OrganComments
-    = cfg.ReadString(ODFSetting, group, wxT("OrganComments"), false);
+    = cfg.ReadString(ODFSetting, WX_ORGAN, wxT("OrganComments"), false);
   m_RecordingDetails
-    = cfg.ReadString(ODFSetting, group, wxT("RecordingDetails"), false);
+    = cfg.ReadString(ODFSetting, WX_ORGAN, wxT("RecordingDetails"), false);
   wxString info_filename
-    = cfg.ReadFileName(ODFSetting, group, wxT("InfoFilename"), false);
+    = cfg.ReadFileName(ODFSetting, WX_ORGAN, wxT("InfoFilename"), false);
   wxFileName fn;
   if (info_filename.IsEmpty()) {
     /* Resolve organ file path */
@@ -230,27 +230,28 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   }
 
   /* load basic organ information */
-  unsigned NumberOfPanels
-    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfPanels"), 0, 100, false);
+  unsigned NumberOfPanels = cfg.ReadInteger(
+    ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
   m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(
-    ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
+    ODFSetting, WX_ORGAN, wxT("DivisionalsStoreIntermanualCouplers"));
   m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(
-    ODFSetting, group, wxT("DivisionalsStoreIntramanualCouplers"));
+    ODFSetting, WX_ORGAN, wxT("DivisionalsStoreIntramanualCouplers"));
   m_DivisionalsStoreTremulants
-    = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreTremulants"));
+    = cfg.ReadBoolean(ODFSetting, WX_ORGAN, wxT("DivisionalsStoreTremulants"));
   m_GeneralsStoreDivisionalCouplers = cfg.ReadBoolean(
-    ODFSetting, group, wxT("GeneralsStoreDivisionalCouplers"));
+    ODFSetting, WX_ORGAN, wxT("GeneralsStoreDivisionalCouplers"));
   m_CombinationsStoreNonDisplayedDrawstops = cfg.ReadBoolean(
     ODFSetting,
-    group,
+    WX_ORGAN,
     wxT("CombinationsStoreNonDisplayedDrawstops"),
     false,
     true);
   m_volume = cfg.ReadInteger(
-    CMBSetting, group, wxT("Volume"), -120, 100, false, m_config.Volume());
+    CMBSetting, WX_ORGAN, wxT("Volume"), -120, 100, false, m_config.Volume());
   if (m_volume > 20)
     m_volume = 0;
-  m_Temperament = cfg.ReadString(CMBSetting, group, wxT("Temperament"), false);
+  m_Temperament
+    = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("Temperament"), false);
 
   GOOrganModel::Load(cfg, this);
   wxString buffer;
@@ -428,14 +429,14 @@ wxString GOOrganController::Load(
     }
 
     if (
-      odf_ini_file.getEntry(wxT("Organ"), wxT("ChurchName")).Trim()
-      != extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).Trim())
+      odf_ini_file.getEntry(WX_ORGAN, wxT("ChurchName")).Trim()
+      != extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).Trim())
       wxLogWarning(
         _("This .cmb file was originally created for:\n%s"),
-        extra_odf_config.getEntry(wxT("Organ"), wxT("ChurchName")).c_str());
+        extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).c_str());
 
     ini.ReadData(extra_odf_config, CMBSetting, false);
-    wxString hash = extra_odf_config.getEntry(wxT("Organ"), wxT("ODFHash"));
+    wxString hash = extra_odf_config.getEntry(WX_ORGAN, wxT("ODFHash"));
     if (hash != wxEmptyString)
       if (hash != m_ODFHash) {
         if (
@@ -468,11 +469,11 @@ wxString GOOrganController::Load(
   try {
     GOConfigReader cfg(ini, m_config.ODFCheck(), m_config.ODFHw1Check());
     /* skip informational items */
-    cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"), false);
-    cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
-    cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), false);
-    cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFHash"), false);
-    cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ArchiveID"), false);
+    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchName"), false);
+    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
+    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
+    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFHash"), false);
+    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ArchiveID"), false);
     ReadOrganFile(cfg);
   } catch (wxString error_) {
     return error_;
@@ -628,7 +629,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
     GOConfigReader cfg(ini);
 
     wxString church_name
-      = cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchName"));
+      = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchName"));
     if (church_name != m_ChurchName)
       if (
         wxMessageBox(
@@ -641,15 +642,15 @@ void GOOrganController::LoadCombination(const wxString &file) {
         == wxNO)
         return;
 
-    wxString hash = odf_ini_file.getEntry(wxT("Organ"), wxT("ODFHash"));
+    wxString hash = odf_ini_file.getEntry(WX_ORGAN, wxT("ODFHash"));
     if (hash != wxEmptyString)
       if (hash != m_ODFHash) {
         wxLogWarning(
           _("The combination file does not exactly match the current ODF."));
       }
     /* skip informational items */
-    cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ChurchAddress"), false);
-    cfg.ReadString(CMBSetting, wxT("Organ"), wxT("ODFPath"), false);
+    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
+    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
 
     ReadCombinations(cfg);
   } catch (wxString error) {
@@ -727,16 +728,16 @@ bool GOOrganController::Export(const wxString &cmb) {
   m_b_customized = true;
 
   GOConfigWriter cfg(cfg_file, prefix);
-  cfg.WriteString(wxT("Organ"), wxT("ODFHash"), m_ODFHash);
-  cfg.WriteString(wxT("Organ"), wxT("ChurchName"), m_ChurchName);
-  cfg.WriteString(wxT("Organ"), wxT("ChurchAddress"), m_ChurchAddress);
-  cfg.WriteString(wxT("Organ"), wxT("ODFPath"), GetODFFilename());
+  cfg.WriteString(WX_ORGAN, wxT("ODFHash"), m_ODFHash);
+  cfg.WriteString(WX_ORGAN, wxT("ChurchName"), m_ChurchName);
+  cfg.WriteString(WX_ORGAN, wxT("ChurchAddress"), m_ChurchAddress);
+  cfg.WriteString(WX_ORGAN, wxT("ODFPath"), GetODFFilename());
   if (m_ArchiveID != wxEmptyString)
-    cfg.WriteString(wxT("Organ"), wxT("ArchiveID"), m_ArchiveID);
+    cfg.WriteString(WX_ORGAN, wxT("ArchiveID"), m_ArchiveID);
 
-  cfg.WriteInteger(wxT("Organ"), wxT("Volume"), m_volume);
+  cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_volume);
 
-  cfg.WriteString(wxT("Organ"), wxT("Temperament"), m_Temperament);
+  cfg.WriteString(WX_ORGAN, wxT("Temperament"), m_Temperament);
 
   GOEventDistributor::Save(cfg);
 
