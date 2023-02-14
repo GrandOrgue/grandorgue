@@ -82,7 +82,10 @@ EVT_CHOICE(ID_EVENT_RELEASE_LOAD, GOOrganDialog::OnReleaseLoadChanged)
 EVT_BUTTON(ID_EVENT_COLLAPSE, GOOrganDialog::OnCollapse)
 END_EVENT_TABLE()
 
-#define RELEASE_LENGTH_STEP 50
+static const unsigned RELEASE_LENGTH_MAX = 3000;
+static const unsigned RELEASE_LENGTH_STEP = 50;
+static const unsigned RELEASE_LENGTH_MAX_INDEX
+  = RELEASE_LENGTH_MAX / RELEASE_LENGTH_STEP;
 
 GOOrganDialog::GOOrganDialog(
   GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
@@ -211,7 +214,7 @@ GOOrganDialog::GOOrganDialog(
     = new wxTextCtrl(scroll, ID_EVENT_RELEASE_LENGTH, wxEmptyString);
   gb->Add(m_ReleaseLength, wxGBPosition(5, 1), wxDefaultSpan, wxEXPAND);
   m_ReleaseLengthSpin = new wxSpinButton(scroll, ID_EVENT_RELEASE_LENGTH_SPIN);
-  m_ReleaseLengthSpin->SetRange(0, 3000 / RELEASE_LENGTH_STEP);
+  m_ReleaseLengthSpin->SetRange(0, RELEASE_LENGTH_MAX_INDEX);
   gb->Add(m_ReleaseLengthSpin, wxGBPosition(5, 2), wxDefaultSpan);
 
   gb->Add(
@@ -440,6 +443,60 @@ void GOOrganDialog::RemoveEmpty(wxChoice *choice) {
   choice->SetSelection(sel);
 }
 
+static const wxString WX__U = wxT("%u");
+static const wxString WX_MAX = wxT("Max");
+
+/**
+ * Parses releaseLengthStr. Max is converted to 0
+ * @param releaseLengthStr a string to parse
+ * @param releaseLength receives the new value if the string value is valid
+ * @return is the string value valid
+ */
+bool str_to_release_length(
+  const wxString &releaseLengthStr, unsigned &releaseLength) {
+  bool isValid = true;
+  long releaseLengthLong = 0;
+
+  if (releaseLengthStr == WX_MAX)
+    releaseLength = 0;
+  else if ((isValid = releaseLengthStr.ToLong(&releaseLengthLong)
+              && releaseLengthLong >= 0
+              && releaseLengthLong <= RELEASE_LENGTH_MAX))
+    releaseLength = (unsigned)releaseLengthLong;
+  return isValid;
+}
+
+/**
+ * Converts the supplied value to string. 0 is converted to Max
+ * @param releaseLength the new value
+ * @return the string value
+ */
+wxString release_length_to_str(unsigned releaseLength) {
+  return releaseLength ? wxString::Format(WX__U, releaseLength) : WX_MAX;
+}
+
+/**
+ * Converts ReleaseLengthSpin index to ReleaseLength. 0 -> 50, 59 -> 3000, 60 ->
+ * 0
+ * @return the ReleaseLength corresponding the current spin index
+ */
+unsigned spin_index_to_release_length(int index) {
+  unsigned releaseLength = ((unsigned)index + 1) * RELEASE_LENGTH_STEP;
+
+  return releaseLength <= RELEASE_LENGTH_MAX ? releaseLength : 0;
+}
+
+/**
+ * Converts ReleaseLengthSpin index to the specified ReleaseLength
+ * 0 -> 60, 50 -> 0, 59 -> 3000
+ * @return the ReleaseLength corresponding the current spin index
+ */
+int release_length_to_spin_index(unsigned releaseLength) {
+  unsigned index = releaseLength / RELEASE_LENGTH_STEP;
+
+  return index ? index - 1 : RELEASE_LENGTH_MAX_INDEX;
+}
+
 void GOOrganDialog::Load() {
   wxArrayTreeItemIds entries;
 
@@ -620,8 +677,8 @@ void GOOrganDialog::Load() {
     m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
   m_DelaySpin->SetValue(delay);
   if (entries.size() == 1)
-    m_ReleaseLength->ChangeValue(wxString::Format(wxT("%u"), releaseLength));
-  m_ReleaseLengthSpin->SetValue(releaseLength / RELEASE_LENGTH_STEP);
+    m_ReleaseLength->ChangeValue(release_length_to_str(releaseLength));
+  m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
   if (entries.size() == 1) {
     m_AudioGroup->SetValue(m_Last->config->GetAudioGroup());
     m_IgnorePitch->SetValue(m_Last->node->GetEffectiveIgnorePitch());
@@ -730,18 +787,17 @@ void GOOrganDialog::OnDelayChanged(wxCommandEvent &e) {
 }
 
 void GOOrganDialog::OnReleaseLengthSpinChanged(wxSpinEvent &e) {
-  m_ReleaseLength->ChangeValue(wxString::Format(
-    wxT("%u"),
-    (unsigned)m_ReleaseLengthSpin->GetValue() * RELEASE_LENGTH_STEP));
+  m_ReleaseLength->ChangeValue(release_length_to_str(
+    spin_index_to_release_length(m_ReleaseLengthSpin->GetValue())));
   m_ReleaseLength->MarkDirty();
   Modified();
 }
 
 void GOOrganDialog::OnReleaseLengthChanged(wxCommandEvent &e) {
-  long releaseLength;
+  unsigned releaseLength;
 
-  if (m_ReleaseLength->GetValue().ToLong(&releaseLength))
-    m_ReleaseLengthSpin->SetValue(releaseLength / RELEASE_LENGTH_STEP);
+  if (str_to_release_length(m_ReleaseLength->GetValue(), releaseLength))
+    m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
   Modified();
 }
 
@@ -839,7 +895,8 @@ void GOOrganDialog::FillTree() {
 
 void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
   double amp, gain, manualTuning, autoTuningCorrection;
-  long delay, releaseLength;
+  long delay;
+  unsigned releaseLength;
 
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);
@@ -886,9 +943,7 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     return;
   }
 
-  if (
-    !m_ReleaseLength->GetValue().ToLong(&releaseLength)
-    && (m_ReleaseLength->IsModified() && (releaseLength < 0 || delay > 3000))) {
+  if (!str_to_release_length(m_ReleaseLength->GetValue(), releaseLength)) {
     GOMessageBox(
       _("Release Length is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
@@ -982,7 +1037,7 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
                              // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_ReleaseLength->IsModified()) {
-    m_ReleaseLength->ChangeValue(wxString::Format(wxT("%lu"), releaseLength));
+    m_ReleaseLength->ChangeValue(release_length_to_str(releaseLength));
     m_ReleaseLength
       ->DiscardEdits(); // workaround of osx implementation bug
                         // https://github.com/oleg68/GrandOrgue/issues/87

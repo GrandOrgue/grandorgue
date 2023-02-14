@@ -5335,8 +5335,8 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <title>Release Length</title>
 	<para>
 	  The release tail length control limits the duration the sound engine
-	  uses to play the release section of the sample. The values are: 0, and
-	  a range from 50 ms to 3000 ms by increments of 50 ms. 0 means playing
+	  uses to play the release section of the sample. The values are: Max or
+	  a range from 50 ms to 3000 ms by increments of 50 ms. Max means playing
 	  the full release section without a limit.
 	</para>
 	<para>
