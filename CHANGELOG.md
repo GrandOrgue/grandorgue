@@ -1,3 +1,4 @@
+# 3.10.0 (2022-02-17)
 - Added storing the GrandOrgueVersion key in the Organ Settings file https://github.com/GrandOrgue/grandorgue/issues/1375
 - Added capability of redefining ReleaseLength and IgnorePitch on each level of Organ Settings
 - Changed defaults for the General Setter elements to Piston https://github.com/GrandOrgue/grandorgue/issues/1360
