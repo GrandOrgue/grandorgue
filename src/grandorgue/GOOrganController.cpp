@@ -94,6 +94,7 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
+    m_OrganModificationListener(nullptr),
     m_DivisionalsStoreIntermanualCouplers(false),
     m_DivisionalsStoreIntramanualCouplers(false),
     m_DivisionalsStoreTremulants(false),
@@ -140,6 +141,9 @@ void GOOrganController::SetOrganModified(bool modified) {
     m_OrganModified = modified;
     m_setter->UpdateModified(modified);
   }
+  if (m_OrganModificationListener)
+    // for reflecting model changes on GUI
+    m_OrganModificationListener->OnIsModifiedChanged(modified);
 }
 
 void GOOrganController::OnIsModifiedChanged(bool modified) {

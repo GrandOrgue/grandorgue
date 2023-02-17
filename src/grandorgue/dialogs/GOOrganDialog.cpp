@@ -68,7 +68,11 @@ EVT_SPIN(
 EVT_TEXT(ID_EVENT_DELAY, GOOrganDialog::OnDelayChanged)
 EVT_SPIN(ID_EVENT_DELAY_SPIN, GOOrganDialog::OnDelaySpinChanged)
 EVT_TEXT(ID_EVENT_AUDIO_GROUP, GOOrganDialog::OnAudioGroupChanged)
+EVT_TEXT(ID_EVENT_RELEASE_LENGTH, GOOrganDialog::OnReleaseLengthChanged)
+EVT_SPIN(
+  ID_EVENT_RELEASE_LENGTH_SPIN, GOOrganDialog::OnReleaseLengthSpinChanged)
 EVT_BUTTON(ID_EVENT_AUDIO_GROUP_ASSISTANT, GOOrganDialog::OnAudioGroupAssitant)
+EVT_CHECKBOX(ID_EVENT_IGNORE_PITCH, GOOrganDialog::OnIgnorePitchChanged)
 EVT_CHOICE(ID_EVENT_BITS_PER_SAMPLE, GOOrganDialog::OnBitsPerSampleChanged)
 EVT_CHOICE(ID_EVENT_COMPRESS, GOOrganDialog::OnCompressChanged)
 EVT_CHOICE(ID_EVENT_CHANNELS, GOOrganDialog::OnChannelsChanged)
@@ -77,6 +81,11 @@ EVT_CHOICE(ID_EVENT_ATTACK_LOAD, GOOrganDialog::OnAttackLoadChanged)
 EVT_CHOICE(ID_EVENT_RELEASE_LOAD, GOOrganDialog::OnReleaseLoadChanged)
 EVT_BUTTON(ID_EVENT_COLLAPSE, GOOrganDialog::OnCollapse)
 END_EVENT_TABLE()
+
+static const unsigned RELEASE_LENGTH_MAX = 3000;
+static const unsigned RELEASE_LENGTH_STEP = 50;
+static const unsigned RELEASE_LENGTH_MAX_INDEX
+  = RELEASE_LENGTH_MAX / RELEASE_LENGTH_STEP;
 
 GOOrganDialog::GOOrganDialog(
   GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
@@ -196,8 +205,21 @@ GOOrganDialog::GOOrganDialog(
   gb->Add(m_DelaySpin, wxGBPosition(4, 2), wxDefaultSpan);
 
   gb->Add(
-    new wxStaticText(scroll, wxID_ANY, _("Audio group:")),
+    new wxStaticText(scroll, wxID_ANY, _("Release Tail Length (ms):")),
     wxGBPosition(5, 0),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
+    5);
+  m_ReleaseLength
+    = new wxTextCtrl(scroll, ID_EVENT_RELEASE_LENGTH, wxEmptyString);
+  gb->Add(m_ReleaseLength, wxGBPosition(5, 1), wxDefaultSpan, wxEXPAND);
+  m_ReleaseLengthSpin = new wxSpinButton(scroll, ID_EVENT_RELEASE_LENGTH_SPIN);
+  m_ReleaseLengthSpin->SetRange(0, RELEASE_LENGTH_MAX_INDEX);
+  gb->Add(m_ReleaseLengthSpin, wxGBPosition(5, 2), wxDefaultSpan);
+
+  gb->Add(
+    new wxStaticText(scroll, wxID_ANY, _("Audio group:")),
+    wxGBPosition(6, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
@@ -209,7 +231,20 @@ GOOrganDialog::GOOrganDialog(
     m_AudioGroup->Append(audio_groups[i]);
   m_AudioGroup->SetValue(wxT(" "));
   m_LastAudioGroup = m_AudioGroup->GetValue();
-  gb->Add(m_AudioGroup, wxGBPosition(5, 1), wxGBSpan(1, 2), wxEXPAND);
+  gb->Add(m_AudioGroup, wxGBPosition(6, 1), wxGBSpan(1, 2), wxEXPAND);
+
+  gb->Add(
+    m_IgnorePitch = new wxCheckBox(
+      scroll,
+      ID_EVENT_IGNORE_PITCH,
+      _("Ignore pitch info in organ samples wav files")),
+    wxGBPosition(7, 0),
+    wxGBSpan(1, 2),
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
+    5);
+  if (m_OrganController->GetRootPipeConfigNode().GetEffectiveIgnorePitch())
+    m_IgnorePitch->SetValue(true);
+
   gb->AddGrowableCol(1, 1);
 
   box1->Add(gb, 0, wxEXPAND | wxALL, 5);
@@ -304,6 +339,7 @@ GOOrganDialog::GOOrganDialog(
     scroll, ID_EVENT_RELEASE_LOAD, wxDefaultPosition, wxDefaultSize, choices);
   grid->Add(m_ReleaseLoad, 1, wxEXPAND);
 
+  m_LastIgnorePitch = false;
   m_BitsPerSample->SetSelection(wxNOT_FOUND);
   m_LastBitsPerSample = m_BitsPerSample->GetSelection();
   m_Compress->SetSelection(wxNOT_FOUND);
@@ -334,7 +370,6 @@ GOOrganDialog::GOOrganDialog(
   box1 = new wxStaticBoxSizer(wxVERTICAL, scroll, _("Sample information"));
   grid = new wxFlexGridSizer(2, 5, 5);
   box1->Add(grid, 0, wxEXPAND | wxALL, 5);
-  settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
   grid->Add(
     new wxStaticText(scroll, wxID_ANY, _("Memory usage:")),
@@ -352,20 +387,8 @@ GOOrganDialog::GOOrganDialog(
   m_BitDisplay = new wxStaticText(scroll, wxID_ANY, wxEmptyString);
   grid->Add(m_BitDisplay);
 
-  wxBoxSizer *box3
-    = new wxStaticBoxSizer(wxVERTICAL, scroll, _("Tuning and Voicing"));
-  box3->Add(
-    m_IgnorePitch = new wxCheckBox(
-      scroll,
-      ID_EVENT_IGNORE_PITCH,
-      _("Ignore pitch info in organ samples wav files")),
-    0,
-    wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
-    5);
-  if (m_OrganController->GetRootPipeConfigNode().GetEffectiveIgnorePitch())
-    m_IgnorePitch->SetValue(true);
+  settingSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
 
-  settingSizer->Add(box3, 0, wxEXPAND | wxALL, 4);
   scroll->SetSizer(settingSizer);
   scroll->SetScrollbars(0, 5, 0, 15);
   mainSizer->Add(scroll, 1, wxALIGN_RIGHT | wxEXPAND);
@@ -374,12 +397,9 @@ GOOrganDialog::GOOrganDialog(
   topSizer->Add(
     CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
   topSizer->AddSpacer(5);
-  SetSizer(topSizer);
-
   FillTree();
   Load();
-
-  topSizer->Fit(this);
+  SetSizerAndFit(topSizer);
 }
 
 GOOrganDialog::~GOOrganDialog() {}
@@ -421,6 +441,60 @@ void GOOrganDialog::RemoveEmpty(wxChoice *choice) {
   if (index != wxNOT_FOUND)
     choice->Delete(index);
   choice->SetSelection(sel);
+}
+
+static const wxString WX__U = wxT("%u");
+static const wxString WX_MAX = wxT("Max");
+
+/**
+ * Parses releaseLengthStr. Max is converted to 0
+ * @param releaseLengthStr a string to parse
+ * @param releaseLength receives the new value if the string value is valid
+ * @return is the string value valid
+ */
+bool str_to_release_length(
+  const wxString &releaseLengthStr, unsigned &releaseLength) {
+  bool isValid = true;
+  long releaseLengthLong = 0;
+
+  if (releaseLengthStr == WX_MAX)
+    releaseLength = 0;
+  else if ((isValid = releaseLengthStr.ToLong(&releaseLengthLong)
+              && releaseLengthLong >= 0
+              && releaseLengthLong <= RELEASE_LENGTH_MAX))
+    releaseLength = (unsigned)releaseLengthLong;
+  return isValid;
+}
+
+/**
+ * Converts the supplied value to string. 0 is converted to Max
+ * @param releaseLength the new value
+ * @return the string value
+ */
+wxString release_length_to_str(unsigned releaseLength) {
+  return releaseLength ? wxString::Format(WX__U, releaseLength) : WX_MAX;
+}
+
+/**
+ * Converts ReleaseLengthSpin index to ReleaseLength. 0 -> 50, 59 -> 3000, 60 ->
+ * 0
+ * @return the ReleaseLength corresponding the current spin index
+ */
+unsigned spin_index_to_release_length(int index) {
+  unsigned releaseLength = ((unsigned)index + 1) * RELEASE_LENGTH_STEP;
+
+  return releaseLength <= RELEASE_LENGTH_MAX ? releaseLength : 0;
+}
+
+/**
+ * Converts ReleaseLengthSpin index to the specified ReleaseLength
+ * 0 -> 60, 50 -> 0, 59 -> 3000
+ * @return the ReleaseLength corresponding the current spin index
+ */
+int release_length_to_spin_index(unsigned releaseLength) {
+  unsigned index = releaseLength / RELEASE_LENGTH_STEP;
+
+  return index ? index - 1 : RELEASE_LENGTH_MAX_INDEX;
 }
 
 void GOOrganDialog::Load() {
@@ -480,7 +554,11 @@ void GOOrganDialog::Load() {
     m_Delay->ChangeValue(wxEmptyString);
     m_Delay->Disable();
     m_DelaySpin->Disable();
+    m_ReleaseLength->ChangeValue(wxEmptyString);
+    m_ReleaseLength->Disable();
+    m_ReleaseLengthSpin->Disable();
     m_AudioGroup->Disable();
+    m_IgnorePitch->Disable();
     m_BitsPerSample->Disable();
     m_Compress->Disable();
     m_Channels->Disable();
@@ -507,9 +585,15 @@ void GOOrganDialog::Load() {
       m_AutoTuningCorrection->ChangeValue(wxEmptyString);
     if (!m_Delay->IsModified())
       m_Delay->ChangeValue(wxEmptyString);
+    if (!m_ReleaseLength->IsModified())
+      m_ReleaseLength->ChangeValue(wxEmptyString);
     if (m_AudioGroup->GetValue() == m_LastAudioGroup) {
       m_AudioGroup->SetValue(wxT(" "));
       m_LastAudioGroup = m_AudioGroup->GetValue();
+    }
+    if (m_IgnorePitch->IsChecked() == m_LastIgnorePitch) {
+      m_IgnorePitch->SetValue(false);
+      m_LastIgnorePitch = false;
     }
     if (m_BitsPerSample->GetSelection() == m_LastBitsPerSample) {
       SetEmpty(m_BitsPerSample);
@@ -556,7 +640,10 @@ void GOOrganDialog::Load() {
   m_AutoTuningCorrectionSpin->Enable();
   m_Delay->Enable();
   m_DelaySpin->Enable();
+  m_ReleaseLength->Enable();
+  m_ReleaseLengthSpin->Enable();
   m_AudioGroup->Enable();
+  m_IgnorePitch->Enable();
   m_BitsPerSample->Enable();
   m_Compress->Enable();
   m_Channels->Enable();
@@ -571,6 +658,7 @@ void GOOrganDialog::Load() {
   float manualTuning = m_Last->config->GetManualTuning();
   float autoTuningCorrection = m_Last->config->GetAutoTuningCorrection();
   unsigned delay = m_Last->config->GetDelay();
+  unsigned releaseLength = m_Last->node->GetEffectiveReleaseTail();
 
   if (entries.size() == 1)
     m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
@@ -588,8 +676,12 @@ void GOOrganDialog::Load() {
   if (entries.size() == 1)
     m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
   m_DelaySpin->SetValue(delay);
+  if (entries.size() == 1)
+    m_ReleaseLength->ChangeValue(release_length_to_str(releaseLength));
+  m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
   if (entries.size() == 1) {
     m_AudioGroup->SetValue(m_Last->config->GetAudioGroup());
+    m_IgnorePitch->SetValue(m_Last->node->GetEffectiveIgnorePitch());
 
     int bits_per_sample = m_Last->config->GetBitsPerSample();
     if (bits_per_sample == -1)
@@ -612,6 +704,7 @@ void GOOrganDialog::Load() {
     m_ReleaseLoad->SetSelection(m_Last->config->GetReleaseLoad() + 1);
 
     m_LastAudioGroup = m_AudioGroup->GetValue();
+    m_LastIgnorePitch = m_IgnorePitch->IsChecked();
     m_LastBitsPerSample = m_BitsPerSample->GetSelection();
     m_LastCompress = m_Compress->GetSelection();
     m_LastChannels = m_Channels->GetSelection();
@@ -693,7 +786,24 @@ void GOOrganDialog::OnDelayChanged(wxCommandEvent &e) {
   Modified();
 }
 
+void GOOrganDialog::OnReleaseLengthSpinChanged(wxSpinEvent &e) {
+  m_ReleaseLength->ChangeValue(release_length_to_str(
+    spin_index_to_release_length(m_ReleaseLengthSpin->GetValue())));
+  m_ReleaseLength->MarkDirty();
+  Modified();
+}
+
+void GOOrganDialog::OnReleaseLengthChanged(wxCommandEvent &e) {
+  unsigned releaseLength;
+
+  if (str_to_release_length(m_ReleaseLength->GetValue(), releaseLength))
+    m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
+  Modified();
+}
+
 void GOOrganDialog::OnAudioGroupChanged(wxCommandEvent &e) { Modified(); }
+
+void GOOrganDialog::OnIgnorePitchChanged(wxCommandEvent &e) { Modified(); }
 
 void GOOrganDialog::OnBitsPerSampleChanged(wxCommandEvent &e) {
   RemoveEmpty(m_BitsPerSample);
@@ -735,9 +845,13 @@ bool GOOrganDialog::Changed() {
     changed = true;
   if (m_AutoTuningCorrection->IsModified())
     changed = true;
+  if (m_ReleaseLength->IsModified())
+    changed = true;
   if (m_Delay->IsModified())
     changed = true;
   if (m_AudioGroup->GetValue() != m_LastAudioGroup)
+    changed = true;
+  if (m_IgnorePitch->GetValue() != m_LastIgnorePitch)
     changed = true;
   if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
     changed = true;
@@ -782,6 +896,7 @@ void GOOrganDialog::FillTree() {
 void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
   double amp, gain, manualTuning, autoTuningCorrection;
   long delay;
+  unsigned releaseLength;
 
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);
@@ -804,14 +919,19 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
   if (
     !m_ManualTuning->GetValue().ToDouble(&manualTuning)
     && (m_ManualTuning->IsModified() && (manualTuning < -1800 || manualTuning > 1800))) {
-    GOMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+    GOMessageBox(
+      _("ManualTuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
   }
 
   if (
     !m_AutoTuningCorrection->GetValue().ToDouble(&autoTuningCorrection)
     && (m_AutoTuningCorrection->IsModified() && (autoTuningCorrection < -1800 || autoTuningCorrection > 1800))) {
-    GOMessageBox(_("Tuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+    GOMessageBox(
+      _("AutoTuningCorrection is invalid"),
+      _("Error"),
+      wxOK | wxICON_ERROR,
+      this);
     return;
   }
 
@@ -823,10 +943,19 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     return;
   }
 
+  if (!str_to_release_length(m_ReleaseLength->GetValue(), releaseLength)) {
+    GOMessageBox(
+      _("Release Length is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
+    return;
+  }
+
   for (unsigned i = 0; i < entries.size(); i++) {
     OrganTreeItemData *e = (OrganTreeItemData *)m_Tree->GetItemData(entries[i]);
     if (!e)
       continue;
+
+    GOPipeConfigNode *parent = e->node->GetParent();
+
     if (m_Amplitude->IsModified())
       e->config->SetAmplitude(amp);
     if (m_Gain->IsModified())
@@ -837,8 +966,28 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
       e->config->SetAutoTuningCorrection(autoTuningCorrection);
     if (m_Delay->IsModified())
       e->config->SetDelay(delay);
+    if (m_ReleaseLength->IsModified()) {
+      long parentReleaseLength = parent ? parent->GetEffectiveReleaseTail() : 0;
+      bool isLessThanParent = releaseLength > 0
+        && (!parentReleaseLength || releaseLength < parentReleaseLength);
+
+      // calculate new effective release length
+      if (!isLessThanParent)
+        releaseLength = parentReleaseLength;
+      e->config->SetReleaseTail(isLessThanParent ? releaseLength : 0);
+    }
     if (m_AudioGroup->GetValue() != m_LastAudioGroup)
       e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
+
+    bool ignorePitch = m_IgnorePitch->IsChecked();
+
+    if (ignorePitch != m_LastIgnorePitch) {
+      bool parentIgnorePitch
+        = parent ? parent->GetEffectiveIgnorePitch() : false;
+
+      e->config->SetIgnorePitch(
+        ignorePitch == parentIgnorePitch ? -1 : (int)ignorePitch);
+    }
     if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
       e->config->SetBitsPerSample(
         m_BitsPerSample->GetSelection() == 0
@@ -887,7 +1036,14 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     m_Delay->DiscardEdits(); // workaround of osx implementation bug
                              // https://github.com/oleg68/GrandOrgue/issues/87
   }
+  if (m_ReleaseLength->IsModified()) {
+    m_ReleaseLength->ChangeValue(release_length_to_str(releaseLength));
+    m_ReleaseLength
+      ->DiscardEdits(); // workaround of osx implementation bug
+                        // https://github.com/oleg68/GrandOrgue/issues/87
+  }
   m_LastAudioGroup = m_AudioGroup->GetValue();
+  m_LastIgnorePitch = m_IgnorePitch->IsChecked();
   m_LastBitsPerSample = m_BitsPerSample->GetSelection();
   m_LastCompress = m_Compress->GetSelection();
   m_LastChannels = m_Channels->GetSelection();
@@ -941,7 +1097,9 @@ void GOOrganDialog::ResetSelectedToDefault(bool isForChildren) {
     e->config->SetManualTuning(0);
     e->config->SetAutoTuningCorrection(0);
     e->config->SetDelay(e->config->GetDefaultDelay());
+    e->config->SetReleaseTail(0);
     e->config->SetAudioGroup(wxEmptyString);
+    e->config->SetIgnorePitch(-1);
     e->config->SetBitsPerSample(-1);
     e->config->SetCompress(-1);
     e->config->SetChannels(-1);
