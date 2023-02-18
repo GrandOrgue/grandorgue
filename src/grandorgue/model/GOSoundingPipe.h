@@ -44,7 +44,10 @@ private:
   unsigned m_ReleaseCrossfadeLength;
   float m_MinVolume;
   float m_MaxVolume;
+  int m_OdfMidiKeyNumber;
+  float m_OdfMidiPitchFraction;
   int m_SampleMidiKeyNumber;
+  float m_SampleMidiPitchFraction;
   bool m_RetunePipe;
   bool m_IsTemperamentOriginalBased;
   GOSoundProviderWave m_SoundProvider;
