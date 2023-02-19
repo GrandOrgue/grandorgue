@@ -9902,14 +9902,14 @@ rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
             <para>
 (integer -1 - 127, default: -1) If -1, use pitch information from the
 Pipe999 sample, else override the information in the sample with this
-MIDI note number (Pipe999PitchFraction is used for specifying the
+MIDI note number Pipe999MIDIPitchFraction is used for specifying the
 fraction). Specifying the MIDI note number also resets the pitch
-fraction in the sample to 0 unless Pipe999PitchFraction is also specified.
+fraction in the sample to 0 unless Pipe999MIDIPitchFraction is also specified.
       </para>
     </listitem>
   </varlistentry>
   <varlistentry>
-    <term>Pipe999PitchFraction</term>
+    <term>Pipe999MIDIPitchFraction</term>
     <listitem>
       <para>
 	(float 0 - 100, default: 0) The pitch fraction in cent over the normal
@@ -9930,8 +9930,8 @@ fraction in the sample to 0 unless Pipe999PitchFraction is also specified.
 	sounds upper, a lower value results the pipe sounds lower.
       </para>
       <para>
-        Specifying Pipe999PitchFraction=28 with Pipe999PitchCorrection=0 gives
-	the same effect as specifying Pipe999PitchFraction=0 with
+        Specifying Pipe999MIDIPitchFraction with Pipe999PitchCorrection=0 gives
+	the same effect as specifying Pipe999MIDIPitchFraction with
 	Pipe999PitchCorrection=-28
       </para>
     </listitem>

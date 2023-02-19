@@ -57,6 +57,13 @@ private:
   void SetOff();
   void Change(unsigned velocity, unsigned old_velocity);
   GOSoundProvider *GetSoundProvider();
+
+  /**
+   * Calculates a pitch offset for retuning from the sample pitch
+   * to the equal temperament
+   * @return pitch offset in cents
+   */
+  float GetEqualTemperamentOffset() const;
   void Validate();
 
   void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);

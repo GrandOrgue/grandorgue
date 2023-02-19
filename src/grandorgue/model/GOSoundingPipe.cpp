@@ -347,6 +347,23 @@ void GOSoundingPipe::Initialize() {}
 
 const wxString &GOSoundingPipe::GetLoadTitle() { return m_Filename; }
 
+float GOSoundingPipe::GetEqualTemperamentOffset() const {
+  float pitchAdjustment = 0.0;
+
+  // For any other temperament than original. Calculate pitchAdjustment by
+  // converting from the original temperament to the equal one before using
+  // temperament offset. Take PitchCorrection into account. Also GUI tuning
+  // adjustments are added and ODF adjustments removed leaving difference.
+  if (!m_PipeConfigNode.GetEffectiveIgnorePitch() && m_SampleMidiKeyNumber) {
+    pitchAdjustment
+      = log(m_HarmonicNumber / 8.0) / log(2) * 1200 // harmonic correction
+      + ((int)m_MidiKeyNumber - m_SampleMidiKeyNumber) * 100 // note correction
+      - m_SampleMidiPitchFraction; // fraction correction
+  }
+  return pitchAdjustment + m_PipeConfigNode.GetEffectivePitchCorrection()
+    + m_PipeConfigNode.GetEffectiveAutoTuningCorection(); // final correction
+}
+
 void GOSoundingPipe::Validate() {
   // make effective values
   m_SampleMidiKeyNumber = m_OdfMidiKeyNumber >= 0
@@ -402,26 +419,18 @@ void GOSoundingPipe::Validate() {
       GetLoadTitle().c_str());
     return;
   }
-  double offset;
-  if (!m_RetunePipe)
-    offset = 0;
-  else
-    offset = m_SoundProvider.GetMidiKeyNumber()
-      + log(8.0 / m_HarmonicNumber) * (12.0 / log(2))
-      - (m_SoundProvider.GetMidiPitchFract()
-         - m_PipeConfigNode.GetEffectivePitchTuning()
-         + m_PipeConfigNode.GetEffectivePitchCorrection())
-        / 100.0
-      - m_MidiKeyNumber;
-  if (offset < -18 || offset > 18) {
+  float offset = m_RetunePipe ? GetEqualTemperamentOffset() : 0.0;
+
+  if (offset < -1800 || offset > 1800) {
     wxLogError(
-      _("rank %s pipe %s: temperament would retune pipe by more than "
+      _("rank %s pipe %s: temperament would retune pipe by %f - more than "
         "1800 cent"),
-      m_Rank->GetName().c_str(),
-      GetLoadTitle().c_str());
+      m_Rank->GetName(),
+      GetLoadTitle(),
+      offset);
     return;
   }
-  if (offset < -6 || offset > 6) {
+  if (offset < -600 || offset > 600) {
     wxLogWarning(
       _("rank %s pipe %s: temperament would retune pipe by more "
         "than 600 cent"),
@@ -495,21 +504,9 @@ void GOSoundingPipe::UpdateTuning() {
     // For original temperament. Set pitchAdjustment from GetEffectiveTuning
     pitchAdjustment = m_PipeConfigNode.GetEffectivePitchTuning()
       + m_PipeConfigNode.GetEffectiveManualTuning();
-  } else {
-    // For any other temperament than original. Calculate pitchAdjustment by
-    // converting from the original temperament to the equal one before using
-    // temperament offset. Take PitchCorrection into account. Also GUI tuning
-    // adjustments are added and ODF adjustments removed leaving difference.
-    if (!m_PipeConfigNode.GetEffectiveIgnorePitch() && m_SampleMidiKeyNumber) {
-      pitchAdjustment
-        = log(m_HarmonicNumber / 8.0) / log(2) * 1200 // harmonic correction
-        + ((int)m_MidiKeyNumber - m_SampleMidiKeyNumber)
-          * 100                      // note correction
-        - m_SampleMidiPitchFraction; // fraction correction
-    }
-    pitchAdjustment += m_PipeConfigNode.GetEffectivePitchCorrection()
-      + m_PipeConfigNode.GetEffectiveAutoTuningCorection(); // final correction
-  }
+  } else
+    pitchAdjustment = GetEqualTemperamentOffset();
+
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }
 
