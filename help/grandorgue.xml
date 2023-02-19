@@ -9902,24 +9902,41 @@ rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
             <para>
 (integer -1 - 127, default: -1) If -1, use pitch information from the
 Pipe999 sample, else override the information in the sample with this
-MIDI note number (Pipe999PitchCorrection is used for specifying the
-fraction). Specifying the MIDI note number also reset the pitch
-fraction in the sample to 0.
-     </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Pipe999PitchCorrection</term>
-          <listitem>
-            <para>
-	      (float -1800 - 1800, default: 0) Correction factor in cent for the
-	      pitch specified in the sample in addition to PitchCorrection of
-	      the whole organ, of the windchest and of the rank. This setting is
-	      used for retuning to other temperaments.
-     </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
+MIDI note number (Pipe999PitchFraction is used for specifying the
+fraction). Specifying the MIDI note number also resets the pitch
+fraction in the sample to 0 unless Pipe999PitchFraction is also specified.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>Pipe999PitchFraction</term>
+    <listitem>
+      <para>
+	(float 0 - 100, default: 0) The pitch fraction in cent over the normal
+	(440hz equal) tone of the midi key specified in the sample or in the
+	Pipe999MIDIKeyNumber.This setting is
+	used for retuning to other temperaments.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>Pipe999PitchCorrection</term>
+    <listitem>
+      <para>
+	(float -1800 - 1800, default: 0) Correction factor in cent for the
+	pitch specified in the sample in addition to PitchCorrection of
+	the whole organ, of the windchest and of the rank. This setting is
+	used for retuning to other temperaments. An upper value results the pipe
+	sounds upper, a lower value results the pipe sounds lower.
+      </para>
+      <para>
+        Specifying Pipe999PitchFraction=28 with Pipe999PitchCorrection=0 gives
+	the same effect as specifying Pipe999PitchFraction=0 with
+	Pipe999PitchCorrection=-28
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
           <term>Pipe999AcceptsRetuning</term>
           <listitem>
             <para>
