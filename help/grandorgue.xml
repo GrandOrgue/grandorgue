@@ -9917,7 +9917,7 @@ fraction in the sample to 0 unless Pipe999MIDIPitchFraction is also specified.
 	value. Describes the actual existing pitch fraction in cent over the
 	normal (440hz equal) tone of the midi key specified in the sample or in
 	the Pipe999MIDIKeyNumber. This setting (together with
-	Pipe999MIDIKeyNumber) is used for retuning to other temperaments.
+	Pipe999MIDIKeyNumber) is used when retuning to other temperaments.
       </para>
     </listitem>
   </varlistentry>
