@@ -9896,13 +9896,13 @@ rank size), eg. 2 2/3 =&gt; 64 / (2 2/3) = 24.
      </para>
           </listitem>
         </varlistentry>
-        <varlistentry>
-          <term>Pipe999MIDIKeyNumber</term>
-          <listitem>
-            <para>
+  <varlistentry>
+    <term>Pipe999MIDIKeyNumber</term>
+    <listitem>
+      <para>
 (integer -1 - 127, default: -1) If -1, use pitch information from the
 Pipe999 sample, else override the information in the sample with this
-MIDI note number Pipe999MIDIPitchFraction is used for specifying the
+MIDI note number (Pipe999MIDIPitchFraction is used for specifying the
 fraction). Specifying the MIDI note number also resets the pitch
 fraction in the sample to 0 unless Pipe999MIDIPitchFraction is also specified.
       </para>
@@ -9912,10 +9912,13 @@ fraction in the sample to 0 unless Pipe999MIDIPitchFraction is also specified.
     <term>Pipe999MIDIPitchFraction</term>
     <listitem>
       <para>
-	(float 0 - 100, default: 0) The pitch fraction in cent over the normal
-	(440hz equal) tone of the midi key specified in the sample or in the
-	Pipe999MIDIKeyNumber.This setting is
-	used for retuning to other temperaments.
+	(float 0 - 100, default: -1) If -1, use pitch information from the
+	Pipe999 sample, else override the information in the sample with this
+	value. Describes the actual existing pitch fraction in cent over the
+	normal (440hz equal) tone of the midi key specified in the sample or in
+	the Pipe999MIDIKeyNumber. This setting (together with
+	Pipe999MIDIKeyNumber) is used for (perhaps when is a better word than
+	for here) retuning to other temperaments.
       </para>
     </listitem>
   </varlistentry>
@@ -9925,14 +9928,9 @@ fraction in the sample to 0 unless Pipe999MIDIPitchFraction is also specified.
       <para>
 	(float -1800 - 1800, default: 0) Correction factor in cent for the
 	pitch specified in the sample in addition to PitchCorrection of
-	the whole organ, of the windchest and of the rank. This setting is
-	used for retuning to other temperaments. An upper value results the pipe
-	sounds upper, a lower value results the pipe sounds lower.
-      </para>
-      <para>
-        Specifying Pipe999MIDIPitchFraction with Pipe999PitchCorrection=0 gives
-	the same effect as specifying Pipe999MIDIPitchFraction with
-	Pipe999PitchCorrection=-28
+	the whole organ, of the windchest and of the rank. This setting is used
+	to adjust tuning while in other temperaments (than original). A positive
+	value raise the pitch, a negative value lowers the pitch.
       </para>
     </listitem>
   </varlistentry>
