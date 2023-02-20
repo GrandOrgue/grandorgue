@@ -347,7 +347,12 @@ void GOSoundingPipe::Initialize() {}
 
 const wxString &GOSoundingPipe::GetLoadTitle() { return m_Filename; }
 
-float GOSoundingPipe::GetEqualTemperamentOffset() const {
+float GOSoundingPipe::GetManualTuningPitchOffset() const {
+  return m_PipeConfigNode.GetEffectivePitchTuning()
+    + m_PipeConfigNode.GetEffectiveManualTuning();
+}
+
+float GOSoundingPipe::GetAutoTuningPitchOffset() const {
   float pitchAdjustment = 0.0;
 
   // For any other temperament than original. Calculate pitchAdjustment by
@@ -419,7 +424,7 @@ void GOSoundingPipe::Validate() {
       GetLoadTitle().c_str());
     return;
   }
-  float offset = m_RetunePipe ? GetEqualTemperamentOffset() : 0.0;
+  float offset = m_RetunePipe ? GetAutoTuningPitchOffset() : 0.0;
 
   if (offset < -1800 || offset > 1800) {
     wxLogError(
@@ -498,14 +503,9 @@ void GOSoundingPipe::UpdateAmplitude() {
 }
 
 void GOSoundingPipe::UpdateTuning() {
-  float pitchAdjustment = 0;
-
-  if (m_IsTemperamentOriginalBased) {
-    // For original temperament. Set pitchAdjustment from GetEffectiveTuning
-    pitchAdjustment = m_PipeConfigNode.GetEffectivePitchTuning()
-      + m_PipeConfigNode.GetEffectiveManualTuning();
-  } else
-    pitchAdjustment = GetEqualTemperamentOffset();
+  float pitchAdjustment = m_IsTemperamentOriginalBased
+    ? GetManualTuningPitchOffset()
+    : GetAutoTuningPitchOffset();
 
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }

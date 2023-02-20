@@ -59,11 +59,16 @@ private:
   GOSoundProvider *GetSoundProvider();
 
   /**
+   * Calculate a pitch offset for manual tuning
+   * @return pitch offset in cents
+   */
+  float GetManualTuningPitchOffset() const;
+  /**
    * Calculates a pitch offset for retuning from the sample pitch
    * to the equal temperament
    * @return pitch offset in cents
    */
-  float GetEqualTemperamentOffset() const;
+  float GetAutoTuningPitchOffset() const;
   void Validate();
 
   void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);
