@@ -11,13 +11,13 @@
 #include <wx/log.h>
 
 #include "config/GOConfigReader.h"
+#include "model/GOCoupler.h"
+#include "model/GODrawStop.h"
 #include "model/GOManual.h"
 #include "model/GOStop.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
 
-#include "GOCoupler.h"
-#include "GODrawStop.h"
 #include "GOOrganController.h"
 
 GOPistonControl::GOPistonControl(GOOrganController *organController)

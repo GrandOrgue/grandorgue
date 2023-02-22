@@ -7,13 +7,13 @@
 
 #include "GOCombinationDefinition.h"
 
+#include "model/GOCoupler.h"
+#include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
 #include "model/GOStop.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
 
-#include "GOCoupler.h"
-#include "GODivisionalCoupler.h"
 #include "GOOrganController.h"
 
 GOCombinationDefinition::GOCombinationDefinition(

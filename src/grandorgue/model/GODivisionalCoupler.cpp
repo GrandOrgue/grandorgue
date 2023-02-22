@@ -9,8 +9,9 @@
 
 #include <wx/intl.h>
 
-#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
+
+#include "GOOrganController.h"
 
 GODivisionalCoupler::GODivisionalCoupler(GOOrganController *organController)
   : GODrawstop(organController), m_BiDirectionalCoupling(false), m_manuals(0) {}

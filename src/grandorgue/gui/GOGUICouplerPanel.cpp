@@ -9,9 +9,9 @@
 
 #include <wx/intl.h>
 
+#include "model/GOCoupler.h"
 #include "model/GOManual.h"
 
-#include "GOCoupler.h"
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
