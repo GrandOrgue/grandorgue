@@ -545,7 +545,7 @@ void GOFrame::Init(wxString filename) {
   clean.Cleanup();
 }
 
-void GOFrame::AttachToOrganController(bool isToAttach) {
+void GOFrame::AttachDetachOrganController(bool isToAttach) {
   GOOrganController *pOrgan = GetOrganController();
 
   if (pOrgan)
@@ -579,7 +579,7 @@ bool GOFrame::CloseOrgan(bool isForce) {
       GOMutexLocker m_locker(m_mutex, true);
 
       if (m_locker.IsLocked()) {
-        AttachToOrganController(false);
+        AttachDetachOrganController(false);
         delete m_doc;
         m_doc = NULL;
         UpdatePanelMenu();
@@ -600,7 +600,7 @@ bool GOFrame::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
     OnIsModifiedChanged(false);
 
     // for reflecting model changes
-    AttachToOrganController(true);
+    AttachDetachOrganController(true);
   }
   return retCode;
 }
