@@ -12,10 +12,10 @@ class GOSoundStateHandler {
 public:
   virtual ~GOSoundStateHandler() {}
 
-  virtual void AbortPlayback() = 0;
   virtual void PreparePlayback() = 0;
+  virtual void AbortPlayback() {}
   virtual void StartPlayback() = 0;
-  virtual void PrepareRecording() = 0;
+  virtual void PrepareRecording() {}
 };
 
 #endif

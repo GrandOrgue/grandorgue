@@ -29,8 +29,6 @@ unsigned GOPipe::RegisterReference(GOPipe *pipe) {
   return id;
 }
 
-void GOPipe::AbortPlayback() {}
-
 void GOPipe::PreparePlayback() {
   m_Velocity = 0;
   for (unsigned i = 0; i < m_Velocities.size(); i++)
@@ -38,8 +36,6 @@ void GOPipe::PreparePlayback() {
 }
 
 void GOPipe::StartPlayback() {}
-
-void GOPipe::PrepareRecording() {}
 
 void GOPipe::SetTemperament(const GOTemperament &temperament) {}
 

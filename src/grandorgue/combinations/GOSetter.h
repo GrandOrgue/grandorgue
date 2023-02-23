@@ -58,10 +58,8 @@ private:
 
   void ControlChanged(void *control);
 
-  void AbortPlayback();
   void PreparePlayback();
   void StartPlayback();
-  void PrepareRecording();
 
 public:
   GOSetter(GOOrganController *organController);

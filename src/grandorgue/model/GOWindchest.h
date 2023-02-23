@@ -33,10 +33,8 @@ private:
   std::vector<GOPipeWindchestCallback *> m_pipes;
   GOPipeConfigTreeNode m_PipeConfig;
 
-  void AbortPlayback();
   void StartPlayback();
   void PreparePlayback();
-  void PrepareRecording();
 
 public:
   GOWindchest(GOOrganController *organController);
