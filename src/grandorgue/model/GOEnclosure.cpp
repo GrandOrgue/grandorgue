@@ -28,7 +28,7 @@ GOEnclosure::GOEnclosure(GOOrganController *organController)
     m_Displayed2(false) {
   m_OrganController->RegisterEventHandler(this);
   m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterSoundStateHandler(this);
 }
 
 GOEnclosure::~GOEnclosure() {}

@@ -65,7 +65,7 @@ GOMetronome::GOMetronome(GOOrganController *organController)
   m_buttons[ID_METRONOME_BEAT_P1]->SetPreconfigIndex(26);
   m_buttons[ID_METRONOME_BEAT_M1]->SetPreconfigIndex(27);
 
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterSoundStateHandler(this);
 }
 
 GOMetronome::~GOMetronome() { StopTimer(); }

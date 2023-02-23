@@ -23,7 +23,7 @@ private:
   std::vector<GOControlChangedHandler *> m_ControlChangedHandlers;
   std::vector<GOMidiConfigurator *> m_MidiConfigurators;
   std::vector<GOEventHandler *> m_MidiEventHandlers;
-  std::vector<GOSoundStateHandler *> m_PlaybackStateHandlers;
+  std::vector<GOSoundStateHandler *> m_SoundStateHandlers;
   std::vector<GOSaveableObject *> m_SaveableObjects;
 
 public:
@@ -41,7 +41,7 @@ public:
     return m_MidiEventHandlers;
   }
   const std::vector<GOSoundStateHandler *> &GetPlaybackStateHandlers() const {
-    return m_PlaybackStateHandlers;
+    return m_SoundStateHandlers;
   }
   const std::vector<GOSaveableObject *> &GetSaveableObjects() const {
     return m_SaveableObjects;
@@ -51,7 +51,7 @@ public:
   void RegisterControlChangedHandler(GOControlChangedHandler *handler);
   void RegisterMidiConfigurator(GOMidiConfigurator *obj);
   void RegisterEventHandler(GOEventHandler *handler);
-  void RegisterPlaybackStateHandler(GOSoundStateHandler *handler);
+  void RegisterSoundStateHandler(GOSoundStateHandler *handler);
   void RegisterSaveableObject(GOSaveableObject *obj);
   void UnregisterSaveableObject(GOSaveableObject *obj);
 

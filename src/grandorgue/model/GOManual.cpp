@@ -49,7 +49,7 @@ GOManual::GOManual(GOOrganController *organController)
   m_InputCouplers.push_back(NULL);
   m_OrganController->RegisterEventHandler(this);
   m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterSoundStateHandler(this);
 }
 
 unsigned GOManual::RegisterCoupler(GOCoupler *coupler) {

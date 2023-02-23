@@ -298,7 +298,7 @@ GOSetter::GOSetter(GOOrganController *organController)
   SetSetterType(m_SetterType);
   SetCrescendoType(m_crescendobank);
 
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterSoundStateHandler(this);
   m_OrganController->RegisterControlChangedHandler(this);
 }
 

@@ -32,7 +32,7 @@ GOButtonControl::GOButtonControl(
     m_IsPiston(isPiston) {
   m_OrganController->RegisterEventHandler(this);
   m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterSoundStateHandler(this);
 }
 
 GOButtonControl::~GOButtonControl() {}

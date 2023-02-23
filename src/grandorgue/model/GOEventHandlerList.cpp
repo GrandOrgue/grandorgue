@@ -26,9 +26,9 @@ void GOEventHandlerList::RegisterMidiConfigurator(GOMidiConfigurator *obj) {
   m_MidiConfigurators.push_back(obj);
 }
 
-void GOEventHandlerList::RegisterPlaybackStateHandler(
-  GOPlaybackStateHandler *handler) {
-  m_PlaybackStateHandlers.push_back(handler);
+void GOEventHandlerList::RegisterSoundStateHandler(
+  GOSoundStateHandler *handler) {
+  m_SoundStateHandlers.push_back(handler);
 }
 
 void GOEventHandlerList::RegisterSaveableObject(GOSaveableObject *obj) {
@@ -52,6 +52,6 @@ void GOEventHandlerList::Cleanup() {
   m_ControlChangedHandlers.clear();
   m_MidiConfigurators.clear();
   m_MidiEventHandlers.clear();
-  m_PlaybackStateHandlers.clear();
+  m_SoundStateHandlers.clear();
   m_SaveableObjects.clear();
 }
