@@ -19,7 +19,7 @@ class GOEventHandlerList;
 class GORank;
 class GOTemperament;
 
-class GOPipe : private GOPlaybackStateHandler {
+class GOPipe : private GOSoundStateHandler {
 private:
   unsigned m_Velocity;
   std::vector<unsigned> m_Velocities;

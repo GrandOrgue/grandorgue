@@ -23,7 +23,7 @@ class GOGeneralCombination;
 
 typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
 
-class GOSetter : private GOPlaybackStateHandler,
+class GOSetter : private GOSoundStateHandler,
                  private GOControlChangedHandler,
                  public GOElementCreator,
                  public GOSaveableObject {

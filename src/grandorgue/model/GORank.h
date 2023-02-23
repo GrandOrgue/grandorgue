@@ -24,7 +24,7 @@ class GOOrganController;
 
 class GORank : private GOSaveableObject,
                public GOMidiConfigurator,
-               private GOPlaybackStateHandler {
+               private GOSoundStateHandler {
 private:
   GOOrganController *m_OrganController;
   wxString m_Name;

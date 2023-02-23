@@ -33,7 +33,7 @@ class GOOrganController;
 
 class GOManual : private GOEventHandler,
                  private GOSaveableObject,
-                 private GOPlaybackStateHandler,
+                 private GOSoundStateHandler,
                  public GOMidiConfigurator {
 private:
   wxString m_group;

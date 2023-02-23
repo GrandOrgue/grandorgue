@@ -26,7 +26,7 @@ class GOOrganController;
 
 class GOEnclosure : private GOEventHandler,
                     private GOSaveableObject,
-                    private GOPlaybackStateHandler,
+                    private GOSoundStateHandler,
                     public GOMidiConfigurator {
 private:
   GOMidiReceiver m_midi;

@@ -20,7 +20,7 @@ class GORank;
 class GOOrganController;
 
 class GOMetronome : private GOTimerCallback,
-                    private GOPlaybackStateHandler,
+                    private GOSoundStateHandler,
                     private GOSaveableObject,
                     public GOElementCreator {
 private:

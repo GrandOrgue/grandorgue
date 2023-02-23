@@ -22,7 +22,7 @@ class GORank;
 class GOTremulant;
 class GOOrganController;
 
-class GOWindchest : private GOPlaybackStateHandler {
+class GOWindchest : private GOSoundStateHandler {
 private:
   GOOrganController *m_OrganController;
   wxString m_Name;

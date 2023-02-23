@@ -21,7 +21,7 @@ class GOConfigWriter;
 class GOOrganController;
 
 class GOLabelControl : private GOSaveableObject,
-                       private GOPlaybackStateHandler,
+                       private GOSoundStateHandler,
                        public GOMidiConfigurator {
 protected:
   wxString m_Name;

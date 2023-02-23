@@ -26,7 +26,7 @@ class GOOrganController;
 
 class GOButtonControl : private GOEventHandler,
                         public GOSaveableObject,
-                        protected GOPlaybackStateHandler,
+                        protected GOSoundStateHandler,
                         public GOMidiConfigurator {
 protected:
   GOOrganController *m_OrganController;
