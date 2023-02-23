@@ -122,9 +122,7 @@ void GOTremulant::AbortPlayback() {
   GOButtonControl::AbortPlayback();
 }
 
-void GOTremulant::StartPlayback() {
-  GODrawstop::StartPlayback();
-
+void GOTremulant::PreparePlayback() {
   if (IsActive() && m_TremulantType == GOSynthTrem) {
     assert(m_SamplerGroupID < 0);
     m_PlaybackHandle = m_OrganController->StartSample(

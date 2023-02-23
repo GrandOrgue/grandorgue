@@ -692,8 +692,6 @@ void GOSetter::PreparePlayback() {
   UpdateTranspose();
 }
 
-void GOSetter::StartPlayback() {}
-
 void GOSetter::PrepareRecording() {}
 
 void GOSetter::Update() {}

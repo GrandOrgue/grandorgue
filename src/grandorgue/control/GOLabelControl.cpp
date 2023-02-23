@@ -59,8 +59,6 @@ void GOLabelControl::AbortPlayback() {
 
 void GOLabelControl::PreparePlayback() { m_sender.SetName(m_Name); }
 
-void GOLabelControl::StartPlayback() {}
-
 void GOLabelControl::PrepareRecording() { m_sender.SetLabel(m_Content); }
 
 wxString GOLabelControl::GetMidiType() { return _("Label"); }

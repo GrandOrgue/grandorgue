@@ -60,7 +60,6 @@ private:
 
   void AbortPlayback();
   void PreparePlayback();
-  void StartPlayback();
   void PrepareRecording();
 
 public:

@@ -37,8 +37,6 @@ void GOPipe::PreparePlayback() {
     m_Velocities[i] = 0;
 }
 
-void GOPipe::StartPlayback() {}
-
 void GOPipe::PrepareRecording() {}
 
 void GOPipe::SetTemperament(const GOTemperament &temperament) {}

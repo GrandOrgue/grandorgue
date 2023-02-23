@@ -138,8 +138,6 @@ void GOEnclosure::PreparePlayback() {
   m_sender.SetName(m_Name);
 }
 
-void GOEnclosure::StartPlayback() {}
-
 void GOEnclosure::PrepareRecording() { m_sender.SetValue(m_MIDIValue); }
 
 void GOEnclosure::SetElementID(int id) {

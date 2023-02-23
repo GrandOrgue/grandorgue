@@ -34,7 +34,6 @@ private:
   GOPipeConfigTreeNode m_PipeConfig;
 
   void AbortPlayback();
-  void StartPlayback();
   void PreparePlayback();
   void PrepareRecording();
 

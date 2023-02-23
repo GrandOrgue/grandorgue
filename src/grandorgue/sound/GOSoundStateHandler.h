@@ -14,7 +14,6 @@ public:
 
   virtual void AbortPlayback() = 0;
   virtual void PreparePlayback() = 0;
-  virtual void StartPlayback() = 0;
   virtual void PrepareRecording() = 0;
 };
 

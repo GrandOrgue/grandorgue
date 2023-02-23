@@ -30,7 +30,6 @@ protected:
   void UpdateHash(GOHash &hash);
 
   void PreparePlayback();
-  void StartPlayback();
   void AbortPlayback();
   void PrepareRecording();
 

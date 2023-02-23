@@ -972,7 +972,6 @@ void GOOrganController::PreparePlayback(
 
   m_setter->UpdateModified(m_OrganModified);
 
-  GOEventDistributor::StartPlayback();
   GOEventDistributor::PrepareRecording();
 }
 
