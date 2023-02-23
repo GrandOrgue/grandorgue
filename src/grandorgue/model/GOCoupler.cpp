@@ -58,13 +58,6 @@ void GOCoupler::PreparePlayback() {
       = m_FirstMidiNote - src->GetFirstLogicalKeyMIDINoteNumber();
   else
     m_FirstLogicalKey = 0;
-}
-
-void GOCoupler::StartPlayback() {
-  GODrawstop::StartPlayback();
-
-  GOManual *src = m_OrganController->GetManual(m_SourceManual);
-
   if (m_UnisonOff && IsActive())
     src->SetUnisonOff(true);
 }

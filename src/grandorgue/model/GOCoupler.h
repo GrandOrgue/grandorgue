@@ -54,7 +54,6 @@ private:
   void SetupCombinationState();
 
   void PreparePlayback();
-  void StartPlayback();
 
 public:
   GOCoupler(GOOrganController *organController, unsigned sourceManual);

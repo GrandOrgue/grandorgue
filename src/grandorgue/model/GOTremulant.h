@@ -46,8 +46,8 @@ private:
   void UpdateHash(GOHash &hash);
   const wxString &GetLoadTitle();
 
+  void PreparePlayback();
   void AbortPlayback();
-  void StartPlayback();
 
 public:
   GOTremulant(GOOrganController *organController);

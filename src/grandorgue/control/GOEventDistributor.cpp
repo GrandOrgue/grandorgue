@@ -50,11 +50,6 @@ void GOEventDistributor::PreparePlayback() {
     handler->PreparePlayback();
 }
 
-void GOEventDistributor::StartPlayback() {
-  for (auto handler : p_model->GetSoundStateHandlers())
-    handler->StartPlayback();
-}
-
 void GOEventDistributor::AbortPlayback() {
   for (auto handler : p_model->GetSoundStateHandlers())
     handler->AbortPlayback();

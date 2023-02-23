@@ -166,11 +166,6 @@ void GOStop::PreparePlayback() {
 
   m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
-}
-
-void GOStop::StartPlayback() {
-  GODrawstop::StartPlayback();
-
   if (IsAuto() && IsActive())
     SetRankKey(0, 0x7f);
 }

@@ -445,8 +445,6 @@ void GOManual::PreparePlayback() {
   m_sender.SetName(m_name);
 }
 
-void GOManual::StartPlayback() {}
-
 void GOManual::PrepareRecording() {
   m_sender.ResetKey();
   for (unsigned i = 0; i < m_KeyVelocity.size(); i++)

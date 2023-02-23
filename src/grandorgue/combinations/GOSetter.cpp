@@ -690,8 +690,6 @@ void GOSetter::PreparePlayback() {
   UpdateTranspose();
 }
 
-void GOSetter::StartPlayback() {}
-
 void GOSetter::Update() {}
 
 bool GOSetter::IsSetterActive() {

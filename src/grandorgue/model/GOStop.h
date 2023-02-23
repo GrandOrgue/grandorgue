@@ -37,7 +37,6 @@ private:
 
   void AbortPlayback();
   void PreparePlayback();
-  void StartPlayback();
 
 public:
   GOStop(GOOrganController *organController, unsigned first_midi_note_number);
