@@ -40,7 +40,7 @@ public:
   const std::vector<GOEventHandler *> &GetMidiEventHandlers() const {
     return m_MidiEventHandlers;
   }
-  const std::vector<GOSoundStateHandler *> &GetPlaybackStateHandlers() const {
+  const std::vector<GOSoundStateHandler *> &GetSoundStateHandlers() const {
     return m_SoundStateHandlers;
   }
   const std::vector<GOSaveableObject *> &GetSaveableObjects() const {
