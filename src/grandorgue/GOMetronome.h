@@ -44,7 +44,6 @@ private:
 
   void AbortPlayback();
   void PreparePlayback();
-  void PrepareRecording();
 
   void Save(GOConfigWriter &cfg);
 

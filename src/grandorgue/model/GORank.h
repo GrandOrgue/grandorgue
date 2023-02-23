@@ -48,7 +48,6 @@ private:
 
   void AbortPlayback();
   void PreparePlayback();
-  void PrepareRecording();
 
 public:
   GORank(GOOrganController *organController);

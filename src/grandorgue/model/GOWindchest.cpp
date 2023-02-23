@@ -125,8 +125,4 @@ void GOWindchest::UpdateTremulant(GOTremulant *tremulant) {
     }
 }
 
-void GOWindchest::AbortPlayback() {}
-
 void GOWindchest::PreparePlayback() { UpdateVolume(); }
-
-void GOWindchest::PrepareRecording() {}
