@@ -11,8 +11,8 @@
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
-#include "model/GOManual.h"
 
+#include "GOManual.h"
 #include "GOOrganController.h"
 
 GOCoupler::GOCoupler(GOOrganController *organController, unsigned sourceManual)

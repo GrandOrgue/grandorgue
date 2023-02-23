@@ -8,10 +8,10 @@
 #include "GOCombination.h"
 
 #include "combinations/GOSetter.h"
+#include "model/GODrawStop.h"
 
 #include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
-#include "GODrawStop.h"
 #include "GOOrganController.h"
 
 GOCombination::GOCombination(

@@ -11,9 +11,9 @@
 
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
-#include "model/GOSwitch.h"
 
 #include "GOOrganController.h"
+#include "GOSwitch.h"
 
 const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
   {wxT("Input"), FUNCTION_INPUT},

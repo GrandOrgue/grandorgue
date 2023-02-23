@@ -121,6 +121,9 @@ model/pipe-config/GOPipeConfig.cpp
 model/pipe-config/GOPipeConfigNode.cpp
 model/pipe-config/GOPipeConfigTreeNode.cpp
 model/GOCacheObject.cpp
+model/GOCoupler.cpp
+model/GODivisionalCoupler.cpp
+model/GODrawStop.cpp
 model/GODummyPipe.cpp
 model/GOEnclosure.cpp
 model/GOEventHandlerList.cpp
@@ -167,10 +170,7 @@ GOCacheCleaner.cpp
 GOCacheWriter.cpp
 GOBitmap.cpp
 GOBitmapCache.cpp
-GOCoupler.cpp
 GODC.cpp
-GODivisionalCoupler.cpp
-GODrawStop.cpp
 GOEvent.cpp
 GOFont.cpp
 GOKeyReceiver.cpp
