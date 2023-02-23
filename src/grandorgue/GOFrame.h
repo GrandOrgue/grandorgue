@@ -103,6 +103,8 @@ private:
   // Returns the current open organ controller or nullptr
   GOOrganController *GetOrganController() const;
 
+  void AttachToOrganController(bool isToAttach);
+
   // Processes the organ model modification event:
   // updates some controls according the organ model changes
   void OnIsModifiedChanged(bool modified) override;
