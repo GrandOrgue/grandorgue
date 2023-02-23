@@ -10,10 +10,11 @@
 
 #include <wx/string.h>
 
-#include "GOPlaybackStateHandler.h"
-#include "GOSaveableObject.h"
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiSender.h"
+#include "sound/GOSoundStateHandler.h"
+
+#include "GOSaveableObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;

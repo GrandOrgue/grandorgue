@@ -13,8 +13,7 @@
 #include <vector>
 
 #include "pipe-config/GOPipeConfigTreeNode.h"
-
-#include "GOPlaybackStateHandler.h"
+#include "sound/GOSoundStateHandler.h"
 
 class GOConfigReader;
 class GOEnclosure;

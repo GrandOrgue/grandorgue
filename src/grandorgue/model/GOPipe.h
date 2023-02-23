@@ -8,11 +8,11 @@
 #ifndef GOPIPE_H
 #define GOPIPE_H
 
-#include <wx/string.h>
-
 #include <vector>
 
-#include "GOPlaybackStateHandler.h"
+#include <wx/string.h>
+
+#include "sound/GOSoundStateHandler.h"
 
 class GOConfigReader;
 class GOEventHandlerList;

@@ -14,7 +14,7 @@ class GOCacheObject;
 class GOControlChangedHandler;
 class GOEventHandler;
 class GOMidiConfigurator;
-class GOPlaybackStateHandler;
+class GOSoundStateHandler;
 class GOSaveableObject;
 
 class GOEventHandlerList {
@@ -23,7 +23,7 @@ private:
   std::vector<GOControlChangedHandler *> m_ControlChangedHandlers;
   std::vector<GOMidiConfigurator *> m_MidiConfigurators;
   std::vector<GOEventHandler *> m_MidiEventHandlers;
-  std::vector<GOPlaybackStateHandler *> m_PlaybackStateHandlers;
+  std::vector<GOSoundStateHandler *> m_PlaybackStateHandlers;
   std::vector<GOSaveableObject *> m_SaveableObjects;
 
 public:
@@ -40,8 +40,7 @@ public:
   const std::vector<GOEventHandler *> &GetMidiEventHandlers() const {
     return m_MidiEventHandlers;
   }
-  const std::vector<GOPlaybackStateHandler *> &GetPlaybackStateHandlers()
-    const {
+  const std::vector<GOSoundStateHandler *> &GetPlaybackStateHandlers() const {
     return m_PlaybackStateHandlers;
   }
   const std::vector<GOSaveableObject *> &GetSaveableObjects() const {
@@ -52,7 +51,7 @@ public:
   void RegisterControlChangedHandler(GOControlChangedHandler *handler);
   void RegisterMidiConfigurator(GOMidiConfigurator *obj);
   void RegisterEventHandler(GOEventHandler *handler);
-  void RegisterPlaybackStateHandler(GOPlaybackStateHandler *handler);
+  void RegisterPlaybackStateHandler(GOSoundStateHandler *handler);
   void RegisterSaveableObject(GOSaveableObject *obj);
   void UnregisterSaveableObject(GOSaveableObject *obj);
 

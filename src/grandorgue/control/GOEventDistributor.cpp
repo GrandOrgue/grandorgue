@@ -9,10 +9,10 @@
 
 #include "model/GOCacheObject.h"
 #include "model/GOEventHandlerList.h"
+#include "sound/GOSoundStateHandler.h"
 
 #include "GOControlChangedHandler.h"
 #include "GOEventHandler.h"
-#include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
 
 void GOEventDistributor::SendMidi(const GOMidiEvent &event) {
