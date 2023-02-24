@@ -509,8 +509,8 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
 }
 
 void GOSoundingPipe::PreparePlayback() {
-  UpdateAudioGroup();
   GOPipe::PreparePlayback();
+  UpdateAudioGroup();
 }
 
 void GOSoundingPipe::AbortPlayback() {
@@ -519,4 +519,5 @@ void GOSoundingPipe::AbortPlayback() {
   m_Sampler = 0;
   m_LastStop = 0;
   m_SoundProvider.UseSampleGroup(0);
+  GOPipe::AbortPlayback();
 }
