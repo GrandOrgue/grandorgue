@@ -8826,7 +8826,7 @@ group label font of the panel.
           <listitem>
             <para>
 	      (integer 0 - 12, default: 1) Builtin bitmap set to use. 0 means
-	      the lable does not have a background image.
+	      that the lable does not have a background image.
 	    </para>
           </listitem>
         </varlistentry>
