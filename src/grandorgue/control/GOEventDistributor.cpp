@@ -45,9 +45,9 @@ void GOEventDistributor::UpdateHash(GOHash &hash) {
     obj->UpdateHash(hash);
 }
 
-void GOEventDistributor::PreparePlayback() {
+void GOEventDistributor::PreparePlayback(GOSoundEngine *pSoundEngine) {
   for (auto handler : p_model->GetSoundStateHandlers())
-    handler->PreparePlayback();
+    handler->PreparePlayback(pSoundEngine);
 }
 
 void GOEventDistributor::AbortPlayback() {

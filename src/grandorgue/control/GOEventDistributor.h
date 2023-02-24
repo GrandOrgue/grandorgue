@@ -15,6 +15,7 @@ class GOConfigWriter;
 class GOEventHandlerList;
 class GOHash;
 class GOMidiEvent;
+class GOSoundEngine;
 
 class GOEventDistributor {
 private:
@@ -29,7 +30,7 @@ protected:
   void ResolveReferences();
   void UpdateHash(GOHash &hash);
 
-  void PreparePlayback();
+  void PreparePlayback(GOSoundEngine *pSoundEngine);
   void AbortPlayback();
   void PrepareRecording();
 
