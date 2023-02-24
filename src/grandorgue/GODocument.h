@@ -13,6 +13,7 @@
 #include "document-base/GODocumentBase.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
+#include "midi/dialog-creator/GOMidiDialogCreator.h"
 #include "threading/GOMutex.h"
 
 class GOOrganController;
@@ -25,7 +26,9 @@ class GOProgressDialog;
 class GOResizable;
 class GOSound;
 
-class GODocument : public GODocumentBase, protected GOMidiCallback {
+class GODocument : public GODocumentBase,
+                   protected GOMidiCallback,
+                   public GOMidiDialogCreator {
 private:
   GOResizable *p_MainWindow;
   GOSound &m_sound;
@@ -45,17 +48,11 @@ public:
   GODocument(GOResizable *pMainWindow, GOSound *sound);
   ~GODocument();
 
+  GOOrganController *GetOrganController() const { return m_OrganController; }
   bool IsModified() const;
 
   void ShowPanel(unsigned id);
   void ShowOrganDialog();
-  void ShowMIDIEventDialog(
-    void *element,
-    wxString title,
-    GOMidiReceiverBase *event,
-    GOMidiSender *sender,
-    GOKeyReceiver *key,
-    GOMidiSender *division = NULL);
   void ShowMidiList();
 
   bool Save();
@@ -65,7 +62,13 @@ public:
   bool ImportCombination(const wxString &cmb);
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
-  GOOrganController *GetOrganController() const { return m_OrganController; }
+  void ShowMIDIEventDialog(
+    void *element,
+    const wxString &title,
+    GOMidiReceiverBase *event,
+    GOMidiSender *sender,
+    GOKeyReceiver *key,
+    GOMidiSender *division = nullptr) override;
 };
 
 #endif

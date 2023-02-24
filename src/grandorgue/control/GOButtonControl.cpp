@@ -185,8 +185,7 @@ void GOButtonControl::ShowConfigDialog() {
     key = NULL;
   }
 
-  m_OrganController->GetDocument()->ShowMIDIEventDialog(
-    this, title, midi, &m_sender, key);
+  m_OrganController->ShowMIDIEventDialog(this, title, midi, &m_sender, key);
 }
 
 wxString GOButtonControl::GetElementStatus() {

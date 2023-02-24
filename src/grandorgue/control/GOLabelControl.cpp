@@ -71,8 +71,8 @@ void GOLabelControl::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_OrganController->GetDocument()->ShowMIDIEventDialog(
-    this, title, NULL, &m_sender, NULL);
+  m_OrganController->ShowMIDIEventDialog(
+    this, title, nullptr, &m_sender, nullptr);
 }
 
 wxString GOLabelControl::GetElementStatus() { return m_Content; }

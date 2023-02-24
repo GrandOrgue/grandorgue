@@ -225,8 +225,7 @@ void GORank::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_OrganController->GetDocument()->ShowMIDIEventDialog(
-    this, title, NULL, &m_sender, NULL, NULL);
+  m_OrganController->ShowMIDIEventDialog(this, title, NULL, &m_sender, NULL);
 }
 
 wxString GORank::GetElementStatus() { return _("-"); }

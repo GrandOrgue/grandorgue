@@ -101,6 +101,7 @@ loader/GOFileStore.cpp
 loader/GOLoaderFilename.cpp
 loader/GOLoadThread.cpp
 loader/GOLoadWorker.cpp
+midi/dialog-creator/GOMidiDialogCreatorProxy.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp
 midi/ports/GOMidiPort.cpp
@@ -162,6 +163,7 @@ sound/GOSoundReverbEngine.cpp
 sound/GOSoundReverbPartition.cpp
 sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
+sound/GOSoundStateHandler.cpp
 sound/GOSound.cpp
 GOAudioGauge.cpp
 GOAudioRecorder.cpp

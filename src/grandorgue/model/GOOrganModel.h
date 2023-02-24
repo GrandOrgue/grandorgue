@@ -10,8 +10,10 @@
 
 #include "ptrvector.h"
 
-#include "GOEventHandlerList.h"
+#include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
+
+#include "GOEventHandlerList.h"
 
 class GOConfig;
 class GOConfigReader;
@@ -27,7 +29,8 @@ class GOSwitch;
 class GOTremulant;
 class GOWindchest;
 
-class GOOrganModel : public GOEventHandlerList {
+class GOOrganModel : public GOEventHandlerList,
+                     public GOMidiDialogCreatorProxy {
 private:
   const GOConfig &m_config;
 

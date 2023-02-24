@@ -289,7 +289,6 @@ void GOSoundProviderWave::LoadFromFile(
   loop_load_type loop_mode,
   unsigned attack_load,
   unsigned release_load,
-  int midi_key_number,
   unsigned loop_crossfade_length,
   unsigned release_crossfase_length) {
   ClearData();
@@ -424,10 +423,6 @@ void GOSoundProviderWave::LoadFromFile(
     }
 
     ComputeReleaseAlignmentInfo();
-    if (midi_key_number != -1) {
-      m_MidiKeyNumber = midi_key_number;
-      m_MidiPitchFract = 0;
-    }
     if (release_crossfase_length)
       m_ReleaseCrossfadeLength = release_crossfase_length;
     else
