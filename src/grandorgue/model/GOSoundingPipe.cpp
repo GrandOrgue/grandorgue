@@ -12,6 +12,7 @@
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
+#include "sound/GOSoundEngine.h"
 #include "temperaments/GOTemperament.h"
 
 #include "GOAlloc.h"
@@ -445,21 +446,27 @@ void GOSoundingPipe::SetTremulant(bool on) {
   if (on != m_Tremulant) {
     m_Tremulant = on;
     m_SoundProvider.UseSampleGroup((unsigned)on);
-    if (m_Sampler)
-      m_OrganController->SwitchSample(&m_SoundProvider, m_Sampler);
+
+    GOSoundEngine *pSoundEngine = GetSoundEngine();
+
+    if (pSoundEngine && m_Sampler)
+      pSoundEngine->SwitchSample(&m_SoundProvider, m_Sampler);
   }
 }
 
 void GOSoundingPipe::Change(unsigned velocity, unsigned last_velocity) {
+  GOSoundEngine *pSoundEngine = GetSoundEngine();
+
   if (!m_Instances && velocity) {
     // the key pressed
-    m_Sampler = m_OrganController->StartSample(
-      &m_SoundProvider,
-      m_SamplerGroupID,
-      m_AudioGroupID,
-      velocity,
-      m_PipeConfigNode.GetEffectiveDelay(),
-      m_LastStop);
+    m_Sampler = pSoundEngine ? pSoundEngine->StartSample(
+                  &m_SoundProvider,
+                  m_SamplerGroupID,
+                  m_AudioGroupID,
+                  velocity,
+                  m_PipeConfigNode.GetEffectiveDelay(),
+                  m_LastStop)
+                             : nullptr;
     if (m_Sampler)
       m_Instances++;
     if (m_SoundProvider.IsOneshot())
@@ -468,12 +475,15 @@ void GOSoundingPipe::Change(unsigned velocity, unsigned last_velocity) {
     // the key released
     m_Instances--;
     if (m_Sampler) {
-      m_LastStop = m_OrganController->StopSample(&m_SoundProvider, m_Sampler);
+      m_LastStop = pSoundEngine
+        ? pSoundEngine->StopSample(&m_SoundProvider, m_Sampler)
+        : 0;
       m_Sampler = nullptr;
     }
   } else if (m_Sampler && last_velocity != velocity)
     // the key was pressed before and the velocity is changed now
-    m_OrganController->UpdateVelocity(&m_SoundProvider, m_Sampler, velocity);
+    if (pSoundEngine)
+      pSoundEngine->UpdateVelocity(&m_SoundProvider, m_Sampler, velocity);
 }
 
 void GOSoundingPipe::UpdateAmplitude() {
