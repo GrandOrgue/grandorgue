@@ -970,7 +970,7 @@ void GOOrganController::PreparePlayback(
   PreconfigRecorder();
 
   m_MidiSamplesetMatch.clear();
-  GOEventDistributor::PreparePlayback();
+  GOEventDistributor::PreparePlayback(engine);
 
   m_setter->UpdateModified(m_OrganModified);
 
