@@ -31,6 +31,7 @@ protected:
   virtual void PreparePlayback() = 0;
   virtual void AbortPlayback() {}
   virtual void PrepareRecording() {}
+
 public:
   /**
    * @return The GOSoundEngine instance when it is ready for playback, otherwise
