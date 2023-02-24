@@ -343,10 +343,6 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) {
   }
 }
 
-void GOSoundingPipe::Initialize() {}
-
-const wxString &GOSoundingPipe::GetLoadTitle() { return m_Filename; }
-
 float GOSoundingPipe::GetManualTuningPitchOffset() const {
   return m_PipeConfigNode.GetEffectivePitchTuning()
     + m_PipeConfigNode.GetEffectiveManualTuning();
@@ -446,54 +442,38 @@ void GOSoundingPipe::Validate() {
 }
 
 void GOSoundingPipe::SetTremulant(bool on) {
-  if (on) {
-    if (!m_Tremulant) {
-      m_Tremulant = true;
-      m_SoundProvider.UseSampleGroup(1);
-      if (m_Sampler)
-        m_OrganController->SwitchSample(GetSoundProvider(), m_Sampler);
-    }
-  } else {
-    if (m_Tremulant) {
-      m_Tremulant = false;
-      m_SoundProvider.UseSampleGroup(0);
-      if (m_Sampler)
-        m_OrganController->SwitchSample(GetSoundProvider(), m_Sampler);
-    }
-  }
-}
-
-GOSoundProvider *GOSoundingPipe::GetSoundProvider() { return &m_SoundProvider; }
-
-void GOSoundingPipe::SetOn(unsigned velocity) {
-  m_Sampler = m_OrganController->StartSample(
-    GetSoundProvider(),
-    m_SamplerGroupID,
-    m_AudioGroupID,
-    velocity,
-    m_PipeConfigNode.GetEffectiveDelay(),
-    m_LastStop);
-  if (m_Sampler)
-    m_Instances++;
-  if (GetSoundProvider()->IsOneshot())
-    m_Sampler = 0;
-}
-
-void GOSoundingPipe::SetOff() {
-  m_Instances--;
-  if (m_Sampler) {
-    m_LastStop = m_OrganController->StopSample(GetSoundProvider(), m_Sampler);
-    m_Sampler = 0;
+  if (on != m_Tremulant) {
+    m_Tremulant = on;
+    m_SoundProvider.UseSampleGroup((unsigned)on);
+    if (m_Sampler)
+      m_OrganController->SwitchSample(&m_SoundProvider, m_Sampler);
   }
 }
 
 void GOSoundingPipe::Change(unsigned velocity, unsigned last_velocity) {
-  if (!m_Instances && velocity)
-    SetOn(velocity);
-  else if (m_Instances && !velocity)
-    SetOff();
-  else if (m_Sampler && last_velocity != velocity)
-    m_OrganController->UpdateVelocity(GetSoundProvider(), m_Sampler, velocity);
+  if (!m_Instances && velocity) {
+    // the key pressed
+    m_Sampler = m_OrganController->StartSample(
+      &m_SoundProvider,
+      m_SamplerGroupID,
+      m_AudioGroupID,
+      velocity,
+      m_PipeConfigNode.GetEffectiveDelay(),
+      m_LastStop);
+    if (m_Sampler)
+      m_Instances++;
+    if (m_SoundProvider.IsOneshot())
+      m_Sampler = nullptr;
+  } else if (m_Instances && !velocity) {
+    // the key released
+    m_Instances--;
+    if (m_Sampler) {
+      m_LastStop = m_OrganController->StopSample(&m_SoundProvider, m_Sampler);
+      m_Sampler = nullptr;
+    }
+  } else if (m_Sampler && last_velocity != velocity)
+    // the key was pressed before and the velocity is changed now
+    m_OrganController->UpdateVelocity(&m_SoundProvider, m_Sampler, velocity);
 }
 
 void GOSoundingPipe::UpdateAmplitude() {
