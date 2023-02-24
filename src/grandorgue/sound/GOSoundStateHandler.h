@@ -8,12 +8,30 @@
 #ifndef GOSOUNDSTATEHANDLER_H
 #define GOSOUNDSTATEHANDLER_H
 
-class GOSoundStateHandler {
-public:
-  virtual ~GOSoundStateHandler() {}
+class GOSoundEngine;
 
+class GOSoundStateHandler {
+private:
+  GOSoundEngine *p_SoundEngine = nullptr;
+
+  void SetSoundEngine(GOSoundEngine *pSoundEngine) {
+    p_SoundEngine = pSoundEngine;
+  }
+
+protected:
   virtual void PreparePlayback() = 0;
-  virtual void AbortPlayback() {}
+
+public:
+  GOSoundEngine *GetSoundEngine() const { return p_SoundEngine; }
+
+public:
+  virtual ~GOSoundStateHandler() { SetSoundEngine(nullptr); }
+
+  void PreparePlayback(GOSoundEngine *pSoundEngine) {
+    SetSoundEngine(pSoundEngine);
+    PreparePlayback();
+  }
+  virtual void AbortPlayback() { SetSoundEngine(nullptr); }
   virtual void PrepareRecording() {}
 };
 
