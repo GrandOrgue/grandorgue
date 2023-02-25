@@ -10,7 +10,15 @@
 
 class GOSoundEngine;
 
+/**
+ * This is a basic class for all objects that need to interact with
+ * GOSoundEngine.
+ * When the sound engine becomes ready, PreparePlayback() is called. When the
+ * sound engine goes to be closed, AbortPlayback() is called.
+ * GetSoundEngine() can be used for access to the sound engine.
+ */
 class GOSoundStateHandler {
+
 private:
   GOSoundEngine *p_SoundEngine = nullptr;
 
@@ -19,19 +27,23 @@ private:
   }
 
 protected:
+  // Derived classes should override
   virtual void PreparePlayback() = 0;
+  virtual void AbortPlayback() {}
+  virtual void PrepareRecording() {}
 public:
+  /**
+   * @return The GOSoundEngine instance when it is ready for playback, otherwise
+   *   nullptr
+   */
   GOSoundEngine *GetSoundEngine() const { return p_SoundEngine; }
 
 public:
   virtual ~GOSoundStateHandler() { SetSoundEngine(nullptr); }
 
-  void PreparePlayback(GOSoundEngine *pSoundEngine) {
-    SetSoundEngine(pSoundEngine);
-    PreparePlayback();
-  }
-  virtual void AbortPlayback() { SetSoundEngine(nullptr); }
-  virtual void PrepareRecording() {}
+  void PreparePlaybackExt(GOSoundEngine *pSoundEngine);
+  void AbortPlaybackExt();
+  void PrepareRecordingExt() { PrepareRecording(); }
 };
 
 #endif
