@@ -35,7 +35,7 @@ GORank::GORank(GOOrganController *organController)
     m_sender(organController, MIDI_SEND_MANUAL),
     m_PipeConfig(NULL, organController, NULL) {
   m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterSoundStateHandler(this);
 }
 
 GORank::~GORank() {}

@@ -10,17 +10,18 @@
 
 #include <wx/string.h>
 
-#include "GOPlaybackStateHandler.h"
-#include "GOSaveableObject.h"
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiSender.h"
+#include "sound/GOSoundStateHandler.h"
+
+#include "GOSaveableObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GOOrganController;
 
 class GOLabelControl : private GOSaveableObject,
-                       private GOPlaybackStateHandler,
+                       private GOSoundStateHandler,
                        public GOMidiConfigurator {
 protected:
   wxString m_Name;

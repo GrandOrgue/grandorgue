@@ -13,8 +13,7 @@
 #include <vector>
 
 #include "pipe-config/GOPipeConfigTreeNode.h"
-
-#include "GOPlaybackStateHandler.h"
+#include "sound/GOSoundStateHandler.h"
 
 class GOConfigReader;
 class GOEnclosure;
@@ -23,7 +22,7 @@ class GORank;
 class GOTremulant;
 class GOOrganController;
 
-class GOWindchest : private GOPlaybackStateHandler {
+class GOWindchest : private GOSoundStateHandler {
 private:
   GOOrganController *m_OrganController;
   wxString m_Name;

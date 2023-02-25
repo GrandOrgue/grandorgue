@@ -26,7 +26,7 @@ GOWindchest::GOWindchest(GOOrganController *organController)
     m_pipes(0),
     m_PipeConfig(
       &organController->GetRootPipeConfigNode(), organController, NULL) {
-  m_OrganController->RegisterPlaybackStateHandler(this);
+  m_OrganController->RegisterSoundStateHandler(this);
 }
 
 void GOWindchest::Init(GOConfigReader &cfg, wxString group, wxString name) {

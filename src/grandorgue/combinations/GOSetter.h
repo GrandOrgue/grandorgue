@@ -15,8 +15,7 @@
 #include "control/GOLabelControl.h"
 #include "model/GOCombination.h"
 #include "model/GOEnclosure.h"
-
-#include "GOPlaybackStateHandler.h"
+#include "sound/GOSoundStateHandler.h"
 
 #define N_CRESCENDOS 4
 
@@ -24,7 +23,7 @@ class GOGeneralCombination;
 
 typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
 
-class GOSetter : private GOPlaybackStateHandler,
+class GOSetter : private GOSoundStateHandler,
                  private GOControlChangedHandler,
                  public GOElementCreator,
                  public GOSaveableObject {

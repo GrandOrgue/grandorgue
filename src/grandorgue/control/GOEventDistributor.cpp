@@ -9,10 +9,10 @@
 
 #include "model/GOCacheObject.h"
 #include "model/GOEventHandlerList.h"
+#include "sound/GOSoundStateHandler.h"
 
 #include "GOControlChangedHandler.h"
 #include "GOEventHandler.h"
-#include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
 
 void GOEventDistributor::SendMidi(const GOMidiEvent &event) {
@@ -46,22 +46,22 @@ void GOEventDistributor::UpdateHash(GOHash &hash) {
 }
 
 void GOEventDistributor::PreparePlayback() {
-  for (auto handler : p_model->GetPlaybackStateHandlers())
+  for (auto handler : p_model->GetSoundStateHandlers())
     handler->PreparePlayback();
 }
 
 void GOEventDistributor::StartPlayback() {
-  for (auto handler : p_model->GetPlaybackStateHandlers())
+  for (auto handler : p_model->GetSoundStateHandlers())
     handler->StartPlayback();
 }
 
 void GOEventDistributor::AbortPlayback() {
-  for (auto handler : p_model->GetPlaybackStateHandlers())
+  for (auto handler : p_model->GetSoundStateHandlers())
     handler->AbortPlayback();
 }
 
 void GOEventDistributor::PrepareRecording() {
-  for (auto handler : p_model->GetPlaybackStateHandlers())
+  for (auto handler : p_model->GetSoundStateHandlers())
     handler->PrepareRecording();
 }
 

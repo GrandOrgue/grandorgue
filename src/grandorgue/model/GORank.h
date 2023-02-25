@@ -8,13 +8,13 @@
 #ifndef GORANK_H
 #define GORANK_H
 
+#include "ptrvector.h"
+
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiSender.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
+#include "sound/GOSoundStateHandler.h"
 
-#include "ptrvector.h"
-
-#include "GOPlaybackStateHandler.h"
 #include "GOSaveableObject.h"
 
 class GOPipe;
@@ -24,7 +24,7 @@ class GOOrganController;
 
 class GORank : private GOSaveableObject,
                public GOMidiConfigurator,
-               private GOPlaybackStateHandler {
+               private GOSoundStateHandler {
 private:
   GOOrganController *m_OrganController;
   wxString m_Name;

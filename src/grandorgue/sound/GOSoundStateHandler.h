@@ -5,12 +5,12 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOPLAYBACKSTATEHANDLER_H
-#define GOPLAYBACKSTATEHANDLER_H
+#ifndef GOSOUNDSTATEHANDLER_H
+#define GOSOUNDSTATEHANDLER_H
 
-class GOPlaybackStateHandler {
+class GOSoundStateHandler {
 public:
-  virtual ~GOPlaybackStateHandler() {}
+  virtual ~GOSoundStateHandler() {}
 
   virtual void AbortPlayback() = 0;
   virtual void PreparePlayback() = 0;

@@ -10,17 +10,16 @@
 
 #include <wx/string.h>
 
-#include <vector>
+#include "ptrvector.h"
 
 #include "combinations/model/GOCombinationDefinition.h"
-
-#include "GOEventHandler.h"
-#include "GOPlaybackStateHandler.h"
-#include "GOSaveableObject.h"
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
-#include "ptrvector.h"
+#include "sound/GOSoundStateHandler.h"
+
+#include "GOEventHandler.h"
+#include "GOSaveableObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;
@@ -34,7 +33,7 @@ class GOOrganController;
 
 class GOManual : private GOEventHandler,
                  private GOSaveableObject,
-                 private GOPlaybackStateHandler,
+                 private GOSoundStateHandler,
                  public GOMidiConfigurator {
 private:
   wxString m_group;

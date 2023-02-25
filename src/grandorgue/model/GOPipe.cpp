@@ -18,7 +18,7 @@ GOPipe::GOPipe(
     m_Velocities(1),
     m_Rank(rank),
     m_MidiKeyNumber(midi_key_number) {
-  handlerList->RegisterPlaybackStateHandler(this);
+  handlerList->RegisterSoundStateHandler(this);
 }
 
 GOPipe::~GOPipe() {}
