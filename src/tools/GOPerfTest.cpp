@@ -71,7 +71,7 @@ void GOPerfTestApp::RunTest(
   unsigned samples_per_frame) {
   try {
     GOConfig settings(wxT("perftest"));
-    GOOrganController *organController = new GOOrganController(NULL, settings);
+    GOOrganController *organController = new GOOrganController(settings);
     const wxString testsDir = argc >= 2 ? argv[1]
                                         : GOStdPath::GetResourceDir()
         + wxFileName::GetPathSeparator() + "perftests";

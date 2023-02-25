@@ -516,7 +516,7 @@ void GOManual::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_OrganController->GetDocument()->ShowMIDIEventDialog(
+  m_OrganController->ShowMIDIEventDialog(
     this, title, &m_midi, &m_sender, NULL, &m_division);
 }
 
