@@ -113,7 +113,6 @@ void GOPerfTestApp::RunTest(
           LOOP_LOAD_ALL,
           1,
           1,
-          -1,
           0,
           0);
         pipes.push_back(w);

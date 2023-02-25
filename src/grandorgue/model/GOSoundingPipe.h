@@ -44,7 +44,10 @@ private:
   unsigned m_ReleaseCrossfadeLength;
   float m_MinVolume;
   float m_MaxVolume;
+  int m_OdfMidiKeyNumber;
+  float m_OdfMidiPitchFraction;
   int m_SampleMidiKeyNumber;
+  float m_SampleMidiPitchFraction;
   bool m_RetunePipe;
   bool m_IsTemperamentOriginalBased;
   GOSoundProviderWave m_SoundProvider;
@@ -54,6 +57,18 @@ private:
   void SetOff();
   void Change(unsigned velocity, unsigned old_velocity);
   GOSoundProvider *GetSoundProvider();
+
+  /**
+   * Calculate a pitch offset for manual tuning
+   * @return pitch offset in cents
+   */
+  float GetManualTuningPitchOffset() const;
+  /**
+   * Calculates a pitch offset for retuning from the sample pitch
+   * to the equal temperament
+   * @return pitch offset in cents
+   */
+  float GetAutoTuningPitchOffset() const;
   void Validate();
 
   void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);
