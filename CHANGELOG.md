@@ -1,3 +1,4 @@
+- Added support of labels without a background image by specifying DispImageNum=0 https://github.com/GrandOrgue/grandorgue/issues/1386
 - Added capability of overriding wav MIDIPitchFraction with the Pipe999MIDIPitchFraction key https://github.com/GrandOrgue/grandorgue/issues/1378
 # 3.10.1 (2022-02-24)
 - Fixed crash on loading an incorrect organ

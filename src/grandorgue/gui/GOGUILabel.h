@@ -10,10 +10,10 @@
 
 #include <wx/colour.h>
 
-#include "GOBitmap.h"
 #include "GOFont.h"
 #include "GOGUIControl.h"
 
+class GOBitmap;
 class GOLabelControl;
 
 class GOGUILabel : public GOGUIControl {
@@ -21,7 +21,7 @@ private:
   int m_DispXpos;
   int m_DispYpos;
   GOLabelControl *m_Label;
-  GOBitmap m_Bitmap;
+  GOBitmap *m_PBackgroundBitmap; // if nullptr then the label is transparent
   unsigned m_FontSize;
   wxString m_FontName;
   GOFont m_Font;
@@ -32,8 +32,17 @@ private:
   unsigned m_TileOffsetX;
   unsigned m_TileOffsetY;
 
+  void DestroyBackgroundBitmap();
+  void InitBackgroundBitmap(
+    unsigned x,
+    unsigned y,
+    wxString imageFileName,
+    unsigned imageNum,
+    const wxString &imageMaskFileneme);
+
 public:
   GOGUILabel(GOGUIPanel *panel, GOLabelControl *label);
+  ~GOGUILabel() override { DestroyBackgroundBitmap(); }
   void Init(
     GOConfigReader &cfg,
     wxString group,

@@ -11,6 +11,7 @@
 #include "config/GOConfigReader.h"
 #include "control/GOLabelControl.h"
 
+#include "GOBitmap.h"
 #include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
@@ -23,7 +24,7 @@ GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabelControl *label)
     m_DispXpos(0),
     m_DispYpos(0),
     m_Label(label),
-    m_Bitmap(),
+    m_PBackgroundBitmap(nullptr),
     m_FontSize(0),
     m_FontName(),
     m_Text(),
@@ -32,6 +33,64 @@ GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabelControl *label)
     m_TextWidth(0),
     m_TileOffsetX(0),
     m_TileOffsetY(0) {}
+
+/**
+ * Deletes m_PBackgroundBitmap if it has been allocated
+ */
+void GOGUILabel::DestroyBackgroundBitmap() {
+  GOBitmap *pOldBackgroundBitmap = m_PBackgroundBitmap;
+
+  // reset the old background
+  if (pOldBackgroundBitmap) {
+    m_PBackgroundBitmap = nullptr;
+    delete pOldBackgroundBitmap;
+  }
+}
+
+static const wxString WX_BITMAP_LABEL_FMT = wxT(GOBitmapPrefix "label%02d");
+
+/**
+ * Creates m_PBackgroundBitmap image from the imageFileName and imageNum and
+ * sets the default values for m_BoundingRect, m_TextRect, m_TextWidth,
+ * m_TileOffsetX, m_TileOffsetY, basing on the image size
+ * @param x - the x coordinate for m_BoundingRect
+ * @param x - the y coordinate for m_BoundingRect
+ * @param imageFileName the file name of the bitmap. If it is empty then
+ *   it is calculated from imageNum
+ * @param imageNum if > 0 then the number of predefined images. If 0 then the
+ *   background is transparent. This parameter is used only if imageFileName is
+ *   empty.
+ * @param imageMaskFilename a filename of the image mask
+ */
+void GOGUILabel::InitBackgroundBitmap(
+  unsigned x,
+  unsigned y,
+  wxString imageFileName,
+  unsigned imageNum,
+  const wxString &imageMaskFilename) {
+  DestroyBackgroundBitmap();
+  if (imageFileName.IsEmpty() && imageNum)
+    // Calculate imageFileName from imageNum
+    imageFileName.Printf(WX_BITMAP_LABEL_FMT, imageNum);
+  if (!imageFileName.IsEmpty())
+    m_PBackgroundBitmap
+      = new GOBitmap(m_panel->LoadBitmap(imageFileName, imageMaskFilename));
+
+  unsigned backgroundWidth
+    = m_PBackgroundBitmap ? m_PBackgroundBitmap->GetWidth() : 80;
+  unsigned backgroundHeight
+    = m_PBackgroundBitmap ? m_PBackgroundBitmap->GetHeight() : 25;
+  unsigned textX = 1;
+  unsigned textY = 1;
+  unsigned textWidth = backgroundWidth - textX;
+  unsigned textHeigth = backgroundHeight - textY;
+
+  m_BoundingRect = wxRect(x, y, backgroundWidth, backgroundHeight);
+  m_TextRect = wxRect(textX, textY, textWidth, textHeigth);
+  m_TextWidth = textWidth;
+  m_TileOffsetX = 0;
+  m_TileOffsetY = 0;
+}
 
 void GOGUILabel::Init(
   GOConfigReader &cfg,
@@ -47,33 +106,17 @@ void GOGUILabel::Init(
   m_FontName = wxT("");
   m_Text = name;
 
-  wxString image_file
-    = wxString::Format(wxT(GOBitmapPrefix "label%02d"), DispImageNum);
-  wxString image_mask_file = wxEmptyString;
-
-  m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
-
-  int x, y, w, h;
-  x = x_pos;
-  y = y_pos;
-  w = m_Bitmap.GetWidth();
-  h = m_Bitmap.GetHeight();
-  m_BoundingRect = wxRect(x, y, w, h);
-
-  m_TileOffsetX = 0;
-  m_TileOffsetY = 0;
-
-  x = 1;
-  y = 1;
-  w = m_BoundingRect.GetWidth() - x;
-  h = m_BoundingRect.GetHeight() - y;
-  m_TextRect = wxRect(x, y, w, h);
-  m_TextWidth = m_TextRect.GetWidth();
+  InitBackgroundBitmap(
+    x_pos, y_pos, wxEmptyString, DispImageNum, wxEmptyString);
 
   m_Font = m_metrics->GetGroupLabelFont();
   m_Font.SetName(m_FontName);
   m_Font.SetPoints(m_FontSize);
 }
+
+static const wxString WX_IMAGE = wxT("Image");
+static const wxString WX_DISP_IMAGE_NUM = wxT("DispImageNum");
+static const wxString WX_MASK = wxT("Mask");
 
 void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
   GOGUIControl::Load(cfg, group);
@@ -134,31 +177,6 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       0);
   }
 
-  m_TextColor = logicalToWxColour(cfg.ReadColor(
-    ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK")));
-  m_FontSize = cfg.ReadFontSize(
-    ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
-  m_FontName = cfg.ReadStringTrim(
-    ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
-  if (!m_Label || !m_panel->GetOrganFile()->GetSettings().ODFCheck())
-    m_Text
-      = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxEmptyString);
-
-  unsigned DispImageNum
-    = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 12, false, 1);
-
-  wxString image_file = cfg.ReadStringTrim(
-    ODFSetting,
-    group,
-    wxT("Image"),
-    false,
-    wxString::Format(wxT(GOBitmapPrefix "label%02d"), DispImageNum));
-  wxString image_mask_file
-    = cfg.ReadStringTrim(ODFSetting, group, wxT("Mask"), false, wxEmptyString);
-
-  m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
-
-  int w, h;
   x = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -175,6 +193,26 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     m_metrics->GetScreenHeight(),
     false,
     y);
+
+  m_TextColor = logicalToWxColour(cfg.ReadColor(
+    ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK")));
+  m_FontSize = cfg.ReadFontSize(
+    ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
+  m_FontName = cfg.ReadStringTrim(
+    ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
+  if (!m_Label || !m_panel->GetOrganFile()->GetSettings().ODFCheck())
+    m_Text
+      = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxEmptyString);
+
+  InitBackgroundBitmap(
+    x,
+    y,
+    cfg.ReadStringTrim(ODFSetting, group, WX_IMAGE, false),
+    cfg.ReadInteger(ODFSetting, group, WX_DISP_IMAGE_NUM, 0, 12, false, 1),
+    cfg.ReadStringTrim(ODFSetting, group, WX_MASK, false));
+
+  int w, h;
+
   w = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -182,7 +220,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     1,
     m_metrics->GetScreenWidth(),
     false,
-    m_Bitmap.GetWidth());
+    m_BoundingRect.width);
   h = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -190,7 +228,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     1,
     m_metrics->GetScreenHeight(),
     false,
-    m_Bitmap.GetHeight());
+    m_BoundingRect.height);
   m_BoundingRect = wxRect(x, y, w, h);
 
   m_TileOffsetX = cfg.ReadInteger(
@@ -198,7 +236,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("TileOffsetX"),
     0,
-    m_Bitmap.GetWidth() - 1,
+    m_BoundingRect.width - 1,
     false,
     0);
   m_TileOffsetY = cfg.ReadInteger(
@@ -206,7 +244,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("TileOffsetY"),
     0,
-    m_Bitmap.GetHeight() - 1,
+    m_BoundingRect.height - 1,
     false,
     0);
 
@@ -215,42 +253,36 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("TextRectLeft"),
     0,
-    m_BoundingRect.GetWidth() - 1,
+    m_BoundingRect.width - 1,
     false,
-    1);
+    m_TextRect.x);
   y = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("TextRectTop"),
     0,
-    m_BoundingRect.GetHeight() - 1,
+    m_BoundingRect.height - 1,
     false,
-    1);
+    m_TextRect.y);
   w = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("TextRectWidth"),
     1,
-    m_BoundingRect.GetWidth() - x,
+    m_BoundingRect.width - x,
     false,
-    m_BoundingRect.GetWidth() - x);
+    m_BoundingRect.width - x);
   h = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("TextRectHeight"),
     1,
-    m_BoundingRect.GetHeight() - y,
+    m_BoundingRect.height - y,
     false,
-    m_BoundingRect.GetHeight() - y);
+    m_BoundingRect.height - y);
   m_TextRect = wxRect(x, y, w, h);
-  m_TextWidth = cfg.ReadInteger(
-    ODFSetting,
-    group,
-    wxT("TextBreakWidth"),
-    0,
-    m_TextRect.GetWidth(),
-    false,
-    m_TextRect.GetWidth());
+  m_TextWidth
+    = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, w, false, w);
 
   m_Font = m_metrics->GetGroupLabelFont();
   m_Font.SetName(m_FontName);
@@ -278,15 +310,17 @@ void GOGUILabel::Layout() {
 }
 
 void GOGUILabel::PrepareDraw(double scale, GOBitmap *background) {
-  m_Bitmap.PrepareTileBitmap(
-    scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
+  if (m_PBackgroundBitmap)
+    m_PBackgroundBitmap->PrepareTileBitmap(
+      scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
 void GOGUILabel::Draw(GODC &dc) {
   if (m_Label)
     m_Text = m_Label->GetContent();
 
-  dc.DrawBitmap(m_Bitmap, m_BoundingRect);
+  if (m_PBackgroundBitmap)
+    dc.DrawBitmap(*m_PBackgroundBitmap, m_BoundingRect);
   if (m_TextWidth)
     dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth);
 
