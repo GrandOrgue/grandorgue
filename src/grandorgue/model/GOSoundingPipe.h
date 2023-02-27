@@ -53,11 +53,8 @@ private:
   GOSoundProviderWave m_SoundProvider;
   GOPipeConfigNode m_PipeConfigNode;
 
-  void SetOn(unsigned velocity);
-  void SetOff();
-  void Change(unsigned velocity, unsigned old_velocity);
-  GOSoundProvider *GetSoundProvider();
-
+  // internal functions
+  void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);
   /**
    * Calculate a pitch offset for manual tuning
    * @return pitch offset in cents
@@ -71,24 +68,37 @@ private:
   float GetAutoTuningPitchOffset() const;
   void Validate();
 
-  void LoadAttack(GOConfigReader &cfg, wxString group, wxString prefix);
-
-  void Initialize();
+  // Callbacks for GOCacheObject
+  const wxString &GetLoadTitle() override { return m_Filename; }
+  void Initialize() override {}
   void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) override;
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override;
-  bool SaveCache(GOCacheWriter &cache);
-  void UpdateHash(GOHash &hash);
-  const wxString &GetLoadTitle();
+  bool SaveCache(GOCacheWriter &cache) override;
+  void UpdateHash(GOHash &hash) override;
 
-  void SetTremulant(bool on);
-
+  // Callbacks from GOPipeConfigNode
   void UpdateAmplitude() override;
   void UpdateTuning() override;
   void UpdateAudioGroup() override;
   void UpdateReleaseTail() override;
+  void SetTemperament(const GOTemperament &temperament) override;
 
-  void AbortPlayback();
-  void PreparePlayback();
+  // Callbacks from the sound engine
+  void PreparePlayback() override;
+  void AbortPlayback() override;
+
+  // Callbacks from the console
+  /**
+   * Called when the tremulant is switched on or off
+   * @param on the new tremulant state
+   */
+  void SetTremulant(bool on) override;
+  /**
+   * Called when the key is just pressed, released or the velocity is changed
+   * @param velocity the velocity of key pressing. 0 means release
+   * @param last_velocity the velocity of the previous key pressing
+   */
+  void Change(unsigned velocity, unsigned old_velocity) override;
 
 public:
   GOSoundingPipe(
@@ -105,7 +115,6 @@ public:
   void Init(
     GOConfigReader &cfg, wxString group, wxString prefix, wxString filename);
   void Load(GOConfigReader &cfg, wxString group, wxString prefix);
-  void SetTemperament(const GOTemperament &temperament);
 };
 
 #endif
