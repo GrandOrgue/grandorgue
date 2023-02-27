@@ -101,6 +101,7 @@ loader/GOFileStore.cpp
 loader/GOLoaderFilename.cpp
 loader/GOLoadThread.cpp
 loader/GOLoadWorker.cpp
+midi/dialog-creator/GOMidiDialogCreatorProxy.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp
 midi/ports/GOMidiPort.cpp

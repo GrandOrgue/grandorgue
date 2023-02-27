@@ -59,7 +59,7 @@ class GOOrganController : public GOEventDistributor,
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
 private:
-  GODocument *m_doc;
+  GOConfig &m_config;
   wxString m_odf;
   wxString m_ArchiveID;
   wxString m_ArchivePath;
@@ -108,7 +108,6 @@ private:
 
   GOMemoryPool m_pool;
   GOBitmapCache m_bitmaps;
-  GOConfig &m_config;
   GOCombinationDefinition m_GeneralTemplate;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
@@ -130,7 +129,8 @@ private:
   wxString GetOrganHash();
 
 public:
-  GOOrganController(GODocument *doc, GOConfig &settings);
+  GOOrganController(
+    GOConfig &config, GOMidiDialogCreator *pMidiDialogCreator = nullptr);
   ~GOOrganController();
 
   // Returns organ modification flag
@@ -174,7 +174,7 @@ public:
   void Reset();
   void ProcessMidi(const GOMidiEvent &event);
   void AllNotesOff();
-  GODocument *GetDocument();
+  // GODocument *GetDocument();
 
   /* Access to internal ODF objects */
   GOSetter *GetSetter();

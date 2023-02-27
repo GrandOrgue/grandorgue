@@ -51,7 +51,7 @@ bool GODocument::LoadOrgan(
   GOConfig &cfg = m_sound.GetSettings();
 
   CloseOrgan();
-  m_OrganController = new GOOrganController(this, cfg);
+  m_OrganController = new GOOrganController(cfg, this);
   wxString error = m_OrganController->Load(dlg, organ, cmb);
   if (!error.IsEmpty()) {
     if (error != wxT("!")) {
@@ -202,7 +202,7 @@ void GODocument::ShowMidiList() {
 
 void GODocument::ShowMIDIEventDialog(
   void *element,
-  wxString title,
+  const wxString &title,
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
   GOKeyReceiver *key,

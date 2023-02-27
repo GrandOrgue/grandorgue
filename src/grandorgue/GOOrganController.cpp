@@ -77,14 +77,15 @@
 static const wxString WX_ORGAN = wxT("Organ");
 static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");
 
-GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
+GOOrganController::GOOrganController(
+  GOConfig &config, GOMidiDialogCreator *pMidiDialogCreator)
   : GOEventDistributor(this),
-    GOOrganModel(settings),
-    m_doc(doc),
+    GOOrganModel(config),
+    m_config(config),
     m_odf(),
     m_ArchiveID(),
     m_hash(),
-    m_FileStore(settings),
+    m_FileStore(config),
     m_CacheFilename(),
     m_SettingFilename(),
     m_ODFHash(),
@@ -120,11 +121,11 @@ GOOrganController::GOOrganController(GODocument *doc, GOConfig &settings)
     m_SampleSetId1(0),
     m_SampleSetId2(0),
     m_bitmaps(this),
-    m_config(settings),
     m_GeneralTemplate(this),
     m_PitchLabel(this),
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {
+  GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
   GOOrganModel::SetModificationListener(this);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
@@ -137,6 +138,7 @@ GOOrganController::~GOOrganController() {
   m_tremulants.clear();
   m_ranks.clear();
   GOOrganModel::SetModificationListener(nullptr);
+  GOOrganModel::SetMidiDialogCreator(nullptr);
 }
 
 void GOOrganController::SetOrganModified(bool modified) {
@@ -788,7 +790,7 @@ GOButtonControl *GOOrganController::GetButtonControl(
   return NULL;
 }
 
-GODocument *GOOrganController::GetDocument() { return m_doc; }
+// GODocument *GOOrganController::GetDocument() { return m_doc; }
 
 void GOOrganController::SetVolume(int volume) { m_volume = volume; }
 
