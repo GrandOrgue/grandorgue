@@ -47,7 +47,6 @@ protected:
   void Save(GOConfigWriter &cfg);
 
   void AbortPlayback();
-  void StartPlayback();
   void PreparePlayback();
   void PrepareRecording();
 

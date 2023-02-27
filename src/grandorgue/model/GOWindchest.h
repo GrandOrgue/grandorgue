@@ -33,7 +33,6 @@ private:
   std::vector<GOPipeWindchestCallback *> m_pipes;
   GOPipeConfigTreeNode m_PipeConfig;
 
-  void StartPlayback();
   void PreparePlayback();
 
 public:

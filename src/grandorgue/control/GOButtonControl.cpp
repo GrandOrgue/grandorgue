@@ -114,8 +114,6 @@ void GOButtonControl::PreparePlayback() {
   m_sender.SetName(m_Name);
 }
 
-void GOButtonControl::StartPlayback() {}
-
 void GOButtonControl::PrepareRecording() { m_sender.SetDisplay(m_Engaged); }
 
 void GOButtonControl::ProcessMidi(const GOMidiEvent &event) {

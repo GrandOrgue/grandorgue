@@ -30,7 +30,6 @@ protected:
 
   virtual void Change(unsigned velocity, unsigned old_velocity) = 0;
 
-  void StartPlayback();
   void PreparePlayback();
 
 public:

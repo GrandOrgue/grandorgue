@@ -59,7 +59,6 @@ private:
   void ControlChanged(void *control);
 
   void PreparePlayback();
-  void StartPlayback();
 
 public:
   GOSetter(GOOrganController *organController);
