@@ -213,8 +213,6 @@ void GORank::PreparePlayback() {
 
 void GORank::StartPlayback() {}
 
-void GORank::PrepareRecording() {}
-
 void GORank::SendKey(unsigned note, unsigned velocity) {
   m_sender.SetKey(note, velocity);
 }

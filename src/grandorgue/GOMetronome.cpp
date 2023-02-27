@@ -232,8 +232,6 @@ void GOMetronome::PreparePlayback() {
 
 void GOMetronome::StartPlayback() {}
 
-void GOMetronome::PrepareRecording() {}
-
 GOEnclosure *GOMetronome::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }

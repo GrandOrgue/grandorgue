@@ -30,10 +30,8 @@ protected:
 
   virtual void Change(unsigned velocity, unsigned old_velocity) = 0;
 
-  void AbortPlayback();
   void StartPlayback();
   void PreparePlayback();
-  void PrepareRecording();
 
 public:
   GOPipe(

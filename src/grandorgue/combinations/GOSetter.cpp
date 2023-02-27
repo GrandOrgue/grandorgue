@@ -670,8 +670,6 @@ void GOSetter::ButtonStateChanged(int id) {
   }
 }
 
-void GOSetter::AbortPlayback() {}
-
 void GOSetter::PreparePlayback() {
   wxString buffer;
   buffer.Printf(wxT("%03d"), m_pos);
@@ -693,8 +691,6 @@ void GOSetter::PreparePlayback() {
 }
 
 void GOSetter::StartPlayback() {}
-
-void GOSetter::PrepareRecording() {}
 
 void GOSetter::Update() {}
 
