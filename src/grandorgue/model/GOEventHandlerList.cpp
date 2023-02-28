@@ -9,6 +9,8 @@
 
 #include <algorithm>
 
+#include "control/GOControlChangedHandler.h"
+
 void GOEventHandlerList::RegisterCacheObject(GOCacheObject *obj) {
   m_CacheObjects.push_back(obj);
 }
@@ -45,6 +47,11 @@ void GOEventHandlerList::UnregisterSaveableObject(GOSaveableObject *obj) {
     *it = nullptr;
     m_SaveableObjects.erase(it);
   }
+}
+
+void GOEventHandlerList::SendControlChanged(void *pControl) {
+  for (auto handler : m_ControlChangedHandlers)
+    handler->ControlChanged(pControl);
 }
 
 void GOEventHandlerList::Cleanup() {

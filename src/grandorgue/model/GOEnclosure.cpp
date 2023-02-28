@@ -82,7 +82,7 @@ void GOEnclosure::Set(int n) {
     m_sender.SetValue(m_MIDIValue);
   }
   m_OrganController->UpdateVolume();
-  m_OrganController->ControlChanged(this);
+  m_OrganController->SendControlChanged(this);
 }
 
 int GOEnclosure::GetMIDIInputNumber() { return m_MIDIInputNumber; }
