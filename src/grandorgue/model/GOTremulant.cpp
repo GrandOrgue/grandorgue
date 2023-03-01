@@ -128,7 +128,9 @@ void GOTremulant::AbortPlayback() {
   GOButtonControl::AbortPlayback();
 }
 
-void GOTremulant::PreparePlayback() {
+void GOTremulant::StartPlayback() {
+  GODrawstop::StartPlayback();
+
   if (IsActive() && m_TremulantType == GOSynthTrem) {
     GOSoundEngine *pSoundEngine = GetSoundEngine();
 

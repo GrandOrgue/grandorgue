@@ -31,6 +31,7 @@ protected:
   void UpdateHash(GOHash &hash);
 
   void PreparePlayback(GOSoundEngine *pSoundEngine);
+  void StartPlayback();
   void AbortPlayback();
   void PrepareRecording();
 

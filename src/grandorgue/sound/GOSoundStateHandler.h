@@ -29,6 +29,7 @@ private:
 protected:
   // Derived classes should override
   virtual void PreparePlayback() = 0;
+  virtual void StartPlayback() {}
   virtual void AbortPlayback() {}
   virtual void PrepareRecording() {}
 
@@ -43,6 +44,7 @@ public:
   virtual ~GOSoundStateHandler() { SetSoundEngine(nullptr); }
 
   void PreparePlaybackExt(GOSoundEngine *pSoundEngine);
+  void StartPlaybackExt() { StartPlayback(); }
   void AbortPlaybackExt();
   void PrepareRecordingExt() { PrepareRecording(); }
 };

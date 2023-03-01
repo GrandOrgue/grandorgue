@@ -50,6 +50,11 @@ void GOEventDistributor::PreparePlayback(GOSoundEngine *pSoundEngine) {
     handler->PreparePlaybackExt(pSoundEngine);
 }
 
+void GOEventDistributor::StartPlayback() {
+  for (auto handler : p_model->GetSoundStateHandlers())
+    handler->StartPlaybackExt();
+}
+
 void GOEventDistributor::AbortPlayback() {
   for (auto handler : p_model->GetSoundStateHandlers())
     handler->AbortPlaybackExt();
