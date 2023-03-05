@@ -7,6 +7,8 @@
 
 #include "GORank.h"
 
+#include <algorithm>
+
 #include <wx/intl.h>
 
 #include "GODocument.h"
@@ -23,8 +25,8 @@ GORank::GORank(GOOrganController *organController)
     m_Name(),
     m_Pipes(),
     m_StopCount(0),
-    m_Velocity(),
-    m_Velocities(),
+    m_NoteStopVelocities(),
+    m_MaxNoteVelocities(),
     m_FirstMidiNoteNumber(0),
     m_Percussive(false),
     m_WindchestGroup(0),
@@ -41,10 +43,10 @@ GORank::GORank(GOOrganController *organController)
 GORank::~GORank() {}
 
 void GORank::Resize() {
-  m_Velocity.resize(m_Pipes.size());
-  m_Velocities.resize(m_Pipes.size());
-  for (unsigned i = 0; i < m_Velocities.size(); i++)
-    m_Velocities[i].resize(m_StopCount);
+  m_MaxNoteVelocities.resize(m_Pipes.size());
+  m_NoteStopVelocities.resize(m_Pipes.size());
+  for (unsigned i = 0; i < m_NoteStopVelocities.size(); i++)
+    m_NoteStopVelocities[i].resize(m_StopCount);
 }
 
 void GORank::Init(
@@ -166,24 +168,22 @@ unsigned GORank::RegisterStop(GOStop *stop) {
 }
 
 void GORank::SetKey(int note, unsigned velocity, unsigned stopID) {
-  if (note < 0 || note >= (int)m_Pipes.size())
-    return;
+  if (note >= 0 && note < (int)m_Pipes.size()) {
+    auto &allStopVelocities = m_NoteStopVelocities[note];
+    unsigned &thisStopVelocity = allStopVelocities[stopID];
+    unsigned oldThisStopVelocity = thisStopVelocity;
+    unsigned &maxVelocity = m_MaxNoteVelocities[note];
 
-  if (m_Velocities[note][stopID] <= velocity && velocity <= m_Velocity[note]) {
-    m_Velocities[note][stopID] = velocity;
-    return;
+    thisStopVelocity = velocity;
+    if (velocity > maxVelocity || velocity < oldThisStopVelocity) {
+      // the max velocity of the pipe is changed
+      // find the new max velocity
+      maxVelocity = velocity >= maxVelocity
+        ? velocity
+        : *std::max_element(allStopVelocities.begin(), allStopVelocities.end());
+      m_Pipes[note]->Set(maxVelocity);
+    }
   }
-  if (velocity >= m_Velocity[note]) {
-    m_Velocities[note][stopID] = velocity;
-    m_Velocity[note] = velocity;
-  } else {
-    m_Velocities[note][stopID] = velocity;
-    m_Velocity[note] = m_Velocities[note][0];
-    for (unsigned i = 1; i < m_Velocities[note].size(); i++)
-      if (m_Velocity[note] < m_Velocities[note][i])
-        m_Velocity[note] = m_Velocities[note][i];
-  }
-  m_Pipes[note]->Set(m_Velocity[note]);
 }
 
 GOPipe *GORank::GetPipe(unsigned index) { return m_Pipes[index]; }
@@ -203,11 +203,11 @@ void GORank::AbortPlayback() { m_sender.SetName(wxEmptyString); }
 
 void GORank::PreparePlayback() {
   m_sender.ResetKey();
-  for (unsigned i = 0; i < m_Velocity.size(); i++)
-    m_Velocity[i] = 0;
-  for (unsigned i = 0; i < m_Velocities.size(); i++)
-    for (unsigned j = 0; j < m_Velocities[i].size(); j++)
-      m_Velocities[i][j] = 0;
+  for (unsigned i = 0; i < m_MaxNoteVelocities.size(); i++)
+    m_MaxNoteVelocities[i] = 0;
+  for (unsigned i = 0; i < m_NoteStopVelocities.size(); i++)
+    for (unsigned j = 0; j < m_NoteStopVelocities[i].size(); j++)
+      m_NoteStopVelocities[i][j] = 0;
   m_sender.SetName(m_Name);
 }
 
