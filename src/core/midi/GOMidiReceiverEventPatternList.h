@@ -41,8 +41,13 @@ public:
 
   GOMidiReceiverType GetType() const;
 
-  unsigned GetEventCount() const;
-  GOMidiReceiverEventPattern &GetEvent(unsigned index);
+  unsigned GetEventCount() const { return m_events.size(); }
+  const GOMidiReceiverEventPattern &GetEvent(unsigned index) const {
+    return m_events[index];
+  }
+  GOMidiReceiverEventPattern &EventAt(unsigned index) {
+    return m_events[index];
+  }
   unsigned AddNewEvent();
   void DeleteEvent(unsigned index);
 };

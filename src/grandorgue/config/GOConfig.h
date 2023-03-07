@@ -168,11 +168,12 @@ public:
   const wxString &GetResourceDirectory() const { return m_ResourceDir; }
   const wxString GetPackageDirectory();
 
-  unsigned GetEventCount();
+  unsigned GetEventCount() const;
   wxString GetEventGroup(unsigned index);
   wxString GetEventTitle(unsigned index);
-  GOMidiReceiverBase *GetMidiEvent(unsigned index);
-  GOMidiReceiverBase *FindMidiEvent(GOMidiReceiverType type, unsigned index);
+  const GOMidiReceiverBase *GetMidiEvent(unsigned index) const;
+  const GOMidiReceiverBase *FindMidiEvent(
+    GOMidiReceiverType type, unsigned index) const;
 
   /*
   bool GetMidiInState(wxString device, bool isEnabledByDefault);

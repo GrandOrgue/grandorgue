@@ -52,7 +52,8 @@ GOSettingsMidiMessage::GOSettingsMidiMessage(
   topSizer->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
 
   for (unsigned i = 0; i < m_config.GetEventCount(); i++) {
-    GOMidiReceiverBase *recv = m_config.GetMidiEvent(i);
+    const GOMidiReceiverBase *recv = m_config.GetMidiEvent(i);
+
     m_Events->InsertItem(i, m_config.GetEventGroup(i));
     m_Events->SetItemPtrData(i, (wxUIntPtr)recv);
     m_Events->SetItem(i, 1, m_config.GetEventTitle(i));
