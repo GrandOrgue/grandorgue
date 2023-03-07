@@ -287,7 +287,7 @@ void GOManual::SetKey(
   if (
     m_first_accessible_logical_key_nb <= note + 1
     && note <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
-    m_OrganController->ControlChanged(this);
+    m_OrganController->SendControlChanged(this);
 }
 
 void GOManual::Set(unsigned note, unsigned velocity) {

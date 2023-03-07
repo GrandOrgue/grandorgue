@@ -146,7 +146,7 @@ void GOButtonControl::Display(bool onoff) {
     return;
   m_sender.SetDisplay(onoff);
   m_Engaged = onoff;
-  m_OrganController->ControlChanged(this);
+  m_OrganController->SendControlChanged(this);
 }
 
 bool GOButtonControl::IsEngaged() const { return m_Engaged; }

@@ -59,9 +59,3 @@ void GOEventDistributor::PrepareRecording() {
   for (auto handler : p_model->GetSoundStateHandlers())
     handler->PrepareRecording();
 }
-
-void GOEventDistributor::ControlChanged(void *control) {
-  if (control)
-    for (auto handler : p_model->GetControlChangedHandlers())
-      handler->ControlChanged(control);
-}

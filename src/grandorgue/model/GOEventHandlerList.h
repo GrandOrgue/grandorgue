@@ -30,10 +30,6 @@ public:
   const std::vector<GOCacheObject *> &GetCacheObjects() const {
     return m_CacheObjects;
   }
-  const std::vector<GOControlChangedHandler *> &GetControlChangedHandlers()
-    const {
-    return m_ControlChangedHandlers;
-  }
   const std::vector<GOMidiConfigurator *> &GetMidiConfigurators() const {
     return m_MidiConfigurators;
   }
@@ -54,6 +50,12 @@ public:
   void RegisterSoundStateHandler(GOSoundStateHandler *handler);
   void RegisterSaveableObject(GOSaveableObject *obj);
   void UnregisterSaveableObject(GOSaveableObject *obj);
+
+  /**
+   * Calls ControlChanged for all ControlChanged handlers
+   * @param pControl - the control that state is changed
+   */
+  void SendControlChanged(void *pControl);
 
   void Cleanup();
 };

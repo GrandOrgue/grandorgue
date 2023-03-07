@@ -38,7 +38,6 @@ public:
   ~GOEventDistributor() { p_model = nullptr; }
 
   void HandleKey(int key);
-  void ControlChanged(void *control);
 };
 
 #endif

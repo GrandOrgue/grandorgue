@@ -49,7 +49,7 @@ const wxString &GOLabelControl::GetContent() { return m_Content; }
 void GOLabelControl::SetContent(wxString name) {
   m_Content = name;
   m_sender.SetLabel(m_Content);
-  m_OrganController->ControlChanged(this);
+  m_OrganController->SendControlChanged(this);
 }
 
 void GOLabelControl::AbortPlayback() {
