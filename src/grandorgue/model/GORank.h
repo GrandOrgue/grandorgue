@@ -29,9 +29,18 @@ private:
   GOOrganController *m_OrganController;
   wxString m_Name;
   ptr_vector<GOPipe> m_Pipes;
+  /**
+   * Number of stops using this rank
+   */
   unsigned m_StopCount;
-  std::vector<unsigned> m_Velocity;
-  std::vector<std::vector<unsigned>> m_Velocities;
+  /**
+   * last pressed velocity of notes and stop
+   */
+  std::vector<std::vector<unsigned>> m_NoteStopVelocities;
+  /**
+   * maximum last velocity of notes over all stops
+   */
+  std::vector<unsigned> m_MaxNoteVelocities;
   unsigned m_FirstMidiNoteNumber;
   bool m_Percussive;
   unsigned m_WindchestGroup;
