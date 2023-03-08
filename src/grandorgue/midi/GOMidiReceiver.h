@@ -10,23 +10,25 @@
 
 #include "midi/GOMidiReceiverBase.h"
 
+class GOConfig;
 class GOOrganModel;
 
 class GOMidiReceiver : public GOMidiReceiverBase {
 private:
-  GOOrganModel *m_OrganController;
+  GOOrganModel &r_OrganModel;
+  const GOConfig &r_config;
   int m_Index;
 
 protected:
-  void Preconfigure(GOConfigReader &cfg, wxString group);
-  int GetTranspose();
+  void Preconfigure(GOConfigReader &cfg, wxString group) override;
+  int GetTranspose() override;
 
 public:
-  GOMidiReceiver(GOOrganModel *organController, GOMidiReceiverType type);
+  GOMidiReceiver(GOOrganModel &organModel, GOMidiReceiverType type);
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 
-  void SetIndex(int index);
+  void SetIndex(int index) { m_Index = index; }
 
   void Assign(const GOMidiReceiverEventPatternList &data);
 };

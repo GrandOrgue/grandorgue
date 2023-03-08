@@ -45,7 +45,7 @@ public:
   const GOMidiReceiverEventPattern &GetEvent(unsigned index) const {
     return m_events[index];
   }
-  GOMidiReceiverEventPattern &EventAt(unsigned index) {
+  GOMidiReceiverEventPattern &GetEvent(unsigned index) {
     return m_events[index];
   }
   unsigned AddNewEvent();

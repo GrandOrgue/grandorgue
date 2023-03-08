@@ -462,7 +462,7 @@ void GOMidiEventRecvTab::LoadEvent() {
   else
     m_delete->Disable();
 
-  GOMidiReceiverEventPattern &e = m_midi.EventAt(m_current);
+  GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
 
   m_eventtype->SetCurrentSelection(e.type);
 
@@ -521,7 +521,7 @@ GOMidiReceiverEventPattern GOMidiEventRecvTab::GetCurrentEvent() {
 }
 
 void GOMidiEventRecvTab::StoreEvent() {
-  m_midi.EventAt(m_current) = GetCurrentEvent();
+  m_midi.GetEvent(m_current) = GetCurrentEvent();
 }
 
 void GOMidiEventRecvTab::OnNewClick(wxCommandEvent &event) {
@@ -703,7 +703,7 @@ void GOMidiEventRecvTab::DetectEvent() {
         if (m_midi.GetType() == MIDI_RECV_MANUAL) {
           if (on.GetMidiType() != MIDI_NOTE)
             continue;
-          GOMidiReceiverEventPattern &e = m_midi.EventAt(m_current);
+          GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
           e.type = MIDI_M_NOTE;
           e.deviceId = on.GetDevice();
           e.channel = on.GetChannel();
@@ -734,7 +734,7 @@ void GOMidiEventRecvTab::DetectEvent() {
         if (on.GetKey() != off.GetKey() && !is_range)
           continue;
         if (m_midi.GetType() == MIDI_RECV_ENCLOSURE) {
-          GOMidiReceiverEventPattern &e = m_midi.EventAt(m_current);
+          GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
           unsigned low = off.GetValue();
           unsigned high = on.GetValue();
           int key = on.GetKey();
@@ -768,7 +768,7 @@ void GOMidiEventRecvTab::DetectEvent() {
           StopListen();
           return;
         }
-        GOMidiReceiverEventPattern &e = m_midi.EventAt(m_current);
+        GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
         unsigned low = 0;
         unsigned high = 1;
         int key = on.GetKey();
@@ -890,7 +890,7 @@ void GOMidiEventRecvTab::DetectEvent() {
     }
   }
 
-  GOMidiReceiverEventPattern &e = m_midi.EventAt(m_current);
+  GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
   GOMidiEvent &event = m_OnList[0];
   unsigned low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
   unsigned high_value = (m_midi.GetType() == MIDI_RECV_MANUAL
