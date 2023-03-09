@@ -163,6 +163,7 @@ sound/GOSoundReverbEngine.cpp
 sound/GOSoundReverbPartition.cpp
 sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
+sound/GOSoundStateHandler.cpp
 sound/GOSound.cpp
 GOAudioGauge.cpp
 GOAudioRecorder.cpp

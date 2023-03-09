@@ -45,17 +45,22 @@ void GOEventDistributor::UpdateHash(GOHash &hash) {
     obj->UpdateHash(hash);
 }
 
-void GOEventDistributor::PreparePlayback() {
+void GOEventDistributor::PreparePlayback(GOSoundEngine *pSoundEngine) {
   for (auto handler : p_model->GetSoundStateHandlers())
-    handler->PreparePlayback();
+    handler->PreparePlaybackExt(pSoundEngine);
+}
+
+void GOEventDistributor::StartPlayback() {
+  for (auto handler : p_model->GetSoundStateHandlers())
+    handler->StartPlaybackExt();
 }
 
 void GOEventDistributor::AbortPlayback() {
   for (auto handler : p_model->GetSoundStateHandlers())
-    handler->AbortPlayback();
+    handler->AbortPlaybackExt();
 }
 
 void GOEventDistributor::PrepareRecording() {
   for (auto handler : p_model->GetSoundStateHandlers())
-    handler->PrepareRecording();
+    handler->PrepareRecordingExt();
 }

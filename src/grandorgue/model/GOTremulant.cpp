@@ -11,6 +11,7 @@
 
 #include "GOOrganController.h"
 #include "config/GOConfigReader.h"
+#include "sound/GOSoundEngine.h"
 #include "sound/GOSoundProviderSynthedTrem.h"
 
 #define DELETE_AND_NULL(x)                                                     \
@@ -99,15 +100,20 @@ void GOTremulant::InitSoundProvider(GOMemoryPool &pool) {
 
 void GOTremulant::ChangeState(bool on) {
   if (m_TremulantType == GOSynthTrem) {
+    GOSoundEngine *pSoundEngine = GetSoundEngine();
+
     if (on) {
       assert(m_SamplerGroupID < 0);
-      m_PlaybackHandle = m_OrganController->StartSample(
-        m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, m_LastStop);
-      on = (m_PlaybackHandle != NULL);
+      m_PlaybackHandle = pSoundEngine
+        ? pSoundEngine->StartSample(
+          m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, m_LastStop)
+        : nullptr;
+      on = (m_PlaybackHandle != nullptr);
     } else {
       assert(m_PlaybackHandle);
-      m_LastStop
-        = m_OrganController->StopSample(m_TremProvider, m_PlaybackHandle);
+      m_LastStop = pSoundEngine
+        ? pSoundEngine->StopSample(m_TremProvider, m_PlaybackHandle)
+        : 0;
       m_PlaybackHandle = NULL;
     }
   }
@@ -122,11 +128,16 @@ void GOTremulant::AbortPlayback() {
   GOButtonControl::AbortPlayback();
 }
 
-void GOTremulant::PreparePlayback() {
+void GOTremulant::StartPlayback() {
+  GODrawstop::StartPlayback();
+
   if (IsActive() && m_TremulantType == GOSynthTrem) {
+    GOSoundEngine *pSoundEngine = GetSoundEngine();
+
     assert(m_SamplerGroupID < 0);
-    m_PlaybackHandle = m_OrganController->StartSample(
-      m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, 0);
+    m_PlaybackHandle = pSoundEngine ? pSoundEngine->StartSample(
+                         m_TremProvider, m_SamplerGroupID, 0, 0x7f, 0, 0)
+                                    : nullptr;
   }
   if (m_TremulantType == GOWavTrem) {
     m_OrganController->UpdateTremulant(this);

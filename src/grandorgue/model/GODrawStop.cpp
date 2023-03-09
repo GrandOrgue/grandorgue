@@ -155,8 +155,8 @@ void GODrawstop::SetCombination(bool on) {
 
 bool GODrawstop::IsActive() const { return m_ActiveState; }
 
-void GODrawstop::PreparePlayback() {
-  GOButtonControl::PreparePlayback();
+void GODrawstop::StartPlayback() {
+  GOButtonControl::StartPlayback();
   Update();
 }
 

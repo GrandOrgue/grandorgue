@@ -889,38 +889,6 @@ GOConfig &GOOrganController::GetSettings() { return m_config; }
 
 GOBitmapCache &GOOrganController::GetBitmapCache() { return m_bitmaps; }
 
-GOSoundSampler *GOOrganController::StartSample(
-  const GOSoundProvider *pipe,
-  int sampler_group_id,
-  unsigned audio_group,
-  unsigned velocity,
-  unsigned delay,
-  uint64_t last_stop) {
-  if (!m_soundengine)
-    return NULL;
-  return m_soundengine->StartSample(
-    pipe, sampler_group_id, audio_group, velocity, delay, last_stop);
-}
-
-uint64_t GOOrganController::StopSample(
-  const GOSoundProvider *pipe, GOSoundSampler *handle) {
-  if (m_soundengine)
-    return m_soundengine->StopSample(pipe, handle);
-  return 0;
-}
-
-void GOOrganController::SwitchSample(
-  const GOSoundProvider *pipe, GOSoundSampler *handle) {
-  if (m_soundengine)
-    m_soundengine->SwitchSample(pipe, handle);
-}
-
-void GOOrganController::UpdateVelocity(
-  const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity) {
-  if (m_soundengine)
-    m_soundengine->UpdateVelocity(pipe, handle, velocity);
-}
-
 void GOOrganController::SendMidiMessage(GOMidiEvent &e) {
   if (m_midi)
     m_midi->Send(e);
@@ -970,10 +938,11 @@ void GOOrganController::PreparePlayback(
   PreconfigRecorder();
 
   m_MidiSamplesetMatch.clear();
-  GOEventDistributor::PreparePlayback();
+  GOEventDistributor::PreparePlayback(engine);
 
   m_setter->UpdateModified(m_OrganModified);
 
+  GOEventDistributor::StartPlayback();
   GOEventDistributor::PrepareRecording();
 }
 

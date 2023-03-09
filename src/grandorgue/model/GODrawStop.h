@@ -44,7 +44,7 @@ protected:
 
   void Save(GOConfigWriter &cfg);
 
-  void PreparePlayback();
+  void StartPlayback() override;
 
 public:
   GODrawstop(GOOrganController *organController);
