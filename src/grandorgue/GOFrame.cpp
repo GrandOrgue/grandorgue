@@ -1095,7 +1095,7 @@ void GOFrame::OnSettings(wxCommandEvent &event) {
 
   bool isToContinue = true; // will GO continue running? Otherwise it will exit
   SettingsReasons *const pReasons = (SettingsReasons *)event.GetClientData();
-  GOSettingsDialog dialog(this, m_Sound, pReasons);
+  GOSettingsDialog dialog(this, m_config, m_Sound, m_Sound.GetMidi(), pReasons);
 
   if (dialog.ShowModal() == wxID_OK) {
     GOArchiveManager manager(m_config, m_config.OrganCachePath());
