@@ -97,7 +97,7 @@ jobs:
 
           - run_on: ubuntu-latest
             for: win64
-            prepare: ubuntu-20
+            prepare: "debian-based"
             build_on: linux
 
           - run_on: ubuntu-18.04
