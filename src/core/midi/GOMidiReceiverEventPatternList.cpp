@@ -17,15 +17,6 @@ GOMidiReceiverType GOMidiReceiverEventPatternList::GetType() const {
   return m_type;
 }
 
-unsigned GOMidiReceiverEventPatternList::GetEventCount() const {
-  return m_events.size();
-}
-
-GOMidiReceiverEventPattern &GOMidiReceiverEventPatternList::GetEvent(
-  unsigned index) {
-  return m_events[index];
-}
-
 unsigned GOMidiReceiverEventPatternList::AddNewEvent() {
   m_events.emplace_back();
   return m_events.size() - 1;

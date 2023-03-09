@@ -16,7 +16,7 @@
 #include "config/GOConfigWriter.h"
 
 GOEnclosure::GOEnclosure(GOOrganController *organController)
-  : m_midi(organController, MIDI_RECV_ENCLOSURE),
+  : m_midi(*organController, MIDI_RECV_ENCLOSURE),
     m_sender(organController, MIDI_SEND_ENCLOSURE),
     m_shortcut(organController, KEY_RECV_ENCLOSURE),
     m_OrganController(organController),

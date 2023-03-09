@@ -11,17 +11,18 @@
 #include "config/GOConfigReader.h"
 #include "model/GOEnclosure.h"
 #include "model/GOManual.h"
-
-#include "GOOrganController.h"
+#include "model/GOOrganModel.h"
 
 GOMidiReceiver::GOMidiReceiver(
-  GOOrganController *organController, GOMidiReceiverType type)
-  : GOMidiReceiverBase(type), m_OrganController(organController), m_Index(-1) {}
+  GOOrganModel &organModel, GOMidiReceiverType type)
+  : GOMidiReceiverBase(type),
+    r_OrganModel(organModel),
+    r_config(organModel.GetConfig()),
+    m_Index(-1) {}
 
-void GOMidiReceiver::SetIndex(int index) { m_Index = index; }
 void GOMidiReceiver::Load(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
-  if (m_OrganController && !m_OrganController->GetSettings().ODFCheck()) {
+  if (!r_config.ODFCheck()) {
     /* Skip old style entries */
     if (m_type == MIDI_RECV_DRAWSTOP)
       cfg.ReadInteger(
@@ -34,8 +35,6 @@ void GOMidiReceiver::Load(
 }
 
 void GOMidiReceiver::Preconfigure(GOConfigReader &cfg, wxString group) {
-  if (!m_OrganController)
-    return;
   unsigned index = 0;
 
   if (m_type == MIDI_RECV_SETTER) {
@@ -45,17 +44,16 @@ void GOMidiReceiver::Preconfigure(GOConfigReader &cfg, wxString group) {
     if (m_Index == -1)
       return;
 
-    index = m_OrganController->GetManual(m_Index)->GetMIDIInputNumber();
+    index = r_OrganModel.GetManual(m_Index)->GetMIDIInputNumber();
   }
   if (m_type == MIDI_RECV_ENCLOSURE) {
     if (m_Index == -1)
       return;
 
-    index
-      = m_OrganController->GetEnclosureElement(m_Index)->GetMIDIInputNumber();
+    index = r_OrganModel.GetEnclosureElement(m_Index)->GetMIDIInputNumber();
   }
-  GOMidiReceiverBase *recv
-    = m_OrganController->GetSettings().FindMidiEvent(m_type, index);
+  const GOMidiReceiverBase *recv = r_config.FindMidiEvent(m_type, index);
+
   if (!recv)
     return;
 
@@ -63,12 +61,9 @@ void GOMidiReceiver::Preconfigure(GOConfigReader &cfg, wxString group) {
     m_events.push_back(recv->GetEvent(i));
 }
 
-int GOMidiReceiver::GetTranspose() {
-  return m_OrganController->GetSettings().Transpose();
-}
+int GOMidiReceiver::GetTranspose() { return r_config.Transpose(); }
 
 void GOMidiReceiver::Assign(const GOMidiReceiverEventPatternList &data) {
   GOMidiReceiverBase::Assign(data);
-  if (m_OrganController)
-    m_OrganController->SetOrganModified();
+  r_OrganModel.SetOrganModelModified();
 }
