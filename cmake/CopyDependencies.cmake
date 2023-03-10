@@ -30,8 +30,8 @@ function(CopyDependencies app instpath)
   string(REPLACE ";" "$<SEMICOLON>" cmd_searchdirs "${searchdirs}")
 
   add_custom_command(TARGET ${app} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -Dstatusfile="${statusfile}" -Dtarget="${targetfile}" -Dsearchdirs="${cmd_searchdirs}" -P "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake"
+    COMMAND ${CMAKE_COMMAND} -Dstatusfile="${statusfile}" -Dbundledtarget="${targetfile}" -Dsearchdirs="${cmd_searchdirs}" -P "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake"
     DEPENDS ${targetfile} "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake" "${statusfile}")
 
-  install(CODE "execute_process(COMMAND \"${CMAKE_COMMAND}\" \"-Dstatusfile=${statusfile}\" \"-Dtarget=\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${instpath}\" \"-Dsearchdirs=${searchdirs}\" -P \"${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake\")")
+  install(CODE "execute_process(COMMAND \"${CMAKE_COMMAND}\" \"-Dstatusfile=${statusfile}\" \"-Dbundledtarget=\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${instpath}\" \"-Dsearchdirs=${searchdirs}\" -P \"${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake\")")
 endfunction()
