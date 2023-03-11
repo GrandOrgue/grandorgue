@@ -313,20 +313,40 @@ void GOCoupler::ChangeKey(int note, unsigned velocity) {
       m_CurrentTone = -1;
     }
 
-    if (
-      ((velocity > 0 && nextNote == note)
-       || (velocity == 0 && nextNote == m_LastTone))
-      || m_CurrentTone == -1)
+    if (((velocity > 0 && nextNote == note)
+         || (velocity == 0 && nextNote == m_LastTone)))
       m_CurrentTone = nextNote;
 
     if (m_CurrentTone != -1)
       SetOut(m_CurrentTone + m_Keyshift, m_KeyVelocity[m_CurrentTone]);
 
-    if (velocity > 0)
-      m_LastTone = note;
-    else
-      m_LastTone = -1;
-    return;
+    int nextCandidate = nextNote;
+    if (m_CouplerType == COUPLER_BASS) {
+      for (nextCandidate += 1; nextCandidate < (int)m_KeyVelocity.size();
+           nextCandidate++)
+        if (m_KeyVelocity[nextCandidate] > 0)
+          break;
+      if (nextCandidate == (int)m_KeyVelocity.size())
+        nextCandidate = -1;
+      if (velocity > 0)
+        m_LastTone = (note < nextCandidate)
+          ? note
+          : (nextCandidate < 0 ? note : nextCandidate);
+      else
+        m_LastTone = (note < nextCandidate) ? -1 : nextCandidate;
+      return;
+    } else {
+      for (nextCandidate -= 1; nextCandidate >= 0; nextCandidate--)
+        if (m_KeyVelocity[nextCandidate] > 0)
+          break;
+      if (velocity > 0)
+        m_LastTone = (note > nextCandidate)
+          ? note
+          : (nextCandidate > 0 ? nextCandidate : note);
+      else
+        m_LastTone = (note > nextCandidate) ? -1 : nextCandidate;
+      return;
+    }
   }
   SetOut(note + m_Keyshift, velocity);
 }
