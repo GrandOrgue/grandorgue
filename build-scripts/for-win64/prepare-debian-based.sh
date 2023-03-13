@@ -1,14 +1,14 @@
 #!/bin/bash
 
 set -e
+
+BASE_DIR=$(dirname $0)
+
 sudo dpkg --add-architecture i386
 sudo apt-get update
 
 # remove an odd version of packages that prevents installing wine32
-LIBPCRE_VERSION=`apt-cache policy libpcre2-8-0:i386 | awk '/Candidate:/ { print $2; }'`
-LIBDG3_VERSION=`apt-cache policy libgd3:i386 | awk '/Candidate:/ { print $2; }'`
-sudo DEBIAN_FRONTEND=noninteractive apt-get --allow-downgrades -y install \
-  libpcre2-8-0=$LIBPCRE_VERSION libgd3=$LIBDG3_VERSION
+$BASE_DIR/../for-linux/prepare-debian-based-align-libs.sh $TARGET_ARCH i386
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
