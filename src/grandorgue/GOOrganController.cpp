@@ -121,7 +121,7 @@ GOOrganController::GOOrganController(
     m_SampleSetId1(0),
     m_SampleSetId2(0),
     m_bitmaps(this),
-    m_GeneralTemplate(this),
+    m_GeneralTemplate(*this),
     m_PitchLabel(this),
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {

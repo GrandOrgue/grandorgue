@@ -45,7 +45,7 @@ GOManual::GOManual(GOOrganController *organController)
     m_divisionals(0),
     m_ODFCouplerCount(0),
     m_displayed(false),
-    m_DivisionalTemplate(organController) {
+    m_DivisionalTemplate(*organController) {
   m_InputCouplers.push_back(NULL);
   m_OrganController->RegisterEventHandler(this);
   m_OrganController->RegisterMidiConfigurator(this);
