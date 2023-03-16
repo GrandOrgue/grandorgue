@@ -8,6 +8,8 @@
 #ifndef GOMIDIEVENT_H
 #define GOMIDIEVENT_H
 
+#include <stdint.h>
+
 #include <vector>
 
 #include "GOTime.h"

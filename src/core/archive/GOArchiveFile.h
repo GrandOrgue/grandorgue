@@ -8,6 +8,7 @@
 #ifndef GOARCHIVEFILE_H
 #define GOARCHIVEFILE_H
 
+#include <stdint.h>
 #include <wx/string.h>
 
 #include <vector>
