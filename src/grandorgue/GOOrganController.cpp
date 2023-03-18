@@ -922,6 +922,11 @@ const wxString GOOrganController::GetSettingFilename() {
 
 const wxString GOOrganController::GetCacheFilename() { return m_CacheFilename; }
 
+wxString GOOrganController::GetCombinationsDir() const {
+  return wxFileName(m_config.OrganCombinationsPath(), m_ChurchName)
+    .GetFullPath();
+}
+
 GOMemoryPool &GOOrganController::GetMemoryPool() { return m_pool; }
 
 GOConfig &GOOrganController::GetSettings() { return m_config; }

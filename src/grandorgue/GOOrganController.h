@@ -234,6 +234,7 @@ public:
   GOOrgan GetOrganInfo();
   const wxString GetSettingFilename();
   const wxString GetCacheFilename();
+  wxString GetCombinationsDir() const;
 
   /* Organ and Building general information */
   const wxString &GetChurchName();
