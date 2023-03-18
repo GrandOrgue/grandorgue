@@ -663,6 +663,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
     cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
 
     ReadCombinations(cfg);
+    SetOrganModified();
   } catch (wxString error) {
     wxLogError(wxT("%s\n"), error.c_str());
     GOMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);

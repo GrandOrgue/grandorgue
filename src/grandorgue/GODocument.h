@@ -59,7 +59,6 @@ public:
   bool Export(const wxString &cmb);
   bool LoadOrgan(
     GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb);
-  bool ImportCombination(const wxString &cmb);
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
   void ShowMIDIEventDialog(

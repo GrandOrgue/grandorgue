@@ -879,6 +879,23 @@ void GOFrame::OnInstall(wxCommandEvent &event) {
     }
 }
 
+void GOFrame::OnImportCombinations(wxCommandEvent &event) {
+  GOOrganController *pOrganController = GetOrganController();
+
+  if (pOrganController) {
+    wxFileDialog dlg(
+      this,
+      _("Import Combinations"),
+      m_config.ExportImportPath(),
+      wxEmptyString,
+      _("Settings files (*.cmb)|*.cmb"),
+      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (dlg.ShowModal() == wxID_OK)
+      pOrganController->LoadCombination(dlg.GetPath());
+  }
+}
+
 void GOFrame::OnImportSettings(wxCommandEvent &event) {
   GOOrganController *organController = GetOrganController();
 
@@ -898,22 +915,6 @@ void GOFrame::OnImportSettings(wxCommandEvent &event) {
       if (m_locker.IsLocked()) {
         LoadOrgan(organ, dlg.GetPath());
       }
-    }
-  }
-}
-
-void GOFrame::OnImportCombinations(wxCommandEvent &event) {
-  if (GetOrganController()) {
-    wxFileDialog dlg(
-      this,
-      _("Import Combinations"),
-      m_config.ExportImportPath(),
-      wxEmptyString,
-      _("Settings files (*.cmb)|*.cmb"),
-      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-
-    if (dlg.ShowModal() == wxID_OK) {
-      m_doc->ImportCombination(dlg.GetPath());
     }
   }
 }
