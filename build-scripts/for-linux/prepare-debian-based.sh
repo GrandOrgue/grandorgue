@@ -45,7 +45,19 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libudev-dev:$TARGET_ARCH \
   libwavpack-dev:$TARGET_ARCH \
   libwxgtk3.0-gtk3-dev:$TARGET_ARCH \
+  libyaml-cpp-dev:$TARGET_ARCH \
   zlib1g-dev:$TARGET_ARCH
+
+# download and install additional packages
+mkdir -p deb
+pushd deb
+
+wget \
+  https://github.com/GrandOrgue/YamlCppAdd/releases/download/0.6.2-5.go/libyaml-cpp-static_0.6.2-5.go_all.deb
+
+sudo apt-get install -y \
+  ./libyaml-cpp-static_0.6.2-5.go_all.deb
+popd
 
 # old linux versions have libgcc1 instead of libgcc-s1
 # prevent generating dependencies on libgcc-s1
