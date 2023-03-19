@@ -16,7 +16,7 @@
 #include "GOPipeWindchestCallback.h"
 
 class GOMemoryPool;
-class GOOrganController;
+class GOOrganModel;
 class GOSoundSampler;
 
 class GOSoundingPipe : public GOPipe,
@@ -24,7 +24,7 @@ class GOSoundingPipe : public GOPipe,
                        private GOPipeUpdateCallback,
                        private GOPipeWindchestCallback {
 private:
-  GOOrganController *m_OrganController;
+  GOOrganModel *p_OrganModel;
   GOSoundSampler *m_Sampler;
   uint64_t m_LastStop;
   int m_Instances;
@@ -102,7 +102,7 @@ private:
 
 public:
   GOSoundingPipe(
-    GOOrganController *organController,
+    GOOrganModel *organController,
     GORank *rank,
     bool percussive,
     int sampler_group_id,

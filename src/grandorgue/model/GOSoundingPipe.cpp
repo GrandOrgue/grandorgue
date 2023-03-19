@@ -17,7 +17,7 @@
 
 #include "GOAlloc.h"
 #include "GOHash.h"
-#include "GOOrganController.h"
+#include "GOOrganModel.h"
 #include "GOPath.h"
 #include "GORank.h"
 #include "GOWindchest.h"
@@ -25,7 +25,7 @@
 #include "go_limits.h"
 
 GOSoundingPipe::GOSoundingPipe(
-  GOOrganController *organController,
+  GOOrganModel *pOrganModel,
   GORank *rank,
   bool percussive,
   int sampler_group_id,
@@ -34,8 +34,8 @@ GOSoundingPipe::GOSoundingPipe(
   float min_volume,
   float max_volume,
   bool retune)
-  : GOPipe(organController, rank, midi_key_number),
-    m_OrganController(organController),
+  : GOPipe(pOrganModel, rank, midi_key_number),
+    p_OrganModel(pOrganModel),
     m_Sampler(NULL),
     m_LastStop(0),
     m_Instances(0),
@@ -59,7 +59,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_RetunePipe(retune),
     m_IsTemperamentOriginalBased(true),
     m_PipeConfigNode(
-      &rank->GetPipeConfig(), organController, this, &m_SoundProvider) {}
+      &rank->GetPipeConfig(), pOrganModel, this, &m_SoundProvider) {}
 
 void GOSoundingPipe::LoadAttack(
   GOConfigReader &cfg, wxString group, wxString prefix) {
@@ -136,7 +136,7 @@ void GOSoundingPipe::LoadAttack(
 
 void GOSoundingPipe::Init(
   GOConfigReader &cfg, wxString group, wxString prefix, wxString filename) {
-  m_OrganController->RegisterCacheObject(this);
+  p_OrganModel->RegisterCacheObject(this);
   m_Filename = filename;
   m_PipeConfigNode.Init(cfg, group, prefix);
   m_OdfMidiKeyNumber = -1;
@@ -144,7 +144,7 @@ void GOSoundingPipe::Init(
   m_LoopCrossfadeLength = 0;
   m_ReleaseCrossfadeLength = 0;
   UpdateAmplitude();
-  m_OrganController->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+  p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
   attack_load_info ainfo;
   ainfo.filename.AssignResource(m_Filename);
@@ -166,7 +166,7 @@ void GOSoundingPipe::Init(
 
 void GOSoundingPipe::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  m_OrganController->RegisterCacheObject(this);
+  p_OrganModel->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   m_PipeConfigNode.Load(cfg, group, prefix);
   m_HarmonicNumber = cfg.ReadInteger(
@@ -182,7 +182,7 @@ void GOSoundingPipe::Load(
     group,
     prefix + wxT("WindchestGroup"),
     1,
-    m_OrganController->GetWindchestGroupCount(),
+    p_OrganModel->GetWindchestGroupCount(),
     false,
     m_SamplerGroupID);
   m_Percussive = cfg.ReadBoolean(
@@ -210,7 +210,7 @@ void GOSoundingPipe::Load(
   m_RetunePipe = cfg.ReadBoolean(
     ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
   UpdateAmplitude();
-  m_OrganController->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+  p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
   LoadAttack(cfg, group, prefix);
 
@@ -378,7 +378,7 @@ void GOSoundingPipe::Validate() {
     : 0.0; // if MidiKeyNumber is provided in the ODF then we ignore
            // the PitchFraction from the sample
 
-  if (!m_OrganController->GetConfig().ODFCheck())
+  if (!p_OrganModel->GetConfig().ODFCheck())
     return;
 
   if (!m_PipeConfigNode.GetEffectiveChannels())
@@ -501,7 +501,7 @@ void GOSoundingPipe::UpdateTuning() {
 }
 
 void GOSoundingPipe::UpdateAudioGroup() {
-  m_AudioGroupID = m_OrganController->GetConfig().GetAudioGroupId(
+  m_AudioGroupID = p_OrganModel->GetConfig().GetAudioGroupId(
     m_PipeConfigNode.GetEffectiveAudioGroup());
 }
 
