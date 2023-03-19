@@ -127,6 +127,8 @@ private:
   void PreconfigRecorder();
 
   wxString GetOrganHash();
+  bool IsToImportCombinationsFor(
+    const wxString &fileName, const wxString &churchName) const;
 
 public:
   GOOrganController(
@@ -158,7 +160,6 @@ public:
     GOProgressDialog *dlg,
     const GOOrgan &organ,
     const wxString &cmb = wxEmptyString);
-
   /**
    * Exports organ combinations in the yaml file
    * @param fileName - the path to the taml file to export
