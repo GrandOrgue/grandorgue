@@ -77,17 +77,22 @@ jobs:
         include:
           - run_on: ubuntu-18.04
             for: linux
-            prepare: "debian-ubuntu"
+            prepare: "debian-based"
+            build_on: linux
+
+          - run_on: ubuntu-18.04
+            for: appimage-x86_64
+            prepare: "debian-based"
             build_on: linux
 
           - run_on: ubuntu-18.04
             for: linux-armhf
-            prepare: "ubuntu-18"
+            prepare: "debian-based"
             build_on: linux
     
           - run_on: ubuntu-18.04
             for: linux-aarch64
-            prepare: "ubuntu-18"
+            prepare: "debian-based"
             build_on: linux
 
           - run_on: macos-11
@@ -98,11 +103,6 @@ jobs:
           - run_on: ubuntu-latest
             for: win64
             prepare: ubuntu-20
-            build_on: linux
-
-          - run_on: ubuntu-18.04
-            for: appimage-x86_64
-            prepare: "debian-ubuntu"
             build_on: linux
 
     runs-on: ${{ matrix.run_on }}
