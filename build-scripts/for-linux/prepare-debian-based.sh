@@ -19,6 +19,10 @@ else
   # ubuntu has different urls for different architectures
   [[ "$OS_DISTR" == "ubuntu" ]] && $DIR/prepare-ubuntu-multiarch-repos.sh
   sudo apt update
+
+  # remove an odd version of packages that prevents installing same packages for foreign arch
+  $DIR/prepare-debian-based-align-libs.sh $TARGET_ARCH
+
   sudo DEBIAN_FRONTEND=noninteractive apt-get install -y dpkg-dev
   GCC_SUFFIX=-$(dpkg-architecture -A $TARGET_ARCH -q DEB_TARGET_MULTIARCH)
 fi
