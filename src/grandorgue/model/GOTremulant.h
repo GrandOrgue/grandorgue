@@ -8,7 +8,7 @@
 #ifndef GOTREMULANT_H
 #define GOTREMULANT_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <wx/string.h>
 
 #include "GOCacheObject.h"
