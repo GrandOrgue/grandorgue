@@ -15,7 +15,7 @@
 class GOCombinationElement;
 class GODrawstop;
 class GOManual;
-class GOOrganController;
+class GOOrganModel;
 
 class GOCombinationDefinition {
 public:
@@ -36,7 +36,7 @@ public:
   } CombinationSlot;
 
 private:
-  GOOrganController *m_OrganController;
+  GOOrganModel &r_OrganModel;
   std::vector<CombinationSlot> m_Content;
 
   void AddGeneral(
@@ -51,7 +51,7 @@ private:
     bool store_unconditional);
 
 public:
-  GOCombinationDefinition(GOOrganController *organController);
+  GOCombinationDefinition(GOOrganModel &organModel);
   ~GOCombinationDefinition();
 
   void InitGeneral();
