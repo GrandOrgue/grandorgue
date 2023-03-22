@@ -8,7 +8,7 @@
 #ifndef GOMIDIEVENT_H
 #define GOMIDIEVENT_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <vector>
 

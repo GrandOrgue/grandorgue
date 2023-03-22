@@ -8,7 +8,7 @@
 #ifndef GOCONFIGFILEWRITER_H
 #define GOCONFIGFILEWRITER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <wx/string.h>
 
 #include <map>
