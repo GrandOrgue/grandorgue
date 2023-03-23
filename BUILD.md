@@ -25,7 +25,7 @@ You can download the source code archive from GitHub
     1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) end extract the contents of the ``rtaudio-master`` subdirectory from the archive to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
     2. `RtMidi`: Download [the source archive](https://github.com/thestk/rtmidi/archive/refs/heads/master.zip) and extract the contents of the ``rtmidi-master`` subdirectory from the archive to the ``submodules/RtMidi`` subdirectory of GrandOrgue source tree.
     3. `PortAudio`: Download [the source archive](https://github.com/PortAudio/portaudio/archive/refs/heads/master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/PortAudio`` subdirectory of GrandOrgue source tree.
-    4. `ZitaConvolver`: Download the source archive](https://salsa.debian.org/multimedia-team/zita-convolver/-/archive/master/zita-convolver-master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/ZitaConvolver`` subdirectory of GrandOrgue source tree.
+    4. `ZitaConvolver`: Download [the source archive](https://salsa.debian.org/multimedia-team/zita-convolver/-/archive/master/zita-convolver-master.zip) and extract the contents of the ``zita-convolver-master`` subdirectory from the archive to the ``submodules/ZitaConvolver`` subdirectory of GrandOrgue source tree.
 
 ## Building for Linux on Linux
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``

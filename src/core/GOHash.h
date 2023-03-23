@@ -8,6 +8,7 @@
 #ifndef GOHASH_H
 #define GOHASH_H
 
+#include <cstdint>
 #include <wx/string.h>
 
 #include "contrib/sha1.h"
