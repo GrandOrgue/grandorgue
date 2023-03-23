@@ -348,6 +348,17 @@ GOStop *GOManual::GetStop(unsigned index) {
   return m_stops[index];
 }
 
+int GOManual::FindStopByName(const wxString &stopName) const {
+  int stopIndex = -1;
+
+  for (unsigned l = m_stops.size(), i = 0; i < l; i++)
+    if (m_stops[i]->GetName() == stopName) {
+      stopIndex = i;
+      break;
+    }
+  return stopIndex;
+}
+
 unsigned GOManual::GetCouplerCount() { return m_couplers.size(); }
 
 unsigned GOManual::GetODFCouplerCount() { return m_ODFCouplerCount; }

@@ -62,7 +62,7 @@ public:
   bool IsDisplayed();
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }
   bool IsReadOnly();
-  const wxString &GetName();
+  const wxString &GetName() const { return m_Name; }
   bool IsPiston() const { return m_IsPiston; }
 
   virtual void Push();

@@ -81,8 +81,6 @@ bool GOButtonControl::IsDisplayed() { return m_Displayed; }
 
 bool GOButtonControl::IsReadOnly() { return m_ReadOnly; }
 
-const wxString &GOButtonControl::GetName() { return m_Name; }
-
 void GOButtonControl::HandleKey(int key) {
   if (m_ReadOnly)
     return;

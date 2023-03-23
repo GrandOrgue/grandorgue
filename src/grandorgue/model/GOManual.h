@@ -112,6 +112,13 @@ public:
 
   unsigned GetStopCount();
   GOStop *GetStop(unsigned index);
+
+  /**
+   * Find a stop by it's name
+   * @param stopName - the name of stop to find
+   * @return the stop index or -1 if the stop is not found
+   */
+  int FindStopByName(const wxString &stopName) const;
   unsigned GetCouplerCount();
   unsigned GetODFCouplerCount();
   GOCoupler *GetCoupler(unsigned index);
