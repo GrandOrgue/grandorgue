@@ -18,20 +18,22 @@ GOGeneralButtonControl::GOGeneralButtonControl(
   GOOrganController *organController,
   bool is_setter)
   : GOPushbuttonControl(organController),
-    m_general(general_template, organController, is_setter) {}
+    m_combination(general_template, organController, is_setter) {}
 
 void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
-  m_general.Load(cfg, group);
+  m_combination.Load(cfg, group);
   GOPushbuttonControl::Load(cfg, group);
 }
 
 void GOGeneralButtonControl::Push() {
   GOCombination::ExtraElementsSet elementSet;
 
-  m_general.Push(
+  m_combination.Push(
     m_OrganController->GetSetter()->GetCrescendoAddSet(elementSet));
 }
 
-GOGeneralCombination &GOGeneralButtonControl::GetGeneral() { return m_general; }
+GOGeneralCombination &GOGeneralButtonControl::GetCombination() {
+  return m_combination;
+}
 
 wxString GOGeneralButtonControl::GetMidiType() { return _("General"); }
