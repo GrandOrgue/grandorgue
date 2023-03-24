@@ -15,8 +15,13 @@
 #include "combinations/GOSetter.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
+#include "model/GOStop.h"
+#include "model/GOSwitch.h"
+#include "model/GOTremulant.h"
+#include "yaml/go-wx-yaml.h"
 
 #include "GOOrganController.h"
 
@@ -375,6 +380,52 @@ void GODivisionalCombination::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
 }
 
+const wxString WX_P03D = "%03d";
+const char *const STOPS = "stops";
+const char *const COUPLERS = "couplers";
+const char *const TREMULANTS = "tremulants";
+const char *const SWITCHES = "switches";
+
+void GODivisionalCombination::ToYaml(YAML::Node &yamlNode) const {
+  const std::vector<GOCombinationDefinition::Element> &elements
+    = m_Template.GetElements();
+  GOManual &manual = *m_OrganController->GetManual(m_odfManualNumber);
+
+  for (unsigned i = 0; i < elements.size(); i++)
+    if (m_State[i] > 0) {
+      const auto e = elements[i];
+      unsigned value = e.index;
+      const wxString valueLabel = wxString::Format(WX_P03D, value);
+
+      assert(value > 0);
+
+      unsigned index = value - 1;
+
+      switch (e.type) {
+      case GOCombinationDefinition::COMBINATION_STOP:
+        yamlNode[STOPS][valueLabel] = manual.GetStop(index)->GetName();
+        break;
+
+      case GOCombinationDefinition::COMBINATION_COUPLER:
+        yamlNode[COUPLERS][valueLabel] = manual.GetCoupler(index)->GetName();
+        break;
+
+      case GOCombinationDefinition::COMBINATION_TREMULANT:
+        yamlNode[TREMULANTS][valueLabel]
+          = m_OrganController->GetTremulant(index)->GetName();
+        break;
+
+      case GOCombinationDefinition::COMBINATION_SWITCH:
+        yamlNode[SWITCHES][valueLabel]
+          = m_OrganController->GetSwitch(index)->GetName();
+        break;
+
+      case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+        break;
+      }
+    }
+}
+
 void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
   PushLocal(extraSet);
 
@@ -451,4 +502,8 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
     }
   }
   return pCmb;
+}
+
+void GODivisionalCombination::FromYaml(const YAML::Node &node) {
+  throw wxT("Not implemented yet");
 }

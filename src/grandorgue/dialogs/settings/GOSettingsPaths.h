@@ -21,6 +21,7 @@ private:
   wxDirPickerCtrl *m_OrganPackages;
   wxDirPickerCtrl *m_OrganCache;
   wxDirPickerCtrl *m_OrganSettings;
+  wxDirPickerCtrl *m_OrganCombinations;
   wxDirPickerCtrl *m_ExportImport;
   wxDirPickerCtrl *m_AudioRecorder;
   wxDirPickerCtrl *m_MidiRecorder;

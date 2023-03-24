@@ -207,6 +207,8 @@ GOConfig::GOConfig(wxString instance)
     OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
     OrganPackagePath(
       this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
+    OrganCombinationsPath(
+      this, wxT("General"), wxT("CmbYamlPath"), wxEmptyString),
     ExportImportPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
     AudioRecorderPath(
       this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
@@ -228,6 +230,8 @@ GOConfig::GOConfig(wxString instance)
     GOStdPath::GetGrandOrgueSubDir(wxT("Cache") + m_InstanceName));
   OrganSettingsPath.setDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(wxT("Data") + m_InstanceName));
+  OrganCombinationsPath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(_("Combinations")));
   ExportImportPath.setDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Settings")));
   AudioRecorderPath.setDefaultValue(

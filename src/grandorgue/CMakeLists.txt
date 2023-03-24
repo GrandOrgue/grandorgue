@@ -180,6 +180,8 @@ sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
 sound/GOSoundStateHandler.cpp
 sound/GOSound.cpp
+yaml/GOSaveableToYaml.cpp
+yaml/go-wx-yaml.cpp
 GOAudioGauge.cpp
 GOAudioRecorder.cpp
 GOCache.cpp

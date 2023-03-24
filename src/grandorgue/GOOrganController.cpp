@@ -8,11 +8,13 @@
 #include "GOOrganController.h"
 
 #include <math.h>
+#include <wx/datetime.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
-#include <wx/stream.h>
+#include <wx/txtstrm.h>
 #include <wx/wfstream.h>
+#include <yaml-cpp/yaml.h>
 
 #include "archive/GOArchive.h"
 #include "archive/GOArchiveFile.h"
@@ -60,6 +62,7 @@
 #include "sound/GOSoundEngine.h"
 #include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
+#include "yaml/go-wx-yaml.h"
 
 #include "go_defs.h"
 
@@ -624,6 +627,41 @@ wxString GOOrganController::Load(
   m_FileStore.CloseArchives();
   if (errMsg.IsEmpty())
     SetTemperament(m_Temperament);
+  return errMsg;
+}
+
+const char *const INFO = "info";
+const char *const CONTENT_TYPE = "content-type";
+const wxString WX_GRANDORGUE_COMBINATIONS = "GrandOrgue Combinations";
+const char *const ORGAN_NAME = "organ-name";
+const char *const GRANDORGUE_VERSION = "grandorgue-version";
+const char *const SAVED_TIME = "saved_time";
+
+wxString GOOrganController::ExportCombination(const wxString &fileName) {
+  wxString errMsg;
+  wxFileOutputStream fOS(fileName);
+
+  if (fOS.IsOk()) {
+    YAML::Node globalNode(YAML::NodeType::Map);
+    YAML::Node infoNode = globalNode[INFO];
+
+    infoNode[CONTENT_TYPE] = WX_GRANDORGUE_COMBINATIONS;
+    infoNode[ORGAN_NAME] = m_ChurchName;
+    infoNode[GRANDORGUE_VERSION] = APP_VERSION;
+    infoNode[SAVED_TIME] = wxDateTime::Now().Format();
+
+    globalNode << *m_setter;
+    globalNode << *m_DivisionalSetter;
+    YAML::Emitter outYaml;
+
+    outYaml << YAML::BeginDoc << globalNode;
+
+    if (!fOS.WriteAll(outYaml.c_str(), outYaml.size()))
+      errMsg.Printf(
+        wxT("Unable to write all the data to the file '%s'"), fileName);
+    fOS.Close();
+  } else
+    errMsg.Printf(wxT("Unable to open the file '%s' for writing"), fileName);
   return errMsg;
 }
 

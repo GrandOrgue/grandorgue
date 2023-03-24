@@ -86,6 +86,22 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     wxEXPAND);
 
   grid->Add(
+    new wxStaticText(this, wxID_ANY, _("Combinations:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  grid->Add(
+    m_OrganCombinations = new wxDirPickerCtrl(
+      this,
+      wxID_ANY,
+      wxEmptyString,
+      _("Select directory for export/import organ combinations"),
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDIRP_USE_TEXTCTRL | wxDIRP_DIR_MUST_EXIST | wxDIRP_SMALL),
+    0,
+    wxEXPAND);
+
+  grid->Add(
     new wxStaticText(this, wxID_ANY, _("Export/import:")),
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
@@ -94,7 +110,7 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
       this,
       wxID_ANY,
       wxEmptyString,
-      _("Select directory for export/import organ settings or combinations"),
+      _("Select directory for export/import organ settings"),
       wxDefaultPosition,
       wxDefaultSize,
       wxDIRP_USE_TEXTCTRL | wxDIRP_DIR_MUST_EXIST | wxDIRP_SMALL),
@@ -157,6 +173,7 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
   m_OrganPackages->SetPath(m_config.OrganPackagePath());
   m_OrganCache->SetPath(m_config.OrganCachePath());
   m_OrganSettings->SetPath(m_config.OrganSettingsPath());
+  m_OrganCombinations->SetPath(m_config.OrganCombinationsPath());
   m_ExportImport->SetPath(m_config.ExportImportPath());
   m_AudioRecorder->SetPath(m_config.AudioRecorderPath());
   m_MidiRecorder->SetPath(m_config.MidiRecorderPath());
@@ -168,6 +185,7 @@ bool GOSettingsPaths::TransferDataFromWindow() {
   m_config.OrganPackagePath(m_OrganPackages->GetPath());
   m_config.OrganCachePath(m_OrganCache->GetPath());
   m_config.OrganSettingsPath(m_OrganSettings->GetPath());
+  m_config.OrganCombinationsPath(m_OrganCombinations->GetPath());
   m_config.ExportImportPath(m_ExportImport->GetPath());
   m_config.AudioRecorderPath(m_AudioRecorder->GetPath());
   m_config.MidiRecorderPath(m_MidiRecorder->GetPath());

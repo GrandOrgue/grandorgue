@@ -16,17 +16,17 @@
 #include "model/GOCombination.h"
 #include "model/GOEnclosure.h"
 #include "sound/GOSoundStateHandler.h"
+#include "yaml/GOSaveableToYaml.h"
 
 #define N_CRESCENDOS 4
 
 class GOGeneralCombination;
 
-typedef enum { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED } SetterType;
-
 class GOSetter : private GOSoundStateHandler,
                  private GOControlChangedHandler,
                  public GOElementCreator,
-                 public GOSaveableObject {
+                 public GOSaveableObject,
+                 public GOSaveableToYaml {
 private:
   GOOrganController *m_OrganController;
 
@@ -45,9 +45,9 @@ private:
   GOLabelControl m_TransposeDisplay;
   GOLabelControl m_NameDisplay;
   GOEnclosure m_swell;
-  SetterType m_SetterType;
+  GOCombination::SetterType m_SetterType;
 
-  void SetSetterType(SetterType type);
+  void SetSetterType(GOCombination::SetterType type);
   void SetCrescendoType(unsigned no);
   void Crescendo(int pos, bool force = false);
 
@@ -64,6 +64,12 @@ public:
   GOSetter(GOOrganController *organController);
   virtual ~GOSetter();
 
+  /**
+   * Save all combinations to yaml as a map
+   * @param outYaml - a yaml emitter to save combinations as a map
+   */
+  void ToYaml(YAML::Node &yamlNode) const override;
+  void FromYaml(const YAML::Node &yamlNode) override;
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
@@ -75,7 +81,7 @@ public:
   bool IsSetterActive();
   void ToggleSetter();
   void SetterActive(bool on);
-  SetterType GetSetterType();
+  GOCombination::SetterType GetSetterType() const { return m_SetterType; }
 
   /*
    * If current crescendo is in override mode then returns nullptr

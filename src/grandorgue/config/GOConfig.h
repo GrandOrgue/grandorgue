@@ -141,6 +141,7 @@ public:
         store, group, name, min_value, max_value, default_value) {}
 
   } BitsPerSample;
+
   GOSettingInteger Transpose;
 
   GOSettingUnsigned MetronomeMeasure;
@@ -152,6 +153,7 @@ public:
 
   GOSettingDirectory OrganPath;
   GOSettingDirectory OrganPackagePath;
+  GOSettingDirectory OrganCombinationsPath;
   GOSettingDirectory ExportImportPath;
   GOSettingDirectory AudioRecorderPath;
   GOSettingDirectory MidiRecorderPath;
@@ -174,20 +176,6 @@ public:
   const GOMidiReceiverBase *GetMidiEvent(unsigned index) const;
   const GOMidiReceiverBase *FindMidiEvent(
     GOMidiReceiverType type, unsigned index) const;
-
-  /*
-  bool GetMidiInState(wxString device, bool isEnabledByDefault);
-  void SetMidiInState(wxString device, bool enabled);
-  unsigned GetMidiInDeviceChannelShift(wxString device);
-  void SetMidiInDeviceChannelShift(wxString device, unsigned shift);
-  wxString GetMidiInOutDevice(wxString device);
-  void SetMidiInOutDevice(wxString device, wxString out_device);
-  std::vector<wxString> GetMidiInDeviceList();
-
-  bool GetMidiOutState(wxString device);
-  void SetMidiOutState(wxString device, bool enabled);
-  std::vector<wxString> GetMidiOutDeviceList();
-   */
 
   const std::vector<wxString> &GetAudioGroups();
   void SetAudioGroups(const std::vector<wxString> &audio_groups);

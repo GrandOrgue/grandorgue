@@ -14,7 +14,7 @@ License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
       <holder>Milan Digital Audio LLC</holder>
     </copyright>
     <copyright>
-      <year>2009-2021</year>
+      <year>2009-2023</year>
       <holder>GrandOrgue contributors (see AUTHORS)</holder>
     </copyright>
     <legalnotice>
@@ -415,6 +415,29 @@ you wish to discard your modifications. Note that the file containing saved sett
 currently in use is <emphasis>deleted</emphasis>.
 </para>
         </sect3>
+        <sect3 id="import_comb">
+          <title>Import Combinations</title>
+          <indexterm>
+            <primary>Import Combinations</primary>
+          </indexterm>
+          <para>Apply only the combination settings from a  previously exported settings file to the currently loaded
+sample set. All other settings that might have previously been changed are preserved.</para>
+          <para>Note that settings may only be applied to a matching sample
+set, and you will receive a warning if you try to do otherwise. The
+location where the combinations were imported from will be remembered for the next time.</para>
+          <para>A settings file matches a sample set when the <emphasis>ChurchName</emphasis> property of the settings file
+matches the <emphasis>ChurchName</emphasis> property of the definition file.</para>
+        </sect3>
+        <sect3 id="export_combinations">
+          <title>Export Combinations</title>
+          <indexterm>
+            <primary>Export Combinations</primary>
+          </indexterm>
+          <para>
+	    Saves current combination settings to a text file in YAML format.
+	    The user can view this file.
+	  </para>
+        </sect3>
         <sect3 id="import_settings">
           <title>Import Settings</title>
           <indexterm>
@@ -430,21 +453,8 @@ A settings file matches a sample set when the <emphasis>ChurchName</emphasis> pr
 matches the <emphasis>ChurchName</emphasis> property of the definition file.
 </para>
         </sect3>
-        <sect3 id="import_comb">
-          <title>Import Combinations</title>
-          <indexterm>
-            <primary>Import Combinations</primary>
-          </indexterm>
-          <para>Apply only the combination settings from a  previously exported settings file to the currently loaded
-sample set. All other settings that might have previously been changed are preserved.</para>
-          <para>Note that settings may only be applied to a matching sample
-set, and you will receive a warning if you try to do otherwise. The
-location where the combinations were imported from will be remembered for the next time.</para>
-          <para>A settings file matches a sample set when the <emphasis>ChurchName</emphasis> property of the settings file
-matches the <emphasis>ChurchName</emphasis> property of the definition file.</para>
-        </sect3>
         <sect3 id="export_settings">
-          <title>Export Settings/Combinations</title>
+          <title>Export Settings</title>
           <indexterm>
             <primary>Export Settings</primary>
           </indexterm>
@@ -452,7 +462,7 @@ matches the <emphasis>ChurchName</emphasis> property of the definition file.</pa
 engaged states; divisional, general, and program combinations;
 volume spinner value; temperament setting; fine tuning data.
 </para>
-          <para><emphasis>Export Settings/Combinations</emphasis> allows the user to choose a specific file name and folder. The latest location where settings were exported to will be remembered for the next time.</para>
+          <para><emphasis>Export Settings</emphasis> allows the user to choose a specific file name and folder. The latest location where settings were exported to will be remembered for the next time.</para>
         </sect3>
         <sect3>
           <title id="audiomidisettings">Settings...</title>
@@ -4255,14 +4265,29 @@ will be added to the <link linkend="knownorgans">known organs list</link>.
                 <entry>Default: <emphasis>Data</emphasis></entry>
               </row>
               <row>
+                <entry><emphasis role="strong">Combinations</emphasis></entry>
+                <entry>
+		  This is the folder where GrandOrgue stores or looks for
+		  combinations files in YAML format. Combinations for different
+		  organs are stored in subfolders of this folder. The names of
+		  the subfolders equal to the organ names. The subfolder of the
+		  current loaded organ is opened when one of the
+		  <link linkend="import_comb">File &gt; Import Combinations
+		  </link>, <link linkend="export_combinations">File &gt; Export
+		  Combinations</link> menu items is selected.
+                </entry>
+                <entry>Default: <emphasis>Settings</emphasis></entry>
+              </row>
+              <row>
                 <entry><emphasis role="strong">Export/Import</emphasis></entry>
                 <entry>
-This is the folder where GrandOrgue stores or looks for settings files. It is
-opened when one of the <link linkend="import_settings">File &gt; Import
-Settings</link>, <link linkend="import_comb">File &gt; Import Combinations</link>,
-<link linkend="export_settings">File &gt; Export Settings/Combinations</link> menu
-items is selected. This folder is usually different from the folder where
-GrandOrgue <link linkend="settingsstore">stores</link> preset files.
+		  This is the folder where GrandOrgue stores or looks for
+		  settings files. It is opened when one of the
+		  <link linkend="import_settings">File &gt; Import Settings
+		  </link>, <link linkend="export_settings">File &gt; Export
+		  Settings</link> menu items is selected. This
+		  folder is usually different from the folder where GrandOrgue
+		  <link linkend="settingsstore">stores</link> preset files.
                 </entry>
                 <entry>Default: <emphasis>Settings</emphasis></entry>
               </row>
