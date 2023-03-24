@@ -15,6 +15,20 @@ add_option(-mstackrealign)
 
 find_package(wxWidgets REQUIRED html net adv core base)
 include(${wxWidgets_USE_FILE})
+if (APPLE)
+  # /usr/local/share/cmake/yaml-cpp/yaml-cpp-config.cmake sets
+  # empty YAML_CPP_INCLUDE_DIR and YAML_CPP_LIBRARIES, so we use pkg_config
+  pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
+else()
+  # but pkg_config does not support static linking for yaml-cpp, so use cmake config
+  find_package(yaml-cpp REQUIRED)
+  include("${yaml-cpp_CONFIG}")
+  # the variables are different in both methods
+  set(YAML_CPP_INCLUDE_DIRS "${YAML_CPP_INCLUDE_DIR}")
+endif()
+
+message("YAML_CPP_INCLUDE_DIRS=${YAML_CPP_INCLUDE_DIRS}")
+message("YAML_CPP_LIBRARIES=${YAML_CPP_LIBRARIES}")
 
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_CURRENT_SOURCE_DIR}/resource ${CMAKE_SOURCE_DIR}/src/core)
 include_directories(${RT_INCLUDE_DIRS})
@@ -23,6 +37,7 @@ include_directories(${ZITACONVOLVER_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${JACK_INCLUDE_DIRS})
+include_directories(${YAML_CPP_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(grandorgue_src
@@ -192,7 +207,7 @@ if (USE_INTERNAL_ZITACONVOLVER)
 endif()
 
 add_library(golib STATIC ${grandorgue_src})
-set(go_libs ${wxWidgets_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES})
+set(go_libs ${wxWidgets_LIBRARIES} ${YAML_CPP_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES})
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR})
 target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
 link_directories(${go_libdir})

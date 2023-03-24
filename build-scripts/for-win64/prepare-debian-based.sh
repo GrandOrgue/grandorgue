@@ -23,14 +23,16 @@ wget \
   https://launchpad.net/~tobydox/+archive/ubuntu/mingw-w64/+files/fftw-mingw-w64_3.3.6-3_all.deb \
   https://github.com/GrandOrgue/JackCross/releases/download/1.9.19-1.os/jack-mingw-w64_1.9.19-1.os_all.deb \
   https://github.com/GrandOrgue/WavPackCross/releases/download/5.4.0-1.go/wavpack-mingw-w64_5.4.0-1.go_all.deb \
-  https://github.com/GrandOrgue/WxWidgetsCross/releases/download/3.1.5-2.go/wxwidgets3.0-mingw-w64_3.1.5-2.go_all.deb
+  https://github.com/GrandOrgue/WxWidgetsCross/releases/download/3.1.5-2.go/wxwidgets3.0-mingw-w64_3.1.5-2.go_all.deb \
+  https://github.com/GrandOrgue/YamlCppAdd/releases/download/0.6.2-6.go/libyaml-cpp-mingw-w64_0.6.2-6.go_all.deb
 
 sudo apt-get install -y \
   ./libgnurx-mingw-w64_2.6.1-1.os_all.deb \
   ./fftw-mingw-w64_3.3.6-3_all.deb \
   ./jack-mingw-w64_1.9.19-1.os_all.deb \
   ./wavpack-mingw-w64_5.4.0-1.go_all.deb \
-  ./wxwidgets3.0-mingw-w64_3.1.5-2.go_all.deb
+  ./wxwidgets3.0-mingw-w64_3.1.5-2.go_all.deb \
+  ./libyaml-cpp-mingw-w64_0.6.2-6.go_all.deb
 
 popd
 

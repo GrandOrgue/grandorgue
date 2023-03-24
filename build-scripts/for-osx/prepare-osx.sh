@@ -1,7 +1,15 @@
 #!/bin/bash
 
 set -e
-brew install gettext jack docbook-xsl cmake pkg-config fftw wavpack imagemagick
+brew install \
+  cmake \
+  docbook-xsl \
+  fftw wavpack \
+  gettext \
+  imagemagick \
+  jack \
+  pkg-config \
+  yaml-cpp
 brew link gettext --force
 
 # install wx for 10.15 in order to using the GrandOrgue bundle with 10.15
