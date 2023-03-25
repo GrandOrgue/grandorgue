@@ -19,33 +19,33 @@ class GOOrganModel;
 
 class GOCombinationDefinition {
 public:
-  typedef enum {
+  enum ElementType {
     COMBINATION_STOP = 0,
     COMBINATION_COUPLER = 1,
     COMBINATION_TREMULANT = 2,
     COMBINATION_DIVISIONALCOUPLER = 3,
     COMBINATION_SWITCH = 4
-  } CombinationType;
-  typedef struct {
-    CombinationType type;
+  };
+  struct Element {
+    ElementType type;
     int manual;
     unsigned index;
     bool store_unconditional;
     wxString group;
     GOCombinationElement *control;
-  } CombinationSlot;
+  };
 
 private:
   GOOrganModel &r_OrganModel;
-  std::vector<CombinationSlot> m_Content;
+  std::vector<Element> m_elements;
 
   void AddGeneral(
-    GODrawstop *control, CombinationType type, int manual, unsigned index);
+    GODrawstop *control, ElementType type, int manual, unsigned index);
   void AddDivisional(
-    GODrawstop *control, CombinationType type, int manual, unsigned index);
+    GODrawstop *control, ElementType type, int manual, unsigned index);
   void Add(
     GODrawstop *control,
-    CombinationType type,
+    ElementType type,
     int manual,
     unsigned index,
     bool store_unconditional);
@@ -57,9 +57,9 @@ public:
   void InitGeneral();
   void InitDivisional(unsigned manual_number);
 
-  int findEntry(CombinationType type, int manual, unsigned index);
+  int FindElement(ElementType type, int manual, unsigned index);
 
-  const std::vector<CombinationSlot> &GetCombinationElements();
+  const std::vector<Element> &GetElements() const { return m_elements; };
 };
 
 #endif
