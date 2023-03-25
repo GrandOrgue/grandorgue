@@ -110,26 +110,46 @@ public:
   void AllNotesOff();
   bool IsKeyDown(unsigned midiNoteNumber);
 
-  unsigned GetStopCount();
+  unsigned GetStopCount() const { return m_stops.size(); };
   GOStop *GetStop(unsigned index);
 
   /**
    * Find a stop by it's name
-   * @param stopName - the name of stop to find
+   * @param name - the name of stop to find
    * @return the stop index or -1 if the stop is not found
    */
-  int FindStopByName(const wxString &stopName) const;
-  unsigned GetCouplerCount();
-  unsigned GetODFCouplerCount();
+  int FindStopByName(const wxString &name) const;
+  unsigned GetCouplerCount() const { return m_couplers.size(); }
+  unsigned GetODFCouplerCount() const { return m_ODFCouplerCount; }
   GOCoupler *GetCoupler(unsigned index);
+  /**
+   * Find a coupler by it's name
+   * @param name - the name of coupler to find
+   * @return the stop index or -1 if the stop is not found
+   */
+  int FindCouplerByName(const wxString &name) const;
   void AddCoupler(GOCoupler *coupler);
   unsigned GetDivisionalCount();
   GODivisionalButtonControl *GetDivisional(unsigned index);
   void AddDivisional(GODivisionalButtonControl *divisional);
-  unsigned GetTremulantCount();
+  unsigned GetTremulantCount() const { return m_tremulant_ids.size(); }
   GOTremulant *GetTremulant(unsigned index);
-  unsigned GetSwitchCount();
+  /**
+   * Find a tremulant belonging to this manual by it's name
+   * @param name - the name of tremulant to find
+   * @return the tremulant index in the OrganModel (not in the manual) or -1
+   *   if the tremulant is not found
+   */
+  int FindTremulantByName(const wxString &name) const;
+  unsigned GetSwitchCount() const { return m_switch_ids.size(); }
   GOSwitch *GetSwitch(unsigned index);
+  /**
+   * Find a switch belonging to this manual by it's name
+   * @param name - the name of switch to find
+   * @return the switch index in the OrganModel (not in the manual) or -1
+   *   if the switch is not found
+   */
+  int FindSwitchByName(const wxString &name) const;
 
   GOCombinationDefinition &GetDivisionalTemplate();
   const wxString &GetName();

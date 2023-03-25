@@ -17,6 +17,8 @@
 #include "GODocument.h"
 #include "GOOrganController.h"
 #include "GOStop.h"
+#include "GOSwitch.h"
+#include "GOTremulant.h"
 
 GOManual::GOManual(GOOrganController *organController)
   : m_group(wxT("---")),
@@ -341,31 +343,36 @@ int GOManual::GetFirstLogicalKeyMIDINoteNumber() {
     + 1;
 }
 
-unsigned GOManual::GetStopCount() { return m_stops.size(); }
-
 GOStop *GOManual::GetStop(unsigned index) {
   assert(index < m_stops.size());
   return m_stops[index];
 }
 
-int GOManual::FindStopByName(const wxString &stopName) const {
-  int stopIndex = -1;
+int GOManual::FindStopByName(const wxString &name) const {
+  int resIndex = -1;
 
   for (unsigned l = m_stops.size(), i = 0; i < l; i++)
-    if (m_stops[i]->GetName() == stopName) {
-      stopIndex = i;
+    if (m_stops[i]->GetName() == name) {
+      resIndex = i;
       break;
     }
-  return stopIndex;
+  return resIndex;
 }
-
-unsigned GOManual::GetCouplerCount() { return m_couplers.size(); }
-
-unsigned GOManual::GetODFCouplerCount() { return m_ODFCouplerCount; }
 
 GOCoupler *GOManual::GetCoupler(unsigned index) {
   assert(index < m_couplers.size());
   return m_couplers[index];
+}
+
+int GOManual::FindCouplerByName(const wxString &name) const {
+  int resIndex = -1;
+
+  for (unsigned l = m_couplers.size(), i = 0; i < l; i++)
+    if (m_couplers[i]->GetName() == name) {
+      resIndex = i;
+      break;
+    }
+  return resIndex;
 }
 
 void GOManual::AddCoupler(GOCoupler *coupler) { m_couplers.push_back(coupler); }
@@ -385,18 +392,46 @@ GOCombinationDefinition &GOManual::GetDivisionalTemplate() {
   return m_DivisionalTemplate;
 }
 
-unsigned GOManual::GetTremulantCount() { return m_tremulant_ids.size(); }
-
 GOTremulant *GOManual::GetTremulant(unsigned index) {
   assert(index < m_tremulant_ids.size());
   return m_OrganController->GetTremulant(m_tremulant_ids[index] - 1);
 }
 
-unsigned GOManual::GetSwitchCount() { return m_switch_ids.size(); }
+int GOManual::FindTremulantByName(const wxString &name) const {
+  int resIndex = -1;
+
+  for (unsigned l = m_tremulant_ids.size(), i = 0; i < l; i++) {
+    int globalIndex = m_tremulant_ids[i] - 1;
+
+    if (
+      globalIndex >= 0
+      && m_OrganController->GetTremulant(globalIndex)->GetName() == name) {
+      resIndex = globalIndex;
+      break;
+    }
+  }
+  return resIndex;
+}
 
 GOSwitch *GOManual::GetSwitch(unsigned index) {
   assert(index < m_switch_ids.size());
   return m_OrganController->GetSwitch(m_switch_ids[index] - 1);
+}
+
+int GOManual::FindSwitchByName(const wxString &name) const {
+  int resIndex = -1;
+
+  for (unsigned l = m_switch_ids.size(), i = 0; i < l; i++) {
+    int globalIndex = m_switch_ids[i] - 1;
+
+    if (
+      globalIndex >= 0
+      && m_OrganController->GetSwitch(globalIndex)->GetName() == name) {
+      resIndex = globalIndex;
+      break;
+    }
+  }
+  return resIndex;
 }
 
 void GOManual::AllNotesOff() {

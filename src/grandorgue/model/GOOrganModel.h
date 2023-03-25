@@ -87,11 +87,23 @@ public:
   unsigned GetEnclosureCount();
   unsigned AddEnclosure(GOEnclosure *enclosure);
 
-  unsigned GetSwitchCount();
-  GOSwitch *GetSwitch(unsigned index);
+  unsigned GetSwitchCount() const { return m_switches.size(); }
+  GOSwitch *GetSwitch(unsigned index) { return m_switches[index]; }
+  /**
+   * Find a switch by it's name
+   * @param name - the name of switch to find
+   * @return the switch index or -1 if the tremulant is not found
+   */
+  int FindSwitchByName(const wxString &name) const;
 
-  unsigned GetTremulantCount();
-  GOTremulant *GetTremulant(unsigned index);
+  unsigned GetTremulantCount() const { return m_tremulants.size(); }
+  GOTremulant *GetTremulant(unsigned index) { return m_tremulants[index]; }
+  /**
+   * Find a tremulant by it's name
+   * @param name - the name of tremulant to find
+   * @return the tremulant index or -1 if the tremulant is not found
+   */
+  int FindTremulantByName(const wxString &name) const;
 
   unsigned GetManualAndPedalCount();
   unsigned GetODFManualCount();
@@ -105,8 +117,19 @@ public:
   unsigned GetNumberOfReversiblePistons();
   GOPistonControl *GetPiston(unsigned index);
 
-  unsigned GetDivisionalCouplerCount();
-  GODivisionalCoupler *GetDivisionalCoupler(unsigned index);
+  unsigned GetDivisionalCouplerCount() const {
+    return m_DivisionalCoupler.size();
+  }
+  GODivisionalCoupler *GetDivisionalCoupler(unsigned index) {
+    return m_DivisionalCoupler[index];
+  }
+
+  /**
+   * Find a divisional coupler by it's name
+   * @param name - the name of the divisional coupler to find
+   * @return the divisional coupler index or -1 if the coupler is not found
+   */
+  int FindDivisionalCouplerByName(const wxString &name) const;
 
   unsigned GetGeneralCount();
   GOGeneralButtonControl *GetGeneral(unsigned index);
