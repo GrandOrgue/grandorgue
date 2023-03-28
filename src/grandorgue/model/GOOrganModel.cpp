@@ -214,14 +214,26 @@ unsigned GOOrganModel::AddEnclosure(GOEnclosure *enclosure) {
   return m_enclosures.size() - 1;
 }
 
-unsigned GOOrganModel::GetSwitchCount() { return m_switches.size(); }
+int GOOrganModel::FindSwitchByName(const wxString &name) const {
+  int resIndex = -1;
 
-GOSwitch *GOOrganModel::GetSwitch(unsigned index) { return m_switches[index]; }
+  for (unsigned l = m_switches.size(), i = 0; i < l; i++)
+    if (m_switches[i]->GetName() == name) {
+      resIndex = i;
+      break;
+    }
+  return resIndex;
+}
 
-unsigned GOOrganModel::GetTremulantCount() { return m_tremulants.size(); }
+int GOOrganModel::FindTremulantByName(const wxString &name) const {
+  int resIndex = -1;
 
-GOTremulant *GOOrganModel::GetTremulant(unsigned index) {
-  return m_tremulants[index];
+  for (unsigned l = m_tremulants.size(), i = 0; i < l; i++)
+    if (m_tremulants[i]->GetName() == name) {
+      resIndex = i;
+      break;
+    }
+  return resIndex;
 }
 
 GORank *GOOrganModel::GetRank(unsigned index) { return m_ranks[index]; }
@@ -238,12 +250,15 @@ GOPistonControl *GOOrganModel::GetPiston(unsigned index) {
   return m_pistons[index];
 }
 
-unsigned GOOrganModel::GetDivisionalCouplerCount() {
-  return m_DivisionalCoupler.size();
-}
+int GOOrganModel::FindDivisionalCouplerByName(const wxString &name) const {
+  int resIndex = -1;
 
-GODivisionalCoupler *GOOrganModel::GetDivisionalCoupler(unsigned index) {
-  return m_DivisionalCoupler[index];
+  for (unsigned l = m_DivisionalCoupler.size(), i = 0; i < l; i++)
+    if (m_DivisionalCoupler[i]->GetName() == name) {
+      resIndex = i;
+      break;
+    }
+  return resIndex;
 }
 
 unsigned GOOrganModel::GetGeneralCount() { return m_generals.size(); }
