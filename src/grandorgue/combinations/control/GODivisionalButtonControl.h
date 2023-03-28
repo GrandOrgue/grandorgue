@@ -15,7 +15,7 @@ class GOConfigReader;
 
 class GODivisionalButtonControl : public GOPushbuttonControl {
 private:
-  GODivisionalCombination m_divisional;
+  GODivisionalCombination m_combination;
 
 public:
   GODivisionalButtonControl(
@@ -23,7 +23,7 @@ public:
     GOCombinationDefinition &divisionalTemplate,
     bool isSetter);
 
-  GODivisionalCombination &GetGeneral() { return m_divisional; }
+  GODivisionalCombination &GetCombination() { return m_combination; }
   wxString GetMidiType() override;
 
   void Init(

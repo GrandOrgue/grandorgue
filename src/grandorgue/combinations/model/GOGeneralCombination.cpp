@@ -391,7 +391,7 @@ void GOGeneralCombination::Push(
 
     for (unsigned k = 0; k < m_OrganController->GetGeneralCount(); k++) {
       GOGeneralButtonControl *general = m_OrganController->GetGeneral(k);
-      general->Display(&general->GetGeneral() == this);
+      general->Display(&general->GetCombination() == this);
     }
 
     for (unsigned j = m_OrganController->GetFirstManualIndex();

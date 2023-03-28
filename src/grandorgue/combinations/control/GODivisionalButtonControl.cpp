@@ -19,7 +19,7 @@ GODivisionalButtonControl::GODivisionalButtonControl(
   GOCombinationDefinition &divisionalTemplate,
   bool isSetter)
   : GOPushbuttonControl(organController),
-    m_divisional(organController, divisionalTemplate, isSetter) {}
+    m_combination(organController, divisionalTemplate, isSetter) {}
 
 wxString GODivisionalButtonControl::GetMidiType() { return _("Divisional"); };
 
@@ -30,7 +30,7 @@ void GODivisionalButtonControl::Init(
   int divisionalNumber,
   const wxString &name) {
   GOPushbuttonControl::Init(cfg, group, name);
-  m_divisional.Init(group, manualNumber, divisionalNumber);
+  m_combination.Init(group, manualNumber, divisionalNumber);
 }
 void GODivisionalButtonControl::Load(
   GOConfigReader &cfg,
@@ -38,16 +38,16 @@ void GODivisionalButtonControl::Load(
   int manualNumber,
   int divisionalNumber) {
   GOPushbuttonControl::Load(cfg, group);
-  m_divisional.Load(cfg, group, manualNumber, divisionalNumber);
+  m_combination.Load(cfg, group, manualNumber, divisionalNumber);
 }
 
 void GODivisionalButtonControl::LoadCombination(GOConfigReader &cfg) {
-  m_divisional.LoadCombination(cfg);
+  m_combination.LoadCombination(cfg);
 }
 
 void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
   GOPushbuttonControl::Save(cfg);
-  m_divisional.Save(cfg);
+  m_combination.Save(cfg);
 }
 
 void GODivisionalButtonControl::Push() {
@@ -55,9 +55,9 @@ void GODivisionalButtonControl::Push() {
   const GOCombination::ExtraElementsSet *pAddSet
     = m_OrganController->GetSetter()->GetCrescendoAddSet(elementSet);
   GOManual *pManual
-    = m_OrganController->GetManual(m_divisional.GetManualNumber());
+    = m_OrganController->GetManual(m_combination.GetManualNumber());
 
-  m_divisional.Push(pAddSet);
+  m_combination.Push(pAddSet);
 
   for (unsigned l = pManual->GetDivisionalCount(), k = 0; k < l; k++) {
     GODivisionalButtonControl *pDivisionalControl = pManual->GetDivisional(k);

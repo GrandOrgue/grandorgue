@@ -15,7 +15,7 @@ class GOConfigReader;
 
 class GOGeneralButtonControl : public GOPushbuttonControl {
 private:
-  GOGeneralCombination m_general;
+  GOGeneralCombination m_combination;
 
 public:
   GOGeneralButtonControl(
@@ -24,7 +24,7 @@ public:
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
   void Push();
-  GOGeneralCombination &GetGeneral();
+  GOGeneralCombination &GetCombination();
 
   wxString GetMidiType();
 };
