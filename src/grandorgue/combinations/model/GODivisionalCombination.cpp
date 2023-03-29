@@ -102,7 +102,7 @@ void GODivisionalCombination::Load(
       buffer.Printf(wxT("Stop%03d"), i + 1);
       unsigned cnt = associatedManual->GetStopCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
-      pos = m_Template.findEntry(
+      pos = m_Template.FindElement(
         GOCombinationDefinition::COMBINATION_STOP, m_odfManualNumber, abs(s));
       if (pos >= 0) {
         if (used[pos]) {
@@ -124,7 +124,7 @@ void GODivisionalCombination::Load(
       buffer.Printf(wxT("Coupler%03d"), i + 1);
       unsigned cnt = associatedManual->GetODFCouplerCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
-      pos = m_Template.findEntry(
+      pos = m_Template.FindElement(
         GOCombinationDefinition::COMBINATION_COUPLER,
         m_odfManualNumber,
         abs(s));
@@ -148,7 +148,7 @@ void GODivisionalCombination::Load(
       buffer.Printf(wxT("Tremulant%03d"), i + 1);
       unsigned cnt = associatedManual->GetTremulantCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt, false, 0);
-      pos = m_Template.findEntry(
+      pos = m_Template.FindElement(
         GOCombinationDefinition::COMBINATION_TREMULANT,
         m_odfManualNumber,
         abs(s));
@@ -172,7 +172,7 @@ void GODivisionalCombination::Load(
       buffer.Printf(wxT("Switch%03d"), i + 1);
       unsigned cnt = associatedManual->GetSwitchCount();
       int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt, false, 0);
-      pos = m_Template.findEntry(
+      pos = m_Template.FindElement(
         GOCombinationDefinition::COMBINATION_SWITCH, m_odfManualNumber, abs(s));
       if (pos >= 0) {
         if (used[pos]) {
@@ -235,7 +235,7 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
     buffer.Printf(wxT("Stop%03d"), i + 1);
     unsigned cnt = associatedManual->GetStopCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
-    pos = m_Template.findEntry(
+    pos = m_Template.FindElement(
       GOCombinationDefinition::COMBINATION_STOP, m_odfManualNumber, abs(s));
     if (pos >= 0) {
       if (m_State[pos] != -1) {
@@ -258,7 +258,7 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
     unsigned cnt = type == CMBSetting ? associatedManual->GetCouplerCount()
                                       : associatedManual->GetODFCouplerCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
-    pos = m_Template.findEntry(
+    pos = m_Template.FindElement(
       GOCombinationDefinition::COMBINATION_COUPLER, m_odfManualNumber, abs(s));
     if (pos >= 0) {
       if (m_State[pos] != -1) {
@@ -280,7 +280,7 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
     buffer.Printf(wxT("Tremulant%03d"), i + 1);
     unsigned cnt = associatedManual->GetTremulantCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt, false, 0);
-    pos = m_Template.findEntry(
+    pos = m_Template.FindElement(
       GOCombinationDefinition::COMBINATION_TREMULANT,
       m_odfManualNumber,
       abs(s));
@@ -304,7 +304,7 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
     buffer.Printf(wxT("Switch%03d"), i + 1);
     unsigned cnt = associatedManual->GetSwitchCount();
     int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt, false, 0);
-    pos = m_Template.findEntry(
+    pos = m_Template.FindElement(
       GOCombinationDefinition::COMBINATION_SWITCH, m_odfManualNumber, abs(s));
     if (pos >= 0) {
       if (m_State[pos] != -1) {
@@ -325,8 +325,8 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
 
 void GODivisionalCombination::Save(GOConfigWriter &cfg) {
   wxString buffer;
-  const std::vector<GOCombinationDefinition::CombinationSlot> &elements
-    = m_Template.GetCombinationElements();
+  const std::vector<GOCombinationDefinition::Element> &elements
+    = m_Template.GetElements();
 
   UpdateState();
 

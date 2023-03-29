@@ -43,8 +43,8 @@ void GOCombination::SetState(unsigned no, int value) { m_State[no] = value; }
 
 void GOCombination::GetExtraSetState(
   GOCombination::ExtraElementsSet &extraSet) {
-  const std::vector<GOCombinationDefinition::CombinationSlot> &elements
-    = m_Template.GetCombinationElements();
+  const std::vector<GOCombinationDefinition::Element> &elements
+    = m_Template.GetElements();
 
   extraSet.clear();
   for (unsigned i = 0; i < elements.size(); i++) {
@@ -55,8 +55,8 @@ void GOCombination::GetExtraSetState(
 
 void GOCombination::GetEnabledElements(
   GOCombination::ExtraElementsSet &enabledElements) {
-  const std::vector<GOCombinationDefinition::CombinationSlot> &elements
-    = m_Template.GetCombinationElements();
+  const std::vector<GOCombinationDefinition::Element> &elements
+    = m_Template.GetElements();
 
   enabledElements.clear();
   for (unsigned i = 0; i < elements.size(); i++) {
@@ -66,8 +66,8 @@ void GOCombination::GetEnabledElements(
 }
 
 void GOCombination::UpdateState() {
-  const std::vector<GOCombinationDefinition::CombinationSlot> &elements
-    = m_Template.GetCombinationElements();
+  const std::vector<GOCombinationDefinition::Element> &elements
+    = m_Template.GetElements();
   if (m_State.size() > elements.size())
     m_State.resize(elements.size());
   else if (m_State.size() < elements.size()) {
@@ -82,8 +82,8 @@ GOCombinationDefinition *GOCombination::GetTemplate() { return &m_Template; }
 
 bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
   bool used = false;
-  const std::vector<GOCombinationDefinition::CombinationSlot> &elements
-    = m_Template.GetCombinationElements();
+  const std::vector<GOCombinationDefinition::Element> &elements
+    = m_Template.GetElements();
   UpdateState();
 
   if (m_OrganFile->GetSetter()->IsSetterActive()) {
