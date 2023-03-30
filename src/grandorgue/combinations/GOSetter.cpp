@@ -457,13 +457,31 @@ const wxString WX_C02U = wxT("%c%02u");
 const wxString WX_U = wxT("%u");
 const wxString WX_03U = wxT("%03u");
 
+wxString general_yaml_key(unsigned i) { return wxString::Format(WX_U, i); }
+
+wxString banked_general_yaml_key(unsigned i) {
+  return wxString::Format(WX_C02U, i / GENERALS + 'A', i % GENERALS + 1);
+}
+
+wxString crescendo_yaml_key(unsigned i) {
+  return wxString::Format(WX_C, i + 'A');
+}
+
+wxString crescendo_step_yaml_key(unsigned i) {
+  return wxString::Format(WX_U, i + 1);
+}
+
+wxString sequencer_cmb_yaml_key(unsigned i) {
+  return wxString::Format(WX_03U, i);
+}
+
 void GOSetter::ToYaml(YAML::Node &yamlNode) const {
   // save generals
   YAML::Node generalsNode;
 
   for (unsigned l = m_OrganController->GetGeneralCount(), i = 0; i < l; i++)
     m_OrganController->GetGeneral(i)->GetCombination().PutToYamlMap(
-      generalsNode, wxString::Format(WX_U, i));
+      generalsNode, general_yaml_key(i));
   put_to_map_if_not_null(yamlNode, SIMPLE_GENERALS, generalsNode);
 
   // save banked generals
@@ -471,9 +489,7 @@ void GOSetter::ToYaml(YAML::Node &yamlNode) const {
 
   for (unsigned l = m_general.size(), i = 0; i < l; i++)
     GOCombination::putToYamlMap(
-      bankedGeneralsNode,
-      wxString::Format(WX_C02U, i / GENERALS + 'A', i % GENERALS + 1),
-      m_general[i]);
+      bankedGeneralsNode, banked_general_yaml_key(i), m_general[i]);
   put_to_map_if_not_null(yamlNode, BANKED_GENERALS, bankedGeneralsNode);
 
   // save crescendos
@@ -485,12 +501,9 @@ void GOSetter::ToYaml(YAML::Node &yamlNode) const {
 
     for (unsigned j = 0; j < CRESCENDO_STEPS; j++)
       GOCombination::putToYamlMap(
-        crescendoSteps,
-        wxString::Format(WX_U, j + 1),
-        m_crescendo[baseIndex + j]);
+        crescendoSteps, crescendo_step_yaml_key(j), m_crescendo[baseIndex + j]);
     if (!crescendoSteps.IsNull()) {
-      YAML::Node crescendoNode
-        = crescendosNode[wxString::Format(WX_C, i + 'A')];
+      YAML::Node crescendoNode = crescendosNode[crescendo_yaml_key(i)];
 
       crescendoNode[OVERRIDE_MODE] = m_CrescendoOverrideMode[i];
       crescendoNode[STEPS] = crescendoSteps;
@@ -508,7 +521,44 @@ void GOSetter::ToYaml(YAML::Node &yamlNode) const {
 }
 
 void GOSetter::FromYaml(const YAML::Node &yamlNode) {
-  throw wxT("Not implemented yet");
+  // restore generals
+  const YAML::Node generalsNode = yamlNode[SIMPLE_GENERALS];
+
+  for (unsigned l = m_OrganController->GetGeneralCount(), i = 0; i < l; i++)
+    get_from_map_or_null(generalsNode, general_yaml_key(i))
+      >> m_OrganController->GetGeneral(i)->GetCombination();
+
+  // restore banked generals
+  const YAML::Node bankedGeneralsNode = yamlNode[BANKED_GENERALS];
+
+  for (unsigned l = m_general.size(), i = 0; i < l; i++)
+    get_from_map_or_null(bankedGeneralsNode, banked_general_yaml_key(i))
+      >> *m_general[i];
+
+  // restore crescendos
+  const YAML::Node crescendosNode = yamlNode[CRESCENDOS];
+
+  for (unsigned i = 0; i < N_CRESCENDOS; i++) {
+    const YAML::Node crescendoNode
+      = get_from_map_or_null(crescendosNode, crescendo_yaml_key(i));
+    const YAML::Node crescendoOverridNode
+      = get_from_map_or_null(crescendoNode, OVERRIDE_MODE);
+    const YAML::Node crescendoSteps
+      = get_from_map_or_null(crescendoNode, STEPS);
+    unsigned baseIndex = CRESCENDO_STEPS * i;
+
+    m_CrescendoOverrideMode[i] = crescendoOverridNode.as<bool, bool>(true);
+    for (unsigned j = 0; j < CRESCENDO_STEPS; j++)
+      get_from_map_or_null(crescendoSteps, crescendo_step_yaml_key(j))
+        >> *m_crescendo[baseIndex + j];
+  }
+
+  // restore sequencer
+  const YAML::Node sequencerNode = yamlNode[SEQUENCER];
+
+  for (unsigned i = 0; i < FRAME_GENERALS; i++)
+    get_from_map_or_null(sequencerNode, sequencer_cmb_yaml_key(i))
+      >> *m_framegeneral[i];
 }
 
 void GOSetter::ButtonStateChanged(int id) {
