@@ -7,6 +7,8 @@
 
 #include "GOCombinationDefinition.h"
 
+#include <wx/intl.h>
+
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
@@ -14,6 +16,13 @@
 #include "model/GOStop.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
+
+const wxString GOCombinationDefinition::ELEMENT_TYPE_NAMES[] = {
+  _("stop"),
+  _("coupler"),
+  _("tremulant"),
+  _("divisional coupler"),
+  _("switch")};
 
 GOCombinationDefinition::GOCombinationDefinition(GOOrganModel &organModel)
   : r_OrganModel(organModel), m_elements(0) {}

@@ -100,7 +100,6 @@ protected:
    * @param yamlMap
    */
   virtual void FromYamlMap(const YAML::Node &yamlMap) = 0;
-
   virtual bool PushLocal(ExtraElementsSet const *extraSet = nullptr);
 
 public:

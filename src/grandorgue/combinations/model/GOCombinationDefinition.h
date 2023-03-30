@@ -35,6 +35,11 @@ public:
     GOCombinationElement *control;
   };
 
+  /**
+   * array of localised names of ElementTypes
+   */
+  static const wxString ELEMENT_TYPE_NAMES[];
+
 private:
   GOOrganModel &r_OrganModel;
   std::vector<Element> m_elements;

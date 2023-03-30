@@ -20,6 +20,12 @@
 #include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
 #include "GOOrganController.h"
+#include "model/GOCoupler.h"
+#include "model/GODivisionalCoupler.h"
+#include "model/GOManual.h"
+#include "model/GOStop.h"
+#include "model/GOSwitch.h"
+#include "model/GOTremulant.h"
 
 GOCombination::GOCombination(
   const GOCombinationDefinition &combination_template,
@@ -68,6 +74,132 @@ void GOCombination::SetLoadedState(
         _("Duplicate combination entry %s in %s"), elementName, m_group);
   } else
     wxLogError(_("Invalid combination entry %s in %s"), elementName, m_group);
+}
+
+void GOCombination::SetStatesFromYaml(
+  const YAML::Node &yamlNode,
+  int manualNumber,
+  GOCombinationDefinition::ElementType elementType) {
+  if (yamlNode.IsDefined() && yamlNode.IsMap()) {
+    const wxString &elementTypeName
+      = GOCombinationDefinition::ELEMENT_TYPE_NAMES[elementType];
+    GOManual *pManual
+      = manualNumber >= 0 ? m_OrganFile->GetManual(manualNumber) : nullptr;
+    int maxElementNumber = 0;
+
+    // find maxElementNumber dependent on the element type
+    switch (elementType) {
+    case GOCombinationDefinition::COMBINATION_STOP:
+      if (pManual)
+        maxElementNumber = pManual->GetStopCount();
+      break;
+    case GOCombinationDefinition::COMBINATION_COUPLER:
+      if (pManual)
+        maxElementNumber = pManual->GetCouplerCount();
+      break;
+    case GOCombinationDefinition::COMBINATION_TREMULANT:
+      maxElementNumber = m_OrganFile->GetTremulantCount();
+      break;
+    case GOCombinationDefinition::COMBINATION_SWITCH:
+      maxElementNumber = m_OrganFile->GetSwitchCount();
+      break;
+    case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+      maxElementNumber = m_OrganFile->GetDivisionalCouplerCount();
+      break;
+    }
+
+    for (const auto &entry : yamlNode) {
+      const wxString numStr = entry.first.as<wxString>();
+      wxString name = entry.second.as<wxString>();
+      int numFromYaml = wxAtoi(numStr);
+      wxString
+        realElementName; // the name of the object referenced with numfromYaml
+
+      if (numFromYaml > 0 && numFromYaml <= maxElementNumber) {
+        unsigned i = (unsigned)(numFromYaml - 1);
+
+        switch (elementType) {
+        case GOCombinationDefinition::COMBINATION_STOP:
+          if (pManual)
+            realElementName = pManual->GetStop(i)->GetName();
+          break;
+        case GOCombinationDefinition::COMBINATION_COUPLER:
+          if (pManual)
+            realElementName = pManual->GetCoupler(i)->GetName();
+          break;
+        case GOCombinationDefinition::COMBINATION_TREMULANT:
+          realElementName = m_OrganFile->GetTremulant(i)->GetName();
+          break;
+        case GOCombinationDefinition::COMBINATION_SWITCH:
+          realElementName = m_OrganFile->GetSwitch(i)->GetName();
+          break;
+        case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+          realElementName = m_OrganFile->GetDivisionalCoupler(i)->GetName();
+          break;
+        }
+      } else
+        numFromYaml = 0;      // invalid element
+      unsigned fitNumber = 0; // the number of matched element (from 1 to
+                              // maxElementNumber). 0 - not matched
+
+      // validate the name
+      if (realElementName == name)
+        fitNumber = numFromYaml; // everything matches
+      else {
+        // names differ. Find the object by name
+        int i = -1;
+
+        switch (elementType) {
+        case GOCombinationDefinition::COMBINATION_STOP:
+          if (pManual)
+            i = pManual->FindStopByName(name);
+          break;
+        case GOCombinationDefinition::COMBINATION_COUPLER:
+          if (pManual)
+            i = pManual->FindCouplerByName(name);
+          break;
+        case GOCombinationDefinition::COMBINATION_TREMULANT:
+          i = pManual ? pManual->FindTremulantByName(name)
+                      : m_OrganFile->FindTremulantByName(name);
+          break;
+        case GOCombinationDefinition::COMBINATION_SWITCH:
+          i = pManual ? pManual->FindSwitchByName(name)
+                      : m_OrganFile->FindSwitchByName(name);
+          break;
+        case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+          i = m_OrganFile->FindDivisionalCouplerByName(name);
+          break;
+        }
+        fitNumber = (unsigned)(i + 1);
+
+        if (fitNumber > 0) // matched by name
+          wxLogWarning(
+            _("Wrong number %s of the %s \"%s\""),
+            numStr,
+            elementTypeName,
+            name);
+        else if (numFromYaml > 0) { // matched by number
+          wxLogWarning(
+            _("Wrong name \"%s\" instead of \"%s\" of the %s %s"),
+            name,
+            realElementName,
+            elementTypeName,
+            numStr);
+          fitNumber = (unsigned)numFromYaml;
+          name = realElementName;
+        }
+      }
+      if (fitNumber) // matched
+        SetLoadedState(manualNumber, elementType, fitNumber, name);
+      else
+        wxLogError(
+          _("Could match the %s \"%s: %s\" neither by name nor by "
+            "number"),
+          elementTypeName,
+          numStr,
+          name);
+    }
+  }
 }
 
 void GOCombination::GetExtraSetState(
