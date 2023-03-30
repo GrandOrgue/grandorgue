@@ -68,6 +68,39 @@ protected:
   virtual void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType)
     = 0;
 
+  /**
+   * Encode one combination element to yaml map. Called internally from ToYaml()
+   * only for elements with enabled state
+   */
+  virtual void PutElementToYamlMap(
+    const GOCombinationDefinition::Element &e,
+    const wxString &valueLabel,
+    const unsigned objectIndex,
+    YAML::Node &yamlMap) const = 0;
+
+  /**
+   * Set states of all elements of a specified type from the yaml node. The yaml
+   *   node must be a map (Number: Name). The elements may be matched by names
+   *   as well by numbers. The name has a higher priority than the number.
+   *   If only of them is matched then log a warning. If no
+   *   of them is matched then log an error.
+   * @param yamlNode the source yaml node with number-name pairs
+   * @param manualNumber in the odf. -1 means that the element does not relate
+   *   to any manual
+   * @param elementType The element type
+   */
+  void SetStatesFromYaml(
+    const YAML::Node &yamlNode,
+    int manualNumber,
+    GOCombinationDefinition::ElementType elementType);
+
+  /**
+   * Fill up the combination from yaml map. It is called internally from
+   * FromYaml after cleaning the combination only when yamlMap is not empty
+   * @param yamlMap
+   */
+  virtual void FromYamlMap(const YAML::Node &yamlMap) = 0;
+
   virtual bool PushLocal(ExtraElementsSet const *extraSet = nullptr);
 
 public:
@@ -92,6 +125,8 @@ public:
    */
   bool FillWithCurrent(SetterType setterType, bool isToStoreInvisibleObjects);
 
+  void ToYaml(YAML::Node &yamlMap) const override;
+
   /**
    * If the combination is not empty, put it into the YAML map a a key value
    * pair
@@ -107,6 +142,8 @@ public:
   }
   static void putToYamlMap(
     YAML::Node &container, const wxString &key, const GOCombination *pCmb);
+
+  void FromYaml(const YAML::Node &yamlNode) override;
 };
 
 #endif

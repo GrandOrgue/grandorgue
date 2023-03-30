@@ -188,42 +188,39 @@ const char *const COUPLERS = "couplers";
 const char *const TREMULANTS = "tremulants";
 const char *const SWITCHES = "switches";
 
-void GODivisionalCombination::ToYaml(YAML::Node &yamlNode) const {
+void GODivisionalCombination::PutElementToYamlMap(
+  const GOCombinationDefinition::Element &e,
+  const wxString &valueLabel,
+  const unsigned objectIndex,
+  YAML::Node &yamlMap) const {
   GOManual &manual = *m_OrganController->GetManual(m_odfManualNumber);
 
-  for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
-    if (GetState(i) > 0) {
-      const auto &e = r_ElementDefinitions[i];
-      unsigned value = e.index;
-      const wxString valueLabel = wxString::Format(WX_P03D, value);
+  switch (e.type) {
+  case GOCombinationDefinition::COMBINATION_STOP:
+    yamlMap[STOPS][valueLabel] = manual.GetStop(objectIndex)->GetName();
+    break;
 
-      assert(value > 0);
+  case GOCombinationDefinition::COMBINATION_COUPLER:
+    yamlMap[COUPLERS][valueLabel] = manual.GetCoupler(objectIndex)->GetName();
+    break;
 
-      unsigned index = value - 1;
+  case GOCombinationDefinition::COMBINATION_TREMULANT:
+    yamlMap[TREMULANTS][valueLabel]
+      = m_OrganController->GetTremulant(objectIndex)->GetName();
+    break;
 
-      switch (e.type) {
-      case GOCombinationDefinition::COMBINATION_STOP:
-        yamlNode[STOPS][valueLabel] = manual.GetStop(index)->GetName();
-        break;
+  case GOCombinationDefinition::COMBINATION_SWITCH:
+    yamlMap[SWITCHES][valueLabel]
+      = m_OrganController->GetSwitch(objectIndex)->GetName();
+    break;
 
-      case GOCombinationDefinition::COMBINATION_COUPLER:
-        yamlNode[COUPLERS][valueLabel] = manual.GetCoupler(index)->GetName();
-        break;
+  case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+    break;
+  }
+}
 
-      case GOCombinationDefinition::COMBINATION_TREMULANT:
-        yamlNode[TREMULANTS][valueLabel]
-          = m_OrganController->GetTremulant(index)->GetName();
-        break;
-
-      case GOCombinationDefinition::COMBINATION_SWITCH:
-        yamlNode[SWITCHES][valueLabel]
-          = m_OrganController->GetSwitch(index)->GetName();
-        break;
-
-      case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-        break;
-      }
-    }
+void GODivisionalCombination::FromYamlMap(const YAML::Node &yamlMap) {
+  throw wxT("Not implemented yet");
 }
 
 void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
@@ -292,8 +289,4 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
     }
   }
   return pCmb;
-}
-
-void GODivisionalCombination::FromYaml(const YAML::Node &node) {
-  throw wxT("Not implemented yet");
 }

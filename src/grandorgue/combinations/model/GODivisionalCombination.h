@@ -23,9 +23,21 @@ protected:
   int m_DivisionalNumber;
   bool m_IsSetter;
 
-  // It is not registered as saveable objectb ecause
+  // It is not registered as saveable object because
   // GOdivisionalSetter::LoadCombination creates the combinations dynamically
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
+
+  void PutElementToYamlMap(
+    const GOCombinationDefinition::Element &e,
+    const wxString &valueLabel,
+    const unsigned objectIndex,
+    YAML::Node &yamlMap) const override;
+
+  /**
+   * Loads the combination from the Yaml Node
+   * @param yamlNode - a YAML node to load from
+   */
+  void FromYamlMap(const YAML::Node &yamlMap) override;
 
 public:
   GODivisionalCombination(
@@ -43,17 +55,6 @@ public:
     int manualNumber,
     int divisionalNumber);
   void Save(GOConfigWriter &cfg);
-
-  /**
-   * Save the combination to the YAML object
-   */
-  void ToYaml(YAML::Node &yamlNode) const override;
-
-  /**
-   * Loads the combination from the Yaml Node
-   * @param yamlNode - a YAML node to load from
-   */
-  void FromYaml(const YAML::Node &yamlNode) override;
 
   void Push(ExtraElementsSet const *extraSet = nullptr);
 

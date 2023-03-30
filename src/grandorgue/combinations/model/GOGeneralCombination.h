@@ -24,23 +24,24 @@ private:
   void Save(GOConfigWriter &cfg);
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
 
+  void PutElementToYamlMap(
+    const GOCombinationDefinition::Element &e,
+    const wxString &valueLabel,
+    const unsigned objectIndex,
+    YAML::Node &yamlMap) const override;
+
+  /**
+   * Loads the combination from the Yaml Node. Called from FromYaml
+   * @param node
+   */
+  void FromYamlMap(const YAML::Node &yamlMap) override;
+
 public:
   GOGeneralCombination(
     GOCombinationDefinition &general_template,
     GOOrganController *organController,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
-
-  /**
-   * Save the combination to the YAML object
-   */
-  void ToYaml(YAML::Node &yamlNode) const override;
-
-  /**
-   * Loads the combination from the Yaml Node
-   * @param node
-   */
-  void FromYaml(const YAML::Node &node) override;
 
   /*
    * Activate this combination

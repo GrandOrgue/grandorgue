@@ -245,52 +245,46 @@ const char *const NAME = "name";
 
 const wxString WX_P03D = wxT("%03d");
 
-void GOGeneralCombination::ToYaml(YAML::Node &yamlNode) const {
-  for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
-    if (GetState(i) > 0) {
-      const GOCombinationDefinition::Element &e = r_ElementDefinitions[i];
-      unsigned value = e.index;
-      int manualIndex = e.manual;
-      const wxString manualLabel = wxString::Format(WX_P03D, manualIndex);
-      const wxString valueLabel = wxString::Format(WX_P03D, value);
+void GOGeneralCombination::PutElementToYamlMap(
+  const GOCombinationDefinition::Element &e,
+  const wxString &valueLabel,
+  const unsigned objectIndex,
+  YAML::Node &yamlMap) const {
+  const wxString manualLabel = wxString::Format(WX_P03D, e.manual);
 
-      assert(value > 0);
+  switch (e.type) {
+  case GOCombinationDefinition::COMBINATION_STOP: {
+    GOManual &manual = *m_OrganController->GetManual(e.manual);
+    YAML::Node manualNode = yamlMap[MANUALS][manualLabel];
 
-      unsigned index = value - 1;
+    manualNode[NAME] = manual.GetName();
+    manualNode[STOPS][valueLabel] = manual.GetStop(objectIndex)->GetName();
+  } break;
 
-      switch (e.type) {
-      case GOCombinationDefinition::COMBINATION_STOP: {
-        GOManual &manual = *m_OrganController->GetManual(manualIndex);
-        YAML::Node manualNode = yamlNode[MANUALS][manualLabel];
+  case GOCombinationDefinition::COMBINATION_COUPLER: {
+    GOManual &manual = *m_OrganController->GetManual(e.manual);
+    YAML::Node manualNode = yamlMap[MANUALS][manualLabel];
 
-        manualNode[NAME] = manual.GetName();
-        manualNode[STOPS][valueLabel] = manual.GetStop(index)->GetName();
-      } break;
+    manualNode[NAME] = manual.GetName();
+    manualNode[COUPLERS][valueLabel]
+      = manual.GetCoupler(objectIndex)->GetName();
+  } break;
 
-      case GOCombinationDefinition::COMBINATION_COUPLER: {
-        GOManual &manual = *m_OrganController->GetManual(manualIndex);
-        YAML::Node manualNode = yamlNode[MANUALS][manualLabel];
+  case GOCombinationDefinition::COMBINATION_TREMULANT:
+    yamlMap[TREMULANTS][valueLabel]
+      = m_OrganController->GetTremulant(objectIndex)->GetName();
+    break;
 
-        manualNode[NAME] = manual.GetName();
-        manualNode[COUPLERS][valueLabel] = manual.GetCoupler(index)->GetName();
-      } break;
+  case GOCombinationDefinition::COMBINATION_SWITCH:
+    yamlMap[SWITCHES][valueLabel]
+      = m_OrganController->GetSwitch(objectIndex)->GetName();
+    break;
 
-      case GOCombinationDefinition::COMBINATION_TREMULANT:
-        yamlNode[TREMULANTS][valueLabel]
-          = m_OrganController->GetTremulant(index)->GetName();
-        break;
-
-      case GOCombinationDefinition::COMBINATION_SWITCH:
-        yamlNode[SWITCHES][valueLabel]
-          = m_OrganController->GetSwitch(index)->GetName();
-        break;
-
-      case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-        yamlNode[DIVISIONAL_COUPLERS][valueLabel]
-          = m_OrganController->GetDivisionalCoupler(index)->GetName();
-        break;
-      }
-    }
+  case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+    yamlMap[DIVISIONAL_COUPLERS][valueLabel]
+      = m_OrganController->GetDivisionalCoupler(objectIndex)->GetName();
+    break;
+  }
 }
 
 void GOGeneralCombination::FromYaml(const YAML::Node &node) {

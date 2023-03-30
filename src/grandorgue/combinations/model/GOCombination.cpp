@@ -155,6 +155,28 @@ void GOCombination::LoadCombination(GOConfigReader &cfg) {
     Clear();
 }
 
+const wxString WX_P03D = wxT("%03d");
+
+void GOCombination::ToYaml(YAML::Node &yamlMap) const {
+  for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
+    if (GetState(i) > 0) {
+      const auto &e = r_ElementDefinitions[i];
+      unsigned value = e.index;
+
+      assert(value > 0);
+      PutElementToYamlMap(
+        e, wxString::Format(WX_P03D, value), value - 1, yamlMap);
+    }
+}
+
+void GOCombination::FromYaml(const YAML::Node &yamlNode) {
+  if (!m_Protected) {
+    Clear();
+    if (yamlNode.IsDefined() && yamlNode.IsMap())
+      FromYamlMap(yamlNode);
+  }
+}
+
 bool GOCombination::FillWithCurrent(
   SetterType setterType, bool isToStoreInvisibleObjects) {
   bool used = false;
