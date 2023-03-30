@@ -20,7 +20,7 @@ Node convert<wxString>::encode(const wxString &rhs) {
 }
 
 bool convert<wxString>::decode(const Node &node, wxString &rhs) {
-  const bool isNull = node.IsNull() || !node.IsDefined();
+  const bool isNull = !node.IsDefined() || node.IsNull();
   bool isValid = isNull || node.IsScalar();
 
   if (isValid) {
@@ -33,6 +33,18 @@ bool convert<wxString>::decode(const Node &node, wxString &rhs) {
 }
 
 } // namespace YAML
+
+YAML::Node get_from_map_or_null(const YAML::Node &container, const char *key) {
+  YAML::Node resultNode;
+
+  if (container.IsDefined() && container.IsMap()) {
+    YAML::Node valueNode = container[key];
+
+    if (valueNode.IsDefined())
+      resultNode = valueNode;
+  }
+  return resultNode;
+}
 
 void put_to_map_if_not_null(
   YAML::Node &container, const char *key, const YAML::Node &value) {
