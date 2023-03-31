@@ -420,13 +420,27 @@ currently in use is <emphasis>deleted</emphasis>.
           <indexterm>
             <primary>Import Combinations</primary>
           </indexterm>
-          <para>Apply only the combination settings from a  previously exported settings file to the currently loaded
-sample set. All other settings that might have previously been changed are preserved.</para>
-          <para>Note that settings may only be applied to a matching sample
-set, and you will receive a warning if you try to do otherwise. The
-location where the combinations were imported from will be remembered for the next time.</para>
-          <para>A settings file matches a sample set when the <emphasis>ChurchName</emphasis> property of the settings file
-matches the <emphasis>ChurchName</emphasis> property of the definition file.</para>
+	  <para>
+	    This menu item opens the file selection dialog that allows the user
+	    to select either a yaml-file, created with <emphasis>Export
+	    Combinations</emphasis>, or a .cmb-file, created with <emphasis>
+	    Export Settings</emphasis>. In the second case apply only the
+	    combination part of settings from a  previously exported settings
+	    file to the currently loaded sample set. All other settings that
+	    might have previously been changed are preserved.
+	  </para>
+          <para>
+	    Note The file selection dialog is opened at the directory where
+	    exported combination are stored, not where the settings files
+	    are. For selecting a .cmb file you have to navigate to the
+	    Export/import directory that is named <emphasis>Settings</emphasis>
+	    by default.
+	  </para>
+          <para>
+	    A settings file matches a sample set when the <emphasis>ChurchName
+	    </emphasis> property of the settings file matches the <emphasis>
+	      ChurchName</emphasis> property of the definition file.
+	  </para>
         </sect3>
         <sect3 id="export_combinations">
           <title>Export Combinations</title>
@@ -435,7 +449,8 @@ matches the <emphasis>ChurchName</emphasis> property of the definition file.</pa
           </indexterm>
           <para>
 	    Saves current combination settings to a text file in YAML format.
-	    The user can view this file.
+	    The user can view this file and can import it later with <emphasis>
+	    Import Combinations</emphasis>
 	  </para>
         </sect3>
         <sect3 id="import_settings">
