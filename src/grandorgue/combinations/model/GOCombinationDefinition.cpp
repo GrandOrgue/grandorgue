@@ -115,7 +115,7 @@ void GOCombinationDefinition::InitDivisional(unsigned manual_number) {
 }
 
 int GOCombinationDefinition::FindElement(
-  ElementType type, int manual, unsigned index) {
+  ElementType type, int manual, unsigned index) const {
   for (unsigned i = 0; i < m_elements.size(); i++) {
     if (
       m_elements[i].type == type && m_elements[i].manual == manual

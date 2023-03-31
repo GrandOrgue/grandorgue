@@ -19,12 +19,14 @@ class GOOrganController;
 class GODivisionalCombination : public GOCombination {
 protected:
   GOOrganController *m_OrganController;
-  wxString m_group;
   unsigned m_odfManualNumber;
   int m_DivisionalNumber;
   bool m_IsSetter;
 
-private:
+  // It is not registered as saveable objectb ecause
+  // GOdivisionalSetter::LoadCombination creates the combinations dynamically
+  void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
+
 public:
   GODivisionalCombination(
     GOOrganController *organController,
@@ -40,9 +42,6 @@ public:
     wxString group,
     int manualNumber,
     int divisionalNumber);
-  // It does not inherit GOSaveableOblect because
-  // GOdivisionalSetter::LoadCombination creates the combinations dynamically
-  void LoadCombination(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
 
   /**

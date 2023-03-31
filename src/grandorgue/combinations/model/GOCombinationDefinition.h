@@ -57,9 +57,8 @@ public:
   void InitGeneral();
   void InitDivisional(unsigned manual_number);
 
-  int FindElement(ElementType type, int manual, unsigned index);
-
   const std::vector<Element> &GetElements() const { return m_elements; };
+  int FindElement(ElementType type, int manual, unsigned index) const;
 };
 
 #endif

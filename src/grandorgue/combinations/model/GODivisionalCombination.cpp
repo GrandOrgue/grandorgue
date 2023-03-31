@@ -13,7 +13,6 @@
 #include "combinations/control/GODivisionalButtonControl.h"
 
 #include "combinations/GOSetter.h"
-#include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
@@ -43,181 +42,35 @@ void GODivisionalCombination::Init(
   m_Protected = false;
 }
 
-static const wxString WX_NUMBER_OF_STOPS = wxT("NumberOfStops");
-
-int read_number_of_stops(
-  GOSettingType settingType,
-  GOConfigReader &cfg,
-  const wxString &group,
-  unsigned maxStopN,
-  bool isRequired) {
-  return cfg.ReadInteger(
-    settingType,
-    group,
-    WX_NUMBER_OF_STOPS,
-    0,
-    maxStopN,
-    isRequired,
-    isRequired ? 0 : -1);
-}
-
 void GODivisionalCombination::Load(
   GOConfigReader &cfg, wxString group, int manualNumber, int divisionalNumber) {
   Init(group, manualNumber, divisionalNumber);
   m_Protected
     = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);
 
-  if (!m_IsSetter) {
-    /* skip ODF settings */
-    UpdateState();
-    wxString buffer;
-    int pos;
-    std::vector<bool> used(m_State.size());
-    GOManual *associatedManual
-      = m_OrganController->GetManual(m_odfManualNumber);
-    unsigned NumberOfStops = (unsigned)read_number_of_stops(
-      ODFSetting, cfg, m_group, associatedManual->GetStopCount(), true);
-    unsigned NumberOfCouplers = cfg.ReadInteger(
-      ODFSetting,
-      m_group,
-      wxT("NumberOfCouplers"),
-      0,
-      associatedManual->GetODFCouplerCount(),
-      m_OrganController->DivisionalsStoreIntermanualCouplers()
-        || m_OrganController->DivisionalsStoreIntramanualCouplers(),
-      0);
-    unsigned NumberOfTremulants = cfg.ReadInteger(
-      ODFSetting,
-      m_group,
-      wxT("NumberOfTremulants"),
-      0,
-      m_OrganController->GetTremulantCount(),
-      m_OrganController->DivisionalsStoreTremulants(),
-      0);
-    unsigned NumberOfSwitches = cfg.ReadInteger(
-      ODFSetting,
-      m_group,
-      wxT("NumberOfSwitches"),
-      0,
-      m_OrganController->GetSwitchCount(),
-      false,
-      0);
-
-    for (unsigned i = 0; i < NumberOfStops; i++) {
-      buffer.Printf(wxT("Stop%03d"), i + 1);
-      unsigned cnt = associatedManual->GetStopCount();
-      int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
-      pos = m_Template.FindElement(
-        GOCombinationDefinition::COMBINATION_STOP, m_odfManualNumber, abs(s));
-      if (pos >= 0) {
-        if (used[pos]) {
-          wxLogError(
-            _("Duplicate combination entry %s in %s"),
-            buffer.c_str(),
-            m_group.c_str());
-        }
-        used[pos] = true;
-      } else {
-        wxLogError(
-          _("Invalid combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-    }
-
-    for (unsigned i = 0; i < NumberOfCouplers; i++) {
-      buffer.Printf(wxT("Coupler%03d"), i + 1);
-      unsigned cnt = associatedManual->GetODFCouplerCount();
-      int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt);
-      pos = m_Template.FindElement(
-        GOCombinationDefinition::COMBINATION_COUPLER,
-        m_odfManualNumber,
-        abs(s));
-      if (pos >= 0) {
-        if (used[pos]) {
-          wxLogError(
-            _("Duplicate combination entry %s in %s"),
-            buffer.c_str(),
-            m_group.c_str());
-        }
-        used[pos] = true;
-      } else {
-        wxLogError(
-          _("Invalid combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-    }
-
-    for (unsigned i = 0; i < NumberOfTremulants; i++) {
-      buffer.Printf(wxT("Tremulant%03d"), i + 1);
-      unsigned cnt = associatedManual->GetTremulantCount();
-      int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt, false, 0);
-      pos = m_Template.FindElement(
-        GOCombinationDefinition::COMBINATION_TREMULANT,
-        m_odfManualNumber,
-        abs(s));
-      if (pos >= 0) {
-        if (used[pos]) {
-          wxLogError(
-            _("Duplicate combination entry %s in %s"),
-            buffer.c_str(),
-            m_group.c_str());
-        }
-        used[pos] = true;
-      } else {
-        wxLogError(
-          _("Invalid combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-    }
-
-    for (unsigned i = 0; i < NumberOfSwitches; i++) {
-      buffer.Printf(wxT("Switch%03d"), i + 1);
-      unsigned cnt = associatedManual->GetSwitchCount();
-      int s = cfg.ReadInteger(ODFSetting, m_group, buffer, -cnt, cnt, false, 0);
-      pos = m_Template.FindElement(
-        GOCombinationDefinition::COMBINATION_SWITCH, m_odfManualNumber, abs(s));
-      if (pos >= 0) {
-        if (used[pos]) {
-          wxLogError(
-            _("Duplicate combination entry %s in %s"),
-            buffer.c_str(),
-            m_group.c_str());
-        }
-        used[pos] = true;
-      } else {
-        wxLogError(
-          _("Invalid combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-    }
-  }
+  if (!m_IsSetter)
+    /* check ODF settings */
+    LoadCombinationInt(cfg, ODFSetting);
 }
 
-void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
-  GOSettingType type = CMBSetting;
+void GODivisionalCombination::LoadCombinationInt(
+  GOConfigReader &cfg, GOSettingType srcType) {
   GOManual *associatedManual = m_OrganController->GetManual(m_odfManualNumber);
-  if (!m_IsSetter)
-    if (read_number_of_stops(type, cfg, m_group, 999, false) == -1)
-      type = ODFSetting;
   wxString buffer;
-  unsigned NumberOfStops = read_number_of_stops(
-    type, cfg, m_group, associatedManual->GetStopCount(), true);
+  unsigned NumberOfStops
+    = ReadNumberOfStops(cfg, srcType, associatedManual->GetStopCount());
   unsigned NumberOfCouplers = cfg.ReadInteger(
-    type,
+    srcType,
     m_group,
     wxT("NumberOfCouplers"),
     0,
-    type == CMBSetting ? associatedManual->GetCouplerCount()
-                       : associatedManual->GetODFCouplerCount(),
+    srcType == CMBSetting ? associatedManual->GetCouplerCount()
+                          : associatedManual->GetODFCouplerCount(),
     m_OrganController->DivisionalsStoreIntermanualCouplers()
       || m_OrganController->DivisionalsStoreIntramanualCouplers(),
     0);
   unsigned NumberOfTremulants = cfg.ReadInteger(
-    type,
+    srcType,
     m_group,
     wxT("NumberOfTremulants"),
     0,
@@ -225,7 +78,7 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
     m_OrganController->DivisionalsStoreTremulants(),
     0);
   unsigned NumberOfSwitches = cfg.ReadInteger(
-    type,
+    srcType,
     m_group,
     wxT("NumberOfSwitches"),
     0,
@@ -233,148 +86,97 @@ void GODivisionalCombination::LoadCombination(GOConfigReader &cfg) {
     false,
     0);
 
-  int pos;
   Clear();
+
+  unsigned cnt = associatedManual->GetStopCount();
 
   for (unsigned i = 0; i < NumberOfStops; i++) {
     buffer.Printf(wxT("Stop%03d"), i + 1);
-    unsigned cnt = associatedManual->GetStopCount();
-    int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
-    pos = m_Template.FindElement(
-      GOCombinationDefinition::COMBINATION_STOP, m_odfManualNumber, abs(s));
-    if (pos >= 0) {
-      if (m_State[pos] != -1) {
-        wxLogError(
-          _("Duplicate combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-      m_State[pos] = (s > 0) ? 1 : 0;
-    } else {
-      wxLogError(
-        _("Invalid combination entry %s in %s"),
-        buffer.c_str(),
-        m_group.c_str());
-    }
+    SetLoadedState(
+      m_odfManualNumber,
+      GOCombinationDefinition::COMBINATION_STOP,
+      cfg.ReadInteger(srcType, m_group, buffer, -cnt, cnt),
+      buffer);
   }
 
+  cnt = srcType == CMBSetting ? associatedManual->GetCouplerCount()
+                              : associatedManual->GetODFCouplerCount();
   for (unsigned i = 0; i < NumberOfCouplers; i++) {
     buffer.Printf(wxT("Coupler%03d"), i + 1);
-    unsigned cnt = type == CMBSetting ? associatedManual->GetCouplerCount()
-                                      : associatedManual->GetODFCouplerCount();
-    int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt);
-    pos = m_Template.FindElement(
-      GOCombinationDefinition::COMBINATION_COUPLER, m_odfManualNumber, abs(s));
-    if (pos >= 0) {
-      if (m_State[pos] != -1) {
-        wxLogError(
-          _("Duplicate combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-      m_State[pos] = (s > 0) ? 1 : 0;
-    } else {
-      wxLogError(
-        _("Invalid combination entry %s in %s"),
-        buffer.c_str(),
-        m_group.c_str());
-    }
+    SetLoadedState(
+      m_odfManualNumber,
+      GOCombinationDefinition::COMBINATION_COUPLER,
+      cfg.ReadInteger(srcType, m_group, buffer, -cnt, cnt),
+      buffer);
   }
 
+  cnt = associatedManual->GetTremulantCount();
   for (unsigned i = 0; i < NumberOfTremulants; i++) {
     buffer.Printf(wxT("Tremulant%03d"), i + 1);
-    unsigned cnt = associatedManual->GetTremulantCount();
-    int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt, false, 0);
-    pos = m_Template.FindElement(
-      GOCombinationDefinition::COMBINATION_TREMULANT,
+    SetLoadedState(
       m_odfManualNumber,
-      abs(s));
-    if (pos >= 0) {
-      if (m_State[pos] != -1) {
-        wxLogError(
-          _("Duplicate combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-      m_State[pos] = (s > 0) ? 1 : 0;
-    } else {
-      wxLogError(
-        _("Invalid combination entry %s in %s"),
-        buffer.c_str(),
-        m_group.c_str());
-    }
+      GOCombinationDefinition::COMBINATION_TREMULANT,
+      cfg.ReadInteger(srcType, m_group, buffer, -cnt, cnt),
+      buffer);
   }
 
+  cnt = associatedManual->GetSwitchCount();
   for (unsigned i = 0; i < NumberOfSwitches; i++) {
     buffer.Printf(wxT("Switch%03d"), i + 1);
-    unsigned cnt = associatedManual->GetSwitchCount();
-    int s = cfg.ReadInteger(type, m_group, buffer, -cnt, cnt, false, 0);
-    pos = m_Template.FindElement(
-      GOCombinationDefinition::COMBINATION_SWITCH, m_odfManualNumber, abs(s));
-    if (pos >= 0) {
-      if (m_State[pos] != -1) {
-        wxLogError(
-          _("Duplicate combination entry %s in %s"),
-          buffer.c_str(),
-          m_group.c_str());
-      }
-      m_State[pos] = (s > 0) ? 1 : 0;
-    } else {
-      wxLogError(
-        _("Invalid combination entry %s in %s"),
-        buffer.c_str(),
-        m_group.c_str());
-    }
+    SetLoadedState(
+      m_odfManualNumber,
+      GOCombinationDefinition::COMBINATION_SWITCH,
+      cfg.ReadInteger(srcType, m_group, buffer, -cnt, cnt),
+      buffer);
   }
 }
 
 void GODivisionalCombination::Save(GOConfigWriter &cfg) {
   wxString buffer;
-  const std::vector<GOCombinationDefinition::Element> &elements
-    = m_Template.GetElements();
-
-  UpdateState();
-
   unsigned stop_count = 0;
   unsigned coupler_count = 0;
   unsigned tremulant_count = 0;
   unsigned switch_count = 0;
 
-  for (unsigned i = 0; i < elements.size(); i++) {
-    if (m_State[i] == -1)
-      continue;
-    int value = m_State[i] == 1 ? elements[i].index : -elements[i].index;
-    switch (elements[i].type) {
-    case GOCombinationDefinition::COMBINATION_STOP:
-      stop_count++;
-      buffer.Printf(wxT("Stop%03d"), stop_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+  UpdateState();
+  for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
+    const GOCombinationDefinition::Element &e = r_ElementDefinitions[i];
+    int state = GetState(i);
 
-    case GOCombinationDefinition::COMBINATION_COUPLER:
-      coupler_count++;
-      buffer.Printf(wxT("Coupler%03d"), coupler_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+    if (state >= 0) {
+      int value = state == 1 ? e.index : -e.index;
+      switch (e.type) {
+      case GOCombinationDefinition::COMBINATION_STOP:
+        stop_count++;
+        buffer.Printf(wxT("Stop%03d"), stop_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
 
-    case GOCombinationDefinition::COMBINATION_TREMULANT:
-      tremulant_count++;
-      buffer.Printf(wxT("Tremulant%03d"), tremulant_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+      case GOCombinationDefinition::COMBINATION_COUPLER:
+        coupler_count++;
+        buffer.Printf(wxT("Coupler%03d"), coupler_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
 
-    case GOCombinationDefinition::COMBINATION_SWITCH:
-      switch_count++;
-      buffer.Printf(wxT("Switch%03d"), switch_count);
-      cfg.WriteInteger(m_group, buffer, value);
-      break;
+      case GOCombinationDefinition::COMBINATION_TREMULANT:
+        tremulant_count++;
+        buffer.Printf(wxT("Tremulant%03d"), tremulant_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
 
-    case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-      break;
+      case GOCombinationDefinition::COMBINATION_SWITCH:
+        switch_count++;
+        buffer.Printf(wxT("Switch%03d"), switch_count);
+        cfg.WriteInteger(m_group, buffer, value);
+        break;
+
+      case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+        break;
+      }
     }
   }
 
-  cfg.WriteInteger(m_group, WX_NUMBER_OF_STOPS, stop_count);
+  WriteNumberOfStops(cfg, stop_count);
   cfg.WriteInteger(m_group, wxT("NumberOfCouplers"), coupler_count);
   cfg.WriteInteger(m_group, wxT("NumberOfTremulants"), tremulant_count);
   cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
@@ -387,13 +189,11 @@ const char *const TREMULANTS = "tremulants";
 const char *const SWITCHES = "switches";
 
 void GODivisionalCombination::ToYaml(YAML::Node &yamlNode) const {
-  const std::vector<GOCombinationDefinition::Element> &elements
-    = m_Template.GetElements();
   GOManual &manual = *m_OrganController->GetManual(m_odfManualNumber);
 
-  for (unsigned i = 0; i < elements.size(); i++)
-    if (m_State[i] > 0) {
-      const auto e = elements[i];
+  for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
+    if (GetState(i) > 0) {
+      const auto &e = r_ElementDefinitions[i];
       unsigned value = e.index;
       const wxString valueLabel = wxString::Format(WX_P03D, value);
 
@@ -464,14 +264,6 @@ void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
 
 wxString GODivisionalCombination::GetMidiType() { return _("Divisional"); }
 
-// checks if a combinatiom exists in the file with the group
-bool is_cmb_on_file(
-  GOSettingType settingType, GOConfigReader &cfg, const wxString &group) {
-  int nOfStops = read_number_of_stops(settingType, cfg, group, 999, false);
-
-  return nOfStops != -1;
-}
-
 GODivisionalCombination *GODivisionalCombination::LoadFrom(
   GOOrganController *organController,
   GOConfigReader &cfg,
@@ -481,12 +273,10 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
   int manualNumber,
   int divisionalNumber) {
   GODivisionalCombination *pCmb = nullptr;
-  bool isCmbOnFile = is_cmb_on_file(ODFSetting, cfg, group)
-    || is_cmb_on_file(CMBSetting, cfg, group);
-  bool isCmbOnReadGroup = !readGroup.IsEmpty()
-    && (is_cmb_on_file(ODFSetting, cfg, readGroup) || is_cmb_on_file(CMBSetting, cfg, readGroup));
+  bool isCmbOnGroup = isCmbOnFile(cfg, group);
+  bool isCmbOnReadGroup = !readGroup.IsEmpty() && isCmbOnFile(cfg, readGroup);
 
-  if (isCmbOnFile || isCmbOnReadGroup) {
+  if (isCmbOnGroup || isCmbOnReadGroup) {
     pCmb
       = new GODivisionalCombination(organController, divisionalTemplate, false);
     pCmb->Load(
@@ -497,7 +287,7 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
     pCmb->LoadCombination(cfg);
     if (isCmbOnReadGroup) {  // The combination was loaded from the legacy group
       pCmb->m_group = group; // It will be saved to the normal group
-      if (isCmbOnFile)       // Load the overriden combination
+      if (isCmbOnGroup)      // Load the overriden combination
         pCmb->LoadCombination(cfg);
     }
   }

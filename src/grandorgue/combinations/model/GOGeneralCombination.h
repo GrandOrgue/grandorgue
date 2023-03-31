@@ -11,19 +11,18 @@
 #include <wx/string.h>
 
 #include "GOCombination.h"
-#include "GOSaveableObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GOOrganController;
 
-class GOGeneralCombination : public GOCombination, private GOSaveableObject {
+class GOGeneralCombination : public GOCombination {
 private:
   GOOrganController *m_OrganController;
   bool m_IsSetter;
 
   void Save(GOConfigWriter &cfg);
-  void LoadCombination(GOConfigReader &cfg);
+  void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
 
 public:
   GOGeneralCombination(
