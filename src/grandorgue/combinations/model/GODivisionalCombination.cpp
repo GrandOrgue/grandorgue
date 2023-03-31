@@ -220,7 +220,29 @@ void GODivisionalCombination::PutElementToYamlMap(
 }
 
 void GODivisionalCombination::FromYamlMap(const YAML::Node &yamlMap) {
-  throw wxT("Not implemented yet");
+  // stops
+  SetStatesFromYaml(
+    yamlMap[STOPS],
+    m_odfManualNumber,
+    GOCombinationDefinition::COMBINATION_STOP);
+
+  // couplers
+  SetStatesFromYaml(
+    yamlMap[COUPLERS],
+    m_odfManualNumber,
+    GOCombinationDefinition::COMBINATION_COUPLER);
+
+  // tremulants
+  SetStatesFromYaml(
+    yamlMap[TREMULANTS],
+    m_odfManualNumber,
+    GOCombinationDefinition::COMBINATION_TREMULANT);
+
+  // switches
+  SetStatesFromYaml(
+    yamlMap[SWITCHES],
+    m_odfManualNumber,
+    GOCombinationDefinition::COMBINATION_SWITCH);
 }
 
 void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {

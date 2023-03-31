@@ -287,6 +287,43 @@ void GOGeneralCombination::PutElementToYamlMap(
   }
 }
 
-void GOGeneralCombination::FromYaml(const YAML::Node &node) {
-  throw wxT("Not implemented yet");
+void GOGeneralCombination::FromYamlMap(const YAML::Node &yamlMap) {
+  // manuals
+  const int minManualNum = m_OrganController->GetFirstManualIndex();
+  const int upperManualNum
+    = minManualNum + m_OrganController->GetManualAndPedalCount();
+
+  for (const auto &manualEntry : get_from_map_or_null(yamlMap, MANUALS)) {
+    const wxString manualNumStr = manualEntry.first.as<wxString>();
+    int manualNum = wxAtoi(manualNumStr);
+
+    if (manualNum >= minManualNum && manualNum < upperManualNum) {
+      // stops
+      SetStatesFromYaml(
+        manualEntry.second[STOPS],
+        manualNum,
+        GOCombinationDefinition::COMBINATION_STOP);
+
+      // couplers
+      SetStatesFromYaml(
+        manualEntry.second[COUPLERS],
+        manualNum,
+        GOCombinationDefinition::COMBINATION_COUPLER);
+    } else
+      wxLogError(_("Invalid manual number %s"), manualNumStr);
+  }
+
+  // tremulants
+  SetStatesFromYaml(
+    yamlMap[TREMULANTS], -1, GOCombinationDefinition::COMBINATION_TREMULANT);
+
+  // switches
+  SetStatesFromYaml(
+    yamlMap[SWITCHES], -1, GOCombinationDefinition::COMBINATION_SWITCH);
+
+  // divisional couplers
+  SetStatesFromYaml(
+    yamlMap[DIVISIONAL_COUPLERS],
+    -1,
+    GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER);
 }
