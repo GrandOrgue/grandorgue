@@ -24,6 +24,8 @@ struct GOMidiReceiverEventPattern : public GOMidiEventPattern {
       high_key(0),
       debounce_time(0) {}
 
+  bool operator==(const GOMidiReceiverEventPattern &other) const;
+
   /**
    * Convert a source midi value (from low_value to high_value) to an internal
    *   one (from MIN_VALUE to MAX_VALUE)

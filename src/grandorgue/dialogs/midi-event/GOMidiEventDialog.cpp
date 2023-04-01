@@ -32,11 +32,13 @@ GOMidiEventDialog::GOMidiEventDialog(
 
   if (event) {
     m_recvPage = new GOMidiEventRecvTab(notebook, event, settings);
+    m_recvPage->SetModificationListener(this);
     AddTab(m_recvPage, "Receive", _("Receive"));
   }
   if (sender) {
     m_sendPage
       = new GOMidiEventSendTab(this, _("Send"), sender, m_recvPage, settings);
+    m_sendPage->SetModificationListener(this);
     AddTab(m_sendPage);
   }
   if (key) {

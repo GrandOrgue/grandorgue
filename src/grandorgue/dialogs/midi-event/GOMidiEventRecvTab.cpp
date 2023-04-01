@@ -320,7 +320,8 @@ bool GOMidiEventRecvTab::TransferDataFromWindow() {
       }
   } while (empty_event);
 
-  m_original->Assign(m_midi);
+  if (m_original->RenewFrom(m_midi))
+    GOModificationProxy::OnIsModifiedChanged(true);
   return true;
 }
 

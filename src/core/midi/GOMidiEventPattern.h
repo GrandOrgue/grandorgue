@@ -29,6 +29,8 @@ struct GOMidiEventPattern {
       low_value(iLowValue),
       high_value(iHighValue) {}
 
+  bool operator==(const GOMidiEventPattern &other) const;
+
   /**
    * Convert a midi value between ranges: from [srcLow, srcHigh] to
    *   [dstLow, dstHigh]. All ranges must be between 0 and 127. They may be

@@ -62,8 +62,3 @@ void GOMidiReceiver::Preconfigure(GOConfigReader &cfg, wxString group) {
 }
 
 int GOMidiReceiver::GetTranspose() { return r_config.Transpose(); }
-
-void GOMidiReceiver::Assign(const GOMidiReceiverEventPatternList &data) {
-  GOMidiReceiverBase::Assign(data);
-  r_OrganModel.SetOrganModelModified();
-}

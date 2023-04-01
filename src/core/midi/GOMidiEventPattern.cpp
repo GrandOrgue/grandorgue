@@ -10,6 +10,12 @@
 #include <algorithm>
 #include <math.h>
 
+bool GOMidiEventPattern::operator==(const GOMidiEventPattern &other) const {
+  return deviceId == other.deviceId && channel == other.channel
+    && key == other.key && low_value == other.low_value
+    && high_value == other.high_value;
+}
+
 int GOMidiEventPattern::convertValueBetweenRanges(
   int srcValue, int srcLow, int srcHigh, int dstLow, int dstHigh) {
   const int dstAbsLow = std::min(dstLow, dstHigh);

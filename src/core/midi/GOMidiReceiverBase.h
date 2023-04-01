@@ -63,8 +63,6 @@ public:
   unsigned KeyLimit(GOMidiReceiverMessageType type);
   unsigned LowerValueLimit(GOMidiReceiverMessageType type);
   unsigned UpperValueLimit(GOMidiReceiverMessageType type);
-
-  virtual void Assign(const GOMidiReceiverEventPatternList &data);
 };
 
 #endif
