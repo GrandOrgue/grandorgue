@@ -9,6 +9,7 @@
 #define GOMIDIRECEIVERBASE_H
 
 #include "GOMidiReceiverEventPatternList.h"
+#include "GOTime.h"
 
 class GOConfigReader;
 class GOConfigWriter;

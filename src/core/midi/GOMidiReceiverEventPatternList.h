@@ -8,10 +8,8 @@
 #ifndef GOMIDIRECEIVEREVENTPATTERNLIST_H
 #define GOMIDIRECEIVEREVENTPATTERNLIST_H
 
-#include <vector>
-
+#include "GOMidiEventPatternList.h"
 #include "GOMidiReceiverEventPattern.h"
-#include "GOTime.h"
 
 typedef enum {
   MIDI_RECV_DRAWSTOP,
@@ -30,26 +28,7 @@ typedef enum {
   MIDI_MATCH_RESET,
 } GOMidiMatchType;
 
-class GOMidiReceiverEventPatternList {
-protected:
-  GOMidiReceiverType m_type;
-  std::vector<GOMidiReceiverEventPattern> m_events;
-
-public:
-  GOMidiReceiverEventPatternList(GOMidiReceiverType type);
-  virtual ~GOMidiReceiverEventPatternList();
-
-  GOMidiReceiverType GetType() const;
-
-  unsigned GetEventCount() const { return m_events.size(); }
-  const GOMidiReceiverEventPattern &GetEvent(unsigned index) const {
-    return m_events[index];
-  }
-  GOMidiReceiverEventPattern &GetEvent(unsigned index) {
-    return m_events[index];
-  }
-  unsigned AddNewEvent();
-  void DeleteEvent(unsigned index);
-};
+using GOMidiReceiverEventPatternList
+  = GOMidiEventPatternList<GOMidiReceiverType, GOMidiReceiverEventPattern>;
 
 #endif
