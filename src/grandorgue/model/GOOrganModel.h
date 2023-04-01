@@ -11,6 +11,7 @@
 #include "ptrvector.h"
 
 #include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
+#include "modification/GOModificationProxy.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOEventHandlerList.h"
@@ -21,7 +22,6 @@ class GODivisionalCoupler;
 class GOEnclosure;
 class GOGeneralButtonControl;
 class GOManual;
-class GOModificationListener;
 class GOOrganController;
 class GOPistonControl;
 class GORank;
@@ -32,12 +32,13 @@ class GOWindchest;
 class GOOrganModel : public GOEventHandlerList,
                      public GOMidiDialogCreatorProxy {
 private:
+  GOModificationProxy m_ModificationProxy;
+
   const GOConfig &m_config;
 
   GOPipeConfigTreeNode m_RootPipeConfigNode;
 
   bool m_OrganModelModified;
-  GOModificationListener *m_ModificationListener;
 
 protected:
   ptr_vector<GOWindchest> m_windchests;
@@ -68,12 +69,8 @@ public:
   void SetOrganModelModified() { SetOrganModelModified(true); }
   void ResetOrganModelModified() { SetOrganModelModified(false); }
 
-  GOModificationListener *GetModificationListener() const {
-    return m_ModificationListener;
-  }
-
-  void SetModificationListener(GOModificationListener *listener) {
-    m_ModificationListener = listener;
+  void SetModelModificationListener(GOModificationListener *listener) {
+    m_ModificationProxy.SetModificationListener(listener);
   }
 
   void UpdateTremulant(GOTremulant *tremulant);

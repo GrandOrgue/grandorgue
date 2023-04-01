@@ -10,11 +10,11 @@
 #include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigReader.h"
 #include "control/GOPistonControl.h"
+#include "modification/GOModificationListener.h"
 
 #include "GODivisionalCoupler.h"
 #include "GOEnclosure.h"
 #include "GOManual.h"
-#include "GOModificationListener.h"
 #include "GOOrganController.h"
 #include "GORank.h"
 #include "GOSwitch.h"
@@ -25,7 +25,6 @@ GOOrganModel::GOOrganModel(const GOConfig &config)
   : m_config(config),
     m_RootPipeConfigNode(nullptr, this, nullptr),
     m_OrganModelModified(false),
-    m_ModificationListener(nullptr),
     m_FirstManual(0),
     m_ODFManualCount(0),
     m_ODFRankCount(0) {}
@@ -145,8 +144,8 @@ void GOOrganModel::Load(
 void GOOrganModel::SetOrganModelModified(bool modified) {
   if (modified != m_OrganModelModified)
     m_OrganModelModified = modified;
-  if (modified && m_ModificationListener)
-    m_ModificationListener->OnIsModifiedChanged(modified);
+  if (modified)
+    m_ModificationProxy.OnIsModifiedChanged(modified);
 }
 
 void GOOrganModel::UpdateTremulant(GOTremulant *tremulant) {
