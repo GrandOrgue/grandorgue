@@ -304,8 +304,12 @@ void GOCombination::ToYaml(YAML::Node &yamlMap) const {
 void GOCombination::FromYaml(const YAML::Node &yamlNode) {
   if (!m_Protected) {
     Clear();
-    if (yamlNode.IsDefined() && yamlNode.IsMap())
+    if (yamlNode.IsDefined() && yamlNode.IsMap()) {
       FromYamlMap(yamlNode);
+      // clear all non mentioned elements. Otherwise they won't be disabled when
+      // this combination is switched on
+      std::replace(m_State.begin(), m_State.end(), -1, 0);
+    }
   }
 }
 
