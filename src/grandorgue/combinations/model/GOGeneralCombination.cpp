@@ -9,13 +9,20 @@
 
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <yaml-cpp/yaml.h>
 
 #include "combinations/GOSetter.h"
 #include "combinations/control/GODivisionalButtonControl.h"
 #include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "model/GOCoupler.h"
+#include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
+#include "model/GOStop.h"
+#include "model/GOSwitch.h"
+#include "model/GOTremulant.h"
+#include "yaml/go-wx-yaml.h"
 
 #include "GOOrganController.h"
 
@@ -465,4 +472,69 @@ void GOGeneralCombination::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, wxT("NumberOfSwitches"), switch_count);
   cfg.WriteInteger(
     m_group, wxT("NumberOfDivisionalCouplers"), divisional_coupler_count);
+}
+
+const char *const MANUALS = "manuals";
+const char *const STOPS = "stops";
+const char *const COUPLERS = "couplers";
+const char *const TREMULANTS = "tremulants";
+const char *const SWITCHES = "switches";
+const char *const DIVISIONAL_COUPLERS = "divisional-couplers";
+const char *const NAME = "name";
+
+const wxString WX_P03D = wxT("%03d");
+
+void GOGeneralCombination::ToYaml(YAML::Node &yamlNode) const {
+  const std::vector<GOCombinationDefinition::Element> &elements
+    = m_Template.GetElements();
+
+  for (unsigned i = 0; i < elements.size(); i++)
+    if (m_State[i] > 0) {
+      const GOCombinationDefinition::Element &e = elements[i];
+      unsigned value = e.index;
+      int manualIndex = e.manual;
+      const wxString manualLabel = wxString::Format(WX_P03D, manualIndex);
+      const wxString valueLabel = wxString::Format(WX_P03D, value);
+
+      assert(value > 0);
+
+      unsigned index = value - 1;
+
+      switch (e.type) {
+      case GOCombinationDefinition::COMBINATION_STOP: {
+        GOManual &manual = *m_OrganController->GetManual(manualIndex);
+        YAML::Node manualNode = yamlNode[MANUALS][manualLabel];
+
+        manualNode[NAME] = manual.GetName();
+        manualNode[STOPS][valueLabel] = manual.GetStop(index)->GetName();
+      } break;
+
+      case GOCombinationDefinition::COMBINATION_COUPLER: {
+        GOManual &manual = *m_OrganController->GetManual(manualIndex);
+        YAML::Node manualNode = yamlNode[MANUALS][manualLabel];
+
+        manualNode[NAME] = manual.GetName();
+        manualNode[COUPLERS][valueLabel] = manual.GetCoupler(index)->GetName();
+      } break;
+
+      case GOCombinationDefinition::COMBINATION_TREMULANT:
+        yamlNode[TREMULANTS][valueLabel]
+          = m_OrganController->GetTremulant(index)->GetName();
+        break;
+
+      case GOCombinationDefinition::COMBINATION_SWITCH:
+        yamlNode[SWITCHES][valueLabel]
+          = m_OrganController->GetSwitch(index)->GetName();
+        break;
+
+      case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
+        yamlNode[DIVISIONAL_COUPLERS][valueLabel]
+          = m_OrganController->GetDivisionalCoupler(index)->GetName();
+        break;
+      }
+    }
+}
+
+void GOGeneralCombination::FromYaml(const YAML::Node &node) {
+  throw wxT("Not implemented yet");
 }

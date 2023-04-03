@@ -11,9 +11,11 @@
 #include <wx/translation.h>
 
 #include "control/GOButtonControl.h"
+#include "control/GODivisionalButtonControl.h"
 #include "control/GOLabelControl.h"
 #include "model/GODivisionalCombination.h"
 #include "model/GOManual.h"
+#include "yaml/go-wx-yaml.h"
 
 #include "GOOrganController.h"
 #include "GOSetter.h"
@@ -230,6 +232,63 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
         divMap[divisionalIndex] = pCmb;
     }
   }
+}
+
+const char *const DIVISIONALS = "divisionals";
+const char *const BANKED_DIVISIONALS = "banked-divisionals";
+const char *const NAME = "name";
+const char *const COMBINATIONS = "combinations";
+const wxString WX_MANUALP03U = wxT("Manual%03u");
+const wxString WX_PU = wxT("%u");
+const wxString WX_P03U = wxT("%03u");
+const wxString WX_PCP02U = wxT("%c%02u");
+
+void GODivisionalSetter::ToYaml(YAML::Node &yamlNode) const {
+  YAML::Node divisionalsNode;
+  YAML::Node bankedDivisionalsNode;
+
+  for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
+    unsigned odfManualIndex = m_FirstManualIndex + manualN;
+    GOManual *const pManual = m_OrganController->GetManual(odfManualIndex);
+    const wxString &manualName = pManual->GetName();
+    const wxString manualLabel
+      = wxString::Format(WX_MANUALP03U, odfManualIndex);
+    const DivisionalMap &divMap = m_DivisionalMaps[manualN];
+
+    // simple divisionals
+    YAML::Node simpleCmbsNode;
+
+    for (int l = pManual->GetDivisionalCount(), i = 0; i < l; i++)
+      pManual->GetDivisional(i)->GetCombination().PutToYamlMap(
+        simpleCmbsNode, wxString::Format(WX_PU, i + 1));
+    put_to_map_with_name(
+      divisionalsNode, manualLabel, manualName, COMBINATIONS, simpleCmbsNode);
+
+    // banked divisionals
+    YAML::Node bankedCmbsNode;
+
+    for (auto &divEntry : divMap) {
+      const unsigned i = divEntry.first;
+
+      GOCombination::putToYamlMap(
+        bankedCmbsNode,
+        wxString::Format(
+          WX_PCP02U, i / N_DIVISIONALS + 'A', i % N_DIVISIONALS + 1),
+        divEntry.second);
+    }
+    put_to_map_with_name(
+      bankedDivisionalsNode,
+      manualLabel,
+      manualName,
+      COMBINATIONS,
+      bankedCmbsNode);
+  }
+  put_to_map_if_not_null(yamlNode, DIVISIONALS, divisionalsNode);
+  put_to_map_if_not_null(yamlNode, BANKED_DIVISIONALS, bankedDivisionalsNode);
+}
+
+void GODivisionalSetter::FromYaml(const YAML::Node &yamlNode) {
+  throw wxT("Not implemented yet");
 }
 
 void GODivisionalSetter::SwitchDivisionalTo(

@@ -32,6 +32,17 @@ public:
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
 
+  /**
+   * Save the combination to the YAML object
+   */
+  void ToYaml(YAML::Node &yamlNode) const override;
+
+  /**
+   * Loads the combination from the Yaml Node
+   * @param node
+   */
+  void FromYaml(const YAML::Node &node) override;
+
   /*
    * Activate this combination
    * If extraSet is passed then not to disable stops that are present in

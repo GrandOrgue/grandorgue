@@ -16,6 +16,7 @@
 #include "ptrvector.h"
 
 #include "control/GOElementCreator.h"
+#include "yaml/GOSaveableToYaml.h"
 
 #include "GOSaveableObject.h"
 
@@ -23,7 +24,9 @@ class GOOrganController;
 class GODivisionalCombination;
 class GOLabelControl;
 
-class GODivisionalSetter : public GOElementCreator, GOSaveableObject {
+class GODivisionalSetter : public GOElementCreator,
+                           GOSaveableObject,
+                           public GOSaveableToYaml {
 private:
   // Maps combination numbers to defined combinations
   // The first bank (A) has numbers from 0 to 9, the second one - from 10 to 19
@@ -86,6 +89,17 @@ public:
   virtual void LoadCombination(GOConfigReader &cfg) override;
   // loads definitions of all buttons
   virtual void Load(GOConfigReader &cfg) override;
+
+  /**
+   * Save the combination to the YAML object
+   */
+  void ToYaml(YAML::Node &yamlNode) const override;
+
+  /**
+   * Loads the object from the saved object in Yaml
+   * @param yamlNode - a node with the saved object
+   */
+  void FromYaml(const YAML::Node &yamlNode) override;
 
   // it is not used but it is required to be as it is declared in
   // GOElementCreator

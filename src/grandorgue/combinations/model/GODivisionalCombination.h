@@ -24,6 +24,7 @@ protected:
   int m_DivisionalNumber;
   bool m_IsSetter;
 
+private:
 public:
   GODivisionalCombination(
     GOOrganController *organController,
@@ -43,6 +44,18 @@ public:
   // GOdivisionalSetter::LoadCombination creates the combinations dynamically
   void LoadCombination(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
+
+  /**
+   * Save the combination to the YAML object
+   */
+  void ToYaml(YAML::Node &yamlNode) const override;
+
+  /**
+   * Loads the combination from the Yaml Node
+   * @param yamlNode - a YAML node to load from
+   */
+  void FromYaml(const YAML::Node &yamlNode) override;
+
   void Push(ExtraElementsSet const *extraSet = nullptr);
 
   wxString GetMidiType();

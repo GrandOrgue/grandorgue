@@ -10,12 +10,14 @@
 #include <wx/app.h>
 #include <wx/intl.h>
 #include <wx/window.h>
+#include <yaml-cpp/yaml.h>
 
-#include "combinations/model/GOGeneralCombination.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "control/GOCallbackButtonControl.h"
+#include "control/GOGeneralButtonControl.h"
+#include "yaml/go-wx-yaml.h"
 
 #include "GOEvent.h"
 #include "GOOrganController.h"
@@ -262,7 +264,7 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_TransposeDisplay(organController),
     m_NameDisplay(organController),
     m_swell(organController),
-    m_SetterType(SETTER_REGULAR) {
+    m_SetterType(GOCombination::SETTER_REGULAR) {
   CreateButtons(m_OrganController);
 
   m_buttons[ID_SETTER_PREV]->SetPreconfigIndex(0);
@@ -304,7 +306,7 @@ GOSetter::GOSetter(GOOrganController *organController)
 
 GOSetter::~GOSetter() {}
 
-static const wxString OVERRIDE_MODE = wxT("OverrideMode");
+static const wxString WX_OVERRIDE_MODE = wxT("OverrideMode");
 
 void GOSetter::Load(GOConfigReader &cfg) {
   m_OrganController->RegisterSaveableObject(this);
@@ -332,10 +334,10 @@ void GOSetter::Load(GOConfigReader &cfg) {
     buffer.Printf(wxT("SetterCrescendo%d"), i);
 
     bool defaultAddMode
-      = cfg.ReadBoolean(ODFSetting, buffer, OVERRIDE_MODE, false, true);
+      = cfg.ReadBoolean(ODFSetting, buffer, WX_OVERRIDE_MODE, false, true);
 
     m_CrescendoOverrideMode[i] = cfg.ReadBoolean(
-      CMBSetting, buffer, OVERRIDE_MODE, false, defaultAddMode);
+      CMBSetting, buffer, WX_OVERRIDE_MODE, false, defaultAddMode);
   }
   for (unsigned i = 0; i < N_CRESCENDOS * CRESCENDO_STEPS; i++) {
     m_crescendo.push_back(new GOGeneralCombination(
@@ -437,10 +439,76 @@ void GOSetter::Save(GOConfigWriter &cfg) {
   for (unsigned i = 0; i < N_CRESCENDOS; i++) {
     cfg.WriteBoolean(
       wxString::Format(wxT("SetterCrescendo%d"), i),
-      OVERRIDE_MODE,
+      WX_OVERRIDE_MODE,
       m_CrescendoOverrideMode[i]);
   }
   // another objects are saveble themself so they are saved separatelly
+}
+
+const char *const CURRENT = "current";
+const char *const SIMPLE_GENERALS = "generals";
+const char *const BANKED_GENERALS = "banked-generals";
+const char *const CRESCENDOS = "crescendos";
+const char *const OVERRIDE_MODE = "override-mode";
+const char *const STEPS = "steps";
+const char *const SEQUENCER = "sequencer";
+const wxString WX_C = wxT("%c");
+const wxString WX_C02U = wxT("%c%02u");
+const wxString WX_U = wxT("%u");
+const wxString WX_03U = wxT("%03u");
+
+void GOSetter::ToYaml(YAML::Node &yamlNode) const {
+  // save generals
+  YAML::Node generalsNode;
+
+  for (unsigned l = m_OrganController->GetGeneralCount(), i = 0; i < l; i++)
+    m_OrganController->GetGeneral(i)->GetCombination().PutToYamlMap(
+      generalsNode, wxString::Format(WX_U, i));
+  put_to_map_if_not_null(yamlNode, SIMPLE_GENERALS, generalsNode);
+
+  // save banked generals
+  YAML::Node bankedGeneralsNode;
+
+  for (unsigned l = m_general.size(), i = 0; i < l; i++)
+    GOCombination::putToYamlMap(
+      bankedGeneralsNode,
+      wxString::Format(WX_C02U, i / GENERALS + 'A', i % GENERALS + 1),
+      m_general[i]);
+  put_to_map_if_not_null(yamlNode, BANKED_GENERALS, bankedGeneralsNode);
+
+  // save crescendos
+  YAML::Node crescendosNode;
+
+  for (unsigned i = 0; i < N_CRESCENDOS; i++) {
+    YAML::Node crescendoSteps;
+    unsigned baseIndex = CRESCENDO_STEPS * i;
+
+    for (unsigned j = 0; j < CRESCENDO_STEPS; j++)
+      GOCombination::putToYamlMap(
+        crescendoSteps,
+        wxString::Format(WX_U, j + 1),
+        m_crescendo[baseIndex + j]);
+    if (!crescendoSteps.IsNull()) {
+      YAML::Node crescendoNode
+        = crescendosNode[wxString::Format(WX_C, i + 'A')];
+
+      crescendoNode[OVERRIDE_MODE] = m_CrescendoOverrideMode[i];
+      crescendoNode[STEPS] = crescendoSteps;
+    }
+  }
+  put_to_map_if_not_null(yamlNode, CRESCENDOS, crescendosNode);
+
+  // save sequencer
+  YAML::Node sequencerNode;
+
+  for (unsigned i = 0; i < FRAME_GENERALS; i++)
+    GOCombination::putToYamlMap(
+      sequencerNode, wxString::Format(WX_03U, i), m_framegeneral[i]);
+  put_to_map_if_not_null(yamlNode, SEQUENCER, sequencerNode);
+}
+
+void GOSetter::FromYaml(const YAML::Node &yamlNode) {
+  throw wxT("Not implemented yet");
 }
 
 void GOSetter::ButtonStateChanged(int id) {
@@ -576,13 +644,13 @@ void GOSetter::ButtonStateChanged(int id) {
     break;
 
   case ID_SETTER_REGULAR:
-    SetSetterType(SETTER_REGULAR);
+    SetSetterType(GOCombination::SETTER_REGULAR);
     break;
   case ID_SETTER_SCOPE:
-    SetSetterType(SETTER_SCOPE);
+    SetSetterType(GOCombination::SETTER_SCOPE);
     break;
   case ID_SETTER_SCOPED:
-    SetSetterType(SETTER_SCOPED);
+    SetSetterType(GOCombination::SETTER_SCOPED);
     break;
   case ID_SETTER_CRESCENDO_A:
   case ID_SETTER_CRESCENDO_B:
@@ -712,13 +780,11 @@ void GOSetter::Push() { SetPosition(m_pos); }
 
 unsigned GOSetter::GetPosition() { return m_pos; }
 
-SetterType GOSetter::GetSetterType() { return m_SetterType; }
-
-void GOSetter::SetSetterType(SetterType type) {
+void GOSetter::SetSetterType(GOCombination::SetterType type) {
   m_SetterType = type;
-  m_buttons[ID_SETTER_REGULAR]->Display(type == SETTER_REGULAR);
-  m_buttons[ID_SETTER_SCOPE]->Display(type == SETTER_SCOPE);
-  m_buttons[ID_SETTER_SCOPED]->Display(type == SETTER_SCOPED);
+  m_buttons[ID_SETTER_REGULAR]->Display(type == GOCombination::SETTER_REGULAR);
+  m_buttons[ID_SETTER_SCOPE]->Display(type == GOCombination::SETTER_SCOPE);
+  m_buttons[ID_SETTER_SCOPED]->Display(type == GOCombination::SETTER_SCOPED);
 }
 
 void GOSetter::SetCrescendoType(unsigned no) {

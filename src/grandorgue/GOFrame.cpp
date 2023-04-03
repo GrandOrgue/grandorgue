@@ -73,8 +73,9 @@ EVT_MENU(ID_FILE_EXIT, GOFrame::OnExit)
 EVT_MENU(ID_FILE_RELOAD, GOFrame::OnReload)
 EVT_MENU(ID_FILE_REVERT, GOFrame::OnRevert)
 EVT_MENU(ID_FILE_PROPERTIES, GOFrame::OnProperties)
-EVT_MENU(ID_FILE_IMPORT_SETTINGS, GOFrame::OnImportSettings)
 EVT_MENU(ID_FILE_IMPORT_COMBINATIONS, GOFrame::OnImportCombinations)
+EVT_MENU(ID_FILE_EXPORT_COMBINATIONS, GOFrame::OnExportCombinations)
+EVT_MENU(ID_FILE_IMPORT_SETTINGS, GOFrame::OnImportSettings)
 EVT_MENU(ID_FILE_EXPORT, GOFrame::OnExport)
 EVT_MENU(ID_FILE_CACHE, GOFrame::OnCache)
 EVT_MENU(ID_FILE_CACHE_DELETE, GOFrame::OnCacheDelete)
@@ -202,20 +203,22 @@ GOFrame::GOFrame(
     ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->AppendSeparator();
   m_file_menu->Append(
-    ID_FILE_IMPORT_SETTINGS,
-    _("&Import Settings"),
-    wxEmptyString,
-    wxITEM_NORMAL);
-  m_file_menu->Append(
     ID_FILE_IMPORT_COMBINATIONS,
     _("Import &Combinations"),
     wxEmptyString,
     wxITEM_NORMAL);
   m_file_menu->Append(
-    ID_FILE_EXPORT,
-    _("&Export Settings/Combinations"),
+    ID_FILE_EXPORT_COMBINATIONS,
+    _("Export &Combinations"),
     wxEmptyString,
     wxITEM_NORMAL);
+  m_file_menu->Append(
+    ID_FILE_IMPORT_SETTINGS,
+    _("&Import Settings"),
+    wxEmptyString,
+    wxITEM_NORMAL);
+  m_file_menu->Append(
+    ID_FILE_EXPORT, _("&Export Settings"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->AppendSeparator();
   m_file_menu->Append(
     ID_SETTINGS, wxT("&Settings..."), wxEmptyString, wxITEM_NORMAL);
@@ -893,6 +896,46 @@ void GOFrame::OnImportCombinations(wxCommandEvent &event) {
 
     if (dlg.ShowModal() == wxID_OK)
       pOrganController->LoadCombination(dlg.GetPath());
+  }
+}
+
+void GOFrame::OnExportCombinations(wxCommandEvent &event) {
+  GOOrganController *pOrganController = GetOrganController();
+
+  if (pOrganController) {
+    const wxString organCmbDir
+      = wxFileName(
+          m_config.OrganCombinationsPath(), pOrganController->GetChurchName())
+          .GetFullPath();
+
+    wxFileName::Mkdir(organCmbDir, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+
+    wxFileDialog dlg(
+      this,
+      _("Export Combinations"),
+      organCmbDir,
+      wxEmptyString,
+      _("Combination files (*.yaml)|*.yaml"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+    if (dlg.ShowModal() == wxID_OK) {
+      wxString exportedFilePath = dlg.GetPath();
+
+      if (!exportedFilePath.EndsWith(wxT(".yaml"), NULL))
+        exportedFilePath += wxT(".yaml");
+      const wxString errMsg
+        = pOrganController->ExportCombination(exportedFilePath);
+
+      if (!errMsg.IsEmpty())
+        GOMessageBox(
+          wxString::Format(
+            _("Failed to export combinations to '%s': %s"),
+            exportedFilePath,
+            errMsg),
+          _("Error"),
+          wxOK | wxICON_ERROR,
+          this);
+    }
   }
 }
 

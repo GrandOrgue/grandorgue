@@ -7,8 +7,11 @@
 
 #include "GOCombination.h"
 
+#include <algorithm>
+
 #include "combinations/GOSetter.h"
 #include "model/GODrawStop.h"
+#include "yaml/go-wx-yaml.h"
 
 #include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
@@ -35,6 +38,12 @@ void GOCombination::Copy(GOCombination *combination) {
   m_State = combination->m_State;
   UpdateState();
   m_OrganFile->SetOrganModified();
+}
+
+bool GOCombination::IsEmpty() const {
+  return std::find_if(
+           m_State.begin(), m_State.end(), [](int i) { return i > 0; })
+    == m_State.end();
 }
 
 int GOCombination::GetState(unsigned no) { return m_State[no]; }
@@ -80,55 +89,65 @@ void GOCombination::UpdateState() {
 
 GOCombinationDefinition *GOCombination::GetTemplate() { return &m_Template; }
 
-bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
+bool GOCombination::FillWithCurrent(
+  SetterType setterType, bool isToStoreInvisibleObjects) {
   bool used = false;
   const std::vector<GOCombinationDefinition::Element> &elements
     = m_Template.GetElements();
-  UpdateState();
 
-  if (m_OrganFile->GetSetter()->IsSetterActive()) {
-    if (m_Protected)
-      return false;
-    if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_REGULAR) {
-      for (unsigned i = 0; i < elements.size(); i++) {
-        if (
-          !m_OrganFile->GetSetter()->StoreInvisibleObjects()
-          && !elements[i].store_unconditional)
-          m_State[i] = -1;
-        else if (elements[i].control->GetCombinationState()) {
+  UpdateState();
+  if (setterType == SETTER_REGULAR) {
+    for (unsigned i = 0; i < elements.size(); i++) {
+      if (!isToStoreInvisibleObjects && !elements[i].store_unconditional)
+        m_State[i] = -1;
+      else if (elements[i].control->GetCombinationState()) {
+        m_State[i] = 1;
+        used |= 1;
+      } else
+        m_State[i] = 0;
+    }
+  }
+  if (setterType == SETTER_SCOPE) {
+    for (unsigned i = 0; i < elements.size(); i++) {
+      if (!isToStoreInvisibleObjects && !elements[i].store_unconditional)
+        m_State[i] = -1;
+      else if (elements[i].control->GetCombinationState()) {
+        m_State[i] = 1;
+        used |= 1;
+      } else
+        m_State[i] = -1;
+    }
+  }
+  if (setterType == SETTER_SCOPED) {
+    for (unsigned i = 0; i < elements.size(); i++) {
+      if (m_State[i] != -1) {
+        if (elements[i].control->GetCombinationState()) {
           m_State[i] = 1;
           used |= 1;
         } else
           m_State[i] = 0;
       }
-      m_OrganFile->SetOrganModified();
     }
-    if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_SCOPE) {
-      for (unsigned i = 0; i < elements.size(); i++) {
-        if (
-          !m_OrganFile->GetSetter()->StoreInvisibleObjects()
-          && !elements[i].store_unconditional)
-          m_State[i] = -1;
-        else if (elements[i].control->GetCombinationState()) {
-          m_State[i] = 1;
-          used |= 1;
-        } else
-          m_State[i] = -1;
-      }
+  }
+  return used;
+}
+
+bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
+  bool used = false;
+  GOSetter &setter = *m_OrganFile->GetSetter();
+
+  if (setter.IsSetterActive()) {
+    if (!m_Protected) {
+
+      used = FillWithCurrent(
+        setter.GetSetterType(), setter.StoreInvisibleObjects());
       m_OrganFile->SetOrganModified();
-    }
-    if (m_OrganFile->GetSetter()->GetSetterType() == SETTER_SCOPED) {
-      for (unsigned i = 0; i < elements.size(); i++) {
-        if (m_State[i] != -1) {
-          if (elements[i].control->GetCombinationState()) {
-            m_State[i] = 1;
-            used |= 1;
-          } else
-            m_State[i] = 0;
-        }
-      }
     }
   } else {
+    const std::vector<GOCombinationDefinition::Element> &elements
+      = m_Template.GetElements();
+
+    UpdateState();
     for (unsigned i = 0; i < elements.size(); i++) {
       if (
         m_State[i] != -1
@@ -140,4 +159,15 @@ bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
   }
 
   return used;
+}
+
+void GOCombination::PutToYamlMap(YAML::Node &container, const char *key) const {
+  if (!IsEmpty())
+    put_to_map_if_not_null(container, key, ToYamlNode());
+}
+
+void GOCombination::putToYamlMap(
+  YAML::Node &container, const wxString &key, const GOCombination *pCmb) {
+  if (pCmb)
+    pCmb->PutToYamlMap(container, key);
 }
