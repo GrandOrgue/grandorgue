@@ -9,6 +9,8 @@
 
 #include <wx/intl.h>
 
+#include "combinations/GOSetter.h"
+
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
@@ -42,103 +44,136 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   PosDisplay->Init(cfg, wxT("SetterCurrentPosition"), 350, 10);
   panel->AddControl(PosDisplay);
 
+  unsigned curRow = 100;
+
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_REFRESH), false);
+  button->Init(cfg, GOSetter::GROUP_REFRESH, 1, curRow);
+  panel->AddControl(button);
+
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_PREV_FILE), false);
+  button->Init(cfg, GOSetter::GROUP_PREV_FILE, 2, curRow);
+  panel->AddControl(button);
+
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_NEXT_FILE), false);
+  button->Init(cfg, GOSetter::GROUP_NEXT_FILE, 8, curRow);
+  panel->AddControl(button);
+
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_LOAD_CMB), false);
+  button->Init(cfg, GOSetter::GROUP_LOAD_CMB, 9, curRow);
+  panel->AddControl(button);
+
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_SAVE_CMB), false);
+  button->Init(cfg, GOSetter::GROUP_SAVE_CMB, 10, curRow);
+  panel->AddControl(button);
+
+  curRow++;
+
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Current")), false);
-  button->Init(cfg, wxT("SetterCurrent"), 1, 100);
+  button->Init(cfg, wxT("SetterCurrent"), 1, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("M100")), false);
-  button->Init(cfg, wxT("SetterM100"), 2, 100);
+  button->Init(cfg, wxT("SetterM100"), 2, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("M10")), false);
-  button->Init(cfg, wxT("SetterM10"), 3, 100);
+  button->Init(cfg, wxT("SetterM10"), 3, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("M1")), false);
-  button->Init(cfg, wxT("SetterM1"), 4, 100);
+  button->Init(cfg, wxT("SetterM1"), 4, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Prev")), false);
-  button->Init(cfg, wxT("SetterPrev"), 5, 100);
+  button->Init(cfg, wxT("SetterPrev"), 5, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Next")), false);
-  button->Init(cfg, wxT("SetterNext"), 6, 100);
+  button->Init(cfg, wxT("SetterNext"), 6, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("P1")), false);
-  button->Init(cfg, wxT("SetterP1"), 7, 100);
+  button->Init(cfg, wxT("SetterP1"), 7, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("P10")), false);
-  button->Init(cfg, wxT("SetterP10"), 8, 100);
+  button->Init(cfg, wxT("SetterP10"), 8, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("P100")), false);
-  button->Init(cfg, wxT("SetterP100"), 9, 100);
+  button->Init(cfg, wxT("SetterP100"), 9, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Home")), false);
-  button->Init(cfg, wxT("SetterHome"), 10, 100);
+  button->Init(cfg, wxT("SetterHome"), 10, curRow);
   panel->AddControl(button);
+
+  curRow++;
 
   for (unsigned i = 0; i < 10; i++) {
     button = new GOGUIButton(
       panel,
       m_OrganController->GetButtonControl(wxString::Format(wxT("L%d"), i)),
       false);
-    button->Init(cfg, wxString::Format(wxT("SetterL%d"), i), i + 1, 101);
+    button->Init(cfg, wxString::Format(wxT("SetterL%d"), i), i + 1, curRow);
     panel->AddControl(button);
   }
 
+  curRow++;
+
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Set")), false);
-  button->Init(cfg, wxT("SetterSet"), 1, 102);
+  button->Init(cfg, wxT("SetterSet"), 1, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Regular")), false);
-  button->Init(cfg, wxT("SetterRegular"), 3, 102);
+  button->Init(cfg, wxT("SetterRegular"), 3, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Scope")), false);
-  button->Init(cfg, wxT("SetterScope"), 4, 102);
+  button->Init(cfg, wxT("SetterScope"), 4, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Scoped")), false);
-  button->Init(cfg, wxT("SetterScoped"), 5, 102);
+  button->Init(cfg, wxT("SetterScoped"), 5, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Full")), false);
-  button->Init(cfg, wxT("SetterFull"), 7, 102);
+  button->Init(cfg, wxT("SetterFull"), 7, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("GC")), false);
-  button->Init(cfg, wxT("SetterGC"), 8, 102);
+  button->Init(cfg, wxT("SetterGC"), 8, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Insert")), false);
-  button->Init(cfg, wxT("SetterInsert"), 9, 102);
+  button->Init(cfg, wxT("SetterInsert"), 9, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Delete")), false);
-  button->Init(cfg, wxT("SetterDelete"), 10, 102);
+  button->Init(cfg, wxT("SetterDelete"), 10, curRow);
   panel->AddControl(button);
 
   return panel;

@@ -24,8 +24,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
   switch (type) {
   case GOGUI_SETTER_SETTER:
     x_size = 800;
-    y_size = 300;
-    drawstop_rows = 3;
+    y_size = 360;
+    drawstop_rows = 4;
     drawstop_cols = 10;
     button_cols = 10;
     button_rows = 0;
