@@ -18,6 +18,8 @@
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
 
+#include "go_gui_utils.h"
+
 GOGUISequencerPanel::GOGUISequencerPanel(GOOrganController *organController)
   : m_OrganController(organController) {}
 
@@ -41,8 +43,20 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
 
   GOGUILabel *PosDisplay
     = new GOGUILabel(panel, m_OrganController->GetLabel(wxT("Label")));
-  PosDisplay->Init(cfg, wxT("SetterCurrentPosition"), 350, 10);
+  PosDisplay->Init(cfg, wxT("SetterCurrentPosition"), 360, 10);
   panel->AddControl(PosDisplay);
+
+  GOGUILabel *const currFileNameDisplay = new GOGUILabel(
+    panel, m_OrganController->GetLabel(GOSetter::KEY_CURR_FILE_NAME));
+
+  currFileNameDisplay->Init(
+    cfg, GOSetter::GROUP_CURR_FILE_NAME, 170, 58, wxEmptyString, 15, 380, 40);
+  currFileNameDisplay->SetFontSize(16);
+  /*
+  currFileNameDisplay->SetFontColour(
+    logicalToWxColour(GOLogicalColour::DARK_RED));
+   */
+  panel->AddControl(currFileNameDisplay);
 
   unsigned curRow = 100;
 
