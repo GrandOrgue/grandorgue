@@ -58,6 +58,13 @@ enum {
   ID_SETTER_DELETE,
   ID_SETTER_INSERT,
 
+  ID_SETTER_REFRESH,
+  ID_SETTER_PREV_FILE,
+  ID_SETTER_NEXT_FILE,
+  ID_SETTER_LOAD_CMB,
+  ID_SETTER_SAVE_CMB,
+  ID_SETTER_SAVE,
+
   ID_SETTER_GENERAL00,
   ID_SETTER_GENERAL01,
   ID_SETTER_GENERAL02,
@@ -131,9 +138,24 @@ enum {
   ID_SETTER_TRANSPOSE_DOWN,
   ID_SETTER_TRANSPOSE_UP,
 
-  ID_SETTER_SAVE,
   ID_SETTER_ON,
 };
+
+const wxString GOSetter::KEY_REFRESH = wxT("Refresh");
+const wxString GOSetter::KEY_PREV_FILE = wxT("PrevFile");
+const wxString GOSetter::KEY_CURR_FILE_NAME = wxT("CurrFileName");
+const wxString GOSetter::KEY_NEXT_FILE = wxT("NextFile");
+const wxString GOSetter::KEY_LOAD_CMB = wxT("LoadCmb");
+const wxString GOSetter::KEY_SAVE_CMB = wxT("SaveCmb");
+const wxString GOSetter::KEY_SAVE = wxT("Save");
+
+const wxString GOSetter::GROUP_REFRESH = wxT("SetterRefresh");
+const wxString GOSetter::GROUP_PREV_FILE = wxT("SetterPrevFile");
+const wxString GOSetter::GROUP_CURR_FILE_NAME = wxT("SetterCurrFileName");
+const wxString GOSetter::GROUP_NEXT_FILE = wxT("SetterNextFile");
+const wxString GOSetter::GROUP_LOAD_CMB = wxT("SetterLoadCmb");
+const wxString GOSetter::GROUP_SAVE_CMB = wxT("SetterSaveCmb");
+const wxString GOSetter::GROUP_SAVE = wxT("SetterSave");
 
 const struct GOElementCreator::ButtonDefinitionEntry GOSetter::m_element_types[]
   = {
@@ -165,6 +187,11 @@ const struct GOElementCreator::ButtonDefinitionEntry GOSetter::m_element_types[]
     {wxT("Full"), ID_SETTER_FULL, true, false, false},
     {wxT("Insert"), ID_SETTER_INSERT, true, true, false},
     {wxT("Delete"), ID_SETTER_DELETE, true, true, false},
+    {KEY_REFRESH, ID_SETTER_REFRESH, true, true, false},
+    {KEY_PREV_FILE, ID_SETTER_PREV_FILE, true, true, false},
+    {KEY_NEXT_FILE, ID_SETTER_NEXT_FILE, true, true, false},
+    {KEY_LOAD_CMB, ID_SETTER_LOAD_CMB, true, true, false},
+    {KEY_SAVE_CMB, ID_SETTER_SAVE_CMB, true, true, false},
     {wxT("General01"), ID_SETTER_GENERAL00, true, true, true},
     {wxT("General02"), ID_SETTER_GENERAL01, true, true, true},
     {wxT("General03"), ID_SETTER_GENERAL02, true, true, true},
@@ -230,7 +257,7 @@ const struct GOElementCreator::ButtonDefinitionEntry GOSetter::m_element_types[]
     {wxT("TransposeDown"), ID_SETTER_TRANSPOSE_DOWN, true, true, false},
     {wxT("TransposeUp"), ID_SETTER_TRANSPOSE_UP, true, true, false},
 
-    {wxT("Save"), ID_SETTER_SAVE, true, true, false},
+    {KEY_SAVE, ID_SETTER_SAVE, true, true, false},
     {wxT("OnState"), ID_SETTER_ON, false, true, false},
 
     {wxT("CrescendoA"), ID_SETTER_CRESCENDO_A, true, true, false},
@@ -258,6 +285,7 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_framegeneral(0),
     m_general(0),
     m_crescendo(0),
+    m_CurrFileDisplay(organController),
     m_PosDisplay(organController),
     m_BankDisplay(organController),
     m_CrescendoDisplay(organController),
@@ -371,6 +399,13 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_buttons[ID_SETTER_INSERT]->Init(cfg, wxT("SetterInsert"), _("Insert"));
   m_buttons[ID_SETTER_DELETE]->Init(cfg, wxT("SetterDelete"), _("Delete"));
 
+  m_buttons[ID_SETTER_REFRESH]->Init(cfg, GROUP_REFRESH, _("Refresh"));
+  m_buttons[ID_SETTER_PREV_FILE]->Init(cfg, GROUP_PREV_FILE, _("Prev File"));
+  m_buttons[ID_SETTER_NEXT_FILE]->Init(cfg, GROUP_NEXT_FILE, _("Next File"));
+  m_buttons[ID_SETTER_LOAD_CMB]->Init(cfg, GROUP_LOAD_CMB, _("Load"));
+  m_buttons[ID_SETTER_SAVE_CMB]->Init(cfg, GROUP_SAVE_CMB, _("Save"));
+  m_buttons[ID_SETTER_SAVE]->Init(cfg, GROUP_SAVE, _("Save Settings"));
+
   m_buttons[ID_SETTER_CRESCENDO_PREV]->Init(
     cfg, wxT("SetterCrescendoPrev"), _("<"));
   m_buttons[ID_SETTER_CRESCENDO_NEXT]->Init(
@@ -401,7 +436,6 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_buttons[ID_SETTER_TRANSPOSE_UP]->Init(
     cfg, wxT("SetterTransposeUp"), _("+"));
 
-  m_buttons[ID_SETTER_SAVE]->Init(cfg, wxT("SetterSave"), _("Save"));
   m_buttons[ID_SETTER_ON]->Init(cfg, wxT("SetterOn"), _("ON"));
   m_buttons[ID_SETTER_ON]->Display(true);
 
@@ -413,6 +447,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
     cfg, wxT("SetterCrescendoPosition"), _("crescendo position"));
   m_TransposeDisplay.Init(cfg, wxT("SetterTranspose"), _("transpose"));
   m_NameDisplay.Init(cfg, wxT("SetterName"), _("organ name"));
+  m_CurrFileDisplay.Init(cfg, KEY_CURR_FILE_NAME, _("current file name"));
 
   for (unsigned i = 0; i < 10; i++) {
     wxString group;
@@ -1013,6 +1048,9 @@ GOLabelControl *GOSetter::GetLabelControl(const wxString &name, bool is_panel) {
 
   if (name == wxT("TransposeLabel"))
     return &m_TransposeDisplay;
+
+  if (name == KEY_CURR_FILE_NAME)
+    return &m_CurrFileDisplay;
 
   if (is_panel)
     return NULL;

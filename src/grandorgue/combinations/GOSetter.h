@@ -39,6 +39,7 @@ private:
   ptr_vector<GOGeneralCombination> m_crescendo;
   std::vector<GOCombination::ExtraElementsSet> m_CrescendoExtraSets;
   bool m_CrescendoOverrideMode[N_CRESCENDOS];
+  GOLabelControl m_CurrFileDisplay;
   GOLabelControl m_PosDisplay;
   GOLabelControl m_BankDisplay;
   GOLabelControl m_CrescendoDisplay;
@@ -61,6 +62,22 @@ private:
   void PreparePlayback();
 
 public:
+  static const wxString KEY_REFRESH;
+  static const wxString KEY_PREV_FILE;
+  static const wxString KEY_CURR_FILE_NAME;
+  static const wxString KEY_NEXT_FILE;
+  static const wxString KEY_LOAD_CMB;
+  static const wxString KEY_SAVE_CMB;
+  static const wxString KEY_SAVE;
+
+  static const wxString GROUP_REFRESH;
+  static const wxString GROUP_PREV_FILE;
+  static const wxString GROUP_CURR_FILE_NAME;
+  static const wxString GROUP_NEXT_FILE;
+  static const wxString GROUP_LOAD_CMB;
+  static const wxString GROUP_SAVE_CMB;
+  static const wxString GROUP_SAVE;
+
   GOSetter(GOOrganController *organController);
   virtual ~GOSetter();
 
