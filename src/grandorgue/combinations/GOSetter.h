@@ -104,6 +104,20 @@ public:
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
   GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 
+  /**
+   * Called from GOOrganController after loading the initial preset and after
+   * loading a yaml combination file.
+   * GOSetter takes the directory name for navigation across the combination
+   * files and takes the filename for displaying it.
+   * @param yamlDir full path to the directory where the yaml combination files
+   *   are stored for this organ or where the last combination file has been
+   *   loaded from
+   * @param yamlFile file name of the last loaded file name without the
+   *   directory. If a preset or a cmb-combination is loaded, then
+   *   yamlFile is empty
+   */
+  void OnCombinationsLoaded(const wxString &yamlDir, const wxString &yamlFile);
+
   void Update();
 
   bool StoreInvisibleObjects();

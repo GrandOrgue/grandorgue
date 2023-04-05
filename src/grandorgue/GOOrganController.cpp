@@ -329,6 +329,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
 
   GetRootPipeConfigNode().SetName(GetChurchName());
   ReadCombinations(cfg);
+  m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
 
   GOHash hash;
   hash.Update(m_ChurchName.utf8_str(), strlen(m_ChurchName.utf8_str()));
@@ -698,9 +699,10 @@ bool GOOrganController::IsToImportCombinationsFor(
 
 void GOOrganController::LoadCombination(const wxString &file) {
   wxString errMsg;
+  const wxFileName fileName(file);
 
   try {
-    const wxString fileExt = wxFileName(file).GetExt();
+    const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
       YAML::Node cmbNode = YAML::LoadFile(file.c_str().AsChar());
@@ -714,6 +716,8 @@ void GOOrganController::LoadCombination(const wxString &file) {
             file, cmbInfoNode[ORGAN_NAME].as<wxString>())) {
         cmbNode >> *m_setter;
         cmbNode >> *m_DivisionalSetter;
+        m_setter->OnCombinationsLoaded(
+          fileName.GetFullPath(), fileName.GetFullName());
       }
     } else {
       GOConfigFileReader odf_ini_file;
@@ -741,6 +745,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
       cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
 
       ReadCombinations(cfg);
+      m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
     }
     SetOrganModified();
   } catch (const wxString &error) {

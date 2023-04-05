@@ -860,6 +860,9 @@ void GOSetter::PreparePlayback() {
   UpdateTranspose();
 }
 
+void GOSetter::OnCombinationsLoaded(
+  const wxString &yamlDir, const wxString &yamlFile) {}
+
 void GOSetter::Update() {}
 
 bool GOSetter::IsSetterActive() {
