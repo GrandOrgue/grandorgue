@@ -8,7 +8,8 @@
 #ifndef GOGUIMANUALBACKGROUND_H
 #define GOGUIMANUALBACKGROUND_H
 
-#include "GOBitmap.h"
+#include "primitives/GOBitmap.h"
+
 #include "GOGUIControl.h"
 
 class GOGUIManualBackground : public GOGUIControl {

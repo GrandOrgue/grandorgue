@@ -87,6 +87,9 @@ dialogs/GOSelectOrganDialog.cpp
 dialogs/GOSplash.cpp
 document-base/GODocumentBase.cpp
 document-base/GOView.cpp
+gui/primitives/GOBitmap.cpp
+gui/primitives/GODC.cpp
+gui/primitives/GOFont.cpp
 gui/GOGUIBankedGeneralsPanel.cpp
 gui/GOGUIButton.cpp
 gui/GOGUICrescendoPanel.cpp
@@ -187,11 +190,8 @@ GOAudioRecorder.cpp
 GOCache.cpp
 GOCacheCleaner.cpp
 GOCacheWriter.cpp
-GOBitmap.cpp
 GOBitmapCache.cpp
-GODC.cpp
 GOEvent.cpp
-GOFont.cpp
 GOKeyReceiver.cpp
 GOLog.cpp
 GOLogWindow.cpp

@@ -11,8 +11,8 @@
 
 #include "config/GOConfigReader.h"
 #include "model/GOEnclosure.h"
+#include "primitives/GODC.h"
 
-#include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"

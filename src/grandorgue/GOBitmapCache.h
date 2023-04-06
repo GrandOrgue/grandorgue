@@ -10,8 +10,9 @@
 
 #include <wx/string.h>
 
-#include "GOBitmap.h"
 #include "ptrvector.h"
+
+#include "gui/primitives/GOBitmap.h"
 
 class GOOrganController;
 

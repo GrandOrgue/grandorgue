@@ -21,8 +21,8 @@
 #include "model/GOStop.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
+#include "primitives/GODC.h"
 
-#include "GODC.h"
 #include "GOGUIButton.h"
 #include "GOGUIControl.h"
 #include "GOGUIDisplayMetrics.h"

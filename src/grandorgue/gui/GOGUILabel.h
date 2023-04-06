@@ -10,7 +10,8 @@
 
 #include <wx/colour.h>
 
-#include "GOFont.h"
+#include "primitives/GOFont.h"
+
 #include "GOGUIControl.h"
 
 class GOBitmap;
