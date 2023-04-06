@@ -30,6 +30,14 @@ class GOSetter : private GOSoundStateHandler,
 private:
   GOOrganController *m_OrganController;
 
+  // working with combination files
+  wxString m_CmbFilesDir;
+  std::vector<wxString> m_CmbFileList;
+  bool m_IsCmbFileListPopulated;
+  wxString m_CmbFileLastLoaded;
+  int m_CmbFilePos; // current displayed position or -1 or the list is not
+                    // populated yet or no file are loaded
+
   unsigned m_pos;
   unsigned m_bank;
   unsigned m_crescendopos;
@@ -47,6 +55,9 @@ private:
   GOLabelControl m_NameDisplay;
   GOEnclosure m_swell;
   GOCombination::SetterType m_SetterType;
+
+  // Show the combination file name
+  void DisplayCmbFile(const wxString &fileName);
 
   void SetSetterType(GOCombination::SetterType type);
   void SetCrescendoType(unsigned no);

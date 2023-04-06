@@ -7,7 +7,10 @@
 
 #include "GOSetter.h"
 
+#include <algorithm>
+
 #include <wx/app.h>
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/window.h>
 #include <yaml-cpp/yaml.h>
@@ -861,7 +864,27 @@ void GOSetter::PreparePlayback() {
 }
 
 void GOSetter::OnCombinationsLoaded(
-  const wxString &yamlDir, const wxString &yamlFile) {}
+  const wxString &yamlDir, const wxString &yamlFile) {
+  if (yamlDir != m_CmbFilesDir) {
+    m_CmbFilesDir = yamlDir;
+    m_CmbFileList.clear();
+    m_IsCmbFileListPopulated = false;
+    m_CmbFilePos = -1;
+    // loaded combinations from a new dir
+  } else {
+    // loaded combinations from the same dir as before
+    if (m_IsCmbFileListPopulated) {
+      // find the new current position
+      auto begin = m_CmbFileList.begin();
+      auto end = m_CmbFileList.end();
+      auto it = std::find(begin, end, yamlFile);
+
+      m_CmbFilePos = it != end ? std::distance(it, begin) : -1;
+    }
+  }
+  m_CmbFileLastLoaded = yamlFile;
+  DisplayCmbFile(m_CmbFileLastLoaded);
+}
 
 void GOSetter::Update() {}
 
