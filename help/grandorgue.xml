@@ -8865,8 +8865,8 @@ group label font of the panel.
           <term>DispImageNum</term>
           <listitem>
             <para>
-	      (integer 0 - 12, default: 1) Builtin bitmap set to use. 0 means
-	      that the lable does not have a background image.
+	      (integer 0 - 15, default: 1) Builtin bitmap set to use. 0 means
+	      that the label does not have a background image.
 	    </para>
           </listitem>
         </varlistentry>
