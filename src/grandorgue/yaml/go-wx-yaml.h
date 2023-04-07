@@ -24,7 +24,21 @@ template <> struct convert<wxString> {
 
 } // namespace YAML
 
-// utility functions non empty YAML nodes into maps
+// utility functions for special processing empty YAML nodes and maps
+/**
+ * if the container is a map and contains the key, return it. Otherwise return
+ * a null mode
+ * @param container
+ * @param key
+ * @return
+ */
+extern YAML::Node get_from_map_or_null(
+  const YAML::Node &container, const char *key);
+inline YAML::Node get_from_map_or_null(
+  const YAML::Node &container, const wxString &key) {
+  return get_from_map_or_null(container, key.mbc_str().data());
+}
+
 /**
  * Put the key-value pair into the container map only if the value is not
  *   empty:
@@ -68,5 +82,4 @@ inline void put_to_map_with_name(
   put_to_map_with_name(
     container, key.mbc_str().data(), nameValue, valueLabel, value);
 }
-
 #endif /* GOWXYAML_H */

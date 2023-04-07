@@ -630,6 +630,8 @@ wxString GOOrganController::Load(
   return errMsg;
 }
 
+// const wxString &WX_CMB = wxT(".cmb");
+const wxString &WX_YAML = wxT("yaml");
 const char *const INFO = "info";
 const char *const CONTENT_TYPE = "content-type";
 const wxString WX_GRANDORGUE_COMBINATIONS = "GrandOrgue Combinations";
@@ -665,46 +667,95 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
   return errMsg;
 }
 
+/**
+ * Check the churchName of the imported combination file. If it differs from the
+ * current organ m_ChurchName then ask for the user
+ * @param churchName the organ the combination file was saved of
+ * @return true if the churchNames are the same or the user agree with importing
+ *   the combination file
+ */
+bool GOOrganController::IsToImportCombinationsFor(
+  const wxString &fileName, const wxString &churchName) const {
+  bool isToImport = true;
+
+  if (churchName != m_ChurchName) {
+    wxLogWarning(
+      _("This combination file '%s' was originally made for another organ "
+        "'%s'"),
+      fileName,
+      churchName);
+    isToImport = wxMessageBox(
+                   wxString::Format(
+                     _("This combination file '%s' was originally made for "
+                       "another organ '%s'. Importing it can cause various "
+                       "problems. Should it really be imported?"),
+                     fileName,
+                     churchName),
+                   _("Import Combinations"),
+                   wxYES_NO,
+                   NULL)
+      == wxYES;
+  }
+  return isToImport;
+}
+
 void GOOrganController::LoadCombination(const wxString &file) {
+  wxString errMsg;
+
   try {
-    GOConfigFileReader odf_ini_file;
+    const wxString fileExt = wxFileName(file).GetExt();
 
-    if (!odf_ini_file.Read(file))
-      throw wxString::Format(_("Unable to read '%s'"), file.c_str());
+    if (fileExt == WX_YAML) {
+      YAML::Node cmbNode = YAML::LoadFile(file.c_str().AsChar());
+      YAML::Node cmbInfoNode = cmbNode[INFO];
+      const wxString contentType = cmbInfoNode[CONTENT_TYPE].as<wxString>();
 
-    GOConfigReaderDB ini;
-    ini.ReadData(odf_ini_file, CMBSetting, false);
-    GOConfigReader cfg(ini);
+      if (contentType != WX_GRANDORGUE_COMBINATIONS)
+        throw wxString::Format(
+          _("The file '%s' is not a GrandOrgue Combination file"), file);
+      if (IsToImportCombinationsFor(
+            file, cmbInfoNode[ORGAN_NAME].as<wxString>())) {
+        cmbNode >> *m_setter;
+        cmbNode >> *m_DivisionalSetter;
+      }
+    } else {
+      GOConfigFileReader odf_ini_file;
 
-    wxString church_name
-      = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchName"));
-    if (church_name != m_ChurchName)
-      if (
-        wxMessageBox(
-          _("This combination file was originally made for "
-            "another organ. Importing it can cause various "
-            "problems. Should it really be imported?"),
-          _("Import"),
-          wxYES_NO,
-          NULL)
-        == wxNO)
+      if (!odf_ini_file.Read(file))
+        throw wxString::Format(_("Unable to read '%s'"), file.c_str());
+
+      GOConfigReaderDB ini;
+      ini.ReadData(odf_ini_file, CMBSetting, false);
+      GOConfigReader cfg(ini);
+
+      wxString church_name
+        = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchName"));
+      if (!IsToImportCombinationsFor(file, church_name))
         return;
 
-    wxString hash = odf_ini_file.getEntry(WX_ORGAN, wxT("ODFHash"));
-    if (hash != wxEmptyString)
-      if (hash != m_ODFHash) {
-        wxLogWarning(
-          _("The combination file does not exactly match the current ODF."));
-      }
-    /* skip informational items */
-    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
-    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
+      wxString hash = odf_ini_file.getEntry(WX_ORGAN, wxT("ODFHash"));
+      if (hash != wxEmptyString)
+        if (hash != m_ODFHash) {
+          wxLogWarning(
+            _("The combination file does not exactly match the current ODF."));
+        }
+      /* skip informational items */
+      cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
+      cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
 
-    ReadCombinations(cfg);
+      ReadCombinations(cfg);
+    }
     SetOrganModified();
-  } catch (wxString error) {
-    wxLogError(wxT("%s\n"), error.c_str());
-    GOMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
+  } catch (const wxString &error) {
+    errMsg = error;
+  } catch (const std::exception &e) {
+    errMsg = e.what();
+  } catch (...) { // We must not allow unhandled exceptions here
+    errMsg.Printf("Unknown exception");
+  }
+  if (!errMsg.IsEmpty()) {
+    wxLogError(errMsg);
+    GOMessageBox(errMsg, _("Load error"), wxOK | wxICON_ERROR, NULL);
   }
 }
 
@@ -921,6 +972,11 @@ const wxString GOOrganController::GetSettingFilename() {
 }
 
 const wxString GOOrganController::GetCacheFilename() { return m_CacheFilename; }
+
+wxString GOOrganController::GetCombinationsDir() const {
+  return wxFileName(m_config.OrganCombinationsPath(), m_ChurchName)
+    .GetFullPath();
+}
 
 GOMemoryPool &GOOrganController::GetMemoryPool() { return m_pool; }
 

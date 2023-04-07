@@ -243,6 +243,23 @@ const wxString WX_PU = wxT("%u");
 const wxString WX_P03U = wxT("%03u");
 const wxString WX_PCP02U = wxT("%c%02u");
 
+wxString manual_yaml_key(unsigned odfManualIndex) {
+  return wxString::Format(WX_MANUALP03U, odfManualIndex);
+}
+
+wxString divisional_yaml_key(unsigned i) {
+  return wxString::Format(WX_PU, i + 1);
+}
+
+wxString banked_divisional_yaml_key(unsigned i) {
+  return wxString::Format(
+    WX_PCP02U, i / N_DIVISIONALS + 'A', i % N_DIVISIONALS + 1);
+}
+
+unsigned banked_divisional_yaml_key_to_index(const wxString &key) {
+  return N_DIVISIONALS * (key[0].GetValue() - 'A') + wxAtoi(key.Mid(1)) - 1;
+}
+
 void GODivisionalSetter::ToYaml(YAML::Node &yamlNode) const {
   YAML::Node divisionalsNode;
   YAML::Node bankedDivisionalsNode;
@@ -251,31 +268,26 @@ void GODivisionalSetter::ToYaml(YAML::Node &yamlNode) const {
     unsigned odfManualIndex = m_FirstManualIndex + manualN;
     GOManual *const pManual = m_OrganController->GetManual(odfManualIndex);
     const wxString &manualName = pManual->GetName();
-    const wxString manualLabel
-      = wxString::Format(WX_MANUALP03U, odfManualIndex);
+    const wxString manualLabel = manual_yaml_key(odfManualIndex);
     const DivisionalMap &divMap = m_DivisionalMaps[manualN];
 
     // simple divisionals
     YAML::Node simpleCmbsNode;
 
-    for (int l = pManual->GetDivisionalCount(), i = 0; i < l; i++)
+    for (unsigned l = pManual->GetDivisionalCount(), i = 0; i < l; i++)
       pManual->GetDivisional(i)->GetCombination().PutToYamlMap(
-        simpleCmbsNode, wxString::Format(WX_PU, i + 1));
+        simpleCmbsNode, divisional_yaml_key(i));
     put_to_map_with_name(
       divisionalsNode, manualLabel, manualName, COMBINATIONS, simpleCmbsNode);
 
     // banked divisionals
     YAML::Node bankedCmbsNode;
 
-    for (auto &divEntry : divMap) {
-      const unsigned i = divEntry.first;
-
+    for (auto &divEntry : divMap)
       GOCombination::putToYamlMap(
         bankedCmbsNode,
-        wxString::Format(
-          WX_PCP02U, i / N_DIVISIONALS + 'A', i % N_DIVISIONALS + 1),
+        banked_divisional_yaml_key(divEntry.first),
         divEntry.second);
-    }
     put_to_map_with_name(
       bankedDivisionalsNode,
       manualLabel,
@@ -288,7 +300,45 @@ void GODivisionalSetter::ToYaml(YAML::Node &yamlNode) const {
 }
 
 void GODivisionalSetter::FromYaml(const YAML::Node &yamlNode) {
-  throw wxT("Not implemented yet");
+  const YAML::Node divisionalsNode = yamlNode[DIVISIONALS];
+  const YAML::Node bankedDivisionalsNode = yamlNode[BANKED_DIVISIONALS];
+
+  for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
+    unsigned odfManualIndex = m_FirstManualIndex + manualN;
+    const wxString manualLabel = manual_yaml_key(odfManualIndex);
+    GOManual *const pManual = m_OrganController->GetManual(odfManualIndex);
+    GOCombinationDefinition &cmbTemplate = pManual->GetDivisionalTemplate();
+    DivisionalMap &divMap = m_DivisionalMaps[manualN];
+
+    // simple divisionals
+    const YAML::Node simpleCmbsNode = get_from_map_or_null(
+      get_from_map_or_null(divisionalsNode, manualLabel), COMBINATIONS);
+
+    for (unsigned l = pManual->GetDivisionalCount(), i = 0; i < l; i++)
+      get_from_map_or_null(simpleCmbsNode, divisional_yaml_key(i))
+        >> pManual->GetDivisional(i)->GetCombination();
+
+    // banked divisionals
+    const YAML::Node bankedCmbsNode = get_from_map_or_null(
+      get_from_map_or_null(bankedDivisionalsNode, manualLabel), COMBINATIONS);
+
+    divMap.clear();
+    for (const auto &cmbEntry : bankedCmbsNode) {
+      const YAML::Node &cmbNode = cmbEntry.second;
+
+      if (cmbNode.IsMap()) {
+        unsigned i
+          = banked_divisional_yaml_key_to_index(cmbEntry.first.as<wxString>());
+        GODivisionalCombination *pCmb
+          = new GODivisionalCombination(m_OrganController, cmbTemplate, false);
+
+        pCmb->Init(
+          GetDivisionalButtonName(odfManualIndex, i), odfManualIndex, i);
+        cmbNode >> *pCmb;
+        divMap[i] = pCmb;
+      }
+    }
+  }
 }
 
 void GODivisionalSetter::SwitchDivisionalTo(

@@ -11,19 +11,30 @@
 #include <wx/string.h>
 
 #include "GOCombination.h"
-#include "GOSaveableObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GOOrganController;
 
-class GOGeneralCombination : public GOCombination, private GOSaveableObject {
+class GOGeneralCombination : public GOCombination {
 private:
   GOOrganController *m_OrganController;
   bool m_IsSetter;
 
   void Save(GOConfigWriter &cfg);
-  void LoadCombination(GOConfigReader &cfg);
+  void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
+
+  void PutElementToYamlMap(
+    const GOCombinationDefinition::Element &e,
+    const wxString &valueLabel,
+    const unsigned objectIndex,
+    YAML::Node &yamlMap) const override;
+
+  /**
+   * Loads the combination from the Yaml Node. Called from FromYaml
+   * @param node
+   */
+  void FromYamlMap(const YAML::Node &yamlMap) override;
 
 public:
   GOGeneralCombination(
@@ -31,17 +42,6 @@ public:
     GOOrganController *organController,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
-
-  /**
-   * Save the combination to the YAML object
-   */
-  void ToYaml(YAML::Node &yamlNode) const override;
-
-  /**
-   * Loads the combination from the Yaml Node
-   * @param node
-   */
-  void FromYaml(const YAML::Node &node) override;
 
   /*
    * Activate this combination

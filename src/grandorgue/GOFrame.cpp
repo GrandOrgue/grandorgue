@@ -889,9 +889,9 @@ void GOFrame::OnImportCombinations(wxCommandEvent &event) {
     wxFileDialog dlg(
       this,
       _("Import Combinations"),
-      m_config.ExportImportPath(),
+      pOrganController->GetCombinationsDir(),
       wxEmptyString,
-      _("Settings files (*.cmb)|*.cmb"),
+      _("Combinations files (*.yaml)|*.yaml|Settings files (*.cmb)|*.cmb"),
       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
     if (dlg.ShowModal() == wxID_OK)
@@ -903,10 +903,7 @@ void GOFrame::OnExportCombinations(wxCommandEvent &event) {
   GOOrganController *pOrganController = GetOrganController();
 
   if (pOrganController) {
-    const wxString organCmbDir
-      = wxFileName(
-          m_config.OrganCombinationsPath(), pOrganController->GetChurchName())
-          .GetFullPath();
+    const wxString organCmbDir = pOrganController->GetCombinationsDir();
 
     wxFileName::Mkdir(organCmbDir, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 

@@ -816,7 +816,8 @@
                  commonFlags="-mtune=generic -march=x86-64 -std=c++11 -fPIC"/>
         <element flagsID="4" commonFlags="-std=c++11 -O3 -ffast-math -fPIC"/>
         <element flagsID="5" commonFlags="-std=c++11 -fPIC"/>
-        <element flagsID="6" commonFlags="-std=c++14"/>
+        <element flagsID="6" commonFlags="-std=c++11 -msse3"/>
+        <element flagsID="7" commonFlags="-std=c++14"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
@@ -826,7 +827,7 @@
           <buildCommand>${MAKE} -f Makefile -j 16 -k</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath>../../build/current/bin/GrandOrgue</executablePath>
-          <ccTool flags="-std=c++11 -msse3">
+          <ccTool flags="6">
           </ccTool>
         </makeTool>
         <preBuild>
@@ -843,7 +844,7 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="6">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../build/current/src/images/ASIO.cpp"
@@ -5871,12 +5872,12 @@
           <incDir>
             <pElem>../../src/core</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>../../src/core/contrib</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
@@ -7061,9 +7062,9 @@
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>../../src/core/contrib</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../src/core/config</pElem>
@@ -7235,8 +7236,8 @@
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>../../src/core</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/unix</pElem>
@@ -8298,7 +8299,7 @@
             <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
             <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
             <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
-            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_RH_RELEASE__=4</Elem>
             <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
             <Elem>__GNUC__=12</Elem>
             <Elem>__GNUG__=12</Elem>
@@ -8309,7 +8310,7 @@
             <Elem>__STDCPP_THREADS__=1</Elem>
             <Elem>__STRICT_ANSI__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
             <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201103L</Elem>
             <Elem>__cpp_constexpr=200704L</Elem>
@@ -8698,7 +8699,7 @@
             <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
             <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
             <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
-            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_RH_RELEASE__=4</Elem>
             <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
             <Elem>__GNUC__=12</Elem>
             <Elem>__GNUG__=12</Elem>
@@ -8709,7 +8710,7 @@
             <Elem>__STDCPP_THREADS__=1</Elem>
             <Elem>__STRICT_ANSI__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
             <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201103L</Elem>
             <Elem>__cpp_constexpr=200704L</Elem>
@@ -9128,6 +9129,7 @@
             <pElem>../../src/core/archive</pElem>
             <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/core/temperaments</pElem>
             <pElem>../../src/core/files</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
@@ -9880,21 +9882,22 @@
         <ccTool flags="0">
           <incDir>
             <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
+            <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node</pElem>
+            <pElem>/usr/include/yaml-cpp/node/detail</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>../../src/grandorgue/combinations/control</pElem>
             <pElem>../../src/grandorgue/yaml</pElem>
-            <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>/usr/include/yaml-cpp</pElem>
-            <pElem>/usr/include/yaml-cpp/node/detail</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
@@ -9937,8 +9940,8 @@
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
             <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue/yaml</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/core/settings</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
@@ -9974,7 +9977,6 @@
           <incDir>
             <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
-            <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
@@ -9983,6 +9985,7 @@
             <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
             <pElem>/usr/include/yaml-cpp/node</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>../../src/grandorgue/combinations</pElem>
@@ -10012,7 +10015,6 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
             <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
@@ -10023,6 +10025,7 @@
             <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
             <pElem>/usr/include/yaml-cpp/node</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>../../src/grandorgue/combinations</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
@@ -10056,33 +10059,35 @@
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
+            <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node</pElem>
+            <pElem>/usr/include/yaml-cpp/node/detail</pElem>
+            <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/combinations</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>../../src/grandorgue/yaml</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>/usr/include/yaml-cpp</pElem>
-            <pElem>/usr/include/yaml-cpp/node/detail</pElem>
+            <pElem>../../src/core/config</pElem>
             <pElem>/usr/include/c++/12/backward</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
-            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue/gui</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/grandorgue/midi/dialog-creator</pElem>
             <pElem>../../src/grandorgue/model/pipe-config</pElem>
             <pElem>/usr/include/wx-3.0/wx/meta</pElem>
             <pElem>../../src/core/threading</pElem>
-            <pElem>/usr/include/c++/12/x86_64-redhat-linux</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/12/x86_64-redhat-linux</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
@@ -10141,12 +10146,13 @@
             <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node</pElem>
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>../../src/core</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>../../src/grandorgue/yaml</pElem>
-            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>../../src/grandorgue/combinations</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
@@ -10157,7 +10163,6 @@
             <pElem>../../src/grandorgue/combinations/control</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/grandorgue/midi</pElem>
-            <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
             <pElem>../../src/grandorgue/gui</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
@@ -10186,13 +10191,13 @@
             <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node</pElem>
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/core</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>../../src/grandorgue/yaml</pElem>
-            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
@@ -10531,13 +10536,13 @@
             <pElem>../../src/grandorgue/sound</pElem>
             <pElem>../../src/core</pElem>
             <pElem>/usr/include/c++/12</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/core/threading</pElem>
@@ -10618,6 +10623,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOOrganDialog.cpp"
@@ -10663,8 +10710,46 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
             <Elem>__GNUC_RH_RELEASE__=4</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -10693,6 +10778,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOSelectOrganDialog.cpp"
@@ -10723,6 +10850,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOSplash.cpp"
@@ -10753,6 +10922,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/common/GODialogCloser.cpp"
@@ -10981,6 +11192,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
@@ -11011,6 +11223,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=4</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsDialog.cpp"
@@ -11019,6 +11273,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
@@ -11050,6 +11305,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiDeviceList.cpp"
@@ -11058,6 +11355,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
@@ -11080,6 +11378,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=4</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiDevices.cpp"
@@ -11088,6 +11428,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
@@ -11114,6 +11455,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiMatchDialog.cpp"
@@ -11122,6 +11505,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
@@ -11143,6 +11527,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=4</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsMidiMessage.cpp"
@@ -11151,6 +11577,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
@@ -11178,6 +11605,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsOptions.cpp"
@@ -11186,6 +11655,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
@@ -11211,6 +11681,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsOrgans.cpp"
@@ -11219,6 +11731,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
@@ -11259,8 +11772,46 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
             <Elem>__GNUC_RH_RELEASE__=4</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -11268,32 +11819,26 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="0">
+        <ccTool flags="6">
           <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/c++/12</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>/usr/include/c++/12/bits</pElem>
-            <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/12/debug</pElem>
-            <pElem>/usr/include/c++/12/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/core/settings</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/12/backward</pElem>
-            <pElem>../../src/grandorgue/config</pElem>
-            <pElem>../../src/core/midi</pElem>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/12/x86_64-redhat-linux</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsPorts.cpp"
@@ -11302,6 +11847,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
@@ -11322,6 +11868,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsReverb.cpp"
@@ -11330,6 +11918,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
@@ -11355,6 +11944,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=4</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20221121 (Red Hat 12.2.1-4)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/settings/GOSettingsTemperaments.cpp"
@@ -11363,6 +11994,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
@@ -11387,6 +12019,48 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/document-base/GODocumentBase.cpp"
@@ -11485,6 +12159,7 @@
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
@@ -11493,7 +12168,6 @@
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/unix</pElem>
             <pElem>/usr/include/c++/12/backward</pElem>
@@ -12093,6 +12767,7 @@
             <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
@@ -12100,7 +12775,6 @@
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
-            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
@@ -13230,6 +13904,7 @@
             <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
             <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
@@ -13239,9 +13914,10 @@
             <pElem>/usr/include/yaml-cpp</pElem>
             <pElem>/usr/include/yaml-cpp/node/detail</pElem>
             <pElem>../../src/core/config</pElem>
+            <pElem>../../src/core/threading</pElem>
+            <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/grandorgue/config</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>../../src/grandorgue/control</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
             <pElem>/usr/include/wx-3.0/wx/unix</pElem>
@@ -13253,9 +13929,7 @@
             <pElem>../../src/core/temperaments</pElem>
             <pElem>../../src/grandorgue/document-base</pElem>
             <pElem>../../src/grandorgue/midi/dialog-creator</pElem>
-            <pElem>../../src/core/threading</pElem>
             <pElem>../../src/grandorgue/gui</pElem>
-            <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/grandorgue/model/pipe-config</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux</pElem>
@@ -13275,6 +13949,7 @@
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/grandorgue/model/pipe-config</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/grandorgue/midi/dialog-creator</pElem>
             <pElem>../../src/core</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
@@ -13282,7 +13957,6 @@
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
             <pElem>../../src/grandorgue/combinations/control</pElem>
@@ -13399,13 +14073,13 @@
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
             <pElem>/usr/include/c++/12</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
+            <pElem>../../src/core</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/core/threading</pElem>
@@ -13438,10 +14112,11 @@
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>../../src/grandorgue/model/pipe-config</pElem>
-            <pElem>../../src/grandorgue/loader</pElem>
-            <pElem>../../src/grandorgue/sound</pElem>
-            <pElem>../../src/core/temperaments</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../src/grandorgue</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/grandorgue/loader</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
@@ -13449,10 +14124,8 @@
             <pElem>../../src/core/config</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../src/core/midi</pElem>
-            <pElem>../../src/grandorgue/config</pElem>
-            <pElem>../../src/core/threading</pElem>
-            <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>../../src/core/contrib</pElem>
+            <pElem>../../src/core/threading</pElem>
             <pElem>../../src/core/settings</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
@@ -13460,17 +14133,20 @@
             <pElem>/usr/include/c++/12/backward</pElem>
             <pElem>/usr/include/wx-3.0/wx/generic</pElem>
             <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/grandorgue</pElem>
+            <pElem>../../src/core/temperaments</pElem>
             <pElem>../../src/grandorgue/combinations/model</pElem>
             <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/grandorgue/gui</pElem>
-            <pElem>../../src/grandorgue/midi/dialog-creator</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOStop.cpp"
@@ -13564,10 +14240,10 @@
             <pElem>/usr/include/c++/12</pElem>
             <pElem>../../src/core/config</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/core/threading</pElem>
@@ -13602,12 +14278,12 @@
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>../../src/grandorgue/model/pipe-config</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/core</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>/usr/include/c++/12/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/12/debug</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
             <pElem>../../src/core/config</pElem>
-            <pElem>../../src/core</pElem>
             <pElem>../../src/grandorgue/loader</pElem>
             <pElem>../../src/core/midi</pElem>
             <pElem>../../src/core/threading</pElem>
@@ -13898,6 +14574,7 @@
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>/usr/include/c++/12</pElem>
             <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
             <pElem>../../src/core/threading</pElem>
             <pElem>../../src/core</pElem>
             <pElem>/usr/include/c++/12/ext</pElem>
@@ -13905,7 +14582,6 @@
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>../../src/grandorgue/model</pElem>
             <pElem>/usr/include/c++/12/backward</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
             <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
@@ -16074,15 +16750,7 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
-          <incDir>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
-          </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16125,15 +16793,7 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
-          <incDir>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
-          </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16176,15 +16836,7 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
-          <incDir>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
-          </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16229,13 +16881,8 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16278,14 +16925,7 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
-          <incDir>
-            <pElem>../../build/current/src/portaudio</pElem>
-          </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16329,15 +16969,9 @@
             flavor2="3">
         <cTool flags="1">
           <incDir>
-            <pElem>../../submodules/PortAudio/include</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16382,14 +17016,8 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16434,13 +17062,8 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16483,15 +17106,7 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
-          <incDir>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
-          </incDir>
           <preprocessorList>
-            <Elem>HAVE_SYS_SOUNDCARD_H=1</Elem>
-            <Elem>PA_USE_ALSA=1</Elem>
-            <Elem>PA_USE_JACK=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -16536,9 +17151,13 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>HAVE_SYS_SOUNDCARD_H</Elem>
+            <Elem>PA_USE_ALSA</Elem>
+            <Elem>PA_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/hostapi/alsa/pa_linux_alsa.c"
@@ -16560,11 +17179,6 @@
             tool="0"
             flavor2="3">
         <cTool flags="1">
-          <incDir>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/PortAudio/src/common</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
-          </incDir>
         </cTool>
       </item>
       <item path="../../submodules/PortAudio/src/os/unix/pa_unix_util.c"
@@ -16574,9 +17188,6 @@
         <cTool flags="1">
           <incDir>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/12/include</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/PortAudio/src/common</pElem>
-            <pElem>../../build/current/src/portaudio</pElem>
           </incDir>
         </cTool>
       </item>
@@ -16607,7 +17218,7 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="6">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <folder path="0/build">
@@ -17203,6 +17814,7 @@
             <pElem>/usr/include/wx-3.0/wx</pElem>
             <pElem>/usr/include/c++/12/bits</pElem>
             <pElem>/usr/include/c++/12</pElem>
+            <pElem>../../src/core</pElem>
           </incDir>
         </ccTool>
       </folder>
@@ -17328,6 +17940,16 @@
             <Elem>WXUSINGDLL=1</Elem>
             <Elem>_FILE_OFFSET_BITS=64</Elem>
             <Elem>_REENTRANT=1</Elem>
+            <Elem>__WXGTK__=1</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/dialogs/common">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+          </incDir>
+          <preprocessorList>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -17366,17 +17988,9 @@
             <Elem>__STRICT_ANSI__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201103L</Elem>
             <Elem>__cpp_constexpr=200704L</Elem>
           </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/dialogs/common">
-        <ccTool>
-          <incDir>
-            <pElem>../../src/grandorgue/dialogs/common</pElem>
-          </incDir>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/dialogs/midi-event">
@@ -17384,13 +17998,48 @@
           <incDir>
             <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
           </incDir>
-        </ccTool>
-      </folder>
-      <folder path="0/src/grandorgue/dialogs/settings">
-        <ccTool>
-          <incDir>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-          </incDir>
+          <preprocessorList>
+            <Elem>__DBL_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=2</Elem>
+            <Elem>__FLT_IS_IEC_60559__=2</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=2</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=12</Elem>
+            <Elem>__GNUG__=12</Elem>
+            <Elem>__GXX_ABI_VERSION=1017</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__SSE3__=1</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="12.2.1 20220819 (Red Hat 12.2.1-2)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+          </preprocessorList>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/document-base">
