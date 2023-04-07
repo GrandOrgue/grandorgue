@@ -22,7 +22,9 @@ private:
 public:
   GOFont();
 
+  const wxString &GetName() const { return m_Name; }
   void SetName(const wxString &name);
+  unsigned GetPoints() const { return m_Points; }
   void SetPoints(unsigned points);
   wxFont GetFont(double scale);
 };

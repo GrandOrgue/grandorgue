@@ -25,8 +25,6 @@ GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabelControl *label)
     m_DispYpos(0),
     m_Label(label),
     m_PBackgroundBitmap(nullptr),
-    m_FontSize(0),
-    m_FontName(),
     m_Text(),
     m_TextColor(0, 0, 0),
     m_TextRect(),
@@ -92,6 +90,12 @@ void GOGUILabel::InitBackgroundBitmap(
   m_TileOffsetY = 0;
 }
 
+void GOGUILabel::InitFont(const wxString &fontName, unsigned fontSize) {
+  m_Font = m_metrics->GetGroupLabelFont();
+  SetFontName(fontName);
+  SetFontSize(fontSize);
+}
+
 void GOGUILabel::Init(
   GOConfigReader &cfg,
   wxString group,
@@ -102,16 +106,11 @@ void GOGUILabel::Init(
   GOGUIControl::Init(cfg, group);
 
   m_TextColor = wxColour(0x00, 0x00, 0x00);
-  m_FontSize = 7;
-  m_FontName = wxT("");
   m_Text = name;
 
   InitBackgroundBitmap(
     x_pos, y_pos, wxEmptyString, DispImageNum, wxEmptyString);
-
-  m_Font = m_metrics->GetGroupLabelFont();
-  m_Font.SetName(m_FontName);
-  m_Font.SetPoints(m_FontSize);
+  InitFont(wxEmptyString, 7);
 }
 
 static const wxString WX_IMAGE = wxT("Image");
@@ -196,10 +195,6 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
 
   m_TextColor = logicalToWxColour(cfg.ReadColor(
     ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK")));
-  m_FontSize = cfg.ReadFontSize(
-    ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
-  m_FontName = cfg.ReadStringTrim(
-    ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
   if (!m_Label || !m_panel->GetOrganFile()->GetSettings().ODFCheck())
     m_Text
       = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxEmptyString);
@@ -210,6 +205,11 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     cfg.ReadStringTrim(ODFSetting, group, WX_IMAGE, false),
     cfg.ReadInteger(ODFSetting, group, WX_DISP_IMAGE_NUM, 0, 12, false, 1),
     cfg.ReadStringTrim(ODFSetting, group, WX_MASK, false));
+  InitFont(
+    cfg.ReadStringTrim(
+      ODFSetting, group, wxT("DispLabelFontName"), false, wxEmptyString),
+    cfg.ReadFontSize(
+      ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal")));
 
   int w, h;
 
@@ -283,10 +283,6 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
   m_TextRect = wxRect(x, y, w, h);
   m_TextWidth
     = cfg.ReadInteger(ODFSetting, group, wxT("TextBreakWidth"), 0, w, false, w);
-
-  m_Font = m_metrics->GetGroupLabelFont();
-  m_Font.SetName(m_FontName);
-  m_Font.SetPoints(m_FontSize);
 }
 
 void GOGUILabel::Layout() {
