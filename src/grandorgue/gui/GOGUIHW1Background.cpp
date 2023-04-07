@@ -7,7 +7,8 @@
 
 #include "GOGUIHW1Background.h"
 
-#include "GODC.h"
+#include "primitives/GODC.h"
+
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"

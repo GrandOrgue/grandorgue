@@ -11,7 +11,7 @@
 #include <wx/colour.h>
 #include <wx/string.h>
 
-#include "GOFont.h"
+#include "primitives/GOFont.h"
 
 class GOGUIDisplayMetrics {
 protected:

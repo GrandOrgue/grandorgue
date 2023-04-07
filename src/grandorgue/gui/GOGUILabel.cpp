@@ -10,9 +10,9 @@
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "control/GOLabelControl.h"
+#include "primitives/GOBitmap.h"
+#include "primitives/GODC.h"
 
-#include "GOBitmap.h"
-#include "GODC.h"
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"

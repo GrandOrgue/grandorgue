@@ -8,7 +8,8 @@
 #ifndef GOGUIIMAGE_H
 #define GOGUIIMAGE_H
 
-#include "GOBitmap.h"
+#include "primitives/GOBitmap.h"
+
 #include "GOGUIControl.h"
 
 class GOGUIImage : public GOGUIControl {

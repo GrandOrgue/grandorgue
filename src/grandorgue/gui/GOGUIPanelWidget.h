@@ -11,7 +11,7 @@
 #include <wx/bitmap.h>
 #include <wx/panel.h>
 
-#include "GOBitmap.h"
+#include "primitives/GOBitmap.h"
 
 class GOGUIPanel;
 

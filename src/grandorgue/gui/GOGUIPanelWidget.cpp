@@ -10,8 +10,9 @@
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 
-#include "GODC.h"
-#include "GOFont.h"
+#include "primitives/GODC.h"
+#include "primitives/GOFont.h"
+
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
 #include "GOKeyConvert.h"

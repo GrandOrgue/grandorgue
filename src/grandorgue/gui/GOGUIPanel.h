@@ -11,9 +11,11 @@
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
-#include "GOBitmap.h"
-#include "GOSaveableObject.h"
 #include "ptrvector.h"
+
+#include "primitives/GOBitmap.h"
+
+#include "GOSaveableObject.h"
 
 class GOGUIControl;
 class GOGUIDisplayMetrics;

@@ -10,7 +10,8 @@
 
 #include <vector>
 
-#include "GOBitmap.h"
+#include "primitives/GOBitmap.h"
+
 #include "GOGUIControl.h"
 
 class GOManual;

@@ -7,7 +7,8 @@
 
 #include "GOGUIImage.h"
 
-#include "GODC.h"
+#include "primitives/GODC.h"
+
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUIPanel.h"
 #include "config/GOConfigReader.h"
