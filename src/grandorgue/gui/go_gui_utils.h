@@ -10,7 +10,7 @@
 
 #include <wx/colour.h>
 
-#include "config/GOLogicalColour.h"
+#include "GOLogicalColour.h"
 
 inline wxColour logicalToWxColour(const GOLogicalColour &lc) {
   return wxColour(lc.m_red, lc.m_green, lc.m_blue);

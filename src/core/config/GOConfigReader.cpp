@@ -272,39 +272,39 @@ GOLogicalColour GOConfigReader::ReadColor(
   value.MakeUpper();
 
   if (value == wxT("BLACK"))
-    return GOLogicalColour(0x00, 0x00, 0x00);
+    return GOLogicalColour::BLACK;
   else if (value == wxT("BLUE"))
-    return GOLogicalColour(0x00, 0x00, 0xFF);
+    return GOLogicalColour::BLUE;
   else if (value == wxT("DARK BLUE"))
-    return GOLogicalColour(0x00, 0x00, 0x80);
+    return GOLogicalColour::DARK_BLUE;
   else if (value == wxT("GREEN"))
-    return GOLogicalColour(0x00, 0xFF, 0x00);
+    return GOLogicalColour::GREEN;
   else if (value == wxT("DARK GREEN"))
-    return GOLogicalColour(0x00, 0x80, 0x00);
+    return GOLogicalColour::DARK_GREEN;
   else if (value == wxT("CYAN"))
-    return GOLogicalColour(0x00, 0xFF, 0xFF);
+    return GOLogicalColour::CYAN;
   else if (value == wxT("DARK CYAN"))
-    return GOLogicalColour(0x00, 0x80, 0x80);
+    return GOLogicalColour::DARK_CYAN;
   else if (value == wxT("RED"))
-    return GOLogicalColour(0xFF, 0x00, 0x00);
+    return GOLogicalColour::RED;
   else if (value == wxT("DARK RED"))
-    return GOLogicalColour(0x80, 0x00, 0x00);
+    return GOLogicalColour::DARK_RED;
   else if (value == wxT("MAGENTA"))
-    return GOLogicalColour(0xFF, 0x00, 0xFF);
+    return GOLogicalColour::MAGENTA;
   else if (value == wxT("DARK MAGENTA"))
-    return GOLogicalColour(0x80, 0x00, 0x80);
+    return GOLogicalColour::DARK_MAGENTA;
   else if (value == wxT("YELLOW"))
-    return GOLogicalColour(0xFF, 0xFF, 0x00);
+    return GOLogicalColour::YELLOW;
   else if (value == wxT("DARK YELLOW"))
-    return GOLogicalColour(0x80, 0x80, 0x00);
+    return GOLogicalColour::DARK_YELLOW;
   else if (value == wxT("LIGHT GREY"))
-    return GOLogicalColour(0xC0, 0xC0, 0xC0);
+    return GOLogicalColour::LIGHT_GREY;
   else if (value == wxT("DARK GREY"))
-    return GOLogicalColour(0x80, 0x80, 0x80);
+    return GOLogicalColour::DARK_GREY;
   else if (value == wxT("WHITE"))
-    return GOLogicalColour(0xFF, 0xFF, 0xFF);
+    return GOLogicalColour::WHITE;
   else if (value == wxT("BROWN"))
-    return GOLogicalColour(0xA5, 0x2A, 0x2A);
+    return GOLogicalColour::BROWN;
 
   GOLogicalColour colour;
   if (parseColor(colour, value))
