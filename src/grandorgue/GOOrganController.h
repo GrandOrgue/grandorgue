@@ -20,8 +20,8 @@
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
 #include "loader/GOFileStore.h"
-#include "model/GOModificationListener.h"
 #include "model/GOOrganModel.h"
+#include "modification/GOModificationProxy.h"
 
 #include "GOBitmapCache.h"
 #include "GOMainWindowData.h"
@@ -55,7 +55,7 @@ typedef struct _GOHashType GOHashType;
 class GOOrganController : public GOEventDistributor,
                           public GOTimer,
                           public GOOrganModel,
-                          public GOModificationListener {
+                          public GOModificationProxy {
   WX_DECLARE_STRING_HASH_MAP(bool, GOStringBoolMap);
 
 private:
@@ -80,7 +80,6 @@ private:
   bool m_b_customized;
   float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
-  GOModificationListener *m_OrganModificationListener;
   bool m_DivisionalsStoreIntermanualCouplers;
   bool m_DivisionalsStoreIntramanualCouplers;
   bool m_DivisionalsStoreTremulants;
@@ -137,9 +136,6 @@ public:
 
   // Returns organ modification flag
   bool IsOrganModified() const { return m_OrganModified; }
-  void SetOrganModificationListener(GOModificationListener *listener) {
-    m_OrganModificationListener = listener;
-  }
   // Sets the organ modification flag
   void SetOrganModified() { SetOrganModified(true); }
   // Clears the organ modification flag

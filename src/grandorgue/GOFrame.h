@@ -16,7 +16,7 @@
 #include "help/GOHelpRequestor.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
-#include "model/GOModificationListener.h"
+#include "modification/GOModificationListener.h"
 #include "threading/GOMutex.h"
 
 #include "GOEvent.h"

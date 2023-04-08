@@ -101,7 +101,6 @@ GOOrganController::GOOrganController(
     m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
-    m_OrganModificationListener(nullptr),
     m_DivisionalsStoreIntermanualCouplers(false),
     m_DivisionalsStoreIntramanualCouplers(false),
     m_DivisionalsStoreTremulants(false),
@@ -129,7 +128,7 @@ GOOrganController::GOOrganController(
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {
   GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
-  GOOrganModel::SetModificationListener(this);
+  GOOrganModel::SetModelModificationListener(this);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
@@ -140,7 +139,7 @@ GOOrganController::~GOOrganController() {
   m_manuals.clear();
   m_tremulants.clear();
   m_ranks.clear();
-  GOOrganModel::SetModificationListener(nullptr);
+  GOOrganModel::SetModelModificationListener(nullptr);
   GOOrganModel::SetMidiDialogCreator(nullptr);
 }
 
@@ -149,9 +148,7 @@ void GOOrganController::SetOrganModified(bool modified) {
     m_OrganModified = modified;
     m_setter->UpdateModified(modified);
   }
-  if (m_OrganModificationListener)
-    // for reflecting model changes on GUI
-    m_OrganModificationListener->OnIsModifiedChanged(modified);
+  GOModificationProxy::OnIsModifiedChanged(modified);
 }
 
 void GOOrganController::OnIsModifiedChanged(bool modified) {
