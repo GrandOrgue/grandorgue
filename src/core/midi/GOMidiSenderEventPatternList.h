@@ -8,8 +8,7 @@
 #ifndef GOMIDISENDEREVENTPATTERNLIST_H
 #define GOMIDISENDEREVENTPATTERNLIST_H
 
-#include <vector>
-
+#include "GOMidiEventPatternList.h"
 #include "GOMidiSenderEventPattern.h"
 
 typedef enum {
@@ -19,21 +18,7 @@ typedef enum {
   MIDI_SEND_MANUAL,
 } GOMidiSenderType;
 
-class GOMidiSenderEventPatternList {
-protected:
-  GOMidiSenderType m_type;
-  std::vector<GOMidiSenderEventPattern> m_events;
-
-public:
-  GOMidiSenderEventPatternList(GOMidiSenderType type);
-  virtual ~GOMidiSenderEventPatternList();
-
-  GOMidiSenderType GetType() const;
-
-  unsigned GetEventCount() const;
-  GOMidiSenderEventPattern &GetEvent(unsigned index);
-  unsigned AddNewEvent();
-  void DeleteEvent(unsigned index);
-};
+using GOMidiSenderEventPatternList
+  = GOMidiEventPatternList<GOMidiSenderType, GOMidiSenderEventPattern>;
 
 #endif
