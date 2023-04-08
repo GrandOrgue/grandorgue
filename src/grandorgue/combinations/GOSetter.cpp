@@ -933,6 +933,20 @@ void GOSetter::OnCombinationsLoaded(
   DisplayCmbFile(m_CmbFileLastLoaded);
 }
 
+void GOSetter::OnCombinationsSaved(const wxString &yamlFile) {
+  if (yamlFile == m_CmbFileLastLoaded)
+    m_IsCmbChanged = false;
+  else if (wxFileName(yamlFile).GetPath() == m_CmbFilesDir) {
+    // Possible a new file has been created in the same directory, so we need to
+    // refresh
+    m_IsCmbFileListPopulated = false;
+    // switch to the new file
+    m_CmbFileLastLoaded = yamlFile;
+    m_IsCmbChanged = false;
+  }
+  DisplayCmbFile(m_CmbFileLastLoaded);
+}
+
 void GOSetter::Update() {}
 
 bool GOSetter::IsSetterActive() {

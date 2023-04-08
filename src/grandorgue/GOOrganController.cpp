@@ -656,7 +656,9 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
 
     outYaml << YAML::BeginDoc << globalNode;
 
-    if (!fOS.WriteAll(outYaml.c_str(), outYaml.size()))
+    if (fOS.WriteAll(outYaml.c_str(), outYaml.size()))
+      m_setter->OnCombinationsSaved(fileName);
+    else
       errMsg.Printf(
         wxT("Unable to write all the data to the file '%s'"), fileName);
     fOS.Close();

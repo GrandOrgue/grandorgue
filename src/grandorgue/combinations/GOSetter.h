@@ -38,6 +38,8 @@ private:
   bool m_IsCmbFileListPopulated;
   // current loaded cmb file name (with dir and extension)
   wxString m_CmbFileLastLoaded;
+  // has the current combinations been changed after last loaded or saved
+  // used for lighting the save button
   bool m_IsCmbChanged;
   // current displayed cmb file name (with dir and extension)
   wxString m_CmbFileDisplayed;
@@ -130,8 +132,8 @@ public:
   /**
    * Called from GOOrganController after loading the initial preset and after
    * loading a yaml combination file.
-   * GOSetter takes the directory name for navigation across the combination
-   * files and takes the filename for displaying it.
+   * GOSetter takes yamlDir for navigation across the combination
+   * files and takes yamlFile for displaying it.
    * @param yamlDir full path to the directory where the yaml combination files
    *   are stored for this organ or where the last combination file has been
    *   loaded from
@@ -140,6 +142,16 @@ public:
    *   yamlFile is empty
    */
   void OnCombinationsLoaded(const wxString &yamlDir, const wxString &yamlFile);
+
+  /**
+   * Called from GOOrganController after saving the current combinations to a
+   * yamlFile.
+   * If the yamlFile is the same as m_CmbFileLastLoaded then reset
+   * m_IsCmbChanged. Else, if the file in the same directory, reset
+   * m_IsCmbFileListPopulated
+   * @param yamlFile the full file name where the combinations were saved
+   */
+  void OnCombinationsSaved(const wxString &yamlFile);
 
   void Update();
 
