@@ -351,8 +351,9 @@ void GODivisionalSetter::SwitchDivisionalTo(
     // whether the combination is defined
     bool isExist = divMap.find(divisionalIdx) != divMap.end();
     GODivisionalCombination *pCmb = isExist ? divMap[divisionalIdx] : nullptr;
+    GOSetter &setter = *m_OrganController->GetSetter();
 
-    if (!isExist && m_OrganController->GetSetter()->IsSetterActive()) {
+    if (!isExist && setter.IsSetterActive()) {
       // create a new combination
       const unsigned manualIndex = m_FirstManualIndex + manualN;
       GOCombinationDefinition &divTemplate
@@ -368,7 +369,7 @@ void GODivisionalSetter::SwitchDivisionalTo(
 
     if (pCmb) {
       // the combination was existing or has just been created
-      pCmb->Push();
+      setter.NotifyCmbPushed(pCmb->Push());
 
       // reflect the ne state of the combination buttons
       for (unsigned firstButtonIdx = N_BUTTONS * manualN, k = 0;

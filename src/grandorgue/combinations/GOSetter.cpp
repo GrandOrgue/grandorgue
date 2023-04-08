@@ -435,6 +435,16 @@ void GOSetter::Load(GOConfigReader &cfg) {
     cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
+void GOSetter::NotifyCmbPushed(bool isChanged) {
+  if (isChanged && IsSetterActive()) {
+    // Temporary we mark the organ modified when a combination is changed for
+    // the user would save the preset.
+    // But we intend to split combinations and organ settings, so in the future
+    // we will only mark the combinations as modified, not the organ settings
+    m_OrganController->SetOrganModified();
+  }
+}
+
 void GOSetter::Save(GOConfigWriter &cfg) {
   for (unsigned i = 0; i < N_CRESCENDOS; i++) {
     cfg.WriteBoolean(
@@ -610,11 +620,13 @@ void GOSetter::ButtonStateChanged(int id) {
     for (unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
       m_framegeneral[j]->Copy(m_framegeneral[j + 1]);
     ResetDisplay();
+    NotifyCmbPushed(true);
     break;
   case ID_SETTER_INSERT:
     for (unsigned j = m_framegeneral.size() - 1; j > m_pos; j--)
       m_framegeneral[j]->Copy(m_framegeneral[j - 1]);
     SetPosition(m_pos);
+    NotifyCmbPushed(true);
     break;
   case ID_SETTER_L0:
   case ID_SETTER_L1:
@@ -678,8 +690,9 @@ void GOSetter::ButtonStateChanged(int id) {
   case ID_SETTER_GENERAL47:
   case ID_SETTER_GENERAL48:
   case ID_SETTER_GENERAL49:
-    m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push(
-      GetCrescendoAddSet(elementSet));
+    NotifyCmbPushed(
+      m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push(
+        GetCrescendoAddSet(elementSet)));
     ResetDisplay();
     m_buttons[id]->Display(true);
     break;
@@ -716,7 +729,8 @@ void GOSetter::ButtonStateChanged(int id) {
     Crescendo(m_crescendopos + 1, true);
     break;
   case ID_SETTER_CRESCENDO_CURRENT:
-    m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push();
+    NotifyCmbPushed(
+      m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push());
     break;
 
   case ID_SETTER_CRESCENDO_OVERRIDE: {
@@ -883,7 +897,8 @@ void GOSetter::SetPosition(int pos, bool push) {
   if (push) {
     GOCombination::ExtraElementsSet elementSet;
 
-    m_framegeneral[m_pos]->Push(GetCrescendoAddSet(elementSet));
+    NotifyCmbPushed(
+      m_framegeneral[m_pos]->Push(GetCrescendoAddSet(elementSet)));
 
     m_buttons[ID_SETTER_HOME]->Display(m_pos == 0);
     for (unsigned i = 0; i < 10; i++)
@@ -913,6 +928,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
     return;
 
   bool crescendoAddMode = !m_CrescendoOverrideMode[m_crescendobank];
+  bool changed = false;
 
   while (pos > m_crescendopos) {
     const unsigned oldIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;
@@ -923,7 +939,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
     else
       m_CrescendoExtraSets[oldIdx].clear();
     ++m_crescendopos;
-    m_crescendo[newIdx]->Push(
+    changed |= m_crescendo[newIdx]->Push(
       crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr, true);
   }
 
@@ -932,9 +948,10 @@ void GOSetter::Crescendo(int newpos, bool force) {
 
     const unsigned newIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;
 
-    m_crescendo[newIdx]->Push(
+    changed |= m_crescendo[newIdx]->Push(
       crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr, true);
   }
+  NotifyCmbPushed(changed);
 
   wxString buffer;
   buffer.Printf(wxT("%d"), m_crescendopos + 1);

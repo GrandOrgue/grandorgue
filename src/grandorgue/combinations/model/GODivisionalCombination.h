@@ -56,7 +56,7 @@ public:
     int divisionalNumber);
   void Save(GOConfigWriter &cfg);
 
-  void Push(ExtraElementsSet const *extraSet = nullptr);
+  bool Push(ExtraElementsSet const *extraSet = nullptr);
 
   wxString GetMidiType();
 

@@ -245,40 +245,40 @@ void GODivisionalCombination::FromYamlMap(const YAML::Node &yamlMap) {
     GOCombinationDefinition::COMBINATION_SWITCH);
 }
 
-void GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
-  PushLocal(extraSet);
+bool GODivisionalCombination::Push(ExtraElementsSet const *extraSet) {
+  bool changed = PushLocal(extraSet);
 
   /* only use divisional couples, if not in setter mode */
-  if (m_OrganController->GetSetter()->IsSetterActive())
-    return;
-
-  for (unsigned k = 0; k < m_OrganController->GetDivisionalCouplerCount();
-       k++) {
-    GODivisionalCoupler *coupler = m_OrganController->GetDivisionalCoupler(k);
-    if (!coupler->IsEngaged())
-      continue;
-
-    for (unsigned i = 0; i < coupler->GetNumberOfManuals(); i++) {
-      if (coupler->GetManual(i) != m_odfManualNumber)
+  if (!m_OrganController->GetSetter()->IsSetterActive()) {
+    for (unsigned k = 0; k < m_OrganController->GetDivisionalCouplerCount();
+         k++) {
+      GODivisionalCoupler *coupler = m_OrganController->GetDivisionalCoupler(k);
+      if (!coupler->IsEngaged())
         continue;
 
-      for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
-        m_OrganController->GetManual(coupler->GetManual(j))
-          ->GetDivisional(m_DivisionalNumber)
-          ->Push();
+      for (unsigned i = 0; i < coupler->GetNumberOfManuals(); i++) {
+        if (coupler->GetManual(i) != m_odfManualNumber)
+          continue;
 
-      if (coupler->IsBidirectional()) {
-        for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++) {
-          if (coupler->GetManual(j) == m_odfManualNumber)
-            break;
+        for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
           m_OrganController->GetManual(coupler->GetManual(j))
             ->GetDivisional(m_DivisionalNumber)
             ->Push();
+
+        if (coupler->IsBidirectional()) {
+          for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++) {
+            if (coupler->GetManual(j) == m_odfManualNumber)
+              break;
+            m_OrganController->GetManual(coupler->GetManual(j))
+              ->GetDivisional(m_DivisionalNumber)
+              ->Push();
+          }
         }
+        break;
       }
-      break;
     }
   }
+  return changed;
 }
 
 wxString GODivisionalCombination::GetMidiType() { return _("Divisional"); }

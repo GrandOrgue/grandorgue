@@ -65,6 +65,13 @@ public:
   virtual ~GOSetter();
 
   /**
+   * Called when after combination is pushed
+   * When Set is active then marks the cpmbinations as modified
+   * Temporary it calls mOrganController->SetModified()
+   */
+  void NotifyCmbPushed(bool isChanged = true);
+
+  /**
    * Save all combinations to yaml as a map
    * @param outYaml - a yaml emitter to save combinations as a map
    */
