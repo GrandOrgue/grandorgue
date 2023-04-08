@@ -7,9 +7,8 @@
 
 #include "GOSetter.h"
 
-#include <algorithm>
-
 #include <wx/app.h>
+#include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/window.h>
@@ -473,6 +472,47 @@ void GOSetter::Load(GOConfigReader &cfg) {
     cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
+void GOSetter::DisplayCmbFile(const wxString &fileName) {
+  const bool isValid = !fileName.IsEmpty();
+  const bool isTheSameAsLoaded = fileName == m_CmbFileLastLoaded;
+
+  m_CmbFileDisplayed = fileName;
+  m_CurrFileDisplay.SetContent(
+    isValid ? wxFileName(fileName).GetName() : wxString());
+  m_buttons[ID_SETTER_LOAD_CMB]->Display(isValid && !isTheSameAsLoaded);
+  m_buttons[ID_SETTER_SAVE_CMB]->Display(
+    isValid && isTheSameAsLoaded && m_IsCmbChanged);
+}
+
+int GOSetter::FindCmbFilePosFor(const wxString &yamlFile) {
+  return yamlFile.IsEmpty() ? -1 : m_CmbFileList.Index(yamlFile);
+}
+
+void GOSetter::MoveToCmbFile(int offset) {
+  if (!m_IsCmbFileListPopulated) {
+    // read the list of combination files
+    wxDir cmbDir(m_CmbFilesDir);
+
+    m_CmbFileList.Clear();
+    wxDir::GetAllFiles(m_CmbFilesDir, &m_CmbFileList, wxT("*.yaml"));
+    m_CmbFileList.Sort();
+    m_CmbFilePos = FindCmbFilePosFor(m_CmbFileDisplayed);
+    m_IsCmbFileListPopulated = true;
+  }
+
+  unsigned l = m_CmbFileList.GetCount();
+
+  if (l) {
+    assert(abs(offset) <= l);
+
+    // move along the list
+    if (m_CmbFilePos < 0 && offset < 0)
+      m_CmbFilePos = 0;                             // move from the end
+    m_CmbFilePos = (m_CmbFilePos + offset + l) % l; // wrap around the margins
+    DisplayCmbFile(m_CmbFileList[m_CmbFilePos]);
+  }
+}
+
 void GOSetter::NotifyCmbChanged() {
   // Temporary we mark the organ modified when a combination is changed for
   // the user would save the preset.
@@ -616,6 +656,17 @@ void GOSetter::ButtonStateChanged(int id) {
   GOCombination::ExtraElementsSet elementSet;
 
   switch (id) {
+
+  case ID_SETTER_REFRESH:
+    m_IsCmbFileListPopulated = false;
+    ;
+    break;
+  case ID_SETTER_PREV_FILE:
+    MoveToCmbFile(-1);
+    break;
+  case ID_SETTER_NEXT_FILE:
+    MoveToCmbFile(1);
+    break;
   case ID_SETTER_PREV:
     Prev();
     break;
@@ -873,16 +924,12 @@ void GOSetter::OnCombinationsLoaded(
     // loaded combinations from a new dir
   } else {
     // loaded combinations from the same dir as before
-    if (m_IsCmbFileListPopulated) {
-      // find the new current position
-      auto begin = m_CmbFileList.begin();
-      auto end = m_CmbFileList.end();
-      auto it = std::find(begin, end, yamlFile);
-
-      m_CmbFilePos = it != end ? std::distance(it, begin) : -1;
-    }
+    m_CmbFilePos = m_IsCmbFileListPopulated && !yamlFile.IsEmpty()
+      ? FindCmbFilePosFor(yamlFile)
+      : -1;
   }
   m_CmbFileLastLoaded = yamlFile;
+  m_IsCmbChanged = false;
   DisplayCmbFile(m_CmbFileLastLoaded);
 }
 

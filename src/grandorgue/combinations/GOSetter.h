@@ -8,6 +8,8 @@
 #ifndef GOSETTER_H
 #define GOSETTER_H
 
+#include <wx/arrstr.h>
+
 #include "ptrvector.h"
 
 #include "control/GOControlChangedHandler.h"
@@ -32,9 +34,13 @@ private:
 
   // working with combination files
   wxString m_CmbFilesDir;
-  std::vector<wxString> m_CmbFileList;
+  wxArrayString m_CmbFileList;
   bool m_IsCmbFileListPopulated;
+  // current loaded cmb file name (with dir and extension)
   wxString m_CmbFileLastLoaded;
+  bool m_IsCmbChanged;
+  // current displayed cmb file name (with dir and extension)
+  wxString m_CmbFileDisplayed;
   int m_CmbFilePos; // current displayed position or -1 or the list is not
                     // populated yet or no file are loaded
 
@@ -58,6 +64,12 @@ private:
 
   // Show the combination file name
   void DisplayCmbFile(const wxString &fileName);
+  /** Find yamlFile among the combination file list. Returns the
+   * file index or to -1 if the file is not found
+   */
+  int FindCmbFilePosFor(const wxString &yamlFile);
+  // Display the prev/next cmb file
+  void MoveToCmbFile(int offset);
 
   void SetSetterType(GOCombination::SetterType type);
   void SetCrescendoType(unsigned no);
@@ -123,7 +135,7 @@ public:
    * @param yamlDir full path to the directory where the yaml combination files
    *   are stored for this organ or where the last combination file has been
    *   loaded from
-   * @param yamlFile file name of the last loaded file name without the
+   * @param yamlFile full file name of the last loaded file name with the
    *   directory. If a preset or a cmb-combination is loaded, then
    *   yamlFile is empty
    */

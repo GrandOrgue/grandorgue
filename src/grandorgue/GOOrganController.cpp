@@ -716,8 +716,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
             file, cmbInfoNode[ORGAN_NAME].as<wxString>())) {
         cmbNode >> *m_setter;
         cmbNode >> *m_DivisionalSetter;
-        m_setter->OnCombinationsLoaded(
-          fileName.GetFullPath(), fileName.GetFullName());
+        m_setter->OnCombinationsLoaded(fileName.GetPath(), file);
       }
     } else {
       GOConfigFileReader odf_ini_file;
