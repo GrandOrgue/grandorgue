@@ -106,6 +106,8 @@ public:
   GOSetter(GOOrganController *organController);
   virtual ~GOSetter();
 
+  bool IsCmbModified() const { return m_IsCmbChanged; }
+
   /**
    * Called after at least one combination is changed
    * Temporary it calls mOrganController->SetModified()

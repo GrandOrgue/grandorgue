@@ -522,8 +522,15 @@ void GOSetter::NotifyCmbChanged() {
 }
 
 void GOSetter::NotifyCmbPushed(bool isChanged) {
-  if (isChanged && IsSetterActive())
+  if (isChanged && IsSetterActive() && !m_IsCmbChanged) {
+    m_IsCmbChanged = true;
+    // light the save button if the last loaded combination file  is displayed
+    if (
+      !m_CmbFileDisplayed.IsEmpty()
+      && m_CmbFileDisplayed == m_CmbFileLastLoaded)
+      m_buttons[ID_SETTER_SAVE_CMB]->Display(true);
     NotifyCmbChanged();
+  }
 }
 
 void GOSetter::Save(GOConfigWriter &cfg) {
