@@ -1,3 +1,4 @@
+- Added capability of exporting and importing combinations in yaml format files https://github.com/GrandOrgue/grandorgue/issues/1195
 - Removed support of old linux distros (with libc6 versions before 2.31) https://github.com/GrandOrgue/grandorgue/discussions/1334
 - Fixed the translation of the desktop icon on Linux https://github.com/GrandOrgue/grandorgue/issues/1429
 - Added support of labels without a background image by specifying DispImageNum=0 https://github.com/GrandOrgue/grandorgue/issues/1386
