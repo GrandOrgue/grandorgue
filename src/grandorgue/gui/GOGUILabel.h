@@ -35,6 +35,8 @@ private:
   void InitBackgroundBitmap(
     unsigned x,
     unsigned y,
+    unsigned w,
+    unsigned h,
     wxString imageFileName,
     unsigned imageNum,
     const wxString &imageMaskFileneme);
@@ -57,7 +59,9 @@ public:
     unsigned x_pos = 0,
     unsigned y_pos = 0,
     wxString name = wxT(""),
-    unsigned imageno = 1);
+    unsigned imageno = 1,
+    unsigned w = 0,
+    unsigned h = 0);
   void Load(GOConfigReader &cfg, wxString group);
   void Layout();
 
