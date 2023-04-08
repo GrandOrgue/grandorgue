@@ -659,13 +659,22 @@ void GOSetter::ButtonStateChanged(int id) {
 
   case ID_SETTER_REFRESH:
     m_IsCmbFileListPopulated = false;
-    ;
     break;
   case ID_SETTER_PREV_FILE:
     MoveToCmbFile(-1);
     break;
   case ID_SETTER_NEXT_FILE:
     MoveToCmbFile(1);
+    break;
+  case ID_SETTER_LOAD_CMB:
+    if (!m_CmbFileDisplayed.IsEmpty())
+      m_OrganController->LoadCombination(m_CmbFileDisplayed);
+    break;
+  case ID_SETTER_SAVE_CMB:
+    if (
+      !m_CmbFileLastLoaded.IsEmpty()
+      && m_CmbFileDisplayed == m_CmbFileLastLoaded)
+      m_OrganController->ExportCombination(m_CmbFileLastLoaded);
     break;
   case ID_SETTER_PREV:
     Prev();
