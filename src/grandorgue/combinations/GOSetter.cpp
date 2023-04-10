@@ -939,8 +939,9 @@ void GOSetter::Crescendo(int newpos, bool force) {
     else
       m_CrescendoExtraSets[oldIdx].clear();
     ++m_crescendopos;
-    changed |= m_crescendo[newIdx]->Push(
-      crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr, true);
+    changed = changed
+      || m_crescendo[newIdx]->Push(
+        crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr, true);
   }
 
   while (pos < m_crescendopos) {
@@ -948,8 +949,9 @@ void GOSetter::Crescendo(int newpos, bool force) {
 
     const unsigned newIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;
 
-    changed |= m_crescendo[newIdx]->Push(
-      crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr, true);
+    changed = changed
+      || m_crescendo[newIdx]->Push(
+        crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr, true);
   }
   NotifyCmbPushed(changed);
 
