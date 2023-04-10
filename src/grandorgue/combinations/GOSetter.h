@@ -65,7 +65,12 @@ public:
   virtual ~GOSetter();
 
   /**
-   * Called when after combination is pushed
+   * Called after at least one combination is changed
+   * Temporary it calls mOrganController->SetModified()
+   */
+  void NotifyCmbChanged();
+  /**
+   * Called after a combination is pushed
    * When Set is active then marks the cpmbinations as modified
    * Temporary it calls mOrganController->SetModified()
    */

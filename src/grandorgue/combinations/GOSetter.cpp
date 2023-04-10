@@ -435,14 +435,17 @@ void GOSetter::Load(GOConfigReader &cfg) {
     cfg, wxT("SetterGeneralNext"), _("Next"));
 }
 
+void GOSetter::NotifyCmbChanged() {
+  // Temporary we mark the organ modified when a combination is changed for
+  // the user would save the preset.
+  // But we intend to split combinations and organ settings, so in the future
+  // we will only mark the combinations as modified, not the organ settings
+  m_OrganController->SetOrganModified();
+}
+
 void GOSetter::NotifyCmbPushed(bool isChanged) {
-  if (isChanged && IsSetterActive()) {
-    // Temporary we mark the organ modified when a combination is changed for
-    // the user would save the preset.
-    // But we intend to split combinations and organ settings, so in the future
-    // we will only mark the combinations as modified, not the organ settings
-    m_OrganController->SetOrganModified();
-  }
+  if (isChanged && IsSetterActive())
+    NotifyCmbChanged();
 }
 
 void GOSetter::Save(GOConfigWriter &cfg) {
@@ -620,13 +623,13 @@ void GOSetter::ButtonStateChanged(int id) {
     for (unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
       m_framegeneral[j]->Copy(m_framegeneral[j + 1]);
     ResetDisplay();
-    NotifyCmbPushed(true);
+    NotifyCmbChanged();
     break;
   case ID_SETTER_INSERT:
     for (unsigned j = m_framegeneral.size() - 1; j > m_pos; j--)
       m_framegeneral[j]->Copy(m_framegeneral[j - 1]);
     SetPosition(m_pos);
-    NotifyCmbPushed(true);
+    NotifyCmbChanged();
     break;
   case ID_SETTER_L0:
   case ID_SETTER_L1:
