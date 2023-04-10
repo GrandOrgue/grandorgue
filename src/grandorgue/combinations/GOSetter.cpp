@@ -674,8 +674,15 @@ void GOSetter::ButtonStateChanged(int id) {
     MoveToCmbFile(1);
     break;
   case ID_SETTER_LOAD_CMB:
-    if (!m_CmbFileDisplayed.IsEmpty())
+    if (!m_CmbFileDisplayed.IsEmpty()) {
+      // Flash the button until OnCombinationsLoaded()
+      m_buttons[ID_SETTER_LOAD_CMB]->Display(true);
       m_OrganController->LoadCombination(m_CmbFileDisplayed);
+      // for minimising buttons to press we just make GrandOrgue ready to play
+      // from the home position
+      SetterActive(false);
+      SetPosition(0, true);
+    }
     break;
   case ID_SETTER_SAVE_CMB:
     if (
