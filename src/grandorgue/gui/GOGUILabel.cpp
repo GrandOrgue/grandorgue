@@ -224,7 +224,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       false,
       0),
     cfg.ReadStringTrim(ODFSetting, group, WX_IMAGE, false),
-    cfg.ReadInteger(ODFSetting, group, WX_DISP_IMAGE_NUM, 0, 12, false, 1),
+    cfg.ReadInteger(ODFSetting, group, WX_DISP_IMAGE_NUM, 0, 15, false, 1),
     cfg.ReadStringTrim(ODFSetting, group, WX_MASK, false));
   InitFont(
     cfg.ReadStringTrim(
