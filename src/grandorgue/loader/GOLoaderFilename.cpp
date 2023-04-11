@@ -41,7 +41,8 @@ std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
     GOArchive *const archive = fileStore.FindArchiveContaining(m_path);
 
     if (!archive)
-      throw _("File is not found in the organ package archives");
+      throw wxString::Format(
+        _("File %s is not found in the organ package archives"), m_path);
     file = archive->OpenFile(m_path);
   } else {
     wxString baseDir;
