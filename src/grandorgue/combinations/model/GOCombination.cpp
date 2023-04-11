@@ -47,7 +47,6 @@ void GOCombination::Copy(GOCombination *combination) {
   assert(&m_Template == &combination->m_Template);
   m_State = combination->m_State;
   UpdateState();
-  m_OrganFile->SetOrganModified();
 }
 
 bool GOCombination::IsEmpty() const {
@@ -364,10 +363,8 @@ bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
 
   if (setter.IsSetterActive()) {
     if (!m_Protected) {
-
       used = FillWithCurrent(
         setter.GetSetterType(), setter.StoreInvisibleObjects());
-      m_OrganFile->SetOrganModified();
     }
   } else {
     UpdateState();

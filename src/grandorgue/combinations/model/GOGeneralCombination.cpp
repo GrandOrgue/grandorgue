@@ -148,9 +148,9 @@ void GOGeneralCombination::LoadCombinationInt(
   }
 }
 
-void GOGeneralCombination::Push(
+bool GOGeneralCombination::Push(
   ExtraElementsSet const *extraSet, bool isFromCrescendo) {
-  GOCombination::PushLocal(extraSet);
+  bool changed = GOCombination::PushLocal(extraSet);
 
   if (!isFromCrescendo || !extraSet) { // Otherwise the crescendo in add mode:
                                        // not to switch off combination buttons
@@ -170,6 +170,7 @@ void GOGeneralCombination::Push(
         m_OrganController->GetManual(j)->GetDivisional(k)->Display(false);
     }
   }
+  return changed;
 }
 
 void GOGeneralCombination::Save(GOConfigWriter &cfg) {

@@ -26,10 +26,11 @@ void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
 }
 
 void GOGeneralButtonControl::Push() {
+  GOSetter &setter = *m_OrganController->GetSetter();
   GOCombination::ExtraElementsSet elementSet;
 
-  m_combination.Push(
-    m_OrganController->GetSetter()->GetCrescendoAddSet(elementSet));
+  setter.NotifyCmbPushed(
+    m_combination.Push(setter.GetCrescendoAddSet(elementSet)));
 }
 
 GOGeneralCombination &GOGeneralButtonControl::GetCombination() {

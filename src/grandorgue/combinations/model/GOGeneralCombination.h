@@ -49,8 +49,9 @@ public:
    * extraSet
    * If isFromCrescendo and extraSet is passed then does not depress other
    * buttons
+   * return if anything is changed
    */
-  void Push(
+  bool Push(
     ExtraElementsSet const *extraSet = nullptr, bool isFromCrescendo = false);
 };
 
