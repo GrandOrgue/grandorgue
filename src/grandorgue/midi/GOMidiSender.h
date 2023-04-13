@@ -51,8 +51,6 @@ public:
   unsigned HighValueLimit(GOMidiSenderMessageType type);
   unsigned StartLimit(GOMidiSenderMessageType type);
   unsigned LengthLimit(GOMidiSenderMessageType type);
-
-  void Assign(const GOMidiSenderEventPatternList &data);
 };
 
 #endif

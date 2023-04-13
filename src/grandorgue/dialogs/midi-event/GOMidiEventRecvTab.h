@@ -16,6 +16,7 @@
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "midi/GOMidiReceiverBase.h"
+#include "modification/GOModificationProxy.h"
 
 #include "GOChoice.h"
 
@@ -28,7 +29,9 @@ class wxToggleButton;
 class GOConfig;
 class GOMidiDeviceConfigList;
 
-class GOMidiEventRecvTab : public wxPanel, protected GOMidiCallback {
+class GOMidiEventRecvTab : public wxPanel,
+                           public GOModificationProxy,
+                           protected GOMidiCallback {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiMap &m_MidiMap;

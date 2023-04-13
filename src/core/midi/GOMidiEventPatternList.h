@@ -35,6 +35,20 @@ public:
   }
 
   void DeleteEvent(unsigned index) { m_events.erase(m_events.begin() + index); }
+
+  /**
+   * Assign the new list to the current one
+   * @param newList the lnew list to assign
+   * @return whether the list is changed
+   */
+
+  bool RenewFrom(const GOMidiEventPatternList &newList) {
+    bool result = newList.m_type != m_type || newList.m_events != m_events;
+
+    if (result)
+      *this = newList;
+    return result;
+  }
 };
 
 #endif /* GOMIDIEVENTPATTERNLIST_H */

@@ -10,6 +10,7 @@
 
 #include "dialogs/common/GODialogTab.h"
 #include "midi/GOMidiSender.h"
+#include "modification/GOModificationProxy.h"
 
 #include "GOChoice.h"
 
@@ -24,7 +25,7 @@ class GOMidiMap;
 class GOMidiEventRecvTab;
 class GOTabbedDialog;
 
-class GOMidiEventSendTab : public GODialogTab {
+class GOMidiEventSendTab : public GODialogTab, public GOModificationProxy {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiDeviceConfigList &m_MidiOut;

@@ -903,8 +903,4 @@ GOMidiMatchType GOMidiReceiverBase::Match(
   return MIDI_MATCH_NONE;
 }
 
-void GOMidiReceiverBase::Assign(const GOMidiReceiverEventPatternList &data) {
-  *(GOMidiReceiverEventPatternList *)this = data;
-}
-
 void GOMidiReceiverBase::PreparePlayback() { m_Internal.resize(0); }

@@ -12,6 +12,7 @@
 
 #include "dialogs/common/GOTabbedDialog.h"
 #include "document-base/GOView.h"
+#include "modification/GOModificationProxy.h"
 
 class GOKeyReceiver;
 class GOMidi;
@@ -23,7 +24,9 @@ class GOMidiEventKeyTab;
 class GOMidiEventRecvTab;
 class GOMidiEventSendTab;
 
-class GOMidiEventDialog : public GOTabbedDialog, public GOView {
+class GOMidiEventDialog : public GOTabbedDialog,
+                          public GOView,
+                          public GOModificationProxy {
 private:
   GOMidiEventRecvTab *m_recvPage;
   GOMidiEventSendTab *m_sendPage;

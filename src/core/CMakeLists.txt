@@ -32,6 +32,8 @@ midi/GOMidiFileReader.cpp
 midi/GOMidiMap.cpp
 midi/GOMidiEventPattern.cpp
 midi/GOMidiReceiverBase.cpp
+midi/GOMidiReceiverEventPattern.cpp
+midi/GOMidiSenderEventPattern.cpp
 midi/GOMidiWXEvent.cpp
 settings/GOSetting.cpp
 settings/GOSettingBool.cpp

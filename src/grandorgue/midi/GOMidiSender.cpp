@@ -667,9 +667,3 @@ void GOMidiSender::SetName(const wxString &text) {
     }
   }
 }
-
-void GOMidiSender::Assign(const GOMidiSenderEventPatternList &data) {
-  *(GOMidiSenderEventPatternList *)this = data;
-  if (m_OrganController)
-    m_OrganController->SetOrganModified();
-}

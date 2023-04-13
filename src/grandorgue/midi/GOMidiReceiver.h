@@ -29,8 +29,6 @@ public:
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 
   void SetIndex(int index) { m_Index = index; }
-
-  void Assign(const GOMidiReceiverEventPatternList &data);
 };
 
 #endif

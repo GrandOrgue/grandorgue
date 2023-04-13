@@ -210,6 +210,7 @@ void GODocument::ShowMIDIEventDialog(
       key,
       division);
     dlg->RegisterMIDIListener(m_OrganController->GetMidi());
+    dlg->SetModificationListener(m_OrganController);
     registerWindow(GODocument::MIDI_EVENT, element, dlg);
   }
 }

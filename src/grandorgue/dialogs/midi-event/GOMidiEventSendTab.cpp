@@ -274,7 +274,8 @@ bool GOMidiEventSendTab::TransferDataFromWindow() {
   } while (empty_event);
   // The event with index 0 is also deleted so the dialog can't be used more
 
-  m_original->Assign(m_midi);
+  if (m_original->RenewFrom(m_midi))
+    OnIsModifiedChanged(true);
   return true;
 }
 
