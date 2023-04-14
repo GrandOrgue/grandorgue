@@ -5907,6 +5907,92 @@ when the sample set doesn't provide them.
           <listitem><simpara>Displays the current slot. It is an "active" label, and as such supports a <link linkend="activelabel">MIDI send</link> configuration</simpara></listitem>
         </varlistentry>
         <varlistentry>
+          <term>Second line</term>
+          <listitem>
+	    <simpara>
+	      This line has elements for working with yaml combination files in
+	      the current combinations directory. By default it is a
+	      subdirectory with the same name as the current loaded organ name
+	      in the Combinations directory. But after importing a yaml
+	      combination file with the <link linkend="import_comb">Import
+	      Combinations</link> menu item, the current combinations directory
+	      becomes the directory where the combination file has been loaded
+	      from.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Large label on the second line</term>
+          <listitem>
+	    <simpara>
+	      Displays a yaml combination file name. It may be either the file
+	      that is loaded or another file the current combinations directory
+	      when the user navigates over them. It is an "active" label, and as
+	      such supports a <link linkend="activelabel">MIDI send</link>
+	      configuration.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Refresh</term>
+          <listitem>
+	    <simpara>
+	      Reload the list of combination files the current combinations
+	      directory.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>PrevFile</term>
+          <listitem>
+	    <simpara>
+	      Navigate to a previous (in alphabetical order) combinations file
+	      in the directory.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>NextFile</term>
+          <listitem>
+	    <simpara>
+	      Navigate to a next (in alphabetical order) combinations file in
+	      the directory.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load</term>
+          <listitem>
+	    <simpara>
+	      Load the combination file displayed in the label. The lighting of
+	      the button shows whether the currently displayed file is loaded
+	      (dark) or not loaded (light). After loading the combination file
+	      with this button, the 000 slot is activated automatically.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Save</term>
+          <listitem>
+	    <simpara>
+	      Save the current combinations file to the file whrere they were
+	      previously been loaded from. This button works only if the label
+	      is navigated to this file (the Save button is dark). Lighting of
+	      this button shows whether the combinations set has been changed
+	      (light) or not (dark) since it was loaded.
+	    </simpara>
+	    <note>
+	      <simpara>
+		This button allows to save the combinations to the same file
+		where they have been loaded from. For saving combinations to
+		another file or for creating a new one use the
+		<link linkend="export_combinations">Export Combinations</link>
+		menu item.
+	      </simpara>
+	    </note>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Current</term>
           <listitem><simpara>
 While <link linkend="memoryset">setting</link>, store the state of drawstops
@@ -7226,6 +7312,25 @@ attributes of a label - only available for old format panels.
 Represents the current number of the setter. The section must contain the GUI
 attributes of a label.
      </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SetterCurrFileName</term>
+          <listitem>
+            <para>
+	      Represents the current combinations file name of the setter.
+	      The section must contain the GUI attributes of a label.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Refresh, SetterPrevFile, SetterNextFile, SetterLoadCmb, SetterSaveCmb</term>
+          <listitem>
+            <para>
+	      Refresh/PrevFile/NextFile/Load/Save buttons of the setter. The
+	      section must contain the GUI attributes of a button (displayed as
+	      button per default).
+	    </para>
           </listitem>
         </varlistentry>
         <varlistentry>
