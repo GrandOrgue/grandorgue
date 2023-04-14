@@ -1,12 +1,13 @@
+# 3.11.0 (2023-04-17)
 - Added capability of navigating over, loading and saving the YAML combinations files on the Combination Setter panel https://github.com/GrandOrgue/grandorgue/issues/1196
 - Added capability of exporting and importing combinations in yaml format files https://github.com/GrandOrgue/grandorgue/issues/1195
 - Removed support of old linux distros (with libc6 versions before 2.31) https://github.com/GrandOrgue/grandorgue/discussions/1334
 - Fixed the translation of the desktop icon on Linux https://github.com/GrandOrgue/grandorgue/issues/1429
 - Added support of labels without a background image by specifying DispImageNum=0 https://github.com/GrandOrgue/grandorgue/issues/1386
 - Added capability of overriding wav MIDIPitchFraction with the Pipe999MIDIPitchFraction key https://github.com/GrandOrgue/grandorgue/issues/1378
-# 3.10.1 (2022-02-24)
+# 3.10.1 (2023-02-24)
 - Fixed crash on loading an incorrect organ
-# 3.10.0 (2022-02-17)
+# 3.10.0 (2023-02-17)
 - Added storing the GrandOrgueVersion key in the Organ Settings file https://github.com/GrandOrgue/grandorgue/issues/1375
 - Added capability of redefining ReleaseLength and IgnorePitch on each level of Organ Settings
 - Changed defaults for the General Setter elements to Piston https://github.com/GrandOrgue/grandorgue/issues/1360
@@ -17,7 +18,7 @@
 - Added PitchCorrection for organs and windchest. Pipe999PitchCorrection became additive to PitchCorrection of the rank, of the windchest and of the organ https://github.com/GrandOrgue/grandorgue/issues/1351
 - Added full support of '/' as the file sepearator in ODF unless 'Check ODF for HW1-compatibility' is set https://github.com/GrandOrgue/grandorgue/issues/827
 - Added support of ODF comments from ';' at any position to the end of line https://github.com/GrandOrgue/grandorgue/issues/828
-# 3.9.5 (2022-01-23)
+# 3.9.5 (2023-01-23)
 - Fixed saving position when some panel is outside the screen area https://github.com/GrandOrgue/grandorgue/issues/1271
 - Fixed playing release samples for very short notes https://github.com/GrandOrgue/grandorgue/issues/1222
 - Fixed help: the wrong panel positioning on wayland was documented https://github.com/GrandOrgue/grandorgue/issues/1271
