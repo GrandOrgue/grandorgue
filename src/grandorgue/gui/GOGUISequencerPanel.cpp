@@ -44,6 +44,7 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   GOGUILabel *PosDisplay
     = new GOGUILabel(panel, m_OrganController->GetLabel(wxT("Label")));
   PosDisplay->Init(cfg, wxT("SetterCurrentPosition"), 325, 10);
+  PosDisplay->SetFontSize(14);
   panel->AddControl(PosDisplay);
 
   GOGUILabel *const currFileNameDisplay = new GOGUILabel(
