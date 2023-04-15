@@ -58,8 +58,10 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   unsigned curRow = 100;
 
   button = new GOGUIButton(
-    panel, m_OrganController->GetButtonControl(GOSetter::KEY_REFRESH), false);
-  button->Init(cfg, GOSetter::GROUP_REFRESH, 1, curRow);
+    panel,
+    m_OrganController->GetButtonControl(GOSetter::KEY_REFRESH_FILES),
+    false);
+  button->Init(cfg, GOSetter::GROUP_REFRESH_FILES, 1, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
@@ -73,13 +75,13 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_OrganController->GetButtonControl(GOSetter::KEY_LOAD_CMB), false);
-  button->Init(cfg, GOSetter::GROUP_LOAD_CMB, 9, curRow);
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_LOAD_FILE), false);
+  button->Init(cfg, GOSetter::GROUP_LOAD_FILE, 9, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_OrganController->GetButtonControl(GOSetter::KEY_SAVE_CMB), false);
-  button->Init(cfg, GOSetter::GROUP_SAVE_CMB, 10, curRow);
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_SAVE_FILE), false);
+  button->Init(cfg, GOSetter::GROUP_SAVE_FILE, 10, curRow);
   panel->AddControl(button);
 
   curRow++;

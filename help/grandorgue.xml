@@ -5934,7 +5934,7 @@ when the sample set doesn't provide them.
 	  </listitem>
         </varlistentry>
         <varlistentry>
-          <term>Refresh</term>
+          <term>Refresh files</term>
           <listitem>
 	    <simpara>
 	      Reload the list of combination files the current combinations
@@ -5943,7 +5943,7 @@ when the sample set doesn't provide them.
 	  </listitem>
         </varlistentry>
         <varlistentry>
-          <term>PrevFile</term>
+          <term>Prev file</term>
           <listitem>
 	    <simpara>
 	      Navigate to a previous (in alphabetical order) combinations file
@@ -5952,7 +5952,7 @@ when the sample set doesn't provide them.
 	  </listitem>
         </varlistentry>
         <varlistentry>
-          <term>NextFile</term>
+          <term>Next file</term>
           <listitem>
 	    <simpara>
 	      Navigate to a next (in alphabetical order) combinations file in
@@ -5961,7 +5961,7 @@ when the sample set doesn't provide them.
 	  </listitem>
         </varlistentry>
         <varlistentry>
-          <term>Load</term>
+          <term>Load file</term>
           <listitem>
 	    <simpara>
 	      Load the combination file displayed in the label. The lighting of
@@ -5972,7 +5972,7 @@ when the sample set doesn't provide them.
 	  </listitem>
         </varlistentry>
         <varlistentry>
-          <term>Save</term>
+          <term>Save file</term>
           <listitem>
 	    <simpara>
 	      Save the current combinations file to the file whrere they were
@@ -7324,12 +7324,12 @@ attributes of a label.
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term>Refresh, SetterPrevFile, SetterNextFile, SetterLoadCmb, SetterSaveCmb</term>
+          <term>SetterRefreshFiles, SetterPrevFile, SetterNextFile, SetterLoadFile, SetterSaveFile</term>
           <listitem>
             <para>
-	      Refresh/PrevFile/NextFile/Load/Save buttons of the setter. The
-	      section must contain the GUI attributes of a button (displayed as
-	      drawstop per default).
+	      Refresh files/Prev file/Next file/Load file/Save file buttons of
+	      the setter. The section must contain the GUI attributes of a
+	      button (displayed as drawstop per default).
 	    </para>
           </listitem>
         </varlistentry>

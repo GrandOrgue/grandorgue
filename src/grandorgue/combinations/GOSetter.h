@@ -87,21 +87,21 @@ private:
   void PreparePlayback();
 
 public:
-  static const wxString KEY_REFRESH;
+  static const wxString KEY_REFRESH_FILES;
   static const wxString KEY_PREV_FILE;
   static const wxString KEY_CURR_FILE_NAME;
   static const wxString KEY_NEXT_FILE;
-  static const wxString KEY_LOAD_CMB;
-  static const wxString KEY_SAVE_CMB;
-  static const wxString KEY_SAVE;
+  static const wxString KEY_LOAD_FILE;
+  static const wxString KEY_SAVE_FILE;
+  static const wxString KEY_SAVE_SETTINGS;
 
-  static const wxString GROUP_REFRESH;
+  static const wxString GROUP_REFRESH_FILES;
   static const wxString GROUP_PREV_FILE;
   static const wxString GROUP_CURR_FILE_NAME;
   static const wxString GROUP_NEXT_FILE;
-  static const wxString GROUP_LOAD_CMB;
-  static const wxString GROUP_SAVE_CMB;
-  static const wxString GROUP_SAVE;
+  static const wxString GROUP_LOAD_FILE;
+  static const wxString GROUP_SAVE_FILE;
+  static const wxString GROUP_SAVE_SETTINGS;
 
   GOSetter(GOOrganController *organController);
   virtual ~GOSetter();
