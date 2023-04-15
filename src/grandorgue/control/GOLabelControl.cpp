@@ -17,7 +17,7 @@ GOLabelControl::GOLabelControl(GOOrganController *organController)
   : m_Name(),
     m_Content(),
     m_OrganController(organController),
-    m_sender(organController, MIDI_SEND_LABEL) {
+    m_sender(*organController, MIDI_SEND_LABEL) {
   m_OrganController->RegisterMidiConfigurator(this);
   m_OrganController->RegisterSoundStateHandler(this);
 }

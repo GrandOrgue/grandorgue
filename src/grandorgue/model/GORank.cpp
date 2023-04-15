@@ -34,7 +34,7 @@ GORank::GORank(GOOrganController *organController)
     m_MinVolume(100),
     m_MaxVolume(100),
     m_RetuneRank(true),
-    m_sender(organController, MIDI_SEND_MANUAL),
+    m_sender(*organController, MIDI_SEND_MANUAL),
     m_PipeConfig(NULL, organController, NULL) {
   m_OrganController->RegisterMidiConfigurator(this);
   m_OrganController->RegisterSoundStateHandler(this);
