@@ -242,8 +242,6 @@ public:
   const wxString &GetRecordingDetails();
   const wxString &GetInfoFilename();
 
-  void SendMidiMessage(GOMidiEvent &e);
-  void SendMidiRecorderMessage(GOMidiEvent &e);
   GOMidi *GetMidi();
 
   GOGUIMouseState &GetMouseState() { return m_MouseState; }

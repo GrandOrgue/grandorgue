@@ -10,6 +10,7 @@
 
 #include "ptrvector.h"
 
+#include "midi/GOMidiSendProxy.h"
 #include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
 #include "modification/GOModificationProxy.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
@@ -30,7 +31,8 @@ class GOTremulant;
 class GOWindchest;
 
 class GOOrganModel : public GOEventHandlerList,
-                     public GOMidiDialogCreatorProxy {
+                     public GOMidiDialogCreatorProxy,
+                     public GOMidiSendProxy {
 private:
   GOModificationProxy m_ModificationProxy;
 

@@ -133,6 +133,7 @@ midi/GOMidiInputMerger.cpp
 midi/GOMidiOutputMerger.cpp
 midi/GOMidiPlayer.cpp
 midi/GOMidiPlayerContent.cpp
+midi/GOMidiSendProxy.cpp
 midi/GOMidiSender.cpp
 midi/GOMidiReceiver.cpp
 midi/GOMidiRecorder.cpp
