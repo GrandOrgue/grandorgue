@@ -53,10 +53,6 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   currFileNameDisplay->Init(
     cfg, GOSetter::GROUP_CURR_FILE_NAME, 170, 58, wxEmptyString, 15, 380, 40);
   currFileNameDisplay->SetFontSize(14);
-  /*
-  currFileNameDisplay->SetFontColour(
-    logicalToWxColour(GOLogicalColour::DARK_RED));
-   */
   panel->AddControl(currFileNameDisplay);
 
   unsigned curRow = 100;

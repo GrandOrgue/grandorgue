@@ -402,11 +402,11 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_buttons[ID_SETTER_DELETE]->Init(cfg, wxT("SetterDelete"), _("Delete"));
 
   m_buttons[ID_SETTER_REFRESH]->Init(cfg, GROUP_REFRESH, _("Refresh"));
-  m_buttons[ID_SETTER_PREV_FILE]->Init(cfg, GROUP_PREV_FILE, _("Prev File"));
-  m_buttons[ID_SETTER_NEXT_FILE]->Init(cfg, GROUP_NEXT_FILE, _("Next File"));
-  m_buttons[ID_SETTER_LOAD_CMB]->Init(cfg, GROUP_LOAD_CMB, _("Load"));
-  m_buttons[ID_SETTER_SAVE_CMB]->Init(cfg, GROUP_SAVE_CMB, _("Save"));
-  m_buttons[ID_SETTER_SAVE]->Init(cfg, GROUP_SAVE, _("Save Settings"));
+  m_buttons[ID_SETTER_PREV_FILE]->Init(cfg, GROUP_PREV_FILE, _("Prev file"));
+  m_buttons[ID_SETTER_NEXT_FILE]->Init(cfg, GROUP_NEXT_FILE, _("Next file"));
+  m_buttons[ID_SETTER_LOAD_CMB]->Init(cfg, GROUP_LOAD_CMB, _("Load file"));
+  m_buttons[ID_SETTER_SAVE_CMB]->Init(cfg, GROUP_SAVE_CMB, _("Save file"));
+  m_buttons[ID_SETTER_SAVE]->Init(cfg, GROUP_SAVE, _("Save settings"));
 
   m_buttons[ID_SETTER_CRESCENDO_PREV]->Init(
     cfg, wxT("SetterCrescendoPrev"), _("<"));

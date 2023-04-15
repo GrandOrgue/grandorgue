@@ -7329,7 +7329,7 @@ attributes of a label.
             <para>
 	      Refresh/PrevFile/NextFile/Load/Save buttons of the setter. The
 	      section must contain the GUI attributes of a button (displayed as
-	      button per default).
+	      drawstop per default).
 	    </para>
           </listitem>
         </varlistentry>
@@ -7338,7 +7338,7 @@ attributes of a label.
           <listitem>
             <para>
 Prev/next/set button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7347,7 +7347,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 +/- 1/10/100 button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7356,7 +7356,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 Move to 000 button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7365,7 +7365,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 Recall current number button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7374,7 +7374,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 General cancel button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7384,7 +7384,7 @@ attributes of a button (displayed as button per default).
             <para>
 Recall combination with the specified digit as last digit button of
 the setter. The section must contain the GUI attributes of a button
-(displayed as button per default).
+(displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7393,7 +7393,7 @@ the setter. The section must contain the GUI attributes of a button
           <listitem>
             <para>
 Button to switch between the various setter modes. The section must
-contain the GUI attributes of a button (displayed as button per
+contain the GUI attributes of a button (displayed as drawstop per
 default).
      </para>
           </listitem>
@@ -7404,7 +7404,7 @@ default).
             <para>
 Button to enable storing all elements in the setter (restrictions from
 the ODF are ignored). The section must contain the GUI attributes of a
-button (displayed as button per default).
+button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7413,7 +7413,7 @@ button (displayed as button per default).
           <listitem>
             <para>
 Buttons to insert/remove a combination. The section must contain the
-GUI attributes of a button (displayed as button per default).
+GUI attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7450,7 +7450,7 @@ attributes of a label.
           <listitem>
             <para>
 Buttons to switch between the various crescendo modes. The section
-must contain the GUI attributes of a button (displayed as button per
+must contain the GUI attributes of a button (displayed as drawstop per
 default).
      </para>
           </listitem>
@@ -7460,7 +7460,7 @@ default).
           <listitem>
             <para>
 Buttons for controlling the crescendo combinations. The section must
-contain the GUI attributes of a button (displayed as button per
+contain the GUI attributes of a button (displayed as drawstop per
 default).
      </para>
           </listitem>
@@ -9249,7 +9249,7 @@ The GUI properties of button objects are:
           <listitem>
             <para>
 (boolean, default: true for divisionals, generals and pistons, else
-false) True means to display as button, false as drawstop
+false) True means to display as piston, false as drawstop
      </para>
           </listitem>
         </varlistentry>
