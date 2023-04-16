@@ -7315,7 +7315,7 @@ attributes of a label.
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term>SetterCurrFileName</term>
+          <term>CurrFileName</term>
           <listitem>
             <para>
 	      Represents the current combinations file name of the setter.
@@ -7324,7 +7324,7 @@ attributes of a label.
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term>SetterRefreshFiles, SetterPrevFile, SetterNextFile, SetterLoadFile, SetterSaveFile</term>
+          <term>RefreshFiles, PrevFile, NextFile, LoadFile, SaveFile</term>
           <listitem>
             <para>
 	      Refresh files/Prev file/Next file/Load file/Save file buttons of
