@@ -5907,6 +5907,92 @@ when the sample set doesn't provide them.
           <listitem><simpara>Displays the current slot. It is an "active" label, and as such supports a <link linkend="activelabel">MIDI send</link> configuration</simpara></listitem>
         </varlistentry>
         <varlistentry>
+          <term>Second line</term>
+          <listitem>
+	    <simpara>
+	      This line has elements for working with yaml combination files in
+	      the current combinations directory. By default it is a
+	      subdirectory with the same name as the current loaded organ name
+	      in the Combinations directory. But after importing a yaml
+	      combination file with the <link linkend="import_comb">Import
+	      Combinations</link> menu item, the current combinations directory
+	      becomes the directory where the combination file has been loaded
+	      from.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Large label on the second line</term>
+          <listitem>
+	    <simpara>
+	      Displays a yaml combination file name. It may be either the file
+	      that is loaded or another file the current combinations directory
+	      when the user navigates over them. It is an "active" label, and as
+	      such supports a <link linkend="activelabel">MIDI send</link>
+	      configuration.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Refresh files</term>
+          <listitem>
+	    <simpara>
+	      Reload the list of combination files the current combinations
+	      directory.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Prev file</term>
+          <listitem>
+	    <simpara>
+	      Navigate to a previous (in alphabetical order) combinations file
+	      in the directory.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Next file</term>
+          <listitem>
+	    <simpara>
+	      Navigate to a next (in alphabetical order) combinations file in
+	      the directory.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Load file</term>
+          <listitem>
+	    <simpara>
+	      Load the combination file displayed in the label. The lighting of
+	      the button shows whether the currently displayed file is loaded
+	      (dark) or not loaded (light). After loading the combination file
+	      with this button, the 000 slot is activated automatically.
+	    </simpara>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Save file</term>
+          <listitem>
+	    <simpara>
+	      Save the current combinations file to the file whrere they were
+	      previously been loaded from. This button works only if the label
+	      is navigated to this file (the Save button is dark). Lighting of
+	      this button shows whether the combinations set has been changed
+	      (light) or not (dark) since it was loaded.
+	    </simpara>
+	    <note>
+	      <simpara>
+		This button allows to save the combinations to the same file
+		where they have been loaded from. For saving combinations to
+		another file or for creating a new one use the
+		<link linkend="export_combinations">Export Combinations</link>
+		menu item.
+	      </simpara>
+	    </note>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Current</term>
           <listitem><simpara>
 While <link linkend="memoryset">setting</link>, store the state of drawstops
@@ -7229,11 +7315,30 @@ attributes of a label.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>CurrFileName</term>
+          <listitem>
+            <para>
+	      Represents the current combinations file name of the setter.
+	      The section must contain the GUI attributes of a label.
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>RefreshFiles, PrevFile, NextFile, LoadFile, SaveFile</term>
+          <listitem>
+            <para>
+	      Refresh files/Prev file/Next file/Load file/Save file buttons of
+	      the setter. The section must contain the GUI attributes of a
+	      button (displayed as drawstop per default).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Prev, Next, Set</term>
           <listitem>
             <para>
 Prev/next/set button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7242,7 +7347,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 +/- 1/10/100 button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7251,7 +7356,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 Move to 000 button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7260,7 +7365,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 Recall current number button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7269,7 +7374,7 @@ attributes of a button (displayed as button per default).
           <listitem>
             <para>
 General cancel button of the setter. The section must contain the GUI
-attributes of a button (displayed as button per default).
+attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7279,7 +7384,7 @@ attributes of a button (displayed as button per default).
             <para>
 Recall combination with the specified digit as last digit button of
 the setter. The section must contain the GUI attributes of a button
-(displayed as button per default).
+(displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7288,7 +7393,7 @@ the setter. The section must contain the GUI attributes of a button
           <listitem>
             <para>
 Button to switch between the various setter modes. The section must
-contain the GUI attributes of a button (displayed as button per
+contain the GUI attributes of a button (displayed as drawstop per
 default).
      </para>
           </listitem>
@@ -7299,7 +7404,7 @@ default).
             <para>
 Button to enable storing all elements in the setter (restrictions from
 the ODF are ignored). The section must contain the GUI attributes of a
-button (displayed as button per default).
+button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7308,7 +7413,7 @@ button (displayed as button per default).
           <listitem>
             <para>
 Buttons to insert/remove a combination. The section must contain the
-GUI attributes of a button (displayed as button per default).
+GUI attributes of a button (displayed as drawstop per default).
      </para>
           </listitem>
         </varlistentry>
@@ -7345,7 +7450,7 @@ attributes of a label.
           <listitem>
             <para>
 Buttons to switch between the various crescendo modes. The section
-must contain the GUI attributes of a button (displayed as button per
+must contain the GUI attributes of a button (displayed as drawstop per
 default).
      </para>
           </listitem>
@@ -7355,7 +7460,7 @@ default).
           <listitem>
             <para>
 Buttons for controlling the crescendo combinations. The section must
-contain the GUI attributes of a button (displayed as button per
+contain the GUI attributes of a button (displayed as drawstop per
 default).
      </para>
           </listitem>
@@ -9144,7 +9249,7 @@ The GUI properties of button objects are:
           <listitem>
             <para>
 (boolean, default: true for divisionals, generals and pistons, else
-false) True means to display as button, false as drawstop
+false) True means to display as piston, false as drawstop
      </para>
           </listitem>
         </varlistentry>
