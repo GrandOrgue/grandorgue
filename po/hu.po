@@ -3039,7 +3039,7 @@ msgstr "Elem"
 
 #: src/grandorgue/dialogs/GOMidiListDialog.cpp:63
 msgid "C&onfigure..."
-msgstr "B&eállítás..."
+msgstr "&Beállítás..."
 
 #: src/grandorgue/dialogs/GOMidiListDialog.cpp:66
 msgid "&Status"
@@ -3373,7 +3373,7 @@ msgstr "&Billentyűparancs:"
 #: src/grandorgue/dialogs/midi-event/GOMidiEventKeyTab.cpp:52
 #: src/grandorgue/dialogs/midi-event/GOMidiEventRecvTab.cpp:191
 msgid "&Listen for Event"
-msgstr "&Eseményre vár"
+msgstr "Eseményre &figyel"
 
 #: src/grandorgue/dialogs/midi-event/GOMidiEventKeyTab.cpp:46
 msgid "&Minus-Shortcut:"
@@ -4171,7 +4171,7 @@ msgstr "MIDI-esemény"
 
 #: src/grandorgue/dialogs/settings/GOSettingsMidiMessage.cpp:50
 msgid "P&roperties..."
-msgstr "T&ulajdonságok..."
+msgstr "&Tulajdonságok..."
 
 #: src/grandorgue/dialogs/settings/GOSettingsMidiMessage.cpp:60
 #: src/grandorgue/dialogs/settings/GOSettingsMidiMessage.cpp:93
@@ -4762,7 +4762,7 @@ msgstr "redőny hiányzik"
 #: src/grandorgue/gui/GOGUIManual.cpp:353
 #, c-format
 msgid "Manual key %d outside of the bounding box"
-msgstr "%d billentyű kilóg a képernyőről"
+msgstr "%d billentyű a határon túlra kilóg"
 
 #: src/grandorgue/gui/GOGUIPanel.cpp:186 src/grandorgue/gui/GOGUIPanel.cpp:323
 #: src/grandorgue/gui/GOGUIPanel.cpp:733
