@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-01-29 10:36+0100\n"
-"PO-Revision-Date: 2022-01-29 12:09+0100\n"
+"POT-Creation-Date: 2023-04-21 21:55+0200\n"
+"PO-Revision-Date: 2023-04-21 23:03+0200\n"
 "Last-Translator: Lars Palo <larspalo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -20,6 +20,16 @@ msgstr ""
 msgid "\n"
 msgstr "\n"
 
+#, c-format
+msgid ""
+"\n"
+"\n"
+"(the following packages will also be deleted:%s)"
+msgstr ""
+"\n"
+"\n"
+"(följande paket kommer också att tas bort: %s)"
+
 msgid ""
 "\n"
 "\n"
@@ -30,7 +40,7 @@ msgstr ""
 "Vänligen välj en giltig impulssvarsfil"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 #, c-format
 msgid " (%.3f used)"
@@ -239,8 +249,8 @@ msgstr "&Förbättringar"
 msgid "&Event:"
 msgstr "&Händelse:"
 
-msgid "&Export Settings/Combinations"
-msgstr "&Exportera inställningar/kombinationer"
+msgid "&Export Settings"
+msgstr "&Exportera inställningar"
 
 msgid "&Favorites"
 msgstr "&Favoriter"
@@ -290,11 +300,14 @@ msgstr "&MIDI-utmatningsenhet..."
 msgid "&MIDI-note:"
 msgstr "&MIDI-not:"
 
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
 msgid "&Mapping output"
 msgstr "&Mappning av utmatning"
 
 msgid "&Memory Level"
-msgstr "Fri ko&mbination"
+msgstr "&Minnesnivå"
 
 msgid "&Memory Set\tShift"
 msgstr "Lagra i &minne\tShift"
@@ -352,6 +365,9 @@ msgstr "&Polyfoni"
 
 msgid "&Release tail length"
 msgstr "&Uppsläppslängd"
+
+msgid "&Relocate..."
+msgstr "&Flytta..."
 
 msgid "&Sample loading"
 msgstr "&Laddning av samplingar"
@@ -412,14 +428,6 @@ msgstr "&Värde:"
 
 msgid "&Volume"
 msgstr "&Volym"
-
-#, c-format
-msgid "'%s' is still used by the organ '%s'"
-msgstr "'%s' används fortfarande av orgel '%s'"
-
-#, c-format
-msgid "'%s' is still used by the package '%s'"
-msgstr "'%s' används fortfarande av paket '%s'"
 
 msgid "(none)"
 msgstr "(ingen)"
@@ -592,6 +600,10 @@ msgstr "9x Note utan mappning"
 msgid ":"
 msgstr ":"
 
+#, c-format
+msgid "; FileName=%s"
+msgstr "; Filnamn=%s"
+
 msgid "<"
 msgstr "<"
 
@@ -601,26 +613,14 @@ msgstr "< Bitar per sampling måste vara en multipel av 8 i denna version"
 msgid "< Invalid CUE chunk in"
 msgstr "< Ogiltig CUE chunk in"
 
-msgid "< Invalid RIFF file"
-msgstr "< Ogiltig RIFF fil"
-
-msgid "< Invalid RIFF/WAVE file"
-msgstr "< Ogiltig RIFF/WAVE fil"
-
 msgid "< Invalid SMPL chunk in"
 msgstr "< Ogiltig SMPL chunk in"
 
 msgid "< Invalid WAVE format chunk"
 msgstr "< Ogiltig WAVE format chunk"
 
-msgid "< Malformed wave file. Format chunk must precede data chunk."
-msgstr "< Missformad wave fil. Format chunk måste föregå data chunk."
-
 msgid "< More than 2 channels in"
 msgstr "< Fler än två kanaler in"
-
-msgid "< Not a RIFF file"
-msgstr "< Ingen RIFF fil"
 
 msgid "< Only 32bit IEEE float samples supported"
 msgstr "< Endast 32 bitars IEEE flyttals samplingar stöds"
@@ -633,9 +633,6 @@ msgstr "< Ej stött PCM format"
 
 msgid "<Invalid SMPL chunk in"
 msgstr "<Ogiltig SMPL chunk in"
-
-msgid "<Invalid WAV file"
-msgstr "<Ogiltig WAV fil"
 
 msgid "<no file loaded>"
 msgstr "<ingen fil laddad>"
@@ -717,6 +714,9 @@ msgstr "Amplituden är felaktig"
 msgid "Amplitude:"
 msgstr "Amplitud:"
 
+msgid "Another registered organ already uses this path"
+msgstr "En annan registrerad orgel använder redan denna sökväg"
+
 msgid "Any channel"
 msgstr "Vilken kanal som helst"
 
@@ -796,6 +796,12 @@ msgstr "Ljudinspelningar"
 msgid "Auto add new devices"
 msgstr "Lägg till nya enheter automatiskt"
 
+msgid "AutoTuning Correction (Cent):"
+msgstr "Omstämningskorrektion (Cent):"
+
+msgid "AutoTuningCorrection is invalid"
+msgstr "Omstämningskorrektionen är ogiltig"
+
 msgid "Automatically manage cache"
 msgstr "Hantera cachen automatiskt"
 
@@ -837,6 +843,9 @@ msgstr "Byggnationsdatum"
 
 msgid "Builder"
 msgstr "Orgelbyggare"
+
+msgid "Builder:"
+msgstr "Orgelbyggare:"
 
 msgid "Button"
 msgstr "Knapp"
@@ -890,12 +899,8 @@ msgid "Cache file had diffent hash bypassing cache."
 msgstr "Cache-fil hade annan hash, förbigår cache."
 
 #, c-format
-msgid "Cache load failure: %s"
-msgstr "Laddning av cache misslyckades: %s"
-
-#, c-format
-msgid "Cache load failure: Failed to read %s from cache."
-msgstr "Cacheläsningsfel: Misslyckades att läsa %s från cache-minnet."
+msgid "Cache load failure: Failed to read %s from cache: %s"
+msgstr "Cacheläsningsfel: Misslyckades att läsa %s från cache: %s"
 
 #, c-format
 msgid ""
@@ -927,6 +932,9 @@ msgstr "Kanal:"
 msgid "Chaumont"
 msgstr "Chaumont"
 
+msgid "Check ODF for HW1-compatibility"
+msgstr "Kontrollera ODF för HW1 kompatibilitet"
+
 msgid "Check on startup"
 msgstr "Kontrollera vid start"
 
@@ -942,6 +950,18 @@ msgstr "Fäll ihop trädet"
 
 msgid "Combination Setter"
 msgstr "Fria kombinationer"
+
+msgid "Combination files (*.yaml)|*.yaml"
+msgstr "Kombinationsfiler (*.yaml)|*.yaml"
+
+msgid "Combinations"
+msgstr "Kombinationer"
+
+msgid "Combinations files (*.yaml)|*.yaml|Settings files (*.cmb)|*.cmb"
+msgstr "Kombinationsfiler (*.yaml)|*.yaml|Inställnings filer (*.cmb)|*.cmb"
+
+msgid "Combinations:"
+msgstr "Kombinationer:"
 
 msgid "Compress cache"
 msgstr "Komprimera cache"
@@ -966,6 +986,10 @@ msgstr "Använda kärnor vid laddning:"
 
 msgid "Corrette (1753)"
 msgstr "Corrette (1753)"
+
+#, c-format
+msgid "Could match the %s \"%s: %s\" neither by name nor by number"
+msgstr "Kunde inte matcha %s \"%s: %s\" varken med namn eller nummer"
 
 #, c-format
 msgid "Could not remove '%s'"
@@ -1034,6 +1058,9 @@ msgstr "Förvald"
 msgid "Default audio group"
 msgstr "Förvald ljudgrupp"
 
+msgid "Default for All"
+msgstr "Förvald för alla"
+
 msgid "Delay (ms):"
 msgstr "Fördröjning (ms):"
 
@@ -1043,8 +1070,21 @@ msgstr "Ta bort"
 msgid "Delete &Cache..."
 msgstr "Ta bort &cache..."
 
-msgid "Delete package"
-msgstr "Ta bort paket"
+msgid "Delete &cache(s)"
+msgstr "Ta bort &cache"
+
+msgid "Delete &preset(s)"
+msgstr "Ta bort förinställning(ar)"
+
+msgid "Delete Organ Packages"
+msgstr "Ta bort orgelpaket"
+
+msgid "Delete Organs"
+msgstr "Ta bort orglar"
+
+#, c-format
+msgid "Delete file %s"
+msgstr "Ta bort fil %s"
 
 msgid "Desired latency:"
 msgstr "Önskad ljudfördröjning:"
@@ -1083,8 +1123,8 @@ msgid "Divisionals"
 msgstr "Divisionals"
 
 #, c-format
-msgid "Do you want to remove %s?"
-msgstr "Vill du ta bort %s?"
+msgid "Do you want to delete organs%s%s?"
+msgstr "Vill du ta bort orglarna%s%s?"
 
 msgid "Don't load"
 msgstr "Ladda inte"
@@ -1195,6 +1235,12 @@ msgstr "Överflödig data i huvudfolder"
 msgid "Excess information in zip64 extendend information record"
 msgstr "Överflödig information i zip64 utökad informationspost"
 
+msgid "Export &Combinations"
+msgstr "Exportera &kombinationer"
+
+msgid "Export Combinations"
+msgstr "Exportera kombinationer"
+
 msgid "Export Settings"
 msgstr "Exportera inställningar"
 
@@ -1288,8 +1334,9 @@ msgstr "Misslyckades skapa mapp '%s'"
 msgid "Failed to decode %s"
 msgstr "Misslyckades att avkoda %s"
 
-msgid "Failed to decode WavePack data"
-msgstr "Misslyckades att avkoda WavePack data"
+#, c-format
+msgid "Failed to decode WavePack data: %s"
+msgstr "Misslyckades att avkoda WavePack data: %s"
 
 #, c-format
 msgid "Failed to decode file '%s'"
@@ -1298,6 +1345,10 @@ msgstr "Misslyckades att avkoda filen '%s'"
 #, c-format
 msgid "Failed to decompress file '%s'"
 msgstr "Misslyckades att dekomprimera filen '%s'"
+
+#, c-format
+msgid "Failed to export combinations to '%s': %s"
+msgstr "Misslyckades att exportera kombinationer till '%s': %s"
 
 #, c-format
 msgid "Failed to export settings to '%s'"
@@ -1391,10 +1442,6 @@ msgid "Failed to read file '%s'"
 msgstr "Misslyckades att läsa filen '%s'"
 
 #, c-format
-msgid "Failed to read file '%s'\n"
-msgstr "Misslyckades att läsa filen '%s'\n"
-
-#, c-format
 msgid "Failed to read wav file %s: %s"
 msgstr "Misslyckades att läsa wav fil %s: %s"
 
@@ -1423,12 +1470,19 @@ msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
 msgstr "Ferdinand Bossard (1743/44) Klosterkirche Muri"
 
 #, c-format
-msgid "File '%s' does not exists"
+msgid "File %s is not found in the organ package archives"
+msgstr "Filen %s hittades inte i orgelpaketet"
+
+#, c-format
+msgid "File '%s' does not exist"
 msgstr "Fil '%s' finns ej"
 
 #, c-format
 msgid "File name '%s' contains invalid path separators"
 msgstr "Filnamn '%s' innehåller felaktig sökvägsavgränsare"
+
+msgid "File name is empty"
+msgstr "Filnamnet är tomt"
 
 #, c-format
 msgid "Filename '%s' contains non-portable directory separator /"
@@ -1546,14 +1600,11 @@ msgstr "Hummels nästan liksväviga temperatur (1829)"
 msgid "I"
 msgstr "I"
 
-msgid "ID"
-msgstr "ID"
-
 msgid "IEEE Float"
 msgstr "IEEE Float"
 
 msgid "INCOMPLETE - "
-msgstr "ICKE KOMPLETT - "
+msgstr "OFULLSTÄNDIG - "
 
 msgid "Ignore pitch info in organ samples wav files"
 msgstr "Ignorera tonhöjdsinformation i ljudsamplingsfilerna"
@@ -1607,8 +1658,9 @@ msgstr "Ofullständig tidsstämpel vid offset %d"
 msgid "Incomplete zip64 extendend information record"
 msgstr "Icke komplett zip64 utökad informationspost"
 
-msgid "Inconsitant WavPack file"
-msgstr "Inkonsekvent WavPack fil"
+#, c-format
+msgid "Inconsitant WavPack file: %s"
+msgstr "Inkonsekvent WavPack fil: %s"
 
 #, c-format
 msgid "Incorrect case for section '%s' entry '%s'"
@@ -1620,9 +1672,6 @@ msgstr "Felaktigt spårantal"
 #, c-format
 msgid "Index '%s' has bad magic - bypassing index"
 msgstr "Index '%s' har dålig magi - förbigår index"
-
-msgid "Info"
-msgstr "Info"
 
 msgid "InfoFilename does not point to a html file"
 msgstr "InfoFilename pekar inte till en html fil"
@@ -1650,6 +1699,18 @@ msgstr "Interpolering:"
 #, c-format
 msgid "Invalid Config entry at line %d: %s"
 msgstr "Felaktig konfigurationspost vid rad %d: %s"
+
+#, c-format
+msgid "Invalid RIFF file: %s"
+msgstr "Ogiltig RIFF fil: %s"
+
+#, c-format
+msgid "Invalid RIFF/WAVE file: %s"
+msgstr "Ogiltig RIFF/WAVE fil: %s"
+
+#, c-format
+msgid "Invalid WAV file: %s"
+msgstr "Ogiltig WAV fil: %s"
 
 #, c-format
 msgid "Invalid boolean value at section '%s' entry '%s': %s"
@@ -1702,6 +1763,14 @@ msgstr "Felaktig lokal rubrikförskjutning"
 
 msgid "Invalid loop definition"
 msgstr "Felaktig loopdefinition"
+
+#, c-format
+msgid "Invalid loop in the file: %s\n"
+msgstr "Felaktig loop i fil: %s\n"
+
+#, c-format
+msgid "Invalid manual number %s"
+msgstr "Felaktig manualnummer %s"
 
 msgid "Invalid object type for reversible piston"
 msgstr "Felaktig objekttyp för reversibel pistong"
@@ -1804,15 +1873,14 @@ msgstr "Laddningen avbröts av användaren - endast delar av orgeln har laddats.
 msgid "Load error"
 msgstr "Fel under laddning"
 
+msgid "Load file"
+msgstr "Ladda fil"
+
 msgid "Load first favorit organ at startup"
 msgstr "Ladda första orgelfavorit vid uppstart"
 
 msgid "Load last used organ at startup"
 msgstr "Ladda sist använda orgel vid uppstart"
-
-#, c-format
-msgid "Loading file %s"
-msgstr "Laddar fil %s"
 
 msgid "Loading sample set"
 msgstr "Laddar samplingssamling"
@@ -1938,6 +2006,10 @@ msgstr "Malerbis vältempererade nr 1 (1794)"
 msgid "Malformed MIDI header"
 msgstr "Felaktigt utformat MIDI huvud"
 
+#, c-format
+msgid "Malformed wave file '%s'. Format chunk must precede data chunk."
+msgstr "Missformad wave fil '%s'. Format bit måste föregå data bit."
+
 msgid "Malformed zip64 end record"
 msgstr "Felaktigt utformat zip64 slutpost"
 
@@ -1967,9 +2039,15 @@ msgstr "Manual 4"
 msgid "Manual 5"
 msgstr "Manual 5"
 
+msgid "Manual Tuning (Cent):"
+msgstr "Manuell stämning (Cent):"
+
 #, c-format
 msgid "Manual key %d outside of the bounding box"
 msgstr "Manualtangenten %d är utanför begränsningsramen"
+
+msgid "ManualTuning is invalid"
+msgstr "Manuell stämning är ogiltig"
 
 msgid "Manuals"
 msgstr "Manualer"
@@ -2164,6 +2242,9 @@ msgstr "Nästa"
 msgid "Next Memory"
 msgstr "Nästa kombination"
 
+msgid "Next file"
+msgstr "Nästa fil"
+
 msgid "Next temperament"
 msgstr "Nästa temperatur"
 
@@ -2198,8 +2279,9 @@ msgstr "Ingen orgelsektion i orgeldefinition %s"
 msgid "No output-file specified"
 msgstr "Ingen utmatningsfil är angiven"
 
-msgid "No samples found"
-msgstr "Inga samplingar hittades"
+#, c-format
+msgid "No samples found: %s"
+msgstr "Inga samplingar hittades: %s"
 
 msgid "No sound output occurring"
 msgstr "Ingen ljudutmatning sker"
@@ -2224,6 +2306,10 @@ msgstr "Ingen"
 
 msgid "Norden"
 msgstr "Norden"
+
+#, c-format
+msgid "Not a RIFF file: %s"
+msgstr "Inte en RIFF fil: %s"
 
 msgid "Not enough samples for a crossfade"
 msgstr "Inte tillräckligt med samplar för en övertoning"
@@ -2312,6 +2398,9 @@ msgstr "Orgelcache:"
 msgid "Organ dialog"
 msgstr "Orgeldialog"
 
+msgid "Organ hash:"
+msgstr "Orgelns hash:"
+
 msgid "Organ package"
 msgstr "Orgelpaket"
 
@@ -2319,14 +2408,17 @@ msgstr "Orgelpaket"
 msgid "Organ package %s changed its title"
 msgstr "Orgelpaket %s har ändrat titel"
 
-msgid "Organ package (*.orgue)|*.orgue"
-msgstr "Orgelpaket (*.orgue)|*.orgue"
+msgid "Organ package (*.orgue)"
+msgstr "Orgelpaket (*.orgue)"
 
 msgid "Organ packages"
 msgstr "Orgelpaket"
 
 msgid "Organ packages:"
 msgstr "Orgelpaket:"
+
+msgid "Organ path"
+msgstr "Orgelns sökväg"
 
 msgid "Organ settings"
 msgstr "Orgelinställningar"
@@ -2357,16 +2449,19 @@ msgstr ""
 "minnesavtrycket via inställningarna för samplingsladdning."
 
 #, c-format
-msgid "Out of range value at section '%s' entry '%s': %d"
-msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %d"
-
-#, c-format
 msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %f"
 
 #, c-format
+msgid "Out of range value at section '%s' entry '%s': %ld"
+msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %ld"
+
+#, c-format
 msgid "Output device %s not found - no sound output will occur"
 msgstr "Enhet %s hittades ej - ingen ljudutmatning kommer att ske"
+
+msgid "Override"
+msgstr "Åsidosätt"
 
 msgid "P"
 msgstr "P"
@@ -2380,12 +2475,21 @@ msgstr "PAUSE"
 msgid "PLAY"
 msgstr "PLAY"
 
+msgid "Package hash:"
+msgstr "Paket hash:"
+
+msgid "Package id:"
+msgstr "Paketid:"
+
+msgid "Package info:"
+msgstr "Paketinfo:"
+
+msgid "Package name:"
+msgstr "Paketnamn:"
+
 #, c-format
 msgid "PackageID %s added more than once"
 msgstr "PaketID %s tillagd mer än en gång"
-
-msgid "Packages"
-msgstr "Paket"
 
 msgid "Panic"
 msgstr "Panik"
@@ -2401,6 +2505,9 @@ msgstr "Läser samplingssamlingens definitionsfil"
 
 msgid "Path"
 msgstr "Sökväg"
+
+msgid "Path in package:"
+msgstr "Sökväg i paket:"
 
 msgid "Paths"
 msgstr "Sökvägar"
@@ -2480,6 +2587,9 @@ msgstr "Förinställning %d"
 
 msgid "Prev"
 msgstr "Föregående"
+
+msgid "Prev file"
+msgstr "Föregående fil"
 
 msgid "Prev temperament"
 msgstr "Föregående temperatur"
@@ -2588,23 +2698,29 @@ msgstr "Inspelare / Spelare"
 msgid "Recorder WAV Format:"
 msgstr "WAV inspelningsformat:"
 
-msgid "Recording"
-msgstr "Inspelning"
-
 msgid "Recording Details"
 msgstr "Inspelningsdetaljer"
 
+msgid "Recording:"
+msgstr "Inspelning:"
+
 msgid "ReferencePipe without Reference"
-msgstr "ReferencePipe utan referens"
+msgstr "Referenspipa utan referens"
+
+msgid "Refresh files"
+msgstr "Uppfräscha filer"
 
 msgid "Regex must be specified when physical and logical device names differ"
 msgstr "Regex måste anges när fysiskt och logiskt enehtsnamn är olika"
 
-msgid "Registered organs"
-msgstr "Registrerade orglar"
-
 msgid "Regular"
 msgstr "Vanlig"
+
+msgid "Release Length is invalid"
+msgstr "Uppsläppslängd är felaktig"
+
+msgid "Release Tail Length (ms):"
+msgstr "Uppsläppslängd (ms):"
 
 msgid "Release loading:"
 msgstr "Laddning av uppsläpp:"
@@ -2615,8 +2731,18 @@ msgstr "Skala uppsläpp"
 msgid "Release tail length"
 msgstr "Uppsläppslängd"
 
+msgid "Relocate organ path"
+msgstr "Flytta orgelns sökväg"
+
+msgid "Relocating path"
+msgstr "Flytta sökväg"
+
 msgid "Rename"
 msgstr "Byt namn"
+
+#, c-format
+msgid "Renamed file %s to %s"
+msgstr "Ändrade namn på %s till %s"
 
 msgid "Resampling failed"
 msgstr "Omsampling misslyckades"
@@ -2698,8 +2824,8 @@ msgstr "Samplingsinformation"
 msgid "Sample rate of device %s changed"
 msgstr "Samplingsfrekvens hos enhet %s ändrad"
 
-msgid "Sample set definition files (*.organ)|*.organ"
-msgstr "Definitionsfil för samplingssamling (*.organ)|*.organ"
+msgid "Sample set definition files (*.organ)"
+msgstr "Definitionsfil för samplingssamling (*.organ)"
 
 msgid "Sample size:"
 msgstr "Samplingsstorlek:"
@@ -2719,15 +2845,21 @@ msgstr "Sauveur 1702"
 msgid "Sauveur harpsichord 1697"
 msgstr "Sauveur cembalo 1697"
 
-msgid "Save"
-msgstr "Spara"
-
 msgid "Save as"
 msgstr "Spara som"
+
+msgid "Save file"
+msgstr "Spara fil"
 
 #, c-format
 msgid "Save of %s to the cache failed"
 msgstr "Lagrandet av %s i cachen misslyckades"
+
+msgid "Save organ settings"
+msgstr "Spara orgelinställningar"
+
+msgid "Save settings"
+msgstr "Spara inställningar"
 
 msgid "Scheffer (1748) modified, Sweden"
 msgstr "Scheffer (1748) modifierad, Sverige"
@@ -2764,9 +2896,11 @@ msgstr "Välj en impulsfil"
 msgid "Select audio groups to distribute:"
 msgstr "Välj ljudgrupper att fördela:"
 
-msgid "Select directory for export/import organ settings or combinations"
-msgstr ""
-"Välj katalog för export/import av orgelinställningar eller kombinationer"
+msgid "Select directory for export/import organ combinations"
+msgstr "Välj katalog för export/import av kombinationer"
+
+msgid "Select directory for export/import organ settings"
+msgstr "Välj katalog för export/import av orgelinställningar"
 
 msgid "Select directory for load new organ packages from"
 msgstr "Välj katalog att ladda orgelpaket från"
@@ -2962,11 +3096,35 @@ msgstr ""
 msgid "The combination file does not exactly match the current ODF."
 msgstr "Kombinationsfilen matchar inte aktuell ODF."
 
+#, c-format
+msgid "The file '%s' is not a GrandOrgue Combination file"
+msgstr "Filen '%s' är ingen kombinationsfil för GrandOrgue"
+
+#, c-format
+msgid ""
+"The following organ packages\n"
+"%s are in the Packages directory and will be registered automatically\n"
+"upon next GrandOrgue restart. Do you really want to unregister them?"
+msgstr ""
+"Följande orgelpaket\n"
+"%s finns i paketmappen och kommer att registreras automatiskt\n"
+"vid nästa GrandOrgue omstart. Vill du verkligen avregistrera dem?"
+
 msgid "The organ package has been registered"
 msgstr "Orgelpaketet har registrerats"
 
+msgid ""
+"The organ settings have been modified\n"
+"Do you want to save them?"
+msgstr ""
+"Orgelinställningarna har ändrats.\n"
+"Vill du spara ändringarna?"
+
 msgid "The regex does not match the physical device name"
 msgstr "Regex matchar inte fysiskt enhetsnamn"
+
+msgid "There are errors while loading the organ. See Log Messages."
+msgstr "Fel uppstod under laddningen av orgeln. Se loggmeddelandena."
 
 #, c-format
 msgid ""
@@ -2976,15 +3134,20 @@ msgstr ""
 "Denna kombinationsfil skapades ursprungligen för:\n"
 "%s"
 
+#, c-format
+msgid "This combination file '%s' was originally made for another organ '%s'"
+msgstr "Kombinationsfilen '%s' skapades ursprungligen för '%s'"
+
+#, c-format
 msgid ""
-"This combination file was originally made for another organ. Importing it "
-"can cause various problems. Should it really be imported?"
+"This combination file '%s' was originally made for another organ '%s'. "
+"Importing it can cause various problems. Should it really be imported?"
 msgstr ""
-"Kombinationsfilen skapades ursprungligen för en annan orgel. Att importera "
+"Kombinationsfilen '%s' skapades ursprungligen för orgel '%s'. Att importera "
 "den kan orsaka problem. Ska den verkligen importeras?"
 
 msgid "This feature is currently not supported."
-msgstr "Denna egenskap är för närvarande inte stödd."
+msgstr "Denna egenskap stöds ej för närvarande."
 
 msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
 msgstr "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
@@ -3020,15 +3183,6 @@ msgstr "Transponera -"
 msgid "Tremulant"
 msgstr "Tremulant"
 
-msgid "Tuning (Cent):"
-msgstr "Stämning (Cent):"
-
-msgid "Tuning and Voicing"
-msgstr "Stämning och intonation"
-
-msgid "Tuning is invalid"
-msgstr "Stämningangivelsen är ogiltig"
-
 msgid "Type"
 msgstr "Typ"
 
@@ -3039,6 +3193,14 @@ msgid "U.O."
 msgstr "U.O."
 
 #, c-format
+msgid "Unable to delete file %s"
+msgstr "Kunde ej ta bort filen %s"
+
+#, c-format
+msgid "Unable to load %s: %s"
+msgstr "Kunde ej ladda %s: %s"
+
+#, c-format
 msgid "Unable to open file %s for writing"
 msgstr "Kunde inte öppna fil %s för skrivning"
 
@@ -3047,15 +3209,30 @@ msgid "Unable to read '%s'"
 msgstr "Kunde ej läsa '%s'"
 
 #, c-format
+msgid "Unable to rename file %s to %s"
+msgstr "Kunde ej döpa om filen %s till %s"
+
+#, c-format
 msgid "Unexpected file in the cache directory: %s"
 msgstr "Ej förväntad fil i cachekatalogen: %s"
+
+#, c-format
+msgid "Unknown MIDI file type %d"
+msgstr "Okänd MIDI filtyp %d"
 
 #, c-format
 msgid "Unknown MIDI message %02X at %d"
 msgstr "Okänt MIDI meddelande %02X vid %d"
 
+#, c-format
+msgid "Unknown SetterElement in section %s"
+msgstr "Okänt SetterElement i avdelning %s"
+
 msgid "Unknown attributes"
 msgstr "Okända attribut"
+
+msgid "Unknown exception"
+msgstr "Okänt undantag"
 
 #, c-format
 msgid "Unknown extendend information %04x"
@@ -3064,14 +3241,6 @@ msgstr "Okänd utökad information %04x"
 #, c-format
 msgid "Unknown filetype %s"
 msgstr "Okänd filtyp %s"
-
-#, c-format
-msgid "Unknown MIDI file type %d"
-msgstr "Okänd MIDI filtyp %d"
-
-#, c-format
-msgid "Unknown SetterElement in section %s"
-msgstr "Okänt SetterElement i avdelning %s"
 
 msgid "Unsupported channel count"
 msgstr "Antalet kanaler stöds ej"
@@ -3181,6 +3350,14 @@ msgstr "Windows höger"
 
 msgid "Workload distribution:"
 msgstr "Belastningsfördelning:"
+
+#, c-format
+msgid "Wrong name \"%s\" instead of \"%s\" of the %s %s"
+msgstr "Fel namn \"%s\" istället för \"%s\" hos %s %s"
+
+#, c-format
+msgid "Wrong number %s of the %s \"%s\""
+msgstr "Fel nummer %s på %s \"%s\""
 
 msgid "X"
 msgstr "X"
@@ -3294,16 +3471,15 @@ msgstr "c#"
 msgid "capital"
 msgstr "kapitäl"
 
-#, c-format
-msgid "caught exception: %s\n"
-msgstr "fångade undantag: %s\n"
-
 msgid "control"
 msgstr "control"
 
 #, c-format
 msgid "control change channel: %d key: %d value: %d"
 msgstr "control change kanal %d nyckel: %d värde: %d"
+
+msgid "coupler"
+msgstr "koppel"
 
 msgid "create"
 msgstr "skapa"
@@ -3313,6 +3489,9 @@ msgstr "skapa ett orgelpaket"
 
 msgid "crescendo position"
 msgstr "crescendoposition"
+
+msgid "current file name"
+msgstr "nuvarande fil"
 
 msgid "d"
 msgstr "d"
@@ -3340,6 +3519,13 @@ msgstr "visar hjälp för kommandopropmptsparametrar"
 
 msgid "divide"
 msgstr "division"
+
+#, c-format
+msgid "divisional bank for %s"
+msgstr "divisional bank för %s"
+
+msgid "divisional coupler"
+msgstr "divisional koppel"
 
 msgid "down"
 msgstr "ner"
@@ -3568,10 +3754,11 @@ msgid "rank %s pipe %s: percussive sample with a release"
 msgstr "piprad %s pipa %s: perkussiv sampling med ett uppsläpp"
 
 #, c-format
-msgid "rank %s pipe %s: temperament would retune pipe by more than 1800 cent"
+msgid ""
+"rank %s pipe %s: temperament would retune pipe by %f - more than 1800 cent"
 msgstr ""
-"piprad %s pipa %s: temperatur kommer att ändra pipans tonhöjd med mer än "
-"1800 cent"
+"piprad %s pipa %s: temperatur kommer att ändra tonhöjd med %f - mer än 1800 "
+"cent"
 
 #, c-format
 msgid "rank %s pipe %s: temperament would retune pipe by more than 600 cent"
@@ -3618,8 +3805,14 @@ msgstr "ange det skapade orgelpaketets filnamn"
 msgid "specify input directory"
 msgstr "ange inmatningskatalog"
 
+msgid "stop"
+msgstr "registerandrag"
+
 msgid "subtract"
 msgstr "minus"
+
+msgid "switch"
+msgstr "omkoppling"
 
 #, c-format
 msgid "sysex Ahlborn-Galanti value: %d"
@@ -3675,6 +3868,9 @@ msgstr "titel"
 msgid "transpose"
 msgstr "transponera"
 
+msgid "tremulant"
+msgstr "tremulant"
+
 msgid "trigger"
 msgstr "utlös"
 
@@ -3703,6 +3899,9 @@ msgstr "}"
 #~ msgid " Out of memory loading"
 #~ msgstr "Slut på minne under inläsning"
 
+#~ msgid "&Export Settings/Combinations"
+#~ msgstr "&Exportera inställningar/kombinationer"
+
 #~ msgid "&Import Settings..."
 #~ msgstr "&Importera inställningar..."
 
@@ -3720,6 +3919,12 @@ msgstr "}"
 
 #~ msgid "&Settings..."
 #~ msgstr "Inställningar..."
+
+#~ msgid "'%s' is still used by the organ '%s'"
+#~ msgstr "'%s' används fortfarande av orgel '%s'"
+
+#~ msgid "'%s' is still used by the package '%s'"
+#~ msgstr "'%s' används fortfarande av paket '%s'"
 
 #~ msgid "*.organ"
 #~ msgstr "*.organ"
@@ -3839,6 +4044,9 @@ msgstr "}"
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr "Cache-fil hade dålig magi (förväntade %#.8x fann %#.8x)"
 
+#~ msgid "Cache load failure: %s"
+#~ msgstr "Laddning av cache misslyckades: %s"
+
 #~ msgid "Cache store:"
 #~ msgstr "Cache lagring:"
 
@@ -3899,11 +4107,11 @@ msgstr "}"
 #~ msgid "Failed to create IPC service."
 #~ msgstr "Misslyckades skapa IPC tjanst."
 
+#~ msgid "Failed to read file '%s'\n"
+#~ msgstr "Misslyckades att läsa filen '%s'\n"
+
 #~ msgid "File belongs to a different organ: %s"
 #~ msgstr "Filen hör till en annan orgel: %s"
-
-#~ msgid "Floating %d"
-#~ msgstr "Koppelmanual %d"
 
 #~ msgid "GrandOrgue Input"
 #~ msgstr "GrandOrgue inmatning"
@@ -3920,6 +4128,9 @@ msgstr "}"
 #~ msgid "Host API not found"
 #~ msgstr "Värd-API hittades ej"
 
+#~ msgid "ID"
+#~ msgstr "ID"
+
 #~ msgid "Illegal combination of I/O devices"
 #~ msgstr "Ogiltig kombination av I/O enheter"
 
@@ -3934,6 +4145,9 @@ msgstr "}"
 
 #~ msgid "Infinite recursive coupling detected!"
 #~ msgstr "Oändlig återkoppling upptäckt!"
+
+#~ msgid "Info"
+#~ msgstr "Info"
 
 #~ msgid "Input overflowed"
 #~ msgstr "Inmatningen flödade över"
@@ -3958,9 +4172,6 @@ msgstr "}"
 
 #~ msgid "Invalid host API"
 #~ msgstr "Felaktig värd API"
-
-#~ msgid "Invalid number of channels"
-#~ msgstr "Felaktigt antal kanaler"
 
 #~ msgid "Invalid stream pointer"
 #~ msgstr "Felaktig ström-pekare"
@@ -3989,6 +4200,9 @@ msgstr "}"
 #~ msgid "Loading %lu%%"
 #~ msgstr "Laddar %lu%%"
 
+#~ msgid "Loading file %s"
+#~ msgstr "Laddar fil %s"
+
 #~ msgid "MIDI Messages"
 #~ msgstr "MIDI-meddelanden"
 
@@ -4015,9 +4229,6 @@ msgstr "}"
 
 #~ msgid "Missing required group '/%s'"
 #~ msgstr "Saknar nödvändig grupp '/%s'"
-
-#~ msgid "My Organs"
-#~ msgstr "Orglar"
 
 #~ msgid ""
 #~ "No MIDI devices are selected for listening; neither MIDI input nor sound "
@@ -4065,6 +4276,9 @@ msgstr "}"
 #~ msgid "Realloc of non-top element failed"
 #~ msgstr "Återtilldelning av elemtentet misslyckades"
 
+#~ msgid "Registered organs"
+#~ msgstr "Registrerade orglar"
+
 #~ msgid "Release Concurrency Level:"
 #~ msgstr "Samtidighetsnivå på uppsläpp:"
 
@@ -4076,6 +4290,9 @@ msgstr "}"
 
 #~ msgid "Sample format not supported"
 #~ msgstr "Samplingsformated stöds ej"
+
+#~ msgid "Save"
+#~ msgstr "Spara"
 
 #~ msgid "Select directory for cache store"
 #~ msgstr "Välj katalog för lagring av cache"
@@ -4104,18 +4321,14 @@ msgstr "}"
 #~ msgid "Success"
 #~ msgstr "Lyckades"
 
-#~ msgid ""
-#~ "The organ settings have been modified. Do you want to save the changes?"
-#~ msgstr "Orgelinställningarna har ändrats. Vill du spara ändringarna?"
+#~ msgid "Tuning and Voicing"
+#~ msgstr "Stämning och intonation"
 
 #~ msgid "Unanticipated host error"
 #~ msgstr "Ej förutsett värd-fel"
 
 #~ msgid "Unknown"
 #~ msgstr "Okänd"
-
-#~ msgid "Unknown: "
-#~ msgstr "Okänd: "
 
 #~ msgid "Value too long: '/%s/%s': %s"
 #~ msgstr "Värde för stort: '/%s/%s': %s"
@@ -4134,6 +4347,9 @@ msgstr "}"
 
 #~ msgid "Windows WDM-KS"
 #~ msgstr "Windows WDM-KS"
+
+#~ msgid "caught exception: %s\n"
+#~ msgstr "fångade undantag: %s\n"
 
 #~ msgid "g_sound has not been allocated"
 #~ msgstr "g_sound har inte allokerats"
