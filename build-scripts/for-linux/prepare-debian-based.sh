@@ -73,3 +73,9 @@ if [ -f /var/lib/dpkg/info/libgcc-s1:$TARGET_ARCH.symbols ]; then
   # overriding does not work while the symbol file exists
   sudo mv /var/lib/dpkg/info/libgcc-s1:$TARGET_ARCH.symbols /var/lib/dpkg/info/libgcc-s1:$TARGET_ARCH.symbols.old
 fi
+
+# some ppas for wxWidgets give very high dependency version that prevents
+# installing on other systems. Remove the version
+if dpkg -s libwxgtk3.2-dev && ! grep -q libwx /etc/dpkg/shlibs.override; then
+  cut -d " " -f 1-3 /var/lib/dpkg/info/libwx*3.2*.shlibs | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
+fi
