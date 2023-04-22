@@ -3,7 +3,7 @@
 set -e
 
 DIR=`dirname $0`
-$DIR/../for-linux/prepare-debian-based.sh
+$DIR/../for-linux/prepare-debian-based.sh "" amd64
 
 # linuxdeploy, linuxdeploy-plugin-gtk and appimagetool must be downloaded
 sudo wget -P /usr/local/bin https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh

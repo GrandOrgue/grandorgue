@@ -1,3 +1,4 @@
+- Fixed uncompatibility with recent linux distros. Use grandorgue-wx32 on new linux distros (where wxWidgets 3.0 is not available) https://github.com/GrandOrgue/grandorgue/issues/1480
 - Added support of negative y-axis adjustment of manual keys https://github.com/GrandOrgue/grandorgue/issues/1485
 - Fixed opening an organ with more than 50 windchest groups https://github.com/GrandOrgue/grandorgue/issues/1484
 # 3.11.0 (2023-04-17)

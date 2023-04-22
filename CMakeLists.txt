@@ -214,7 +214,17 @@ add_subdirectory(resources)
 
 # packaging
 
-set(CPACK_PACKAGE_NAME "grandorgue")
+# deal with possible package names among grandorgue, grandorgue-wx30
+set(BASE_PACKAGE_NAME "grandorgue")
+
+if("${CMAKE_PACKAGE_SUFFIX}" STREQUAL "wx30")
+  set(CPACK_PACKAGE_NAME "${BASE_PACKAGE_NAME}-wx30")
+  set(OTHER_PACKAGE_NAME "${BASE_PACKAGE_NAME}")
+else()
+  set(CPACK_PACKAGE_NAME "${BASE_PACKAGE_NAME}")
+  set(OTHER_PACKAGE_NAME "${BASE_PACKAGE_NAME}-wx30")
+endif()
+
 set(CPACK_PACKAGE_VENDOR "Our Organ")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GrandOrgue - OpenSource Virtual Pipe Organ Software")
 set(
@@ -330,7 +340,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_DEMO_FILE_NAME RPM-DEFAULT)
   if(NOT GO_SEPARATE_LINUX_PACKAGES)
     # For automatic removal of previously installed suppackages
-    set(CPACK_RPM_PACKAGE_OBSOLETES "grandorgue-resources grandorgue-demo")
+    set(CPACK_RPM_PACKAGE_OBSOLETES "grandorgue-resources grandorgue-demo ${OTHER_PACKAGE_NAME}")
   endif()
 
   # for source rpms
@@ -349,12 +359,12 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
   set(CPACK_DEBIAN_PACKAGE_SECTION sound)
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-  set(CPACK_DEBIAN_UNSPECIFIED_PACKAGE_RECOMMENDS "grandorgue-demo, wx3.0-i18n")
+  set(CPACK_DEBIAN_UNSPECIFIED_PACKAGE_RECOMMENDS "grandorgue-demo")
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   set(CPACK_DEBIAN_PACKAGE_SOURCE "${CPACK_DEBIAN_UNSPECIFIED_PACKAGE_NAME}")
   if(NOT GO_SEPARATE_LINUX_PACKAGES)
     # For automatic removal of previously installed suppackages
-    set(CPACK_DEBIAN_PACKAGE_REPLACES "grandorgue-resources, grandorgue-demo")
+    set(CPACK_DEBIAN_PACKAGE_REPLACES "grandorgue-resources, grandorgue-demo, ${OTHER_PACKAGE_NAME}")
   endif()
 endif()
 
@@ -366,5 +376,6 @@ message(STATUS "  Project                     : ${PROJECT_NAME}")
 message(STATUS "  Description                 : ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 message(STATUS "  Version                     : ${VERSION}")
 message(STATUS "  Build                       : ${CPACK_PACKAGE_RELEASE}")
+message(STATUS "  Package name                : ${CPACK_PACKAGE_NAME}")
 message(STATUS "============================================================================")
 message(STATUS " ")

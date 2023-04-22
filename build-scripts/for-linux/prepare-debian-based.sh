@@ -1,13 +1,20 @@
 #!/bin/bash
 
-#rem $1 - target architecture: ex arm64, amd64, armhf
+# $1 - wxWidgets package version: empty - libwxgtk3.2-dev or wx30 - libwxgtk3.0-gtk3-dev
+# $2 - target architecture: ex arm64, amd64, armhf
 
 set -e
 
 DIR=`dirname $0`
 
+WX_PKG_NAME=libwxgtk3.2-dev
+[[ "$1" == "wx30" ]] && WX_PKG_NAME=libwxgtk3.0-gtk3-dev
+
 CURRENT_ARCH=$(dpkg --print-architecture)
-TARGET_ARCH="${1:-$CURRENT_ARCH}"
+TARGET_ARCH="${2:-$CURRENT_ARCH}"
+
+OS_DISTR=$(awk -F= '$1=="ID" {print $2;}' /etc/os-release)
+[[ "$OS_DISTR" == "ubuntu" ]] && $DIR/prepare-ubuntu-wx-repo.bash $WX_PKG_NAME
 
 if [[ "$TARGET_ARCH" == "$CURRENT_ARCH" ]]; then
   GCC_SUFFIX=""
@@ -15,7 +22,6 @@ if [[ "$TARGET_ARCH" == "$CURRENT_ARCH" ]]; then
 else
   sudo dpkg --add-architecture "$TARGET_ARCH"
 
-  OS_DISTR=$(awk -F= '$1=="ID" {print $2;}'  /etc/os-release)
   # ubuntu has different urls for different architectures
   [[ "$OS_DISTR" == "ubuntu" ]] && $DIR/prepare-ubuntu-multiarch-repos.sh
   sudo apt update
@@ -30,6 +36,7 @@ fi
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cmake \
   docbook-xsl \
+  dpkg-dev \
   file \
   gettext \
   imagemagick \
@@ -44,7 +51,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libjack-dev:$TARGET_ARCH \
   libudev-dev:$TARGET_ARCH \
   libwavpack-dev:$TARGET_ARCH \
-  libwxgtk3.0-gtk3-dev:$TARGET_ARCH \
+  ${WX_PKG_NAME}:$TARGET_ARCH \
   libyaml-cpp-dev:$TARGET_ARCH \
   zlib1g-dev:$TARGET_ARCH
 
