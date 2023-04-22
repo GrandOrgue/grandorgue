@@ -1,3 +1,4 @@
+- Fixed opening an organ with more than 50 windchest groups https://github.com/GrandOrgue/grandorgue/issues/1484
 # 3.11.0 (2023-04-17)
 - Added capability of navigating over, loading and saving the YAML combinations files on the Combination Setter panel https://github.com/GrandOrgue/grandorgue/issues/1196
 - Added capability of exporting and importing combinations in yaml format files https://github.com/GrandOrgue/grandorgue/issues/1195
