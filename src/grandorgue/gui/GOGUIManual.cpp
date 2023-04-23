@@ -231,7 +231,8 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
     wxString off_mask_file, on_mask_file;
     wxString on_file, off_file;
     wxString bmp_type;
-    unsigned key_width, key_yoffset;
+    unsigned key_width;
+    int key_yoffset;
     int key_offset;
     wxString base = keyNames[key_nb % 12];
     if (!i)
@@ -316,7 +317,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
     key_offset = cfg.ReadInteger(
       ODFSetting, group, wxT("Offset_") + base, -500, 500, false, key_offset);
     key_yoffset = cfg.ReadInteger(
-      ODFSetting, group, wxT("YOffset_") + base, 0, 500, false, key_yoffset);
+      ODFSetting, group, wxT("YOffset_") + base, -500, 500, false, key_yoffset);
 
     key_width = cfg.ReadInteger(
       ODFSetting,
@@ -338,7 +339,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       ODFSetting,
       group,
       wxString::Format(wxT("Key%03dYOffset"), i + 1),
-      0,
+      -500,
       500,
       false,
       key_yoffset);
@@ -348,7 +349,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       y + key_yoffset,
       m_Keys[i].OnBitmap.GetWidth(),
       m_Keys[i].OnBitmap.GetHeight());
-    if (x + key_offset < 0)
+    if (x + key_offset < 0 || y + key_yoffset < 0)
       wxLogWarning(
         _("Manual key %d outside of the bounding box"), m_Keys[i].MidiNumber);
 

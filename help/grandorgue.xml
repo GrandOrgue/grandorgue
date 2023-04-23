@@ -8695,7 +8695,7 @@ sharp key overlapped with the previous key.
           <term>YOffset_<emphasis>KEYTYPE</emphasis></term>
           <listitem>
             <para>
-(integer 0 - 500, default: 0) This value is can be used to adjust the
+(integer -500 - 500, default: 0) This value is can be used to adjust the
 Y coordinate of the current key.
      </para>
           </listitem>
@@ -8761,7 +8761,7 @@ sharp key overlapped with the previous 999 key.
           <term>Key999YOffset</term>
           <listitem>
             <para>
-(integer 0 - 500, default: corresponding
+(integer -500 - 500, default: corresponding
 YOffset_<emphasis>KEYTYPE</emphasis>) This value is can be used to
 adjust the Y coordinate of the 999 key.
      </para>
