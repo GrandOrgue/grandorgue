@@ -15,17 +15,17 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiMap;
-class GOOrganController;
+class GOMidiSendProxy;
 struct IniFileEnumEntry;
 
 class GOMidiSender : public GOMidiSenderEventPatternList {
 private:
   static const struct IniFileEnumEntry m_MidiTypes[];
-  GOOrganController *m_OrganController;
+  GOMidiSendProxy &r_proxy;
   int m_ElementID;
 
 public:
-  GOMidiSender(GOOrganController *organController, GOMidiSenderType type);
+  GOMidiSender(GOMidiSendProxy &proxy, GOMidiSenderType type);
   ~GOMidiSender();
 
   void SetElementID(int id);

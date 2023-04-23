@@ -987,16 +987,6 @@ GOConfig &GOOrganController::GetSettings() { return m_config; }
 
 GOBitmapCache &GOOrganController::GetBitmapCache() { return m_bitmaps; }
 
-void GOOrganController::SendMidiMessage(GOMidiEvent &e) {
-  if (m_midi)
-    m_midi->Send(e);
-}
-
-void GOOrganController::SendMidiRecorderMessage(GOMidiEvent &e) {
-  if (m_MidiRecorder)
-    m_MidiRecorder->SendMidiRecorderMessage(e);
-}
-
 GOMidi *GOOrganController::GetMidi() { return m_midi; }
 
 void GOOrganController::LoadMIDIFile(wxString const &filename) {
@@ -1013,6 +1003,7 @@ void GOOrganController::Abort() {
   m_MidiRecorder->StopRecording();
   m_AudioRecorder->StopRecording();
   m_AudioRecorder->SetAudioRecorder(NULL);
+  GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;
 }
 
@@ -1036,6 +1027,7 @@ void GOOrganController::PreparePlayback(
   PreconfigRecorder();
 
   m_MidiSamplesetMatch.clear();
+  GOOrganModel::SetMidi(midi, m_MidiRecorder);
   GOEventDistributor::PreparePlayback(engine);
 
   m_setter->UpdateModified(m_OrganModified);

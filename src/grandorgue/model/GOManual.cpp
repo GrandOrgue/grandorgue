@@ -23,8 +23,8 @@
 GOManual::GOManual(GOOrganController *organController)
   : m_group(wxT("---")),
     m_midi(*organController, MIDI_RECV_MANUAL),
-    m_sender(organController, MIDI_SEND_MANUAL),
-    m_division(organController, MIDI_SEND_MANUAL),
+    m_sender(*organController, MIDI_SEND_MANUAL),
+    m_division(*organController, MIDI_SEND_MANUAL),
     m_OrganController(organController),
     m_InputCouplers(),
     m_KeyVelocity(0),
