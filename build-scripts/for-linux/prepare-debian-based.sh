@@ -1,14 +1,23 @@
 #!/bin/bash
 
-# $1 - wxWidgets package version: empty - libwxgtk3.2-dev or wx30 - libwxgtk3.0-gtk3-dev
+# $1 - wxWidgets package version: empty - libwxgtk3.0-gtk3-dev or wx32 - libwxgtk3.2-dev
 # $2 - target architecture: ex arm64, amd64, armhf
 
 set -e
 
 DIR=`dirname $0`
 
-WX_PKG_NAME=libwxgtk3.2-dev
-[[ "$1" == "wx30" ]] && WX_PKG_NAME=libwxgtk3.0-gtk3-dev
+# calculate wx package name
+case "$1" in
+wx32)
+  WX_PKG_NAME=libwxgtk3.2-dev
+  ;;
+wx30)
+  WX_PKG_NAME=libwxgtk3.0-gtk3-dev
+  ;;
+*)
+  WX_PKG_NAME=libwxgtk3.0-gtk3-dev
+esac
 
 CURRENT_ARCH=$(dpkg --print-architecture)
 TARGET_ARCH="${2:-$CURRENT_ARCH}"

@@ -84,7 +84,7 @@ jobs:
             for: linux
             prepare: "debian-based"
             build_on: linux
-            pkg_suffix: wx30
+            pkg_suffix: wx32
 
           - run_on: ubuntu-20.04
             for: appimage-x86_64
@@ -100,7 +100,7 @@ jobs:
             for: linux-armhf
             prepare: "debian-based"
             build_on: linux
-            pkg_suffix: wx30
+            pkg_suffix: wx32
 
           - run_on: ubuntu-20.04
             for: linux-aarch64
@@ -111,7 +111,7 @@ jobs:
             for: linux-aarch64
             prepare: "debian-based"
             build_on: linux
-            pkg_suffix: wx30
+            pkg_suffix: wx32
 
           - run_on: macos-11
             for: osx
