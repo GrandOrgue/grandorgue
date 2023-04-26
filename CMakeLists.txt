@@ -217,13 +217,16 @@ add_subdirectory(resources)
 # deal with possible package names among grandorgue, grandorgue-wx30
 set(BASE_PACKAGE_NAME "grandorgue")
 
-set(POSSIBLE_PACKAGE_NAMES "${BASE_PACKAGE_NAME}" "${BASE_PACKAGE_NAME}-wx30" "${BASE_PACKAGE_NAME}-wx32")
+set(OTHER_PACKAGE_NAMES "${BASE_PACKAGE_NAME}" "${BASE_PACKAGE_NAME}-wx30" "${BASE_PACKAGE_NAME}-wx32")
 set(CPACK_PACKAGE_NAME "${BASE_PACKAGE_NAME}")
 if(CMAKE_PACKAGE_SUFFIX)
   set(CPACK_PACKAGE_NAME "${BASE_PACKAGE_NAME}-${CMAKE_PACKAGE_SUFFIX}")
 endif()
-list(REMOVE_ITEM POSSIBLE_PACKAGE_NAMES "${CPACK_PACKAGE_NAME}")
-set(OTHER_PACKAGE_NAME "${POSSIBLE_PACKAGE_NAMES}")
+list(REMOVE_ITEM OTHER_PACKAGE_NAMES "${CPACK_PACKAGE_NAME}")
+if(NOT GO_SEPARATE_LINUX_PACKAGES)
+  # For automatic removal of previously installed subpackages
+  list(APPEND OTHER_PACKAGE_NAMES "${BASE_PACKAGE_NAME}-resources" "${BASE_PACKAGE_NAME}-demo")
+endif()
 
 set(CPACK_PACKAGE_VENDOR "Our Organ")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GrandOrgue - OpenSource Virtual Pipe Organ Software")
@@ -338,10 +341,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_DEMO_PACKAGE_SUMMARY "${CPACK_COMPONENT_DEMO_DISPLAY_NAME}")
   set(CPACK_RPM_DEMO_PACKAGE_ARCHITECTURE noarch)
   set(CPACK_RPM_DEMO_FILE_NAME RPM-DEFAULT)
-  if(NOT GO_SEPARATE_LINUX_PACKAGES)
-    # For automatic removal of previously installed suppackages
-    set(CPACK_RPM_PACKAGE_OBSOLETES "grandorgue-resources grandorgue-demo ${OTHER_PACKAGE_NAME}")
-  endif()
+  string (REPLACE ";" " " CPACK_RPM_PACKAGE_OBSOLETES "${OTHER_PACKAGE_NAMES}")
 
   # for source rpms
   set(CPACK_RPM_BUILDREQUIRES "pkgconfig(alsa), gcc-c++, jack-audio-connection-kit-devel, cmake, wxGTK3-devel, pkgconfig(fftw3f), pkgconfig(libudev), pkgconfig(wavpack), pkgconfig(zlib), libxslt, zip, po4a")
@@ -362,10 +362,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_DEBIAN_UNSPECIFIED_PACKAGE_RECOMMENDS "grandorgue-demo")
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   set(CPACK_DEBIAN_PACKAGE_SOURCE "${CPACK_DEBIAN_UNSPECIFIED_PACKAGE_NAME}")
-  if(NOT GO_SEPARATE_LINUX_PACKAGES)
-    # For automatic removal of previously installed suppackages
-    set(CPACK_DEBIAN_PACKAGE_REPLACES "grandorgue-resources, grandorgue-demo, ${OTHER_PACKAGE_NAME}")
-  endif()
+  string (REPLACE ";" ", " CPACK_DEBIAN_PACKAGE_REPLACES "${OTHER_PACKAGE_NAMES}")
 endif()
 
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CPACK_SYSTEM_NAME}.${CMAKE_SYSTEM_PROCESSOR}")
