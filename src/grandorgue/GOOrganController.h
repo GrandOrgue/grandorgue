@@ -80,11 +80,6 @@ private:
   bool m_b_customized;
   float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
-  bool m_DivisionalsStoreIntermanualCouplers;
-  bool m_DivisionalsStoreIntramanualCouplers;
-  bool m_DivisionalsStoreTremulants;
-  bool m_GeneralsStoreDivisionalCouplers;
-  bool m_CombinationsStoreNonDisplayedDrawstops;
 
   wxString m_ChurchName;
   wxString m_ChurchAddress;
@@ -199,13 +194,6 @@ public:
   GOMainWindowData *GetMainWindowData();
 
   void LoadMIDIFile(const wxString &filename);
-
-  /* ODF general properties */
-  bool DivisionalsStoreIntermanualCouplers();
-  bool DivisionalsStoreIntramanualCouplers();
-  bool DivisionalsStoreTremulants();
-  bool CombinationsStoreNonDisplayedDrawstops();
-  bool GeneralsStoreDivisionalCouplers();
 
   void SetVolume(int volume);
   int GetVolume();

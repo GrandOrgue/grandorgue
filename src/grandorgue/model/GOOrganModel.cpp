@@ -23,6 +23,11 @@
 
 GOOrganModel::GOOrganModel(const GOConfig &config)
   : m_config(config),
+    m_DivisionalsStoreIntermanualCouplers(false),
+    m_DivisionalsStoreIntramanualCouplers(false),
+    m_DivisionalsStoreTremulants(false),
+    m_GeneralsStoreDivisionalCouplers(false),
+    m_CombinationsStoreNonDisplayedDrawstops(false),
     m_RootPipeConfigNode(nullptr, this, nullptr),
     m_OrganModelModified(false),
     m_FirstManual(0),
@@ -34,8 +39,23 @@ GOOrganModel::~GOOrganModel() {}
 void GOOrganModel::Load(
   GOConfigReader &cfg, GOOrganController *organController) {
   wxString group = wxT("Organ");
-  unsigned NumberOfWindchestGroups = cfg.ReadInteger(
-    ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 999);
+  m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(
+    ODFSetting, group, wxT("DivisionalsStoreIntermanualCouplers"));
+  m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(
+    ODFSetting, group, wxT("DivisionalsStoreIntramanualCouplers"));
+  m_DivisionalsStoreTremulants
+    = cfg.ReadBoolean(ODFSetting, group, wxT("DivisionalsStoreTremulants"));
+  m_GeneralsStoreDivisionalCouplers = cfg.ReadBoolean(
+    ODFSetting, group, wxT("GeneralsStoreDivisionalCouplers"));
+  m_CombinationsStoreNonDisplayedDrawstops = cfg.ReadBoolean(
+    ODFSetting,
+    group,
+    wxT("CombinationsStoreNonDisplayedDrawstops"),
+    false,
+    true);
+
+  unsigned NumberOfWindchestGroups
+    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 999);
 
   m_RootPipeConfigNode.Load(cfg, group, wxEmptyString);
   m_windchests.resize(0);
