@@ -405,7 +405,7 @@ void GODivisionalSetter::SwitchBankToNext(unsigned manualN) {
   }
 }
 
-void GODivisionalSetter::ButtonStateChanged(int id) {
+void GODivisionalSetter::ButtonStateChanged(int id, bool newState) {
   // dispatch button press to the actual button
 
   int manualN = id / N_BUTTONS;

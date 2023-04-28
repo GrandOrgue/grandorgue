@@ -21,7 +21,7 @@ GOCallbackButtonControl::GOCallbackButtonControl(
 
 void GOCallbackButtonControl::Push() {
   if (m_Pushbutton)
-    m_callback->ButtonStateChanged(this);
+    m_callback->ButtonStateChanged(this, true);
   else
     GOButtonControl::Push();
 }
@@ -29,7 +29,7 @@ void GOCallbackButtonControl::Push() {
 void GOCallbackButtonControl::Set(bool on) {
   if (IsEngaged() == on)
     return;
-  m_callback->ButtonStateChanged(this);
+  m_callback->ButtonStateChanged(this, on);
   Display(on);
 }
 

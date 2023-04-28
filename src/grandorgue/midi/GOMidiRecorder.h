@@ -53,7 +53,7 @@ private:
   const struct GOElementCreator::ButtonDefinitionEntry *
   GetButtonDefinitionList();
 
-  void ButtonStateChanged(int id);
+  void ButtonStateChanged(int id, bool newState) override;
 
   void UpdateDisplay();
   void HandleTimer();

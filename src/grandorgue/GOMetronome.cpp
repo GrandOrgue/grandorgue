@@ -132,7 +132,7 @@ void GOMetronome::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, wxT("MeasureLength"), m_MeasureLength);
 }
 
-void GOMetronome::ButtonStateChanged(int id) {
+void GOMetronome::ButtonStateChanged(int id, bool newState) {
   switch (id) {
   case ID_METRONOME_ON:
     if (m_Running)

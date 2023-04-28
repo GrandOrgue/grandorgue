@@ -33,7 +33,7 @@ protected:
   ptr_vector<GOButtonControl> m_buttons;
 
   virtual const struct ButtonDefinitionEntry *GetButtonDefinitionList() = 0;
-  virtual void ButtonStateChanged(int id) = 0;
+  virtual void ButtonStateChanged(int id, bool newState) = 0;
   void CreateButtons(GOOrganController *organController);
 
 public:
@@ -48,7 +48,7 @@ public:
   virtual GOButtonControl *GetButtonControl(
     const wxString &name, bool is_panel);
 
-  void ButtonStateChanged(GOButtonControl *button);
+  void ButtonStateChanged(GOButtonControl *button, bool newState) override;
 };
 
 #endif
