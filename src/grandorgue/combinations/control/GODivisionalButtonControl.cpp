@@ -20,7 +20,7 @@ GODivisionalButtonControl::GODivisionalButtonControl(
   bool isSetter)
   : GOPushbuttonControl(*organController),
     r_setter(*organController->GetSetter()),
-    m_combination(organController, divisionalTemplate, isSetter) {}
+    m_combination(*organController, divisionalTemplate, isSetter) {}
 
 wxString GODivisionalButtonControl::GetMidiType() { return _("Divisional"); };
 

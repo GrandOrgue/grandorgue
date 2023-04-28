@@ -240,9 +240,9 @@ void GODivisionalCombination::FromYamlMap(const YAML::Node &yamlMap) {
 }
 
 GODivisionalCombination *GODivisionalCombination::LoadFrom(
-  GOOrganController *organController,
+  GOOrganModel &organModel,
   GOConfigReader &cfg,
-  GOCombinationDefinition &divisionalTemplate,
+  const GOCombinationDefinition &cmbDef,
   const wxString &group,
   const wxString &readGroup,
   int manualNumber,
@@ -252,8 +252,7 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
   bool isCmbOnReadGroup = !readGroup.IsEmpty() && isCmbOnFile(cfg, readGroup);
 
   if (isCmbOnGroup || isCmbOnReadGroup) {
-    pCmb
-      = new GODivisionalCombination(organController, divisionalTemplate, false);
+    pCmb = new GODivisionalCombination(organModel, cmbDef, false);
     pCmb->Load(
       cfg,
       isCmbOnReadGroup ? readGroup : group,
