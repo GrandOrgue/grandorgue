@@ -307,7 +307,15 @@ void GOCombination::FromYaml(const YAML::Node &yamlNode) {
       FromYamlMap(yamlNode);
       // clear all non mentioned elements. Otherwise they won't be disabled when
       // this combination is switched on
-      std::replace(m_State.begin(), m_State.end(), -1, 0);
+
+      for (unsigned l = r_ElementDefinitions.size(), i = 0; i < l; i++) {
+        auto &state = m_State[i];
+
+        if (state < 0 && r_ElementDefinitions[i].store_unconditional)
+          state = 0;
+        // else the element is not visible and it shouldn't be touched by the
+        // combination
+      }
     }
   }
 }
