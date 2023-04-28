@@ -59,6 +59,8 @@ public:
   GOCombinationDefinition(GOOrganModel &organModel);
   ~GOCombinationDefinition();
 
+  GOOrganModel &GetOrganModel() { return r_OrganModel; }
+
   void InitGeneral();
   void InitDivisional(unsigned manual_number);
 

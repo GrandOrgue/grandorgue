@@ -19,7 +19,7 @@ class GOSetterState;
 
 class GODivisionalCombination : public GOCombination {
 protected:
-  GOOrganController *m_OrganController;
+  GOOrganModel *r_OrganModel;
   unsigned m_odfManualNumber;
   int m_DivisionalNumber;
   bool m_IsSetter;

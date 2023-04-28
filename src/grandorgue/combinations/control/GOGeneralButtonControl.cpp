@@ -19,7 +19,7 @@ GOGeneralButtonControl::GOGeneralButtonControl(
   bool is_setter)
   : GOPushbuttonControl(*organController),
     r_setter(*organController->GetSetter()),
-    m_combination(general_template, organController, is_setter) {}
+    m_combination(*organController, general_template, is_setter) {}
 
 void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
   m_combination.Load(cfg, group);
