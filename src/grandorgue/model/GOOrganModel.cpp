@@ -54,8 +54,8 @@ void GOOrganModel::Load(
     false,
     true);
 
-  unsigned NumberOfWindchestGroups = cfg.ReadInteger(
-    ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 999);
+  unsigned NumberOfWindchestGroups
+    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfWindchestGroups"), 1, 999);
 
   m_RootPipeConfigNode.Load(cfg, group, wxEmptyString);
   m_windchests.resize(0);
