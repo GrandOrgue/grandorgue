@@ -7,8 +7,6 @@
 
 #include "GOSetter.h"
 
-#include <stdio.h>
-
 #include <wx/app.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
@@ -707,11 +705,6 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
     break;
   case ID_SETTER_SET:
     m_state.m_IsActive = newState;
-
-    printf(
-      "GOSetter::ButtonStateChanged: %s\n",
-      m_state.m_IsActive ? "true" : "false");
-
     wxTheApp->GetTopWindow()->UpdateWindowUI();
     break;
   case ID_SETTER_M1:
