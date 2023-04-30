@@ -25,7 +25,7 @@ GOCoupler::GOCoupler(GOOrganController *organController, unsigned sourceManual)
     m_CoupleToSubsequentDownwardIntramanualCouplers(false),
     m_CouplerType(COUPLER_NORMAL),
     m_SourceManual(sourceManual),
-    m_CouplerID(0),
+    m_CouplerIndexInDest(0),
     m_DestinationManual(0),
     m_DestinationKeyshift(0),
     m_Keyshift(0),
@@ -92,8 +92,8 @@ void GOCoupler::Init(
   m_NumberOfKeys = 127;
 
   if (!m_UnisonOff)
-    m_CouplerID = m_OrganController->GetManual(m_DestinationManual)
-                    ->RegisterCoupler(this);
+    m_CouplerIndexInDest = m_OrganController->GetManual(m_DestinationManual)
+                             ->RegisterCoupler(this);
 }
 
 void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
@@ -241,8 +241,8 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
   GODrawstop::Load(cfg, group);
 
   if (!m_UnisonOff)
-    m_CouplerID = m_OrganController->GetManual(m_DestinationManual)
-                    ->RegisterCoupler(this);
+    m_CouplerIndexInDest = m_OrganController->GetManual(m_DestinationManual)
+                             ->RegisterCoupler(this);
 }
 
 void GOCoupler::SetupCombinationState() {
@@ -273,7 +273,7 @@ void GOCoupler::SetOut(int noteNumber, unsigned velocity) {
     newstate--;
   GOManual *dest = m_OrganController->GetManual(m_DestinationManual);
   m_OutVelocity[note] = newstate;
-  dest->SetKey(note, m_OutVelocity[note], this, m_CouplerID);
+  dest->SetKey(note, m_OutVelocity[note], this, m_CouplerIndexInDest);
 }
 
 unsigned GOCoupler::GetInternalState(int noteNumber) {
@@ -371,7 +371,7 @@ void GOCoupler::ChangeState(bool on) {
       newstate--;
     if (m_OutVelocity[i] != newstate) {
       m_OutVelocity[i] = newstate;
-      dest->SetKey(i, m_OutVelocity[i], this, m_CouplerID);
+      dest->SetKey(i, m_OutVelocity[i], this, m_CouplerIndexInDest);
     }
   }
 }

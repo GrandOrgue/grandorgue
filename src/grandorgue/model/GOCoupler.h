@@ -31,7 +31,7 @@ private:
   bool m_CoupleToSubsequentDownwardIntramanualCouplers;
   GOCouplerType m_CouplerType;
   unsigned m_SourceManual;
-  unsigned m_CouplerID;
+  unsigned m_CouplerIndexInDest;
   unsigned m_DestinationManual;
   int m_DestinationKeyshift;
   int m_Keyshift;
