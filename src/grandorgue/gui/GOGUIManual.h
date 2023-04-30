@@ -30,6 +30,7 @@ private:
   GOManual *m_manual;
   unsigned m_ManualNumber;
   std::vector<KeyInfo> m_Keys;
+  wxPoint m_LeftTop;
 
 public:
   GOGUIManual(GOGUIPanel *panel, GOManual *manual, unsigned manual_number);

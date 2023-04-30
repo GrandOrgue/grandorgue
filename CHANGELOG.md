@@ -1,3 +1,4 @@
+- Added support of negative y-axis adjustment of manual keys https://github.com/GrandOrgue/grandorgue/issues/1485
 - Fixed opening an organ with more than 50 windchest groups https://github.com/GrandOrgue/grandorgue/issues/1484
 # 3.11.0 (2023-04-17)
 - Added capability of navigating over, loading and saving the YAML combinations files on the Combination Setter panel https://github.com/GrandOrgue/grandorgue/issues/1196

@@ -145,7 +145,8 @@ void GOGUIManual::Init(GOConfigReader &cfg, wxString group) {
     x += key_width;
   }
 
-  m_BoundingRect = wxRect(-1, -1, width + 1, height + 1);
+  m_BoundingRect = wxRect(0, 0, width + 1, height + 1);
+  m_LeftTop = wxPoint(-1, -1);
 }
 
 void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
@@ -182,9 +183,12 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
     false,
     m_manual->GetFirstAccessibleKeyMIDINoteNumber());
 
-  unsigned x = 0, y = 0;
-  int width = 0;
-  int height = 1;
+  int x = 0;
+  int y = 0;
+  int top = 0;
+  int left = 0;
+  int right = 0;
+  int bottom = 1;
 
   m_Keys.resize(cfg.ReadInteger(
     ODFSetting,
@@ -231,7 +235,8 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
     wxString off_mask_file, on_mask_file;
     wxString on_file, off_file;
     wxString bmp_type;
-    unsigned key_width, key_yoffset;
+    unsigned key_width;
+    int key_yoffset;
     int key_offset;
     wxString base = keyNames[key_nb % 12];
     if (!i)
@@ -316,7 +321,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
     key_offset = cfg.ReadInteger(
       ODFSetting, group, wxT("Offset_") + base, -500, 500, false, key_offset);
     key_yoffset = cfg.ReadInteger(
-      ODFSetting, group, wxT("YOffset_") + base, 0, 500, false, key_yoffset);
+      ODFSetting, group, wxT("YOffset_") + base, -500, 500, false, key_yoffset);
 
     key_width = cfg.ReadInteger(
       ODFSetting,
@@ -338,26 +343,25 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       ODFSetting,
       group,
       wxString::Format(wxT("Key%03dYOffset"), i + 1),
-      0,
+      -500,
       500,
       false,
       key_yoffset);
 
-    m_Keys[i].Rect = wxRect(
+    wxRect &keyRect = m_Keys[i].Rect;
+
+    keyRect = wxRect(
       x + key_offset,
       y + key_yoffset,
       m_Keys[i].OnBitmap.GetWidth(),
       m_Keys[i].OnBitmap.GetHeight());
-    if (x + key_offset < 0)
-      wxLogWarning(
-        _("Manual key %d outside of the bounding box"), m_Keys[i].MidiNumber);
 
     unsigned mouse_x = cfg.ReadInteger(
       ODFSetting,
       group,
       wxString::Format(wxT("Key%03dMouseRectLeft"), i + 1),
       0,
-      m_Keys[i].Rect.GetWidth() - 1,
+      keyRect.GetWidth() - 1,
       false,
       0);
     unsigned mouse_y = cfg.ReadInteger(
@@ -365,7 +369,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxString::Format(wxT("Key%03dMouseRectTop"), i + 1),
       0,
-      m_Keys[i].Rect.GetHeight() - 1,
+      keyRect.GetHeight() - 1,
       false,
       0);
     unsigned mouse_w = cfg.ReadInteger(
@@ -373,61 +377,66 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxString::Format(wxT("Key%03dMouseRectWidth"), i + 1),
       1,
-      m_Keys[i].Rect.GetWidth() - mouse_x,
+      keyRect.GetWidth() - mouse_x,
       false,
-      m_Keys[i].Rect.GetWidth() - mouse_x);
+      keyRect.GetWidth() - mouse_x);
     unsigned mouse_h = cfg.ReadInteger(
       ODFSetting,
       group,
       wxString::Format(wxT("Key%03dMouseRectHeight"), i + 1),
       1,
-      m_Keys[i].Rect.GetHeight() - mouse_y,
+      keyRect.GetHeight() - mouse_y,
       false,
-      m_Keys[i].Rect.GetHeight() - mouse_y);
+      keyRect.GetHeight() - mouse_y);
     m_Keys[i].MouseRect = wxRect(
-      m_Keys[i].Rect.GetX() + mouse_x,
-      m_Keys[i].Rect.GetY() + mouse_y,
-      mouse_w,
-      mouse_h);
+      keyRect.GetX() + mouse_x, keyRect.GetY() + mouse_y, mouse_w, mouse_h);
 
-    if (height < m_Keys[i].Rect.GetBottom())
-      height = m_Keys[i].Rect.GetBottom();
-    if (width < m_Keys[i].Rect.GetRight())
-      width = m_Keys[i].Rect.GetRight();
+    if (top > keyRect.GetTop())
+      top = keyRect.GetTop();
+    if (left > keyRect.GetLeft())
+      left = keyRect.GetLeft();
+    if (bottom < keyRect.GetBottom())
+      bottom = keyRect.GetBottom();
+    if (right < keyRect.GetRight())
+      right = keyRect.GetRight();
     x += key_width;
   }
 
-  x = cfg.ReadInteger(
-    ODFSetting,
-    group,
-    wxT("PositionX"),
-    0,
-    m_metrics->GetScreenWidth(),
-    false,
-    -1);
-  y = cfg.ReadInteger(
-    ODFSetting,
-    group,
-    wxT("PositionY"),
-    0,
-    m_metrics->GetScreenHeight(),
-    false,
-    -1);
-
-  m_BoundingRect = wxRect(x, y, width + 1, height + 1);
+  m_LeftTop = wxPoint(
+    cfg.ReadInteger(
+      ODFSetting,
+      group,
+      wxT("PositionX"),
+      0,
+      m_metrics->GetScreenWidth(),
+      false,
+      -1),
+    cfg.ReadInteger(
+      ODFSetting,
+      group,
+      wxT("PositionY"),
+      0,
+      m_metrics->GetScreenHeight(),
+      false,
+      -1));
+  m_BoundingRect = wxRect(left, top, right - left + 1, bottom - top + 1);
 }
 
 void GOGUIManual::Layout() {
   const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri
     = m_layout->GetManualRenderInfo(m_ManualNumber);
-  if (m_BoundingRect.GetX() == -1)
-    m_BoundingRect.SetX(mri.x + 1);
-  if (m_BoundingRect.GetY() == -1)
-    m_BoundingRect.SetY(mri.keys_y);
 
+  // Get the top left point
+  if (m_LeftTop.x == -1)
+    m_LeftTop.x = mri.x + 1;
+  if (m_LeftTop.y == -1)
+    m_LeftTop.y = mri.keys_y;
+
+  // Move all rectangles to the top left point
+  m_BoundingRect.Offset(m_LeftTop);
   for (unsigned i = 0; i < m_Keys.size(); i++) {
-    m_Keys[i].Rect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
-    m_Keys[i].MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
+    m_Keys[i].Rect.Offset(m_LeftTop);
+    m_Keys[i].MouseRect.Offset(m_LeftTop);
   }
 }
 
