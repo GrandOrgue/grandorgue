@@ -81,6 +81,12 @@ jobs:
             build_on: linux
 
           - run_on: ubuntu-20.04
+            for: linux
+            prepare: "debian-based"
+            build_on: linux
+            pkg_suffix: wx32
+
+          - run_on: ubuntu-20.04
             for: appimage-x86_64
             prepare: "debian-based"
             build_on: linux
@@ -91,9 +97,21 @@ jobs:
             build_on: linux
     
           - run_on: ubuntu-20.04
+            for: linux-armhf
+            prepare: "debian-based"
+            build_on: linux
+            pkg_suffix: wx32
+
+          - run_on: ubuntu-20.04
             for: linux-aarch64
             prepare: "debian-based"
             build_on: linux
+
+          - run_on: ubuntu-20.04
+            for: linux-aarch64
+            prepare: "debian-based"
+            build_on: linux
+            pkg_suffix: wx32
 
           - run_on: macos-11
             for: osx
@@ -112,11 +130,11 @@ jobs:
         submodules: true
     
     - name: Install Dependencies
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh
+      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.pkg_suffix }}"
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
+      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}} ${{github.workspace}} "${{ matrix.pkg_suffix }}"
 
     - name: Upload result
       uses: nanoufo/action-upload-artifacts-and-release-assets@v1.5

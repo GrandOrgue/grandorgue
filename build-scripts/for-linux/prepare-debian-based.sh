@@ -1,13 +1,29 @@
 #!/bin/bash
 
-#rem $1 - target architecture: ex arm64, amd64, armhf
+# $1 - wxWidgets package version: empty - libwxgtk3.0-gtk3-dev or wx32 - libwxgtk3.2-dev
+# $2 - target architecture: ex arm64, amd64, armhf
 
 set -e
 
 DIR=`dirname $0`
 
+# calculate wx package name
+case "$1" in
+wx32)
+  WX_PKG_NAME=libwxgtk3.2-dev
+  ;;
+wx30)
+  WX_PKG_NAME=libwxgtk3.0-gtk3-dev
+  ;;
+*)
+  WX_PKG_NAME=libwxgtk3.0-gtk3-dev
+esac
+
 CURRENT_ARCH=$(dpkg --print-architecture)
-TARGET_ARCH="${1:-$CURRENT_ARCH}"
+TARGET_ARCH="${2:-$CURRENT_ARCH}"
+
+OS_DISTR=$(awk -F= '$1=="ID" {print $2;}' /etc/os-release)
+[[ "$OS_DISTR" == "ubuntu" ]] && $DIR/prepare-ubuntu-wx-repo.bash $WX_PKG_NAME
 
 if [[ "$TARGET_ARCH" == "$CURRENT_ARCH" ]]; then
   GCC_SUFFIX=""
@@ -15,7 +31,6 @@ if [[ "$TARGET_ARCH" == "$CURRENT_ARCH" ]]; then
 else
   sudo dpkg --add-architecture "$TARGET_ARCH"
 
-  OS_DISTR=$(awk -F= '$1=="ID" {print $2;}'  /etc/os-release)
   # ubuntu has different urls for different architectures
   [[ "$OS_DISTR" == "ubuntu" ]] && $DIR/prepare-ubuntu-multiarch-repos.sh
   sudo apt update
@@ -30,6 +45,7 @@ fi
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cmake \
   docbook-xsl \
+  dpkg-dev \
   file \
   gettext \
   imagemagick \
@@ -44,7 +60,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libjack-dev:$TARGET_ARCH \
   libudev-dev:$TARGET_ARCH \
   libwavpack-dev:$TARGET_ARCH \
-  libwxgtk3.0-gtk3-dev:$TARGET_ARCH \
+  ${WX_PKG_NAME}:$TARGET_ARCH \
   libyaml-cpp-dev:$TARGET_ARCH \
   zlib1g-dev:$TARGET_ARCH
 
@@ -65,4 +81,10 @@ if [ -f /var/lib/dpkg/info/libgcc-s1:$TARGET_ARCH.symbols ]; then
   sudo sh -c "echo \"libgcc_s 1 libgcc1 (>= 1:3.0)\" >>/etc/dpkg/shlibs.override"
   # overriding does not work while the symbol file exists
   sudo mv /var/lib/dpkg/info/libgcc-s1:$TARGET_ARCH.symbols /var/lib/dpkg/info/libgcc-s1:$TARGET_ARCH.symbols.old
+fi
+
+# some ppas for wxWidgets give very high dependency version that prevents
+# installing on other systems. Remove the version
+if dpkg -s libwxgtk3.2-dev && ! grep -q libwx /etc/dpkg/shlibs.override; then
+  cut -d " " -f 1-3 /var/lib/dpkg/info/libwx*3.2*.shlibs | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
 fi
