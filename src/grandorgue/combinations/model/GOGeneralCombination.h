@@ -21,8 +21,8 @@ private:
   GOOrganController *m_OrganController;
   bool m_IsSetter;
 
-  void Save(GOConfigWriter &cfg);
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
+  void SaveInt(GOConfigWriter &cfg) override;
 
   void PutElementToYamlMap(
     const GOCombinationDefinition::Element &e,

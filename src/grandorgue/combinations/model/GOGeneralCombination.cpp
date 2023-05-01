@@ -42,7 +42,7 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
 
   /* check ODF settings */
   if (!m_IsSetter)
-    LoadCombinationInt(cfg, ODFSetting);
+    LoadCombination(cfg, ODFSetting);
 }
 
 void GOGeneralCombination::LoadCombinationInt(
@@ -78,8 +78,6 @@ void GOGeneralCombination::LoadCombinationInt(
     0,
     m_OrganController->GetDivisionalCouplerCount(),
     m_OrganController->GeneralsStoreDivisionalCouplers());
-
-  Clear();
 
   for (unsigned i = 0; i < NumberOfStops; i++) {
     unsigned m = cfg.ReadInteger(
@@ -173,7 +171,7 @@ bool GOGeneralCombination::Push(
   return changed;
 }
 
-void GOGeneralCombination::Save(GOConfigWriter &cfg) {
+void GOGeneralCombination::SaveInt(GOConfigWriter &cfg) {
   UpdateState();
 
   wxString buffer;

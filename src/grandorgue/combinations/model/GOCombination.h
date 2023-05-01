@@ -28,7 +28,22 @@ public:
 private:
   const GOCombinationDefinition &m_Template;
   GOOrganController *m_OrganFile;
+
+  /**
+   *  States of the elements.
+   *  1 - enabled
+   *  0 - disabled
+   *  -1 - not to touch. Usually this state is used for invisible elements that
+   *    are not stored in the combination normally.
+   */
   std::vector<int> m_State;
+
+  /**
+   * Whether the combination has been captured when `Full` was engaged or not
+   * If the combination is Full then all elements can have states 0 and 1, else
+   * the state -1 is also valid.
+   */
+  bool m_IsFull;
 
 protected:
   const std::vector<GOCombinationDefinition::Element> &r_ElementDefinitions;
@@ -64,9 +79,13 @@ protected:
     int elementNumber,
     const wxString &elementName);
 
-  // Load the combination either from the odf or from the cmb
+  // Load the implementation-specific part of the combination
   virtual void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType)
     = 0;
+  // Load the combination either from the odf or from the cmb
+  void LoadCombination(GOConfigReader &cfg, GOSettingType srcType);
+  // Save implementation-specific part of the combination to the cmb
+  virtual void SaveInt(GOConfigWriter &cfg) = 0;
 
   /**
    * Encode one combination element to yaml map. Called internally from ToYaml()
@@ -118,6 +137,8 @@ public:
 
   // if present, read from CMB, else read from ODF, else clear
   void LoadCombination(GOConfigReader &cfg) override;
+  // Save the combination to the cmb
+  void Save(GOConfigWriter &cfg) override;
 
   /**
    * Fills the combination from the current organ elements
