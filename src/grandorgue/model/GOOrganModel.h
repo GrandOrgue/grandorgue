@@ -38,6 +38,12 @@ private:
 
   const GOConfig &m_config;
 
+  bool m_DivisionalsStoreIntermanualCouplers;
+  bool m_DivisionalsStoreIntramanualCouplers;
+  bool m_DivisionalsStoreTremulants;
+  bool m_GeneralsStoreDivisionalCouplers;
+  bool m_CombinationsStoreNonDisplayedDrawstops;
+
   GOPipeConfigTreeNode m_RootPipeConfigNode;
 
   bool m_OrganModelModified;
@@ -63,6 +69,27 @@ public:
   ~GOOrganModel();
 
   const GOConfig &GetConfig() const { return m_config; }
+
+  /* combinations properties */
+  bool DivisionalsStoreIntermanualCouplers() const {
+    return m_DivisionalsStoreIntermanualCouplers;
+  }
+
+  bool DivisionalsStoreIntramanualCouplers() const {
+    return m_DivisionalsStoreIntramanualCouplers;
+  }
+
+  bool DivisionalsStoreTremulants() const {
+    return m_DivisionalsStoreTremulants;
+  }
+
+  bool CombinationsStoreNonDisplayedDrawstops() const {
+    return m_CombinationsStoreNonDisplayedDrawstops;
+  }
+
+  bool GeneralsStoreDivisionalCouplers() const {
+    return m_GeneralsStoreDivisionalCouplers;
+  }
 
   GOPipeConfigNode &GetRootPipeConfigNode() { return m_RootPipeConfigNode; }
 

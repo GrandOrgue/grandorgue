@@ -101,11 +101,6 @@ GOOrganController::GOOrganController(
     m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
-    m_DivisionalsStoreIntermanualCouplers(false),
-    m_DivisionalsStoreIntramanualCouplers(false),
-    m_DivisionalsStoreTremulants(false),
-    m_GeneralsStoreDivisionalCouplers(false),
-    m_CombinationsStoreNonDisplayedDrawstops(false),
     m_ChurchName(),
     m_ChurchAddress(),
     m_OrganBuilder(),
@@ -241,20 +236,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   /* load basic organ information */
   unsigned NumberOfPanels = cfg.ReadInteger(
     ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
-  m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(
-    ODFSetting, WX_ORGAN, wxT("DivisionalsStoreIntermanualCouplers"));
-  m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(
-    ODFSetting, WX_ORGAN, wxT("DivisionalsStoreIntramanualCouplers"));
-  m_DivisionalsStoreTremulants
-    = cfg.ReadBoolean(ODFSetting, WX_ORGAN, wxT("DivisionalsStoreTremulants"));
-  m_GeneralsStoreDivisionalCouplers = cfg.ReadBoolean(
-    ODFSetting, WX_ORGAN, wxT("GeneralsStoreDivisionalCouplers"));
-  m_CombinationsStoreNonDisplayedDrawstops = cfg.ReadBoolean(
-    ODFSetting,
-    WX_ORGAN,
-    wxT("CombinationsStoreNonDisplayedDrawstops"),
-    false,
-    true);
   cfg.ReadString(CMBSetting, WX_ORGAN, WX_GRANDORGUE_VERSION, false);
   m_volume = cfg.ReadInteger(
     CMBSetting, WX_ORGAN, wxT("Volume"), -120, 100, false, m_config.Volume());
@@ -888,26 +869,6 @@ GOButtonControl *GOOrganController::GetButtonControl(
 void GOOrganController::SetVolume(int volume) { m_volume = volume; }
 
 int GOOrganController::GetVolume() { return m_volume; }
-
-bool GOOrganController::DivisionalsStoreIntermanualCouplers() {
-  return m_DivisionalsStoreIntermanualCouplers;
-}
-
-bool GOOrganController::DivisionalsStoreIntramanualCouplers() {
-  return m_DivisionalsStoreIntramanualCouplers;
-}
-
-bool GOOrganController::DivisionalsStoreTremulants() {
-  return m_DivisionalsStoreTremulants;
-}
-
-bool GOOrganController::CombinationsStoreNonDisplayedDrawstops() {
-  return m_CombinationsStoreNonDisplayedDrawstops;
-}
-
-bool GOOrganController::GeneralsStoreDivisionalCouplers() {
-  return m_GeneralsStoreDivisionalCouplers;
-}
 
 GOSetter *GOOrganController::GetSetter() { return m_setter; }
 
