@@ -18,7 +18,10 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "control/GOCallbackButtonControl.h"
+#include "control/GODivisionalButtonControl.h"
 #include "control/GOGeneralButtonControl.h"
+#include "model/GODivisionalCoupler.h"
+#include "model/GOManual.h"
 #include "yaml/go-wx-yaml.h"
 
 #include "GOEvent.h"
@@ -293,8 +296,7 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_CrescendoDisplay(organController),
     m_TransposeDisplay(organController),
     m_NameDisplay(organController),
-    m_swell(organController),
-    m_SetterType(GOCombination::SETTER_REGULAR) {
+    m_swell(organController) {
   CreateButtons(m_OrganController);
 
   m_buttons[ID_SETTER_PREV]->SetPreconfigIndex(0);
@@ -327,7 +329,7 @@ GOSetter::GOSetter(GOOrganController *organController)
   m_buttons[ID_SETTER_NEXT]->SetShortcutKey(39);
   m_buttons[ID_SETTER_CURRENT]->SetShortcutKey(40);
 
-  SetSetterType(m_SetterType);
+  SetSetterType(GOSetterState::SETTER_REGULAR);
   SetCrescendoType(m_crescendobank);
 
   m_OrganController->RegisterSoundStateHandler(this);
@@ -483,7 +485,7 @@ void GOSetter::DisplayCmbFile(const wxString &fileName) {
     isValid ? wxFileName(fileName).GetName() : wxString());
   m_buttons[ID_SETTER_LOAD_FILE]->Display(isValid && !isTheSameAsLoaded);
   m_buttons[ID_SETTER_SAVE_FILE]->Display(
-    isValid && isTheSameAsLoaded && m_IsCmbChanged);
+    isValid && isTheSameAsLoaded && m_state.m_IsModified);
 }
 
 int GOSetter::FindCmbFilePosFor(const wxString &yamlFile) {
@@ -524,8 +526,8 @@ void GOSetter::NotifyCmbChanged() {
 }
 
 void GOSetter::NotifyCmbPushed(bool isChanged) {
-  if (isChanged && IsSetterActive() && !m_IsCmbChanged) {
-    m_IsCmbChanged = true;
+  if (isChanged && m_state.m_IsActive && !m_state.m_IsModified) {
+    m_state.m_IsModified = true;
     // light the save button if the last loaded combination file  is displayed
     if (
       !m_CmbFileDisplayed.IsEmpty()
@@ -698,7 +700,11 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
   case ID_SETTER_NEXT:
     Next();
     break;
+  case ID_SETTER_FULL:
+    m_state.m_IsStoreInvisible = newState;
+    break;
   case ID_SETTER_SET:
+    m_state.m_IsActive = newState;
     wxTheApp->GetTopWindow()->UpdateWindowUI();
     break;
   case ID_SETTER_M1:
@@ -807,9 +813,7 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
   case ID_SETTER_GENERAL47:
   case ID_SETTER_GENERAL48:
   case ID_SETTER_GENERAL49:
-    NotifyCmbPushed(
-      m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]->Push(
-        GetCrescendoAddSet(elementSet)));
+    PushGeneral(*m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]);
     ResetDisplay();
     m_buttons[id]->Display(true);
     break;
@@ -824,13 +828,13 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
     break;
 
   case ID_SETTER_REGULAR:
-    SetSetterType(GOCombination::SETTER_REGULAR);
+    SetSetterType(GOSetterState::SETTER_REGULAR);
     break;
   case ID_SETTER_SCOPE:
-    SetSetterType(GOCombination::SETTER_SCOPE);
+    SetSetterType(GOSetterState::SETTER_SCOPE);
     break;
   case ID_SETTER_SCOPED:
-    SetSetterType(GOCombination::SETTER_SCOPED);
+    SetSetterType(GOSetterState::SETTER_SCOPED);
     break;
   case ID_SETTER_CRESCENDO_A:
   case ID_SETTER_CRESCENDO_B:
@@ -846,17 +850,13 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
     Crescendo(m_crescendopos + 1, true);
     break;
   case ID_SETTER_CRESCENDO_CURRENT:
-    NotifyCmbPushed(
-      m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]->Push());
+    PushGeneral(
+      *m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]);
     break;
 
-  case ID_SETTER_CRESCENDO_OVERRIDE: {
-    GOButtonControl *btn = m_buttons[ID_SETTER_CRESCENDO_OVERRIDE];
-    bool newIsOverride = !btn->IsEngaged();
-
-    m_CrescendoOverrideMode[m_crescendobank] = newIsOverride;
-    btn->Display(newIsOverride);
-  } break;
+  case ID_SETTER_CRESCENDO_OVERRIDE:
+    m_CrescendoOverrideMode[m_crescendobank] = newState;
+    m_buttons[ID_SETTER_CRESCENDO_OVERRIDE]->Display(newState);
 
   case ID_SETTER_PITCH_M1:
     m_OrganController->GetRootPipeConfigNode().ModifyManualTuning(-1);
@@ -954,37 +954,93 @@ void GOSetter::OnCombinationsLoaded(
       : -1;
   }
   m_CmbFileLastLoaded = yamlFile;
-  m_IsCmbChanged = false;
+  m_state.m_IsModified = false;
   DisplayCmbFile(m_CmbFileLastLoaded);
 }
 
 void GOSetter::OnCombinationsSaved(const wxString &yamlFile) {
   if (yamlFile == m_CmbFileLastLoaded)
-    m_IsCmbChanged = false;
+    m_state.m_IsModified = false;
   else if (wxFileName(yamlFile).GetPath() == m_CmbFilesDir) {
     // Possible a new file has been created in the same directory, so we need to
     // refresh
     m_IsCmbFileListPopulated = false;
     // switch to the new file
     m_CmbFileLastLoaded = yamlFile;
-    m_IsCmbChanged = false;
+    m_state.m_IsModified = false;
   }
   DisplayCmbFile(m_CmbFileLastLoaded);
 }
 
 void GOSetter::Update() {}
 
-bool GOSetter::IsSetterActive() {
-  return m_buttons[ID_SETTER_SET]->IsEngaged();
-}
-
-bool GOSetter::StoreInvisibleObjects() {
-  return m_buttons[ID_SETTER_FULL]->IsEngaged();
-}
-
 void GOSetter::SetterActive(bool on) { m_buttons[ID_SETTER_SET]->Set(on); }
 
 void GOSetter::ToggleSetter() { m_buttons[ID_SETTER_SET]->Push(); }
+
+void GOSetter::PushGeneral(GOGeneralCombination &cmb) {
+  GOCombination::ExtraElementsSet elementSet;
+  const GOCombination::ExtraElementsSet *pExtraSet
+    = GetCrescendoAddSet(elementSet);
+
+  NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
+  if (!pExtraSet) { // Otherwise the crescendo in add mode:
+                    // not to switch off combination buttons
+    ResetDisplay(); // disable buttons
+
+    for (unsigned k = 0; k < m_OrganController->GetGeneralCount(); k++) {
+      GOGeneralButtonControl *general = m_OrganController->GetGeneral(k);
+      general->Display(&general->GetCombination() == &cmb);
+    }
+
+    for (unsigned j = m_OrganController->GetFirstManualIndex();
+         j <= m_OrganController->GetManualAndPedalCount();
+         j++) {
+      for (unsigned k = 0;
+           k < m_OrganController->GetManual(j)->GetDivisionalCount();
+           k++)
+        m_OrganController->GetManual(j)->GetDivisional(k)->Display(false);
+    }
+  }
+}
+
+void GOSetter::PushDivisional(GODivisionalCombination &cmb) {
+  GOCombination::ExtraElementsSet elementSet;
+
+  NotifyCmbPushed(cmb.Push(m_state, GetCrescendoAddSet(elementSet)));
+  /* only use divisional couples, if not in setter mode */
+  if (!m_state.m_IsActive) {
+    unsigned cmbManualNumber = cmb.GetManualNumber();
+    unsigned divisionalNumber = cmb.GetDivisionalNumber();
+
+    for (unsigned k = 0; k < m_OrganController->GetDivisionalCouplerCount();
+         k++) {
+      GODivisionalCoupler *coupler = m_OrganController->GetDivisionalCoupler(k);
+      if (!coupler->IsEngaged())
+        continue;
+
+      for (unsigned i = 0; i < coupler->GetNumberOfManuals(); i++) {
+        if (coupler->GetManual(i) != cmbManualNumber)
+          continue;
+
+        for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++)
+          m_OrganController->GetManual(coupler->GetManual(j))
+            ->GetDivisional(divisionalNumber)
+            ->Push();
+
+        if (coupler->IsBidirectional())
+          for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++) {
+            if (coupler->GetManual(j) == cmbManualNumber)
+              break;
+            m_OrganController->GetManual(coupler->GetManual(j))
+              ->GetDivisional(divisionalNumber)
+              ->Push();
+          }
+        break;
+      }
+    }
+  }
+}
 
 void GOSetter::Next() { SetPosition(m_pos + 1); }
 
@@ -994,11 +1050,11 @@ void GOSetter::Push() { SetPosition(m_pos); }
 
 unsigned GOSetter::GetPosition() { return m_pos; }
 
-void GOSetter::SetSetterType(GOCombination::SetterType type) {
-  m_SetterType = type;
-  m_buttons[ID_SETTER_REGULAR]->Display(type == GOCombination::SETTER_REGULAR);
-  m_buttons[ID_SETTER_SCOPE]->Display(type == GOCombination::SETTER_SCOPE);
-  m_buttons[ID_SETTER_SCOPED]->Display(type == GOCombination::SETTER_SCOPED);
+void GOSetter::SetSetterType(GOSetterState::SetterType type) {
+  m_state.m_SetterType = type;
+  m_buttons[ID_SETTER_REGULAR]->Display(type == GOSetterState::SETTER_REGULAR);
+  m_buttons[ID_SETTER_SCOPE]->Display(type == GOSetterState::SETTER_SCOPE);
+  m_buttons[ID_SETTER_SCOPED]->Display(type == GOSetterState::SETTER_SCOPED);
 }
 
 void GOSetter::SetCrescendoType(unsigned no) {
@@ -1045,11 +1101,7 @@ void GOSetter::SetPosition(int pos, bool push) {
     pos -= m_framegeneral.size();
   m_pos = pos;
   if (push) {
-    GOCombination::ExtraElementsSet elementSet;
-
-    NotifyCmbPushed(
-      m_framegeneral[m_pos]->Push(GetCrescendoAddSet(elementSet)));
-
+    PushGeneral(*m_framegeneral[m_pos]);
     m_buttons[ID_SETTER_HOME]->Display(m_pos == 0);
     for (unsigned i = 0; i < 10; i++)
       m_buttons[ID_SETTER_L0 + i]->Display((m_pos % 10) == i);
@@ -1071,7 +1123,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
     newpos = 0;
   if (newpos > CRESCENDO_STEPS - 1)
     newpos = CRESCENDO_STEPS - 1;
-  if (IsSetterActive() && !force)
+  if (m_state.m_IsActive && !force)
     return;
   unsigned pos = newpos;
   if (pos == m_crescendopos)
@@ -1091,7 +1143,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
     ++m_crescendopos;
     changed = changed
       || m_crescendo[newIdx]->Push(
-        crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr, true);
+        m_state, crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr);
   }
 
   while (pos < m_crescendopos) {
@@ -1101,8 +1153,11 @@ void GOSetter::Crescendo(int newpos, bool force) {
 
     changed = changed
       || m_crescendo[newIdx]->Push(
-        crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr, true);
+        m_state, crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr);
   }
+  // switch combination buttons off in the crescendo override mode
+  if (changed && !crescendoAddMode)
+    ResetDisplay();
   NotifyCmbPushed(changed);
 
   wxString buffer;

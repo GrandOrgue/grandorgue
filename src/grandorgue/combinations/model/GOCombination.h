@@ -17,12 +17,12 @@
 
 #include "GOCombinationDefinition.h"
 #include "GOSaveableObject.h"
+#include "GOSetterState.h"
 
 class GOOrganController;
 
 class GOCombination : public GOSaveableObject, public GOSaveableToYaml {
 public:
-  enum SetterType { SETTER_REGULAR, SETTER_SCOPE, SETTER_SCOPED };
   using ExtraElementsSet = std::unordered_set<unsigned>;
 
 private:
@@ -119,7 +119,6 @@ protected:
    * @param yamlMap
    */
   virtual void FromYamlMap(const YAML::Node &yamlMap) = 0;
-  virtual bool PushLocal(ExtraElementsSet const *extraSet = nullptr);
 
 public:
   GOCombination(
@@ -143,7 +142,8 @@ public:
   /**
    * Fills the combination from the current organ elements
    */
-  bool FillWithCurrent(SetterType setterType, bool isToStoreInvisibleObjects);
+  bool FillWithCurrent(
+    GOSetterState::SetterType setterType, bool isToStoreInvisibleObjects);
 
   void ToYaml(YAML::Node &yamlMap) const override;
 
@@ -164,6 +164,10 @@ public:
     YAML::Node &container, const wxString &key, const GOCombination *pCmb);
 
   void FromYaml(const YAML::Node &yamlNode) override;
+
+  bool Push(
+    const GOSetterState &setterState,
+    const ExtraElementsSet *extraSet = nullptr);
 };
 
 #endif

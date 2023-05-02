@@ -261,7 +261,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
 
   m_setter = new GOSetter(this);
   m_elementcreators.push_back(m_setter);
-  m_DivisionalSetter = new GODivisionalSetter(this);
+  m_DivisionalSetter = new GODivisionalSetter(this, m_setter->GetState());
   m_elementcreators.push_back(m_DivisionalSetter);
   m_AudioRecorder = new GOAudioRecorder(this);
   m_MidiRecorder = new GOMidiRecorder(this);
