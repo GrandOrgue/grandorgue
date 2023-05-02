@@ -24,3 +24,10 @@ for F in $(grep -l '(, weak)\?'  /usr/local/Cellar/cmake/*/share/cmake/Modules/G
   sed -e 's/(, weak)\?/(, (weak|reexport))?/' $F >${F}.new
   mv ${F}.new $F
 done
+
+# wxwidgets has been built against libtiff.5.dylib but it is not more available
+if [ ! -f /usr/local/opt/libtiff/lib/libtiff.5.dylib ]; then
+  pushd /usr/local/opt/libtiff/lib
+  sudo ln -s `readlink libtiff.dylib` libtiff.5.dylib
+  popd
+fi
