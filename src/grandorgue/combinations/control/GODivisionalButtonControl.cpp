@@ -52,14 +52,10 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalButtonControl::Push() {
-  GOCombination::ExtraElementsSet elementSet;
-  const GOCombination::ExtraElementsSet *pAddSet
-    = r_setter.GetCrescendoAddSet(elementSet);
   GOManual *pManual
     = m_OrganController->GetManual(m_combination.GetManualNumber());
 
-  r_setter.NotifyCmbPushed(m_combination.Push(pAddSet));
-
+  r_setter.PushDivisional(m_combination);
   for (unsigned l = pManual->GetDivisionalCount(), k = 0; k < l; k++) {
     GODivisionalButtonControl *pDivisionalControl = pManual->GetDivisional(k);
 

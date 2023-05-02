@@ -11,9 +11,6 @@
 #include <wx/log.h>
 #include <yaml-cpp/yaml.h>
 
-#include "combinations/GOSetter.h"
-#include "combinations/control/GODivisionalButtonControl.h"
-#include "combinations/control/GOGeneralButtonControl.h"
 #include "config/GOConfigWriter.h"
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
@@ -144,31 +141,6 @@ void GOGeneralCombination::LoadCombinationInt(
       cfg.ReadInteger(srcType, m_group, buffer, -cnt, cnt),
       buffer);
   }
-}
-
-bool GOGeneralCombination::Push(
-  ExtraElementsSet const *extraSet, bool isFromCrescendo) {
-  bool changed = GOCombination::PushLocal(extraSet);
-
-  if (!isFromCrescendo || !extraSet) { // Otherwise the crescendo in add mode:
-                                       // not to switch off combination buttons
-    m_OrganController->GetSetter()->ResetDisplay(); // disable buttons
-
-    for (unsigned k = 0; k < m_OrganController->GetGeneralCount(); k++) {
-      GOGeneralButtonControl *general = m_OrganController->GetGeneral(k);
-      general->Display(&general->GetCombination() == this);
-    }
-
-    for (unsigned j = m_OrganController->GetFirstManualIndex();
-         j <= m_OrganController->GetManualAndPedalCount();
-         j++) {
-      for (unsigned k = 0;
-           k < m_OrganController->GetManual(j)->GetDivisionalCount();
-           k++)
-        m_OrganController->GetManual(j)->GetDivisional(k)->Display(false);
-    }
-  }
-  return changed;
 }
 
 void GOGeneralCombination::SaveInt(GOConfigWriter &cfg) {

@@ -263,7 +263,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     m_tremulants[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 
-  m_DivisionalSetter = new GODivisionalSetter(this);
+  m_DivisionalSetter = new GODivisionalSetter(this, m_setter->GetState());
   m_elementcreators.push_back(m_DivisionalSetter);
   m_AudioRecorder = new GOAudioRecorder(this);
   m_MidiRecorder = new GOMidiRecorder(this);

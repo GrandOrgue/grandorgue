@@ -12,20 +12,19 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "combinations/GOSetter.h"
 #include "config/GOConfigWriter.h"
+#include "model/GOCoupler.h"
+#include "model/GODivisionalCoupler.h"
 #include "model/GODrawStop.h"
+#include "model/GOManual.h"
+#include "model/GOStop.h"
+#include "model/GOSwitch.h"
+#include "model/GOTremulant.h"
 #include "yaml/go-wx-yaml.h"
 
 #include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
 #include "GOOrganController.h"
-#include "model/GOCoupler.h"
-#include "model/GODivisionalCoupler.h"
-#include "model/GOManual.h"
-#include "model/GOStop.h"
-#include "model/GOSwitch.h"
-#include "model/GOTremulant.h"
 
 GOCombination::GOCombination(
   const GOCombinationDefinition &combination_template,
@@ -347,12 +346,13 @@ void GOCombination::FromYaml(const YAML::Node &yamlNode) {
 }
 
 bool GOCombination::FillWithCurrent(
-  SetterType setterType, bool isToStoreInvisibleObjects) {
+  GOSetterState::SetterType setterType, bool isToStoreInvisibleObjects) {
   bool used = false;
 
   UpdateState();
   m_IsFull = isToStoreInvisibleObjects;
-  if (setterType == SETTER_REGULAR) {
+  switch (setterType) {
+  case GOSetterState::SETTER_REGULAR:
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
       if (
         !isToStoreInvisibleObjects
@@ -364,8 +364,8 @@ bool GOCombination::FillWithCurrent(
       } else
         m_State[i] = 0;
     }
-  }
-  if (setterType == SETTER_SCOPE) {
+    break;
+  case GOSetterState::SETTER_SCOPE:
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
       if (
         !isToStoreInvisibleObjects
@@ -377,9 +377,9 @@ bool GOCombination::FillWithCurrent(
       } else
         m_State[i] = -1;
     }
-  }
-  if (setterType == SETTER_SCOPED) {
-    for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
+    break;
+  case GOSetterState::SETTER_SCOPED:
+    for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
       if (m_State[i] != -1) {
         if (r_ElementDefinitions[i].control->GetCombinationState()) {
           m_State[i] = 1;
@@ -387,19 +387,20 @@ bool GOCombination::FillWithCurrent(
         } else
           m_State[i] = 0;
       }
-    }
+    break;
   }
   return used;
 }
 
-bool GOCombination::PushLocal(GOCombination::ExtraElementsSet const *extraSet) {
+bool GOCombination::Push(
+  const GOSetterState &setterState,
+  const GOCombination::ExtraElementsSet *extraSet) {
   bool used = false;
-  GOSetter &setter = *m_OrganFile->GetSetter();
 
-  if (setter.IsSetterActive()) {
+  if (setterState.m_IsActive) {
     if (!m_Protected) {
       used = FillWithCurrent(
-        setter.GetSetterType(), setter.StoreInvisibleObjects());
+        setterState.m_SetterType, setterState.m_IsStoreInvisible);
     }
   } else {
     UpdateState();
