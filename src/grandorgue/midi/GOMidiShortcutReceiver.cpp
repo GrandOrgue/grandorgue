@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOKeyReceiver.h"
+#include "GOMidiShortcutReceiver.h"
 
 #include "GOOrganController.h"
 #include "config/GOConfigReader.h"

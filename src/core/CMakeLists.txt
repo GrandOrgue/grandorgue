@@ -54,7 +54,6 @@ temperaments/GOTemperamentUser.cpp
 GOCompress.cpp
 GOHash.cpp
 GOKeyConvert.cpp
-GOKeyReceiverData.cpp
 GOLogicalColour.cpp
 GOMemoryPool.cpp
 GOOrgan.cpp

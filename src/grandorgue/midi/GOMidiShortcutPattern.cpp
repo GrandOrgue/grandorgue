@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOKeyReceiverData.h"
+#include "GOMidiShortcutPattern.h"
 
 GOKeyReceiverData::GOKeyReceiverData(KEY_RECEIVER_TYPE type)
   : m_type(type), m_ShortcutKey(0), m_MinusKey(0) {}

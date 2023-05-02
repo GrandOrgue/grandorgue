@@ -10,7 +10,7 @@
 
 #include <wx/panel.h>
 
-#include "GOKeyReceiver.h"
+#include "midi/GOMidiShortcutReceiver.h"
 
 class wxChoice;
 class wxToggleButton;

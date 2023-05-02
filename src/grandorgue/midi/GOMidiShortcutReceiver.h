@@ -10,7 +10,7 @@
 
 #include <wx/string.h>
 
-#include "GOKeyReceiverData.h"
+#include "GOMidiShortcutPattern.h"
 
 class GOConfigReader;
 class GOConfigWriter;
