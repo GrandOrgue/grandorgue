@@ -661,7 +661,7 @@ void GOSetter::FromYaml(const YAML::Node &yamlNode) {
       >> *m_framegeneral[i];
 }
 
-void GOSetter::ButtonStateChanged(int id) {
+void GOSetter::ButtonStateChanged(int id, bool newState) {
   GOCombination::ExtraElementsSet elementSet;
 
   switch (id) {

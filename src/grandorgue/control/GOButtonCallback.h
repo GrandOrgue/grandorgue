@@ -14,7 +14,13 @@ class GOButtonCallback {
 public:
   virtual ~GOButtonCallback() {}
 
-  virtual void ButtonStateChanged(GOButtonControl *button) = 0;
+  /**
+   * Called when the button is pushed of it's state is changed
+   * @param button the button that is changed
+   * @param newState is the button goes to be pushed or not.
+   *   For pushbuttons it is always true
+   */
+  virtual void ButtonStateChanged(GOButtonControl *button, bool newState) = 0;
 };
 
 #endif

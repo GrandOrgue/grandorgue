@@ -40,7 +40,7 @@ private:
 
   void HandleTimer();
 
-  void ButtonStateChanged(int id);
+  void ButtonStateChanged(int id, bool newState) override;
 
   void AbortPlayback();
   void PreparePlayback();

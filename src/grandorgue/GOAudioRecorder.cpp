@@ -70,7 +70,7 @@ void GOAudioRecorder::Load(GOConfigReader &cfg) {
   m_RecordingTime.Init(cfg, wxT("AudioRecordTime"), _("Audio recording time"));
 }
 
-void GOAudioRecorder::ButtonStateChanged(int id) {
+void GOAudioRecorder::ButtonStateChanged(int id, bool newState) {
   switch (id) {
   case ID_AUDIO_RECORDER_STOP:
     StopRecording();

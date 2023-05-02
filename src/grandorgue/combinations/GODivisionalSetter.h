@@ -67,7 +67,7 @@ protected:
   GetButtonDefinitionList() override;
 
   // called on pressing any button. id is mapped to manualN and divisionalN
-  void ButtonStateChanged(int id) override;
+  void ButtonStateChanged(int id, bool newState) override;
 
 public:
   // calculates the setter element name for a divisional button

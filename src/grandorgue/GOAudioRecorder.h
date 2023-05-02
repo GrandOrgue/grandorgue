@@ -30,7 +30,7 @@ private:
   static const struct ButtonDefinitionEntry m_element_types[];
   const struct ButtonDefinitionEntry *GetButtonDefinitionList();
 
-  void ButtonStateChanged(int id);
+  void ButtonStateChanged(int id, bool newState) override;
 
   void UpdateDisplay();
   void HandleTimer();
