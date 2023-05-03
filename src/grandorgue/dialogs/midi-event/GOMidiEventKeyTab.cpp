@@ -94,7 +94,8 @@ bool GOMidiEventKeyTab::TransferDataFromWindow() {
     else
       m_key.SetMinusKey(key->key_code);
   }
-  m_original->Assign(m_key);
+  if (m_original->RenewFrom(m_key))
+    GOModificationProxy::OnIsModifiedChanged(true);
   return true;
 }
 

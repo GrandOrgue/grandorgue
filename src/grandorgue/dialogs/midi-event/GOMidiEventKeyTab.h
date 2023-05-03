@@ -11,11 +11,12 @@
 #include <wx/panel.h>
 
 #include "midi/GOMidiShortcutReceiver.h"
+#include "modification/GOModificationProxy.h"
 
 class wxChoice;
 class wxToggleButton;
 
-class GOMidiEventKeyTab : public wxPanel {
+class GOMidiEventKeyTab : public wxPanel, public GOModificationProxy {
 private:
   GOMidiShortcutReceiver *m_original;
   GOMidiShortcutPattern m_key;

@@ -7,13 +7,8 @@
 
 #include "GOMidiShortcutReceiver.h"
 
-#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
-
-GOMidiShortcutReceiver::GOMidiShortcutReceiver(
-  GOOrganController *organController, KEY_RECEIVER_TYPE type)
-  : GOMidiShortcutPattern(type), m_OrganController(organController) {}
 
 void GOMidiShortcutReceiver::Load(GOConfigReader &cfg, wxString group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
@@ -46,8 +41,12 @@ KEY_MATCH_TYPE GOMidiShortcutReceiver::Match(unsigned key) {
   return KEY_MATCH_NONE;
 }
 
-void GOMidiShortcutReceiver::Assign(const GOMidiShortcutPattern &data) {
-  *(GOMidiShortcutPattern *)this = data;
-  if (m_OrganController)
-    m_OrganController->SetOrganModified();
+bool GOMidiShortcutReceiver::RenewFrom(
+  const GOMidiShortcutPattern &newPattern) {
+  GOMidiShortcutPattern &pattern = *this;
+  bool result = !(newPattern == pattern);
+
+  if (result)
+    pattern = newPattern;
+  return result;
 }
