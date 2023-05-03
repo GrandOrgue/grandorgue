@@ -12,7 +12,7 @@
 
 class GODummyPipe : public GOPipe {
 private:
-  void Change(unsigned velocity, unsigned old_velocity);
+  void VelocityChanged(unsigned velocity, unsigned old_velocity);
 
 public:
   GODummyPipe(

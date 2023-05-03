@@ -37,7 +37,7 @@ void GOPipe::PreparePlayback() {
 
 void GOPipe::SetTemperament(const GOTemperament &temperament) {}
 
-void GOPipe::Set(unsigned velocity, unsigned referenceID) {
+void GOPipe::SetVelocity(unsigned velocity, unsigned referenceID) {
   if (m_Velocities[referenceID] <= velocity && velocity <= m_Velocity) {
     m_Velocities[referenceID] = velocity;
     return;
@@ -55,5 +55,5 @@ void GOPipe::Set(unsigned velocity, unsigned referenceID) {
   }
 
   m_Rank->SendKey(m_MidiKeyNumber, velocity);
-  Change(m_Velocity, last_velocity);
+  VelocityChanged(m_Velocity, last_velocity);
 }

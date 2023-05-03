@@ -454,7 +454,8 @@ void GOSoundingPipe::SetTremulant(bool on) {
   }
 }
 
-void GOSoundingPipe::Change(unsigned velocity, unsigned last_velocity) {
+void GOSoundingPipe::VelocityChanged(
+  unsigned velocity, unsigned last_velocity) {
   GOSoundEngine *pSoundEngine = GetSoundEngine();
 
   if (!m_Instances && velocity) {

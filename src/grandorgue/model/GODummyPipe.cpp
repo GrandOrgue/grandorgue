@@ -13,4 +13,4 @@ GODummyPipe::GODummyPipe(
 
 void GODummyPipe::Load(GOConfigReader &cfg, wxString group, wxString prefix) {}
 
-void GODummyPipe::Change(unsigned velocity, unsigned old_velocity) {}
+void GODummyPipe::VelocityChanged(unsigned velocity, unsigned old_velocity) {}

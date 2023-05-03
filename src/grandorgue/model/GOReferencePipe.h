@@ -27,7 +27,7 @@ private:
   void UpdateHash(GOHash &hash);
   const wxString &GetLoadTitle();
 
-  void Change(unsigned velocity, unsigned old_velocity) override;
+  void VelocityChanged(unsigned velocity, unsigned old_velocity) override;
 
 public:
   GOReferencePipe(GOOrganModel *model, GORank *rank, unsigned midi_key_number);
