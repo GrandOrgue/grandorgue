@@ -36,7 +36,7 @@ class GOOrganModel : public GOEventHandlerList,
 private:
   GOModificationProxy m_ModificationProxy;
 
-  const GOConfig &m_config;
+  GOConfig &m_config;
 
   bool m_DivisionalsStoreIntermanualCouplers;
   bool m_DivisionalsStoreIntramanualCouplers;
@@ -65,10 +65,11 @@ protected:
   void Load(GOConfigReader &cfg, GOOrganController *organController);
 
 public:
-  GOOrganModel(const GOConfig &config);
+  GOOrganModel(GOConfig &config);
   ~GOOrganModel();
 
   const GOConfig &GetConfig() const { return m_config; }
+  GOConfig &GetConfig() { return m_config; }
 
   /* combinations properties */
   bool DivisionalsStoreIntermanualCouplers() const {

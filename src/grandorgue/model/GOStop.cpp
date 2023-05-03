@@ -77,7 +77,7 @@ void GOStop::Load(GOConfigReader &cfg, wxString group) {
     }
   } else {
     RankInfo info;
-    info.Rank = new GORank(m_OrganController);
+    info.Rank = new GORank(*m_OrganController);
     m_OrganController->AddRank(info.Rank);
     info.FirstPipeNumber = cfg.ReadInteger(
       ODFSetting, group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, 192);

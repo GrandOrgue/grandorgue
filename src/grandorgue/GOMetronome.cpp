@@ -106,7 +106,7 @@ void GOMetronome::Load(GOConfigReader &cfg) {
   windchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
   unsigned samplegroup = m_OrganController->AddWindchest(windchest);
 
-  m_rank = new GORank(m_OrganController);
+  m_rank = new GORank(*m_OrganController);
   m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, samplegroup);
   m_StopID = m_rank->RegisterStop(NULL);
   m_OrganController->AddRank(m_rank);

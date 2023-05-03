@@ -17,16 +17,18 @@
 
 #include "GOSaveableObject.h"
 
+class GOMidiMap;
+class GOOrganModel;
 class GOPipe;
 class GOStop;
 class GOTemperament;
-class GOOrganController;
 
 class GORank : private GOSaveableObject,
                public GOMidiConfigurator,
                private GOSoundStateHandler {
 private:
-  GOOrganController *m_OrganController;
+  GOOrganModel &r_OrganModel;
+  GOMidiMap &r_MidiMap;
   wxString m_Name;
   ptr_vector<GOPipe> m_Pipes;
   /**
@@ -59,7 +61,7 @@ private:
   void PreparePlayback();
 
 public:
-  GORank(GOOrganController *organController);
+  GORank(GOOrganModel &organModel);
   ~GORank();
   void Init(
     GOConfigReader &cfg,

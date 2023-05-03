@@ -21,7 +21,7 @@
 #include "GOTremulant.h"
 #include "GOWindchest.h"
 
-GOOrganModel::GOOrganModel(const GOConfig &config)
+GOOrganModel::GOOrganModel(GOConfig &config)
   : m_config(config),
     m_DivisionalsStoreIntermanualCouplers(false),
     m_DivisionalsStoreIntramanualCouplers(false),
@@ -106,7 +106,7 @@ void GOOrganModel::Load(
   m_ODFRankCount
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfRanks"), 0, 999, false);
   for (unsigned i = 0; i < m_ODFRankCount; i++) {
-    m_ranks.push_back(new GORank(organController));
+    m_ranks.push_back(new GORank(*organController));
     m_ranks[i]->Load(cfg, wxString::Format(wxT("Rank%03d"), i + 1), -1);
   }
 
