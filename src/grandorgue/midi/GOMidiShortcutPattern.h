@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOKEYRECEIVERDATA_H
-#define GOKEYRECEIVERDATA_H
+#ifndef GOMIDISHORTCUTPATTERN_H
+#define GOMIDISHORTCUTPATTERN_H
 
 typedef enum {
   KEY_RECV_BUTTON,
@@ -19,22 +19,23 @@ typedef enum {
   KEY_MATCH_MINUS,
 } KEY_MATCH_TYPE;
 
-class GOKeyReceiverData {
+class GOMidiShortcutPattern {
 protected:
   KEY_RECEIVER_TYPE m_type;
-  unsigned m_ShortcutKey;
-  unsigned m_MinusKey;
+  unsigned m_ShortcutKey = 0;
+  unsigned m_MinusKey = 0;
 
 public:
-  GOKeyReceiverData(KEY_RECEIVER_TYPE type);
-  virtual ~GOKeyReceiverData();
+  GOMidiShortcutPattern(KEY_RECEIVER_TYPE type) : m_type(type) {}
+  virtual ~GOMidiShortcutPattern() {}
 
-  KEY_RECEIVER_TYPE GetType() const;
+  KEY_RECEIVER_TYPE GetType() const { return m_type; }
 
-  unsigned GetShortcut();
-  void SetShortcut(unsigned key);
-  unsigned GetMinusKey();
-  void SetMinusKey(unsigned key);
+  unsigned GetShortcut() const { return m_ShortcutKey; }
+  void SetShortcut(unsigned key) { m_ShortcutKey = key; }
+  unsigned GetMinusKey() const { return m_MinusKey; }
+  void SetMinusKey(unsigned key) { m_MinusKey = key; };
+  bool operator==(const GOMidiShortcutPattern &other) const;
 };
 
 #endif

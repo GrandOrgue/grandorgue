@@ -11,11 +11,11 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOKeyReceiver::GOKeyReceiver(
+GOMidiShortcutReceiver::GOMidiShortcutReceiver(
   GOOrganController *organController, KEY_RECEIVER_TYPE type)
-  : GOKeyReceiverData(type), m_OrganController(organController) {}
+  : GOMidiShortcutPattern(type), m_OrganController(organController) {}
 
-void GOKeyReceiver::Load(GOConfigReader &cfg, wxString group) {
+void GOMidiShortcutReceiver::Load(GOConfigReader &cfg, wxString group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
     m_ShortcutKey
       = cfg.ReadInteger(CMBSetting, group, wxT("PlusKey"), 0, 255, false, 0);
@@ -29,7 +29,7 @@ void GOKeyReceiver::Load(GOConfigReader &cfg, wxString group) {
   }
 }
 
-void GOKeyReceiver::Save(GOConfigWriter &cfg, wxString group) {
+void GOMidiShortcutReceiver::Save(GOConfigWriter &cfg, wxString group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
     cfg.WriteInteger(group, wxT("PlusKey"), m_ShortcutKey);
     cfg.WriteInteger(group, wxT("MinusKey"), m_MinusKey);
@@ -38,7 +38,7 @@ void GOKeyReceiver::Save(GOConfigWriter &cfg, wxString group) {
   }
 }
 
-KEY_MATCH_TYPE GOKeyReceiver::Match(unsigned key) {
+KEY_MATCH_TYPE GOMidiShortcutReceiver::Match(unsigned key) {
   if (m_ShortcutKey == key)
     return KEY_MATCH;
   if (m_MinusKey == key)
@@ -46,8 +46,8 @@ KEY_MATCH_TYPE GOKeyReceiver::Match(unsigned key) {
   return KEY_MATCH_NONE;
 }
 
-void GOKeyReceiver::Assign(const GOKeyReceiverData &data) {
-  *(GOKeyReceiverData *)this = data;
+void GOMidiShortcutReceiver::Assign(const GOMidiShortcutPattern &data) {
+  *(GOMidiShortcutPattern *)this = data;
   if (m_OrganController)
     m_OrganController->SetOrganModified();
 }

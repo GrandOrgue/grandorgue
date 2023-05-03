@@ -31,7 +31,7 @@ class GOEnclosure : private GOEventHandler,
 private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
-  GOKeyReceiver m_shortcut;
+  GOMidiShortcutReceiver m_shortcut;
   GOOrganController *m_OrganController;
   int m_AmpMinimumLevel;
   int m_MIDIInputNumber;

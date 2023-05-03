@@ -14,7 +14,7 @@
 #include "document-base/GOView.h"
 #include "modification/GOModificationProxy.h"
 
-class GOKeyReceiver;
+class GOMidiShortcutReceiver;
 class GOMidi;
 class GOMidiListener;
 class GOMidiReceiverBase;
@@ -46,7 +46,7 @@ public:
     GOConfig &settings,
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
-    GOKeyReceiver *key,
+    GOMidiShortcutReceiver *key,
     GOMidiSender *division = NULL);
 
   void RegisterMIDIListener(GOMidi *midi);

@@ -12,7 +12,7 @@ class wxString;
 
 class GOMidiReceiverBase;
 class GOMidiSender;
-class GOKeyReceiver;
+class GOMidiShortcutReceiver;
 
 /**
  * An abstract class that can show a MIDIEventDialog
@@ -24,7 +24,7 @@ public:
     const wxString &title,
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
-    GOKeyReceiver *key,
+    GOMidiShortcutReceiver *key,
     GOMidiSender *division = nullptr)
     = 0;
 };

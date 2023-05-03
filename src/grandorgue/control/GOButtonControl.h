@@ -32,7 +32,7 @@ protected:
   GOOrganController *m_OrganController;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
-  GOKeyReceiver m_shortcut;
+  GOMidiShortcutReceiver m_shortcut;
   bool m_Pushbutton;
   bool m_Displayed;
   wxString m_Name;

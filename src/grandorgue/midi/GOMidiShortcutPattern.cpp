@@ -7,17 +7,8 @@
 
 #include "GOMidiShortcutPattern.h"
 
-GOKeyReceiverData::GOKeyReceiverData(KEY_RECEIVER_TYPE type)
-  : m_type(type), m_ShortcutKey(0), m_MinusKey(0) {}
-
-GOKeyReceiverData::~GOKeyReceiverData() {}
-
-KEY_RECEIVER_TYPE GOKeyReceiverData::GetType() const { return m_type; }
-
-unsigned GOKeyReceiverData::GetShortcut() { return m_ShortcutKey; }
-
-void GOKeyReceiverData::SetShortcut(unsigned key) { m_ShortcutKey = key; }
-
-unsigned GOKeyReceiverData::GetMinusKey() { return m_MinusKey; }
-
-void GOKeyReceiverData::SetMinusKey(unsigned key) { m_MinusKey = key; }
+bool GOMidiShortcutPattern::operator==(
+  const GOMidiShortcutPattern &other) const {
+  return m_type == other.m_type && m_ShortcutKey == other.m_ShortcutKey
+    && m_MinusKey == other.m_MinusKey;
+}

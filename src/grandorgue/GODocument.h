@@ -17,7 +17,7 @@
 #include "threading/GOMutex.h"
 
 class GOOrganController;
-class GOKeyReceiver;
+class GOMidiShortcutReceiver;
 class GOMidiEvent;
 class GOMidiReceiverBase;
 class GOMidiSender;
@@ -66,7 +66,7 @@ public:
     const wxString &title,
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
-    GOKeyReceiver *key,
+    GOMidiShortcutReceiver *key,
     GOMidiSender *division = nullptr) override;
 };
 

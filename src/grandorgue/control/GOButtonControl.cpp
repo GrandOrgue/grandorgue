@@ -177,7 +177,7 @@ void GOButtonControl::ShowConfigDialog() {
     GetMidiName().c_str());
 
   GOMidiReceiver *midi = &m_midi;
-  GOKeyReceiver *key = &m_shortcut;
+  GOMidiShortcutReceiver *key = &m_shortcut;
   if (IsReadOnly()) {
     midi = NULL;
     key = NULL;
