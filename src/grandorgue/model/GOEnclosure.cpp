@@ -9,45 +9,44 @@
 
 #include <wx/intl.h>
 
-#include "GODocument.h"
-#include "GOOrganController.h"
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GOEnclosure::GOEnclosure(GOOrganController *organController)
-  : m_midi(*organController, MIDI_RECV_ENCLOSURE),
-    m_sender(*organController, MIDI_SEND_ENCLOSURE),
+#include "GOOrganModel.h"
+
+GOEnclosure::GOEnclosure(GOOrganModel &organModel)
+  : r_OrganModel(organModel),
+    r_MidiMap(organModel.GetConfig().GetMidiMap()),
+    m_midi(organModel, MIDI_RECV_ENCLOSURE),
+    m_sender(organModel, MIDI_SEND_ENCLOSURE),
     m_shortcut(KEY_RECV_ENCLOSURE),
-    m_OrganController(organController),
     m_AmpMinimumLevel(0),
     m_MIDIInputNumber(0),
     m_MIDIValue(0),
     m_Name(),
     m_Displayed1(false),
     m_Displayed2(false) {
-  m_OrganController->RegisterEventHandler(this);
-  m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterSoundStateHandler(this);
+  organModel.RegisterEventHandler(this);
+  organModel.RegisterMidiConfigurator(this);
+  organModel.RegisterSoundStateHandler(this);
 }
-
-GOEnclosure::~GOEnclosure() {}
 
 void GOEnclosure::Init(
   GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_Name = Name;
   Set(cfg.ReadInteger(
     CMBSetting, m_group, wxT("Value"), 0, 127, false, def_value));
-  m_midi.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
-  m_sender.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_midi.Load(cfg, m_group, r_MidiMap);
+  m_sender.Load(cfg, m_group, r_MidiMap);
   m_shortcut.Load(cfg, m_group);
   m_AmpMinimumLevel = 1;
 }
 
 void GOEnclosure::Load(GOConfigReader &cfg, wxString group, int enclosure_nb) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_Name = cfg.ReadStringNotEmpty(ODFSetting, m_group, wxT("Name"));
   m_Displayed1
@@ -60,14 +59,14 @@ void GOEnclosure::Load(GOConfigReader &cfg, wxString group, int enclosure_nb) {
     ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, 127));
   m_midi.SetIndex(enclosure_nb);
-  m_midi.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
-  m_sender.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_midi.Load(cfg, m_group, r_MidiMap);
+  m_sender.Load(cfg, m_group, r_MidiMap);
   m_shortcut.Load(cfg, m_group);
 }
 
 void GOEnclosure::Save(GOConfigWriter &cfg) {
-  m_midi.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
-  m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_midi.Save(cfg, m_group, r_MidiMap);
+  m_sender.Save(cfg, m_group, r_MidiMap);
   m_shortcut.Save(cfg, m_group);
   cfg.WriteInteger(m_group, wxT("Value"), m_MIDIValue);
 }
@@ -81,8 +80,8 @@ void GOEnclosure::Set(int n) {
     m_MIDIValue = n;
     m_sender.SetValue(m_MIDIValue);
   }
-  m_OrganController->UpdateVolume();
-  m_OrganController->SendControlChanged(this);
+  r_OrganModel.UpdateVolume();
+  r_OrganModel.SendControlChanged(this);
 }
 
 int GOEnclosure::GetMIDIInputNumber() { return m_MIDIInputNumber; }
@@ -155,7 +154,7 @@ void GOEnclosure::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_OrganController->ShowMIDIEventDialog(
+  r_OrganModel.ShowMIDIEventDialog(
     this, title, &m_midi, &m_sender, &m_shortcut);
 }
 

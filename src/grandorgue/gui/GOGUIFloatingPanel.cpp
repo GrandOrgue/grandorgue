@@ -80,7 +80,7 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
     */
   }
 
-  GOEnclosure *master_enc = new GOEnclosure(m_OrganController);
+  GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
   master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
   m_OrganController->AddEnclosure(master_enc);
   master_enc->SetElementID(
@@ -94,7 +94,7 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
     GOWindchest *windchest = m_OrganController->GetWindchest(i);
     windchest->AddEnclosure(master_enc);
 
-    GOEnclosure *enc = new GOEnclosure(m_OrganController);
+    GOEnclosure *enc = new GOEnclosure(*m_OrganController);
     enc->Init(
       cfg,
       wxString::Format(wxT("SetterMaster%03d"), i + 1),
