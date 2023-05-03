@@ -26,6 +26,7 @@ protected:
   // It is not registered as saveable object because
   // GOdivisionalSetter::LoadCombination creates the combinations dynamically
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
+  void SaveInt(GOConfigWriter &cfg);
 
   void PutElementToYamlMap(
     const GOCombinationDefinition::Element &e,
@@ -54,7 +55,6 @@ public:
     wxString group,
     int manualNumber,
     int divisionalNumber);
-  void Save(GOConfigWriter &cfg);
 
   bool Push(ExtraElementsSet const *extraSet = nullptr);
 

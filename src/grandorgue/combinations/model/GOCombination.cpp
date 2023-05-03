@@ -32,6 +32,7 @@ GOCombination::GOCombination(
   GOOrganController *organController)
   : m_Template(combination_template),
     m_OrganFile(organController),
+    m_IsFull(false),
     r_ElementDefinitions(combination_template.GetElements()),
     m_Protected(false) {}
 
@@ -41,6 +42,7 @@ void GOCombination::Clear() {
   UpdateState();
   for (unsigned i = 0; i < m_State.size(); i++)
     m_State[i] = -1;
+  m_IsFull = false;
 }
 
 void GOCombination::Copy(GOCombination *combination) {
@@ -277,16 +279,31 @@ void GOCombination::WriteNumberOfStops(
   cfg.WriteInteger(m_group, WX_NUMBER_OF_STOPS, stopCount);
 }
 
+const wxString WX_IS_FULL = wxT("IsFull");
+
+// Load the combination either from the odf or from the cmb
+void GOCombination::LoadCombination(
+  GOConfigReader &cfg, GOSettingType srcType) {
+  m_IsFull = cfg.ReadBoolean(srcType, m_group, WX_IS_FULL, false, true);
+  LoadCombinationInt(cfg, srcType);
+}
+
 void GOCombination::LoadCombination(GOConfigReader &cfg) {
+  Clear();
+
   if (is_cmb_on_file(cfg, CMBSetting, m_group))
-    LoadCombinationInt(cfg, CMBSetting);
+    LoadCombination(cfg, CMBSetting);
   else if (is_cmb_on_file(cfg, ODFSetting, m_group))
-    LoadCombinationInt(cfg, ODFSetting);
-  else
-    Clear();
+    LoadCombination(cfg, ODFSetting);
+}
+
+void GOCombination::Save(GOConfigWriter &cfg) {
+  cfg.WriteBoolean(m_group, WX_IS_FULL, m_IsFull);
+  SaveInt(cfg);
 }
 
 const wxString WX_P03D = wxT("%03d");
+const char *const FULL = "full";
 
 void GOCombination::ToYaml(YAML::Node &yamlMap) const {
   for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
@@ -298,16 +315,32 @@ void GOCombination::ToYaml(YAML::Node &yamlMap) const {
       PutElementToYamlMap(
         e, wxString::Format(WX_P03D, value), value - 1, yamlMap);
     }
+  // if the combination is not empty
+  if (yamlMap.IsDefined() && yamlMap.IsMap() && m_IsFull)
+    yamlMap[FULL] = true; // save whether the combination is set as full
 }
 
 void GOCombination::FromYaml(const YAML::Node &yamlNode) {
   if (!m_Protected) {
     Clear();
+
     if (yamlNode.IsDefined() && yamlNode.IsMap()) {
       FromYamlMap(yamlNode);
+      m_IsFull = yamlNode[FULL].as<bool>(false);
+
       // clear all non mentioned elements. Otherwise they won't be disabled when
       // this combination is switched on
-      std::replace(m_State.begin(), m_State.end(), -1, 0);
+
+      for (unsigned l = r_ElementDefinitions.size(), i = 0; i < l; i++) {
+        auto &state = m_State[i];
+
+        if (
+          state < 0
+          && (r_ElementDefinitions[i].store_unconditional || m_IsFull))
+          state = 0;
+        // else the element is not visible and it shouldn't be touched by the
+        // combination
+      }
     }
   }
 }
@@ -317,6 +350,7 @@ bool GOCombination::FillWithCurrent(
   bool used = false;
 
   UpdateState();
+  m_IsFull = isToStoreInvisibleObjects;
   if (setterType == SETTER_REGULAR) {
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
       if (

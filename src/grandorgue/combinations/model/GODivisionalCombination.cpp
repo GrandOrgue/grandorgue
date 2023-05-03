@@ -50,7 +50,7 @@ void GODivisionalCombination::Load(
 
   if (!m_IsSetter)
     /* check ODF settings */
-    LoadCombinationInt(cfg, ODFSetting);
+    LoadCombination(cfg, ODFSetting);
 }
 
 void GODivisionalCombination::LoadCombinationInt(
@@ -85,8 +85,6 @@ void GODivisionalCombination::LoadCombinationInt(
     m_OrganController->GetSwitchCount(),
     false,
     0);
-
-  Clear();
 
   unsigned cnt = associatedManual->GetStopCount();
 
@@ -131,7 +129,7 @@ void GODivisionalCombination::LoadCombinationInt(
   }
 }
 
-void GODivisionalCombination::Save(GOConfigWriter &cfg) {
+void GODivisionalCombination::SaveInt(GOConfigWriter &cfg) {
   wxString buffer;
   unsigned stop_count = 0;
   unsigned coupler_count = 0;
