@@ -197,7 +197,7 @@ void GODocument::ShowMIDIEventDialog(
   const wxString &title,
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
-  GOKeyReceiver *key,
+  GOMidiShortcutReceiver *key,
   GOMidiSender *division) {
   if (!showWindow(GODocument::MIDI_EVENT, element) && m_OrganController) {
     GOMidiEventDialog *dlg = new GOMidiEventDialog(

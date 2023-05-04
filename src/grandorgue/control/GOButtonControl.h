@@ -13,10 +13,10 @@
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
+#include "midi/GOMidiShortcutReceiver.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
-#include "GOKeyReceiver.h"
 #include "GOSaveableObject.h"
 
 class GOConfigReader;
@@ -32,7 +32,7 @@ protected:
   GOOrganController *m_OrganController;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
-  GOKeyReceiver m_shortcut;
+  GOMidiShortcutReceiver m_shortcut;
   bool m_Pushbutton;
   bool m_Displayed;
   wxString m_Name;

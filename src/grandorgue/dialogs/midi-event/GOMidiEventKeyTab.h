@@ -10,15 +10,15 @@
 
 #include <wx/panel.h>
 
-#include "GOKeyReceiver.h"
+#include "midi/GOMidiShortcutReceiver.h"
 
 class wxChoice;
 class wxToggleButton;
 
 class GOMidiEventKeyTab : public wxPanel {
 private:
-  GOKeyReceiver *m_original;
-  GOKeyReceiverData m_key;
+  GOMidiShortcutReceiver *m_original;
+  GOMidiShortcutPattern m_key;
   wxChoice *m_keyselect;
   wxToggleButton *m_listen;
   wxChoice *m_keyminusselect;
@@ -40,7 +40,7 @@ protected:
   };
 
 public:
-  GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event);
+  GOMidiEventKeyTab(wxWindow *parent, GOMidiShortcutReceiver *event);
   ~GOMidiEventKeyTab();
 
   virtual bool TransferDataFromWindow() override;

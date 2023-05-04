@@ -20,7 +20,7 @@ GOMidiEventDialog::GOMidiEventDialog(
   GOConfig &settings,
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
-  GOKeyReceiver *key,
+  GOMidiShortcutReceiver *key,
   GOMidiSender *division)
   : GOTabbedDialog(parent, "MidiEvent", title),
     GOView(doc, this),

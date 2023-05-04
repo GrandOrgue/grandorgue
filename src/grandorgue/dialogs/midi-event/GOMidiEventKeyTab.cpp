@@ -20,7 +20,8 @@ EVT_TOGGLEBUTTON(ID_LISTEN, GOMidiEventKeyTab::OnListenClick)
 EVT_TOGGLEBUTTON(ID_LISTEN_MINUS, GOMidiEventKeyTab::OnMinusListenClick)
 END_EVENT_TABLE()
 
-GOMidiEventKeyTab::GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event)
+GOMidiEventKeyTab::GOMidiEventKeyTab(
+  wxWindow *parent, GOMidiShortcutReceiver *event)
   : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
     m_original(event),
     m_key(*event),

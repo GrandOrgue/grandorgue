@@ -5,30 +5,31 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOKEYRECEIVER_H
-#define GOKEYRECEIVER_H
+#ifndef GOMIDISHORTCUTRECEIVER_H
+#define GOMIDISHORTCUTRECEIVER_H
 
 #include <wx/string.h>
 
-#include "GOKeyReceiverData.h"
+#include "GOMidiShortcutPattern.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GOOrganController;
 
-class GOKeyReceiver : public GOKeyReceiverData {
+class GOMidiShortcutReceiver : public GOMidiShortcutPattern {
 private:
   GOOrganController *m_OrganController;
 
 public:
-  GOKeyReceiver(GOOrganController *organController, KEY_RECEIVER_TYPE type);
+  GOMidiShortcutReceiver(
+    GOOrganController *organController, KEY_RECEIVER_TYPE type);
 
   void Load(GOConfigReader &cfg, wxString group);
   void Save(GOConfigWriter &cfg, wxString group);
 
   KEY_MATCH_TYPE Match(unsigned key);
 
-  void Assign(const GOKeyReceiverData &data);
+  void Assign(const GOMidiShortcutPattern &data);
 };
 
 #endif

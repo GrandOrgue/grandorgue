@@ -135,6 +135,8 @@ midi/GOMidiPlayer.cpp
 midi/GOMidiPlayerContent.cpp
 midi/GOMidiSendProxy.cpp
 midi/GOMidiSender.cpp
+midi/GOMidiShortcutPattern.cpp
+midi/GOMidiShortcutReceiver.cpp
 midi/GOMidiReceiver.cpp
 midi/GOMidiRecorder.cpp
 model/pipe-config/GOPipeConfig.cpp
@@ -194,7 +196,6 @@ GOCacheCleaner.cpp
 GOCacheWriter.cpp
 GOBitmapCache.cpp
 GOEvent.cpp
-GOKeyReceiver.cpp
 GOLog.cpp
 GOLogWindow.cpp
 GOMetronome.cpp

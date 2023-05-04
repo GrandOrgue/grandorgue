@@ -13,10 +13,10 @@
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
+#include "midi/GOMidiShortcutReceiver.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
-#include "GOKeyReceiver.h"
 #include "GOSaveableObject.h"
 
 class GOConfigReader;
@@ -31,7 +31,7 @@ class GOEnclosure : private GOEventHandler,
 private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
-  GOKeyReceiver m_shortcut;
+  GOMidiShortcutReceiver m_shortcut;
   GOOrganController *m_OrganController;
   int m_AmpMinimumLevel;
   int m_MIDIInputNumber;
