@@ -1,3 +1,4 @@
+# 3.11.1 (2023-05-03)
 - Fixed processing yaml combinations on organs with invisible couplers https://github.com/GrandOrgue/grandorgue/issues/1489
 - Fixed uncompatibility with recent linux distros. Use grandorgue-wx32 on new linux distros (where wxWidgets 3.0 is not available) https://github.com/GrandOrgue/grandorgue/issues/1480
 - Added support of negative y-axis adjustment of manual keys https://github.com/GrandOrgue/grandorgue/issues/1485
