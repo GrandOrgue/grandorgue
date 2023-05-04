@@ -61,6 +61,7 @@ void GOReferencePipe::UpdateHash(GOHash &hash) {}
 
 const wxString &GOReferencePipe::GetLoadTitle() { return m_Filename; }
 
-void GOReferencePipe::Change(unsigned velocity, unsigned old_velocity) {
-  m_Reference->Set(velocity, m_ReferenceID);
+void GOReferencePipe::VelocityChanged(
+  unsigned velocity, unsigned old_velocity) {
+  m_Reference->SetVelocity(velocity, m_ReferenceID);
 }

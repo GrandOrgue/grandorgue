@@ -28,7 +28,12 @@ protected:
   GORank *m_Rank;
   unsigned m_MidiKeyNumber;
 
-  virtual void Change(unsigned velocity, unsigned old_velocity) = 0;
+  /**
+   * Called when a user presses or releases the key.
+   * @param velocity - the new velocity. >0 - pressed, 0 - released
+   * @param old_velocity - the old velocity. If 0, then the kew wasn't pressed
+   */
+  virtual void VelocityChanged(unsigned velocity, unsigned old_velocity) = 0;
 
   void PreparePlayback();
 
@@ -37,7 +42,12 @@ public:
     GOEventHandlerList *handlerList, GORank *rank, unsigned midi_key_number);
   virtual ~GOPipe();
   virtual void Load(GOConfigReader &cfg, wxString group, wxString prefix) = 0;
-  void Set(unsigned velocity, unsigned referenceID = 0);
+  /**
+   * Called from GORank when a user presses the key
+   * @param velocity the velocity value of the midi event
+   * @param referenceID - 0 or the id of the reference for a REF: pipe
+   */
+  void SetVelocity(unsigned velocity, unsigned referenceID = 0);
   unsigned RegisterReference(GOPipe *pipe);
   virtual void SetTemperament(const GOTemperament &temperament);
 };

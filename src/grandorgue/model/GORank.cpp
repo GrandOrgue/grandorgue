@@ -177,7 +177,7 @@ void GORank::SetKey(int note, unsigned velocity, unsigned stopID) {
       maxVelocity = velocity >= maxVelocity
         ? velocity
         : *std::max_element(allStopVelocities.begin(), allStopVelocities.end());
-      m_Pipes[note]->Set(maxVelocity);
+      m_Pipes[note]->SetVelocity(maxVelocity);
     }
   }
 }

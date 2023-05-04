@@ -98,7 +98,7 @@ private:
    * @param velocity the velocity of key pressing. 0 means release
    * @param last_velocity the velocity of the previous key pressing
    */
-  void Change(unsigned velocity, unsigned old_velocity) override;
+  void VelocityChanged(unsigned velocity, unsigned old_velocity) override;
 
 public:
   GOSoundingPipe(
