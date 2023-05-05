@@ -23,11 +23,15 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOMidiEvent;
 class GOOrganController;
+class GOOrganModel;
 
 class GOButtonControl : private GOEventHandler,
                         public GOSaveableObject,
                         protected GOSoundStateHandler,
                         public GOMidiConfigurator {
+private:
+  GOMidiMap &r_MidiMap;
+
 protected:
   GOOrganController *m_OrganController;
   GOMidiReceiver m_midi;
@@ -56,7 +60,6 @@ public:
     GOMidiReceiverType midi_type,
     bool pushbutton,
     bool isPiston = false);
-  virtual ~GOButtonControl();
   void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
   void Load(GOConfigReader &cfg, const wxString &group);
   bool IsDisplayed();

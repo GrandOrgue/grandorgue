@@ -9,10 +9,6 @@
 
 #include "GOCallbackButtonControl.h"
 
-GOElementCreator::GOElementCreator() : m_buttons() {}
-
-GOElementCreator::~GOElementCreator() {}
-
 void GOElementCreator::CreateButtons(GOOrganController *organController) {
   const struct ButtonDefinitionEntry *entries = GetButtonDefinitionList();
   for (unsigned i = 0;
