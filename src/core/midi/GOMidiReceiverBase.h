@@ -42,7 +42,7 @@ protected:
 public:
   GOMidiReceiverBase(GOMidiReceiverType type);
 
-  virtual void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
+  virtual void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map);
   void PreparePlayback();
 
