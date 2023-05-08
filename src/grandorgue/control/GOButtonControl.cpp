@@ -19,7 +19,7 @@ GOButtonControl::GOButtonControl(
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : r_MidiMap(m_OrganController->GetConfig().GetMidiMap()),
+  : r_MidiMap(organController->GetConfig().GetMidiMap()),
     m_OrganController(organController),
     m_midi(*organController, midi_type),
     m_sender(*organController, MIDI_SEND_BUTTON),
