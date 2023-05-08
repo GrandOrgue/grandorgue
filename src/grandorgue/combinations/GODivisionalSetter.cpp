@@ -115,7 +115,7 @@ GODivisionalSetter::GODivisionalSetter(
 
   // create button conrols for all buttons. It calls the GetButtonDefinitionList
   // callback
-  CreateButtons(organController);
+  CreateButtons(*organController);
 
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);

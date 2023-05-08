@@ -12,7 +12,8 @@
 
 class GOPushbuttonControl : public GOButtonControl {
 public:
-  GOPushbuttonControl(GOOrganController *organController);
+  GOPushbuttonControl(GOOrganModel &organModel)
+    : GOButtonControl(organModel, MIDI_RECV_BUTTON, true) {}
 };
 
 #endif

@@ -18,7 +18,7 @@ GODivisionalButtonControl::GODivisionalButtonControl(
   GOOrganController *organController,
   GOCombinationDefinition &divisionalTemplate,
   bool isSetter)
-  : GOPushbuttonControl(organController),
+  : GOPushbuttonControl(*organController),
     r_setter(*organController->GetSetter()),
     m_combination(organController, divisionalTemplate, isSetter) {}
 
@@ -52,8 +52,7 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalButtonControl::Push() {
-  GOManual *pManual
-    = m_OrganController->GetManual(m_combination.GetManualNumber());
+  GOManual *pManual = r_OrganModel.GetManual(m_combination.GetManualNumber());
 
   r_setter.PushDivisional(m_combination);
   for (unsigned l = pManual->GetDivisionalCount(), k = 0; k < l; k++) {

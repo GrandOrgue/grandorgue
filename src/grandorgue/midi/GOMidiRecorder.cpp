@@ -62,7 +62,7 @@ GOMidiRecorder::GOMidiRecorder(GOOrganController *organController)
     m_BufferPos(0),
     m_FileLength(0),
     m_Last(0) {
-  CreateButtons(m_OrganController);
+  CreateButtons(*m_OrganController);
   Clear();
   UpdateDisplay();
 }

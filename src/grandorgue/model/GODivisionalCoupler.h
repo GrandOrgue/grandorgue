@@ -21,7 +21,7 @@ private:
   void SetupCombinationState();
 
 public:
-  GODivisionalCoupler(GOOrganController *organController);
+  GODivisionalCoupler(GOOrganModel &organModel);
   void Load(GOConfigReader &cfg, wxString group);
 
   unsigned GetNumberOfManuals();

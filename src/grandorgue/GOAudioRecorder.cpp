@@ -49,7 +49,7 @@ GOAudioRecorder::GOAudioRecorder(GOOrganController *organController)
     m_RecordSeconds(0),
     m_Filename(),
     m_DoRename(false) {
-  CreateButtons(m_OrganController);
+  CreateButtons(*m_OrganController);
   UpdateDisplay();
 }
 
