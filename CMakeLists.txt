@@ -18,6 +18,7 @@ project(
   VERSION "${VERSION}"
   DESCRIPTION "GrandOrgue - free pipe organ simulator"
   LANGUAGES CXX C
+  HOMEPAGE_URL "https://github.com/GrandOrgue/grandorgue"
 )
 set(NUM_VERSION "${PROJECT_VERSION}")
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
@@ -214,7 +215,7 @@ add_subdirectory(resources)
 
 # packaging
 
-# deal with possible package names among grandorgue, grandorgue-wx30
+# deal with possible package names among grandorgue, grandorgue-wx30, grandorgue-wx32
 set(BASE_PACKAGE_NAME "grandorgue")
 
 set(OTHER_PACKAGE_NAMES "${BASE_PACKAGE_NAME}" "${BASE_PACKAGE_NAME}-wx30" "${BASE_PACKAGE_NAME}-wx32")
@@ -228,11 +229,11 @@ if(NOT GO_SEPARATE_LINUX_PACKAGES)
   list(APPEND OTHER_PACKAGE_NAMES "${BASE_PACKAGE_NAME}-resources" "${BASE_PACKAGE_NAME}-demo")
 endif()
 
-set(CPACK_PACKAGE_VENDOR "Our Organ")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GrandOrgue - OpenSource Virtual Pipe Organ Software")
+set(CPACK_PACKAGE_VENDOR "GrandOrgue contributors")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenSource Virtual Pipe Organ Software")
 set(
   CPACK_PACKAGE_DESCRIPTION
-  "GrandOrgue is a virtual pipe organ sample player application supporting a HW1 compatible file format"
+  "GrandOrgue is a virtual pipe organ sample player application"
 )
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_RELEASE ${BUILD_VERSION})
@@ -324,7 +325,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_GENERATOR TGZ RPM DEB)
 
   set(CPACK_RPM_COMPONENT_INSTALL ${GO_SEPARATE_LINUX_PACKAGES})
-  set(CPACK_RPM_PACKAGE_LICENSE "GPL v2+")
+  set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-or-later")
   set(CPACK_RPM_PACKAGE_RELEASE "${CPACK_PACKAGE_RELEASE}")
   set(CPACK_RPM_PACKAGE_GROUP "Productivity/Multimedia/Sound/Midi")
   set(CPACK_RPM_MAIN_COMPONENT Unspecified)
@@ -342,6 +343,14 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_DEMO_PACKAGE_ARCHITECTURE noarch)
   set(CPACK_RPM_DEMO_FILE_NAME RPM-DEFAULT)
   string (REPLACE ";" " " CPACK_RPM_PACKAGE_OBSOLETES "${OTHER_PACKAGE_NAMES}")
+
+  # prevent rpmlint errors
+  set(
+    CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+    /usr/share/icons
+    /usr/share/man
+    /usr/share/man/man1
+  )
 
   # for source rpms
   set(CPACK_RPM_BUILDREQUIRES "pkgconfig(alsa), gcc-c++, jack-audio-connection-kit-devel, cmake, wxGTK3-devel, pkgconfig(fftw3f), pkgconfig(libudev), pkgconfig(wavpack), pkgconfig(zlib), libxslt, zip, po4a")
