@@ -284,6 +284,7 @@ const wxString WX_IS_FULL = wxT("IsFull");
 // Load the combination either from the odf or from the cmb
 void GOCombination::LoadCombination(
   GOConfigReader &cfg, GOSettingType srcType) {
+  UpdateState();
   m_IsFull = cfg.ReadBoolean(srcType, m_group, WX_IS_FULL, false, true);
   LoadCombinationInt(cfg, srcType);
 }
