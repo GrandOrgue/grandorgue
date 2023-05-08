@@ -19,7 +19,8 @@ GOButtonControl::GOButtonControl(
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : m_OrganController(organController),
+  : r_MidiMap(organController->GetConfig().GetMidiMap()),
+    m_OrganController(organController),
     m_midi(*organController, midi_type),
     m_sender(*organController, MIDI_SEND_BUTTON),
     m_shortcut(KEY_RECV_BUTTON),
@@ -35,8 +36,6 @@ GOButtonControl::GOButtonControl(
   m_OrganController->RegisterSoundStateHandler(this);
 }
 
-GOButtonControl::~GOButtonControl() {}
-
 void GOButtonControl::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
   m_OrganController->RegisterSaveableObject(this);
@@ -45,10 +44,10 @@ void GOButtonControl::Init(
   m_Displayed = false;
   m_DisplayInInvertedState = false;
   if (!m_ReadOnly) {
-    m_midi.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
+    m_midi.Load(cfg, group, r_MidiMap);
     m_shortcut.Load(cfg, group);
   }
-  m_sender.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, group, r_MidiMap);
 }
 
 void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
@@ -59,22 +58,19 @@ void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
     = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
   m_DisplayInInvertedState = cfg.ReadBoolean(
     ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
-
-  GOMidiMap &midiMap = m_OrganController->GetSettings().GetMidiMap();
-
   if (!m_ReadOnly) {
-    m_midi.Load(cfg, group, midiMap);
+    m_midi.Load(cfg, group, r_MidiMap);
     m_shortcut.Load(cfg, group);
   }
-  m_sender.Load(cfg, group, midiMap);
+  m_sender.Load(cfg, group, r_MidiMap);
 }
 
 void GOButtonControl::Save(GOConfigWriter &cfg) {
   if (!m_ReadOnly) {
-    m_midi.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+    m_midi.Save(cfg, m_group, r_MidiMap);
     m_shortcut.Save(cfg, m_group);
   }
-  m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Save(cfg, m_group, r_MidiMap);
 }
 
 bool GOButtonControl::IsDisplayed() { return m_Displayed; }

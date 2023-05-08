@@ -19,6 +19,7 @@ GODivisionalButtonControl::GODivisionalButtonControl(
   GOCombinationDefinition &divisionalTemplate,
   bool isSetter)
   : GOPushbuttonControl(organController),
+    r_setter(*organController->GetSetter()),
     m_combination(organController, divisionalTemplate, isSetter) {}
 
 wxString GODivisionalButtonControl::GetMidiType() { return _("Divisional"); };
@@ -52,13 +53,12 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 
 void GODivisionalButtonControl::Push() {
   GOCombination::ExtraElementsSet elementSet;
-  GOSetter &setter = *m_OrganController->GetSetter();
   const GOCombination::ExtraElementsSet *pAddSet
-    = setter.GetCrescendoAddSet(elementSet);
+    = r_setter.GetCrescendoAddSet(elementSet);
   GOManual *pManual
     = m_OrganController->GetManual(m_combination.GetManualNumber());
 
-  setter.NotifyCmbPushed(m_combination.Push(pAddSet));
+  r_setter.NotifyCmbPushed(m_combination.Push(pAddSet));
 
   for (unsigned l = pManual->GetDivisionalCount(), k = 0; k < l; k++) {
     GODivisionalButtonControl *pDivisionalControl = pManual->GetDivisional(k);

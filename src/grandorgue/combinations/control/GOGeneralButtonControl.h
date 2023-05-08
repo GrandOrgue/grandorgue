@@ -12,9 +12,11 @@
 #include "control/GOPushbuttonControl.h"
 
 class GOConfigReader;
+class GOSetter;
 
 class GOGeneralButtonControl : public GOPushbuttonControl {
 private:
+  GOSetter &r_setter;
   GOGeneralCombination m_combination;
 
 public:

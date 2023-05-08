@@ -37,9 +37,6 @@ protected:
   void CreateButtons(GOOrganController *organController);
 
 public:
-  GOElementCreator();
-  virtual ~GOElementCreator();
-
   virtual void Load(GOConfigReader &cfg) = 0;
 
   virtual GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) = 0;
