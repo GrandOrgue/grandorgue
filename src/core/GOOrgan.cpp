@@ -138,7 +138,10 @@ const wxString GOOrgan::GetOrganHash() const {
     hash.Update(m_ODF);
   } else {
     wxFileName odf(m_ODF);
-    odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
+
+    odf.Normalize(
+      wxPATH_NORM_DOTS | wxPATH_NORM_TILDE | wxPATH_NORM_CASE
+      | wxPATH_NORM_ABSOLUTE | wxPATH_NORM_LONG | wxPATH_NORM_SHORTCUT);
     wxString filename = odf.GetFullPath();
 
     hash.Update(filename);

@@ -60,7 +60,7 @@ const struct IniFileEnumEntry GOMidiReceiverBase::m_MidiTypes[] = {
 };
 
 void GOMidiReceiverBase::Load(
-  GOConfigReader &cfg, wxString group, GOMidiMap &map) {
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
   m_events.resize(0);
 
   int event_cnt = cfg.ReadInteger(
