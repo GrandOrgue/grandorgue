@@ -244,8 +244,12 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   m_Temperament
     = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("Temperament"), false);
 
+  // It must be created before GOOrganModel::Load because lots of objects
+  // reference to it
+  m_setter = new GOSetter(this);
+  m_elementcreators.push_back(m_setter);
+
   GOOrganModel::Load(cfg, this);
-  wxString buffer;
 
   for (unsigned i = 0; i < m_enclosures.size(); i++)
     m_enclosures[i]->SetElementID(
@@ -259,8 +263,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     m_tremulants[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 
-  m_setter = new GOSetter(this);
-  m_elementcreators.push_back(m_setter);
   m_DivisionalSetter = new GODivisionalSetter(this);
   m_elementcreators.push_back(m_DivisionalSetter);
   m_AudioRecorder = new GOAudioRecorder(this);
@@ -291,6 +293,8 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   m_panels.resize(0);
   m_panels.push_back(new GOGUIPanel(this));
   m_panels[0]->Load(cfg, wxT(""));
+
+  wxString buffer;
 
   for (unsigned i = 0; i < NumberOfPanels; i++) {
     buffer.Printf(wxT("Panel%03d"), i + 1);
