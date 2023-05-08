@@ -21,15 +21,15 @@ private:
   GOOrganController *m_OrganController;
 
 public:
-  GOMidiShortcutReceiver(
-    GOOrganController *organController, KEY_RECEIVER_TYPE type);
+  GOMidiShortcutReceiver(KEY_RECEIVER_TYPE type)
+    : GOMidiShortcutPattern(type) {}
 
   void Load(GOConfigReader &cfg, wxString group);
   void Save(GOConfigWriter &cfg, wxString group);
 
   KEY_MATCH_TYPE Match(unsigned key);
 
-  void Assign(const GOMidiShortcutPattern &data);
+  bool RenewFrom(const GOMidiShortcutPattern &newPattern);
 };
 
 #endif

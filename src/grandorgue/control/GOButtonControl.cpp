@@ -22,7 +22,7 @@ GOButtonControl::GOButtonControl(
   : m_OrganController(organController),
     m_midi(*organController, midi_type),
     m_sender(*organController, MIDI_SEND_BUTTON),
-    m_shortcut(organController, KEY_RECV_BUTTON),
+    m_shortcut(KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
     m_Name(),
