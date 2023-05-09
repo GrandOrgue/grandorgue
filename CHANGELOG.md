@@ -1,3 +1,4 @@
+# 3.11.2 (2023-05-08)
 - Fixed crash on loading organ with general of divisional buttons https://github.com/GrandOrgue/grandorgue/issues/1512
 # 3.11.1 (2023-05-03)
 - Fixed processing yaml combinations on organs with invisible couplers https://github.com/GrandOrgue/grandorgue/issues/1489
