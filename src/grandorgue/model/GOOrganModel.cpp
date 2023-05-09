@@ -78,7 +78,7 @@ void GOOrganModel::Load(
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 50);
   m_enclosures.resize(0);
   for (unsigned i = 0; i < NumberOfEnclosures; i++) {
-    m_enclosures.push_back(new GOEnclosure(organController));
+    m_enclosures.push_back(new GOEnclosure(*organController));
     m_enclosures[i]->Load(
       cfg, wxString::Format(wxT("Enclosure%03u"), i + 1), i);
   }
