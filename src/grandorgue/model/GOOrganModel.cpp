@@ -75,7 +75,7 @@ void GOOrganModel::Load(
     m_manuals.push_back(new GOManual(organController));
 
   unsigned NumberOfEnclosures
-    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 50);
+    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfEnclosures"), 0, 999);
   m_enclosures.resize(0);
   for (unsigned i = 0; i < NumberOfEnclosures; i++) {
     m_enclosures.push_back(new GOEnclosure(*organController));

@@ -7037,7 +7037,7 @@ The manual information for each manual is available in sections called
           <term>NumberOfEnclosures</term>
           <listitem>
             <para>
-(integer 0 - 50, required) number of enclosures. The details of each enclosure are contained in a section called <emphasis>Enclosure999</emphasis>
+(integer 0 - 999 required) number of enclosures. The details of each enclosure are contained in a section called <emphasis>Enclosure999</emphasis>
      </para>
           </listitem>
         </varlistentry>
