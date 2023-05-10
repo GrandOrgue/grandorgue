@@ -1,3 +1,4 @@
+- Added new builtin bitmap set of manual keys and one new drawstop bitmap https://github.com/GrandOrgue/grandorgue/discussions/1490
 # 3.11.2 (2023-05-08)
 - Fixed crash on loading organ with general of divisional buttons https://github.com/GrandOrgue/grandorgue/issues/1512
 # 3.11.1 (2023-05-03)

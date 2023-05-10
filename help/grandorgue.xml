@@ -8822,6 +8822,15 @@ for the keys.
           </listitem>
         </varlistentry>
         <varlistentry>
+          <term>DispImageNum</term>
+          <listitem>
+            <para>
+(integer 1 - 2, default: 1) determines which set of builtin bitmaps is used for
+displaying the keys.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>DisplayFirstNote</term>
           <listitem>
             <para>
@@ -9301,7 +9310,7 @@ is false, move it a little bit left. Otherwise ignored.
           <listitem>
             <para>
 (integer 1 - type dependent, default: see below) Builtin bitmap set to
-use. GrandOrgue has 6 for drawstops and 5 for pistons. The default is
+use. GrandOrgue has 7 for drawstops and 5 for pistons. The default is
 3 (piston) or 4 (drawstops) for read-only buttons, otherwise the
 default is 1.
      </para>
