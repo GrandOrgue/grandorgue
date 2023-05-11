@@ -421,7 +421,9 @@ void GOSoundingPipe::Validate() {
       GetLoadTitle().c_str());
     return;
   }
-  float offset = m_RetunePipe ? GetAutoTuningPitchOffset() : 0.0;
+  float offset = m_RetunePipe
+    ? (GetAutoTuningPitchOffset() - GetManualTuningPitchOffset())
+    : 0.0;
 
   if (offset < -1800 || offset > 1800) {
     wxLogError(

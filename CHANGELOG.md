@@ -1,3 +1,4 @@
+- Fixed warning "temperament would retune pipe by more than 600 cents" for retuned pipes https://github.com/GrandOrgue/ODFEdit/discussions/11#discussioncomment-5877020
 - Increased the maximum value of Enclosures from 50 to 999 https://github.com/GrandOrgue/grandorgue/issues/1484
 # 3.11.2 (2023-05-08)
 - Fixed crash on loading organ with general of divisional buttons https://github.com/GrandOrgue/grandorgue/issues/1512
