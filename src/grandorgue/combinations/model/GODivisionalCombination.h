@@ -15,6 +15,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOOrganController;
+class GOSetterState;
 
 class GODivisionalCombination : public GOCombination {
 protected:
@@ -55,10 +56,6 @@ public:
     wxString group,
     int manualNumber,
     int divisionalNumber);
-
-  bool Push(ExtraElementsSet const *extraSet = nullptr);
-
-  wxString GetMidiType();
 
   // checks if the combination exists in the config file
   // returns the loaded combination if it exists else returns nullptr

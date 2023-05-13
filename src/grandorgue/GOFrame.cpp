@@ -783,7 +783,7 @@ void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
   if (event.GetId() == ID_AUDIO_MEMSET)
     event.Check(
       organController && organController->GetSetter()
-      && organController->GetSetter()->IsSetterActive());
+      && organController->GetSetter()->GetState().m_IsActive);
   else if (event.GetId() == ID_ORGAN_EDIT)
     event.Check(m_doc && m_doc->WindowExists(GODocument::ORGAN_DIALOG, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
