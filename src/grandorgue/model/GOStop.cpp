@@ -9,13 +9,13 @@
 
 #include <wx/intl.h>
 
-#include "GOOrganController.h"
-#include "GORank.h"
 #include "config/GOConfigReader.h"
 
-GOStop::GOStop(
-  GOOrganController *organController, unsigned first_midi_note_number)
-  : GODrawstop(organController),
+#include "GOOrganModel.h"
+#include "GORank.h"
+
+GOStop::GOStop(GOOrganModel &organModel, unsigned first_midi_note_number)
+  : GODrawstop(organModel),
     m_RankInfo(0),
     m_KeyVelocity(0),
     m_FirstMidiNoteNumber(first_midi_note_number),
@@ -46,8 +46,8 @@ void GOStop::Load(GOConfigReader &cfg, wxString group) {
         group,
         wxString::Format(wxT("Rank%03d"), i + 1),
         1,
-        m_OrganController->GetODFRankCount());
-      info.Rank = m_OrganController->GetRank(no - 1);
+        r_OrganModel.GetODFRankCount());
+      info.Rank = r_OrganModel.GetRank(no - 1);
       info.FirstPipeNumber = cfg.ReadInteger(
         ODFSetting,
         group,
@@ -77,8 +77,8 @@ void GOStop::Load(GOConfigReader &cfg, wxString group) {
     }
   } else {
     RankInfo info;
-    info.Rank = new GORank(*m_OrganController);
-    m_OrganController->AddRank(info.Rank);
+    info.Rank = new GORank(r_OrganModel);
+    r_OrganModel.AddRank(info.Rank);
     info.FirstPipeNumber = cfg.ReadInteger(
       ODFSetting, group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, 192);
     info.FirstAccessibleKeyNumber = 1;
@@ -96,20 +96,18 @@ void GOStop::Load(GOConfigReader &cfg, wxString group) {
   m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
   m_StoreDivisional
-    = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-    || IsDisplayed();
-  m_StoreGeneral = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-    || IsDisplayed();
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreGeneral
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 
   GODrawstop::Load(cfg, group);
 }
 
 void GOStop::SetupCombinationState() {
   m_StoreDivisional
-    = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-    || IsDisplayed();
-  m_StoreGeneral = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-    || IsDisplayed();
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_StoreGeneral
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 void GOStop::SetRankKey(unsigned key, unsigned velocity) {

@@ -170,7 +170,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   m_stops.resize(0);
   for (unsigned i = 0; i < nb_stops; i++) {
     m_stops.push_back(
-      new GOStop(m_OrganController, GetFirstLogicalKeyMIDINoteNumber()));
+      new GOStop(*m_OrganController, GetFirstLogicalKeyMIDINoteNumber()));
     buffer.Printf(wxT("Stop%03d"), i + 1);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
@@ -182,7 +182,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
 
   m_couplers.resize(0);
   for (unsigned i = 0; i < m_ODFCouplerCount; i++) {
-    m_couplers.push_back(new GOCoupler(m_OrganController, m_manual_number));
+    m_couplers.push_back(new GOCoupler(*m_OrganController, m_manual_number));
     buffer.Printf(wxT("Coupler%03d"), i + 1);
     buffer.Printf(
       wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));

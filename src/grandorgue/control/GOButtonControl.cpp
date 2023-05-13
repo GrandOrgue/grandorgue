@@ -15,14 +15,14 @@
 #include "GOOrganController.h"
 
 GOButtonControl::GOButtonControl(
-  GOOrganController *organController,
+  GOOrganModel &organModel,
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : r_MidiMap(organController->GetConfig().GetMidiMap()),
-    m_OrganController(organController),
-    m_midi(*organController, midi_type),
-    m_sender(*organController, MIDI_SEND_BUTTON),
+  : r_MidiMap(organModel.GetConfig().GetMidiMap()),
+    r_OrganModel(organModel),
+    m_midi(organModel, midi_type),
+    m_sender(organModel, MIDI_SEND_BUTTON),
     m_shortcut(KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
@@ -31,14 +31,14 @@ GOButtonControl::GOButtonControl(
     m_DisplayInInvertedState(false),
     m_ReadOnly(false),
     m_IsPiston(isPiston) {
-  m_OrganController->RegisterEventHandler(this);
-  m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterSoundStateHandler(this);
+  organModel.RegisterEventHandler(this);
+  organModel.RegisterMidiConfigurator(this);
+  organModel.RegisterSoundStateHandler(this);
 }
 
 void GOButtonControl::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
   m_Displayed = false;
@@ -51,7 +51,7 @@ void GOButtonControl::Init(
 }
 
 void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true, m_Name);
   m_Displayed
@@ -140,7 +140,7 @@ void GOButtonControl::Display(bool onoff) {
     return;
   m_sender.SetDisplay(onoff);
   m_Engaged = onoff;
-  m_OrganController->SendControlChanged(this);
+  r_OrganModel.SendControlChanged(this);
 }
 
 bool GOButtonControl::IsEngaged() const { return m_Engaged; }
@@ -179,7 +179,7 @@ void GOButtonControl::ShowConfigDialog() {
     key = NULL;
   }
 
-  m_OrganController->ShowMIDIEventDialog(this, title, midi, &m_sender, key);
+  r_OrganModel.ShowMIDIEventDialog(this, title, midi, &m_sender, key);
 }
 
 wxString GOButtonControl::GetElementStatus() {

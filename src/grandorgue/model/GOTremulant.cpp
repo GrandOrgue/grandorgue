@@ -9,8 +9,8 @@
 
 #include <wx/intl.h>
 
-#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
+#include "model/GOOrganModel.h"
 #include "sound/GOSoundEngine.h"
 #include "sound/GOSoundProviderSynthedTrem.h"
 
@@ -27,8 +27,8 @@ const struct IniFileEnumEntry GOTremulant::m_tremulant_types[] = {
   {wxT("Wave"), GOWavTrem},
 };
 
-GOTremulant::GOTremulant(GOOrganController *organController)
-  : GODrawstop(organController),
+GOTremulant::GOTremulant(GOOrganModel &organModel)
+  : GODrawstop(organModel),
     m_TremulantType(GOSynthTrem),
     m_Period(0),
     m_StartRate(0),
@@ -79,15 +79,14 @@ void GOTremulant::Load(
     m_PlaybackHandle = 0;
   }
   GODrawstop::Load(cfg, group);
-  m_OrganController->RegisterCacheObject(this);
+  r_OrganModel.RegisterCacheObject(this);
 }
 
 void GOTremulant::SetupCombinationState() {
-  m_StoreDivisional = m_OrganController->DivisionalsStoreTremulants()
-    && (m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-        || IsDisplayed());
-  m_StoreGeneral = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-    || IsDisplayed();
+  m_StoreDivisional = r_OrganModel.DivisionalsStoreTremulants()
+    && (r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
+  m_StoreGeneral
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 void GOTremulant::InitSoundProvider(GOMemoryPool &pool) {
@@ -118,7 +117,7 @@ void GOTremulant::ChangeState(bool on) {
     }
   }
   if (m_TremulantType == GOWavTrem) {
-    m_OrganController->UpdateTremulant(this);
+    r_OrganModel.UpdateTremulant(this);
   }
 }
 
@@ -140,7 +139,7 @@ void GOTremulant::StartPlayback() {
                                     : nullptr;
   }
   if (m_TremulantType == GOWavTrem) {
-    m_OrganController->UpdateTremulant(this);
+    r_OrganModel.UpdateTremulant(this);
   }
 }
 

@@ -9,7 +9,7 @@
 
 #include "GOCallbackButtonControl.h"
 
-void GOElementCreator::CreateButtons(GOOrganController *organController) {
+void GOElementCreator::CreateButtons(GOOrganModel &organModel) {
   const struct ButtonDefinitionEntry *entries = GetButtonDefinitionList();
   for (unsigned i = 0;
        entries[i].name != wxEmptyString && entries[i].value >= 0;
@@ -17,7 +17,7 @@ void GOElementCreator::CreateButtons(GOOrganController *organController) {
     if (m_buttons.size() <= (unsigned)entries[i].value)
       m_buttons.resize(entries[i].value + 1);
     m_buttons[entries[i].value] = new GOCallbackButtonControl(
-      organController, this, entries[i].is_pushbutton, entries[i].is_piston);
+      organModel, this, entries[i].is_pushbutton, entries[i].is_piston);
   }
 }
 

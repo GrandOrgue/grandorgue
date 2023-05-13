@@ -56,7 +56,7 @@ private:
   void PreparePlayback();
 
 public:
-  GOCoupler(GOOrganController *organController, unsigned sourceManual);
+  GOCoupler(GOOrganModel &organModel, unsigned sourceManual);
   void Init(
     GOConfigReader &cfg,
     wxString group,

@@ -47,7 +47,7 @@ GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
     m_Speed(1),
     m_IsPlaying(false),
     m_Pause(false) {
-  CreateButtons(m_OrganController);
+  CreateButtons(*m_OrganController);
   Clear();
   m_DeviceID
     = m_OrganController->GetSettings().GetMidiMap().GetDeviceIdByLogicalName(

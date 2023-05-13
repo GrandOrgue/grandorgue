@@ -296,8 +296,9 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_CrescendoDisplay(organController),
     m_TransposeDisplay(organController),
     m_NameDisplay(organController),
-    m_swell(*organController) {
-  CreateButtons(m_OrganController);
+    m_swell(*organController),
+    m_SetterType(GOCombination::SETTER_REGULAR) {
+  CreateButtons(*m_OrganController);
 
   m_buttons[ID_SETTER_PREV]->SetPreconfigIndex(0);
   m_buttons[ID_SETTER_NEXT]->SetPreconfigIndex(1);
