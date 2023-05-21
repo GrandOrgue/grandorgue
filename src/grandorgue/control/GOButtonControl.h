@@ -22,7 +22,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiEvent;
-class GOOrganController;
+class GOMidiMap;
 class GOOrganModel;
 
 class GOButtonControl : private GOEventHandler,
@@ -33,7 +33,7 @@ private:
   GOMidiMap &r_MidiMap;
 
 protected:
-  GOOrganController *m_OrganController;
+  GOOrganModel &r_OrganModel;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOMidiShortcutReceiver m_shortcut;
@@ -56,7 +56,7 @@ protected:
 
 public:
   GOButtonControl(
-    GOOrganController *organController,
+    GOOrganModel &organModel,
     GOMidiReceiverType midi_type,
     bool pushbutton,
     bool isPiston = false);

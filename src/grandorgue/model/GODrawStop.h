@@ -47,7 +47,7 @@ protected:
   void StartPlayback() override;
 
 public:
-  GODrawstop(GOOrganController *organController);
+  GODrawstop(GOOrganModel &organModel);
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   void RegisterControlled(GODrawstop *sw);

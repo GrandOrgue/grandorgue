@@ -15,6 +15,7 @@
 #include "control/GOLabelControl.h"
 #include "model/GODivisionalCombination.h"
 #include "model/GOManual.h"
+#include "model/GOSetterState.h"
 #include "yaml/go-wx-yaml.h"
 
 #include "GOOrganController.h"
@@ -84,8 +85,10 @@ wxString GODivisionalSetter::GetDivisionalBankNextLabelName(
   return wxString::Format(wxT("Setter%03dDivisionalNextBank"), manualIndex);
 }
 
-GODivisionalSetter::GODivisionalSetter(GOOrganController *organController)
+GODivisionalSetter::GODivisionalSetter(
+  GOOrganController *organController, const GOSetterState &setterState)
   : m_OrganController(organController),
+    r_SetterState(setterState),
     m_FirstManualIndex(m_OrganController->GetFirstManualIndex()),
     m_OdfManualCount(m_OrganController->GetODFManualCount()),
     m_NManuals(m_OdfManualCount - m_FirstManualIndex),
@@ -112,7 +115,7 @@ GODivisionalSetter::GODivisionalSetter(GOOrganController *organController)
 
   // create button conrols for all buttons. It calls the GetButtonDefinitionList
   // callback
-  CreateButtons(organController);
+  CreateButtons(*organController);
 
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);
@@ -351,9 +354,8 @@ void GODivisionalSetter::SwitchDivisionalTo(
     // whether the combination is defined
     bool isExist = divMap.find(divisionalIdx) != divMap.end();
     GODivisionalCombination *pCmb = isExist ? divMap[divisionalIdx] : nullptr;
-    GOSetter &setter = *m_OrganController->GetSetter();
 
-    if (!isExist && setter.IsSetterActive()) {
+    if (!isExist && r_SetterState.m_IsActive) {
       // create a new combination
       const unsigned manualIndex = m_FirstManualIndex + manualN;
       GOCombinationDefinition &divTemplate
@@ -369,7 +371,7 @@ void GODivisionalSetter::SwitchDivisionalTo(
 
     if (pCmb) {
       // the combination was existing or has just been created
-      setter.NotifyCmbPushed(pCmb->Push());
+      m_OrganController->GetSetter()->PushDivisional(*pCmb);
 
       // reflect the ne state of the combination buttons
       for (unsigned firstButtonIdx = N_BUTTONS * manualN, k = 0;

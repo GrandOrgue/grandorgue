@@ -18,7 +18,7 @@ protected:
 
 public:
   GOCallbackButtonControl(
-    GOOrganController *organController,
+    GOOrganModel &organModel,
     GOButtonCallback *callback,
     bool isPushbutton,
     bool isPiston = false);

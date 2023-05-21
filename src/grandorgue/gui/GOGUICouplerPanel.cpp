@@ -70,7 +70,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       dest_manual->GetName());
     panel->AddControl(PosDisplay);
 
-    coupler = new GOCoupler(m_OrganController, manual_nr);
+    coupler = new GOCoupler(*m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i),
@@ -91,7 +91,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_OrganController, manual_nr);
+    coupler = new GOCoupler(*m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i),
@@ -112,7 +112,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_OrganController, manual_nr);
+    coupler = new GOCoupler(*m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i),
@@ -133,7 +133,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_OrganController, manual_nr);
+    coupler = new GOCoupler(*m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i),
@@ -154,7 +154,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       100 + i);
     panel->AddControl(button);
 
-    coupler = new GOCoupler(m_OrganController, manual_nr);
+    coupler = new GOCoupler(*m_OrganController, manual_nr);
     coupler->Init(
       cfg,
       wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i),

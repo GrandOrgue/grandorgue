@@ -23,6 +23,7 @@
 class GOOrganController;
 class GODivisionalCombination;
 class GOLabelControl;
+class GOSetterState;
 
 class GODivisionalSetter : public GOElementCreator,
                            GOSaveableObject,
@@ -34,6 +35,7 @@ private:
   using DivisionalMap = std::map<unsigned, GODivisionalCombination *>;
 
   GOOrganController *m_OrganController;
+  const GOSetterState &r_SetterState;
 
   // the setter starts manuals from 0 but m_OrganController may start from
   // m_FirstManualIndex
@@ -80,7 +82,8 @@ public:
   // calculates the setter element name for the next-bank button
   static wxString GetDivisionalBankNextLabelName(unsigned manualIndex);
 
-  GODivisionalSetter(GOOrganController *organController);
+  GODivisionalSetter(
+    GOOrganController *organController, const GOSetterState &setterState);
   virtual ~GODivisionalSetter();
 
   // saves all combinations to the preset file

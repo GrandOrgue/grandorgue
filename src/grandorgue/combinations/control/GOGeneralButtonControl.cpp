@@ -17,7 +17,7 @@ GOGeneralButtonControl::GOGeneralButtonControl(
   GOCombinationDefinition &general_template,
   GOOrganController *organController,
   bool is_setter)
-  : GOPushbuttonControl(organController),
+  : GOPushbuttonControl(*organController),
     r_setter(*organController->GetSetter()),
     m_combination(general_template, organController, is_setter) {}
 
@@ -26,12 +26,7 @@ void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
   GOPushbuttonControl::Load(cfg, group);
 }
 
-void GOGeneralButtonControl::Push() {
-  GOCombination::ExtraElementsSet elementSet;
-
-  r_setter.NotifyCmbPushed(
-    m_combination.Push(r_setter.GetCrescendoAddSet(elementSet)));
-}
+void GOGeneralButtonControl::Push() { r_setter.PushGeneral(m_combination); }
 
 GOGeneralCombination &GOGeneralButtonControl::GetCombination() {
   return m_combination;

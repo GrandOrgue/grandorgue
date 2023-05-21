@@ -15,8 +15,8 @@
 #include "GOManual.h"
 #include "GOOrganController.h"
 
-GOCoupler::GOCoupler(GOOrganController *organController, unsigned sourceManual)
-  : GODrawstop(organController),
+GOCoupler::GOCoupler(GOOrganModel &organModel, unsigned sourceManual)
+  : GODrawstop(organModel),
     m_UnisonOff(false),
     m_CoupleToSubsequentUnisonIntermanualCouplers(false),
     m_CoupleToSubsequentUpwardIntermanualCouplers(false),
@@ -41,8 +41,8 @@ GOCoupler::GOCoupler(GOOrganController *organController, unsigned sourceManual)
 void GOCoupler::PreparePlayback() {
   GODrawstop::PreparePlayback();
 
-  GOManual *src = m_OrganController->GetManual(m_SourceManual);
-  GOManual *dest = m_OrganController->GetManual(m_DestinationManual);
+  GOManual *src = r_OrganModel.GetManual(m_SourceManual);
+  GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
 
   m_KeyVelocity.resize(src->GetLogicalKeyCount());
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
@@ -92,8 +92,8 @@ void GOCoupler::Init(
   m_NumberOfKeys = 127;
 
   if (!m_UnisonOff)
-    m_CouplerIndexInDest = m_OrganController->GetManual(m_DestinationManual)
-                             ->RegisterCoupler(this);
+    m_CouplerIndexInDest
+      = r_OrganModel.GetManual(m_DestinationManual)->RegisterCoupler(this);
 }
 
 void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
@@ -103,8 +103,8 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
     ODFSetting,
     group,
     wxT("DestinationManual"),
-    m_OrganController->GetFirstManualIndex(),
-    m_OrganController->GetManualAndPedalCount(),
+    r_OrganModel.GetFirstManualIndex(),
+    r_OrganModel.GetManualAndPedalCount(),
     !m_UnisonOff,
     0);
   m_DestinationKeyshift = cfg.ReadInteger(
@@ -118,7 +118,7 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
     m_CouplerType = COUPLER_NORMAL;
     m_FirstMidiNote = 0;
     m_NumberOfKeys = 127;
-    if (!m_OrganController->GetSettings().ODFCheck()) {
+    if (!r_OrganModel.GetConfig().ODFCheck()) {
       cfg.ReadBoolean(
         ODFSetting,
         group,
@@ -169,7 +169,7 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
       m_CoupleToSubsequentDownwardIntermanualCouplers = false;
       m_CoupleToSubsequentUpwardIntramanualCouplers = false;
       m_CoupleToSubsequentDownwardIntramanualCouplers = false;
-      if (!m_OrganController->GetSettings().ODFCheck()) {
+      if (!r_OrganModel.GetConfig().ODFCheck()) {
         cfg.ReadBoolean(
           ODFSetting,
           group,
@@ -241,19 +241,17 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
   GODrawstop::Load(cfg, group);
 
   if (!m_UnisonOff)
-    m_CouplerIndexInDest = m_OrganController->GetManual(m_DestinationManual)
-                             ->RegisterCoupler(this);
+    m_CouplerIndexInDest
+      = r_OrganModel.GetManual(m_DestinationManual)->RegisterCoupler(this);
 }
 
 void GOCoupler::SetupCombinationState() {
   m_StoreDivisional
-    = ((m_OrganController->DivisionalsStoreIntramanualCouplers()
-        && !IsIntermanual())
-       || (m_OrganController->DivisionalsStoreIntermanualCouplers() && IsIntermanual()))
-    && (m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-        || IsDisplayed());
-  m_StoreGeneral = m_OrganController->CombinationsStoreNonDisplayedDrawstops()
-    || IsDisplayed();
+    = ((r_OrganModel.DivisionalsStoreIntramanualCouplers() && !IsIntermanual())
+       || (r_OrganModel.DivisionalsStoreIntermanualCouplers() && IsIntermanual()))
+    && (r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
+  m_StoreGeneral
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 void GOCoupler::SetOut(int noteNumber, unsigned velocity) {
@@ -271,7 +269,7 @@ void GOCoupler::SetOut(int noteNumber, unsigned velocity) {
   unsigned newstate = m_InternalVelocity[note];
   if (newstate)
     newstate--;
-  GOManual *dest = m_OrganController->GetManual(m_DestinationManual);
+  GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
   m_OutVelocity[note] = newstate;
   dest->SetKey(note, m_OutVelocity[note], this, m_CouplerIndexInDest);
 }
@@ -358,10 +356,10 @@ void GOCoupler::SetKey(
 }
 
 void GOCoupler::ChangeState(bool on) {
-  GOManual *dest = m_OrganController->GetManual(m_DestinationManual);
+  GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
 
   if (m_UnisonOff) {
-    m_OrganController->GetManual(m_SourceManual)->SetUnisonOff(on);
+    r_OrganModel.GetManual(m_SourceManual)->SetUnisonOff(on);
     return;
   }
 

@@ -15,6 +15,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOOrganController;
+class GOSetter;
 
 class GOGeneralCombination : public GOCombination {
 private:
@@ -42,17 +43,6 @@ public:
     GOOrganController *organController,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
-
-  /*
-   * Activate this combination
-   * If extraSet is passed then not to disable stops that are present in
-   * extraSet
-   * If isFromCrescendo and extraSet is passed then does not depress other
-   * buttons
-   * return if anything is changed
-   */
-  bool Push(
-    ExtraElementsSet const *extraSet = nullptr, bool isFromCrescendo = false);
 };
 
 #endif /* GOGENERALCOMBINATION_H */
