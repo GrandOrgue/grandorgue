@@ -13,7 +13,7 @@
 #include "config/GOConfigReader.h"
 
 #include "GOManual.h"
-#include "GOOrganController.h"
+#include "GOOrganModel.h"
 
 GOCoupler::GOCoupler(GOOrganModel &organModel, unsigned sourceManual)
   : GODrawstop(organModel),

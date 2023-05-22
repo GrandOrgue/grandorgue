@@ -11,7 +11,7 @@
 
 #include "config/GOConfigReader.h"
 
-#include "GOOrganController.h"
+#include "GOOrganModel.h"
 
 GODivisionalCoupler::GODivisionalCoupler(GOOrganModel &organModel)
   : GODrawstop(organModel), m_BiDirectionalCoupling(false), m_manuals(0) {}

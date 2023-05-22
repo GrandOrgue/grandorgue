@@ -13,7 +13,6 @@
 #include "config/GOConfigReader.h"
 
 #include "GOManual.h"
-#include "GOOrganController.h"
 #include "GOOrganModel.h"
 #include "GORank.h"
 #include "GOStop.h"
