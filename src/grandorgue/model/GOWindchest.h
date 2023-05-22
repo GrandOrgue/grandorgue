@@ -20,11 +20,11 @@ class GOEnclosure;
 class GOPipeWindchestCallback;
 class GORank;
 class GOTremulant;
-class GOOrganController;
+class GOOrganModel;
 
 class GOWindchest : private GOSoundStateHandler {
 private:
-  GOOrganController *m_OrganController;
+  GOOrganModel &r_OrganModel;
   wxString m_Name;
   float m_Volume;
   std::vector<GOEnclosure *> m_enclosure;
@@ -36,7 +36,7 @@ private:
   void PreparePlayback();
 
 public:
-  GOWindchest(GOOrganController *organController);
+  GOWindchest(GOOrganModel &organModel);
 
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group, unsigned index);

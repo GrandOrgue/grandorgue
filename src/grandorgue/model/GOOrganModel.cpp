@@ -60,7 +60,7 @@ void GOOrganModel::Load(
   m_RootPipeConfigNode.Load(cfg, group, wxEmptyString);
   m_windchests.resize(0);
   for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
-    m_windchests.push_back(new GOWindchest(organController));
+    m_windchests.push_back(new GOWindchest(*organController));
 
   m_ODFManualCount
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfManuals"), 1, 16) + 1;
