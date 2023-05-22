@@ -348,7 +348,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_framegeneral.resize(0);
   for (unsigned i = 0; i < FRAME_GENERALS; i++) {
     m_framegeneral.push_back(new GOGeneralCombination(
-      m_OrganController->GetGeneralTemplate(), m_OrganController, true));
+      *m_OrganController, m_OrganController->GetGeneralTemplate(), true));
     buffer.Printf(wxT("FrameGeneral%03d"), i + 1);
     m_framegeneral[i]->Load(cfg, buffer);
   }
@@ -356,7 +356,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_general.resize(0);
   for (unsigned i = 0; i < GENERALS * GENERAL_BANKS; i++) {
     m_general.push_back(new GOGeneralCombination(
-      m_OrganController->GetGeneralTemplate(), m_OrganController, true));
+      *m_OrganController, m_OrganController->GetGeneralTemplate(), true));
     buffer.Printf(wxT("SetterGeneral%03d"), i + 1);
     m_general[i]->Load(cfg, buffer);
   }
@@ -373,7 +373,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   }
   for (unsigned i = 0; i < N_CRESCENDOS * CRESCENDO_STEPS; i++) {
     m_crescendo.push_back(new GOGeneralCombination(
-      m_OrganController->GetGeneralTemplate(), m_OrganController, true));
+      *m_OrganController, m_OrganController->GetGeneralTemplate(), true));
     m_CrescendoExtraSets.emplace_back();
     buffer.Printf(
       wxT("SetterCrescendo%d_%03d"),
