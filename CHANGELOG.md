@@ -1,3 +1,4 @@
+- Reverted back default display of GeneralPrev and GeneralNext https://github.com/GrandOrgue/grandorgue/issues/1538
 - Removed support of MacOs 10.15. Now MacOs 11 or above is required https://github.com/GrandOrgue/grandorgue/discussions/1149
 - Fixed warning "temperament would retune pipe by more than 600 cents" for retuned pipes https://github.com/GrandOrgue/ODFEdit/discussions/11#discussioncomment-5877020
 - Increased the maximum value of Enclosures from 50 to 999 https://github.com/GrandOrgue/grandorgue/issues/1484

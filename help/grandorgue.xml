@@ -7271,7 +7271,7 @@ attributes of a label.
               Represents a divisional button YYY (000 means 1, 001 - 2 etc) for
               the manual XXX (000 - Pedal, 001 - the first manual, etc). The
               section must contain the GUI attributes of a button (displayed as
-              button per default).
+              piston per default).
             </para>
           </listitem>
         </varlistentry>
@@ -7282,7 +7282,7 @@ attributes of a label.
               Represents a button switching the current bank of divisionals for
               the manual XXX (000 - Pedal, 001 - the first manual, etc). The
               section must contain the GUI attributes of a button (displayed as
-              button per default).
+              piston per default).
             </para>
           </listitem>
         </varlistentry>
@@ -7431,7 +7431,7 @@ attributes of a button (displayed as piston per default).
           <listitem>
             <para>
 Buttons for switching banks of the setter generals. The section must
-contain the GUI attributes of a button (displayed as piston per
+contain the GUI attributes of a button (displayed as drawstop per
 default).
      </para>
           </listitem>
