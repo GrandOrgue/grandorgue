@@ -248,8 +248,8 @@ const struct GOElementCreator::ButtonDefinitionEntry GOSetter::m_element_types[]
     {wxT("General49"), ID_SETTER_GENERAL48, true, true, true},
     {wxT("General50"), ID_SETTER_GENERAL49, true, true, true},
 
-    {wxT("GeneralPrev"), ID_SETTER_GENERAL_PREV, true, true, true},
-    {wxT("GeneralNext"), ID_SETTER_GENERAL_NEXT, true, true, true},
+    {wxT("GeneralPrev"), ID_SETTER_GENERAL_PREV, true, true, false},
+    {wxT("GeneralNext"), ID_SETTER_GENERAL_NEXT, true, true, false},
 
     {wxT("PitchP1"), ID_SETTER_PITCH_P1, true, true, false},
     {wxT("PitchP10"), ID_SETTER_PITCH_P10, true, true, false},
