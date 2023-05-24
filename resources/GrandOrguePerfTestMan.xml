@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!--
+  GrandOrgue - free pipe organ simulator
+
+  Copyright 2006 Milan Digital Audio LLC
+  Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+  License GPL-2.0 or later
+  (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+-->
+<refentry lang="en">
+  <refentryinfo>
+    <title>GrandOrguePerfTest man page</title>
+    <author>
+      <surname>GrandOrgue contributors (see AUTHORS)</surname>
+    </author>
+    <productname>GrandOrgue</productname>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>GrandOrguePerfTest</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <title>NAME</title>
+    <refname>GrandOrguePerfTest</refname>
+    <refentrytitle>
+      <command>GrandOrguePerfTest</command>
+    </refentrytitle>
+    <refpurpose>Virtual Pipe Organ Software. Testing performance</refpurpose>
+    <manvolnum>1</manvolnum>
+  </refnamediv>
+  <refsynopsisdiv>
+    <title>SYNOPSIS</title>
+    <cmdsynopsis>
+      <command>GrandOrguePerfTest</command>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>DESCRIPTION</title>
+    <para>
+      GrandOrguePerfTest is a commandline tool built together with GrandOrgue to
+      test performance of the computer with different settings: Bits per sample,
+      Sample Rate, Loseless compression, Linear/Polyphase interpolation and
+      Sampes per buffer.
+    </para>
+    <para>
+      It outputs one line for each parameter set to the standard output. This
+      line contains the 'limit:' value. It is the recommended maximum value for
+      the Polyphony field in the GrandOrgan toolbar.
+    </para>
+  </refsect1>
+</refentry>

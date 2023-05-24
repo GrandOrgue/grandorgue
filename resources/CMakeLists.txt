@@ -49,6 +49,13 @@ endforeach()
 # ========================
 # Install resources
 # ========================
+function(add_man_page EXECUTABLE_NAME)
+  ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_NAME}.1" COMMAND ${XSLTPROC} -o "${CMAKE_CURRENT_BINARY_DIR}/" ${DOCBOOK_PATH}/manpages/docbook.xsl "${CMAKE_CURRENT_SOURCE_DIR}/${EXECUTABLE_NAME}Man.xml" DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${EXECUTABLE_NAME}Man.xml)
+  LIST(APPEND DEPLIST "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_NAME}.1")
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_NAME}.1" DESTINATION share/man/man1)
+  set(DEPLIST ${DEPLIST} PARENT_SCOPE)
+endfunction()
+
 if (APPLE)
    ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.icns" COMMAND iconutil -c icns ${GENERATED_ICONS_DIR} DEPENDS ${GENERATED_ICONS})
    INSTALL(FILES "${RESOURCEDIR}/GrandOrgue.icns" DESTINATION "${RESOURCEINSTDIR}")
@@ -71,9 +78,9 @@ elseif(UNIX)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.desktop" DESTINATION share/applications)
 
   if(XSLTPROC AND DOCBOOK_PATH)
-    ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1" COMMAND ${XSLTPROC} -o "${CMAKE_CURRENT_BINARY_DIR}/" ${DOCBOOK_PATH}/manpages/docbook.xsl "${CMAKE_CURRENT_SOURCE_DIR}/man.xml" DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/man.xml)
-    LIST(APPEND DEPLIST "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1")
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1" DESTINATION share/man/man1)
+    add_man_page(GrandOrgue)
+    add_man_page(GrandOrguePerfTest)
+    add_man_page(GrandOrgueTool)
   else()
     MESSAGE(STATUS "Not build manpage - some programs are missing")
   endif()
@@ -82,5 +89,7 @@ elseif(UNIX)
   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgue.appdata.xml.in" "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.appdata.xml/GrandOrgue.appdata.xml")
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.appdata.xml/GrandOrgue.appdata.xml" DESTINATION share/metainfo)
 endif()
+
+message(STATUS "DEPLIST=${DEPLIST}")
 
 ADD_CUSTOM_TARGET(resources ALL DEPENDS ${DEPLIST})

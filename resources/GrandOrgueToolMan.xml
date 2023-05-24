@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!--
+  GrandOrgue - free pipe organ simulator
+
+  Copyright 2006 Milan Digital Audio LLC
+  Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+  License GPL-2.0 or later
+  (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+-->
+<refentry lang="en">
+  <refentryinfo>
+    <title>GrandOrgue Tool man page</title>
+    <author>
+      <surname>GrandOrgue contributors (see AUTHORS)</surname>
+    </author>
+    <productname>GrandOrgue</productname>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>GrandOrgueTool</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <title>NAME</title>
+    <refname>GrandOrgueTool</refname>
+    <refentrytitle>
+      <command>GrandOrgueTool</command>
+    </refentrytitle>
+    <refpurpose>Virtual Pipe Organ Software. Organ package creation</refpurpose>
+    <manvolnum>1</manvolnum>
+  </refnamediv>
+  <refsynopsisdiv>
+    <title>SYNOPSIS</title>
+    <cmdsynopsis>
+      <command>GrandOrgueTool</command>
+      <arg choice="opt">
+        <option>-h</option>
+      </arg>
+      <arg choice="opt">
+        <option>-c</option>
+      </arg>
+      <arg choice="opt">
+        <option>-o <replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-i <replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-t <replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-p1:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-p2:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-p3:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-p4:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-p5:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o1:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o2:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o3:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o4:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o5:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o6:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o7:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o8:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o9:<replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-o10:<replaceable>str</replaceable></option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>DESCRIPTION</title>
+    <para>
+      GrandOrgueTool is a commandline tool built together with GrandOrgue to
+      make the .orgue package creation process easier.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>OPTIONS</title>
+    <variablelist>
+      <varlistentry>
+        <term><option>-h</option>, <option>--help</option></term>
+        <listitem>
+          <para>
+display usage message
+</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-c</option>, <option>--create</option></term>
+        <listitem>
+          <para>
+	    create an organ package
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o <parameter>str</parameter></option>, <option>--organ-package=<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    specify generated organ package filename
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-i <parameter>str</parameter></option>, <option>--input-directory=<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    specify input directory
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-t <parameter>str</parameter></option>, <option>--title=<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    organ package title
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-p1:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    depend on organ package
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-p2:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    depend on organ package
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-p3:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    depend on organ package
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-p4:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    depend on organ package
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-p5:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    depend on organ package
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o1:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o2:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o3:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o4:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o5:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o6:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o7:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o8:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o9:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-o10:<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+	    provide odf-file-name
+	  </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
