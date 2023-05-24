@@ -94,8 +94,8 @@ void GOGUIManual::Init(GOConfigReader &cfg, wxString group) {
       else
         bmp_type = wxT("Natural");
     }
-    off_file = wxT(GOBitmapPrefix "") + type + wxT("Off_") + bmp_type;
-    on_file = wxT(GOBitmapPrefix "") + type + wxT("On_") + bmp_type;
+    off_file = wxT(GOBitmapPrefix "") + type + wxT("01Off_") + bmp_type;
+    on_file = wxT(GOBitmapPrefix "") + type + wxT("01On_") + bmp_type;
 
     on_mask_file = wxEmptyString;
     off_mask_file = on_mask_file;
@@ -260,8 +260,14 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       else
         bmp_type = wxT("Natural");
     }
-    off_file = wxT(GOBitmapPrefix) + type + wxT("Off_") + bmp_type;
-    on_file = wxT(GOBitmapPrefix) + type + wxT("On_") + bmp_type;
+
+    int DispImageNum
+      = cfg.ReadInteger(ODFSetting, group, wxT("DispImageNum"), 1, 2, false, 1);
+
+    off_file = wxT(GOBitmapPrefix) + type
+      + wxString::Format(wxT("%02dOff_"), DispImageNum) + bmp_type;
+    on_file = wxT(GOBitmapPrefix) + type
+      + wxString::Format(wxT("%02dOn_"), DispImageNum) + bmp_type;
 
     on_file = cfg.ReadStringTrim(
       ODFSetting, group, wxT("ImageOn_") + base, false, on_file);
