@@ -58,6 +58,7 @@
   STOP(04)                                                                     \
   STOP(05)                                                                     \
   STOP(06)                                                                     \
+  STOP(07)                                                                     \
   PISTON(01)                                                                   \
   PISTON(02)                                                                   \
   PISTON(03)                                                                   \
@@ -81,12 +82,18 @@
   ENCLOSURE(B)                                                                 \
   ENCLOSURE(C)                                                                 \
   ENCLOSURE(D)                                                                 \
-  PEDAL(, Wood, Black)                                                         \
-  PEDAL(Inverted, Black, Wood)                                                 \
-  MANUAL(, White, Black)                                                       \
-  MANUAL(Inverted, Black, White)                                               \
-  MANUAL(Wood, Wood, Black)                                                    \
-  MANUAL(InvertedWood, Black, Wood)
+  PEDAL(, Wood, Black, 01)                                                     \
+  PEDAL(Inverted, Black, Wood, 01)                                             \
+  MANUAL(, White, Black, 01)                                                   \
+  MANUAL(Inverted, Black, White, 01)                                           \
+  MANUAL(Wood, Wood, Black, 01)                                                \
+  MANUAL(InvertedWood, Black, Wood, 01)                                        \
+  PEDAL(, Wood, Black, 02)                                                     \
+  PEDAL(Inverted, Black, Wood, 02)                                             \
+  MANUAL(, White, Black, 02)                                                   \
+  MANUAL(Inverted, Black, White, 02)                                           \
+  MANUAL(Wood, Wood, Black, 02)                                                \
+  MANUAL(InvertedWood, Black, Wood, 02)
 
 #define ENCLOSURE(A)                                                           \
   ENC(A, 00)                                                                   \
@@ -116,22 +123,22 @@
   DECLARE_IMAGE(piston##A##on, "piston" #A "_on");
 #define LABEL(A) DECLARE_IMAGE(label##A, "label" #A);
 #define ENC(A, B) DECLARE_IMAGE(Enclosure##A##B, "enclosure" #A #B);
-#define PEDAL(A, B, C)                                                         \
-  DECLARE_IMAGE(PedalNatural##B##Up, "Pedal" #A "Off_Natural");                \
-  DECLARE_IMAGE(PedalNatural##B##Down, "Pedal" #A "On_Natural");               \
-  DECLARE_IMAGE(PedalSharp##C##Up, "Pedal" #A "Off_Sharp");                    \
-  DECLARE_IMAGE(PedalSharp##C##Down, "Pedal" #A "On_Sharp");
-#define MANUAL(A, B, C)                                                        \
-  DECLARE_IMAGE(ManualC##B##Up, "Manual" #A "Off_C");                          \
-  DECLARE_IMAGE(ManualC##B##Down, "Manual" #A "On_C");                         \
-  DECLARE_IMAGE(ManualD##B##Up, "Manual" #A "Off_D");                          \
-  DECLARE_IMAGE(ManualD##B##Down, "Manual" #A "On_D");                         \
-  DECLARE_IMAGE(ManualE##B##Up, "Manual" #A "Off_E");                          \
-  DECLARE_IMAGE(ManualE##B##Down, "Manual" #A "On_E");                         \
-  DECLARE_IMAGE(ManualNatural##B##Up, "Manual" #A "Off_Natural");              \
-  DECLARE_IMAGE(ManualNatural##B##Down, "Manual" #A "On_Natural");             \
-  DECLARE_IMAGE(ManualSharp##C##Up, "Manual" #A "Off_Sharp");                  \
-  DECLARE_IMAGE(ManualSharp##C##Down, "Manual" #A "On_Sharp");
+#define PEDAL(A, B, C, D)                                                      \
+  DECLARE_IMAGE(PedalNatural##B##Up##D, "Pedal" #A #D "Off_Natural");          \
+  DECLARE_IMAGE(PedalNatural##B##Down##D, "Pedal" #A #D "On_Natural");         \
+  DECLARE_IMAGE(PedalSharp##C##Up##D, "Pedal" #A #D "Off_Sharp");              \
+  DECLARE_IMAGE(PedalSharp##C##Down##D, "Pedal" #A #D "On_Sharp");
+#define MANUAL(A, B, C, D)                                                     \
+  DECLARE_IMAGE(ManualC##B##Up##D, "Manual" #A #D "Off_C");                    \
+  DECLARE_IMAGE(ManualC##B##Down##D, "Manual" #A #D "On_C");                   \
+  DECLARE_IMAGE(ManualD##B##Up##D, "Manual" #A #D "Off_D");                    \
+  DECLARE_IMAGE(ManualD##B##Down##D, "Manual" #A #D "On_D");                   \
+  DECLARE_IMAGE(ManualE##B##Up##D, "Manual" #A #D "Off_E");                    \
+  DECLARE_IMAGE(ManualE##B##Down##D, "Manual" #A #D "On_E");                   \
+  DECLARE_IMAGE(ManualNatural##B##Up##D, "Manual" #A #D "Off_Natural");        \
+  DECLARE_IMAGE(ManualNatural##B##Down##D, "Manual" #A #D "On_Natural");       \
+  DECLARE_IMAGE(ManualSharp##C##Up##D, "Manual" #A #D "Off_Sharp");            \
+  DECLARE_IMAGE(ManualSharp##C##Down##D, "Manual" #A #D "On_Sharp");
 
 #define DECLARE_IMAGE(A, B) wxImage GetImage_##A();
 #define DECLARE_IMAGE_ROT(A, B)

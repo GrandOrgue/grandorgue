@@ -171,7 +171,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispImageNum"),
       1,
-      6,
+      7,
       false,
       m_ButtonControl->IsReadOnly() ? 4 : 1);
     off_file
