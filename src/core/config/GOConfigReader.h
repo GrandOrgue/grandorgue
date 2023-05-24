@@ -8,6 +8,9 @@
 #ifndef GOCONFIGREADER_H
 #define GOCONFIGREADER_H
 
+#include <unordered_set>
+
+#include <wx/hashmap.h>
 #include <wx/string.h>
 
 #include "GOLogicalColour.h"
@@ -23,7 +26,10 @@ typedef enum { ODFSetting, CMBSetting } GOSettingType;
 
 class GOConfigReader {
 private:
+  using StringSet = std::unordered_set<wxString, wxStringHash, wxStringEqual>;
+
   GOConfigReaderDB &m_Config;
+  StringSet m_GroupsInUse;
   bool m_Strict;
   bool m_IsHw1Check;
 
@@ -169,6 +175,13 @@ public:
     unsigned count,
     bool required,
     int defaultValue);
+
+  /**
+   * Mark the group as used. Throws an exception if the group has already been
+   * marked as in use
+   * @param group the group name
+   */
+  void MarkGroupInUse(const wxString &group);
 };
 
 #endif

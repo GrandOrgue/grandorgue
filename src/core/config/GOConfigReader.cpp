@@ -7,6 +7,7 @@
 
 #include "config/GOConfigReader.h"
 
+#include <unordered_set>
 #include <wx/intl.h>
 #include <wx/log.h>
 
@@ -621,4 +622,10 @@ int GOConfigReader::ReadEnum(
   unsigned count,
   bool required) {
   return ReadEnum(type, group, key, entry, count, required, entry[0].value);
+}
+
+void GOConfigReader::MarkGroupInUse(const wxString &group) {
+  if (m_GroupsInUse.find(group) != m_GroupsInUse.end())
+    throw wxString::Format(_("Section %s already in use"), group);
+  m_GroupsInUse.insert(group);
 }
