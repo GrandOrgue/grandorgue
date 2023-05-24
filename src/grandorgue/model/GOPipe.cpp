@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "GOOrganController.h"
+#include "GOEventHandlerList.h"
 #include "GORank.h"
 
 GOPipe::GOPipe(

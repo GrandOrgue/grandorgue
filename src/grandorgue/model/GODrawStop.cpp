@@ -12,7 +12,7 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-#include "GOOrganController.h"
+#include "GOOrganModel.h"
 #include "GOSwitch.h"
 
 const struct IniFileEnumEntry GODrawstop::m_function_types[] = {

@@ -14,7 +14,6 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOOrganController;
 struct IniFileEnumEntry;
 
 class GOCoupler : public GODrawstop {
