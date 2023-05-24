@@ -19,15 +19,15 @@
 #include "GOSaveableObject.h"
 #include "GOSetterState.h"
 
-class GOOrganController;
+class GOOrganModel;
 
 class GOCombination : public GOSaveableObject, public GOSaveableToYaml {
 public:
   using ExtraElementsSet = std::unordered_set<unsigned>;
 
 private:
+  GOOrganModel &r_OrganModel;
   const GOCombinationDefinition &m_Template;
-  GOOrganController *m_OrganFile;
 
   /**
    *  States of the elements.
@@ -122,8 +122,7 @@ protected:
 
 public:
   GOCombination(
-    const GOCombinationDefinition &combination_template,
-    GOOrganController *organController);
+    GOOrganModel &organModel, const GOCombinationDefinition &cmbDef);
   virtual ~GOCombination();
 
   bool IsEmpty() const;

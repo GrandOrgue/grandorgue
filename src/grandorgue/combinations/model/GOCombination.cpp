@@ -17,6 +17,7 @@
 #include "model/GODivisionalCoupler.h"
 #include "model/GODrawStop.h"
 #include "model/GOManual.h"
+#include "model/GOOrganModel.h"
 #include "model/GOStop.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
@@ -24,15 +25,15 @@
 
 #include "GOCombinationDefinition.h"
 #include "GOCombinationElement.h"
-#include "GOOrganController.h"
+
+class GOOrganModel;
 
 GOCombination::GOCombination(
-  const GOCombinationDefinition &combination_template,
-  GOOrganController *organController)
-  : m_Template(combination_template),
-    m_OrganFile(organController),
+  GOOrganModel &organModel, const GOCombinationDefinition &cmbDef)
+  : r_OrganModel(organModel),
+    m_Template(cmbDef),
     m_IsFull(false),
-    r_ElementDefinitions(combination_template.GetElements()),
+    r_ElementDefinitions(cmbDef.GetElements()),
     m_Protected(false) {}
 
 GOCombination::~GOCombination() {}
@@ -84,7 +85,7 @@ void GOCombination::SetStatesFromYaml(
     const wxString &elementTypeName
       = GOCombinationDefinition::ELEMENT_TYPE_NAMES[elementType];
     GOManual *pManual
-      = manualNumber >= 0 ? m_OrganFile->GetManual(manualNumber) : nullptr;
+      = manualNumber >= 0 ? r_OrganModel.GetManual(manualNumber) : nullptr;
     int maxElementNumber = 0;
 
     // find maxElementNumber dependent on the element type
@@ -98,13 +99,13 @@ void GOCombination::SetStatesFromYaml(
         maxElementNumber = pManual->GetCouplerCount();
       break;
     case GOCombinationDefinition::COMBINATION_TREMULANT:
-      maxElementNumber = m_OrganFile->GetTremulantCount();
+      maxElementNumber = r_OrganModel.GetTremulantCount();
       break;
     case GOCombinationDefinition::COMBINATION_SWITCH:
-      maxElementNumber = m_OrganFile->GetSwitchCount();
+      maxElementNumber = r_OrganModel.GetSwitchCount();
       break;
     case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-      maxElementNumber = m_OrganFile->GetDivisionalCouplerCount();
+      maxElementNumber = r_OrganModel.GetDivisionalCouplerCount();
       break;
     }
 
@@ -128,13 +129,13 @@ void GOCombination::SetStatesFromYaml(
             realElementName = pManual->GetCoupler(i)->GetName();
           break;
         case GOCombinationDefinition::COMBINATION_TREMULANT:
-          realElementName = m_OrganFile->GetTremulant(i)->GetName();
+          realElementName = r_OrganModel.GetTremulant(i)->GetName();
           break;
         case GOCombinationDefinition::COMBINATION_SWITCH:
-          realElementName = m_OrganFile->GetSwitch(i)->GetName();
+          realElementName = r_OrganModel.GetSwitch(i)->GetName();
           break;
         case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-          realElementName = m_OrganFile->GetDivisionalCoupler(i)->GetName();
+          realElementName = r_OrganModel.GetDivisionalCoupler(i)->GetName();
           break;
         }
       } else
@@ -160,14 +161,14 @@ void GOCombination::SetStatesFromYaml(
           break;
         case GOCombinationDefinition::COMBINATION_TREMULANT:
           i = pManual ? pManual->FindTremulantByName(name)
-                      : m_OrganFile->FindTremulantByName(name);
+                      : r_OrganModel.FindTremulantByName(name);
           break;
         case GOCombinationDefinition::COMBINATION_SWITCH:
           i = pManual ? pManual->FindSwitchByName(name)
-                      : m_OrganFile->FindSwitchByName(name);
+                      : r_OrganModel.FindSwitchByName(name);
           break;
         case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
-          i = m_OrganFile->FindDivisionalCouplerByName(name);
+          i = r_OrganModel.FindDivisionalCouplerByName(name);
           break;
         }
         fitNumber = (unsigned)(i + 1);

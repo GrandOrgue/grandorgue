@@ -14,22 +14,21 @@
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
+#include "model/GOOrganModel.h"
 #include "model/GOStop.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
 #include "yaml/go-wx-yaml.h"
 
-#include "GOOrganController.h"
-
 GODivisionalCombination::GODivisionalCombination(
-  GOOrganController *organController,
-  GOCombinationDefinition &divisional_template,
-  bool is_setter)
-  : GOCombination(divisional_template, organController),
-    m_OrganController(organController),
+  GOOrganModel &organModel,
+  const GOCombinationDefinition &cmbDef,
+  bool isSetter)
+  : GOCombination(organModel, cmbDef),
+    r_OrganModel(organModel),
     m_odfManualNumber(1),
     m_DivisionalNumber(0),
-    m_IsSetter(is_setter) {}
+    m_IsSetter(isSetter) {}
 
 void GODivisionalCombination::Init(
   const wxString &group, int manualNumber, int divisionalNumber) {
@@ -52,7 +51,7 @@ void GODivisionalCombination::Load(
 
 void GODivisionalCombination::LoadCombinationInt(
   GOConfigReader &cfg, GOSettingType srcType) {
-  GOManual *associatedManual = m_OrganController->GetManual(m_odfManualNumber);
+  GOManual *associatedManual = r_OrganModel.GetManual(m_odfManualNumber);
   wxString buffer;
   unsigned NumberOfStops
     = ReadNumberOfStops(cfg, srcType, associatedManual->GetStopCount());
@@ -63,23 +62,23 @@ void GODivisionalCombination::LoadCombinationInt(
     0,
     srcType == CMBSetting ? associatedManual->GetCouplerCount()
                           : associatedManual->GetODFCouplerCount(),
-    m_OrganController->DivisionalsStoreIntermanualCouplers()
-      || m_OrganController->DivisionalsStoreIntramanualCouplers(),
+    r_OrganModel.DivisionalsStoreIntermanualCouplers()
+      || r_OrganModel.DivisionalsStoreIntramanualCouplers(),
     0);
   unsigned NumberOfTremulants = cfg.ReadInteger(
     srcType,
     m_group,
     wxT("NumberOfTremulants"),
     0,
-    m_OrganController->GetTremulantCount(),
-    m_OrganController->DivisionalsStoreTremulants(),
+    r_OrganModel.GetTremulantCount(),
+    r_OrganModel.DivisionalsStoreTremulants(),
     0);
   unsigned NumberOfSwitches = cfg.ReadInteger(
     srcType,
     m_group,
     wxT("NumberOfSwitches"),
     0,
-    m_OrganController->GetSwitchCount(),
+    r_OrganModel.GetSwitchCount(),
     false,
     0);
 
@@ -188,7 +187,7 @@ void GODivisionalCombination::PutElementToYamlMap(
   const wxString &valueLabel,
   const unsigned objectIndex,
   YAML::Node &yamlMap) const {
-  GOManual &manual = *m_OrganController->GetManual(m_odfManualNumber);
+  GOManual &manual = *r_OrganModel.GetManual(m_odfManualNumber);
 
   switch (e.type) {
   case GOCombinationDefinition::COMBINATION_STOP:
@@ -201,12 +200,12 @@ void GODivisionalCombination::PutElementToYamlMap(
 
   case GOCombinationDefinition::COMBINATION_TREMULANT:
     yamlMap[TREMULANTS][valueLabel]
-      = m_OrganController->GetTremulant(objectIndex)->GetName();
+      = r_OrganModel.GetTremulant(objectIndex)->GetName();
     break;
 
   case GOCombinationDefinition::COMBINATION_SWITCH:
     yamlMap[SWITCHES][valueLabel]
-      = m_OrganController->GetSwitch(objectIndex)->GetName();
+      = r_OrganModel.GetSwitch(objectIndex)->GetName();
     break;
 
   case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
@@ -241,9 +240,9 @@ void GODivisionalCombination::FromYamlMap(const YAML::Node &yamlMap) {
 }
 
 GODivisionalCombination *GODivisionalCombination::LoadFrom(
-  GOOrganController *organController,
+  GOOrganModel &organModel,
   GOConfigReader &cfg,
-  GOCombinationDefinition &divisionalTemplate,
+  const GOCombinationDefinition &cmbDef,
   const wxString &group,
   const wxString &readGroup,
   int manualNumber,
@@ -253,8 +252,7 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
   bool isCmbOnReadGroup = !readGroup.IsEmpty() && isCmbOnFile(cfg, readGroup);
 
   if (isCmbOnGroup || isCmbOnReadGroup) {
-    pCmb
-      = new GODivisionalCombination(organController, divisionalTemplate, false);
+    pCmb = new GODivisionalCombination(organModel, cmbDef, false);
     pCmb->Load(
       cfg,
       isCmbOnReadGroup ? readGroup : group,

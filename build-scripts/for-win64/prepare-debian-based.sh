@@ -10,6 +10,10 @@ sudo apt-get update
 # remove an odd version of packages that prevents installing wine32
 $BASE_DIR/../for-linux/prepare-debian-based-align-libs.sh $TARGET_ARCH i386
 
+# install dependencies for wine32
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  libgcc-s1:i386 libstdc++6:i386
+
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
   docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \

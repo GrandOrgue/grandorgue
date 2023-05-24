@@ -222,7 +222,7 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
          divisionalIndex++) {
       // try to load the combination
       GODivisionalCombination *pCmb = GODivisionalCombination::LoadFrom(
-        m_OrganController,
+        *m_OrganController,
         cfg,
         cmbTemplate,
         GetDivisionalButtonName(odfManualIndex, divisionalIndex),
@@ -333,7 +333,7 @@ void GODivisionalSetter::FromYaml(const YAML::Node &yamlNode) {
         unsigned i
           = banked_divisional_yaml_key_to_index(cmbEntry.first.as<wxString>());
         GODivisionalCombination *pCmb
-          = new GODivisionalCombination(m_OrganController, cmbTemplate, false);
+          = new GODivisionalCombination(*m_OrganController, cmbTemplate, false);
 
         pCmb->Init(
           GetDivisionalButtonName(odfManualIndex, i), odfManualIndex, i);
@@ -361,7 +361,7 @@ void GODivisionalSetter::SwitchDivisionalTo(
       GOCombinationDefinition &divTemplate
         = m_OrganController->GetManual(manualIndex)->GetDivisionalTemplate();
 
-      pCmb = new GODivisionalCombination(m_OrganController, divTemplate, true);
+      pCmb = new GODivisionalCombination(*m_OrganController, divTemplate, true);
       pCmb->Init(
         GetDivisionalButtonName(manualIndex, divisionalIdx),
         manualIndex,

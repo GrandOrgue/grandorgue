@@ -19,7 +19,7 @@ class GOSetterState;
 
 class GODivisionalCombination : public GOCombination {
 protected:
-  GOOrganController *m_OrganController;
+  GOOrganModel &r_OrganModel;
   unsigned m_odfManualNumber;
   int m_DivisionalNumber;
   bool m_IsSetter;
@@ -43,8 +43,8 @@ protected:
 
 public:
   GODivisionalCombination(
-    GOOrganController *organController,
-    GOCombinationDefinition &divisionalTemplate,
+    GOOrganModel &organModel,
+    const GOCombinationDefinition &cmbDef,
     bool isSetter);
 
   unsigned GetManualNumber() const { return m_odfManualNumber; }
@@ -60,9 +60,9 @@ public:
   // checks if the combination exists in the config file
   // returns the loaded combination if it exists else returns nullptr
   static GODivisionalCombination *LoadFrom(
-    GOOrganController *organController,
+    GOOrganModel &organModel,
     GOConfigReader &cfg,
-    GOCombinationDefinition &divisional_template,
+    const GOCombinationDefinition &cmbDef,
     const wxString &group,
     // for compatibility with the old preset: load the combination with the old
     // group name

@@ -14,12 +14,12 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOOrganController;
+class GOOrganModel;
 class GOSetter;
 
 class GOGeneralCombination : public GOCombination {
 private:
-  GOOrganController *m_OrganController;
+  GOOrganModel &r_OrganModel;
   bool m_IsSetter;
 
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
@@ -39,9 +39,9 @@ private:
 
 public:
   GOGeneralCombination(
-    GOCombinationDefinition &general_template,
-    GOOrganController *organController,
-    bool is_setter);
+    GOOrganModel &organModel,
+    const GOCombinationDefinition &cmbDef,
+    bool isSetter);
   void Load(GOConfigReader &cfg, wxString group);
 };
 
