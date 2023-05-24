@@ -77,7 +77,7 @@ void GOPerfTestApp::RunTest(
         + wxFileName::GetPathSeparator() + "perftests";
 
     organController->InitOrganDirectory(testsDir);
-    organController->AddWindchest(new GOWindchest(organController));
+    organController->AddWindchest(new GOWindchest(*organController));
     GOSoundEngine *engine = new GOSoundEngine();
     GOSoundRecorder recorder;
 

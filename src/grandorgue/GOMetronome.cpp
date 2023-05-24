@@ -102,7 +102,7 @@ void GOMetronome::Load(GOConfigReader &cfg) {
 
   m_OrganController->RegisterSaveableObject(this);
 
-  GOWindchest *windchest = new GOWindchest(m_OrganController);
+  GOWindchest *windchest = new GOWindchest(*m_OrganController);
   windchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
   unsigned samplegroup = m_OrganController->AddWindchest(windchest);
 

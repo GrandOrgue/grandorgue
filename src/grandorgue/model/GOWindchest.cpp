@@ -16,17 +16,16 @@
 #include "GOPipeWindchestCallback.h"
 #include "GOTremulant.h"
 
-GOWindchest::GOWindchest(GOOrganController *organController)
-  : m_OrganController(organController),
+GOWindchest::GOWindchest(GOOrganModel &organModel)
+  : r_OrganModel(organModel),
     m_Name(),
     m_Volume(1),
     m_enclosure(0),
     m_tremulant(0),
     m_ranks(0),
     m_pipes(0),
-    m_PipeConfig(
-      &organController->GetRootPipeConfigNode(), organController, NULL) {
-  m_OrganController->RegisterSoundStateHandler(this);
+    m_PipeConfig(&organModel.GetRootPipeConfigNode(), &organModel, NULL) {
+  organModel.RegisterSoundStateHandler(this);
 }
 
 void GOWindchest::Init(GOConfigReader &cfg, wxString group, wxString name) {
@@ -43,21 +42,21 @@ void GOWindchest::Load(GOConfigReader &cfg, wxString group, unsigned index) {
     group,
     wxT("NumberOfEnclosures"),
     0,
-    m_OrganController->GetEnclosureCount());
+    r_OrganModel.GetEnclosureCount());
   unsigned NumberOfTremulants = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("NumberOfTremulants"),
     0,
-    m_OrganController->GetTremulantCount());
+    r_OrganModel.GetTremulantCount());
 
   m_enclosure.resize(0);
   for (unsigned i = 0; i < NumberOfEnclosures; i++) {
     wxString buffer;
     buffer.Printf(wxT("Enclosure%03d"), i + 1);
-    m_enclosure.push_back(m_OrganController->GetEnclosureElement(
+    m_enclosure.push_back(r_OrganModel.GetEnclosureElement(
       cfg.ReadInteger(
-        ODFSetting, group, buffer, 1, m_OrganController->GetEnclosureCount())
+        ODFSetting, group, buffer, 1, r_OrganModel.GetEnclosureCount())
       - 1));
   }
 
@@ -67,7 +66,7 @@ void GOWindchest::Load(GOConfigReader &cfg, wxString group, unsigned index) {
     buffer.Printf(wxT("Tremulant%03d"), i + 1);
     m_tremulant.push_back(
       cfg.ReadInteger(
-        ODFSetting, group, buffer, 1, m_OrganController->GetTremulantCount())
+        ODFSetting, group, buffer, 1, r_OrganModel.GetTremulantCount())
       - 1);
   }
 
@@ -114,8 +113,8 @@ GOPipeConfigNode &GOWindchest::GetPipeConfig() { return m_PipeConfig; }
 
 void GOWindchest::UpdateTremulant(GOTremulant *tremulant) {
   for (unsigned i = 0; i < m_tremulant.size(); i++)
-    if (tremulant == m_OrganController->GetTremulant(m_tremulant[i])) {
-      GOTremulant *t = m_OrganController->GetTremulant(m_tremulant[i]);
+    if (tremulant == r_OrganModel.GetTremulant(m_tremulant[i])) {
+      GOTremulant *t = r_OrganModel.GetTremulant(m_tremulant[i]);
       if (t->GetTremulantType() != GOWavTrem)
         continue;
       bool on = t->IsActive();
