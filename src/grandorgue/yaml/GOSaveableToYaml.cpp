@@ -10,7 +10,7 @@
 #include <yaml-cpp/yaml.h>
 
 YAML::Node GOSaveableToYaml::ToYamlNode() const {
-  YAML::Node yamlNode;
+  YAML::Node yamlNode(YAML::NodeType::Map);
 
   ToYaml(yamlNode);
   return yamlNode;
