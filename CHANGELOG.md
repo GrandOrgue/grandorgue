@@ -1,3 +1,4 @@
+# 3.12.0 (2023-05-25)
 - Reverted back default display of GeneralPrev and GeneralNext https://github.com/GrandOrgue/grandorgue/issues/1538
 - Added new builtin bitmap set of manual keys and one new drawstop bitmap https://github.com/GrandOrgue/grandorgue/discussions/1490
 - Removed support of MacOs 10.15. Now MacOs 11 or above is required https://github.com/GrandOrgue/grandorgue/discussions/1149
