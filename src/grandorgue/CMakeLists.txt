@@ -23,7 +23,7 @@ else()
   # but pkg_config does not support static linking for yaml-cpp, so use cmake config
   ## at first, try to find static package
   set(CMAKE_FIND_DEBUG_MODE TRUE)
-  find_package(yaml-cpp REQUIRED PATH_SUFFIXES yaml-cpp-static yaml-cpp)
+  find_package(yaml-cpp REQUIRED)
   set(CMAKE_FIND_DEBUG_MODE FALSE)
   message("yaml-cpp_CONFIG=${yaml-cpp_CONFIG}")
   include("${yaml-cpp_CONFIG}")
