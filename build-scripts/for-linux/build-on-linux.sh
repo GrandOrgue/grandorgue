@@ -8,7 +8,8 @@
 
 set -e
 
-source $(dirname $0)/../set-ver-prms.sh "$1" "$2"
+DIR=$(dirname $0)
+source $DIR/../set-ver-prms.sh "$1" "$2"
 
 if [[ -n "$3" ]]; then
 	SRC_DIR=$3
@@ -27,15 +28,10 @@ pushd build/linux
 rm -rf *
 export LANG=C
 
-GO_PRMS="-DCMAKE_BUILD_TYPE=Release $CMAKE_VERSION_PRMS -DCMAKE_PACKAGE_SUFFIX=$PACKAGE_SUFFIX"
-
-#specify the yaml-cpp-static path
-MULTIARCH=$(dpkg-architecture -q DEB_TARGET_MULTIARCH -A $TARGET_ARCH)
-if [[ -d /usr/lib/$MULTIARCH/cmake/yaml-cpp-static ]]; then
-  GO_PRMS="$GO_PRMS -Dyaml-cpp_DIR=/usr/lib/$MULTIARCH/cmake/yaml-cpp-static"
-elif [[ -d /usr/lib64/cmake/yaml-cpp-static ]]; then
-  GO_PRMS="$GO_PRMS -Dyaml-cpp_DIR=/usr/lib64/cmake/yaml-cpp-static"
-fi
+GO_PRMS="-DCMAKE_BUILD_TYPE=Release \
+  $CMAKE_VERSION_PRMS \
+  -DCMAKE_PACKAGE_SUFFIX=$PACKAGE_SUFFIX \
+  $($DIR/cmake-prm-yaml-cpp.bash $TARGET_ARCH)"
 
 echo "cmake -G \"Unix Makefiles\" $GO_PRMS . $SRC_DIR"
 cmake -G "Unix Makefiles" $GO_PRMS . $SRC_DIR
