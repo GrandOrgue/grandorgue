@@ -22,6 +22,7 @@ if (APPLE)
 else()
   # but pkg_config does not support static linking for yaml-cpp, so use cmake config
   find_package(yaml-cpp REQUIRED)
+  message("yaml-cpp_CONFIG=${yaml-cpp_CONFIG}")
   include("${yaml-cpp_CONFIG}")
   # the variables are different in both methods
   set(YAML_CPP_INCLUDE_DIRS "${YAML_CPP_INCLUDE_DIR}")
