@@ -45,7 +45,7 @@ GO_ARM_PRMS="-DCMAKE_SYSTEM_NAME=Linux \
 GO_PRMS="-DCMAKE_BUILD_TYPE=Release \
   $CMAKE_VERSION_PRMS \
   -DCMAKE_PACKAGE_SUFFIX=$PACKAGE_SUFFIX \
-  $($DIR/../for-linux/cmake-prm-yaml-cpp.bash $TARGET_ARCH)"
+  $($DIR/../for-linux/cmake-prm-yaml-cpp.bash armhf)"
 
 echo "cmake -G \"Unix Makefiles\" $GO_PRMS . $SRC_DIR"
 cmake -G "Unix Makefiles" $GO_PRMS $GO_ARM_PRMS . $SRC_DIR
