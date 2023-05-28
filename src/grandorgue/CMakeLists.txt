@@ -21,7 +21,11 @@ if (APPLE)
   pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
 else()
   # but pkg_config does not support static linking for yaml-cpp, so use cmake config
+  ## at first, try to find static package
+  set(CMAKE_FIND_DEBUG_MODE TRUE)
   find_package(yaml-cpp REQUIRED)
+  set(CMAKE_FIND_DEBUG_MODE FALSE)
+  message("yaml-cpp_CONFIG=${yaml-cpp_CONFIG}")
   include("${yaml-cpp_CONFIG}")
   # the variables are different in both methods
   set(YAML_CPP_INCLUDE_DIRS "${YAML_CPP_INCLUDE_DIR}")
