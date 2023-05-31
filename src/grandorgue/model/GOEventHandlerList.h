@@ -11,6 +11,7 @@
 #include <vector>
 
 class GOCacheObject;
+class GOCombinationButtonSet;
 class GOControlChangedHandler;
 class GOEventHandler;
 class GOMidiConfigurator;
@@ -20,6 +21,7 @@ class GOSaveableObject;
 class GOEventHandlerList {
 private:
   std::vector<GOCacheObject *> m_CacheObjects;
+  std::vector<GOCombinationButtonSet *> m_CombinationButtonSets;
   std::vector<GOControlChangedHandler *> m_ControlChangedHandlers;
   std::vector<GOMidiConfigurator *> m_MidiConfigurators;
   std::vector<GOEventHandler *> m_MidiEventHandlers;
@@ -29,6 +31,10 @@ private:
 public:
   const std::vector<GOCacheObject *> &GetCacheObjects() const {
     return m_CacheObjects;
+  }
+  const std::vector<GOCombinationButtonSet *> &GetCombinationButtonSets()
+    const {
+    return m_CombinationButtonSets;
   }
   const std::vector<GOMidiConfigurator *> &GetMidiConfigurators() const {
     return m_MidiConfigurators;
@@ -44,6 +50,7 @@ public:
   }
 
   void RegisterCacheObject(GOCacheObject *obj);
+  void RegisterCombinationButtonSet(GOCombinationButtonSet *obj);
   void RegisterControlChangedHandler(GOControlChangedHandler *handler);
   void RegisterMidiConfigurator(GOMidiConfigurator *obj);
   void RegisterEventHandler(GOEventHandler *handler);

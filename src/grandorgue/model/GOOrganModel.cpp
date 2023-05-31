@@ -32,7 +32,9 @@ GOOrganModel::GOOrganModel(GOConfig &config)
     m_OrganModelModified(false),
     m_FirstManual(0),
     m_ODFManualCount(0),
-    m_ODFRankCount(0) {}
+    m_ODFRankCount(0) {
+  RegisterCombinationButtonSet(this);
+}
 
 GOOrganModel::~GOOrganModel() {}
 
@@ -284,4 +286,10 @@ unsigned GOOrganModel::GetGeneralCount() { return m_generals.size(); }
 
 GOGeneralButtonControl *GOOrganModel::GetGeneral(unsigned index) {
   return m_generals[index];
+}
+
+void GOOrganModel::UpdateAllButtonsLight(
+  GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
+  for (GOGeneralButtonControl *pGeneral : m_generals)
+    UpdateOneButtonLight(pGeneral, buttonToLight);
 }

@@ -12,6 +12,7 @@
 
 #include "ptrvector.h"
 
+#include "control/GOCombinationButtonSet.h"
 #include "control/GOControlChangedHandler.h"
 #include "control/GOElementCreator.h"
 #include "control/GOLabelControl.h"
@@ -28,6 +29,7 @@ class GOGeneralCombination;
 class GODivisionalCombination;
 
 class GOSetter : private GOSoundStateHandler,
+                 private GOCombinationButtonSet,
                  private GOControlChangedHandler,
                  public GOElementCreator,
                  public GOSaveableObject,
@@ -98,6 +100,24 @@ private:
    */
   void NotifyCmbPushed(bool isChanged = true);
 
+  /**
+   * Ubdate all setter combination buttons light.
+   * If the button
+   * @param buttonToLight
+   * @param manualIndexOnlyFor
+   */
+  void UpdateAllButtonsLight(
+    GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
+
+  /**
+   * Ubdate buttons light in all combination button set.
+   * If the button
+   * @param buttonToLight
+   * @param manualIndexOnlyFor
+   */
+  void UpdateAllSetsButtonsLight(
+    GOButtonControl *buttonToLight, int manualIndexOnlyFor);
+
 public:
   static const wxString KEY_REFRESH_FILES;
   static const wxString KEY_PREV_FILE;
@@ -167,11 +187,13 @@ public:
    * extraSet
    * If isFromCrescendo and it is in add mode then then does not depress other
    * buttons
-   *
+   * @param cmb the cmb to activate or to set
+   * @param pButton the button to light on
    * return if anything is changed
    */
-  void PushGeneral(GOGeneralCombination &cmb);
-  void PushDivisional(GODivisionalCombination &cmb);
+  void PushGeneral(GOGeneralCombination &cmb, GOButtonControl *pButtonToLight);
+  void PushDivisional(
+    GODivisionalCombination &cmb, GOButtonControl *pButtonToLight);
 
   /*
    * If current crescendo is in override mode then returns nullptr
@@ -187,7 +209,11 @@ public:
   unsigned GetPosition();
   void UpdatePosition(int pos);
   void SetPosition(int pos, bool push = true);
-  void ResetDisplay();
+
+  /**
+   * Switch the light of all combination buttons off
+   */
+  void ResetCmbButtons() { UpdateAllSetsButtonsLight(nullptr, -1); }
   void SetTranspose(int value);
   void UpdateTranspose();
   void UpdateModified(bool modified);

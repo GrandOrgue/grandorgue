@@ -10,6 +10,7 @@
 
 #include "ptrvector.h"
 
+#include "combinations/control/GOCombinationButtonSet.h"
 #include "midi/GOMidiSendProxy.h"
 #include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
 #include "modification/GOModificationProxy.h"
@@ -30,7 +31,8 @@ class GOSwitch;
 class GOTremulant;
 class GOWindchest;
 
-class GOOrganModel : public GOEventHandlerList,
+class GOOrganModel : private GOCombinationButtonSet,
+                     public GOEventHandlerList,
                      public GOMidiDialogCreatorProxy,
                      public GOMidiSendProxy {
 private:
@@ -63,6 +65,15 @@ protected:
   unsigned m_ODFRankCount;
 
   void Load(GOConfigReader &cfg, GOOrganController *organController);
+
+  /**
+   * Ubdate all generals buttons light.
+   * @param buttonToLight - the button that should be lighted on. All other
+   *   divisionals are lighted off
+   * @param manualIndexOnlyFor - if >= 0 change lighting of this manual only
+   */
+  void UpdateAllButtonsLight(
+    GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
 
 public:
   GOOrganModel(GOConfig &config);

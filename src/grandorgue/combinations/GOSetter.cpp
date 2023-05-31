@@ -272,7 +272,11 @@ const struct GOElementCreator::ButtonDefinitionEntry GOSetter::m_element_types[]
     {wxT("CrescendoPrev"), ID_SETTER_CRESCENDO_PREV, true, true, false},
     {wxT("CrescendoCurrent"), ID_SETTER_CRESCENDO_CURRENT, true, true, false},
     {wxT("CrescendoNext"), ID_SETTER_CRESCENDO_NEXT, true, true, false},
-    {wxT("CrescendoOverride"), ID_SETTER_CRESCENDO_OVERRIDE, true, true, false},
+    {wxT("CrescendoOverride"),
+     ID_SETTER_CRESCENDO_OVERRIDE,
+     true,
+     false,
+     false},
     {wxT(""), -1, false, false, false},
 };
 
@@ -333,6 +337,7 @@ GOSetter::GOSetter(GOOrganController *organController)
   SetCrescendoType(m_crescendobank);
 
   m_OrganController->RegisterSoundStateHandler(this);
+  m_OrganController->RegisterCombinationButtonSet(this);
   m_OrganController->RegisterControlChangedHandler(this);
 }
 
@@ -742,7 +747,7 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
   case ID_SETTER_DELETE:
     for (unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
       m_framegeneral[j]->Copy(m_framegeneral[j + 1]);
-    ResetDisplay();
+    UpdateAllButtonsLight(nullptr, -1);
     NotifyCmbChanged();
     break;
   case ID_SETTER_INSERT:
@@ -813,9 +818,8 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
   case ID_SETTER_GENERAL47:
   case ID_SETTER_GENERAL48:
   case ID_SETTER_GENERAL49:
-    PushGeneral(*m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS]);
-    ResetDisplay();
-    m_buttons[id]->Display(true);
+    PushGeneral(
+      *m_general[id - ID_SETTER_GENERAL00 + m_bank * GENERALS], m_buttons[id]);
     break;
   case ID_SETTER_GENERAL_PREV:
   case ID_SETTER_GENERAL_NEXT:
@@ -851,7 +855,8 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
     break;
   case ID_SETTER_CRESCENDO_CURRENT:
     PushGeneral(
-      *m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS]);
+      *m_crescendo[m_crescendopos + m_crescendobank * CRESCENDO_STEPS],
+      nullptr);
     break;
 
   case ID_SETTER_CRESCENDO_OVERRIDE:
@@ -978,7 +983,24 @@ void GOSetter::SetterActive(bool on) { m_buttons[ID_SETTER_SET]->Set(on); }
 
 void GOSetter::ToggleSetter() { m_buttons[ID_SETTER_SET]->Push(); }
 
-void GOSetter::PushGeneral(GOGeneralCombination &cmb) {
+void GOSetter::UpdateAllButtonsLight(
+  GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
+  UpdateOneButtonLight(m_buttons[ID_SETTER_HOME], buttonToLight);
+  for (unsigned i = 0; i < 10; i++)
+    UpdateOneButtonLight(m_buttons[ID_SETTER_L0 + i], buttonToLight);
+  for (unsigned i = 0; i < GENERALS; i++)
+    UpdateOneButtonLight(m_buttons[ID_SETTER_GENERAL00 + i], buttonToLight);
+}
+
+void GOSetter::UpdateAllSetsButtonsLight(
+  GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
+  for (GOCombinationButtonSet *pCmbButtonSet :
+       m_OrganController->GetCombinationButtonSets())
+    pCmbButtonSet->UpdateAllButtonsLight(buttonToLight, manualIndexOnlyFor);
+}
+
+void GOSetter::PushGeneral(
+  GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) {
   GOCombination::ExtraElementsSet elementSet;
   const GOCombination::ExtraElementsSet *pExtraSet
     = GetCrescendoAddSet(elementSet);
@@ -986,28 +1008,17 @@ void GOSetter::PushGeneral(GOGeneralCombination &cmb) {
   NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
   if (!pExtraSet) { // Otherwise the crescendo in add mode:
                     // not to switch off combination buttons
-    ResetDisplay(); // disable buttons
-
-    for (unsigned k = 0; k < m_OrganController->GetGeneralCount(); k++) {
-      GOGeneralButtonControl *general = m_OrganController->GetGeneral(k);
-      general->Display(&general->GetCombination() == &cmb);
-    }
-
-    for (unsigned j = m_OrganController->GetFirstManualIndex();
-         j <= m_OrganController->GetManualAndPedalCount();
-         j++) {
-      for (unsigned k = 0;
-           k < m_OrganController->GetManual(j)->GetDivisionalCount();
-           k++)
-        m_OrganController->GetManual(j)->GetDivisional(k)->Display(false);
-    }
+    UpdateAllSetsButtonsLight(pButtonToLight, -1);
   }
 }
 
-void GOSetter::PushDivisional(GODivisionalCombination &cmb) {
+void GOSetter::PushDivisional(
+  GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) {
   GOCombination::ExtraElementsSet elementSet;
+  const GOCombination::ExtraElementsSet *pExtraSet
+    = GetCrescendoAddSet(elementSet);
 
-  NotifyCmbPushed(cmb.Push(m_state, GetCrescendoAddSet(elementSet)));
+  NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
   /* only use divisional couples, if not in setter mode */
   if (!m_state.m_IsActive) {
     unsigned cmbManualNumber = cmb.GetManualNumber();
@@ -1040,6 +1051,8 @@ void GOSetter::PushDivisional(GODivisionalCombination &cmb) {
       }
     }
   }
+  if (!pExtraSet)
+    UpdateAllSetsButtonsLight(pButtonToLight, cmb.GetManualNumber());
 }
 
 void GOSetter::Next() { SetPosition(m_pos + 1); }
@@ -1079,14 +1092,6 @@ const GOCombination::ExtraElementsSet *GOSetter::GetCrescendoAddSet(
   return pResElementSet;
 }
 
-void GOSetter::ResetDisplay() {
-  m_buttons[ID_SETTER_HOME]->Display(false);
-  for (unsigned i = 0; i < 10; i++)
-    m_buttons[ID_SETTER_L0 + i]->Display(false);
-  for (unsigned i = 0; i < GENERALS; i++)
-    m_buttons[ID_SETTER_GENERAL00 + i]->Display(false);
-}
-
 void GOSetter::UpdatePosition(int pos) {
   if (pos != (int)m_pos)
     SetPosition(pos);
@@ -1101,12 +1106,8 @@ void GOSetter::SetPosition(int pos, bool push) {
     pos -= m_framegeneral.size();
   m_pos = pos;
   if (push) {
-    PushGeneral(*m_framegeneral[m_pos]);
+    PushGeneral(*m_framegeneral[m_pos], m_buttons[ID_SETTER_L0 + m_pos % 10]);
     m_buttons[ID_SETTER_HOME]->Display(m_pos == 0);
-    for (unsigned i = 0; i < 10; i++)
-      m_buttons[ID_SETTER_L0 + i]->Display((m_pos % 10) == i);
-    for (unsigned i = 0; i < GENERALS; i++)
-      m_buttons[ID_SETTER_GENERAL00 + i]->Display(false);
   }
 
   buffer.Printf(wxT("%03d"), m_pos);
@@ -1157,7 +1158,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
   }
   // switch combination buttons off in the crescendo override mode
   if (changed && !crescendoAddMode)
-    ResetDisplay();
+    ResetCmbButtons();
   NotifyCmbPushed(changed);
 
   wxString buffer;

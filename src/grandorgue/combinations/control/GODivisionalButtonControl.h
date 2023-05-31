@@ -44,7 +44,7 @@ public:
   void LoadCombination(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
 
-  void Push();
+  void Push() override;
 };
 
 #endif /* GODIVISIONALBUTTONCONTROL_H */

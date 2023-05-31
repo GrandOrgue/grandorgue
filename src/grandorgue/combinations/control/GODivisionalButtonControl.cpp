@@ -52,12 +52,5 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalButtonControl::Push() {
-  GOManual *pManual = r_OrganModel.GetManual(m_combination.GetManualNumber());
-
-  r_setter.PushDivisional(m_combination);
-  for (unsigned l = pManual->GetDivisionalCount(), k = 0; k < l; k++) {
-    GODivisionalButtonControl *pDivisionalControl = pManual->GetDivisional(k);
-
-    pDivisionalControl->Display(pDivisionalControl == this);
-  }
+  r_setter.PushDivisional(m_combination, this);
 }
