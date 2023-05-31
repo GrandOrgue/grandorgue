@@ -1,3 +1,4 @@
+- Fixed bug of GC not working on manual with only a single stop https://github.com/GrandOrgue/grandorgue/issues/1556
 - Fixed installation on linux with another yaml-cpp version than 6.2 https://github.com/GrandOrgue/grandorgue/issues/1548
 # 3.12.0 (2023-05-25)
 - Reverted back default display of GeneralPrev and GeneralNext https://github.com/GrandOrgue/grandorgue/issues/1538
