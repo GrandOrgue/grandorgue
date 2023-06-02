@@ -422,7 +422,7 @@ void GODivisionalSetter::UpdateAllButtonsLight(
     if (
       manualIndexOnlyFor < 0
       || (unsigned)manualIndexOnlyFor == odfManualIndex) {
-      // reflect the ne state of the combination buttons
+      // reflect the new state of the combination buttons
       for (unsigned firstButtonIdx = N_BUTTONS * manualN, k = 0;
            k < N_DIVISIONALS;
            k++) {

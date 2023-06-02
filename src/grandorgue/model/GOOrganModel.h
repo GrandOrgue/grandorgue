@@ -67,7 +67,7 @@ protected:
   void Load(GOConfigReader &cfg, GOOrganController *organController);
 
   /**
-   * Ubdate all generals buttons light.
+   * Update all generals buttons light.
    * @param buttonToLight - the button that should be lighted on. All other
    *   divisionals are lighted off
    * @param manualIndexOnlyFor - if >= 0 change lighting of this manual only

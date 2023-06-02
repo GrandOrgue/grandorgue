@@ -13,7 +13,7 @@ class GOButtonControl;
 class GOCombinationButtonSet {
 protected:
   /**
-   * Ubdate light of one button.
+   * Update light of one button.
    * @param pButton - the button to control
    * @param buttonToLight - the button to light
    */
@@ -22,7 +22,7 @@ protected:
 
 public:
   /**
-   * Ubdate all combination buttons light.
+   * Update all combination buttons light.
    * If the button
    * @param buttonToLight
    * @param manualIndexOnlyFor

@@ -86,7 +86,7 @@ private:
   void PrepareRecording();
 
   /**
-   * Ubdate all divisional buttons light.
+   * Update all divisional buttons light.
    * @param buttonToLight
    * @param manualIndexOnlyFor
    */
