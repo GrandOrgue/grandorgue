@@ -290,6 +290,7 @@ GOGeneralButtonControl *GOOrganModel::GetGeneral(unsigned index) {
 
 void GOOrganModel::UpdateAllButtonsLight(
   GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
-  for (GOGeneralButtonControl *pGeneral : m_generals)
-    UpdateOneButtonLight(pGeneral, buttonToLight);
+  if (manualIndexOnlyFor < 0)
+    for (GOGeneralButtonControl *pGeneral : m_generals)
+      UpdateOneButtonLight(pGeneral, buttonToLight);
 }

@@ -985,11 +985,13 @@ void GOSetter::ToggleSetter() { m_buttons[ID_SETTER_SET]->Push(); }
 
 void GOSetter::UpdateAllButtonsLight(
   GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
-  UpdateOneButtonLight(m_buttons[ID_SETTER_HOME], buttonToLight);
-  for (unsigned i = 0; i < 10; i++)
-    UpdateOneButtonLight(m_buttons[ID_SETTER_L0 + i], buttonToLight);
-  for (unsigned i = 0; i < GENERALS; i++)
-    UpdateOneButtonLight(m_buttons[ID_SETTER_GENERAL00 + i], buttonToLight);
+  if (manualIndexOnlyFor < 0) {
+    UpdateOneButtonLight(m_buttons[ID_SETTER_HOME], buttonToLight);
+    for (unsigned i = 0; i < 10; i++)
+      UpdateOneButtonLight(m_buttons[ID_SETTER_L0 + i], buttonToLight);
+    for (unsigned i = 0; i < GENERALS; i++)
+      UpdateOneButtonLight(m_buttons[ID_SETTER_GENERAL00 + i], buttonToLight);
+  }
 }
 
 void GOSetter::UpdateAllSetsButtonsLight(
