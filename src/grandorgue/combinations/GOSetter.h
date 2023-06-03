@@ -101,7 +101,7 @@ private:
   void NotifyCmbPushed(bool isChanged = true);
 
   /**
-   * Ubdate all setter combination buttons light.
+   * Update all setter combination buttons light.
    * If the button
    * @param buttonToLight
    * @param manualIndexOnlyFor
@@ -110,7 +110,7 @@ private:
     GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
 
   /**
-   * Ubdate buttons light in all combination button set.
+   * Update buttons light in all combination button set.
    * If the button
    * @param buttonToLight
    * @param manualIndexOnlyFor
