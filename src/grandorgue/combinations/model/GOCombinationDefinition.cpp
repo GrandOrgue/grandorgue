@@ -31,12 +31,12 @@ GOCombinationDefinition::~GOCombinationDefinition() {}
 
 void GOCombinationDefinition::AddGeneral(
   GODrawstop *control, ElementType type, int manual, unsigned index) {
-  Add(control, type, manual, index, control->GetStoreGeneral());
+  Add(control, type, manual, index, control->IsToStoreInGeneral());
 }
 
 void GOCombinationDefinition::AddDivisional(
   GODrawstop *control, ElementType type, int manual, unsigned index) {
-  Add(control, type, manual, index, control->GetStoreDivisional());
+  Add(control, type, manual, index, control->IsToStoreInDivisional());
 }
 
 void GOCombinationDefinition::Add(

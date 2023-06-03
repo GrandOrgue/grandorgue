@@ -50,7 +50,7 @@ private:
   void SetOut(int note, unsigned velocity);
   unsigned GetInternalState(int note);
   void ChangeState(bool on);
-  void SetupCombinationState();
+  void SetupIsToStoreInCmb();
 
   void PreparePlayback();
 

@@ -18,7 +18,7 @@ private:
   std::vector<unsigned> m_manuals;
 
   void ChangeState(bool on);
-  void SetupCombinationState();
+  void SetupIsToStoreInCmb();
 
 public:
   GODivisionalCoupler(GOOrganModel &organModel);

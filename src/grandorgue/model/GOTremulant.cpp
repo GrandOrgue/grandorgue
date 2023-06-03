@@ -82,10 +82,10 @@ void GOTremulant::Load(
   r_OrganModel.RegisterCacheObject(this);
 }
 
-void GOTremulant::SetupCombinationState() {
-  m_StoreDivisional = r_OrganModel.DivisionalsStoreTremulants()
+void GOTremulant::SetupIsToStoreInCmb() {
+  m_IsToStoreInDivisional = r_OrganModel.DivisionalsStoreTremulants()
     && (r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
-  m_StoreGeneral
+  m_IsToStoreInGeneral
     = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
