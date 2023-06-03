@@ -38,7 +38,7 @@ private:
 
   void InitSoundProvider(GOMemoryPool &pool);
   void ChangeState(bool on);
-  void SetupIsToStoreInCmb();
+  void SetupIsToStoreInCmb() override;
 
   void Initialize();
   void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool);

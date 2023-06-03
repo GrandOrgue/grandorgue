@@ -103,13 +103,6 @@ void GOStop::Load(GOConfigReader &cfg, wxString group) {
   GODrawstop::Load(cfg, group);
 }
 
-void GOStop::SetupIsToStoreInCmb() {
-  m_IsToStoreInDivisional
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_IsToStoreInGeneral
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-}
-
 void GOStop::SetRankKey(unsigned key, unsigned velocity) {
   for (unsigned j = 0; j < m_RankInfo.size(); j++) {
     if (
