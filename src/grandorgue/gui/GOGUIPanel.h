@@ -34,6 +34,19 @@ class GOOrganController;
 class GOGUIPanel : private GOSaveableObject {
 private:
   void ReadSizeInfoFromCfg(GOConfigReader &cfg, bool isOpenByDefault);
+  void LoadButton(
+    GOConfigReader &cfg,
+    GOButtonControl *pButtonControl,
+    const wxString &groupPrefix,
+    unsigned groupIndex,
+    bool isPiston = false);
+  void LoadManualButton(
+    GOConfigReader &cfg,
+    GOButtonControl *pButtonControl,
+    const wxString &manualGroup,
+    const wxString &groupPrefix,
+    unsigned elementIndex,
+    bool isPiston = false);
 
 protected:
   GOOrganController *m_OrganController;

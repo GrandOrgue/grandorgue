@@ -99,6 +99,45 @@ void GOGUIPanel::Init(
   ReadSizeInfoFromCfg(cfg, false);
 }
 
+const wxString WX_S_03D = wxT("%s%03d");
+
+wxString compose_group_name(const wxString &groupPrefix, unsigned groupIndex) {
+  return wxString::Format(WX_S_03D, groupPrefix, groupIndex);
+}
+
+void GOGUIPanel::LoadButton(
+  GOConfigReader &cfg,
+  GOButtonControl *pButtonControl,
+  const wxString &groupPrefix,
+  unsigned groupIndex,
+  bool isPiston) {
+  if (pButtonControl && pButtonControl->IsDisplayed())
+    LoadControl(
+      new GOGUIButton(this, pButtonControl, isPiston),
+      cfg,
+      compose_group_name(groupPrefix, groupIndex));
+}
+
+void GOGUIPanel::LoadManualButton(
+  GOConfigReader &cfg,
+  GOButtonControl *pButtonControl,
+  const wxString &manualGroup,
+  const wxString &groupPrefix,
+  unsigned elementIndex,
+  bool isPiston) {
+  LoadButton(
+    cfg,
+    pButtonControl,
+    groupPrefix,
+    cfg.ReadInteger(
+      ODFSetting,
+      manualGroup,
+      compose_group_name(groupPrefix, elementIndex),
+      1,
+      999),
+    isPiston);
+}
+
 void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
   m_OrganController->RegisterSaveableObject(this);
   m_group = group;
@@ -189,105 +228,60 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
     }
 
     for (unsigned i = 0; i < m_OrganController->GetTremulantCount(); i++)
-      if (m_OrganController->GetTremulant(i)->IsDisplayed()) {
-        LoadControl(
-          new GOGUIButton(this, m_OrganController->GetTremulant(i)),
-          cfg,
-          wxString::Format(wxT("Tremulant%03d"), i + 1));
-      }
-
+      LoadButton(
+        cfg, m_OrganController->GetTremulant(i), wxT("Tremulant"), i + 1);
     for (unsigned i = 0; i < m_OrganController->GetDivisionalCouplerCount();
          i++)
-      if (m_OrganController->GetDivisionalCoupler(i)->IsDisplayed()) {
-        LoadControl(
-          new GOGUIButton(this, m_OrganController->GetDivisionalCoupler(i)),
-          cfg,
-          wxString::Format(wxT("DivisionalCoupler%03d"), i + 1));
-      }
-
+      LoadButton(
+        cfg,
+        m_OrganController->GetDivisionalCoupler(i),
+        wxT("DivisionalCoupler"),
+        i + 1);
     for (unsigned i = 0; i < m_OrganController->GetGeneralCount(); i++)
-      if (m_OrganController->GetGeneral(i)->IsDisplayed()) {
-        LoadControl(
-          new GOGUIButton(this, m_OrganController->GetGeneral(i), true),
-          cfg,
-          wxString::Format(wxT("General%03d"), i + 1));
-      }
-
+      LoadButton(
+        cfg, m_OrganController->GetGeneral(i), wxT("General"), i + 1, true);
     for (unsigned i = 0; i < m_OrganController->GetNumberOfReversiblePistons();
          i++)
-      if (m_OrganController->GetPiston(i)->IsDisplayed()) {
-        LoadControl(
-          new GOGUIButton(this, m_OrganController->GetPiston(i), true),
-          cfg,
-          wxString::Format(wxT("ReversiblePiston%03d"), i + 1));
-      }
-
+      LoadButton(
+        cfg,
+        m_OrganController->GetPiston(i),
+        wxT("ReversiblePiston"),
+        i + 1,
+        true);
     for (unsigned i = 0; i < m_OrganController->GetSwitchCount(); i++)
-      if (m_OrganController->GetSwitch(i)->IsDisplayed()) {
-        LoadControl(
-          new GOGUIButton(this, m_OrganController->GetSwitch(i), false),
-          cfg,
-          wxString::Format(wxT("Switch%03d"), i + 1));
-      }
+      LoadButton(cfg, m_OrganController->GetSwitch(i), wxT("Switch"), i + 1);
 
     for (unsigned int i = m_OrganController->GetFirstManualIndex();
          i <= m_OrganController->GetManualAndPedalCount();
          i++) {
-      wxString manual_group = wxString::Format(wxT("Manual%03d"), i);
-      if (m_OrganController->GetManual(i)->IsDisplayed()) {
+      GOManual *pManual = m_OrganController->GetManual(i);
+
+      if (pManual->IsDisplayed()) {
+        wxString manualGroup = wxString::Format(wxT("Manual%03d"), i);
+
         LoadBackgroundControl(
           new GOGUIManualBackground(this, m_layout->GetManualNumber()),
           cfg,
-          manual_group);
+          manualGroup);
         LoadControl(
-          new GOGUIManual(
-            this, m_OrganController->GetManual(i), m_layout->GetManualNumber()),
+          new GOGUIManual(this, pManual, m_layout->GetManualNumber()),
           cfg,
-          manual_group);
+          manualGroup);
+        for (unsigned j = 0; j < pManual->GetODFCouplerCount(); j++)
+          LoadManualButton(
+            cfg, pManual->GetCoupler(j), manualGroup, wxT("Coupler"), j + 1);
+        for (unsigned j = 0; j < pManual->GetStopCount(); j++)
+          LoadManualButton(
+            cfg, pManual->GetStop(j), manualGroup, wxT("Stop"), j + 1);
+        for (unsigned j = 0; j < pManual->GetDivisionalCount(); j++)
+          LoadManualButton(
+            cfg,
+            pManual->GetDivisional(j),
+            manualGroup,
+            wxT("Divisional"),
+            j + 1,
+            true);
       }
-
-      for (unsigned j = 0;
-           j < m_OrganController->GetManual(i)->GetODFCouplerCount();
-           j++)
-        if (m_OrganController->GetManual(i)->GetCoupler(j)->IsDisplayed()) {
-          wxString buffer = wxString::Format(wxT("Coupler%03d"), j + 1);
-          buffer = wxString::Format(
-            wxT("Coupler%03d"),
-            cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 999));
-          LoadControl(
-            new GOGUIButton(
-              this, m_OrganController->GetManual(i)->GetCoupler(j)),
-            cfg,
-            buffer);
-        }
-
-      for (unsigned j = 0; j < m_OrganController->GetManual(i)->GetStopCount();
-           j++)
-        if (m_OrganController->GetManual(i)->GetStop(j)->IsDisplayed()) {
-          wxString buffer = wxString::Format(wxT("Stop%03d"), j + 1);
-          buffer = wxString::Format(
-            wxT("Stop%03d"),
-            cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 999));
-          LoadControl(
-            new GOGUIButton(this, m_OrganController->GetManual(i)->GetStop(j)),
-            cfg,
-            buffer);
-        }
-
-      for (unsigned j = 0;
-           j < m_OrganController->GetManual(i)->GetDivisionalCount();
-           j++)
-        if (m_OrganController->GetManual(i)->GetDivisional(j)->IsDisplayed()) {
-          wxString buffer = wxString::Format(wxT("Divisional%03d"), j + 1);
-          buffer = wxString::Format(
-            wxT("Divisional%03d"),
-            cfg.ReadInteger(ODFSetting, manual_group, buffer, 1, 999));
-          LoadControl(
-            new GOGUIButton(
-              this, m_OrganController->GetManual(i)->GetDivisional(j), true),
-            cfg,
-            buffer);
-        }
     }
   } else if (!new_format) {
     unsigned NumberOfEnclosures = cfg.ReadInteger(
