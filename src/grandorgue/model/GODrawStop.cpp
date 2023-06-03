@@ -50,10 +50,13 @@ void GODrawstop::Init(GOConfigReader &cfg, wxString group, wxString name) {
 }
 
 void GODrawstop::SetupIsToStoreInCmb() {
+  const bool isControlledByUser = !IsReadOnly();
+
   m_IsToStoreInDivisional
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_IsToStoreInGeneral
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops()
+    || isControlledByUser;
+  m_IsToStoreInGeneral = r_OrganModel.CombinationsStoreNonDisplayedDrawstops()
+    || isControlledByUser;
 }
 
 void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
