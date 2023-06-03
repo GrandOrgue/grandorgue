@@ -577,5 +577,5 @@ void GOManual::UpdateAllButtonsLight(
   GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
   if (manualIndexOnlyFor < 0 || (unsigned)manualIndexOnlyFor == m_manual_number)
     for (GOButtonControl *pDivisional : m_divisionals)
-      UpdateOneButtonLight(pDivisional, buttonToLight);
+      updateOneButtonLight(pDivisional, buttonToLight);
 }

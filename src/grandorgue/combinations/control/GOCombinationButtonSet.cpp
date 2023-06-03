@@ -9,7 +9,7 @@
 
 #include "control/GOButtonControl.h"
 
-void GOCombinationButtonSet::UpdateOneButtonLight(
+void GOCombinationButtonSet::updateOneButtonLight(
   GOButtonControl *pButton, GOButtonControl *buttonToLight) {
   if (pButton) {
     // switch off and then on is necessary for sending midi events

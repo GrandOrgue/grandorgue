@@ -17,7 +17,7 @@ protected:
    * @param pButton - the button to control
    * @param buttonToLight - the button to light
    */
-  void UpdateOneButtonLight(
+  static void updateOneButtonLight(
     GOButtonControl *pButton, GOButtonControl *buttonToLight);
 
 public:
