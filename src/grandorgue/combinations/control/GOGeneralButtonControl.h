@@ -25,7 +25,7 @@ public:
     GOOrganController *organController,
     bool is_setter);
   void Load(GOConfigReader &cfg, wxString group);
-  void Push();
+  void Push() override;
   GOGeneralCombination &GetCombination();
 
   wxString GetMidiType();

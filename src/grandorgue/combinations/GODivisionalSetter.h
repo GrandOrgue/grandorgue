@@ -15,6 +15,7 @@
 
 #include "ptrvector.h"
 
+#include "control/GOCombinationButtonSet.h"
 #include "control/GOElementCreator.h"
 #include "yaml/GOSaveableToYaml.h"
 
@@ -26,6 +27,7 @@ class GOLabelControl;
 class GOSetterState;
 
 class GODivisionalSetter : public GOElementCreator,
+                           private GOCombinationButtonSet,
                            GOSaveableObject,
                            public GOSaveableToYaml {
 private:
@@ -62,6 +64,15 @@ private:
   void UpdateBankDisplay(unsigned manualN);
   // delete all combinations from m_DivisionalMaps
   void ClearCombinations();
+
+  /**
+   * Update all divisional buttons light.
+   * @param buttonToLight - the button that should be lighted on. All other
+   *   divisionals are lighted off
+   * @param manualIndexOnlyFor - if >= 0 change lighting of this manual only
+   */
+  void UpdateAllButtonsLight(
+    GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
 
 protected:
   // called from GOElementCreator::CreateButtons()

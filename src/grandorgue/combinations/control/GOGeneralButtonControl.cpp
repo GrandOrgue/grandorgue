@@ -26,7 +26,9 @@ void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
   GOPushbuttonControl::Load(cfg, group);
 }
 
-void GOGeneralButtonControl::Push() { r_setter.PushGeneral(m_combination); }
+void GOGeneralButtonControl::Push() {
+  r_setter.PushGeneral(m_combination, this);
+}
 
 GOGeneralCombination &GOGeneralButtonControl::GetCombination() {
   return m_combination;

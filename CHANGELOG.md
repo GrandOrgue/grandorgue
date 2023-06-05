@@ -1,3 +1,4 @@
+- Fixed displaying light of various combination buttons https://github.com/GrandOrgue/grandorgue/issues/1536 
 - Fixed saving empty and scoped combinations to yaml https://github.com/GrandOrgue/grandorgue/issues/1531
 - Fixed bug of GC not working on manual with only a single stop https://github.com/GrandOrgue/grandorgue/issues/1556
 - Fixed installation on linux with another yaml-cpp version than 6.2 https://github.com/GrandOrgue/grandorgue/issues/1548

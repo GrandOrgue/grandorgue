@@ -15,6 +15,11 @@ void GOEventHandlerList::RegisterCacheObject(GOCacheObject *obj) {
   m_CacheObjects.push_back(obj);
 }
 
+void GOEventHandlerList::RegisterCombinationButtonSet(
+  GOCombinationButtonSet *obj) {
+  m_CombinationButtonSets.push_back(obj);
+}
+
 void GOEventHandlerList::RegisterControlChangedHandler(
   GOControlChangedHandler *handler) {
   m_ControlChangedHandlers.push_back(handler);
@@ -56,6 +61,7 @@ void GOEventHandlerList::SendControlChanged(void *pControl) {
 
 void GOEventHandlerList::Cleanup() {
   m_CacheObjects.clear();
+  m_CombinationButtonSets.clear();
   m_ControlChangedHandlers.clear();
   m_MidiConfigurators.clear();
   m_MidiEventHandlers.clear();

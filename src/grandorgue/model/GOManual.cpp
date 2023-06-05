@@ -49,6 +49,7 @@ GOManual::GOManual(GOOrganController *organController)
     m_displayed(false),
     m_DivisionalTemplate(*organController) {
   m_InputCouplers.push_back(NULL);
+  m_OrganController->RegisterCombinationButtonSet(this);
   m_OrganController->RegisterEventHandler(this);
   m_OrganController->RegisterMidiConfigurator(this);
   m_OrganController->RegisterSoundStateHandler(this);
@@ -570,4 +571,11 @@ std::vector<wxString> GOManual::GetElementActions() {
 
 void GOManual::TriggerElementActions(unsigned no) {
   // Never called
+}
+
+void GOManual::UpdateAllButtonsLight(
+  GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
+  if (manualIndexOnlyFor < 0 || (unsigned)manualIndexOnlyFor == m_manual_number)
+    for (GOButtonControl *pDivisional : m_divisionals)
+      updateOneButtonLight(pDivisional, buttonToLight);
 }

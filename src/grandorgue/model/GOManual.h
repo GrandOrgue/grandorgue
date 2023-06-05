@@ -12,6 +12,7 @@
 
 #include "ptrvector.h"
 
+#include "combinations/control/GOCombinationButtonSet.h"
 #include "combinations/model/GOCombinationDefinition.h"
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiReceiver.h"
@@ -32,6 +33,7 @@ class GOTremulant;
 class GOOrganController;
 
 class GOManual : private GOEventHandler,
+                 private GOCombinationButtonSet,
                  private GOSaveableObject,
                  private GOSoundStateHandler,
                  public GOMidiConfigurator {
@@ -82,6 +84,14 @@ private:
   void AbortPlayback();
   void PreparePlayback();
   void PrepareRecording();
+
+  /**
+   * Update all divisional buttons light.
+   * @param buttonToLight
+   * @param manualIndexOnlyFor
+   */
+  void UpdateAllButtonsLight(
+    GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
 
 public:
   GOManual(GOOrganController *organController);

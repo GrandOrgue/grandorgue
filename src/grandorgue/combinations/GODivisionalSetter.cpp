@@ -116,7 +116,7 @@ GODivisionalSetter::GODivisionalSetter(
   // create button conrols for all buttons. It calls the GetButtonDefinitionList
   // callback
   CreateButtons(*organController);
-
+  organController->RegisterCombinationButtonSet(this);
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);
     m_BankLabels.push_back(new GOLabelControl(organController));
@@ -369,19 +369,10 @@ void GODivisionalSetter::SwitchDivisionalTo(
       divMap[divisionalIdx] = pCmb;
     }
 
-    if (pCmb) {
+    if (pCmb)
       // the combination was existing or has just been created
-      m_OrganController->GetSetter()->PushDivisional(*pCmb);
-
-      // reflect the ne state of the combination buttons
-      for (unsigned firstButtonIdx = N_BUTTONS * manualN, k = 0;
-           k < N_DIVISIONALS;
-           k++) {
-        GOButtonControl *divisional = m_buttons[firstButtonIdx + k];
-
-        divisional->Display(k == divisionalN);
-      }
-    }
+      m_OrganController->GetSetter()->PushDivisional(
+        *pCmb, m_buttons[N_BUTTONS * manualN + divisionalN]);
   }
 }
 
@@ -420,5 +411,25 @@ void GODivisionalSetter::ButtonStateChanged(int id, bool newState) {
       SwitchBankToPrev(manualN);
     else if (buttonId == ID_NEXT_BANK)
       SwitchBankToNext(manualN);
+  }
+}
+
+void GODivisionalSetter::UpdateAllButtonsLight(
+  GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
+  for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
+    unsigned odfManualIndex = m_FirstManualIndex + manualN;
+
+    if (
+      manualIndexOnlyFor < 0
+      || (unsigned)manualIndexOnlyFor == odfManualIndex) {
+      // reflect the new state of the combination buttons
+      for (unsigned firstButtonIdx = N_BUTTONS * manualN, k = 0;
+           k < N_DIVISIONALS;
+           k++) {
+        GOButtonControl *pDivisional = m_buttons[firstButtonIdx + k];
+
+        pDivisional->Display(pDivisional == buttonToLight);
+      }
+    }
   }
 }

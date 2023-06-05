@@ -1062,7 +1062,7 @@ void GOOrganController::Reset() {
     GetDivisionalCoupler(j)->Reset();
   for (unsigned k = 0; k < GetGeneralCount(); k++)
     GetGeneral(k)->Display(false);
-  m_setter->ResetDisplay();
+  m_setter->ResetCmbButtons();
 }
 
 void GOOrganController::SetTemperament(const GOTemperament &temperament) {
