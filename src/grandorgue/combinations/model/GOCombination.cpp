@@ -33,6 +33,7 @@ GOCombination::GOCombination(
   : r_OrganModel(organModel),
     m_Template(cmbDef),
     m_IsFull(false),
+    m_HasScope(false),
     r_ElementDefinitions(cmbDef.GetElements()),
     m_Protected(false) {}
 
@@ -43,6 +44,7 @@ void GOCombination::Clear() {
   for (unsigned i = 0; i < m_State.size(); i++)
     m_State[i] = -1;
   m_IsFull = false;
+  m_HasScope = false;
 }
 
 void GOCombination::Copy(GOCombination *combination) {
@@ -53,7 +55,7 @@ void GOCombination::Copy(GOCombination *combination) {
 
 bool GOCombination::IsEmpty() const {
   return std::find_if(
-           m_State.begin(), m_State.end(), [](int i) { return i > 0; })
+           m_State.begin(), m_State.end(), [](int i) { return i >= 0; })
     == m_State.end();
 }
 
@@ -68,7 +70,9 @@ void GOCombination::SetLoadedState(
   if (pos >= 0) {
     int &state = m_State[pos];
 
-    if (state < 0) // has not yet been set
+    // when loading scope/scoped cmb from yaml, the same element may be read
+    // twice: for the scope and for the regular cmb
+    if (state < 0 || (m_HasScope && state == 0)) // has not yet been set
       state = (elementNumber > 0) ? 1 : 0;
     else // has already been set
       wxLogError(
@@ -280,13 +284,15 @@ void GOCombination::WriteNumberOfStops(
 }
 
 const wxString WX_IS_FULL = wxT("IsFull");
+const wxString WX_HAS_SCOPE = wxT("HasScope");
 
 // Load the combination either from the odf or from the cmb
 void GOCombination::LoadCombination(
   GOConfigReader &cfg, GOSettingType srcType) {
-  UpdateState();
+  Clear();
   m_IsFull = cfg.ReadBoolean(srcType, m_group, WX_IS_FULL, false, true);
   LoadCombinationInt(cfg, srcType);
+  m_HasScope = cfg.ReadBoolean(srcType, m_group, WX_HAS_SCOPE, false, false);
 }
 
 void GOCombination::LoadCombination(GOConfigReader &cfg) {
@@ -300,15 +306,18 @@ void GOCombination::LoadCombination(GOConfigReader &cfg) {
 
 void GOCombination::Save(GOConfigWriter &cfg) {
   cfg.WriteBoolean(m_group, WX_IS_FULL, m_IsFull);
+  cfg.WriteBoolean(m_group, WX_HAS_SCOPE, m_HasScope);
   SaveInt(cfg);
 }
 
 const wxString WX_P03D = wxT("%03d");
 const char *const FULL = "full";
+const char *const SCOPE = "scope";
 
-void GOCombination::ToYaml(YAML::Node &yamlMap) const {
+void GOCombination::PutElementsToYaml(
+  YAML::Node &yamlMap, int stateFrom) const {
   for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
-    if (GetState(i) > 0) {
+    if (GetState(i) >= stateFrom) {
       const auto &e = r_ElementDefinitions[i];
       unsigned value = e.index;
 
@@ -316,8 +325,17 @@ void GOCombination::ToYaml(YAML::Node &yamlMap) const {
       PutElementToYamlMap(
         e, wxString::Format(WX_P03D, value), value - 1, yamlMap);
     }
-  // if the combination is not empty
-  if (yamlMap.IsDefined() && yamlMap.IsMap() && m_IsFull)
+}
+
+void GOCombination::ToYaml(YAML::Node &yamlMap) const {
+  PutElementsToYaml(yamlMap, 1);
+  if (m_HasScope) {
+    YAML::Node scopeNode(YAML::NodeType::Map);
+
+    PutElementsToYaml(scopeNode, 0);
+    yamlMap[SCOPE] = scopeNode;
+  }
+  if (m_IsFull)
     yamlMap[FULL] = true; // save whether the combination is set as full
 }
 
@@ -326,21 +344,32 @@ void GOCombination::FromYaml(const YAML::Node &yamlNode) {
     Clear();
 
     if (yamlNode.IsDefined() && yamlNode.IsMap()) {
+      const YAML::Node scopeNode = yamlNode[SCOPE];
+
+      m_HasScope = scopeNode.IsDefined();
+
+      if (m_HasScope) {
+        // set state to 0 for the scope
+        FromYamlMap(scopeNode);
+        std::replace(m_State.begin(), m_State.end(), 1, 0);
+      }
+
       FromYamlMap(yamlNode);
       m_IsFull = yamlNode[FULL].as<bool>(false);
 
       // clear all non mentioned elements. Otherwise they won't be disabled when
       // this combination is switched on
+      if (!m_HasScope) {
+        for (unsigned l = r_ElementDefinitions.size(), i = 0; i < l; i++) {
+          auto &state = m_State[i];
 
-      for (unsigned l = r_ElementDefinitions.size(), i = 0; i < l; i++) {
-        auto &state = m_State[i];
-
-        if (
-          state < 0
-          && (r_ElementDefinitions[i].store_unconditional || m_IsFull))
-          state = 0;
-        // else the element is not visible and it shouldn't be touched by the
-        // combination
+          if (
+            state < 0
+            && (r_ElementDefinitions[i].store_unconditional || m_IsFull))
+            state = 0;
+          // else the element is not visible so it shouldn't be touched by the
+          // combination
+        }
       }
     }
   }
@@ -354,6 +383,7 @@ bool GOCombination::FillWithCurrent(
   m_IsFull = isToStoreInvisibleObjects;
   switch (setterType) {
   case GOSetterState::SETTER_REGULAR:
+    m_HasScope = false;
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
       if (
         !isToStoreInvisibleObjects
@@ -367,6 +397,7 @@ bool GOCombination::FillWithCurrent(
     }
     break;
   case GOSetterState::SETTER_SCOPE:
+    m_HasScope = true;
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
       if (
         !isToStoreInvisibleObjects
@@ -380,6 +411,7 @@ bool GOCombination::FillWithCurrent(
     }
     break;
   case GOSetterState::SETTER_SCOPED:
+    m_HasScope = true;
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++)
       if (m_State[i] != -1) {
         if (r_ElementDefinitions[i].control->GetCombinationState()) {
@@ -420,7 +452,7 @@ bool GOCombination::Push(
 
 void GOCombination::PutToYamlMap(YAML::Node &container, const char *key) const {
   if (!IsEmpty())
-    put_to_map_if_not_null(container, key, ToYamlNode());
+    container[key] = ToYamlNode();
 }
 
 void GOCombination::putToYamlMap(

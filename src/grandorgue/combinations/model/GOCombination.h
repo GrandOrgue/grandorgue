@@ -45,6 +45,13 @@ private:
    */
   bool m_IsFull;
 
+  /**
+   * Whether the combination has been captured when `Scope` or `Scoped` engaged
+   */
+  bool m_HasScope;
+
+  void PutElementsToYaml(YAML::Node &yamlMap, int stateFrom) const;
+
 protected:
   const std::vector<GOCombinationDefinition::Element> &r_ElementDefinitions;
   bool m_Protected;
