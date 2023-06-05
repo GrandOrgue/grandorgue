@@ -310,7 +310,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           this, m_OrganController->GetEnclosureElement(enclosure_nb - 1)),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(panel_prefix + buffer);
+      cfg.MarkGroupInUse(panel_prefix + buffer);
     }
 
     unsigned NumberOfSetterElements = cfg.ReadInteger(
@@ -345,7 +345,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           this, m_OrganController->GetTremulant(tremulant_nb - 1)),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(panel_prefix + buffer);
+      cfg.MarkGroupInUse(panel_prefix + buffer);
     }
 
     unsigned NumberOfDivisionalCouplers = cfg.ReadInteger(
@@ -368,7 +368,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           this, m_OrganController->GetDivisionalCoupler(coupler_nb - 1)),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(panel_prefix + buffer);
+      cfg.MarkGroupInUse(panel_prefix + buffer);
     }
 
     unsigned NumberOfGenerals = cfg.ReadInteger(
@@ -391,7 +391,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           this, m_OrganController->GetGeneral(general_nb - 1), true),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(panel_prefix + buffer);
+      cfg.MarkGroupInUse(panel_prefix + buffer);
     }
 
     unsigned NumberOfReversiblePistons = cfg.ReadInteger(
@@ -414,7 +414,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           this, m_OrganController->GetPiston(piston_nb - 1), true),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(panel_prefix + buffer);
+      cfg.MarkGroupInUse(panel_prefix + buffer);
     }
 
     unsigned NumberOfSwitches = cfg.ReadInteger(
@@ -439,7 +439,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           this, m_OrganController->GetSwitch(switch_nb - 1), false),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(panel_prefix + buffer);
+      cfg.MarkGroupInUse(panel_prefix + buffer);
     }
 
     unsigned nb_manuals = cfg.ReadInteger(
@@ -466,7 +466,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           m_layout->GetManualNumber()),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(panel_prefix + buffer);
+      cfg.MarkGroupInUse(panel_prefix + buffer);
     }
 
     unsigned NumberOfCouplers = cfg.ReadInteger(
@@ -493,7 +493,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           m_OrganController->GetManual(manual_nb)->GetCoupler(coupler_nb - 1)),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(
+      cfg.MarkGroupInUse(
         panel_prefix
         + wxString::Format(
           wxT("Manual%03dCoupler%03d"), manual_nb, coupler_nb));
@@ -522,7 +522,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           this, m_OrganController->GetManual(manual_nb)->GetStop(stop_nb - 1)),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(
+      cfg.MarkGroupInUse(
         panel_prefix
         + wxString::Format(wxT("Manual%03dStop%03d"), manual_nb, stop_nb));
     }
@@ -553,7 +553,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           true),
         cfg,
         panel_prefix + buffer);
-      m_OrganController->MarkSectionInUse(
+      cfg.MarkGroupInUse(
         panel_prefix
         + wxString::Format(
           wxT("Manual%03dDivisional%03d"), manual_nb, divisional_nb));

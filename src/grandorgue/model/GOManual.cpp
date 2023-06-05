@@ -174,7 +174,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     buffer.Printf(wxT("Stop%03d"), i + 1);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
-    m_OrganController->MarkSectionInUse(buffer);
+    cfg.MarkGroupInUse(buffer);
     m_stops[i]->Load(cfg, buffer);
     m_stops[i]->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
@@ -186,7 +186,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     buffer.Printf(wxT("Coupler%03d"), i + 1);
     buffer.Printf(
       wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
-    m_OrganController->MarkSectionInUse(buffer);
+    cfg.MarkGroupInUse(buffer);
     m_couplers[i]->Load(cfg, buffer);
     m_couplers[i]->SetElementID(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("M%dC%d"), m_manual_number, i)));
@@ -227,7 +227,7 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     buffer.Printf(
       wxT("Divisional%03d"),
       cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
-    m_OrganController->MarkSectionInUse(buffer);
+    cfg.MarkGroupInUse(buffer);
     m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
   }
   m_midi.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());

@@ -111,7 +111,6 @@ GOOrganController::GOOrganController(
     m_panels(),
     m_panelcreators(),
     m_elementcreators(),
-    m_UsedSections(),
     m_soundengine(0),
     m_midi(0),
     m_MidiSamplesetMatch(),
@@ -1102,10 +1101,4 @@ GOLabelControl *GOOrganController::GetTemperamentLabel() {
 
 GOMainWindowData *GOOrganController::GetMainWindowData() {
   return &m_MainWindowData;
-}
-
-void GOOrganController::MarkSectionInUse(wxString name) {
-  if (m_UsedSections[name])
-    throw wxString::Format(_("Section %s already in use"), name.c_str());
-  m_UsedSections[name] = true;
 }
