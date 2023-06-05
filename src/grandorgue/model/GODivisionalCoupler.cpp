@@ -42,9 +42,9 @@ void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
   GODrawstop::Load(cfg, group);
 }
 
-void GODivisionalCoupler::SetupCombinationState() {
-  m_StoreDivisional = false;
-  m_StoreGeneral = r_OrganModel.GeneralsStoreDivisionalCouplers();
+void GODivisionalCoupler::SetupIsToStoreInCmb() {
+  m_IsToStoreInDivisional = false;
+  m_IsToStoreInGeneral = r_OrganModel.GeneralsStoreDivisionalCouplers();
 }
 
 void GODivisionalCoupler::ChangeState(bool on) {}

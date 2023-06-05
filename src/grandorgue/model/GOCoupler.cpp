@@ -245,12 +245,12 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
       = r_OrganModel.GetManual(m_DestinationManual)->RegisterCoupler(this);
 }
 
-void GOCoupler::SetupCombinationState() {
-  m_StoreDivisional
+void GOCoupler::SetupIsToStoreInCmb() {
+  m_IsToStoreInDivisional
     = ((r_OrganModel.DivisionalsStoreIntramanualCouplers() && !IsIntermanual())
        || (r_OrganModel.DivisionalsStoreIntermanualCouplers() && IsIntermanual()))
     && (r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
-  m_StoreGeneral
+  m_IsToStoreInGeneral
     = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 

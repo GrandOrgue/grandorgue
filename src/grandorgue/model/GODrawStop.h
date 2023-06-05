@@ -35,12 +35,21 @@ private:
   std::vector<GODrawstop *> m_ControllingDrawstops;
 
 protected:
-  bool m_StoreDivisional;
-  bool m_StoreGeneral;
+  /*
+   * m_IsToStoreInDivisional and m_IsToStoreInGeneral control whether the
+   * drawstop state should be saved in combinations by default.
+   * When Full is enabled the state is saved regardless these variables.
+   * The initial intention was to save the state of drawstops controlled by the
+   * user and not to save the state that is calculated from the state of other
+   * elements
+   */
+  bool m_IsToStoreInDivisional;
+  bool m_IsToStoreInGeneral;
+
+  virtual void SetupIsToStoreInCmb() = 0;
 
   void SetState(bool on);
   virtual void ChangeState(bool on) = 0;
-  virtual void SetupCombinationState() = 0;
 
   void Save(GOConfigWriter &cfg);
 
@@ -48,6 +57,12 @@ protected:
 
 public:
   GODrawstop(GOOrganModel &organModel);
+
+  bool IsToStoreInDivisional() const { return m_IsToStoreInDivisional; }
+  bool IsToStoreInGeneral() const { return m_IsToStoreInGeneral; }
+  bool IsActive() const { return m_ActiveState; }
+  bool GetCombinationState() const override { return IsEngaged(); }
+
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   void RegisterControlled(GODrawstop *sw);
@@ -55,11 +70,6 @@ public:
   virtual void Update();
   void Reset();
   void SetCombination(bool on);
-
-  bool IsActive() const;
-  bool GetCombinationState() const;
-  bool GetStoreDivisional() const;
-  bool GetStoreGeneral() const;
 };
 
 #endif

@@ -33,7 +33,7 @@ private:
 
   void SetRankKey(unsigned key, unsigned velocity);
   void ChangeState(bool on);
-  void SetupCombinationState();
+  void SetupIsToStoreInCmb();
 
   void AbortPlayback();
   void PreparePlayback();

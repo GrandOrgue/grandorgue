@@ -17,10 +17,10 @@ GOSwitch::~GOSwitch() {}
 
 void GOSwitch::ChangeState(bool on) {}
 
-void GOSwitch::SetupCombinationState() {
-  m_StoreDivisional
+void GOSwitch::SetupIsToStoreInCmb() {
+  m_IsToStoreInDivisional
     = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_StoreGeneral
+  m_IsToStoreInGeneral
     = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 

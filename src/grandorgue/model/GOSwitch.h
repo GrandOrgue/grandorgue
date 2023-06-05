@@ -13,7 +13,7 @@
 class GOSwitch : public GODrawstop {
 protected:
   void ChangeState(bool);
-  void SetupCombinationState();
+  void SetupIsToStoreInCmb();
 
 public:
   GOSwitch(GOOrganModel &organModel);
