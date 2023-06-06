@@ -49,6 +49,13 @@ void GODrawstop::Init(GOConfigReader &cfg, wxString group, wxString name) {
   GOButtonControl::Init(cfg, group, name);
 }
 
+void GODrawstop::SetupIsToStoreInCmb() {
+  m_IsToStoreInDivisional
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  m_IsToStoreInGeneral
+    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+}
+
 void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
   m_Type = (GOFunctionType)cfg.ReadEnum(
     ODFSetting,

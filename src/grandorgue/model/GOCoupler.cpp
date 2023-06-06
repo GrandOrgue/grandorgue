@@ -246,12 +246,10 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
 }
 
 void GOCoupler::SetupIsToStoreInCmb() {
-  m_IsToStoreInDivisional
-    = ((r_OrganModel.DivisionalsStoreIntramanualCouplers() && !IsIntermanual())
-       || (r_OrganModel.DivisionalsStoreIntermanualCouplers() && IsIntermanual()))
-    && (r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
-  m_IsToStoreInGeneral
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  GODrawstop::SetupIsToStoreInCmb();
+  m_IsToStoreInDivisional = m_IsToStoreInDivisional
+    && (IsIntermanual() ? r_OrganModel.DivisionalsStoreIntermanualCouplers()
+                        : r_OrganModel.DivisionalsStoreIntramanualCouplers());
 }
 
 void GOCoupler::SetOut(int noteNumber, unsigned velocity) {

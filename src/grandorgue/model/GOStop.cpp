@@ -95,19 +95,7 @@ void GOStop::Load(GOConfigReader &cfg, wxString group) {
 
   m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
-  m_IsToStoreInDivisional
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_IsToStoreInGeneral
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-
   GODrawstop::Load(cfg, group);
-}
-
-void GOStop::SetupIsToStoreInCmb() {
-  m_IsToStoreInDivisional
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_IsToStoreInGeneral
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
 }
 
 void GOStop::SetRankKey(unsigned key, unsigned velocity) {

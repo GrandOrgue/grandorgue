@@ -83,10 +83,9 @@ void GOTremulant::Load(
 }
 
 void GOTremulant::SetupIsToStoreInCmb() {
-  m_IsToStoreInDivisional = r_OrganModel.DivisionalsStoreTremulants()
-    && (r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed());
-  m_IsToStoreInGeneral
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
+  GODrawstop::SetupIsToStoreInCmb();
+  m_IsToStoreInDivisional
+    = m_IsToStoreInDivisional && r_OrganModel.DivisionalsStoreTremulants();
 }
 
 void GOTremulant::InitSoundProvider(GOMemoryPool &pool) {

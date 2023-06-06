@@ -17,11 +17,4 @@ GOSwitch::~GOSwitch() {}
 
 void GOSwitch::ChangeState(bool on) {}
 
-void GOSwitch::SetupIsToStoreInCmb() {
-  m_IsToStoreInDivisional
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-  m_IsToStoreInGeneral
-    = r_OrganModel.CombinationsStoreNonDisplayedDrawstops() || IsDisplayed();
-}
-
 wxString GOSwitch::GetMidiType() { return _("Drawstop"); }

@@ -46,7 +46,7 @@ protected:
   bool m_IsToStoreInDivisional;
   bool m_IsToStoreInGeneral;
 
-  virtual void SetupIsToStoreInCmb() = 0;
+  virtual void SetupIsToStoreInCmb();
 
   void SetState(bool on);
   virtual void ChangeState(bool on) = 0;
