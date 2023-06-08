@@ -15,6 +15,7 @@
 class GOSoundRtPort : public GOSoundPort {
 private:
   RtAudio *m_rtApi;
+  unsigned m_RtDevIndex;
   unsigned m_nBuffers;
 
   static int Callback(
@@ -25,14 +26,16 @@ private:
     RtAudioStreamStatus status,
     void *userData);
 
-  static wxString getName(RtAudio *rtApi, unsigned index);
+  static wxString getName(RtAudio *rtApi, const RtAudio::DeviceInfo &devInfo);
+
+  GOSoundRtPort(
+    GOSound *sound, RtAudio *rtApi, unsigned rtDevIndex, const wxString &name);
 
 public:
   static const wxString PORT_NAME;
   static const wxString PORT_NAME_OLD;
 
   // rtApi to be deleted in the destructor
-  GOSoundRtPort(GOSound *sound, RtAudio *rtApi, wxString name);
   ~GOSoundRtPort();
 
   void Open();
