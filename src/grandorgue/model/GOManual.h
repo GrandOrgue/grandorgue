@@ -38,6 +38,8 @@ class GOManual : private GOEventHandler,
                  private GOSoundStateHandler,
                  public GOMidiConfigurator {
 private:
+  GOMidiMap &r_MidiMap;
+
   wxString m_group;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
