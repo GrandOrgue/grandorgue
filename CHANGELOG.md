@@ -1,3 +1,4 @@
+- Fixed "The device does not support requested channel count" error when using an USB audio card on MacOS https://github.com/GrandOrgue/grandorgue/issues/1550
 # 3.12.1 (2023-06-06)
 - Fixed not storing switch state in combinations in organs with panels of the new style https://github.com/GrandOrgue/grandorgue/issues/1498
 - Fixed displaying light of various combination buttons https://github.com/GrandOrgue/grandorgue/issues/1536 

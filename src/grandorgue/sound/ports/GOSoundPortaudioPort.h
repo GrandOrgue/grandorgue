@@ -14,6 +14,7 @@
 
 class GOSoundPortaudioPort : public GOSoundPort {
 private:
+  unsigned m_PaDevIndex;
   PaStream *m_stream;
 
   static int Callback(
@@ -24,14 +25,15 @@ private:
     PaStreamCallbackFlags statusFlags,
     void *userData);
 
-  static wxString getName(unsigned index);
+  static wxString getName(const PaDeviceInfo *pInfo);
   static wxString getLastError(PaError error);
 
 public:
   static const wxString PORT_NAME;
   static const wxString PORT_NAME_OLD;
 
-  GOSoundPortaudioPort(GOSound *sound, wxString name);
+  GOSoundPortaudioPort(
+    GOSound *sound, unsigned paDevIndex, const wxString &name);
   virtual ~GOSoundPortaudioPort();
 
   void Open();
@@ -42,7 +44,7 @@ public:
     return GOSoundPortFactory::c_NoApis;
   }
   static GOSoundPort *create(
-    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+    const GOPortsConfig &portsConfig, GOSound *sound, const wxString &name);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
   static void terminate();

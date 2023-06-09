@@ -15,8 +15,12 @@
 const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
 const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
 
-GOSoundRtPort::GOSoundRtPort(GOSound *sound, RtAudio *rtApi, wxString name)
-  : GOSoundPort(sound, name), m_rtApi(rtApi), m_nBuffers(0) {}
+GOSoundRtPort::GOSoundRtPort(
+  GOSound *sound, RtAudio *rtApi, unsigned rtDevIndex, const wxString &name)
+  : GOSoundPort(sound, name),
+    m_rtApi(rtApi),
+    m_RtDevIndex(rtDevIndex),
+    m_nBuffers(0) {}
 
 GOSoundRtPort::~GOSoundRtPort() {
   Close();
@@ -41,14 +45,10 @@ void GOSoundRtPort::Open() {
 
   try {
     RtAudio::StreamParameters aOutputParam;
-    aOutputParam.deviceId = -1;
-    aOutputParam.nChannels = m_Channels;
-
-    for (unsigned i = 0; i < m_rtApi->getDeviceCount(); i++)
-      if (getName(m_rtApi, i) == m_Name)
-        aOutputParam.deviceId = i;
-
     RtAudio::StreamOptions aOptions;
+
+    aOutputParam.deviceId = m_RtDevIndex;
+    aOutputParam.nChannels = m_Channels;
     // the next flag causes Rt/Core forces setting the buffer size to 15
     // and the sound distortion https://github.com/oleg68/GrandOrgue/issues/54
     // aOptions.flags = RTAUDIO_MINIMIZE_LATENCY;
@@ -141,27 +141,20 @@ int GOSoundRtPort::Callback(
 }
 
 wxString compose_device_name(
-  const wxString &prefix, RtAudio *rt_api, unsigned index) {
+  const wxString &prefix, RtAudio *rt_api, const RtAudio::DeviceInfo &info) {
   wxString apiName = RtAudio::getApiName(rt_api->getCurrentApi());
-  wxString devName;
 
-  try {
-    RtAudio::DeviceInfo info = rt_api->getDeviceInfo(index);
-    devName = wxString(info.name);
-  } catch (RtAudioError &e) {
-    wxString error = wxString::FromAscii(e.getMessage().c_str());
-    wxLogError(_("RtAudio error: %s"), error.c_str());
-    devName = wxString::Format(_("<unknown> %d"), index);
-  }
   return GOSoundPortFactory::getInstance().ComposeDeviceName(
-    prefix, apiName, devName);
+    prefix, apiName, wxString(info.name));
 }
 
-wxString GOSoundRtPort::getName(RtAudio *rt_api, unsigned index) {
-  return compose_device_name(PORT_NAME, rt_api, index);
+wxString GOSoundRtPort::getName(
+  RtAudio *rtApi, const RtAudio::DeviceInfo &devInfo) {
+  return compose_device_name(PORT_NAME, rtApi, devInfo);
 }
 
-wxString get_oldstyle_name(RtAudio::Api api, RtAudio *rt_api, unsigned index) {
+wxString get_oldstyle_name(
+  RtAudio::Api api, RtAudio *rt_api, const RtAudio::DeviceInfo &info) {
   wxString apiName;
 
   switch (api) {
@@ -193,18 +186,7 @@ wxString get_oldstyle_name(RtAudio::Api api, RtAudio *rt_api, unsigned index) {
   default:
     apiName = wxT("Unknown");
   }
-
-  wxString prefix = apiName + wxT(": ");
-  wxString devName;
-  try {
-    RtAudio::DeviceInfo info = rt_api->getDeviceInfo(index);
-    devName = wxString(info.name);
-  } catch (RtAudioError &e) {
-    wxString error = wxString::FromAscii(e.getMessage().c_str());
-    wxLogError(_("RtAudio error: %s"), error.c_str());
-    devName = wxString::Format(_("<unknown> %d"), index);
-  }
-  return apiName + wxT(": ") + devName;
+  return apiName + wxT(": ") + wxString(info.name);
 }
 
 static bool hasApiNamesPopulated = false;
@@ -250,16 +232,18 @@ GOSoundPort *GOSoundRtPort::create(
 
           try {
             rtApi = new RtAudio(apiIndex);
-            unsigned int deviceCount = rtApi->getDeviceCount();
-
-            for (unsigned i = 0; i < deviceCount; i++) {
-              const wxString devName = getName(rtApi, i);
+            for (unsigned l = rtApi->getDeviceCount(), i = 0; i < l; i++) {
+              const RtAudio::DeviceInfo info = rtApi->getDeviceInfo(i);
+              const wxString devName = getName(rtApi, info);
 
               if (
-                devName == name || devName + GOPortFactory::c_NameDelim == name
-                || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, rtApi, i) == name)
-                || compose_device_name(PORT_NAME_OLD, rtApi, i) == name) {
-                port = new GOSoundRtPort(sound, rtApi, devName);
+                (devName == name || devName + GOPortFactory::c_NameDelim == name
+                 || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, rtApi, info) == name)
+                 || compose_device_name(PORT_NAME_OLD, rtApi, info) == name)
+                && // skip input-only devices that may have the same name (osx
+                   // usb)
+                info.outputChannels > 0) {
+                port = new GOSoundRtPort(sound, rtApi, i, devName);
                 break;
               }
             }
@@ -305,7 +289,7 @@ void GOSoundRtPort::addDevices(
               GOSoundDevInfo info;
               info.channels = dev_info.outputChannels;
               info.isDefault = dev_info.isDefaultOutput;
-              info.name = getName(rtApi, i);
+              info.name = getName(rtApi, dev_info);
               result.push_back(info);
             }
           } catch (RtAudioError &e) {
