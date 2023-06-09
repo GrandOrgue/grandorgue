@@ -13,10 +13,10 @@
 class GOCombinationControllerProxy : public GOCombinationController {
 private:
   GOCombinationController *p_controller = nullptr;
-  
+
 public:
   void SetCombinationController(GOCombinationController *pController) {
-      p_controller = pController;
+    p_controller = pController;
   }
 
   void PushGeneral(
@@ -26,4 +26,3 @@ public:
 };
 
 #endif /* GOCOMBINATIONCONTROLLERPROXY_H */
-

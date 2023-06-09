@@ -193,8 +193,8 @@ public:
    * @param pButton the button to light on
    * return if anything is changed
    */
-  void PushGeneral(GOGeneralCombination &cmb, GOButtonControl *pButtonToLight)
-    override;
+  void PushGeneral(
+    GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) override;
   void PushDivisional(
     GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) override;
 

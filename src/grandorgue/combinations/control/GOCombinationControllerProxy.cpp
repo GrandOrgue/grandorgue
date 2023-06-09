@@ -17,5 +17,4 @@ void GOCombinationControllerProxy::PushDivisional(
   GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) {
   if (p_controller)
     p_controller->PushDivisional(cmb, pButtonToLight);
-  
 }

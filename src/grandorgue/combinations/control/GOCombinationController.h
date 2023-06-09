@@ -25,11 +25,11 @@ public:
    * return if anything is changed
    */
   virtual void PushGeneral(
-    GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) = 0;
+    GOGeneralCombination &cmb, GOButtonControl *pButtonToLight)
+    = 0;
   virtual void PushDivisional(
-    GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) = 0;
-
+    GODivisionalCombination &cmb, GOButtonControl *pButtonToLight)
+    = 0;
 };
 
 #endif /* GOCOMBINATIONCONTROLLER_H */
-
