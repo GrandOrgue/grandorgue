@@ -35,7 +35,7 @@ protected:
 public:
   const wxString &GetCurrTabName() const;
   wxBookCtrlBase *GetBook() const { return p_book; }
-  
+
   const wxString &GetHelpSuffix() const override { return GetCurrTabName(); }
 
   void NavigateToTab(const wxString &tabName);
@@ -43,7 +43,6 @@ public:
   virtual bool TransferDataToWindow() override;
   virtual bool Validate() override;
   virtual bool TransferDataFromWindow() override;
-
 };
 
 #endif /* GOTABBEDDIALOG_H */

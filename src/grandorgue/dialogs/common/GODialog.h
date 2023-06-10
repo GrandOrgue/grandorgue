@@ -17,7 +17,7 @@ class wxSizer;
 class GODialog : public wxPropertySheetDialog, public GODialogCloser {
 private:
   static const wxString WX_EMPTY;
-  
+
   const wxString m_name;
   wxSizer *p_ButtonSizer;
 
@@ -43,4 +43,3 @@ protected:
 };
 
 #endif /* GODIALOG_H */
-

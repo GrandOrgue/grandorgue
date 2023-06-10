@@ -18,7 +18,8 @@ GOTabbedDialog::GOTabbedDialog(
   wxWindow *win,
   const wxString &name,  // not translated
   const wxString &title, // translated
-  long addStyle) : GODialog(win, name, title, addStyle) {
+  long addStyle)
+  : GODialog(win, name, title, addStyle) {
   p_book = GetBookCtrl();
   p_book->SetExtraStyle(p_book->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
 }
