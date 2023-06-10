@@ -9,38 +9,18 @@
 
 #include <algorithm>
 
-#include <wx/app.h>
 #include <wx/bookctrl.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
-
-#include "help/GOHelpRequestor.h"
 
 #include "GODialogTab.h"
-#include "GOEvent.h"
-
-BEGIN_EVENT_TABLE(GOTabbedDialog, wxPropertySheetDialog)
-EVT_BUTTON(wxID_HELP, GOTabbedDialog::OnHelp)
-END_EVENT_TABLE()
 
 GOTabbedDialog::GOTabbedDialog(
   wxWindow *win,
   const wxString &name,  // not translated
   const wxString &title, // translated
-  long addStyle)
-  : wxPropertySheetDialog(
-    win,
-    wxID_ANY,
-    title,
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | addStyle),
-    GODialogCloser(this),
-    m_name(name) {
+  long addStyle) : GODialog(win, name, title, addStyle) {
   p_book = GetBookCtrl();
   p_book->SetExtraStyle(p_book->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
-  p_ButtonSizer = CreateButtonSizer(wxOK | wxCANCEL | wxHELP);
-  GetInnerSizer()->Add(p_ButtonSizer, 0, wxEXPAND | wxALL, 5);
 }
 
 void GOTabbedDialog::AddTab(
@@ -51,10 +31,6 @@ void GOTabbedDialog::AddTab(
 
 void GOTabbedDialog::AddTab(GODialogTab *tab) {
   AddTab(tab, tab->GetName(), tab->GetLabel());
-}
-
-void GOTabbedDialog::OnHelp(wxCommandEvent &event) {
-  GOHelpRequestor::DisplayHelp(m_name + "." + GetCurrTabName(), IsModal());
 }
 
 const wxString &GOTabbedDialog::GetCurrTabName() const {
