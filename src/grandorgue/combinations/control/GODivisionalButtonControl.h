@@ -8,6 +8,8 @@
 #ifndef GODIVISIONALBUTTONCONTROL_H
 #define GODIVISIONALBUTTONCONTROL_H
 
+#include <wx/string.h>
+
 #include "combinations/model/GODivisionalCombination.h"
 #include "control/GOPushbuttonControl.h"
 
