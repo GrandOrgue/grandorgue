@@ -10,9 +10,7 @@
 #include "wx/intl.h"
 
 #include "combinations/GOSetter.h"
-#include "model/GOManual.h"
-
-#include "GOOrganController.h"
+#include "model/GOOrganModel.h"
 
 GODivisionalButtonControl::GODivisionalButtonControl(
   GOOrganModel &organModel, unsigned manualNumber, bool isSetter)
@@ -46,5 +44,5 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalButtonControl::Push() {
-  organModel.PushDivisional(m_combination, this);
+  r_OrganModel.PushDivisional(m_combination, this);
 }
