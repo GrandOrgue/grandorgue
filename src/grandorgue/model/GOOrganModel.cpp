@@ -178,8 +178,7 @@ void GOOrganModel::LoadCmbButtons(
   m_GeneralTemplate.InitGeneral();
   m_generals.resize(0);
   for (unsigned i = 0; i < NumberOfGenerals; i++) {
-    m_generals.push_back(
-      new GOGeneralButtonControl(m_GeneralTemplate, organController, false));
+    m_generals.push_back(new GOGeneralButtonControl(*this, false));
     m_generals[i]->Load(cfg, wxString::Format(wxT("General%03d"), i + 1));
   }
 

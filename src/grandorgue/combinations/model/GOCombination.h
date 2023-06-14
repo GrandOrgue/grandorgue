@@ -25,8 +25,10 @@ class GOCombination : public GOSaveableObject, public GOSaveableToYaml {
 public:
   using ExtraElementsSet = std::unordered_set<unsigned>;
 
-private:
+protected:
   GOOrganModel &r_OrganModel;
+
+private:
   const GOCombinationDefinition &m_Template;
 
   /**
