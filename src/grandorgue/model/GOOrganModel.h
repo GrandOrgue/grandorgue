@@ -11,6 +11,7 @@
 #include "ptrvector.h"
 
 #include "combinations/control/GOCombinationButtonSet.h"
+#include "combinations/control/GOCombinationControllerProxy.h"
 #include "midi/GOMidiSendProxy.h"
 #include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
 #include "modification/GOModificationProxy.h"
@@ -32,6 +33,7 @@ class GOTremulant;
 class GOWindchest;
 
 class GOOrganModel : private GOCombinationButtonSet,
+                     public GOCombinationControllerProxy,
                      public GOEventHandlerList,
                      public GOMidiDialogCreatorProxy,
                      public GOMidiSendProxy {

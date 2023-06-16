@@ -133,8 +133,11 @@ GOOrganController::~GOOrganController() {
   m_manuals.clear();
   m_tremulants.clear();
   m_ranks.clear();
+  GOOrganModel::Cleanup();
   GOOrganModel::SetModelModificationListener(nullptr);
   GOOrganModel::SetMidiDialogCreator(nullptr);
+  GOOrganModel::SetCombinationController(nullptr);
+  m_elementcreators.clear();
 }
 
 void GOOrganController::SetOrganModified(bool modified) {
@@ -246,6 +249,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   // It must be created before GOOrganModel::Load because lots of objects
   // reference to it
   m_setter = new GOSetter(this);
+  GOOrganModel::SetCombinationController(m_setter);
   m_elementcreators.push_back(m_setter);
 
   GOOrganModel::Load(cfg, this);

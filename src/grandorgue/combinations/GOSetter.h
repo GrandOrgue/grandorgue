@@ -13,6 +13,7 @@
 #include "ptrvector.h"
 
 #include "control/GOCombinationButtonSet.h"
+#include "control/GOCombinationController.h"
 #include "control/GOControlChangedHandler.h"
 #include "control/GOElementCreator.h"
 #include "control/GOLabelControl.h"
@@ -30,6 +31,7 @@ class GODivisionalCombination;
 
 class GOSetter : private GOSoundStateHandler,
                  private GOCombinationButtonSet,
+                 public GOCombinationController,
                  private GOControlChangedHandler,
                  public GOElementCreator,
                  public GOSaveableObject,
@@ -191,9 +193,10 @@ public:
    * @param pButton the button to light on
    * return if anything is changed
    */
-  void PushGeneral(GOGeneralCombination &cmb, GOButtonControl *pButtonToLight);
+  void PushGeneral(
+    GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) override;
   void PushDivisional(
-    GODivisionalCombination &cmb, GOButtonControl *pButtonToLight);
+    GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) override;
 
   /*
    * If current crescendo is in override mode then returns nullptr
