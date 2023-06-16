@@ -21,7 +21,8 @@
 #include "GOTremulant.h"
 
 GOManual::GOManual(GOOrganController *organController)
-  : m_group(wxT("---")),
+  : r_MidiMap(organController->GetConfig().GetMidiMap()),
+    m_group(wxT("---")),
     m_midi(*organController, MIDI_RECV_MANUAL),
     m_sender(*organController, MIDI_SEND_MANUAL),
     m_division(*organController, MIDI_SEND_MANUAL),
@@ -97,12 +98,9 @@ void GOManual::Init(
   m_tremulant_ids.resize(0);
   m_switch_ids.resize(0);
   m_divisionals.resize(0);
-  m_midi.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
-  m_sender.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
-  m_division.Load(
-    cfg,
-    group + wxT("Division"),
-    m_OrganController->GetSettings().GetMidiMap());
+  m_midi.Load(cfg, group, r_MidiMap);
+  m_sender.Load(cfg, group, r_MidiMap);
+  m_division.Load(cfg, group + wxT("Division"), r_MidiMap);
 
   SetElementID(m_OrganController->GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
@@ -231,12 +229,9 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     cfg.MarkGroupInUse(buffer);
     m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
   }
-  m_midi.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
-  m_sender.Load(cfg, group, m_OrganController->GetSettings().GetMidiMap());
-  m_division.Load(
-    cfg,
-    group + wxT("Division"),
-    m_OrganController->GetSettings().GetMidiMap());
+  m_midi.Load(cfg, group, r_MidiMap);
+  m_sender.Load(cfg, group, r_MidiMap);
+  m_division.Load(cfg, group + wxT("Division"), r_MidiMap);
 
   SetElementID(m_OrganController->GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
@@ -461,12 +456,9 @@ bool GOManual::IsKeyDown(unsigned midiNoteNumber) {
 bool GOManual::IsDisplayed() { return m_displayed; }
 
 void GOManual::Save(GOConfigWriter &cfg) {
-  m_midi.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
-  m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
-  m_division.Save(
-    cfg,
-    m_group + wxT("Division"),
-    m_OrganController->GetSettings().GetMidiMap());
+  m_midi.Save(cfg, m_group, r_MidiMap);
+  m_sender.Save(cfg, m_group, r_MidiMap);
+  m_division.Save(cfg, m_group + wxT("Division"), r_MidiMap);
 }
 
 void GOManual::AbortPlayback() {
