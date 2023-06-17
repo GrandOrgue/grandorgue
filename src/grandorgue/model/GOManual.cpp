@@ -110,7 +110,8 @@ void GOManual::Init(
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 }
 
-void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
+void GOManual::Load(
+  GOConfigReader &cfg, const wxString &group, int manualNumber) {
   m_OrganController->RegisterSaveableObject(this);
   m_group = group;
   m_name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"));
@@ -134,8 +135,6 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfStops"), 0, 999);
   m_ODFCouplerCount = cfg.ReadInteger(
     ODFSetting, group, wxT("NumberOfCouplers"), 0, 999, false);
-  unsigned nb_divisionals = cfg.ReadInteger(
-    ODFSetting, group, wxT("NumberOfDivisionals"), 0, 999, false);
   unsigned nb_tremulants = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -217,18 +216,6 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
     m_switch_ids.push_back(new_id);
   }
 
-  GetDivisionalTemplate().InitDivisional(m_manual_number);
-  m_divisionals.resize(0);
-  for (unsigned i = 0; i < nb_divisionals; i++) {
-    m_divisionals.push_back(new GODivisionalButtonControl(
-      m_OrganController, GetDivisionalTemplate(), false));
-    buffer.Printf(wxT("Divisional%03d"), i + 1);
-    buffer.Printf(
-      wxT("Divisional%03d"),
-      cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
-    cfg.MarkGroupInUse(buffer);
-    m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
-  }
   m_midi.Load(cfg, group, r_MidiMap);
   m_sender.Load(cfg, group, r_MidiMap);
   m_division.Load(cfg, group + wxT("Division"), r_MidiMap);
@@ -239,6 +226,26 @@ void GOManual::Load(GOConfigReader &cfg, wxString group, int manualNumber) {
   Resize();
   m_KeyVelocity.resize(m_nb_accessible_keys);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
+}
+
+void GOManual::LoadDivisionals(GOConfigReader &cfg) {
+  unsigned nDivisionals = cfg.ReadInteger(
+    ODFSetting, m_group, wxT("NumberOfDivisionals"), 0, 999, false);
+  wxString buffer;
+
+  m_DivisionalTemplate.InitDivisional(m_manual_number);
+  m_divisionals.resize(0);
+  for (unsigned i = 0; i < nDivisionals; i++) {
+    m_divisionals.push_back(new GODivisionalButtonControl(
+      m_OrganController, m_DivisionalTemplate, false));
+
+    buffer.Printf(wxT("Divisional%03d"), i + 1);
+    buffer.Printf(
+      wxT("Divisional%03d"),
+      cfg.ReadInteger(ODFSetting, m_group, buffer, 1, 999));
+    cfg.MarkGroupInUse(buffer);
+    m_divisionals[i]->Load(cfg, buffer, m_manual_number, i);
+  }
 }
 
 void GOManual::SetOutput(unsigned note, unsigned velocity) {
