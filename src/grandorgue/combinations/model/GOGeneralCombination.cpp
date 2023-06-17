@@ -26,7 +26,7 @@ GOGeneralCombination::GOGeneralCombination(
   : GOCombination(organModel, organModel.GetGeneralTemplate()),
     m_IsSetter(isSetter) {}
 
-void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
+void GOGeneralCombination::Load(GOConfigReader &cfg, const wxString &group) {
   r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
 

@@ -38,7 +38,7 @@ private:
 
 public:
   GOGeneralCombination(GOOrganModel &organModel, bool isSetter);
-  void Load(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, const wxString &group);
 };
 
 #endif /* GOGENERALCOMBINATION_H */
