@@ -12,6 +12,7 @@
 
 #include "combinations/control/GOCombinationButtonSet.h"
 #include "combinations/control/GOCombinationControllerProxy.h"
+#include "combinations/model/GOCombinationDefinition.h"
 #include "midi/GOMidiSendProxy.h"
 #include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
 #include "modification/GOModificationProxy.h"
@@ -38,9 +39,10 @@ class GOOrganModel : private GOCombinationButtonSet,
                      public GOMidiDialogCreatorProxy,
                      public GOMidiSendProxy {
 private:
-  GOModificationProxy m_ModificationProxy;
-
   GOConfig &m_config;
+
+  GOModificationProxy m_ModificationProxy;
+  GOCombinationDefinition m_GeneralTemplate;
 
   bool m_DivisionalsStoreIntermanualCouplers;
   bool m_DivisionalsStoreIntramanualCouplers;
@@ -69,6 +71,13 @@ protected:
   void Load(GOConfigReader &cfg, GOOrganController *organController);
 
   /**
+   * Called after Load() and InitCmbTemplates();
+   * Init general and divisional templates
+   * Load generals and divisionals from ODF/cmb
+   */
+  void LoadCmbButtons(GOConfigReader &cfg, GOOrganController *organController);
+
+  /**
    * Update all generals buttons light.
    * @param buttonToLight - the button that should be lighted on. All other
    *   divisionals are lighted off
@@ -85,6 +94,10 @@ public:
   GOConfig &GetConfig() { return m_config; }
 
   unsigned GetRecorderElementID(const wxString &name);
+
+  const GOCombinationDefinition &GetGeneralTemplate() const {
+    return m_GeneralTemplate;
+  }
 
   /* combinations properties */
   bool DivisionalsStoreIntermanualCouplers() const {

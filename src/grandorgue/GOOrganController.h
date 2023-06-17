@@ -14,7 +14,6 @@
 
 #include "ptrvector.h"
 
-#include "combinations/model/GOCombinationDefinition.h"
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
@@ -30,6 +29,7 @@
 
 class GOGUIPanel;
 class GOGUIPanelCreator;
+class GOGUICouplerPanel;
 class GOArchive;
 class GOAudioRecorder;
 class GOButtonControl;
@@ -101,7 +101,6 @@ private:
 
   GOMemoryPool m_pool;
   GOBitmapCache m_bitmaps;
-  GOCombinationDefinition m_GeneralTemplate;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
   GOMainWindowData m_MainWindowData;
@@ -185,7 +184,6 @@ public:
   void SetTemperament(wxString name);
   wxString GetTemperament();
 
-  GOCombinationDefinition &GetGeneralTemplate();
   GOLabelControl *GetPitchLabel();
   GOLabelControl *GetTemperamentLabel();
   GOMainWindowData *GetMainWindowData();
