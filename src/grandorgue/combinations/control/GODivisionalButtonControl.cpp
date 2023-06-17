@@ -15,10 +15,10 @@
 #include "GOOrganController.h"
 
 GODivisionalButtonControl::GODivisionalButtonControl(
-  GOOrganController *organController, unsigned manualNumber, bool isSetter)
-  : GOPushbuttonControl(*organController),
-    r_setter(*organController->GetSetter()),
-    m_combination(*organController, manualNumber, isSetter) {}
+  GOOrganModel &organModel, unsigned manualNumber, bool isSetter)
+  : GOPushbuttonControl(organModel),
+    r_OrganModel(organModel),
+    m_combination(organModel, manualNumber, isSetter) {}
 
 wxString GODivisionalButtonControl::GetMidiType() { return _("Divisional"); };
 
@@ -46,5 +46,5 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalButtonControl::Push() {
-  r_setter.PushDivisional(m_combination, this);
+  organModel.PushDivisional(m_combination, this);
 }

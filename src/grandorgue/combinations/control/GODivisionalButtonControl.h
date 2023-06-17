@@ -12,16 +12,16 @@
 #include "control/GOPushbuttonControl.h"
 
 class GOConfigReader;
-class GOSetter;
+class GOOrganModel;
 
 class GODivisionalButtonControl : public GOPushbuttonControl {
 private:
-  GOSetter &r_setter;
+  GOOrganModel &r_OrganModel;
   GODivisionalCombination m_combination;
 
 public:
   GODivisionalButtonControl(
-    GOOrganController *organController, unsigned manualNumber, bool isSetter);
+    GOOrganModel &organModel, unsigned manualNumber, bool isSetter);
 
   GODivisionalCombination &GetCombination() { return m_combination; }
   wxString GetMidiType() override;
