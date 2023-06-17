@@ -133,6 +133,7 @@ GOOrganController::~GOOrganController() {
   m_manuals.clear();
   m_tremulants.clear();
   m_ranks.clear();
+  m_VirtualCouplers.Cleanup();
   GOOrganModel::Cleanup();
   GOOrganModel::SetModelModificationListener(nullptr);
   GOOrganModel::SetMidiDialogCreator(nullptr);
@@ -266,6 +267,8 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     m_tremulants[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 
+  m_VirtualCouplers.Init(*this, cfg);
+
   m_DivisionalSetter = new GODivisionalSetter(this, m_setter->GetState());
   m_elementcreators.push_back(m_DivisionalSetter);
   m_AudioRecorder = new GOAudioRecorder(this);
@@ -275,7 +278,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   m_elementcreators.push_back(m_MidiPlayer);
   m_elementcreators.push_back(m_MidiRecorder);
   m_elementcreators.push_back(new GOMetronome(this));
-  m_panelcreators.push_back(new GOGUICouplerPanel(this));
+  m_panelcreators.push_back(new GOGUICouplerPanel(this, m_VirtualCouplers));
   m_panelcreators.push_back(new GOGUIFloatingPanel(this));
   m_panelcreators.push_back(new GOGUIMetronomePanel(this));
   m_panelcreators.push_back(new GOGUICrescendoPanel(this));
@@ -1087,10 +1090,6 @@ wxString GOOrganController::GetTemperament() { return m_Temperament; }
 void GOOrganController::AllNotesOff() {
   for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
     GetManual(k)->AllNotesOff();
-}
-
-int GOOrganController::GetRecorderElementID(wxString name) {
-  return m_config.GetMidiMap().GetElementByString(name);
 }
 
 GOCombinationDefinition &GOOrganController::GetGeneralTemplate() {

@@ -211,6 +211,7 @@ GOProperties.cpp
 GOFrame.cpp
 GODocument.cpp
 GOPanelView.cpp
+GOVirtualCouplerController.cpp
 )
 
 if (USE_INTERNAL_ZITACONVOLVER)

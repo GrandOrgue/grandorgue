@@ -12,16 +12,20 @@
 
 class GOGUIPanel;
 class GOOrganController;
+class GOVirtualCouplerController;
 
 class GOGUICouplerPanel : public GOGUIPanelCreator {
 private:
   GOOrganController *m_OrganController;
+  const GOVirtualCouplerController &r_VirtualCouplers;
 
   GOGUIPanel *CreateCouplerPanel(GOConfigReader &cfg, unsigned manual_nr);
 
 public:
-  GOGUICouplerPanel(GOOrganController *organController);
-  ~GOGUICouplerPanel();
+  GOGUICouplerPanel(
+    GOOrganController *organController,
+    const GOVirtualCouplerController &virtualCouplers)
+    : m_OrganController(organController), r_VirtualCouplers(virtualCouplers) {}
 
   void CreatePanels(GOConfigReader &cfg);
 };

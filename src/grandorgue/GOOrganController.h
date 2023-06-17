@@ -26,6 +26,7 @@
 #include "GOMainWindowData.h"
 #include "GOMemoryPool.h"
 #include "GOTimer.h"
+#include "GOVirtualCouplerController.h"
 
 class GOGUIPanel;
 class GOGUIPanelCreator;
@@ -85,6 +86,8 @@ private:
   wxString m_OrganComments;
   wxString m_RecordingDetails;
   wxString m_InfoFilename;
+
+  GOVirtualCouplerController m_VirtualCouplers;
 
   ptr_vector<GOGUIPanel> m_panels;
   ptr_vector<GOGUIPanelCreator> m_panelcreators;
@@ -182,7 +185,6 @@ public:
   void SetTemperament(wxString name);
   wxString GetTemperament();
 
-  int GetRecorderElementID(wxString name);
   GOCombinationDefinition &GetGeneralTemplate();
   GOLabelControl *GetPitchLabel();
   GOLabelControl *GetTemperamentLabel();

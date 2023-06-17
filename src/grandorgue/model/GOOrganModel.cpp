@@ -8,6 +8,7 @@
 #include "GOOrganModel.h"
 
 #include "combinations/control/GOGeneralButtonControl.h"
+#include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "control/GOPistonControl.h"
 #include "modification/GOModificationListener.h"
@@ -37,6 +38,10 @@ GOOrganModel::GOOrganModel(GOConfig &config)
 }
 
 GOOrganModel::~GOOrganModel() {}
+
+unsigned GOOrganModel::GetRecorderElementID(const wxString &name) {
+  return m_config.GetMidiMap().GetElementByString(name);
+}
 
 void GOOrganModel::Load(
   GOConfigReader &cfg, GOOrganController *organController) {
