@@ -21,26 +21,24 @@
 #include "yaml/go-wx-yaml.h"
 
 GODivisionalCombination::GODivisionalCombination(
-  GOOrganModel &organModel,
-  const GOCombinationDefinition &cmbDef,
-  bool isSetter)
-  : GOCombination(organModel, cmbDef),
+  GOOrganModel &organModel, unsigned manualNumber, bool isSetter)
+  : GOCombination(
+    organModel, organModel.GetManual(manualNumber)->GetDivisionalTemplate()),
     r_OrganModel(organModel),
-    m_odfManualNumber(1),
+    m_odfManualNumber(manualNumber),
     m_DivisionalNumber(0),
     m_IsSetter(isSetter) {}
 
 void GODivisionalCombination::Init(
-  const wxString &group, int manualNumber, int divisionalNumber) {
+  const wxString &group, int divisionalNumber) {
   m_group = group;
-  m_odfManualNumber = manualNumber;
   m_DivisionalNumber = divisionalNumber;
   m_Protected = false;
 }
 
 void GODivisionalCombination::Load(
-  GOConfigReader &cfg, wxString group, int manualNumber, int divisionalNumber) {
-  Init(group, manualNumber, divisionalNumber);
+  GOConfigReader &cfg, const wxString &group, int divisionalNumber) {
+  Init(group, divisionalNumber);
   m_Protected
     = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);
 
@@ -239,10 +237,9 @@ void GODivisionalCombination::FromYamlMap(const YAML::Node &yamlMap) {
     GOCombinationDefinition::COMBINATION_SWITCH);
 }
 
-GODivisionalCombination *GODivisionalCombination::LoadFrom(
+GODivisionalCombination *GODivisionalCombination::loadFrom(
   GOOrganModel &organModel,
   GOConfigReader &cfg,
-  const GOCombinationDefinition &cmbDef,
   const wxString &group,
   const wxString &readGroup,
   int manualNumber,
@@ -252,12 +249,8 @@ GODivisionalCombination *GODivisionalCombination::LoadFrom(
   bool isCmbOnReadGroup = !readGroup.IsEmpty() && isCmbOnFile(cfg, readGroup);
 
   if (isCmbOnGroup || isCmbOnReadGroup) {
-    pCmb = new GODivisionalCombination(organModel, cmbDef, false);
-    pCmb->Load(
-      cfg,
-      isCmbOnReadGroup ? readGroup : group,
-      manualNumber,
-      divisionalNumber);
+    pCmb = new GODivisionalCombination(organModel, manualNumber, false);
+    pCmb->Load(cfg, isCmbOnReadGroup ? readGroup : group, divisionalNumber);
     pCmb->LoadCombination(cfg);
     if (isCmbOnReadGroup) {  // The combination was loaded from the legacy group
       pCmb->m_group = group; // It will be saved to the normal group

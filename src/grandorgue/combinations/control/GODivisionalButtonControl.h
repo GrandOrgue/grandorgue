@@ -21,9 +21,7 @@ private:
 
 public:
   GODivisionalButtonControl(
-    GOOrganController *organController,
-    GOCombinationDefinition &divisionalTemplate,
-    bool isSetter);
+    GOOrganController *organController, unsigned manualNumber, bool isSetter);
 
   GODivisionalCombination &GetCombination() { return m_combination; }
   wxString GetMidiType() override;
@@ -31,15 +29,10 @@ public:
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
-    int manualNumber,
     int divisionalNumber,
     const wxString &name);
 
-  void Load(
-    GOConfigReader &cfg,
-    const wxString &group,
-    int manualNumber,
-    int divisionalNumber);
+  void Load(GOConfigReader &cfg, const wxString &group, int divisionalNumber);
 
   void LoadCombination(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);

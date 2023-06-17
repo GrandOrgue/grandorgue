@@ -213,18 +213,15 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     unsigned odfManualIndex = m_FirstManualIndex + manualN;
     DivisionalMap &divMap = m_DivisionalMaps[manualN];
-    GOManual *pManual = m_OrganController->GetManual(odfManualIndex);
-    GOCombinationDefinition &cmbTemplate = pManual->GetDivisionalTemplate();
 
     for (unsigned nDivisionals = N_DIVISIONALS * DIVISIONAL_BANKS,
                   divisionalIndex = 0;
          divisionalIndex < nDivisionals;
          divisionalIndex++) {
       // try to load the combination
-      GODivisionalCombination *pCmb = GODivisionalCombination::LoadFrom(
+      GODivisionalCombination *pCmb = GODivisionalCombination::loadFrom(
         *m_OrganController,
         cfg,
-        cmbTemplate,
         GetDivisionalButtonName(odfManualIndex, divisionalIndex),
         WX_EMPTY_STRING, // legacyGroupName is not used yet
         odfManualIndex,
@@ -310,7 +307,6 @@ void GODivisionalSetter::FromYaml(const YAML::Node &yamlNode) {
     unsigned odfManualIndex = m_FirstManualIndex + manualN;
     const wxString manualLabel = manual_yaml_key(odfManualIndex);
     GOManual *const pManual = m_OrganController->GetManual(odfManualIndex);
-    GOCombinationDefinition &cmbTemplate = pManual->GetDivisionalTemplate();
     DivisionalMap &divMap = m_DivisionalMaps[manualN];
 
     // simple divisionals
@@ -332,11 +328,10 @@ void GODivisionalSetter::FromYaml(const YAML::Node &yamlNode) {
       if (cmbNode.IsMap()) {
         unsigned i
           = banked_divisional_yaml_key_to_index(cmbEntry.first.as<wxString>());
-        GODivisionalCombination *pCmb
-          = new GODivisionalCombination(*m_OrganController, cmbTemplate, false);
+        GODivisionalCombination *pCmb = new GODivisionalCombination(
+          *m_OrganController, odfManualIndex, false);
 
-        pCmb->Init(
-          GetDivisionalButtonName(odfManualIndex, i), odfManualIndex, i);
+        pCmb->Init(GetDivisionalButtonName(odfManualIndex, i), i);
         cmbNode >> *pCmb;
         divMap[i] = pCmb;
       }
@@ -358,14 +353,10 @@ void GODivisionalSetter::SwitchDivisionalTo(
     if (!isExist && r_SetterState.m_IsActive) {
       // create a new combination
       const unsigned manualIndex = m_FirstManualIndex + manualN;
-      GOCombinationDefinition &divTemplate
-        = m_OrganController->GetManual(manualIndex)->GetDivisionalTemplate();
 
-      pCmb = new GODivisionalCombination(*m_OrganController, divTemplate, true);
+      pCmb = new GODivisionalCombination(*m_OrganController, manualIndex, true);
       pCmb->Init(
-        GetDivisionalButtonName(manualIndex, divisionalIdx),
-        manualIndex,
-        divisionalIdx);
+        GetDivisionalButtonName(manualIndex, divisionalIdx), divisionalIdx);
       divMap[divisionalIdx] = pCmb;
     }
 
