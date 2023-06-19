@@ -236,8 +236,8 @@ void GOManual::LoadDivisionals(GOConfigReader &cfg) {
   m_DivisionalTemplate.InitDivisional(m_manual_number);
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nDivisionals; i++) {
-    m_divisionals.push_back(
-      new GODivisionalButtonControl(m_OrganController, m_manual_number, false));
+    m_divisionals.push_back(new GODivisionalButtonControl(
+      *m_OrganController, m_manual_number, false));
 
     buffer.Printf(wxT("Divisional%03d"), i + 1);
     buffer.Printf(
