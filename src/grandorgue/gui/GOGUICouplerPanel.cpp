@@ -19,11 +19,7 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
-
-GOGUICouplerPanel::GOGUICouplerPanel(GOOrganController *organController)
-  : m_OrganController(organController) {}
-
-GOGUICouplerPanel::~GOGUICouplerPanel() {}
+#include "GOVirtualCouplerController.h"
 
 void GOGUICouplerPanel::CreatePanels(GOConfigReader &cfg) {
   for (unsigned i = m_OrganController->GetFirstManualIndex();
@@ -70,110 +66,60 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
       dest_manual->GetName());
     panel->AddControl(PosDisplay);
 
-    coupler = new GOCoupler(*m_OrganController, manual_nr);
-    coupler->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i),
-      _("16"),
-      false,
-      false,
-      -12,
-      i,
-      GOCoupler::COUPLER_NORMAL);
-    coupler->SetElementID(m_OrganController->GetRecorderElementID(
-      wxString::Format(wxT("S%dM%dC16"), manual_nr, i)));
-    manual->AddCoupler(coupler);
-    button = new GOGUIButton(panel, coupler, false);
-    button->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i),
-      2,
-      100 + i);
-    panel->AddControl(button);
+    if ((coupler = r_VirtualCouplers.GetCoupler(
+           manual_nr, i, GOVirtualCouplerController::COUPLER_16))) {
+      button = new GOGUIButton(panel, coupler, false);
+      button->Init(
+        cfg,
+        wxString::Format(wxT("SetterManual%03dCoupler%03dT16"), manual_nr, i),
+        2,
+        100 + i);
+      panel->AddControl(button);
+    }
 
-    coupler = new GOCoupler(*m_OrganController, manual_nr);
-    coupler->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i),
-      manual_nr != i ? _("8") : _("U.O."),
-      manual_nr == i,
-      false,
-      0,
-      i,
-      GOCoupler::COUPLER_NORMAL);
-    coupler->SetElementID(m_OrganController->GetRecorderElementID(
-      wxString::Format(wxT("S%dM%dC8"), manual_nr, i)));
-    manual->AddCoupler(coupler);
-    button = new GOGUIButton(panel, coupler, false);
-    button->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i),
-      3,
-      100 + i);
-    panel->AddControl(button);
+    if ((coupler = r_VirtualCouplers.GetCoupler(
+           manual_nr, i, GOVirtualCouplerController::COUPLER_8))) {
+      button = new GOGUIButton(panel, coupler, false);
+      button->Init(
+        cfg,
+        wxString::Format(wxT("SetterManual%03dCoupler%03dT8"), manual_nr, i),
+        3,
+        100 + i);
+      panel->AddControl(button);
+    }
 
-    coupler = new GOCoupler(*m_OrganController, manual_nr);
-    coupler->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i),
-      _("4"),
-      false,
-      false,
-      12,
-      i,
-      GOCoupler::COUPLER_NORMAL);
-    coupler->SetElementID(m_OrganController->GetRecorderElementID(
-      wxString::Format(wxT("S%dM%dC4"), manual_nr, i)));
-    manual->AddCoupler(coupler);
-    button = new GOGUIButton(panel, coupler, false);
-    button->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i),
-      4,
-      100 + i);
-    panel->AddControl(button);
+    if ((coupler = r_VirtualCouplers.GetCoupler(
+           manual_nr, i, GOVirtualCouplerController::COUPLER_4))) {
+      button = new GOGUIButton(panel, coupler, false);
+      button->Init(
+        cfg,
+        wxString::Format(wxT("SetterManual%03dCoupler%03dT4"), manual_nr, i),
+        4,
+        100 + i);
+      panel->AddControl(button);
+    }
 
-    coupler = new GOCoupler(*m_OrganController, manual_nr);
-    coupler->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i),
-      _("BAS"),
-      false,
-      false,
-      0,
-      i,
-      GOCoupler::COUPLER_BASS);
-    coupler->SetElementID(m_OrganController->GetRecorderElementID(
-      wxString::Format(wxT("S%dM%dCB"), manual_nr, i)));
-    manual->AddCoupler(coupler);
-    button = new GOGUIButton(panel, coupler, false);
-    button->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i),
-      5,
-      100 + i);
-    panel->AddControl(button);
+    if ((coupler = r_VirtualCouplers.GetCoupler(
+           manual_nr, i, GOVirtualCouplerController::COUPLER_BAS))) {
+      button = new GOGUIButton(panel, coupler, false);
+      button->Init(
+        cfg,
+        wxString::Format(wxT("SetterManual%03dCoupler%03dBAS"), manual_nr, i),
+        5,
+        100 + i);
+      panel->AddControl(button);
+    }
 
-    coupler = new GOCoupler(*m_OrganController, manual_nr);
-    coupler->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i),
-      _("MEL"),
-      false,
-      false,
-      0,
-      i,
-      GOCoupler::COUPLER_MELODY);
-    coupler->SetElementID(m_OrganController->GetRecorderElementID(
-      wxString::Format(wxT("S%dM%dCM"), manual_nr, i)));
-    manual->AddCoupler(coupler);
-    button = new GOGUIButton(panel, coupler, false);
-    button->Init(
-      cfg,
-      wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i),
-      6,
-      100 + i);
-    panel->AddControl(button);
+    if ((coupler = r_VirtualCouplers.GetCoupler(
+           manual_nr, i, GOVirtualCouplerController::COUPLER_MEL))) {
+      button = new GOGUIButton(panel, coupler, false);
+      button->Init(
+        cfg,
+        wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i),
+        6,
+        100 + i);
+      panel->AddControl(button);
+    }
   }
 
   return panel;

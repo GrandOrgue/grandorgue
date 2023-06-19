@@ -84,6 +84,8 @@ public:
   const GOConfig &GetConfig() const { return m_config; }
   GOConfig &GetConfig() { return m_config; }
 
+  unsigned GetRecorderElementID(const wxString &name);
+
   /* combinations properties */
   bool DivisionalsStoreIntermanualCouplers() const {
     return m_DivisionalsStoreIntermanualCouplers;
