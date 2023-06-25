@@ -22,6 +22,8 @@ GOTabbedDialog::GOTabbedDialog(
   : GODialog(win, name, title, addStyle) {
   p_book = GetBookCtrl();
   p_book->SetExtraStyle(p_book->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
+  wxPropertySheetDialog::GetInnerSizer()->Add(
+    GetButtonSizer(), 0, wxEXPAND | wxALL, 5);
 }
 
 void GOTabbedDialog::AddTab(

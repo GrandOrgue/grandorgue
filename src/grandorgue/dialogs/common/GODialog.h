@@ -8,27 +8,47 @@
 #ifndef GODIALOG_H
 #define GODIALOG_H
 
-#include <wx/propdlg.h>
+#include <wx/sizer.h>
+
+#include "help/GOHelpRequestor.h"
 
 #include "GODialogCloser.h"
 
 class wxSizer;
 
-class GODialog : public wxPropertySheetDialog, public GODialogCloser {
+template <class DialogClass>
+class GODialog : public DialogClass, public GODialogCloser {
 private:
   static const wxString WX_EMPTY;
 
   const wxString m_name;
   wxSizer *p_ButtonSizer;
 
-  void OnHelp(wxCommandEvent &event);
+  void OnHelp(wxCommandEvent &event) {
+    const wxString &helpSuffix = GetHelpSuffix();
+    const wxString helpSection
+      = m_name + (helpSuffix.IsEmpty() ? WX_EMPTY : wxT(".") + helpSuffix);
+
+    GOHelpRequestor::DisplayHelp(helpSection, wxDialog::IsModal());
+  }
 
 protected:
   GODialog(
     wxWindow *win,
     const wxString &name,  // not translated
     const wxString &title, // translated
-    long addStyle = 0);
+    long addStyle = 0)
+    : DialogClass(
+      win,
+      wxID_ANY,
+      title,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | addStyle),
+      GODialogCloser(this),
+      m_name(name) {
+    p_ButtonSizer = wxDialog::CreateButtonSizer(wxOK | wxCANCEL | wxHELP);
+  }
 
   wxSizer *GetButtonSizer() const { return p_ButtonSizer; }
 
@@ -41,5 +61,12 @@ protected:
 
   DECLARE_EVENT_TABLE()
 };
+
+template <class DialogClass>
+const wxString GODialog<DialogClass>::WX_EMPTY = wxEmptyString;
+
+BEGIN_EVENT_TABLE_TEMPLATE1(GODialog, DialogClass, DialogClass)
+EVT_BUTTON(wxID_HELP, GODialog::OnHelp)
+END_EVENT_TABLE()
 
 #endif /* GODIALOG_H */
