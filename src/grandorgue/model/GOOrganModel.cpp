@@ -57,7 +57,7 @@ void GOOrganModel::Load(
   m_GeneralsStoreDivisionalCouplers = cfg.ReadBoolean(
     ODFSetting, WX_ORGAN, wxT("GeneralsStoreDivisionalCouplers"));
   m_CombinationsStoreNonDisplayedDrawstops = cfg.ReadBoolean(
-    ODFSetting, WX_ORGAN, wxT("CombinationsStoreNonDisplayedDrawstops"));
+    ODFSetting, WX_ORGAN, wxT("CombinationsStoreNonDisplayedDrawstops"), false);
 
   unsigned NumberOfWindchestGroups = cfg.ReadInteger(
     ODFSetting, WX_ORGAN, wxT("NumberOfWindchestGroups"), 1, 999);
