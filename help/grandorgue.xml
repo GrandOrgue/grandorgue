@@ -7150,7 +7150,7 @@ state of divisional couplers.
           <term>CombinationsStoreNonDisplayedDrawstops</term>
           <listitem>
             <para>
-	      (boolean, default: true) determines, if the state of read-only
+	      (boolean, default: false) determines, if the state of read-only
 	      objects (that is calculated based on the state of another objects)
 	      is stored in divisionals, generals and the setter.
 	    </para>
