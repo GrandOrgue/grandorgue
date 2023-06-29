@@ -45,9 +45,8 @@ void GOCombinationDefinition::Add(
   int manual,
   unsigned index,
   bool store_unconditional) {
-  if (control->IsReadOnly())
-    return;
   Element def;
+
   def.type = type;
   def.manual = manual;
   def.index = index;

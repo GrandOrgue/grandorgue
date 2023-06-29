@@ -103,7 +103,8 @@ public:
     int manualNumber,
     unsigned first_midi,
     unsigned keys);
-  void Load(GOConfigReader &cfg, wxString group, int manualNumber);
+  void Load(GOConfigReader &cfg, const wxString &group, int manualNumber);
+  void LoadDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);
   void SetKey(
     unsigned note, unsigned velocity, GOCoupler *prev, unsigned couplerID);

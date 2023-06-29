@@ -7150,10 +7150,10 @@ state of divisional couplers.
           <term>CombinationsStoreNonDisplayedDrawstops</term>
           <listitem>
             <para>
-(boolean, default: true) determines, if the state of 
-invisible objects (on the main panel) is stored in divisionals,
-generals and the setter.
-     </para>
+	      (boolean, default: false) determines, if the state of read-only
+	      objects (that is calculated based on the state of another objects)
+	      is stored in divisionals, generals and the setter.
+	    </para>
           </listitem>
         </varlistentry>
         <varlistentry>
