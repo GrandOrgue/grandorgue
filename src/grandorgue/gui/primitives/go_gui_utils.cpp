@@ -7,6 +7,7 @@
 
 #include "go_gui_utils.h"
 
+#include <wx/bitmap.h>
 #include <wx/icon.h>
 #include <wx/image.h>
 
@@ -17,7 +18,9 @@ static wxIcon go_icon;
 
 static void assure_initialised() {
   if (!has_initialised) {
-    go_icon.CopyFromBitmap(GetImage_GOIcon());
+    wxBitmap iconBitmap(GetImage_GOIcon());
+
+    go_icon.CopyFromBitmap(iconBitmap);
     has_initialised = true;
   }
 }
