@@ -26,7 +26,6 @@ class GODivisionalCoupler;
 class GOEnclosure;
 class GOGeneralButtonControl;
 class GOManual;
-class GOOrganController;
 class GOPistonControl;
 class GORank;
 class GOSwitch;
@@ -68,14 +67,14 @@ protected:
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;
 
-  void Load(GOConfigReader &cfg, GOOrganController *organController);
+  void Load(GOConfigReader &cfg);
 
   /**
    * Called after Load() and InitCmbTemplates();
    * Init general and divisional templates
    * Load generals and divisionals from ODF/cmb
    */
-  void LoadCmbButtons(GOConfigReader &cfg, GOOrganController *organController);
+  void LoadCmbButtons(GOConfigReader &cfg);
 
   /**
    * Update all generals buttons light.
