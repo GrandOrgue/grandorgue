@@ -8,8 +8,7 @@
 #include "GOGUIHW1DisplayMetrics.h"
 
 #include "config/GOConfigReader.h"
-
-#include "go_gui_utils.h"
+#include "primitives/go_gui_utils.h"
 
 GOGUIHW1DisplayMetrics::GOGUIHW1DisplayMetrics(
   GOConfigReader &ini, wxString group)

@@ -12,12 +12,12 @@
 #include "config/GOConfigReader.h"
 #include "model/GOEnclosure.h"
 #include "primitives/GODC.h"
+#include "primitives/go_gui_utils.h"
 
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "go_gui_utils.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)
   : GOGUIControl(panel, control),

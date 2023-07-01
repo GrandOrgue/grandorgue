@@ -9,12 +9,11 @@
 
 #include <wx/display.h>
 #include <wx/frame.h>
-#include <wx/icon.h>
 #include <wx/image.h>
 
-#include "Images.h"
 #include "gui/GOGUIPanel.h"
 #include "gui/GOGUIPanelWidget.h"
+#include "gui/primitives/go_gui_utils.h"
 
 BEGIN_EVENT_TABLE(GOPanelView, wxScrolledWindow)
 EVT_SIZE(GOPanelView::OnSize)
@@ -35,9 +34,7 @@ GOPanelView *GOPanelView::createWithFrame(
   // We probably should change this to add black borders to it. Also, for these
   // platforms a full-screen mode would be beneficial (on MacOS is already
   // works).
-  wxIcon icon;
-  icon.CopyFromBitmap(GetImage_GOIcon());
-  frame->SetIcon(icon);
+  frame->SetIcon(get_go_icon());
   return new GOPanelView(doc, panel, frame);
 }
 

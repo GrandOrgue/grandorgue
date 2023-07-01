@@ -10,6 +10,7 @@
 #include <wx/intl.h>
 
 #include "combinations/GOSetter.h"
+#include "primitives/go_gui_utils.h"
 
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
@@ -17,8 +18,6 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
-
-#include "go_gui_utils.h"
 
 GOGUISequencerPanel::GOGUISequencerPanel(GOOrganController *organController)
   : m_OrganController(organController) {}
