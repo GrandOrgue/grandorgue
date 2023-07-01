@@ -75,10 +75,10 @@ void GOOrganModel::Load(
   m_manuals.resize(0);
   m_manuals.resize(m_FirstManual); // Add empty slot for pedal, if necessary
   for (unsigned int i = m_FirstManual; i < m_ODFManualCount; i++)
-    m_manuals.push_back(new GOManual(organController));
+    m_manuals.push_back(new GOManual(*this));
 
   for (unsigned int i = 0; i < 4; i++)
-    m_manuals.push_back(new GOManual(organController));
+    m_manuals.push_back(new GOManual(*this));
 
   unsigned NumberOfEnclosures
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfEnclosures"), 0, 999);
