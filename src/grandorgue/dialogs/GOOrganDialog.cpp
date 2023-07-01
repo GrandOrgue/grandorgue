@@ -44,13 +44,11 @@ public:
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_TREE_UPDATED)
 
-BEGIN_EVENT_TABLE(GOOrganDialog, wxDialog)
+BEGIN_EVENT_TABLE(GOOrganDialog, GOSimpleDialog)
 EVT_BUTTON(ID_EVENT_APPLY, GOOrganDialog::OnEventApply)
 EVT_BUTTON(ID_EVENT_RESET, GOOrganDialog::OnEventReset)
 EVT_BUTTON(ID_EVENT_DEFAULT, GOOrganDialog::OnEventDefault)
 EVT_BUTTON(ID_EVENT_DEFAULT_ALL, GOOrganDialog::OnEventDefaultAll)
-EVT_BUTTON(wxID_OK, GOOrganDialog::OnOK)
-EVT_BUTTON(wxID_CANCEL, GOOrganDialog::OnCancel)
 EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, GOOrganDialog::OnTreeChanging)
 EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganDialog::OnTreeChanged)
 EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganDialog::OnTreeUpdated)
@@ -89,28 +87,15 @@ static const unsigned RELEASE_LENGTH_MAX_INDEX
 
 GOOrganDialog::GOOrganDialog(
   GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
-  : wxDialog(
-    parent,
-    wxID_ANY,
-    _("Organ settings"),
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+  : GOSimpleDialog(parent, wxT("Organ settings"), _("Organ settings")),
     GOView(doc, this),
     m_OrganController(organController),
     m_Apply(NULL),
     m_Reset(NULL),
     m_Last(NULL),
-    m_LoadChangeCnt(0),
-    m_ModalDialog(NULL),
-    m_Destroying(false),
-    m_DestroyPending(false) {
+    m_LoadChangeCnt(0) {
   wxArrayString choices;
-
-  wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *mainSizer = new wxBoxSizer(wxHORIZONTAL);
-
-  topSizer->Add(mainSizer, 1, wxALL | wxEXPAND, 6);
 
   m_Tree = new wxTreeCtrl(
     this,
@@ -242,8 +227,6 @@ GOOrganDialog::GOOrganDialog(
     wxGBSpan(1, 2),
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
     5);
-  if (m_OrganController->GetRootPipeConfigNode().GetEffectiveIgnorePitch())
-    m_IgnorePitch->SetValue(true);
 
   gb->AddGrowableCol(1, 1);
 
@@ -391,41 +374,11 @@ GOOrganDialog::GOOrganDialog(
 
   scroll->SetSizer(settingSizer);
   scroll->SetScrollbars(0, 5, 0, 15);
-  mainSizer->Add(scroll, 1, wxALIGN_RIGHT | wxEXPAND);
+  mainSizer->Add(scroll, 1, wxEXPAND);
 
-  topSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxALL, 5);
-  topSizer->Add(
-    CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
-  topSizer->AddSpacer(5);
   FillTree();
   Load();
-  SetSizerAndFit(topSizer);
-}
-
-GOOrganDialog::~GOOrganDialog() {}
-
-bool GOOrganDialog::CloseModal() {
-  if (m_DestroyPending) {
-    wxDialog::Destroy();
-    return true;
-  }
-  if (m_ModalDialog) {
-    wxDialog *dlg = m_ModalDialog;
-    m_ModalDialog = NULL;
-    dlg->EndModal(wxID_CANCEL);
-    if (m_Destroying)
-      m_DestroyPending = true;
-    return true;
-  }
-  return false;
-}
-
-bool GOOrganDialog::Destroy() {
-  Hide();
-  m_Destroying = true;
-  if (CloseModal())
-    return true;
-  return wxDialog::Destroy();
+  LayoutWithInnerSizer(mainSizer);
 }
 
 void GOOrganDialog::SetEmpty(wxChoice *choice) {
@@ -568,6 +521,7 @@ void GOOrganDialog::Load() {
     m_Apply->Disable();
     m_Reset->Disable();
     m_Default->Disable();
+    m_DefaultAll->Disable();
     m_AudioGroupAssistant->Disable();
     return;
   }
@@ -651,6 +605,7 @@ void GOOrganDialog::Load() {
   m_AttackLoad->Enable();
   m_ReleaseLoad->Enable();
   m_Default->Enable();
+  m_DefaultAll->Enable();
   m_Reset->Disable();
 
   float amplitude = m_Last->config->GetAmplitude();
@@ -1120,12 +1075,18 @@ void GOOrganDialog::OnEventDefaultAll(wxCommandEvent &e) {
   ResetSelectedToDefault(true);
 }
 
-void GOOrganDialog::OnTreeChanging(wxTreeEvent &e) {
-  if (Changed()) {
+bool GOOrganDialog::CheckForUnapplied() {
+  bool res = Changed();
+
+  if (res)
     GOMessageBox(
       _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+  return res;
+}
+
+void GOOrganDialog::OnTreeChanging(wxTreeEvent &e) {
+  if (CheckForUnapplied())
     e.Veto();
-  }
 }
 
 void GOOrganDialog::OnTreeChanged(wxTreeEvent &e) {
@@ -1166,27 +1127,6 @@ void GOOrganDialog::OnTreeChanged(wxTreeEvent &e) {
 
 void GOOrganDialog::OnTreeUpdated(wxCommandEvent &e) { Load(); }
 
-void GOOrganDialog::OnOK(wxCommandEvent &event) {
-  if (Changed()) {
-    GOMessageBox(
-      _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
-    return;
-  }
-  GOPipeConfig &rootPipeConfig(
-    m_OrganController->GetRootPipeConfigNode().GetPipeConfig());
-  bool newIgnorePitch = m_IgnorePitch->GetValue();
-
-  // for avoiding modification of rootPipeConfig when it is non necessary
-  if (newIgnorePitch != (rootPipeConfig.IsIgnorePitch() > 0))
-    m_OrganController->GetRootPipeConfigNode().GetPipeConfig().SetIgnorePitch(
-      newIgnorePitch);
-  m_OrganController->SetTemperament(m_OrganController->GetTemperament());
-  m_OrganController->SetOrganModified();
-  Destroy();
-}
-
-void GOOrganDialog::OnCancel(wxCommandEvent &event) { Destroy(); }
-
 void GOOrganDialog::UpdateAudioGroup(
   std::vector<wxString> audio_group, unsigned &pos, wxTreeItemId item) {
   OrganTreeItemData *e = (OrganTreeItemData *)m_Tree->GetItemData(item);
@@ -1206,11 +1146,8 @@ void GOOrganDialog::UpdateAudioGroup(
 }
 
 void GOOrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
-  if (Changed()) {
-    GOMessageBox(
-      _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+  if (CheckForUnapplied())
     return;
-  }
   wxArrayString strs;
   std::vector<wxString> group_list
     = m_OrganController->GetSettings().GetAudioGroups();
@@ -1219,13 +1156,10 @@ void GOOrganDialog::OnAudioGroupAssitant(wxCommandEvent &e) {
 
   wxMultiChoiceDialog dlg(
     this, _("Select audio groups to distribute:"), _("Organ dialog"), strs);
-  m_ModalDialog = &dlg;
   if (dlg.ShowModal() != wxID_OK) {
-    CloseModal();
     return;
   }
   wxArrayInt sel = dlg.GetSelections();
-  CloseModal();
   if (sel.Count() == 0) {
     GOMessageBox(
       _("No audio group selected"), _("Error"), wxOK | wxICON_ERROR, this);

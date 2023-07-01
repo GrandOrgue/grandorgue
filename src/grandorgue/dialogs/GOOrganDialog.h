@@ -9,8 +9,8 @@
 #define GOORGANDIALOG_H
 
 #include <vector>
-#include <wx/dialog.h>
 
+#include "common/GOSimpleDialog.h"
 #include "document-base/GOView.h"
 
 class GOPipeConfigNode;
@@ -28,7 +28,7 @@ class wxTreeCtrl;
 class wxTreeEvent;
 class wxTreeItemId;
 
-class GOOrganDialog : public wxDialog, public GOView {
+class GOOrganDialog : public GOSimpleDialog, public GOView {
 private:
   GOOrganController *m_OrganController;
   wxTreeCtrl *m_Tree;
@@ -70,11 +70,7 @@ private:
   wxButton *m_Collapse;
   OrganTreeItemData *m_Last;
   unsigned m_LoadChangeCnt;
-  wxDialog *m_ModalDialog;
-  bool m_Destroying;
-  bool m_DestroyPending;
 
-  bool CloseModal();
   void FillTree();
   void Load();
   bool Changed();
@@ -86,6 +82,12 @@ private:
   void FillTree(wxTreeItemId parent, GOPipeConfigNode &config);
   void CloseTree(wxTreeItemId parent);
   void ResetSelectedToDefault(bool isForChildren);
+  /**
+   * Checks if all changes have been applied. If some unapplied changes are
+   * present, then display an error message.
+   * Returns if there are unapplied changes
+   */
+  bool CheckForUnapplied();
 
   void OnTreeChanging(wxTreeEvent &e);
   void OnTreeChanged(wxTreeEvent &e);
@@ -114,8 +116,6 @@ private:
   void OnEventReset(wxCommandEvent &e);
   void OnEventDefault(wxCommandEvent &e);
   void OnEventDefaultAll(wxCommandEvent &e);
-  void OnOK(wxCommandEvent &event);
-  void OnCancel(wxCommandEvent &event);
   void OnAudioGroupAssitant(wxCommandEvent &e);
   void OnCollapse(wxCommandEvent &e);
 
@@ -150,12 +150,12 @@ protected:
     ID_EVENT_COMPRESS
   };
 
+  bool Validate() override { return !CheckForUnapplied(); }
+
 public:
   GOOrganDialog(
     GODocumentBase *doc, wxWindow *parent, GOOrganController *organController);
-  ~GOOrganDialog();
-
-  bool Destroy();
+  virtual ~GOOrganDialog() {}
 
   DECLARE_EVENT_TABLE()
 };
