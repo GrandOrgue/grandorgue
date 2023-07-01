@@ -8,6 +8,7 @@
 #include "go_gui_utils.h"
 
 #include <wx/icon.h>
+#include <wx/image.h>
 
 #include "Images.h"
 
