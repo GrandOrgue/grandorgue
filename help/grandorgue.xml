@@ -5541,6 +5541,37 @@ Within  windchests, the ranks are ordered as found in the definition file.
       <title>Buttons row</title>
       <para>These buttons are used to drive the dialog and always act on the selected element.</para>
       <variablelist>
+	<varlistentry>
+	  <term>Distribute audio groups</term>
+	  <listitem>
+	    <simpara>
+	      This button allows to spread the selected elements over selected
+	      audio groups. The elements are spread over audio groups using a
+	      round-robin scheme.
+	    </simpara>
+	    <simpara>Select the elements to spread, click the button. A dialog
+	      opens where the desired audio groups can be selected by checking
+	      their box.
+	      <mediaobject>
+		<imageobject>
+		  <imagedata scalefit="1" width="100%" fileref="images/distribute_audio_groups.png"/>
+		</imageobject>
+	      </mediaobject>
+	      Push the <emphasis role="bold">OK</emphasis> button. The
+	      modification is applied.
+	    </simpara>
+	    <caution>
+	      <simpara>
+		The round-robin scheme is applied to the audio groups in their
+		display order in the selector dialog. They appear in that dialog
+		in the same order they were created. Therefore, when elements
+		need to be spread over a list of audio groups, these audio
+		groups <emphasis role="bold">must</emphasis> be created in the
+		order of the round-robin scheme.
+	      </simpara>
+	    </caution>
+          </listitem>
+	</varlistentry>
         <varlistentry>
           <term>Default</term>
           <listitem>
@@ -5579,28 +5610,6 @@ or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
       <para>This frame displays a single check box labeled <emphasis>Ignore pitch info in organ samples wav files</emphasis>.</para>
       <para>This feature is closely related to the temperament feature which assumes, when the samples are dynamically retuned after a new temperament is applied, that pitch information was embedded in each sample file <emphasis>or in the pipe entry within the Organ Definition File</emphasis>. If the sample set designer has <emphasis role="bold">NOT</emphasis> embedded pitch information, the result is weird and unpredictable.</para>
       <para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected. In this case, GrandOrgue assumes that the samples are tuned to equal temperament.</para>
-    </sect1>
-    <sect1>
-      <title>Collapse tree button</title>
-      <para>When the dialog opens, the tree is displayed unfolded to the pipe level. This button is a shortcut for displaying only the root node:</para>
-      <mediaobject><imageobject><imagedata fileref="images/organ_settings_collapsed.png" /></imageobject></mediaobject>
-      <para>Double-click the organ name to unfold the tree to the windchest level:</para>
-      <mediaobject><imageobject><imagedata fileref="images/organ_settings_unfold.png" /></imageobject></mediaobject>
-    </sect1>
-    <sect1>
-      <title>Distribute audio groups button</title>
-      <para>This button allows to spread the selected elements over selected audio groups. The elements are spread over audio groups using a round-robin scheme.</para>
-      <para>Select the elements to spread, click the button. A dialog opens where the desired audio groups can be selected by checking their box.
-      <mediaobject><imageobject><imagedata scalefit="1" width="100%" fileref="images/distribute_audio_groups.png"/></imageobject></mediaobject>
-      Push the <emphasis role="bold">OK</emphasis> button. The modification is applied.
-      </para>
-      <caution>
-      <simpara>
-      The round-robin scheme is applied to the audio groups in their display order in the selector dialog.
-      They appear in that dialog in the same order they were created.
-      Therefore, when elements need to be spread over a list of audio groups, these audio groups
-      <emphasis role="bold">must</emphasis> be created in the order of the round-robin scheme.</simpara>
-      </caution>
     </sect1>
   </chapter>
   <chapter>
