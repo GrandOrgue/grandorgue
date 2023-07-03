@@ -1,3 +1,4 @@
+- Fixed displaying buttons if the manual is not visible https://github.com/GrandOrgue/grandorgue/issues/1566
 - Changed the default value of the CombinationsStoreNonDisplayedDrawstops ODF settings to false
 - Fixed capability of running on MacOs 11.3
 - Fixed "The device does not support requested channel count" error when using an USB audio card on MacOS https://github.com/GrandOrgue/grandorgue/issues/1550
