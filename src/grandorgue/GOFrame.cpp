@@ -11,7 +11,6 @@
 #include <wx/display.h>
 #include <wx/fileconf.h>
 #include <wx/filedlg.h>
-#include <wx/icon.h>
 #include <wx/image.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
@@ -33,6 +32,7 @@
 #include "dialogs/settings/GOSettingsReason.h"
 #include "files/GOStdFileName.h"
 #include "gui/GOGUIPanel.h"
+#include "gui/primitives/go_gui_utils.h"
 #include "help/GOHelpRequestor.h"
 #include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
@@ -153,9 +153,7 @@ GOFrame::GOFrame(
     m_AfterSettingsEventType(wxEVT_NULL),
     m_AfterSettingsEventId(0),
     p_AfterSettingsEventOrgan(NULL) {
-  wxIcon icon;
-  icon.CopyFromBitmap(GetImage_GOIcon());
-  SetIcon(icon);
+  SetIcon(get_go_icon());
 
   wxArrayString choices;
 

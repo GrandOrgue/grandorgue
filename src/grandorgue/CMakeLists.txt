@@ -95,6 +95,7 @@ document-base/GOView.cpp
 gui/primitives/GOBitmap.cpp
 gui/primitives/GODC.cpp
 gui/primitives/GOFont.cpp
+gui/primitives/go_gui_utils.cpp
 gui/GOGUIBankedGeneralsPanel.cpp
 gui/GOGUIButton.cpp
 gui/GOGUICrescendoPanel.cpp
