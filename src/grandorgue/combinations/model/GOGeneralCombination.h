@@ -19,7 +19,6 @@ class GOSetter;
 
 class GOGeneralCombination : public GOCombination {
 private:
-  GOOrganModel &r_OrganModel;
   bool m_IsSetter;
 
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
@@ -38,11 +37,8 @@ private:
   void FromYamlMap(const YAML::Node &yamlMap) override;
 
 public:
-  GOGeneralCombination(
-    GOOrganModel &organModel,
-    const GOCombinationDefinition &cmbDef,
-    bool isSetter);
-  void Load(GOConfigReader &cfg, wxString group);
+  GOGeneralCombination(GOOrganModel &organModel, bool isSetter);
+  void Load(GOConfigReader &cfg, const wxString &group);
 };
 
 #endif /* GOGENERALCOMBINATION_H */

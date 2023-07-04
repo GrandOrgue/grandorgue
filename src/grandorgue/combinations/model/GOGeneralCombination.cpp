@@ -22,14 +22,11 @@
 #include "yaml/go-wx-yaml.h"
 
 GOGeneralCombination::GOGeneralCombination(
-  GOOrganModel &organModel,
-  const GOCombinationDefinition &cmbDef,
-  bool isSetter)
-  : GOCombination(organModel, cmbDef),
-    r_OrganModel(organModel),
+  GOOrganModel &organModel, bool isSetter)
+  : GOCombination(organModel, organModel.GetGeneralTemplate()),
     m_IsSetter(isSetter) {}
 
-void GOGeneralCombination::Load(GOConfigReader &cfg, wxString group) {
+void GOGeneralCombination::Load(GOConfigReader &cfg, const wxString &group) {
   r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
 

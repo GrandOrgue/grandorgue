@@ -43,26 +43,19 @@ protected:
 
 public:
   GODivisionalCombination(
-    GOOrganModel &organModel,
-    const GOCombinationDefinition &cmbDef,
-    bool isSetter);
+    GOOrganModel &organModel, unsigned manualNumber, bool isSetter);
 
   unsigned GetManualNumber() const { return m_odfManualNumber; }
   int GetDivisionalNumber() const { return m_DivisionalNumber; }
 
-  void Init(const wxString &group, int manualNumber, int divisionalNumber);
-  void Load(
-    GOConfigReader &cfg,
-    wxString group,
-    int manualNumber,
-    int divisionalNumber);
+  void Init(const wxString &group, int divisionalNumber);
+  void Load(GOConfigReader &cfg, const wxString &group, int divisionalNumber);
 
   // checks if the combination exists in the config file
   // returns the loaded combination if it exists else returns nullptr
-  static GODivisionalCombination *LoadFrom(
+  static GODivisionalCombination *loadFrom(
     GOOrganModel &organModel,
     GOConfigReader &cfg,
-    const GOCombinationDefinition &cmbDef,
     const wxString &group,
     // for compatibility with the old preset: load the combination with the old
     // group name
