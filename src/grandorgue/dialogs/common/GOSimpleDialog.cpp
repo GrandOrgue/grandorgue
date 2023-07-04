@@ -13,7 +13,7 @@
 void GOSimpleDialog::LayoutWithInnerSizer(wxSizer *pInnerSizer) {
   wxBoxSizer *const pTopSizer = new wxBoxSizer(wxVERTICAL);
 
-  pTopSizer->Add(pInnerSizer, 1, wxGROW | wxEXPAND | wxALL, 2);
+  pTopSizer->Add(pInnerSizer, 1, wxGROW | wxEXPAND | wxALL, 5);
   pTopSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxALL, 5);
   pTopSizer->Add(GetButtonSizer(), 0, wxEXPAND | wxALL, 5);
   SetSizerAndFit(pTopSizer);
