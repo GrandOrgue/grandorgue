@@ -255,10 +255,9 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
          i <= m_OrganController->GetManualAndPedalCount();
          i++) {
       GOManual *pManual = m_OrganController->GetManual(i);
+      wxString manualGroup = wxString::Format(wxT("Manual%03d"), i);
 
       if (pManual->IsDisplayed()) {
-        wxString manualGroup = wxString::Format(wxT("Manual%03d"), i);
-
         LoadBackgroundControl(
           new GOGUIManualBackground(this, m_layout->GetManualNumber()),
           cfg,
@@ -267,21 +266,21 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
           new GOGUIManual(this, pManual, m_layout->GetManualNumber()),
           cfg,
           manualGroup);
-        for (unsigned j = 0; j < pManual->GetODFCouplerCount(); j++)
-          LoadManualButton(
-            cfg, pManual->GetCoupler(j), manualGroup, wxT("Coupler"), j + 1);
-        for (unsigned j = 0; j < pManual->GetStopCount(); j++)
-          LoadManualButton(
-            cfg, pManual->GetStop(j), manualGroup, wxT("Stop"), j + 1);
-        for (unsigned j = 0; j < pManual->GetDivisionalCount(); j++)
-          LoadManualButton(
-            cfg,
-            pManual->GetDivisional(j),
-            manualGroup,
-            wxT("Divisional"),
-            j + 1,
-            true);
       }
+      for (unsigned j = 0; j < pManual->GetODFCouplerCount(); j++)
+        LoadManualButton(
+          cfg, pManual->GetCoupler(j), manualGroup, wxT("Coupler"), j + 1);
+      for (unsigned j = 0; j < pManual->GetStopCount(); j++)
+        LoadManualButton(
+          cfg, pManual->GetStop(j), manualGroup, wxT("Stop"), j + 1);
+      for (unsigned j = 0; j < pManual->GetDivisionalCount(); j++)
+        LoadManualButton(
+          cfg,
+          pManual->GetDivisional(j),
+          manualGroup,
+          wxT("Divisional"),
+          j + 1,
+          true);
     }
   } else if (!new_format) {
     unsigned NumberOfEnclosures = cfg.ReadInteger(
