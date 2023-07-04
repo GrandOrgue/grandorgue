@@ -66,7 +66,6 @@ control/GOElementCreator.cpp
 control/GOEventDistributor.cpp
 control/GOLabelControl.cpp
 control/GOPistonControl.cpp
-dialogs/common/GODialog.cpp
 dialogs/common/GODialogCloser.cpp
 dialogs/common/GODialogTab.cpp
 dialogs/common/GOTabbedDialog.cpp
