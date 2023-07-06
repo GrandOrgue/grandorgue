@@ -68,6 +68,7 @@ control/GOLabelControl.cpp
 control/GOPistonControl.cpp
 dialogs/common/GODialogCloser.cpp
 dialogs/common/GODialogTab.cpp
+dialogs/common/GOSimpleDialog.cpp
 dialogs/common/GOTabbedDialog.cpp
 dialogs/midi-event/GOMidiEventDialog.cpp
 dialogs/midi-event/GOMidiEventKeyTab.cpp
