@@ -15,18 +15,18 @@
 
 #include "GOCoupler.h"
 #include "GODocument.h"
-#include "GOOrganController.h"
+#include "GOOrganModel.h"
 #include "GOStop.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 
-GOManual::GOManual(GOOrganController *organController)
-  : r_MidiMap(organController->GetConfig().GetMidiMap()),
+GOManual::GOManual(GOOrganModel &organModel)
+  : r_OrganModel(organModel),
+    r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_group(wxT("---")),
-    m_midi(*organController, MIDI_RECV_MANUAL),
-    m_sender(*organController, MIDI_SEND_MANUAL),
-    m_division(*organController, MIDI_SEND_MANUAL),
-    m_OrganController(organController),
+    m_midi(organModel, MIDI_RECV_MANUAL),
+    m_sender(organModel, MIDI_SEND_MANUAL),
+    m_division(organModel, MIDI_SEND_MANUAL),
     m_InputCouplers(),
     m_KeyVelocity(0),
     m_RemoteVelocity(),
@@ -48,12 +48,12 @@ GOManual::GOManual(GOOrganController *organController)
     m_divisionals(0),
     m_ODFCouplerCount(0),
     m_displayed(false),
-    m_DivisionalTemplate(*organController) {
+    m_DivisionalTemplate(organModel) {
   m_InputCouplers.push_back(NULL);
-  m_OrganController->RegisterCombinationButtonSet(this);
-  m_OrganController->RegisterEventHandler(this);
-  m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterSoundStateHandler(this);
+  organModel.RegisterCombinationButtonSet(this);
+  organModel.RegisterEventHandler(this);
+  organModel.RegisterMidiConfigurator(this);
+  organModel.RegisterSoundStateHandler(this);
 }
 
 unsigned GOManual::RegisterCoupler(GOCoupler *coupler) {
@@ -77,11 +77,11 @@ void GOManual::Init(
   int manualNumber,
   unsigned first_midi,
   unsigned keys) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_name = wxString::Format(
     _("Coupling manual %d"),
-    manualNumber - m_OrganController->GetODFManualCount() + 1);
+    manualNumber - r_OrganModel.GetODFManualCount() + 1);
   m_nb_logical_keys = keys;
   m_first_accessible_logical_key_nb = 1;
   m_first_accessible_key_midi_note_nb = first_midi;
@@ -102,7 +102,7 @@ void GOManual::Init(
   m_sender.Load(cfg, group, r_MidiMap);
   m_division.Load(cfg, group + wxT("Division"), r_MidiMap);
 
-  SetElementID(m_OrganController->GetRecorderElementID(
+  SetElementID(r_OrganModel.GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
 
   Resize();
@@ -112,7 +112,7 @@ void GOManual::Init(
 
 void GOManual::Load(
   GOConfigReader &cfg, const wxString &group, int manualNumber) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"));
   m_nb_logical_keys
@@ -140,14 +140,14 @@ void GOManual::Load(
     group,
     wxT("NumberOfTremulants"),
     0,
-    m_OrganController->GetTremulantCount(),
+    r_OrganModel.GetTremulantCount(),
     false);
   unsigned nb_switches = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("NumberOfSwitches"),
     0,
-    m_OrganController->GetSwitchCount(),
+    r_OrganModel.GetSwitchCount(),
     false);
   m_manual_number = manualNumber;
 
@@ -168,25 +168,25 @@ void GOManual::Load(
   m_stops.resize(0);
   for (unsigned i = 0; i < nb_stops; i++) {
     m_stops.push_back(
-      new GOStop(*m_OrganController, GetFirstLogicalKeyMIDINoteNumber()));
+      new GOStop(r_OrganModel, GetFirstLogicalKeyMIDINoteNumber()));
     buffer.Printf(wxT("Stop%03d"), i + 1);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
     cfg.MarkGroupInUse(buffer);
     m_stops[i]->Load(cfg, buffer);
-    m_stops[i]->SetElementID(m_OrganController->GetRecorderElementID(
+    m_stops[i]->SetElementID(r_OrganModel.GetRecorderElementID(
       wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
   }
 
   m_couplers.resize(0);
   for (unsigned i = 0; i < m_ODFCouplerCount; i++) {
-    m_couplers.push_back(new GOCoupler(*m_OrganController, m_manual_number));
+    m_couplers.push_back(new GOCoupler(r_OrganModel, m_manual_number));
     buffer.Printf(wxT("Coupler%03d"), i + 1);
     buffer.Printf(
       wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
     cfg.MarkGroupInUse(buffer);
     m_couplers[i]->Load(cfg, buffer);
-    m_couplers[i]->SetElementID(m_OrganController->GetRecorderElementID(
+    m_couplers[i]->SetElementID(r_OrganModel.GetRecorderElementID(
       wxString::Format(wxT("M%dC%d"), m_manual_number, i)));
   }
 
@@ -194,7 +194,7 @@ void GOManual::Load(
   for (unsigned i = 0; i < nb_tremulants; i++) {
     buffer.Printf(wxT("Tremulant%03d"), i + 1);
     unsigned new_id = cfg.ReadInteger(
-      ODFSetting, group, buffer, 1, m_OrganController->GetTremulantCount());
+      ODFSetting, group, buffer, 1, r_OrganModel.GetTremulantCount());
     for (unsigned j = 0; j < m_tremulant_ids.size(); j++)
       if (m_tremulant_ids[j] == new_id)
         throw wxString::Format(
@@ -208,7 +208,7 @@ void GOManual::Load(
   for (unsigned i = 0; i < nb_switches; i++) {
     buffer.Printf(wxT("Switch%03d"), i + 1);
     unsigned new_id = cfg.ReadInteger(
-      ODFSetting, group, buffer, 1, m_OrganController->GetSwitchCount());
+      ODFSetting, group, buffer, 1, r_OrganModel.GetSwitchCount());
     for (unsigned j = 0; j < m_switch_ids.size(); j++)
       if (m_switch_ids[j] == new_id)
         throw wxString::Format(
@@ -220,7 +220,7 @@ void GOManual::Load(
   m_sender.Load(cfg, group, r_MidiMap);
   m_division.Load(cfg, group + wxT("Division"), r_MidiMap);
 
-  SetElementID(m_OrganController->GetRecorderElementID(
+  SetElementID(r_OrganModel.GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
 
   Resize();
@@ -236,8 +236,8 @@ void GOManual::LoadDivisionals(GOConfigReader &cfg) {
   m_DivisionalTemplate.InitDivisional(m_manual_number);
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nDivisionals; i++) {
-    m_divisionals.push_back(new GODivisionalButtonControl(
-      *m_OrganController, m_manual_number, false));
+    m_divisionals.push_back(
+      new GODivisionalButtonControl(r_OrganModel, m_manual_number, false));
 
     buffer.Printf(wxT("Divisional%03d"), i + 1);
     buffer.Printf(
@@ -292,7 +292,7 @@ void GOManual::SetKey(
   if (
     m_first_accessible_logical_key_nb <= note + 1
     && note <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
-    m_OrganController->SendControlChanged(this);
+    r_OrganModel.SendControlChanged(this);
 }
 
 void GOManual::Set(unsigned note, unsigned velocity) {
@@ -397,7 +397,7 @@ GOCombinationDefinition &GOManual::GetDivisionalTemplate() {
 
 GOTremulant *GOManual::GetTremulant(unsigned index) {
   assert(index < m_tremulant_ids.size());
-  return m_OrganController->GetTremulant(m_tremulant_ids[index] - 1);
+  return r_OrganModel.GetTremulant(m_tremulant_ids[index] - 1);
 }
 
 int GOManual::FindTremulantByName(const wxString &name) const {
@@ -408,7 +408,7 @@ int GOManual::FindTremulantByName(const wxString &name) const {
 
     if (
       globalIndex >= 0
-      && m_OrganController->GetTremulant(globalIndex)->GetName() == name) {
+      && r_OrganModel.GetTremulant(globalIndex)->GetName() == name) {
       resIndex = globalIndex;
       break;
     }
@@ -418,7 +418,7 @@ int GOManual::FindTremulantByName(const wxString &name) const {
 
 GOSwitch *GOManual::GetSwitch(unsigned index) {
   assert(index < m_switch_ids.size());
-  return m_OrganController->GetSwitch(m_switch_ids[index] - 1);
+  return r_OrganModel.GetSwitch(m_switch_ids[index] - 1);
 }
 
 int GOManual::FindSwitchByName(const wxString &name) const {
@@ -429,7 +429,7 @@ int GOManual::FindSwitchByName(const wxString &name) const {
 
     if (
       globalIndex >= 0
-      && m_OrganController->GetSwitch(globalIndex)->GetName() == name) {
+      && r_OrganModel.GetSwitch(globalIndex)->GetName() == name) {
       resIndex = globalIndex;
       break;
     }
@@ -557,7 +557,7 @@ void GOManual::ShowConfigDialog() {
     GetMidiType().c_str(),
     GetMidiName().c_str());
 
-  m_OrganController->ShowMIDIEventDialog(
+  r_OrganModel.ShowMIDIEventDialog(
     this, title, &m_midi, &m_sender, NULL, &m_division);
 }
 

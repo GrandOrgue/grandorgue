@@ -30,7 +30,7 @@ class GOMidiEvent;
 class GOStop;
 class GOSwitch;
 class GOTremulant;
-class GOOrganController;
+class GOOrganModel;
 
 class GOManual : private GOEventHandler,
                  private GOCombinationButtonSet,
@@ -38,13 +38,13 @@ class GOManual : private GOEventHandler,
                  private GOSoundStateHandler,
                  public GOMidiConfigurator {
 private:
+  GOOrganModel &r_OrganModel;
   GOMidiMap &r_MidiMap;
 
   wxString m_group;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOMidiSender m_division;
-  GOOrganController *m_OrganController;
   std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */
   std::vector<unsigned> m_KeyVelocity;
@@ -96,7 +96,7 @@ private:
     GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
 
 public:
-  GOManual(GOOrganController *organController);
+  GOManual(GOOrganModel &organModel);
   void Init(
     GOConfigReader &cfg,
     wxString group,
