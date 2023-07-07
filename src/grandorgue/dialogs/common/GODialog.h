@@ -51,6 +51,7 @@ protected:
       m_name(name) {
     wxDialog::SetIcon(get_go_icon());
     p_ButtonSizer = wxDialog::CreateButtonSizer(buttonFlags);
+    this->template SetLayoutAdaptationMode(wxDIALOG_ADAPTATION_MODE_ENABLED);
   }
 
   wxSizer *GetButtonSizer() const { return p_ButtonSizer; }
