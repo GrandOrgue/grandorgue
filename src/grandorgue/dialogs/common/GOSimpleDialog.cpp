@@ -17,4 +17,16 @@ void GOSimpleDialog::LayoutWithInnerSizer(wxSizer *pInnerSizer) {
   pTopSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxALL, 5);
   pTopSizer->Add(GetButtonSizer(), 0, wxEXPAND | wxALL, 5);
   SetSizerAndFit(pTopSizer);
+
+  long style = GetWindowStyle();
+
+  // This call is necessary for the dialog not to cover the help window
+  Create(
+    GetParentForModalDialog(GetParent(), style),
+    GetId(),
+    GetTitle(),
+    GetPosition(),
+    GetSize(),
+    style,
+    GetName());
 }

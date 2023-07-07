@@ -15,7 +15,6 @@
 class wxSizer;
 
 class GOSimpleDialog : public GODialog<wxDialog> {
-private:
 protected:
   GOSimpleDialog(
     wxWindow *win,
