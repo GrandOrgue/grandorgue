@@ -99,7 +99,7 @@ GOOrganDialog::GOOrganDialog(
     this,
     ID_EVENT_TREE,
     wxDefaultPosition,
-    wxDefaultSize,
+    wxSize(300, 100),
     wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
   mainSizer->Add(
     m_Tree,
