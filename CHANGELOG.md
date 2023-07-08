@@ -1,3 +1,4 @@
+- Fixed incorrect window icon and migrated GOMidiListDialog from wxDialog to GOSimpleDialog https://github.com/GrandOrgue/grandorgue/pull/1587
 - Fixed absence of the Help button on the Organ Setting dialog https://github.com/GrandOrgue/grandorgue/issues/1416
 - Fixed displaying buttons if the manual is not visible https://github.com/GrandOrgue/grandorgue/issues/1566
 - Changed the default value of the CombinationsStoreNonDisplayedDrawstops ODF settings to false
