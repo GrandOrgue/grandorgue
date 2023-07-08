@@ -13,6 +13,7 @@
 #include "help/GOHelpRequestor.h"
 
 #include "GODialogCloser.h"
+#include "gui/primitives/go_gui_utils.h"
 
 class wxSizer;
 
@@ -47,6 +48,7 @@ protected:
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | addStyle),
       GODialogCloser(this),
       m_name(name) {
+    SetIcon(get_go_icon());
     p_ButtonSizer = wxDialog::CreateButtonSizer(wxOK | wxCANCEL | wxHELP);
   }
 
