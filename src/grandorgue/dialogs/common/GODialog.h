@@ -10,10 +10,10 @@
 
 #include <wx/sizer.h>
 
+#include "gui/primitives/go_gui_utils.h"
 #include "help/GOHelpRequestor.h"
 
 #include "GODialogCloser.h"
-#include "gui/primitives/go_gui_utils.h"
 
 class wxSizer;
 

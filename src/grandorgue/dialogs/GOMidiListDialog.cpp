@@ -78,7 +78,6 @@ GOMidiListDialog::GOMidiListDialog(
   m_Objects->SetColumnWidth(1, wxLIST_AUTOSIZE);
 
   topSizer->AddSpacer(5);
-  topSizer->Fit(this);
   LayoutWithInnerSizer(topSizer);
 }
 
