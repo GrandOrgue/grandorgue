@@ -10,8 +10,7 @@
 
 #include <vector>
 
-#include <wx/dialog.h>
-
+#include "common/GOSimpleDialog.h"
 #include "document-base/GOView.h"
 
 class wxButton;
@@ -20,7 +19,7 @@ class wxListView;
 
 class GOMidiConfigurator;
 
-class GOMidiListDialog : public wxDialog, public GOView {
+class GOMidiListDialog : public GOSimpleDialog, public GOView {
 private:
   wxListView *m_Objects;
   wxButton *m_Edit;
@@ -38,7 +37,6 @@ private:
   void OnObjectClick(wxListEvent &event);
   void OnObjectDoubleClick(wxListEvent &event);
   void OnEdit(wxCommandEvent &event);
-  void OnOK(wxCommandEvent &event);
   void OnStatus(wxCommandEvent &event);
   void OnButton(wxCommandEvent &event);
 

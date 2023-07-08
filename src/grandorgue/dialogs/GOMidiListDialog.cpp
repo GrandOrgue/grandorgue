@@ -15,12 +15,11 @@
 
 #include "GOEvent.h"
 
-BEGIN_EVENT_TABLE(GOMidiListDialog, wxDialog)
+BEGIN_EVENT_TABLE(GOMidiListDialog, GOSimpleDialog)
 EVT_LIST_ITEM_SELECTED(ID_LIST, GOMidiListDialog::OnObjectClick)
 EVT_LIST_ITEM_ACTIVATED(ID_LIST, GOMidiListDialog::OnObjectDoubleClick)
 EVT_BUTTON(ID_STATUS, GOMidiListDialog::OnStatus)
 EVT_BUTTON(ID_EDIT, GOMidiListDialog::OnEdit)
-EVT_BUTTON(wxID_OK, GOMidiListDialog::OnOK)
 EVT_COMMAND_RANGE(
   ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, GOMidiListDialog::OnButton)
 END_EVENT_TABLE()
@@ -29,13 +28,12 @@ GOMidiListDialog::GOMidiListDialog(
   GODocumentBase *doc,
   wxWindow *parent,
   const std::vector<GOMidiConfigurator *> &midi_elements)
-  : wxDialog(
+  : GOSimpleDialog(
     parent,
-    wxID_ANY,
+    wxT("MIDI Objects"),
     _("MIDI Objects"),
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+    0,
+    wxOK | wxHELP),
     GOView(doc, this) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
@@ -66,8 +64,6 @@ GOMidiListDialog::GOMidiListDialog(
   m_Status = new wxButton(this, ID_STATUS, _("&Status"));
   m_Status->Disable();
   buttons->Add(m_Status);
-  wxButton *close = new wxButton(this, wxID_OK, _("&Close"));
-  buttons->Add(close);
   topSizer->Add(buttons, 0, wxALIGN_RIGHT | wxALL, 1);
 
   for (unsigned i = 0; i < midi_elements.size(); i++) {
@@ -82,8 +78,8 @@ GOMidiListDialog::GOMidiListDialog(
   m_Objects->SetColumnWidth(1, wxLIST_AUTOSIZE);
 
   topSizer->AddSpacer(5);
-  this->SetSizer(topSizer);
   topSizer->Fit(this);
+  LayoutWithInnerSizer(topSizer);
 }
 
 GOMidiListDialog::~GOMidiListDialog() {}
@@ -103,8 +99,6 @@ void GOMidiListDialog::OnStatus(wxCommandEvent &event) {
     obj->GetMidiType() + _(" ") + obj->GetMidiName(),
     wxOK);
 }
-
-void GOMidiListDialog::OnOK(wxCommandEvent &event) { Destroy(); }
 
 void GOMidiListDialog::OnObjectClick(wxListEvent &event) {
   m_Edit->Enable();
