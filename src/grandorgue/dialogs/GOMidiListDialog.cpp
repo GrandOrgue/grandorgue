@@ -29,11 +29,7 @@ GOMidiListDialog::GOMidiListDialog(
   wxWindow *parent,
   const std::vector<GOMidiConfigurator *> &midi_elements)
   : GOSimpleDialog(
-    parent,
-    wxT("MIDI Objects"),
-    _("MIDI Objects"),
-    0,
-    wxOK | wxHELP),
+    parent, wxT("MIDI Objects"), _("MIDI Objects"), 0, wxOK | wxHELP),
     GOView(doc, this) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
