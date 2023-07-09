@@ -21,8 +21,9 @@ protected:
     wxWindow *win,
     const wxString &name,  // not translated
     const wxString &title, // translated
-    long addStyle = 0)
-    : GODialog(win, name, title, addStyle) {}
+    long addStyle = 0,
+    long buttonFlags = wxOK | wxCANCEL | wxHELP)
+    : GODialog(win, name, title, addStyle, buttonFlags) {}
 
   void LayoutWithInnerSizer(wxSizer *pInnerSizer);
 };
