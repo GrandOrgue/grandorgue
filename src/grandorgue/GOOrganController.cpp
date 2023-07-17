@@ -252,11 +252,11 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   GOOrganModel::SetCombinationController(m_setter);
   m_elementcreators.push_back(m_setter);
 
-  GOOrganModel::Load(cfg, this);
+  GOOrganModel::Load(cfg);
 
   m_VirtualCouplers.Init(*this, cfg);
 
-  GOOrganModel::LoadCmbButtons(cfg, this);
+  GOOrganModel::LoadCmbButtons(cfg);
 
   m_DivisionalSetter = new GODivisionalSetter(this, m_setter->GetState());
   m_elementcreators.push_back(m_DivisionalSetter);
