@@ -31,4 +31,5 @@ GOSimpleDialog::GOSimpleDialog(
 
 void GOSimpleDialog::LayoutWithInnerSizer(wxSizer *pInnerSizer) {
   p_ContentSizer->Add(pInnerSizer, 1, wxGROW | wxEXPAND);
+  GetSizer()->SetSizeHints(this);
 }
