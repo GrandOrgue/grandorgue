@@ -364,7 +364,6 @@ GOOrganDialog::GOOrganDialog(
 
 bool GOOrganDialog::TransferDataToWindow() {
   FillTree();
-  // Load();
   return true;
 }
 
@@ -828,7 +827,6 @@ wxTreeItemId GOOrganDialog::FillTree(
     e = m_Tree->AppendItem(parent, config.GetName(), -1, -1, data);
   for (unsigned i = 0; i < config.GetChildCount(); i++)
     FillTree(e, *config.GetChild(i));
-  // m_Tree->Expand(e);
   return e;
 }
 
