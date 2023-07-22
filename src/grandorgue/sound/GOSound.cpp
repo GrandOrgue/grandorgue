@@ -319,7 +319,7 @@ bool GOSound::AudioCallback(
   GOSoundOutput *device = &m_AudioOutputs[dev_index];
   GOMutexLocker locker(device->mutex);
 
-  if (device->wait && device->waiting)
+  while (device->wait && device->waiting)
     device->condition.Wait();
 
   unsigned cnt = m_CalcCount.fetch_add(1);
