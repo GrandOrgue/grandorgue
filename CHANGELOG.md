@@ -1,3 +1,4 @@
+- Improve concurrency handling
 - Fixed an incorrect dialog window icon
 - Fixed absence of the Help button on the Organ Setting dialog https://github.com/GrandOrgue/grandorgue/issues/1416
 - Fixed displaying buttons if the manual is not visible https://github.com/GrandOrgue/grandorgue/issues/1566
