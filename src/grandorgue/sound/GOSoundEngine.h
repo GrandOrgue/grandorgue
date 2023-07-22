@@ -8,6 +8,7 @@
 #ifndef GOSOUNDENGINE_H_
 #define GOSOUNDENGINE_H_
 
+#include <atomic>
 #include <vector>
 
 #include "GOSoundResample.h"
@@ -48,7 +49,7 @@ private:
   uint64_t m_CurrentTime;
   GOSoundSamplerPool m_SamplerPool;
   unsigned m_AudioGroupCount;
-  unsigned m_UsedPolyphony;
+  std::atomic_uint m_UsedPolyphony;
   unsigned m_WorkerSlots;
   std::vector<double> m_MeterInfo;
   ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
@@ -63,7 +64,7 @@ private:
 
   struct resampler_coefs_s m_ResamplerCoefs;
 
-  volatile bool m_HasBeenSetup;
+  std::atomic_bool m_HasBeenSetup;
 
   /* samplerGroupID:
      -1 .. -n Tremulants

@@ -20,7 +20,7 @@ private:
   const std::vector<T *> &m_objects;
   const unsigned m_NObjects;
   std::atomic_uint m_pos;
-  volatile bool m_IsBroken;
+  std::atomic_bool m_IsBroken;
 
 public:
   GOObjectDistributor(const std::vector<T *> &objects)

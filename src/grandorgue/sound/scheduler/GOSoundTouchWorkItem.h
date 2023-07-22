@@ -8,6 +8,8 @@
 #ifndef GOSOUNDTOUCHWORKITEM_H
 #define GOSOUNDTOUCHWORKITEM_H
 
+#include <atomic>
+
 #include "GOSoundWorkItem.h"
 #include "threading/GOMutex.h"
 
@@ -17,7 +19,7 @@ class GOSoundTouchWorkItem : public GOSoundWorkItem {
 private:
   GOMemoryPool &m_Pool;
   GOMutex m_Mutex;
-  bool m_Stop;
+  std::atomic_bool m_Stop;
 
 public:
   GOSoundTouchWorkItem(GOMemoryPool &pool);

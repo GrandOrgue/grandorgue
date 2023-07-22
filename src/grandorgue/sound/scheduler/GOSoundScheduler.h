@@ -20,7 +20,7 @@ private:
   std::vector<GOSoundWorkItem *> m_Work;
   std::vector<GOSoundWorkItem **> m_WorkItems;
   atomic_uint m_NextItem;
-  unsigned m_ItemCount;
+  atomic_uint m_ItemCount;
   unsigned m_RepeatCount;
   GOMutex m_Mutex;
 

@@ -8,6 +8,7 @@
 #ifndef GOSOUNDOUTPUTWORKITEM_H
 #define GOSOUNDOUTPUTWORKITEM_H
 
+#include <atomic>
 #include <vector>
 
 #include "sound/GOSoundBufferItem.h"
@@ -26,7 +27,7 @@ private:
   GOSoundReverb *m_Reverb;
   GOMutex m_Mutex;
   unsigned m_Done;
-  volatile bool m_Stop;
+  std::atomic_bool m_Stop;
 
 public:
   GOSoundOutputWorkItem(

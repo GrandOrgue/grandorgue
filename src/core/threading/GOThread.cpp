@@ -32,6 +32,6 @@ void GOThread::Stop() {
   Wait();
 }
 
-bool GOThread::ShouldStop() { return load_once(m_Stop); }
+bool GOThread::ShouldStop() { return m_Stop; }
 
 void GOThread::EntryPoint(GOThread *thread) { thread->Entry(); }

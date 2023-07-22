@@ -8,6 +8,8 @@
 #ifndef GOSOUNDGROUPWORKITEM_H
 #define GOSOUNDGROUPWORKITEM_H
 
+#include <atomic>
+
 #include "GOSoundThread.h"
 #include "sound/GOSoundBufferItem.h"
 #include "sound/GOSoundSamplerList.h"
@@ -25,8 +27,8 @@ private:
   GOMutex m_Mutex;
   GOCondition m_Condition;
   unsigned m_ActiveCount;
-  unsigned m_Done;
-  volatile bool m_Stop;
+  std::atomic_uint m_Done;
+  std::atomic_bool m_Stop;
 
   void ProcessList(
     GOSoundSamplerList &list, bool toDropOld, float *output_buffer);

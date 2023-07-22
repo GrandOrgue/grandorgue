@@ -8,12 +8,13 @@
 #ifndef GOTHREAD_H
 #define GOTHREAD_H
 
+#include <atomic>
 #include <thread>
 
 class GOThread {
 private:
   std::thread m_Thread;
-  bool m_Stop;
+  std::atomic_bool m_Stop;
 
   static void EntryPoint(GOThread *thread);
 

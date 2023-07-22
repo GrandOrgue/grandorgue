@@ -48,7 +48,7 @@ public:
   GOMemoryPool();
   ~GOMemoryPool();
   void SetMemoryLimit(size_t limit);
-  void TouchMemory(bool &stop);
+  void TouchMemory(std::atomic_bool &stop);
 
   void *Alloc(size_t length, bool final);
   void *MoveToPool(void *data, size_t length);

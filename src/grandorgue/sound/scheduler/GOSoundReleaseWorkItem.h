@@ -8,6 +8,8 @@
 #ifndef GOSOUNDRELEASEWORKITEM_H
 #define GOSOUNDRELEASEWORKITEM_H
 
+#include <atomic>
+
 #include "ptrvector.h"
 #include "sound/GOSoundSimpleSamplerList.h"
 #include "sound/scheduler/GOSoundWorkItem.h"
@@ -23,7 +25,7 @@ private:
   GOSoundSimpleSamplerList m_List;
   atomic_uint m_WaitCnt;
   atomic_uint m_Cnt;
-  volatile bool m_Stop;
+  std::atomic_bool m_Stop;
 
 public:
   GOSoundReleaseWorkItem(
