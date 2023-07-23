@@ -1,3 +1,4 @@
+# 3.12.2 (2023-07-23)
 - Fixed size of the Organ Settings Dialog https://github.com/GrandOrgue/grandorgue/issues/1415
 - Fixed an incorrect dialog window icon
 - Fixed absence of the Help button on the Organ Setting dialog https://github.com/GrandOrgue/grandorgue/issues/1416
