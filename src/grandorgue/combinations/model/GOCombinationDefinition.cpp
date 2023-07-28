@@ -95,31 +95,23 @@ void GOCombinationDefinition::InitGeneral() {
       i + 1);
 }
 
-void GOCombinationDefinition::InitDivisional(unsigned manual_number) {
-  GOManual *associatedManual = r_OrganModel.GetManual(manual_number);
+void GOCombinationDefinition::InitDivisional(GOManual &manual) {
+  unsigned manualN = manual.GetManulNumber();
+
   m_elements.resize(0);
 
-  for (unsigned i = 0; i < associatedManual->GetStopCount(); i++)
-    AddDivisional(
-      associatedManual->GetStop(i), COMBINATION_STOP, manual_number, i + 1);
+  for (unsigned i = 0; i < manual.GetStopCount(); i++)
+    AddDivisional(manual.GetStop(i), COMBINATION_STOP, manualN, i + 1);
 
-  for (unsigned i = 0; i < associatedManual->GetCouplerCount(); i++)
-    AddDivisional(
-      associatedManual->GetCoupler(i),
-      COMBINATION_COUPLER,
-      manual_number,
-      i + 1);
+  for (unsigned i = 0; i < manual.GetCouplerCount(); i++)
+    AddDivisional(manual.GetCoupler(i), COMBINATION_COUPLER, manualN, i + 1);
 
-  for (unsigned i = 0; i < associatedManual->GetTremulantCount(); i++)
+  for (unsigned i = 0; i < manual.GetTremulantCount(); i++)
     AddDivisional(
-      associatedManual->GetTremulant(i),
-      COMBINATION_TREMULANT,
-      manual_number,
-      i + 1);
+      manual.GetTremulant(i), COMBINATION_TREMULANT, manualN, i + 1);
 
-  for (unsigned i = 0; i < associatedManual->GetSwitchCount(); i++)
-    AddDivisional(
-      associatedManual->GetSwitch(i), COMBINATION_SWITCH, manual_number, i + 1);
+  for (unsigned i = 0; i < manual.GetSwitchCount(); i++)
+    AddDivisional(manual.GetSwitch(i), COMBINATION_SWITCH, manualN, i + 1);
 }
 
 int GOCombinationDefinition::FindElement(
