@@ -290,7 +290,7 @@ const wxString WX_HAS_SCOPE = wxT("HasScope");
 void GOCombination::LoadCombination(
   GOConfigReader &cfg, GOSettingType srcType) {
   Clear();
-  m_IsFull = cfg.ReadBoolean(srcType, m_group, WX_IS_FULL, false, true);
+  m_IsFull = cfg.ReadBoolean(srcType, m_group, WX_IS_FULL, false, false);
   LoadCombinationInt(cfg, srcType);
   m_HasScope = cfg.ReadBoolean(srcType, m_group, WX_HAS_SCOPE, false, false);
 }
