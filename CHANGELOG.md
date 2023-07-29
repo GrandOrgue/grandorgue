@@ -1,3 +1,4 @@
+- Fixed saving all combinations as full
 # 3.12.2 (2023-07-23)
 - Fixed size of the Organ Settings Dialog https://github.com/GrandOrgue/grandorgue/issues/1415
 - Fixed an incorrect dialog window icon
