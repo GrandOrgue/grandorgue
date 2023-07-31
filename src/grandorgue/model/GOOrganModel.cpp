@@ -87,6 +87,8 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
       cfg, wxString::Format(wxT("Enclosure%03u"), i + 1), i);
   }
 
+  // Switches must be loaded before manuals because manuals reference to
+  // switches
   unsigned NumberOfSwitches
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfSwitches"), 0, 999, 0);
   m_switches.resize(0);
@@ -114,6 +116,8 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
     m_ranks[i]->Load(cfg, wxString::Format(wxT("Rank%03d"), i + 1), -1);
   }
 
+  // Switches must be loaded before manuals because manuals reference to
+  // switches
   for (unsigned int i = m_FirstManual; i < m_ODFManualCount; i++)
     m_manuals[i]->Load(cfg, wxString::Format(wxT("Manual%03d"), i), i);
 

@@ -11,14 +11,28 @@
 #include "GODrawStop.h"
 
 class GOSwitch : public GODrawstop {
+  // the number of manual for mainual switches
+  // -2 global switches not referenced from manuals
+  // -1 global switches referenced from more than one manual
+
+  int m_AssociatedManualN = -2;
+  unsigned m_IndexInManual = 0;
+
 protected:
-  void ChangeState(bool);
+  void ChangeState(bool) override {}
 
 public:
-  GOSwitch(GOOrganModel &organModel);
-  ~GOSwitch();
+  GOSwitch(GOOrganModel &organModel) : GODrawstop(organModel) {}
 
-  wxString GetMidiType();
+  // Return -1 for all kinds of global switches
+  int GetAssociatedManualN() const { return std::max(m_AssociatedManualN, -1); }
+  unsigned GetIndexInManual() const { return m_IndexInManual; }
+
+  // Set m_AssociatedManualN.
+  // Check that the switch is referenced not more than once
+  void AssociateWithManual(int manualN, unsigned indexInManual);
+
+  wxString GetMidiType() override;
 };
 
 #endif
