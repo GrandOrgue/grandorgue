@@ -38,6 +38,8 @@ void GOGeneralCombination::Load(GOConfigReader &cfg, const wxString &group) {
     LoadCombination(cfg, ODFSetting);
 }
 
+const wxString WX_SWITCH_MANUAL_03D = wxT("SwitchManual%03d");
+
 void GOGeneralCombination::LoadCombinationInt(
   GOConfigReader &cfg, GOSettingType srcType) {
   wxString buffer;
@@ -71,6 +73,7 @@ void GOGeneralCombination::LoadCombinationInt(
     0,
     r_OrganModel.GetDivisionalCouplerCount(),
     r_OrganModel.GeneralsStoreDivisionalCouplers());
+  unsigned maxManualN = r_OrganModel.GetManualAndPedalCount();
 
   for (unsigned i = 0; i < NumberOfStops; i++) {
     unsigned m = cfg.ReadInteger(
@@ -78,7 +81,7 @@ void GOGeneralCombination::LoadCombinationInt(
       m_group,
       wxString::Format(wxT("StopManual%03d"), i + 1),
       r_OrganModel.GetFirstManualIndex(),
-      r_OrganModel.GetManualAndPedalCount());
+      maxManualN);
 
     buffer.Printf(wxT("StopNumber%03d"), i + 1);
     SetLoadedState(
@@ -120,11 +123,34 @@ void GOGeneralCombination::LoadCombinationInt(
 
   cnt = r_OrganModel.GetSwitchCount();
   for (unsigned i = 0; i < NumberOfSwitches; i++) {
-    buffer.Printf(wxT("SwitchNumber%03d"), i + 1);
-    SetLoadedState(
+    int switchManualN = cfg.ReadInteger(
+      srcType,
+      m_group,
+      wxString::Format(WX_SWITCH_MANUAL_03D, i + 1),
       -1,
+      maxManualN,
+      false,
+      -1);
+
+    buffer.Printf(wxT("SwitchNumber%03d"), i + 1);
+
+    int switchNumber = cfg.ReadInteger(srcType, m_group, buffer, -cnt, cnt);
+
+    if (switchManualN < 0 && switchNumber != 0) {
+      // the switch has been saved as global. Try to convert it's number to a
+      // manual switch
+      GOSwitch *pSwitch = r_OrganModel.GetSwitch(abs(switchNumber) - 1);
+
+      switchManualN = pSwitch->GetAssociatedManualN();
+      if (switchManualN >= 0) // may be converted
+        switchNumber = (pSwitch->GetIndexInManual() + 1)
+          // copy the sign
+          * ((switchNumber > 0) - (switchNumber < 0));
+    }
+    SetLoadedState(
+      switchManualN,
       GOCombinationDefinition::COMBINATION_SWITCH,
-      cfg.ReadInteger(srcType, m_group, buffer, -cnt, cnt),
+      switchNumber,
       buffer);
   }
 
@@ -180,8 +206,14 @@ void GOGeneralCombination::SaveInt(GOConfigWriter &cfg) {
 
       case GOCombinationDefinition::COMBINATION_SWITCH:
         switch_count++;
-        buffer.Printf(wxT("SwitchNumber%03d"), switch_count);
-        cfg.WriteInteger(m_group, buffer, value);
+        cfg.WriteInteger(
+          m_group,
+          wxString::Format(WX_SWITCH_MANUAL_03D, switch_count),
+          e.manual);
+        cfg.WriteInteger(
+          m_group,
+          wxString::Format(wxT("SwitchNumber%03d"), switch_count),
+          value);
         break;
 
       case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
@@ -243,8 +275,16 @@ void GOGeneralCombination::PutElementToYamlMap(
     break;
 
   case GOCombinationDefinition::COMBINATION_SWITCH:
-    yamlMap[SWITCHES][valueLabel]
-      = r_OrganModel.GetSwitch(objectIndex)->GetName();
+    if (e.manual >= 0) { // manual switch
+      GOManual &manual = *r_OrganModel.GetManual(e.manual);
+      YAML::Node manualNode = yamlMap[MANUALS][manualLabel];
+
+      manualNode[NAME] = manual.GetName();
+      manualNode[SWITCHES][valueLabel]
+        = manual.GetSwitch(objectIndex)->GetName();
+    } else // global switch
+      yamlMap[SWITCHES][valueLabel]
+        = r_OrganModel.GetSwitch(objectIndex)->GetName();
     break;
 
   case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
@@ -276,6 +316,12 @@ void GOGeneralCombination::FromYamlMap(const YAML::Node &yamlMap) {
         manualEntry.second[COUPLERS],
         manualNum,
         GOCombinationDefinition::COMBINATION_COUPLER);
+
+      // manual switches
+      SetStatesFromYaml(
+        manualEntry.second[SWITCHES],
+        manualNum,
+        GOCombinationDefinition::COMBINATION_SWITCH);
     } else
       wxLogError(_("Invalid manual number %s"), manualNumStr);
   }
@@ -284,7 +330,7 @@ void GOGeneralCombination::FromYamlMap(const YAML::Node &yamlMap) {
   SetStatesFromYaml(
     yamlMap[TREMULANTS], -1, GOCombinationDefinition::COMBINATION_TREMULANT);
 
-  // switches
+  // global switches
   SetStatesFromYaml(
     yamlMap[SWITCHES], -1, GOCombinationDefinition::COMBINATION_SWITCH);
 

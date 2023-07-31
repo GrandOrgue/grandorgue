@@ -202,8 +202,7 @@ void GODivisionalCombination::PutElementToYamlMap(
     break;
 
   case GOCombinationDefinition::COMBINATION_SWITCH:
-    yamlMap[SWITCHES][valueLabel]
-      = r_OrganModel.GetSwitch(objectIndex)->GetName();
+    yamlMap[SWITCHES][valueLabel] = manual.GetSwitch(objectIndex)->GetName();
     break;
 
   case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:

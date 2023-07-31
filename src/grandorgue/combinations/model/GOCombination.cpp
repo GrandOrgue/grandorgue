@@ -106,7 +106,8 @@ void GOCombination::SetStatesFromYaml(
       maxElementNumber = r_OrganModel.GetTremulantCount();
       break;
     case GOCombinationDefinition::COMBINATION_SWITCH:
-      maxElementNumber = r_OrganModel.GetSwitchCount();
+      maxElementNumber
+        = pManual ? pManual->GetSwitchCount() : r_OrganModel.GetSwitchCount();
       break;
     case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
       maxElementNumber = r_OrganModel.GetDivisionalCouplerCount();
@@ -136,7 +137,9 @@ void GOCombination::SetStatesFromYaml(
           realElementName = r_OrganModel.GetTremulant(i)->GetName();
           break;
         case GOCombinationDefinition::COMBINATION_SWITCH:
-          realElementName = r_OrganModel.GetSwitch(i)->GetName();
+          realElementName
+            = (pManual ? pManual->GetSwitch(i) : r_OrganModel.GetSwitch(i))
+                ->GetName();
           break;
         case GOCombinationDefinition::COMBINATION_DIVISIONALCOUPLER:
           realElementName = r_OrganModel.GetDivisionalCoupler(i)->GetName();
