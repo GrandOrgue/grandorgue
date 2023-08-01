@@ -1,3 +1,4 @@
+- Fixed convolution enabling warrning in the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1617
 - Fixed "Release Length is not valid" error when applying changes for several Organ Settings objects at once https://github.com/GrandOrgue/grandorgue/issues/1601
 - Fixed saving all combinations as full
 # 3.12.2 (2023-07-23)
