@@ -233,7 +233,7 @@ void GOManual::LoadDivisionals(GOConfigReader &cfg) {
     ODFSetting, m_group, wxT("NumberOfDivisionals"), 0, 999, false);
   wxString buffer;
 
-  m_DivisionalTemplate.InitDivisional(m_manual_number);
+  m_DivisionalTemplate.InitDivisional(*this);
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nDivisionals; i++) {
     m_divisionals.push_back(
