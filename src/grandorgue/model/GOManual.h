@@ -97,6 +97,9 @@ private:
 
 public:
   GOManual(GOOrganModel &organModel);
+
+  unsigned GetManulNumber() const { return m_manual_number; }
+
   void Init(
     GOConfigReader &cfg,
     wxString group,

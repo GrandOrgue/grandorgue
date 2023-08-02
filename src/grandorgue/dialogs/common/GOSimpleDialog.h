@@ -16,14 +16,15 @@ class wxSizer;
 
 class GOSimpleDialog : public GODialog<wxDialog> {
 private:
+  wxSizer *p_ContentSizer;
+
 protected:
   GOSimpleDialog(
-    wxWindow *win,
+    wxWindow *parent,
     const wxString &name,  // not translated
     const wxString &title, // translated
     long addStyle = 0,
-    long buttonFlags = wxOK | wxCANCEL | wxHELP)
-    : GODialog(win, name, title, addStyle, buttonFlags) {}
+    long buttonFlags = DEFAULT_BUTTON_FLAGS);
 
   void LayoutWithInnerSizer(wxSizer *pInnerSizer);
 };

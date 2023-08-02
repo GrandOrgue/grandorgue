@@ -62,7 +62,7 @@ public:
   GOOrganModel &GetOrganModel() { return r_OrganModel; }
 
   void InitGeneral();
-  void InitDivisional(unsigned manual_number);
+  void InitDivisional(GOManual &manual);
 
   const std::vector<Element> &GetElements() const { return m_elements; };
   int FindElement(ElementType type, int manual, unsigned index) const;
