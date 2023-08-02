@@ -34,10 +34,6 @@ void GOSoundScheduler::Clear() {
   Unlock();
 }
 
-void GOSoundScheduler::Lock() { m_ItemCount = 0; }
-
-void GOSoundScheduler::Unlock() { m_ItemCount = m_WorkItems.size(); }
-
 void GOSoundScheduler::Update() {
   m_WorkItems.clear();
   SortList(m_Work);

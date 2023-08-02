@@ -24,8 +24,8 @@ private:
   unsigned m_RepeatCount;
   GOMutex m_Mutex;
 
-  void Lock();
-  void Unlock();
+  void Lock() { m_ItemCount = 0; }
+  void Unlock() { m_ItemCount = m_WorkItems.size(); }
   void Update();
 
   bool CompareItem(GOSoundWorkItem *a, GOSoundWorkItem *b);
