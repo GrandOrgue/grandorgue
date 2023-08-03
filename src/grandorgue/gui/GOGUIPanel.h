@@ -15,7 +15,7 @@
 
 #include "primitives/GOBitmap.h"
 
-#include "GOSaveableObject.h"
+#include "GOGUISizeKeeper.h"
 
 class GOGUIControl;
 class GOGUIDisplayMetrics;
@@ -31,9 +31,10 @@ class GOOrganController;
 
 #define GOBitmapPrefix "../GO:"
 
-class GOGUIPanel : private GOSaveableObject {
+class GOGUIPanel : public GOGUISizeKeeper {
 private:
-  void ReadSizeInfoFromCfg(GOConfigReader &cfg, bool isOpenByDefault);
+  void BasicLoad(
+    GOConfigReader &cfg, const wxString &group, bool isOpenByDefault);
   void LoadButton(
     GOConfigReader &cfg,
     GOButtonControl *pButtonControl,
@@ -59,15 +60,12 @@ protected:
   GOGUIDisplayMetrics *m_metrics;
   GOGUILayoutEngine *m_layout;
   GOPanelView *m_view;
-  wxRect m_rect;
-  int m_DisplayNum;
-  bool m_IsMaximized;
   bool m_InitialOpenWindow;
 
   void LoadControl(GOGUIControl *control, GOConfigReader &cfg, wxString group);
   void LoadBackgroundControl(
     GOGUIControl *control, GOConfigReader &cfg, wxString group);
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
   GOGUIControl *CreateGUIElement(GOConfigReader &cfg, wxString group);
 
@@ -82,15 +80,18 @@ public:
     wxString name,
     wxString group,
     wxString group_name = wxT(""));
-  void Load(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, const wxString &group);
   void Layout();
 
   void SetView(GOPanelView *view);
 
   GOOrganController *GetOrganFile();
-  const wxString &GetGroup() { return m_group; }
   const wxString &GetName();
   const wxString &GetGroupName();
+
+  // gets the current size info of the window
+  virtual void CaptureSizeInfo(const wxTopLevelWindow &win) override;
+
   void AddEvent(GOGUIControl *control);
   void AddControl(GOGUIControl *control);
   GOGUIDisplayMetrics *GetDisplayMetrics();
@@ -109,12 +110,6 @@ public:
   unsigned GetHeight();
   bool InitialOpenWindow();
 
-  wxRect GetWindowRect();
-  void SetWindowRect(wxRect rect);
-  int GetDisplayNum() const { return m_DisplayNum; }
-  void SetDisplayNum(int displayNum) { m_DisplayNum = displayNum; }
-  bool IsMaximized() const { return m_IsMaximized; }
-  void SetMaximized(bool isMaximized) { m_IsMaximized = isMaximized; }
   void SetInitialOpenWindow(bool open);
 };
 
