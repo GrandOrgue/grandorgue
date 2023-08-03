@@ -223,6 +223,14 @@ add_subdirectory(packages)
 add_subdirectory(perftests)
 add_subdirectory(resources)
 
+if (NOT DEFINED GO_BUILD_TESTING OR GO_BUILD_TESTING STREQUAL "")
+  set(GO_BUILD_TESTING ${BUILD_TESTING})
+endif()
+if (GO_BUILD_TESTING)
+  message("==== Testing enabled ====")
+  add_subdirectory(src/tests)
+endif()
+
 
 # packaging
 
@@ -416,12 +424,3 @@ message(STATUS "  Build                       : ${CPACK_PACKAGE_RELEASE}")
 message(STATUS "  Package name                : ${CPACK_PACKAGE_NAME}")
 message(STATUS "============================================================================")
 message(STATUS " ")
-
-
-if (NOT DEFINED GO_BUILD_TESTING OR GO_BUILD_TESTING STREQUAL "")
-  set(GO_BUILD_TESTING ${BUILD_TESTING})
-endif()
-if (GO_BUILD_TESTING)
-  message("TEST BUILD")
-  add_subdirectory(tests)
-endif()
