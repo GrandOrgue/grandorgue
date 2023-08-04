@@ -18,5 +18,4 @@ target_link_libraries(GOTestLib golib)
 
 add_test(NAME GOTestLib COMMAND GOTestLib)
 
-enable_testing()
 BUILD_EXECUTABLE(GOTestLib)

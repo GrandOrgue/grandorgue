@@ -2,6 +2,25 @@ name: Build
 
 on: [push]
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      
+      - name: Install Dependencies
+        run: ${{github.workspace}}/build-scripts/for-linux/prepare-debian-based.sh
+
+      - name: Build
+        working-directory: ${{github.workspace}}
+        run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64
+  
+      - name: Test
+        working-directory: ${{github.workspace}}/build/linux
+        run: ctest
+        
   calc_ver:
     # calculate versions from git tags
     runs-on: ubuntu-latest
@@ -70,7 +89,7 @@ jobs:
         body_path: "${{ steps.relnotes.outputs.file }}"
         
   build:
-    needs: [calc_ver]
+    needs: [calc_ver, tests]
 
     strategy:
       fail-fast: false
