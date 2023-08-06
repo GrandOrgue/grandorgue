@@ -144,7 +144,8 @@ void GOSoundGroupWorkItem::Finish(bool stop, GOSoundThread *pThread) {
     GOMutexLocker locker(
       m_Mutex, false, "GOSoundGroupWorkItem::Finish", pThread);
 
-    while (locker.IsLocked() && m_Done != 3)
+    while (locker.IsLocked() && m_Done != 3
+           && (pThread == nullptr || !pThread->ShouldStop()))
       m_Condition.WaitOrStop("GOSoundGroupWorkItem::Finish", pThread);
   }
 }
