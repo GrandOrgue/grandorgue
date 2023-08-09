@@ -19,7 +19,7 @@ jobs:
   
       - name: Test
         working-directory: ${{github.workspace}}/build/linux
-        run: ctest
+        run: ctest --verbose
         
   calc_ver:
     # calculate versions from git tags
