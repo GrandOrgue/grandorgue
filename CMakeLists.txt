@@ -229,6 +229,7 @@ endif()
 if (GO_BUILD_TESTING)
   enable_testing()
   add_subdirectory(src/tests)
+  
   message(STATUS "============================================================================")
   message(STATUS " Testing enabled")
   message(STATUS "============================================================================")
