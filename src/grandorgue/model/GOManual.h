@@ -64,7 +64,9 @@ private:
   int m_MIDIInputNumber;
 
   std::vector<unsigned> m_tremulant_ids;
-  std::vector<unsigned> m_switch_ids;
+
+  // Global Switch Id is the number of switch in ODF started with 1
+  std::vector<unsigned> m_GlobalSwitchIds;
 
   wxString m_name;
 
@@ -157,7 +159,7 @@ public:
    *   if the tremulant is not found
    */
   int FindTremulantByName(const wxString &name) const;
-  unsigned GetSwitchCount() const { return m_switch_ids.size(); }
+  unsigned GetSwitchCount() const { return m_GlobalSwitchIds.size(); }
   GOSwitch *GetSwitch(unsigned index);
   /**
    * Find a switch belonging to this manual by it's name
