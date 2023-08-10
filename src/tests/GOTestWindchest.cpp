@@ -17,22 +17,11 @@
 GOTestWindchest::GOTestWindchest() {}
 GOTestWindchest::~GOTestWindchest() {}
 
-bool GOTestWindchest::setUp() { return true; }
-bool GOTestWindchest::tearDown() { return true; }
-
 void GOTestWindchest::run() {
-  char path[] = ".";
-  char *dir_name = mkdtemp(path);
-  GOConfig settings(wxT("Windchest Test"));
-  GOOrganController *organController = new GOOrganController(settings);
-
-  organController->InitOrganDirectory(dir_name);
-
   // Check the size of Windchest is correct
   unsigned w_size;
-  w_size = organController->AddWindchest(new GOWindchest(*organController));
+  w_size = this->controller->AddWindchest(new GOWindchest(*this->controller));
   if (w_size != 1) {
     throw("Windchest size is wrong");
   }
-  unlink(dir_name);
 }
