@@ -7,6 +7,7 @@
 #ifndef GOTEST_H
 #define GOTEST_H
 
+#include "GOOrganController.h"
 #include <wx/string.h>
 
 class GOTest {
@@ -25,6 +26,16 @@ public:
   virtual bool tearDown();
 
   wxString name = "GOTest";
+};
+
+class GOCommonControllerTest : public GOTest {
+
+public:
+  GOCommonControllerTest();
+  char *organ_directory;
+  GOOrganController *controller;
+  virtual bool setUp();
+  virtual bool tearDown();
 };
 
 #endif

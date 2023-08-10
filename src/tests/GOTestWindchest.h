@@ -15,14 +15,12 @@
 
 #include <wx/string.h>
 
-class GOTestWindchest : public GOTest {
+class GOTestWindchest : public GOCommonControllerTest {
 
 public:
   GOTestWindchest();
   virtual ~GOTestWindchest();
   virtual void run();
-  virtual bool setUp();
-  virtual bool tearDown();
 
   wxString name = "Windchest";
 };
