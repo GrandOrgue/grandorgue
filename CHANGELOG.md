@@ -1,3 +1,4 @@
+# 3.12.3 (2023-08-14)
 - Fixed saving manual switches as global in yaml https://github.com/GrandOrgue/grandorgue/issues/1599
 - Fixed convolution enabling warrning in the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1617
 - Fixed "Release Length is not valid" error when applying changes for several Organ Settings objects at once https://github.com/GrandOrgue/grandorgue/issues/1601
