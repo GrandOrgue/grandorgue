@@ -18,7 +18,6 @@
 class GOTestWindchest : public GOCommonControllerTest {
 
 public:
-  GOTestWindchest();
   virtual ~GOTestWindchest();
   virtual void run();
 

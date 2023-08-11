@@ -5,11 +5,15 @@
  */
 #include "GOTest.h"
 #include "GOOrganController.h"
+#include "GOTestCollection.h"
 #include "config/GOConfig.h"
 #include <iostream>
 #include <wx/string.h>
 
-GOTest::GOTest() {}
+GOTest::GOTest() {
+  // This is the magic to auto register tests in TestCollection
+  GOTestCollection::Instance()->add_test(this);
+}
 GOTest::~GOTest() {}
 
 bool GOTest::setUp() { return true; }
