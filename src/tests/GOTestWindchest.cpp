@@ -14,7 +14,6 @@
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
 
-GOTestWindchest::GOTestWindchest() {}
 GOTestWindchest::~GOTestWindchest() {}
 
 void GOTestWindchest::run() {

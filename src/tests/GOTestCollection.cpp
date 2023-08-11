@@ -10,10 +10,10 @@
 
 GOTestCollection::GOTestCollection() {}
 
-GOTestCollection::~GOTestCollection() {
-  // Destroy the initialized tests in vector
-  tests_.clear();
-}
+// GOTestCollection::~GOTestCollection() {
+//   // Destroy the initialized tests in vector
+//   tests_.clear();
+// }
 
 void GOTestCollection::add_test(GOTest *test) {
   /*
@@ -68,3 +68,28 @@ void GOTestCollection::run() {
     }
   }
 }
+
+GOTestCollection *GOTestCollection::go_test_collection = nullptr;
+
+// class X {
+//    // pointeur vers le singleton
+//    static X *singleton;
+//    X(); // constructeur privé
+// public:
+//    // pour obtenir l'singleton
+//    static X *get()    {
+//       //
+//       // instanciation unique garantie, du moins si
+//       // le programme n'a qu'un seul fil d'exécution;
+//       // si votre programme comprend plusieurs fils
+//       // d'exécution, ce qui suit est insuffisant
+//       //
+//       if (!singleton)
+//          singleton = new X;
+//       return singleton;
+//    }
+//    // ...
+// };
+// // initialisation du pointeur de singleton à zéro
+// // (insérer dans le .cpp)
+// X *X::singleton = nullptr;

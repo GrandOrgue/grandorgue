@@ -17,11 +17,13 @@ int main() {
       TODO: It should displays also the tests results
   */
 
-  GOTestCollection go_collection;
-  go_collection.add_test(new GOTestWindchest());
-  go_collection.run();
-  const int failed_count = go_collection.get_failed_count();
-  const int success_count = go_collection.get_success_count();
+  // GOTestCollection go_collection;
+  // go_collection.add_test(new GOTestWindchest());
+  // go_collection.run();
+  new GOTestWindchest;
+  GOTestCollection::Instance()->run();
+  const int failed_count = GOTestCollection::Instance()->get_failed_count();
+  const int success_count = GOTestCollection::Instance()->get_success_count();
   if (failed_count > 0) {
     std::cerr << failed_count << " tests Failed";
     std::cout << success_count << " tests Succeeded";
