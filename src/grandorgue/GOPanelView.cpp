@@ -39,78 +39,36 @@ GOPanelView *GOPanelView::createWithFrame(
 }
 
 GOPanelView::GOPanelView(
-  GODocumentBase *doc, GOGUIPanel *panel, wxWindow *parent)
-  : wxScrolledWindow(parent),
-    GOView(doc, parent),
-    m_panelwidget(NULL),
+  GODocumentBase *doc, GOGUIPanel *panel, wxTopLevelWindow *topWindow)
+  : wxScrolledWindow(topWindow),
+    GOView(doc, topWindow),
+    m_panelwidget(new GOGUIPanelWidget(panel, this)),
     m_panel(panel),
-    m_TopWindow(dynamic_cast<wxTopLevelWindow *>(parent)) {
-  wxWindow *frame = parent;
-
-  GOGUIPanelWidget *panelwidget = new GOGUIPanelWidget(panel, this);
+    m_TopWindow(topWindow) {
+  // Set a black background color (especially useful if user switches to full
+  // screen)
+  topWindow->SetBackgroundColour(*wxBLACK);
 
   // Set maximum size to the size the window would have with scaling 100%
   // However, still within the default maximum limits, whatever those may be
   // Set an initial client size to what it would be with scaling 100%
-  frame->SetMaxSize(wxSize(wxDefaultCoord, wxDefaultCoord));
-  frame->SetClientSize(panelwidget->GetSize());
+  topWindow->SetMaxSize(wxSize(wxDefaultCoord, wxDefaultCoord));
+  topWindow->SetClientSize(m_panelwidget->GetSize());
   // frame->SetMaxSize(frame->GetSize());
 
   // Set a minimum size for the window, just some small value
-  wxSize minsize(100, 100);
-  frame->SetMinClientSize(minsize);
+  topWindow->SetMinClientSize(wxSize(100, 100));
 
-  // Set a black background color (especially useful if user switches to full
-  // screen)
-  frame->SetBackgroundColour(*wxBLACK);
-
-  // Get the position and size of the window as saved by the user previously,
-  // or otherwise its default values
-  wxRect const savedRect = panel->GetWindowRect();
-
-  // If both width and height are set, set position and size of the window
-  // E.g. in case of corrupted preferences, this might not be the case
-  if (savedRect.GetWidth() && savedRect.GetHeight())
-    frame->SetSize(savedRect);
-
-  // However, even if this worked, we cannot be sure that the window is now
-  // fully within the client area of an existing display.
-  // For example, the user may have disconnected the display, or lowered its
-  // resolution. So, we need to get the client area of the desired display, or
-  // if it does not exist anymore, the client area of the default display
-  int const savedDisplayNum = panel->GetDisplayNum();
-  int nr = savedDisplayNum >= 0 && savedDisplayNum < (int)wxDisplay::GetCount()
-    ? savedDisplayNum
-    : wxDisplay::GetFromWindow(frame);
-
-  // Check if the window is visible. If not, center it at the first display
-  if (nr == wxNOT_FOUND) {
-    wxRect max = wxDisplay((unsigned)0).GetClientArea();
-    // If our current window is within this area, all is fine
-    wxRect current = frame->GetRect();
-
-    if (!max.Contains(current)) {
-      // Otherwise, check and correct width and height,
-      // and place the frame at the center of the Client Area of the display
-      if (current.GetWidth() > max.GetWidth())
-        current.SetWidth(max.GetWidth());
-      if (current.GetHeight() > max.GetHeight())
-        current.SetHeight(max.GetHeight());
-      frame->SetSize(current.CenterIn(max, wxBOTH));
-    }
-  }
-  if (m_TopWindow && panel->IsMaximized())
-    m_TopWindow->Maximize(true);
-
-  m_panelwidget = panelwidget;
+  // set the windows position adn size as it has been saved
+  panel->ApplySizeInfo(*topWindow);
 
   // At this point, the new window may fill the whole display and still not be
   // large enough to show all contents. So, before showing anything, lets see
   // what scaling is needed to fit the content completely to the window.
-  wxSize scaledsize = m_panelwidget->UpdateSize(frame->GetClientSize());
+  wxSize scaledsize = m_panelwidget->UpdateSize(topWindow->GetClientSize());
 
-  frame->Show();
-  frame->Update();
+  topWindow->Show();
+  topWindow->Update();
 
   // Ensure that scrollbars will appear when they are needed
   // Current design aims for avoiding this as much as possible
@@ -149,33 +107,8 @@ void GOPanelView::AddEvent(GOGUIControl *control) {
 }
 
 void GOPanelView::SyncState() {
-  m_panel->SetWindowRect(GetParent()->GetRect());
-
-  if (m_TopWindow) {
-    bool isMaximized = m_TopWindow->IsMaximized();
-
-    m_panel->SetMaximized(isMaximized);
-
-    // calculate the best display num
-    int displayNum = wxDisplay::GetFromWindow(m_TopWindow);
-
-    if (displayNum == wxNOT_FOUND)
-      // actually wxNOT_FOUND == -1, but we don't want to depend on it
-      displayNum = -1;
-    else if (!isMaximized) {
-      // check that the window fits the display
-      // we do not check it for maximized window because their decoration may be
-      // outside the display
-      wxDisplay const display(displayNum);
-      wxRect const clientArea = display.GetClientArea();
-
-      if (!clientArea.Contains(m_TopWindow->GetRect()))
-        // do not store the dispplay num if the window does not fit it
-        displayNum = -1;
-    }
-    m_panel->SetDisplayNum(displayNum);
-  }
-  m_panel->SetInitialOpenWindow(true);
+  if (m_TopWindow)
+    m_panel->CaptureSizeInfo(*m_TopWindow);
 }
 
 bool GOPanelView::Destroy() {
@@ -191,31 +124,35 @@ void GOPanelView::Raise() {
 
 void GOPanelView::OnSize(wxSizeEvent &event) {
   if (m_panelwidget) {
-    wxSize max = event.GetSize();
-    max = m_panelwidget->UpdateSize(max);
-    wxSize scaledsize = max;
-    this->SetVirtualSize(max);
+    // Scale out the panel according the new size
+
+    const wxSize newSize = event.GetSize();
+    const wxSize maxSize = m_panelwidget->UpdateSize(newSize);
+
+    this->SetVirtualSize(maxSize);
 
     int x, xu, y, yu;
     GetScrollPixelsPerUnit(&xu, &yu);
 
     GetViewStart(&x, &y);
 
-    if (xu && x * xu + max.GetWidth() > event.GetSize().GetWidth())
-      x = (event.GetSize().GetWidth() - max.GetWidth()) / xu;
-    if (yu && y * yu + max.GetHeight() > event.GetSize().GetHeight())
-      y = (event.GetSize().GetHeight() - max.GetHeight()) / yu;
+    if (xu && x * xu + maxSize.GetWidth() > newSize.GetWidth())
+      x = (newSize.GetWidth() - maxSize.GetWidth()) / xu;
+    if (yu && y * yu + maxSize.GetHeight() > newSize.GetHeight())
+      y = (newSize.GetHeight() - maxSize.GetHeight()) / yu;
     this->Scroll(x, y);
 
     // Reset the position of the panel, before centering it
     // (some wrong value from previous centering may remain otherwise)
     m_panelwidget->SetPosition(wxPoint(0, 0));
+
     // In a direction where the actual window size is larger than the
     // size of the panel (=scaledsize), the panel needs to be centered
     wxSize actualsize = GetParent()->GetClientSize();
-    if (actualsize.GetWidth() > scaledsize.GetWidth())
+
+    if (actualsize.GetWidth() > maxSize.GetWidth())
       m_panelwidget->CentreOnParent(wxHORIZONTAL);
-    if (actualsize.GetHeight() > scaledsize.GetHeight())
+    if (actualsize.GetHeight() > maxSize.GetHeight())
       m_panelwidget->CentreOnParent(wxVERTICAL);
   }
   event.Skip();
