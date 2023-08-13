@@ -120,6 +120,7 @@ gui/GOGUIPanel.cpp
 gui/GOGUIPanelWidget.cpp
 gui/GOGUIRecorderPanel.cpp
 gui/GOGUISequencerPanel.cpp
+gui/GOGUISizeKeeper.cpp
 help/GOHelpController.cpp
 help/GOHelpRequestor.cpp
 loader/GOFileStore.cpp

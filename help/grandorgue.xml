@@ -5191,8 +5191,7 @@ convolution engine to produce the reverberated wave.
         <varlistentry>
           <term>Enable Convolution Reverb</term>
           <listitem>
-            <simpara>This checkbox enables the feature. A pop-up is displayed which can be safely ignored.</simpara>
-            <mediaobject><imageobject><imagedata fileref="images/reverb_warning.png"/></imageobject></mediaobject>
+            <simpara>This checkbox enables the feature.</simpara>
           </listitem>
         </varlistentry>
         <varlistentry>

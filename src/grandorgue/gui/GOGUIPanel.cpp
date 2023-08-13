@@ -39,8 +39,6 @@
 #include "GOPanelView.h"
 #include "Images.h"
 
-constexpr static int windowLimit = 10000;
-
 GOGUIPanel::GOGUIPanel(GOOrganController *organController)
   : m_OrganController(organController),
     m_MouseState(organController->GetMouseState()),
@@ -52,9 +50,6 @@ GOGUIPanel::GOGUIPanel(GOOrganController *organController)
     m_metrics(0),
     m_layout(0),
     m_view(0),
-    m_rect(0, 0, 0, 0),
-    m_DisplayNum(-1),
-    m_IsMaximized(false),
     m_InitialOpenWindow(false) {
   for (unsigned i = 0; i < 64; i++)
     m_WoodImages.push_back(LoadBitmap(
@@ -88,15 +83,13 @@ void GOGUIPanel::Init(
   wxString name,
   wxString group,
   wxString group_name) {
+  BasicLoad(cfg, group, false);
   m_OrganController->RegisterSaveableObject(this);
-  m_group = group;
   m_metrics = metrics;
   m_layout = new GOGUILayoutEngine(*m_metrics);
   m_Name = name;
   m_GroupName = group_name;
   m_controls.resize(0);
-
-  ReadSizeInfoFromCfg(cfg, false);
 }
 
 const wxString WX_S_03D = wxT("%s%03d");
@@ -138,13 +131,13 @@ void GOGUIPanel::LoadManualButton(
     isPiston);
 }
 
-void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
-  m_OrganController->RegisterSaveableObject(this);
-  m_group = group;
+void GOGUIPanel::Load(GOConfigReader &cfg, const wxString &group) {
+  wxString cfgGroup = group;
   wxString panel_group;
   wxString panel_prefix;
   bool is_main_panel;
   bool new_format = false;
+
   if (
     cfg.ReadInteger(
       ODFSetting,
@@ -157,27 +150,29 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
     >= 0)
     new_format = true;
 
-  if (group.IsEmpty()) {
+  if (cfgGroup.IsEmpty()) {
     m_Name = m_OrganController->GetChurchName();
     m_GroupName = wxT("");
-    m_group = wxT("Organ");
+    cfgGroup = wxT("Organ");
     if (new_format) {
       panel_group = wxT("Panel000");
       panel_prefix = panel_group;
       m_Name
         = cfg.ReadString(ODFSetting, panel_group, wxT("Name"), false, m_Name);
     } else {
-      panel_group = m_group;
+      panel_group = cfgGroup;
       panel_prefix = wxEmptyString;
     }
     is_main_panel = true;
   } else {
-    panel_group = group;
+    panel_group = cfgGroup;
     panel_prefix = panel_group;
     is_main_panel = false;
     m_Name = cfg.ReadStringNotEmpty(ODFSetting, panel_group, wxT("Name"));
     m_GroupName = cfg.ReadString(ODFSetting, panel_group, wxT("Group"), false);
   }
+  BasicLoad(cfg, cfgGroup, is_main_panel);
+  m_OrganController->RegisterSaveableObject(this);
 
   m_metrics = new GOGUIHW1DisplayMetrics(cfg, panel_group);
   m_layout = new GOGUILayoutEngine(*m_metrics);
@@ -727,7 +722,6 @@ void GOGUIPanel::Load(GOConfigReader &cfg, wxString group) {
       LoadControl(control, cfg, buffer);
     }
   }
-  ReadSizeInfoFromCfg(cfg, is_main_panel);
 }
 
 GOGUIControl *GOGUIPanel::CreateGUIElement(
@@ -760,15 +754,16 @@ unsigned GOGUIPanel::GetWidth() { return m_metrics->GetScreenWidth(); }
 
 unsigned GOGUIPanel::GetHeight() { return m_metrics->GetScreenHeight(); }
 
-wxRect GOGUIPanel::GetWindowRect() { return m_rect; }
-
-void GOGUIPanel::SetWindowRect(wxRect rect) { m_rect = rect; }
-
 void GOGUIPanel::SetInitialOpenWindow(bool open) { m_InitialOpenWindow = open; }
 
 void GOGUIPanel::AddEvent(GOGUIControl *control) {
   if (m_view)
     m_view->AddEvent(control);
+}
+
+void GOGUIPanel::CaptureSizeInfo(const wxTopLevelWindow &win) {
+  GOGUISizeKeeper::CaptureSizeInfo(win);
+  m_InitialOpenWindow = win.IsVisible();
 }
 
 void GOGUIPanel::LoadControl(
@@ -802,46 +797,16 @@ void GOGUIPanel::Draw(GODC &dc) {
     m_controls[i]->Draw(dc);
 }
 
-void GOGUIPanel::ReadSizeInfoFromCfg(
-  GOConfigReader &cfg, bool isOpenByDefault) {
-  int x = cfg.ReadInteger(
-    CMBSetting, m_group, wxT("WindowX"), -windowLimit, windowLimit, false, 0);
-  int y = cfg.ReadInteger(
-    CMBSetting, m_group, wxT("WindowY"), -windowLimit, windowLimit, false, 0);
-  int w = cfg.ReadInteger(
-    CMBSetting, m_group, wxT("WindowWidth"), 0, windowLimit, false, 0);
-  int h = cfg.ReadInteger(
-    CMBSetting, m_group, wxT("WindowHeight"), 0, windowLimit, false, 0);
-
-  m_rect = wxRect(x, y, w, h);
-  m_DisplayNum = cfg.ReadInteger(
-    CMBSetting, m_group, wxT("DisplayNumber"), -1, windowLimit, false, -1);
-  m_IsMaximized = cfg.ReadBoolean(
-    CMBSetting, m_group, wxT("WindowMaximized"), false, false);
+void GOGUIPanel::BasicLoad(
+  GOConfigReader &cfg, const wxString &group, bool isOpenByDefault) {
+  GOGUISizeKeeper::Load(cfg, group);
   m_InitialOpenWindow = cfg.ReadBoolean(
     CMBSetting, m_group, wxT("WindowDisplayed"), false, isOpenByDefault);
 }
 
 void GOGUIPanel::Save(GOConfigWriter &cfg) {
+  GOGUISizeKeeper::Save(cfg);
   cfg.WriteBoolean(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
-  cfg.WriteBoolean(m_group, wxT("WindowMaximized"), m_IsMaximized);
-  if (m_DisplayNum >= 0)
-    cfg.WriteInteger(m_group, wxT("DisplayNumber"), m_DisplayNum);
-
-  wxRect size = m_rect;
-
-  cfg.WriteInteger(
-    m_group,
-    wxT("WindowX"),
-    std::min(windowLimit, std::max(-windowLimit, size.GetLeft())));
-  cfg.WriteInteger(
-    m_group,
-    wxT("WindowY"),
-    std::min(windowLimit, std::max(-windowLimit, size.GetTop())));
-  cfg.WriteInteger(
-    m_group, wxT("WindowWidth"), std::min(windowLimit, size.GetWidth()));
-  cfg.WriteInteger(
-    m_group, wxT("WindowHeight"), std::min(windowLimit, size.GetHeight()));
 }
 
 void GOGUIPanel::Modified() { m_OrganController->SetOrganModified(); }
