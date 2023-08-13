@@ -242,7 +242,7 @@ inline void GOAudioSection::MonoUncompressedLinear(
 template <class T>
 inline void GOAudioSection::StereoUncompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
-  typedef T stereoSample[0][2];
+  typedef T stereoSample[][2];
 
   // "borrow" the output buffer to compute release alignment info
   stereoSample &input = (stereoSample &)*(T *)(stream->ptr);
@@ -305,7 +305,7 @@ inline void GOAudioSection::MonoUncompressedPolyphase(
 template <class T>
 inline void GOAudioSection::StereoUncompressedPolyphase(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
-  typedef T stereoSample[0][2];
+  typedef T stereoSample[][2];
 
   // copy the sample buffer
   stereoSample &input = (stereoSample &)*(T *)(stream->ptr);

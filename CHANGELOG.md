@@ -1,4 +1,16 @@
 - Improved concurrency handling
+- Added deregistering organs in the temporary directory that do not more exist https://github.com/GrandOrgue/grandorgue/issues/1660
+- Fixed error messages after multiple runs of GrandOrgue ftom Appimage with a demo organ https://github.com/GrandOrgue/grandorgue/issues/1660
+# 3.13.0 (2023-10-11)
+- Implemented option to send MIDI Note Off as 0x8X or 0x9X with velocity 0 https://github.com/GrandOrgue/grandorgue/issues/1640
+- Added capability of control buttons with Control Change MIDI events with different keys but same values using "Bx Ctrl Change Fixed On Value Toggle" and "Bx Ctrl Change Fixed Off Value Toggle" https://github.com/GrandOrgue/grandorgue/issues/1392
+- Added saving dialog positions and sizes https://github.com/GrandOrgue/grandorgue/issues/1035
+- Increased maximum value of Pipe999LoopCrossfadeLength and Pipe999ReleaseCrossfadeLength. Now they are 3000 https://github.com/GrandOrgue/grandorgue/issues/1612
+# 3.12.3 (2023-08-14)
+- Fixed saving manual switches as global in yaml https://github.com/GrandOrgue/grandorgue/issues/1599
+- Fixed convolution enabling warrning in the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1617
+- Fixed "Release Length is not valid" error when applying changes for several Organ Settings objects at once https://github.com/GrandOrgue/grandorgue/issues/1601
+- Fixed saving all combinations as full
 # 3.12.2 (2023-07-23)
 - Fixed size of the Organ Settings Dialog https://github.com/GrandOrgue/grandorgue/issues/1415
 - Fixed an incorrect dialog window icon

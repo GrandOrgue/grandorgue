@@ -28,12 +28,13 @@ void GOFileStore::SetDirectory(const wxString &directory) {
 bool GOFileStore::LoadArchive(
   GOOrganList &organList,
   const wxString &cacheDir,
-  const wxString id,
+  const wxString &id,
+  const wxString &archivePath,
   const wxString &parentId,
   wxString &errMsg) {
   bool isOk = true;
   GOArchiveManager manager(organList, cacheDir);
-  GOArchive *archive = manager.LoadArchive(id);
+  GOArchive *archive = manager.LoadArchive(id, archivePath);
 
   if (archive)
     m_archives.push_back(archive);
@@ -61,15 +62,18 @@ bool GOFileStore::LoadArchive(
 bool GOFileStore::LoadArchives(
   GOOrganList &organList,
   const wxString &cacheDir,
-  const wxString mainId,
+  const wxString &mainArchiveId,
+  const wxString &mainArchivePath,
   wxString &errMsg) {
   SetDirectory(wxEmptyString); // clean up all
 
-  bool isOk = LoadArchive(organList, cacheDir, mainId, wxEmptyString, errMsg);
+  bool isOk = LoadArchive(
+    organList, cacheDir, mainArchiveId, mainArchivePath, wxEmptyString, errMsg);
 
   if (isOk)
     for (auto depId : m_archives[0]->GetDependencies()) {
-      isOk = LoadArchive(organList, cacheDir, depId, mainId, errMsg);
+      isOk = LoadArchive(
+        organList, cacheDir, depId, wxEmptyString, mainArchiveId, errMsg);
       if (!isOk)
         break;
     }

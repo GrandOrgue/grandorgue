@@ -54,6 +54,16 @@ protected:
   void PreparePlayback();
   void PrepareRecording();
 
+  GOMidiReceiverBase *GetMidiReceiver() override {
+    return IsReadOnly() ? nullptr : &m_midi;
+  }
+
+  GOMidiSender *GetMidiSender() override { return &m_sender; }
+
+  GOMidiShortcutReceiver *GetMidiShortcutReceiver() override {
+    return IsReadOnly() ? nullptr : &m_shortcut;
+  }
+
 public:
   GOButtonControl(
     GOOrganModel &organModel,
@@ -64,7 +74,7 @@ public:
   void Load(GOConfigReader &cfg, const wxString &group);
   bool IsDisplayed();
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }
-  bool IsReadOnly();
+  bool IsReadOnly() const { return m_ReadOnly; }
   const wxString &GetName() const { return m_Name; }
   bool IsPiston() const { return m_IsPiston; }
 
@@ -77,8 +87,7 @@ public:
   void SetShortcutKey(unsigned key);
   void SetPreconfigIndex(unsigned index);
 
-  wxString GetMidiName();
-  void ShowConfigDialog();
+  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus();
   std::vector<wxString> GetElementActions();

@@ -32,8 +32,9 @@ public:
   ~GOOrganList();
 
   void AddOrgan(const GOOrgan &organ);
-  const ptr_vector<GOOrgan> &GetOrganList() const;
-  ptr_vector<GOOrgan> &GetOrganList();
+  void RemoveInvalidTmpOrgans();
+  const ptr_vector<GOOrgan> &GetOrganList() const { return m_OrganList; }
+  ptr_vector<GOOrgan> &GetOrganList() { return m_OrganList; }
   std::vector<const GOOrgan *> GetLRUOrganList();
 
   void AddArchive(const GOArchiveFile &archive);

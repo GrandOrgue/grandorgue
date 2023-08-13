@@ -87,6 +87,14 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         0,
         0x200000);
 
+    if (IsNote(eventType))
+      m_events[i].useNoteOff = cfg.ReadBoolean(
+        CMBSetting,
+        group,
+        wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
+        false,
+        true);
+
     if (HasLowValue(eventType))
       m_events[i].low_value = cfg.ReadInteger(
         CMBSetting,
@@ -151,6 +159,12 @@ void GOMidiSender::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
         group,
         wxString::Format(wxT("MIDISendKey%03d"), i + 1),
         m_events[i].key);
+
+    if (IsNote(m_events[i].type))
+      cfg.WriteBoolean(
+        group,
+        wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
+        m_events[i].useNoteOff);
 
     if (HasLowValue(m_events[i].type))
       cfg.WriteInteger(
@@ -253,6 +267,15 @@ bool GOMidiSender::HasLength(GOMidiSenderMessageType type) {
   return false;
 }
 
+bool GOMidiSender::IsNote(GOMidiSenderMessageType type) {
+  if (
+    type == MIDI_S_NOTE || type == MIDI_S_NOTE_NO_VELOCITY
+    || type == MIDI_S_NOTE_ON || type == MIDI_S_NOTE_OFF)
+    return true;
+
+  return false;
+}
+
 unsigned GOMidiSender::KeyLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_PGM_ON || type == MIDI_S_PGM_OFF)
     return 0x200000;
@@ -304,7 +327,7 @@ unsigned GOMidiSender::LengthLimit(GOMidiSenderMessageType type) {
 void GOMidiSender::SetDisplay(bool state) {
   if (m_ElementID != -1) {
     GOMidiEvent e;
-    e.SetMidiType(MIDI_NRPN);
+    e.SetMidiType(GOMidiEvent::MIDI_NRPN);
     e.SetDevice(m_ElementID);
     e.SetValue(state ? 0x7F : 0x00);
     r_proxy.SendMidiRecorderMessage(e);
@@ -314,16 +337,17 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_NOTE) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NOTE);
+      e.SetMidiType(GOMidiEvent::MIDI_NOTE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
+      e.SetUseNoteOff(m_events[i].useNoteOff);
       r_proxy.SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_CTRL) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_CTRL_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
@@ -332,7 +356,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_RPN) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_RPN);
+      e.SetMidiType(GOMidiEvent::MIDI_RPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
@@ -341,7 +365,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_NRPN) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NRPN);
+      e.SetMidiType(GOMidiEvent::MIDI_NRPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
@@ -350,7 +374,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_PGM_RANGE) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_PGM_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_PGM_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(state ? m_events[i].high_value : m_events[i].low_value);
       r_proxy.SendMidiMessage(e);
@@ -358,7 +382,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_RPN_RANGE) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_RPN);
+      e.SetMidiType(GOMidiEvent::MIDI_RPN);
       e.SetChannel(m_events[i].channel);
       e.SetValue(m_events[i].key);
       e.SetKey(state ? m_events[i].high_value : m_events[i].low_value);
@@ -367,7 +391,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_NRPN_RANGE) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NRPN);
+      e.SetMidiType(GOMidiEvent::MIDI_NRPN);
       e.SetChannel(m_events[i].channel);
       e.SetValue(m_events[i].key);
       e.SetKey(state ? m_events[i].high_value : m_events[i].low_value);
@@ -376,7 +400,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_PGM_ON && state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_PGM_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_PGM_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       r_proxy.SendMidiMessage(e);
@@ -384,7 +408,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_PGM_OFF && !state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_PGM_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_PGM_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       r_proxy.SendMidiMessage(e);
@@ -392,16 +416,17 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_NOTE_ON && state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NOTE);
+      e.SetMidiType(GOMidiEvent::MIDI_NOTE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].high_value);
+      e.SetUseNoteOff(m_events[i].useNoteOff);
       r_proxy.SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_NOTE_OFF && !state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NOTE);
+      e.SetMidiType(GOMidiEvent::MIDI_NOTE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].low_value);
@@ -410,7 +435,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_CTRL_ON && state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_CTRL_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].high_value);
@@ -419,7 +444,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_CTRL_OFF && !state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_CTRL_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].low_value);
@@ -428,7 +453,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_RPN_ON && state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_RPN);
+      e.SetMidiType(GOMidiEvent::MIDI_RPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].high_value);
@@ -437,7 +462,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_RPN_OFF && !state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_RPN);
+      e.SetMidiType(GOMidiEvent::MIDI_RPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].low_value);
@@ -446,7 +471,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_NRPN_ON && state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NRPN);
+      e.SetMidiType(GOMidiEvent::MIDI_NRPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].high_value);
@@ -455,7 +480,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_NRPN_OFF && !state) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NRPN);
+      e.SetMidiType(GOMidiEvent::MIDI_NRPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].low_value);
@@ -464,7 +489,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_HW_LCD) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_LCD);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_LCD);
       e.SetChannel(m_events[i].low_value);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
@@ -474,7 +499,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_HW_STRING) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_STRING);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_STRING);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
       e.SetString(state ? _("ON") : _("OFF"), m_events[i].length);
@@ -483,7 +508,7 @@ void GOMidiSender::SetDisplay(bool state) {
     if (m_events[i].type == MIDI_S_RODGERS_STOP_CHANGE) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_RODGERS_STOP_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_RODGERS_STOP_CHANGE);
       e.SetChannel(m_events[i].key);
       e.SetKey(m_events[i].low_value);
       e.SetValue(state);
@@ -495,7 +520,7 @@ void GOMidiSender::SetDisplay(bool state) {
 void GOMidiSender::ResetKey() {
   if (m_ElementID != -1) {
     GOMidiEvent e;
-    e.SetMidiType(MIDI_CTRL_CHANGE);
+    e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
     e.SetDevice(m_ElementID);
     e.SetKey(MIDI_CTRL_NOTES_OFF);
     e.SetValue(0);
@@ -508,7 +533,7 @@ void GOMidiSender::ResetKey() {
       || m_events[i].type == MIDI_S_NOTE_NO_VELOCITY) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_CTRL_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(MIDI_CTRL_NOTES_OFF);
       e.SetValue(0);
@@ -520,10 +545,11 @@ void GOMidiSender::ResetKey() {
 void GOMidiSender::SetKey(unsigned key, unsigned velocity) {
   if (m_ElementID != -1) {
     GOMidiEvent e;
-    e.SetMidiType(MIDI_NOTE);
+    e.SetMidiType(GOMidiEvent::MIDI_NOTE);
     e.SetDevice(m_ElementID);
     e.SetKey(key & 0x7F);
     e.SetValue(velocity & 0x7F);
+    e.SetUseNoteOff(true);
     r_proxy.SendMidiRecorderMessage(e);
   }
 
@@ -531,16 +557,17 @@ void GOMidiSender::SetKey(unsigned key, unsigned velocity) {
     if (m_events[i].type == MIDI_S_NOTE) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NOTE);
+      e.SetMidiType(GOMidiEvent::MIDI_NOTE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(key);
       e.SetValue(m_events[i].ConvertIntValueToDst(velocity));
+      e.SetUseNoteOff(m_events[i].useNoteOff);
       r_proxy.SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_NOTE_NO_VELOCITY) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NOTE);
+      e.SetMidiType(GOMidiEvent::MIDI_NOTE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(key);
       e.SetValue(velocity ? m_events[i].high_value : m_events[i].low_value);
@@ -552,7 +579,7 @@ void GOMidiSender::SetKey(unsigned key, unsigned velocity) {
 void GOMidiSender::SetValue(unsigned value) {
   if (m_ElementID != -1) {
     GOMidiEvent e;
-    e.SetMidiType(MIDI_NRPN);
+    e.SetMidiType(GOMidiEvent::MIDI_NRPN);
     e.SetDevice(m_ElementID);
     e.SetValue(value & 0x7F);
     r_proxy.SendMidiRecorderMessage(e);
@@ -562,7 +589,7 @@ void GOMidiSender::SetValue(unsigned value) {
     if (m_events[i].type == MIDI_S_CTRL) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_CTRL_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].ConvertIntValueToDst(value));
@@ -571,7 +598,7 @@ void GOMidiSender::SetValue(unsigned value) {
     if (m_events[i].type == MIDI_S_RPN) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_RPN);
+      e.SetMidiType(GOMidiEvent::MIDI_RPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].ConvertIntValueToDst(value));
@@ -580,7 +607,7 @@ void GOMidiSender::SetValue(unsigned value) {
     if (m_events[i].type == MIDI_S_NRPN) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_NRPN);
+      e.SetMidiType(GOMidiEvent::MIDI_NRPN);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].ConvertIntValueToDst(value));
@@ -589,7 +616,7 @@ void GOMidiSender::SetValue(unsigned value) {
     if (m_events[i].type == MIDI_S_PGM_RANGE) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_PGM_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_PGM_CHANGE);
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].ConvertIntValueToDst(value));
       r_proxy.SendMidiMessage(e);
@@ -597,7 +624,7 @@ void GOMidiSender::SetValue(unsigned value) {
     if (m_events[i].type == MIDI_S_HW_LCD) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_LCD);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_LCD);
       e.SetChannel(m_events[i].low_value);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
@@ -608,7 +635,7 @@ void GOMidiSender::SetValue(unsigned value) {
     if (m_events[i].type == MIDI_S_HW_STRING) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_STRING);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_STRING);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
       e.SetString(
@@ -623,7 +650,7 @@ void GOMidiSender::SetLabel(const wxString &text) {
     if (m_events[i].type == MIDI_S_HW_LCD) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_LCD);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_LCD);
       e.SetChannel(m_events[i].low_value);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
@@ -633,7 +660,7 @@ void GOMidiSender::SetLabel(const wxString &text) {
     if (m_events[i].type == MIDI_S_HW_STRING) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_STRING);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_STRING);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
       e.SetString(text, m_events[i].length);
@@ -647,7 +674,7 @@ void GOMidiSender::SetName(const wxString &text) {
     if (m_events[i].type == MIDI_S_HW_NAME_LCD) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_LCD);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_LCD);
       e.SetChannel(m_events[i].low_value);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
@@ -657,7 +684,7 @@ void GOMidiSender::SetName(const wxString &text) {
     if (m_events[i].type == MIDI_S_HW_NAME_STRING) {
       GOMidiEvent e;
       e.SetDevice(m_events[i].deviceId);
-      e.SetMidiType(MIDI_SYSEX_HW_STRING);
+      e.SetMidiType(GOMidiEvent::MIDI_SYSEX_HW_STRING);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].start);
       e.SetString(text, m_events[i].length);

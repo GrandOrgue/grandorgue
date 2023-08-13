@@ -212,15 +212,7 @@ void GOSettingsReverb::UpdateEnabled() {
   }
 }
 
-void GOSettingsReverb::OnEnabled(wxCommandEvent &event) {
-  if (m_Enabled->GetValue())
-    wxMessageBox(
-      _("This feature is currently not supported."),
-      _("Warning"),
-      wxOK | wxICON_WARNING,
-      this);
-  UpdateEnabled();
-}
+void GOSettingsReverb::OnEnabled(wxCommandEvent &event) { UpdateEnabled(); }
 
 void GOSettingsReverb::OnFileChanged(wxFileDirPickerEvent &e) { UpdateFile(); }
 

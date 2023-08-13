@@ -14,6 +14,7 @@
 
 #include "ptrvector.h"
 
+#include "config/GOConfig.h"
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
 #include "gui/GOGUIMouseState.h"
@@ -34,6 +35,7 @@ class GOArchive;
 class GOAudioRecorder;
 class GOButtonControl;
 class GOCache;
+class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
 class GOMidi;
@@ -135,6 +137,7 @@ public:
   void ResetOrganModified();
 
   const GOFileStore &GetFileStore() const { return m_FileStore; }
+  GODialogSizeSet &GetDialogSizeSet() { return m_config.m_DialogSizes; }
 
   /**
    * Set the organ directory without providing any odf.

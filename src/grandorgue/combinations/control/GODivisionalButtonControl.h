@@ -26,7 +26,8 @@ public:
     GOOrganModel &organModel, unsigned manualNumber, bool isSetter);
 
   GODivisionalCombination &GetCombination() { return m_combination; }
-  wxString GetMidiType() override;
+  const wxString &GetMidiTypeCode() const override;
+  const wxString &GetMidiType() const override;
 
   void Init(
     GOConfigReader &cfg,

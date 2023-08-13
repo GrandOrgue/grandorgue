@@ -13,7 +13,7 @@
 bool GOMidiEventPattern::operator==(const GOMidiEventPattern &other) const {
   return deviceId == other.deviceId && channel == other.channel
     && key == other.key && low_value == other.low_value
-    && high_value == other.high_value;
+    && high_value == other.high_value && useNoteOff == other.useNoteOff;
 }
 
 int GOMidiEventPattern::convertValueBetweenRanges(

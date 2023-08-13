@@ -23,6 +23,8 @@ protected:
     wxWindow *parent,
     const wxString &name,  // not translated
     const wxString &title, // translated
+    GODialogSizeSet &dialogSizes,
+    const wxString dialogSelector = wxEmptyString,
     long addStyle = 0,
     long buttonFlags = DEFAULT_BUTTON_FLAGS);
 

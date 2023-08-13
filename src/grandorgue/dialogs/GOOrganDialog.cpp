@@ -86,7 +86,11 @@ static const unsigned RELEASE_LENGTH_MAX_INDEX
 
 GOOrganDialog::GOOrganDialog(
   GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
-  : GOSimpleDialog(parent, wxT("Organ settings"), _("Organ settings")),
+  : GOSimpleDialog(
+    parent,
+    wxT("Organ settings"),
+    _("Organ settings"),
+    organController->GetDialogSizeSet()),
     GOView(doc, this),
     m_OrganController(organController),
     m_Apply(NULL),
@@ -888,7 +892,12 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
     return;
   }
 
-  if (!str_to_release_length(m_ReleaseLength->GetValue(), releaseLength)) {
+  const wxString releaseLengthStr = m_ReleaseLength->GetValue();
+  const bool isReleaseLengthPresent = !releaseLengthStr.IsEmpty();
+
+  if (
+    isReleaseLengthPresent
+    && !str_to_release_length(releaseLengthStr, releaseLength)) {
     GOMessageBox(
       _("Release Length is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
@@ -911,7 +920,7 @@ void GOOrganDialog::OnEventApply(wxCommandEvent &e) {
       e->config->SetAutoTuningCorrection(autoTuningCorrection);
     if (m_Delay->IsModified())
       e->config->SetDelay(delay);
-    if (m_ReleaseLength->IsModified()) {
+    if (isReleaseLengthPresent && m_ReleaseLength->IsModified()) {
       long parentReleaseLength = parent ? parent->GetEffectiveReleaseTail() : 0;
       bool isLessThanParent = releaseLength > 0
         && (!parentReleaseLength || releaseLength < parentReleaseLength);

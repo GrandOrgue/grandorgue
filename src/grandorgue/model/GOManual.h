@@ -64,7 +64,9 @@ private:
   int m_MIDIInputNumber;
 
   std::vector<unsigned> m_tremulant_ids;
-  std::vector<unsigned> m_switch_ids;
+
+  // Global Switch Id is the number of switch in ODF started with 1
+  std::vector<unsigned> m_GlobalSwitchIds;
 
   wxString m_name;
 
@@ -94,6 +96,11 @@ private:
    */
   void UpdateAllButtonsLight(
     GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
+
+protected:
+  GOMidiReceiverBase *GetMidiReceiver() override { return &m_midi; }
+  GOMidiSender *GetMidiSender() override { return &m_sender; }
+  GOMidiSender *GetDivision() override { return &m_division; }
 
 public:
   GOManual(GOOrganModel &organModel);
@@ -157,7 +164,7 @@ public:
    *   if the tremulant is not found
    */
   int FindTremulantByName(const wxString &name) const;
-  unsigned GetSwitchCount() const { return m_switch_ids.size(); }
+  unsigned GetSwitchCount() const { return m_GlobalSwitchIds.size(); }
   GOSwitch *GetSwitch(unsigned index);
   /**
    * Find a switch belonging to this manual by it's name
@@ -168,12 +175,11 @@ public:
   int FindSwitchByName(const wxString &name) const;
 
   GOCombinationDefinition &GetDivisionalTemplate();
-  const wxString &GetName();
+  const wxString &GetName() const { return m_name; }
   bool IsDisplayed();
-
-  wxString GetMidiType();
-  wxString GetMidiName();
-  void ShowConfigDialog();
+  const wxString &GetMidiTypeCode() const override;
+  const wxString &GetMidiType() const override;
+  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus();
   std::vector<wxString> GetElementActions();

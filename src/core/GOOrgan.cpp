@@ -85,8 +85,6 @@ const wxString &GOOrgan::GetRecordingDetail() const {
   return m_RecordingDetail;
 }
 
-const wxString &GOOrgan::GetArchiveID() const { return m_ArchiveID; }
-
 GOMidiReceiverBase &GOOrgan::GetMIDIReceiver() { return m_midi; }
 
 const wxString GOOrgan::GetUITitle() const {
@@ -121,13 +119,19 @@ bool GOOrgan::Match(const GOMidiEvent &e) {
 }
 
 bool GOOrgan::IsUsable(const GOOrganList &organs) const {
-  if (m_ArchiveID != wxEmptyString) {
-    const GOArchiveFile *archive = organs.GetArchiveByID(m_ArchiveID, true);
+  bool res;
+
+  if (!m_ArchiveID.IsEmpty()) {
+    const GOArchiveFile *archive = m_ArchivePath.IsEmpty()
+      ? organs.GetArchiveByID(m_ArchiveID, true)
+      : organs.GetArchiveByPath(m_ArchivePath);
+
     if (!archive)
-      return false;
-    return archive->IsComplete(organs);
+      res = false;
+    res = archive->IsComplete(organs);
   } else
-    return wxFileExists(m_ODF);
+    res = wxFileExists(m_ODF);
+  return res;
 }
 
 const wxString GOOrgan::GetOrganHash() const {

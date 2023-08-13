@@ -285,6 +285,10 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     cfg, wxT("SetterMasterTemperament"), _("temperament"));
   m_MainWindowData.Load(cfg);
 
+  // Load dialog sizes
+  if (GODialogSizeSet::isPresentInCfg(cfg, CMBSetting))
+    m_config.m_DialogSizes.Load(cfg, CMBSetting);
+
   m_panels.resize(0);
   m_panels.push_back(new GOGUIPanel(this));
   m_panels[0]->Load(cfg, wxT(""));
@@ -343,7 +347,11 @@ wxString GOOrganController::Load(
     wxString errMsg;
 
     if (!m_FileStore.LoadArchives(
-          m_config, m_config.OrganCachePath(), organ.GetArchiveID(), errMsg))
+          m_config,
+          m_config.OrganCachePath(),
+          organ.GetArchiveID(),
+          organ.GetArchivePath(),
+          errMsg))
       return errMsg;
     m_ArchivePath = organ.GetArchivePath();
     m_odf = organ.GetODFPath();
@@ -813,6 +821,7 @@ bool GOOrganController::Export(const wxString &cmb) {
   cfg.WriteString(WX_ORGAN, wxT("Temperament"), m_Temperament);
 
   GOEventDistributor::Save(cfg);
+  GetDialogSizeSet().Save(cfg);
 
   wxString tmp_name = cmb + wxT(".new");
 
@@ -1018,16 +1027,16 @@ void GOOrganController::Update() {
 }
 
 void GOOrganController::ProcessMidi(const GOMidiEvent &event) {
-  if (event.GetMidiType() == MIDI_RESET) {
+  if (event.GetMidiType() == GOMidiEvent::MIDI_RESET) {
     Reset();
     return;
   }
   while (m_MidiSamplesetMatch.size() < event.GetDevice())
     m_MidiSamplesetMatch.push_back(true);
 
-  if (event.GetMidiType() == MIDI_SYSEX_GO_CLEAR)
+  if (event.GetMidiType() == GOMidiEvent::MIDI_SYSEX_GO_CLEAR)
     m_MidiSamplesetMatch[event.GetDevice()] = true;
-  else if (event.GetMidiType() == MIDI_SYSEX_GO_SAMPLESET) {
+  else if (event.GetMidiType() == GOMidiEvent::MIDI_SYSEX_GO_SAMPLESET) {
     if (
       event.GetKey() == m_SampleSetId1 && event.GetValue() == m_SampleSetId2) {
       m_MidiSamplesetMatch[event.GetDevice()] = true;
@@ -1035,7 +1044,7 @@ void GOOrganController::ProcessMidi(const GOMidiEvent &event) {
       m_MidiSamplesetMatch[event.GetDevice()] = false;
       return;
     }
-  } else if (event.GetMidiType() == MIDI_SYSEX_GO_SETUP) {
+  } else if (event.GetMidiType() == GOMidiEvent::MIDI_SYSEX_GO_SETUP) {
     if (!m_MidiSamplesetMatch[event.GetDevice()])
       return;
   }

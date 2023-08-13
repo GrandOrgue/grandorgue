@@ -14,6 +14,7 @@
 #include <map>
 #include <vector>
 
+#include "dialogs/common/GODialogSizeSet.h"
 #include "midi/GOMidiMap.h"
 #include "midi/GOMidiReceiverBase.h"
 #include "settings/GOSettingBool.h"
@@ -161,6 +162,8 @@ public:
 
   GOMidiDeviceConfigList m_MidiIn;
   GOMidiDeviceConfigList m_MidiOut;
+
+  GODialogSizeSet m_DialogSizes;
 
   void Load();
 

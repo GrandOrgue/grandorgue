@@ -67,6 +67,7 @@ control/GOEventDistributor.cpp
 control/GOLabelControl.cpp
 control/GOPistonControl.cpp
 dialogs/common/GODialogCloser.cpp
+dialogs/common/GODialogSizeSet.cpp
 dialogs/common/GODialogTab.cpp
 dialogs/common/GOSimpleDialog.cpp
 dialogs/common/GOTabbedDialog.cpp
@@ -104,13 +105,14 @@ gui/GOGUIControl.cpp
 gui/GOGUICouplerPanel.cpp
 gui/GOGUIDisplayMetrics.cpp
 gui/GOGUIDivisionalsPanel.cpp
-gui/GOGUILayoutEngine.cpp
-gui/GOGUIHW1DisplayMetrics.cpp
-gui/GOGUISetterDisplayMetrics.cpp
 gui/GOGUIEnclosure.cpp
 gui/GOGUIFloatingPanel.cpp
 gui/GOGUIHW1Background.cpp
+gui/GOGUIHW1DisplayMetrics.cpp
 gui/GOGUIImage.cpp
+gui/GOGUILayoutEngine.cpp
+gui/GOGUIPanelView.cpp
+gui/GOGUISetterDisplayMetrics.cpp
 gui/GOGUILabel.cpp
 gui/GOGUIManual.cpp
 gui/GOGUIManualBackground.cpp
@@ -120,6 +122,7 @@ gui/GOGUIPanel.cpp
 gui/GOGUIPanelWidget.cpp
 gui/GOGUIRecorderPanel.cpp
 gui/GOGUISequencerPanel.cpp
+gui/GOGUISizeKeeper.cpp
 help/GOHelpController.cpp
 help/GOHelpRequestor.cpp
 loader/GOFileStore.cpp
@@ -135,8 +138,9 @@ midi/ports/GOMidiRtPortFactory.cpp
 midi/ports/GOMidiRtInPort.cpp
 midi/ports/GOMidiRtOutPort.cpp
 midi/GOMidi.cpp
-midi/GOMidiListener.cpp
+midi/GOMidiConfigurator.cpp
 midi/GOMidiInputMerger.cpp
+midi/GOMidiListener.cpp
 midi/GOMidiOutputMerger.cpp
 midi/GOMidiPlayer.cpp
 midi/GOMidiPlayerContent.cpp
@@ -211,7 +215,6 @@ GOOrganController.cpp
 GOProperties.cpp
 GOFrame.cpp
 GODocument.cpp
-GOPanelView.cpp
 GOVirtualCouplerController.cpp
 )
 

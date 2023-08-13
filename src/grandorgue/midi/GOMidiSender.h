@@ -46,6 +46,7 @@ public:
   bool HasHighValue(GOMidiSenderMessageType type);
   bool HasStart(GOMidiSenderMessageType type);
   bool HasLength(GOMidiSenderMessageType type);
+  bool IsNote(GOMidiSenderMessageType type);
   unsigned KeyLimit(GOMidiSenderMessageType type);
   unsigned LowValueLimit(GOMidiSenderMessageType type);
   unsigned HighValueLimit(GOMidiSenderMessageType type);

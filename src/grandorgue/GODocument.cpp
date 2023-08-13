@@ -15,6 +15,7 @@
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "document-base/GOView.h"
 #include "gui/GOGUIPanel.h"
+#include "gui/GOGUIPanelView.h"
 #include "midi/GOMidiEvent.h"
 #include "sound/GOSound.h"
 #include "threading/GOMutexLocker.h"
@@ -23,7 +24,6 @@
 #include "GOFrame.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
-#include "GOPanelView.h"
 #include "GOResizable.h"
 #include "go_ids.h"
 
@@ -120,7 +120,7 @@ void GODocument::ShowPanel(unsigned id) {
 
   if (!showWindow(GODocument::PANEL, panel)) {
     registerWindow(
-      GODocument::PANEL, panel, GOPanelView::createWithFrame(this, panel));
+      GODocument::PANEL, panel, GOGUIPanelView::createWithFrame(this, panel));
   }
 }
 
@@ -188,13 +188,17 @@ void GODocument::ShowMidiList() {
       GODocument::MIDI_LIST,
       NULL,
       new GOMidiListDialog(
-        this, NULL, m_OrganController->GetMidiConfigurators()));
+        this,
+        NULL,
+        m_OrganController->GetConfig().m_DialogSizes,
+        m_OrganController->GetMidiConfigurators()));
   }
 }
 
 void GODocument::ShowMIDIEventDialog(
   void *element,
   const wxString &title,
+  const wxString &dialogSelector,
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
@@ -205,6 +209,7 @@ void GODocument::ShowMIDIEventDialog(
       NULL,
       title,
       m_OrganController->GetSettings(),
+      dialogSelector,
       event,
       sender,
       key,

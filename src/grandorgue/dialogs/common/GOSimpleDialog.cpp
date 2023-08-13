@@ -14,9 +14,11 @@ GOSimpleDialog::GOSimpleDialog(
   wxWindow *parent,
   const wxString &name,  // not translated
   const wxString &title, // translated
+  GODialogSizeSet &dialogSizes,
+  const wxString dialogSelector,
   long addStyle,
   long buttonFlags)
-  : GODialog(name) {
+  : GODialog(name, dialogSizes, dialogSelector) {
   // This call is necessary for the dialog not to cover the help window
   if (Create(parent, title, addStyle, buttonFlags)) {
     wxBoxSizer *const pTopSizer = new wxBoxSizer(wxVERTICAL);

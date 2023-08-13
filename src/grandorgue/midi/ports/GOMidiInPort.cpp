@@ -31,7 +31,7 @@ void GOMidiInPort::Receive(const std::vector<unsigned char> msg) {
 
   GOMidiEvent e;
   e.FromMidi(msg, m_midi->GetMidiMap());
-  if (e.GetMidiType() == MIDI_NONE)
+  if (e.GetMidiType() == GOMidiEvent::MIDI_NONE)
     return;
   e.SetDevice(GetID());
   e.SetTime(wxGetLocalTimeMillis());

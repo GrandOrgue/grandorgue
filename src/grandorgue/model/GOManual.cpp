@@ -21,7 +21,8 @@
 #include "GOTremulant.h"
 
 GOManual::GOManual(GOOrganModel &organModel)
-  : r_OrganModel(organModel),
+  : GOMidiConfigurator(organModel),
+    r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_group(wxT("---")),
     m_midi(organModel, MIDI_RECV_MANUAL),
@@ -41,7 +42,7 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_UnisonOff(0),
     m_MIDIInputNumber(0),
     m_tremulant_ids(0),
-    m_switch_ids(0),
+    m_GlobalSwitchIds(0),
     m_name(),
     m_stops(0),
     m_couplers(0),
@@ -96,7 +97,7 @@ void GOManual::Init(
   m_couplers.resize(0);
   m_ODFCouplerCount = 0;
   m_tremulant_ids.resize(0);
-  m_switch_ids.resize(0);
+  m_GlobalSwitchIds.resize(0);
   m_divisionals.resize(0);
   m_midi.Load(cfg, group, r_MidiMap);
   m_sender.Load(cfg, group, r_MidiMap);
@@ -204,16 +205,20 @@ void GOManual::Load(
     m_tremulant_ids.push_back(new_id);
   }
 
-  m_switch_ids.resize(0);
+  m_GlobalSwitchIds.resize(0);
   for (unsigned i = 0; i < nb_switches; i++) {
     buffer.Printf(wxT("Switch%03d"), i + 1);
-    unsigned new_id = cfg.ReadInteger(
+    unsigned globalSwitchId = cfg.ReadInteger(
       ODFSetting, group, buffer, 1, r_OrganModel.GetSwitchCount());
-    for (unsigned j = 0; j < m_switch_ids.size(); j++)
-      if (m_switch_ids[j] == new_id)
+    for (unsigned j = 0; j < m_GlobalSwitchIds.size(); j++)
+      if (m_GlobalSwitchIds[j] == globalSwitchId)
         throw wxString::Format(
-          _("Manual %d: Switch%03d already in use"), m_manual_number, new_id);
-    m_switch_ids.push_back(new_id);
+          _("Manual %d: Switch%03d already in use"),
+          m_manual_number,
+          globalSwitchId);
+    m_GlobalSwitchIds.push_back(globalSwitchId);
+    r_OrganModel.GetSwitch(globalSwitchId - 1)
+      ->AssociateWithManual(m_manual_number, i);
   }
 
   m_midi.Load(cfg, group, r_MidiMap);
@@ -328,8 +333,6 @@ void GOManual::SetUnisonOff(bool on) {
 
 GOManual::~GOManual(void) {}
 
-const wxString &GOManual::GetName() { return m_name; }
-
 int GOManual::GetMIDIInputNumber() { return m_MIDIInputNumber; }
 
 unsigned GOManual::GetLogicalKeyCount() { return m_nb_logical_keys; }
@@ -417,15 +420,15 @@ int GOManual::FindTremulantByName(const wxString &name) const {
 }
 
 GOSwitch *GOManual::GetSwitch(unsigned index) {
-  assert(index < m_switch_ids.size());
-  return r_OrganModel.GetSwitch(m_switch_ids[index] - 1);
+  assert(index < m_GlobalSwitchIds.size());
+  return r_OrganModel.GetSwitch(m_GlobalSwitchIds[index] - 1);
 }
 
 int GOManual::FindSwitchByName(const wxString &name) const {
   int resIndex = -1;
 
-  for (unsigned l = m_switch_ids.size(), i = 0; i < l; i++) {
-    int globalIndex = m_switch_ids[i] - 1;
+  for (unsigned l = m_GlobalSwitchIds.size(), i = 0; i < l; i++) {
+    int globalIndex = m_GlobalSwitchIds[i] - 1;
 
     if (
       globalIndex >= 0
@@ -547,19 +550,12 @@ void GOManual::SetElementID(int id) {
   m_sender.SetElementID(id);
 }
 
-wxString GOManual::GetMidiType() { return _("Manual"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
+const wxString WX_MIDI_TYPE = _("Manual");
 
-wxString GOManual::GetMidiName() { return GetName(); }
+const wxString &GOManual::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
 
-void GOManual::ShowConfigDialog() {
-  wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"),
-    GetMidiType().c_str(),
-    GetMidiName().c_str());
-
-  r_OrganModel.ShowMIDIEventDialog(
-    this, title, &m_midi, &m_sender, NULL, &m_division);
-}
+const wxString &GOManual::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOManual::GetElementStatus() { return _("-"); }
 

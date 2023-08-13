@@ -25,7 +25,8 @@ public:
   void Push() override;
   GOGeneralCombination &GetCombination();
 
-  wxString GetMidiType();
+  const wxString &GetMidiTypeCode() const override;
+  const wxString &GetMidiType() const override;
 };
 
 #endif /* GOGENERAL_H */
