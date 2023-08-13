@@ -42,7 +42,7 @@ public:
 
   float GetWindchestVolume();
   float GetVolume() {
-    if (!m_Done)
+    if (!m_Done.load())
       Run();
     return m_Volume;
   }

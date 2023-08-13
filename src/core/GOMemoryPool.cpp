@@ -423,13 +423,13 @@ void GOMemoryPool::TouchMemory(std::atomic_bool &stop) {
   if (m_TouchCache) {
     for (int i = 0; m_TouchPos < m_CacheSize; m_TouchPos += m_PageSize, i++) {
       touchMemory(m_CacheStart + m_TouchPos);
-      if (stop || i > 1000)
+      if (stop.load() || i > 1000)
         return;
     }
   } else {
     for (int i = 0; m_TouchPos < m_PoolSize; m_TouchPos += m_PageSize, i++) {
       touchMemory(m_PoolStart + m_TouchPos);
-      if (stop || i > 1000)
+      if (stop.load() || i > 1000)
         return;
     }
   }

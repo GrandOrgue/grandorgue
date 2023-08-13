@@ -26,7 +26,7 @@ private:
   std::vector<float> m_MeterInfo;
   GOSoundReverb *m_Reverb;
   GOMutex m_Mutex;
-  unsigned m_Done;
+  std::atomic_bool m_Done;
   std::atomic_bool m_Stop;
 
 public:

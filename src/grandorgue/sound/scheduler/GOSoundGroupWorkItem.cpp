@@ -22,9 +22,9 @@ GOSoundGroupWorkItem::GOSoundGroupWorkItem(
 
 void GOSoundGroupWorkItem::Reset() {
   GOMutexLocker locker(m_Mutex);
-  m_Done = 0;
+  m_Done.store(0);
   m_ActiveCount = 0;
-  m_Stop = false;
+  m_Stop.store(false);
 }
 
 void GOSoundGroupWorkItem::Clear() {
@@ -44,7 +44,8 @@ void GOSoundGroupWorkItem::ProcessList(
   GOSoundSampler *sampler;
 
   while ((sampler = list.Get())) {
-    if (toDropOld && m_Stop && sampler->time + 2000 < m_engine.GetTime()) {
+    if (
+      toDropOld && m_Stop.load() && sampler->time + 2000 < m_engine.GetTime()) {
       if (sampler->drop_counter++ > 3) {
         m_engine.ReturnSampler(sampler);
         continue;
@@ -71,7 +72,7 @@ unsigned GOSoundGroupWorkItem::GetCost() {
 bool GOSoundGroupWorkItem::GetRepeat() { return true; }
 
 void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
-  if (m_Done == 3) // has already processed in this period
+  if (m_Done.load() == 3) // has already processed in this period
     return;
   {
     GOMutexLocker locker(
@@ -80,11 +81,11 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
     if (!locker.IsLocked())
       return;
 
-    if (m_Done == 0) // the first thread entered to Run()
+    if (m_Done.load() == 0) // the first thread entered to Run()
     {
       m_Active.Move();
       m_Release.Move();
-      m_Done = 1; // there are some thteads in Run()
+      m_Done.store(1); // there are some thteads in Run()
     } else {
       if (!m_Active.Peek() && !m_Release.Peek())
         return;
@@ -107,11 +108,11 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
     if (!locker.IsLocked())
       return;
 
-    if (m_Done == 1)
+    if (m_Done.load() == 1)
     // The first thread is finished. Assign the result to the common buffer
     {
       memcpy(m_Buffer, buffer, m_SamplesPerBuffer * 2 * sizeof(float));
-      m_Done = 2; // some thread has already finished
+      m_Done.store(2); // some thread has already finished
     } else
     // not the first thread. Add the result to the common buffer
     {
@@ -122,29 +123,29 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
     if (!m_ActiveCount)
     // the last thread
     {
-      m_Done = 3; // all threads have finished processing this period
+      m_Done.store(3); // all threads have finished processing this period
       m_Condition.Broadcast();
     }
   }
 }
 
 void GOSoundGroupWorkItem::Exec() {
-  m_Stop = true;
+  m_Stop.store(true);
   Run();
 }
 
 void GOSoundGroupWorkItem::Finish(bool stop, GOSoundThread *pThread) {
   if (stop)
-    m_Stop = true;
+    m_Stop.store(true);
   Run(pThread);
-  if (m_Done == 3)
+  if (m_Done.load() == 3)
     return;
 
   {
     GOMutexLocker locker(
       m_Mutex, false, "GOSoundGroupWorkItem::Finish", pThread);
 
-    while (locker.IsLocked() && m_Done != 3
+    while (locker.IsLocked() && m_Done.load() != 3
            && (pThread == nullptr || !pThread->ShouldStop()))
       m_Condition.WaitOrStop("GOSoundGroupWorkItem::Finish", pThread);
   }
@@ -154,7 +155,7 @@ void GOSoundGroupWorkItem::WaitAndClear() {
   GOMutexLocker locker(m_Mutex, false, "ClearAndWait::WaitAndClear");
 
   // wait for no threads are inside Run()
-  while (m_Done > 0 && m_Done < 3)
+  while (m_Done.load() > 0 && m_Done.load() < 3)
     m_Condition.WaitOrStop("ClearAndWait::ClearAndWait", NULL);
 
   // Now it is safe to clear because m_Mutex is locked and no other threads can

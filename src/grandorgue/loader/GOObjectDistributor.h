@@ -31,12 +31,12 @@ public:
 
   unsigned GetNObjects() const { return m_NObjects; }
   unsigned GetPos() const {
-    unsigned pos = m_pos;
+    unsigned pos = m_pos.load();
 
     return pos < m_NObjects ? pos : m_NObjects;
   }
 
-  bool IsComplete() const { return m_pos >= m_NObjects; }
+  bool IsComplete() const { return m_pos.load() >= m_NObjects; }
 
   /**
    * The main method for fetching the next object. Each object can be fetched
@@ -45,7 +45,7 @@ public:
   T *FetchNext() {
     T *obj = nullptr;
 
-    if (!m_IsBroken) {
+    if (!m_IsBroken.load()) {
       unsigned pos = m_pos.fetch_add(1);
 
       if (pos < m_NObjects)
@@ -58,7 +58,7 @@ public:
    * This method is called on any exception occured. It causes that all worker
    * threads stop working immediate because they can not fetch more objects
    */
-  void Break() { m_IsBroken = true; }
+  void Break() { m_IsBroken.store(true); }
 };
 
 #endif /* GOBJECTDISTRIBUTOR_H */
