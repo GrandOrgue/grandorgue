@@ -84,8 +84,16 @@ void GOCombinationDefinition::InitGeneral() {
   for (unsigned i = 0; i < r_OrganModel.GetTremulantCount(); i++)
     AddGeneral(r_OrganModel.GetTremulant(i), COMBINATION_TREMULANT, -1, i + 1);
 
-  for (unsigned i = 0; i < r_OrganModel.GetSwitchCount(); i++)
-    AddGeneral(r_OrganModel.GetSwitch(i), COMBINATION_SWITCH, -1, i + 1);
+  for (unsigned i = 0; i < r_OrganModel.GetSwitchCount(); i++) {
+    GOSwitch *pSwitch = r_OrganModel.GetSwitch(i);
+    int manualN = pSwitch->GetAssociatedManualN();
+
+    AddGeneral(
+      pSwitch,
+      COMBINATION_SWITCH,
+      manualN,
+      (manualN >= 0 ? pSwitch->GetIndexInManual() : i) + 1);
+  }
 
   for (unsigned i = 0; i < r_OrganModel.GetDivisionalCouplerCount(); i++)
     AddGeneral(
