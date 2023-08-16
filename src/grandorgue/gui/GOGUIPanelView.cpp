@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOPanelView.h"
+#include "GOGUIPanelView.h"
 
 #include <wx/display.h>
 #include <wx/frame.h>

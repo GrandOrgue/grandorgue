@@ -34,9 +34,9 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
+#include "GOGUIPanelView.h"
 #include "GOGUIPanelWidget.h"
 #include "GOOrganController.h"
-#include "GOPanelView.h"
 #include "Images.h"
 
 GOGUIPanel::GOGUIPanel(GOOrganController *organController)

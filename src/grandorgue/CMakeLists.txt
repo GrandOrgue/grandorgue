@@ -104,13 +104,14 @@ gui/GOGUIControl.cpp
 gui/GOGUICouplerPanel.cpp
 gui/GOGUIDisplayMetrics.cpp
 gui/GOGUIDivisionalsPanel.cpp
-gui/GOGUILayoutEngine.cpp
-gui/GOGUIHW1DisplayMetrics.cpp
-gui/GOGUISetterDisplayMetrics.cpp
 gui/GOGUIEnclosure.cpp
 gui/GOGUIFloatingPanel.cpp
 gui/GOGUIHW1Background.cpp
+gui/GOGUIHW1DisplayMetrics.cpp
 gui/GOGUIImage.cpp
+gui/GOGUILayoutEngine.cpp
+gui/GOGUIPanelView.cpp
+gui/GOGUISetterDisplayMetrics.cpp
 gui/GOGUILabel.cpp
 gui/GOGUIManual.cpp
 gui/GOGUIManualBackground.cpp
@@ -212,7 +213,6 @@ GOOrganController.cpp
 GOProperties.cpp
 GOFrame.cpp
 GODocument.cpp
-GOPanelView.cpp
 GOVirtualCouplerController.cpp
 )
 
