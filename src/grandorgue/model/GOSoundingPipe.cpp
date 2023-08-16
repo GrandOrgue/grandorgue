@@ -198,13 +198,13 @@ void GOSoundingPipe::Load(
     false,
     -1.0);
   m_LoopCrossfadeLength = cfg.ReadInteger(
-    ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 120, false, 0);
+    ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 3000, false, 0);
   m_ReleaseCrossfadeLength = cfg.ReadInteger(
     ODFSetting,
     group,
     prefix + wxT("ReleaseCrossfadeLength"),
     0,
-    200,
+    3000,
     false,
     0);
   m_RetunePipe = cfg.ReadBoolean(
