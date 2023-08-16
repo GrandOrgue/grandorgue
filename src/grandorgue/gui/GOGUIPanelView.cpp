@@ -11,15 +11,16 @@
 #include <wx/frame.h>
 #include <wx/image.h>
 
-#include "gui/GOGUIPanel.h"
-#include "gui/GOGUIPanelWidget.h"
-#include "gui/primitives/go_gui_utils.h"
+#include "primitives/go_gui_utils.h"
 
-BEGIN_EVENT_TABLE(GOPanelView, wxScrolledWindow)
-EVT_SIZE(GOPanelView::OnSize)
+#include "GOGUIPanel.h"
+#include "GOGUIPanelWidget.h"
+
+BEGIN_EVENT_TABLE(GOGUIPanelView, wxScrolledWindow)
+EVT_SIZE(GOGUIPanelView::OnSize)
 END_EVENT_TABLE()
 
-GOPanelView *GOPanelView::createWithFrame(
+GOGUIPanelView *GOGUIPanelView::createWithFrame(
   GODocumentBase *doc, GOGUIPanel *panel) {
   wxFrame *frame = new wxFrame(
     NULL,
@@ -35,10 +36,10 @@ GOPanelView *GOPanelView::createWithFrame(
   // platforms a full-screen mode would be beneficial (on MacOS is already
   // works).
   frame->SetIcon(get_go_icon());
-  return new GOPanelView(doc, panel, frame);
+  return new GOGUIPanelView(doc, panel, frame);
 }
 
-GOPanelView::GOPanelView(
+GOGUIPanelView::GOGUIPanelView(
   GODocumentBase *doc, GOGUIPanel *panel, wxTopLevelWindow *topWindow)
   : wxScrolledWindow(topWindow),
     GOView(doc, topWindow),
@@ -88,41 +89,41 @@ GOPanelView::GOPanelView(
   m_panel->SetView(this);
 }
 
-GOPanelView::~GOPanelView() {
+GOGUIPanelView::~GOGUIPanelView() {
   if (m_panel)
     m_panel->SetView(NULL);
 }
 
-void GOPanelView::RemoveView() {
+void GOGUIPanelView::RemoveView() {
   if (m_panel)
     m_panel->SetView(NULL);
   m_panel = NULL;
   GOView::RemoveView();
 }
 
-void GOPanelView::AddEvent(GOGUIControl *control) {
+void GOGUIPanelView::AddEvent(GOGUIControl *control) {
   wxCommandEvent event(wxEVT_GOCONTROL, 0);
   event.SetClientData(control);
   m_panelwidget->GetEventHandler()->AddPendingEvent(event);
 }
 
-void GOPanelView::SyncState() {
+void GOGUIPanelView::SyncState() {
   if (m_TopWindow)
     m_panel->CaptureSizeInfo(*m_TopWindow);
 }
 
-bool GOPanelView::Destroy() {
+bool GOGUIPanelView::Destroy() {
   if (m_panel)
     m_panel->SetView(NULL);
   return wxScrolledWindow::Destroy();
 }
 
-void GOPanelView::Raise() {
+void GOGUIPanelView::Raise() {
   wxScrolledWindow::Raise();
   m_panelwidget->CallAfter(&GOGUIPanelWidget::Focus);
 }
 
-void GOPanelView::OnSize(wxSizeEvent &event) {
+void GOGUIPanelView::OnSize(wxSizeEvent &event) {
   if (m_panelwidget) {
     // Scale out the panel according the new size
 

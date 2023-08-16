@@ -120,7 +120,7 @@ void GODocument::ShowPanel(unsigned id) {
 
   if (!showWindow(GODocument::PANEL, panel)) {
     registerWindow(
-      GODocument::PANEL, panel, GOPanelView::createWithFrame(this, panel));
+      GODocument::PANEL, panel, GOGUIPanelView::createWithFrame(this, panel));
   }
 }
 

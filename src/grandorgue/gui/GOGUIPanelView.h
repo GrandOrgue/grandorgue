@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOPANELVIEW_H
-#define GOPANELVIEW_H
+#ifndef GOGUIPANELVIEW_H
+#define GOGUIPANELVIEW_H
 
 #include <wx/scrolwin.h>
 #include <wx/toplevel.h>
@@ -17,7 +17,7 @@ class GOGUIControl;
 class GOGUIPanel;
 class GOGUIPanelWidget;
 
-class GOPanelView : public wxScrolledWindow, public GOView {
+class GOGUIPanelView : public wxScrolledWindow, public GOView {
 private:
   GOGUIPanelWidget *m_panelwidget;
   GOGUIPanel *m_panel;
@@ -27,13 +27,15 @@ private:
   void OnSize(wxSizeEvent &event);
 
 public:
-  GOPanelView(GODocumentBase *doc, GOGUIPanel *panel, wxTopLevelWindow *parent);
-  ~GOPanelView();
+  GOGUIPanelView(
+    GODocumentBase *doc, GOGUIPanel *panel, wxTopLevelWindow *parent);
+  ~GOGUIPanelView();
 
   void AddEvent(GOGUIControl *control);
 
   // creates a PanelView and a wxFrame filled with this PanelView
-  static GOPanelView *createWithFrame(GODocumentBase *doc, GOGUIPanel *panel);
+  static GOGUIPanelView *createWithFrame(
+    GODocumentBase *doc, GOGUIPanel *panel);
   void SyncState();
 
   void Raise();
