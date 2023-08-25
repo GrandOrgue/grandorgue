@@ -34,9 +34,9 @@
 #include "GOGUILayoutEngine.h"
 #include "GOGUIManual.h"
 #include "GOGUIManualBackground.h"
+#include "GOGUIPanelView.h"
 #include "GOGUIPanelWidget.h"
 #include "GOOrganController.h"
-#include "GOPanelView.h"
 #include "Images.h"
 
 GOGUIPanel::GOGUIPanel(GOOrganController *organController)
@@ -75,7 +75,7 @@ GOBitmap GOGUIPanel::LoadBitmap(wxString filename, wxString maskname) {
   return m_OrganController->GetBitmapCache().GetBitmap(filename, maskname);
 }
 
-void GOGUIPanel::SetView(GOPanelView *view) { m_view = view; }
+void GOGUIPanel::SetView(GOGUIPanelView *view) { m_view = view; }
 
 void GOGUIPanel::Init(
   GOConfigReader &cfg,

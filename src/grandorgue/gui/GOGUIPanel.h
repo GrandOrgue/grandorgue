@@ -26,7 +26,7 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOButtonControl;
 class GODC;
-class GOPanelView;
+class GOGUIPanelView;
 class GOOrganController;
 
 #define GOBitmapPrefix "../GO:"
@@ -59,7 +59,7 @@ protected:
   wxString m_GroupName;
   GOGUIDisplayMetrics *m_metrics;
   GOGUILayoutEngine *m_layout;
-  GOPanelView *m_view;
+  GOGUIPanelView *m_view;
   bool m_InitialOpenWindow;
 
   void LoadControl(GOGUIControl *control, GOConfigReader &cfg, wxString group);
@@ -83,7 +83,7 @@ public:
   void Load(GOConfigReader &cfg, const wxString &group);
   void Layout();
 
-  void SetView(GOPanelView *view);
+  void SetView(GOGUIPanelView *view);
 
   GOOrganController *GetOrganFile();
   const wxString &GetName();
