@@ -60,6 +60,9 @@ private:
   void AbortPlayback();
   void PreparePlayback();
 
+protected:
+  GOMidiSender *GetMidiSender() override { return &m_sender; }
+
 public:
   GORank(GOOrganModel &organModel);
   ~GORank();
@@ -77,11 +80,10 @@ public:
   unsigned GetPipeCount();
   GOPipeConfigNode &GetPipeConfig();
   void SetTemperament(const GOTemperament &temperament);
-  const wxString &GetName();
+  const wxString &GetName() const { return m_Name; }
 
-  wxString GetMidiType();
-  wxString GetMidiName();
-  void ShowConfigDialog();
+  const wxString &GetMidiType() const override;
+  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus();
   std::vector<wxString> GetElementActions();

@@ -27,7 +27,7 @@ public:
   void Load(GOConfigReader &cfg, wxString group);
   void Push();
 
-  wxString GetMidiType();
+  const wxString &GetMidiType() const override;
 };
 
 #endif /* GOPISTON_H */

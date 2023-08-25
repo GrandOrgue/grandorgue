@@ -33,4 +33,6 @@ void GOCallbackButtonControl::Set(bool on) {
   Display(on);
 }
 
-wxString GOCallbackButtonControl::GetMidiType() { return _("Button"); }
+const wxString &GOCallbackButtonControl::GetMidiType() const {
+  return _("Button");
+}

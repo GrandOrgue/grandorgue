@@ -144,4 +144,4 @@ void GOTremulant::StartPlayback() {
 
 GOTremulantType GOTremulant::GetTremulantType() { return m_TremulantType; }
 
-wxString GOTremulant::GetMidiType() { return _("Tremulant"); }
+const wxString &GOTremulant::GetMidiType() const { return _("Tremulant"); }

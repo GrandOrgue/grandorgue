@@ -28,7 +28,7 @@ public:
   unsigned GetManual(unsigned index);
   bool IsBidirectional();
 
-  wxString GetMidiType();
+  const wxString &GetMidiType() const override;
 };
 
 #endif /* GODIVISIONALCOUPLER_H */

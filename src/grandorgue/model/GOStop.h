@@ -47,7 +47,7 @@ public:
 
   unsigned IsAuto() const;
 
-  wxString GetMidiType();
+  const wxString &GetMidiType() const override;
 };
 
 #endif /* GOSTOP_H_ */

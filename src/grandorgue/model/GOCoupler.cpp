@@ -378,4 +378,4 @@ bool GOCoupler::IsIntermanual() {
 
 bool GOCoupler::IsUnisonOff() { return m_UnisonOff; }
 
-wxString GOCoupler::GetMidiType() { return _("Coupler"); }
+const wxString &GOCoupler::GetMidiType() const { return _("Coupler"); }

@@ -163,4 +163,4 @@ void GOStop::StartPlayback() {
 
 GORank *GOStop::GetRank(unsigned index) { return m_RankInfo[index].Rank; }
 
-wxString GOStop::GetMidiType() { return _("Stop"); }
+const wxString &GOStop::GetMidiType() const { return _("Stop"); }

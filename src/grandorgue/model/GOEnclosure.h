@@ -52,13 +52,19 @@ private:
   void PreparePlayback();
   void PrepareRecording();
 
+  GOMidiReceiverBase *GetMidiReceiver() override { return &m_midi; }
+  GOMidiSender *GetMidiSender() override { return &m_sender; }
+  GOMidiShortcutReceiver *GetMidiShortcutReceiver() override {
+    return &m_shortcut;
+  }
+
 public:
   GOEnclosure(GOOrganModel &organModel);
   void Init(
     GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value);
   void Load(GOConfigReader &cfg, wxString group, int enclosure_nb);
   void Set(int n);
-  const wxString &GetName();
+  const wxString &GetName() const { return m_Name; }
   int GetValue();
   int GetMIDIInputNumber();
   float GetAttenuation();
@@ -67,9 +73,8 @@ public:
   bool IsDisplayed(bool new_format);
   void SetElementID(int id);
 
-  wxString GetMidiType();
-  wxString GetMidiName();
-  void ShowConfigDialog();
+  const wxString &GetMidiType() const override;
+  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus();
   std::vector<wxString> GetElementActions();

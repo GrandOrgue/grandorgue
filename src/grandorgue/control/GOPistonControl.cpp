@@ -95,4 +95,4 @@ void GOPistonControl::ControlChanged(void *control) {
 
 void GOPistonControl::Push() { this->drawstop->Push(); }
 
-wxString GOPistonControl::GetMidiType() { return _("Piston"); }
+const wxString &GOPistonControl::GetMidiType() const { return _("Piston"); }

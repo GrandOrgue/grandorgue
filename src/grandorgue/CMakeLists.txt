@@ -136,8 +136,9 @@ midi/ports/GOMidiRtPortFactory.cpp
 midi/ports/GOMidiRtInPort.cpp
 midi/ports/GOMidiRtOutPort.cpp
 midi/GOMidi.cpp
-midi/GOMidiListener.cpp
+midi/GOMidiConfigurator.cpp
 midi/GOMidiInputMerger.cpp
+midi/GOMidiListener.cpp
 midi/GOMidiOutputMerger.cpp
 midi/GOMidiPlayer.cpp
 midi/GOMidiPlayerContent.cpp

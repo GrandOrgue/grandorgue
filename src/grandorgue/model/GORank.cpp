@@ -21,7 +21,8 @@
 #include "GOWindchest.h"
 
 GORank::GORank(GOOrganModel &organModel)
-  : r_OrganModel(organModel),
+  : GOMidiConfigurator(organModel),
+    r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_Name(),
     m_Pipes(),
@@ -186,8 +187,6 @@ GOPipe *GORank::GetPipe(unsigned index) { return m_Pipes[index]; }
 
 unsigned GORank::GetPipeCount() { return m_Pipes.size(); }
 
-const wxString &GORank::GetName() { return m_Name; }
-
 GOPipeConfigNode &GORank::GetPipeConfig() { return m_PipeConfig; }
 
 void GORank::SetTemperament(const GOTemperament &temperament) {
@@ -211,18 +210,7 @@ void GORank::SendKey(unsigned note, unsigned velocity) {
   m_sender.SetKey(note, velocity);
 }
 
-wxString GORank::GetMidiType() { return _("Rank"); }
-
-wxString GORank::GetMidiName() { return m_Name; }
-
-void GORank::ShowConfigDialog() {
-  wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"),
-    GetMidiType().c_str(),
-    GetMidiName().c_str());
-
-  r_OrganModel.ShowMIDIEventDialog(this, title, NULL, &m_sender, NULL);
-}
+const wxString &GORank::GetMidiType() const { return _("Rank"); }
 
 wxString GORank::GetElementStatus() { return _("-"); }
 

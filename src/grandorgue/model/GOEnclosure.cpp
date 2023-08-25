@@ -16,7 +16,8 @@
 #include "GOOrganModel.h"
 
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
-  : r_OrganModel(organModel),
+  : GOMidiConfigurator(organModel),
+    r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_midi(organModel, MIDI_RECV_ENCLOSURE),
     m_sender(organModel, MIDI_SEND_ENCLOSURE),
@@ -116,8 +117,6 @@ void GOEnclosure::HandleKey(int key) {
   }
 }
 
-const wxString &GOEnclosure::GetName() { return m_Name; }
-
 int GOEnclosure::GetValue() { return m_MIDIValue; }
 
 bool GOEnclosure::IsDisplayed(bool new_format) {
@@ -144,19 +143,7 @@ void GOEnclosure::SetElementID(int id) {
   m_sender.SetElementID(id);
 }
 
-wxString GOEnclosure::GetMidiType() { return _("Enclosure"); }
-
-wxString GOEnclosure::GetMidiName() { return GetName(); }
-
-void GOEnclosure::ShowConfigDialog() {
-  wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"),
-    GetMidiType().c_str(),
-    GetMidiName().c_str());
-
-  r_OrganModel.ShowMIDIEventDialog(
-    this, title, &m_midi, &m_sender, &m_shortcut);
-}
+const wxString &GOEnclosure::GetMidiType() const { return _("Enclosure"); }
 
 wxString GOEnclosure::GetElementStatus() {
   return wxString::Format(_("%.3f %%"), (m_MIDIValue * 100.0 / 127));

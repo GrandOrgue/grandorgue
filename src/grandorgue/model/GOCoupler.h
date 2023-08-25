@@ -73,7 +73,7 @@ public:
   bool IsIntermanual();
   bool IsUnisonOff();
 
-  wxString GetMidiType();
+  const wxString &GetMidiType() const override;
 };
 
 #endif

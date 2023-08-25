@@ -14,7 +14,8 @@
 #include "config/GOConfig.h"
 
 GOLabelControl::GOLabelControl(GOOrganController *organController)
-  : m_Name(),
+  : GOMidiConfigurator(*organController),
+    m_Name(),
     m_Content(),
     m_OrganController(organController),
     m_sender(*organController, MIDI_SEND_LABEL) {
@@ -42,8 +43,6 @@ void GOLabelControl::Save(GOConfigWriter &cfg) {
   m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
 }
 
-const wxString &GOLabelControl::GetName() { return m_Name; }
-
 const wxString &GOLabelControl::GetContent() { return m_Content; }
 
 void GOLabelControl::SetContent(wxString name) {
@@ -61,19 +60,7 @@ void GOLabelControl::PreparePlayback() { m_sender.SetName(m_Name); }
 
 void GOLabelControl::PrepareRecording() { m_sender.SetLabel(m_Content); }
 
-wxString GOLabelControl::GetMidiType() { return _("Label"); }
-
-wxString GOLabelControl::GetMidiName() { return GetName(); }
-
-void GOLabelControl::ShowConfigDialog() {
-  wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"),
-    GetMidiType().c_str(),
-    GetMidiName().c_str());
-
-  m_OrganController->ShowMIDIEventDialog(
-    this, title, nullptr, &m_sender, nullptr);
-}
+const wxString &GOLabelControl::GetMidiType() const { return _("Label"); }
 
 wxString GOLabelControl::GetElementStatus() { return m_Content; }
 

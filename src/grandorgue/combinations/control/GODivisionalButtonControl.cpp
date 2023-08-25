@@ -18,7 +18,9 @@ GODivisionalButtonControl::GODivisionalButtonControl(
     r_OrganModel(organModel),
     m_combination(organModel, manualNumber, isSetter) {}
 
-wxString GODivisionalButtonControl::GetMidiType() { return _("Divisional"); };
+const wxString &GODivisionalButtonControl::GetMidiType() const {
+  return _("Divisional");
+}
 
 void GODivisionalButtonControl::Init(
   GOConfigReader &cfg,

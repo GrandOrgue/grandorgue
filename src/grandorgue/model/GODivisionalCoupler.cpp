@@ -57,4 +57,6 @@ unsigned GODivisionalCoupler::GetManual(unsigned index) {
 
 bool GODivisionalCoupler::IsBidirectional() { return m_BiDirectionalCoupling; }
 
-wxString GODivisionalCoupler::GetMidiType() { return _("Divisional Coupler"); }
+const wxString &GODivisionalCoupler::GetMidiType() const {
+  return _("Divisional Coupler");
+}

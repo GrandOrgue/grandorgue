@@ -12,14 +12,31 @@
 
 #include <vector>
 
+class GOMidiDialogCreator;
+class GOMidiReceiverBase;
+class GOMidiSender;
+class GOMidiShortcutReceiver;
+
 class GOMidiConfigurator {
+private:
+  GOMidiDialogCreator &r_DialogCreator;
+
+protected:
+  virtual GOMidiReceiverBase *GetMidiReceiver() { return nullptr; }
+  virtual GOMidiSender *GetMidiSender() { return nullptr; }
+  virtual GOMidiShortcutReceiver *GetMidiShortcutReceiver() { return nullptr; }
+  virtual GOMidiSender *GetDivision() { return nullptr; }
+
 public:
+  GOMidiConfigurator(GOMidiDialogCreator &dialogCreator)
+    : r_DialogCreator(dialogCreator) {}
+
   virtual ~GOMidiConfigurator() {}
 
-  virtual wxString GetMidiType() = 0;
-  virtual wxString GetMidiName() = 0;
+  virtual const wxString &GetMidiType() const = 0;
+  virtual const wxString &GetMidiName() const = 0;
 
-  virtual void ShowConfigDialog() = 0;
+  void ShowConfigDialog();
 
   virtual wxString GetElementStatus() = 0;
   virtual std::vector<wxString> GetElementActions() = 0;

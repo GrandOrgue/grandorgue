@@ -14,4 +14,4 @@ void GOSwitch::AssociateWithManual(int manualN, unsigned indexInManual) {
   m_IndexInManual = m_AssociatedManualN >= 0 ? indexInManual : 0;
 }
 
-wxString GOSwitch::GetMidiType() { return _("Drawstop"); }
+const wxString &GOSwitch::GetMidiType() const { return _("Drawstop"); }

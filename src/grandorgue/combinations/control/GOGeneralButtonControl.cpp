@@ -31,4 +31,6 @@ GOGeneralCombination &GOGeneralButtonControl::GetCombination() {
   return m_combination;
 }
 
-wxString GOGeneralButtonControl::GetMidiType() { return _("General"); }
+const wxString &GOGeneralButtonControl::GetMidiType() const {
+  return _("General");
+}
