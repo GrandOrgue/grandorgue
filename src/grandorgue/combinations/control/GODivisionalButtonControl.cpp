@@ -18,8 +18,15 @@ GODivisionalButtonControl::GODivisionalButtonControl(
     r_OrganModel(organModel),
     m_combination(organModel, manualNumber, isSetter) {}
 
+const wxString WX_MIDI_TYPE_CODE = wxT("Divisional");
+const wxString WX_MIDI_TYPE = _("Divisional");
+
+const wxString &GODivisionalButtonControl::GetMidiTypeCode() const {
+  return WX_MIDI_TYPE_CODE;
+}
+
 const wxString &GODivisionalButtonControl::GetMidiType() const {
-  return _("Divisional");
+  return WX_MIDI_TYPE;
 }
 
 void GODivisionalButtonControl::Init(

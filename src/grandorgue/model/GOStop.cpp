@@ -163,4 +163,9 @@ void GOStop::StartPlayback() {
 
 GORank *GOStop::GetRank(unsigned index) { return m_RankInfo[index].Rank; }
 
-const wxString &GOStop::GetMidiType() const { return _("Stop"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Stop");
+const wxString WX_MIDI_TYPE = _("Stop");
+
+const wxString &GOStop::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
+
+const wxString &GOStop::GetMidiType() const { return WX_MIDI_TYPE; }

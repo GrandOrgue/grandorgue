@@ -28,6 +28,7 @@ public:
   unsigned GetManual(unsigned index);
   bool IsBidirectional();
 
+  const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;
 };
 

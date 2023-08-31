@@ -33,6 +33,7 @@ public:
 
   virtual ~GOMidiConfigurator() {}
 
+  virtual const wxString &GetMidiTypeCode() const = 0;
   virtual const wxString &GetMidiType() const = 0;
   virtual const wxString &GetMidiName() const = 0;
 

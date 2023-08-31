@@ -550,7 +550,12 @@ void GOManual::SetElementID(int id) {
   m_sender.SetElementID(id);
 }
 
-const wxString &GOManual::GetMidiType() const { return _("Manual"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
+const wxString WX_MIDI_TYPE = _("Manual");
+
+const wxString &GOManual::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
+
+const wxString &GOManual::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOManual::GetElementStatus() { return _("-"); }
 

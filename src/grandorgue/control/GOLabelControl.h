@@ -45,6 +45,7 @@ public:
   const wxString &GetContent();
   void SetContent(wxString name);
 
+  const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;
   const wxString &GetMidiName() const override { return GetName(); }
   GOMidiSender *GetMidiSender() override { return &m_sender; }

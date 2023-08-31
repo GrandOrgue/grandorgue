@@ -143,7 +143,14 @@ void GOEnclosure::SetElementID(int id) {
   m_sender.SetElementID(id);
 }
 
-const wxString &GOEnclosure::GetMidiType() const { return _("Enclosure"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Enclosure");
+const wxString WX_MIDI_TYPE = _("Enclosure");
+
+const wxString &GOEnclosure::GetMidiTypeCode() const {
+  return WX_MIDI_TYPE_CODE;
+}
+
+const wxString &GOEnclosure::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOEnclosure::GetElementStatus() {
   return wxString::Format(_("%.3f %%"), (m_MIDIValue * 100.0 / 127));

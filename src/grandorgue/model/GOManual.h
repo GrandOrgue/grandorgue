@@ -177,6 +177,7 @@ public:
   GOCombinationDefinition &GetDivisionalTemplate();
   const wxString &GetName() const { return m_name; }
   bool IsDisplayed();
+  const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;
   const wxString &GetMidiName() const override { return GetName(); }
 

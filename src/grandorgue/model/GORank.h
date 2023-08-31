@@ -82,6 +82,7 @@ public:
   void SetTemperament(const GOTemperament &temperament);
   const wxString &GetName() const { return m_Name; }
 
+  const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;
   const wxString &GetMidiName() const override { return GetName(); }
 

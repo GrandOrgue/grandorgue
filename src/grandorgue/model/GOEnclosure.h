@@ -73,6 +73,7 @@ public:
   bool IsDisplayed(bool new_format);
   void SetElementID(int id);
 
+  const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;
   const wxString &GetMidiName() const override { return GetName(); }
 

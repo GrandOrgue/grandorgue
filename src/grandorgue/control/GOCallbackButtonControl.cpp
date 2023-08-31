@@ -33,6 +33,13 @@ void GOCallbackButtonControl::Set(bool on) {
   Display(on);
 }
 
+const wxString WX_MIDI_TYPE_CODE = wxT("Button");
+const wxString WX_MIDI_TYPE = _("Button");
+
+const wxString &GOCallbackButtonControl::GetMidiTypeCode() const {
+  return WX_MIDI_TYPE_CODE;
+}
+
 const wxString &GOCallbackButtonControl::GetMidiType() const {
-  return _("Button");
+  return WX_MIDI_TYPE;
 }

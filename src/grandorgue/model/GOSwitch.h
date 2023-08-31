@@ -32,6 +32,7 @@ public:
   // Check that the switch is referenced not more than once
   void AssociateWithManual(int manualN, unsigned indexInManual);
 
+  const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;
 };
 

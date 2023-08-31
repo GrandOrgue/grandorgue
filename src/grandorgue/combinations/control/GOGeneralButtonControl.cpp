@@ -31,6 +31,13 @@ GOGeneralCombination &GOGeneralButtonControl::GetCombination() {
   return m_combination;
 }
 
+const wxString WX_MIDI_TYPE_CODE = wxT("General");
+const wxString WX_MIDI_TYPE = _("General");
+
+const wxString &GOGeneralButtonControl::GetMidiTypeCode() const {
+  return WX_MIDI_TYPE_CODE;
+}
+
 const wxString &GOGeneralButtonControl::GetMidiType() const {
-  return _("General");
+  return WX_MIDI_TYPE;
 }

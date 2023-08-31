@@ -60,7 +60,14 @@ void GOLabelControl::PreparePlayback() { m_sender.SetName(m_Name); }
 
 void GOLabelControl::PrepareRecording() { m_sender.SetLabel(m_Content); }
 
-const wxString &GOLabelControl::GetMidiType() const { return _("Label"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Label");
+const wxString WX_MIDI_TYPE = _("Label");
+
+const wxString &GOLabelControl::GetMidiTypeCode() const {
+  return WX_MIDI_TYPE_CODE;
+}
+
+const wxString &GOLabelControl::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOLabelControl::GetElementStatus() { return m_Content; }
 

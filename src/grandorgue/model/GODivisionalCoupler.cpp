@@ -57,6 +57,13 @@ unsigned GODivisionalCoupler::GetManual(unsigned index) {
 
 bool GODivisionalCoupler::IsBidirectional() { return m_BiDirectionalCoupling; }
 
+const wxString WX_MIDI_TYPE_CODE = wxT("DivisionalCoupler");
+const wxString WX_MIDI_TYPE = _("Divisional Coupler");
+
+const wxString &GODivisionalCoupler::GetMidiTypeCode() const {
+  return WX_MIDI_TYPE_CODE;
+}
+
 const wxString &GODivisionalCoupler::GetMidiType() const {
-  return _("Divisional Coupler");
+  return WX_MIDI_TYPE;
 }

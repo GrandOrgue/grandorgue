@@ -210,7 +210,12 @@ void GORank::SendKey(unsigned note, unsigned velocity) {
   m_sender.SetKey(note, velocity);
 }
 
-const wxString &GORank::GetMidiType() const { return _("Rank"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Rank");
+const wxString WX_MIDI_TYPE = _("Rank");
+
+const wxString &GORank::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
+
+const wxString &GORank::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GORank::GetElementStatus() { return _("-"); }
 

@@ -14,4 +14,9 @@ void GOSwitch::AssociateWithManual(int manualN, unsigned indexInManual) {
   m_IndexInManual = m_AssociatedManualN >= 0 ? indexInManual : 0;
 }
 
-const wxString &GOSwitch::GetMidiType() const { return _("Drawstop"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Drawstop");
+const wxString WX_MIDI_TYPE = _("Drawstop");
+
+const wxString &GOSwitch::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
+
+const wxString &GOSwitch::GetMidiType() const { return WX_MIDI_TYPE; }

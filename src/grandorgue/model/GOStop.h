@@ -47,6 +47,7 @@ public:
 
   unsigned IsAuto() const;
 
+  const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;
 };
 
