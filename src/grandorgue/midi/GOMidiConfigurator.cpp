@@ -12,12 +12,16 @@
 #include "dialog-creator/GOMidiDialogCreator.h"
 
 void GOMidiConfigurator::ShowConfigDialog() {
-  wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"), GetMidiType(), GetMidiName());
+  const wxString &midiTypeCode = GetMidiTypeCode();
+  const wxString &midiName = GetMidiName();
+  wxString title
+    = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType(), midiName);
+  wxString selector = wxString::Format(wxT("%s.%s"), midiTypeCode, midiName);
 
   r_DialogCreator.ShowMIDIEventDialog(
     this,
     title,
+    selector,
     GetMidiReceiver(),
     GetMidiSender(),
     GetMidiShortcutReceiver(),

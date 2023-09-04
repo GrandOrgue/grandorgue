@@ -30,9 +30,9 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
   int y = cfg.ReadInteger(
     CMBSetting, m_group, WX_WINDOW_Y, -windowLimit, windowLimit, false, 0);
   int w = cfg.ReadInteger(
-    CMBSetting, m_group, WX_WINDOW_WIDTH, 0, windowLimit, false, 0);
+    CMBSetting, m_group, WX_WINDOW_WIDTH, -1, windowLimit, false, 0);
   int h = cfg.ReadInteger(
-    CMBSetting, m_group, WX_WINDOW_HEIGHT, 0, windowLimit, false, 0);
+    CMBSetting, m_group, WX_WINDOW_HEIGHT, -1, windowLimit, false, 0);
 
   m_rect = wxRect(x, y, w, h);
   m_DisplayNum = cfg.ReadInteger(

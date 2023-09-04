@@ -410,6 +410,8 @@ void GOConfig::Load() {
     m_MidiOut.Load(cfg);
     m_MidiIn.Load(cfg, &m_MidiOut);
 
+    m_DialogSizes.Load(cfg, CMBSetting);
+
     if (wxFileExists(m_ConfigFileName))
       wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
   } catch (wxString error) {
@@ -706,6 +708,8 @@ void GOConfig::Flush() {
 
   m_MidiOut.Save(cfg, false);
   m_MidiIn.Save(cfg, true);
+
+  m_DialogSizes.Save(cfg);
 
   if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name)) {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());

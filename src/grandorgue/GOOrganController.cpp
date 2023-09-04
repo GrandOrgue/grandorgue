@@ -285,6 +285,10 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     cfg, wxT("SetterMasterTemperament"), _("temperament"));
   m_MainWindowData.Load(cfg);
 
+  // Load dialog sizes
+  if (GODialogSizeSet::isPresentInCfg(cfg, CMBSetting))
+    m_config.m_DialogSizes.Load(cfg, CMBSetting);
+
   m_panels.resize(0);
   m_panels.push_back(new GOGUIPanel(this));
   m_panels[0]->Load(cfg, wxT(""));
@@ -813,6 +817,7 @@ bool GOOrganController::Export(const wxString &cmb) {
   cfg.WriteString(WX_ORGAN, wxT("Temperament"), m_Temperament);
 
   GOEventDistributor::Save(cfg);
+  GetDialogSizeSet().Save(cfg);
 
   wxString tmp_name = cmb + wxT(".new");
 
