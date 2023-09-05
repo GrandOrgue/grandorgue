@@ -9,33 +9,11 @@
 #define GOMIDIEVENT_H
 
 #include <cstdint>
-
 #include <vector>
 
 #include "GOTime.h"
 
 class GOMidiMap;
-
-typedef enum {
-  MIDI_NONE,
-  MIDI_RESET,
-  MIDI_NOTE,
-  MIDI_AFTERTOUCH,
-  MIDI_CTRL_CHANGE,
-  MIDI_PGM_CHANGE,
-  MIDI_RPN,
-  MIDI_NRPN,
-  MIDI_SYSEX_JOHANNUS_9,
-  MIDI_SYSEX_JOHANNUS_11,
-  MIDI_SYSEX_VISCOUNT,
-  MIDI_SYSEX_AHLBORN_GALANTI,
-  MIDI_SYSEX_GO_CLEAR,
-  MIDI_SYSEX_GO_SETUP,
-  MIDI_SYSEX_GO_SAMPLESET,
-  MIDI_SYSEX_HW_STRING,
-  MIDI_SYSEX_HW_LCD,
-  MIDI_SYSEX_RODGERS_STOP_CHANGE,
-} midi_message_type;
 
 #define MIDI_CTRL_BANK_SELECT_MSB 0
 #define MIDI_CTRL_BANK_SELECT_LSB 32
@@ -48,8 +26,30 @@ typedef enum {
 #define MIDI_CTRL_NOTES_OFF 123
 
 class GOMidiEvent {
+public:
+  enum MidiType {
+    MIDI_NONE,
+    MIDI_RESET,
+    MIDI_NOTE,
+    MIDI_AFTERTOUCH,
+    MIDI_CTRL_CHANGE,
+    MIDI_PGM_CHANGE,
+    MIDI_RPN,
+    MIDI_NRPN,
+    MIDI_SYSEX_JOHANNUS_9,
+    MIDI_SYSEX_JOHANNUS_11,
+    MIDI_SYSEX_VISCOUNT,
+    MIDI_SYSEX_AHLBORN_GALANTI,
+    MIDI_SYSEX_GO_CLEAR,
+    MIDI_SYSEX_GO_SETUP,
+    MIDI_SYSEX_GO_SAMPLESET,
+    MIDI_SYSEX_HW_STRING,
+    MIDI_SYSEX_HW_LCD,
+    MIDI_SYSEX_RODGERS_STOP_CHANGE,
+  };
+
 private:
-  midi_message_type m_miditype;
+  MidiType m_MidiType;
   int m_channel, m_key, m_value;
   unsigned m_device;
   GOTime m_time;
@@ -60,8 +60,8 @@ public:
   GOMidiEvent();
   GOMidiEvent(const GOMidiEvent &e);
 
-  midi_message_type GetMidiType() const { return m_miditype; }
-  void SetMidiType(midi_message_type t) { m_miditype = t; }
+  MidiType GetMidiType() const { return m_MidiType; }
+  void SetMidiType(MidiType t) { m_MidiType = t; }
 
   void SetDevice(unsigned dev) { m_device = dev; }
 

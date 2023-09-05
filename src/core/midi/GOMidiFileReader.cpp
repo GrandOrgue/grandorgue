@@ -312,7 +312,7 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
 
     e.FromMidi(msg, m_Map);
     e.SetTime(m_LastTime);
-    if (e.GetMidiType() != MIDI_NONE)
+    if (e.GetMidiType() != GOMidiEvent::MIDI_NONE)
       return true;
   } while (true);
 }

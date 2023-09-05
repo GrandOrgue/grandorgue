@@ -10,19 +10,18 @@
 
 #include <wx/string.h>
 
+#include <cstdint>
 #include <vector>
 
 #include "midi/GOMidiEvent.h"
 
-class GOMidiOutputEvent;
-
 class GOMidiOutputMerger {
 private:
-  typedef struct {
-    midi_message_type type;
+  struct GOMidiOutputMergerHWState {
+    GOMidiEvent::MidiType type;
     int key;
     wxString content;
-  } GOMidiOutputMergerHWState;
+  };
   std::vector<GOMidiOutputMergerHWState> m_HWState;
   std::vector<std::vector<uint8_t>> m_RodgersState;
 

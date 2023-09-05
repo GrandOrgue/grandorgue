@@ -158,7 +158,7 @@ void GOMidiPlayer::StopPlaying() {
   if (m_IsPlaying) {
     for (unsigned i = 1; i < 16; i++) {
       GOMidiEvent e;
-      e.SetMidiType(MIDI_CTRL_CHANGE);
+      e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
       e.SetChannel(i);
       e.SetKey(MIDI_CTRL_NOTES_OFF);
       e.SetValue(0);
