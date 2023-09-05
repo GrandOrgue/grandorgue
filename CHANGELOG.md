@@ -1,3 +1,4 @@
+- Added saving dialog positions and sizes https://github.com/GrandOrgue/grandorgue/issues/1035
 - Increased maximum value of Pipe999LoopCrossfadeLength and Pipe999ReleaseCrossfadeLength. Now they are 3000 https://github.com/GrandOrgue/grandorgue/issues/1612
 # 3.12.3 (2023-08-14)
 - Fixed saving manual switches as global in yaml https://github.com/GrandOrgue/grandorgue/issues/1599
