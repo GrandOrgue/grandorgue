@@ -19,7 +19,8 @@ GOButtonControl::GOButtonControl(
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : r_MidiMap(organModel.GetConfig().GetMidiMap()),
+  : GOMidiConfigurator(organModel),
+    r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_OrganModel(organModel),
     m_midi(organModel, midi_type),
     m_sender(organModel, MIDI_SEND_BUTTON),
@@ -74,8 +75,6 @@ void GOButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 bool GOButtonControl::IsDisplayed() { return m_Displayed; }
-
-bool GOButtonControl::IsReadOnly() { return m_ReadOnly; }
 
 void GOButtonControl::HandleKey(int key) {
   if (m_ReadOnly)
@@ -162,24 +161,6 @@ void GOButtonControl::SetShortcutKey(unsigned key) {
 
 void GOButtonControl::SetPreconfigIndex(unsigned index) {
   m_midi.SetIndex(index);
-}
-
-wxString GOButtonControl::GetMidiName() { return GetName(); }
-
-void GOButtonControl::ShowConfigDialog() {
-  wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"),
-    GetMidiType().c_str(),
-    GetMidiName().c_str());
-
-  GOMidiReceiver *midi = &m_midi;
-  GOMidiShortcutReceiver *key = &m_shortcut;
-  if (IsReadOnly()) {
-    midi = NULL;
-    key = NULL;
-  }
-
-  r_OrganModel.ShowMIDIEventDialog(this, title, midi, &m_sender, key);
 }
 
 wxString GOButtonControl::GetElementStatus() {

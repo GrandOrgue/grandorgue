@@ -25,7 +25,8 @@ public:
   void Push(void);
   void Set(bool on);
 
-  wxString GetMidiType();
+  const wxString &GetMidiTypeCode() const override;
+  const wxString &GetMidiType() const override;
 };
 
 #endif

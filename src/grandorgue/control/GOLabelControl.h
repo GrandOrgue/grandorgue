@@ -41,13 +41,14 @@ public:
   virtual ~GOLabelControl();
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group, wxString name);
-  const wxString &GetName();
+  const wxString &GetName() const { return m_Name; }
   const wxString &GetContent();
   void SetContent(wxString name);
 
-  wxString GetMidiType();
-  wxString GetMidiName();
-  void ShowConfigDialog();
+  const wxString &GetMidiTypeCode() const override;
+  const wxString &GetMidiType() const override;
+  const wxString &GetMidiName() const override { return GetName(); }
+  GOMidiSender *GetMidiSender() override { return &m_sender; }
 
   wxString GetElementStatus();
   std::vector<wxString> GetElementActions();

@@ -21,7 +21,8 @@
 #include "GOTremulant.h"
 
 GOManual::GOManual(GOOrganModel &organModel)
-  : r_OrganModel(organModel),
+  : GOMidiConfigurator(organModel),
+    r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_group(wxT("---")),
     m_midi(organModel, MIDI_RECV_MANUAL),
@@ -332,8 +333,6 @@ void GOManual::SetUnisonOff(bool on) {
 
 GOManual::~GOManual(void) {}
 
-const wxString &GOManual::GetName() { return m_name; }
-
 int GOManual::GetMIDIInputNumber() { return m_MIDIInputNumber; }
 
 unsigned GOManual::GetLogicalKeyCount() { return m_nb_logical_keys; }
@@ -551,19 +550,12 @@ void GOManual::SetElementID(int id) {
   m_sender.SetElementID(id);
 }
 
-wxString GOManual::GetMidiType() { return _("Manual"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
+const wxString WX_MIDI_TYPE = _("Manual");
 
-wxString GOManual::GetMidiName() { return GetName(); }
+const wxString &GOManual::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
 
-void GOManual::ShowConfigDialog() {
-  wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"),
-    GetMidiType().c_str(),
-    GetMidiName().c_str());
-
-  r_OrganModel.ShowMIDIEventDialog(
-    this, title, &m_midi, &m_sender, NULL, &m_division);
-}
+const wxString &GOManual::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOManual::GetElementStatus() { return _("-"); }
 

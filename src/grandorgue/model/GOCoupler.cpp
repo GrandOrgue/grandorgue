@@ -378,4 +378,9 @@ bool GOCoupler::IsIntermanual() {
 
 bool GOCoupler::IsUnisonOff() { return m_UnisonOff; }
 
-wxString GOCoupler::GetMidiType() { return _("Coupler"); }
+const wxString WX_MIDI_TYPE_CODE = wxT("Coupler");
+const wxString WX_MIDI_TYPE = _("Coupler");
+
+const wxString &GOCoupler::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
+
+const wxString &GOCoupler::GetMidiType() const { return WX_MIDI_TYPE; }
