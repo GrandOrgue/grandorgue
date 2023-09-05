@@ -32,10 +32,12 @@ private:
   using SizeId = std::pair<wxString, wxString>;
 
   struct SizeIdHash {
-    static std::hash<wxString> instance;
+    // Don't use std::hash<wxString> because it does not exist in wx 3.0
+    static std::hash<std::wstring> instance;
 
     std::size_t operator()(const SizeId &k) const {
-      return instance(k.first) ^ instance(k.second);
+      return instance(k.first.ToStdWstring())
+        ^ instance(k.second.ToStdWstring());
     }
   };
 

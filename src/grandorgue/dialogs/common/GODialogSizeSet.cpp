@@ -12,7 +12,7 @@
 
 const wxString WX_EMPTY_STRING = wxEmptyString;
 
-std::hash<wxString> GODialogSizeSet::SizeIdHash::instance;
+std::hash<std::wstring> GODialogSizeSet::SizeIdHash::instance;
 
 const wxString WX_DIALOG_SIZES = wxT("DialogSizes");
 const wxString WX_SAVED_COUNT = wxT("SavedCount");
