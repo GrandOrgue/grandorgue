@@ -90,7 +90,7 @@ GOOrganDialog::GOOrganDialog(
     parent,
     wxT("Organ settings"),
     _("Organ settings"),
-    m_OrganController->GetDialogSizeSet()),
+    organController->GetDialogSizeSet()),
     GOView(doc, this),
     m_OrganController(organController),
     m_Apply(NULL),
