@@ -13,7 +13,7 @@
 #include "GORodgers.h"
 
 GOMidiEvent::GOMidiEvent()
-  : m_miditype(MIDI_NONE),
+  : m_MidiType(MIDI_NONE),
     m_channel(-1),
     m_key(-1),
     m_value(-1),
@@ -22,7 +22,7 @@ GOMidiEvent::GOMidiEvent()
     m_data() {}
 
 GOMidiEvent::GOMidiEvent(const GOMidiEvent &e)
-  : m_miditype(e.m_miditype),
+  : m_MidiType(e.m_MidiType),
     m_channel(e.m_channel),
     m_key(e.m_key),
     m_value(e.m_value),

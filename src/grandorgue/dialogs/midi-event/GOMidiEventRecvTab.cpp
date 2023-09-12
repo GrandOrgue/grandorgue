@@ -581,16 +581,16 @@ void GOMidiEventRecvTab::OnTimer(wxTimerEvent &event) {
 
 void GOMidiEventRecvTab::OnMidiEvent(const GOMidiEvent &event) {
   switch (event.GetMidiType()) {
-  case MIDI_NOTE:
-  case MIDI_CTRL_CHANGE:
-  case MIDI_PGM_CHANGE:
-  case MIDI_RPN:
-  case MIDI_NRPN:
-  case MIDI_SYSEX_JOHANNUS_9:
-  case MIDI_SYSEX_JOHANNUS_11:
-  case MIDI_SYSEX_VISCOUNT:
-  case MIDI_SYSEX_RODGERS_STOP_CHANGE:
-  case MIDI_SYSEX_AHLBORN_GALANTI:
+  case GOMidiEvent::MIDI_NOTE:
+  case GOMidiEvent::MIDI_CTRL_CHANGE:
+  case GOMidiEvent::MIDI_PGM_CHANGE:
+  case GOMidiEvent::MIDI_RPN:
+  case GOMidiEvent::MIDI_NRPN:
+  case GOMidiEvent::MIDI_SYSEX_JOHANNUS_9:
+  case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
+  case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
+  case GOMidiEvent::MIDI_SYSEX_RODGERS_STOP_CHANGE:
+  case GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI:
     break;
 
   default:
@@ -666,14 +666,14 @@ bool GOMidiEventRecvTab::SimilarEvent(
   if (e1.GetChannel() != e2.GetChannel())
     return false;
 
-  if (e1.GetMidiType() == MIDI_PGM_CHANGE)
+  if (e1.GetMidiType() == GOMidiEvent::MIDI_PGM_CHANGE)
     return true;
-  if (e1.GetMidiType() == MIDI_SYSEX_VISCOUNT)
+  if (e1.GetMidiType() == GOMidiEvent::MIDI_SYSEX_VISCOUNT)
     return true;
-  if (e1.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI)
+  if (e1.GetMidiType() == GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI)
     return true;
   if (e1.GetKey() == e2.GetKey()) {
-    if (e1.GetMidiType() != MIDI_NOTE)
+    if (e1.GetMidiType() != GOMidiEvent::MIDI_NOTE)
       return true;
   }
   return false;
@@ -690,7 +690,7 @@ void GOMidiEventRecvTab::DetectEvent() {
       for (unsigned j = 0; j < m_OffList.size(); j++) {
         if (j + 1 < m_OffList.size()) {
           if (SimilarEvent(m_OffList[j], m_OffList[j + 1])) {
-            if (m_OffList[j].GetMidiType() != MIDI_NOTE)
+            if (m_OffList[j].GetMidiType() != GOMidiEvent::MIDI_NOTE)
               continue;
           }
         }
@@ -702,7 +702,7 @@ void GOMidiEventRecvTab::DetectEvent() {
         if (on.GetMidiType() != off.GetMidiType())
           continue;
         if (m_midi.GetType() == MIDI_RECV_MANUAL) {
-          if (on.GetMidiType() != MIDI_NOTE)
+          if (on.GetMidiType() != GOMidiEvent::MIDI_NOTE)
             continue;
           GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
           e.type = MIDI_M_NOTE;
@@ -724,12 +724,12 @@ void GOMidiEventRecvTab::DetectEvent() {
         bool is_range = false;
         if (
           on.GetValue() == off.GetValue() && on.GetKey() != off.GetKey()
-          && (on.GetMidiType() == MIDI_RPN || on.GetMidiType() == MIDI_NRPN)) {
+          && (on.GetMidiType() == GOMidiEvent::MIDI_RPN || on.GetMidiType() == GOMidiEvent::MIDI_NRPN)) {
           if (m_midi.GetType() == MIDI_RECV_ENCLOSURE)
             is_range = false;
           else
             is_range = true;
-        } else if (on.GetMidiType() == MIDI_PGM_CHANGE) {
+        } else if (on.GetMidiType() == GOMidiEvent::MIDI_PGM_CHANGE) {
           is_range = true;
         }
         if (on.GetKey() != off.GetKey() && !is_range)
@@ -740,16 +740,16 @@ void GOMidiEventRecvTab::DetectEvent() {
           unsigned high = on.GetValue();
           int key = on.GetKey();
           switch (on.GetMidiType()) {
-          case MIDI_CTRL_CHANGE:
+          case GOMidiEvent::MIDI_CTRL_CHANGE:
             e.type = MIDI_M_CTRL_CHANGE;
             break;
-          case MIDI_RPN:
+          case GOMidiEvent::MIDI_RPN:
             e.type = MIDI_M_RPN;
             break;
-          case MIDI_NRPN:
+          case GOMidiEvent::MIDI_NRPN:
             e.type = MIDI_M_NRPN;
             break;
-          case MIDI_PGM_CHANGE:
+          case GOMidiEvent::MIDI_PGM_CHANGE:
             e.type = MIDI_M_PGM_RANGE;
             low = off.GetKey();
             high = on.GetKey();
@@ -774,14 +774,14 @@ void GOMidiEventRecvTab::DetectEvent() {
         unsigned high = 1;
         int key = on.GetKey();
         switch (on.GetMidiType()) {
-        case MIDI_NOTE:
+        case GOMidiEvent::MIDI_NOTE:
           e.type = MIDI_M_NOTE;
           if (on.GetValue() > 0 && off.GetValue() > 0)
             e.type = MIDI_M_NOTE_ON;
           if (on.GetValue() == 0 && off.GetValue() == 0)
             e.type = MIDI_M_NOTE_OFF;
           break;
-        case MIDI_CTRL_CHANGE:
+        case GOMidiEvent::MIDI_CTRL_CHANGE:
           e.type = MIDI_M_CTRL_CHANGE;
           if (on.GetValue() == off.GetValue())
             e.type = on.GetValue() > 0 ? MIDI_M_CTRL_CHANGE_ON
@@ -801,7 +801,7 @@ void GOMidiEventRecvTab::DetectEvent() {
             }
           }
           break;
-        case MIDI_PGM_CHANGE:
+        case GOMidiEvent::MIDI_PGM_CHANGE:
           if (on.GetKey() == off.GetKey())
             e.type = MIDI_M_PGM_CHANGE;
           else {
@@ -811,7 +811,7 @@ void GOMidiEventRecvTab::DetectEvent() {
             key = -1;
           }
           break;
-        case MIDI_RPN:
+        case GOMidiEvent::MIDI_RPN:
           if (is_range) {
             e.type = MIDI_M_RPN_RANGE;
             key = on.GetValue();
@@ -823,7 +823,7 @@ void GOMidiEventRecvTab::DetectEvent() {
           if (on.GetValue() == off.GetValue())
             e.type = on.GetValue() > 0 ? MIDI_M_RPN_ON : MIDI_M_RPN_OFF;
           break;
-        case MIDI_NRPN:
+        case GOMidiEvent::MIDI_NRPN:
           if (is_range) {
             e.type = MIDI_M_NRPN_RANGE;
             key = on.GetValue();
@@ -835,14 +835,14 @@ void GOMidiEventRecvTab::DetectEvent() {
           if (on.GetValue() == off.GetValue())
             e.type = on.GetValue() > 0 ? MIDI_M_NRPN_ON : MIDI_M_NRPN_OFF;
           break;
-        case MIDI_SYSEX_JOHANNUS_9:
+        case GOMidiEvent::MIDI_SYSEX_JOHANNUS_9:
           e.type = MIDI_M_SYSEX_JOHANNUS_9;
           break;
-        case MIDI_SYSEX_JOHANNUS_11:
+        case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
           e.type = MIDI_M_SYSEX_JOHANNUS_11;
           high = 0x7f;
           break;
-        case MIDI_SYSEX_VISCOUNT:
+        case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
           if (on.GetValue() == off.GetValue()) {
             low = off.GetValue();
             e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
@@ -852,7 +852,7 @@ void GOMidiEventRecvTab::DetectEvent() {
             e.type = MIDI_M_SYSEX_VISCOUNT;
           }
           break;
-        case MIDI_SYSEX_RODGERS_STOP_CHANGE:
+        case GOMidiEvent::MIDI_SYSEX_RODGERS_STOP_CHANGE:
           for (unsigned i = 0; i
                < m_original->LowerValueLimit(MIDI_M_SYSEX_RODGERS_STOP_CHANGE);
                i++) {
@@ -867,7 +867,7 @@ void GOMidiEventRecvTab::DetectEvent() {
             }
           }
           break;
-        case MIDI_SYSEX_AHLBORN_GALANTI:
+        case GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI:
           low = off.GetValue();
           high = on.GetValue();
           e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
@@ -899,33 +899,33 @@ void GOMidiEventRecvTab::DetectEvent() {
     ? 127
     : 1;
   switch (event.GetMidiType()) {
-  case MIDI_NOTE:
+  case GOMidiEvent::MIDI_NOTE:
     e.type = MIDI_M_NOTE;
     break;
-  case MIDI_CTRL_CHANGE:
+  case GOMidiEvent::MIDI_CTRL_CHANGE:
     e.type = MIDI_M_CTRL_CHANGE;
     break;
-  case MIDI_PGM_CHANGE:
+  case GOMidiEvent::MIDI_PGM_CHANGE:
     e.type = MIDI_M_PGM_CHANGE;
     break;
-  case MIDI_RPN:
+  case GOMidiEvent::MIDI_RPN:
     e.type = MIDI_M_RPN;
     break;
-  case MIDI_NRPN:
+  case GOMidiEvent::MIDI_NRPN:
     e.type = MIDI_M_NRPN;
     break;
-  case MIDI_SYSEX_JOHANNUS_9:
+  case GOMidiEvent::MIDI_SYSEX_JOHANNUS_9:
     e.type = MIDI_M_SYSEX_JOHANNUS_9;
     break;
-  case MIDI_SYSEX_JOHANNUS_11:
+  case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
     e.type = MIDI_M_SYSEX_JOHANNUS_11;
     high_value = 127;
     break;
-  case MIDI_SYSEX_VISCOUNT:
+  case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
     e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
     low_value = event.GetValue();
     break;
-  case MIDI_SYSEX_AHLBORN_GALANTI:
+  case GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI:
     e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
     if (((event.GetValue() >> 7) & 0x0f) < 8) {
       high_value = event.GetValue();
