@@ -42,6 +42,10 @@ else
   GCC_SUFFIX=-$(dpkg-architecture -A $TARGET_ARCH -q DEB_TARGET_MULTIARCH)
 fi
 
+# it is necessary for future installing wx
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  libcups2:$TARGET_ARCH
+
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cmake \
   docbook-xsl \
