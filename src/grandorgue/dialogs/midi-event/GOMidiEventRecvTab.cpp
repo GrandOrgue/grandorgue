@@ -37,6 +37,7 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
     m_MidiMap(config.GetMidiMap()),
     m_original(event),
     m_midi(*event),
+    m_ReceiverType(event->GetType()),
     m_listener(),
     m_ListenState(0),
     m_Timer(this, ID_TIMER) {
@@ -216,44 +217,43 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
   ;
 
   m_eventtype->Append(_("(none)"), MIDI_M_NONE);
-  if (m_midi.GetType() != MIDI_RECV_ENCLOSURE)
+  if (m_ReceiverType != MIDI_RECV_ENCLOSURE)
     m_eventtype->Append(_("9x Note"), MIDI_M_NOTE);
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("9x Note On Toggle"), MIDI_M_NOTE_ON);
     m_eventtype->Append(_("9x Note Off Toggle"), MIDI_M_NOTE_OFF);
     m_eventtype->Append(_("9x Note On/Off Toggle"), MIDI_M_NOTE_ON_OFF);
   }
-  if (m_midi.GetType() != MIDI_RECV_MANUAL)
+  if (m_ReceiverType != MIDI_RECV_MANUAL)
     m_eventtype->Append(_("Bx Controller"), MIDI_M_CTRL_CHANGE);
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("Bx Controller On Toggle"), MIDI_M_CTRL_CHANGE_ON);
     m_eventtype->Append(_("Bx Controller Off Toggle"), MIDI_M_CTRL_CHANGE_OFF);
     m_eventtype->Append(
       _("Bx Controller On/Off Toggle"), MIDI_M_CTRL_CHANGE_ON_OFF);
   }
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
+    m_ReceiverType != MIDI_RECV_MANUAL && m_ReceiverType != MIDI_RECV_ENCLOSURE)
     m_eventtype->Append(_("Cx Program Change"), MIDI_M_PGM_CHANGE);
-  if (m_midi.GetType() == MIDI_RECV_MANUAL) {
+  if (m_ReceiverType == MIDI_RECV_MANUAL) {
     m_eventtype->Append(_("9x Note without Velocity"), MIDI_M_NOTE_NO_VELOCITY);
     m_eventtype->Append(
       _("9x Note short octave at low key"), MIDI_M_NOTE_SHORT_OCTAVE);
     m_eventtype->Append(_("9x Note without map"), MIDI_M_NOTE_NORMAL);
   }
 
-  if (m_midi.GetType() != MIDI_RECV_MANUAL) {
+  if (m_ReceiverType != MIDI_RECV_MANUAL) {
     m_eventtype->Append(_("RPN"), MIDI_M_RPN);
     m_eventtype->Append(_("NRPN"), MIDI_M_NRPN);
     m_eventtype->Append(_("Cx Program Change Range"), MIDI_M_PGM_RANGE);
   }
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("RPN On Toggle"), MIDI_M_RPN_ON);
     m_eventtype->Append(_("RPN Off Toggle"), MIDI_M_RPN_OFF);
     m_eventtype->Append(_("RPN On/Off Toggle"), MIDI_M_RPN_ON_OFF);
@@ -265,8 +265,8 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
   }
 
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("Ctrl Change Bitfield"), MIDI_M_CTRL_BIT);
     m_eventtype->Append(
       _("Bx Ctrl Change Fixed Value"), MIDI_M_CTRL_CHANGE_FIXED);
@@ -355,14 +355,14 @@ void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {
     m_HighValue->Disable();
   if (m_original->HasKey(type)) {
     m_data->Enable();
-    if (m_midi.GetType() == MIDI_RECV_MANUAL)
+    if (m_ReceiverType == MIDI_RECV_MANUAL)
       m_data->SetRange(-35, 35);
     else
       m_data->SetRange(0, m_original->KeyLimit(type));
   } else
     m_data->Disable();
 
-  if (m_midi.GetType() == MIDI_RECV_MANUAL) {
+  if (m_ReceiverType == MIDI_RECV_MANUAL) {
     m_LowValueLabel->SetLabel(_("L&owest velocity:"));
     m_HighValueLabel->SetLabel(_("H&ighest velocity:"));
     m_DataLabel->SetLabel(_("&Transpose:"));
@@ -560,7 +560,7 @@ void GOMidiEventRecvTab::OnListenAdvancedClick(wxCommandEvent &event) {
 void GOMidiEventRecvTab::OnTimer(wxTimerEvent &event) {
   if (m_ListenState == 2) {
     wxString label;
-    switch (m_midi.GetType()) {
+    switch (m_ReceiverType) {
     case MIDI_RECV_MANUAL:
       label = _("Please press the highest key with minimal velocity");
       break;
@@ -626,7 +626,7 @@ void GOMidiEventRecvTab::StartListen(bool type) {
   } else {
     m_ListenState = 2;
     wxString label;
-    switch (m_midi.GetType()) {
+    switch (m_ReceiverType) {
     case MIDI_RECV_MANUAL:
       label = _("Please press the lowest key with minimal velocity");
       break;
@@ -701,7 +701,7 @@ void GOMidiEventRecvTab::DetectEvent() {
           continue;
         if (on.GetMidiType() != off.GetMidiType())
           continue;
-        if (m_midi.GetType() == MIDI_RECV_MANUAL) {
+        if (m_ReceiverType == MIDI_RECV_MANUAL) {
           if (on.GetMidiType() != GOMidiEvent::MIDI_NOTE)
             continue;
           GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
@@ -725,7 +725,7 @@ void GOMidiEventRecvTab::DetectEvent() {
         if (
           on.GetValue() == off.GetValue() && on.GetKey() != off.GetKey()
           && (on.GetMidiType() == GOMidiEvent::MIDI_RPN || on.GetMidiType() == GOMidiEvent::MIDI_NRPN)) {
-          if (m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+          if (m_ReceiverType == MIDI_RECV_ENCLOSURE)
             is_range = false;
           else
             is_range = true;
@@ -734,7 +734,7 @@ void GOMidiEventRecvTab::DetectEvent() {
         }
         if (on.GetKey() != off.GetKey() && !is_range)
           continue;
-        if (m_midi.GetType() == MIDI_RECV_ENCLOSURE) {
+        if (m_ReceiverType == MIDI_RECV_ENCLOSURE) {
           GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
           unsigned low = off.GetValue();
           unsigned high = on.GetValue();
@@ -893,9 +893,9 @@ void GOMidiEventRecvTab::DetectEvent() {
 
   GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
   GOMidiEvent &event = m_OnList[0];
-  unsigned low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
-  unsigned high_value = (m_midi.GetType() == MIDI_RECV_MANUAL
-                         || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
+  unsigned low_value = m_ReceiverType == MIDI_RECV_MANUAL ? 1 : 0;
+  unsigned high_value = (m_ReceiverType == MIDI_RECV_MANUAL
+                         || m_ReceiverType == MIDI_RECV_ENCLOSURE)
     ? 127
     : 1;
   switch (event.GetMidiType()) {
@@ -941,7 +941,7 @@ void GOMidiEventRecvTab::DetectEvent() {
   }
   e.deviceId = event.GetDevice();
   e.channel = event.GetChannel();
-  if (m_midi.GetType() != MIDI_RECV_MANUAL)
+  if (m_ReceiverType != MIDI_RECV_MANUAL)
     e.key = event.GetKey();
   e.low_key = 0;
   e.high_key = 127;

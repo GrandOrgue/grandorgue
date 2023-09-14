@@ -38,6 +38,7 @@ private:
 
   GOMidiReceiverBase *m_original;
   GOMidiReceiverEventPatternList m_midi;
+  GOMidiReceiverType m_ReceiverType;
   GOMidiListener m_listener;
   GOChoice<GOMidiReceiverMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
