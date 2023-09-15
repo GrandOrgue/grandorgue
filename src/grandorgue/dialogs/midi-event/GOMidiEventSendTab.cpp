@@ -8,12 +8,12 @@
 #include "GOMidiEventSendTab.h"
 
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/gbsizer.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
-#include <wx/checkbox.h>
 
 #include "config/GOConfig.h"
 #include "dialogs/common/GOTabbedDialog.h"

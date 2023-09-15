@@ -86,7 +86,12 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         wxString::Format(wxT("MIDISendKey%03d"), i + 1),
         0,
         0x200000);
-      m_events[i].useNoteOff = cfg.ReadBoolean(CMBSetting, group, wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1), false, true);
+      m_events[i].useNoteOff = cfg.ReadBoolean(
+        CMBSetting,
+        group,
+        wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
+        false,
+        true);
     }
 
     if (HasLowValue(eventType))
@@ -153,7 +158,10 @@ void GOMidiSender::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
         group,
         wxString::Format(wxT("MIDISendKey%03d"), i + 1),
         m_events[i].key);
-      cfg.WriteBoolean(group, wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1), m_events[i].useNoteOff);
+      cfg.WriteBoolean(
+        group,
+        wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
+        m_events[i].useNoteOff);
     }
 
     if (HasLowValue(m_events[i].type))
