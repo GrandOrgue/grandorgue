@@ -16,18 +16,21 @@ struct GOMidiEventPattern {
   int key;
   int low_value;
   int high_value;
+  bool useNoteOff;
 
   GOMidiEventPattern(
     unsigned uDeviceId,
     int iChannel,
     int iKey,
     int iLowValue = 0,
-    int iHighValue = 0)
+    int iHighValue = 0,
+    bool iUseNoteOff = true)
     : deviceId(uDeviceId),
       channel(iChannel),
       key(iKey),
       low_value(iLowValue),
-      high_value(iHighValue) {}
+      high_value(iHighValue),
+      useNoteOff(iUseNoteOff) {}
 
   bool operator==(const GOMidiEventPattern &other) const;
 

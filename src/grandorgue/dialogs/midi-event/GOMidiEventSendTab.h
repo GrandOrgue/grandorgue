@@ -18,6 +18,7 @@ class wxButton;
 class wxChoice;
 class wxSpinCtrl;
 class wxStaticText;
+class wxCheckBox;
 
 class GOConfig;
 class GOMidiDeviceConfigList;
@@ -38,6 +39,7 @@ private:
   wxChoice *m_eventno, *m_channel, *m_device;
   wxStaticText *m_KeyLabel;
   wxSpinCtrl *m_key;
+  wxCheckBox *m_noteOff;
   wxStaticText *m_LowValueLabel;
   wxSpinCtrl *m_LowValue;
   wxStaticText *m_HighValueLabel;
@@ -72,7 +74,8 @@ protected:
     ID_HIGH_VALUE,
     ID_START,
     ID_LENGTH,
-    ID_COPY
+    ID_COPY,
+    ID_NOTE_OFF
   };
 
 public:

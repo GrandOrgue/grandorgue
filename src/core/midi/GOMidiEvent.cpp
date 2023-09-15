@@ -19,7 +19,8 @@ GOMidiEvent::GOMidiEvent()
     m_value(-1),
     m_time(0),
     m_string(),
-    m_data() {}
+    m_data(),
+	m_useNoteOff(true) {}
 
 GOMidiEvent::GOMidiEvent(const GOMidiEvent &e)
   : m_MidiType(e.m_MidiType),
@@ -29,7 +30,8 @@ GOMidiEvent::GOMidiEvent(const GOMidiEvent &e)
     m_device(e.m_device),
     m_time(e.m_time),
     m_string(e.m_string.Clone()),
-    m_data(e.m_data) {}
+    m_data(e.m_data),
+	m_useNoteOff(e.m_useNoteOff) {}
 
 void GOMidiEvent::SetString(const wxString &str, unsigned length) {
   unsigned len = str.length();
@@ -185,7 +187,7 @@ void GOMidiEvent::ToMidi(
     if (GetChannel() == -1)
       return;
     m.resize(3);
-    if (GetValue() == 0)
+    if (GetValue() == 0 && m_useNoteOff)
       m[0] = 0x80;
     else
       m[0] = 0x90;
@@ -503,4 +505,12 @@ wxString GOMidiEvent::ToString(GOMidiMap &map) const {
   default:
     return wxEmptyString;
   }
+}
+
+void GOMidiEvent::SetUseNoteOff(bool useNoteOff) {
+	m_useNoteOff = useNoteOff;
+}
+
+bool GOMidiEvent::IsUsingNoteOff() {
+  return m_useNoteOff;
 }
