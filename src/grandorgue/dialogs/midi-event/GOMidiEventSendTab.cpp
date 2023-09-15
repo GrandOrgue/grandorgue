@@ -13,6 +13,7 @@
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
+#include <wx/checkbox.h>
 
 #include "config/GOConfig.h"
 #include "dialogs/common/GOTabbedDialog.h"
@@ -99,6 +100,14 @@ GOMidiEventSendTab::GOMidiEventSendTab(
     0,
     127);
   grid->Add(m_key, wxGBPosition(4, 1));
+
+  m_noteOff = new wxCheckBox(
+    this,
+    ID_NOTE_OFF,
+    wxT("Use Note OFF (0x80)"),
+    wxDefaultPosition,
+    wxDefaultSize);
+  grid->Add(m_noteOff, wxGBPosition(4, 2));
 
   m_LowValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
   grid->Add(
@@ -288,8 +297,11 @@ void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
   if (m_original->HasKey(type)) {
     m_key->Enable();
     m_key->SetRange(0, m_original->KeyLimit(type));
-  } else
+    m_noteOff->Enable();
+  } else {
     m_key->Disable();
+    m_noteOff->Disable();
+  }
   if (m_original->HasLowValue(type)) {
     m_LowValue->Enable();
     m_LowValue->SetRange(0, m_original->LowValueLimit(type));
@@ -413,6 +425,7 @@ void GOMidiEventSendTab::LoadEvent() {
   m_HighValue->SetValue(e.high_value);
   m_StartValue->SetValue(e.start);
   m_LengthValue->SetValue(e.length);
+  m_noteOff->SetValue(e.useNoteOff);
 }
 
 void GOMidiEventSendTab::StoreEvent() {
@@ -430,6 +443,7 @@ void GOMidiEventSendTab::StoreEvent() {
   e.high_value = m_HighValue->GetValue();
   e.start = m_StartValue->GetValue();
   e.length = m_LengthValue->GetValue();
+  e.useNoteOff = m_noteOff->GetValue();
 }
 
 void GOMidiEventSendTab::OnNewClick(wxCommandEvent &event) {

@@ -55,6 +55,7 @@ private:
   GOTime m_time;
   wxString m_string;
   std::vector<uint8_t> m_data;
+  bool m_useNoteOff;
 
 public:
   GOMidiEvent();
@@ -91,6 +92,9 @@ public:
     std::vector<std::vector<unsigned char>> &msg, GOMidiMap &map) const;
 
   wxString ToString(GOMidiMap &map) const;
+
+  void SetUseNoteOff(bool useNoteOff);
+  bool IsUsingNoteOff();
 };
 
 #endif
