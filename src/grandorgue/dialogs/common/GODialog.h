@@ -8,12 +8,14 @@
 #ifndef GODIALOG_H
 #define GODIALOG_H
 
+#include "wx/dialog.h"
 #include <wx/sizer.h>
 
 #include "gui/primitives/go_gui_utils.h"
 #include "help/GOHelpRequestor.h"
 
 #include "GODialogCloser.h"
+#include "GODialogSizeSet.h"
 
 class wxSizer;
 
@@ -28,6 +30,7 @@ private:
   static const wxString WX_EMPTY;
 
   const wxString m_name;
+  GOGUISizeKeeper &r_SizeKeeper;
   wxSizer *p_ButtonSizer = nullptr;
 
   // For using in constructors only
@@ -46,7 +49,13 @@ private:
 
 protected:
   // for two-step dialog construction.
-  GODialog(const wxString &name) : GODialogCloser(this), m_name(name) {
+  GODialog(
+    const wxString &name,
+    GODialogSizeSet &dialogSizes,
+    const wxString &dialogSelector = wxEmptyString)
+    : GODialogCloser(this),
+      m_name(name),
+      r_SizeKeeper(dialogSizes.AssureSizeKeeperFor(name, dialogSelector)) {
     Init();
   }
   // wxDialog::Create must be called in the derived class constructor
@@ -80,6 +89,8 @@ protected:
     wxWindow *parent,
     const wxString &name,  // not translated
     const wxString &title, // translated
+    GODialogSizeSet &dialogSizes,
+    const wxString dialogSelector = wxEmptyString,
     long addStyle = 0,
     long buttonFlags = DEFAULT_BUTTON_FLAGS)
     : DialogClass(
@@ -90,7 +101,8 @@ protected:
       wxDefaultSize,
       DEFAULT_DIALOG_STYLE | addStyle),
       GODialogCloser(this),
-      m_name(name) {
+      m_name(name),
+      r_SizeKeeper(dialogSizes.AssureSizeKeeperFor(name, dialogSelector)) {
     Init();
     wxDialog::SetIcon(get_go_icon());
     p_ButtonSizer = ((DialogClass *)this)->CreateButtonSizer(buttonFlags);
@@ -104,6 +116,15 @@ protected:
    * @return the current subsection name or an emptyy string
    */
   virtual const wxString &GetHelpSuffix() const { return WX_EMPTY; }
+
+public:
+  bool Show(bool show = true) override {
+    if (show)
+      r_SizeKeeper.ApplySizeInfo(*(DialogClass *)this);
+    else
+      r_SizeKeeper.CaptureSizeInfo(*(DialogClass *)this);
+    return DialogClass::Show(show);
+  }
 
   DECLARE_EVENT_TABLE()
 };

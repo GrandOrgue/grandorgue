@@ -188,13 +188,17 @@ void GODocument::ShowMidiList() {
       GODocument::MIDI_LIST,
       NULL,
       new GOMidiListDialog(
-        this, NULL, m_OrganController->GetMidiConfigurators()));
+        this,
+        NULL,
+        m_OrganController->GetConfig().m_DialogSizes,
+        m_OrganController->GetMidiConfigurators()));
   }
 }
 
 void GODocument::ShowMIDIEventDialog(
   void *element,
   const wxString &title,
+  const wxString &dialogSelector,
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
@@ -205,6 +209,7 @@ void GODocument::ShowMIDIEventDialog(
       NULL,
       title,
       m_OrganController->GetSettings(),
+      dialogSelector,
       event,
       sender,
       key,

@@ -44,6 +44,7 @@ public:
   GOMidiListDialog(
     GODocumentBase *doc,
     wxWindow *parent,
+    GODialogSizeSet &dialogSizes,
     const std::vector<GOMidiConfigurator *> &midi_elements);
   ~GOMidiListDialog();
 

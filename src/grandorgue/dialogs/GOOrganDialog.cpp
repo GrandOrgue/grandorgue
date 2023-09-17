@@ -86,7 +86,11 @@ static const unsigned RELEASE_LENGTH_MAX_INDEX
 
 GOOrganDialog::GOOrganDialog(
   GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
-  : GOSimpleDialog(parent, wxT("Organ settings"), _("Organ settings")),
+  : GOSimpleDialog(
+    parent,
+    wxT("Organ settings"),
+    _("Organ settings"),
+    organController->GetDialogSizeSet()),
     GOView(doc, this),
     m_OrganController(organController),
     m_Apply(NULL),

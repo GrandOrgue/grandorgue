@@ -43,7 +43,12 @@ GOSettingsDialog::GOSettingsDialog(
   GOMidi &midi,
   SettingsReasons *reasons)
   : GOTabbedDialog(
-    parent, "Settings", _("Program Settings"), wxDIALOG_NO_PARENT),
+    parent,
+    "Settings",
+    _("Program Settings"),
+    config.m_DialogSizes,
+    wxEmptyString,
+    wxDIALOG_NO_PARENT),
     m_ReasonsAlreadyShown(false),
     m_Reasons(reasons) {
   wxBookCtrlBase *notebook = GetBook();
