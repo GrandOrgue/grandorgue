@@ -703,18 +703,6 @@ void GOMidiEventRecvTab::DetectEvent() {
         }
 
         GOMidiEvent off = m_OffList[j];
-        bool is_range = false;
-
-        if (
-          on.GetValue() == off.GetValue() && on.GetKey() != off.GetKey()
-          && (on.GetMidiType() == GOMidiEvent::MIDI_RPN || on.GetMidiType() == GOMidiEvent::MIDI_NRPN)) {
-          if (m_ReceiverType == MIDI_RECV_ENCLOSURE)
-            is_range = false;
-          else
-            is_range = true;
-        } else if (on.GetMidiType() == GOMidiEvent::MIDI_PGM_CHANGE) {
-          is_range = true;
-        }
 
         if (on.GetDevice() != off.GetDevice())
           continue;
@@ -722,8 +710,12 @@ void GOMidiEventRecvTab::DetectEvent() {
           continue;
         if (on.GetMidiType() != off.GetMidiType())
           continue;
+
+        const GOMidiEvent::MidiType eventMidiType = on.GetMidiType();
+        bool is_range = false;
+
         if (m_ReceiverType == MIDI_RECV_MANUAL) {
-          if (on.GetMidiType() != GOMidiEvent::MIDI_NOTE)
+          if (eventMidiType != GOMidiEvent::MIDI_NOTE)
             continue;
           e.type = MIDI_M_NOTE;
           e.deviceId = on.GetDevice();
@@ -738,14 +730,63 @@ void GOMidiEventRecvTab::DetectEvent() {
             e.low_key -= 4;
           }
           hasFilled = true;
+        } else if (
+          (m_ReceiverType == MIDI_RECV_BUTTON
+           || m_ReceiverType == MIDI_RECV_DRAWSTOP)
+          && (eventMidiType == GOMidiEvent::MIDI_CTRL_CHANGE)
+          && on.GetKey() != off.GetKey() && on.GetValue() == off.GetValue()) {
+          GOMidiReceiverEventPattern ep;
+
+          // different keys for On and Off
+          ep.deviceId = on.GetDevice();
+          ep.channel = on.GetChannel();
+          ep.low_value = on.GetValue();
+          ep.high_value = on.GetValue();
+          ep.debounce_time = 0;
+          e = ep;
+          e.type = MIDI_M_CTRL_CHANGE_FIXED_ON;
+          e.key = on.GetKey();
+
+          GOMidiReceiverEventPattern *pOffEvent = nullptr;
+
+          // find among existing events
+          for (unsigned lk = m_midi.GetEventCount(), k = 0; k < lk; k++)
+            if ((int)k != m_current) {
+              GOMidiReceiverEventPattern &eK = m_midi.GetEvent(k);
+
+              if (
+                eK.channel == e.channel && eK.deviceId == e.deviceId
+                && (eK.type == MIDI_M_CTRL_CHANGE_FIXED_ON || eK.type == MIDI_M_CTRL_CHANGE_FIXED_OFF)) {
+                pOffEvent = &eK;
+                break;
+              }
+            }
+
+          // Add a new event it has not been found
+          if (!pOffEvent)
+            pOffEvent = &m_midi.GetEvent(m_midi.AddNewEvent());
+          *pOffEvent = ep;
+          pOffEvent->type = MIDI_M_CTRL_CHANGE_FIXED_OFF;
+          pOffEvent->key = off.GetKey();
+          hasFilled = true;
         } else {
+          if (
+            on.GetValue() == off.GetValue() && on.GetKey() != off.GetKey()
+            && (eventMidiType == GOMidiEvent::MIDI_RPN || eventMidiType == GOMidiEvent::MIDI_NRPN || eventMidiType == GOMidiEvent::MIDI_CTRL_CHANGE)) {
+            if (m_ReceiverType == MIDI_RECV_ENCLOSURE)
+              is_range = false;
+            else
+              is_range = true;
+          } else if (eventMidiType == GOMidiEvent::MIDI_PGM_CHANGE) {
+            is_range = true;
+          }
           if (on.GetKey() != off.GetKey() && !is_range)
             continue;
           if (m_ReceiverType == MIDI_RECV_ENCLOSURE) {
             unsigned low = off.GetValue();
             unsigned high = on.GetValue();
             int key = on.GetKey();
-            switch (on.GetMidiType()) {
+            switch (eventMidiType) {
             case GOMidiEvent::MIDI_CTRL_CHANGE:
               e.type = MIDI_M_CTRL_CHANGE;
               break;
@@ -776,7 +817,7 @@ void GOMidiEventRecvTab::DetectEvent() {
             unsigned low = 0;
             unsigned high = 1;
             int key = on.GetKey();
-            switch (on.GetMidiType()) {
+            switch (eventMidiType) {
             case GOMidiEvent::MIDI_NOTE:
               e.type = MIDI_M_NOTE;
               if (on.GetValue() > 0 && off.GetValue() > 0)
