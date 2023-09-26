@@ -37,6 +37,7 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
     m_MidiMap(config.GetMidiMap()),
     m_original(event),
     m_midi(*event),
+    m_ReceiverType(event->GetType()),
     m_listener(),
     m_ListenState(0),
     m_Timer(this, ID_TIMER) {
@@ -216,44 +217,43 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
   ;
 
   m_eventtype->Append(_("(none)"), MIDI_M_NONE);
-  if (m_midi.GetType() != MIDI_RECV_ENCLOSURE)
+  if (m_ReceiverType != MIDI_RECV_ENCLOSURE)
     m_eventtype->Append(_("9x Note"), MIDI_M_NOTE);
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("9x Note On Toggle"), MIDI_M_NOTE_ON);
     m_eventtype->Append(_("9x Note Off Toggle"), MIDI_M_NOTE_OFF);
     m_eventtype->Append(_("9x Note On/Off Toggle"), MIDI_M_NOTE_ON_OFF);
   }
-  if (m_midi.GetType() != MIDI_RECV_MANUAL)
+  if (m_ReceiverType != MIDI_RECV_MANUAL)
     m_eventtype->Append(_("Bx Controller"), MIDI_M_CTRL_CHANGE);
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("Bx Controller On Toggle"), MIDI_M_CTRL_CHANGE_ON);
     m_eventtype->Append(_("Bx Controller Off Toggle"), MIDI_M_CTRL_CHANGE_OFF);
     m_eventtype->Append(
       _("Bx Controller On/Off Toggle"), MIDI_M_CTRL_CHANGE_ON_OFF);
   }
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE)
+    m_ReceiverType != MIDI_RECV_MANUAL && m_ReceiverType != MIDI_RECV_ENCLOSURE)
     m_eventtype->Append(_("Cx Program Change"), MIDI_M_PGM_CHANGE);
-  if (m_midi.GetType() == MIDI_RECV_MANUAL) {
+  if (m_ReceiverType == MIDI_RECV_MANUAL) {
     m_eventtype->Append(_("9x Note without Velocity"), MIDI_M_NOTE_NO_VELOCITY);
     m_eventtype->Append(
       _("9x Note short octave at low key"), MIDI_M_NOTE_SHORT_OCTAVE);
     m_eventtype->Append(_("9x Note without map"), MIDI_M_NOTE_NORMAL);
   }
 
-  if (m_midi.GetType() != MIDI_RECV_MANUAL) {
+  if (m_ReceiverType != MIDI_RECV_MANUAL) {
     m_eventtype->Append(_("RPN"), MIDI_M_RPN);
     m_eventtype->Append(_("NRPN"), MIDI_M_NRPN);
     m_eventtype->Append(_("Cx Program Change Range"), MIDI_M_PGM_RANGE);
   }
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("RPN On Toggle"), MIDI_M_RPN_ON);
     m_eventtype->Append(_("RPN Off Toggle"), MIDI_M_RPN_OFF);
     m_eventtype->Append(_("RPN On/Off Toggle"), MIDI_M_RPN_ON_OFF);
@@ -265,8 +265,8 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
   }
 
   if (
-    m_midi.GetType() != MIDI_RECV_MANUAL
-    && m_midi.GetType() != MIDI_RECV_ENCLOSURE) {
+    m_ReceiverType != MIDI_RECV_MANUAL
+    && m_ReceiverType != MIDI_RECV_ENCLOSURE) {
     m_eventtype->Append(_("Ctrl Change Bitfield"), MIDI_M_CTRL_BIT);
     m_eventtype->Append(
       _("Bx Ctrl Change Fixed Value"), MIDI_M_CTRL_CHANGE_FIXED);
@@ -355,14 +355,14 @@ void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {
     m_HighValue->Disable();
   if (m_original->HasKey(type)) {
     m_data->Enable();
-    if (m_midi.GetType() == MIDI_RECV_MANUAL)
+    if (m_ReceiverType == MIDI_RECV_MANUAL)
       m_data->SetRange(-35, 35);
     else
       m_data->SetRange(0, m_original->KeyLimit(type));
   } else
     m_data->Disable();
 
-  if (m_midi.GetType() == MIDI_RECV_MANUAL) {
+  if (m_ReceiverType == MIDI_RECV_MANUAL) {
     m_LowValueLabel->SetLabel(_("L&owest velocity:"));
     m_HighValueLabel->SetLabel(_("H&ighest velocity:"));
     m_DataLabel->SetLabel(_("&Transpose:"));
@@ -560,7 +560,7 @@ void GOMidiEventRecvTab::OnListenAdvancedClick(wxCommandEvent &event) {
 void GOMidiEventRecvTab::OnTimer(wxTimerEvent &event) {
   if (m_ListenState == 2) {
     wxString label;
-    switch (m_midi.GetType()) {
+    switch (m_ReceiverType) {
     case MIDI_RECV_MANUAL:
       label = _("Please press the highest key with minimal velocity");
       break;
@@ -626,7 +626,7 @@ void GOMidiEventRecvTab::StartListen(bool type) {
   } else {
     m_ListenState = 2;
     wxString label;
-    switch (m_midi.GetType()) {
+    switch (m_ReceiverType) {
     case MIDI_RECV_MANUAL:
       label = _("Please press the lowest key with minimal velocity");
       break;
@@ -680,13 +680,20 @@ bool GOMidiEventRecvTab::SimilarEvent(
 }
 
 void GOMidiEventRecvTab::DetectEvent() {
+  // We will fill the event pattern here
+  GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
+  // whether we has already filled the event
+  bool hasFilled = false;
+
   if (m_ListenState == 3) {
     for (unsigned i = 0; i < m_OnList.size(); i++) {
       if (i + 1 < m_OnList.size()) {
         if (SimilarEvent(m_OnList[i], m_OnList[i + 1]))
           continue;
       }
+
       GOMidiEvent on = m_OnList[i];
+
       for (unsigned j = 0; j < m_OffList.size(); j++) {
         if (j + 1 < m_OffList.size()) {
           if (SimilarEvent(m_OffList[j], m_OffList[j + 1])) {
@@ -694,17 +701,30 @@ void GOMidiEventRecvTab::DetectEvent() {
               continue;
           }
         }
+
         GOMidiEvent off = m_OffList[j];
+        bool is_range = false;
+
+        if (
+          on.GetValue() == off.GetValue() && on.GetKey() != off.GetKey()
+          && (on.GetMidiType() == GOMidiEvent::MIDI_RPN || on.GetMidiType() == GOMidiEvent::MIDI_NRPN)) {
+          if (m_ReceiverType == MIDI_RECV_ENCLOSURE)
+            is_range = false;
+          else
+            is_range = true;
+        } else if (on.GetMidiType() == GOMidiEvent::MIDI_PGM_CHANGE) {
+          is_range = true;
+        }
+
         if (on.GetDevice() != off.GetDevice())
           continue;
         if (on.GetChannel() != off.GetChannel())
           continue;
         if (on.GetMidiType() != off.GetMidiType())
           continue;
-        if (m_midi.GetType() == MIDI_RECV_MANUAL) {
+        if (m_ReceiverType == MIDI_RECV_MANUAL) {
           if (on.GetMidiType() != GOMidiEvent::MIDI_NOTE)
             continue;
-          GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
           e.type = MIDI_M_NOTE;
           e.deviceId = on.GetDevice();
           e.channel = on.GetChannel();
@@ -717,237 +737,224 @@ void GOMidiEventRecvTab::DetectEvent() {
             e.type = MIDI_M_NOTE_SHORT_OCTAVE;
             e.low_key -= 4;
           }
-          LoadEvent();
-          StopListen();
-          return;
-        }
-        bool is_range = false;
-        if (
-          on.GetValue() == off.GetValue() && on.GetKey() != off.GetKey()
-          && (on.GetMidiType() == GOMidiEvent::MIDI_RPN || on.GetMidiType() == GOMidiEvent::MIDI_NRPN)) {
-          if (m_midi.GetType() == MIDI_RECV_ENCLOSURE)
-            is_range = false;
-          else
-            is_range = true;
-        } else if (on.GetMidiType() == GOMidiEvent::MIDI_PGM_CHANGE) {
-          is_range = true;
-        }
-        if (on.GetKey() != off.GetKey() && !is_range)
-          continue;
-        if (m_midi.GetType() == MIDI_RECV_ENCLOSURE) {
-          GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
-          unsigned low = off.GetValue();
-          unsigned high = on.GetValue();
-          int key = on.GetKey();
-          switch (on.GetMidiType()) {
-          case GOMidiEvent::MIDI_CTRL_CHANGE:
-            e.type = MIDI_M_CTRL_CHANGE;
-            break;
-          case GOMidiEvent::MIDI_RPN:
-            e.type = MIDI_M_RPN;
-            break;
-          case GOMidiEvent::MIDI_NRPN:
-            e.type = MIDI_M_NRPN;
-            break;
-          case GOMidiEvent::MIDI_PGM_CHANGE:
-            e.type = MIDI_M_PGM_RANGE;
-            low = off.GetKey();
-            high = on.GetKey();
-            key = -1;
-            break;
-          default:
+          hasFilled = true;
+        } else {
+          if (on.GetKey() != off.GetKey() && !is_range)
             continue;
-          }
-          e.deviceId = on.GetDevice();
-          e.channel = on.GetChannel();
-          e.key = key;
-          e.low_key = 0;
-          e.high_key = 0;
-          e.high_value = high;
-          e.low_value = low;
-          LoadEvent();
-          StopListen();
-          return;
-        }
-        GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
-        unsigned low = 0;
-        unsigned high = 1;
-        int key = on.GetKey();
-        switch (on.GetMidiType()) {
-        case GOMidiEvent::MIDI_NOTE:
-          e.type = MIDI_M_NOTE;
-          if (on.GetValue() > 0 && off.GetValue() > 0)
-            e.type = MIDI_M_NOTE_ON;
-          if (on.GetValue() == 0 && off.GetValue() == 0)
-            e.type = MIDI_M_NOTE_OFF;
-          break;
-        case GOMidiEvent::MIDI_CTRL_CHANGE:
-          e.type = MIDI_M_CTRL_CHANGE;
-          if (on.GetValue() == off.GetValue())
-            e.type = on.GetValue() > 0 ? MIDI_M_CTRL_CHANGE_ON
-                                       : MIDI_M_CTRL_CHANGE_OFF;
-          for (unsigned k = 0; k < 7; k++)
-            if (on.GetValue() == off.GetValue() + (1 << k)) {
-              e.type = MIDI_M_CTRL_BIT;
-              low = k;
+          if (m_ReceiverType == MIDI_RECV_ENCLOSURE) {
+            unsigned low = off.GetValue();
+            unsigned high = on.GetValue();
+            int key = on.GetKey();
+            switch (on.GetMidiType()) {
+            case GOMidiEvent::MIDI_CTRL_CHANGE:
+              e.type = MIDI_M_CTRL_CHANGE;
+              break;
+            case GOMidiEvent::MIDI_RPN:
+              e.type = MIDI_M_RPN;
+              break;
+            case GOMidiEvent::MIDI_NRPN:
+              e.type = MIDI_M_NRPN;
+              break;
+            case GOMidiEvent::MIDI_PGM_CHANGE:
+              e.type = MIDI_M_PGM_RANGE;
+              low = off.GetKey();
+              high = on.GetKey();
+              key = -1;
+              break;
+            default:
+              continue;
             }
-          if (
-            off.GetValue() != 0 && (on.GetValue() & 64)
-            && (on.GetValue() & 63) == off.GetValue()) {
-            if (e.type != MIDI_M_CTRL_BIT || on.GetKey() >= 60) {
-              high = on.GetValue();
-              low = off.GetValue();
-              e.type = MIDI_M_CTRL_CHANGE_FIXED;
-            }
-          }
-          break;
-        case GOMidiEvent::MIDI_PGM_CHANGE:
-          if (on.GetKey() == off.GetKey())
-            e.type = MIDI_M_PGM_CHANGE;
-          else {
-            e.type = MIDI_M_PGM_RANGE;
-            low = off.GetKey();
-            high = on.GetKey();
-            key = -1;
-          }
-          break;
-        case GOMidiEvent::MIDI_RPN:
-          if (is_range) {
-            e.type = MIDI_M_RPN_RANGE;
-            key = on.GetValue();
-            low = off.GetKey();
-            high = on.GetKey();
-            break;
-          }
-          e.type = MIDI_M_RPN;
-          if (on.GetValue() == off.GetValue())
-            e.type = on.GetValue() > 0 ? MIDI_M_RPN_ON : MIDI_M_RPN_OFF;
-          break;
-        case GOMidiEvent::MIDI_NRPN:
-          if (is_range) {
-            e.type = MIDI_M_NRPN_RANGE;
-            key = on.GetValue();
-            low = off.GetKey();
-            high = on.GetKey();
-            break;
-          }
-          e.type = MIDI_M_NRPN;
-          if (on.GetValue() == off.GetValue())
-            e.type = on.GetValue() > 0 ? MIDI_M_NRPN_ON : MIDI_M_NRPN_OFF;
-          break;
-        case GOMidiEvent::MIDI_SYSEX_JOHANNUS_9:
-          e.type = MIDI_M_SYSEX_JOHANNUS_9;
-          break;
-        case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
-          e.type = MIDI_M_SYSEX_JOHANNUS_11;
-          high = 0x7f;
-          break;
-        case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
-          if (on.GetValue() == off.GetValue()) {
-            low = off.GetValue();
-            e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
+            e.deviceId = on.GetDevice();
+            e.channel = on.GetChannel();
+            e.key = key;
+            e.low_key = 0;
+            e.high_key = 0;
+            e.high_value = high;
+            e.low_value = low;
+            hasFilled = true;
           } else {
-            low = off.GetValue();
-            high = on.GetValue();
-            e.type = MIDI_M_SYSEX_VISCOUNT;
-          }
-          break;
-        case GOMidiEvent::MIDI_SYSEX_RODGERS_STOP_CHANGE:
-          for (unsigned i = 0; i
-               < m_original->LowerValueLimit(MIDI_M_SYSEX_RODGERS_STOP_CHANGE);
-               i++) {
-            if (
-              GORodgersGetBit(i, off.GetKey(), off.GetData())
-                == MIDI_BIT_STATE::MIDI_BIT_CLEAR
-              && GORodgersGetBit(i, on.GetKey(), on.GetData())
-                == MIDI_BIT_STATE::MIDI_BIT_SET) {
-              key = on.GetChannel();
-              low = i;
-              e.type = MIDI_M_SYSEX_RODGERS_STOP_CHANGE;
+            unsigned low = 0;
+            unsigned high = 1;
+            int key = on.GetKey();
+            switch (on.GetMidiType()) {
+            case GOMidiEvent::MIDI_NOTE:
+              e.type = MIDI_M_NOTE;
+              if (on.GetValue() > 0 && off.GetValue() > 0)
+                e.type = MIDI_M_NOTE_ON;
+              if (on.GetValue() == 0 && off.GetValue() == 0)
+                e.type = MIDI_M_NOTE_OFF;
+              break;
+            case GOMidiEvent::MIDI_CTRL_CHANGE:
+              e.type = MIDI_M_CTRL_CHANGE;
+              if (on.GetValue() == off.GetValue())
+                e.type = on.GetValue() > 0 ? MIDI_M_CTRL_CHANGE_ON
+                                           : MIDI_M_CTRL_CHANGE_OFF;
+              for (unsigned k = 0; k < 7; k++)
+                if (on.GetValue() == off.GetValue() + (1 << k)) {
+                  e.type = MIDI_M_CTRL_BIT;
+                  low = k;
+                }
+              if (
+                off.GetValue() != 0 && (on.GetValue() & 64)
+                && (on.GetValue() & 63) == off.GetValue()) {
+                if (e.type != MIDI_M_CTRL_BIT || on.GetKey() >= 60) {
+                  high = on.GetValue();
+                  low = off.GetValue();
+                  e.type = MIDI_M_CTRL_CHANGE_FIXED;
+                }
+              }
+              break;
+            case GOMidiEvent::MIDI_PGM_CHANGE:
+              if (on.GetKey() == off.GetKey())
+                e.type = MIDI_M_PGM_CHANGE;
+              else {
+                e.type = MIDI_M_PGM_RANGE;
+                low = off.GetKey();
+                high = on.GetKey();
+                key = -1;
+              }
+              break;
+            case GOMidiEvent::MIDI_RPN:
+              if (is_range) {
+                e.type = MIDI_M_RPN_RANGE;
+                key = on.GetValue();
+                low = off.GetKey();
+                high = on.GetKey();
+                break;
+              }
+              e.type = MIDI_M_RPN;
+              if (on.GetValue() == off.GetValue())
+                e.type = on.GetValue() > 0 ? MIDI_M_RPN_ON : MIDI_M_RPN_OFF;
+              break;
+            case GOMidiEvent::MIDI_NRPN:
+              if (is_range) {
+                e.type = MIDI_M_NRPN_RANGE;
+                key = on.GetValue();
+                low = off.GetKey();
+                high = on.GetKey();
+                break;
+              }
+              e.type = MIDI_M_NRPN;
+              if (on.GetValue() == off.GetValue())
+                e.type = on.GetValue() > 0 ? MIDI_M_NRPN_ON : MIDI_M_NRPN_OFF;
+              break;
+            case GOMidiEvent::MIDI_SYSEX_JOHANNUS_9:
+              e.type = MIDI_M_SYSEX_JOHANNUS_9;
+              break;
+            case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
+              e.type = MIDI_M_SYSEX_JOHANNUS_11;
+              high = 0x7f;
+              break;
+            case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
+              if (on.GetValue() == off.GetValue()) {
+                low = off.GetValue();
+                e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
+              } else {
+                low = off.GetValue();
+                high = on.GetValue();
+                e.type = MIDI_M_SYSEX_VISCOUNT;
+              }
+              break;
+            case GOMidiEvent::MIDI_SYSEX_RODGERS_STOP_CHANGE:
+              for (unsigned i = 0; i < m_original->LowerValueLimit(
+                                     MIDI_M_SYSEX_RODGERS_STOP_CHANGE);
+                   i++) {
+                if (
+                  GORodgersGetBit(i, off.GetKey(), off.GetData())
+                    == MIDI_BIT_STATE::MIDI_BIT_CLEAR
+                  && GORodgersGetBit(i, on.GetKey(), on.GetData())
+                    == MIDI_BIT_STATE::MIDI_BIT_SET) {
+                  key = on.GetChannel();
+                  low = i;
+                  e.type = MIDI_M_SYSEX_RODGERS_STOP_CHANGE;
+                }
+              }
+              break;
+            case GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI:
+              low = off.GetValue();
+              high = on.GetValue();
+              e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
+              break;
+
+            default:
+              continue;
             }
+            e.deviceId = on.GetDevice();
+            e.channel = on.GetChannel();
+            e.key = key;
+            e.low_key = 0;
+            e.high_key = 0;
+            e.low_value = low;
+            e.high_value = high;
+            e.debounce_time = 0;
+            hasFilled = true;
           }
-          break;
-        case GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI:
-          low = off.GetValue();
-          high = on.GetValue();
-          e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
-          break;
-
-        default:
-          continue;
         }
-        e.deviceId = on.GetDevice();
-        e.channel = on.GetChannel();
-        e.key = key;
-        e.low_key = 0;
-        e.high_key = 0;
-        e.low_value = low;
-        e.high_value = high;
-        e.debounce_time = 0;
-        LoadEvent();
-        StopListen();
-        return;
       }
+      if (hasFilled)
+        break;
     }
   }
 
-  GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
-  GOMidiEvent &event = m_OnList[0];
-  unsigned low_value = m_midi.GetType() == MIDI_RECV_MANUAL ? 1 : 0;
-  unsigned high_value = (m_midi.GetType() == MIDI_RECV_MANUAL
-                         || m_midi.GetType() == MIDI_RECV_ENCLOSURE)
-    ? 127
-    : 1;
-  switch (event.GetMidiType()) {
-  case GOMidiEvent::MIDI_NOTE:
-    e.type = MIDI_M_NOTE;
-    break;
-  case GOMidiEvent::MIDI_CTRL_CHANGE:
-    e.type = MIDI_M_CTRL_CHANGE;
-    break;
-  case GOMidiEvent::MIDI_PGM_CHANGE:
-    e.type = MIDI_M_PGM_CHANGE;
-    break;
-  case GOMidiEvent::MIDI_RPN:
-    e.type = MIDI_M_RPN;
-    break;
-  case GOMidiEvent::MIDI_NRPN:
-    e.type = MIDI_M_NRPN;
-    break;
-  case GOMidiEvent::MIDI_SYSEX_JOHANNUS_9:
-    e.type = MIDI_M_SYSEX_JOHANNUS_9;
-    break;
-  case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
-    e.type = MIDI_M_SYSEX_JOHANNUS_11;
-    high_value = 127;
-    break;
-  case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
-    e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
-    low_value = event.GetValue();
-    break;
-  case GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI:
-    e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
-    if (((event.GetValue() >> 7) & 0x0f) < 8) {
-      high_value = event.GetValue();
-      low_value = high_value + (6 << 7);
-    } else {
+  if (!hasFilled) {
+    // could not detect complex midi setup. Detect a simple one
+    GOMidiEvent &event = m_OnList[0];
+    unsigned low_value = m_ReceiverType == MIDI_RECV_MANUAL ? 1 : 0;
+    unsigned high_value = (m_ReceiverType == MIDI_RECV_MANUAL
+                           || m_ReceiverType == MIDI_RECV_ENCLOSURE)
+      ? 127
+      : 1;
+    switch (event.GetMidiType()) {
+    case GOMidiEvent::MIDI_NOTE:
+      e.type = MIDI_M_NOTE;
+      break;
+    case GOMidiEvent::MIDI_CTRL_CHANGE:
+      e.type = MIDI_M_CTRL_CHANGE;
+      break;
+    case GOMidiEvent::MIDI_PGM_CHANGE:
+      e.type = MIDI_M_PGM_CHANGE;
+      break;
+    case GOMidiEvent::MIDI_RPN:
+      e.type = MIDI_M_RPN;
+      break;
+    case GOMidiEvent::MIDI_NRPN:
+      e.type = MIDI_M_NRPN;
+      break;
+    case GOMidiEvent::MIDI_SYSEX_JOHANNUS_9:
+      e.type = MIDI_M_SYSEX_JOHANNUS_9;
+      break;
+    case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
+      e.type = MIDI_M_SYSEX_JOHANNUS_11;
+      high_value = 127;
+      break;
+    case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
+      e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
       low_value = event.GetValue();
-      high_value = low_value - (6 << 7);
-    }
-    break;
+      break;
+    case GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI:
+      e.type = MIDI_M_SYSEX_AHLBORN_GALANTI;
+      if (((event.GetValue() >> 7) & 0x0f) < 8) {
+        high_value = event.GetValue();
+        low_value = high_value + (6 << 7);
+      } else {
+        low_value = event.GetValue();
+        high_value = low_value - (6 << 7);
+      }
+      break;
 
-  default:
-    e.type = MIDI_M_NONE;
+    default:
+      e.type = MIDI_M_NONE;
+    }
+    e.deviceId = event.GetDevice();
+    e.channel = event.GetChannel();
+    if (m_ReceiverType != MIDI_RECV_MANUAL)
+      e.key = event.GetKey();
+    e.low_key = 0;
+    e.high_key = 127;
+    e.low_value = low_value;
+    e.high_value = high_value;
+    e.debounce_time = 0;
   }
-  e.deviceId = event.GetDevice();
-  e.channel = event.GetChannel();
-  if (m_midi.GetType() != MIDI_RECV_MANUAL)
-    e.key = event.GetKey();
-  e.low_key = 0;
-  e.high_key = 127;
-  e.low_value = low_value;
-  e.high_value = high_value;
-  e.debounce_time = 0;
 
   LoadEvent();
   StopListen();
