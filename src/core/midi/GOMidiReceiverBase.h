@@ -8,6 +8,7 @@
 #ifndef GOMIDIRECEIVERBASE_H
 #define GOMIDIRECEIVERBASE_H
 
+#include "GOMidiMatchType.h"
 #include "GOMidiReceiverEventPatternList.h"
 #include "GOTime.h"
 

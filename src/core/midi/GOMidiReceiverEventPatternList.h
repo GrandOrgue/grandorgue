@@ -10,23 +10,7 @@
 
 #include "GOMidiEventPatternList.h"
 #include "GOMidiReceiverEventPattern.h"
-
-typedef enum {
-  MIDI_RECV_DRAWSTOP,
-  MIDI_RECV_BUTTON,
-  MIDI_RECV_ENCLOSURE,
-  MIDI_RECV_MANUAL,
-  MIDI_RECV_SETTER,
-  MIDI_RECV_ORGAN,
-} GOMidiReceiverType;
-
-typedef enum {
-  MIDI_MATCH_NONE,
-  MIDI_MATCH_ON,
-  MIDI_MATCH_OFF,
-  MIDI_MATCH_CHANGE,
-  MIDI_MATCH_RESET,
-} GOMidiMatchType;
+#include "GOMidiReceiverType.h"
 
 using GOMidiReceiverEventPatternList
   = GOMidiEventPatternList<GOMidiReceiverType, GOMidiReceiverEventPattern>;
