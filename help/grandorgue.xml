@@ -964,11 +964,11 @@ instructions are displayed in the space above the OK / Cancel buttons.
     <sect1>
       <title>Send</title>
       <indexterm><primary>MidiEvent.Send</primary></indexterm>
-      <figure><title>MIDI sent event</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_send.png" /></imageobject></mediaobject></figure>
+      <figure><title>MIDI send event</title><mediaobject><imageobject><imagedata fileref="images/midi_event_editor_send.png" /></imageobject></mediaobject></figure>
       <para>This tab configures which MIDI events are sent from the console element.</para>
       <para>
 The overall layout is the same for all elements. Depending on the element being
-configured, the fields circled in red will be disabled or relabeled.
+configured, some fields will be disabled or relabeled.
       </para>
       <para>It is possible to define several sent events for the same GUI control. All of them will be sent whenever the control is triggered.</para>
       <variablelist>
@@ -995,6 +995,10 @@ event to all selected output devices ( in the <link
         <varlistentry>
           <term>Channel</term>
           <listitem><simpara>MIDI channel for this event (1-16, defaults to 1).</simpara></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Use Note Off (0x8X)</term>
+          <listitem><simpara>For MIDI note events the state of this checkbox will decide if the note off message is sent as a Note Off (0x8X) or as a Note On (0x9X) with velocity 0.</simpara></listitem>
         </varlistentry>
         <varlistentry>
           <term>New</term>

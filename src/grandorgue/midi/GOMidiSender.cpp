@@ -79,20 +79,21 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         wxString::Format(wxT("MIDISendChannel%03d"), i + 1),
         1,
         16);
-    if (HasKey(eventType)) {
+    if (HasKey(eventType))
       m_events[i].key = cfg.ReadInteger(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendKey%03d"), i + 1),
         0,
         0x200000);
+
+    if (IsNote(eventType))
       m_events[i].useNoteOff = cfg.ReadBoolean(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
         false,
         true);
-    }
 
     if (HasLowValue(eventType))
       m_events[i].low_value = cfg.ReadInteger(
@@ -153,16 +154,17 @@ void GOMidiSender::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
         group,
         wxString::Format(wxT("MIDISendChannel%03d"), i + 1),
         m_events[i].channel);
-    if (HasKey(m_events[i].type)) {
+    if (HasKey(m_events[i].type))
       cfg.WriteInteger(
         group,
         wxString::Format(wxT("MIDISendKey%03d"), i + 1),
         m_events[i].key);
+
+    if (IsNote(m_events[i].type))
       cfg.WriteBoolean(
         group,
         wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
         m_events[i].useNoteOff);
-    }
 
     if (HasLowValue(m_events[i].type))
       cfg.WriteInteger(
@@ -262,6 +264,15 @@ bool GOMidiSender::HasLength(GOMidiSenderMessageType type) {
     type == MIDI_S_HW_NAME_STRING || type == MIDI_S_HW_NAME_LCD
     || type == MIDI_S_HW_STRING || type == MIDI_S_HW_LCD)
     return true;
+  return false;
+}
+
+bool GOMidiSender::IsNote(GOMidiSenderMessageType type) {
+  if (
+    type == MIDI_S_NOTE || type == MIDI_S_NOTE_NO_VELOCITY
+    || type == MIDI_S_NOTE_ON || type == MIDI_S_NOTE_OFF)
+    return true;
+
   return false;
 }
 

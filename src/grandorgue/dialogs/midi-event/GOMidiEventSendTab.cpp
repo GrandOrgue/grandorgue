@@ -104,7 +104,7 @@ GOMidiEventSendTab::GOMidiEventSendTab(
   m_noteOff = new wxCheckBox(
     this,
     ID_NOTE_OFF,
-    wxT("Use Note OFF (0x80)"),
+    wxT("Use Note Off (0x8X)"),
     wxDefaultPosition,
     wxDefaultSize);
   grid->Add(m_noteOff, wxGBPosition(4, 2));
@@ -297,11 +297,12 @@ void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
   if (m_original->HasKey(type)) {
     m_key->Enable();
     m_key->SetRange(0, m_original->KeyLimit(type));
-    m_noteOff->Enable();
-  } else {
+  } else
     m_key->Disable();
+  if (m_original->IsNote(type))
+    m_noteOff->Enable();
+  else
     m_noteOff->Disable();
-  }
   if (m_original->HasLowValue(type)) {
     m_LowValue->Enable();
     m_LowValue->SetRange(0, m_original->LowValueLimit(type));
