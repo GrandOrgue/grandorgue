@@ -31,7 +31,8 @@ private:
   bool LoadArchive(
     GOOrganList &organList,
     const wxString &cacheDir,
-    const wxString id,
+    const wxString &id,
+    const wxString &archivePath,
     const wxString &parentId,
     wxString &errMsg);
 
@@ -50,7 +51,9 @@ public:
    * Load archive directories for the given archive id and all it's dependencies
    * @param organList - a list of registered organs
    * @param cacheDir - a directory to read/write index files
-   * @param mainId - an identifier of the main archive to load
+   * @param mainArchiveId - an identifier of the main archive to load
+   * @param mainArchivePath - an path to the main archive to load. If empty
+   *   then search among organList
    * @param errMsg - an error message that is returned if the operation fails
    * @return - true if success and false if any error occured (the error message
    *   is returned in errMsg)
@@ -58,7 +61,8 @@ public:
   bool LoadArchives(
     GOOrganList &organList,
     const wxString &cacheDir,
-    const wxString mainId,
+    const wxString &mainArchiveId,
+    const wxString &mainArchivePath,
     wxString &errMsg);
 
   /**
