@@ -87,6 +87,14 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         0,
         0x200000);
 
+    if (IsNote(eventType))
+      m_events[i].useNoteOff = cfg.ReadBoolean(
+        CMBSetting,
+        group,
+        wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
+        false,
+        true);
+
     if (HasLowValue(eventType))
       m_events[i].low_value = cfg.ReadInteger(
         CMBSetting,
@@ -151,6 +159,12 @@ void GOMidiSender::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
         group,
         wxString::Format(wxT("MIDISendKey%03d"), i + 1),
         m_events[i].key);
+
+    if (IsNote(m_events[i].type))
+      cfg.WriteBoolean(
+        group,
+        wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
+        m_events[i].useNoteOff);
 
     if (HasLowValue(m_events[i].type))
       cfg.WriteInteger(
@@ -253,6 +267,15 @@ bool GOMidiSender::HasLength(GOMidiSenderMessageType type) {
   return false;
 }
 
+bool GOMidiSender::IsNote(GOMidiSenderMessageType type) {
+  if (
+    type == MIDI_S_NOTE || type == MIDI_S_NOTE_NO_VELOCITY
+    || type == MIDI_S_NOTE_ON || type == MIDI_S_NOTE_OFF)
+    return true;
+
+  return false;
+}
+
 unsigned GOMidiSender::KeyLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_PGM_ON || type == MIDI_S_PGM_OFF)
     return 0x200000;
@@ -318,6 +341,7 @@ void GOMidiSender::SetDisplay(bool state) {
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(state ? m_events[i].high_value : m_events[i].low_value);
+      e.SetUseNoteOff(m_events[i].useNoteOff);
       r_proxy.SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_CTRL) {
@@ -396,6 +420,7 @@ void GOMidiSender::SetDisplay(bool state) {
       e.SetChannel(m_events[i].channel);
       e.SetKey(m_events[i].key);
       e.SetValue(m_events[i].high_value);
+      e.SetUseNoteOff(m_events[i].useNoteOff);
       r_proxy.SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_NOTE_OFF && !state) {
@@ -524,6 +549,7 @@ void GOMidiSender::SetKey(unsigned key, unsigned velocity) {
     e.SetDevice(m_ElementID);
     e.SetKey(key & 0x7F);
     e.SetValue(velocity & 0x7F);
+    e.SetUseNoteOff(true);
     r_proxy.SendMidiRecorderMessage(e);
   }
 
@@ -535,6 +561,7 @@ void GOMidiSender::SetKey(unsigned key, unsigned velocity) {
       e.SetChannel(m_events[i].channel);
       e.SetKey(key);
       e.SetValue(m_events[i].ConvertIntValueToDst(velocity));
+      e.SetUseNoteOff(m_events[i].useNoteOff);
       r_proxy.SendMidiMessage(e);
     }
     if (m_events[i].type == MIDI_S_NOTE_NO_VELOCITY) {
