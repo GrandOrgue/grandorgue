@@ -29,6 +29,8 @@ protected:
     wxWindow *win,
     const wxString &name,  // not translated
     const wxString &title, // translated
+    GODialogSizeSet &dialogSizes,
+    const wxString dialogSelector,
     long addStyle = 0);
 
   void AddTab(wxPanel *tab, const wxString &tabName, const wxString &tabTitle);

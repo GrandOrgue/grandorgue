@@ -9,6 +9,8 @@
 
 #include <wx/bookctrl.h>
 
+#include <config/GOConfig.h>
+
 #include "GOMidiEventKeyTab.h"
 #include "GOMidiEventRecvTab.h"
 #include "GOMidiEventSendTab.h"
@@ -16,13 +18,15 @@
 GOMidiEventDialog::GOMidiEventDialog(
   GODocumentBase *doc,
   wxWindow *parent,
-  wxString title,
+  const wxString &title,
   GOConfig &settings,
+  const wxString &dialogSelector,
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
   GOMidiSender *division)
-  : GOTabbedDialog(parent, "MidiEvent", title),
+  : GOTabbedDialog(
+    parent, "MidiEvent", title, settings.m_DialogSizes, dialogSelector),
     GOView(doc, this),
     m_recvPage(NULL),
     m_sendPage(NULL),

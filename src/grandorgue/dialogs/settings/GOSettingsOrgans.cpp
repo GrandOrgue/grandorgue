@@ -600,8 +600,9 @@ void GOSettingsOrgans::OnOrganMidi(wxCommandEvent &event) {
       this,
       wxString::Format(
         _("MIDI settings for organ %s"),
-        pOrganSlot->p_CurrentOrgan->GetChurchName().c_str()),
+        pOrganSlot->p_CurrentOrgan->GetChurchName()),
       m_config,
+      wxT("Organs"),
       &pOrganSlot->p_CurrentOrgan->GetMIDIReceiver(),
       NULL,
       NULL);

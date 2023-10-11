@@ -710,12 +710,12 @@ GOMidiMatchType GOMidiReceiverBase::Match(
       && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED_ON
       && m_events[i].key == e.GetKey()
       && e.GetValue() == m_events[i].high_value)
-      return debounce(e, MIDI_MATCH_CHANGE, i);
+      return debounce(e, MIDI_MATCH_ON, i);
     if (
       eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
       && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED_OFF
       && m_events[i].key == e.GetKey() && e.GetValue() == m_events[i].low_value)
-      return debounce(e, MIDI_MATCH_CHANGE, i);
+      return debounce(e, MIDI_MATCH_OFF, i);
     if (
       eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
       && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF

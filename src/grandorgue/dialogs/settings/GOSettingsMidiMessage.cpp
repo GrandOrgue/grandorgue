@@ -83,8 +83,9 @@ void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent &event) {
     NULL,
     this,
     wxString::Format(
-      _("Initial MIDI settings for %s"), m_config.GetEventTitle(index).c_str()),
+      _("Initial MIDI settings for %s"), m_config.GetEventTitle(index)),
     m_config,
+    wxT("InitialSettings"),
     recv,
     NULL,
     NULL);

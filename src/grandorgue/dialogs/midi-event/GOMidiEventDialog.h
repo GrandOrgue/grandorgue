@@ -14,12 +14,12 @@
 #include "document-base/GOView.h"
 #include "modification/GOModificationProxy.h"
 
+class GOConfig;
 class GOMidiShortcutReceiver;
 class GOMidi;
 class GOMidiListener;
 class GOMidiReceiverBase;
 class GOMidiSender;
-class GOConfig;
 class GOMidiEventKeyTab;
 class GOMidiEventRecvTab;
 class GOMidiEventSendTab;
@@ -42,8 +42,9 @@ public:
       call Destroy() if needed
     */
     wxWindow *parent,
-    wxString title,
+    const wxString &title,
     GOConfig &settings,
+    const wxString &dialogSelector,
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,

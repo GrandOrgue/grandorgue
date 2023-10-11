@@ -38,6 +38,7 @@ private:
 
   GOMidiReceiverBase *m_original;
   GOMidiReceiverEventPatternList m_midi;
+  GOMidiReceiverType m_ReceiverType;
   GOMidiListener m_listener;
   GOChoice<GOMidiReceiverMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
@@ -53,11 +54,28 @@ private:
   wxToggleButton *m_ListenSimple;
   wxStaticText *m_ListenInstructions;
   wxToggleButton *m_ListenAdvanced;
+
+  /**
+   * Event detection state
+   * 0 - not listened now
+   * 1 - "Listen for event", the the ON events are listened now
+   * 2 - "Detect complex MIDI setup", the ON events are listened now
+   * 3 - "Detect complex MIDI setup", the OFF events are listened now
+   */
   unsigned m_ListenState;
   wxButton *m_new, *m_delete;
   wxTimer m_Timer;
   int m_current;
+
+  /**
+   * the list of midi events for "Listen for event" or for the ON part of
+   * "Detect complex MIDI setup"
+   */
   std::vector<GOMidiEvent> m_OnList;
+  /**
+   * the list of midi events for "Listen for event" or for the OFF part of
+   * "Detect complex MIDI setup"
+   */
   std::vector<GOMidiEvent> m_OffList;
 
   bool SimilarEvent(const GOMidiEvent &e1, const GOMidiEvent &e2);

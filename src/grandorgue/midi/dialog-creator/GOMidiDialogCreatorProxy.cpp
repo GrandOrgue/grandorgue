@@ -10,11 +10,12 @@
 void GOMidiDialogCreatorProxy::ShowMIDIEventDialog(
   void *element,
   const wxString &title,
+  const wxString &dialogSelector,
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
   GOMidiSender *division) {
   if (p_creator)
     p_creator->ShowMIDIEventDialog(
-      element, title, event, sender, key, division);
+      element, title, dialogSelector, event, sender, key, division);
 }

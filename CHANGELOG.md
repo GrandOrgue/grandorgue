@@ -1,4 +1,6 @@
 - Implemented option to send MIDI Note Off as 0x8X or 0x9X with velocity 0 https://github.com/GrandOrgue/grandorgue/issues/1640
+- Added capability of control buttons with Control Change MIDI events with different keys but same values using "Bx Ctrl Change Fixed On Value Toggle" and "Bx Ctrl Change Fixed Off Value Toggle" https://github.com/GrandOrgue/grandorgue/issues/1392
+- Added saving dialog positions and sizes https://github.com/GrandOrgue/grandorgue/issues/1035
 - Increased maximum value of Pipe999LoopCrossfadeLength and Pipe999ReleaseCrossfadeLength. Now they are 3000 https://github.com/GrandOrgue/grandorgue/issues/1612
 # 3.12.3 (2023-08-14)
 - Fixed saving manual switches as global in yaml https://github.com/GrandOrgue/grandorgue/issues/1599

@@ -18,8 +18,10 @@ GOTabbedDialog::GOTabbedDialog(
   wxWindow *win,
   const wxString &name,  // not translated
   const wxString &title, // translated
+  GODialogSizeSet &dialogSizes,
+  const wxString dialogSelector,
   long addStyle)
-  : GODialog(win, name, title, addStyle) {
+  : GODialog(win, name, title, dialogSizes, dialogSelector, addStyle) {
   p_book = GetBookCtrl();
   p_book->SetExtraStyle(p_book->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
   wxPropertySheetDialog::GetInnerSizer()->Add(

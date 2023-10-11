@@ -22,6 +22,7 @@ public:
   void ShowMIDIEventDialog(
     void *element,
     const wxString &title,
+    const wxString &dialogSelector,
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,
