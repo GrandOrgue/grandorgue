@@ -94,7 +94,7 @@ public:
   wxString ToString(GOMidiMap &map) const;
 
   void SetUseNoteOff(bool useNoteOff) { m_IsToUseNoteOff = useNoteOff; }
-  bool IsUsingNoteOff() { return m_IsToUseNoteOff; }
+  bool IsUsingNoteOff() const { return m_IsToUseNoteOff; }
 };
 
 #endif
