@@ -26,7 +26,7 @@ public:
   GOArchiveManager(GOOrganList &OrganList, const wxString &cacheDir);
   ~GOArchiveManager();
 
-  GOArchive *LoadArchive(const wxString &id);
+  GOArchive *LoadArchive(const wxString &id, const wxString &archivePath);
   wxString InstallPackage(const wxString &path);
   bool RegisterPackage(const wxString &path);
   void RegisterPackageDirectory(const wxString &path);

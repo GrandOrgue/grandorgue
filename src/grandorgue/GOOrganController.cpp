@@ -347,7 +347,11 @@ wxString GOOrganController::Load(
     wxString errMsg;
 
     if (!m_FileStore.LoadArchives(
-          m_config, m_config.OrganCachePath(), organ.GetArchiveID(), errMsg))
+          m_config,
+          m_config.OrganCachePath(),
+          organ.GetArchiveID(),
+          organ.GetArchivePath(),
+          errMsg))
       return errMsg;
     m_ArchivePath = organ.GetArchivePath();
     m_odf = organ.GetODFPath();

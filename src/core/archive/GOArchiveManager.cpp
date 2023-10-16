@@ -108,25 +108,31 @@ bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
   return true;
 }
 
-GOArchive *GOArchiveManager::LoadArchive(const wxString &id) {
-  for (unsigned i = 0; i < m_OrganList.GetArchiveList().size(); i++) {
-    const GOArchiveFile *file = m_OrganList.GetArchiveList()[i];
-    if (file->GetID() != id)
-      continue;
-    GOArchive *archive = OpenArchive(file->GetPath());
-    if (!archive)
-      continue;
-    if (!ReadIndex(archive, archive->GetArchiveID() != id)) {
-      delete archive;
-      continue;
+GOArchive *GOArchiveManager::LoadArchive(
+  const wxString &id, const wxString &archivePath) {
+  GOArchive *pResArchive = nullptr;
+
+  for (const GOArchiveFile *file : m_OrganList.GetArchiveList()) {
+    const wxString &filePath = file->GetPath();
+
+    if (
+      file->GetID() == id
+      && (archivePath.IsEmpty() || filePath == archivePath)) {
+      GOArchive *archiveProbe = OpenArchive(filePath);
+
+      if (archiveProbe) {
+        bool isSameOrgan = archiveProbe->GetArchiveID() == id;
+
+        // if (!isSameOrgan) install organs from the archive but don't use it
+        if (ReadIndex(archiveProbe, !isSameOrgan) && isSameOrgan) {
+          pResArchive = archiveProbe;
+          break;
+        }
+        delete archiveProbe;
+      }
     }
-    if (archive->GetArchiveID() != id) {
-      delete archive;
-      continue;
-    }
-    return archive;
   }
-  return NULL;
+  return pResArchive;
 }
 
 wxString GOArchiveManager::InstallPackage(

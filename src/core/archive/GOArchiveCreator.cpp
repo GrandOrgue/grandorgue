@@ -66,7 +66,9 @@ bool GOArchiveCreator::AddPackage(const wxString &path) {
       return true;
     }
   m_packageIDs.push_back(a);
-  GOArchive *archive = m_Manager.LoadArchive(a->GetID());
+
+  GOArchive *archive = m_Manager.LoadArchive(a->GetID(), path);
+
   if (!archive) {
     wxLogError(_("Failed to load organ package %s"), path.c_str());
     return false;
