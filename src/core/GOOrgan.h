@@ -50,10 +50,13 @@ public:
   const wxString &GetChurchName() const;
   const wxString &GetOrganBuilder() const;
   const wxString &GetRecordingDetail() const;
-  const wxString &GetArchiveID() const;
+  const wxString &GetArchiveID() const { return m_ArchiveID; }
   const wxString &GetArchivePath() const { return m_ArchivePath; }
   void SetArchivePath(const wxString &archivePath) {
     m_ArchivePath = archivePath;
+  }
+  const wxString &GetPath() const {
+    return m_ArchiveID.IsEmpty() ? m_ODF : m_ArchivePath;
   }
   const wxString GetOrganHash() const;
   long GetLastUse() const;

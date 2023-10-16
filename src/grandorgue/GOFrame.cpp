@@ -522,6 +522,11 @@ void GOFrame::Init(wxString filename) {
     event.SetClientData(pReasons);
     GetEventHandler()->AddPendingEvent(event);
   }
+
+  // Remove demo organs that have been registered from temporary (appimage)
+  // directories and they are not more valid
+  m_config.RemoveInvalidTmpOrgans();
+
   GOArchiveManager manager(m_config, m_config.OrganCachePath());
   manager.RegisterPackageDirectory(m_config.GetPackageDirectory());
   manager.RegisterPackageDirectory(m_config.OrganPackagePath());

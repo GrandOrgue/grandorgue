@@ -9,10 +9,14 @@
 
 #include <algorithm>
 
-#include "GOOrgan.h"
+#include <wx/dir.h>
+#include <wx/stdpaths.h>
+
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+
+#include "GOOrgan.h"
 
 GOOrganList::GOOrganList() : m_OrganList(), m_ArchiveList() {}
 
@@ -44,11 +48,23 @@ void GOOrganList::Save(GOConfigWriter &cfg, GOMidiMap &map) {
     m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1), map);
 }
 
-const ptr_vector<GOOrgan> &GOOrganList::GetOrganList() const {
-  return m_OrganList;
-}
+void GOOrganList::RemoveInvalidTmpOrgans() {
+  const wxString tmpDirPrefix
+    = wxDir(wxStandardPaths::Get().GetTempDir()).GetNameWithSep();
 
-ptr_vector<GOOrgan> &GOOrganList::GetOrganList() { return m_OrganList; }
+  for (int i = m_OrganList.size() - 1; i >= 0; i--) {
+    const GOOrgan &o = *m_OrganList[i];
+
+    if (!o.IsUsable(*this) && o.GetPath().StartsWith(tmpDirPrefix))
+      m_OrganList.erase(i);
+  }
+  for (int i = m_ArchiveList.size() - 1; i >= 0; i--) {
+    const GOArchiveFile &aF = *m_ArchiveList[i];
+
+    if (!aF.IsUsable(*this) && aF.GetPath().StartsWith(tmpDirPrefix))
+      m_ArchiveList.erase(i);
+  }
+}
 
 static bool LRUCompare(const GOOrgan *a, const GOOrgan *b) {
   return a->GetLastUse() > b->GetLastUse();
