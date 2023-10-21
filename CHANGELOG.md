@@ -1,3 +1,4 @@
+- Adopted the build instruction and the build scripts to new ubuntu versions https://github.com/GrandOrgue/grandorgue/issues/1673
 - Improved concurrency handling
 - Added deregistering organs in the temporary directory that do not more exist https://github.com/GrandOrgue/grandorgue/issues/1660
 - Fixed error messages after multiple runs of GrandOrgue ftom Appimage with a demo organ https://github.com/GrandOrgue/grandorgue/issues/1660
