@@ -3,12 +3,12 @@
 # $1 - Version
 # $2 - Build version
 # $3 - Go source Dir. If not set then relative to the script dir
-# $4 - package suffix: empty or wx30
+# $4 - package suffix: empty or wx30 or wx32
 # $5 - target deb architecture. Default - current
 
 set -e
 
-DIR=$(dirname $0)
+DIR=$(readlink -f $(dirname $0))
 source $DIR/../set-ver-prms.sh "$1" "$2"
 
 if [[ -n "$3" ]]; then

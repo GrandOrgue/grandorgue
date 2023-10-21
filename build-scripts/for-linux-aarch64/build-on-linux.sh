@@ -7,7 +7,7 @@
 
 set -e
 
-DIR=$(dirname $0)
+DIR=$(readlink -f $(dirname $0))
 source $DIR/../set-ver-prms.sh "$1" "$2"
 
 if [[ -n "$3" ]]; then
