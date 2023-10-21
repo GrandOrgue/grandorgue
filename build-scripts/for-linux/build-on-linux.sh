@@ -33,6 +33,12 @@ GO_PRMS="-DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_PACKAGE_SUFFIX=$PACKAGE_SUFFIX \
   $($DIR/cmake-prm-yaml-cpp.bash $TARGET_ARCH)"
 
+# a workaround of the new dpkg-shlibdeps that prevents cpack from making the DEB package
+if ! dpkg-shlibdeps --help 1>/dev/null; then
+  echo "set(IGNORE_MISSING_INFO_FLAG --ignore-missing-info)" >CPackSpkgShlibdeps.cmake
+  GO_PRMS="$GO_PRMS -DCPACK_PROPERTIES_FILE=$(readlink -f CPackSpkgShlibdeps.cmake)"
+fi
+
 echo "cmake -G \"Unix Makefiles\" $GO_PRMS . $SRC_DIR"
 cmake -G "Unix Makefiles" $GO_PRMS . $SRC_DIR
 make -k $PARALLEL_PRMS VERBOSE=1 package
