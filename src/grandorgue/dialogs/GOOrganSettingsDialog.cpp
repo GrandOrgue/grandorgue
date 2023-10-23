@@ -474,24 +474,26 @@ int release_length_to_spin_index(unsigned releaseLength) {
 }
 
 void GOOrganSettingsDialog::Load() {
-  wxArrayTreeItemIds entries;
+  wxArrayTreeItemIds selectedItemIds;
 
-  m_Tree->GetSelections(entries);
-  for (unsigned i = 0; i < entries.size(); i++) {
-    if (!m_Tree->GetItemData(entries[i])) {
+  m_Tree->GetSelections(selectedItemIds);
+  for (unsigned i = 0; i < selectedItemIds.size(); i++) {
+    if (!m_Tree->GetItemData(selectedItemIds[i])) {
       wxLogError(
         _("Invalid item selected: %s"),
-        m_Tree->GetItemText(entries[i]).c_str());
-      entries.RemoveAt(i, 1);
+        m_Tree->GetItemText(selectedItemIds[i]).c_str());
+      selectedItemIds.RemoveAt(i, 1);
       i--;
     }
   }
 
   GOSampleStatistic stat;
-  for (unsigned i = 0; i < entries.size(); i++)
-    if (m_Tree->GetItemData(entries[i]))
-      stat.Cumulate(((OrganTreeItemData *)m_Tree->GetItemData(entries[i]))
-                      ->node->GetStatistic());
+
+  for (unsigned l = selectedItemIds.size(), i = 0; i < l; i++)
+    if (m_Tree->GetItemData(selectedItemIds[i]))
+      stat.Cumulate(
+        ((OrganTreeItemData *)m_Tree->GetItemData(selectedItemIds[i]))
+          ->node->GetStatistic());
 
   if (!stat.IsValid()) {
     m_MemoryDisplay->SetLabel(_("--- MB (--- MB end)"));
@@ -513,7 +515,7 @@ void GOOrganSettingsDialog::Load() {
       buf + wxString::Format(_(" (%.3f used)"), stat.GetUsedBits()));
   }
 
-  if (entries.size() == 0) {
+  if (selectedItemIds.size() == 0) {
     m_Last = NULL;
     m_Amplitude->ChangeValue(wxEmptyString);
     m_Amplitude->Disable();
@@ -551,7 +553,13 @@ void GOOrganSettingsDialog::Load() {
 
   m_AudioGroupAssistant->Enable();
 
-  if (entries.size() > 1) {
+  const bool isSingleSelection = selectedItemIds.size() == 1;
+
+  if (isSingleSelection) {
+    // all values will be rendered, so mark they as not modified
+    m_Discard->Disable();
+    m_Apply->Disable();
+  } else {
     if (!m_Amplitude->IsModified())
       m_Amplitude->ChangeValue(wxEmptyString);
     if (!m_Gain->IsModified())
@@ -565,7 +573,7 @@ void GOOrganSettingsDialog::Load() {
     if (!m_ReleaseLength->IsModified())
       m_ReleaseLength->ChangeValue(wxEmptyString);
     if (m_AudioGroup->GetValue() == m_LastAudioGroup) {
-      m_AudioGroup->SetValue(wxT(" "));
+      m_AudioGroup->ChangeValue(wxT(" "));
       m_LastAudioGroup = m_AudioGroup->GetValue();
     }
     if (m_IgnorePitch->IsChecked() == m_LastIgnorePitch) {
@@ -596,16 +604,15 @@ void GOOrganSettingsDialog::Load() {
       SetEmpty(m_ReleaseLoad);
       m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
     }
-  } else
-    m_Apply->Disable();
+  }
 
-  for (unsigned i = 0; i < entries.size(); i++)
-    if (m_Last && m_Tree->GetItemData(entries[i]) == m_Last)
+  for (unsigned i = 0; i < selectedItemIds.size(); i++)
+    if (m_Last && m_Tree->GetItemData(selectedItemIds[i]) == m_Last)
       return;
 
   m_Last = 0;
-  for (unsigned i = 0; i < entries.size() && !m_Last; i++)
-    m_Last = (OrganTreeItemData *)m_Tree->GetItemData(entries[i]);
+  for (unsigned i = 0; i < selectedItemIds.size() && !m_Last; i++)
+    m_Last = (OrganTreeItemData *)m_Tree->GetItemData(selectedItemIds[i]);
 
   m_Amplitude->Enable();
   m_AmplitudeSpin->Enable();
@@ -629,36 +636,36 @@ void GOOrganSettingsDialog::Load() {
   m_ReleaseLoad->Enable();
   m_Default->Enable();
   m_DefaultAll->Enable();
-  m_Discard->Disable();
 
-  float amplitude = m_Last->config->GetAmplitude();
-  float gain = m_Last->config->GetGain();
-  float manualTuning = m_Last->config->GetManualTuning();
-  float autoTuningCorrection = m_Last->config->GetAutoTuningCorrection();
-  unsigned delay = m_Last->config->GetDelay();
-  unsigned releaseLength = m_Last->node->GetEffectiveReleaseTail();
+  if (isSingleSelection) {
+    // fill the fields with values from the selected object
+    float amplitude = m_Last->config->GetAmplitude();
+    float gain = m_Last->config->GetGain();
+    float manualTuning = m_Last->config->GetManualTuning();
+    float autoTuningCorrection = m_Last->config->GetAutoTuningCorrection();
+    unsigned delay = m_Last->config->GetDelay();
+    unsigned releaseLength = m_Last->node->GetEffectiveReleaseTail();
 
-  if (entries.size() == 1)
     m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
-  m_AmplitudeSpin->SetValue(amplitude);
-  if (entries.size() == 1)
+    m_Amplitude->DiscardEdits();
+    m_AmplitudeSpin->SetValue(amplitude);
     m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
-  m_GainSpin->SetValue(gain);
-  if (entries.size() == 1)
+    m_Gain->DiscardEdits();
+    m_GainSpin->SetValue(gain);
     m_ManualTuning->ChangeValue(wxString::Format(wxT("%f"), manualTuning));
-  m_ManualTuningSpin->SetValue(manualTuning);
-  if (entries.size() == 1)
+    m_ManualTuning->DiscardEdits();
+    m_ManualTuningSpin->SetValue(manualTuning);
     m_AutoTuningCorrection->ChangeValue(
       wxString::Format(wxT("%f"), autoTuningCorrection));
-  m_AutoTuningCorrectionSpin->SetValue(autoTuningCorrection);
-  if (entries.size() == 1)
+    m_AutoTuningCorrection->DiscardEdits();
+    m_AutoTuningCorrectionSpin->SetValue(autoTuningCorrection);
     m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
-  m_DelaySpin->SetValue(delay);
-  if (entries.size() == 1)
+    m_Delay->DiscardEdits();
+    m_DelaySpin->SetValue(delay);
     m_ReleaseLength->ChangeValue(release_length_to_str(releaseLength));
-  m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
-  if (entries.size() == 1) {
-    m_AudioGroup->SetValue(m_Last->config->GetAudioGroup());
+    m_ReleaseLength->DiscardEdits();
+    m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
+    m_AudioGroup->ChangeValue(m_Last->config->GetAudioGroup());
     m_IgnorePitch->SetValue(m_Last->node->GetEffectiveIgnorePitch());
 
     int bits_per_sample = m_Last->config->GetBitsPerSample();
