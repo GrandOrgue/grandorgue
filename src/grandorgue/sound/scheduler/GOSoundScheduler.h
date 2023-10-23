@@ -20,12 +20,12 @@ private:
   std::vector<GOSoundWorkItem *> m_Work;
   std::vector<GOSoundWorkItem **> m_WorkItems;
   atomic_uint m_NextItem;
-  unsigned m_ItemCount;
+  atomic_uint m_ItemCount;
   unsigned m_RepeatCount;
   GOMutex m_Mutex;
 
-  void Lock();
-  void Unlock();
+  void Lock() { m_ItemCount = 0; }
+  void Unlock() { m_ItemCount = m_WorkItems.size(); }
   void Update();
 
   bool CompareItem(GOSoundWorkItem *a, GOSoundWorkItem *b);

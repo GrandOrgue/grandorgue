@@ -8,6 +8,7 @@
 #ifndef GOMUTEX_H
 #define GOMUTEX_H
 
+#include <atomic>
 #include <mutex>
 
 #include "GOThread.h"
@@ -16,7 +17,7 @@ class GOMutex {
 private:
   std::timed_mutex m_mutex;
 
-  const char *volatile m_LockerInfo;
+  std::atomic<const char *> m_LockerInfo;
 
   GOMutex(const GOMutex &) = delete;
   const GOMutex &operator=(const GOMutex &) = delete;

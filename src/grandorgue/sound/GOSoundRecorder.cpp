@@ -155,7 +155,7 @@ template <class T> void GOSoundRecorder::ConvertData() {
   unsigned start_pos = 0;
   T *buf = (T *)m_Buffer;
   for (unsigned i = 0; i < m_Outputs.size(); i++) {
-    m_Outputs[i]->Finish(m_Stop);
+    m_Outputs[i]->Finish(m_Stop.load());
 
     unsigned pos = start_pos;
     unsigned inc = m_Channels - m_Outputs[i]->GetChannels();
@@ -206,7 +206,7 @@ void GOSoundRecorder::Run(GOSoundThread *thread) {
 }
 
 void GOSoundRecorder::Exec() {
-  m_Stop = true;
+  m_Stop.store(true);
   Run();
 }
 
@@ -218,5 +218,5 @@ void GOSoundRecorder::Clear() {
 void GOSoundRecorder::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Done = false;
-  m_Stop = false;
+  m_Stop.store(false);
 }

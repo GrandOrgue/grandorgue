@@ -58,14 +58,14 @@ GOSoundEngine::~GOSoundEngine() {
 }
 
 void GOSoundEngine::Reset() {
-  if (m_HasBeenSetup) {
+  if (m_HasBeenSetup.load()) {
     for (unsigned i = 0; i < m_Windchests.size(); i++)
       m_Windchests[i]->Init(m_Tremulants);
   }
 
   m_Scheduler.Clear();
 
-  if (m_HasBeenSetup) {
+  if (m_HasBeenSetup.load()) {
     for (unsigned i = 0; i < m_Tremulants.size(); i++)
       m_Scheduler.Add(m_Tremulants[i]);
     for (unsigned i = 0; i < m_Windchests.size(); i++)
@@ -79,7 +79,7 @@ void GOSoundEngine::Reset() {
     if (m_TouchProcessor)
       m_Scheduler.Add(m_TouchProcessor.get());
   }
-  m_UsedPolyphony = 0;
+  m_UsedPolyphony.store(0);
 
   m_SamplerPool.ReturnAll();
   m_CurrentTime = 1;
@@ -186,7 +186,7 @@ void GOSoundEngine::StartSampler(
 }
 
 void GOSoundEngine::ClearSetup() {
-  m_HasBeenSetup = false;
+  m_HasBeenSetup.store(false);
 
   // the winchests may be still used from audio callbacks.
   // clear the pending sound before destroying the windchests
@@ -217,7 +217,7 @@ void GOSoundEngine::Setup(
       new GOSoundWindchestWorkItem(*this, organController->GetWindchest(i)));
   m_TouchProcessor = std::unique_ptr<GOSoundTouchWorkItem>(
     new GOSoundTouchWorkItem(organController->GetMemoryPool()));
-  m_HasBeenSetup = true;
+  m_HasBeenSetup.store(true);
   Reset();
 }
 
@@ -358,7 +358,7 @@ void GOSoundEngine::GetAudioOutput(
   size_t const nBytes = sizeof(float) * n_frames
     * m_AudioOutputs[audio_output + 1]->GetChannels();
 
-  if (m_HasBeenSetup) {
+  if (m_HasBeenSetup.load()) {
     m_AudioOutputs[audio_output + 1]->Finish(last);
     memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, nBytes);
   } else
@@ -370,8 +370,8 @@ void GOSoundEngine::NextPeriod() {
 
   m_CurrentTime += m_SamplesPerBuffer;
   unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
-  if (used_samplers > m_UsedPolyphony)
-    m_UsedPolyphony = used_samplers;
+  if (used_samplers > m_UsedPolyphony.load())
+    m_UsedPolyphony.store(used_samplers);
 
   m_Scheduler.Reset();
 }
@@ -640,8 +640,8 @@ void GOSoundEngine::UpdateVelocity(
 }
 
 const std::vector<double> &GOSoundEngine::GetMeterInfo() {
-  m_MeterInfo[0] = m_UsedPolyphony / (double)GetHardPolyphony();
-  m_UsedPolyphony = 0;
+  m_MeterInfo[0] = m_UsedPolyphony.load() / (double)GetHardPolyphony();
+  m_UsedPolyphony.store(0);
 
   for (unsigned i = 1; i < m_MeterInfo.size(); i++)
     m_MeterInfo[i] = 0;

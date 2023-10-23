@@ -11,6 +11,7 @@
 #include <wx/file.h>
 #include <wx/string.h>
 
+#include <atomic>
 #include <vector>
 
 #include "sound/scheduler/GOSoundWorkItem.h"
@@ -32,7 +33,7 @@ private:
   unsigned m_SamplesPerBuffer;
   bool m_Recording;
   bool m_Done;
-  volatile bool m_Stop;
+  std::atomic_bool m_Stop;
   std::vector<GOSoundBufferItem *> m_Outputs;
   char *m_Buffer;
 

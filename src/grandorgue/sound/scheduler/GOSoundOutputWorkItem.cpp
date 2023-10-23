@@ -37,11 +37,11 @@ void GOSoundOutputWorkItem::SetOutputs(
 }
 
 void GOSoundOutputWorkItem::Run(GOSoundThread *pThread) {
-  if (m_Done)
+  if (m_Done.load())
     return;
   GOMutexLocker locker(m_Mutex, false, "GOSoundOutputWorkItem::Run", pThread);
 
-  if (m_Done || !locker.IsLocked())
+  if (m_Done.load() || !locker.IsLocked())
     return;
 
   /* initialise the output buffer */
@@ -54,7 +54,7 @@ void GOSoundOutputWorkItem::Run(GOSoundThread *pThread) {
         continue;
 
       float *this_buff = m_Outputs[j / 2]->m_Buffer;
-      m_Outputs[j / 2]->Finish(m_Stop, pThread);
+      m_Outputs[j / 2]->Finish(m_Stop.load(), pThread);
       if (pThread && pThread->ShouldStop())
         return;
 
@@ -80,15 +80,15 @@ void GOSoundOutputWorkItem::Run(GOSoundThread *pThread) {
       c = 0;
   }
 
-  m_Done = true;
+  m_Done.store(true);
 }
 
 void GOSoundOutputWorkItem::Exec() { Run(); }
 
 void GOSoundOutputWorkItem::Finish(bool stop, GOSoundThread *pThread) {
   if (stop)
-    m_Stop = true;
-  if (!m_Done)
+    m_Stop.store(true);
+  if (!m_Done.load())
     Run(pThread);
 }
 
@@ -105,8 +105,8 @@ void GOSoundOutputWorkItem::ResetMeterInfo() {
 
 void GOSoundOutputWorkItem::Reset() {
   GOMutexLocker locker(m_Mutex);
-  m_Done = false;
-  m_Stop = false;
+  m_Done.store(false);
+  m_Stop.store(false);
 }
 
 unsigned GOSoundOutputWorkItem::GetGroup() { return AUDIOOUTPUT; }

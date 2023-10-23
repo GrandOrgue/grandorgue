@@ -44,7 +44,7 @@ bool GOMutex::LockOrStop(const char *lockerInfo, GOThread *pThread) {
     while (!pThread->ShouldStop() && !isLocked) {
       isLocked = DoLock(true);
       if (!isLocked && isFirstTime) {
-        const char *currentLockerInfo = m_LockerInfo;
+        const char *currentLockerInfo = m_LockerInfo.load();
 
         wxLogWarning(
           "GOMutex: timeout when locking mutex %p; currentLocker=%s "
@@ -59,12 +59,12 @@ bool GOMutex::LockOrStop(const char *lockerInfo, GOThread *pThread) {
     isLocked = DoLock(false);
 
   if (isLocked)
-    m_LockerInfo = LOCKER_INFO(lockerInfo);
+    m_LockerInfo.store(LOCKER_INFO(lockerInfo));
   return isLocked;
 }
 
 void GOMutex::Unlock() {
-  m_LockerInfo = NULL;
+  m_LockerInfo.store(NULL);
   DoUnlock();
 }
 
@@ -72,6 +72,6 @@ bool GOMutex::TryLock(const char *lockerInfo) {
   bool isLocked = DoTryLock();
 
   if (isLocked)
-    m_LockerInfo = LOCKER_INFO(lockerInfo);
+    m_LockerInfo.store(LOCKER_INFO(lockerInfo));
   return isLocked;
 }

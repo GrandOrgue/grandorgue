@@ -14,13 +14,13 @@ GOThread::GOThread() : m_Thread(), m_Stop(false) {}
 GOThread::~GOThread() { Stop(); }
 
 void GOThread::Start() {
-  m_Stop = false;
+  m_Stop.store(false);
   if (m_Thread.joinable())
     return;
   m_Thread = std::thread(GOThread::EntryPoint, this);
 }
 
-void GOThread::MarkForStop() { m_Stop = true; }
+void GOThread::MarkForStop() { m_Stop.store(true); }
 
 void GOThread::Wait() {
   if (m_Thread.joinable())
@@ -32,6 +32,6 @@ void GOThread::Stop() {
   Wait();
 }
 
-bool GOThread::ShouldStop() { return load_once(m_Stop); }
+bool GOThread::ShouldStop() { return m_Stop.load(); }
 
 void GOThread::EntryPoint(GOThread *thread) { thread->Entry(); }

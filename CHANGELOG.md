@@ -1,3 +1,4 @@
+- Improved concurrency handling
 - Added deregistering organs in the temporary directory that do not more exist https://github.com/GrandOrgue/grandorgue/issues/1660
 - Fixed error messages after multiple runs of GrandOrgue ftom Appimage with a demo organ https://github.com/GrandOrgue/grandorgue/issues/1660
 # 3.13.0 (2023-10-11)

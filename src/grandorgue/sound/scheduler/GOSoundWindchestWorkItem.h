@@ -8,6 +8,8 @@
 #ifndef GOSOUNDWINDCHESTWORKITEM_H
 #define GOSOUNDWINDCHESTWORKITEM_H
 
+#include <atomic>
+
 #include "ptrvector.h"
 #include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOMutex.h"
@@ -21,7 +23,7 @@ private:
   GOSoundEngine &m_engine;
   GOMutex m_Mutex;
   float m_Volume;
-  bool m_Done;
+  std::atomic_bool m_Done;
   GOWindchest *m_Windchest;
   std::vector<GOSoundTremulantWorkItem *> m_Tremulants;
 
@@ -40,7 +42,7 @@ public:
 
   float GetWindchestVolume();
   float GetVolume() {
-    if (!m_Done)
+    if (!m_Done.load())
       Run();
     return m_Volume;
   }
