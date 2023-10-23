@@ -31,6 +31,35 @@
 #include "GOOrganController.h"
 #include "GOSampleStatistic.h"
 
+enum {
+  ID_EVENT_TREE = 200,
+  ID_EVENT_APPLY,
+  ID_EVENT_DISCARD,
+  ID_EVENT_AUDIO_GROUP_ASSISTANT,
+  ID_EVENT_DEFAULT,
+  ID_EVENT_DEFAULT_ALL,
+  ID_EVENT_AMPLITUDE,
+  ID_EVENT_AMPLITUDE_SPIN,
+  ID_EVENT_GAIN,
+  ID_EVENT_GAIN_SPIN,
+  ID_EVENT_MANUAL_TUNING,
+  ID_EVENT_MANUAL_TUNING_SPIN,
+  ID_EVENT_AUTO_TUNING_CORRECTION,
+  ID_EVENT_AUTO_TUNING_CORRECTION_SPIN,
+  ID_EVENT_DELAY,
+  ID_EVENT_DELAY_SPIN,
+  ID_EVENT_RELEASE_LENGTH,
+  ID_EVENT_RELEASE_LENGTH_SPIN,
+  ID_EVENT_AUDIO_GROUP,
+  ID_EVENT_IGNORE_PITCH,
+  ID_EVENT_LOOP_LOAD,
+  ID_EVENT_ATTACK_LOAD,
+  ID_EVENT_RELEASE_LOAD,
+  ID_EVENT_BITS_PER_SAMPLE,
+  ID_EVENT_CHANNELS,
+  ID_EVENT_COMPRESS
+};
+
 class OrganTreeItemData : public wxTreeItemData {
 public:
   OrganTreeItemData(GOPipeConfigNode &c) {
@@ -46,20 +75,18 @@ DEFINE_LOCAL_EVENT_TYPE(wxEVT_TREE_UPDATED)
 
 BEGIN_EVENT_TABLE(GOOrganSettingsDialog, GOSimpleDialog)
 EVT_BUTTON(ID_EVENT_APPLY, GOOrganSettingsDialog::OnEventApply)
-EVT_BUTTON(ID_EVENT_RESET, GOOrganSettingsDialog::OnEventReset)
+EVT_BUTTON(ID_EVENT_DISCARD, GOOrganSettingsDialog::OnEventDiscard)
 EVT_BUTTON(ID_EVENT_DEFAULT, GOOrganSettingsDialog::OnEventDefault)
 EVT_BUTTON(ID_EVENT_DEFAULT_ALL, GOOrganSettingsDialog::OnEventDefaultAll)
 EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanging)
 EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanged)
-EVT_COMMAND(
-  ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganSettingsDialog::OnTreeUpdated)
+EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganSettingsDialog::OnTreeUpdated)
 EVT_TEXT(ID_EVENT_AMPLITUDE, GOOrganSettingsDialog::OnAmplitudeChanged)
 EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, GOOrganSettingsDialog::OnAmplitudeSpinChanged)
 EVT_TEXT(ID_EVENT_GAIN, GOOrganSettingsDialog::OnGainChanged)
 EVT_SPIN(ID_EVENT_GAIN_SPIN, GOOrganSettingsDialog::OnGainSpinChanged)
 EVT_TEXT(ID_EVENT_MANUAL_TUNING, GOOrganSettingsDialog::OnManualTuningChanged)
-EVT_SPIN(
-  ID_EVENT_MANUAL_TUNING_SPIN, GOOrganSettingsDialog::OnManualTuningSpinChanged)
+EVT_SPIN(ID_EVENT_MANUAL_TUNING_SPIN, GOOrganSettingsDialog::OnManualTuningSpinChanged)
 EVT_TEXT(
   ID_EVENT_AUTO_TUNING_CORRECTION,
   GOOrganSettingsDialog::OnAutoTuningCorrectionChanged)
@@ -100,7 +127,7 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     GOView(doc, this),
     m_OrganController(organController),
     m_Apply(NULL),
-    m_Reset(NULL),
+    m_Discard(NULL),
     m_Last(NULL),
     m_LoadChangeCnt(0) {
   wxGridBagSizer *const mainSizer = new wxGridBagSizer(5, 5);
@@ -364,8 +391,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   mainSizer->Add(m_Default, wxGBPosition(4, 1));
   m_DefaultAll = new wxButton(this, ID_EVENT_DEFAULT_ALL, _("Default for All"));
   mainSizer->Add(m_DefaultAll, wxGBPosition(4, 2));
-  m_Reset = new wxButton(this, ID_EVENT_RESET, _("Reset"));
-  mainSizer->Add(m_Reset, wxGBPosition(4, 3));
+  m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
+  mainSizer->Add(m_Discard, wxGBPosition(4, 3));
   m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
   mainSizer->Add(m_Apply, wxGBPosition(4, 4), wxDefaultSpan, wxRIGHT, 5);
 
@@ -515,7 +542,7 @@ void GOOrganSettingsDialog::Load() {
     m_AttackLoad->Disable();
     m_ReleaseLoad->Disable();
     m_Apply->Disable();
-    m_Reset->Disable();
+    m_Discard->Disable();
     m_Default->Disable();
     m_DefaultAll->Disable();
     m_AudioGroupAssistant->Disable();
@@ -602,7 +629,7 @@ void GOOrganSettingsDialog::Load() {
   m_ReleaseLoad->Enable();
   m_Default->Enable();
   m_DefaultAll->Enable();
-  m_Reset->Disable();
+  m_Discard->Disable();
 
   float amplitude = m_Last->config->GetAmplitude();
   float gain = m_Last->config->GetGain();
@@ -825,8 +852,8 @@ bool GOOrganSettingsDialog::Changed() {
 }
 
 void GOOrganSettingsDialog::Modified() {
-  if (m_Reset)
-    m_Reset->Enable();
+  if (m_Discard)
+    m_Discard->Enable();
   if (m_Apply)
     m_Apply->Enable();
 }
@@ -969,7 +996,7 @@ void GOOrganSettingsDialog::OnEventApply(wxCommandEvent &e) {
       e->config->SetReleaseLoad(m_ReleaseLoad->GetSelection() - 1);
   }
 
-  m_Reset->Disable();
+  m_Discard->Disable();
   m_Apply->Disable();
   if (m_Amplitude->IsModified()) {
     m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
@@ -1016,7 +1043,7 @@ void GOOrganSettingsDialog::OnEventApply(wxCommandEvent &e) {
   m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
 }
 
-void GOOrganSettingsDialog::OnEventReset(wxCommandEvent &e) {
+void GOOrganSettingsDialog::OnEventDiscard(wxCommandEvent &e) {
   m_Last = NULL;
   Load();
 }
@@ -1089,7 +1116,10 @@ bool GOOrganSettingsDialog::CheckForUnapplied() {
 
   if (res)
     GOMessageBox(
-      _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+      _("Please apply or discard changes first"),
+      _("Error"),
+      wxOK | wxICON_ERROR,
+      this);
   return res;
 }
 
