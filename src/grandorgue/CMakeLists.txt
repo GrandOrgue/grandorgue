@@ -88,7 +88,7 @@ dialogs/settings/GOSettingsOrgans.cpp
 dialogs/settings/GOSettingsReverb.cpp
 dialogs/settings/GOSettingsTemperaments.cpp
 dialogs/GOMidiListDialog.cpp
-dialogs/GOOrganDialog.cpp
+dialogs/GOOrganSettingsDialog.cpp
 dialogs/GOProgressDialog.cpp
 dialogs/GOSelectOrganDialog.cpp
 dialogs/GOSplash.cpp

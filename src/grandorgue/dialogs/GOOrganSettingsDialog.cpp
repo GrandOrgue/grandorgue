@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOOrganDialog.h"
+#include "GOOrganSettingsDialog.h"
 
 #include <unordered_set>
 

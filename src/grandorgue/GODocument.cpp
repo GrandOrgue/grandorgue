@@ -11,7 +11,7 @@
 
 #include "config/GOConfig.h"
 #include "dialogs/GOMidiListDialog.h"
-#include "dialogs/GOOrganDialog.h"
+#include "dialogs/GOOrganSettingsDialog.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "document-base/GOView.h"
 #include "gui/GOGUIPanel.h"
