@@ -173,12 +173,12 @@ void GODocument::OnMidiEvent(const GOMidiEvent &event) {
     m_OrganController->ProcessMidi(event);
 }
 
-void GODocument::ShowOrganDialog() {
+void GODocument::ShowOrganSettingsDialog() {
   if (!showWindow(GODocument::ORGAN_DIALOG, NULL) && m_OrganController) {
     registerWindow(
       GODocument::ORGAN_DIALOG,
       NULL,
-      new GOOrganDialog(this, NULL, m_OrganController));
+      new GOOrganSettingsDialog(this, NULL, m_OrganController));
   }
 }
 

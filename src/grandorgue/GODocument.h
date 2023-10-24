@@ -52,7 +52,7 @@ public:
   bool IsModified() const;
 
   void ShowPanel(unsigned id);
-  void ShowOrganDialog();
+  void ShowOrganSettingsDialog();
   void ShowMidiList();
 
   bool Save();

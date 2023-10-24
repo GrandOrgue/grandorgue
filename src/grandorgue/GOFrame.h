@@ -117,7 +117,7 @@ private:
   void OnRevert(wxCommandEvent &event);
   void OnProperties(wxCommandEvent &event);
 
-  void OnEditOrgan(wxCommandEvent &event);
+  void OnOrganSettings(wxCommandEvent &event);
   void OnMidiList(wxCommandEvent &event);
 
   void OnAudioPanic(wxCommandEvent &event);
