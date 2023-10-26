@@ -16,6 +16,7 @@
 #include <wx/combobox.h>
 #include <wx/gbsizer.h>
 #include <wx/log.h>
+#include <wx/msgdlg.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
 #include <wx/spinbutt.h>
@@ -77,7 +78,6 @@ BEGIN_EVENT_TABLE(GOOrganSettingsDialog, GOSimpleDialog)
 EVT_BUTTON(ID_EVENT_APPLY, GOOrganSettingsDialog::OnEventApply)
 EVT_BUTTON(ID_EVENT_DISCARD, GOOrganSettingsDialog::OnEventDiscard)
 EVT_BUTTON(ID_EVENT_DEFAULT, GOOrganSettingsDialog::OnEventDefault)
-EVT_BUTTON(ID_EVENT_DEFAULT_ALL, GOOrganSettingsDialog::OnEventDefaultAll)
 EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanging)
 EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanged)
 EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganSettingsDialog::OnTreeUpdated)
@@ -1058,67 +1058,75 @@ void GOOrganSettingsDialog::OnEventDiscard(wxCommandEvent &e) {
   Load();
 }
 
-void GOOrganSettingsDialog::ResetSelectedToDefault(bool isForChildren) {
+void GOOrganSettingsDialog::OnEventDefault(wxCommandEvent &e) {
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);
 
   std::unordered_set<OrganTreeItemData *> oiSet;
+  bool hasChildren = false;
 
   // Fill idSet with entries
   for (const wxTreeItemId id : entries) {
     OrganTreeItemData *p = (OrganTreeItemData *)m_Tree->GetItemData(id);
+    wxTreeItemIdValue cookie;
 
     if (p)
       oiSet.insert(p);
+    if (!hasChildren && m_Tree->GetFirstChild(id, cookie).IsOk())
+      hasChildren = true;
   }
 
-  // add the children
-  if (isForChildren) {
-    // entries.size() it may not be precalculated because it is increased
-    for (unsigned i = 0; i < entries.size(); i++) {
-      const wxTreeItemId id = entries[i];
-      wxTreeItemIdValue cookie;
+  int wxForChildren = hasChildren
+    ? wxMessageBox(
+      _("Some selected objects have subobjects.\n"
+        "Do you want the subobjects also to be reset to defaults?\n"
+        "Note: resetting to defaults cann't be undone."),
+      _("Resetting to defaults"),
+      wxCENTRE | wxYES_NO | wxCANCEL | wxNO_DEFAULT,
+      this)
+    : wxNO;
 
-      for (wxTreeItemId c = m_Tree->GetFirstChild(id, cookie); c.IsOk();
-           c = m_Tree->GetNextChild(id, cookie)) {
-        OrganTreeItemData *p = (OrganTreeItemData *)m_Tree->GetItemData(c);
+  if (wxForChildren != wxCANCEL) {
+    // add the children
+    if (wxForChildren == wxYES) {
+      // entries.size() it may not be precalculated because it is increased
+      for (unsigned i = 0; i < entries.size(); i++) {
+        const wxTreeItemId id = entries[i];
+        wxTreeItemIdValue cookie;
 
-        if (p && oiSet.find(p) == oiSet.end()) {
-          oiSet.insert(p);
-          entries.push_back(c);
-          // c's children will be scanned later in the loop
+        for (wxTreeItemId c = m_Tree->GetFirstChild(id, cookie); c.IsOk();
+             c = m_Tree->GetNextChild(id, cookie)) {
+          OrganTreeItemData *p = (OrganTreeItemData *)m_Tree->GetItemData(c);
+
+          if (p && oiSet.find(p) == oiSet.end()) {
+            oiSet.insert(p);
+            entries.push_back(c);
+            // c's children will be scanned later in the loop
+          }
         }
       }
     }
+
+    for (OrganTreeItemData *e : oiSet) {
+      e->config->SetAmplitude(e->config->GetDefaultAmplitude());
+      e->config->SetGain(e->config->GetDefaultGain());
+      e->config->SetManualTuning(0);
+      e->config->SetAutoTuningCorrection(0);
+      e->config->SetDelay(e->config->GetDefaultDelay());
+      e->config->SetReleaseTail(0);
+      e->config->SetAudioGroup(wxEmptyString);
+      e->config->SetIgnorePitch(-1);
+      e->config->SetBitsPerSample(-1);
+      e->config->SetCompress(-1);
+      e->config->SetChannels(-1);
+      e->config->SetLoopLoad(-1);
+      e->config->SetAttackLoad(-1);
+      e->config->SetReleaseLoad(-1);
+    }
+
+    m_Last = NULL;
+    Load();
   }
-
-  for (OrganTreeItemData *e : oiSet) {
-    e->config->SetAmplitude(e->config->GetDefaultAmplitude());
-    e->config->SetGain(e->config->GetDefaultGain());
-    e->config->SetManualTuning(0);
-    e->config->SetAutoTuningCorrection(0);
-    e->config->SetDelay(e->config->GetDefaultDelay());
-    e->config->SetReleaseTail(0);
-    e->config->SetAudioGroup(wxEmptyString);
-    e->config->SetIgnorePitch(-1);
-    e->config->SetBitsPerSample(-1);
-    e->config->SetCompress(-1);
-    e->config->SetChannels(-1);
-    e->config->SetLoopLoad(-1);
-    e->config->SetAttackLoad(-1);
-    e->config->SetReleaseLoad(-1);
-  }
-
-  m_Last = NULL;
-  Load();
-}
-
-void GOOrganSettingsDialog::OnEventDefault(wxCommandEvent &e) {
-  ResetSelectedToDefault(false);
-}
-
-void GOOrganSettingsDialog::OnEventDefaultAll(wxCommandEvent &e) {
-  ResetSelectedToDefault(true);
 }
 
 bool GOOrganSettingsDialog::CheckForUnapplied() {
