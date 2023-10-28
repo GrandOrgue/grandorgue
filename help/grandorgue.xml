@@ -5393,6 +5393,11 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <para>This dropdown selects which audio group the sound from the selected element is routed to</para>
         <para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>
       </sect2>
+      <sect2>
+	<title>Ignore pitch info in organ samples wav files</title>
+	<para>This feature is closely related to the temperament feature which assumes, when the samples are dynamically retuned after a new temperament is applied, that pitch information was embedded in each sample file <emphasis>or in the pipe entry within the Organ Definition File</emphasis>. If the sample set designer has <emphasis role="bold">NOT</emphasis> embedded pitch information, the result is weird and unpredictable.</para>
+	<para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected. In this case, GrandOrgue assumes that the samples are tuned to equal temperament.</para>
+      </sect2>
     </sect1>
     <sect1>
       <title>Sample loading frame</title>
@@ -5545,6 +5550,12 @@ Within  windchests, the ranks are ordered as found in the definition file.
       <para>These buttons are used to drive the dialog and always act on the selected element.</para>
       <variablelist>
 	<varlistentry>
+	  <term>Help</term>
+	  <listitem>
+	    <simpara>This button opens the help window.</simpara>
+          </listitem>
+	</varlistentry>
+	<varlistentry>
 	  <term>Distribute audio groups</term>
 	  <listitem>
 	    <simpara>
@@ -5619,26 +5630,37 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <varlistentry>
           <term>Discard</term>
           <listitem>
-            <simpara>This button is grayed out until a value is modified. It restores all previously applied values.</simpara>
+            <simpara>
+	      This button is grayed out until any value is modified. It restores
+	      all previously changed values that have not yet been applied.
+	    </simpara>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>Apply</term>
           <listitem>
             <simpara>
-This button applies all modified values to the selected element.
-Changes <emphasis role="bold">MUST</emphasis> be applied before proceeding to another element modification
-or closing the dialog with the <emphasis role="bold">OK</emphasis> button.
+	      This button applies all modified values to the selected element.
+	      Changes <emphasis role="bold">MUST</emphasis> be applied or
+	      discarded before proceeding to another element modification or
+	      closing the dialog with the <emphasis role="bold">Close</emphasis>
+	      button.
             </simpara>
           </listitem>
         </varlistentry>
+	<varlistentry>
+	  <term>Close</term>
+	  <listitem>
+	    <simpara>This button closes the Organ Settings window.</simpara>
+	    <simpara>
+	      If some hanges have not yet been applied then GrandOrgue rejects
+	      closing the window and asks the user to press either
+	      <emphasis role="bold">Apply</emphasis> or
+	      <emphasis role="bold">Discard</emphasis> button before.
+	    </simpara>
+          </listitem>
+	</varlistentry>
       </variablelist>
-    </sect1>
-    <sect1>
-      <title>Tuning and Voicing frame</title>
-      <para>This frame displays a single check box labeled <emphasis>Ignore pitch info in organ samples wav files</emphasis>.</para>
-      <para>This feature is closely related to the temperament feature which assumes, when the samples are dynamically retuned after a new temperament is applied, that pitch information was embedded in each sample file <emphasis>or in the pipe entry within the Organ Definition File</emphasis>. If the sample set designer has <emphasis role="bold">NOT</emphasis> embedded pitch information, the result is weird and unpredictable.</para>
-      <para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected. In this case, GrandOrgue assumes that the samples are tuned to equal temperament.</para>
     </sect1>
   </chapter>
   <chapter>

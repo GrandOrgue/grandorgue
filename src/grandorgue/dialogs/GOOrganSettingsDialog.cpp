@@ -173,7 +173,7 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   grid->Add(m_BitDisplay);
   box1->Add(grid, 0, wxEXPAND | wxALL, 5);
   mainSizer->Add(
-    box1, wxGBPosition(0, 1), wxGBSpan(1, 4), wxEXPAND | wxRIGHT, 5);
+    box1, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND | wxRIGHT, 5);
 
   box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Settings"));
 
@@ -291,7 +291,7 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   gb->AddGrowableCol(1, 1);
   box1->Add(gb, 0, wxEXPAND | wxALL, 5);
   mainSizer->Add(
-    box1, wxGBPosition(1, 1), wxGBSpan(1, 4), wxEXPAND | wxRIGHT, 5);
+    box1, wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND | wxRIGHT, 5);
 
   box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample Loading"));
   grid = new wxFlexGridSizer(2, 5, 5);
@@ -394,36 +394,31 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
   box1->Add(grid, 0, wxEXPAND | wxALL, 5);
   mainSizer->Add(
-    box1, wxGBPosition(2, 1), wxGBSpan(1, 4), wxEXPAND | wxRIGHT, 5);
-
-  m_AudioGroupAssistant = new wxButton(
-    this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
-  /*
-  mainSizer->Add(
-    m_AudioGroupAssistant, wxGBPosition(4, 0), wxDefaultSpan, wxLEFT, 5);
-   */
-  m_Default = new wxButton(this, ID_EVENT_DEFAULT, _("Default"));
-  /*
-  mainSizer->Add(m_Default, wxGBPosition(4, 1));
-  m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
-  /*
-  mainSizer->Add(m_Discard, wxGBPosition(4, 3));
-  */
-  m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
-  /*
-  mainSizer->Add(m_Apply, wxGBPosition(4, 4), wxDefaultSpan, wxRIGHT, 5);
-   */
+    box1, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND | wxRIGHT, 5);
 
   // add a custom button 'Reason into the space of the standard dialog button
   wxSizer *const pButtonSizer = GetButtonSizer();
 
   if (pButtonSizer) {
+    pButtonSizer->InsertSpacer(2, 10);
+    m_AudioGroupAssistant = new wxButton(
+      this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
     pButtonSizer->Insert(
-      3, m_AudioGroupAssistant, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT, 10);
+      3,
+      m_AudioGroupAssistant,
+      0,
+      wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT,
+      2);
+    m_Default = new wxButton(this, ID_EVENT_DEFAULT, _("Default"));
     pButtonSizer->Insert(
-      4, m_Default, 0, wxALIGN_CENTRE_VERTICAL | wxRIGHT, 10);
-    pButtonSizer->Insert(5, m_Discard, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT, 10);
-    pButtonSizer->Insert(6, m_Apply, 0, wxALIGN_CENTRE_VERTICAL | wxRIGHT, 10);
+      4, m_Default, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
+    pButtonSizer->Insert(
+      6, m_Discard, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
+    pButtonSizer->Insert(
+      7, m_Apply, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    pButtonSizer->InsertSpacer(8, 10);
   }
 
   LayoutWithInnerSizer(mainSizer);
