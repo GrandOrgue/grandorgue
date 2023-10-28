@@ -409,7 +409,6 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
 
   LayoutWithInnerSizer(mainSizer);
 }
-
 bool GOOrganSettingsDialog::TransferDataToWindow() {
   FillTree();
   return true;
