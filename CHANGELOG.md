@@ -1,3 +1,4 @@
+- Added a confirmation box when restoring Organ Settings to default https://github.com/GrandOrgue/grandorgue/issues/1674
 - Replaced the Cancel and OK buttons in the Organ Settings dialog with the single Close button https://github.com/GrandOrgue/grandorgue/issues/1674
 - Fixed change tracking and enableing/disabling the Discard and Apply buttons in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1674
 - Renamed the Reset button to Discard in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1674
