@@ -398,14 +398,33 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
 
   m_AudioGroupAssistant = new wxButton(
     this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
+  /*
   mainSizer->Add(
     m_AudioGroupAssistant, wxGBPosition(4, 0), wxDefaultSpan, wxLEFT, 5);
+   */
   m_Default = new wxButton(this, ID_EVENT_DEFAULT, _("Default"));
+  /*
   mainSizer->Add(m_Default, wxGBPosition(4, 1));
   m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
+  /*
   mainSizer->Add(m_Discard, wxGBPosition(4, 3));
+  */
   m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
+  /*
   mainSizer->Add(m_Apply, wxGBPosition(4, 4), wxDefaultSpan, wxRIGHT, 5);
+   */
+
+  // add a custom button 'Reason into the space of the standard dialog button
+  wxSizer *const pButtonSizer = GetButtonSizer();
+
+  if (pButtonSizer) {
+    pButtonSizer->Insert(
+      3, m_AudioGroupAssistant, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT, 10);
+    pButtonSizer->Insert(
+      4, m_Default, 0, wxALIGN_CENTRE_VERTICAL | wxRIGHT, 10);
+    pButtonSizer->Insert(5, m_Discard, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT, 10);
+    pButtonSizer->Insert(6, m_Apply, 0, wxALIGN_CENTRE_VERTICAL | wxRIGHT, 10);
+  }
 
   LayoutWithInnerSizer(mainSizer);
 }
