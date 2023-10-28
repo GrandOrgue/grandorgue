@@ -5653,7 +5653,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
 	  <listitem>
 	    <simpara>This button closes the Organ Settings window.</simpara>
 	    <simpara>
-	      If some hanges have not yet been applied then GrandOrgue rejects
+	      If some changes have not yet been applied then GrandOrgue rejects
 	      closing the window and asks the user to press either
 	      <emphasis role="bold">Apply</emphasis> or
 	      <emphasis role="bold">Discard</emphasis> button before.
