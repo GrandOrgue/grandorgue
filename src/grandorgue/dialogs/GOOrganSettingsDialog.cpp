@@ -392,8 +392,6 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     m_AudioGroupAssistant, wxGBPosition(4, 0), wxDefaultSpan, wxLEFT, 5);
   m_Default = new wxButton(this, ID_EVENT_DEFAULT, _("Default"));
   mainSizer->Add(m_Default, wxGBPosition(4, 1));
-  m_DefaultAll = new wxButton(this, ID_EVENT_DEFAULT_ALL, _("Default for All"));
-  mainSizer->Add(m_DefaultAll, wxGBPosition(4, 2));
   m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
   mainSizer->Add(m_Discard, wxGBPosition(4, 3));
   m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
@@ -549,7 +547,6 @@ void GOOrganSettingsDialog::Load() {
     m_Apply->Disable();
     m_Discard->Disable();
     m_Default->Disable();
-    m_DefaultAll->Disable();
     m_AudioGroupAssistant->Disable();
     return;
   }
@@ -638,7 +635,6 @@ void GOOrganSettingsDialog::Load() {
   m_AttackLoad->Enable();
   m_ReleaseLoad->Enable();
   m_Default->Enable();
-  m_DefaultAll->Enable();
 
   if (isSingleSelection) {
     // fill the fields with values from the selected object

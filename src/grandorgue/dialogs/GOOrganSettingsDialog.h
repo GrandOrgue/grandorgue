@@ -65,7 +65,6 @@ private:
   wxButton *m_Apply;
   wxButton *m_Discard;
   wxButton *m_Default;
-  wxButton *m_DefaultAll;
   wxButton *m_AudioGroupAssistant;
   OrganTreeItemData *m_Last;
   unsigned m_LoadChangeCnt;

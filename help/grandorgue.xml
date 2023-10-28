@@ -5578,16 +5578,42 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <varlistentry>
           <term>Default</term>
           <listitem>
-            <simpara>This button restores the setting values for the selected element from the organ definition file.</simpara>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Default for All</term>
-          <listitem>
             <simpara>
-              This button restores the setting values for the selected element
-              and all its child elements from the organ definition file.
-            </simpara>
+	      This button restores the setting values for the selected elements
+	      from the organ definition file.
+	    </simpara>
+    	    <caution>
+	      <simpara>
+		This action can not be undone with the
+		<emphasis role="bold">Discard</emphasis> button.
+	      </simpara>
+    	    </caution>
+            <simpara>
+	      If any of selected elements has a subelement then a confirmation
+	      box will appear.
+	    </simpara>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata
+		  scalefit="1" width="100%"
+		  fileref="images/organ_settings_default.png"
+		/>
+	      </imageobject>
+	    </mediaobject>
+            <simpara>
+              Pushing <emphasis role="bold">No</emphasis> causes restoring the
+	      values only for the selected elements but not for their
+	      subelements.
+	    </simpara>
+            <simpara>
+              Pushing <emphasis role="bold">Yes</emphasis> causes restoring the
+	      values for the selected and for all their subelements
+	      recursivelly.
+	    </simpara>
+            <simpara>
+              Pushing <emphasis role="bold">Cancel</emphasis> causing not
+	      changing anything.
+	    </simpara>
           </listitem>
         </varlistentry>
         <varlistentry>
