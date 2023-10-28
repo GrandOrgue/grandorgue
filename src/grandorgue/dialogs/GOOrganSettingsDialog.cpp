@@ -116,6 +116,7 @@ static const unsigned RELEASE_LENGTH_MAX = 3000;
 static const unsigned RELEASE_LENGTH_STEP = 50;
 static const unsigned RELEASE_LENGTH_MAX_INDEX
   = RELEASE_LENGTH_MAX / RELEASE_LENGTH_STEP;
+static const wxSize EDIT_SIZE = wxSize(50, -1);
 
 GOOrganSettingsDialog::GOOrganSettingsDialog(
   GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
@@ -184,7 +185,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_Amplitude = new wxTextCtrl(this, ID_EVENT_AMPLITUDE, wxEmptyString);
+  m_Amplitude = new wxTextCtrl(
+    this, ID_EVENT_AMPLITUDE, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_Amplitude, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND);
   m_AmplitudeSpin = new wxSpinButton(this, ID_EVENT_AMPLITUDE_SPIN);
   m_AmplitudeSpin->SetRange(0, 1000);
@@ -196,7 +198,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_Gain = new wxTextCtrl(this, ID_EVENT_GAIN, wxEmptyString);
+  m_Gain = new wxTextCtrl(
+    this, ID_EVENT_GAIN, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_Gain, wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND);
   m_GainSpin = new wxSpinButton(this, ID_EVENT_GAIN_SPIN);
   m_GainSpin->SetRange(-120, 40);
@@ -208,7 +211,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_ManualTuning = new wxTextCtrl(this, ID_EVENT_MANUAL_TUNING, wxEmptyString);
+  m_ManualTuning = new wxTextCtrl(
+    this, ID_EVENT_MANUAL_TUNING, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_ManualTuning, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND);
   m_ManualTuningSpin = new wxSpinButton(this, ID_EVENT_MANUAL_TUNING_SPIN);
   m_ManualTuningSpin->SetRange(-1800, 1800);
@@ -219,8 +223,12 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_AutoTuningCorrection
-    = new wxTextCtrl(this, ID_EVENT_AUTO_TUNING_CORRECTION, wxEmptyString);
+  m_AutoTuningCorrection = new wxTextCtrl(
+    this,
+    ID_EVENT_AUTO_TUNING_CORRECTION,
+    wxEmptyString,
+    wxDefaultPosition,
+    EDIT_SIZE);
   gb->Add(m_AutoTuningCorrection, wxGBPosition(3, 1), wxDefaultSpan, wxEXPAND);
   m_AutoTuningCorrectionSpin
     = new wxSpinButton(this, ID_EVENT_AUTO_TUNING_CORRECTION_SPIN);
@@ -233,7 +241,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_Delay = new wxTextCtrl(this, ID_EVENT_DELAY, wxEmptyString);
+  m_Delay = new wxTextCtrl(
+    this, ID_EVENT_DELAY, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_Delay, wxGBPosition(4, 1), wxDefaultSpan, wxEXPAND);
   m_DelaySpin = new wxSpinButton(this, ID_EVENT_DELAY_SPIN);
   m_DelaySpin->SetRange(0, 10000);
@@ -245,8 +254,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_ReleaseLength
-    = new wxTextCtrl(this, ID_EVENT_RELEASE_LENGTH, wxEmptyString);
+  m_ReleaseLength = new wxTextCtrl(
+    this, ID_EVENT_RELEASE_LENGTH, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_ReleaseLength, wxGBPosition(5, 1), wxDefaultSpan, wxEXPAND);
   m_ReleaseLengthSpin = new wxSpinButton(this, ID_EVENT_RELEASE_LENGTH_SPIN);
   m_ReleaseLengthSpin->SetRange(0, RELEASE_LENGTH_MAX_INDEX);
@@ -258,7 +267,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
-  m_AudioGroup = new wxComboBox(this, ID_EVENT_AUDIO_GROUP, wxEmptyString);
+  m_AudioGroup = new wxComboBox(
+    this, ID_EVENT_AUDIO_GROUP, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   m_AudioGroup->Append(wxEmptyString);
   std::vector<wxString> audio_groups
     = m_OrganController->GetSettings().GetAudioGroups();
@@ -645,17 +655,17 @@ void GOOrganSettingsDialog::Load() {
     unsigned delay = m_Last->config->GetDelay();
     unsigned releaseLength = m_Last->node->GetEffectiveReleaseTail();
 
-    m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
+    m_Amplitude->ChangeValue(wxString::Format(wxT("%.1f"), amplitude));
     m_Amplitude->DiscardEdits();
     m_AmplitudeSpin->SetValue(amplitude);
-    m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
+    m_Gain->ChangeValue(wxString::Format(wxT("%.1f"), gain));
     m_Gain->DiscardEdits();
     m_GainSpin->SetValue(gain);
-    m_ManualTuning->ChangeValue(wxString::Format(wxT("%f"), manualTuning));
+    m_ManualTuning->ChangeValue(wxString::Format(wxT("%.1f"), manualTuning));
     m_ManualTuning->DiscardEdits();
     m_ManualTuningSpin->SetValue(manualTuning);
     m_AutoTuningCorrection->ChangeValue(
-      wxString::Format(wxT("%f"), autoTuningCorrection));
+      wxString::Format(wxT("%.1f"), autoTuningCorrection));
     m_AutoTuningCorrection->DiscardEdits();
     m_AutoTuningCorrectionSpin->SetValue(autoTuningCorrection);
     m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
@@ -700,7 +710,7 @@ void GOOrganSettingsDialog::Load() {
 
 void GOOrganSettingsDialog::OnAmplitudeSpinChanged(wxSpinEvent &e) {
   m_Amplitude->ChangeValue(
-    wxString::Format(wxT("%f"), (float)m_AmplitudeSpin->GetValue()));
+    wxString::Format(wxT("%.1f"), (float)m_AmplitudeSpin->GetValue()));
   m_Amplitude->MarkDirty();
   Modified();
 }
@@ -714,7 +724,7 @@ void GOOrganSettingsDialog::OnAmplitudeChanged(wxCommandEvent &e) {
 
 void GOOrganSettingsDialog::OnGainSpinChanged(wxSpinEvent &e) {
   m_Gain->ChangeValue(
-    wxString::Format(wxT("%f"), (float)m_GainSpin->GetValue()));
+    wxString::Format(wxT("%.1f"), (float)m_GainSpin->GetValue()));
   m_Gain->MarkDirty();
   Modified();
 }
@@ -728,7 +738,7 @@ void GOOrganSettingsDialog::OnGainChanged(wxCommandEvent &e) {
 
 void GOOrganSettingsDialog::OnManualTuningSpinChanged(wxSpinEvent &e) {
   m_ManualTuning->ChangeValue(
-    wxString::Format(wxT("%f"), (float)m_ManualTuningSpin->GetValue()));
+    wxString::Format(wxT("%.1f"), (float)m_ManualTuningSpin->GetValue()));
   m_ManualTuning->MarkDirty();
   Modified();
 }
@@ -743,7 +753,7 @@ void GOOrganSettingsDialog::OnManualTuningChanged(wxCommandEvent &e) {
 
 void GOOrganSettingsDialog::OnAutoTuningCorrectionSpinChanged(wxSpinEvent &e) {
   m_AutoTuningCorrection->ChangeValue(
-    wxString::Format(wxT("%f"), (float)m_AutoTuningCorrectionSpin->GetValue()));
+    wxString::Format(wxT("%.1f"), (float)m_AutoTuningCorrectionSpin->GetValue()));
   m_AutoTuningCorrection->MarkDirty();
   Modified();
 }
@@ -1005,25 +1015,25 @@ void GOOrganSettingsDialog::OnEventApply(wxCommandEvent &e) {
   m_Discard->Disable();
   m_Apply->Disable();
   if (m_Amplitude->IsModified()) {
-    m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
+    m_Amplitude->ChangeValue(wxString::Format(wxT("%.1f"), amp));
     m_Amplitude
       ->DiscardEdits(); // workaround of osx implementation bug
                         // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_Gain->IsModified()) {
-    m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
+    m_Gain->ChangeValue(wxString::Format(wxT("%.1f"), gain));
     m_Gain->DiscardEdits(); // workaround of osx implementation bug
                             // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_ManualTuning->IsModified()) {
-    m_ManualTuning->ChangeValue(wxString::Format(wxT("%f"), manualTuning));
+    m_ManualTuning->ChangeValue(wxString::Format(wxT("%.1f"), manualTuning));
     m_ManualTuning
       ->DiscardEdits(); // workaround of osx implementation bug
                         // https://github.com/oleg68/GrandOrgue/issues/87
   }
   if (m_AutoTuningCorrection->IsModified()) {
     m_AutoTuningCorrection->ChangeValue(
-      wxString::Format(wxT("%f"), autoTuningCorrection));
+      wxString::Format(wxT("%.1f"), autoTuningCorrection));
     m_AutoTuningCorrection
       ->DiscardEdits(); // workaround of osx implementation bug
                         // https://github.com/oleg68/GrandOrgue/issues/87
