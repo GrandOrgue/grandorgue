@@ -7,8 +7,6 @@
 
 #include "GOThread.h"
 
-#include "atomic.h"
-
 GOThread::GOThread() : m_Thread(), m_Stop(false) {}
 
 GOThread::~GOThread() { Stop(); }

@@ -8,33 +8,34 @@
 #ifndef GOSOUNDSAMPLERLIST_H
 #define GOSOUNDSAMPLERLIST_H
 
+#include <atomic>
+
 #include "GOSoundSampler.h"
-#include "threading/atomic.h"
 
 class GOSoundSamplerList {
 private:
-  atomic<GOSoundSampler *> m_GetList;
-  atomic<GOSoundSampler *> m_PutList;
-  atomic_uint m_PutCount;
+  std::atomic<GOSoundSampler *> m_GetList;
+  std::atomic<GOSoundSampler *> m_PutList;
+  std::atomic_uint m_PutCount;
 
 public:
   GOSoundSamplerList() { Clear(); }
 
   void Clear() {
-    m_GetList = 0;
-    m_PutList = 0;
-    m_PutCount = 0;
+    m_GetList.store(0);
+    m_PutList.store(0);
+    m_PutCount.store(0);
   }
 
-  GOSoundSampler *Peek() { return m_GetList; }
+  GOSoundSampler *Peek() { return m_GetList.load(); }
 
   GOSoundSampler *Get() {
     do {
-      GOSoundSampler *sampler = m_GetList;
+      GOSoundSampler *sampler = m_GetList.load();
       if (!sampler)
         return NULL;
       GOSoundSampler *next = sampler->next;
-      if (m_GetList.compare_exchange(sampler, next))
+      if (m_GetList.compare_exchange_strong(sampler, next))
         return sampler;
     } while (true);
   }
@@ -43,7 +44,7 @@ public:
     do {
       GOSoundSampler *current = m_PutList;
       sampler->next = current;
-      if (m_PutList.compare_exchange(current, sampler)) {
+      if (m_PutList.compare_exchange_strong(current, sampler)) {
         m_PutCount.fetch_add(1);
         return;
       }
@@ -56,7 +57,7 @@ public:
     GOSoundSampler *sampler;
     do {
       sampler = m_PutList;
-      if (m_PutList.compare_exchange(sampler, NULL))
+      if (m_PutList.compare_exchange_strong(sampler, nullptr))
         break;
     } while (true);
     m_PutCount.exchange(0);
@@ -64,7 +65,7 @@ public:
     if (!sampler)
       return;
     do {
-      GOSoundSampler *current = m_GetList;
+      GOSoundSampler *current = m_GetList.load();
       GOSoundSampler *next = sampler;
       if (current) {
         while (next) {
@@ -76,7 +77,7 @@ public:
           }
         }
       }
-      if (m_GetList.compare_exchange(current, sampler))
+      if (m_GetList.compare_exchange_strong(current, sampler))
         return;
       if (next)
         next->next = NULL;

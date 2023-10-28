@@ -8,34 +8,35 @@
 #ifndef GOSOUNDSIMPLESAMPLERLIST_H
 #define GOSOUNDSIMPLESAMPLERLIST_H
 
+#include <atomic>
+
 #include "GOSoundSampler.h"
-#include "threading/atomic.h"
 
 class GOSoundSimpleSamplerList {
 private:
-  atomic<GOSoundSampler *> m_List;
+  std::atomic<GOSoundSampler *> m_List;
 
 public:
   GOSoundSimpleSamplerList() { Clear(); }
 
-  void Clear() { m_List = 0; }
+  void Clear() { m_List.store(nullptr); }
 
   GOSoundSampler *Get() {
     do {
-      GOSoundSampler *sampler = m_List;
+      GOSoundSampler *sampler = m_List.load();
       if (!sampler)
         return NULL;
       GOSoundSampler *next = sampler->next;
-      if (m_List.compare_exchange(sampler, next))
+      if (m_List.compare_exchange_strong(sampler, next))
         return sampler;
     } while (true);
   }
 
   void Put(GOSoundSampler *sampler) {
     do {
-      GOSoundSampler *current = m_List;
+      GOSoundSampler *current = m_List.load();
       sampler->next = current;
-      if (m_List.compare_exchange(current, sampler))
+      if (m_List.compare_exchange_strong(current, sampler))
         return;
     } while (true);
   }

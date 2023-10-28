@@ -7,13 +7,6 @@
 
 #include "GOMemoryPool.h"
 
-#include <wx/file.h>
-#include <wx/intl.h>
-#include <wx/log.h>
-#include <wx/utils.h>
-
-#include "threading/GOMutexLocker.h"
-#include "threading/atomic.h"
 #ifdef __linux__
 #include <sys/mman.h>
 #endif
@@ -28,7 +21,14 @@
 #endif
 #include <errno.h>
 
-static inline void touchMemory(const char *pos) { load_once(*pos); }
+#include <wx/file.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/utils.h>
+
+#include "threading/GOMutexLocker.h"
+
+static inline void touchMemory(const char *pos) { *(const volatile char *)pos; }
 
 GOMemoryPool::GOMemoryPool()
   : m_PoolStart(0),
