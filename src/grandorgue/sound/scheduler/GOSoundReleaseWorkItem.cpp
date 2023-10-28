@@ -44,7 +44,7 @@ void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread) {
     unsigned wait = m_WaitCnt;
     if (wait < m_AudioGroups.size()) {
       m_AudioGroups[wait]->Finish(false);
-      m_WaitCnt.compare_exchange(wait, wait + 1);
+      m_WaitCnt.compare_exchange_strong(wait, wait + 1);
     }
   } while (!m_Stop.load() && m_WaitCnt < m_AudioGroups.size());
 }

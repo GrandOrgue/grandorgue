@@ -13,16 +13,17 @@
 #include <map>
 #include <vector>
 
-#include "GOSoundDevInfo.h"
-#include "GOSoundEngine.h"
-#include "GOSoundRecorder.h"
 #include "config/GOPortsConfig.h"
 #include "midi/GOMidi.h"
 #include "ports/GOSoundPortFactory.h"
-#include "ptrvector.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
-#include "threading/atomic.h"
+
+#include "ptrvector.h"
+
+#include "GOSoundDevInfo.h"
+#include "GOSoundEngine.h"
+#include "GOSoundRecorder.h"
 
 class GOOrganController;
 class GOMidi;
@@ -70,8 +71,8 @@ private:
   bool logSoundErrors;
 
   std::vector<GOSoundOutput> m_AudioOutputs;
-  atomic_uint m_WaitCount;
-  atomic_uint m_CalcCount;
+  std::atomic_uint m_WaitCount;
+  std::atomic_uint m_CalcCount;
 
   unsigned m_SamplesPerBuffer;
 

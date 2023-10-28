@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "threading/GOMutex.h"
-#include "threading/atomic.h"
 
 class GOSoundWorkItem;
 
@@ -19,13 +18,13 @@ class GOSoundScheduler {
 private:
   std::vector<GOSoundWorkItem *> m_Work;
   std::vector<GOSoundWorkItem **> m_WorkItems;
-  atomic_uint m_NextItem;
-  atomic_uint m_ItemCount;
+  std::atomic_uint m_NextItem;
+  std::atomic_uint m_ItemCount;
   unsigned m_RepeatCount;
   GOMutex m_Mutex;
 
-  void Lock() { m_ItemCount = 0; }
-  void Unlock() { m_ItemCount = m_WorkItems.size(); }
+  void Lock() { m_ItemCount.store(0); }
+  void Unlock() { m_ItemCount.store(m_WorkItems.size()); }
   void Update();
 
   bool CompareItem(GOSoundWorkItem *a, GOSoundWorkItem *b);
