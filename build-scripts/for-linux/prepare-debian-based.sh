@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $1 - wxWidgets package version: empty - libwxgtk3.0-gtk3-dev or wx32 - libwxgtk3.2-dev
+# $1 - wxWidgets package version: empty - autoselect, wx30 - libwxgtk3.0-gtk3-dev or wx32 - libwxgtk3.2-dev
 # $2 - target architecture: ex arm64, amd64, armhf
 
 set -e
@@ -16,8 +16,21 @@ wx30)
   WX_PKG_NAME=libwxgtk3.0-gtk3-dev
   ;;
 *)
-  WX_PKG_NAME=libwxgtk3.0-gtk3-dev
+  sudo apt-get update
+  # search for the last available version of libwxgtk
+  WX_PKG_NAME=$(
+    apt-cache pkgnames libwxgtk \
+      | grep -e 'libwxgtk3.0-gtk3-dev\|libwxgtk[0-9].[0-9]-dev' \
+      | sort \
+      | tail -n 1 \
+    )
+  if [[ -z "$WX_PKG_NAME" ]]; then
+    echo >&2 "No libwxgtk*-dev package available for this linux distribution"
+    return 1 2>/dev/null || exit 1
+  fi
 esac
+
+echo "wx package: $WX_PKG_NAME"
 
 CURRENT_ARCH=$(dpkg --print-architecture)
 TARGET_ARCH="${2:-$CURRENT_ARCH}"
@@ -89,6 +102,6 @@ fi
 
 # some ppas for wxWidgets give very high dependency version that prevents
 # installing on other systems. Remove the version
-if dpkg -s libwxgtk3.2-dev && ! grep -q libwx /etc/dpkg/shlibs.override; then
+if dpkg -s libwxgtk3.2-dev 2>/dev/null && ! grep -q libwx /etc/dpkg/shlibs.override; then
   cut -d " " -f 1-3 /var/lib/dpkg/info/libwx*3.2*.shlibs | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
 fi

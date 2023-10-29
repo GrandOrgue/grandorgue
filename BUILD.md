@@ -36,7 +36,7 @@ You can download the source code archive from GitHub
     - Or run the prepared scripts for certain linux distributions by a sudoer user:
         - on Fedora run ``<GO source tree>/build-scripts/for-linux/prepare-fedora.sh``
         - on OpenSuse run ``<GO source tree>/build-scripts/for-linux/prepare-opensuse.sh``
-        - on Debian 9+ or on Ubuntu 18+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-ubuntu.sh``
+        - on Debian 9+ or on Ubuntu 18+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-based.sh``
 3. Build
     - Manually
         1. Create an empty build directory, eg:
