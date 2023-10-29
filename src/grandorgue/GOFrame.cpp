@@ -79,7 +79,7 @@ EVT_MENU(ID_FILE_IMPORT_SETTINGS, GOFrame::OnImportSettings)
 EVT_MENU(ID_FILE_EXPORT, GOFrame::OnExport)
 EVT_MENU(ID_FILE_CACHE, GOFrame::OnCache)
 EVT_MENU(ID_FILE_CACHE_DELETE, GOFrame::OnCacheDelete)
-EVT_MENU(ID_ORGAN_EDIT, GOFrame::OnEditOrgan)
+EVT_MENU(ID_ORGAN_EDIT, GOFrame::OnOrganSettings)
 EVT_MENU(ID_MIDI_LIST, GOFrame::OnMidiList)
 EVT_MENU(ID_MIDI_MONITOR, GOFrame::OnMidiMonitor)
 EVT_MENU(ID_AUDIO_PANIC, GOFrame::OnAudioPanic)
@@ -1202,13 +1202,13 @@ void GOFrame::OnAudioState(wxCommandEvent &WXUNUSED(event)) {
   GOMessageBox(m_Sound.getState(), _("Sound output"), wxOK, this);
 }
 
-void GOFrame::OnEditOrgan(wxCommandEvent &event) {
-  if (GetOrganController())
-    m_doc->ShowOrganDialog();
+void GOFrame::OnOrganSettings(wxCommandEvent &event) {
+  if (m_doc)
+    m_doc->ShowOrganSettingsDialog();
 }
 
 void GOFrame::OnMidiList(wxCommandEvent &event) {
-  if (GetOrganController())
+  if (m_doc)
     m_doc->ShowMidiList();
 }
 

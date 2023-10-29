@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOORGANDIALOG_H
-#define GOORGANDIALOG_H
+#ifndef GOORGANSETTINGSDIALOG_H
+#define GOORGANSETTINGSDIALOG_H
 
 #include <vector>
 
@@ -28,7 +28,7 @@ class wxTreeCtrl;
 class wxTreeEvent;
 class wxTreeItemId;
 
-class GOOrganDialog : public GOSimpleDialog, public GOView {
+class GOOrganSettingsDialog : public GOSimpleDialog, public GOView {
 private:
   GOOrganController *m_OrganController;
   wxTreeCtrl *m_Tree;
@@ -151,7 +151,7 @@ protected:
   bool Validate() override { return !CheckForUnapplied(); }
 
 public:
-  GOOrganDialog(
+  GOOrganSettingsDialog(
     GODocumentBase *doc, wxWindow *parent, GOOrganController *organController);
 
   DECLARE_EVENT_TABLE()

@@ -11,7 +11,7 @@
 
 #include "config/GOConfig.h"
 #include "dialogs/GOMidiListDialog.h"
-#include "dialogs/GOOrganDialog.h"
+#include "dialogs/GOOrganSettingsDialog.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "document-base/GOView.h"
 #include "gui/GOGUIPanel.h"
@@ -173,12 +173,12 @@ void GODocument::OnMidiEvent(const GOMidiEvent &event) {
     m_OrganController->ProcessMidi(event);
 }
 
-void GODocument::ShowOrganDialog() {
+void GODocument::ShowOrganSettingsDialog() {
   if (!showWindow(GODocument::ORGAN_DIALOG, NULL) && m_OrganController) {
     registerWindow(
       GODocument::ORGAN_DIALOG,
       NULL,
-      new GOOrganDialog(this, NULL, m_OrganController));
+      new GOOrganSettingsDialog(this, NULL, m_OrganController));
   }
 }
 
