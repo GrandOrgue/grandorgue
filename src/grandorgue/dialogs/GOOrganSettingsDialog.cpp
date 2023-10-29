@@ -31,6 +31,35 @@
 #include "GOOrganController.h"
 #include "GOSampleStatistic.h"
 
+enum {
+  ID_EVENT_TREE = 200,
+  ID_EVENT_APPLY,
+  ID_EVENT_DISCARD,
+  ID_EVENT_AUDIO_GROUP_ASSISTANT,
+  ID_EVENT_DEFAULT,
+  ID_EVENT_DEFAULT_ALL,
+  ID_EVENT_AMPLITUDE,
+  ID_EVENT_AMPLITUDE_SPIN,
+  ID_EVENT_GAIN,
+  ID_EVENT_GAIN_SPIN,
+  ID_EVENT_MANUAL_TUNING,
+  ID_EVENT_MANUAL_TUNING_SPIN,
+  ID_EVENT_AUTO_TUNING_CORRECTION,
+  ID_EVENT_AUTO_TUNING_CORRECTION_SPIN,
+  ID_EVENT_DELAY,
+  ID_EVENT_DELAY_SPIN,
+  ID_EVENT_RELEASE_LENGTH,
+  ID_EVENT_RELEASE_LENGTH_SPIN,
+  ID_EVENT_AUDIO_GROUP,
+  ID_EVENT_IGNORE_PITCH,
+  ID_EVENT_LOOP_LOAD,
+  ID_EVENT_ATTACK_LOAD,
+  ID_EVENT_RELEASE_LOAD,
+  ID_EVENT_BITS_PER_SAMPLE,
+  ID_EVENT_CHANNELS,
+  ID_EVENT_COMPRESS
+};
+
 class OrganTreeItemData : public wxTreeItemData {
 public:
   OrganTreeItemData(GOPipeConfigNode &c) {
@@ -46,20 +75,18 @@ DEFINE_LOCAL_EVENT_TYPE(wxEVT_TREE_UPDATED)
 
 BEGIN_EVENT_TABLE(GOOrganSettingsDialog, GOSimpleDialog)
 EVT_BUTTON(ID_EVENT_APPLY, GOOrganSettingsDialog::OnEventApply)
-EVT_BUTTON(ID_EVENT_RESET, GOOrganSettingsDialog::OnEventReset)
+EVT_BUTTON(ID_EVENT_DISCARD, GOOrganSettingsDialog::OnEventDiscard)
 EVT_BUTTON(ID_EVENT_DEFAULT, GOOrganSettingsDialog::OnEventDefault)
 EVT_BUTTON(ID_EVENT_DEFAULT_ALL, GOOrganSettingsDialog::OnEventDefaultAll)
 EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanging)
 EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanged)
-EVT_COMMAND(
-  ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganSettingsDialog::OnTreeUpdated)
+EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganSettingsDialog::OnTreeUpdated)
 EVT_TEXT(ID_EVENT_AMPLITUDE, GOOrganSettingsDialog::OnAmplitudeChanged)
 EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, GOOrganSettingsDialog::OnAmplitudeSpinChanged)
 EVT_TEXT(ID_EVENT_GAIN, GOOrganSettingsDialog::OnGainChanged)
 EVT_SPIN(ID_EVENT_GAIN_SPIN, GOOrganSettingsDialog::OnGainSpinChanged)
 EVT_TEXT(ID_EVENT_MANUAL_TUNING, GOOrganSettingsDialog::OnManualTuningChanged)
-EVT_SPIN(
-  ID_EVENT_MANUAL_TUNING_SPIN, GOOrganSettingsDialog::OnManualTuningSpinChanged)
+EVT_SPIN(ID_EVENT_MANUAL_TUNING_SPIN, GOOrganSettingsDialog::OnManualTuningSpinChanged)
 EVT_TEXT(
   ID_EVENT_AUTO_TUNING_CORRECTION,
   GOOrganSettingsDialog::OnAutoTuningCorrectionChanged)
@@ -100,7 +127,7 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     GOView(doc, this),
     m_OrganController(organController),
     m_Apply(NULL),
-    m_Reset(NULL),
+    m_Discard(NULL),
     m_Last(NULL),
     m_LoadChangeCnt(0) {
   wxGridBagSizer *const mainSizer = new wxGridBagSizer(5, 5);
@@ -364,8 +391,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   mainSizer->Add(m_Default, wxGBPosition(4, 1));
   m_DefaultAll = new wxButton(this, ID_EVENT_DEFAULT_ALL, _("Default for All"));
   mainSizer->Add(m_DefaultAll, wxGBPosition(4, 2));
-  m_Reset = new wxButton(this, ID_EVENT_RESET, _("Reset"));
-  mainSizer->Add(m_Reset, wxGBPosition(4, 3));
+  m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
+  mainSizer->Add(m_Discard, wxGBPosition(4, 3));
   m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
   mainSizer->Add(m_Apply, wxGBPosition(4, 4), wxDefaultSpan, wxRIGHT, 5);
 
@@ -447,24 +474,26 @@ int release_length_to_spin_index(unsigned releaseLength) {
 }
 
 void GOOrganSettingsDialog::Load() {
-  wxArrayTreeItemIds entries;
+  wxArrayTreeItemIds selectedItemIds;
 
-  m_Tree->GetSelections(entries);
-  for (unsigned i = 0; i < entries.size(); i++) {
-    if (!m_Tree->GetItemData(entries[i])) {
+  m_Tree->GetSelections(selectedItemIds);
+  for (unsigned i = 0; i < selectedItemIds.size(); i++) {
+    if (!m_Tree->GetItemData(selectedItemIds[i])) {
       wxLogError(
         _("Invalid item selected: %s"),
-        m_Tree->GetItemText(entries[i]).c_str());
-      entries.RemoveAt(i, 1);
+        m_Tree->GetItemText(selectedItemIds[i]).c_str());
+      selectedItemIds.RemoveAt(i, 1);
       i--;
     }
   }
 
   GOSampleStatistic stat;
-  for (unsigned i = 0; i < entries.size(); i++)
-    if (m_Tree->GetItemData(entries[i]))
-      stat.Cumulate(((OrganTreeItemData *)m_Tree->GetItemData(entries[i]))
-                      ->node->GetStatistic());
+
+  for (unsigned l = selectedItemIds.size(), i = 0; i < l; i++)
+    if (m_Tree->GetItemData(selectedItemIds[i]))
+      stat.Cumulate(
+        ((OrganTreeItemData *)m_Tree->GetItemData(selectedItemIds[i]))
+          ->node->GetStatistic());
 
   if (!stat.IsValid()) {
     m_MemoryDisplay->SetLabel(_("--- MB (--- MB end)"));
@@ -486,7 +515,7 @@ void GOOrganSettingsDialog::Load() {
       buf + wxString::Format(_(" (%.3f used)"), stat.GetUsedBits()));
   }
 
-  if (entries.size() == 0) {
+  if (selectedItemIds.size() == 0) {
     m_Last = NULL;
     m_Amplitude->ChangeValue(wxEmptyString);
     m_Amplitude->Disable();
@@ -515,7 +544,7 @@ void GOOrganSettingsDialog::Load() {
     m_AttackLoad->Disable();
     m_ReleaseLoad->Disable();
     m_Apply->Disable();
-    m_Reset->Disable();
+    m_Discard->Disable();
     m_Default->Disable();
     m_DefaultAll->Disable();
     m_AudioGroupAssistant->Disable();
@@ -524,7 +553,13 @@ void GOOrganSettingsDialog::Load() {
 
   m_AudioGroupAssistant->Enable();
 
-  if (entries.size() > 1) {
+  const bool isSingleSelection = selectedItemIds.size() == 1;
+
+  if (isSingleSelection) {
+    // all values will be rendered, so mark they as not modified
+    m_Discard->Disable();
+    m_Apply->Disable();
+  } else {
     if (!m_Amplitude->IsModified())
       m_Amplitude->ChangeValue(wxEmptyString);
     if (!m_Gain->IsModified())
@@ -538,7 +573,7 @@ void GOOrganSettingsDialog::Load() {
     if (!m_ReleaseLength->IsModified())
       m_ReleaseLength->ChangeValue(wxEmptyString);
     if (m_AudioGroup->GetValue() == m_LastAudioGroup) {
-      m_AudioGroup->SetValue(wxT(" "));
+      m_AudioGroup->ChangeValue(wxT(" "));
       m_LastAudioGroup = m_AudioGroup->GetValue();
     }
     if (m_IgnorePitch->IsChecked() == m_LastIgnorePitch) {
@@ -569,16 +604,15 @@ void GOOrganSettingsDialog::Load() {
       SetEmpty(m_ReleaseLoad);
       m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
     }
-  } else
-    m_Apply->Disable();
+  }
 
-  for (unsigned i = 0; i < entries.size(); i++)
-    if (m_Last && m_Tree->GetItemData(entries[i]) == m_Last)
+  for (unsigned i = 0; i < selectedItemIds.size(); i++)
+    if (m_Last && m_Tree->GetItemData(selectedItemIds[i]) == m_Last)
       return;
 
   m_Last = 0;
-  for (unsigned i = 0; i < entries.size() && !m_Last; i++)
-    m_Last = (OrganTreeItemData *)m_Tree->GetItemData(entries[i]);
+  for (unsigned i = 0; i < selectedItemIds.size() && !m_Last; i++)
+    m_Last = (OrganTreeItemData *)m_Tree->GetItemData(selectedItemIds[i]);
 
   m_Amplitude->Enable();
   m_AmplitudeSpin->Enable();
@@ -602,36 +636,36 @@ void GOOrganSettingsDialog::Load() {
   m_ReleaseLoad->Enable();
   m_Default->Enable();
   m_DefaultAll->Enable();
-  m_Reset->Disable();
 
-  float amplitude = m_Last->config->GetAmplitude();
-  float gain = m_Last->config->GetGain();
-  float manualTuning = m_Last->config->GetManualTuning();
-  float autoTuningCorrection = m_Last->config->GetAutoTuningCorrection();
-  unsigned delay = m_Last->config->GetDelay();
-  unsigned releaseLength = m_Last->node->GetEffectiveReleaseTail();
+  if (isSingleSelection) {
+    // fill the fields with values from the selected object
+    float amplitude = m_Last->config->GetAmplitude();
+    float gain = m_Last->config->GetGain();
+    float manualTuning = m_Last->config->GetManualTuning();
+    float autoTuningCorrection = m_Last->config->GetAutoTuningCorrection();
+    unsigned delay = m_Last->config->GetDelay();
+    unsigned releaseLength = m_Last->node->GetEffectiveReleaseTail();
 
-  if (entries.size() == 1)
     m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amplitude));
-  m_AmplitudeSpin->SetValue(amplitude);
-  if (entries.size() == 1)
+    m_Amplitude->DiscardEdits();
+    m_AmplitudeSpin->SetValue(amplitude);
     m_Gain->ChangeValue(wxString::Format(wxT("%f"), gain));
-  m_GainSpin->SetValue(gain);
-  if (entries.size() == 1)
+    m_Gain->DiscardEdits();
+    m_GainSpin->SetValue(gain);
     m_ManualTuning->ChangeValue(wxString::Format(wxT("%f"), manualTuning));
-  m_ManualTuningSpin->SetValue(manualTuning);
-  if (entries.size() == 1)
+    m_ManualTuning->DiscardEdits();
+    m_ManualTuningSpin->SetValue(manualTuning);
     m_AutoTuningCorrection->ChangeValue(
       wxString::Format(wxT("%f"), autoTuningCorrection));
-  m_AutoTuningCorrectionSpin->SetValue(autoTuningCorrection);
-  if (entries.size() == 1)
+    m_AutoTuningCorrection->DiscardEdits();
+    m_AutoTuningCorrectionSpin->SetValue(autoTuningCorrection);
     m_Delay->ChangeValue(wxString::Format(wxT("%u"), delay));
-  m_DelaySpin->SetValue(delay);
-  if (entries.size() == 1)
+    m_Delay->DiscardEdits();
+    m_DelaySpin->SetValue(delay);
     m_ReleaseLength->ChangeValue(release_length_to_str(releaseLength));
-  m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
-  if (entries.size() == 1) {
-    m_AudioGroup->SetValue(m_Last->config->GetAudioGroup());
+    m_ReleaseLength->DiscardEdits();
+    m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
+    m_AudioGroup->ChangeValue(m_Last->config->GetAudioGroup());
     m_IgnorePitch->SetValue(m_Last->node->GetEffectiveIgnorePitch());
 
     int bits_per_sample = m_Last->config->GetBitsPerSample();
@@ -825,8 +859,8 @@ bool GOOrganSettingsDialog::Changed() {
 }
 
 void GOOrganSettingsDialog::Modified() {
-  if (m_Reset)
-    m_Reset->Enable();
+  if (m_Discard)
+    m_Discard->Enable();
   if (m_Apply)
     m_Apply->Enable();
 }
@@ -969,7 +1003,7 @@ void GOOrganSettingsDialog::OnEventApply(wxCommandEvent &e) {
       e->config->SetReleaseLoad(m_ReleaseLoad->GetSelection() - 1);
   }
 
-  m_Reset->Disable();
+  m_Discard->Disable();
   m_Apply->Disable();
   if (m_Amplitude->IsModified()) {
     m_Amplitude->ChangeValue(wxString::Format(wxT("%f"), amp));
@@ -1016,7 +1050,7 @@ void GOOrganSettingsDialog::OnEventApply(wxCommandEvent &e) {
   m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
 }
 
-void GOOrganSettingsDialog::OnEventReset(wxCommandEvent &e) {
+void GOOrganSettingsDialog::OnEventDiscard(wxCommandEvent &e) {
   m_Last = NULL;
   Load();
 }
@@ -1089,7 +1123,10 @@ bool GOOrganSettingsDialog::CheckForUnapplied() {
 
   if (res)
     GOMessageBox(
-      _("Please apply changes first"), _("Error"), wxOK | wxICON_ERROR, this);
+      _("Please apply or discard changes first"),
+      _("Error"),
+      wxOK | wxICON_ERROR,
+      this);
   return res;
 }
 

@@ -5591,7 +5591,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term>Reset</term>
+          <term>Discard</term>
           <listitem>
             <simpara>This button is grayed out until a value is modified. It restores all previously applied values.</simpara>
           </listitem>

@@ -1,3 +1,5 @@
+- Fixed change tracking and enableing/disabling the Discard and Apply buttons in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1674
+- Renamed the Reset button to Discard in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1674
 - Adopted the build instruction and the build scripts to new ubuntu versions https://github.com/GrandOrgue/grandorgue/issues/1673
 - Improved concurrency handling
 - Added deregistering organs in the temporary directory that do not more exist https://github.com/GrandOrgue/grandorgue/issues/1660

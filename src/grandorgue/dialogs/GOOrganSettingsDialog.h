@@ -63,7 +63,7 @@ private:
   wxStaticText *m_MemoryDisplay;
   wxStaticText *m_BitDisplay;
   wxButton *m_Apply;
-  wxButton *m_Reset;
+  wxButton *m_Discard;
   wxButton *m_Default;
   wxButton *m_DefaultAll;
   wxButton *m_AudioGroupAssistant;
@@ -112,41 +112,12 @@ private:
   void OnAttackLoadChanged(wxCommandEvent &e);
   void OnReleaseLoadChanged(wxCommandEvent &e);
   void OnEventApply(wxCommandEvent &e);
-  void OnEventReset(wxCommandEvent &e);
+  void OnEventDiscard(wxCommandEvent &e);
   void OnEventDefault(wxCommandEvent &e);
   void OnEventDefaultAll(wxCommandEvent &e);
   void OnAudioGroupAssitant(wxCommandEvent &e);
 
 protected:
-  enum {
-    ID_EVENT_TREE = 200,
-    ID_EVENT_APPLY,
-    ID_EVENT_RESET,
-    ID_EVENT_AUDIO_GROUP_ASSISTANT,
-    ID_EVENT_DEFAULT,
-    ID_EVENT_DEFAULT_ALL,
-    ID_EVENT_AMPLITUDE,
-    ID_EVENT_AMPLITUDE_SPIN,
-    ID_EVENT_GAIN,
-    ID_EVENT_GAIN_SPIN,
-    ID_EVENT_MANUAL_TUNING,
-    ID_EVENT_MANUAL_TUNING_SPIN,
-    ID_EVENT_AUTO_TUNING_CORRECTION,
-    ID_EVENT_AUTO_TUNING_CORRECTION_SPIN,
-    ID_EVENT_DELAY,
-    ID_EVENT_DELAY_SPIN,
-    ID_EVENT_RELEASE_LENGTH,
-    ID_EVENT_RELEASE_LENGTH_SPIN,
-    ID_EVENT_AUDIO_GROUP,
-    ID_EVENT_IGNORE_PITCH,
-    ID_EVENT_LOOP_LOAD,
-    ID_EVENT_ATTACK_LOAD,
-    ID_EVENT_RELEASE_LOAD,
-    ID_EVENT_BITS_PER_SAMPLE,
-    ID_EVENT_CHANNELS,
-    ID_EVENT_COMPRESS
-  };
-
   bool TransferDataToWindow() override;
   bool Validate() override { return !CheckForUnapplied(); }
 
