@@ -1076,7 +1076,7 @@ void GOOrganSettingsDialog::OnEventDefault(wxCommandEvent &e) {
     ? wxMessageBox(
       _("Some selected objects have subobjects.\n"
         "Do you want the subobjects also to be reset to defaults?\n"
-        "Note: resetting to defaults cann't be undone."),
+        "Note: resetting to defaults cannot be undone."),
       _("Resetting to defaults"),
       wxCENTRE | wxYES_NO | wxCANCEL | wxNO_DEFAULT,
       this)
