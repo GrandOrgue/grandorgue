@@ -65,7 +65,6 @@ private:
   wxButton *m_Apply;
   wxButton *m_Discard;
   wxButton *m_Default;
-  wxButton *m_DefaultAll;
   wxButton *m_AudioGroupAssistant;
   OrganTreeItemData *m_Last;
   unsigned m_LoadChangeCnt;
@@ -80,7 +79,6 @@ private:
     std::vector<wxString> audio_group, unsigned &pos, wxTreeItemId item);
   wxTreeItemId FillTree(wxTreeItemId parent, GOPipeConfigNode &config);
   void CloseTree(wxTreeItemId parent);
-  void ResetSelectedToDefault(bool isForChildren);
   /**
    * Checks if all changes have been applied. If some unapplied changes are
    * present, then display an error message.
@@ -114,7 +112,6 @@ private:
   void OnEventApply(wxCommandEvent &e);
   void OnEventDiscard(wxCommandEvent &e);
   void OnEventDefault(wxCommandEvent &e);
-  void OnEventDefaultAll(wxCommandEvent &e);
   void OnAudioGroupAssitant(wxCommandEvent &e);
 
 protected:
