@@ -130,6 +130,25 @@ void GOWave::Open(GOOpenedFile *file) {
   Open(content, fileName);
 }
 
+static void check_for_bounds(
+  const wxString &fileName,
+  GO_WAVECHUNKHEADER *pHeader,
+  unsigned long offset,
+  unsigned long length,
+  unsigned long chunkOffset) {
+  unsigned long size = pHeader->dwSize;
+
+  if (offset + size > length)
+    throw wxString::Format(
+      _("Malformed wave file '%s'. The chunk %x at %lu with the size 8 + %lu "
+        "ends after the end of file %lu"),
+      fileName,
+      (unsigned)pHeader->fccChunk,
+      chunkOffset,
+      size,
+      length);
+}
+
 void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
   /* Close any currently open wave data */
   Close();
@@ -197,6 +216,9 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
       /* Read chunk header */
       GO_WAVECHUNKHEADER *header = (GO_WAVECHUNKHEADER *)(ptr + offset);
       unsigned long size = header->dwSize;
+      unsigned long chunkOffset = offset;
+
+      // skip the header
       offset += sizeof(GO_WAVECHUNKHEADER);
 
       if (header->fccChunk == WAVE_TYPE_DATA) {
@@ -210,20 +232,25 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
           size = 0;
         else {
           m_SampleData.free();
+          check_for_bounds(fileName, header, offset, length, chunkOffset);
           m_SampleData.Append(ptr + offset, size);
         }
       }
       if (header->fccChunk == WAVE_TYPE_FMT) {
         hasFormat = true;
+        check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadFormatChunk(ptr + offset, size);
       }
-      if (header->fccChunk == WAVE_TYPE_CUE) /* This used to only work if !load
-                                                m_pipe_percussive[i] */
+      if (header->fccChunk == WAVE_TYPE_CUE) { /* This used to only work if
+                                                !load m_pipe_percussive[i] */
+        check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadCueChunk(ptr + offset, size);
-      if (header->fccChunk == WAVE_TYPE_SAMPLE) /* This used to only work if
+      }
+      if (header->fccChunk == WAVE_TYPE_SAMPLE) { /* This used to only work if
                                                    !load m_pipe_percussive[i] */
+        check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadSamplerChunk(ptr + offset, size);
-
+      }
       /* Move to next chunk respecting word alignment */
       offset += size + (size & 1);
     }
