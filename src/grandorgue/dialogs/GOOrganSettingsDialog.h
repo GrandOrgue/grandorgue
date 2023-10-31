@@ -70,7 +70,7 @@ private:
   unsigned m_LoadChangeCnt;
 
   void FillTree();
-  void Load();
+  void Load(bool isForce);
   bool Changed();
   void Modified();
   void SetEmpty(wxChoice *choice);
