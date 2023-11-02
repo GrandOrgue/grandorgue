@@ -80,13 +80,15 @@ EVT_BUTTON(ID_EVENT_DISCARD, GOOrganSettingsDialog::OnEventDiscard)
 EVT_BUTTON(ID_EVENT_DEFAULT, GOOrganSettingsDialog::OnEventDefault)
 EVT_TREE_SEL_CHANGING(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanging)
 EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganSettingsDialog::OnTreeChanged)
-EVT_COMMAND(ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganSettingsDialog::OnTreeUpdated)
+EVT_COMMAND(
+  ID_EVENT_TREE, wxEVT_TREE_UPDATED, GOOrganSettingsDialog::OnTreeUpdated)
 EVT_TEXT(ID_EVENT_AMPLITUDE, GOOrganSettingsDialog::OnAmplitudeChanged)
 EVT_SPIN(ID_EVENT_AMPLITUDE_SPIN, GOOrganSettingsDialog::OnAmplitudeSpinChanged)
 EVT_TEXT(ID_EVENT_GAIN, GOOrganSettingsDialog::OnGainChanged)
 EVT_SPIN(ID_EVENT_GAIN_SPIN, GOOrganSettingsDialog::OnGainSpinChanged)
 EVT_TEXT(ID_EVENT_MANUAL_TUNING, GOOrganSettingsDialog::OnManualTuningChanged)
-EVT_SPIN(ID_EVENT_MANUAL_TUNING_SPIN, GOOrganSettingsDialog::OnManualTuningSpinChanged)
+EVT_SPIN(
+  ID_EVENT_MANUAL_TUNING_SPIN, GOOrganSettingsDialog::OnManualTuningSpinChanged)
 EVT_TEXT(
   ID_EVENT_AUTO_TUNING_CORRECTION,
   GOOrganSettingsDialog::OnAutoTuningCorrectionChanged)
@@ -752,8 +754,8 @@ void GOOrganSettingsDialog::OnManualTuningChanged(wxCommandEvent &e) {
 }
 
 void GOOrganSettingsDialog::OnAutoTuningCorrectionSpinChanged(wxSpinEvent &e) {
-  m_AutoTuningCorrection->ChangeValue(
-    wxString::Format(wxT("%.1f"), (float)m_AutoTuningCorrectionSpin->GetValue()));
+  m_AutoTuningCorrection->ChangeValue(wxString::Format(
+    wxT("%.1f"), (float)m_AutoTuningCorrectionSpin->GetValue()));
   m_AutoTuningCorrection->MarkDirty();
   Modified();
 }
