@@ -573,8 +573,11 @@ wxString GOOrganController::Load(
               obj->GetLoadTitle(),
               obj->GetLoadError());
         }
-        errMsg.Printf(
-          _("There are errors while loading the organ. See Log Messages."));
+        GOMessageBox(
+          _("There are errors while loading the organ. See Log Messages."),
+          _("Load error"),
+          wxOK | wxICON_ERROR,
+          NULL);
       } else {
         if (objectDistributor.IsComplete())
           m_Cacheable = true;

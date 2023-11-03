@@ -138,15 +138,20 @@ static void check_for_bounds(
   unsigned long chunkOffset) {
   unsigned long size = pHeader->dwSize;
 
-  if (offset + size > length)
+  if (offset + size > length) {
+    char buf[5];
+
+    strncpy(buf, (const char *)&pHeader->fccChunk, 4);
+    buf[4] = '\x00';
     throw wxString::Format(
-      _("Malformed wave file '%s'. The chunk %x at %lu with the size 8 + %lu "
-        "ends after the end of file %lu"),
+      _("Malformed wave file '%s'. The chunk '%4s' at %lu with the size 8 + %lu"
+        " ends after the end of file %lu"),
       fileName,
-      (unsigned)pHeader->fccChunk,
+      buf,
       chunkOffset,
       size,
       length);
+  }
 }
 
 void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
@@ -272,14 +277,6 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
         m_Loops.erase(m_Loops.begin() + i);
       }
     }
-  } catch (wxString msg) {
-    wxLogError(_("unhandled exception: %s\n"), msg);
-
-    /* Free any memory that was allocated by chunk loading procedures */
-    Close();
-
-    /* Rethrow the exception */
-    throw;
   } catch (...) {
     /* Free any memory that was allocated by chunk loading procedures */
     Close();
