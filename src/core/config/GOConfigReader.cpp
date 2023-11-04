@@ -374,16 +374,16 @@ int GOConfigReader::ReadInteger(
       value.c_str());
   }
 
-  if (nmin <= retval && retval <= nmax)
-    return retval;
-
-  wxString error;
-  error.Printf(
-    _("Out of range value at section '%s' entry '%s': %ld"),
-    group,
-    key,
-    retval);
-  throw error;
+  if (retval < nmin || retval > nmax) {
+    wxLogError(
+      _("Out of range value at section '%s' entry '%s': %ld. Assumed %d"),
+      group,
+      key,
+      retval,
+      defaultValue);
+    retval = defaultValue;
+  }
+  return retval;
 }
 
 int GOConfigReader::ReadLong(
@@ -455,16 +455,16 @@ double GOConfigReader::ReadFloat(
     throw error;
   }
 
-  if (nmin <= retval && retval <= nmax)
-    return retval;
-
-  wxString error;
-  error.Printf(
-    _("Out of range value at section '%s' entry '%s': %f"),
-    group.c_str(),
-    key.c_str(),
-    retval);
-  throw error;
+  if (retval < nmin || retval > nmax) {
+    wxLogError(
+      _("Out of range value at section '%s' entry '%s': %f. Assumed %f."),
+      group,
+      key,
+      retval,
+      defaultValue);
+    retval = defaultValue;
+  }
+  return retval;
 }
 
 unsigned GOConfigReader::ReadSize(
