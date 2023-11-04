@@ -124,15 +124,18 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
         0x1f,
         false,
         0);
-    if (HasLength(eventType))
+    if (HasLength(eventType)) {
+      unsigned maxLength = LengthLimit(eventType);
+
       m_events[i].length = cfg.ReadInteger(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendLength%03d"), i + 1),
         0,
-        0x1f,
+        maxLength,
         false,
-        LengthLimit(eventType));
+        maxLength);
+    }
   }
 }
 
