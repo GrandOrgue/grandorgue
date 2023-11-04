@@ -118,7 +118,7 @@ static const unsigned RELEASE_LENGTH_MAX = 3000;
 static const unsigned RELEASE_LENGTH_STEP = 50;
 static const unsigned RELEASE_LENGTH_MAX_INDEX
   = RELEASE_LENGTH_MAX / RELEASE_LENGTH_STEP;
-static const wxSize EDIT_SIZE = wxSize(50, -1);
+static const wxSize EDIT_SIZE = wxSize(60, -1);
 
 GOOrganSettingsDialog::GOOrganSettingsDialog(
   GODocumentBase *doc, wxWindow *parent, GOOrganController *organController)
@@ -142,7 +142,7 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     this,
     ID_EVENT_TREE,
     wxDefaultPosition,
-    wxSize(300, 100),
+    wxDefaultSize,
     wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
   mainSizer->Add(
     m_Tree,
@@ -175,7 +175,7 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   grid->Add(m_BitDisplay);
   box1->Add(grid, 0, wxEXPAND | wxALL, 5);
   mainSizer->Add(
-    box1, wxGBPosition(0, 1), wxGBSpan(1, 4), wxEXPAND | wxRIGHT, 5);
+    box1, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND | wxRIGHT, 5);
 
   box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Settings"));
 
@@ -184,45 +184,45 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("Amplitude:")),
     wxGBPosition(0, 0),
-    wxDefaultSpan,
+    wxGBSpan(1, 2),
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
   m_Amplitude = new wxTextCtrl(
     this, ID_EVENT_AMPLITUDE, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
-  gb->Add(m_Amplitude, wxGBPosition(0, 1), wxDefaultSpan, wxEXPAND);
+  gb->Add(m_Amplitude, wxGBPosition(0, 2), wxDefaultSpan, wxEXPAND);
   m_AmplitudeSpin = new wxSpinButton(this, ID_EVENT_AMPLITUDE_SPIN);
   m_AmplitudeSpin->SetRange(0, 1000);
-  gb->Add(m_AmplitudeSpin, wxGBPosition(0, 2), wxDefaultSpan);
+  gb->Add(m_AmplitudeSpin, wxGBPosition(0, 3), wxDefaultSpan);
 
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("Gain (dB):")),
     wxGBPosition(1, 0),
-    wxDefaultSpan,
+    wxGBSpan(1, 2),
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
   m_Gain = new wxTextCtrl(
     this, ID_EVENT_GAIN, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
-  gb->Add(m_Gain, wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND);
+  gb->Add(m_Gain, wxGBPosition(1, 2), wxDefaultSpan, wxEXPAND);
   m_GainSpin = new wxSpinButton(this, ID_EVENT_GAIN_SPIN);
   m_GainSpin->SetRange(-120, 40);
-  gb->Add(m_GainSpin, wxGBPosition(1, 2), wxDefaultSpan);
+  gb->Add(m_GainSpin, wxGBPosition(1, 3), wxDefaultSpan);
 
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("Manual Tuning (Cent):")),
     wxGBPosition(2, 0),
-    wxDefaultSpan,
+    wxGBSpan(1, 2),
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
   m_ManualTuning = new wxTextCtrl(
     this, ID_EVENT_MANUAL_TUNING, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
-  gb->Add(m_ManualTuning, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND);
+  gb->Add(m_ManualTuning, wxGBPosition(2, 2), wxDefaultSpan, wxEXPAND);
   m_ManualTuningSpin = new wxSpinButton(this, ID_EVENT_MANUAL_TUNING_SPIN);
   m_ManualTuningSpin->SetRange(-1800, 1800);
-  gb->Add(m_ManualTuningSpin, wxGBPosition(2, 2));
+  gb->Add(m_ManualTuningSpin, wxGBPosition(2, 3));
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("AutoTuning Correction (Cent):")),
     wxGBPosition(3, 0),
-    wxDefaultSpan,
+    wxGBSpan(1, 2),
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
   m_AutoTuningCorrection = new wxTextCtrl(
@@ -231,37 +231,37 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     wxEmptyString,
     wxDefaultPosition,
     EDIT_SIZE);
-  gb->Add(m_AutoTuningCorrection, wxGBPosition(3, 1), wxDefaultSpan, wxEXPAND);
+  gb->Add(m_AutoTuningCorrection, wxGBPosition(3, 2), wxDefaultSpan, wxEXPAND);
   m_AutoTuningCorrectionSpin
     = new wxSpinButton(this, ID_EVENT_AUTO_TUNING_CORRECTION_SPIN);
   m_AutoTuningCorrectionSpin->SetRange(-1800, 1800);
-  gb->Add(m_AutoTuningCorrectionSpin, wxGBPosition(3, 2));
+  gb->Add(m_AutoTuningCorrectionSpin, wxGBPosition(3, 3));
 
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("Tracker (ms):")),
     wxGBPosition(4, 0),
-    wxDefaultSpan,
+    wxGBSpan(1, 2),
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
   m_Delay = new wxTextCtrl(
     this, ID_EVENT_DELAY, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
-  gb->Add(m_Delay, wxGBPosition(4, 1), wxDefaultSpan, wxEXPAND);
+  gb->Add(m_Delay, wxGBPosition(4, 2), wxDefaultSpan, wxEXPAND);
   m_DelaySpin = new wxSpinButton(this, ID_EVENT_DELAY_SPIN);
   m_DelaySpin->SetRange(0, 10000);
-  gb->Add(m_DelaySpin, wxGBPosition(4, 2), wxDefaultSpan);
+  gb->Add(m_DelaySpin, wxGBPosition(4, 3), wxDefaultSpan);
 
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("Release Tail Length (ms):")),
     wxGBPosition(5, 0),
-    wxDefaultSpan,
+    wxGBSpan(1, 2),
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
   m_ReleaseLength = new wxTextCtrl(
     this, ID_EVENT_RELEASE_LENGTH, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
-  gb->Add(m_ReleaseLength, wxGBPosition(5, 1), wxDefaultSpan, wxEXPAND);
+  gb->Add(m_ReleaseLength, wxGBPosition(5, 2), wxDefaultSpan, wxEXPAND);
   m_ReleaseLengthSpin = new wxSpinButton(this, ID_EVENT_RELEASE_LENGTH_SPIN);
   m_ReleaseLengthSpin->SetRange(0, RELEASE_LENGTH_MAX_INDEX);
-  gb->Add(m_ReleaseLengthSpin, wxGBPosition(5, 2), wxDefaultSpan);
+  gb->Add(m_ReleaseLengthSpin, wxGBPosition(5, 3), wxDefaultSpan);
 
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("Audio group:")),
@@ -278,7 +278,7 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     m_AudioGroup->Append(audio_groups[i]);
   m_AudioGroup->SetValue(wxT(" "));
   m_LastAudioGroup = m_AudioGroup->GetValue();
-  gb->Add(m_AudioGroup, wxGBPosition(6, 1), wxGBSpan(1, 2), wxEXPAND);
+  gb->Add(m_AudioGroup, wxGBPosition(6, 1), wxGBSpan(1, 3), wxEXPAND);
 
   gb->Add(
     m_IgnorePitch = new wxCheckBox(
@@ -286,14 +286,14 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
       ID_EVENT_IGNORE_PITCH,
       _("Ignore pitch info in organ samples wav files")),
     wxGBPosition(7, 0),
-    wxGBSpan(1, 2),
-    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
+    wxGBSpan(1, 4),
+    wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
     5);
 
-  gb->AddGrowableCol(1, 1);
+  gb->AddGrowableCol(2, 1);
   box1->Add(gb, 0, wxEXPAND | wxALL, 5);
   mainSizer->Add(
-    box1, wxGBPosition(1, 1), wxGBSpan(1, 4), wxEXPAND | wxRIGHT, 5);
+    box1, wxGBPosition(1, 1), wxDefaultSpan, wxEXPAND | wxRIGHT, 5);
 
   box1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Sample Loading"));
   grid = new wxFlexGridSizer(2, 5, 5);
@@ -396,22 +396,36 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   m_LastReleaseLoad = m_ReleaseLoad->GetSelection();
   box1->Add(grid, 0, wxEXPAND | wxALL, 5);
   mainSizer->Add(
-    box1, wxGBPosition(2, 1), wxGBSpan(1, 4), wxEXPAND | wxRIGHT, 5);
+    box1, wxGBPosition(2, 1), wxDefaultSpan, wxEXPAND | wxRIGHT, 5);
 
-  m_AudioGroupAssistant = new wxButton(
-    this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
-  mainSizer->Add(
-    m_AudioGroupAssistant, wxGBPosition(4, 0), wxDefaultSpan, wxLEFT, 5);
-  m_Default = new wxButton(this, ID_EVENT_DEFAULT, _("Default"));
-  mainSizer->Add(m_Default, wxGBPosition(4, 1));
-  m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
-  mainSizer->Add(m_Discard, wxGBPosition(4, 3));
-  m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
-  mainSizer->Add(m_Apply, wxGBPosition(4, 4), wxDefaultSpan, wxRIGHT, 5);
+  // add a custom button 'Reason into the space of the standard dialog button
+  wxSizer *const pButtonSizer = GetButtonSizer();
+
+  if (pButtonSizer) {
+    pButtonSizer->InsertSpacer(2, 10);
+    m_AudioGroupAssistant = new wxButton(
+      this, ID_EVENT_AUDIO_GROUP_ASSISTANT, _("Distribute audio groups"));
+    pButtonSizer->Insert(
+      3,
+      m_AudioGroupAssistant,
+      0,
+      wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT,
+      2);
+    m_Default = new wxButton(this, ID_EVENT_DEFAULT, _("Default"));
+    pButtonSizer->Insert(
+      4, m_Default, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    pButtonSizer->InsertSpacer(6, 10);
+    m_Discard = new wxButton(this, ID_EVENT_DISCARD, _("Discard"));
+    pButtonSizer->Insert(
+      7, m_Discard, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    m_Apply = new wxButton(this, ID_EVENT_APPLY, _("Apply"));
+    pButtonSizer->Insert(
+      8, m_Apply, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    pButtonSizer->InsertSpacer(9, 10);
+  }
 
   LayoutWithInnerSizer(mainSizer);
 }
-
 bool GOOrganSettingsDialog::TransferDataToWindow() {
   FillTree();
   return true;
