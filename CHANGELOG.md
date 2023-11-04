@@ -1,3 +1,4 @@
+- Fixed discard in the Organ Settings dialog when multiple objects are selected https://github.com/GrandOrgue/grandorgue/issues/1674
 - Moved all Organ Settings dialog buttons to the single button row https://github.com/GrandOrgue/grandorgue/issues/1674
 - Decreased number of decimal digits in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1627
 - Added a confirmation box when restoring Organ Settings to default https://github.com/GrandOrgue/grandorgue/issues/1674
