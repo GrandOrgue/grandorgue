@@ -28,6 +28,8 @@ private:
 
   static wxString getName(RtAudio *rtApi, const RtAudio::DeviceInfo &devInfo);
 
+  bool processRtResult(RtAudioErrorType rtResult, bool isToThrowOnError = true);
+
   GOSoundRtPort(
     GOSound *sound, RtAudio *rtApi, unsigned rtDevIndex, const wxString &name);
 
