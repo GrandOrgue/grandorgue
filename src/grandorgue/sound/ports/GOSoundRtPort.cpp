@@ -16,10 +16,10 @@ const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
 const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
 
 GOSoundRtPort::GOSoundRtPort(
-  GOSound *sound, RtAudio *rtApi, unsigned rtDevIndex, const wxString &name)
+  GOSound *sound, RtAudio *rtApi, unsigned rtDevId, const wxString &name)
   : GOSoundPort(sound, name),
     m_rtApi(rtApi),
-    m_RtDevIndex(rtDevIndex),
+    m_RtDevId(rtDevId),
     m_nBuffers(0) {}
 
 GOSoundRtPort::~GOSoundRtPort() {
@@ -61,7 +61,7 @@ void GOSoundRtPort::Open() {
   RtAudio::StreamParameters aOutputParam;
   RtAudio::StreamOptions aOptions;
 
-  aOutputParam.deviceId = m_RtDevIndex;
+  aOutputParam.deviceId = m_RtDevId;
   aOutputParam.nChannels = m_Channels;
   // the next flag causes Rt/Core forces setting the buffer size to 15
   // and the sound distortion https://github.com/oleg68/GrandOrgue/issues/54
@@ -225,8 +225,8 @@ GOSoundPort *GOSoundRtPort::create(
         RtAudio *rtApi = NULL;
 
         rtApi = new RtAudio(apiIndex);
-        for (unsigned l = rtApi->getDeviceCount(), i = 0; i < l; i++) {
-          const RtAudio::DeviceInfo info = rtApi->getDeviceInfo(i);
+        for (auto deviceId : rtApi->getDeviceIds()) {
+          const RtAudio::DeviceInfo info = rtApi->getDeviceInfo(deviceId);
           const wxString devName = getName(rtApi, info);
 
           if (
@@ -236,7 +236,7 @@ GOSoundPort *GOSoundRtPort::create(
             && // skip input-only devices that may have the same name (osx
                // usb)
             info.outputChannels > 0) {
-            port = new GOSoundRtPort(sound, rtApi, i, devName);
+            port = new GOSoundRtPort(sound, rtApi, deviceId, devName);
             break;
           }
         }
@@ -264,17 +264,17 @@ void GOSoundRtPort::addDevices(
         RtAudio *rtApi = nullptr;
 
         rtApi = new RtAudio(apiIndex);
-        for (unsigned i = 0; i < rtApi->getDeviceCount(); i++) {
-          RtAudio::DeviceInfo dev_info = rtApi->getDeviceInfo(i);
-          if (!dev_info.ID)
-            continue;
-          if (dev_info.outputChannels < 1)
-            continue;
-          GOSoundDevInfo info;
-          info.channels = dev_info.outputChannels;
-          info.isDefault = dev_info.isDefaultOutput;
-          info.name = getName(rtApi, dev_info);
-          result.push_back(info);
+        for (auto deviceId : rtApi->getDeviceIds()) {
+          RtAudio::DeviceInfo dev_info = rtApi->getDeviceInfo(deviceId);
+
+          if (dev_info.ID && dev_info.outputChannels > 0) {
+            GOSoundDevInfo info;
+
+            info.channels = dev_info.outputChannels;
+            info.isDefault = dev_info.isDefaultOutput;
+            info.name = getName(rtApi, dev_info);
+            result.push_back(info);
+          }
         }
         if (rtApi)
           delete rtApi;

@@ -15,7 +15,7 @@
 class GOSoundRtPort : public GOSoundPort {
 private:
   RtAudio *m_rtApi;
-  unsigned m_RtDevIndex;
+  unsigned m_RtDevId;
   unsigned m_nBuffers;
 
   static int Callback(
