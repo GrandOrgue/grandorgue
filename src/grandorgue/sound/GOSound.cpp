@@ -240,8 +240,10 @@ void GOSound::AssignOrganFile(GOOrganController *organController) {
     multi.Add(m_AudioOutputs[i].mutex);
 
   if (m_OrganController) {
+    StopThreads();
     m_OrganController->Abort();
     m_SoundEngine.ClearSetup();
+    StartThreads();
   }
 
   m_OrganController = organController;
