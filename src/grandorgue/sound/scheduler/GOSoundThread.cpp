@@ -12,9 +12,14 @@
 #include "GOSoundScheduler.h"
 #include "sound/scheduler/GOSoundWorkItem.h"
 #include "threading/GOMutexLocker.h"
+#include <unistd.h>
 
 GOSoundThread::GOSoundThread(GOSoundScheduler *scheduler)
-  : GOThread(), m_Scheduler(scheduler), m_Condition(m_Mutex) {
+  : GOThread(),
+    m_Scheduler(scheduler),
+    m_Condition(m_Mutex),
+    m_IdleStateReachedCondition(m_Mutex),
+    m_IsIdle(false) {
   wxLogDebug(wxT("Create Thread"));
 }
 
@@ -35,13 +40,24 @@ void GOSoundThread::Entry() {
       break;
 
     GOMutexLocker lock(m_Mutex, false, "GOSoundThread::Entry", this);
-
+    m_IsIdle = true;
+    m_IdleStateReachedCondition.Broadcast();
     if (!lock.IsLocked() || ShouldStop())
       break;
     if (!m_Condition.WaitOrStop("GOSoundThread::Entry"))
       break;
+    m_IsIdle = false;
   }
+
   return;
+}
+
+void GOSoundThread::WaitForReleaseOfWorkItems() {
+  GOMutexLocker lock(
+    m_Mutex, false, "GOSoundThread::WaitForReleaseOfWorkItems");
+  while (!m_IsIdle) {
+    m_IdleStateReachedCondition.Wait();
+  }
 }
 
 void GOSoundThread::Run() { Start(); }

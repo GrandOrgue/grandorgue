@@ -94,6 +94,7 @@ private:
 
   void StopThreads();
   void StartThreads();
+  void WaitForThreadsToReleaseWorkItems();
 
   void ResetMeters();
 

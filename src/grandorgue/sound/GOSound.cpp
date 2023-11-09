@@ -54,6 +54,11 @@ void GOSound::StartThreads() {
     m_Threads[i]->Run();
 }
 
+void GOSound::WaitForThreadsToReleaseWorkItems() {
+  for (unsigned i = 0; i < m_Threads.size(); i++)
+    m_Threads[i]->WaitForReleaseOfWorkItems();
+}
+
 void GOSound::StopThreads() {
   for (unsigned i = 0; i < m_Threads.size(); i++)
     m_Threads[i]->Delete();
@@ -240,10 +245,14 @@ void GOSound::AssignOrganFile(GOOrganController *organController) {
     multi.Add(m_AudioOutputs[i].mutex);
 
   if (m_OrganController) {
-    StopThreads();
+    // clear any scheduled work items
+    m_SoundEngine.GetScheduler().Clear();
+    // ensure pointers to work items are not held by threads
+    WaitForThreadsToReleaseWorkItems();
+
     m_OrganController->Abort();
+    // now work items are safe to be deleted
     m_SoundEngine.ClearSetup();
-    StartThreads();
   }
 
   m_OrganController = organController;
