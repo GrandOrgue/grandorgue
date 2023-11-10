@@ -245,14 +245,16 @@ void GOSound::AssignOrganFile(GOOrganController *organController) {
     multi.Add(m_AudioOutputs[i].mutex);
 
   if (m_OrganController) {
-    // clear any scheduled work items
-    m_SoundEngine.GetScheduler().Clear();
     // ensure pointers to work items are not held by threads
+    m_SoundEngine.GetScheduler().PauseGivingWork();
     WaitForThreadsToReleaseWorkItems();
 
     m_OrganController->Abort();
     // now work items are safe to be deleted
     m_SoundEngine.ClearSetup();
+
+    // resume processing of work items
+    m_SoundEngine.GetScheduler().ResumeGivingWork();
   }
 
   m_OrganController = organController;
