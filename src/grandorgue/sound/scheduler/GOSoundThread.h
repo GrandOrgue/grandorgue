@@ -21,6 +21,7 @@ private:
   GOMutex m_Mutex;
   GOCondition m_Condition;
   GOCondition m_IdleStateReachedCondition;
+  // whether the thread sleeps and waits for waking up with m_Condition
   bool m_IsIdle; // guarded by m_Mutex
 
   void Entry();

@@ -40,10 +40,10 @@ void GOSoundThread::Entry() {
       break;
 
     GOMutexLocker lock(m_Mutex, false, "GOSoundThread::Entry", this);
-    m_IsIdle = true;
-    m_IdleStateReachedCondition.Broadcast();
     if (!lock.IsLocked() || ShouldStop())
       break;
+    m_IsIdle = true;
+    m_IdleStateReachedCondition.Broadcast();
     if (!m_Condition.WaitOrStop("GOSoundThread::Entry"))
       break;
     m_IsIdle = false;
