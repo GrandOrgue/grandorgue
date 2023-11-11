@@ -52,9 +52,8 @@ void GOSoundThread::Entry() {
   return;
 }
 
-void GOSoundThread::WaitForReleaseOfWorkItems() {
-  GOMutexLocker lock(
-    m_Mutex, false, "GOSoundThread::WaitForReleaseOfWorkItems");
+void GOSoundThread::WaitForIdle() {
+  GOMutexLocker lock(m_Mutex, false, "GOSoundThread::WaitForIdle");
   while (!m_IsIdle) {
     m_IdleStateReachedCondition.Wait();
   }

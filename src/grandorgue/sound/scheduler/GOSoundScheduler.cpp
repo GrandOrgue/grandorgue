@@ -131,7 +131,7 @@ void GOSoundScheduler::Exec() {
 
 GOSoundWorkItem *GOSoundScheduler::GetNextGroup() {
   do {
-    if (m_IsNotGivingWork) {
+    if (m_IsNotGivingWork.load()) {
       return nullptr;
     }
     unsigned next = m_NextItem.fetch_add(1);

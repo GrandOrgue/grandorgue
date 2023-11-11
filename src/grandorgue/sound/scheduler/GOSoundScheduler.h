@@ -48,8 +48,8 @@ public:
   void Add(GOSoundWorkItem *item);
   void Remove(GOSoundWorkItem *item);
 
-  void PauseGivingWork() { m_IsNotGivingWork = true; }
-  void ResumeGivingWork() { m_IsNotGivingWork = false; }
+  void PauseGivingWork() { m_IsNotGivingWork.store(true); }
+  void ResumeGivingWork() { m_IsNotGivingWork.store(false); }
 
   GOSoundWorkItem *GetNextGroup();
 };

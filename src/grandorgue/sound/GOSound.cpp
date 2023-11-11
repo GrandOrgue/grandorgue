@@ -54,11 +54,6 @@ void GOSound::StartThreads() {
     m_Threads[i]->Run();
 }
 
-void GOSound::WaitForThreadsToReleaseWorkItems() {
-  for (unsigned i = 0; i < m_Threads.size(); i++)
-    m_Threads[i]->WaitForReleaseOfWorkItems();
-}
-
 void GOSound::StopThreads() {
   for (unsigned i = 0; i < m_Threads.size(); i++)
     m_Threads[i]->Delete();
@@ -247,7 +242,8 @@ void GOSound::AssignOrganFile(GOOrganController *organController) {
   if (m_OrganController) {
     // ensure pointers to work items are not held by threads
     m_SoundEngine.GetScheduler().PauseGivingWork();
-    WaitForThreadsToReleaseWorkItems();
+    for (GOSoundThread *thread : m_Threads)
+      thread->WaitForIdle();
 
     m_OrganController->Abort();
     // now work items are safe to be deleted

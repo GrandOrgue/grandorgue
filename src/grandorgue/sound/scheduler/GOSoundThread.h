@@ -36,10 +36,10 @@ public:
    * 2. thread is running and is not marked to be stopped
    *
    * === Result ===
-   * Method returns when the thread forgets all pointers to work items
+   * Method returns when the thread is idle (i.e. does not run any work items)
    * (so that work items can be deleted safely)
    */
-  void WaitForReleaseOfWorkItems();
+  void WaitForIdle();
   void Run();
   void Delete();
   void Wakeup();
