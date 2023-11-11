@@ -56,7 +56,7 @@ public:
 
   /**
    * This method is called on any exception occured. It causes that all worker
-   * threads stop working immediate because they can not fetch more objects
+   * threads stop working immediate because they cannot fetch more objects
    */
   void Break() { m_IsBroken.store(true); }
 };

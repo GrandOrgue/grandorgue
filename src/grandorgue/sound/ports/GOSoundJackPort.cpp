@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-// wx should be included before windows.h (from jack.h), otherwise it can not be
+// wx should be included before windows.h (from jack.h), otherwise it cannot be
 // compiled with mingw
 #include "GOSoundJackPort.h"
 
