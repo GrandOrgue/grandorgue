@@ -1,3 +1,4 @@
+- Fixed crash on closing an organ https://github.com/GrandOrgue/grandorgue/issues/1678
 # 3.13.1 (2023-11-05)
 - Fixed the maximal value of the "SYSEX Hauptwerk 32 Byte LCD" midi send events https://github.com/GrandOrgue/grandorgue/issues/1686
 - Fixed discard in the Organ Settings dialog when multiple objects are selected https://github.com/GrandOrgue/grandorgue/issues/1674
