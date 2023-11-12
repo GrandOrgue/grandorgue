@@ -11,7 +11,11 @@
 #include "threading/GOMutexLocker.h"
 
 GOSoundScheduler::GOSoundScheduler()
-  : m_Work(), m_WorkItems(), m_ItemCount(0), m_RepeatCount(0) {}
+  : m_Work(),
+    m_WorkItems(),
+    m_IsNotGivingWork(false),
+    m_ItemCount(0),
+    m_RepeatCount(0) {}
 
 GOSoundScheduler::~GOSoundScheduler() {
   GOMutexLocker lock(m_Mutex);
@@ -127,6 +131,9 @@ void GOSoundScheduler::Exec() {
 
 GOSoundWorkItem *GOSoundScheduler::GetNextGroup() {
   do {
+    if (m_IsNotGivingWork.load()) {
+      return nullptr;
+    }
     unsigned next = m_NextItem.fetch_add(1);
     if (next >= m_ItemCount)
       return nullptr;

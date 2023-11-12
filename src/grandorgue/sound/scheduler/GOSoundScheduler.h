@@ -18,6 +18,8 @@ class GOSoundScheduler {
 private:
   std::vector<GOSoundWorkItem *> m_Work;
   std::vector<GOSoundWorkItem **> m_WorkItems;
+  // if GetNextGroup() always returns nullptr
+  std::atomic_bool m_IsNotGivingWork;
   std::atomic_uint m_NextItem;
   std::atomic_uint m_ItemCount;
   unsigned m_RepeatCount;
@@ -45,6 +47,9 @@ public:
   void Exec();
   void Add(GOSoundWorkItem *item);
   void Remove(GOSoundWorkItem *item);
+
+  void PauseGivingWork() { m_IsNotGivingWork.store(true); }
+  void ResumeGivingWork() { m_IsNotGivingWork.store(false); }
 
   GOSoundWorkItem *GetNextGroup();
 };
