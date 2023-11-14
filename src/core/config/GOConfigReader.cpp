@@ -375,6 +375,12 @@ int GOConfigReader::ReadInteger(
   }
 
   if (retval < nmin || retval > nmax) {
+    if (type == ODFSetting)
+      throw wxString::Format(
+        _("Out of range value at section '%s' entry '%s': %ld"),
+        group,
+        key,
+        retval);
     wxLogError(
       _("Out of range value at section '%s' entry '%s': %ld. Assumed %d"),
       group,
@@ -456,6 +462,12 @@ double GOConfigReader::ReadFloat(
   }
 
   if (retval < nmin || retval > nmax) {
+    if (type == ODFSetting)
+      throw wxString::Format(
+        _("Out of range value at section '%s' entry '%s': %f"),
+        group,
+        key,
+        retval);
     wxLogError(
       _("Out of range value at section '%s' entry '%s': %f. Assumed %f."),
       group,
