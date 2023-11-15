@@ -270,19 +270,12 @@ void GOSoundingPipe::LoadData(
       m_LoopCrossfadeLength,
       m_ReleaseCrossfadeLength);
     Validate();
-  } catch (wxString str) {
-    m_SoundProvider.ClearData();
-    throw wxString::Format(
-      _("Error while loading samples for rank %s pipe %s: %s"),
-      m_Rank->GetName().c_str(),
-      GetLoadTitle().c_str(),
-      str.c_str());
   } catch (std::bad_alloc &ba) {
     m_SoundProvider.ClearData();
     throw GOOutOfMemory();
-  } catch (GOOutOfMemory e) {
+  } catch (...) {
     m_SoundProvider.ClearData();
-    throw GOOutOfMemory();
+    throw;
   }
 }
 
