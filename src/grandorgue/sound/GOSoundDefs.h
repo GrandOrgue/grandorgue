@@ -26,7 +26,7 @@
 /* Maximum number of blocks (1 block is nChannels samples) per frame */
 #define MAX_FRAME_SIZE (1024)
 
-/* Maximum number of channels the engine supports. This value can not be
+/* Maximum number of channels the engine supports. This value cannot be
  * changed at present.
  */
 #define MAX_OUTPUT_CHANNELS (2)
