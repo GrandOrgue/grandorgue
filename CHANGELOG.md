@@ -1,3 +1,4 @@
+- Fixed loading an organ when some configuration entry is out of range https://github.com/GrandOrgue/grandorgue/issues/1696
 - Fixed crash when trying to load a sample set with a truncated wave file https://github.com/GrandOrgue/grandorgue/discussions/370
 - Fixed crash on closing an organ https://github.com/GrandOrgue/grandorgue/issues/1678
 # 3.13.1 (2023-11-05)
