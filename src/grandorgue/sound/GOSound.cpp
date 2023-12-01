@@ -23,10 +23,13 @@
 
 GOSound::GOSound(GOConfig &settings)
   : m_open(false),
+    m_IsRunning(false),
     logSoundErrors(true),
     m_AudioOutputs(),
     m_WaitCount(),
     m_CalcCount(),
+    m_NCallbacksEntered(0),
+    m_CallbackCondition(m_CallbackMutex),
     m_SamplesPerBuffer(0),
     meter_counter(0),
     m_defaultAudioDevice(),
@@ -68,6 +71,7 @@ void GOSound::OpenSound() {
   m_LastErrorMessage = wxEmptyString;
   assert(!m_open);
   assert(m_AudioOutputs.size() == 0);
+  m_NCallbacksEntered.store(0);
 
   unsigned audio_group_count = m_config.GetAudioGroups().size();
   std::vector<GOAudioDeviceConfig> audio_config
@@ -151,6 +155,7 @@ void GOSound::OpenSound() {
     StartStreams();
     StartThreads();
     m_open = true;
+    m_IsRunning.store(true);
 
     if (m_OrganController)
       m_OrganController->PreparePlayback(
@@ -189,6 +194,14 @@ void GOSound::StartStreams() {
 }
 
 void GOSound::CloseSound() {
+  // wait for all started callbacks to finish
+  m_IsRunning.store(false);
+  {
+    GOMutexLocker lock(m_CallbackMutex);
+
+    while (m_NCallbacksEntered.load() > 0)
+      m_CallbackCondition.Wait();
+  }
   StopThreads();
 
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
@@ -318,45 +331,48 @@ void GOSound::UpdateMeter() {
 
 bool GOSound::AudioCallback(
   unsigned dev_index, float *output_buffer, unsigned int n_frames) {
-  if (n_frames != m_SamplesPerBuffer) {
-    wxLogError(
-      _("No sound output will happen. Samples per buffer has been "
-        "changed by the sound driver to %d"),
-      n_frames);
-    return 1;
-  }
-  GOSoundOutput *device = &m_AudioOutputs[dev_index];
-  GOMutexLocker locker(device->mutex);
-
-  while (device->wait && device->waiting)
-    device->condition.Wait();
-
-  unsigned cnt = m_CalcCount.fetch_add(1);
-  m_SoundEngine.GetAudioOutput(
-    output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
-  device->wait = true;
-  unsigned count = m_WaitCount.fetch_add(1);
-
-  if (count + 1 == m_AudioOutputs.size()) {
-    m_SoundEngine.NextPeriod();
-    UpdateMeter();
-
-    {
-      GOMutexLocker thread_locker(m_thread_lock);
-      for (unsigned i = 0; i < m_Threads.size(); i++)
-        m_Threads[i]->Wakeup();
+  if (m_IsRunning.load()) {
+    if (n_frames != m_SamplesPerBuffer) {
+      wxLogError(
+        _("No sound output will happen. Samples per buffer has been "
+          "changed by the sound driver to %d"),
+        n_frames);
+      return 1;
     }
-    m_CalcCount.exchange(0);
-    m_WaitCount.exchange(0);
+    m_NCallbacksEntered.fetch_add(1);
+    GOSoundOutput *device = &m_AudioOutputs[dev_index];
+    GOMutexLocker locker(device->mutex);
 
-    for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
+    while (device->wait && device->waiting)
+      device->condition.Wait();
+
+    unsigned cnt = m_CalcCount.fetch_add(1);
+    m_SoundEngine.GetAudioOutput(
+      output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
+    device->wait = true;
+    unsigned count = m_WaitCount.fetch_add(1);
+
+    if (count + 1 == m_AudioOutputs.size()) {
+      m_SoundEngine.NextPeriod();
+      UpdateMeter();
+
+      {
+        GOMutexLocker thread_locker(m_thread_lock);
+        for (unsigned i = 0; i < m_Threads.size(); i++)
+          m_Threads[i]->Wakeup();
+      }
+      m_CalcCount.exchange(0);
+      m_WaitCount.exchange(0);
+
+      for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
       GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
-
-      m_AudioOutputs[i].wait = false;
-      m_AudioOutputs[i].condition.Signal();
+        m_AudioOutputs[i].wait = false;
+        m_AudioOutputs[i].condition.Signal();
+      }
     }
+    m_NCallbacksEntered.fetch_sub(1);
+    m_CallbackCondition.Signal();
   }
-
   return true;
 }
 

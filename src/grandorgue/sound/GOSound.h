@@ -64,6 +64,7 @@ class GOSound {
 
 private:
   bool m_open;
+  std::atomic_bool m_IsRunning;
 
   GOMutex m_lock;
   GOMutex m_thread_lock;
@@ -73,6 +74,9 @@ private:
   std::vector<GOSoundOutput> m_AudioOutputs;
   std::atomic_uint m_WaitCount;
   std::atomic_uint m_CalcCount;
+  GOMutex m_CallbackMutex;
+  std::atomic_int m_NCallbacksEntered;
+  GOCondition m_CallbackCondition;
 
   unsigned m_SamplesPerBuffer;
 
