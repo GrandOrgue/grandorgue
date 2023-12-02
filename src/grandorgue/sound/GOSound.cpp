@@ -24,12 +24,12 @@
 GOSound::GOSound(GOConfig &settings)
   : m_open(false),
     m_IsRunning(false),
+    m_NCallbacksEntered(0),
+    m_CallbackCondition(m_CallbackMutex),
     logSoundErrors(true),
     m_AudioOutputs(),
     m_WaitCount(),
     m_CalcCount(),
-    m_NCallbacksEntered(0),
-    m_CallbackCondition(m_CallbackMutex),
     m_SamplesPerBuffer(0),
     meter_counter(0),
     m_defaultAudioDevice(),
@@ -71,7 +71,6 @@ void GOSound::OpenSound() {
   m_LastErrorMessage = wxEmptyString;
   assert(!m_open);
   assert(m_AudioOutputs.size() == 0);
-  m_NCallbacksEntered.store(0);
 
   unsigned audio_group_count = m_config.GetAudioGroups().size();
   std::vector<GOAudioDeviceConfig> audio_config
@@ -152,6 +151,7 @@ void GOSound::OpenSound() {
     }
 
     OpenMidi();
+    m_NCallbacksEntered.store(0);
     StartStreams();
     StartThreads();
     m_open = true;
@@ -194,14 +194,17 @@ void GOSound::StartStreams() {
 }
 
 void GOSound::CloseSound() {
-  // wait for all started callbacks to finish
   m_IsRunning.store(false);
+
+  // wait for all started callbacks to finish
   {
     GOMutexLocker lock(m_CallbackMutex);
 
     while (m_NCallbacksEntered.load() > 0)
-      m_CallbackCondition.Wait();
+      m_CallbackCondition.WaitOrStop(
+        "GOSound::CloseSound waits for all callbacks to finish", nullptr);
   }
+
   StopThreads();
 
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
@@ -340,38 +343,47 @@ bool GOSound::AudioCallback(
       return 1;
     }
     m_NCallbacksEntered.fetch_add(1);
-    GOSoundOutput *device = &m_AudioOutputs[dev_index];
-    GOMutexLocker locker(device->mutex);
+    // assure that m_IsRunning has not yet been changed after
+    // m_NCallbacksEntered.fetch_add, otherwise the control thread may not wait
+    if (m_IsRunning.load()) {
+      GOSoundOutput *device = &m_AudioOutputs[dev_index];
+      GOMutexLocker locker(device->mutex);
 
-    while (device->wait && device->waiting)
-      device->condition.Wait();
+      while (device->wait && device->waiting)
+        device->condition.Wait();
 
-    unsigned cnt = m_CalcCount.fetch_add(1);
-    m_SoundEngine.GetAudioOutput(
-      output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
-    device->wait = true;
-    unsigned count = m_WaitCount.fetch_add(1);
+      unsigned cnt = m_CalcCount.fetch_add(1);
+      m_SoundEngine.GetAudioOutput(
+        output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
+      device->wait = true;
+      unsigned count = m_WaitCount.fetch_add(1);
 
-    if (count + 1 == m_AudioOutputs.size()) {
-      m_SoundEngine.NextPeriod();
-      UpdateMeter();
+      if (count + 1 == m_AudioOutputs.size()) {
+        m_SoundEngine.NextPeriod();
+        UpdateMeter();
 
-      {
-        GOMutexLocker thread_locker(m_thread_lock);
-        for (unsigned i = 0; i < m_Threads.size(); i++)
-          m_Threads[i]->Wakeup();
-      }
-      m_CalcCount.exchange(0);
-      m_WaitCount.exchange(0);
+        {
+          GOMutexLocker thread_locker(m_thread_lock);
+          for (unsigned i = 0; i < m_Threads.size(); i++)
+            m_Threads[i]->Wakeup();
+        }
+        m_CalcCount.exchange(0);
+        m_WaitCount.exchange(0);
 
-      for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-      GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
-        m_AudioOutputs[i].wait = false;
-        m_AudioOutputs[i].condition.Signal();
+        for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
+          GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
+          m_AudioOutputs[i].wait = false;
+          m_AudioOutputs[i].condition.Signal();
+        }
       }
     }
-    m_NCallbacksEntered.fetch_sub(1);
-    m_CallbackCondition.Signal();
+    if (m_NCallbacksEntered.fetch_sub(1) <= 1 && !m_IsRunning.load()) {
+      // ensure that the control thread enters into m_NCallbackCondition.Wait()
+      GOMutexLocker lk(m_CallbackMutex);
+
+      // notify the control thread
+      m_CallbackCondition.Broadcast();
+    }
   }
   return true;
 }
