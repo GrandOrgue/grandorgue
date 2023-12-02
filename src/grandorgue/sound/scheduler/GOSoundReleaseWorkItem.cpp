@@ -24,8 +24,8 @@ void GOSoundReleaseWorkItem::Clear() { m_List.Clear(); }
 
 void GOSoundReleaseWorkItem::Reset() {
   m_Stop.store(false);
-  m_Cnt = 0;
-  m_WaitCnt = 0;
+  m_Cnt.store(0);
+  m_WaitCnt.store(0);
 }
 
 void GOSoundReleaseWorkItem::Add(GOSoundSampler *sampler) {
@@ -41,12 +41,12 @@ void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread) {
       if (m_Stop.load() && m_Cnt > 10)
         break;
     }
-    unsigned wait = m_WaitCnt;
+    unsigned wait = m_WaitCnt.load();
     if (wait < m_AudioGroups.size()) {
-      m_AudioGroups[wait]->Finish(false);
+      m_AudioGroups[wait]->Finish(false, pThread);
       m_WaitCnt.compare_exchange_strong(wait, wait + 1);
     }
-  } while (!m_Stop.load() && m_WaitCnt < m_AudioGroups.size());
+  } while (!m_Stop.load() && m_WaitCnt.load() < m_AudioGroups.size());
 }
 
 void GOSoundReleaseWorkItem::Exec() {
