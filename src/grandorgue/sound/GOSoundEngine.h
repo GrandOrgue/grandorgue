@@ -76,6 +76,7 @@ private:
   void CreateReleaseSampler(GOSoundSampler *sampler);
   void SwitchAttackSampler(GOSoundSampler *sampler);
   float GetRandomFactor();
+  unsigned GetBufferSizeFor(unsigned outputIndex, unsigned n_frames);
 
 public:
   GOSoundEngine();
@@ -113,6 +114,8 @@ public:
   void UpdateVelocity(
     const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity);
 
+  void GetEmptyAudioOutput(
+    unsigned outputIndex, unsigned nFrames, float *pOutputBuffer);
   void GetAudioOutput(
     float *output_buffer, unsigned n_frames, unsigned audio_output, bool last);
   void NextPeriod();

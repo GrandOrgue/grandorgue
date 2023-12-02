@@ -353,16 +353,27 @@ void GOSoundEngine::SetupReverb(GOConfig &settings) {
       m_AudioOutputs[i]->SetupReverb(settings);
 }
 
+unsigned GOSoundEngine::GetBufferSizeFor(
+  unsigned outputIndex, unsigned nFrames) {
+  return sizeof(float) * nFrames
+    * m_AudioOutputs[outputIndex + 1]->GetChannels();
+}
+
+void GOSoundEngine::GetEmptyAudioOutput(
+  unsigned outputIndex, unsigned nFrames, float *pOutputBuffer) {
+  memset(pOutputBuffer, 0, GetBufferSizeFor(outputIndex, nFrames));
+}
+
 void GOSoundEngine::GetAudioOutput(
   float *output_buffer, unsigned n_frames, unsigned audio_output, bool last) {
-  size_t const nBytes = sizeof(float) * n_frames
-    * m_AudioOutputs[audio_output + 1]->GetChannels();
-
   if (m_HasBeenSetup.load()) {
     m_AudioOutputs[audio_output + 1]->Finish(last);
-    memcpy(output_buffer, m_AudioOutputs[audio_output + 1]->m_Buffer, nBytes);
+    memcpy(
+      output_buffer,
+      m_AudioOutputs[audio_output + 1]->m_Buffer,
+      GetBufferSizeFor(audio_output, n_frames));
   } else
-    memset(output_buffer, 0, nBytes);
+    GetEmptyAudioOutput(audio_output, n_frames, output_buffer);
 }
 
 void GOSoundEngine::NextPeriod() {
