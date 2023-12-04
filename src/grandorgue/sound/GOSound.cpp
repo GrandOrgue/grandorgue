@@ -350,7 +350,8 @@ bool GOSound::AudioCallback(
     m_WaitCount.exchange(0);
 
     for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-      GOMutexLocker(m_AudioOutputs[i].mutex, i == dev_index);
+      GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
+
       m_AudioOutputs[i].wait = false;
       m_AudioOutputs[i].condition.Signal();
     }
