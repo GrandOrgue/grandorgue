@@ -8,6 +8,8 @@
 #ifndef GOSETTER_H
 #define GOSETTER_H
 
+#include <unordered_set>
+
 #include <wx/arrstr.h>
 
 #include "ptrvector.h"
@@ -195,6 +197,10 @@ public:
    */
   void PushGeneral(
     GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) override;
+  void PushDivisional(
+    std::unordered_set<GODivisionalCombination *> &usedCmbs,
+    GODivisionalCombination &cmb,
+    GOButtonControl *pButtonToLight);
   void PushDivisional(
     GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) override;
 
