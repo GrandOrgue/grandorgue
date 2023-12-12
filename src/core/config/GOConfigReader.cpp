@@ -20,8 +20,8 @@ GOConfigReader::GOConfigReader(
 
 bool GOConfigReader::Read(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
   wxString &value) {
   bool found = false;
@@ -63,10 +63,10 @@ bool GOConfigReader::Read(
 
 wxString GOConfigReader::ReadString(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value;
   bool found = Read(type, group, key, required, value);
 
@@ -76,16 +76,19 @@ wxString GOConfigReader::ReadString(
 }
 
 wxString GOConfigReader::ReadString(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadString(type, group, key, required, wxT(""));
 }
 
 wxString GOConfigReader::ReadStringTrim(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value = ReadString(type, group, key, required, defaultValue);
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
@@ -101,16 +104,19 @@ wxString GOConfigReader::ReadStringTrim(
 }
 
 wxString GOConfigReader::ReadStringTrim(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadStringTrim(type, group, key, required, wxT(""));
 }
 
 wxString GOConfigReader::ReadStringNotEmpty(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value = ReadString(type, group, key, required, defaultValue);
 
   if (value.Trim().length() == 0 && m_Strict) {
@@ -121,12 +127,18 @@ wxString GOConfigReader::ReadStringNotEmpty(
 }
 
 wxString GOConfigReader::ReadStringNotEmpty(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadStringNotEmpty(type, group, key, required, wxT(""));
 }
 
 wxString GOConfigReader::ReadFileName(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   const wxString fileName = ReadStringTrim(type, group, key, required);
 
   if (m_IsHw1Check && fileName.Find(wxT('/')) != wxNOT_FOUND) {
@@ -137,7 +149,10 @@ wxString GOConfigReader::ReadFileName(
 }
 
 bool GOConfigReader::ReadBoolean(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadBoolean(type, group, key, required, false);
 }
 
@@ -186,8 +201,8 @@ int GOConfigReader::ReadBooleanTriple(
 
 bool GOConfigReader::ReadBoolean(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
   bool defaultValue) {
   int tripleValue = ReadBooleanTriple(type, group, key, required);
@@ -196,7 +211,10 @@ bool GOConfigReader::ReadBoolean(
 }
 
 GOLogicalColour GOConfigReader::ReadColor(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadColor(type, group, key, required, wxT("BLACK"));
 }
 
@@ -253,10 +271,10 @@ bool parseColor(GOLogicalColour &result, wxString value) {
 
 GOLogicalColour GOConfigReader::ReadColor(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value;
   if (!Read(type, group, key, required, value))
     value = defaultValue;
@@ -322,8 +340,8 @@ GOLogicalColour GOConfigReader::ReadColor(
 
 int GOConfigReader::ReadInteger(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required) {
@@ -332,8 +350,8 @@ int GOConfigReader::ReadInteger(
 
 int GOConfigReader::ReadInteger(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required,
@@ -394,8 +412,8 @@ int GOConfigReader::ReadInteger(
 
 int GOConfigReader::ReadLong(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required) {
@@ -404,8 +422,8 @@ int GOConfigReader::ReadLong(
 
 int GOConfigReader::ReadLong(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required,
@@ -415,8 +433,8 @@ int GOConfigReader::ReadLong(
 
 double GOConfigReader::ReadFloat(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   double nmin,
   double nmax,
   bool required) {
@@ -425,8 +443,8 @@ double GOConfigReader::ReadFloat(
 
 double GOConfigReader::ReadFloat(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   double nmin,
   double nmax,
   bool required,
@@ -481,8 +499,8 @@ double GOConfigReader::ReadFloat(
 
 unsigned GOConfigReader::ReadSize(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   unsigned size_type,
   bool required) {
   return ReadSize(type, group, key, size_type, required, wxT("SMALL"));
@@ -490,11 +508,11 @@ unsigned GOConfigReader::ReadSize(
 
 unsigned GOConfigReader::ReadSize(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   unsigned size_type,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   static const int sizes[2][4]
     = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
   wxString value;
@@ -537,16 +555,19 @@ unsigned GOConfigReader::ReadSize(
 }
 
 unsigned GOConfigReader::ReadFontSize(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadFontSize(type, group, key, required, wxT("NORMAL"));
 }
 
 unsigned GOConfigReader::ReadFontSize(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value;
   if (!Read(type, group, key, required, value))
     value = defaultValue;
@@ -585,8 +606,8 @@ unsigned GOConfigReader::ReadFontSize(
 
 int GOConfigReader::ReadEnum(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   const struct IniFileEnumEntry *entry,
   unsigned count,
   bool required,
@@ -628,8 +649,8 @@ int GOConfigReader::ReadEnum(
 
 int GOConfigReader::ReadEnum(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   const struct IniFileEnumEntry *entry,
   unsigned count,
   bool required) {
