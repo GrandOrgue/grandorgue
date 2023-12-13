@@ -1,3 +1,4 @@
+- Fixed crash on enabling convolution reverb https://github.com/GrandOrgue/grandorgue/issues/1741
 - Fixed hang on Panic button press on MacOs https://github.com/GrandOrgue/grandorgue/issues/1726
 - Fixed crash on switching divisionals when a bidirectional devisional coupler was engaged https://github.com/GrandOrgue/grandorgue/issues/1725
 # 3.13.2 (2023-11-19)
