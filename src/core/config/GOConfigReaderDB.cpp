@@ -96,7 +96,10 @@ void GOConfigReaderDB::AddEntry(
 }
 
 bool GOConfigReaderDB::GetString(
-  GOSettingType type, wxString group, wxString key, wxString &value) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  wxString &value) {
   wxString index = group + wxT("/") + key;
   if (type == CMBSetting) {
     m_CMBUsed[index] = true;

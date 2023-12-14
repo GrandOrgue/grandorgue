@@ -38,7 +38,10 @@ public:
     GOConfigFileReader &ODF, GOSettingType type, bool handle_prefix);
 
   bool GetString(
-    GOSettingType type, wxString group, wxString key, wxString &value);
+    GOSettingType type,
+    const wxString &group,
+    const wxString &key,
+    wxString &value);
 };
 
 #endif
