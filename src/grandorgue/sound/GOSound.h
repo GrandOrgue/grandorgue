@@ -64,6 +64,15 @@ class GOSound {
 
 private:
   bool m_open;
+  std::atomic_bool m_IsRunning;
+
+  // counter of audio callbacks that have been entered but have not yet been
+  // exited
+  std::atomic_uint m_NCallbacksEntered;
+
+  // For waiting for and notifying when m_NCallbacksEntered bacomes 0
+  GOMutex m_CallbackMutex;
+  GOCondition m_CallbackCondition;
 
   GOMutex m_lock;
   GOMutex m_thread_lock;

@@ -23,7 +23,7 @@ GOSoundGroupWorkItem::GOSoundGroupWorkItem(
 void GOSoundGroupWorkItem::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Done.store(0);
-  m_ActiveCount = 0;
+  m_ActiveCount.store(0);
   m_Stop.store(false);
 }
 
@@ -90,7 +90,7 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
       if (!m_Active.Peek() && !m_Release.Peek())
         return;
     }
-    m_ActiveCount++;
+    m_ActiveCount.fetch_add(1);
   }
 
   // several threads may process the same list in parallel helping each other
@@ -105,24 +105,21 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
     GOMutexLocker locker(
       m_Mutex, false, "GOSoundGroupWorkItem::Run.afterProcess", pThread);
 
-    if (!locker.IsLocked())
-      return;
-
-    if (m_Done.load() == 1)
-    // The first thread is finished. Assign the result to the common buffer
-    {
-      memcpy(m_Buffer, buffer, m_SamplesPerBuffer * 2 * sizeof(float));
-      m_Done.store(2); // some thread has already finished
-    } else
-    // not the first thread. Add the result to the common buffer
-    {
-      for (unsigned i = 0; i < m_SamplesPerBuffer * 2; i++)
-        m_Buffer[i] += buffer[i];
+    if (locker.IsLocked()) {
+      if (m_Done.load() == 1)
+      // The first thread is finished. Assign the result to the common buffer
+      {
+        memcpy(m_Buffer, buffer, m_SamplesPerBuffer * 2 * sizeof(float));
+        m_Done.store(2); // some thread has already finished
+      } else
+      // not the first thread. Add the result to the common buffer
+      {
+        for (unsigned i = 0; i < m_SamplesPerBuffer * 2; i++)
+          m_Buffer[i] += buffer[i];
+      }
     }
-    m_ActiveCount--;
-    if (!m_ActiveCount)
-    // the last thread
-    {
+    if (m_ActiveCount.fetch_sub(1) <= 1) {
+      // the last thread
       m_Done.store(3); // all threads have finished processing this period
       m_Condition.Broadcast();
     }

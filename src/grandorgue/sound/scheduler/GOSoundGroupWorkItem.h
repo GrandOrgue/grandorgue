@@ -26,7 +26,15 @@ private:
   GOSoundSamplerList m_Release;
   GOMutex m_Mutex;
   GOCondition m_Condition;
-  unsigned m_ActiveCount;
+
+  // the number of threads are processing the samples
+  std::atomic_uint m_ActiveCount;
+
+  // processing state
+  //   0 - no threads are processing the samples
+  //   1 - some threads are processing the samples and none has finished
+  //   2 - some thread has finished processing samples but not all
+  //   3 - all threads have finished processing samples
   std::atomic_uint m_Done;
   std::atomic_bool m_Stop;
 

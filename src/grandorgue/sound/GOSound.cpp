@@ -23,6 +23,9 @@
 
 GOSound::GOSound(GOConfig &settings)
   : m_open(false),
+    m_IsRunning(false),
+    m_NCallbacksEntered(0),
+    m_CallbackCondition(m_CallbackMutex),
     logSoundErrors(true),
     m_AudioOutputs(),
     m_WaitCount(),
@@ -148,9 +151,11 @@ void GOSound::OpenSound() {
     }
 
     OpenMidi();
+    m_NCallbacksEntered.store(0);
     StartStreams();
     StartThreads();
     m_open = true;
+    m_IsRunning.store(true);
 
     if (m_OrganController)
       m_OrganController->PreparePlayback(
@@ -189,6 +194,17 @@ void GOSound::StartStreams() {
 }
 
 void GOSound::CloseSound() {
+  m_IsRunning.store(false);
+
+  // wait for all started callbacks to finish
+  {
+    GOMutexLocker lock(m_CallbackMutex);
+
+    while (m_NCallbacksEntered.load() > 0)
+      m_CallbackCondition.WaitOrStop(
+        "GOSound::CloseSound waits for all callbacks to finish", nullptr);
+  }
+
   StopThreads();
 
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
@@ -318,45 +334,62 @@ void GOSound::UpdateMeter() {
 
 bool GOSound::AudioCallback(
   unsigned dev_index, float *output_buffer, unsigned int n_frames) {
-  if (n_frames != m_SamplesPerBuffer) {
-    wxLogError(
-      _("No sound output will happen. Samples per buffer has been "
-        "changed by the sound driver to %d"),
-      n_frames);
-    return 1;
+  bool wasEntered = false;
+
+  if (m_IsRunning.load()) {
+    if (n_frames == m_SamplesPerBuffer) {
+      m_NCallbacksEntered.fetch_add(1);
+      wasEntered = true;
+    } else
+      wxLogError(
+        _("No sound output will happen. Samples per buffer has been "
+          "changed by the sound driver to %d"),
+        n_frames);
   }
-  GOSoundOutput *device = &m_AudioOutputs[dev_index];
-  GOMutexLocker locker(device->mutex);
+  // assure that m_IsRunning has not yet been changed after
+  // m_NCallbacksEntered.fetch_add, otherwise the control thread may not wait
+  if (wasEntered && m_IsRunning.load()) {
+    GOSoundOutput *device = &m_AudioOutputs[dev_index];
+    GOMutexLocker locker(device->mutex);
 
-  while (device->wait && device->waiting)
-    device->condition.Wait();
+    while (device->wait && device->waiting)
+      device->condition.Wait();
 
-  unsigned cnt = m_CalcCount.fetch_add(1);
-  m_SoundEngine.GetAudioOutput(
-    output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
-  device->wait = true;
-  unsigned count = m_WaitCount.fetch_add(1);
+    unsigned cnt = m_CalcCount.fetch_add(1);
+    m_SoundEngine.GetAudioOutput(
+      output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
+    device->wait = true;
+    unsigned count = m_WaitCount.fetch_add(1);
 
-  if (count + 1 == m_AudioOutputs.size()) {
-    m_SoundEngine.NextPeriod();
-    UpdateMeter();
+    if (count + 1 == m_AudioOutputs.size()) {
+      m_SoundEngine.NextPeriod();
+      UpdateMeter();
 
-    {
-      GOMutexLocker thread_locker(m_thread_lock);
-      for (unsigned i = 0; i < m_Threads.size(); i++)
-        m_Threads[i]->Wakeup();
+      {
+        GOMutexLocker thread_locker(m_thread_lock);
+        for (unsigned i = 0; i < m_Threads.size(); i++)
+          m_Threads[i]->Wakeup();
+      }
+      m_CalcCount.exchange(0);
+      m_WaitCount.exchange(0);
+
+      for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
+        GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
+        m_AudioOutputs[i].wait = false;
+        m_AudioOutputs[i].condition.Signal();
+      }
     }
-    m_CalcCount.exchange(0);
-    m_WaitCount.exchange(0);
+  } else
+    m_SoundEngine.GetEmptyAudioOutput(dev_index, n_frames, output_buffer);
+  if (
+    wasEntered && m_NCallbacksEntered.fetch_sub(1) <= 1
+    && !m_IsRunning.load()) {
+    // ensure that the control thread enters into m_NCallbackCondition.Wait()
+    GOMutexLocker lk(m_CallbackMutex);
 
-    for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-      GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
-
-      m_AudioOutputs[i].wait = false;
-      m_AudioOutputs[i].condition.Signal();
-    }
+    // notify the control thread
+    m_CallbackCondition.Broadcast();
   }
-
   return true;
 }
 
