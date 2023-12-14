@@ -22,10 +22,14 @@ const wxString GOStandardFile::GetPath() { return m_Path; }
 size_t GOStandardFile::GetSize() { return m_Size; }
 
 bool GOStandardFile::Open() {
-  if (!m_File.Open(m_Path, wxFile::read))
-    return false;
-  m_Size = m_File.Length();
-  return true;
+  bool isOk = false;
+
+  // Avoid opening a directory
+  if (wxFileExists(m_Path) && m_File.Open(m_Path, wxFile::read)) {
+    m_Size = m_File.Length();
+    isOk = true;
+  }
+  return isOk;
 }
 void GOStandardFile::Close() { m_File.Close(); }
 
