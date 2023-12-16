@@ -16,8 +16,12 @@ GOSettingFile::GOSettingFile(
 wxString GOSettingFile::validate(wxString value) {
   if (value == wxEmptyString || !wxFileExists(value))
     value = getDefaultValue();
-  wxFileName file(value);
-  file.MakeAbsolute();
-  value = file.GetFullPath();
+  if (!value.IsEmpty()) {
+    // convert value to an absolute path
+    wxFileName file(value);
+
+    file.MakeAbsolute();
+    value = file.GetFullPath();
+  }
   return value;
 }
