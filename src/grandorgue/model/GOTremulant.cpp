@@ -52,12 +52,6 @@ bool GOTremulant::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   return true;
 }
 
-bool GOTremulant::SaveCache(GOCacheWriter &cache) { return true; }
-
-void GOTremulant::UpdateHash(GOHash &ctx) {}
-
-const wxString &GOTremulant::GetLoadTitle() { return m_Name; }
-
 void GOTremulant::Load(
   GOConfigReader &cfg, wxString group, int sampler_group_id) {
   m_TremulantType = (GOTremulantType)cfg.ReadEnum(

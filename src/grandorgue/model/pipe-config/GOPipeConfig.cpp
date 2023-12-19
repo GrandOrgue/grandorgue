@@ -212,8 +212,6 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
 
 GOPipeUpdateCallback *GOPipeConfig::GetCallback() { return m_Callback; }
 
-const wxString &GOPipeConfig::GetAudioGroup() { return m_AudioGroup; }
-
 void GOPipeConfig::SetAudioGroup(const wxString &str) {
   m_AudioGroup = str;
   m_Callback->UpdateAudioGroup();
@@ -260,51 +258,35 @@ void GOPipeConfig::SetAutoTuningCorrection(float cent) {
   m_OrganModel->SetOrganModelModified();
 }
 
-unsigned GOPipeConfig::GetDelay() { return m_Delay; }
-
-unsigned GOPipeConfig::GetDefaultDelay() { return m_DefaultDelay; }
-
 void GOPipeConfig::SetDelay(unsigned delay) {
   m_Delay = delay;
   m_OrganModel->SetOrganModelModified();
 }
-
-int GOPipeConfig::GetBitsPerSample() { return m_BitsPerSample; }
 
 void GOPipeConfig::SetBitsPerSample(int value) {
   m_BitsPerSample = value;
   m_OrganModel->SetOrganModelModified();
 }
 
-int GOPipeConfig::GetCompress() { return m_Compress; }
-
 void GOPipeConfig::SetCompress(int value) {
   m_Compress = value;
   m_OrganModel->SetOrganModelModified();
 }
-
-int GOPipeConfig::GetChannels() { return m_Channels; }
 
 void GOPipeConfig::SetChannels(int value) {
   m_Channels = value;
   m_OrganModel->SetOrganModelModified();
 }
 
-int GOPipeConfig::GetLoopLoad() { return m_LoopLoad; }
-
 void GOPipeConfig::SetLoopLoad(int value) {
   m_LoopLoad = value;
   m_OrganModel->SetOrganModelModified();
 }
 
-int GOPipeConfig::GetAttackLoad() { return m_AttackLoad; }
-
 void GOPipeConfig::SetAttackLoad(int value) {
   m_AttackLoad = value;
   m_OrganModel->SetOrganModelModified();
 }
-
-int GOPipeConfig::GetReleaseLoad() { return m_ReleaseLoad; }
 
 void GOPipeConfig::SetReleaseLoad(int value) {
   m_ReleaseLoad = value;

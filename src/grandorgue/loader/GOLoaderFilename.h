@@ -43,7 +43,7 @@ public:
   void AssignResource(const wxString &path) { Assign(ROOT_RESOURCE, path); }
   void AssignAbsolute(const wxString &path) { Assign(ROOT_ABSOLUTE, path); }
 
-  const wxString &GetTitle() const { return m_path; }
+  const wxString &GetPath() const { return m_path; }
   void Hash(GOHash &hash) const;
 
   /**

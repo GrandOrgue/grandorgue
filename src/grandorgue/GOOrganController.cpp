@@ -374,7 +374,7 @@ wxString GOOrganController::Load(
   GOConfigFileReader odf_ini_file;
 
   if (!odf_ini_file.Read(odf_name.Open(m_FileStore).get())) {
-    errMsg.Printf(_("Unable to read '%s'"), odf_name.GetTitle().c_str());
+    errMsg.Printf(_("Unable to read '%s'"), odf_name.GetPath().c_str());
     return errMsg;
   }
 

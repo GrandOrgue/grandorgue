@@ -23,9 +23,9 @@ private:
   void Initialize();
   void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) override {}
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override { return true; }
-  bool SaveCache(GOCacheWriter &cache) override { return true; }
-  void UpdateHash(GOHash &hash);
-  const wxString &GetLoadTitle();
+  bool SaveCache(GOCacheWriter &cache) const override { return true; }
+  void UpdateHash(GOHash &hash) const override {}
+  const wxString &GetLoadTitle() const override { return m_Filename; }
 
   void VelocityChanged(unsigned velocity, unsigned old_velocity) override;
 

@@ -32,7 +32,7 @@ public:
   void AddChild(GOPipeConfigNode *node);
   unsigned GetChildCount();
   GOPipeConfigNode *GetChild(unsigned index);
-  GOSampleStatistic GetStatistic();
+  GOSampleStatistic GetStatistic() const;
 };
 
 #endif

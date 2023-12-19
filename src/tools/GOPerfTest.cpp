@@ -102,7 +102,7 @@ void GOPerfTestApp::RunTest(
         ainfo.release_end = -1;
         ainfo.loops.clear();
         attack.push_back(ainfo);
-        w->LoadFromFile(
+        w->LoadFromSampleFiles(
           organController->GetFileStore(),
           organController->GetMemoryPool(),
           attack,

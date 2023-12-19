@@ -56,10 +56,6 @@ void GOReferencePipe::Initialize() {
   m_ReferenceID = m_Reference->RegisterReference(this);
 }
 
-void GOReferencePipe::UpdateHash(GOHash &hash) {}
-
-const wxString &GOReferencePipe::GetLoadTitle() { return m_Filename; }
-
 void GOReferencePipe::VelocityChanged(
   unsigned velocity, unsigned old_velocity) {
   m_Reference->SetVelocity(velocity, m_ReferenceID);

@@ -70,29 +70,30 @@ public:
   float GetAutoTuningCorrection() const { return m_AutoTuningCorrection; }
   void SetAutoTuningCorrection(float cent);
 
-  unsigned GetDelay();
-  unsigned GetDefaultDelay();
+  unsigned GetDefaultDelay() const { return m_DefaultDelay; }
+
+  unsigned GetDelay() const { return m_Delay; }
   void SetDelay(unsigned delay);
 
-  const wxString &GetAudioGroup();
+  const wxString &GetAudioGroup() const { return m_AudioGroup; }
   void SetAudioGroup(const wxString &str);
 
-  int GetBitsPerSample();
+  int GetBitsPerSample() const { return m_BitsPerSample; }
   void SetBitsPerSample(int value);
 
-  int GetCompress();
+  int GetCompress() const { return m_Compress; }
   void SetCompress(int value);
 
-  int GetChannels();
+  int GetChannels() const { return m_Channels; }
   void SetChannels(int value);
 
-  int GetLoopLoad();
+  int GetLoopLoad() const { return m_LoopLoad; }
   void SetLoopLoad(int value);
 
-  int GetAttackLoad();
+  int GetAttackLoad() const { return m_AttackLoad; }
   void SetAttackLoad(int value);
 
-  int GetReleaseLoad();
+  int GetReleaseLoad() const { return m_ReleaseLoad; }
   void SetReleaseLoad(int value);
 
   int IsIgnorePitch() const { return m_IgnorePitch; }
