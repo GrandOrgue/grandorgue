@@ -61,6 +61,7 @@ public:
   virtual bool SaveCache(GOCacheWriter &cache) const = 0;
   virtual void UpdateHash(GOHash &hash) const = 0;
   virtual const wxString &GetLoadTitle() const = 0;
+  virtual const wxString &GetNameForError() const { return GetLoadTitle(); }
 };
 
 #endif

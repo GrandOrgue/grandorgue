@@ -93,8 +93,9 @@ class GOSoundProviderWave : public GOSoundProvider {
    * Load attack and/or release samples from one wav file or from an archive
    */
   void LoadFromOneFile(
+    const GOFileStore &fileStore,
     GOMemoryPool &pool,
-    GOOpenedFile *file,
+    const GOLoaderFilename &loaderFilename,
     const std::vector<GOWaveLoop> *loops,
     bool is_attack,
     bool is_release,

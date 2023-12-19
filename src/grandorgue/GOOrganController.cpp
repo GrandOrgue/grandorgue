@@ -570,7 +570,7 @@ wxString GOOrganController::Load(
           if (!obj->IsReady())
             wxLogError(
               _("Unable to load %s: %s"),
-              obj->GetLoadTitle(),
+              obj->GetNameForError(),
               obj->GetLoadError());
         }
         GOMessageBox(

@@ -182,8 +182,9 @@ void GOSoundProviderWave::LoadPitch(GOOpenedFile *file) {
 }
 
 void GOSoundProviderWave::LoadFromOneFile(
+  const GOFileStore &fileStore,
   GOMemoryPool &pool,
-  GOOpenedFile *file,
+  const GOLoaderFilename &loaderFilename,
   const std::vector<GOWaveLoop> *loops,
   bool is_attack,
   bool is_release,
@@ -201,68 +202,86 @@ void GOSoundProviderWave::LoadFromOneFile(
   bool use_pitch,
   unsigned loop_crossfade_length,
   unsigned max_released_time) {
-  GOWave wave;
+  // if an exception occures during Open(), it alteady contains the file name
+  std::unique_ptr<GOOpenedFile> openedFilePtr = loaderFilename.Open(fileStore);
 
-  wave.Open(file);
+  // catch a possible exception and rethrow it prefixed with the filename
+  wxString excText;
 
-  /* allocate data to work with */
-  unsigned totalDataSize = wave.GetLength() * GetBytesPerSample(bits_per_sample)
-    * wave.GetChannels();
-  GOBuffer<char> data(totalDataSize);
+  try {
+    GOWave wave;
 
-  if (use_pitch) {
-    m_MidiKeyNumber = wave.GetMidiNote();
-    m_MidiPitchFract = wave.GetPitchFract();
-  }
+    wave.Open(openedFilePtr.get());
 
-  unsigned channels = wave.GetChannels();
-  if (load_channels == 1)
-    channels = 1;
-  unsigned wave_channels = channels;
-  if (load_channels < 0 && (unsigned)-load_channels <= wave.GetChannels()) {
-    wave_channels = load_channels;
-    channels = 1;
-  }
-  if (bits_per_sample > wave.GetBitsPerSample())
-    bits_per_sample = wave.GetBitsPerSample();
+    /* allocate data to work with */
+    unsigned totalDataSize = wave.GetLength()
+      * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
+    GOBuffer<char> data(totalDataSize);
 
-  wave.ReadSamples(
-    data.get(),
-    (GOWave::SAMPLE_FORMAT)bits_per_sample,
-    wave.GetSampleRate(),
-    wave_channels);
+    if (use_pitch) {
+      m_MidiKeyNumber = wave.GetMidiNote();
+      m_MidiPitchFract = wave.GetPitchFract();
+    }
 
-  if (is_attack)
-    CreateAttack(
-      pool,
+    unsigned channels = wave.GetChannels();
+    if (load_channels == 1)
+      channels = 1;
+    unsigned wave_channels = channels;
+    if (load_channels < 0 && (unsigned)-load_channels <= wave.GetChannels()) {
+      wave_channels = load_channels;
+      channels = 1;
+    }
+    if (bits_per_sample > wave.GetBitsPerSample())
+      bits_per_sample = wave.GetBitsPerSample();
+
+    wave.ReadSamples(
       data.get(),
-      wave,
-      attack_start,
-      loops,
-      sample_group,
-      bits_per_sample,
-      channels,
-      compress,
-      loop_mode,
-      percussive,
-      min_attack_velocity,
-      loop_crossfade_length,
-      max_released_time);
+      (GOWave::SAMPLE_FORMAT)bits_per_sample,
+      wave.GetSampleRate(),
+      wave_channels);
 
-  if (
-    is_release
-    && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
-    CreateRelease(
-      pool,
-      data.get(),
-      wave,
-      sample_group,
-      max_playback_time,
-      cue_point,
-      release_end,
-      bits_per_sample,
-      channels,
-      compress);
+    if (is_attack)
+      CreateAttack(
+        pool,
+        data.get(),
+        wave,
+        attack_start,
+        loops,
+        sample_group,
+        bits_per_sample,
+        channels,
+        compress,
+        loop_mode,
+        percussive,
+        min_attack_velocity,
+        loop_crossfade_length,
+        max_released_time);
+
+    if (
+      is_release
+      && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
+      CreateRelease(
+        pool,
+        data.get(),
+        wave,
+        sample_group,
+        max_playback_time,
+        cue_point,
+        release_end,
+        bits_per_sample,
+        channels,
+        compress);
+  } catch (GOOutOfMemory e) {
+    throw e;
+  } catch (const wxString &error) {
+    excText = error;
+  } catch (const std::exception &e) {
+    excText = e.what();
+  } catch (...) { // We must not allow unhandled exceptions here
+    excText = _("Unknown exception");
+  }
+  if (!excText.IsEmpty())
+    throw wxString::Format("%s: %s", loaderFilename.GetPath(), excText);
 }
 
 unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber) {
@@ -377,8 +396,9 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
   try {
     for (unsigned i = 0; i < attacks.size(); i++) {
       LoadFromOneFile(
+        fileStore,
         pool,
-        attacks[i].filename.Open(fileStore).get(),
+        attacks[i].filename,
         &attacks[i].loops,
         true,
         attacks[i].load_release,
@@ -401,8 +421,9 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
 
     for (unsigned i = 0; i < releases.size(); i++) {
       LoadFromOneFile(
+        fileStore,
         pool,
-        releases[i].filename.Open(fileStore).get(),
+        releases[i].filename,
         nullptr,
         false,
         true,
