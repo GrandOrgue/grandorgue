@@ -256,7 +256,7 @@ void GOSoundingPipe::Load(
 void GOSoundingPipe::LoadData(
   const GOFileStore &fileStore, GOMemoryPool &pool) {
   try {
-    m_SoundProvider.LoadFromSampleFiles(
+    m_SoundProvider.LoadFromMultipleFiles(
       fileStore,
       pool,
       m_AttackInfo,

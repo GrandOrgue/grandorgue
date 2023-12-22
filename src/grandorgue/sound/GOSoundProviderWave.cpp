@@ -181,7 +181,7 @@ void GOSoundProviderWave::LoadPitch(GOOpenedFile *file) {
   m_MidiPitchFract = wave.GetPitchFract();
 }
 
-void GOSoundProviderWave::LoadFromWavFile(
+void GOSoundProviderWave::LoadFromOneFile(
   GOMemoryPool &pool,
   GOOpenedFile *file,
   const std::vector<GOWaveLoop> *loops,
@@ -278,7 +278,7 @@ unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber) {
   return fade_length;
 }
 
-void GOSoundProviderWave::LoadFromSampleFiles(
+void GOSoundProviderWave::LoadFromMultipleFiles(
   const GOFileStore &fileStore,
   GOMemoryPool &pool,
   std::vector<attack_load_info> attacks,
@@ -376,7 +376,7 @@ void GOSoundProviderWave::LoadFromSampleFiles(
 
   try {
     for (unsigned i = 0; i < attacks.size(); i++) {
-      LoadFromWavFile(
+      LoadFromOneFile(
         pool,
         attacks[i].filename.Open(fileStore).get(),
         &attacks[i].loops,
@@ -400,7 +400,7 @@ void GOSoundProviderWave::LoadFromSampleFiles(
     }
 
     for (unsigned i = 0; i < releases.size(); i++) {
-      LoadFromWavFile(
+      LoadFromOneFile(
         pool,
         releases[i].filename.Open(fileStore).get(),
         nullptr,

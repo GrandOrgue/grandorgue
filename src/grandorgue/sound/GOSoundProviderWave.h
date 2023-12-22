@@ -89,10 +89,10 @@ class GOSoundProviderWave : public GOSoundProvider {
     unsigned channels,
     bool compress);
 
-  /* Load attack or/and release samples from one wav file or from an archive
-   *
+  /*
+   * Load attack or/and release samples from one wav file or from an archive
    */
-  void LoadFromWavFile(
+  void LoadFromOneFile(
     GOMemoryPool &pool,
     GOOpenedFile *file,
     const std::vector<GOWaveLoop> *loops,
@@ -117,11 +117,11 @@ class GOSoundProviderWave : public GOSoundProvider {
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 
 public:
-  /**
+  /*
    * Load all attack and release samples from corresponding .wav files or from
-   *an archive
-   **/
-  void LoadFromSampleFiles(
+   * an archive
+   */
+  void LoadFromMultipleFiles(
     const GOFileStore &fileStore,
     GOMemoryPool &pool,
     std::vector<attack_load_info> attacks,
