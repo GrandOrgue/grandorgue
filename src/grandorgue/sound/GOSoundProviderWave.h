@@ -90,7 +90,7 @@ class GOSoundProviderWave : public GOSoundProvider {
     bool compress);
 
   /*
-   * Load attack or/and release samples from one wav file or from an archive
+   * Load attack and/or release samples from one wav file or from an archive
    */
   void LoadFromOneFile(
     GOMemoryPool &pool,
