@@ -517,10 +517,7 @@ wxString GOOrganController::Load(
       if (cache_ok) {
         while ((obj = objectDistributor.FetchNext())) {
           if (!obj->LoadFromCacheWithoutExc(m_pool, reader)) {
-            wxLogWarning(
-              _("Cache load failure: Failed to read %s from cache: %s"),
-              obj->GetLoadTitle(),
-              obj->GetLoadError());
+            wxLogWarning(_("Cache load failure: %s"), obj->GetLoadError());
             break;
           }
           if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
@@ -568,10 +565,7 @@ wxString GOOrganController::Load(
       if (wereExceptions) {
         for (auto obj : GetCacheObjects()) {
           if (!obj->IsReady())
-            wxLogError(
-              _("Unable to load %s: %s"),
-              obj->GetNameForError(),
-              obj->GetLoadError());
+            wxLogError(_("Unable to load data: %s"), obj->GetLoadError());
         }
         GOMessageBox(
           _("There are errors while loading the organ. See Log Messages."),

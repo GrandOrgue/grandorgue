@@ -19,11 +19,19 @@ class GOMemoryPool;
 class GOCacheObject {
 private:
   bool m_IsReady = false;
+
+  // the group name in the ODF
+  wxString m_group;
+
+  // the ODF key prefix of all settings belong to this object
+  wxString m_KeyPrefix;
+
   wxString m_LoadError;
 
   void InitBeforeLoad();
 
 protected:
+  void SetGroupAndPrefix(const wxString &group, const wxString &keyPrefix);
   virtual void Initialize() = 0;
   virtual void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) = 0;
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache) = 0;
@@ -61,7 +69,9 @@ public:
   virtual bool SaveCache(GOCacheWriter &cache) const = 0;
   virtual void UpdateHash(GOHash &hash) const = 0;
   virtual const wxString &GetLoadTitle() const = 0;
-  virtual const wxString &GetNameForError() const { return GetLoadTitle(); }
+
+  // Returns the message string prefixed with group and keyPrefix
+  const wxString GenerateMessage(const wxString &srcMsg);
 };
 
 #endif
