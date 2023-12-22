@@ -565,7 +565,7 @@ wxString GOOrganController::Load(
       if (wereExceptions) {
         for (auto obj : GetCacheObjects()) {
           if (!obj->IsReady())
-            wxLogError(_("Unable to load data: %s"), obj->GetLoadError());
+            wxLogError(obj->GetLoadError());
         }
         GOMessageBox(
           _("There are errors while loading the organ. See Log Messages."),
