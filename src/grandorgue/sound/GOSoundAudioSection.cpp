@@ -732,6 +732,9 @@ void GOAudioSection::Setup(
         loop_length * m_BytesPerSample,
         (end_length - copy_len) * m_BytesPerSample);
       if (fade_len > 0)
+        // TODO: Remove the parameter names from the comment and reduce the
+        // number of parameters of DoCrossfade that the call would be easy
+        // readable without additional comments
         DoCrossfade(
           end_seg.end_data,                  // dest
           MAX_READAHEAD,                     // dest_offset
