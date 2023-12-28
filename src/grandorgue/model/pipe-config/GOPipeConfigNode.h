@@ -55,22 +55,22 @@ public:
   float GetEffectiveManualTuning() const;
   float GetEffectiveAutoTuningCorection() const;
 
-  unsigned GetEffectiveDelay();
-  wxString GetEffectiveAudioGroup();
+  unsigned GetEffectiveDelay() const;
+  wxString GetEffectiveAudioGroup() const;
 
-  unsigned GetEffectiveBitsPerSample();
-  bool GetEffectiveCompress();
-  unsigned GetEffectiveLoopLoad();
-  unsigned GetEffectiveAttackLoad();
-  unsigned GetEffectiveReleaseLoad();
-  unsigned GetEffectiveChannels();
+  unsigned GetEffectiveBitsPerSample() const;
+  bool GetEffectiveCompress() const;
+  unsigned GetEffectiveLoopLoad() const;
+  unsigned GetEffectiveAttackLoad() const;
+  unsigned GetEffectiveReleaseLoad() const;
+  unsigned GetEffectiveChannels() const;
   bool GetEffectiveIgnorePitch() const;
   unsigned GetEffectiveReleaseTail() const;
 
   virtual void AddChild(GOPipeConfigNode *node);
   virtual unsigned GetChildCount();
   virtual GOPipeConfigNode *GetChild(unsigned index);
-  virtual GOSampleStatistic GetStatistic();
+  virtual GOSampleStatistic GetStatistic() const;
 };
 
 #endif

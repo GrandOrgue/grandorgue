@@ -58,9 +58,9 @@ public:
    */
   bool LoadFromCacheWithoutExc(GOMemoryPool &pool, GOCache &cache);
 
-  virtual bool SaveCache(GOCacheWriter &cache) = 0;
-  virtual void UpdateHash(GOHash &hash) = 0;
-  virtual const wxString &GetLoadTitle() = 0;
+  virtual bool SaveCache(GOCacheWriter &cache) const = 0;
+  virtual void UpdateHash(GOHash &hash) const = 0;
+  virtual const wxString &GetLoadTitle() const = 0;
 };
 
 #endif

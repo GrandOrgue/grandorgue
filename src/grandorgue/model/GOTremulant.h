@@ -43,9 +43,9 @@ private:
   void Initialize();
   void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool);
   bool LoadCache(GOMemoryPool &pool, GOCache &cache);
-  bool SaveCache(GOCacheWriter &cache);
-  void UpdateHash(GOHash &hash);
-  const wxString &GetLoadTitle();
+  bool SaveCache(GOCacheWriter &cache) const override { return true; }
+  void UpdateHash(GOHash &hash) const override {}
+  const wxString &GetLoadTitle() const override { return m_Name; };
 
   void AbortPlayback();
   void StartPlayback();

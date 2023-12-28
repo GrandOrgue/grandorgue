@@ -55,7 +55,7 @@ void GOPipeConfigTreeNode::UpdateReleaseTail() {
     m_Callback->UpdateReleaseTail();
 }
 
-GOSampleStatistic GOPipeConfigTreeNode::GetStatistic() {
+GOSampleStatistic GOPipeConfigTreeNode::GetStatistic() const {
   GOSampleStatistic stat = GOPipeConfigNode::GetStatistic();
   for (unsigned i = 0; i < m_Childs.size(); i++)
     stat.Cumulate(m_Childs[i]->GetStatistic());

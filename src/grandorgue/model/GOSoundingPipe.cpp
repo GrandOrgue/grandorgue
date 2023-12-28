@@ -256,7 +256,7 @@ void GOSoundingPipe::Load(
 void GOSoundingPipe::LoadData(
   const GOFileStore &fileStore, GOMemoryPool &pool) {
   try {
-    m_SoundProvider.LoadFromFile(
+    m_SoundProvider.LoadFromMultipleFiles(
       fileStore,
       pool,
       m_AttackInfo,
@@ -294,11 +294,11 @@ bool GOSoundingPipe::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   }
 }
 
-bool GOSoundingPipe::SaveCache(GOCacheWriter &cache) {
+bool GOSoundingPipe::SaveCache(GOCacheWriter &cache) const {
   return m_SoundProvider.SaveCache(cache);
 }
 
-void GOSoundingPipe::UpdateHash(GOHash &hash) {
+void GOSoundingPipe::UpdateHash(GOHash &hash) const {
   hash.Update(m_Filename);
   hash.Update(m_PipeConfigNode.GetEffectiveBitsPerSample());
   hash.Update(m_PipeConfigNode.GetEffectiveCompress());

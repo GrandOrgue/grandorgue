@@ -668,11 +668,13 @@ void GOAudioSection::Setup(
     /* Setup the loops and find the amount of data we need to store in the
      * main block. */
     unsigned min_reqd_samples = 0;
+
     for (unsigned i = 0; i < loop_points->size(); i++) {
       audio_start_data_segment start_seg;
       audio_end_data_segment end_seg;
       const GOWaveLoop &loop = (*loop_points)[i];
       unsigned fade_len = crossfade_length;
+
       if (loop.m_EndPosition + 1 > min_reqd_samples)
         min_reqd_samples = loop.m_EndPosition + 1;
 
@@ -683,24 +685,19 @@ void GOAudioSection::Setup(
         = 1 + end_seg.end_offset - start_seg.start_offset;
       unsigned end_length;
 
+      if (fade_len > end_seg.end_offset - start_seg.start_offset)
+        throw(wxString) _("Loop too short for crossfade");
+
+      if (start_seg.start_offset < fade_len)
+        throw(wxString) _("Not enough samples for a crossfade");
+
+      // calculate the fade segment size and offsets
       if (end_seg.end_offset - start_seg.start_offset > SHORT_LOOP_LENGTH) {
-        if (fade_len > end_seg.end_offset - start_seg.start_offset)
-          throw(wxString) _("Loop too short for crossfade");
-
-        if (start_seg.start_offset < fade_len)
-          throw(wxString) _("Not enough samples for a crossfade");
-
         end_seg.transition_offset
           = end_seg.end_offset - MAX_READAHEAD - fade_len + 1;
         end_seg.read_end = end_seg.end_offset - fade_len;
         end_length = 2 * MAX_READAHEAD + fade_len;
       } else {
-        if (fade_len > end_seg.end_offset - start_seg.start_offset)
-          throw(wxString) _("Loop too short for crossfade");
-
-        if (start_seg.start_offset < fade_len)
-          throw(wxString) _("Not enough samples for a crossfade");
-
         end_seg.transition_offset = start_seg.start_offset;
         end_seg.read_end = end_seg.end_offset;
         end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
@@ -711,16 +708,18 @@ void GOAudioSection::Setup(
             + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len;
       }
       end_seg.end_size = end_length * m_BytesPerSample;
-      end_seg.end_data = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
-      end_seg.end_ptr
-        = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
+      // Allocate the fade segment
+      end_seg.end_data = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
       if (!end_seg.end_data)
         throw GOOutOfMemory();
+      end_seg.end_ptr
+        = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
       const unsigned copy_len
         = 1 + end_seg.end_offset - end_seg.transition_offset;
 
+      // Fill the fade seg with transition data, then with the loop start data
       memcpy(
         end_seg.end_data,
         ((const unsigned char *)pcm_data)
@@ -733,16 +732,19 @@ void GOAudioSection::Setup(
         loop_length * m_BytesPerSample,
         (end_length - copy_len) * m_BytesPerSample);
       if (fade_len > 0)
+        // TODO: Remove the parameter names from the comment and reduce the
+        // number of parameters of DoCrossfade that the call would be easy
+        // readable without additional comments
         DoCrossfade(
-          end_seg.end_data,
-          MAX_READAHEAD,
-          (const unsigned char *)pcm_data,
-          start_seg.start_offset - fade_len,
-          pcm_data_channels,
-          m_BitsPerSample,
-          fade_len,
-          loop_length,
-          end_length);
+          end_seg.end_data,                  // dest
+          MAX_READAHEAD,                     // dest_offset
+          (const unsigned char *)pcm_data,   // src
+          start_seg.start_offset - fade_len, // src_offset
+          pcm_data_channels,                 // channels
+          m_BitsPerSample,                   // bits_per_sample
+          fade_len,                          // fade_length
+          loop_length,                       // loop_length
+          end_length);                       // length
 
       end_seg.end_loop_length = loop_length;
       end_seg.end_pos = end_length + end_seg.transition_offset;

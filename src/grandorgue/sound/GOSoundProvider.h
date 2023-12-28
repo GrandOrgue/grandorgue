@@ -55,7 +55,7 @@ public:
   void ClearData();
 
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache);
-  virtual bool SaveCache(GOCacheWriter &cache);
+  virtual bool SaveCache(GOCacheWriter &cache) const;
 
   void UseSampleGroup(unsigned sample_group);
   void SetVelocityParameter(float min_volume, float max_volume);

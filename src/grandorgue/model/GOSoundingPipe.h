@@ -69,12 +69,12 @@ private:
   void Validate();
 
   // Callbacks for GOCacheObject
-  const wxString &GetLoadTitle() override { return m_Filename; }
+  const wxString &GetLoadTitle() const override { return m_Filename; }
   void Initialize() override {}
   void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) override;
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override;
-  bool SaveCache(GOCacheWriter &cache) override;
-  void UpdateHash(GOHash &hash) override;
+  bool SaveCache(GOCacheWriter &cache) const override;
+  void UpdateHash(GOHash &hash) const override;
 
   // Callbacks from GOPipeConfigNode
   void UpdateAmplitude() override;
