@@ -19,7 +19,9 @@
 
 class GOAudioSection;
 class GOCache;
+class GOCacheObject;
 class GOCacheWriter;
+class GOLoaderFilename;
 class GOMemoryPool;
 class GOSoundReleaseAlignTable;
 class GOSampleStatistic;
@@ -197,6 +199,8 @@ public:
     int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
   void Setup(
+    const GOCacheObject *pObjectFor,
+    const GOLoaderFilename *pLoaderFilename,
     const void *pcm_data,
     GOWave::SAMPLE_FORMAT pcm_data_format,
     unsigned pcm_data_channels,

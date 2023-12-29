@@ -58,6 +58,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_SampleMidiPitchFraction(0.0),
     m_RetunePipe(retune),
     m_IsTemperamentOriginalBased(true),
+    m_SoundProvider(this),
     m_PipeConfigNode(
       &rank->GetPipeConfig(), pOrganModel, this, &m_SoundProvider) {}
 

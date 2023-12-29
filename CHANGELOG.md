@@ -1,3 +1,4 @@
+- Fixed not loading a pipe if some loop was not suitable for crossfade https://github.com/GrandOrgue/grandorgue/issues/1724
 - Fixed a wrong .wav filename in the log message window https://github.com/GrandOrgue/grandorgue/issues/1724
 - Increased the maximum number of Tremulants from 10 to 999
 - Fixed setting a reverb file name by default to the current directory https://github.com/GrandOrgue/grandorgue/issues/1741

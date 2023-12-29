@@ -22,7 +22,7 @@ void GOCacheObject::InitBeforeLoad() {
   m_LoadError.Clear();
 }
 
-const wxString GOCacheObject::GenerateMessage(const wxString &srcMsg) {
+const wxString GOCacheObject::GenerateMessage(const wxString &srcMsg) const {
   wxString res;
 
   if (!m_group.IsEmpty()) {

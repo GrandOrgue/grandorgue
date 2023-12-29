@@ -53,6 +53,15 @@ public:
    * @return a pointer to the GOFile
    */
   std::unique_ptr<GOOpenedFile> Open(const GOFileStore &fileStore) const;
+
+  wxString GenerateMessage(const wxString &srcMsg) const {
+    return wxString::Format("%s: %s", m_path, srcMsg);
+  }
+
+  static wxString generateMessage(
+    const GOLoaderFilename *pFileName, const wxString &srcMsg) {
+    return pFileName ? pFileName->GenerateMessage(srcMsg) : srcMsg;
+  }
 };
 
 #endif

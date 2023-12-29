@@ -89,6 +89,8 @@ void GOSoundProviderSynthedTrem::Create(
   m_AttackInfo.push_back(attack_info);
   m_Attack.push_back(new GOAudioSection(pool));
   m_Attack[0]->Setup(
+    nullptr,
+    nullptr,
     data.get(),
     GOWave::SF_SIGNEDSHORT_16,
     1,
@@ -105,6 +107,8 @@ void GOSoundProviderSynthedTrem::Create(
   m_ReleaseInfo.push_back(release_info);
   m_Release.push_back(new GOAudioSection(pool));
   m_Release[0]->Setup(
+    nullptr,
+    nullptr,
     data.get() + attack_samples + loop_samples,
     GOWave::SF_SIGNEDSHORT_16,
     1,

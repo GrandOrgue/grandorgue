@@ -17,6 +17,7 @@
 #include "GOSoundProvider.h"
 #include "GOWaveLoop.h"
 
+class GOCacheObject;
 class GOWave;
 
 class GOSoundProviderWave : public GOSoundProvider {
@@ -61,10 +62,14 @@ public:
   };
 
 private:
+  // Used for error messages
+  GOCacheObject *p_ObjectFor;
+
   unsigned GetBytesPerSample(unsigned bits_per_sample);
 
   void CreateAttack(
     GOMemoryPool &pool,
+    const GOLoaderFilename &loaderFilename,
     const char *data,
     GOWave &wave,
     int attack_start,
@@ -81,6 +86,7 @@ private:
 
   void CreateRelease(
     GOMemoryPool &pool,
+    const GOLoaderFilename &loaderFilename,
     const char *data,
     GOWave &wave,
     int sample_group,
@@ -120,6 +126,9 @@ private:
   unsigned GetFaderLength(unsigned MidiKeyNumber);
 
 public:
+  GOSoundProviderWave(GOCacheObject *pObjectFor = nullptr)
+    : p_ObjectFor(pObjectFor) {}
+
   /*
    * Load all attack and release samples from corresponding .wav files or from
    * an archive
