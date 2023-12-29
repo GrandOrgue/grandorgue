@@ -7105,7 +7105,7 @@ The manual information for each manual is available in sections called
           <term>NumberOfTremulants</term>
           <listitem>
             <para>
-(integer 0 - 10, required) number of tremulants. The details of each tremulant are contained in a section called <emphasis>Tremulant999</emphasis>
+(integer 0 - 999, required) number of tremulants. The details of each tremulant are contained in a section called <emphasis>Tremulant999</emphasis>
      </para>
           </listitem>
         </varlistentry>

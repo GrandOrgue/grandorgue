@@ -1,3 +1,4 @@
+- Increased the maximum number of Tremulants from 10 to 999
 - Fixed setting a reverb file name by default to the current directory https://github.com/GrandOrgue/grandorgue/issues/1741
 - Fixed crash on enabling convolution reverb https://github.com/GrandOrgue/grandorgue/issues/1741
 - Fixed hang on Panic button press on MacOs https://github.com/GrandOrgue/grandorgue/issues/1726

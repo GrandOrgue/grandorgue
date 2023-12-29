@@ -98,7 +98,7 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   }
 
   unsigned NumberOfTremulants
-    = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfTremulants"), 0, 10);
+    = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfTremulants"), 0, 999);
   for (unsigned i = 0; i < NumberOfTremulants; i++) {
     m_tremulants.push_back(new GOTremulant(*this));
     m_tremulants[i]->Load(
