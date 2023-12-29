@@ -202,7 +202,7 @@ void GOSoundProviderWave::LoadFromOneFile(
   bool use_pitch,
   unsigned loop_crossfade_length,
   unsigned max_released_time) {
-  // if an exception occurs during Open(), it alteady contains the file name
+  // if an exception occurs during Open(), it already contains the file name
   std::unique_ptr<GOOpenedFile> openedFilePtr = loaderFilename.Open(fileStore);
 
   // catch a possible exception and rethrow it prefixed with the filename
