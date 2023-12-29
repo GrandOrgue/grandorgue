@@ -9,9 +9,10 @@
 
 #include <wx/intl.h>
 
+#include "loader/cache/GOCache.h"
+#include "loader/cache/GOCacheWriter.h"
+
 #include "GOAlloc.h"
-#include "GOCache.h"
-#include "GOCacheWriter.h"
 #include "GOMemoryPool.h"
 #include "GOSampleStatistic.h"
 #include "GOSoundCompress.h"
