@@ -46,6 +46,8 @@
 #include "gui/GOGUISequencerPanel.h"
 #include "loader/GOLoadThread.h"
 #include "loader/GOLoaderFilename.h"
+#include "loader/cache/GOCache.h"
+#include "loader/cache/GOCacheWriter.h"
 #include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiPlayer.h"
@@ -68,8 +70,6 @@
 
 #include "GOAudioRecorder.h"
 #include "GOBuffer.h"
-#include "GOCache.h"
-#include "GOCacheWriter.h"
 #include "GODocument.h"
 #include "GOEvent.h"
 #include "GOHash.h"

@@ -34,6 +34,7 @@
 #include "gui/GOGUIPanel.h"
 #include "gui/primitives/go_gui_utils.h"
 #include "help/GOHelpRequestor.h"
+#include "loader/cache/GOCacheCleaner.h"
 #include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
 #include "sound/GOSound.h"
@@ -42,7 +43,6 @@
 
 #include "GOApp.h"
 #include "GOAudioGauge.h"
-#include "GOCacheCleaner.h"
 #include "GODocument.h"
 #include "GOEvent.h"
 #include "GOLogicalRect.h"

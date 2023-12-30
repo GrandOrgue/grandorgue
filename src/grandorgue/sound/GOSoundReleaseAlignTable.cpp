@@ -9,8 +9,8 @@
 
 #include <stdlib.h>
 
-#include "GOCache.h"
-#include "GOCacheWriter.h"
+#include "loader/cache/GOCache.h"
+#include "loader/cache/GOCacheWriter.h"
 #include "sound/GOSoundAudioSection.h"
 
 #ifndef NDEBUG

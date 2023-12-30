@@ -129,6 +129,9 @@ loader/GOFileStore.cpp
 loader/GOLoaderFilename.cpp
 loader/GOLoadThread.cpp
 loader/GOLoadWorker.cpp
+loader/cache/GOCache.cpp
+loader/cache/GOCacheCleaner.cpp
+loader/cache/GOCacheWriter.cpp
 midi/dialog-creator/GOMidiDialogCreatorProxy.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp
@@ -202,9 +205,6 @@ yaml/GOSaveableToYaml.cpp
 yaml/go-wx-yaml.cpp
 GOAudioGauge.cpp
 GOAudioRecorder.cpp
-GOCache.cpp
-GOCacheCleaner.cpp
-GOCacheWriter.cpp
 GOBitmapCache.cpp
 GOEvent.cpp
 GOLog.cpp
