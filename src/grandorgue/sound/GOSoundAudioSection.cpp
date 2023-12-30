@@ -67,6 +67,7 @@ void GOAudioSection::ClearData() {
     m_EndSegments.pop_back();
   }
   m_StartSegments.clear();
+  m_ReleaseCrossfadeLength = 0;
 }
 
 bool GOAudioSection::LoadCache(GOCache &cache) {
@@ -89,6 +90,8 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
   if (!cache.Read(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
     return false;
   if (!cache.Read(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
+    return false;
+  if (!cache.Read(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
   m_Data = (unsigned char *)cache.ReadBlock(m_AllocSize);
   if (!m_Data)
@@ -164,6 +167,8 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
     return false;
   if (!cache.Write(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
+    return false;
+  if (!cache.Write(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
   if (!cache.WriteBlock(m_Data, m_AllocSize))
     return false;
@@ -650,14 +655,17 @@ void GOAudioSection::Setup(
   const unsigned pcm_data_nb_samples,
   const std::vector<GOWaveLoop> *loop_points,
   bool compress,
-  unsigned crossfade_length) {
+  unsigned loopCrossfadeLength,
+  unsigned releaseCrossfadeLength) {
   if (pcm_data_channels < 1 || pcm_data_channels > 2)
     throw(wxString) _("< More than 2 channels in");
 
   m_BitsPerSample = wave_bits_per_sample(pcm_data_format);
   compress = (compress) && (m_BitsPerSample > 8);
-  crossfade_length = crossfade_length * pcm_data_sample_rate / 1000;
 
+  unsigned fade_len = loopCrossfadeLength * pcm_data_sample_rate / 1000;
+
+  m_ReleaseCrossfadeLength = releaseCrossfadeLength;
   assert(pcm_data_nb_samples > 0);
 
   const unsigned bytes_per_sample = wave_bytes_per_sample(pcm_data_format);
@@ -681,7 +689,6 @@ void GOAudioSection::Setup(
       audio_start_data_segment start_seg;
       audio_end_data_segment end_seg;
       const GOWaveLoop &loop = (*loop_points)[i];
-      unsigned fade_len = crossfade_length;
 
       if (loop.m_EndPosition + 1 > min_reqd_samples)
         min_reqd_samples = loop.m_EndPosition + 1;

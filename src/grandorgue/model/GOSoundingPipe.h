@@ -40,8 +40,6 @@ private:
   bool m_Percussive;
   float m_TemperamentOffset;
   unsigned m_HarmonicNumber;
-  unsigned m_LoopCrossfadeLength;
-  unsigned m_ReleaseCrossfadeLength;
   float m_MinVolume;
   float m_MaxVolume;
   int m_OdfMidiKeyNumber;
@@ -58,7 +56,10 @@ private:
    * add it to m_AttackFileInfos
    */
   void LoadAttackFileInfo(
-    GOConfigReader &cfg, const wxString &group, const wxString &prefix);
+    GOConfigReader &cfg,
+    const wxString &group,
+    const wxString &prefix,
+    bool isMain);
   /* Read one release file info from the odf keys with the prefix specified and
    * add it to m_AttackFileInfos
    */

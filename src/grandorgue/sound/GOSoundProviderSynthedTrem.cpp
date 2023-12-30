@@ -98,6 +98,7 @@ void GOSoundProviderSynthedTrem::Create(
     trem_loop.m_EndPosition,
     &trem_loops,
     false,
+    0,
     0);
 
   /* Release section */
@@ -116,6 +117,7 @@ void GOSoundProviderSynthedTrem::Create(
     release_samples,
     NULL,
     false,
+    0,
     0);
 
   ComputeReleaseAlignmentInfo();

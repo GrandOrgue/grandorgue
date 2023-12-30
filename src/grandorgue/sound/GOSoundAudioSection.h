@@ -168,6 +168,7 @@ private:
   unsigned m_MaxAmplitude;
   int m_MaxAbsAmplitude;
   int m_MaxAbsDerivative;
+  unsigned m_ReleaseCrossfadeLength; // in ms
 
 public:
   GOAudioSection(GOMemoryPool &pool);
@@ -176,6 +177,9 @@ public:
   unsigned GetChannels() const;
   unsigned GetBytesPerSample() const;
   unsigned GetLength() const;
+  unsigned GetReleaseCrossfadeLength() const {
+    return m_ReleaseCrossfadeLength;
+  }
 
   bool LoadCache(GOCache &cache);
   bool SaveCache(GOCacheWriter &cache) const;
@@ -209,7 +213,8 @@ public:
     unsigned pcm_data_nb_samples,
     const std::vector<GOWaveLoop> *loop_points,
     bool compress,
-    unsigned crossfade_length);
+    unsigned loopCrossfadeLength,
+    unsigned releaseCrossfadeLength);
 
   bool IsOneshot() const;
 
