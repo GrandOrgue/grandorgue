@@ -63,7 +63,8 @@ GOSoundingPipe::GOSoundingPipe(
 
 void GOSoundingPipe::LoadAttack(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  attack_load_info ainfo;
+  GOSoundProviderWave::AttackDescription ainfo;
+
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
   ainfo.sample_group = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
@@ -146,7 +147,8 @@ void GOSoundingPipe::Init(
   UpdateAmplitude();
   p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
-  attack_load_info ainfo;
+  GOSoundProviderWave::AttackDescription ainfo;
+
   ainfo.filename.AssignResource(m_Filename);
   ainfo.sample_group = -1;
   ainfo.load_release = !m_Percussive;
@@ -222,7 +224,7 @@ void GOSoundingPipe::Load(
   unsigned release_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
   for (unsigned i = 0; i < release_count; i++) {
-    release_load_info rinfo;
+    GOSoundProviderWave::ReleaseDescription rinfo;
     wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
 
     rinfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, p));
@@ -264,7 +266,8 @@ void GOSoundingPipe::LoadData(
       m_PipeConfigNode.GetEffectiveBitsPerSample(),
       m_PipeConfigNode.GetEffectiveChannels(),
       m_PipeConfigNode.GetEffectiveCompress(),
-      (loop_load_type)m_PipeConfigNode.GetEffectiveLoopLoad(),
+      (GOSoundProviderWave::LoopLoadType)
+        m_PipeConfigNode.GetEffectiveLoopLoad(),
       m_PipeConfigNode.GetEffectiveAttackLoad(),
       m_PipeConfigNode.GetEffectiveReleaseLoad(),
       m_LoopCrossfadeLength,
