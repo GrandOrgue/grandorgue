@@ -136,6 +136,7 @@ void GOSoundingPipe::LoadAttack(
 
 void GOSoundingPipe::Init(
   GOConfigReader &cfg, wxString group, wxString prefix, wxString filename) {
+  SetGroupAndPrefix(group, prefix);
   p_OrganModel->RegisterCacheObject(this);
   m_Filename = filename;
   m_PipeConfigNode.Init(cfg, group, prefix);
@@ -166,6 +167,7 @@ void GOSoundingPipe::Init(
 
 void GOSoundingPipe::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
+  SetGroupAndPrefix(group, prefix);
   p_OrganModel->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   m_PipeConfigNode.Load(cfg, group, prefix);

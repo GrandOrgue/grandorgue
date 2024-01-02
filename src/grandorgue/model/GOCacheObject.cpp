@@ -11,9 +11,30 @@
 
 #include "GOAlloc.h"
 
+void GOCacheObject::SetGroupAndPrefix(
+  const wxString &group, const wxString &keyPrefix) {
+  m_group = group;
+  m_KeyPrefix = keyPrefix;
+}
+
 void GOCacheObject::InitBeforeLoad() {
   m_IsReady = false;
   m_LoadError.Clear();
+}
+
+const wxString GOCacheObject::GenerateMessage(const wxString &srcMsg) {
+  wxString res;
+
+  if (!m_group.IsEmpty()) {
+    res << m_group;
+    if (!m_KeyPrefix.IsEmpty()) {
+      res << "/";
+      res << m_KeyPrefix;
+    }
+    res << ": ";
+  }
+  res << srcMsg;
+  return res;
 }
 
 bool GOCacheObject::InitWithoutExc() {
@@ -24,11 +45,11 @@ bool GOCacheObject::InitWithoutExc() {
   } catch (GOOutOfMemory e) {
     throw e;
   } catch (wxString error) {
-    m_LoadError = error;
+    m_LoadError = GenerateMessage(error);
   } catch (const std::exception &e) {
-    m_LoadError = e.what();
+    m_LoadError = GenerateMessage(e.what());
   } catch (...) { // We must not allow unhandled exceptions here
-    m_LoadError = _("Unknown exception");
+    m_LoadError = GenerateMessage(_("Unknown exception"));
   }
   return m_IsReady;
 }
@@ -42,11 +63,11 @@ bool GOCacheObject::LoadFromFileWithoutExc(
   } catch (GOOutOfMemory e) {
     throw e;
   } catch (wxString error) {
-    m_LoadError = error;
+    m_LoadError = GenerateMessage(error);
   } catch (const std::exception &e) {
-    m_LoadError = e.what();
+    m_LoadError = GenerateMessage(e.what());
   } catch (...) { // We must not allow unhandled exceptions here
-    m_LoadError = _("Unknown exception");
+    m_LoadError = GenerateMessage(_("Unknown exception"));
   }
   return m_IsReady;
 }
@@ -59,11 +80,11 @@ bool GOCacheObject::LoadFromCacheWithoutExc(
   } catch (GOOutOfMemory e) {
     throw e;
   } catch (wxString error) {
-    m_LoadError = error;
+    m_LoadError = GenerateMessage(error);
   } catch (const std::exception &e) {
-    m_LoadError = e.what();
+    m_LoadError = GenerateMessage(e.what());
   } catch (...) { // We must not allow unhandled exceptions here
-    m_LoadError = _("Unknown exception");
+    m_LoadError = GenerateMessage(_("Unknown exception"));
   }
   return m_IsReady;
 }

@@ -27,6 +27,7 @@ GOReferencePipe::GOReferencePipe(
 
 void GOReferencePipe::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
+  SetGroupAndPrefix(group, prefix);
   m_model->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   if (!m_Filename.StartsWith(wxT("REF:")))
