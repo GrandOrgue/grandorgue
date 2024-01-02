@@ -281,8 +281,8 @@ unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber) {
 void GOSoundProviderWave::LoadFromMultipleFiles(
   const GOFileStore &fileStore,
   GOMemoryPool &pool,
-  std::vector<AttackDescription> attacks,
-  std::vector<ReleaseDescription> releases,
+  std::vector<AttackFileInfo> attacks,
+  std::vector<ReleaseFileInfo> releases,
   unsigned bits_per_sample,
   int load_channels,
   bool compress,

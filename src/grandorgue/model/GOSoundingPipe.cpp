@@ -63,7 +63,7 @@ GOSoundingPipe::GOSoundingPipe(
 
 void GOSoundingPipe::LoadAttack(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  GOSoundProviderWave::AttackDescription ainfo;
+  GOSoundProviderWave::AttackFileInfo ainfo;
 
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
   ainfo.sample_group = cfg.ReadInteger(
@@ -147,7 +147,7 @@ void GOSoundingPipe::Init(
   UpdateAmplitude();
   p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
-  GOSoundProviderWave::AttackDescription ainfo;
+  GOSoundProviderWave::AttackFileInfo ainfo;
 
   ainfo.filename.AssignResource(m_Filename);
   ainfo.sample_group = -1;
@@ -224,7 +224,7 @@ void GOSoundingPipe::Load(
   unsigned release_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
   for (unsigned i = 0; i < release_count; i++) {
-    GOSoundProviderWave::ReleaseDescription rinfo;
+    GOSoundProviderWave::ReleaseFileInfo rinfo;
     wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
 
     rinfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, p));

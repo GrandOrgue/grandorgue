@@ -29,8 +29,8 @@ private:
   uint64_t m_LastStop;
   int m_Instances;
   bool m_Tremulant;
-  std::vector<GOSoundProviderWave::AttackDescription> m_AttackInfo;
-  std::vector<GOSoundProviderWave::ReleaseDescription> m_ReleaseInfo;
+  std::vector<GOSoundProviderWave::AttackFileInfo> m_AttackInfo;
+  std::vector<GOSoundProviderWave::ReleaseFileInfo> m_ReleaseInfo;
   wxString m_Filename;
 
   /* states which windchest this pipe belongs to, see

@@ -38,7 +38,7 @@ public:
     LOOP_LOAD_ALL = 2
   };
 
-  struct AttackDescription {
+  struct AttackFileInfo {
     GOLoaderFilename filename;
     int sample_group;
     bool load_release;
@@ -52,7 +52,7 @@ public:
     std::vector<GOWaveLoop> loops;
   };
 
-  struct ReleaseDescription {
+  struct ReleaseFileInfo {
     GOLoaderFilename filename;
     int sample_group;
     int max_playback_time;
@@ -126,8 +126,8 @@ public:
   void LoadFromMultipleFiles(
     const GOFileStore &fileStore,
     GOMemoryPool &pool,
-    std::vector<AttackDescription> attacks,
-    std::vector<ReleaseDescription> releases,
+    std::vector<AttackFileInfo> attacks,
+    std::vector<ReleaseFileInfo> releases,
     unsigned bits_per_sample,
     int channels,
     bool compress,
