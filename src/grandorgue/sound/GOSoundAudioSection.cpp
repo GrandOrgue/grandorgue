@@ -693,11 +693,13 @@ void GOAudioSection::Setup(
       wxString loopError;
 
       if (fade_len > loop_length - 1)
-        loopError
-          = wxString::Format(_("Loop %u is too short for crossfade"), i + 1);
+        loopError = wxString::Format(
+          _("The loop %u is ignored: it is too short for crossfade"), i + 1);
       else if (start_seg.start_offset < fade_len)
         loopError = wxString::Format(
-          _("Not enough samples for crossfade before loop %u "), i + 1);
+          _("The loop %u is ignored: not enough samples for crossfade before "
+            "it's start"),
+          i + 1);
 
       if (loopError.IsEmpty()) {
         unsigned end_length;
@@ -769,6 +771,8 @@ void GOAudioSection::Setup(
       } else
         wxLogWarning(GOCacheObject::generateMessage(
           pObjectFor, pLoaderFilename, loopError));
+      if (!m_EndSegments.size())
+        throw(wxString) _("No valid loops exist in the file");
     }
 
     /* There is no need to store any samples after the end of the last loop. */
