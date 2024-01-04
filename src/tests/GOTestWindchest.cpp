@@ -23,4 +23,8 @@ void GOTestWindchest::run() {
   if (w_size != 1) {
     throw("Windchest size is wrong");
   }
+  w_size = this->controller->AddWindchest(new GOWindchest(*this->controller));
+  if (w_size != 2) {
+    throw("Windchest size is wrong");
+  }
 }
