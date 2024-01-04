@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -748,19 +748,18 @@ void GOAudioSection::Setup(
           loop_length * m_BytesPerSample,
           (end_length - copy_len) * m_BytesPerSample);
         if (fade_len > 0)
-          // TODO: Remove the parameter names from the comment and reduce the
-          // number of parameters of DoCrossfade that the call would be easy
-          // readable without additional comments
+          // TODO: reduce the number of parameters of DoCrossfade that the call
+          // would be easy readable without additional comments
           DoCrossfade(
-            end_seg.end_data,                  // dest
-            MAX_READAHEAD,                     // dest_offset
-            (const unsigned char *)pcm_data,   // src
-            start_seg.start_offset - fade_len, // src_offset
-            pcm_data_channels,                 // channels
-            m_BitsPerSample,                   // bits_per_sample
-            fade_len,                          // fade_length
-            loop_length,                       // loop_length
-            end_length);                       // length
+            end_seg.end_data,
+            MAX_READAHEAD,
+            (const unsigned char *)pcm_data,
+            start_seg.start_offset - fade_len,
+            pcm_data_channels,
+            m_BitsPerSample,
+            fade_len,
+            loop_length,
+            end_length);
 
         end_seg.end_loop_length = loop_length;
         end_seg.end_pos = end_length + end_seg.transition_offset;
