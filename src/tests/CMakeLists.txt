@@ -10,8 +10,12 @@ include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/s
 
 # Add here your tests files
 set(go_test_lib
+    # Test framework - Don't modify
+    GOTestResult.cpp
+    GOTestResultCollection.cpp
     GOTest.cpp
     GOTestCollection.cpp
+    # Add here the individual tests
     GOTestWindchest.cpp
 )
 

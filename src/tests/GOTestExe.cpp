@@ -4,10 +4,10 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include <iostream>
-
 #include "GOTestCollection.h"
 #include "GOTestWindchest.h"
+#include <iostream>
+#include <wx/log.h>
 
 int main() {
   /*
@@ -17,18 +17,31 @@ int main() {
       TODO: It should displays also the tests results
   */
 
-  // GOTestCollection go_collection;
-  // go_collection.add_test(new GOTestWindchest());
-  // go_collection.run();
+  /* Instantiate all the test classes here */
   new GOTestWindchest;
-  GOTestCollection::Instance()->run();
+  /* end of instanciation */
+  GOTestResultCollection test_result_collection;
+  test_result_collection = GOTestCollection::Instance()->run();
+
+  // Display tests results
+  int run_number_ = 0;
+  std::vector<GOTestResult *> test_results
+    = test_result_collection.get_results();
+  for (auto current = test_results.begin(); current != test_results.end();
+       ++current, ++run_number_) {
+    auto test = *current;
+    wxLogMessage("--------------------");
+    wxLogMessage(test->GetMessage());
+    // if (GOTestResult current.isFailed())
+    //   std::cerr << current.get_message() << "\n";
+  }
+
   const int failed_count = GOTestCollection::Instance()->get_failed_count();
   const int success_count = GOTestCollection::Instance()->get_success_count();
   if (failed_count > 0) {
-    std::cerr << failed_count << " tests Failed";
-    std::cout << success_count << " tests Succeeded";
+    std::cerr << failed_count << " tests Failed\n";
     return 1;
   }
-  std::cout << success_count << " tests Succeeded";
+  std::cout << success_count << " tests Succeeded\n";
   return 0;
 }

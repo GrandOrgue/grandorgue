@@ -18,14 +18,16 @@ class GOTest {
           - A tear down method
   */
 
+private:
+  wxString name = "GOTest";
+
 public:
   GOTest();
   virtual ~GOTest();
   virtual bool setUp();
   virtual void run();
   virtual bool tearDown();
-
-  wxString name = "GOTest";
+  wxString GetName() { return name; }
 };
 
 class GOCommonControllerTest : public GOTest {

@@ -27,4 +27,17 @@ void GOTestWindchest::run() {
   if (w_size != 2) {
     throw("Windchest size is wrong");
   }
+
+  // Check the Windchest count function
+  w_size = this->controller->GetWindchestGroupCount();
+  if (w_size != 2) {
+    throw("Windchest count is wrong");
+  }
+
+  // Check if name is void
+  GOWindchest *windchest = this->controller->GetWindchest(0);
+  const wxString name = windchest->GetName();
+  if (name != "") {
+    throw("Windchest name should be void (no configuration set)");
+  }
 }

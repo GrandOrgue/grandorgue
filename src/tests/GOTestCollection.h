@@ -7,6 +7,7 @@
 #define GOTESTCOLLECTION_H
 
 #include "GOTest.h"
+#include "GOTestResultCollection.h"
 #include <vector>
 #include <wx/string.h>
 
@@ -39,7 +40,7 @@ public:
   }
   //   GOTestCollection();
   //   virtual ~GOTestCollection();
-  void run();
+  GOTestResultCollection run();
   void add_test(GOTest *test);
   int get_failed_count();
   int get_success_count();
