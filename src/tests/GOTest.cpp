@@ -33,7 +33,7 @@ bool GOCommonControllerTest::setUp() {
   // Make organ temporary directory
   char path[] = ".";
   this->organ_directory = mkdtemp(path);
-  GOConfig settings(name);
+  GOConfig settings(this->GetName());
   this->controller = new GOOrganController(settings);
   this->controller->InitOrganDirectory(this->organ_directory);
   return true;

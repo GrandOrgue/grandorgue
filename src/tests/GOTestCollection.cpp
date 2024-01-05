@@ -4,6 +4,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 #include "GOTestCollection.h"
+#include "GOTestResultCollection.h"
 #include <iostream>
 #include <iterator>
 #include <vector>
@@ -36,11 +37,12 @@ int GOTestCollection::get_success_count() {
   return success_count_;
 }
 
-void GOTestCollection::run() {
+GOTestResultCollection GOTestCollection::run() {
   /*
       This iterates on tests_ vector, run them one by one, then collects
       the tests results and display them at the end.
   */
+  GOTestResultCollection *test_result_collection = new GOTestResultCollection();
   run_number_ = 0;
   for (auto current = tests_.begin(); current != tests_.end();
        ++current, ++run_number_) {
@@ -49,9 +51,12 @@ void GOTestCollection::run() {
       if (test->setUp()) {
         try {
           test->run();
+          test_result_collection->add_result(
+            new GOTestResult(test->GetName() << " succeeded"));
           success_count_++;
-        } catch (...) {
+        } catch (std::exception &e) {
           fail_count_++;
+          test_result_collection->add_result(new GOTestResult(e.what(), true));
           test->tearDown();
           continue;
         }
@@ -67,6 +72,7 @@ void GOTestCollection::run() {
       // error("Unexpected error");
     }
   }
+  return *test_result_collection;
 }
 
 GOTestCollection *GOTestCollection::go_test_collection = nullptr;
