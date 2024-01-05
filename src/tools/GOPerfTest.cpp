@@ -88,9 +88,10 @@ void GOPerfTestApp::RunTest(
 
         w->SetAmplitude(102, 0);
 
-        std::vector<release_load_info> release;
-        std::vector<attack_load_info> attack;
-        attack_load_info ainfo;
+        std::vector<GOSoundProviderWave::AttackFileInfo> attacks;
+        std::vector<GOSoundProviderWave::ReleaseFileInfo> releases;
+        GOSoundProviderWave::AttackFileInfo ainfo;
+
         ainfo.filename.Assign(wxString::Format(wxT("%02d.wav"), i % 3));
         ainfo.sample_group = -1;
         ainfo.load_release = true;
@@ -101,16 +102,16 @@ void GOPerfTestApp::RunTest(
         ainfo.cue_point = -1;
         ainfo.release_end = -1;
         ainfo.loops.clear();
-        attack.push_back(ainfo);
+        attacks.push_back(ainfo);
         w->LoadFromMultipleFiles(
           organController->GetFileStore(),
           organController->GetMemoryPool(),
-          attack,
-          release,
+          attacks,
+          releases,
           bits_per_sample,
           2,
           compress,
-          LOOP_LOAD_ALL,
+          GOSoundProviderWave::LOOP_LOAD_ALL,
           1,
           1,
           0,
