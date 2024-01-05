@@ -17,11 +17,13 @@
 
 class GOTestWindchest : public GOCommonControllerTest {
 
+private:
+  wxString name = "Windchest";
+
 public:
+  GOTestWindchest() { name = "Windchest"; }
   virtual ~GOTestWindchest();
   virtual void run();
-
-  wxString name = "Windchest";
 };
 
 #endif
