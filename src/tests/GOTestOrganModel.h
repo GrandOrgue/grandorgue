@@ -3,8 +3,8 @@
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
-#ifndef GOTESTWINDCHEST_H
-#define GOTESTWINDCHEST_H
+#ifndef GOTESTORGANMODEL_H
+#define GOTESTORGANMODEL_H
 
 #include "GOTest.h"
 #include <wx/string.h>
@@ -15,16 +15,16 @@
 
 #include <wx/string.h>
 
-class GOTestWindchest : public GOCommonControllerTest {
+class GOTestOrganModel : public GOCommonControllerTest {
 
 private:
-  wxString name = "Windchest";
+  wxString name = "GOTestOrganModel";
 
 public:
-  GOTestWindchest() { name = "Windchest"; }
-  virtual ~GOTestWindchest();
+  GOTestOrganModel() { name = "GOTestOrganModel"; }
+  virtual ~GOTestOrganModel();
   virtual void run();
-  wxString GetName();
+  wxString GetName() { return name; };
 };
 
 #endif

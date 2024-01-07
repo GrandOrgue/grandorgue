@@ -27,7 +27,7 @@ public:
   virtual bool setUp();
   virtual void run();
   virtual bool tearDown();
-  wxString GetName() { return name; }
+  virtual wxString GetName() { return name; };
 };
 
 class GOCommonControllerTest : public GOTest {

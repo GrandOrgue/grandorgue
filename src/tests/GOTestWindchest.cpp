@@ -41,3 +41,5 @@ void GOTestWindchest::run() {
     throw("Windchest name should be void (no configuration set)");
   }
 }
+
+wxString GOTestWindchest::GetName() { return name; }

@@ -5,6 +5,9 @@
 
 set -e
 
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  libboost-stacktrace-dev
+
 DIR=$(dirname $0)
 # source $DIR/../set-ver-prms.sh "$1" "$2"
 
@@ -22,7 +25,7 @@ pushd build/linux
 rm -rf *
 export LANG=C
 
-GO_PRMS="-DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON \
+GO_PRMS="-DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DBOOST_ENABLE_ASSERT_DEBUG_HANDLER=ON -DBOOST_STACKTRACE_USE_ADDR2LINE=ON \
   $CMAKE_VERSION_PRMS \
   $($DIR/cmake-prm-yaml-cpp.bash $TARGET_ARCH)"
 

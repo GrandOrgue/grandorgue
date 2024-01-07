@@ -22,5 +22,3 @@ GOTestResult::GOTestResult(wxString message, bool failed)
   : m_result_message(message) {
   failed = failed;
 }
-
-bool GOTestResult::isFailed() { return this->failed; }
