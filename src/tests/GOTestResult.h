@@ -6,6 +6,10 @@
 #ifndef GOTESTRESULT_H
 #define GOTESTRESULT_H
 
+#include <fstream>
+#include <iostream>
+#include <string>
+
 #include "GOTest.h"
 #include <vector>
 #include <wx/string.h>
@@ -13,7 +17,7 @@
 class GOTestResult {
 
 private:
-  wxString m_result_message = wxEmptyString;
+  wxString m_result_message;
   bool failed;
 
 public:
@@ -23,11 +27,15 @@ public:
 
   const wxString GetMessage() {
     wxString result = wxEmptyString;
+    // if (this->isFailed())
+    //     result += "\033[1;31m";
     result += m_result_message;
+    // if (this->isFailed())
+    //     result += "\033[0m";
     return result;
     // return m_result_message;
   }
-  bool isFailed();
+  bool isFailed() { return failed; }
 };
 
 #endif
