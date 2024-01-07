@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -53,6 +53,15 @@ public:
    * @return a pointer to the GOFile
    */
   std::unique_ptr<GOOpenedFile> Open(const GOFileStore &fileStore) const;
+
+  wxString GenerateMessage(const wxString &srcMsg) const {
+    return wxString::Format("%s: %s", m_path, srcMsg);
+  }
+
+  static wxString generateMessage(
+    const GOLoaderFilename *pFileName, const wxString &srcMsg) {
+    return pFileName ? pFileName->GenerateMessage(srcMsg) : srcMsg;
+  }
 };
 
 #endif

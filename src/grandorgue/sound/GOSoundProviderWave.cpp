@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -35,6 +35,7 @@ unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample) {
 
 void GOSoundProviderWave::CreateAttack(
   GOMemoryPool &pool,
+  const GOLoaderFilename &loaderFilename,
   const char *data,
   GOWave &wave,
   int attack_start,
@@ -120,6 +121,8 @@ void GOSoundProviderWave::CreateAttack(
   GOAudioSection *section = new GOAudioSection(pool);
   m_Attack.push_back(section);
   section->Setup(
+    p_ObjectFor,
+    &loaderFilename,
     data + attack_pos * GetBytesPerSample(bits_per_sample) * channels,
     (GOWave::SAMPLE_FORMAT)bits_per_sample,
     channels,
@@ -132,6 +135,7 @@ void GOSoundProviderWave::CreateAttack(
 
 void GOSoundProviderWave::CreateRelease(
   GOMemoryPool &pool,
+  const GOLoaderFilename &loaderFilename,
   const char *data,
   GOWave &wave,
   int sample_group,
@@ -163,6 +167,8 @@ void GOSoundProviderWave::CreateRelease(
   GOAudioSection *section = new GOAudioSection(pool);
   m_Release.push_back(section);
   section->Setup(
+    p_ObjectFor,
+    &loaderFilename,
     data + release_offset * GetBytesPerSample(bits_per_sample) * channels,
     (GOWave::SAMPLE_FORMAT)bits_per_sample,
     channels,
@@ -243,6 +249,7 @@ void GOSoundProviderWave::LoadFromOneFile(
     if (is_attack)
       CreateAttack(
         pool,
+        loaderFilename,
         data.get(),
         wave,
         attack_start,
@@ -262,6 +269,7 @@ void GOSoundProviderWave::LoadFromOneFile(
       && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
       CreateRelease(
         pool,
+        loaderFilename,
         data.get(),
         wave,
         sample_group,
@@ -281,7 +289,7 @@ void GOSoundProviderWave::LoadFromOneFile(
     excText = _("Unknown exception");
   }
   if (!excText.IsEmpty())
-    throw wxString::Format("%s: %s", loaderFilename.GetPath(), excText);
+    throw loaderFilename.GenerateMessage(excText);
 }
 
 unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber) {

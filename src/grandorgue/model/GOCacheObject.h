@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,6 +9,8 @@
 #define GOCACHEOBJECT_H
 
 #include <wx/string.h>
+
+#include "loader/GOLoaderFilename.h"
 
 class GOCache;
 class GOCacheWriter;
@@ -71,7 +73,20 @@ public:
   virtual const wxString &GetLoadTitle() const = 0;
 
   // Returns the message string prefixed with group and keyPrefix
-  const wxString GenerateMessage(const wxString &srcMsg);
+  const wxString GenerateMessage(const wxString &srcMsg) const;
+
+  static const wxString generateMessage(
+    const GOCacheObject *pObjectFor, const wxString &srcMsg) {
+    return pObjectFor ? pObjectFor->GenerateMessage(srcMsg) : srcMsg;
+  }
+
+  static const wxString generateMessage(
+    const GOCacheObject *pObjectFor,
+    const GOLoaderFilename *pFilename,
+    const wxString &srcMsg) {
+    return generateMessage(
+      pObjectFor, GOLoaderFilename::generateMessage(pFilename, srcMsg));
+  }
 };
 
 #endif

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,7 +19,9 @@
 
 class GOAudioSection;
 class GOCache;
+class GOCacheObject;
 class GOCacheWriter;
+class GOLoaderFilename;
 class GOMemoryPool;
 class GOSoundReleaseAlignTable;
 class GOSampleStatistic;
@@ -197,6 +199,8 @@ public:
     int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
   void Setup(
+    const GOCacheObject *pObjectFor,
+    const GOLoaderFilename *pLoaderFilename,
     const void *pcm_data,
     GOWave::SAMPLE_FORMAT pcm_data_format,
     unsigned pcm_data_channels,

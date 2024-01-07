@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -89,6 +89,8 @@ void GOSoundProviderSynthedTrem::Create(
   m_AttackInfo.push_back(attack_info);
   m_Attack.push_back(new GOAudioSection(pool));
   m_Attack[0]->Setup(
+    nullptr,
+    nullptr,
     data.get(),
     GOWave::SF_SIGNEDSHORT_16,
     1,
@@ -105,6 +107,8 @@ void GOSoundProviderSynthedTrem::Create(
   m_ReleaseInfo.push_back(release_info);
   m_Release.push_back(new GOAudioSection(pool));
   m_Release[0]->Setup(
+    nullptr,
+    nullptr,
     data.get() + attack_samples + loop_samples,
     GOWave::SF_SIGNEDSHORT_16,
     1,
