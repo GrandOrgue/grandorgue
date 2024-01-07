@@ -14,10 +14,10 @@ void GOTestResultCollection::add_result(GOTestResult *test_result) {
   /*
       This method allows to add tests results.
   */
-  this->test_results.push_back(test_result);
+  test_results.push_back(test_result);
 }
 
 std::vector<GOTestResult *> GOTestResultCollection::get_results() {
 
-  return this->test_results;
+  return test_results;
 }

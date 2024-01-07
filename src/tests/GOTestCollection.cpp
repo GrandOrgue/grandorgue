@@ -3,7 +3,9 @@
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
+
 #include "GOTestCollection.h"
+#include "GOTestException.h"
 #include "GOTestResultCollection.h"
 #include <iostream>
 #include <iterator>
@@ -46,17 +48,28 @@ GOTestResultCollection GOTestCollection::run() {
   run_number_ = 0;
   for (auto current = tests_.begin(); current != tests_.end();
        ++current, ++run_number_) {
+    auto test = *current;
     try {
-      auto test = *current;
       if (test->setUp()) {
         try {
           test->run();
           test_result_collection->add_result(
             new GOTestResult(test->GetName() << " succeeded"));
           success_count_++;
+        } catch (GOTestException &e) {
+          fail_count_++;
+          test_result_collection->add_result(new GOTestResult(
+            test->GetName() << " failed: \n"
+                            << e.what(),
+            true));
+          test->tearDown();
+          continue;
         } catch (std::exception &e) {
           fail_count_++;
-          test_result_collection->add_result(new GOTestResult(e.what(), true));
+          test_result_collection->add_result(new GOTestResult(
+            test->GetName() << " failed: \n"
+                            << e.what(),
+            true));
           test->tearDown();
           continue;
         }
@@ -64,12 +77,16 @@ GOTestResultCollection GOTestCollection::run() {
           continue;
         }
       } else {
-        // error("Setup failed");
+        std::cout << "KO";
       }
     } catch (std::exception &e) {
-      // error(e.what());
+      std::cout << "KO";
     } catch (...) {
-      // error("Unexpected error");
+      fail_count_++;
+      test_result_collection->add_result(
+        new GOTestResult("Unknown exception", true));
+      test->tearDown();
+      continue;
     }
   }
   return *test_result_collection;

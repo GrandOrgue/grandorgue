@@ -5,6 +5,9 @@ add_option(-msse3)
 
 add_option(-mstackrealign)
 
+
+
+
 include(UsewxWidgets)
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/src/core)
 
@@ -17,6 +20,9 @@ set(go_test_lib
     GOTestCollection.cpp
     # Add here the individual tests
     GOTestWindchest.cpp
+
+    # GOOrganModel
+    GOTestOrganModel.cpp
 )
 
 add_library(GOTestLib STATIC ${go_test_lib})
@@ -44,3 +50,4 @@ target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests)
 BUILD_EXECUTABLE(GOTestExe)
 
 add_test(NAME GOTestExe COMMAND GOTestExe)
+
