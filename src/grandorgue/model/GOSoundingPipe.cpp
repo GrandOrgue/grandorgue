@@ -40,8 +40,8 @@ GOSoundingPipe::GOSoundingPipe(
     m_LastStop(0),
     m_Instances(0),
     m_Tremulant(false),
-    m_AttackInfo(),
-    m_ReleaseInfo(),
+    m_AttackFileInfos(),
+    m_ReleaseFileInfos(),
     m_Filename(),
     m_SamplerGroupID(sampler_group_id),
     m_AudioGroupID(0),
@@ -62,8 +62,41 @@ GOSoundingPipe::GOSoundingPipe(
     m_PipeConfigNode(
       &rank->GetPipeConfig(), pOrganModel, this, &m_SoundProvider) {}
 
-void GOSoundingPipe::LoadAttack(
-  GOConfigReader &cfg, wxString group, wxString prefix) {
+void GOSoundingPipe::Init(
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &prefix,
+  const wxString &filename) {
+  SetGroupAndPrefix(group, prefix);
+  p_OrganModel->RegisterCacheObject(this);
+  m_Filename = filename;
+  m_PipeConfigNode.Init(cfg, group, prefix);
+  m_OdfMidiKeyNumber = -1;
+  m_OdfMidiPitchFraction = -1.0;
+  UpdateAmplitude();
+  p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+
+  GOSoundProviderWave::AttackFileInfo ainfo;
+
+  ainfo.filename.AssignResource(m_Filename);
+  ainfo.sample_group = -1;
+  ainfo.load_release = !m_Percussive;
+  ainfo.percussive = m_Percussive;
+  ainfo.max_playback_time = -1;
+  ainfo.cue_point = -1;
+  ainfo.min_attack_velocity = 0;
+  ainfo.max_released_time = -1;
+  ainfo.attack_start = 0;
+  ainfo.release_end = -1;
+  m_AttackFileInfos.push_back(ainfo);
+
+  m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
+  m_PipeConfigNode.SetName(
+    wxString::Format(_("%d: %s"), m_MidiKeyNumber, m_Filename.c_str()));
+}
+
+void GOSoundingPipe::LoadAttackFileInfo(
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   GOSoundProviderWave::AttackFileInfo ainfo;
 
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
@@ -71,7 +104,6 @@ void GOSoundingPipe::LoadAttack(
     ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
   ainfo.load_release = cfg.ReadBoolean(
     ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);
-  ;
   ainfo.percussive = m_Percussive;
   ainfo.max_playback_time = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
@@ -133,39 +165,35 @@ void GOSoundingPipe::LoadAttack(
     ainfo.loops.push_back(linfo);
   }
 
-  m_AttackInfo.push_back(ainfo);
+  m_AttackFileInfos.push_back(ainfo);
 }
 
-void GOSoundingPipe::Init(
-  GOConfigReader &cfg, wxString group, wxString prefix, wxString filename) {
-  SetGroupAndPrefix(group, prefix);
-  p_OrganModel->RegisterCacheObject(this);
-  m_Filename = filename;
-  m_PipeConfigNode.Init(cfg, group, prefix);
-  m_OdfMidiKeyNumber = -1;
-  m_OdfMidiPitchFraction = -1.0;
-  m_LoopCrossfadeLength = 0;
-  m_ReleaseCrossfadeLength = 0;
-  UpdateAmplitude();
-  p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+void GOSoundingPipe::LoadReleaseFileInfo(
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
+  GOSoundProviderWave::ReleaseFileInfo rinfo;
 
-  GOSoundProviderWave::AttackFileInfo ainfo;
-
-  ainfo.filename.AssignResource(m_Filename);
-  ainfo.sample_group = -1;
-  ainfo.load_release = !m_Percussive;
-  ainfo.percussive = m_Percussive;
-  ainfo.max_playback_time = -1;
-  ainfo.cue_point = -1;
-  ainfo.min_attack_velocity = 0;
-  ainfo.max_released_time = -1;
-  ainfo.attack_start = 0;
-  ainfo.release_end = -1;
-  m_AttackInfo.push_back(ainfo);
-
-  m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
-  m_PipeConfigNode.SetName(
-    wxString::Format(_("%d: %s"), m_MidiKeyNumber, m_Filename.c_str()));
+  rinfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
+  rinfo.sample_group = cfg.ReadInteger(
+    ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
+  rinfo.max_playback_time = cfg.ReadInteger(
+    ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
+  rinfo.cue_point = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    prefix + wxT("CuePoint"),
+    -1,
+    MAX_SAMPLE_LENGTH,
+    false,
+    -1);
+  rinfo.release_end = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    prefix + wxT("ReleaseEnd"),
+    -1,
+    MAX_SAMPLE_LENGTH,
+    false,
+    -1);
+  m_ReleaseFileInfos.push_back(rinfo);
 }
 
 void GOSoundingPipe::Load(
@@ -217,37 +245,19 @@ void GOSoundingPipe::Load(
   UpdateAmplitude();
   p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
-  LoadAttack(cfg, group, prefix);
+  LoadAttackFileInfo(cfg, group, prefix);
 
   unsigned attack_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("AttackCount"), 0, 100, false, 0);
-  for (unsigned i = 0; i < attack_count; i++)
-    LoadAttack(cfg, group, prefix + wxString::Format(wxT("Attack%03d"), i + 1));
+  for (unsigned i = 1; i <= attack_count; i++)
+    LoadAttackFileInfo(
+      cfg, group, wxString::Format(wxT("%sAttack%03d"), prefix, i));
 
   unsigned release_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
-  for (unsigned i = 0; i < release_count; i++) {
-    GOSoundProviderWave::ReleaseFileInfo rinfo;
-    wxString p = prefix + wxString::Format(wxT("Release%03d"), i + 1);
-
-    rinfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, p));
-    rinfo.sample_group = cfg.ReadInteger(
-      ODFSetting, group, p + wxT("IsTremulant"), -1, 1, false, -1);
-    rinfo.max_playback_time = cfg.ReadInteger(
-      ODFSetting, group, p + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
-    rinfo.cue_point = cfg.ReadInteger(
-      ODFSetting, group, p + wxT("CuePoint"), -1, MAX_SAMPLE_LENGTH, false, -1);
-    rinfo.release_end = cfg.ReadInteger(
-      ODFSetting,
-      group,
-      p + wxT("ReleaseEnd"),
-      -1,
-      MAX_SAMPLE_LENGTH,
-      false,
-      -1);
-
-    m_ReleaseInfo.push_back(rinfo);
-  }
+  for (unsigned i = 1; i <= release_count; i++)
+    LoadReleaseFileInfo(
+      cfg, group, wxString::Format(wxT("%sRelease%03d"), prefix, i));
 
   m_MinVolume = cfg.ReadFloat(
     ODFSetting, group, wxT("MinVelocityVolume"), 0, 1000, false, m_MinVolume);
@@ -264,8 +274,8 @@ void GOSoundingPipe::LoadData(
     m_SoundProvider.LoadFromMultipleFiles(
       fileStore,
       pool,
-      m_AttackInfo,
-      m_ReleaseInfo,
+      m_AttackFileInfos,
+      m_ReleaseFileInfos,
       m_PipeConfigNode.GetEffectiveBitsPerSample(),
       m_PipeConfigNode.GetEffectiveChannels(),
       m_PipeConfigNode.GetEffectiveCompress(),
@@ -316,30 +326,30 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) const {
   hash.Update(m_LoopCrossfadeLength);
   hash.Update(m_ReleaseCrossfadeLength);
 
-  hash.Update(m_AttackInfo.size());
-  for (unsigned i = 0; i < m_AttackInfo.size(); i++) {
-    m_AttackInfo[i].filename.Hash(hash);
-    hash.Update(m_AttackInfo[i].sample_group);
-    hash.Update(m_AttackInfo[i].max_playback_time);
-    hash.Update(m_AttackInfo[i].load_release);
-    hash.Update(m_AttackInfo[i].percussive);
-    hash.Update(m_AttackInfo[i].cue_point);
-    hash.Update(m_AttackInfo[i].loops.size());
-    hash.Update(m_AttackInfo[i].attack_start);
-    hash.Update(m_AttackInfo[i].release_end);
-    for (unsigned j = 0; j < m_AttackInfo[i].loops.size(); j++) {
-      hash.Update(m_AttackInfo[i].loops[j].m_StartPosition);
-      hash.Update(m_AttackInfo[i].loops[j].m_EndPosition);
+  hash.Update(m_AttackFileInfos.size());
+  for (const auto &a : m_AttackFileInfos) {
+    a.filename.Hash(hash);
+    hash.Update(a.sample_group);
+    hash.Update(a.max_playback_time);
+    hash.Update(a.load_release);
+    hash.Update(a.percussive);
+    hash.Update(a.cue_point);
+    hash.Update(a.loops.size());
+    hash.Update(a.attack_start);
+    hash.Update(a.release_end);
+    for (unsigned j = 0; j < a.loops.size(); j++) {
+      hash.Update(a.loops[j].m_StartPosition);
+      hash.Update(a.loops[j].m_EndPosition);
     }
   }
 
-  hash.Update(m_ReleaseInfo.size());
-  for (unsigned i = 0; i < m_ReleaseInfo.size(); i++) {
-    m_ReleaseInfo[i].filename.Hash(hash);
-    hash.Update(m_ReleaseInfo[i].sample_group);
-    hash.Update(m_ReleaseInfo[i].max_playback_time);
-    hash.Update(m_ReleaseInfo[i].cue_point);
-    hash.Update(m_ReleaseInfo[i].release_end);
+  hash.Update(m_ReleaseFileInfos.size());
+  for (const auto &r : m_ReleaseFileInfos) {
+    r.filename.Hash(hash);
+    hash.Update(r.sample_group);
+    hash.Update(r.max_playback_time);
+    hash.Update(r.cue_point);
+    hash.Update(r.release_end);
   }
 }
 

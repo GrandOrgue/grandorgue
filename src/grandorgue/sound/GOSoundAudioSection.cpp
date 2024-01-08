@@ -661,6 +661,7 @@ void GOAudioSection::Setup(
   assert(pcm_data_nb_samples > 0);
 
   const unsigned bytes_per_sample = wave_bytes_per_sample(pcm_data_format);
+
   m_BytesPerSample = bytes_per_sample * pcm_data_channels;
 
   unsigned total_alloc_samples = pcm_data_nb_samples;

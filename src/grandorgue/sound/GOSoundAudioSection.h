@@ -176,6 +176,7 @@ public:
   unsigned GetChannels() const;
   unsigned GetBytesPerSample() const;
   unsigned GetLength() const;
+
   bool LoadCache(GOCache &cache);
   bool SaveCache(GOCacheWriter &cache) const;
 
