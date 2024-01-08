@@ -1,3 +1,4 @@
+# 3.13.3 (2024-01-07)
 - Fixed not loading a pipe if some loop was not suitable for crossfade https://github.com/GrandOrgue/grandorgue/issues/1724
 - Fixed a wrong .wav filename in the log message window https://github.com/GrandOrgue/grandorgue/issues/1724
 - Increased the maximum number of Tremulants from 10 to 999
