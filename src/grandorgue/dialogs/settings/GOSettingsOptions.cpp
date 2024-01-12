@@ -65,6 +65,10 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_GERMAN)));
   m_Language->Append(
+    wxLocale::GetLanguageName(wxLANGUAGE_HUNGARIAN),
+    new wxStringClientData(
+      wxLocale::GetLanguageCanonicalName(wxLANGUAGE_HUNGARIAN)));
+  m_Language->Append(
     wxLocale::GetLanguageName(wxLANGUAGE_ITALIAN),
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_ITALIAN)));
