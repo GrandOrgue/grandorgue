@@ -64,10 +64,9 @@ public:
 private:
   // Used for error messages
   GOCacheObject *p_ObjectFor;
-
   unsigned GetBytesPerSample(unsigned bits_per_sample);
 
-  void CreateAttack(
+  void AddAttackSection(
     GOMemoryPool &pool,
     const GOLoaderFilename &loaderFilename,
     const char *data,
@@ -84,7 +83,7 @@ private:
     unsigned loop_crossfade_length,
     unsigned max_released_time);
 
-  void CreateRelease(
+  void AddReleaseSection(
     GOMemoryPool &pool,
     const GOLoaderFilename &loaderFilename,
     const char *data,
@@ -142,8 +141,8 @@ public:
     int channels,
     bool compress,
     LoopLoadType loop_mode,
-    unsigned attack_load,
-    unsigned release_load,
+    bool isToLoadAttacks,
+    bool isToLoadReleases,
     unsigned loop_crossfade_length,
     unsigned release_crossfase_length);
   void SetAmplitude(float fixed_amplitude, float gain);

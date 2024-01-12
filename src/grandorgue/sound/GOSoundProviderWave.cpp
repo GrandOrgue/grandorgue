@@ -33,7 +33,7 @@ unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample) {
     return 3;
 }
 
-void GOSoundProviderWave::CreateAttack(
+void GOSoundProviderWave::AddAttackSection(
   GOMemoryPool &pool,
   const GOLoaderFilename &loaderFilename,
   const char *data,
@@ -47,7 +47,7 @@ void GOSoundProviderWave::CreateAttack(
   LoopLoadType loop_mode,
   bool percussive,
   unsigned min_attack_velocity,
-  unsigned loop_crossfade_length,
+  unsigned loop_crossfade_length, // in samples
   unsigned max_released_time) {
   std::vector<GOWaveLoop> waveLoops;
   std::vector<GOWaveLoop> loops;
@@ -133,7 +133,7 @@ void GOSoundProviderWave::CreateAttack(
     loop_crossfade_length);
 }
 
-void GOSoundProviderWave::CreateRelease(
+void GOSoundProviderWave::AddReleaseSection(
   GOMemoryPool &pool,
   const GOLoaderFilename &loaderFilename,
   const char *data,
@@ -218,7 +218,6 @@ void GOSoundProviderWave::LoadFromOneFile(
     GOWave wave;
 
     wave.Open(openedFilePtr.get());
-
     /* allocate data to work with */
     unsigned totalDataSize = wave.GetLength()
       * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
@@ -230,9 +229,12 @@ void GOSoundProviderWave::LoadFromOneFile(
     }
 
     unsigned channels = wave.GetChannels();
+
     if (load_channels == 1)
       channels = 1;
+
     unsigned wave_channels = channels;
+
     if (load_channels < 0 && (unsigned)-load_channels <= wave.GetChannels()) {
       wave_channels = load_channels;
       channels = 1;
@@ -247,7 +249,7 @@ void GOSoundProviderWave::LoadFromOneFile(
       wave_channels);
 
     if (is_attack)
-      CreateAttack(
+      AddAttackSection(
         pool,
         loaderFilename,
         data.get(),
@@ -267,7 +269,7 @@ void GOSoundProviderWave::LoadFromOneFile(
     if (
       is_release
       && (!is_attack || (wave.GetNbLoops() > 0 && wave.HasReleaseMarker() && !percussive)))
-      CreateRelease(
+      AddReleaseSection(
         pool,
         loaderFilename,
         data.get(),
@@ -314,8 +316,8 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
   int load_channels,
   bool compress,
   LoopLoadType loop_mode,
-  unsigned attack_load,
-  unsigned release_load,
+  bool isToLoadAttacks,
+  bool isToLoadReleases,
   unsigned loop_crossfade_length,
   unsigned release_crossfase_length) {
   ClearData();
@@ -324,7 +326,7 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
 
   bool load_first_attack = true;
 
-  if (!release_load)
+  if (!isToLoadReleases)
     for (int k = -1; k < 2; k++) {
       unsigned longest = 0;
       for (unsigned i = 0; i < attacks.size(); i++)
@@ -361,7 +363,7 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
         }
     }
 
-  if (!attack_load)
+  if (!isToLoadAttacks)
     for (int k = -1; k < 2; k++) {
       int best_idx = -1;
       unsigned min_velocity = 0xff;
@@ -402,44 +404,44 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
     }
 
   try {
-    for (unsigned i = 0; i < attacks.size(); i++) {
+    for (const auto &a : attacks) {
       LoadFromOneFile(
         fileStore,
         pool,
-        attacks[i].filename,
-        &attacks[i].loops,
+        a.filename,
+        &a.loops,
         true,
-        attacks[i].load_release,
-        attacks[i].sample_group,
-        attacks[i].max_playback_time,
-        attacks[i].attack_start,
-        attacks[i].cue_point,
-        attacks[i].release_end,
+        a.load_release,
+        a.sample_group,
+        a.max_playback_time,
+        a.attack_start,
+        a.cue_point,
+        a.release_end,
         bits_per_sample,
         load_channels,
         compress,
         loop_mode,
-        attacks[i].percussive,
-        attacks[i].min_attack_velocity,
+        a.percussive,
+        a.min_attack_velocity,
         load_first_attack,
         loop_crossfade_length,
-        attacks[i].max_released_time);
+        a.max_released_time);
       load_first_attack = false;
     }
 
-    for (unsigned i = 0; i < releases.size(); i++) {
+    for (const auto &r : releases) {
       LoadFromOneFile(
         fileStore,
         pool,
-        releases[i].filename,
+        r.filename,
         nullptr,
         false,
         true,
-        releases[i].sample_group,
-        releases[i].max_playback_time,
+        r.sample_group,
+        r.max_playback_time,
         0,
-        releases[i].cue_point,
-        releases[i].release_end,
+        r.cue_point,
+        r.release_end,
         bits_per_sample,
         load_channels,
         compress,

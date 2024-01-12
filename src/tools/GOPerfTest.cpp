@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -112,8 +112,8 @@ void GOPerfTestApp::RunTest(
           2,
           compress,
           GOSoundProviderWave::LOOP_LOAD_ALL,
-          1,
-          1,
+          true,
+          true,
           0,
           0);
         pipes.push_back(w);

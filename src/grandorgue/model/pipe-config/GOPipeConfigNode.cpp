@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -155,22 +155,20 @@ unsigned GOPipeConfigNode::GetEffectiveLoopLoad() const {
     return m_config.LoopLoad();
 }
 
-unsigned GOPipeConfigNode::GetEffectiveAttackLoad() const {
-  if (m_PipeConfig.GetAttackLoad() != -1)
-    return m_PipeConfig.GetAttackLoad();
-  if (m_parent)
-    return m_parent->GetEffectiveAttackLoad();
-  else
-    return m_config.AttackLoad();
+bool GOPipeConfigNode::GetEffectiveAttackLoad() const {
+  const int thisConfigValue = m_PipeConfig.GetAttackLoad();
+
+  return thisConfigValue != -1 ? (bool)thisConfigValue
+    : m_parent                 ? m_parent->GetEffectiveAttackLoad()
+                               : m_config.AttackLoad();
 }
 
-unsigned GOPipeConfigNode::GetEffectiveReleaseLoad() const {
-  if (m_PipeConfig.GetReleaseLoad() != -1)
-    return m_PipeConfig.GetReleaseLoad();
-  if (m_parent)
-    return m_parent->GetEffectiveReleaseLoad();
-  else
-    return m_config.ReleaseLoad();
+bool GOPipeConfigNode::GetEffectiveReleaseLoad() const {
+  const int thisConfigValue = m_PipeConfig.GetReleaseLoad();
+
+  return thisConfigValue != -1 ? (bool)thisConfigValue
+    : m_parent                 ? m_parent->GetEffectiveReleaseLoad()
+                               : m_config.ReleaseLoad();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveChannels() const {
