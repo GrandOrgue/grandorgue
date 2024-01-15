@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -166,7 +166,7 @@ void GOGeneralCombination::LoadCombinationInt(
 }
 
 void GOGeneralCombination::SaveInt(GOConfigWriter &cfg) {
-  UpdateState();
+  AssureElementStatesAllocated();
 
   wxString buffer;
   unsigned stop_count = 0;
@@ -177,7 +177,7 @@ void GOGeneralCombination::SaveInt(GOConfigWriter &cfg) {
 
   for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
     const GOCombinationDefinition::Element &e = r_ElementDefinitions[i];
-    int state = GetState(i);
+    int state = GetElementState(i);
 
     if (state >= 0) {
       int value = state == 1 ? e.index : -e.index;
