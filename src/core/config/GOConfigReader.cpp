@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,8 +11,9 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "GOBool3.h"
+#include "GOConfigReaderDB.h"
 #include "GOUtil.h"
-#include "config/GOConfigReaderDB.h"
 
 GOConfigReader::GOConfigReader(
   GOConfigReaderDB &cfg, bool strict, bool hw1Check)
@@ -156,7 +157,7 @@ bool GOConfigReader::ReadBoolean(
   return ReadBoolean(type, group, key, required, false);
 }
 
-int GOConfigReader::ReadBooleanTriple(
+GOBool3 GOConfigReader::ReadBooleanTriple(
   GOSettingType type,
   const wxString &group,
   const wxString &key,
@@ -164,7 +165,7 @@ int GOConfigReader::ReadBooleanTriple(
   wxString value;
 
   if (!Read(type, group, key, required, value))
-    return -1;
+    return BOOL3_UNDEF;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -176,9 +177,9 @@ int GOConfigReader::ReadBooleanTriple(
     value.Trim();
   }
   if (value == wxT("Y") || value == wxT("y"))
-    return 1;
+    return BOOL3_TRUE;
   if (value == wxT("N") || value == wxT("n"))
-    return 0;
+    return BOOL3_FALSE;
   value.MakeUpper();
   wxLogWarning(
     _("Strange boolean value for section '%s' entry '%s': %s"),
@@ -186,9 +187,9 @@ int GOConfigReader::ReadBooleanTriple(
     key.c_str(),
     value.c_str());
   if (value.Length() && value[0] == wxT('Y'))
-    return 1;
+    return BOOL3_TRUE;
   else if (value.Length() && value[0] == wxT('N'))
-    return 0;
+    return BOOL3_FALSE;
 
   wxString error;
   error.Printf(
@@ -205,9 +206,7 @@ bool GOConfigReader::ReadBoolean(
   const wxString &key,
   bool required,
   bool defaultValue) {
-  int tripleValue = ReadBooleanTriple(type, group, key, required);
-
-  return tripleValue < 0 ? defaultValue : (tripleValue);
+  return to_bool(ReadBooleanTriple(type, group, key, required), defaultValue);
 }
 
 GOLogicalColour GOConfigReader::ReadColor(
