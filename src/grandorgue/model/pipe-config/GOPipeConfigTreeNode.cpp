@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,7 +13,7 @@ GOPipeConfigTreeNode::GOPipeConfigTreeNode(
   GOPipeConfigNode *parent,
   GOOrganModel *organModel,
   GOPipeUpdateCallback *callback)
-  : GOPipeConfigNode(parent, organModel, this, NULL),
+  : GOPipeConfigNode(parent, *organModel, this, NULL),
     m_Childs(),
     m_Callback(callback) {}
 
