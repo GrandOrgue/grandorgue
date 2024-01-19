@@ -10397,13 +10397,18 @@ specified in samples.
           <term>Pipe999ReleaseCrossfadeLength</term>
           <listitem>
             <para>
-	      (integer 0 - 3000, default: 0) Crossfade length in ms between loop
-	      and the release (or other attacks). 0 means automatic selection.
+	      (integer 0 - 3000, default: 0). 0 means automatic selection.
             </para>
             <para>
-	      This parameter is inherited by all releases loaded from additional
-	      attack and release files specified in the Pipe999Attack999 and
-	      Pipe999Release999 parameters and may be redefined with the
+	      Crossfade length in ms between loop and the release loaded from
+	      the file specified in the Pipe999 parameter or between different
+	      attack samples if Pipe999AttackCount > 0.
+            </para>
+            <para>
+	      This parameter is not inherited by the releases loaded from
+	      additional attack and release files specified in the
+	      Pipe999Attack999 and Pipe999Release999 parameters that should be
+	      specified with the
 	      Pipe999Attack999ReleaseCrossfadeLength and 
 	      Pipe999Release999ReleaseCrossfadeLength parameters.
             </para>
@@ -10411,7 +10416,9 @@ specified in samples.
           <term>Pipe999Attack999ReleaseCrossfadeLength</term>
           <listitem>
             <para>
-	      (integer 0 - 3000, default: Pipe999ReleaseCrossfadeLength)
+	      (integer 0 - 3000, default: 0). 0 means automatic selection.
+            </para>
+            <para>
 	      Crossfade length in ms between loop and the release loaded from
 	      the file specified in the Pipe999Attack999 parameter.
             </para>
@@ -10419,7 +10426,9 @@ specified in samples.
           <term>Pipe999Release999ReleaseCrossfadeLength</term>
           <listitem>
             <para>
-	      (integer 0 - 3000, default: Pipe999ReleaseCrossfadeLength)
+	      (integer 0 - 3000, default: 0). 0 means automatic selection.
+            </para>
+            <para>
 	      Crossfade length in ms between loop and the release loaded from
 	      the file specified in the Pipe999Release999 parameter.
             </para>

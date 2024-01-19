@@ -37,7 +37,7 @@ GOSoundProvider::GOSoundProvider()
     m_ReleaseInfo(),
     m_VelocityVolumeBase(1),
     m_VelocityVolumeIncrement(0),
-    m_DefaultSwitchSampleCrossfadeLength(184) {
+    m_AttackSwitchCrossfadeLength(184) {
   m_Gain = 0.0f;
 }
 
@@ -56,8 +56,7 @@ bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
     return false;
   if (!cache.Read(
-        &m_DefaultSwitchSampleCrossfadeLength,
-        sizeof(m_DefaultSwitchSampleCrossfadeLength)))
+        &m_AttackSwitchCrossfadeLength, sizeof(m_AttackSwitchCrossfadeLength)))
     return false;
 
   unsigned attacks;
@@ -99,8 +98,7 @@ bool GOSoundProvider::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
     return false;
   if (!cache.Write(
-        &m_DefaultSwitchSampleCrossfadeLength,
-        sizeof(m_DefaultSwitchSampleCrossfadeLength)))
+        &m_AttackSwitchCrossfadeLength, sizeof(m_AttackSwitchCrossfadeLength)))
     return false;
 
   unsigned attacks = m_Attack.size();

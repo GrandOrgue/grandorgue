@@ -46,7 +46,7 @@ protected:
   void ComputeReleaseAlignmentInfo();
   float m_VelocityVolumeBase;
   float m_VelocityVolumeIncrement;
-  unsigned m_DefaultSwitchSampleCrossfadeLength;
+  unsigned m_AttackSwitchCrossfadeLength;
 
 public:
   GOSoundProvider();
@@ -74,8 +74,8 @@ public:
 
   unsigned GetMidiKeyNumber() const;
   float GetMidiPitchFract() const;
-  unsigned GetDefaultSwitchSampleCrossfadeLength() const {
-    return m_DefaultSwitchSampleCrossfadeLength;
+  unsigned GetAttackSwitchCrossfadeLength() const {
+    return m_AttackSwitchCrossfadeLength;
   }
 
   float GetVelocityVolume(unsigned velocity) const;

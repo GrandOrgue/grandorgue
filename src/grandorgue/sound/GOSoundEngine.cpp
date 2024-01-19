@@ -443,8 +443,7 @@ void GOSoundEngine::SwitchAttackSampler(GOSoundSampler *handle) {
     handle->time = m_CurrentTime + 1;
 
     float gain_target = this_pipe->GetGain() * section->GetNormGain();
-    unsigned cross_fade_len
-      = this_pipe->GetDefaultSwitchSampleCrossfadeLength();
+    unsigned cross_fade_len = this_pipe->GetAttackSwitchCrossfadeLength();
 
     handle->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
     section->InitAlignedStream(&handle->stream, &new_sampler->stream);
@@ -475,7 +474,7 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
     &handle->stream, ((double)(m_CurrentTime - handle->time)) / m_SampleRate);
   unsigned cross_fade_len = release_section
     ? release_section->GetReleaseCrossfadeLength()
-    : this_pipe->GetDefaultSwitchSampleCrossfadeLength();
+    : this_pipe->GetAttackSwitchCrossfadeLength();
   handle->fader.StartDecay(cross_fade_len, m_SampleRate);
   handle->is_release = true;
 

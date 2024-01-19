@@ -222,6 +222,7 @@ void GOSoundProviderWave::LoadFromOneFile(
     GOWave wave;
 
     wave.Open(openedFilePtr.get());
+
     /* allocate data to work with */
     unsigned totalDataSize = wave.GetLength()
       * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
@@ -230,10 +231,14 @@ void GOSoundProviderWave::LoadFromOneFile(
     if (use_pitch) {
       m_MidiKeyNumber = wave.GetMidiNote();
       m_MidiPitchFract = wave.GetPitchFract();
-      m_DefaultSwitchSampleCrossfadeLength = releaseCrossfadeLength
-        ? releaseCrossfadeLength
-        : GetFaderLength(m_MidiKeyNumber);
     }
+
+    unsigned midiKeyCrossfadeLength = getFaderLength(m_MidiKeyNumber);
+
+    if (use_pitch)
+      m_AttackSwitchCrossfadeLength = releaseCrossfadeLength
+        ? releaseCrossfadeLength
+        : midiKeyCrossfadeLength;
 
     unsigned channels = wave.GetChannels();
 
@@ -289,7 +294,7 @@ void GOSoundProviderWave::LoadFromOneFile(
         channels,
         compress,
         releaseCrossfadeLength ? releaseCrossfadeLength
-                               : m_DefaultSwitchSampleCrossfadeLength);
+                               : midiKeyCrossfadeLength);
   } catch (GOOutOfMemory e) {
     throw e;
   } catch (const wxString &error) {
@@ -303,14 +308,14 @@ void GOSoundProviderWave::LoadFromOneFile(
     throw loaderFilename.GenerateMessage(excText);
 }
 
-unsigned GOSoundProviderWave::GetFaderLength(unsigned MidiKeyNumber) {
+unsigned GOSoundProviderWave::getFaderLength(unsigned midiKeyNumber) {
   unsigned fade_length = 46;
-  if (MidiKeyNumber > 0 && MidiKeyNumber < 133) {
+  if (midiKeyNumber > 0 && midiKeyNumber < 133) {
     fade_length
-      = 184 - (int)((((float)MidiKeyNumber - 42.0f) / 44.0f) * 178.0f);
-    if (MidiKeyNumber < 42)
+      = 184 - (int)((((float)midiKeyNumber - 42.0f) / 44.0f) * 178.0f);
+    if (midiKeyNumber < 42)
       fade_length = 184;
-    if (MidiKeyNumber > 86)
+    if (midiKeyNumber > 86)
       fade_length = 6;
   }
   return fade_length;
