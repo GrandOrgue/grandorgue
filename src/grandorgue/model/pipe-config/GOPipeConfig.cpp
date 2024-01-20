@@ -10,6 +10,9 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
+#include "GOPipeConfigListener.h"
+#include "GOPipeUpdateCallback.h"
+
 GOPipeConfig::GOPipeConfig(
   GOPipeConfigListener &listener, GOPipeUpdateCallback *callback)
   : r_listener(listener),

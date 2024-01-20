@@ -10,11 +10,10 @@
 
 #include <wx/string.h>
 
-#include "GOPipeConfigListener.h"
-#include "GOPipeUpdateCallback.h"
-
 class GOConfigReader;
 class GOConfigWriter;
+class GOPipeConfigListener;
+class GOPipeUpdateCallback;
 
 class GOPipeConfig {
 private:
