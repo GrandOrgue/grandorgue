@@ -1,3 +1,4 @@
+- Fixed unability to select the Hungarian language in the Organ Settings dialog
 - Eliminated resetting audio group with the Default button of Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/731
 # 3.13.3 (2024-01-07)
 - Fixed not loading a pipe if some loop was not suitable for crossfade https://github.com/GrandOrgue/grandorgue/issues/1724
