@@ -5591,7 +5591,14 @@ Within  windchests, the ranks are ordered as found in the definition file.
           <listitem>
             <simpara>
 	      This button restores the setting values for the selected elements
-	      from the organ definition file.
+	      from the organ definition.
+	    </simpara>
+            <simpara>
+	      Because the audio group cannot be specified in the ODF, the 
+	      Default button does not affect the Audio group setting. For 
+	      resetting an audio group for the selected elements the user has to
+	      select the empty value in the Audio Group field and press to the
+	      Apply button.
 	    </simpara>
     	    <caution>
 	      <simpara>

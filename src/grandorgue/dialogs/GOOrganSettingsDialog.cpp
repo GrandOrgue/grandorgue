@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -38,7 +38,6 @@ enum {
   ID_EVENT_DISCARD,
   ID_EVENT_AUDIO_GROUP_ASSISTANT,
   ID_EVENT_DEFAULT,
-  ID_EVENT_DEFAULT_ALL,
   ID_EVENT_AMPLITUDE,
   ID_EVENT_AMPLITUDE_SPIN,
   ID_EVENT_GAIN,
@@ -1150,7 +1149,6 @@ void GOOrganSettingsDialog::OnEventDefault(wxCommandEvent &e) {
       e->config->SetAutoTuningCorrection(0);
       e->config->SetDelay(e->config->GetDefaultDelay());
       e->config->SetReleaseTail(0);
-      e->config->SetAudioGroup(wxEmptyString);
       e->config->SetIgnorePitch(-1);
       e->config->SetBitsPerSample(-1);
       e->config->SetCompress(-1);
