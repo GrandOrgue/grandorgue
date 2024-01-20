@@ -130,7 +130,7 @@ void GODivisionalCombination::SaveInt(GOConfigWriter &cfg) {
   unsigned tremulant_count = 0;
   unsigned switch_count = 0;
 
-  AssureElementStatesAllocated();
+  EnsureElementStatesAllocated();
   for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
     const GOCombinationDefinition::Element &e = r_ElementDefinitions[i];
     int state = GetElementState(i);

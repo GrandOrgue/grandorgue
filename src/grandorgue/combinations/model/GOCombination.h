@@ -58,7 +58,7 @@ protected:
   const std::vector<GOCombinationDefinition::Element> &r_ElementDefinitions;
   bool m_Protected;
 
-  void AssureElementStatesAllocated();
+  void EnsureElementStatesAllocated();
 
   // Read the NumberOfStops key from the given config source
   unsigned ReadNumberOfStops(

@@ -166,7 +166,7 @@ void GOGeneralCombination::LoadCombinationInt(
 }
 
 void GOGeneralCombination::SaveInt(GOConfigWriter &cfg) {
-  AssureElementStatesAllocated();
+  EnsureElementStatesAllocated();
 
   wxString buffer;
   unsigned stop_count = 0;

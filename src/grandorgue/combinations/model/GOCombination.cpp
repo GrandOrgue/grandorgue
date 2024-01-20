@@ -40,7 +40,7 @@ GOCombination::GOCombination(
 GOCombination::~GOCombination() {}
 
 void GOCombination::Clear() {
-  AssureElementStatesAllocated();
+  EnsureElementStatesAllocated();
   for (unsigned i = 0; i < m_ElementStates.size(); i++)
     m_ElementStates[i] = -1;
   m_IsFull = false;
@@ -50,7 +50,7 @@ void GOCombination::Clear() {
 void GOCombination::Copy(GOCombination *combination) {
   assert(&m_Template == &combination->m_Template);
   m_ElementStates = combination->m_ElementStates;
-  AssureElementStatesAllocated();
+  EnsureElementStatesAllocated();
 }
 
 bool GOCombination::IsEmpty() const {
@@ -232,7 +232,7 @@ void GOCombination::GetEnabledElements(
   }
 }
 
-void GOCombination::AssureElementStatesAllocated() {
+void GOCombination::EnsureElementStatesAllocated() {
   unsigned defSize = r_ElementDefinitions.size();
 
   if (m_ElementStates.size() > defSize)
@@ -385,7 +385,7 @@ bool GOCombination::FillWithCurrent(
   GOSetterState::SetterType setterType, bool isToStoreInvisibleObjects) {
   bool used = false;
 
-  AssureElementStatesAllocated();
+  EnsureElementStatesAllocated();
   m_IsFull = isToStoreInvisibleObjects;
   switch (setterType) {
   case GOSetterState::SETTER_REGULAR:
@@ -442,7 +442,7 @@ bool GOCombination::Push(
         setterState.m_SetterType, setterState.m_IsStoreInvisible);
     }
   } else {
-    AssureElementStatesAllocated();
+    EnsureElementStatesAllocated();
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
       if (
         m_ElementStates[i] != -1
