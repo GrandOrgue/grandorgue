@@ -127,7 +127,6 @@ private:
     unsigned max_released_time);
 
   void LoadPitch(GOOpenedFile *file);
-  static unsigned getFaderLength(unsigned midiKeyNumber);
 
 public:
   GOSoundProviderWave(GOCacheObject *pObjectFor = nullptr)

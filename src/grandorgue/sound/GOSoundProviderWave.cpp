@@ -190,6 +190,19 @@ void GOSoundProviderWave::LoadPitch(GOOpenedFile *file) {
   m_MidiPitchFract = wave.GetPitchFract();
 }
 
+static unsigned get_fader_length(unsigned midiKeyNumber) {
+  unsigned fade_length = 46;
+  if (midiKeyNumber > 0 && midiKeyNumber < 133) {
+    fade_length
+      = 184 - (int)((((float)midiKeyNumber - 42.0f) / 44.0f) * 178.0f);
+    if (midiKeyNumber < 42)
+      fade_length = 184;
+    if (midiKeyNumber > 86)
+      fade_length = 6;
+  }
+  return fade_length;
+}
+
 void GOSoundProviderWave::LoadFromOneFile(
   const GOFileStore &fileStore,
   GOMemoryPool &pool,
@@ -233,7 +246,7 @@ void GOSoundProviderWave::LoadFromOneFile(
       m_MidiPitchFract = wave.GetPitchFract();
     }
 
-    unsigned midiKeyCrossfadeLength = getFaderLength(m_MidiKeyNumber);
+    unsigned midiKeyCrossfadeLength = get_fader_length(m_MidiKeyNumber);
 
     if (use_pitch)
       m_AttackSwitchCrossfadeLength = releaseCrossfadeLength
@@ -306,19 +319,6 @@ void GOSoundProviderWave::LoadFromOneFile(
   }
   if (!excText.IsEmpty())
     throw loaderFilename.GenerateMessage(excText);
-}
-
-unsigned GOSoundProviderWave::getFaderLength(unsigned midiKeyNumber) {
-  unsigned fade_length = 46;
-  if (midiKeyNumber > 0 && midiKeyNumber < 133) {
-    fade_length
-      = 184 - (int)((((float)midiKeyNumber - 42.0f) / 44.0f) * 178.0f);
-    if (midiKeyNumber < 42)
-      fade_length = 184;
-    if (midiKeyNumber > 86)
-      fade_length = 6;
-  }
-  return fade_length;
 }
 
 void GOSoundProviderWave::LoadFromMultipleFiles(
