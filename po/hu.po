@@ -4863,7 +4863,7 @@ msgstr "MIDI-hang (*.mid)|*.mid"
 
 #: src/grandorgue/midi/GOMidiRecorder.cpp:340
 msgid "%Y-%m-%d-%H-%M-%S.%l.mid"
-msgstr "%Y-%m-%d-%H-%M-%S.%l.wav"
+msgstr "%Y-%m-%d-%H-%M-%S.%l.mid"
 
 #: src/grandorgue/midi/GOMidiRecorder.cpp:345
 #: src/grandorgue/sound/GOSoundRecorder.cpp:73
