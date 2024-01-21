@@ -165,7 +165,7 @@ GOBool3 GOConfigReader::ReadBooleanTriple(
   wxString value;
 
   if (!Read(type, group, key, required, value))
-    return BOOL3_UNDEF;
+    return BOOL3_DEFAULT;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)

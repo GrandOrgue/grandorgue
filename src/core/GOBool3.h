@@ -12,10 +12,10 @@
 
 // 3-value booleans
 enum GOBool3 : int8_t {
-  BOOL3_UNDEF = -1,
+  BOOL3_DEFAULT = -1,
   BOOL3_FALSE = 0, // must be the same as ``(int8_t) false``
   BOOL3_TRUE = 1,  // must be the same as ``(int8_t) true``
-  BOOL3_MIN = BOOL3_UNDEF,
+  BOOL3_MIN = BOOL3_DEFAULT,
   BOOL3_MAX = BOOL3_TRUE
 };
 

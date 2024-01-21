@@ -134,7 +134,7 @@ public:
     const wxString &key,
     bool required) {
     return to_bool3(ReadInteger(
-      type, group, key, BOOL3_MIN, BOOL3_MAX, required, BOOL3_UNDEF));
+      type, group, key, BOOL3_MIN, BOOL3_MAX, required, BOOL3_DEFAULT));
   }
   int ReadLong(
     GOSettingType type,
