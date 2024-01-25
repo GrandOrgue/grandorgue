@@ -48,8 +48,6 @@ GOSoundingPipe::GOSoundingPipe(
     m_Percussive(percussive),
     m_TemperamentOffset(0),
     m_HarmonicNumber(harmonic_number),
-    m_LoopCrossfadeLength(0),
-    m_ReleaseCrossfadeLength(0),
     m_MinVolume(min_volume),
     m_MaxVolume(max_volume),
     m_OdfMidiKeyNumber(-1),
@@ -88,6 +86,8 @@ void GOSoundingPipe::Init(
   ainfo.max_released_time = -1;
   ainfo.attack_start = 0;
   ainfo.release_end = -1;
+  ainfo.m_LoopCrossfadeLength = 0;
+  ainfo.m_ReleaseCrossfadeLength = 0;
   m_AttackFileInfos.push_back(ainfo);
 
   m_SoundProvider.SetVelocityParameter(m_MinVolume, m_MaxVolume);
@@ -96,7 +96,10 @@ void GOSoundingPipe::Init(
 }
 
 void GOSoundingPipe::LoadAttackFileInfo(
-  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &prefix,
+  bool isMainForSecondaryAttacks) {
   GOSoundProviderWave::AttackFileInfo ainfo;
 
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
@@ -164,6 +167,18 @@ void GOSoundingPipe::LoadAttackFileInfo(
       true);
     ainfo.loops.push_back(linfo);
   }
+  ainfo.m_LoopCrossfadeLength = cfg.ReadInteger(
+    ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 3000, false, 0);
+  ainfo.m_ReleaseCrossfadeLength
+    = isMainForSecondaryAttacks || ainfo.load_release ? cfg.ReadInteger(
+        ODFSetting,
+        group,
+        prefix + wxT("ReleaseCrossfadeLength"),
+        0,
+        3000,
+        false,
+        0)
+                                                      : 0;
 
   m_AttackFileInfos.push_back(ainfo);
 }
@@ -193,6 +208,14 @@ void GOSoundingPipe::LoadReleaseFileInfo(
     MAX_SAMPLE_LENGTH,
     false,
     -1);
+  rinfo.m_ReleaseCrossfadeLength = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    prefix + wxT("ReleaseCrossfadeLength"),
+    0,
+    3000,
+    false,
+    0);
   m_ReleaseFileInfos.push_back(rinfo);
 }
 
@@ -230,28 +253,19 @@ void GOSoundingPipe::Load(
     100.0,
     false,
     -1.0);
-  m_LoopCrossfadeLength = cfg.ReadInteger(
-    ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 3000, false, 0);
-  m_ReleaseCrossfadeLength = cfg.ReadInteger(
-    ODFSetting,
-    group,
-    prefix + wxT("ReleaseCrossfadeLength"),
-    0,
-    3000,
-    false,
-    0);
   m_RetunePipe = cfg.ReadBoolean(
     ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
   UpdateAmplitude();
   p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
 
-  LoadAttackFileInfo(cfg, group, prefix);
-
   unsigned attack_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("AttackCount"), 0, 100, false, 0);
+
+  LoadAttackFileInfo(cfg, group, prefix, attack_count > 0);
+
   for (unsigned i = 1; i <= attack_count; i++)
     LoadAttackFileInfo(
-      cfg, group, wxString::Format(wxT("%sAttack%03d"), prefix, i));
+      cfg, group, wxString::Format(wxT("%sAttack%03d"), prefix, i), false);
 
   unsigned release_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
@@ -282,9 +296,7 @@ void GOSoundingPipe::LoadData(
       (GOSoundProviderWave::LoopLoadType)
         m_PipeConfigNode.GetEffectiveLoopLoad(),
       m_PipeConfigNode.GetEffectiveAttackLoad(),
-      m_PipeConfigNode.GetEffectiveReleaseLoad(),
-      m_LoopCrossfadeLength,
-      m_ReleaseCrossfadeLength);
+      m_PipeConfigNode.GetEffectiveReleaseLoad());
     Validate();
   } catch (std::bad_alloc &ba) {
     m_SoundProvider.ClearData();
@@ -323,8 +335,6 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) const {
   hash.Update(m_PipeConfigNode.GetEffectiveAttackLoad());
   hash.Update(m_PipeConfigNode.GetEffectiveReleaseLoad());
   hash.Update(m_OdfMidiKeyNumber);
-  hash.Update(m_LoopCrossfadeLength);
-  hash.Update(m_ReleaseCrossfadeLength);
 
   hash.Update(m_AttackFileInfos.size());
   for (const auto &a : m_AttackFileInfos) {
@@ -341,6 +351,8 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) const {
       hash.Update(a.loops[j].m_StartPosition);
       hash.Update(a.loops[j].m_EndPosition);
     }
+    hash.Update(a.m_LoopCrossfadeLength);
+    hash.Update(a.m_ReleaseCrossfadeLength);
   }
 
   hash.Update(m_ReleaseFileInfos.size());
@@ -350,6 +362,7 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) const {
     hash.Update(r.max_playback_time);
     hash.Update(r.cue_point);
     hash.Update(r.release_end);
+    hash.Update(r.m_ReleaseCrossfadeLength);
   }
 }
 

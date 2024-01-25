@@ -51,6 +51,8 @@ public:
     int cue_point;
     int release_end;
     std::vector<GOWaveLoop> loops;
+    unsigned m_LoopCrossfadeLength;
+    unsigned m_ReleaseCrossfadeLength;
   };
 
   struct ReleaseFileInfo {
@@ -59,6 +61,7 @@ public:
     int max_playback_time;
     int cue_point;
     int release_end;
+    unsigned m_ReleaseCrossfadeLength;
   };
 
 private:
@@ -94,7 +97,8 @@ private:
     int release_end,
     unsigned bits_per_sample,
     unsigned channels,
-    bool compress);
+    bool compress,
+    unsigned releaseCrossfadeLength);
 
   /*
    * Load attack and/or release samples from one wav file or from an archive
@@ -119,10 +123,10 @@ private:
     unsigned min_attack_velocity,
     bool use_pitch,
     unsigned loop_crossfade_length,
+    unsigned releaseCrossfadeLengh,
     unsigned max_released_time);
 
   void LoadPitch(GOOpenedFile *file);
-  unsigned GetFaderLength(unsigned MidiKeyNumber);
 
 public:
   GOSoundProviderWave(GOCacheObject *pObjectFor = nullptr)
@@ -142,9 +146,7 @@ public:
     bool compress,
     LoopLoadType loop_mode,
     bool isToLoadAttacks,
-    bool isToLoadReleases,
-    unsigned loop_crossfade_length,
-    unsigned release_crossfase_length);
+    bool isToLoadReleases);
   void SetAmplitude(float fixed_amplitude, float gain);
 };
 

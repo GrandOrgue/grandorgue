@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -37,7 +37,7 @@ GOSoundProvider::GOSoundProvider()
     m_ReleaseInfo(),
     m_VelocityVolumeBase(1),
     m_VelocityVolumeIncrement(0),
-    m_ReleaseCrossfadeLength(184) {
+    m_AttackSwitchCrossfadeLength(184) {
   m_Gain = 0.0f;
 }
 
@@ -55,7 +55,8 @@ bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
     return false;
   if (!cache.Read(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
     return false;
-  if (!cache.Read(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
+  if (!cache.Read(
+        &m_AttackSwitchCrossfadeLength, sizeof(m_AttackSwitchCrossfadeLength)))
     return false;
 
   unsigned attacks;
@@ -96,7 +97,8 @@ bool GOSoundProvider::SaveCache(GOCacheWriter &cache) const {
     return false;
   if (!cache.Write(&m_MidiPitchFract, sizeof(m_MidiPitchFract)))
     return false;
-  if (!cache.Write(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
+  if (!cache.Write(
+        &m_AttackSwitchCrossfadeLength, sizeof(m_AttackSwitchCrossfadeLength)))
     return false;
 
   unsigned attacks = m_Attack.size();
@@ -166,10 +168,6 @@ void GOSoundProvider::SetTuning(float cent) {
 unsigned GOSoundProvider::GetMidiKeyNumber() const { return m_MidiKeyNumber; }
 
 float GOSoundProvider::GetMidiPitchFract() const { return m_MidiPitchFract; }
-
-unsigned GOSoundProvider::GetReleaseCrossfadeLength() const {
-  return m_ReleaseCrossfadeLength;
-}
 
 void GOSoundProvider::SetVelocityParameter(float min_volume, float max_volume) {
   if (min_volume == max_volume) {

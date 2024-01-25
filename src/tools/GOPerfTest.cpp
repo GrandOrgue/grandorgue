@@ -102,6 +102,8 @@ void GOPerfTestApp::RunTest(
         ainfo.cue_point = -1;
         ainfo.release_end = -1;
         ainfo.loops.clear();
+        ainfo.m_LoopCrossfadeLength = 0;
+        ainfo.m_ReleaseCrossfadeLength = 0;
         attacks.push_back(ainfo);
         w->LoadFromMultipleFiles(
           organController->GetFileStore(),
@@ -113,9 +115,7 @@ void GOPerfTestApp::RunTest(
           compress,
           GOSoundProviderWave::LOOP_LOAD_ALL,
           true,
-          true,
-          0,
-          0);
+          true);
         pipes.push_back(w);
       }
       engine->SetSamplesPerBuffer(samples_per_frame);
