@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,11 +9,13 @@
 
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
-#include "model/GOOrganModel.h"
+
+#include "GOPipeConfigListener.h"
+#include "GOPipeUpdateCallback.h"
 
 GOPipeConfig::GOPipeConfig(
-  GOOrganModel *organModel, GOPipeUpdateCallback *callback)
-  : m_OrganModel(organModel),
+  GOPipeConfigListener &listener, GOPipeUpdateCallback *callback)
+  : r_listener(listener),
     m_Callback(callback),
     m_Group(),
     m_NamePrefix(),
@@ -42,7 +44,7 @@ static const wxString WX_MANUAL_TUNING = wxT("ManualTuning");
 static const wxString WX_AUTO_TUNING_CORRECTION = wxT("AutoTuningCorrection");
 
 void GOPipeConfig::ReadTuning(
-  GOConfigReader &cfg, wxString group, wxString prefix) {
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   // m_PitchTuning must be read before calling GOPipeConfig::ReadTuning
   float legacyTuning = cfg.ReadFloat(
     CMBSetting, group, prefix + WX_TUNING, -1800, 1800, false, m_PitchTuning);
@@ -65,7 +67,8 @@ void GOPipeConfig::ReadTuning(
     0);
 }
 
-void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
+void GOPipeConfig::Init(
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   m_Group = group;
   m_NamePrefix = prefix;
   m_AudioGroup
@@ -124,7 +127,8 @@ void GOPipeConfig::Init(GOConfigReader &cfg, wxString group, wxString prefix) {
   m_Callback->UpdateAudioGroup();
 }
 
-void GOPipeConfig::Load(GOConfigReader &cfg, wxString group, wxString prefix) {
+void GOPipeConfig::Load(
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   m_Group = group;
   m_NamePrefix = prefix;
   m_AudioGroup
@@ -215,7 +219,7 @@ GOPipeUpdateCallback *GOPipeConfig::GetCallback() { return m_Callback; }
 void GOPipeConfig::SetAudioGroup(const wxString &str) {
   m_AudioGroup = str;
   m_Callback->UpdateAudioGroup();
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 float GOPipeConfig::GetAmplitude() { return m_Amplitude; }
@@ -225,7 +229,7 @@ float GOPipeConfig::GetDefaultAmplitude() { return m_DefaultAmplitude; }
 void GOPipeConfig::SetAmplitude(float amp) {
   m_Amplitude = amp;
   m_Callback->UpdateAmplitude();
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 float GOPipeConfig::GetGain() { return m_Gain; }
@@ -235,7 +239,7 @@ float GOPipeConfig::GetDefaultGain() { return m_DefaultGain; }
 void GOPipeConfig::SetGain(float gain) {
   m_Gain = gain;
   m_Callback->UpdateAmplitude();
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetManualTuning(float cent) {
@@ -245,7 +249,7 @@ void GOPipeConfig::SetManualTuning(float cent) {
     cent = 1800;
   m_ManualTuning = cent;
   m_Callback->UpdateTuning();
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetAutoTuningCorrection(float cent) {
@@ -255,51 +259,51 @@ void GOPipeConfig::SetAutoTuningCorrection(float cent) {
     cent = 1800;
   m_AutoTuningCorrection = cent;
   m_Callback->UpdateTuning();
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetDelay(unsigned delay) {
   m_Delay = delay;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetBitsPerSample(int value) {
   m_BitsPerSample = value;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetCompress(int value) {
   m_Compress = value;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetChannels(int value) {
   m_Channels = value;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetLoopLoad(int value) {
   m_LoopLoad = value;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetAttackLoad(int value) {
   m_AttackLoad = value;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetReleaseLoad(int value) {
   m_ReleaseLoad = value;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetIgnorePitch(int value) {
   m_IgnorePitch = value;
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }
 
 void GOPipeConfig::SetReleaseTail(unsigned releaseTail) {
   m_ReleaseTail = releaseTail;
   m_Callback->UpdateReleaseTail();
-  m_OrganModel->SetOrganModelModified();
+  r_listener.NotifyPipeConfigModified();
 }

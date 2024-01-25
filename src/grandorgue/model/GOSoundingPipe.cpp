@@ -58,7 +58,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_IsTemperamentOriginalBased(true),
     m_SoundProvider(this),
     m_PipeConfigNode(
-      &rank->GetPipeConfig(), pOrganModel, this, &m_SoundProvider) {}
+      &rank->GetPipeConfig(), *pOrganModel, this, &m_SoundProvider) {}
 
 void GOSoundingPipe::Init(
   GOConfigReader &cfg,

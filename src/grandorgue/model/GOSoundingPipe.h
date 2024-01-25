@@ -9,6 +9,7 @@
 #define GOSOUNDINGPIPE_H
 
 #include "pipe-config/GOPipeConfigNode.h"
+#include "pipe-config/GOPipeUpdateCallback.h"
 #include "sound/GOSoundProviderWave.h"
 
 #include "GOCacheObject.h"

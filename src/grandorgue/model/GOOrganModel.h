@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,6 +16,7 @@
 #include "midi/GOMidiSendProxy.h"
 #include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
 #include "modification/GOModificationProxy.h"
+#include "pipe-config/GOPipeConfigListener.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOEventHandlerList.h"
@@ -36,7 +37,8 @@ class GOOrganModel : private GOCombinationButtonSet,
                      public GOCombinationControllerProxy,
                      public GOEventHandlerList,
                      public GOMidiDialogCreatorProxy,
-                     public GOMidiSendProxy {
+                     public GOMidiSendProxy,
+                     public GOPipeConfigListener {
 private:
   GOConfig &m_config;
 
@@ -123,7 +125,7 @@ public:
 
   bool IsOrganModelModified() const { return m_OrganModelModified; }
   void SetOrganModelModified(bool modified);
-  void SetOrganModelModified() { SetOrganModelModified(true); }
+  void NotifyPipeConfigModified() override { SetOrganModelModified(true); }
   void ResetOrganModelModified() { SetOrganModelModified(false); }
 
   void SetModelModificationListener(GOModificationListener *listener) {

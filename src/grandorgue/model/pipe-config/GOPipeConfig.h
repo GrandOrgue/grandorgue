@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,15 +10,14 @@
 
 #include <wx/string.h>
 
-#include "GOPipeUpdateCallback.h"
-
 class GOConfigReader;
 class GOConfigWriter;
-class GOOrganModel;
+class GOPipeConfigListener;
+class GOPipeUpdateCallback;
 
 class GOPipeConfig {
 private:
-  GOOrganModel *m_OrganModel;
+  GOPipeConfigListener &r_listener;
   GOPipeUpdateCallback *m_Callback;
   wxString m_Group;
   wxString m_NamePrefix;
@@ -44,13 +43,14 @@ private:
   int m_IgnorePitch;
   unsigned m_ReleaseTail; // the max release length in ms
 
-  void ReadTuning(GOConfigReader &cfg, wxString group, wxString prefix);
+  void ReadTuning(
+    GOConfigReader &cfg, const wxString &group, const wxString &prefix);
 
 public:
-  GOPipeConfig(GOOrganModel *organModel, GOPipeUpdateCallback *callback);
+  GOPipeConfig(GOPipeConfigListener &listener, GOPipeUpdateCallback *callback);
 
-  void Init(GOConfigReader &cfg, wxString group, wxString prefix);
-  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
+  void Init(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
+  void Load(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
   void Save(GOConfigWriter &cfg);
 
   GOPipeUpdateCallback *GetCallback();

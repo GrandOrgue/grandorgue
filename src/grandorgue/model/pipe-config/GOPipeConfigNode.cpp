@@ -15,11 +15,11 @@
 
 GOPipeConfigNode::GOPipeConfigNode(
   GOPipeConfigNode *parent,
-  GOOrganModel *organModel,
+  GOOrganModel &organModel,
   GOPipeUpdateCallback *callback,
   GOStatisticCallback *statistic)
-  : m_OrganModel(organModel),
-    m_config(organModel->GetConfig()),
+  : r_OrganModel(organModel),
+    m_config(organModel.GetConfig()),
     m_parent(parent),
     m_PipeConfig(organModel, callback),
     m_StatisticCallback(statistic),
@@ -42,13 +42,13 @@ void GOPipeConfigNode::SetName(wxString name) { m_Name = name; }
 
 void GOPipeConfigNode::Init(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  m_OrganModel->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_PipeConfig.Init(cfg, group, prefix);
 }
 
 void GOPipeConfigNode::Load(
   GOConfigReader &cfg, wxString group, wxString prefix) {
-  m_OrganModel->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_PipeConfig.Load(cfg, group, prefix);
 }
 
