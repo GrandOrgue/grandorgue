@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,6 +13,7 @@
 #include <wx/hashmap.h>
 #include <wx/string.h>
 
+#include "GOBool3.h"
 #include "GOLogicalColour.h"
 
 class GOConfigReaderDB;
@@ -47,7 +48,7 @@ public:
   /**
    * Reads a triple-value boolean (-1 - not defined, 0 - false, 1 - true)
    */
-  int ReadBooleanTriple(
+  GOBool3 ReadBooleanTriple(
     GOSettingType type,
     const wxString &group,
     const wxString &key,
@@ -127,6 +128,14 @@ public:
     int nmax,
     bool required,
     int defaultValue);
+  GOBool3 ReadBool3FromInt(
+    GOSettingType type,
+    const wxString &group,
+    const wxString &key,
+    bool required) {
+    return to_bool3(ReadInteger(
+      type, group, key, BOOL3_MIN, BOOL3_MAX, required, BOOL3_DEFAULT));
+  }
   int ReadLong(
     GOSettingType type,
     const wxString &group,
