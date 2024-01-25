@@ -10,9 +10,6 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-#include "GOPipeConfigListener.h"
-#include "GOPipeUpdateCallback.h"
-
 GOPipeConfig::GOPipeConfig(
   GOPipeConfigListener &listener, GOPipeUpdateCallback *callback)
   : r_listener(listener),
@@ -20,24 +17,24 @@ GOPipeConfig::GOPipeConfig(
     m_Group(),
     m_NamePrefix(),
     m_AudioGroup(),
-    m_Amplitude(0),
     m_DefaultAmplitude(0),
+    m_Amplitude(0),
     m_DefaultGain(0),
+    m_Gain(0),
     m_PitchTuning(0),
     m_PitchCorrection(0),
-    m_Gain(0),
     m_ManualTuning(0),
     m_AutoTuningCorrection(0),
-    m_Delay(0),
     m_DefaultDelay(0),
+    m_Delay(0),
+    m_ReleaseTail(0),
     m_BitsPerSample(-1),
-    m_Compress(-1),
     m_Channels(-1),
     m_LoopLoad(-1),
+    m_Compress(-1),
     m_AttackLoad(-1),
     m_ReleaseLoad(-1),
-    m_IgnorePitch(-1),
-    m_ReleaseTail(0) {}
+    m_IgnorePitch(-1) {}
 
 static const wxString WX_TUNING = wxT("Tuning");
 static const wxString WX_MANUAL_TUNING = wxT("ManualTuning");
@@ -214,96 +211,10 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
     m_Group, m_NamePrefix + wxT("ReleaseTail"), (int)m_ReleaseTail);
 }
 
-GOPipeUpdateCallback *GOPipeConfig::GetCallback() { return m_Callback; }
-
-void GOPipeConfig::SetAudioGroup(const wxString &str) {
-  m_AudioGroup = str;
-  m_Callback->UpdateAudioGroup();
-  r_listener.NotifyPipeConfigModified();
-}
-
-float GOPipeConfig::GetAmplitude() { return m_Amplitude; }
-
-float GOPipeConfig::GetDefaultAmplitude() { return m_DefaultAmplitude; }
-
-void GOPipeConfig::SetAmplitude(float amp) {
-  m_Amplitude = amp;
-  m_Callback->UpdateAmplitude();
-  r_listener.NotifyPipeConfigModified();
-}
-
-float GOPipeConfig::GetGain() { return m_Gain; }
-
-float GOPipeConfig::GetDefaultGain() { return m_DefaultGain; }
-
-void GOPipeConfig::SetGain(float gain) {
-  m_Gain = gain;
-  m_Callback->UpdateAmplitude();
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetManualTuning(float cent) {
-  if (cent < -1800)
-    cent = -1800;
-  if (cent > 1800)
-    cent = 1800;
-  m_ManualTuning = cent;
-  m_Callback->UpdateTuning();
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetAutoTuningCorrection(float cent) {
-  if (cent < -1800)
-    cent = -1800;
-  if (cent > 1800)
-    cent = 1800;
-  m_AutoTuningCorrection = cent;
-  m_Callback->UpdateTuning();
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetDelay(unsigned delay) {
-  m_Delay = delay;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetBitsPerSample(int value) {
-  m_BitsPerSample = value;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetCompress(int value) {
-  m_Compress = value;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetChannels(int value) {
-  m_Channels = value;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetLoopLoad(int value) {
-  m_LoopLoad = value;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetAttackLoad(int value) {
-  m_AttackLoad = value;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetReleaseLoad(int value) {
-  m_ReleaseLoad = value;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetIgnorePitch(int value) {
-  m_IgnorePitch = value;
-  r_listener.NotifyPipeConfigModified();
-}
-
-void GOPipeConfig::SetReleaseTail(unsigned releaseTail) {
-  m_ReleaseTail = releaseTail;
-  m_Callback->UpdateReleaseTail();
-  r_listener.NotifyPipeConfigModified();
+void GOPipeConfig::SetPitchMember(float cents, float &member) {
+  if (cents < -1800)
+    cents = -1800;
+  if (cents > 1800)
+    cents = 1800;
+  SetSmallMember(cents, member, &GOPipeUpdateCallback::UpdateTuning);
 }
