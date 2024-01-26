@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -130,10 +130,10 @@ void GODivisionalCombination::SaveInt(GOConfigWriter &cfg) {
   unsigned tremulant_count = 0;
   unsigned switch_count = 0;
 
-  UpdateState();
+  EnsureElementStatesAllocated();
   for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
     const GOCombinationDefinition::Element &e = r_ElementDefinitions[i];
-    int state = GetState(i);
+    int state = GetElementState(i);
 
     if (state >= 0) {
       int value = state == 1 ? e.index : -e.index;

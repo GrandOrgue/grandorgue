@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -38,7 +38,7 @@ private:
    *  -1 - not to touch. Usually this state is used for invisible elements that
    *    are not stored in the combination normally.
    */
-  std::vector<int> m_State;
+  std::vector<int> m_ElementStates;
 
   /**
    * Whether the combination has been captured when `Full` was engaged or not
@@ -58,7 +58,7 @@ protected:
   const std::vector<GOCombinationDefinition::Element> &r_ElementDefinitions;
   bool m_Protected;
 
-  void UpdateState();
+  void EnsureElementStatesAllocated();
 
   // Read the NumberOfStops key from the given config source
   unsigned ReadNumberOfStops(
@@ -135,7 +135,7 @@ public:
   virtual ~GOCombination();
 
   bool IsEmpty() const;
-  int GetState(unsigned no) const { return m_State[no]; }
+  int GetElementState(unsigned no) const { return m_ElementStates[no]; }
   void GetExtraSetState(ExtraElementsSet &extraSet);
   void GetEnabledElements(GOCombination::ExtraElementsSet &enabledElements);
 
