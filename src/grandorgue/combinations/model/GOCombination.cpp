@@ -215,6 +215,8 @@ void GOCombination::SetStatesFromYaml(
 void GOCombination::GetExtraSetState(
   GOCombination::ExtraElementsSet &extraSet) {
   extraSet.clear();
+  // May be called from init a crescendo before init combinations
+  EnsureElementStatesAllocated();
   for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
     if (
       m_ElementStates[i] == 0
