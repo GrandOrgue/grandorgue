@@ -133,10 +133,11 @@ void GODivisionalCombination::SaveInt(GOConfigWriter &cfg) {
   EnsureElementStatesAllocated();
   for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
     const GOCombinationDefinition::Element &e = r_ElementDefinitions[i];
-    int state = GetElementState(i);
+    GOBool3 state = GetElementState(i);
 
-    if (state >= 0) {
-      int value = state == 1 ? e.index : -e.index;
+    if (state >= BOOL3_FALSE) {
+      int value = to_bool(state) ? e.index : -e.index;
+
       switch (e.type) {
       case GOCombinationDefinition::COMBINATION_STOP:
         stop_count++;
