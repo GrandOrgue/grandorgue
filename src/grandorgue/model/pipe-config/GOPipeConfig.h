@@ -43,14 +43,21 @@ private:
   int m_IgnorePitch;
   unsigned m_ReleaseTail; // the max release length in ms
 
-  void ReadTuning(
+  // Load all customizable values from the .cmb
+  void LoadFromCmb(
     GOConfigReader &cfg, const wxString &group, const wxString &prefix);
 
 public:
   GOPipeConfig(GOPipeConfigListener &listener, GOPipeUpdateCallback *callback);
 
+  // Set default values and load all customizable values from the .cmb
   void Init(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
+
+  // Load default values from the ODF and and load all customizable values from
+  // the .cmb
   void Load(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
+
+  // Save all customizable values to the .cmb
   void Save(GOConfigWriter &cfg);
 
   GOPipeUpdateCallback *GetCallback();
