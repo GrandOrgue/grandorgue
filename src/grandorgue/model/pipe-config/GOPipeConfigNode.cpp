@@ -28,95 +28,32 @@ GOPipeConfigNode::GOPipeConfigNode(
     m_parent->AddChild(this);
 }
 
-GOPipeConfigNode::~GOPipeConfigNode() {}
-
 void GOPipeConfigNode::SetParent(GOPipeConfigNode *parent) {
   m_parent = parent;
   if (m_parent)
     m_parent->AddChild(this);
 }
 
-const wxString &GOPipeConfigNode::GetName() { return m_Name; }
-
-void GOPipeConfigNode::SetName(wxString name) { m_Name = name; }
-
 void GOPipeConfigNode::Init(
-  GOConfigReader &cfg, wxString group, wxString prefix) {
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   r_OrganModel.RegisterSaveableObject(this);
   m_PipeConfig.Init(cfg, group, prefix);
 }
 
 void GOPipeConfigNode::Load(
-  GOConfigReader &cfg, wxString group, wxString prefix) {
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   r_OrganModel.RegisterSaveableObject(this);
   m_PipeConfig.Load(cfg, group, prefix);
 }
 
-void GOPipeConfigNode::Save(GOConfigWriter &cfg) { m_PipeConfig.Save(cfg); }
-
-GOPipeConfig &GOPipeConfigNode::GetPipeConfig() { return m_PipeConfig; }
-
-void GOPipeConfigNode::ModifyManualTuning(float diff) {
-  m_PipeConfig.SetManualTuning(m_PipeConfig.GetManualTuning() + diff);
-}
-
-void GOPipeConfigNode::ModifyAutoTuningCorrection(float diff) {
-  m_PipeConfig.SetAutoTuningCorrection(
-    m_PipeConfig.GetAutoTuningCorrection() + diff);
-}
-
-float GOPipeConfigNode::GetEffectiveAmplitude() {
-  if (m_parent)
-    return m_PipeConfig.GetAmplitude() * m_parent->GetEffectiveAmplitude()
-      / 100.0;
-  else
-    return m_PipeConfig.GetAmplitude() / 100.0;
-}
-
-float GOPipeConfigNode::GetEffectiveGain() {
-  if (m_parent)
-    return m_PipeConfig.GetGain() + m_parent->GetEffectiveGain();
-  else
-    return m_PipeConfig.GetGain();
-}
-
-float GOPipeConfigNode::GetEffectivePitchTuning() const {
-  float pitchTuning = m_PipeConfig.GetPitchTuning();
+float GOPipeConfigNode::GetEffectiveFloatSum(
+  float (GOPipeConfig::*getFloat)() const,
+  float (GOPipeConfigNode::*getParentFloat)() const) const {
+  float value = (m_PipeConfig.*getFloat)();
 
   if (m_parent)
-    pitchTuning += m_parent->GetEffectivePitchTuning();
-  return pitchTuning;
-}
-
-float GOPipeConfigNode::GetEffectivePitchCorrection() const {
-  float pitchCorrection = m_PipeConfig.GetPitchCorrection();
-
-  if (m_parent)
-    pitchCorrection += m_parent->GetEffectivePitchCorrection();
-  return pitchCorrection;
-}
-
-float GOPipeConfigNode::GetEffectiveManualTuning() const {
-  float cents = m_PipeConfig.GetManualTuning();
-
-  if (m_parent)
-    cents += m_parent->GetEffectiveManualTuning();
-  return cents;
-}
-
-float GOPipeConfigNode::GetEffectiveAutoTuningCorection() const {
-  float cents = m_PipeConfig.GetAutoTuningCorrection();
-
-  if (m_parent)
-    cents += m_parent->GetEffectiveAutoTuningCorection();
-  return cents;
-}
-
-unsigned GOPipeConfigNode::GetEffectiveDelay() const {
-  if (m_parent)
-    return m_PipeConfig.GetDelay() + m_parent->GetEffectiveDelay();
-  else
-    return m_PipeConfig.GetDelay();
+    value += (m_parent->*getParentFloat)();
+  return value;
 }
 
 wxString GOPipeConfigNode::GetEffectiveAudioGroup() const {
@@ -128,6 +65,31 @@ wxString GOPipeConfigNode::GetEffectiveAudioGroup() const {
     return wxEmptyString;
 }
 
+float GOPipeConfigNode::GetEffectiveAmplitude() const {
+  if (m_parent)
+    return m_PipeConfig.GetAmplitude() * m_parent->GetEffectiveAmplitude()
+      / 100.0;
+  else
+    return m_PipeConfig.GetAmplitude() / 100.0;
+}
+
+unsigned GOPipeConfigNode::GetEffectiveDelay() const {
+  if (m_parent)
+    return m_PipeConfig.GetDelay() + m_parent->GetEffectiveDelay();
+  else
+    return m_PipeConfig.GetDelay();
+}
+
+unsigned GOPipeConfigNode::GetEffectiveReleaseTail() const {
+  unsigned releaseTail = m_parent ? m_parent->GetEffectiveReleaseTail() : 0;
+  const unsigned thisReleaseTail = m_PipeConfig.GetReleaseTail();
+
+  // Set releaseTail as minimum between the parent release tail and this one
+  if (thisReleaseTail && (!releaseTail || thisReleaseTail < releaseTail))
+    releaseTail = thisReleaseTail;
+  return releaseTail;
+}
+
 unsigned GOPipeConfigNode::GetEffectiveBitsPerSample() const {
   if (m_PipeConfig.GetBitsPerSample() != -1)
     return m_PipeConfig.GetBitsPerSample();
@@ -137,13 +99,13 @@ unsigned GOPipeConfigNode::GetEffectiveBitsPerSample() const {
     return m_config.BitsPerSample();
 }
 
-bool GOPipeConfigNode::GetEffectiveCompress() const {
-  if (m_PipeConfig.GetCompress() != -1)
-    return m_PipeConfig.GetCompress() ? true : false;
+unsigned GOPipeConfigNode::GetEffectiveChannels() const {
+  if (m_PipeConfig.GetChannels() != -1)
+    return m_PipeConfig.GetChannels();
   if (m_parent)
-    return m_parent->GetEffectiveCompress();
+    return m_parent->GetEffectiveChannels();
   else
-    return m_config.LosslessCompression();
+    return m_config.LoadChannels();
 }
 
 unsigned GOPipeConfigNode::GetEffectiveLoopLoad() const {
@@ -153,6 +115,15 @@ unsigned GOPipeConfigNode::GetEffectiveLoopLoad() const {
     return m_parent->GetEffectiveLoopLoad();
   else
     return m_config.LoopLoad();
+}
+
+bool GOPipeConfigNode::GetEffectiveCompress() const {
+  if (m_PipeConfig.GetCompress() != -1)
+    return m_PipeConfig.GetCompress() ? true : false;
+  if (m_parent)
+    return m_parent->GetEffectiveCompress();
+  else
+    return m_config.LosslessCompression();
 }
 
 bool GOPipeConfigNode::GetEffectiveAttackLoad() const {
@@ -171,21 +142,6 @@ bool GOPipeConfigNode::GetEffectiveReleaseLoad() const {
                                : m_config.ReleaseLoad();
 }
 
-unsigned GOPipeConfigNode::GetEffectiveChannels() const {
-  if (m_PipeConfig.GetChannels() != -1)
-    return m_PipeConfig.GetChannels();
-  if (m_parent)
-    return m_parent->GetEffectiveChannels();
-  else
-    return m_config.LoadChannels();
-}
-
-GOSampleStatistic GOPipeConfigNode::GetStatistic() const {
-  if (m_StatisticCallback)
-    return m_StatisticCallback->GetStatistic();
-  return GOSampleStatistic();
-}
-
 bool GOPipeConfigNode::GetEffectiveIgnorePitch() const {
   const int thisConfigValue = m_PipeConfig.IsIgnorePitch();
 
@@ -194,18 +150,17 @@ bool GOPipeConfigNode::GetEffectiveIgnorePitch() const {
     : m_parent && m_parent->GetEffectiveIgnorePitch();
 }
 
-unsigned GOPipeConfigNode::GetEffectiveReleaseTail() const {
-  unsigned releaseTail = m_parent ? m_parent->GetEffectiveReleaseTail() : 0;
-  const unsigned thisReleaseTail = m_PipeConfig.GetReleaseTail();
-
-  // Set releaseTail as minimum between the parent release tail and this one
-  if (thisReleaseTail && (!releaseTail || thisReleaseTail < releaseTail))
-    releaseTail = thisReleaseTail;
-  return releaseTail;
+GOSampleStatistic GOPipeConfigNode::GetStatistic() const {
+  if (m_StatisticCallback)
+    return m_StatisticCallback->GetStatistic();
+  return GOSampleStatistic();
 }
 
-unsigned GOPipeConfigNode::GetChildCount() { return 0; }
+void GOPipeConfigNode::ModifyManualTuning(float diff) {
+  m_PipeConfig.SetManualTuning(m_PipeConfig.GetManualTuning() + diff);
+}
 
-GOPipeConfigNode *GOPipeConfigNode::GetChild(unsigned index) { return NULL; }
-
-void GOPipeConfigNode::AddChild(GOPipeConfigNode *node) {}
+void GOPipeConfigNode::ModifyAutoTuningCorrection(float diff) {
+  m_PipeConfig.SetAutoTuningCorrection(
+    m_PipeConfig.GetAutoTuningCorrection() + diff);
+}

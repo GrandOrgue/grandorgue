@@ -25,7 +25,11 @@ private:
   GOStatisticCallback *m_StatisticCallback;
   wxString m_Name;
 
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override { m_PipeConfig.Save(cfg); }
+
+  float GetEffectiveFloatSum(
+    float (GOPipeConfig::*getFloat)() const,
+    float (GOPipeConfigNode::*getParentFloat)() const) const;
 
 public:
   GOPipeConfigNode(
@@ -33,44 +37,67 @@ public:
     GOOrganModel &organModel,
     GOPipeUpdateCallback *callback,
     GOStatisticCallback *statistic);
-  virtual ~GOPipeConfigNode();
 
   GOPipeConfigNode *GetParent() const { return m_parent; }
   void SetParent(GOPipeConfigNode *parent);
-  void Init(GOConfigReader &cfg, wxString group, wxString prefix);
-  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
+  void Init(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
+  void Load(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
 
-  const wxString &GetName();
-  void SetName(wxString name);
+  const wxString &GetName() const { return m_Name; }
+  void SetName(const wxString &name) { m_Name = name; }
 
-  GOPipeConfig &GetPipeConfig();
+  GOPipeConfig &GetPipeConfig() { return m_PipeConfig; }
+
+  wxString GetEffectiveAudioGroup() const;
+
+  float GetEffectiveAmplitude() const;
+
+  float GetEffectiveGain() const {
+    return GetEffectiveFloatSum(
+      &GOPipeConfig::GetGain, &GOPipeConfigNode::GetEffectiveGain);
+  }
+
+  float GetEffectivePitchTuning() const {
+    return GetEffectiveFloatSum(
+      &GOPipeConfig::GetPitchTuning,
+      &GOPipeConfigNode::GetEffectivePitchTuning);
+  }
+
+  float GetEffectivePitchCorrection() const {
+    return GetEffectiveFloatSum(
+      &GOPipeConfig::GetPitchCorrection,
+      &GOPipeConfigNode::GetEffectivePitchCorrection);
+  }
+
+  float GetEffectiveManualTuning() const {
+    return GetEffectiveFloatSum(
+      &GOPipeConfig::GetManualTuning,
+      &GOPipeConfigNode::GetEffectiveManualTuning);
+  }
+
+  float GetEffectiveAutoTuningCorection() const {
+    return GetEffectiveFloatSum(
+      &GOPipeConfig::GetAutoTuningCorrection,
+      &GOPipeConfigNode::GetEffectiveAutoTuningCorection);
+  }
+
+  unsigned GetEffectiveDelay() const;
+  unsigned GetEffectiveReleaseTail() const;
+  unsigned GetEffectiveBitsPerSample() const;
+  unsigned GetEffectiveChannels() const;
+  unsigned GetEffectiveLoopLoad() const;
+  bool GetEffectiveCompress() const;
+  bool GetEffectiveAttackLoad() const;
+  bool GetEffectiveReleaseLoad() const;
+  bool GetEffectiveIgnorePitch() const;
+
+  virtual void AddChild(GOPipeConfigNode *node) {}
+  virtual unsigned GetChildCount() const { return 0; }
+  virtual GOPipeConfigNode *GetChild(unsigned index) const { return nullptr; }
+  virtual GOSampleStatistic GetStatistic() const;
 
   void ModifyManualTuning(float diff);
   void ModifyAutoTuningCorrection(float diff);
-
-  float GetEffectiveAmplitude();
-  float GetEffectiveGain();
-  float GetEffectivePitchTuning() const;
-  float GetEffectivePitchCorrection() const;
-  float GetEffectiveManualTuning() const;
-  float GetEffectiveAutoTuningCorection() const;
-
-  unsigned GetEffectiveDelay() const;
-  wxString GetEffectiveAudioGroup() const;
-
-  unsigned GetEffectiveBitsPerSample() const;
-  bool GetEffectiveCompress() const;
-  unsigned GetEffectiveLoopLoad() const;
-  bool GetEffectiveAttackLoad() const;
-  bool GetEffectiveReleaseLoad() const;
-  unsigned GetEffectiveChannels() const;
-  bool GetEffectiveIgnorePitch() const;
-  unsigned GetEffectiveReleaseTail() const;
-
-  virtual void AddChild(GOPipeConfigNode *node);
-  virtual unsigned GetChildCount();
-  virtual GOPipeConfigNode *GetChild(unsigned index);
-  virtual GOSampleStatistic GetStatistic() const;
 };
 
 #endif

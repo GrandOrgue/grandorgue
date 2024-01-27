@@ -30,10 +30,12 @@ public:
     GOOrganModel *organModel,
     GOPipeUpdateCallback *callback);
 
-  void AddChild(GOPipeConfigNode *node);
-  unsigned GetChildCount();
-  GOPipeConfigNode *GetChild(unsigned index);
-  GOSampleStatistic GetStatistic() const;
+  void AddChild(GOPipeConfigNode *node) override { m_Childs.push_back(node); }
+  unsigned GetChildCount() const override { return m_Childs.size(); }
+  GOPipeConfigNode *GetChild(unsigned index) const override {
+    return m_Childs[index];
+  }
+  GOSampleStatistic GetStatistic() const override;
 };
 
 #endif
