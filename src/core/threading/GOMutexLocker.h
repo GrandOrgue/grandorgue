@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,8 +12,8 @@
 
 class GOMutexLocker {
 private:
-  GOMutex &m_Mutex;
-  bool m_Locked;
+  GOMutex &m_mutex;
+  bool m_IsLocked;
 
 public:
   /**
@@ -33,37 +33,16 @@ public:
   GOMutexLocker(
     GOMutex &mutex,
     bool try_lock = false,
-    const char *lockerInfo = NULL,
-    GOThread *pThread = NULL)
-    : m_Mutex(mutex), m_Locked(false) {
-    if (try_lock)
-      m_Locked = m_Mutex.TryLock(lockerInfo);
-    else if (pThread != NULL)
-      m_Locked = m_Mutex.LockOrStop(lockerInfo, pThread);
-    else {
-      m_Mutex.Lock(lockerInfo);
-      m_Locked = true;
-    }
-  }
+    const char *lockerInfo = nullptr,
+    GOThread *pThread = nullptr);
 
-  ~GOMutexLocker() {
-    if (m_Locked)
-      m_Mutex.Unlock();
-  }
+  ~GOMutexLocker();
 
-  bool TryLock(const char *lockerInfo = NULL) {
-    if (!m_Locked)
-      m_Locked = m_Mutex.TryLock(lockerInfo);
-    return m_Locked;
-  }
+  bool TryLock(const char *lockerInfo = NULL);
 
-  bool IsLocked() const { return m_Locked; }
+  bool IsLocked() const { return m_IsLocked; }
 
-  void Unlock() {
-    if (m_Locked)
-      m_Mutex.Unlock();
-    m_Locked = false;
-  }
+  void Unlock();
 
   GOMutexLocker(const GOMutexLocker &) = delete;
   GOMutexLocker &operator=(const GOMutexLocker &) = delete;
