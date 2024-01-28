@@ -38,7 +38,7 @@ public:
 
   ~GOMutexLocker();
 
-  bool TryLock(const char *lockerInfo = NULL);
+  bool TryLock(const char *lockerInfo = nullptr);
 
   bool IsLocked() const { return m_IsLocked; }
 
