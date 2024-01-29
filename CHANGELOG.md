@@ -1,3 +1,4 @@
+- Fixed crash with rtaudio/asio https://github.com/GrandOrgue/grandorgue/issues/1772
 - Added support of specifying different crossfade length for additional attack and release files https://github.com/GrandOrgue/grandorgue/issues/1760
 - Fixed wrong filename of the midi recorder file with Hungarian language settings https://github.com/GrandOrgue/grandorgue/issues/1644
 - Fixed unability to select the Hungarian language in the Organ Settings dialog

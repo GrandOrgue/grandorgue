@@ -1,16 +1,23 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 message(STATUS "RtAudio build Configuration")
 
 INCLUDE (CheckIncludeFileCXX)
 
-include_directories("${RTAUDIO_SRC_DIR}/include")
 set(RtAudio_Sources "${RTAUDIO_SRC_DIR}/RtAudio.cpp")
 
 if (WIN32)
   if (RTAUDIO_USE_ASIO)
+    add_definitions(-D__WINDOWS_ASIO__ -D_WIN32_WINNT=0x0501 -DWINVER=0x0501)
+    # they should be included before ${RTAUDIO_SRC_DIR}/include because 
+    # the same headers in ${RTAUDIO_SRC_DIR}/include are of a wrong version
+    include_directories(
+      "${ASIO_SDK_DIR}/common"
+      "${ASIO_SDK_DIR}/host"
+      "${ASIO_SDK_DIR}/host/pc"
+    )
     set(RtAudio_Sources ${RtAudio_Sources}
       "${ASIO_SDK_DIR}/host/asiodrivers.cpp"
       "${ASIO_SDK_DIR}/host/pc/asiolist.cpp"
@@ -20,6 +27,7 @@ if (WIN32)
   endif ()
 endif ()
 
+include_directories("${RTAUDIO_SRC_DIR}/include")
 add_library(RtAudio STATIC ${RtAudio_Sources})
 
 if (WIN32)
@@ -31,17 +39,6 @@ if (WIN32)
    if (RTAUDIO_USE_DSOUND)
       add_definitions(-D__WINDOWS_DS__)
       target_link_libraries(RtAudio dsound)
-   endif ()
-
-   if (RTAUDIO_USE_ASIO)
-      add_definitions(-D__WINDOWS_ASIO__ -D_WIN32_WINNT=0x0501 -DWINVER=0x0501)
-      include_directories(
-	"${ASIO_SDK_DIR}/common"
-        "${ASIO_SDK_DIR}/host"
-	"${ASIO_SDK_DIR}/host/pc"
-      )
-      include_directories(asiohelpers)
-      include_directories(asiohelpers/include)
    endif ()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
