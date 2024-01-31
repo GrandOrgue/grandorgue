@@ -7,6 +7,7 @@
 
 #include "GOApp.h"
 
+#include <wx/cmdline.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
 #include <wx/image.h>
@@ -40,19 +41,25 @@ GOApp::GOApp()
     m_FileName(),
     m_InstanceName() {}
 
-const wxCmdLineEntryDesc GOApp::m_cmdLineDesc[] = {
+static const wxCmdLineEntryDesc cmd_line_desc[] = {
   {wxCMD_LINE_SWITCH,
-   wxTRANSLATE("h"),
-   wxTRANSLATE("help"),
+   "h",
+   "help",
    wxTRANSLATE("displays help on the command line parameters"),
    wxCMD_LINE_VAL_NONE,
    wxCMD_LINE_OPTION_HELP},
   {wxCMD_LINE_OPTION,
-   wxTRANSLATE("i"),
-   wxTRANSLATE("instance"),
+   "i",
+   "instance",
    wxTRANSLATE("specify GrandOrgue instance name"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
+  {wxCMD_LINE_SWITCH,
+   "j",
+   "justgui",
+   wxTRANSLATE("Load just GUI. Not to load any sound samples"),
+   wxCMD_LINE_VAL_NONE,
+   0},
   {wxCMD_LINE_PARAM,
    NULL,
    NULL,
@@ -64,7 +71,7 @@ const wxCmdLineEntryDesc GOApp::m_cmdLineDesc[] = {
 void GOApp::OnInitCmdLine(wxCmdLineParser &parser) {
   parser.SetLogo(wxString::Format(
     _("GrandOrgue %s - Virtual Pipe Organ Software"), wxT(APP_VERSION)));
-  parser.SetDesc(m_cmdLineDesc);
+  parser.SetDesc(cmd_line_desc);
 }
 
 bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {

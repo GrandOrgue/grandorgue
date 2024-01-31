@@ -23,7 +23,6 @@
 #define GOAPP_H
 
 #include <wx/app.h>
-#include <wx/cmdline.h>
 
 class GOFrame;
 class GOLog;
@@ -50,8 +49,6 @@ protected:
   GOLog *m_Log;
   wxString m_FileName;
   wxString m_InstanceName;
-
-  static const wxCmdLineEntryDesc m_cmdLineDesc[];
 
 public:
   GOApp();
