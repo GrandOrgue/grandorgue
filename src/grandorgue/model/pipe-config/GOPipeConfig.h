@@ -8,8 +8,11 @@
 #ifndef GOPIPECONFIG_H
 #define GOPIPECONFIG_H
 
+#include <cstdint>
+
 #include <wx/string.h>
 
+#include "GOBool3.h"
 #include "GOPipeConfigListener.h"
 #include "GOPipeUpdateCallback.h"
 
@@ -34,16 +37,16 @@ private:
   float m_PitchCorrection;
   float m_ManualTuning;
   float m_AutoTuningCorrection;
-  unsigned m_DefaultDelay;
-  unsigned m_Delay;
-  unsigned m_ReleaseTail; // the max release length in ms
-  int m_BitsPerSample;
-  int m_Channels;
-  int m_LoopLoad;
-  int m_Compress;
-  int m_AttackLoad;
-  int m_ReleaseLoad;
-  int m_IgnorePitch;
+  uint16_t m_DefaultDelay;
+  uint16_t m_Delay;
+  uint16_t m_ReleaseTail; // the max release length in ms
+  int8_t m_BitsPerSample;
+  int8_t m_Channels;
+  int8_t m_LoopLoad;
+  GOBool3 m_Compress;
+  GOBool3 m_AttackLoad;
+  GOBool3 m_ReleaseLoad;
+  GOBool3 m_IgnorePitch;
 
   // Load all customizable values from the .cmb
   void LoadFromCmb(
@@ -119,36 +122,38 @@ public:
     SetPitchMember(cents, m_AutoTuningCorrection);
   }
 
-  unsigned GetDefaultDelay() const { return m_DefaultDelay; }
-  unsigned GetDelay() const { return m_Delay; }
-  void SetDelay(unsigned delay) { SetSmallMember(delay, m_Delay); }
+  uint16_t GetDefaultDelay() const { return m_DefaultDelay; }
+  uint16_t GetDelay() const { return m_Delay; }
+  void SetDelay(uint16_t delay) { SetSmallMember(delay, m_Delay); }
 
-  unsigned GetReleaseTail() const { return m_ReleaseTail; }
-  void SetReleaseTail(unsigned releaseTail) {
+  uint16_t GetReleaseTail() const { return m_ReleaseTail; }
+  void SetReleaseTail(uint16_t releaseTail) {
     SetSmallMember(
       releaseTail, m_ReleaseTail, &GOPipeUpdateCallback::UpdateReleaseTail);
   }
 
-  int GetBitsPerSample() const { return m_BitsPerSample; }
-  void SetBitsPerSample(int value) { SetSmallMember(value, m_BitsPerSample); }
+  int8_t GetBitsPerSample() const { return m_BitsPerSample; }
+  void SetBitsPerSample(int8_t value) {
+    SetSmallMember(value, m_BitsPerSample);
+  }
 
-  int GetChannels() const { return m_Channels; }
-  void SetChannels(int value) { SetSmallMember(value, m_Channels); }
+  int8_t GetChannels() const { return m_Channels; }
+  void SetChannels(int8_t value) { SetSmallMember(value, m_Channels); }
 
-  int GetLoopLoad() const { return m_LoopLoad; }
-  void SetLoopLoad(int value) { SetSmallMember(value, m_LoopLoad); }
+  int8_t GetLoopLoad() const { return m_LoopLoad; }
+  void SetLoopLoad(int8_t value) { SetSmallMember(value, m_LoopLoad); }
 
-  int GetCompress() const { return m_Compress; }
-  void SetCompress(int value) { SetSmallMember(value, m_Compress); }
+  GOBool3 GetCompress() const { return m_Compress; }
+  void SetCompress(GOBool3 value) { SetSmallMember(value, m_Compress); }
 
-  int GetAttackLoad() const { return m_AttackLoad; }
-  void SetAttackLoad(int value) { SetSmallMember(value, m_AttackLoad); }
+  GOBool3 GetAttackLoad() const { return m_AttackLoad; }
+  void SetAttackLoad(GOBool3 value) { SetSmallMember(value, m_AttackLoad); }
 
-  int GetReleaseLoad() const { return m_ReleaseLoad; }
-  void SetReleaseLoad(int value) { SetSmallMember(value, m_ReleaseLoad); }
+  GOBool3 GetReleaseLoad() const { return m_ReleaseLoad; }
+  void SetReleaseLoad(GOBool3 value) { SetSmallMember(value, m_ReleaseLoad); }
 
-  int IsIgnorePitch() const { return m_IgnorePitch; }
-  void SetIgnorePitch(int value) { SetSmallMember(value, m_IgnorePitch); }
+  GOBool3 IsIgnorePitch() const { return m_IgnorePitch; }
+  void SetIgnorePitch(GOBool3 value) { SetSmallMember(value, m_IgnorePitch); }
 };
 
 #endif

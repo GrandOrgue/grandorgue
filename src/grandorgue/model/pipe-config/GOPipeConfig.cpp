@@ -31,10 +31,10 @@ GOPipeConfig::GOPipeConfig(
     m_BitsPerSample(-1),
     m_Channels(-1),
     m_LoopLoad(-1),
-    m_Compress(-1),
-    m_AttackLoad(-1),
-    m_ReleaseLoad(-1),
-    m_IgnorePitch(-1) {}
+    m_Compress(BOOL3_DEFAULT),
+    m_AttackLoad(BOOL3_DEFAULT),
+    m_ReleaseLoad(BOOL3_DEFAULT),
+    m_IgnorePitch(BOOL3_DEFAULT) {}
 
 static const wxString WX_TUNING = wxT("Tuning");
 static const wxString WX_MANUAL_TUNING = wxT("ManualTuning");
@@ -83,9 +83,9 @@ void GOPipeConfig::LoadFromCmb(
     1800,
     false,
     0);
-  m_Delay = cfg.ReadInteger(
+  m_Delay = (uint16_t)cfg.ReadInteger(
     CMBSetting, group, prefix + wxT("Delay"), 0, 10000, false, m_DefaultDelay);
-  m_BitsPerSample = cfg.ReadInteger(
+  m_BitsPerSample = (int8_t)cfg.ReadInteger(
     CMBSetting,
     m_Group,
     m_NamePrefix + wxT("BitsPerSample"),
@@ -95,19 +95,19 @@ void GOPipeConfig::LoadFromCmb(
     -1);
   if (m_BitsPerSample < 8 || m_BitsPerSample > 24)
     m_BitsPerSample = -1;
-  m_Compress = cfg.ReadInteger(
-    CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), -1, 1, false, -1);
-  m_Channels = cfg.ReadInteger(
+  m_Channels = (int8_t)cfg.ReadInteger(
     CMBSetting, m_Group, m_NamePrefix + wxT("Channels"), -1, 2, false, -1);
-  m_LoopLoad = cfg.ReadInteger(
+  m_LoopLoad = (int8_t)cfg.ReadInteger(
     CMBSetting, m_Group, m_NamePrefix + wxT("LoopLoad"), -1, 2, false, -1);
-  m_AttackLoad = cfg.ReadInteger(
-    CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), -1, 1, false, -1);
-  m_ReleaseLoad = cfg.ReadInteger(
-    CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), -1, 1, false, -1);
+  m_Compress = cfg.ReadBool3FromInt(
+    CMBSetting, m_Group, m_NamePrefix + wxT("Compress"), false);
+  m_AttackLoad = cfg.ReadBool3FromInt(
+    CMBSetting, m_Group, m_NamePrefix + wxT("AttackLoad"), false);
+  m_ReleaseLoad = cfg.ReadBool3FromInt(
+    CMBSetting, m_Group, m_NamePrefix + wxT("ReleaseLoad"), false);
   m_IgnorePitch = cfg.ReadBooleanTriple(
     CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
-  m_ReleaseTail = (unsigned)cfg.ReadInteger(
+  m_ReleaseTail = (uint16_t)cfg.ReadInteger(
     CMBSetting, group, m_NamePrefix + wxT("ReleaseTail"), 0, 3000, false, 0);
 
   m_Callback->UpdateAmplitude();

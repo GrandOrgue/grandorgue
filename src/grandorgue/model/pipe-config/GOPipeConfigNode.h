@@ -8,10 +8,11 @@
 #ifndef GOPIPECONFIGNODE_H
 #define GOPIPECONFIGNODE_H
 
+#include <config/GOConfig.h>
+
 #include "GOPipeConfig.h"
 #include "GOSaveableObject.h"
 
-class GOConfig;
 class GOOrganModel;
 class GOSampleStatistic;
 class GOStatisticCallback;
@@ -27,9 +28,34 @@ private:
 
   void Save(GOConfigWriter &cfg) override { m_PipeConfig.Save(cfg); }
 
-  float GetEffectiveFloatSum(
-    float (GOPipeConfig::*getFloat)() const,
-    float (GOPipeConfigNode::*getParentFloat)() const) const;
+  template <typename T>
+  T GetEffectiveSum(
+    T (GOPipeConfig::*getThisValue)() const,
+    T (GOPipeConfigNode::*getParentValue)() const) const {
+    T value = (m_PipeConfig.*getThisValue)();
+
+    if (m_parent)
+      value += (m_parent->*getParentValue)();
+    return value;
+  }
+
+  uint8_t GetEffectiveUint8(
+    int8_t (GOPipeConfig::*getThisValue)() const,
+    uint8_t (GOPipeConfigNode::*getParentValue)() const,
+    const GOSettingUnsigned GOConfig::*globalValue) const;
+
+  template <typename T>
+  bool GetEffectiveBool(
+    GOBool3 (GOPipeConfig::*getThisValue)() const,
+    bool (GOPipeConfigNode::*getParentValue)() const,
+    const T GOConfig::*globalValue,
+    bool defaultValue = false) const {
+    return to_bool((m_PipeConfig.*getThisValue)(), [=]() {
+      return m_parent ? (m_parent->*getParentValue)()
+        : globalValue ? (bool)(m_config.*globalValue)()
+                      : defaultValue;
+    });
+  }
 
 public:
   GOPipeConfigNode(
@@ -53,43 +79,90 @@ public:
   float GetEffectiveAmplitude() const;
 
   float GetEffectiveGain() const {
-    return GetEffectiveFloatSum(
+    return GetEffectiveSum(
       &GOPipeConfig::GetGain, &GOPipeConfigNode::GetEffectiveGain);
   }
 
   float GetEffectivePitchTuning() const {
-    return GetEffectiveFloatSum(
+    return GetEffectiveSum(
       &GOPipeConfig::GetPitchTuning,
       &GOPipeConfigNode::GetEffectivePitchTuning);
   }
 
   float GetEffectivePitchCorrection() const {
-    return GetEffectiveFloatSum(
+    return GetEffectiveSum(
       &GOPipeConfig::GetPitchCorrection,
       &GOPipeConfigNode::GetEffectivePitchCorrection);
   }
 
   float GetEffectiveManualTuning() const {
-    return GetEffectiveFloatSum(
+    return GetEffectiveSum(
       &GOPipeConfig::GetManualTuning,
       &GOPipeConfigNode::GetEffectiveManualTuning);
   }
 
   float GetEffectiveAutoTuningCorection() const {
-    return GetEffectiveFloatSum(
+    return GetEffectiveSum(
       &GOPipeConfig::GetAutoTuningCorrection,
       &GOPipeConfigNode::GetEffectiveAutoTuningCorection);
   }
 
-  unsigned GetEffectiveDelay() const;
-  unsigned GetEffectiveReleaseTail() const;
-  unsigned GetEffectiveBitsPerSample() const;
-  unsigned GetEffectiveChannels() const;
-  unsigned GetEffectiveLoopLoad() const;
-  bool GetEffectiveCompress() const;
-  bool GetEffectiveAttackLoad() const;
-  bool GetEffectiveReleaseLoad() const;
-  bool GetEffectiveIgnorePitch() const;
+  uint16_t GetEffectiveDelay() const {
+    return GetEffectiveSum(
+      &GOPipeConfig::GetDelay, &GOPipeConfigNode::GetEffectiveDelay);
+  }
+
+  uint16_t GetEffectiveReleaseTail() const;
+
+  uint8_t GetEffectiveBitsPerSample() const {
+    return GetEffectiveUint8(
+      &GOPipeConfig::GetBitsPerSample,
+      &GOPipeConfigNode::GetEffectiveBitsPerSample,
+      (const GOSettingUnsigned GOConfig::*)&GOConfig::BitsPerSample);
+  }
+
+  uint8_t GetEffectiveChannels() const {
+    return GetEffectiveUint8(
+      &GOPipeConfig::GetChannels,
+      &GOPipeConfigNode::GetEffectiveChannels,
+      &GOConfig::LoadChannels);
+  }
+
+  uint8_t GetEffectiveLoopLoad() const {
+    return GetEffectiveUint8(
+      &GOPipeConfig::GetLoopLoad,
+      &GOPipeConfigNode::GetEffectiveLoopLoad,
+      &GOConfig::LoopLoad);
+  }
+
+  bool GetEffectiveCompress() const {
+    return GetEffectiveBool(
+      &GOPipeConfig::GetCompress,
+      &GOPipeConfigNode::GetEffectiveCompress,
+      &GOConfig::LosslessCompression);
+  }
+
+  bool GetEffectiveAttackLoad() const {
+    return GetEffectiveBool(
+      &GOPipeConfig::GetAttackLoad,
+      &GOPipeConfigNode::GetEffectiveAttackLoad,
+      &GOConfig::AttackLoad);
+  }
+
+  bool GetEffectiveReleaseLoad() const {
+    return GetEffectiveBool(
+      &GOPipeConfig::GetReleaseLoad,
+      &GOPipeConfigNode::GetEffectiveReleaseLoad,
+      &GOConfig::ReleaseLoad);
+  }
+
+  bool GetEffectiveIgnorePitch() const {
+    return GetEffectiveBool(
+      &GOPipeConfig::IsIgnorePitch,
+      &GOPipeConfigNode::GetEffectiveIgnorePitch,
+      (const GOSettingUnsigned GOConfig::*)nullptr,
+      false);
+  }
 
   virtual void AddChild(GOPipeConfigNode *node) {}
   virtual unsigned GetChildCount() const { return 0; }

@@ -46,16 +46,6 @@ void GOPipeConfigNode::Load(
   m_PipeConfig.Load(cfg, group, prefix);
 }
 
-float GOPipeConfigNode::GetEffectiveFloatSum(
-  float (GOPipeConfig::*getFloat)() const,
-  float (GOPipeConfigNode::*getParentFloat)() const) const {
-  float value = (m_PipeConfig.*getFloat)();
-
-  if (m_parent)
-    value += (m_parent->*getParentFloat)();
-  return value;
-}
-
 wxString GOPipeConfigNode::GetEffectiveAudioGroup() const {
   if (m_PipeConfig.GetAudioGroup() != wxEmptyString)
     return m_PipeConfig.GetAudioGroup();
@@ -73,14 +63,7 @@ float GOPipeConfigNode::GetEffectiveAmplitude() const {
     return m_PipeConfig.GetAmplitude() / 100.0;
 }
 
-unsigned GOPipeConfigNode::GetEffectiveDelay() const {
-  if (m_parent)
-    return m_PipeConfig.GetDelay() + m_parent->GetEffectiveDelay();
-  else
-    return m_PipeConfig.GetDelay();
-}
-
-unsigned GOPipeConfigNode::GetEffectiveReleaseTail() const {
+uint16_t GOPipeConfigNode::GetEffectiveReleaseTail() const {
   unsigned releaseTail = m_parent ? m_parent->GetEffectiveReleaseTail() : 0;
   const unsigned thisReleaseTail = m_PipeConfig.GetReleaseTail();
 
@@ -90,64 +73,15 @@ unsigned GOPipeConfigNode::GetEffectiveReleaseTail() const {
   return releaseTail;
 }
 
-unsigned GOPipeConfigNode::GetEffectiveBitsPerSample() const {
-  if (m_PipeConfig.GetBitsPerSample() != -1)
-    return m_PipeConfig.GetBitsPerSample();
-  if (m_parent)
-    return m_parent->GetEffectiveBitsPerSample();
-  else
-    return m_config.BitsPerSample();
-}
+uint8_t GOPipeConfigNode::GetEffectiveUint8(
+  int8_t (GOPipeConfig::*getThisValue)() const,
+  uint8_t (GOPipeConfigNode::*getParentValue)() const,
+  const GOSettingUnsigned GOConfig::*globalValue) const {
+  int8_t thisValue = (m_PipeConfig.*getThisValue)();
 
-unsigned GOPipeConfigNode::GetEffectiveChannels() const {
-  if (m_PipeConfig.GetChannels() != -1)
-    return m_PipeConfig.GetChannels();
-  if (m_parent)
-    return m_parent->GetEffectiveChannels();
-  else
-    return m_config.LoadChannels();
-}
-
-unsigned GOPipeConfigNode::GetEffectiveLoopLoad() const {
-  if (m_PipeConfig.GetLoopLoad() != -1)
-    return m_PipeConfig.GetLoopLoad();
-  if (m_parent)
-    return m_parent->GetEffectiveLoopLoad();
-  else
-    return m_config.LoopLoad();
-}
-
-bool GOPipeConfigNode::GetEffectiveCompress() const {
-  if (m_PipeConfig.GetCompress() != -1)
-    return m_PipeConfig.GetCompress() ? true : false;
-  if (m_parent)
-    return m_parent->GetEffectiveCompress();
-  else
-    return m_config.LosslessCompression();
-}
-
-bool GOPipeConfigNode::GetEffectiveAttackLoad() const {
-  const int thisConfigValue = m_PipeConfig.GetAttackLoad();
-
-  return thisConfigValue != -1 ? (bool)thisConfigValue
-    : m_parent                 ? m_parent->GetEffectiveAttackLoad()
-                               : m_config.AttackLoad();
-}
-
-bool GOPipeConfigNode::GetEffectiveReleaseLoad() const {
-  const int thisConfigValue = m_PipeConfig.GetReleaseLoad();
-
-  return thisConfigValue != -1 ? (bool)thisConfigValue
-    : m_parent                 ? m_parent->GetEffectiveReleaseLoad()
-                               : m_config.ReleaseLoad();
-}
-
-bool GOPipeConfigNode::GetEffectiveIgnorePitch() const {
-  const int thisConfigValue = m_PipeConfig.IsIgnorePitch();
-
-  return thisConfigValue != -1
-    ? (thisConfigValue)
-    : m_parent && m_parent->GetEffectiveIgnorePitch();
+  return thisValue >= 0 ? (unsigned)thisValue
+    : m_parent          ? (m_parent->*getParentValue)()
+                        : (m_config.*globalValue)();
 }
 
 GOSampleStatistic GOPipeConfigNode::GetStatistic() const {
