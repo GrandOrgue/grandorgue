@@ -1,3 +1,4 @@
+- Removed support of MacOS 11 https://github.com/GrandOrgue/grandorgue/issues/1791
 - Fixed crash on loading an organ with a crescendo in Add mode https://github.com/GrandOrgue/grandorgue/issues/1772
 - Fixed crash with rtaudio/asio https://github.com/GrandOrgue/grandorgue/issues/1772
 - Added support of specifying different crossfade length for additional attack and release files https://github.com/GrandOrgue/grandorgue/issues/1760
