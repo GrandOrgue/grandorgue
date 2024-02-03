@@ -45,7 +45,8 @@ private:
   int m_ReleaseLoad;
   int m_IgnorePitch;
 
-  void ReadTuning(
+  // Load all customizable values from the .cmb
+  void LoadFromCmb(
     GOConfigReader &cfg, const wxString &group, const wxString &prefix);
 
   /* two generic setters SetSmallMember and SetLargeMember differ only in
@@ -78,8 +79,14 @@ private:
 public:
   GOPipeConfig(GOPipeConfigListener &listener, GOPipeUpdateCallback *callback);
 
+  // Set default values and load all customizable values from the .cmb
   void Init(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
+
+  // Load default values from the ODF and and load all customizable values from
+  // the .cmb
   void Load(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
+
+  // Save all customizable values to the .cmb
   void Save(GOConfigWriter &cfg);
 
   GOPipeUpdateCallback *GetCallback() const { return m_Callback; }
