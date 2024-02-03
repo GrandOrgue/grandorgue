@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(UsewxWidgets)
@@ -45,6 +45,7 @@ settings/GOSettingStore.cpp
 settings/GOSettingString.cpp
 threading/GOCondition.cpp
 threading/GOMutex.cpp
+threading/GOMutexLocker.cpp
 threading/GOThread.cpp
 threading/threading_impl.cpp
 temperaments/GOTemperament.cpp
