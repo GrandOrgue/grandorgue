@@ -48,12 +48,10 @@ private:
   bool GetEffectiveBool(
     GOBool3 (GOPipeConfig::*getThisValue)() const,
     bool (GOPipeConfigNode::*getParentValue)() const,
-    const T GOConfig::*globalValue,
-    bool defaultValue = false) const {
+    const T GOConfig::*globalValue) const {
     return to_bool((m_PipeConfig.*getThisValue)(), [=]() {
       return m_parent ? (m_parent->*getParentValue)()
-        : globalValue ? (bool)(m_config.*globalValue)()
-                      : defaultValue;
+                      : globalValue && (bool)(m_config.*globalValue)();
     });
   }
 
@@ -160,8 +158,7 @@ public:
     return GetEffectiveBool(
       &GOPipeConfig::IsIgnorePitch,
       &GOPipeConfigNode::GetEffectiveIgnorePitch,
-      (const GOSettingUnsigned GOConfig::*)nullptr,
-      false);
+      (const GOSettingUnsigned GOConfig::*)nullptr);
   }
 
   virtual void AddChild(GOPipeConfigNode *node) {}
