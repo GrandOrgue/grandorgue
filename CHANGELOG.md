@@ -1,3 +1,4 @@
+- Added capability of loading only GUI panels without audio samples by specifying the "-g" switch from the command line https://github.com/GrandOrgue/grandorgue/issues/1602
 - Removed support of MacOS 11 https://github.com/GrandOrgue/grandorgue/issues/1791
 - Fixed crash on loading an organ with a crescendo in Add mode https://github.com/GrandOrgue/grandorgue/issues/1772
 - Fixed crash with rtaudio/asio https://github.com/GrandOrgue/grandorgue/issues/1772

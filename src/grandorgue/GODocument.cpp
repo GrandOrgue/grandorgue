@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -46,13 +46,16 @@ bool GODocument::IsModified() const {
 }
 
 bool GODocument::LoadOrgan(
-  GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb) {
+  GOProgressDialog *dlg,
+  const GOOrgan &organ,
+  const wxString &cmb,
+  bool isGuiOnly) {
   wxBusyCursor busy;
   GOConfig &cfg = m_sound.GetSettings();
 
   CloseOrgan();
   m_OrganController = new GOOrganController(cfg, this);
-  wxString error = m_OrganController->Load(dlg, organ, cmb);
+  wxString error = m_OrganController->Load(dlg, organ, cmb, isGuiOnly);
   if (!error.IsEmpty()) {
     if (error != wxT("!")) {
       wxLogError(wxT("%s\n"), error.c_str());

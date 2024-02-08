@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -69,6 +69,7 @@ private:
   wxString m_Label;
   bool m_MidiMonitor;
   bool m_isMeterReady;
+  bool m_IsGuiOnly;
 
   // to avoid event processing when the settings dialog is open
   bool m_InSettings;
@@ -182,7 +183,7 @@ public:
     GOSound &sound);
   virtual ~GOFrame(void);
 
-  void Init(wxString filename);
+  void Init(const wxString &filename, bool isGuiOnly);
 
   void DoSplash(bool timeout = true);
 

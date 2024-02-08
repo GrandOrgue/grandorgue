@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,12 +14,13 @@
 #include <wx/regex.h>
 #include <wx/stopwatch.h>
 
+#include "config/GOConfig.h"
+#include "sound/GOSound.h"
+
 #include "GOFrame.h"
 #include "GOLog.h"
 #include "GOStdPath.h"
-#include "config/GOConfig.h"
 #include "go_defs.h"
-#include "sound/GOSound.h"
 
 #ifdef __WXMAC__
 #include <ApplicationServices/ApplicationServices.h>
@@ -39,27 +40,38 @@ GOApp::GOApp()
     m_soundSystem(NULL),
     m_Log(NULL),
     m_FileName(),
-    m_InstanceName() {}
+    m_InstanceName(),
+    m_IsGuiOnly(false) {}
+
+static const wxString SWITCH_GUI = wxT("g");
+static const wxString SWITCH_HELP = wxT("h");
+static const wxString OPTION_INSTANCE = wxT("i");
 
 static const wxCmdLineEntryDesc cmd_line_desc[] = {
   {wxCMD_LINE_SWITCH,
-   "h",
+   SWITCH_GUI,
+   "gui-only",
+   wxTRANSLATE("Load just GUI. Not to load any sound samples"),
+   wxCMD_LINE_VAL_NONE,
+   0},
+  {wxCMD_LINE_SWITCH,
+   SWITCH_HELP,
    "help",
    wxTRANSLATE("displays help on the command line parameters"),
    wxCMD_LINE_VAL_NONE,
    wxCMD_LINE_OPTION_HELP},
   {wxCMD_LINE_OPTION,
-   "i",
+   OPTION_INSTANCE,
    "instance",
    wxTRANSLATE("specify GrandOrgue instance name"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
   {wxCMD_LINE_SWITCH,
-   "j",
-   "justgui",
-   wxTRANSLATE("Load just GUI. Not to load any sound samples"),
+   "v",
+   "verbose",
+   wxTRANSLATE("generate verbose log messages"),
    wxCMD_LINE_VAL_NONE,
-   0},
+   0x0},
   {wxCMD_LINE_PARAM,
    NULL,
    NULL,
@@ -75,18 +87,28 @@ void GOApp::OnInitCmdLine(wxCmdLineParser &parser) {
 }
 
 bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
-  wxString str;
-  if (parser.Found(wxT("i"), &str)) {
-    wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
-    if (!r.Matches(str)) {
-      wxMessageOutput::Get()->Printf(_("Invalid instance name"));
-      return false;
+  bool res = wxApp::OnCmdLineParsed(parser);
+
+  if (res)
+    m_IsGuiOnly = parser.FoundSwitch(SWITCH_GUI) == wxCMD_SWITCH_ON;
+  if (res) {
+    wxString str;
+
+    if (parser.Found(OPTION_INSTANCE, &str)) {
+      wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
+
+      if (r.Matches(str))
+        m_InstanceName = wxT("-") + str;
+      else {
+        wxMessageOutput::Get()->Printf(_("Invalid instance name"));
+        res = false;
+      }
     }
-    m_InstanceName = wxT("-") + str;
   }
-  for (unsigned i = 0; i < parser.GetParamCount(); i++)
-    m_FileName = parser.GetParam(i);
-  return true;
+  if (res)
+    for (unsigned i = 0; i < parser.GetParamCount(); i++)
+      m_FileName = parser.GetParam(i);
+  return res;
 }
 
 bool GOApp::OnInit() {
@@ -147,7 +169,7 @@ bool GOApp::OnInit() {
   SetTopWindow(m_Frame);
   m_Log = new GOLog(m_Frame);
   wxLog::SetActiveTarget(m_Log);
-  m_Frame->Init(m_FileName);
+  m_Frame->Init(m_FileName, m_IsGuiOnly);
 
   return true;
 }
