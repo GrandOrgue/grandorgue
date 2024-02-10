@@ -113,7 +113,7 @@ jobs:
             build_on: linux
             pkg_suffix: wx32
 
-          - run_on: macos-11
+          - run_on: macos-12
             for: osx
             prepare: osx
             build_on: osx
