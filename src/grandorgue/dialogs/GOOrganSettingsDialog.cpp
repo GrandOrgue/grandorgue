@@ -1013,6 +1013,21 @@ void GOOrganSettingsDialog::OnEventApply(wxCommandEvent &e) {
     }
     if (m_AudioGroup->GetValue() != m_LastAudioGroup)
       e->config->SetAudioGroup(m_AudioGroup->GetValue().Trim());
+    if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
+      e->config->SetBitsPerSample(
+        m_BitsPerSample->GetSelection() == 0
+          ? (int8_t)-1
+          : (int8_t)(m_BitsPerSample->GetSelection() + 7));
+    if (m_Channels->GetSelection() != m_LastChannels)
+      e->config->SetChannels((int8_t)(m_Channels->GetSelection() - 1));
+    if (m_LoopLoad->GetSelection() != m_LastLoopLoad)
+      e->config->SetLoopLoad((int8_t)(m_LoopLoad->GetSelection() - 1));
+    if (m_Compress->GetSelection() != m_LastCompress)
+      e->config->SetCompress(to_bool3(m_Compress->GetSelection() - 1));
+    if (m_AttackLoad->GetSelection() != m_LastAttackLoad)
+      e->config->SetAttackLoad(to_bool3(m_AttackLoad->GetSelection() - 1));
+    if (m_ReleaseLoad->GetSelection() != m_LastReleaseLoad)
+      e->config->SetReleaseLoad(to_bool3(m_ReleaseLoad->GetSelection() - 1));
 
     bool ignorePitch = m_IgnorePitch->IsChecked();
 
@@ -1021,23 +1036,9 @@ void GOOrganSettingsDialog::OnEventApply(wxCommandEvent &e) {
         = parent ? parent->GetEffectiveIgnorePitch() : false;
 
       e->config->SetIgnorePitch(
-        ignorePitch == parentIgnorePitch ? -1 : (int)ignorePitch);
+        ignorePitch == parentIgnorePitch ? BOOL3_DEFAULT
+                                         : to_bool3(ignorePitch));
     }
-    if (m_BitsPerSample->GetSelection() != m_LastBitsPerSample)
-      e->config->SetBitsPerSample(
-        m_BitsPerSample->GetSelection() == 0
-          ? -1
-          : m_BitsPerSample->GetSelection() + 7);
-    if (m_Compress->GetSelection() != m_LastCompress)
-      e->config->SetCompress(m_Compress->GetSelection() - 1);
-    if (m_Channels->GetSelection() != m_LastChannels)
-      e->config->SetChannels(m_Channels->GetSelection() - 1);
-    if (m_LoopLoad->GetSelection() != m_LastLoopLoad)
-      e->config->SetLoopLoad(m_LoopLoad->GetSelection() - 1);
-    if (m_AttackLoad->GetSelection() != m_LastAttackLoad)
-      e->config->SetAttackLoad(m_AttackLoad->GetSelection() - 1);
-    if (m_ReleaseLoad->GetSelection() != m_LastReleaseLoad)
-      e->config->SetReleaseLoad(m_ReleaseLoad->GetSelection() - 1);
   }
 
   m_Discard->Disable();
@@ -1149,13 +1150,13 @@ void GOOrganSettingsDialog::OnEventDefault(wxCommandEvent &e) {
       e->config->SetAutoTuningCorrection(0);
       e->config->SetDelay(e->config->GetDefaultDelay());
       e->config->SetReleaseTail(0);
-      e->config->SetIgnorePitch(-1);
       e->config->SetBitsPerSample(-1);
-      e->config->SetCompress(-1);
       e->config->SetChannels(-1);
       e->config->SetLoopLoad(-1);
-      e->config->SetAttackLoad(-1);
-      e->config->SetReleaseLoad(-1);
+      e->config->SetCompress(BOOL3_DEFAULT);
+      e->config->SetAttackLoad(BOOL3_DEFAULT);
+      e->config->SetReleaseLoad(BOOL3_DEFAULT);
+      e->config->SetIgnorePitch(BOOL3_DEFAULT);
     }
 
     m_Last = NULL;
