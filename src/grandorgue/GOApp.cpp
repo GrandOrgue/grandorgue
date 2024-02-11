@@ -43,9 +43,9 @@ GOApp::GOApp()
     m_InstanceName(),
     m_IsGuiOnly(false) {}
 
-static const wxString SWITCH_GUI = wxT("g");
-static const wxString SWITCH_HELP = wxT("h");
-static const wxString OPTION_INSTANCE = wxT("i");
+static const char *const SWITCH_GUI = "g";
+static const char *const SWITCH_HELP = "h";
+static const char *const OPTION_INSTANCE = "i";
 
 static const wxCmdLineEntryDesc cmd_line_desc[] = {
   {wxCMD_LINE_SWITCH,
