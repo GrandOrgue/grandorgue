@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -149,6 +149,7 @@ GOFrame::GOFrame(
     m_Label(),
     m_MidiMonitor(false),
     m_isMeterReady(false),
+    m_IsGuiOnly(false),
     m_InSettings(false),
     m_AfterSettingsEventType(wxEVT_NULL),
     m_AfterSettingsEventId(0),
@@ -493,7 +494,8 @@ void GOFrame::UpdateVolumeControlWithSettings() {
   m_isMeterReady = true;
 }
 
-void GOFrame::Init(wxString filename) {
+void GOFrame::Init(const wxString &filename, bool isGuiOnly) {
+  m_IsGuiOnly = isGuiOnly;
   Show(true);
 
   SettingsReasons settingsReasons;
@@ -602,7 +604,7 @@ bool GOFrame::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
   if (m_doc) {
     GOProgressDialog dlg;
 
-    retCode = m_doc->LoadOrgan(&dlg, organ, cmb);
+    retCode = m_doc->LoadOrgan(&dlg, organ, cmb, m_IsGuiOnly);
     OnIsModifiedChanged(false);
 
     // for reflecting model changes
