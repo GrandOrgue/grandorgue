@@ -13,5 +13,10 @@ private:
 
 public:
   GOTestException(char *msg) : message(msg) {}
-  char *what() { return message; }
+  std::string what() {
+    std::string returned_message = message;
+    returned_message = returned_message + "\n";
+    std::cerr << boost::stacktrace::stacktrace();
+    return returned_message;
+  }
 };

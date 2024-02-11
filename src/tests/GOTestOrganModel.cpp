@@ -3,7 +3,6 @@
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
-
 #include <iostream>
 
 #include <boost/stacktrace.hpp>
@@ -30,9 +29,16 @@ void GOTestOrganModel::run() {
 
   this->controller->ResetOrganModified();
 
+  if (this->controller->IsOrganModified()) {
+    char message[] = "Is Modified value is not False";
+    throw GOTestException(message);
+  }
+
+  // Check the NotifyPipeConfigModified function
+  this->controller->SetOrganModelModified(false);
+  this->controller->NotifyPipeConfigModified();
   if (!this->controller->IsOrganModified()) {
-    char message[] = "Is Modified value is not True";
-    std::cout << "FAILED " << boost::stacktrace::stacktrace();
-    std::throw_with_nested(GOTestException("Is Modified value is not True"));
+    char message[] = "NotifyPipeConfigModified: Is Modified value is not True";
+    throw GOTestException(message);
   }
 }
