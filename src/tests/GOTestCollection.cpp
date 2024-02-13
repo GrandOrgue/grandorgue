@@ -54,22 +54,18 @@ GOTestResultCollection GOTestCollection::run() {
         try {
           test->run();
           test_result_collection->add_result(
-            new GOTestResult(test->GetName() << " succeeded"));
+            new GOTestResult(test->GetName() + " succeeded"));
           success_count_++;
         } catch (GOTestException &e) {
           fail_count_++;
-          test_result_collection->add_result(new GOTestResult(
-            test->GetName() << " failed: \n"
-                            << e.what(),
-            true));
+          test_result_collection->add_result(
+            new GOTestResult(test->GetName() + " failed: " + e.what(), true));
           test->tearDown();
           continue;
         } catch (std::exception &e) {
           fail_count_++;
-          test_result_collection->add_result(new GOTestResult(
-            test->GetName() << " failed: \n"
-                            << e.what(),
-            true));
+          test_result_collection->add_result(
+            new GOTestResult(test->GetName() + " failed: " + e.what(), true));
           test->tearDown();
           continue;
         }
@@ -77,10 +73,12 @@ GOTestResultCollection GOTestCollection::run() {
           continue;
         }
       } else {
-        std::cout << "KO";
+        test_result_collection->add_result(new GOTestResult(
+          "The setUp() of test '" + test->GetName() + "' has failed."));
       }
     } catch (std::exception &e) {
-      std::cout << "KO";
+      test_result_collection->add_result(new GOTestResult(
+        "An exception occurred during test '" + test->GetName() + "'."));
     } catch (...) {
       fail_count_++;
       test_result_collection->add_result(
@@ -93,26 +91,3 @@ GOTestResultCollection GOTestCollection::run() {
 }
 
 GOTestCollection *GOTestCollection::go_test_collection = nullptr;
-
-// class X {
-//    // pointeur vers le singleton
-//    static X *singleton;
-//    X(); // constructeur privé
-// public:
-//    // pour obtenir l'singleton
-//    static X *get()    {
-//       //
-//       // instanciation unique garantie, du moins si
-//       // le programme n'a qu'un seul fil d'exécution;
-//       // si votre programme comprend plusieurs fils
-//       // d'exécution, ce qui suit est insuffisant
-//       //
-//       if (!singleton)
-//          singleton = new X;
-//       return singleton;
-//    }
-//    // ...
-// };
-// // initialisation du pointeur de singleton à zéro
-// // (insérer dans le .cpp)
-// X *X::singleton = nullptr;

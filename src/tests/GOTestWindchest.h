@@ -18,13 +18,13 @@
 class GOTestWindchest : public GOCommonControllerTest {
 
 private:
-  wxString name = "Windchest";
+  std::string name = "Windchest";
 
 public:
   GOTestWindchest() { name = "Windchest"; }
   virtual ~GOTestWindchest();
   virtual void run();
-  wxString GetName();
+  std::string GetName();
 };
 
 #endif

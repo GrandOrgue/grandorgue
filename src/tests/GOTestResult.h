@@ -26,7 +26,7 @@ public:
   GOTestResult(wxString message, bool failed);
 
   const wxString GetMessage() {
-    wxString result = wxEmptyString;
+    wxString result = "";
     // if (this->isFailed())
     //     result += "\033[1;31m";
     result += m_result_message;

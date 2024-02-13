@@ -8,6 +8,7 @@
 #include "GOTestCollection.h"
 #include "config/GOConfig.h"
 #include <iostream>
+#include <wx/log.h>
 #include <wx/string.h>
 
 GOTest::GOTest() {
@@ -16,7 +17,12 @@ GOTest::GOTest() {
 }
 GOTest::~GOTest() {}
 
-bool GOTest::setUp() { return true; }
+bool GOTest::setUp() {
+  wxLogMessage(
+    wxT("==================== %s - BEGIN ===================="),
+    this->GetName());
+  return true;
+}
 
 void GOTest::run() {}
 
@@ -31,6 +37,7 @@ bool GOCommonControllerTest::setUp() {
   // during test teardown().
 
   // Make organ temporary directory
+  GOTest::setUp();
   char path[] = ".";
   this->organ_directory = mkdtemp(path);
   GOConfig settings(this->GetName());

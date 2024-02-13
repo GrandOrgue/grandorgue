@@ -10,7 +10,7 @@
 
 GOTestResult::GOTestResult() {
 
-  m_result_message = wxEmptyString;
+  // m_result_message = "";
   this->failed = false;
 }
 

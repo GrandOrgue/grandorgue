@@ -23,14 +23,14 @@ void GOTestOrganModel::run() {
   // Set OrganModel Modified
   this->controller->SetOrganModelModified(true);
   if (!this->controller->IsOrganModified()) {
-    char message[] = "Is Modified value is not True";
+    std::string message = "Is Modified value is not True";
     throw GOTestException(message);
   }
 
   this->controller->ResetOrganModified();
 
   if (this->controller->IsOrganModified()) {
-    char message[] = "Is Modified value is not False";
+    std::string message = "Is Modified value is not False";
     throw GOTestException(message);
   }
 
@@ -38,7 +38,8 @@ void GOTestOrganModel::run() {
   this->controller->SetOrganModelModified(false);
   this->controller->NotifyPipeConfigModified();
   if (!this->controller->IsOrganModified()) {
-    char message[] = "NotifyPipeConfigModified: Is Modified value is not True";
+    std::string message
+      = "NotifyPipeConfigModified: Is Modified value is not True";
     throw GOTestException(message);
   }
 }

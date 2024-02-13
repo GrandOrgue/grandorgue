@@ -26,6 +26,9 @@ set(go_test_lib
 )
 
 add_library(GOTestLib STATIC ${go_test_lib})
+find_package(cpptrace REQUIRED)
+
+target_link_libraries(GOTestLib cpptrace::cpptrace)
 target_link_libraries(GOTestLib GrandOrgueCore)
 target_link_libraries(GOTestLib golib)
 
