@@ -3,20 +3,24 @@
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
-#include <boost/stacktrace.hpp>
+#ifndef GOTESTEXCEPTION_H
+#define GOTESTEXCEPTION_H
+#include <cpptrace.hpp>
 #include <exception>
 #include <iostream>
+#include <wx/string.h>
 
 class GOTestException : public std::exception {
 private:
-  char *message;
+  wxString message;
 
 public:
-  GOTestException(char *msg) : message(msg) {}
-  std::string what() {
-    std::string returned_message = message;
+  GOTestException(wxString msg) : message(msg) {}
+  wxString what() {
+    wxString returned_message = message;
     returned_message = returned_message + "\n";
-    std::cerr << boost::stacktrace::stacktrace();
+
     return returned_message;
   }
 };
+#endif

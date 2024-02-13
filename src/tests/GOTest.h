@@ -8,9 +8,10 @@
 #define GOTEST_H
 
 #include "GOOrganController.h"
+#include "GOTestUtils.h"
 #include <wx/string.h>
 
-class GOTest {
+class GOTest : public GOTestUtils {
   /*
       We define here all methods that will be called to run tests properly.
           - A setup
@@ -19,7 +20,7 @@ class GOTest {
   */
 
 private:
-  wxString name = "GOTest";
+  std::string name = "GOTest";
 
 public:
   GOTest();
@@ -27,7 +28,7 @@ public:
   virtual bool setUp();
   virtual void run();
   virtual bool tearDown();
-  virtual wxString GetName() { return name; };
+  virtual std::string GetName() { return name; };
 };
 
 class GOCommonControllerTest : public GOTest {
@@ -36,7 +37,7 @@ public:
   GOCommonControllerTest();
   char *organ_directory;
   GOOrganController *controller;
-  virtual bool setUp();
+  bool setUp();
   virtual bool tearDown();
 };
 

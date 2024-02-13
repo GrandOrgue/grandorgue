@@ -18,13 +18,13 @@
 class GOTestOrganModel : public GOCommonControllerTest {
 
 private:
-  wxString name = "GOTestOrganModel";
+  std::string name = "GOTestOrganModel";
 
 public:
   GOTestOrganModel() { name = "GOTestOrganModel"; }
   virtual ~GOTestOrganModel();
   virtual void run();
-  wxString GetName() { return name; };
+  std::string GetName() { return name; };
 };
 
 #endif

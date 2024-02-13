@@ -6,7 +6,18 @@
 set -e
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  libboost-stacktrace-dev
+  libboost-stacktrace-dev git
+
+mkdir cpptrace
+cd cpptrace
+git clone https://github.com/jeremy-rifkin/cpptrace.git .
+git checkout v0.4.0
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j
+sudo make install
+cd ../..
 
 DIR=$(dirname $0)
 # source $DIR/../set-ver-prms.sh "$1" "$2"
