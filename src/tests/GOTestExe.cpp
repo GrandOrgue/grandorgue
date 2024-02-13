@@ -29,21 +29,22 @@ int main() {
   int run_number_ = 0;
   std::vector<GOTestResult *> test_results
     = test_result_collection.get_results();
+  wxLogMessage("==================== TESTS RESULTS ====================");
   for (auto current = test_results.begin(); current != test_results.end();
        ++current, ++run_number_) {
     auto test_result = *current;
-    wxLogMessage("--------------------");
+    wxLogMessage("-------------------------------------------------------");
     wxLogMessage(test_result->GetMessage());
-    // if (GOTestResult current.isFailed())
-    //   std::cerr << current.get_message() << "\n";
   }
 
   const int failed_count = GOTestCollection::Instance()->get_failed_count();
   const int success_count = GOTestCollection::Instance()->get_success_count();
+  wxLogMessage("==================== TESTS SUMMARY ====================");
   if (failed_count > 0) {
-    std::cerr << failed_count << " tests Failed\n";
+    wxLogMessage(wxT("%d tests Failed"), failed_count);
     return 1;
   }
-  std::cout << success_count << " tests Succeeded\n";
+  wxLogMessage(wxT("%d tests Succeeded"), success_count);
+  wxLogMessage("=======================================================");
   return 0;
 }
