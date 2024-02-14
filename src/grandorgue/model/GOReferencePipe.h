@@ -32,7 +32,8 @@ private:
 public:
   GOReferencePipe(GOOrganModel *model, GORank *rank, unsigned midi_key_number);
 
-  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
+  void Load(GOConfigReader &cfg, const wxString &group, const wxString &prefix)
+    override;
 };
 
 #endif
