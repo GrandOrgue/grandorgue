@@ -20,26 +20,19 @@
 GOTestOrganModel::~GOTestOrganModel() {}
 
 void GOTestOrganModel::run() {
+  wxString message;
   // Set OrganModel Modified
   this->controller->SetOrganModelModified(true);
-  if (!this->controller->IsOrganModified()) {
-    std::string message = "Is Modified value is not True";
-    throw GOTestException(message);
-  }
+  message = "Is Organ Modified value is not True";
+  this->GOAssert(this->controller->IsOrganModified(), message);
 
   this->controller->ResetOrganModified();
-
-  if (this->controller->IsOrganModified()) {
-    std::string message = "Is Modified value is not False";
-    throw GOTestException(message);
-  }
+  message = "Is Organ Modified value is not False";
+  this->GOAssert(!this->controller->IsOrganModified(), message);
 
   // Check the NotifyPipeConfigModified function
   this->controller->SetOrganModelModified(false);
   this->controller->NotifyPipeConfigModified();
-  if (!this->controller->IsOrganModified()) {
-    std::string message
-      = "NotifyPipeConfigModified: Is Modified value is not True";
-    throw GOTestException(message);
-  }
+  message = "NotifyPipeConfigModified: Is Modified value is not True";
+  this->GOAssert(this->controller->IsOrganModified(), message);
 }
