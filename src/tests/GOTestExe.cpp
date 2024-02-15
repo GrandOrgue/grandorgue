@@ -6,6 +6,7 @@
 
 #include "GOTestCollection.h"
 #include "GOTestOrganModel.h"
+#include "GOTestSwitch.h"
 #include "GOTestWindchest.h"
 #include <iostream>
 #include <wx/log.h>
@@ -21,6 +22,7 @@ int main() {
   /* Instantiate all the test classes here */
   new GOTestWindchest;
   new GOTestOrganModel;
+  new GOTestSwitch;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->run();

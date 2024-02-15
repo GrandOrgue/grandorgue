@@ -20,6 +20,7 @@ set(go_test_lib
     GOTestCollection.cpp
     # Add here the individual tests
     GOTestWindchest.cpp
+    GOTestSwitch.cpp
 
     # GOOrganModel
     GOTestOrganModel.cpp
