@@ -5,7 +5,7 @@ add_option(-msse3)
 
 add_option(-mstackrealign)
 
-
+set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage")
 
 
 include(UsewxWidgets)
@@ -54,4 +54,4 @@ target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests)
 BUILD_EXECUTABLE(GOTestExe)
 
 add_test(NAME GOTestExe COMMAND GOTestExe)
-
+include(CTest)
