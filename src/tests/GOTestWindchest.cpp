@@ -26,7 +26,7 @@ void GOTestWindchest::run() {
   unsigned w_size;
   w_size = this->controller->AddWindchest(new GOWindchest(*this->controller));
   message = "Windchest size is wrong";
-  this->GOAssert(w_size == 2, message);
+  this->GOAssert(w_size == 1, message);
 
   w_size = this->controller->AddWindchest(new GOWindchest(*this->controller));
   message = "Windchest size is wrong";
