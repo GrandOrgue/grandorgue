@@ -19,7 +19,11 @@ jobs:
   
       - name: Test
         working-directory: ${{github.workspace}}/build/linux
-        run: ctest --verbose
+        run: ctest -T test --verbose
+      - name: Coverage
+        working-directory: ${{github.workspace}}/build/linux
+        run: ctest -T coverage --verbose
+      - uses: codecov/codecov-action@v1 
         
   calc_ver:
     # calculate versions from git tags
