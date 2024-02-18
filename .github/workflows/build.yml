@@ -18,12 +18,15 @@ jobs:
         run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64
   
       - name: Test
-        working-directory: ${{github.workspace}}/build/linux
+        working-directory: ${{github.workspace}}
         run: ctest -T test --verbose
       - name: Coverage
-        working-directory: ${{github.workspace}}/build/linux
-        run: ctest -T coverage && gcovr -e "submodules/*|usr/*"
-      - uses: codecov/codecov-action@v1 
+        working-directory: ${{github.workspace}}
+        run: ctest -T coverage
+      - name: Coverage Report
+        working-directory: ${{github.workspace}}
+        run: gcovr -e "submodules/*|usr/*"
+      - uses: codecov/codecov-action@v3
         
   calc_ver:
     # calculate versions from git tags

@@ -5,11 +5,6 @@ add_option(-msse3)
 
 add_option(-mstackrealign)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage")
-set(COVERAGE_EXCLUDES 'submodules/*' 'usr/*')
-
-
-
 include(UsewxWidgets)
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/src/core)
 
@@ -23,7 +18,6 @@ set(go_test_lib
     # Add here the individual tests
     GOTestWindchest.cpp
     GOTestSwitch.cpp
-
     # GOOrganModel
     GOTestOrganModel.cpp
 )

@@ -5,9 +5,6 @@
  */
 #include <iostream>
 
-#include <boost/stacktrace.hpp>
-#include <exception>
-
 #include "GOTest.h"
 #include "GOTestCollection.h"
 #include "GOTestException.h"

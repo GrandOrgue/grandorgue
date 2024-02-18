@@ -29,6 +29,11 @@ elseif(NOT BUILD_VERSION)
   set(BUILD_VERSION "0.0")
 endif()
 
+
+if (NOT DEFINED GO_BUILD_TESTING OR GO_BUILD_TESTING STREQUAL "")
+  set(GO_BUILD_TESTING ${BUILD_TESTING})
+endif()
+
 set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
 
 # Set GITHUB_PROJECT variable that is used to configure update checking
@@ -211,6 +216,15 @@ message(STATUS "  wxWidgets config binary     : ${wxWidgets_CONFIG_EXECUTABLE}")
 message(STATUS "  wxWidgets configuration     : ${wxWidgets_CONFIGURATION}")
 message(STATUS "============================================================================")
 
+
+if (GO_BUILD_TESTING)
+    # Add coverage configuration to include project files - Don't put extra libraries here under
+    set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage")
+    message(STATUS "============================================================================")
+    message(STATUS " Coverage enabled")
+    message(STATUS "============================================================================")
+endif()
+
 add_subdirectory(src/build)
 add_subdirectory(src/images)
 add_subdirectory(src/core)
@@ -223,9 +237,6 @@ add_subdirectory(packages)
 add_subdirectory(perftests)
 add_subdirectory(resources)
 
-if (NOT DEFINED GO_BUILD_TESTING OR GO_BUILD_TESTING STREQUAL "")
-  set(GO_BUILD_TESTING ${BUILD_TESTING})
-endif()
 if (GO_BUILD_TESTING)
   enable_testing()
   add_subdirectory(src/tests)
