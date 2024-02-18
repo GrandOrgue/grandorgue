@@ -6,7 +6,7 @@
 set -e
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  libboost-stacktrace-dev git
+  libboost-stacktrace-dev git gcovr
 
 mkdir cpptrace
 cd cpptrace
