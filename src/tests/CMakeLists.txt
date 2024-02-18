@@ -6,6 +6,8 @@ add_option(-msse3)
 add_option(-mstackrealign)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage")
+set(COVERAGE_EXCLUDES 'submodules/*' 'usr/*')
+
 
 
 include(UsewxWidgets)
