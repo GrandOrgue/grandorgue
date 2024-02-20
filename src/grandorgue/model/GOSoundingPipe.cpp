@@ -220,7 +220,7 @@ void GOSoundingPipe::LoadReleaseFileInfo(
 }
 
 void GOSoundingPipe::Load(
-  GOConfigReader &cfg, wxString group, wxString prefix) {
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   SetGroupAndPrefix(group, prefix);
   p_OrganModel->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);

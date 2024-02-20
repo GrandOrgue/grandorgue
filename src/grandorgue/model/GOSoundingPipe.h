@@ -113,7 +113,7 @@ private:
 
 public:
   GOSoundingPipe(
-    GOOrganModel *organController,
+    GOOrganModel *pOrganModel,
     GORank *rank,
     bool percussive,
     int sampler_group_id,
@@ -128,7 +128,8 @@ public:
     const wxString &group,
     const wxString &prefix,
     const wxString &filename);
-  void Load(GOConfigReader &cfg, wxString group, wxString prefix);
+  void Load(GOConfigReader &cfg, const wxString &group, const wxString &prefix)
+    override;
 };
 
 #endif

@@ -160,7 +160,6 @@ model/GOCacheObject.cpp
 model/GOCoupler.cpp
 model/GODivisionalCoupler.cpp
 model/GODrawStop.cpp
-model/GODummyPipe.cpp
 model/GOEnclosure.cpp
 model/GOEventHandlerList.cpp
 model/GOManual.cpp
