@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -53,6 +53,7 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
     int x, y;
     GOManual *dest_manual = m_OrganController->GetManual(i);
     GOCoupler *coupler;
+    GOButtonControl *pCouplerThough;
     GOGUIButton *button;
 
     panel->GetLayoutEngine()->GetDrawstopBlitPosition(100 + i, 1, x, y);
@@ -117,6 +118,17 @@ GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
         cfg,
         wxString::Format(wxT("SetterManual%03dCoupler%03dMEL"), manual_nr, i),
         6,
+        100 + i);
+      panel->AddControl(button);
+    }
+
+    if ((pCouplerThough = r_VirtualCouplers.GetCouplerThrough(manual_nr, i))) {
+      button = new GOGUIButton(panel, pCouplerThough, false);
+      button->Init(
+        cfg,
+        wxString::Format(
+          wxT("SetterManual%03dCoupler%03dThrough"), manual_nr, i),
+        7,
         100 + i);
       panel->AddControl(button);
     }

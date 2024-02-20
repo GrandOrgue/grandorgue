@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,6 +9,8 @@
 
 #include <wx/intl.h>
 
+#include "config/GOConfigWriter.h"
+#include "control/GOCallbackButtonControl.h"
 #include "model/GOCoupler.h"
 #include "model/GOManual.h"
 #include "model/GOOrganModel.h"
@@ -56,8 +58,8 @@ void GOVirtualCouplerController::Init(
     for (unsigned int dstManualN = organModel.GetFirstManualIndex();
          dstManualN < organModel.GetODFManualCount();
          dstManualN++) {
-      ManualCouplerSet &manualCouplers
-        = m_CouplerPtrs[make_key(srcManualN, dstManualN)];
+      CouplerSetKey couplerSetKey = make_key(srcManualN, dstManualN);
+      ManualCouplerSet &manualCouplers = m_CouplerPtrs[couplerSetKey];
 
       load_coupler(
         organModel,
@@ -123,7 +125,42 @@ void GOVirtualCouplerController::Init(
         wxT("SetterManual%03dCoupler%03dMEL"),
         wxT("S%dM%dCM"),
         _("MEL"));
+
+      GOCallbackButtonControl *pCoupleThrough
+        = new GOCallbackButtonControl(organModel, this, false, false);
+
+      pCoupleThrough->Init(
+        cfg,
+        wxString::Format(
+          wxT("SetterManual%03dCoupler%03dThrough"), srcManualN, dstManualN),
+        _("Couple Through"));
+      m_CoupleThroughPtrs[couplerSetKey] = pCoupleThrough;
     }
+  }
+}
+
+static wxString WX_COOPLE_THROUGH = wxT("CoupleThrough");
+
+void GOVirtualCouplerController::Load(
+  GOOrganModel &organModel, GOConfigReader &cfg) {
+  Init(organModel, cfg);
+  for (auto e : m_CoupleThroughPtrs) {
+    GOCallbackButtonControl *pCoupleThrough = e.second;
+    bool isCoupleThrough = cfg.ReadBoolean(
+      CMBSetting, pCoupleThrough->GetGroup(), WX_COOPLE_THROUGH, false, false);
+
+    pCoupleThrough->Set(isCoupleThrough);
+  }
+}
+
+void GOVirtualCouplerController::Save(GOConfigWriter &cfg) {
+  for (auto e : m_CoupleThroughPtrs) {
+    GOCallbackButtonControl *pCoupleThrough = e.second;
+
+    cfg.WriteBoolean(
+      pCoupleThrough->GetGroup(),
+      WX_COOPLE_THROUGH,
+      pCoupleThrough->IsEngaged());
   }
 }
 
@@ -132,4 +169,23 @@ GOCoupler *GOVirtualCouplerController::GetCoupler(
   const auto iter = m_CouplerPtrs.find(make_key(fromManual, toManual));
 
   return iter != m_CouplerPtrs.end() ? iter->second[type] : nullptr;
+}
+
+GOButtonControl *GOVirtualCouplerController::GetCouplerThrough(
+  unsigned fromManual, unsigned toManual) const {
+  const auto iter = m_CoupleThroughPtrs.find(make_key(fromManual, toManual));
+
+  return iter != m_CoupleThroughPtrs.end() ? iter->second : nullptr;
+}
+
+void GOVirtualCouplerController::ButtonStateChanged(
+  GOButtonControl *button, bool newState) {
+  for (auto e : m_CoupleThroughPtrs)
+    if (e.second == button) {
+      const CouplerSetKey &couplerSetKey = e.first;
+      ManualCouplerSet &manualCouplers = m_CouplerPtrs[couplerSetKey];
+
+      for (auto pCoupler : manualCouplers)
+        pCoupler->SetRecursive(newState);
+    }
 }

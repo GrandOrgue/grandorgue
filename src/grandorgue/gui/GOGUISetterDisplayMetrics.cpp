@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -50,11 +50,11 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
     break;
 
   case GOGUI_SETTER_COUPLER:
-    x_size = 500;
+    x_size = 600;
     y_size = 20 + 80 * organController->GetODFManualCount();
     drawstop_rows = organController->GetODFManualCount();
-    drawstop_cols = 6;
-    button_cols = 10;
+    drawstop_cols = 7;
+    button_cols = 0;
     button_rows = 0;
     break;
 

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -62,6 +62,14 @@ void GOCoupler::PreparePlayback() {
     src->SetUnisonOff(true);
 }
 
+void GOCoupler::SetRecursive(bool isRecursive) {
+  m_CoupleToSubsequentUnisonIntermanualCouplers = isRecursive;
+  m_CoupleToSubsequentUpwardIntermanualCouplers = isRecursive;
+  m_CoupleToSubsequentDownwardIntermanualCouplers = isRecursive;
+  m_CoupleToSubsequentUpwardIntramanualCouplers = isRecursive;
+  m_CoupleToSubsequentDownwardIntramanualCouplers = isRecursive;
+}
+
 const struct IniFileEnumEntry GOCoupler::m_coupler_types[] = {
   {wxT("Normal"), COUPLER_NORMAL},
   {wxT("Bass"), COUPLER_BASS},
@@ -80,11 +88,7 @@ void GOCoupler::Init(
   m_UnisonOff = unison_off;
   m_DestinationManual = dest_manual;
   m_DestinationKeyshift = keyshift;
-  m_CoupleToSubsequentUnisonIntermanualCouplers = recursive;
-  m_CoupleToSubsequentUpwardIntermanualCouplers = recursive;
-  m_CoupleToSubsequentDownwardIntermanualCouplers = recursive;
-  m_CoupleToSubsequentUpwardIntramanualCouplers = recursive;
-  m_CoupleToSubsequentDownwardIntramanualCouplers = recursive;
+  SetRecursive(recursive);
   GODrawstop::Init(cfg, group, name);
 
   m_CouplerType = coupler_type;
@@ -110,11 +114,7 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
   m_DestinationKeyshift = cfg.ReadInteger(
     ODFSetting, group, wxT("DestinationKeyshift"), -24, 24, !m_UnisonOff, 0);
   if (m_UnisonOff) {
-    m_CoupleToSubsequentUnisonIntermanualCouplers = false;
-    m_CoupleToSubsequentUpwardIntermanualCouplers = false;
-    m_CoupleToSubsequentDownwardIntermanualCouplers = false;
-    m_CoupleToSubsequentUpwardIntramanualCouplers = false;
-    m_CoupleToSubsequentDownwardIntramanualCouplers = false;
+    SetRecursive(false);
     m_CouplerType = COUPLER_NORMAL;
     m_FirstMidiNote = 0;
     m_NumberOfKeys = 127;
@@ -164,11 +164,7 @@ void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
       false,
       COUPLER_NORMAL);
     if (m_CouplerType == COUPLER_BASS || m_CouplerType == COUPLER_MELODY) {
-      m_CoupleToSubsequentUnisonIntermanualCouplers = false;
-      m_CoupleToSubsequentUpwardIntermanualCouplers = false;
-      m_CoupleToSubsequentDownwardIntermanualCouplers = false;
-      m_CoupleToSubsequentUpwardIntramanualCouplers = false;
-      m_CoupleToSubsequentDownwardIntramanualCouplers = false;
+      SetRecursive(false);
       if (!r_OrganModel.GetConfig().ODFCheck()) {
         cfg.ReadBoolean(
           ODFSetting,
