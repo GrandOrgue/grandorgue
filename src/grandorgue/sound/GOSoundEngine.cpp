@@ -7,6 +7,8 @@
 
 #include "GOSoundEngine.h"
 
+#include <algorithm>
+
 #include "model/GOPipe.h"
 #include "model/GOWindchest.h"
 #include "sound/scheduler/GOSoundGroupWorkItem.h"
@@ -399,30 +401,41 @@ GOSoundSampler *GOSoundEngine::StartSample(
   unsigned audio_group,
   unsigned velocity,
   unsigned delay,
-  uint64_t last_stop) {
+  uint64_t prevEventTime,
+  bool isRelease,
+  uint64_t *pStartTimeSamples) {
   unsigned delay_samples = (delay * m_SampleRate) / (1000);
   uint64_t start_time = m_CurrentTime + delay_samples;
-  unsigned releasedDurationMs = SamplesDiffToMs(last_stop, start_time);
-  const GOSoundAudioSection *attack
-    = pipe->GetAttack(velocity, releasedDurationMs);
+  unsigned eventIntervalMs = SamplesDiffToMs(prevEventTime, start_time);
 
-  if (!attack || attack->GetChannels() == 0)
-    return NULL;
-  GOSoundSampler *sampler = m_SamplerPool.GetSampler();
-  if (sampler) {
-    sampler->pipe = pipe;
-    sampler->velocity = velocity;
-    attack->InitStream(
-      &m_ResamplerCoefs,
-      &sampler->stream,
-      GetRandomFactor() * pipe->GetTuning() / (float)m_SampleRate);
-    const float playback_gain = pipe->GetGain() * attack->GetNormGain();
-    sampler->fader.NewConstant(playback_gain);
-    sampler->delay = delay_samples;
-    sampler->time = start_time;
-    sampler->fader.SetVelocityVolume(
-      sampler->pipe->GetVelocityVolume(sampler->velocity));
-    StartSampler(sampler, sampler_group_id, audio_group);
+  GOSoundSampler *sampler = nullptr;
+  const GOSoundAudioSection *section = isRelease
+    ? pipe->GetRelease(-1, eventIntervalMs)
+    : pipe->GetAttack(velocity, eventIntervalMs);
+
+  if (pStartTimeSamples) {
+    *pStartTimeSamples = start_time;
+  }
+  if (section && section->GetChannels()) {
+    sampler = m_SamplerPool.GetSampler();
+    if (sampler) {
+      sampler->pipe = pipe;
+      sampler->velocity = velocity;
+      section->InitStream(
+        &m_ResamplerCoefs,
+        &sampler->stream,
+        GetRandomFactor() * pipe->GetTuning() / (float)m_SampleRate);
+
+      const float playback_gain = pipe->GetGain() * section->GetNormGain();
+
+      sampler->fader.NewConstant(playback_gain);
+      sampler->delay = delay_samples;
+      sampler->time = start_time;
+      sampler->fader.SetVelocityVolume(
+        sampler->pipe->GetVelocityVolume(sampler->velocity));
+      sampler->is_release = isRelease;
+      StartSampler(sampler, sampler_group_id, audio_group);
+    }
   }
   return sampler;
 }

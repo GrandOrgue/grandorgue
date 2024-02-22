@@ -31,6 +31,8 @@ GOPipeConfig::GOPipeConfig(
     m_BitsPerSample(-1),
     m_Channels(-1),
     m_LoopLoad(-1),
+    m_Percussive(BOOL3_DEFAULT),
+    m_IndependentRelease(BOOL3_DEFAULT),
     m_Compress(BOOL3_DEFAULT),
     m_AttackLoad(BOOL3_DEFAULT),
     m_ReleaseLoad(BOOL3_DEFAULT),
@@ -124,11 +126,15 @@ void GOPipeConfig::Init(
   m_PitchCorrection = 0;
   m_DefaultDelay = 0;
   m_Percussive = BOOL3_DEFAULT;
+  m_IndependentRelease = BOOL3_DEFAULT;
   LoadFromCmb(cfg, group, prefix);
 }
 
 void GOPipeConfig::Load(
-  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &prefix,
+  bool isParentPercussive) {
   m_DefaultAmplitude = cfg.ReadFloat(
     ODFSetting, group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
   m_DefaultGain = cfg.ReadFloat(
@@ -141,6 +147,10 @@ void GOPipeConfig::Load(
     ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
   m_Percussive = cfg.ReadBooleanTriple(
     ODFSetting, group, prefix + wxT("Percussive"), false);
+  m_IndependentRelease = to_bool(m_Percussive, isParentPercussive)
+    ? cfg.ReadBooleanTriple(
+      ODFSetting, group, prefix + wxT("HasIndependentRelease"), false)
+    : BOOL3_DEFAULT;
   LoadFromCmb(cfg, group, prefix);
 }
 

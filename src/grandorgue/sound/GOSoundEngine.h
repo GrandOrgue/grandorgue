@@ -112,7 +112,9 @@ public:
     unsigned audio_group,
     unsigned velocity,
     unsigned delay,
-    uint64_t last_stop);
+    uint64_t prevEventTime,
+    bool isRelease = false,
+    uint64_t *pStartTimeSamples = nullptr);
   uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void UpdateVelocity(

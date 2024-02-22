@@ -140,6 +140,13 @@ public:
       (const GOSettingUnsigned GOConfig::*)nullptr);
   }
 
+  bool IsEffectiveIndependentRelease() const {
+    return GetEffectiveBool(
+      &GOPipeConfig::GetIndependentRelease,
+      &GOPipeConfigNode::IsEffectiveIndependentRelease,
+      (const GOSettingUnsigned GOConfig::*)nullptr);
+  }
+
   bool GetEffectiveCompress() const {
     return GetEffectiveBool(
       &GOPipeConfig::GetCompress,

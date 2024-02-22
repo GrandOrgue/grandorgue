@@ -43,7 +43,8 @@ void GOPipeConfigNode::Init(
 void GOPipeConfigNode::Load(
   GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   r_OrganModel.RegisterSaveableObject(this);
-  m_PipeConfig.Load(cfg, group, prefix);
+  m_PipeConfig.Load(
+    cfg, group, prefix, m_parent && m_parent->GetEffectivePercussive());
 }
 
 wxString GOPipeConfigNode::GetEffectiveAudioGroup() const {

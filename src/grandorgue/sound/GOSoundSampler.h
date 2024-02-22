@@ -14,8 +14,7 @@
 class GOSoundProvider;
 class GOSoundWindchestWorkItem;
 
-class GOSoundSampler {
-public:
+struct GOSoundSampler {
   GOSoundSampler *next;
   const GOSoundProvider *pipe;
   int sampler_group_id;

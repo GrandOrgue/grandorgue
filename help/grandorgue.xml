@@ -9913,9 +9913,22 @@ on which the pipes of the are placed.
           <term>Percussive</term>
           <listitem>
             <para>
-(boolean, required) If false, the samples are played as is (without
-any loop/release handling)
-     </para>
+	      (boolean, required) If false, the samples are played as is
+	      (without any loop/release handling).
+	    </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HasIndependentRelease</term>
+          <listitem>
+            <para>
+	      (boolean, default false or inherited from the Organ, Windchest or
+	      Rank). If true than release is played independently on the attack.
+	    </para>
+            <para>
+	      If HasIndependentRelease is true then Percussive must also be set
+	      to true.
+	    </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -9955,12 +9968,36 @@ attributes are:
       </para>
       <variablelist>
         <varlistentry>
+          <term>Pipe999</term>
+          <listitem>
+            <para>
+(string, required) Relative path to the sample WAV file of the first
+attack. It may be listed as REF:aa:bb:cc too. In that case, it means
+that this pipe is borrowed from manual aa, first rank of stop bb, the pipe cc.
+It may contain DUMMY, which defines a non-sounding placeholder.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Pipe999Percussive</term>
           <listitem>
             <para>
 (boolean, default: rank percussive setting) If false, the samples are
 played as is (without any loop/release handling)
      </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Pipe999HasIndependentRelease</term>
+          <listitem>
+            <para>
+	      (boolean, default: rank HasIndependentRelease setting). If true
+	      then the release is played independently on the attack.
+	    </para>
+            <para>
+	      If HasIndependentRelease is true then Pipe999Percussive must be
+	      also true and Pipe999ReleaseCount must be greater than 0.
+	    </para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -9996,17 +10033,6 @@ number of cents (in addition to the organ/rank factor).
             <para>
 (integer 0 - 10000, default: 0) Delay introduced by the tracker for
 that pipe.
-     </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Pipe999</term>
-          <listitem>
-            <para>
-(string, required) Relative path to the sample WAV file of the first
-attack. It may be listed as REF:aa:bb:cc too. In that case, it means
-that this pipe is borrowed from manual aa, first rank of stop bb, the pipe cc.
-It may contain DUMMY, which defines a non-sounding placeholder.
      </para>
           </listitem>
         </varlistentry>
