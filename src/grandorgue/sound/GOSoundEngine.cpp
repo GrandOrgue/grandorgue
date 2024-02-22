@@ -246,7 +246,7 @@ bool GOSoundEngine::ProcessSampler(
      *
      *     playback gain * (2 ^ -sampler->pipe_section->sample_bits)
      */
-    if (!GOAudioSection::ReadBlock(&sampler->stream, temp, n_frames))
+    if (!GOSoundAudioSection::ReadBlock(&sampler->stream, temp, n_frames))
       sampler->pipe = NULL;
 
     sampler->fader.Process(n_frames, temp, volume);
@@ -400,7 +400,7 @@ GOSoundSampler *GOSoundEngine::StartSample(
   if (released_time > (unsigned)-1)
     released_time = (unsigned)-1;
 
-  const GOAudioSection *attack = pipe->GetAttack(velocity, released_time);
+  const GOSoundAudioSection *attack = pipe->GetAttack(velocity, released_time);
   if (!attack || attack->GetChannels() == 0)
     return NULL;
   GOSoundSampler *sampler = m_SamplerPool.GetSampler();
@@ -429,7 +429,8 @@ void GOSoundEngine::SwitchAttackSampler(GOSoundSampler *handle) {
   unsigned time = 1000;
 
   const GOSoundProvider *this_pipe = handle->pipe;
-  const GOAudioSection *section = this_pipe->GetAttack(handle->velocity, time);
+  const GOSoundAudioSection *section
+    = this_pipe->GetAttack(handle->velocity, time);
   if (!section)
     return;
   if (handle->is_release)
@@ -470,7 +471,7 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
    * automatically be placed back in the pool when the fade restores to
    * zero. */
   const GOSoundProvider *this_pipe = handle->pipe;
-  const GOAudioSection *release_section = this_pipe->GetRelease(
+  const GOSoundAudioSection *release_section = this_pipe->GetRelease(
     handle->stream.audio_section->GetSampleGroup(),
     ((double)(m_CurrentTime - handle->time)) / m_SampleRate);
   unsigned cross_fade_len = release_section

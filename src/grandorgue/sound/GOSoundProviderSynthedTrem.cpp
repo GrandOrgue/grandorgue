@@ -87,7 +87,7 @@ void GOSoundProviderSynthedTrem::Create(
   attack_info.min_attack_velocity = 0;
   attack_info.max_released_time = -1;
   m_AttackInfo.push_back(attack_info);
-  m_Attack.push_back(new GOAudioSection(pool));
+  m_Attack.push_back(new GOSoundAudioSection(pool));
   m_Attack[0]->Setup(
     nullptr,
     nullptr,
@@ -107,7 +107,7 @@ void GOSoundProviderSynthedTrem::Create(
   release_info.sample_group = -1;
   release_info.max_playback_time = -1;
   m_ReleaseInfo.push_back(release_info);
-  m_Release.push_back(new GOAudioSection(pool));
+  m_Release.push_back(new GOSoundAudioSection(pool));
   m_Release[0]->Setup(
     nullptr,
     nullptr,

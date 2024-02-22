@@ -14,7 +14,7 @@
 #include "GOStatisticCallback.h"
 #include "ptrvector.h"
 
-class GOAudioSection;
+class GOSoundAudioSection;
 class GOCache;
 class GOCacheWriter;
 class GOHash;
@@ -41,9 +41,9 @@ protected:
   float m_Tuning;
   bool m_SampleGroup;
   unsigned m_ReleaseTail;
-  ptr_vector<GOAudioSection> m_Attack;
+  ptr_vector<GOSoundAudioSection> m_Attack;
   std::vector<AttackSelector> m_AttackInfo;
-  ptr_vector<GOAudioSection> m_Release;
+  ptr_vector<GOSoundAudioSection> m_Release;
   std::vector<ReleaseSelector> m_ReleaseInfo;
   void ComputeReleaseAlignmentInfo();
   float m_VelocityVolumeBase;
@@ -64,9 +64,9 @@ public:
   void UseSampleGroup(unsigned sample_group);
   void SetVelocityParameter(float min_volume, float max_volume);
 
-  const GOAudioSection *GetAttack(
+  const GOSoundAudioSection *GetAttack(
     unsigned velocity, unsigned released_time) const;
-  const GOAudioSection *GetRelease(
+  const GOSoundAudioSection *GetRelease(
     uint8_t sampleGroup, double playback_time) const;
   float GetGain() const;
   int IsOneshot() const;

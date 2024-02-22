@@ -73,7 +73,7 @@ bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
     if (!cache.Read(&info, sizeof(info)))
       return false;
     m_AttackInfo.push_back(info);
-    m_Attack.push_back(new GOAudioSection(pool));
+    m_Attack.push_back(new GOSoundAudioSection(pool));
     if (!m_Attack[i]->LoadCache(cache))
       return false;
   }
@@ -86,7 +86,7 @@ bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
     if (!cache.Read(&info, sizeof(info)))
       return false;
     m_ReleaseInfo.push_back(info);
-    m_Release.push_back(new GOAudioSection(pool));
+    m_Release.push_back(new GOSoundAudioSection(pool));
     if (!m_Release[i]->LoadCache(cache))
       return false;
   }
@@ -131,7 +131,7 @@ bool GOSoundProvider::SaveCache(GOCacheWriter &cache) const {
 }
 
 void GOSoundProvider::ComputeReleaseAlignmentInfo() {
-  std::vector<const GOAudioSection *> sections;
+  std::vector<const GOSoundAudioSection *> sections;
   for (int k = -1; k < 2; k++) {
     sections.clear();
     for (unsigned i = 0; i < m_Attack.size(); i++)
@@ -189,7 +189,7 @@ float GOSoundProvider::GetVelocityVolume(unsigned velocity) const {
   return m_VelocityVolumeBase + (velocity * m_VelocityVolumeIncrement);
 }
 
-const GOAudioSection *GOSoundProvider::GetAttack(
+const GOSoundAudioSection *GOSoundProvider::GetAttack(
   unsigned velocity, unsigned released_time) const {
   const unsigned x = abs(rand());
   int best_match = -1;
@@ -218,7 +218,7 @@ const GOAudioSection *GOSoundProvider::GetAttack(
   return NULL;
 }
 
-const GOAudioSection *GOSoundProvider::GetRelease(
+const GOSoundAudioSection *GOSoundProvider::GetRelease(
   uint8_t sampleGroup, double playback_time) const {
   unsigned time = std::min(playback_time, 3600.0) * 1000;
 

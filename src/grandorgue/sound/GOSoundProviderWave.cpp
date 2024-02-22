@@ -118,7 +118,7 @@ void GOSoundProviderWave::AddAttackSection(
   attack_info.min_attack_velocity = min_attack_velocity;
   attack_info.max_released_time = max_released_time;
   m_AttackInfo.push_back(attack_info);
-  GOAudioSection *section = new GOAudioSection(pool);
+  GOSoundAudioSection *section = new GOSoundAudioSection(pool);
   m_Attack.push_back(section);
   section->Setup(
     p_ObjectFor,
@@ -167,7 +167,7 @@ void GOSoundProviderWave::AddReleaseSection(
   release_info.sample_group = sample_group;
   release_info.max_playback_time = max_playback_time;
   m_ReleaseInfo.push_back(release_info);
-  GOAudioSection *section = new GOAudioSection(pool);
+  GOSoundAudioSection *section = new GOSoundAudioSection(pool);
   m_Release.push_back(section);
   section->Setup(
     p_ObjectFor,

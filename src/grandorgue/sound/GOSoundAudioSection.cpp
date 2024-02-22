@@ -34,7 +34,7 @@ static unsigned limited_diff(unsigned a, unsigned b) {
     return 0;
 }
 
-GOAudioSection::GOAudioSection(GOMemoryPool &pool)
+GOSoundAudioSection::GOSoundAudioSection(GOMemoryPool &pool)
   : m_Data(NULL),
     m_ReleaseAligner(NULL),
     m_ReleaseStartSegment(0),
@@ -42,9 +42,9 @@ GOAudioSection::GOAudioSection(GOMemoryPool &pool)
   ClearData();
 }
 
-GOAudioSection::~GOAudioSection() { ClearData(); }
+GOSoundAudioSection::~GOSoundAudioSection() { ClearData(); }
 
-void GOAudioSection::ClearData() {
+void GOSoundAudioSection::ClearData() {
   m_AllocSize = 0;
   m_SampleCount = 0;
   m_SampleRate = 0;
@@ -70,7 +70,7 @@ void GOAudioSection::ClearData() {
   m_ReleaseCrossfadeLength = 0;
 }
 
-bool GOAudioSection::LoadCache(GOCache &cache) {
+bool GOSoundAudioSection::LoadCache(GOCache &cache) {
   if (!cache.Read(&m_AllocSize, sizeof(m_AllocSize)))
     return false;
   if (!cache.Read(&m_SampleCount, sizeof(m_SampleCount)))
@@ -149,7 +149,7 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
   return true;
 }
 
-bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
+bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&m_AllocSize, sizeof(m_AllocSize)))
     return false;
   if (!cache.Write(&m_SampleCount, sizeof(m_SampleCount)))
@@ -231,7 +231,7 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
  * into the correct range. */
 
 template <class T>
-inline void GOAudioSection::MonoUncompressedLinear(
+inline void GOSoundAudioSection::MonoUncompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   T *input = (T *)(stream->ptr);
@@ -254,7 +254,7 @@ inline void GOAudioSection::MonoUncompressedLinear(
 }
 
 template <class T>
-inline void GOAudioSection::StereoUncompressedLinear(
+inline void GOSoundAudioSection::StereoUncompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   typedef T stereoSample[][2];
 
@@ -285,7 +285,7 @@ inline void GOAudioSection::StereoUncompressedLinear(
 }
 
 template <class T>
-inline void GOAudioSection::MonoUncompressedPolyphase(
+inline void GOSoundAudioSection::MonoUncompressedPolyphase(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   T *input = ((T *)stream->ptr);
@@ -317,7 +317,7 @@ inline void GOAudioSection::MonoUncompressedPolyphase(
 }
 
 template <class T>
-inline void GOAudioSection::StereoUncompressedPolyphase(
+inline void GOSoundAudioSection::StereoUncompressedPolyphase(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   typedef T stereoSample[][2];
 
@@ -355,7 +355,7 @@ inline void GOAudioSection::StereoUncompressedPolyphase(
 }
 
 template <bool format16>
-inline void GOAudioSection::MonoCompressedLinear(
+inline void GOSoundAudioSection::MonoCompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   for (unsigned int i = 0; i < n_blocks; i++,
                     stream->position_fraction += stream->increment_fraction,
@@ -380,7 +380,7 @@ inline void GOAudioSection::MonoCompressedLinear(
 }
 
 template <bool format16>
-inline void GOAudioSection::StereoCompressedLinear(
+inline void GOSoundAudioSection::StereoCompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   for (unsigned int i = 0; i < n_blocks;
@@ -409,7 +409,7 @@ inline void GOAudioSection::StereoCompressedLinear(
   stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 }
 
-inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
+inline DecodeBlockFunction GOSoundAudioSection::GetDecodeBlockFunction(
   unsigned channels,
   unsigned bits_per_sample,
   bool compressed,
@@ -471,7 +471,7 @@ inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
   return NULL;
 }
 
-inline unsigned GOAudioSection::PickEndSegment(
+inline unsigned GOSoundAudioSection::PickEndSegment(
   unsigned start_segment_index) const {
   const unsigned x = abs(rand());
   for (unsigned i = 0; i < m_EndSegments.size(); i++) {
@@ -486,7 +486,7 @@ inline unsigned GOAudioSection::PickEndSegment(
   return 0;
 }
 
-bool GOAudioSection::ReadBlock(
+bool GOSoundAudioSection::ReadBlock(
   audio_section_stream *stream, float *buffer, unsigned int n_blocks) {
   while (n_blocks > 0) {
     if (stream->position_index >= stream->transition_position) {
@@ -593,7 +593,7 @@ static inline void loop_memcpy(
   memcpy(dest, source, count);
 }
 
-void GOAudioSection::GetMaxAmplitudeAndDerivative() {
+void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
   DecompressionCache cache;
 
   InitDecompressionCache(cache);
@@ -625,7 +625,7 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative() {
   }
 }
 
-void GOAudioSection::DoCrossfade(
+void GOSoundAudioSection::DoCrossfade(
   unsigned char *dest,
   unsigned dest_offset,
   const unsigned char *src,
@@ -649,7 +649,7 @@ void GOAudioSection::DoCrossfade(
       }
 }
 
-void GOAudioSection::Setup(
+void GOSoundAudioSection::Setup(
   const GOCacheObject *pObjectFor,
   const GOLoaderFilename *pLoaderFilename,
   const void *pcm_data,
@@ -846,7 +846,7 @@ void GOAudioSection::Setup(
     Compress(m_BitsPerSample > 16);
 }
 
-void GOAudioSection::Compress(bool format16) {
+void GOSoundAudioSection::Compress(bool format16) {
   unsigned char *data = (unsigned char *)m_Pool.Alloc(m_AllocSize, false);
   if (data == NULL)
     throw GOOutOfMemory();
@@ -904,8 +904,9 @@ void GOAudioSection::Compress(bool format16) {
     throw GOOutOfMemory();
 }
 
-void GOAudioSection::SetupStreamAlignment(
-  const std::vector<const GOAudioSection *> &joinables, unsigned start_index) {
+void GOSoundAudioSection::SetupStreamAlignment(
+  const std::vector<const GOSoundAudioSection *> &joinables,
+  unsigned start_index) {
   if (m_ReleaseAligner) {
     delete m_ReleaseAligner;
     m_ReleaseAligner = NULL;
@@ -936,7 +937,7 @@ void GOAudioSection::SetupStreamAlignment(
   }
 }
 
-unsigned GOAudioSection::GetMargin(
+unsigned GOSoundAudioSection::GetMargin(
   bool compressed, interpolation_type interpolation) {
   if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed)
     return POLYPHASE_READAHEAD;
@@ -946,7 +947,7 @@ unsigned GOAudioSection::GetMargin(
     return LINEAR_READAHEAD;
 }
 
-void GOAudioSection::InitStream(
+void GOSoundAudioSection::InitStream(
   const struct resampler_coefs_s *resampler_coefs,
   audio_section_stream *stream,
   float sample_rate_adjustment) const {
@@ -986,7 +987,7 @@ void GOAudioSection::InitStream(
     = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 }
 
-void GOAudioSection::InitAlignedStream(
+void GOSoundAudioSection::InitAlignedStream(
   audio_section_stream *stream,
   const audio_section_stream *existing_stream) const {
   stream->audio_section = this;
@@ -1035,9 +1036,9 @@ void GOAudioSection::InitAlignedStream(
   m_ReleaseAligner->SetupRelease(*stream, *existing_stream);
 }
 
-unsigned GOAudioSection::GetSampleRate() const { return m_SampleRate; }
+unsigned GOSoundAudioSection::GetSampleRate() const { return m_SampleRate; }
 
-void GOAudioSection::GetHistory(
+void GOSoundAudioSection::GetHistory(
   const audio_section_stream *stream,
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) {
   memset(
@@ -1075,7 +1076,7 @@ void GOAudioSection::GetHistory(
   }
 }
 
-GOSampleStatistic GOAudioSection::GetStatistic() {
+GOSampleStatistic GOSoundAudioSection::GetStatistic() {
   GOSampleStatistic stat;
 
   size_t size = 0;

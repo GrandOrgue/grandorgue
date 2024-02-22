@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -50,7 +50,7 @@ bool GOSoundReleaseAlignTable::Save(GOCacheWriter &cache) {
 }
 
 void GOSoundReleaseAlignTable::ComputeTable(
-  const GOAudioSection &release,
+  const GOSoundAudioSection &release,
   int phase_align_max_amplitude,
   int phase_align_max_derivative,
   unsigned int sample_rate,
@@ -176,7 +176,7 @@ void GOSoundReleaseAlignTable::SetupRelease(
   audio_section_stream &release_sampler,
   const audio_section_stream &old_sampler) const {
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
-  GOAudioSection::GetHistory(&old_sampler, history);
+  GOSoundAudioSection::GetHistory(&old_sampler, history);
 
   /* Get combined release f's and v's */
   int f_mod = 0;
