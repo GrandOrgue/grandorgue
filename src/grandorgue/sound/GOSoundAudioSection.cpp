@@ -50,7 +50,7 @@ void GOAudioSection::ClearData() {
   m_SampleRate = 0;
   m_BitsPerSample = 0;
   m_BytesPerSample = 0;
-  m_Compressed = false;
+  m_IsCompressed = false;
   m_Channels = 0;
   if (m_Data) {
     m_Pool.Free(m_Data);
@@ -81,7 +81,9 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
     return false;
   if (!cache.Read(&m_BytesPerSample, sizeof(m_BytesPerSample)))
     return false;
-  if (!cache.Read(&m_Compressed, sizeof(m_Compressed)))
+  if (!cache.Read(&m_SampleGroup, sizeof(m_SampleGroup)))
+    return false;
+  if (!cache.Read(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
   if (!cache.Read(&m_Channels, sizeof(m_Channels)))
     return false;
@@ -158,7 +160,9 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
     return false;
   if (!cache.Write(&m_BytesPerSample, sizeof(m_BytesPerSample)))
     return false;
-  if (!cache.Write(&m_Compressed, sizeof(m_Compressed)))
+  if (!cache.Write(&m_SampleGroup, sizeof(m_SampleGroup)))
+    return false;
+  if (!cache.Write(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
   if (!cache.Write(&m_Channels, sizeof(m_Channels)))
     return false;
@@ -654,6 +658,7 @@ void GOAudioSection::Setup(
   const unsigned pcm_data_sample_rate,
   const unsigned pcm_data_nb_samples,
   const std::vector<GOWaveLoop> *loop_points,
+  int8_t sampleGroup,
   bool compress,
   unsigned loopCrossfadeLength,
   unsigned releaseCrossfadeLength) {
@@ -829,7 +834,8 @@ void GOAudioSection::Setup(
   m_SampleCount = total_alloc_samples;
   m_SampleFracBits = m_BitsPerSample - 1;
   m_Channels = pcm_data_channels;
-  m_Compressed = false;
+  m_IsCompressed = false;
+  m_SampleGroup = sampleGroup;
 
   /* Store the main data blob. */
   memcpy(m_Data, pcm_data, m_AllocSize);
@@ -888,59 +894,10 @@ void GOAudioSection::Compress(bool format16) {
     }
   }
 
-#if 0
-	GOAudioSection new_section(m_Pool);
-	new_section.m_BitsPerSample = m_BitsPerSample;
-	new_section.m_Channels = m_Channels;
-	new_section.m_Data = data;
-	new_section.m_AllocSize = output_len;
-	new_section.m_Compressed = true;
-	DecompressionCache tmp;
-	InitDecompressionCache(tmp);
-
-	for (unsigned i = 0; i < m_SampleCount; i++)
-	{
-		for (unsigned j = 0; j < m_StartSegments.size(); j++)
-		{
-			if (m_StartSegments[j].start_offset == i && i)
-			{
-				if (tmp.position != m_StartSegments[j].cache.position)
-					wxLogError(wxT("StartSeg %d: Pos %d %d"), j, tmp.position, m_StartSegments[j].cache.position);
-				if(tmp.prev[0] != m_StartSegments[j].cache.prev[0] ||
-				   tmp.prev[1] != m_StartSegments[j].cache.prev[1])
-					wxLogError(wxT("StartSeg %d: prev %d %d - %d %d "), j, tmp.prev[0], m_StartSegments[j].cache.prev[0], 
-						   tmp.prev[1], m_StartSegments[j].cache.prev[1]);
-				if(tmp.value[0] != m_StartSegments[j].cache.value[0] ||
-				   tmp.value[1] != m_StartSegments[j].cache.value[1])
-					wxLogError(wxT("StartSeg %d: prev %d %d - %d %d "), j, tmp.value[0], m_StartSegments[j].cache.value[0], 
-						   tmp.value[1], m_StartSegments[j].cache.value[1]);
-				if(tmp.last[0] != m_StartSegments[j].cache.last[0] ||
-				   tmp.last[1] != m_StartSegments[j].cache.last[1])
-					wxLogError(wxT("StartSeg %d: last %d %d - %d %d "), j, tmp.last[0], m_StartSegments[j].cache.last[0], 
-						   tmp.last[1], m_StartSegments[j].cache.last[1]);
-				if (tmp.ptr != data + (intptr_t)m_StartSegments[j].cache.ptr)
-					wxLogError(wxT("StartSeg %d: ptr %p %p"), j, tmp.ptr, data + (intptr_t)m_StartSegments[j].cache.ptr);
-			}
-		}
-
-		for (unsigned j = 0; j < m_Channels; j++)
-		{
-			int old_value = GetSample(i, j);
-			int new_value = new_section.GetSample(i, j, &tmp);
-			if (old_value != new_value)
-				wxLogError(wxT("%d %d: %d %d"), i, j, old_value, new_value);
-		}
-	}
-
-	new_section.m_Data = NULL;
-
-	wxLogError(wxT("Compress: %d %d"), m_AllocSize, output_len);
-#endif
-
   m_Pool.Free(m_Data);
   m_Data = data;
   m_AllocSize = output_len;
-  m_Compressed = true;
+  m_IsCompressed = true;
 
   m_Data = (unsigned char *)m_Pool.MoveToPool(m_Data, m_AllocSize);
   if (m_Data == NULL)
@@ -1010,17 +967,17 @@ void GOAudioSection::InitStream(
   stream->decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     false);
   stream->end_decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     true);
   stream->margin
-    = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
+    = GetMargin(m_IsCompressed, stream->resample_coefs->interpolation);
   assert(stream->margin <= MAX_READAHEAD);
   stream->read_end = limited_diff(end.read_end, stream->margin);
   stream->end_pos = end.end_pos - stream->margin;
@@ -1055,17 +1012,17 @@ void GOAudioSection::InitAlignedStream(
   stream->decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     false);
   stream->end_decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     true);
   stream->margin
-    = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
+    = GetMargin(m_IsCompressed, stream->resample_coefs->interpolation);
   assert(stream->margin <= MAX_READAHEAD);
   stream->read_end = limited_diff(end.read_end, stream->margin);
   stream->end_pos = end.end_pos - stream->margin;
@@ -1095,7 +1052,7 @@ void GOAudioSection::GetHistory(
           stream->audio_section->m_Channels,
           stream->end_ptr);
   } else {
-    if (!stream->audio_section->m_Compressed) {
+    if (!stream->audio_section->m_IsCompressed) {
       for (unsigned i = 0; i < BLOCK_HISTORY; i++)
         for (unsigned j = 0; j < stream->audio_section->m_Channels; j++)
           history[i][j] = GetSampleData(

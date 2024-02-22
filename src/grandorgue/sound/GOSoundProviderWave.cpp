@@ -113,7 +113,7 @@ void GOSoundProviderWave::AddAttackSection(
     }
   }
 
-  attack_section_info attack_info;
+  AttackSelector attack_info;
   attack_info.sample_group = sample_group;
   attack_info.min_attack_velocity = min_attack_velocity;
   attack_info.max_released_time = max_released_time;
@@ -129,6 +129,7 @@ void GOSoundProviderWave::AddAttackSection(
     wave.GetSampleRate(),
     wave.GetLength(),
     &loops,
+    sample_group,
     compress,
     loop_crossfade_length,
     0);
@@ -162,7 +163,7 @@ void GOSoundProviderWave::AddReleaseSection(
   if (release_offset >= release_end_marker)
     throw(wxString) _("Invalid release position");
 
-  release_section_info release_info;
+  ReleaseSelector release_info;
   release_info.sample_group = sample_group;
   release_info.max_playback_time = max_playback_time;
   m_ReleaseInfo.push_back(release_info);
@@ -177,6 +178,7 @@ void GOSoundProviderWave::AddReleaseSection(
     wave.GetSampleRate(),
     release_samples,
     NULL,
+    sample_group,
     compress,
     0,
     releaseCrossfadeLength);

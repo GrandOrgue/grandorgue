@@ -41,27 +41,27 @@ public:
 
   struct AttackFileInfo {
     GOLoaderFilename filename;
-    int sample_group;
-    bool load_release;
-    bool percussive;
+    std::vector<GOWaveLoop> loops;
     unsigned min_attack_velocity;
     unsigned max_released_time;
     int max_playback_time;
     int attack_start;
     int cue_point;
     int release_end;
-    std::vector<GOWaveLoop> loops;
     unsigned m_LoopCrossfadeLength;
     unsigned m_ReleaseCrossfadeLength;
+    int8_t sample_group;
+    bool load_release;
+    bool percussive;
   };
 
   struct ReleaseFileInfo {
     GOLoaderFilename filename;
-    int sample_group;
     int max_playback_time;
     int cue_point;
     int release_end;
     unsigned m_ReleaseCrossfadeLength;
+    int8_t sample_group;
   };
 
 private:

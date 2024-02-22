@@ -156,10 +156,12 @@ private:
   unsigned m_SampleRate;
 
   /* Type of the data which is stored in the data pointer */
-  unsigned m_Compressed;
   unsigned m_BitsPerSample;
   unsigned m_BytesPerSample;
   unsigned m_Channels;
+
+  int8_t m_SampleGroup;
+  bool m_IsCompressed;
 
   /* Size of the section in BYTES */
   GOMemoryPool &m_Pool;
@@ -174,7 +176,9 @@ public:
   GOAudioSection(GOMemoryPool &pool);
   ~GOAudioSection();
   void ClearData();
-  unsigned GetChannels() const;
+  inline unsigned GetChannels() const { return m_Channels; }
+  inline int8_t GetSampleGroup() const { return m_SampleGroup; }
+
   unsigned GetBytesPerSample() const;
   unsigned GetLength() const;
   unsigned GetReleaseCrossfadeLength() const {
@@ -212,6 +216,7 @@ public:
     unsigned pcm_data_sample_rate,
     unsigned pcm_data_nb_samples,
     const std::vector<GOWaveLoop> *loop_points,
+    int8_t sampleGroup,
     bool compress,
     unsigned loopCrossfadeLength,
     unsigned releaseCrossfadeLength);
@@ -246,10 +251,8 @@ public:
   GOSampleStatistic GetStatistic();
 };
 
-inline unsigned GOAudioSection::GetChannels() const { return m_Channels; }
-
 inline unsigned GOAudioSection::GetBytesPerSample() const {
-  return (m_Compressed) ? 0 : (m_BitsPerSample / 8);
+  return (m_IsCompressed) ? 0 : (m_BitsPerSample / 8);
 }
 
 inline unsigned GOAudioSection::GetLength() const { return m_SampleCount; }
@@ -283,7 +286,7 @@ inline int GOAudioSection::GetSampleData(
 
 inline int GOAudioSection::GetSample(
   unsigned position, unsigned channel, DecompressionCache *cache) const {
-  if (!m_Compressed) {
+  if (!m_IsCompressed) {
     return GetSampleData(
       position, channel, m_BitsPerSample, m_Channels, m_Data);
   } else {

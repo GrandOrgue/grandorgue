@@ -104,7 +104,7 @@ public:
 
   GOSoundSampler *StartSample(
     const GOSoundProvider *pipe,
-    int sampler_group_id,
+    int8_t sampler_group_id,
     unsigned audio_group,
     unsigned velocity,
     unsigned delay,

@@ -12,6 +12,7 @@
 #include "loader/cache/GOCache.h"
 #include "loader/cache/GOCacheWriter.h"
 
+#include "GOHash.h"
 #include "GOMemoryPool.h"
 #include "GOSampleStatistic.h"
 #include "GOSoundAudioSection.h"
@@ -24,6 +25,11 @@
       x = NULL;                                                                \
     }                                                                          \
   } while (0)
+
+void GOSoundProvider::UpdateCacheHash(GOHash &hash) {
+  hash.Update(sizeof(AttackSelector));
+  hash.Update(sizeof(ReleaseSelector));
+}
 
 GOSoundProvider::GOSoundProvider()
   : m_MidiKeyNumber(0),
@@ -63,7 +69,7 @@ bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   if (!cache.Read(&attacks, sizeof(attacks)))
     return false;
   for (unsigned i = 0; i < attacks; i++) {
-    attack_section_info info;
+    AttackSelector info;
     if (!cache.Read(&info, sizeof(info)))
       return false;
     m_AttackInfo.push_back(info);
@@ -76,7 +82,7 @@ bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   if (!cache.Read(&releases, sizeof(releases)))
     return false;
   for (unsigned i = 0; i < releases; i++) {
-    release_section_info info;
+    ReleaseSelector info;
     if (!cache.Read(&info, sizeof(info)))
       return false;
     m_ReleaseInfo.push_back(info);
@@ -213,20 +219,14 @@ const GOAudioSection *GOSoundProvider::GetAttack(
 }
 
 const GOAudioSection *GOSoundProvider::GetRelease(
-  const audio_section_stream *handle, double playback_time) const {
-  unsigned attack_idx = 0;
+  uint8_t sampleGroup, double playback_time) const {
   unsigned time = std::min(playback_time, 3600.0) * 1000;
-  for (unsigned i = 0; i < m_Attack.size(); i++) {
-    if (handle->audio_section == m_Attack[i])
-      attack_idx = i;
-  }
 
   const unsigned x = abs(rand());
   int best_match = -1;
   for (unsigned i = 0; i < m_Release.size(); i++) {
     const unsigned idx = (i + x) % m_Release.size();
-    if (
-      m_ReleaseInfo[idx].sample_group != m_AttackInfo[attack_idx].sample_group)
+    if (m_ReleaseInfo[idx].sample_group != sampleGroup)
       continue;
     if (m_ReleaseInfo[idx].max_playback_time < time)
       continue;
