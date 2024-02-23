@@ -67,7 +67,7 @@ public:
   const GOSoundAudioSection *GetAttack(
     unsigned velocity, unsigned releasedDurationMs) const;
   const GOSoundAudioSection *GetRelease(
-    uint8_t sampleGroup, unsigned playbackDurationMs) const;
+    int8_t sampleGroup, unsigned playbackDurationMs) const;
   float GetGain() const;
   int IsOneshot() const;
 

@@ -220,7 +220,7 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
 }
 
 const GOSoundAudioSection *GOSoundProvider::GetRelease(
-  uint8_t sampleGroup, unsigned playbackDurationMs) const {
+  int8_t sampleGroup, unsigned playbackDurationMs) const {
   const unsigned x = abs(rand());
   int best_match = -1;
 
