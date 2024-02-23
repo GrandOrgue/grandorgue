@@ -190,9 +190,10 @@ float GOSoundProvider::GetVelocityVolume(unsigned velocity) const {
 }
 
 const GOSoundAudioSection *GOSoundProvider::GetAttack(
-  unsigned velocity, unsigned released_time) const {
+  unsigned velocity, unsigned releasedDurationMs) const {
   const unsigned x = abs(rand());
   int best_match = -1;
+
   for (unsigned i = 0; i < m_Attack.size(); i++) {
     const unsigned idx = (i + x) % m_Attack.size();
     if (
@@ -201,7 +202,7 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
       continue;
     if (m_AttackInfo[idx].min_attack_velocity > velocity)
       continue;
-    if (m_AttackInfo[idx].max_released_time < released_time)
+    if (m_AttackInfo[idx].max_released_time < releasedDurationMs)
       continue;
     if (best_match == -1)
       best_match = idx;
@@ -219,16 +220,15 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
 }
 
 const GOSoundAudioSection *GOSoundProvider::GetRelease(
-  uint8_t sampleGroup, double playback_time) const {
-  unsigned time = std::min(playback_time, 3600.0) * 1000;
-
+  uint8_t sampleGroup, unsigned playbackDurationMs) const {
   const unsigned x = abs(rand());
   int best_match = -1;
+
   for (unsigned i = 0; i < m_Release.size(); i++) {
     const unsigned idx = (i + x) % m_Release.size();
     if (m_ReleaseInfo[idx].sample_group != sampleGroup)
       continue;
-    if (m_ReleaseInfo[idx].max_playback_time < time)
+    if (m_ReleaseInfo[idx].max_playback_time < playbackDurationMs)
       continue;
     if (best_match == -1)
       best_match = idx;

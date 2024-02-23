@@ -387,6 +387,12 @@ void GOSoundEngine::NextPeriod() {
   m_Scheduler.Reset();
 }
 
+unsigned GOSoundEngine::SamplesDiffToMs(
+  uint64_t fromSamples, uint64_t toSamples) {
+  return (unsigned)std::min(
+    (toSamples - fromSamples) * 1000 / m_SampleRate, (uint64_t)UINT_MAX);
+}
+
 GOSoundSampler *GOSoundEngine::StartSample(
   const GOSoundProvider *pipe,
   int8_t sampler_group_id,
@@ -396,11 +402,10 @@ GOSoundSampler *GOSoundEngine::StartSample(
   uint64_t last_stop) {
   unsigned delay_samples = (delay * m_SampleRate) / (1000);
   uint64_t start_time = m_CurrentTime + delay_samples;
-  uint64_t released_time = ((start_time - last_stop) * 1000) / m_SampleRate;
-  if (released_time > (unsigned)-1)
-    released_time = (unsigned)-1;
+  unsigned releasedDurationMs = SamplesDiffToMs(last_stop, start_time);
+  const GOSoundAudioSection *attack
+    = pipe->GetAttack(velocity, releasedDurationMs);
 
-  const GOSoundAudioSection *attack = pipe->GetAttack(velocity, released_time);
   if (!attack || attack->GetChannels() == 0)
     return NULL;
   GOSoundSampler *sampler = m_SamplerPool.GetSampler();
@@ -473,10 +478,11 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
   const GOSoundProvider *this_pipe = handle->pipe;
   const GOSoundAudioSection *release_section = this_pipe->GetRelease(
     handle->stream.audio_section->GetSampleGroup(),
-    ((double)(m_CurrentTime - handle->time)) / m_SampleRate);
+    SamplesDiffToMs(handle->time, m_CurrentTime));
   unsigned cross_fade_len = release_section
     ? release_section->GetReleaseCrossfadeLength()
     : this_pipe->GetAttackSwitchCrossfadeLength();
+
   handle->fader.StartDecay(cross_fade_len, m_SampleRate);
   handle->is_release = true;
 
