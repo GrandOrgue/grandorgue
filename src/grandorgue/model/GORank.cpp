@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -30,7 +30,6 @@ GORank::GORank(GOOrganModel &organModel)
     m_NoteStopVelocities(),
     m_MaxNoteVelocities(),
     m_FirstMidiNoteNumber(0),
-    m_Percussive(false),
     m_WindchestGroup(0),
     m_HarmonicNumber(8),
     m_MinVolume(100),
@@ -65,7 +64,6 @@ void GORank::Init(
 
   m_PipeConfig.Init(cfg, group, wxEmptyString);
   m_WindchestGroup = windchest_nr;
-  m_Percussive = false;
   m_HarmonicNumber = 8;
   m_MinVolume = 100;
   m_MaxVolume = 100;
@@ -105,7 +103,6 @@ void GORank::Load(
     wxT("WindchestGroup"),
     1,
     r_OrganModel.GetWindchestGroupCount());
-  m_Percussive = cfg.ReadBoolean(ODFSetting, group, wxT("Percussive"));
   m_HarmonicNumber = cfg.ReadInteger(
     ODFSetting, group, wxT("HarmonicNumber"), 1, 1024, false, 8);
   m_MinVolume = cfg.ReadFloat(
@@ -134,7 +131,6 @@ void GORank::Load(
       m_Pipes.push_back(new GOSoundingPipe(
         &r_OrganModel,
         this,
-        m_Percussive,
         m_WindchestGroup,
         m_FirstMidiNoteNumber + i,
         m_HarmonicNumber,

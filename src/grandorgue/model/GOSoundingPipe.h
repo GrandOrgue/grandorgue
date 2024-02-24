@@ -38,7 +38,6 @@ private:
    * GOSoundEngine::StartSampler */
   int m_SamplerGroupID;
   unsigned m_AudioGroupID;
-  bool m_Percussive;
   float m_TemperamentOffset;
   unsigned m_HarmonicNumber;
   float m_MinVolume;
@@ -115,7 +114,6 @@ public:
   GOSoundingPipe(
     GOOrganModel *pOrganModel,
     GORank *rank,
-    bool percussive,
     int sampler_group_id,
     unsigned midi_key_number,
     unsigned harmonic_number,

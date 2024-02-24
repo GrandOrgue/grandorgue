@@ -27,7 +27,6 @@
 GOSoundingPipe::GOSoundingPipe(
   GOOrganModel *pOrganModel,
   GORank *rank,
-  bool percussive,
   int sampler_group_id,
   unsigned midi_key_number,
   unsigned harmonic_number,
@@ -45,7 +44,6 @@ GOSoundingPipe::GOSoundingPipe(
     m_Filename(),
     m_SamplerGroupID(sampler_group_id),
     m_AudioGroupID(0),
-    m_Percussive(percussive),
     m_TemperamentOffset(0),
     m_HarmonicNumber(harmonic_number),
     m_MinVolume(min_volume),
@@ -78,8 +76,8 @@ void GOSoundingPipe::Init(
 
   ainfo.filename.AssignResource(m_Filename);
   ainfo.sample_group = -1;
-  ainfo.load_release = !m_Percussive;
-  ainfo.percussive = m_Percussive;
+  ainfo.percussive = m_PipeConfigNode.GetEffectivePercussive();
+  ainfo.load_release = !ainfo.percussive;
   ainfo.max_playback_time = -1;
   ainfo.cue_point = -1;
   ainfo.min_attack_velocity = 0;
@@ -105,9 +103,9 @@ void GOSoundingPipe::LoadAttackFileInfo(
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
   ainfo.sample_group = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
+  ainfo.percussive = m_PipeConfigNode.GetEffectivePercussive();
   ainfo.load_release = cfg.ReadBoolean(
-    ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);
-  ainfo.percussive = m_Percussive;
+    ODFSetting, group, prefix + wxT("LoadRelease"), false, !ainfo.percussive);
   ainfo.max_playback_time = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
   ainfo.cue_point = cfg.ReadInteger(
@@ -241,8 +239,6 @@ void GOSoundingPipe::Load(
     p_OrganModel->GetWindchestGroupCount(),
     false,
     m_SamplerGroupID);
-  m_Percussive = cfg.ReadBoolean(
-    ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
   m_OdfMidiKeyNumber = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
   m_OdfMidiPitchFraction = cfg.ReadFloat(

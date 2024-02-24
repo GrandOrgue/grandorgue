@@ -123,6 +123,7 @@ void GOPipeConfig::Init(
   m_PitchTuning = 0;
   m_PitchCorrection = 0;
   m_DefaultDelay = 0;
+  m_Percussive = BOOL3_DEFAULT;
   LoadFromCmb(cfg, group, prefix);
 }
 
@@ -138,6 +139,8 @@ void GOPipeConfig::Load(
     ODFSetting, group, prefix + wxT("PitchCorrection"), -1800, 1800, false, 0);
   m_DefaultDelay = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
+  m_Percussive = cfg.ReadBooleanTriple(
+    ODFSetting, group, prefix + wxT("Percussive"), false);
   LoadFromCmb(cfg, group, prefix);
 }
 
