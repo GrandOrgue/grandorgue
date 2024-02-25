@@ -139,7 +139,7 @@ void GOVirtualCouplerController::Init(
   }
 }
 
-static wxString WX_COOPLE_THROUGH = wxT("CoupleThrough");
+static wxString WX_COUPLE_THROUGH = wxT("CoupleThrough");
 
 void GOVirtualCouplerController::Load(
   GOOrganModel &organModel, GOConfigReader &cfg) {
@@ -147,7 +147,7 @@ void GOVirtualCouplerController::Load(
   for (auto e : m_CoupleThroughPtrs) {
     GOCallbackButtonControl *pCoupleThrough = e.second;
     bool isCoupleThrough = cfg.ReadBoolean(
-      CMBSetting, pCoupleThrough->GetGroup(), WX_COOPLE_THROUGH, false, false);
+      CMBSetting, pCoupleThrough->GetGroup(), WX_COUPLE_THROUGH, false, false);
 
     pCoupleThrough->Set(isCoupleThrough);
   }
@@ -159,7 +159,7 @@ void GOVirtualCouplerController::Save(GOConfigWriter &cfg) {
 
     cfg.WriteBoolean(
       pCoupleThrough->GetGroup(),
-      WX_COOPLE_THROUGH,
+      WX_COUPLE_THROUGH,
       pCoupleThrough->IsEngaged());
   }
 }
