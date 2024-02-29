@@ -265,7 +265,7 @@ void GOCoupler::SetOut(int noteNumber, unsigned velocity) {
     newstate--;
   GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
   m_OutVelocity[note] = newstate;
-  dest->SetKey(note, m_OutVelocity[note], this, m_CouplerIndexInDest);
+  dest->SetKey(note, m_OutVelocity[note], m_CouplerIndexInDest);
 }
 
 unsigned GOCoupler::GetInternalState(int noteNumber) {
@@ -363,8 +363,21 @@ void GOCoupler::ChangeState(bool on) {
       newstate--;
     if (m_OutVelocity[i] != newstate) {
       m_OutVelocity[i] = newstate;
-      dest->SetKey(i, m_OutVelocity[i], this, m_CouplerIndexInDest);
+      dest->SetKey(i, m_OutVelocity[i], m_CouplerIndexInDest);
     }
+  }
+}
+
+void GOCoupler::RefreshState() {
+  bool on = IsActive();
+
+  if (m_UnisonOff)
+    r_OrganModel.GetManual(m_SourceManual)->SetUnisonOff(on);
+  else {
+    GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
+
+    for (unsigned l = m_OutVelocity.size(), i = 0; i < l; i++)
+      dest->PropagateKeyToCouplers(i);
   }
 }
 

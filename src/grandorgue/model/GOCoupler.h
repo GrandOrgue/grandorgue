@@ -72,6 +72,9 @@ public:
     int dest_manual,
     GOCouplerType coupler_type);
   void Load(GOConfigReader &cfg, wxString group);
+
+  void RefreshState();
+
   void SetKey(
     unsigned note,
     const std::vector<unsigned> &velocities,

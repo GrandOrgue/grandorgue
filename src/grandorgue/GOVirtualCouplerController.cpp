@@ -185,7 +185,9 @@ void GOVirtualCouplerController::ButtonStateChanged(
       const CouplerSetKey &couplerSetKey = e.first;
       ManualCouplerSet &manualCouplers = m_CouplerPtrs[couplerSetKey];
 
-      for (auto pCoupler : manualCouplers)
+      for (auto pCoupler : manualCouplers) {
         pCoupler->SetRecursive(newState);
+        pCoupler->RefreshState();
+      }
     }
 }
