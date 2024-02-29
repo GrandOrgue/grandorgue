@@ -73,6 +73,7 @@ public:
     GOCouplerType coupler_type);
   void Load(GOConfigReader &cfg, wxString group);
 
+  // send key states for all chaned couplers
   void RefreshState();
 
   void SetKey(

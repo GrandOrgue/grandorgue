@@ -377,7 +377,9 @@ void GOCoupler::RefreshState() {
     GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
 
     for (unsigned l = m_OutVelocity.size(), i = 0; i < l; i++)
-      dest->PropagateKeyToCouplers(i);
+      // check if the key is set. Otherwise propagating is not necessary
+      if (m_OutVelocity[i])
+        dest->PropagateKeyToCouplers(i);
   }
 }
 
