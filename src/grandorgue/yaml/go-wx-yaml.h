@@ -36,7 +36,7 @@ extern YAML::Node get_from_map_or_null(
   const YAML::Node &container, const char *key);
 inline YAML::Node get_from_map_or_null(
   const YAML::Node &container, const wxString &key) {
-  return get_from_map_or_null(container, key.mbc_str().data());
+  return get_from_map_or_null(container, key.utf8_str().data());
 }
 
 /**
@@ -52,7 +52,7 @@ extern void put_to_map_if_not_null(
   YAML::Node &container, const char *key, const YAML::Node &value);
 inline void putToMapIfNotNull(
   YAML::Node &container, const wxString &key, const YAML::Node &value) {
-  put_to_map_if_not_null(container, key.mbc_str().data(), value);
+  put_to_map_if_not_null(container, key.utf8_str().data(), value);
 }
 
 /**
@@ -80,6 +80,6 @@ inline void put_to_map_with_name(
   const char *valueLabel,
   const YAML::Node &value) {
   put_to_map_with_name(
-    container, key.mbc_str().data(), nameValue, valueLabel, value);
+    container, key.utf8_str().data(), nameValue, valueLabel, value);
 }
 #endif /* GOWXYAML_H */
