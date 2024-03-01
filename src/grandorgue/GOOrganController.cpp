@@ -645,7 +645,9 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
     outYaml << YAML::BeginDoc << globalNode;
 
     uint8_t utf8bom[] = {0xEF, 0xBB, 0xBF};
-    if (fOS.WriteAll(utf8bom, sizeof(utf8bom)) && fOS.WriteAll(outYaml.c_str(), outYaml.size()))
+    if (
+      fOS.WriteAll(utf8bom, sizeof(utf8bom))
+      && fOS.WriteAll(outYaml.c_str(), outYaml.size()))
       m_setter->OnCombinationsSaved(fileName);
     else
       errMsg.Printf(
@@ -701,9 +703,11 @@ static std::vector<char> loadFileBytes(const wxString &file) {
 }
 
 static wxString loadFileTextWithEncodingDetection(const wxString &file) {
-  std::vector<char> content = loadFileBytes(file);  
+  std::vector<char> content = loadFileBytes(file);
   std::array<char, 3> utf8bom = {'\xEF', '\xBB', '\xBF'};
-  if (content.size() >= utf8bom.size() && std::equal(utf8bom.begin(), utf8bom.end(), content.begin())) {
+  if (
+    content.size() >= utf8bom.size()
+    && std::equal(utf8bom.begin(), utf8bom.end(), content.begin())) {
     // Newer GO versions export yaml files with UTF-8-BOM.
     // wxConvAuto will detect BOM and decode as UTF-8.
     return wxString(&content[0], wxConvAuto(), content.size());
@@ -721,7 +725,8 @@ void GOOrganController::LoadCombination(const wxString &file) {
     const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
-      wxScopedCharBuffer fileContentInUtf8 = loadFileTextWithEncodingDetection(file).utf8_str();
+      wxScopedCharBuffer fileContentInUtf8
+        = loadFileTextWithEncodingDetection(file).utf8_str();
       YAML::Node cmbNode = YAML::Load(fileContentInUtf8.data());
       YAML::Node cmbInfoNode = cmbNode[INFO];
       const wxString contentType = cmbInfoNode[CONTENT_TYPE].as<wxString>();
