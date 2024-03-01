@@ -7,6 +7,7 @@
 
 #include "GOOrganController.h"
 
+#include <algorithm>
 #include <math.h>
 #include <wx/datetime.h>
 #include <wx/filename.h>
@@ -700,13 +701,16 @@ static std::vector<char> loadFileBytes(const wxString &file) {
 }
 
 static wxString loadFileTextWithEncodingDetection(const wxString &file) {
-  std::vector<char> content = loadFileBytes(file);
-  wxConvAuto conv(wxFONTENCODING_SYSTEM); // utf-8 if BOM is present, system otherwise
-  wxString contentAsText = wxString(&content[0], conv, content.size());
-  if (contentAsText.IsEmpty() && content.size() != 0) {
-    throw wxString::Format(_("Failed to guess file encoding: %s"), file);
+  std::vector<char> content = loadFileBytes(file);  
+  std::array<char, 3> utf8bom = {'\xEF', '\xBB', '\xBF'};
+  if (content.size() >= utf8bom.size() && std::equal(utf8bom.begin(), utf8bom.end(), content.begin())) {
+    // Newer GO versions export yaml files with UTF-8-BOM.
+    // wxConvAuto will detect BOM and decode as UTF-8.
+    return wxString(&content[0], wxConvAuto(), content.size());
+  } else {
+    // Use encoding that was used in older GO versions (system default)
+    return wxString(&content[0], *wxConvCurrent, content.size());
   }
-  return contentAsText;
 }
 
 void GOOrganController::LoadCombination(const wxString &file) {
