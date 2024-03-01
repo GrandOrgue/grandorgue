@@ -43,6 +43,7 @@ private:
   int8_t m_BitsPerSample;
   int8_t m_Channels;
   int8_t m_LoopLoad;
+  GOBool3 m_Percussive;
   GOBool3 m_Compress;
   GOBool3 m_AttackLoad;
   GOBool3 m_ReleaseLoad;
@@ -142,6 +143,10 @@ public:
 
   int8_t GetLoopLoad() const { return m_LoopLoad; }
   void SetLoopLoad(int8_t value) { SetSmallMember(value, m_LoopLoad); }
+
+  GOBool3 GetPercussive() const { return m_Percussive; }
+  // does not send notifications
+  void SetPercussiveFromInit(GOBool3 value) { m_Percussive = value; }
 
   GOBool3 GetCompress() const { return m_Compress; }
   void SetCompress(GOBool3 value) { SetSmallMember(value, m_Compress); }

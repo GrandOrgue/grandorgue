@@ -133,6 +133,13 @@ public:
       &GOConfig::LoopLoad);
   }
 
+  bool GetEffectivePercussive() const {
+    return GetEffectiveBool(
+      &GOPipeConfig::GetPercussive,
+      &GOPipeConfigNode::GetEffectivePercussive,
+      (const GOSettingUnsigned GOConfig::*)nullptr);
+  }
+
   bool GetEffectiveCompress() const {
     return GetEffectiveBool(
       &GOPipeConfig::GetCompress,
