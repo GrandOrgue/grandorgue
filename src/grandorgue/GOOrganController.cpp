@@ -254,7 +254,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
 
   GOOrganModel::Load(cfg);
 
-  m_VirtualCouplers.Init(*this, cfg);
+  m_VirtualCouplers.Load(*this, cfg);
 
   GOOrganModel::LoadCmbButtons(cfg);
 
@@ -825,6 +825,7 @@ bool GOOrganController::Export(const wxString &cmb) {
 
   GOEventDistributor::Save(cfg);
   GetDialogSizeSet().Save(cfg);
+  m_VirtualCouplers.Save(cfg);
 
   wxString tmp_name = cmb + wxT(".new");
 

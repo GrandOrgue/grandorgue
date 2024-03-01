@@ -5732,6 +5732,10 @@ keyboard, etc.
               <entry><emphasis role="strong">MEL</emphasis></entry>
               <entry>"Melody" coupler. The upper note in any chord played on the "master" keyboard is "pulled" on the target key/pedal board.</entry>
             </row>
+            <row valign="top">
+              <entry><emphasis role="strong">Couple Through</emphasis></entry>
+              <entry>When it is engaged, any source manual key pressing is transfering to all engaged target manual further couplers for all couplers in this row</entry>
+            </row>
           </tbody>
         </tgroup>
       </informaltable>
