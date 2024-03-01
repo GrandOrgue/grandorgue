@@ -643,7 +643,8 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
 
     outYaml << YAML::BeginDoc << globalNode;
 
-    if (fOS.WriteAll(outYaml.c_str(), outYaml.size()))
+    uint8_t utf8bom[] = {0xEF, 0xBB, 0xBF};
+    if (fOS.WriteAll(utf8bom, sizeof(utf8bom)) && fOS.WriteAll(outYaml.c_str(), outYaml.size()))
       m_setter->OnCombinationsSaved(fileName);
     else
       errMsg.Printf(
@@ -686,6 +687,28 @@ bool GOOrganController::IsToImportCombinationsFor(
   return isToImport;
 }
 
+static std::vector<char> loadFileBytes(const wxString &file) {
+  wxFileInputStream fileInputStream(file);
+  if (!fileInputStream.IsOk()) {
+    throw wxString::Format(_("Failed to open '%s'"), file);
+  }
+  std::vector<char> content(fileInputStream.GetSize());
+  if (!fileInputStream.ReadAll(&content[0], content.size())) {
+    throw wxString::Format(_("Failed to read '%s'"), file);
+  }
+  return content;
+}
+
+static wxString loadFileTextWithEncodingDetection(const wxString &file) {
+  std::vector<char> content = loadFileBytes(file);
+  wxConvAuto conv(wxFONTENCODING_SYSTEM); // utf-8 if BOM is present, system otherwise
+  wxString contentAsText = wxString(&content[0], conv, content.size());
+  if (contentAsText.IsEmpty() && content.size() != 0) {
+    throw wxString::Format(_("Failed to guess file encoding: %s"), file);
+  }
+  return contentAsText;
+}
+
 void GOOrganController::LoadCombination(const wxString &file) {
   wxString errMsg;
   const wxFileName fileName(file);
@@ -694,7 +717,8 @@ void GOOrganController::LoadCombination(const wxString &file) {
     const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
-      YAML::Node cmbNode = YAML::LoadFile(file.c_str().AsChar());
+      std::string fileContentInUtf8 = loadFileTextWithEncodingDetection(file).utf8_string();
+      YAML::Node cmbNode = YAML::Load(fileContentInUtf8);
       YAML::Node cmbInfoNode = cmbNode[INFO];
       const wxString contentType = cmbInfoNode[CONTENT_TYPE].as<wxString>();
 
