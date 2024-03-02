@@ -725,8 +725,10 @@ void GOOrganController::LoadCombination(const wxString &file) {
     const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
-      wxScopedCharBuffer fileContentInUtf8
-        = loadFileTextWithEncodingDetection(file).utf8_str();
+      wxString fileContent = loadFileTextWithEncodingDetection(file);
+      // Note: wxScopedCharBuffer may point to internals of wxString above
+      // fileContent must not be destructed while fileContentInUtf8 is in use
+      wxScopedCharBuffer fileContentInUtf8 = fileContent.utf8_str();
       YAML::Node cmbNode = YAML::Load(fileContentInUtf8.data());
       YAML::Node cmbInfoNode = cmbNode[INFO];
       const wxString contentType = cmbInfoNode[CONTENT_TYPE].as<wxString>();
