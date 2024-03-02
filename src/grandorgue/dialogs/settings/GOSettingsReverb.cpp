@@ -19,6 +19,7 @@
 
 #include "config/GOConfig.h"
 #include "files/GOStandardFile.h"
+#include "wxcontrols/GOFilePickerCtrl.h"
 
 #include "GOWave.h"
 
@@ -53,10 +54,9 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
     new wxStaticText(this, wxID_ANY, _("Impulse response:")),
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-  m_File = new wxFilePickerCtrl(
+  m_File = new GOFilePickerCtrl(
     this,
     ID_FILE,
-    wxEmptyString,
     _("Select an impulse file"),
     _("*.wav"),
     wxDefaultPosition,

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,6 +14,7 @@
 #include <wx/string.h>
 
 #include "config/GOConfig.h"
+#include "wxcontrols/GODirPickerCtrl.h"
 
 GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
   : wxPanel(parent, wxID_ANY), m_config(settings) {
@@ -27,10 +28,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_Samplesets = new wxDirPickerCtrl(
+    m_Samplesets = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for open new organs at"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -43,10 +43,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_OrganPackages = new wxDirPickerCtrl(
+    m_OrganPackages = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for load new organ packages from"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -59,10 +58,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_OrganCache = new wxDirPickerCtrl(
+    m_OrganCache = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for storing organ cache"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -74,10 +72,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_OrganSettings = new wxDirPickerCtrl(
+    m_OrganSettings = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for storing organ settings"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -90,10 +87,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_OrganCombinations = new wxDirPickerCtrl(
+    m_OrganCombinations = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for export/import organ combinations"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -106,10 +102,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_ExportImport = new wxDirPickerCtrl(
+    m_ExportImport = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for export/import organ settings"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -122,10 +117,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_AudioRecorder = new wxDirPickerCtrl(
+    m_AudioRecorder = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for your audio recordings"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -138,10 +132,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_MidiRecorder = new wxDirPickerCtrl(
+    m_MidiRecorder = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for your MIDI recording"),
       wxDefaultPosition,
       wxDefaultSize,
@@ -154,10 +147,9 @@ GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   grid->Add(
-    m_MidiPlayer = new wxDirPickerCtrl(
+    m_MidiPlayer = new GODirPickerCtrl(
       this,
       wxID_ANY,
-      wxEmptyString,
       _("Select directory for the MIDI player"),
       wxDefaultPosition,
       wxDefaultSize,
