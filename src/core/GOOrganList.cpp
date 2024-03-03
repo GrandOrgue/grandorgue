@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -60,8 +60,11 @@ void GOOrganList::RemoveInvalidTmpOrgans() {
   }
   for (int i = m_ArchiveList.size() - 1; i >= 0; i--) {
     const GOArchiveFile &aF = *m_ArchiveList[i];
+    const wxString &archivePath = aF.GetPath();
 
-    if (!aF.IsUsable(*this) && aF.GetPath().StartsWith(tmpDirPrefix))
+    if (
+      !archivePath.IsEmpty() && !aF.IsUsable()
+      && archivePath.StartsWith(tmpDirPrefix))
       m_ArchiveList.erase(i);
   }
 }
@@ -107,7 +110,7 @@ const GOArchiveFile *GOOrganList::GetArchiveByID(
   const wxString &id, bool useable) const {
   for (unsigned i = 0; i < m_ArchiveList.size(); i++)
     if (m_ArchiveList[i]->GetID() == id)
-      if (!useable || m_ArchiveList[i]->IsUsable(*this))
+      if (!useable || m_ArchiveList[i]->IsUsable())
         return m_ArchiveList[i];
   return NULL;
 }
