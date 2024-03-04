@@ -644,7 +644,7 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
 
     outYaml << YAML::BeginDoc << globalNode;
 
-    uint8_t utf8bom[] = {0xEF, 0xBB, 0xBF};
+    static const uint8_t utf8bom[] = {0xEF, 0xBB, 0xBF};
     if (
       fOS.WriteAll(utf8bom, sizeof(utf8bom))
       && fOS.WriteAll(outYaml.c_str(), outYaml.size()))

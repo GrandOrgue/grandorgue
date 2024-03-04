@@ -1,4 +1,4 @@
-- Organ combination .yaml files are now portable across Windows, Linux and MacOS https://github.com/GrandOrgue/grandorgue/issues/1818
+- Fixed different encoding of combination .yaml files on Windows, Linux and MacOS https://github.com/GrandOrgue/grandorgue/issues/1818
 - Added support of "Couple Through" mode of Virtual Couplers https://github.com/GrandOrgue/grandorgue/issues/1657
 - Added capability of loading only GUI panels without audio samples by specifying the "-g" switch from the command line https://github.com/GrandOrgue/grandorgue/issues/1602
 - Removed support of MacOS 11 https://github.com/GrandOrgue/grandorgue/issues/1791
