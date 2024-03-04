@@ -690,26 +690,34 @@ bool GOOrganController::IsToImportCombinationsFor(
   return isToImport;
 }
 
-static std::vector<char> loadFileBytes(const wxString &file) {
-  wxFileInputStream fileInputStream(file);
-  if (!fileInputStream.IsOk()) {
-    throw wxString::Format(_("Failed to open '%s'"), file);
+static std::vector<char> load_file_bytes(const wxString &filePath) {
+  wxFile file;
+  if (!file.Open(filePath)) {
+    throw wxString::Format(
+      _("Failed to open '%s': %s"), filePath, strerror(file.GetLastError()));
   }
-  std::vector<char> content(fileInputStream.GetSize());
-  if (!fileInputStream.ReadAll(&content[0], content.size())) {
-    throw wxString::Format(_("Failed to read '%s'"), file);
+  std::vector<char> content;
+  content.reserve(file.Length());
+  char buf[8 * 1024]; // 8 KiB
+  ssize_t bytesRead;
+  while ((bytesRead = file.Read(buf, sizeof(buf))) != 0) {
+    if (bytesRead == wxInvalidOffset) {
+      throw wxString::Format(
+        _("Failed to read '%s': %s"), filePath, strerror(file.GetLastError()));
+    }
+    content.insert(content.end(), &buf[0], &buf[bytesRead]);
   }
   return content;
 }
 
-static wxString loadFileTextWithEncodingDetection(const wxString &file) {
-  std::vector<char> content = loadFileBytes(file);
-  std::array<char, 3> utf8bom = {'\xEF', '\xBB', '\xBF'};
-  if (
-    content.size() >= utf8bom.size()
-    && std::equal(utf8bom.begin(), utf8bom.end(), content.begin())) {
-    // Newer GO versions export yaml files with UTF-8-BOM.
-    // wxConvAuto will detect BOM and decode as UTF-8.
+static wxString load_file_text_with_encoding_detection(
+  const wxString &filePath) {
+  std::vector<char> content = load_file_bytes(filePath);
+  wxBOM detectedBOM = wxConvAuto::DetectBOM(&content[0], content.size());
+  if (detectedBOM != wxBOM_None && detectedBOM != wxBOM_Unknown) {
+    // We know what encoding was used for that file.
+    // wxConvAuto will use BOM to determine encoding and to decode file content.
+    // Note: newer GO versions export yaml files with UTF-8-BOM.
     return wxString(&content[0], wxConvAuto(), content.size());
   } else {
     // Use encoding that was used in older GO versions (system default)
@@ -725,7 +733,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
     const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
-      wxString fileContent = loadFileTextWithEncodingDetection(file);
+      wxString fileContent = load_file_text_with_encoding_detection(file);
       // Note: wxScopedCharBuffer may point to internals of wxString above
       // fileContent must not be destructed while fileContentInUtf8 is in use
       wxScopedCharBuffer fileContentInUtf8 = fileContent.utf8_str();
