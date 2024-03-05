@@ -7,6 +7,7 @@
 
 #include "GOOrganController.h"
 
+#include <algorithm>
 #include <math.h>
 #include <wx/datetime.h>
 #include <wx/filename.h>
@@ -643,7 +644,10 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
 
     outYaml << YAML::BeginDoc << globalNode;
 
-    if (fOS.WriteAll(outYaml.c_str(), outYaml.size()))
+    static const uint8_t utf8bom[] = {0xEF, 0xBB, 0xBF};
+    if (
+      fOS.WriteAll(utf8bom, sizeof(utf8bom))
+      && fOS.WriteAll(outYaml.c_str(), outYaml.size()))
       m_setter->OnCombinationsSaved(fileName);
     else
       errMsg.Printf(
@@ -686,6 +690,41 @@ bool GOOrganController::IsToImportCombinationsFor(
   return isToImport;
 }
 
+static std::vector<char> load_file_bytes(const wxString &filePath) {
+  wxFile file;
+  if (!file.Open(filePath)) {
+    throw wxString::Format(
+      _("Failed to open '%s': %s"), filePath, strerror(file.GetLastError()));
+  }
+  std::vector<char> content;
+  content.reserve(file.Length());
+  char buf[8 * 1024]; // 8 KiB
+  ssize_t bytesRead;
+  while ((bytesRead = file.Read(buf, sizeof(buf))) != 0) {
+    if (bytesRead == wxInvalidOffset) {
+      throw wxString::Format(
+        _("Failed to read '%s': %s"), filePath, strerror(file.GetLastError()));
+    }
+    content.insert(content.end(), &buf[0], &buf[bytesRead]);
+  }
+  return content;
+}
+
+static wxString load_file_text_with_encoding_detection(
+  const wxString &filePath) {
+  std::vector<char> content = load_file_bytes(filePath);
+  wxBOM detectedBOM = wxConvAuto::DetectBOM(&content[0], content.size());
+  if (detectedBOM != wxBOM_None && detectedBOM != wxBOM_Unknown) {
+    // We know what encoding was used for that file.
+    // wxConvAuto will use BOM to determine encoding and to decode file content.
+    // Note: newer GO versions export yaml files with UTF-8-BOM.
+    return wxString(&content[0], wxConvAuto(), content.size());
+  } else {
+    // Use encoding that was used in older GO versions (system default)
+    return wxString(&content[0], *wxConvCurrent, content.size());
+  }
+}
+
 void GOOrganController::LoadCombination(const wxString &file) {
   wxString errMsg;
   const wxFileName fileName(file);
@@ -694,7 +733,11 @@ void GOOrganController::LoadCombination(const wxString &file) {
     const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
-      YAML::Node cmbNode = YAML::LoadFile(file.c_str().AsChar());
+      wxString fileContent = load_file_text_with_encoding_detection(file);
+      // Note: wxScopedCharBuffer may point to internals of wxString above
+      // fileContent must not be destructed while fileContentInUtf8 is in use
+      wxScopedCharBuffer fileContentInUtf8 = fileContent.utf8_str();
+      YAML::Node cmbNode = YAML::Load(fileContentInUtf8.data());
       YAML::Node cmbInfoNode = cmbNode[INFO];
       const wxString contentType = cmbInfoNode[CONTENT_TYPE].as<wxString>();
 

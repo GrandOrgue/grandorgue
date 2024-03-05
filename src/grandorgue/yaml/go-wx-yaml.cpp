@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,7 +15,7 @@ Node convert<wxString>::encode(const wxString &rhs) {
   Node node;
 
   if (!rhs.IsEmpty())
-    node = rhs.mbc_str().data();
+    node = rhs.utf8_str().data();
   return node;
 }
 
@@ -27,7 +27,7 @@ bool convert<wxString>::decode(const Node &node, wxString &rhs) {
     if (isNull)
       rhs = wxEmptyString;
     else
-      rhs = node.as<std::string>();
+      rhs = wxString::FromUTF8(node.as<std::string>().c_str());
   }
   return isValid;
 }
