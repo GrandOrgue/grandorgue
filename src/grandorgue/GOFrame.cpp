@@ -40,9 +40,9 @@
 #include "sound/GOSound.h"
 #include "temperaments/GOTemperament.h"
 #include "threading/GOMutexLocker.h"
+#include "wxcontrols/GOAudioGauge.h"
 
 #include "GOApp.h"
-#include "GOAudioGauge.h"
 #include "GODocument.h"
 #include "GOEvent.h"
 #include "GOLogicalRect.h"

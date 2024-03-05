@@ -202,7 +202,7 @@ sound/GOSoundStateHandler.cpp
 sound/GOSound.cpp
 yaml/GOSaveableToYaml.cpp
 yaml/go-wx-yaml.cpp
-GOAudioGauge.cpp
+wxcontrols/GOAudioGauge.cpp
 GOAudioRecorder.cpp
 GOBitmapCache.cpp
 GOEvent.cpp
