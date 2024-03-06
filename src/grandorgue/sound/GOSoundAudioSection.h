@@ -17,7 +17,7 @@
 #include "GOSoundResample.h"
 #include "GOWave.h"
 
-class GOAudioSection;
+class GOSoundAudioSection;
 class GOCache;
 class GOCacheObject;
 class GOCacheWriter;
@@ -63,7 +63,7 @@ typedef struct audio_end_data_segment_s {
 } audio_end_data_segment;
 
 typedef struct audio_section_stream_s {
-  const GOAudioSection *audio_section;
+  const GOSoundAudioSection *audio_section;
   const struct resampler_coefs_s *resample_coefs;
 
   /* Method used to decode stream */
@@ -93,7 +93,7 @@ typedef struct audio_section_stream_s {
   DecompressionCache cache;
 } audio_section_stream;
 
-class GOAudioSection {
+class GOSoundAudioSection {
 private:
   template <class T>
   static void MonoUncompressedLinear(
@@ -156,10 +156,12 @@ private:
   unsigned m_SampleRate;
 
   /* Type of the data which is stored in the data pointer */
-  unsigned m_Compressed;
   unsigned m_BitsPerSample;
   unsigned m_BytesPerSample;
   unsigned m_Channels;
+
+  int8_t m_SampleGroup;
+  bool m_IsCompressed;
 
   /* Size of the section in BYTES */
   GOMemoryPool &m_Pool;
@@ -171,10 +173,12 @@ private:
   unsigned m_ReleaseCrossfadeLength; // in ms
 
 public:
-  GOAudioSection(GOMemoryPool &pool);
-  ~GOAudioSection();
+  GOSoundAudioSection(GOMemoryPool &pool);
+  ~GOSoundAudioSection();
   void ClearData();
-  unsigned GetChannels() const;
+  inline unsigned GetChannels() const { return m_Channels; }
+  inline int8_t GetSampleGroup() const { return m_SampleGroup; }
+
   unsigned GetBytesPerSample() const;
   unsigned GetLength() const;
   unsigned GetReleaseCrossfadeLength() const {
@@ -212,6 +216,7 @@ public:
     unsigned pcm_data_sample_rate,
     unsigned pcm_data_nb_samples,
     const std::vector<GOWaveLoop> *loop_points,
+    int8_t sampleGroup,
     bool compress,
     unsigned loopCrossfadeLength,
     unsigned releaseCrossfadeLength);
@@ -241,25 +246,24 @@ public:
   unsigned GetSampleRate() const;
   bool SupportsStreamAlignment() const;
   void SetupStreamAlignment(
-    const std::vector<const GOAudioSection *> &joinables, unsigned start_index);
+    const std::vector<const GOSoundAudioSection *> &joinables,
+    unsigned start_index);
 
   GOSampleStatistic GetStatistic();
 };
 
-inline unsigned GOAudioSection::GetChannels() const { return m_Channels; }
-
-inline unsigned GOAudioSection::GetBytesPerSample() const {
-  return (m_Compressed) ? 0 : (m_BitsPerSample / 8);
+inline unsigned GOSoundAudioSection::GetBytesPerSample() const {
+  return (m_IsCompressed) ? 0 : (m_BitsPerSample / 8);
 }
 
-inline unsigned GOAudioSection::GetLength() const { return m_SampleCount; }
+inline unsigned GOSoundAudioSection::GetLength() const { return m_SampleCount; }
 
-inline bool GOAudioSection::IsOneshot() const {
+inline bool GOSoundAudioSection::IsOneshot() const {
   return (m_EndSegments.size() == 1)
     && (m_EndSegments[0].next_start_segment_index < 0);
 }
 
-inline int GOAudioSection::GetSampleData(
+inline int GOSoundAudioSection::GetSampleData(
   unsigned position,
   unsigned channel,
   unsigned bits_per_sample,
@@ -281,9 +285,9 @@ inline int GOAudioSection::GetSampleData(
   return 0;
 }
 
-inline int GOAudioSection::GetSample(
+inline int GOSoundAudioSection::GetSample(
   unsigned position, unsigned channel, DecompressionCache *cache) const {
-  if (!m_Compressed) {
+  if (!m_IsCompressed) {
     return GetSampleData(
       position, channel, m_BitsPerSample, m_Channels, m_Data);
   } else {
@@ -299,7 +303,7 @@ inline int GOAudioSection::GetSample(
   }
 }
 
-inline void GOAudioSection::SetSampleData(
+inline void GOSoundAudioSection::SetSampleData(
   unsigned position,
   unsigned channel,
   unsigned bits_per_sample,
@@ -324,11 +328,11 @@ inline void GOAudioSection::SetSampleData(
   assert(0 && "broken sampler type");
 }
 
-inline float GOAudioSection::GetNormGain() const {
+inline float GOSoundAudioSection::GetNormGain() const {
   return scalbnf(1.0f, -((int)m_SampleFracBits));
 }
 
-inline bool GOAudioSection::SupportsStreamAlignment() const {
+inline bool GOSoundAudioSection::SupportsStreamAlignment() const {
   return (m_ReleaseAligner != NULL);
 }
 

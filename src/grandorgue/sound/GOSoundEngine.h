@@ -46,6 +46,8 @@ private:
   unsigned m_SamplesPerBuffer;
   float m_Gain;
   unsigned m_SampleRate;
+
+  // time in samples
   uint64_t m_CurrentTime;
   GOSoundSamplerPool m_SamplerPool;
   unsigned m_AudioGroupCount;
@@ -65,6 +67,8 @@ private:
   struct resampler_coefs_s m_ResamplerCoefs;
 
   std::atomic_bool m_HasBeenSetup;
+
+  unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples);
 
   /* samplerGroupID:
      -1 .. -n Tremulants
@@ -104,7 +108,7 @@ public:
 
   GOSoundSampler *StartSample(
     const GOSoundProvider *pipe,
-    int sampler_group_id,
+    int8_t sampler_group_id,
     unsigned audio_group,
     unsigned velocity,
     unsigned delay,

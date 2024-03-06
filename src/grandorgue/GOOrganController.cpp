@@ -176,18 +176,17 @@ bool GOOrganController::IsCacheable() { return m_Cacheable; }
 
 GOHashType GOOrganController::GenerateCacheHash() {
   GOHash hash;
+
   UpdateHash(hash);
-  hash.Update(sizeof(GOAudioSection));
+  hash.Update(sizeof(GOSoundAudioSection));
   hash.Update(sizeof(GOSoundingPipe));
   hash.Update(sizeof(GOSoundReleaseAlignTable));
   hash.Update(BLOCK_HISTORY);
   hash.Update(MAX_READAHEAD);
   hash.Update(SHORT_LOOP_LENGTH);
-  hash.Update(sizeof(attack_section_info));
-  hash.Update(sizeof(release_section_info));
+  GOSoundProvider::UpdateCacheHash(hash);
   hash.Update(sizeof(audio_start_data_segment));
   hash.Update(sizeof(audio_end_data_segment));
-
   return hash.getHash();
 }
 
