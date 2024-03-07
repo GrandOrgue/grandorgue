@@ -118,6 +118,11 @@ jobs:
             prepare: osx
             build_on: osx
 
+          - run_on: macos-14
+            for: osx
+            prepare: osx
+            build_on: osx
+
           - run_on: ubuntu-latest
             for: win64
             prepare: "debian-based"
