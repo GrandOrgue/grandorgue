@@ -17,6 +17,8 @@
 #include "GOOrgan.h"
 #include "GOOrganList.h"
 
+enum { ID_ORGANS = 200 };
+
 BEGIN_EVENT_TABLE(GOSelectOrganDialog, GOSimpleDialog)
 EVT_LIST_ITEM_ACTIVATED(ID_ORGANS, GOSelectOrganDialog::OnDoubleClick)
 END_EVENT_TABLE()

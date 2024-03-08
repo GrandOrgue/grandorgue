@@ -24,8 +24,6 @@ private:
   const GOOrganList &r_OrganList;
   wxListView *m_Organs;
 
-  enum { ID_ORGANS = 200 };
-
   bool Validate() override;
 
   void OnDoubleClick(wxListEvent &event) { CloseAdvanced(wxID_OK); }
