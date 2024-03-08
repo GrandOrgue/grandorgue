@@ -50,6 +50,8 @@ EVT_BUTTON(ID_DEL_CACHE, GOSettingsOrgans::OnDelCache)
 EVT_BUTTON(ID_DEL_PRESET, GOSettingsOrgans::OnDelPreset)
 END_EVENT_TABLE()
 
+enum { GRID_COL_NAME = 0, GRID_COL_MIDI, GRID_COL_PATH, GRID_N_COLS };
+
 GOSettingsOrgans::GOSettingsOrgans(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
   : wxPanel(parent, wxID_ANY),
@@ -62,13 +64,13 @@ GOSettingsOrgans::GOSettingsOrgans(
 
   m_GridOrgans
     = new wxGrid(this, ID_ORGANS, wxDefaultPosition, wxSize(100, 40));
-  m_GridOrgans->CreateGrid(0, 3, wxGrid::wxGridSelectRows);
-  m_GridOrgans->SetColLabelValue(0, _("Name"));
-  m_GridOrgans->SetColLabelValue(1, _("MIDI"));
-  m_GridOrgans->SetColLabelValue(2, _("Path"));
-  m_GridOrgans->SetColSize(0, 200);
-  m_GridOrgans->SetColSize(1, 50);
-  m_GridOrgans->SetColSize(2, 300);
+  m_GridOrgans->CreateGrid(0, GRID_N_COLS, wxGrid::wxGridSelectRows);
+  m_GridOrgans->SetColSize(GRID_COL_NAME, 200);
+  m_GridOrgans->SetColLabelValue(GRID_COL_NAME, _("Name"));
+  m_GridOrgans->SetColSize(GRID_COL_MIDI, 50);
+  m_GridOrgans->SetColLabelValue(GRID_COL_MIDI, _("MIDI"));
+  m_GridOrgans->SetColSize(GRID_COL_PATH, 300);
+  m_GridOrgans->SetColLabelValue(GRID_COL_PATH, _("Path"));
   m_GridOrgans->HideRowLabels();
   m_GridOrgans->EnableEditing(false);
   gbSizer->Add(
@@ -218,7 +220,7 @@ GOSettingsOrgans::GOSettingsOrgans(
 
 using StringSet = std::unordered_set<wxString, wxStringHash, wxStringEqual>;
 
-StringSet collect_hashes_from_organ_files(
+static StringSet collect_hashes_from_organ_files(
   const wxString &dirPath, const wxString &pattern) {
   StringSet hashSet;
   wxArrayString files;
@@ -283,12 +285,12 @@ GOSettingsOrgans::PackageSlotSet GOSettingsOrgans::GetUsedPackages(
 void GOSettingsOrgans::DisplayMidiCell(unsigned rowN, GOOrgan *pOrgan) {
   m_GridOrgans->SetCellValue(
     rowN,
-    1,
+    GRID_COL_MIDI,
     pOrgan->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
 }
 
 void GOSettingsOrgans::DisplayPathCell(unsigned rowN, const wxString &path) {
-  m_GridOrgans->SetCellValue(rowN, 2, path);
+  m_GridOrgans->SetCellValue(rowN, GRID_COL_PATH, path);
 }
 
 void GOSettingsOrgans::FillGridRow(unsigned rowN, OrganSlot &organSlot) {
@@ -304,10 +306,11 @@ void GOSettingsOrgans::FillGridRow(unsigned rowN, OrganSlot &organSlot) {
 
   m_OrganSlotPtrsByGridLine[rowN] = &organSlot;
 
-  m_GridOrgans->SetCellValue(rowN, 0, title);
+  m_GridOrgans->SetCellValue(rowN, GRID_COL_NAME, title);
   DisplayMidiCell(rowN, o);
   DisplayPathCell(rowN, organSlot.m_CurrentPath);
-  m_GridOrgans->SetCellAlignment(rowN, 2, wxALIGN_RIGHT, wxALIGN_TOP);
+  m_GridOrgans->SetCellAlignment(
+    rowN, GRID_COL_PATH, wxALIGN_RIGHT, wxALIGN_TOP);
 }
 
 bool GOSettingsOrgans::TransferDataToWindow() {
