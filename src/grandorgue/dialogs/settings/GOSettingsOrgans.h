@@ -109,10 +109,12 @@ private:
   void RefreshButtons();
   VisibleOrganRecs GetCurrentOrganRecs();
 
+  void DisplayMidiCell(unsigned rowN, GOOrgan *pOrgan);
+  void DisplayPathCell(unsigned rowN, const wxString &path);
   void FillGridRow(unsigned rowN, OrganSlot &organSlot);
   void ReorderOrgans(const VisibleOrganRecs &newSortedRecs);
   void DelSelectedOrgans();
-  void ReplaceOrganPath(const long index, const wxString &newPath);
+  void ReplaceOrganPath(const unsigned index, const wxString &newPath);
 
   void OnCharHook(wxKeyEvent &ev);
 
