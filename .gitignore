@@ -19,9 +19,9 @@
 /ide-projects/NetBeans12/nbproject/private/
 
 *.a
+*.cmake
 CMakeCache.txt
 CMakeFiles/
-*.cmake
 Makefile
 /_CPack_Packages/
 
