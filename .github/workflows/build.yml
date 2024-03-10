@@ -98,7 +98,7 @@ jobs:
         body_path: "${{ steps.relnotes.outputs.file }}"
         
   build:
-    needs: [calc_ver, tests]
+    needs: [calc_ver]
 
     strategy:
       fail-fast: false
@@ -182,7 +182,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    needs: [calc_ver, build]
+    needs: [calc_ver, tests, build]
     if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
     runs-on: ubuntu-latest
     steps:
