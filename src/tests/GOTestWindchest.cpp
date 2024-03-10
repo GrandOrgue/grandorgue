@@ -92,7 +92,7 @@ void GOTestWindchest::run() {
   message = "The Pipe count for Windchest should be 0";
   this->GOAssert(rank->GetPipeCount() == 0, message);
   GOSoundingPipe *pipe = new GOSoundingPipe(
-    this->controller, rank, true, w_size, 36, 8, 100, 100, false);
+    this->controller, rank, w_size, 36, 8, 100, 100, false);
   rank->AddPipe(pipe);
 
   message = "The Pipe count for Windchest should be 1";
