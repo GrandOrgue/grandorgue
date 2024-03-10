@@ -10,8 +10,10 @@ jobs:
         with:
           submodules: true
       
-      - name: Install Dependencies
+      - name: Install Base Dependencies
         run: ${{github.workspace}}/build-scripts/for-linux/prepare-debian-based.sh
+      - name: Install Test Dependencies
+        run: ${{github.workspace}}/build-scripts/for-linux/prepare-debian-for-tests.sh
 
       - name: Build
         working-directory: ${{github.workspace}}
