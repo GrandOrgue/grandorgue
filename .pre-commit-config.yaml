@@ -6,6 +6,6 @@ repos:
       - id: clang-format
         args: [--style=file, -i]
   - repo: https://github.com/nanoufo/copyright-hook
-    rev: e1c3332dfcb4afa9f3c69db2da8f269984bce38f
+    rev: v1.1.0
     hooks:
       - id: update-copyright
