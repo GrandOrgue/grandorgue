@@ -76,7 +76,7 @@ void GOWindchest::Load(GOConfigReader &cfg, wxString group, unsigned index) {
     wxT("Name"),
     false,
     wxString::Format(_("Windchest %d"), index + 1));
-  m_PipeConfig.Init(cfg, group, wxEmptyString);
+  m_PipeConfig.Load(cfg, group, wxEmptyString);
   m_PipeConfig.SetName(GetName());
 }
 
