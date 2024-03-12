@@ -385,10 +385,11 @@ bool GOSettingsOrgans::TransferDataToWindow() {
   return true;
 }
 
-void GOSettingsOrgans::RefreshFocused() {
-  const int currOrganIndex = m_GridOrgans->GetGridCursorRow();
-  const OrganSlot *pSlot
-    = currOrganIndex >= 0 ? m_OrganSlotPtrsByGridLine[currOrganIndex] : nullptr;
+void GOSettingsOrgans::RefreshFocused(const int currOrganIndex) {
+  const OrganSlot *pSlot = currOrganIndex >= 0
+      && currOrganIndex < (int)m_OrganSlotPtrsByGridLine.size()
+    ? m_OrganSlotPtrsByGridLine[currOrganIndex]
+    : nullptr;
   const GOOrgan *o = pSlot ? pSlot->p_CurrentOrgan : NULL;
   const bool isPackage = pSlot && pSlot->is_packaged;
   const GOArchiveFile *a = isPackage && pSlot->p_PackageSlot
@@ -427,7 +428,7 @@ void GOSettingsOrgans::OnCharHook(wxKeyEvent &ev) {
 }
 
 void GOSettingsOrgans::OnOrganSelectCell(wxGridEvent &event) {
-  RefreshFocused();
+  RefreshFocused(event.GetRow());
   RefreshButtons();
 }
 
@@ -604,7 +605,7 @@ void GOSettingsOrgans::DelSelectedOrgans() {
           m_PackageSlotByPath.erase(pkgSlot->p_CurrentPkg->GetPath());
         }
 
-        RefreshFocused();
+        RefreshFocused(m_GridOrgans->GetGridCursorRow());
       }
     }
   }
@@ -759,7 +760,7 @@ void GOSettingsOrgans::OnOrganRelocate(wxCommandEvent &event) {
               ReplaceOrganPath(i, newPath);
         } else {
           ReplaceOrganPath(currOrganIndex, newPath);
-          RefreshFocused();
+          RefreshFocused(m_GridOrgans->GetGridCursorRow());
         }
       }
     }

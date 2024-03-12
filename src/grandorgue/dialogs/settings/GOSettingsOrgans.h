@@ -105,7 +105,7 @@ private:
   PackageSlotSet GetUsedPackages(
     std::unordered_set<unsigned> itemsToExtract
     = std::unordered_set<unsigned>());
-  void RefreshFocused();
+  void RefreshFocused(const int currOrganIndex);
   void RefreshButtons();
   VisibleOrganRecs GetCurrentOrganRecs();
 
