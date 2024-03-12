@@ -9923,7 +9923,7 @@ on which the pipes of the are placed.
           <listitem>
             <para>
 	      (boolean, default false or inherited from the Organ, Windchest or
-	      Rank). If true than release is played independently on the attack.
+	      Rank). If true, releases are played independently of the attacks.
 	    </para>
             <para>
 	      If HasIndependentRelease is true then Percussive must also be set
@@ -9991,8 +9991,8 @@ played as is (without any loop/release handling)
           <term>Pipe999HasIndependentRelease</term>
           <listitem>
             <para>
-	      (boolean, default: rank HasIndependentRelease setting). If true
-	      then the release is played independently on the attack.
+	      (boolean, default: rank HasIndependentRelease setting). If true,
+	      releases are played independently of attacks in this pipe.
 	    </para>
             <para>
 	      If HasIndependentRelease is true then Pipe999Percussive must be
