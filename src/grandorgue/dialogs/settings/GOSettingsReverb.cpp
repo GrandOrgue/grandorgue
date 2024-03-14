@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,6 +19,7 @@
 
 #include "config/GOConfig.h"
 #include "files/GOStandardFile.h"
+#include "wxcontrols/GOFilePickerCtrl.h"
 
 #include "GOWave.h"
 
@@ -53,10 +54,9 @@ GOSettingsReverb::GOSettingsReverb(GOConfig &settings, wxWindow *parent)
     new wxStaticText(this, wxID_ANY, _("Impulse response:")),
     0,
     wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-  m_File = new wxFilePickerCtrl(
+  m_File = new GOFilePickerCtrl(
     this,
     ID_FILE,
-    wxEmptyString,
     _("Select an impulse file"),
     _("*.wav"),
     wxDefaultPosition,
