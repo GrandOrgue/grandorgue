@@ -123,6 +123,7 @@ GOOrganController::GOOrganController(
     m_MainWindowData(this, wxT("MainWindow")) {
   GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
   GOOrganModel::SetModelModificationListener(this);
+  m_setter = new GOSetter(this);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
@@ -248,7 +249,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
 
   // It must be created before GOOrganModel::Load because lots of objects
   // reference to it
-  m_setter = new GOSetter(this);
   GOOrganModel::SetCombinationController(m_setter);
   m_elementcreators.push_back(m_setter);
 
