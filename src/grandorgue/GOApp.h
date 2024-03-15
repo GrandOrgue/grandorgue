@@ -22,6 +22,7 @@
 #ifndef GOAPP_H
 #define GOAPP_H
 
+#include <thread>
 #include <wx/app.h>
 
 class GOFrame;
@@ -42,6 +43,7 @@ private:
   virtual void CleanUp() override;
 
 protected:
+  std::thread m_updateCheckerThread;
   GOFrame *m_Frame;
   wxLocale m_locale;
   GOConfig *m_config;

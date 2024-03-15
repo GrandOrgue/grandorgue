@@ -160,11 +160,12 @@ public:
   GOSettingDirectory MidiRecorderPath;
   GOSettingDirectory MidiPlayerPath;
 
+  GOSettingBool CheckForUpdatesAtStartup;
+
   GOMidiDeviceConfigList m_MidiIn;
   GOMidiDeviceConfigList m_MidiOut;
 
   GODialogSizeSet m_DialogSizes;
-
   void Load();
 
   int GetLanguageId() const;

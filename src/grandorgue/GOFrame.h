@@ -19,6 +19,7 @@
 #include "modification/GOModificationListener.h"
 #include "size/GOResizable.h"
 #include "threading/GOMutex.h"
+#include "updater/GOUpdateChecker.h"
 
 #include "GOEvent.h"
 
@@ -161,6 +162,8 @@ private:
   void OnSetTitle(wxCommandEvent &event);
   void OnMsgBox(wxMsgBoxEvent &event);
   void OnRenameFile(wxRenameFileEvent &event);
+
+  void OnUpdateCheckCompleted(UpdateCheckerCompletedEvent &event);
 
   bool CloseOrgan(bool isForce = false);
   bool CloseProgram(bool isForce = false);

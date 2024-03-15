@@ -16,6 +16,7 @@
 
 #include "config/GOConfig.h"
 #include "sound/GOSound.h"
+#include "updater/GOUpdateChecker.h"
 
 #include "GOFrame.h"
 #include "GOLog.h"
@@ -171,6 +172,11 @@ bool GOApp::OnInit() {
   wxLog::SetActiveTarget(m_Log);
   m_Frame->Init(m_FileName, m_IsGuiOnly);
 
+  if (m_config->CheckForUpdatesAtStartup()) {
+    // Start update checker thread that will fire events to m_Frame
+    m_updateCheckerThread = start_update_checker_thread(m_Frame);
+  }
+
   return true;
 }
 
@@ -195,6 +201,11 @@ int GOApp::OnExit() {
 }
 
 void GOApp::CleanUp() {
+  // Make sure update checker is completed
+  if (m_updateCheckerThread.joinable()) {
+    m_updateCheckerThread.join();
+  }
+
   // Ensure that GOFrame and other objects are destroyed before deleting
   wxApp::CleanUp();
 

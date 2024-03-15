@@ -186,6 +186,10 @@ else()
   set(ZITACONVOLVER_LIBRARIES zita-convolver)
 endif()
 
+# include libcurl for automatic cheking for updates
+# exports CURL::libcurl that can be used in target_link_libraries
+find_package(CURL REQUIRED)
+
 # include FFTW
 pkg_check_modules(FFTW REQUIRED fftw3f)
 

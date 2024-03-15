@@ -407,6 +407,16 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   item6->Add(grid, 0, wxEXPAND | wxALL, 5);
   item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
+  item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Updates"));
+  item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+  item6->Add(
+    m_CheckForUpdatesAtStartup = new wxCheckBox(
+      this, ID_COMPRESS_CACHE, _("check for updates at startup")),
+    0,
+    wxEXPAND | wxALL,
+    5);
+  m_CheckForUpdatesAtStartup->SetValue(m_config.CheckForUpdatesAtStartup());
+
   item0->Add(item9, 1, wxEXPAND | wxALL, 0);
 
   topSizer->Add(item0, 0, wxEXPAND | wxALL, 5);
@@ -449,6 +459,7 @@ bool GOSettingsOptions::TransferDataFromWindow() {
   m_config.MemoryLimit(m_MemoryLimit->GetValue());
   m_config.MetronomeBPM(m_MetronomeBPM->GetValue());
   m_config.MetronomeMeasure(m_MetronomeMeasure->GetValue());
+  m_config.CheckForUpdatesAtStartup(m_CheckForUpdatesAtStartup->GetValue());
 
   // Language
   const wxStringClientData *const langData
