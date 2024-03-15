@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,6 +12,7 @@
 
 class wxBookCtrlBase;
 
+class GOGUIAdditionalSizeKeeper;
 class GOTabbedDialog;
 
 class GODialogTab : public wxPanel {
@@ -21,6 +22,9 @@ private:
 public:
   GODialogTab(
     GOTabbedDialog *pDlg, const wxString &name, const wxString &label);
+
+  virtual void ApplyAddSizes(const GOGUIAdditionalSizeKeeper &sizeKeeper) {}
+  virtual void CaptureAddSizes(GOGUIAdditionalSizeKeeper &sizeKeeper) const {}
 
   /**
    * Makes this tab selected in the book control and shows the erroe message box

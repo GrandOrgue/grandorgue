@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,6 +12,8 @@
 #include <wx/sizer.h>
 
 #include "gui/primitives/go_gui_utils.h"
+
+#include "gui/GOGUISizeKeeper.h"
 #include "help/GOHelpRequestor.h"
 
 #include "GODialogCloser.h"
@@ -117,12 +119,18 @@ protected:
    */
   virtual const wxString &GetHelpSuffix() const { return WX_EMPTY; }
 
+  virtual void ApplyAddSizes(const GOGUIAdditionalSizeKeeper &sizeKeeper) {}
+  virtual void CaptureAddSizes(GOGUIAdditionalSizeKeeper &sizeKeeper) const {}
+
 public:
   bool Show(bool show = true) override {
-    if (show)
+    if (show) {
       r_SizeKeeper.ApplySizeInfo(*(DialogClass *)this);
-    else
+      ApplyAddSizes(r_SizeKeeper);
+    } else {
       r_SizeKeeper.CaptureSizeInfo(*(DialogClass *)this);
+      CaptureAddSizes(r_SizeKeeper);
+    }
     return DialogClass::Show(show);
   }
 

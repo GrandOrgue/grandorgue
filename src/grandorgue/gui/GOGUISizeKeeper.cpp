@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,6 +21,15 @@ const wxString WX_WINDOW_WIDTH = wxT("WindowWidth");
 const wxString WX_WINDOW_HEIGHT = wxT("WindowHeight");
 const wxString WX_DISPLAY_NUMBER = wxT("DisplayNumber");
 const wxString WX_WINDOW_MAXIMIZED = wxT("WindowMaximized");
+const wxString WX_N_ADD_SIZES = wxT("NAddSizes");
+const wxString WX_ADD_SIZE_KEY_FMT = wxT("AddSize.%03d.key");
+const wxString WX_ADD_SIZE_VALUE_FMT = wxT("AddSize.%03d.value");
+
+int GOGUISizeKeeper::GetAddSize(const wxString &key) const {
+  auto iter = m_AddSizes.find(key);
+
+  return iter == m_AddSizes.end() ? -1 : iter->second;
+}
 
 // read the size info from config files
 void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
@@ -33,12 +42,25 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
     CMBSetting, m_group, WX_WINDOW_WIDTH, -1, windowLimit, false, 0);
   int h = cfg.ReadInteger(
     CMBSetting, m_group, WX_WINDOW_HEIGHT, -1, windowLimit, false, 0);
+  unsigned nAddSizes = (unsigned)cfg.ReadInteger(
+    CMBSetting, m_group, WX_N_ADD_SIZES, 0, 999, false, 0);
 
   m_rect = wxRect(x, y, w, h);
   m_DisplayNum = cfg.ReadInteger(
     CMBSetting, m_group, WX_DISPLAY_NUMBER, -1, windowLimit, false, -1);
   m_IsMaximized
     = cfg.ReadBoolean(CMBSetting, m_group, WX_WINDOW_MAXIMIZED, false, false);
+  m_AddSizes.clear();
+  for (unsigned i = 1; i <= nAddSizes; i++) {
+    m_AddSizes[cfg.ReadString(
+      CMBSetting, m_group, wxString::Format(WX_ADD_SIZE_KEY_FMT, i), false)]
+      = cfg.ReadInteger(
+        CMBSetting,
+        m_group,
+        wxString::Format(WX_ADD_SIZE_VALUE_FMT, i),
+        false,
+        -1);
+  }
 }
 
 // save the size info to the config file
@@ -61,6 +83,17 @@ void GOGUISizeKeeper::Save(GOConfigWriter &cfg) {
     m_group, WX_WINDOW_WIDTH, std::min(windowLimit, size.GetWidth()));
   cfg.WriteInteger(
     m_group, WX_WINDOW_HEIGHT, std::min(windowLimit, size.GetHeight()));
+
+  unsigned nAddSizes = 0;
+
+  for (const auto &e : m_AddSizes) {
+    nAddSizes++;
+    cfg.WriteString(
+      m_group, wxString::Format(WX_ADD_SIZE_KEY_FMT, nAddSizes), e.first);
+    cfg.WriteInteger(
+      m_group, wxString::Format(WX_ADD_SIZE_VALUE_FMT, nAddSizes), e.second);
+  }
+  cfg.WriteInteger(m_group, WX_N_ADD_SIZES, nAddSizes);
 }
 
 // gets the current size info of the window

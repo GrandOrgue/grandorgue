@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,6 +11,8 @@
 
 #include <wx/bookctrl.h>
 #include <wx/panel.h>
+
+#include "gui/GOGUIAdditionalSizeKeeperProxy.h"
 
 #include "GODialogTab.h"
 
@@ -36,6 +38,34 @@ void GOTabbedDialog::AddTab(
 
 void GOTabbedDialog::AddTab(GODialogTab *tab) {
   AddTab(tab, tab->GetName(), tab->GetLabel());
+}
+
+void GOTabbedDialog::ApplyAddSizes(
+  const GOGUIAdditionalSizeKeeper &sizeKeeper) {
+  for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
+    GODialogTab *tab = dynamic_cast<GODialogTab *>(p_book->GetPage(i));
+
+    if (tab) {
+      GOGUIAdditionalSizeKeeperProxy proxy(
+        const_cast<GOGUIAdditionalSizeKeeper &>(sizeKeeper), tab->GetName());
+
+      tab->ApplyAddSizes(proxy);
+    }
+  }
+}
+
+void GOTabbedDialog::CaptureAddSizes(
+  GOGUIAdditionalSizeKeeper &sizeKeeper) const {
+  for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
+    const GODialogTab *tab
+      = dynamic_cast<const GODialogTab *>(p_book->GetPage(i));
+
+    if (tab) {
+      GOGUIAdditionalSizeKeeperProxy proxy(sizeKeeper, tab->GetName());
+
+      tab->CaptureAddSizes(proxy);
+    }
+  }
 }
 
 const wxString &GOTabbedDialog::GetCurrTabName() const {
