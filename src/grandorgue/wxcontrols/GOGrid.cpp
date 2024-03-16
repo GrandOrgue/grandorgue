@@ -184,6 +184,11 @@ GOGrid::GOGrid(
   : wxGrid(parent, id, pos, size, style, name),
     p_RightVisibleRenderer(new RightVisibleCellRenderer()) {}
 
+GOGrid::~GOGrid() {
+  // force deleting p_RightVisibleRenderer after deletion of all columns
+  p_RightVisibleRenderer->DecRef();
+}
+
 bool GOGrid::IsColumnRightVisible(unsigned colN) const {
   return colN < m_AreColumnsRightVisible.size()
     && m_AreColumnsRightVisible[colN];

@@ -25,6 +25,7 @@ public:
     const wxSize &size = wxDefaultSize,
     long style = wxWANTS_CHARS,
     const wxString &name = wxGridNameStr);
+  virtual ~GOGrid();
 
   bool IsColumnRightVisible(unsigned colN) const;
   void SetColumnRightVisible(unsigned colN, bool isRightVisible);
