@@ -17,7 +17,14 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
   docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \
-  wine32 winbind
+  wine32 winbind pipx
+
+# Install tool to download pre-compiled libraries from msys2 repositories
+pipx install git+https://github.com/nanoufo/msys2-downloader.git@main
+
+# Download curl and dependencies
+msys2-download --extract-root ./msys2-sysroot --env mingw64 curl
+sudo cp -n -r ./msys2-sysroot/mingw64/* /usr/x86_64-w64-mingw32/
 
 mkdir -p deb
 pushd deb
