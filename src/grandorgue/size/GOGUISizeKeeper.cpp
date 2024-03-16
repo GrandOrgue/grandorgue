@@ -21,9 +21,9 @@ const wxString WX_WINDOW_WIDTH = wxT("WindowWidth");
 const wxString WX_WINDOW_HEIGHT = wxT("WindowHeight");
 const wxString WX_DISPLAY_NUMBER = wxT("DisplayNumber");
 const wxString WX_WINDOW_MAXIMIZED = wxT("WindowMaximized");
-const wxString WX_N_ADD_SIZES = wxT("NAddSizes");
-const wxString WX_ADD_SIZE_KEY_FMT = wxT("AddSize.%03d.key");
-const wxString WX_ADD_SIZE_VALUE_FMT = wxT("AddSize.%03d.value");
+const wxString WX_ADDITIONAL_SIZE_COUNT = wxT("AdditionalSizeCount");
+const wxString WX_ADDITIONAL_SIZE_KEY_FMT = wxT("AdditionalSize.%03d.key");
+const wxString WX_ADDITIONAL_SIZE_VALUE_FMT = wxT("AdditionalSize.%03d.value");
 
 int GOGUISizeKeeper::GetAddSize(const wxString &key) const {
   auto iter = m_AddSizes.find(key);
@@ -43,7 +43,7 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
   int h = cfg.ReadInteger(
     CMBSetting, m_group, WX_WINDOW_HEIGHT, -1, windowLimit, false, 0);
   unsigned nAddSizes = (unsigned)cfg.ReadInteger(
-    CMBSetting, m_group, WX_N_ADD_SIZES, 0, 999, false, 0);
+    CMBSetting, m_group, WX_ADDITIONAL_SIZE_COUNT, 0, 999, false, 0);
 
   m_rect = wxRect(x, y, w, h);
   m_DisplayNum = cfg.ReadInteger(
@@ -53,11 +53,14 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
   m_AddSizes.clear();
   for (unsigned i = 1; i <= nAddSizes; i++) {
     m_AddSizes[cfg.ReadString(
-      CMBSetting, m_group, wxString::Format(WX_ADD_SIZE_KEY_FMT, i), false)]
+      CMBSetting,
+      m_group,
+      wxString::Format(WX_ADDITIONAL_SIZE_KEY_FMT, i),
+      false)]
       = cfg.ReadInteger(
         CMBSetting,
         m_group,
-        wxString::Format(WX_ADD_SIZE_VALUE_FMT, i),
+        wxString::Format(WX_ADDITIONAL_SIZE_VALUE_FMT, i),
         false,
         -1);
   }
@@ -89,11 +92,15 @@ void GOGUISizeKeeper::Save(GOConfigWriter &cfg) {
   for (const auto &e : m_AddSizes) {
     nAddSizes++;
     cfg.WriteString(
-      m_group, wxString::Format(WX_ADD_SIZE_KEY_FMT, nAddSizes), e.first);
+      m_group,
+      wxString::Format(WX_ADDITIONAL_SIZE_KEY_FMT, nAddSizes),
+      e.first);
     cfg.WriteInteger(
-      m_group, wxString::Format(WX_ADD_SIZE_VALUE_FMT, nAddSizes), e.second);
+      m_group,
+      wxString::Format(WX_ADDITIONAL_SIZE_VALUE_FMT, nAddSizes),
+      e.second);
   }
-  cfg.WriteInteger(m_group, WX_N_ADD_SIZES, nAddSizes);
+  cfg.WriteInteger(m_group, WX_ADDITIONAL_SIZE_COUNT, nAddSizes);
 }
 
 // gets the current size info of the window

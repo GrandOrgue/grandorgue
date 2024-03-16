@@ -12,9 +12,8 @@
 #include <wx/sizer.h>
 
 #include "gui/primitives/go_gui_utils.h"
-
-#include "gui/GOGUISizeKeeper.h"
 #include "help/GOHelpRequestor.h"
+#include "size/GOGUISizeKeeper.h"
 
 #include "GODialogCloser.h"
 #include "GODialogSizeSet.h"

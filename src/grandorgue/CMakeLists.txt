@@ -122,7 +122,6 @@ gui/GOGUIPanel.cpp
 gui/GOGUIPanelWidget.cpp
 gui/GOGUIRecorderPanel.cpp
 gui/GOGUISequencerPanel.cpp
-gui/GOGUISizeKeeper.cpp
 help/GOHelpController.cpp
 help/GOHelpRequestor.cpp
 loader/GOFileStore.cpp
@@ -173,6 +172,7 @@ model/GOSwitch.cpp
 model/GOTremulant.cpp
 model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
+size/GOGUISizeKeeper.cpp
 sound/ports/GOSoundJackPort.cpp
 sound/ports/GOSoundPort.cpp
 sound/ports/GOSoundPortFactory.cpp
