@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOGUIADDITIONALSIZEKEEPERPROXY_H
-#define GOGUIADDITIONALSIZEKEEPERPROXY_H
+#ifndef GOADDITIONALSIZEKEEPERPROXY_H
+#define GOADDITIONALSIZEKEEPERPROXY_H
 
 #include "GOAdditionalSizeKeeper.h"
 
@@ -34,4 +34,4 @@ public:
   }
 };
 
-#endif /* GOGUIADDITIONALSIZEKEEPERPROXY_H */
+#endif /* GOADDITIONALSIZEKEEPERPROXY_H */
