@@ -31,7 +31,7 @@ private:
   static const wxString WX_EMPTY;
 
   const wxString m_name;
-  GOGUISizeKeeper &r_SizeKeeper;
+  GOSizeKeeper &r_SizeKeeper;
   wxSizer *p_ButtonSizer = nullptr;
 
   // For using in constructors only

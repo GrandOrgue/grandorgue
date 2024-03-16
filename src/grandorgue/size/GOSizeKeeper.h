@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOGUISIZEKEEPER_H
-#define GOGUISIZEKEEPER_H
+#ifndef GOSIZEKEEPER_H
+#define GOSIZEKEEPER_H
 
 #include <map>
 
@@ -25,7 +25,7 @@ class GOConfigWriter;
  * and size in a config file.
  * Note: not all window managers allows applications to control window positions
  */
-class GOGUISizeKeeper : public GOSaveableObject, public GOAdditionalSizeKeeper {
+class GOSizeKeeper : public GOSaveableObject, public GOAdditionalSizeKeeper {
 private:
   wxRect m_rect = wxRect(wxDefaultPosition, wxDefaultSize);
   int m_DisplayNum = -1;
@@ -57,4 +57,4 @@ public:
   void ApplySizeInfo(wxTopLevelWindow &win);
 };
 
-#endif /* GOGUISIZEKEEPER_H */
+#endif /* GOSIZEKEEPER_H */

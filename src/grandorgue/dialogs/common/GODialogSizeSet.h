@@ -47,8 +47,7 @@ private:
     }
   };
 
-  std::unordered_map<SizeId, GOGUISizeKeeper *, SizeIdHash, SizeIdEqual>
-    m_SizeSet;
+  std::unordered_map<SizeId, GOSizeKeeper *, SizeIdHash, SizeIdEqual> m_SizeSet;
 
 public:
   ~GODialogSizeSet();
@@ -63,7 +62,7 @@ public:
    * @param pDialogSelector
    * @return
    */
-  GOGUISizeKeeper &AssureSizeKeeperFor(
+  GOSizeKeeper &AssureSizeKeeperFor(
     const wxString &dialogName, const wxString &dialogSelector = wxEmptyString);
 
   static bool isPresentInCfg(GOConfigReader &cfg, GOSettingType settingType);

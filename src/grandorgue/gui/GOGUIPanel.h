@@ -30,7 +30,7 @@ class GOOrganController;
 
 #define GOBitmapPrefix "../GO:"
 
-class GOGUIPanel : public GOGUISizeKeeper {
+class GOGUIPanel : public GOSizeKeeper {
 private:
   void BasicLoad(
     GOConfigReader &cfg, const wxString &group, bool isOpenByDefault);
