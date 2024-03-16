@@ -30,6 +30,7 @@
 #include "config/GOConfig.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "files/GOStdFileName.h"
+#include "wxcontrols/GOGrid.h"
 
 #include "GOOrgan.h"
 #include "GOOrganController.h"
@@ -63,16 +64,18 @@ GOSettingsOrgans::GOSettingsOrgans(
   wxGridBagSizer *const gbSizer = new wxGridBagSizer(5, 5);
 
   m_GridOrgans
-    = new wxGrid(this, ID_ORGANS, wxDefaultPosition, wxSize(100, 40));
+    = new GOGrid(this, ID_ORGANS, wxDefaultPosition, wxSize(100, 40));
   m_GridOrgans->CreateGrid(0, GRID_N_COLS, wxGrid::wxGridSelectRows);
+  m_GridOrgans->HideRowLabels();
+  m_GridOrgans->EnableEditing(false);
   m_GridOrgans->SetColSize(GRID_COL_NAME, 200);
   m_GridOrgans->SetColLabelValue(GRID_COL_NAME, _("Name"));
   m_GridOrgans->SetColSize(GRID_COL_MIDI, 50);
   m_GridOrgans->SetColLabelValue(GRID_COL_MIDI, _("MIDI"));
   m_GridOrgans->SetColSize(GRID_COL_PATH, 300);
   m_GridOrgans->SetColLabelValue(GRID_COL_PATH, _("Path"));
-  m_GridOrgans->HideRowLabels();
-  m_GridOrgans->EnableEditing(false);
+  m_GridOrgans->SetColumnRightVisible(GRID_COL_PATH, true);
+
   gbSizer->Add(
     m_GridOrgans, wxGBPosition(0, 0), wxGBSpan(1, 4), wxALL | wxEXPAND, 5);
 
@@ -309,8 +312,6 @@ void GOSettingsOrgans::FillGridRow(unsigned rowN, OrganSlot &organSlot) {
   m_GridOrgans->SetCellValue(rowN, GRID_COL_NAME, title);
   DisplayMidiCell(rowN, o);
   DisplayPathCell(rowN, organSlot.m_CurrentPath);
-  m_GridOrgans->SetCellAlignment(
-    rowN, GRID_COL_PATH, wxALIGN_RIGHT, wxALIGN_TOP);
 }
 
 bool GOSettingsOrgans::TransferDataToWindow() {

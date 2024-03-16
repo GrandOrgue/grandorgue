@@ -18,13 +18,13 @@
 
 class GOMidi;
 class wxButton;
-class wxGrid;
 class wxGridEvent;
 class wxGridRangeSelectEvent;
 class wxTextCtrl;
 
 class GOArchiveFile;
 class GOConfig;
+class GOGrid;
 class GOOrgan;
 
 class GOSettingsOrgans : public wxPanel {
@@ -83,7 +83,7 @@ private:
   std::unordered_map<const wxString, OrganSlot *, wxStringHash, wxStringEqual>
     m_OrganSlotByPath;
 
-  wxGrid *m_GridOrgans;
+  GOGrid *m_GridOrgans;
   wxTextCtrl *m_Builder;
   wxTextCtrl *m_Recording;
   wxTextCtrl *m_OrganHash;
