@@ -5,15 +5,18 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOGUIADDITIONALSIZEKEEPER_H
-#define GOGUIADDITIONALSIZEKEEPER_H
+#ifndef GOADDITIONALSIZEKEEPER_H
+#define GOADDITIONALSIZEKEEPER_H
 
 #include <wx/string.h>
 
-class GOGUIAdditionalSizeKeeper {
+/**
+ * An abstract class for storing information of sizes
+ */
+class GOAdditionalSizeKeeper {
 public:
-  virtual int GetAddSize(const wxString &key) const = 0;
-  virtual void SetAddSize(const wxString &key, int value) = 0;
+  virtual int GetAdditionalSize(const wxString &key) const = 0;
+  virtual void SetAdditionalSize(const wxString &key, int value) = 0;
 };
 
-#endif /* GOGUIADDITIONALSIZEKEEPER_H */
+#endif /* GOADDITIONALSIZEKEEPER_H */

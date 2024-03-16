@@ -118,8 +118,8 @@ protected:
    */
   virtual const wxString &GetHelpSuffix() const { return WX_EMPTY; }
 
-  virtual void ApplyAddSizes(const GOGUIAdditionalSizeKeeper &sizeKeeper) {}
-  virtual void CaptureAddSizes(GOGUIAdditionalSizeKeeper &sizeKeeper) const {}
+  virtual void ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) {}
+  virtual void CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const {}
 
 public:
   bool Show(bool show = true) override {

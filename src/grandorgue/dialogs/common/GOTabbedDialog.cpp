@@ -40,28 +40,26 @@ void GOTabbedDialog::AddTab(GODialogTab *tab) {
   AddTab(tab, tab->GetName(), tab->GetLabel());
 }
 
-void GOTabbedDialog::ApplyAddSizes(
-  const GOGUIAdditionalSizeKeeper &sizeKeeper) {
+void GOTabbedDialog::ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) {
   for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
     GODialogTab *tab = dynamic_cast<GODialogTab *>(p_book->GetPage(i));
 
     if (tab) {
-      GOGUIAdditionalSizeKeeperProxy proxy(
-        const_cast<GOGUIAdditionalSizeKeeper &>(sizeKeeper), tab->GetName());
+      GOAdditionalSizeKeeperProxy proxy(
+        const_cast<GOAdditionalSizeKeeper &>(sizeKeeper), tab->GetName());
 
       tab->ApplyAddSizes(proxy);
     }
   }
 }
 
-void GOTabbedDialog::CaptureAddSizes(
-  GOGUIAdditionalSizeKeeper &sizeKeeper) const {
+void GOTabbedDialog::CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const {
   for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
     const GODialogTab *tab
       = dynamic_cast<const GODialogTab *>(p_book->GetPage(i));
 
     if (tab) {
-      GOGUIAdditionalSizeKeeperProxy proxy(sizeKeeper, tab->GetName());
+      GOAdditionalSizeKeeperProxy proxy(sizeKeeper, tab->GetName());
 
       tab->CaptureAddSizes(proxy);
     }

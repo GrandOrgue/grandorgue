@@ -10,9 +10,9 @@
 
 #include "GOAdditionalSizeKeeper.h"
 
-class GOGUIAdditionalSizeKeeperProxy : public GOGUIAdditionalSizeKeeper {
+class GOAdditionalSizeKeeperProxy : public GOAdditionalSizeKeeper {
 private:
-  GOGUIAdditionalSizeKeeper &r_parent;
+  GOAdditionalSizeKeeper &r_parent;
   wxString m_KeyPrefix;
 
   inline wxString MakeKey(const wxString &key) const {
@@ -20,17 +20,17 @@ private:
   }
 
 public:
-  GOGUIAdditionalSizeKeeperProxy(
-    GOGUIAdditionalSizeKeeper &parent, const wxString &prefix)
+  GOAdditionalSizeKeeperProxy(
+    GOAdditionalSizeKeeper &parent, const wxString &prefix)
     : r_parent(parent),
       m_KeyPrefix(prefix.IsEmpty() ? prefix : prefix + wxT(".")) {}
 
-  int GetAddSize(const wxString &key) const override {
-    return r_parent.GetAddSize(MakeKey(key));
+  int GetAdditionalSize(const wxString &key) const override {
+    return r_parent.GetAdditionalSize(MakeKey(key));
   }
 
-  void SetAddSize(const wxString &key, int value) override {
-    r_parent.SetAddSize(MakeKey(key), value);
+  void SetAdditionalSize(const wxString &key, int value) override {
+    r_parent.SetAdditionalSize(MakeKey(key), value);
   }
 };
 

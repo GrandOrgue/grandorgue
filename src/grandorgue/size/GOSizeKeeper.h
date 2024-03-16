@@ -25,8 +25,7 @@ class GOConfigWriter;
  * and size in a config file.
  * Note: not all window managers allows applications to control window positions
  */
-class GOGUISizeKeeper : public GOSaveableObject,
-                        public GOGUIAdditionalSizeKeeper {
+class GOGUISizeKeeper : public GOSaveableObject, public GOAdditionalSizeKeeper {
 private:
   wxRect m_rect = wxRect(wxDefaultPosition, wxDefaultSize);
   int m_DisplayNum = -1;
@@ -39,9 +38,9 @@ public:
 
   void SetWindowRect(const wxRect &rect) { m_rect = rect; }
 
-  int GetAddSize(const wxString &key) const override;
+  int GetAdditionalSize(const wxString &key) const override;
 
-  void SetAddSize(const wxString &key, int value) override {
+  void SetAdditionalSize(const wxString &key, int value) override {
     m_AddSizes[key] = value;
   }
 

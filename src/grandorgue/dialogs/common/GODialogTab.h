@@ -12,7 +12,7 @@
 
 class wxBookCtrlBase;
 
-class GOGUIAdditionalSizeKeeper;
+class GOAdditionalSizeKeeper;
 class GOTabbedDialog;
 
 class GODialogTab : public wxPanel {
@@ -23,8 +23,8 @@ public:
   GODialogTab(
     GOTabbedDialog *pDlg, const wxString &name, const wxString &label);
 
-  virtual void ApplyAddSizes(const GOGUIAdditionalSizeKeeper &sizeKeeper) {}
-  virtual void CaptureAddSizes(GOGUIAdditionalSizeKeeper &sizeKeeper) const {}
+  virtual void ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) {}
+  virtual void CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const {}
 
   /**
    * Makes this tab selected in the book control and shows the erroe message box

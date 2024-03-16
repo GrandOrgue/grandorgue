@@ -25,7 +25,7 @@ const wxString WX_ADDITIONAL_SIZE_COUNT = wxT("AdditionalSizeCount");
 const wxString WX_ADDITIONAL_SIZE_KEY_FMT = wxT("AdditionalSize.%03d.key");
 const wxString WX_ADDITIONAL_SIZE_VALUE_FMT = wxT("AdditionalSize.%03d.value");
 
-int GOGUISizeKeeper::GetAddSize(const wxString &key) const {
+int GOGUISizeKeeper::GetAdditionalSize(const wxString &key) const {
   auto iter = m_AddSizes.find(key);
 
   return iter == m_AddSizes.end() ? -1 : iter->second;
