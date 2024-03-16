@@ -118,17 +118,18 @@ protected:
    */
   virtual const wxString &GetHelpSuffix() const { return WX_EMPTY; }
 
-  virtual void ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) {}
-  virtual void CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const {}
+  virtual void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) {}
+  virtual void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const {}
 
 public:
   bool Show(bool show = true) override {
     if (show) {
       r_SizeKeeper.ApplySizeInfo(*(DialogClass *)this);
-      ApplyAddSizes(r_SizeKeeper);
+      ApplyAdditionalSizes(r_SizeKeeper);
     } else {
       r_SizeKeeper.CaptureSizeInfo(*(DialogClass *)this);
-      CaptureAddSizes(r_SizeKeeper);
+      CaptureAdditionalSizes(r_SizeKeeper);
     }
     return DialogClass::Show(show);
   }

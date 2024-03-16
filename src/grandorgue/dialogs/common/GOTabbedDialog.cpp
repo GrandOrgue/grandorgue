@@ -40,7 +40,8 @@ void GOTabbedDialog::AddTab(GODialogTab *tab) {
   AddTab(tab, tab->GetName(), tab->GetLabel());
 }
 
-void GOTabbedDialog::ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) {
+void GOTabbedDialog::ApplyAdditionalSizes(
+  const GOAdditionalSizeKeeper &sizeKeeper) {
   for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
     GODialogTab *tab = dynamic_cast<GODialogTab *>(p_book->GetPage(i));
 
@@ -48,12 +49,13 @@ void GOTabbedDialog::ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) {
       GOAdditionalSizeKeeperProxy proxy(
         const_cast<GOAdditionalSizeKeeper &>(sizeKeeper), tab->GetName());
 
-      tab->ApplyAddSizes(proxy);
+      tab->ApplyAdditionalSizes(proxy);
     }
   }
 }
 
-void GOTabbedDialog::CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const {
+void GOTabbedDialog::CaptureAdditionalSizes(
+  GOAdditionalSizeKeeper &sizeKeeper) const {
   for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
     const GODialogTab *tab
       = dynamic_cast<const GODialogTab *>(p_book->GetPage(i));
@@ -61,7 +63,7 @@ void GOTabbedDialog::CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const {
     if (tab) {
       GOAdditionalSizeKeeperProxy proxy(sizeKeeper, tab->GetName());
 
-      tab->CaptureAddSizes(proxy);
+      tab->CaptureAdditionalSizes(proxy);
     }
   }
 }

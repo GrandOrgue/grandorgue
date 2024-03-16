@@ -31,7 +31,7 @@ private:
   int m_DisplayNum = -1;
   bool m_IsMaximized = false;
   // additional sizes for elements
-  std::map<wxString, int> m_AddSizes;
+  std::map<wxString, int> m_AdditionalSizes;
 
 public:
   const wxRect &GetWindowRect() const { return m_rect; }
@@ -41,7 +41,7 @@ public:
   int GetAdditionalSize(const wxString &key) const override;
 
   void SetAdditionalSize(const wxString &key, int value) override {
-    m_AddSizes[key] = value;
+    m_AdditionalSizes[key] = value;
   }
 
   // set the group and read the size info from config files

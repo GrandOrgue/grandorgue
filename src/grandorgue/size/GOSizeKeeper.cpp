@@ -26,9 +26,9 @@ const wxString WX_ADDITIONAL_SIZE_KEY_FMT = wxT("AdditionalSize.%03d.key");
 const wxString WX_ADDITIONAL_SIZE_VALUE_FMT = wxT("AdditionalSize.%03d.value");
 
 int GOGUISizeKeeper::GetAdditionalSize(const wxString &key) const {
-  auto iter = m_AddSizes.find(key);
+  auto iter = m_AdditionalSizes.find(key);
 
-  return iter == m_AddSizes.end() ? -1 : iter->second;
+  return iter == m_AdditionalSizes.end() ? -1 : iter->second;
 }
 
 // read the size info from config files
@@ -50,9 +50,9 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
     CMBSetting, m_group, WX_DISPLAY_NUMBER, -1, windowLimit, false, -1);
   m_IsMaximized
     = cfg.ReadBoolean(CMBSetting, m_group, WX_WINDOW_MAXIMIZED, false, false);
-  m_AddSizes.clear();
+  m_AdditionalSizes.clear();
   for (unsigned i = 1; i <= nAddSizes; i++) {
-    m_AddSizes[cfg.ReadString(
+    m_AdditionalSizes[cfg.ReadString(
       CMBSetting,
       m_group,
       wxString::Format(WX_ADDITIONAL_SIZE_KEY_FMT, i),
@@ -89,7 +89,7 @@ void GOGUISizeKeeper::Save(GOConfigWriter &cfg) {
 
   unsigned nAddSizes = 0;
 
-  for (const auto &e : m_AddSizes) {
+  for (const auto &e : m_AdditionalSizes) {
     nAddSizes++;
     cfg.WriteString(
       m_group,

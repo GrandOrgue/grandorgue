@@ -36,8 +36,9 @@ protected:
   void AddTab(wxPanel *tab, const wxString &tabName, const wxString &tabTitle);
   void AddTab(GODialogTab *tab);
 
-  void ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
-  void CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const override;
+  void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
+  void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const override;
 
 public:
   const wxString &GetCurrTabName() const;

@@ -23,8 +23,9 @@ public:
   GODialogTab(
     GOTabbedDialog *pDlg, const wxString &name, const wxString &label);
 
-  virtual void ApplyAddSizes(const GOAdditionalSizeKeeper &sizeKeeper) {}
-  virtual void CaptureAddSizes(GOAdditionalSizeKeeper &sizeKeeper) const {}
+  virtual void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) {}
+  virtual void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const {}
 
   /**
    * Makes this tab selected in the book control and shows the erroe message box
