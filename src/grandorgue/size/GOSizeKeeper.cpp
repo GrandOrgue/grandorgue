@@ -13,7 +13,7 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-constexpr static int windowLimit = 10000;
+constexpr static int windowLimit = 32000;
 
 const wxString WX_WINDOW_X = wxT("WindowX");
 const wxString WX_WINDOW_Y = wxT("WindowY");
