@@ -42,7 +42,7 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
     CMBSetting, m_group, WX_WINDOW_WIDTH, -1, windowLimit, false, 0);
   int h = cfg.ReadInteger(
     CMBSetting, m_group, WX_WINDOW_HEIGHT, -1, windowLimit, false, 0);
-  unsigned nAddSizes = (unsigned)cfg.ReadInteger(
+  unsigned additionalSizeCount = (unsigned)cfg.ReadInteger(
     CMBSetting, m_group, WX_ADDITIONAL_SIZE_COUNT, 0, 999, false, 0);
 
   m_rect = wxRect(x, y, w, h);
@@ -51,7 +51,7 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
   m_IsMaximized
     = cfg.ReadBoolean(CMBSetting, m_group, WX_WINDOW_MAXIMIZED, false, false);
   m_AdditionalSizes.clear();
-  for (unsigned i = 1; i <= nAddSizes; i++) {
+  for (unsigned i = 1; i <= additionalSizeCount; i++) {
     m_AdditionalSizes[cfg.ReadString(
       CMBSetting,
       m_group,
@@ -87,20 +87,20 @@ void GOGUISizeKeeper::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(
     m_group, WX_WINDOW_HEIGHT, std::min(windowLimit, size.GetHeight()));
 
-  unsigned nAddSizes = 0;
+  unsigned additionalSizeCount = 0;
 
   for (const auto &e : m_AdditionalSizes) {
-    nAddSizes++;
+    additionalSizeCount++;
     cfg.WriteString(
       m_group,
-      wxString::Format(WX_ADDITIONAL_SIZE_KEY_FMT, nAddSizes),
+      wxString::Format(WX_ADDITIONAL_SIZE_KEY_FMT, additionalSizeCount),
       e.first);
     cfg.WriteInteger(
       m_group,
-      wxString::Format(WX_ADDITIONAL_SIZE_VALUE_FMT, nAddSizes),
+      wxString::Format(WX_ADDITIONAL_SIZE_VALUE_FMT, additionalSizeCount),
       e.second);
   }
-  cfg.WriteInteger(m_group, WX_ADDITIONAL_SIZE_COUNT, nAddSizes);
+  cfg.WriteInteger(m_group, WX_ADDITIONAL_SIZE_COUNT, additionalSizeCount);
 }
 
 // gets the current size info of the window
