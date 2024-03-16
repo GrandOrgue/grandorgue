@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOGUISizeKeeper.h"
+#include "GOSizeKeeper.h"
 
 #include <wx/display.h>
 #include <wx/toplevel.h>

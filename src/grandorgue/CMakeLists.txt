@@ -172,7 +172,7 @@ model/GOSwitch.cpp
 model/GOTremulant.cpp
 model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
-size/GOGUISizeKeeper.cpp
+size/GOSizeKeeper.cpp
 sound/ports/GOSoundJackPort.cpp
 sound/ports/GOSoundPort.cpp
 sound/ports/GOSoundPortFactory.cpp

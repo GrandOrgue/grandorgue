@@ -12,7 +12,7 @@
 #include <wx/bookctrl.h>
 #include <wx/panel.h>
 
-#include "size/GOGUIAdditionalSizeKeeperProxy.h"
+#include "size/GOAdditionalSizeKeeperProxy.h"
 
 #include "GODialogTab.h"
 

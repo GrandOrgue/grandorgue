@@ -14,7 +14,7 @@
 #include <wx/string.h>
 
 #include "config/GOConfigReader.h"
-#include "size/GOGUISizeKeeper.h"
+#include "size/GOSizeKeeper.h"
 
 /**
  * This class keeps positions and sizes of all dialogs. Every dialog is

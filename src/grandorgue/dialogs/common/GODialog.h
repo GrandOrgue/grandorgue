@@ -13,7 +13,7 @@
 
 #include "gui/primitives/go_gui_utils.h"
 #include "help/GOHelpRequestor.h"
-#include "size/GOGUISizeKeeper.h"
+#include "size/GOSizeKeeper.h"
 
 #include "GODialogCloser.h"
 #include "GODialogSizeSet.h"

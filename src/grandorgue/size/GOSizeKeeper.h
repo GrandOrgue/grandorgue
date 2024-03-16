@@ -12,7 +12,7 @@
 
 #include <wx/gdicmn.h>
 
-#include "GOGUIAdditionalSizeKeeper.h"
+#include "GOAdditionalSizeKeeper.h"
 #include "GOSaveableObject.h"
 
 class wxTopLevelWindow;

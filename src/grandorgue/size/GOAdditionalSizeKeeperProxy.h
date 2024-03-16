@@ -8,7 +8,7 @@
 #ifndef GOGUIADDITIONALSIZEKEEPERPROXY_H
 #define GOGUIADDITIONALSIZEKEEPERPROXY_H
 
-#include "GOGUIAdditionalSizeKeeper.h"
+#include "GOAdditionalSizeKeeper.h"
 
 class GOGUIAdditionalSizeKeeperProxy : public GOGUIAdditionalSizeKeeper {
 private:
