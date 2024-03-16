@@ -23,7 +23,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 pipx install git+https://github.com/nanoufo/msys2-downloader.git@main
 
 # Download curl and dependencies
-msys2-download --extract-root ./msys2-sysroot --env mingw64 curl
+msys2-download --extract-root ./msys2-sysroot --env mingw64 curl-winssl
 sudo cp -n -r ./msys2-sysroot/mingw64/* /usr/x86_64-w64-mingw32/
 
 mkdir -p deb
