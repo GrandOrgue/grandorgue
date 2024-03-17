@@ -11,7 +11,9 @@
 #include "yaml/go-wx-yaml.h"
 #include <curl/curl.h>
 #include <iostream>
+#include <memory>
 #include <thread>
+#include <threading/GOThread.h>
 #include <wx/regex.h>
 #include <wx/string.h>
 #include <yaml-cpp/yaml.h>
@@ -127,28 +129,43 @@ static GOReleaseMetadata fetch_latest_release() {
   }
 }
 
-static void check_for_updates(wxEvtHandler *completionEventHandler) {
-  try {
-    GOUpdateCheckerResult result;
-    // Fetch latest release
-    result.latestRelease = fetch_latest_release();
-    // Compare versions
-    GOVersion releaseVersion = GOVersion(result.latestRelease.version);
-    GOVersion currentVersion = GOVersion(APP_VERSION);
-    result.updateAvailable = currentVersion.IsValid()
-      && releaseVersion.IsValid() && currentVersion < releaseVersion;
-    // Fire completion event
-    completionEventHandler->QueueEvent(new UpdateCheckerCompletedEvent(result));
-    // Log results
-    wxLogDebug(
-      "latest version: %s, update available: %s",
-      result.latestRelease.version,
-      result.updateAvailable ? "yes" : "no");
-  } catch (UpdateCheckerException &e) {
-    wxLogMessage("failed to check for updates: %s", e.what());
-  }
-}
+class CheckForUpdatesThread : public GOThread {
+public:
+  CheckForUpdatesThread(wxEvtHandler *completionEventHandler)
+    : m_CompletionEventHandler(completionEventHandler) {}
 
-std::thread start_update_checker_thread(wxEvtHandler *completionEventHandler) {
-  return std::thread(check_for_updates, completionEventHandler);
+protected:
+  void Entry() override {
+    try {
+      GOUpdateCheckerResult result;
+      // Fetch latest release
+      result.latestRelease = fetch_latest_release();
+      // Compare versions
+      GOVersion releaseVersion = GOVersion(result.latestRelease.version);
+      GOVersion currentVersion = GOVersion(APP_VERSION);
+      result.updateAvailable = currentVersion.IsValid()
+        && releaseVersion.IsValid() && currentVersion < releaseVersion;
+      // Fire completion event
+      m_CompletionEventHandler->QueueEvent(
+        new UpdateCheckerCompletedEvent(result));
+      // Log results
+      wxLogDebug(
+        "latest version: %s, update available: %s",
+        result.latestRelease.version,
+        result.updateAvailable ? "yes" : "no");
+    } catch (UpdateCheckerException &e) {
+      wxLogDebug("failed to check for updates: %s", e.what());
+    }
+  }
+
+private:
+  wxEvtHandler *m_CompletionEventHandler;
+};
+
+std::unique_ptr<GOThread> start_update_checker_thread(
+  wxEvtHandler *completionEventHandler) {
+  std::unique_ptr<GOThread> thread(
+    new CheckForUpdatesThread(completionEventHandler));
+  thread->Start();
+  return thread;
 }

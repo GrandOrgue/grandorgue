@@ -8,9 +8,9 @@
 #ifndef GOUPDATECHECKER_H
 #define GOUPDATECHECKER_H
 
+#include "threading/GOThread.h"
 #include <stdexcept>
 #include <string>
-#include <thread>
 #include <wx/wx.h>
 
 struct GOReleaseMetadata {
@@ -56,6 +56,7 @@ typedef void (wxEvtHandler::*UpdateCheckerHandlerFunction)(
 // The spawned thread fires UpdateCheckerCompletedEvent to
 // completionEventHandler on success. Nothing is done on failure except logging
 // some messages.
-std::thread start_update_checker_thread(wxEvtHandler *completionEventHandler);
+std::unique_ptr<GOThread> start_update_checker_thread(
+  wxEvtHandler *completionEventHandler);
 
 #endif

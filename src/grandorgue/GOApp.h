@@ -22,7 +22,6 @@
 #ifndef GOAPP_H
 #define GOAPP_H
 
-#include <thread>
 #include <wx/app.h>
 
 class GOFrame;

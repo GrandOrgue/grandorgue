@@ -16,7 +16,6 @@
 
 #include "config/GOConfig.h"
 #include "sound/GOSound.h"
-#include "updater/GOUpdateChecker.h"
 
 #include "GOFrame.h"
 #include "GOLog.h"

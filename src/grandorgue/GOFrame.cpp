@@ -25,6 +25,7 @@
 #include "archive/GOArchiveManager.h"
 #include "combinations/GOSetter.h"
 #include "config/GOConfig.h"
+#include "dialogs/GONewReleaseDialog.h"
 #include "dialogs/GOProgressDialog.h"
 #include "dialogs/GOSelectOrganDialog.h"
 #include "dialogs/GOSplash.h"
@@ -51,7 +52,6 @@
 #include "GOPath.h"
 #include "GOProperties.h"
 #include "Images.h"
-#include "dialogs/GONewReleaseDialog.h"
 #include "go_ids.h"
 #include "go_limits.h"
 
@@ -498,7 +498,7 @@ void GOFrame::UpdateVolumeControlWithSettings() {
 void GOFrame::Init(const wxString &filename, bool isGuiOnly) {
   if (m_config.CheckForUpdatesAtStartup()) {
     // Start update checker thread that will fire events to this frame
-    m_updateCheckerThread = start_update_checker_thread(this);
+    m_UpdateCheckerThread = start_update_checker_thread(this);
   }
 
   m_IsGuiOnly = isGuiOnly;
@@ -1062,8 +1062,8 @@ void GOFrame::OnMenuClose(wxCommandEvent &event) {
 
 bool GOFrame::CloseProgram(bool isForce) {
   // Make sure update checking is completed
-  if (m_updateCheckerThread.joinable()) {
-    m_updateCheckerThread.join();
+  if (m_UpdateCheckerThread) {
+    m_UpdateCheckerThread->Wait();
   }
 
   bool isClosed = CloseOrgan(isForce);
