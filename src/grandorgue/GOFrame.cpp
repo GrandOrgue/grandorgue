@@ -1102,7 +1102,9 @@ void GOFrame::OnProperties(wxCommandEvent &event) {
 
   if (organController) {
     GOProperties dlg(organController, this);
-    dlg.ShowModal();
+    if (dlg.ShowModal() == wxID_OK) {
+      m_config.Flush();
+    }
   }
 }
 
@@ -1366,7 +1368,9 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
 void GOFrame::OnUpdateCheckCompleted(UpdateCheckerCompletedEvent &event) {
   if (event.Result().updateAvailable) {
     GONewReleaseDialog dialog(this, m_config, event.Result().latestRelease);
-    dialog.ShowModal();
+    if (dialog.ShowModal() == wxID_OK) {
+      m_config.Flush();
+    }
   }
 }
 

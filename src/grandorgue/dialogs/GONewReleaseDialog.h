@@ -8,16 +8,17 @@
 #ifndef GONEWRELEASEDIALOG_H
 #define GONEWRELEASEDIALOG_H
 
+#include "common/GOSimpleDialog.h"
 #include "config/GOConfig.h"
 #include "updater/GOUpdateChecker.h"
 #include <wx/wx.h>
 
-class GONewReleaseDialog : public wxDialog {
+class GONewReleaseDialog : public GOSimpleDialog {
 public:
   GONewReleaseDialog(
     wxWindow *parent, GOConfig &config, GOReleaseMetadata release);
-  void HandleDownloadButton(const wxCommandEvent &event);
-  void HandleOkButton(const wxCommandEvent &event);
+  void OnDownloadButton(const wxCommandEvent &event);
+  bool TransferDataFromWindow() override;
 
 private:
   wxCheckBox *m_checkUpdatesAtStartupCtrl;

@@ -6,17 +6,21 @@
  */
 
 #include "GOUpdateChecker.h"
-#include "go_defs.h"
-#include "settings.h"
-#include "yaml/go-wx-yaml.h"
-#include <curl/curl.h>
+
 #include <iostream>
 #include <memory>
 #include <thread>
-#include <threading/GOThread.h>
+
+#include <curl/curl.h>
 #include <wx/regex.h>
 #include <wx/string.h>
 #include <yaml-cpp/yaml.h>
+
+#include "yaml/go-wx-yaml.h"
+
+#include "go_defs.h"
+#include "settings.h"
+#include "threading/GOThread.h"
 
 wxDEFINE_EVENT(UPDATE_CHECKER_COMPLETED, UpdateCheckerCompletedEvent);
 
