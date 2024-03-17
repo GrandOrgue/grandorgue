@@ -170,6 +170,7 @@ bool GOApp::OnInit() {
   m_Log = new GOLog(m_Frame);
   wxLog::SetActiveTarget(m_Log);
   m_Frame->Init(m_FileName, m_IsGuiOnly);
+
   return true;
 }
 

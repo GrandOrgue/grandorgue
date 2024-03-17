@@ -166,6 +166,7 @@ public:
   GOMidiDeviceConfigList m_MidiOut;
 
   GODialogSizeSet m_DialogSizes;
+
   void Load();
 
   int GetLanguageId() const;

@@ -1102,9 +1102,7 @@ void GOFrame::OnProperties(wxCommandEvent &event) {
 
   if (organController) {
     GOProperties dlg(organController, this);
-    if (dlg.ShowModal() == wxID_OK) {
-      m_config.Flush();
-    }
+    dlg.ShowModal();
   }
 }
 
