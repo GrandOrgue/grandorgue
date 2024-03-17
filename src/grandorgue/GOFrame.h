@@ -71,6 +71,7 @@ private:
   bool m_MidiMonitor;
   bool m_isMeterReady;
   bool m_IsGuiOnly;
+  std::thread m_updateCheckerThread;
 
   // to avoid event processing when the settings dialog is open
   bool m_InSettings;

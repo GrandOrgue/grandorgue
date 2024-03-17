@@ -20,7 +20,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wine32 winbind pipx
 
 # Install tool to download pre-compiled libraries from msys2 repositories
-pipx install git+https://github.com/nanoufo/msys2-downloader.git@main
+sudo PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
+	pipx install git+https://github.com/nanoufo/msys2-downloader.git@main
 
 # Download curl and dependencies
 msys2-download --extract-root ./msys2-sysroot --env mingw64 curl-winssl

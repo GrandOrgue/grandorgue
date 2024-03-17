@@ -410,8 +410,8 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Updates"));
   item9->Add(item6, 0, wxEXPAND | wxALL, 5);
   item6->Add(
-    m_CheckForUpdatesAtStartup = new wxCheckBox(
-      this, ID_COMPRESS_CACHE, _("check for updates at startup")),
+    m_CheckForUpdatesAtStartup
+    = new wxCheckBox(this, wxID_ANY, _("check for updates at startup")),
     0,
     wxEXPAND | wxALL,
     5);

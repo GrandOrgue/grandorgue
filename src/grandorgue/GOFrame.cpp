@@ -51,9 +51,9 @@
 #include "GOPath.h"
 #include "GOProperties.h"
 #include "Images.h"
+#include "dialogs/GONewReleaseDialog.h"
 #include "go_ids.h"
 #include "go_limits.h"
-#include "updater/GONewReleaseDialog.h"
 
 BEGIN_EVENT_TABLE(GOFrame, wxFrame)
 EVT_MSGBOX(GOFrame::OnMsgBox)
@@ -496,6 +496,11 @@ void GOFrame::UpdateVolumeControlWithSettings() {
 }
 
 void GOFrame::Init(const wxString &filename, bool isGuiOnly) {
+  if (m_config.CheckForUpdatesAtStartup()) {
+    // Start update checker thread that will fire events to this frame
+    m_updateCheckerThread = start_update_checker_thread(this);
+  }
+
   m_IsGuiOnly = isGuiOnly;
   Show(true);
 
@@ -1056,6 +1061,11 @@ void GOFrame::OnMenuClose(wxCommandEvent &event) {
 }
 
 bool GOFrame::CloseProgram(bool isForce) {
+  // Make sure update checking is completed
+  if (m_updateCheckerThread.joinable()) {
+    m_updateCheckerThread.join();
+  }
+
   bool isClosed = CloseOrgan(isForce);
 
   if (isClosed)
