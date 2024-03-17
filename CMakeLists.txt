@@ -31,6 +31,11 @@ endif()
 
 set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
 
+# Set GITHUB_PROJECT variable that is used to configure update checking
+if (NOT DEFINED GITHUB_PROJECT)
+  set(GITHUB_PROJECT "GrandOrgue/grandorgue")
+endif()
+
 # Define a c++ standard
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested to build this project")
@@ -71,6 +76,8 @@ include(${CMAKE_SOURCE_DIR}/cmake/AddCXXOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/FindTools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/BuildLibrary.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/BuildExecutable.cmake)
+
+add_cxx_option(-std=c++11)
 
 IF (APPLE)
   set(BININSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
