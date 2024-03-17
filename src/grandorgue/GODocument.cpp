@@ -17,6 +17,7 @@
 #include "gui/GOGUIPanel.h"
 #include "gui/GOGUIPanelView.h"
 #include "midi/GOMidiEvent.h"
+#include "size/GOResizable.h"
 #include "sound/GOSound.h"
 #include "threading/GOMutexLocker.h"
 
@@ -24,7 +25,6 @@
 #include "GOFrame.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
-#include "GOResizable.h"
 #include "go_ids.h"
 
 GODocument::GODocument(GOResizable *pMainWindow, GOSound *sound)

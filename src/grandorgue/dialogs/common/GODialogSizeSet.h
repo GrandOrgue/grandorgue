@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,7 +14,7 @@
 #include <wx/string.h>
 
 #include "config/GOConfigReader.h"
-#include "gui/GOGUISizeKeeper.h"
+#include "size/GOSizeKeeper.h"
 
 /**
  * This class keeps positions and sizes of all dialogs. Every dialog is
@@ -47,8 +47,7 @@ private:
     }
   };
 
-  std::unordered_map<SizeId, GOGUISizeKeeper *, SizeIdHash, SizeIdEqual>
-    m_SizeSet;
+  std::unordered_map<SizeId, GOSizeKeeper *, SizeIdHash, SizeIdEqual> m_SizeSet;
 
 public:
   ~GODialogSizeSet();
@@ -63,7 +62,7 @@ public:
    * @param pDialogSelector
    * @return
    */
-  GOGUISizeKeeper &AssureSizeKeeperFor(
+  GOSizeKeeper &AssureSizeKeeperFor(
     const wxString &dialogName, const wxString &dialogSelector = wxEmptyString);
 
   static bool isPresentInCfg(GOConfigReader &cfg, GOSettingType settingType);

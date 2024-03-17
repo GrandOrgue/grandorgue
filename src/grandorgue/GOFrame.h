@@ -17,10 +17,10 @@
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "modification/GOModificationListener.h"
+#include "size/GOResizable.h"
 #include "threading/GOMutex.h"
 
 #include "GOEvent.h"
-#include "GOResizable.h"
 
 class GOApp;
 class GOAudioGauge;
