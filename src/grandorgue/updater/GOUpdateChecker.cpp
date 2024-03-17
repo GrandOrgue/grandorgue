@@ -22,7 +22,7 @@
 #include "settings.h"
 #include "threading/GOThread.h"
 
-wxDEFINE_EVENT(UPDATE_CHECKER_COMPLETED, UpdateCheckerCompletedEvent);
+wxDEFINE_EVENT(UPDATE_CHECKING_COMPLETION, GOUpdateChecker::CompletionEvent);
 
 class GOVersion {
 public:
@@ -116,14 +116,14 @@ static std::vector<char> fetch_latest_release_as_json_bytes() {
   return response;
 }
 
-static GOReleaseMetadata fetch_latest_release() {
+static GOUpdateChecker::ReleaseMetadata fetch_latest_release() {
   std::vector<char> responseContent = fetch_latest_release_as_json_bytes();
   try {
     // JSON is valid YAML, use yaml-cpp so that we don't have to add another
     // project dependency
     YAML::Node response
       = YAML::Load(std::string(&responseContent[0], responseContent.size()));
-    GOReleaseMetadata metadata;
+    GOUpdateChecker::ReleaseMetadata metadata;
     metadata.version = response["name"].as<wxString>();
     metadata.changelog = response["body"].as<wxString>();
     return metadata;
@@ -141,7 +141,7 @@ public:
 protected:
   void Entry() override {
     try {
-      GOUpdateCheckerResult result;
+      GOUpdateChecker::Result result;
       // Fetch latest release
       result.latestRelease = fetch_latest_release();
       // Compare versions
@@ -150,8 +150,8 @@ protected:
       result.updateAvailable = currentVersion.IsValid()
         && releaseVersion.IsValid() && currentVersion < releaseVersion;
       // Fire completion event
-      m_CompletionEventHandler->QueueEvent(
-        new UpdateCheckerCompletedEvent(result));
+      m_CompletionEventHandler->QueueEvent(new GOUpdateChecker::CompletionEvent(
+        UPDATE_CHECKING_COMPLETION, result));
       // Log results
       wxLogDebug(
         "latest version: %s, update available: %s",
@@ -166,7 +166,7 @@ private:
   wxEvtHandler *m_CompletionEventHandler;
 };
 
-std::unique_ptr<GOThread> start_update_checker_thread(
+std::unique_ptr<GOThread> GOUpdateChecker::StartThread(
   wxEvtHandler *completionEventHandler) {
   std::unique_ptr<GOThread> thread(
     new CheckForUpdatesThread(completionEventHandler));

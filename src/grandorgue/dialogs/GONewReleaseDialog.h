@@ -16,7 +16,9 @@
 class GONewReleaseDialog : public GOSimpleDialog {
 public:
   GONewReleaseDialog(
-    wxWindow *parent, GOConfig &config, GOReleaseMetadata release);
+    wxWindow *parent,
+    GOConfig &config,
+    GOUpdateChecker::ReleaseMetadata release);
   void OnDownloadButton(const wxCommandEvent &event);
   bool TransferDataFromWindow() override;
 

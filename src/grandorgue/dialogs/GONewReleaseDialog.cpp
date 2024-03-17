@@ -9,7 +9,7 @@
 #include "updater/settings.h"
 
 GONewReleaseDialog::GONewReleaseDialog(
-  wxWindow *parent, GOConfig &config, GOReleaseMetadata release)
+  wxWindow *parent, GOConfig &config, GOUpdateChecker::ReleaseMetadata release)
   : GOSimpleDialog(
     parent,
     "NewRelease",

@@ -164,7 +164,7 @@ private:
   void OnMsgBox(wxMsgBoxEvent &event);
   void OnRenameFile(wxRenameFileEvent &event);
 
-  void OnUpdateCheckCompleted(UpdateCheckerCompletedEvent &event);
+  void OnUpdateCheckingCompletion(GOUpdateChecker::CompletionEvent &event);
 
   bool CloseOrgan(bool isForce = false);
   bool CloseProgram(bool isForce = false);

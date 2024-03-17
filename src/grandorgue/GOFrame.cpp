@@ -113,7 +113,7 @@ EVT_SLIDER(ID_METER_FRAME_SPIN, GOFrame::OnChangeSetter)
 EVT_TEXT(ID_METER_AUDIO_SPIN, GOFrame::OnSettingsVolume)
 EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOFrame::OnSettingsVolume)
 EVT_COMMAND(ID_METER_AUDIO_SPIN, wxEVT_SETVALUE, GOFrame::OnChangeVolume)
-EVT_UPDATE_CHECKER_COMPLETED(GOFrame::OnUpdateCheckCompleted)
+EVT_UPDATE_CHECKING_COMPLETION(GOFrame::OnUpdateCheckingCompletion)
 EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOFrame::OnUpdateLoaded)
 EVT_UPDATE_UI_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
@@ -498,7 +498,7 @@ void GOFrame::UpdateVolumeControlWithSettings() {
 void GOFrame::Init(const wxString &filename, bool isGuiOnly) {
   if (m_config.CheckForUpdatesAtStartup()) {
     // Start update checker thread that will fire events to this frame
-    m_UpdateCheckerThread = start_update_checker_thread(this);
+    m_UpdateCheckerThread = GOUpdateChecker::StartThread(this);
   }
 
   m_IsGuiOnly = isGuiOnly;
@@ -1365,9 +1365,10 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
   GOSyncDirectory(filepath.GetPath());
 }
 
-void GOFrame::OnUpdateCheckCompleted(UpdateCheckerCompletedEvent &event) {
-  if (event.Result().updateAvailable) {
-    GONewReleaseDialog dialog(this, m_config, event.Result().latestRelease);
+void GOFrame::OnUpdateCheckingCompletion(
+  GOUpdateChecker::CompletionEvent &event) {
+  if (event.GetResult().updateAvailable) {
+    GONewReleaseDialog dialog(this, m_config, event.GetResult().latestRelease);
     if (dialog.ShowModal() == wxID_OK) {
       m_config.Flush();
     }
