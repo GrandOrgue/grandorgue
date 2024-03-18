@@ -1071,9 +1071,9 @@ void GOFrame::OnMenuClose(wxCommandEvent &event) {
 }
 
 bool GOFrame::CloseProgram(bool isForce) {
-  // Make sure update checking is completed
   if (m_UpdateCheckerThread) {
-    m_UpdateCheckerThread->Wait();
+    // Stop update checking so that we can safely destruct the thread
+    m_UpdateCheckerThread->Stop();
   }
 
   bool isClosed = CloseOrgan(isForce);

@@ -9,9 +9,6 @@
 
 #include "go_defs.h"
 
-// Don't use long timeouts here since we wait for completion on application
-// exit. Also users may become annoyed if 'New release!' dialog appears while
-// they are playing.
 const long TIMEOUT_MS = 5000;
 const char *const USER_AGENT_HEADER = "User-Agent: GrandOrgue";
 const char *const RELEASES_API_URL

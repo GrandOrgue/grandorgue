@@ -68,6 +68,20 @@ private:
   CURL *m_curl;
 };
 
+// a small helper class that destroys curl multi handle in destructor
+class CurlMultiDestroyer {
+public:
+  explicit CurlMultiDestroyer(CURLM *curl) : m_curlMulti(curl) {}
+  ~CurlMultiDestroyer() {
+    if (m_curlMulti) {
+      curl_multi_cleanup(m_curlMulti);
+    }
+  }
+
+private:
+  CURL *m_curlMulti;
+};
+
 static size_t handle_received_bytes(
   void *contents, size_t size, size_t nmemb, std::vector<char> *dst) {
   size_t bytesReceived = size * nmemb;
@@ -75,45 +89,6 @@ static size_t handle_received_bytes(
   dst->reserve(dst->size() + bytesReceived);
   dst->insert(dst->end(), contentsAsChars, contentsAsChars + bytesReceived);
   return bytesReceived;
-}
-
-static std::vector<char> fetch_latest_releases_as_json_bytes() {
-  CURL *curl = curl_easy_init();
-  CurlDestroyer destroyer(curl); // destroy curl on exit
-  if (!curl) {
-    throw UpdateCheckerException("failed to initialize curl");
-  }
-
-  // Response body will be here
-  std::vector<char> response;
-
-  // Configure the request
-  curl_slist *headers = nullptr;
-  headers = curl_slist_append(headers, USER_AGENT_HEADER);
-  curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, TIMEOUT_MS);
-  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-  curl_easy_setopt(curl, CURLOPT_URL, RELEASES_API_URL);
-  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, handle_received_bytes);
-  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-  // Perform the request
-  CURLcode res = curl_easy_perform(curl);
-  if (res != CURLE_OK) {
-    throw UpdateCheckerException(
-      std::string("failed fetching the latest release: ")
-      + curl_easy_strerror(res));
-  }
-
-  // Check the response status
-  long httpCode;
-  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-  if (httpCode != 200) {
-    throw UpdateCheckerException(
-      std::string("failed fetching the latest release: response code is ")
-      + std::to_string(httpCode));
-  }
-
-  return response;
 }
 
 struct GithubRelease {
@@ -131,24 +106,6 @@ struct GithubRelease {
     return release;
   }
 };
-
-static std::vector<GithubRelease> fetch_latest_releases() {
-  std::vector<char> responseContent = fetch_latest_releases_as_json_bytes();
-  try {
-    // JSON is valid YAML, use yaml-cpp so that we don't have to add another
-    // project dependency
-    YAML::Node response
-      = YAML::Load(std::string(&responseContent[0], responseContent.size()));
-    std::vector<GithubRelease> releases;
-    for (const auto &node : response) {
-      releases.push_back(GithubRelease::fromYaml(node));
-    }
-    return releases;
-  } catch (const YAML::Exception &e) {
-    throw UpdateCheckerException(
-      std::string("error parsing github api response: ") + e.what());
-  }
-}
 
 class CheckForUpdatesThread : public GOThread {
 public:
@@ -170,10 +127,90 @@ private:
   wxEvtHandler *m_CompletionEventHandler;
   GOUpdateChecker::CheckReason m_CheckReason;
 
-  static GOUpdateChecker::Result DoUpdateChecking() {
+  std::vector<char> FetchLatestReleasesAsJsonBytes() {
+    CURL *curl = curl_easy_init();
+    CurlDestroyer destroyer(curl); // destroy curl on exit
+    if (!curl) {
+      throw UpdateCheckerException("failed to initialize curl");
+    }
+
+    // Response body will be here
+    std::vector<char> response;
+
+    // Configure the request
+    curl_slist *headers = nullptr;
+    headers = curl_slist_append(headers, USER_AGENT_HEADER);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, TIMEOUT_MS);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_URL, RELEASES_API_URL);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, handle_received_bytes);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+    // Create a multi-handle that uses non-blocking IO to make the request
+    // interruptable
+    CURLM *curlMulti = curl_multi_init();
+    CurlMultiDestroyer multiDestroyer(curlMulti);
+    if (!curlMulti) {
+      throw UpdateCheckerException("failed to initialize curl multi handle");
+    }
+    curl_multi_add_handle(curlMulti, curl);
+
+    int stillRunning = 1; // number of requests in progress
+    while (stillRunning) {
+      if (ShouldStop()) {
+        throw UpdateCheckerException("Aborted");
+      }
+      // Wait for file descriptors to be ready
+      int numFdsReady;
+      CURLMcode waitCode
+        = curl_multi_wait(curlMulti, nullptr, 0, 100, &numFdsReady);
+      if (waitCode != CURLM_OK) {
+        throw UpdateCheckerException(
+          std::string("curl_multi_wait: ") + curl_multi_strerror(waitCode));
+      }
+      // Do actions with ready file descriptors
+      CURLMcode performCode = curl_multi_perform(curlMulti, &stillRunning);
+      if (performCode != CURLM_OK) {
+        throw UpdateCheckerException(
+          std::string("curl_multi_perform: ")
+          + curl_multi_strerror(performCode));
+      }
+    }
+
+    // Check the response status
+    long httpCode;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+    if (httpCode != 200) {
+      throw UpdateCheckerException(
+        std::string("failed fetching the latest release: response code is ")
+        + std::to_string(httpCode));
+    }
+
+    return response;
+  }
+
+  std::vector<GithubRelease> FetchLatestReleases() {
+    std::vector<char> responseContent = FetchLatestReleasesAsJsonBytes();
+    try {
+      // JSON is valid YAML, use yaml-cpp so that we don't have to add another
+      // project dependency
+      YAML::Node response
+        = YAML::Load(std::string(&responseContent[0], responseContent.size()));
+      std::vector<GithubRelease> releases;
+      for (const auto &node : response) {
+        releases.push_back(GithubRelease::fromYaml(node));
+      }
+      return releases;
+    } catch (const YAML::Exception &e) {
+      throw UpdateCheckerException(
+        std::string("error parsing github api response: ") + e.what());
+    }
+  }
+
+  GOUpdateChecker::Result DoUpdateChecking() {
     try {
       // Fetch latest releases and filter out drafts and prereleases
-      std::vector<GithubRelease> allReleases = fetch_latest_releases();
+      std::vector<GithubRelease> allReleases = FetchLatestReleases();
       allReleases.erase(
         std::remove_if(
           allReleases.begin(),
