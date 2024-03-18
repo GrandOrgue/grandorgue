@@ -20,7 +20,7 @@ GONewReleaseDialog::GONewReleaseDialog(
     wxEmptyString,
     0,
     wxCLOSE),
-    m_config(config) {
+    r_config(config) {
   wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
   // Version name
@@ -46,7 +46,7 @@ GONewReleaseDialog::GONewReleaseDialog(
   // Checkbox to disable updates at startup
   m_checkUpdatesAtStartupCtrl
     = new wxCheckBox(this, wxID_ANY, _("Check for updates at startup"));
-  m_checkUpdatesAtStartupCtrl->SetValue(m_config.CheckForUpdatesAtStartup());
+  m_checkUpdatesAtStartupCtrl->SetValue(r_config.CheckForUpdatesAtStartup());
   sizer->Add(m_checkUpdatesAtStartupCtrl, 0, wxALL, 5);
 
   // Add Download button that opens the browser
@@ -75,6 +75,6 @@ void GONewReleaseDialog::OnDownloadButton(const wxCommandEvent &event) {
 
 bool GONewReleaseDialog::TransferDataFromWindow() {
   bool newValue = m_checkUpdatesAtStartupCtrl->GetValue();
-  m_config.CheckForUpdatesAtStartup(newValue);
+  r_config.CheckForUpdatesAtStartup(newValue);
   return true;
 }

@@ -8,10 +8,12 @@
 #ifndef GOUPDATECHECKER_H
 #define GOUPDATECHECKER_H
 
-#include "threading/GOThread.h"
 #include <stdexcept>
 #include <string>
+
 #include <wx/wx.h>
+
+#include "threading/GOThread.h"
 
 struct GOUpdateChecker {
   enum class CheckReason { STARTUP, USER_REQUEST };

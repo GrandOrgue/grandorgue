@@ -16,11 +16,11 @@
 #include <wx/string.h>
 #include <yaml-cpp/yaml.h>
 
+#include "threading/GOThread.h"
 #include "yaml/go-wx-yaml.h"
 
 #include "go_defs.h"
 #include "settings.h"
-#include "threading/GOThread.h"
 
 wxDEFINE_EVENT(UPDATE_CHECKING_COMPLETION, GOUpdateChecker::CompletionEvent);
 

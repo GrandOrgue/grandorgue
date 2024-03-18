@@ -24,7 +24,7 @@ public:
 
 private:
   wxCheckBox *m_checkUpdatesAtStartupCtrl;
-  GOConfig &m_config;
+  GOConfig &r_config;
 };
 
 #endif

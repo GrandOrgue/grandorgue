@@ -1393,15 +1393,18 @@ void GOFrame::OnUpdateCheckingCompletion(
   const GOUpdateChecker::Result &result = event.GetResult();
   if (result.checkReason == GOUpdateChecker::CheckReason::USER_REQUEST) {
     wxEndBusyCursor();
-    if (result.successful && result.updateAvailable) {
-      GONewReleaseDialog dialog(
-        this, m_config, event.GetResult().latestRelease);
-      if (dialog.ShowModal() == wxID_OK) {
-        m_config.Flush();
+    if (result.successful) {
+      if (result.updateAvailable) {
+        GONewReleaseDialog dialog(
+          this, m_config, event.GetResult().latestRelease);
+        if (dialog.ShowModal() == wxID_OK) {
+          m_config.Flush();
+        }
+      } else {
+        wxMessageBox(
+          _("You are using the latest GrandOrgue version"),
+          _("Update checker"));
       }
-    } else if (result.successful) {
-      wxMessageBox(
-        _("You are using the latest GrandOrgue version"), _("Update checker"));
     } else {
       wxMessageBox(
         _("Failed to check for updates: %s").Format(result.errorMessage));
