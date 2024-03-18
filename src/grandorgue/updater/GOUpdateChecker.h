@@ -14,14 +14,39 @@
 #include <wx/wx.h>
 
 struct GOUpdateChecker {
+  enum class CheckReason { STARTUP, USER_REQUEST };
+
   struct ReleaseMetadata {
     wxString version;
     wxString changelog;
   };
 
   struct Result {
+    bool successful{};
     ReleaseMetadata latestRelease;
     bool updateAvailable{};
+    wxString errorMessage;
+    CheckReason checkReason{};
+
+    static Result error(const wxString &message) {
+      Result r;
+      r.successful = false;
+      r.errorMessage = message;
+      return r;
+    }
+
+    static Result success(ReleaseMetadata release, bool updateAvailable) {
+      Result r;
+      r.successful = true;
+      r.latestRelease = std::move(release);
+      r.updateAvailable = updateAvailable;
+      return r;
+    }
+
+    Result &withCheckReason(CheckReason reason) {
+      this->checkReason = reason;
+      return *this;
+    }
   };
 
   class CompletionEvent : public wxEvent {
@@ -32,20 +57,20 @@ struct GOUpdateChecker {
     CompletionEvent(wxEventType eventType, Result result)
       : wxEvent(0, eventType), m_result(std::move(result)) {}
 
-    CompletionEvent(const CompletionEvent &event) : wxEvent(event) {
-      this->m_result = event.m_result;
+    CompletionEvent(const CompletionEvent &event) = default;
+
+    [[nodiscard]] const Result &GetResult() const { return m_result; }
+    [[nodiscard]] wxEvent *Clone() const override {
+      return new CompletionEvent(*this);
     }
-
-    const Result &GetResult() const { return m_result; }
-
-    wxEvent *Clone() const override { return new CompletionEvent(*this); }
   };
 
   // The spawned thread fires UpdateCheckerCompletedEvent to
   // completionEventHandler on success. Nothing is done on failure except
   // logging some messages.
   static std::unique_ptr<GOThread> StartThread(
-    wxEvtHandler *completionEventHandler);
+    CheckReason reason, wxEvtHandler *completionEventHandler);
+  static void OpenDownloadPageInBrowser();
 };
 
 /* Boilerplate code for custom event types in wxWidgets */

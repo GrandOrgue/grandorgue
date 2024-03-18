@@ -134,41 +134,54 @@ static GOUpdateChecker::ReleaseMetadata fetch_latest_release() {
 
 class CheckForUpdatesThread : public GOThread {
 public:
-  explicit CheckForUpdatesThread(wxEvtHandler *completionEventHandler)
-    : m_CompletionEventHandler(completionEventHandler) {}
+  explicit CheckForUpdatesThread(
+    GOUpdateChecker::CheckReason checkReason,
+    wxEvtHandler *completionEventHandler)
+    : m_CompletionEventHandler(completionEventHandler),
+      m_CheckReason(checkReason) {}
 
 protected:
   void Entry() override {
-    try {
-      GOUpdateChecker::Result result;
-      // Fetch latest release
-      result.latestRelease = fetch_latest_release();
-      // Compare versions
-      GOVersion releaseVersion = GOVersion(result.latestRelease.version);
-      GOVersion currentVersion = GOVersion(APP_VERSION);
-      result.updateAvailable = currentVersion.IsValid()
-        && releaseVersion.IsValid() && currentVersion < releaseVersion;
-      // Fire completion event
-      m_CompletionEventHandler->QueueEvent(new GOUpdateChecker::CompletionEvent(
-        UPDATE_CHECKING_COMPLETION, result));
-      // Log results
-      wxLogDebug(
-        "latest version: %s, update available: %s",
-        result.latestRelease.version,
-        result.updateAvailable ? "yes" : "no");
-    } catch (UpdateCheckerException &e) {
-      wxLogDebug("failed to check for updates: %s", e.what());
-    }
+    GOUpdateChecker::Result result
+      = DoUpdateChecking().withCheckReason(m_CheckReason);
+    m_CompletionEventHandler->QueueEvent(
+      new GOUpdateChecker::CompletionEvent(UPDATE_CHECKING_COMPLETION, result));
   }
 
 private:
   wxEvtHandler *m_CompletionEventHandler;
+  GOUpdateChecker::CheckReason m_CheckReason;
+
+  static GOUpdateChecker::Result DoUpdateChecking() {
+    try {
+      // Fetch latest release
+      GOUpdateChecker::ReleaseMetadata release = fetch_latest_release();
+      // Compare versions
+      GOVersion releaseVersion = GOVersion(release.version);
+      GOVersion currentVersion = GOVersion(APP_VERSION);
+      bool updateAvailable = currentVersion.IsValid()
+        && releaseVersion.IsValid() && currentVersion < releaseVersion;
+      wxLogDebug(
+        "latest version: %s, update available: %s",
+        release.version,
+        updateAvailable ? "yes" : "no");
+      return GOUpdateChecker::Result::success(release, updateAvailable);
+    } catch (const UpdateCheckerException &e) {
+      wxLogDebug("failed to check for updates: %s", e.what());
+      return GOUpdateChecker::Result::error(e.what());
+    }
+  }
 };
 
 std::unique_ptr<GOThread> GOUpdateChecker::StartThread(
+  GOUpdateChecker::CheckReason checkReason,
   wxEvtHandler *completionEventHandler) {
-  std::unique_ptr<GOThread> thread(
-    new CheckForUpdatesThread(completionEventHandler));
+  auto thread = std::make_unique<CheckForUpdatesThread>(
+    checkReason, completionEventHandler);
   thread->Start();
   return thread;
+}
+
+void GOUpdateChecker::OpenDownloadPageInBrowser() {
+  wxLaunchDefaultBrowser(DOWNLOAD_URL);
 }

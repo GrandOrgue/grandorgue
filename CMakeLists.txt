@@ -77,8 +77,6 @@ include(${CMAKE_SOURCE_DIR}/cmake/FindTools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/BuildLibrary.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/BuildExecutable.cmake)
 
-add_cxx_option(-std=c++11)
-
 IF (APPLE)
   set(BININSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
   SET(LIBINSTDIR "${PROJECT_NAME}.app/Contents/MacOS")

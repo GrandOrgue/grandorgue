@@ -6,7 +6,7 @@
  */
 
 #include "GONewReleaseDialog.h"
-#include "updater/settings.h"
+#include "go_ids.h"
 
 GONewReleaseDialog::GONewReleaseDialog(
   wxWindow *parent,
@@ -19,7 +19,7 @@ GONewReleaseDialog::GONewReleaseDialog(
     config.m_DialogSizes,
     wxEmptyString,
     0,
-    wxOK),
+    wxCLOSE),
     m_config(config) {
   wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -52,7 +52,8 @@ GONewReleaseDialog::GONewReleaseDialog(
   // Add Download button that opens the browser
   wxSizer *const pButtonSizer = GetButtonSizer();
   if (pButtonSizer) {
-    wxButton *downloadBtn = new wxButton(this, wxID_EXECUTE, _("Download"));
+    wxButton *downloadBtn
+      = new wxButton(this, ID_DOWNLOAD_NEW_RELEASE, _("Download"));
     pButtonSizer->Insert(
       2, downloadBtn, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 10);
   }
@@ -61,11 +62,15 @@ GONewReleaseDialog::GONewReleaseDialog(
   LayoutWithInnerSizer(sizer);
 
   // Bind event handlers
-  Bind(wxEVT_BUTTON, &GONewReleaseDialog::OnDownloadButton, this, wxID_EXECUTE);
+  Bind(
+    wxEVT_BUTTON,
+    &GONewReleaseDialog::OnDownloadButton,
+    this,
+    ID_DOWNLOAD_NEW_RELEASE);
 }
 
 void GONewReleaseDialog::OnDownloadButton(const wxCommandEvent &event) {
-  wxLaunchDefaultBrowser(DOWNLOAD_URL);
+  GOUpdateChecker::OpenDownloadPageInBrowser();
 }
 
 bool GONewReleaseDialog::TransferDataFromWindow() {
