@@ -7,6 +7,7 @@
 
 #include "GOUpdateChecker.h"
 
+#include <algorithm>
 #include <iostream>
 #include <thread>
 
