@@ -76,7 +76,7 @@ static size_t handle_received_bytes(
   return bytesReceived;
 }
 
-static std::vector<char> fetch_latest_release_as_json_bytes() {
+static std::vector<char> fetch_latest_releases_as_json_bytes() {
   CURL *curl = curl_easy_init();
   CurlDestroyer destroyer(curl); // destroy curl on exit
   if (!curl) {
@@ -91,7 +91,7 @@ static std::vector<char> fetch_latest_release_as_json_bytes() {
   headers = curl_slist_append(headers, USER_AGENT_HEADER);
   curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, TIMEOUT_MS);
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-  curl_easy_setopt(curl, CURLOPT_URL, LATEST_RELEASE_API_URL);
+  curl_easy_setopt(curl, CURLOPT_URL, RELEASES_API_URL);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, handle_received_bytes);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
@@ -115,17 +115,34 @@ static std::vector<char> fetch_latest_release_as_json_bytes() {
   return response;
 }
 
-static GOUpdateChecker::ReleaseMetadata fetch_latest_release() {
-  std::vector<char> responseContent = fetch_latest_release_as_json_bytes();
+struct GithubRelease {
+  wxString name;
+  wxString body;
+  bool draft;
+  bool prerelease;
+
+  static GithubRelease fromYaml(const YAML::Node &node) {
+    GithubRelease release;
+    release.name = node["name"].as<wxString>();
+    release.body = node["body"].as<wxString>();
+    release.draft = node["draft"].as<bool>();
+    release.prerelease = node["prerelease"].as<bool>();
+    return release;
+  }
+};
+
+static std::vector<GithubRelease> fetch_latest_releases() {
+  std::vector<char> responseContent = fetch_latest_releases_as_json_bytes();
   try {
     // JSON is valid YAML, use yaml-cpp so that we don't have to add another
     // project dependency
     YAML::Node response
       = YAML::Load(std::string(&responseContent[0], responseContent.size()));
-    GOUpdateChecker::ReleaseMetadata metadata;
-    metadata.version = response["name"].as<wxString>();
-    metadata.changelog = response["body"].as<wxString>();
-    return metadata;
+    std::vector<GithubRelease> releases;
+    for (const auto &node : response) {
+      releases.push_back(GithubRelease::fromYaml(node));
+    }
+    return releases;
   } catch (const YAML::Exception &e) {
     throw UpdateCheckerException(
       std::string("error parsing github api response: ") + e.what());
@@ -154,18 +171,42 @@ private:
 
   static GOUpdateChecker::Result DoUpdateChecking() {
     try {
-      // Fetch latest release
-      GOUpdateChecker::ReleaseMetadata release = fetch_latest_release();
-      // Compare versions
-      GOVersion releaseVersion = GOVersion(release.version);
+      // Fetch latest releases and filter out drafts and prereleases
+      std::vector<GithubRelease> allReleases = fetch_latest_releases();
+      allReleases.erase(
+        std::remove_if(
+          allReleases.begin(),
+          allReleases.end(),
+          [](const GithubRelease &r) { return r.draft || r.prerelease; }),
+        allReleases.end());
+      // Get the latest version
+      if (allReleases.empty()) {
+        return GOUpdateChecker::Result::error("no releases found");
+      }
+      const wxString &latestVersionStr = allReleases[0].name;
+      // Compare version numbers
+      GOVersion latestVersion = GOVersion(latestVersionStr);
       GOVersion currentVersion = GOVersion(APP_VERSION);
-      bool updateAvailable = currentVersion.IsValid()
-        && releaseVersion.IsValid() && currentVersion < releaseVersion;
+      bool updateAvailable = currentVersion.IsValid() && latestVersion.IsValid()
+        && currentVersion < latestVersion;
+      // Build the latest release metadata
+      GOUpdateChecker::ReleaseMetadata metadata;
+      metadata.version = latestVersionStr;
+      if (updateAvailable) {
+        // build changelog by concatenating bodies of releases
+        for (const auto &release : allReleases) {
+          GOVersion releaseVersion = GOVersion(release.name);
+          if (releaseVersion.IsValid() && currentVersion < releaseVersion) {
+            metadata.changelog
+              += wxString::Format("%s\n%s\n", release.name, release.body);
+          }
+        }
+      }
       wxLogDebug(
         "latest version: %s, update available: %s",
-        release.version,
+        latestVersionStr,
         updateAvailable ? "yes" : "no");
-      return GOUpdateChecker::Result::success(release, updateAvailable);
+      return GOUpdateChecker::Result::success(metadata, updateAvailable);
     } catch (const UpdateCheckerException &e) {
       wxLogDebug("failed to check for updates: %s", e.what());
       return GOUpdateChecker::Result::error(e.what());
