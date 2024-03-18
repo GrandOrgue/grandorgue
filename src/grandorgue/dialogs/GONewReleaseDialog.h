@@ -18,7 +18,7 @@ public:
   GONewReleaseDialog(
     wxWindow *parent,
     GOConfig &config,
-    GOUpdateChecker::ReleaseMetadata release);
+    const GOUpdateChecker::ReleaseMetadata &release);
   void OnDownloadButton(const wxCommandEvent &event);
   bool TransferDataFromWindow() override;
 

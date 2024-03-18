@@ -21,7 +21,7 @@ struct GOUpdateChecker {
 
   struct Result {
     ReleaseMetadata latestRelease;
-    bool updateAvailable;
+    bool updateAvailable{};
   };
 
   class CompletionEvent : public wxEvent {
@@ -32,15 +32,13 @@ struct GOUpdateChecker {
     CompletionEvent(wxEventType eventType, Result result)
       : wxEvent(0, eventType), m_result(std::move(result)) {}
 
-    CompletionEvent(const CompletionEvent &event) {
+    CompletionEvent(const CompletionEvent &event) : wxEvent(event) {
       this->m_result = event.m_result;
     }
 
     const Result &GetResult() const { return m_result; }
 
-    virtual wxEvent *Clone() const override {
-      return new CompletionEvent(*this);
-    }
+    wxEvent *Clone() const override { return new CompletionEvent(*this); }
   };
 
   // The spawned thread fires UpdateCheckerCompletedEvent to

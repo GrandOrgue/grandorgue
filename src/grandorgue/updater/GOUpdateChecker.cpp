@@ -8,7 +8,6 @@
 #include "GOUpdateChecker.h"
 
 #include <iostream>
-#include <memory>
 #include <thread>
 
 #include <curl/curl.h>
@@ -26,8 +25,8 @@ wxDEFINE_EVENT(UPDATE_CHECKING_COMPLETION, GOUpdateChecker::CompletionEvent);
 
 class GOVersion {
 public:
-  GOVersion(const wxString &str) {
-    wxRegEx versionRegex("v?(\\d+).(\\d+).(\\d+)-(\\d+).*", wxRE_ADVANCED);
+  explicit GOVersion(const wxString &str) {
+    wxRegEx versionRegex(R"(v?(\d+).(\d+).(\d+)-(\d+).*)", wxRE_ADVANCED);
     if (versionRegex.Matches(str)) {
       assert(versionRegex.GetMatchCount() == m_components.size() + 1);
       for (size_t i = 0; i < m_components.size(); i++) {
@@ -44,20 +43,20 @@ public:
   bool IsValid() const { return m_valid; }
 
 private:
-  std::array<int, 4> m_components;
-  bool m_valid;
+  std::array<int, 4> m_components{};
+  bool m_valid{};
 };
 
 class UpdateCheckerException : public std::runtime_error {
 public:
-  UpdateCheckerException(const std::string &message)
+  explicit UpdateCheckerException(const std::string &message)
     : std::runtime_error(message) {}
 };
 
 // a small helper class that destroys curl session in destructor
 class CurlDestroyer {
 public:
-  CurlDestroyer(CURL *curl) : m_curl(curl) {}
+  explicit CurlDestroyer(CURL *curl) : m_curl(curl) {}
   ~CurlDestroyer() {
     if (m_curl) {
       curl_easy_cleanup(m_curl);
@@ -135,7 +134,7 @@ static GOUpdateChecker::ReleaseMetadata fetch_latest_release() {
 
 class CheckForUpdatesThread : public GOThread {
 public:
-  CheckForUpdatesThread(wxEvtHandler *completionEventHandler)
+  explicit CheckForUpdatesThread(wxEvtHandler *completionEventHandler)
     : m_CompletionEventHandler(completionEventHandler) {}
 
 protected:

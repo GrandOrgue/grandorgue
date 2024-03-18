@@ -9,7 +9,9 @@
 #include "updater/settings.h"
 
 GONewReleaseDialog::GONewReleaseDialog(
-  wxWindow *parent, GOConfig &config, GOUpdateChecker::ReleaseMetadata release)
+  wxWindow *parent,
+  GOConfig &config,
+  const GOUpdateChecker::ReleaseMetadata &release)
   : GOSimpleDialog(
     parent,
     "NewRelease",
