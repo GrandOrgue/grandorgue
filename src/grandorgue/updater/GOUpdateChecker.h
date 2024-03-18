@@ -22,11 +22,11 @@ struct GOUpdateChecker {
   };
 
   struct Result {
-    bool successful{};
+    bool successful;
     ReleaseMetadata latestRelease;
-    bool updateAvailable{};
+    bool updateAvailable = false;
     wxString errorMessage;
-    CheckReason checkReason{};
+    CheckReason checkReason = CheckReason::STARTUP;
 
     static Result error(const wxString &message) {
       Result r;

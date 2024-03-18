@@ -26,7 +26,7 @@ wxDEFINE_EVENT(UPDATE_CHECKING_COMPLETION, GOUpdateChecker::CompletionEvent);
 
 class GOVersion {
 public:
-  explicit GOVersion(const wxString &str) {
+  explicit GOVersion(const wxString &str) : m_components(), m_valid(false) {
     wxRegEx versionRegex(R"(v?(\d+).(\d+).(\d+)-(\d+).*)", wxRE_ADVANCED);
     if (versionRegex.Matches(str)) {
       assert(versionRegex.GetMatchCount() == m_components.size() + 1);
@@ -44,8 +44,8 @@ public:
   bool IsValid() const { return m_valid; }
 
 private:
-  std::array<int, 4> m_components{};
-  bool m_valid{};
+  std::array<int, 4> m_components;
+  bool m_valid;
 };
 
 class UpdateCheckerException : public std::runtime_error {
