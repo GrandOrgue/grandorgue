@@ -18,7 +18,7 @@ PARALLEL_PRMS="-j$(nproc)"
 
 # Find VC (needed for CV2PDB)
 VCTOOLS_COMPONENT="Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
-VCTOOLS_DIR=$(vswhere -latest -requires "$VCTOOLS_COMPONENT" -find '**\bin\Hostx86\x64')
+VCTOOLS_DIR=$(vswhere -latest -requires "$VCTOOLS_COMPONENT" -find '**\bin\Hostx86\x64' | head -n 1)
 if [ -z "${VCTOOLS_DIR}" ]; then
 	echo "Could not find $VCTOOLS_COMPONENT Visual Studio component"
 	exit 1
