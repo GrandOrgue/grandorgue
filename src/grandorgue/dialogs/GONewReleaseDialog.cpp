@@ -5,8 +5,14 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
+#include <wx/event.h>
+
 #include "GONewReleaseDialog.h"
 #include "go_ids.h"
+
+BEGIN_EVENT_TABLE(GONewReleaseDialog, GOSimpleDialog)
+EVT_BUTTON(ID_DOWNLOAD_NEW_RELEASE, GONewReleaseDialog::OnDownloadButton)
+END_EVENT_TABLE()
 
 GONewReleaseDialog::GONewReleaseDialog(
   wxWindow *parent,
@@ -60,16 +66,9 @@ GONewReleaseDialog::GONewReleaseDialog(
 
   // Compute layout & set dialog size
   LayoutWithInnerSizer(sizer);
-
-  // Bind event handlers
-  Bind(
-    wxEVT_BUTTON,
-    &GONewReleaseDialog::OnDownloadButton,
-    this,
-    ID_DOWNLOAD_NEW_RELEASE);
 }
 
-void GONewReleaseDialog::OnDownloadButton(const wxCommandEvent &event) {
+void GONewReleaseDialog::OnDownloadButton(wxCommandEvent &event) {
   GOUpdateChecker::OpenDownloadPageInBrowser();
 }
 
