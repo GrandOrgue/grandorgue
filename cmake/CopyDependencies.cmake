@@ -22,5 +22,8 @@ function(CopyDependencies app instpath)
     COMMAND ${CMAKE_COMMAND} -Dstatusfile="${statusfile}" -Dbundledtarget="${targetfile}" -Dsearchdirs="${cmd_searchdirs}" -P "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake"
     DEPENDS ${targetfile} "${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake" "${statusfile}")
 
-  install(CODE "execute_process(COMMAND \"${CMAKE_COMMAND}\" \"-Dstatusfile=${statusfile}\" \"-Dbundledtarget=\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${instpath}\" \"-Dsearchdirs=${searchdirs}\" -P \"${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake\")")
+  install(CODE "
+    cmake_path(APPEND BUNDLEDTARGET \$ENV{DESTDIR} \${CMAKE_INSTALL_PREFIX} ${instpath})
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" \"-Dstatusfile=${statusfile}\" \"-Dbundledtarget=\${BUNDLEDTARGET}\" \"-Dsearchdirs=${searchdirs}\" -P \"${CMAKE_SOURCE_DIR}/cmake/FixupBundle.cmake\")
+  ")
 endfunction()

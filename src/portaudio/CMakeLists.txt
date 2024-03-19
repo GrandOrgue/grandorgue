@@ -76,12 +76,6 @@ if (WIN32)
    endif ()
 
    check_include_file_cxx(rpcsal.h HAVE_RPCSAL_H)
-   check_cxx_source_compiles("#include <ksmedia.h>
-   KSRTAUDIO_HWREGISTER_PROPERTY x;" HAVE_KSRT)
-   if (${HAVE_KSRT})
-   else()
-     include_directories(${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/wasapi/mingw-include)
-   endif ()
 
    if (RTAUDIO_USE_WDMKS)
       add_definitions(-DPA_USE_WDMKS)

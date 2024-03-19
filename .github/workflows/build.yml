@@ -71,7 +71,9 @@ jobs:
         
   build:
     needs: [calc_ver]
-
+    defaults:
+      run:
+        shell: '${{ matrix.shell }} {0}'
     strategy:
       matrix:
         include:
@@ -79,49 +81,58 @@ jobs:
             for: linux
             prepare: "debian-based"
             build_on: linux
+            shell: /bin/bash
 
           - run_on: ubuntu-20.04
             for: linux
             prepare: "debian-based"
             build_on: linux
             pkg_suffix: wx32
+            shell: /bin/bash
 
           - run_on: ubuntu-20.04
             for: appimage-x86_64
             prepare: "debian-based"
             build_on: linux
+            shell: /bin/bash
 
           - run_on: ubuntu-20.04
             for: linux-armhf
             prepare: "debian-based"
             build_on: linux
+            shell: /bin/bash
     
           - run_on: ubuntu-20.04
             for: linux-armhf
             prepare: "debian-based"
             build_on: linux
             pkg_suffix: wx32
+            shell: /bin/bash
 
           - run_on: ubuntu-20.04
             for: linux-aarch64
             prepare: "debian-based"
             build_on: linux
+            shell: /bin/bash
 
           - run_on: ubuntu-20.04
             for: linux-aarch64
             prepare: "debian-based"
             build_on: linux
             pkg_suffix: wx32
+            shell: /bin/bash
 
           - run_on: macos-12
             for: osx
             prepare: osx
             build_on: osx
-
-          - run_on: ubuntu-latest
+            shell: /bin/bash
+          
+          - run_on: windows-latest
             for: win64
-            prepare: "debian-based"
-            build_on: linux
+            prepare: msys2
+            build_on: msys2
+            shell: 'c:\msys64\msys2_shell.cmd -mingw64 -here -no-start -defterm'
 
     runs-on: ${{ matrix.run_on }}
     steps:
@@ -130,11 +141,13 @@ jobs:
         submodules: true
     
     - name: Install Dependencies
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.pkg_suffix }}"
+      run: | 
+        "${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh" "${{ matrix.pkg_suffix }}"
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}} ${{github.workspace}} "${{ matrix.pkg_suffix }}"
+      run: |
+        "${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh" ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}} "${{github.workspace}}" "${{ matrix.pkg_suffix }}"
 
     - name: Upload result
       uses: nanoufo/action-upload-artifacts-and-release-assets@v2
