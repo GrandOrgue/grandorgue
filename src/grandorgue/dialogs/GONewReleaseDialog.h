@@ -8,7 +8,8 @@
 #ifndef GONEWRELEASEDIALOG_H
 #define GONEWRELEASEDIALOG_H
 
-#include <wx/wx.h>
+#include <wx/checkbox.h>
+#include <wx/event.h>
 
 #include "common/GOSimpleDialog.h"
 #include "config/GOConfig.h"
