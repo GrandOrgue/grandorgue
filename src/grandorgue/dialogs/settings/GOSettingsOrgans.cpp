@@ -30,6 +30,7 @@
 #include "config/GOConfig.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "files/GOStdFileName.h"
+#include "size/GOAdditionalSizeKeeperProxy.h"
 #include "wxcontrols/GOGrid.h"
 
 #include "GOOrgan.h"
@@ -54,8 +55,12 @@ END_EVENT_TABLE()
 enum { GRID_COL_NAME = 0, GRID_COL_MIDI, GRID_COL_PATH, GRID_N_COLS };
 
 GOSettingsOrgans::GOSettingsOrgans(
-  GOConfig &settings, GOMidi &midi, wxWindow *parent)
-  : wxPanel(parent, wxID_ANY),
+  GOConfig &settings,
+  GOMidi &midi,
+  GOTabbedDialog *pDlg,
+  const wxString &name,
+  const wxString &label)
+  : GODialogTab(pDlg, name, label),
     m_config(settings),
     m_midi(midi),
     m_OrigOrganList(settings.GetOrganList()),
@@ -658,6 +663,23 @@ void GOSettingsOrgans::ReplaceOrganPath(
     pOrganSlot->m_CurrentPath = newPath;
     m_OrganSlotByPath[newPath] = pOrganSlot;
   }
+}
+
+const wxString WX_GRID_ORGANS = wxT("GridOrgans");
+
+void GOSettingsOrgans::ApplyAdditionalSizes(
+  const GOAdditionalSizeKeeper &sizeKeeper) {
+  GOAdditionalSizeKeeperProxy proxyGridOrgans(
+    const_cast<GOAdditionalSizeKeeper &>(sizeKeeper), WX_GRID_ORGANS);
+
+  m_GridOrgans->ApplyColumnSizes(proxyGridOrgans);
+}
+
+void GOSettingsOrgans::CaptureAdditionalSizes(
+  GOAdditionalSizeKeeper &sizeKeeper) const {
+  GOAdditionalSizeKeeperProxy proxyGridOrgans(sizeKeeper, WX_GRID_ORGANS);
+
+  m_GridOrgans->CaptureColumnSizes(proxyGridOrgans);
 }
 
 void GOSettingsOrgans::OnOrganUp(wxCommandEvent &event) {
