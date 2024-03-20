@@ -203,6 +203,7 @@ sound/GOSound.cpp
 yaml/GOSaveableToYaml.cpp
 yaml/go-wx-yaml.cpp
 wxcontrols/GOAudioGauge.cpp
+wxcontrols/GOGrid.cpp
 wxcontrols/GORightVisiblePicker.cpp
 GOAudioRecorder.cpp
 GOBitmapCache.cpp
