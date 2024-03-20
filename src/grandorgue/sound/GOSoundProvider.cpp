@@ -35,7 +35,7 @@ GOSoundProvider::GOSoundProvider()
   : m_MidiKeyNumber(0),
     m_MidiPitchFract(0),
     m_Tuning(1),
-    m_SampleGroup(0),
+    m_SampleGroup(false),
     m_ReleaseTail(0),
     m_Attack(),
     m_AttackInfo(),
@@ -92,10 +92,6 @@ bool GOSoundProvider::LoadCache(GOMemoryPool &pool, GOCache &cache) {
   }
 
   return true;
-}
-
-void GOSoundProvider::UseSampleGroup(unsigned sample_group) {
-  m_SampleGroup = sample_group;
 }
 
 bool GOSoundProvider::SaveCache(GOCacheWriter &cache) const {
@@ -198,7 +194,7 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
     const unsigned idx = (i + x) % m_Attack.size();
     if (
       m_AttackInfo[idx].sample_group != -1
-      && m_AttackInfo[idx].sample_group != m_SampleGroup)
+      && m_AttackInfo[idx].sample_group != (int8_t)m_SampleGroup)
       continue;
     if (m_AttackInfo[idx].min_attack_velocity > velocity)
       continue;
