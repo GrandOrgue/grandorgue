@@ -12,6 +12,8 @@
 
 #include <wx/grid.h>
 
+class GOAdditionalSizeKeeper;
+
 class GOGrid : public wxGrid {
 private:
   wxGridCellStringRenderer *p_RightVisibleRenderer;
@@ -29,6 +31,9 @@ public:
 
   bool IsColumnRightVisible(unsigned colN) const;
   void SetColumnRightVisible(unsigned colN, bool isRightVisible);
+
+  void ApplyColumnSizes(const GOAdditionalSizeKeeper &sizeKeeper);
+  void CaptureColumnSizes(GOAdditionalSizeKeeper &sizeKeeper) const;
 
   virtual wxGridCellRenderer *GetDefaultRendererForCell(
     int row, int col) const override;

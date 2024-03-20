@@ -9,6 +9,8 @@
 
 #include <wx/dc.h>
 
+#include "size/GOAdditionalSizeKeeper.h"
+
 class RightVisibleCellRenderer : public wxGridCellStringRenderer {
   virtual void Draw(
     wxGrid &grid,
@@ -199,6 +201,24 @@ void GOGrid::SetColumnRightVisible(unsigned colN, bool isRightVisible) {
   while (m_AreColumnsRightVisible.size() <= colN)
     m_AreColumnsRightVisible.push_back(false);
   m_AreColumnsRightVisible[colN] = isRightVisible;
+}
+
+const wxString WX_COL_SIZE_KEY_FMT = wxT("Column%03dSize");
+
+void GOGrid::ApplyColumnSizes(const GOAdditionalSizeKeeper &sizeKeeper) {
+  for (int l = GetNumberCols(), i = 0; i < l; i++) {
+    int newSize
+      = sizeKeeper.GetAdditionalSize(wxString::Format(WX_COL_SIZE_KEY_FMT, i));
+
+    if (newSize > 0)
+      SetColSize(i, newSize);
+  }
+}
+
+void GOGrid::CaptureColumnSizes(GOAdditionalSizeKeeper &sizeKeeper) const {
+  for (int l = GetNumberCols(), i = 0; i < l; i++)
+    sizeKeeper.SetAdditionalSize(
+      wxString::Format(WX_COL_SIZE_KEY_FMT, i), GetColSize(i));
 }
 
 wxGridCellRenderer *GOGrid::GetDefaultRendererForCell(int row, int col) const {
