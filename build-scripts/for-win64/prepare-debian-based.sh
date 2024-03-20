@@ -19,7 +19,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \
   wine32 winbind pipx
 
-if ! command -v msys2-download &> /dev/; then
+if ! command -v msys2-download &> /dev/null; then
   # Install a tool to download pre-compiled libraries from msys2 repositories
   sudo PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
     pipx install git+https://github.com/nanoufo/msys2-downloader.git@v1.0.0
@@ -34,7 +34,7 @@ if ! dpkg -l curl-winssl-msys2-mingw64 &>/dev/null; then
   rm -rf ./msys2
   mkdir msys2
   msys2-download --make-deb --output ./msys2 --env mingw64 --exclude gcc-libs zlib -- curl-winssl
-  dpkg -i msys2/*.deb
+  sudo dpkg -i msys2/*.deb
 fi
 
 wget \
