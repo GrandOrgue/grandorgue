@@ -19,16 +19,23 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \
   wine32 winbind pipx
 
-# Install tool to download pre-compiled libraries from msys2 repositories
-sudo PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
-	pipx install git+https://github.com/nanoufo/msys2-downloader.git@main
-
-# Download curl and dependencies
-msys2-download --extract-root ./msys2-sysroot --env mingw64 curl-winssl
-sudo cp -n -r ./msys2-sysroot/mingw64/* /usr/x86_64-w64-mingw32/
+if ! command -v msys2-download &> /dev/; then
+  # Install a tool to download pre-compiled libraries from msys2 repositories
+  sudo PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
+    pipx install git+https://github.com/nanoufo/msys2-downloader.git@v1.0.0
+fi
 
 mkdir -p deb
 pushd deb
+
+if ! dpkg -l curl-winssl-msys2-mingw64 &>/dev/null; then
+  # Download curl and dependencies from MSYS2 repositories.
+  # GO uses libcurl for checking for updates.
+  rm -rf ./msys2
+  mkdir msys2
+  msys2-download --make-deb --output ./msys2 --env mingw64 --exclude gcc-libs zlib -- curl-winssl
+  dpkg -i msys2/*.deb
+fi
 
 wget \
   https://github.com/GrandOrgue/Mingw64LibGnuRx/releases/download/2.6.1-1.os/libgnurx-mingw-w64_2.6.1-1.os_all.deb \
