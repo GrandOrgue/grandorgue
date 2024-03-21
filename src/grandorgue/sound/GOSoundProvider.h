@@ -61,7 +61,8 @@ public:
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache);
   virtual bool SaveCache(GOCacheWriter &cache) const;
 
-  void UseSampleGroup(unsigned sample_group);
+  void UseSampleGroup(bool sampleGroup) { m_SampleGroup = sampleGroup; }
+
   void SetVelocityParameter(float min_volume, float max_volume);
 
   const GOSoundAudioSection *GetAttack(

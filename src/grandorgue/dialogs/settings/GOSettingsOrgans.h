@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -18,12 +18,13 @@
 
 class GOMidi;
 class wxButton;
-class wxListEvent;
-class wxListView;
+class wxGridEvent;
+class wxGridRangeSelectEvent;
 class wxTextCtrl;
 
 class GOArchiveFile;
 class GOConfig;
+class GOGrid;
 class GOOrgan;
 
 class GOSettingsOrgans : public wxPanel {
@@ -63,7 +64,7 @@ private:
   using OrganSlotToLongMap
     = std::unordered_map<const GOSettingsOrgans::OrganSlot *, long>;
   struct VisibleOrganRec {
-    const OrganSlot *p_OrganSlot;
+    OrganSlot *p_OrganSlot;
     bool is_selected;
     bool is_focused;
   };
@@ -78,10 +79,11 @@ private:
   std::unordered_map<const wxString, PackageSlot *, wxStringHash, wxStringEqual>
     m_PackageSlotByPath;
   std::vector<OrganSlot> m_OrganSlots;
+  std::vector<OrganSlot *> m_OrganSlotPtrsByGridLine;
   std::unordered_map<const wxString, OrganSlot *, wxStringHash, wxStringEqual>
     m_OrganSlotByPath;
 
-  wxListView *m_Organs;
+  GOGrid *m_GridOrgans;
   wxTextCtrl *m_Builder;
   wxTextCtrl *m_Recording;
   wxTextCtrl *m_OrganHash;
@@ -101,22 +103,23 @@ private:
   wxButton *m_DelPreset;
 
   PackageSlotSet GetUsedPackages(
-    std::unordered_set<long> itemsToExtract = std::unordered_set<long>());
-  void RefreshFocused();
+    std::unordered_set<unsigned> itemsToExtract
+    = std::unordered_set<unsigned>());
+  void RefreshFocused(const int currOrganIndex);
   void RefreshButtons();
   VisibleOrganRecs GetCurrentOrganRecs();
 
-  static int wxCALLBACK
-  organOrdCompareCallback(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
-
+  void DisplayMidiCell(unsigned rowN, GOOrgan *pOrgan);
+  void DisplayPathCell(unsigned rowN, const wxString &path);
+  void FillGridRow(unsigned rowN, OrganSlot &organSlot);
   void ReorderOrgans(const VisibleOrganRecs &newSortedRecs);
   void DelSelectedOrgans();
-  void ReplaceOrganPath(const long index, const wxString &newPath);
+  void ReplaceOrganPath(const unsigned index, const wxString &newPath);
 
   void OnCharHook(wxKeyEvent &ev);
 
-  void OnOrganFocused(wxListEvent &event);
-  void OnOrganSelected(wxListEvent &event);
+  void OnOrganSelectCell(wxGridEvent &event);
+  void OnOrganRangeSelect(wxGridRangeSelectEvent &event);
   void OnOrganUp(wxCommandEvent &event);
   void OnOrganDown(wxCommandEvent &event);
   void OnOrganTop(wxCommandEvent &event);

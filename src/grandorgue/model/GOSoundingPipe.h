@@ -27,6 +27,7 @@ class GOSoundingPipe : public GOPipe,
 private:
   GOOrganModel *p_OrganModel;
   GOSoundSampler *m_Sampler;
+  uint64_t m_LastStart;
   uint64_t m_LastStop;
   int m_Instances;
   bool m_Tremulant;
