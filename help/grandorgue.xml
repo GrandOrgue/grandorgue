@@ -663,6 +663,21 @@ program will jump directly to the appropriate topic.
           </para>
         </sect3>
       </sect2>
+      <sect2 id="update-available">
+        <title>Update available!</title>
+        <para>That menu appears only if update checking at startup is enabled and a new update is available.</para>
+        <indexterm>
+          <primary>updates</primary>
+        </indexterm>
+        <sect3>
+          <title>Show changelog</title>
+          <para>Shows what changed between the installed version and the newest one.</para>
+        </sect3>
+        <sect3>
+          <title>Download</title>
+          <para>Opens the GrandOrgue releases page in the browser.</para>
+        </sect3>
+      </sect2>
     </sect1>
     <sect1>
       <title>Tool bar</title>
@@ -6274,7 +6289,7 @@ closed with changed metronome settings.
       <title>Updates</title>
       <sect2>
         <title>Check for updates at startup</title>
-        <para>Check the checkbox here if you would like GrandOrgue to notify you when a new version of GrandOrgue is available.</para>
+        <para>Check the checkbox here if you would like GrandOrgue to notify you when a new version of GrandOrgue is available. If there is one, GrandOrgue will create a new menu <link linkend="update-available">Update available!</link>.</para>
       </sect2>
     </sect1>
     <sect1 id="masterControls">

@@ -17,7 +17,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
   docbook-xsl xsltproc gettext po4a imagemagick zip libz-mingw-w64-dev \
-  wine32 winbind pipx
+  wine32 winbind pipx git
 
 if ! command -v msys2-download &> /dev/null; then
   # Install a tool to download pre-compiled libraries from msys2 repositories
