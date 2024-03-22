@@ -541,7 +541,7 @@ unsigned GOConfigReader::ReadSize(
 
   long size;
   if (parseLong(size, value))
-    if (100 <= size && size <= 4000)
+    if (100 <= size && size <= 32000)
       return size;
 
   wxString error;
