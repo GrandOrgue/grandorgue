@@ -659,7 +659,8 @@ program will jump directly to the appropriate topic.
             <primary>updates</primary>
           </indexterm>
           <para>
-            Check if a newer version of GrandOrgue is available. If there is one, GrandOrgue will show you the changes in this version and suggest downloading it.
+            Check if a newer version of GrandOrgue is available. If there is one,
+            GrandOrgue will show you <link linkend="update-changelog">what changed</link> in the new version.
           </para>
         </sect3>
       </sect2>
@@ -671,7 +672,12 @@ program will jump directly to the appropriate topic.
         </indexterm>
         <sect3>
           <title>Show changelog</title>
-          <para>Shows what changed between the installed version and the newest one.</para>
+          <para>Opens a window that shows what changed between the installed version and the newest one.</para>
+          <mediaobject id="update-changelog">
+            <imageobject>
+              <imagedata fileref="images/update_changelog.png"/>
+            </imageobject>
+          </mediaobject>
         </sect3>
         <sect3>
           <title>Download</title>
