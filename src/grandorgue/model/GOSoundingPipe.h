@@ -27,6 +27,7 @@ class GOSoundingPipe : public GOPipe,
 private:
   GOOrganModel *p_OrganModel;
   GOSoundSampler *m_Sampler;
+  uint64_t m_LastStart;
   uint64_t m_LastStop;
   int m_Instances;
   bool m_Tremulant;
@@ -38,7 +39,6 @@ private:
    * GOSoundEngine::StartSampler */
   int m_SamplerGroupID;
   unsigned m_AudioGroupID;
-  bool m_Percussive;
   float m_TemperamentOffset;
   unsigned m_HarmonicNumber;
   float m_MinVolume;
@@ -115,7 +115,6 @@ public:
   GOSoundingPipe(
     GOOrganModel *pOrganModel,
     GORank *rank,
-    bool percussive,
     int sampler_group_id,
     unsigned midi_key_number,
     unsigned harmonic_number,

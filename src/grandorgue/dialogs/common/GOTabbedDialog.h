@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -35,6 +35,10 @@ protected:
 
   void AddTab(wxPanel *tab, const wxString &tabName, const wxString &tabTitle);
   void AddTab(GODialogTab *tab);
+
+  void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
+  void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const override;
 
 public:
   const wxString &GetCurrTabName() const;

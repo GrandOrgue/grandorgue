@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -46,6 +46,8 @@ private:
   unsigned m_SamplesPerBuffer;
   float m_Gain;
   unsigned m_SampleRate;
+
+  // time in samples
   uint64_t m_CurrentTime;
   GOSoundSamplerPool m_SamplerPool;
   unsigned m_AudioGroupCount;
@@ -65,6 +67,8 @@ private:
   struct resampler_coefs_s m_ResamplerCoefs;
 
   std::atomic_bool m_HasBeenSetup;
+
+  unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples);
 
   /* samplerGroupID:
      -1 .. -n Tremulants
@@ -104,11 +108,13 @@ public:
 
   GOSoundSampler *StartSample(
     const GOSoundProvider *pipe,
-    int sampler_group_id,
+    int8_t sampler_group_id,
     unsigned audio_group,
     unsigned velocity,
     unsigned delay,
-    uint64_t last_stop);
+    uint64_t prevEventTime,
+    bool isRelease = false,
+    uint64_t *pStartTimeSamples = nullptr);
   uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void UpdateVelocity(

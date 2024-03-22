@@ -8,47 +8,51 @@
 #ifndef GOSOUNDPROVIDER_H_
 #define GOSOUNDPROVIDER_H_
 
+#include <cstdint>
 #include <vector>
 
 #include "GOStatisticCallback.h"
 #include "ptrvector.h"
 
-class GOAudioSection;
+class GOSoundAudioSection;
 class GOCache;
 class GOCacheWriter;
+class GOHash;
 class GOMemoryPool;
 
 typedef struct audio_section_stream_s audio_section_stream;
 
-typedef struct {
-  int sample_group;
-  unsigned min_attack_velocity;
-  unsigned max_released_time;
-} attack_section_info;
-
-typedef struct {
-  int sample_group;
-  unsigned max_playback_time;
-} release_section_info;
-
 class GOSoundProvider : public GOStatisticCallback {
 protected:
+  struct AttackSelector {
+    unsigned min_attack_velocity;
+    unsigned max_released_time;
+    int8_t sample_group;
+  };
+
+  struct ReleaseSelector {
+    unsigned max_playback_time;
+    int8_t sample_group;
+  };
+
   unsigned m_MidiKeyNumber;
   float m_MidiPitchFract;
   float m_Gain;
   float m_Tuning;
   bool m_SampleGroup;
   unsigned m_ReleaseTail;
-  ptr_vector<GOAudioSection> m_Attack;
-  std::vector<attack_section_info> m_AttackInfo;
-  ptr_vector<GOAudioSection> m_Release;
-  std::vector<release_section_info> m_ReleaseInfo;
+  ptr_vector<GOSoundAudioSection> m_Attack;
+  std::vector<AttackSelector> m_AttackInfo;
+  ptr_vector<GOSoundAudioSection> m_Release;
+  std::vector<ReleaseSelector> m_ReleaseInfo;
   void ComputeReleaseAlignmentInfo();
   float m_VelocityVolumeBase;
   float m_VelocityVolumeIncrement;
   unsigned m_AttackSwitchCrossfadeLength;
 
 public:
+  static void UpdateCacheHash(GOHash &hash);
+
   GOSoundProvider();
   virtual ~GOSoundProvider();
 
@@ -57,13 +61,14 @@ public:
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache);
   virtual bool SaveCache(GOCacheWriter &cache) const;
 
-  void UseSampleGroup(unsigned sample_group);
+  void UseSampleGroup(bool sampleGroup) { m_SampleGroup = sampleGroup; }
+
   void SetVelocityParameter(float min_volume, float max_volume);
 
-  const GOAudioSection *GetRelease(
-    const audio_section_stream *handle, double playback_time) const;
-  const GOAudioSection *GetAttack(
-    unsigned velocity, unsigned released_time) const;
+  const GOSoundAudioSection *GetAttack(
+    unsigned velocity, unsigned releasedDurationMs) const;
+  const GOSoundAudioSection *GetRelease(
+    int8_t sampleGroup, unsigned playbackDurationMs) const;
   float GetGain() const;
   int IsOneshot() const;
 

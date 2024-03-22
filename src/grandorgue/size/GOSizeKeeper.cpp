@@ -1,11 +1,11 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOGUISizeKeeper.h"
+#include "GOSizeKeeper.h"
 
 #include <wx/display.h>
 #include <wx/toplevel.h>
@@ -13,7 +13,7 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-constexpr static int windowLimit = 10000;
+constexpr static int windowLimit = 32000;
 
 const wxString WX_WINDOW_X = wxT("WindowX");
 const wxString WX_WINDOW_Y = wxT("WindowY");
@@ -21,9 +21,18 @@ const wxString WX_WINDOW_WIDTH = wxT("WindowWidth");
 const wxString WX_WINDOW_HEIGHT = wxT("WindowHeight");
 const wxString WX_DISPLAY_NUMBER = wxT("DisplayNumber");
 const wxString WX_WINDOW_MAXIMIZED = wxT("WindowMaximized");
+const wxString WX_ADDITIONAL_SIZE_COUNT = wxT("AdditionalSizeCount");
+const wxString WX_ADDITIONAL_SIZE_KEY_FMT = wxT("AdditionalSize.%03d.key");
+const wxString WX_ADDITIONAL_SIZE_VALUE_FMT = wxT("AdditionalSize.%03d.value");
+
+int GOSizeKeeper::GetAdditionalSize(const wxString &key) const {
+  auto iter = m_AdditionalSizes.find(key);
+
+  return iter == m_AdditionalSizes.end() ? -1 : iter->second;
+}
 
 // read the size info from config files
-void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
+void GOSizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
   SetGroup(group);
   int x = cfg.ReadInteger(
     CMBSetting, m_group, WX_WINDOW_X, -windowLimit, windowLimit, false, 0);
@@ -33,16 +42,32 @@ void GOGUISizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
     CMBSetting, m_group, WX_WINDOW_WIDTH, -1, windowLimit, false, 0);
   int h = cfg.ReadInteger(
     CMBSetting, m_group, WX_WINDOW_HEIGHT, -1, windowLimit, false, 0);
+  unsigned additionalSizeCount = (unsigned)cfg.ReadInteger(
+    CMBSetting, m_group, WX_ADDITIONAL_SIZE_COUNT, 0, 999, false, 0);
 
   m_rect = wxRect(x, y, w, h);
   m_DisplayNum = cfg.ReadInteger(
     CMBSetting, m_group, WX_DISPLAY_NUMBER, -1, windowLimit, false, -1);
   m_IsMaximized
     = cfg.ReadBoolean(CMBSetting, m_group, WX_WINDOW_MAXIMIZED, false, false);
+  m_AdditionalSizes.clear();
+  for (unsigned i = 1; i <= additionalSizeCount; i++) {
+    m_AdditionalSizes[cfg.ReadString(
+      CMBSetting,
+      m_group,
+      wxString::Format(WX_ADDITIONAL_SIZE_KEY_FMT, i),
+      false)]
+      = cfg.ReadInteger(
+        CMBSetting,
+        m_group,
+        wxString::Format(WX_ADDITIONAL_SIZE_VALUE_FMT, i),
+        false,
+        -1);
+  }
 }
 
 // save the size info to the config file
-void GOGUISizeKeeper::Save(GOConfigWriter &cfg) {
+void GOSizeKeeper::Save(GOConfigWriter &cfg) {
   cfg.WriteBoolean(m_group, WX_WINDOW_MAXIMIZED, m_IsMaximized);
   if (m_DisplayNum >= 0)
     cfg.WriteInteger(m_group, WX_DISPLAY_NUMBER, m_DisplayNum);
@@ -61,10 +86,25 @@ void GOGUISizeKeeper::Save(GOConfigWriter &cfg) {
     m_group, WX_WINDOW_WIDTH, std::min(windowLimit, size.GetWidth()));
   cfg.WriteInteger(
     m_group, WX_WINDOW_HEIGHT, std::min(windowLimit, size.GetHeight()));
+
+  unsigned additionalSizeCount = 0;
+
+  for (const auto &e : m_AdditionalSizes) {
+    additionalSizeCount++;
+    cfg.WriteString(
+      m_group,
+      wxString::Format(WX_ADDITIONAL_SIZE_KEY_FMT, additionalSizeCount),
+      e.first);
+    cfg.WriteInteger(
+      m_group,
+      wxString::Format(WX_ADDITIONAL_SIZE_VALUE_FMT, additionalSizeCount),
+      e.second);
+  }
+  cfg.WriteInteger(m_group, WX_ADDITIONAL_SIZE_COUNT, additionalSizeCount);
 }
 
 // gets the current size info of the window
-void GOGUISizeKeeper::CaptureSizeInfo(const wxTopLevelWindow &win) {
+void GOSizeKeeper::CaptureSizeInfo(const wxTopLevelWindow &win) {
   m_rect = win.GetRect();
   m_IsMaximized = win.IsMaximized();
 
@@ -87,7 +127,7 @@ void GOGUISizeKeeper::CaptureSizeInfo(const wxTopLevelWindow &win) {
 }
 
 // make the windows position and size as the stored size info
-void GOGUISizeKeeper::ApplySizeInfo(wxTopLevelWindow &win) {
+void GOSizeKeeper::ApplySizeInfo(wxTopLevelWindow &win) {
   // m_rect contains the position and size of the window as saved by the user
   // previously, or otherwise its default values
 

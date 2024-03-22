@@ -5,3 +5,7 @@ repos:
     hooks:
       - id: clang-format
         args: [--style=file, -i]
+  - repo: https://github.com/nanoufo/copyright-hook
+    rev: v1.1.0
+    hooks:
+      - id: update-copyright

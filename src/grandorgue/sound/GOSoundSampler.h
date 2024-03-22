@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,8 +14,7 @@
 class GOSoundProvider;
 class GOSoundWindchestWorkItem;
 
-class GOSoundSampler {
-public:
+struct GOSoundSampler {
   GOSoundSampler *next;
   const GOSoundProvider *pipe;
   int sampler_group_id;

@@ -1,3 +1,9 @@
+- Increased maximum value of allowed size to 32000 https://github.com/GrandOrgue/grandorgue/issues/1840
+- Added capability of specifying AmplitudeLevel, Gain, PitchTuning, PitchCorrection and TrackerDelay, Percussive, HasIndependentRelease at the WindchestGroup level of ODF
+- Added capability of specifying Percussive and HasIndependentRelease at the Organ level of ODF
+- Added capability of playing release of percussive pipes with Pipe999HasIndependentRelease=Y https://github.com/GrandOrgue/grandorgue/issues/1385
+- Fixed different encoding of combination .yaml files on Windows, Linux and MacOS https://github.com/GrandOrgue/grandorgue/issues/1818
+- Added support of "Couple Through" mode of Virtual Couplers https://github.com/GrandOrgue/grandorgue/issues/1657
 - Added capability of loading only GUI panels without audio samples by specifying the "-g" switch from the command line https://github.com/GrandOrgue/grandorgue/issues/1602
 - Removed support of MacOS 11 https://github.com/GrandOrgue/grandorgue/issues/1791
 - Fixed crash on loading an organ with a crescendo in Add mode https://github.com/GrandOrgue/grandorgue/issues/1772

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -37,13 +37,13 @@ wxString dialog_group_name(
   return groupName;
 }
 
-GOGUISizeKeeper &GODialogSizeSet::AssureSizeKeeperFor(
+GOSizeKeeper &GODialogSizeSet::AssureSizeKeeperFor(
   const wxString &dialogName, const wxString &dialogSelector) {
   const SizeId sizeId(dialogName, dialogSelector);
-  GOGUISizeKeeper *&rSizeKeeper = m_SizeSet[sizeId];
+  GOSizeKeeper *&rSizeKeeper = m_SizeSet[sizeId];
 
   if (!rSizeKeeper) {
-    GOGUISizeKeeper *const psizeKeeper = new GOGUISizeKeeper();
+    GOSizeKeeper *const psizeKeeper = new GOSizeKeeper();
 
     psizeKeeper->SetGroup(dialog_group_name(dialogName, dialogSelector));
     rSizeKeeper = psizeKeeper;

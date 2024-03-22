@@ -27,7 +27,6 @@
 GOSoundingPipe::GOSoundingPipe(
   GOOrganModel *pOrganModel,
   GORank *rank,
-  bool percussive,
   int sampler_group_id,
   unsigned midi_key_number,
   unsigned harmonic_number,
@@ -37,6 +36,7 @@ GOSoundingPipe::GOSoundingPipe(
   : GOPipe(pOrganModel, rank, midi_key_number),
     p_OrganModel(pOrganModel),
     m_Sampler(NULL),
+    m_LastStart(0),
     m_LastStop(0),
     m_Instances(0),
     m_Tremulant(false),
@@ -45,7 +45,6 @@ GOSoundingPipe::GOSoundingPipe(
     m_Filename(),
     m_SamplerGroupID(sampler_group_id),
     m_AudioGroupID(0),
-    m_Percussive(percussive),
     m_TemperamentOffset(0),
     m_HarmonicNumber(harmonic_number),
     m_MinVolume(min_volume),
@@ -78,8 +77,8 @@ void GOSoundingPipe::Init(
 
   ainfo.filename.AssignResource(m_Filename);
   ainfo.sample_group = -1;
-  ainfo.load_release = !m_Percussive;
-  ainfo.percussive = m_Percussive;
+  ainfo.percussive = m_PipeConfigNode.GetEffectivePercussive();
+  ainfo.load_release = !ainfo.percussive;
   ainfo.max_playback_time = -1;
   ainfo.cue_point = -1;
   ainfo.min_attack_velocity = 0;
@@ -105,9 +104,9 @@ void GOSoundingPipe::LoadAttackFileInfo(
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
   ainfo.sample_group = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
+  ainfo.percussive = m_PipeConfigNode.GetEffectivePercussive();
   ainfo.load_release = cfg.ReadBoolean(
-    ODFSetting, group, prefix + wxT("LoadRelease"), false, !m_Percussive);
-  ainfo.percussive = m_Percussive;
+    ODFSetting, group, prefix + wxT("LoadRelease"), false, !ainfo.percussive);
   ainfo.max_playback_time = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
   ainfo.cue_point = cfg.ReadInteger(
@@ -241,8 +240,6 @@ void GOSoundingPipe::Load(
     p_OrganModel->GetWindchestGroupCount(),
     false,
     m_SamplerGroupID);
-  m_Percussive = cfg.ReadBoolean(
-    ODFSetting, group, prefix + wxT("Percussive"), false, m_Percussive);
   m_OdfMidiKeyNumber = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
   m_OdfMidiPitchFraction = cfg.ReadFloat(
@@ -269,6 +266,14 @@ void GOSoundingPipe::Load(
 
   unsigned release_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
+
+  if (m_PipeConfigNode.IsEffectiveIndependentRelease() && !release_count)
+    wxLogWarning(
+      _("The pipe %s/%s has independent release but %sReleaseCount=0"),
+      group,
+      prefix,
+      prefix);
+
   for (unsigned i = 1; i <= release_count; i++)
     LoadReleaseFileInfo(
       cfg, group, wxString::Format(wxT("%sRelease%03d"), prefix, i));
@@ -335,6 +340,7 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) const {
   hash.Update(m_PipeConfigNode.GetEffectiveAttackLoad());
   hash.Update(m_PipeConfigNode.GetEffectiveReleaseLoad());
   hash.Update(m_OdfMidiKeyNumber);
+  hash.Update(m_PipeConfigNode.IsEffectiveIndependentRelease());
 
   hash.Update(m_AttackFileInfos.size());
   for (const auto &a : m_AttackFileInfos) {
@@ -427,7 +433,9 @@ void GOSoundingPipe::Validate() {
       GetLoadTitle().c_str());
   }
 
-  if (m_SoundProvider.checkNotNecessaryRelease()) {
+  if (
+    !m_PipeConfigNode.IsEffectiveIndependentRelease()
+    && m_SoundProvider.checkNotNecessaryRelease()) {
     wxLogWarning(
       _("rank %s pipe %s: percussive sample with a release"),
       m_Rank->GetName().c_str(),
@@ -490,7 +498,9 @@ void GOSoundingPipe::VelocityChanged(
                   m_AudioGroupID,
                   velocity,
                   m_PipeConfigNode.GetEffectiveDelay(),
-                  m_LastStop)
+                  m_LastStop,
+                  false,
+                  &m_LastStart)
                              : nullptr;
     if (m_Sampler)
       m_Instances++;
@@ -504,7 +514,16 @@ void GOSoundingPipe::VelocityChanged(
         ? pSoundEngine->StopSample(&m_SoundProvider, m_Sampler)
         : 0;
       m_Sampler = nullptr;
-    }
+    } else if (m_PipeConfigNode.IsEffectiveIndependentRelease() && pSoundEngine)
+      pSoundEngine->StartSample(
+        &m_SoundProvider,
+        m_SamplerGroupID,
+        m_AudioGroupID,
+        last_velocity,
+        m_PipeConfigNode.GetEffectiveDelay(),
+        m_LastStart,
+        true,
+        &m_LastStop);
   } else if (m_Sampler && last_velocity != velocity)
     // the key was pressed before and the velocity is changed now
     if (pSoundEngine)

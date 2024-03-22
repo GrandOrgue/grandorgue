@@ -82,12 +82,12 @@ void GOSoundProviderSynthedTrem::Create(
   trem_loop.m_EndPosition = (attack_samples + loop_samples) - 1;
   std::vector<GOWaveLoop> trem_loops;
   trem_loops.push_back(trem_loop);
-  attack_section_info attack_info;
+  AttackSelector attack_info;
   attack_info.sample_group = -1;
   attack_info.min_attack_velocity = 0;
   attack_info.max_released_time = -1;
   m_AttackInfo.push_back(attack_info);
-  m_Attack.push_back(new GOAudioSection(pool));
+  m_Attack.push_back(new GOSoundAudioSection(pool));
   m_Attack[0]->Setup(
     nullptr,
     nullptr,
@@ -97,16 +97,17 @@ void GOSoundProviderSynthedTrem::Create(
     sample_freq,
     trem_loop.m_EndPosition,
     &trem_loops,
+    -1,
     false,
     0,
     0);
 
   /* Release section */
-  release_section_info release_info;
+  ReleaseSelector release_info;
   release_info.sample_group = -1;
   release_info.max_playback_time = -1;
   m_ReleaseInfo.push_back(release_info);
-  m_Release.push_back(new GOAudioSection(pool));
+  m_Release.push_back(new GOSoundAudioSection(pool));
   m_Release[0]->Setup(
     nullptr,
     nullptr,
@@ -116,6 +117,7 @@ void GOSoundProviderSynthedTrem::Create(
     sample_freq,
     release_samples,
     NULL,
+    -1,
     false,
     0,
     0);

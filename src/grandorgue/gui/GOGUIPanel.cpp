@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -762,7 +762,7 @@ void GOGUIPanel::AddEvent(GOGUIControl *control) {
 }
 
 void GOGUIPanel::CaptureSizeInfo(const wxTopLevelWindow &win) {
-  GOGUISizeKeeper::CaptureSizeInfo(win);
+  GOSizeKeeper::CaptureSizeInfo(win);
   m_InitialOpenWindow = win.IsVisible();
 }
 
@@ -799,13 +799,13 @@ void GOGUIPanel::Draw(GODC &dc) {
 
 void GOGUIPanel::BasicLoad(
   GOConfigReader &cfg, const wxString &group, bool isOpenByDefault) {
-  GOGUISizeKeeper::Load(cfg, group);
+  GOSizeKeeper::Load(cfg, group);
   m_InitialOpenWindow = cfg.ReadBoolean(
     CMBSetting, m_group, wxT("WindowDisplayed"), false, isOpenByDefault);
 }
 
 void GOGUIPanel::Save(GOConfigWriter &cfg) {
-  GOGUISizeKeeper::Save(cfg);
+  GOSizeKeeper::Save(cfg);
   cfg.WriteBoolean(m_group, wxT("WindowDisplayed"), m_InitialOpenWindow);
 }
 

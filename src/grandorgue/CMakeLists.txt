@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
@@ -122,7 +122,6 @@ gui/GOGUIPanel.cpp
 gui/GOGUIPanelWidget.cpp
 gui/GOGUIRecorderPanel.cpp
 gui/GOGUISequencerPanel.cpp
-gui/GOGUISizeKeeper.cpp
 help/GOHelpController.cpp
 help/GOHelpRequestor.cpp
 loader/GOFileStore.cpp
@@ -173,6 +172,7 @@ model/GOSwitch.cpp
 model/GOTremulant.cpp
 model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
+size/GOSizeKeeper.cpp
 sound/ports/GOSoundJackPort.cpp
 sound/ports/GOSoundPort.cpp
 sound/ports/GOSoundPortFactory.cpp
@@ -202,7 +202,9 @@ sound/GOSoundStateHandler.cpp
 sound/GOSound.cpp
 yaml/GOSaveableToYaml.cpp
 yaml/go-wx-yaml.cpp
-GOAudioGauge.cpp
+wxcontrols/GOAudioGauge.cpp
+wxcontrols/GOGrid.cpp
+wxcontrols/GORightVisiblePicker.cpp
 GOAudioRecorder.cpp
 GOBitmapCache.cpp
 GOEvent.cpp

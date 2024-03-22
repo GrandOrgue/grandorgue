@@ -18,6 +18,7 @@
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/splash.h>
+#include <wx/textctrl.h>
 #include <wx/toolbar.h>
 
 #include <algorithm>
@@ -37,15 +38,15 @@
 #include "loader/cache/GOCacheCleaner.h"
 #include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
+#include "size/GOLogicalRect.h"
 #include "sound/GOSound.h"
 #include "temperaments/GOTemperament.h"
 #include "threading/GOMutexLocker.h"
+#include "wxcontrols/GOAudioGauge.h"
 
 #include "GOApp.h"
-#include "GOAudioGauge.h"
 #include "GODocument.h"
 #include "GOEvent.h"
-#include "GOLogicalRect.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
 #include "GOPath.h"
@@ -849,10 +850,10 @@ void GOFrame::OnLoadRecent(wxCommandEvent &event) {
 }
 
 void GOFrame::OnLoad(wxCommandEvent &event) {
-  GOSelectOrganDialog dlg(this, _("Select organ to load"), m_config);
-  if (dlg.ShowModal() != wxID_OK)
-    return;
-  Open(*dlg.GetSelection());
+  GOSelectOrganDialog dlg(this, m_config);
+
+  if (dlg.ShowModal() == wxID_OK)
+    Open(*dlg.GetSelection());
 }
 
 void GOFrame::OnOpen(wxCommandEvent &event) {

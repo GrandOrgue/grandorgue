@@ -1,15 +1,18 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOGUISIZEKEEPER_H
-#define GOGUISIZEKEEPER_H
+#ifndef GOSIZEKEEPER_H
+#define GOSIZEKEEPER_H
+
+#include <map>
 
 #include <wx/gdicmn.h>
 
+#include "GOAdditionalSizeKeeper.h"
 #include "GOSaveableObject.h"
 
 class wxTopLevelWindow;
@@ -22,16 +25,24 @@ class GOConfigWriter;
  * and size in a config file.
  * Note: not all window managers allows applications to control window positions
  */
-class GOGUISizeKeeper : public GOSaveableObject {
+class GOSizeKeeper : public GOSaveableObject, public GOAdditionalSizeKeeper {
 private:
   wxRect m_rect = wxRect(wxDefaultPosition, wxDefaultSize);
   int m_DisplayNum = -1;
   bool m_IsMaximized = false;
+  // additional sizes for elements
+  std::map<wxString, int> m_AdditionalSizes;
 
 public:
   const wxRect &GetWindowRect() const { return m_rect; }
 
   void SetWindowRect(const wxRect &rect) { m_rect = rect; }
+
+  int GetAdditionalSize(const wxString &key) const override;
+
+  void SetAdditionalSize(const wxString &key, int value) override {
+    m_AdditionalSizes[key] = value;
+  }
 
   // set the group and read the size info from config files
   virtual void Load(GOConfigReader &cfg, const wxString &group);
@@ -46,4 +57,4 @@ public:
   void ApplySizeInfo(wxTopLevelWindow &win);
 };
 
-#endif /* GOGUISIZEKEEPER_H */
+#endif /* GOSIZEKEEPER_H */

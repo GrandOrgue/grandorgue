@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -18,28 +18,28 @@
 #include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/gbsizer.h>
-#include <wx/listctrl.h>
+#include <wx/grid.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
-#include "GOOrgan.h"
 #include "archive/GOArchiveFile.h"
+#include "archive/GOArchiveIndex.h"
 #include "config/GOConfig.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "files/GOStdFileName.h"
+#include "wxcontrols/GOGrid.h"
 
+#include "GOOrgan.h"
 #include "GOOrganController.h"
-#include "archive/GOArchiveIndex.h"
 
 static const wxString EMPTY_STRING = wxEmptyString;
 
 BEGIN_EVENT_TABLE(GOSettingsOrgans, wxPanel)
-EVT_LIST_ITEM_FOCUSED(ID_ORGANS, GOSettingsOrgans::OnOrganFocused)
-EVT_LIST_ITEM_SELECTED(ID_ORGANS, GOSettingsOrgans::OnOrganSelected)
-EVT_LIST_ITEM_DESELECTED(ID_ORGANS, GOSettingsOrgans::OnOrganSelected)
+EVT_GRID_CMD_SELECT_CELL(ID_ORGANS, GOSettingsOrgans::OnOrganSelectCell)
+EVT_GRID_CMD_RANGE_SELECT(ID_ORGANS, GOSettingsOrgans::OnOrganRangeSelect)
 EVT_CHAR_HOOK(GOSettingsOrgans::OnCharHook)
 EVT_BUTTON(ID_ORGAN_UP, GOSettingsOrgans::OnOrganUp)
 EVT_BUTTON(ID_ORGAN_DOWN, GOSettingsOrgans::OnOrganDown)
@@ -51,6 +51,8 @@ EVT_BUTTON(ID_DEL_CACHE, GOSettingsOrgans::OnDelCache)
 EVT_BUTTON(ID_DEL_PRESET, GOSettingsOrgans::OnDelPreset)
 END_EVENT_TABLE()
 
+enum { GRID_COL_NAME = 0, GRID_COL_MIDI, GRID_COL_PATH, GRID_N_COLS };
+
 GOSettingsOrgans::GOSettingsOrgans(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
   : wxPanel(parent, wxID_ANY),
@@ -61,22 +63,21 @@ GOSettingsOrgans::GOSettingsOrgans(
   wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
   wxGridBagSizer *const gbSizer = new wxGridBagSizer(5, 5);
 
-  m_Organs = new wxListView(
-    this,
-    ID_ORGANS,
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxLC_REPORT | wxLC_HRULES | wxLC_VRULES);
-  m_Organs->InsertColumn(0, _("Name"));
-  m_Organs->InsertColumn(1, _("MIDI"));
-  m_Organs->InsertColumn(2, _("Path"));
-  m_Organs->SetColumnWidth(0, 200);
-  m_Organs->SetColumnWidth(1, 50);
-  m_Organs->SetColumnWidth(2, 0);
-  m_Organs->SetColumnWidth(2, 300);
+  m_GridOrgans
+    = new GOGrid(this, ID_ORGANS, wxDefaultPosition, wxSize(100, 40));
+  m_GridOrgans->CreateGrid(0, GRID_N_COLS, wxGrid::wxGridSelectRows);
+  m_GridOrgans->HideRowLabels();
+  m_GridOrgans->EnableEditing(false);
+  m_GridOrgans->SetColSize(GRID_COL_NAME, 200);
+  m_GridOrgans->SetColLabelValue(GRID_COL_NAME, _("Name"));
+  m_GridOrgans->SetColSize(GRID_COL_MIDI, 50);
+  m_GridOrgans->SetColLabelValue(GRID_COL_MIDI, _("MIDI"));
+  m_GridOrgans->SetColSize(GRID_COL_PATH, 300);
+  m_GridOrgans->SetColLabelValue(GRID_COL_PATH, _("Path"));
+  m_GridOrgans->SetColumnRightVisible(GRID_COL_PATH, true);
 
   gbSizer->Add(
-    m_Organs, wxGBPosition(0, 0), wxGBSpan(1, 4), wxALL | wxEXPAND, 5);
+    m_GridOrgans, wxGBPosition(0, 0), wxGBSpan(1, 4), wxALL | wxEXPAND, 5);
 
   gbSizer->Add(
     new wxStaticText(this, wxID_ANY, _("Builder:")),
@@ -222,7 +223,7 @@ GOSettingsOrgans::GOSettingsOrgans(
 
 using StringSet = std::unordered_set<wxString, wxStringHash, wxStringEqual>;
 
-StringSet collect_hashes_from_organ_files(
+static StringSet collect_hashes_from_organ_files(
   const wxString &dirPath, const wxString &pattern) {
   StringSet hashSet;
   wxArrayString files;
@@ -235,7 +236,7 @@ StringSet collect_hashes_from_organ_files(
 }
 
 GOSettingsOrgans::PackageSlotSet GOSettingsOrgans::GetUsedPackages(
-  std::unordered_set<long> itemsToExtract) {
+  std::unordered_set<unsigned> itemsToExtract) {
   // fill up a map pkgId -> pkgSlot
   std::unordered_map<
     const wxString,
@@ -251,10 +252,9 @@ GOSettingsOrgans::PackageSlotSet GOSettingsOrgans::GetUsedPackages(
   // find all package paths are still used by the remaining organs
   PackageSlotSet packagesUsed;
 
-  for (long l = m_Organs->GetItemCount(), i = 0; i < l; i++)
+  for (unsigned l = m_GridOrgans->GetNumberRows(), i = 0; i < l; i++)
     if (itemsToExtract.find(i) == itemsToExtract.end()) { // not selected
-      const PackageSlot *pPkgSlot
-        = ((OrganSlot *)m_Organs->GetItemData(i))->p_PackageSlot;
+      const PackageSlot *pPkgSlot = m_OrganSlotPtrsByGridLine[i]->p_PackageSlot;
 
       if (pPkgSlot)
         packagesUsed.insert(pPkgSlot);
@@ -285,9 +285,36 @@ GOSettingsOrgans::PackageSlotSet GOSettingsOrgans::GetUsedPackages(
   return packagesUsed;
 }
 
-bool GOSettingsOrgans::TransferDataToWindow() {
-  m_config.AddOrgansFromArchives();
+void GOSettingsOrgans::DisplayMidiCell(unsigned rowN, GOOrgan *pOrgan) {
+  m_GridOrgans->SetCellValue(
+    rowN,
+    GRID_COL_MIDI,
+    pOrgan->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
+}
 
+void GOSettingsOrgans::DisplayPathCell(unsigned rowN, const wxString &path) {
+  m_GridOrgans->SetCellValue(rowN, GRID_COL_PATH, path);
+}
+
+void GOSettingsOrgans::FillGridRow(unsigned rowN, OrganSlot &organSlot) {
+  GOOrgan *o = organSlot.p_CurrentOrgan;
+  wxString title = o->GetChurchName();
+
+  if (!o->IsUsable(m_config))
+    title = _("MISSING - ") + title;
+
+  // m_OrganSlotPtrsByGridLine has at least rowN+1 elements
+  for (unsigned i = m_OrganSlotPtrsByGridLine.size(); i <= rowN; i++)
+    m_OrganSlotPtrsByGridLine.push_back(nullptr);
+
+  m_OrganSlotPtrsByGridLine[rowN] = &organSlot;
+
+  m_GridOrgans->SetCellValue(rowN, GRID_COL_NAME, title);
+  DisplayMidiCell(rowN, o);
+  DisplayPathCell(rowN, organSlot.m_CurrentPath);
+}
+
+bool GOSettingsOrgans::TransferDataToWindow() {
   StringSet organHashesWithCache = collect_hashes_from_organ_files(
     m_config.OrganCachePath(), GOStdFileName::composeCacheFilePattern());
   StringSet organHashesWithPresets = collect_hashes_from_organ_files(
@@ -303,14 +330,20 @@ bool GOSettingsOrgans::TransferDataToWindow() {
     m_PackageSlotByPath[pPackage->GetPath()] = &m_PackageSlots[i];
   }
 
+  const unsigned nOrgans = m_OrigOrganList.size();
+
   m_OrganSlots.clear();
-  m_OrganSlots.reserve(m_OrigOrganList.size());
-  for (unsigned i = 0; i < m_OrigOrganList.size(); i++) {
+  m_OrganSlots.reserve(nOrgans);
+  m_OrganSlotPtrsByGridLine.reserve(nOrgans);
+
+  m_GridOrgans->ClearGrid();
+  m_GridOrgans->AppendRows(nOrgans);
+
+  for (unsigned i = 0; i < nOrgans; i++) {
     m_OrganSlots.emplace_back();
 
     OrganSlot &organSlot = m_OrganSlots[i];
     GOOrgan *o = m_OrigOrganList[i];
-    wxString title = o->GetChurchName();
     wxString hash = o->GetOrganHash();
 
     organSlot.p_OrigOrgan = o;
@@ -334,16 +367,10 @@ bool GOSettingsOrgans::TransferDataToWindow() {
 
     m_OrganSlotByPath[organSlot.m_CurrentPath] = &organSlot;
 
-    if (!o->IsUsable(m_config))
-      title = _("MISSING - ") + title;
-    m_Organs->InsertItem(i, title);
-    m_Organs->SetItemPtrData(i, (wxUIntPtr)&organSlot);
-    m_Organs->SetItem(
-      i, 1, o->GetMIDIReceiver().GetEventCount() > 0 ? _("Yes") : _("No"));
-    m_Organs->SetItem(i, 2, organSlot.m_CurrentPath);
+    FillGridRow(i, organSlot);
   }
-  if (m_OrigOrganList.size() >= 0)
-    m_Organs->Focus(0);
+  if (nOrgans >= 0)
+    m_GridOrgans->SetGridCursor(0, 0);
 
   // mark unused packages for deleting
   PackageSlotSet packagesUsed = GetUsedPackages();
@@ -359,11 +386,11 @@ bool GOSettingsOrgans::TransferDataToWindow() {
   return true;
 }
 
-void GOSettingsOrgans::RefreshFocused() {
-  const int currOrganIndex = m_Organs->GetFocusedItem();
+void GOSettingsOrgans::RefreshFocused(const int currOrganIndex) {
   const OrganSlot *pSlot = currOrganIndex >= 0
-    ? (OrganSlot *)m_Organs->GetItemData(currOrganIndex)
-    : NULL;
+      && currOrganIndex < (int)m_OrganSlotPtrsByGridLine.size()
+    ? m_OrganSlotPtrsByGridLine[currOrganIndex]
+    : nullptr;
   const GOOrgan *o = pSlot ? pSlot->p_CurrentOrgan : NULL;
   const bool isPackage = pSlot && pSlot->is_packaged;
   const GOArchiveFile *a = isPackage && pSlot->p_PackageSlot
@@ -401,42 +428,43 @@ void GOSettingsOrgans::OnCharHook(wxKeyEvent &ev) {
     ev.Skip(true);
 }
 
-void GOSettingsOrgans::OnOrganFocused(wxListEvent &event) {
-  RefreshFocused();
+void GOSettingsOrgans::OnOrganSelectCell(wxGridEvent &event) {
+  RefreshFocused(event.GetRow());
   RefreshButtons();
 }
 
-void GOSettingsOrgans::OnOrganSelected(wxListEvent &event) { RefreshButtons(); }
+void GOSettingsOrgans::OnOrganRangeSelect(wxGridRangeSelectEvent &event) {
+  RefreshButtons();
+}
 
 GOSettingsOrgans::VisibleOrganRecs GOSettingsOrgans::GetCurrentOrganRecs() {
   VisibleOrganRecs recs;
-  const long iFocused = m_Organs->GetFocusedItem();
+  const int iFocused = m_GridOrgans->GetGridCursorRow();
 
-  for (long l = m_Organs->GetItemCount(), i = 0; i < l; i++)
-    recs.push_back(
-      {(const OrganSlot *)m_Organs->GetItemData(i), false, i == iFocused});
-  for (long i = m_Organs->GetFirstSelected(); i >= 0;
-       i = m_Organs->GetNextSelected(i))
+  for (int l = m_GridOrgans->GetNumberRows(), i = 0; i < l; i++)
+    recs.push_back({m_OrganSlotPtrsByGridLine[i], false, i == iFocused});
+  for (int i : m_GridOrgans->GetSelectedRows())
     recs[i].is_selected = true;
   return recs;
 }
 
 void GOSettingsOrgans::RefreshButtons() {
-  if (m_Organs->GetFocusedItem() >= 0) {
+  if (m_GridOrgans->GetGridCursorRow() >= 0) {
     m_OrganMidi->Enable();
   } else {
     m_OrganMidi->Disable();
   }
 
-  long iFirstSelected = m_Organs->GetFirstSelected();
-
-  long iLastSelected = -1;
+  int iFirstSelected = -1;
+  int iLastSelected = -1;
   bool isAnyCacheExisting = false;
   bool isAnyPresetExisting = false;
 
-  for (long i = iFirstSelected; i >= 0; i = m_Organs->GetNextSelected(i)) {
-    const OrganSlot *pSlot = (const OrganSlot *)m_Organs->GetItemData(i);
+  for (int i : m_GridOrgans->GetSelectedRows()) {
+    const OrganSlot *pSlot = m_OrganSlotPtrsByGridLine[i];
 
+    if (iFirstSelected < 0)
+      iFirstSelected = i;
     iLastSelected = i;
     isAnyCacheExisting = isAnyCacheExisting || pSlot->is_AnyCacheExisting;
     isAnyPresetExisting = isAnyPresetExisting || pSlot->is_AnyPresetExisting;
@@ -449,7 +477,7 @@ void GOSettingsOrgans::RefreshButtons() {
     m_OrganTop->Enable();
     m_OrganUp->Enable();
   }
-  if (iLastSelected >= 0 && iLastSelected + 1 < m_Organs->GetItemCount())
+  if (iLastSelected >= 0 && iLastSelected + 1 < m_GridOrgans->GetNumberRows())
     m_OrganDown->Enable();
   else
     m_OrganDown->Disable();
@@ -469,48 +497,39 @@ void GOSettingsOrgans::RefreshButtons() {
     m_OrganDel->Disable();
 }
 
-int wxCALLBACK GOSettingsOrgans::organOrdCompareCallback(
-  wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData) {
-  const OrganSlotToLongMap *ord = (const OrganSlotToLongMap *)sortData;
-  long i1 = ord->at((const OrganSlot *)item1);
-  long i2 = ord->at((const OrganSlot *)item2);
-
-  return i1 < i2 ? -1 : i1 > i2 ? 1 : 0;
-}
-
 void GOSettingsOrgans::ReorderOrgans(const VisibleOrganRecs &newSortedRecs) {
   const int l = newSortedRecs.size();
-  OrganSlotToLongMap newOrd;
 
-  for (int i = 0; i < l; i++)
-    newOrd[newSortedRecs[i].p_OrganSlot] = i;
-  m_Organs->SortItems(organOrdCompareCallback, (wxIntPtr)&newOrd);
-
-  // restore selection and the focus
   for (int i = 0; i < l; i++) {
     const VisibleOrganRec &rec = newSortedRecs[i];
 
-    m_Organs->Select(i, rec.is_selected);
+    FillGridRow(i, *rec.p_OrganSlot);
+
+    // restore selection and the focus
+    if (rec.is_selected)
+      m_GridOrgans->SelectRow(i, true);
+    else
+      m_GridOrgans->DeselectRow(i);
     if (rec.is_focused)
-      m_Organs->Focus(i);
+      m_GridOrgans->SetGridCursor(i, 0);
   }
 }
 
 static wxString NAMES_DELIM = "\n";
 
 void GOSettingsOrgans::DelSelectedOrgans() {
-  std::unordered_set<long> selectedItemSet;
-  std::vector<long> selectedItems;
-  wxString organNames;
-
-  for (long i = m_Organs->GetFirstSelected(); i >= 0;
-       i = m_Organs->GetNextSelected(i)) {
-    selectedItems.push_back(i);
-    selectedItemSet.insert(i);
-    organNames += NAMES_DELIM + m_Organs->GetItemText(i);
-  }
+  const wxArrayInt selectedItems = m_GridOrgans->GetSelectedRows();
 
   if (selectedItems.size()) {
+    std::unordered_set<unsigned> selectedItemSet;
+    wxString organNames;
+
+    for (int i : selectedItems) {
+      selectedItemSet.insert(i);
+      organNames += NAMES_DELIM
+        + m_OrganSlotPtrsByGridLine[i]->p_CurrentOrgan->GetChurchName();
+    }
+
     // find all package paths are still used by the remaining organs
     PackageSlotSet packagesUsed = GetUsedPackages(selectedItemSet);
 
@@ -569,11 +588,14 @@ void GOSettingsOrgans::DelSelectedOrgans() {
              this)
           == wxYES) {
         // do actual deleting
-        for (int i = selectedItems.size() - 1; i >= 0; i--) {
-          const long j = selectedItems[i];
-          OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(j);
+        auto slotsBegin = m_OrganSlotPtrsByGridLine.begin();
 
-          m_Organs->DeleteItem(j);
+        for (int i = selectedItems.size() - 1; i >= 0; i--) {
+          const int j = selectedItems[i];
+          OrganSlot *pOrganSlot = m_OrganSlotPtrsByGridLine[j];
+
+          m_OrganSlotPtrsByGridLine.erase(slotsBegin + j);
+          m_GridOrgans->DeleteRows(j);
           pOrganSlot->is_present = false;
           m_OrganSlotByPath.erase(pOrganSlot->m_CurrentPath);
         }
@@ -584,17 +606,17 @@ void GOSettingsOrgans::DelSelectedOrgans() {
           m_PackageSlotByPath.erase(pkgSlot->p_CurrentPkg->GetPath());
         }
 
-        RefreshFocused();
+        RefreshFocused(m_GridOrgans->GetGridCursorRow());
       }
     }
   }
 }
 
 void GOSettingsOrgans::OnOrganMidi(wxCommandEvent &event) {
-  const int currOrganIndex = m_Organs->GetFocusedItem();
+  const int currOrganIndex = m_GridOrgans->GetGridCursorRow();
 
   if (currOrganIndex >= 0) {
-    OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(currOrganIndex);
+    OrganSlot *pOrganSlot = m_OrganSlotPtrsByGridLine[currOrganIndex];
     GOMidiEventDialog dlg(
       NULL,
       this,
@@ -609,18 +631,13 @@ void GOSettingsOrgans::OnOrganMidi(wxCommandEvent &event) {
 
     dlg.RegisterMIDIListener(&m_midi);
     dlg.ShowModal();
-    m_Organs->SetItem(
-      currOrganIndex,
-      1,
-      pOrganSlot->p_CurrentOrgan->GetMIDIReceiver().GetEventCount() > 0
-        ? _("Yes")
-        : _("No"));
+    DisplayMidiCell(currOrganIndex, pOrganSlot->p_CurrentOrgan);
   }
 }
 
 void GOSettingsOrgans::ReplaceOrganPath(
-  const long index, const wxString &newPath) {
-  OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(index);
+  const unsigned index, const wxString &newPath) {
+  OrganSlot *pOrganSlot = m_OrganSlotPtrsByGridLine[index];
 
   if (pOrganSlot->m_CurrentPath != newPath) {
     GOOrgan *pNewOrgan = new GOOrgan(*pOrganSlot->p_CurrentOrgan);
@@ -629,7 +646,7 @@ void GOSettingsOrgans::ReplaceOrganPath(
       pNewOrgan->SetArchivePath(newPath);
     else
       pNewOrgan->SetODFPath(newPath);
-    m_Organs->SetItem(index, 2, newPath);
+    DisplayPathCell(index, newPath);
 
     m_OrganSlotByPath.erase(pOrganSlot->m_CurrentPath);
 
@@ -692,10 +709,10 @@ void GOSettingsOrgans::OnOrganTop(wxCommandEvent &event) {
 }
 
 void GOSettingsOrgans::OnOrganRelocate(wxCommandEvent &event) {
-  const int currOrganIndex = m_Organs->GetFocusedItem();
+  const int currOrganIndex = m_GridOrgans->GetGridCursorRow();
 
   if (currOrganIndex >= 0) {
-    OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(currOrganIndex);
+    OrganSlot *pOrganSlot = m_OrganSlotPtrsByGridLine[currOrganIndex];
     const bool isArchive = pOrganSlot->is_packaged;
     const wxString oldPath = pOrganSlot->m_CurrentPath;
     const wxFileName oldFileName(oldPath);
@@ -739,13 +756,12 @@ void GOSettingsOrgans::OnOrganRelocate(wxCommandEvent &event) {
           pPkgSlot->p_CurrentPkg = pNewPkg;
 
           // switch other organs from the same package to the new archive
-          for (long l = m_Organs->GetItemCount(), i = 0; i < l; i++)
-            if (
-              ((OrganSlot *)m_Organs->GetItemData(i))->m_CurrentPath == oldPath)
+          for (unsigned l = m_OrganSlotPtrsByGridLine.size(), i = 0; i < l; i++)
+            if (m_OrganSlotPtrsByGridLine[i]->m_CurrentPath == oldPath)
               ReplaceOrganPath(i, newPath);
         } else {
           ReplaceOrganPath(currOrganIndex, newPath);
-          RefreshFocused();
+          RefreshFocused(m_GridOrgans->GetGridCursorRow());
         }
       }
     }
@@ -753,9 +769,8 @@ void GOSettingsOrgans::OnOrganRelocate(wxCommandEvent &event) {
 }
 
 void GOSettingsOrgans::OnDelCache(wxCommandEvent &event) {
-  for (long i = m_Organs->GetFirstSelected(); i >= 0;
-       i = m_Organs->GetNextSelected(i)) {
-    OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(i);
+  for (auto i : m_GridOrgans->GetSelectedRows()) {
+    OrganSlot *pOrganSlot = m_OrganSlotPtrsByGridLine[i];
 
     if (pOrganSlot->is_present && pOrganSlot->is_AnyCacheExisting)
       pOrganSlot->is_AnyCacheExisting = false;
@@ -764,9 +779,8 @@ void GOSettingsOrgans::OnDelCache(wxCommandEvent &event) {
 }
 
 void GOSettingsOrgans::OnDelPreset(wxCommandEvent &event) {
-  for (long i = m_Organs->GetFirstSelected(); i >= 0;
-       i = m_Organs->GetNextSelected(i)) {
-    OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(i);
+  for (auto i : m_GridOrgans->GetSelectedRows()) {
+    OrganSlot *pOrganSlot = m_OrganSlotPtrsByGridLine[i];
 
     if (pOrganSlot->is_present && pOrganSlot->is_AnyPresetExisting)
       pOrganSlot->is_AnyPresetExisting = false;
@@ -838,11 +852,8 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
     pOrgan = NULL; // for preventing delete on clear()
   }
   m_OrigOrganList.clear();
-  for (long i = 0; i < m_Organs->GetItemCount(); i++) {
-    OrganSlot *pOrganSlot = (OrganSlot *)m_Organs->GetItemData(i);
-
+  for (auto pOrganSlot : m_OrganSlotPtrsByGridLine)
     m_OrigOrganList.push_back(pOrganSlot->p_CurrentOrgan);
-  }
 
   StringToStringMap
     indicesToKeep; // the old hash -> the new hash; may be the same
@@ -861,8 +872,8 @@ bool GOSettingsOrgans::TransferDataFromWindow() {
     PackageSlot &pkgSlot = m_PackageSlots[i];
 
     if (!pkgSlot.is_present) {
-      m_OrigPackageList.erase(i);
       m_PackageSlots.erase(m_PackageSlots.begin() + i);
+      m_OrigPackageList.erase(i);
     } else if (pkgSlot.p_CurrentPkg != pkgSlot.p_OrigPkg) {
       m_OrigPackageList[i] = pkgSlot.p_CurrentPkg;
       delete pkgSlot.p_OrigPkg;
