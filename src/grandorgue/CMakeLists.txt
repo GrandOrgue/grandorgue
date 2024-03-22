@@ -250,8 +250,3 @@ if (GO_USE_JACK)
    add_definitions(-DGO_USE_JACK)
    target_link_libraries(golib PkgConfig::JACK)
 endif ()
-
-if(APPLE)
-  ADD_CUSTOM_COMMAND(TARGET "GrandOrgue" POST_BUILD COMMAND codesign --force -s - "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/*.*")
-  ADD_CUSTOM_COMMAND(TARGET "GrandOrgue" POST_BUILD COMMAND codesign --force -s - "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
-endif()
