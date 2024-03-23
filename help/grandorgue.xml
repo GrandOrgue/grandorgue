@@ -6570,7 +6570,7 @@ or an integer number between 1 and 50.
       </para>
       <para>
 A panel size can be one of the following values: SMALL, MEDIUM, MEDIUM LARGE, LARGE
-or an integer number between 100 and 4000.
+or an integer number between 100 and 32000.
       </para>
       <para>
 The following image formats are supported: bmp, gif, jpg, ico, png

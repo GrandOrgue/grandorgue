@@ -1,4 +1,5 @@
 - Added automatic update checking at startup (configurable) and the ability to check for updates from Help menu  
+- Increased maximum value of allowed size to 32000 https://github.com/GrandOrgue/grandorgue/issues/1840
 - Added capability of specifying AmplitudeLevel, Gain, PitchTuning, PitchCorrection and TrackerDelay, Percussive, HasIndependentRelease at the WindchestGroup level of ODF
 - Added capability of specifying Percussive and HasIndependentRelease at the Organ level of ODF
 - Added capability of playing release of percussive pipes with Pipe999HasIndependentRelease=Y https://github.com/GrandOrgue/grandorgue/issues/1385
