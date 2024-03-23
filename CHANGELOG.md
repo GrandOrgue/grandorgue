@@ -1,3 +1,4 @@
+- Fixed crash on loading an organ without a pedal but wit a unison-off coupler https://github.com/GrandOrgue/grandorgue/issues/1846
 - Added capability of specifying AmplitudeLevel, Gain, PitchTuning, PitchCorrection and TrackerDelay, Percussive, HasIndependentRelease at the WindchestGroup level of ODF
 - Added capability of specifying Percussive and HasIndependentRelease at the Organ level of ODF
 - Added capability of playing release of percussive pipes with Pipe999HasIndependentRelease=Y https://github.com/GrandOrgue/grandorgue/issues/1385
