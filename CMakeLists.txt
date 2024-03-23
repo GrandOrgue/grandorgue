@@ -278,18 +278,21 @@ if (APPLE)
   configure_file(${CMAKE_SOURCE_DIR}/src/grandorgue/resource/Info.plist.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
   INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
 
-  set (CPACK_SYSTEM_NAME "osx")
+  set (CPACK_SYSTEM_NAME "macOS")
   set (CPACK_GENERATOR DragNDrop)
 	
 	# script to codesign the app on the .dmg, executed before building the .dmg
 	file(WRITE "${CMAKE_BINARY_DIR}/sign_package.cmake"
-		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/Frameworks/*.*\")\n")
-	file(APPEND "${CMAKE_BINARY_DIR}/sign_package.cmake"
-		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrguePerfTest\")\n")
-	file(APPEND "${CMAKE_BINARY_DIR}/sign_package.cmake"
-		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrgueTool\")\n")
-	file(APPEND "${CMAKE_BINARY_DIR}/sign_package.cmake"
-		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app\")\n")
+		"# CPack prebuild script for code signing\n\n"
+    "file(GLOB LIBSTOSIGN \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/Frameworks/*.*\")\n"
+		"FOREACH(LIBTOSIGN \${LIBSTOSIGN})\n"
+		"  EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${LIBTOSIGN}\")\n"
+		"ENDFOREACH()\n"
+		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrguePerfTest\")\n"
+		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrgueTool\")\n"
+		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app\")\n"
+		"EXECUTE_PROCESS(COMMAND echo \"Checking code signature...\")\n"
+		"EXECUTE_PROCESS(COMMAND codesign --verify --deep \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app\")\n")
 	set(CPACK_PRE_BUILD_SCRIPTS "${CMAKE_BINARY_DIR}/sign_package.cmake")
 
 elseif (WIN32)
