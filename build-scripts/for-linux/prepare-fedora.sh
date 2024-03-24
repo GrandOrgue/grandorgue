@@ -10,4 +10,4 @@ set -e
 sudo dnf install -y \
   cmake gcc-c++ make gettext docbook-style-xsl zip po4a ImageMagick rpm-build \
   pipewire-jack-audio-connection-kit-devel fftw-devel zlib-devel wavpack-devel \
-  $WX_PKG_NAME alsa-lib-devel systemd-devel yaml-cpp-static dpkg-dev
+  $WX_PKG_NAME alsa-lib-devel systemd-devel yaml-cpp-static dpkg-dev libcurl-devel

@@ -79,7 +79,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libwavpack-dev:$TARGET_ARCH \
   ${WX_PKG_NAME}:$TARGET_ARCH \
   libyaml-cpp-dev:$TARGET_ARCH \
-  zlib1g-dev:$TARGET_ARCH
+  zlib1g-dev:$TARGET_ARCH \
+  libcurl4-openssl-dev:$TARGET_ARCH
 
 # download and install additional packages
 mkdir -p deb

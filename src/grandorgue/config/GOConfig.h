@@ -160,6 +160,8 @@ public:
   GOSettingDirectory MidiRecorderPath;
   GOSettingDirectory MidiPlayerPath;
 
+  GOSettingBool CheckForUpdatesAtStartup;
+
   GOMidiDeviceConfigList m_MidiIn;
   GOMidiDeviceConfigList m_MidiOut;
 

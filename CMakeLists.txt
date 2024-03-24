@@ -31,6 +31,11 @@ endif()
 
 set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
 
+# Set GITHUB_PROJECT variable that is used to configure update checking
+if (NOT DEFINED GITHUB_PROJECT)
+  set(GITHUB_PROJECT "GrandOrgue/grandorgue")
+endif()
+
 # Define a c++ standard
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested to build this project")
@@ -185,6 +190,10 @@ else()
   set(ZITACONVOLVER_INCLUDE_DIRS "")
   set(ZITACONVOLVER_LIBRARIES zita-convolver)
 endif()
+
+# include libcurl for automatic cheking for updates
+# exports CURL::libcurl that can be used in target_link_libraries
+find_package(CURL REQUIRED)
 
 # include FFTW
 pkg_check_modules(FFTW REQUIRED fftw3f)
