@@ -2,6 +2,34 @@ name: Build
 
 on: [push]
 jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      
+      - name: Install Base Dependencies
+        run: ${{github.workspace}}/build-scripts/for-linux/prepare-debian-based.sh
+      - name: Install Test Dependencies
+        run: ${{github.workspace}}/build-scripts/for-linux/prepare-debian-for-tests.sh
+
+      - name: Build
+        working-directory: ${{github.workspace}}
+        run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64
+  
+      - name: Test
+        working-directory: ${{github.workspace}}
+        run: ctest -T test --verbose
+      - name: Coverage
+        working-directory: ${{github.workspace}}
+        run: ctest -T coverage
+      - name: Coverage Report
+        working-directory: ${{github.workspace}}
+        run: gcovr -e "submodules/*|usr/*"
+      - uses: codecov/codecov-action@v3
+        
   calc_ver:
     # calculate versions from git tags
     runs-on: ubuntu-latest
@@ -148,7 +176,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    needs: [calc_ver, build]
+    needs: [calc_ver, tests, build]
     if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
     runs-on: ubuntu-latest
     steps:
