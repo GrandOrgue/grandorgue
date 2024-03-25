@@ -7,6 +7,8 @@
 
 #include "GOGrid.h"
 
+#include <algorithm>
+
 #include <wx/dc.h>
 
 #include "size/GOAdditionalSizeKeeper.h"
