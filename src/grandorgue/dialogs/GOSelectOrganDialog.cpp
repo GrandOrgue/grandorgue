@@ -83,21 +83,20 @@ bool GOSelectOrganDialog::TransferDataToWindow() {
     if (o->IsUsable(r_OrganList)) {
       const wxString &archiveId = o->GetArchiveID();
       const bool isArchive = !archiveId.IsEmpty();
+      wxString packageName;
 
-      m_OrganPtrs.push_back(o);
-      m_GridOrgans->AppendRows(1);
-      m_GridOrgans->SetCellValue(rowN, GRID_COL_NAME, o->GetChurchName());
       if (isArchive) {
         const GOArchiveFile *a
           = r_OrganList.GetArchiveByPath(o->GetArchivePath());
 
-        m_GridOrgans->SetCellValue(
-          rowN, GRID_COL_PACKAGE, a ? a->GetName() : archiveId);
+        packageName = a ? a->GetName() : archiveId;
       }
+      m_OrganPtrs.push_back(o);
+      m_GridOrgans->AppendRows(1);
+      m_GridOrgans->SetCellValue(rowN, GRID_COL_NAME, o->GetChurchName());
+      m_GridOrgans->SetCellValue(rowN, GRID_COL_PACKAGE, packageName);
       m_GridOrgans->SetCellValue(
         rowN, GRID_COL_PATH, isArchive ? o->GetArchivePath() : o->GetODFPath());
-      m_GridOrgans->SetCellAlignment(
-        rowN, GRID_COL_PATH, wxALIGN_RIGHT, wxALIGN_TOP);
       rowN++;
     }
   return true;

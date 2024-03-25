@@ -16,6 +16,7 @@ class GOAdditionalSizeKeeper;
 
 class GOGrid : public wxGrid {
 private:
+  wxGridCellStringRenderer *p_NormalVisibleRenderer;
   wxGridCellStringRenderer *p_RightVisibleRenderer;
   std::vector<bool> m_AreColumnsRightVisible;
 
