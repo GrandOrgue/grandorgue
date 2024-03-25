@@ -34,7 +34,8 @@ fi
 mkdir -p deb
 pushd deb
 
-# MSYS2 packages are built against newer libstdc++, so we need to install gcc-libs too
+# MSYS2 packages are built against newer libstdc++.
+# It will be downloaded as a dependency for the packages below.
 PACKAGES_FROM_MSYS2=(curl-winssl fftw jack2 wavpack yaml-cpp wxwidgets3.2-msw)
 DEB_PACKAGES_FROM_MSYS2=("${PACKAGES_FROM_MSYS2[@]/%/-msys2-mingw64}")
 if ! dpkg -l "${DEB_PACKAGES_FROM_MSYS2[@]}" &>/dev/null; then
