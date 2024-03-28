@@ -8,25 +8,34 @@
 #ifndef GOSELECTORGANDIALOG_H_
 #define GOSELECTORGANDIALOG_H_
 
+#include <vector>
+
 #include <wx/event.h>
 
 #include "common/GOSimpleDialog.h"
 
-class wxListEvent;
-class wxListView;
+class wxGridEvent;
 
 class GOConfig;
+class GOGrid;
 class GOOrgan;
 class GOOrganList;
 
 class GOSelectOrganDialog : public GOSimpleDialog {
 private:
   const GOOrganList &r_OrganList;
-  wxListView *m_Organs;
+
+  GOGrid *m_GridOrgans;
+  std::vector<GOOrgan *> m_OrganPtrs;
+
+  void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
+  void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const override;
 
   bool Validate() override;
 
-  void OnDoubleClick(wxListEvent &event) { CloseAdvanced(wxID_OK); }
+  void OnSelectCell(wxGridEvent &event);
+  void OnDoubleClick(wxGridEvent &event) { CloseAdvanced(wxID_OK); }
 
 public:
   GOSelectOrganDialog(wxWindow *parent, GOConfig &config);
