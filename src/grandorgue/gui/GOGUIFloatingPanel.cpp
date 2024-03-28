@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -90,7 +90,7 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
   enclosure->Init(cfg, wxT("SetterMasterVolume"));
   panel->AddControl(enclosure);
 
-  for (unsigned i = 0; i < m_OrganController->GetWindchestGroupCount(); i++) {
+  for (unsigned i = 0; i < m_OrganController->GetWindchestCount(); i++) {
     GOWindchest *windchest = m_OrganController->GetWindchest(i);
     windchest->AddEnclosure(master_enc);
 

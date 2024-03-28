@@ -214,7 +214,7 @@ void GOSoundEngine::Setup(
       new GOSoundTremulantWorkItem(*this, m_SamplesPerBuffer));
   m_Windchests.clear();
   m_Windchests.push_back(new GOSoundWindchestWorkItem(*this, NULL));
-  for (unsigned i = 0; i < organController->GetWindchestGroupCount(); i++)
+  for (unsigned i = 0; i < organController->GetWindchestCount(); i++)
     m_Windchests.push_back(
       new GOSoundWindchestWorkItem(*this, organController->GetWindchest(i)));
   m_TouchProcessor = std::unique_ptr<GOSoundTouchWorkItem>(
