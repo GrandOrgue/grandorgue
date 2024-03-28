@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -204,12 +204,6 @@ void GOOrganModel::UpdateVolume() {
   for (unsigned i = 0; i < m_windchests.size(); i++)
     m_windchests[i]->UpdateVolume();
 }
-
-GOWindchest *GOOrganModel::GetWindchest(unsigned index) {
-  return m_windchests[index];
-}
-
-unsigned GOOrganModel::GetWindchestGroupCount() { return m_windchests.size(); }
 
 unsigned GOOrganModel::AddWindchest(GOWindchest *windchest) {
   m_windchests.push_back(windchest);

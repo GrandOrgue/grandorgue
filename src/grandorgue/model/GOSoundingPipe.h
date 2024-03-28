@@ -37,7 +37,7 @@ private:
 
   /* states which windchest this pipe belongs to, see
    * GOSoundEngine::StartSampler */
-  int m_SamplerGroupID;
+  unsigned m_WindchestN; // starts with 1
   unsigned m_AudioGroupID;
   float m_TemperamentOffset;
   unsigned m_HarmonicNumber;
@@ -115,7 +115,7 @@ public:
   GOSoundingPipe(
     GOOrganModel *pOrganModel,
     GORank *rank,
-    int sampler_group_id,
+    unsigned windchestN,
     unsigned midi_key_number,
     unsigned harmonic_number,
     float min_volume,
