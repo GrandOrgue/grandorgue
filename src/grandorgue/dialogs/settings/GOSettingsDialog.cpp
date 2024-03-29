@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -63,8 +63,9 @@ GOSettingsDialog::GOSettingsDialog(
   AddTab(m_MidiDevicePage, PAGE_MIDI_DEVICES, _("MIDI Devices"));
   m_MidiMessagePage = new GOSettingsMidiMessage(config, midi, notebook);
   AddTab(m_MidiMessagePage, PAGE_INITIAL_MIDI, _("Initial MIDI"));
-  m_OrgansPage = new GOSettingsOrgans(config, midi, notebook);
-  AddTab(m_OrgansPage, PAGE_ORGANS, _("Organs"));
+  m_OrgansPage
+    = new GOSettingsOrgans(config, midi, this, PAGE_ORGANS, _("Organs"));
+  AddTab(m_OrgansPage);
   m_ReverbPage = new GOSettingsReverb(config, notebook);
   AddTab(m_ReverbPage, PAGE_REVERB, _("Reverb"));
   m_TemperamentsPage = new GOSettingsTemperaments(config, notebook);

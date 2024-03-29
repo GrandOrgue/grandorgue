@@ -88,6 +88,7 @@ dialogs/settings/GOSettingsOrgans.cpp
 dialogs/settings/GOSettingsReverb.cpp
 dialogs/settings/GOSettingsTemperaments.cpp
 dialogs/GOMidiListDialog.cpp
+dialogs/GONewReleaseDialog.cpp
 dialogs/GOOrganSettingsDialog.cpp
 dialogs/GOProgressDialog.cpp
 dialogs/GOSelectOrganDialog.cpp
@@ -200,6 +201,7 @@ sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
 sound/GOSoundStateHandler.cpp
 sound/GOSound.cpp
+updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp
 yaml/go-wx-yaml.cpp
 wxcontrols/GOAudioGauge.cpp
@@ -224,7 +226,7 @@ if (USE_INTERNAL_ZITACONVOLVER)
 endif()
 
 add_library(golib STATIC ${grandorgue_src})
-set(go_libs ${wxWidgets_LIBRARIES} ${YAML_CPP_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES})
+set(go_libs ${wxWidgets_LIBRARIES} ${YAML_CPP_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES} CURL::libcurl)
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR})
 target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
 link_directories(${go_libdir})

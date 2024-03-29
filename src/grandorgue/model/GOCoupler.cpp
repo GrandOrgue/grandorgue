@@ -42,22 +42,26 @@ void GOCoupler::PreparePlayback() {
   GODrawstop::PreparePlayback();
 
   GOManual *src = r_OrganModel.GetManual(m_SourceManual);
-  GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
 
   m_KeyVelocity.resize(src->GetLogicalKeyCount());
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
-  m_InternalVelocity.resize(dest->GetLogicalKeyCount());
-  std::fill(m_InternalVelocity.begin(), m_InternalVelocity.end(), 0);
-  m_OutVelocity.resize(dest->GetLogicalKeyCount());
-  std::fill(m_OutVelocity.begin(), m_OutVelocity.end(), 0);
 
-  m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber()
-    - dest->GetFirstLogicalKeyMIDINoteNumber();
   if (m_FirstMidiNote > src->GetFirstLogicalKeyMIDINoteNumber())
     m_FirstLogicalKey
       = m_FirstMidiNote - src->GetFirstLogicalKeyMIDINoteNumber();
   else
     m_FirstLogicalKey = 0;
+  if (!m_UnisonOff) {
+    GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
+
+    m_InternalVelocity.resize(dest->GetLogicalKeyCount());
+    std::fill(m_InternalVelocity.begin(), m_InternalVelocity.end(), 0);
+    m_OutVelocity.resize(dest->GetLogicalKeyCount());
+    std::fill(m_OutVelocity.begin(), m_OutVelocity.end(), 0);
+
+    m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber()
+      - dest->GetFirstLogicalKeyMIDINoteNumber();
+  }
   if (m_UnisonOff && IsActive())
     src->SetUnisonOff(true);
 }
@@ -249,6 +253,8 @@ void GOCoupler::SetupIsToStoreInCmb() {
 }
 
 void GOCoupler::SetOut(int noteNumber, unsigned velocity) {
+  assert(!m_UnisonOff); // ChangeKey doesn't call SetOut for UnisonOff
+
   if (noteNumber < 0)
     return;
   unsigned note = noteNumber;
@@ -263,8 +269,10 @@ void GOCoupler::SetOut(int noteNumber, unsigned velocity) {
   unsigned newstate = m_InternalVelocity[note];
   if (newstate)
     newstate--;
-  GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
   m_OutVelocity[note] = newstate;
+
+  GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
+
   dest->SetKey(note, m_OutVelocity[note], m_CouplerIndexInDest);
 }
 
@@ -350,20 +358,19 @@ void GOCoupler::SetKey(
 }
 
 void GOCoupler::ChangeState(bool on) {
-  GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
-
-  if (m_UnisonOff) {
+  if (m_UnisonOff)
     r_OrganModel.GetManual(m_SourceManual)->SetUnisonOff(on);
-    return;
-  }
+  else {
+    GOManual *dest = r_OrganModel.GetManual(m_DestinationManual);
 
-  for (unsigned i = 0; i < m_InternalVelocity.size(); i++) {
-    unsigned newstate = on ? m_InternalVelocity[i] : 0;
-    if (newstate > 0)
-      newstate--;
-    if (m_OutVelocity[i] != newstate) {
-      m_OutVelocity[i] = newstate;
-      dest->SetKey(i, m_OutVelocity[i], m_CouplerIndexInDest);
+    for (unsigned i = 0; i < m_InternalVelocity.size(); i++) {
+      unsigned newstate = on ? m_InternalVelocity[i] : 0;
+      if (newstate > 0)
+        newstate--;
+      if (m_OutVelocity[i] != newstate) {
+        m_OutVelocity[i] = newstate;
+        dest->SetKey(i, m_OutVelocity[i], m_CouplerIndexInDest);
+      }
     }
   }
 }

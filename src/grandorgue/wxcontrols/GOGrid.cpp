@@ -7,9 +7,16 @@
 
 #include "GOGrid.h"
 
+#include <algorithm>
+
 #include <wx/dc.h>
 
-class RightVisibleCellRenderer : public wxGridCellStringRenderer {
+#include "size/GOAdditionalSizeKeeper.h"
+
+class GOCellRenderer : public wxGridCellStringRenderer {
+private:
+  bool m_IsRightVisible;
+
   virtual void Draw(
     wxGrid &grid,
     wxGridCellAttr &attr,
@@ -18,12 +25,10 @@ class RightVisibleCellRenderer : public wxGridCellStringRenderer {
     int row,
     int col,
     bool isSelected) override;
-};
 
-static size_t clamp(size_t v, size_t l, size_t u) {
-  // std::clamp in C++17
-  return v < l ? l : v > u ? u : v;
-}
+public:
+  GOCellRenderer(bool isRightVisible) : m_IsRightVisible(isRightVisible) {}
+};
 
 static wxString truncate_line_left(
   wxDC &dc, const wxString &line, wxCoord targetWidth) {
@@ -52,7 +57,7 @@ static wxString truncate_line_left(
     // Heuristic: consider average character width
     wxCoord avgCharW = (lW - uW) / (u - l);
     size_t mid = avgCharW != 0
-      ? clamp(l + (lW - targetWidth) / avgCharW, l + 1, u - 1)
+      ? std::clamp(l + (lW - targetWidth) / avgCharW, l + 1, u - 1)
       : (l + u) / 2;
     wxCoord midW, midH;
     wxString midLine = ellipsis + line.Mid(mid);
@@ -74,7 +79,8 @@ static void draw_text_rectangle(
   const wxArrayString &lines,
   const wxRect &rect,
   int horizAlign,
-  int vertAlign) {
+  int vertAlign,
+  bool isRightVisible) {
   // Based on wxGrid::DrawTextRectangle(wxDC, wxArrayString, ...).
   // Simplified for HORIZONTAL text orientation
   if (lines.empty()) {
@@ -126,14 +132,15 @@ static void draw_text_rectangle(
     case wxALIGN_LEFT:
     default:
       x = rect.x + GRID_TEXT_MARGIN;
-      if (textWidth > rect.width) {
+
+      if (textWidth > rect.width && isRightVisible) {
         // if text box is too wide, prefer showing its right part
         x -= textWidth - rect.width;
       }
       break;
     }
 
-    if (x >= rect.x) {
+    if (x >= rect.x || !isRightVisible) {
       // Text fits
       dc.DrawText(line, x, y);
     } else {
@@ -148,7 +155,7 @@ static void draw_text_rectangle(
   }
 }
 
-void RightVisibleCellRenderer::Draw(
+void GOCellRenderer::Draw(
   wxGrid &grid,
   wxGridCellAttr &attr,
   wxDC &dc,
@@ -171,7 +178,8 @@ void RightVisibleCellRenderer::Draw(
   // Render text
   wxRect rect = rectCell;
   rect.Inflate(-1);
-  draw_text_rectangle(grid, dc, lines, rect, horizAlign, vertAlign);
+  draw_text_rectangle(
+    grid, dc, lines, rect, horizAlign, vertAlign, m_IsRightVisible);
 }
 
 GOGrid::GOGrid(
@@ -182,11 +190,13 @@ GOGrid::GOGrid(
   long style,
   const wxString &name)
   : wxGrid(parent, id, pos, size, style, name),
-    p_RightVisibleRenderer(new RightVisibleCellRenderer()) {}
+    p_NormalVisibleRenderer(new GOCellRenderer(false)),
+    p_RightVisibleRenderer(new GOCellRenderer(true)) {}
 
 GOGrid::~GOGrid() {
   // force deleting p_RightVisibleRenderer after deletion of all columns
   p_RightVisibleRenderer->DecRef();
+  p_NormalVisibleRenderer->DecRef();
 }
 
 bool GOGrid::IsColumnRightVisible(unsigned colN) const {
@@ -201,13 +211,29 @@ void GOGrid::SetColumnRightVisible(unsigned colN, bool isRightVisible) {
   m_AreColumnsRightVisible[colN] = isRightVisible;
 }
 
-wxGridCellRenderer *GOGrid::GetDefaultRendererForCell(int row, int col) const {
-  wxGridCellRenderer *pRenderer;
+const wxString WX_COL_SIZE_KEY_FMT = wxT("Column%03dSize");
 
-  if (IsColumnRightVisible(col)) {
-    p_RightVisibleRenderer->IncRef();
-    pRenderer = p_RightVisibleRenderer;
-  } else
-    pRenderer = wxGrid::GetDefaultRendererForCell(row, col);
+void GOGrid::ApplyColumnSizes(const GOAdditionalSizeKeeper &sizeKeeper) {
+  for (int l = GetNumberCols(), i = 0; i < l; i++) {
+    int newSize
+      = sizeKeeper.GetAdditionalSize(wxString::Format(WX_COL_SIZE_KEY_FMT, i));
+
+    if (newSize > 0)
+      SetColSize(i, newSize);
+  }
+}
+
+void GOGrid::CaptureColumnSizes(GOAdditionalSizeKeeper &sizeKeeper) const {
+  for (int l = GetNumberCols(), i = 0; i < l; i++)
+    sizeKeeper.SetAdditionalSize(
+      wxString::Format(WX_COL_SIZE_KEY_FMT, i), GetColSize(i));
+}
+
+wxGridCellRenderer *GOGrid::GetDefaultRendererForCell(int row, int col) const {
+  wxGridCellRenderer *pRenderer = IsColumnRightVisible(col)
+    ? p_RightVisibleRenderer
+    : p_NormalVisibleRenderer;
+
+  pRenderer->IncRef();
   return pRenderer;
 }

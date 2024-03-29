@@ -12,7 +12,8 @@
 #include <unordered_set>
 
 #include <wx/hashset.h>
-#include <wx/panel.h>
+
+#include "dialogs/common/GODialogTab.h"
 
 #include "ptrvector.h"
 
@@ -22,12 +23,13 @@ class wxGridEvent;
 class wxGridRangeSelectEvent;
 class wxTextCtrl;
 
+class GOAdditionalSizeKeeper;
 class GOArchiveFile;
 class GOConfig;
 class GOGrid;
 class GOOrgan;
 
-class GOSettingsOrgans : public wxPanel {
+class GOSettingsOrgans : public GODialogTab {
 public:
   enum {
     ID_ORGANS = 200,
@@ -116,6 +118,10 @@ private:
   void DelSelectedOrgans();
   void ReplaceOrganPath(const unsigned index, const wxString &newPath);
 
+  void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
+  void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const override;
+
   void OnCharHook(wxKeyEvent &ev);
 
   void OnOrganSelectCell(wxGridEvent &event);
@@ -130,7 +136,12 @@ private:
   void OnDelPreset(wxCommandEvent &event);
 
 public:
-  GOSettingsOrgans(GOConfig &settings, GOMidi &midi, wxWindow *parent);
+  GOSettingsOrgans(
+    GOConfig &settings,
+    GOMidi &midi,
+    GOTabbedDialog *pDlg,
+    const wxString &name,
+    const wxString &label);
 
   virtual bool TransferDataToWindow() override;
   virtual bool TransferDataFromWindow() override;

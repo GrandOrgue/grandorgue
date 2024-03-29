@@ -61,6 +61,8 @@ void GOSizeKeeper::Load(GOConfigReader &cfg, const wxString &group) {
         CMBSetting,
         m_group,
         wxString::Format(WX_ADDITIONAL_SIZE_VALUE_FMT, i),
+        0,
+        32000,
         false,
         -1);
   }
