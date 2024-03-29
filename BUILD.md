@@ -156,62 +156,29 @@ You can download the source code archive from GitHub
 
         The built appimage will appear in the build/appimage-x86_64 subdirectory of current directory
 
-## Building for OS X on OS X
+## Building for macOS on macOS
 1. Prequisites:
-    1. OS X >= 10.11
-    2. Xcode >= 7.3
-    3. homebrew
-2. Extract the GO sources somewhere, eg: /home/user/gosources
-3. Install the required software
-    - Manually
-
-        ```
-        brew update
-        brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
-        brew link gettext --force
-        ```
-
-    - Or run the prepared scripts by a sudoer user:
-
-        ```
-        <GO source tree>/build-scripts/for-osx/prepare-osx.sh
-	    ```
-
+    1. A macOS version supported by Homebrew (the three latest major versions of macOS)
+    2. Xcode or Command Line Tools for Xcode
+    3. Homebrew
+2. Extract the GO sources somewhere, eg: ~/documents/Projects/GrandOrgueDev/gosources using the Git method. The manual method may install the wrong version of an external submodule.
+3. Install the required software by running (the commands in)
+    ```
+    <GO source tree>/build-scripts/for-osx/prepare-osx.sh
+    ```
 4. Build
-    - Manually
-        1. Create an empty build directory, eg: mkdir /home/user/gobuild
-        2. Run cmake:
-
-
-		    ```
-            cd /home/user/gobuild
-            cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <GO source tree>
-        	```
-
-            Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
-
-        3. Run make
-
-
-		    ```
-            make
-		    ```
-
-
-        4. For making tar.gz package, run
-
-
-		    ```
-            make -k package VERBOSE=1
-		    ```
-
-    - Or run the prepared build script
-
-	    ```
+    1. Create an empty build folder, eg: ~/documents/Projects/GrandOrgueDev/gobuild
+    2. Change the working directory
+        ```
+        cd ~/documents/Projects/GrandOrgueDev/gobuild
+        ```
+    3. Run (the commands in) the prepared build script
+        ```
         <GO source tree>/build-scripts/for-osx/build-on-osx.sh
-	    ```
-
-        The built package will appear in the build/osx subdirectory of current directory, 
+        ```
+      Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
+      The built app will appear in the build/osx subdirectory of current directory.
+    4. For an incremental build `cd` to `build/osx`, run `make` again and code sign the app manually.
 
 ## Cross-building for Windows-64 bit on Linux
 
