@@ -285,14 +285,14 @@ if (APPLE)
 	file(WRITE "${CMAKE_BINARY_DIR}/sign_package.cmake"
 		"# CPack prebuild script for code signing\n\n"
     "file(GLOB LIBSTOSIGN \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/Frameworks/*.*\")\n"
-		"FOREACH(LIBTOSIGN \${LIBSTOSIGN})\n"
-		"  EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${LIBTOSIGN}\")\n"
-		"ENDFOREACH()\n"
-		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrguePerfTest\")\n"
-		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrgueTool\")\n"
-		"EXECUTE_PROCESS(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app\")\n"
-		"EXECUTE_PROCESS(COMMAND echo \"Checking code signature...\")\n"
-		"EXECUTE_PROCESS(COMMAND codesign --verify --deep \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app\")\n")
+		"foreach(LIBTOSIGN \${LIBSTOSIGN})\n"
+		"  execute_process(COMMAND codesign --force --sign - \"\${LIBTOSIGN}\")\n"
+		"endforeach()\n"
+		"execute_process(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrguePerfTest\")\n"
+		"execute_process(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app/Contents/MacOS/GrandOrgueTool\")\n"
+		"execute_process(COMMAND codesign --force --sign - \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app\")\n"
+		"execute_process(COMMAND echo \"Checking code signature...\")\n"
+		"execute_process(COMMAND codesign --verify --deep \"\${CPACK_TEMPORARY_INSTALL_DIRECTORY}/ALL_IN_ONE/${PROJECT_NAME}.app\")\n")
 	set(CPACK_PRE_BUILD_SCRIPTS "${CMAKE_BINARY_DIR}/sign_package.cmake")
 
 elseif (WIN32)
