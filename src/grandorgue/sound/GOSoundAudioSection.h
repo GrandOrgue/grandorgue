@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <math.h>
 
+#include "GOBool3.h"
 #include "GOInt.h"
 #include "GOSoundCompress.h"
 #include "GOSoundDefs.h"
@@ -160,7 +161,7 @@ private:
   unsigned m_BytesPerSample;
   unsigned m_Channels;
 
-  int8_t m_SampleGroup;
+  GOBool3 m_WaveTremulantStateFor;
   bool m_IsCompressed;
 
   /* Size of the section in BYTES */
@@ -177,7 +178,7 @@ public:
   ~GOSoundAudioSection();
   void ClearData();
   inline unsigned GetChannels() const { return m_Channels; }
-  inline int8_t GetSampleGroup() const { return m_SampleGroup; }
+  inline int8_t GetSampleGroup() const { return m_WaveTremulantStateFor; }
 
   unsigned GetBytesPerSample() const;
   unsigned GetLength() const;
@@ -216,7 +217,7 @@ public:
     unsigned pcm_data_sample_rate,
     unsigned pcm_data_nb_samples,
     const std::vector<GOWaveLoop> *loop_points,
-    int8_t sampleGroup,
+    GOBool3 waveTremulantStateFor,
     bool compress,
     unsigned loopCrossfadeLength,
     unsigned releaseCrossfadeLength);

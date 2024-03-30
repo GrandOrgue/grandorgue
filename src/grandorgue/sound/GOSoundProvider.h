@@ -11,8 +11,10 @@
 #include <cstdint>
 #include <vector>
 
-#include "GOStatisticCallback.h"
 #include "ptrvector.h"
+
+#include "GOBool3.h"
+#include "GOStatisticCallback.h"
 
 class GOSoundAudioSection;
 class GOCache;
@@ -27,19 +29,19 @@ protected:
   struct AttackSelector {
     unsigned min_attack_velocity;
     unsigned max_released_time;
-    int8_t sample_group;
+    GOBool3 m_WaveTremulantStateFor;
   };
 
   struct ReleaseSelector {
     unsigned max_playback_time;
-    int8_t sample_group;
+    GOBool3 m_WaveTremulantStateFor;
   };
 
   unsigned m_MidiKeyNumber;
   float m_MidiPitchFract;
   float m_Gain;
   float m_Tuning;
-  bool m_SampleGroup;
+  bool m_IsWaveTremulantActive;
   unsigned m_ReleaseTail;
   ptr_vector<GOSoundAudioSection> m_Attack;
   std::vector<AttackSelector> m_AttackInfo;
@@ -61,7 +63,7 @@ public:
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache);
   virtual bool SaveCache(GOCacheWriter &cache) const;
 
-  void UseSampleGroup(bool sampleGroup) { m_SampleGroup = sampleGroup; }
+  void SetWaveTremulant(bool isActive) { m_IsWaveTremulantActive = isActive; }
 
   void SetVelocityParameter(float min_volume, float max_volume);
 
@@ -85,10 +87,10 @@ public:
 
   float GetVelocityVolume(unsigned velocity) const;
 
-  bool checkForMissingAttack();
-  bool checkForMissingRelease();
-  bool checkMissingRelease();
-  bool checkNotNecessaryRelease();
+  bool СheckForMissingAttack();
+  bool СheckForMissingRelease();
+  bool СheckMissingRelease();
+  bool СheckNotNecessaryRelease();
 
   GOSampleStatistic GetStatistic();
 };

@@ -81,7 +81,7 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
     return false;
   if (!cache.Read(&m_BytesPerSample, sizeof(m_BytesPerSample)))
     return false;
-  if (!cache.Read(&m_SampleGroup, sizeof(m_SampleGroup)))
+  if (!cache.Read(&m_WaveTremulantStateFor, sizeof(m_WaveTremulantStateFor)))
     return false;
   if (!cache.Read(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
@@ -160,7 +160,7 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
     return false;
   if (!cache.Write(&m_BytesPerSample, sizeof(m_BytesPerSample)))
     return false;
-  if (!cache.Write(&m_SampleGroup, sizeof(m_SampleGroup)))
+  if (!cache.Write(&m_WaveTremulantStateFor, sizeof(m_WaveTremulantStateFor)))
     return false;
   if (!cache.Write(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
@@ -658,7 +658,7 @@ void GOSoundAudioSection::Setup(
   const unsigned pcm_data_sample_rate,
   const unsigned pcm_data_nb_samples,
   const std::vector<GOWaveLoop> *loop_points,
-  int8_t sampleGroup,
+  GOBool3 waveTremulantStateFor,
   bool compress,
   unsigned loopCrossfadeLength,
   unsigned releaseCrossfadeLength) {
@@ -835,7 +835,7 @@ void GOSoundAudioSection::Setup(
   m_SampleFracBits = m_BitsPerSample - 1;
   m_Channels = pcm_data_channels;
   m_IsCompressed = false;
-  m_SampleGroup = sampleGroup;
+  m_WaveTremulantStateFor = waveTremulantStateFor;
 
   /* Store the main data blob. */
   memcpy(m_Data, pcm_data, m_AllocSize);

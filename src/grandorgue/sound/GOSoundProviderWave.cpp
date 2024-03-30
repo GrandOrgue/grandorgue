@@ -40,7 +40,7 @@ void GOSoundProviderWave::AddAttackSection(
   GOWave &wave,
   int attack_start,
   const std::vector<GOWaveLoop> *pSrcLoops,
-  int sample_group,
+  GOBool3 waveTremulantStateFor,
   unsigned bits_per_sample,
   unsigned channels,
   bool compress,
@@ -114,7 +114,7 @@ void GOSoundProviderWave::AddAttackSection(
   }
 
   AttackSelector attack_info;
-  attack_info.sample_group = sample_group;
+  attack_info.m_WaveTremulantStateFor = waveTremulantStateFor;
   attack_info.min_attack_velocity = min_attack_velocity;
   attack_info.max_released_time = max_released_time;
   m_AttackInfo.push_back(attack_info);
@@ -129,7 +129,7 @@ void GOSoundProviderWave::AddAttackSection(
     wave.GetSampleRate(),
     wave.GetLength(),
     &loops,
-    sample_group,
+    waveTremulantStateFor,
     compress,
     loop_crossfade_length,
     0);
@@ -140,7 +140,7 @@ void GOSoundProviderWave::AddReleaseSection(
   const GOLoaderFilename &loaderFilename,
   const char *data,
   GOWave &wave,
-  int sample_group,
+  GOBool3 waveTremulantStateFor,
   unsigned max_playback_time,
   int cue_point,
   int release_end,
@@ -164,7 +164,7 @@ void GOSoundProviderWave::AddReleaseSection(
     throw(wxString) _("Invalid release position");
 
   ReleaseSelector release_info;
-  release_info.sample_group = sample_group;
+  release_info.m_WaveTremulantStateFor = waveTremulantStateFor;
   release_info.max_playback_time = max_playback_time;
   m_ReleaseInfo.push_back(release_info);
   GOSoundAudioSection *section = new GOSoundAudioSection(pool);
@@ -178,7 +178,7 @@ void GOSoundProviderWave::AddReleaseSection(
     wave.GetSampleRate(),
     release_samples,
     NULL,
-    sample_group,
+    waveTremulantStateFor,
     compress,
     0,
     releaseCrossfadeLength);
@@ -212,7 +212,7 @@ void GOSoundProviderWave::LoadFromOneFile(
   const std::vector<GOWaveLoop> *loops,
   bool is_attack,
   bool is_release,
-  int sample_group,
+  GOBool3 waveTremulantStateFor,
   unsigned max_playback_time,
   int attack_start,
   int cue_point,
@@ -283,7 +283,7 @@ void GOSoundProviderWave::LoadFromOneFile(
         wave,
         attack_start,
         loops,
-        sample_group,
+        waveTremulantStateFor,
         bits_per_sample,
         channels,
         compress,
@@ -301,7 +301,7 @@ void GOSoundProviderWave::LoadFromOneFile(
         loaderFilename,
         data.get(),
         wave,
-        sample_group,
+        waveTremulantStateFor,
         max_playback_time,
         cue_point,
         release_end,
@@ -347,17 +347,18 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
         if (
           attacks[i].load_release
           && (unsigned)attacks[i].max_playback_time > longest
-          && attacks[i].sample_group == k)
+          && attacks[i].m_WaveTremulantStateFor == k)
           longest = attacks[i].max_playback_time;
       for (unsigned i = 0; i < releases.size(); i++)
         if (
           (unsigned)releases[i].max_playback_time > longest
-          && releases[i].sample_group == k)
+          && releases[i].m_WaveTremulantStateFor == k)
           longest = releases[i].max_playback_time;
 
       bool found = false;
       for (unsigned i = 0; i < attacks.size(); i++)
-        if (attacks[i].load_release && attacks[i].sample_group == k) {
+        if (
+          attacks[i].load_release && attacks[i].m_WaveTremulantStateFor == k) {
           if ((unsigned)attacks[i].max_playback_time == longest && !found) {
             found = true;
             continue;
@@ -365,7 +366,7 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
             attacks[i].load_release = false;
         }
       for (unsigned i = 0; i < releases.size(); i++)
-        if (releases[i].sample_group == k) {
+        if (releases[i].m_WaveTremulantStateFor == k) {
           if ((unsigned)releases[i].max_playback_time == longest && !found) {
             found = true;
             continue;
@@ -383,7 +384,7 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
       unsigned min_velocity = 0xff;
       unsigned max_released_time = 0;
       for (unsigned i = 0; i < attacks.size(); i++) {
-        if (attacks[i].sample_group != k)
+        if (attacks[i].m_WaveTremulantStateFor != k)
           continue;
         if (attacks[i].min_attack_velocity < min_velocity)
           min_velocity = attacks[i].min_attack_velocity;
@@ -397,12 +398,13 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
           best_idx = i;
       }
       for (unsigned i = 0; i < attacks.size(); i++) {
-        if (attacks[i].sample_group == k) {
+        if (attacks[i].m_WaveTremulantStateFor == k) {
           attacks[i].min_attack_velocity = min_velocity;
           attacks[i].max_released_time = max_released_time;
         }
         if (
-          attacks[i].sample_group != k || best_idx == -1 || best_idx == (int)i)
+          attacks[i].m_WaveTremulantStateFor != k || best_idx == -1
+          || best_idx == (int)i)
           continue;
         if (load_first_attack && i == 0) {
           LoadPitch(attacks[i].filename.Open(fileStore).get());
@@ -426,7 +428,7 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
         &a.loops,
         true,
         a.load_release,
-        a.sample_group,
+        a.m_WaveTremulantStateFor,
         a.max_playback_time,
         a.attack_start,
         a.cue_point,
@@ -452,7 +454,7 @@ void GOSoundProviderWave::LoadFromMultipleFiles(
         nullptr,
         false,
         true,
-        r.sample_group,
+        r.m_WaveTremulantStateFor,
         r.max_playback_time,
         0,
         r.cue_point,

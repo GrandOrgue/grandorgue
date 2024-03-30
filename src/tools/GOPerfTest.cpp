@@ -93,7 +93,7 @@ void GOPerfTestApp::RunTest(
         GOSoundProviderWave::AttackFileInfo ainfo;
 
         ainfo.filename.Assign(wxString::Format(wxT("%02d.wav"), i % 3));
-        ainfo.sample_group = -1;
+        ainfo.m_WaveTremulantStateFor = BOOL3_DEFAULT;
         ainfo.load_release = true;
         ainfo.percussive = false;
         ainfo.min_attack_velocity = 0;

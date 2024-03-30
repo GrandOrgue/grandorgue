@@ -119,7 +119,7 @@ void GOWindchest::UpdateTremulant(GOTremulant *tremulant) {
         continue;
       bool on = t->IsActive();
       for (unsigned j = 0; j < m_pipes.size(); j++)
-        m_pipes[j]->SetTremulant(on);
+        m_pipes[j]->SetWaveTremulant(on);
       return;
     }
 }

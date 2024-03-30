@@ -39,7 +39,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_LastStart(0),
     m_LastStop(0),
     m_Instances(0),
-    m_Tremulant(false),
+    m_IsWaveTremulantActive(false),
     m_AttackFileInfos(),
     m_ReleaseFileInfos(),
     m_Filename(),
@@ -76,7 +76,7 @@ void GOSoundingPipe::Init(
   GOSoundProviderWave::AttackFileInfo ainfo;
 
   ainfo.filename.AssignResource(m_Filename);
-  ainfo.sample_group = -1;
+  ainfo.m_WaveTremulantStateFor = BOOL3_DEFAULT;
   ainfo.percussive = m_PipeConfigNode.GetEffectivePercussive();
   ainfo.load_release = !ainfo.percussive;
   ainfo.max_playback_time = -1;
@@ -102,8 +102,8 @@ void GOSoundingPipe::LoadAttackFileInfo(
   GOSoundProviderWave::AttackFileInfo ainfo;
 
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
-  ainfo.sample_group = cfg.ReadInteger(
-    ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
+  ainfo.m_WaveTremulantStateFor = cfg.ReadBool3FromInt(
+    ODFSetting, group, prefix + wxT("IsTremulant"), false);
   ainfo.percussive = m_PipeConfigNode.GetEffectivePercussive();
   ainfo.load_release = cfg.ReadBoolean(
     ODFSetting, group, prefix + wxT("LoadRelease"), false, !ainfo.percussive);
@@ -187,8 +187,8 @@ void GOSoundingPipe::LoadReleaseFileInfo(
   GOSoundProviderWave::ReleaseFileInfo rinfo;
 
   rinfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
-  rinfo.sample_group = cfg.ReadInteger(
-    ODFSetting, group, prefix + wxT("IsTremulant"), -1, 1, false, -1);
+  rinfo.m_WaveTremulantStateFor = cfg.ReadBool3FromInt(
+    ODFSetting, group, prefix + wxT("IsTremulant"), false);
   rinfo.max_playback_time = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("MaxKeyPressTime"), -1, 100000, false, -1);
   rinfo.cue_point = cfg.ReadInteger(
@@ -345,7 +345,7 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) const {
   hash.Update(m_AttackFileInfos.size());
   for (const auto &a : m_AttackFileInfos) {
     a.filename.Hash(hash);
-    hash.Update(a.sample_group);
+    hash.Update(a.m_WaveTremulantStateFor);
     hash.Update(a.max_playback_time);
     hash.Update(a.load_release);
     hash.Update(a.percussive);
@@ -364,7 +364,7 @@ void GOSoundingPipe::UpdateHash(GOHash &hash) const {
   hash.Update(m_ReleaseFileInfos.size());
   for (const auto &r : m_ReleaseFileInfos) {
     r.filename.Hash(hash);
-    hash.Update(r.sample_group);
+    hash.Update(r.m_WaveTremulantStateFor);
     hash.Update(r.max_playback_time);
     hash.Update(r.cue_point);
     hash.Update(r.release_end);
@@ -412,21 +412,21 @@ void GOSoundingPipe::Validate() {
   if (!m_PipeConfigNode.GetEffectiveChannels())
     return;
 
-  if (m_SoundProvider.checkForMissingAttack()) {
+  if (m_SoundProvider.СheckForMissingAttack()) {
     wxLogWarning(
       _("rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"),
       m_Rank->GetName().c_str(),
       GetLoadTitle().c_str());
   }
 
-  if (m_SoundProvider.checkForMissingRelease()) {
+  if (m_SoundProvider.СheckForMissingRelease()) {
     wxLogWarning(
       _("rank %s pipe %s: default release is missing"),
       m_Rank->GetName().c_str(),
       GetLoadTitle().c_str());
   }
 
-  if (m_SoundProvider.checkMissingRelease()) {
+  if (m_SoundProvider.СheckMissingRelease()) {
     wxLogWarning(
       _("rank %s pipe %s: no release defined"),
       m_Rank->GetName().c_str(),
@@ -435,7 +435,7 @@ void GOSoundingPipe::Validate() {
 
   if (
     !m_PipeConfigNode.IsEffectiveIndependentRelease()
-    && m_SoundProvider.checkNotNecessaryRelease()) {
+    && m_SoundProvider.СheckNotNecessaryRelease()) {
     wxLogWarning(
       _("rank %s pipe %s: percussive sample with a release"),
       m_Rank->GetName().c_str(),
@@ -474,10 +474,10 @@ void GOSoundingPipe::Validate() {
   }
 }
 
-void GOSoundingPipe::SetTremulant(bool on) {
-  if (on != m_Tremulant) {
-    m_Tremulant = on;
-    m_SoundProvider.UseSampleGroup((unsigned)on);
+void GOSoundingPipe::SetWaveTremulant(bool on) {
+  if (on != m_IsWaveTremulantActive) {
+    m_IsWaveTremulantActive = on;
+    m_SoundProvider.SetWaveTremulant(on);
 
     GOSoundEngine *pSoundEngine = GetSoundEngine();
 
@@ -569,9 +569,9 @@ void GOSoundingPipe::PreparePlayback() {
 
 void GOSoundingPipe::AbortPlayback() {
   m_Instances = 0;
-  m_Tremulant = false;
+  m_IsWaveTremulantActive = false;
   m_Sampler = 0;
   m_LastStop = 0;
-  m_SoundProvider.UseSampleGroup(0);
+  m_SoundProvider.SetWaveTremulant(0);
   GOPipe::AbortPlayback();
 }
