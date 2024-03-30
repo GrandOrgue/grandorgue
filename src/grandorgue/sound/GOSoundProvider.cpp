@@ -241,7 +241,7 @@ const GOSoundAudioSection *GOSoundProvider::GetRelease(
   return NULL;
 }
 
-bool GOSoundProvider::СheckForMissingRelease() {
+bool GOSoundProvider::CheckForMissingRelease() {
   for (int8_t k = BOOL3_MIN; k <= BOOL3_MAX; k++) {
     unsigned cnt = 0;
     bool max_release = false;
@@ -257,7 +257,7 @@ bool GOSoundProvider::СheckForMissingRelease() {
   return false;
 }
 
-bool GOSoundProvider::СheckForMissingAttack() {
+bool GOSoundProvider::CheckForMissingAttack() {
   for (int8_t k = BOOL3_MIN; k <= BOOL3_MAX; k++) {
     unsigned cnt = 0;
     bool max_release = false;
@@ -273,7 +273,7 @@ bool GOSoundProvider::СheckForMissingAttack() {
   return false;
 }
 
-bool GOSoundProvider::СheckMissingRelease() {
+bool GOSoundProvider::CheckMissingRelease() {
   if (IsOneshot())
     return false;
   for (int8_t k = BOOL3_MIN; k <= BOOL3_MAX; k++) {
@@ -292,7 +292,7 @@ bool GOSoundProvider::СheckMissingRelease() {
   }
   return false;
 }
-bool GOSoundProvider::СheckNotNecessaryRelease() {
+bool GOSoundProvider::CheckNotNecessaryRelease() {
   if (IsOneshot() && m_Release.size())
     return true;
   return false;

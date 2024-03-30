@@ -87,10 +87,10 @@ public:
 
   float GetVelocityVolume(unsigned velocity) const;
 
-  bool СheckForMissingAttack();
-  bool СheckForMissingRelease();
-  bool СheckMissingRelease();
-  bool СheckNotNecessaryRelease();
+  bool CheckForMissingAttack();
+  bool CheckForMissingRelease();
+  bool CheckMissingRelease();
+  bool CheckNotNecessaryRelease();
 
   GOSampleStatistic GetStatistic();
 };

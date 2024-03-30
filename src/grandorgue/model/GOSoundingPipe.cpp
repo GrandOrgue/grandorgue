@@ -412,21 +412,21 @@ void GOSoundingPipe::Validate() {
   if (!m_PipeConfigNode.GetEffectiveChannels())
     return;
 
-  if (m_SoundProvider.СheckForMissingAttack()) {
+  if (m_SoundProvider.CheckForMissingAttack()) {
     wxLogWarning(
       _("rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"),
       m_Rank->GetName().c_str(),
       GetLoadTitle().c_str());
   }
 
-  if (m_SoundProvider.СheckForMissingRelease()) {
+  if (m_SoundProvider.CheckForMissingRelease()) {
     wxLogWarning(
       _("rank %s pipe %s: default release is missing"),
       m_Rank->GetName().c_str(),
       GetLoadTitle().c_str());
   }
 
-  if (m_SoundProvider.СheckMissingRelease()) {
+  if (m_SoundProvider.CheckMissingRelease()) {
     wxLogWarning(
       _("rank %s pipe %s: no release defined"),
       m_Rank->GetName().c_str(),
@@ -435,7 +435,7 @@ void GOSoundingPipe::Validate() {
 
   if (
     !m_PipeConfigNode.IsEffectiveIndependentRelease()
-    && m_SoundProvider.СheckNotNecessaryRelease()) {
+    && m_SoundProvider.CheckNotNecessaryRelease()) {
     wxLogWarning(
       _("rank %s pipe %s: percussive sample with a release"),
       m_Rank->GetName().c_str(),
