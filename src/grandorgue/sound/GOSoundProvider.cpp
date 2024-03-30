@@ -217,13 +217,13 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
 }
 
 const GOSoundAudioSection *GOSoundProvider::GetRelease(
-  int8_t sampleGroup, unsigned playbackDurationMs) const {
+  GOBool3 waveTremulantStateFor, unsigned playbackDurationMs) const {
   const unsigned x = abs(rand());
   int best_match = -1;
 
   for (unsigned i = 0; i < m_Release.size(); i++) {
     const unsigned idx = (i + x) % m_Release.size();
-    if (m_ReleaseInfo[idx].m_WaveTremulantStateFor != sampleGroup)
+    if (m_ReleaseInfo[idx].m_WaveTremulantStateFor != waveTremulantStateFor)
       continue;
     if (m_ReleaseInfo[idx].max_playback_time < playbackDurationMs)
       continue;

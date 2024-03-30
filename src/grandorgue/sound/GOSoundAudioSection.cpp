@@ -50,6 +50,7 @@ void GOSoundAudioSection::ClearData() {
   m_SampleRate = 0;
   m_BitsPerSample = 0;
   m_BytesPerSample = 0;
+  m_WaveTremulantStateFor = BOOL3_DEFAULT;
   m_IsCompressed = false;
   m_Channels = 0;
   if (m_Data) {

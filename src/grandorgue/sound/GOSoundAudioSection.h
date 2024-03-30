@@ -178,7 +178,9 @@ public:
   ~GOSoundAudioSection();
   void ClearData();
   inline unsigned GetChannels() const { return m_Channels; }
-  inline int8_t GetSampleGroup() const { return m_WaveTremulantStateFor; }
+  inline GOBool3 GetWaveTremulantStateFor() const {
+    return m_WaveTremulantStateFor;
+  }
 
   unsigned GetBytesPerSample() const;
   unsigned GetLength() const;

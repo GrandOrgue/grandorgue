@@ -70,7 +70,7 @@ public:
   const GOSoundAudioSection *GetAttack(
     unsigned velocity, unsigned releasedDurationMs) const;
   const GOSoundAudioSection *GetRelease(
-    int8_t sampleGroup, unsigned playbackDurationMs) const;
+    GOBool3 waveTremulantStateFor, unsigned playbackDurationMs) const;
   float GetGain() const;
   int IsOneshot() const;
 
