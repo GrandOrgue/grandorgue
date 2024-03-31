@@ -360,7 +360,12 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   # In Fedora libcurl is based on openssl, but libcurl package does not provide such symbol.
   # As a workaround, we set the right symbol manually.
   set(CPACK_RPM_SPEC_MORE_DEFINE "%global __requires_exclude libcurl.*")
-  set(CPACK_RPM_PACKAGE_REQUIRES "libcurl.so.4")
+  if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64" OR "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+    # dnf tries to install the 32-bit package on x86_64 if '()(64bit)' is omitted
+    set(CPACK_RPM_PACKAGE_REQUIRES "libcurl.so.4()(64bit)")
+  else()
+    set(CPACK_RPM_PACKAGE_REQUIRES "libcurl.so.4")
+  endif()
 
   # prevent rpmlint errors
   set(
