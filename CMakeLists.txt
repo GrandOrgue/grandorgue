@@ -356,6 +356,12 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_DEMO_FILE_NAME RPM-DEFAULT)
   string (REPLACE ";" " " CPACK_RPM_PACKAGE_OBSOLETES "${OTHER_PACKAGE_NAMES}")
 
+  # On Ubuntu rpmbuild generates a libcurl.so.4(CURL_OPENSSL_4)(64bit) requirement for libcurl.
+  # In Fedora libcurl is based on openssl, but libcurl package does not provide such symbol.
+  # As a workaround, we set the right symbol manually.
+  set(CPACK_RPM_SPEC_MORE_DEFINE "%global __requires_exclude libcurl.*")
+  set(CPACK_RPM_PACKAGE_REQUIRES "libcurl.so.4")
+
   # prevent rpmlint errors
   set(
     CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
