@@ -31,12 +31,15 @@ You can download the source code archive from GitHub
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
 2. Install required software
     - Manually
-        1. Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
-        2. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+        1. Install gcc C++ compiler, make, cmake, imagemagic, pkg-config
+        2. Install the development packages of wxWigets, alsa (libasound), jack (libjack), fftw (fftw3), wavpack, yaml-cpp, zlib, libcurl, udev from your distribution.
+        
+            The exact name of packages difer from one distribution to another.             For example, on any debian-based distribution (including Ubuntu, Mint and Raspbian) they are libasound2-dev, libfftw3-dev, libjack-dev, libudev-dev, libwxgtk3.2-dev, libyaml-cpp-dev, zlib1g-dev, libcurl4-openssl-dev.
+        3. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution).
     - Or run the prepared scripts for certain linux distributions by a sudoer user:
         - on Fedora run ``<GO source tree>/build-scripts/for-linux/prepare-fedora.sh``
         - on OpenSuse run ``<GO source tree>/build-scripts/for-linux/prepare-opensuse.sh``
-        - on Debian 9+ or on Ubuntu 18+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-based.sh``
+        - on Debian 10+ or on Ubuntu 20+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-based.sh``
 3. Build
     - Manually
         1. Create an empty build directory, eg:
