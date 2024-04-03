@@ -176,9 +176,10 @@ You can download the source code archive from GitHub
         ```
         <GO source tree>/build-scripts/for-osx/build-on-osx.sh
         ```
-      Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
-      The built app will appear in the build/osx subdirectory of current directory.
-    4. For an incremental build `cd` to `build/osx`, run `make` again and code sign the app manually.
+        Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
+        
+        The built app will appear in the build/osx subdirectory of current directory.
+    4. For an incremental build ``cd`` to build/osx, run ``make`` again and code sign the app manually.
 
 ## Cross-building for Windows-64 bit on Linux
 
