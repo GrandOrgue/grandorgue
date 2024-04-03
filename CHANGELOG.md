@@ -1,3 +1,5 @@
+- Added a github build for macOS/Apple silicon https://github.com/GrandOrgue/grandorgue/discussions/1153
+- The macOS apps are ad-hoc code signed https://github.com/GrandOrgue/grandorgue/issues/1835
 # 3.14.0 (2024-03-29)
 - Fixed crash on loading an organ without a pedal but wit a unison-off coupler https://github.com/GrandOrgue/grandorgue/issues/1846
 - Changed displaying of the right part of paths https://github.com/GrandOrgue/grandorgue/issues/1663

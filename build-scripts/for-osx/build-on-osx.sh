@@ -23,7 +23,7 @@ rm -rf *
 export LANG=C
 
 case `arch` in
-  arm64) # Apple Silicon
+  arm64) # Apple silicon
   OS_PRMS="-DDOCBOOK_DIR=/opt/homebrew/opt/docbook-xsl/docbook-xsl"
   ;;
   i386) # Intel
