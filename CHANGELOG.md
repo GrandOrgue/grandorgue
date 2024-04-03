@@ -1,3 +1,4 @@
+# 3.14.0 (2024-03-29)
 - Fixed crash on loading an organ without a pedal but wit a unison-off coupler https://github.com/GrandOrgue/grandorgue/issues/1846
 - Changed displaying of the right part of paths https://github.com/GrandOrgue/grandorgue/issues/1663
 - Added automatic update checking at startup (configurable) and the ability to check for updates from Help menu  
