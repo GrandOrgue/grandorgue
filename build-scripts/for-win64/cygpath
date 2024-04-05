@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# A small script to fool MSYS2 version of wx-config.
+# Normal `cygpath` converts between MSYS2 paths and native Windows paths.
+# On Linux we don't need any conversions, but wx-config still executes `cygpath`.
+# This script just returns the original path and ignores any flags.
+
+for arg in "$@"; do
+      if [[ $arg == -* ]]; then
+          # Ignore
+          continue
+      fi
+      # Found the first argument that is not an option
+      echo "$arg"
+      exit 0
+done
