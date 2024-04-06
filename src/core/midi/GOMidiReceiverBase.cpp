@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -64,8 +64,9 @@ void GOMidiReceiverBase::Load(
   m_events.resize(0);
 
   int event_cnt = cfg.ReadInteger(
-    CMBSetting, group, wxT("NumberOfMIDIEvents"), -1, 255, false);
-  if (event_cnt >= 0) {
+    CMBSetting, group, wxT("NumberOfMIDIEvents"), 0, 255, false);
+
+  if (event_cnt > 0) {
     m_events.resize(event_cnt);
     for (unsigned i = 0; i < m_events.size(); i++) {
       m_events[i].deviceId = map.GetDeviceIdByLogicalName(cfg.ReadString(
