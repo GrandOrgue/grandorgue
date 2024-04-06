@@ -330,7 +330,7 @@ GOFrame::GOFrame(
     wxDefaultSize,
     choices);
   m_ToolBar->AddControl(m_ReleaseLength);
-  UpdateReleaseLength(m_config.ReleaseLength());
+  UpdateReleaseLength(0);
 
   m_ToolBar->AddTool(
     ID_TRANSPOSE,
@@ -492,8 +492,6 @@ void GOFrame::UpdateReleaseLength(unsigned releaseLength) {
 
   if (organController && organController->GetReleaseTail() != releaseLength)
     organController->SetReleaseTail(releaseLength);
-  if (m_config.ReleaseLength() != releaseLength)
-    m_config.ReleaseLength(releaseLength);
   if (m_ReleaseLength->GetSelection() != releaseLengthIndex)
     m_ReleaseLength->SetSelection(releaseLengthIndex);
 }
