@@ -157,29 +157,57 @@ You can download the source code archive from GitHub
         The built appimage will appear in the build/appimage-x86_64 subdirectory of current directory
 
 ## Building for macOS on macOS
+
 1. Prequisites:
     1. A macOS version supported by Homebrew (the three latest major versions of macOS)
     2. Xcode or Command Line Tools for Xcode
     3. Homebrew
+
 2. Extract the GO sources somewhere, eg: ~/documents/Projects/GrandOrgueDev/gosources using the Git method. The manual method may install the wrong version of an external submodule.
+
 3. Install the required software by running (the commands in)
     ```
     <GO source tree>/build-scripts/for-osx/prepare-osx.sh
     ```
+
 4. Build
-    1. Create an empty build folder, eg: ~/documents/Projects/GrandOrgueDev/gobuild
-    2. Change the working directory
-        ```
-        cd ~/documents/Projects/GrandOrgueDev/gobuild
-        ```
-    3. Run (the commands in) the prepared build script
-        ```
-        <GO source tree>/build-scripts/for-osx/build-on-osx.sh
-        ```
-        Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
-        
-        The built app will appear in the build/osx subdirectory of current directory.
-    4. For an incremental build ``cd`` to build/osx, run ``make`` again and code sign the app manually.
+    - Manually
+        1. Create an empty build folder, eg: ~/documents/Projects/GrandOrgueDev/gobuild
+
+        2. Change the working directory
+            ```
+            cd ~/documents/Projects/GrandOrgueDev/gobuild
+            ```
+
+        3. Run cmake:
+            - on Apple silicon
+                ```
+                cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/opt/homebrew/opt/docbook-xsl/docbook-xsl <GO source tree>
+                ```
+            - on Intel
+                ```
+                cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <GO source tree>
+                ```
+            Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to `cmake`.
+
+        4. Run make
+            ```
+            make
+            ```
+
+    - Automatically
+        1. Create an empty build folder, eg: ~/documents/Projects/GrandOrgueDev/gobuild
+
+        2. Change the working directory
+            ```
+            cd ~/documents/Projects/GrandOrgueDev/gobuild
+            ```
+
+        3. Run the prepared build script
+            ```
+            <GO source tree>/build-scripts/for-osx/build-on-osx.sh
+            ```
+            The built app will appear in the build/osx subdirectory of current directory.
 
 ## Cross-building for Windows-64 bit on Linux
 

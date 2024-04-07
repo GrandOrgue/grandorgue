@@ -1,5 +1,5 @@
 - Added support of macOS on Apple silicon. GrandOrgue for macOS on Apple silicon requires macOS 14 or higher. GrandOrgue for macOS on Intel requires macOS 12.1 or higher. https://github.com/GrandOrgue/grandorgue/discussions/1153
-- GrandOrgue for macOS is ad-hoc code signed https://github.com/GrandOrgue/grandorgue/issues/1835
+- Added ad-hoc code signing of GrandOrgue for macOS https://github.com/GrandOrgue/grandorgue/issues/1835
 # 3.14.0 (2024-03-29)
 - Fixed crash on loading an organ without a pedal but wit a unison-off coupler https://github.com/GrandOrgue/grandorgue/issues/1846
 - Changed displaying of the right part of paths https://github.com/GrandOrgue/grandorgue/issues/1663
