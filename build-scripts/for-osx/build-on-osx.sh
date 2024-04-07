@@ -34,11 +34,4 @@ GO_PRMS="-DCMAKE_BUILD_TYPE=Release $CMAKE_VERSION_PRMS"
 cmake -G "Unix Makefiles" $OS_PRMS $GO_PRMS . $SRC_DIR
 make -k $PARALLEL_PRMS VERBOSE=1 package
 
-codesign --force --sign - GrandOrgue.app/Contents/Frameworks/*.*
-codesign --force --sign - GrandOrgue.app/Contents/MacOS/GrandOrguePerfTest
-codesign --force --sign - GrandOrgue.app/Contents/MacOS/GrandOrgueTool
-codesign --force --sign - GrandOrgue.app
-echo "Checking code signature..."
-codesign --verify --deep GrandOrgue.app
-
 popd
