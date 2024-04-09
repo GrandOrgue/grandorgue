@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -30,6 +30,8 @@ enum GOMidiReceiverMessageType {
   MIDI_M_NOTE_ON,
   MIDI_M_NOTE_OFF,
   MIDI_M_NOTE_ON_OFF,
+  MIDI_M_NOTE_FIXED_ON,
+  MIDI_M_NOTE_FIXED_OFF,
   MIDI_M_CTRL_CHANGE_ON,
   MIDI_M_CTRL_CHANGE_OFF,
   MIDI_M_CTRL_CHANGE_ON_OFF,
