@@ -30,7 +30,7 @@ private:
   uint64_t m_LastStart;
   uint64_t m_LastStop;
   int m_Instances;
-  bool m_Tremulant;
+  bool m_IsWaveTremulantActive;
   std::vector<GOSoundProviderWave::AttackFileInfo> m_AttackFileInfos;
   std::vector<GOSoundProviderWave::ReleaseFileInfo> m_ReleaseFileInfos;
   wxString m_Filename;
@@ -100,10 +100,10 @@ private:
 
   // Callbacks from the console
   /**
-   * Called when the tremulant is switched on or off
+   * Called when a wave tremulant is switched on or off
    * @param on the new tremulant state
    */
-  void SetTremulant(bool on) override;
+  void SetWaveTremulant(bool on) override;
   /**
    * Called when the key is just pressed, released or the velocity is changed
    * @param velocity the velocity of key pressing. 0 means release

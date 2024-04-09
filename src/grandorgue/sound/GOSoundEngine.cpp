@@ -410,7 +410,7 @@ GOSoundSampler *GOSoundEngine::StartSample(
 
   GOSoundSampler *sampler = nullptr;
   const GOSoundAudioSection *section = isRelease
-    ? pipe->GetRelease(-1, eventIntervalMs)
+    ? pipe->GetRelease(BOOL3_DEFAULT, eventIntervalMs)
     : pipe->GetAttack(velocity, eventIntervalMs);
 
   if (pStartTimeSamples) {
@@ -490,7 +490,7 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
    * zero. */
   const GOSoundProvider *this_pipe = handle->pipe;
   const GOSoundAudioSection *release_section = this_pipe->GetRelease(
-    handle->stream.audio_section->GetSampleGroup(),
+    handle->stream.audio_section->GetWaveTremulantStateFor(),
     SamplesDiffToMs(handle->time, m_CurrentTime));
   unsigned cross_fade_len = release_section
     ? release_section->GetReleaseCrossfadeLength()

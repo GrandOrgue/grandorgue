@@ -83,7 +83,7 @@ void GOSoundProviderSynthedTrem::Create(
   std::vector<GOWaveLoop> trem_loops;
   trem_loops.push_back(trem_loop);
   AttackSelector attack_info;
-  attack_info.sample_group = -1;
+  attack_info.m_WaveTremulantStateFor = BOOL3_DEFAULT;
   attack_info.min_attack_velocity = 0;
   attack_info.max_released_time = -1;
   m_AttackInfo.push_back(attack_info);
@@ -97,14 +97,14 @@ void GOSoundProviderSynthedTrem::Create(
     sample_freq,
     trem_loop.m_EndPosition,
     &trem_loops,
-    -1,
+    BOOL3_DEFAULT,
     false,
     0,
     0);
 
   /* Release section */
   ReleaseSelector release_info;
-  release_info.sample_group = -1;
+  release_info.m_WaveTremulantStateFor = BOOL3_DEFAULT;
   release_info.max_playback_time = -1;
   m_ReleaseInfo.push_back(release_info);
   m_Release.push_back(new GOSoundAudioSection(pool));
@@ -117,7 +117,7 @@ void GOSoundProviderSynthedTrem::Create(
     sample_freq,
     release_samples,
     NULL,
-    -1,
+    BOOL3_DEFAULT,
     false,
     0,
     0);
