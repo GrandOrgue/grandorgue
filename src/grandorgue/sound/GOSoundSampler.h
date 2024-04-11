@@ -16,10 +16,10 @@ class GOSoundWindchestWorkItem;
 
 struct GOSoundSampler {
   GOSoundSampler *next;
-  const GOSoundProvider *pipe;
-  int sampler_group_id;
-  GOSoundWindchestWorkItem *windchest;
-  unsigned audio_group_id;
+  const GOSoundProvider *p_SoundProvider;
+  int m_SamplerTaskId;
+  GOSoundWindchestWorkItem *p_WindchestTask;
+  unsigned m_AudioGroupId;
   audio_section_stream stream;
   GOSoundFader fader;
   uint64_t time;

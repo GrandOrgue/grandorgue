@@ -30,7 +30,7 @@ GORank::GORank(GOOrganModel &organModel)
     m_NoteStopVelocities(),
     m_MaxNoteVelocities(),
     m_FirstMidiNoteNumber(0),
-    m_WindchestGroup(0),
+    m_WindchestN(0),
     m_HarmonicNumber(8),
     m_MinVolume(100),
     m_MaxVolume(100),
@@ -52,24 +52,25 @@ void GORank::Resize() {
 
 void GORank::Init(
   GOConfigReader &cfg,
-  wxString group,
-  wxString name,
-  int first_midi_note_number,
-  unsigned windchest_nr) {
+  const wxString &group,
+  const wxString &name,
+  unsigned firstMidiNoteNumber,
+  unsigned windchestN) {
   r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
 
-  m_FirstMidiNoteNumber = first_midi_note_number;
+  m_FirstMidiNoteNumber = firstMidiNoteNumber;
   m_Name = name;
 
   m_PipeConfig.Init(cfg, group, wxEmptyString);
-  m_WindchestGroup = windchest_nr;
+  m_WindchestN = windchestN;
   m_HarmonicNumber = 8;
   m_MinVolume = 100;
   m_MaxVolume = 100;
   m_RetuneRank = false;
 
-  GOWindchest *windchest = r_OrganModel.GetWindchest(m_WindchestGroup - 1);
+  GOWindchest *windchest = r_OrganModel.GetWindchest(m_WindchestN - 1);
+
   windchest->AddRank(this);
   m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
@@ -80,7 +81,7 @@ void GORank::Init(
 }
 
 void GORank::Load(
-  GOConfigReader &cfg, wxString group, int first_midi_note_number) {
+  GOConfigReader &cfg, const wxString &group, int defaultFirstMidiNoteNumber) {
   r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
 
@@ -90,19 +91,19 @@ void GORank::Load(
     wxT("FirstMidiNoteNumber"),
     0,
     256,
-    first_midi_note_number < 0,
-    first_midi_note_number);
+    defaultFirstMidiNoteNumber < 0,
+    std::max(defaultFirstMidiNoteNumber, 0));
   m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 
   unsigned number_of_logical_pipes
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
   m_PipeConfig.Load(cfg, group, wxEmptyString);
-  m_WindchestGroup = cfg.ReadInteger(
+  m_WindchestN = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("WindchestGroup"),
     1,
-    r_OrganModel.GetWindchestGroupCount());
+    r_OrganModel.GetWindchestCount());
   m_HarmonicNumber = cfg.ReadInteger(
     ODFSetting, group, wxT("HarmonicNumber"), 1, 1024, false, 8);
   m_MinVolume = cfg.ReadFloat(
@@ -112,7 +113,8 @@ void GORank::Load(
   m_RetuneRank
     = cfg.ReadBoolean(ODFSetting, group, wxT("AcceptsRetuning"), false, true);
 
-  GOWindchest *windchest = r_OrganModel.GetWindchest(m_WindchestGroup - 1);
+  GOWindchest *windchest = r_OrganModel.GetWindchest(m_WindchestN - 1);
+
   windchest->AddRank(this);
   m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
@@ -131,7 +133,7 @@ void GORank::Load(
       m_Pipes.push_back(new GOSoundingPipe(
         &r_OrganModel,
         this,
-        m_WindchestGroup,
+        m_WindchestN,
         m_FirstMidiNoteNumber + i,
         m_HarmonicNumber,
         m_MinVolume,

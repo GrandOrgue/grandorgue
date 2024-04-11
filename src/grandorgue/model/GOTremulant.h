@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -34,7 +34,7 @@ private:
   GOSoundProvider *m_TremProvider;
   GOSoundSampler *m_PlaybackHandle;
   uint64_t m_LastStop;
-  int m_SamplerGroupID;
+  unsigned m_TremulantN;
 
   void InitSoundProvider(GOMemoryPool &pool);
   void ChangeState(bool on);
@@ -53,7 +53,7 @@ private:
 public:
   GOTremulant(GOOrganModel &organModel);
   ~GOTremulant();
-  void Load(GOConfigReader &cfg, wxString group, int sampler_group_id);
+  void Load(GOConfigReader &cfg, const wxString &group, unsigned tremulantN);
   GOTremulantType GetTremulantType();
 
   const wxString &GetMidiTypeCode() const override;

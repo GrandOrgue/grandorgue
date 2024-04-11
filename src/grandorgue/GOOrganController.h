@@ -51,7 +51,6 @@ class GODocument;
 class GOSoundEngine;
 class GOSoundProvider;
 class GOSoundRecorder;
-class GOSoundSampler;
 typedef struct _GOHashType GOHashType;
 
 class GOOrganController : public GOEventDistributor,

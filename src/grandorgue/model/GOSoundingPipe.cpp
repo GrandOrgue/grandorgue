@@ -27,7 +27,7 @@
 GOSoundingPipe::GOSoundingPipe(
   GOOrganModel *pOrganModel,
   GORank *rank,
-  int sampler_group_id,
+  unsigned windchestN,
   unsigned midi_key_number,
   unsigned harmonic_number,
   float min_volume,
@@ -43,7 +43,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_AttackFileInfos(),
     m_ReleaseFileInfos(),
     m_Filename(),
-    m_SamplerGroupID(sampler_group_id),
+    m_WindchestN(windchestN),
     m_AudioGroupID(0),
     m_TemperamentOffset(0),
     m_HarmonicNumber(harmonic_number),
@@ -71,7 +71,7 @@ void GOSoundingPipe::Init(
   m_OdfMidiKeyNumber = -1;
   m_OdfMidiPitchFraction = -1.0;
   UpdateAmplitude();
-  p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+  p_OrganModel->GetWindchest(m_WindchestN - 1)->AddPipe(this);
 
   GOSoundProviderWave::AttackFileInfo ainfo;
 
@@ -232,14 +232,14 @@ void GOSoundingPipe::Load(
     1024,
     false,
     m_HarmonicNumber);
-  m_SamplerGroupID = cfg.ReadInteger(
+  m_WindchestN = cfg.ReadInteger(
     ODFSetting,
     group,
     prefix + wxT("WindchestGroup"),
     1,
-    p_OrganModel->GetWindchestGroupCount(),
+    p_OrganModel->GetWindchestCount(),
     false,
-    m_SamplerGroupID);
+    m_WindchestN);
   m_OdfMidiKeyNumber = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("MIDIKeyNumber"), -1, 127, false, -1);
   m_OdfMidiPitchFraction = cfg.ReadFloat(
@@ -253,7 +253,7 @@ void GOSoundingPipe::Load(
   m_RetunePipe = cfg.ReadBoolean(
     ODFSetting, group, prefix + wxT("AcceptsRetuning"), false, m_RetunePipe);
   UpdateAmplitude();
-  p_OrganModel->GetWindchest(m_SamplerGroupID - 1)->AddPipe(this);
+  p_OrganModel->GetWindchest(m_WindchestN - 1)->AddPipe(this);
 
   unsigned attack_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("AttackCount"), 0, 100, false, 0);
@@ -492,9 +492,9 @@ void GOSoundingPipe::VelocityChanged(
 
   if (!m_Instances && velocity) {
     // the key pressed
-    m_Sampler = pSoundEngine ? pSoundEngine->StartSample(
+    m_Sampler = pSoundEngine ? pSoundEngine->StartPipeSample(
                   &m_SoundProvider,
-                  m_SamplerGroupID,
+                  m_WindchestN,
                   m_AudioGroupID,
                   velocity,
                   m_PipeConfigNode.GetEffectiveDelay(),
@@ -515,9 +515,9 @@ void GOSoundingPipe::VelocityChanged(
         : 0;
       m_Sampler = nullptr;
     } else if (m_PipeConfigNode.IsEffectiveIndependentRelease() && pSoundEngine)
-      pSoundEngine->StartSample(
+      pSoundEngine->StartPipeSample(
         &m_SoundProvider,
-        m_SamplerGroupID,
+        m_WindchestN,
         m_AudioGroupID,
         last_velocity,
         m_PipeConfigNode.GetEffectiveDelay(),

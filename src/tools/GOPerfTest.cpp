@@ -146,7 +146,8 @@ void GOPerfTestApp::RunTest(
       float output_buffer[samples_per_frame * 2];
 
       for (unsigned i = 0; i < pipes.size(); i++) {
-        GOSoundSampler *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
+        GOSoundSampler *handle
+          = engine->StartPipeSample(pipes[i], 1, 0, 127, 0, 0);
         if (handle)
           handles.push_back(handle);
       }
