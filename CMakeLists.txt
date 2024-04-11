@@ -79,9 +79,9 @@ include(${CMAKE_SOURCE_DIR}/cmake/BuildExecutable.cmake)
 
 IF (APPLE)
   set(BININSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
-  SET(LIBINSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
+  SET(LIBINSTDIR "${PROJECT_NAME}.app/Contents/Frameworks")
   SET(RESOURCEINSTDIR "${PROJECT_NAME}.app/Contents/Resources")
-  SET(RPATH_PREFIX "@executable_path")
+  SET(RPATH_PREFIX "${PROJECT_NAME}.app/Contents/Frameworks")
 ELSE()
   set(BININSTDIR "bin")
   IF (WIN32)
@@ -277,18 +277,26 @@ set(CPACK_COMPONENT_UNSPECIFIED_DEPENDS resources)
 set(CPACK_COMPONENT_DEMO_DEPENDS Unspecified)
 
 if (APPLE)
-   # see the following URL for information about these variables
-   # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-   set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
-   set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
+  # see the following URL for information about these variables
+  # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+  set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
+  set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
 
-   set(CPACK_PACKAGE_ICON "${RESOURCEDIR}/GrandOrgue.icns")
+  set(CPACK_PACKAGE_ICON "${RESOURCEDIR}/GrandOrgue.icns")
 
-   configure_file(${CMAKE_SOURCE_DIR}/src/grandorgue/resource/Info.plist.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
-   INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
+  configure_file(${CMAKE_SOURCE_DIR}/src/grandorgue/resource/Info.plist.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
+  INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
 
-  set (CPACK_SYSTEM_NAME "osx")
-  set (CPACK_GENERATOR DragNDrop)
+  add_custom_target(
+    macOSApplication
+    ALL
+    DEPENDS GrandOrgue GrandOrgueTool GrandOrguePerfTest resources # run after building these targets
+    COMMAND "${CMAKE_COMMAND}" -DAPP_DIR="${CMAKE_BINARY_DIR}" -P "${CMAKE_SOURCE_DIR}/cmake/SignMacOSApp.cmake"
+  )
+
+  set(CPACK_SYSTEM_NAME "macOS")
+  set(CPACK_GENERATOR DragNDrop)
+  set(CPACK_PRE_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/cmake/SignMacOSApp.cmake")
 
 elseif (WIN32)
 
