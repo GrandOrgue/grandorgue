@@ -1,3 +1,4 @@
+# 3.14.1 (2024-04-17)
 - Fixed changing sound of a playing pipe without Pipe999IsTremulant when a wave tremulant state is changed https://github.com/GrandOrgue/grandorgue/issues/1855
 - Fixed crash on opening a very old config https://github.com/GrandOrgue/grandorgue/discussions/1869
 - Fixed ignoring initial midi setup when loading an organ with a preset without midi events configured https://github.com/GrandOrgue/grandorgue/issues/1785
