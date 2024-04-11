@@ -1,3 +1,4 @@
+- Fixed an error that occurred when trying to install the GrandOrgue RPM package https://github.com/GrandOrgue/grandorgue/issues/1859
 # 3.14.0 (2024-03-29)
 - Fixed crash on loading an organ without a pedal but wit a unison-off coupler https://github.com/GrandOrgue/grandorgue/issues/1846
 - Changed displaying of the right part of paths https://github.com/GrandOrgue/grandorgue/issues/1663
