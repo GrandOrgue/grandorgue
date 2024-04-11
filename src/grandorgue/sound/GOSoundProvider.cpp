@@ -35,7 +35,7 @@ GOSoundProvider::GOSoundProvider()
   : m_MidiKeyNumber(0),
     m_MidiPitchFract(0),
     m_Tuning(1),
-    m_SampleGroup(false),
+    m_IsWaveTremulantActive(BOOL3_FALSE),
     m_ReleaseTail(0),
     m_Attack(),
     m_AttackInfo(),
@@ -128,21 +128,21 @@ bool GOSoundProvider::SaveCache(GOCacheWriter &cache) const {
 
 void GOSoundProvider::ComputeReleaseAlignmentInfo() {
   std::vector<const GOSoundAudioSection *> sections;
-  for (int k = -1; k < 2; k++) {
+  for (int8_t k = BOOL3_MIN; k <= BOOL3_MAX; ++k) {
     sections.clear();
     for (unsigned i = 0; i < m_Attack.size(); i++)
-      if (m_AttackInfo[i].sample_group == k)
+      if (m_AttackInfo[i].m_WaveTremulantStateFor == k)
         sections.push_back(m_Attack[i]);
     for (unsigned i = 0; i < m_Release.size(); i++)
-      if (m_ReleaseInfo[i].sample_group == k)
+      if (m_ReleaseInfo[i].m_WaveTremulantStateFor == k)
         m_Release[i]->SetupStreamAlignment(sections, 0);
 
     sections.clear();
     for (unsigned i = 0; i < m_Attack.size(); i++)
-      if (m_AttackInfo[i].sample_group != k)
+      if (m_AttackInfo[i].m_WaveTremulantStateFor != k)
         sections.push_back(m_Attack[i]);
     for (unsigned i = 0; i < m_Attack.size(); i++)
-      if (m_AttackInfo[i].sample_group == k)
+      if (m_AttackInfo[i].m_WaveTremulantStateFor == k)
         m_Attack[i]->SetupStreamAlignment(sections, 1);
   }
 
@@ -193,8 +193,9 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
   for (unsigned i = 0; i < m_Attack.size(); i++) {
     const unsigned idx = (i + x) % m_Attack.size();
     if (
-      m_AttackInfo[idx].sample_group != -1
-      && m_AttackInfo[idx].sample_group != (int8_t)m_SampleGroup)
+      m_AttackInfo[idx].m_WaveTremulantStateFor != BOOL3_DEFAULT
+      && m_AttackInfo[idx].m_WaveTremulantStateFor
+        != to_bool3(m_IsWaveTremulantActive))
       continue;
     if (m_AttackInfo[idx].min_attack_velocity > velocity)
       continue;
@@ -216,13 +217,13 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
 }
 
 const GOSoundAudioSection *GOSoundProvider::GetRelease(
-  int8_t sampleGroup, unsigned playbackDurationMs) const {
+  GOBool3 waveTremulantStateFor, unsigned playbackDurationMs) const {
   const unsigned x = abs(rand());
   int best_match = -1;
 
   for (unsigned i = 0; i < m_Release.size(); i++) {
     const unsigned idx = (i + x) % m_Release.size();
-    if (m_ReleaseInfo[idx].sample_group != sampleGroup)
+    if (m_ReleaseInfo[idx].m_WaveTremulantStateFor != waveTremulantStateFor)
       continue;
     if (m_ReleaseInfo[idx].max_playback_time < playbackDurationMs)
       continue;
@@ -240,12 +241,12 @@ const GOSoundAudioSection *GOSoundProvider::GetRelease(
   return NULL;
 }
 
-bool GOSoundProvider::checkForMissingRelease() {
-  for (int k = -1; k < 2; k++) {
+bool GOSoundProvider::CheckForMissingRelease() {
+  for (int8_t k = BOOL3_MIN; k <= BOOL3_MAX; k++) {
     unsigned cnt = 0;
     bool max_release = false;
     for (unsigned i = 0; i < m_Release.size(); i++)
-      if (m_ReleaseInfo[i].sample_group == k) {
+      if (m_ReleaseInfo[i].m_WaveTremulantStateFor == k) {
         cnt++;
         if (m_ReleaseInfo[i].max_playback_time == (unsigned)-1)
           max_release = true;
@@ -256,12 +257,12 @@ bool GOSoundProvider::checkForMissingRelease() {
   return false;
 }
 
-bool GOSoundProvider::checkForMissingAttack() {
-  for (int k = -1; k < 2; k++) {
+bool GOSoundProvider::CheckForMissingAttack() {
+  for (int8_t k = BOOL3_MIN; k <= BOOL3_MAX; k++) {
     unsigned cnt = 0;
     bool max_release = false;
     for (unsigned i = 0; i < m_Attack.size(); i++)
-      if (m_AttackInfo[i].sample_group == k) {
+      if (m_AttackInfo[i].m_WaveTremulantStateFor == k) {
         cnt++;
         if (m_AttackInfo[i].max_released_time == (unsigned)-1)
           max_release = true;
@@ -272,26 +273,26 @@ bool GOSoundProvider::checkForMissingAttack() {
   return false;
 }
 
-bool GOSoundProvider::checkMissingRelease() {
+bool GOSoundProvider::CheckMissingRelease() {
   if (IsOneshot())
     return false;
-  for (int k = -1; k < 2; k++) {
+  for (int8_t k = BOOL3_MIN; k <= BOOL3_MAX; k++) {
     bool found = false;
     for (unsigned i = 0; i < m_Attack.size() && !found; i++)
-      if (m_AttackInfo[i].sample_group == k)
+      if (m_AttackInfo[i].m_WaveTremulantStateFor == k)
         found = true;
     if (!found)
       continue;
     found = false;
     for (unsigned i = 0; i < m_Release.size() && !found; i++)
-      if (m_ReleaseInfo[i].sample_group == k)
+      if (m_ReleaseInfo[i].m_WaveTremulantStateFor == k)
         found = true;
     if (!found)
       return true;
   }
   return false;
 }
-bool GOSoundProvider::checkNotNecessaryRelease() {
+bool GOSoundProvider::CheckNotNecessaryRelease() {
   if (IsOneshot() && m_Release.size())
     return true;
   return false;

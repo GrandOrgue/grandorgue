@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -102,7 +102,7 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   for (unsigned i = 0; i < NumberOfTremulants; i++) {
     m_tremulants.push_back(new GOTremulant(*this));
     m_tremulants[i]->Load(
-      cfg, wxString::Format(wxT("Tremulant%03d"), i + 1), -((int)(i + 1)));
+      cfg, wxString::Format(wxT("Tremulant%03d"), i + 1), i + 1);
   }
 
   for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
@@ -204,12 +204,6 @@ void GOOrganModel::UpdateVolume() {
   for (unsigned i = 0; i < m_windchests.size(); i++)
     m_windchests[i]->UpdateVolume();
 }
-
-GOWindchest *GOOrganModel::GetWindchest(unsigned index) {
-  return m_windchests[index];
-}
-
-unsigned GOOrganModel::GetWindchestGroupCount() { return m_windchests.size(); }
 
 unsigned GOOrganModel::AddWindchest(GOWindchest *windchest) {
   m_windchests.push_back(windchest);

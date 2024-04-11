@@ -11,9 +11,11 @@
 #include <atomic>
 #include <vector>
 
-#include "GOSoundResample.h"
-#include "GOSoundSamplerPool.h"
 #include "scheduler/GOSoundScheduler.h"
+
+#include "GOSoundResample.h"
+#include "GOSoundSampler.h"
+#include "GOSoundSamplerPool.h"
 
 class GOWindchest;
 class GOSoundProvider;
@@ -33,10 +35,10 @@ typedef struct {
   std::vector<std::vector<float>> scale_factors;
 } GOAudioOutputConfiguration;
 
-class GOSoundSampler;
-
 class GOSoundEngine {
 private:
+  static constexpr int DETACHED_RELEASE_TASK_ID = 0;
+
   unsigned m_PolyphonySoftLimit;
   bool m_PolyphonyLimiting;
   bool m_ScaledReleases;
@@ -54,14 +56,13 @@ private:
   std::atomic_uint m_UsedPolyphony;
   unsigned m_WorkerSlots;
   std::vector<double> m_MeterInfo;
-  ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
-  ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
-  ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
-  ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
+  ptr_vector<GOSoundTremulantWorkItem> m_TremulantTasks;
+  ptr_vector<GOSoundWindchestWorkItem> m_WindchestTasks;
+  ptr_vector<GOSoundGroupWorkItem> m_AudioGroupTasks;
+  ptr_vector<GOSoundOutputWorkItem> m_AudioOutputTasks;
   GOSoundRecorder *m_AudioRecorder;
   GOSoundReleaseWorkItem *m_ReleaseProcessor;
-  std::unique_ptr<GOSoundTouchWorkItem> m_TouchProcessor;
-
+  std::unique_ptr<GOSoundTouchWorkItem> m_TouchTask;
   GOSoundScheduler m_Scheduler;
 
   struct resampler_coefs_s m_ResamplerCoefs;
@@ -70,13 +71,32 @@ private:
 
   unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples);
 
-  /* samplerGroupID:
+  /* samplerTaskId:
      -1 .. -n Tremulants
-     0 detached release
+     0 (DETACHED_RELEASE_TASK_ID) detached release
      1 .. n Windchests
   */
-  void StartSampler(
-    GOSoundSampler *sampler, int sampler_group_id, unsigned audio_group);
+  inline static unsigned isWindchestTask(int taskId) { return taskId >= 0; }
+
+  inline static unsigned windchestTaskToIndex(int taskId) {
+    return (unsigned)taskId;
+  }
+
+  inline static unsigned tremulantTaskToIndex(int taskId) {
+    return -taskId - 1;
+  }
+
+  void StartSampler(GOSoundSampler *sampler);
+
+  GOSoundSampler *StartTaskSample(
+    const GOSoundProvider *soundProvider,
+    int samplerTaskId,
+    unsigned audioGroup,
+    unsigned velocity,
+    unsigned delay,
+    uint64_t prevEventTime,
+    bool isRelease,
+    uint64_t *pStartTimeSamples);
   void CreateReleaseSampler(GOSoundSampler *sampler);
   void SwitchAttackSampler(GOSoundSampler *sampler);
   float GetRandomFactor();
@@ -106,15 +126,34 @@ public:
   const std::vector<double> &GetMeterInfo();
   void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 
-  GOSoundSampler *StartSample(
-    const GOSoundProvider *pipe,
-    int8_t sampler_group_id,
-    unsigned audio_group,
+  inline GOSoundSampler *StartPipeSample(
+    const GOSoundProvider *pipeProvider,
+    unsigned windchestN,
+    unsigned audioGroup,
     unsigned velocity,
     unsigned delay,
     uint64_t prevEventTime,
     bool isRelease = false,
-    uint64_t *pStartTimeSamples = nullptr);
+    uint64_t *pStartTimeSamples = nullptr) {
+    return StartTaskSample(
+      pipeProvider,
+      windchestN,
+      audioGroup,
+      velocity,
+      delay,
+      prevEventTime,
+      isRelease,
+      pStartTimeSamples);
+  }
+
+  inline GOSoundSampler *StartTremulantSample(
+    const GOSoundProvider *tremProvider,
+    unsigned tremulantN,
+    uint64_t prevEventTime) {
+    return StartTaskSample(
+      tremProvider, -tremulantN, 0, 0x7f, 0, prevEventTime, false, nullptr);
+  }
+
   uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void UpdateVelocity(

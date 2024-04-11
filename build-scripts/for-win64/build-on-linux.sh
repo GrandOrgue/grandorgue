@@ -41,11 +41,6 @@ CMAKE_WIN_PRMS="-DASIO_SDK_DIR=/usr/local/asio-sdk \
   -DRTAUDIO_USE_ASIO=ON \
   -DVC_PATH=/usr/local/share/wine/msvc/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86"
 
-# additional dir for finding dlls. Only for debian-based
-if [[ ! -f $MINGW_DIR/bin/libstdc++-6.dll ]] && [[ -d "$CPP_DLL_DIR" ]]; then
-  CMAKE_WIN_PRMS="$CMAKE_WIN_PRMS -DDEPEND_ADD_DIRS=$CPP_DLL_DIR"
-fi
-
 CMAKE_APP_PRMS="-DGO_USE_JACK=ON $CMAKE_VERSION_PRMS"
 
 cmake $CMAKE_MINGW_PRMS $CMAKE_WIN_PRMS $CMAKE_APP_PRMS . $SRC_DIR

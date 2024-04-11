@@ -105,21 +105,21 @@ void GOMetronome::Load(GOConfigReader &cfg) {
   GOWindchest *windchest = new GOWindchest(*m_OrganController);
   windchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
   windchest->GetPipeConfig().GetPipeConfig().SetPercussiveFromInit(BOOL3_TRUE);
-  unsigned samplegroup = m_OrganController->AddWindchest(windchest);
+  unsigned windchestN = m_OrganController->AddWindchest(windchest);
 
   m_rank = new GORank(*m_OrganController);
-  m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, samplegroup);
+  m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, windchestN);
   m_StopID = m_rank->RegisterStop(NULL);
   m_OrganController->AddRank(m_rank);
 
   GOSoundingPipe *pipe;
   pipe = new GOSoundingPipe(
-    m_OrganController, m_rank, samplegroup, 36, 8, 100, 100, false);
+    m_OrganController, m_rank, windchestN, 36, 8, 100, 100, false);
   m_rank->AddPipe(pipe);
   pipe->Init(
     cfg, wxT("MetronomSounds"), wxT("A"), wxT("sounds\\metronome\\beat.wv"));
   pipe = new GOSoundingPipe(
-    m_OrganController, m_rank, samplegroup, 37, 8, 100, 100, false);
+    m_OrganController, m_rank, windchestN, 37, 8, 100, 100, false);
   m_rank->AddPipe(pipe);
   pipe->Init(
     cfg,

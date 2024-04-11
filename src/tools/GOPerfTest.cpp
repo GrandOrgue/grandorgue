@@ -93,7 +93,7 @@ void GOPerfTestApp::RunTest(
         GOSoundProviderWave::AttackFileInfo ainfo;
 
         ainfo.filename.Assign(wxString::Format(wxT("%02d.wav"), i % 3));
-        ainfo.sample_group = -1;
+        ainfo.m_WaveTremulantStateFor = BOOL3_DEFAULT;
         ainfo.load_release = true;
         ainfo.percussive = false;
         ainfo.min_attack_velocity = 0;
@@ -146,7 +146,8 @@ void GOPerfTestApp::RunTest(
       float output_buffer[samples_per_frame * 2];
 
       for (unsigned i = 0; i < pipes.size(); i++) {
-        GOSoundSampler *handle = engine->StartSample(pipes[i], 1, 0, 127, 0, 0);
+        GOSoundSampler *handle
+          = engine->StartPipeSample(pipes[i], 1, 0, 127, 0, 0);
         if (handle)
           handles.push_back(handle);
       }

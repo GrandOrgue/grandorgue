@@ -135,9 +135,11 @@ public:
   void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();
 
-  unsigned GetWindchestGroupCount();
+  unsigned GetWindchestCount() const { return m_windchests.size(); }
+  // Returns the windchest number starting with 1
   unsigned AddWindchest(GOWindchest *windchest);
-  GOWindchest *GetWindchest(unsigned index);
+  // Returns the windchest by it's index starting with 0
+  GOWindchest *GetWindchest(unsigned index) { return m_windchests[index]; }
 
   GOEnclosure *GetEnclosureElement(unsigned index);
   unsigned GetEnclosureCount();
