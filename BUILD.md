@@ -34,7 +34,7 @@ You can download the source code archive from GitHub
         1. Install gcc C++ compiler, make, cmake, imagemagic, pkg-config
         2. Install the development packages of wxWigets, alsa (libasound), jack (libjack), fftw (fftw3), wavpack, yaml-cpp, zlib, libcurl, udev from your distribution.
         
-            The exact name of packages difer from one distribution to another.             For example, on any debian-based distribution (including Ubuntu, Mint and Raspbian) they are libasound2-dev, libfftw3-dev, libjack-dev, libudev-dev, libwxgtk3.2-dev, libyaml-cpp-dev, zlib1g-dev, libcurl4-openssl-dev.
+            The exact name of packages differ from one distribution to another.             For example, on any debian-based distribution (including Ubuntu, Mint and Raspbian) they are libasound2-dev, libfftw3-dev, libjack-dev, libudev-dev, libwxgtk3.2-dev, libyaml-cpp-dev, zlib1g-dev, libcurl4-openssl-dev.
         3. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution).
     - Or run the prepared scripts for certain linux distributions by a sudoer user:
         - on Fedora run ``<GO source tree>/build-scripts/for-linux/prepare-fedora.sh``
