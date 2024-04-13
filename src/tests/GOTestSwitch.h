@@ -20,7 +20,7 @@ public:
   GOTestSwitch() { name = "GOTestSwitch"; }
   virtual ~GOTestSwitch();
   virtual void run();
-  //   std::string GetName();
+  std::string GetName();
 };
 
 #endif

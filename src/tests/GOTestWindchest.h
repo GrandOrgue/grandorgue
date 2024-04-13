@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,7 +21,7 @@ private:
   std::string name = "Windchest";
 
 public:
-  GOTestWindchest() { name = "Windchest"; }
+  GOTestWindchest() { name = "GOTestWindchest"; }
   virtual ~GOTestWindchest();
   virtual void run();
   std::string GetName();
