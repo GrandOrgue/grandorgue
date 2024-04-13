@@ -21,4 +21,4 @@ void GOTestSwitch::run() {
   this->GOAssert(go_switch->GetIndexInManual() == 0, message);
 }
 
-// std::string GOTestSwitch::GetName() { return name; }
+std::string GOTestSwitch::GetName() { return name; }
