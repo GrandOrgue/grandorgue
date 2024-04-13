@@ -1,3 +1,4 @@
+- Fixed ignoring initial midi setup when loading an organ with a preset without midi events configured https://github.com/GrandOrgue/grandorgue/issues/1785
 - Fixed saving Max release tail to the organ preset https://github.com/GrandOrgue/grandorgue/issues/1804
 - Fixed required package names in the BUILD.md file https://github.com/GrandOrgue/grandorgue/issues/1799
 - Added support of macOS on Apple silicon. GrandOrgue for macOS on Apple silicon requires macOS 14 or higher. GrandOrgue for macOS on Intel requires macOS 12.1 or higher. https://github.com/GrandOrgue/grandorgue/discussions/1153
