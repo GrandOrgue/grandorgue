@@ -9,17 +9,7 @@ include(UsewxWidgets)
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/src/core)
 
 add_subdirectory(common)
-
-# Add here your tests files
-
-set(go_tests
-    GOTestOrganModel.cpp
-    GOTestSwitch.cpp
-    GOTestWindchest.cpp
-)
-add_library(GOTests STATIC ${go_tests})
-
-target_link_libraries(GOTests GOTestLib)
+add_subdirectory(testing)
 
 
 add_option(-mmmx)
@@ -38,6 +28,7 @@ target_link_libraries(GOTestExe golib)
 target_link_libraries(GOTestExe GOTests)
 target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests)
 target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/common)
+target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/testing)
 target_include_directories(GOTests PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/common)
 BUILD_EXECUTABLE(GOTestExe)
 
