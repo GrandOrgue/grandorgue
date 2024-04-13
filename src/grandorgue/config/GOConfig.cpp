@@ -194,7 +194,6 @@ GOConfig::GOConfig(wxString instance)
     PolyphonyLimit(
       this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
     Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
-    ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
     LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
     BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
     Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),

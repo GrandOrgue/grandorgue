@@ -121,7 +121,6 @@ public:
   GOSettingInteger Volume;
   GOSettingUnsigned PolyphonyLimit;
   GOSettingUnsigned Preset;
-  GOSettingUnsigned ReleaseLength;
   GOSettingString LanguageCode;
 
   class GOSettingUnsignedBit : public GOSettingUnsigned {
