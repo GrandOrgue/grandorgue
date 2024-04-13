@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -33,7 +33,7 @@ void GOTestWindchest::run() {
   this->GOAssert(w_size == 2, message);
 
   // Check the Windchest count function
-  w_size = this->controller->GetWindchestGroupCount();
+  w_size = this->controller->GetWindchestCount();
   message = "Windchest count is wrong";
   this->GOAssert(w_size == 2, message);
 
