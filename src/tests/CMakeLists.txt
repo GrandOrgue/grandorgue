@@ -8,29 +8,18 @@ add_option(-mstackrealign)
 include(UsewxWidgets)
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/src/core)
 
+add_subdirectory(common)
+
 # Add here your tests files
-set(go_test_lib
-    # Test framework - Don't modify
-    GOTestResult.cpp
-    GOTestResultCollection.cpp
-    GOTest.cpp
-    GOTestCollection.cpp
-    # Add here the individual tests
-    GOTestWindchest.cpp
-    GOTestSwitch.cpp
-    # GOOrganModel
+
+set(go_tests
     GOTestOrganModel.cpp
+    GOTestSwitch.cpp
+    GOTestWindchest.cpp
 )
+add_library(GOTests STATIC ${go_tests})
 
-add_library(GOTestLib STATIC ${go_test_lib})
-find_package(cpptrace REQUIRED)
-
-target_link_libraries(GOTestLib cpptrace::cpptrace)
-target_link_libraries(GOTestLib GrandOrgueCore)
-target_link_libraries(GOTestLib golib)
-
-target_include_directories(GOTestLib PUBLIC ${CMAKE_SOURCE_DIR}/src/tests)
-target_include_directories(GOTestLib PUBLIC ${CMAKE_SOURCE_DIR}/src/grandorgue)
+target_link_libraries(GOTests GOTestLib)
 
 
 add_option(-mmmx)
@@ -46,7 +35,10 @@ add_executable(GOTestExe GOTestExe.cpp)
 
 target_link_libraries(GOTestExe GOTestLib)
 target_link_libraries(GOTestExe golib)
+target_link_libraries(GOTestExe GOTests)
 target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests)
+target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/common)
+target_include_directories(GOTests PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/common)
 BUILD_EXECUTABLE(GOTestExe)
 
 add_test(NAME GOTestExe COMMAND GOTestExe)
