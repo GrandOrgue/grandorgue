@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -36,6 +36,17 @@ void GOEventHandlerList::RegisterMidiConfigurator(GOMidiConfigurator *obj) {
 void GOEventHandlerList::RegisterSoundStateHandler(
   GOSoundStateHandler *handler) {
   m_SoundStateHandlers.push_back(handler);
+}
+
+void GOEventHandlerList::UnRegisterSoundStateHandler(
+  GOSoundStateHandler *handler) {
+  auto it = std::find(
+    m_SoundStateHandlers.begin(), m_SoundStateHandlers.end(), handler);
+
+  if (it != m_SoundStateHandlers.end()) {
+    *it = nullptr;
+    m_SoundStateHandlers.erase(it);
+  }
 }
 
 void GOEventHandlerList::RegisterSaveableObject(GOSaveableObject *obj) {

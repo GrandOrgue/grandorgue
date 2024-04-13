@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,8 @@
 #include "GOGUIMasterPanel.h"
 
 #include <wx/intl.h>
+
+#include "combinations/GOSetter.h"
 
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
@@ -94,7 +96,7 @@ GOGUIPanel *GOGUIMasterPanel::CreateMasterPanel(GOConfigReader &cfg) {
   panel->AddControl(button);
 
   button = new GOGUIButton(
-    panel, m_OrganController->GetButtonControl(wxT("OnState")), true);
+    panel, m_OrganController->GetButtonControl(GOSetter::KEY_ON_STATE), true);
   button->Init(cfg, wxT("SetterOn"), 1, 100, 4);
   panel->AddControl(button);
 
