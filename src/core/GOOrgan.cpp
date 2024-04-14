@@ -126,7 +126,7 @@ bool GOOrgan::IsUsable(const GOOrganList &organs) const {
       ? organs.GetArchiveByID(m_ArchiveID, true)
       : organs.GetArchiveByPath(m_ArchivePath);
 
-    res = (archive != nullptr) && archive->IsComplete(organs);
+    res = archive && archive->IsComplete(organs);
   } else
     res = wxFileExists(m_ODF);
   return res;
