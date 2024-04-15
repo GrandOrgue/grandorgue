@@ -712,8 +712,7 @@ GOMidiMatchType GOMidiReceiverBase::Match(
       ((eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
         && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_ON)
        || (eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_FIXED_ON))
-      && pattern.key == e.GetKey() 
-      && e.GetValue() == pattern.high_value)
+      && pattern.key == e.GetKey() && e.GetValue() == pattern.high_value)
       return debounce(e, MIDI_MATCH_ON, i);
     if (
       ((eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
