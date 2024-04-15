@@ -1,3 +1,4 @@
+- Added tone balance (bass/treble harmonics balance) voicing option
 # 3.14.2 (2024-04-29)
 - Fixed divisional couplers with setter divisionals https://github.com/GrandOrgue/grandorgue/issues/1787
 - Fixed behavior of "Detect complex MIDI setup" with Note events in different cases https://github.com/GrandOrgue/grandorgue/issues/1762

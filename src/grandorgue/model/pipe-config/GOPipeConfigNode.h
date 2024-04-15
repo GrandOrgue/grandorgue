@@ -112,6 +112,12 @@ public:
 
   uint16_t GetEffectiveReleaseTail() const;
 
+  int GetEffectiveBrightnessValue() const {
+    return GetEffectiveSum(
+      &GOPipeConfig::GetBrightnessValue,
+      &GOPipeConfigNode::GetEffectiveBrightnessValue);
+  }
+
   uint8_t GetEffectiveBitsPerSample() const {
     return GetEffectiveUint8(
       &GOPipeConfig::GetBitsPerSample,

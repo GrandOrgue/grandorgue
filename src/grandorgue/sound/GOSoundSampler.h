@@ -9,6 +9,7 @@
 #define GOSOUNDSAMPLER_H_
 
 #include "GOSoundAudioSection.h"
+#include "GOSoundEq.h"
 #include "GOSoundFader.h"
 
 class GOSoundProvider;
@@ -22,6 +23,7 @@ struct GOSoundSampler {
   unsigned m_AudioGroupId;
   audio_section_stream stream;
   GOSoundFader fader;
+  GOSoundEq eq;
   uint64_t time;
   unsigned velocity;
   unsigned delay;

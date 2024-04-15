@@ -91,6 +91,7 @@ private:
   void UpdateTuning() override;
   void UpdateAudioGroup() override;
   void UpdateReleaseTail() override;
+  void UpdateBrightness() override;
   void SetTemperament(const GOTemperament &temperament) override;
 
   // Callbacks from the sound engine

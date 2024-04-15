@@ -5419,6 +5419,19 @@ Within  windchests, the ranks are ordered as found in the definition file.
 	</para>
       </sect2>
       <sect2>
+        <title>Brightness</title>
+        <para>
+          This setting allows to adjust the bass/treble balance of the element.
+          The value is a relative adjustment where a low number means less high
+          frequencies and a high number means less low frequencies. Allowed
+          range is {-100, +100}. Brightness is cumulative from organ level down
+          to pipe level within the allowed range.
+        </para>
+        <para><emphasis>Note</emphasis>: A 0 value means that this setting
+          value has no effect on the effective brightness.
+        </para>
+      </sect2>
+      <sect2>
         <title>Audio Group</title>
         <para>This dropdown selects which audio group the sound from the selected element is routed to</para>
         <para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>

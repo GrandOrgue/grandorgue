@@ -23,6 +23,7 @@ private:
   void UpdateTuning() override;
   void UpdateAudioGroup() override;
   void UpdateReleaseTail() override;
+  void UpdateBrightness() override;
 
 public:
   GOPipeConfigTreeNode(

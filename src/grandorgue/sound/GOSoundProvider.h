@@ -41,6 +41,7 @@ protected:
   float m_MidiPitchFract;
   float m_Gain;
   float m_Tuning;
+  int m_BrightnessValue;
   bool m_IsWaveTremulantActive;
   unsigned m_ReleaseTail;
   ptr_vector<GOSoundAudioSection> m_Attack;
@@ -82,6 +83,8 @@ public:
 
   float GetTuning() const;
   void SetTuning(float cent);
+  int GetBrightnessValue() const;
+  void SetBrightnessValue(int value);
   unsigned GetReleaseTail() const { return m_ReleaseTail; }
   void SetReleaseTail(unsigned releaseTail) { m_ReleaseTail = releaseTail; }
 
@@ -104,5 +107,9 @@ public:
 inline float GOSoundProvider::GetGain() const { return m_Gain; }
 
 inline float GOSoundProvider::GetTuning() const { return m_Tuning; }
+
+inline int GOSoundProvider::GetBrightnessValue() const {
+  return m_BrightnessValue;
+}
 
 #endif /* GOSOUNDPROVIDER_H_ */

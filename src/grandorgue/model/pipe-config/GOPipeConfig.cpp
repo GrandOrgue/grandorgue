@@ -25,6 +25,7 @@ GOPipeConfig::GOPipeConfig(
     m_PitchCorrection(0),
     m_ManualTuning(0),
     m_AutoTuningCorrection(0),
+    m_BrightnessValue(0),
     m_DefaultDelay(0),
     m_Delay(0),
     m_ReleaseTail(0),
@@ -111,11 +112,20 @@ void GOPipeConfig::LoadFromCmb(
     CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
   m_ReleaseTail = (uint16_t)cfg.ReadInteger(
     CMBSetting, group, m_NamePrefix + wxT("ReleaseTail"), 0, 3000, false, 0);
+  m_BrightnessValue = cfg.ReadInteger(
+    CMBSetting,
+    m_Group,
+    m_NamePrefix + wxT("BrightnessEq"),
+    -100,
+    100,
+    false,
+    0);
 
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
   m_Callback->UpdateReleaseTail();
+  m_Callback->UpdateBrightness();
 }
 
 void GOPipeConfig::Init(
@@ -173,6 +183,8 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
     m_Group, m_NamePrefix + wxT("IgnorePitch"), m_IgnorePitch);
   cfg.WriteInteger(
     m_Group, m_NamePrefix + wxT("ReleaseTail"), (int)m_ReleaseTail);
+  cfg.WriteInteger(
+    m_Group, m_NamePrefix + wxT("BrightnessEq"), m_BrightnessValue);
 }
 
 void GOPipeConfig::SetPitchMember(float cents, float &member) {
@@ -181,4 +193,12 @@ void GOPipeConfig::SetPitchMember(float cents, float &member) {
   if (cents > 1800)
     cents = 1800;
   SetSmallMember(cents, member, &GOPipeUpdateCallback::UpdateTuning);
+}
+
+void GOPipeConfig::SetBrightnessMember(int value, int &member) {
+  if (value < -100)
+    value = -100;
+  if (value > 100)
+    value = 100;
+  SetSmallMember(value, member, &GOPipeUpdateCallback::UpdateBrightness);
 }
