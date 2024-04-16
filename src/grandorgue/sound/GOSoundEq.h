@@ -43,7 +43,7 @@ inline void GOSoundEq::InitEq(int slider, unsigned samplerate) {
     double a0, a1, b0, b1;
     if (slider < 0) {
       // lowpass filter act as a high cut
-      double hz = 4100 + slider * 40;
+      double hz = 16000 * pow(20.0 / 16000.0, abs(slider) / 99.0);
       double w0 = 2.0 * 3.14159265358979323846 * hz / samplerate;
       double cosW0 = cos(w0);
       double sinW0 = sin(w0);
@@ -53,7 +53,7 @@ inline void GOSoundEq::InitEq(int slider, unsigned samplerate) {
       a1 = (sinW0 - cosW0 - 1.0);
     } else {
       // highpass filter act as a low cut
-      double hz = 20 + slider * 20;
+      double hz = 20 * pow(800.0, slider / 99.0);
       double w0 = 2.0 * 3.14159265358979323846 * hz / samplerate;
       double cosW0 = cos(w0);
       double sinW0 = sin(w0);
