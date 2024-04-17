@@ -271,7 +271,7 @@ void GOSoundEngine::ProcessRelease(GOSoundSampler *sampler) {
     CreateReleaseSampler(sampler);
     sampler->stop = 0;
   } else if (sampler->new_attack) {
-    SwitchAttackSampler(sampler);
+    SwitchToAnotherAttack(sampler);
     sampler->new_attack = 0;
   }
   PassSampler(sampler);
@@ -386,7 +386,7 @@ unsigned GOSoundEngine::SamplesDiffToMs(
     (toSamples - fromSamples) * 1000 / m_SampleRate, (uint64_t)UINT_MAX);
 }
 
-GOSoundSampler *GOSoundEngine::StartTaskSample(
+GOSoundSampler *GOSoundEngine::CreateTaskSample(
   const GOSoundProvider *pSoundProvider,
   int samplerTaskId,
   unsigned audioGroup,
@@ -411,6 +411,7 @@ GOSoundSampler *GOSoundEngine::StartTaskSample(
     sampler = m_SamplerPool.GetSampler();
     if (sampler) {
       sampler->p_SoundProvider = pSoundProvider;
+      sampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
       sampler->velocity = velocity;
       section->InitStream(
         &m_ResamplerCoefs,
@@ -434,40 +435,43 @@ GOSoundSampler *GOSoundEngine::StartTaskSample(
   return sampler;
 }
 
-void GOSoundEngine::SwitchAttackSampler(GOSoundSampler *handle) {
-  if (!handle->p_SoundProvider)
-    return;
+void GOSoundEngine::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
+  const GOSoundProvider *pProvider = pSampler->p_SoundProvider;
 
-  unsigned time = 1000;
+  if (pProvider && !pSampler->is_release) {
+    const GOSoundAudioSection *section
+      = pProvider->GetAttack(pSampler->velocity, 1000);
 
-  const GOSoundProvider *this_pipe = handle->p_SoundProvider;
-  const GOSoundAudioSection *section
-    = this_pipe->GetAttack(handle->velocity, time);
-  if (!section)
-    return;
-  if (handle->is_release)
-    return;
+    if (section) {
+      GOSoundSampler *new_sampler = m_SamplerPool.GetSampler();
 
-  GOSoundSampler *new_sampler = m_SamplerPool.GetSampler();
-  if (new_sampler != NULL) {
-    *new_sampler = *handle;
+      if (new_sampler != NULL) {
+        float gain_target = pProvider->GetGain() * section->GetNormGain();
+        unsigned cross_fade_len = pProvider->GetAttackSwitchCrossfadeLength();
 
-    handle->p_SoundProvider = this_pipe;
-    handle->time = m_CurrentTime + 1;
+        // copy old sampler to the new one
+        *new_sampler = *pSampler;
 
-    float gain_target = this_pipe->GetGain() * section->GetNormGain();
-    unsigned cross_fade_len = this_pipe->GetAttackSwitchCrossfadeLength();
+        // start decay in the new sampler
+        new_sampler->is_release = true;
+        new_sampler->time = m_CurrentTime;
+        new_sampler->fader.StartDecay(cross_fade_len, m_SampleRate);
+        new_sampler->fader.SetVelocityVolume(
+          new_sampler->p_SoundProvider->GetVelocityVolume(
+            new_sampler->velocity));
 
-    handle->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
-    section->InitAlignedStream(&handle->stream, &new_sampler->stream);
-    handle->is_release = false;
-    new_sampler->is_release = true;
-    new_sampler->time = m_CurrentTime;
-    new_sampler->fader.StartDecay(cross_fade_len, m_SampleRate);
-    new_sampler->fader.SetVelocityVolume(
-      new_sampler->p_SoundProvider->GetVelocityVolume(new_sampler->velocity));
+        // start new section stream in the old sampler
+        pSampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
+        section->InitAlignedStream(&pSampler->stream, &new_sampler->stream);
+        pSampler->p_SoundProvider = pProvider;
+        pSampler->time = m_CurrentTime + 1;
 
-    StartSampler(new_sampler);
+        pSampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
+        pSampler->is_release = false;
+
+        StartSampler(new_sampler);
+      }
+    }
   }
 }
 
@@ -483,7 +487,7 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
    * zero. */
   const GOSoundProvider *this_pipe = handle->p_SoundProvider;
   const GOSoundAudioSection *release_section = this_pipe->GetRelease(
-    handle->stream.audio_section->GetWaveTremulantStateFor(),
+    handle->m_WaveTremulantStateFor,
     SamplesDiffToMs(handle->time, m_CurrentTime));
   unsigned cross_fade_len = release_section
     ? release_section->GetReleaseCrossfadeLength()
@@ -506,6 +510,8 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
       new_sampler->p_SoundProvider = this_pipe;
       new_sampler->time = m_CurrentTime + 1;
       new_sampler->velocity = handle->velocity;
+      new_sampler->m_WaveTremulantStateFor
+        = release_section->GetWaveTremulantStateFor();
 
       unsigned gain_decay_length = 0;
       float gain_target = this_pipe->GetGain() * release_section->GetNormGain();

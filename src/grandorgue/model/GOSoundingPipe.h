@@ -26,11 +26,10 @@ class GOSoundingPipe : public GOPipe,
                        private GOPipeWindchestCallback {
 private:
   GOOrganModel *p_OrganModel;
-  GOSoundSampler *m_Sampler;
+  GOSoundSampler *p_CurrentLoopSampler;
   uint64_t m_LastStart;
   uint64_t m_LastStop;
   int m_Instances;
-  bool m_IsWaveTremulantActive;
   std::vector<GOSoundProviderWave::AttackFileInfo> m_AttackFileInfos;
   std::vector<GOSoundProviderWave::ReleaseFileInfo> m_ReleaseFileInfos;
   wxString m_Filename;

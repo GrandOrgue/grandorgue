@@ -35,11 +35,10 @@ GOSoundingPipe::GOSoundingPipe(
   bool retune)
   : GOPipe(pOrganModel, rank, midi_key_number),
     p_OrganModel(pOrganModel),
-    m_Sampler(NULL),
+    p_CurrentLoopSampler(nullptr),
     m_LastStart(0),
     m_LastStop(0),
     m_Instances(0),
-    m_IsWaveTremulantActive(false),
     m_AttackFileInfos(),
     m_ReleaseFileInfos(),
     m_Filename(),
@@ -475,14 +474,16 @@ void GOSoundingPipe::Validate() {
 }
 
 void GOSoundingPipe::SetWaveTremulant(bool on) {
-  if (on != m_IsWaveTremulantActive) {
-    m_IsWaveTremulantActive = on;
+  if (m_SoundProvider.IsWaveTremulant() != on) {
     m_SoundProvider.SetWaveTremulant(on);
 
     GOSoundEngine *pSoundEngine = GetSoundEngine();
 
-    if (pSoundEngine && m_Sampler)
-      pSoundEngine->SwitchSample(&m_SoundProvider, m_Sampler);
+    if (
+      pSoundEngine && p_CurrentLoopSampler
+      && !m_SoundProvider.IsWaveTremulantStateSuitable(
+        p_CurrentLoopSampler->m_WaveTremulantStateFor))
+      pSoundEngine->SwitchSample(&m_SoundProvider, p_CurrentLoopSampler);
   }
 }
 
@@ -492,28 +493,30 @@ void GOSoundingPipe::VelocityChanged(
 
   if (!m_Instances && velocity) {
     // the key pressed
-    m_Sampler = pSoundEngine ? pSoundEngine->StartPipeSample(
-                  &m_SoundProvider,
-                  m_WindchestN,
-                  m_AudioGroupID,
-                  velocity,
-                  m_PipeConfigNode.GetEffectiveDelay(),
-                  m_LastStop,
-                  false,
-                  &m_LastStart)
-                             : nullptr;
-    if (m_Sampler)
+    GOSoundSampler *pSampler = pSoundEngine ? pSoundEngine->StartPipeSample(
+                                 &m_SoundProvider,
+                                 m_WindchestN,
+                                 m_AudioGroupID,
+                                 velocity,
+                                 m_PipeConfigNode.GetEffectiveDelay(),
+                                 m_LastStop,
+                                 false,
+                                 &m_LastStart)
+                                            : nullptr;
+    if (pSampler) {
       m_Instances++;
-    if (m_SoundProvider.IsOneshot())
-      m_Sampler = nullptr;
+      if (!m_SoundProvider.IsOneshot()) {
+        p_CurrentLoopSampler = pSampler;
+      }
+    }
   } else if (m_Instances && !velocity) {
     // the key released
     m_Instances--;
-    if (m_Sampler) {
+    if (p_CurrentLoopSampler) {
       m_LastStop = pSoundEngine
-        ? pSoundEngine->StopSample(&m_SoundProvider, m_Sampler)
+        ? pSoundEngine->StopSample(&m_SoundProvider, p_CurrentLoopSampler)
         : 0;
-      m_Sampler = nullptr;
+      p_CurrentLoopSampler = nullptr;
     } else if (m_PipeConfigNode.IsEffectiveIndependentRelease() && pSoundEngine)
       pSoundEngine->StartPipeSample(
         &m_SoundProvider,
@@ -524,10 +527,11 @@ void GOSoundingPipe::VelocityChanged(
         m_LastStart,
         true,
         &m_LastStop);
-  } else if (m_Sampler && last_velocity != velocity)
+  } else if (p_CurrentLoopSampler && last_velocity != velocity)
     // the key was pressed before and the velocity is changed now
     if (pSoundEngine)
-      pSoundEngine->UpdateVelocity(&m_SoundProvider, m_Sampler, velocity);
+      pSoundEngine->UpdateVelocity(
+        &m_SoundProvider, p_CurrentLoopSampler, velocity);
 }
 
 void GOSoundingPipe::UpdateAmplitude() {
@@ -569,9 +573,8 @@ void GOSoundingPipe::PreparePlayback() {
 
 void GOSoundingPipe::AbortPlayback() {
   m_Instances = 0;
-  m_IsWaveTremulantActive = false;
-  m_Sampler = 0;
+  p_CurrentLoopSampler = 0;
   m_LastStop = 0;
-  m_SoundProvider.SetWaveTremulant(0);
+  m_SoundProvider.SetWaveTremulant(false);
   GOPipe::AbortPlayback();
 }

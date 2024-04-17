@@ -192,23 +192,20 @@ const GOSoundAudioSection *GOSoundProvider::GetAttack(
 
   for (unsigned i = 0; i < m_Attack.size(); i++) {
     const unsigned idx = (i + x) % m_Attack.size();
+
     if (
-      m_AttackInfo[idx].m_WaveTremulantStateFor != BOOL3_DEFAULT
-      && m_AttackInfo[idx].m_WaveTremulantStateFor
-        != to_bool3(m_IsWaveTremulantActive))
-      continue;
-    if (m_AttackInfo[idx].min_attack_velocity > velocity)
-      continue;
-    if (m_AttackInfo[idx].max_released_time < releasedDurationMs)
-      continue;
-    if (best_match == -1)
-      best_match = idx;
-    else if (
-      m_AttackInfo[best_match].min_attack_velocity
-        < m_AttackInfo[idx].min_attack_velocity
-      && m_AttackInfo[best_match].max_released_time
-        > m_AttackInfo[idx].max_released_time)
-      best_match = idx;
+      IsWaveTremulantStateSuitable(m_AttackInfo[idx].m_WaveTremulantStateFor)
+      && m_AttackInfo[idx].min_attack_velocity <= velocity
+      && m_AttackInfo[idx].max_released_time >= releasedDurationMs) {
+      if (best_match == -1)
+        best_match = idx;
+      else if (
+        m_AttackInfo[best_match].min_attack_velocity
+          < m_AttackInfo[idx].min_attack_velocity
+        && m_AttackInfo[best_match].max_released_time
+          > m_AttackInfo[idx].max_released_time)
+        best_match = idx;
+    }
   }
 
   if (best_match != -1)

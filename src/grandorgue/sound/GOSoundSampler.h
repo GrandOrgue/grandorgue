@@ -28,6 +28,7 @@ struct GOSoundSampler {
   /* current index of the current block into this sample */
   volatile unsigned long stop;
   volatile unsigned long new_attack;
+  GOBool3 m_WaveTremulantStateFor;
   bool is_release;
   unsigned drop_counter;
 };

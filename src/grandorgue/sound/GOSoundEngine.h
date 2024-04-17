@@ -88,7 +88,7 @@ private:
 
   void StartSampler(GOSoundSampler *sampler);
 
-  GOSoundSampler *StartTaskSample(
+  GOSoundSampler *CreateTaskSample(
     const GOSoundProvider *soundProvider,
     int samplerTaskId,
     unsigned audioGroup,
@@ -98,7 +98,14 @@ private:
     bool isRelease,
     uint64_t *pStartTimeSamples);
   void CreateReleaseSampler(GOSoundSampler *sampler);
-  void SwitchAttackSampler(GOSoundSampler *sampler);
+
+  /**
+   * Creates a new sampler with decay of current loop.
+   * Switch this sampler to the new attack.
+   * It is used when a wave tremulant is switched on or off.
+   * @param pSampler current playing sampler for switching to a new attack
+   */
+  void SwitchToAnotherAttack(GOSoundSampler *pSampler);
   float GetRandomFactor();
   unsigned GetBufferSizeFor(unsigned outputIndex, unsigned n_frames);
 
@@ -135,7 +142,7 @@ public:
     uint64_t prevEventTime,
     bool isRelease = false,
     uint64_t *pStartTimeSamples = nullptr) {
-    return StartTaskSample(
+    return CreateTaskSample(
       pipeProvider,
       windchestN,
       audioGroup,
@@ -150,7 +157,7 @@ public:
     const GOSoundProvider *tremProvider,
     unsigned tremulantN,
     uint64_t prevEventTime) {
-    return StartTaskSample(
+    return CreateTaskSample(
       tremProvider, -tremulantN, 0, 0x7f, 0, prevEventTime, false, nullptr);
   }
 

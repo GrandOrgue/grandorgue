@@ -63,9 +63,15 @@ public:
   virtual bool LoadCache(GOMemoryPool &pool, GOCache &cache);
   virtual bool SaveCache(GOCacheWriter &cache) const;
 
+  bool IsWaveTremulant() const { return m_IsWaveTremulantActive; }
   void SetWaveTremulant(bool isActive) { m_IsWaveTremulantActive = isActive; }
 
   void SetVelocityParameter(float min_volume, float max_volume);
+
+  bool IsWaveTremulantStateSuitable(GOBool3 waveTremulantStateFor) const {
+    return to_bool(waveTremulantStateFor, m_IsWaveTremulantActive)
+      == m_IsWaveTremulantActive;
+  }
 
   const GOSoundAudioSection *GetAttack(
     unsigned velocity, unsigned releasedDurationMs) const;
