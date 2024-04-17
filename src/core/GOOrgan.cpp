@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -126,9 +126,7 @@ bool GOOrgan::IsUsable(const GOOrganList &organs) const {
       ? organs.GetArchiveByID(m_ArchiveID, true)
       : organs.GetArchiveByPath(m_ArchivePath);
 
-    if (!archive)
-      res = false;
-    res = archive->IsComplete(organs);
+    res = archive && archive->IsComplete(organs);
   } else
     res = wxFileExists(m_ODF);
   return res;
