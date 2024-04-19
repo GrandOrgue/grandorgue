@@ -21,24 +21,24 @@
 #include "yaml/go-wx-yaml.h"
 
 GODivisionalCombination::GODivisionalCombination(
-  GOOrganModel &organModel, unsigned manualNumber, bool isSetter)
+  GOOrganModel &organModel,
+  unsigned manualNumber,
+  bool isSetter,
+  unsigned divisionalIndex)
   : GOCombination(
     organModel, organModel.GetManual(manualNumber)->GetDivisionalTemplate()),
     r_OrganModel(organModel),
     m_odfManualNumber(manualNumber),
-    m_DivisionalNumber(0),
-    m_IsSetter(isSetter) {}
+    m_IsSetter(isSetter),
+    m_DivisionalIndex(divisionalIndex) {}
 
-void GODivisionalCombination::Init(
-  const wxString &group, int divisionalNumber) {
+void GODivisionalCombination::Init(const wxString &group) {
   m_group = group;
-  m_DivisionalNumber = divisionalNumber;
   m_Protected = false;
 }
 
-void GODivisionalCombination::Load(
-  GOConfigReader &cfg, const wxString &group, int divisionalNumber) {
-  Init(group, divisionalNumber);
+void GODivisionalCombination::Load(GOConfigReader &cfg, const wxString &group) {
+  m_group = group;
   m_Protected
     = cfg.ReadBoolean(ODFSetting, group, wxT("Protected"), false, false);
 
@@ -242,15 +242,16 @@ GODivisionalCombination *GODivisionalCombination::loadFrom(
   GOConfigReader &cfg,
   const wxString &group,
   const wxString &readGroup,
-  int manualNumber,
-  int divisionalNumber) {
+  unsigned manualNumber,
+  unsigned divisionalIndex) {
   GODivisionalCombination *pCmb = nullptr;
   bool isCmbOnGroup = isCmbOnFile(cfg, group);
   bool isCmbOnReadGroup = !readGroup.IsEmpty() && isCmbOnFile(cfg, readGroup);
 
   if (isCmbOnGroup || isCmbOnReadGroup) {
-    pCmb = new GODivisionalCombination(organModel, manualNumber, false);
-    pCmb->Load(cfg, isCmbOnReadGroup ? readGroup : group, divisionalNumber);
+    pCmb = new GODivisionalCombination(
+      organModel, manualNumber, true, divisionalIndex);
+    pCmb->Load(cfg, isCmbOnReadGroup ? readGroup : group);
     pCmb->LoadCombination(cfg);
     if (isCmbOnReadGroup) {  // The combination was loaded from the legacy group
       pCmb->m_group = group; // It will be saved to the normal group

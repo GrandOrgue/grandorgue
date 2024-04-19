@@ -242,14 +242,14 @@ void GOManual::LoadDivisionals(GOConfigReader &cfg) {
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nDivisionals; i++) {
     m_divisionals.push_back(
-      new GODivisionalButtonControl(r_OrganModel, m_manual_number, false));
+      new GODivisionalButtonControl(r_OrganModel, m_manual_number, i));
 
     buffer.Printf(wxT("Divisional%03d"), i + 1);
     buffer.Printf(
       wxT("Divisional%03d"),
       cfg.ReadInteger(ODFSetting, m_group, buffer, 1, 999));
     cfg.MarkGroupInUse(buffer);
-    m_divisionals[i]->Load(cfg, buffer, i);
+    m_divisionals[i]->Load(cfg, buffer);
   }
 }
 

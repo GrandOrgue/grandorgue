@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -329,9 +329,9 @@ void GODivisionalSetter::FromYaml(const YAML::Node &yamlNode) {
         unsigned i
           = banked_divisional_yaml_key_to_index(cmbEntry.first.as<wxString>());
         GODivisionalCombination *pCmb = new GODivisionalCombination(
-          *m_OrganController, odfManualIndex, false);
+          *m_OrganController, odfManualIndex, true, i);
 
-        pCmb->Init(GetDivisionalButtonName(odfManualIndex, i), i);
+        pCmb->Init(GetDivisionalButtonName(odfManualIndex, i));
         cmbNode >> *pCmb;
         divMap[i] = pCmb;
       }
@@ -354,9 +354,9 @@ void GODivisionalSetter::SwitchDivisionalTo(
       // create a new combination
       const unsigned manualIndex = m_FirstManualIndex + manualN;
 
-      pCmb = new GODivisionalCombination(*m_OrganController, manualIndex, true);
-      pCmb->Init(
-        GetDivisionalButtonName(manualIndex, divisionalIdx), divisionalIdx);
+      pCmb = new GODivisionalCombination(
+        *m_OrganController, manualIndex, true, divisionalIdx);
+      pCmb->Init(GetDivisionalButtonName(manualIndex, divisionalIdx));
       divMap[divisionalIdx] = pCmb;
     }
 

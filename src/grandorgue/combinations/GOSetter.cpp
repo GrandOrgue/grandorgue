@@ -1026,7 +1026,7 @@ void GOSetter::PushDivisional(
     /* only use divisional couples, if not in setter mode */
     if (!m_state.m_IsActive) {
       unsigned cmbManualNumber = cmb.GetManualNumber();
-      unsigned divisionalNumber = cmb.GetDivisionalNumber();
+      unsigned divisionalNumber = cmb.GetDivisionalIndex();
 
       for (unsigned k = 0; k < m_OrganController->GetDivisionalCouplerCount();
            k++) {

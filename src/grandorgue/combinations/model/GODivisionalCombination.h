@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,8 +21,19 @@ class GODivisionalCombination : public GOCombination {
 protected:
   GOOrganModel &r_OrganModel;
   unsigned m_odfManualNumber;
-  int m_DivisionalNumber;
+
+  /* true - this combination belongs to the divisional setter
+   * false - this combination belongs to a manual divisional
+   */
   bool m_IsSetter;
+
+  /* the divisional index.
+   * if m_IsSetter then it is the index in the divisional setter across all
+   *   banks.
+   * else it is the index in the manual. It may be obtained with
+   *   manual->GetDivisional()
+   */
+  unsigned m_DivisionalIndex;
 
   // It is not registered as saveable object because
   // GOdivisionalSetter::LoadCombination creates the combinations dynamically
@@ -43,16 +54,20 @@ protected:
 
 public:
   GODivisionalCombination(
-    GOOrganModel &organModel, unsigned manualNumber, bool isSetter);
+    GOOrganModel &organModel,
+    unsigned manualNumber,
+    bool isSetter,
+    unsigned divisionalIndex);
 
   unsigned GetManualNumber() const { return m_odfManualNumber; }
-  int GetDivisionalNumber() const { return m_DivisionalNumber; }
+  unsigned GetDivisionalIndex() const { return m_DivisionalIndex; }
 
-  void Init(const wxString &group, int divisionalNumber);
-  void Load(GOConfigReader &cfg, const wxString &group, int divisionalNumber);
+  void Init(const wxString &group);
+  void Load(GOConfigReader &cfg, const wxString &group);
 
   // checks if the combination exists in the config file
   // returns the loaded combination if it exists else returns nullptr
+  // used only for the devisional setter combinations
   static GODivisionalCombination *loadFrom(
     GOOrganModel &organModel,
     GOConfigReader &cfg,
@@ -60,8 +75,8 @@ public:
     // for compatibility with the old preset: load the combination with the old
     // group name
     const wxString &readGroup,
-    int manualNumber,
-    int divisionalNumber);
+    unsigned manualNumber,
+    unsigned divisionalIndex);
 };
 
 #endif
