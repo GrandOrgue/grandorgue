@@ -1026,7 +1026,7 @@ void GOSetter::PushDivisional(
     /* only use divisional couples, if not in setter mode */
     if (!m_state.m_IsActive) {
       unsigned cmbManualNumber = cmb.GetManualNumber();
-      unsigned divisionalNumber = cmb.GetDivisionalIndex();
+      unsigned divisionalIndex = cmb.GetDivisionalIndex();
 
       for (unsigned k = 0; k < m_OrganController->GetDivisionalCouplerCount();
            k++) {
@@ -1042,7 +1042,7 @@ void GOSetter::PushDivisional(
           for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++) {
             GODivisionalButtonControl *coupledDivisional
               = m_OrganController->GetManual(coupler->GetManual(j))
-                  ->GetDivisional(divisionalNumber);
+                  ->GetDivisional(divisionalIndex);
 
             PushDivisional(
               usedCmbs, coupledDivisional->GetCombination(), coupledDivisional);
@@ -1057,7 +1057,7 @@ void GOSetter::PushDivisional(
 
               GODivisionalButtonControl *coupledDivisional
                 = m_OrganController->GetManual(coupledManualIndex)
-                    ->GetDivisional(divisionalNumber);
+                    ->GetDivisional(divisionalIndex);
 
               PushDivisional(
                 usedCmbs,
