@@ -52,10 +52,8 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalButtonControl::Push() {
-  std::set<unsigned> coupledManuals;
-
-  r_OrganModel.FillCoupledManualsForDivisional(m_ManualN, coupledManuals);
-  for (unsigned coupledManualN : coupledManuals) {
+  for (unsigned coupledManualN :
+       r_OrganModel.GetCoupledManualsForDivisional(m_ManualN)) {
     GOManual *pManual = r_OrganModel.GetManual(coupledManualN);
 
     if (m_DivisionalIndex < pManual->GetDivisionalCount()) {

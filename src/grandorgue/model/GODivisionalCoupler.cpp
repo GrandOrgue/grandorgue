@@ -7,6 +7,8 @@
 
 #include "GODivisionalCoupler.h"
 
+#include <algorithm>
+
 #include <wx/intl.h>
 
 #include "config/GOConfigReader.h"

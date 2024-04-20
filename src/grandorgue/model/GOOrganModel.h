@@ -57,6 +57,16 @@ private:
 
   bool m_OrganModelModified;
 
+  /**
+   * Walks across all manuals with divisional coupler engaged and returns the
+   *   set of manuals where the divisional with the same number should be pushed
+   * @param startManual the first manual index where a divisional is pushed
+   * @param manualSet the resulting set of manuals. It always contains
+   *   startManual
+   */
+  void FillCoupledManualsForDivisional(
+    unsigned startManual, std::set<unsigned> &manualSet) const;
+
 protected:
   ptr_vector<GOWindchest> m_windchests;
   ptr_vector<GOManual> m_manuals;
@@ -185,14 +195,13 @@ public:
   }
 
   /**
-   * Walks across all manuals with divisional coupler engaged and returns the
-   *   set of manuals where the divisional with the same number should be pushed
+   * Walks recursivelly across all manuals with divisional coupler engaged and
+   *   returns a set of manuals where the divisional with the same number should
+   *   be pushed
    * @param startManual the first manual index where a divisional is pushed
-   * @param manualSet the resulting set of manuals. It always contains
-   *   startManual
+   * @return the resulting set of manuals. It always contains startManual
    */
-  void FillCoupledManualsForDivisional(
-    unsigned startManual, std::set<unsigned> &manualSet) const;
+  std::set<unsigned> GetCoupledManualsForDivisional(unsigned startManual) const;
 
   /**
    * Find a divisional coupler by it's name
