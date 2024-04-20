@@ -153,7 +153,7 @@ public:
    */
   int FindCouplerByName(const wxString &name) const;
   void AddCoupler(GOCoupler *coupler);
-  unsigned GetDivisionalCount();
+  unsigned GetDivisionalCount() const { return m_divisionals.size(); }
   GODivisionalButtonControl *GetDivisional(unsigned index);
   void AddDivisional(GODivisionalButtonControl *divisional);
   unsigned GetTremulantCount() const { return m_tremulant_ids.size(); }

@@ -8,6 +8,8 @@
 #ifndef GOORGANMODEL_H
 #define GOORGANMODEL_H
 
+#include <set>
+
 #include "ptrvector.h"
 
 #include "combinations/control/GOCombinationButtonSet.h"
@@ -181,6 +183,16 @@ public:
   GODivisionalCoupler *GetDivisionalCoupler(unsigned index) {
     return m_DivisionalCoupler[index];
   }
+
+  /**
+   * Walks across all manuals with divisional coupler engaged and returns the
+   *   set of manuals where the divisional with the same number should be pushed
+   * @param startManual the first manual index where a divisional is pushed
+   * @param manualSet the resulting set of manuals. It always contains
+   *   startManual
+   */
+  void FillCoupledManualsForDivisional(
+    unsigned startManual, std::set<unsigned> &manualSet) const;
 
   /**
    * Find a divisional coupler by it's name

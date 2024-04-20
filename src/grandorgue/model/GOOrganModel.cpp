@@ -290,6 +290,17 @@ GOPistonControl *GOOrganModel::GetPiston(unsigned index) {
   return m_pistons[index];
 }
 
+void GOOrganModel::FillCoupledManualsForDivisional(
+  unsigned startManual, std::set<unsigned> &manualSet) const {
+  // protection against infinite recursion
+  if (manualSet.insert(startManual).second) {
+    // walk on the couplers
+    for (const GODivisionalCoupler *coupler : m_DivisionalCoupler)
+      for (auto otherManual : coupler->GetCoupledManuals(startManual))
+        FillCoupledManualsForDivisional(otherManual, manualSet);
+  }
+}
+
 int GOOrganModel::FindDivisionalCouplerByName(const wxString &name) const {
   int resIndex = -1;
 
