@@ -256,8 +256,11 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
         check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadSamplerChunk(ptr + offset, size);
       }
-      /* Move to next chunk respecting word alignment */
-      offset += size + (size & 1);
+      /* Move to next chunk respecting word alignment
+         Unless lack of final padding (non spec-compliant) */
+      offset += size;
+      if (offset < length)
+        offset += size & 1;
     }
 
     if (offset != length)
