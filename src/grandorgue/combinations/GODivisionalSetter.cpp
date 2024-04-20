@@ -131,10 +131,9 @@ GODivisionalSetter::~GODivisionalSetter() {
   m_OrganController->UnregisterSaveableObject(this);
 }
 
-void GODivisionalSetter::UpdateBankDisplay(unsigned manualN) {
+void GODivisionalSetter::UpdateBankDisplay(unsigned manualN, uint8_t bankN) {
   // 0 -> A, 19 -> T
-  m_BankLabels[manualN]->SetContent(
-    wxString::Format(wxT("%c"), 'A' + m_manualBanks[manualN]));
+  m_BankLabels[manualN]->SetContent(wxString::Format(wxT("%c"), 'A' + bankN));
 }
 
 void GODivisionalSetter::Save(GOConfigWriter &cfg) {
@@ -190,7 +189,8 @@ void GODivisionalSetter::Load(GOConfigReader &cfg) {
     divisionalNext->Init(cfg, buttonNextName, wxT("+"));
 
     // display the initial bank
-    UpdateBankDisplay(manualN);
+    m_manualBanks[manualN] = 0;
+    UpdateBankDisplay(manualN, 0);
   }
 }
 
@@ -339,12 +339,39 @@ void GODivisionalSetter::FromYaml(const YAML::Node &yamlNode) {
   }
 }
 
+template <typename F>
+void GODivisionalSetter::SwitchBank(unsigned manualN, const F &setNewBank) {
+  if (manualN < m_NManuals) {
+    uint8_t &currBank = m_manualBanks[manualN];
+    uint8_t oldBank = currBank;
+
+    setNewBank(currBank);
+
+    if (currBank != oldBank)
+      UpdateBankDisplay(manualN, currBank);
+  }
+}
+
+void GODivisionalSetter::SwitchBankToPrev(unsigned manualN) {
+  SwitchBank(manualN, [](uint8_t &currBank) {
+    if (currBank > 0)
+      currBank--;
+  });
+}
+
+void GODivisionalSetter::SwitchBankToNext(unsigned manualN) {
+  SwitchBank(manualN, [](uint8_t &currBank) {
+    if (currBank < DIVISIONAL_BANKS - 1)
+      currBank++;
+  });
+}
+
 void GODivisionalSetter::SwitchDivisionalTo(
   unsigned manualN, unsigned divisionalN) {
   if (manualN < m_NManuals && divisionalN < N_DIVISIONALS) {
+    uint8_t bankN = m_manualBanks[manualN];
     // absolute index of the divisional combination for the manual
-    unsigned divisionalIdx
-      = N_DIVISIONALS * m_manualBanks[manualN] + divisionalN;
+    unsigned divisionalIdx = N_DIVISIONALS * bankN + divisionalN;
     DivisionalMap &divMap = m_DivisionalMaps[manualN];
     // whether the combination is defined
     bool isExist = divMap.find(divisionalIdx) != divMap.end();
@@ -360,34 +387,26 @@ void GODivisionalSetter::SwitchDivisionalTo(
       divMap[divisionalIdx] = pCmb;
     }
 
-    if (pCmb)
+    if (pCmb) {
       // the combination was existing or has just been created
-      m_OrganController->PushDivisional(
-        *pCmb,
-        manualIndex,
-        manualIndex,
-        m_buttons[N_BUTTONS * manualN + divisionalN]);
-  }
-}
+      for (unsigned coupledManualIndex :
+           m_OrganController->GetCoupledManualsForDivisional(manualIndex)) {
+        unsigned coupledManualN = coupledManualIndex - m_FirstManualIndex;
+        DivisionalMap &coupledDivMap = m_DivisionalMaps[coupledManualN];
 
-void GODivisionalSetter::SwitchBankToPrev(unsigned manualN) {
-  if (manualN < m_NManuals) {
-    unsigned &currBank = m_manualBanks[manualN];
-
-    if (currBank > 0) {
-      currBank--;
-      UpdateBankDisplay(manualN);
-    }
-  }
-}
-
-void GODivisionalSetter::SwitchBankToNext(unsigned manualN) {
-  if (manualN < m_NManuals) {
-    unsigned &currBank = m_manualBanks[manualN];
-
-    if (currBank < DIVISIONAL_BANKS - 1) {
-      currBank++;
-      UpdateBankDisplay(manualN);
+        if (coupledDivMap.find(divisionalIdx) != coupledDivMap.end()) {
+          if (!r_SetterState.m_IsActive) {
+            // ensure that coupledManualN has the same current bank
+            SwitchBank(
+              coupledManualN, [=](uint8_t &currBank) { currBank = bankN; });
+          } // else PushDivisional does nothing for coupled manuals
+          m_OrganController->PushDivisional(
+            *coupledDivMap[divisionalIdx],
+            manualIndex,
+            coupledManualN,
+            m_buttons[N_BUTTONS * coupledManualN + divisionalN]);
+        }
+      }
     }
   }
 }
