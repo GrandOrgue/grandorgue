@@ -285,8 +285,8 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   p_OnStateButton = GetButtonControl(GOSetter::KEY_ON_STATE);
 
   if (p_OnStateButton) {
-    // we do not want to send midi events on m_OnStateButton togeather with
-    // other events. They will be sent separatelly
+    // we do not want to send midi events on m_OnStateButton together with
+    // other events. They will be sent separately.
     UnRegisterSoundStateHandler(p_OnStateButton);
   }
 

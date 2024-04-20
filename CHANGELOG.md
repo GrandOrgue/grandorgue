@@ -1,4 +1,4 @@
-- Fixed the order of sending midi events from an On indicator. Now they are sent after sending all events from another controls https://github.com/GrandOrgue/grandorgue/issues/1762
+- Fixed the order of sending midi events from an On indicator. Now they are sent after sending all events from other controls https://github.com/GrandOrgue/grandorgue/issues/1762
 # 3.14.1 (2024-04-17)
 - Fixed changing sound of a playing pipe without Pipe999IsTremulant when a wave tremulant state is changed https://github.com/GrandOrgue/grandorgue/issues/1855
 - Fixed crash on opening a very old config https://github.com/GrandOrgue/grandorgue/discussions/1869
