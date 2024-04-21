@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -256,8 +256,11 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
         check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadSamplerChunk(ptr + offset, size);
       }
-      /* Move to next chunk respecting word alignment */
-      offset += size + (size & 1);
+      /* Move to next chunk respecting word alignment
+         Unless lack of final padding (non spec-compliant) */
+      offset += size;
+      if (offset < length)
+        offset += size & 1;
     }
 
     if (offset != length)
