@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -108,20 +108,21 @@ const std::vector<wxString> &GOArchiveFile::GetDependencyTitles() const {
   return m_DependencyTitles;
 }
 
-bool GOArchiveFile::IsUsable(const GOOrganList &organs) const {
-  return wxFileExists(m_Path);
+bool GOArchiveFile::IsUsable() const {
+  return !m_Path.IsEmpty() && wxFileExists(m_Path);
 }
 
 bool GOArchiveFile::IsComplete(const GOOrganList &organs) const {
-  if (!IsUsable(organs))
-    return false;
-  for (unsigned i = 0; i < m_Dependencies.size(); i++) {
-    const GOArchiveFile *archive
-      = organs.GetArchiveByID(m_Dependencies[i], true);
-    if (!archive)
-      return false;
-    if (!archive->IsUsable(organs))
-      return false;
-  }
-  return true;
+  bool isComplete = IsUsable();
+
+  if (isComplete)
+    for (auto &dep : m_Dependencies) {
+      const GOArchiveFile *archive = organs.GetArchiveByID(dep, true);
+
+      isComplete = archive && archive->IsUsable();
+
+      if (!isComplete)
+        break;
+    }
+  return isComplete;
 }

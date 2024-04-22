@@ -404,7 +404,7 @@ void GOSettingsOrgans::RefreshFocused(const int currOrganIndex) {
   wxString archiveInfo = EMPTY_STRING;
 
   if (a) {
-    if (!a->IsUsable(m_config))
+    if (!a->IsUsable())
       archiveInfo = _("MISSING - ");
     else if (!a->IsComplete(m_config)) {
       archiveInfo = _("INCOMPLETE - ");
