@@ -154,6 +154,8 @@ const wxString GOSetter::KEY_LOAD_FILE = wxT("LoadFile");
 const wxString GOSetter::KEY_SAVE_FILE = wxT("SaveFile");
 const wxString GOSetter::KEY_SAVE_SETTINGS = wxT("Save");
 
+const wxString GOSetter::KEY_ON_STATE = wxT("OnState");
+
 const wxString GOSetter::GROUP_REFRESH_FILES = wxT("SetterRefreshFiles");
 const wxString GOSetter::GROUP_PREV_FILE = wxT("SetterPrevFile");
 const wxString GOSetter::GROUP_CURR_FILE_NAME = wxT("SetterCurrFileName");
@@ -263,7 +265,7 @@ const struct GOElementCreator::ButtonDefinitionEntry GOSetter::m_element_types[]
     {wxT("TransposeUp"), ID_SETTER_TRANSPOSE_UP, true, true, false},
 
     {KEY_SAVE_SETTINGS, ID_SETTER_SAVE_SETTINGS, true, true, false},
-    {wxT("OnState"), ID_SETTER_ON, false, true, false},
+    {KEY_ON_STATE, ID_SETTER_ON, false, true, false},
 
     {wxT("CrescendoA"), ID_SETTER_CRESCENDO_A, true, true, false},
     {wxT("CrescendoB"), ID_SETTER_CRESCENDO_B, true, true, false},

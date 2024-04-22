@@ -73,6 +73,7 @@ private:
   GOAudioRecorder *m_AudioRecorder;
   GOMidiPlayer *m_MidiPlayer;
   GOMidiRecorder *m_MidiRecorder;
+  GOButtonControl *p_OnStateButton;
   int m_volume;
   wxString m_Temperament;
 

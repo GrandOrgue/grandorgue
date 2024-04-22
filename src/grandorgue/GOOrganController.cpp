@@ -98,6 +98,7 @@ GOOrganController::GOOrganController(
     m_AudioRecorder(NULL),
     m_MidiPlayer(NULL),
     m_MidiRecorder(NULL),
+    p_OnStateButton(nullptr),
     m_volume(0),
     m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
@@ -128,6 +129,7 @@ GOOrganController::GOOrganController(
 }
 
 GOOrganController::~GOOrganController() {
+  p_OnStateButton = nullptr;
   m_FileStore.CloseArchives();
   GOEventHandlerList::Cleanup();
   // Just to be sure, that the sound providers are freed before the pool
@@ -279,6 +281,14 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
 
   for (unsigned i = 0; i < m_elementcreators.size(); i++)
     m_elementcreators[i]->Load(cfg);
+
+  p_OnStateButton = GetButtonControl(GOSetter::KEY_ON_STATE);
+
+  if (p_OnStateButton) {
+    // we do not want to send midi events on m_OnStateButton together with
+    // other events. They will be sent separately.
+    UnRegisterSoundStateHandler(p_OnStateButton);
+  }
 
   m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
   m_TemperamentLabel.Load(
@@ -1014,6 +1024,8 @@ void GOOrganController::Abort() {
   m_MidiRecorder->StopRecording();
   m_AudioRecorder->StopRecording();
   m_AudioRecorder->SetAudioRecorder(NULL);
+  if (p_OnStateButton)
+    p_OnStateButton->AbortPlaybackExt();
   GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;
 }
@@ -1045,6 +1057,13 @@ void GOOrganController::PreparePlayback(
 
   GOEventDistributor::StartPlayback();
   GOEventDistributor::PrepareRecording();
+
+  // Light the OnState button
+  if (p_OnStateButton) {
+    p_OnStateButton->PreparePlaybackExt(engine);
+    p_OnStateButton->StartPlaybackExt();
+    p_OnStateButton->PrepareRecordingExt();
+  }
 }
 
 void GOOrganController::PrepareRecording() {
