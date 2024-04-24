@@ -37,7 +37,7 @@ private:
   float m_PitchCorrection;
   float m_ManualTuning;
   float m_AutoTuningCorrection;
-  int m_BrightnessValue;
+  int m_ToneBalanceValue;
   uint16_t m_DefaultDelay;
   uint16_t m_Delay;
   uint16_t m_ReleaseTail; // the max release length in ms
@@ -81,7 +81,7 @@ private:
   }
 
   void SetPitchMember(float cents, float &member);
-  void SetBrightnessMember(int value, int &member);
+  void SetToneBalanceMember(int value, int &member);
 
 public:
   GOPipeConfig(GOPipeConfigListener &listener, GOPipeUpdateCallback *callback);
@@ -130,9 +130,9 @@ public:
     SetPitchMember(cents, m_AutoTuningCorrection);
   }
 
-  int GetBrightnessValue() const { return m_BrightnessValue; }
-  void SetBrightnessValue(int value) {
-    SetBrightnessMember(value, m_BrightnessValue);
+  int GetToneBalanceValue() const { return m_ToneBalanceValue; }
+  void SetToneBalanceValue(int value) {
+    SetToneBalanceMember(value, m_ToneBalanceValue);
   }
 
   uint16_t GetDefaultDelay() const { return m_DefaultDelay; }

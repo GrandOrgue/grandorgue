@@ -45,11 +45,11 @@ void GOPipeConfigTreeNode::UpdateReleaseTail() {
     m_Callback->UpdateReleaseTail();
 }
 
-void GOPipeConfigTreeNode::UpdateBrightness() {
+void GOPipeConfigTreeNode::UpdateToneBalance() {
   for (auto child : m_Childs)
-    child->GetPipeConfig().GetCallback()->UpdateBrightness();
+    child->GetPipeConfig().GetCallback()->UpdateToneBalance();
   if (m_Callback)
-    m_Callback->UpdateBrightness();
+    m_Callback->UpdateToneBalance();
 }
 
 GOSampleStatistic GOPipeConfigTreeNode::GetStatistic() const {

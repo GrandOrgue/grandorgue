@@ -557,9 +557,9 @@ void GOSoundingPipe::UpdateReleaseTail() {
   m_SoundProvider.SetReleaseTail(m_PipeConfigNode.GetEffectiveReleaseTail());
 }
 
-void GOSoundingPipe::UpdateBrightness() {
-  m_SoundProvider.SetBrightnessValue(
-    m_PipeConfigNode.GetEffectiveBrightnessValue());
+void GOSoundingPipe::UpdateToneBalance() {
+  m_SoundProvider.SetToneBalanceValue(
+    m_PipeConfigNode.GetEffectiveToneBalanceValue());
 }
 
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {

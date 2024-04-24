@@ -16,7 +16,7 @@ public:
   virtual void UpdateTuning() = 0;
   virtual void UpdateAudioGroup() = 0;
   virtual void UpdateReleaseTail() = 0;
-  virtual void UpdateBrightness() = 0;
+  virtual void UpdateToneBalance() = 0;
 };
 
 #endif

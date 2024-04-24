@@ -241,8 +241,8 @@ bool GOSoundEngine::ProcessSampler(
       sampler->p_SoundProvider = NULL;
 
     sampler->fader.Process(n_frames, temp, volume);
-    if (sampler->eq.IsToApplyEq())
-      sampler->eq.ProcessBuffer(n_frames, temp);
+    if (sampler->eqState.IsToApplyEq())
+      sampler->eqState.ProcessBuffer(n_frames, temp);
 
     /* Add these samples to the current output buffer shifting
      * right by the necessary amount to bring the sample gain back
@@ -428,8 +428,7 @@ GOSoundSampler *GOSoundEngine::CreateTaskSample(
       sampler->time = start_time;
       sampler->fader.SetVelocityVolume(
         sampler->p_SoundProvider->GetVelocityVolume(sampler->velocity));
-      sampler->eq.InitEq(
-        sampler->p_SoundProvider->GetBrightnessValue(), m_SampleRate);
+      sampler->eqState.Init(sampler->p_SoundProvider->GetToneEq());
       sampler->is_release = isRelease;
       sampler->m_SamplerTaskId = samplerTaskId;
       sampler->m_AudioGroupId = audioGroup;
@@ -473,8 +472,7 @@ void GOSoundEngine::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
         pSampler->fader.NewAttacking(gain_target, cross_fade_len, m_SampleRate);
         pSampler->is_release = false;
 
-        new_sampler->eq.InitEq(
-          new_sampler->p_SoundProvider->GetBrightnessValue(), m_SampleRate);
+        new_sampler->eqState.Init(new_sampler->p_SoundProvider->GetToneEq());
 
         StartSampler(new_sampler);
       }
@@ -623,8 +621,7 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
       new_sampler->m_AudioGroupId = handle->m_AudioGroupId;
       new_sampler->fader.SetVelocityVolume(
         new_sampler->p_SoundProvider->GetVelocityVolume(new_sampler->velocity));
-      new_sampler->eq.InitEq(
-        new_sampler->p_SoundProvider->GetBrightnessValue(), m_SampleRate);
+      new_sampler->eqState.Init(new_sampler->p_SoundProvider->GetToneEq());
       StartSampler(new_sampler);
       handle->time = m_CurrentTime;
     }

@@ -23,7 +23,7 @@ struct GOSoundSampler {
   unsigned m_AudioGroupId;
   audio_section_stream stream;
   GOSoundFader fader;
-  GOSoundEq eq;
+  GOSoundEq::EqState eqState;
   uint64_t time;
   unsigned velocity;
   unsigned delay;

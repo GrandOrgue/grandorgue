@@ -45,8 +45,8 @@ private:
   wxSpinButton *m_DelaySpin;
   wxTextCtrl *m_ReleaseLength;
   wxSpinButton *m_ReleaseLengthSpin;
-  wxTextCtrl *m_Brightness;
-  wxSlider *m_BrightnessSlider;
+  wxTextCtrl *m_ToneBalance;
+  wxSlider *m_ToneBalanceSlider;
   wxComboBox *m_AudioGroup;
   wxString m_LastAudioGroup;
   wxCheckBox *m_IgnorePitch;
@@ -104,8 +104,8 @@ private:
   void OnDelayChanged(wxCommandEvent &e);
   void OnReleaseLengthSpinChanged(wxSpinEvent &e);
   void OnReleaseLengthChanged(wxCommandEvent &e);
-  void OnBrightnessSliderChanged(wxCommandEvent &e);
-  void OnBrightnessChanged(wxCommandEvent &e);
+  void OnToneBalanceSliderChanged(wxCommandEvent &e);
+  void OnToneBalanceChanged(wxCommandEvent &e);
   void OnAudioGroupChanged(wxCommandEvent &e);
   void OnIgnorePitchChanged(wxCommandEvent &e);
   void OnBitsPerSampleChanged(wxCommandEvent &e);

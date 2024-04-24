@@ -25,7 +25,7 @@ GOPipeConfig::GOPipeConfig(
     m_PitchCorrection(0),
     m_ManualTuning(0),
     m_AutoTuningCorrection(0),
-    m_BrightnessValue(0),
+    m_ToneBalanceValue(0),
     m_DefaultDelay(0),
     m_Delay(0),
     m_ReleaseTail(0),
@@ -112,10 +112,10 @@ void GOPipeConfig::LoadFromCmb(
     CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
   m_ReleaseTail = (uint16_t)cfg.ReadInteger(
     CMBSetting, group, m_NamePrefix + wxT("ReleaseTail"), 0, 3000, false, 0);
-  m_BrightnessValue = cfg.ReadInteger(
+  m_ToneBalanceValue = cfg.ReadInteger(
     CMBSetting,
     m_Group,
-    m_NamePrefix + wxT("BrightnessEq"),
+    m_NamePrefix + wxT("ToneBalance"),
     -100,
     100,
     false,
@@ -125,7 +125,7 @@ void GOPipeConfig::LoadFromCmb(
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
   m_Callback->UpdateReleaseTail();
-  m_Callback->UpdateBrightness();
+  m_Callback->UpdateToneBalance();
 }
 
 void GOPipeConfig::Init(
@@ -184,7 +184,7 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(
     m_Group, m_NamePrefix + wxT("ReleaseTail"), (int)m_ReleaseTail);
   cfg.WriteInteger(
-    m_Group, m_NamePrefix + wxT("BrightnessEq"), m_BrightnessValue);
+    m_Group, m_NamePrefix + wxT("ToneBalance"), m_ToneBalanceValue);
 }
 
 void GOPipeConfig::SetPitchMember(float cents, float &member) {
@@ -195,10 +195,10 @@ void GOPipeConfig::SetPitchMember(float cents, float &member) {
   SetSmallMember(cents, member, &GOPipeUpdateCallback::UpdateTuning);
 }
 
-void GOPipeConfig::SetBrightnessMember(int value, int &member) {
+void GOPipeConfig::SetToneBalanceMember(int value, int &member) {
   if (value < -100)
     value = -100;
   if (value > 100)
     value = 100;
-  SetSmallMember(value, member, &GOPipeUpdateCallback::UpdateBrightness);
+  SetSmallMember(value, member, &GOPipeUpdateCallback::UpdateToneBalance);
 }

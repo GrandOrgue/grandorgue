@@ -112,10 +112,10 @@ public:
 
   uint16_t GetEffectiveReleaseTail() const;
 
-  int GetEffectiveBrightnessValue() const {
+  int GetEffectiveToneBalanceValue() const {
     return GetEffectiveSum(
-      &GOPipeConfig::GetBrightnessValue,
-      &GOPipeConfigNode::GetEffectiveBrightnessValue);
+      &GOPipeConfig::GetToneBalanceValue,
+      &GOPipeConfigNode::GetEffectiveToneBalanceValue);
   }
 
   uint8_t GetEffectiveBitsPerSample() const {
