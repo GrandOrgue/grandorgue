@@ -1,20 +1,20 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDTREMULANTWORKITEM_H
-#define GOSOUNDTREMULANTWORKITEM_H
+#ifndef GOSOUNDTREMULANTTASK_H
+#define GOSOUNDTREMULANTTASK_H
 
 #include "sound/GOSoundSamplerList.h"
-#include "sound/scheduler/GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
 class GOSoundEngine;
 
-class GOSoundTremulantWorkItem : public GOSoundWorkItem {
+class GOSoundTremulantTask : public GOSoundTask {
 private:
   GOSoundEngine &m_engine;
   GOSoundSamplerList m_Samplers;
@@ -24,7 +24,7 @@ private:
   bool m_Done;
 
 public:
-  GOSoundTremulantWorkItem(
+  GOSoundTremulantTask(
     GOSoundEngine &sound_engine, unsigned samples_per_buffer);
 
   unsigned GetGroup();

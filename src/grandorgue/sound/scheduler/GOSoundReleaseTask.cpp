@@ -1,38 +1,36 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundReleaseWorkItem.h"
+#include "GOSoundReleaseTask.h"
 
-#include "GOSoundGroupWorkItem.h"
+#include "GOSoundGroupTask.h"
 #include "sound/GOSoundEngine.h"
 
-GOSoundReleaseWorkItem::GOSoundReleaseWorkItem(
-  GOSoundEngine &sound_engine, ptr_vector<GOSoundGroupWorkItem> &audio_groups)
+GOSoundReleaseTask::GOSoundReleaseTask(
+  GOSoundEngine &sound_engine, ptr_vector<GOSoundGroupTask> &audio_groups)
   : m_engine(sound_engine), m_AudioGroups(audio_groups), m_Stop(false) {}
 
-unsigned GOSoundReleaseWorkItem::GetGroup() { return RELEASE; }
+unsigned GOSoundReleaseTask::GetGroup() { return RELEASE; }
 
-unsigned GOSoundReleaseWorkItem::GetCost() { return 0; }
+unsigned GOSoundReleaseTask::GetCost() { return 0; }
 
-bool GOSoundReleaseWorkItem::GetRepeat() { return true; }
+bool GOSoundReleaseTask::GetRepeat() { return true; }
 
-void GOSoundReleaseWorkItem::Clear() { m_List.Clear(); }
+void GOSoundReleaseTask::Clear() { m_List.Clear(); }
 
-void GOSoundReleaseWorkItem::Reset() {
+void GOSoundReleaseTask::Reset() {
   m_Stop.store(false);
   m_Cnt.store(0);
   m_WaitCnt.store(0);
 }
 
-void GOSoundReleaseWorkItem::Add(GOSoundSampler *sampler) {
-  m_List.Put(sampler);
-}
+void GOSoundReleaseTask::Add(GOSoundSampler *sampler) { m_List.Put(sampler); }
 
-void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread) {
+void GOSoundReleaseTask::Run(GOSoundThread *pThread) {
   GOSoundSampler *sampler;
   do {
     while ((sampler = m_List.Get())) {
@@ -49,7 +47,7 @@ void GOSoundReleaseWorkItem::Run(GOSoundThread *pThread) {
   } while (!m_Stop.load() && m_WaitCnt.load() < m_AudioGroups.size());
 }
 
-void GOSoundReleaseWorkItem::Exec() {
+void GOSoundReleaseTask::Exec() {
   m_Stop.store(true);
   Run();
   GOSoundSampler *sampler;

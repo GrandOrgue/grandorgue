@@ -20,13 +20,13 @@
 class GOWindchest;
 class GOSoundProvider;
 class GOSoundRecorder;
-class GOSoundGroupWorkItem;
-class GOSoundOutputWorkItem;
-class GOSoundReleaseWorkItem;
-class GOSoundTouchWorkItem;
-class GOSoundTremulantWorkItem;
-class GOSoundWindchestWorkItem;
-class GOSoundWorkItem;
+class GOSoundGroupTask;
+class GOSoundOutputTask;
+class GOSoundReleaseTask;
+class GOSoundTouchTask;
+class GOSoundTremulantTask;
+class GOSoundWindchestTask;
+class GOSoundTask;
 class GOOrganController;
 class GOConfig;
 
@@ -56,13 +56,13 @@ private:
   std::atomic_uint m_UsedPolyphony;
   unsigned m_WorkerSlots;
   std::vector<double> m_MeterInfo;
-  ptr_vector<GOSoundTremulantWorkItem> m_TremulantTasks;
-  ptr_vector<GOSoundWindchestWorkItem> m_WindchestTasks;
-  ptr_vector<GOSoundGroupWorkItem> m_AudioGroupTasks;
-  ptr_vector<GOSoundOutputWorkItem> m_AudioOutputTasks;
+  ptr_vector<GOSoundTremulantTask> m_TremulantTasks;
+  ptr_vector<GOSoundWindchestTask> m_WindchestTasks;
+  ptr_vector<GOSoundGroupTask> m_AudioGroupTasks;
+  ptr_vector<GOSoundOutputTask> m_AudioOutputTasks;
   GOSoundRecorder *m_AudioRecorder;
-  GOSoundReleaseWorkItem *m_ReleaseProcessor;
-  std::unique_ptr<GOSoundTouchWorkItem> m_TouchTask;
+  GOSoundReleaseTask *m_ReleaseProcessor;
+  std::unique_ptr<GOSoundTouchTask> m_TouchTask;
   GOSoundScheduler m_Scheduler;
 
   struct resampler_coefs_s m_ResamplerCoefs;

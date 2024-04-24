@@ -1,37 +1,37 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundTouchWorkItem.h"
+#include "GOSoundTouchTask.h"
 
 #include "GOMemoryPool.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundTouchWorkItem::GOSoundTouchWorkItem(GOMemoryPool &pool)
+GOSoundTouchTask::GOSoundTouchTask(GOMemoryPool &pool)
   : m_Pool(pool), m_Stop(false) {}
 
-unsigned GOSoundTouchWorkItem::GetGroup() { return TOUCH; }
+unsigned GOSoundTouchTask::GetGroup() { return TOUCH; }
 
-unsigned GOSoundTouchWorkItem::GetCost() { return 0; }
+unsigned GOSoundTouchTask::GetCost() { return 0; }
 
-bool GOSoundTouchWorkItem::GetRepeat() { return false; }
+bool GOSoundTouchTask::GetRepeat() { return false; }
 
-void GOSoundTouchWorkItem::Run(GOSoundThread *thread) {
+void GOSoundTouchTask::Run(GOSoundThread *thread) {
   GOMutexLocker locker(m_Mutex);
   m_Pool.TouchMemory(m_Stop);
 }
 
-void GOSoundTouchWorkItem::Exec() {
+void GOSoundTouchTask::Exec() {
   m_Stop = true;
   GOMutexLocker locker(m_Mutex);
 }
 
-void GOSoundTouchWorkItem::Clear() { Reset(); }
+void GOSoundTouchTask::Clear() { Reset(); }
 
-void GOSoundTouchWorkItem::Reset() {
+void GOSoundTouchTask::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Stop = false;
 }

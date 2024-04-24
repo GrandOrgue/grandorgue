@@ -1,40 +1,40 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundTremulantWorkItem.h"
+#include "GOSoundTremulantTask.h"
 
 #include "sound/GOSoundEngine.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundTremulantWorkItem::GOSoundTremulantWorkItem(
+GOSoundTremulantTask::GOSoundTremulantTask(
   GOSoundEngine &sound_engine, unsigned samples_per_buffer)
   : m_engine(sound_engine),
     m_Volume(0),
     m_SamplesPerBuffer(samples_per_buffer),
     m_Done(false) {}
 
-void GOSoundTremulantWorkItem::Reset() {
+void GOSoundTremulantTask::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Done = false;
 }
 
-void GOSoundTremulantWorkItem::Clear() { m_Samplers.Clear(); }
+void GOSoundTremulantTask::Clear() { m_Samplers.Clear(); }
 
-void GOSoundTremulantWorkItem::Add(GOSoundSampler *sampler) {
+void GOSoundTremulantTask::Add(GOSoundSampler *sampler) {
   m_Samplers.Put(sampler);
 }
 
-unsigned GOSoundTremulantWorkItem::GetGroup() { return TREMULANT; }
+unsigned GOSoundTremulantTask::GetGroup() { return TREMULANT; }
 
-unsigned GOSoundTremulantWorkItem::GetCost() { return 0; }
+unsigned GOSoundTremulantTask::GetCost() { return 0; }
 
-bool GOSoundTremulantWorkItem::GetRepeat() { return false; }
+bool GOSoundTremulantTask::GetRepeat() { return false; }
 
-void GOSoundTremulantWorkItem::Run(GOSoundThread *thread) {
+void GOSoundTremulantTask::Run(GOSoundThread *thread) {
   if (m_Done)
     return;
 
@@ -66,4 +66,4 @@ void GOSoundTremulantWorkItem::Run(GOSoundThread *thread) {
   m_Done = true;
 }
 
-void GOSoundTremulantWorkItem::Exec() { Run(); }
+void GOSoundTremulantTask::Exec() { Run(); }

@@ -1,28 +1,28 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDTOUCHWORKITEM_H
-#define GOSOUNDTOUCHWORKITEM_H
+#ifndef GOSOUNDTOUCHTASK_H
+#define GOSOUNDTOUCHTASK_H
 
 #include <atomic>
 
-#include "GOSoundWorkItem.h"
+#include "GOSoundTask.h"
 #include "threading/GOMutex.h"
 
 class GOMemoryPool;
 
-class GOSoundTouchWorkItem : public GOSoundWorkItem {
+class GOSoundTouchTask : public GOSoundTask {
 private:
   GOMemoryPool &m_Pool;
   GOMutex m_Mutex;
   std::atomic_bool m_Stop;
 
 public:
-  GOSoundTouchWorkItem(GOMemoryPool &pool);
+  GOSoundTouchTask(GOMemoryPool &pool);
 
   unsigned GetGroup();
   unsigned GetCost();

@@ -1,17 +1,17 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundOutputWorkItem.h"
+#include "GOSoundOutputTask.h"
 
 #include "GOSoundThread.h"
 #include "sound/GOSoundReverb.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundOutputWorkItem::GOSoundOutputWorkItem(
+GOSoundOutputTask::GOSoundOutputTask(
   unsigned channels,
   std::vector<float> scale_factors,
   unsigned samples_per_buffer)
@@ -25,21 +25,20 @@ GOSoundOutputWorkItem::GOSoundOutputWorkItem(
   m_Reverb = new GOSoundReverb(m_Channels);
 }
 
-GOSoundOutputWorkItem::~GOSoundOutputWorkItem() {
+GOSoundOutputTask::~GOSoundOutputTask() {
   if (m_Reverb)
     delete m_Reverb;
 }
 
-void GOSoundOutputWorkItem::SetOutputs(
-  std::vector<GOSoundBufferItem *> outputs) {
+void GOSoundOutputTask::SetOutputs(std::vector<GOSoundBufferItem *> outputs) {
   m_Outputs = outputs;
   m_OutputCount = m_Outputs.size() * 2;
 }
 
-void GOSoundOutputWorkItem::Run(GOSoundThread *pThread) {
+void GOSoundOutputTask::Run(GOSoundThread *pThread) {
   if (m_Done.load())
     return;
-  GOMutexLocker locker(m_Mutex, false, "GOSoundOutputWorkItem::Run", pThread);
+  GOMutexLocker locker(m_Mutex, false, "GOSoundOutputTask::Run", pThread);
 
   if (m_Done.load() || !locker.IsLocked())
     return;
@@ -83,42 +82,42 @@ void GOSoundOutputWorkItem::Run(GOSoundThread *pThread) {
   m_Done.store(true);
 }
 
-void GOSoundOutputWorkItem::Exec() { Run(); }
+void GOSoundOutputTask::Exec() { Run(); }
 
-void GOSoundOutputWorkItem::Finish(bool stop, GOSoundThread *pThread) {
+void GOSoundOutputTask::Finish(bool stop, GOSoundThread *pThread) {
   if (stop)
     m_Stop.store(true);
   if (!m_Done.load())
     Run(pThread);
 }
 
-void GOSoundOutputWorkItem::Clear() {
+void GOSoundOutputTask::Clear() {
   m_Reverb->Reset();
   ResetMeterInfo();
 }
 
-void GOSoundOutputWorkItem::ResetMeterInfo() {
+void GOSoundOutputTask::ResetMeterInfo() {
   GOMutexLocker locker(m_Mutex);
   for (unsigned i = 0; i < m_MeterInfo.size(); i++)
     m_MeterInfo[i] = 0;
 }
 
-void GOSoundOutputWorkItem::Reset() {
+void GOSoundOutputTask::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Done.store(false);
   m_Stop.store(false);
 }
 
-unsigned GOSoundOutputWorkItem::GetGroup() { return AUDIOOUTPUT; }
+unsigned GOSoundOutputTask::GetGroup() { return AUDIOOUTPUT; }
 
-unsigned GOSoundOutputWorkItem::GetCost() { return 0; }
+unsigned GOSoundOutputTask::GetCost() { return 0; }
 
-bool GOSoundOutputWorkItem::GetRepeat() { return false; }
+bool GOSoundOutputTask::GetRepeat() { return false; }
 
-void GOSoundOutputWorkItem::SetupReverb(GOConfig &settings) {
+void GOSoundOutputTask::SetupReverb(GOConfig &settings) {
   m_Reverb->Setup(settings);
 }
 
-const std::vector<float> &GOSoundOutputWorkItem::GetMeterInfo() {
+const std::vector<float> &GOSoundOutputTask::GetMeterInfo() {
   return m_MeterInfo;
 }

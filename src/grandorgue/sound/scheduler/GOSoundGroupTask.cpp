@@ -5,13 +5,13 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundGroupWorkItem.h"
+#include "GOSoundGroupTask.h"
 
-#include "GOSoundWindchestWorkItem.h"
+#include "GOSoundWindchestTask.h"
 #include "sound/GOSoundEngine.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundGroupWorkItem::GOSoundGroupWorkItem(
+GOSoundGroupTask::GOSoundGroupTask(
   GOSoundEngine &sound_engine, unsigned samples_per_buffer)
   : GOSoundBufferItem(samples_per_buffer, 2),
     m_engine(sound_engine),
@@ -20,26 +20,26 @@ GOSoundGroupWorkItem::GOSoundGroupWorkItem(
     m_Done(0),
     m_Stop(false) {}
 
-void GOSoundGroupWorkItem::Reset() {
+void GOSoundGroupTask::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Done.store(0);
   m_ActiveCount.store(0);
   m_Stop.store(false);
 }
 
-void GOSoundGroupWorkItem::Clear() {
+void GOSoundGroupTask::Clear() {
   m_Active.Clear();
   m_Release.Clear();
 }
 
-void GOSoundGroupWorkItem::Add(GOSoundSampler *sampler) {
+void GOSoundGroupTask::Add(GOSoundSampler *sampler) {
   if (sampler->is_release)
     m_Release.Put(sampler);
   else
     m_Active.Put(sampler);
 }
 
-void GOSoundGroupWorkItem::ProcessList(
+void GOSoundGroupTask::ProcessList(
   GOSoundSamplerList &list, bool toDropOld, float *output_buffer) {
   GOSoundSampler *sampler;
 
@@ -53,7 +53,7 @@ void GOSoundGroupWorkItem::ProcessList(
     }
     sampler->drop_counter = 0;
 
-    GOSoundWindchestWorkItem *const windchest = sampler->p_WindchestTask;
+    GOSoundWindchestTask *const windchest = sampler->p_WindchestTask;
 
     if (
       windchest
@@ -63,20 +63,20 @@ void GOSoundGroupWorkItem::ProcessList(
   }
 }
 
-unsigned GOSoundGroupWorkItem::GetGroup() { return AUDIOGROUP; }
+unsigned GOSoundGroupTask::GetGroup() { return AUDIOGROUP; }
 
-unsigned GOSoundGroupWorkItem::GetCost() {
+unsigned GOSoundGroupTask::GetCost() {
   return m_Active.GetCount() + m_Release.GetCount();
 }
 
-bool GOSoundGroupWorkItem::GetRepeat() { return true; }
+bool GOSoundGroupTask::GetRepeat() { return true; }
 
-void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
+void GOSoundGroupTask::Run(GOSoundThread *pThread) {
   if (m_Done.load() == 3) // has already processed in this period
     return;
   {
     GOMutexLocker locker(
-      m_Mutex, false, "GOSoundGroupWorkItem::Run.beforeProcess", pThread);
+      m_Mutex, false, "GOSoundGroupTask::Run.beforeProcess", pThread);
 
     if (!locker.IsLocked())
       return;
@@ -103,7 +103,7 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
 
   {
     GOMutexLocker locker(
-      m_Mutex, false, "GOSoundGroupWorkItem::Run.afterProcess", pThread);
+      m_Mutex, false, "GOSoundGroupTask::Run.afterProcess", pThread);
 
     if (locker.IsLocked()) {
       if (m_Done.load() == 1)
@@ -126,12 +126,12 @@ void GOSoundGroupWorkItem::Run(GOSoundThread *pThread) {
   }
 }
 
-void GOSoundGroupWorkItem::Exec() {
+void GOSoundGroupTask::Exec() {
   m_Stop.store(true);
   Run();
 }
 
-void GOSoundGroupWorkItem::Finish(bool stop, GOSoundThread *pThread) {
+void GOSoundGroupTask::Finish(bool stop, GOSoundThread *pThread) {
   if (stop)
     m_Stop.store(true);
   Run(pThread);
@@ -139,16 +139,15 @@ void GOSoundGroupWorkItem::Finish(bool stop, GOSoundThread *pThread) {
     return;
 
   {
-    GOMutexLocker locker(
-      m_Mutex, false, "GOSoundGroupWorkItem::Finish", pThread);
+    GOMutexLocker locker(m_Mutex, false, "GOSoundGroupTask::Finish", pThread);
 
     while (locker.IsLocked() && m_Done.load() != 3
            && (pThread == nullptr || !pThread->ShouldStop()))
-      m_Condition.WaitOrStop("GOSoundGroupWorkItem::Finish", pThread);
+      m_Condition.WaitOrStop("GOSoundGroupTask::Finish", pThread);
   }
 }
 
-void GOSoundGroupWorkItem::WaitAndClear() {
+void GOSoundGroupTask::WaitAndClear() {
   GOMutexLocker locker(m_Mutex, false, "ClearAndWait::WaitAndClear");
 
   // wait for no threads are inside Run()

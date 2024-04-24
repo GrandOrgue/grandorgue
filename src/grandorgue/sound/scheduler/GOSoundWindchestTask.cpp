@@ -1,19 +1,19 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundWindchestWorkItem.h"
+#include "GOSoundWindchestTask.h"
 
 #include "model/GOWindchest.h"
 #include "sound/GOSoundEngine.h"
 #include "threading/GOMutexLocker.h"
 
-#include "GOSoundTremulantWorkItem.h"
+#include "GOSoundTremulantTask.h"
 
-GOSoundWindchestWorkItem::GOSoundWindchestWorkItem(
+GOSoundWindchestTask::GOSoundWindchestTask(
   GOSoundEngine &sound_engine, GOWindchest *windchest)
   : m_engine(sound_engine),
     m_Volume(0),
@@ -21,8 +21,7 @@ GOSoundWindchestWorkItem::GOSoundWindchestWorkItem(
     m_Windchest(windchest),
     m_Tremulants() {}
 
-void GOSoundWindchestWorkItem::Init(
-  ptr_vector<GOSoundTremulantWorkItem> &tremulants) {
+void GOSoundWindchestTask::Init(ptr_vector<GOSoundTremulantTask> &tremulants) {
   m_Tremulants.clear();
   if (!m_Windchest)
     return;
@@ -30,27 +29,27 @@ void GOSoundWindchestWorkItem::Init(
     m_Tremulants.push_back(tremulants[m_Windchest->GetTremulantId(i)]);
 }
 
-void GOSoundWindchestWorkItem::Clear() { Reset(); }
+void GOSoundWindchestTask::Clear() { Reset(); }
 
-void GOSoundWindchestWorkItem::Reset() {
+void GOSoundWindchestTask::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Done.store(false);
 }
 
-unsigned GOSoundWindchestWorkItem::GetGroup() { return WINDCHEST; }
+unsigned GOSoundWindchestTask::GetGroup() { return WINDCHEST; }
 
-unsigned GOSoundWindchestWorkItem::GetCost() { return 0; }
+unsigned GOSoundWindchestTask::GetCost() { return 0; }
 
-bool GOSoundWindchestWorkItem::GetRepeat() { return false; }
+bool GOSoundWindchestTask::GetRepeat() { return false; }
 
-float GOSoundWindchestWorkItem::GetWindchestVolume() {
+float GOSoundWindchestTask::GetWindchestVolume() {
   if (m_Windchest != NULL)
     return m_Windchest->GetVolume();
   else
     return 1;
 }
 
-void GOSoundWindchestWorkItem::Run(GOSoundThread *thread) {
+void GOSoundWindchestTask::Run(GOSoundThread *thread) {
   if (m_Done.load())
     return;
 
@@ -69,4 +68,4 @@ void GOSoundWindchestWorkItem::Run(GOSoundThread *thread) {
   m_Done.store(true);
 }
 
-void GOSoundWindchestWorkItem::Exec() {}
+void GOSoundWindchestTask::Exec() {}

@@ -1,37 +1,36 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDRELEASEWORKITEM_H
-#define GOSOUNDRELEASEWORKITEM_H
+#ifndef GOSOUNDRELEASETASK_H
+#define GOSOUNDRELEASETASK_H
 
 #include <atomic>
 
 #include "sound/GOSoundSimpleSamplerList.h"
-#include "sound/scheduler/GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundTask.h"
 
 #include "ptrvector.h"
 
 class GOSoundEngine;
-class GOSoundGroupWorkItem;
+class GOSoundGroupTask;
 class GOSoundSampler;
 
-class GOSoundReleaseWorkItem : public GOSoundWorkItem {
+class GOSoundReleaseTask : public GOSoundTask {
 private:
   GOSoundEngine &m_engine;
-  ptr_vector<GOSoundGroupWorkItem> &m_AudioGroups;
+  ptr_vector<GOSoundGroupTask> &m_AudioGroups;
   GOSoundSimpleSamplerList m_List;
   std::atomic_uint m_WaitCnt;
   std::atomic_uint m_Cnt;
   std::atomic_bool m_Stop;
 
 public:
-  GOSoundReleaseWorkItem(
-    GOSoundEngine &sound_engine,
-    ptr_vector<GOSoundGroupWorkItem> &audio_groups);
+  GOSoundReleaseTask(
+    GOSoundEngine &sound_engine, ptr_vector<GOSoundGroupTask> &audio_groups);
 
   unsigned GetGroup();
   unsigned GetCost();
