@@ -54,6 +54,8 @@ const struct IniFileEnumEntry GOMidiReceiverBase::m_MidiTypes[] = {
   {wxT("NoteOn"), MIDI_M_NOTE_ON},
   {wxT("NoteOff"), MIDI_M_NOTE_OFF},
   {wxT("NoteOnOff"), MIDI_M_NOTE_ON_OFF},
+  {wxT("NoteFixedOn"), MIDI_M_NOTE_FIXED_ON},
+  {wxT("NoteFixedOff"), MIDI_M_NOTE_FIXED_OFF},
   {wxT("NoteNoVelocity"), MIDI_M_NOTE_NO_VELOCITY},
   {wxT("NoteShortOctave"), MIDI_M_NOTE_SHORT_OCTAVE},
   {wxT("NoteNormal"), MIDI_M_NOTE_NORMAL},
@@ -251,6 +253,7 @@ bool GOMidiReceiverBase::HasChannel(GOMidiReceiverMessageType type) {
     || type == MIDI_M_CTRL_BIT || type == MIDI_M_CTRL_CHANGE_FIXED
     || type == MIDI_M_RPN || type == MIDI_M_NRPN || type == MIDI_M_NOTE_ON
     || type == MIDI_M_NOTE_OFF || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_FIXED_OFF
     || type == MIDI_M_CTRL_CHANGE_ON || type == MIDI_M_CTRL_CHANGE_OFF
     || type == MIDI_M_CTRL_CHANGE_ON_OFF || type == MIDI_M_CTRL_CHANGE_FIXED_ON
     || type == MIDI_M_CTRL_CHANGE_FIXED_OFF
@@ -272,6 +275,7 @@ bool GOMidiReceiverBase::HasKey(GOMidiReceiverMessageType type) {
     || type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE || type == MIDI_M_CTRL_BIT
     || type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_RPN
     || type == MIDI_M_NRPN || type == MIDI_M_NOTE_ON || type == MIDI_M_NOTE_OFF
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_FIXED_OFF
     || type == MIDI_M_NOTE_ON_OFF || type == MIDI_M_CTRL_CHANGE_ON
     || type == MIDI_M_CTRL_CHANGE_OFF || type == MIDI_M_CTRL_CHANGE_ON_OFF
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON
@@ -313,6 +317,7 @@ bool GOMidiReceiverBase::HasDebounce(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_PGM_CHANGE || type == MIDI_M_NOTE_ON
     || type == MIDI_M_NOTE_OFF || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_FIXED_OFF
     || type == MIDI_M_CTRL_CHANGE || type == MIDI_M_CTRL_CHANGE_ON
     || type == MIDI_M_CTRL_CHANGE_OFF || type == MIDI_M_CTRL_CHANGE_ON_OFF
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON
@@ -332,8 +337,9 @@ bool GOMidiReceiverBase::HasLowerLimit(GOMidiReceiverMessageType type) {
     || type == MIDI_M_NRPN_RANGE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_BIT
     || type == MIDI_M_RPN || type == MIDI_M_NRPN || type == MIDI_M_NOTE_OFF
-    || type == MIDI_M_NOTE_ON_OFF || type == MIDI_M_CTRL_CHANGE_OFF
-    || type == MIDI_M_CTRL_CHANGE_ON_OFF || type == MIDI_M_CTRL_CHANGE_FIXED_OFF
+    || type == MIDI_M_NOTE_FIXED_OFF || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_OFF || type == MIDI_M_CTRL_CHANGE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_FIXED_OFF
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF || type == MIDI_M_RPN_OFF
     || type == MIDI_M_RPN_ON_OFF || type == MIDI_M_NRPN_OFF
     || type == MIDI_M_NRPN_ON_OFF || type == MIDI_M_NOTE_NO_VELOCITY
@@ -354,8 +360,9 @@ bool GOMidiReceiverBase::HasUpperLimit(GOMidiReceiverMessageType type) {
     || type == MIDI_M_NRPN_RANGE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_RPN
     || type == MIDI_M_NRPN || type == MIDI_M_NOTE_ON
-    || type == MIDI_M_NOTE_ON_OFF || type == MIDI_M_CTRL_CHANGE_ON
-    || type == MIDI_M_CTRL_CHANGE_ON_OFF || type == MIDI_M_CTRL_CHANGE_FIXED_ON
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_ON || type == MIDI_M_CTRL_CHANGE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_FIXED_ON
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF || type == MIDI_M_RPN_ON
     || type == MIDI_M_RPN_ON_OFF || type == MIDI_M_NRPN_ON
     || type == MIDI_M_NRPN_ON_OFF || type == MIDI_M_NOTE_NO_VELOCITY
@@ -702,13 +709,15 @@ GOMidiMatchType GOMidiReceiverBase::Match(
       continue;
     }
     if (
-      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
-      && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_ON
+      ((eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+        && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_ON)
+       || (eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_FIXED_ON))
       && pattern.key == e.GetKey() && e.GetValue() == pattern.high_value)
       return debounce(e, MIDI_MATCH_ON, i);
     if (
-      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
-      && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_OFF
+      ((eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+        && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_OFF)
+       || (eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_FIXED_OFF))
       && pattern.key == e.GetKey() && e.GetValue() == pattern.low_value)
       return debounce(e, MIDI_MATCH_OFF, i);
     if (

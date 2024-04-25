@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -225,6 +225,8 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
     m_eventtype->Append(_("9x Note On Toggle"), MIDI_M_NOTE_ON);
     m_eventtype->Append(_("9x Note Off Toggle"), MIDI_M_NOTE_OFF);
     m_eventtype->Append(_("9x Note On/Off Toggle"), MIDI_M_NOTE_ON_OFF);
+    m_eventtype->Append(_("9x Note Fixed On"), MIDI_M_NOTE_FIXED_ON);
+    m_eventtype->Append(_("9x Note Fixed Off"), MIDI_M_NOTE_FIXED_OFF);
   }
   if (m_ReceiverType != MIDI_RECV_MANUAL)
     m_eventtype->Append(_("Bx Controller"), MIDI_M_CTRL_CHANGE);
@@ -733,8 +735,16 @@ void GOMidiEventRecvTab::DetectEvent() {
         } else if (
           (m_ReceiverType == MIDI_RECV_BUTTON
            || m_ReceiverType == MIDI_RECV_DRAWSTOP)
-          && (eventMidiType == GOMidiEvent::MIDI_CTRL_CHANGE)
+          && (eventMidiType == GOMidiEvent::MIDI_CTRL_CHANGE || eventMidiType == GOMidiEvent::MIDI_NOTE)
           && on.GetKey() != off.GetKey() && on.GetValue() == off.GetValue()) {
+          const GOMidiReceiverMessageType onType
+            = (eventMidiType == GOMidiEvent::MIDI_CTRL_CHANGE)
+            ? MIDI_M_CTRL_CHANGE_FIXED_ON
+            : MIDI_M_NOTE_FIXED_ON;
+          const GOMidiReceiverMessageType offType
+            = (eventMidiType == GOMidiEvent::MIDI_CTRL_CHANGE)
+            ? MIDI_M_CTRL_CHANGE_FIXED_OFF
+            : MIDI_M_NOTE_FIXED_OFF;
           GOMidiReceiverEventPattern ep;
 
           // different keys for On and Off
@@ -744,7 +754,7 @@ void GOMidiEventRecvTab::DetectEvent() {
           ep.high_value = on.GetValue();
           ep.debounce_time = 0;
           e = ep;
-          e.type = MIDI_M_CTRL_CHANGE_FIXED_ON;
+          e.type = onType;
           e.key = on.GetKey();
 
           GOMidiReceiverEventPattern *pOffEvent = nullptr;
@@ -756,7 +766,7 @@ void GOMidiEventRecvTab::DetectEvent() {
 
               if (
                 eK.channel == e.channel && eK.deviceId == e.deviceId
-                && (eK.type == MIDI_M_CTRL_CHANGE_FIXED_ON || eK.type == MIDI_M_CTRL_CHANGE_FIXED_OFF)) {
+                && (eK.type == onType || eK.type == offType)) {
                 pOffEvent = &eK;
                 break;
               }
@@ -766,7 +776,7 @@ void GOMidiEventRecvTab::DetectEvent() {
           if (!pOffEvent)
             pOffEvent = &m_midi.GetEvent(m_midi.AddNewEvent());
           *pOffEvent = ep;
-          pOffEvent->type = MIDI_M_CTRL_CHANGE_FIXED_OFF;
+          pOffEvent->type = offType;
           pOffEvent->key = off.GetKey();
           hasFilled = true;
         } else {
@@ -931,6 +941,8 @@ void GOMidiEventRecvTab::DetectEvent() {
             hasFilled = true;
           }
         }
+        if (hasFilled)
+          break;
       }
       if (hasFilled)
         break;
