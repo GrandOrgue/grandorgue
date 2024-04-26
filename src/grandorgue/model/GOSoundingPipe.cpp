@@ -574,6 +574,10 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
 void GOSoundingPipe::PreparePlayback() {
   GOPipe::PreparePlayback();
   UpdateAudioGroup();
+  GOSoundEngine *pSoundEngine = GetSoundEngine();
+  if (pSoundEngine)
+    m_SoundProvider.SetToneBalanceFilterSamplerate(
+      pSoundEngine->GetSampleRate());
 }
 
 void GOSoundingPipe::AbortPlayback() {

@@ -170,8 +170,12 @@ void GOSoundProvider::SetTuning(float cent) {
 
 void GOSoundProvider::SetToneBalanceValue(int value) {
   m_ToneBalanceValue = value;
-  if (m_Attack.size())
-    m_ToneEq.InitEq(m_ToneBalanceValue, m_Attack[0]->GetSampleRate());
+  m_ToneBalance.Init(m_ToneBalanceValue);
+}
+
+void GOSoundProvider::SetToneBalanceFilterSamplerate(unsigned samplerate) {
+  m_ToneBalance.SetFilterSamplerate(samplerate);
+  m_ToneBalance.Init(m_ToneBalanceValue);
 }
 
 unsigned GOSoundProvider::GetMidiKeyNumber() const { return m_MidiKeyNumber; }

@@ -201,6 +201,7 @@ sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
 sound/GOSoundStateHandler.cpp
 sound/GOSound.cpp
+sound/GOSoundFilter.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp
 yaml/go-wx-yaml.cpp

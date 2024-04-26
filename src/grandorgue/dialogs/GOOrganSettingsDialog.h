@@ -12,7 +12,6 @@
 
 #include "common/GOSimpleDialog.h"
 #include "document-base/GOView.h"
-#include <wx/slider.h>
 
 class GOPipeConfigNode;
 class GOOrganController;
@@ -46,7 +45,7 @@ private:
   wxTextCtrl *m_ReleaseLength;
   wxSpinButton *m_ReleaseLengthSpin;
   wxTextCtrl *m_ToneBalance;
-  wxSlider *m_ToneBalanceSlider;
+  wxSpinButton *m_ToneBalanceSpin;
   wxComboBox *m_AudioGroup;
   wxString m_LastAudioGroup;
   wxCheckBox *m_IgnorePitch;
@@ -104,7 +103,7 @@ private:
   void OnDelayChanged(wxCommandEvent &e);
   void OnReleaseLengthSpinChanged(wxSpinEvent &e);
   void OnReleaseLengthChanged(wxCommandEvent &e);
-  void OnToneBalanceSliderChanged(wxCommandEvent &e);
+  void OnToneBalanceSpinChanged(wxSpinEvent &e);
   void OnToneBalanceChanged(wxCommandEvent &e);
   void OnAudioGroupChanged(wxCommandEvent &e);
   void OnIgnorePitchChanged(wxCommandEvent &e);

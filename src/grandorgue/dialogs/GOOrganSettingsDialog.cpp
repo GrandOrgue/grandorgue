@@ -59,7 +59,7 @@ enum {
   ID_EVENT_CHANNELS,
   ID_EVENT_COMPRESS,
   ID_EVENT_TONE_BALANCE,
-  ID_EVENT_TONE_BALANCE_SLIDER
+  ID_EVENT_TONE_BALANCE_SPIN
 };
 
 class OrganTreeItemData : public wxTreeItemData {
@@ -99,9 +99,8 @@ EVT_SPIN(
 EVT_TEXT(ID_EVENT_DELAY, GOOrganSettingsDialog::OnDelayChanged)
 EVT_SPIN(ID_EVENT_DELAY_SPIN, GOOrganSettingsDialog::OnDelaySpinChanged)
 EVT_TEXT(ID_EVENT_TONE_BALANCE, GOOrganSettingsDialog::OnToneBalanceChanged)
-EVT_SLIDER(
-  ID_EVENT_TONE_BALANCE_SLIDER,
-  GOOrganSettingsDialog::OnToneBalanceSliderChanged)
+EVT_SPIN(
+  ID_EVENT_TONE_BALANCE_SPIN, GOOrganSettingsDialog::OnToneBalanceSpinChanged)
 EVT_TEXT(ID_EVENT_AUDIO_GROUP, GOOrganSettingsDialog::OnAudioGroupChanged)
 EVT_TEXT(ID_EVENT_RELEASE_LENGTH, GOOrganSettingsDialog::OnReleaseLengthChanged)
 EVT_SPIN(
@@ -277,25 +276,13 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
   m_ToneBalance = new wxTextCtrl(
     this, ID_EVENT_TONE_BALANCE, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_ToneBalance, wxGBPosition(6, 2), wxDefaultSpan, wxEXPAND);
-  gb->Add(
-    new wxStaticText(this, wxID_ANY, _("Bass")),
-    wxGBPosition(7, 0),
-    wxDefaultSpan,
-    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
-    5);
-  m_ToneBalanceSlider
-    = new wxSlider(this, ID_EVENT_TONE_BALANCE_SLIDER, 0, -100, 100);
-  gb->Add(m_ToneBalanceSlider, wxGBPosition(7, 1), wxGBSpan(1, 2), wxEXPAND);
-  gb->Add(
-    new wxStaticText(this, wxID_ANY, _("Treble")),
-    wxGBPosition(7, 3),
-    wxDefaultSpan,
-    wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
-    5);
+  m_ToneBalanceSpin = new wxSpinButton(this, ID_EVENT_TONE_BALANCE_SPIN);
+  m_ToneBalanceSpin->SetRange(-100, 100);
+  gb->Add(m_ToneBalanceSpin, wxGBPosition(6, 3), wxDefaultSpan);
 
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("Audio group:")),
-    wxGBPosition(8, 0),
+    wxGBPosition(7, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxBOTTOM,
     5);
@@ -308,14 +295,14 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     m_AudioGroup->Append(audio_groups[i]);
   m_AudioGroup->SetValue(wxT(" "));
   m_LastAudioGroup = m_AudioGroup->GetValue();
-  gb->Add(m_AudioGroup, wxGBPosition(8, 1), wxGBSpan(1, 3), wxEXPAND);
+  gb->Add(m_AudioGroup, wxGBPosition(7, 1), wxGBSpan(1, 3), wxEXPAND);
 
   gb->Add(
     m_IgnorePitch = new wxCheckBox(
       this,
       ID_EVENT_IGNORE_PITCH,
       _("Ignore pitch info in organ samples wav files")),
-    wxGBPosition(9, 0),
+    wxGBPosition(8, 0),
     wxGBSpan(1, 4),
     wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
     5);
@@ -594,8 +581,8 @@ void GOOrganSettingsDialog::Load(bool isForce) {
     m_ReleaseLengthSpin->Disable();
     m_ToneBalance->ChangeValue(wxEmptyString);
     m_ToneBalance->Disable();
-    m_ToneBalanceSlider->SetValue(0);
-    m_ToneBalanceSlider->Disable();
+    m_ToneBalanceSpin->SetValue(0);
+    m_ToneBalanceSpin->Disable();
     m_AudioGroup->Disable();
     m_IgnorePitch->Disable();
     m_BitsPerSample->Disable();
@@ -702,7 +689,7 @@ void GOOrganSettingsDialog::Load(bool isForce) {
   m_ReleaseLength->Enable();
   m_ReleaseLengthSpin->Enable();
   m_ToneBalance->Enable();
-  m_ToneBalanceSlider->Enable();
+  m_ToneBalanceSpin->Enable();
   m_AudioGroup->Enable();
   m_IgnorePitch->Enable();
   m_BitsPerSample->Enable();
@@ -743,7 +730,7 @@ void GOOrganSettingsDialog::Load(bool isForce) {
     m_ReleaseLength->DiscardEdits();
     m_ReleaseLengthSpin->SetValue(release_length_to_spin_index(releaseLength));
     m_ToneBalance->ChangeValue(wxString::Format(wxT("%i"), toneBalance));
-    m_ToneBalanceSlider->SetValue(toneBalance);
+    m_ToneBalanceSpin->SetValue(toneBalance);
     m_AudioGroup->ChangeValue(m_Last->config->GetAudioGroup());
     m_IgnorePitch->SetValue(m_Last->node->GetEffectiveIgnorePitch());
 
@@ -865,9 +852,9 @@ void GOOrganSettingsDialog::OnReleaseLengthChanged(wxCommandEvent &e) {
   Modified();
 }
 
-void GOOrganSettingsDialog::OnToneBalanceSliderChanged(wxCommandEvent &e) {
+void GOOrganSettingsDialog::OnToneBalanceSpinChanged(wxSpinEvent &e) {
   m_ToneBalance->ChangeValue(
-    wxString::Format(wxT("%i"), m_ToneBalanceSlider->GetValue()));
+    wxString::Format(wxT("%i"), m_ToneBalanceSpin->GetValue()));
   m_ToneBalance->MarkDirty();
   Modified();
 }
@@ -876,7 +863,7 @@ void GOOrganSettingsDialog::OnToneBalanceChanged(wxCommandEvent &e) {
   long value;
 
   if (m_ToneBalance->GetValue().ToLong(&value))
-    m_ToneBalanceSlider->SetValue(value);
+    m_ToneBalanceSpin->SetValue(value);
   Modified();
 }
 
