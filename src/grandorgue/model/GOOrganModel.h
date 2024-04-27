@@ -195,7 +195,7 @@ public:
   }
 
   /**
-   * Walks recursivelly across all manuals with divisional coupler engaged and
+   * Walks recursively across all manuals with divisional coupler engaged and
    *   returns a set of manuals where the divisional with the same number should
    *   be pushed
    * @param startManual the first manual index where a divisional is pushed

@@ -17,7 +17,7 @@ class GOConfigReader;
 class GOOrganModel;
 
 /**
- * A divisional combination button for a manual. It is uses only for odf-defined
+ * A divisional combination button for a manual. It is used only for odf-defined
  * (old style) divisionals and not for setter (banked) divisionals
  */
 class GODivisionalButtonControl : public GOPushbuttonControl {

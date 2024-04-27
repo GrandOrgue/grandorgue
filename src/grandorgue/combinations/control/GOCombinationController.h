@@ -29,7 +29,7 @@ public:
     = 0;
 
   /**
-   * Activate the divisional cmb. Does not process duvisional couplers
+   * Activate the divisional cmb. Does not process divisional couplers
    * @param cmb the cmb to activate or to set
    * @param startManual the manual that is pushed manually.
    * @param cmbManual the manual where to push the divisional. It may differ
