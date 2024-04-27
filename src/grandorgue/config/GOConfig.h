@@ -76,6 +76,8 @@ private:
 
   wxString GetEventSection(unsigned index);
 
+  void LoadDefaults();
+
 public:
   GOConfig(wxString instance);
   ~GOConfig();
