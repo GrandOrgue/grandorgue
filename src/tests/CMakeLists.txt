@@ -11,15 +11,6 @@ include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/s
 add_subdirectory(common)
 add_subdirectory(testing)
 
-
-add_option(-mmmx)
-add_option(-msse)
-add_option(-msse2)
-add_option(-msse3)
-
-add_option(-mstackrealign)
-
-include(UsewxWidgets)
 add_executable(GOTestExe GOTestExe.cpp)
 
 
