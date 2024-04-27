@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -22,7 +22,10 @@ public:
   void PushGeneral(
     GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) override;
   void PushDivisional(
-    GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) override;
+    GODivisionalCombination &cmb,
+    unsigned startManual,
+    unsigned cmbManual,
+    GOButtonControl *pButtonToLight) override;
 };
 
 #endif /* GOCOMBINATIONCONTROLLERPROXY_H */

@@ -307,6 +307,25 @@ GOGeneralButtonControl *GOOrganModel::GetGeneral(unsigned index) {
   return m_generals[index];
 }
 
+void GOOrganModel::FillCoupledManualsForDivisional(
+  unsigned startManual, std::set<unsigned> &manualSet) const {
+  // protection against infinite recursion
+  if (manualSet.insert(startManual).second) {
+    // walk on the couplers
+    for (const GODivisionalCoupler *coupler : m_DivisionalCoupler)
+      for (auto otherManual : coupler->GetCoupledManuals(startManual))
+        FillCoupledManualsForDivisional(otherManual, manualSet);
+  }
+}
+
+std::set<unsigned> GOOrganModel::GetCoupledManualsForDivisional(
+  unsigned startManual) const {
+  std::set<unsigned> res;
+
+  FillCoupledManualsForDivisional(startManual, res);
+  return res;
+}
+
 void GOOrganModel::UpdateAllButtonsLight(
   GOButtonControl *buttonToLight, int manualIndexOnlyFor) {
   if (manualIndexOnlyFor < 0)

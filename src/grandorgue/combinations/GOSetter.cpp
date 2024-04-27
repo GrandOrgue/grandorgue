@@ -1015,71 +1015,19 @@ void GOSetter::PushGeneral(
 }
 
 void GOSetter::PushDivisional(
-  std::unordered_set<GODivisionalCombination *> &usedCmbs,
   GODivisionalCombination &cmb,
+  unsigned startManual,
+  unsigned cmbManual,
   GOButtonControl *pButtonToLight) {
-  // protection against infinite recursion
-  if (usedCmbs.insert(&cmb).second) {
+  if (cmbManual == startManual || !m_state.m_IsActive) {
     GOCombination::ExtraElementsSet elementSet;
     const GOCombination::ExtraElementsSet *pExtraSet
       = GetCrescendoAddSet(elementSet);
 
     NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
-    /* only use divisional couples, if not in setter mode */
-    if (!m_state.m_IsActive) {
-      unsigned cmbManualNumber = cmb.GetManualNumber();
-      unsigned divisionalNumber = cmb.GetDivisionalNumber();
-
-      for (unsigned k = 0; k < m_OrganController->GetDivisionalCouplerCount();
-           k++) {
-        GODivisionalCoupler *coupler
-          = m_OrganController->GetDivisionalCoupler(k);
-        if (!coupler->IsEngaged())
-          continue;
-
-        for (unsigned i = 0; i < coupler->GetNumberOfManuals(); i++) {
-          if (coupler->GetManual(i) != cmbManualNumber)
-            continue;
-
-          for (unsigned int j = i + 1; j < coupler->GetNumberOfManuals(); j++) {
-            GODivisionalButtonControl *coupledDivisional
-              = m_OrganController->GetManual(coupler->GetManual(j))
-                  ->GetDivisional(divisionalNumber);
-
-            PushDivisional(
-              usedCmbs, coupledDivisional->GetCombination(), coupledDivisional);
-          }
-
-          if (coupler->IsBidirectional())
-            for (unsigned j = 0; j < coupler->GetNumberOfManuals(); j++) {
-              unsigned coupledManualIndex = coupler->GetManual(j);
-
-              if (coupledManualIndex == cmbManualNumber)
-                break;
-
-              GODivisionalButtonControl *coupledDivisional
-                = m_OrganController->GetManual(coupledManualIndex)
-                    ->GetDivisional(divisionalNumber);
-
-              PushDivisional(
-                usedCmbs,
-                coupledDivisional->GetCombination(),
-                coupledDivisional);
-            }
-          break;
-        }
-      }
-    }
     if (!pExtraSet)
-      UpdateAllSetsButtonsLight(pButtonToLight, cmb.GetManualNumber());
+      UpdateAllSetsButtonsLight(pButtonToLight, cmbManual);
   }
-}
-
-void GOSetter::PushDivisional(
-  GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) {
-  std::unordered_set<GODivisionalCombination *> usedCmbs;
-
-  PushDivisional(usedCmbs, cmb, pButtonToLight);
 }
 
 void GOSetter::Next() { SetPosition(m_pos + 1); }

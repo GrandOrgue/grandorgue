@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -349,10 +349,10 @@ void GODivisionalSetter::SwitchDivisionalTo(
     // whether the combination is defined
     bool isExist = divMap.find(divisionalIdx) != divMap.end();
     GODivisionalCombination *pCmb = isExist ? divMap[divisionalIdx] : nullptr;
+    const unsigned manualIndex = m_FirstManualIndex + manualN;
 
     if (!isExist && r_SetterState.m_IsActive) {
       // create a new combination
-      const unsigned manualIndex = m_FirstManualIndex + manualN;
 
       pCmb = new GODivisionalCombination(*m_OrganController, manualIndex, true);
       pCmb->Init(
@@ -362,8 +362,11 @@ void GODivisionalSetter::SwitchDivisionalTo(
 
     if (pCmb)
       // the combination was existing or has just been created
-      m_OrganController->GetSetter()->PushDivisional(
-        *pCmb, m_buttons[N_BUTTONS * manualN + divisionalN]);
+      m_OrganController->PushDivisional(
+        *pCmb,
+        manualIndex,
+        manualIndex,
+        m_buttons[N_BUTTONS * manualN + divisionalN]);
   }
 }
 

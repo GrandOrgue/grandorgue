@@ -1,17 +1,23 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GODivisionalCoupler.h"
 
+#include <algorithm>
+
 #include <wx/intl.h>
 
 #include "config/GOConfigReader.h"
 
 #include "GOOrganModel.h"
+
+const wxString GODivisionalCoupler::WX_MIDI_TYPE_CODE
+  = wxT("DivisionalCoupler");
+const wxString GODivisionalCoupler::WX_MIDI_TYPE_DESC = _("Divisional Coupler");
 
 GODivisionalCoupler::GODivisionalCoupler(GOOrganModel &organModel)
   : GODrawstop(organModel), m_BiDirectionalCoupling(false), m_manuals(0) {}
@@ -47,23 +53,23 @@ void GODivisionalCoupler::SetupIsToStoreInCmb() {
   m_IsToStoreInGeneral = r_OrganModel.GeneralsStoreDivisionalCouplers();
 }
 
-void GODivisionalCoupler::ChangeState(bool on) {}
+std::set<unsigned> GODivisionalCoupler::GetCoupledManuals(
+  unsigned startManual) const {
+  std::set<unsigned> res;
 
-unsigned GODivisionalCoupler::GetNumberOfManuals() { return m_manuals.size(); }
+  if (IsEngaged()) {
+    auto firstIt = m_manuals.cbegin();
+    auto lastIt = m_manuals.cend();
+    auto startIt = std::find(firstIt, lastIt, startManual);
 
-unsigned GODivisionalCoupler::GetManual(unsigned index) {
-  return m_manuals[index];
-}
+    if (startIt != lastIt) { // startManual participates in the coupler
+      auto copyIt = m_BiDirectionalCoupling ? firstIt : startIt;
 
-bool GODivisionalCoupler::IsBidirectional() { return m_BiDirectionalCoupling; }
-
-const wxString WX_MIDI_TYPE_CODE = wxT("DivisionalCoupler");
-const wxString WX_MIDI_TYPE = _("Divisional Coupler");
-
-const wxString &GODivisionalCoupler::GetMidiTypeCode() const {
-  return WX_MIDI_TYPE_CODE;
-}
-
-const wxString &GODivisionalCoupler::GetMidiType() const {
-  return WX_MIDI_TYPE;
+      std::copy_if(
+        copyIt, lastIt, std::inserter(res, res.begin()), [=](auto x) {
+          return x != startManual;
+        });
+    }
+  }
+  return res;
 }

@@ -200,11 +200,10 @@ public:
   void PushGeneral(
     GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) override;
   void PushDivisional(
-    std::unordered_set<GODivisionalCombination *> &usedCmbs,
     GODivisionalCombination &cmb,
-    GOButtonControl *pButtonToLight);
-  void PushDivisional(
-    GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) override;
+    unsigned startManual,
+    unsigned cmbManual,
+    GOButtonControl *pButtonToLight) override;
 
   /*
    * If current crescendo is in override mode then returns nullptr

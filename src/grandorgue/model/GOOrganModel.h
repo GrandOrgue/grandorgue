@@ -8,6 +8,8 @@
 #ifndef GOORGANMODEL_H
 #define GOORGANMODEL_H
 
+#include <set>
+
 #include "ptrvector.h"
 
 #include "combinations/control/GOCombinationButtonSet.h"
@@ -54,6 +56,16 @@ private:
   GOPipeConfigTreeNode m_RootPipeConfigNode;
 
   bool m_OrganModelModified;
+
+  /**
+   * Walks across all manuals with divisional coupler engaged and returns the
+   *   set of manuals where the divisional with the same number should be pushed
+   * @param startManual the first manual index where a divisional is pushed
+   * @param manualSet the resulting set of manuals. It always contains
+   *   startManual
+   */
+  void FillCoupledManualsForDivisional(
+    unsigned startManual, std::set<unsigned> &manualSet) const;
 
 protected:
   ptr_vector<GOWindchest> m_windchests;
@@ -181,6 +193,15 @@ public:
   GODivisionalCoupler *GetDivisionalCoupler(unsigned index) {
     return m_DivisionalCoupler[index];
   }
+
+  /**
+   * Walks recursively across all manuals with divisional coupler engaged and
+   *   returns a set of manuals where the divisional with the same number should
+   *   be pushed
+   * @param startManual the first manual index where a divisional is pushed
+   * @return the resulting set of manuals. It always contains startManual
+   */
+  std::set<unsigned> GetCoupledManualsForDivisional(unsigned startManual) const;
 
   /**
    * Find a divisional coupler by it's name

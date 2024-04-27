@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,7 +14,10 @@ void GOCombinationControllerProxy::PushGeneral(
 }
 
 void GOCombinationControllerProxy::PushDivisional(
-  GODivisionalCombination &cmb, GOButtonControl *pButtonToLight) {
+  GODivisionalCombination &cmb,
+  unsigned startManual,
+  unsigned cmbManual,
+  GOButtonControl *pButtonToLight) {
   if (p_controller)
-    p_controller->PushDivisional(cmb, pButtonToLight);
+    p_controller->PushDivisional(cmb, startManual, cmbManual, pButtonToLight);
 }
