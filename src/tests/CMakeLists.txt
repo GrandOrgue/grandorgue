@@ -29,6 +29,7 @@ target_link_libraries(GOTestExe GOTests)
 target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests)
 target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/common)
 target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/testing)
+target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/testing/model)
 target_include_directories(GOTests PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/common)
 BUILD_EXECUTABLE(GOTestExe)
 
