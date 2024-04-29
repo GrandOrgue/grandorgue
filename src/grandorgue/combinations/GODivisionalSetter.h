@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,7 @@
 #ifndef GODIVISIONALSETTER_H
 #define GODIVISIONALSETTER_H
 
+#include <cstdint>
 #include <map>
 #include <unordered_map>
 
@@ -56,12 +57,21 @@ private:
     unordered_map<const wxString, GOLabelControl *, wxStringHash, wxStringEqual>
       m_BankLabelsByName;
   // current bank numbers for each manual. 0 - A, 1 - B, etc
-  std::vector<unsigned> m_manualBanks;
+  std::vector<uint8_t> m_manualBanks;
   // All combinations for all nanuals
   std::vector<DivisionalMap> m_DivisionalMaps;
 
   // update the current bank on the m_BankLabels[manualN]
-  void UpdateBankDisplay(unsigned manualN);
+  void UpdateBankDisplay(unsigned manualN, uint8_t bankN);
+
+  /**
+   * Switches the current bank of the manual.
+   * @param manualN manual number in the setter
+   * @param setNewBank a function with (unsigned &currBank) parameter. It may
+   *   change currBank
+   */
+  template <typename F> void SwitchBank(unsigned manualN, const F &setNewBank);
+
   // delete all combinations from m_DivisionalMaps
   void ClearCombinations();
 
@@ -127,11 +137,6 @@ public:
     return m_BankLabelsByName[name];
   }
 
-  // Activates the combination for the manual as the button divisionalN is
-  // pressed. Current bank is taken into account.
-  // manualN, and divisionalN start with 0
-  void SwitchDivisionalTo(unsigned manualN, unsigned divisionalN);
-
   // Activate the previous bank for the manual if it exists.
   // manualN starts with 0
   void SwitchBankToPrev(unsigned manualN);
@@ -139,6 +144,11 @@ public:
   // Activate the next bank for the manual if it exists
   // manualN starts with 0
   void SwitchBankToNext(unsigned manualN);
+
+  // Activates the combination for the manual as the button divisionalN is
+  // pressed. Current bank is taken into account.
+  // manualN, and divisionalN start with 0
+  void SwitchDivisionalTo(unsigned manualN, unsigned divisionalN);
 };
 
 #endif /* GODIVISIONALSETTER_H */

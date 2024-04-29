@@ -1,3 +1,4 @@
+- Fixed divisional couplers with setter divisionals https://github.com/GrandOrgue/grandorgue/issues/1787
 - Fixed behavior of "Detect complex MIDI setup" with Note events in different cases https://github.com/GrandOrgue/grandorgue/issues/1762
 - Fixed the order of sending midi events from an On indicator. Now they are sent after sending all events from other controls https://github.com/GrandOrgue/grandorgue/issues/1762
 # 3.14.1 (2024-04-17)
