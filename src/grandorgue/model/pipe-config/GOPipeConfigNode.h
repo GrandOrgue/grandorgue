@@ -112,11 +112,7 @@ public:
 
   uint16_t GetEffectiveReleaseTail() const;
 
-  int GetEffectiveToneBalanceValue() const {
-    return GetEffectiveSum(
-      &GOPipeConfig::GetToneBalanceValue,
-      &GOPipeConfigNode::GetEffectiveToneBalanceValue);
-  }
+  int GetEffectiveToneBalanceValue() const;
 
   uint8_t GetEffectiveBitsPerSample() const {
     return GetEffectiveUint8(
