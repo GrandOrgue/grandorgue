@@ -21,13 +21,13 @@ jobs:
   
       - name: Test
         working-directory: ${{github.workspace}}
-        run: ctest -T test --verbose
+        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh test
       - name: Coverage
         working-directory: ${{github.workspace}}
-        run: ctest -T coverage
+        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh coverage
       - name: Coverage Report
         working-directory: ${{github.workspace}}
-        run: gcovr -e "submodules/*|usr/*"
+        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh gcovr
       - uses: codecov/codecov-action@v3
         
   calc_ver:
