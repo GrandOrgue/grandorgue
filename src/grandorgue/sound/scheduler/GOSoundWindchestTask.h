@@ -1,34 +1,34 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDWINDCHESTWORKITEM_H
-#define GOSOUNDWINDCHESTWORKITEM_H
+#ifndef GOSOUNDWINDCHESTTASK_H
+#define GOSOUNDWINDCHESTTASK_H
 
 #include <atomic>
 
 #include "ptrvector.h"
-#include "sound/scheduler/GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
 class GOSoundEngine;
-class GOSoundTremulantWorkItem;
+class GOSoundTremulantTask;
 class GOWindchest;
 
-class GOSoundWindchestWorkItem : public GOSoundWorkItem {
+class GOSoundWindchestTask : public GOSoundTask {
 private:
   GOSoundEngine &m_engine;
   GOMutex m_Mutex;
   float m_Volume;
   std::atomic_bool m_Done;
   GOWindchest *m_Windchest;
-  std::vector<GOSoundTremulantWorkItem *> m_Tremulants;
+  std::vector<GOSoundTremulantTask *> m_Tremulants;
 
 public:
-  GOSoundWindchestWorkItem(GOSoundEngine &sound_engine, GOWindchest *windchest);
+  GOSoundWindchestTask(GOSoundEngine &sound_engine, GOWindchest *windchest);
 
   unsigned GetGroup();
   unsigned GetCost();
@@ -38,7 +38,7 @@ public:
 
   void Clear();
   void Reset();
-  void Init(ptr_vector<GOSoundTremulantWorkItem> &tremulants);
+  void Init(ptr_vector<GOSoundTremulantTask> &tremulants);
 
   float GetWindchestVolume();
   float GetVolume() {

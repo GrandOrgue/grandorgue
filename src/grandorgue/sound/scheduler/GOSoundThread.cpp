@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,7 +10,7 @@
 #include <wx/log.h>
 
 #include "GOSoundScheduler.h"
-#include "sound/scheduler/GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutexLocker.h"
 #include <unistd.h>
 
@@ -28,7 +28,7 @@ void GOSoundThread::Entry() {
     bool shouldStop = false;
 
     do {
-      GOSoundWorkItem *next = m_Scheduler->GetNextGroup();
+      GOSoundTask *next = m_Scheduler->GetNextGroup();
 
       if (next == NULL)
         break;
