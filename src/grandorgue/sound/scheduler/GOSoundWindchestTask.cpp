@@ -7,65 +7,47 @@
 
 #include "GOSoundWindchestTask.h"
 
-#include "model/GOWindchest.h"
 #include "sound/GOSoundEngine.h"
 #include "threading/GOMutexLocker.h"
 
 #include "GOSoundTremulantTask.h"
 
 GOSoundWindchestTask::GOSoundWindchestTask(
-  GOSoundEngine &sound_engine, GOWindchest *windchest)
-  : m_engine(sound_engine),
-    m_Volume(0),
-    m_Done(false),
-    m_Windchest(windchest),
-    m_Tremulants() {}
+  GOSoundEngine &soundEngine, GOWindchest *pWindchest)
+  : r_engine(soundEngine),
+    m_volume(0),
+    m_done(false),
+    p_windchest(pWindchest) {}
 
-void GOSoundWindchestTask::Init(ptr_vector<GOSoundTremulantTask> &tremulants) {
-  m_Tremulants.clear();
-  if (!m_Windchest)
-    return;
-  for (unsigned i = 0; i < m_Windchest->GetTremulantCount(); i++)
-    m_Tremulants.push_back(tremulants[m_Windchest->GetTremulantId(i)]);
+void GOSoundWindchestTask::Init(
+  ptr_vector<GOSoundTremulantTask> &tremulantTasks) {
+  m_pTremulantTasks.clear();
+  if (p_windchest)
+    for (unsigned i = 0; i < p_windchest->GetTremulantCount(); i++)
+      m_pTremulantTasks.push_back(
+        tremulantTasks[p_windchest->GetTremulantId(i)]);
 }
-
-void GOSoundWindchestTask::Clear() { Reset(); }
 
 void GOSoundWindchestTask::Reset() {
-  GOMutexLocker locker(m_Mutex);
-  m_Done.store(false);
+  GOMutexLocker locker(m_mutex);
+
+  m_done.store(false);
 }
 
-unsigned GOSoundWindchestTask::GetGroup() { return WINDCHEST; }
+void GOSoundWindchestTask::Run(GOSoundThread *pThread) {
+  if (!m_done.load()) {
+    GOMutexLocker locker(m_mutex);
 
-unsigned GOSoundWindchestTask::GetCost() { return 0; }
+    if (!m_done.load()) {
+      float volume = r_engine.GetGain();
 
-bool GOSoundWindchestTask::GetRepeat() { return false; }
-
-float GOSoundWindchestTask::GetWindchestVolume() {
-  if (m_Windchest != NULL)
-    return m_Windchest->GetVolume();
-  else
-    return 1;
-}
-
-void GOSoundWindchestTask::Run(GOSoundThread *thread) {
-  if (m_Done.load())
-    return;
-
-  GOMutexLocker locker(m_Mutex);
-
-  if (m_Done.load())
-    return;
-
-  float volume = m_engine.GetGain();
-  if (m_Windchest != NULL) {
-    volume *= m_Windchest->GetVolume();
-    for (unsigned i = 0; i < m_Tremulants.size(); i++)
-      volume *= m_Tremulants[i]->GetVolume();
+      if (p_windchest) {
+        volume *= p_windchest->GetVolume();
+        for (unsigned i = 0; i < m_pTremulantTasks.size(); i++)
+          volume *= m_pTremulantTasks[i]->GetVolume();
+      }
+      m_volume = volume;
+      m_done.store(true);
+    }
   }
-  m_Volume = volume;
-  m_Done.store(true);
 }
-
-void GOSoundWindchestTask::Exec() {}
