@@ -168,7 +168,7 @@ void GOSoundProvider::SetTuning(float cent) {
   m_Tuning = pow(pow(2, 1.0 / 1200.0), cent);
 }
 
-void GOSoundProvider::SetToneBalanceValue(int value) {
+void GOSoundProvider::SetToneBalanceValue(int8_t value) {
   m_ToneBalanceValue = value;
   m_ToneBalance.Init(m_ToneBalanceValue);
 }

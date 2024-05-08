@@ -74,7 +74,7 @@ uint16_t GOPipeConfigNode::GetEffectiveReleaseTail() const {
   return releaseTail;
 }
 
-int GOPipeConfigNode::GetEffectiveToneBalanceValue() const {
+int8_t GOPipeConfigNode::GetEffectiveToneBalanceValue() const {
   if (m_PipeConfig.GetToneBalanceValue())
     return m_PipeConfig.GetToneBalanceValue();
   else

@@ -9,11 +9,17 @@
 #define GOSOUNDFILTER_H_
 
 #include <cmath>
-
-enum class GO_FILTER_TYPE { LPF, HPF, LOW_SHELF, HIGH_SHELF };
+#include <cstdint>
 
 class GOSoundFilter {
 public:
+  enum class FilterType : uint8_t {
+    TYPE_NONE = 0,
+    TYPE_LPF,
+    TYPE_HPF,
+    TYPE_LOW_SHELF,
+    TYPE_HIGH_SHELF
+  };
   class FilterState {
   public:
     FilterState() { Init(nullptr); }
@@ -23,7 +29,18 @@ public:
         m_state[i] = 0;
     }
     bool IsToApply() { return m_filter->IsToApply(); }
-    void ProcessBuffer(unsigned n_blocks, float *buffer);
+    inline void ProcessBuffer(unsigned n_blocks, float *buffer) {
+      float out[2];
+      for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
+        out[0] = m_filter->m_B0 * buffer[0] + m_state[0];
+        out[1] = m_filter->m_B0 * buffer[1] + m_state[1];
+        m_state[0] = m_filter->m_B1 * buffer[0] - m_filter->m_A1 * out[0];
+        m_state[1] = m_filter->m_B1 * buffer[1] - m_filter->m_A1 * out[1];
+
+        buffer[0] = out[0];
+        buffer[1] = out[1];
+      }
+    }
 
   private:
     float m_state[2];
@@ -31,8 +48,7 @@ public:
   };
 
 private:
-  GO_FILTER_TYPE m_type;
-  bool m_isToApply;
+  FilterType m_type;
   unsigned m_samplerate;
 
   // Calculated filter coefficients
@@ -42,24 +58,12 @@ private:
 
 public:
   GOSoundFilter();
-  void Init(GO_FILTER_TYPE type, double frequency, double gain = 0);
-  bool IsToApply() const { return m_isToApply; }
-  void SetIsToApply(bool apply) { m_isToApply = apply; }
-  void SetSamplerate(unsigned samplerate) { m_samplerate = samplerate; }
-};
-
-inline void GOSoundFilter::FilterState::ProcessBuffer(
-  unsigned n_blocks, float *buffer) {
-  float out[2];
-  for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-    out[0] = m_filter->m_B0 * buffer[0] + m_state[0];
-    out[1] = m_filter->m_B0 * buffer[1] + m_state[1];
-    m_state[0] = m_filter->m_B1 * buffer[0] - m_filter->m_A1 * out[0];
-    m_state[1] = m_filter->m_B1 * buffer[1] - m_filter->m_A1 * out[1];
-
-    buffer[0] = out[0];
-    buffer[1] = out[1];
+  void Init(FilterType type, double frequency, double gain = 0);
+  bool IsToApply() const { return static_cast<bool>(m_type); }
+  void SetSamplerate(unsigned samplerate) {
+    m_samplerate = samplerate;
+    m_type = FilterType::TYPE_NONE;
   }
-}
+};
 
 #endif /* GOSOUNDFILTER_H_ */

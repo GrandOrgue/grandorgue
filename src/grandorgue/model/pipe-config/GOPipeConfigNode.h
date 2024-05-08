@@ -112,7 +112,7 @@ public:
 
   uint16_t GetEffectiveReleaseTail() const;
 
-  int GetEffectiveToneBalanceValue() const;
+  int8_t GetEffectiveToneBalanceValue() const;
 
   uint8_t GetEffectiveBitsPerSample() const {
     return GetEffectiveUint8(

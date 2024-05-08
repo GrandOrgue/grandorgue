@@ -195,10 +195,11 @@ void GOPipeConfig::SetPitchMember(float cents, float &member) {
   SetSmallMember(cents, member, &GOPipeUpdateCallback::UpdateTuning);
 }
 
-void GOPipeConfig::SetToneBalanceMember(int value, int &member) {
+void GOPipeConfig::SetToneBalanceValue(int8_t value) {
   if (value < -100)
     value = -100;
   if (value > 100)
     value = 100;
-  SetSmallMember(value, member, &GOPipeUpdateCallback::UpdateToneBalance);
+  SetSmallMember(
+    value, m_ToneBalanceValue, &GOPipeUpdateCallback::UpdateToneBalance);
 }

@@ -8,8 +8,8 @@
 #ifndef GOPIPECONFIG_H
 #define GOPIPECONFIG_H
 
+#include <algorithm>
 #include <cstdint>
-
 #include <wx/string.h>
 
 #include "GOBool3.h"
@@ -37,10 +37,10 @@ private:
   float m_PitchCorrection;
   float m_ManualTuning;
   float m_AutoTuningCorrection;
-  int m_ToneBalanceValue;
   uint16_t m_DefaultDelay;
   uint16_t m_Delay;
   uint16_t m_ReleaseTail; // the max release length in ms
+  int8_t m_ToneBalanceValue;
   int8_t m_BitsPerSample;
   int8_t m_Channels;
   int8_t m_LoopLoad;
@@ -81,7 +81,6 @@ private:
   }
 
   void SetPitchMember(float cents, float &member);
-  void SetToneBalanceMember(int value, int &member);
 
 public:
   GOPipeConfig(GOPipeConfigListener &listener, GOPipeUpdateCallback *callback);
@@ -130,10 +129,8 @@ public:
     SetPitchMember(cents, m_AutoTuningCorrection);
   }
 
-  int GetToneBalanceValue() const { return m_ToneBalanceValue; }
-  void SetToneBalanceValue(int value) {
-    SetToneBalanceMember(value, m_ToneBalanceValue);
-  }
+  int8_t GetToneBalanceValue() const { return m_ToneBalanceValue; }
+  void SetToneBalanceValue(int8_t value);
 
   uint16_t GetDefaultDelay() const { return m_DefaultDelay; }
   uint16_t GetDelay() const { return m_Delay; }

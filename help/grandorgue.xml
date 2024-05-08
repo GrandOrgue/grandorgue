@@ -5422,7 +5422,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
         <title>Tone balance</title>
         <para>
           This setting adjusts the bass/treble harmonics balance of the pipes.
-          The value is a converted to a frequency adjustment where a negative
+          The value is a converted to a cutoff frequency for a filter where a negative
           number means less high frequencies and a positive number means less
           low frequencies. Allowed range is {-100, +100}. A tone balance value
           which is not zero on a child level will override a value set at any
