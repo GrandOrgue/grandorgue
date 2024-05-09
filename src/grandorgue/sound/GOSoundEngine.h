@@ -69,7 +69,9 @@ private:
 
   std::atomic_bool m_HasBeenSetup;
 
-  unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples);
+  unsigned MsToSamples(unsigned ms) const { return m_SampleRate * ms / 1000; }
+
+  unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples) const;
 
   /* samplerTaskId:
      -1 .. -n Tremulants

@@ -8,40 +8,80 @@
 #ifndef GOSOUNDFADER_H_
 #define GOSOUNDFADER_H_
 
+/**
+ * This class is responsible of smooth changing a volume of samples.
+ *
+ * There are different types of volumes
+ * - Target volume. It is defined by total capacity of the asmple size and may
+ *   be adjusted in odf and settings.
+ * - External volume. It may be changed by an enclosure during playback.
+ * - VelocityVolume. It is defined when a key is pressed and may be changed if
+ *   another coupled key with the same pipe is pressed with another velocity.
+ *   It is considered as part of an
+ * - Total volume. It is a production of of all volumes above.
+ *
+ * There are three staging of playing one sample related to the target volume:
+ * - Increasing: from 0 to m_TargetVolume during m_IncreasingFrames. It is used
+ *   only for crossfade between two samples.
+ * - Constant playing: the volume is not changed. Usually it is used for the
+ *   attack sample (because the increasing is already sampled).
+ * - Decreasing: from m_СurrentVolume to 0. It is used for bothe crossfade from
+ *   a loop to a release sample and when playing the release sample when
+ *   ReleseTail limitation is used
+ *
+ * totalVol = targetVolume * externalVolume
+ * This volume is applied in the Process() call
+ */
+
 class GOSoundFader {
 private:
-  float m_gain;
-  float m_attack;
-  float m_decay;
-  float m_target;
+  // The final volume after increasing
+  float m_TargetVolume;
+  // Additional coeff.
   float m_VelocityVolume;
-  float m_real_target;
-  float m_last_volume;
-  unsigned m_nb_attack_frames_left;
 
-  void NewAttacking(float target_gain, unsigned n_frames);
+  // a volume delta for one frame when increasing
+  float m_IncreasingDeltaPerFrame;
+  unsigned m_IncreasingFrames;
 
-  inline void StartDecay(unsigned n_frames) {
-    m_decay = -(m_target / n_frames);
-  }
+  // a volume delta for one frame when decreasing
+  float m_DecreasingDeltaPerFrame;
+
+  float m_LastExternalVolume;
+  float m_LastTotalVolume;
+
+  // The final volume with taking external volume into account
+  float m_TotalVolume;
 
 public:
-  inline void NewAttacking(
-    float target_gain, unsigned ms, unsigned sample_rate) {
-    NewAttacking(target_gain, sample_rate * ms / 1000);
-  }
+  /**
+   * Setup the fader for constant volume (for the first attack or an
+   * independent release)
+   * @param gain - the volume amplitude coeff
+   */
+  void SetupForConstantVolume(float targetVolume);
 
-  void NewConstant(float gain);
+  /**
+   * Setup the increase the volume from 0 to target_gain
+   * Usually it is used together with StartDecreasingVolume for another sampler
+   * @param targetVolume final volume
+   * @param nFrames number of frames to increase the volume for
+   */
+  void SetupForIncreasingVolume(float targetVolume, unsigned nFrames);
 
-  inline void StartDecay(unsigned ms, unsigned sample_rate) {
-    StartDecay(sample_rate * ms / 1000);
+  /**
+   * Setup the decrease the volume from the current value (m_target) to 0
+   * @param nFrames number of frames for full decay
+   */
+  inline void StartDecreasingVolume(unsigned nFrames) {
+    m_DecreasingDeltaPerFrame = -(m_TargetVolume / nFrames);
   }
 
   inline void SetVelocityVolume(float volume) { m_VelocityVolume = volume; }
 
-  void Process(unsigned n_blocks, float *buffer, float volume);
+  void Process(unsigned n_blocks, float *buffer, float externalVolume);
 
-  bool IsSilent() const { return (m_gain <= 0.0f); }
+  bool IsSilent() const { return (m_LastTotalVolume <= 0.0f); }
 };
 
 #endif /* GOSOUNDFADER_H_ */

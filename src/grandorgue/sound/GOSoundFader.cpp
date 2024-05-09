@@ -9,74 +9,91 @@
 
 #include "GOSoundDefs.h"
 
-void GOSoundFader::NewAttacking(float target_gain, unsigned n_frames) {
-  m_nb_attack_frames_left = n_frames;
-  m_decay = 0.0f;
-  m_gain = 0.0f;
-  m_target = target_gain;
-  m_attack = target_gain / n_frames;
-  m_last_volume = -1;
+void GOSoundFader::SetupForIncreasingVolume(
+  float target_gain, unsigned n_frames) {
+  m_IncreasingFrames = n_frames;
+  m_DecreasingDeltaPerFrame = 0.0f;
+  m_LastTotalVolume = 0.0f;
+  m_TargetVolume = target_gain;
+  m_IncreasingDeltaPerFrame = target_gain / n_frames;
+  m_LastExternalVolume = -1;
   m_VelocityVolume = 1;
 }
 
-void GOSoundFader::NewConstant(float gain) {
-  m_nb_attack_frames_left = 0;
-  m_attack = m_decay = 0.0f;
-  m_gain = m_target = gain;
-  m_last_volume = -1;
+void GOSoundFader::SetupForConstantVolume(float gain) {
+  m_IncreasingFrames = 0;
+  m_IncreasingDeltaPerFrame = m_DecreasingDeltaPerFrame = 0.0f;
+  m_LastTotalVolume = m_TargetVolume = gain;
+  m_LastExternalVolume = -1;
   m_VelocityVolume = 1;
 }
 
-void GOSoundFader::Process(unsigned n_blocks, float *buffer, float volume) {
+void GOSoundFader::Process(
+  unsigned n_blocks, float *buffer, float externalVolume) {
   // setup process
-  volume *= m_VelocityVolume;
-  if (m_last_volume < 0) {
-    m_last_volume = volume;
-    m_real_target = m_target * volume;
-    m_gain *= volume;
+  externalVolume *= m_VelocityVolume;
+  if (m_LastExternalVolume < 0) {
+    m_LastExternalVolume = externalVolume;
+    m_TotalVolume = m_TargetVolume * externalVolume;
+    m_LastTotalVolume *= externalVolume;
   }
 
-  float gain = m_gain;
-  float gain_delta = 0;
+  float frameVolume = m_LastTotalVolume; // the volume for the first frame
+  float frameVolumeDelta = 0;            // changing the volume by one frame
 
-  if (volume != m_last_volume || m_attack + m_decay != 0) {
-    float volume_diff
-      = m_target * (volume - m_last_volume) * n_blocks / MAX_FRAME_SIZE;
-    float fade_diff = n_blocks * (m_attack + m_decay) * volume;
-    float new_last_volume
-      = m_last_volume + ((volume - m_last_volume) * n_blocks) / MAX_FRAME_SIZE;
-    m_real_target = m_target * new_last_volume;
+  if (
+    externalVolume != m_LastExternalVolume
+    || m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame != 0) {
+    /*
+     * the volume is changed during the buffer.
+     * Calculate frameVolumeDelta and other m_lasTotalVolume
+     *
+     * Because totalVol = targetVolume * externalVolume,
+     * totalVolumeDiff = targetVolumeDiff * externalVolume
+     *   + externalVolumeDiff * targetVolume
+     */
 
-    float end = m_gain + volume_diff + fade_diff;
+    // Assume that external volume is fully changed in MAX_FRAME_SIZE frames
+    float externalVolumeDiff = m_TargetVolume
+      * (externalVolume - m_LastExternalVolume) * n_blocks / MAX_FRAME_SIZE;
+    float fade_diff = n_blocks
+      * (m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame)
+      * externalVolume;
+    float newLastExternalVolume = m_LastExternalVolume
+      + ((externalVolume - m_LastExternalVolume) * n_blocks) / MAX_FRAME_SIZE;
+    m_TotalVolume = m_TargetVolume * newLastExternalVolume;
+
+    float end = m_LastTotalVolume + externalVolumeDiff + fade_diff;
+
     if (end < 0) {
       end = 0;
-      m_decay = 0;
-    } else if (end > m_real_target) {
-      end = m_real_target;
-      m_attack = 0.0f;
+      m_DecreasingDeltaPerFrame = 0;
+    } else if (end > m_TotalVolume) {
+      end = m_TotalVolume;
+      m_IncreasingDeltaPerFrame = 0.0f;
     }
-    gain_delta = (end - m_gain) / (n_blocks);
-    m_last_volume = new_last_volume;
-    m_gain = end;
+    frameVolumeDelta = (end - m_LastTotalVolume) / (n_blocks);
+    m_LastExternalVolume = newLastExternalVolume;
+    m_LastTotalVolume = end;
   }
-  if (m_attack > 0.0f) {
-    if (m_nb_attack_frames_left >= n_blocks)
-      m_nb_attack_frames_left -= n_blocks;
+  if (m_IncreasingDeltaPerFrame > 0.0f) {
+    if (m_IncreasingFrames >= n_blocks)
+      m_IncreasingFrames -= n_blocks;
     else
-      m_attack = 0.0f;
+      m_IncreasingDeltaPerFrame = 0.0f;
   }
 
   // Procedss data
-  if (gain_delta) {
+  if (frameVolumeDelta) {
     for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-      buffer[0] *= gain;
-      buffer[1] *= gain;
-      gain += gain_delta;
+      buffer[0] *= frameVolume;
+      buffer[1] *= frameVolume;
+      frameVolume += frameVolumeDelta;
     }
   } else {
     for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-      buffer[0] *= gain;
-      buffer[1] *= gain;
+      buffer[0] *= frameVolume;
+      buffer[1] *= frameVolume;
     }
   }
 }
