@@ -42,47 +42,44 @@ private:
 
   // a volume delta for one frame when increasing
   float m_IncreasingDeltaPerFrame;
-  unsigned m_IncreasingFrames;
 
   // a volume delta for one frame when decreasing
   float m_DecreasingDeltaPerFrame;
 
   // Last volume points are the volumes at the end of previous Process()
+  float m_LastTargetVolumePoint;
   float m_LastExternalVolumePoint;
-  float m_LastTotalVolumePoint;
-
-  // The final volume with taking external volume into account
-  float m_TotalVolume;
 
 public:
   /**
-   * Setup the fader for constant volume (for the first attack or an
-   * independent release)
-   * @param gain - the volume amplitude coeff
+   * Setup the fadef for constant volume of for increasing from 0 to
+   * targetVolume
+   * @param targetVolume target volume to reach
+   * @param velocityVolume the initial velocity volume. It may be changed later
+   * @param nFramesToIncreaseIn if it is 0 then the target volume will be
+   *   constant. Else it will smoothly increase from 0 to targetVolume in this
+   *   number of frames
    */
-  void SetupForConstantVolume(float targetVolume);
+  void Setup(
+    float targetVolume, float velocityVolume, unsigned nFramesToIncreaseIn = 0);
 
   /**
-   * Setup the increase the volume from 0 to target_gain
-   * Usually it is used together with StartDecreasingVolume for another sampler
-   * @param targetVolume final volume
-   * @param nFrames number of frames to increase the volume for
-   */
-  void SetupForIncreasingVolume(float targetVolume, unsigned nFrames);
-
-  /**
-   * Setup the decrease the volume from the current value (m_target) to 0
+   * Start decreasing the volume from the current value
+   * (m_LastTargetVolumePoint) to 0
    * @param nFrames number of frames for full decay
    */
   inline void StartDecreasingVolume(unsigned nFrames) {
+    // may be m_TargetVolume has not yet been reached, but the velocity of
+    // decreasing should be the same as it has reached
     m_DecreasingDeltaPerFrame = -(m_TargetVolume / nFrames);
   }
 
+  inline float GetVelocityVolume() const { return m_VelocityVolume; }
   inline void SetVelocityVolume(float volume) { m_VelocityVolume = volume; }
 
-  void Process(unsigned n_blocks, float *buffer, float externalVolume);
+  void Process(unsigned nFrames, float *buffer, float externalVolume);
 
-  bool IsSilent() const { return (m_LastTotalVolumePoint <= 0.0f); }
+  bool IsSilent() const { return (m_LastTargetVolumePoint <= 0.0f); }
 };
 
 #endif /* GOSOUNDFADER_H_ */

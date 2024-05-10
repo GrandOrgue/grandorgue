@@ -422,11 +422,10 @@ GOSoundSampler *GOSoundEngine::CreateTaskSample(
       const float playback_gain
         = pSoundProvider->GetGain() * section->GetNormGain();
 
-      sampler->fader.SetupForConstantVolume(playback_gain);
+      sampler->fader.Setup(
+        playback_gain, pSoundProvider->GetVelocityVolume(velocity));
       sampler->delay = delay_samples;
       sampler->time = start_time;
-      sampler->fader.SetVelocityVolume(
-        sampler->p_SoundProvider->GetVelocityVolume(sampler->velocity));
       sampler->toneBalanceFilterState.Init(
         sampler->p_SoundProvider->GetToneBalance()->GetFilter());
       sampler->is_release = isRelease;
@@ -460,9 +459,6 @@ void GOSoundEngine::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
         new_sampler->is_release = true;
         new_sampler->time = m_CurrentTime;
         new_sampler->fader.StartDecreasingVolume(crossFadeSamples);
-        new_sampler->fader.SetVelocityVolume(
-          new_sampler->p_SoundProvider->GetVelocityVolume(
-            new_sampler->velocity));
 
         // start new section stream in the old sampler
         pSampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
@@ -470,7 +466,10 @@ void GOSoundEngine::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
         pSampler->p_SoundProvider = pProvider;
         pSampler->time = m_CurrentTime + 1;
 
-        pSampler->fader.SetupForIncreasingVolume(gain_target, crossFadeSamples);
+        pSampler->fader.Setup(
+          gain_target,
+          new_sampler->fader.GetVelocityVolume(),
+          crossFadeSamples);
         pSampler->is_release = false;
 
         new_sampler->toneBalanceFilterState.Init(
@@ -516,7 +515,6 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
     if (new_sampler != NULL) {
       new_sampler->p_SoundProvider = this_pipe;
       new_sampler->time = m_CurrentTime + 1;
-      new_sampler->velocity = handle->velocity;
       new_sampler->m_WaveTremulantStateFor
         = release_section->GetWaveTremulantStateFor();
 
@@ -588,8 +586,8 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
 
       const unsigned releaseLength = this_pipe->GetReleaseTail();
 
-      new_sampler->fader.SetupForIncreasingVolume(
-        gain_target, crossFadeSamples);
+      new_sampler->fader.Setup(
+        gain_target, handle->fader.GetVelocityVolume(), crossFadeSamples);
 
       if (
         releaseLength > 0
@@ -622,8 +620,6 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
          * means it will still be affected by tremulants - yuck). */
         : handle->m_SamplerTaskId;
       new_sampler->m_AudioGroupId = handle->m_AudioGroupId;
-      new_sampler->fader.SetVelocityVolume(
-        new_sampler->p_SoundProvider->GetVelocityVolume(new_sampler->velocity));
       new_sampler->toneBalanceFilterState.Init(
         new_sampler->p_SoundProvider->GetToneBalance()->GetFilter());
       StartSampler(new_sampler);
@@ -674,7 +670,7 @@ void GOSoundEngine::UpdateVelocity(
     // SetVelocityVolume but we don't want to lock it because this functionality
     // is not so important Concurrent update possible, as it just update a float
     handle->velocity = velocity;
-    handle->fader.SetVelocityVolume(pipe->GetVelocityVolume(handle->velocity));
+    handle->fader.SetVelocityVolume(pipe->GetVelocityVolume(velocity));
   }
 }
 
