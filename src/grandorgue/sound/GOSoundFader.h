@@ -47,8 +47,9 @@ private:
   // a volume delta for one frame when decreasing
   float m_DecreasingDeltaPerFrame;
 
-  float m_LastExternalVolume;
-  float m_LastTotalVolume;
+  // Last volume points are the volumes at the end of previous Process()
+  float m_LastExternalVolumePoint;
+  float m_LastTotalVolumePoint;
 
   // The final volume with taking external volume into account
   float m_TotalVolume;
@@ -81,7 +82,7 @@ public:
 
   void Process(unsigned n_blocks, float *buffer, float externalVolume);
 
-  bool IsSilent() const { return (m_LastTotalVolume <= 0.0f); }
+  bool IsSilent() const { return (m_LastTotalVolumePoint <= 0.0f); }
 };
 
 #endif /* GOSOUNDFADER_H_ */

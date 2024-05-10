@@ -13,18 +13,18 @@ void GOSoundFader::SetupForIncreasingVolume(
   float target_gain, unsigned n_frames) {
   m_IncreasingFrames = n_frames;
   m_DecreasingDeltaPerFrame = 0.0f;
-  m_LastTotalVolume = 0.0f;
+  m_LastTotalVolumePoint = 0.0f;
   m_TargetVolume = target_gain;
   m_IncreasingDeltaPerFrame = target_gain / n_frames;
-  m_LastExternalVolume = -1;
+  m_LastExternalVolumePoint = -1;
   m_VelocityVolume = 1;
 }
 
 void GOSoundFader::SetupForConstantVolume(float gain) {
   m_IncreasingFrames = 0;
   m_IncreasingDeltaPerFrame = m_DecreasingDeltaPerFrame = 0.0f;
-  m_LastTotalVolume = m_TargetVolume = gain;
-  m_LastExternalVolume = -1;
+  m_LastTotalVolumePoint = m_TargetVolume = gain;
+  m_LastExternalVolumePoint = -1;
   m_VelocityVolume = 1;
 }
 
@@ -34,19 +34,21 @@ void GOSoundFader::Process(
 
   // Consider the velocity volume as part of the external volume
   externalVolume *= m_VelocityVolume;
-  if (m_LastExternalVolume < 0) {
-    m_LastExternalVolume = externalVolume;
+  if (m_LastExternalVolumePoint < 0) {
+    m_LastExternalVolumePoint = externalVolume;
     m_TotalVolume = m_TargetVolume * externalVolume;
-    m_LastTotalVolume *= externalVolume;
+    m_LastTotalVolumePoint *= externalVolume;
   }
 
   float targetVolumeDeltaPerFrame
     = m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame;
-  float frameTotalVolume = m_LastTotalVolume; // the volume for the first frame
+  float frameTotalVolume
+    = m_LastTotalVolumePoint;      // the volume for the first frame
   float frameTotalVolumeDelta = 0; // changing the volume by one frame
 
   if (
-    externalVolume != m_LastExternalVolume || targetVolumeDeltaPerFrame != 0) {
+    externalVolume != m_LastExternalVolumePoint
+    || targetVolumeDeltaPerFrame != 0) {
     /*
      * the volume is changed during the buffer.
      * Calculate frameVolumeDelta and other m_lasTotalVolume
@@ -59,14 +61,15 @@ void GOSoundFader::Process(
     float targetVolumeChange = targetVolumeDeltaPerFrame * nFrames;
     // Assume that external volume is fully changed in MAX_FRAME_SIZE frames
     float externalVolumeChange
-      = (externalVolume - m_LastExternalVolume) * nFrames / MAX_FRAME_SIZE;
+      = (externalVolume - m_LastExternalVolumePoint) * nFrames / MAX_FRAME_SIZE;
     float targetVolumeDiff = targetVolumeChange * externalVolume;
     float externalVolumeDiff = externalVolumeChange * m_TargetVolume;
-    float newLastExternalVolume = m_LastExternalVolume + externalVolumeChange;
+    float newLastExternalVolume
+      = m_LastExternalVolumePoint + externalVolumeChange;
 
     m_TotalVolume = m_TargetVolume * newLastExternalVolume;
 
-    float end = m_LastTotalVolume + externalVolumeDiff + targetVolumeDiff;
+    float end = m_LastTotalVolumePoint + externalVolumeDiff + targetVolumeDiff;
 
     if (end < 0) {
       end = 0;
@@ -75,9 +78,9 @@ void GOSoundFader::Process(
       end = m_TotalVolume;
       m_IncreasingDeltaPerFrame = 0.0f;
     }
-    frameTotalVolumeDelta = (end - m_LastTotalVolume) / (nFrames);
-    m_LastExternalVolume = newLastExternalVolume;
-    m_LastTotalVolume = end;
+    frameTotalVolumeDelta = (end - m_LastTotalVolumePoint) / (nFrames);
+    m_LastExternalVolumePoint = newLastExternalVolume;
+    m_LastTotalVolumePoint = end;
   }
   if (m_IncreasingDeltaPerFrame > 0.0f) {
     if (m_IncreasingFrames >= nFrames)
