@@ -29,8 +29,10 @@ void GOSoundFader::SetupForConstantVolume(float gain) {
 }
 
 void GOSoundFader::Process(
-  unsigned n_blocks, float *buffer, float externalVolume) {
+  unsigned nFrames, float *buffer, float externalVolume) {
   // setup process
+
+  // Consider the velocity volume as part of the external volume
   externalVolume *= m_VelocityVolume;
   if (m_LastExternalVolume < 0) {
     m_LastExternalVolume = externalVolume;
@@ -38,12 +40,13 @@ void GOSoundFader::Process(
     m_LastTotalVolume *= externalVolume;
   }
 
-  float frameVolume = m_LastTotalVolume; // the volume for the first frame
-  float frameVolumeDelta = 0;            // changing the volume by one frame
+  float targetVolumeDeltaPerFrame
+    = m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame;
+  float frameTotalVolume = m_LastTotalVolume; // the volume for the first frame
+  float frameTotalVolumeDelta = 0; // changing the volume by one frame
 
   if (
-    externalVolume != m_LastExternalVolume
-    || m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame != 0) {
+    externalVolume != m_LastExternalVolume || targetVolumeDeltaPerFrame != 0) {
     /*
      * the volume is changed during the buffer.
      * Calculate frameVolumeDelta and other m_lasTotalVolume
@@ -53,17 +56,17 @@ void GOSoundFader::Process(
      *   + externalVolumeDiff * targetVolume
      */
 
+    float targetVolumeChange = targetVolumeDeltaPerFrame * nFrames;
     // Assume that external volume is fully changed in MAX_FRAME_SIZE frames
-    float externalVolumeDiff = m_TargetVolume
-      * (externalVolume - m_LastExternalVolume) * n_blocks / MAX_FRAME_SIZE;
-    float fade_diff = n_blocks
-      * (m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame)
-      * externalVolume;
-    float newLastExternalVolume = m_LastExternalVolume
-      + ((externalVolume - m_LastExternalVolume) * n_blocks) / MAX_FRAME_SIZE;
+    float externalVolumeChange
+      = (externalVolume - m_LastExternalVolume) * nFrames / MAX_FRAME_SIZE;
+    float targetVolumeDiff = targetVolumeChange * externalVolume;
+    float externalVolumeDiff = externalVolumeChange * m_TargetVolume;
+    float newLastExternalVolume = m_LastExternalVolume + externalVolumeChange;
+
     m_TotalVolume = m_TargetVolume * newLastExternalVolume;
 
-    float end = m_LastTotalVolume + externalVolumeDiff + fade_diff;
+    float end = m_LastTotalVolume + externalVolumeDiff + targetVolumeDiff;
 
     if (end < 0) {
       end = 0;
@@ -72,28 +75,28 @@ void GOSoundFader::Process(
       end = m_TotalVolume;
       m_IncreasingDeltaPerFrame = 0.0f;
     }
-    frameVolumeDelta = (end - m_LastTotalVolume) / (n_blocks);
+    frameTotalVolumeDelta = (end - m_LastTotalVolume) / (nFrames);
     m_LastExternalVolume = newLastExternalVolume;
     m_LastTotalVolume = end;
   }
   if (m_IncreasingDeltaPerFrame > 0.0f) {
-    if (m_IncreasingFrames >= n_blocks)
-      m_IncreasingFrames -= n_blocks;
+    if (m_IncreasingFrames >= nFrames)
+      m_IncreasingFrames -= nFrames;
     else
       m_IncreasingDeltaPerFrame = 0.0f;
   }
 
   // Procedss data
-  if (frameVolumeDelta) {
-    for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-      buffer[0] *= frameVolume;
-      buffer[1] *= frameVolume;
-      frameVolume += frameVolumeDelta;
+  if (frameTotalVolumeDelta) {
+    for (unsigned int i = 0; i < nFrames; i++, buffer += 2) {
+      buffer[0] *= frameTotalVolume;
+      buffer[1] *= frameTotalVolume;
+      frameTotalVolume += frameTotalVolumeDelta;
     }
   } else {
-    for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-      buffer[0] *= frameVolume;
-      buffer[1] *= frameVolume;
+    for (unsigned int i = 0; i < nFrames; i++, buffer += 2) {
+      buffer[0] *= frameTotalVolume;
+      buffer[1] *= frameTotalVolume;
     }
   }
 }
