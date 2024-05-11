@@ -23,19 +23,15 @@ public:
   class FilterState {
   public:
     FilterState() { Init(nullptr); }
-    void Init(const GOSoundFilter *filter) {
-      m_filter = filter;
-      for (int i = 0; i < 2; i++)
-        m_state[i] = 0;
-    }
-    bool IsToApply() { return m_filter->IsToApply(); }
+    void Init(const GOSoundFilter *filter);
+    bool IsToApply() { return p_filter && p_filter->IsToApply(); }
     inline void ProcessBuffer(unsigned n_blocks, float *buffer) {
       float out[2];
       for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-        out[0] = m_filter->m_B0 * buffer[0] + m_state[0];
-        out[1] = m_filter->m_B0 * buffer[1] + m_state[1];
-        m_state[0] = m_filter->m_B1 * buffer[0] - m_filter->m_A1 * out[0];
-        m_state[1] = m_filter->m_B1 * buffer[1] - m_filter->m_A1 * out[1];
+        out[0] = p_filter->m_B0 * buffer[0] + m_state[0];
+        out[1] = p_filter->m_B0 * buffer[1] + m_state[1];
+        m_state[0] = p_filter->m_B1 * buffer[0] - p_filter->m_A1 * out[0];
+        m_state[1] = p_filter->m_B1 * buffer[1] - p_filter->m_A1 * out[1];
 
         buffer[0] = out[0];
         buffer[1] = out[1];
@@ -44,7 +40,7 @@ public:
 
   private:
     float m_state[2];
-    const GOSoundFilter *m_filter;
+    const GOSoundFilter *p_filter;
   };
 
 private:

@@ -64,3 +64,9 @@ void GOSoundFilter::Init(FilterType type, double frequency, double gain) {
   m_B1 = b1 / a0;
   m_A1 = a1 / a0;
 }
+
+void GOSoundFilter::FilterState::Init(const GOSoundFilter *filter) {
+  p_filter = filter;
+  for (int i = 0; i < 2; i++)
+    m_state[i] = 0;
+}
