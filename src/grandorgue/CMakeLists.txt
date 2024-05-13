@@ -189,6 +189,7 @@ sound/scheduler/GOSoundTremulantTask.cpp
 sound/scheduler/GOSoundWindchestTask.cpp
 sound/GOSoundAudioSection.cpp
 sound/GOSoundEngine.cpp
+sound/GOSoundFader.cpp
 sound/GOSoundProvider.cpp
 sound/GOSoundProviderSynthedTrem.cpp
 sound/GOSoundProviderWave.cpp
