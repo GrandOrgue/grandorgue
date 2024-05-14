@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2006 Milan Digital Audio LLC
+  Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+  License GPL-2.0 or later
+  (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+-->
+<component type="desktop-application">
+  <id>net.sourceforge.GrandOrgue</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>GrandOrgue</name>
+  <summary>Pipe organ simulator</summary>
+  <url type="homepage">https://github.com/GrandOrgue/grandorgue"</url>
+
+  <description>
+    <p>
+      GrandOrgue is a virtual pipe organ sample player application supporting
+      a HW1 compatible file format.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">GrandOrgue.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://camo.githubusercontent.com/36bf7da02a6a8220fdc12e2c2481c00df662e67a8464902beda5184577c31604/687474703a2f2f7777772e66616d696c6a656e70616c6f2e73652f73697465732f64656661756c742f66696c65732f62696c6465722f73637265656e73686f74732f50697465614d48535f6d61696e2e706e67</image>
+    </screenshot>
+
+    <screenshot>
+      <image>https://camo.githubusercontent.com/f92194299b21fd9cc64d51a752751fa3defa9fe2b8a2dad6651773ac44b22c70/687474703a2f2f7777772e66616d696c6a656e70616c6f2e73652f73697465732f64656661756c742f66696c65732f62696c6465722f73637265656e73686f74732f4b616c76747261736b4368757263682e706e67</image>
+    </screenshot>
+
+    <screenshot>
+      <image>https://camo.githubusercontent.com/12ff05f9e419d98a7280b6b2a71e5f4318f20d7bdc1f3d3a7952f68d6bbb95ec/687474703a2f2f7777772e66616d696c6a656e70616c6f2e73652f73697465732f64656661756c742f66696c65732f62696c6465722f73637265656e73686f74732f53744361726c6f427265736369612e706e67</image>
+    </screenshot>
+
+    <screenshot>
+      <image>https://camo.githubusercontent.com/4e10d9d6d467850b692f778d0179a921ffc7fabb63b436f1fd982786d1f0256e/687474703a2f2f7777772e66616d696c6a656e70616c6f2e73652f73697465732f64656661756c742f66696c65732f62696c6465722f73637265656e73686f74732f57696c64657276616e6b2e706e67</image>
+    </screenshot>
+    
+    <screenshot>
+      <image>https://camo.githubusercontent.com/6703a9e8c07fe756367ac7d89eaa161de0b408ad664b487b136f5ddf0b78d8c0/687474703a2f2f7777772e66616d696c6a656e70616c6f2e73652f73697465732f64656661756c742f66696c65732f62696c6465722f73637265656e73686f74732f42757265615f63687563685f6775692e706e67</image>
+    </screenshot>
+    
+    <screenshot>
+      <image>https://camo.githubusercontent.com/ac3bd65ee6e46da77634fcb2f9ee011cd838891634c451d056ccf88e2f1e4cf2/687474703a2f2f7777772e66616d696c6a656e70616c6f2e73652f73697465732f64656661756c742f66696c65732f62696c6465722f73637265656e73686f74732f42757265615f6368757263685f657874656e6465642e706e67</image>
+    </screenshot>
+
+  </screenshots>
+
+  <provides>
+    <binary>GrandOrgue</binary>
+  </provides>
+
+  <releases>
+    <release version="@FULL_VERSION@" date="@TODAY@"></release>
+  </releases>
+
+  <content_rating type="oars-1.1" />
+</component>

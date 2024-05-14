@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,7 +8,9 @@
 #ifndef GOMIDIRECEIVERBASE_H
 #define GOMIDIRECEIVERBASE_H
 
-#include "GOMidiReceiverData.h"
+#include "GOMidiMatchType.h"
+#include "GOMidiReceiverEventPatternList.h"
+#include "GOTime.h"
 
 class GOConfigReader;
 class GOConfigWriter;
@@ -16,7 +18,7 @@ class GOMidiEvent;
 class GOMidiMap;
 struct IniFileEnumEntry;
 
-class GOMidiReceiverBase : public GOMidiReceiverData {
+class GOMidiReceiverBase : public GOMidiReceiverEventPatternList {
 private:
   typedef struct {
     unsigned device;
@@ -41,7 +43,7 @@ protected:
 public:
   GOMidiReceiverBase(GOMidiReceiverType type);
 
-  virtual void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
+  virtual void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map);
   void PreparePlayback();
 
@@ -52,18 +54,16 @@ public:
   GOMidiMatchType Match(
     const GOMidiEvent &e, const unsigned midi_map[128], int &key, int &value);
 
-  bool HasDebounce(GOMidiReceiveMessageType type);
-  bool HasChannel(GOMidiReceiveMessageType type);
-  bool HasKey(GOMidiReceiveMessageType type);
-  bool HasLowKey(GOMidiReceiveMessageType type);
-  bool HasHighKey(GOMidiReceiveMessageType type);
-  bool HasLowerLimit(GOMidiReceiveMessageType type);
-  bool HasUpperLimit(GOMidiReceiveMessageType type);
-  unsigned KeyLimit(GOMidiReceiveMessageType type);
-  unsigned LowerValueLimit(GOMidiReceiveMessageType type);
-  unsigned UpperValueLimit(GOMidiReceiveMessageType type);
-
-  virtual void Assign(const GOMidiReceiverData &data);
+  bool HasDebounce(GOMidiReceiverMessageType type);
+  bool HasChannel(GOMidiReceiverMessageType type);
+  bool HasKey(GOMidiReceiverMessageType type);
+  bool HasLowKey(GOMidiReceiverMessageType type);
+  bool HasHighKey(GOMidiReceiverMessageType type);
+  bool HasLowerLimit(GOMidiReceiverMessageType type);
+  bool HasUpperLimit(GOMidiReceiverMessageType type);
+  unsigned KeyLimit(GOMidiReceiverMessageType type);
+  unsigned LowerValueLimit(GOMidiReceiverMessageType type);
+  unsigned UpperValueLimit(GOMidiReceiverMessageType type);
 };
 
 #endif

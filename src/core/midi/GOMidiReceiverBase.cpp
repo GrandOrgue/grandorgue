@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,7 +14,10 @@
 #include "config/GOConfigWriter.h"
 
 GOMidiReceiverBase::GOMidiReceiverBase(GOMidiReceiverType type)
-  : GOMidiReceiverData(type), m_ElementID(-1), m_last(), m_Internal() {}
+  : GOMidiReceiverEventPatternList(type),
+    m_ElementID(-1),
+    m_last(),
+    m_Internal() {}
 
 void GOMidiReceiverBase::SetElementID(int id) { m_ElementID = id; }
 
@@ -51,31 +54,36 @@ const struct IniFileEnumEntry GOMidiReceiverBase::m_MidiTypes[] = {
   {wxT("NoteOn"), MIDI_M_NOTE_ON},
   {wxT("NoteOff"), MIDI_M_NOTE_OFF},
   {wxT("NoteOnOff"), MIDI_M_NOTE_ON_OFF},
+  {wxT("NoteFixedOn"), MIDI_M_NOTE_FIXED_ON},
+  {wxT("NoteFixedOff"), MIDI_M_NOTE_FIXED_OFF},
   {wxT("NoteNoVelocity"), MIDI_M_NOTE_NO_VELOCITY},
   {wxT("NoteShortOctave"), MIDI_M_NOTE_SHORT_OCTAVE},
   {wxT("NoteNormal"), MIDI_M_NOTE_NORMAL},
 };
 
 void GOMidiReceiverBase::Load(
-  GOConfigReader &cfg, wxString group, GOMidiMap &map) {
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
   m_events.resize(0);
 
   int event_cnt = cfg.ReadInteger(
-    CMBSetting, group, wxT("NumberOfMIDIEvents"), -1, 255, false);
-  if (event_cnt >= 0) {
+    CMBSetting, group, wxT("NumberOfMIDIEvents"), 0, 255, false);
+
+  if (event_cnt > 0) {
     m_events.resize(event_cnt);
     for (unsigned i = 0; i < m_events.size(); i++) {
-      m_events[i].deviceId = map.GetDeviceIdByLogicalName(cfg.ReadString(
+      auto &pattern = m_events[i];
+
+      pattern.deviceId = map.GetDeviceIdByLogicalName(cfg.ReadString(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDIDevice%03d"), i + 1),
         false));
-      GOMidiReceiveMessageType default_type = MIDI_M_PGM_CHANGE;
+      GOMidiReceiverMessageType default_type = MIDI_M_PGM_CHANGE;
       if (m_type == MIDI_RECV_MANUAL)
         default_type = MIDI_M_NOTE;
       if (m_type == MIDI_RECV_ENCLOSURE)
         default_type = MIDI_M_CTRL_CHANGE;
-      m_events[i].type = (GOMidiReceiveMessageType)cfg.ReadEnum(
+      pattern.type = (GOMidiReceiverMessageType)cfg.ReadEnum(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDIEventType%03d"), i + 1),
@@ -83,17 +91,17 @@ void GOMidiReceiverBase::Load(
         sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]),
         false,
         default_type);
-      if (HasChannel(m_events[i].type))
-        m_events[i].channel = cfg.ReadInteger(
+      if (HasChannel(pattern.type))
+        pattern.channel = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDIChannel%03d"), i + 1),
           -1,
           16);
       else
-        m_events[i].channel = -1;
-      if (HasDebounce(m_events[i].type))
-        m_events[i].debounce_time = cfg.ReadInteger(
+        pattern.channel = -1;
+      if (HasDebounce(pattern.type))
+        pattern.debounce_time = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDIDebounce%03d"), i + 1),
@@ -101,8 +109,8 @@ void GOMidiReceiverBase::Load(
           3000,
           false,
           0);
-      if (HasLowKey(m_events[i].type))
-        m_events[i].low_key = cfg.ReadInteger(
+      if (HasLowKey(pattern.type))
+        pattern.low_key = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDILowerKey%03d"), i + 1),
@@ -110,8 +118,8 @@ void GOMidiReceiverBase::Load(
           127,
           false,
           0);
-      if (HasHighKey(m_events[i].type))
-        m_events[i].high_key = cfg.ReadInteger(
+      if (HasHighKey(pattern.type))
+        pattern.high_key = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDIUpperKey%03d"), i + 1),
@@ -121,22 +129,22 @@ void GOMidiReceiverBase::Load(
           127);
 
       if (m_type == MIDI_RECV_MANUAL)
-        m_events[i].key = cfg.ReadInteger(
+        pattern.key = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDIKeyShift%03d"), i + 1),
           -35,
           35);
-      else if (HasKey(m_events[i].type))
-        m_events[i].key = cfg.ReadInteger(
+      else if (HasKey(pattern.type))
+        pattern.key = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDIKey%03d"), i + 1),
           0,
           0x200000);
 
-      if (HasLowerLimit(m_events[i].type))
-        m_events[i].low_value = cfg.ReadInteger(
+      if (HasLowerLimit(pattern.type))
+        pattern.low_value = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDILowerLimit%03d"), i + 1),
@@ -152,8 +160,8 @@ void GOMidiReceiverBase::Load(
             false,
             1));
 
-      if (HasUpperLimit(m_events[i].type))
-        m_events[i].high_value = cfg.ReadInteger(
+      if (HasUpperLimit(pattern.type))
+        pattern.high_value = cfg.ReadInteger(
           CMBSetting,
           group,
           wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1),
@@ -183,61 +191,61 @@ void GOMidiReceiverBase::Save(
   GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
   cfg.WriteInteger(group, wxT("NumberOfMIDIEvents"), m_events.size());
   for (unsigned i = 0; i < m_events.size(); i++) {
+    auto &pattern = m_events[i];
+
     cfg.WriteString(
       group,
       wxString::Format(wxT("MIDIDevice%03d"), i + 1),
-      map.GetDeviceLogicalNameById(m_events[i].deviceId));
+      map.GetDeviceLogicalNameById(pattern.deviceId));
     cfg.WriteEnum(
       group,
       wxString::Format(wxT("MIDIEventType%03d"), i + 1),
-      m_events[i].type,
+      pattern.type,
       m_MidiTypes,
       sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
-    if (HasChannel(m_events[i].type))
+    if (HasChannel(pattern.type))
       cfg.WriteInteger(
         group,
         wxString::Format(wxT("MIDIChannel%03d"), i + 1),
-        m_events[i].channel);
-    if (HasDebounce(m_events[i].type))
+        pattern.channel);
+    if (HasDebounce(pattern.type))
       cfg.WriteInteger(
         group,
         wxString::Format(wxT("MIDIDebounce%03d"), i + 1),
-        m_events[i].debounce_time);
+        pattern.debounce_time);
 
-    if (HasLowKey(m_events[i].type))
+    if (HasLowKey(pattern.type))
       cfg.WriteInteger(
         group,
         wxString::Format(wxT("MIDILowerKey%03d"), i + 1),
-        m_events[i].low_key);
-    if (HasHighKey(m_events[i].type))
+        pattern.low_key);
+    if (HasHighKey(pattern.type))
       cfg.WriteInteger(
         group,
         wxString::Format(wxT("MIDIUpperKey%03d"), i + 1),
-        m_events[i].high_key);
+        pattern.high_key);
 
     if (m_type == MIDI_RECV_MANUAL)
       cfg.WriteInteger(
-        group,
-        wxString::Format(wxT("MIDIKeyShift%03d"), i + 1),
-        m_events[i].key);
-    else if (HasKey(m_events[i].type))
+        group, wxString::Format(wxT("MIDIKeyShift%03d"), i + 1), pattern.key);
+    else if (HasKey(pattern.type))
       cfg.WriteInteger(
-        group, wxString::Format(wxT("MIDIKey%03d"), i + 1), m_events[i].key);
+        group, wxString::Format(wxT("MIDIKey%03d"), i + 1), pattern.key);
 
-    if (HasLowerLimit(m_events[i].type))
+    if (HasLowerLimit(pattern.type))
       cfg.WriteInteger(
         group,
         wxString::Format(wxT("MIDILowerLimit%03d"), i + 1),
-        m_events[i].low_value);
-    if (HasUpperLimit(m_events[i].type))
+        pattern.low_value);
+    if (HasUpperLimit(pattern.type))
       cfg.WriteInteger(
         group,
         wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1),
-        m_events[i].high_value);
+        pattern.high_value);
   }
 }
 
-bool GOMidiReceiverBase::HasChannel(GOMidiReceiveMessageType type) {
+bool GOMidiReceiverBase::HasChannel(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_PGM_CHANGE || type == MIDI_M_PGM_RANGE
@@ -245,6 +253,7 @@ bool GOMidiReceiverBase::HasChannel(GOMidiReceiveMessageType type) {
     || type == MIDI_M_CTRL_BIT || type == MIDI_M_CTRL_CHANGE_FIXED
     || type == MIDI_M_RPN || type == MIDI_M_NRPN || type == MIDI_M_NOTE_ON
     || type == MIDI_M_NOTE_OFF || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_FIXED_OFF
     || type == MIDI_M_CTRL_CHANGE_ON || type == MIDI_M_CTRL_CHANGE_OFF
     || type == MIDI_M_CTRL_CHANGE_ON_OFF || type == MIDI_M_CTRL_CHANGE_FIXED_ON
     || type == MIDI_M_CTRL_CHANGE_FIXED_OFF
@@ -257,7 +266,7 @@ bool GOMidiReceiverBase::HasChannel(GOMidiReceiveMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasKey(GOMidiReceiveMessageType type) {
+bool GOMidiReceiverBase::HasKey(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_PGM_CHANGE || type == MIDI_M_RPN_RANGE
@@ -266,6 +275,7 @@ bool GOMidiReceiverBase::HasKey(GOMidiReceiveMessageType type) {
     || type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE || type == MIDI_M_CTRL_BIT
     || type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_RPN
     || type == MIDI_M_NRPN || type == MIDI_M_NOTE_ON || type == MIDI_M_NOTE_OFF
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_FIXED_OFF
     || type == MIDI_M_NOTE_ON_OFF || type == MIDI_M_CTRL_CHANGE_ON
     || type == MIDI_M_CTRL_CHANGE_OFF || type == MIDI_M_CTRL_CHANGE_ON_OFF
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON
@@ -279,7 +289,7 @@ bool GOMidiReceiverBase::HasKey(GOMidiReceiveMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasLowKey(GOMidiReceiveMessageType type) {
+bool GOMidiReceiverBase::HasLowKey(GOMidiReceiverMessageType type) {
   if (m_type != MIDI_RECV_MANUAL)
     return false;
   if (
@@ -289,7 +299,7 @@ bool GOMidiReceiverBase::HasLowKey(GOMidiReceiveMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasHighKey(GOMidiReceiveMessageType type) {
+bool GOMidiReceiverBase::HasHighKey(GOMidiReceiverMessageType type) {
   if (m_type != MIDI_RECV_MANUAL)
     return false;
   if (
@@ -299,7 +309,7 @@ bool GOMidiReceiverBase::HasHighKey(GOMidiReceiveMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasDebounce(GOMidiReceiveMessageType type) {
+bool GOMidiReceiverBase::HasDebounce(GOMidiReceiverMessageType type) {
   if (m_type == MIDI_RECV_MANUAL)
     return false;
   if (m_type == MIDI_RECV_ENCLOSURE)
@@ -307,6 +317,7 @@ bool GOMidiReceiverBase::HasDebounce(GOMidiReceiveMessageType type) {
   if (
     type == MIDI_M_PGM_CHANGE || type == MIDI_M_NOTE_ON
     || type == MIDI_M_NOTE_OFF || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_FIXED_OFF
     || type == MIDI_M_CTRL_CHANGE || type == MIDI_M_CTRL_CHANGE_ON
     || type == MIDI_M_CTRL_CHANGE_OFF || type == MIDI_M_CTRL_CHANGE_ON_OFF
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON
@@ -320,14 +331,15 @@ bool GOMidiReceiverBase::HasDebounce(GOMidiReceiveMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasLowerLimit(GOMidiReceiveMessageType type) {
+bool GOMidiReceiverBase::HasLowerLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_PGM_RANGE || type == MIDI_M_RPN_RANGE
     || type == MIDI_M_NRPN_RANGE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_CTRL_BIT
     || type == MIDI_M_RPN || type == MIDI_M_NRPN || type == MIDI_M_NOTE_OFF
-    || type == MIDI_M_NOTE_ON_OFF || type == MIDI_M_CTRL_CHANGE_OFF
-    || type == MIDI_M_CTRL_CHANGE_ON_OFF || type == MIDI_M_CTRL_CHANGE_FIXED_OFF
+    || type == MIDI_M_NOTE_FIXED_OFF || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_OFF || type == MIDI_M_CTRL_CHANGE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_FIXED_OFF
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF || type == MIDI_M_RPN_OFF
     || type == MIDI_M_RPN_ON_OFF || type == MIDI_M_NRPN_OFF
     || type == MIDI_M_NRPN_ON_OFF || type == MIDI_M_NOTE_NO_VELOCITY
@@ -342,14 +354,15 @@ bool GOMidiReceiverBase::HasLowerLimit(GOMidiReceiveMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasUpperLimit(GOMidiReceiveMessageType type) {
+bool GOMidiReceiverBase::HasUpperLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_PGM_RANGE || type == MIDI_M_RPN_RANGE
     || type == MIDI_M_NRPN_RANGE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_CTRL_CHANGE_FIXED || type == MIDI_M_RPN
     || type == MIDI_M_NRPN || type == MIDI_M_NOTE_ON
-    || type == MIDI_M_NOTE_ON_OFF || type == MIDI_M_CTRL_CHANGE_ON
-    || type == MIDI_M_CTRL_CHANGE_ON_OFF || type == MIDI_M_CTRL_CHANGE_FIXED_ON
+    || type == MIDI_M_NOTE_FIXED_ON || type == MIDI_M_NOTE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_ON || type == MIDI_M_CTRL_CHANGE_ON_OFF
+    || type == MIDI_M_CTRL_CHANGE_FIXED_ON
     || type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF || type == MIDI_M_RPN_ON
     || type == MIDI_M_RPN_ON_OFF || type == MIDI_M_NRPN_ON
     || type == MIDI_M_NRPN_ON_OFF || type == MIDI_M_NOTE_NO_VELOCITY
@@ -361,7 +374,7 @@ bool GOMidiReceiverBase::HasUpperLimit(GOMidiReceiveMessageType type) {
   return false;
 }
 
-unsigned GOMidiReceiverBase::KeyLimit(GOMidiReceiveMessageType type) {
+unsigned GOMidiReceiverBase::KeyLimit(GOMidiReceiverMessageType type) {
   if (type == MIDI_M_PGM_CHANGE)
     return 0x200000;
   if (
@@ -372,7 +385,7 @@ unsigned GOMidiReceiverBase::KeyLimit(GOMidiReceiveMessageType type) {
   return 0x7f;
 }
 
-unsigned GOMidiReceiverBase::LowerValueLimit(GOMidiReceiveMessageType type) {
+unsigned GOMidiReceiverBase::LowerValueLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_RPN_RANGE || type == MIDI_M_NRPN_RANGE
     || type == MIDI_M_SYSEX_AHLBORN_GALANTI
@@ -394,7 +407,7 @@ unsigned GOMidiReceiverBase::LowerValueLimit(GOMidiReceiveMessageType type) {
   return 0x7f;
 }
 
-unsigned GOMidiReceiverBase::UpperValueLimit(GOMidiReceiveMessageType type) {
+unsigned GOMidiReceiverBase::UpperValueLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_RPN_RANGE || type == MIDI_M_NRPN_RANGE
     || type == MIDI_M_SYSEX_AHLBORN_GALANTI
@@ -451,12 +464,13 @@ GOMidiMatchType GOMidiReceiverBase::Match(const GOMidiEvent &e, int &value) {
 
 GOMidiMatchType GOMidiReceiverBase::Match(
   const GOMidiEvent &e, const unsigned midi_map[128], int &key, int &value) {
-  value = 0;
+  const GOMidiEvent::MidiType eMidiType = e.GetMidiType();
 
+  value = 0;
   if (
-    e.GetMidiType() == MIDI_SYSEX_GO_CLEAR
-    || e.GetMidiType() == MIDI_SYSEX_GO_SAMPLESET) {
-    if (e.GetMidiType() == MIDI_SYSEX_GO_CLEAR && e.GetChannel() == 0)
+    eMidiType == GOMidiEvent::MIDI_SYSEX_GO_CLEAR
+    || eMidiType == GOMidiEvent::MIDI_SYSEX_GO_SAMPLESET) {
+    if (eMidiType == GOMidiEvent::MIDI_SYSEX_GO_CLEAR && e.GetChannel() == 0)
       deleteInternal(e.GetDevice());
     else {
       unsigned pos = createInternal(e.GetDevice());
@@ -464,7 +478,7 @@ GOMidiMatchType GOMidiReceiverBase::Match(
     }
     return MIDI_MATCH_NONE;
   }
-  if (e.GetMidiType() == MIDI_SYSEX_GO_SETUP) {
+  if (eMidiType == GOMidiEvent::MIDI_SYSEX_GO_SETUP) {
     if (m_ElementID == -1)
       return MIDI_MATCH_NONE;
     if (m_ElementID != e.GetKey())
@@ -480,7 +494,7 @@ GOMidiMatchType GOMidiReceiverBase::Match(
     if (m_Internal[i].device == e.GetDevice()) {
       if (m_type == MIDI_RECV_MANUAL) {
         if (
-          e.GetMidiType() == MIDI_NOTE
+          eMidiType == GOMidiEvent::MIDI_NOTE
           && e.GetChannel() == m_Internal[i].channel) {
           key = e.GetKey() + GetTranspose();
           value = e.GetValue();
@@ -495,13 +509,13 @@ GOMidiMatchType GOMidiReceiverBase::Match(
         }
 
         if (
-          e.GetMidiType() == MIDI_CTRL_CHANGE
+          eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
           && e.GetKey() == MIDI_CTRL_NOTES_OFF
           && e.GetChannel() == m_Internal[i].channel)
           return MIDI_MATCH_RESET;
       } else {
         if (
-          e.GetMidiType() == MIDI_NRPN
+          eMidiType == GOMidiEvent::MIDI_NRPN
           && e.GetChannel() == m_Internal[i].channel
           && e.GetKey() == m_Internal[i].key) {
           value = e.GetValue();
@@ -517,73 +531,68 @@ GOMidiMatchType GOMidiReceiverBase::Match(
     }
 
   for (unsigned i = 0; i < m_events.size(); i++) {
+    const auto &pattern = m_events[i];
+
     if (
-      m_events[i].channel != -1 && m_events[i].channel != e.GetChannel()
-      && HasChannel(m_events[i].type))
+      pattern.channel != -1 && pattern.channel != e.GetChannel()
+      && HasChannel(pattern.type))
       continue;
-    if (m_events[i].deviceId != 0 && m_events[i].deviceId != e.GetDevice())
+    if (pattern.deviceId != 0 && pattern.deviceId != e.GetDevice())
       continue;
     if (m_type == MIDI_RECV_MANUAL) {
       if (
-        m_events[i].type != MIDI_M_NOTE
-        && m_events[i].type != MIDI_M_NOTE_NO_VELOCITY
-        && m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE
-        && m_events[i].type != MIDI_M_NOTE_NORMAL)
+        pattern.type != MIDI_M_NOTE && pattern.type != MIDI_M_NOTE_NO_VELOCITY
+        && pattern.type != MIDI_M_NOTE_SHORT_OCTAVE
+        && pattern.type != MIDI_M_NOTE_NORMAL)
         continue;
-      if (e.GetMidiType() == MIDI_NOTE || e.GetMidiType() == MIDI_AFTERTOUCH) {
-        if (
-          e.GetKey() < m_events[i].low_key || e.GetKey() > m_events[i].high_key)
+      if (
+        eMidiType == GOMidiEvent::MIDI_NOTE
+        || eMidiType == GOMidiEvent::MIDI_AFTERTOUCH) {
+        if (e.GetKey() < pattern.low_key || e.GetKey() > pattern.high_key)
           continue;
         key = e.GetKey();
-        if (m_events[i].type == MIDI_M_NOTE_SHORT_OCTAVE) {
-          int no = e.GetKey() - m_events[i].low_key;
+        if (pattern.type == MIDI_M_NOTE_SHORT_OCTAVE) {
+          int no = e.GetKey() - pattern.low_key;
           if (no <= 3)
             continue;
           if (no == 4 || no == 6 || no == 8)
             key -= 4;
         }
-        key = key + GetTranspose() + m_events[i].key;
+        key = key + GetTranspose() + pattern.key;
         if (key < 0)
           continue;
         if (key > 127)
           continue;
         if (
-          midi_map && m_events[i].type != MIDI_M_NOTE_SHORT_OCTAVE
-          && m_events[i].type != MIDI_M_NOTE_NORMAL)
+          midi_map && pattern.type != MIDI_M_NOTE_SHORT_OCTAVE
+          && pattern.type != MIDI_M_NOTE_NORMAL)
           key = midi_map[key];
-        if (m_events[i].type == MIDI_M_NOTE_NO_VELOCITY) {
+        if (pattern.type == MIDI_M_NOTE_NO_VELOCITY) {
           value = e.GetValue() ? 127 : 0;
-          if (e.GetMidiType() == MIDI_AFTERTOUCH)
+          if (eMidiType == GOMidiEvent::MIDI_AFTERTOUCH)
             continue;
-        } else {
-          value = e.GetValue() - m_events[i].low_value;
-          value *= 127
-            / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        }
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
-        if (m_events[i].low_value <= m_events[i].high_value) {
-          if (e.GetValue() < m_events[i].low_value)
+        } else
+          value = pattern.ConvertSrcValueToInt(e.GetValue());
+        if (pattern.low_value <= pattern.high_value) {
+          if (e.GetValue() < pattern.low_value)
             return MIDI_MATCH_OFF;
-          if (e.GetValue() <= m_events[i].high_value)
+          if (e.GetValue() <= pattern.high_value)
             return MIDI_MATCH_ON;
         } else {
-          if (e.GetValue() >= m_events[i].low_value)
+          if (e.GetValue() >= pattern.low_value)
             return MIDI_MATCH_OFF;
-          if (e.GetValue() >= m_events[i].high_value)
+          if (e.GetValue() >= pattern.high_value)
             return MIDI_MATCH_ON;
         }
         continue;
       }
       if (
-        e.GetMidiType() == MIDI_CTRL_CHANGE
+        eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
         && e.GetKey() == MIDI_CTRL_NOTES_OFF)
         return MIDI_MATCH_RESET;
 
       if (
-        e.GetMidiType() == MIDI_CTRL_CHANGE
+        eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
         && e.GetKey() == MIDI_CTRL_SOUNDS_OFF)
         return MIDI_MATCH_RESET;
 
@@ -591,174 +600,140 @@ GOMidiMatchType GOMidiReceiverBase::Match(
     }
     if (m_type == MIDI_RECV_ENCLOSURE) {
       if (
-        m_events[i].type == MIDI_M_CTRL_CHANGE
-        && e.GetMidiType() == MIDI_CTRL_CHANGE
-        && m_events[i].key == e.GetKey()) {
-        value = e.GetValue();
-        value = value - m_events[i].low_value;
-        value *= 127
-          / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
+        pattern.type == MIDI_M_CTRL_CHANGE
+        && eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+        && pattern.key == e.GetKey()) {
+        value = pattern.ConvertSrcValueToInt(e.GetValue());
         return MIDI_MATCH_CHANGE;
       }
       if (
-        m_events[i].type == MIDI_M_RPN && e.GetMidiType() == MIDI_RPN
-        && m_events[i].key == e.GetKey()) {
-        value = e.GetValue();
-        value = value - m_events[i].low_value;
-        value *= 127
-          / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
+        pattern.type == MIDI_M_RPN && eMidiType == GOMidiEvent::MIDI_RPN
+        && pattern.key == e.GetKey()) {
+        value = pattern.ConvertSrcValueToInt(e.GetValue());
         return MIDI_MATCH_CHANGE;
       }
       if (
-        m_events[i].type == MIDI_M_NRPN && e.GetMidiType() == MIDI_NRPN
-        && m_events[i].key == e.GetKey()) {
-        value = e.GetValue();
-        value = value - m_events[i].low_value;
-        value *= 127
-          / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-        if (value < 0)
-          value = 0;
-        if (value > 127)
-          value = 127;
+        pattern.type == MIDI_M_NRPN && eMidiType == GOMidiEvent::MIDI_NRPN
+        && pattern.key == e.GetKey()) {
+        value = pattern.ConvertSrcValueToInt(e.GetValue());
         return MIDI_MATCH_CHANGE;
       }
       if (
-        m_events[i].type == MIDI_M_PGM_RANGE
-        && e.GetMidiType() == MIDI_PGM_CHANGE)
+        pattern.type == MIDI_M_PGM_RANGE
+        && eMidiType == GOMidiEvent::MIDI_PGM_CHANGE)
         if (
-          (m_events[i].low_value <= e.GetKey()
-           && e.GetKey() <= m_events[i].high_value)
-          || (m_events[i].high_value <= e.GetKey() && e.GetKey() <= m_events[i].low_value)) {
-          value = e.GetKey();
-          value = value - m_events[i].low_value;
-          value *= 127
-            / (m_events[i].high_value - m_events[i].low_value + 0.00000001);
-          if (value < 0)
-            value = 0;
-          if (value > 127)
-            value = 127;
+          (pattern.low_value <= e.GetKey() && e.GetKey() <= pattern.high_value)
+          || (pattern.high_value <= e.GetKey() && e.GetKey() <= pattern.low_value)) {
+          value = pattern.ConvertSrcValueToInt(e.GetValue());
           return MIDI_MATCH_CHANGE;
         }
       continue;
     }
     if (
-      e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE
-      && m_events[i].key == e.GetKey()) {
-      if (m_events[i].low_value <= m_events[i].high_value) {
-        if (e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE
+      && pattern.key == e.GetKey()) {
+      if (pattern.low_value <= pattern.high_value) {
+        if (e.GetValue() <= pattern.low_value)
           return MIDI_MATCH_OFF;
-        if (e.GetValue() >= m_events[i].high_value)
+        if (e.GetValue() >= pattern.high_value)
           return MIDI_MATCH_ON;
       } else {
-        if (e.GetValue() >= m_events[i].low_value)
+        if (e.GetValue() >= pattern.low_value)
           return MIDI_MATCH_OFF;
-        if (e.GetValue() <= m_events[i].high_value)
+        if (e.GetValue() <= pattern.high_value)
           return MIDI_MATCH_ON;
       }
       continue;
     }
     if (
-      e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE_ON
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_ON
+      && pattern.key == e.GetKey() && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_OFF
+      && pattern.key == e.GetKey() && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE_ON_OFF
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_NOTE && m_events[i].type == MIDI_M_NOTE_ON_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
 
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE
-      && m_events[i].key == e.GetKey()) {
-      if (m_events[i].low_value <= m_events[i].high_value) {
-        if (e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE && pattern.key == e.GetKey()) {
+      if (pattern.low_value <= pattern.high_value) {
+        if (e.GetValue() <= pattern.low_value)
           return debounce(e, MIDI_MATCH_OFF, i);
-        if (e.GetValue() >= m_events[i].high_value)
+        if (e.GetValue() >= pattern.high_value)
           return debounce(e, MIDI_MATCH_ON, i);
       } else {
-        if (e.GetValue() >= m_events[i].low_value)
+        if (e.GetValue() >= pattern.low_value)
           return debounce(e, MIDI_MATCH_OFF, i);
-        if (e.GetValue() <= m_events[i].high_value)
+        if (e.GetValue() <= pattern.high_value)
           return debounce(e, MIDI_MATCH_ON, i);
       }
       continue;
     }
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_ON
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE_ON && pattern.key == e.GetKey()
+      && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE_OFF && pattern.key == e.GetKey()
+      && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_ON_OFF
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE_ON_OFF && pattern.key == e.GetKey()
+      && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_ON_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE_ON_OFF && pattern.key == e.GetKey()
+      && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED
-      && m_events[i].key == e.GetKey()) {
-      if (e.GetValue() == m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE_FIXED
+      && pattern.key == e.GetKey()) {
+      if (e.GetValue() == pattern.low_value)
         return debounce(e, MIDI_MATCH_OFF, i);
-      if (e.GetValue() == m_events[i].high_value)
+      if (e.GetValue() == pattern.high_value)
         return debounce(e, MIDI_MATCH_ON, i);
       continue;
     }
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED_ON
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() == m_events[i].high_value)
+      ((eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+        && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_ON)
+       || (eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_FIXED_ON))
+      && pattern.key == e.GetKey() && e.GetValue() == pattern.high_value)
+      return debounce(e, MIDI_MATCH_ON, i);
+    if (
+      ((eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+        && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_OFF)
+       || (eMidiType == GOMidiEvent::MIDI_NOTE && pattern.type == MIDI_M_NOTE_FIXED_OFF))
+      && pattern.key == e.GetKey() && e.GetValue() == pattern.low_value)
+      return debounce(e, MIDI_MATCH_OFF, i);
+    if (
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() == pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() == m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() == pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() == m_events[i].high_value)
-      return debounce(e, MIDI_MATCH_CHANGE, i);
-    if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE
-      && m_events[i].type == MIDI_M_CTRL_CHANGE_FIXED_ON_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() == m_events[i].low_value)
-      return debounce(e, MIDI_MATCH_CHANGE, i);
-    if (
-      e.GetMidiType() == MIDI_CTRL_CHANGE && m_events[i].type == MIDI_M_CTRL_BIT
-      && m_events[i].key == e.GetKey()) {
-      unsigned mask = 1 << m_events[i].low_value;
+      eMidiType == GOMidiEvent::MIDI_CTRL_CHANGE
+      && pattern.type == MIDI_M_CTRL_BIT && pattern.key == e.GetKey()) {
+      unsigned mask = 1 << pattern.low_value;
       if (e.GetValue() & mask)
         return debounce(e, MIDI_MATCH_ON, i);
       else
@@ -766,142 +741,134 @@ GOMidiMatchType GOMidiReceiverBase::Match(
     }
 
     if (
-      e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN
-      && m_events[i].key == e.GetKey()) {
-      if (m_events[i].low_value <= m_events[i].high_value) {
-        if (e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_RPN && pattern.type == MIDI_M_RPN
+      && pattern.key == e.GetKey()) {
+      if (pattern.low_value <= pattern.high_value) {
+        if (e.GetValue() <= pattern.low_value)
           return MIDI_MATCH_OFF;
-        if (e.GetValue() >= m_events[i].high_value)
+        if (e.GetValue() >= pattern.high_value)
           return MIDI_MATCH_ON;
       } else {
-        if (e.GetValue() >= m_events[i].low_value)
+        if (e.GetValue() >= pattern.low_value)
           return MIDI_MATCH_OFF;
-        if (e.GetValue() <= m_events[i].high_value)
+        if (e.GetValue() <= pattern.high_value)
           return MIDI_MATCH_ON;
       }
       continue;
     }
     if (
-      e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_ON
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_RPN && pattern.type == MIDI_M_RPN_ON
+      && pattern.key == e.GetKey() && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_RPN && pattern.type == MIDI_M_RPN_OFF
+      && pattern.key == e.GetKey() && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_ON_OFF
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_RPN && pattern.type == MIDI_M_RPN_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_ON_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_RPN && pattern.type == MIDI_M_RPN_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
 
     if (
-      e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN
-      && m_events[i].key == e.GetKey()) {
-      if (m_events[i].low_value <= m_events[i].high_value) {
-        if (e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_NRPN && pattern.type == MIDI_M_NRPN
+      && pattern.key == e.GetKey()) {
+      if (pattern.low_value <= pattern.high_value) {
+        if (e.GetValue() <= pattern.low_value)
           return MIDI_MATCH_OFF;
-        if (e.GetValue() >= m_events[i].high_value)
+        if (e.GetValue() >= pattern.high_value)
           return MIDI_MATCH_ON;
       } else {
-        if (e.GetValue() >= m_events[i].low_value)
+        if (e.GetValue() >= pattern.low_value)
           return MIDI_MATCH_OFF;
-        if (e.GetValue() <= m_events[i].high_value)
+        if (e.GetValue() <= pattern.high_value)
           return MIDI_MATCH_ON;
       }
       continue;
     }
     if (
-      e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_ON
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_NRPN && pattern.type == MIDI_M_NRPN_ON
+      && pattern.key == e.GetKey() && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_NRPN && pattern.type == MIDI_M_NRPN_OFF
+      && pattern.key == e.GetKey() && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_ON_OFF
-      && m_events[i].key == e.GetKey()
-      && e.GetValue() >= m_events[i].high_value)
+      eMidiType == GOMidiEvent::MIDI_NRPN && pattern.type == MIDI_M_NRPN_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() >= pattern.high_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_ON_OFF
-      && m_events[i].key == e.GetKey() && e.GetValue() <= m_events[i].low_value)
+      eMidiType == GOMidiEvent::MIDI_NRPN && pattern.type == MIDI_M_NRPN_ON_OFF
+      && pattern.key == e.GetKey() && e.GetValue() <= pattern.low_value)
       return debounce(e, MIDI_MATCH_CHANGE, i);
 
     if (
-      e.GetMidiType() == MIDI_PGM_CHANGE
-      && m_events[i].type == MIDI_M_PGM_CHANGE
-      && m_events[i].key == e.GetKey()) {
+      eMidiType == GOMidiEvent::MIDI_PGM_CHANGE
+      && pattern.type == MIDI_M_PGM_CHANGE && pattern.key == e.GetKey()) {
       return debounce(e, MIDI_MATCH_CHANGE, i);
     }
     if (
-      e.GetMidiType() == MIDI_PGM_CHANGE && m_events[i].type == MIDI_M_PGM_RANGE
-      && m_events[i].low_value == e.GetKey())
+      eMidiType == GOMidiEvent::MIDI_PGM_CHANGE
+      && pattern.type == MIDI_M_PGM_RANGE && pattern.low_value == e.GetKey())
       return MIDI_MATCH_OFF;
     if (
-      e.GetMidiType() == MIDI_PGM_CHANGE && m_events[i].type == MIDI_M_PGM_RANGE
-      && m_events[i].high_value == e.GetKey())
+      eMidiType == GOMidiEvent::MIDI_PGM_CHANGE
+      && pattern.type == MIDI_M_PGM_RANGE && pattern.high_value == e.GetKey())
       return MIDI_MATCH_ON;
     if (
-      e.GetMidiType() == MIDI_SYSEX_JOHANNUS_9
-      && m_events[i].type == MIDI_M_SYSEX_JOHANNUS_9
-      && m_events[i].key == e.GetKey()) {
+      eMidiType == GOMidiEvent::MIDI_SYSEX_JOHANNUS_9
+      && pattern.type == MIDI_M_SYSEX_JOHANNUS_9 && pattern.key == e.GetKey()) {
       return debounce(e, MIDI_MATCH_CHANGE, i);
     }
     if (
-      e.GetMidiType() == MIDI_SYSEX_JOHANNUS_11
-      && m_events[i].type == MIDI_M_SYSEX_JOHANNUS_11
-      && m_events[i].key == e.GetKey() && m_events[i].low_value <= e.GetValue()
-      && m_events[i].high_value >= e.GetValue()) {
+      eMidiType == GOMidiEvent::MIDI_SYSEX_JOHANNUS_11
+      && pattern.type == MIDI_M_SYSEX_JOHANNUS_11 && pattern.key == e.GetKey()
+      && pattern.low_value <= e.GetValue()
+      && pattern.high_value >= e.GetValue()) {
       return debounce(e, MIDI_MATCH_CHANGE, i);
     }
     if (
-      e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_RANGE
-      && m_events[i].low_value == e.GetKey() && m_events[i].key == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_RPN && pattern.type == MIDI_M_RPN_RANGE
+      && pattern.low_value == e.GetKey() && pattern.key == e.GetValue())
       return MIDI_MATCH_OFF;
     if (
-      e.GetMidiType() == MIDI_RPN && m_events[i].type == MIDI_M_RPN_RANGE
-      && m_events[i].high_value == e.GetKey()
-      && m_events[i].key == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_RPN && pattern.type == MIDI_M_RPN_RANGE
+      && pattern.high_value == e.GetKey() && pattern.key == e.GetValue())
       return MIDI_MATCH_ON;
     if (
-      e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_RANGE
-      && m_events[i].low_value == e.GetKey() && m_events[i].key == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_NRPN && pattern.type == MIDI_M_NRPN_RANGE
+      && pattern.low_value == e.GetKey() && pattern.key == e.GetValue())
       return MIDI_MATCH_OFF;
     if (
-      e.GetMidiType() == MIDI_NRPN && m_events[i].type == MIDI_M_NRPN_RANGE
-      && m_events[i].high_value == e.GetKey()
-      && m_events[i].key == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_NRPN && pattern.type == MIDI_M_NRPN_RANGE
+      && pattern.high_value == e.GetKey() && pattern.key == e.GetValue())
       return MIDI_MATCH_ON;
 
     if (
-      e.GetMidiType() == MIDI_SYSEX_VISCOUNT
-      && m_events[i].type == MIDI_M_SYSEX_VISCOUNT
-      && m_events[i].low_value == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_SYSEX_VISCOUNT
+      && pattern.type == MIDI_M_SYSEX_VISCOUNT
+      && pattern.low_value == e.GetValue())
       return MIDI_MATCH_OFF;
     if (
-      e.GetMidiType() == MIDI_SYSEX_VISCOUNT
-      && m_events[i].type == MIDI_M_SYSEX_VISCOUNT
-      && m_events[i].high_value == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_SYSEX_VISCOUNT
+      && pattern.type == MIDI_M_SYSEX_VISCOUNT
+      && pattern.high_value == e.GetValue())
       return MIDI_MATCH_ON;
     if (
-      e.GetMidiType() == MIDI_SYSEX_VISCOUNT
-      && m_events[i].type == MIDI_M_SYSEX_VISCOUNT_TOGGLE
-      && m_events[i].low_value == e.GetValue()) {
+      eMidiType == GOMidiEvent::MIDI_SYSEX_VISCOUNT
+      && pattern.type == MIDI_M_SYSEX_VISCOUNT_TOGGLE
+      && pattern.low_value == e.GetValue()) {
       return debounce(e, MIDI_MATCH_CHANGE, i);
     }
     if (
-      e.GetMidiType() == MIDI_SYSEX_RODGERS_STOP_CHANGE
-      && m_events[i].type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE
-      && m_events[i].key == e.GetChannel()) {
-      switch (GORodgersGetBit(m_events[i].low_value, e.GetKey(), e.GetData())) {
+      eMidiType == GOMidiEvent::MIDI_SYSEX_RODGERS_STOP_CHANGE
+      && pattern.type == MIDI_M_SYSEX_RODGERS_STOP_CHANGE
+      && pattern.key == e.GetChannel()) {
+      switch (GORodgersGetBit(pattern.low_value, e.GetKey(), e.GetData())) {
       case MIDI_BIT_STATE::MIDI_BIT_CLEAR:
         return MIDI_MATCH_OFF;
 
@@ -912,31 +879,27 @@ GOMidiMatchType GOMidiReceiverBase::Match(
       }
     }
     if (
-      e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI
-      && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI
-      && m_events[i].low_value == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI
+      && pattern.type == MIDI_M_SYSEX_AHLBORN_GALANTI
+      && pattern.low_value == e.GetValue())
       return MIDI_MATCH_OFF;
     if (
-      e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI
-      && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI
-      && m_events[i].high_value == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI
+      && pattern.type == MIDI_M_SYSEX_AHLBORN_GALANTI
+      && pattern.high_value == e.GetValue())
       return MIDI_MATCH_ON;
     if (
-      e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI
-      && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE
-      && m_events[i].low_value == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI
+      && pattern.type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE
+      && pattern.low_value == e.GetValue())
       return debounce(e, MIDI_MATCH_CHANGE, i);
     if (
-      e.GetMidiType() == MIDI_SYSEX_AHLBORN_GALANTI
-      && m_events[i].type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE
-      && m_events[i].high_value == e.GetValue())
+      eMidiType == GOMidiEvent::MIDI_SYSEX_AHLBORN_GALANTI
+      && pattern.type == MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE
+      && pattern.high_value == e.GetValue())
       return debounce(e, MIDI_MATCH_CHANGE, i);
   }
   return MIDI_MATCH_NONE;
-}
-
-void GOMidiReceiverBase::Assign(const GOMidiReceiverData &data) {
-  *(GOMidiReceiverData *)this = data;
 }
 
 void GOMidiReceiverBase::PreparePlayback() { m_Internal.resize(0); }

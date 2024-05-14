@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,11 +10,16 @@
 #include <wx/log.h>
 
 #include "GOSoundScheduler.h"
-#include "sound/scheduler/GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutexLocker.h"
+#include <unistd.h>
 
 GOSoundThread::GOSoundThread(GOSoundScheduler *scheduler)
-  : GOThread(), m_Scheduler(scheduler), m_Condition(m_Mutex) {
+  : GOThread(),
+    m_Scheduler(scheduler),
+    m_Condition(m_Mutex),
+    m_IdleStateReachedCondition(m_Mutex),
+    m_IsIdle(false) {
   wxLogDebug(wxT("Create Thread"));
 }
 
@@ -23,7 +28,7 @@ void GOSoundThread::Entry() {
     bool shouldStop = false;
 
     do {
-      GOSoundWorkItem *next = m_Scheduler->GetNextGroup();
+      GOSoundTask *next = m_Scheduler->GetNextGroup();
 
       if (next == NULL)
         break;
@@ -35,13 +40,23 @@ void GOSoundThread::Entry() {
       break;
 
     GOMutexLocker lock(m_Mutex, false, "GOSoundThread::Entry", this);
-
     if (!lock.IsLocked() || ShouldStop())
       break;
+    m_IsIdle = true;
+    m_IdleStateReachedCondition.Broadcast();
     if (!m_Condition.WaitOrStop("GOSoundThread::Entry"))
       break;
+    m_IsIdle = false;
   }
+
   return;
+}
+
+void GOSoundThread::WaitForIdle() {
+  GOMutexLocker lock(m_Mutex, false, "GOSoundThread::WaitForIdle");
+  while (!m_IsIdle) {
+    m_IdleStateReachedCondition.Wait();
+  }
 }
 
 void GOSoundThread::Run() { Start(); }

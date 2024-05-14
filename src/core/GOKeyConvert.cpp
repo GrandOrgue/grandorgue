@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -86,7 +86,7 @@ static GOShortcutKey shortcuts[] = {
   {wxTRANSLATE("numpad 9"), 105},
   {wxTRANSLATE("multiply"), 106},
   {wxTRANSLATE("add"), 107},
-  {wxTRANSLATE("seperator"), 108},
+  {wxTRANSLATE("separator"), 108},
   {wxTRANSLATE("subtract"), 109},
   {wxTRANSLATE("decimal"), 110},
   {wxTRANSLATE("divide"), 111},

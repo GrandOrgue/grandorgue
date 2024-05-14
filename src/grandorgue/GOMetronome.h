@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,42 +8,42 @@
 #ifndef GOMETRONOME_H
 #define GOMETRONOME_H
 
-#include "GOElementCreator.h"
-#include "GOLabel.h"
-#include "GOPlaybackStateHandler.h"
+#include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
+#include "sound/GOSoundStateHandler.h"
+
 #include "GOSaveableObject.h"
 #include "GOTimerCallback.h"
 
 class GOMidiEvent;
 class GORank;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOMetronome : private GOTimerCallback,
-                    private GOPlaybackStateHandler,
+                    private GOSoundStateHandler,
                     private GOSaveableObject,
                     public GOElementCreator {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   unsigned m_BPM;
   unsigned m_MeasureLength;
   unsigned m_Pos;
   bool m_Running;
-  GOLabel m_BPMDisplay;
-  GOLabel m_MeasureDisplay;
+  GOLabelControl m_BPMDisplay;
+  GOLabelControl m_MeasureDisplay;
   GORank *m_rank;
   unsigned m_StopID;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct GOElementCreator::ButtonDefinitionEntry m_element_types[];
+  const struct GOElementCreator::ButtonDefinitionEntry *
+  GetButtonDefinitionList();
 
   void HandleTimer();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id, bool newState) override;
 
   void AbortPlayback();
   void PreparePlayback();
-  void StartPlayback();
-  void PrepareRecording();
 
   void Save(GOConfigWriter &cfg);
 
@@ -54,13 +54,13 @@ private:
   void UpdateMeasure(int val);
 
 public:
-  GOMetronome(GODefinitionFile *organfile);
+  GOMetronome(GOOrganController *organController);
   virtual ~GOMetronome();
 
   void Load(GOConfigReader &cfg);
 
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 };
 
 #endif

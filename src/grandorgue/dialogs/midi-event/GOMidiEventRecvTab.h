@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,6 +16,7 @@
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "midi/GOMidiReceiverBase.h"
+#include "modification/GOModificationProxy.h"
 
 #include "GOChoice.h"
 
@@ -28,15 +29,18 @@ class wxToggleButton;
 class GOConfig;
 class GOMidiDeviceConfigList;
 
-class GOMidiEventRecvTab : public wxPanel, protected GOMidiCallback {
+class GOMidiEventRecvTab : public wxPanel,
+                           public GOModificationProxy,
+                           protected GOMidiCallback {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiMap &m_MidiMap;
 
   GOMidiReceiverBase *m_original;
-  GOMidiReceiverData m_midi;
+  GOMidiReceiverEventPatternList m_midi;
+  GOMidiReceiverType m_ReceiverType;
   GOMidiListener m_listener;
-  GOChoice<GOMidiReceiveMessageType> *m_eventtype;
+  GOChoice<GOMidiReceiverMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
   wxStaticText *m_DataLabel;
   wxSpinCtrl *m_data;
@@ -50,11 +54,28 @@ private:
   wxToggleButton *m_ListenSimple;
   wxStaticText *m_ListenInstructions;
   wxToggleButton *m_ListenAdvanced;
+
+  /**
+   * Event detection state
+   * 0 - not listened now
+   * 1 - "Listen for event", the the ON events are listened now
+   * 2 - "Detect complex MIDI setup", the ON events are listened now
+   * 3 - "Detect complex MIDI setup", the OFF events are listened now
+   */
   unsigned m_ListenState;
   wxButton *m_new, *m_delete;
   wxTimer m_Timer;
   int m_current;
+
+  /**
+   * the list of midi events for "Listen for event" or for the ON part of
+   * "Detect complex MIDI setup"
+   */
   std::vector<GOMidiEvent> m_OnList;
+  /**
+   * the list of midi events for "Listen for event" or for the OFF part of
+   * "Detect complex MIDI setup"
+   */
   std::vector<GOMidiEvent> m_OffList;
 
   bool SimilarEvent(const GOMidiEvent &e1, const GOMidiEvent &e2);
@@ -100,7 +121,7 @@ public:
   void RegisterMIDIListener(GOMidi *midi);
 
   virtual bool TransferDataFromWindow() override;
-  GOMidiReceiveEvent GetCurrentEvent();
+  GOMidiReceiverEventPattern GetCurrentEvent();
 
   DECLARE_EVENT_TABLE()
 };

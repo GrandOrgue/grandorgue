@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,7 +20,8 @@ EVT_TOGGLEBUTTON(ID_LISTEN, GOMidiEventKeyTab::OnListenClick)
 EVT_TOGGLEBUTTON(ID_LISTEN_MINUS, GOMidiEventKeyTab::OnMinusListenClick)
 END_EVENT_TABLE()
 
-GOMidiEventKeyTab::GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event)
+GOMidiEventKeyTab::GOMidiEventKeyTab(
+  wxWindow *parent, GOMidiShortcutReceiver *event)
   : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
     m_original(event),
     m_key(*event),
@@ -93,7 +94,8 @@ bool GOMidiEventKeyTab::TransferDataFromWindow() {
     else
       m_key.SetMinusKey(key->key_code);
   }
-  m_original->Assign(m_key);
+  if (m_original->RenewFrom(m_key))
+    GOModificationProxy::OnIsModifiedChanged(true);
   return true;
 }
 

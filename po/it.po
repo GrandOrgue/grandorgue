@@ -832,7 +832,7 @@ msgid "Error"
 msgstr "Errore"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr ""
 "Dispositivo di output %s non trovato - non si verificherà alcun suono in "
 "uscita"
@@ -1239,7 +1239,7 @@ msgstr "i"
 msgid "instance"
 msgstr "istanza"
 
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "definizione del nome dell'istanza di GrandOrgue"
 
 msgid "organ file"
@@ -1834,7 +1834,7 @@ msgstr "moltiplicare"
 msgid "add"
 msgstr "aggiungi"
 
-msgid "seperator"
+msgid "separator"
 msgstr "separatore"
 
 msgid "subtract"
@@ -1992,7 +1992,7 @@ msgstr "Creare %p"
 msgid "Destroy %p"
 msgstr "Distruggi %p"
 
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgid "< Malformed wave file. Format chunk must precede data chunk."
 msgstr ""
 "< File wave non valido. Il formato blocco deve precedere il blocco di dati."
 
@@ -2067,7 +2067,7 @@ msgstr "ritorno di formato non corretto!"
 msgid "Windchest %d"
 msgstr "Windchest %d"
 
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Definizione dei loop non valido"
 
 msgid "Invalid release position"

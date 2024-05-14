@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,14 +8,19 @@
 #include "GOSoundAudioSection.h"
 
 #include <wx/intl.h>
+#include <wx/log.h>
+
+#include "loader/cache/GOCache.h"
+#include "loader/cache/GOCacheWriter.h"
+
+#include "loader/GOLoaderFilename.h"
+#include "model/GOCacheObject.h"
 
 #include "GOAlloc.h"
-#include "GOCache.h"
-#include "GOCacheWriter.h"
 #include "GOMemoryPool.h"
-#include "GOReleaseAlignTable.h"
 #include "GOSampleStatistic.h"
 #include "GOSoundCompress.h"
+#include "GOSoundReleaseAlignTable.h"
 #include "GOSoundResample.h"
 
 #ifndef M_PI
@@ -29,7 +34,7 @@ static unsigned limited_diff(unsigned a, unsigned b) {
     return 0;
 }
 
-GOAudioSection::GOAudioSection(GOMemoryPool &pool)
+GOSoundAudioSection::GOSoundAudioSection(GOMemoryPool &pool)
   : m_Data(NULL),
     m_ReleaseAligner(NULL),
     m_ReleaseStartSegment(0),
@@ -37,15 +42,16 @@ GOAudioSection::GOAudioSection(GOMemoryPool &pool)
   ClearData();
 }
 
-GOAudioSection::~GOAudioSection() { ClearData(); }
+GOSoundAudioSection::~GOSoundAudioSection() { ClearData(); }
 
-void GOAudioSection::ClearData() {
+void GOSoundAudioSection::ClearData() {
   m_AllocSize = 0;
   m_SampleCount = 0;
   m_SampleRate = 0;
   m_BitsPerSample = 0;
   m_BytesPerSample = 0;
-  m_Compressed = false;
+  m_WaveTremulantStateFor = BOOL3_DEFAULT;
+  m_IsCompressed = false;
   m_Channels = 0;
   if (m_Data) {
     m_Pool.Free(m_Data);
@@ -62,9 +68,10 @@ void GOAudioSection::ClearData() {
     m_EndSegments.pop_back();
   }
   m_StartSegments.clear();
+  m_ReleaseCrossfadeLength = 0;
 }
 
-bool GOAudioSection::LoadCache(GOCache &cache) {
+bool GOSoundAudioSection::LoadCache(GOCache &cache) {
   if (!cache.Read(&m_AllocSize, sizeof(m_AllocSize)))
     return false;
   if (!cache.Read(&m_SampleCount, sizeof(m_SampleCount)))
@@ -75,7 +82,9 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
     return false;
   if (!cache.Read(&m_BytesPerSample, sizeof(m_BytesPerSample)))
     return false;
-  if (!cache.Read(&m_Compressed, sizeof(m_Compressed)))
+  if (!cache.Read(&m_WaveTremulantStateFor, sizeof(m_WaveTremulantStateFor)))
+    return false;
+  if (!cache.Read(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
   if (!cache.Read(&m_Channels, sizeof(m_Channels)))
     return false;
@@ -84,6 +93,8 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
   if (!cache.Read(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
     return false;
   if (!cache.Read(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
+    return false;
+  if (!cache.Read(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
   m_Data = (unsigned char *)cache.ReadBlock(m_AllocSize);
   if (!m_Data)
@@ -131,7 +142,7 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
     return false;
   m_ReleaseAligner = NULL;
   if (load_align_tracker) {
-    m_ReleaseAligner = new GOReleaseAlignTable();
+    m_ReleaseAligner = new GOSoundReleaseAlignTable();
     if (!m_ReleaseAligner->Load(cache))
       return false;
   }
@@ -139,7 +150,7 @@ bool GOAudioSection::LoadCache(GOCache &cache) {
   return true;
 }
 
-bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
+bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&m_AllocSize, sizeof(m_AllocSize)))
     return false;
   if (!cache.Write(&m_SampleCount, sizeof(m_SampleCount)))
@@ -150,7 +161,9 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
     return false;
   if (!cache.Write(&m_BytesPerSample, sizeof(m_BytesPerSample)))
     return false;
-  if (!cache.Write(&m_Compressed, sizeof(m_Compressed)))
+  if (!cache.Write(&m_WaveTremulantStateFor, sizeof(m_WaveTremulantStateFor)))
+    return false;
+  if (!cache.Write(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
   if (!cache.Write(&m_Channels, sizeof(m_Channels)))
     return false;
@@ -159,6 +172,8 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&m_MaxAmplitude, sizeof(m_MaxAmplitude)))
     return false;
   if (!cache.Write(&m_ReleaseStartSegment, sizeof(m_ReleaseStartSegment)))
+    return false;
+  if (!cache.Write(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
   if (!cache.WriteBlock(m_Data, m_AllocSize))
     return false;
@@ -217,7 +232,7 @@ bool GOAudioSection::SaveCache(GOCacheWriter &cache) const {
  * into the correct range. */
 
 template <class T>
-inline void GOAudioSection::MonoUncompressedLinear(
+inline void GOSoundAudioSection::MonoUncompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   T *input = (T *)(stream->ptr);
@@ -240,9 +255,9 @@ inline void GOAudioSection::MonoUncompressedLinear(
 }
 
 template <class T>
-inline void GOAudioSection::StereoUncompressedLinear(
+inline void GOSoundAudioSection::StereoUncompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
-  typedef T stereoSample[0][2];
+  typedef T stereoSample[][2];
 
   // "borrow" the output buffer to compute release alignment info
   stereoSample &input = (stereoSample &)*(T *)(stream->ptr);
@@ -271,7 +286,7 @@ inline void GOAudioSection::StereoUncompressedLinear(
 }
 
 template <class T>
-inline void GOAudioSection::MonoUncompressedPolyphase(
+inline void GOSoundAudioSection::MonoUncompressedPolyphase(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   T *input = ((T *)stream->ptr);
@@ -303,9 +318,9 @@ inline void GOAudioSection::MonoUncompressedPolyphase(
 }
 
 template <class T>
-inline void GOAudioSection::StereoUncompressedPolyphase(
+inline void GOSoundAudioSection::StereoUncompressedPolyphase(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
-  typedef T stereoSample[0][2];
+  typedef T stereoSample[][2];
 
   // copy the sample buffer
   stereoSample &input = (stereoSample &)*(T *)(stream->ptr);
@@ -341,7 +356,7 @@ inline void GOAudioSection::StereoUncompressedPolyphase(
 }
 
 template <bool format16>
-inline void GOAudioSection::MonoCompressedLinear(
+inline void GOSoundAudioSection::MonoCompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   for (unsigned int i = 0; i < n_blocks; i++,
                     stream->position_fraction += stream->increment_fraction,
@@ -366,7 +381,7 @@ inline void GOAudioSection::MonoCompressedLinear(
 }
 
 template <bool format16>
-inline void GOAudioSection::StereoCompressedLinear(
+inline void GOSoundAudioSection::StereoCompressedLinear(
   audio_section_stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   for (unsigned int i = 0; i < n_blocks;
@@ -395,7 +410,7 @@ inline void GOAudioSection::StereoCompressedLinear(
   stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 }
 
-inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
+inline DecodeBlockFunction GOSoundAudioSection::GetDecodeBlockFunction(
   unsigned channels,
   unsigned bits_per_sample,
   bool compressed,
@@ -457,7 +472,7 @@ inline DecodeBlockFunction GOAudioSection::GetDecodeBlockFunction(
   return NULL;
 }
 
-inline unsigned GOAudioSection::PickEndSegment(
+inline unsigned GOSoundAudioSection::PickEndSegment(
   unsigned start_segment_index) const {
   const unsigned x = abs(rand());
   for (unsigned i = 0; i < m_EndSegments.size(); i++) {
@@ -472,7 +487,7 @@ inline unsigned GOAudioSection::PickEndSegment(
   return 0;
 }
 
-bool GOAudioSection::ReadBlock(
+bool GOSoundAudioSection::ReadBlock(
   audio_section_stream *stream, float *buffer, unsigned int n_blocks) {
   while (n_blocks > 0) {
     if (stream->position_index >= stream->transition_position) {
@@ -579,7 +594,7 @@ static inline void loop_memcpy(
   memcpy(dest, source, count);
 }
 
-void GOAudioSection::GetMaxAmplitudeAndDerivative() {
+void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
   DecompressionCache cache;
 
   InitDecompressionCache(cache);
@@ -611,7 +626,7 @@ void GOAudioSection::GetMaxAmplitudeAndDerivative() {
   }
 }
 
-void GOAudioSection::DoCrossfade(
+void GOSoundAudioSection::DoCrossfade(
   unsigned char *dest,
   unsigned dest_offset,
   const unsigned char *src,
@@ -635,25 +650,32 @@ void GOAudioSection::DoCrossfade(
       }
 }
 
-void GOAudioSection::Setup(
+void GOSoundAudioSection::Setup(
+  const GOCacheObject *pObjectFor,
+  const GOLoaderFilename *pLoaderFilename,
   const void *pcm_data,
   const GOWave::SAMPLE_FORMAT pcm_data_format,
   const unsigned pcm_data_channels,
   const unsigned pcm_data_sample_rate,
   const unsigned pcm_data_nb_samples,
-  const std::vector<GO_WAVE_LOOP> *loop_points,
+  const std::vector<GOWaveLoop> *loop_points,
+  GOBool3 waveTremulantStateFor,
   bool compress,
-  unsigned crossfade_length) {
+  unsigned loopCrossfadeLength,
+  unsigned releaseCrossfadeLength) {
   if (pcm_data_channels < 1 || pcm_data_channels > 2)
     throw(wxString) _("< More than 2 channels in");
 
   m_BitsPerSample = wave_bits_per_sample(pcm_data_format);
   compress = (compress) && (m_BitsPerSample > 8);
-  crossfade_length = crossfade_length * pcm_data_sample_rate / 1000;
 
+  unsigned fade_len = loopCrossfadeLength * pcm_data_sample_rate / 1000;
+
+  m_ReleaseCrossfadeLength = releaseCrossfadeLength;
   assert(pcm_data_nb_samples > 0);
 
   const unsigned bytes_per_sample = wave_bytes_per_sample(pcm_data_format);
+
   m_BytesPerSample = bytes_per_sample * pcm_data_channels;
 
   unsigned total_alloc_samples = pcm_data_nb_samples;
@@ -668,88 +690,102 @@ void GOAudioSection::Setup(
     /* Setup the loops and find the amount of data we need to store in the
      * main block. */
     unsigned min_reqd_samples = 0;
+
     for (unsigned i = 0; i < loop_points->size(); i++) {
       audio_start_data_segment start_seg;
       audio_end_data_segment end_seg;
-      const GO_WAVE_LOOP &loop = (*loop_points)[i];
-      unsigned fade_len = crossfade_length;
-      if (loop.end_sample + 1 > min_reqd_samples)
-        min_reqd_samples = loop.end_sample + 1;
+      const GOWaveLoop &loop = (*loop_points)[i];
 
-      start_seg.start_offset = loop.start_sample;
-      end_seg.end_offset = loop.end_sample;
+      if (loop.m_EndPosition + 1 > min_reqd_samples)
+        min_reqd_samples = loop.m_EndPosition + 1;
+
+      start_seg.start_offset = loop.m_StartPosition;
+      end_seg.end_offset = loop.m_EndPosition;
       end_seg.next_start_segment_index = i + 1;
       const unsigned loop_length
         = 1 + end_seg.end_offset - start_seg.start_offset;
-      unsigned end_length;
+      wxString loopError;
 
-      if (end_seg.end_offset - start_seg.start_offset > SHORT_LOOP_LENGTH) {
-        if (fade_len > end_seg.end_offset - start_seg.start_offset)
-          throw(wxString) _("Loop too short for crossfade");
+      if (fade_len > loop_length - 1)
+        loopError = wxString::Format(
+          _("The loop %u is ignored: it is too short for crossfade"), i + 1);
+      else if (start_seg.start_offset < fade_len)
+        loopError = wxString::Format(
+          _("The loop %u is ignored: not enough samples for crossfade before "
+            "it's start"),
+          i + 1);
 
-        if (start_seg.start_offset < fade_len)
-          throw(wxString) _("Not enough samples for a crossfade");
+      if (loopError.IsEmpty()) {
+        unsigned end_length;
 
-        end_seg.transition_offset
-          = end_seg.end_offset - MAX_READAHEAD - fade_len + 1;
-        end_seg.read_end = end_seg.end_offset - fade_len;
-        end_length = 2 * MAX_READAHEAD + fade_len;
-      } else {
-        if (fade_len > end_seg.end_offset - start_seg.start_offset)
-          throw(wxString) _("Loop too short for crossfade");
+        // calculate the fade segment size and offsets
+        if (end_seg.end_offset - start_seg.start_offset > SHORT_LOOP_LENGTH) {
+          end_seg.transition_offset
+            = end_seg.end_offset - MAX_READAHEAD - fade_len + 1;
+          end_seg.read_end = end_seg.end_offset - fade_len;
+          end_length = 2 * MAX_READAHEAD + fade_len;
+        } else {
+          end_seg.transition_offset = start_seg.start_offset;
+          end_seg.read_end = end_seg.end_offset;
+          end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
+          if (
+            end_length < MAX_READAHEAD
+              + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH
+              + fade_len)
+            end_length = MAX_READAHEAD
+              + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH
+              + fade_len;
+        }
+        end_seg.end_size = end_length * m_BytesPerSample;
 
-        if (start_seg.start_offset < fade_len)
-          throw(wxString) _("Not enough samples for a crossfade");
+        // Allocate the fade segment
+        end_seg.end_data
+          = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
+        if (!end_seg.end_data)
+          throw GOOutOfMemory();
+        end_seg.end_ptr
+          = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
-        end_seg.transition_offset = start_seg.start_offset;
-        end_seg.read_end = end_seg.end_offset;
-        end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
-        if (
-          end_length < MAX_READAHEAD
-            + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len)
-          end_length = MAX_READAHEAD
-            + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH + fade_len;
-      }
-      end_seg.end_size = end_length * m_BytesPerSample;
-      end_seg.end_data = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
-      end_seg.end_ptr
-        = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
+        const unsigned copy_len
+          = 1 + end_seg.end_offset - end_seg.transition_offset;
 
-      if (!end_seg.end_data)
-        throw GOOutOfMemory();
-
-      const unsigned copy_len
-        = 1 + end_seg.end_offset - end_seg.transition_offset;
-
-      memcpy(
-        end_seg.end_data,
-        ((const unsigned char *)pcm_data)
-          + end_seg.transition_offset * m_BytesPerSample,
-        copy_len * m_BytesPerSample);
-      loop_memcpy(
-        ((unsigned char *)end_seg.end_data) + copy_len * m_BytesPerSample,
-        ((const unsigned char *)pcm_data)
-          + loop.start_sample * m_BytesPerSample,
-        loop_length * m_BytesPerSample,
-        (end_length - copy_len) * m_BytesPerSample);
-      if (fade_len > 0)
-        DoCrossfade(
+        // Fill the fade seg with transition data, then with the loop start data
+        memcpy(
           end_seg.end_data,
-          MAX_READAHEAD,
-          (const unsigned char *)pcm_data,
-          start_seg.start_offset - fade_len,
-          pcm_data_channels,
-          m_BitsPerSample,
-          fade_len,
-          loop_length,
-          end_length);
+          ((const unsigned char *)pcm_data)
+            + end_seg.transition_offset * m_BytesPerSample,
+          copy_len * m_BytesPerSample);
+        loop_memcpy(
+          ((unsigned char *)end_seg.end_data) + copy_len * m_BytesPerSample,
+          ((const unsigned char *)pcm_data)
+            + loop.m_StartPosition * m_BytesPerSample,
+          loop_length * m_BytesPerSample,
+          (end_length - copy_len) * m_BytesPerSample);
+        if (fade_len > 0)
+          // TODO: reduce the number of parameters of DoCrossfade that the call
+          // would be easy readable without additional comments
+          DoCrossfade(
+            end_seg.end_data,
+            MAX_READAHEAD,
+            (const unsigned char *)pcm_data,
+            start_seg.start_offset - fade_len,
+            pcm_data_channels,
+            m_BitsPerSample,
+            fade_len,
+            loop_length,
+            end_length);
 
-      end_seg.end_loop_length = loop_length;
-      end_seg.end_pos = end_length + end_seg.transition_offset;
-      assert(end_length >= MAX_READAHEAD);
+        end_seg.end_loop_length = loop_length;
+        end_seg.end_pos = end_length + end_seg.transition_offset;
+        assert(end_length >= MAX_READAHEAD);
 
-      m_StartSegments.push_back(start_seg);
-      m_EndSegments.push_back(end_seg);
+        m_StartSegments.push_back(start_seg);
+        m_EndSegments.push_back(end_seg);
+      } else
+        wxLogWarning(GOCacheObject::generateMessage(
+          pObjectFor, pLoaderFilename, loopError));
+      if (!m_EndSegments.size())
+        throw(wxString) _("No valid loops exist in the file");
     }
 
     /* There is no need to store any samples after the end of the last loop. */
@@ -799,7 +835,8 @@ void GOAudioSection::Setup(
   m_SampleCount = total_alloc_samples;
   m_SampleFracBits = m_BitsPerSample - 1;
   m_Channels = pcm_data_channels;
-  m_Compressed = false;
+  m_IsCompressed = false;
+  m_WaveTremulantStateFor = waveTremulantStateFor;
 
   /* Store the main data blob. */
   memcpy(m_Data, pcm_data, m_AllocSize);
@@ -810,7 +847,7 @@ void GOAudioSection::Setup(
     Compress(m_BitsPerSample > 16);
 }
 
-void GOAudioSection::Compress(bool format16) {
+void GOSoundAudioSection::Compress(bool format16) {
   unsigned char *data = (unsigned char *)m_Pool.Alloc(m_AllocSize, false);
   if (data == NULL)
     throw GOOutOfMemory();
@@ -858,67 +895,19 @@ void GOAudioSection::Compress(bool format16) {
     }
   }
 
-#if 0
-	GOAudioSection new_section(m_Pool);
-	new_section.m_BitsPerSample = m_BitsPerSample;
-	new_section.m_Channels = m_Channels;
-	new_section.m_Data = data;
-	new_section.m_AllocSize = output_len;
-	new_section.m_Compressed = true;
-	DecompressionCache tmp;
-	InitDecompressionCache(tmp);
-
-	for (unsigned i = 0; i < m_SampleCount; i++)
-	{
-		for (unsigned j = 0; j < m_StartSegments.size(); j++)
-		{
-			if (m_StartSegments[j].start_offset == i && i)
-			{
-				if (tmp.position != m_StartSegments[j].cache.position)
-					wxLogError(wxT("StartSeg %d: Pos %d %d"), j, tmp.position, m_StartSegments[j].cache.position);
-				if(tmp.prev[0] != m_StartSegments[j].cache.prev[0] ||
-				   tmp.prev[1] != m_StartSegments[j].cache.prev[1])
-					wxLogError(wxT("StartSeg %d: prev %d %d - %d %d "), j, tmp.prev[0], m_StartSegments[j].cache.prev[0], 
-						   tmp.prev[1], m_StartSegments[j].cache.prev[1]);
-				if(tmp.value[0] != m_StartSegments[j].cache.value[0] ||
-				   tmp.value[1] != m_StartSegments[j].cache.value[1])
-					wxLogError(wxT("StartSeg %d: prev %d %d - %d %d "), j, tmp.value[0], m_StartSegments[j].cache.value[0], 
-						   tmp.value[1], m_StartSegments[j].cache.value[1]);
-				if(tmp.last[0] != m_StartSegments[j].cache.last[0] ||
-				   tmp.last[1] != m_StartSegments[j].cache.last[1])
-					wxLogError(wxT("StartSeg %d: last %d %d - %d %d "), j, tmp.last[0], m_StartSegments[j].cache.last[0], 
-						   tmp.last[1], m_StartSegments[j].cache.last[1]);
-				if (tmp.ptr != data + (intptr_t)m_StartSegments[j].cache.ptr)
-					wxLogError(wxT("StartSeg %d: ptr %p %p"), j, tmp.ptr, data + (intptr_t)m_StartSegments[j].cache.ptr);
-			}
-		}
-
-		for (unsigned j = 0; j < m_Channels; j++)
-		{
-			int old_value = GetSample(i, j);
-			int new_value = new_section.GetSample(i, j, &tmp);
-			if (old_value != new_value)
-				wxLogError(wxT("%d %d: %d %d"), i, j, old_value, new_value);
-		}
-	}
-
-	new_section.m_Data = NULL;
-
-	wxLogError(wxT("Compress: %d %d"), m_AllocSize, output_len);
-#endif
-
   m_Pool.Free(m_Data);
   m_Data = data;
   m_AllocSize = output_len;
-  m_Compressed = true;
+  m_IsCompressed = true;
 
   m_Data = (unsigned char *)m_Pool.MoveToPool(m_Data, m_AllocSize);
   if (m_Data == NULL)
     throw GOOutOfMemory();
 }
 
-void GOAudioSection::SetupStreamAlignment(
-  const std::vector<const GOAudioSection *> &joinables, unsigned start_index) {
+void GOSoundAudioSection::SetupStreamAlignment(
+  const std::vector<const GOSoundAudioSection *> &joinables,
+  unsigned start_index) {
   if (m_ReleaseAligner) {
     delete m_ReleaseAligner;
     m_ReleaseAligner = NULL;
@@ -939,7 +928,7 @@ void GOAudioSection::SetupStreamAlignment(
     m_ReleaseStartSegment = 0;
 
   if ((max_derivative != 0) && (max_amplitude != 0)) {
-    m_ReleaseAligner = new GOReleaseAlignTable();
+    m_ReleaseAligner = new GOSoundReleaseAlignTable();
     m_ReleaseAligner->ComputeTable(
       *this,
       max_amplitude,
@@ -949,7 +938,7 @@ void GOAudioSection::SetupStreamAlignment(
   }
 }
 
-unsigned GOAudioSection::GetMargin(
+unsigned GOSoundAudioSection::GetMargin(
   bool compressed, interpolation_type interpolation) {
   if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed)
     return POLYPHASE_READAHEAD;
@@ -959,7 +948,7 @@ unsigned GOAudioSection::GetMargin(
     return LINEAR_READAHEAD;
 }
 
-void GOAudioSection::InitStream(
+void GOSoundAudioSection::InitStream(
   const struct resampler_coefs_s *resampler_coefs,
   audio_section_stream *stream,
   float sample_rate_adjustment) const {
@@ -980,17 +969,17 @@ void GOAudioSection::InitStream(
   stream->decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     false);
   stream->end_decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     true);
   stream->margin
-    = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
+    = GetMargin(m_IsCompressed, stream->resample_coefs->interpolation);
   assert(stream->margin <= MAX_READAHEAD);
   stream->read_end = limited_diff(end.read_end, stream->margin);
   stream->end_pos = end.end_pos - stream->margin;
@@ -999,7 +988,7 @@ void GOAudioSection::InitStream(
     = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
 }
 
-void GOAudioSection::InitAlignedStream(
+void GOSoundAudioSection::InitAlignedStream(
   audio_section_stream *stream,
   const audio_section_stream *existing_stream) const {
   stream->audio_section = this;
@@ -1025,17 +1014,17 @@ void GOAudioSection::InitAlignedStream(
   stream->decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     false);
   stream->end_decode_call = GetDecodeBlockFunction(
     m_Channels,
     m_BitsPerSample,
-    m_Compressed,
+    m_IsCompressed,
     stream->resample_coefs->interpolation,
     true);
   stream->margin
-    = GetMargin(m_Compressed, stream->resample_coefs->interpolation);
+    = GetMargin(m_IsCompressed, stream->resample_coefs->interpolation);
   assert(stream->margin <= MAX_READAHEAD);
   stream->read_end = limited_diff(end.read_end, stream->margin);
   stream->end_pos = end.end_pos - stream->margin;
@@ -1048,9 +1037,9 @@ void GOAudioSection::InitAlignedStream(
   m_ReleaseAligner->SetupRelease(*stream, *existing_stream);
 }
 
-unsigned GOAudioSection::GetSampleRate() const { return m_SampleRate; }
+unsigned GOSoundAudioSection::GetSampleRate() const { return m_SampleRate; }
 
-void GOAudioSection::GetHistory(
+void GOSoundAudioSection::GetHistory(
   const audio_section_stream *stream,
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) {
   memset(
@@ -1065,7 +1054,7 @@ void GOAudioSection::GetHistory(
           stream->audio_section->m_Channels,
           stream->end_ptr);
   } else {
-    if (!stream->audio_section->m_Compressed) {
+    if (!stream->audio_section->m_IsCompressed) {
       for (unsigned i = 0; i < BLOCK_HISTORY; i++)
         for (unsigned j = 0; j < stream->audio_section->m_Channels; j++)
           history[i][j] = GetSampleData(
@@ -1088,7 +1077,7 @@ void GOAudioSection::GetHistory(
   }
 }
 
-GOSampleStatistic GOAudioSection::GetStatistic() {
+GOSampleStatistic GOSoundAudioSection::GetStatistic() {
   GOSampleStatistic stat;
 
   size_t size = 0;

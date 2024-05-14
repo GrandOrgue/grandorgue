@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,11 +8,11 @@
 #ifndef GORUGEARCHIVEENTRYFILE_H
 #define GORUGEARCHIVEENTRYFILE_H
 
-#include "GOFile.h"
+#include "files/GOOpenedFile.h"
 
 class GOArchive;
 
-class GOArchiveEntryFile : public GOFile {
+class GOArchiveEntryFile : public GOOpenedFile {
 private:
   GOArchive *m_archiv;
   wxString m_Name;

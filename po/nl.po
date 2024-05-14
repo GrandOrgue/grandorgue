@@ -465,7 +465,7 @@ msgstr "< Ongeldige SMPL-chunk in"
 msgid "< Invalid WAVE format chunk"
 msgstr "< Ongeldig WAVE-formaatchunk"
 
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgid "< Malformed wave file. Format chunk must precede data chunk."
 msgstr "< Misvormd wave-bestand. Formaatchunk moet voorafgaan aan datachunk."
 
 msgid "< More than 2 channels in"
@@ -1331,7 +1331,7 @@ msgstr "Ongeldige integer-waarde in sectie '%s' entry '%s': %s"
 msgid "Invalid item selected: %s"
 msgstr "Ongeldige keuze geselecteerd: %s"
 
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Ongeldige lusdefinitie"
 
 msgid "Invalid number of channels"
@@ -1806,7 +1806,7 @@ msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Waarde buiten het bereik in sectie '%s' entry '%s': %f"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr ""
 "Uitvoer apparaat %s niet gevonden. Er kan geen geluid geproduceerd worden."
 
@@ -2640,7 +2640,7 @@ msgstr "scroll"
 msgid "select"
 msgstr "select"
 
-msgid "seperator"
+msgid "separator"
 msgstr "scheidingsteken"
 
 msgid "settingsdialog.."
@@ -2652,7 +2652,7 @@ msgstr "snapshot"
 msgid "space"
 msgstr "spatie"
 
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "GrandOrgue-instantienaam specificeren"
 
 msgid "subtract"

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,18 +13,19 @@
 #include <map>
 #include <vector>
 
-#include "GOSoundDevInfo.h"
-#include "GOSoundEngine.h"
-#include "GOSoundRecorder.h"
 #include "config/GOPortsConfig.h"
 #include "midi/GOMidi.h"
 #include "ports/GOSoundPortFactory.h"
-#include "ptrvector.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
-#include "threading/atomic.h"
 
-class GODefinitionFile;
+#include "ptrvector.h"
+
+#include "GOSoundDevInfo.h"
+#include "GOSoundEngine.h"
+#include "GOSoundRecorder.h"
+
+class GOOrganController;
 class GOMidi;
 class GOSoundThread;
 class GOSoundPort;
@@ -63,6 +64,15 @@ class GOSound {
 
 private:
   bool m_open;
+  std::atomic_bool m_IsRunning;
+
+  // counter of audio callbacks that have been entered but have not yet been
+  // exited
+  std::atomic_uint m_NCallbacksEntered;
+
+  // For waiting for and notifying when m_NCallbacksEntered bacomes 0
+  GOMutex m_CallbackMutex;
+  GOCondition m_CallbackCondition;
 
   GOMutex m_lock;
   GOMutex m_thread_lock;
@@ -70,8 +80,8 @@ private:
   bool logSoundErrors;
 
   std::vector<GOSoundOutput> m_AudioOutputs;
-  atomic_uint m_WaitCount;
-  atomic_uint m_CalcCount;
+  std::atomic_uint m_WaitCount;
+  std::atomic_uint m_CalcCount;
 
   unsigned m_SamplesPerBuffer;
 
@@ -79,7 +89,7 @@ private:
 
   wxString m_defaultAudioDevice;
 
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOSoundRecorder m_AudioRecorder;
 
   GOSoundEngine m_SoundEngine;
@@ -116,8 +126,8 @@ public:
 
   GOConfig &GetSettings();
 
-  void AssignOrganFile(GODefinitionFile *organfile);
-  GODefinitionFile *GetOrganFile();
+  void AssignOrganFile(GOOrganController *organController);
+  GOOrganController *GetOrganFile();
 
   void SetLogSoundErrorMessages(bool settingsDialogVisible);
 

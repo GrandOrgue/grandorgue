@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -119,7 +119,7 @@ void GOSplash::DrawText(wxBitmap &bitmap) {
   font.SetPointSize(7);
   dc.SetFont(font);
   wxString msg
-    = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2021 "
+    = _("Copyright 2006 Milan Digital Audio LLC\nCopyright 2009-2024 "
         "GrandOrgue contributors\n\nThis software comes with no warranty");
   dc.DrawLabel(
     msg,

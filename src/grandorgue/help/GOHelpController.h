@@ -4,7 +4,7 @@
 #include <wx/html/helpctrl.h>
 
 /*
- * The standard wxHtmlHelpController can not bring the help above a modal dialog
+ * The standard wxHtmlHelpController cannot bring the help above a modal dialog
  * under linux. This class creates wxHtmlHelpFrame with wxTOPLEVEL_EX_DIALOG
  * extra style for being able to do this.
  */

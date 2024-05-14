@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -18,8 +18,8 @@ void GOMidiOutputMerger::Clear() {
 
 bool GOMidiOutputMerger::Process(GOMidiEvent &e) {
   if (
-    e.GetMidiType() == MIDI_SYSEX_HW_STRING
-    || e.GetMidiType() == MIDI_SYSEX_HW_LCD) {
+    e.GetMidiType() == GOMidiEvent::MIDI_SYSEX_HW_STRING
+    || e.GetMidiType() == GOMidiEvent::MIDI_SYSEX_HW_LCD) {
     unsigned item = 0;
     while (item < m_HWState.size()) {
       if (
@@ -32,7 +32,7 @@ bool GOMidiOutputMerger::Process(GOMidiEvent &e) {
       GOMidiOutputMergerHWState s;
       s.type = e.GetMidiType();
       s.key = e.GetKey();
-      if (e.GetMidiType() == MIDI_SYSEX_HW_STRING)
+      if (e.GetMidiType() == GOMidiEvent::MIDI_SYSEX_HW_STRING)
         s.content = wxString(wxT(' '), 16);
       else
         s.content = wxString(wxT(' '), 32);
@@ -45,7 +45,7 @@ bool GOMidiOutputMerger::Process(GOMidiEvent &e) {
       s.content[i] = e.GetString()[j];
     e.SetString(s.content);
   }
-  if (e.GetMidiType() == MIDI_SYSEX_RODGERS_STOP_CHANGE) {
+  if (e.GetMidiType() == GOMidiEvent::MIDI_SYSEX_RODGERS_STOP_CHANGE) {
     if ((unsigned)e.GetChannel() >= m_RodgersState.size())
       m_RodgersState.resize(e.GetChannel() + 1);
     std::vector<uint8_t> &data = m_RodgersState[e.GetChannel()];

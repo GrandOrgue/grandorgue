@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,7 +12,7 @@
 #include <wx/stattext.h>
 #include <wx/string.h>
 
-class GODefinitionFile;
+class GOOrganController;
 
 class wxStaticLink : public wxStaticText {
 private:
@@ -27,10 +27,10 @@ public:
 
 class GOProperties : public wxDialog {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
 public:
-  GOProperties(GODefinitionFile *organfile, wxWindow *parent);
+  GOProperties(GOOrganController *organController, wxWindow *parent);
   ~GOProperties(void);
 };
 

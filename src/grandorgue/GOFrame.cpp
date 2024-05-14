@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,44 +11,49 @@
 #include <wx/display.h>
 #include <wx/fileconf.h>
 #include <wx/filedlg.h>
-#include <wx/icon.h>
 #include <wx/image.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
+#include <wx/platinfo.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/splash.h>
+#include <wx/textctrl.h>
 #include <wx/toolbar.h>
 
 #include <algorithm>
 
 #include "archive/GOArchiveManager.h"
+#include "combinations/GOSetter.h"
 #include "config/GOConfig.h"
+#include "dialogs/GONewReleaseDialog.h"
 #include "dialogs/GOProgressDialog.h"
 #include "dialogs/GOSelectOrganDialog.h"
 #include "dialogs/GOSplash.h"
 #include "dialogs/settings/GOSettingsDialog.h"
 #include "dialogs/settings/GOSettingsReason.h"
+#include "files/GOStdFileName.h"
 #include "gui/GOGUIPanel.h"
+#include "gui/primitives/go_gui_utils.h"
 #include "help/GOHelpRequestor.h"
+#include "loader/cache/GOCacheCleaner.h"
 #include "midi/GOMidi.h"
 #include "midi/GOMidiEvent.h"
+#include "size/GOLogicalRect.h"
 #include "sound/GOSound.h"
 #include "temperaments/GOTemperament.h"
 #include "threading/GOMutexLocker.h"
+#include "wxcontrols/GOAudioGauge.h"
 
 #include "GOApp.h"
-#include "GOAudioGauge.h"
-#include "GOCacheCleaner.h"
-#include "GODefinitionFile.h"
 #include "GODocument.h"
 #include "GOEvent.h"
-#include "GOLogicalRect.h"
 #include "GOOrgan.h"
+#include "GOOrganController.h"
 #include "GOPath.h"
 #include "GOProperties.h"
-#include "GOSetter.h"
 #include "Images.h"
+#include "go_defs.h"
 #include "go_ids.h"
 #include "go_limits.h"
 
@@ -71,12 +76,13 @@ EVT_MENU(ID_FILE_EXIT, GOFrame::OnExit)
 EVT_MENU(ID_FILE_RELOAD, GOFrame::OnReload)
 EVT_MENU(ID_FILE_REVERT, GOFrame::OnRevert)
 EVT_MENU(ID_FILE_PROPERTIES, GOFrame::OnProperties)
-EVT_MENU(ID_FILE_IMPORT_SETTINGS, GOFrame::OnImportSettings)
 EVT_MENU(ID_FILE_IMPORT_COMBINATIONS, GOFrame::OnImportCombinations)
+EVT_MENU(ID_FILE_EXPORT_COMBINATIONS, GOFrame::OnExportCombinations)
+EVT_MENU(ID_FILE_IMPORT_SETTINGS, GOFrame::OnImportSettings)
 EVT_MENU(ID_FILE_EXPORT, GOFrame::OnExport)
 EVT_MENU(ID_FILE_CACHE, GOFrame::OnCache)
 EVT_MENU(ID_FILE_CACHE_DELETE, GOFrame::OnCacheDelete)
-EVT_MENU(ID_ORGAN_EDIT, GOFrame::OnEditOrgan)
+EVT_MENU(ID_ORGAN_EDIT, GOFrame::OnOrganSettings)
 EVT_MENU(ID_MIDI_LIST, GOFrame::OnMidiList)
 EVT_MENU(ID_MIDI_MONITOR, GOFrame::OnMidiMonitor)
 EVT_MENU(ID_AUDIO_PANIC, GOFrame::OnAudioPanic)
@@ -109,7 +115,10 @@ EVT_SLIDER(ID_METER_FRAME_SPIN, GOFrame::OnChangeSetter)
 EVT_TEXT(ID_METER_AUDIO_SPIN, GOFrame::OnSettingsVolume)
 EVT_TEXT_ENTER(ID_METER_AUDIO_SPIN, GOFrame::OnSettingsVolume)
 EVT_COMMAND(ID_METER_AUDIO_SPIN, wxEVT_SETVALUE, GOFrame::OnChangeVolume)
-
+EVT_MENU(ID_CHECK_FOR_UPDATES, GOFrame::OnUpdateCheckingRequested)
+EVT_MENU(ID_SHOW_RELEASE_CHANGELOG, GOFrame::OnNewReleaseInfoRequested)
+EVT_MENU(ID_DOWNLOAD_NEW_RELEASE, GOFrame::OnNewReleaseDownload)
+EVT_UPDATE_CHECKING_COMPLETION(GOFrame::OnUpdateCheckingCompletion)
 EVT_UPDATE_UI_RANGE(ID_FILE_RELOAD, ID_AUDIO_MEMSET, GOFrame::OnUpdateLoaded)
 EVT_UPDATE_UI_RANGE(ID_PRESET_0, ID_PRESET_LAST, GOFrame::OnUpdateLoaded)
 END_EVENT_TABLE()
@@ -146,13 +155,12 @@ GOFrame::GOFrame(
     m_Label(),
     m_MidiMonitor(false),
     m_isMeterReady(false),
+    m_IsGuiOnly(false),
     m_InSettings(false),
     m_AfterSettingsEventType(wxEVT_NULL),
     m_AfterSettingsEventId(0),
     p_AfterSettingsEventOrgan(NULL) {
-  wxIcon icon;
-  icon.CopyFromBitmap(GetImage_GOIcon());
-  SetIcon(icon);
+  SetIcon(get_go_icon());
 
   wxArrayString choices;
 
@@ -161,9 +169,6 @@ GOFrame::GOFrame(
   m_favorites_menu = new wxMenu;
 
   m_recent_menu = new wxMenu;
-
-  wxToolBar *tb = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
-  tb->SetToolBitmapSize(wxSize(16, 16));
 
   wxMenu *preset_menu = new wxMenu;
   for (unsigned i = ID_PRESET_0; i <= ID_PRESET_LAST; i++)
@@ -203,20 +208,22 @@ GOFrame::GOFrame(
     ID_FILE_REVERT, _("Reset to &Defaults"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->AppendSeparator();
   m_file_menu->Append(
-    ID_FILE_IMPORT_SETTINGS,
-    _("&Import Settings"),
-    wxEmptyString,
-    wxITEM_NORMAL);
-  m_file_menu->Append(
     ID_FILE_IMPORT_COMBINATIONS,
     _("Import &Combinations"),
     wxEmptyString,
     wxITEM_NORMAL);
   m_file_menu->Append(
-    ID_FILE_EXPORT,
-    _("&Export Settings/Combinations"),
+    ID_FILE_EXPORT_COMBINATIONS,
+    _("Export &Combinations"),
     wxEmptyString,
     wxITEM_NORMAL);
+  m_file_menu->Append(
+    ID_FILE_IMPORT_SETTINGS,
+    _("&Import Settings"),
+    wxEmptyString,
+    wxITEM_NORMAL);
+  m_file_menu->Append(
+    ID_FILE_EXPORT, _("&Export Settings"), wxEmptyString, wxITEM_NORMAL);
   m_file_menu->AppendSeparator();
   m_file_menu->Append(
     ID_SETTINGS, wxT("&Settings..."), wxEmptyString, wxITEM_NORMAL);
@@ -249,21 +256,36 @@ GOFrame::GOFrame(
   wxMenu *help_menu = new wxMenu;
   help_menu->Append(wxID_HELP, _("&Help\tF1"), wxEmptyString, wxITEM_NORMAL);
   help_menu->Append(wxID_ABOUT, _("&About"), wxEmptyString, wxITEM_NORMAL);
+  help_menu->Append(
+    ID_CHECK_FOR_UPDATES,
+    _("&Check for updates"),
+    wxEmptyString,
+    wxITEM_NORMAL);
+  m_panel_menu = new wxMenu();
 
-  tb->AddTool(
+  wxMenuBar *menu_bar = new wxMenuBar;
+  menu_bar->Append(m_file_menu, _("&File"));
+  menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
+  menu_bar->Append(m_panel_menu, _("&Panel"));
+  menu_bar->Append(help_menu, _("&Help"));
+  SetMenuBar(menu_bar);
+
+  m_ToolBar = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
+  m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
+  m_ToolBar->AddTool(
     ID_AUDIO_MEMSET,
     _("&Memory Set\tShift"),
     GetImage_set(),
     _("Memory Set"),
     wxITEM_CHECK);
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_MEMORY,
     _("&Memory Level"),
     GetImage_memory(),
     _("Memory Level"),
     wxITEM_NORMAL);
   m_SetterPosition = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_FRAME_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -271,13 +293,13 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     0,
     999);
-  tb->AddControl(m_SetterPosition);
+  m_ToolBar->AddControl(m_SetterPosition);
   m_SetterPosition->SetValue(0);
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
   m_Volume = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_AUDIO_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -285,14 +307,13 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     -120,
     20);
-  tb->AddControl(m_Volume);
-
-  m_VolumeControl = new wxControl(tb, wxID_ANY);
+  m_ToolBar->AddControl(m_Volume);
+  m_VolumeControl = new wxControl(m_ToolBar, wxID_ANY);
+  m_VolumeControlTool = m_ToolBar->AddControl(m_VolumeControl);
   AdjustVolumeControlWithSettings();
-  tb->AddControl(m_VolumeControl);
   m_Volume->SetValue(m_config.Volume());
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_RELEASELENGTH,
     _("&Release tail length"),
     GetImage_reverb(),
@@ -303,20 +324,22 @@ GOFrame::GOFrame(
   for (unsigned i = 1; i <= 60; i++)
     choices.push_back(wxString::Format(_("%d ms"), i * 50));
   m_ReleaseLength = new wxChoice(
-    tb, ID_RELEASELENGTH_SELECT, wxDefaultPosition, wxDefaultSize, choices);
-  tb->AddControl(m_ReleaseLength);
-  unsigned n = m_config.ReleaseLength();
-  m_ReleaseLength->SetSelection(n / 50);
-  m_Sound.GetEngine().SetReleaseLength(n);
+    m_ToolBar,
+    ID_RELEASELENGTH_SELECT,
+    wxDefaultPosition,
+    wxDefaultSize,
+    choices);
+  m_ToolBar->AddControl(m_ReleaseLength);
+  UpdateReleaseLength(0);
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_TRANSPOSE,
     _("&Transpose"),
     GetImage_transpose(),
     _("Transpose"),
     wxITEM_NORMAL);
   m_Transpose = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_TRANSPOSE_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -324,17 +347,17 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     -11,
     11);
-  tb->AddControl(m_Transpose);
+  m_ToolBar->AddControl(m_Transpose);
   m_Transpose->SetValue(m_config.Transpose());
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_POLYPHONY,
     _("&Polyphony"),
     GetImage_polyphony(),
     _("Polyphony"),
     wxITEM_NORMAL);
   m_Polyphony = new wxSpinCtrl(
-    tb,
+    m_ToolBar,
     ID_METER_POLY_SPIN,
     wxEmptyString,
     wxDefaultPosition,
@@ -342,27 +365,19 @@ GOFrame::GOFrame(
     wxSP_ARROW_KEYS,
     1,
     MAX_POLYPHONY);
-  tb->AddControl(m_Polyphony);
+  m_ToolBar->AddControl(m_Polyphony);
 
-  m_SamplerUsage = new GOAudioGauge(tb, wxID_ANY, wxDefaultPosition);
-  tb->AddControl(m_SamplerUsage);
+  m_SamplerUsage = new GOAudioGauge(m_ToolBar, wxID_ANY, wxDefaultPosition);
+  m_ToolBar->AddControl(m_SamplerUsage);
   m_Polyphony->SetValue(m_config.PolyphonyLimit());
 
-  tb->AddTool(
+  m_ToolBar->AddTool(
     ID_AUDIO_PANIC,
     _("&Panic\tEscape"),
     GetImage_panic(),
     _("Panic"),
     wxITEM_NORMAL);
 
-  m_panel_menu = new wxMenu();
-
-  wxMenuBar *menu_bar = new wxMenuBar;
-  menu_bar->Append(m_file_menu, _("&File"));
-  menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
-  menu_bar->Append(m_panel_menu, _("&Panel"));
-  menu_bar->Append(help_menu, _("&Help"));
-  SetMenuBar(menu_bar);
   SetAutoLayout(true);
 
   UpdateSize();
@@ -387,6 +402,17 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
   bool rc = false;
 
   if (count != m_VolumeGauge.size()) {
+    const wxPortId portId = wxPlatformInfo::Get().GetPortId();
+    const bool isOsX = portId == wxPORT_COCOA || portId == wxPORT_OSX;
+    int volCtlId = m_VolumeControlTool->GetId();
+    int volCtlPos = m_ToolBar->GetToolPos(volCtlId);
+
+    // OsX doesn't relayout the toolbar correctly after changing the size of
+    // a control so we need to remove it and to reinsert it later
+    // But RemoveTool hangs on windows, so we do it only on OsX
+    if (isOsX)
+      m_ToolBar->RemoveTool(volCtlId);
+
     m_VolumeGauge.clear();
     m_VolumeControl->DestroyChildren();
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -405,6 +431,11 @@ bool GOFrame::AdjustVolumeControlWithSettings() {
 
     m_VolumeControl->SetSizer(sizer);
     sizer->Fit(m_VolumeControl);
+
+    // reinsert the control and relayout the toolbar on OsX
+    if (isOsX)
+      m_ToolBar->InsertTool(volCtlPos, m_VolumeControlTool);
+    m_ToolBar->Realize();
     rc = true;
   }
   return rc;
@@ -455,6 +486,16 @@ void GOFrame::SetPosSize(const GOLogicalRect &lRect) {
   }
 }
 
+void GOFrame::UpdateReleaseLength(unsigned releaseLength) {
+  GOOrganController *organController = GetOrganController();
+  int releaseLengthIndex = releaseLength / 50;
+
+  if (organController && organController->GetReleaseTail() != releaseLength)
+    organController->SetReleaseTail(releaseLength);
+  if (m_ReleaseLength->GetSelection() != releaseLengthIndex)
+    m_ReleaseLength->SetSelection(releaseLengthIndex);
+}
+
 void GOFrame::UpdateVolumeControlWithSettings() {
   m_isMeterReady = false;
   if (AdjustVolumeControlWithSettings())
@@ -462,7 +503,14 @@ void GOFrame::UpdateVolumeControlWithSettings() {
   m_isMeterReady = true;
 }
 
-void GOFrame::Init(wxString filename) {
+void GOFrame::Init(const wxString &filename, bool isGuiOnly) {
+  if (m_config.CheckForUpdatesAtStartup()) {
+    // Start update checker thread that will fire events to this frame
+    m_UpdateCheckerThread = GOUpdateChecker::StartThread(
+      GOUpdateChecker::CheckReason::STARTUP, this);
+  }
+
+  m_IsGuiOnly = isGuiOnly;
   Show(true);
 
   SettingsReasons settingsReasons;
@@ -491,9 +539,17 @@ void GOFrame::Init(wxString filename) {
     event.SetClientData(pReasons);
     GetEventHandler()->AddPendingEvent(event);
   }
-  GOArchiveManager manager(m_config, m_config.OrganCachePath);
+
+  GOArchiveManager manager(m_config, m_config.OrganCachePath());
+
   manager.RegisterPackageDirectory(m_config.GetPackageDirectory());
   manager.RegisterPackageDirectory(m_config.OrganPackagePath());
+
+  // Remove demo organs that have been registered from temporary (appimage)
+  // directories and they are not more valid
+  m_config.AddOrgansFromArchives();
+  m_config.RemoveInvalidTmpOrgans();
+
   if (!filename.IsEmpty())
     SendLoadFile(filename);
   else
@@ -513,6 +569,13 @@ void GOFrame::Init(wxString filename) {
   m_listener.SetCallback(this);
   GOCacheCleaner clean(m_config);
   clean.Cleanup();
+}
+
+void GOFrame::AttachDetachOrganController(bool isToAttach) {
+  GOOrganController *pOrgan = GetOrganController();
+
+  if (pOrgan)
+    pOrgan->SetModificationListener(isToAttach ? this : nullptr);
 }
 
 bool GOFrame::CloseOrgan(bool isForce) {
@@ -542,6 +605,7 @@ bool GOFrame::CloseOrgan(bool isForce) {
       GOMutexLocker m_locker(m_mutex, true);
 
       if (m_locker.IsLocked()) {
+        AttachDetachOrganController(false);
         delete m_doc;
         m_doc = NULL;
         UpdatePanelMenu();
@@ -552,32 +616,56 @@ bool GOFrame::CloseOrgan(bool isForce) {
   return isClosed;
 }
 
+bool GOFrame::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
+  bool retCode = false;
+
+  if (m_doc) {
+    GOProgressDialog dlg;
+
+    retCode = m_doc->LoadOrgan(&dlg, organ, cmb, m_IsGuiOnly);
+    OnIsModifiedChanged(false);
+
+    // for reflecting model changes
+    AttachDetachOrganController(true);
+  }
+  return retCode;
+}
+
 void GOFrame::Open(const GOOrgan &organ) {
-  if (!CloseOrgan(false))
-    return;
-  GOMutexLocker m_locker(m_mutex, true);
-  if (!m_locker.IsLocked())
-    return;
-  GOProgressDialog dlg;
-  m_doc = new GODocument(this, &m_Sound);
-  m_doc->Load(&dlg, organ);
+  if (CloseOrgan(false)) {
+    GOMutexLocker m_locker(m_mutex, true);
+
+    if (m_locker.IsLocked()) {
+      m_doc = new GODocument(this, &m_Sound);
+      LoadOrgan(organ);
+    }
+  }
+}
+
+GOOrganController *GOFrame::GetOrganController() const {
+  return m_doc ? m_doc->GetOrganController() : nullptr;
+}
+
+void GOFrame::OnPanel(wxCommandEvent &event) {
+  GOOrganController *organController = GetOrganController();
+  unsigned no = event.GetId() - ID_PANEL_FIRST;
+
+  if (organController && no < organController->GetPanelCount())
+    m_doc->ShowPanel(no);
+}
+
+void GOFrame::OnIsModifiedChanged(bool modified) {
+  GOOrganController *organController = GetOrganController();
+
+  if (organController)
+    UpdateReleaseLength(organController->GetReleaseTail());
   UpdatePanelMenu();
 }
 
-GODocument *GOFrame::GetDocument() { return m_doc; }
-
-void GOFrame::OnPanel(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  unsigned no = event.GetId() - ID_PANEL_FIRST;
-  if (doc && doc->GetOrganFile() && no < doc->GetOrganFile()->GetPanelCount())
-    doc->ShowPanel(no);
-}
-
 void GOFrame::UpdatePanelMenu() {
-  GODocument *doc = GetDocument();
-  GODefinitionFile *organfile = doc ? doc->GetOrganFile() : NULL;
-  unsigned panelcount = (organfile && organfile->GetPanelCount())
-    ? organfile->GetPanelCount()
+  GOOrganController *organController = GetOrganController();
+  unsigned panelcount = (organController && organController->GetPanelCount())
+    ? organController->GetPanelCount()
     : 0;
   panelcount = std::min(panelcount, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
@@ -586,7 +674,7 @@ void GOFrame::UpdatePanelMenu() {
       m_panel_menu->FindItemByPosition(m_panel_menu->GetMenuItemCount() - 1));
 
   for (unsigned i = 0; i < panelcount; i++) {
-    GOGUIPanel *panel = organfile->GetPanel(i);
+    GOGUIPanel *panel = organController->GetPanel(i);
     wxMenu *menu = NULL;
     if (panel->GetGroupName() == wxEmptyString)
       menu = m_panel_menu;
@@ -603,7 +691,7 @@ void GOFrame::UpdatePanelMenu() {
     }
     wxMenuItem *item = menu->AppendCheckItem(ID_PANEL_FIRST + i, wxT("_"));
     item->SetItemLabel(panel->GetName());
-    item->Check(doc->WindowExists(GODocument::PANEL, panel) ? true : false);
+    item->Check(m_doc->WindowExists(GODocument::PANEL, panel) ? true : false);
   }
 }
 
@@ -640,11 +728,10 @@ void GOFrame::UpdateRecentMenu() {
 }
 
 void GOFrame::UpdateTemperamentMenu() {
-  GODocument *doc = GetDocument();
-  GODefinitionFile *organfile = doc ? doc->GetOrganFile() : NULL;
+  GOOrganController *organController = GetOrganController();
   wxString temperament = wxEmptyString;
-  if (organfile)
-    temperament = organfile->GetTemperament();
+  if (organController)
+    temperament = organController->GetTemperament();
 
   while (m_temperament_menu->GetMenuItemCount() > 0)
     m_temperament_menu->Destroy(m_temperament_menu->FindItemByPosition(
@@ -655,7 +742,7 @@ void GOFrame::UpdateTemperamentMenu() {
        i++) {
     const GOTemperament &t = m_config.GetTemperaments().GetTemperament(i);
     wxMenu *menu;
-    wxString group = t.GetGroup();
+    wxString group = t.GetGroupTitle();
     if (group == wxEmptyString)
       menu = m_temperament_menu;
     else {
@@ -672,7 +759,7 @@ void GOFrame::UpdateTemperamentMenu() {
     }
     wxMenuItem *e = menu->Append(
       ID_TEMPERAMENT_0 + i, t.GetTitle(), wxEmptyString, wxITEM_CHECK);
-    e->Enable(organfile);
+    e->Enable(organController);
     e->Check(t.GetName() == temperament);
   }
 }
@@ -709,8 +796,7 @@ void GOFrame::OnMeters(wxCommandEvent &event) {
 }
 
 void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
-  GODocument *doc = GetDocument();
-  GODefinitionFile *organfile = doc ? doc->GetOrganFile() : NULL;
+  GOOrganController *organController = GetOrganController();
 
   if (ID_PRESET_0 <= event.GetId() && event.GetId() <= ID_PRESET_LAST) {
     event.Check(m_config.Preset() == (unsigned)(event.GetId() - ID_PRESET_0));
@@ -719,25 +805,25 @@ void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
 
   if (event.GetId() == ID_AUDIO_MEMSET)
     event.Check(
-      organfile && organfile->GetSetter()
-      && organfile->GetSetter()->IsSetterActive());
+      organController && organController->GetSetter()
+      && organController->GetSetter()->GetState().m_IsActive);
   else if (event.GetId() == ID_ORGAN_EDIT)
-    event.Check(doc && doc->WindowExists(GODocument::ORGAN_DIALOG, NULL));
+    event.Check(m_doc && m_doc->WindowExists(GODocument::ORGAN_DIALOG, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
-    event.Check(doc && doc->WindowExists(GODocument::MIDI_LIST, NULL));
+    event.Check(m_doc && m_doc->WindowExists(GODocument::MIDI_LIST, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
     event.Check(m_MidiMonitor);
 
   if (event.GetId() == ID_FILE_CACHE_DELETE)
-    event.Enable(organfile && organfile->CachePresent());
+    event.Enable(organController && organController->CachePresent());
   else if (event.GetId() == ID_FILE_CACHE)
-    event.Enable(organfile && organfile->IsCacheable());
+    event.Enable(organController && organController->IsCacheable());
   else if (event.GetId() == ID_MIDI_MONITOR)
     event.Enable(true);
   else
     event.Enable(
-      organfile
-      && (event.GetId() == ID_FILE_REVERT ? organfile->IsCustomized() : true));
+      organController
+      && (event.GetId() == ID_FILE_REVERT ? organController->IsCustomized() : true));
 }
 
 void GOFrame::OnPreset(wxCommandEvent &event) {
@@ -745,17 +831,16 @@ void GOFrame::OnPreset(wxCommandEvent &event) {
   if (id == m_config.Preset())
     return;
   m_config.Preset(id);
-  if (GetDocument())
+  if (m_doc)
     ProcessCommand(ID_FILE_RELOAD);
 }
 
 void GOFrame::OnTemperament(wxCommandEvent &event) {
   unsigned id = event.GetId() - ID_TEMPERAMENT_0;
-  GODocument *doc = GetDocument();
-  if (
-    doc && doc->GetOrganFile()
-    && id < m_config.GetTemperaments().GetTemperamentCount())
-    doc->GetOrganFile()->SetTemperament(
+  GOOrganController *organController = GetOrganController();
+
+  if (organController && id < m_config.GetTemperaments().GetTemperamentCount())
+    organController->SetTemperament(
       m_config.GetTemperaments().GetTemperament(id).GetName());
 }
 
@@ -782,10 +867,10 @@ void GOFrame::OnLoadRecent(wxCommandEvent &event) {
 }
 
 void GOFrame::OnLoad(wxCommandEvent &event) {
-  GOSelectOrganDialog dlg(this, _("Select organ to load"), m_config);
-  if (dlg.ShowModal() != wxID_OK)
-    return;
-  Open(*dlg.GetSelection());
+  GOSelectOrganDialog dlg(this, m_config);
+
+  if (dlg.ShowModal() == wxID_OK)
+    Open(*dlg.GetSelection());
 }
 
 void GOFrame::OnOpen(wxCommandEvent &event) {
@@ -794,7 +879,7 @@ void GOFrame::OnOpen(wxCommandEvent &event) {
     _("Open organ"),
     m_config.OrganPath(),
     wxEmptyString,
-    _("Sample set definition files (*.organ)|*.organ"),
+    GOStdFileName::getOdfDlgWildcard(),
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dlg.ShowModal() == wxID_OK) {
     Open(GOOrgan(dlg.GetPath()));
@@ -807,7 +892,7 @@ void GOFrame::OnInstall(wxCommandEvent &event) {
     _("Install organ package"),
     m_config.OrganPath(),
     wxEmptyString,
-    _("Organ package (*.orgue)|*.orgue"),
+    GOStdFileName::getPackageDlgWildcard(),
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dlg.ShowModal() == wxID_OK)
     if (InstallOrganPackage(dlg.GetPath())) {
@@ -820,76 +905,110 @@ void GOFrame::OnInstall(wxCommandEvent &event) {
     }
 }
 
-void GOFrame::OnImportSettings(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (!doc || !doc->GetOrganFile())
-    return;
+void GOFrame::OnImportCombinations(wxCommandEvent &event) {
+  GOOrganController *pOrganController = GetOrganController();
 
-  wxFileDialog dlg(
-    this,
-    _("Import Settings"),
-    m_config.ExportImportPath(),
-    wxEmptyString,
-    _("Settings files (*.cmb)|*.cmb"),
-    wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-  if (dlg.ShowModal() == wxID_OK) {
-    GOProgressDialog pdlg;
-    GOOrgan organ = doc->GetOrganFile()->GetOrganInfo();
-    GOMutexLocker m_locker(m_mutex, true);
-    if (!m_locker.IsLocked())
-      return;
-    doc->Import(&pdlg, organ, dlg.GetPath());
+  if (pOrganController) {
+    wxFileDialog dlg(
+      this,
+      _("Import Combinations"),
+      pOrganController->GetCombinationsDir(),
+      wxEmptyString,
+      _("Combinations files (*.yaml)|*.yaml|Settings files (*.cmb)|*.cmb"),
+      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (dlg.ShowModal() == wxID_OK)
+      pOrganController->LoadCombination(dlg.GetPath());
   }
 }
 
-void GOFrame::OnImportCombinations(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (!doc || !doc->GetOrganFile())
-    return;
+void GOFrame::OnExportCombinations(wxCommandEvent &event) {
+  GOOrganController *pOrganController = GetOrganController();
 
-  wxFileDialog dlg(
-    this,
-    _("Import Combinations"),
-    m_config.ExportImportPath(),
-    wxEmptyString,
-    _("Settings files (*.cmb)|*.cmb"),
-    wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-  if (dlg.ShowModal() == wxID_OK) {
-    doc->ImportCombination(dlg.GetPath());
+  if (pOrganController) {
+    const wxString organCmbDir = pOrganController->GetCombinationsDir();
+
+    wxFileName::Mkdir(organCmbDir, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+
+    wxFileDialog dlg(
+      this,
+      _("Export Combinations"),
+      organCmbDir,
+      wxEmptyString,
+      _("Combination files (*.yaml)|*.yaml"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+    if (dlg.ShowModal() == wxID_OK) {
+      wxString exportedFilePath = dlg.GetPath();
+
+      if (!exportedFilePath.EndsWith(wxT(".yaml"), NULL))
+        exportedFilePath += wxT(".yaml");
+      const wxString errMsg
+        = pOrganController->ExportCombination(exportedFilePath);
+
+      if (!errMsg.IsEmpty())
+        GOMessageBox(
+          wxString::Format(
+            _("Failed to export combinations to '%s': %s"),
+            exportedFilePath,
+            errMsg),
+          _("Error"),
+          wxOK | wxICON_ERROR,
+          this);
+    }
+  }
+}
+
+void GOFrame::OnImportSettings(wxCommandEvent &event) {
+  GOOrganController *organController = GetOrganController();
+
+  if (organController) {
+    wxFileDialog dlg(
+      this,
+      _("Import Settings"),
+      m_config.ExportImportPath(),
+      wxEmptyString,
+      _("Settings files (*.cmb)|*.cmb"),
+      wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (dlg.ShowModal() == wxID_OK) {
+      GOOrgan organ = organController->GetOrganInfo();
+      GOMutexLocker m_locker(m_mutex, true);
+
+      if (m_locker.IsLocked()) {
+        LoadOrgan(organ, dlg.GetPath());
+      }
+    }
   }
 }
 
 void GOFrame::OnExport(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (!doc || !doc->GetOrganFile())
-    return;
+  if (GetOrganController()) {
+    wxFileDialog dlg(
+      this,
+      _("Export Settings"),
+      m_config.ExportImportPath(),
+      wxEmptyString,
+      _("Settings files (*.cmb)|*.cmb"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
-  wxFileDialog dlg(
-    this,
-    _("Export Settings"),
-    m_config.ExportImportPath(),
-    wxEmptyString,
-    _("Settings files (*.cmb)|*.cmb"),
-    wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-  if (dlg.ShowModal() == wxID_OK) {
-    wxString exportedFilePath = dlg.GetPath();
-    if (!exportedFilePath.EndsWith(wxT(".cmb"), NULL))
-      exportedFilePath += wxT(".cmb");
-    if (!doc->Export(exportedFilePath))
-      GOMessageBox(
-        wxString::Format(
-          _("Failed to export settings to '%s'"), exportedFilePath.c_str()),
-        _("Error"),
-        wxOK | wxICON_ERROR,
-        this);
+    if (dlg.ShowModal() == wxID_OK) {
+      wxString exportedFilePath = dlg.GetPath();
+      if (!exportedFilePath.EndsWith(wxT(".cmb"), NULL))
+        exportedFilePath += wxT(".cmb");
+      if (!m_doc->Export(exportedFilePath))
+        GOMessageBox(
+          wxString::Format(
+            _("Failed to export settings to '%s'"), exportedFilePath.c_str()),
+          _("Error"),
+          wxOK | wxICON_ERROR,
+          this);
+    }
   }
 }
 
 void GOFrame::OnSave(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (!doc || !doc->GetOrganFile())
-    return;
-  if (!doc->Save())
+  if (GetOrganController() && !m_doc->Save())
     GOMessageBox(
       _("Failed to save the organ setting"),
       _("Error"),
@@ -913,13 +1032,16 @@ wxString formatSize(wxLongLong &size) {
 
 void GOFrame::OnCache(wxCommandEvent &event) {
   bool res = true;
-  GODocument *doc = GetDocument();
+  GOOrganController *organController = GetOrganController();
   GOMutexLocker m_locker(m_mutex, true);
+
   if (!m_locker.IsLocked())
     return;
+
   GOProgressDialog dlg;
-  if (doc && doc->GetOrganFile())
-    res = doc->GetOrganFile()->UpdateCache(&dlg, m_config.CompressCache());
+
+  if (organController)
+    res = organController->UpdateCache(&dlg, m_config.CompressCache());
   if (!res) {
     wxLogError(_("Creating the cache failed"));
     GOMessageBox(
@@ -928,29 +1050,34 @@ void GOFrame::OnCache(wxCommandEvent &event) {
 }
 
 void GOFrame::OnCacheDelete(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile())
-    doc->GetOrganFile()->DeleteCache();
+  GOOrganController *organController = GetOrganController();
+
+  if (organController)
+    organController->DeleteCache();
 }
 
 void GOFrame::OnReload(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (!doc || !doc->GetOrganFile())
-    return;
-  GOOrgan organ = doc->GetOrganFile()->GetOrganInfo();
-  if (!CloseOrgan(false))
-    return;
-  Open(organ);
+  GOOrganController *organController = GetOrganController();
+
+  if (organController) {
+    GOOrgan organ = organController->GetOrganInfo();
+
+    if (CloseOrgan(false))
+      Open(organ);
+  }
 }
 
 void GOFrame::OnMenuClose(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (!doc)
-    return;
-  CloseOrgan(false);
+  if (m_doc)
+    CloseOrgan(false);
 }
 
 bool GOFrame::CloseProgram(bool isForce) {
+  if (m_UpdateCheckerThread) {
+    // Stop update checking so that we can safely destruct the thread
+    m_UpdateCheckerThread->Stop();
+  }
+
   bool isClosed = CloseOrgan(isForce);
 
   if (isClosed)
@@ -973,17 +1100,20 @@ void GOFrame::OnRevert(wxCommandEvent &event) {
       wxYES_NO | wxICON_EXCLAMATION,
       this)
     == wxYES) {
-    GODocument *doc = GetDocument();
-    GOProgressDialog dlg;
-    if (doc)
-      doc->Revert(&dlg);
+    GOOrganController *organController = GetOrganController();
+
+    if (organController) {
+      organController->DeleteSettings();
+      LoadOrgan(organController->GetOrganInfo());
+    }
   }
 }
 
 void GOFrame::OnProperties(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile()) {
-    GOProperties dlg(doc->GetOrganFile(), this);
+  GOOrganController *organController = GetOrganController();
+
+  if (organController) {
+    GOProperties dlg(organController, this);
     dlg.ShowModal();
   }
 }
@@ -1006,18 +1136,18 @@ void GOFrame::OnMidiLoad(wxCommandEvent &WXUNUSED(event)) {
     _("MID files (*.mid)|*.mid"),
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dlg.ShowModal() == wxID_OK) {
-    GODocument *doc = GetDocument();
-    if (doc && doc->GetOrganFile()) {
-      wxString filepath = dlg.GetPath();
-      doc->GetOrganFile()->LoadMIDIFile(filepath);
-    }
+    GOOrganController *organController = GetOrganController();
+
+    if (organController)
+      organController->LoadMIDIFile(dlg.GetPath());
   }
 }
 
 void GOFrame::OnAudioMemset(wxCommandEvent &WXUNUSED(event)) {
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile())
-    doc->GetOrganFile()->GetSetter()->ToggleSetter();
+  GOOrganController *organController = GetOrganController();
+
+  if (organController)
+    organController->GetSetter()->ToggleSetter();
 }
 
 void GOFrame::SetEventAfterSettings(
@@ -1034,10 +1164,10 @@ void GOFrame::OnSettings(wxCommandEvent &event) {
 
   bool isToContinue = true; // will GO continue running? Otherwise it will exit
   SettingsReasons *const pReasons = (SettingsReasons *)event.GetClientData();
-  GOSettingsDialog dialog(this, m_Sound, pReasons);
+  GOSettingsDialog dialog(this, m_config, m_Sound, m_Sound.GetMidi(), pReasons);
 
   if (dialog.ShowModal() == wxID_OK) {
-    GOArchiveManager manager(m_config, m_config.OrganCachePath);
+    GOArchiveManager manager(m_config, m_config.OrganCachePath());
     manager.RegisterPackageDirectory(m_config.OrganPackagePath());
 
     UpdateVolumeControlWithSettings();
@@ -1097,16 +1227,14 @@ void GOFrame::OnAudioState(wxCommandEvent &WXUNUSED(event)) {
   GOMessageBox(m_Sound.getState(), _("Sound output"), wxOK, this);
 }
 
-void GOFrame::OnEditOrgan(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile())
-    doc->ShowOrganDialog();
+void GOFrame::OnOrganSettings(wxCommandEvent &event) {
+  if (m_doc)
+    m_doc->ShowOrganSettingsDialog();
 }
 
 void GOFrame::OnMidiList(wxCommandEvent &event) {
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile())
-    doc->ShowMidiList();
+  if (m_doc)
+    m_doc->ShowMidiList();
 }
 
 void GOFrame::OnHelp(wxCommandEvent &event) {
@@ -1131,32 +1259,33 @@ void GOFrame::OnSettingsPolyphony(wxCommandEvent &event) {
 
 void GOFrame::OnSettingsMemoryEnter(wxCommandEvent &event) {
   long n = m_SetterPosition->GetValue();
+  GOOrganController *organController = GetOrganController();
 
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile())
-    doc->GetOrganFile()->GetSetter()->SetPosition(n);
+  if (organController)
+    organController->GetSetter()->SetPosition(n);
 }
 
 void GOFrame::OnSettingsMemory(wxCommandEvent &event) {
   long n = m_SetterPosition->GetValue();
+  GOOrganController *organController = GetOrganController();
 
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile())
-    doc->GetOrganFile()->GetSetter()->UpdatePosition(n);
+  if (organController)
+    organController->GetSetter()->UpdatePosition(n);
 }
 
 void GOFrame::OnSettingsTranspose(wxCommandEvent &event) {
-  long n = m_Transpose->GetValue();
+  GOOrganController *organController = GetOrganController();
 
-  m_config.Transpose(n);
-  GODocument *doc = GetDocument();
-  if (doc && doc->GetOrganFile())
-    doc->GetOrganFile()->GetSetter()->SetTranspose(n);
+  if (organController) {
+    long n = m_Transpose->GetValue();
+
+    m_config.Transpose(n);
+    organController->GetSetter()->SetTranspose(n);
+  }
 }
 
 void GOFrame::OnSettingsReleaseLength(wxCommandEvent &event) {
-  m_config.ReleaseLength(m_ReleaseLength->GetSelection() * 50);
-  m_Sound.GetEngine().SetReleaseLength(m_config.ReleaseLength());
+  UpdateReleaseLength(m_ReleaseLength->GetSelection() * 50);
 }
 
 void GOFrame::OnHelpAbout(wxCommandEvent &event) { DoSplash(false); }
@@ -1246,8 +1375,72 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
   GOSyncDirectory(filepath.GetPath());
 }
 
+void GOFrame::OnUpdateCheckingRequested(wxCommandEvent &event) {
+  if (m_UpdateCheckerThread) {
+    // Update checking is already in progress, ignore request
+    return;
+  }
+  wxBeginBusyCursor();
+  m_UpdateCheckerThread = GOUpdateChecker::StartThread(
+    GOUpdateChecker::CheckReason::USER_REQUEST, this);
+}
+
+void GOFrame::OnUpdateCheckingCompletion(
+  GOUpdateChecker::CompletionEvent &event) {
+  // Remove update checker thread
+  m_UpdateCheckerThread->Wait();
+  m_UpdateCheckerThread = nullptr;
+
+  // Handle result
+  const GOUpdateChecker::Result &result = event.GetResult();
+  if (result.checkReason == GOUpdateChecker::CheckReason::USER_REQUEST) {
+    wxEndBusyCursor();
+    if (result.successful) {
+      if (result.updateAvailable) {
+        GONewReleaseDialog dialog(
+          this, m_config, event.GetResult().latestRelease);
+        if (dialog.ShowModal() == wxID_OK) {
+          m_config.Flush();
+        }
+      } else {
+        wxMessageBox(
+          _("You are using the latest GrandOrgue version"),
+          _("Update checker"));
+      }
+    } else {
+      wxMessageBox(
+        _("Failed to check for updates: %s").Format(result.errorMessage));
+    }
+  } else if (
+    result.checkReason == GOUpdateChecker::CheckReason::STARTUP
+    && result.successful && result.updateAvailable) {
+    m_StartupUpdateCheckerResult = result;
+    wxMenu *updateAvailableMenu = new wxMenu();
+    wxString versionChangeStr
+      = wxString::Format("%s -> %s", APP_VERSION, result.latestRelease.version);
+    updateAvailableMenu->Append(ID_SHOW_RELEASE_CHANGELOG, versionChangeStr);
+    updateAvailableMenu->Append(
+      ID_SHOW_RELEASE_CHANGELOG, _("&Show changelog"));
+    updateAvailableMenu->Append(ID_DOWNLOAD_NEW_RELEASE, _("&Download"));
+    wxMenuBar *menuBar = GetMenuBar();
+    menuBar->Append(updateAvailableMenu, _("&Update available!"));
+  }
+}
+
+void GOFrame::OnNewReleaseInfoRequested(wxCommandEvent &event) {
+  GONewReleaseDialog dialog(
+    this, m_config, m_StartupUpdateCheckerResult.latestRelease);
+  if (dialog.ShowModal() == wxID_OK) {
+    m_config.Flush();
+  }
+}
+
+void GOFrame::OnNewReleaseDownload(wxCommandEvent &event) {
+  GOUpdateChecker::OpenDownloadPageInBrowser();
+}
+
 bool GOFrame::InstallOrganPackage(wxString name) {
-  GOArchiveManager manager(m_config, m_config.OrganCachePath);
+  GOArchiveManager manager(m_config, m_config.OrganCachePath());
   wxString result = manager.InstallPackage(name);
   if (result != wxEmptyString) {
     GOMessageBox(result, _("Error"), wxOK | wxICON_ERROR, this);

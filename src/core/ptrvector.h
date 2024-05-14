@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -67,6 +67,14 @@ public:
   }
 
   typename std::vector<T *>::const_iterator end() const noexcept {
+    return std::vector<T *>::end();
+  }
+
+  typename std::vector<T *>::iterator begin() noexcept {
+    return std::vector<T *>::begin();
+  }
+
+  typename std::vector<T *>::iterator end() noexcept {
     return std::vector<T *>::end();
   }
 };

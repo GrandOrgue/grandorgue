@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,18 +12,21 @@
 
 #include "dialogs/common/GOTabbedDialog.h"
 #include "document-base/GOView.h"
+#include "modification/GOModificationProxy.h"
 
-class GOKeyReceiver;
+class GOConfig;
+class GOMidiShortcutReceiver;
 class GOMidi;
 class GOMidiListener;
 class GOMidiReceiverBase;
 class GOMidiSender;
-class GOConfig;
 class GOMidiEventKeyTab;
 class GOMidiEventRecvTab;
 class GOMidiEventSendTab;
 
-class GOMidiEventDialog : public GOTabbedDialog, public GOView {
+class GOMidiEventDialog : public GOTabbedDialog,
+                          public GOView,
+                          public GOModificationProxy {
 private:
   GOMidiEventRecvTab *m_recvPage;
   GOMidiEventSendTab *m_sendPage;
@@ -39,11 +42,12 @@ public:
       call Destroy() if needed
     */
     wxWindow *parent,
-    wxString title,
+    const wxString &title,
     GOConfig &settings,
+    const wxString &dialogSelector,
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
-    GOKeyReceiver *key,
+    GOMidiShortcutReceiver *key,
     GOMidiSender *division = NULL);
 
   void RegisterMIDIListener(GOMidi *midi);

@@ -17,6 +17,9 @@ Installation of the program creates neither the configuration file nor directori
 
 ## Installation or upgrading on Linux
 
+x11 is recommended for running GrandOrgue. Some positioning/sizing may work not
+properly on wayland. See more [here](https://github.com/GrandOrgue/grandorgue/issues/1271).
+
 ### Run GrandOrgue on Linux directly from AppImage
 The GrandOrgue appimage is built for x86_64 architecture without jack support to maximize compatibility. This method does not require any installation of dependencies or GrandOrgue itself.
 
@@ -113,10 +116,12 @@ This method requires that all dependencies have already been installed. Usually 
 2. Unpack it's contents to some directory.
 3. Run ``GrandOrgue.exe`` from the `bin` subdirectory
 
-## Installation on OSx (intel-based only)
-1. Download the file grandorgue-<version>.os.osx.x86_64.dmg
-2. Open it
-3. Click on the keyboard icon for running
+## Installation on macOS
+1. Download the file grandorgue-<version>.os.macOS.x86_64.dmg (Intel) or grandorgue-<version>.os.macOS.arm64.dmg (Apple silicon)
+2. Double-click the downloaded *.dmg file.
+3. Drag and drop the GrandOrgue app to the Applications Folder.
+4. GrandOrgue is an app from an unidentified developer. Control-click the GrandOrgue app icon in the Applications Folder, then choose Open from the shortcut menu.
+5. Click Open. The GrandOrgue app is saved as an exception to your security settings, and you can open it in the future by double-clicking it just as you can any registered app.
 
 # Deinstallation
 

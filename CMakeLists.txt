@@ -1,21 +1,7 @@
-# GrandOrgue - free pipe organ simulator
-# 
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2019 GrandOrgue contributors (see AUTHORS)
-# 
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 2 of the
-# License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# License GPL-2.0 or later
+# (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 cmake_minimum_required(VERSION 3.10)
 
@@ -32,6 +18,7 @@ project(
   VERSION "${VERSION}"
   DESCRIPTION "GrandOrgue - free pipe organ simulator"
   LANGUAGES CXX C
+  HOMEPAGE_URL "https://github.com/GrandOrgue/grandorgue"
 )
 set(NUM_VERSION "${PROJECT_VERSION}")
 string(REPLACE "." "," NUM_WIN_VERSION ${NUM_VERSION})
@@ -43,6 +30,15 @@ elseif(NOT BUILD_VERSION)
 endif()
 
 set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
+
+# Set GITHUB_PROJECT variable that is used to configure update checking
+if (NOT DEFINED GITHUB_PROJECT)
+  set(GITHUB_PROJECT "GrandOrgue/grandorgue")
+endif()
+
+# Define a c++ standard
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested to build this project")
 
 # Build configuration options
 option(RTAUDIO_USE_CORE       "Enable RtAudio support for Core Audio (Rt and PortAudio - OS X only)" ON)
@@ -69,6 +65,7 @@ else ()
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" OFF)
 endif ()
 option(GO_SEPARATE_LINUX_PACKAGES "Generate separate linux packages for resources and demo" OFF)
+option(USE_BUILD_SYSTEM_LIBDIR "Use build system (distro-specific) libdir (Linux only)" OFF)
 
 # only use options supported by the compiler
 include(CheckIncludeFileCXX)
@@ -80,19 +77,20 @@ include(${CMAKE_SOURCE_DIR}/cmake/FindTools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/BuildLibrary.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/BuildExecutable.cmake)
 
-add_cxx_option(-std=c++11)
-CHECK_INCLUDE_FILE_CXX(atomic HAVE_ATOMIC)
-CHECK_INCLUDE_FILE_CXX(mutex HAVE_MUTEX)
-
 IF (APPLE)
   set(BININSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
-  SET(LIBINSTDIR "${PROJECT_NAME}.app/Contents/MacOS")
+  SET(LIBINSTDIR "${PROJECT_NAME}.app/Contents/Frameworks")
   SET(RESOURCEINSTDIR "${PROJECT_NAME}.app/Contents/Resources")
-  SET(RPATH_PREFIX "@executable_path")
+  SET(RPATH_PREFIX "${PROJECT_NAME}.app/Contents/Frameworks")
 ELSE()
   set(BININSTDIR "bin")
   IF (WIN32)
     SET(LIBINSTDIR "bin")
+  ELSEIF (USE_BUILD_SYSTEM_LIBDIR)
+    # See https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html for
+    # the purpose of this module
+    include(GNUInstallDirs)
+    SET(LIBINSTDIR "${CMAKE_INSTALL_LIBDIR}" CACHE STRING "library directory")
   ELSE ()
     SET(LIBINSTDIR "lib" CACHE STRING "library directory")
   ENDIF ()
@@ -117,7 +115,6 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 # setup compiler flags for debug vs release compiles
 add_option(-Wall)
-add_definitions(-DGO_STD_MUTEX)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
 else()
@@ -194,6 +191,10 @@ else()
   set(ZITACONVOLVER_LIBRARIES zita-convolver)
 endif()
 
+# include libcurl for automatic cheking for updates
+# exports CURL::libcurl that can be used in target_link_libraries
+find_package(CURL REQUIRED)
+
 # include FFTW
 pkg_check_modules(FFTW REQUIRED fftw3f)
 
@@ -225,12 +226,25 @@ add_subdirectory(resources)
 
 # packaging
 
-set(CPACK_PACKAGE_NAME "grandorgue")
-set(CPACK_PACKAGE_VENDOR "Our Organ")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "GrandOrgue - OpenSource Virtual Pipe Organ Software")
+# deal with possible package names among grandorgue, grandorgue-wx30, grandorgue-wx32
+set(BASE_PACKAGE_NAME "grandorgue")
+
+set(OTHER_PACKAGE_NAMES "${BASE_PACKAGE_NAME}" "${BASE_PACKAGE_NAME}-wx30" "${BASE_PACKAGE_NAME}-wx32")
+set(CPACK_PACKAGE_NAME "${BASE_PACKAGE_NAME}")
+if(CMAKE_PACKAGE_SUFFIX)
+  set(CPACK_PACKAGE_NAME "${BASE_PACKAGE_NAME}-${CMAKE_PACKAGE_SUFFIX}")
+endif()
+list(REMOVE_ITEM OTHER_PACKAGE_NAMES "${CPACK_PACKAGE_NAME}")
+if(NOT GO_SEPARATE_LINUX_PACKAGES)
+  # For automatic removal of previously installed subpackages
+  list(APPEND OTHER_PACKAGE_NAMES "${BASE_PACKAGE_NAME}-resources" "${BASE_PACKAGE_NAME}-demo")
+endif()
+
+set(CPACK_PACKAGE_VENDOR "GrandOrgue contributors")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenSource Virtual Pipe Organ Software")
 set(
   CPACK_PACKAGE_DESCRIPTION
-  "GrandOrgue is a virtual pipe organ sample player application supporting a HW1 compatible file format"
+  "GrandOrgue is a virtual pipe organ sample player application"
 )
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_RELEASE ${BUILD_VERSION})
@@ -263,18 +277,26 @@ set(CPACK_COMPONENT_UNSPECIFIED_DEPENDS resources)
 set(CPACK_COMPONENT_DEMO_DEPENDS Unspecified)
 
 if (APPLE)
-   # see the following URL for information about these variables
-   # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-   set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
-   set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
+  # see the following URL for information about these variables
+  # https://developer.apple.com/library/mac/#documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+  set(BUNDLE_CFBundleShortVersionString ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
+  set(BUNDLE_CFBundleVersion ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_STAGE})
 
-   set(CPACK_PACKAGE_ICON "${RESOURCEDIR}/GrandOrgue.icns")
+  set(CPACK_PACKAGE_ICON "${RESOURCEDIR}/GrandOrgue.icns")
 
-   configure_file(${CMAKE_SOURCE_DIR}/src/grandorgue/resource/Info.plist.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
-   INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
+  configure_file(${CMAKE_SOURCE_DIR}/src/grandorgue/resource/Info.plist.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist)
+  INSTALL(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Info.plist DESTINATION "${PROJECT_NAME}.app/Contents/")
 
-  set (CPACK_SYSTEM_NAME "osx")
-  set (CPACK_GENERATOR DragNDrop)
+  add_custom_target(
+    macOSApplication
+    ALL
+    DEPENDS GrandOrgue GrandOrgueTool GrandOrguePerfTest resources # run after building these targets
+    COMMAND "${CMAKE_COMMAND}" -DAPP_DIR="${CMAKE_BINARY_DIR}" -P "${CMAKE_SOURCE_DIR}/cmake/SignMacOSApp.cmake"
+  )
+
+  set(CPACK_SYSTEM_NAME "macOS")
+  set(CPACK_GENERATOR DragNDrop)
+  set(CPACK_PRE_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/cmake/SignMacOSApp.cmake")
 
 elseif (WIN32)
 
@@ -322,9 +344,10 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_GENERATOR TGZ RPM DEB)
 
   set(CPACK_RPM_COMPONENT_INSTALL ${GO_SEPARATE_LINUX_PACKAGES})
-  set(CPACK_RPM_PACKAGE_LICENSE "GPL v2+")
+  set(CPACK_RPM_PACKAGE_LICENSE "GPL-2.0-or-later")
   set(CPACK_RPM_PACKAGE_RELEASE "${CPACK_PACKAGE_RELEASE}")
   set(CPACK_RPM_PACKAGE_GROUP "Productivity/Multimedia/Sound/Midi")
+  set(CPACK_RPM_PACKAGE_URL "https://github.com/GrandOrgue/grandorgue")
   set(CPACK_RPM_MAIN_COMPONENT Unspecified)
   set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
   set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
@@ -339,10 +362,26 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_RPM_DEMO_PACKAGE_SUMMARY "${CPACK_COMPONENT_DEMO_DISPLAY_NAME}")
   set(CPACK_RPM_DEMO_PACKAGE_ARCHITECTURE noarch)
   set(CPACK_RPM_DEMO_FILE_NAME RPM-DEFAULT)
-  if(NOT GO_SEPARATE_LINUX_PACKAGES)
-    # For automatic removal of previously installed suppackages
-    set(CPACK_RPM_PACKAGE_OBSOLETES "grandorgue-resources grandorgue-demo")
+  string (REPLACE ";" " " CPACK_RPM_PACKAGE_OBSOLETES "${OTHER_PACKAGE_NAMES}")
+
+  # On Ubuntu rpmbuild generates a libcurl.so.4(CURL_OPENSSL_4)(64bit) requirement for libcurl.
+  # In Fedora libcurl is based on openssl, but libcurl package does not provide such symbol.
+  # As a workaround, we set the right symbol manually.
+  set(CPACK_RPM_SPEC_MORE_DEFINE "%global __requires_exclude libcurl.*")
+  if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64" OR "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+    # dnf tries to install the 32-bit package on x86_64 if '()(64bit)' is omitted
+    set(CPACK_RPM_PACKAGE_REQUIRES "libcurl.so.4()(64bit)")
+  else()
+    set(CPACK_RPM_PACKAGE_REQUIRES "libcurl.so.4")
   endif()
+
+  # prevent rpmlint errors
+  set(
+    CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+    /usr/share/icons
+    /usr/share/man
+    /usr/share/man/man1
+  )
 
   # for source rpms
   set(CPACK_RPM_BUILDREQUIRES "pkgconfig(alsa), gcc-c++, jack-audio-connection-kit-devel, cmake, wxGTK3-devel, pkgconfig(fftw3f), pkgconfig(libudev), pkgconfig(wavpack), pkgconfig(zlib), libxslt, zip, po4a")
@@ -360,13 +399,10 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
   set(CPACK_DEBIAN_PACKAGE_SECTION sound)
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-  set(CPACK_DEBIAN_UNSPECIFIED_PACKAGE_RECOMMENDS "grandorgue-demo, wx3.0-i18n")
+  set(CPACK_DEBIAN_UNSPECIFIED_PACKAGE_RECOMMENDS "grandorgue-demo")
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   set(CPACK_DEBIAN_PACKAGE_SOURCE "${CPACK_DEBIAN_UNSPECIFIED_PACKAGE_NAME}")
-  if(NOT GO_SEPARATE_LINUX_PACKAGES)
-    # For automatic removal of previously installed suppackages
-    set(CPACK_DEBIAN_PACKAGE_REPLACES "grandorgue-resources, grandorgue-demo")
-  endif()
+  string (REPLACE ";" ", " CPACK_DEBIAN_PACKAGE_REPLACES "${OTHER_PACKAGE_NAMES}")
 endif()
 
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CPACK_SYSTEM_NAME}.${CMAKE_SYSTEM_PROCESSOR}")
@@ -377,5 +413,6 @@ message(STATUS "  Project                     : ${PROJECT_NAME}")
 message(STATUS "  Description                 : ${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
 message(STATUS "  Version                     : ${VERSION}")
 message(STATUS "  Build                       : ${CPACK_PACKAGE_RELEASE}")
+message(STATUS "  Package name                : ${CPACK_PACKAGE_NAME}")
 message(STATUS "============================================================================")
 message(STATUS " ")

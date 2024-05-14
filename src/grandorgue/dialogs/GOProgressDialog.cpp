@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -20,6 +20,7 @@
  */
 
 #include "GOProgressDialog.h"
+#include "gui/primitives/go_gui_utils.h"
 
 #include <wx/progdlg.h>
 #include <wx/stopwatch.h>
@@ -45,6 +46,7 @@ void GOProgressDialog::Setup(
     NULL,
     wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME
       | wxPD_REMAINING_TIME);
+  m_dlg->SetIcon(get_go_icon());
   m_last = 0;
   m_const = 0;
   m_value = 0;

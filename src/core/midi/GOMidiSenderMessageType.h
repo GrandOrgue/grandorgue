@@ -1,0 +1,38 @@
+/*
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
+
+#ifndef GOMIDISENDERMESSAGETYPE_H
+#define GOMIDISENDERMESSAGETYPE_H
+
+enum GOMidiSenderMessageType {
+  MIDI_S_NONE,
+  MIDI_S_NOTE,
+  MIDI_S_NOTE_NO_VELOCITY,
+  MIDI_S_CTRL,
+  MIDI_S_RPN,
+  MIDI_S_NRPN,
+  MIDI_S_RPN_RANGE,
+  MIDI_S_NRPN_RANGE,
+  MIDI_S_PGM_RANGE,
+  MIDI_S_PGM_ON,
+  MIDI_S_PGM_OFF,
+  MIDI_S_NOTE_ON,
+  MIDI_S_NOTE_OFF,
+  MIDI_S_CTRL_ON,
+  MIDI_S_CTRL_OFF,
+  MIDI_S_RPN_ON,
+  MIDI_S_RPN_OFF,
+  MIDI_S_NRPN_ON,
+  MIDI_S_NRPN_OFF,
+  MIDI_S_HW_NAME_STRING,
+  MIDI_S_HW_NAME_LCD,
+  MIDI_S_HW_STRING,
+  MIDI_S_HW_LCD,
+  MIDI_S_RODGERS_STOP_CHANGE,
+};
+
+#endif /* GOMIDISENDERMESSAGETYPE_H */

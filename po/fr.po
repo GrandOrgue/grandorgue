@@ -74,7 +74,7 @@ msgid "Metronome"
 msgstr "Métronome"
 
 #, c-format
-msgid "Unkown SetterElement in section %s"
+msgid "Unknown SetterElement in section %s"
 msgstr "SetterElement inconnu dans la section %s"
 
 msgid "Recorder"
@@ -193,7 +193,7 @@ msgid "Unknown attributes"
 msgstr "Attributs inconnus"
 
 #, c-format
-msgid "File name '%s' contains invalid path seperators"
+msgid "File name '%s' contains invalid path separators"
 msgstr "Le nom du fichier '%s' contient des séparateurs invalides"
 
 #, c-format
@@ -422,7 +422,7 @@ msgid "File '%s' does not exists"
 msgstr "Le fichier '%s' n'existe pas"
 
 #, c-format
-msgid "Filename '%s' contains non-portable directory seperator /"
+msgid "Filename '%s' contains non-portable directory separator /"
 msgstr "Le nom de fichier '%s' contient le séparateur non portable /"
 
 msgid "General"
@@ -650,7 +650,7 @@ msgstr "pavé numérique *"
 msgid "add"
 msgstr "pavé numérique +"
 
-msgid "seperator"
+msgid "separator"
 msgstr "séparateur"
 
 msgid "subtract"
@@ -929,7 +929,7 @@ msgid "MIDI file type 2 is not supported"
 msgstr "Fichier MIDI de type 2: non supporté"
 
 #, c-format
-msgid "Unkown MIDI file type %d"
+msgid "Unknown MIDI file type %d"
 msgstr "Type de fichier MIDI inconnu: %d"
 
 #, c-format
@@ -1364,7 +1364,7 @@ msgid "Default audio group"
 msgstr "Groupe audio par défaut"
 
 #, c-format
-msgid "Output device %s not found - no sound output will occure"
+msgid "Output device %s not found - no sound output will occur"
 msgstr "Interface de sortie %s non trouvée - aucun son ne sera produit"
 
 msgid "Error"
@@ -1866,7 +1866,7 @@ msgstr "< Fichier RIFF/WAVE invalide"
 msgid "Inconsitant WavPack file"
 msgstr "Fichier WavPack incohérent"
 
-msgid "< Malformed wave file. Format chunk must preceed data chunk."
+msgid "< Malformed wave file. Format chunk must precede data chunk."
 msgstr ""
 "< Format fichier WAVE malformé. Le bloc FORMAT doit précéder le bloc DATA."
 
@@ -1916,7 +1916,7 @@ msgstr ""
 "Associer des échantillons de percussion et sans percussion dans un tuyau "
 "n'est pas permis"
 
-msgid "Invalid loop defintion"
+msgid "Invalid loop definition"
 msgstr "Mauvaise définition de boucle"
 
 msgid "Loop too short for a cross fade"
@@ -1964,7 +1964,7 @@ msgstr ""
 msgid "instance"
 msgstr ""
 
-msgid "specifiy GrandOrgue instance name"
+msgid "specify GrandOrgue instance name"
 msgstr "spécifie le nom de l'instance de GrandOrgue"
 
 msgid "organ file"

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,32 +11,46 @@
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
-#include "GOBitmap.h"
-#include "GOSaveableObject.h"
 #include "ptrvector.h"
+
+#include "primitives/GOBitmap.h"
+#include "size/GOSizeKeeper.h"
 
 class GOGUIControl;
 class GOGUIDisplayMetrics;
 class GOGUILayoutEngine;
 class GOGUIMouseState;
-class GOGUIMouseStateTracker;
 class GOGUIPanelWidget;
 class GOConfigReader;
 class GOConfigWriter;
-class GOButton;
+class GOButtonControl;
 class GODC;
-class GOPanelView;
-class GODefinitionFile;
+class GOGUIPanelView;
+class GOOrganController;
 
 #define GOBitmapPrefix "../GO:"
 
-class GOGUIPanel : private GOSaveableObject {
+class GOGUIPanel : public GOSizeKeeper {
 private:
-  void ReadSizeInfoFromCfg(GOConfigReader &cfg, bool isOpenByDefault);
+  void BasicLoad(
+    GOConfigReader &cfg, const wxString &group, bool isOpenByDefault);
+  void LoadButton(
+    GOConfigReader &cfg,
+    GOButtonControl *pButtonControl,
+    const wxString &groupPrefix,
+    unsigned groupIndex,
+    bool isPiston = false);
+  void LoadManualButton(
+    GOConfigReader &cfg,
+    GOButtonControl *pButtonControl,
+    const wxString &manualGroup,
+    const wxString &groupPrefix,
+    unsigned elementIndex,
+    bool isPiston = false);
 
 protected:
-  GODefinitionFile *m_organfile;
-  GOGUIMouseStateTracker &m_MouseState;
+  GOOrganController *m_OrganController;
+  GOGUIMouseState &m_MouseState;
   ptr_vector<GOGUIControl> m_controls;
   std::vector<GOBitmap> m_WoodImages;
   unsigned m_BackgroundControls;
@@ -44,23 +58,20 @@ protected:
   wxString m_GroupName;
   GOGUIDisplayMetrics *m_metrics;
   GOGUILayoutEngine *m_layout;
-  GOPanelView *m_view;
-  wxRect m_rect;
-  int m_DisplayNum;
-  bool m_IsMaximized;
+  GOGUIPanelView *m_view;
   bool m_InitialOpenWindow;
 
   void LoadControl(GOGUIControl *control, GOConfigReader &cfg, wxString group);
   void LoadBackgroundControl(
     GOGUIControl *control, GOConfigReader &cfg, wxString group);
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
   GOGUIControl *CreateGUIElement(GOConfigReader &cfg, wxString group);
 
   void SendMousePress(int x, int y, bool right, GOGUIMouseState &state);
 
 public:
-  GOGUIPanel(GODefinitionFile *organfile);
+  GOGUIPanel(GOOrganController *organController);
   virtual ~GOGUIPanel();
   void Init(
     GOConfigReader &cfg,
@@ -68,15 +79,18 @@ public:
     wxString name,
     wxString group,
     wxString group_name = wxT(""));
-  void Load(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, const wxString &group);
   void Layout();
 
-  void SetView(GOPanelView *view);
+  void SetView(GOGUIPanelView *view);
 
-  GODefinitionFile *GetOrganFile();
-  const wxString &GetGroup() { return m_group; }
+  GOOrganController *GetOrganFile();
   const wxString &GetName();
   const wxString &GetGroupName();
+
+  // gets the current size info of the window
+  virtual void CaptureSizeInfo(const wxTopLevelWindow &win) override;
+
   void AddEvent(GOGUIControl *control);
   void AddControl(GOGUIControl *control);
   GOGUIDisplayMetrics *GetDisplayMetrics();
@@ -95,12 +109,6 @@ public:
   unsigned GetHeight();
   bool InitialOpenWindow();
 
-  wxRect GetWindowRect();
-  void SetWindowRect(wxRect rect);
-  int GetDisplayNum() const { return m_DisplayNum; }
-  void SetDisplayNum(int displayNum) { m_DisplayNum = displayNum; }
-  bool IsMaximized() const { return m_IsMaximized; }
-  void SetMaximized(bool isMaximized) { m_IsMaximized = isMaximized; }
   void SetInitialOpenWindow(bool open);
 };
 

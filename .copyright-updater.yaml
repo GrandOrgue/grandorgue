@@ -1,0 +1,2 @@
+pattern: ' Copyright {years} GrandOrgue contributors (see AUTHORS)'
+ignore_commits_before: 2024-01-01

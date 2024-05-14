@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,22 +10,22 @@
 
 #include <wx/string.h>
 
-#include "midi/GOMidiSenderData.h"
+#include "midi/GOMidiSenderEventPatternList.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiMap;
-class GODefinitionFile;
+class GOMidiSendProxy;
 struct IniFileEnumEntry;
 
-class GOMidiSender : public GOMidiSenderData {
+class GOMidiSender : public GOMidiSenderEventPatternList {
 private:
   static const struct IniFileEnumEntry m_MidiTypes[];
-  GODefinitionFile *m_organfile;
+  GOMidiSendProxy &r_proxy;
   int m_ElementID;
 
 public:
-  GOMidiSender(GODefinitionFile *organfile, GOMidiSenderType type);
+  GOMidiSender(GOMidiSendProxy &proxy, GOMidiSenderType type);
   ~GOMidiSender();
 
   void SetElementID(int id);
@@ -40,19 +40,18 @@ public:
   void SetLabel(const wxString &text);
   void SetName(const wxString &text);
 
-  bool HasChannel(GOMidiSendMessageType type);
-  bool HasKey(GOMidiSendMessageType type);
-  bool HasLowValue(GOMidiSendMessageType type);
-  bool HasHighValue(GOMidiSendMessageType type);
-  bool HasStart(GOMidiSendMessageType type);
-  bool HasLength(GOMidiSendMessageType type);
-  unsigned KeyLimit(GOMidiSendMessageType type);
-  unsigned LowValueLimit(GOMidiSendMessageType type);
-  unsigned HighValueLimit(GOMidiSendMessageType type);
-  unsigned StartLimit(GOMidiSendMessageType type);
-  unsigned LengthLimit(GOMidiSendMessageType type);
-
-  void Assign(const GOMidiSenderData &data);
+  bool HasChannel(GOMidiSenderMessageType type);
+  bool HasKey(GOMidiSenderMessageType type);
+  bool HasLowValue(GOMidiSenderMessageType type);
+  bool HasHighValue(GOMidiSenderMessageType type);
+  bool HasStart(GOMidiSenderMessageType type);
+  bool HasLength(GOMidiSenderMessageType type);
+  bool IsNote(GOMidiSenderMessageType type);
+  unsigned KeyLimit(GOMidiSenderMessageType type);
+  unsigned LowValueLimit(GOMidiSenderMessageType type);
+  unsigned HighValueLimit(GOMidiSenderMessageType type);
+  unsigned StartLimit(GOMidiSenderMessageType type);
+  unsigned LengthLimit(GOMidiSenderMessageType type);
 };
 
 #endif

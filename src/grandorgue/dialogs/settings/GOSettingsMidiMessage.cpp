@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -52,7 +52,8 @@ GOSettingsMidiMessage::GOSettingsMidiMessage(
   topSizer->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
 
   for (unsigned i = 0; i < m_config.GetEventCount(); i++) {
-    GOMidiReceiverBase *recv = m_config.GetMidiEvent(i);
+    const GOMidiReceiverBase *recv = m_config.GetMidiEvent(i);
+
     m_Events->InsertItem(i, m_config.GetEventGroup(i));
     m_Events->SetItemPtrData(i, (wxUIntPtr)recv);
     m_Events->SetItem(i, 1, m_config.GetEventTitle(i));
@@ -82,8 +83,9 @@ void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent &event) {
     NULL,
     this,
     wxString::Format(
-      _("Initial MIDI settings for %s"), m_config.GetEventTitle(index).c_str()),
+      _("Initial MIDI settings for %s"), m_config.GetEventTitle(index)),
     m_config,
+    wxT("InitialSettings"),
     recv,
     NULL,
     NULL);

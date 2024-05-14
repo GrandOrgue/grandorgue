@@ -1,24 +1,26 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOApp.h"
 
+#include <wx/cmdline.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
 #include <wx/image.h>
 #include <wx/regex.h>
 #include <wx/stopwatch.h>
 
+#include "config/GOConfig.h"
+#include "sound/GOSound.h"
+
 #include "GOFrame.h"
 #include "GOLog.h"
 #include "GOStdPath.h"
-#include "config/GOConfig.h"
 #include "go_defs.h"
-#include "sound/GOSound.h"
 
 #ifdef __WXMAC__
 #include <ApplicationServices/ApplicationServices.h>
@@ -38,21 +40,38 @@ GOApp::GOApp()
     m_soundSystem(NULL),
     m_Log(NULL),
     m_FileName(),
-    m_InstanceName() {}
+    m_InstanceName(),
+    m_IsGuiOnly(false) {}
 
-const wxCmdLineEntryDesc GOApp::m_cmdLineDesc[] = {
+static const char *const SWITCH_GUI = "g";
+static const char *const SWITCH_HELP = "h";
+static const char *const OPTION_INSTANCE = "i";
+
+static const wxCmdLineEntryDesc cmd_line_desc[] = {
   {wxCMD_LINE_SWITCH,
-   wxTRANSLATE("h"),
-   wxTRANSLATE("help"),
+   SWITCH_GUI,
+   "gui-only",
+   wxTRANSLATE("Load just GUI. Not to load any sound samples"),
+   wxCMD_LINE_VAL_NONE,
+   0},
+  {wxCMD_LINE_SWITCH,
+   SWITCH_HELP,
+   "help",
    wxTRANSLATE("displays help on the command line parameters"),
    wxCMD_LINE_VAL_NONE,
    wxCMD_LINE_OPTION_HELP},
   {wxCMD_LINE_OPTION,
-   wxTRANSLATE("i"),
-   wxTRANSLATE("instance"),
-   wxTRANSLATE("specifiy GrandOrgue instance name"),
+   OPTION_INSTANCE,
+   "instance",
+   wxTRANSLATE("specify GrandOrgue instance name"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
+  {wxCMD_LINE_SWITCH,
+   "v",
+   "verbose",
+   wxTRANSLATE("generate verbose log messages"),
+   wxCMD_LINE_VAL_NONE,
+   0x0},
   {wxCMD_LINE_PARAM,
    NULL,
    NULL,
@@ -64,22 +83,32 @@ const wxCmdLineEntryDesc GOApp::m_cmdLineDesc[] = {
 void GOApp::OnInitCmdLine(wxCmdLineParser &parser) {
   parser.SetLogo(wxString::Format(
     _("GrandOrgue %s - Virtual Pipe Organ Software"), wxT(APP_VERSION)));
-  parser.SetDesc(m_cmdLineDesc);
+  parser.SetDesc(cmd_line_desc);
 }
 
 bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
-  wxString str;
-  if (parser.Found(wxT("i"), &str)) {
-    wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
-    if (!r.Matches(str)) {
-      wxMessageOutput::Get()->Printf(_("Invalid instance name"));
-      return false;
+  bool res = wxApp::OnCmdLineParsed(parser);
+
+  if (res)
+    m_IsGuiOnly = parser.FoundSwitch(SWITCH_GUI) == wxCMD_SWITCH_ON;
+  if (res) {
+    wxString str;
+
+    if (parser.Found(OPTION_INSTANCE, &str)) {
+      wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
+
+      if (r.Matches(str))
+        m_InstanceName = wxT("-") + str;
+      else {
+        wxMessageOutput::Get()->Printf(_("Invalid instance name"));
+        res = false;
+      }
     }
-    m_InstanceName = wxT("-") + str;
   }
-  for (unsigned i = 0; i < parser.GetParamCount(); i++)
-    m_FileName = parser.GetParam(i);
-  return true;
+  if (res)
+    for (unsigned i = 0; i < parser.GetParamCount(); i++)
+      m_FileName = parser.GetParam(i);
+  return res;
 }
 
 bool GOApp::OnInit() {
@@ -140,7 +169,7 @@ bool GOApp::OnInit() {
   SetTopWindow(m_Frame);
   m_Log = new GOLog(m_Frame);
   wxLog::SetActiveTarget(m_Log);
-  m_Frame->Init(m_FileName);
+  m_Frame->Init(m_FileName, m_IsGuiOnly);
 
   return true;
 }
@@ -154,9 +183,6 @@ int GOApp::OnRun() { return wxApp::OnRun(); }
 
 int GOApp::OnExit() {
   wxLog::SetActiveTarget(NULL);
-  delete m_soundSystem;
-  delete m_config;
-  delete m_Log;
 
   int rc = wxApp::OnExit();
 
@@ -166,6 +192,26 @@ int GOApp::OnExit() {
     wxExecute(cmdargs);
   }
   return rc;
+}
+
+void GOApp::CleanUp() {
+  // Ensure that GOFrame and other objects are destroyed before deleting
+  wxApp::CleanUp();
+
+  // CleanUp() may be called even if OnInit() has not succeed, so we need to
+  // check
+  if (m_soundSystem) {
+    delete m_soundSystem;
+    m_soundSystem = nullptr;
+  }
+  if (m_config) {
+    delete m_config;
+    m_config = nullptr;
+  }
+  if (m_Log) {
+    delete m_Log;
+    m_Log = nullptr;
+  }
 }
 
 void GOApp::SetRestart() { m_Restart = true; }

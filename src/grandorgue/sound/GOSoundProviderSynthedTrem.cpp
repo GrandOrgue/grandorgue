@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,10 +11,7 @@
 #include "GOMemoryPool.h"
 #include "GOSoundAudioSection.h"
 
-GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem(GOMemoryPool &pool)
-  : GOSoundProvider(pool) {
-  m_Gain = 1.0f;
-}
+GOSoundProviderSynthedTrem::GOSoundProviderSynthedTrem() { m_Gain = 1.0f; }
 
 inline short SynthTrem(double amp, double angle) {
   return (short)(amp * sin(angle));
@@ -29,7 +26,11 @@ inline short SynthTrem(double amp, double angle, double fade) {
 }
 
 void GOSoundProviderSynthedTrem::Create(
-  int period, int start_rate, int stop_rate, int amp_mod_depth) {
+  GOMemoryPool &pool,
+  int period,
+  int start_rate,
+  int stop_rate,
+  int amp_mod_depth) {
   ClearData();
 
   const double trem_freq = 1000.0 / period;
@@ -76,41 +77,49 @@ void GOSoundProviderSynthedTrem::Create(
   }
 
   /* Attack sustain section */
-  GO_WAVE_LOOP trem_loop;
-  trem_loop.start_sample = attack_samples;
-  trem_loop.end_sample = (attack_samples + loop_samples) - 1;
-  std::vector<GO_WAVE_LOOP> trem_loops;
+  GOWaveLoop trem_loop;
+  trem_loop.m_StartPosition = attack_samples;
+  trem_loop.m_EndPosition = (attack_samples + loop_samples) - 1;
+  std::vector<GOWaveLoop> trem_loops;
   trem_loops.push_back(trem_loop);
-  attack_section_info attack_info;
-  attack_info.sample_group = -1;
+  AttackSelector attack_info;
+  attack_info.m_WaveTremulantStateFor = BOOL3_DEFAULT;
   attack_info.min_attack_velocity = 0;
   attack_info.max_released_time = -1;
   m_AttackInfo.push_back(attack_info);
-  m_Attack.push_back(new GOAudioSection(m_pool));
+  m_Attack.push_back(new GOSoundAudioSection(pool));
   m_Attack[0]->Setup(
+    nullptr,
+    nullptr,
     data.get(),
     GOWave::SF_SIGNEDSHORT_16,
     1,
     sample_freq,
-    trem_loop.end_sample,
+    trem_loop.m_EndPosition,
     &trem_loops,
+    BOOL3_DEFAULT,
     false,
+    0,
     0);
 
   /* Release section */
-  release_section_info release_info;
-  release_info.sample_group = -1;
+  ReleaseSelector release_info;
+  release_info.m_WaveTremulantStateFor = BOOL3_DEFAULT;
   release_info.max_playback_time = -1;
   m_ReleaseInfo.push_back(release_info);
-  m_Release.push_back(new GOAudioSection(m_pool));
+  m_Release.push_back(new GOSoundAudioSection(pool));
   m_Release[0]->Setup(
+    nullptr,
+    nullptr,
     data.get() + attack_samples + loop_samples,
     GOWave::SF_SIGNEDSHORT_16,
     1,
     sample_freq,
     release_samples,
     NULL,
+    BOOL3_DEFAULT,
     false,
+    0,
     0);
 
   ComputeReleaseAlignmentInfo();

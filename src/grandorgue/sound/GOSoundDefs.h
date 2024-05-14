@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -26,7 +26,7 @@
 /* Maximum number of blocks (1 block is nChannels samples) per frame */
 #define MAX_FRAME_SIZE (1024)
 
-/* Maximum number of channels the engine supports. This value can not be
+/* Maximum number of channels the engine supports. This value cannot be
  * changed at present.
  */
 #define MAX_OUTPUT_CHANNELS (2)

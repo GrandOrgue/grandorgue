@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,8 +10,9 @@
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 
-#include "GODC.h"
-#include "GOFont.h"
+#include "primitives/GODC.h"
+#include "primitives/GOFont.h"
+
 #include "GOGUIControl.h"
 #include "GOGUIPanel.h"
 #include "GOKeyConvert.h"
@@ -24,13 +25,16 @@ EVT_PAINT(GOGUIPanelWidget::OnPaint)
 EVT_COMMAND(0, wxEVT_GOCONTROL, GOGUIPanelWidget::OnGOControl)
 EVT_MOTION(GOGUIPanelWidget::OnMouseMove)
 EVT_LEFT_DOWN(GOGUIPanelWidget::OnMouseLeftDown)
-EVT_LEFT_DCLICK(GOGUIPanelWidget::OnMouseLeftDown)
+EVT_LEFT_DCLICK(GOGUIPanelWidget::OnMouseLeftDclick)
+EVT_LEFT_UP(GOGUIPanelWidget::OnMouseLeftUp)
 EVT_RIGHT_DOWN(GOGUIPanelWidget::OnMouseRightDown)
 EVT_RIGHT_DCLICK(GOGUIPanelWidget::OnMouseRightDown)
 EVT_MOUSEWHEEL(GOGUIPanelWidget::OnMouseScroll)
 EVT_KEY_DOWN(GOGUIPanelWidget::OnKeyCommand)
 EVT_KEY_UP(GOGUIPanelWidget::OnKeyUp)
 END_EVENT_TABLE()
+
+const wxPoint default_point(wxDefaultCoord, wxDefaultCoord);
 
 GOGUIPanelWidget::GOGUIPanelWidget(
   GOGUIPanel *panel, wxWindow *parent, wxWindowID id)
@@ -39,7 +43,8 @@ GOGUIPanelWidget::GOGUIPanelWidget(
     m_BGInit(false),
     m_Background(&m_BGImage),
     m_Scale(1),
-    m_FontScale(1) {
+    m_FontScale(1),
+    m_PressedPoint(default_point) {
   initFont();
   SetLabel(m_panel->GetName());
   m_ClientBitmap.Create(
@@ -147,38 +152,69 @@ bool GOGUIPanelWidget::ForwardMouseEvent(wxMouseEvent &event) {
   return true;
 }
 
+void GOGUIPanelWidget::HandleMousePress(const wxPoint &point, bool isRight) {
+  if (!isRight)
+    m_PressedPoint = point;
+  m_panel->HandleMousePress(point.x / m_Scale, point.y / m_Scale, isRight);
+}
+
+void GOGUIPanelWidget::HandleMouseRelease(bool isRight) {
+  m_panel->HandleMouseRelease(isRight);
+  if (!isRight)
+    m_PressedPoint = default_point;
+}
+
 void GOGUIPanelWidget::OnMouseMove(wxMouseEvent &event) {
   if (!event.LeftIsDown()) {
-    m_panel->HandleMouseRelease(false);
+    HandleMouseRelease(false);
     return;
   }
-
   if (ForwardMouseEvent(event))
     return;
-  m_panel->HandleMousePress(
-    event.GetX() / m_Scale, event.GetY() / m_Scale, false);
+
+  wxPoint point = event.GetPosition();
+
+  // some windows managers call several times at the same position. Skip if so
+  if (point != m_PressedPoint)
+    HandleMousePress(point, false);
   event.Skip();
 }
 
 void GOGUIPanelWidget::OnMouseLeftDown(wxMouseEvent &event) {
   Focus();
-
   if (ForwardMouseEvent(event))
     return;
 
-  m_panel->HandleMouseRelease(false);
+  wxPoint point = event.GetPosition();
 
-  m_panel->HandleMousePress(
-    event.GetX() / m_Scale, event.GetY() / m_Scale, false);
+  // some windows managers call several times at the same position. Skip if so
+  if (point != m_PressedPoint) {
+    HandleMouseRelease(false);
+    HandleMousePress(point, false);
+  }
   event.Skip();
+}
+
+void GOGUIPanelWidget::OnMouseLeftDclick(wxMouseEvent &event) {
+  if (!ForwardMouseEvent(event)) {
+    HandleMouseRelease(false);
+    HandleMousePress(event.GetPosition(), false);
+    event.Skip();
+  }
 }
 
 void GOGUIPanelWidget::OnMouseRightDown(wxMouseEvent &event) {
   Focus();
 
-  m_panel->HandleMousePress(
-    event.GetX() / m_Scale, event.GetY() / m_Scale, true);
+  HandleMousePress(event.GetPosition(), true);
   event.Skip();
+}
+
+void GOGUIPanelWidget::OnMouseLeftUp(wxMouseEvent &event) {
+  if (m_PressedPoint.IsFullySpecified() && !event.LeftIsDown()) {
+    HandleMouseRelease(false);
+    event.Skip();
+  }
 }
 
 void GOGUIPanelWidget::OnMouseScroll(wxMouseEvent &event) {

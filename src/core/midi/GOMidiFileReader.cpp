@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,9 +21,12 @@ GOMidiFileReader::GOMidiFileReader(GOMidiMap &map)
     m_Speed(0),
     m_Pos(0),
     m_TrackEnd(0),
+    m_IsFirstTrackComplete(false),
+    m_LastStatus(0),
+    m_CurrentSpeed(0),
+    m_CurrentSpeedTo(-1),
     m_LastTime(0),
-    m_PPQ(0),
-    m_Tempo(0) {}
+    m_PPQ(0) {}
 
 GOMidiFileReader::~GOMidiFileReader() { m_Data.free(); }
 
@@ -80,11 +83,13 @@ bool GOMidiFileReader::Open(wxString filename) {
     return false;
 
   default:
-    wxLogError(_("Unkown MIDI file type %d"), (int)h->type);
+    wxLogError(_("Unknown MIDI file type %d"), (int)h->type);
     return false;
   }
-  m_Tempo = 0x7A120; // 120 BPM
+
+  unsigned tempo = 0x7A120; // 120 BPM
   unsigned ppq = h->ppq;
+
   if (ppq & 0x8000) {
     unsigned frames = 1 + ((-ppq >> 8) & 0x7F);
     unsigned res = ppq & 0xFF;
@@ -92,9 +97,9 @@ bool GOMidiFileReader::Open(wxString filename) {
     m_PPQ = 0;
   } else {
     m_PPQ = ppq;
-    m_Speed = m_Tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
+    m_Speed = tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
   }
-
+  m_TempoMap.clear();
   return true;
 }
 
@@ -129,6 +134,14 @@ bool GOMidiFileReader::StartTrack() {
       m_LastStatus = 0;
       m_LastTime = 0;
       m_CurrentSpeed = m_Speed;
+      m_CurrentSpeedTo = -1;
+      if (m_IsFirstTrackComplete) {
+        // find the first tempo change from the tempo map
+        auto mapIter = m_TempoMap.lower_bound(0);
+
+        if (mapIter != m_TempoMap.end())
+          m_CurrentSpeedTo = mapIter->first;
+      }
       return true;
     }
   } while (true);
@@ -162,6 +175,7 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
       wxLogError(_("End of track marker missing at offset %d"), m_Pos);
       m_Pos = m_TrackEnd;
       m_TrackEnd = 0;
+      m_IsFirstTrackComplete = true;
     }
     if (!m_TrackEnd)
       if (!StartTrack())
@@ -253,7 +267,7 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
     }
     for (unsigned i = 0; i < len; i++)
       msg.push_back(m_Data[m_Pos++]);
-    m_LastTime += rel_time * m_Speed;
+    m_LastTime += rel_time * m_CurrentSpeed;
 
     if (msg[0] == 0xFF && msg[1] == 0x2F && msg[2] == 0x00) {
       if (m_Pos != m_TrackEnd)
@@ -261,18 +275,44 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
 
       m_Pos = m_TrackEnd;
       m_TrackEnd = 0;
+      m_IsFirstTrackComplete = true;
       continue;
     }
 
+    // Look up the tempo map: should we change the tempo?
+    if (
+      m_IsFirstTrackComplete && m_CurrentSpeedTo >= 0
+      && m_LastTime >= m_CurrentSpeedTo) {
+      // inherit tempo changes from the first track
+      // find the next tempo from m_TempoMap
+      auto mapIter = m_TempoMap.lower_bound(m_CurrentSpeedTo);
+
+      assert(mapIter != m_TempoMap.end()); // due the rule for m_CurrentSpeedTo
+      if (mapIter->first > m_LastTime)     // not yet
+        mapIter--;
+
+      // now mapIter points to the greatest entry <= m_LastTime
+      m_CurrentSpeed = mapIter->second;
+      mapIter++; // to the next tempo change
+      m_CurrentSpeedTo = mapIter != m_TempoMap.end() ? mapIter->first : -1;
+    }
+
+    // try to process tempo changes from the current track of the midi file
     if (msg[0] == 0xFF && msg[1] == 0x51 && msg[2] == 0x03) {
-      m_Tempo = (msg[3] << 16) | (msg[4] << 8) | (msg[5]);
-      m_Speed = m_Tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
+      unsigned tempo = (msg[3] << 16) | (msg[4] << 8) | (msg[5]);
+
+      m_CurrentSpeed = tempo / 1000.0 / (m_PPQ ? m_PPQ : 1);
+
+      if (!m_IsFirstTrackComplete) {
+        // fill out the tempo map
+        m_TempoMap[m_LastTime] = m_CurrentSpeed;
+      }
       continue;
     }
 
     e.FromMidi(msg, m_Map);
     e.SetTime(m_LastTime);
-    if (e.GetMidiType() != MIDI_NONE)
+    if (e.GetMidiType() != GOMidiEvent::MIDI_NONE)
       return true;
   } while (true);
 }

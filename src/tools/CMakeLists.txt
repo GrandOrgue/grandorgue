@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 add_option(-mmmx)
@@ -31,7 +31,3 @@ target_include_directories(GrandOrguePerfTest PUBLIC ${CMAKE_SOURCE_DIR}/src/gra
 target_link_libraries(GrandOrguePerfTest golib)
 
 add_custom_target(runperftest COMMAND GrandOrguePerfTest "${CMAKE_SOURCE_DIR}/tests" DEPENDS GrandOrguePerfTest)
-
-if (GO_USE_JACK STREQUAL "ON")
-   target_link_libraries(GrandOrguePerfTest PkgConfig::JACK)
-endif ()

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,23 +8,26 @@
 #ifndef GOSOUNDENGINE_H_
 #define GOSOUNDENGINE_H_
 
+#include <atomic>
 #include <vector>
 
-#include "GOSoundResample.h"
-#include "GOSoundSamplerPool.h"
 #include "scheduler/GOSoundScheduler.h"
+
+#include "GOSoundResample.h"
+#include "GOSoundSampler.h"
+#include "GOSoundSamplerPool.h"
 
 class GOWindchest;
 class GOSoundProvider;
 class GOSoundRecorder;
-class GOSoundGroupWorkItem;
-class GOSoundOutputWorkItem;
-class GOSoundReleaseWorkItem;
-class GOSoundTouchWorkItem;
-class GOSoundTremulantWorkItem;
-class GOSoundWindchestWorkItem;
-class GOSoundWorkItem;
-class GODefinitionFile;
+class GOSoundGroupTask;
+class GOSoundOutputTask;
+class GOSoundReleaseTask;
+class GOSoundTouchTask;
+class GOSoundTremulantTask;
+class GOSoundWindchestTask;
+class GOSoundTask;
+class GOOrganController;
 class GOConfig;
 
 typedef struct {
@@ -32,56 +35,85 @@ typedef struct {
   std::vector<std::vector<float>> scale_factors;
 } GOAudioOutputConfiguration;
 
-class GOSoundSampler;
-
 class GOSoundEngine {
 private:
+  static constexpr int DETACHED_RELEASE_TASK_ID = 0;
+
   unsigned m_PolyphonySoftLimit;
   bool m_PolyphonyLimiting;
   bool m_ScaledReleases;
   bool m_ReleaseAlignmentEnabled;
   bool m_RandomizeSpeaking;
   int m_Volume;
-  unsigned m_ReleaseLength;
   unsigned m_SamplesPerBuffer;
   float m_Gain;
   unsigned m_SampleRate;
+
+  // time in samples
   uint64_t m_CurrentTime;
   GOSoundSamplerPool m_SamplerPool;
   unsigned m_AudioGroupCount;
-  unsigned m_UsedPolyphony;
+  std::atomic_uint m_UsedPolyphony;
   unsigned m_WorkerSlots;
   std::vector<double> m_MeterInfo;
-  ptr_vector<GOSoundTremulantWorkItem> m_Tremulants;
-  ptr_vector<GOSoundWindchestWorkItem> m_Windchests;
-  ptr_vector<GOSoundGroupWorkItem> m_AudioGroups;
-  ptr_vector<GOSoundOutputWorkItem> m_AudioOutputs;
+  ptr_vector<GOSoundTremulantTask> m_TremulantTasks;
+  ptr_vector<GOSoundWindchestTask> m_WindchestTasks;
+  ptr_vector<GOSoundGroupTask> m_AudioGroupTasks;
+  ptr_vector<GOSoundOutputTask> m_AudioOutputTasks;
   GOSoundRecorder *m_AudioRecorder;
-  GOSoundReleaseWorkItem *m_ReleaseProcessor;
-  std::unique_ptr<GOSoundTouchWorkItem> m_TouchProcessor;
-
+  GOSoundReleaseTask *m_ReleaseProcessor;
+  std::unique_ptr<GOSoundTouchTask> m_TouchTask;
   GOSoundScheduler m_Scheduler;
 
   struct resampler_coefs_s m_ResamplerCoefs;
 
-  volatile bool m_HasBeenSetup;
+  std::atomic_bool m_HasBeenSetup;
 
-  /* samplerGroupID:
+  unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples);
+
+  /* samplerTaskId:
      -1 .. -n Tremulants
-     0 detached release
+     0 (DETACHED_RELEASE_TASK_ID) detached release
      1 .. n Windchests
   */
-  void StartSampler(
-    GOSoundSampler *sampler, int sampler_group_id, unsigned audio_group);
+  inline static unsigned isWindchestTask(int taskId) { return taskId >= 0; }
+
+  inline static unsigned windchestTaskToIndex(int taskId) {
+    return (unsigned)taskId;
+  }
+
+  inline static unsigned tremulantTaskToIndex(int taskId) {
+    return -taskId - 1;
+  }
+
+  void StartSampler(GOSoundSampler *sampler);
+
+  GOSoundSampler *CreateTaskSample(
+    const GOSoundProvider *soundProvider,
+    int samplerTaskId,
+    unsigned audioGroup,
+    unsigned velocity,
+    unsigned delay,
+    uint64_t prevEventTime,
+    bool isRelease,
+    uint64_t *pStartTimeSamples);
   void CreateReleaseSampler(GOSoundSampler *sampler);
-  void SwitchAttackSampler(GOSoundSampler *sampler);
+
+  /**
+   * Creates a new sampler with decay of current loop.
+   * Switch this sampler to the new attack.
+   * It is used when a wave tremulant is switched on or off.
+   * @param pSampler current playing sampler for switching to a new attack
+   */
+  void SwitchToAnotherAttack(GOSoundSampler *pSampler);
   float GetRandomFactor();
+  unsigned GetBufferSizeFor(unsigned outputIndex, unsigned n_frames);
 
 public:
   GOSoundEngine();
   ~GOSoundEngine();
   void Reset();
-  void Setup(GODefinitionFile *organ_file, unsigned release_count = 1);
+  void Setup(GOOrganController *organController, unsigned release_count = 1);
   void ClearSetup();
   void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
   void SetupReverb(GOConfig &settings);
@@ -98,22 +130,44 @@ public:
   int GetVolume() const;
   void SetScaledReleases(bool enable);
   void SetRandomizeSpeaking(bool enable);
-  void SetReleaseLength(unsigned reverb);
   const std::vector<double> &GetMeterInfo();
   void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 
-  GOSoundSampler *StartSample(
-    const GOSoundProvider *pipe,
-    int sampler_group_id,
-    unsigned audio_group,
+  inline GOSoundSampler *StartPipeSample(
+    const GOSoundProvider *pipeProvider,
+    unsigned windchestN,
+    unsigned audioGroup,
     unsigned velocity,
     unsigned delay,
-    uint64_t last_stop);
+    uint64_t prevEventTime,
+    bool isRelease = false,
+    uint64_t *pStartTimeSamples = nullptr) {
+    return CreateTaskSample(
+      pipeProvider,
+      windchestN,
+      audioGroup,
+      velocity,
+      delay,
+      prevEventTime,
+      isRelease,
+      pStartTimeSamples);
+  }
+
+  inline GOSoundSampler *StartTremulantSample(
+    const GOSoundProvider *tremProvider,
+    unsigned tremulantN,
+    uint64_t prevEventTime) {
+    return CreateTaskSample(
+      tremProvider, -tremulantN, 0, 0x7f, 0, prevEventTime, false, nullptr);
+  }
+
   uint64_t StopSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void SwitchSample(const GOSoundProvider *pipe, GOSoundSampler *handle);
   void UpdateVelocity(
     const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity);
 
+  void GetEmptyAudioOutput(
+    unsigned outputIndex, unsigned nFrames, float *pOutputBuffer);
   void GetAudioOutput(
     float *output_buffer, unsigned n_frames, unsigned audio_output, bool last);
   void NextPeriod();

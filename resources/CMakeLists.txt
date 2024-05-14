@@ -1,21 +1,7 @@
-# GrandOrgue - free pipe organ simulator
-# 
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2019 GrandOrgue contributors (see AUTHORS)
-# 
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation; either version 2 of the
-# License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# License GPL-2.0 or later
+# (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 set(DEPLIST)
 
@@ -63,6 +49,13 @@ endforeach()
 # ========================
 # Install resources
 # ========================
+function(add_man_page EXECUTABLE_NAME)
+  ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_NAME}.1" COMMAND ${XSLTPROC} -o "${CMAKE_CURRENT_BINARY_DIR}/" ${DOCBOOK_PATH}/manpages/docbook.xsl "${CMAKE_CURRENT_SOURCE_DIR}/${EXECUTABLE_NAME}Man.xml" DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${EXECUTABLE_NAME}Man.xml)
+  LIST(APPEND DEPLIST "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_NAME}.1")
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_NAME}.1" DESTINATION share/man/man1)
+  set(DEPLIST ${DEPLIST} PARENT_SCOPE)
+endfunction()
+
 if (APPLE)
    ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.icns" COMMAND iconutil -c icns ${GENERATED_ICONS_DIR} DEPENDS ${GENERATED_ICONS})
    INSTALL(FILES "${RESOURCEDIR}/GrandOrgue.icns" DESTINATION "${RESOURCEINSTDIR}")
@@ -85,15 +78,18 @@ elseif(UNIX)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.desktop" DESTINATION share/applications)
 
   if(XSLTPROC AND DOCBOOK_PATH)
-    ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1" COMMAND ${XSLTPROC} -o "${CMAKE_CURRENT_BINARY_DIR}/" ${DOCBOOK_PATH}/manpages/docbook.xsl "${CMAKE_CURRENT_SOURCE_DIR}/man.xml" DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/man.xml)
-    LIST(APPEND DEPLIST "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1")
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.1" DESTINATION share/man/man1)
+    add_man_page(GrandOrgue)
+    add_man_page(GrandOrguePerfTest)
+    add_man_page(GrandOrgueTool)
   else()
     MESSAGE(STATUS "Not build manpage - some programs are missing")
   endif()
 
-  install(FILES GrandOrgue.appdata.xml DESTINATION share/metainfo)
-
+  string(TIMESTAMP TODAY "%Y-%m-%d")
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/GrandOrgue.appdata.xml.in" "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.appdata.xml/GrandOrgue.appdata.xml")
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.appdata.xml/GrandOrgue.appdata.xml" DESTINATION share/metainfo)
 endif()
+
+message(STATUS "DEPLIST=${DEPLIST}")
 
 ADD_CUSTOM_TARGET(resources ALL DEPENDS ${DEPLIST})

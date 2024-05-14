@@ -1,19 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOMemoryPool.h"
 
-#include <wx/file.h>
-#include <wx/intl.h>
-#include <wx/log.h>
-#include <wx/utils.h>
-
-#include "threading/GOMutexLocker.h"
-#include "threading/atomic.h"
 #ifdef __linux__
 #include <sys/mman.h>
 #endif
@@ -28,7 +21,14 @@
 #endif
 #include <errno.h>
 
-static inline void touchMemory(const char *pos) { load_once(*pos); }
+#include <wx/file.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/utils.h>
+
+#include "threading/GOMutexLocker.h"
+
+static inline void touchMemory(const char *pos) { *(const volatile char *)pos; }
 
 GOMemoryPool::GOMemoryPool()
   : m_PoolStart(0),
@@ -419,17 +419,17 @@ void GOMemoryPool::GrowPool(size_t length) {
   m_PoolEnd = m_PoolStart + m_PoolSize;
 }
 
-void GOMemoryPool::TouchMemory(bool &stop) {
+void GOMemoryPool::TouchMemory(std::atomic_bool &stop) {
   if (m_TouchCache) {
     for (int i = 0; m_TouchPos < m_CacheSize; m_TouchPos += m_PageSize, i++) {
       touchMemory(m_CacheStart + m_TouchPos);
-      if (load_once(stop) || i > 1000)
+      if (stop.load() || i > 1000)
         return;
     }
   } else {
     for (int i = 0; m_TouchPos < m_PoolSize; m_TouchPos += m_PageSize, i++) {
       touchMemory(m_PoolStart + m_TouchPos);
-      if (load_once(stop) || i > 1000)
+      if (stop.load() || i > 1000)
         return;
     }
   }

@@ -1,25 +1,28 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "config/GOConfigReader.h"
 
+#include <unordered_set>
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "GOBool3.h"
+#include "GOConfigReaderDB.h"
 #include "GOUtil.h"
-#include "config/GOConfigReaderDB.h"
 
-GOConfigReader::GOConfigReader(GOConfigReaderDB &cfg, bool strict)
-  : m_Strict(strict), m_Config(cfg) {}
+GOConfigReader::GOConfigReader(
+  GOConfigReaderDB &cfg, bool strict, bool hw1Check)
+  : m_Config(cfg), m_Strict(strict), m_IsHw1Check(hw1Check) {}
 
 bool GOConfigReader::Read(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
   wxString &value) {
   bool found = false;
@@ -61,10 +64,10 @@ bool GOConfigReader::Read(
 
 wxString GOConfigReader::ReadString(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value;
   bool found = Read(type, group, key, required, value);
 
@@ -74,16 +77,19 @@ wxString GOConfigReader::ReadString(
 }
 
 wxString GOConfigReader::ReadString(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadString(type, group, key, required, wxT(""));
 }
 
 wxString GOConfigReader::ReadStringTrim(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value = ReadString(type, group, key, required, defaultValue);
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
@@ -99,16 +105,19 @@ wxString GOConfigReader::ReadStringTrim(
 }
 
 wxString GOConfigReader::ReadStringTrim(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadStringTrim(type, group, key, required, wxT(""));
 }
 
 wxString GOConfigReader::ReadStringNotEmpty(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value = ReadString(type, group, key, required, defaultValue);
 
   if (value.Trim().length() == 0 && m_Strict) {
@@ -119,24 +128,44 @@ wxString GOConfigReader::ReadStringNotEmpty(
 }
 
 wxString GOConfigReader::ReadStringNotEmpty(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadStringNotEmpty(type, group, key, required, wxT(""));
 }
 
-bool GOConfigReader::ReadBoolean(
-  GOSettingType type, wxString group, wxString key, bool required) {
-  return ReadBoolean(type, group, key, required, false);
+wxString GOConfigReader::ReadFileName(
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
+  const wxString fileName = ReadStringTrim(type, group, key, required);
+
+  if (m_IsHw1Check && fileName.Find(wxT('/')) != wxNOT_FOUND) {
+    wxLogWarning(
+      _("Filename '%s' contains non-portable directory separator /"), fileName);
+  }
+  return fileName;
 }
 
 bool GOConfigReader::ReadBoolean(
   GOSettingType type,
-  wxString group,
-  wxString key,
-  bool required,
-  bool defaultValue) {
+  const wxString &group,
+  const wxString &key,
+  bool required) {
+  return ReadBoolean(type, group, key, required, false);
+}
+
+GOBool3 GOConfigReader::ReadBooleanTriple(
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   wxString value;
+
   if (!Read(type, group, key, required, value))
-    return defaultValue;
+    return BOOL3_DEFAULT;
 
   if (value.length() > 0 && value[value.length() - 1] == ' ') {
     if (m_Strict)
@@ -148,9 +177,9 @@ bool GOConfigReader::ReadBoolean(
     value.Trim();
   }
   if (value == wxT("Y") || value == wxT("y"))
-    return true;
+    return BOOL3_TRUE;
   if (value == wxT("N") || value == wxT("n"))
-    return false;
+    return BOOL3_FALSE;
   value.MakeUpper();
   wxLogWarning(
     _("Strange boolean value for section '%s' entry '%s': %s"),
@@ -158,9 +187,9 @@ bool GOConfigReader::ReadBoolean(
     key.c_str(),
     value.c_str());
   if (value.Length() && value[0] == wxT('Y'))
-    return true;
+    return BOOL3_TRUE;
   else if (value.Length() && value[0] == wxT('N'))
-    return false;
+    return BOOL3_FALSE;
 
   wxString error;
   error.Printf(
@@ -171,8 +200,20 @@ bool GOConfigReader::ReadBoolean(
   throw error;
 }
 
+bool GOConfigReader::ReadBoolean(
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required,
+  bool defaultValue) {
+  return to_bool(ReadBooleanTriple(type, group, key, required), defaultValue);
+}
+
 GOLogicalColour GOConfigReader::ReadColor(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadColor(type, group, key, required, wxT("BLACK"));
 }
 
@@ -229,10 +270,10 @@ bool parseColor(GOLogicalColour &result, wxString value) {
 
 GOLogicalColour GOConfigReader::ReadColor(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value;
   if (!Read(type, group, key, required, value))
     value = defaultValue;
@@ -249,39 +290,39 @@ GOLogicalColour GOConfigReader::ReadColor(
   value.MakeUpper();
 
   if (value == wxT("BLACK"))
-    return GOLogicalColour(0x00, 0x00, 0x00);
+    return GOLogicalColour::BLACK;
   else if (value == wxT("BLUE"))
-    return GOLogicalColour(0x00, 0x00, 0xFF);
+    return GOLogicalColour::BLUE;
   else if (value == wxT("DARK BLUE"))
-    return GOLogicalColour(0x00, 0x00, 0x80);
+    return GOLogicalColour::DARK_BLUE;
   else if (value == wxT("GREEN"))
-    return GOLogicalColour(0x00, 0xFF, 0x00);
+    return GOLogicalColour::GREEN;
   else if (value == wxT("DARK GREEN"))
-    return GOLogicalColour(0x00, 0x80, 0x00);
+    return GOLogicalColour::DARK_GREEN;
   else if (value == wxT("CYAN"))
-    return GOLogicalColour(0x00, 0xFF, 0xFF);
+    return GOLogicalColour::CYAN;
   else if (value == wxT("DARK CYAN"))
-    return GOLogicalColour(0x00, 0x80, 0x80);
+    return GOLogicalColour::DARK_CYAN;
   else if (value == wxT("RED"))
-    return GOLogicalColour(0xFF, 0x00, 0x00);
+    return GOLogicalColour::RED;
   else if (value == wxT("DARK RED"))
-    return GOLogicalColour(0x80, 0x00, 0x00);
+    return GOLogicalColour::DARK_RED;
   else if (value == wxT("MAGENTA"))
-    return GOLogicalColour(0xFF, 0x00, 0xFF);
+    return GOLogicalColour::MAGENTA;
   else if (value == wxT("DARK MAGENTA"))
-    return GOLogicalColour(0x80, 0x00, 0x80);
+    return GOLogicalColour::DARK_MAGENTA;
   else if (value == wxT("YELLOW"))
-    return GOLogicalColour(0xFF, 0xFF, 0x00);
+    return GOLogicalColour::YELLOW;
   else if (value == wxT("DARK YELLOW"))
-    return GOLogicalColour(0x80, 0x80, 0x00);
+    return GOLogicalColour::DARK_YELLOW;
   else if (value == wxT("LIGHT GREY"))
-    return GOLogicalColour(0xC0, 0xC0, 0xC0);
+    return GOLogicalColour::LIGHT_GREY;
   else if (value == wxT("DARK GREY"))
-    return GOLogicalColour(0x80, 0x80, 0x80);
+    return GOLogicalColour::DARK_GREY;
   else if (value == wxT("WHITE"))
-    return GOLogicalColour(0xFF, 0xFF, 0xFF);
+    return GOLogicalColour::WHITE;
   else if (value == wxT("BROWN"))
-    return GOLogicalColour(0xA5, 0x2A, 0x2A);
+    return GOLogicalColour::BROWN;
 
   GOLogicalColour colour;
   if (parseColor(colour, value))
@@ -298,8 +339,8 @@ GOLogicalColour GOConfigReader::ReadColor(
 
 int GOConfigReader::ReadInteger(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required) {
@@ -308,8 +349,8 @@ int GOConfigReader::ReadInteger(
 
 int GOConfigReader::ReadInteger(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required,
@@ -350,22 +391,28 @@ int GOConfigReader::ReadInteger(
       value.c_str());
   }
 
-  if (nmin <= retval && retval <= nmax)
-    return retval;
-
-  wxString error;
-  error.Printf(
-    _("Out of range value at section '%s' entry '%s': %d"),
-    group.c_str(),
-    key.c_str(),
-    retval);
-  throw error;
+  if (retval < nmin || retval > nmax) {
+    if (type == ODFSetting)
+      throw wxString::Format(
+        _("Out of range value at section '%s' entry '%s': %ld"),
+        group,
+        key,
+        retval);
+    wxLogError(
+      _("Out of range value at section '%s' entry '%s': %ld. Assumed %d"),
+      group,
+      key,
+      retval,
+      defaultValue);
+    retval = defaultValue;
+  }
+  return retval;
 }
 
 int GOConfigReader::ReadLong(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required) {
@@ -374,8 +421,8 @@ int GOConfigReader::ReadLong(
 
 int GOConfigReader::ReadLong(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   int nmin,
   int nmax,
   bool required,
@@ -385,8 +432,8 @@ int GOConfigReader::ReadLong(
 
 double GOConfigReader::ReadFloat(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   double nmin,
   double nmax,
   bool required) {
@@ -395,8 +442,8 @@ double GOConfigReader::ReadFloat(
 
 double GOConfigReader::ReadFloat(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   double nmin,
   double nmax,
   bool required,
@@ -431,22 +478,28 @@ double GOConfigReader::ReadFloat(
     throw error;
   }
 
-  if (nmin <= retval && retval <= nmax)
-    return retval;
-
-  wxString error;
-  error.Printf(
-    _("Out of range value at section '%s' entry '%s': %f"),
-    group.c_str(),
-    key.c_str(),
-    retval);
-  throw error;
+  if (retval < nmin || retval > nmax) {
+    if (type == ODFSetting)
+      throw wxString::Format(
+        _("Out of range value at section '%s' entry '%s': %f"),
+        group,
+        key,
+        retval);
+    wxLogError(
+      _("Out of range value at section '%s' entry '%s': %f. Assumed %f."),
+      group,
+      key,
+      retval,
+      defaultValue);
+    retval = defaultValue;
+  }
+  return retval;
 }
 
 unsigned GOConfigReader::ReadSize(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   unsigned size_type,
   bool required) {
   return ReadSize(type, group, key, size_type, required, wxT("SMALL"));
@@ -454,11 +507,11 @@ unsigned GOConfigReader::ReadSize(
 
 unsigned GOConfigReader::ReadSize(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   unsigned size_type,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   static const int sizes[2][4]
     = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
   wxString value;
@@ -488,7 +541,7 @@ unsigned GOConfigReader::ReadSize(
 
   long size;
   if (parseLong(size, value))
-    if (100 <= size && size <= 4000)
+    if (100 <= size && size <= 32000)
       return size;
 
   wxString error;
@@ -501,16 +554,19 @@ unsigned GOConfigReader::ReadSize(
 }
 
 unsigned GOConfigReader::ReadFontSize(
-  GOSettingType type, wxString group, wxString key, bool required) {
+  GOSettingType type,
+  const wxString &group,
+  const wxString &key,
+  bool required) {
   return ReadFontSize(type, group, key, required, wxT("NORMAL"));
 }
 
 unsigned GOConfigReader::ReadFontSize(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   bool required,
-  wxString defaultValue) {
+  const wxString &defaultValue) {
   wxString value;
   if (!Read(type, group, key, required, value))
     value = defaultValue;
@@ -549,8 +605,8 @@ unsigned GOConfigReader::ReadFontSize(
 
 int GOConfigReader::ReadEnum(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   const struct IniFileEnumEntry *entry,
   unsigned count,
   bool required,
@@ -592,10 +648,16 @@ int GOConfigReader::ReadEnum(
 
 int GOConfigReader::ReadEnum(
   GOSettingType type,
-  wxString group,
-  wxString key,
+  const wxString &group,
+  const wxString &key,
   const struct IniFileEnumEntry *entry,
   unsigned count,
   bool required) {
   return ReadEnum(type, group, key, entry, count, required, entry[0].value);
+}
+
+void GOConfigReader::MarkGroupInUse(const wxString &group) {
+  if (m_GroupsInUse.find(group) != m_GroupsInUse.end())
+    throw wxString::Format(_("Section %s already in use"), group);
+  m_GroupsInUse.insert(group);
 }

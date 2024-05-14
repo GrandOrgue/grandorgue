@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,14 +12,15 @@
 #include <wx/log.h>
 #include <wx/stopwatch.h>
 
-#include "GODefinitionFile.h"
-#include "GOEvent.h"
-#include "GOMidi.h"
-#include "GOPath.h"
-#include "GOSetterButton.h"
 #include "config/GOConfig.h"
+#include "control/GOCallbackButtonControl.h"
 #include "midi/GOMidiEvent.h"
 #include "midi/GOMidiFile.h"
+
+#include "GOEvent.h"
+#include "GOMidi.h"
+#include "GOOrganController.h"
+#include "GOPath.h"
 
 enum {
   ID_MIDI_RECORDER_RECORD = 0,
@@ -27,24 +28,28 @@ enum {
   ID_MIDI_RECORDER_RECORD_RENAME,
 };
 
-const struct ElementListEntry GOMidiRecorder::m_element_types[] = {
-  {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true},
-  {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true},
-  {wxT("MidiRecorderRecordRename"),
-   ID_MIDI_RECORDER_RECORD_RENAME,
-   false,
-   true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOMidiRecorder::m_element_types[]
+  = {
+    {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true, false},
+    {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true, false},
+    {wxT("MidiRecorderRecordRename"),
+     ID_MIDI_RECORDER_RECORD_RENAME,
+     false,
+     true,
+     false},
+    {wxT(""), -1, false, false, false},
 };
 
-const struct ElementListEntry *GOMidiRecorder::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOMidiRecorder::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 
-GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
-  : m_organfile(organfile),
-    m_Map(organfile->GetSettings().GetMidiMap()),
-    m_RecordingTime(organfile),
+GOMidiRecorder::GOMidiRecorder(GOOrganController *organController)
+  : m_OrganController(organController),
+    m_Map(organController->GetSettings().GetMidiMap()),
+    m_RecordingTime(organController),
     m_RecordSeconds(0),
     m_NextChannel(0),
     m_NextNRPN(0),
@@ -57,7 +62,7 @@ GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
     m_BufferPos(0),
     m_FileLength(0),
     m_Last(0) {
-  CreateButtons(m_organfile);
+  CreateButtons(*m_OrganController);
   Clear();
   UpdateDisplay();
 }
@@ -65,16 +70,16 @@ GOMidiRecorder::GOMidiRecorder(GODefinitionFile *organfile)
 GOMidiRecorder::~GOMidiRecorder() { StopRecording(); }
 
 void GOMidiRecorder::Load(GOConfigReader &cfg) {
-  m_button[ID_MIDI_RECORDER_RECORD]->Init(
+  m_buttons[ID_MIDI_RECORDER_RECORD]->Init(
     cfg, wxT("MidiRecorderRecord"), _("REC"));
-  m_button[ID_MIDI_RECORDER_STOP]->Init(
+  m_buttons[ID_MIDI_RECORDER_STOP]->Init(
     cfg, wxT("MidiRecorderStop"), _("STOP"));
-  m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Init(
+  m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Init(
     cfg, wxT("MidiRecorderRecordRename"), _("REC File"));
   m_RecordingTime.Init(cfg, wxT("MidiRecordTime"), _("MIDI recording time"));
 }
 
-void GOMidiRecorder::ButtonChanged(int id) {
+void GOMidiRecorder::ButtonStateChanged(int id, bool newState) {
   switch (id) {
   case ID_MIDI_RECORDER_STOP:
     StopRecording();
@@ -97,7 +102,7 @@ void GOMidiRecorder::SetOutputDevice(const wxString &device_id) {
 void GOMidiRecorder::SendEvent(GOMidiEvent &e) {
   e.SetDevice(m_OutputDevice);
   if (m_OutputDevice)
-    m_organfile->SendMidiMessage(e);
+    m_OrganController->SendMidiMessage(e);
   if (IsRecording())
     WriteEvent(e);
 }
@@ -109,7 +114,7 @@ void GOMidiRecorder::Clear() {
   m_NextNRPN = 0;
 
   GOMidiEvent e;
-  e.SetMidiType(MIDI_SYSEX_GO_CLEAR);
+  e.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_CLEAR);
   e.SetTime(wxGetLocalTimeMillis());
   SendEvent(e);
 }
@@ -126,7 +131,7 @@ void GOMidiRecorder::PreconfigureMapping(
     if (m_Preconfig[i].elementID == ref) {
       GOMidiEvent e1;
       e1.SetTime(wxGetLocalTimeMillis());
-      e1.SetMidiType(MIDI_SYSEX_GO_SETUP);
+      e1.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_SETUP);
       e1.SetKey(id);
       e1.SetChannel(m_Preconfig[i].channel);
       e1.SetValue(m_Preconfig[i].key);
@@ -160,7 +165,7 @@ void GOMidiRecorder::PreconfigureMapping(
 
   GOMidiEvent e1;
   e1.SetTime(wxGetLocalTimeMillis());
-  e1.SetMidiType(MIDI_SYSEX_GO_SETUP);
+  e1.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_SETUP);
   e1.SetKey(id);
   e1.SetChannel(m.channel);
   e1.SetValue(m.key);
@@ -174,7 +179,7 @@ void GOMidiRecorder::PreconfigureMapping(
 void GOMidiRecorder::SetSamplesetId(unsigned id1, unsigned id2) {
   GOMidiEvent e1;
   e1.SetTime(wxGetLocalTimeMillis());
-  e1.SetMidiType(MIDI_SYSEX_GO_SAMPLESET);
+  e1.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_SAMPLESET);
   e1.SetKey(id1);
   e1.SetValue(id2);
   SendEvent(e1);
@@ -204,7 +209,7 @@ bool GOMidiRecorder::SetupMapping(unsigned element, bool isNRPN) {
     }
     GOMidiEvent e1;
     e1.SetTime(wxGetLocalTimeMillis());
-    e1.SetMidiType(MIDI_SYSEX_GO_SETUP);
+    e1.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_SETUP);
     e1.SetKey(m_Mappings[element].elementID);
     e1.SetChannel(m_Mappings[element].channel);
     e1.SetValue(m_Mappings[element].key);
@@ -216,12 +221,12 @@ bool GOMidiRecorder::SetupMapping(unsigned element, bool isNRPN) {
 void GOMidiRecorder::SendMidiRecorderMessage(GOMidiEvent &e) {
   if (!m_OutputDevice && !IsRecording())
     return;
-  if (!SetupMapping(e.GetDevice(), e.GetMidiType() == MIDI_NRPN))
+  if (!SetupMapping(e.GetDevice(), e.GetMidiType() == GOMidiEvent::MIDI_NRPN))
     return;
 
   e.SetTime(wxGetLocalTimeMillis());
   e.SetChannel(m_Mappings[e.GetDevice()].channel);
-  if (e.GetMidiType() == MIDI_NRPN)
+  if (e.GetMidiType() == GOMidiEvent::MIDI_NRPN)
     e.SetKey(m_Mappings[e.GetDevice()].key);
 
   SendEvent(e);
@@ -297,9 +302,9 @@ void GOMidiRecorder::UpdateDisplay() {
 }
 
 void GOMidiRecorder::StopRecording() {
-  m_button[ID_MIDI_RECORDER_RECORD]->Display(false);
-  m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
-  m_organfile->DeleteTimer(this);
+  m_buttons[ID_MIDI_RECORDER_RECORD]->Display(false);
+  m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(false);
+  m_OrganController->DeleteTimer(this);
   if (!IsRecording())
     return;
   const unsigned char end[4] = {0x01, 0xFF, 0x2F, 0x00};
@@ -317,7 +322,7 @@ void GOMidiRecorder::StopRecording() {
   } else
     GOAskRenameFile(
       m_Filename,
-      m_organfile->GetSettings().MidiRecorderPath(),
+      m_OrganController->GetSettings().MidiRecorderPath(),
       _("MIDI files (*.mid)|*.mid"));
   UpdateDisplay();
 }
@@ -327,10 +332,10 @@ void GOMidiRecorder::StartRecording(bool rename) {
   MIDIFileHeader t = {{'M', 'T', 'r', 'k'}, 0};
 
   StopRecording();
-  if (!m_organfile)
+  if (!m_OrganController)
     return;
 
-  m_Filename = m_organfile->GetSettings().MidiRecorderPath()
+  m_Filename = m_OrganController->GetSettings().MidiRecorderPath()
     + wxFileName::GetPathSeparator()
     + wxDateTime::UNow().Format(_("%Y-%m-%d-%H-%M-%S.%l.mid"));
   m_DoRename = rename;
@@ -346,7 +351,7 @@ void GOMidiRecorder::StartRecording(bool rename) {
   Write(&h, sizeof(h));
   Write(&t, sizeof(t));
 
-  wxString s = m_organfile->GetChurchName();
+  wxString s = m_OrganController->GetChurchName();
   wxCharBuffer b = s.ToAscii();
   unsigned len = s.length();
   unsigned char th[] = {0x00, 0xFF, 0x04};
@@ -356,21 +361,22 @@ void GOMidiRecorder::StartRecording(bool rename) {
 
   m_Last = wxGetLocalTimeMillis();
   if (m_DoRename)
-    m_button[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
+    m_buttons[ID_MIDI_RECORDER_RECORD_RENAME]->Display(true);
   else
-    m_button[ID_MIDI_RECORDER_RECORD]->Display(true);
-  m_organfile->PrepareRecording();
+    m_buttons[ID_MIDI_RECORDER_RECORD]->Display(true);
+  m_OrganController->PrepareRecording();
 
   m_RecordSeconds = 0;
   UpdateDisplay();
-  m_organfile->SetRelativeTimer(1000, this, 1000);
+  m_OrganController->SetRelativeTimer(1000, this, 1000);
 }
 
 GOEnclosure *GOMidiRecorder::GetEnclosure(const wxString &name, bool is_panel) {
   return NULL;
 }
 
-GOLabel *GOMidiRecorder::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOMidiRecorder::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!--
+  GrandOrgue - free pipe organ simulator
+
+  Copyright 2006 Milan Digital Audio LLC
+  Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+  License GPL-2.0 or later
+  (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+-->
+<refentry lang="en">
+  <refentryinfo>
+    <title>GrandOrgue man page</title>
+    <author>
+      <surname>GrandOrgue contributors (see AUTHORS)</surname>
+    </author>
+    <productname>GrandOrgue</productname>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>GrandOrgue</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <title>NAME</title>
+    <refname>GrandOrgue</refname>
+    <refentrytitle>
+      <command>GrandOrgue</command>
+    </refentrytitle>
+    <refpurpose>Virtual Pipe Organ Software</refpurpose>
+    <manvolnum>1</manvolnum>
+  </refnamediv>
+  <refsynopsisdiv>
+    <title>SYNOPSIS</title>
+    <cmdsynopsis>
+      <command>GrandOrgue</command>
+      <arg choice="opt">
+        <option>-h</option>
+      </arg>
+      <arg choice="opt">
+        <option>-i <replaceable>str</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <replaceable>organ-file</replaceable>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>DESCRIPTION</title>
+    <para>
+GrandOrgue is a virtual pipe organ sample player application supporting
+a HW1 compatible file format. The online help system provides detailed information and
+describes the file format.
+</para>
+  </refsect1>
+  <refsect1>
+    <title>OPTIONS</title>
+    <para>
+It is possible to pass the path to one organ file.
+</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>-h</option>, <option>--help</option></term>
+        <listitem>
+          <para>
+display usage message
+</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-i <parameter>str</parameter></option>, <option>--instance=<parameter>str</parameter></option></term>
+        <listitem>
+          <para>
+specify GrandOrgue instance name
+</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>

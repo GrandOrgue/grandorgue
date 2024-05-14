@@ -1,14 +1,14 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOGUIControl.h"
 
-#include "GODefinitionFile.h"
 #include "GOGUIPanel.h"
+#include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 
 GOGUIControl::GOGUIControl(GOGUIPanel *panel, void *control)

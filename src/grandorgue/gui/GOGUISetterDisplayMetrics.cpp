@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,12 +9,13 @@
 
 #include <algorithm>
 
-#include "GODefinitionFile.h"
-#include "GOManual.h"
 #include "config/GOConfigReader.h"
+#include "model/GOManual.h"
+
+#include "GOOrganController.h"
 
 GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
-  GOConfigReader &ini, GODefinitionFile *organfile, GOGUISetterType type)
+  GOConfigReader &ini, GOOrganController *organController, GOGUISetterType type)
   : GOGUIDisplayMetrics() {
   unsigned x_size, y_size;
   int drawstop_rows, drawstop_cols;
@@ -23,8 +24,8 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
   switch (type) {
   case GOGUI_SETTER_SETTER:
     x_size = 800;
-    y_size = 300;
-    drawstop_rows = 3;
+    y_size = 360;
+    drawstop_rows = 4;
     drawstop_cols = 10;
     button_cols = 10;
     button_rows = 0;
@@ -40,32 +41,33 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
     break;
 
   case GOGUI_SETTER_DIVISIONALS:
-    x_size = 600;
-    y_size = 40 * organfile->GetODFManualCount() + 140;
+    x_size = 720;
+    y_size = 40 * organController->GetODFManualCount() + 140;
     drawstop_rows = 1;
     drawstop_cols = 7;
-    button_cols = 13;
-    button_rows = organfile->GetODFManualCount();
+    button_cols = 16;
+    button_rows = organController->GetODFManualCount();
     break;
 
   case GOGUI_SETTER_COUPLER:
-    x_size = 500;
-    y_size = 20 + 80 * organfile->GetODFManualCount();
-    drawstop_rows = organfile->GetODFManualCount();
-    drawstop_cols = 6;
-    button_cols = 10;
+    x_size = 600;
+    y_size = 20 + 80 * organController->GetODFManualCount();
+    drawstop_rows = organController->GetODFManualCount();
+    drawstop_cols = 7;
+    button_cols = 0;
     button_rows = 0;
     break;
 
   case GOGUI_SETTER_FLOATING:
-    x_size = 40
+    x_size
+      = 40
       + std::max(
-               10
-                 * organfile->GetManual(organfile->GetODFManualCount())
-                     ->GetLogicalKeyCount(),
-               (unsigned)10 * 40);
-    y_size = (organfile->GetManualAndPedalCount()
-              - organfile->GetODFManualCount() + 1)
+          10
+            * organController->GetManual(organController->GetODFManualCount())
+                ->GetLogicalKeyCount(),
+          (unsigned)10 * 40);
+    y_size = (organController->GetManualAndPedalCount()
+              - organController->GetODFManualCount() + 1)
         * 60
       + 160;
     drawstop_rows = 0;

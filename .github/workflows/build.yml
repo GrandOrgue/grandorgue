@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4.1.1
 
     - name: Set git tags and compose RELNOTES.md
       shell: bash
@@ -27,7 +27,7 @@ jobs:
       shell: bash
       run: |
         [[ -e RELNOTES.md ]] && RELNOTES_FILE=RELNOTES.md
-        echo "::set-output name=file::$RELNOTES_FILE"
+        echo "file=$RELNOTES_FILE" >>$GITHUB_OUTPUT
 
     - name: Calculate versions
       id: vers
@@ -44,10 +44,10 @@ jobs:
           RELEASE_FLAG=ON
         fi
 
-        echo "::set-output name=project_ver::$PROJECT_VERSION"
-        echo "::set-output name=build_ver::$BUILD_VERSION"
-        echo "::set-output name=full_ver::$PROJECT_VERSION-$BUILD_VERSION"
-        echo "::set-output name=release_flag::$RELEASE_FLAG"
+        echo "project_ver=$PROJECT_VERSION" >>$GITHUB_OUTPUT
+        echo "build_ver=$BUILD_VERSION" >>$GITHUB_OUTPUT
+        echo "full_ver=$PROJECT_VERSION-$BUILD_VERSION" >>$GITHUB_OUTPUT
+        echo "release_flag=$RELEASE_FLAG" >>$GITHUB_OUTPUT
 
     - name: Display versions
       run: |
@@ -75,51 +75,74 @@ jobs:
     strategy:
       matrix:
         include:
-          - run_on: ubuntu-18.04
+          - run_on: ubuntu-20.04
             for: linux
-            prepare: "debian-ubuntu"
+            prepare: "debian-based"
             build_on: linux
 
-          - run_on: ubuntu-18.04
+          - run_on: ubuntu-20.04
+            for: linux
+            prepare: "debian-based"
+            build_on: linux
+            pkg_suffix: wx32
+
+          - run_on: ubuntu-20.04
+            for: appimage-x86_64
+            prepare: "debian-based"
+            build_on: linux
+
+          - run_on: ubuntu-20.04
             for: linux-armhf
-            prepare: "ubuntu-18"
+            prepare: "debian-based"
             build_on: linux
     
-          - run_on: ubuntu-18.04
+          - run_on: ubuntu-20.04
+            for: linux-armhf
+            prepare: "debian-based"
+            build_on: linux
+            pkg_suffix: wx32
+
+          - run_on: ubuntu-20.04
             for: linux-aarch64
-            prepare: "ubuntu-18"
+            prepare: "debian-based"
             build_on: linux
 
-          - run_on: macos-10.15
+          - run_on: ubuntu-20.04
+            for: linux-aarch64
+            prepare: "debian-based"
+            build_on: linux
+            pkg_suffix: wx32
+
+          - run_on: macos-12 # x86_64
+            for: osx
+            prepare: osx
+            build_on: osx
+
+          - run_on: macos-14 # arm64
             for: osx
             prepare: osx
             build_on: osx
 
           - run_on: ubuntu-latest
             for: win64
-            prepare: ubuntu-20
-            build_on: linux
-
-          - run_on: ubuntu-18.04
-            for: appimage-x86_64
-            prepare: "debian-ubuntu"
+            prepare: "debian-based"
             build_on: linux
 
     runs-on: ${{ matrix.run_on }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4.1.1
       with:
         submodules: true
     
     - name: Install Dependencies
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh
+      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.pkg_suffix }}"
       
     - name: Build
       working-directory: ${{github.workspace}}
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}}
+      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh ${{needs.calc_ver.outputs.project_ver}} ${{needs.calc_ver.outputs.build_ver}} ${{github.workspace}} "${{ matrix.pkg_suffix }}"
 
     - name: Upload result
-      uses: nanoufo/action-upload-artifacts-and-release-assets@v1.4
+      uses: nanoufo/action-upload-artifacts-and-release-assets@v2
       with:
         path: |
           ${{github.workspace}}/build/${{ matrix.for }}/grandorgue*${{needs.calc_ver.outputs.full_ver}}*

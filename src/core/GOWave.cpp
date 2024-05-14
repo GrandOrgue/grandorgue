@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,7 +11,8 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "GOFile.h"
+#include "files/GOOpenedFile.h"
+
 #include "GOWavPack.h"
 #include "GOWavPackWriter.h"
 #include "GOWaveTypes.h"
@@ -103,9 +104,9 @@ void GOWave::LoadSamplerChunk(const uint8_t *ptr, unsigned long length) {
     = (GO_WAVESAMPLERLOOP *)(ptr + sizeof(GO_WAVESAMPLERCHUNK));
   m_Loops.clear();
   for (unsigned k = 0; k < numberOfLoops; k++) {
-    GO_WAVE_LOOP l;
-    l.start_sample = loops[k].dwStart;
-    l.end_sample = loops[k].dwEnd;
+    GOWaveLoop l;
+    l.m_StartPosition = loops[k].dwStart;
+    l.m_EndPosition = loops[k].dwEnd;
     m_Loops.push_back(l);
   }
 
@@ -113,7 +114,7 @@ void GOWave::LoadSamplerChunk(const uint8_t *ptr, unsigned long length) {
   m_PitchFract = sampler->dwMIDIPitchFraction / (double)UINT_MAX * 100.0;
 }
 
-void GOWave::Open(GOFile *file) {
+void GOWave::Open(GOOpenedFile *file) {
   const wxString fileName = file->GetName();
 
   if (!file->Open())
@@ -127,6 +128,30 @@ void GOWave::Open(GOFile *file) {
 
   file->Close();
   Open(content, fileName);
+}
+
+static void check_for_bounds(
+  const wxString &fileName,
+  GO_WAVECHUNKHEADER *pHeader,
+  unsigned long offset,
+  unsigned long length,
+  unsigned long chunkOffset) {
+  unsigned long size = pHeader->dwSize;
+
+  if (offset + size > length) {
+    char buf[5];
+
+    strncpy(buf, (const char *)&pHeader->fccChunk, 4);
+    buf[4] = '\x00';
+    throw wxString::Format(
+      _("Malformed wave file '%s'. The chunk '%4s' at %lu with the size 8 + %lu"
+        " ends after the end of file %lu"),
+      fileName,
+      buf,
+      chunkOffset,
+      size,
+      length);
+  }
 }
 
 void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
@@ -196,12 +221,15 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
       /* Read chunk header */
       GO_WAVECHUNKHEADER *header = (GO_WAVECHUNKHEADER *)(ptr + offset);
       unsigned long size = header->dwSize;
+      unsigned long chunkOffset = offset;
+
+      // skip the header
       offset += sizeof(GO_WAVECHUNKHEADER);
 
       if (header->fccChunk == WAVE_TYPE_DATA) {
         if (!hasFormat)
           throw wxString::Format(
-            _("Malformed wave file '%s'. Format chunk must preceed data "
+            _("Malformed wave file '%s'. Format chunk must precede data "
               "chunk."),
             fileName);
 
@@ -209,22 +237,30 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
           size = 0;
         else {
           m_SampleData.free();
+          check_for_bounds(fileName, header, offset, length, chunkOffset);
           m_SampleData.Append(ptr + offset, size);
         }
       }
       if (header->fccChunk == WAVE_TYPE_FMT) {
         hasFormat = true;
+        check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadFormatChunk(ptr + offset, size);
       }
-      if (header->fccChunk == WAVE_TYPE_CUE) /* This used to only work if !load
-                                                m_pipe_percussive[i] */
+      if (header->fccChunk == WAVE_TYPE_CUE) { /* This used to only work if
+                                                !load m_pipe_percussive[i] */
+        check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadCueChunk(ptr + offset, size);
-      if (header->fccChunk == WAVE_TYPE_SAMPLE) /* This used to only work if
+      }
+      if (header->fccChunk == WAVE_TYPE_SAMPLE) { /* This used to only work if
                                                    !load m_pipe_percussive[i] */
+        check_for_bounds(fileName, header, offset, length, chunkOffset);
         LoadSamplerChunk(ptr + offset, size);
-
-      /* Move to next chunk respecting word alignment */
-      offset += size + (size & 1);
+      }
+      /* Move to next chunk respecting word alignment
+         Unless lack of final padding (non spec-compliant) */
+      offset += size;
+      if (offset < length)
+        offset += size & 1;
     }
 
     if (offset != length)
@@ -236,22 +272,14 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
     // be correct!
     for (unsigned int i = 0; i < m_Loops.size(); i++) {
       if (
-        (m_Loops[i].start_sample >= m_Loops[i].end_sample)
-        || (m_Loops[i].start_sample >= GetLength())
-        || (m_Loops[i].end_sample >= GetLength())
-        || (m_Loops[i].end_sample == 0)) {
+        (m_Loops[i].m_StartPosition >= m_Loops[i].m_EndPosition)
+        || (m_Loops[i].m_StartPosition >= GetLength())
+        || (m_Loops[i].m_EndPosition >= GetLength())
+        || (m_Loops[i].m_EndPosition == 0)) {
         wxLogError(_("Invalid loop in the file: %s\n"), fileName);
         m_Loops.erase(m_Loops.begin() + i);
       }
     }
-  } catch (wxString msg) {
-    wxLogError(_("unhandled exception: %s\n"), msg);
-
-    /* Free any memory that was allocated by chunk loading procedures */
-    Close();
-
-    /* Rethrow the exception */
-    throw;
   } catch (...) {
     /* Free any memory that was allocated by chunk loading procedures */
     Close();
@@ -282,17 +310,17 @@ unsigned GOWave::GetReleaseMarkerPosition() const {
   return m_CuePoint;
 }
 
-const GO_WAVE_LOOP &GOWave::GetLongestLoop() const {
+const GOWaveLoop &GOWave::GetLongestLoop() const {
   if (m_Loops.size() < 1)
     throw(wxString) _("wave does not contain loops");
 
-  assert(m_Loops[0].end_sample > m_Loops[0].start_sample);
+  assert(m_Loops[0].m_EndPosition > m_Loops[0].m_StartPosition);
   unsigned lidx = 0;
   for (unsigned int i = 1; i < m_Loops.size(); i++) {
-    assert(m_Loops[i].end_sample > m_Loops[i].start_sample);
+    assert(m_Loops[i].m_EndPosition > m_Loops[i].m_StartPosition);
     if (
-      (m_Loops[i].end_sample - m_Loops[i].start_sample)
-      > (m_Loops[lidx].end_sample - m_Loops[lidx].start_sample))
+      (m_Loops[i].m_EndPosition - m_Loops[i].m_StartPosition)
+      > (m_Loops[lidx].m_EndPosition - m_Loops[lidx].m_StartPosition))
       lidx = i;
   }
 
@@ -459,7 +487,7 @@ void GOWave::ReadSamples(
 
 unsigned GOWave::GetNbLoops() const { return m_Loops.size(); }
 
-const GO_WAVE_LOOP &GOWave::GetLoop(unsigned idx) const {
+const GOWaveLoop &GOWave::GetLoop(unsigned idx) const {
   assert(idx < m_Loops.size());
   return m_Loops[idx];
 }
@@ -527,8 +555,8 @@ bool GOWave::Save(GOBuffer<uint8_t> &buf) {
     for (unsigned i = 0; i < m_Loops.size(); i++) {
       loop.dwIdentifier = i;
       loop.dwType = 0;
-      loop.dwStart = m_Loops[i].start_sample;
-      loop.dwEnd = m_Loops[i].end_sample;
+      loop.dwStart = m_Loops[i].m_StartPosition;
+      loop.dwEnd = m_Loops[i].m_EndPosition;
       loop.dwFraction = 0;
       loop.dwPlayCount = 0;
       loops.Append((const uint8_t *)&loop, sizeof(loop));

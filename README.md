@@ -6,7 +6,7 @@
 
 GrandOrgue is a sample based pipe organ simulator.
 
-It currently supports Linux, Windows and OS X. Porting to other OS supported by RtMidi, RtAudio and wxWidgets should be possible with some build system adjustments.
+It currently supports Linux, Windows and macOS. Porting to other OS supported by RtMidi, RtAudio and wxWidgets should be possible with some build system adjustments.
 
 ## Home page and resources
 GrandOrgue is hosted on Github. The repository can be found at [https://github.com/GrandOrgue/grandorgue](https://github.com/GrandOrgue/grandorgue).

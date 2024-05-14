@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -48,7 +48,7 @@ public:
   GOMemoryPool();
   ~GOMemoryPool();
   void SetMemoryLimit(size_t limit);
-  void TouchMemory(bool &stop);
+  void TouchMemory(std::atomic_bool &stop);
 
   void *Alloc(size_t length, bool final);
   void *MoveToPool(void *data, size_t length);

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,47 +12,45 @@
 
 #include <wx/propdlg.h>
 
-#include "GODialogCloser.h"
+#include "GODialog.h"
 
 class wxBookCtrlBase;
 class wxPanel;
-class wxSizer;
 
 class GODialogTab;
 
-class GOTabbedDialog : public wxPropertySheetDialog, public GODialogCloser {
+class GOTabbedDialog : public GODialog<wxPropertySheetDialog> {
 private:
-  const wxString m_name;
   std::vector<wxString> m_TabNames;
   wxBookCtrlBase *p_book;
-  wxSizer *p_ButtonSizer;
-
-  void OnHelp(wxCommandEvent &event);
 
 protected:
   GOTabbedDialog(
     wxWindow *win,
     const wxString &name,  // not translated
     const wxString &title, // translated
+    GODialogSizeSet &dialogSizes,
+    const wxString dialogSelector,
     long addStyle = 0);
-
-  wxSizer *GetButtonSizer() const { return p_ButtonSizer; }
 
   void AddTab(wxPanel *tab, const wxString &tabName, const wxString &tabTitle);
   void AddTab(GODialogTab *tab);
 
+  void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
+  void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const override;
+
 public:
   const wxString &GetCurrTabName() const;
-
   wxBookCtrlBase *GetBook() const { return p_book; }
+
+  const wxString &GetHelpSuffix() const override { return GetCurrTabName(); }
 
   void NavigateToTab(const wxString &tabName);
 
   virtual bool TransferDataToWindow() override;
   virtual bool Validate() override;
   virtual bool TransferDataFromWindow() override;
-
-  DECLARE_EVENT_TABLE()
 };
 
 #endif /* GOTABBEDDIALOG_H */

@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -23,7 +23,6 @@
 #define GOAPP_H
 
 #include <wx/app.h>
-#include <wx/cmdline.h>
 
 class GOFrame;
 class GOLog;
@@ -35,11 +34,12 @@ private:
   bool m_Restart;
 
   virtual void MacOpenFile(const wxString &fileName);
+  void OnInitCmdLine(wxCmdLineParser &parser);
+  bool OnCmdLineParsed(wxCmdLineParser &parser);
   bool OnInit();
   int OnRun();
   int OnExit();
-  void OnInitCmdLine(wxCmdLineParser &parser);
-  bool OnCmdLineParsed(wxCmdLineParser &parser);
+  virtual void CleanUp() override;
 
 protected:
   GOFrame *m_Frame;
@@ -49,8 +49,7 @@ protected:
   GOLog *m_Log;
   wxString m_FileName;
   wxString m_InstanceName;
-
-  static const wxCmdLineEntryDesc m_cmdLineDesc[];
+  bool m_IsGuiOnly;
 
 public:
   GOApp();

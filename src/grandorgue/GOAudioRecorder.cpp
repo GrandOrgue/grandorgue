@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,12 +10,13 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
-#include "GOEvent.h"
-#include "GOPath.h"
-#include "GOSetterButton.h"
 #include "config/GOConfig.h"
+#include "control/GOCallbackButtonControl.h"
 #include "sound/GOSoundRecorder.h"
+
+#include "GOEvent.h"
+#include "GOOrganController.h"
+#include "GOPath.h"
 
 enum {
   ID_AUDIO_RECORDER_RECORD = 0,
@@ -23,28 +24,32 @@ enum {
   ID_AUDIO_RECORDER_RECORD_RENAME,
 };
 
-const struct ElementListEntry GOAudioRecorder::m_element_types[] = {
-  {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true},
-  {wxT("AudioRecorderStop"), ID_AUDIO_RECORDER_STOP, false, true},
-  {wxT("AudioRecorderRecordRename"),
-   ID_AUDIO_RECORDER_RECORD_RENAME,
-   false,
-   true},
-  {wxT(""), -1, false, false},
+const struct GOElementCreator::ButtonDefinitionEntry
+  GOAudioRecorder::m_element_types[]
+  = {
+    {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true, false},
+    {wxT("AudioRecorderStop"), ID_AUDIO_RECORDER_STOP, false, true, false},
+    {wxT("AudioRecorderRecordRename"),
+     ID_AUDIO_RECORDER_RECORD_RENAME,
+     false,
+     true,
+     false},
+    {wxT(""), -1, false, false, false},
 };
 
-const struct ElementListEntry *GOAudioRecorder::GetButtonList() {
+const struct GOElementCreator::ButtonDefinitionEntry *GOAudioRecorder::
+  GetButtonDefinitionList() {
   return m_element_types;
 }
 
-GOAudioRecorder::GOAudioRecorder(GODefinitionFile *organfile)
-  : m_organfile(organfile),
+GOAudioRecorder::GOAudioRecorder(GOOrganController *organController)
+  : m_OrganController(organController),
     m_recorder(NULL),
-    m_RecordingTime(organfile),
+    m_RecordingTime(organController),
     m_RecordSeconds(0),
     m_Filename(),
     m_DoRename(false) {
-  CreateButtons(m_organfile);
+  CreateButtons(*m_OrganController);
   UpdateDisplay();
 }
 
@@ -56,16 +61,16 @@ void GOAudioRecorder::SetAudioRecorder(GOSoundRecorder *recorder) {
 }
 
 void GOAudioRecorder::Load(GOConfigReader &cfg) {
-  m_button[ID_AUDIO_RECORDER_RECORD]->Init(
+  m_buttons[ID_AUDIO_RECORDER_RECORD]->Init(
     cfg, wxT("AudioRecorderRecord"), _("REC"));
-  m_button[ID_AUDIO_RECORDER_STOP]->Init(
+  m_buttons[ID_AUDIO_RECORDER_STOP]->Init(
     cfg, wxT("AudioRecorderStop"), _("STOP"));
-  m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Init(
+  m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Init(
     cfg, wxT("AudioRecorderRecordRename"), _("REC File"));
   m_RecordingTime.Init(cfg, wxT("AudioRecordTime"), _("Audio recording time"));
 }
 
-void GOAudioRecorder::ButtonChanged(int id) {
+void GOAudioRecorder::ButtonStateChanged(int id, bool newState) {
   switch (id) {
   case ID_AUDIO_RECORDER_STOP:
     StopRecording();
@@ -86,7 +91,8 @@ GOEnclosure *GOAudioRecorder::GetEnclosure(
   return NULL;
 }
 
-GOLabel *GOAudioRecorder::GetLabel(const wxString &name, bool is_panel) {
+GOLabelControl *GOAudioRecorder::GetLabelControl(
+  const wxString &name, bool is_panel) {
   if (is_panel)
     return NULL;
 
@@ -111,9 +117,9 @@ void GOAudioRecorder::UpdateDisplay() {
 }
 
 void GOAudioRecorder::StopRecording() {
-  m_button[ID_AUDIO_RECORDER_RECORD]->Display(false);
-  m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
-  m_organfile->DeleteTimer(this);
+  m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(false);
+  m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
+  m_OrganController->DeleteTimer(this);
   if (!IsRecording())
     return;
 
@@ -124,17 +130,17 @@ void GOAudioRecorder::StopRecording() {
   } else
     GOAskRenameFile(
       m_Filename,
-      m_organfile->GetSettings().AudioRecorderPath(),
+      m_OrganController->GetSettings().AudioRecorderPath(),
       _("WAV files (*.wav)|*.wav"));
   UpdateDisplay();
 }
 
 void GOAudioRecorder::StartRecording(bool rename) {
   StopRecording();
-  if (!m_organfile)
+  if (!m_OrganController)
     return;
 
-  m_Filename = m_organfile->GetSettings().AudioRecorderPath()
+  m_Filename = m_OrganController->GetSettings().AudioRecorderPath()
     + wxFileName::GetPathSeparator()
     + wxDateTime::UNow().Format(_("%Y-%m-%d-%H-%M-%S.%l.wav"));
   m_DoRename = rename;
@@ -144,13 +150,13 @@ void GOAudioRecorder::StartRecording(bool rename) {
     return;
 
   if (m_DoRename)
-    m_button[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);
+    m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(true);
   else
-    m_button[ID_AUDIO_RECORDER_RECORD]->Display(true);
+    m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(true);
 
   m_RecordSeconds = 0;
   UpdateDisplay();
-  m_organfile->SetRelativeTimer(1000, this, 1000);
+  m_OrganController->SetRelativeTimer(1000, this, 1000);
 }
 
 void GOAudioRecorder::HandleTimer() {

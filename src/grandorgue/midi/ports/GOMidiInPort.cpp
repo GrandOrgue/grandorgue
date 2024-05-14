@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -31,7 +31,7 @@ void GOMidiInPort::Receive(const std::vector<unsigned char> msg) {
 
   GOMidiEvent e;
   e.FromMidi(msg, m_midi->GetMidiMap());
-  if (e.GetMidiType() == MIDI_NONE)
+  if (e.GetMidiType() == GOMidiEvent::MIDI_NONE)
     return;
   e.SetDevice(GetID());
   e.SetTime(wxGetLocalTimeMillis());

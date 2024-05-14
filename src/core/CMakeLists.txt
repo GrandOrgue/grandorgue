@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(UsewxWidgets)
@@ -10,12 +10,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/go_defs.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(src
-contrib/sha1.cpp
-threading/GOCondition.cpp
-threading/GOMutex.cpp
-threading/GOWaitQueue.cpp
-threading/GOThread.cpp
-threading/threading_impl.cpp
 archive/GOArchive.cpp
 archive/GOArchiveCreator.cpp
 archive/GOArchiveFile.cpp
@@ -24,31 +18,23 @@ archive/GOArchiveEntryFile.cpp
 archive/GOArchiveManager.cpp
 archive/GOArchiveReader.cpp
 archive/GOArchiveWriter.cpp
-GOCompress.cpp
 config/GOConfigFileReader.cpp
 config/GOConfigFileWriter.cpp
 config/GOConfigReader.cpp
 config/GOConfigReaderDB.cpp
 config/GOConfigWriter.cpp
-GOEventDistributor.cpp
-GOHash.cpp
-GOInvalidFile.cpp
-GOKeyConvert.cpp
-GOKeyReceiverData.cpp
-GOLoadThread.cpp
-GOMemoryPool.cpp
+contrib/sha1.cpp
+files/GOInvalidFile.cpp
+files/GOStandardFile.cpp
+files/GOStdFileName.cpp
 midi/GOMidiEvent.cpp
 midi/GOMidiFileReader.cpp
 midi/GOMidiMap.cpp
+midi/GOMidiEventPattern.cpp
 midi/GOMidiReceiverBase.cpp
-midi/GOMidiReceiverData.cpp
-midi/GOMidiSenderData.cpp
+midi/GOMidiReceiverEventPattern.cpp
+midi/GOMidiSenderEventPattern.cpp
 midi/GOMidiWXEvent.cpp
-GOOrgan.cpp
-GOOrganList.cpp
-GOPath.cpp
-GORodgers.cpp
-GOSampleStatistic.cpp
 settings/GOSetting.cpp
 settings/GOSettingBool.cpp
 settings/GOSettingDirectory.cpp
@@ -57,12 +43,26 @@ settings/GOSettingFile.cpp
 settings/GOSettingFloat.cpp
 settings/GOSettingStore.cpp
 settings/GOSettingString.cpp
-GOStandardFile.cpp
-GOStdPath.cpp
+threading/GOCondition.cpp
+threading/GOMutex.cpp
+threading/GOMutexLocker.cpp
+threading/GOThread.cpp
+threading/threading_impl.cpp
 temperaments/GOTemperament.cpp
 temperaments/GOTemperamentCent.cpp
 temperaments/GOTemperamentList.cpp
 temperaments/GOTemperamentUser.cpp
+GOCompress.cpp
+GOHash.cpp
+GOKeyConvert.cpp
+GOLogicalColour.cpp
+GOMemoryPool.cpp
+GOOrgan.cpp
+GOOrganList.cpp
+GOPath.cpp
+GORodgers.cpp
+GOSampleStatistic.cpp
+GOStdPath.cpp
 GOTimer.cpp
 GOUtil.cpp
 GOWave.cpp

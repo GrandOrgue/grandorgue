@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -33,13 +33,13 @@ const wxCmdLineEntryDesc GOTool::m_cmdLineDesc[] = {
   {wxCMD_LINE_OPTION,
    wxTRANSLATE("o"),
    wxTRANSLATE("organ-package"),
-   wxTRANSLATE("specifiy generated organ package filename"),
+   wxTRANSLATE("specify generated organ package filename"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
   {wxCMD_LINE_OPTION,
    wxTRANSLATE("i"),
    wxTRANSLATE("input-directory"),
-   wxTRANSLATE("specifiy input directory"),
+   wxTRANSLATE("specify input directory"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
   {wxCMD_LINE_OPTION,
@@ -212,7 +212,7 @@ bool GOTool::CreateOrganPackage(
 
   cacheDir(GOStdPath::GetGrandOrgueSubDir("ToolCache"));
 
-  GOArchiveCreator archiveCreator(cacheDir);
+  GOArchiveCreator archiveCreator(cacheDir());
 
   for (unsigned i = 0; i < packages.size(); i++)
     if (!archiveCreator.AddPackage(packages[i])) {

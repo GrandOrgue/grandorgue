@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,14 +11,13 @@
 #include "GOSoundSimpleSamplerList.h"
 #include "ptrvector.h"
 #include "threading/GOMutex.h"
-#include "threading/atomic.h"
 
 class GOSoundSampler;
 
 class GOSoundSamplerPool {
 private:
   GOMutex m_Lock;
-  atomic_uint m_SamplerCount;
+  std::atomic_uint m_SamplerCount;
   unsigned m_UsageLimit;
   GOSoundSimpleSamplerList m_AvailableSamplers;
   ptr_vector<GOSoundSampler> m_Samplers;
@@ -38,7 +37,7 @@ inline unsigned GOSoundSamplerPool::GetUsageLimit() const {
 }
 
 inline unsigned GOSoundSamplerPool::UsedSamplerCount() const {
-  return m_SamplerCount;
+  return m_SamplerCount.load();
 }
 
 #endif /* GOSOUNDSAMPLERPOOL_H_ */

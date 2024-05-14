@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,17 +10,18 @@
 
 #include <wx/colour.h>
 
-#include "GOBitmap.h"
-#include "GOFont.h"
+#include "primitives/GOBitmap.h"
+#include "primitives/GOFont.h"
+
 #include "GOGUIControl.h"
 
-class GOButton;
+class GOButtonControl;
 
 class GOGUIButton : public GOGUIControl {
 protected:
   bool m_IsPiston;
   bool m_DispKeyLabelOnLeft;
-  GOButton *m_Button;
+  GOButtonControl *m_ButtonControl;
   wxRect m_MouseRect;
   unsigned m_Radius;
   GOBitmap m_OnBitmap;
@@ -38,7 +39,8 @@ protected:
   unsigned m_TileOffsetY;
 
 public:
-  GOGUIButton(GOGUIPanel *panel, GOButton *control, bool is_piston = false);
+  GOGUIButton(
+    GOGUIPanel *panel, GOButtonControl *control, bool is_piston = false);
 
   void Init(
     GOConfigReader &cfg,

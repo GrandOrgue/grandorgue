@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,38 +9,25 @@
 
 #include <algorithm>
 
-#include <wx/app.h>
 #include <wx/bookctrl.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
 
-#include "help/GOHelpRequestor.h"
+#include "size/GOAdditionalSizeKeeperProxy.h"
 
 #include "GODialogTab.h"
-#include "GOEvent.h"
-
-BEGIN_EVENT_TABLE(GOTabbedDialog, wxPropertySheetDialog)
-EVT_BUTTON(wxID_HELP, GOTabbedDialog::OnHelp)
-END_EVENT_TABLE()
 
 GOTabbedDialog::GOTabbedDialog(
   wxWindow *win,
   const wxString &name,  // not translated
   const wxString &title, // translated
+  GODialogSizeSet &dialogSizes,
+  const wxString dialogSelector,
   long addStyle)
-  : wxPropertySheetDialog(
-    win,
-    wxID_ANY,
-    title,
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | addStyle),
-    GODialogCloser(this),
-    m_name(name) {
+  : GODialog(win, name, title, dialogSizes, dialogSelector, addStyle) {
   p_book = GetBookCtrl();
   p_book->SetExtraStyle(p_book->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
-  p_ButtonSizer = CreateButtonSizer(wxOK | wxCANCEL | wxHELP);
-  GetInnerSizer()->Add(p_ButtonSizer, 0, wxEXPAND | wxALL, 5);
+  wxPropertySheetDialog::GetInnerSizer()->Add(
+    GetButtonSizer(), 0, wxEXPAND | wxALL, 5);
 }
 
 void GOTabbedDialog::AddTab(
@@ -53,8 +40,32 @@ void GOTabbedDialog::AddTab(GODialogTab *tab) {
   AddTab(tab, tab->GetName(), tab->GetLabel());
 }
 
-void GOTabbedDialog::OnHelp(wxCommandEvent &event) {
-  GOHelpRequestor::DisplayHelp(m_name + "." + GetCurrTabName(), IsModal());
+void GOTabbedDialog::ApplyAdditionalSizes(
+  const GOAdditionalSizeKeeper &sizeKeeper) {
+  for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
+    GODialogTab *tab = dynamic_cast<GODialogTab *>(p_book->GetPage(i));
+
+    if (tab) {
+      GOAdditionalSizeKeeperProxy proxy(
+        const_cast<GOAdditionalSizeKeeper &>(sizeKeeper), tab->GetName());
+
+      tab->ApplyAdditionalSizes(proxy);
+    }
+  }
+}
+
+void GOTabbedDialog::CaptureAdditionalSizes(
+  GOAdditionalSizeKeeper &sizeKeeper) const {
+  for (unsigned l = p_book->GetPageCount(), i = 0; i < l; i++) {
+    const GODialogTab *tab
+      = dynamic_cast<const GODialogTab *>(p_book->GetPage(i));
+
+    if (tab) {
+      GOAdditionalSizeKeeperProxy proxy(sizeKeeper, tab->GetName());
+
+      tab->CaptureAdditionalSizes(proxy);
+    }
+  }
 }
 
 const wxString &GOTabbedDialog::GetCurrTabName() const {

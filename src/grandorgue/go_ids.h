@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -40,8 +40,9 @@ enum {
 
   ID_FILE_RELOAD,
   ID_FILE_REVERT,
-  ID_FILE_IMPORT_SETTINGS,
   ID_FILE_IMPORT_COMBINATIONS,
+  ID_FILE_EXPORT_COMBINATIONS,
+  ID_FILE_IMPORT_SETTINGS,
   ID_FILE_EXPORT,
   ID_FILE_CACHE,
   ID_FILE_CACHE_DELETE,
@@ -82,6 +83,10 @@ enum {
   ID_PANEL_MENU,
   ID_PANEL_FIRST,
   ID_PANEL_LAST = ID_PANEL_FIRST + 200,
+
+  ID_CHECK_FOR_UPDATES,
+  ID_DOWNLOAD_NEW_RELEASE,
+  ID_SHOW_RELEASE_CHANGELOG
 };
 
 #endif

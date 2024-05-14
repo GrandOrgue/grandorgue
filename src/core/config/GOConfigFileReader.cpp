@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,10 +11,11 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "files/GOStandardFile.h"
+
 #include "GOBuffer.h"
 #include "GOCompress.h"
 #include "GOHash.h"
-#include "GOStandardFile.h"
 
 GOConfigFileReader::GOConfigFileReader() : m_Entries(), m_Hash() {}
 
@@ -57,7 +58,7 @@ bool GOConfigFileReader::Read(wxString filename) {
   return Read(&file);
 }
 
-bool GOConfigFileReader::Read(GOFile *file) {
+bool GOConfigFileReader::Read(GOOpenedFile *file) {
   m_Entries.clear();
 
   if (!file->Open()) {
@@ -116,9 +117,13 @@ bool GOConfigFileReader::Read(GOFile *file) {
     wxString line = GetNextLine(input, pos);
     lineno++;
 
+    /* Skip the comment */
+    int semicolumnPos = line.find(wxT(";"), 0);
+
+    if (semicolumnPos >= 0)
+      line = line.substr(0, semicolumnPos).Trim();
+
     if (line == wxEmptyString)
-      continue;
-    if (line.Len() >= 1 && line[0] == wxT(';'))
       continue;
     if (line.Len() > 1 && line[0] == wxT('[')) {
       if (line[line.Len() - 1] != wxT(']')) {

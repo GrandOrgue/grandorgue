@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,25 +10,25 @@
 
 #include "midi/GOMidiReceiverBase.h"
 
-class GODefinitionFile;
+class GOConfig;
+class GOOrganModel;
 
 class GOMidiReceiver : public GOMidiReceiverBase {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganModel &r_OrganModel;
+  const GOConfig &r_config;
   int m_Index;
 
 protected:
-  void Preconfigure(GOConfigReader &cfg, wxString group);
-  int GetTranspose();
+  void Preconfigure(GOConfigReader &cfg, wxString group) override;
+  int GetTranspose() override;
 
 public:
-  GOMidiReceiver(GODefinitionFile *organfile, GOMidiReceiverType type);
+  GOMidiReceiver(GOOrganModel &organModel, GOMidiReceiverType type);
 
-  void Load(GOConfigReader &cfg, wxString group, GOMidiMap &map);
+  void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 
-  void SetIndex(int index);
-
-  void Assign(const GOMidiReceiverData &data);
+  void SetIndex(int index) { m_Index = index; }
 };
 
 #endif

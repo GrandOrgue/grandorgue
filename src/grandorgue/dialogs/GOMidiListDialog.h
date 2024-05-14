@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,16 +10,16 @@
 
 #include <vector>
 
-#include <wx/dialog.h>
-
+#include "common/GOSimpleDialog.h"
 #include "document-base/GOView.h"
 
-class GOEventDistributor;
 class wxButton;
 class wxListEvent;
 class wxListView;
 
-class GOMidiListDialog : public wxDialog, public GOView {
+class GOMidiConfigurator;
+
+class GOMidiListDialog : public GOSimpleDialog, public GOView {
 private:
   wxListView *m_Objects;
   wxButton *m_Edit;
@@ -37,13 +37,15 @@ private:
   void OnObjectClick(wxListEvent &event);
   void OnObjectDoubleClick(wxListEvent &event);
   void OnEdit(wxCommandEvent &event);
-  void OnOK(wxCommandEvent &event);
   void OnStatus(wxCommandEvent &event);
   void OnButton(wxCommandEvent &event);
 
 public:
   GOMidiListDialog(
-    GODocumentBase *doc, wxWindow *parent, GOEventDistributor *midi_elements);
+    GODocumentBase *doc,
+    wxWindow *parent,
+    GODialogSizeSet &dialogSizes,
+    const std::vector<GOMidiConfigurator *> &midi_elements);
   ~GOMidiListDialog();
 
   DECLARE_EVENT_TABLE()

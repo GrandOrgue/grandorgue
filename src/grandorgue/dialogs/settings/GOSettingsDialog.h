@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,6 +12,8 @@
 
 #include "GOSettingsReason.h"
 
+class GOConfig;
+class GOMidi;
 class GOSound;
 class GOSettingsAudioGroup;
 class GOSettingsAudio;
@@ -37,8 +39,6 @@ public:
 private:
   enum { ID_REASONS = 100 };
 
-  GOSound &m_Sound;
-
   bool m_ReasonsAlreadyShown;
   SettingsReasons *m_Reasons;
   GOSettingsOptions *m_OptionsPage;
@@ -55,7 +55,12 @@ private:
   void OnReasons(wxCommandEvent &event);
 
 public:
-  GOSettingsDialog(wxWindow *parent, GOSound &sound, SettingsReasons *reasons);
+  GOSettingsDialog(
+    wxWindow *parent,
+    GOConfig &config,
+    GOSound &sound,
+    GOMidi &midi,
+    SettingsReasons *reasons);
 
   bool NeedReload();
   bool NeedRestart();

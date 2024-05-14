@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,16 +11,16 @@
 #include "gui/GOGUIPanelCreator.h"
 
 class GOGUIPanel;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOGUIFloatingPanel : public GOGUIPanelCreator {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
   GOGUIPanel *CreateFloatingPanel(GOConfigReader &cfg);
 
 public:
-  GOGUIFloatingPanel(GODefinitionFile *organfile);
+  GOGUIFloatingPanel(GOOrganController *organController);
   ~GOGUIFloatingPanel();
 
   void CreatePanels(GOConfigReader &cfg);

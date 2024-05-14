@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -24,7 +24,7 @@ typedef struct _GOArchiveEntry {
 
 class GOArchiveIndex {
 private:
-  const GOSettingDirectory &m_CachePath;
+  wxString m_CachePath;
   wxString m_Path;
   wxFile m_File;
 
@@ -45,7 +45,7 @@ private:
     const wxString &id, const std::vector<GOArchiveEntry> &entries);
 
 public:
-  GOArchiveIndex(const GOSettingDirectory &cachePath, const wxString &path);
+  GOArchiveIndex(const wxString &cachePath, const wxString &path);
   ~GOArchiveIndex();
 
   bool ReadIndex(wxString &id, std::vector<GOArchiveEntry> &entries);

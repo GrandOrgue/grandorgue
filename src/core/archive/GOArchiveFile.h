@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,7 @@
 #ifndef GOARCHIVEFILE_H
 #define GOARCHIVEFILE_H
 
+#include <cstdint>
 #include <wx/string.h>
 
 #include <vector>
@@ -35,6 +36,8 @@ public:
   GOArchiveFile(GOConfigReader &cfg, wxString group);
   virtual ~GOArchiveFile();
 
+  static wxString getArchiveHash(const wxString &path);
+
   void Update(const GOArchiveFile &archive);
   wxString GetCurrentFileID() const;
 
@@ -42,13 +45,14 @@ public:
 
   const wxString &GetID() const;
   const wxString &GetPath() const;
+  const void SetPath(const wxString &newPath) { m_Path = newPath; }
   const wxString &GetName() const;
   const wxString &GetFileID() const;
-  const wxString GetArchiveHash() const;
+  const wxString GetArchiveHash() const { return getArchiveHash(m_Path); }
   const std::vector<wxString> &GetDependencies() const;
   const std::vector<wxString> &GetDependencyTitles() const;
 
-  bool IsUsable(const GOOrganList &organs) const;
+  bool IsUsable() const;
   bool IsComplete(const GOOrganList &organs) const;
 };
 

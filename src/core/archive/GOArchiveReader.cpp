@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -314,7 +314,7 @@ bool GOArchiveReader::ReadFileRecord(
        name[name.length() - 2] == wxT('.') &&
        name[name.length() - 3] == wxT('/'))) {
     wxLogError(
-      _("File name '%s' contains invalid path seperators"), name.c_str());
+      _("File name '%s' contains invalid path separators"), name.c_str());
     return false;
   }
   if (name[name.length() - 1] == wxT('/')) {

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,6 +14,8 @@ class GOSettingBool : private GOSetting {
 private:
   bool m_Value;
   bool m_DefaultValue;
+  // whether the value was read from the setting or was set by default
+  bool m_IsPresent;
 
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
@@ -25,6 +27,7 @@ public:
   GOSettingBool(
     GOSettingStore *store, wxString group, wxString name, bool default_value);
 
+  bool IsPresent() const { return m_IsPresent; }
   void setDefaultValue(bool default_value);
 
   bool operator()() const;

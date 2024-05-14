@@ -1,4 +1,167 @@
-- Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1129
+- Added a tone balance (bass/treble harmonics balance) voicing option
+# 3.14.2 (2024-04-29)
+- Fixed divisional couplers with setter divisionals https://github.com/GrandOrgue/grandorgue/issues/1787
+- Fixed behavior of "Detect complex MIDI setup" with Note events in different cases https://github.com/GrandOrgue/grandorgue/issues/1762
+- Fixed the order of sending midi events from an On indicator. Now they are sent after sending all events from other controls https://github.com/GrandOrgue/grandorgue/issues/1762
+# 3.14.1 (2024-04-17)
+- Fixed changing sound of a playing pipe without Pipe999IsTremulant when a wave tremulant state is changed https://github.com/GrandOrgue/grandorgue/issues/1855
+- Fixed crash on opening a very old config https://github.com/GrandOrgue/grandorgue/discussions/1869
+- Fixed ignoring initial midi setup when loading an organ with a preset without midi events configured https://github.com/GrandOrgue/grandorgue/issues/1785
+- Fixed saving Max release tail to the organ preset https://github.com/GrandOrgue/grandorgue/issues/1804
+- Fixed required package names in the BUILD.md file https://github.com/GrandOrgue/grandorgue/issues/1799
+- Added support of macOS on Apple silicon. GrandOrgue for macOS on Apple silicon requires macOS 14 or higher. GrandOrgue for macOS on Intel requires macOS 12.1 or higher. https://github.com/GrandOrgue/grandorgue/discussions/1153
+- Added ad-hoc code signing of GrandOrgue for macOS https://github.com/GrandOrgue/grandorgue/issues/1835
+- Fixed an error that occurred when trying to install the GrandOrgue RPM package https://github.com/GrandOrgue/grandorgue/issues/1859
+# 3.14.0 (2024-03-29)
+- Fixed crash on loading an organ without a pedal but wit a unison-off coupler https://github.com/GrandOrgue/grandorgue/issues/1846
+- Changed displaying of the right part of paths https://github.com/GrandOrgue/grandorgue/issues/1663
+- Added automatic update checking at startup (configurable) and the ability to check for updates from Help menu  
+- Increased maximum value of allowed size to 32000 https://github.com/GrandOrgue/grandorgue/issues/1840
+- Added capability of specifying AmplitudeLevel, Gain, PitchTuning, PitchCorrection and TrackerDelay, Percussive, HasIndependentRelease at the WindchestGroup level of ODF
+- Added capability of specifying Percussive and HasIndependentRelease at the Organ level of ODF
+- Added capability of playing release of percussive pipes with Pipe999HasIndependentRelease=Y https://github.com/GrandOrgue/grandorgue/issues/1385
+- Fixed different encoding of combination .yaml files on Windows, Linux and MacOS https://github.com/GrandOrgue/grandorgue/issues/1818
+- Added support of "Couple Through" mode of Virtual Couplers https://github.com/GrandOrgue/grandorgue/issues/1657
+- Added capability of loading only GUI panels without audio samples by specifying the "-g" switch from the command line https://github.com/GrandOrgue/grandorgue/issues/1602
+- Removed support of MacOS 11 https://github.com/GrandOrgue/grandorgue/issues/1791
+- Fixed crash on loading an organ with a crescendo in Add mode https://github.com/GrandOrgue/grandorgue/issues/1772
+- Fixed crash with rtaudio/asio https://github.com/GrandOrgue/grandorgue/issues/1772
+- Added support of specifying different crossfade length for additional attack and release files https://github.com/GrandOrgue/grandorgue/issues/1760
+- Fixed wrong filename of the midi recorder file with Hungarian language settings https://github.com/GrandOrgue/grandorgue/issues/1644
+- Fixed unability to select the Hungarian language in the Organ Settings dialog
+- Eliminated resetting audio group with the Default button of Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/731
+# 3.13.3 (2024-01-07)
+- Fixed not loading a pipe if some loop was not suitable for crossfade https://github.com/GrandOrgue/grandorgue/issues/1724
+- Fixed a wrong .wav filename in the log message window https://github.com/GrandOrgue/grandorgue/issues/1724
+- Increased the maximum number of Tremulants from 10 to 999
+- Fixed setting a reverb file name by default to the current directory https://github.com/GrandOrgue/grandorgue/issues/1741
+- Fixed crash on enabling convolution reverb https://github.com/GrandOrgue/grandorgue/issues/1741
+- Fixed hang on Panic button press on MacOs https://github.com/GrandOrgue/grandorgue/issues/1726
+- Fixed crash on switching divisionals when a bidirectional devisional coupler was engaged https://github.com/GrandOrgue/grandorgue/issues/1725
+# 3.13.2 (2023-11-19)
+- Fixed loading an organ when some configuration entry is out of range https://github.com/GrandOrgue/grandorgue/issues/1696
+- Fixed crash when trying to load a sample set with a truncated wave file https://github.com/GrandOrgue/grandorgue/discussions/370
+- Fixed crash on closing an organ https://github.com/GrandOrgue/grandorgue/issues/1678
+# 3.13.1 (2023-11-05)
+- Fixed the maximal value of the "SYSEX Hauptwerk 32 Byte LCD" midi send events https://github.com/GrandOrgue/grandorgue/issues/1686
+- Fixed discard in the Organ Settings dialog when multiple objects are selected https://github.com/GrandOrgue/grandorgue/issues/1674
+- Moved all Organ Settings dialog buttons to the single button row https://github.com/GrandOrgue/grandorgue/issues/1674
+- Decreased number of decimal digits in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1627
+- Added a confirmation box when restoring Organ Settings to default https://github.com/GrandOrgue/grandorgue/issues/1674
+- Replaced the Cancel and OK buttons in the Organ Settings dialog with the single Close button https://github.com/GrandOrgue/grandorgue/issues/1674
+- Fixed change tracking and enableing/disabling the Discard and Apply buttons in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1674
+- Renamed the Reset button to Discard in the Organ Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1674
+- Adopted the build instruction and the build scripts to new ubuntu versions https://github.com/GrandOrgue/grandorgue/issues/1673
+- Improved concurrency handling
+- Added deregistering organs in the temporary directory that do not more exist https://github.com/GrandOrgue/grandorgue/issues/1660
+- Fixed error messages after multiple runs of GrandOrgue ftom Appimage with a demo organ https://github.com/GrandOrgue/grandorgue/issues/1660
+# 3.13.0 (2023-10-11)
+- Implemented option to send MIDI Note Off as 0x8X or 0x9X with velocity 0 https://github.com/GrandOrgue/grandorgue/issues/1640
+- Added capability of control buttons with Control Change MIDI events with different keys but same values using "Bx Ctrl Change Fixed On Value Toggle" and "Bx Ctrl Change Fixed Off Value Toggle" https://github.com/GrandOrgue/grandorgue/issues/1392
+- Added saving dialog positions and sizes https://github.com/GrandOrgue/grandorgue/issues/1035
+- Increased maximum value of Pipe999LoopCrossfadeLength and Pipe999ReleaseCrossfadeLength. Now they are 3000 https://github.com/GrandOrgue/grandorgue/issues/1612
+# 3.12.3 (2023-08-14)
+- Fixed saving manual switches as global in yaml https://github.com/GrandOrgue/grandorgue/issues/1599
+- Fixed convolution enabling warrning in the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1617
+- Fixed "Release Length is not valid" error when applying changes for several Organ Settings objects at once https://github.com/GrandOrgue/grandorgue/issues/1601
+- Fixed saving all combinations as full
+# 3.12.2 (2023-07-23)
+- Fixed size of the Organ Settings Dialog https://github.com/GrandOrgue/grandorgue/issues/1415
+- Fixed an incorrect dialog window icon
+- Fixed absence of the Help button on the Organ Setting dialog https://github.com/GrandOrgue/grandorgue/issues/1416
+- Fixed displaying buttons if the manual is not visible https://github.com/GrandOrgue/grandorgue/issues/1566
+- Changed the default value of the CombinationsStoreNonDisplayedDrawstops ODF settings to false
+- Fixed capability of running on MacOs 11.3
+- Fixed "The device does not support requested channel count" error when using an USB audio card on MacOS https://github.com/GrandOrgue/grandorgue/issues/1550
+# 3.12.1 (2023-06-06)
+- Fixed not storing switch state in combinations in organs with panels of the new style https://github.com/GrandOrgue/grandorgue/issues/1498
+- Fixed displaying light of various combination buttons https://github.com/GrandOrgue/grandorgue/issues/1536 
+- Fixed saving empty and scoped combinations to yaml https://github.com/GrandOrgue/grandorgue/issues/1531
+- Fixed bug of GC not working on manual with only a single stop https://github.com/GrandOrgue/grandorgue/issues/1556
+- Fixed installation on linux with another yaml-cpp version than 6.2 https://github.com/GrandOrgue/grandorgue/issues/1548
+# 3.12.0 (2023-05-25)
+- Reverted back default display of GeneralPrev and GeneralNext https://github.com/GrandOrgue/grandorgue/issues/1538
+- Added new builtin bitmap set of manual keys and one new drawstop bitmap https://github.com/GrandOrgue/grandorgue/discussions/1490
+- Removed support of MacOs 10.15. Now MacOs 11 or above is required https://github.com/GrandOrgue/grandorgue/discussions/1149
+- Fixed warning "temperament would retune pipe by more than 600 cents" for retuned pipes https://github.com/GrandOrgue/ODFEdit/discussions/11#discussioncomment-5877020
+- Increased the maximum value of Enclosures from 50 to 999 https://github.com/GrandOrgue/grandorgue/issues/1484
+# 3.11.2 (2023-05-08)
+- Fixed crash on loading organ with general of divisional buttons https://github.com/GrandOrgue/grandorgue/issues/1512
+# 3.11.1 (2023-05-03)
+- Fixed processing yaml combinations on organs with invisible couplers https://github.com/GrandOrgue/grandorgue/issues/1489
+- Fixed uncompatibility with recent linux distros. Use grandorgue-wx32 on new linux distros (where wxWidgets 3.0 is not available) https://github.com/GrandOrgue/grandorgue/issues/1480
+- Added support of negative y-axis adjustment of manual keys https://github.com/GrandOrgue/grandorgue/issues/1485
+- Fixed opening an organ with more than 50 windchest groups https://github.com/GrandOrgue/grandorgue/issues/1484
+# 3.11.0 (2023-04-17)
+- Added capability of navigating over, loading and saving the YAML combinations files on the Combination Setter panel https://github.com/GrandOrgue/grandorgue/issues/1196
+- Added capability of exporting and importing combinations in yaml format files https://github.com/GrandOrgue/grandorgue/issues/1195
+- Removed support of old linux distros (with libc6 versions before 2.31) https://github.com/GrandOrgue/grandorgue/discussions/1334
+- Fixed the translation of the desktop icon on Linux https://github.com/GrandOrgue/grandorgue/issues/1429
+- Added support of labels without a background image by specifying DispImageNum=0 https://github.com/GrandOrgue/grandorgue/issues/1386
+- Added capability of overriding wav MIDIPitchFraction with the Pipe999MIDIPitchFraction key https://github.com/GrandOrgue/grandorgue/issues/1378
+# 3.10.1 (2023-02-24)
+- Fixed crash on loading an incorrect organ
+# 3.10.0 (2023-02-17)
+- Added storing the GrandOrgueVersion key in the Organ Settings file https://github.com/GrandOrgue/grandorgue/issues/1375
+- Added capability of redefining ReleaseLength and IgnorePitch on each level of Organ Settings
+- Changed defaults for the General Setter elements to Piston https://github.com/GrandOrgue/grandorgue/issues/1360
+- Added new fields ManualTuning and AutoTuningCorrection of Organ Settings https://github.com/GrandOrgue/grandorgue/issues/1333
+- Fixed duplicating packaged organs in the organ list https://github.com/GrandOrgue/grandorgue/issues/1367
+- Fixed displaying a popup window when a cache had been created with another GO version https://github.com/GrandOrgue/grandorgue/issues/1363
+- Fixed not saving midi settings of divisional buttons https://github.com/GrandOrgue/grandorgue/issues/1350
+- Added PitchCorrection for organs and windchest. Pipe999PitchCorrection became additive to PitchCorrection of the rank, of the windchest and of the organ https://github.com/GrandOrgue/grandorgue/issues/1351
+- Added full support of '/' as the file sepearator in ODF unless 'Check ODF for HW1-compatibility' is set https://github.com/GrandOrgue/grandorgue/issues/827
+- Added support of ODF comments from ';' at any position to the end of line https://github.com/GrandOrgue/grandorgue/issues/828
+# 3.9.5 (2023-01-23)
+- Fixed saving position when some panel is outside the screen area https://github.com/GrandOrgue/grandorgue/issues/1271
+- Fixed playing release samples for very short notes https://github.com/GrandOrgue/grandorgue/issues/1222
+- Fixed help: the wrong panel positioning on wayland was documented https://github.com/GrandOrgue/grandorgue/issues/1271
+- Fixed typos and spelling errors in the Help
+- Fixed continuing loading an organ after an exception in one loading thread
+- Fixed size of text fields in the Organ Settings dialog on OsX https://github.com/GrandOrgue/grandorgue/issues/1315
+- Fixed missing the object filename in an error message if some exception occured when loading this object
+# 3.9.4 (2022-12-12)
+- Fixed starting 3.9.3 on Windows https://github.com/GrandOrgue/grandorgue/issues/1311
+# 3.9.3 (2022-12-09)
+- Fixed an old version number in the gnome application metadata https://github.com/GrandOrgue/grandorgue/issues/1304
+- Fixed switching off generals when using crescendo in not override mode https://github.com/GrandOrgue/grandorgue/issues/1299
+- Fixed error messages of GrandOrguePerf https://github.com/GrandOrgue/grandorgue/issues/1280
+- Fixed exit from GrandOrgue with an unhandled exception occurred on loading an organ
+- Fixed displaying output volume indicators on OSx https://github.com/GrandOrgue/grandorgue/issues/1255
+- Fixed sending midi-off events from generals and another pushbuttons https://github.com/GrandOrgue/grandorgue/issues/1291
+- Fixed crashing on exit in some cases
+# 3.9.2 (2022-11-29)
+- Fixed sending incorrect midi values from an enclosure https://github.com/GrandOrgue/grandorgue/issues/1267
+- Fixed not sending midi events from pushbuttons, including GC https://github.com/GrandOrgue/grandorgue/issues/1220
+- Fixed sending a midi event from an enclosure when it's value is not changed https://github.com/GrandOrgue/grandorgue/issues/1206
+- Fixed processing enclosures with high value is less than low value https://github.com/GrandOrgue/grandorgue/issues/1266
+# 3.9.1 (2022-11-14)
+- Fixed crash on loading an organ without a pedal https://github.com/GrandOrgue/grandorgue/issues/1249
+- Fixed SYSEX Hauptwerk max. length in MIDI event editor https://github.com/GrandOrgue/grandorgue/issues/1207
+- Fixed enclosure value calculation https://github.com/GrandOrgue/grandorgue/issues/1203
+- Fixed controlling stops with a touchscreen on Raspberry Pi https://github.com/GrandOrgue/grandorgue/issues/1208
+# 3.9.0 (2022-11-03)
+- Fixed playing multitrack midi files with changes of tempo https://github.com/GrandOrgue/grandorgue/discussions/1225
+- Fixed displaying audio ports on OSx https://github.com/GrandOrgue/grandorgue/issues/1216
+- Added divisional combination banks https://github.com/GrandOrgue/grandorgue/issues/708
+- Renamed audio ports: Pa to PortAudio and Rt to RtAudio https://github.com/GrandOrgue/grandorgue/issues/1216
+- Fixed size of the Organ Selection Dialog https://github.com/GrandOrgue/grandorgue/issues/1215
+- Fixed generals buttons behaviour with the crescendo in add mode https://github.com/GrandOrgue/grandorgue/issues/1209
+- Fixed an empty stop set to a general combination https://github.com/GrandOrgue/grandorgue/issues/1212
+# 3.8.0 (2022-09-15)
+- Fixed setting an empty stop set to a divisional combination https://github.com/GrandOrgue/grandorgue/issues/1068
+- Added capability of switching between the Override and the Add crescendo mode https://github.com/GrandOrgue/grandorgue/issues/1170
+- Fixed rebuilding the cache every time upon the appimage starts https://github.com/GrandOrgue/grandorgue/issues/1174
+- Fixed building appimage in an ubuntu container
+# 3.7.1 (2022-09-02)
+- Fixed translation of temperaments' names https://github.com/GrandOrgue/grandorgue/issues/1104
+- Fixed saving ReleaseTail https://github.com/GrandOrgue/grandorgue/issues/1161
+- Moved build for OsX to OsX 11 https://github.com/GrandOrgue/grandorgue/discussions/1149
+# 3.7.0 (2022-08-11)
+- Fixed packaging for OSx https://github.com/GrandOrgue/grandorgue/issues/1135
+- Deleting an organ in the Organ tab of the Settings dialog causes also deleting it's cache and all it's presets https://github.com/GrandOrgue/grandorgue/issues/1049
+- Reorganised the Organs tab of the Settings dialog https://github.com/GrandOrgue/grandorgue/issues/1119
+- Added capability of restoring organ settings values for all subobjects https://github.com/GrandOrgue/grandorgue/issues/1119
 # 3.6.7 (2022-05-15)
 - Added publishing debug symbols on windows builds https://github.com/GrandOrgue/grandorgue/issues/853
 # 3.6.6 (2022-04-29)
@@ -423,7 +586,7 @@
 # 0.3.1.2214 (2016-12-04)
 - Remove wx2.8 code
 # 0.3.1.2213 (2016-12-04)
-- Prepare for a seperate cache directory
+- Prepare for a separate cache directory
 # 0.3.1.2212 (2016-12-04)
 - Fix reverb threading issues
 # 0.3.1.2211 (2016-12-04)
@@ -439,7 +602,7 @@
 # 0.3.1.2206 (2016-12-01)
 - Add MIDI file content storage object
 # 0.3.1.2205 (2016-12-01)
-- seperate SYSEX from manual MIDI assignment
+- separate SYSEX from manual MIDI assignment
 # 0.3.1.2204 (2016-11-25)
 - Remove unreferenced cache files
 # 0.3.1.2203 (2016-11-25)
@@ -533,7 +696,7 @@
 # 0.3.1.2163 (2016-09-13)
 - Fix build errors
 # 0.3.1.2162 (2016-09-12)
-- Split resources into a seperate package
+- Split resources into a separate package
 # 0.3.1.2161 (2016-09-12)
 - Create portable windows package
 # 0.3.1.2160 (2016-09-12)
@@ -716,7 +879,7 @@
 # 0.3.1.2072 (2016-01-07)
 - Add clear command
 # 0.3.1.2071 (2016-01-03)
-- seperate event mapping
+- separate event mapping
 # 0.3.1.2070 (2016-01-03)
 - Unify event writing
 # 0.3.1.2069 (2016-01-03)
@@ -944,7 +1107,7 @@
 # 0.3.1.1960 (2015-09-23)
 - Move cmake external libary handling
 # 0.3.1.1959 (2015-09-23)
-- Seperate cmake image conversion macros
+- Separate cmake image conversion macros
 # 0.3.1.1958 (2015-09-23)
 - Refactor cmake po macros
 # 0.3.1.1957 (2015-09-19)
@@ -1329,11 +1492,11 @@
 # 0.3.1.1769 (2014-11-04)
 - Merge RtMidi error callback
 # 0.3.1.1768 (2014-11-04)
-- Merge seperate RtAudio/RtMidi error classes
+- Merge separate RtAudio/RtMidi error classes
 # 0.3.1.1767 (2014-11-04)
 - Refactor sound output
 # 0.3.1.1766 (2014-11-04)
-- Seperate internal audio device information
+- Separate internal audio device information
 # 0.3.1.1765 (2014-11-04)
 - Remove not used return type
 # 0.3.1.1764 (2014-11-04)
@@ -1441,11 +1604,11 @@
 # 0.3.1.1720 (2014-07-22)
 - Help Update: MIDI event editor - Drawstop/Pushbutton specifics
 # 0.3.1.1719 (2014-07-18)
-- Make ODF path seperator check strict mode only
+- Make ODF path separator check strict mode only
 # 0.3.1.1718 (2014-07-18)
 - Allow disabling sample loading to aid ODF development
 # 0.3.1.1717 (2014-07-17)
-- Seperate layout engine
+- Separate layout engine
 # 0.3.1.1716 (2014-07-17)
 - DisplayMetrics don't depend on organ file
 # 0.3.1.1715 (2014-07-17)
@@ -1453,7 +1616,7 @@
 # 0.3.1.1714 (2014-07-17)
 - Use wxString::Format
 # 0.3.1.1713 (2014-07-17)
-- Check for a invalid directory seperator
+- Check for a invalid directory separator
 # 0.3.1.1712 (2014-07-17)
 - Fix manual background
 # 0.3.1.1711 (2014-07-15)
@@ -1481,7 +1644,7 @@
 # 0.3.1.1700 (2014-07-07)
 - Pass variables by reference
 # 0.3.1.1699 (2014-07-07)
-- seperate access of calculated metrics
+- separate access of calculated metrics
 # 0.3.1.1698 (2014-07-07)
 - Pass button configuration via Init
 # 0.3.1.1697 (2014-07-07)
@@ -1513,7 +1676,7 @@
 # 0.3.1.1684 (2014-05-04)
 - Lockless sampler list handling
 # 0.3.1.1683 (2014-05-04)
-- Seperate tremulant processing
+- Separate tremulant processing
 # 0.3.1.1682 (2014-05-03)
 - fix OS X installer containing a wrong copy of the demo organ
 # 0.3.1.1681 (2014-05-03)
@@ -1697,7 +1860,7 @@
 # 0.3.1.1592 (2014-02-09)
 - /usr/share/appdata must be owned by a package
 # 0.3.1.1591 (2014-02-09)
-- Seperate reverb processing for the individual channels
+- Separate reverb processing for the individual channels
 # 0.3.1.1590 (2014-02-09)
 - Rework end segement pointer
 # 0.3.1.1589 (2014-02-09)
@@ -1731,7 +1894,7 @@
 # 0.3.1.1575 (2014-02-02)
 - Don't build all object for perftest and GO twice
 # 0.3.1.1574 (2014-02-02)
-- Seperate internal midi event from wxEvent
+- Separate internal midi event from wxEvent
 # 0.3.1.1573 (2014-02-01)
 - Don't store device id as string
 # 0.3.1.1572 (2014-02-01)
@@ -2023,7 +2186,7 @@
 # 0.3.1.1429 (2013-11-22)
 - Correct ODF reference
 # 0.3.1.1428 (2013-11-22)
-- Allow to specifiy trigger value for buttons
+- Allow to specify trigger value for buttons
 # 0.3.1.1427 (2013-11-22)
 - Improve MIDI dialog
 # 0.3.1.1426 (2013-11-22)
@@ -2154,7 +2317,7 @@
 # 0.3.1.1369 (2013-10-23)
 - Rework MIDI handling
 # 0.3.1.1368 (2013-10-22)
-- Specifiy parent for MessageBox
+- Specify parent for MessageBox
 # 0.3.1.1367 (2013-10-18)
 - Update demo organ (http://www.magle.dk/music-forums/18709-grandorgue-rev-1331-demo-4.html)
 # 0.3.1.1366 (2013-09-29)
@@ -2305,7 +2468,7 @@
 # 0.3.1.1294 (2013-04-27)
 - Don't call back from widget into the view
 # 0.3.1.1293 (2013-04-27)
-- Seperate panel from the panel widget
+- Separate panel from the panel widget
 # 0.3.1.1292 (2013-04-27)
 - Access frame via view
 # 0.3.1.1291 (2013-04-27)
@@ -2458,7 +2621,7 @@
 # 0.3.1.1218 (2013-01-27)
 - Update copyright
 # 0.3.1.1217 (2013-01-21)
-- Allow to build built tool seperatly
+- Allow to build built tool separately
 # 0.3.1.1216 (2013-01-19)
 - Remove HauptwerkOrganFileFormatVersion from documentation
 # 0.3.1.1215 (2013-01-19)
@@ -2666,7 +2829,7 @@
 # 0.3.1.1114 (2012-10-28)
 - Correct spec file
 # 0.3.1.1113 (2012-10-28)
-- Allow to specifiy revision via CMake parameter
+- Allow to specify revision via CMake parameter
 # 0.3.1.1112 (2012-10-27)
 - Adapt for wx2.9
 # 0.3.1.1111 (2012-10-27)
@@ -2802,7 +2965,7 @@
 # 0.3.1.1046 (2012-07-06)
 - Document building the wxWidgets translations
 # 0.3.1.1045 (2012-07-06)
-- Seperate ODF settings from user settings
+- Separate ODF settings from user settings
 # 0.3.1.1044 (2012-07-06)
 - Check for invalid boolean values
 # 0.3.1.1043 (2012-07-06)
@@ -2826,9 +2989,9 @@
 # 0.3.1.1034 (2012-07-06)
 - Lock contention debugger
 # 0.3.1.1033 (2012-06-27)
-- Allow to specificy GC state
+- Allow to specify GC state
 # 0.3.1.1032 (2012-06-27)
-- Allow to specifiy a mouse rectangle for manual keys
+- Allow to specify a mouse rectangle for manual keys
 # 0.3.1.1031 (2012-06-25)
 - fix an installer issue placing the english translation in the wrong place
 # 0.3.1.1030 (2012-06-24)
@@ -3561,7 +3724,7 @@
 # 0.3.1.670 (2011-12-24)
 - Recommend mingw-w64 instead of mingw
 # 0.3.1.669 (2011-12-24)
-- Seperate cache directory from settings directory to allow an easier backup for users
+- Separate cache directory from settings directory to allow an easier backup for users
 # 0.3.1.668 (2011-12-24)
 - Add missing path translation
 # 0.3.1.667 (2011-12-24)

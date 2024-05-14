@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -26,7 +26,7 @@
 #include "GOArchiveWriter.h"
 #include "GOOrganList.h"
 
-class GOFile;
+class GOOpenedFile;
 class GOOrgan;
 
 class GOArchiveCreator {
@@ -40,16 +40,16 @@ private:
   std::vector<wxString> m_OrganPaths;
   wxString m_PackageTitle;
 
-  std::unique_ptr<GOFile> findPackageFile(const wxString &name);
+  std::unique_ptr<GOOpenedFile> findPackageFile(const wxString &name);
   bool writePackageIndex();
   bool checkExtension(const wxString &name, wxString ext);
   bool storeFile(const wxString &name, const GOBuffer<uint8_t> &data);
-  bool addOrganData(unsigned idx, GOFile *file);
+  bool addOrganData(unsigned idx, GOOpenedFile *file);
   bool compressData(
     const wxString &name, const wxString &ext, GOBuffer<uint8_t> &data);
 
 public:
-  GOArchiveCreator(const GOSettingDirectory &cacheDir);
+  GOArchiveCreator(const wxString &cacheDir);
   ~GOArchiveCreator();
 
   bool CreatePackage(const wxString &path, const wxString title);

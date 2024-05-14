@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,14 +9,15 @@
 
 #include <wx/intl.h>
 
-#include "GODC.h"
-#include "GOEnclosure.h"
+#include "config/GOConfigReader.h"
+#include "model/GOEnclosure.h"
+#include "primitives/GODC.h"
+#include "primitives/go_gui_utils.h"
+
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
-#include "config/GOConfigReader.h"
-#include "go_gui_utils.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)
   : GOGUIControl(panel, control),

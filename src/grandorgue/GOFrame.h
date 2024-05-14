@@ -1,22 +1,8 @@
 /*
- * GrandOrgue - a free pipe organ simulator
- *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #ifndef GOFRAME_H
@@ -30,26 +16,33 @@
 #include "help/GOHelpRequestor.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
+#include "modification/GOModificationListener.h"
+#include "size/GOResizable.h"
 #include "threading/GOMutex.h"
+#include "updater/GOUpdateChecker.h"
 
 #include "GOEvent.h"
-#include "GOResizable.h"
 
 class GOApp;
+class GOAudioGauge;
+class GOConfig;
 class GODocument;
 class GOMidiEvent;
 class GOOrgan;
-class GOConfig;
+class GOOrganController;
+class GOProgressDialog;
 class GOSound;
 class wxChoice;
-class GOAudioGauge;
 class wxHtmlHelpController;
 class wxSpinCtrl;
+class wxToolBar;
+class wxToolBarToolBase;
 
 class GOFrame : public wxFrame,
                 private GOHelpRequestor,
                 public GOResizable,
-                protected GOMidiCallback {
+                protected GOMidiCallback,
+                private GOModificationListener {
 private:
   GOApp &m_App;
   GOMutex m_mutex;
@@ -60,8 +53,10 @@ private:
   wxMenu *m_recent_menu;
   wxMenu *m_temperament_menu;
   GODocument *m_doc;
+  wxToolBar *m_ToolBar;
   GOAudioGauge *m_SamplerUsage;
   wxControl *m_VolumeControl;
+  wxToolBarToolBase *m_VolumeControlTool;
   std::vector<GOAudioGauge *> m_VolumeGauge;
   wxSpinCtrl *m_Transpose;
   wxChoice *m_ReleaseLength;
@@ -75,6 +70,9 @@ private:
   wxString m_Label;
   bool m_MidiMonitor;
   bool m_isMeterReady;
+  bool m_IsGuiOnly;
+  std::unique_ptr<GOThread> m_UpdateCheckerThread;
+  GOUpdateChecker::Result m_StartupUpdateCheckerResult;
 
   // to avoid event processing when the settings dialog is open
   bool m_InSettings;
@@ -82,6 +80,8 @@ private:
   int m_AfterSettingsEventId;
   GOOrgan *p_AfterSettingsEventOrgan;
 
+  // Updates ReleseLength in the model, in the config, and in the control
+  void UpdateReleaseLength(unsigned releaseLength);
   void UpdatePanelMenu();
   void UpdateFavoritesMenu();
   void UpdateRecentMenu();
@@ -90,10 +90,18 @@ private:
   void UpdateSize();
   void UpdateVolumeControlWithSettings();
 
-  GODocument *GetDocument();
+  // Returns the current open organ controller or nullptr
+  GOOrganController *GetOrganController() const;
+
+  void AttachDetachOrganController(bool isToAttach);
+
+  // Processes the organ model modification event:
+  // updates some controls according the organ model changes
+  void OnIsModifiedChanged(bool modified) override;
+
+  bool LoadOrgan(const GOOrgan &organ, const wxString &cmb = wxEmptyString);
 
   void OnMeters(wxCommandEvent &event);
-
   void OnLoadFile(wxCommandEvent &event);
   void OnLoad(wxCommandEvent &event);
   void OnLoadFavorite(wxCommandEvent &event);
@@ -103,8 +111,9 @@ private:
   void OnSave(wxCommandEvent &event);
   void OnMenuClose(wxCommandEvent &event);
   void OnExit(wxCommandEvent &event);
-  void OnImportSettings(wxCommandEvent &event);
   void OnImportCombinations(wxCommandEvent &event);
+  void OnExportCombinations(wxCommandEvent &event);
+  void OnImportSettings(wxCommandEvent &event);
   void OnExport(wxCommandEvent &event);
   void OnCache(wxCommandEvent &event);
   void OnCacheDelete(wxCommandEvent &event);
@@ -112,7 +121,7 @@ private:
   void OnRevert(wxCommandEvent &event);
   void OnProperties(wxCommandEvent &event);
 
-  void OnEditOrgan(wxCommandEvent &event);
+  void OnOrganSettings(wxCommandEvent &event);
   void OnMidiList(wxCommandEvent &event);
 
   void OnAudioPanic(wxCommandEvent &event);
@@ -156,6 +165,11 @@ private:
   void OnMsgBox(wxMsgBoxEvent &event);
   void OnRenameFile(wxRenameFileEvent &event);
 
+  void OnUpdateCheckingRequested(wxCommandEvent &event);
+  void OnUpdateCheckingCompletion(GOUpdateChecker::CompletionEvent &event);
+  void OnNewReleaseInfoRequested(wxCommandEvent &event);
+  void OnNewReleaseDownload(wxCommandEvent &event);
+
   bool CloseOrgan(bool isForce = false);
   bool CloseProgram(bool isForce = false);
   void Open(const GOOrgan &organ);
@@ -177,7 +191,7 @@ public:
     GOSound &sound);
   virtual ~GOFrame(void);
 
-  void Init(wxString filename);
+  void Init(const wxString &filename, bool isGuiOnly);
 
   void DoSplash(bool timeout = true);
 

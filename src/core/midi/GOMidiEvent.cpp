@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,23 +13,25 @@
 #include "GORodgers.h"
 
 GOMidiEvent::GOMidiEvent()
-  : m_miditype(MIDI_NONE),
+  : m_MidiType(MIDI_NONE),
     m_channel(-1),
     m_key(-1),
     m_value(-1),
     m_time(0),
     m_string(),
-    m_data() {}
+    m_data(),
+    m_IsToUseNoteOff(true) {}
 
 GOMidiEvent::GOMidiEvent(const GOMidiEvent &e)
-  : m_miditype(e.m_miditype),
+  : m_MidiType(e.m_MidiType),
     m_channel(e.m_channel),
     m_key(e.m_key),
     m_value(e.m_value),
     m_device(e.m_device),
     m_time(e.m_time),
     m_string(e.m_string.Clone()),
-    m_data(e.m_data) {}
+    m_data(e.m_data),
+    m_IsToUseNoteOff(e.m_IsToUseNoteOff) {}
 
 void GOMidiEvent::SetString(const wxString &str, unsigned length) {
   unsigned len = str.length();
@@ -185,7 +187,7 @@ void GOMidiEvent::ToMidi(
     if (GetChannel() == -1)
       return;
     m.resize(3);
-    if (GetValue() == 0)
+    if (GetValue() == 0 && m_IsToUseNoteOff)
       m[0] = 0x80;
     else
       m[0] = 0x90;

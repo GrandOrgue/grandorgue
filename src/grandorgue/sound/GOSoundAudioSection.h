@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,17 +11,20 @@
 #include <assert.h>
 #include <math.h>
 
+#include "GOBool3.h"
 #include "GOInt.h"
 #include "GOSoundCompress.h"
 #include "GOSoundDefs.h"
 #include "GOSoundResample.h"
 #include "GOWave.h"
 
-class GOAudioSection;
+class GOSoundAudioSection;
 class GOCache;
+class GOCacheObject;
 class GOCacheWriter;
+class GOLoaderFilename;
 class GOMemoryPool;
-class GOReleaseAlignTable;
+class GOSoundReleaseAlignTable;
 class GOSampleStatistic;
 
 struct audio_section_stream_s;
@@ -61,7 +64,7 @@ typedef struct audio_end_data_segment_s {
 } audio_end_data_segment;
 
 typedef struct audio_section_stream_s {
-  const GOAudioSection *audio_section;
+  const GOSoundAudioSection *audio_section;
   const struct resampler_coefs_s *resample_coefs;
 
   /* Method used to decode stream */
@@ -91,7 +94,7 @@ typedef struct audio_section_stream_s {
   DecompressionCache cache;
 } audio_section_stream;
 
-class GOAudioSection {
+class GOSoundAudioSection {
 private:
   template <class T>
   static void MonoUncompressedLinear(
@@ -144,7 +147,7 @@ private:
   unsigned char *m_Data;
 
   /* If this is a release section, it may contain an alignment table */
-  GOReleaseAlignTable *m_ReleaseAligner;
+  GOSoundReleaseAlignTable *m_ReleaseAligner;
   unsigned m_ReleaseStartSegment;
 
   /* Number of significant bits in the decoded sample data */
@@ -154,10 +157,12 @@ private:
   unsigned m_SampleRate;
 
   /* Type of the data which is stored in the data pointer */
-  unsigned m_Compressed;
   unsigned m_BitsPerSample;
   unsigned m_BytesPerSample;
   unsigned m_Channels;
+
+  GOBool3 m_WaveTremulantStateFor;
+  bool m_IsCompressed;
 
   /* Size of the section in BYTES */
   GOMemoryPool &m_Pool;
@@ -166,14 +171,23 @@ private:
   unsigned m_MaxAmplitude;
   int m_MaxAbsAmplitude;
   int m_MaxAbsDerivative;
+  unsigned m_ReleaseCrossfadeLength; // in ms
 
 public:
-  GOAudioSection(GOMemoryPool &pool);
-  ~GOAudioSection();
+  GOSoundAudioSection(GOMemoryPool &pool);
+  ~GOSoundAudioSection();
   void ClearData();
-  unsigned GetChannels() const;
+  inline unsigned GetChannels() const { return m_Channels; }
+  inline GOBool3 GetWaveTremulantStateFor() const {
+    return m_WaveTremulantStateFor;
+  }
+
   unsigned GetBytesPerSample() const;
   unsigned GetLength() const;
+  unsigned GetReleaseCrossfadeLength() const {
+    return m_ReleaseCrossfadeLength;
+  }
+
   bool LoadCache(GOCache &cache);
   bool SaveCache(GOCacheWriter &cache) const;
 
@@ -197,14 +211,18 @@ public:
     int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
   void Setup(
+    const GOCacheObject *pObjectFor,
+    const GOLoaderFilename *pLoaderFilename,
     const void *pcm_data,
     GOWave::SAMPLE_FORMAT pcm_data_format,
     unsigned pcm_data_channels,
     unsigned pcm_data_sample_rate,
     unsigned pcm_data_nb_samples,
-    const std::vector<GO_WAVE_LOOP> *loop_points,
+    const std::vector<GOWaveLoop> *loop_points,
+    GOBool3 waveTremulantStateFor,
     bool compress,
-    unsigned crossfade_length);
+    unsigned loopCrossfadeLength,
+    unsigned releaseCrossfadeLength);
 
   bool IsOneshot() const;
 
@@ -231,25 +249,24 @@ public:
   unsigned GetSampleRate() const;
   bool SupportsStreamAlignment() const;
   void SetupStreamAlignment(
-    const std::vector<const GOAudioSection *> &joinables, unsigned start_index);
+    const std::vector<const GOSoundAudioSection *> &joinables,
+    unsigned start_index);
 
   GOSampleStatistic GetStatistic();
 };
 
-inline unsigned GOAudioSection::GetChannels() const { return m_Channels; }
-
-inline unsigned GOAudioSection::GetBytesPerSample() const {
-  return (m_Compressed) ? 0 : (m_BitsPerSample / 8);
+inline unsigned GOSoundAudioSection::GetBytesPerSample() const {
+  return (m_IsCompressed) ? 0 : (m_BitsPerSample / 8);
 }
 
-inline unsigned GOAudioSection::GetLength() const { return m_SampleCount; }
+inline unsigned GOSoundAudioSection::GetLength() const { return m_SampleCount; }
 
-inline bool GOAudioSection::IsOneshot() const {
+inline bool GOSoundAudioSection::IsOneshot() const {
   return (m_EndSegments.size() == 1)
     && (m_EndSegments[0].next_start_segment_index < 0);
 }
 
-inline int GOAudioSection::GetSampleData(
+inline int GOSoundAudioSection::GetSampleData(
   unsigned position,
   unsigned channel,
   unsigned bits_per_sample,
@@ -271,9 +288,9 @@ inline int GOAudioSection::GetSampleData(
   return 0;
 }
 
-inline int GOAudioSection::GetSample(
+inline int GOSoundAudioSection::GetSample(
   unsigned position, unsigned channel, DecompressionCache *cache) const {
-  if (!m_Compressed) {
+  if (!m_IsCompressed) {
     return GetSampleData(
       position, channel, m_BitsPerSample, m_Channels, m_Data);
   } else {
@@ -289,7 +306,7 @@ inline int GOAudioSection::GetSample(
   }
 }
 
-inline void GOAudioSection::SetSampleData(
+inline void GOSoundAudioSection::SetSampleData(
   unsigned position,
   unsigned channel,
   unsigned bits_per_sample,
@@ -314,11 +331,11 @@ inline void GOAudioSection::SetSampleData(
   assert(0 && "broken sampler type");
 }
 
-inline float GOAudioSection::GetNormGain() const {
+inline float GOSoundAudioSection::GetNormGain() const {
   return scalbnf(1.0f, -((int)m_SampleFracBits));
 }
 
-inline bool GOAudioSection::SupportsStreamAlignment() const {
+inline bool GOSoundAudioSection::SupportsStreamAlignment() const {
   return (m_ReleaseAligner != NULL);
 }
 

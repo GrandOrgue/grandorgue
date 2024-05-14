@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,15 +10,16 @@
 
 #include <wx/panel.h>
 
-#include "GOKeyReceiver.h"
+#include "midi/GOMidiShortcutReceiver.h"
+#include "modification/GOModificationProxy.h"
 
 class wxChoice;
 class wxToggleButton;
 
-class GOMidiEventKeyTab : public wxPanel {
+class GOMidiEventKeyTab : public wxPanel, public GOModificationProxy {
 private:
-  GOKeyReceiver *m_original;
-  GOKeyReceiverData m_key;
+  GOMidiShortcutReceiver *m_original;
+  GOMidiShortcutPattern m_key;
   wxChoice *m_keyselect;
   wxToggleButton *m_listen;
   wxChoice *m_keyminusselect;
@@ -40,7 +41,7 @@ protected:
   };
 
 public:
-  GOMidiEventKeyTab(wxWindow *parent, GOKeyReceiver *event);
+  GOMidiEventKeyTab(wxWindow *parent, GOMidiShortcutReceiver *event);
   ~GOMidiEventKeyTab();
 
   virtual bool TransferDataFromWindow() override;

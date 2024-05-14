@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,9 +9,11 @@
 
 #include <wx/intl.h>
 
-#include "GODefinitionFile.h"
-#include "GODivisional.h"
-#include "GOEnclosure.h"
+#include "combinations/GODivisionalSetter.h"
+#include "model/GOEnclosure.h"
+#include "model/GOManual.h"
+#include "model/GOWindchest.h"
+
 #include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
@@ -19,22 +21,21 @@
 #include "GOGUIManualBackground.h"
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
-#include "GOManual.h"
-#include "GOWindchest.h"
+#include "GOOrganController.h"
 
-GOGUIFloatingPanel::GOGUIFloatingPanel(GODefinitionFile *organfile)
-  : m_organfile(organfile) {}
+GOGUIFloatingPanel::GOGUIFloatingPanel(GOOrganController *organController)
+  : m_OrganController(organController) {}
 
 GOGUIFloatingPanel::~GOGUIFloatingPanel() {}
 
 void GOGUIFloatingPanel::CreatePanels(GOConfigReader &cfg) {
-  m_organfile->AddPanel(CreateFloatingPanel(cfg));
+  m_OrganController->AddPanel(CreateFloatingPanel(cfg));
 }
 
 GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
-  GOGUIPanel *panel = new GOGUIPanel(m_organfile);
-  GOGUIDisplayMetrics *metrics
-    = new GOGUISetterDisplayMetrics(cfg, m_organfile, GOGUI_SETTER_FLOATING);
+  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
+    cfg, m_OrganController, GOGUI_SETTER_FLOATING);
   panel->Init(
     cfg,
     metrics,
@@ -46,66 +47,62 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
   back->Init(cfg, wxT("SetterFloating"));
   panel->AddControl(back);
 
-  for (unsigned i = m_organfile->GetODFManualCount();
-       i <= m_organfile->GetManualAndPedalCount();
+  for (unsigned i = m_OrganController->GetODFManualCount();
+       i <= m_OrganController->GetManualAndPedalCount();
        i++) {
     wxString group;
     group.Printf(
-      wxT("SetterFloating%03d"), i - m_organfile->GetODFManualCount() + 1);
-    GOGUIManualBackground *manual_back
-      = new GOGUIManualBackground(panel, i - m_organfile->GetODFManualCount());
+      wxT("SetterFloating%03d"),
+      i - m_OrganController->GetODFManualCount() + 1);
+    GOGUIManualBackground *manual_back = new GOGUIManualBackground(
+      panel, i - m_OrganController->GetODFManualCount());
     manual_back->Init(cfg, group);
     panel->AddControl(manual_back);
 
     GOGUIManual *manual = new GOGUIManual(
-      panel, m_organfile->GetManual(i), i - m_organfile->GetODFManualCount());
+      panel,
+      m_OrganController->GetManual(i),
+      i - m_OrganController->GetODFManualCount());
     manual->Init(cfg, group);
     panel->AddControl(manual);
 
+    /*
     for (unsigned j = 0; j < 10; j++) {
-      GODivisional *divisional = new GODivisional(
-        m_organfile, m_organfile->GetManual(i)->GetDivisionalTemplate(), true);
-      divisional->Init(
-        cfg,
-        wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),
-        i,
-        100 + j,
-        wxString::Format(wxT("%d"), j + 1));
-      m_organfile->GetManual(i)->AddDivisional(divisional);
+      wxString buttonName = GODivisionalSetter::GetDivisionalButtonName(i, j);
+      GOButtonControl *const divisional
+        = m_OrganController->GetButtonControl(buttonName, false);
 
       GOGUIButton *button = new GOGUIButton(panel, divisional, true);
       button->Init(
-        cfg,
-        wxString::Format(wxT("Setter%03dDivisional%03d"), i, j + 100),
-        j + 1,
-        i - m_organfile->GetODFManualCount());
+        cfg, buttonName, j + 1, i - m_OrganController->GetODFManualCount());
       panel->AddControl(button);
     }
+    */
   }
 
-  GOEnclosure *master_enc = new GOEnclosure(m_organfile);
+  GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
   master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
-  m_organfile->AddEnclosure(master_enc);
+  m_OrganController->AddEnclosure(master_enc);
   master_enc->SetElementID(
-    m_organfile->GetRecorderElementID(wxString::Format(wxT("SM"))));
+    m_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
 
   GOGUIEnclosure *enclosure = new GOGUIEnclosure(panel, master_enc);
   enclosure->Init(cfg, wxT("SetterMasterVolume"));
   panel->AddControl(enclosure);
 
-  for (unsigned i = 0; i < m_organfile->GetWindchestGroupCount(); i++) {
-    GOWindchest *windchest = m_organfile->GetWindchest(i);
+  for (unsigned i = 0; i < m_OrganController->GetWindchestCount(); i++) {
+    GOWindchest *windchest = m_OrganController->GetWindchest(i);
     windchest->AddEnclosure(master_enc);
 
-    GOEnclosure *enc = new GOEnclosure(m_organfile);
+    GOEnclosure *enc = new GOEnclosure(*m_OrganController);
     enc->Init(
       cfg,
       wxString::Format(wxT("SetterMaster%03d"), i + 1),
       windchest->GetName(),
       127);
-    m_organfile->AddEnclosure(enc);
-    enc->SetElementID(
-      m_organfile->GetRecorderElementID(wxString::Format(wxT("SM%d"), i)));
+    m_OrganController->AddEnclosure(enc);
+    enc->SetElementID(m_OrganController->GetRecorderElementID(
+      wxString::Format(wxT("SM%d"), i)));
     windchest->AddEnclosure(enc);
 
     enclosure = new GOGUIEnclosure(panel, enc);

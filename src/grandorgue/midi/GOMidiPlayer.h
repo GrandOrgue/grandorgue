@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,21 +13,22 @@
 
 #include <vector>
 
-#include "GOElementCreator.h"
-#include "GOLabel.h"
+#include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
+#include "midi/GOMidiPlayerContent.h"
+
 #include "GOTime.h"
 #include "GOTimerCallback.h"
-#include "midi/GOMidiPlayerContent.h"
 
 class GOMidiEvent;
 class GOMidiFileReader;
-class GODefinitionFile;
+class GOOrganController;
 
 class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOMidiPlayerContent m_content;
-  GOLabel m_PlayingTime;
+  GOLabelControl m_PlayingTime;
   GOTime m_Start;
   unsigned m_PlayingSeconds;
   float m_Speed;
@@ -35,16 +36,17 @@ private:
   bool m_Pause;
   unsigned m_DeviceID;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct GOElementCreator::ButtonDefinitionEntry m_element_types[];
+  const struct GOElementCreator::ButtonDefinitionEntry *
+  GetButtonDefinitionList();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id, bool newState) override;
 
   void UpdateDisplay();
   void HandleTimer();
 
 public:
-  GOMidiPlayer(GODefinitionFile *organfile);
+  GOMidiPlayer(GOOrganController *organController);
   ~GOMidiPlayer();
 
   void Clear();
@@ -58,7 +60,7 @@ public:
 
   void Load(GOConfigReader &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 };
 
 #endif

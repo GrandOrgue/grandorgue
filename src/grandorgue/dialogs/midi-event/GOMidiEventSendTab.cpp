@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,7 @@
 #include "GOMidiEventSendTab.h"
 
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/gbsizer.h>
 #include <wx/sizer.h>
@@ -72,7 +73,7 @@ GOMidiEventSendTab::GOMidiEventSendTab(
     wxGBPosition(2, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  m_eventtype = new GOChoice<GOMidiSendMessageType>(this, ID_EVENT);
+  m_eventtype = new GOChoice<GOMidiSenderMessageType>(this, ID_EVENT);
   grid->Add(m_eventtype, wxGBPosition(2, 1), wxGBSpan(1, 4), wxEXPAND);
 
   grid->Add(
@@ -99,6 +100,14 @@ GOMidiEventSendTab::GOMidiEventSendTab(
     0,
     127);
   grid->Add(m_key, wxGBPosition(4, 1));
+
+  m_noteOff = new wxCheckBox(
+    this,
+    ID_NOTE_OFF,
+    wxT("Use Note Off (0x8X)"),
+    wxDefaultPosition,
+    wxDefaultSize);
+  grid->Add(m_noteOff, wxGBPosition(4, 2));
 
   m_LowValueLabel = new wxStaticText(this, wxID_ANY, wxT(""));
   grid->Add(
@@ -274,12 +283,13 @@ bool GOMidiEventSendTab::TransferDataFromWindow() {
   } while (empty_event);
   // The event with index 0 is also deleted so the dialog can't be used more
 
-  m_original->Assign(m_midi);
+  if (m_original->RenewFrom(m_midi))
+    OnIsModifiedChanged(true);
   return true;
 }
 
 void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
-  GOMidiSendMessageType type = m_eventtype->GetCurrentSelection();
+  GOMidiSenderMessageType type = m_eventtype->GetCurrentSelection();
   if (m_original->HasChannel(type))
     m_channel->Enable();
   else
@@ -289,6 +299,10 @@ void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
     m_key->SetRange(0, m_original->KeyLimit(type));
   } else
     m_key->Disable();
+  if (m_original->IsNote(type))
+    m_noteOff->Enable();
+  else
+    m_noteOff->Disable();
   if (m_original->HasLowValue(type)) {
     m_LowValue->Enable();
     m_LowValue->SetRange(0, m_original->LowValueLimit(type));
@@ -393,7 +407,7 @@ void GOMidiEventSendTab::LoadEvent() {
   else
     m_delete->Disable();
 
-  GOMidiSendEvent &e = m_midi.GetEvent(m_current);
+  GOMidiSenderEventPattern &e = m_midi.GetEvent(m_current);
 
   m_eventtype->SetCurrentSelection(e.type);
 
@@ -412,10 +426,11 @@ void GOMidiEventSendTab::LoadEvent() {
   m_HighValue->SetValue(e.high_value);
   m_StartValue->SetValue(e.start);
   m_LengthValue->SetValue(e.length);
+  m_noteOff->SetValue(e.useNoteOff);
 }
 
 void GOMidiEventSendTab::StoreEvent() {
-  GOMidiSendEvent &e = m_midi.GetEvent(m_current);
+  GOMidiSenderEventPattern &e = m_midi.GetEvent(m_current);
   if (m_device->GetSelection() == 0)
     e.deviceId = 0;
   else
@@ -429,6 +444,7 @@ void GOMidiEventSendTab::StoreEvent() {
   e.high_value = m_HighValue->GetValue();
   e.start = m_StartValue->GetValue();
   e.length = m_LengthValue->GetValue();
+  e.useNoteOff = m_noteOff->GetValue();
 }
 
 void GOMidiEventSendTab::OnNewClick(wxCommandEvent &event) {
@@ -454,9 +470,9 @@ void GOMidiEventSendTab::OnCopyClick(wxCommandEvent &event) {
   LoadEvent();
 }
 
-GOMidiSendEvent GOMidiEventSendTab::CopyEvent() {
-  GOMidiReceiveEvent recv = m_recv->GetCurrentEvent();
-  GOMidiSendEvent e;
+GOMidiSenderEventPattern GOMidiEventSendTab::CopyEvent() {
+  GOMidiReceiverEventPattern recv = m_recv->GetCurrentEvent();
+  GOMidiSenderEventPattern e;
 
   // try to fill e.deviceId as the id of the bound output device of the input
   // device

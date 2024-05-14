@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -64,6 +64,10 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     wxLocale::GetLanguageName(wxLANGUAGE_GERMAN),
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_GERMAN)));
+  m_Language->Append(
+    wxLocale::GetLanguageName(wxLANGUAGE_HUNGARIAN),
+    new wxStringClientData(
+      wxLocale::GetLanguageCanonicalName(wxLANGUAGE_HUNGARIAN)));
   m_Language->Append(
     wxLocale::GetLanguageName(wxLANGUAGE_ITALIAN),
     new wxStringClientData(
@@ -362,6 +366,14 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     5);
   m_ODFCheck->SetValue(m_config.ODFCheck());
 
+  item9->Add(
+    m_ODFHw1Check
+    = new wxCheckBox(this, ID_ODF_CHECK, _("Check ODF for HW1-compatibility")),
+    0,
+    wxEXPAND | wxALL,
+    5);
+  m_ODFHw1Check->SetValue(m_config.ODFHw1Check());
+
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Metronome"));
   grid = new wxFlexGridSizer(2, 5, 5);
   grid->Add(
@@ -395,6 +407,16 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   item6->Add(grid, 0, wxEXPAND | wxALL, 5);
   item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
+  item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Updates"));
+  item9->Add(item6, 0, wxEXPAND | wxALL, 5);
+  item6->Add(
+    m_CheckForUpdatesAtStartup
+    = new wxCheckBox(this, wxID_ANY, _("Check for updates at startup")),
+    0,
+    wxEXPAND | wxALL,
+    5);
+  m_CheckForUpdatesAtStartup->SetValue(m_config.CheckForUpdatesAtStartup());
+
   item0->Add(item9, 1, wxEXPAND | wxALL, 0);
 
   topSizer->Add(item0, 0, wxEXPAND | wxALL, 5);
@@ -419,6 +441,7 @@ bool GOSettingsOptions::TransferDataFromWindow() {
   m_config.ManageCache(m_ManageCache->IsChecked());
   m_config.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
   m_config.ODFCheck(m_ODFCheck->IsChecked());
+  m_config.ODFHw1Check(m_ODFHw1Check->IsChecked());
   m_config.RecordDownmix(m_RecordDownmix->IsChecked());
   m_config.Volume(m_Volume->GetValue());
   m_config.ScaleRelease(m_Scale->IsChecked());
@@ -436,6 +459,7 @@ bool GOSettingsOptions::TransferDataFromWindow() {
   m_config.MemoryLimit(m_MemoryLimit->GetValue());
   m_config.MetronomeBPM(m_MetronomeBPM->GetValue());
   m_config.MetronomeMeasure(m_MetronomeMeasure->GetValue());
+  m_config.CheckForUpdatesAtStartup(m_CheckForUpdatesAtStartup->GetValue());
 
   // Language
   const wxStringClientData *const langData

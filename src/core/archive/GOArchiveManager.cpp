@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,24 +12,26 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "GOArchive.h"
-#include "GOArchiveFile.h"
-#include "GOFile.h"
-#include "GOOrgan.h"
-#include "GOOrganList.h"
-#include "GOPath.h"
 #include "config/GOConfigFileReader.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
+#include "files/GOOpenedFile.h"
+
+#include "GOArchive.h"
+#include "GOArchiveFile.h"
+#include "GOOrgan.h"
+#include "GOOrganList.h"
+#include "GOPath.h"
 
 GOArchiveManager::GOArchiveManager(
-  GOOrganList &OrganList, const GOSettingDirectory &CacheDir)
-  : m_OrganList(OrganList), m_CacheDir(CacheDir) {}
+  GOOrganList &OrganList, const wxString &cacheDir)
+  : m_OrganList(OrganList), m_CacheDir(cacheDir) {}
 
 GOArchiveManager::~GOArchiveManager() {}
 
 GOArchive *GOArchiveManager::OpenArchive(const wxString &path) {
   GOArchive *archive = new GOArchive(m_CacheDir);
+
   if (!archive->OpenArchive(path)) {
     delete archive;
     return NULL;
@@ -38,7 +40,7 @@ GOArchive *GOArchiveManager::OpenArchive(const wxString &path) {
 }
 
 bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
-  GOFile *indexFile = archive->OpenFile(wxT("organindex.ini"));
+  GOOpenedFile *indexFile = archive->OpenFile(wxT("organindex.ini"));
   if (!indexFile)
     return false;
   GOConfigFileReader ini_file;
@@ -84,8 +86,13 @@ bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
       wxString RecordingDetails
         = cfg.ReadString(CMBSetting, group, wxT("RecordingDetails"), false);
       if (InstallOrgans)
-        organs.push_back(
-          GOOrgan(odf, id, ChurchName, OrganBuilder, RecordingDetails));
+        organs.push_back(GOOrgan(
+          odf,
+          id,
+          archive->GetPath(),
+          ChurchName,
+          OrganBuilder,
+          RecordingDetails));
     }
 
     GOArchiveFile a(
@@ -101,25 +108,31 @@ bool GOArchiveManager::ReadIndex(GOArchive *archive, bool InstallOrgans) {
   return true;
 }
 
-GOArchive *GOArchiveManager::LoadArchive(const wxString &id) {
-  for (unsigned i = 0; i < m_OrganList.GetArchiveList().size(); i++) {
-    const GOArchiveFile *file = m_OrganList.GetArchiveList()[i];
-    if (file->GetID() != id)
-      continue;
-    GOArchive *archive = OpenArchive(file->GetPath());
-    if (!archive)
-      continue;
-    if (!ReadIndex(archive, archive->GetArchiveID() != id)) {
-      delete archive;
-      continue;
+GOArchive *GOArchiveManager::LoadArchive(
+  const wxString &id, const wxString &archivePath) {
+  GOArchive *pResArchive = nullptr;
+
+  for (const GOArchiveFile *file : m_OrganList.GetArchiveList()) {
+    const wxString &filePath = file->GetPath();
+
+    if (
+      file->GetID() == id
+      && (archivePath.IsEmpty() || filePath == archivePath)) {
+      GOArchive *archiveProbe = OpenArchive(filePath);
+
+      if (archiveProbe) {
+        bool isSameOrgan = archiveProbe->GetArchiveID() == id;
+
+        // if (!isSameOrgan) install organs from the archive but don't use it
+        if (ReadIndex(archiveProbe, !isSameOrgan) && isSameOrgan) {
+          pResArchive = archiveProbe;
+          break;
+        }
+        delete archiveProbe;
+      }
     }
-    if (archive->GetArchiveID() != id) {
-      delete archive;
-      continue;
-    }
-    return archive;
   }
-  return NULL;
+  return pResArchive;
 }
 
 wxString GOArchiveManager::InstallPackage(

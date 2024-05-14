@@ -25,18 +25,21 @@ You can download the source code archive from GitHub
     1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) end extract the contents of the ``rtaudio-master`` subdirectory from the archive to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
     2. `RtMidi`: Download [the source archive](https://github.com/thestk/rtmidi/archive/refs/heads/master.zip) and extract the contents of the ``rtmidi-master`` subdirectory from the archive to the ``submodules/RtMidi`` subdirectory of GrandOrgue source tree.
     3. `PortAudio`: Download [the source archive](https://github.com/PortAudio/portaudio/archive/refs/heads/master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/PortAudio`` subdirectory of GrandOrgue source tree.
-    4. `ZitaConvolver`: Download the source archive](https://salsa.debian.org/multimedia-team/zita-convolver/-/archive/master/zita-convolver-master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/ZitaConvolver`` subdirectory of GrandOrgue source tree.
+    4. `ZitaConvolver`: Download [the source archive](https://salsa.debian.org/multimedia-team/zita-convolver/-/archive/master/zita-convolver-master.zip) and extract the contents of the ``zita-convolver-master`` subdirectory from the archive to the ``submodules/ZitaConvolver`` subdirectory of GrandOrgue source tree.
 
 ## Building for Linux on Linux
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
 2. Install required software
     - Manually
-        1. Install gcc C++ compiler, make, cmake and the development packages of wxWigets, jack (libjack), pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
-        2. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
+        1. Install gcc C++ compiler, make, cmake, imagemagic, pkg-config
+        2. Install the development packages of wxWigets, alsa (libasound), jack (libjack), fftw (fftw3), wavpack, yaml-cpp, zlib, libcurl, udev from your distribution.
+        
+            The exact name of packages differ from one distribution to another.             For example, on any debian-based distribution (including Ubuntu, Mint and Raspbian) they are libasound2-dev, libfftw3-dev, libjack-dev, libudev-dev, libwxgtk3.2-dev, libyaml-cpp-dev, zlib1g-dev, libcurl4-openssl-dev.
+        3. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution).
     - Or run the prepared scripts for certain linux distributions by a sudoer user:
         - on Fedora run ``<GO source tree>/build-scripts/for-linux/prepare-fedora.sh``
         - on OpenSuse run ``<GO source tree>/build-scripts/for-linux/prepare-opensuse.sh``
-        - on Debian 9+ or on Ubuntu 18+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-ubuntu.sh``
+        - on Debian 10+ or on Ubuntu 20+ run ``<GO source tree>/build-scripts/for-linux/prepare-debian-based.sh``
 3. Build
     - Manually
         1. Create an empty build directory, eg:
@@ -156,62 +159,58 @@ You can download the source code archive from GitHub
 
         The built appimage will appear in the build/appimage-x86_64 subdirectory of current directory
 
-## Building for OS X on OS X
+## Building for macOS on macOS
+
 1. Prequisites:
-    1. OS X >= 10.11
-    2. Xcode >= 7.3
-    3. homebrew
-2. Extract the GO sources somewhere, eg: /home/user/gosources
-3. Install the required software
-    - Manually
+    1. A macOS version supported by Homebrew (the three latest major versions of macOS)
+    2. Xcode or Command Line Tools for Xcode
+    3. Homebrew
 
-        ```
-        brew update
-        brew install gettext jack docbook-xsl wxmac cmake pkg-config fftw wavpack
-        brew link gettext --force
-        ```
+2. Extract the GO sources somewhere, eg: ~/documents/Projects/GrandOrgueDev/gosources using the Git method. The manual method may install the wrong version of an external submodule.
 
-    - Or run the prepared scripts by a sudoer user:
-
-        ```
-        <GO source tree>/build-scripts/for-osx/prepare-osx.sh
-	    ```
+3. Install the required software by running (the commands in)
+    ```
+    <GO source tree>/build-scripts/for-osx/prepare-osx.sh
+    ```
 
 4. Build
     - Manually
-        1. Create an empty build directory, eg: mkdir /home/user/gobuild
-        2. Run cmake:
+        1. Create an empty build folder, eg: ~/documents/Projects/GrandOrgueDev/gobuild
 
+        2. Change the working directory
+            ```
+            cd ~/documents/Projects/GrandOrgueDev/gobuild
+            ```
 
-		    ```
-            cd /home/user/gobuild
-            cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <GO source tree>
-        	```
+        3. Run cmake:
+            - on Apple silicon
+                ```
+                cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/opt/homebrew/opt/docbook-xsl/docbook-xsl <GO source tree>
+                ```
+            - on Intel
+                ```
+                cmake -G "Unix Makefiles" -DDOCBOOK_DIR=/usr/local/opt/docbook-xsl/docbook-xsl <GO source tree>
+                ```
+            Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to `cmake`.
 
-            Hint: For debugging a build, add the ``-DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g`` option to cmake.
-
-        3. Run make
-
-
-		    ```
+        4. Run make
+            ```
             make
-		    ```
+            ```
 
+    - Automatically
+        1. Create an empty build folder, eg: ~/documents/Projects/GrandOrgueDev/gobuild
 
-        4. For making tar.gz package, run
+        2. Change the working directory
+            ```
+            cd ~/documents/Projects/GrandOrgueDev/gobuild
+            ```
 
-
-		    ```
-            make -k package VERBOSE=1
-		    ```
-
-    - Or run the prepared build script
-
-	    ```
-        <GO source tree>/build-scripts/for-osx/build-on-osx.sh
-	    ```
-
-        The built package will appear in the build/osx subdirectory of current directory, 
+        3. Run the prepared build script
+            ```
+            <GO source tree>/build-scripts/for-osx/build-on-osx.sh
+            ```
+            The built app will appear in the build/osx subdirectory of current directory.
 
 ## Cross-building for Windows-64 bit on Linux
 

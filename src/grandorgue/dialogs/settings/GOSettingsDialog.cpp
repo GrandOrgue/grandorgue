@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -22,8 +22,6 @@
 #include "GOSettingsPaths.h"
 #include "GOSettingsReverb.h"
 #include "GOSettingsTemperaments.h"
-#include "go_ids.h"
-#include "sound/GOSound.h"
 
 BEGIN_EVENT_TABLE(GOSettingsDialog, GOTabbedDialog)
 EVT_BUTTON(ID_REASONS, GOSettingsDialog::OnReasons)
@@ -39,32 +37,38 @@ const wxString GOSettingsDialog::PAGE_REVERB = wxT("Reverb");
 const wxString GOSettingsDialog::PAGE_TEMPERAMENTS = wxT("Temperaments");
 
 GOSettingsDialog::GOSettingsDialog(
-  wxWindow *win, GOSound &sound, SettingsReasons *reasons)
-  : GOTabbedDialog(win, "Settings", _("Program Settings"), wxDIALOG_NO_PARENT),
-    m_Sound(sound),
+  wxWindow *parent,
+  GOConfig &config,
+  GOSound &sound,
+  GOMidi &midi,
+  SettingsReasons *reasons)
+  : GOTabbedDialog(
+    parent,
+    "Settings",
+    _("Program Settings"),
+    config.m_DialogSizes,
+    wxEmptyString,
+    wxDIALOG_NO_PARENT),
     m_ReasonsAlreadyShown(false),
     m_Reasons(reasons) {
   wxBookCtrlBase *notebook = GetBook();
 
-  m_OptionsPage = new GOSettingsOptions(m_Sound.GetSettings(), notebook);
+  m_OptionsPage = new GOSettingsOptions(config, notebook);
   AddTab(m_OptionsPage, PAGE_OPTIONS, _("Options"));
-  m_PathsPage = new GOSettingsPaths(m_Sound.GetSettings(), notebook);
+  m_PathsPage = new GOSettingsPaths(config, notebook);
   AddTab(m_PathsPage, PAGE_PATHS, _("Paths"));
-  m_AudioPage = new GOSettingsAudio(m_Sound.GetSettings(), m_Sound, notebook);
+  m_AudioPage = new GOSettingsAudio(config, sound, notebook);
   AddTab(m_AudioPage, PAGE_AUDIO, _("Audio"));
-  m_MidiDevicePage = new SettingsMidiDevices(
-    m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+  m_MidiDevicePage = new SettingsMidiDevices(config, midi, notebook);
   AddTab(m_MidiDevicePage, PAGE_MIDI_DEVICES, _("MIDI Devices"));
-  m_MidiMessagePage = new GOSettingsMidiMessage(
-    m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
+  m_MidiMessagePage = new GOSettingsMidiMessage(config, midi, notebook);
   AddTab(m_MidiMessagePage, PAGE_INITIAL_MIDI, _("Initial MIDI"));
   m_OrgansPage
-    = new GOSettingsOrgans(m_Sound.GetSettings(), m_Sound.GetMidi(), notebook);
-  AddTab(m_OrgansPage, PAGE_ORGANS, _("Organs"));
-  m_ReverbPage = new GOSettingsReverb(m_Sound.GetSettings(), notebook);
+    = new GOSettingsOrgans(config, midi, this, PAGE_ORGANS, _("Organs"));
+  AddTab(m_OrgansPage);
+  m_ReverbPage = new GOSettingsReverb(config, notebook);
   AddTab(m_ReverbPage, PAGE_REVERB, _("Reverb"));
-  m_TemperamentsPage
-    = new GOSettingsTemperaments(m_Sound.GetSettings(), notebook);
+  m_TemperamentsPage = new GOSettingsTemperaments(config, notebook);
   AddTab(m_TemperamentsPage, PAGE_TEMPERAMENTS, _("Temperaments"));
 
   bool hasReasons = reasons && reasons->size();

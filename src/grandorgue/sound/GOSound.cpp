@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,8 +11,8 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#include "GODefinitionFile.h"
 #include "GOEvent.h"
+#include "GOOrganController.h"
 #include "GOSoundDefs.h"
 #include "config/GOConfig.h"
 #include "midi/GOMidi.h"
@@ -23,6 +23,9 @@
 
 GOSound::GOSound(GOConfig &settings)
   : m_open(false),
+    m_IsRunning(false),
+    m_NCallbacksEntered(0),
+    m_CallbackCondition(m_CallbackMutex),
     logSoundErrors(true),
     m_AudioOutputs(),
     m_WaitCount(),
@@ -30,7 +33,7 @@ GOSound::GOSound(GOConfig &settings)
     m_SamplesPerBuffer(0),
     meter_counter(0),
     m_defaultAudioDevice(),
-    m_organfile(0),
+    m_OrganController(0),
     m_config(settings),
     m_midi(settings) {}
 
@@ -118,8 +121,8 @@ void GOSound::OpenSound() {
   m_SoundEngine.SetupReverb(m_config);
   m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
 
-  if (m_organfile)
-    m_SoundEngine.Setup(m_organfile, m_config.ReleaseConcurrency());
+  if (m_OrganController)
+    m_SoundEngine.Setup(m_OrganController, m_config.ReleaseConcurrency());
   else
     m_SoundEngine.ClearSetup();
 
@@ -136,7 +139,7 @@ void GOSound::OpenSound() {
         = GOSoundPortFactory::create(portsConfig, this, name);
       if (!m_AudioOutputs[i].port)
         throw wxString::Format(
-          _("Output device %s not found - no sound output will occure"),
+          _("Output device %s not found - no sound output will occur"),
           name.c_str());
 
       m_AudioOutputs[i].port->Init(
@@ -148,12 +151,15 @@ void GOSound::OpenSound() {
     }
 
     OpenMidi();
+    m_NCallbacksEntered.store(0);
     StartStreams();
     StartThreads();
     m_open = true;
+    m_IsRunning.store(true);
 
-    if (m_organfile)
-      m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
+    if (m_OrganController)
+      m_OrganController->PreparePlayback(
+        &GetEngine(), &GetMidi(), &m_AudioRecorder);
   } catch (wxString &msg) {
     if (logSoundErrors)
       GOMessageBox(msg, _("Error"), wxOK | wxICON_ERROR, NULL);
@@ -188,6 +194,17 @@ void GOSound::StartStreams() {
 }
 
 void GOSound::CloseSound() {
+  m_IsRunning.store(false);
+
+  // wait for all started callbacks to finish
+  {
+    GOMutexLocker lock(m_CallbackMutex);
+
+    while (m_NCallbacksEntered.load() > 0)
+      m_CallbackCondition.WaitOrStop(
+        "GOSound::CloseSound waits for all callbacks to finish", nullptr);
+  }
+
   StopThreads();
 
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
@@ -211,8 +228,8 @@ void GOSound::CloseSound() {
     }
   }
 
-  if (m_organfile)
-    m_organfile->Abort();
+  if (m_OrganController)
+    m_OrganController->Abort();
   ResetMeters();
   m_AudioOutputs.clear();
   m_open = false;
@@ -229,8 +246,8 @@ void GOSound::AssureSoundIsClosed() {
     CloseSound();
 }
 
-void GOSound::AssignOrganFile(GODefinitionFile *organfile) {
-  if (organfile == m_organfile)
+void GOSound::AssignOrganFile(GOOrganController *organController) {
+  if (organController == m_OrganController)
     return;
 
   GOMutexLocker locker(m_lock);
@@ -238,22 +255,32 @@ void GOSound::AssignOrganFile(GODefinitionFile *organfile) {
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
     multi.Add(m_AudioOutputs[i].mutex);
 
-  if (m_organfile) {
-    m_organfile->Abort();
+  if (m_OrganController) {
+    // ensure pointers to work items are not held by threads
+    m_SoundEngine.GetScheduler().PauseGivingWork();
+    for (GOSoundThread *thread : m_Threads)
+      thread->WaitForIdle();
+
+    m_OrganController->Abort();
+    // now work items are safe to be deleted
     m_SoundEngine.ClearSetup();
+
+    // resume processing of work items
+    m_SoundEngine.GetScheduler().ResumeGivingWork();
   }
 
-  m_organfile = organfile;
+  m_OrganController = organController;
 
-  if (m_organfile && m_AudioOutputs.size()) {
-    m_SoundEngine.Setup(organfile, m_config.ReleaseConcurrency());
-    m_organfile->PreparePlayback(&GetEngine(), &GetMidi(), &m_AudioRecorder);
+  if (m_OrganController && m_AudioOutputs.size()) {
+    m_SoundEngine.Setup(organController, m_config.ReleaseConcurrency());
+    m_OrganController->PreparePlayback(
+      &GetEngine(), &GetMidi(), &m_AudioRecorder);
   }
 }
 
 GOConfig &GOSound::GetSettings() { return m_config; }
 
-GODefinitionFile *GOSound::GetOrganFile() { return m_organfile; }
+GOOrganController *GOSound::GetOrganFile() { return m_OrganController; }
 
 void GOSound::SetLogSoundErrorMessages(bool settingsDialogVisible) {
   logSoundErrors = settingsDialogVisible;
@@ -307,44 +334,62 @@ void GOSound::UpdateMeter() {
 
 bool GOSound::AudioCallback(
   unsigned dev_index, float *output_buffer, unsigned int n_frames) {
-  if (n_frames != m_SamplesPerBuffer) {
-    wxLogError(
-      _("No sound output will happen. Samples per buffer has been "
-        "changed by the sound driver to %d"),
-      n_frames);
-    return 1;
+  bool wasEntered = false;
+
+  if (m_IsRunning.load()) {
+    if (n_frames == m_SamplesPerBuffer) {
+      m_NCallbacksEntered.fetch_add(1);
+      wasEntered = true;
+    } else
+      wxLogError(
+        _("No sound output will happen. Samples per buffer has been "
+          "changed by the sound driver to %d"),
+        n_frames);
   }
-  GOSoundOutput *device = &m_AudioOutputs[dev_index];
-  GOMutexLocker locker(device->mutex);
+  // assure that m_IsRunning has not yet been changed after
+  // m_NCallbacksEntered.fetch_add, otherwise the control thread may not wait
+  if (wasEntered && m_IsRunning.load()) {
+    GOSoundOutput *device = &m_AudioOutputs[dev_index];
+    GOMutexLocker locker(device->mutex);
 
-  if (device->wait && device->waiting)
-    device->condition.Wait();
+    while (device->wait && device->waiting)
+      device->condition.Wait();
 
-  unsigned cnt = m_CalcCount.fetch_add(1);
-  m_SoundEngine.GetAudioOutput(
-    output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
-  device->wait = true;
-  unsigned count = m_WaitCount.fetch_add(1);
+    unsigned cnt = m_CalcCount.fetch_add(1);
+    m_SoundEngine.GetAudioOutput(
+      output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
+    device->wait = true;
+    unsigned count = m_WaitCount.fetch_add(1);
 
-  if (count + 1 == m_AudioOutputs.size()) {
-    m_SoundEngine.NextPeriod();
-    UpdateMeter();
+    if (count + 1 == m_AudioOutputs.size()) {
+      m_SoundEngine.NextPeriod();
+      UpdateMeter();
 
-    {
-      GOMutexLocker thread_locker(m_thread_lock);
-      for (unsigned i = 0; i < m_Threads.size(); i++)
-        m_Threads[i]->Wakeup();
+      {
+        GOMutexLocker thread_locker(m_thread_lock);
+        for (unsigned i = 0; i < m_Threads.size(); i++)
+          m_Threads[i]->Wakeup();
+      }
+      m_CalcCount.exchange(0);
+      m_WaitCount.exchange(0);
+
+      for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
+        GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
+        m_AudioOutputs[i].wait = false;
+        m_AudioOutputs[i].condition.Signal();
+      }
     }
-    m_CalcCount.exchange(0);
-    m_WaitCount.exchange(0);
+  } else
+    m_SoundEngine.GetEmptyAudioOutput(dev_index, n_frames, output_buffer);
+  if (
+    wasEntered && m_NCallbacksEntered.fetch_sub(1) <= 1
+    && !m_IsRunning.load()) {
+    // ensure that the control thread enters into m_NCallbackCondition.Wait()
+    GOMutexLocker lk(m_CallbackMutex);
 
-    for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-      GOMutexLocker(m_AudioOutputs[i].mutex, i == dev_index);
-      m_AudioOutputs[i].wait = false;
-      m_AudioOutputs[i].condition.Signal();
-    }
+    // notify the control thread
+    m_CallbackCondition.Broadcast();
   }
-
   return true;
 }
 

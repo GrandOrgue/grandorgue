@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,6 +10,7 @@
 
 #include "dialogs/common/GODialogTab.h"
 #include "midi/GOMidiSender.h"
+#include "modification/GOModificationProxy.h"
 
 #include "GOChoice.h"
 
@@ -17,6 +18,7 @@ class wxButton;
 class wxChoice;
 class wxSpinCtrl;
 class wxStaticText;
+class wxCheckBox;
 
 class GOConfig;
 class GOMidiDeviceConfigList;
@@ -24,7 +26,7 @@ class GOMidiMap;
 class GOMidiEventRecvTab;
 class GOTabbedDialog;
 
-class GOMidiEventSendTab : public GODialogTab {
+class GOMidiEventSendTab : public GODialogTab, public GOModificationProxy {
 private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiDeviceConfigList &m_MidiOut;
@@ -32,11 +34,12 @@ private:
 
   GOMidiSender *m_original;
   GOMidiEventRecvTab *m_recv;
-  GOMidiSenderData m_midi;
-  GOChoice<GOMidiSendMessageType> *m_eventtype;
+  GOMidiSenderEventPatternList m_midi;
+  GOChoice<GOMidiSenderMessageType> *m_eventtype;
   wxChoice *m_eventno, *m_channel, *m_device;
   wxStaticText *m_KeyLabel;
   wxSpinCtrl *m_key;
+  wxCheckBox *m_noteOff;
   wxStaticText *m_LowValueLabel;
   wxSpinCtrl *m_LowValue;
   wxStaticText *m_HighValueLabel;
@@ -50,7 +53,7 @@ private:
 
   void StoreEvent();
   void LoadEvent();
-  GOMidiSendEvent CopyEvent();
+  GOMidiSenderEventPattern CopyEvent();
 
   void OnNewClick(wxCommandEvent &event);
   void OnDeleteClick(wxCommandEvent &event);
@@ -71,7 +74,8 @@ protected:
     ID_HIGH_VALUE,
     ID_START,
     ID_LENGTH,
-    ID_COPY
+    ID_COPY,
+    ID_NOTE_OFF
   };
 
 public:

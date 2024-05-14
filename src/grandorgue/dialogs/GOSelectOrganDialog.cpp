@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,84 +10,125 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
+#include "archive/GOArchiveFile.h"
+#include "config/GOConfig.h"
+#include "size/GOAdditionalSizeKeeperProxy.h"
+#include "wxcontrols/GOGrid.h"
+
 #include "GOOrgan.h"
 #include "GOOrganList.h"
-#include "archive/GOArchiveFile.h"
 
-BEGIN_EVENT_TABLE(GOSelectOrganDialog, wxDialog)
-EVT_BUTTON(wxID_OK, GOSelectOrganDialog::OnOK)
-EVT_LIST_ITEM_ACTIVATED(ID_ORGANS, GOSelectOrganDialog::OnDoubleClick)
+enum { ID_ORGANS = 200 };
+
+BEGIN_EVENT_TABLE(GOSelectOrganDialog, GOSimpleDialog)
+EVT_GRID_CMD_SELECT_CELL(ID_ORGANS, GOSelectOrganDialog::OnSelectCell)
+EVT_GRID_CMD_CELL_LEFT_DCLICK(ID_ORGANS, GOSelectOrganDialog::OnDoubleClick)
 END_EVENT_TABLE()
 
-GOSelectOrganDialog::GOSelectOrganDialog(
-  wxWindow *parent, wxString title, const GOOrganList &organList)
-  : wxDialog(
-    NULL,
-    wxID_ANY,
-    title,
-    wxDefaultPosition,
-    wxSize(600, 480),
-    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
-    m_OrganList(organList) {
+enum { GRID_COL_NAME = 0, GRID_COL_PACKAGE, GRID_COL_PATH, GRID_N_COLS };
+
+GOSelectOrganDialog::GOSelectOrganDialog(wxWindow *parent, GOConfig &config)
+  : GOSimpleDialog(
+    nullptr,
+    wxT("Load"),
+    _("Select organ to load"),
+    config.m_DialogSizes,
+    wxEmptyString,
+    wxDIALOG_NO_PARENT),
+    r_OrganList(config) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-  topSizer->AddSpacer(5);
 
-  m_Organs = new wxListView(
-    this,
-    ID_ORGANS,
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
-  m_Organs->InsertColumn(0, _("Church"));
-  m_Organs->InsertColumn(1, _("Builder"));
-  m_Organs->InsertColumn(2, _("Recording"));
-  m_Organs->InsertColumn(3, _("Organ package"));
-  m_Organs->InsertColumn(4, _("ODF Path"));
-  topSizer->Add(m_Organs, 1, wxEXPAND | wxALL, 5);
+  m_GridOrgans
+    = new GOGrid(this, ID_ORGANS, wxDefaultPosition, wxSize(100, 40));
+  m_GridOrgans->CreateGrid(0, 3, wxGrid::wxGridSelectRows);
+  m_GridOrgans->HideRowLabels();
+  m_GridOrgans->EnableEditing(false);
+  m_GridOrgans->SetColLabelValue(GRID_COL_NAME, _("Name"));
+  m_GridOrgans->SetColLabelValue(GRID_COL_PACKAGE, _("Organ package"));
+  m_GridOrgans->SetColLabelValue(GRID_COL_PATH, _("Organ path"));
+  m_GridOrgans->SetColSize(GRID_COL_NAME, 150);
+  m_GridOrgans->SetColSize(GRID_COL_PACKAGE, 150);
+  m_GridOrgans->SetColSize(GRID_COL_PATH, 300);
+  m_GridOrgans->SetColumnRightVisible(GRID_COL_PATH, true);
+  topSizer->Add(m_GridOrgans, 1, wxEXPAND | wxALL, 5);
 
-  for (unsigned i = 0, j = 0; j < m_OrganList.GetOrganList().size(); j++) {
-    const GOOrgan *o = m_OrganList.GetOrganList()[j];
-    if (!o->IsUsable(m_OrganList))
-      continue;
-    m_Organs->InsertItem(i, o->GetChurchName());
-    m_Organs->SetItemPtrData(i, (wxUIntPtr)o);
-    m_Organs->SetItem(i, 1, o->GetOrganBuilder());
-    m_Organs->SetItem(i, 2, o->GetRecordingDetail());
-    m_Organs->SetItem(i, 4, o->GetODFPath());
-    if (o->GetArchiveID() != wxEmptyString) {
-      const GOArchiveFile *a = m_OrganList.GetArchiveByID(o->GetArchiveID());
-      m_Organs->SetItem(i, 3, a ? a->GetName() : o->GetArchiveID());
-    }
-    i++;
-  }
-
-  m_Organs->SetColumnWidth(0, 150);
-  m_Organs->SetColumnWidth(1, 150);
-  m_Organs->SetColumnWidth(2, 250);
-  m_Organs->SetColumnWidth(3, wxLIST_AUTOSIZE);
-  m_Organs->SetColumnWidth(4, wxLIST_AUTOSIZE);
-
-  topSizer->AddSpacer(5);
-  topSizer->Add(
-    CreateButtonSizer(wxOK | wxCANCEL), 0, wxALIGN_RIGHT | wxALL, 5);
-
-  SetSizerAndFit(topSizer);
+  LayoutWithInnerSizer(topSizer);
 }
 
-void GOSelectOrganDialog::OnOK(wxCommandEvent &event) {
-  if (m_Organs->GetItemData(m_Organs->GetFirstSelected()) == 0) {
-    wxMessageBox(
-      _("Please select an organ"), _("Error"), wxOK | wxICON_ERROR, this);
-    return;
-  }
-  EndModal(wxID_OK);
+const wxString WX_GRID_ORGANS = wxT("GridOrgans");
+
+void GOSelectOrganDialog::ApplyAdditionalSizes(
+  const GOAdditionalSizeKeeper &sizeKeeper) {
+  GOAdditionalSizeKeeperProxy proxyGridOrgans(
+    const_cast<GOAdditionalSizeKeeper &>(sizeKeeper), WX_GRID_ORGANS);
+
+  m_GridOrgans->ApplyColumnSizes(proxyGridOrgans);
+}
+
+void GOSelectOrganDialog::CaptureAdditionalSizes(
+  GOAdditionalSizeKeeper &sizeKeeper) const {
+  GOAdditionalSizeKeeperProxy proxyGridOrgans(sizeKeeper, WX_GRID_ORGANS);
+
+  m_GridOrgans->CaptureColumnSizes(proxyGridOrgans);
+}
+
+bool GOSelectOrganDialog::TransferDataToWindow() {
+  int nRowsOld = m_GridOrgans->GetNumberRows();
+  unsigned rowN = 0;
+
+  if (nRowsOld > 0)
+    m_GridOrgans->DeleteRows(0, nRowsOld);
+  m_OrganPtrs.clear();
+  for (const auto o : r_OrganList.GetOrganList())
+    if (o->IsUsable(r_OrganList)) {
+      const wxString &archiveId = o->GetArchiveID();
+      const bool isArchive = !archiveId.IsEmpty();
+      wxString packageName;
+
+      if (isArchive) {
+        const GOArchiveFile *a
+          = r_OrganList.GetArchiveByPath(o->GetArchivePath());
+
+        packageName = a ? a->GetName() : archiveId;
+      }
+      m_OrganPtrs.push_back(o);
+      m_GridOrgans->AppendRows(1);
+      m_GridOrgans->SetCellValue(rowN, GRID_COL_NAME, o->GetChurchName());
+      m_GridOrgans->SetCellValue(rowN, GRID_COL_PACKAGE, packageName);
+      m_GridOrgans->SetCellValue(
+        rowN, GRID_COL_PATH, isArchive ? o->GetArchivePath() : o->GetODFPath());
+      rowN++;
+    }
+  return true;
+}
+
+void GOSelectOrganDialog::OnSelectCell(wxGridEvent &event) {
+  const int index = event.GetRow();
+  const wxArrayInt selectedRows = m_GridOrgans->GetSelectedRows();
+  bool isAlreadySelected = false;
+
+  for (auto rowN : selectedRows)
+    if (rowN == index)
+      isAlreadySelected = true;
+    else
+      m_GridOrgans->DeselectRow(rowN);
+  if (index >= 0 && !isAlreadySelected)
+    m_GridOrgans->SelectRow(index);
 }
 
 const GOOrgan *GOSelectOrganDialog::GetSelection() {
-  return (const GOOrgan *)m_Organs->GetItemData(m_Organs->GetFirstSelected());
+  int index = m_GridOrgans->GetGridCursorRow();
+
+  return index >= 0 ? m_OrganPtrs[index] : nullptr;
 }
 
-void GOSelectOrganDialog::OnDoubleClick(wxListEvent &event) {
-  wxCommandEvent e;
-  OnOK(event);
+bool GOSelectOrganDialog::Validate() {
+  bool isValid = true;
+
+  if (!GetSelection()) {
+    wxMessageBox(
+      _("Please select an organ"), _("Error"), wxOK | wxICON_ERROR, this);
+    isValid = false;
+  }
+  return isValid;
 }

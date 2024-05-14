@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -22,6 +22,7 @@
 GOOrgan::GOOrgan(
   wxString odf,
   wxString archive,
+  wxString archivePath,
   wxString church_name,
   wxString organ_builder,
   wxString recording_detail)
@@ -30,19 +31,14 @@ GOOrgan::GOOrgan(
     m_OrganBuilder(organ_builder),
     m_RecordingDetail(recording_detail),
     m_ArchiveID(archive),
+    m_ArchivePath(archivePath),
     m_NamesInitialized(true),
     m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
 GOOrgan::GOOrgan(wxString odf)
-  : m_ODF(odf),
-    m_ChurchName(),
-    m_OrganBuilder(),
-    m_RecordingDetail(),
-    m_ArchiveID(),
-    m_NamesInitialized(false),
-    m_midi(MIDI_RECV_ORGAN) {
+  : m_ODF(odf), m_NamesInitialized(false), m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = wxGetUTCTime();
 }
 
@@ -53,6 +49,7 @@ GOOrgan::GOOrgan(GOConfigReader &cfg, wxString group, GOMidiMap &map)
   m_OrganBuilder = cfg.ReadString(CMBSetting, group, wxT("OrganBuilder"));
   m_RecordingDetail = cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"));
   m_ArchiveID = cfg.ReadString(CMBSetting, group, wxT("Archiv"), false);
+  m_ArchivePath = cfg.ReadString(CMBSetting, group, wxT("ArchivePath"), false);
   m_LastUse = cfg.ReadInteger(
     CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, wxGetUTCTime());
   m_NamesInitialized = true;
@@ -88,8 +85,6 @@ const wxString &GOOrgan::GetRecordingDetail() const {
   return m_RecordingDetail;
 }
 
-const wxString &GOOrgan::GetArchiveID() const { return m_ArchiveID; }
-
 GOMidiReceiverBase &GOOrgan::GetMIDIReceiver() { return m_midi; }
 
 const wxString GOOrgan::GetUITitle() const {
@@ -104,8 +99,10 @@ void GOOrgan::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
   cfg.WriteString(group, wxT("ChurchName"), m_ChurchName);
   cfg.WriteString(group, wxT("OrganBuilder"), m_OrganBuilder);
   cfg.WriteString(group, wxT("RecordingDetail"), m_RecordingDetail);
-  if (m_ArchiveID != wxEmptyString)
+  if (m_ArchiveID != wxEmptyString) {
     cfg.WriteString(group, wxT("Archiv"), m_ArchiveID);
+    cfg.WriteString(group, wxT("ArchivePath"), m_ArchivePath);
+  }
   cfg.WriteInteger(group, wxT("LastUse"), m_LastUse);
   m_midi.Save(cfg, group, map);
 }
@@ -122,13 +119,17 @@ bool GOOrgan::Match(const GOMidiEvent &e) {
 }
 
 bool GOOrgan::IsUsable(const GOOrganList &organs) const {
-  if (m_ArchiveID != wxEmptyString) {
-    const GOArchiveFile *archive = organs.GetArchiveByID(m_ArchiveID, true);
-    if (!archive)
-      return false;
-    return archive->IsComplete(organs);
+  bool res;
+
+  if (!m_ArchiveID.IsEmpty()) {
+    const GOArchiveFile *archive = m_ArchivePath.IsEmpty()
+      ? organs.GetArchiveByID(m_ArchiveID, true)
+      : organs.GetArchiveByPath(m_ArchivePath);
+
+    res = archive && archive->IsComplete(organs);
   } else
-    return wxFileExists(m_ODF);
+    res = wxFileExists(m_ODF);
+  return res;
 }
 
 const wxString GOOrgan::GetOrganHash() const {
@@ -139,7 +140,10 @@ const wxString GOOrgan::GetOrganHash() const {
     hash.Update(m_ODF);
   } else {
     wxFileName odf(m_ODF);
-    odf.Normalize(wxPATH_NORM_ALL | wxPATH_NORM_CASE);
+
+    odf.Normalize(
+      wxPATH_NORM_DOTS | wxPATH_NORM_TILDE | wxPATH_NORM_CASE
+      | wxPATH_NORM_ABSOLUTE | wxPATH_NORM_LONG | wxPATH_NORM_SHORTCUT);
     wxString filename = odf.GetFullPath();
 
     hash.Update(filename);

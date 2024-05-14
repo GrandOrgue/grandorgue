@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -164,6 +164,7 @@ GOConfig::GOConfig(wxString instance)
       sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]),
       GOInitialLoadType::LOAD_LAST_USED),
     ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
+    ODFHw1Check(this, wxT("General"), wxT("ODFHw1Check"), false),
     LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
     LosslessCompression(
       this, wxT("General"), wxT("LosslessCompression"), false),
@@ -193,7 +194,6 @@ GOConfig::GOConfig(wxString instance)
     PolyphonyLimit(
       this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
     Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
-    ReleaseLength(this, wxT("General"), wxT("ReleaseLength"), 0, 3000, 0),
     LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
     BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
     Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
@@ -206,12 +206,16 @@ GOConfig::GOConfig(wxString instance)
     OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
     OrganPackagePath(
       this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
+    OrganCombinationsPath(
+      this, wxT("General"), wxT("CmbYamlPath"), wxEmptyString),
     ExportImportPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
     AudioRecorderPath(
       this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
     MidiRecorderPath(
       this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
     MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString),
+    CheckForUpdatesAtStartup(
+      this, wxT("General"), wxT("CheckForUpdatesAtStartup"), true),
     m_MidiIn(MIDI_IN),
     m_MidiOut(MIDI_OUT) {
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
@@ -227,6 +231,8 @@ GOConfig::GOConfig(wxString instance)
     GOStdPath::GetGrandOrgueSubDir(wxT("Cache") + m_InstanceName));
   OrganSettingsPath.setDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(wxT("Data") + m_InstanceName));
+  OrganCombinationsPath.setDefaultValue(
+    GOStdPath::GetGrandOrgueSubDir(_("Combinations")));
   ExportImportPath.setDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Settings")));
   AudioRecorderPath.setDefaultValue(
@@ -237,7 +243,8 @@ GOConfig::GOConfig(wxString instance)
     GOStdPath::GetGrandOrgueSubDir(_("MIDI recordings")));
 }
 
-GOConfig::~GOConfig() { Flush(); }
+GOConfig::~GOConfig() { /* Flush(); */
+}
 
 void load_ports_config(
   GOConfigReader &cfg,
@@ -394,11 +401,17 @@ void GOConfig::Load() {
 
       GOSettingStore::Load(cfg);
 
+    // Fill ODFHw1Check with ODFCheck by default
+    if (!ODFHw1Check.IsPresent())
+      ODFHw1Check(ODFCheck());
+
     if (Concurrency() == 0)
       Concurrency(1);
 
     m_MidiOut.Load(cfg);
     m_MidiIn.Load(cfg, &m_MidiOut);
+
+    m_DialogSizes.Load(cfg, CMBSetting);
 
     if (wxFileExists(m_ConfigFileName))
       wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
@@ -447,7 +460,7 @@ void GOConfig::SetLanguageId(int langId) {
                                  : wxLocale::GetLanguageCanonicalName(langId));
 }
 
-unsigned GOConfig::GetEventCount() {
+unsigned GOConfig::GetEventCount() const {
   return sizeof(m_MIDISettings) / sizeof(m_MIDISettings[0]);
 }
 
@@ -479,21 +492,17 @@ wxString GOConfig::GetEventTitle(unsigned index) {
   return wxGetTranslation(m_MIDISettings[index].name);
 }
 
-GOMidiReceiverBase *GOConfig::GetMidiEvent(unsigned index) {
+const GOMidiReceiverBase *GOConfig::GetMidiEvent(unsigned index) const {
   assert(index < GetEventCount());
   return m_MIDIEvents[index];
 }
 
-GOMidiReceiverBase *GOConfig::FindMidiEvent(
-  GOMidiReceiverType type, unsigned index) {
+const GOMidiReceiverBase *GOConfig::FindMidiEvent(
+  GOMidiReceiverType type, unsigned index) const {
   for (unsigned i = 0; i < GetEventCount(); i++)
     if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
       return m_MIDIEvents[i];
   return NULL;
-}
-
-const wxString GOConfig::GetResourceDirectory() {
-  return m_ResourceDir.c_str();
 }
 
 const wxString GOConfig::GetPackageDirectory() {
@@ -588,7 +597,7 @@ void GOConfig::SetAudioGroups(const std::vector<wxString> &audio_groups) {
   m_AudioGroups = audio_groups;
 }
 
-unsigned GOConfig::GetAudioGroupId(const wxString &str) {
+unsigned GOConfig::GetAudioGroupId(const wxString &str) const {
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
     if (m_AudioGroups[i] == str)
       return i;
@@ -700,6 +709,8 @@ void GOConfig::Flush() {
 
   m_MidiOut.Save(cfg, false);
   m_MidiIn.Save(cfg, true);
+
+  m_DialogSizes.Save(cfg);
 
   if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name)) {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());

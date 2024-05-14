@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,15 +11,16 @@
 #include <wx/file.h>
 #include <wx/string.h>
 
+#include <atomic>
 #include <vector>
 
-#include "sound/scheduler/GOSoundWorkItem.h"
+#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
 class GOSoundBufferItem;
 struct struct_WAVE;
 
-class GOSoundRecorder : public GOSoundWorkItem {
+class GOSoundRecorder : public GOSoundTask {
 private:
   wxFile m_file;
   GOMutex m_lock;
@@ -32,7 +33,7 @@ private:
   unsigned m_SamplesPerBuffer;
   bool m_Recording;
   bool m_Done;
-  volatile bool m_Stop;
+  std::atomic_bool m_Stop;
   std::vector<GOSoundBufferItem *> m_Outputs;
   char *m_Buffer;
 

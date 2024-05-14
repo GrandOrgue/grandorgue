@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -47,9 +47,13 @@ GOSoundPort *GOSoundPortFactory::create(
   wxString subsysName = parser.nextComp();
   unsigned short subsysMask; // possible subsystems matching with the name
 
-  if (subsysName == GOSoundPortaudioPort::PORT_NAME)
+  if (
+    subsysName == GOSoundPortaudioPort::PORT_NAME
+    || subsysName == GOSoundPortaudioPort::PORT_NAME_OLD)
     subsysMask = SUBSYS_PA_BIT;
-  else if (subsysName == GOSoundRtPort::PORT_NAME)
+  else if (
+    subsysName == GOSoundRtPort::PORT_NAME
+    || subsysName == GOSoundRtPort::PORT_NAME_OLD)
     subsysMask = SUBSYS_RT_BIT;
   else if (subsysName == GOSoundJackPort::PORT_NAME)
     subsysMask = SUBSYS_JACK_BIT;

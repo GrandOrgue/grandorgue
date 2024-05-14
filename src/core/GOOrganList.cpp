@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,10 +9,14 @@
 
 #include <algorithm>
 
-#include "GOOrgan.h"
+#include <wx/dir.h>
+#include <wx/stdpaths.h>
+
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+
+#include "GOOrgan.h"
 
 GOOrganList::GOOrganList() : m_OrganList(), m_ArchiveList() {}
 
@@ -44,11 +48,26 @@ void GOOrganList::Save(GOConfigWriter &cfg, GOMidiMap &map) {
     m_OrganList[i]->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1), map);
 }
 
-const ptr_vector<GOOrgan> &GOOrganList::GetOrganList() const {
-  return m_OrganList;
-}
+void GOOrganList::RemoveInvalidTmpOrgans() {
+  const wxString tmpDirPrefix
+    = wxDir(wxStandardPaths::Get().GetTempDir()).GetNameWithSep();
 
-ptr_vector<GOOrgan> &GOOrganList::GetOrganList() { return m_OrganList; }
+  for (int i = m_OrganList.size() - 1; i >= 0; i--) {
+    const GOOrgan &o = *m_OrganList[i];
+
+    if (!o.IsUsable(*this) && o.GetPath().StartsWith(tmpDirPrefix))
+      m_OrganList.erase(i);
+  }
+  for (int i = m_ArchiveList.size() - 1; i >= 0; i--) {
+    const GOArchiveFile &aF = *m_ArchiveList[i];
+    const wxString &archivePath = aF.GetPath();
+
+    if (
+      !archivePath.IsEmpty() && !aF.IsUsable()
+      && archivePath.StartsWith(tmpDirPrefix))
+      m_ArchiveList.erase(i);
+  }
+}
 
 static bool LRUCompare(const GOOrgan *a, const GOOrgan *b) {
   return a->GetLastUse() > b->GetLastUse();
@@ -63,15 +82,20 @@ std::vector<const GOOrgan *> GOOrganList::GetLRUOrganList() {
   return lru;
 }
 
-void GOOrganList::AddOrgan(const GOOrgan &organ) {
-  for (unsigned i = 0; i < m_OrganList.size(); i++)
+void GOOrganList::AddOrgan(const GOOrgan &newOrgan) {
+  for (GOOrgan *pExOrgan : m_OrganList)
     if (
-      organ.GetODFPath() == m_OrganList[i]->GetODFPath()
-      && organ.GetArchiveID() == m_OrganList[i]->GetArchiveID()) {
-      m_OrganList[i]->Update(organ);
+      pExOrgan->GetODFPath() == newOrgan.GetODFPath()
+      && pExOrgan->GetArchiveID() == newOrgan.GetArchiveID()
+      && (
+	pExOrgan->GetArchivePath().IsEmpty() 
+	|| pExOrgan->GetArchivePath() == newOrgan.GetArchivePath()
+      )
+    ) {
+      pExOrgan->Update(newOrgan);
       return;
     }
-  m_OrganList.push_back(new GOOrgan(organ));
+  m_OrganList.push_back(new GOOrgan(newOrgan));
 }
 
 const ptr_vector<GOArchiveFile> &GOOrganList::GetArchiveList() const {
@@ -86,7 +110,7 @@ const GOArchiveFile *GOOrganList::GetArchiveByID(
   const wxString &id, bool useable) const {
   for (unsigned i = 0; i < m_ArchiveList.size(); i++)
     if (m_ArchiveList[i]->GetID() == id)
-      if (!useable || m_ArchiveList[i]->IsUsable(*this))
+      if (!useable || m_ArchiveList[i]->IsUsable())
         return m_ArchiveList[i];
   return NULL;
 }
@@ -105,4 +129,31 @@ void GOOrganList::AddArchive(const GOArchiveFile &archive) {
       return;
     }
   m_ArchiveList.push_back(new GOArchiveFile(archive));
+}
+
+void GOOrganList::AddOrgansFromArchives() {
+  for (const GOArchiveFile *pA : m_ArchiveList) {
+    const wxString &archivePath = pA->GetPath();
+    const wxString &archiveId = pA->GetID();
+
+    GOOrgan *pOMatchedByPath = NULL;
+    GOOrgan *pOMatchedById = NULL;
+
+    for (GOOrgan *pO : m_OrganList) {
+      const wxString &organArchivePath = pO->GetArchivePath();
+
+      if (organArchivePath == archivePath) {
+        pOMatchedByPath = pO;
+        break;
+      }
+      if (
+        !pOMatchedById && organArchivePath.IsEmpty()
+        && pO->GetArchiveID() == archiveId)
+        pOMatchedById = pO;
+    }
+    if (!pOMatchedByPath) {
+      if (pOMatchedById)
+        pOMatchedById->SetArchivePath(archivePath);
+    }
+  }
 }

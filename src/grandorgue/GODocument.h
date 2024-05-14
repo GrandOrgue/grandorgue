@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,10 +13,11 @@
 #include "document-base/GODocumentBase.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
+#include "midi/dialog-creator/GOMidiDialogCreator.h"
 #include "threading/GOMutex.h"
 
-class GODefinitionFile;
-class GOKeyReceiver;
+class GOOrganController;
+class GOMidiShortcutReceiver;
 class GOMidiEvent;
 class GOMidiReceiverBase;
 class GOMidiSender;
@@ -25,17 +26,18 @@ class GOProgressDialog;
 class GOResizable;
 class GOSound;
 
-class GODocument : public GODocumentBase, protected GOMidiCallback {
+class GODocument : public GODocumentBase,
+                   protected GOMidiCallback,
+                   public GOMidiDialogCreator {
 private:
   GOResizable *p_MainWindow;
   GOSound &m_sound;
 
   GOMutex m_lock;
   bool m_OrganFileReady;
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
 
   GOMidiListener m_listener;
-  bool m_modified;
 
   void OnMidiEvent(const GOMidiEvent &event);
 
@@ -46,29 +48,30 @@ public:
   GODocument(GOResizable *pMainWindow, GOSound *sound);
   ~GODocument();
 
-  bool IsModified();
-  void Modify(bool modified);
+  GOOrganController *GetOrganController() const { return m_OrganController; }
+  bool IsModified() const;
 
   void ShowPanel(unsigned id);
-  void ShowOrganDialog();
-  void ShowMIDIEventDialog(
-    void *element,
-    wxString title,
-    GOMidiReceiverBase *event,
-    GOMidiSender *sender,
-    GOKeyReceiver *key,
-    GOMidiSender *division = NULL);
+  void ShowOrganSettingsDialog();
   void ShowMidiList();
 
-  bool Load(GOProgressDialog *dlg, const GOOrgan &organ);
   bool Save();
   bool Export(const wxString &cmb);
-  bool Import(GOProgressDialog *dlg, const GOOrgan &organ, const wxString &cmb);
-  bool ImportCombination(const wxString &cmb);
-  bool Revert(GOProgressDialog *dlg);
+  bool LoadOrgan(
+    GOProgressDialog *dlg,
+    const GOOrgan &organ,
+    const wxString &cmb,
+    bool isGuiOnly);
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
-  GODefinitionFile *GetOrganFile();
+  void ShowMIDIEventDialog(
+    void *element,
+    const wxString &title,
+    const wxString &dialogSelector,
+    GOMidiReceiverBase *event,
+    GOMidiSender *sender,
+    GOMidiShortcutReceiver *key,
+    GOMidiSender *division = nullptr) override;
 };
 
 #endif

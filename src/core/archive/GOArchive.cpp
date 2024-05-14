@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,13 +10,14 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "files/GOInvalidFile.h"
+#include "threading/GOMutexLocker.h"
+
 #include "GOArchiveEntryFile.h"
 #include "GOArchiveIndex.h"
 #include "GOArchiveReader.h"
-#include "GOInvalidFile.h"
-#include "threading/GOMutexLocker.h"
 
-GOArchive::GOArchive(const GOSettingDirectory &cachePath)
+GOArchive::GOArchive(const wxString &cachePath)
   : m_CachePath(cachePath), m_ID(), m_Dependencies(), m_Entries(), m_Path() {}
 
 GOArchive::~GOArchive() { Close(); }
@@ -57,7 +58,7 @@ bool GOArchive::containsFile(const wxString &name) {
   return false;
 }
 
-GOFile *GOArchive::OpenFile(const wxString &name) {
+GOOpenedFile *GOArchive::OpenFile(const wxString &name) {
   for (unsigned i = 0; i < m_Entries.size(); i++)
     if (m_Entries[i].name == name) {
       return new GOArchiveEntryFile(

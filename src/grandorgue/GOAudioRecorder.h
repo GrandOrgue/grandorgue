@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,32 +10,33 @@
 
 #include <wx/string.h>
 
-#include "GOElementCreator.h"
-#include "GOLabel.h"
+#include "control/GOElementCreator.h"
+#include "control/GOLabelControl.h"
+
 #include "GOTimerCallback.h"
 
-class GODefinitionFile;
+class GOOrganController;
 class GOSoundRecorder;
 
 class GOAudioRecorder : public GOElementCreator, private GOTimerCallback {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   GOSoundRecorder *m_recorder;
-  GOLabel m_RecordingTime;
+  GOLabelControl m_RecordingTime;
   unsigned m_RecordSeconds;
   wxString m_Filename;
   bool m_DoRename;
 
-  static const struct ElementListEntry m_element_types[];
-  const struct ElementListEntry *GetButtonList();
+  static const struct ButtonDefinitionEntry m_element_types[];
+  const struct ButtonDefinitionEntry *GetButtonDefinitionList();
 
-  void ButtonChanged(int id);
+  void ButtonStateChanged(int id, bool newState) override;
 
   void UpdateDisplay();
   void HandleTimer();
 
 public:
-  GOAudioRecorder(GODefinitionFile *organfile);
+  GOAudioRecorder(GOOrganController *organController);
   ~GOAudioRecorder();
 
   void SetAudioRecorder(GOSoundRecorder *recorder);
@@ -46,7 +47,7 @@ public:
 
   void Load(GOConfigReader &cfg);
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabel *GetLabel(const wxString &name, bool is_panel);
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
 };
 
 #endif

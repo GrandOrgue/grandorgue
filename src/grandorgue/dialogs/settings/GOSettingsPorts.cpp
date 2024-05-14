@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -77,6 +77,7 @@ GOSettingsPorts::GOSettingsPorts(
     wxDefaultSize,
     wxTL_SINGLE | wxTL_CHECKBOX | wxTL_NO_HEADER);
   m_Ports->AppendColumn(wxEmptyString);
+  m_Ports->SetColumnWidth(0, 200);
   m_Ports->Bind(
     wxEVT_TREELIST_ITEM_CHECKED, &GOSettingsPorts::OnPortItemChecked, this);
   m_PortsSizer->Add(m_Ports, 1, wxEXPAND);

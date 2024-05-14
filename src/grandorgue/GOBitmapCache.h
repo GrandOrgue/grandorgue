@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,14 +10,15 @@
 
 #include <wx/string.h>
 
-#include "GOBitmap.h"
 #include "ptrvector.h"
 
-class GODefinitionFile;
+#include "gui/primitives/GOBitmap.h"
+
+class GOOrganController;
 
 class GOBitmapCache {
 private:
-  GODefinitionFile *m_organfile;
+  GOOrganController *m_OrganController;
   ptr_vector<wxImage> m_Bitmaps;
   std::vector<wxString> m_Filenames;
   std::vector<wxString> m_Masknames;
@@ -25,7 +26,7 @@ private:
   bool loadFile(wxImage &img, const wxString &filename);
 
 public:
-  GOBitmapCache(GODefinitionFile *organfile);
+  GOBitmapCache(GOOrganController *organController);
   virtual ~GOBitmapCache();
 
   void RegisterBitmap(

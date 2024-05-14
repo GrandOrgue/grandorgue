@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -49,13 +49,13 @@ void GOMidiPlayerContent::SetupManual(
   GOMidiEvent e;
   e.SetTime(0);
 
-  e.SetMidiType(MIDI_SYSEX_GO_SETUP);
+  e.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_SETUP);
   e.SetKey(map.GetElementByString(ID));
   e.SetChannel(channel);
   e.SetValue(0);
   m_Events.push_back(e);
 
-  e.SetMidiType(MIDI_CTRL_CHANGE);
+  e.SetMidiType(GOMidiEvent::MIDI_CTRL_CHANGE);
   e.SetChannel(channel);
   e.SetKey(MIDI_CTRL_NOTES_OFF);
   e.SetValue(0);
@@ -70,10 +70,12 @@ bool GOMidiPlayerContent::Load(
 
   GOMidiMerger merger;
   merger.Clear();
-  if (events.size() && events[0].GetMidiType() != MIDI_SYSEX_GO_CLEAR) {
+  if (
+    events.size()
+    && events[0].GetMidiType() != GOMidiEvent::MIDI_SYSEX_GO_CLEAR) {
     GOMidiEvent e;
     e.SetTime(0);
-    e.SetMidiType(MIDI_SYSEX_GO_CLEAR);
+    e.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_CLEAR);
     e.SetChannel(0);
     m_Events.push_back(e);
 

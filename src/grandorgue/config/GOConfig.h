@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2022 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,6 +14,7 @@
 #include <map>
 #include <vector>
 
+#include "dialogs/common/GODialogSizeSet.h"
 #include "midi/GOMidiMap.h"
 #include "midi/GOMidiReceiverBase.h"
 #include "settings/GOSettingBool.h"
@@ -24,9 +25,9 @@
 #include "settings/GOSettingNumber.h"
 #include "settings/GOSettingStore.h"
 #include "settings/GOSettingString.h"
+#include "size/GOLogicalRect.h"
 #include "temperaments/GOTemperamentList.h"
 
-#include "GOLogicalRect.h"
 #include "GOMidiDeviceConfigList.h"
 #include "GOOrganList.h"
 #include "GOPortsConfig.h"
@@ -98,6 +99,7 @@ public:
   GOSettingBool CompressCache;
   GOSettingEnum<GOInitialLoadType> LoadLastFile;
   GOSettingBool ODFCheck;
+  GOSettingBool ODFHw1Check;
 
   GOSettingUnsigned LoadChannels;
   GOSettingBool LosslessCompression;
@@ -119,7 +121,6 @@ public:
   GOSettingInteger Volume;
   GOSettingUnsigned PolyphonyLimit;
   GOSettingUnsigned Preset;
-  GOSettingUnsigned ReleaseLength;
   GOSettingString LanguageCode;
 
   class GOSettingUnsignedBit : public GOSettingUnsigned {
@@ -140,6 +141,7 @@ public:
         store, group, name, min_value, max_value, default_value) {}
 
   } BitsPerSample;
+
   GOSettingInteger Transpose;
 
   GOSettingUnsigned MetronomeMeasure;
@@ -151,45 +153,37 @@ public:
 
   GOSettingDirectory OrganPath;
   GOSettingDirectory OrganPackagePath;
+  GOSettingDirectory OrganCombinationsPath;
   GOSettingDirectory ExportImportPath;
   GOSettingDirectory AudioRecorderPath;
   GOSettingDirectory MidiRecorderPath;
   GOSettingDirectory MidiPlayerPath;
 
+  GOSettingBool CheckForUpdatesAtStartup;
+
   GOMidiDeviceConfigList m_MidiIn;
   GOMidiDeviceConfigList m_MidiOut;
+
+  GODialogSizeSet m_DialogSizes;
 
   void Load();
 
   int GetLanguageId() const;
   void SetLanguageId(int langId);
 
-  const wxString GetResourceDirectory();
+  const wxString &GetResourceDirectory() const { return m_ResourceDir; }
   const wxString GetPackageDirectory();
 
-  unsigned GetEventCount();
+  unsigned GetEventCount() const;
   wxString GetEventGroup(unsigned index);
   wxString GetEventTitle(unsigned index);
-  GOMidiReceiverBase *GetMidiEvent(unsigned index);
-  GOMidiReceiverBase *FindMidiEvent(GOMidiReceiverType type, unsigned index);
-
-  /*
-  bool GetMidiInState(wxString device, bool isEnabledByDefault);
-  void SetMidiInState(wxString device, bool enabled);
-  unsigned GetMidiInDeviceChannelShift(wxString device);
-  void SetMidiInDeviceChannelShift(wxString device, unsigned shift);
-  wxString GetMidiInOutDevice(wxString device);
-  void SetMidiInOutDevice(wxString device, wxString out_device);
-  std::vector<wxString> GetMidiInDeviceList();
-
-  bool GetMidiOutState(wxString device);
-  void SetMidiOutState(wxString device, bool enabled);
-  std::vector<wxString> GetMidiOutDeviceList();
-   */
+  const GOMidiReceiverBase *GetMidiEvent(unsigned index) const;
+  const GOMidiReceiverBase *FindMidiEvent(
+    GOMidiReceiverType type, unsigned index) const;
 
   const std::vector<wxString> &GetAudioGroups();
   void SetAudioGroups(const std::vector<wxString> &audio_groups);
-  unsigned GetAudioGroupId(const wxString &str);
+  unsigned GetAudioGroupId(const wxString &str) const;
   int GetStrictAudioGroupId(const wxString &str);
 
   const GOPortsConfig &GetSoundPortsConfig() const {
