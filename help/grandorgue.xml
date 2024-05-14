@@ -500,13 +500,16 @@ sample set closes. Note that this will also unload the sample set and
 free the RAM it required.
 </para>
         </sect3>
-        <sect3>
+        <sect3 id="fileExit">
           <title>Exit</title>
           <indexterm>
             <primary>Exit</primary>
           </indexterm>
           <para>
 Closes and exits the GrandOrgue app.
+</para>
+        <para>
+          Exit can also be fired by a MIDI message, see Audio/Midi menu &rarr; <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Exit).
 </para>
         </sect3>
       </sect2>
@@ -583,6 +586,9 @@ sound and turning off all notes. It may also be quickly accessed on
 the toolbar or via the <emphasis>Escape</emphasis> key on the computer keyboard. This should be generally
 unnecessary, although it may be useful if you need to quickly stop the
 sound output, or if the sound is breaking up due to CPU overload.
+</para>
+          <para>
+Panic button can also be fired by a MIDI message, see Audio/Midi menu &rarr; <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Panic).
 </para>
         </sect3>
         <sect3 id="memoryset">
@@ -793,7 +799,7 @@ the far right will turn red if the polyphony limit has been reached,
 and will stay red until the polyphony is adjusted.
 </para>
       </sect2>
-      <sect2>
+      <sect2 id="panicButton">
         <title>Panic Button</title>
         <indexterm>
           <primary>Panic Button</primary>
@@ -808,6 +814,9 @@ sound and turning off all notes. It may also be quickly accessed on
 the toolbar or via the <emphasis>Escape</emphasis> key. This should be generally
 unnecessary, although it may be useful if you need to quickly stop the
 sound output, or if the sound is breaking up due to CPU overload.
+        </para>
+        <para>
+Panic button can also be fired by a MIDI message, see Audio/Midi menu &rarr; <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Panic).
 </para>
       </sect2>
     </sect1>
@@ -6194,6 +6203,13 @@ controls.
             <listitem>
               <simpara>Shifts left all slots following the current slot. The state of the <link linkend="memoryset">Set</link> button does not change the behavior.
                 <note><simpara>The combination stored in the current slot is lost. The combination stored in slot #999 is reset to "empty".</simpara></note>
+              </simpara>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>Hidden buttons</term>
+            <listitem>
+              <simpara>There are two hidden buttons, <link linkend="panicButton">Panic</link> and <link linkend="fileExit">Exit GO</link>, that serve as MIDI receivers only, not visible in this panel for mouse interaction. To configure them, go to Audio/Midi menu &rarr; <link linkend="midiobjects">MIDI Objects</link> and look for type Button, elements Panic resp. Exit to assign MIDI events that will fire the two functions. 
               </simpara>
             </listitem>
           </varlistentry>
