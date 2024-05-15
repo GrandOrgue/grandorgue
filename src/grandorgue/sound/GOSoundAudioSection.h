@@ -136,8 +136,6 @@ private:
     unsigned dest_offset,
     const unsigned char *src,
     unsigned src_offset,
-    unsigned channels,
-    unsigned bits_per_sample,
     unsigned fade_length,
     unsigned loop_length,
     unsigned length);
@@ -146,7 +144,7 @@ private:
   std::vector<EndSegment> m_EndSegments;
 
   /* Pointer to (size) bytes of data encoded in the format (type) */
-  unsigned char *m_Data;
+  unsigned char *m_data;
 
   /* If this is a release section, it may contain an alignment table */
   GOSoundReleaseAlignTable *m_ReleaseAligner;
@@ -159,9 +157,9 @@ private:
   unsigned m_SampleRate;
 
   /* Type of the data which is stored in the data pointer */
-  unsigned m_BitsPerSample;
-  unsigned m_BytesPerSample;
-  unsigned m_Channels;
+  uint8_t m_BitsPerSample;
+  uint8_t m_BytesPerSample;
+  uint8_t m_channels;
 
   GOBool3 m_WaveTremulantStateFor;
   bool m_IsCompressed;
@@ -177,17 +175,79 @@ private:
 
   void ClearData();
 
+  template <typename T>
+  inline static int getSampleData(
+    const T *data, unsigned position, uint8_t channels, uint8_t channel) {
+    return data[position * channels + channel];
+  }
+
+  inline static int getSampleData(
+    const unsigned char *sampleData,
+    unsigned position,
+    uint8_t channels,
+    uint8_t channel,
+    uint8_t bitsPerSample) {
+    int res;
+
+    if (bitsPerSample <= 8)
+      res = getSampleData(
+        (const GOInt8 *)sampleData, position, channels, channel);
+    else if (bitsPerSample <= 16)
+      res = getSampleData(
+        (const GOInt16 *)sampleData, position, channels, channel);
+    else if (bitsPerSample <= 24)
+      res = getSampleData(
+        (const GOInt24 *)sampleData, position, channels, channel);
+    else {
+      assert(0 && "broken sampler type");
+      res = 0;
+    }
+    return res;
+  }
+
+  inline int GetSampleData(
+    const unsigned char *sampleData, unsigned position, uint8_t channel) const {
+    return getSampleData(
+      m_data, position, m_channels, channel, m_BitsPerSample);
+  }
+
+  template <typename T>
+  inline static void setSampleData(
+    T *data, unsigned position, uint8_t channels, uint8_t channel, int value) {
+    data[position * channels + channel] = value;
+  }
+
+  inline static void setSampleData(
+    void *sampleData,
+    unsigned position,
+    uint8_t channels,
+    uint8_t channel,
+    uint8_t bitsPerSample,
+    int value) {
+    if (bitsPerSample <= 8)
+      setSampleData((GOInt8 *)sampleData, position, channels, channel, value);
+    else if (bitsPerSample <= 16)
+      setSampleData((GOInt16 *)sampleData, position, channels, channel, value);
+    else if (bitsPerSample <= 24)
+      setSampleData((GOInt24 *)sampleData, position, channels, channel, value);
+    else
+      assert(0 && "broken sampler type");
+  }
+
+  inline void SetSampleData(
+    unsigned char *sampleData, unsigned position, uint8_t channel, int value) {
+    setSampleData(
+      sampleData, position, m_channels, channel, m_BitsPerSample, value);
+  }
+
 public:
   GOSoundAudioSection(GOMemoryPool &pool);
   ~GOSoundAudioSection() { ClearData(); }
 
-  inline unsigned GetChannels() const { return m_Channels; }
+  inline uint8_t GetChannels() const { return m_channels; }
+
   inline GOBool3 GetWaveTremulantStateFor() const {
     return m_WaveTremulantStateFor;
-  }
-
-  inline unsigned GetBytesPerSample() const {
-    return (m_IsCompressed) ? 0 : (m_BitsPerSample / 8);
   }
 
   inline unsigned GetLength() const { return m_SampleCount; }
@@ -233,60 +293,12 @@ public:
       && (m_EndSegments[0].next_start_segment_index < 0);
   }
 
-  inline static int GetSampleData(
-    unsigned position,
-    unsigned channel,
-    unsigned bits_per_sample,
-    unsigned channels,
-    const unsigned char *sample_data) {
-    if (bits_per_sample <= 8) {
-      GOInt8 *data = (GOInt8 *)sample_data;
-      return data[position * channels + channel];
-    }
-    if (bits_per_sample <= 16) {
-      GOInt16 *data = (GOInt16 *)sample_data;
-      return data[position * channels + channel];
-    }
-    if (bits_per_sample <= 24) {
-      GOInt24 *data = (GOInt24 *)sample_data;
-      return data[position * channels + channel];
-    }
-    assert(0 && "broken sampler type");
-    return 0;
-  }
-
-  inline static void SetSampleData(
-    unsigned position,
-    unsigned channel,
-    unsigned bits_per_sample,
-    unsigned channels,
-    unsigned value,
-    unsigned char *sample_data) {
-    if (bits_per_sample <= 8) {
-      GOInt8 *data = (GOInt8 *)sample_data;
-      data[position * channels + channel] = value;
-      return;
-    }
-    if (bits_per_sample <= 16) {
-      GOInt16 *data = (GOInt16 *)sample_data;
-      data[position * channels + channel] = value;
-      return;
-    }
-    if (bits_per_sample <= 24) {
-      GOInt24 *data = (GOInt24 *)sample_data;
-      data[position * channels + channel] = value;
-      return;
-    }
-    assert(0 && "broken sampler type");
-  }
-
   inline int GetSample(
     unsigned position,
     unsigned channel,
     DecompressionCache *cache = nullptr) const {
     if (!m_IsCompressed) {
-      return GetSampleData(
-        position, channel, m_BitsPerSample, m_Channels, m_Data);
+      return GetSampleData(m_data, position, channel);
     } else {
       DecompressionCache tmp;
       if (!cache) {
@@ -296,7 +308,7 @@ public:
 
       assert(m_BitsPerSample >= 12);
       DecompressTo(
-        *cache, position, m_Data, m_Channels, (m_BitsPerSample >= 20));
+        *cache, position, m_data, m_channels, (m_BitsPerSample >= 20));
       return cache->value[channel];
     }
   }

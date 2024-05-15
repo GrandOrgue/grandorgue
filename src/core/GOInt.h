@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -109,7 +109,7 @@ private:
 public:
   GOInt24(int val = 0) { assign(val); }
 
-  operator int() { return ((hi << 16) | lo); }
+  operator int() const { return ((hi << 16) | lo); }
 
   int operator=(const int val) {
     assign(val);

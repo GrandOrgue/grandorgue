@@ -35,7 +35,7 @@ static unsigned limited_diff(unsigned a, unsigned b) {
 }
 
 GOSoundAudioSection::GOSoundAudioSection(GOMemoryPool &pool)
-  : m_Data(NULL),
+  : m_data(NULL),
     m_ReleaseAligner(NULL),
     m_ReleaseStartSegment(0),
     m_Pool(pool) {
@@ -50,10 +50,10 @@ void GOSoundAudioSection::ClearData() {
   m_BytesPerSample = 0;
   m_WaveTremulantStateFor = BOOL3_DEFAULT;
   m_IsCompressed = false;
-  m_Channels = 0;
-  if (m_Data) {
-    m_Pool.Free(m_Data);
-    m_Data = NULL;
+  m_channels = 0;
+  if (m_data) {
+    m_Pool.Free(m_data);
+    m_data = NULL;
   }
   if (m_ReleaseAligner) {
     delete m_ReleaseAligner;
@@ -84,7 +84,7 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
     return false;
   if (!cache.Read(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
-  if (!cache.Read(&m_Channels, sizeof(m_Channels)))
+  if (!cache.Read(&m_channels, sizeof(m_channels)))
     return false;
   if (!cache.Read(&m_SampleFracBits, sizeof(m_SampleFracBits)))
     return false;
@@ -94,8 +94,8 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
     return false;
   if (!cache.Read(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
-  m_Data = (unsigned char *)cache.ReadBlock(m_AllocSize);
-  if (!m_Data)
+  m_data = (unsigned char *)cache.ReadBlock(m_AllocSize);
+  if (!m_data)
     return false;
 
   unsigned temp;
@@ -163,7 +163,7 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
     return false;
   if (!cache.Write(&m_IsCompressed, sizeof(m_IsCompressed)))
     return false;
-  if (!cache.Write(&m_Channels, sizeof(m_Channels)))
+  if (!cache.Write(&m_channels, sizeof(m_channels)))
     return false;
   if (!cache.Write(&m_SampleFracBits, sizeof(m_SampleFracBits)))
     return false;
@@ -173,7 +173,7 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
     return false;
   if (!cache.Write(&m_ReleaseCrossfadeLength, sizeof(m_ReleaseCrossfadeLength)))
     return false;
-  if (!cache.WriteBlock(m_Data, m_AllocSize))
+  if (!cache.WriteBlock(m_data, m_AllocSize))
     return false;
 
   unsigned temp;
@@ -528,10 +528,10 @@ bool GOSoundAudioSection::ReadBlock(
           = &stream->audio_section->m_EndSegments[next_end_segment_index];
 
         stream->position_index += next->start_offset;
-        stream->ptr = stream->audio_section->m_Data;
+        stream->ptr = stream->audio_section->m_data;
         stream->cache = next->cache;
         stream->cache.ptr
-          = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
+          = stream->audio_section->m_data + (intptr_t)stream->cache.ptr;
         assert(next_end->end_offset >= next->start_offset);
         stream->transition_position = next_end->transition_offset;
         stream->end_ptr = next_end->end_ptr;
@@ -605,7 +605,7 @@ void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
   for (unsigned int i = 0; i < m_SampleCount; i++) {
     /* Get sum of amplitudes in channels */
     int f = 0;
-    for (unsigned int j = 0; j < m_Channels; j++) {
+    for (unsigned int j = 0; j < m_channels; j++) {
       int val = GetSample(i, j, &cache);
       f += val;
       if (abs(val) > m_MaxAmplitude)
@@ -630,23 +630,21 @@ void GOSoundAudioSection::DoCrossfade(
   unsigned dest_offset,
   const unsigned char *src,
   unsigned src_offset,
-  unsigned channels,
-  unsigned bits_per_sample,
   unsigned fade_length,
   unsigned loop_length,
   unsigned length) {
   for (; dest_offset < length; dest_offset += loop_length)
-    for (unsigned pos = 0; pos < fade_length; pos++)
-      for (unsigned j = 0; j < channels; j++) {
-        float val1 = GetSampleData(
-          pos + dest_offset, j, bits_per_sample, channels, dest);
-        float val2
-          = GetSampleData(pos + src_offset, j, bits_per_sample, channels, src);
-        float factor = (cos(M_PI * (pos + 0.5) / fade_length) + 1.0) * 0.5;
+    for (unsigned pos = 0; pos < fade_length; pos++) {
+      float factor = (cos(M_PI * (pos + 0.5) / fade_length) + 1.0) * 0.5;
+
+      for (uint8_t j = 0; j < m_channels; j++) {
+        float val1 = GetSampleData(dest, pos + dest_offset, j);
+        float val2 = GetSampleData(src, pos + src_offset, j);
         float result = val1 * factor + val2 * (1 - factor);
-        SetSampleData(
-          pos + dest_offset, j, bits_per_sample, channels, result, dest);
+
+        SetSampleData(dest, pos + dest_offset, j, (int)result);
       }
+    }
 }
 
 void GOSoundAudioSection::Setup(
@@ -665,6 +663,7 @@ void GOSoundAudioSection::Setup(
   if (pcm_data_channels < 1 || pcm_data_channels > 2)
     throw(wxString) _("< More than 2 channels in");
 
+  m_channels = pcm_data_channels;
   m_BitsPerSample = wave_bits_per_sample(pcm_data_format);
   compress = (compress) && (m_BitsPerSample > 8);
 
@@ -768,8 +767,6 @@ void GOSoundAudioSection::Setup(
             MAX_READAHEAD,
             (const unsigned char *)pcm_data,
             start_seg.start_offset - fade_len,
-            pcm_data_channels,
-            m_BitsPerSample,
             fade_len,
             loop_length,
             end_length);
@@ -827,18 +824,17 @@ void GOSoundAudioSection::Setup(
   }
 
   m_AllocSize = total_alloc_samples * m_BytesPerSample;
-  m_Data = (unsigned char *)m_Pool.Alloc(m_AllocSize, !compress);
-  if (m_Data == NULL)
+  m_data = (unsigned char *)m_Pool.Alloc(m_AllocSize, !compress);
+  if (m_data == NULL)
     throw GOOutOfMemory();
   m_SampleRate = pcm_data_sample_rate;
   m_SampleCount = total_alloc_samples;
   m_SampleFracBits = m_BitsPerSample - 1;
-  m_Channels = pcm_data_channels;
   m_IsCompressed = false;
   m_WaveTremulantStateFor = waveTremulantStateFor;
 
   /* Store the main data blob. */
-  memcpy(m_Data, pcm_data, m_AllocSize);
+  memcpy(m_data, pcm_data, m_AllocSize);
 
   GetMaxAmplitudeAndDerivative();
 
@@ -870,10 +866,10 @@ void GOSoundAudioSection::Compress(bool format16) {
     state.prev[1] = state.value[1];
 
     state.value[0] = GetSample(i, 0);
-    if (m_Channels > 1)
+    if (m_channels > 1)
       state.value[1] = GetSample(i, 1);
 
-    for (unsigned j = 0; j < m_Channels; j++) {
+    for (unsigned j = 0; j < m_channels; j++) {
       int val = state.value[j];
       int encode = val - (state.prev[j] + (state.prev[j] - state.last[j]) / 2);
 
@@ -886,21 +882,21 @@ void GOSoundAudioSection::Compress(bool format16) {
        * uncompressed data. */
       if (output_len + 10 >= m_AllocSize) {
         m_Pool.Free(data);
-        m_Data = (unsigned char *)m_Pool.MoveToPool(m_Data, m_AllocSize);
-        if (m_Data == NULL)
+        m_data = (unsigned char *)m_Pool.MoveToPool(m_data, m_AllocSize);
+        if (m_data == NULL)
           throw GOOutOfMemory();
         return;
       }
     }
   }
 
-  m_Pool.Free(m_Data);
-  m_Data = data;
+  m_Pool.Free(m_data);
+  m_data = data;
   m_AllocSize = output_len;
   m_IsCompressed = true;
 
-  m_Data = (unsigned char *)m_Pool.MoveToPool(m_Data, m_AllocSize);
-  if (m_Data == NULL)
+  m_data = (unsigned char *)m_Pool.MoveToPool(m_data, m_AllocSize);
+  if (m_data == NULL)
     throw GOOutOfMemory();
 }
 
@@ -957,7 +953,7 @@ void GOSoundAudioSection::InitStream(
   const EndSegment &end = m_EndSegments[PickEndSegment(0)];
   assert(end.transition_offset >= start.start_offset);
   stream->resample_coefs = resampler_coefs;
-  stream->ptr = stream->audio_section->m_Data;
+  stream->ptr = stream->audio_section->m_data;
   stream->transition_position = end.transition_offset;
   stream->end_seg = &end;
   stream->end_ptr = end.end_ptr;
@@ -966,13 +962,13 @@ void GOSoundAudioSection::InitStream(
   stream->position_index = start.start_offset;
   stream->position_fraction = 0;
   stream->decode_call = GetDecodeBlockFunction(
-    m_Channels,
+    m_channels,
     m_BitsPerSample,
     m_IsCompressed,
     stream->resample_coefs->interpolation,
     false);
   stream->end_decode_call = GetDecodeBlockFunction(
-    m_Channels,
+    m_channels,
     m_BitsPerSample,
     m_IsCompressed,
     stream->resample_coefs->interpolation,
@@ -984,7 +980,7 @@ void GOSoundAudioSection::InitStream(
   stream->end_pos = end.end_pos - stream->margin;
   stream->cache = start.cache;
   stream->cache.ptr
-    = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
+    = stream->audio_section->m_data + (intptr_t)stream->cache.ptr;
 }
 
 void GOSoundAudioSection::InitAlignedStream(
@@ -995,7 +991,7 @@ void GOSoundAudioSection::InitAlignedStream(
   const EndSegment &end = m_EndSegments[PickEndSegment(m_ReleaseStartSegment)];
   assert(end.transition_offset >= start.start_offset);
 
-  stream->ptr = stream->audio_section->m_Data;
+  stream->ptr = stream->audio_section->m_data;
   stream->transition_position = end.transition_offset;
   stream->end_seg = &end;
   stream->end_ptr = end.end_ptr;
@@ -1008,13 +1004,13 @@ void GOSoundAudioSection::InitAlignedStream(
   stream->position_index = start.start_offset;
   stream->position_fraction = existing_stream->position_fraction;
   stream->decode_call = GetDecodeBlockFunction(
-    m_Channels,
+    m_channels,
     m_BitsPerSample,
     m_IsCompressed,
     stream->resample_coefs->interpolation,
     false);
   stream->end_decode_call = GetDecodeBlockFunction(
-    m_Channels,
+    m_channels,
     m_BitsPerSample,
     m_IsCompressed,
     stream->resample_coefs->interpolation,
@@ -1026,7 +1022,7 @@ void GOSoundAudioSection::InitAlignedStream(
   stream->end_pos = end.end_pos - stream->margin;
   stream->cache = start.cache;
   stream->cache.ptr
-    = stream->audio_section->m_Data + (intptr_t)stream->cache.ptr;
+    = stream->audio_section->m_data + (intptr_t)stream->cache.ptr;
   if (!m_ReleaseAligner) {
     return;
   }
@@ -1037,35 +1033,34 @@ void GOSoundAudioSection::GetHistory(
   const Stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) {
   memset(
     history, 0, sizeof(history[0][0]) * BLOCK_HISTORY * MAX_OUTPUT_CHANNELS);
-  if (stream->position_index >= stream->transition_position) {
+  if (stream->position_index >= stream->transition_position)
     for (unsigned i = 0; i < BLOCK_HISTORY; i++)
-      for (unsigned j = 0; j < stream->audio_section->m_Channels; j++)
-        history[i][j] = GetSampleData(
+      for (uint8_t j = 0; j < stream->audio_section->m_channels; j++)
+        history[i][j] = getSampleData(
+          stream->end_ptr,
           stream->position_index - stream->transition_position + i,
+          stream->audio_section->m_channels,
           j,
-          stream->audio_section->m_BitsPerSample,
-          stream->audio_section->m_Channels,
-          stream->end_ptr);
-  } else {
-    if (!stream->audio_section->m_IsCompressed) {
-      for (unsigned i = 0; i < BLOCK_HISTORY; i++)
-        for (unsigned j = 0; j < stream->audio_section->m_Channels; j++)
-          history[i][j] = GetSampleData(
-            stream->position_index + i,
-            j,
-            stream->audio_section->m_BitsPerSample,
-            stream->audio_section->m_Channels,
-            stream->ptr);
-    } else {
-      DecompressionCache cache = stream->cache;
-      for (unsigned i = 0; i < BLOCK_HISTORY; i++) {
-        for (unsigned j = 0; j < stream->audio_section->m_Channels; j++)
-          history[i][j] = cache.value[j];
-        DecompressionStep(
-          cache,
-          stream->audio_section->m_Channels,
-          stream->audio_section->m_BitsPerSample >= 20);
-      }
+          stream->audio_section->m_BitsPerSample);
+  else if (!stream->audio_section->m_IsCompressed)
+    for (unsigned i = 0; i < BLOCK_HISTORY; i++)
+      for (uint8_t j = 0; j < stream->audio_section->m_channels; j++)
+        history[i][j] = getSampleData(
+          stream->ptr,
+          stream->position_index + i,
+          stream->audio_section->m_channels,
+          j,
+          stream->audio_section->m_BitsPerSample);
+  else {
+    DecompressionCache cache = stream->cache;
+
+    for (unsigned i = 0; i < BLOCK_HISTORY; i++) {
+      for (uint8_t j = 0; j < stream->audio_section->m_channels; j++)
+        history[i][j] = cache.value[j];
+      DecompressionStep(
+        cache,
+        stream->audio_section->m_channels,
+        stream->audio_section->m_BitsPerSample >= 20);
     }
   }
 }

@@ -760,6 +760,7 @@
                  commonFlags="-mtune=generic -march=x86-64 -std=c++11 -fPIC"/>
         <element flagsID="5" commonFlags="-std=c++11 -O3 -ffast-math -fPIC"/>
         <element flagsID="6" commonFlags="-std=c++14"/>
+        <element flagsID="7" commonFlags="-std=gnu++17 -fPIC"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
@@ -21606,88 +21607,34 @@
         <ccTool flags="3">
         </ccTool>
       </item>
-      <item path="../../src/core/GOCompress.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="4">
+      <item path="../../src/core/GOCompress.cpp" ex="false" tool="1" flavor2="11">
+        <ccTool flags="7">
           <incDir>
-            <pElem>/usr/include/wx-3.2/wx</pElem>
-            <pElem>/usr/include/c++/13/bits</pElem>
-            <pElem>/usr/include/c++/13</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/13/debug</pElem>
-            <pElem>/usr/include/c++/13/ext</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2/wx</pElem>
-            <pElem>/usr/include/wx-3.2/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.2/wx/unix</pElem>
-            <pElem>/usr/include/c++/13/backward</pElem>
-            <pElem>/usr/include/wx-3.2/wx/meta</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
-            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
-            <Elem>__BFLT16_DIG__=2</Elem>
-            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
-            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
-            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
-            <Elem>__BFLT16_MANT_DIG__=8</Elem>
-            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
-            <Elem>__BFLT16_MAX_EXP__=128</Elem>
-            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
-            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
-            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
-            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__DBL_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
-            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
-            <Elem>__FLT16_DIG__=3</Elem>
-            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
-            <Elem>__FLT16_HAS_DENORM__=1</Elem>
-            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_MANT_DIG__=11</Elem>
-            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
-            <Elem>__FLT16_MAX_EXP__=16</Elem>
-            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
-            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
-            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
-            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT_IS_IEC_60559__=1</Elem>
-            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
-            <Elem>__GNUC_RH_RELEASE__=6</Elem>
-            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
-            <Elem>__GNUC__=13</Elem>
-            <Elem>__GNUG__=13</Elem>
-            <Elem>__GXX_ABI_VERSION=1018</Elem>
-            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
-            <Elem>__PIC__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__STDCPP_THREADS__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__pic__=2</Elem>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>__WXGTK__</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/GOHash.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
@@ -21705,6 +21652,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -21768,6 +21717,16 @@
       <item path="../../src/core/GOKeyConvert.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
@@ -21783,6 +21742,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -21846,9 +21807,21 @@
       <item path="../../src/core/GOLogicalColour.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -21912,6 +21885,16 @@
       <item path="../../src/core/GOMemoryPool.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -21930,6 +21913,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -21993,6 +21978,16 @@
       <item path="../../src/core/GOOrgan.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>../../src/core/midi</pElem>
@@ -22014,6 +22009,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22077,6 +22074,16 @@
       <item path="../../src/core/GOOrganList.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -22096,6 +22103,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22159,6 +22168,16 @@
       <item path="../../src/core/GOPath.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
@@ -22176,6 +22195,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22239,6 +22260,16 @@
       <item path="../../src/core/GORodgers.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
@@ -22250,6 +22281,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22316,6 +22349,16 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
@@ -22325,6 +22368,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22388,6 +22433,16 @@
       <item path="../../src/core/GOStdPath.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
@@ -22404,6 +22459,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22467,6 +22524,16 @@
       <item path="../../src/core/GOTimer.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>../../src/core/threading</pElem>
@@ -22484,6 +22551,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22547,6 +22616,16 @@
       <item path="../../src/core/GOUtil.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
@@ -22562,6 +22641,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22625,6 +22706,16 @@
       <item path="../../src/core/GOWavPack.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
@@ -22637,6 +22728,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22700,6 +22793,16 @@
       <item path="../../src/core/GOWavPackWriter.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
@@ -22712,6 +22815,8 @@
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -22772,110 +22877,30 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/core/GOWave.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="4">
+      <item path="../../src/core/GOWave.cpp" ex="false" tool="1" flavor2="11">
+        <ccTool flags="7">
           <incDir>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/wx-3.2/wx</pElem>
-            <pElem>/usr/include/c++/13</pElem>
-            <pElem>/usr/include/c++/13/bits</pElem>
-            <pElem>../../src/core/files</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
-            <pElem>/usr/include/c++/13/debug</pElem>
-            <pElem>/usr/include/c++/13/ext</pElem>
-            <pElem>/usr/include/wavpack</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2/wx</pElem>
-            <pElem>/usr/include/wx-3.2/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.2/wx/unix</pElem>
-            <pElem>/usr/include/c++/13/backward</pElem>
-            <pElem>/usr/include/wx-3.2/wx/meta</pElem>
-            <pElem>/usr/include/wx-3.2/wx/generic</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
-            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
-            <Elem>__BFLT16_DIG__=2</Elem>
-            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
-            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
-            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
-            <Elem>__BFLT16_MANT_DIG__=8</Elem>
-            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
-            <Elem>__BFLT16_MAX_EXP__=128</Elem>
-            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
-            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
-            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
-            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__DBL_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
-            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
-            <Elem>__FLT16_DIG__=3</Elem>
-            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
-            <Elem>__FLT16_HAS_DENORM__=1</Elem>
-            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_MANT_DIG__=11</Elem>
-            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
-            <Elem>__FLT16_MAX_EXP__=16</Elem>
-            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
-            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
-            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
-            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT_IS_IEC_60559__=1</Elem>
-            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
-            <Elem>__GNUC_RH_RELEASE__=6</Elem>
-            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
-            <Elem>__GNUC__=13</Elem>
-            <Elem>__GNUG__=13</Elem>
-            <Elem>__GXX_ABI_VERSION=1018</Elem>
-            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
-            <Elem>__PIC__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__STDCPP_THREADS__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__pic__=2</Elem>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>__WXGTK__</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchive.cpp"
             ex="false"
             tool="1"
-            flavor2="8">
-        <ccTool flags="4">
+            flavor2="11">
+        <ccTool flags="7">
           <incDir>
-            <pElem>/usr/include/wx-3.2/wx</pElem>
-            <pElem>/usr/include/c++/13</pElem>
-            <pElem>/usr/include/c++/13/bits</pElem>
-            <pElem>/usr/include/c++/13/ext</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/13/debug</pElem>
-            <pElem>../../src/core/threading</pElem>
-            <pElem>../../src/core/files</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2/wx</pElem>
-            <pElem>/usr/include/wx-3.2/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.2/wx/unix</pElem>
-            <pElem>/usr/include/c++/13/backward</pElem>
-            <pElem>/usr/include/wx-3.2/wx/meta</pElem>
-            <pElem>/usr/include/wx-3.2/wx/generic</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
         </ccTool>
@@ -22883,27 +22908,12 @@
       <item path="../../src/core/archive/GOArchiveCreator.cpp"
             ex="false"
             tool="1"
-            flavor2="8">
-        <ccTool flags="4">
+            flavor2="11">
+        <ccTool flags="7">
           <incDir>
-            <pElem>/usr/include/wx-3.2/wx</pElem>
-            <pElem>/usr/include/c++/13</pElem>
-            <pElem>/usr/include/c++/13/bits</pElem>
-            <pElem>../../src/core/config</pElem>
-            <pElem>../../src/core/files</pElem>
-            <pElem>/usr/include/c++/13/ext</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/13/debug</pElem>
-            <pElem>../../src/core/threading</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2/wx</pElem>
-            <pElem>/usr/include/wx-3.2/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.2/wx/unix</pElem>
-            <pElem>/usr/include/c++/13/backward</pElem>
-            <pElem>/usr/include/wx-3.2/wx/meta</pElem>
-            <pElem>/usr/include/wx-3.2/wx/generic</pElem>
-            <pElem>../../src/core/midi</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
         </ccTool>
@@ -22914,6 +22924,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/archive</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>../../src/core/files</pElem>
@@ -22931,6 +22952,70 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>GrandOrgueCore_EXPORTS=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveFile.cpp"
@@ -22939,6 +23024,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/archive</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -22957,6 +23053,70 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>GrandOrgueCore_EXPORTS=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveIndex.cpp"
@@ -22965,6 +23125,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/archive</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -22983,6 +23154,70 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>GrandOrgueCore_EXPORTS=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveManager.cpp"
@@ -22991,6 +23226,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/archive</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -23011,29 +23257,81 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>GrandOrgueCore_EXPORTS=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__WXGTK__=1</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveReader.cpp"
             ex="false"
             tool="1"
-            flavor2="8">
-        <ccTool flags="4">
+            flavor2="11">
+        <ccTool flags="7">
           <incDir>
-            <pElem>/usr/include/wx-3.2/wx</pElem>
-            <pElem>/usr/include/c++/13</pElem>
-            <pElem>/usr/include/c++/13/bits</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/13/debug</pElem>
-            <pElem>/usr/include/c++/13/ext</pElem>
-            <pElem>../../src/core/contrib</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2/wx</pElem>
-            <pElem>/usr/include/wx-3.2/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.2/wx/unix</pElem>
-            <pElem>/usr/include/c++/13/backward</pElem>
-            <pElem>/usr/include/wx-3.2/wx/meta</pElem>
-            <pElem>/usr/include/wx-3.2/wx/generic</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
         </ccTool>
@@ -23041,22 +23339,12 @@
       <item path="../../src/core/archive/GOArchiveWriter.cpp"
             ex="false"
             tool="1"
-            flavor2="8">
-        <ccTool flags="4">
+            flavor2="11">
+        <ccTool flags="7">
           <incDir>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/wx-3.2/wx</pElem>
-            <pElem>/usr/include/c++/13</pElem>
-            <pElem>/usr/include/c++/13/bits</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
-            <pElem>/usr/include/c++/13/debug</pElem>
-            <pElem>/usr/include/c++/13/ext</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2/wx</pElem>
-            <pElem>/usr/include/wx-3.2/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.2/wx/unix</pElem>
-            <pElem>/usr/include/c++/13/backward</pElem>
-            <pElem>/usr/include/wx-3.2/wx/meta</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
         </ccTool>
@@ -23258,6 +23546,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
@@ -23272,6 +23571,67 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiEventPattern.cpp"
@@ -23280,6 +23640,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13/debug</pElem>
@@ -23289,35 +23660,101 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiFileReader.cpp"
             ex="false"
             tool="1"
-            flavor2="8">
-        <ccTool flags="4">
+            flavor2="11">
+        <ccTool flags="7">
           <incDir>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/13</pElem>
-            <pElem>/usr/include/c++/13/bits</pElem>
-            <pElem>/usr/include/wx-3.2/wx</pElem>
-            <pElem>/usr/include/c++/13/ext</pElem>
-            <pElem>/usr/include/c++/13/debug</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/13/include</pElem>
-            <pElem>/usr/include/c++/13/backward</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2/wx</pElem>
-            <pElem>/usr/include/wx-3.2/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.2/wx/unix</pElem>
-            <pElem>/usr/include/wx-3.2/wx/meta</pElem>
-            <pElem>/usr/include/wx-3.2/wx/generic</pElem>
-            <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiMap.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -23332,6 +23769,67 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiReceiverBase.cpp"
@@ -23340,6 +23838,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
@@ -23355,6 +23864,67 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiReceiverEventPattern.cpp"
@@ -23363,8 +23933,80 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiSenderEventPattern.cpp"
@@ -23373,8 +24015,80 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/midi/GOMidiWXEvent.cpp"
@@ -23383,6 +24097,17 @@
             flavor2="8">
         <ccTool flags="4">
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/midi</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
             <pElem>/usr/include/c++/13</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -23398,6 +24123,67 @@
             <pElem>/usr/include/c++/13/x86_64-redhat-linux</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
+            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
+            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
+            <Elem>__BFLT16_DIG__=2</Elem>
+            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
+            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
+            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
+            <Elem>__BFLT16_MANT_DIG__=8</Elem>
+            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
+            <Elem>__BFLT16_MAX_EXP__=128</Elem>
+            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
+            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
+            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
+            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
+            <Elem>__DBL_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
+            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
+            <Elem>__FLT16_DIG__=3</Elem>
+            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
+            <Elem>__FLT16_HAS_DENORM__=1</Elem>
+            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
+            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
+            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT16_MANT_DIG__=11</Elem>
+            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
+            <Elem>__FLT16_MAX_EXP__=16</Elem>
+            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
+            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
+            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
+            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
+            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
+            <Elem>__FLT_IS_IEC_60559__=1</Elem>
+            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
+            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
+            <Elem>__GNUC_RH_RELEASE__=6</Elem>
+            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
+            <Elem>__GNUC__=13</Elem>
+            <Elem>__GNUG__=13</Elem>
+            <Elem>__GXX_ABI_VERSION=1018</Elem>
+            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
+            <Elem>__PIC__=2</Elem>
+            <Elem>__REGISTER_PREFIX__=</Elem>
+            <Elem>__STDCPP_THREADS__=1</Elem>
+            <Elem>__STRICT_ANSI__=1</Elem>
+            <Elem>__USER_LABEL_PREFIX__=</Elem>
+            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
+            <Elem>__cplusplus=201103L</Elem>
+            <Elem>__cpp_constexpr=200704L</Elem>
+            <Elem>__pic__=2</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/settings/GOSetting.cpp"
@@ -28335,6 +29121,22 @@
       </folder>
       <folder path="0/src/core">
         <ccTool>
+          <preprocessorList>
+            <Elem>GrandOrgueCore_EXPORTS=1</Elem>
+            <Elem>WXUSINGDLL=1</Elem>
+            <Elem>__WXGTK__=1</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/archive">
+        <ccTool>
+          <preprocessorList>
+            <Elem>GrandOrgueCore_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/config">
+        <ccTool>
           <incDir>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
@@ -28346,88 +29148,11 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
             <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>GrandOrgueCore_EXPORTS=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
-            <Elem>_REENTRANT=1</Elem>
-            <Elem>__WXGTK__=1</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/core/archive">
-        <ccTool>
-          <incDir>
-            <pElem>../../src/core/archive</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
-            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
-            <Elem>__BFLT16_DIG__=2</Elem>
-            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
-            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
-            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
-            <Elem>__BFLT16_MANT_DIG__=8</Elem>
-            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
-            <Elem>__BFLT16_MAX_EXP__=128</Elem>
-            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
-            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
-            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
-            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__DBL_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
-            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
-            <Elem>__FLT16_DIG__=3</Elem>
-            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
-            <Elem>__FLT16_HAS_DENORM__=1</Elem>
-            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_MANT_DIG__=11</Elem>
-            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
-            <Elem>__FLT16_MAX_EXP__=16</Elem>
-            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
-            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
-            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
-            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT_IS_IEC_60559__=1</Elem>
-            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
-            <Elem>__GNUC_RH_RELEASE__=6</Elem>
-            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
-            <Elem>__GNUC__=13</Elem>
-            <Elem>__GNUG__=13</Elem>
-            <Elem>__GXX_ABI_VERSION=1018</Elem>
-            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
-            <Elem>__PIC__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__STDCPP_THREADS__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__pic__=2</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/core/config">
-        <ccTool>
-          <incDir>
             <pElem>../../src/core/config</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -28491,10 +29216,22 @@
       <folder path="0/src/core/contrib">
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/core/contrib</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -28558,76 +29295,22 @@
       <folder path="0/src/core/files">
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/core/files</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
-            <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
-            <Elem>__BFLT16_DIG__=2</Elem>
-            <Elem>__BFLT16_EPSILON__=7.81250000000000000000000000000000000e-3BF16</Elem>
-            <Elem>__BFLT16_HAS_DENORM__=1</Elem>
-            <Elem>__BFLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__BFLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__BFLT16_IS_IEC_60559__=0</Elem>
-            <Elem>__BFLT16_MANT_DIG__=8</Elem>
-            <Elem>__BFLT16_MAX_10_EXP__=38</Elem>
-            <Elem>__BFLT16_MAX_EXP__=128</Elem>
-            <Elem>__BFLT16_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__BFLT16_MIN_10_EXP__=(-37)</Elem>
-            <Elem>__BFLT16_MIN_EXP__=(-125)</Elem>
-            <Elem>__BFLT16_MIN__=1.17549435082228750796873653722224568e-38BF16</Elem>
-            <Elem>__BFLT16_NORM_MAX__=3.38953138925153547590470800371487867e+38BF16</Elem>
-            <Elem>__DBL_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT128_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
-            <Elem>__FLT16_DENORM_MIN__=5.96046447753906250000000000000000000e-8F16</Elem>
-            <Elem>__FLT16_DIG__=3</Elem>
-            <Elem>__FLT16_EPSILON__=9.76562500000000000000000000000000000e-4F16</Elem>
-            <Elem>__FLT16_HAS_DENORM__=1</Elem>
-            <Elem>__FLT16_HAS_INFINITY__=1</Elem>
-            <Elem>__FLT16_HAS_QUIET_NAN__=1</Elem>
-            <Elem>__FLT16_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT16_MANT_DIG__=11</Elem>
-            <Elem>__FLT16_MAX_10_EXP__=4</Elem>
-            <Elem>__FLT16_MAX_EXP__=16</Elem>
-            <Elem>__FLT16_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT16_MIN_10_EXP__=(-4)</Elem>
-            <Elem>__FLT16_MIN_EXP__=(-13)</Elem>
-            <Elem>__FLT16_MIN__=6.10351562500000000000000000000000000e-5F16</Elem>
-            <Elem>__FLT16_NORM_MAX__=6.55040000000000000000000000000000000e+4F16</Elem>
-            <Elem>__FLT32X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT32_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64X_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT64_IS_IEC_60559__=1</Elem>
-            <Elem>__FLT_IS_IEC_60559__=1</Elem>
-            <Elem>__GCC_CONSTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GCC_DESTRUCTIVE_SIZE=64</Elem>
-            <Elem>__GNUC_EXECUTION_CHARSET_NAME="UTF-8"</Elem>
-            <Elem>__GNUC_RH_RELEASE__=6</Elem>
-            <Elem>__GNUC_WIDE_EXECUTION_CHARSET_NAME="UTF-32LE"</Elem>
-            <Elem>__GNUC__=13</Elem>
-            <Elem>__GNUG__=13</Elem>
-            <Elem>__GXX_ABI_VERSION=1018</Elem>
-            <Elem>__LDBL_IS_IEC_60559__=1</Elem>
-            <Elem>__PIC__=2</Elem>
-            <Elem>__REGISTER_PREFIX__=</Elem>
-            <Elem>__STDCPP_THREADS__=1</Elem>
-            <Elem>__STRICT_ANSI__=1</Elem>
-            <Elem>__USER_LABEL_PREFIX__=</Elem>
-            <Elem>__VERSION__="13.2.1 20231205 (Red Hat 13.2.1-6)"</Elem>
-            <Elem>__cplusplus=201103L</Elem>
-            <Elem>__cpp_constexpr=200704L</Elem>
-            <Elem>__pic__=2</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/core/midi">
-        <ccTool>
-          <incDir>
-            <pElem>../../src/core/midi</pElem>
-          </incDir>
-          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -28691,9 +29374,21 @@
       <folder path="0/src/core/settings">
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/core/settings</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -28757,10 +29452,22 @@
       <folder path="0/src/core/temperaments">
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/core/temperaments</pElem>
             <pElem>/usr/include/wx-3.2/wx</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
             <Elem>__BFLT16_DIG__=2</Elem>
@@ -28818,6 +29525,26 @@
             <Elem>__cplusplus=201103L</Elem>
             <Elem>__cpp_constexpr=200704L</Elem>
             <Elem>__pic__=2</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/core/threading">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT=1</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
