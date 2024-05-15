@@ -29,14 +29,14 @@ class GOSampleStatistic;
 
 class GOSoundAudioSection {
 public:
-  struct audio_start_data_segment {
+  struct StartSegment {
     /* Sample offset into entire audio section where data begins. */
     unsigned start_offset;
 
     DecompressionCache cache;
   };
 
-  struct audio_end_data_segment {
+  struct EndSegment {
     /* Sample offset where the loop ends and needs to jump into the next
      * start segment. */
     unsigned end_offset;
@@ -59,14 +59,14 @@ public:
     int next_start_segment_index;
   };
 
-  struct audio_section_stream;
+  struct Stream;
 
 private:
   typedef void (*DecodeBlockFunction)(
-    audio_section_stream *stream, float *output, unsigned int n_blocks);
+    Stream *stream, float *output, unsigned int n_blocks);
 
 public:
-  struct audio_section_stream {
+  struct Stream {
     const GOSoundAudioSection *audio_section;
     const struct resampler_coefs_s *resample_coefs;
 
@@ -82,7 +82,7 @@ public:
 
     /* Derived from the start and end audio segments which were used to setup
      * this stream. */
-    const audio_end_data_segment *end_seg;
+    const EndSegment *end_seg;
     const unsigned char *end_ptr;
     unsigned margin;
     unsigned transition_position;
@@ -100,22 +100,22 @@ public:
 private:
   template <class T>
   static void MonoUncompressedLinear(
-    audio_section_stream *stream, float *output, unsigned int n_blocks);
+    Stream *stream, float *output, unsigned int n_blocks);
   template <class T>
   static void StereoUncompressedLinear(
-    audio_section_stream *stream, float *output, unsigned int n_blocks);
+    Stream *stream, float *output, unsigned int n_blocks);
   template <class T>
   static void MonoUncompressedPolyphase(
-    audio_section_stream *stream, float *output, unsigned int n_blocks);
+    Stream *stream, float *output, unsigned int n_blocks);
   template <class T>
   static void StereoUncompressedPolyphase(
-    audio_section_stream *stream, float *output, unsigned int n_blocks);
+    Stream *stream, float *output, unsigned int n_blocks);
   template <bool format16>
   static void MonoCompressedLinear(
-    audio_section_stream *stream, float *output, unsigned int n_blocks);
+    Stream *stream, float *output, unsigned int n_blocks);
   template <bool format16>
   static void StereoCompressedLinear(
-    audio_section_stream *stream, float *output, unsigned int n_blocks);
+    Stream *stream, float *output, unsigned int n_blocks);
 
   static DecodeBlockFunction GetDecodeBlockFunction(
     unsigned channels,
@@ -142,8 +142,8 @@ private:
     unsigned loop_length,
     unsigned length);
 
-  std::vector<audio_start_data_segment> m_StartSegments;
-  std::vector<audio_end_data_segment> m_EndSegments;
+  std::vector<StartSegment> m_StartSegments;
+  std::vector<EndSegment> m_EndSegments;
 
   /* Pointer to (size) bytes of data encoded in the format (type) */
   unsigned char *m_Data;
@@ -195,22 +195,18 @@ public:
 
   /* Initialize a stream to play this audio section and seek into it using
    * release alignment if available. */
-  void InitAlignedStream(
-    audio_section_stream *stream,
-    const audio_section_stream *existing_stream) const;
+  void InitAlignedStream(Stream *stream, const Stream *existing_stream) const;
 
   /* Initialize a stream to play this audio section */
   void InitStream(
     const struct resampler_coefs_s *resampler_coefs,
-    audio_section_stream *stream,
+    Stream *stream,
     float sample_rate_adjustment) const;
 
   /* Read an audio buffer from an audio section stream */
-  static bool ReadBlock(
-    audio_section_stream *stream, float *buffer, unsigned int n_blocks);
+  static bool ReadBlock(Stream *stream, float *buffer, unsigned int n_blocks);
   static void GetHistory(
-    const audio_section_stream *stream,
-    int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
+    const Stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
   void Setup(
     const GOCacheObject *pObjectFor,

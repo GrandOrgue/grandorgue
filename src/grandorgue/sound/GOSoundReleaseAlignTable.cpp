@@ -173,8 +173,8 @@ void GOSoundReleaseAlignTable::ComputeTable(
 }
 
 void GOSoundReleaseAlignTable::SetupRelease(
-  GOSoundAudioSection::audio_section_stream &release_sampler,
-  const GOSoundAudioSection::audio_section_stream &old_sampler) const {
+  GOSoundAudioSection::Stream &release_sampler,
+  const GOSoundAudioSection::Stream &old_sampler) const {
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
   GOSoundAudioSection::GetHistory(&old_sampler, history);
 

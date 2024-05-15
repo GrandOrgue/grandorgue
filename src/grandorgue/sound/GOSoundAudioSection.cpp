@@ -104,7 +104,7 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
   if (!cache.Read(&temp, sizeof(temp)))
     return false;
   for (unsigned i = 0; i < temp; i++) {
-    audio_start_data_segment s;
+    StartSegment s;
     if (!cache.Read(&s, sizeof(s)))
       return false;
     m_StartSegments.push_back(s);
@@ -113,7 +113,7 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
   if (!cache.Read(&temp, sizeof(temp)))
     return false;
   for (unsigned i = 0; i < temp; i++) {
-    audio_end_data_segment s;
+    EndSegment s;
     if (!cache.Read(&s.end_offset, sizeof(s.end_offset)))
       return false;
     if (!cache.Read(
@@ -184,7 +184,7 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&temp, sizeof(unsigned)))
     return false;
   for (unsigned i = 0; i < temp; i++) {
-    const audio_start_data_segment *s = &m_StartSegments[i];
+    const StartSegment *s = &m_StartSegments[i];
     if (!cache.Write(s, sizeof(*s)))
       return false;
   }
@@ -193,7 +193,7 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&temp, sizeof(temp)))
     return false;
   for (unsigned i = 0; i < temp; i++) {
-    const audio_end_data_segment *s = &m_EndSegments[i];
+    const EndSegment *s = &m_EndSegments[i];
     if (!cache.Write(&s->end_offset, sizeof(s->end_offset)))
       return false;
     if (!cache.Write(
@@ -233,7 +233,7 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
 
 template <class T>
 inline void GOSoundAudioSection::MonoUncompressedLinear(
-  audio_section_stream *stream, float *output, unsigned int n_blocks) {
+  Stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   T *input = (T *)(stream->ptr);
   for (unsigned int i = 0; i < n_blocks; i++,
@@ -256,7 +256,7 @@ inline void GOSoundAudioSection::MonoUncompressedLinear(
 
 template <class T>
 inline void GOSoundAudioSection::StereoUncompressedLinear(
-  audio_section_stream *stream, float *output, unsigned int n_blocks) {
+  Stream *stream, float *output, unsigned int n_blocks) {
   typedef T stereoSample[][2];
 
   // "borrow" the output buffer to compute release alignment info
@@ -287,7 +287,7 @@ inline void GOSoundAudioSection::StereoUncompressedLinear(
 
 template <class T>
 inline void GOSoundAudioSection::MonoUncompressedPolyphase(
-  audio_section_stream *stream, float *output, unsigned int n_blocks) {
+  Stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   T *input = ((T *)stream->ptr);
   const float *coef = stream->resample_coefs->coefs;
@@ -319,7 +319,7 @@ inline void GOSoundAudioSection::MonoUncompressedPolyphase(
 
 template <class T>
 inline void GOSoundAudioSection::StereoUncompressedPolyphase(
-  audio_section_stream *stream, float *output, unsigned int n_blocks) {
+  Stream *stream, float *output, unsigned int n_blocks) {
   typedef T stereoSample[][2];
 
   // copy the sample buffer
@@ -357,7 +357,7 @@ inline void GOSoundAudioSection::StereoUncompressedPolyphase(
 
 template <bool format16>
 inline void GOSoundAudioSection::MonoCompressedLinear(
-  audio_section_stream *stream, float *output, unsigned int n_blocks) {
+  Stream *stream, float *output, unsigned int n_blocks) {
   for (unsigned int i = 0; i < n_blocks; i++,
                     stream->position_fraction += stream->increment_fraction,
                     output += 2) {
@@ -382,7 +382,7 @@ inline void GOSoundAudioSection::MonoCompressedLinear(
 
 template <bool format16>
 inline void GOSoundAudioSection::StereoCompressedLinear(
-  audio_section_stream *stream, float *output, unsigned int n_blocks) {
+  Stream *stream, float *output, unsigned int n_blocks) {
   // copy the sample buffer
   for (unsigned int i = 0; i < n_blocks;
        stream->position_fraction += stream->increment_fraction,
@@ -478,7 +478,7 @@ inline unsigned GOSoundAudioSection::PickEndSegment(
   const unsigned x = abs(rand());
   for (unsigned i = 0; i < m_EndSegments.size(); i++) {
     const unsigned idx = (i + x) % m_EndSegments.size();
-    const audio_end_data_segment *end = &m_EndSegments[idx];
+    const EndSegment *end = &m_EndSegments[idx];
     if (
       end->transition_offset
       >= m_StartSegments[start_segment_index].start_offset)
@@ -489,7 +489,7 @@ inline unsigned GOSoundAudioSection::PickEndSegment(
 }
 
 bool GOSoundAudioSection::ReadBlock(
-  audio_section_stream *stream, float *buffer, unsigned int n_blocks) {
+  Stream *stream, float *buffer, unsigned int n_blocks) {
   while (n_blocks > 0) {
     if (stream->position_index >= stream->transition_position) {
       assert(stream->end_decode_call);
@@ -508,7 +508,7 @@ bool GOSoundAudioSection::ReadBlock(
       n_blocks -= len;
 
       if (stream->position_index >= stream->end_pos) {
-        const audio_end_data_segment *end = stream->end_seg;
+        const EndSegment *end = stream->end_seg;
         if (end->next_start_segment_index < 0) {
           for (unsigned i = 0; i < n_blocks * 2; i++)
             buffer[i] = 0;
@@ -520,13 +520,13 @@ bool GOSoundAudioSection::ReadBlock(
           stream->position_index -= end->end_loop_length;
 
         const unsigned next_index = end->next_start_segment_index;
-        const audio_start_data_segment *next
+        const StartSegment *next
           = &stream->audio_section->m_StartSegments[next_index];
 
         /* Find a suitable end segment */
         const unsigned next_end_segment_index
           = stream->audio_section->PickEndSegment(next_index);
-        const audio_end_data_segment *next_end
+        const EndSegment *next_end
           = &stream->audio_section->m_EndSegments[next_end_segment_index];
 
         stream->position_index += next->start_offset;
@@ -682,7 +682,7 @@ void GOSoundAudioSection::Setup(
   unsigned total_alloc_samples = pcm_data_nb_samples;
   /* Create a start segment */
   {
-    audio_start_data_segment start_seg;
+    StartSegment start_seg;
     start_seg.start_offset = 0;
     m_StartSegments.push_back(start_seg);
   }
@@ -693,8 +693,8 @@ void GOSoundAudioSection::Setup(
     unsigned min_reqd_samples = 0;
 
     for (unsigned i = 0; i < loop_points->size(); i++) {
-      audio_start_data_segment start_seg;
-      audio_end_data_segment end_seg;
+      StartSegment start_seg;
+      EndSegment end_seg;
       const GOWaveLoop &loop = (*loop_points)[i];
 
       if (loop.m_EndPosition + 1 > min_reqd_samples)
@@ -794,7 +794,7 @@ void GOSoundAudioSection::Setup(
       total_alloc_samples = min_reqd_samples;
   } else {
     /* Create a default end segment */
-    audio_end_data_segment end_seg;
+    EndSegment end_seg;
     end_seg.end_offset = pcm_data_nb_samples - 1;
     end_seg.read_end = end_seg.end_offset + 1;
     end_seg.next_start_segment_index = -1;
@@ -951,12 +951,12 @@ unsigned GOSoundAudioSection::GetMargin(
 
 void GOSoundAudioSection::InitStream(
   const struct resampler_coefs_s *resampler_coefs,
-  audio_section_stream *stream,
+  Stream *stream,
   float sample_rate_adjustment) const {
   stream->audio_section = this;
 
-  const audio_start_data_segment &start = m_StartSegments[0];
-  const audio_end_data_segment &end = m_EndSegments[PickEndSegment(0)];
+  const StartSegment &start = m_StartSegments[0];
+  const EndSegment &end = m_EndSegments[PickEndSegment(0)];
   assert(end.transition_offset >= start.start_offset);
   stream->resample_coefs = resampler_coefs;
   stream->ptr = stream->audio_section->m_Data;
@@ -990,14 +990,11 @@ void GOSoundAudioSection::InitStream(
 }
 
 void GOSoundAudioSection::InitAlignedStream(
-  audio_section_stream *stream,
-  const audio_section_stream *existing_stream) const {
+  Stream *stream, const Stream *existing_stream) const {
   stream->audio_section = this;
 
-  const audio_start_data_segment &start
-    = m_StartSegments[m_ReleaseStartSegment];
-  const audio_end_data_segment &end
-    = m_EndSegments[PickEndSegment(m_ReleaseStartSegment)];
+  const StartSegment &start = m_StartSegments[m_ReleaseStartSegment];
+  const EndSegment &end = m_EndSegments[PickEndSegment(m_ReleaseStartSegment)];
   assert(end.transition_offset >= start.start_offset);
 
   stream->ptr = stream->audio_section->m_Data;
@@ -1041,8 +1038,7 @@ void GOSoundAudioSection::InitAlignedStream(
 unsigned GOSoundAudioSection::GetSampleRate() const { return m_SampleRate; }
 
 void GOSoundAudioSection::GetHistory(
-  const audio_section_stream *stream,
-  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) {
+  const Stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) {
   memset(
     history, 0, sizeof(history[0][0]) * BLOCK_HISTORY * MAX_OUTPUT_CHANNELS);
   if (stream->position_index >= stream->transition_position) {

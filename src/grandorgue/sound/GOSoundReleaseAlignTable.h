@@ -38,8 +38,8 @@ public:
     unsigned start_position);
 
   void SetupRelease(
-    GOSoundAudioSection::audio_section_stream &release_sampler,
-    const GOSoundAudioSection::audio_section_stream &old_sampler) const;
+    GOSoundAudioSection::Stream &release_sampler,
+    const GOSoundAudioSection::Stream &old_sampler) const;
 };
 
 #endif /* GOSOUNDRELEASEALIGNTABLE_H */
