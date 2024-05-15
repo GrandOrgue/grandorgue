@@ -42,8 +42,6 @@ GOSoundAudioSection::GOSoundAudioSection(GOMemoryPool &pool)
   ClearData();
 }
 
-GOSoundAudioSection::~GOSoundAudioSection() { ClearData(); }
-
 void GOSoundAudioSection::ClearData() {
   m_AllocSize = 0;
   m_SampleCount = 0;
@@ -1035,8 +1033,6 @@ void GOSoundAudioSection::InitAlignedStream(
   m_ReleaseAligner->SetupRelease(*stream, *existing_stream);
 }
 
-unsigned GOSoundAudioSection::GetSampleRate() const { return m_SampleRate; }
-
 void GOSoundAudioSection::GetHistory(
   const Stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) {
   memset(
@@ -1076,8 +1072,8 @@ void GOSoundAudioSection::GetHistory(
 
 GOSampleStatistic GOSoundAudioSection::GetStatistic() {
   GOSampleStatistic stat;
-
   size_t size = 0;
+
   for (unsigned i = 0; i < m_EndSegments.size(); i++)
     size += m_EndSegments[i].end_size;
   stat.SetEndSegmentSize(size);

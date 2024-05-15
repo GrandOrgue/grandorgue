@@ -175,17 +175,23 @@ private:
   int m_MaxAbsDerivative;
   unsigned m_ReleaseCrossfadeLength; // in ms
 
+  void ClearData();
+
 public:
   GOSoundAudioSection(GOMemoryPool &pool);
-  ~GOSoundAudioSection();
-  void ClearData();
+  ~GOSoundAudioSection() { ClearData(); }
+
   inline unsigned GetChannels() const { return m_Channels; }
   inline GOBool3 GetWaveTremulantStateFor() const {
     return m_WaveTremulantStateFor;
   }
 
-  unsigned GetBytesPerSample() const;
-  unsigned GetLength() const;
+  inline unsigned GetBytesPerSample() const {
+    return (m_IsCompressed) ? 0 : (m_BitsPerSample / 8);
+  }
+
+  inline unsigned GetLength() const { return m_SampleCount; }
+
   unsigned GetReleaseCrossfadeLength() const {
     return m_ReleaseCrossfadeLength;
   }
@@ -222,119 +228,92 @@ public:
     unsigned loopCrossfadeLength,
     unsigned releaseCrossfadeLength);
 
-  bool IsOneshot() const;
+  inline bool IsOneshot() const {
+    return (m_EndSegments.size() == 1)
+      && (m_EndSegments[0].next_start_segment_index < 0);
+  }
 
-  static int GetSampleData(
+  inline static int GetSampleData(
     unsigned position,
     unsigned channel,
     unsigned bits_per_sample,
     unsigned channels,
-    const unsigned char *data);
-  static void SetSampleData(
+    const unsigned char *sample_data) {
+    if (bits_per_sample <= 8) {
+      GOInt8 *data = (GOInt8 *)sample_data;
+      return data[position * channels + channel];
+    }
+    if (bits_per_sample <= 16) {
+      GOInt16 *data = (GOInt16 *)sample_data;
+      return data[position * channels + channel];
+    }
+    if (bits_per_sample <= 24) {
+      GOInt24 *data = (GOInt24 *)sample_data;
+      return data[position * channels + channel];
+    }
+    assert(0 && "broken sampler type");
+    return 0;
+  }
+
+  inline static void SetSampleData(
     unsigned position,
     unsigned channel,
     unsigned bits_per_sample,
     unsigned channels,
     unsigned value,
-    unsigned char *data);
+    unsigned char *sample_data) {
+    if (bits_per_sample <= 8) {
+      GOInt8 *data = (GOInt8 *)sample_data;
+      data[position * channels + channel] = value;
+      return;
+    }
+    if (bits_per_sample <= 16) {
+      GOInt16 *data = (GOInt16 *)sample_data;
+      data[position * channels + channel] = value;
+      return;
+    }
+    if (bits_per_sample <= 24) {
+      GOInt24 *data = (GOInt24 *)sample_data;
+      data[position * channels + channel] = value;
+      return;
+    }
+    assert(0 && "broken sampler type");
+  }
 
-  int GetSample(
+  inline int GetSample(
     unsigned position,
     unsigned channel,
-    DecompressionCache *cache = NULL) const;
+    DecompressionCache *cache = nullptr) const {
+    if (!m_IsCompressed) {
+      return GetSampleData(
+        position, channel, m_BitsPerSample, m_Channels, m_Data);
+    } else {
+      DecompressionCache tmp;
+      if (!cache) {
+        cache = &tmp;
+        InitDecompressionCache(*cache);
+      }
 
-  float GetNormGain() const;
-  unsigned GetSampleRate() const;
-  bool SupportsStreamAlignment() const;
+      assert(m_BitsPerSample >= 12);
+      DecompressTo(
+        *cache, position, m_Data, m_Channels, (m_BitsPerSample >= 20));
+      return cache->value[channel];
+    }
+  }
+
+  inline float GetNormGain() const {
+    return scalbnf(1.0f, -((int)m_SampleFracBits));
+  }
+
+  inline unsigned GetSampleRate() const { return m_SampleRate; }
+
+  inline bool SupportsStreamAlignment() const { return (m_ReleaseAligner); }
+
   void SetupStreamAlignment(
     const std::vector<const GOSoundAudioSection *> &joinables,
     unsigned start_index);
 
   GOSampleStatistic GetStatistic();
 };
-
-inline unsigned GOSoundAudioSection::GetBytesPerSample() const {
-  return (m_IsCompressed) ? 0 : (m_BitsPerSample / 8);
-}
-
-inline unsigned GOSoundAudioSection::GetLength() const { return m_SampleCount; }
-
-inline bool GOSoundAudioSection::IsOneshot() const {
-  return (m_EndSegments.size() == 1)
-    && (m_EndSegments[0].next_start_segment_index < 0);
-}
-
-inline int GOSoundAudioSection::GetSampleData(
-  unsigned position,
-  unsigned channel,
-  unsigned bits_per_sample,
-  unsigned channels,
-  const unsigned char *sample_data) {
-  if (bits_per_sample <= 8) {
-    GOInt8 *data = (GOInt8 *)sample_data;
-    return data[position * channels + channel];
-  }
-  if (bits_per_sample <= 16) {
-    GOInt16 *data = (GOInt16 *)sample_data;
-    return data[position * channels + channel];
-  }
-  if (bits_per_sample <= 24) {
-    GOInt24 *data = (GOInt24 *)sample_data;
-    return data[position * channels + channel];
-  }
-  assert(0 && "broken sampler type");
-  return 0;
-}
-
-inline int GOSoundAudioSection::GetSample(
-  unsigned position, unsigned channel, DecompressionCache *cache) const {
-  if (!m_IsCompressed) {
-    return GetSampleData(
-      position, channel, m_BitsPerSample, m_Channels, m_Data);
-  } else {
-    DecompressionCache tmp;
-    if (!cache) {
-      cache = &tmp;
-      InitDecompressionCache(*cache);
-    }
-
-    assert(m_BitsPerSample >= 12);
-    DecompressTo(*cache, position, m_Data, m_Channels, (m_BitsPerSample >= 20));
-    return cache->value[channel];
-  }
-}
-
-inline void GOSoundAudioSection::SetSampleData(
-  unsigned position,
-  unsigned channel,
-  unsigned bits_per_sample,
-  unsigned channels,
-  unsigned value,
-  unsigned char *sample_data) {
-  if (bits_per_sample <= 8) {
-    GOInt8 *data = (GOInt8 *)sample_data;
-    data[position * channels + channel] = value;
-    return;
-  }
-  if (bits_per_sample <= 16) {
-    GOInt16 *data = (GOInt16 *)sample_data;
-    data[position * channels + channel] = value;
-    return;
-  }
-  if (bits_per_sample <= 24) {
-    GOInt24 *data = (GOInt24 *)sample_data;
-    data[position * channels + channel] = value;
-    return;
-  }
-  assert(0 && "broken sampler type");
-}
-
-inline float GOSoundAudioSection::GetNormGain() const {
-  return scalbnf(1.0f, -((int)m_SampleFracBits));
-}
-
-inline bool GOSoundAudioSection::SupportsStreamAlignment() const {
-  return (m_ReleaseAligner != NULL);
-}
 
 #endif /* GOSOUNDAUDIOSECTION_H_ */
