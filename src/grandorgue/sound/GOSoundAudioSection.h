@@ -59,75 +59,9 @@ public:
     int next_start_segment_index;
   };
 
-  struct Stream;
 
 private:
-  typedef void (*DecodeBlockFunction)(
-    Stream *stream, float *output, unsigned int n_blocks);
-
-public:
-  struct Stream {
-    const GOSoundAudioSection *audio_section;
-    const struct resampler_coefs_s *resample_coefs;
-
-    /* Method used to decode stream */
-    DecodeBlockFunction decode_call;
-
-    /* Cached method used to decode the data in end_ptr. This is just the
-     * uncompressed version of decode_call */
-    DecodeBlockFunction end_decode_call;
-
-    /* Used for both compressed and uncompressed decoding */
-    const unsigned char *ptr;
-
-    /* Derived from the start and end audio segments which were used to setup
-     * this stream. */
-    const EndSegment *end_seg;
-    const unsigned char *end_ptr;
-    unsigned margin;
-    unsigned transition_position;
-    unsigned read_end;
-    unsigned end_pos;
-
-    unsigned position_index;
-    unsigned position_fraction;
-    unsigned increment_fraction;
-
-    /* for decoding compressed format */
-    DecompressionCache cache;
-  };
-
-private:
-  template <class T>
-  static void MonoUncompressedLinear(
-    Stream *stream, float *output, unsigned int n_blocks);
-  template <class T>
-  static void StereoUncompressedLinear(
-    Stream *stream, float *output, unsigned int n_blocks);
-  template <class T>
-  static void MonoUncompressedPolyphase(
-    Stream *stream, float *output, unsigned int n_blocks);
-  template <class T>
-  static void StereoUncompressedPolyphase(
-    Stream *stream, float *output, unsigned int n_blocks);
-  template <bool format16>
-  static void MonoCompressedLinear(
-    Stream *stream, float *output, unsigned int n_blocks);
-  template <bool format16>
-  static void StereoCompressedLinear(
-    Stream *stream, float *output, unsigned int n_blocks);
-
-  static DecodeBlockFunction GetDecodeBlockFunction(
-    unsigned channels,
-    unsigned bits_per_sample,
-    bool compressed,
-    interpolation_type interpolation,
-    bool is_end);
-  static unsigned GetMargin(bool compressed, interpolation_type interpolation);
-
   void Compress(bool format16);
-
-  unsigned PickEndSegment(unsigned start_segment_index) const;
 
   void GetMaxAmplitudeAndDerivative();
 
@@ -205,12 +139,6 @@ private:
     return res;
   }
 
-  inline int GetSampleData(
-    const unsigned char *sampleData, unsigned position, uint8_t channel) const {
-    return getSampleData(
-      sampleData, position, m_channels, channel, m_BitsPerSample);
-  }
-
   template <typename T>
   inline static void setSampleData(
     T *data, unsigned position, uint8_t channels, uint8_t channel, int value) {
@@ -241,10 +169,22 @@ private:
   }
 
 public:
+  inline static unsigned limitedDiff(unsigned a, unsigned b) {
+    return (a > b) ? a - b : 0;
+  }
+
   GOSoundAudioSection(GOMemoryPool &pool);
   ~GOSoundAudioSection() { ClearData(); }
 
+  GOSoundReleaseAlignTable *GetReleaseAligner() const {
+    return m_ReleaseAligner;
+  }
+  unsigned GetReleaseStartSegment() const { return m_ReleaseStartSegment; }
+  unsigned GetSampleRate() const { return m_SampleRate; }
+  uint8_t GetBitsPerSample() const { return m_BitsPerSample; }
+  uint8_t GetBytesPerSample() const { return m_BytesPerSample; }
   inline uint8_t GetChannels() const { return m_channels; }
+  bool IsCompressed() const { return m_IsCompressed; }
 
   inline GOBool3 GetWaveTremulantStateFor() const {
     return m_WaveTremulantStateFor;
@@ -256,23 +196,24 @@ public:
     return m_ReleaseCrossfadeLength;
   }
 
+  const StartSegment &GetStartSegment(unsigned index) const {
+    return m_StartSegments[index];
+  }
+
+  const EndSegment &GetEndSegment(unsigned index) const {
+    return m_EndSegments[index];
+  }
+
+  const unsigned char *GetData() const { return m_data; }
+
+  inline int GetSampleData(
+    const unsigned char *sampleData, unsigned position, uint8_t channel) const {
+    return getSampleData(
+      sampleData, position, m_channels, channel, m_BitsPerSample);
+  }
+
   bool LoadCache(GOCache &cache);
   bool SaveCache(GOCacheWriter &cache) const;
-
-  /* Initialize a stream to play this audio section and seek into it using
-   * release alignment if available. */
-  void InitAlignedStream(Stream *stream, const Stream *existing_stream) const;
-
-  /* Initialize a stream to play this audio section */
-  void InitStream(
-    const struct resampler_coefs_s *resampler_coefs,
-    Stream *stream,
-    float sample_rate_adjustment) const;
-
-  /* Read an audio buffer from an audio section stream */
-  static bool ReadBlock(Stream *stream, float *buffer, unsigned int n_blocks);
-  static void GetHistory(
-    const Stream *stream, int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
 
   void Setup(
     const GOCacheObject *pObjectFor,
@@ -292,6 +233,8 @@ public:
     return (m_EndSegments.size() == 1)
       && (m_EndSegments[0].next_start_segment_index < 0);
   }
+
+  unsigned PickEndSegment(unsigned start_segment_index) const;
 
   inline int GetSample(
     unsigned position,
@@ -316,8 +259,6 @@ public:
   inline float GetNormGain() const {
     return scalbnf(1.0f, -((int)m_SampleFracBits));
   }
-
-  inline unsigned GetSampleRate() const { return m_SampleRate; }
 
   inline bool SupportsStreamAlignment() const { return (m_ReleaseAligner); }
 

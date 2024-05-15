@@ -37,9 +37,8 @@ public:
     unsigned int sample_rate,
     unsigned start_position);
 
-  void SetupRelease(
-    GOSoundAudioSection::Stream &release_sampler,
-    const GOSoundAudioSection::Stream &old_sampler) const;
+  unsigned GetPositionFor(
+    int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
 };
 
 #endif /* GOSOUNDRELEASEALIGNTABLE_H */

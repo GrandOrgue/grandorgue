@@ -201,6 +201,7 @@ sound/GOSoundReverbPartition.cpp
 sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
 sound/GOSoundStateHandler.cpp
+sound/GOSoundStream.cpp
 sound/GOSound.cpp
 sound/GOSoundFilter.cpp
 sound/GOSoundToneBalanceFilter.cpp

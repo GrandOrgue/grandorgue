@@ -11,7 +11,8 @@
 
 #include "loader/cache/GOCache.h"
 #include "loader/cache/GOCacheWriter.h"
-#include "sound/GOSoundAudioSection.h"
+
+#include "GOSoundAudioSection.h"
 
 #ifndef NDEBUG
 #ifdef PALIGN_DEBUG
@@ -172,12 +173,8 @@ void GOSoundReleaseAlignTable::ComputeTable(
       }
 }
 
-void GOSoundReleaseAlignTable::SetupRelease(
-  GOSoundAudioSection::Stream &release_sampler,
-  const GOSoundAudioSection::Stream &old_sampler) const {
-  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
-  GOSoundAudioSection::GetHistory(&old_sampler, history);
-
+unsigned GOSoundReleaseAlignTable::GetPositionFor(
+  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const {
   /* Get combined release f's and v's */
   int f_mod = 0;
   int v_mod = 0;
@@ -213,14 +210,5 @@ void GOSoundReleaseAlignTable::SetupRelease(
     : (
       (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
                                            : ampIndex);
-  release_sampler.position_index = m_PositionEntries[derivIndex][ampIndex];
-
-#ifndef NDEBUG
-#ifdef PALIGN_DEBUG
-  printf("setup release using alignment:\n");
-  printf("  pos:    %d\n", release_sampler.position_index);
-  printf("  derIdx: %d\n", derivIndex);
-  printf("  ampIdx: %d\n", ampIndex);
-#endif
-#endif
+  return m_PositionEntries[derivIndex][ampIndex];
 }
