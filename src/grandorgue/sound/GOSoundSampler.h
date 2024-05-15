@@ -21,7 +21,7 @@ struct GOSoundSampler {
   int m_SamplerTaskId;
   GOSoundWindchestTask *p_WindchestTask;
   unsigned m_AudioGroupId;
-  audio_section_stream stream;
+  GOSoundAudioSection::audio_section_stream stream;
   GOSoundFader fader;
   GOSoundFilter::FilterState toneBalanceFilterState;
   uint64_t time;

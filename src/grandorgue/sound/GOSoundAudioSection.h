@@ -27,74 +27,76 @@ class GOMemoryPool;
 class GOSoundReleaseAlignTable;
 class GOSampleStatistic;
 
-struct audio_section_stream_s;
-
-typedef void (*DecodeBlockFunction)(
-  audio_section_stream_s *stream, float *output, unsigned int n_blocks);
-
-typedef struct audio_start_data_segment_s {
-  /* Sample offset into entire audio section where data begins. */
-  unsigned start_offset;
-
-  DecompressionCache cache;
-
-} audio_start_data_segment;
-
-typedef struct audio_end_data_segment_s {
-  /* Sample offset where the loop ends and needs to jump into the next
-   * start segment. */
-  unsigned end_offset;
-
-  /* Sample offset where the uncompressed end data blob begins (must be less
-   * than end_offset). */
-  unsigned transition_offset;
-
-  /* Uncompressed ending data blob. This data must start before sample_offset*/
-  unsigned char *end_data;
-  unsigned char *end_ptr;
-  unsigned read_end;
-  unsigned end_pos;
-  unsigned end_size;
-  unsigned end_loop_length;
-
-  /* Index of the next section segment to be played (-1 indicates the
-   * end of the blob. */
-  int next_start_segment_index;
-
-} audio_end_data_segment;
-
-typedef struct audio_section_stream_s {
-  const GOSoundAudioSection *audio_section;
-  const struct resampler_coefs_s *resample_coefs;
-
-  /* Method used to decode stream */
-  DecodeBlockFunction decode_call;
-
-  /* Cached method used to decode the data in end_ptr. This is just the
-   * uncompressed version of decode_call */
-  DecodeBlockFunction end_decode_call;
-
-  /* Used for both compressed and uncompressed decoding */
-  const unsigned char *ptr;
-
-  /* Derived from the start and end audio segments which were used to setup
-   * this stream. */
-  const audio_end_data_segment *end_seg;
-  const unsigned char *end_ptr;
-  unsigned margin;
-  unsigned transition_position;
-  unsigned read_end;
-  unsigned end_pos;
-
-  unsigned position_index;
-  unsigned position_fraction;
-  unsigned increment_fraction;
-
-  /* for decoding compressed format */
-  DecompressionCache cache;
-} audio_section_stream;
-
 class GOSoundAudioSection {
+public:
+  struct audio_start_data_segment {
+    /* Sample offset into entire audio section where data begins. */
+    unsigned start_offset;
+
+    DecompressionCache cache;
+  };
+
+  struct audio_end_data_segment {
+    /* Sample offset where the loop ends and needs to jump into the next
+     * start segment. */
+    unsigned end_offset;
+
+    /* Sample offset where the uncompressed end data blob begins (must be less
+     * than end_offset). */
+    unsigned transition_offset;
+
+    /* Uncompressed ending data blob. This data must start before
+     * sample_offset*/
+    unsigned char *end_data;
+    unsigned char *end_ptr;
+    unsigned read_end;
+    unsigned end_pos;
+    unsigned end_size;
+    unsigned end_loop_length;
+
+    /* Index of the next section segment to be played (-1 indicates the
+     * end of the blob. */
+    int next_start_segment_index;
+  };
+
+  struct audio_section_stream;
+
+private:
+  typedef void (*DecodeBlockFunction)(
+    audio_section_stream *stream, float *output, unsigned int n_blocks);
+
+public:
+  struct audio_section_stream {
+    const GOSoundAudioSection *audio_section;
+    const struct resampler_coefs_s *resample_coefs;
+
+    /* Method used to decode stream */
+    DecodeBlockFunction decode_call;
+
+    /* Cached method used to decode the data in end_ptr. This is just the
+     * uncompressed version of decode_call */
+    DecodeBlockFunction end_decode_call;
+
+    /* Used for both compressed and uncompressed decoding */
+    const unsigned char *ptr;
+
+    /* Derived from the start and end audio segments which were used to setup
+     * this stream. */
+    const audio_end_data_segment *end_seg;
+    const unsigned char *end_ptr;
+    unsigned margin;
+    unsigned transition_position;
+    unsigned read_end;
+    unsigned end_pos;
+
+    unsigned position_index;
+    unsigned position_fraction;
+    unsigned increment_fraction;
+
+    /* for decoding compressed format */
+    DecompressionCache cache;
+  };
+
 private:
   template <class T>
   static void MonoUncompressedLinear(

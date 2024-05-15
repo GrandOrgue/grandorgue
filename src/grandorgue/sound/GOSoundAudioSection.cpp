@@ -410,12 +410,13 @@ inline void GOSoundAudioSection::StereoCompressedLinear(
   stream->position_fraction = stream->position_fraction & (UPSAMPLE_FACTOR - 1);
 }
 
-inline DecodeBlockFunction GOSoundAudioSection::GetDecodeBlockFunction(
-  unsigned channels,
-  unsigned bits_per_sample,
-  bool compressed,
-  interpolation_type interpolation,
-  bool is_end) {
+inline GOSoundAudioSection::DecodeBlockFunction GOSoundAudioSection::
+  GetDecodeBlockFunction(
+    unsigned channels,
+    unsigned bits_per_sample,
+    bool compressed,
+    interpolation_type interpolation,
+    bool is_end) {
   if (compressed && !is_end) {
     /* TODO: Add support for polyphase compressed decoders. Fallback to
      * linear interpolation for now. */
