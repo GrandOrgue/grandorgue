@@ -557,6 +557,11 @@ void GOSoundingPipe::UpdateReleaseTail() {
   m_SoundProvider.SetReleaseTail(m_PipeConfigNode.GetEffectiveReleaseTail());
 }
 
+void GOSoundingPipe::UpdateToneBalance() {
+  m_SoundProvider.SetToneBalanceValue(
+    m_PipeConfigNode.GetEffectiveToneBalanceValue());
+}
+
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
   m_IsTemperamentOriginalBased = temperament.IsTemperamentOriginalBased();
   if (!m_RetunePipe)
@@ -569,6 +574,10 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
 void GOSoundingPipe::PreparePlayback() {
   GOPipe::PreparePlayback();
   UpdateAudioGroup();
+  GOSoundEngine *pSoundEngine = GetSoundEngine();
+  if (pSoundEngine)
+    m_SoundProvider.SetToneBalanceFilterSamplerate(
+      pSoundEngine->GetSampleRate());
 }
 
 void GOSoundingPipe::AbortPlayback() {

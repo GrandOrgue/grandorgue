@@ -6,9 +6,9 @@
  */
 
 #include "GOPipeConfig.h"
-
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include <algorithm>
 
 GOPipeConfig::GOPipeConfig(
   GOPipeConfigListener &listener, GOPipeUpdateCallback *callback)
@@ -28,6 +28,7 @@ GOPipeConfig::GOPipeConfig(
     m_DefaultDelay(0),
     m_Delay(0),
     m_ReleaseTail(0),
+    m_ToneBalanceValue(0),
     m_BitsPerSample(-1),
     m_Channels(-1),
     m_LoopLoad(-1),
@@ -111,11 +112,20 @@ void GOPipeConfig::LoadFromCmb(
     CMBSetting, m_Group, m_NamePrefix + wxT("IgnorePitch"), false);
   m_ReleaseTail = (uint16_t)cfg.ReadInteger(
     CMBSetting, group, m_NamePrefix + wxT("ReleaseTail"), 0, 3000, false, 0);
+  m_ToneBalanceValue = cfg.ReadInteger(
+    CMBSetting,
+    m_Group,
+    m_NamePrefix + wxT("ToneBalance"),
+    -100,
+    100,
+    false,
+    0);
 
   m_Callback->UpdateAmplitude();
   m_Callback->UpdateTuning();
   m_Callback->UpdateAudioGroup();
   m_Callback->UpdateReleaseTail();
+  m_Callback->UpdateToneBalance();
 }
 
 void GOPipeConfig::Init(
@@ -173,12 +183,20 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
     m_Group, m_NamePrefix + wxT("IgnorePitch"), m_IgnorePitch);
   cfg.WriteInteger(
     m_Group, m_NamePrefix + wxT("ReleaseTail"), (int)m_ReleaseTail);
+  cfg.WriteInteger(
+    m_Group, m_NamePrefix + wxT("ToneBalance"), m_ToneBalanceValue);
 }
 
 void GOPipeConfig::SetPitchMember(float cents, float &member) {
-  if (cents < -1800)
-    cents = -1800;
-  if (cents > 1800)
-    cents = 1800;
-  SetSmallMember(cents, member, &GOPipeUpdateCallback::UpdateTuning);
+  SetSmallMember(
+    std::clamp(cents, -1800.0f, 1800.0f),
+    member,
+    &GOPipeUpdateCallback::UpdateTuning);
+}
+
+void GOPipeConfig::SetToneBalanceValue(int8_t value) {
+  SetSmallMember(
+    std::clamp(value, (int8_t)-100, (int8_t)100),
+    m_ToneBalanceValue,
+    &GOPipeUpdateCallback::UpdateToneBalance);
 }

@@ -10,6 +10,7 @@
 
 #include "GOSoundAudioSection.h"
 #include "GOSoundFader.h"
+#include "GOSoundFilter.h"
 
 class GOSoundProvider;
 class GOSoundWindchestTask;
@@ -22,6 +23,7 @@ struct GOSoundSampler {
   unsigned m_AudioGroupId;
   audio_section_stream stream;
   GOSoundFader fader;
+  GOSoundFilter::FilterState toneBalanceFilterState;
   uint64_t time;
   unsigned velocity;
   unsigned delay;

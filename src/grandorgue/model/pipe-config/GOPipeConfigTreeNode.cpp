@@ -45,6 +45,13 @@ void GOPipeConfigTreeNode::UpdateReleaseTail() {
     m_Callback->UpdateReleaseTail();
 }
 
+void GOPipeConfigTreeNode::UpdateToneBalance() {
+  for (auto child : m_Childs)
+    child->GetPipeConfig().GetCallback()->UpdateToneBalance();
+  if (m_Callback)
+    m_Callback->UpdateToneBalance();
+}
+
 GOSampleStatistic GOPipeConfigTreeNode::GetStatistic() const {
   GOSampleStatistic stat = GOPipeConfigNode::GetStatistic();
   for (unsigned i = 0; i < m_Childs.size(); i++)

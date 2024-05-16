@@ -35,6 +35,7 @@ GOSoundProvider::GOSoundProvider()
   : m_MidiKeyNumber(0),
     m_MidiPitchFract(0),
     m_Tuning(1),
+    m_ToneBalanceValue(0),
     m_IsWaveTremulantActive(BOOL3_FALSE),
     m_ReleaseTail(0),
     m_Attack(),
@@ -165,6 +166,16 @@ int GOSoundProvider::IsOneshot() const {
 
 void GOSoundProvider::SetTuning(float cent) {
   m_Tuning = pow(pow(2, 1.0 / 1200.0), cent);
+}
+
+void GOSoundProvider::SetToneBalanceValue(int8_t value) {
+  m_ToneBalanceValue = value;
+  m_ToneBalance.Init(m_ToneBalanceValue);
+}
+
+void GOSoundProvider::SetToneBalanceFilterSamplerate(unsigned samplerate) {
+  m_ToneBalance.SetFilterSamplerate(samplerate);
+  m_ToneBalance.Init(m_ToneBalanceValue);
 }
 
 unsigned GOSoundProvider::GetMidiKeyNumber() const { return m_MidiKeyNumber; }

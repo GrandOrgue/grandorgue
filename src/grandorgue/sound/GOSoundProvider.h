@@ -14,6 +14,7 @@
 #include "ptrvector.h"
 
 #include "GOBool3.h"
+#include "GOSoundToneBalanceFilter.h"
 #include "GOStatisticCallback.h"
 
 class GOSoundAudioSection;
@@ -41,6 +42,8 @@ protected:
   float m_MidiPitchFract;
   float m_Gain;
   float m_Tuning;
+  int8_t m_ToneBalanceValue;
+  GOSoundToneBalanceFilter m_ToneBalance;
   bool m_IsWaveTremulantActive;
   unsigned m_ReleaseTail;
   ptr_vector<GOSoundAudioSection> m_Attack;
@@ -82,6 +85,12 @@ public:
 
   float GetTuning() const;
   void SetTuning(float cent);
+  int8_t GetToneBalanceValue() const;
+  void SetToneBalanceValue(int8_t value);
+  void SetToneBalanceFilterSamplerate(unsigned samplerate);
+  const GOSoundToneBalanceFilter *GetToneBalance() const {
+    return &m_ToneBalance;
+  }
   unsigned GetReleaseTail() const { return m_ReleaseTail; }
   void SetReleaseTail(unsigned releaseTail) { m_ReleaseTail = releaseTail; }
 
@@ -104,5 +113,9 @@ public:
 inline float GOSoundProvider::GetGain() const { return m_Gain; }
 
 inline float GOSoundProvider::GetTuning() const { return m_Tuning; }
+
+inline int8_t GOSoundProvider::GetToneBalanceValue() const {
+  return m_ToneBalanceValue;
+}
 
 #endif /* GOSOUNDPROVIDER_H_ */

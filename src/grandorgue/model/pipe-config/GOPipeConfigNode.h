@@ -112,6 +112,8 @@ public:
 
   uint16_t GetEffectiveReleaseTail() const;
 
+  int8_t GetEffectiveToneBalanceValue() const;
+
   uint8_t GetEffectiveBitsPerSample() const {
     return GetEffectiveUint8(
       &GOPipeConfig::GetBitsPerSample,
