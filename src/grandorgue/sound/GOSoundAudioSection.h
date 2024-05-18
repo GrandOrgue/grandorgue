@@ -208,7 +208,7 @@ private:
   inline int GetSampleData(
     const unsigned char *sampleData, unsigned position, uint8_t channel) const {
     return getSampleData(
-      m_data, position, m_channels, channel, m_BitsPerSample);
+      sampleData, position, m_channels, channel, m_BitsPerSample);
   }
 
   template <typename T>
@@ -218,7 +218,7 @@ private:
   }
 
   inline static void setSampleData(
-    void *sampleData,
+    unsigned char *sampleData,
     unsigned position,
     uint8_t channels,
     uint8_t channel,
