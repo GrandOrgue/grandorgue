@@ -101,12 +101,11 @@ void GOSoundEngine::SetSamplesPerBuffer(unsigned samples_per_buffer) {
 
 void GOSoundEngine::SetSampleRate(unsigned sample_rate) {
   m_SampleRate = sample_rate;
-  resampler_coefs_init(
-    &m_ResamplerCoefs, m_SampleRate, m_ResamplerCoefs.interpolation);
+  m_ResamplerCoefs.Init(m_SampleRate, m_ResamplerCoefs.m_interpolation);
 }
 
 void GOSoundEngine::SetInterpolationType(unsigned type) {
-  m_ResamplerCoefs.interpolation = (GOSoundResample::InterpolationType)type;
+  m_ResamplerCoefs.m_interpolation = (GOSoundResample::InterpolationType)type;
 }
 
 unsigned GOSoundEngine::GetSampleRate() { return m_SampleRate; }

@@ -75,8 +75,7 @@ static void create_nyquist_filter(
 
 #include <stdio.h>
 
-void resampler_coefs_init(
-  struct GOSoundResample *resampler_coefs,
+void GOSoundResample::Init(
   const unsigned input_sample_rate,
   GOSoundResample::InterpolationType interpolation) {
   float temp[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
@@ -103,26 +102,27 @@ void resampler_coefs_init(
    * arrays. */
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
     for (unsigned j = 0; j < SUBFILTER_TAPS; j++) {
-      resampler_coefs->coefs[i * SUBFILTER_TAPS + ((SUBFILTER_TAPS - 1) - j)]
+      coefs[i * SUBFILTER_TAPS + ((SUBFILTER_TAPS - 1) - j)]
         = temp[j * UPSAMPLE_FACTOR + i];
     }
   }
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
-    resampler_coefs->linear[i][0] = i / (float)UPSAMPLE_FACTOR;
-    resampler_coefs->linear[i][1] = 1 - (i / (float)UPSAMPLE_FACTOR);
+    linear[i][0] = i / (float)UPSAMPLE_FACTOR;
+    linear[i][1] = 1 - (i / (float)UPSAMPLE_FACTOR);
   }
-  resampler_coefs->interpolation = interpolation;
+  m_interpolation = interpolation;
 }
 
-float *resample_block(
-  float *data,
+float *GOSoundResample::newResampledMono(
+  const float *data,
   unsigned &len,
   unsigned from_samplerate,
   unsigned to_samplerate) {
   struct GOSoundResample coefs;
   float factor = ((float)from_samplerate) / to_samplerate;
-  resampler_coefs_init(
-    &coefs, to_samplerate, GOSoundResample::GO_POLYPHASE_INTERPOLATION);
+
+  coefs.Init(to_samplerate, GO_POLYPHASE_INTERPOLATION);
+
   const float *coef = coefs.coefs;
   unsigned new_len = ceil(len / factor);
   unsigned position_index = 0;
@@ -143,7 +143,7 @@ float *resample_block(
     float out3 = 0.0f;
     float out4 = 0.0f;
     const float *coef_set = &coef[position_fraction << SUBFILTER_BITS];
-    float *in_set = &data[position_index];
+    const float *in_set = &data[position_index];
     unsigned max_i = len - position_index;
 
     for (unsigned j = 0; j < SUBFILTER_TAPS; j += 4) {

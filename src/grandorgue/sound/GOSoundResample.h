@@ -49,15 +49,28 @@ struct GOSoundResample {
 
   float coefs[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
   float linear[UPSAMPLE_FACTOR][2];
-  InterpolationType interpolation;
+  InterpolationType m_interpolation;
+
+  void Init(
+    const unsigned input_sample_rate,
+    GOSoundResample::InterpolationType interpolation);
+
+  /**
+   * Allocate a new sample block and fill it with resampled data. Assume that
+   *   the samples are mono
+   * @param data a pointer to the source samples
+   * @param before call - number of source samples. After call it is filled
+   *   with number of target samples
+   * @param from_samplerate source samplerate
+   * @param to_samplerate target samplerate
+   * @return a pointer to the new allocated data block. The caller is
+   *   responsible to free this block
+   */
+  static float *newResampledMono(
+    const float *data,
+    unsigned &len,
+    unsigned from_samplerate,
+    unsigned to_samplerate);
 };
-
-void resampler_coefs_init(
-  struct GOSoundResample *resampler_coefs,
-  const unsigned input_sample_rate,
-  GOSoundResample::InterpolationType interpolation);
-
-float *resample_block(
-  float *data, unsigned &len, unsigned from_samplerate, unsigned to_samplerate);
 
 #endif /* GOSOUNDRESAMPLE_H_ */
