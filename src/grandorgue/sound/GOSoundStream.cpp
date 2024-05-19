@@ -157,7 +157,7 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
   unsigned channels,
   unsigned bits_per_sample,
   bool compressed,
-  interpolation_type interpolation,
+  GOSoundResample::InterpolationType interpolation,
   bool is_end) {
   if (compressed && !is_end) {
     /* TODO: Add support for polyphase compressed decoders. Fallback to
@@ -176,7 +176,9 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
       return &GOSoundStream::StereoCompressedLinear<false>;
     }
   } else {
-    if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed) {
+    if (
+      interpolation == GOSoundResample::GO_POLYPHASE_INTERPOLATION
+      && !compressed) {
       if (channels == 1) {
         if (bits_per_sample <= 8)
           return &GOSoundStream::MonoUncompressedPolyphase<GOInt8>;
@@ -216,8 +218,9 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
 }
 
 static unsigned calculate_margin(
-  bool compressed, interpolation_type interpolation) {
-  if (interpolation == GO_POLYPHASE_INTERPOLATION && !compressed)
+  bool compressed, GOSoundResample::InterpolationType interpolation) {
+  if (
+    interpolation == GOSoundResample::GO_POLYPHASE_INTERPOLATION && !compressed)
     return POLYPHASE_READAHEAD;
   else if (compressed)
     return LINEAR_COMPRESSED_READAHEAD;
@@ -227,7 +230,7 @@ static unsigned calculate_margin(
 
 void GOSoundStream::InitStream(
   const GOSoundAudioSection *pSection,
-  const struct resampler_coefs_s *resampler_coefs,
+  const struct GOSoundResample *resampler_coefs,
   float sample_rate_adjustment) {
   audio_section = pSection;
 

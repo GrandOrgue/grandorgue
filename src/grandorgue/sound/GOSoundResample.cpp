@@ -2,7 +2,7 @@
  * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -76,9 +76,9 @@ static void create_nyquist_filter(
 #include <stdio.h>
 
 void resampler_coefs_init(
-  struct resampler_coefs_s *resampler_coefs,
+  struct GOSoundResample *resampler_coefs,
   const unsigned input_sample_rate,
-  interpolation_type interpolation) {
+  GOSoundResample::InterpolationType interpolation) {
   float temp[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
 
 #if 1
@@ -119,9 +119,10 @@ float *resample_block(
   unsigned &len,
   unsigned from_samplerate,
   unsigned to_samplerate) {
-  struct resampler_coefs_s coefs;
+  struct GOSoundResample coefs;
   float factor = ((float)from_samplerate) / to_samplerate;
-  resampler_coefs_init(&coefs, to_samplerate, GO_POLYPHASE_INTERPOLATION);
+  resampler_coefs_init(
+    &coefs, to_samplerate, GOSoundResample::GO_POLYPHASE_INTERPOLATION);
   const float *coef = coefs.coefs;
   unsigned new_len = ceil(len / factor);
   unsigned position_index = 0;

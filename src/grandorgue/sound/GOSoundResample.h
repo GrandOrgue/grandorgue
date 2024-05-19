@@ -2,7 +2,7 @@
  * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -22,6 +22,8 @@
 #ifndef GOSOUNDRESAMPLE_H_
 #define GOSOUNDRESAMPLE_H_
 
+#include <cstdint>
+
 #define SUBFILTER_BITS (3U)
 #define SUBFILTER_TAPS (1U << SUBFILTER_BITS)
 #define UPSAMPLE_BITS (13U)
@@ -39,21 +41,21 @@
  * 48 kHz. */
 #define MAX_POSITIVE_FACTOR (2663U)
 
-typedef enum {
-  GO_LINEAR_INTERPOLATION = 0,
-  GO_POLYPHASE_INTERPOLATION = 1,
-} interpolation_type;
+struct GOSoundResample {
+  enum InterpolationType {
+    GO_LINEAR_INTERPOLATION = 0,
+    GO_POLYPHASE_INTERPOLATION = 1,
+  };
 
-struct resampler_coefs_s {
   float coefs[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
   float linear[UPSAMPLE_FACTOR][2];
-  interpolation_type interpolation;
+  InterpolationType interpolation;
 };
 
 void resampler_coefs_init(
-  struct resampler_coefs_s *resampler_coefs,
+  struct GOSoundResample *resampler_coefs,
   const unsigned input_sample_rate,
-  interpolation_type interpolation);
+  GOSoundResample::InterpolationType interpolation);
 
 float *resample_block(
   float *data, unsigned &len, unsigned from_samplerate, unsigned to_samplerate);

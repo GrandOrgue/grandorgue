@@ -106,7 +106,7 @@ void GOSoundEngine::SetSampleRate(unsigned sample_rate) {
 }
 
 void GOSoundEngine::SetInterpolationType(unsigned type) {
-  m_ResamplerCoefs.interpolation = (interpolation_type)type;
+  m_ResamplerCoefs.interpolation = (GOSoundResample::InterpolationType)type;
 }
 
 unsigned GOSoundEngine::GetSampleRate() { return m_SampleRate; }

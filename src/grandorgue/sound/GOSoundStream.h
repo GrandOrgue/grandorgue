@@ -13,7 +13,7 @@
 class GOSoundStream {
 private:
   const GOSoundAudioSection *audio_section;
-  const struct resampler_coefs_s *resample_coefs;
+  const struct GOSoundResample *resample_coefs;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
     float *output, unsigned int n_blocks);
@@ -66,7 +66,7 @@ private:
     unsigned channels,
     unsigned bits_per_sample,
     bool compressed,
-    interpolation_type interpolation,
+    GOSoundResample::InterpolationType interpolation,
     bool is_end);
 
   void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
@@ -75,7 +75,7 @@ public:
   /* Initialize a stream to play this audio section */
   void InitStream(
     const GOSoundAudioSection *pSection,
-    const struct resampler_coefs_s *resampler_coefs,
+    const struct GOSoundResample *resampler_coefs,
     float sample_rate_adjustment);
 
   /* Initialize a stream to play this audio section and seek into it using
