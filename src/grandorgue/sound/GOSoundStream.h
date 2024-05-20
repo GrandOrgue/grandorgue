@@ -9,11 +9,12 @@
 #define GOSOUNDSTREAM_H
 
 #include "GOSoundAudioSection.h"
+#include "GOSoundResample.h"
 
 class GOSoundStream {
 private:
   const GOSoundAudioSection *audio_section;
-  const struct GOSoundResample *resample_coefs;
+  const GOSoundResample *resample;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
     float *output, unsigned int n_blocks);
@@ -37,17 +38,10 @@ private:
   unsigned read_end;
   unsigned end_pos;
 
-  unsigned position_index;
-  unsigned position_fraction;
-  unsigned increment_fraction;
+  GOSoundResample::ResamplingPosition resamplingPos;
 
   /* for decoding compressed format */
   DecompressionCache cache;
-
-  inline void NormalisePosition() {
-    position_index += position_fraction >> UPSAMPLE_BITS;
-    position_fraction = position_fraction & (UPSAMPLE_FACTOR - 1);
-  }
 
   template <class T>
   void MonoUncompressedLinear(float *output, unsigned int n_blocks);

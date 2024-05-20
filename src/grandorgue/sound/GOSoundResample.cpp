@@ -30,6 +30,14 @@
 #define M_PI 3.14159265358979323846264338327950288
 #endif
 
+void GOSoundResample::ResamplingPosition::Init(
+  float factor, unsigned startIndex, const ResamplingPosition *pOld) {
+  m_index = startIndex;
+  m_fraction = pOld ? pOld->m_fraction : 0;
+  m_FractionIncrement
+    = roundf(factor * (pOld ? pOld->m_FractionIncrement : UPSAMPLE_FACTOR));
+}
+
 static double sinc(const double arg) {
   return (arg == 0) ? 1.0 : sin(M_PI * arg) / (M_PI * arg);
 }
@@ -72,8 +80,6 @@ static void create_nyquist_filter(
     output[i] = f;
   }
 }
-
-#include <stdio.h>
 
 void GOSoundResample::Init(
   const unsigned input_sample_rate,
