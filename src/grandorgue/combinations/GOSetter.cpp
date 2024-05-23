@@ -144,6 +144,8 @@ enum {
   ID_SETTER_TRANSPOSE_UP,
 
   ID_SETTER_ON,
+  ID_SETTER_AUDIO_PANIC,
+  ID_SETTER_FILE_EXIT
 };
 
 const wxString GOSetter::KEY_REFRESH_FILES = wxT("RefreshFiles");
@@ -279,8 +281,9 @@ const struct GOElementCreator::ButtonDefinitionEntry GOSetter::m_element_types[]
      true,
      false,
      false},
-    {wxT(""), -1, false, false, false},
-};
+    {wxT("PanicButton"), ID_SETTER_AUDIO_PANIC, true, true, true},
+    {wxT("ExitGO"), ID_SETTER_FILE_EXIT, true, true, true},
+    {wxT(""), -1, false, false, false}};
 
 const struct GOElementCreator::ButtonDefinitionEntry *GOSetter::
   GetButtonDefinitionList() {
@@ -330,6 +333,8 @@ GOSetter::GOSetter(GOOrganController *organController)
   m_buttons[ID_SETTER_TEMPERAMENT_NEXT]->SetPreconfigIndex(22);
   m_buttons[ID_SETTER_TRANSPOSE_DOWN]->SetPreconfigIndex(23);
   m_buttons[ID_SETTER_TRANSPOSE_UP]->SetPreconfigIndex(24);
+  m_buttons[ID_SETTER_AUDIO_PANIC]->SetPreconfigIndex(25);
+  m_buttons[ID_SETTER_FILE_EXIT]->SetPreconfigIndex(26);
 
   m_buttons[ID_SETTER_PREV]->SetShortcutKey(37);
   m_buttons[ID_SETTER_NEXT]->SetShortcutKey(39);
@@ -449,6 +454,10 @@ void GOSetter::Load(GOConfigReader &cfg) {
 
   m_buttons[ID_SETTER_ON]->Init(cfg, wxT("SetterOn"), _("ON"));
   m_buttons[ID_SETTER_ON]->Display(true);
+
+  m_buttons[ID_SETTER_AUDIO_PANIC]->Init(cfg, wxT("AudioPanic"), _("Panic"));
+  m_buttons[ID_SETTER_FILE_EXIT]->Init(
+    cfg, wxT("ExitGO"), _("Exit GrandOrgue"));
 
   m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"), 0);
 
@@ -920,6 +929,14 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
     else
       value--;
     SetTranspose(value);
+  } break;
+  case ID_SETTER_AUDIO_PANIC: {
+    wxCommandEvent event(wxEVT_MENU, ID_AUDIO_PANIC);
+    wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+  } break;
+  case ID_SETTER_FILE_EXIT: {
+    wxCommandEvent event(wxEVT_MENU, ID_FILE_EXIT);
+    wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
   } break;
   }
 }

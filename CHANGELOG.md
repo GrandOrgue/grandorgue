@@ -1,3 +1,4 @@
+- Added Midi listener for Panic button and Exit GO function. https://github.com/GrandOrgue/grandorgue/issues/1905
 - Added a tone balance (bass/treble harmonics balance) voicing option
 # 3.14.2 (2024-04-29)
 - Fixed divisional couplers with setter divisionals https://github.com/GrandOrgue/grandorgue/issues/1787
