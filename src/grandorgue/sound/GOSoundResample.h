@@ -27,6 +27,7 @@
 struct GOSoundResample {
   static constexpr unsigned POLYPHASE_BITS = 3;
   static constexpr unsigned POLYPHASE_POINTS = 1 << POLYPHASE_BITS;
+  static constexpr unsigned LINEAR_POINTS = 2;
   static constexpr unsigned UPSAMPLE_BITS = 13;
   static constexpr unsigned UPSAMPLE_FACTOR = 1 << UPSAMPLE_BITS;
   static constexpr unsigned UPSAMPLE_MASK = UPSAMPLE_FACTOR - 1;
@@ -120,8 +121,8 @@ struct GOSoundResample {
     }
   };
 
-  float m_PolyphaseCoefs[UPSAMPLE_FACTOR * POLYPHASE_POINTS];
-  float m_LinearCoeffs[UPSAMPLE_FACTOR][2];
+  float m_PolyphaseCoefs[UPSAMPLE_FACTOR][POLYPHASE_POINTS];
+  float m_LinearCoeffs[UPSAMPLE_FACTOR][LINEAR_POINTS];
   InterpolationType m_interpolation;
 
   void Init(
@@ -130,14 +131,14 @@ struct GOSoundResample {
 
   template <class SourceT>
   inline float CalcLinear(unsigned fraction, SourceT &source) const {
-    const float(&coef)[2] = m_LinearCoeffs[fraction];
+    const float(&coef)[LINEAR_POINTS] = m_LinearCoeffs[fraction];
 
     return source.NextSample() * coef[1] + source.NextSample() * coef[0];
   }
 
   template <class SourceT>
   inline float CalcPolyphase(unsigned fraction, SourceT &source) const {
-    const float *pCoef = m_PolyphaseCoefs + (fraction << POLYPHASE_BITS);
+    const float *pCoef = m_PolyphaseCoefs[fraction];
     float out = 0.0f;
 
     for (unsigned j = 0; j < POLYPHASE_POINTS; j++)

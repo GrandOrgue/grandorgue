@@ -86,29 +86,14 @@ void GOSoundResample::Init(
   GOSoundResample::InterpolationType interpolation) {
   float temp[UPSAMPLE_FACTOR * POLYPHASE_POINTS];
 
-#if 1
   create_nyquist_filter(temp, POLYPHASE_POINTS, UPSAMPLE_FACTOR);
-#else
-  static const double generalised_max_frequency
-    = ((double)UPSAMPLE_FACTOR / (double)MAX_POSITIVE_FACTOR);
-  const double cutoff_frequency
-    = ((double)input_sample_rate / 2.0) * generalised_max_frequency;
-  create_sinc_filter(
-    temp,
-    UPSAMPLE_FACTOR * POLYPHASE_POINTS,
-    cutoff_frequency / 2,
-    cutoff_frequency,
-    input_sample_rate * UPSAMPLE_FACTOR,
-    UPSAMPLE_FACTOR);
-#endif
-
   apply_lanczos_window(temp, UPSAMPLE_FACTOR * POLYPHASE_POINTS);
 
   /* Split up the filter into the sub-filters and reverse the coefficient
    * arrays. */
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
     for (unsigned j = 0; j < POLYPHASE_POINTS; j++) {
-      m_PolyphaseCoefs[i * POLYPHASE_POINTS + ((POLYPHASE_POINTS - 1) - j)]
+      m_PolyphaseCoefs[i][(POLYPHASE_POINTS - 1) - j]
         = temp[j * UPSAMPLE_FACTOR + i];
     }
   }
@@ -124,12 +109,11 @@ float *GOSoundResample::newResampledMono(
   unsigned &len,
   unsigned from_samplerate,
   unsigned to_samplerate) {
-  struct GOSoundResample coefs;
+  struct GOSoundResample resample;
   float factor = ((float)from_samplerate) / to_samplerate;
 
-  coefs.Init(to_samplerate, GO_POLYPHASE_INTERPOLATION);
+  resample.Init(to_samplerate, GO_POLYPHASE_INTERPOLATION);
 
-  const float *coef = coefs.m_PolyphaseCoefs;
   unsigned new_len = ceil(len / factor);
   unsigned position_index = 0;
   unsigned position_fraction = 0;
@@ -148,7 +132,7 @@ float *GOSoundResample::newResampledMono(
     float out2 = 0.0f;
     float out3 = 0.0f;
     float out4 = 0.0f;
-    const float *coef_set = &coef[position_fraction << POLYPHASE_BITS];
+    const float *coef_set = resample.m_PolyphaseCoefs[position_fraction];
     const float *in_set = &data[position_index];
     unsigned max_i = len - position_index;
 
