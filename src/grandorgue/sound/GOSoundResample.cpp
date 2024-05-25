@@ -81,9 +81,7 @@ static void create_nyquist_filter(
   }
 }
 
-void GOSoundResample::Init(
-  const unsigned input_sample_rate,
-  GOSoundResample::InterpolationType interpolation) {
+GOSoundResample::GOSoundResample() {
   float temp[UPSAMPLE_FACTOR * POLYPHASE_POINTS];
 
   create_nyquist_filter(temp, POLYPHASE_POINTS, UPSAMPLE_FACTOR);
@@ -101,7 +99,6 @@ void GOSoundResample::Init(
     m_LinearCoeffs[i][0] = i / (float)UPSAMPLE_FACTOR;
     m_LinearCoeffs[i][1] = 1 - (i / (float)UPSAMPLE_FACTOR);
   }
-  m_interpolation = interpolation;
 }
 
 float *GOSoundResample::newResampledMono(
@@ -111,8 +108,6 @@ float *GOSoundResample::newResampledMono(
   unsigned to_samplerate) {
   struct GOSoundResample resample;
   float factor = ((float)from_samplerate) / to_samplerate;
-
-  resample.Init(to_samplerate, GO_POLYPHASE_INTERPOLATION);
 
   unsigned new_len = ceil(len / factor);
   unsigned position_index = 0;

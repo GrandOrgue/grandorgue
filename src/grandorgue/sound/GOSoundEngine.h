@@ -65,7 +65,7 @@ private:
   std::unique_ptr<GOSoundTouchTask> m_TouchTask;
   GOSoundScheduler m_Scheduler;
 
-  struct GOSoundResample m_ResamplerCoefs;
+  GOSoundResample m_resample;
 
   std::atomic_bool m_HasBeenSetup;
 

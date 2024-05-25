@@ -47,7 +47,6 @@ GOSoundEngine::GOSoundEngine()
     m_AudioRecorder(NULL),
     m_TouchTask(),
     m_HasBeenSetup(false) {
-  memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
   m_SamplerPool.SetUsageLimit(2048);
   m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
   m_ReleaseProcessor = new GOSoundReleaseTask(*this, m_AudioGroupTasks);
@@ -101,11 +100,10 @@ void GOSoundEngine::SetSamplesPerBuffer(unsigned samples_per_buffer) {
 
 void GOSoundEngine::SetSampleRate(unsigned sample_rate) {
   m_SampleRate = sample_rate;
-  m_ResamplerCoefs.Init(m_SampleRate, m_ResamplerCoefs.m_interpolation);
 }
 
 void GOSoundEngine::SetInterpolationType(unsigned type) {
-  m_ResamplerCoefs.m_interpolation = (GOSoundResample::InterpolationType)type;
+  m_resample.m_interpolation = (GOSoundResample::InterpolationType)type;
 }
 
 unsigned GOSoundEngine::GetSampleRate() { return m_SampleRate; }
@@ -415,7 +413,7 @@ GOSoundSampler *GOSoundEngine::CreateTaskSample(
       sampler->velocity = velocity;
       sampler->stream.InitStream(
         section,
-        &m_ResamplerCoefs,
+        &m_resample,
         GetRandomFactor() * pSoundProvider->GetTuning() / (float)m_SampleRate);
 
       const float playback_gain
@@ -604,7 +602,7 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
       } else {
         new_sampler->stream.InitStream(
           release_section,
-          &m_ResamplerCoefs,
+          &m_resample,
           this_pipe->GetTuning() / (float)m_SampleRate);
       }
       new_sampler->is_release = true;

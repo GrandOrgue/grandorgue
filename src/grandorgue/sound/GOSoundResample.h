@@ -25,8 +25,7 @@
 #include <cstdint>
 
 struct GOSoundResample {
-  static constexpr unsigned POLYPHASE_BITS = 3;
-  static constexpr unsigned POLYPHASE_POINTS = 1 << POLYPHASE_BITS;
+  static constexpr unsigned POLYPHASE_POINTS = 8;
   static constexpr unsigned LINEAR_POINTS = 2;
   static constexpr unsigned UPSAMPLE_BITS = 13;
   static constexpr unsigned UPSAMPLE_FACTOR = 1 << UPSAMPLE_BITS;
@@ -125,9 +124,7 @@ struct GOSoundResample {
   float m_LinearCoeffs[UPSAMPLE_FACTOR][LINEAR_POINTS];
   InterpolationType m_interpolation;
 
-  void Init(
-    const unsigned input_sample_rate,
-    GOSoundResample::InterpolationType interpolation);
+  GOSoundResample();
 
   template <class SourceT>
   inline float CalcLinear(unsigned fraction, SourceT &source) const {
