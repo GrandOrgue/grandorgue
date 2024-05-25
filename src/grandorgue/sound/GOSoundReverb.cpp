@@ -92,7 +92,9 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       settings.SampleRate());
      */
     if (wav.GetSampleRate() != settings.SampleRate()) {
-      float *new_data = GOSoundResample::newResampledMono(
+      GOSoundResample resample;
+
+      float *new_data = resample.NewResampledMono(
         data, len, wav.GetSampleRate(), settings.SampleRate());
       if (!new_data)
         throw(wxString) _("Resampling failed");

@@ -101,50 +101,30 @@ GOSoundResample::GOSoundResample() {
   }
 }
 
-float *GOSoundResample::newResampledMono(
+float *GOSoundResample::NewResampledMono(
   const float *data,
   unsigned &len,
   unsigned from_samplerate,
   unsigned to_samplerate) {
-  struct GOSoundResample resample;
   float factor = ((float)from_samplerate) / to_samplerate;
 
   unsigned new_len = ceil(len / factor);
-  unsigned position_index = 0;
-  unsigned position_fraction = 0;
-  unsigned increment_fraction = factor * UPSAMPLE_FACTOR;
+
   if (!new_len)
     return NULL;
+
   float *out = (float *)malloc(sizeof(float) * new_len);
+
   if (!out)
     return NULL;
 
-  for (unsigned i = 0; i < new_len;
-       ++i, position_fraction += increment_fraction) {
-    position_index += position_fraction >> UPSAMPLE_BITS;
-    position_fraction = position_fraction & (UPSAMPLE_FACTOR - 1);
-    float out1 = 0.0f;
-    float out2 = 0.0f;
-    float out3 = 0.0f;
-    float out4 = 0.0f;
-    const float *coef_set = resample.m_PolyphaseCoefs[position_fraction];
-    const float *in_set = &data[position_index];
-    unsigned max_i = len - position_index;
+  ResamplingPosition resamplingPos;
+  PointerWindow<float, 1> w(data, len);
 
-    for (unsigned j = 0; j < POLYPHASE_POINTS; j += 4) {
-      unsigned k = j;
+  resamplingPos.Init(factor);
 
-      if (k < max_i)
-        out1 += in_set[k] * coef_set[k];
-      if (++k < max_i)
-        out2 += in_set[k] * coef_set[k];
-      if (++k < max_i)
-        out3 += in_set[k] * coef_set[k];
-      if (++k < max_i)
-        out4 += in_set[k] * coef_set[k];
-    }
-    out[i] = out1 + out2 + out3 + out4;
-  }
+  ResampleBlock<PolyphaseResampler, PointerWindow<float, 1>, 1>(
+    resamplingPos, w, out, new_len);
   len = new_len;
   return out;
 }

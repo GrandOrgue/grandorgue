@@ -16,114 +16,12 @@
  * the audio is. The fade engine should ensure that this data is always brought
  * into the correct range. */
 
-template <class T>
-void GOSoundStream::MonoUncompressedLinear(
-  float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerWindow<T, 1> w((T *)ptr, end_pos);
+template <class ResamplerT, class WindowT>
+inline void GOSoundStream::DecodeBlock(float *pOut, unsigned nOutSamples) {
+  WindowT w(*this);
 
-  for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    w.Seek(resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
-    output[1] = output[0];
-  }
-}
-
-template <class T>
-void GOSoundStream::StereoUncompressedLinear(
-  float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerWindow<T, 2> w((T *)ptr, end_pos);
-
-  for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    w.Seek(resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
-    w.Seek(resamplingPos.GetIndex(), 1);
-    output[1] = resample->CalcLinear(resamplingPos.GetFraction(), w);
-  }
-}
-
-template <class T>
-void GOSoundStream::MonoUncompressedPolyphase(
-  float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerWindow<T, 1> w((T *)ptr, end_pos);
-
-  for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    w.Seek(resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcPolyphase(resamplingPos.GetFraction(), w);
-    output[1] = output[0];
-  }
-}
-
-template <class T>
-void GOSoundStream::StereoUncompressedPolyphase(
-  float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerWindow<T, 2> w((T *)ptr, end_pos);
-
-  for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    w.Seek(resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcPolyphase(resamplingPos.GetFraction(), w);
-    w.Seek(resamplingPos.GetIndex(), 1);
-    output[1] = resample->CalcPolyphase(resamplingPos.GetFraction(), w);
-  }
-}
-
-template <bool format16, uint8_t nChannels> class GODecompressionCacheWindow {
-public:
-  static constexpr uint8_t m_NChannels = nChannels;
-
-private:
-  DecompressionCache &r_cache;
-  uint8_t m_ChannelN;
-  enum { PREV, VALUE, ZERO } m_curr;
-
-public:
-  inline GODecompressionCacheWindow(DecompressionCache &cache)
-    : r_cache(cache) {}
-
-  inline void Seek(unsigned index, uint8_t channelN) {
-    while (r_cache.position <= index + 1) {
-      DecompressionStep(r_cache, m_NChannels, format16);
-    }
-    m_ChannelN = channelN;
-    m_curr = PREV;
-  }
-
-  inline float NextSample() {
-    int res;
-
-    if (m_curr == PREV) {
-      res = r_cache.prev[m_ChannelN];
-      m_curr = VALUE;
-    } else if (m_curr == VALUE) {
-      res = r_cache.value[m_ChannelN];
-      m_curr = ZERO;
-    } else
-      res = 0;
-    return (float)res;
-  }
-};
-
-template <bool format16>
-void GOSoundStream::MonoCompressedLinear(float *output, unsigned int n_blocks) {
-  GODecompressionCacheWindow<format16, 1> w(cache);
-
-  for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    w.Seek(resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
-    output[1] = output[0];
-  }
-}
-
-template <bool format16>
-void GOSoundStream::StereoCompressedLinear(
-  float *output, unsigned int n_blocks) {
-  GODecompressionCacheWindow<format16, 2> w(cache);
-
-  for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    w.Seek(resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
-    w.Seek(resamplingPos.GetIndex(), 1);
-    output[1] = resample->CalcLinear(resamplingPos.GetFraction(), w);
-  }
+  resample->ResampleBlock<ResamplerT, WindowT, 2>(
+    resamplingPos, w, pOut, nOutSamples);
 }
 
 GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
@@ -137,16 +35,24 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
      * linear interpolation for now. */
     if (channels == 1) {
       if (bits_per_sample >= 20)
-        return &GOSoundStream::MonoCompressedLinear<true>;
+        return &GOSoundStream::DecodeBlock<
+          GOSoundResample::LinearResampler,
+          StreamCacheWindow<true, 1>>;
 
       assert(bits_per_sample >= 12);
-      return &GOSoundStream::MonoCompressedLinear<false>;
+      return &GOSoundStream::DecodeBlock<
+        GOSoundResample::LinearResampler,
+        StreamCacheWindow<false, 1>>;
     } else if (channels == 2) {
       if (bits_per_sample >= 20)
-        return &GOSoundStream::StereoCompressedLinear<true>;
+        return &GOSoundStream::DecodeBlock<
+          GOSoundResample::LinearResampler,
+          StreamCacheWindow<true, 2>>;
 
       assert(bits_per_sample >= 12);
-      return &GOSoundStream::StereoCompressedLinear<false>;
+      return &GOSoundStream::DecodeBlock<
+        GOSoundResample::LinearResampler,
+        StreamCacheWindow<false, 2>>;
     }
   } else {
     if (
@@ -154,34 +60,58 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
       && !compressed) {
       if (channels == 1) {
         if (bits_per_sample <= 8)
-          return &GOSoundStream::MonoUncompressedPolyphase<GOInt8>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::PolyphaseResampler,
+            StreamPtrWindow<GOInt8, 1>>;
         if (bits_per_sample <= 16)
-          return &GOSoundStream::MonoUncompressedPolyphase<GOInt16>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::PolyphaseResampler,
+            StreamPtrWindow<GOInt16, 1>>;
         if (bits_per_sample <= 24)
-          return &GOSoundStream::MonoUncompressedPolyphase<GOInt24>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::PolyphaseResampler,
+            StreamPtrWindow<GOInt24, 1>>;
       } else if (channels == 2) {
         if (bits_per_sample <= 8)
-          return &GOSoundStream::StereoUncompressedPolyphase<GOInt8>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::PolyphaseResampler,
+            StreamPtrWindow<GOInt8, 2>>;
         if (bits_per_sample <= 16)
-          return &GOSoundStream::StereoUncompressedPolyphase<GOInt16>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::PolyphaseResampler,
+            StreamPtrWindow<GOInt16, 2>>;
         if (bits_per_sample <= 24)
-          return &GOSoundStream::StereoUncompressedPolyphase<GOInt24>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::PolyphaseResampler,
+            StreamPtrWindow<GOInt24, 2>>;
       }
     } else {
       if (channels == 1) {
         if (bits_per_sample <= 8)
-          return &GOSoundStream::MonoUncompressedLinear<GOInt8>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamPtrWindow<GOInt8, 1>>;
         if (bits_per_sample <= 16)
-          return &GOSoundStream::MonoUncompressedLinear<GOInt16>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamPtrWindow<GOInt16, 1>>;
         if (bits_per_sample <= 24)
-          return &GOSoundStream::MonoUncompressedLinear<GOInt24>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamPtrWindow<GOInt24, 1>>;
       } else if (channels == 2) {
         if (bits_per_sample <= 8)
-          return &GOSoundStream::StereoUncompressedLinear<GOInt8>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamPtrWindow<GOInt8, 2>>;
         if (bits_per_sample <= 16)
-          return &GOSoundStream::StereoUncompressedLinear<GOInt16>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamPtrWindow<GOInt16, 2>>;
         if (bits_per_sample <= 24)
-          return &GOSoundStream::StereoUncompressedLinear<GOInt24>;
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamPtrWindow<GOInt24, 2>>;
       }
     }
   }

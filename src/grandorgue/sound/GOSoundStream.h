@@ -17,7 +17,7 @@ private:
   const GOSoundResample *resample;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
-    float *output, unsigned int n_blocks);
+    float *pOut, unsigned nOutSamples);
 
   /* Method used to decode stream */
   DecodeBlockFunction decode_call;
@@ -43,18 +43,50 @@ private:
   /* for decoding compressed format */
   DecompressionCache cache;
 
-  template <class T>
-  void MonoUncompressedLinear(float *output, unsigned int n_blocks);
-  template <class T>
-  void StereoUncompressedLinear(float *output, unsigned int n_blocks);
-  template <class T>
-  void MonoUncompressedPolyphase(float *output, unsigned int n_blocks);
-  template <class T>
-  void StereoUncompressedPolyphase(float *output, unsigned int n_blocks);
-  template <bool format16>
-  void MonoCompressedLinear(float *output, unsigned int n_blocks);
-  template <bool format16>
-  void StereoCompressedLinear(float *output, unsigned int n_blocks);
+  template <class SampleT, uint8_t nChannels>
+  class StreamPtrWindow
+    : public GOSoundResample::PointerWindow<SampleT, nChannels> {
+  public:
+    inline StreamPtrWindow(GOSoundStream &stream)
+      : GOSoundResample::PointerWindow<SampleT, nChannels>(
+        (SampleT *)stream.ptr, stream.end_pos) {}
+  };
+
+  template <bool format16, uint8_t nChannels>
+  class StreamCacheWindow : public GOSoundResample::SampleWindow<nChannels> {
+  private:
+    DecompressionCache &r_cache;
+    uint8_t m_ChannelN;
+    enum { PREV, VALUE, ZERO } m_curr;
+
+  public:
+    inline StreamCacheWindow(GOSoundStream &stream) : r_cache(stream.cache) {}
+
+    inline void Seek(unsigned index, uint8_t channelN) {
+      while (r_cache.position <= index + 1) {
+        DecompressionStep(r_cache, nChannels, format16);
+      }
+      m_ChannelN = channelN;
+      m_curr = PREV;
+    }
+
+    inline float NextSample() {
+      int res;
+
+      if (m_curr == PREV) {
+        res = r_cache.prev[m_ChannelN];
+        m_curr = VALUE;
+      } else if (m_curr == VALUE) {
+        res = r_cache.value[m_ChannelN];
+        m_curr = ZERO;
+      } else
+        res = 0;
+      return (float)res;
+    }
+  };
+
+  template <class ResamplerT, class WindowT>
+  inline void DecodeBlock(float *pOut, unsigned nOutSamples);
 
   static DecodeBlockFunction getDecodeBlockFunction(
     unsigned channels,

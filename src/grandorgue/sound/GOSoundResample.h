@@ -93,20 +93,23 @@ struct GOSoundResample {
     }
   };
 
-  template <class SampleT, uint8_t nChannels> class PointerWindow {
-  private:
+  template <uint8_t nChannels> struct SampleWindow {
     static constexpr uint8_t m_NChannels = nChannels;
+  };
 
+  template <class SampleT, uint8_t nChannels>
+  class PointerWindow : public SampleWindow<nChannels> {
+  private:
     const SampleT *p_StartPtr;
     const SampleT *p_EndPtr;
     const SampleT *p_CurrPtr;
 
   public:
     inline PointerWindow(const SampleT *ptr, unsigned to)
-      : p_StartPtr(ptr), p_EndPtr(ptr + m_NChannels * to) {}
+      : p_StartPtr(ptr), p_EndPtr(ptr + nChannels * to) {}
 
     inline void Seek(unsigned index, uint8_t channel) {
-      p_CurrPtr = p_StartPtr + m_NChannels * index + channel;
+      p_CurrPtr = p_StartPtr + nChannels * index + channel;
     }
 
     inline float NextSample() {
@@ -114,7 +117,7 @@ struct GOSoundResample {
 
       if (p_CurrPtr < p_EndPtr) {
         res = (float)*p_CurrPtr;
-        p_CurrPtr += m_NChannels;
+        p_CurrPtr += nChannels;
       }
       return res;
     }
@@ -126,21 +129,46 @@ struct GOSoundResample {
 
   GOSoundResample();
 
-  template <class SourceT>
-  inline float CalcLinear(unsigned fraction, SourceT &source) const {
-    const float(&coef)[LINEAR_POINTS] = m_LinearCoeffs[fraction];
+  struct LinearResampler {
+    template <class WindowT>
+    static inline float calc(
+      const GOSoundResample &r, unsigned fraction, WindowT &w) {
+      const float(&coef)[LINEAR_POINTS] = r.m_LinearCoeffs[fraction];
 
-    return source.NextSample() * coef[1] + source.NextSample() * coef[0];
-  }
+      return w.NextSample() * coef[1] + w.NextSample() * coef[0];
+    }
+  };
 
-  template <class SourceT>
-  inline float CalcPolyphase(unsigned fraction, SourceT &source) const {
-    const float *pCoef = m_PolyphaseCoefs[fraction];
-    float out = 0.0f;
+  struct PolyphaseResampler {
+    template <class WindowT>
+    static inline float calc(
+      const GOSoundResample &r, unsigned fraction, WindowT &w) {
+      const float *pCoef = r.m_PolyphaseCoefs[fraction];
+      float out = 0.0f;
 
-    for (unsigned j = 0; j < POLYPHASE_POINTS; j++)
-      out += source.NextSample() * *(pCoef++);
-    return out;
+      for (unsigned j = 0; j < POLYPHASE_POINTS; j++)
+        out += w.NextSample() * *(pCoef++);
+      return out;
+    }
+  };
+
+  template <class ResamplerT, class WindowT, uint8_t nOutChannels>
+  inline void ResampleBlock(
+    ResamplingPosition &resamplingPos,
+    WindowT &w,
+    float *pOut,
+    unsigned nOutSamples) const {
+    for (unsigned i = 0; i < nOutSamples; i++, resamplingPos.Inc()) {
+      float outSample = 0.0f;
+
+      for (unsigned j = 0; j < nOutChannels; j++) {
+        if (j < WindowT::m_NChannels) {
+          w.Seek(resamplingPos.GetIndex(), j);
+          outSample = ResamplerT::calc(*this, resamplingPos.GetFraction(), w);
+        }
+        *(pOut++) = outSample;
+      }
+    }
   }
 
   /**
@@ -154,7 +182,7 @@ struct GOSoundResample {
    * @return a pointer to the new allocated data block. The caller is
    *   responsible to free this block
    */
-  static float *newResampledMono(
+  float *NewResampledMono(
     const float *data,
     unsigned &len,
     unsigned from_samplerate,
