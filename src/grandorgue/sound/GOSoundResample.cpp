@@ -84,10 +84,10 @@ static void create_nyquist_filter(
 void GOSoundResample::Init(
   const unsigned input_sample_rate,
   GOSoundResample::InterpolationType interpolation) {
-  float temp[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
+  float temp[UPSAMPLE_FACTOR * POLYPHASE_POINTS];
 
 #if 1
-  create_nyquist_filter(temp, SUBFILTER_TAPS, UPSAMPLE_FACTOR);
+  create_nyquist_filter(temp, POLYPHASE_POINTS, UPSAMPLE_FACTOR);
 #else
   static const double generalised_max_frequency
     = ((double)UPSAMPLE_FACTOR / (double)MAX_POSITIVE_FACTOR);
@@ -95,26 +95,26 @@ void GOSoundResample::Init(
     = ((double)input_sample_rate / 2.0) * generalised_max_frequency;
   create_sinc_filter(
     temp,
-    UPSAMPLE_FACTOR * SUBFILTER_TAPS,
+    UPSAMPLE_FACTOR * POLYPHASE_POINTS,
     cutoff_frequency / 2,
     cutoff_frequency,
     input_sample_rate * UPSAMPLE_FACTOR,
     UPSAMPLE_FACTOR);
 #endif
 
-  apply_lanczos_window(temp, UPSAMPLE_FACTOR * SUBFILTER_TAPS);
+  apply_lanczos_window(temp, UPSAMPLE_FACTOR * POLYPHASE_POINTS);
 
   /* Split up the filter into the sub-filters and reverse the coefficient
    * arrays. */
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
-    for (unsigned j = 0; j < SUBFILTER_TAPS; j++) {
-      coefs[i * SUBFILTER_TAPS + ((SUBFILTER_TAPS - 1) - j)]
+    for (unsigned j = 0; j < POLYPHASE_POINTS; j++) {
+      m_PolyphaseCoefs[i * POLYPHASE_POINTS + ((POLYPHASE_POINTS - 1) - j)]
         = temp[j * UPSAMPLE_FACTOR + i];
     }
   }
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
-    linear[i][0] = i / (float)UPSAMPLE_FACTOR;
-    linear[i][1] = 1 - (i / (float)UPSAMPLE_FACTOR);
+    m_LinearCoeffs[i][0] = i / (float)UPSAMPLE_FACTOR;
+    m_LinearCoeffs[i][1] = 1 - (i / (float)UPSAMPLE_FACTOR);
   }
   m_interpolation = interpolation;
 }
@@ -129,7 +129,7 @@ float *GOSoundResample::newResampledMono(
 
   coefs.Init(to_samplerate, GO_POLYPHASE_INTERPOLATION);
 
-  const float *coef = coefs.coefs;
+  const float *coef = coefs.m_PolyphaseCoefs;
   unsigned new_len = ceil(len / factor);
   unsigned position_index = 0;
   unsigned position_fraction = 0;
@@ -148,11 +148,11 @@ float *GOSoundResample::newResampledMono(
     float out2 = 0.0f;
     float out3 = 0.0f;
     float out4 = 0.0f;
-    const float *coef_set = &coef[position_fraction << SUBFILTER_BITS];
+    const float *coef_set = &coef[position_fraction << POLYPHASE_BITS];
     const float *in_set = &data[position_index];
     unsigned max_i = len - position_index;
 
-    for (unsigned j = 0; j < SUBFILTER_TAPS; j += 4) {
+    for (unsigned j = 0; j < POLYPHASE_POINTS; j += 4) {
       unsigned k = j;
 
       if (k < max_i)

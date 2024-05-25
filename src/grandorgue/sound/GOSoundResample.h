@@ -25,8 +25,8 @@
 #include <cstdint>
 
 struct GOSoundResample {
-  static constexpr unsigned SUBFILTER_BITS = 3;
-  static constexpr unsigned SUBFILTER_TAPS = 1 << SUBFILTER_BITS;
+  static constexpr unsigned POLYPHASE_BITS = 3;
+  static constexpr unsigned POLYPHASE_POINTS = 1 << POLYPHASE_BITS;
   static constexpr unsigned UPSAMPLE_BITS = 13;
   static constexpr unsigned UPSAMPLE_FACTOR = 1 << UPSAMPLE_BITS;
   static constexpr unsigned UPSAMPLE_MASK = UPSAMPLE_FACTOR - 1;
@@ -93,18 +93,20 @@ struct GOSoundResample {
     }
   };
 
-  template <class SampleT, uint8_t nChannels> class PointerSource {
+  template <class SampleT, uint8_t nChannels> class PointerWindow {
   private:
     static constexpr uint8_t m_NChannels = nChannels;
 
+    const SampleT *p_StartPtr;
     const SampleT *p_EndPtr;
     const SampleT *p_CurrPtr;
 
   public:
-    inline void Init(
-      const SampleT *ptr, uint8_t channel, unsigned from, unsigned to) {
-      p_EndPtr = ptr + m_NChannels * to;
-      p_CurrPtr = ptr + m_NChannels * from + channel;
+    inline PointerWindow(const SampleT *ptr, unsigned to)
+      : p_StartPtr(ptr), p_EndPtr(ptr + m_NChannels * to) {}
+
+    inline void Seek(unsigned index, uint8_t channel) {
+      p_CurrPtr = p_StartPtr + m_NChannels * index + channel;
     }
 
     inline float NextSample() {
@@ -118,8 +120,8 @@ struct GOSoundResample {
     }
   };
 
-  float coefs[UPSAMPLE_FACTOR * SUBFILTER_TAPS];
-  float linear[UPSAMPLE_FACTOR][2];
+  float m_PolyphaseCoefs[UPSAMPLE_FACTOR * POLYPHASE_POINTS];
+  float m_LinearCoeffs[UPSAMPLE_FACTOR][2];
   InterpolationType m_interpolation;
 
   void Init(
@@ -128,17 +130,17 @@ struct GOSoundResample {
 
   template <class SourceT>
   inline float CalcLinear(unsigned fraction, SourceT &source) const {
-    const float(&coef)[2] = linear[fraction];
+    const float(&coef)[2] = m_LinearCoeffs[fraction];
 
     return source.NextSample() * coef[1] + source.NextSample() * coef[0];
   }
 
   template <class SourceT>
   inline float CalcPolyphase(unsigned fraction, SourceT &source) const {
-    const float *pCoef = coefs + (fraction << SUBFILTER_BITS);
+    const float *pCoef = m_PolyphaseCoefs + (fraction << POLYPHASE_BITS);
     float out = 0.0f;
 
-    for (unsigned j = 0; j < SUBFILTER_TAPS; j++)
+    for (unsigned j = 0; j < POLYPHASE_POINTS; j++)
       out += source.NextSample() * *(pCoef++);
     return out;
   }

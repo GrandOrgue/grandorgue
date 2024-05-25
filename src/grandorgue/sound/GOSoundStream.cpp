@@ -19,11 +19,11 @@
 template <class T>
 void GOSoundStream::MonoUncompressedLinear(
   float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerSource<T, 1> source;
+  GOSoundResample::PointerWindow<T, 1> w((T *)ptr, end_pos);
 
   for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    source.Init((T *)ptr, 0, resamplingPos.GetIndex(), end_pos);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), source);
+    w.Seek(resamplingPos.GetIndex(), 0);
+    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
     output[1] = output[0];
   }
 }
@@ -31,24 +31,24 @@ void GOSoundStream::MonoUncompressedLinear(
 template <class T>
 void GOSoundStream::StereoUncompressedLinear(
   float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerSource<T, 2> source;
+  GOSoundResample::PointerWindow<T, 2> w((T *)ptr, end_pos);
 
   for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    source.Init((T *)ptr, 0, resamplingPos.GetIndex(), end_pos);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), source);
-    source.Init((T *)ptr, 1, resamplingPos.GetIndex(), end_pos);
-    output[1] = resample->CalcLinear(resamplingPos.GetFraction(), source);
+    w.Seek(resamplingPos.GetIndex(), 0);
+    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
+    w.Seek(resamplingPos.GetIndex(), 1);
+    output[1] = resample->CalcLinear(resamplingPos.GetFraction(), w);
   }
 }
 
 template <class T>
 void GOSoundStream::MonoUncompressedPolyphase(
   float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerSource<T, 1> source;
+  GOSoundResample::PointerWindow<T, 1> w((T *)ptr, end_pos);
 
   for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    source.Init((T *)ptr, 0, resamplingPos.GetIndex(), end_pos);
-    output[0] = resample->CalcPolyphase(resamplingPos.GetFraction(), source);
+    w.Seek(resamplingPos.GetIndex(), 0);
+    output[0] = resample->CalcPolyphase(resamplingPos.GetFraction(), w);
     output[1] = output[0];
   }
 }
@@ -56,31 +56,32 @@ void GOSoundStream::MonoUncompressedPolyphase(
 template <class T>
 void GOSoundStream::StereoUncompressedPolyphase(
   float *output, unsigned int n_blocks) {
-  GOSoundResample::PointerSource<T, 2> source;
+  GOSoundResample::PointerWindow<T, 2> w((T *)ptr, end_pos);
 
   for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    source.Init((T *)ptr, 0, resamplingPos.GetIndex(), end_pos);
-    output[0] = resample->CalcPolyphase(resamplingPos.GetFraction(), source);
-    source.Init((T *)ptr, 1, resamplingPos.GetIndex(), end_pos);
-    output[1] = resample->CalcPolyphase(resamplingPos.GetFraction(), source);
+    w.Seek(resamplingPos.GetIndex(), 0);
+    output[0] = resample->CalcPolyphase(resamplingPos.GetFraction(), w);
+    w.Seek(resamplingPos.GetIndex(), 1);
+    output[1] = resample->CalcPolyphase(resamplingPos.GetFraction(), w);
   }
 }
 
-template <bool format16, uint8_t nChannels> class GODecompressionCacheSource {
+template <bool format16, uint8_t nChannels> class GODecompressionCacheWindow {
 public:
   static constexpr uint8_t m_NChannels = nChannels;
 
 private:
-  DecompressionCache *p_cache;
+  DecompressionCache &r_cache;
   uint8_t m_ChannelN;
   enum { PREV, VALUE, ZERO } m_curr;
 
 public:
-  inline void Init(
-    DecompressionCache *pCache, unsigned index, uint8_t channelN) {
-    p_cache = pCache;
-    while (pCache->position <= index + 1) {
-      DecompressionStep(*pCache, m_NChannels, format16);
+  inline GODecompressionCacheWindow(DecompressionCache &cache)
+    : r_cache(cache) {}
+
+  inline void Seek(unsigned index, uint8_t channelN) {
+    while (r_cache.position <= index + 1) {
+      DecompressionStep(r_cache, m_NChannels, format16);
     }
     m_ChannelN = channelN;
     m_curr = PREV;
@@ -90,10 +91,10 @@ public:
     int res;
 
     if (m_curr == PREV) {
-      res = p_cache->prev[m_ChannelN];
+      res = r_cache.prev[m_ChannelN];
       m_curr = VALUE;
     } else if (m_curr == VALUE) {
-      res = p_cache->value[m_ChannelN];
+      res = r_cache.value[m_ChannelN];
       m_curr = ZERO;
     } else
       res = 0;
@@ -103,11 +104,11 @@ public:
 
 template <bool format16>
 void GOSoundStream::MonoCompressedLinear(float *output, unsigned int n_blocks) {
-  GODecompressionCacheSource<format16, 1> source;
+  GODecompressionCacheWindow<format16, 1> w(cache);
 
   for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    source.Init(&cache, resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), source);
+    w.Seek(resamplingPos.GetIndex(), 0);
+    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
     output[1] = output[0];
   }
 }
@@ -115,13 +116,13 @@ void GOSoundStream::MonoCompressedLinear(float *output, unsigned int n_blocks) {
 template <bool format16>
 void GOSoundStream::StereoCompressedLinear(
   float *output, unsigned int n_blocks) {
-  GODecompressionCacheSource<format16, 2> source;
+  GODecompressionCacheWindow<format16, 2> w(cache);
 
   for (unsigned i = 0; i < n_blocks; i++, resamplingPos.Inc(), output += 2) {
-    source.Init(&cache, resamplingPos.GetIndex(), 0);
-    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), source);
-    source.Init(&cache, resamplingPos.GetIndex(), 1);
-    output[1] = resample->CalcLinear(resamplingPos.GetFraction(), source);
+    w.Seek(resamplingPos.GetIndex(), 0);
+    output[0] = resample->CalcLinear(resamplingPos.GetFraction(), w);
+    w.Seek(resamplingPos.GetIndex(), 1);
+    output[1] = resample->CalcLinear(resamplingPos.GetFraction(), w);
   }
 }
 
