@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -43,7 +43,7 @@ void GOEnclosure::Init(
   m_midi.Load(cfg, m_group, r_MidiMap);
   m_sender.Load(cfg, m_group, r_MidiMap);
   m_shortcut.Load(cfg, m_group);
-  m_AmpMinimumLevel = 1;
+  m_AmpMinimumLevel = 0;
 }
 
 void GOEnclosure::Load(GOConfigReader &cfg, wxString group, int enclosure_nb) {
