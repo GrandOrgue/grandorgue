@@ -8,10 +8,10 @@
 #ifndef GOSOUNDRELEASEALIGNTABLE_H
 #define GOSOUNDRELEASEALIGNTABLE_H
 
-class GOSoundAudioSection;
+#include "GOSoundAudioSection.h"
+
 class GOCache;
 class GOCacheWriter;
-typedef struct audio_section_stream_s audio_section_stream;
 
 #define PHASE_ALIGN_DERIVATIVES 2
 #define PHASE_ALIGN_AMPLITUDES 32
@@ -38,8 +38,8 @@ public:
     unsigned start_position);
 
   void SetupRelease(
-    audio_section_stream &release_sampler,
-    const audio_section_stream &old_sampler) const;
+    GOSoundAudioSection::Stream &release_sampler,
+    const GOSoundAudioSection::Stream &old_sampler) const;
 };
 
 #endif /* GOSOUNDRELEASEALIGNTABLE_H */
