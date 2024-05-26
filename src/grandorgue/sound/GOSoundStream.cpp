@@ -305,13 +305,13 @@ void GOSoundStream::GetHistory(
       for (uint8_t j = 0; j < nChannels; j++)
         history[i][j] = audio_section->GetSampleData(ptr, pos + i, j);
   else {
-    DecompressionCache cache = cache;
+    DecompressionCache tmpCache = cache;
 
     for (unsigned i = 0; i < BLOCK_HISTORY; i++) {
       for (uint8_t j = 0; j < nChannels; j++)
-        history[i][j] = cache.value[j];
+        history[i][j] = tmpCache.value[j];
       DecompressionStep(
-        cache, nChannels, audio_section->GetBitsPerSample() >= 20);
+        tmpCache, nChannels, audio_section->GetBitsPerSample() >= 20);
     }
   }
 }
