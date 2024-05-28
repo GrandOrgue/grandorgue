@@ -59,7 +59,6 @@ public:
     int next_start_segment_index;
   };
 
-
 private:
   void Compress(bool format16);
 
