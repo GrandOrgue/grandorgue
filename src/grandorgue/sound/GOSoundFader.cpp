@@ -7,76 +7,90 @@
 
 #include "GOSoundFader.h"
 
-#include "GOSoundDefs.h"
+#include <algorithm>
 
-void GOSoundFader::NewAttacking(float target_gain, unsigned n_frames) {
-  m_nb_attack_frames_left = n_frames;
-  m_decay = 0.0f;
-  m_gain = 0.0f;
-  m_target = target_gain;
-  m_attack = target_gain / n_frames;
-  m_last_volume = -1;
-  m_VelocityVolume = 1;
+void GOSoundFader::Setup(
+  float targetVolume, float velocityVolume, unsigned nFramesToIncreaseIn) {
+  m_TargetVolume = targetVolume;
+
+  if (nFramesToIncreaseIn) {
+    m_LastTargetVolumePoint = 0.0f;
+    m_IncreasingDeltaPerFrame = targetVolume / nFramesToIncreaseIn;
+  } else {
+    m_LastTargetVolumePoint = targetVolume;
+    m_IncreasingDeltaPerFrame = 0.0f;
+  }
+  m_DecreasingDeltaPerFrame = 0.0f;
+  m_VelocityVolume = velocityVolume;
+  m_LastExternalVolumePoint = -1; // will be set on the first Process() call
 }
 
-void GOSoundFader::NewConstant(float gain) {
-  m_nb_attack_frames_left = 0;
-  m_attack = m_decay = 0.0f;
-  m_gain = m_target = gain;
-  m_last_volume = -1;
-  m_VelocityVolume = 1;
-}
+// if the external volume is changed, do it smoothly in this number of frames
+static constexpr unsigned EXTERNAL_VOLUME_CHANGE_FRAMES = 1024;
 
-void GOSoundFader::Process(unsigned n_blocks, float *buffer, float volume) {
+void GOSoundFader::Process(
+  unsigned nFrames, float *buffer, float externalVolume) {
   // setup process
-  volume *= m_VelocityVolume;
-  if (m_last_volume < 0) {
-    m_last_volume = volume;
-    m_real_target = m_target * volume;
-    m_gain *= volume;
+
+  // Consider the velocity volume as part of the external volume
+  externalVolume *= m_VelocityVolume;
+
+  float startTargetVolumePoint = m_LastTargetVolumePoint;
+  // Calculate new m_LastTargetVolumePoint
+  // the target volume will be changed from startTargetVolumePoint to
+  // m_LastTargetVolumePoint during the nFrames
+  float targetVolumeDeltaPerFrame
+    = m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame;
+
+  if (targetVolumeDeltaPerFrame != 0.0f) {
+    m_LastTargetVolumePoint = std::clamp(
+      startTargetVolumePoint + targetVolumeDeltaPerFrame * nFrames,
+      0.0f,
+      m_TargetVolume);
+
+    if (m_LastTargetVolumePoint >= m_TargetVolume)
+      // target volume is reached. Stop increasing
+      m_IncreasingDeltaPerFrame = 0.0f;
+    else if (m_LastTargetVolumePoint <= 0.0f)
+      // Decreasing is finished. Stop it.
+      m_DecreasingDeltaPerFrame = 0.0f;
   }
 
-  float gain = m_gain;
-  float gain_delta = 0;
+  if (m_LastExternalVolumePoint < 0.0f) // The first Process() call
+    m_LastExternalVolumePoint = externalVolume;
 
-  if (volume != m_last_volume || m_attack + m_decay != 0) {
-    float volume_diff
-      = m_target * (volume - m_last_volume) * n_blocks / MAX_FRAME_SIZE;
-    float fade_diff = n_blocks * (m_attack + m_decay) * volume;
-    float new_last_volume
-      = m_last_volume + ((volume - m_last_volume) * n_blocks) / MAX_FRAME_SIZE;
-    m_real_target = m_target * new_last_volume;
+  float startExternalVolumePoint = m_LastExternalVolumePoint;
+  // Calculate new m_LastExternalVolumePoint
+  // the target volume will be changed from startExternalVolumePoint to
+  // m_LastExternalVolumePoint during the nFrames period
+  if (externalVolume != startExternalVolumePoint)
+    m_LastExternalVolumePoint += (externalVolume - startExternalVolumePoint)
+      // Assume that external volume is to be reached in MAX_FRAME_SIZE frames
+      * std::max(nFrames, EXTERNAL_VOLUME_CHANGE_FRAMES)
+      / EXTERNAL_VOLUME_CHANGE_FRAMES;
 
-    float end = m_gain + volume_diff + fade_diff;
-    if (end < 0) {
-      end = 0;
-      m_decay = 0;
-    } else if (end > m_real_target) {
-      end = m_real_target;
-      m_attack = 0.0f;
-    }
-    gain_delta = (end - m_gain) / (n_blocks);
-    m_last_volume = new_last_volume;
-    m_gain = end;
-  }
-  if (m_attack > 0.0f) {
-    if (m_nb_attack_frames_left >= n_blocks)
-      m_nb_attack_frames_left -= n_blocks;
-    else
-      m_attack = 0.0f;
-  }
+  float frameTotalVolume = startTargetVolumePoint * startExternalVolumePoint;
 
-  // Procedss data
-  if (gain_delta) {
-    for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-      buffer[0] *= gain;
-      buffer[1] *= gain;
-      gain += gain_delta;
+  // Process data
+  if (
+    (m_LastTargetVolumePoint == startTargetVolumePoint)
+    && (m_LastExternalVolumePoint == startExternalVolumePoint)) {
+    // Adjust the buffer by frameTotalVolume
+    for (unsigned int i = 0; i < nFrames; i++, buffer += 2) {
+      buffer[0] *= frameTotalVolume;
+      buffer[1] *= frameTotalVolume;
     }
   } else {
-    for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-      buffer[0] *= gain;
-      buffer[1] *= gain;
+    // Adjust the buffer smoothly from frameTotalVolume to
+    // m_LastTargetVolumePoint * m_LastExternalVolumePoint
+    float frameTotalVolumeDelta // changing the volume by one frame
+      = (m_LastTargetVolumePoint * m_LastExternalVolumePoint - frameTotalVolume)
+      / nFrames;
+
+    for (unsigned int i = 0; i < nFrames; i++, buffer += 2) {
+      buffer[0] *= frameTotalVolume;
+      buffer[1] *= frameTotalVolume;
+      frameTotalVolume += frameTotalVolumeDelta;
     }
   }
 }
