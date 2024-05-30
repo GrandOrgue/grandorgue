@@ -73,6 +73,7 @@ jobs:
     needs: [calc_ver]
 
     strategy:
+      fail-fast: false
       matrix:
         include:
           - run_on: ubuntu-20.04
