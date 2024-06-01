@@ -22,7 +22,8 @@ public:
 };
 
 template <bool format16, uint8_t nChannels>
-class StreamCacheWindow : public GOSoundResample::SampleVector<nChannels> {
+class StreamCacheWindow
+  : public GOSoundResample::FloatingSampleVector<nChannels> {
 private:
   DecompressionCache &r_cache;
   uint8_t m_ChannelN;

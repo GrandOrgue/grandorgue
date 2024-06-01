@@ -34,7 +34,7 @@ private:
   const GOSoundAudioSection::EndSegment *end_seg;
   const unsigned char *end_ptr;
 
-  // How many last samples are reserved for resample vector
+  // How many last samples should be reserved for read-ahead
   unsigned margin;
   unsigned transition_position;
   unsigned read_end;

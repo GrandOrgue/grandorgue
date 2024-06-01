@@ -103,7 +103,7 @@ public:
    * These methods are not virtual for a better performance. Their
    * implementation is substituted inline from the subclasses by a resampler.
    */
-  template <uint8_t nChannels> struct SampleVector {
+  template <uint8_t nChannels> struct FloatingSampleVector {
     static constexpr uint8_t m_NChannels = nChannels;
   };
 
@@ -123,7 +123,7 @@ public:
    * The calling program must ensure that there are sufficient number of samples
    */
   template <class SampleT, class ResT, uint8_t nChannels>
-  class PtrSampleVector : public SampleVector<nChannels> {
+  class PtrSampleVector : public FloatingSampleVector<nChannels> {
   private:
     // points to the first sample of the 0-channel in the input stream
     const SampleT *p_StartPtr;
@@ -202,15 +202,23 @@ public:
     }
   };
 
-  // The coefficients for the linear interpolation
+  // These cofficients are calculated in the constructor and are not more
+  // changed
+
+  // The coefficients for linear interpolation
   float m_LinearCoefs[UPSAMPLE_FACTOR][LINEAR_POINTS];
-  // The coefficients for the polyphase interpolation
+  // The coefficients for polyphase interpolation
   float m_PolyphaseCoefs[UPSAMPLE_FACTOR][POLYPHASE_POINTS];
 
   GOSoundResample();
 
+  /**
+   * A resampler that calculates a next output sample as a scalar production of
+   * the vector of continous input samples and the vector of coefficients
+   */
   template <unsigned nPoints> class ScalarProductionResampler {
   private:
+    // precalculated coefficients for each resampling position fraction
     const float (&r_coefs)[UPSAMPLE_FACTOR][nPoints];
 
   protected:
@@ -219,12 +227,26 @@ public:
       : r_coefs(coefs) {}
 
   public:
+    /**
+     * @return Necessary number of continous input samples for calculating one
+     * output sample
+     */
     static constexpr unsigned getVectorLength() { return nPoints; }
 
-    template <class WindowT, uint8_t nOutChannels>
+    /**
+     * Do actual resampling of an input sample block to the output block of the
+     *   given number of samples
+     * @param resamplingPos A resampling position in the input stream. It is
+     *   advanced during this call
+     * @param sV a floating sample vector linked to the input stream
+     * @param pOut a pointer to the output sample buffer in interleaving format.
+     *   Must have at least nOutChannels*nOutSamples length
+     * @param nOutSamples a number of output samples of each channel
+     */
+    template <class SampleVectorT, uint8_t nOutChannels>
     inline void ResampleBlock(
       ResamplingPosition &resamplingPos,
-      WindowT &w,
+      SampleVectorT &sV,
       float *pOut,
       unsigned nOutSamples) const {
       for (unsigned i = 0; i < nOutSamples; i++, resamplingPos.Inc()) {
@@ -232,15 +254,15 @@ public:
         float outSample = 0.0f;
 
         for (uint8_t ch = 0; ch < nOutChannels; ch++) {
-          if (ch < WindowT::m_NChannels) {
+          if (ch < SampleVectorT::m_NChannels) {
             const float *pCoef = coefs;
 
-            w.Seek(resamplingPos.GetIndex(), ch);
+            sV.Seek(resamplingPos.GetIndex(), ch);
             // calculate the next output sample as a scalar production of the
             // input sample vector and the vector of coefficients
             outSample = 0.0f;
             for (unsigned j = 0; j < nPoints; j++)
-              outSample += w.NextSample() * *(pCoef++);
+              outSample += sV.NextSample() * *(pCoef++);
           }
           /* else copy the calculated sample from the previous channel. It is
            * useful only for resampling a mono stream to a stereo one */
