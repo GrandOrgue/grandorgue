@@ -101,6 +101,20 @@ GOSoundResample::GOSoundResample() {
   }
 }
 
+unsigned GOSoundResample::getVectorLength(
+  GOSoundResample::InterpolationType interpolation) {
+  unsigned res;
+
+  switch (interpolation) {
+  case GO_LINEAR_INTERPOLATION:
+    res = LinearResampler::getVectorLength();
+    break;
+  case GO_POLYPHASE_INTERPOLATION:
+    res = PolyphaseResampler::getVectorLength();
+  }
+  return res;
+}
+
 float *GOSoundResample::NewResampledMono(
   const float *data,
   unsigned &len,

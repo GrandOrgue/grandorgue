@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,10 +11,6 @@
 /* Number of samples to match for release alignment. */
 #define BLOCK_HISTORY (2)
 
-/* Read-Ahead of various playback modes */
-#define POLYPHASE_READAHEAD (8)
-#define LINEAR_COMPRESSED_READAHEAD (2)
-#define LINEAR_READAHEAD (1)
 /* Maximum of the above values */
 #define MAX_READAHEAD (8)
 /* Minimum remaining loop length after a crossfade */

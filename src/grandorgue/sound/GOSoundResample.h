@@ -270,6 +270,13 @@ public:
   };
 
   /**
+   * Returns the necessary sample vector length for the given interpolation type
+   * @param interpolation - the interpolation type
+   * @return the number of samples
+   */
+  static unsigned getVectorLength(InterpolationType interpolation);
+
+  /**
    * Allocate a new sample block and fill it with resampled data. Assume that
    *   the samples are mono
    * @param data a pointer to the source samples

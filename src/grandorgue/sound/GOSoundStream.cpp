@@ -166,13 +166,8 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
 
 static unsigned calculate_margin(
   bool compressed, GOSoundResample::InterpolationType interpolation) {
-  if (
-    interpolation == GOSoundResample::GO_POLYPHASE_INTERPOLATION && !compressed)
-    return POLYPHASE_READAHEAD;
-  else if (compressed)
-    return LINEAR_COMPRESSED_READAHEAD;
-  else
-    return LINEAR_READAHEAD;
+  return GOSoundResample::getVectorLength(interpolation) - 1
+    + (unsigned)compressed;
 }
 
 void GOSoundStream::InitStream(
