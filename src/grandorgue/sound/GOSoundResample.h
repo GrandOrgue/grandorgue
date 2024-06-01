@@ -24,24 +24,20 @@
 
 #include <cstdint>
 
-struct GOSoundResample {
+/**
+ * This class provides algorithms for resampling audio buffers
+ * Now two algorithms are supported: Linear and Polyphase.
+ * They calculate a next output sample based on a vector of a few continous
+ * input samples.
+ */
+
+class GOSoundResample {
+public:
   static constexpr unsigned POLYPHASE_POINTS = 8;
   static constexpr unsigned LINEAR_POINTS = 2;
   static constexpr unsigned UPSAMPLE_BITS = 13;
   static constexpr unsigned UPSAMPLE_FACTOR = 1 << UPSAMPLE_BITS;
   static constexpr unsigned UPSAMPLE_MASK = UPSAMPLE_FACTOR - 1;
-
-  /* This factor must not be exceeded in the downsampler and it MUST be
-   * greater than UPSAMPLE_FACTOR.
-   *
-   * The value of 2663 was tuned analytically and results in a filter power
-   * ripple of less than 0.00002 dB when the sub filter taps is 8 and the
-   * upsample factor is 2048.
-   *
-   * The roll off characteristic starts at:
-   *  (UPSAMPLE_FACTOR * sample_rate) / (MAX_POSITIVE_FACTOR * 2) ~ 18kHz at
-   * 48 kHz. */
-  static constexpr unsigned MAX_POSITIVE_FACTOR = 2663;
 
   enum InterpolationType {
     GO_LINEAR_INTERPOLATION = 0,
@@ -93,83 +89,187 @@ struct GOSoundResample {
     }
   };
 
-  template <uint8_t nChannels> struct SampleWindow {
+  /**
+   * Represents an abstract vector of continous input samples somethere in the
+   * input stream. It has nChannels input channels (1 - mono, 2 - stereo)
+   * It has two main methods:
+   * - void Seek(unsigned index, uint8_t channel) - sets the vector to the index
+   *   position in the input stream for the specified channel. The
+   *   implementation may restrict moving the position only forward
+   * - void NextSample() - returns the next sample of the same channel. The
+   *   implementation must provide sufficient number of samples required by
+   *   the certain resampling algorithm.
+   *
+   * These methods are not virtual for a better performance. Their
+   * implementation is substituted inline from the subclasses by a resampler.
+   */
+  template <uint8_t nChannels> struct SampleVector {
     static constexpr uint8_t m_NChannels = nChannels;
   };
 
-  template <class SampleT, uint8_t nChannels>
-  class PointerWindow : public SampleWindow<nChannels> {
+  /**
+   * A vector of continous samples in a memory region referenced by a pointer.
+   * SampleT - a type of one sample. Usually int8_t, int16_t, GOInt24, or float
+   * ResT - a type of one sample returned by NextSample(). Usually int or float
+   * nChannels - number of channels in the source stream
+   *
+   * If nChannels>1 it asumes that samples are interleaving for several channels
+   *     - 0 left
+   *     - 0 right
+   *     - 1 left
+   *     - 1 right
+   *     - ...
+   * For the performance reason this NextSample() does not check for the bounds.
+   * The calling program must ensure that there are sufficient number of samples
+   */
+  template <class SampleT, class ResT, uint8_t nChannels>
+  class PtrSampleVector : public SampleVector<nChannels> {
   private:
+    // points to the first sample of the 0-channel in the input stream
     const SampleT *p_StartPtr;
-    const SampleT *p_EndPtr;
+    // points to the current sample in the vector
     const SampleT *p_CurrPtr;
 
-  public:
-    inline PointerWindow(const SampleT *ptr, unsigned to)
-      : p_StartPtr(ptr), p_EndPtr(ptr + nChannels * to) {}
+  protected:
+    /**
+     * Checks that the current sample pointer is before the specified end
+     * pointer
+     * @param endPtr the end pointer
+     * @return are there more samples in the vector
+     */
+    inline bool IsBefore(const SampleT *endPtr) const {
+      return p_CurrPtr < endPtr;
+    }
 
+  public:
+    /**
+     * Construct the vector with some start pointer.
+     * @param ptr a pointer to the first (0 left) sample
+     */
+    inline PtrSampleVector(const SampleT *ptr) : p_StartPtr(ptr) {}
+
+    /**
+     * Moves the current sample pointer to the specified position in the input
+     * stream for the channel specified
+     * @param ptr a pointer to the first (0 left) sample
+     */
     inline void Seek(unsigned index, uint8_t channel) {
       p_CurrPtr = p_StartPtr + nChannels * index + channel;
     }
 
-    inline float NextSample() {
-      float res = 0.0f;
-
-      if (p_CurrPtr < p_EndPtr) {
-        res = (float)*p_CurrPtr;
-        p_CurrPtr += nChannels;
-      }
+    /**
+     * Returns the next sample from the vector and moves the current sample
+     * pointer to the next sample of the same channel
+     * @return the sample
+     */
+    inline ResT NextSample() {
+      ResT res = (ResT)*p_CurrPtr;
+      p_CurrPtr += nChannels;
       return res;
     }
   };
 
+  /**
+   * A vector of continous samples in memory with checking for bounds on
+   * NextSample().
+   * This checking reduces the performance dramatically so it is intended to use
+   * only in not realtime cases (for example, on loading, but not when playing)
+   */
+  template <class SampleT, class ResT, uint8_t nChannels>
+  class BoundedPtrSampleVector
+    : public PtrSampleVector<SampleT, ResT, nChannels> {
+  private:
+    /**
+     * Points to the end of the memory region
+     */
+    const SampleT *p_EndPtr;
+
+  public:
+    /**
+     * Constructs the vector with the start pointer and the length of the
+     * memory region
+     * @param ptr - a pointer to the first sample in the region
+     * @param len - a number of samples of each channels
+     */
+    inline BoundedPtrSampleVector(const SampleT *ptr, unsigned len)
+      : PtrSampleVector<SampleT, ResT, nChannels>(ptr),
+        p_EndPtr(ptr + nChannels * len) {}
+
+    inline ResT NextSample() {
+      return PtrSampleVector<SampleT, ResT, nChannels>::IsBefore(p_EndPtr)
+        ? PtrSampleVector<SampleT, ResT, nChannels>::NextSample()
+        : (ResT)0;
+    }
+  };
+
+  // The coefficients for the linear interpolation
+  float m_LinearCoefs[UPSAMPLE_FACTOR][LINEAR_POINTS];
+  // The coefficients for the polyphase interpolation
   float m_PolyphaseCoefs[UPSAMPLE_FACTOR][POLYPHASE_POINTS];
-  float m_LinearCoeffs[UPSAMPLE_FACTOR][LINEAR_POINTS];
+
   InterpolationType m_interpolation;
 
   GOSoundResample();
 
-  struct LinearResampler {
-    template <class WindowT>
-    static inline float calc(
-      const GOSoundResample &r, unsigned fraction, WindowT &w) {
-      const float(&coef)[LINEAR_POINTS] = r.m_LinearCoeffs[fraction];
+  template <unsigned nPoints> class ScalarProductionResampler {
+  private:
+    const float (&r_coefs)[UPSAMPLE_FACTOR][nPoints];
 
-      return w.NextSample() * coef[1] + w.NextSample() * coef[0];
-    }
-  };
+  protected:
+    inline ScalarProductionResampler(
+      const float (&coefs)[UPSAMPLE_FACTOR][nPoints])
+      : r_coefs(coefs) {}
 
-  struct PolyphaseResampler {
-    template <class WindowT>
-    static inline float calc(
-      const GOSoundResample &r, unsigned fraction, WindowT &w) {
-      const float *pCoef = r.m_PolyphaseCoefs[fraction];
-      float out = 0.0f;
+  public:
+    static constexpr unsigned getVectorLength() { return nPoints; }
 
-      for (unsigned j = 0; j < POLYPHASE_POINTS; j++)
-        out += w.NextSample() * *(pCoef++);
-      return out;
-    }
-  };
+    template <class WindowT, uint8_t nOutChannels>
+    inline void ResampleBlock(
+      ResamplingPosition &resamplingPos,
+      WindowT &w,
+      float *pOut,
+      unsigned nOutSamples) const {
+      for (unsigned i = 0; i < nOutSamples; i++, resamplingPos.Inc()) {
+        const float(&coefs)[nPoints] = r_coefs[resamplingPos.GetFraction()];
+        float outSample = 0.0f;
 
-  template <class ResamplerT, class WindowT, uint8_t nOutChannels>
-  inline void ResampleBlock(
-    ResamplingPosition &resamplingPos,
-    WindowT &w,
-    float *pOut,
-    unsigned nOutSamples) const {
-    for (unsigned i = 0; i < nOutSamples; i++, resamplingPos.Inc()) {
-      float outSample = 0.0f;
+        for (uint8_t ch = 0; ch < nOutChannels; ch++) {
+          if (ch < WindowT::m_NChannels) {
+            const float *pCoef = coefs;
 
-      for (unsigned j = 0; j < nOutChannels; j++) {
-        if (j < WindowT::m_NChannels) {
-          w.Seek(resamplingPos.GetIndex(), j);
-          outSample = ResamplerT::calc(*this, resamplingPos.GetFraction(), w);
+            w.Seek(resamplingPos.GetIndex(), ch);
+            // calculate the next output sample as a scalar production of the
+            // input sample vector and the vector of coefficients
+            outSample = 0.0f;
+            for (unsigned j = 0; j < nPoints; j++)
+              outSample += w.NextSample() * *(pCoef++);
+          }
+          /* else copy the calculated sample from the previous channel. It is
+           * useful only for resampling a mono stream to a stereo one */
+          *(pOut++) = outSample;
         }
-        *(pOut++) = outSample;
       }
     }
-  }
+  };
+
+  /**
+   * This resampler use a scalar production of vector of two samples and a
+   * vector of two coefficients
+   */
+  struct LinearResampler : public ScalarProductionResampler<LINEAR_POINTS> {
+    inline LinearResampler(const GOSoundResample &r)
+      : ScalarProductionResampler<LINEAR_POINTS>(r.m_LinearCoefs) {}
+  };
+
+  /**
+   * This resampler use a scalar production of vector of eight samples and a
+   * vector of eight coefficients
+   */
+  struct PolyphaseResampler
+    : public ScalarProductionResampler<POLYPHASE_POINTS> {
+    inline PolyphaseResampler(const GOSoundResample &r)
+      : ScalarProductionResampler<POLYPHASE_POINTS>(r.m_PolyphaseCoefs) {}
+  };
 
   /**
    * Allocate a new sample block and fill it with resampled data. Assume that

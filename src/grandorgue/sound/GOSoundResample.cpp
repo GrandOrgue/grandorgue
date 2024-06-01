@@ -96,8 +96,8 @@ GOSoundResample::GOSoundResample() {
     }
   }
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
-    m_LinearCoeffs[i][0] = i / (float)UPSAMPLE_FACTOR;
-    m_LinearCoeffs[i][1] = 1 - (i / (float)UPSAMPLE_FACTOR);
+    m_LinearCoefs[i][0] = 1 - (i / (float)UPSAMPLE_FACTOR);
+    m_LinearCoefs[i][1] = i / (float)UPSAMPLE_FACTOR;
   }
 }
 
@@ -119,11 +119,11 @@ float *GOSoundResample::NewResampledMono(
     return NULL;
 
   ResamplingPosition resamplingPos;
-  PointerWindow<float, 1> w(data, len);
+  BoundedPtrSampleVector<float, float, 1> w(data, len);
+  PolyphaseResampler resampler(*this);
 
   resamplingPos.Init(factor);
-
-  ResampleBlock<PolyphaseResampler, PointerWindow<float, 1>, 1>(
+  resampler.ResampleBlock<BoundedPtrSampleVector<float, float, 1>, 1>(
     resamplingPos, w, out, new_len);
   len = new_len;
   return out;

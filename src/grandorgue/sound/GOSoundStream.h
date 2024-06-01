@@ -43,54 +43,15 @@ private:
   /* for decoding compressed format */
   DecompressionCache cache;
 
-  template <class SampleT, uint8_t nChannels>
-  class StreamPtrWindow
-    : public GOSoundResample::PointerWindow<SampleT, nChannels> {
-  public:
-    inline StreamPtrWindow(GOSoundStream &stream)
-      : GOSoundResample::PointerWindow<SampleT, nChannels>(
-        (SampleT *)stream.ptr, stream.end_pos) {}
-  };
-
-  template <bool format16, uint8_t nChannels>
-  class StreamCacheWindow : public GOSoundResample::SampleWindow<nChannels> {
-  private:
-    DecompressionCache &r_cache;
-    uint8_t m_ChannelN;
-    enum { PREV, VALUE, ZERO } m_curr;
-
-  public:
-    inline StreamCacheWindow(GOSoundStream &stream) : r_cache(stream.cache) {}
-
-    inline void Seek(unsigned index, uint8_t channelN) {
-      while (r_cache.position <= index + 1) {
-        DecompressionStep(r_cache, nChannels, format16);
-      }
-      m_ChannelN = channelN;
-      m_curr = PREV;
-    }
-
-    inline float NextSample() {
-      int res;
-
-      if (m_curr == PREV) {
-        res = r_cache.prev[m_ChannelN];
-        m_curr = VALUE;
-      } else if (m_curr == VALUE) {
-        res = r_cache.value[m_ChannelN];
-        m_curr = ZERO;
-      } else
-        res = 0;
-      return (float)res;
-    }
-  };
-
+  /* The block decode functions should provide whatever the normal resolution of
+   * the audio is. The fade engine should ensure that this data is always
+   * brought into the correct range. */
   template <class ResamplerT, class WindowT>
-  inline void DecodeBlock(float *pOut, unsigned nOutSamples);
+  void DecodeBlock(float *pOut, unsigned nOutSamples);
 
   static DecodeBlockFunction getDecodeBlockFunction(
-    unsigned channels,
-    unsigned bits_per_sample,
+    uint8_t channels,
+    uint8_t bits_per_sample,
     bool compressed,
     GOSoundResample::InterpolationType interpolation,
     bool is_end);
@@ -98,6 +59,9 @@ private:
   void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
 
 public:
+  const unsigned char *GetPtr() const { return ptr; }
+  DecompressionCache &GetDecompressionCache() { return cache; }
+
   /* Initialize a stream to play this audio section */
   void InitStream(
     const GOSoundAudioSection *pSection,
