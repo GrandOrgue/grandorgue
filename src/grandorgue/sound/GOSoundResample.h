@@ -207,8 +207,6 @@ public:
   // The coefficients for the polyphase interpolation
   float m_PolyphaseCoefs[UPSAMPLE_FACTOR][POLYPHASE_POINTS];
 
-  InterpolationType m_interpolation;
-
   GOSoundResample();
 
   template <unsigned nPoints> class ScalarProductionResampler {

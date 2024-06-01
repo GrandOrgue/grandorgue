@@ -64,14 +64,17 @@ public:
 
   /* Initialize a stream to play this audio section */
   void InitStream(
+    const GOSoundResample *pResample,
     const GOSoundAudioSection *pSection,
-    const struct GOSoundResample *resampler_coefs,
+    GOSoundResample::InterpolationType interpolation,
     float sample_rate_adjustment);
 
   /* Initialize a stream to play this audio section and seek into it using
    * release alignment if available. */
   void InitAlignedStream(
-    const GOSoundAudioSection *pSection, const GOSoundStream *existing_stream);
+    const GOSoundAudioSection *pSection,
+    GOSoundResample::InterpolationType interpolation,
+    const GOSoundStream *existing_stream);
 
   /* Read an audio buffer from an audio section stream */
   bool ReadBlock(float *buffer, unsigned int n_blocks);

@@ -66,6 +66,7 @@ private:
   GOSoundScheduler m_Scheduler;
 
   GOSoundResample m_resample;
+  GOSoundResample::InterpolationType m_interpolation;
 
   std::atomic_bool m_HasBeenSetup;
 

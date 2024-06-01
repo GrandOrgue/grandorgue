@@ -176,8 +176,9 @@ static unsigned calculate_margin(
 }
 
 void GOSoundStream::InitStream(
+  const GOSoundResample *pResample,
   const GOSoundAudioSection *pSection,
-  const struct GOSoundResample *resampler_coefs,
+  GOSoundResample::InterpolationType interpolation,
   float sample_rate_adjustment) {
   audio_section = pSection;
 
@@ -186,7 +187,7 @@ void GOSoundStream::InitStream(
     = pSection->GetEndSegment(pSection->PickEndSegment(0));
 
   assert(end.transition_offset >= start.start_offset);
-  resample = resampler_coefs;
+  resample = pResample;
   ptr = audio_section->GetData();
   transition_position = end.transition_offset;
   end_seg = &end;
@@ -197,16 +198,15 @@ void GOSoundStream::InitStream(
     pSection->GetChannels(),
     pSection->GetBitsPerSample(),
     pSection->IsCompressed(),
-    resample->m_interpolation,
+    interpolation,
     false);
   end_decode_call = getDecodeBlockFunction(
     pSection->GetChannels(),
     pSection->GetBitsPerSample(),
     pSection->IsCompressed(),
-    resample->m_interpolation,
+    interpolation,
     true);
-  margin
-    = calculate_margin(pSection->IsCompressed(), resample->m_interpolation);
+  margin = calculate_margin(pSection->IsCompressed(), interpolation);
   assert(margin <= MAX_READAHEAD);
   read_end = GOSoundAudioSection::limitedDiff(end.read_end, margin);
   end_pos = end.end_pos - margin;
@@ -215,7 +215,9 @@ void GOSoundStream::InitStream(
 }
 
 void GOSoundStream::InitAlignedStream(
-  const GOSoundAudioSection *pSection, const GOSoundStream *existing_stream) {
+  const GOSoundAudioSection *pSection,
+  GOSoundResample::InterpolationType interpolation,
+  const GOSoundStream *existing_stream) {
   const unsigned releaseStartSegment = pSection->GetReleaseStartSegment();
   const GOSoundAudioSection::StartSegment &start
     = pSection->GetStartSegment(releaseStartSegment);
@@ -249,16 +251,15 @@ void GOSoundStream::InitAlignedStream(
     pSection->GetChannels(),
     pSection->GetBitsPerSample(),
     pSection->IsCompressed(),
-    resample->m_interpolation,
+    interpolation,
     false);
   end_decode_call = getDecodeBlockFunction(
     pSection->GetChannels(),
     pSection->GetBitsPerSample(),
     pSection->IsCompressed(),
-    resample->m_interpolation,
+    interpolation,
     true);
-  margin
-    = calculate_margin(pSection->IsCompressed(), resample->m_interpolation);
+  margin = calculate_margin(pSection->IsCompressed(), interpolation);
   assert(margin <= MAX_READAHEAD);
   read_end = GOSoundAudioSection::limitedDiff(end.read_end, margin);
   end_pos = end.end_pos - margin;
