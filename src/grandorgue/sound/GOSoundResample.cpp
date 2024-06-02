@@ -120,9 +120,11 @@ float *GOSoundResample::NewResampledMono(
   unsigned &len,
   unsigned from_samplerate,
   unsigned to_samplerate) {
-  float factor = ((float)from_samplerate) / to_samplerate;
+  ResamplingPosition resamplingPos;
 
-  unsigned new_len = ceil(len / factor);
+  resamplingPos.Init((float)from_samplerate / to_samplerate);
+
+  unsigned new_len = resamplingPos.AvailableTargetSamples(len);
 
   if (!new_len)
     return NULL;
@@ -132,11 +134,9 @@ float *GOSoundResample::NewResampledMono(
   if (!out)
     return NULL;
 
-  ResamplingPosition resamplingPos;
   BoundedPtrSampleVector<float, float, 1> w(data, len);
   PolyphaseResampler resampler(*this);
 
-  resamplingPos.Init(factor);
   resampler.ResampleBlock<BoundedPtrSampleVector<float, float, 1>, 1>(
     resamplingPos, w, out, new_len);
   len = new_len;

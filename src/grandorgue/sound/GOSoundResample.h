@@ -87,6 +87,15 @@ public:
       m_index += m_fraction >> UPSAMPLE_BITS;
       m_fraction &= UPSAMPLE_MASK;
     }
+
+    /**
+     * Calculates haw many target samples may be received from this position
+     * @param endIndex the index position after the last source sample
+     */
+    inline unsigned AvailableTargetSamples(unsigned endIndex) {
+      return ((endIndex - m_index) * UPSAMPLE_FACTOR - m_fraction)
+        / m_FractionIncrement;
+    }
   };
 
   /**

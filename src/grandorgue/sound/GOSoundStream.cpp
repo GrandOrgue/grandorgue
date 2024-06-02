@@ -66,7 +66,7 @@ void GOSoundStream::DecodeBlock(float *pOut, unsigned nOutSamples) {
   WindowT w(*this);
 
   resampler.template ResampleBlock<WindowT, 2>(
-    resamplingPos, w, pOut, nOutSamples);
+    m_ResamplingPos, w, pOut, nOutSamples);
 }
 
 GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
@@ -188,7 +188,7 @@ void GOSoundStream::InitStream(
   transition_position = end.transition_offset;
   end_seg = &end;
   end_ptr = end.end_ptr;
-  resamplingPos.Init(
+  m_ResamplingPos.Init(
     sample_rate_adjustment * pSection->GetSampleRate(), start.start_offset);
   decode_call = getDecodeBlockFunction(
     pSection->GetChannels(),
@@ -202,10 +202,12 @@ void GOSoundStream::InitStream(
     pSection->IsCompressed(),
     interpolation,
     true);
-  margin = calculate_margin(pSection->IsCompressed(), interpolation);
-  assert(margin <= MAX_READAHEAD);
-  read_end = GOSoundAudioSection::limitedDiff(end.read_end, margin);
-  end_pos = end.end_pos - margin;
+  m_ReadAheadMarginLength
+    = calculate_margin(pSection->IsCompressed(), interpolation);
+  assert(m_ReadAheadMarginLength <= MAX_READAHEAD);
+  read_end
+    = GOSoundAudioSection::limitedDiff(end.read_end, m_ReadAheadMarginLength);
+  end_pos = end.end_pos - m_ReadAheadMarginLength;
   cache = start.cache;
   cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
 }
@@ -239,10 +241,10 @@ void GOSoundStream::InitAlignedStream(
   end_ptr = end.end_ptr;
   /* Translate increment in case of differing sample rates */
   resample = existing_stream->resample;
-  resamplingPos.Init(
+  m_ResamplingPos.Init(
     pSection->GetSampleRate() / existing_stream->audio_section->GetSampleRate(),
     startIndex,
-    &existing_stream->resamplingPos);
+    &existing_stream->m_ResamplingPos);
   decode_call = getDecodeBlockFunction(
     pSection->GetChannels(),
     pSection->GetBitsPerSample(),
@@ -255,20 +257,21 @@ void GOSoundStream::InitAlignedStream(
     pSection->IsCompressed(),
     interpolation,
     true);
-  margin = calculate_margin(pSection->IsCompressed(), interpolation);
-  assert(margin <= MAX_READAHEAD);
-  read_end = GOSoundAudioSection::limitedDiff(end.read_end, margin);
-  end_pos = end.end_pos - margin;
+  m_ReadAheadMarginLength
+    = calculate_margin(pSection->IsCompressed(), interpolation);
+  assert(m_ReadAheadMarginLength <= MAX_READAHEAD);
+  read_end
+    = GOSoundAudioSection::limitedDiff(end.read_end, m_ReadAheadMarginLength);
+  end_pos = end.end_pos - m_ReadAheadMarginLength;
   cache = start.cache;
   cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
 }
 
 bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
   while (n_blocks > 0) {
-    unsigned pos = resamplingPos.GetIndex();
+    unsigned pos = m_ResamplingPos.GetIndex();
     // Calculate target number of samples
-    unsigned len
-      = roundf((end_pos - pos) / resamplingPos.GetResamplingFactor());
+    unsigned len = m_ResamplingPos.AvailableTargetSamples(end_pos);
 
     if (len == 0)
       len = 1;
@@ -308,14 +311,15 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
           = &audio_section->GetEndSegment(next_end_segment_index);
 
         ptr = audio_section->GetData();
-        resamplingPos.SetIndex(next->start_offset + pos);
+        m_ResamplingPos.SetIndex(next->start_offset + pos);
         cache = next->cache;
         cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
         assert(next_end->end_offset >= next->start_offset);
         transition_position = next_end->transition_offset;
         end_ptr = next_end->end_ptr;
-        read_end = GOSoundAudioSection::limitedDiff(next_end->read_end, margin);
-        end_pos = next_end->end_pos - margin;
+        read_end = GOSoundAudioSection::limitedDiff(
+          next_end->read_end, m_ReadAheadMarginLength);
+        end_pos = next_end->end_pos - m_ReadAheadMarginLength;
         end_seg = next_end;
       }
     } else {
@@ -332,7 +336,7 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
 void GOSoundStream::GetHistory(
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const {
   uint8_t nChannels = audio_section->GetChannels();
-  unsigned pos = resamplingPos.GetIndex();
+  unsigned pos = m_ResamplingPos.GetIndex();
 
   memset(
     history, 0, sizeof(history[0][0]) * BLOCK_HISTORY * MAX_OUTPUT_CHANNELS);
