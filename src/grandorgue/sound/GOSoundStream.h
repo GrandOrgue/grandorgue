@@ -38,7 +38,6 @@ private:
   // resampling previous samples
   unsigned m_ReadAheadMarginLength;
   unsigned transition_position;
-  unsigned read_end;
   unsigned end_pos;
 
   GOSoundResample::ResamplingPosition m_ResamplingPos;

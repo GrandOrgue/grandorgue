@@ -205,8 +205,6 @@ void GOSoundStream::InitStream(
   m_ReadAheadMarginLength
     = calculate_margin(pSection->IsCompressed(), interpolation);
   assert(m_ReadAheadMarginLength <= MAX_READAHEAD);
-  read_end
-    = GOSoundAudioSection::limitedDiff(end.read_end, m_ReadAheadMarginLength);
   end_pos = end.end_pos - m_ReadAheadMarginLength;
   cache = start.cache;
   cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
@@ -260,8 +258,6 @@ void GOSoundStream::InitAlignedStream(
   m_ReadAheadMarginLength
     = calculate_margin(pSection->IsCompressed(), interpolation);
   assert(m_ReadAheadMarginLength <= MAX_READAHEAD);
-  read_end
-    = GOSoundAudioSection::limitedDiff(end.read_end, m_ReadAheadMarginLength);
   end_pos = end.end_pos - m_ReadAheadMarginLength;
   cache = start.cache;
   cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
@@ -269,40 +265,46 @@ void GOSoundStream::InitAlignedStream(
 
 bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
   while (n_blocks > 0) {
-    unsigned pos = m_ResamplingPos.GetIndex();
-    // Calculate target number of samples
-    unsigned len = m_ResamplingPos.AvailableTargetSamples(end_pos);
+    /*
+      Calculate target number of samples available from the current loop
+      min=1 - for infinite loop pervention we need to advance position after
+      end_pos. 1 target sample is always available due read-ahead
+     */
+    unsigned len = std::clamp(
+      m_ResamplingPos.AvailableTargetSamples(end_pos), 1U, n_blocks);
 
-    if (len == 0)
-      len = 1;
-    len = std::min(len, n_blocks);
-
-    if (pos >= transition_position) {
+    if (m_ResamplingPos.GetIndex() >= transition_position) {
+      // switch to or continue playing the end-segment
       assert(end_decode_call);
 
       /* Setup ptr and position required by the end-block */
       ptr = end_ptr;
-      // May be we also need to set the position to 0?
+      // we continue to use the same position as before because end_ptr is a
+      // "virtual" pointer: end_data - transition_offset
       (this->*end_decode_call)(buffer, len);
       buffer += 2 * len;
       n_blocks -= len;
 
-      if (pos >= end_pos) {
+      // A new position after playing the end segment
+      unsigned pos = m_ResamplingPos.GetIndex();
+
+      if (pos >= end_pos) { // the loop has been fully played. Move to the start
+                            // of the loop
         const GOSoundAudioSection::EndSegment *end = end_seg;
 
-        if (end->next_start_segment_index < 0) {
+        if (end->next_start_segment_index < 0) { // it is not a loop
           for (unsigned i = 0; i < n_blocks * 2; i++)
             buffer[i] = 0;
           return 0;
         }
 
-        pos -= end->end_offset + 1;
-        while (pos >= end->end_loop_length)
-          pos -= end->end_loop_length;
-
         const unsigned next_index = end->next_start_segment_index;
         const GOSoundAudioSection::StartSegment *next
           = &audio_section->GetStartSegment(next_index);
+
+        // switch to the start of the loop
+        ptr = audio_section->GetData();
+        m_ResamplingPos.SetIndex(next->start_offset + (pos - end_pos));
 
         /* Find a suitable end segment */
         const unsigned next_end_segment_index
@@ -310,15 +312,11 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
         const GOSoundAudioSection::EndSegment *next_end
           = &audio_section->GetEndSegment(next_end_segment_index);
 
-        ptr = audio_section->GetData();
-        m_ResamplingPos.SetIndex(next->start_offset + pos);
         cache = next->cache;
         cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
         assert(next_end->end_offset >= next->start_offset);
         transition_position = next_end->transition_offset;
         end_ptr = next_end->end_ptr;
-        read_end = GOSoundAudioSection::limitedDiff(
-          next_end->read_end, m_ReadAheadMarginLength);
         end_pos = next_end->end_pos - m_ReadAheadMarginLength;
         end_seg = next_end;
       }
