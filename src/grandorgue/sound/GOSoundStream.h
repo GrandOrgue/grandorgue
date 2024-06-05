@@ -34,9 +34,6 @@ private:
   const GOSoundAudioSection::EndSegment *end_seg;
   const unsigned char *end_ptr;
 
-  // How many last samples should not be resampled and should be only used for
-  // resampling previous samples
-  unsigned m_ReadAheadMarginLength;
   unsigned transition_position;
   unsigned end_pos;
 

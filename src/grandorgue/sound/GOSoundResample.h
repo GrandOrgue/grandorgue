@@ -89,12 +89,18 @@ public:
     }
 
     /**
-     * Calculates haw many target samples may be received from this position
-     * @param endIndex the index position after the last source sample
+     * Calculates the target samples length from given source position to the
+     * end index
+     * @param endIndex the first index position after the last source sample
+     * @result - the number of tatget samples can be received before the current
+     *   position exceeds endIndex specified
      */
     inline unsigned AvailableTargetSamples(unsigned endIndex) {
-      return ((endIndex - m_index) * UPSAMPLE_FACTOR - m_fraction)
-        / m_FractionIncrement;
+      return m_index < endIndex ? ((endIndex - m_index) * UPSAMPLE_FACTOR
+                                   + m_FractionIncrement - 1 // for rounding up
+                                   - m_fraction)
+          / m_FractionIncrement
+                                : 0;
     }
   };
 
