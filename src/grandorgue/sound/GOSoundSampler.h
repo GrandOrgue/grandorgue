@@ -8,9 +8,9 @@
 #ifndef GOSOUNDSAMPLER_H_
 #define GOSOUNDSAMPLER_H_
 
-#include "GOSoundAudioSection.h"
 #include "GOSoundFader.h"
 #include "GOSoundFilter.h"
+#include "GOSoundStream.h"
 
 class GOSoundProvider;
 class GOSoundWindchestTask;
@@ -21,7 +21,7 @@ struct GOSoundSampler {
   int m_SamplerTaskId;
   GOSoundWindchestTask *p_WindchestTask;
   unsigned m_AudioGroupId;
-  GOSoundAudioSection::Stream stream;
+  GOSoundStream stream;
   GOSoundFader fader;
   GOSoundFilter::FilterState toneBalanceFilterState;
   uint64_t time;

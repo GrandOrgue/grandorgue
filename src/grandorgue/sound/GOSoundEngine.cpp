@@ -236,7 +236,7 @@ bool GOSoundEngine::ProcessSampler(
      *
      *     playback gain * (2 ^ -sampler->pipe_section->sample_bits)
      */
-    if (!GOSoundAudioSection::ReadBlock(&sampler->stream, temp, n_frames))
+    if (!sampler->stream.ReadBlock(temp, n_frames))
       sampler->p_SoundProvider = NULL;
 
     sampler->fader.Process(n_frames, temp, volume);
@@ -414,9 +414,9 @@ GOSoundSampler *GOSoundEngine::CreateTaskSample(
       sampler->p_SoundProvider = pSoundProvider;
       sampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
       sampler->velocity = velocity;
-      section->InitStream(
+      sampler->stream.InitStream(
+        section,
         &m_ResamplerCoefs,
-        &sampler->stream,
         GetRandomFactor() * pSoundProvider->GetTuning() / (float)m_SampleRate);
 
       const float playback_gain
@@ -462,7 +462,7 @@ void GOSoundEngine::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
 
         // start new section stream in the old sampler
         pSampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
-        section->InitAlignedStream(&pSampler->stream, &new_sampler->stream);
+        pSampler->stream.InitAlignedStream(section, &new_sampler->stream);
         pSampler->p_SoundProvider = pProvider;
         pSampler->time = m_CurrentTime + 1;
 
@@ -601,12 +601,11 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
       if (
         m_ReleaseAlignmentEnabled
         && release_section->SupportsStreamAlignment()) {
-        release_section->InitAlignedStream(
-          &new_sampler->stream, &handle->stream);
+        new_sampler->stream.InitAlignedStream(release_section, &handle->stream);
       } else {
-        release_section->InitStream(
+        new_sampler->stream.InitStream(
+          release_section,
           &m_ResamplerCoefs,
-          &new_sampler->stream,
           this_pipe->GetTuning() / (float)m_SampleRate);
       }
       new_sampler->is_release = true;
