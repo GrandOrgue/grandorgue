@@ -314,10 +314,11 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       end_seg = next_end;
     } else { // no loop available
       // fill the buffer with zeros
-      do {
-        *(buffer++) = 0.0f;
-        *(buffer++) = 0.0f;
-      } while (--n_blocks > 0);
+      float *p = buffer;
+
+      for (unsigned i = n_blocks * 2; i > 0; i--)
+        *(p++) = 0.0f;
+      n_blocks = 0;
       res = false;
     }
   }
