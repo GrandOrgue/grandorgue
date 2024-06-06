@@ -26,16 +26,20 @@ private:
    * uncompressed version of decode_call */
   DecodeBlockFunction end_decode_call;
 
-  /* Used for both compressed and uncompressed decoding */
+  /* Current pointer. Used in the DecodeBlock functions. May be a real pointer
+   * to the audio section data or an end segment vir tual pointer */
   const unsigned char *ptr;
 
-  /* Derived from the start and end audio segments which were used to setup
-   * this stream. */
-  const GOSoundAudioSection::EndSegment *end_seg;
+  // A virtual pointer to the end segment. An real pointer has the
+  // transition_position offset from this
   const unsigned char *end_ptr;
 
+  // when to switch to the end segment
   unsigned transition_position;
+  // loop end pos, when to switch to the next start segment
   unsigned end_pos;
+  // -1 means it is not looped sample, otherwise the index of the start segment
+  int m_NextStartSegmentIndex;
 
   GOSoundResample::ResamplingPosition m_ResamplingPos;
 

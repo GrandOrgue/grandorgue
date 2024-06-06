@@ -187,7 +187,7 @@ void GOSoundStream::InitStream(
   resample = pResample;
   ptr = audio_section->GetData();
   transition_position = end.transition_offset;
-  end_seg = &end;
+  m_NextStartSegmentIndex = end.next_start_segment_index;
   end_ptr = end.end_ptr;
   m_ResamplingPos.Init(
     sample_rate_adjustment * pSection->GetSampleRate(), start.start_offset);
@@ -234,7 +234,7 @@ void GOSoundStream::InitAlignedStream(
   audio_section = pSection;
   ptr = audio_section->GetData();
   transition_position = end.transition_offset;
-  end_seg = &end;
+  m_NextStartSegmentIndex = end.next_start_segment_index;
   end_ptr = end.end_ptr;
   /* Translate increment in case of differing sample rates */
   resample = existing_stream->resample;
@@ -289,11 +289,10 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       buffer += 2 * targetSamples;
       n_blocks -= targetSamples;
       assert(!n_blocks || m_ResamplingPos.GetIndex() >= finishPos);
-    } else if (end_seg->next_start_segment_index >= 0) {
+    } else if (m_NextStartSegmentIndex >= 0) {
       // switch to the start of the loop
-      const unsigned next_index = end_seg->next_start_segment_index;
       const GOSoundAudioSection::StartSegment *next
-        = &audio_section->GetStartSegment(next_index);
+        = &audio_section->GetStartSegment(m_NextStartSegmentIndex);
 
       // switch to the start of the loop
       ptr = audio_section->GetData();
@@ -301,7 +300,7 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
 
       /* Find a suitable end segment */
       const unsigned next_end_segment_index
-        = audio_section->PickEndSegment(next_index);
+        = audio_section->PickEndSegment(m_NextStartSegmentIndex);
       const GOSoundAudioSection::EndSegment *next_end
         = &audio_section->GetEndSegment(next_end_segment_index);
 
@@ -311,7 +310,7 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       transition_position = next_end->transition_offset;
       end_pos = next_end->end_pos;
       end_ptr = next_end->end_ptr;
-      end_seg = next_end;
+      m_NextStartSegmentIndex = next_end->next_start_segment_index;
     } else { // no loop available
       // fill the buffer with zeros
       float *p = buffer;
