@@ -8,8 +8,10 @@
 #ifndef GOSOUNDSTREAM_H
 #define GOSOUNDSTREAM_H
 
-#include "GOSoundAudioSection.h"
+#include "GOSoundCompress.h"
 #include "GOSoundResample.h"
+
+class GOSoundAudioSection;
 
 class GOSoundStream {
 private:

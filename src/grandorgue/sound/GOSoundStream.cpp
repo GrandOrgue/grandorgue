@@ -41,7 +41,7 @@ public:
     m_curr = PREV;
   }
 
-  inline float NextSample() {
+  inline int NextSample() {
     int res;
 
     if (m_curr == PREV) {
@@ -52,7 +52,7 @@ public:
       m_curr = ZERO;
     } else
       res = 0;
-    return (float)res;
+    return res;
   }
 };
 

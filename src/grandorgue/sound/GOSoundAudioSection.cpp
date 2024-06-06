@@ -417,7 +417,7 @@ void GOSoundAudioSection::Setup(
         if (!end_seg.end_data)
           throw GOOutOfMemory();
 
-        // make the universal pointer for reading the end segment with the same
+        // make a virtual pointer for reading the end segment with the same
         // offset as the main data
         end_seg.end_ptr
           = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;

@@ -37,8 +37,8 @@ public:
   };
 
   /**
-   * This segment contains copysamples from a loop end and then from the loop
-   * start. It is necessary for read-ahead when resampling
+   * This segment contains copy of samples from a loop end and then from the
+   * loop start. It is necessary for read-ahead when resampling
    */
   struct EndSegment {
     /* Sample offset where the loop ends and needs to jump into the next

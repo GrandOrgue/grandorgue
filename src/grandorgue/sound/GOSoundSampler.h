@@ -8,6 +8,7 @@
 #ifndef GOSOUNDSAMPLER_H_
 #define GOSOUNDSAMPLER_H_
 
+#include "GOBool3.h"
 #include "GOSoundFader.h"
 #include "GOSoundFilter.h"
 #include "GOSoundStream.h"
