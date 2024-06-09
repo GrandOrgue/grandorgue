@@ -27,7 +27,11 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+// maximal readahead is necessary for polyphase resampling
+static constexpr unsigned MAX_READAHEAD = GOSoundResample::POLYPHASE_POINTS;
 static constexpr unsigned DEFAULT_END_SEG_LENGTH = MAX_READAHEAD * 2;
+
+const unsigned GOSoundAudioSection::getMaxReadAhead() { return MAX_READAHEAD; }
 
 GOSoundAudioSection::GOSoundAudioSection(GOMemoryPool &pool)
   : m_data(NULL),

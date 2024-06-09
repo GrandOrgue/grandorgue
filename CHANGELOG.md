@@ -1,3 +1,4 @@
+- Fixed not compatibilyty between polyphase interpolation and loseless compression https://github.com/GrandOrgue/grandorgue/issues/710
 - Fixed not sounding of pipe after an enclosure has closed to zero and then opened https://github.com/GrandOrgue/grandorgue/issues/1813
 - Added Midi listener for Panic button and Exit GO function. https://github.com/GrandOrgue/grandorgue/issues/1905
 - Added a tone balance (bass/treble harmonics balance) voicing option

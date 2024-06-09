@@ -426,15 +426,6 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
 }
 
 bool GOSettingsOptions::TransferDataFromWindow() {
-  if (
-    m_Interpolation->GetSelection() == 1 && m_LosslessCompression->IsChecked())
-    wxMessageBox(
-      _("Polyphase is not supported with lossless compression - "
-        "falling back to linear."),
-      _("Warning"),
-      wxOK | wxICON_WARNING,
-      this);
-
   m_config.LosslessCompression(m_LosslessCompression->IsChecked());
   m_config.ManagePolyphony(m_Limit->IsChecked());
   m_config.CompressCache(m_CompressCache->IsChecked());
