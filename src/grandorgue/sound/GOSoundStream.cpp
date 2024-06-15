@@ -304,7 +304,7 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       const GOSoundAudioSection::EndSegment *next_end
         = &audio_section->GetEndSegment(next_end_segment_index);
 
-      assert(next_end->end_offset >= next->start_offset);
+      assert(next_end->end_pos >= next->start_offset);
       cache = next->cache;
       cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
       transition_position = next_end->transition_offset;
