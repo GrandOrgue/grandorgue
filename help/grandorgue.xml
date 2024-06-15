@@ -9749,7 +9749,7 @@ settings depends on the function.
           <term>DefaultToEngaged</term>
           <listitem>
             <para>
-(boolean, required) State of the button after loading.
+(boolean, required if Function is Input or not defined, else ignored) State of the button after loading.
      </para>
           </listitem>
         </varlistentry>
