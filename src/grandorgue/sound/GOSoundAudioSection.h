@@ -49,7 +49,7 @@ public:
     unsigned end_pos;
 
     /* Sample offset where the uncompressed end data blob begins (must be less
-     * than end_offset). */
+     * than end_pos). */
     unsigned transition_offset;
 
     /* Uncompressed ending data blob. This data must start before
