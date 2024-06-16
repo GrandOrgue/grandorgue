@@ -96,10 +96,13 @@ public:
      *   position exceeds endIndex specified
      */
     inline unsigned AvailableTargetSamples(unsigned endIndex) {
-      return m_index < endIndex ? ((endIndex - m_index) * UPSAMPLE_FACTOR
-                                   + m_FractionIncrement - 1 // for rounding up
-                                   - m_fraction)
-          / m_FractionIncrement
+      return m_index < endIndex ? unsigned(
+               (
+                 // for preventing owerflowing if endIndex >= 2**19 ~ 550000
+                 uint64_t(endIndex - m_index) * UPSAMPLE_FACTOR
+                 + m_FractionIncrement - 1 // for rounding up
+                 - m_fraction)
+               / m_FractionIncrement)
                                 : 0;
     }
   };
