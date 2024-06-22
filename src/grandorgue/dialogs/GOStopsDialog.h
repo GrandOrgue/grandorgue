@@ -28,6 +28,7 @@ private:
   std::unordered_map<GOCombinationElement *, wxCheckBox *>
     mp_checkboxesByControl;
 
+  void OnElementChanging(wxCommandEvent &event);
   void ControlChanged(GOControl *pControl) override;
 
 public:
@@ -39,7 +40,7 @@ public:
 
   ~GOStopsDialog();
 
-  // DECLARE_EVENT_TABLE()
+  DECLARE_EVENT_TABLE()
 };
 
 #endif /* GOSTOPSDIALOG_H */

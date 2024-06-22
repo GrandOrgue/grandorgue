@@ -19,9 +19,15 @@
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
 
+constexpr unsigned MAX_ELEMENTS = 2000;
+
 enum {
-  ID_FIRST = 200,
+  ID_CHECKBOX = 200,
 };
+
+BEGIN_EVENT_TABLE(GOStopsDialog, GOSimpleDialog)
+EVT_CHECKBOX(ID_CHECKBOX, GOStopsDialog::OnElementChanging)
+END_EVENT_TABLE()
 
 GOStopsDialog::GOStopsDialog(
   GODocumentBase *doc,
@@ -101,14 +107,9 @@ GOStopsDialog::GOStopsDialog(
       }
 
       if (sizerIndex >= 0 && sizerIndex <= (int)globalSectionN && pName) {
-        wxCheckBox *pCheckBox = new wxCheckBox(this, ID_FIRST + i, *pName);
+        wxCheckBox *pCheckBox = new wxCheckBox(this, ID_CHECKBOX, *pName);
 
-        printf(
-          "GOStopsDialog: %u %s: %p\n",
-          sizerIndex,
-          pName->c_str().AsChar(),
-          e.control);
-
+        pCheckBox->SetClientData(e.control);
         mp_checkboxesByControl[e.control] = pCheckBox;
         pCheckBox->SetValue(e.control->GetCombinationState());
         sizers[sizerIndex]->Add(pCheckBox, 0, wxEXPAND | wxALL, 5);
@@ -122,6 +123,15 @@ GOStopsDialog::GOStopsDialog(
 
 GOStopsDialog::~GOStopsDialog() {
   r_model.UnRegisterControlChangedHandler(this);
+}
+
+void GOStopsDialog::OnElementChanging(wxCommandEvent &event) {
+  wxCheckBox *pCheck = static_cast<wxCheckBox *>(event.GetEventObject());
+  GOCombinationElement *pE
+    = static_cast<GOCombinationElement *>(pCheck->GetClientData());
+
+  if (pE)
+    pE->SetCombination(event.IsChecked());
 }
 
 void GOStopsDialog::ControlChanged(GOControl *pControl) {
