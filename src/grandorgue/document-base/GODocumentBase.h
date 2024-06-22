@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,7 +14,7 @@ class GOView;
 
 class GODocumentBase {
 public:
-  typedef enum { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, PANEL } WindowType;
+  enum WindowType { ORGAN_DIALOG, MIDI_EVENT, MIDI_LIST, STOPS, PANEL };
 
 private:
   typedef struct {

@@ -22,6 +22,8 @@ public:
 
 private:
   static const struct IniFileEnumEntry m_coupler_types[];
+
+  bool m_IsVirtual;
   bool m_UnisonOff;
   bool m_CoupleToSubsequentUnisonIntermanualCouplers;
   bool m_CoupleToSubsequentUpwardIntermanualCouplers;
@@ -55,8 +57,10 @@ private:
   void PreparePlayback();
 
 public:
-  GOCoupler(GOOrganModel &organModel, unsigned sourceManual);
+  GOCoupler(
+    GOOrganModel &organModel, unsigned sourceManual, bool isVirtual = false);
 
+  bool IsVirtual() const { return m_IsVirtual; }
   bool IsRecursive() const {
     return m_CoupleToSubsequentUnisonIntermanualCouplers;
   }

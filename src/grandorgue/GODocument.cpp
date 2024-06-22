@@ -12,6 +12,7 @@
 #include "config/GOConfig.h"
 #include "dialogs/GOMidiListDialog.h"
 #include "dialogs/GOOrganSettingsDialog.h"
+#include "dialogs/GOStopsDialog.h"
 #include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "document-base/GOView.h"
 #include "gui/GOGUIPanel.h"
@@ -187,6 +188,18 @@ void GODocument::ShowMidiList() {
         m_OrganController->GetConfig().m_DialogSizes,
         m_OrganController->GetMidiConfigurators()));
   }
+}
+
+void GODocument::ShowStops() {
+  if (!showWindow(GODocument::STOPS, NULL) && m_OrganController)
+    registerWindow(
+      GODocument::STOPS,
+      nullptr,
+      new GOStopsDialog(
+        this,
+        nullptr,
+        m_OrganController->GetConfig().m_DialogSizes,
+        *m_OrganController));
 }
 
 void GODocument::ShowMIDIEventDialog(

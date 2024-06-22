@@ -15,8 +15,10 @@
 #include "GOManual.h"
 #include "GOOrganModel.h"
 
-GOCoupler::GOCoupler(GOOrganModel &organModel, unsigned sourceManual)
+GOCoupler::GOCoupler(
+  GOOrganModel &organModel, unsigned sourceManual, bool isVirtual)
   : GODrawstop(organModel),
+    m_IsVirtual(isVirtual),
     m_UnisonOff(false),
     m_CoupleToSubsequentUnisonIntermanualCouplers(false),
     m_CoupleToSubsequentUpwardIntermanualCouplers(false),

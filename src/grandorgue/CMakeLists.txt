@@ -94,6 +94,7 @@ dialogs/GOOrganSettingsDialog.cpp
 dialogs/GOProgressDialog.cpp
 dialogs/GOSelectOrganDialog.cpp
 dialogs/GOSplash.cpp
+dialogs/GOStopsDialog.cpp
 document-base/GODocumentBase.cpp
 document-base/GOView.cpp
 gui/primitives/GOBitmap.cpp
