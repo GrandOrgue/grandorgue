@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -88,7 +88,7 @@ void GOPistonControl::Load(GOConfigReader &cfg, wxString group) {
   ControlChanged(drawstop);
 }
 
-void GOPistonControl::ControlChanged(void *control) {
+void GOPistonControl::ControlChanged(GOControl *control) {
   if (control == drawstop)
     Display(drawstop->IsEngaged() ^ drawstop->DisplayInverted());
 }

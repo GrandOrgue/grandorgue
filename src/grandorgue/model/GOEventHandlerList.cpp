@@ -9,7 +9,7 @@
 
 #include "control/GOControlChangedHandler.h"
 
-void GOEventHandlerList::SendControlChanged(void *pControl) {
+void GOEventHandlerList::SendControlChanged(GOControl *pControl) {
   for (auto handler : m_ControlChangedHandlers.AsVector())
     handler->ControlChanged(pControl);
 }

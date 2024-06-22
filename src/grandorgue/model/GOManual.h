@@ -14,6 +14,7 @@
 
 #include "combinations/control/GOCombinationButtonSet.h"
 #include "combinations/model/GOCombinationDefinition.h"
+#include "control/GOControl.h"
 #include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
@@ -32,7 +33,8 @@ class GOSwitch;
 class GOTremulant;
 class GOOrganModel;
 
-class GOManual : private GOEventHandler,
+class GOManual : public GOControl,
+                 private GOEventHandler,
                  private GOCombinationButtonSet,
                  private GOSaveableObject,
                  private GOSoundStateHandler,
