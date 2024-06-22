@@ -10,9 +10,6 @@
 
 class GOCombinationElement {
 public:
-  virtual ~GOCombinationElement() {}
-
-  virtual void *GetControl() const = 0;
   virtual bool GetCombinationState() const = 0;
   virtual void SetCombination(bool on) = 0;
 };

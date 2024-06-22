@@ -58,8 +58,6 @@ protected:
 public:
   GODrawstop(GOOrganModel &organModel);
 
-  void *GetControl() const override { return (GOButtonControl *)this; }
-
   bool IsToStoreInDivisional() const { return m_IsToStoreInDivisional; }
   bool IsToStoreInGeneral() const { return m_IsToStoreInGeneral; }
   bool IsActive() const { return m_ActiveState; }
