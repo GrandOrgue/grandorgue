@@ -813,6 +813,8 @@ void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
     event.Check(m_doc && m_doc->WindowExists(GODocument::ORGAN_DIALOG, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
     event.Check(m_doc && m_doc->WindowExists(GODocument::MIDI_LIST, NULL));
+  else if (event.GetId() == ID_STOPS)
+    event.Check(m_doc && m_doc->WindowExists(GODocument::STOPS, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
     event.Check(m_MidiMonitor);
 
