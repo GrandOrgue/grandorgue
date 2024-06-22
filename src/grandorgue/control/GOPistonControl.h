@@ -20,7 +20,7 @@ class GOPistonControl : public GOPushbuttonControl,
 private:
   GOButtonControl *drawstop;
 
-  void ControlChanged(GOControl *control);
+  void ControlChanged(GOControl *control) override;
 
 public:
   GOPistonControl(GOOrganModel &organModel);

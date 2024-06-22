@@ -36,7 +36,7 @@ protected:
   void Init(GOConfigReader &cfg, wxString group);
   void Save(GOConfigWriter &cfg);
 
-  void ControlChanged(GOControl *control);
+  void ControlChanged(GOControl *control) override;
 
 public:
   GOGUIControl(GOGUIPanel *panel, void *control);
