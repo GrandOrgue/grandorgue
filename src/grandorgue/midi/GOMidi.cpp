@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -60,7 +60,7 @@ void GOMidi::Open() {
     if (pDevConf && pDevConf->m_IsEnabled)
       ((GOMidiInPort *)pPort)
         ->Open(
-          m_MidiMap.GetDeviceIdByLogicalName(pDevConf->m_LogicalName),
+          m_MidiMap.GetDeviceIdByLogicalName(pDevConf->GetLogicalName()),
           pDevConf->m_ChannelShift);
     else
       pPort->Close();
@@ -75,7 +75,8 @@ void GOMidi::Open() {
       pPort->IsToUse() && portsConfig.IsEnabled(portName, apiName)
       && (devConf = m_config.m_MidiOut.FindByPhysicalName(pPort->GetName(), portName, apiName))
       && devConf->m_IsEnabled)
-      pPort->Open(m_MidiMap.GetDeviceIdByLogicalName(devConf->m_LogicalName));
+      pPort->Open(
+        m_MidiMap.GetDeviceIdByLogicalName(devConf->GetLogicalName()));
     else
       pPort->Close();
   }
