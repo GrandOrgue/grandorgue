@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -92,8 +92,10 @@ void GOSoundReverb::Setup(GOConfig &settings) {
       settings.SampleRate());
      */
     if (wav.GetSampleRate() != settings.SampleRate()) {
-      float *new_data
-        = resample_block(data, len, wav.GetSampleRate(), settings.SampleRate());
+      GOSoundResample resample;
+
+      float *new_data = resample.NewResampledMono(
+        data, len, wav.GetSampleRate(), settings.SampleRate());
       if (!new_data)
         throw(wxString) _("Resampling failed");
       free(data);

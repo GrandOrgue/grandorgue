@@ -8,15 +8,18 @@
 #ifndef GOSOUNDSTREAM_H
 #define GOSOUNDSTREAM_H
 
-#include "GOSoundAudioSection.h"
+#include "GOSoundCompress.h"
+#include "GOSoundResample.h"
+
+class GOSoundAudioSection;
 
 class GOSoundStream {
 private:
   const GOSoundAudioSection *audio_section;
-  const struct resampler_coefs_s *resample_coefs;
+  const GOSoundResample *resample;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
-    float *output, unsigned int n_blocks);
+    float *pOut, unsigned nOutSamples);
 
   /* Method used to decode stream */
   DecodeBlockFunction decode_call;
@@ -25,63 +28,58 @@ private:
    * uncompressed version of decode_call */
   DecodeBlockFunction end_decode_call;
 
-  /* Used for both compressed and uncompressed decoding */
+  /* Current pointer. Used in the DecodeBlock functions. May be a real pointer
+   * to the audio section data or an end segment vir tual pointer */
   const unsigned char *ptr;
 
-  /* Derived from the start and end audio segments which were used to setup
-   * this stream. */
-  const GOSoundAudioSection::EndSegment *end_seg;
+  // A virtual pointer to the end segment. An real pointer has the
+  // transition_position offset from this
   const unsigned char *end_ptr;
-  unsigned margin;
-  unsigned transition_position;
-  unsigned read_end;
-  unsigned end_pos;
 
-  unsigned position_index;
-  unsigned position_fraction;
-  unsigned increment_fraction;
+  // when to switch to the end segment
+  unsigned transition_position;
+  // loop end pos, when to switch to the next start segment
+  unsigned end_pos;
+  // -1 means it is not looped sample, otherwise the index of the start segment
+  int m_NextStartSegmentIndex;
+
+  GOSoundResample::ResamplingPosition m_ResamplingPos;
 
   /* for decoding compressed format */
   DecompressionCache cache;
 
-  inline void NormalisePosition() {
-    position_index += position_fraction >> UPSAMPLE_BITS;
-    position_fraction = position_fraction & (UPSAMPLE_FACTOR - 1);
-  }
-
-  template <class T>
-  void MonoUncompressedLinear(float *output, unsigned int n_blocks);
-  template <class T>
-  void StereoUncompressedLinear(float *output, unsigned int n_blocks);
-  template <class T>
-  void MonoUncompressedPolyphase(float *output, unsigned int n_blocks);
-  template <class T>
-  void StereoUncompressedPolyphase(float *output, unsigned int n_blocks);
-  template <bool format16>
-  void MonoCompressedLinear(float *output, unsigned int n_blocks);
-  template <bool format16>
-  void StereoCompressedLinear(float *output, unsigned int n_blocks);
+  /* The block decode functions should provide whatever the normal resolution of
+   * the audio is. The fade engine should ensure that this data is always
+   * brought into the correct range. */
+  template <class ResamplerT, class WindowT>
+  void DecodeBlock(float *pOut, unsigned nOutSamples);
 
   static DecodeBlockFunction getDecodeBlockFunction(
-    unsigned channels,
-    unsigned bits_per_sample,
+    uint8_t channels,
+    uint8_t bits_per_sample,
     bool compressed,
-    interpolation_type interpolation,
+    GOSoundResample::InterpolationType interpolation,
     bool is_end);
 
   void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
 
 public:
+  const unsigned char *GetPtr() const { return ptr; }
+  DecompressionCache &GetDecompressionCache() { return cache; }
+
   /* Initialize a stream to play this audio section */
   void InitStream(
+    const GOSoundResample *pResample,
     const GOSoundAudioSection *pSection,
-    const struct resampler_coefs_s *resampler_coefs,
+    GOSoundResample::InterpolationType interpolation,
     float sample_rate_adjustment);
 
   /* Initialize a stream to play this audio section and seek into it using
    * release alignment if available. */
   void InitAlignedStream(
-    const GOSoundAudioSection *pSection, const GOSoundStream *existing_stream);
+    const GOSoundAudioSection *pSection,
+    GOSoundResample::InterpolationType interpolation,
+    const GOSoundStream *existing_stream);
 
   /* Read an audio buffer from an audio section stream */
   bool ReadBlock(float *buffer, unsigned int n_blocks);

@@ -27,6 +27,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+static constexpr unsigned DEFAULT_END_SEG_LENGTH = MAX_READAHEAD * 2;
+
 GOSoundAudioSection::GOSoundAudioSection(GOMemoryPool &pool)
   : m_data(NULL),
     m_ReleaseAligner(NULL),
@@ -105,18 +107,11 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
     return false;
   for (unsigned i = 0; i < temp; i++) {
     EndSegment s;
-    if (!cache.Read(&s.end_offset, sizeof(s.end_offset)))
-      return false;
+
     if (!cache.Read(
           &s.next_start_segment_index, sizeof(s.next_start_segment_index)))
       return false;
     if (!cache.Read(&s.transition_offset, sizeof(s.transition_offset)))
-      return false;
-    if (!cache.Read(&s.end_loop_length, sizeof(s.end_loop_length)))
-      return false;
-    if (!cache.Read(&s.read_end, sizeof(s.read_end)))
-      return false;
-    if (!cache.Read(&s.end_pos, sizeof(s.end_pos)))
       return false;
     if (!cache.Read(&s.end_size, sizeof(s.end_size)))
       return false;
@@ -185,18 +180,11 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
     return false;
   for (unsigned i = 0; i < temp; i++) {
     const EndSegment *s = &m_EndSegments[i];
-    if (!cache.Write(&s->end_offset, sizeof(s->end_offset)))
-      return false;
+
     if (!cache.Write(
           &s->next_start_segment_index, sizeof(s->next_start_segment_index)))
       return false;
     if (!cache.Write(&s->transition_offset, sizeof(s->transition_offset)))
-      return false;
-    if (!cache.Write(&s->end_loop_length, sizeof(s->end_loop_length)))
-      return false;
-    if (!cache.Write(&s->read_end, sizeof(s->read_end)))
-      return false;
-    if (!cache.Write(&s->end_pos, sizeof(s->end_pos)))
       return false;
     if (!cache.Write(&s->end_size, sizeof(s->end_size)))
       return false;
@@ -373,10 +361,9 @@ void GOSoundAudioSection::Setup(
         min_reqd_samples = loop.m_EndPosition + 1;
 
       start_seg.start_offset = loop.m_StartPosition;
-      end_seg.end_offset = loop.m_EndPosition;
+      end_seg.end_pos = loop.m_EndPosition;
       end_seg.next_start_segment_index = i + 1;
-      const unsigned loop_length
-        = 1 + end_seg.end_offset - start_seg.start_offset;
+      const unsigned loop_length = end_seg.end_pos - start_seg.start_offset;
       wxString loopError;
 
       if (fade_len > loop_length - 1)
@@ -392,14 +379,12 @@ void GOSoundAudioSection::Setup(
         unsigned end_length;
 
         // calculate the fade segment size and offsets
-        if (end_seg.end_offset - start_seg.start_offset > SHORT_LOOP_LENGTH) {
+        if (loop_length >= SHORT_LOOP_LENGTH) {
           end_seg.transition_offset
-            = end_seg.end_offset - MAX_READAHEAD - fade_len + 1;
-          end_seg.read_end = end_seg.end_offset - fade_len;
-          end_length = 2 * MAX_READAHEAD + fade_len;
+            = end_seg.end_pos - MAX_READAHEAD - fade_len;
+          end_length = DEFAULT_END_SEG_LENGTH + fade_len;
         } else {
           end_seg.transition_offset = start_seg.start_offset;
-          end_seg.read_end = end_seg.end_offset;
           end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
           if (
             end_length < MAX_READAHEAD
@@ -416,24 +401,27 @@ void GOSoundAudioSection::Setup(
           = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
         if (!end_seg.end_data)
           throw GOOutOfMemory();
+
+        // make a virtual pointer for reading the end segment with the same
+        // offset as the main data
         end_seg.end_ptr
           = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
-        const unsigned copy_len
-          = 1 + end_seg.end_offset - end_seg.transition_offset;
+        const unsigned nBytesToCopy
+          = (end_seg.end_pos - end_seg.transition_offset) * m_BytesPerSample;
 
         // Fill the fade seg with transition data, then with the loop start data
         memcpy(
           end_seg.end_data,
           ((const unsigned char *)pcm_data)
             + end_seg.transition_offset * m_BytesPerSample,
-          copy_len * m_BytesPerSample);
+          nBytesToCopy);
         loop_memcpy(
-          ((unsigned char *)end_seg.end_data) + copy_len * m_BytesPerSample,
+          ((unsigned char *)end_seg.end_data) + nBytesToCopy,
           ((const unsigned char *)pcm_data)
             + loop.m_StartPosition * m_BytesPerSample,
           loop_length * m_BytesPerSample,
-          (end_length - copy_len) * m_BytesPerSample);
+          end_seg.end_size - nBytesToCopy);
         if (fade_len > 0)
           // TODO: reduce the number of parameters of DoCrossfade that the call
           // would be easy readable without additional comments
@@ -446,8 +434,6 @@ void GOSoundAudioSection::Setup(
             loop_length,
             end_length);
 
-        end_seg.end_loop_length = loop_length;
-        end_seg.end_pos = end_length + end_seg.transition_offset;
         assert(end_length >= MAX_READAHEAD);
 
         m_StartSegments.push_back(start_seg);
@@ -465,35 +451,31 @@ void GOSoundAudioSection::Setup(
   } else {
     /* Create a default end segment */
     EndSegment end_seg;
-    end_seg.end_offset = pcm_data_nb_samples - 1;
-    end_seg.read_end = end_seg.end_offset + 1;
-    end_seg.next_start_segment_index = -1;
-    unsigned end_length = 2 * MAX_READAHEAD;
-    end_seg.end_size = end_length * m_BytesPerSample;
-    end_seg.end_data = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
-    end_seg.transition_offset = limitedDiff(end_seg.end_offset, MAX_READAHEAD);
-    end_seg.end_loop_length = end_length * 2;
-    end_seg.end_ptr
-      = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
-    const unsigned copy_len
-      = 1 + end_seg.end_offset - end_seg.transition_offset;
+    end_seg.end_pos = pcm_data_nb_samples;
+    end_seg.next_start_segment_index = -1;
+    end_seg.end_size = m_BytesPerSample * DEFAULT_END_SEG_LENGTH;
+    end_seg.end_data = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
 
     if (!end_seg.end_data)
       throw GOOutOfMemory();
 
+    end_seg.transition_offset = limitedDiff(end_seg.end_pos, MAX_READAHEAD);
+    end_seg.end_ptr
+      = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
+
+    const unsigned nBytesToCopy
+      = (end_seg.end_pos - end_seg.transition_offset) * m_BytesPerSample;
+
     memcpy(
       end_seg.end_data,
       ((const unsigned char *)pcm_data)
-        + end_seg.transition_offset * m_BytesPerSample,
-      copy_len * m_BytesPerSample);
+        + m_BytesPerSample * end_seg.transition_offset,
+      nBytesToCopy);
     memset(
-      ((unsigned char *)end_seg.end_data) + copy_len * m_BytesPerSample,
+      ((unsigned char *)end_seg.end_data) + nBytesToCopy,
       0,
-      (end_length - copy_len) * m_BytesPerSample);
-
-    end_seg.end_pos = end_length + end_seg.transition_offset;
-    assert(end_length >= MAX_READAHEAD);
+      end_seg.end_size - nBytesToCopy);
 
     m_EndSegments.push_back(end_seg);
   }

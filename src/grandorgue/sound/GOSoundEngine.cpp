@@ -47,7 +47,6 @@ GOSoundEngine::GOSoundEngine()
     m_AudioRecorder(NULL),
     m_TouchTask(),
     m_HasBeenSetup(false) {
-  memset(&m_ResamplerCoefs, 0, sizeof(m_ResamplerCoefs));
   m_SamplerPool.SetUsageLimit(2048);
   m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;
   m_ReleaseProcessor = new GOSoundReleaseTask(*this, m_AudioGroupTasks);
@@ -101,12 +100,10 @@ void GOSoundEngine::SetSamplesPerBuffer(unsigned samples_per_buffer) {
 
 void GOSoundEngine::SetSampleRate(unsigned sample_rate) {
   m_SampleRate = sample_rate;
-  resampler_coefs_init(
-    &m_ResamplerCoefs, m_SampleRate, m_ResamplerCoefs.interpolation);
 }
 
 void GOSoundEngine::SetInterpolationType(unsigned type) {
-  m_ResamplerCoefs.interpolation = (interpolation_type)type;
+  m_interpolation = (GOSoundResample::InterpolationType)type;
 }
 
 unsigned GOSoundEngine::GetSampleRate() { return m_SampleRate; }
@@ -415,8 +412,9 @@ GOSoundSampler *GOSoundEngine::CreateTaskSample(
       sampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
       sampler->velocity = velocity;
       sampler->stream.InitStream(
+        &m_resample,
         section,
-        &m_ResamplerCoefs,
+        m_interpolation,
         GetRandomFactor() * pSoundProvider->GetTuning() / (float)m_SampleRate);
 
       const float playback_gain
@@ -462,7 +460,8 @@ void GOSoundEngine::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
 
         // start new section stream in the old sampler
         pSampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
-        pSampler->stream.InitAlignedStream(section, &new_sampler->stream);
+        pSampler->stream.InitAlignedStream(
+          section, m_interpolation, &new_sampler->stream);
         pSampler->p_SoundProvider = pProvider;
         pSampler->time = m_CurrentTime + 1;
 
@@ -601,11 +600,13 @@ void GOSoundEngine::CreateReleaseSampler(GOSoundSampler *handle) {
       if (
         m_ReleaseAlignmentEnabled
         && release_section->SupportsStreamAlignment()) {
-        new_sampler->stream.InitAlignedStream(release_section, &handle->stream);
+        new_sampler->stream.InitAlignedStream(
+          release_section, m_interpolation, &handle->stream);
       } else {
         new_sampler->stream.InitStream(
+          &m_resample,
           release_section,
-          &m_ResamplerCoefs,
+          m_interpolation,
           this_pipe->GetTuning() / (float)m_SampleRate);
       }
       new_sampler->is_release = true;
