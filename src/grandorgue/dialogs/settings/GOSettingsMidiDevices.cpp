@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -137,8 +137,8 @@ void SettingsMidiDevices::RenewDevices(
   for (unsigned l = m_OutDevices.GetDeviceCount(), i = 0; i < l; i++) {
     const GOMidiDeviceConfig &c = m_OutDevices.GetDeviceConf(i);
 
-    m_RecorderDevice->Append(c.m_PhysicalName);
-    if (m_config.MidiRecorderOutputDevice() == c.m_LogicalName)
+    m_RecorderDevice->Append(c.GetPhysicalName());
+    if (m_config.MidiRecorderOutputDevice() == c.GetLogicalName())
       m_RecorderDevice->SetSelection(i + 1);
   }
 }
@@ -166,7 +166,7 @@ void SettingsMidiDevices::OnInOutDeviceClick(wxCommandEvent &event) {
 
   if (devConf.p_OutputDevice)
     for (unsigned i = 1; i < choices.GetCount(); i++)
-      if (choices[i] == devConf.p_OutputDevice->m_PhysicalName)
+      if (choices[i] == devConf.p_OutputDevice->GetPhysicalName())
         selection = i;
 
   int result = wxGetSingleChoiceIndex(
@@ -192,7 +192,7 @@ void SettingsMidiDevices::OnInChannelShiftClick(wxCommandEvent &event) {
       "interface's channel 1 to appear as channel 9,\n"
       "channel 2 to appear as channel 10, and so on."),
     _("Channel offset:"),
-    devConf.m_PhysicalName,
+    devConf.GetPhysicalName(),
     devConf.m_ChannelShift,
     0,
     15,
@@ -219,6 +219,6 @@ bool SettingsMidiDevices::TransferDataFromWindow() {
     m_config.MidiRecorderOutputDevice(wxEmptyString);
   else
     m_config.MidiRecorderOutputDevice(
-      m_OutDevices.GetDeviceConf(iRec - 1).m_LogicalName);
+      m_OutDevices.GetDeviceConf(iRec - 1).GetLogicalName());
   return true;
 }

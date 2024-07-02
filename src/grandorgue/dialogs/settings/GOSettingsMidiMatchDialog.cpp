@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,6 +9,7 @@
 
 #include <wx/app.h>
 #include <wx/msgdlg.h>
+#include <wx/regex.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
@@ -76,10 +77,10 @@ GOSettingsMidiMatchDialog::GOSettingsMidiMatchDialog(
 }
 
 void GOSettingsMidiMatchDialog::FillWith(const GOMidiDeviceConfig &devConf) {
-  m_PhysicalName = devConf.m_PhysicalName;
-  t_PhysicalName->ChangeValue(devConf.m_PhysicalName);
-  t_LogicalName->ChangeValue(devConf.m_LogicalName);
-  t_regex->ChangeValue(devConf.m_RegEx);
+  m_PhysicalName = devConf.GetPhysicalName();
+  t_PhysicalName->ChangeValue(devConf.GetPhysicalName());
+  t_LogicalName->ChangeValue(devConf.GetLogicalName());
+  t_regex->ChangeValue(devConf.GetRegEx());
 }
 
 bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString &errMsg) {
@@ -94,10 +95,10 @@ bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString &errMsg) {
     // Check logicalName for uniqueness
     for (const GOMidiDeviceConfig *pDev : *p_OtherDevices)
       if (
-        pDev->m_PhysicalName != m_PhysicalName
-        && pDev->m_LogicalName == newLogicalName) {
-        errMsg
-          = _("Logical device name is already used by ") + pDev->m_PhysicalName;
+        pDev->GetPhysicalName() != m_PhysicalName
+        && pDev->GetLogicalName() == newLogicalName) {
+        errMsg = _("Logical device name is already used by ")
+          + pDev->GetPhysicalName();
         isValid = false;
         break;
       }
@@ -167,6 +168,6 @@ bool GOSettingsMidiMatchDialog::Validate() {
 }
 
 void GOSettingsMidiMatchDialog::SaveTo(GOMidiDeviceConfig &devConf) {
-  devConf.m_LogicalName = t_LogicalName->GetValue();
+  devConf.SetLogicalName(t_LogicalName->GetValue());
   devConf.SetRegEx(t_regex->GetValue());
 }
