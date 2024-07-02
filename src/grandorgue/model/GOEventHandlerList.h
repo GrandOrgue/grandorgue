@@ -14,6 +14,7 @@
 
 class GOCacheObject;
 class GOCombinationButtonSet;
+class GOControl;
 class GOControlChangedHandler;
 class GOEventHandler;
 class GOMidiConfigurator;
@@ -126,7 +127,7 @@ public:
    * Calls ControlChanged for all ControlChanged handlers
    * @param pControl - the control that state is changed
    */
-  void SendControlChanged(void *pControl);
+  void SendControlChanged(GOControl *pControl);
 
   void Cleanup();
 };

@@ -1158,7 +1158,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
   m_CrescendoDisplay.SetContent(buffer);
 }
 
-void GOSetter::ControlChanged(void *control) {
+void GOSetter::ControlChanged(GOControl *control) {
   if (control == &m_swell)
     Crescendo(m_swell.GetValue() * CRESCENDO_STEPS / 128);
 }

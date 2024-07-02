@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -37,7 +37,7 @@ void GOGUIControl::Layout() {}
 
 void GOGUIControl::Save(GOConfigWriter &cfg) {}
 
-void GOGUIControl::ControlChanged(void *control) {
+void GOGUIControl::ControlChanged(GOControl *control) {
   if (control == m_control)
     if (!m_DrawPending) {
       m_DrawPending = true;

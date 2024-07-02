@@ -88,7 +88,7 @@ private:
 
   void ButtonStateChanged(int id, bool newState) override;
 
-  void ControlChanged(void *control);
+  void ControlChanged(GOControl *control) override;
 
   void PreparePlayback();
 

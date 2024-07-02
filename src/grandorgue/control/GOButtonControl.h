@@ -16,6 +16,7 @@
 #include "midi/GOMidiShortcutReceiver.h"
 #include "sound/GOSoundStateHandler.h"
 
+#include "GOControl.h"
 #include "GOEventHandler.h"
 #include "GOSaveableObject.h"
 
@@ -25,7 +26,8 @@ class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOButtonControl : private GOEventHandler,
+class GOButtonControl : public GOControl,
+                        private GOEventHandler,
                         public GOSaveableObject,
                         public GOSoundStateHandler,
                         public GOMidiConfigurator {
