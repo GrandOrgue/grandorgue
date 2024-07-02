@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -10,7 +10,10 @@ set(DEPLIST)
 # ========================
 
 # Find ImageMagick
-find_program(ImageMagick_convert_EXECUTABLE convert)
+LIST(APPEND CMAKE_IGNORE_PATH "C:\\Windows\\System32") # ignore convert.exe here
+find_program(ImageMagick_convert_EXECUTABLE convert REQUIRED)
+MESSAGE("Found ImageMagick convert at ${ImageMagick_convert_EXECUTABLE}")
+LIST(POP_BACK CMAKE_IGNORE_PATH)
 
 # Setup command to generate GOIcon.ico.
 # That icon is used for two purposes:
