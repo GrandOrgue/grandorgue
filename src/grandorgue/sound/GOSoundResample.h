@@ -249,7 +249,7 @@ public:
      * @return Necessary number of continous input samples for calculating one
      * output sample
      */
-    static constexpr unsigned getVectorLength() { return nPoints; }
+    static constexpr unsigned VECTOR_LENGTH = nPoints;
 
     /**
      * Do actual resampling of an input sample block to the output block of the

@@ -185,7 +185,7 @@ GOHashType GOOrganController::GenerateCacheHash() {
   hash.Update(sizeof(GOSoundingPipe));
   hash.Update(sizeof(GOSoundReleaseAlignTable));
   hash.Update(BLOCK_HISTORY);
-  hash.Update(MAX_READAHEAD);
+  hash.Update(GOSoundAudioSection::getMaxReadAhead());
   hash.Update(SHORT_LOOP_LENGTH);
   GOSoundProvider::UpdateCacheHash(hash);
   hash.Update(sizeof(GOSoundAudioSection::StartSegment));

@@ -11,8 +11,6 @@
 /* Number of samples to match for release alignment. */
 #define BLOCK_HISTORY (2)
 
-/* Maximum of the above values */
-#define MAX_READAHEAD (8)
 /* Minimum remaining loop length after a crossfade */
 #define REMAINING_AFTER_CROSSFADE 256
 

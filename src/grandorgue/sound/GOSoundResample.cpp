@@ -107,10 +107,10 @@ unsigned GOSoundResample::getVectorLength(
 
   switch (interpolation) {
   case GO_LINEAR_INTERPOLATION:
-    res = LinearResampler::getVectorLength();
+    res = LinearResampler::VECTOR_LENGTH;
     break;
   case GO_POLYPHASE_INTERPOLATION:
-    res = PolyphaseResampler::getVectorLength();
+    res = PolyphaseResampler::VECTOR_LENGTH;
   }
   return res;
 }

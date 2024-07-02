@@ -15,8 +15,21 @@ class GOSoundAudioSection;
 
 class GOSoundStream {
 private:
+  /* Maximum number of continous samples required for resampling of one target
+   * sample. The polyphase algorithm requires the longest sample vector */
+  static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::POLYPHASE_POINTS;
+  /* Maximum number of audio chanels in the source samples */
+  static constexpr unsigned MAX_INPUT_CHANNELS = 2;
+
   const GOSoundAudioSection *audio_section;
   const GOSoundResample *resample;
+
+  template <class SampleT, uint8_t nChannels> class StreamPtrWindow;
+
+  template <bool format16, uint8_t nChannels> class StreamCacheWindow;
+
+  template <bool format16, unsigned windowLen, uint8_t nChannels>
+  class StreamCacheReadAheadWindow;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
     float *pOut, unsigned nOutSamples);
@@ -48,6 +61,11 @@ private:
   /* for decoding compressed format */
   DecompressionCache cache;
 
+  /* A ring buffer for resampling of compressed samples. It has double
+   * MAX_WINDOW_LEN length for having a continous memory region of
+   * MAX_WINDOW_LEN samples */
+  int m_ReadAheadBuffer[MAX_INPUT_CHANNELS * MAX_WINDOW_LEN * 2];
+
   /* The block decode functions should provide whatever the normal resolution of
    * the audio is. The fade engine should ensure that this data is always
    * brought into the correct range. */
@@ -64,9 +82,6 @@ private:
   void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
 
 public:
-  const unsigned char *GetPtr() const { return ptr; }
-  DecompressionCache &GetDecompressionCache() { return cache; }
-
   /* Initialize a stream to play this audio section */
   void InitStream(
     const GOSoundResample *pResample,
