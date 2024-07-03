@@ -28,8 +28,8 @@ public:
   GODeviceNamePattern(
     const wxString &logicalName,
     const wxString &regEx = wxEmptyString,
-    const wxString portName = wxEmptyString,
-    const wxString apiName = wxEmptyString,
+    const wxString &portName = wxEmptyString,
+    const wxString &apiName = wxEmptyString,
     const wxString &physicalName = wxEmptyString);
 
   GODeviceNamePattern(const GODeviceNamePattern &src) {

@@ -12,8 +12,8 @@
 GODeviceNamePattern::GODeviceNamePattern(
   const wxString &logicalName,
   const wxString &regEx,
-  const wxString portName,
-  const wxString apiName,
+  const wxString &portName,
+  const wxString &apiName,
   const wxString &physicalName)
   : m_LogicalName(logicalName),
     m_PortName(portName),

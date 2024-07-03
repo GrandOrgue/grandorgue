@@ -30,8 +30,8 @@ public:
   GOMidiDeviceConfig(
     const wxString &logicalName,
     const wxString &regEx = wxEmptyString,
-    const wxString portName = wxEmptyString,
-    const wxString apiName = wxEmptyString,
+    const wxString &portName = wxEmptyString,
+    const wxString &apiName = wxEmptyString,
     bool isEnabled = true,
     const wxString &physicalName = wxEmptyString);
 

@@ -10,8 +10,8 @@
 GOMidiDeviceConfig::GOMidiDeviceConfig(
   const wxString &logicalName,
   const wxString &regEx,
-  const wxString portName,
-  const wxString apiName,
+  const wxString &portName,
+  const wxString &apiName,
   bool isEnabled,
   const wxString &physicalName)
   : GODeviceNamePattern(logicalName, regEx, portName, apiName, physicalName),
