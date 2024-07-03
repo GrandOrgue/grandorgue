@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -767,7 +767,8 @@ bool GOSettingsAudio::TransferDataFromWindow() {
               conf.scale_factors[channel_id][l].right = data->volume;
           }
         if (!found) {
-          GOAudioGroupOutputConfig gconf;
+          GOAudioDeviceConfig::GroupOutput gconf;
+
           gconf.name = data->name;
           gconf.left = -121;
           gconf.right = -121;
