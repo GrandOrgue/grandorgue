@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -72,36 +72,45 @@ void GOSound::OpenSound() {
   assert(!m_open);
   assert(m_AudioOutputs.size() == 0);
 
-  unsigned audio_group_count = m_config.GetAudioGroups().size();
-  std::vector<GOAudioDeviceConfig> audio_config
+  const unsigned audio_group_count = m_config.GetAudioGroups().size();
+  const std::vector<GOAudioDeviceConfig> &audio_config
     = m_config.GetAudioDeviceConfig();
+  const unsigned audioDeviceCount = audio_config.size();
   std::vector<GOAudioOutputConfiguration> engine_config;
 
   m_AudioOutputs.resize(audio_config.size());
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
     m_AudioOutputs[i].port = NULL;
-  engine_config.resize(audio_config.size());
-  for (unsigned i = 0; i < engine_config.size(); i++) {
-    engine_config[i].channels = audio_config[i].channels;
-    engine_config[i].scale_factors.resize(engine_config[i].channels);
-    for (unsigned j = 0; j < engine_config[i].channels; j++) {
-      engine_config[i].scale_factors[j].resize(audio_group_count * 2);
-      for (unsigned k = 0; k < audio_group_count * 2; k++)
-        engine_config[i].scale_factors[j][k] = -121;
+  engine_config.resize(audioDeviceCount);
+  for (unsigned i = 0; i < audioDeviceCount; i++) {
+    const GOAudioDeviceConfig &deviceConfig = audio_config[i];
+    const auto &deviceOutputs = deviceConfig.GetChannelOututs();
+    GOAudioOutputConfiguration &engineConfig = engine_config[i];
 
-      if (j >= audio_config[i].scale_factors.size())
+    engineConfig.channels = deviceConfig.GetChannels();
+    engineConfig.scale_factors.resize(engineConfig.channels);
+    for (unsigned j = 0; j < engineConfig.channels; j++) {
+      std::vector<float> &scaleFactors = engineConfig.scale_factors[j];
+
+      scaleFactors.resize(audio_group_count * 2);
+      std::fill(
+        scaleFactors.begin(),
+        scaleFactors.end(),
+        GOAudioDeviceConfig::MUTE_VOLUME);
+
+      if (j >= deviceOutputs.size())
         continue;
-      for (unsigned k = 0; k < audio_config[i].scale_factors[j].size(); k++) {
-        int id = m_config.GetStrictAudioGroupId(
-          audio_config[i].scale_factors[j][k].name);
-        if (id == -1)
-          continue;
-        if (audio_config[i].scale_factors[j][k].left >= -120)
-          engine_config[i].scale_factors[j][id * 2]
-            = audio_config[i].scale_factors[j][k].left;
-        if (audio_config[i].scale_factors[j][k].right >= -120)
-          engine_config[i].scale_factors[j][id * 2 + 1]
-            = audio_config[i].scale_factors[j][k].right;
+
+      const auto &channelOutputs = deviceOutputs[j];
+
+      for (unsigned k = 0; k < channelOutputs.size(); k++) {
+        const auto &groupOutput = channelOutputs[k];
+        int id = m_config.GetStrictAudioGroupId(groupOutput.GetName());
+
+        if (id >= 0) {
+          scaleFactors[id * 2] = groupOutput.GetLeft();
+          scaleFactors[id * 2 + 1] = groupOutput.GetRight();
+        }
       }
     }
   }
@@ -128,11 +137,12 @@ void GOSound::OpenSound() {
 
   try {
     for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-      wxString name = audio_config[i].name;
+      const GOAudioDeviceConfig &deviceConfig = audio_config[i];
+      wxString name = deviceConfig.GetName();
 
       const GOPortsConfig &portsConfig(m_config.GetSoundPortsConfig());
 
-      if (name == wxEmptyString)
+      if (name.IsEmpty())
         name = GetDefaultAudioDevice(portsConfig);
 
       m_AudioOutputs[i].port
@@ -143,10 +153,10 @@ void GOSound::OpenSound() {
           name.c_str());
 
       m_AudioOutputs[i].port->Init(
-        audio_config[i].channels,
+        deviceConfig.GetChannels(),
         GetEngine().GetSampleRate(),
         m_SamplesPerBuffer,
-        audio_config[i].desired_latency,
+        deviceConfig.GetDesiredLatency(),
         i);
     }
 

@@ -55,6 +55,7 @@ combinations/model/GODivisionalCombination.cpp
 combinations/model/GOGeneralCombination.cpp
 combinations/GODivisionalSetter.cpp
 combinations/GOSetter.cpp
+config/GOAudioDeviceConfig.cpp
 config/GOConfig.cpp
 config/GODeviceNamePattern.cpp
 config/GOMidiDeviceConfig.cpp
