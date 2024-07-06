@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -77,7 +77,7 @@ private:
   wxTreeItemId AddDeviceNode(wxString name, unsigned latency);
   wxTreeItemId AddChannelNode(const wxTreeItemId &audio, unsigned channel);
   wxTreeItemId AddGroupNode(
-    const wxTreeItemId &channel, const wxString &name, bool left);
+    const wxTreeItemId &channel, const wxString &name, bool left, float volume);
   void UpdateDevice(const wxTreeItemId &dev);
   void UpdateVolume(const wxTreeItemId &group, float volume);
   void UpdateButtons();

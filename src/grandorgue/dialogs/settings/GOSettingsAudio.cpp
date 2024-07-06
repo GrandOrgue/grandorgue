@@ -338,7 +338,7 @@ wxTreeItemId GOSettingsAudio::AddChannelNode(
 }
 
 wxTreeItemId GOSettingsAudio::AddGroupNode(
-  const wxTreeItemId &channel, const wxString &name, bool left) {
+  const wxTreeItemId &channel, const wxString &name, bool left, float volume) {
   wxTreeItemId current;
   current = GetGroupNode(channel, name, left);
   if (current.IsOk())
@@ -347,7 +347,7 @@ wxTreeItemId GOSettingsAudio::AddGroupNode(
     channel, name, -1, -1, new AudioItemData(name, left, -121));
   m_AudioOutput->Expand(current);
   m_AudioOutput->Expand(channel);
-  UpdateVolume(current, -121);
+  UpdateVolume(current, volume);
   return current;
 }
 
@@ -535,9 +535,7 @@ void GOSettingsAudio::OnOutputAdd(wxCommandEvent &event) {
       _("Add new audio group"), _("New audio group"), names, this);
     if (index == -1)
       return;
-    wxTreeItemId id
-      = AddGroupNode(selection, groups[index].first, groups[index].second);
-    UpdateVolume(id, 0);
+    AddGroupNode(selection, groups[index].first, groups[index].second, 0);
   } else if (data && data->type == AudioItemData::ROOT_NODE) {
     int index;
     wxArrayString devs;
@@ -688,7 +686,7 @@ void GOSettingsAudio::OnOutputDefault(wxCommandEvent &event) {
     == wxNO)
     return;
   wxTreeItemId root = m_AudioOutput->GetRootItem();
-  wxTreeItemId audio, channel, group;
+  wxTreeItemId audio, channel;
   wxTreeItemIdValue i;
   wxString dev_name = wxEmptyString;
   audio = m_AudioOutput->GetFirstChild(root, i);
@@ -702,17 +700,13 @@ void GOSettingsAudio::OnOutputDefault(wxCommandEvent &event) {
   audio = AddDeviceNode(dev_name);
   channel = AddChannelNode(audio, 0);
 
-  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++) {
-    group = AddGroupNode(channel, m_AudioGroups->GetString(i), true);
-    UpdateVolume(group, 0);
-  }
+  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++)
+    AddGroupNode(channel, m_AudioGroups->GetString(i), true, 0);
 
   channel = AddChannelNode(audio, 1);
 
-  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++) {
-    group = AddGroupNode(channel, m_AudioGroups->GetString(i), false);
-    UpdateVolume(group, 0);
-  }
+  for (unsigned l = m_AudioGroups->GetCount(), i = 0; i < l; i++)
+    AddGroupNode(channel, m_AudioGroups->GetString(i), false, 0);
 
   m_AudioOutput->ExpandAll();
   UpdateButtons();
