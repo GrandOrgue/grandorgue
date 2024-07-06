@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -224,18 +224,18 @@ bool GOSettingsAudio::TransferDataToWindow() {
       if (j >= audio_config[i].scale_factors.size())
         continue;
       for (unsigned k = 0; k < audio_config[i].scale_factors[j].size(); k++) {
-        if (audio_config[i].scale_factors[j][k].left >= -120) {
-          wxTreeItemId group;
-          group = AddGroupNode(
-            channel, audio_config[i].scale_factors[j][k].name, true);
-          UpdateVolume(group, audio_config[i].scale_factors[j][k].left);
-        }
-        if (audio_config[i].scale_factors[j][k].right >= -120) {
-          wxTreeItemId group;
-          group = AddGroupNode(
-            channel, audio_config[i].scale_factors[j][k].name, false);
-          UpdateVolume(group, audio_config[i].scale_factors[j][k].right);
-        }
+        if (audio_config[i].scale_factors[j][k].left >= -120)
+          AddGroupNode(
+            channel,
+            audio_config[i].scale_factors[j][k].name,
+            true,
+            audio_config[i].scale_factors[j][k].left);
+        if (audio_config[i].scale_factors[j][k].right >= -120)
+          AddGroupNode(
+            channel,
+            audio_config[i].scale_factors[j][k].name,
+            false,
+            audio_config[i].scale_factors[j][k].right);
       }
     }
   }
