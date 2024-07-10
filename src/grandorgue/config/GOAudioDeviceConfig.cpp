@@ -17,7 +17,9 @@ const wxString GOAudioDeviceConfig::WX_AUDIO_DEVICES = wxT("AudioDevices");
 
 GOAudioDeviceConfig::GOAudioDeviceConfig(
   const wxString &name, unsigned desiredLatency, uint8_t channels)
-  : m_name(name), m_DesiredLatency(desiredLatency), m_channels(channels) {
+  : GODeviceNamePattern(name),
+    m_DesiredLatency(desiredLatency),
+    m_channels(channels) {
   m_ChannelOutputs.resize(channels);
 }
 
@@ -48,7 +50,7 @@ static const wxString WX_RIGHT = wxT("Right");
 void GOAudioDeviceConfig::Load(GOConfigReader &cfg, unsigned deviceN) {
   const wxString p0 = wxString::Format(WX_DVICE_03D_FMT, deviceN);
 
-  m_name = cfg.ReadString(CMBSetting, WX_AUDIO_DEVICES, p0 + WX_NAME);
+  LoadNamePattern(cfg, WX_AUDIO_DEVICES, p0, WX_NAME);
   m_DesiredLatency = cfg.ReadInteger(
     CMBSetting,
     WX_AUDIO_DEVICES,
@@ -86,7 +88,7 @@ void GOAudioDeviceConfig::Load(GOConfigReader &cfg, unsigned deviceN) {
 void GOAudioDeviceConfig::Save(GOConfigWriter &cfg, unsigned deviceN) const {
   const wxString p0 = wxString::Format(WX_DVICE_03D_FMT, deviceN);
 
-  cfg.WriteString(WX_AUDIO_DEVICES, p0 + WX_NAME, m_name);
+  SaveNamePattern(cfg, WX_AUDIO_DEVICES, p0, WX_NAME);
   cfg.WriteInteger(WX_AUDIO_DEVICES, p0 + WX_CHANNEL_COUNT, m_channels);
   cfg.WriteInteger(WX_AUDIO_DEVICES, p0 + WX_LATENCY, m_DesiredLatency);
   for (uint8_t j = 0; j < m_channels; j++) {

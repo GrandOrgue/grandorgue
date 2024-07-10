@@ -13,10 +13,12 @@
 
 #include <wx/string.h>
 
+#include "GODeviceNamePattern.h"
+
 class GOConfigReader;
 class GOConfigWriter;
 
-class GOAudioDeviceConfig {
+class GOAudioDeviceConfig : public GODeviceNamePattern {
 public:
   // volume values in dB
   static constexpr float MUTE_VOLUME = -121.0f;
@@ -51,7 +53,6 @@ public:
 
 private:
   std::vector<std::vector<GroupOutput>> m_ChannelOutputs;
-  wxString m_name;
   unsigned m_DesiredLatency;
   uint8_t m_channels;
 
@@ -69,7 +70,6 @@ public:
   // Creates the config with default settings
   GOAudioDeviceConfig(const std::vector<wxString> &audioGroups);
 
-  const wxString &GetName() const { return m_name; }
   unsigned GetDesiredLatency() const { return m_DesiredLatency; }
   uint8_t GetChannels() const { return m_channels; }
   const std::vector<std::vector<GroupOutput>> &GetChannelOututs() const {

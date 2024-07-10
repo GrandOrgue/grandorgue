@@ -217,8 +217,8 @@ bool GOSettingsAudio::TransferDataToWindow() {
   for (const auto &deviceConfig : m_config.GetAudioDeviceConfig()) {
     const auto &deviceOutputs = deviceConfig.GetChannelOututs();
     const unsigned deviceOutputsSize = deviceOutputs.size();
-    wxTreeItemId audio
-      = AddDeviceNode(deviceConfig.GetName(), deviceConfig.GetDesiredLatency());
+    wxTreeItemId audio = AddDeviceNode(
+      deviceConfig.GetLogicalName(), deviceConfig.GetDesiredLatency());
 
     for (unsigned l = deviceConfig.GetChannels(), j = 0; j < l; j++) {
       wxTreeItemId channel = AddChannelNode(audio, j);

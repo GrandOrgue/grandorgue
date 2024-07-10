@@ -138,7 +138,7 @@ void GOSound::OpenSound() {
   try {
     for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
       const GOAudioDeviceConfig &deviceConfig = audio_config[i];
-      wxString name = deviceConfig.GetName();
+      wxString name = deviceConfig.GetLogicalName();
 
       const GOPortsConfig &portsConfig(m_config.GetSoundPortsConfig());
 
