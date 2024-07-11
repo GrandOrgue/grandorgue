@@ -207,9 +207,9 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
   m_device->Append(_("Any device"));
   for (GOMidiDeviceConfig *pDevConf : m_MidiIn)
     if (
-      portsConfig.IsEnabled(pDevConf->m_PortName, pDevConf->m_ApiName)
+      portsConfig.IsEnabled(pDevConf->GetPortName(), pDevConf->GetApiName())
       && pDevConf->m_IsEnabled)
-      m_device->Append(pDevConf->m_LogicalName);
+      m_device->Append(pDevConf->GetLogicalName());
 
   m_channel->Append(_("Any channel"));
   for (unsigned int i = 1; i <= 16; i++)

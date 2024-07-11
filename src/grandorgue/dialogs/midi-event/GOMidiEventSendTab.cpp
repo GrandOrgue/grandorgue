@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -194,9 +194,9 @@ GOMidiEventSendTab::GOMidiEventSendTab(
   m_device->Append(_("Any device"));
   for (const GOMidiDeviceConfig *pDevConf : m_MidiOut)
     if (
-      portsConfig.IsEnabled(pDevConf->m_PortName, pDevConf->m_ApiName)
+      portsConfig.IsEnabled(pDevConf->GetPortName(), pDevConf->GetApiName())
       && pDevConf->m_IsEnabled)
-      m_device->Append(pDevConf->m_LogicalName);
+      m_device->Append(pDevConf->GetLogicalName());
 
   for (unsigned int i = 1; i <= 16; i++)
     m_channel->Append(wxString::Format(wxT("%d"), i));
@@ -482,8 +482,9 @@ GOMidiSenderEventPattern GOMidiEventSendTab::CopyEvent() {
     : NULL;
   const GOMidiDeviceConfig *pOutDev = pInDev ? pInDev->p_OutputDevice : NULL;
 
-  e.deviceId
-    = pOutDev ? m_MidiMap.GetDeviceIdByLogicalName(pOutDev->m_LogicalName) : 0;
+  e.deviceId = pOutDev
+    ? m_MidiMap.GetDeviceIdByLogicalName(pOutDev->GetLogicalName())
+    : 0;
 
   e.type = MIDI_S_NONE;
   e.channel = 1;
