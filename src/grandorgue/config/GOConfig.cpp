@@ -343,7 +343,7 @@ void GOConfig::Load() {
         unsigned group_count = cfg.ReadInteger(
           CMBSetting, wxT("AudioDevices"), prefix + wxT("GroupCount"), 0, 200);
         for (unsigned k = 0; k < group_count; k++) {
-          GOAudioGroupOutputConfig group;
+          GOAudioDeviceConfig::GroupOutput group;
           wxString p = prefix + wxString::Format(wxT("Group%03d"), k + 1);
 
           group.name
@@ -405,7 +405,7 @@ void GOConfig::Load() {
     conf.scale_factors.resize(conf.channels);
     conf.desired_latency = GetDefaultLatency();
     for (unsigned k = 0; k < m_AudioGroups.size(); k++) {
-      GOAudioGroupOutputConfig group;
+      GOAudioDeviceConfig::GroupOutput group;
       group.name = m_AudioGroups[k];
 
       group.left = 0.0f;
