@@ -14,7 +14,6 @@
 #include "GOBool3.h"
 #include "GOInt.h"
 #include "GOSoundCompress.h"
-#include "GOSoundDefs.h"
 #include "GOSoundResample.h"
 #include "GOWave.h"
 
@@ -29,6 +28,8 @@ class GOSampleStatistic;
 
 class GOSoundAudioSection {
 public:
+  static const unsigned getMaxReadAhead();
+
   struct StartSegment {
     /* Sample offset into entire audio section where data begins. */
     unsigned start_offset;
