@@ -7,6 +7,8 @@
 
 #include "GOSoundStream.h"
 
+#include <wx/log.h>
+
 #include "GOSoundAudioSection.h"
 #include "GOSoundReleaseAlignTable.h"
 
@@ -370,10 +372,10 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       // switch to the start of the loop
       const GOSoundAudioSection::StartSegment *next
         = &audio_section->GetStartSegment(m_NextStartSegmentIndex);
+      unsigned newPos = next->start_offset + (pos - end_pos);
 
       // switch to the start of the loop
       ptr = audio_section->GetData();
-      m_ResamplingPos.SetIndex(next->start_offset + (pos - end_pos));
 
       /* Find a suitable end segment */
       const unsigned next_end_segment_index
@@ -382,12 +384,26 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
         = &audio_section->GetEndSegment(next_end_segment_index);
 
       assert(next_end->end_pos >= next->start_offset);
+
       cache = next->cache;
       cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
       transition_position = next_end->transition_offset;
       end_pos = next_end->end_pos;
       end_ptr = next_end->end_ptr;
-      m_NextStartSegmentIndex = next_end->next_start_segment_index;
+
+      m_ResamplingPos.SetIndex(newPos);
+      if (newPos < end_pos) // valid loop
+        m_NextStartSegmentIndex = next_end->next_start_segment_index;
+      else { // invalid loop. Using it might cause infinite iterations here
+        wxLogError(
+          "GOSoundStream::ReadBlock: Breaking invalid loop: start_offset=%d, "
+          "end_pos=%d, new_pos=%d",
+          next_end->end_pos,
+          next->start_offset,
+          newPos);
+        // force exit at the next iteration
+        m_NextStartSegmentIndex = -1;
+      }
     } else { // no loop available
       // fill the buffer with zeros
       float *p = buffer;

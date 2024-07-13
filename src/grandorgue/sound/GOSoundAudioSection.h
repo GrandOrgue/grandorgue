@@ -41,7 +41,7 @@ public:
    * This segment contains copy of samples from a loop end and then from the
    * loop start. It is necessary for read-ahead when resampling
    */
-  struct EndSegment {
+  struct EndSegmentDescription {
     /* A position after the last copied sample in the end segment.
      * An end segment has more MAX_READAHEAD samples after end_pos:
      *     - A loop end segment contains a copy of samples from the loop start
@@ -53,19 +53,21 @@ public:
      * than end_pos). */
     unsigned transition_offset;
 
-    /* Uncompressed ending data blob. This data must start before
-     * sample_offset*/
-    unsigned char *end_data;
-
-    // A virtual pointer to end_data. end_data has transition_offset to end_ptr
-    unsigned char *end_ptr;
-
     // The size of the end data in bytes
     unsigned end_size;
 
     /* Index of the next section segment to be played (-1 indicates the
      * end of the blob. */
     int next_start_segment_index;
+  };
+
+  struct EndSegment : public EndSegmentDescription {
+    /* Uncompressed ending data blob. This data must start before
+     * sample_offset*/
+    unsigned char *end_data;
+
+    // A virtual pointer to end_data. end_data has transition_offset to end_ptr
+    unsigned char *end_ptr;
   };
 
 private:

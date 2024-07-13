@@ -113,11 +113,8 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
     EndSegment s;
 
     if (!cache.Read(
-          &s.next_start_segment_index, sizeof(s.next_start_segment_index)))
-      return false;
-    if (!cache.Read(&s.transition_offset, sizeof(s.transition_offset)))
-      return false;
-    if (!cache.Read(&s.end_size, sizeof(s.end_size)))
+          static_cast<EndSegmentDescription *>(&s),
+          sizeof(EndSegmentDescription)))
       return false;
     s.end_data = (unsigned char *)cache.ReadBlock(s.end_size);
     if (!s.end_data)
@@ -183,16 +180,13 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&temp, sizeof(temp)))
     return false;
   for (unsigned i = 0; i < temp; i++) {
-    const EndSegment *s = &m_EndSegments[i];
+    const EndSegment &s = m_EndSegments[i];
 
     if (!cache.Write(
-          &s->next_start_segment_index, sizeof(s->next_start_segment_index)))
+          static_cast<const EndSegmentDescription *>(&s),
+          sizeof(EndSegmentDescription)))
       return false;
-    if (!cache.Write(&s->transition_offset, sizeof(s->transition_offset)))
-      return false;
-    if (!cache.Write(&s->end_size, sizeof(s->end_size)))
-      return false;
-    if (!cache.WriteBlock(s->end_data, s->end_size))
+    if (!cache.WriteBlock(s.end_data, s.end_size))
       return false;
   }
 
