@@ -12,6 +12,7 @@ class GOCombinationElement {
 public:
   virtual bool GetCombinationState() const = 0;
   virtual void SetCombination(bool on) = 0;
+  virtual bool IsControlledByUser() const = 0;
 };
 
 #endif

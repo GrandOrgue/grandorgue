@@ -34,6 +34,8 @@ private:
   std::vector<GODrawstop *> m_ControlledDrawstops;
   std::vector<GODrawstop *> m_ControllingDrawstops;
 
+  bool IsControlledByUser() const override { return !IsReadOnly(); }
+
 protected:
   /*
    * m_IsToStoreInDivisional and m_IsToStoreInGeneral control whether the

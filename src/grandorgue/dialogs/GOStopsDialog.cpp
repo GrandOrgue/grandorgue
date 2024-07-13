@@ -106,7 +106,9 @@ GOStopsDialog::GOStopsDialog(
       } break;
       }
 
-      if (sizerIndex >= 0 && sizerIndex <= (int)globalSectionN && pName) {
+      if (
+        sizerIndex >= 0 && sizerIndex <= (int)globalSectionN && pName
+        && e.control->IsControlledByUser()) {
         wxCheckBox *pCheckBox = new wxCheckBox(this, ID_CHECKBOX, *pName);
 
         pCheckBox->SetClientData(e.control);
