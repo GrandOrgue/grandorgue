@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-04-21 21:55+0200\n"
-"PO-Revision-Date: 2023-04-21 23:03+0200\n"
+"POT-Creation-Date: 2024-07-15 16:41+0200\n"
+"PO-Revision-Date: 2024-07-15 18:39+0200\n"
 "Last-Translator: Lars Palo <larspalo@yahoo.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -201,6 +201,9 @@ msgstr "&Cache"
 msgid "&Channel:"
 msgstr "&Kanal:"
 
+msgid "&Check for updates"
+msgstr "Sök efter uppdateringar"
+
 msgid "&Clear"
 msgstr "Rensa"
 
@@ -242,6 +245,9 @@ msgstr "&Enhet:"
 
 msgid "&Down"
 msgstr "Ne&d"
+
+msgid "&Download"
+msgstr "Ladda ne&d"
 
 msgid "&Enhancements"
 msgstr "&Förbättringar"
@@ -378,6 +384,9 @@ msgstr "&Spara\tCtrl+S"
 msgid "&Shortcut:"
 msgstr "&Genväg:"
 
+msgid "&Show changelog"
+msgstr "Vi&sa ändringslogg"
+
 msgid "&Sound Engine"
 msgstr "&Ljudmotor"
 
@@ -413,6 +422,12 @@ msgstr "&Upp"
 
 msgid "&Update Cache..."
 msgstr "&Uppdatera cache..."
+
+msgid "&Update available!"
+msgstr "&Uppdatering tillgänglig!"
+
+msgid "&Updates"
+msgstr "&Uppdateringar"
 
 msgid "&Upper PGM number:"
 msgstr "&Övre PGM nummer:"
@@ -573,6 +588,12 @@ msgstr "9"
 msgid "9x Note"
 msgstr "9x Note"
 
+msgid "9x Note Fixed Off"
+msgstr "9x Note Fixed Off"
+
+msgid "9x Note Fixed On"
+msgstr "9x Note Fixed On"
+
 msgid "9x Note Off"
 msgstr "9x Note Off"
 
@@ -636,10 +657,6 @@ msgstr "<Ogiltig SMPL chunk in"
 
 msgid "<no file loaded>"
 msgstr "<ingen fil laddad>"
-
-#, c-format
-msgid "<unknown> %d"
-msgstr "<okänd> %d"
 
 msgid ">"
 msgstr ">"
@@ -899,8 +916,8 @@ msgid "Cache file had diffent hash bypassing cache."
 msgstr "Cache-fil hade annan hash, förbigår cache."
 
 #, c-format
-msgid "Cache load failure: Failed to read %s from cache: %s"
-msgstr "Cacheläsningsfel: Misslyckades att läsa %s från cache: %s"
+msgid "Cache load failure: %s"
+msgstr "Laddning av cache misslyckades: %s"
 
 #, c-format
 msgid ""
@@ -919,6 +936,9 @@ msgstr "Ändra ljudenhet"
 msgid "Change audio group"
 msgstr "Ändra ljudgrupp"
 
+msgid "Changelog:"
+msgstr "Ändringslogg:"
+
 #, c-format
 msgid "Channel %d"
 msgstr "Kanal %d"
@@ -935,18 +955,15 @@ msgstr "Chaumont"
 msgid "Check ODF for HW1-compatibility"
 msgstr "Kontrollera ODF för HW1 kompatibilitet"
 
+msgid "Check for updates at startup"
+msgstr "Sök efter uppdateringar vid start"
+
 msgid "Check on startup"
 msgstr "Kontrollera vid start"
-
-msgid "Church"
-msgstr "Kyrka"
 
 #, c-format
 msgid "ChurchName missing in organ definition %s"
 msgstr "ChurchName saknas i orgeldefinition %s"
-
-msgid "Collapse tree"
-msgstr "Fäll ihop trädet"
 
 msgid "Combination Setter"
 msgstr "Fria kombinationer"
@@ -972,12 +989,12 @@ msgstr "Konfigurationspost utan grupp på rad %d"
 
 msgid ""
 "Copyright 2006 Milan Digital Audio LLC\n"
-"Copyright 2009-2021 GrandOrgue contributors\n"
+"Copyright 2009-2024 GrandOrgue contributors\n"
 "\n"
 "This software comes with no warranty"
 msgstr ""
 "Copyright 2006 Milan Digital Audio LLC\n"
-"Copyright 2009-2021 GrandOrgue bidragsgivare\n"
+"Copyright 2009-2024 GrandOrgue bidragsgivare\n"
 "\n"
 "Denna mjukvara levereras utan garantier"
 
@@ -1001,6 +1018,9 @@ msgstr "Kunde inte skriva till '%s'"
 
 msgid "Couperin"
 msgstr "Couperin"
+
+msgid "Couple Through"
+msgstr "Koppla genomgående"
 
 msgid "Coupler"
 msgstr "Koppel"
@@ -1058,9 +1078,6 @@ msgstr "Förvald"
 msgid "Default audio group"
 msgstr "Förvald ljudgrupp"
 
-msgid "Default for All"
-msgstr "Förvald för alla"
-
 msgid "Delay (ms):"
 msgstr "Fördröjning (ms):"
 
@@ -1110,6 +1127,9 @@ msgstr "Direkt Ljud:"
 msgid "Disabled"
 msgstr "Avaktiverad"
 
+msgid "Discard"
+msgstr "Förkasta"
+
 msgid "Distribute audio groups"
 msgstr "Fördela ljudgrupper"
 
@@ -1128,6 +1148,9 @@ msgstr "Vill du ta bort orglarna%s%s?"
 
 msgid "Don't load"
 msgstr "Ladda inte"
+
+msgid "Download"
+msgstr "Ladda ned"
 
 msgid "Drawstop"
 msgstr "Registerandrag"
@@ -1218,10 +1241,6 @@ msgstr "Fel"
 msgid "Error decoding a track"
 msgstr "Fel vid avkodning av spår"
 
-#, c-format
-msgid "Error while loading samples for rank %s pipe %s: %s"
-msgstr "Fel vid laddning av samplingar för register %s pipa %s: %s"
-
 msgid "Event-&No"
 msgstr "Händelse-&Nr"
 
@@ -1234,6 +1253,9 @@ msgstr "Överflödig data i huvudfolder"
 
 msgid "Excess information in zip64 extendend information record"
 msgstr "Överflödig information i zip64 utökad informationspost"
+
+msgid "Exit GrandOrgue"
+msgstr "Avsluta GrandOrgue"
 
 msgid "Export &Combinations"
 msgstr "Exportera &kombinationer"
@@ -1327,6 +1349,10 @@ msgid "Failed creating organ package file %s"
 msgstr "Misslyckades att skapa orgelpaketfil %s"
 
 #, c-format
+msgid "Failed to check for updates: %s"
+msgstr "Misslyckades att söka efter uppdateringar: %s"
+
+#, c-format
 msgid "Failed to create directory '%s'"
 msgstr "Misslyckades skapa mapp '%s'"
 
@@ -1383,6 +1409,10 @@ msgid "Failed to open '%s'"
 msgstr "Misslyckades att öppna '%s'"
 
 #, c-format
+msgid "Failed to open '%s': %s"
+msgstr "Misslyckades att öppna '%s': %s"
+
+#, c-format
 msgid "Failed to open archive %s"
 msgstr "Misslyckades att öppna arkiv %s"
 
@@ -1421,6 +1451,10 @@ msgstr "Misslyckades att läsa %s från orgelpaket"
 #, c-format
 msgid "Failed to read '%s'"
 msgstr "Misslyckades att läsa '%s'"
+
+#, c-format
+msgid "Failed to read '%s': %s"
+msgstr "Misslyckades att läsa '%s': %s"
 
 msgid "Failed to read cache directory"
 msgstr "Misslyckades läsa cachekatalog"
@@ -1879,6 +1913,9 @@ msgstr "Ladda fil"
 msgid "Load first favorit organ at startup"
 msgstr "Ladda första orgelfavorit vid uppstart"
 
+msgid "Load just GUI. Not to load any sound samples"
+msgstr "Ladda endast GUI. Laddar inga ljudsamplingar"
+
 msgid "Load last used organ at startup"
 msgstr "Ladda sist använda orgel vid uppstart"
 
@@ -1905,9 +1942,6 @@ msgstr "Inläsning av loopar:"
 
 msgid "Loop too short for a cross fade"
 msgstr "Loop alltför kort för en övertoning"
-
-msgid "Loop too short for crossfade"
-msgstr "Loop alltför kort för övertoning"
 
 msgid "Lossless compression"
 msgstr "Förlustfri komprimering"
@@ -2009,6 +2043,14 @@ msgstr "Felaktigt utformat MIDI huvud"
 #, c-format
 msgid "Malformed wave file '%s'. Format chunk must precede data chunk."
 msgstr "Missformad wave fil '%s'. Format bit måste föregå data bit."
+
+#, c-format
+msgid ""
+"Malformed wave file '%s'. The chunk '%4s' at %lu with the size 8 + %lu ends "
+"after the end of file %lu"
+msgstr ""
+"Felaktigt utformad wave fil '%s'. Chunk '%4s' vid %lu med storlek 8 + %lu "
+"slutar efter filslutet %lu"
 
 msgid "Malformed zip64 end record"
 msgstr "Felaktigt utformat zip64 slutpost"
@@ -2236,6 +2278,13 @@ msgstr "Ny ljudgrupp"
 msgid "New audio group name"
 msgstr "Nytt ljudgruppsnamn"
 
+msgid "New release available"
+msgstr "Ny utgåva är tillgänglig"
+
+#, c-format
+msgid "New version: %s"
+msgstr "Ny version: %s"
+
 msgid "Next"
 msgstr "Nästa"
 
@@ -2297,6 +2346,9 @@ msgstr ""
 msgid "No title specified"
 msgstr "Ingen titel är angiven"
 
+msgid "No valid loops exist in the file"
+msgstr "Ingen giltig loop finns i filen"
+
 #, c-format
 msgid "Non-empty directory '%s'"
 msgstr "Ej tömd mapp '%s'"
@@ -2310,9 +2362,6 @@ msgstr "Norden"
 #, c-format
 msgid "Not a RIFF file: %s"
 msgstr "Inte en RIFF fil: %s"
-
-msgid "Not enough samples for a crossfade"
-msgstr "Inte tillräckligt med samplar för en övertoning"
 
 #, c-format
 msgid "Not recognized MIDI chunk at offset %d"
@@ -2453,8 +2502,16 @@ msgid "Out of range value at section '%s' entry '%s': %f"
 msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %f"
 
 #, c-format
+msgid "Out of range value at section '%s' entry '%s': %f. Assumed %f."
+msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %f. Antog %f."
+
+#, c-format
 msgid "Out of range value at section '%s' entry '%s': %ld"
 msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %ld"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %ld. Assumed %d"
+msgstr "Värde utanför tillåtna gränser i sektion '%s' post '%s': %ld. Antog %d"
 
 #, c-format
 msgid "Output device %s not found - no sound output will occur"
@@ -2530,8 +2587,8 @@ msgstr "Piporgel simulator"
 msgid "Piston"
 msgstr "Pistong"
 
-msgid "Please apply changes first"
-msgstr "Vänligen verkställ ändringar först"
+msgid "Please apply or discard changes first"
+msgstr "Vänligen verkställ eller förkasta ändringar först"
 
 msgid "Please enter a volume between -120 and 40 dB"
 msgstr "Vänligen ange ny volym mellan -120 och 40 dB"
@@ -2565,12 +2622,6 @@ msgstr "Vänligen växla den igen (till inaktivt läge, om möjligt)"
 
 msgid "Polyphase"
 msgstr "Polyfas"
-
-msgid ""
-"Polyphase is not supported with lossless compression - falling back to "
-"linear."
-msgstr ""
-"Polyfas stöds ej med förlustfri komprimering - faller tillbaka till linjär."
 
 msgid "Polyphony"
 msgstr "Polyfoni"
@@ -2747,11 +2798,11 @@ msgstr "Ändrade namn på %s till %s"
 msgid "Resampling failed"
 msgstr "Omsampling misslyckades"
 
-msgid "Reset"
-msgstr "Återställ"
-
 msgid "Reset to &Defaults"
 msgstr "Återgå till stan&dardinställningar"
+
+msgid "Resetting to defaults"
+msgstr "Återgå till standardinställningar"
 
 msgid "Reverb"
 msgstr "Reverb"
@@ -2779,6 +2830,10 @@ msgstr "Rousseaus temperatur (1768)"
 #, c-format
 msgid "RtAudio error: %s"
 msgstr "RtAudio fel: %s"
+
+#, c-format
+msgid "RtAudio warning: %s"
+msgstr "RtAudio varning: %s"
 
 #, c-format
 msgid "RtMidi error: %s"
@@ -2986,6 +3041,17 @@ msgstr ""
 "\n"
 "Vill du ladda om samplingssamlingen nu?"
 
+msgid ""
+"Some selected objects have subobjects.\n"
+"Do you want the subobjects also to be reset to defaults?\n"
+"Note: resetting to defaults cannot be undone.\n"
+"Note: resetting all subobjects may take some time."
+msgstr ""
+"Vissa valda objekt har subobjekt.\n"
+"Vill du att subobjekten också ska återgå till förinställda värden?\n"
+"Notera: återställning till förinställda värden kan inte ångras.\n"
+"Notera: återställning av alla subobjekt kan ta lite tid."
+
 msgid "Some tracks are missing"
 msgstr "Några spår saknas"
 
@@ -3110,6 +3176,17 @@ msgstr ""
 "%s finns i paketmappen och kommer att registreras automatiskt\n"
 "vid nästa GrandOrgue omstart. Vill du verkligen avregistrera dem?"
 
+#, c-format
+msgid "The loop %u is ignored: it is too short for crossfade"
+msgstr "Loop %u ignoreras: den är alltför kort för övertoning"
+
+#, c-format
+msgid ""
+"The loop %u is ignored: not enough samples for crossfade before it's start"
+msgstr ""
+"Loop %u ignoreras: inte tillräckligt antal samplingar för en övertoning "
+"innan dess start"
+
 msgid "The organ package has been registered"
 msgstr "Orgelpaketet har registrerats"
 
@@ -3119,6 +3196,10 @@ msgid ""
 msgstr ""
 "Orgelinställningarna har ändrats.\n"
 "Vill du spara ändringarna?"
+
+#, c-format
+msgid "The pipe %s/%s has independent release but %sReleaseCount=0"
+msgstr "Pipa %s/%s har oberoende uppsläpp men %sReleaseCount=0"
 
 msgid "The regex does not match the physical device name"
 msgstr "Regex matchar inte fysiskt enhetsnamn"
@@ -3146,9 +3227,6 @@ msgstr ""
 "Kombinationsfilen '%s' skapades ursprungligen för orgel '%s'. Att importera "
 "den kan orsaka problem. Ska den verkligen importeras?"
 
-msgid "This feature is currently not supported."
-msgstr "Denna egenskap stöds ej för närvarande."
-
 msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
 msgstr "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
 
@@ -3157,6 +3235,12 @@ msgstr "Slag per takt:"
 
 msgid "Title"
 msgstr "Titel"
+
+msgid "Tone balance:"
+msgstr "Tonbalans:"
+
+msgid "ToneBalance value is invalid"
+msgstr "Tonbalansvärde är felaktigt"
 
 msgid "Too many audio channels configured for the new audio interface"
 msgstr "För många ljudkanaler har konfigurerats för det nya ljudgränssnittet"
@@ -3195,10 +3279,6 @@ msgstr "U.O."
 #, c-format
 msgid "Unable to delete file %s"
 msgstr "Kunde ej ta bort filen %s"
-
-#, c-format
-msgid "Unable to load %s: %s"
-msgstr "Kunde ej ladda %s: %s"
 
 #, c-format
 msgid "Unable to open file %s for writing"
@@ -3246,7 +3326,7 @@ msgid "Unsupported channel count"
 msgstr "Antalet kanaler stöds ej"
 
 msgid "Unsupported channel number"
-msgstr "Antal kanaler stödjs ej"
+msgstr "Antal kanaler stöds ej"
 
 msgid "Unsupported format"
 msgstr "Formatet stöds ej"
@@ -3258,6 +3338,9 @@ msgstr "Oanvänd CMB post '%s'"
 #, c-format
 msgid "Unused ODF entry '%s'"
 msgstr "Oanvänd ODF post '%s'"
+
+msgid "Update checker"
+msgstr "Uppdateringssökning"
 
 msgid "User"
 msgstr "Användare"
@@ -3273,7 +3356,7 @@ msgid "Using helpfile %s (search path: %s)"
 msgstr "Använder hjälpfil %s (sökväg: %s)"
 
 msgid "Using more than one audio interface is currently not supported."
-msgstr "Användande av mer än ett ljudinterface är för närvarande ej stött."
+msgstr "Användande av mer än ett ljudinterface stöds ej för närvarande."
 
 msgid "V"
 msgstr "V"
@@ -3367,6 +3450,9 @@ msgstr "Y"
 
 msgid "Yes"
 msgstr "Ja"
+
+msgid "You are using the latest GrandOrgue version"
+msgstr "Du använder den senaste GrandOrgue versionen"
 
 msgid "Z"
 msgstr "Z"
@@ -3567,6 +3653,9 @@ msgstr "g#"
 msgid "general bank"
 msgstr "general bank"
 
+msgid "generate verbose log messages"
+msgstr "generera utförliga loggmeddelanden"
+
 msgid "h"
 msgstr "h"
 
@@ -3584,9 +3673,6 @@ msgstr "inmatningskatalog"
 
 msgid "insert"
 msgstr "insert"
-
-msgid "instance"
-msgstr "instans"
 
 msgid "left"
 msgstr "vänster"
@@ -3874,10 +3960,6 @@ msgstr "tremulant"
 msgid "trigger"
 msgstr "utlös"
 
-#, c-format
-msgid "unhandled exception: %s\n"
-msgstr "ohanterat undantag: %s\n"
-
 msgid "up"
 msgstr "upp"
 
@@ -4001,6 +4083,9 @@ msgstr "}"
 #~ msgid "< out of memory allocating wave"
 #~ msgstr "< slut på minne under waveallokering"
 
+#~ msgid "<unknown> %d"
+#~ msgstr "<okänd> %d"
+
 #~ msgid "ALSA"
 #~ msgstr "ALSA"
 
@@ -4044,8 +4129,8 @@ msgstr "}"
 #~ msgid "Cache file had bad magic (expected %#.8x got %#.8x) bypassing cache."
 #~ msgstr "Cache-fil hade dålig magi (förväntade %#.8x fann %#.8x)"
 
-#~ msgid "Cache load failure: %s"
-#~ msgstr "Laddning av cache misslyckades: %s"
+#~ msgid "Cache load failure: Failed to read %s from cache: %s"
+#~ msgstr "Cacheläsningsfel: Misslyckades att läsa %s från cache: %s"
 
 #~ msgid "Cache store:"
 #~ msgstr "Cache lagring:"
@@ -4068,6 +4153,12 @@ msgstr "}"
 #~ msgid "Choose a file"
 #~ msgstr "Valj en fil"
 
+#~ msgid "Church"
+#~ msgstr "Kyrka"
+
+#~ msgid "Collapse tree"
+#~ msgstr "Fäll ihop trädet"
+
 #~ msgid "Comb. Add."
 #~ msgstr "Komb. Add."
 
@@ -4083,6 +4174,9 @@ msgstr "}"
 #~ msgid "Data/Offset"
 #~ msgstr "Data/Förskjutning"
 
+#~ msgid "Default for All"
+#~ msgstr "Förvald för alla"
+
 #~ msgid "Defaults and Initial Settings"
 #~ msgstr "Förvalda och initiala inställningar"
 
@@ -4092,14 +4186,14 @@ msgstr "}"
 #~ msgid "Device Settings"
 #~ msgstr "Enhetsinställningar"
 
-#~ msgid "Device unavailable"
-#~ msgstr "Enheten är inte tillgänglig"
-
 #~ msgid "Device: %s"
 #~ msgstr "Enhet: %s"
 
 #~ msgid "DirectSound"
 #~ msgstr "DirectSound"
+
+#~ msgid "Error while loading samples for rank %s pipe %s: %s"
+#~ msgstr "Fel vid laddning av samplingar för register %s pipa %s: %s"
 
 #~ msgid "Event"
 #~ msgstr "Händelse"
@@ -4237,6 +4331,9 @@ msgstr "}"
 #~ "Inga MIDI-enheter är valda; varken MIDI-inmatning eller ljudutmatnng "
 #~ "kommer att ske!"
 
+#~ msgid "Not enough samples for a crossfade"
+#~ msgstr "Inte tillräckligt med samplar för en övertoning"
+
 #~ msgid "OSS"
 #~ msgstr "OSS"
 
@@ -4254,6 +4351,13 @@ msgstr "}"
 
 #~ msgid "Output underflowed"
 #~ msgstr "Underström av utmatningen"
+
+#~ msgid ""
+#~ "Polyphase is not supported with lossless compression - falling back to "
+#~ "linear."
+#~ msgstr ""
+#~ "Polyfas stöds ej med förlustfri komprimering - faller tillbaka till "
+#~ "linjär."
 
 #~ msgid "PortAudio not initialized"
 #~ msgstr "PortAudio ej initialiserad"
@@ -4288,6 +4392,9 @@ msgstr "}"
 #~ msgid "Reload"
 #~ msgstr "Ladda om"
 
+#~ msgid "Reset"
+#~ msgstr "Återställ"
+
 #~ msgid "Sample format not supported"
 #~ msgstr "Samplingsformated stöds ej"
 
@@ -4321,8 +4428,14 @@ msgstr "}"
 #~ msgid "Success"
 #~ msgstr "Lyckades"
 
+#~ msgid "This feature is currently not supported."
+#~ msgstr "Denna egenskap stöds ej för närvarande."
+
 #~ msgid "Tuning and Voicing"
 #~ msgstr "Stämning och intonation"
+
+#~ msgid "Unable to load %s: %s"
+#~ msgstr "Kunde ej ladda %s: %s"
 
 #~ msgid "Unanticipated host error"
 #~ msgstr "Ej förutsett värd-fel"
@@ -4354,6 +4467,9 @@ msgstr "}"
 #~ msgid "g_sound has not been allocated"
 #~ msgstr "g_sound har inte allokerats"
 
+#~ msgid "instance"
+#~ msgstr "instans"
+
 #~ msgid "ms"
 #~ msgstr "ms"
 
@@ -4368,3 +4484,6 @@ msgstr "}"
 
 #~ msgid "success"
 #~ msgstr "lyckades"
+
+#~ msgid "unhandled exception: %s\n"
+#~ msgstr "ohanterat undantag: %s\n"
