@@ -120,12 +120,18 @@ GOStopsDialog::GOStopsDialog(
   }
 
   LayoutWithInnerSizer(mainSizer);
+}
+
+void GOStopsDialog::OnShow() {
+  GOSimpleDialog::OnShow();
   r_model.RegisterControlChangedHandler(this);
 }
 
-GOStopsDialog::~GOStopsDialog() {
+void GOStopsDialog::OnHide() {
+  // Don't move to the destructor becaus it may be called after ~GOOrganModel
   r_model.UnRegisterControlChangedHandler(this);
-}
+  GOSimpleDialog::OnHide();
+};
 
 void GOStopsDialog::OnElementChanging(wxCommandEvent &event) {
   wxCheckBox *pCheck = static_cast<wxCheckBox *>(event.GetEventObject());

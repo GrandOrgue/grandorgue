@@ -31,14 +31,15 @@ private:
   void OnElementChanging(wxCommandEvent &event);
   void ControlChanged(GOControl *pControl) override;
 
+  void OnShow() override;
+  void OnHide() override;
+
 public:
   GOStopsDialog(
     GODocumentBase *doc,
     wxWindow *parent,
     GODialogSizeSet &dialogSizes,
     GOOrganModel &model);
-
-  ~GOStopsDialog();
 
   DECLARE_EVENT_TABLE()
 };
