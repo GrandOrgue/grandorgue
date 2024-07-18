@@ -7,6 +7,9 @@
 
 #include "GOMidiDeviceConfig.h"
 
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
+
 GOMidiDeviceConfig::GOMidiDeviceConfig(
   const wxString &logicalName,
   const wxString &regEx,
@@ -26,4 +29,41 @@ void GOMidiDeviceConfig::AssignMidiDeviceConfig(const GOMidiDeviceConfig &src) {
 void GOMidiDeviceConfig::Assign(const GOMidiDeviceConfig &src) {
   AssignNamePattern(src);
   AssignMidiDeviceConfig(src);
+}
+
+static const wxString WX_ENABLED = wxT("Enabled");
+static const wxString WX_SHIFT = wxT("Shift");
+static const wxString WX_OUTPUT_DEVICE = wxT("OutputDevice");
+
+void GOMidiDeviceConfig::LoadDeviceConfig(
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &prefix,
+  const bool isInput) {
+  LoadNamePattern(cfg, group, prefix, wxEmptyString);
+  m_IsEnabled = cfg.ReadBoolean(CMBSetting, group, prefix + WX_ENABLED);
+  if (isInput) {
+    m_ChannelShift
+      = cfg.ReadInteger(CMBSetting, group, prefix + WX_SHIFT, 0, 15);
+    m_OutputDeviceName
+      = cfg.ReadString(CMBSetting, group, prefix + WX_OUTPUT_DEVICE, false);
+  } else {
+    m_ChannelShift = 0;
+    m_OutputDeviceName = wxEmptyString;
+  }
+}
+
+void GOMidiDeviceConfig::SaveDeviceConfig(
+  GOConfigWriter &cfg,
+  const wxString &group,
+  const wxString &prefix,
+  const bool isInput) const {
+  SaveNamePattern(cfg, group, prefix, wxEmptyString);
+  cfg.WriteBoolean(group, prefix + WX_ENABLED, m_IsEnabled);
+  if (isInput) {
+    cfg.WriteInteger(group, prefix + WX_SHIFT, m_ChannelShift);
+    if (p_OutputDevice)
+      cfg.WriteString(
+        group, prefix + WX_OUTPUT_DEVICE, p_OutputDevice->GetLogicalName());
+  }
 }
