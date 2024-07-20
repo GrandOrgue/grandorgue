@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -25,6 +25,7 @@
 #include "GOSoundEngine.h"
 #include "GOSoundRecorder.h"
 
+class GODeviceNamePattern;
 class GOOrganController;
 class GOMidi;
 class GOSoundThread;
@@ -87,7 +88,7 @@ private:
 
   unsigned meter_counter;
 
-  wxString m_defaultAudioDevice;
+  GOSoundDevInfo m_DefaultAudioDevice;
 
   GOOrganController *m_OrganController;
   GOSoundRecorder m_AudioRecorder;
@@ -132,7 +133,10 @@ public:
   void SetLogSoundErrorMessages(bool settingsDialogVisible);
 
   std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
-  const wxString GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
+  const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
+
+  static void FillDeviceNamePattern(
+    const GOSoundDevInfo &deviceInfo, GODeviceNamePattern &pattern);
 
   GOMidi &GetMidi();
 

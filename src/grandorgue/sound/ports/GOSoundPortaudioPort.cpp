@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,8 @@
 #include "GOSoundPortaudioPort.h"
 
 #include <wx/intl.h>
+
+#include "config/GODeviceNamePattern.h"
 
 const wxString GOSoundPortaudioPort::PORT_NAME = wxT("PortAudio");
 const wxString GOSoundPortaudioPort::PORT_NAME_OLD = wxT("Pa");
@@ -39,15 +41,15 @@ GOSoundPortaudioPort::GOSoundPortaudioPort(
 
 GOSoundPortaudioPort::~GOSoundPortaudioPort() { Close(); }
 
-wxString compose_device_name(
+static wxString compose_device_name(
   const wxString &prefix, const PaDeviceInfo *pInfo) {
   const PaHostApiInfo *pApi = Pa_GetHostApiInfo(pInfo->hostApi);
-  return GOSoundPortFactory::getInstance().ComposeDeviceName(
+  return GOSoundPortFactory::getFullDeviceName(
     prefix, wxString::FromAscii(pApi->name), wxString(pInfo->name));
 }
 
-wxString GOSoundPortaudioPort::getName(const PaDeviceInfo *pInfo) {
-  return compose_device_name(PORT_NAME, pInfo);
+static wxString compose_device_name(const PaDeviceInfo *pInfo) {
+  return compose_device_name(GOSoundPortaudioPort::PORT_NAME, pInfo);
 }
 
 void GOSoundPortaudioPort::Open() {
@@ -142,16 +144,22 @@ void GOSoundPortaudioPort::terminate() {
 }
 
 GOSoundPort *GOSoundPortaudioPort::create(
-  const GOPortsConfig &portsConfig, GOSound *sound, const wxString &name) {
+  const GOPortsConfig &portsConfig,
+  GOSound *sound,
+  GODeviceNamePattern &pattern) {
   if (portsConfig.IsEnabled(PORT_NAME)) {
     assure_initialised();
     for (int i = 0; i < Pa_GetDeviceCount(); i++) {
       const PaDeviceInfo *pInfo = Pa_GetDeviceInfo(i);
-      const wxString devName = getName(pInfo);
+      const wxString devName = compose_device_name(pInfo);
 
       if (
         pInfo->maxOutputChannels > 0
-        && (devName == name || devName + GOPortFactory::c_NameDelim == name || get_oldstyle_name(i) == name || compose_device_name(PORT_NAME_OLD, pInfo) == name))
+        && (
+	  pattern.DoesMatch(devName)
+	  || pattern.DoesMatch(devName + GOPortFactory::c_NameDelim)
+	  || pattern.DoesMatch(get_oldstyle_name(i))
+	  || pattern.DoesMatch(compose_device_name(PORT_NAME_OLD, pInfo))))
         return new GOSoundPortaudioPort(sound, i, devName);
     }
   }
@@ -162,16 +170,20 @@ void GOSoundPortaudioPort::addDevices(
   const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &result) {
   if (portsConfig.IsEnabled(PORT_NAME)) {
     assure_initialised();
-    for (int i = 0; i < Pa_GetDeviceCount(); i++) {
-      const PaDeviceInfo *dev_info = Pa_GetDeviceInfo(i);
-      if (dev_info->maxOutputChannels < 1)
-        continue;
 
-      GOSoundDevInfo info;
-      info.channels = dev_info->maxOutputChannels;
-      info.isDefault = (Pa_GetDefaultOutputDevice() == i);
-      info.name = getName(dev_info);
-      result.push_back(info);
+    const PaDeviceIndex defaultIndex = Pa_GetDefaultOutputDevice();
+
+    for (int i = 0; i < Pa_GetDeviceCount(); i++) {
+      const PaDeviceInfo *pInfo = Pa_GetDeviceInfo(i);
+
+      if (pInfo->maxOutputChannels > 0) {
+        result.emplace_back(
+          PORT_NAME,
+          wxString::FromAscii(Pa_GetHostApiInfo(pInfo->hostApi)->name),
+          wxString(pInfo->name),
+          pInfo->maxOutputChannels,
+          i == defaultIndex);
+      }
     }
   }
 }

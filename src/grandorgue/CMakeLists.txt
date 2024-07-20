@@ -56,6 +56,7 @@ combinations/model/GOGeneralCombination.cpp
 combinations/GODivisionalSetter.cpp
 combinations/GOSetter.cpp
 config/GOAudioDeviceConfig.cpp
+config/GOAudioDeviceNode.cpp
 config/GOConfig.cpp
 config/GODeviceNamePattern.cpp
 config/GOMidiDeviceConfig.cpp
@@ -191,6 +192,7 @@ sound/scheduler/GOSoundTouchTask.cpp
 sound/scheduler/GOSoundTremulantTask.cpp
 sound/scheduler/GOSoundWindchestTask.cpp
 sound/GOSoundAudioSection.cpp
+sound/GOSoundDevInfo.cpp
 sound/GOSoundEngine.cpp
 sound/GOSoundFader.cpp
 sound/GOSoundProvider.cpp

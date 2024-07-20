@@ -68,13 +68,13 @@ private:
   std::vector<GOSoundDevInfo> m_DeviceList;
 
   AudioItemData *GetObject(const wxTreeItemId &id);
-  wxTreeItemId GetDeviceNode(const wxString &name);
+  wxTreeItemId FindDeviceNodeByPhysicalName(const wxString &name);
   wxTreeItemId GetChannelNode(const wxTreeItemId &audio, unsigned channel);
   wxTreeItemId GetGroupNode(
     const wxTreeItemId &channel, const wxString &name, bool left);
 
-  wxTreeItemId AddDeviceNode(wxString name);
-  wxTreeItemId AddDeviceNode(wxString name, unsigned latency);
+  wxTreeItemId AddDeviceNode(const GOAudioDeviceNode &node);
+  wxTreeItemId AddDeviceNode(const GOSoundDevInfo &deviceInfo);
   wxTreeItemId AddChannelNode(const wxTreeItemId &audio, unsigned channel);
   wxTreeItemId AddGroupNode(
     const wxTreeItemId &channel, const wxString &name, bool left, float volume);
@@ -83,7 +83,7 @@ private:
   void UpdateButtons();
 
   void AssureDeviceList();
-  std::vector<wxString> GetRemainingAudioDevices(
+  std::vector<GOSoundDevInfo> GetRemainingAudioDevices(
     const wxTreeItemId *ignoreItem);
   std::vector<std::pair<wxString, bool>> GetRemainingAudioGroups(
     const wxTreeItemId &channel);

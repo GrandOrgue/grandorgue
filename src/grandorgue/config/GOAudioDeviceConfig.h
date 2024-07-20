@@ -13,12 +13,12 @@
 
 #include <wx/string.h>
 
-#include "GODeviceNamePattern.h"
+#include "GOAudioDeviceNode.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 
-class GOAudioDeviceConfig : public GODeviceNamePattern {
+class GOAudioDeviceConfig : public GOAudioDeviceNode {
 public:
   // volume values in dB
   static constexpr float MUTE_VOLUME = -121.0f;
@@ -52,26 +52,26 @@ public:
   };
 
 private:
+  uint8_t m_NChannels;
   std::vector<std::vector<GroupOutput>> m_ChannelOutputs;
-  unsigned m_DesiredLatency;
-  uint8_t m_channels;
 
   static float volumeFor(bool isForLeft, bool isLeft, float vol) {
     return isLeft == isForLeft ? vol : MUTE_VOLUME;
   }
 
+  void ResizeChannels() { m_ChannelOutputs.resize(m_NChannels); }
+
 public:
-  GOAudioDeviceConfig(
-    const wxString &name, unsigned desiredLatency, uint8_t channels);
+  GOAudioDeviceConfig(const GOAudioDeviceNode &node, uint8_t nChannels);
 
   // Creates en ampty config for future Load()
-  GOAudioDeviceConfig();
+  GOAudioDeviceConfig() {}
 
   // Creates the config with default settings
   GOAudioDeviceConfig(const std::vector<wxString> &audioGroups);
 
-  unsigned GetDesiredLatency() const { return m_DesiredLatency; }
-  uint8_t GetChannels() const { return m_channels; }
+  uint8_t GetChannels() const { return m_NChannels; }
+
   const std::vector<std::vector<GroupOutput>> &GetChannelOututs() const {
     return m_ChannelOutputs;
   }

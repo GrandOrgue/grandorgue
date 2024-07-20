@@ -43,6 +43,8 @@ public:
 
   ~GODeviceNamePattern();
 
+  bool IsFilled() const { return !m_LogicalName.IsEmpty(); }
+
   const wxString &GetLogicalName() const { return m_LogicalName; }
   void SetLogicalName(const wxString &name) { m_LogicalName = name; }
 
