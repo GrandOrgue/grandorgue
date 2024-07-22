@@ -182,6 +182,7 @@ void GOApp::MacOpenFile(const wxString &filename) {
 int GOApp::OnRun() { return wxApp::OnRun(); }
 
 int GOApp::OnExit() {
+  wxLog::FlushActive();
   wxLog::SetActiveTarget(NULL);
 
   int rc = wxApp::OnExit();
