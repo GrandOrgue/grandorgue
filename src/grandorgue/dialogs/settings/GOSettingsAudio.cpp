@@ -214,28 +214,23 @@ bool GOSettingsAudio::TransferDataToWindow() {
 
   FillPortsWith(m_config.GetSoundPortsConfig());
   m_AudioOutput->AddRoot(_("Audio Output"), -1, -1, new AudioItemData());
-  std::vector<GOAudioDeviceConfig> audio_config
-    = m_Sound.GetSettings().GetAudioDeviceConfig();
-  for (unsigned i = 0; i < audio_config.size(); i++) {
+  for (const auto &deviceConfig : m_config.GetAudioDeviceConfig()) {
+    const auto &deviceOutputs = deviceConfig.GetChannelOututs();
+    const unsigned deviceOutputsSize = deviceOutputs.size();
     wxTreeItemId audio
-      = AddDeviceNode(audio_config[i].name, audio_config[i].desired_latency);
-    for (unsigned j = 0; j < audio_config[i].channels; j++) {
+      = AddDeviceNode(deviceConfig.GetName(), deviceConfig.GetDesiredLatency());
+
+    for (unsigned l = deviceConfig.GetChannels(), j = 0; j < l; j++) {
       wxTreeItemId channel = AddChannelNode(audio, j);
-      if (j >= audio_config[i].scale_factors.size())
-        continue;
-      for (unsigned k = 0; k < audio_config[i].scale_factors[j].size(); k++) {
-        if (audio_config[i].scale_factors[j][k].left >= -120)
-          AddGroupNode(
-            channel,
-            audio_config[i].scale_factors[j][k].name,
-            true,
-            audio_config[i].scale_factors[j][k].left);
-        if (audio_config[i].scale_factors[j][k].right >= -120)
-          AddGroupNode(
-            channel,
-            audio_config[i].scale_factors[j][k].name,
-            false,
-            audio_config[i].scale_factors[j][k].right);
+      if (j < deviceOutputsSize) {
+        for (const auto &groupOutput : deviceOutputs[j]) {
+          const wxString &name = groupOutput.GetName();
+
+          if (groupOutput.IsLeftEnabled())
+            AddGroupNode(channel, name, true, groupOutput.GetLeft());
+          if (groupOutput.IsRightEnabled())
+            AddGroupNode(channel, name, false, groupOutput.GetRight());
+        }
       }
     }
   }
@@ -297,7 +292,7 @@ wxTreeItemId GOSettingsAudio::GetGroupNode(
 }
 
 wxTreeItemId GOSettingsAudio::AddDeviceNode(wxString name) {
-  return AddDeviceNode(name, m_Sound.GetSettings().GetDefaultLatency());
+  return AddDeviceNode(name, m_config.GetDefaultLatency());
 }
 
 wxTreeItemId GOSettingsAudio::AddDeviceNode(
@@ -654,16 +649,21 @@ void GOSettingsAudio::OnOutputProperties(wxCommandEvent &event) {
     data->latency = latency;
     UpdateDevice(selection);
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
-    wxString current
-      = wxString::Format(wxT("%f"), data->volume >= -120 ? data->volume : -120);
+    wxString current = wxString::Format(
+      wxT("%f"), std::max(data->volume, GOAudioDeviceConfig::MIN_VOLUME));
     current = wxGetTextFromUser(
       _("Please enter new volume in dB:"), _("Change audio group"), current);
     if (current == wxEmptyString)
       return;
     double volume;
-    if (!current.ToDouble(&volume) || volume < -120.0 || volume > 40.0) {
+    if (
+      !current.ToDouble(&volume) || volume < GOAudioDeviceConfig::MIN_VOLUME
+      || volume > GOAudioDeviceConfig::MAX_VOLUME) {
       wxMessageBox(
-        _("Please enter a volume between -120 and 40 dB"),
+        wxString::Format(
+          _("Please enter a volume between %3.1f and %2.1f dB"),
+          GOAudioDeviceConfig::MIN_VOLUME,
+          GOAudioDeviceConfig::MAX_VOLUME),
         _("Error"),
         wxOK | wxICON_ERROR,
         this);
@@ -727,64 +727,43 @@ bool GOSettingsAudio::TransferDataFromWindow() {
     wxLogError(_("Invalid sample rate"));
   m_config.SamplesPerBuffer(m_SamplesPerBuffer->GetValue());
 
-  m_Sound.GetSettings().SetSoundPortsConfig(RenewPortsConfig());
+  m_config.SetSoundPortsConfig(RenewPortsConfig());
 
   std::vector<GOAudioDeviceConfig> audio_config;
   wxTreeItemId root = m_AudioOutput->GetRootItem();
-  wxTreeItemId audio, channel, group;
   wxTreeItemIdValue i, j, k;
 
-  audio = m_AudioOutput->GetFirstChild(root, i);
-  while (audio.IsOk()) {
-    GOAudioDeviceConfig conf;
-    conf.name = ((AudioItemData *)m_AudioOutput->GetItemData(audio))->name;
-    conf.desired_latency
-      = ((AudioItemData *)m_AudioOutput->GetItemData(audio))->latency;
-    conf.channels = m_AudioOutput->GetChildrenCount(audio, false);
-    conf.scale_factors.resize(conf.channels);
+  for (wxTreeItemId audioItem = m_AudioOutput->GetFirstChild(root, i);
+       audioItem.IsOk();
+       audioItem = m_AudioOutput->GetNextChild(root, i)) {
+    const AudioItemData *audioData
+      = (const AudioItemData *)m_AudioOutput->GetItemData(audioItem);
+    const unsigned devIndex = audio_config.size();
 
-    int channel_id = 0;
-    channel = m_AudioOutput->GetFirstChild(audio, j);
-    while (channel.IsOk()) {
-      group = m_AudioOutput->GetFirstChild(channel, k);
-      while (group.IsOk()) {
-        AudioItemData *data
-          = (AudioItemData *)m_AudioOutput->GetItemData(group);
-        bool found = false;
+    audio_config.emplace_back(
+      audioData->name,
+      audioData->latency,
+      (uint8_t)m_AudioOutput->GetChildrenCount(audioItem, false));
 
-        for (unsigned l = 0; l < conf.scale_factors[channel_id].size(); l++)
-          if (conf.scale_factors[channel_id][l].name == data->name) {
-            found = true;
-            if (data->left)
-              conf.scale_factors[channel_id][l].left = data->volume;
-            else
-              conf.scale_factors[channel_id][l].right = data->volume;
-          }
-        if (!found) {
-          GOAudioDeviceConfig::GroupOutput gconf;
+    GOAudioDeviceConfig &deviceConf = audio_config[devIndex];
+    uint8_t channelN = 0;
 
-          gconf.name = data->name;
-          gconf.left = -121;
-          gconf.right = -121;
+    for (wxTreeItemId channelItem = m_AudioOutput->GetFirstChild(audioItem, j);
+         channelItem.IsOk();
+         channelItem = m_AudioOutput->GetNextChild(audioItem, j)) {
+      for (wxTreeItemId groupItem
+           = m_AudioOutput->GetFirstChild(channelItem, k);
+           groupItem.IsOk();
+           groupItem = m_AudioOutput->GetNextChild(channelItem, k)) {
+        AudioItemData *groupData
+          = (AudioItemData *)m_AudioOutput->GetItemData(groupItem);
 
-          if (data->left)
-            gconf.left = data->volume;
-          else
-            gconf.right = data->volume;
-
-          conf.scale_factors[channel_id].push_back(gconf);
-        }
-
-        group = m_AudioOutput->GetNextChild(channel, k);
+        deviceConf.SetOutputVolume(
+          channelN, groupData->name, groupData->left, groupData->volume);
       }
-
-      channel = m_AudioOutput->GetNextChild(audio, j);
-      channel_id++;
+      channelN++;
     }
-
-    audio_config.push_back(conf);
-    audio = m_AudioOutput->GetNextChild(root, i);
   }
-  m_Sound.GetSettings().SetAudioDeviceConfig(audio_config);
+  m_config.SetAudioDeviceConfig(audio_config);
   return true;
 }
