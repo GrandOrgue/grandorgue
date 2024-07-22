@@ -52,6 +52,7 @@ enum {
 
   ID_ORGAN_EDIT,
   ID_MIDI_LIST,
+  ID_STOPS,
 
   ID_MIDI_LOAD,
   ID_MIDI_MONITOR,

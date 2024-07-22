@@ -84,6 +84,7 @@ EVT_MENU(ID_FILE_CACHE, GOFrame::OnCache)
 EVT_MENU(ID_FILE_CACHE_DELETE, GOFrame::OnCacheDelete)
 EVT_MENU(ID_ORGAN_EDIT, GOFrame::OnOrganSettings)
 EVT_MENU(ID_MIDI_LIST, GOFrame::OnMidiList)
+EVT_MENU(ID_STOPS, GOFrame::OnStops)
 EVT_MENU(ID_MIDI_MONITOR, GOFrame::OnMidiMonitor)
 EVT_MENU(ID_AUDIO_PANIC, GOFrame::OnAudioPanic)
 EVT_MENU(ID_AUDIO_MEMSET, GOFrame::OnAudioMemset)
@@ -239,6 +240,7 @@ GOFrame::GOFrame(
     ID_ORGAN_EDIT, _("&Organ settings"), wxEmptyString, wxITEM_CHECK);
   m_audio_menu->Append(
     ID_MIDI_LIST, _("M&idi Objects"), wxEmptyString, wxITEM_CHECK);
+  m_audio_menu->Append(ID_STOPS, _("Stops"), wxEmptyString, wxITEM_CHECK);
   m_audio_menu->AppendSeparator();
   m_audio_menu->Append(
     ID_AUDIO_STATE, _("&Sound Output State"), wxEmptyString, wxITEM_NORMAL);
@@ -811,6 +813,8 @@ void GOFrame::OnUpdateLoaded(wxUpdateUIEvent &event) {
     event.Check(m_doc && m_doc->WindowExists(GODocument::ORGAN_DIALOG, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
     event.Check(m_doc && m_doc->WindowExists(GODocument::MIDI_LIST, NULL));
+  else if (event.GetId() == ID_STOPS)
+    event.Check(m_doc && m_doc->WindowExists(GODocument::STOPS, NULL));
   else if (event.GetId() == ID_MIDI_LIST)
     event.Check(m_MidiMonitor);
 
@@ -1235,6 +1239,11 @@ void GOFrame::OnOrganSettings(wxCommandEvent &event) {
 void GOFrame::OnMidiList(wxCommandEvent &event) {
   if (m_doc)
     m_doc->ShowMidiList();
+}
+
+void GOFrame::OnStops(wxCommandEvent &event) {
+  if (m_doc)
+    m_doc->ShowStops();
 }
 
 void GOFrame::OnHelp(wxCommandEvent &event) {
