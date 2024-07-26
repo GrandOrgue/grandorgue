@@ -219,22 +219,24 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     else
       m_InfoFilename = wxEmptyString;
   } else {
-    GOLoaderFilename fname;
-
-    fname.Assign(info_filename);
-    std::unique_ptr<GOOpenedFile> file = fname.Open(m_FileStore);
-    fn = info_filename;
-    if (
-      file->isValid()
-      && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm"))) {
-      if (fn.FileExists() && !m_FileStore.AreArchivesUsed())
+    if (!m_FileStore.AreArchivesUsed()) {
+      info_filename.Replace(
+        wxT("\\"), wxString(wxFileName::GetPathSeparator()));
+      wxString infoFilePath
+        = wxFileName(GetODFFilename()).GetPath(wxPATH_GET_SEPARATOR)
+        + info_filename;
+      fn = infoFilePath;
+      if (
+        fn.FileExists()
+        && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm"))) {
         m_InfoFilename = fn.GetFullPath();
-      else
+      } else {
         m_InfoFilename = wxEmptyString;
-    } else {
-      m_InfoFilename = wxEmptyString;
-      if (m_config.ODFCheck())
-        wxLogWarning(_("InfoFilename does not point to a html file"));
+        if (m_config.ODFCheck())
+          wxLogWarning(
+            _("InfoFilename %s either does not exist or is not a html file"),
+            fn.GetFullPath());
+      }
     }
   }
 
