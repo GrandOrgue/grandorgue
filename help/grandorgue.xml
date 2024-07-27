@@ -4861,13 +4861,13 @@ the same channel.
               Grandorgue recognizes the MIDI device
             </para>
             <indexterm>
-              <primary>MIDI Matching</primary>
+              <primary>Device Matching</primary>
             </indexterm>
             <figure>
-              <title>MIDI device matching properties</title>
+              <title>Device matching properties</title>
               <mediaobject>
                 <imageobject>
-                  <imagedata fileref="images/midi_matching_editor.png"/>
+                  <imagedata fileref="images/device_matching_editor.png"/>
                 </imageobject>
               </mediaobject>
             </figure>
@@ -4876,9 +4876,9 @@ the same channel.
                 <term>Physical device name</term>
                 <listitem>
                   <para>
-                  This is the name of MIDI device as it is reported by a MIDI port.
-                  A user can not alter it, but this name may be not persistent
-                  across reboots
+                    This is the name of a Audio/MIDI device as it is reported by
+                    the Sound/MIDI port. A user can not alter it, but this name
+                    may be not persistent across reboots
                   </para>
                 </listitem>
               </varlistentry>
