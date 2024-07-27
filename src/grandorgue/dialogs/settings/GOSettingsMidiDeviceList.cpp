@@ -7,6 +7,8 @@
 
 #include "GOSettingsMidiDeviceList.h"
 
+#include "config/GOMidiDeviceConfig.h"
+
 #include "GOSettingsDeviceMatchDialog.h"
 
 GOSettingsMidiDeviceList::GOSettingsMidiDeviceList(
