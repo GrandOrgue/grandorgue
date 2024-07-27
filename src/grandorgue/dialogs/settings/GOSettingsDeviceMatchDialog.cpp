@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSettingsMidiMatchDialog.h"
+#include "GOSettingsDeviceMatchDialog.h"
 
 #include <wx/app.h>
 #include <wx/msgdlg.h>

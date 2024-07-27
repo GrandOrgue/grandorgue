@@ -78,10 +78,10 @@ dialogs/midi-event/GOMidiEventKeyTab.cpp
 dialogs/midi-event/GOMidiEventRecvTab.cpp
 dialogs/midi-event/GOMidiEventSendTab.cpp
 dialogs/settings/GOSettingsAudio.cpp
+dialogs/settings/GOSettingsDeviceMatchDialog.cpp
 dialogs/settings/GOSettingsDialog.cpp
 dialogs/settings/GOSettingsMidiDeviceList.cpp
 dialogs/settings/GOSettingsMidiDevices.cpp
-dialogs/settings/GOSettingsMidiMatchDialog.cpp
 dialogs/settings/GOSettingsMidiMessage.cpp
 dialogs/settings/GOSettingsPaths.cpp
 dialogs/settings/GOSettingsPorts.cpp
