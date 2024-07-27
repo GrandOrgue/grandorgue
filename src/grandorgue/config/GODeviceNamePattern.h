@@ -43,6 +43,11 @@ public:
 
   ~GODeviceNamePattern();
 
+  GODeviceNamePattern &operator=(const GODeviceNamePattern &src) {
+    AssignNamePattern(src);
+    return *this;
+  }
+
   bool IsFilled() const { return !m_LogicalName.IsEmpty(); }
 
   const wxString &GetLogicalName() const { return m_LogicalName; }
@@ -74,7 +79,7 @@ public:
 
   void AssignNamePattern(const GODeviceNamePattern &src);
 
-  bool DoesMatch(const wxString &physicalName);
+  bool DoesMatch(const wxString &physicalName) const;
 };
 
 #endif /* GODEVICENAMEPATTERN_H */

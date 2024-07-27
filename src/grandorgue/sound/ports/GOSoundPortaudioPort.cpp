@@ -147,6 +147,8 @@ GOSoundPort *GOSoundPortaudioPort::create(
   const GOPortsConfig &portsConfig,
   GOSound *sound,
   GODeviceNamePattern &pattern) {
+  GOSoundPort *pPort = nullptr;
+
   if (portsConfig.IsEnabled(PORT_NAME)) {
     assure_initialised();
     for (int i = 0; i < Pa_GetDeviceCount(); i++) {
@@ -159,11 +161,14 @@ GOSoundPort *GOSoundPortaudioPort::create(
 	  pattern.DoesMatch(devName)
 	  || pattern.DoesMatch(devName + GOPortFactory::c_NameDelim)
 	  || pattern.DoesMatch(get_oldstyle_name(i))
-	  || pattern.DoesMatch(compose_device_name(PORT_NAME_OLD, pInfo))))
-        return new GOSoundPortaudioPort(sound, i, devName);
+	  || pattern.DoesMatch(compose_device_name(PORT_NAME_OLD, pInfo)))) {
+        pattern.SetPhysicalName(devName);
+        pPort = new GOSoundPortaudioPort(sound, i, devName);
+        break;
+      }
     }
   }
-  return NULL;
+  return pPort;
 }
 
 void GOSoundPortaudioPort::addDevices(

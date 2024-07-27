@@ -42,6 +42,7 @@ class GOSettingsAudio : public wxPanel, GOSettingsPorts {
     ID_OUTPUT_DEL,
     ID_OUTPUT_CHANGE,
     ID_OUTPUT_PROPERTIES,
+    ID_OUTPUT_MATCHING,
     ID_OUTPUT_DEFAULT,
   };
 
@@ -62,6 +63,7 @@ private:
   wxButton *m_DelMap;
   wxButton *m_ChangeMap;
   wxButton *m_PropertiesMap;
+  wxButton *m_MatchingMap;
   wxButton *m_DefaultMap;
 
   GOPortsConfig m_PortsConfigPopulatedWith;
@@ -98,6 +100,7 @@ private:
   void OnOutputDel(wxCommandEvent &event);
   void OnOutputChange(wxCommandEvent &event);
   void OnOutputProperties(wxCommandEvent &event);
+  void OnOutputMatching(wxCommandEvent &event);
   void OnOutputDefault(wxCommandEvent &event);
 
 public:

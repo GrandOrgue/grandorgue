@@ -23,6 +23,8 @@
 #include "sound/GOSound.h"
 #include "sound/ports/GOSoundPortFactory.h"
 
+#include "GOSettingsDeviceMatchDialog.h"
+
 class AudioItemData : public wxTreeItemData {
 public:
   enum NodeType { ROOT_NODE, DEVICE_NODE, CHANNEL_NODE, GROUP_NODE };
@@ -70,6 +72,7 @@ EVT_BUTTON(ID_OUTPUT_ADD, GOSettingsAudio::OnOutputAdd)
 EVT_BUTTON(ID_OUTPUT_DEL, GOSettingsAudio::OnOutputDel)
 EVT_BUTTON(ID_OUTPUT_CHANGE, GOSettingsAudio::OnOutputChange)
 EVT_BUTTON(ID_OUTPUT_PROPERTIES, GOSettingsAudio::OnOutputProperties)
+EVT_BUTTON(ID_OUTPUT_MATCHING, GOSettingsAudio::OnOutputMatching)
 EVT_BUTTON(ID_OUTPUT_DEFAULT, GOSettingsAudio::OnOutputDefault)
 END_EVENT_TABLE()
 
@@ -146,21 +149,40 @@ GOSettingsAudio::GOSettingsAudio(
   gridMap->Add(
     m_AudioOutput,
     wxGBPosition(0, 0),
-    wxGBSpan(1, 6),
+    wxGBSpan(1, 7),
     wxEXPAND | wxLEFT | wxRIGHT,
     5);
   m_AddMap = new wxButton(this, ID_OUTPUT_ADD, _("&Add"));
-  gridMap->Add(m_AddMap, wxGBPosition(1, 0), wxDefaultSpan, wxALL, 5);
+  gridMap->Add(
+    m_AddMap, wxGBPosition(1, 0), wxDefaultSpan, wxTOP | wxLEFT | wxBOTTOM, 5);
   m_DelMap = new wxButton(this, ID_OUTPUT_DEL, _("&Delete"));
-  gridMap->Add(m_DelMap, wxGBPosition(1, 1), wxDefaultSpan, wxALL, 5);
+  gridMap->Add(
+    m_DelMap, wxGBPosition(1, 1), wxDefaultSpan, wxTOP | wxLEFT | wxBOTTOM, 5);
   m_ChangeMap = new wxButton(this, ID_OUTPUT_CHANGE, _("Change"));
-  gridMap->Add(m_ChangeMap, wxGBPosition(1, 2), wxDefaultSpan, wxALL, 5);
+  gridMap->Add(
+    m_ChangeMap,
+    wxGBPosition(1, 2),
+    wxDefaultSpan,
+    wxTOP | wxLEFT | wxBOTTOM,
+    5);
   m_PropertiesMap = new wxButton(this, ID_OUTPUT_PROPERTIES, _("Properties"));
-  gridMap->Add(m_PropertiesMap, wxGBPosition(1, 3), wxDefaultSpan, wxALL, 5);
+  gridMap->Add(
+    m_PropertiesMap,
+    wxGBPosition(1, 3),
+    wxDefaultSpan,
+    wxTOP | wxLEFT | wxBOTTOM,
+    5);
+  m_MatchingMap = new wxButton(this, ID_OUTPUT_MATCHING, _("Matching"));
+  gridMap->Add(
+    m_MatchingMap,
+    wxGBPosition(1, 4),
+    wxDefaultSpan,
+    wxTOP | wxLEFT | wxBOTTOM,
+    5);
   m_DefaultMap = new wxButton(this, ID_OUTPUT_DEFAULT, _("Revert to Default"));
-  gridMap->Add(m_DefaultMap, wxGBPosition(1, 4), wxDefaultSpan, wxALL, 5);
+  gridMap->Add(m_DefaultMap, wxGBPosition(1, 5), wxDefaultSpan, wxALL, 5);
   gridMap->AddGrowableRow(0, 1);
-  gridMap->AddGrowableCol(5, 1);
+  gridMap->AddGrowableCol(6, 1);
   boxMap->Add(gridMap, 1, wxEXPAND);
 
   gridRoot->Add(
@@ -454,6 +476,7 @@ void GOSettingsAudio::UpdateButtons() {
     m_AddMap->Enable();
     m_PropertiesMap->Enable();
     m_ChangeMap->Enable();
+    m_MatchingMap->Enable();
     if (
       m_AudioOutput->GetChildrenCount(m_AudioOutput->GetRootItem(), false) > 1)
       m_DelMap->Enable();
@@ -462,6 +485,7 @@ void GOSettingsAudio::UpdateButtons() {
   } else if (data && data->type == AudioItemData::CHANNEL_NODE) {
     m_PropertiesMap->Disable();
     m_ChangeMap->Disable();
+    m_MatchingMap->Disable();
     if (GetRemainingAudioGroups(selection).size())
       m_AddMap->Enable();
     else
@@ -478,16 +502,19 @@ void GOSettingsAudio::UpdateButtons() {
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
     m_PropertiesMap->Enable();
     m_ChangeMap->Enable();
+    m_MatchingMap->Disable();
     m_AddMap->Disable();
     m_DelMap->Enable();
   } else if (data && data->type == AudioItemData::ROOT_NODE) {
     m_PropertiesMap->Disable();
     m_ChangeMap->Disable();
+    m_MatchingMap->Disable();
     m_AddMap->Enable();
     m_DelMap->Disable();
   } else {
     m_PropertiesMap->Disable();
     m_ChangeMap->Disable();
+    m_MatchingMap->Disable();
     m_AddMap->Disable();
     m_DelMap->Disable();
   }
@@ -659,6 +686,26 @@ void GOSettingsAudio::OnOutputProperties(wxCommandEvent &event) {
     UpdateVolume(selection, data->volume);
   }
   UpdateButtons();
+}
+
+void GOSettingsAudio::OnOutputMatching(wxCommandEvent &event) {
+  wxTreeItemId selection = m_AudioOutput->GetSelection();
+  AudioItemData *data = GetObject(selection);
+
+  if (data && data->type == AudioItemData::DEVICE_NODE) {
+    std::vector<const GODeviceNamePattern *> allDevices;
+
+    // fill allDevices
+
+    GOSettingsDeviceMatchDialog dlg(m_parent, &allDevices);
+    GOAudioDeviceNode &devNode = data->m_device;
+
+    dlg.FillWith(devNode);
+    if (dlg.ShowModal() == wxID_OK) {
+      dlg.SaveTo(devNode);
+      UpdateDevice(selection);
+    }
+  }
 }
 
 void GOSettingsAudio::OnOutputDefault(wxCommandEvent &event) {

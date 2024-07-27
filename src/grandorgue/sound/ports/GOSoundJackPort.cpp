@@ -180,6 +180,7 @@ GOSoundPort *GOSoundJackPort::create(
   const GOPortsConfig &portsConfig,
   GOSound *sound,
   GODeviceNamePattern &pattern) {
+  GOSoundPort *pPort = nullptr;
 #if defined(GO_USE_JACK)
   const wxString devName = getName();
 
@@ -188,10 +189,12 @@ GOSoundPort *GOSoundJackPort::create(
     && (
       pattern.DoesMatch(devName)
       || pattern.DoesMatch(devName + GOPortFactory::c_NameDelim)
-      || pattern.DoesMatch(OLD_STYLE_NAME)))
-    return new GOSoundJackPort(sound, devName);
+      || pattern.DoesMatch(OLD_STYLE_NAME))) {
+    pattern.SetPhysicalName(devName);
+    pPort = new GOSoundJackPort(sound, devName);
+  }
 #endif
-  return NULL;
+  return pPort;
 }
 
 void GOSoundJackPort::addDevices(

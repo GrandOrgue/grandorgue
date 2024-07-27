@@ -246,6 +246,7 @@ GOSoundPort *GOSoundRtPort::create(
             && // skip input-only devices that may have the same name (osx
                // usb)
             info.outputChannels > 0) {
+            pattern.SetPhysicalName(devName);
             port = new GOSoundRtPort(sound, rtApi, deviceId, devName);
             break;
           }
