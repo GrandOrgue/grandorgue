@@ -21,11 +21,13 @@ private:
 public:
   typedef std::vector<GOMidiDeviceConfig *> RefVector;
 
-  bool m_IsEnabled;
-
+  bool m_IsEnabled = true;
   // Midi-in only
   int m_ChannelShift = 0;
+  wxString m_OutputDeviceName;
   GOMidiDeviceConfig *p_OutputDevice = NULL;
+
+  GOMidiDeviceConfig() {}
 
   GOMidiDeviceConfig(
     const wxString &logicalName,
@@ -40,6 +42,18 @@ public:
   GOMidiDeviceConfig(const GOMidiDeviceConfig &src) : GODeviceNamePattern(src) {
     AssignMidiDeviceConfig(src);
   }
+
+  void LoadDeviceConfig(
+    GOConfigReader &cfg,
+    const wxString &group,
+    const wxString &prefix,
+    const bool isInput);
+
+  void SaveDeviceConfig(
+    GOConfigWriter &cfg,
+    const wxString &group,
+    const wxString &prefix,
+    const bool isInput) const;
 };
 
 #endif /* GOMIDIDEVICECONFIG_H */
