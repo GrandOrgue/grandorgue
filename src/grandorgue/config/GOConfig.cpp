@@ -575,10 +575,6 @@ int GOConfig::GetStrictAudioGroupId(const wxString &str) {
   return -1;
 }
 
-const std::vector<GOAudioDeviceConfig> &GOConfig::GetAudioDeviceConfig() {
-  return m_AudioDeviceConfig;
-}
-
 void GOConfig::SetAudioDeviceConfig(
   const std::vector<GOAudioDeviceConfig> &config) {
   if (!config.size())
