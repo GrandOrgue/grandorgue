@@ -23,7 +23,7 @@ case $STEP in
         SCRIPT=$GCOVR_SCRIPT
     ;;
     "")
-        SCRIPT="$TEST_SCRIPT && $COVERAGE_SCRIPT && $GCOVR_SCRIPT"
+        SCRIPT="$TEST_SCRIPT ; $COVERAGE_SCRIPT ; $GCOVR_SCRIPT"
 esac;
 
 $SCRIPT
