@@ -19,15 +19,9 @@ jobs:
         working-directory: ${{github.workspace}}
         run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64
   
-      - name: Test
+      - name: Run tests
         working-directory: ${{github.workspace}}
-        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh test
-      - name: Coverage
-        working-directory: ${{github.workspace}}
-        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh coverage
-      - name: Coverage Report
-        working-directory: ${{github.workspace}}
-        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh gcovr
+        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
