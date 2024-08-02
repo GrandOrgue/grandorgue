@@ -210,28 +210,23 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   wxString info_filename
     = cfg.ReadFileName(ODFSetting, WX_ORGAN, wxT("InfoFilename"), false);
   wxFileName fn;
+  m_InfoFilename = wxEmptyString;
   if (info_filename.IsEmpty()) {
     /* Resolve organ file path */
     fn = GetODFFilename();
     fn.SetExt(wxT("html"));
     if (fn.FileExists() && !m_FileStore.AreArchivesUsed())
       m_InfoFilename = fn.GetFullPath();
-    else
-      m_InfoFilename = wxEmptyString;
   } else {
     if (!m_FileStore.AreArchivesUsed()) {
-      info_filename.Replace(
-        wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-      wxString infoFilePath
-        = wxFileName(GetODFFilename()).GetPath(wxPATH_GET_SEPARATOR)
-        + info_filename;
-      fn = infoFilePath;
+      GOLoaderFilename::GenerateFullPath(
+        info_filename, wxFileName(GetODFFilename()).GetPath());
+      fn = info_filename;
       if (
         fn.FileExists()
         && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm"))) {
         m_InfoFilename = fn.GetFullPath();
       } else {
-        m_InfoFilename = wxEmptyString;
         if (m_config.ODFCheck())
           wxLogWarning(
             _("InfoFilename %s either does not exist or is not a html file"),

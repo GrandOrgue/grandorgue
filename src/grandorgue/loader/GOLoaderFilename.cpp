@@ -7,7 +7,6 @@
 
 #include "GOLoaderFilename.h"
 
-#include <wx/filename.h>
 #include <wx/log.h>
 
 #include "archive/GOArchive.h"
@@ -54,9 +53,7 @@ std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
 
     wxString fullPath = m_path;
 
-    fullPath.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-    if (!baseDir.IsEmpty())
-      fullPath = baseDir + wxFileName::GetPathSeparator() + fullPath;
+    GenerateFullPath(fullPath, baseDir);
 
     if (fullPath.IsEmpty())
       throw _("File name is empty");
