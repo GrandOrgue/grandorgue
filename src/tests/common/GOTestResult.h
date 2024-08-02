@@ -27,13 +27,8 @@ public:
 
   const wxString GetMessage() {
     wxString result = "";
-    // if (this->isFailed())
-    //     result += "\033[1;31m";
     result += m_result_message;
-    // if (this->isFailed())
-    //     result += "\033[0m";
     return result;
-    // return m_result_message;
   }
   bool isFailed() { return failed; }
 };

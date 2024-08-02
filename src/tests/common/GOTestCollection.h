@@ -13,7 +13,7 @@
 
 class GOTestCollection {
   /*
-      This is the class that collects all the tests (derived from GOTest)
+      This is the class that collects all the tests (tests_ derived from GOTest)
   */
 
 private:
@@ -28,18 +28,10 @@ private:
 
 public:
   static GOTestCollection *Instance() {
-    //
-    // instanciation unique garantie, du moins si
-    // le programme n'a qu'un seul fil d'exécution;
-    // si votre programme comprend plusieurs fils
-    // d'exécution, ce qui suit est insuffisant
-    //
     if (!go_test_collection)
       go_test_collection = new GOTestCollection;
     return go_test_collection;
   }
-  //   GOTestCollection();
-  //   virtual ~GOTestCollection();
   GOTestResultCollection run();
   void add_test(GOTest *test);
   int get_failed_count();

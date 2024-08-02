@@ -8,11 +8,7 @@
 #include <iterator>
 #include <vector>
 
-GOTestResult::GOTestResult() {
-
-  // m_result_message = "";
-  this->failed = false;
-}
+GOTestResult::GOTestResult() { this->failed = false; }
 
 GOTestResult::GOTestResult(wxString message) : m_result_message(message) {
   failed = false;
