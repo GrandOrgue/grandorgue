@@ -8,6 +8,7 @@
 #include "GOSoundPortaudioPort.h"
 
 #include <wx/intl.h>
+#include <wx/regex.h>
 
 #include "config/GODeviceNamePattern.h"
 
@@ -171,6 +172,30 @@ GOSoundPort *GOSoundPortaudioPort::create(
   return pPort;
 }
 
+static const wxString WX_ALSA = wxT("ALSA");
+static const wxRegEx REGEX_ALSA_NAME_PATTERN("(.+) \\(hw:([0-9]+),([0-9]+)\\)");
+
+static void fill_logical_name_and_regex(GOSoundDevInfo &info) {
+  const wxString &apiName = info.GetApiName();
+  const wxString &deviceName = info.GetName();
+
+  if (apiName == wxT("ALSA")) {
+    if (REGEX_ALSA_NAME_PATTERN.Matches(deviceName)) {
+      const wxString devName1 = REGEX_ALSA_NAME_PATTERN.GetMatch(deviceName, 1);
+      const wxString devName3 = REGEX_ALSA_NAME_PATTERN.GetMatch(deviceName, 3);
+
+      info.SetDefaultNameRegex(GOSoundPortFactory::getFullDeviceName(
+        GOSoundPortaudioPort::PORT_NAME,
+        apiName,
+        wxString::Format("%s \\(hw:[0-9]+,%s\\)", devName1, devName3)));
+      info.SetDefaultLogicalName(GOSoundPortFactory::getFullDeviceName(
+        GOSoundPortaudioPort::PORT_NAME,
+        apiName,
+        wxString::Format("%s (hw:,%s)", devName1, devName3)));
+    }
+  }
+}
+
 void GOSoundPortaudioPort::addDevices(
   const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &result) {
   if (portsConfig.IsEnabled(PORT_NAME)) {
@@ -187,7 +212,8 @@ void GOSoundPortaudioPort::addDevices(
           wxString::FromAscii(Pa_GetHostApiInfo(pInfo->hostApi)->name),
           wxString(pInfo->name),
           pInfo->maxOutputChannels,
-          i == defaultIndex);
+          i == defaultIndex,
+          fill_logical_name_and_regex);
       }
     }
   }
