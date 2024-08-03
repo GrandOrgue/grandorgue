@@ -219,19 +219,16 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
       m_InfoFilename = fn.GetFullPath();
   } else {
     if (!m_FileStore.AreArchivesUsed()) {
-      GOLoaderFilename::GenerateFullPath(
+      fn = GOLoaderFilename::generateFullPath(
         info_filename, wxFileName(GetODFFilename()).GetPath());
-      fn = info_filename;
       if (
         fn.FileExists()
-        && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm"))) {
+        && (fn.GetExt() == wxT("html") || fn.GetExt() == wxT("htm")))
         m_InfoFilename = fn.GetFullPath();
-      } else {
-        if (m_config.ODFCheck())
-          wxLogWarning(
-            _("InfoFilename %s either does not exist or is not a html file"),
-            fn.GetFullPath());
-      }
+      else if (m_config.ODFCheck())
+        wxLogWarning(
+          _("InfoFilename %s either does not exist or is not a html file"),
+          fn.GetFullPath());
     }
   }
 

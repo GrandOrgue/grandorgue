@@ -10,7 +10,6 @@
 
 #include <memory>
 
-#include <wx/filename.h>
 #include <wx/string.h>
 
 class GOOpenedFile;
@@ -64,11 +63,8 @@ public:
     return pFileName ? pFileName->GenerateMessage(srcMsg) : srcMsg;
   }
 
-  static void GenerateFullPath(wxString &relPath, wxString baseDir) {
-    relPath.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-    if (!baseDir.IsEmpty())
-      relPath = baseDir + wxFileName::GetPathSeparator() + relPath;
-  }
+  static wxString generateFullPath(
+    const wxString &relPath, const wxString &baseDir);
 };
 
 #endif

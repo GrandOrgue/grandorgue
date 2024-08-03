@@ -7,6 +7,7 @@
 
 #include "GOLoaderFilename.h"
 
+#include <wx/filename.h>
 #include <wx/log.h>
 
 #include "archive/GOArchive.h"
@@ -51,9 +52,7 @@ std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
     else if (m_RootKind == ROOT_RESOURCE)
       baseDir = fileStore.GetResourceDirectory();
 
-    wxString fullPath = m_path;
-
-    GenerateFullPath(fullPath, baseDir);
+    wxString fullPath = generateFullPath(m_path, baseDir);
 
     if (fullPath.IsEmpty())
       throw _("File name is empty");
@@ -62,4 +61,13 @@ std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
     file = new GOStandardFile(fullPath, m_path);
   }
   return std::unique_ptr<GOOpenedFile>(file);
+}
+
+wxString GOLoaderFilename::generateFullPath(
+  const wxString &relPath, const wxString &baseDir) {
+  wxString res = relPath;
+  res.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
+  if (!baseDir.IsEmpty())
+    res = baseDir + wxFileName::GetPathSeparator() + res;
+  return res;
 }
