@@ -1,3 +1,4 @@
+# 3.15.0 (2024-08-06)
 - Added capability of regex matching audio device names https://github.com/GrandOrgue/grandorgue/issues/1265
 - Added a checkbox-based Stops dialog (Audio/Midi -> Stops) https://github.com/GrandOrgue/grandorgue/issues/1816
 - Fixed not compatibilyty between polyphase interpolation and loseless compression https://github.com/GrandOrgue/grandorgue/issues/710
