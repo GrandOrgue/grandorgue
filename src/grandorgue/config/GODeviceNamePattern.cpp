@@ -9,6 +9,9 @@
 
 #include <wx/regex.h>
 
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
+
 GODeviceNamePattern::GODeviceNamePattern(
   const wxString &logicalName,
   const wxString &regEx,
@@ -42,6 +45,32 @@ void GODeviceNamePattern::SetRegEx(const wxString &regEx) {
     m_RegEx = regEx;
     m_CompiledRegEx = regEx.IsEmpty() ? nullptr : new wxRegEx(regEx);
   }
+}
+
+static const wxString WX_REGEX = wxT("RegEx");
+static const wxString WX_PORT_NAME = wxT("PortName");
+static const wxString WX_API_NAME = wxT("ApiName");
+
+void GODeviceNamePattern::LoadNamePattern(
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &prefix,
+  const wxString &nameKey) {
+  m_LogicalName = cfg.ReadString(CMBSetting, group, prefix + nameKey),
+  SetRegEx(cfg.ReadString(CMBSetting, group, prefix + WX_REGEX, false));
+  m_PortName = cfg.ReadString(CMBSetting, group, prefix + WX_PORT_NAME, false);
+  m_ApiName = cfg.ReadString(CMBSetting, group, prefix + WX_API_NAME, false);
+}
+
+void GODeviceNamePattern::SaveNamePattern(
+  GOConfigWriter &cfg,
+  const wxString &group,
+  const wxString &prefix,
+  const wxString &nameKey) const {
+  cfg.WriteString(group, prefix + nameKey, m_LogicalName);
+  cfg.WriteString(group, prefix + WX_REGEX, m_RegEx);
+  cfg.WriteString(group, prefix + WX_PORT_NAME, m_PortName);
+  cfg.WriteString(group, prefix + WX_API_NAME, m_ApiName);
 }
 
 bool GODeviceNamePattern::DoesMatch(const wxString &physicalName) {

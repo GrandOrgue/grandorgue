@@ -54,6 +54,7 @@ public:
   void ShowPanel(unsigned id);
   void ShowOrganSettingsDialog();
   void ShowMidiList();
+  void ShowStops();
 
   bool Save();
   bool Export(const wxString &cmb);

@@ -7,7 +7,7 @@
 
 #include "GOSettingsMidiDeviceList.h"
 
-#include "GOSettingsMidiMatchDialog.h"
+#include "GOSettingsDeviceMatchDialog.h"
 
 GOSettingsMidiDeviceList::GOSettingsMidiDeviceList(
   const ptr_vector<GOMidiPort> &ports,
@@ -95,7 +95,8 @@ void GOSettingsMidiDeviceList::OnChecked(wxCommandEvent &event) {
 
 void GOSettingsMidiDeviceList::OnMatchingClick(wxCommandEvent &event) {
   GOMidiDeviceConfig &devConf = GetSelectedDeviceConf();
-  GOSettingsMidiMatchDialog dlg(m_parent, &m_ListedConfs);
+  GOSettingsDeviceMatchDialog dlg(
+    m_parent, (std::vector<const GODeviceNamePattern *> *)&m_ListedConfs);
 
   dlg.FillWith(devConf);
   if (dlg.ShowModal() == wxID_OK) {

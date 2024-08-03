@@ -566,6 +566,27 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
           <para>The <emphasis role="strong">Configure</emphasis> button opens the <link linkend="midieventeditor">MIDI event editor</link> dialog for this element.</para>
           <para>Double-clicking on the element in the list opens the MIDI event editor as well.</para>
         </sect3>
+        <sect3 id="accessibility-stops">
+          <title>Stops</title>
+          <indexterm><primary>Stops</primary></indexterm>
+          <figure>
+            <title>Stops</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="images/accessibility_stops.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+          <para>
+	    Opens a window displaying all stops and switches. Unlike GUI Panels,
+	    it uses standard checkboxes instead of bitmap images, so it can be
+	    used with a screen reader software.
+	  </para>
+          <para>
+	    Checking or unchecking a stop or a switch causes engaging or 
+	    disengaging the object in the organ
+          </para>
+        </sect3>
         <sect3>
           <title>Sound Output State</title>
           <mediaobject><imageobject><imagedata fileref="images/sound_output_state.png"/></imageobject></mediaobject>
@@ -4840,13 +4861,13 @@ the same channel.
               Grandorgue recognizes the MIDI device
             </para>
             <indexterm>
-              <primary>MIDI Matching</primary>
+              <primary>Device Matching</primary>
             </indexterm>
             <figure>
-              <title>MIDI device matching properties</title>
+              <title>Device matching properties</title>
               <mediaobject>
                 <imageobject>
-                  <imagedata fileref="images/midi_matching_editor.png"/>
+                  <imagedata fileref="images/device_matching_editor.png"/>
                 </imageobject>
               </mediaobject>
             </figure>
@@ -4855,9 +4876,9 @@ the same channel.
                 <term>Physical device name</term>
                 <listitem>
                   <para>
-                  This is the name of MIDI device as it is reported by a MIDI port.
-                  A user can not alter it, but this name may be not persistent
-                  across reboots
+                    This is the name of a Audio/MIDI device as it is reported by
+                    the Sound/MIDI port. A user can not alter it, but this name
+                    may be not persistent across reboots
                   </para>
                 </listitem>
               </varlistentry>

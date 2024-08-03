@@ -28,7 +28,7 @@ void load_coupler(
   const wxString &recorderNameFmt,
   const wxString &couplerLabel) {
   GOManual *pSrcManual = organModel.GetManual(srcManualN);
-  GOCoupler *pCoupler = new GOCoupler(organModel, srcManualN);
+  GOCoupler *pCoupler = new GOCoupler(organModel, srcManualN, true);
 
   pCoupler->Init(
     cfg,

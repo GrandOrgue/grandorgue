@@ -12,6 +12,9 @@
 
 class wxRegEx;
 
+class GOConfigReader;
+class GOConfigWriter;
+
 class GODeviceNamePattern {
 private:
   wxRegEx *m_CompiledRegEx = nullptr;
@@ -25,6 +28,8 @@ private:
   wxString m_PhysicalName;
 
 public:
+  GODeviceNamePattern() {}
+
   GODeviceNamePattern(
     const wxString &logicalName,
     const wxString &regEx = wxEmptyString,
@@ -52,6 +57,18 @@ public:
 
   const wxString &GetPhysicalName() const { return m_PhysicalName; }
   void SetPhysicalName(const wxString &name) { m_PhysicalName = name; }
+
+  void LoadNamePattern(
+    GOConfigReader &cfg,
+    const wxString &group,
+    const wxString &prefix,
+    const wxString &nameKey = wxEmptyString);
+
+  void SaveNamePattern(
+    GOConfigWriter &cfg,
+    const wxString &group,
+    const wxString &prefix,
+    const wxString &nameKey = wxEmptyString) const;
 
   void AssignNamePattern(const GODeviceNamePattern &src);
 

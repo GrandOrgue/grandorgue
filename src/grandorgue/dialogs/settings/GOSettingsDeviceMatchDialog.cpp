@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSettingsMidiMatchDialog.h"
+#include "GOSettingsDeviceMatchDialog.h"
 
 #include <wx/app.h>
 #include <wx/msgdlg.h>
@@ -15,20 +15,21 @@
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 
+#include "config/GODeviceNamePattern.h"
 #include "help/GOHelpRequestor.h"
 
-BEGIN_EVENT_TABLE(GOSettingsMidiMatchDialog, wxDialog)
-EVT_TEXT(ID_LOGICAL_NAME, GOSettingsMidiMatchDialog::OnLogicalNameChanged)
-EVT_TEXT(ID_REGEX, GOSettingsMidiMatchDialog::OnRegexChanged)
-EVT_BUTTON(wxID_HELP, GOSettingsMidiMatchDialog::OnHelp)
+BEGIN_EVENT_TABLE(GOSettingsDeviceMatchDialog, wxDialog)
+EVT_TEXT(ID_LOGICAL_NAME, GOSettingsDeviceMatchDialog::OnLogicalNameChanged)
+EVT_TEXT(ID_REGEX, GOSettingsDeviceMatchDialog::OnRegexChanged)
+EVT_BUTTON(wxID_HELP, GOSettingsDeviceMatchDialog::OnHelp)
 END_EVENT_TABLE()
 
-GOSettingsMidiMatchDialog::GOSettingsMidiMatchDialog(
-  wxWindow *parent, std::vector<GOMidiDeviceConfig *> *otherDevices)
+GOSettingsDeviceMatchDialog::GOSettingsDeviceMatchDialog(
+  wxWindow *parent, std::vector<const GODeviceNamePattern *> *otherDevices)
   : wxDialog(
     parent,
     wxID_ANY,
-    _("MIDI device matching properties"),
+    _("Device matching properties"),
     wxDefaultPosition,
     wxSize(400, -1),
     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT),
@@ -64,10 +65,7 @@ GOSettingsMidiMatchDialog::GOSettingsMidiMatchDialog(
   topSizer->Add(mainSizer, 0, wxALL | wxEXPAND, 5);
 
   topSizer->Add(
-    CreateSeparatedButtonSizer(wxOK | wxCANCEL | wxHELP),
-    0,
-    wxALIGN_RIGHT | wxALL | wxEXPAND,
-    5);
+    CreateSeparatedButtonSizer(wxOK | wxCANCEL | wxHELP), 0, wxEXPAND, 5);
 
   m_StatusBar = new wxStatusBar(this);
   topSizer->Add(m_StatusBar, 0, wxEXPAND);
@@ -76,14 +74,15 @@ GOSettingsMidiMatchDialog::GOSettingsMidiMatchDialog(
   Fit();
 }
 
-void GOSettingsMidiMatchDialog::FillWith(const GOMidiDeviceConfig &devConf) {
-  m_PhysicalName = devConf.GetPhysicalName();
-  t_PhysicalName->ChangeValue(devConf.GetPhysicalName());
-  t_LogicalName->ChangeValue(devConf.GetLogicalName());
-  t_regex->ChangeValue(devConf.GetRegEx());
+void GOSettingsDeviceMatchDialog::FillWith(
+  const GODeviceNamePattern &namePattern) {
+  m_PhysicalName = namePattern.GetPhysicalName();
+  t_PhysicalName->ChangeValue(namePattern.GetPhysicalName());
+  t_LogicalName->ChangeValue(namePattern.GetLogicalName());
+  t_regex->ChangeValue(namePattern.GetRegEx());
 }
 
-bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString &errMsg) {
+bool GOSettingsDeviceMatchDialog::ValidateLogicalName(wxString &errMsg) {
   bool isValid = true;
   const wxString &newLogicalName = t_LogicalName->GetValue();
 
@@ -93,7 +92,7 @@ bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString &errMsg) {
   }
   if (isValid && p_OtherDevices)
     // Check logicalName for uniqueness
-    for (const GOMidiDeviceConfig *pDev : *p_OtherDevices)
+    for (const GODeviceNamePattern *pDev : *p_OtherDevices)
       if (
         pDev->GetPhysicalName() != m_PhysicalName
         && pDev->GetLogicalName() == newLogicalName) {
@@ -114,14 +113,14 @@ bool GOSettingsMidiMatchDialog::ValidateLogicalName(wxString &errMsg) {
   return isValid;
 }
 
-void GOSettingsMidiMatchDialog::OnLogicalNameChanged(wxCommandEvent &event) {
+void GOSettingsDeviceMatchDialog::OnLogicalNameChanged(wxCommandEvent &event) {
   wxString errMsg;
 
   ValidateLogicalName(errMsg);
   m_StatusBar->SetStatusText(errMsg);
 }
 
-bool GOSettingsMidiMatchDialog::ValidateRegex(wxString &errMsg) {
+bool GOSettingsDeviceMatchDialog::ValidateRegex(wxString &errMsg) {
   bool isValid = true;
   const wxString &newRegex = t_regex->GetValue();
 
@@ -142,18 +141,18 @@ bool GOSettingsMidiMatchDialog::ValidateRegex(wxString &errMsg) {
   return isValid;
 }
 
-void GOSettingsMidiMatchDialog::OnRegexChanged(wxCommandEvent &event) {
+void GOSettingsDeviceMatchDialog::OnRegexChanged(wxCommandEvent &event) {
   wxString errMsg;
 
   ValidateRegex(errMsg);
   m_StatusBar->SetStatusText(errMsg);
 }
 
-void GOSettingsMidiMatchDialog::OnHelp(wxCommandEvent &event) {
-  GOHelpRequestor::DisplayHelp("MIDI Matching", IsModal());
+void GOSettingsDeviceMatchDialog::OnHelp(wxCommandEvent &event) {
+  GOHelpRequestor::DisplayHelp("Device Matching", IsModal());
 }
 
-bool GOSettingsMidiMatchDialog::Validate() {
+bool GOSettingsDeviceMatchDialog::Validate() {
   wxString errMsg;
   bool isValid = true;
 
@@ -163,11 +162,11 @@ bool GOSettingsMidiMatchDialog::Validate() {
     isValid = ValidateRegex(errMsg);
   if (!isValid)
     wxMessageBox(
-      errMsg, _("MIDI matching error"), wxOK | wxCENTRE | wxICON_ERROR);
+      errMsg, _("Device matching error"), wxOK | wxCENTRE | wxICON_ERROR);
   return isValid;
 }
 
-void GOSettingsMidiMatchDialog::SaveTo(GOMidiDeviceConfig &devConf) {
-  devConf.SetLogicalName(t_LogicalName->GetValue());
-  devConf.SetRegEx(t_regex->GetValue());
+void GOSettingsDeviceMatchDialog::SaveTo(GODeviceNamePattern &namePattern) {
+  namePattern.SetLogicalName(t_LogicalName->GetValue());
+  namePattern.SetRegEx(t_regex->GetValue());
 }
