@@ -4722,6 +4722,21 @@ role="strong">STOP</emphasis> button is depressed.
           </sect4>
         </sect3>
         <sect3>
+          <title>Matching</title>
+          <indexterm>
+            <primary>Audio device matching rules</primary>
+          </indexterm>
+          <para>
+            This feature is available when a <emphasis role="bold">Device:
+            </emphasis> node is selected in the tree.
+          </para>  
+          <para>
+            This button allows to define matching rules for devices whose name
+            may be altered across reboots. See 
+            <link linkend="devicematching">Device Matching</link> for details
+          </para>
+        </sect3>
+        <sect3>
           <title>Revert to default</title>
           <indexterm>
             <primary>Revert audio configuration</primary>
@@ -4769,6 +4784,82 @@ role="strong">STOP</emphasis> button is depressed.
           <para>This feature is available when a <emphasis role="bold">Channel n</emphasis> node is selected in the tree. The <emphasis>Delete</emphasis> button is active only if there are at least two channels defined for the device. Push the <emphasis>Delete</emphasis> button. The selected channel is deleted with its configuration.</para>
         </sect3>
       </sect2>
+    </sect1>
+    <sect1 id="devicematching">
+        <title>Devices Matching</title>
+        <indexterm>
+          <primary>Device Matching</primary>
+        </indexterm>
+        <figure>
+          <title>Device matching properties</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/device_matching_editor.png"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+        <para>
+          This dialog allows to define matching rules for audio/midi device
+          names  
+        </para>
+        <variablelist>
+          <varlistentry>
+            <term>Physical device name</term>
+            <listitem>
+              <para>
+                This is the name of a Audio/MIDI device as it is reported by
+                the Sound/MIDI port. A user can not alter it, but this name
+                may be not persistent across reboots
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>Logical device name</term>
+            <listitem>
+              <para>
+                This is the name of MIDI device as it is presented to the user.
+                By default it is the same name as the physical name, but
+                the user is capable to set some another name
+              </para>
+              <note>
+                <simpara>The logical device name must be unique</simpara>
+              </note>
+              <note>
+                <simpara>
+                  If the user alters the logical name, a regex pattern must
+                  be provided so that GrandOrgue can find this device by its
+                  physical name.
+                </simpara>
+                <simpara>
+                  Specify there the most common part among the physical names
+                  of the device appear across reboots
+                </simpara>
+              </note>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>Physical name regex pattern</term>
+            <listitem>
+              <para>
+                This is a pattern that allows GrandOrgue to find this MIDI
+                device with it's physical device name.
+              </para>
+              <para>
+                The simplest pattern would be the most common part of the
+                physical device name that is present always and it kept
+                across reboots. More advanced regular expressions are also
+                supported, look at
+                <ulink url="https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions">
+                  the full syntax
+                </ulink>
+              </para>
+              <para>
+                By default the regex pattern is empty so the device can be
+                found only if it's physical name is equal to it's logical name
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
     </sect1>
     <sect1 id="mididevicestab">
       <title>MIDI Devices tab</title>
@@ -4858,77 +4949,9 @@ the same channel.
             </para>
             <para>
               The <emphasis>Matching</emphasis> button allows to change the way
-              Grandorgue recognizes the MIDI device
+              Grandorgue recognizes the MIDI device. See 
+              <link linkend="devicematching">Device Matching</link> for details
             </para>
-            <indexterm>
-              <primary>Device Matching</primary>
-            </indexterm>
-            <figure>
-              <title>Device matching properties</title>
-              <mediaobject>
-                <imageobject>
-                  <imagedata fileref="images/device_matching_editor.png"/>
-                </imageobject>
-              </mediaobject>
-            </figure>
-            <variablelist>
-              <varlistentry>
-                <term>Physical device name</term>
-                <listitem>
-                  <para>
-                    This is the name of a Audio/MIDI device as it is reported by
-                    the Sound/MIDI port. A user can not alter it, but this name
-                    may be not persistent across reboots
-                  </para>
-                </listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>Logical device name</term>
-                <listitem>
-                  <para>
-                    This is the name of MIDI device as it is presented to the user.
-                    By default it is the same name as the physical name, but
-                    the user is capable to set some another name
-                  </para>
-                  <note>
-                    <simpara>The logical device name must be unique</simpara>
-                  </note>
-                  <note>
-                    <simpara>
-                      If the user alters the logical name, a regex pattern must
-                      be provided so that GrandOrgue can find this device by its
-                      physical name.
-                    </simpara>
-                    <simpara>
-                      Specify there the most common part among the physical names
-                      of the device appear across reboots
-                    </simpara>
-                  </note>
-                </listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>Physical name regex pattern</term>
-                <listitem>
-                  <para>
-                    This is a pattern that allows GrandOrgue to find this MIDI
-                    device with it's physical device name.
-                  </para>
-                  <para>
-                    The simplest pattern would be the most common part of the
-                    physical device name that is present always and it kept
-                    across reboots. More advanced regular expressions are also
-                    supported, look at
-                    <ulink url="https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions">
-                      the full syntax
-                    </ulink>
-                  </para>
-                  <para>
-                    By default the regex pattern is empty so the device can be
-                    found only if it's physical name is equal to it's logical name
-                  </para>
-                </listitem>
-              </varlistentry>
-            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
