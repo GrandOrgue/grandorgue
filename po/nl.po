@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-15 16:41+0200\n"
-"PO-Revision-Date: 2024-07-17 12:43+0200\n"
+"POT-Creation-Date: 2024-08-03 20:28+0200\n"
+"PO-Revision-Date: 2024-08-03 20:51+0200\n"
 "Last-Translator: Otto B. Wiersma\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -1121,6 +1121,12 @@ msgstr ""
 "Apparaat %s vereist een andere samples per buffer instelling: %d.\n"
 "Pas aub de GrandOrgue audio instellingen aan."
 
+msgid "Device matching error"
+msgstr "Apparaat-matchingfout"
+
+msgid "Device matching properties"
+msgstr "Overeenkomende eigenschappen van apparaten"
+
 #, c-format
 msgid "Device: %s [%d ms requested]"
 msgstr "Apparaat: %s (%d ms aangevraagd)"
@@ -1581,6 +1587,9 @@ msgstr "General"
 msgid "Generals"
 msgstr "Generals"
 
+msgid "Globals"
+msgstr "Globals"
+
 msgid "Gottfried Silbermann nr 1"
 msgstr "Gottfried Silbermann nr. 1"
 
@@ -1993,9 +2002,6 @@ msgstr "MIDI speler"
 msgid "MIDI Recorder"
 msgstr "MIDI recorder"
 
-msgid "MIDI device matching properties"
-msgstr "Overeenkomende eigenschappen van MIDI-apparaten"
-
 msgid "MIDI event: "
 msgstr "MIDI-signaal: "
 
@@ -2013,9 +2019,6 @@ msgstr "MIDI-bestanden (*.mid)|*.mid"
 
 msgid "MIDI header missing"
 msgstr "De MIDI header ontbreekt"
-
-msgid "MIDI matching error"
-msgstr "MIDI-matchingfout"
 
 msgid "MIDI output device"
 msgstr "MIDI uitvoer-apparaat"
@@ -2601,8 +2604,9 @@ msgstr "Registratieknop"
 msgid "Please apply or discard changes first"
 msgstr "Pas de wijzigingen eerst toe of verwijder ze"
 
-msgid "Please enter a volume between -120 and 40 dB"
-msgstr "Voer een volume in tussen -120 en 40 dB"
+#, c-format
+msgid "Please enter a volume between %3.1f and %2.1f dB"
+msgstr "Voer een volume in tussen %3.1f en %2.1f dB"
 
 msgid "Please enter new volume in dB:"
 msgstr "Voer een nieuw volume in in dB:"
@@ -3118,6 +3122,9 @@ msgstr "Stevin (Simon), monochordium 1585"
 
 msgid "Stop"
 msgstr "Stop"
+
+msgid "Stops"
+msgstr "Registers"
 
 #, c-format
 msgid "Strange boolean value for section '%s' entry '%s': %s"
