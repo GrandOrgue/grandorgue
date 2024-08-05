@@ -4786,7 +4786,7 @@ role="strong">STOP</emphasis> button is depressed.
       </sect2>
     </sect1>
     <sect1 id="devicematching">
-        <title>Devices Matching</title>
+        <title>Device Matching</title>
         <indexterm>
           <primary>Device Matching</primary>
         </indexterm>
@@ -4808,8 +4808,8 @@ role="strong">STOP</emphasis> button is depressed.
             <listitem>
               <para>
                 This is the name of a Audio/MIDI device as it is reported by
-                the Sound/MIDI port. A user can not alter it, but this name
-                may be not persistent across reboots
+                the Sound/MIDI port. A user cannot alter it, and this name may
+                be not persistent across reboots
               </para>
             </listitem>
           </varlistentry>
@@ -4817,8 +4817,8 @@ role="strong">STOP</emphasis> button is depressed.
             <term>Logical device name</term>
             <listitem>
               <para>
-                This is the name of MIDI device as it is presented to the user.
-                By default it is the same name as the physical name, but
+                This is the name of Audio/MIDI device as it is presented to the
+                user. By default it is the same name as the physical name, but
                 the user is capable to set some another name
               </para>
               <note>
@@ -4831,8 +4831,8 @@ role="strong">STOP</emphasis> button is depressed.
                   physical name.
                 </simpara>
                 <simpara>
-                  Specify there the most common part among the physical names
-                  of the device appear across reboots
+                  Specify the most common part among the different physical 
+                  names that the device can have across reboots
                 </simpara>
               </note>
             </listitem>
@@ -4841,17 +4841,19 @@ role="strong">STOP</emphasis> button is depressed.
             <term>Physical name regex pattern</term>
             <listitem>
               <para>
-                This is a pattern that allows GrandOrgue to find this MIDI
+                This is a pattern that allows GrandOrgue to find this Audio/MIDI
                 device with it's physical device name.
               </para>
               <para>
                 The simplest pattern would be the most common part of the
-                physical device name that is present always and it kept
-                across reboots. More advanced regular expressions are also
-                supported, look at
-                <ulink url="https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions">
-                  the full syntax
-                </ulink>
+                physical device name that is always present and kept across
+                reboots. More advanced regular expressions are also supported, 
+                look at
+                <ulink
+                  url="https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions"
+                >
+                  https://en.wikibooks.org/wiki/Regular_Expressions/POSIX_Basic_Regular_Expressions
+                </ulink> for the full syntax.
               </para>
               <para>
                 By default the regex pattern is empty so the device can be

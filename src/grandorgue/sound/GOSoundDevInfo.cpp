@@ -47,7 +47,7 @@ GOSoundDevInfo::GOSoundDevInfo(
 
 /* Don't use the short constructor here because it calls to
  * GOSoundPortFactory::getFullDeviceName that uses static variables from other
- * units. The orger of initializing static variables in differed units is not
+ * units. The order of initializing static variables in different units is not
  * defined
  */
 const GOSoundDevInfo GOSoundDevInfo::INVALID_DEVICE_INFO(
