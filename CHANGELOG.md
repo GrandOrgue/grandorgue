@@ -1,3 +1,4 @@
+- Fixed loading organ to not abort if reading InfoFilename failed and also fixed showing link in properties dialog if InfoFilename exists
 # 3.15.0 (2024-08-06)
 - Added capability of regex matching audio device names https://github.com/GrandOrgue/grandorgue/issues/1265
 - Added a checkbox-based Stops dialog (Audio/Midi -> Stops) https://github.com/GrandOrgue/grandorgue/issues/1816
