@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-15 16:41+0200\n"
-"PO-Revision-Date: 2024-07-17 12:43+0200\n"
+"POT-Creation-Date: 2024-08-03 20:28+0200\n"
+"PO-Revision-Date: 2024-08-06 13:41+0200\n"
 "Last-Translator: Otto B. Wiersma\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -718,7 +718,7 @@ msgid "All"
 msgstr "Alle"
 
 msgid "All loops"
-msgstr "Alle lussen"
+msgstr "Alle loops"
 
 msgid "Allocated sample memory"
 msgstr "Toegewezen sample-geheugen"
@@ -1120,6 +1120,12 @@ msgid ""
 msgstr ""
 "Apparaat %s vereist een andere samples per buffer instelling: %d.\n"
 "Pas aub de GrandOrgue audio instellingen aan."
+
+msgid "Device matching error"
+msgstr "Apparaat-matchingfout"
+
+msgid "Device matching properties"
+msgstr "Overeenkomende eigenschappen van apparaten"
 
 #, c-format
 msgid "Device: %s [%d ms requested]"
@@ -1534,7 +1540,7 @@ msgid "Filename contains invalid characters"
 msgstr "De bestandsnaam bevat ongeldige tekens"
 
 msgid "First loop"
-msgstr "Eerste lus"
+msgstr "Eerste loop"
 
 msgid "Fisk-Vogel: Memorial Church at Stanford"
 msgstr "Fisk-Vogel: Memorial Church in Stanford"
@@ -1580,6 +1586,9 @@ msgstr "General"
 
 msgid "Generals"
 msgstr "Generals"
+
+msgid "Globals"
+msgstr "Globals"
 
 msgid "Gottfried Silbermann nr 1"
 msgstr "Gottfried Silbermann nr. 1"
@@ -1800,11 +1809,11 @@ msgid "Invalid local header offset"
 msgstr "Ongeldig lokaal header-begin"
 
 msgid "Invalid loop definition"
-msgstr "Ongeldige lusdefinitie"
+msgstr "Ongeldige loopdefinitie"
 
 #, c-format
 msgid "Invalid loop in the file: %s\n"
-msgstr "Ongeldige lus in bestand: %s\n"
+msgstr "Ongeldige loop in bestand: %s\n"
 
 #, c-format
 msgid "Invalid manual number %s"
@@ -1940,13 +1949,13 @@ msgid "Logical device name:"
 msgstr "De logische apparaatnaam:"
 
 msgid "Longest loop"
-msgstr "Langste lus"
+msgstr "Langste loop"
 
 msgid "Loop loading:"
-msgstr "Het laden van lussen:"
+msgstr "Het laden van loops:"
 
 msgid "Loop too short for a cross fade"
-msgstr "De lus is te kort voor een cross fade"
+msgstr "De loop is te kort voor een cross fade"
 
 msgid "Lossless compression"
 msgstr "Compressie zonder kwaliteitsverlies"
@@ -1993,9 +2002,6 @@ msgstr "MIDI speler"
 msgid "MIDI Recorder"
 msgstr "MIDI recorder"
 
-msgid "MIDI device matching properties"
-msgstr "Overeenkomende eigenschappen van MIDI-apparaten"
-
 msgid "MIDI event: "
 msgstr "MIDI-signaal: "
 
@@ -2013,9 +2019,6 @@ msgstr "MIDI-bestanden (*.mid)|*.mid"
 
 msgid "MIDI header missing"
 msgstr "De MIDI header ontbreekt"
-
-msgid "MIDI matching error"
-msgstr "MIDI-matchingfout"
 
 msgid "MIDI output device"
 msgstr "MIDI uitvoer-apparaat"
@@ -2326,7 +2329,7 @@ msgid "No input directory specified"
 msgstr "Geen invoermap opgegeven"
 
 msgid "No loop found"
-msgstr "Geen lus gevonden"
+msgstr "Geen loop gevonden"
 
 #, c-format
 msgid "No organ section in organ definition %s"
@@ -2354,7 +2357,7 @@ msgid "No title specified"
 msgstr "Geen titel gespecificeerd"
 
 msgid "No valid loops exist in the file"
-msgstr "Er is geen geldige lus in het bestand"
+msgstr "Er is geen geldige loop in het bestand"
 
 #, c-format
 msgid "Non-empty directory '%s'"
@@ -2601,8 +2604,9 @@ msgstr "Registratieknop"
 msgid "Please apply or discard changes first"
 msgstr "Pas de wijzigingen eerst toe of verwijder ze"
 
-msgid "Please enter a volume between -120 and 40 dB"
-msgstr "Voer een volume in tussen -120 en 40 dB"
+#, c-format
+msgid "Please enter a volume between %3.1f and %2.1f dB"
+msgstr "Voer een volume in tussen %3.1f en %2.1f dB"
 
 msgid "Please enter new volume in dB:"
 msgstr "Voer een nieuw volume in in dB:"
@@ -3119,6 +3123,9 @@ msgstr "Stevin (Simon), monochordium 1585"
 msgid "Stop"
 msgstr "Stop"
 
+msgid "Stops"
+msgstr "Registers"
+
 #, c-format
 msgid "Strange boolean value for section '%s' entry '%s': %s"
 msgstr "Vreemde boolean-waarde voor sectie '%s' entry '%s': %s"
@@ -3193,13 +3200,13 @@ msgstr ""
 
 #, c-format
 msgid "The loop %u is ignored: it is too short for crossfade"
-msgstr "De lus %u wordt genegeerd: deze is te kort voor crossfade"
+msgstr "De loop %u wordt genegeerd: deze is te kort voor crossfade"
 
 #, c-format
 msgid ""
 "The loop %u is ignored: not enough samples for crossfade before it's start"
 msgstr ""
-"De lus %u wordt genegeerd: er zijn niet genoeg samples voor crossfade "
+"De loop %u wordt genegeerd: er zijn niet genoeg samples voor crossfade "
 "voordat deze begint"
 
 msgid "The organ package has been registered"
@@ -3991,7 +3998,7 @@ msgid "virtual pipe organ simulator"
 msgstr "virtuele pijporgelsimulator"
 
 msgid "wave does not contain loops"
-msgstr "wave-bestand bevat geen lussen"
+msgstr "wave-bestand bevat geen loops"
 
 msgid "{"
 msgstr "{"
