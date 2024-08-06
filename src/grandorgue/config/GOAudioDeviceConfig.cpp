@@ -12,21 +12,18 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-static constexpr unsigned DEFAULT_LATENCY = 50;
 const wxString GOAudioDeviceConfig::WX_AUDIO_DEVICES = wxT("AudioDevices");
 
 GOAudioDeviceConfig::GOAudioDeviceConfig(
-  const wxString &name, unsigned desiredLatency, uint8_t channels)
-  : m_name(name), m_DesiredLatency(desiredLatency), m_channels(channels) {
-  m_ChannelOutputs.resize(channels);
+  const GOAudioDeviceNode &node, uint8_t nChannels)
+  : GOAudioDeviceNode(node), m_NChannels(nChannels) {
+  ResizeChannels();
 }
-
-GOAudioDeviceConfig::GOAudioDeviceConfig()
-  : GOAudioDeviceConfig(wxEmptyString, DEFAULT_LATENCY, 0) {}
 
 GOAudioDeviceConfig::GOAudioDeviceConfig(
   const std::vector<wxString> &audioGroups)
-  : GOAudioDeviceConfig(wxEmptyString, DEFAULT_LATENCY, 2) {
+  : m_NChannels(2) {
+  ResizeChannels();
   std::vector<GroupOutput> &leftOutput = m_ChannelOutputs[0];
   std::vector<GroupOutput> &rightOutput = m_ChannelOutputs[1];
   for (const auto &groupName : audioGroups) {
@@ -36,31 +33,24 @@ GOAudioDeviceConfig::GOAudioDeviceConfig(
 }
 
 static const wxString WX_DVICE_03D_FMT = wxT("Device%03d");
-static const wxString WX_NAME = wxT("Name");
 static const wxString WX_CHANNEL_COUNT = wxT("ChannelCount");
-static const wxString WX_LATENCY = wxT("Latency");
 static const wxString WX_CHANNEL_03D_FMT = wxT("Channel%03d");
 static const wxString WX_GROUP_COUNT = wxT("GroupCount");
 static const wxString WX_GROUP_03D_FMT = wxT("Group%03d");
+static const wxString WX_NAME = wxT("Name");
 static const wxString WX_LEFT = wxT("Left");
 static const wxString WX_RIGHT = wxT("Right");
 
 void GOAudioDeviceConfig::Load(GOConfigReader &cfg, unsigned deviceN) {
   const wxString p0 = wxString::Format(WX_DVICE_03D_FMT, deviceN);
 
-  m_name = cfg.ReadString(CMBSetting, WX_AUDIO_DEVICES, p0 + WX_NAME);
-  m_DesiredLatency = cfg.ReadInteger(
-    CMBSetting,
-    WX_AUDIO_DEVICES,
-    p0 + WX_LATENCY,
-    0,
-    999,
-    false,
-    DEFAULT_LATENCY);
-  m_channels = (uint8_t)cfg.ReadInteger(
+  LoadDeviceNode(cfg, WX_AUDIO_DEVICES, p0);
+
+  m_NChannels = (uint8_t)cfg.ReadInteger(
     CMBSetting, WX_AUDIO_DEVICES, p0 + WX_CHANNEL_COUNT, 0, 200);
-  m_ChannelOutputs.resize(m_channels);
-  for (uint8_t j = 0; j < m_channels; j++) {
+
+  ResizeChannels();
+  for (uint8_t j = 0; j < m_NChannels; j++) {
     const wxString p1 = p0 + wxString::Format(WX_CHANNEL_03D_FMT, j + 1);
     std::vector<GroupOutput> &groups = m_ChannelOutputs[j];
     const unsigned groupCount = cfg.ReadInteger(
@@ -86,10 +76,9 @@ void GOAudioDeviceConfig::Load(GOConfigReader &cfg, unsigned deviceN) {
 void GOAudioDeviceConfig::Save(GOConfigWriter &cfg, unsigned deviceN) const {
   const wxString p0 = wxString::Format(WX_DVICE_03D_FMT, deviceN);
 
-  cfg.WriteString(WX_AUDIO_DEVICES, p0 + WX_NAME, m_name);
-  cfg.WriteInteger(WX_AUDIO_DEVICES, p0 + WX_CHANNEL_COUNT, m_channels);
-  cfg.WriteInteger(WX_AUDIO_DEVICES, p0 + WX_LATENCY, m_DesiredLatency);
-  for (uint8_t j = 0; j < m_channels; j++) {
+  SaveDeviceNode(cfg, WX_AUDIO_DEVICES, p0);
+  cfg.WriteInteger(WX_AUDIO_DEVICES, p0 + WX_CHANNEL_COUNT, m_NChannels);
+  for (uint8_t j = 0; j < m_NChannels; j++) {
     const wxString p1 = p0 + wxString::Format(WX_CHANNEL_03D_FMT, j + 1);
     const std::vector<GroupOutput> &groups = m_ChannelOutputs[j];
     const unsigned groupCount = groups.size();

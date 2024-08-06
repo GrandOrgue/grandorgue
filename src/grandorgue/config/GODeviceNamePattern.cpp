@@ -73,7 +73,7 @@ void GODeviceNamePattern::SaveNamePattern(
   cfg.WriteString(group, prefix + WX_API_NAME, m_ApiName);
 }
 
-bool GODeviceNamePattern::DoesMatch(const wxString &physicalName) {
+bool GODeviceNamePattern::DoesMatch(const wxString &physicalName) const {
   return (m_CompiledRegEx && m_CompiledRegEx->IsValid()
           && m_CompiledRegEx->Matches(physicalName))
     || m_LogicalName == physicalName;

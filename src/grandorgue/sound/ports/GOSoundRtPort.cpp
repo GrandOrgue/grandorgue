@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,6 +11,7 @@
 #include <wx/log.h>
 
 #include "GOSoundPortFactory.h"
+#include "config/GODeviceNamePattern.h"
 
 const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
 const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
@@ -136,7 +137,7 @@ int GOSoundRtPort::Callback(
     return 1;
 }
 
-wxString compose_device_name(
+static wxString compose_device_name(
   const wxString &prefix, RtAudio *rt_api, const RtAudio::DeviceInfo &info) {
   wxString apiName = RtAudio::getApiName(rt_api->getCurrentApi());
 
@@ -144,9 +145,9 @@ wxString compose_device_name(
     prefix, apiName, wxString(info.name));
 }
 
-wxString GOSoundRtPort::getName(
+static wxString compose_device_name(
   RtAudio *rtApi, const RtAudio::DeviceInfo &devInfo) {
-  return compose_device_name(PORT_NAME, rtApi, devInfo);
+  return compose_device_name(GOSoundRtPort::PORT_NAME, rtApi, devInfo);
 }
 
 wxString get_oldstyle_name(
@@ -202,15 +203,22 @@ const std::vector<wxString> &GOSoundRtPort::getApis() {
 }
 
 GOSoundPort *GOSoundRtPort::create(
-  const GOPortsConfig &portsConfig, GOSound *sound, wxString name) {
+  const GOPortsConfig &portsConfig,
+  GOSound *sound,
+  GODeviceNamePattern &pattern) {
   GOSoundRtPort *port = NULL;
 
   if (portsConfig.IsEnabled(PORT_NAME)) {
-    GOSoundPortFactory::NameParser parser(name);
-    const wxString subsysName = parser.nextComp();
-    wxString apiName = (subsysName == PORT_NAME || subsysName == PORT_NAME_OLD)
-      ? parser.nextComp()
-      : wxT("");
+    wxString portName = pattern.GetPortName();
+    wxString apiName = pattern.GetApiName();
+
+    if (portName.IsEmpty()) {
+      GOSoundPortFactory::NameParser parser(pattern.GetLogicalName());
+
+      portName = parser.nextComp();
+      if (portName == PORT_NAME || portName == PORT_NAME_OLD)
+        apiName = parser.nextComp();
+    }
 
     std::vector<RtAudio::Api> rtaudio_apis;
     RtAudio::getCompiledApi(rtaudio_apis);
@@ -227,15 +235,18 @@ GOSoundPort *GOSoundRtPort::create(
         rtApi = new RtAudio(apiIndex);
         for (auto deviceId : rtApi->getDeviceIds()) {
           const RtAudio::DeviceInfo info = rtApi->getDeviceInfo(deviceId);
-          const wxString devName = getName(rtApi, info);
+          const wxString devName = compose_device_name(rtApi, info);
 
           if (
-            (devName == name || devName + GOPortFactory::c_NameDelim == name
-             || (apiName.IsEmpty() && get_oldstyle_name(apiIndex, rtApi, info) == name)
-             || compose_device_name(PORT_NAME_OLD, rtApi, info) == name)
+            (pattern.DoesMatch(devName)
+             || pattern.DoesMatch(devName + GOPortFactory::c_NameDelim)
+             || (apiName.IsEmpty() && pattern.DoesMatch(get_oldstyle_name(apiIndex, rtApi, info)))
+             || pattern.DoesMatch(
+               compose_device_name(PORT_NAME_OLD, rtApi, info)))
             && // skip input-only devices that may have the same name (osx
                // usb)
             info.outputChannels > 0) {
+            pattern.SetPhysicalName(devName);
             port = new GOSoundRtPort(sound, rtApi, deviceId, devName);
             break;
           }
@@ -261,23 +272,20 @@ void GOSoundRtPort::addDevices(
       const RtAudio::Api apiIndex = rtaudio_apis[k];
 
       if (portsConfig.IsEnabled(PORT_NAME, RtAudio::getApiName(apiIndex))) {
-        RtAudio *rtApi = nullptr;
+        RtAudio rtApi(apiIndex);
+        wxString apiName = RtAudio::getApiName(rtApi.getCurrentApi());
 
-        rtApi = new RtAudio(apiIndex);
-        for (auto deviceId : rtApi->getDeviceIds()) {
-          RtAudio::DeviceInfo dev_info = rtApi->getDeviceInfo(deviceId);
+        for (auto deviceId : rtApi.getDeviceIds()) {
+          RtAudio::DeviceInfo devInfo = rtApi.getDeviceInfo(deviceId);
 
-          if (dev_info.ID && dev_info.outputChannels > 0) {
-            GOSoundDevInfo info;
-
-            info.channels = dev_info.outputChannels;
-            info.isDefault = dev_info.isDefaultOutput;
-            info.name = getName(rtApi, dev_info);
-            result.push_back(info);
-          }
+          if (devInfo.ID && devInfo.outputChannels > 0)
+            result.emplace_back(
+              PORT_NAME,
+              apiName,
+              wxString(devInfo.name),
+              devInfo.outputChannels,
+              devInfo.isDefaultOutput);
         }
-        if (rtApi)
-          delete rtApi;
       }
     }
   }
