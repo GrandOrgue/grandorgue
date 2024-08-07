@@ -42,6 +42,7 @@ class GOSettingsAudio : public wxPanel, GOSettingsPorts {
     ID_OUTPUT_DEL,
     ID_OUTPUT_CHANGE,
     ID_OUTPUT_PROPERTIES,
+    ID_OUTPUT_MATCHING,
     ID_OUTPUT_DEFAULT,
   };
 
@@ -62,19 +63,20 @@ private:
   wxButton *m_DelMap;
   wxButton *m_ChangeMap;
   wxButton *m_PropertiesMap;
+  wxButton *m_MatchingMap;
   wxButton *m_DefaultMap;
 
   GOPortsConfig m_PortsConfigPopulatedWith;
   std::vector<GOSoundDevInfo> m_DeviceList;
 
   AudioItemData *GetObject(const wxTreeItemId &id);
-  wxTreeItemId GetDeviceNode(const wxString &name);
+  wxTreeItemId FindDeviceNodeByPhysicalName(const wxString &name);
   wxTreeItemId GetChannelNode(const wxTreeItemId &audio, unsigned channel);
   wxTreeItemId GetGroupNode(
     const wxTreeItemId &channel, const wxString &name, bool left);
 
-  wxTreeItemId AddDeviceNode(wxString name);
-  wxTreeItemId AddDeviceNode(wxString name, unsigned latency);
+  wxTreeItemId AddDeviceNode(const GOAudioDeviceNode &node);
+  wxTreeItemId AddDeviceNode(const GOSoundDevInfo &deviceInfo);
   wxTreeItemId AddChannelNode(const wxTreeItemId &audio, unsigned channel);
   wxTreeItemId AddGroupNode(
     const wxTreeItemId &channel, const wxString &name, bool left, float volume);
@@ -83,7 +85,7 @@ private:
   void UpdateButtons();
 
   void AssureDeviceList();
-  std::vector<wxString> GetRemainingAudioDevices(
+  std::vector<GOSoundDevInfo> GetRemainingAudioDevices(
     const wxTreeItemId *ignoreItem);
   std::vector<std::pair<wxString, bool>> GetRemainingAudioGroups(
     const wxTreeItemId &channel);
@@ -98,6 +100,7 @@ private:
   void OnOutputDel(wxCommandEvent &event);
   void OnOutputChange(wxCommandEvent &event);
   void OnOutputProperties(wxCommandEvent &event);
+  void OnOutputMatching(wxCommandEvent &event);
   void OnOutputDefault(wxCommandEvent &event);
 
 public:

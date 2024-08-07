@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,6 +10,8 @@
 #include "GOSoundJackPort.h"
 
 #include <wx/log.h>
+
+#include "config/GODeviceNamePattern.h"
 
 const wxString GOSoundJackPort::PORT_NAME = wxT("Jack");
 
@@ -24,6 +26,7 @@ GOSoundJackPort::~GOSoundJackPort() { Close(); }
 
 static const jack_options_t JACK_OPTIONS = JackNullOption;
 static const char *CLIENT_NAME = "GrandOrgueAudio";
+static const wxString DEVICE_NAME = "Native Output";
 
 void GOSoundJackPort::JackLatencyCallback(
   jack_latency_callback_mode_t mode, void *data) {
@@ -174,28 +177,31 @@ void GOSoundJackPort::Close() {
 static const wxString OLD_STYLE_NAME = wxT("Jack Output");
 
 GOSoundPort *GOSoundJackPort::create(
-  const GOPortsConfig &portsConfig, GOSound *sound, wxString name) {
+  const GOPortsConfig &portsConfig,
+  GOSound *sound,
+  GODeviceNamePattern &pattern) {
+  GOSoundPort *pPort = nullptr;
 #if defined(GO_USE_JACK)
   const wxString devName = getName();
 
   if (
     portsConfig.IsEnabled(PORT_NAME)
-    && (name == devName || devName + GOPortFactory::c_NameDelim == name || name == OLD_STYLE_NAME))
-    return new GOSoundJackPort(sound, devName);
+    && (
+      pattern.DoesMatch(devName)
+      || pattern.DoesMatch(devName + GOPortFactory::c_NameDelim)
+      || pattern.DoesMatch(OLD_STYLE_NAME))) {
+    pattern.SetPhysicalName(devName);
+    pPort = new GOSoundJackPort(sound, devName);
+  }
 #endif
-  return NULL;
+  return pPort;
 }
 
 void GOSoundJackPort::addDevices(
   const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &result) {
 #if defined(GO_USE_JACK)
-  if (portsConfig.IsEnabled(PORT_NAME)) {
-    GOSoundDevInfo info;
-
-    info.channels = MAX_CHANNELS_COUNT;
-    info.isDefault = true;
-    info.name = getName();
-    result.push_back(info);
-  }
+  if (portsConfig.IsEnabled(PORT_NAME))
+    result.emplace_back(
+      PORT_NAME, wxEmptyString, DEVICE_NAME, MAX_CHANNELS_COUNT, false);
 #endif
 }

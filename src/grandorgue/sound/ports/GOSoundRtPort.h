@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,9 +8,13 @@
 #ifndef GOSOUNDRTPORT_H
 #define GOSOUNDRTPORT_H
 
-#include "GOSoundPort.h"
 #include "RtAudio.h"
+
 #include "sound/GOSoundDevInfo.h"
+
+#include "GOSoundPort.h"
+
+class GODeviceNamePattern;
 
 class GOSoundRtPort : public GOSoundPort {
 private:
@@ -25,8 +29,6 @@ private:
     double streamTime,
     RtAudioStreamStatus status,
     void *userData);
-
-  static wxString getName(RtAudio *rtApi, const RtAudio::DeviceInfo &devInfo);
 
   bool processRtResult(RtAudioErrorType rtResult, bool isToThrowOnError = true);
 
@@ -46,7 +48,9 @@ public:
 
   static const std::vector<wxString> &getApis();
   static GOSoundPort *create(
-    const GOPortsConfig &portsConfig, GOSound *sound, wxString name);
+    const GOPortsConfig &portsConfig,
+    GOSound *sound,
+    GODeviceNamePattern &pattern);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);
 };

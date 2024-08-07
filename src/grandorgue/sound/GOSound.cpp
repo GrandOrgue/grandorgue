@@ -32,7 +32,7 @@ GOSound::GOSound(GOConfig &settings)
     m_CalcCount(),
     m_SamplesPerBuffer(0),
     meter_counter(0),
-    m_defaultAudioDevice(),
+    m_DefaultAudioDevice(GOSoundDevInfo::getInvalideDeviceInfo()),
     m_OrganController(0),
     m_config(settings),
     m_midi(settings) {}
@@ -73,7 +73,7 @@ void GOSound::OpenSound() {
   assert(m_AudioOutputs.size() == 0);
 
   const unsigned audio_group_count = m_config.GetAudioGroups().size();
-  const std::vector<GOAudioDeviceConfig> &audio_config
+  std::vector<GOAudioDeviceConfig> &audio_config
     = m_config.GetAudioDeviceConfig();
   const unsigned audioDeviceCount = audio_config.size();
   std::vector<GOAudioOutputConfiguration> engine_config;
@@ -135,24 +135,29 @@ void GOSound::OpenSound() {
   else
     m_SoundEngine.ClearSetup();
 
+  const GOPortsConfig &portsConfig(m_config.GetSoundPortsConfig());
+
   try {
-    for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-      const GOAudioDeviceConfig &deviceConfig = audio_config[i];
-      wxString name = deviceConfig.GetName();
+    for (unsigned l = m_AudioOutputs.size(), i = 0; i < l; i++) {
+      GOAudioDeviceConfig &deviceConfig = audio_config[i];
+      GODeviceNamePattern *pNamePattern = &deviceConfig;
+      GODeviceNamePattern defaultDevicePattern;
 
-      const GOPortsConfig &portsConfig(m_config.GetSoundPortsConfig());
+      if (!pNamePattern->IsFilled()) {
+        FillDeviceNamePattern(
+          GetDefaultAudioDevice(portsConfig), defaultDevicePattern);
+        pNamePattern = &defaultDevicePattern;
+      }
 
-      if (name.IsEmpty())
-        name = GetDefaultAudioDevice(portsConfig);
+      GOSoundPort *pPort
+        = GOSoundPortFactory::create(portsConfig, this, *pNamePattern);
 
-      m_AudioOutputs[i].port
-        = GOSoundPortFactory::create(portsConfig, this, name);
-      if (!m_AudioOutputs[i].port)
+      if (!pPort)
         throw wxString::Format(
           _("Output device %s not found - no sound output will occur"),
-          name.c_str());
-
-      m_AudioOutputs[i].port->Init(
+          pNamePattern->GetRegEx());
+      m_AudioOutputs[i].port = pPort;
+      pPort->Init(
         deviceConfig.GetChannels(),
         GetEngine().GetSampleRate(),
         m_SamplesPerBuffer,
@@ -302,22 +307,33 @@ std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
   // Because some devices (ex. ASIO) cann't be open more than once
   // then close the current audio device
   AssureSoundIsClosed();
-  m_defaultAudioDevice = wxEmptyString;
+  m_DefaultAudioDevice = GOSoundDevInfo::getInvalideDeviceInfo();
+
   std::vector<GOSoundDevInfo> list
     = GOSoundPortFactory::getDeviceList(portsConfig);
-  for (unsigned i = 0; i < list.size(); i++)
-    if (list[i].isDefault) {
-      m_defaultAudioDevice = list[i].name;
+
+  for (const auto &devInfo : list)
+    if (devInfo.IsDefault()) {
+      m_DefaultAudioDevice = devInfo;
       break;
     }
   return list;
 }
 
-const wxString GOSound::GetDefaultAudioDevice(
+const GOSoundDevInfo &GOSound::GetDefaultAudioDevice(
   const GOPortsConfig &portsConfig) {
-  if (m_defaultAudioDevice.IsEmpty())
+  if (!m_DefaultAudioDevice.IsValid())
     GetAudioDevices(portsConfig);
-  return m_defaultAudioDevice;
+  return m_DefaultAudioDevice;
+}
+
+void GOSound::FillDeviceNamePattern(
+  const GOSoundDevInfo &deviceInfo, GODeviceNamePattern &pattern) {
+  pattern.SetLogicalName(deviceInfo.GetDefaultLogicalName());
+  pattern.SetRegEx(deviceInfo.GetDefaultNameRegex());
+  pattern.SetPortName(deviceInfo.GetPortName());
+  pattern.SetApiName(deviceInfo.GetApiName());
+  pattern.SetPhysicalName(deviceInfo.GetFullName());
 }
 
 GOMidi &GOSound::GetMidi() { return m_midi; }
