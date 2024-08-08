@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -52,11 +52,7 @@ std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
     else if (m_RootKind == ROOT_RESOURCE)
       baseDir = fileStore.GetResourceDirectory();
 
-    wxString fullPath = m_path;
-
-    fullPath.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
-    if (!baseDir.IsEmpty())
-      fullPath = baseDir + wxFileName::GetPathSeparator() + fullPath;
+    wxString fullPath = generateFullPath(m_path, baseDir);
 
     if (fullPath.IsEmpty())
       throw _("File name is empty");
@@ -65,4 +61,13 @@ std::unique_ptr<GOOpenedFile> GOLoaderFilename::Open(
     file = new GOStandardFile(fullPath, m_path);
   }
   return std::unique_ptr<GOOpenedFile>(file);
+}
+
+wxString GOLoaderFilename::generateFullPath(
+  const wxString &relPath, const wxString &baseDir) {
+  wxString res = relPath;
+  res.Replace(wxT("\\"), wxString(wxFileName::GetPathSeparator()));
+  if (!baseDir.IsEmpty())
+    res = baseDir + wxFileName::GetPathSeparator() + res;
+  return res;
 }

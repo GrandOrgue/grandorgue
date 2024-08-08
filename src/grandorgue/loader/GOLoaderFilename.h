@@ -62,6 +62,9 @@ public:
     const GOLoaderFilename *pFileName, const wxString &srcMsg) {
     return pFileName ? pFileName->GenerateMessage(srcMsg) : srcMsg;
   }
+
+  static wxString generateFullPath(
+    const wxString &relPath, const wxString &baseDir);
 };
 
 #endif
