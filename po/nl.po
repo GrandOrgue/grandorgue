@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: GrandOrgue\n"
 "Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-07 20:37+0200\n"
-"PO-Revision-Date: 2024-08-07 20:45+0200\n"
+"PO-Revision-Date: 2024-08-08 17:37+0200\n"
 "Last-Translator: Otto B. Wiersma\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -219,7 +219,7 @@ msgid "&Convolution reverb"
 msgstr "&Convolutie-nagalm"
 
 msgid "&Copy current receive event"
-msgstr "&Kopieer recent ontvangen event"
+msgstr "&Kopieer huidig ontvangsignaal"
 
 msgid "&Data:"
 msgstr "&Data:"
@@ -252,7 +252,7 @@ msgid "&Enhancements"
 msgstr "&Uitbreidingen"
 
 msgid "&Event:"
-msgstr "&Event:"
+msgstr "&Signaal:"
 
 msgid "&Export Settings"
 msgstr "&Instellingen exporteren"
@@ -309,7 +309,7 @@ msgid "&MIDI..."
 msgstr "&MIDI..."
 
 msgid "&Mapping output"
-msgstr "&Geluidsuitvoer in kaart brengen"
+msgstr "&Uitvoertoewijzing"
 
 msgid "&Memory Level"
 msgstr "&Geheugenniveau"
@@ -390,7 +390,7 @@ msgid "&Sound Engine"
 msgstr "&Geluidsmodule"
 
 msgid "&Sound Output State"
-msgstr "&Geluidsuitvoer"
+msgstr "&Geluidsuitvoerstatus"
 
 msgid "&Sound output"
 msgstr "&Geluidsuitvoer"
@@ -432,7 +432,7 @@ msgid "&Upper PGM number:"
 msgstr "&Upper PGM nummer:"
 
 msgid "&Upper bank:"
-msgstr "&Bovengrens:"
+msgstr "&Hoogste bank:"
 
 msgid "&Upper limit:"
 msgstr "&Bovengrens:"
@@ -1885,7 +1885,7 @@ msgid "L&ower bank:"
 msgstr "&Lagere bank:"
 
 msgid "L&ower limit:"
-msgstr "&Lagere limiet:"
+msgstr "&Ondergrens:"
 
 msgid "L&owest velocity:"
 msgstr "T&raagste aanslag:"
@@ -1991,7 +1991,7 @@ msgid "MIDI Devices"
 msgstr "MIDI-apparaten"
 
 msgid "MIDI Event"
-msgstr "MIDI-event"
+msgstr "MIDI-signaal"
 
 msgid "MIDI Objects"
 msgstr "MIDI objecten"
@@ -2092,7 +2092,7 @@ msgid "Manual 5"
 msgstr "Manuaal 5"
 
 msgid "Manual Tuning (Cent):"
-msgstr "Manuaalstemming (cent)"
+msgstr "Handmatige stemming (cent)"
 
 #, c-format
 msgid "Manual key %d outside of the bounding box"
@@ -3992,7 +3992,7 @@ msgid "tremulant"
 msgstr "tremulant"
 
 msgid "trigger"
-msgstr "trekker"
+msgstr "activeren"
 
 msgid "up"
 msgstr "omhoog"
