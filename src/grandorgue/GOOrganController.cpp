@@ -82,7 +82,9 @@ static const wxString WX_ORGAN = wxT("Organ");
 static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");
 
 GOOrganController::GOOrganController(
-  GOConfig &config, GOMidiDialogCreator *pMidiDialogCreator)
+  GOConfig &config,
+  GOMidiDialogCreator *pMidiDialogCreator,
+  bool isAppInitialized)
   : GOEventDistributor(this),
     GOOrganModel(config),
     m_config(config),
@@ -98,6 +100,7 @@ GOOrganController::GOOrganController(
     m_AudioRecorder(NULL),
     m_MidiPlayer(NULL),
     m_MidiRecorder(NULL),
+    m_TimerManager(NULL),
     p_OnStateButton(nullptr),
     m_volume(0),
     m_b_customized(false),
@@ -122,6 +125,10 @@ GOOrganController::GOOrganController(
     m_PitchLabel(this),
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {
+  if (isAppInitialized) {
+    // Load here objects that needs App (wx) to be loaded
+    m_TimerManager = new GOTimer();
+  }
   GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);

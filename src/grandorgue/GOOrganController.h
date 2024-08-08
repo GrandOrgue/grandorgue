@@ -54,7 +54,6 @@ class GOSoundRecorder;
 typedef struct _GOHashType GOHashType;
 
 class GOOrganController : public GOEventDistributor,
-                          public GOTimer,
                           public GOOrganModel,
                           public GOModificationProxy {
 private:
@@ -73,6 +72,7 @@ private:
   GOAudioRecorder *m_AudioRecorder;
   GOMidiPlayer *m_MidiPlayer;
   GOMidiRecorder *m_MidiRecorder;
+  GOTimer *m_TimerManager;
   GOButtonControl *p_OnStateButton;
   int m_volume;
   wxString m_Temperament;
@@ -126,7 +126,9 @@ private:
 
 public:
   GOOrganController(
-    GOConfig &config, GOMidiDialogCreator *pMidiDialogCreator = nullptr);
+    GOConfig &config,
+    GOMidiDialogCreator *pMidiDialogCreator = nullptr,
+    bool isAppInitialized = false);
   ~GOOrganController();
 
   // Returns organ modification flag
@@ -232,6 +234,11 @@ public:
   GOMidi *GetMidi();
 
   GOGUIMouseState &GetMouseState() { return m_MouseState; }
+
+  /**
+   * Return the Timer Manager for Metronome, Midi recorder, ...
+   */
+  GOTimer *GetTimerManager() { return m_TimerManager; }
 };
 
 #endif
