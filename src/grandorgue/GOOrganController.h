@@ -102,7 +102,7 @@ private:
   GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
-  GOBitmapCache m_bitmaps;
+  GOBitmapCache *m_bitmaps;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
   GOMainWindowData m_MainWindowData;
@@ -186,7 +186,7 @@ public:
   void AddPanel(GOGUIPanel *panel);
   GOMemoryPool &GetMemoryPool();
   GOConfig &GetSettings();
-  GOBitmapCache &GetBitmapCache();
+  GOBitmapCache &GetBitmapCache() { return *m_bitmaps; }
   void SetTemperament(wxString name);
   wxString GetTemperament();
 

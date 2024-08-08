@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -161,7 +161,9 @@ GOBitmapCache::GOBitmapCache(GOOrganController *organController)
     m_Bitmaps(),
     m_Filenames(),
     m_Masknames() {
-  BITMAP_LIST;
+  if (organController) {
+    BITMAP_LIST;
+  }
 }
 
 GOBitmapCache::~GOBitmapCache() {}

@@ -121,13 +121,14 @@ GOOrganController::GOOrganController(
     m_MidiSamplesetMatch(),
     m_SampleSetId1(0),
     m_SampleSetId2(0),
-    m_bitmaps(this),
+    m_bitmaps(nullptr),
     m_PitchLabel(this),
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded
     m_TimerManager = new GOTimer();
+    m_bitmaps = new GOBitmapCache(this);
   }
   GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
   GOOrganModel::SetModelModificationListener(this);
@@ -1006,8 +1007,6 @@ wxString GOOrganController::GetCombinationsDir() const {
 GOMemoryPool &GOOrganController::GetMemoryPool() { return m_pool; }
 
 GOConfig &GOOrganController::GetSettings() { return m_config; }
-
-GOBitmapCache &GOOrganController::GetBitmapCache() { return m_bitmaps; }
 
 GOMidi *GOOrganController::GetMidi() { return m_midi; }
 
