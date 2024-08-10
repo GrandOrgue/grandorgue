@@ -175,7 +175,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    needs: [calc_ver, tests, build]
+    needs: [calc_ver, build]
     if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
     runs-on: ubuntu-latest
     steps:
