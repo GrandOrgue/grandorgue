@@ -12,7 +12,7 @@ class GOTestUtils {
   */
 
 public:
-  void GOAssert(bool expression, wxString message) {
+  void GOAssert(bool expression, std::string message) {
     /**
      * This util function should be called as soon as we want to test an
      * expression in the test framework and launch the appropriate Exception

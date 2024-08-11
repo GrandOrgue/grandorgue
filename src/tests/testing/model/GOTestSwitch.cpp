@@ -10,7 +10,7 @@
 GOTestSwitch::~GOTestSwitch() {}
 
 void GOTestSwitch::run() {
-  wxString message;
+  std::string message;
 
   // Check global Switch
   GOSwitch *go_switch = new GOSwitch(*this->controller);

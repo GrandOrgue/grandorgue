@@ -6,15 +6,19 @@
 #include "GOTestResult.h"
 #include <iostream>
 #include <iterator>
+#include <string>
 #include <vector>
 
-GOTestResult::GOTestResult() { this->failed = false; }
+GOTestResult::GOTestResult() {
+  m_result_message = "";
+  this->failed = false;
+}
 
-GOTestResult::GOTestResult(wxString message) : m_result_message(message) {
+GOTestResult::GOTestResult(std::string message) : m_result_message(message) {
   failed = false;
 }
 
-GOTestResult::GOTestResult(wxString message, bool failed)
+GOTestResult::GOTestResult(std::string message, bool failed)
   : m_result_message(message) {
   failed = failed;
 }

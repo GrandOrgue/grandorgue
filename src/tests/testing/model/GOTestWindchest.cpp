@@ -21,7 +21,7 @@
 GOTestWindchest::~GOTestWindchest() {}
 
 void GOTestWindchest::run() {
-  wxString message;
+  std::string message;
   // Check the size of Windchest is correct
   unsigned w_size;
   w_size = this->controller->AddWindchest(new GOWindchest(*this->controller));

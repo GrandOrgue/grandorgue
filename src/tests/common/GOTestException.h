@@ -8,16 +8,16 @@
 #include <cpptrace.hpp>
 #include <exception>
 #include <iostream>
-#include <wx/string.h>
+#include <string>
 
 class GOTestException : public std::exception {
 private:
-  wxString message;
+  std::string message;
 
 public:
-  GOTestException(wxString msg) : message(msg) {}
-  wxString what() {
-    wxString returned_message = message;
+  GOTestException(std::string msg) : message(msg) {}
+  std::string what() {
+    std::string returned_message = message;
     returned_message = returned_message + "\n";
 
     return returned_message;

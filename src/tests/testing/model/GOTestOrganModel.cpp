@@ -17,7 +17,7 @@
 GOTestOrganModel::~GOTestOrganModel() {}
 
 void GOTestOrganModel::run() {
-  wxString message;
+  std::string message;
   // Set OrganModel Modified
   this->controller->SetOrganModelModified(true);
   message = "Is Organ Modified value is not True";

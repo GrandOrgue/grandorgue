@@ -13,11 +13,6 @@
 
 GOTestCollection::GOTestCollection() {}
 
-// GOTestCollection::~GOTestCollection() {
-//   // Destroy the initialized tests in vector
-//   tests_.clear();
-// }
-
 void GOTestCollection::add_test(GOTest *test) {
   /*
       This method allows to add tests classes (derived from GOTest).

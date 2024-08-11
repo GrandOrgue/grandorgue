@@ -12,24 +12,19 @@
 
 #include "GOTest.h"
 #include <vector>
-#include <wx/string.h>
 
 class GOTestResult {
 
 private:
-  wxString m_result_message;
+  std::string m_result_message;
   bool failed;
 
 public:
   GOTestResult();
-  GOTestResult(wxString message);
-  GOTestResult(wxString message, bool failed);
+  GOTestResult(std::string message);
+  GOTestResult(std::string message, bool failed);
 
-  const wxString GetMessage() {
-    wxString result = "";
-    result += m_result_message;
-    return result;
-  }
+  const std::string GetMessage() { return m_result_message; }
   bool isFailed() { return failed; }
 };
 

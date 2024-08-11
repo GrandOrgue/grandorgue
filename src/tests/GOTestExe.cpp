@@ -36,7 +36,7 @@ int main() {
        ++current, ++run_number_) {
     auto test_result = *current;
     wxLogMessage("-------------------------------------------------------");
-    wxLogMessage(test_result->GetMessage());
+    wxLogMessage(wxString(test_result->GetMessage()));
   }
 
   const int failed_count = GOTestCollection::Instance()->get_failed_count();
