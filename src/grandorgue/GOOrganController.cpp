@@ -145,6 +145,8 @@ GOOrganController::~GOOrganController() {
   m_tremulants.clear();
   m_ranks.clear();
   m_VirtualCouplers.Cleanup();
+  m_TimerManager->Cleanup();
+  m_bitmaps->Cleanup();
   GOOrganModel::Cleanup();
   GOOrganModel::SetModelModificationListener(nullptr);
   GOOrganModel::SetMidiDialogCreator(nullptr);

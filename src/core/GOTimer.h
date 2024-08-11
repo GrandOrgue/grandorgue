@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -34,6 +34,7 @@ private:
 public:
   GOTimer();
   ~GOTimer();
+  void Cleanup() { m_Entries.clear(); };
 
   void SetTimer(GOTime time, GOTimerCallback *callback, unsigned interval = 0);
   void SetRelativeTimer(
