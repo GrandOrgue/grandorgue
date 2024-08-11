@@ -186,7 +186,7 @@ public:
   void AddPanel(GOGUIPanel *panel);
   GOMemoryPool &GetMemoryPool();
   GOConfig &GetSettings();
-  GOBitmapCache &GetBitmapCache() { return *m_bitmaps; }
+  GOBitmapCache &GetBitmapCache() const { return *m_bitmaps; }
   void SetTemperament(wxString name);
   wxString GetTemperament();
 
@@ -238,7 +238,7 @@ public:
   /**
    * Return the Timer Manager for Metronome, Midi recorder, ...
    */
-  GOTimer *GetTimerManager() { return m_TimerManager; }
+  GOTimer *GetTimerManager() const { return m_TimerManager; }
 };
 
 #endif
