@@ -224,6 +224,25 @@ if (GO_BUILD_TESTING)
     message(STATUS " Coverage enabled")
     message(STATUS "============================================================================")
 endif()
+# include wxMaterialWidgets
+if(NOT WX_MATERIAL_PROVIDER_SRC_DIR)
+    set(WX_MATERIAL_PROVIDER_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/wxMaterialDesignArtProvider")
+    if(NOT EXISTS "${WX_MATERIAL_PROVIDER_SRC_DIR}/wxMaterialDesignIconsMain.h")
+      message(
+        FATAL_ERROR 
+        "${WX_MATERIAL_PROVIDER_SRC_DIR}/wxMaterialDesignIconsMain.h file does not exist."
+        "Possible the wxMaterialDesign submodule has not been updated."
+        "Try to execute 'git submodule update --init --recursive' in the source directory"
+      )
+    endif()
+  endif()
+
+set(WX_MATERIAL_DESIGN_SRC_DIR "${WX_MATERIAL_PROVIDER_SRC_DIR}/MaterialDesign")
+
+include_directories(WX_MATERIAL_PROVIDER_SRC_DIR)
+include_directories(WX_MATERIAL_DESIGN_SRC_DIR)
+
+add_subdirectory(src/wxMaterial)
 
 add_subdirectory(src/build)
 add_subdirectory(src/images)

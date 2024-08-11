@@ -15,3 +15,6 @@
 [submodule "wxMaterialDesignArtProvider"]
 	path = wxMaterialDesignArtProvider
 	url = https://github.com/perazz/wxMaterialDesignArtProvider
+[submodule "submodules/wxMaterialDesignArtProvider"]
+	path = submodules/wxMaterialDesignArtProvider
+	url = https://github.com/perazz/wxMaterialDesignArtProvider
