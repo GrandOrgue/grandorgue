@@ -100,7 +100,7 @@ GOOrganController::GOOrganController(
     m_AudioRecorder(NULL),
     m_MidiPlayer(NULL),
     m_MidiRecorder(NULL),
-    m_TimerManager(NULL),
+    m_timer(NULL),
     p_OnStateButton(nullptr),
     m_volume(0),
     m_b_customized(false),
@@ -127,7 +127,7 @@ GOOrganController::GOOrganController(
     m_MainWindowData(this, wxT("MainWindow")) {
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded
-    m_TimerManager = new GOTimer();
+    m_timer = new GOTimer();
     m_bitmaps = new GOBitmapCache(this);
   }
   GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
@@ -145,8 +145,10 @@ GOOrganController::~GOOrganController() {
   m_tremulants.clear();
   m_ranks.clear();
   m_VirtualCouplers.Cleanup();
-  m_TimerManager->Cleanup();
-  m_bitmaps->Cleanup();
+  if (m_timer)
+    delete m_timer;
+  if (m_bitmaps)
+    delete m_bitmaps;
   GOOrganModel::Cleanup();
   GOOrganModel::SetModelModificationListener(nullptr);
   GOOrganModel::SetMidiDialogCreator(nullptr);

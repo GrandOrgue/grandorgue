@@ -119,7 +119,7 @@ void GOAudioRecorder::UpdateDisplay() {
 void GOAudioRecorder::StopRecording() {
   m_buttons[ID_AUDIO_RECORDER_RECORD]->Display(false);
   m_buttons[ID_AUDIO_RECORDER_RECORD_RENAME]->Display(false);
-  m_OrganController->GetTimerManager()->DeleteTimer(this);
+  m_OrganController->GetTimer()->DeleteTimer(this);
   if (!IsRecording())
     return;
 
@@ -156,7 +156,7 @@ void GOAudioRecorder::StartRecording(bool rename) {
 
   m_RecordSeconds = 0;
   UpdateDisplay();
-  m_OrganController->GetTimerManager()->SetRelativeTimer(1000, this, 1000);
+  m_OrganController->GetTimer()->SetRelativeTimer(1000, this, 1000);
 }
 
 void GOAudioRecorder::HandleTimer() {

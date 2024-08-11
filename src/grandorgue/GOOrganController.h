@@ -72,7 +72,7 @@ private:
   GOAudioRecorder *m_AudioRecorder;
   GOMidiPlayer *m_MidiPlayer;
   GOMidiRecorder *m_MidiRecorder;
-  GOTimer *m_TimerManager;
+  GOTimer *m_timer;
   GOButtonControl *p_OnStateButton;
   int m_volume;
   wxString m_Temperament;
@@ -238,7 +238,7 @@ public:
   /**
    * Return the Timer Manager for Metronome, Midi recorder, ...
    */
-  GOTimer *GetTimerManager() const { return m_TimerManager; }
+  GOTimer *GetTimer() const { return m_timer; }
 };
 
 #endif
