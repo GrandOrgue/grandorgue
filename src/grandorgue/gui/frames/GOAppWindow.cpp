@@ -48,6 +48,10 @@
 #include "temperaments/GOTemperament.h"
 #include "threading/GOMutexLocker.h"
 
+#include "icons/GOIconManager.h"
+
+#include "GOApp.h"
+#include "GODocument.h"
 #include "GOEvent.h"
 #include "GOOrganController.h"
 #include "Images.h"
@@ -318,9 +322,14 @@ GOAppWindow::GOAppWindow(
     999);
   m_ToolBar->AddControl(m_SetterPosition);
   m_SetterPosition->SetValue(0);
-
+  GOIconManager *m_icon = new GOIconManager();
+  std::string volume = "volume";
   m_ToolBar->AddTool(
-    ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
+    ID_VOLUME,
+    _("&Volume"),
+    m_icon->GetIcon(volume),
+    _("Volume"),
+    wxITEM_NORMAL);
   m_Volume = new wxSpinCtrl(
     m_ToolBar,
     ID_METER_AUDIO_SPIN,
