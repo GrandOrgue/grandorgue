@@ -12,3 +12,6 @@
 [submodule "submodules/ZitaConvolver"]
 	path = submodules/ZitaConvolver
 	url = https://github.com/GrandOrgue/ZitaConvolver.git
+[submodule "submodules/wxMaterialDesignArtProvider"]
+	path = submodules/wxMaterialDesignArtProvider
+	url = https://github.com/perazz/wxMaterialDesignArtProvider
