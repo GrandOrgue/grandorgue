@@ -37,6 +37,7 @@ include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${JACK_INCLUDE_DIRS})
 include_directories(${YAML_CPP_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${WX_MATERIAL_DESIGN_SRC_DIR})
 
 set(grandorgue_src
 combinations/control/GOCombinationButtonSet.cpp

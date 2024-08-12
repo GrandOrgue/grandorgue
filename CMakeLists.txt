@@ -342,9 +342,6 @@ if(NOT WX_MATERIAL_PROVIDER_SRC_DIR)
 
 set(WX_MATERIAL_DESIGN_SRC_DIR "${WX_MATERIAL_PROVIDER_SRC_DIR}/MaterialDesign")
 
-include_directories(WX_MATERIAL_PROVIDER_SRC_DIR)
-include_directories(WX_MATERIAL_DESIGN_SRC_DIR)
-
 add_subdirectory(src/wxMaterial)
 
 if(GO_BUILD_ASAN)
