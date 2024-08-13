@@ -7,13 +7,10 @@
 #define GOTESTORGANMODEL_H
 
 #include "GOTest.h"
-#include <wx/string.h>
 
 #include "GOOrganController.h"
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
-
-#include <wx/string.h>
 
 class GOTestOrganModel : public GOCommonControllerTest {
 
