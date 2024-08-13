@@ -8,8 +8,8 @@
 #include "GOTestOrganModel.h"
 #include "GOTestSwitch.h"
 #include "GOTestWindchest.h"
+#include <cstdio>
 #include <iostream>
-#include <wx/log.h>
 
 int main() {
   /*
@@ -31,22 +31,22 @@ int main() {
   int run_number_ = 0;
   std::vector<GOTestResult *> test_results
     = test_result_collection.get_results();
-  wxLogMessage("==================== TESTS RESULTS ====================");
+  std::cout << "==================== TESTS RESULTS ====================\n";
   for (auto current = test_results.begin(); current != test_results.end();
        ++current, ++run_number_) {
     auto test_result = *current;
-    wxLogMessage("-------------------------------------------------------");
-    wxLogMessage(wxString(test_result->GetMessage()));
+    std::cout << "-------------------------------------------------------\n";
+    std::cout << test_result->GetMessage() << "\n";
   }
 
   const int failed_count = GOTestCollection::Instance()->get_failed_count();
   const int success_count = GOTestCollection::Instance()->get_success_count();
-  wxLogMessage("==================== TESTS SUMMARY ====================");
+  std::cout << "==================== TESTS SUMMARY ====================\n";
   if (failed_count > 0) {
-    wxLogMessage(wxT("%d tests Failed"), failed_count);
+    std::cout << failed_count << " tests Failed\n";
     return 1;
   }
-  wxLogMessage(wxT("%d tests Succeeded"), success_count);
-  wxLogMessage("=======================================================");
+  std::cout << success_count << " tests Succeeded\n";
+  std::cout << "=======================================================\n";
   return 0;
 }
