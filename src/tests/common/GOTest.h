@@ -9,7 +9,6 @@
 
 #include "GOOrganController.h"
 #include "GOTestUtils.h"
-#include <wx/string.h>
 
 class GOTest : public GOTestUtils {
   /*

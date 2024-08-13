@@ -3,7 +3,6 @@
 
 #include "GOTestException.h"
 #include <cpptrace.hpp>
-#include <wx/string.h>
 
 class GOTestUtils {
   /*

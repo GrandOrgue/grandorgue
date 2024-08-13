@@ -9,7 +9,6 @@
 #include "GOTest.h"
 #include "GOTestResult.h"
 #include <vector>
-#include <wx/string.h>
 
 class GOTestResultCollection {
 

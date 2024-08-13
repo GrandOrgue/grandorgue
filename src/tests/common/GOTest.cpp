@@ -7,9 +7,8 @@
 #include "GOOrganController.h"
 #include "GOTestCollection.h"
 #include "config/GOConfig.h"
+#include <cstdio>
 #include <iostream>
-#include <wx/log.h>
-#include <wx/string.h>
 
 GOTest::GOTest() {
   // This is the magic to auto register tests in TestCollection
@@ -18,9 +17,8 @@ GOTest::GOTest() {
 GOTest::~GOTest() {}
 
 bool GOTest::setUp() {
-  wxLogMessage(
-    wxT("==================== %s - BEGIN ===================="),
-    this->GetName());
+  std::cout << "==================== " << this->GetName()
+            << " - BEGIN ====================";
   return true;
 }
 
