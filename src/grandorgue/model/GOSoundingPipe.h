@@ -56,10 +56,7 @@ private:
    * add it to m_AttackFileInfos
    */
   void LoadAttackFileInfo(
-    GOConfigReader &cfg,
-    const wxString &group,
-    const wxString &prefix,
-    bool isMain);
+    GOConfigReader &cfg, const wxString &group, const wxString &prefix);
   /* Read one release file info from the odf keys with the prefix specified and
    * add it to m_AttackFileInfos
    */
