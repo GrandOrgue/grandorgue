@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,20 +19,22 @@ private:
   void Save(GOConfigWriter &cfg);
 
 protected:
-  wxString getDefaultValue();
-  virtual wxString validate(wxString value);
+  const wxString &GetDefaultValue() const { return m_DefaultValue; }
+  virtual wxString Validate(const wxString &value) const { return value; }
 
 public:
   GOSettingString(
     GOSettingStore *store,
-    wxString group,
-    wxString name,
-    wxString default_value);
+    const wxString &group,
+    const wxString &name,
+    const wxString &defaultValue);
 
-  void setDefaultValue(wxString default_value);
+  void SetDefaultValue(const wxString &defaultValue) {
+    m_DefaultValue = defaultValue;
+  }
 
-  wxString operator()() const;
-  void operator()(wxString value);
+  const wxString &operator()() const { return m_Value; }
+  void operator()(const wxString &value) { m_Value = Validate(value); }
 };
 
 #endif
