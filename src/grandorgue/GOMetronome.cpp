@@ -176,7 +176,7 @@ void GOMetronome::UpdateBPM(int val) {
   if (m_BPM > 500)
     m_BPM = 500;
   if (m_Running)
-    m_OrganController->UpdateInterval(this, 60000 / m_BPM);
+    m_OrganController->GetTimer()->UpdateInterval(this, 60000 / m_BPM);
   UpdateState();
 }
 
@@ -201,11 +201,11 @@ void GOMetronome::StartTimer() {
   m_Pos = 0;
   m_Running = true;
   UpdateState();
-  m_OrganController->SetTimer(0, this, 60000 / m_BPM);
+  m_OrganController->GetTimer()->SetTimer(0, this, 60000 / m_BPM);
 }
 
 void GOMetronome::StopTimer() {
-  m_OrganController->DeleteTimer(this);
+  m_OrganController->GetTimer()->DeleteTimer(this);
   m_Running = false;
   UpdateState();
 }
