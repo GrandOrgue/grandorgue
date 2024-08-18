@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,12 +11,16 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-void GOCreateDirectory(const wxString &path) {
-  if (wxFileName::DirExists(path))
-    return;
-  if (!wxFileName::Mkdir(path, 0777, wxPATH_MKDIR_FULL)) {
-    wxLogError(_("Failed to create directory '%s'"), path.c_str());
+bool go_create_directory(const wxString &path) {
+  bool res = true;
+
+  if (
+    !wxFileName::DirExists(path)
+    && !wxFileName::Mkdir(path, 0777, wxPATH_MKDIR_FULL)) {
+    wxLogError(_("Failed to create directory '%s'"), path);
+    res = false;
   }
+  return res;
 }
 
 wxString GONormalizePath(const wxString &path) {

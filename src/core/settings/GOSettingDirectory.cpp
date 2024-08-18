@@ -21,13 +21,14 @@ GOSettingDirectory::GOSettingDirectory(
 wxString GOSettingDirectory::Validate(const wxString &value) const {
   wxString newValue = value;
 
-  if (newValue == wxEmptyString || !wxFileName::DirExists(newValue))
+  if (newValue == wxEmptyString)
     newValue = GetDefaultValue();
 
   wxFileName file(newValue);
 
   file.MakeAbsolute();
   newValue = file.GetFullPath();
-  GOCreateDirectory(newValue);
+  if (!wxFileName::DirExists(newValue))
+    go_create_directory(newValue);
   return newValue;
 }
