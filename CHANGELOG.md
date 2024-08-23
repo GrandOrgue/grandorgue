@@ -1,3 +1,4 @@
+- Fixed crash on releasing a key of any Binauralpipes organ https://github.com/GrandOrgue/grandorgue/issues/1986
 - Fixed absance of warnings of unused Pipe999ReleaseCrossfadeLength https://github.com/GrandOrgue/grandorgue/issues/1904
 - Fixed loading organ to not abort if reading InfoFilename failed and also fixed showing link in properties dialog if InfoFilename exists
 # 3.15.0 (2024-08-06)

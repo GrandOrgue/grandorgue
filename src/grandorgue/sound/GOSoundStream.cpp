@@ -319,7 +319,8 @@ void GOSoundStream::InitAlignedStream(
   /* Translate increment in case of differing sample rates */
   resample = existing_stream->resample;
   m_ResamplingPos.Init(
-    pSection->GetSampleRate() / existing_stream->audio_section->GetSampleRate(),
+    (float)pSection->GetSampleRate()
+      / existing_stream->audio_section->GetSampleRate(),
     startIndex,
     &existing_stream->m_ResamplingPos);
   decode_call = getDecodeBlockFunction(
