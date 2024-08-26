@@ -19,15 +19,12 @@ GOSettingDirectory::GOSettingDirectory(
   : GOSettingString(store, group, name, defaultValue) {}
 
 wxString GOSettingDirectory::Validate(const wxString &value) const {
-  wxString newValue = value;
-
-  if (newValue == wxEmptyString)
-    newValue = GetDefaultValue();
-
-  wxFileName file(newValue);
+  wxFileName file(!value.IsEmpty() ? value : GetDefaultValue());
 
   file.MakeAbsolute();
-  newValue = file.GetFullPath();
+
+  const wxString newValue = file.GetFullPath();
+
   if (!wxFileName::DirExists(newValue))
     go_create_directory(newValue);
   return newValue;
