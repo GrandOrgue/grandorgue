@@ -53,7 +53,7 @@ protected:
   void SetState(bool on);
   virtual void ChangeState(bool on) = 0;
 
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
   void StartPlayback() override;
 
@@ -68,10 +68,10 @@ public:
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   void RegisterControlled(GODrawstop *sw);
-  virtual void Set(bool on);
+  virtual void Set(bool on) override;
   virtual void Update();
   void Reset();
-  void SetCombination(bool on);
+  void SetCombination(bool on) override;
 };
 
 #endif

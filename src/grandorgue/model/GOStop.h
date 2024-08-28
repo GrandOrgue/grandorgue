@@ -32,11 +32,11 @@ private:
   unsigned m_NumberOfAccessiblePipes;
 
   void SetRankKey(unsigned key, unsigned velocity);
-  void ChangeState(bool on);
+  void ChangeState(bool on) override;
 
-  void AbortPlayback();
-  void PreparePlayback();
-  void StartPlayback();
+  void AbortPlayback() override;
+  void PreparePlayback() override;
+  void StartPlayback() override;
 
 public:
   GOStop(GOOrganModel &organModel, unsigned first_midi_note_number);

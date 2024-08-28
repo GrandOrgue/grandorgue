@@ -26,7 +26,7 @@ protected:
 public:
   GOMidiReceiver(GOOrganModel &organModel, GOMidiReceiverType type);
 
-  void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
+  void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map) override;
 
   void SetIndex(int index) { m_Index = index; }
 };

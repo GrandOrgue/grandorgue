@@ -55,7 +55,7 @@ private:
   void UpdateLimits();
   void UpdateEnabled();
 
-  bool Validate();
+  bool Validate() override;
 
 public:
   GOSettingsReverb(GOConfig &settings, wxWindow *parent);

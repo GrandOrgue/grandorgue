@@ -53,7 +53,7 @@ private:
     const wxString &portName,
     const wxString apiName,
     bool oldEnabled,
-    bool newEnabled);
+    bool newEnabled) override;
   void OnInDevicesClick(wxCommandEvent &event);
   void OnInOutDeviceClick(wxCommandEvent &event);
   void OnInChannelShiftClick(wxCommandEvent &event);

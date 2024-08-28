@@ -62,12 +62,12 @@ public:
     unsigned imageno = 1,
     unsigned w = 0,
     unsigned h = 0);
-  void Load(GOConfigReader &cfg, wxString group);
-  void Layout();
+  void Load(GOConfigReader &cfg, wxString group) override;
+  void Layout() override;
 
-  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState &state);
-  void PrepareDraw(double scale, GOBitmap *background);
-  void Draw(GODC &dc);
+  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState &state) override;
+  void PrepareDraw(double scale, GOBitmap *background) override;
+  void Draw(GODC &dc) override;
 };
 
 #endif

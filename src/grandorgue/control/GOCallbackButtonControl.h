@@ -22,8 +22,8 @@ public:
     GOButtonCallback *callback,
     bool isPushbutton,
     bool isPiston = false);
-  void Push(void);
-  void Set(bool on);
+  void Push(void) override;
+  void Set(bool on) override;
 
   const wxString &GetMidiTypeCode() const override;
   const wxString &GetMidiType() const override;

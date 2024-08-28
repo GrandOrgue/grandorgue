@@ -37,7 +37,7 @@ private:
   void OnAdd(wxCommandEvent &event);
   void OnDel(wxCommandEvent &event);
 
-  void Update();
+  void Update() override;
 
 public:
   GOSettingsTemperaments(GOConfig &settings, wxWindow *parent);

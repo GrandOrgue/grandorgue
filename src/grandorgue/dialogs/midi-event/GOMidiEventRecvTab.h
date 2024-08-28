@@ -93,7 +93,7 @@ private:
   void OnDeleteClick(wxCommandEvent &event);
   void OnEventChange(wxCommandEvent &event);
   void OnTypeChange(wxCommandEvent &event);
-  void OnMidiEvent(const GOMidiEvent &event);
+  void OnMidiEvent(const GOMidiEvent &event) override;
 
 protected:
   enum {

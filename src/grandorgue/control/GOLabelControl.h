@@ -32,11 +32,11 @@ protected:
   GOOrganController *m_OrganController;
   GOMidiSender m_sender;
 
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
-  void AbortPlayback();
-  void PreparePlayback();
-  void PrepareRecording();
+  void AbortPlayback() override;
+  void PreparePlayback() override;
+  void PrepareRecording() override;
 
 public:
   GOLabelControl(GOOrganController *organController);
@@ -52,9 +52,9 @@ public:
   const wxString &GetMidiName() const override { return GetName(); }
   GOMidiSender *GetMidiSender() override { return &m_sender; }
 
-  wxString GetElementStatus();
-  std::vector<wxString> GetElementActions();
-  void TriggerElementActions(unsigned no);
+  wxString GetElementStatus() override;
+  std::vector<wxString> GetElementActions() override;
+  void TriggerElementActions(unsigned no) override;
 };
 
 #endif

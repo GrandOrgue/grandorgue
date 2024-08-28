@@ -33,12 +33,12 @@ class GOApp : public wxApp {
 private:
   bool m_Restart;
 
-  virtual void MacOpenFile(const wxString &fileName);
-  void OnInitCmdLine(wxCmdLineParser &parser);
-  bool OnCmdLineParsed(wxCmdLineParser &parser);
-  bool OnInit();
-  int OnRun();
-  int OnExit();
+  virtual void MacOpenFile(const wxString &fileName) override;
+  void OnInitCmdLine(wxCmdLineParser &parser) override;
+  bool OnCmdLineParsed(wxCmdLineParser &parser) override;
+  bool OnInit() override;
+  int OnRun() override;
+  int OnExit() override;
   virtual void CleanUp() override;
 
 protected:

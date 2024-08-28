@@ -79,7 +79,7 @@ public:
     wxString name,
     wxString group,
     wxString group_name = wxT(""));
-  void Load(GOConfigReader &cfg, const wxString &group);
+  void Load(GOConfigReader &cfg, const wxString &group) override;
   void Layout();
 
   void SetView(GOGUIPanelView *view);

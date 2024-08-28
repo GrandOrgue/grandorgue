@@ -81,15 +81,15 @@ private:
 
   void Resize();
 
-  void ProcessMidi(const GOMidiEvent &event);
-  void HandleKey(int key);
+  void ProcessMidi(const GOMidiEvent &event) override;
+  void HandleKey(int key) override;
   void SetOutput(unsigned note, unsigned velocity);
 
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
-  void AbortPlayback();
-  void PreparePlayback();
-  void PrepareRecording();
+  void AbortPlayback() override;
+  void PreparePlayback() override;
+  void PrepareRecording() override;
 
   /**
    * Update all divisional buttons light.
@@ -184,9 +184,9 @@ public:
   const wxString &GetMidiType() const override;
   const wxString &GetMidiName() const override { return GetName(); }
 
-  wxString GetElementStatus();
-  std::vector<wxString> GetElementActions();
-  void TriggerElementActions(unsigned no);
+  wxString GetElementStatus() override;
+  std::vector<wxString> GetElementActions() override;
+  void TriggerElementActions(unsigned no) override;
 };
 
 #endif

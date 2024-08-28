@@ -27,7 +27,7 @@ protected:
   // It is not registered as saveable object because
   // GOdivisionalSetter::LoadCombination creates the combinations dynamically
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
-  void SaveInt(GOConfigWriter &cfg);
+  void SaveInt(GOConfigWriter &cfg) override;
 
   void PutElementToYamlMap(
     const GOCombinationDefinition::Element &e,

@@ -37,18 +37,18 @@ private:
   unsigned m_TremulantN;
 
   void InitSoundProvider(GOMemoryPool &pool);
-  void ChangeState(bool on);
+  void ChangeState(bool on) override;
   void SetupIsToStoreInCmb() override;
 
-  void Initialize();
-  void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool);
-  bool LoadCache(GOMemoryPool &pool, GOCache &cache);
+  void Initialize() override;
+  void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) override;
+  bool LoadCache(GOMemoryPool &pool, GOCache &cache) override;
   bool SaveCache(GOCacheWriter &cache) const override { return true; }
   void UpdateHash(GOHash &hash) const override {}
   const wxString &GetLoadTitle() const override { return m_Name; };
 
-  void AbortPlayback();
-  void StartPlayback();
+  void AbortPlayback() override;
+  void StartPlayback() override;
 
 public:
   GOTremulant(GOOrganModel &organModel);
