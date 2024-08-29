@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -65,7 +65,8 @@ public:
   void Load(GOConfigReader &cfg, wxString group) override;
   void Layout() override;
 
-  bool HandleMousePress(int x, int y, bool right, GOGUIMouseState &state) override;
+  bool HandleMousePress(
+    int x, int y, bool right, GOGUIMouseState &state) override;
   void PrepareDraw(double scale, GOBitmap *background) override;
   void Draw(GODC &dc) override;
 };
