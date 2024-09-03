@@ -28585,6 +28585,10 @@
             <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveEntryFile.cpp"
@@ -28625,7 +28629,6 @@
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
@@ -28682,7 +28685,6 @@
             <Elem>__STDCPP_THREADS__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="14.1.1 20240701 (Red Hat 14.1.1-7)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201703L</Elem>
             <Elem>__cpp_aggregate_bases=201603L</Elem>
             <Elem>__cpp_aligned_new=201606L</Elem>
@@ -28749,7 +28751,6 @@
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
@@ -28806,7 +28807,6 @@
             <Elem>__STDCPP_THREADS__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="14.1.1 20240701 (Red Hat 14.1.1-7)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201703L</Elem>
             <Elem>__cpp_aggregate_bases=201603L</Elem>
             <Elem>__cpp_aligned_new=201606L</Elem>
@@ -28873,7 +28873,6 @@
           <preprocessorList>
             <Elem>GO_USE_JACK</Elem>
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
-            <Elem>WXUSINGDLL=1</Elem>
             <Elem>_REENTRANT=1</Elem>
             <Elem>__BFLT16_DECIMAL_DIG__=4</Elem>
             <Elem>__BFLT16_DENORM_MIN__=9.18354961579912115600575419704879436e-41BF16</Elem>
@@ -28930,7 +28929,6 @@
             <Elem>__STDCPP_THREADS__=1</Elem>
             <Elem>__USER_LABEL_PREFIX__=</Elem>
             <Elem>__VERSION__="14.1.1 20240701 (Red Hat 14.1.1-7)"</Elem>
-            <Elem>__WXGTK__=1</Elem>
             <Elem>__cplusplus=201703L</Elem>
             <Elem>__cpp_aggregate_bases=201603L</Elem>
             <Elem>__cpp_aligned_new=201606L</Elem>
@@ -28969,6 +28967,10 @@
             <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/core</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/core/archive/GOArchiveReader.cpp"
@@ -32839,10 +32841,33 @@
       </item>
       <item path="../../src/tools/GOPerfTest.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../build/current/src/tools</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/tools/GOTool.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/tools</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../submodules/PortAudio/src/common/pa_allocation.c"
@@ -33700,27 +33725,6 @@
             <Elem>__cplusplus=201103L</Elem>
             <Elem>__cpp_constexpr=200704L</Elem>
             <Elem>__pic__=2</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/src/tools">
-        <ccTool>
-          <incDir>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-            <pElem>../../build/current/src/tools</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </folder>

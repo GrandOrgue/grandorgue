@@ -1381,7 +1381,7 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
   } else
     wxRemoveFile(filepath.GetFullPath());
 
-  go_synch_directory(filepath.GetPath());
+  go_sync_directory(filepath.GetPath());
 }
 
 void GOFrame::OnUpdateCheckingRequested(wxCommandEvent &event) {

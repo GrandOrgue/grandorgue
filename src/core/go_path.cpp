@@ -11,7 +11,7 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-void go_create_directory(const wxString &path) {
+bool go_create_directory(const wxString &path) {
   bool res = true;
 
   if (
@@ -34,7 +34,7 @@ wxString go_get_path(const wxString &path) {
   return name.GetPath();
 }
 
-void go_synch_directory(const wxString &path) {
+void go_sync_directory(const wxString &path) {
   int fd = wxOpen(path.c_str(), O_RDONLY, 0);
   if (fd == -1)
     return;
@@ -54,6 +54,6 @@ bool go_rename_file(const wxString &from, const wxString &to) {
       return false;
     }
   }
-  go_synch_directory(name.GetPath());
+  go_sync_directory(name.GetPath());
   return true;
 }
