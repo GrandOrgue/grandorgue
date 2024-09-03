@@ -18,9 +18,9 @@
 #include "GOAlloc.h"
 #include "GOHash.h"
 #include "GOOrganModel.h"
-#include "GOPath.h"
 #include "GORank.h"
 #include "GOWindchest.h"
+#include "go_path.h"
 
 #include "go_limits.h"
 

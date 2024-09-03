@@ -21,7 +21,7 @@
 #include "GOArchiveFile.h"
 #include "GOOrgan.h"
 #include "GOOrganList.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 GOArchiveManager::GOArchiveManager(
   GOOrganList &OrganList, const wxString &cacheDir)

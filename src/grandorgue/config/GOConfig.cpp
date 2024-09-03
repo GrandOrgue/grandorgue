@@ -14,7 +14,6 @@
 
 #include "GOMemoryPool.h"
 #include "GOOrgan.h"
-#include "GOPath.h"
 #include "GOPortFactory.h"
 #include "GOStdPath.h"
 #include "archive/GOArchiveFile.h"
@@ -24,6 +23,7 @@
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
 #include "go_limits.h"
+#include "go_path.h"
 #include "midi/ports/GOMidiPort.h"
 #include "midi/ports/GOMidiPortFactory.h"
 #include "settings/GOSettingEnum.cpp"

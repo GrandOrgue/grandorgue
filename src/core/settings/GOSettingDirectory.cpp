@@ -9,7 +9,7 @@
 
 #include <wx/filename.h>
 
-#include "GOPath.h"
+#include "go_path.h"
 
 GOSettingDirectory::GOSettingDirectory(
   GOSettingStore *store,

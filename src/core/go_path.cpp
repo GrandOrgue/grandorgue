@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOPath.h"
+#include "go_path.h"
 
 #include <wx/file.h>
 #include <wx/filename.h>

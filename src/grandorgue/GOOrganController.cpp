@@ -76,7 +76,7 @@
 #include "GOHash.h"
 #include "GOMetronome.h"
 #include "GOOrgan.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 static const wxString WX_ORGAN = wxT("Organ");
 static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");

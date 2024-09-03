@@ -16,7 +16,7 @@
 
 #include "GOEvent.h"
 #include "GOOrganController.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 enum {
   ID_AUDIO_RECORDER_RECORD = 0,

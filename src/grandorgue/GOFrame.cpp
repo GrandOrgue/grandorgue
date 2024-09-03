@@ -50,12 +50,12 @@
 #include "GOEvent.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
-#include "GOPath.h"
 #include "GOProperties.h"
 #include "Images.h"
 #include "go_defs.h"
 #include "go_ids.h"
 #include "go_limits.h"
+#include "go_path.h"
 
 BEGIN_EVENT_TABLE(GOFrame, wxFrame)
 EVT_MSGBOX(GOFrame::OnMsgBox)

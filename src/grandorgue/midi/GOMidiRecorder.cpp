@@ -20,7 +20,7 @@
 #include "GOEvent.h"
 #include "GOMidi.h"
 #include "GOOrganController.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 enum {
   ID_MIDI_RECORDER_RECORD = 0,

@@ -35,8 +35,8 @@
 #include "GOArchiveFile.h"
 #include "GOCompress.h"
 #include "GOOrgan.h"
-#include "GOPath.h"
 #include "GOWave.h"
+#include "go_path.h"
 
 GOArchiveCreator::GOArchiveCreator(const wxString &cacheDir)
   : m_OrganList(),
