@@ -1,3 +1,4 @@
+# 3.15.1 (2024-09-03)
 - Fixed saving of Settings->Paths https://github.com/GrandOrgue/grandorgue/issues/1907
 - Fixed crash on releasing a key of any Binauralpipes organ https://github.com/GrandOrgue/grandorgue/issues/1986
 - Fixed absence of warnings of unused Pipe999ReleaseCrossfadeLength https://github.com/GrandOrgue/grandorgue/issues/1904
