@@ -11,7 +11,7 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-bool GOCreateDirectory(const wxString &path) {
+void go_create_directory(const wxString &path) {
   bool res = true;
 
   if (
@@ -23,18 +23,18 @@ bool GOCreateDirectory(const wxString &path) {
   return res;
 }
 
-wxString GONormalizePath(const wxString &path) {
+wxString go_normalize_path(const wxString &path) {
   wxFileName name(path);
   name.MakeAbsolute();
   return name.GetLongPath();
 }
 
-wxString GOGetPath(const wxString &path) {
-  wxFileName name(GONormalizePath(path));
+wxString go_get_path(const wxString &path) {
+  wxFileName name(go_normalize_path(path));
   return name.GetPath();
 }
 
-void GOSyncDirectory(const wxString &path) {
+void go_synch_directory(const wxString &path) {
   int fd = wxOpen(path.c_str(), O_RDONLY, 0);
   if (fd == -1)
     return;
@@ -42,7 +42,7 @@ void GOSyncDirectory(const wxString &path) {
   wxClose(fd);
 }
 
-bool GORenameFile(const wxString &from, const wxString &to) {
+bool go_rename_file(const wxString &from, const wxString &to) {
   wxFileName name(to);
   if (!wxRenameFile(from, to)) {
     if (::wxFileExists(to) && !::wxRemoveFile(to)) {
@@ -54,6 +54,6 @@ bool GORenameFile(const wxString &from, const wxString &to) {
       return false;
     }
   }
-  GOSyncDirectory(name.GetPath());
+  go_synch_directory(name.GetPath());
   return true;
 }

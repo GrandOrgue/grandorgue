@@ -318,7 +318,7 @@ void GOMidiRecorder::StopRecording() {
   m_file.Close();
   if (!m_DoRename) {
     wxFileName name = m_Filename;
-    GOSyncDirectory(name.GetPath());
+    go_synch_directory(name.GetPath());
   } else
     GOAskRenameFile(
       m_Filename,

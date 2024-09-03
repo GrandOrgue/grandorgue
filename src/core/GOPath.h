@@ -10,11 +10,11 @@
 
 #include <wx/string.h>
 
-bool GOCreateDirectory(const wxString &path);
-wxString GONormalizePath(const wxString &path);
-wxString GOGetPath(const wxString &path);
+void go_create_directory(const wxString &path);
+wxString go_normalize_path(const wxString &path);
+wxString go_get_path(const wxString &path);
 
-void GOSyncDirectory(const wxString &path);
-bool GORenameFile(const wxString &from, const wxString &to);
+void go_synch_directory(const wxString &path);
+bool go_rename_file(const wxString &from, const wxString &to);
 
 #endif

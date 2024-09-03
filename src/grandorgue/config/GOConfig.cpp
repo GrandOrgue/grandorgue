@@ -647,6 +647,6 @@ void GOConfig::Flush() {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
     return;
   }
-  if (!GORenameFile(tmp_name, m_ConfigFileName))
+  if (!go_rename_file(tmp_name, m_ConfigFileName))
     return;
 }

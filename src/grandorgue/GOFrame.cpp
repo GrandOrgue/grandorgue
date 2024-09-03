@@ -1377,11 +1377,11 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
     wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (dlg.ShowModal() == wxID_OK) {
     if (filepath.GetFullPath() != dlg.GetPath())
-      GORenameFile(filepath.GetFullPath(), dlg.GetPath());
+      go_rename_file(filepath.GetFullPath(), dlg.GetPath());
   } else
     wxRemoveFile(filepath.GetFullPath());
 
-  GOSyncDirectory(filepath.GetPath());
+  go_synch_directory(filepath.GetPath());
 }
 
 void GOFrame::OnUpdateCheckingRequested(wxCommandEvent &event) {

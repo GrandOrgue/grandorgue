@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -193,7 +193,7 @@ bool GOArchiveCreator::checkExtension(const wxString &name, wxString ext) {
 }
 
 bool GOArchiveCreator::AddDirectory(const wxString &path) {
-  wxString dir = GONormalizePath(path);
+  wxString dir = go_normalize_path(path);
   if (!wxDirExists(dir)) {
     wxLogError(_("Input directory %s not found"), path.c_str());
     return false;

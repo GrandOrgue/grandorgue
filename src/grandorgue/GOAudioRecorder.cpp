@@ -126,7 +126,7 @@ void GOAudioRecorder::StopRecording() {
   m_recorder->Close();
   if (!m_DoRename) {
     wxFileName name = m_Filename;
-    GOSyncDirectory(name.GetPath());
+    go_synch_directory(name.GetPath());
   } else
     GOAskRenameFile(
       m_Filename,
