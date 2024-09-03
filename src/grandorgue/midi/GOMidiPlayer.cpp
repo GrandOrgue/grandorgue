@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -150,7 +150,7 @@ void GOMidiPlayer::Pause() {
     m_Pause = true;
     m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
     m_Start = wxGetLocalTimeMillis() - m_Start;
-    m_OrganController->DeleteTimer(this);
+    m_OrganController->GetTimer()->DeleteTimer(this);
   }
 }
 
@@ -172,7 +172,7 @@ void GOMidiPlayer::StopPlaying() {
   m_buttons[ID_MIDI_PLAYER_PLAY]->Display(false);
   m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(false);
   UpdateDisplay();
-  m_OrganController->DeleteTimer(this);
+  m_OrganController->GetTimer()->DeleteTimer(this);
 }
 
 bool GOMidiPlayer::IsPlaying() { return m_IsPlaying; }
@@ -212,7 +212,7 @@ void GOMidiPlayer::HandleTimer() {
       GOTime next = e.GetTime() * m_Speed + m_Start;
       if (next > m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000)
         next = m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000;
-      m_OrganController->SetTimer(next, this);
+      m_OrganController->GetTimer()->SetTimer(next, this);
       return;
     }
   } while (true);

@@ -386,22 +386,22 @@ void GOConfig::LoadDefaults() {
     m_MIDIEvents.push_back(new GOMidiReceiverBase(m_MIDISettings[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
-  OrganPath.setDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
-  OrganPackagePath.setDefaultValue(
+  OrganPath.SetDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
+  OrganPackagePath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Organ packages")));
-  OrganCachePath.setDefaultValue(
+  OrganCachePath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(wxT("Cache") + m_InstanceName));
-  OrganSettingsPath.setDefaultValue(
+  OrganSettingsPath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(wxT("Data") + m_InstanceName));
-  OrganCombinationsPath.setDefaultValue(
+  OrganCombinationsPath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Combinations")));
-  ExportImportPath.setDefaultValue(
+  ExportImportPath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Settings")));
-  AudioRecorderPath.setDefaultValue(
+  AudioRecorderPath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("Audio recordings")));
-  MidiRecorderPath.setDefaultValue(
+  MidiRecorderPath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("MIDI recordings")));
-  MidiPlayerPath.setDefaultValue(
+  MidiPlayerPath.SetDefaultValue(
     GOStdPath::GetGrandOrgueSubDir(_("MIDI recordings")));
 }
 

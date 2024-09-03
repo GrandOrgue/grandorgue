@@ -82,7 +82,9 @@ static const wxString WX_ORGAN = wxT("Organ");
 static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");
 
 GOOrganController::GOOrganController(
-  GOConfig &config, GOMidiDialogCreator *pMidiDialogCreator)
+  GOConfig &config,
+  GOMidiDialogCreator *pMidiDialogCreator,
+  bool isAppInitialized)
   : GOEventDistributor(this),
     GOOrganModel(config),
     m_config(config),
@@ -98,6 +100,7 @@ GOOrganController::GOOrganController(
     m_AudioRecorder(NULL),
     m_MidiPlayer(NULL),
     m_MidiRecorder(NULL),
+    m_timer(NULL),
     p_OnStateButton(nullptr),
     m_volume(0),
     m_b_customized(false),
@@ -118,10 +121,15 @@ GOOrganController::GOOrganController(
     m_MidiSamplesetMatch(),
     m_SampleSetId1(0),
     m_SampleSetId2(0),
-    m_bitmaps(this),
+    m_bitmaps(nullptr),
     m_PitchLabel(this),
     m_TemperamentLabel(this),
     m_MainWindowData(this, wxT("MainWindow")) {
+  if (isAppInitialized) {
+    // Load here objects that needs App (wx) to be loaded
+    m_timer = new GOTimer();
+    m_bitmaps = new GOBitmapCache(this);
+  }
   GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);
@@ -137,6 +145,10 @@ GOOrganController::~GOOrganController() {
   m_tremulants.clear();
   m_ranks.clear();
   m_VirtualCouplers.Cleanup();
+  if (m_timer)
+    delete m_timer;
+  if (m_bitmaps)
+    delete m_bitmaps;
   GOOrganModel::Cleanup();
   GOOrganModel::SetModelModificationListener(nullptr);
   GOOrganModel::SetMidiDialogCreator(nullptr);
@@ -999,8 +1011,6 @@ wxString GOOrganController::GetCombinationsDir() const {
 GOMemoryPool &GOOrganController::GetMemoryPool() { return m_pool; }
 
 GOConfig &GOOrganController::GetSettings() { return m_config; }
-
-GOBitmapCache &GOOrganController::GetBitmapCache() { return m_bitmaps; }
 
 GOMidi *GOOrganController::GetMidi() { return m_midi; }
 

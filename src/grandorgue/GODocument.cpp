@@ -55,7 +55,7 @@ bool GODocument::LoadOrgan(
   GOConfig &cfg = m_sound.GetSettings();
 
   CloseOrgan();
-  m_OrganController = new GOOrganController(cfg, this);
+  m_OrganController = new GOOrganController(cfg, this, true);
   wxString error = m_OrganController->Load(dlg, organ, cmb, isGuiOnly);
   if (!error.IsEmpty()) {
     if (error != wxT("!")) {

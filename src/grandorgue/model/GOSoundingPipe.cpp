@@ -94,10 +94,7 @@ void GOSoundingPipe::Init(
 }
 
 void GOSoundingPipe::LoadAttackFileInfo(
-  GOConfigReader &cfg,
-  const wxString &group,
-  const wxString &prefix,
-  bool isMainForSecondaryAttacks) {
+  GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   GOSoundProviderWave::AttackFileInfo ainfo;
 
   ainfo.filename.Assign(cfg.ReadFileName(ODFSetting, group, prefix));
@@ -167,15 +164,14 @@ void GOSoundingPipe::LoadAttackFileInfo(
   }
   ainfo.m_LoopCrossfadeLength = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("LoopCrossfadeLength"), 0, 3000, false, 0);
-  ainfo.m_ReleaseCrossfadeLength
-    = isMainForSecondaryAttacks || ainfo.load_release ? cfg.ReadInteger(
-        ODFSetting,
-        group,
-        prefix + wxT("ReleaseCrossfadeLength"),
-        0,
-        3000,
-        false,
-        0)
+  ainfo.m_ReleaseCrossfadeLength = ainfo.load_release ? cfg.ReadInteger(
+                                     ODFSetting,
+                                     group,
+                                     prefix + wxT("ReleaseCrossfadeLength"),
+                                     0,
+                                     3000,
+                                     false,
+                                     0)
                                                       : 0;
 
   m_AttackFileInfos.push_back(ainfo);
@@ -257,11 +253,11 @@ void GOSoundingPipe::Load(
   unsigned attack_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("AttackCount"), 0, 100, false, 0);
 
-  LoadAttackFileInfo(cfg, group, prefix, attack_count > 0);
+  LoadAttackFileInfo(cfg, group, prefix);
 
   for (unsigned i = 1; i <= attack_count; i++)
     LoadAttackFileInfo(
-      cfg, group, wxString::Format(wxT("%sAttack%03d"), prefix, i), false);
+      cfg, group, wxString::Format(wxT("%sAttack%03d"), prefix, i));
 
   unsigned release_count = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("ReleaseCount"), 0, 100, false, 0);
