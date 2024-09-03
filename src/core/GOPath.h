@@ -10,7 +10,7 @@
 
 #include <wx/string.h>
 
-bool go_create_directory(const wxString &path);
+bool GOCreateDirectory(const wxString &path);
 wxString GONormalizePath(const wxString &path);
 wxString GOGetPath(const wxString &path);
 

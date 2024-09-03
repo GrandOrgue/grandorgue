@@ -26,6 +26,6 @@ wxString GOSettingDirectory::Validate(const wxString &value) const {
   const wxString newValue = file.GetFullPath();
 
   if (!wxFileName::DirExists(newValue))
-    go_create_directory(newValue);
+    GOCreateDirectory(newValue);
   return newValue;
 }

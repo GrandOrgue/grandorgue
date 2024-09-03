@@ -11,7 +11,7 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-bool go_create_directory(const wxString &path) {
+bool GOCreateDirectory(const wxString &path) {
   bool res = true;
 
   if (
