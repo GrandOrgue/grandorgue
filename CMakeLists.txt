@@ -119,9 +119,7 @@ SET(CMAKE_INSTALL_RPATH "${RPATH_PREFIX}/${RPATH}")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 # setup compiler flags for debug vs release compiles
-if (NOT APPLE)
-  add_option(-Wall)
-endif ()
+add_option(-Wall)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
 else()
