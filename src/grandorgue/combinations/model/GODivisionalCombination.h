@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -27,7 +27,7 @@ protected:
   // It is not registered as saveable object because
   // GOdivisionalSetter::LoadCombination creates the combinations dynamically
   void LoadCombinationInt(GOConfigReader &cfg, GOSettingType srcType) override;
-  void SaveInt(GOConfigWriter &cfg);
+  void SaveInt(GOConfigWriter &cfg) override;
 
   void PutElementToYamlMap(
     const GOCombinationDefinition::Element &e,

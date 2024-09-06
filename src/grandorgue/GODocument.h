@@ -39,7 +39,7 @@ private:
 
   GOMidiListener m_listener;
 
-  void OnMidiEvent(const GOMidiEvent &event);
+  void OnMidiEvent(const GOMidiEvent &event) override;
 
   void SyncState();
   void CloseOrgan();

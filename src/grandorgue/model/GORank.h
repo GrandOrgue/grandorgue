@@ -54,10 +54,10 @@ private:
 
   void Resize();
 
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
-  void AbortPlayback();
-  void PreparePlayback();
+  void AbortPlayback() override;
+  void PreparePlayback() override;
 
 protected:
   GOMidiSender *GetMidiSender() override { return &m_sender; }
@@ -93,9 +93,9 @@ public:
   const wxString &GetMidiType() const override;
   const wxString &GetMidiName() const override { return GetName(); }
 
-  wxString GetElementStatus();
-  std::vector<wxString> GetElementActions();
-  void TriggerElementActions(unsigned no);
+  wxString GetElementStatus() override;
+  std::vector<wxString> GetElementActions() override;
+  void TriggerElementActions(unsigned no) override;
 
   void SendKey(unsigned note, unsigned velocity);
 };

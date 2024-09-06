@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -51,12 +51,12 @@ private:
 
   static const struct GOElementCreator::ButtonDefinitionEntry m_element_types[];
   const struct GOElementCreator::ButtonDefinitionEntry *
-  GetButtonDefinitionList();
+  GetButtonDefinitionList() override;
 
   void ButtonStateChanged(int id, bool newState) override;
 
   void UpdateDisplay();
-  void HandleTimer();
+  void HandleTimer() override;
 
   void Ensure(unsigned length);
   void Flush();
@@ -84,9 +84,9 @@ public:
   bool IsRecording();
   void StopRecording();
 
-  void Load(GOConfigReader &cfg);
-  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
+  void Load(GOConfigReader &cfg) override;
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) override;
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel) override;
 };
 
 #endif

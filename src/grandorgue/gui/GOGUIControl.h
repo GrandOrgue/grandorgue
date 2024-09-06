@@ -34,7 +34,7 @@ protected:
   bool m_DrawPending;
 
   void Init(GOConfigReader &cfg, wxString group);
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
   void ControlChanged(GOControl *control) override;
 

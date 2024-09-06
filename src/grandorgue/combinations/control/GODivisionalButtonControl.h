@@ -43,8 +43,8 @@ public:
 
   void Load(GOConfigReader &cfg, const wxString &group);
 
-  void LoadCombination(GOConfigReader &cfg);
-  void Save(GOConfigWriter &cfg);
+  void LoadCombination(GOConfigReader &cfg) override;
+  void Save(GOConfigWriter &cfg) override;
 
   void Push() override;
 };

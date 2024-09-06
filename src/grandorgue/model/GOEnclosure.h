@@ -45,14 +45,14 @@ private:
   bool m_Displayed1;
   bool m_Displayed2;
 
-  void ProcessMidi(const GOMidiEvent &event);
-  void HandleKey(int key);
+  void ProcessMidi(const GOMidiEvent &event) override;
+  void HandleKey(int key) override;
 
-  void Save(GOConfigWriter &cfg);
+  void Save(GOConfigWriter &cfg) override;
 
-  void AbortPlayback();
-  void PreparePlayback();
-  void PrepareRecording();
+  void AbortPlayback() override;
+  void PreparePlayback() override;
+  void PrepareRecording() override;
 
   GOMidiReceiverBase *GetMidiReceiver() override { return &m_midi; }
   GOMidiSender *GetMidiSender() override { return &m_sender; }
@@ -79,9 +79,9 @@ public:
   const wxString &GetMidiType() const override;
   const wxString &GetMidiName() const override { return GetName(); }
 
-  wxString GetElementStatus();
-  std::vector<wxString> GetElementActions();
-  void TriggerElementActions(unsigned no);
+  wxString GetElementStatus() override;
+  std::vector<wxString> GetElementActions() override;
+  void TriggerElementActions(unsigned no) override;
 };
 
 #endif /* GOENCLOSURE_H_ */

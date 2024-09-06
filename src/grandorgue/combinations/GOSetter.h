@@ -84,13 +84,13 @@ private:
   void Crescendo(int pos, bool force = false);
 
   static const struct ButtonDefinitionEntry m_element_types[];
-  const struct ButtonDefinitionEntry *GetButtonDefinitionList();
+  const struct ButtonDefinitionEntry *GetButtonDefinitionList() override;
 
   void ButtonStateChanged(int id, bool newState) override;
 
   void ControlChanged(GOControl *control) override;
 
-  void PreparePlayback();
+  void PreparePlayback() override;
 
   /**
    * Called after at least one combination is changed
@@ -153,10 +153,10 @@ public:
    */
   void ToYaml(YAML::Node &yamlNode) const override;
   void FromYaml(const YAML::Node &yamlNode) override;
-  void Load(GOConfigReader &cfg);
-  void Save(GOConfigWriter &cfg);
-  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel);
-  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel);
+  void Load(GOConfigReader &cfg) override;
+  void Save(GOConfigWriter &cfg) override;
+  GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) override;
+  GOLabelControl *GetLabelControl(const wxString &name, bool is_panel) override;
 
   /**
    * Called from GOOrganController after loading the initial preset and after

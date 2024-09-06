@@ -159,7 +159,7 @@ private:
   void OnMenuOpen(wxMenuEvent &event);
   void OnCloseWindow(wxCloseEvent &event);
 
-  void OnMidiEvent(const GOMidiEvent &event);
+  void OnMidiEvent(const GOMidiEvent &event) override;
 
   void OnUpdateLoaded(wxUpdateUIEvent &event);
   void OnSetTitle(wxCommandEvent &event);
