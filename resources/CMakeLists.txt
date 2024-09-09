@@ -20,9 +20,6 @@ ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GOIcon.ico"
                      COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${RESOURCEDIR}/GOIcon.ico" 
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
 
-# Without that instuctions on building files above doesn't being added to Makefile
-LIST(APPEND DEPLIST "${RESOURCEDIR}/GOIcon.ico" ${GENERATED_ICONS})
-
 # Configure generation of icons & create directory for generated .png icons
 # Directory is named GrandOrgue.iconset because iconutil (for MacOS) requires such name
 # Icons from this directory will be included into linux package (with renaming) and into MacOS icons (assembled into archive via iconutil)
@@ -39,6 +36,8 @@ foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
                      COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
 endforeach()
+# Without that instuctions on building files above doesn't being added to Makefile
+LIST(APPEND DEPLIST "${RESOURCEDIR}/GOIcon.ico" ${GENERATED_ICONS})
 
 # ========================
 # Install resources
