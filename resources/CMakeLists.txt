@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -19,15 +19,6 @@ find_program(ImageMagick_convert_EXECUTABLE convert)
 ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GOIcon.ico"
                      COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${RESOURCEDIR}/GOIcon.ico" 
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
-# Following files reference GOIcon.ico by a relative path, because of that they need to be placed near GOIcon.ico
-ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.rc"
-                   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.rc"
-                   DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc")
-ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.manifest"
-                   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest" "${RESOURCEDIR}/GrandOrgue.manifest"
-                   DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest")
-# Without that instuctions on building files above doesn't being added to Makefile
-LIST(APPEND DEPLIST "${RESOURCEDIR}/GOIcon.ico" "${RESOURCEDIR}/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.manifest" ${GENERATED_ICONS})
 
 # Configure generation of icons & create directory for generated .png icons
 # Directory is named GrandOrgue.iconset because iconutil (for MacOS) requires such name
@@ -45,6 +36,8 @@ foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
                      COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
 endforeach()
+# Without that instuctions on building files above doesn't being added to Makefile
+LIST(APPEND DEPLIST "${RESOURCEDIR}/GOIcon.ico" ${GENERATED_ICONS})
 
 # ========================
 # Install resources
@@ -56,13 +49,21 @@ function(add_man_page EXECUTABLE_NAME)
   set(DEPLIST ${DEPLIST} PARENT_SCOPE)
 endfunction()
 
-if (APPLE)
+if(WIN32)
+# Following files reference GOIcon.ico by a relative path, because of that they need to be placed near GOIcon.ico
+  ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.rc"
+		     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.rc"
+		     DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc")
+  ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.manifest"
+		     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest" "${RESOURCEDIR}/GrandOrgue.manifest"
+		     DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest")
+  LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.manifest")
+elseif(APPLE)
    ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.icns" COMMAND iconutil -c icns ${GENERATED_ICONS_DIR} DEPENDS ${GENERATED_ICONS})
    INSTALL(FILES "${RESOURCEDIR}/GrandOrgue.icns" DESTINATION "${RESOURCEINSTDIR}")
-   LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.icns" ${GENERATED_ICONS})
+   LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.icns")
 elseif(UNIX)
   # Install generated icons for linux 
-  LIST(APPEND DEPLIST ${GENERATED_ICONS})
   foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
     INSTALL(FILES "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" RENAME GrandOrgue.png DESTINATION share/icons/hicolor/${ICON_SIZE}x${ICON_SIZE}/apps)
   endforeach()
