@@ -16,15 +16,15 @@ find_program(ImageMagick_convert_EXECUTABLE convert)
 # That icon is used for two purposes:
 # 1. Windows application icon (included from GrandOrgue.rc that is copied below and included from ${CMAKE_SOURCE_DIR}/src/grandorgue/CMakeLists.txt)
 # 2. Conversion into .cpp and usage in GO code (in ${CMAKE_SOURCE_DIR}/src/images/CMakeLists.txt)
-ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GOIcon.ico"
-                     COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${RESOURCEDIR}/GOIcon.ico" 
+ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/GOIcon.ico"
+                     COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${CMAKE_CURRENT_BINARY_DIR}/GOIcon.ico"
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
 
 # Configure generation of icons & create directory for generated .png icons
 # Directory is named GrandOrgue.iconset because iconutil (for MacOS) requires such name
 # Icons from this directory will be included into linux package (with renaming) and into MacOS icons (assembled into archive via iconutil)
 set(ICON_SIZES 16 32 64 128 256 512 1024)
-set(GENERATED_ICONS_DIR "${RESOURCEDIR}/GrandOrgue.iconset" )
+set(GENERATED_ICONS_DIR "${CMAKE_CURRENT_BINARY_DIR}/GrandOrgue.iconset" )
 ADD_CUSTOM_COMMAND(OUTPUT ${GENERATED_ICONS_DIR} COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_ICONS_DIR})
 
 # Setup commands to generate .png icons of different sizes
@@ -36,8 +36,6 @@ foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
                      COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
                      DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
 endforeach()
-# Without that instuctions on building files above doesn't being added to Makefile
-LIST(APPEND DEPLIST "${RESOURCEDIR}/GOIcon.ico" ${GENERATED_ICONS})
 
 # ========================
 # Install resources
@@ -51,18 +49,24 @@ endfunction()
 
 if(WIN32)
 # Following files reference GOIcon.ico by a relative path, because of that they need to be placed near GOIcon.ico
+  ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GOIcon.ico"
+		     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/GOIcon.ico" "${RESOURCEDIR}/GOIcon.ico"
+		     DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/GOIcon.ico")
   ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.rc"
 		     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.rc"
 		     DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.rc")
   ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.manifest"
 		     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest" "${RESOURCEDIR}/GrandOrgue.manifest"
 		     DEPENDS "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.manifest")
-  LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.manifest")
+  LIST(APPEND DEPLIST "${RESOURCEDIR}/GOIcon.ico" "${RESOURCEDIR}/GrandOrgue.rc" "${RESOURCEDIR}/GrandOrgue.manifest")
 elseif(APPLE)
    ADD_CUSTOM_COMMAND(OUTPUT "${RESOURCEDIR}/GrandOrgue.icns" COMMAND iconutil -c icns ${GENERATED_ICONS_DIR} DEPENDS ${GENERATED_ICONS})
    INSTALL(FILES "${RESOURCEDIR}/GrandOrgue.icns" DESTINATION "${RESOURCEINSTDIR}")
    LIST(APPEND DEPLIST "${RESOURCEDIR}/GrandOrgue.icns")
 elseif(UNIX)
+  # Without that instuctions on building files above doesn't being added to Makefile
+  LIST(APPEND DEPLIST ${GENERATED_ICONS})
+
   # Install generated icons for linux 
   foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
     INSTALL(FILES "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" RENAME GrandOrgue.png DESTINATION share/icons/hicolor/${ICON_SIZE}x${ICON_SIZE}/apps)
