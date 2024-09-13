@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(${CMAKE_SOURCE_DIR}/cmake/ConvertImages.cmake)
@@ -25,7 +25,7 @@ CONVERTIMAGE(IMAGE_LIST settings.png)
 CONVERTIMAGE(IMAGE_LIST volume.png)
 CONVERTIMAGE(IMAGE_LIST Splash.jpg)
 CONVERTIMAGE(IMAGE_LIST ASIO.jpg)
-CONVERTIMAGE(IMAGE_LIST "${RESOURCEDIR}/GOIcon.ico")
+CONVERTIMAGE(IMAGE_LIST "${CMAKE_BINARY_DIR}/GOIcon.ico")
 CONVERTIMAGE(IMAGE_LIST ManualCBlackDown01.png)
 CONVERTIMAGE(IMAGE_LIST ManualCBlackUp01.png)
 CONVERTIMAGE(IMAGE_LIST ManualCWhiteDown01.png)
