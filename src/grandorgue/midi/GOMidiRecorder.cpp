@@ -20,7 +20,7 @@
 #include "GOEvent.h"
 #include "GOMidi.h"
 #include "GOOrganController.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 enum {
   ID_MIDI_RECORDER_RECORD = 0,
@@ -318,7 +318,7 @@ void GOMidiRecorder::StopRecording() {
   m_file.Close();
   if (!m_DoRename) {
     wxFileName name = m_Filename;
-    GOSyncDirectory(name.GetPath());
+    go_sync_directory(name.GetPath());
   } else
     GOAskRenameFile(
       m_Filename,

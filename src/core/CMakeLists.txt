@@ -59,7 +59,6 @@ GOLogicalColour.cpp
 GOMemoryPool.cpp
 GOOrgan.cpp
 GOOrganList.cpp
-GOPath.cpp
 GORodgers.cpp
 GOSampleStatistic.cpp
 GOStdPath.cpp
@@ -68,6 +67,7 @@ GOUtil.cpp
 GOWave.cpp
 GOWavPack.cpp
 GOWavPackWriter.cpp
+go_path.cpp
 )
 
 BUILD_LIBRARY(GrandOrgueCore ${src})

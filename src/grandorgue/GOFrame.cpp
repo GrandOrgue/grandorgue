@@ -50,12 +50,12 @@
 #include "GOEvent.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
-#include "GOPath.h"
 #include "GOProperties.h"
 #include "Images.h"
 #include "go_defs.h"
 #include "go_ids.h"
 #include "go_limits.h"
+#include "go_path.h"
 
 BEGIN_EVENT_TABLE(GOFrame, wxFrame)
 EVT_MSGBOX(GOFrame::OnMsgBox)
@@ -1377,11 +1377,11 @@ void GOFrame::OnRenameFile(wxRenameFileEvent &event) {
     wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (dlg.ShowModal() == wxID_OK) {
     if (filepath.GetFullPath() != dlg.GetPath())
-      GORenameFile(filepath.GetFullPath(), dlg.GetPath());
+      go_rename_file(filepath.GetFullPath(), dlg.GetPath());
   } else
     wxRemoveFile(filepath.GetFullPath());
 
-  GOSyncDirectory(filepath.GetPath());
+  go_sync_directory(filepath.GetPath());
 }
 
 void GOFrame::OnUpdateCheckingRequested(wxCommandEvent &event) {

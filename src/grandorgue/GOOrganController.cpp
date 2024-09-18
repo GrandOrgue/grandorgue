@@ -76,7 +76,7 @@
 #include "GOHash.h"
 #include "GOMetronome.h"
 #include "GOOrgan.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 static const wxString WX_ORGAN = wxT("Organ");
 static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");
@@ -377,9 +377,9 @@ wxString GOOrganController::Load(
     odf_name.Assign(m_odf);
   } else {
     wxString file = organ.GetODFPath();
-    m_odf = GONormalizePath(file);
+    m_odf = go_normalize_path(file);
     odf_name.AssignAbsolute(m_odf);
-    m_FileStore.SetDirectory(GOGetPath(m_odf));
+    m_FileStore.SetDirectory(go_get_path(m_odf));
   }
   m_hash = organ.GetOrganHash();
   dlg->Setup(
@@ -895,7 +895,7 @@ bool GOOrganController::Export(const wxString &cmb) {
     wxLogError(_("Could not write to '%s'"), tmp_name);
     return false;
   }
-  if (!GORenameFile(tmp_name, cmb))
+  if (!go_rename_file(tmp_name, cmb))
     return false;
   return true;
 }

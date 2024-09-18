@@ -16,7 +16,7 @@
 
 #include "GOEvent.h"
 #include "GOOrganController.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 enum {
   ID_AUDIO_RECORDER_RECORD = 0,
@@ -126,7 +126,7 @@ void GOAudioRecorder::StopRecording() {
   m_recorder->Close();
   if (!m_DoRename) {
     wxFileName name = m_Filename;
-    GOSyncDirectory(name.GetPath());
+    go_sync_directory(name.GetPath());
   } else
     GOAskRenameFile(
       m_Filename,

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,7 +21,7 @@
 #include "GOArchiveFile.h"
 #include "GOOrgan.h"
 #include "GOOrganList.h"
-#include "GOPath.h"
+#include "go_path.h"
 
 GOArchiveManager::GOArchiveManager(
   GOOrganList &OrganList, const wxString &cacheDir)
@@ -137,7 +137,7 @@ GOArchive *GOArchiveManager::LoadArchive(
 
 wxString GOArchiveManager::InstallPackage(
   const wxString &path, const wxString &last_id) {
-  wxString p = GONormalizePath(path);
+  wxString p = go_normalize_path(path);
   GOArchive *archive = OpenArchive(p);
   if (!archive)
     return wxString::Format(
@@ -155,7 +155,7 @@ wxString GOArchiveManager::InstallPackage(const wxString &path) {
 }
 
 bool GOArchiveManager::RegisterPackage(const wxString &path) {
-  wxString p = GONormalizePath(path);
+  wxString p = go_normalize_path(path);
   const GOArchiveFile *archive = m_OrganList.GetArchiveByPath(p);
   if (archive != NULL) {
     if (archive->GetFileID() == archive->GetCurrentFileID())

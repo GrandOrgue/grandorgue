@@ -14,7 +14,6 @@
 
 #include "GOMemoryPool.h"
 #include "GOOrgan.h"
-#include "GOPath.h"
 #include "GOPortFactory.h"
 #include "GOStdPath.h"
 #include "archive/GOArchiveFile.h"
@@ -24,6 +23,7 @@
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
 #include "go_limits.h"
+#include "go_path.h"
 #include "midi/ports/GOMidiPort.h"
 #include "midi/ports/GOMidiPortFactory.h"
 #include "settings/GOSettingEnum.cpp"
@@ -647,6 +647,6 @@ void GOConfig::Flush() {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
     return;
   }
-  if (!GORenameFile(tmp_name, m_ConfigFileName))
+  if (!go_rename_file(tmp_name, m_ConfigFileName))
     return;
 }
