@@ -58,6 +58,7 @@ private:
 protected:
   const std::vector<GOCombinationDefinition::Element> &r_ElementDefinitions;
   bool m_Protected;
+  wxString m_CombinationStateName;
 
   void EnsureElementStatesAllocated();
 
@@ -134,6 +135,13 @@ public:
   GOCombination(
     GOOrganModel &organModel, const GOCombinationDefinition &cmbDef);
   virtual ~GOCombination();
+
+  const wxString &GetCombinationStateName() const {
+    return m_CombinationStateName;
+  }
+  void SetCombinationStateName(const wxString &combinationStateName) {
+    m_CombinationStateName = combinationStateName;
+  }
 
   bool IsEmpty() const;
   GOBool3 GetElementState(unsigned no) const { return m_ElementStates[no]; }

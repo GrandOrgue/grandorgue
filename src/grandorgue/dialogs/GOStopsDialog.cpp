@@ -139,7 +139,7 @@ void GOStopsDialog::OnElementChanging(wxCommandEvent &event) {
     = static_cast<GOCombinationElement *>(pCheck->GetClientData());
 
   if (pE)
-    pE->SetCombinationState(event.IsChecked());
+    pE->SetCombinationState(event.IsChecked(), wxEmptyString);
 }
 
 void GOStopsDialog::ControlChanged(GOControl *pControl) {

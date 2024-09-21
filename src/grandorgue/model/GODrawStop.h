@@ -8,6 +8,8 @@
 #ifndef GODRAWSTOP_H
 #define GODRAWSTOP_H
 
+#include <unordered_map>
+
 #include <wx/string.h>
 
 #include "combinations/model/GOCombinationElement.h"
@@ -29,13 +31,15 @@ private:
   static const struct IniFileEnumEntry m_function_types[];
   GOFunctionType m_Type;
   int m_GCState;
+  std::unordered_map<wxString, bool> m_InternalStates;
   bool m_ActiveState;
   std::vector<GODrawstop *> m_ControlledDrawstops;
   std::vector<GODrawstop *> m_ControllingDrawstops;
 
   bool IsControlledByUser() const override { return !IsReadOnly(); }
 
-  void SetDrawStopState(bool on);
+  void SetInternalState(bool on, const wxString &stateName);
+  void SetDrawStopState(bool on) { SetInternalState(on, wxEmptyString); }
 
 protected:
   /*
@@ -71,7 +75,7 @@ public:
   virtual void SetButtonState(bool on) override;
   virtual void Update();
   void Reset();
-  void SetCombinationState(bool on) override;
+  void SetCombinationState(bool on, const wxString &stateName) override;
 };
 
 #endif

@@ -8,10 +8,12 @@
 #ifndef GOCOMBINATIONELEMENT_H
 #define GOCOMBINATIONELEMENT_H
 
+class wxString;
+
 class GOCombinationElement {
 public:
   virtual bool GetCombinationState() const = 0;
-  virtual void SetCombinationState(bool on) = 0;
+  virtual void SetCombinationState(bool on, const wxString &stateName) = 0;
   virtual bool IsControlledByUser() const = 0;
 };
 
