@@ -35,6 +35,8 @@ private:
 
   bool IsControlledByUser() const override { return !IsReadOnly(); }
 
+  void SetDrawStopState(bool on);
+
 protected:
   /*
    * m_IsToStoreInDivisional and m_IsToStoreInGeneral control whether the
@@ -49,7 +51,6 @@ protected:
 
   virtual void SetupIsToStoreInCmb();
 
-  void SetState(bool on);
   virtual void OnDrawstopStateChanged(bool on) = 0;
 
   void Save(GOConfigWriter &cfg) override;
