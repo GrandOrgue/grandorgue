@@ -29,6 +29,7 @@ GODrawstop::GODrawstop(GOOrganModel &organModel)
   : GOButtonControl(organModel, MIDI_RECV_DRAWSTOP, false),
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
+    m_ActiveState(false),
     m_ControlledDrawstops(),
     m_ControllingDrawstops(),
     m_IsToStoreInDivisional(false),
