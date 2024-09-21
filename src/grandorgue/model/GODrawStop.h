@@ -50,7 +50,7 @@ protected:
   virtual void SetupIsToStoreInCmb();
 
   void SetState(bool on);
-  virtual void ChangeState(bool on) = 0;
+  virtual void OnDrawstopStateChanged(bool on) = 0;
 
   void Save(GOConfigWriter &cfg) override;
 

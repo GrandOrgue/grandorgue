@@ -32,7 +32,7 @@ private:
   unsigned m_NumberOfAccessiblePipes;
 
   void SetRankKey(unsigned key, unsigned velocity);
-  void ChangeState(bool on) override;
+  void OnDrawstopStateChanged(bool on) override;
 
   void AbortPlayback() override;
   void PreparePlayback() override;

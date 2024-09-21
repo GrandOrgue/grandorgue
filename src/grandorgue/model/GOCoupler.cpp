@@ -359,7 +359,7 @@ void GOCoupler::SetKey(
   ChangeKey(note, velocity);
 }
 
-void GOCoupler::ChangeState(bool on) {
+void GOCoupler::OnDrawstopStateChanged(bool on) {
   if (m_UnisonOff)
     r_OrganModel.GetManual(m_SourceManual)->SetUnisonOff(on);
   else {

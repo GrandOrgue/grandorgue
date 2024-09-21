@@ -154,7 +154,7 @@ void GODrawstop::SetState(bool on) {
     Display(on);
   }
   m_ActiveState = on;
-  ChangeState(on);
+  OnDrawstopStateChanged(on);
   for (unsigned i = 0; i < m_ControlledDrawstops.size(); i++)
     m_ControlledDrawstops[i]->Update();
 }
