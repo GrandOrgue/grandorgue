@@ -149,7 +149,7 @@ void GOVirtualCouplerController::Load(
     bool isCoupleThrough = cfg.ReadBoolean(
       CMBSetting, pCoupleThrough->GetGroup(), WX_COUPLE_THROUGH, false, false);
 
-    pCoupleThrough->Set(isCoupleThrough);
+    pCoupleThrough->SetButtonState(isCoupleThrough);
   }
 }
 

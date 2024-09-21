@@ -996,7 +996,9 @@ void GOSetter::OnCombinationsSaved(const wxString &yamlFile) {
 
 void GOSetter::Update() {}
 
-void GOSetter::SetterActive(bool on) { m_buttons[ID_SETTER_SET]->Set(on); }
+void GOSetter::SetterActive(bool on) {
+  m_buttons[ID_SETTER_SET]->SetButtonState(on);
+}
 
 void GOSetter::ToggleSetter() { m_buttons[ID_SETTER_SET]->Push(); }
 

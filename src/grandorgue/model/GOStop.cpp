@@ -143,7 +143,7 @@ GOStop::~GOStop(void) {}
 
 void GOStop::AbortPlayback() {
   if (IsAuto())
-    Set(false);
+    SetButtonState(false);
   GOButtonControl::AbortPlayback();
 }
 

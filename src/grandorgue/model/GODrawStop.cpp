@@ -132,7 +132,7 @@ void GODrawstop::Save(GOConfigWriter &cfg) {
   GOButtonControl::Save(cfg);
 }
 
-void GODrawstop::Set(bool on) {
+void GODrawstop::SetButtonState(bool on) {
   if (IsEngaged() == on)
     return;
   Display(on);
@@ -144,7 +144,7 @@ void GODrawstop::Reset() {
     return;
   if (m_GCState < 0)
     return;
-  Set(m_GCState > 0 ? true : false);
+  SetButtonState(m_GCState > 0 ? true : false);
 }
 
 void GODrawstop::SetState(bool on) {
@@ -161,7 +161,7 @@ void GODrawstop::SetState(bool on) {
 
 void GODrawstop::SetCombinationState(bool on) {
   if (!IsReadOnly())
-    Set(on);
+    SetButtonState(on);
 }
 
 void GODrawstop::StartPlayback() {

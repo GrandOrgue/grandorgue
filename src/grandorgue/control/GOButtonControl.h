@@ -81,7 +81,7 @@ public:
   bool IsPiston() const { return m_IsPiston; }
 
   virtual void Push();
-  virtual void Set(bool on);
+  virtual void SetButtonState(bool on);
   virtual void Display(bool onoff);
   bool IsEngaged() const;
   bool DisplayInverted() const;
