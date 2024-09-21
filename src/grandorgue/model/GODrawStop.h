@@ -30,7 +30,6 @@ private:
   GOFunctionType m_Type;
   int m_GCState;
   bool m_ActiveState;
-  bool m_CombinationState;
   std::vector<GODrawstop *> m_ControlledDrawstops;
   std::vector<GODrawstop *> m_ControllingDrawstops;
 
@@ -71,7 +70,7 @@ public:
   virtual void Set(bool on) override;
   virtual void Update();
   void Reset();
-  void SetCombination(bool on) override;
+  void SetCombinationState(bool on) override;
 };
 
 #endif

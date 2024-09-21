@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -29,8 +29,6 @@ GODrawstop::GODrawstop(GOOrganModel &organModel)
   : GOButtonControl(organModel, MIDI_RECV_DRAWSTOP, false),
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
-    m_ActiveState(false),
-    m_CombinationState(false),
     m_ControlledDrawstops(),
     m_ControllingDrawstops(),
     m_IsToStoreInDivisional(false),
@@ -160,11 +158,9 @@ void GODrawstop::SetState(bool on) {
     m_ControlledDrawstops[i]->Update();
 }
 
-void GODrawstop::SetCombination(bool on) {
-  if (IsReadOnly())
-    return;
-  m_CombinationState = on;
-  Set(on);
+void GODrawstop::SetCombinationState(bool on) {
+  if (!IsReadOnly())
+    Set(on);
 }
 
 void GODrawstop::StartPlayback() {

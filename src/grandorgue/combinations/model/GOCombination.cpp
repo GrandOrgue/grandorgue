@@ -454,7 +454,7 @@ bool GOCombination::Push(
       if (
         m_ElementStates[i] != BOOL3_DEFAULT
         && (!extraSet || extraSet->find(i) == extraSet->end())) {
-        r_ElementDefinitions[i].control->SetCombination(
+        r_ElementDefinitions[i].control->SetCombinationState(
           to_bool(m_ElementStates[i]));
         used |= to_bool(m_ElementStates[i]);
       }
