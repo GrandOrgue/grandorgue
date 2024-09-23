@@ -1025,8 +1025,8 @@ void GOSetter::PushGeneral(
     = GetCrescendoAddSet(elementSet);
 
   NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
-  if (!pExtraSet) { // Otherwise the crescendo in add mode:
-                    // not to switch off combination buttons
+  if (pButtonToLight || !pExtraSet) { // Otherwise the crescendo in add mode:
+                                      // not to switch off combination buttons
     UpdateAllSetsButtonsLight(pButtonToLight, -1);
   }
 }
@@ -1042,7 +1042,7 @@ void GOSetter::PushDivisional(
       = GetCrescendoAddSet(elementSet);
 
     NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
-    if (!pExtraSet)
+    if (pButtonToLight || !pExtraSet)
       UpdateAllSetsButtonsLight(pButtonToLight, cmbManual);
   }
 }
