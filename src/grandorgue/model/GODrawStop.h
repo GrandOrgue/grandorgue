@@ -10,6 +10,7 @@
 
 #include <unordered_map>
 
+#include <wx/hashmap.h>
 #include <wx/string.h>
 
 #include "combinations/model/GOCombinationElement.h"
@@ -31,7 +32,8 @@ private:
   static const struct IniFileEnumEntry m_function_types[];
   GOFunctionType m_Type;
   int m_GCState;
-  std::unordered_map<wxString, bool> m_InternalStates;
+  std::unordered_map<wxString, bool, wxStringHash, wxStringEqual>
+    m_InternalStates;
   bool m_ActiveState;
   std::vector<GODrawstop *> m_ControlledDrawstops;
   std::vector<GODrawstop *> m_ControllingDrawstops;
