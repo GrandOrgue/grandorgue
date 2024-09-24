@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -30,7 +30,6 @@ GODrawstop::GODrawstop(GOOrganModel &organModel)
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
     m_ActiveState(false),
-    m_CombinationState(false),
     m_ControlledDrawstops(),
     m_ControllingDrawstops(),
     m_IsToStoreInDivisional(false),
@@ -133,11 +132,11 @@ void GODrawstop::Save(GOConfigWriter &cfg) {
   GOButtonControl::Save(cfg);
 }
 
-void GODrawstop::Set(bool on) {
+void GODrawstop::SetButtonState(bool on) {
   if (IsEngaged() == on)
     return;
   Display(on);
-  SetState(on);
+  SetDrawStopState(on);
 }
 
 void GODrawstop::Reset() {
@@ -145,26 +144,24 @@ void GODrawstop::Reset() {
     return;
   if (m_GCState < 0)
     return;
-  Set(m_GCState > 0 ? true : false);
+  SetButtonState(m_GCState > 0 ? true : false);
 }
 
-void GODrawstop::SetState(bool on) {
+void GODrawstop::SetDrawStopState(bool on) {
   if (IsActive() == on)
     return;
   if (IsReadOnly()) {
     Display(on);
   }
   m_ActiveState = on;
-  ChangeState(on);
+  OnDrawstopStateChanged(on);
   for (unsigned i = 0; i < m_ControlledDrawstops.size(); i++)
     m_ControlledDrawstops[i]->Update();
 }
 
-void GODrawstop::SetCombination(bool on) {
-  if (IsReadOnly())
-    return;
-  m_CombinationState = on;
-  Set(on);
+void GODrawstop::SetCombinationState(bool on) {
+  if (!IsReadOnly())
+    SetButtonState(on);
 }
 
 void GODrawstop::StartPlayback() {
@@ -176,7 +173,7 @@ void GODrawstop::Update() {
   bool state;
   switch (m_Type) {
   case FUNCTION_INPUT:
-    SetState(IsEngaged());
+    SetDrawStopState(IsEngaged());
     break;
 
   case FUNCTION_AND:
@@ -185,9 +182,9 @@ void GODrawstop::Update() {
     for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
       state = state && m_ControllingDrawstops[i]->IsActive();
     if (m_Type == FUNCTION_NAND)
-      SetState(!state);
+      SetDrawStopState(!state);
     else
-      SetState(state);
+      SetDrawStopState(state);
     break;
 
   case FUNCTION_OR:
@@ -196,21 +193,21 @@ void GODrawstop::Update() {
     for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
       state = state || m_ControllingDrawstops[i]->IsActive();
     if (m_Type == FUNCTION_NOR)
-      SetState(!state);
+      SetDrawStopState(!state);
     else
-      SetState(state);
+      SetDrawStopState(state);
     break;
 
   case FUNCTION_XOR:
     state = false;
     for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
       state = state != m_ControllingDrawstops[i]->IsActive();
-    SetState(state);
+    SetDrawStopState(state);
     break;
 
   case FUNCTION_NOT:
     state = m_ControllingDrawstops[0]->IsActive();
-    SetState(!state);
+    SetDrawStopState(!state);
     break;
   }
 }

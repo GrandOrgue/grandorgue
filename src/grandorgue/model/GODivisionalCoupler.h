@@ -23,7 +23,7 @@ private:
   bool m_BiDirectionalCoupling;
   std::vector<unsigned> m_manuals;
 
-  void ChangeState(bool on) override {}
+  void OnDrawstopStateChanged(bool on) override {}
   void SetupIsToStoreInCmb() override;
 
 public:

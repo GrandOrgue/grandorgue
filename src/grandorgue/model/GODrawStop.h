@@ -30,11 +30,12 @@ private:
   GOFunctionType m_Type;
   int m_GCState;
   bool m_ActiveState;
-  bool m_CombinationState;
   std::vector<GODrawstop *> m_ControlledDrawstops;
   std::vector<GODrawstop *> m_ControllingDrawstops;
 
   bool IsControlledByUser() const override { return !IsReadOnly(); }
+
+  void SetDrawStopState(bool on);
 
 protected:
   /*
@@ -50,8 +51,7 @@ protected:
 
   virtual void SetupIsToStoreInCmb();
 
-  void SetState(bool on);
-  virtual void ChangeState(bool on) = 0;
+  virtual void OnDrawstopStateChanged(bool on) = 0;
 
   void Save(GOConfigWriter &cfg) override;
 
@@ -68,10 +68,10 @@ public:
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   void RegisterControlled(GODrawstop *sw);
-  virtual void Set(bool on) override;
+  virtual void SetButtonState(bool on) override;
   virtual void Update();
   void Reset();
-  void SetCombination(bool on) override;
+  void SetCombinationState(bool on) override;
 };
 
 #endif

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -92,10 +92,10 @@ void GOButtonControl::HandleKey(int key) {
 void GOButtonControl::Push() {
   if (m_ReadOnly)
     return;
-  Set(m_Engaged ^ true);
+  SetButtonState(m_Engaged ^ true);
 }
 
-void GOButtonControl::Set(bool on) {}
+void GOButtonControl::SetButtonState(bool on) {}
 
 void GOButtonControl::AbortPlayback() {
   m_sender.SetDisplay(false);
@@ -121,12 +121,12 @@ void GOButtonControl::ProcessMidi(const GOMidiEvent &event) {
     if (m_Pushbutton)
       Push();
     else
-      Set(true);
+      SetButtonState(true);
     break;
 
   case MIDI_MATCH_OFF:
     if (!m_Pushbutton)
-      Set(false);
+      SetButtonState(false);
     break;
 
   default:

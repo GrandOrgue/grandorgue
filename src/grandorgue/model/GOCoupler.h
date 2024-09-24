@@ -51,7 +51,7 @@ private:
   void ChangeKey(int note, unsigned velocity);
   void SetOut(int note, unsigned velocity);
   unsigned GetInternalState(int note);
-  void ChangeState(bool on) override;
+  void OnDrawstopStateChanged(bool on) override;
   void SetupIsToStoreInCmb() override;
 
   void PreparePlayback() override;

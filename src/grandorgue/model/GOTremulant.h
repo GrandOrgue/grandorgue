@@ -37,7 +37,7 @@ private:
   unsigned m_TremulantN;
 
   void InitSoundProvider(GOMemoryPool &pool);
-  void ChangeState(bool on) override;
+  void OnDrawstopStateChanged(bool on) override;
   void SetupIsToStoreInCmb() override;
 
   void Initialize() override;

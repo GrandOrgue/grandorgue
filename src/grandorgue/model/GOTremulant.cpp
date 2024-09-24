@@ -91,7 +91,7 @@ void GOTremulant::InitSoundProvider(GOMemoryPool &pool) {
   }
 }
 
-void GOTremulant::ChangeState(bool on) {
+void GOTremulant::OnDrawstopStateChanged(bool on) {
   if (m_TremulantType == GOSynthTrem) {
     GOSoundEngine *pSoundEngine = GetSoundEngine();
 

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -26,7 +26,7 @@ void GOCallbackButtonControl::Push() {
     GOButtonControl::Push();
 }
 
-void GOCallbackButtonControl::Set(bool on) {
+void GOCallbackButtonControl::SetButtonState(bool on) {
   if (IsEngaged() == on)
     return;
   m_callback->ButtonStateChanged(this, on);
