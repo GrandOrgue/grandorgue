@@ -305,7 +305,7 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_CrescendoDisplay(organController),
     m_TransposeDisplay(organController),
     m_NameDisplay(organController),
-    m_swell(*organController) {
+    m_CrescendoEnclosure(*organController) {
   CreateButtons(*m_OrganController);
 
   m_buttons[ID_SETTER_PREV]->SetPreconfigIndex(0);
@@ -459,7 +459,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_buttons[ID_SETTER_FILE_EXIT]->Init(
     cfg, wxT("ExitGO"), _("Exit GrandOrgue"));
 
-  m_swell.Init(cfg, wxT("SetterSwell"), _("Crescendo"), 0);
+  m_CrescendoEnclosure.Init(cfg, wxT("SetterSwell"), _("Crescendo"), 0);
 
   m_PosDisplay.Init(cfg, wxT("SetterCurrentPosition"), _("sequencer position"));
   m_BankDisplay.Init(cfg, wxT("SetterGeneralBank"), _("general bank"));
@@ -1161,8 +1161,8 @@ void GOSetter::Crescendo(int newpos, bool force) {
 }
 
 void GOSetter::ControlChanged(GOControl *control) {
-  if (control == &m_swell)
-    Crescendo(m_swell.GetValue() * CRESCENDO_STEPS / 128);
+  if (control == &m_CrescendoEnclosure)
+    Crescendo(m_CrescendoEnclosure.GetValue() * CRESCENDO_STEPS / 128);
 }
 
 void GOSetter::UpdateTranspose() {
@@ -1188,7 +1188,7 @@ void GOSetter::UpdateModified(bool modified) {
 
 GOEnclosure *GOSetter::GetEnclosure(const wxString &name, bool is_panel) {
   if (name == wxT("Swell"))
-    return &m_swell;
+    return &m_CrescendoEnclosure;
 
   return NULL;
 }
