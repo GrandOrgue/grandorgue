@@ -68,7 +68,7 @@ private:
   GOLabelControl m_CrescendoDisplay;
   GOLabelControl m_TransposeDisplay;
   GOLabelControl m_NameDisplay;
-  GOEnclosure m_CrescendoEnclosure;
+  GOEnclosure m_CrescendoCtrl;
 
   // Show the combination file name
   void DisplayCmbFile(const wxString &fileName);
