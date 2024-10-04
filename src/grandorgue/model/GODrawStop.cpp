@@ -152,10 +152,11 @@ void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
       resState = resState || intState.second;
     if (m_ActiveState != resState) {
       Display(resState);
-      OnDrawstopStateChanged(resState);
-      for (unsigned i = 0; i < m_ControlledDrawstops.size(); i++)
-        m_ControlledDrawstops[i]->Update();
+      // must be before calling m_ControlledDrawstops[i]->Update();
       m_ActiveState = resState;
+      OnDrawstopStateChanged(resState);
+      for (auto *pDrawstop : m_ControlledDrawstops)
+        pDrawstop->Update(); // reads m_ActiveState
     }
   }
 }
