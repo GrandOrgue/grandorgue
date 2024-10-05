@@ -78,8 +78,8 @@ public:
   bool IsToStoreInGeneral() const { return m_IsToStoreInGeneral; }
   bool GetCombinationState() const override { return IsEngaged(); }
 
-  void Init(GOConfigReader &cfg, wxString group, wxString name);
-  void Load(GOConfigReader &cfg, wxString group);
+  void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
+  void Load(GOConfigReader &cfg, const wxString &group);
   void RegisterControlled(GODrawstop *sw);
   void UnRegisterControlled(GODrawstop *sw);
   virtual void SetButtonState(bool on) override;
