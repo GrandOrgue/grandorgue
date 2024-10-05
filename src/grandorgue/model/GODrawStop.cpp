@@ -190,11 +190,6 @@ void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
   }
 }
 
-void GODrawstop::SetButtonState(bool on) {
-  if (IsEngaged() != on)
-    SetDrawStopState(on);
-}
-
 void GODrawstop::SetCombinationState(bool on, const wxString &stateName) {
   if (!IsReadOnly())
     SetInternalState(on, stateName);

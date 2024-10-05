@@ -6,7 +6,7 @@
             <name>GrandOrgue</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions>cc,cpp,cxx</cpp-extensions>
-            <header-extensions>h,hxx,linux</header-extensions>
+            <header-extensions>h,hpp,hxx,inc,linux</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
@@ -19,6 +19,10 @@
                 </confElem>
                 <confElem>
                     <name>PerfTest</name>
+                    <type>0</type>
+                </confElem>
+                <confElem>
+                    <name>ctest</name>
                     <type>0</type>
                 </confElem>
             </confList>
