@@ -4,12 +4,14 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
+#include <cstdio>
+#include <iostream>
+
 #include "GOTestCollection.h"
+#include "GOTestDrawStop.h"
 #include "GOTestOrganModel.h"
 #include "GOTestSwitch.h"
 #include "GOTestWindchest.h"
-#include <cstdio>
-#include <iostream>
 
 int main() {
   /*
@@ -20,9 +22,10 @@ int main() {
   */
 
   /* Instantiate all the test classes here */
-  new GOTestWindchest;
+  new GOTestDrawStop;
   new GOTestOrganModel;
   new GOTestSwitch;
+  new GOTestWindchest;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->run();
