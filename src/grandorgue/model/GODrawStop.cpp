@@ -39,7 +39,8 @@ void GODrawstop::RegisterControlled(GODrawstop *sw) {
   m_ControlledDrawstops.push_back(sw);
 }
 
-void GODrawstop::Init(GOConfigReader &cfg, wxString group, wxString name) {
+void GODrawstop::Init(
+  GOConfigReader &cfg, const wxString &group, const wxString &name) {
   m_Type = FUNCTION_INPUT;
   m_Engaged = cfg.ReadBoolean(CMBSetting, group, wxT("DefaultToEngaged"));
   m_GCState = 0;
@@ -58,7 +59,7 @@ void GODrawstop::SetupIsToStoreInCmb() {
     || isControlledByUser;
 }
 
-void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
+void GODrawstop::Load(GOConfigReader &cfg, const wxString &group) {
   m_Type = (GOFunctionType)cfg.ReadEnum(
     ODFSetting,
     group,

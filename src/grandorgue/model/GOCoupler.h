@@ -75,7 +75,7 @@ public:
     int keyshift,
     int dest_manual,
     GOCouplerType coupler_type);
-  void Load(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, const wxString &group);
 
   // send key states for all chained couplers
   void RefreshState();
