@@ -7,7 +7,6 @@ std::string GOTestDrawStop::TestFunctions::TEST_NAME
   = CLASS_NAME + "::Functions";
 
 void GOTestDrawStop::TestFunctions::run() {
-  // test grouping functionality
   GOSwitch sw1(*controller);
   GOSwitch sw2(*controller);
   GOSwitch sw3(*controller);
@@ -67,20 +66,6 @@ void GOTestDrawStop::TestFunctions::run() {
   GOAssert(sw12.IsActive(), "true AND true");
   GOAssert(sw13.IsActive(), "true OR true");
   GOAssert(!sw23.IsActive(), "true XOR true");
-
-  /*
-  std::string message;
-
-  // Check global Switch
-  GOSwitch *go_switch(*this->controller);
-  message = "The associated manual should be -1 as it is a global switch!";
-  this->GOAssert(go_switch->GetAssociatedManualN() == -1, message);
-
-  message = "The switch index in manual should be 0!";
-  this->GOAssert(go_switch->GetIndexInManual() == 0, message);
-  */
-
-  // Test AND function of switches
 
   sw23.ClearControllingDrawstops();
   sw13.ClearControllingDrawstops();
