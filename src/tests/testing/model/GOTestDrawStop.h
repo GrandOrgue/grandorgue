@@ -3,16 +3,19 @@
 
 #include "GOTest.h"
 
-class GOTestDrawStop : public GOCommonControllerTest {
-
+class GOTestDrawStop {
 private:
-  std::string name = "GOTestDrawStop";
+  static std::string CLASS_NAME;
 
 public:
-  GOTestDrawStop() {}
-  virtual ~GOTestDrawStop() {}
-  virtual void run();
-  std::string GetName() { return name; }
+  class TestFunctions : public GOCommonControllerTest {
+  private:
+    static std::string TEST_NAME;
+
+  public:
+    virtual void run() override;
+    std::string GetName() override { return TEST_NAME; }
+  };
 };
 
 #endif /* GOTESTDRAWSTOP_H */

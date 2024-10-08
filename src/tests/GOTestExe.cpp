@@ -22,10 +22,10 @@ int main() {
   */
 
   /* Instantiate all the test classes here */
-  new GOTestDrawStop;
-  new GOTestOrganModel;
-  new GOTestSwitch;
-  new GOTestWindchest;
+  GOTestDrawStop::TestFunctions testDrawStopFunctions;
+  GOTestOrganModel testOrganModel;
+  GOTestSwitch testSwitch;
+  GOTestWindchest testWindchest;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->run();
