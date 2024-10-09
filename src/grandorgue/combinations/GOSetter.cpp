@@ -351,6 +351,18 @@ GOSetter::GOSetter(GOOrganController *organController)
 GOSetter::~GOSetter() {}
 
 static const wxString WX_OVERRIDE_MODE = wxT("OverrideMode");
+static const wxString WX_EMPTY_STRING = wxEmptyString;
+
+static wxString crescendo_cmb_state_name(
+  bool isOverride, uint8_t crescendoIdx) {
+  return isOverride ? WX_EMPTY_STRING
+                    : wxString::Format("crescendo-%c", 'A' + crescendoIdx);
+}
+
+wxString GOSetter::GetCrescendoCmbStateName(uint8_t crescendoIdx) const {
+  return crescendo_cmb_state_name(
+    m_CrescendoOverrideMode[crescendoIdx], crescendoIdx);
+}
 
 void GOSetter::Load(GOConfigReader &cfg) {
   m_OrganController->RegisterSaveableObject(this);
@@ -382,14 +394,21 @@ void GOSetter::Load(GOConfigReader &cfg) {
     m_CrescendoOverrideMode[i] = cfg.ReadBoolean(
       CMBSetting, buffer, WX_OVERRIDE_MODE, false, defaultAddMode);
   }
-  for (unsigned i = 0; i < N_CRESCENDOS * CRESCENDO_STEPS; i++) {
-    m_crescendo.push_back(new GOGeneralCombination(*m_OrganController, true));
-    m_CrescendoExtraSets.emplace_back();
-    buffer.Printf(
-      wxT("SetterCrescendo%d_%03d"),
-      (i / CRESCENDO_STEPS) + 1,
-      (i % CRESCENDO_STEPS) + 1);
-    m_crescendo[i]->Load(cfg, buffer);
+  for (uint8_t crescendoIdx = 0; crescendoIdx < N_CRESCENDOS; crescendoIdx++) {
+    wxString cmbStateName = GetCrescendoCmbStateName(crescendoIdx);
+
+    for (unsigned i = 0; i < CRESCENDO_STEPS; i++) {
+      GOGeneralCombination *pCmb
+        = new GOGeneralCombination(*m_OrganController, true);
+
+      m_crescendo.push_back(pCmb);
+      m_CrescendoExtraSets.emplace_back();
+      pCmb->Load(
+        cfg,
+        wxString::Format(
+          wxT("SetterCrescendo%d_%03d"), crescendoIdx + 1, i + 1));
+      pCmb->SetCombinationStateName(cmbStateName);
+    }
   }
 
   m_buttons[ID_SETTER_PREV]->Init(cfg, wxT("SetterPrev"), _("Previous"));
@@ -868,10 +887,16 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
       nullptr);
     break;
 
-  case ID_SETTER_CRESCENDO_OVERRIDE:
-    m_CrescendoOverrideMode[m_crescendobank] = newState;
-    m_buttons[ID_SETTER_CRESCENDO_OVERRIDE]->Display(newState);
+  case ID_SETTER_CRESCENDO_OVERRIDE: {
+    wxString cmbStateName = crescendo_cmb_state_name(newState, m_crescendobank);
 
+    m_CrescendoOverrideMode[m_crescendobank] = newState;
+    for (unsigned i = 0; i < CRESCENDO_STEPS; i++)
+      m_crescendo[N_CRESCENDOS * m_crescendobank + i]->SetCombinationStateName(
+        cmbStateName);
+    m_buttons[ID_SETTER_CRESCENDO_OVERRIDE]->Display(newState);
+    break;
+  }
   case ID_SETTER_PITCH_M1:
     m_OrganController->GetRootPipeConfigNode().ModifyManualTuning(-1);
     m_OrganController->GetRootPipeConfigNode().ModifyAutoTuningCorrection(-1);
@@ -1023,12 +1048,11 @@ void GOSetter::UpdateAllSetsButtonsLight(
 void GOSetter::PushGeneral(
   GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) {
   GOCombination::ExtraElementsSet elementSet;
-  const GOCombination::ExtraElementsSet *pExtraSet
-    = GetCrescendoAddSet(elementSet);
 
-  NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
-  if (pButtonToLight || !pExtraSet) { // Otherwise the crescendo in add mode:
-                                      // not to switch off combination buttons
+  NotifyCmbPushed(cmb.Push(m_state));
+  if (pButtonToLight || IsCurrentCrescendoOverride()) {
+    // Otherwise the crescendo in add mode: not to switch off combination
+    // buttons
     UpdateAllSetsButtonsLight(pButtonToLight, -1);
   }
 }
@@ -1039,12 +1063,8 @@ void GOSetter::PushDivisional(
   unsigned cmbManual,
   GOButtonControl *pButtonToLight) {
   if (cmbManual == startManual || !m_state.m_IsActive) {
-    GOCombination::ExtraElementsSet elementSet;
-    const GOCombination::ExtraElementsSet *pExtraSet
-      = GetCrescendoAddSet(elementSet);
-
-    NotifyCmbPushed(cmb.Push(m_state, pExtraSet));
-    if (pButtonToLight || !pExtraSet)
+    NotifyCmbPushed(cmb.Push(m_state));
+    if (pButtonToLight || IsCurrentCrescendoOverride())
       UpdateAllSetsButtonsLight(pButtonToLight, cmbManual);
   }
 }
@@ -1074,6 +1094,7 @@ void GOSetter::SetCrescendoType(unsigned no) {
     m_CrescendoOverrideMode[m_crescendobank]);
 }
 
+/*
 const GOCombination::ExtraElementsSet *GOSetter::GetCrescendoAddSet(
   GOCombination::ExtraElementsSet &elementSet) {
   const GOCombination::ExtraElementsSet *pResElementSet = nullptr;
@@ -1084,7 +1105,7 @@ const GOCombination::ExtraElementsSet *GOSetter::GetCrescendoAddSet(
     pResElementSet = &elementSet;
   }
   return pResElementSet;
-}
+} */
 
 void GOSetter::UpdatePosition(int pos) {
   if (pos != (int)m_pos)
@@ -1136,9 +1157,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
     else
       m_CrescendoExtraSets[oldIdx].clear();
     ++m_crescendopos;
-    changed = changed
-      || m_crescendo[newIdx]->Push(
-        m_state, crescendoAddMode ? &m_CrescendoExtraSets[oldIdx] : nullptr);
+    changed = changed || m_crescendo[newIdx]->Push(m_state);
   }
 
   while (pos < m_crescendopos) {
@@ -1146,9 +1165,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
 
     const unsigned newIdx = m_crescendopos + m_crescendobank * CRESCENDO_STEPS;
 
-    changed = changed
-      || m_crescendo[newIdx]->Push(
-        m_state, crescendoAddMode ? &m_CrescendoExtraSets[newIdx] : nullptr);
+    changed = changed || m_crescendo[newIdx]->Push(m_state);
   }
   // switch combination buttons off in the crescendo override mode
   if (changed && !crescendoAddMode)

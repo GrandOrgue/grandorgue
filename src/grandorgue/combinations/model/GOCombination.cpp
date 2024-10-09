@@ -438,9 +438,7 @@ bool GOCombination::FillWithCurrent(
   return used;
 }
 
-bool GOCombination::Push(
-  const GOSetterState &setterState,
-  const GOCombination::ExtraElementsSet *extraSet) {
+bool GOCombination::Push(const GOSetterState &setterState) {
   bool used = false;
 
   if (setterState.m_IsActive) {
@@ -451,12 +449,12 @@ bool GOCombination::Push(
   } else {
     EnsureElementStatesAllocated();
     for (unsigned i = 0; i < r_ElementDefinitions.size(); i++) {
-      if (
-        m_ElementStates[i] != BOOL3_DEFAULT
-        && (!extraSet || extraSet->find(i) == extraSet->end())) {
+      if (m_ElementStates[i] != BOOL3_DEFAULT) {
+        bool elementState = to_bool(m_ElementStates[i]);
+
         r_ElementDefinitions[i].control->SetCombinationState(
-          to_bool(m_ElementStates[i]), m_CombinationStateName);
-        used |= to_bool(m_ElementStates[i]);
+          elementState, m_CombinationStateName);
+        used = used || elementState;
       }
     }
   }

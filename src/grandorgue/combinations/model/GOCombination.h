@@ -182,9 +182,7 @@ public:
 
   void FromYaml(const YAML::Node &yamlNode) override;
 
-  bool Push(
-    const GOSetterState &setterState,
-    const ExtraElementsSet *extraSet = nullptr);
+  bool Push(const GOSetterState &setterState);
 };
 
 #endif

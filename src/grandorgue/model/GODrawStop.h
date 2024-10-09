@@ -74,7 +74,7 @@ public:
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group);
   void RegisterControlled(GODrawstop *sw);
-  virtual void SetButtonState(bool on) override;
+  virtual void SetButtonState(bool on) override { SetDrawStopState(on); }
   virtual void Update();
   void Reset();
   void SetCombinationState(bool on, const wxString &stateName) override;
