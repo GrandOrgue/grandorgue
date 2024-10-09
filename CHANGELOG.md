@@ -1,3 +1,4 @@
+# 3.15.2 (2024-10-10)
 - Fixed combination button lighting when a crescendo was in the Override=Off mode https://github.com/GrandOrgue/grandorgue/issues/1935
 # 3.15.1 (2024-09-03)
 - Fixed saving of Settings->Paths https://github.com/GrandOrgue/grandorgue/issues/1907
