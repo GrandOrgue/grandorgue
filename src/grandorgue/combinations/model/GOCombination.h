@@ -23,9 +23,6 @@
 class GOOrganModel;
 
 class GOCombination : public GOSaveableObject, public GOSaveableToYaml {
-public:
-  using ExtraElementsSet = std::unordered_set<unsigned>;
-
 protected:
   GOOrganModel &r_OrganModel;
 
@@ -145,8 +142,6 @@ public:
 
   bool IsEmpty() const;
   GOBool3 GetElementState(unsigned no) const { return m_ElementStates[no]; }
-  void GetExtraSetState(ExtraElementsSet &extraSet);
-  void GetEnabledElements(GOCombination::ExtraElementsSet &enabledElements);
 
   void Copy(const GOCombination *combination);
   void Clear();
@@ -182,9 +177,7 @@ public:
 
   void FromYaml(const YAML::Node &yamlNode) override;
 
-  bool Push(
-    const GOSetterState &setterState,
-    const ExtraElementsSet *extraSet = nullptr);
+  bool Push(const GOSetterState &setterState);
 };
 
 #endif
