@@ -132,13 +132,6 @@ void GODrawstop::Save(GOConfigWriter &cfg) {
   GOButtonControl::Save(cfg);
 }
 
-void GODrawstop::SetButtonState(bool on) {
-  if (IsEngaged() == on)
-    return;
-  Display(on);
-  SetDrawStopState(on);
-}
-
 void GODrawstop::Reset() {
   if (IsReadOnly())
     return;
@@ -147,21 +140,35 @@ void GODrawstop::Reset() {
   SetButtonState(m_GCState > 0 ? true : false);
 }
 
-void GODrawstop::SetDrawStopState(bool on) {
-  if (IsActive() == on)
-    return;
-  if (IsReadOnly()) {
-    Display(on);
+void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
+  bool &internalState = m_InternalStates[stateName];
+
+  if (internalState != on) {
+    internalState = on;
+
+    bool resState = false;
+
+    for (const auto &intState : m_InternalStates)
+      resState = resState || intState.second;
+    if (m_ActiveState != resState) {
+      Display(resState);
+      // must be before calling m_ControlledDrawstops[i]->Update();
+      m_ActiveState = resState;
+      OnDrawstopStateChanged(resState);
+      for (auto *pDrawstop : m_ControlledDrawstops)
+        pDrawstop->Update(); // reads m_ActiveState
+    }
   }
-  m_ActiveState = on;
-  OnDrawstopStateChanged(on);
-  for (unsigned i = 0; i < m_ControlledDrawstops.size(); i++)
-    m_ControlledDrawstops[i]->Update();
 }
 
-void GODrawstop::SetCombinationState(bool on) {
+void GODrawstop::SetButtonState(bool on) {
+  if (IsEngaged() != on)
+    SetDrawStopState(on);
+}
+
+void GODrawstop::SetCombinationState(bool on, const wxString &stateName) {
   if (!IsReadOnly())
-    SetButtonState(on);
+    SetInternalState(on, stateName);
 }
 
 void GODrawstop::StartPlayback() {
