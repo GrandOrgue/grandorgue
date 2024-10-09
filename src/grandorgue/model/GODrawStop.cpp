@@ -39,6 +39,45 @@ void GODrawstop::RegisterControlled(GODrawstop *sw) {
   m_ControlledDrawstops.push_back(sw);
 }
 
+void GODrawstop::UnRegisterControlled(GODrawstop *sw) {
+  auto end = m_ControlledDrawstops.end();
+  auto pos = std::find(m_ControlledDrawstops.begin(), end, sw);
+
+  m_ControlledDrawstops.erase(pos);
+}
+
+void GODrawstop::ClearControllingDrawstops() {
+  for (auto pControlling : m_ControllingDrawstops)
+    pControlling->UnRegisterControlled(this);
+  m_ControllingDrawstops.clear();
+}
+
+void GODrawstop::AddControllingDrawstop(
+  GODrawstop *pDrawStop, unsigned switchN, const wxString &group) {
+  auto end = m_ControllingDrawstops.end();
+
+  if (m_Type == FUNCTION_INPUT)
+    throw wxString::Format(_("Switch %d already assigned to %s"), group);
+  if (std::find(m_ControllingDrawstops.begin(), end, pDrawStop) != end)
+    throw wxString::Format(
+      _("Switch %d already assigned to %s"), switchN, group);
+  if (pDrawStop == this)
+    throw wxString::Format(_("Drawstop %s can't reference to itself"), group);
+  pDrawStop->RegisterControlled(this);
+  m_ControllingDrawstops.push_back(pDrawStop);
+}
+
+void GODrawstop::SetFunctionType(GOFunctionType newFunctionType) {
+  if (newFunctionType != m_Type) {
+    if (m_Type == FUNCTION_INPUT)
+      ClearControllingDrawstops();
+    else if (m_Type == FUNCTION_NOT && m_ControllingDrawstops.size() > 1)
+      throw wxString::Format(
+        _("A NOT Switch must not have more than one controlling switches"));
+    m_Type = newFunctionType;
+  }
+}
+
 void GODrawstop::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_Type = FUNCTION_INPUT;
   m_Engaged = cfg.ReadBoolean(CMBSetting, group, wxT("DefaultToEngaged"));
@@ -77,7 +116,7 @@ void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
   } else {
     m_ReadOnly = true;
     unsigned cnt = 0;
-    bool unique = true;
+
     if (m_Type == FUNCTION_NOT)
       cnt = 1;
     else if (
@@ -101,16 +140,8 @@ void GODrawstop::Load(GOConfigReader &cfg, wxString group) {
         r_OrganModel.GetSwitchCount(),
         true,
         1);
-      GODrawstop *s = r_OrganModel.GetSwitch(no - 1);
-      for (unsigned j = 0; j < m_ControllingDrawstops.size(); j++)
-        if (unique && m_ControllingDrawstops[j] == s)
-          throw wxString::Format(
-            _("Switch %d already assigned to %s"), no, group.c_str());
-      if (s == (GODrawstop *)this)
-        throw wxString::Format(
-          _("Drawstop %s can't reference to itself"), group.c_str());
-      s->RegisterControlled(this);
-      m_ControllingDrawstops.push_back(s);
+
+      AddControllingDrawstop(r_OrganModel.GetSwitch(no - 1), no, group);
     }
   }
 
