@@ -106,7 +106,7 @@ void GOCoupler::Init(
       = r_OrganModel.GetManual(m_DestinationManual)->RegisterCoupler(this);
 }
 
-void GOCoupler::Load(GOConfigReader &cfg, wxString group) {
+void GOCoupler::Load(GOConfigReader &cfg, const wxString &group) {
   m_UnisonOff
     = cfg.ReadBoolean(ODFSetting, group, wxT("UnisonOff"), true, false);
   m_DestinationManual = cfg.ReadInteger(
