@@ -126,7 +126,7 @@ void GOStop::SetKey(unsigned note, unsigned velocity) {
   if (m_KeyVelocity[note] == velocity)
     return;
   m_KeyVelocity[note] = velocity;
-  if (IsActive())
+  if (IsEngaged())
     SetRankKey(note, m_KeyVelocity[note]);
 }
 
@@ -157,7 +157,7 @@ void GOStop::PreparePlayback() {
 void GOStop::StartPlayback() {
   GODrawstop::StartPlayback();
 
-  if (IsAuto() && IsActive())
+  if (IsAuto() && IsEngaged())
     SetRankKey(0, 0x7f);
 }
 

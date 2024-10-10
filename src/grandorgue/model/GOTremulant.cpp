@@ -123,7 +123,7 @@ void GOTremulant::AbortPlayback() {
 void GOTremulant::StartPlayback() {
   GODrawstop::StartPlayback();
 
-  if (IsActive() && m_TremulantType == GOSynthTrem) {
+  if (IsEngaged() && m_TremulantType == GOSynthTrem) {
     GOSoundEngine *pSoundEngine = GetSoundEngine();
 
     assert(m_TremulantN > 0);

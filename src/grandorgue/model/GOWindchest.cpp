@@ -117,7 +117,9 @@ void GOWindchest::UpdateTremulant(GOTremulant *tremulant) {
       GOTremulant *t = r_OrganModel.GetTremulant(m_tremulant[i]);
       if (t->GetTremulantType() != GOWavTrem)
         continue;
-      bool on = t->IsActive();
+
+      bool on = t->IsEngaged();
+
       for (unsigned j = 0; j < m_pipes.size(); j++)
         m_pipes[j]->SetWaveTremulant(on);
       return;
