@@ -34,7 +34,6 @@ private:
   int m_GCState;
   std::unordered_map<wxString, bool, wxStringHash, wxStringEqual>
     m_InternalStates;
-  bool m_ActiveState;
   std::vector<GODrawstop *> m_ControlledDrawstops;
   std::vector<GODrawstop *> m_ControllingDrawstops;
 
@@ -68,7 +67,6 @@ public:
 
   bool IsToStoreInDivisional() const { return m_IsToStoreInDivisional; }
   bool IsToStoreInGeneral() const { return m_IsToStoreInGeneral; }
-  bool IsActive() const { return m_ActiveState; }
   bool GetCombinationState() const override { return IsEngaged(); }
 
   void Init(GOConfigReader &cfg, wxString group, wxString name);

@@ -29,7 +29,6 @@ GODrawstop::GODrawstop(GOOrganModel &organModel)
   : GOButtonControl(organModel, MIDI_RECV_DRAWSTOP, false),
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
-    m_ActiveState(false),
     m_ControlledDrawstops(),
     m_ControllingDrawstops(),
     m_IsToStoreInDivisional(false),
@@ -150,10 +149,9 @@ void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
 
     for (const auto &intState : m_InternalStates)
       resState = resState || intState.second;
-    if (m_ActiveState != resState) {
+    if (IsEngaged() != resState) {
       Display(resState);
       // must be before calling m_ControlledDrawstops[i]->Update();
-      m_ActiveState = resState;
       OnDrawstopStateChanged(resState);
       for (auto *pDrawstop : m_ControlledDrawstops)
         pDrawstop->Update(); // reads m_ActiveState
@@ -187,7 +185,7 @@ void GODrawstop::Update() {
   case FUNCTION_NAND:
     state = true;
     for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-      state = state && m_ControllingDrawstops[i]->IsActive();
+      state = state && m_ControllingDrawstops[i]->IsEngaged();
     if (m_Type == FUNCTION_NAND)
       SetDrawStopState(!state);
     else
@@ -198,7 +196,7 @@ void GODrawstop::Update() {
   case FUNCTION_NOR:
     state = false;
     for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-      state = state || m_ControllingDrawstops[i]->IsActive();
+      state = state || m_ControllingDrawstops[i]->IsEngaged();
     if (m_Type == FUNCTION_NOR)
       SetDrawStopState(!state);
     else
@@ -208,12 +206,12 @@ void GODrawstop::Update() {
   case FUNCTION_XOR:
     state = false;
     for (unsigned i = 0; i < m_ControllingDrawstops.size(); i++)
-      state = state != m_ControllingDrawstops[i]->IsActive();
+      state = state != m_ControllingDrawstops[i]->IsEngaged();
     SetDrawStopState(state);
     break;
 
   case FUNCTION_NOT:
-    state = m_ControllingDrawstops[0]->IsActive();
+    state = m_ControllingDrawstops[0]->IsEngaged();
     SetDrawStopState(!state);
     break;
   }
