@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,7 +14,11 @@ GODialogCloser::GODialogCloser(wxDialog *pDlg) : p_dialog(pDlg) {
 
 bool GODialogCloser::ShowAdvanced(bool isAutoDestroyable) {
   m_AutoDestroyable = isAutoDestroyable;
-  return p_dialog->Show(true);
+
+  bool res = p_dialog->Show(true);
+
+  p_dialog->Raise();
+  return res;
 }
 
 int GODialogCloser::ShowModalAdvanced(bool isAutoDestroyable) {

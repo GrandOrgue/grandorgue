@@ -1,3 +1,4 @@
+- Fixed non bringing a dialog windows on top when it had been already open https://github.com/GrandOrgue/grandorgue/issues/1961
 - Fixed combination button lighting when a crescendo was in the Override=Off mode https://github.com/GrandOrgue/grandorgue/issues/1935
 # 3.15.1 (2024-09-03)
 - Fixed saving of Settings->Paths https://github.com/GrandOrgue/grandorgue/issues/1907
