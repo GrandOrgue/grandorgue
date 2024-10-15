@@ -29,7 +29,7 @@ unsigned GOStop::IsAuto() const {
   return (m_RankInfo.size() == 1 && m_RankInfo[0].Rank->GetPipeCount() == 1);
 }
 
-void GOStop::Load(GOConfigReader &cfg, wxString group) {
+void GOStop::Load(GOConfigReader &cfg, const wxString &group) {
   unsigned number_of_ranks = cfg.ReadInteger(
     ODFSetting, group, wxT("NumberOfRanks"), 0, 999, false, 0);
 
