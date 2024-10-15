@@ -22,7 +22,7 @@ int main() {
   */
 
   /* Instantiate all the test classes here */
-  GOTestDrawStop::TestFunctions testDrawStopFunctions;
+  GOTestDrawStop testDrawStop;
   GOTestOrganModel testOrganModel;
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
