@@ -163,12 +163,26 @@ void GODrawstop::Save(GOConfigWriter &cfg) {
   GOButtonControl::Save(cfg);
 }
 
+void GODrawstop::SetResultState(bool resState) {
+  if (IsEngaged() != resState) {
+    Display(resState);
+    // must be before calling m_ControlledDrawstops[i]->Update();
+    OnDrawstopStateChanged(resState);
+    for (auto *pDrawstop : m_ControlledDrawstops)
+      pDrawstop->Update(); // reads IsEngaged()
+  }
+}
+
 void GODrawstop::Reset() {
-  if (IsReadOnly())
-    return;
-  if (m_GCState < 0)
-    return;
-  SetButtonState(m_GCState > 0 ? true : false);
+  if (!IsReadOnly() && m_GCState >= 0) {
+    if (m_GCState == 0) {
+      // Clear all internal states
+      for (auto &intState : m_InternalStates)
+        intState.second = false;
+      SetResultState(false);
+    } else
+      SetButtonState(true);
+  }
 }
 
 void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
@@ -181,13 +195,7 @@ void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
 
     for (const auto &intState : m_InternalStates)
       resState = resState || intState.second;
-    if (IsEngaged() != resState) {
-      Display(resState);
-      // must be before calling m_ControlledDrawstops[i]->Update();
-      OnDrawstopStateChanged(resState);
-      for (auto *pDrawstop : m_ControlledDrawstops)
-        pDrawstop->Update(); // reads m_ActiveState
-    }
+    SetResultState(resState);
   }
 }
 

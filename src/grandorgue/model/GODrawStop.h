@@ -39,7 +39,11 @@ private:
 
   bool IsControlledByUser() const override { return !IsReadOnly(); }
 
+  // set the result state of the internal OR switch
+  void SetResultState(bool on);
+  // set one entry of the internal OR switch
   void SetInternalState(bool on, const wxString &stateName);
+  // set the default entry of the internal OR switch
   void SetDrawStopState(bool on) { SetInternalState(on, wxEmptyString); }
 
 protected:
