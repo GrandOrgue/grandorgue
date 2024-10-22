@@ -94,6 +94,7 @@ dialogs/GOMidiListDialog.cpp
 dialogs/GONewReleaseDialog.cpp
 dialogs/GOOrganSettingsDialog.cpp
 dialogs/GOProgressDialog.cpp
+dialogs/GOPropertiesDialog.cpp
 dialogs/GOSelectOrganDialog.cpp
 dialogs/GOSplash.cpp
 dialogs/GOStopsDialog.cpp
@@ -224,7 +225,6 @@ GOLogWindow.cpp
 GOMetronome.cpp
 GOMainWindowData.cpp
 GOOrganController.cpp
-GOProperties.cpp
 GOFrame.cpp
 GODocument.cpp
 GOVirtualCouplerController.cpp
