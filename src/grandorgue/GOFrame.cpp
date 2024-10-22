@@ -28,6 +28,7 @@
 #include "config/GOConfig.h"
 #include "dialogs/GONewReleaseDialog.h"
 #include "dialogs/GOProgressDialog.h"
+#include "dialogs/GOPropertiesDialog.h"
 #include "dialogs/GOSelectOrganDialog.h"
 #include "dialogs/GOSplash.h"
 #include "dialogs/settings/GOSettingsDialog.h"
@@ -50,7 +51,6 @@
 #include "GOEvent.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
-#include "GOProperties.h"
 #include "Images.h"
 #include "go_defs.h"
 #include "go_ids.h"
@@ -1117,7 +1117,7 @@ void GOFrame::OnProperties(wxCommandEvent &event) {
   GOOrganController *organController = GetOrganController();
 
   if (organController) {
-    GOProperties dlg(organController, this);
+    GOPropertiesDialog dlg(organController, this);
     dlg.ShowModal();
   }
 }

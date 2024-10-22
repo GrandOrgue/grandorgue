@@ -24,48 +24,48 @@ void GOTestDrawStop::TestFunctions::run() {
   sw23.AddControllingDrawstop(&sw2, 1, "sw3");
   sw23.AddControllingDrawstop(&sw3, 2, "sw3");
 
-  GOAssert(!sw12.IsActive(), "false AND false");
-  GOAssert(!sw13.IsActive(), "false OR false");
-  GOAssert(!sw23.IsActive(), "false XOR false");
+  GOAssert(!sw12.IsEngaged(), "false AND false");
+  GOAssert(!sw13.IsEngaged(), "false OR false");
+  GOAssert(!sw23.IsEngaged(), "false XOR false");
 
   sw1.SetButtonState(true);
-  GOAssert(!sw12.IsActive(), "true AND false");
-  GOAssert(sw13.IsActive(), "true OR false");
-  GOAssert(!sw23.IsActive(), "false XOR false");
+  GOAssert(!sw12.IsEngaged(), "true AND false");
+  GOAssert(sw13.IsEngaged(), "true OR false");
+  GOAssert(!sw23.IsEngaged(), "false XOR false");
 
   sw1.SetButtonState(false);
   sw2.SetButtonState(true);
-  GOAssert(!sw12.IsActive(), "false AND true");
-  GOAssert(!sw13.IsActive(), "false OR false");
-  GOAssert(sw23.IsActive(), "true XOR false");
+  GOAssert(!sw12.IsEngaged(), "false AND true");
+  GOAssert(!sw13.IsEngaged(), "false OR false");
+  GOAssert(sw23.IsEngaged(), "true XOR false");
 
   sw1.SetButtonState(true);
-  GOAssert(sw12.IsActive(), "true AND true");
-  GOAssert(sw13.IsActive(), "true OR false");
-  GOAssert(sw23.IsActive(), "true XOR false");
+  GOAssert(sw12.IsEngaged(), "true AND true");
+  GOAssert(sw13.IsEngaged(), "true OR false");
+  GOAssert(sw23.IsEngaged(), "true XOR false");
 
   sw1.SetButtonState(false);
   sw2.SetButtonState(false);
   sw3.SetButtonState(true);
-  GOAssert(!sw12.IsActive(), "false AND false");
-  GOAssert(sw13.IsActive(), "false OR true");
-  GOAssert(sw23.IsActive(), "false XOR true");
+  GOAssert(!sw12.IsEngaged(), "false AND false");
+  GOAssert(sw13.IsEngaged(), "false OR true");
+  GOAssert(sw23.IsEngaged(), "false XOR true");
 
   sw1.SetButtonState(true);
-  GOAssert(!sw12.IsActive(), "true AND false");
-  GOAssert(sw13.IsActive(), "true OR true");
-  GOAssert(sw23.IsActive(), "false XOR true");
+  GOAssert(!sw12.IsEngaged(), "true AND false");
+  GOAssert(sw13.IsEngaged(), "true OR true");
+  GOAssert(sw23.IsEngaged(), "false XOR true");
 
   sw1.SetButtonState(false);
   sw2.SetButtonState(true);
-  GOAssert(!sw12.IsActive(), "false AND true");
-  GOAssert(sw13.IsActive(), "false OR true");
-  GOAssert(!sw23.IsActive(), "true XOR true");
+  GOAssert(!sw12.IsEngaged(), "false AND true");
+  GOAssert(sw13.IsEngaged(), "false OR true");
+  GOAssert(!sw23.IsEngaged(), "true XOR true");
 
   sw1.SetButtonState(true);
-  GOAssert(sw12.IsActive(), "true AND true");
-  GOAssert(sw13.IsActive(), "true OR true");
-  GOAssert(!sw23.IsActive(), "true XOR true");
+  GOAssert(sw12.IsEngaged(), "true AND true");
+  GOAssert(sw13.IsEngaged(), "true OR true");
+  GOAssert(!sw23.IsEngaged(), "true XOR true");
 
   sw23.ClearControllingDrawstops();
   sw13.ClearControllingDrawstops();
