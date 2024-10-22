@@ -12,6 +12,17 @@
 
 #include "GOOrganController.h"
 
+class wxStaticLink : public wxStaticText {
+private:
+  wxString m_url;
+
+  void OnClick(wxMouseEvent &event);
+
+public:
+  wxStaticLink(wxWindow *parent, const wxString &label, const wxString &url);
+  DECLARE_EVENT_TABLE()
+};
+
 BEGIN_EVENT_TABLE(wxStaticLink, wxStaticText)
 EVT_LEFT_UP(wxStaticLink::OnClick)
 END_EVENT_TABLE()
@@ -54,7 +65,8 @@ bool GOPropertiesTest(const wxString &what) {
     && what.CmpNoCase(wxT("N/A"));
 }
 
-GOProperties::GOProperties(GOOrganController *organController, wxWindow *win)
+GOPropertiesDialog::GOPropertiesDialog(
+  GOOrganController *organController, wxWindow *win)
   : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties")),
     m_OrganController(organController) {
   wxASSERT(organController);
@@ -169,5 +181,3 @@ GOProperties::GOProperties(GOOrganController *organController, wxWindow *win)
   SetSizer(topSizer);
   topSizer->Fit(this);
 }
-
-GOProperties::~GOProperties(void) {}
