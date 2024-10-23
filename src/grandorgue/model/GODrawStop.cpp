@@ -185,18 +185,27 @@ void GODrawstop::Reset() {
   }
 }
 
+bool GODrawstop::CalculateResultState(bool includeDefault) const {
+  bool resState = false;
+
+  for (const auto &intState : m_InternalStates)
+    if (includeDefault || !intState.first.IsEmpty())
+      resState = resState || intState.second;
+  return resState;
+}
+
 void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
   bool &internalState = m_InternalStates[stateName];
 
   if (internalState != on) {
     internalState = on;
-
-    bool resState = false;
-
-    for (const auto &intState : m_InternalStates)
-      resState = resState || intState.second;
-    SetResultState(resState);
+    SetResultState(CalculateResultState(true));
   }
+}
+
+void GODrawstop::SetButtonState(bool on) {
+  if (!IsReadOnly() && (on || !CalculateResultState(false)))
+    SetDrawStopState(on);
 }
 
 void GODrawstop::SetCombinationState(bool on, const wxString &stateName) {
