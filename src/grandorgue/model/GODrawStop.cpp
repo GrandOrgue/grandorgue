@@ -204,7 +204,8 @@ void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
 }
 
 void GODrawstop::SetButtonState(bool on) {
-  if (!IsReadOnly() && (on || !CalculateResultState(false)))
+  // we prohibit changing the button state while it is engaged by a crescendo
+  if (!IsReadOnly() && !CalculateResultState(false))
     SetDrawStopState(on);
 }
 

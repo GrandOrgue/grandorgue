@@ -112,11 +112,17 @@ void GOTestDrawStop::TestInternalState::run() {
   GOAssert(sw.IsEngaged(), "After engaging from a crescendo");
 
   sw.SetButtonState(true);
-  GOAssert(sw.IsEngaged(), "After engaging manually and from a crescendo");
+  GOAssert(
+    sw.IsEngaged(),
+    "After engaging from a crescendo and an attempt to engage manually");
 
   sw.SetCombinationState(false, WX_CRESCENDO_A);
   GOAssert(
-    sw.IsEngaged(), "After disengaging from a crescendo but engaded manually");
+    !sw.IsEngaged(),
+    "After an attempt to engage manually and disengaging from a crescendo");
+
+  sw.SetButtonState(true);
+  GOAssert(sw.IsEngaged(), "After engaging manually");
 
   sw.SetCombinationState(true, WX_CRESCENDO_A);
   GOAssert(sw.IsEngaged(), "After engaging manually and from a crescendo");
