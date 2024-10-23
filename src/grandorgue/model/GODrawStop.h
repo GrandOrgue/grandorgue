@@ -39,7 +39,12 @@ private:
 
   bool IsControlledByUser() const override { return !IsReadOnly(); }
 
+  // set the result state of the internal OR switch
+  void SetResultState(bool on);
+  // set one entry of the internal OR switch
+  bool CalculateResultState(bool includeDefault) const;
   void SetInternalState(bool on, const wxString &stateName);
+  // set the default entry of the internal OR switch
   void SetDrawStopState(bool on) { SetInternalState(on, wxEmptyString); }
 
 protected:
@@ -82,7 +87,7 @@ public:
   void Load(GOConfigReader &cfg, const wxString &group);
   void RegisterControlled(GODrawstop *sw);
   void UnRegisterControlled(GODrawstop *sw);
-  virtual void SetButtonState(bool on) override { SetDrawStopState(on); }
+  virtual void SetButtonState(bool on) override;
   virtual void Update();
   void Reset();
   void SetCombinationState(bool on, const wxString &stateName) override;
