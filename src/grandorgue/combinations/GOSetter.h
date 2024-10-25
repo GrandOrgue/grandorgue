@@ -60,7 +60,6 @@ private:
   ptr_vector<GOGeneralCombination> m_framegeneral;
   ptr_vector<GOGeneralCombination> m_general;
   ptr_vector<GOGeneralCombination> m_crescendo;
-  std::vector<GOCombination::ExtraElementsSet> m_CrescendoExtraSets;
   bool m_CrescendoOverrideMode[N_CRESCENDOS];
   GOLabelControl m_CurrFileDisplay;
   GOLabelControl m_PosDisplay;
@@ -81,6 +80,10 @@ private:
 
   void SetSetterType(GOSetterState::SetterType type);
   void SetCrescendoType(unsigned no);
+  bool IsCurrentCrescendoOverride() const {
+    return m_CrescendoOverrideMode[m_crescendobank];
+  }
+  wxString GetCrescendoCmbStateName(uint8_t crescendoIdx) const;
   void Crescendo(int pos, bool force = false);
 
   static const struct ButtonDefinitionEntry m_element_types[];
@@ -204,14 +207,6 @@ public:
     unsigned startManual,
     unsigned cmbManual,
     GOButtonControl *pButtonToLight) override;
-
-  /*
-   * If current crescendo is in override mode then returns nullptr
-   * If current crescendo is in add mode then fills elementSet and returns a
-   * pointer to it
-   */
-  const GOCombination::ExtraElementsSet *GetCrescendoAddSet(
-    GOCombination::ExtraElementsSet &elementSet);
 
   void Next();
   void Prev();

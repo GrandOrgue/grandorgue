@@ -163,12 +163,35 @@ void GODrawstop::Save(GOConfigWriter &cfg) {
   GOButtonControl::Save(cfg);
 }
 
+void GODrawstop::SetResultState(bool resState) {
+  if (IsEngaged() != resState) {
+    Display(resState);
+    // must be before calling m_ControlledDrawstops[i]->Update();
+    OnDrawstopStateChanged(resState);
+    for (auto *pDrawstop : m_ControlledDrawstops)
+      pDrawstop->Update(); // reads IsEngaged()
+  }
+}
+
 void GODrawstop::Reset() {
-  if (IsReadOnly())
-    return;
-  if (m_GCState < 0)
-    return;
-  SetButtonState(m_GCState > 0 ? true : false);
+  if (!IsReadOnly() && m_GCState >= 0) {
+    if (m_GCState == 0) {
+      // Clear all internal states
+      for (auto &intState : m_InternalStates)
+        intState.second = false;
+      SetResultState(false);
+    } else
+      SetButtonState(true);
+  }
+}
+
+bool GODrawstop::CalculateResultState(bool includeDefault) const {
+  bool resState = false;
+
+  for (const auto &intState : m_InternalStates)
+    if (includeDefault || !intState.first.IsEmpty())
+      resState = resState || intState.second;
+  return resState;
 }
 
 void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
@@ -176,19 +199,14 @@ void GODrawstop::SetInternalState(bool on, const wxString &stateName) {
 
   if (internalState != on) {
     internalState = on;
-
-    bool resState = false;
-
-    for (const auto &intState : m_InternalStates)
-      resState = resState || intState.second;
-    if (IsEngaged() != resState) {
-      Display(resState);
-      // must be before calling m_ControlledDrawstops[i]->Update();
-      OnDrawstopStateChanged(resState);
-      for (auto *pDrawstop : m_ControlledDrawstops)
-        pDrawstop->Update(); // reads m_ActiveState
-    }
+    SetResultState(CalculateResultState(true));
   }
+}
+
+void GODrawstop::SetButtonState(bool on) {
+  // we prohibit changing the button state while it is engaged by a crescendo
+  if (!IsReadOnly() && !CalculateResultState(false))
+    SetDrawStopState(on);
 }
 
 void GODrawstop::SetCombinationState(bool on, const wxString &stateName) {
