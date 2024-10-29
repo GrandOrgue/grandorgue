@@ -736,12 +736,6 @@
         </df>
       </df>
     </df>
-    <df root="../.." name="1">
-    </df>
-    <df root="../.." name="2">
-    </df>
-    <df root="../.." name="3">
-    </df>
     <logicalFolder name="Modules" displayName="Modules" projectFiles="true">
       <itemPath>/usr/share/cmake/Modules/CMakeCCompilerABI.c</itemPath>
       <itemPath>/usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp</itemPath>
@@ -753,28 +747,9 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>../../CMakeLists.txt</itemPath>
     </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Важные файлы"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>../../CMakeLists.txt</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Важные файлы"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>../../CMakeLists.txt</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Важные файлы"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>../../CMakeLists.txt</itemPath>
-    </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
-    <Elem>../..</Elem>
     <Elem>../..</Elem>
   </sourceRootList>
   <projectmakefile>../../Makefile</projectmakefile>
