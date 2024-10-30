@@ -1,16 +1,27 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOProperties.h"
+#include "GOPropertiesDialog.h"
 
 #include <wx/sizer.h>
 #include <wx/statline.h>
 
 #include "GOOrganController.h"
+
+class wxStaticLink : public wxStaticText {
+private:
+  wxString m_url;
+
+  void OnClick(wxMouseEvent &event);
+
+public:
+  wxStaticLink(wxWindow *parent, const wxString &label, const wxString &url);
+  DECLARE_EVENT_TABLE()
+};
 
 BEGIN_EVENT_TABLE(wxStaticLink, wxStaticText)
 EVT_LEFT_UP(wxStaticLink::OnClick)
@@ -54,7 +65,8 @@ bool GOPropertiesTest(const wxString &what) {
     && what.CmpNoCase(wxT("N/A"));
 }
 
-GOProperties::GOProperties(GOOrganController *organController, wxWindow *win)
+GOPropertiesDialog::GOPropertiesDialog(
+  GOOrganController *organController, wxWindow *win)
   : wxDialog(win, wxID_ANY, (wxString)_("Organ Properties")),
     m_OrganController(organController) {
   wxASSERT(organController);
@@ -169,5 +181,3 @@ GOProperties::GOProperties(GOOrganController *organController, wxWindow *win)
   SetSizer(topSizer);
   topSizer->Fit(this);
 }
-
-GOProperties::~GOProperties(void) {}

@@ -463,6 +463,7 @@
             <in>GONewReleaseDialog.cpp</in>
             <in>GOOrganSettingsDialog.cpp</in>
             <in>GOProgressDialog.cpp</in>
+            <in>GOPropertiesDialog.cpp</in>
             <in>GOSelectOrganDialog.cpp</in>
             <in>GOSplash.cpp</in>
             <in>GOStopsDialog.cpp</in>
@@ -642,7 +643,6 @@
           <in>GOMainWindowData.cpp</in>
           <in>GOMetronome.cpp</in>
           <in>GOOrganController.cpp</in>
-          <in>GOProperties.cpp</in>
           <in>GOVirtualCouplerController.cpp</in>
         </df>
         <df name="portaudio">
@@ -736,12 +736,6 @@
         </df>
       </df>
     </df>
-    <df root="../.." name="1">
-    </df>
-    <df root="../.." name="2">
-    </df>
-    <df root="../.." name="3">
-    </df>
     <logicalFolder name="Modules" displayName="Modules" projectFiles="true">
       <itemPath>/usr/share/cmake/Modules/CMakeCCompilerABI.c</itemPath>
       <itemPath>/usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp</itemPath>
@@ -753,28 +747,9 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>../../CMakeLists.txt</itemPath>
     </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Важные файлы"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>../../CMakeLists.txt</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Важные файлы"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>../../CMakeLists.txt</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Важные файлы"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>../../CMakeLists.txt</itemPath>
-    </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
-    <Elem>../..</Elem>
     <Elem>../..</Elem>
   </sourceRootList>
   <projectmakefile>../../Makefile</projectmakefile>
@@ -31349,13 +31324,6 @@
         <ccTool flags="1">
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/GOProperties.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
       <item path="../../src/grandorgue/GOVirtualCouplerController.cpp"
             ex="false"
             tool="1"
@@ -31627,6 +31595,13 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOProgressDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/dialogs/GOPropertiesDialog.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -37285,33 +37260,6 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/GOProperties.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
       <item path="../../src/grandorgue/combinations/GODivisionalSetter.h"
             ex="false"
             tool="3"
@@ -37542,6 +37490,33 @@
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/dialogs/GOPropertiesDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/dialogs/GOSelectOrganDialog.cpp"
