@@ -13,7 +13,7 @@
 
 #include <wx/hashset.h>
 
-#include "dialogs/common/GODialogTab.h"
+#include "gui/dialogs/common/GODialogTab.h"
 
 #include "ptrvector.h"
 

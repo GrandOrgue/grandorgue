@@ -14,7 +14,8 @@
 #include <map>
 #include <vector>
 
-#include "dialogs/common/GODialogSizeSet.h"
+#include "gui/dialogs/common/GODialogSizeSet.h"
+#include "gui/size/GOLogicalRect.h"
 #include "midi/GOMidiMap.h"
 #include "midi/GOMidiReceiverBase.h"
 #include "settings/GOSettingBool.h"
@@ -25,7 +26,6 @@
 #include "settings/GOSettingNumber.h"
 #include "settings/GOSettingStore.h"
 #include "settings/GOSettingString.h"
-#include "size/GOLogicalRect.h"
 #include "temperaments/GOTemperamentList.h"
 
 #include "GOAudioDeviceConfig.h"

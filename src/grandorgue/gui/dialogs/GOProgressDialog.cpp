@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -20,7 +20,7 @@
  */
 
 #include "GOProgressDialog.h"
-#include "gui/primitives/go_gui_utils.h"
+#include "gui/wxcontrols/go_gui_utils.h"
 
 #include <wx/progdlg.h>
 #include <wx/stopwatch.h>

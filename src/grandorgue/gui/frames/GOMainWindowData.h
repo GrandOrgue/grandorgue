@@ -10,7 +10,7 @@
 
 #include <wx/gdicmn.h>
 
-#include "size/GOLogicalRect.h"
+#include "gui/size/GOLogicalRect.h"
 
 #include "GOSaveableObject.h"
 

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,7 +13,7 @@
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
-#include "dialogs/midi-event/GOMidiEventDialog.h"
+#include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 
 BEGIN_EVENT_TABLE(GOSettingsMidiMessage, wxPanel)
 EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiMessage::OnEventsClick)

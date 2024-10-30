@@ -15,9 +15,9 @@
 #include <wx/stopwatch.h>
 
 #include "config/GOConfig.h"
+#include "gui/frames/GOFrame.h"
 #include "sound/GOSound.h"
 
-#include "GOFrame.h"
 #include "GOLog.h"
 #include "GOStdPath.h"
 #include "go_defs.h"

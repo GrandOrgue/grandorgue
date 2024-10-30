@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,9 +10,9 @@
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "control/GOLabelControl.h"
+#include "gui/wxcontrols/go_gui_utils.h"
 #include "primitives/GOBitmap.h"
 #include "primitives/GODC.h"
-#include "primitives/go_gui_utils.h"
 
 #include "GOGUIDisplayMetrics.h"
 #include "GOGUILayoutEngine.h"

@@ -1,13 +1,13 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOLog.h"
 
-#include "GOLogWindow.h"
+#include "gui/frames/GOLogWindow.h"
 
 GOLog::GOLog(wxWindow *parent) : m_LogWindow(NULL) {
   m_LogWindow = new GOLogWindow(parent, wxID_ANY, _("Log messages"));

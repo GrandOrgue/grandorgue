@@ -13,11 +13,11 @@
 
 #include <vector>
 
+#include "gui/size/GOResizable.h"
 #include "help/GOHelpRequestor.h"
 #include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "modification/GOModificationListener.h"
-#include "size/GOResizable.h"
 #include "threading/GOMutex.h"
 #include "updater/GOUpdateChecker.h"
 

@@ -477,10 +477,45 @@
               <in>GOLogWindow.cpp</in>
               <in>GOMainWindowData.cpp</in>
             </df>
+            <df name="panels">
+              <df name="primitives">
+                <in>GOBitmap.cpp</in>
+                <in>GODC.cpp</in>
+                <in>GOFont.cpp</in>
+              </df>
+              <in>GOGUIBankedGeneralsPanel.cpp</in>
+              <in>GOGUIButton.cpp</in>
+              <in>GOGUIControl.cpp</in>
+              <in>GOGUICouplerPanel.cpp</in>
+              <in>GOGUICrescendoPanel.cpp</in>
+              <in>GOGUIDisplayMetrics.cpp</in>
+              <in>GOGUIDivisionalsPanel.cpp</in>
+              <in>GOGUIEnclosure.cpp</in>
+              <in>GOGUIFloatingPanel.cpp</in>
+              <in>GOGUIHW1Background.cpp</in>
+              <in>GOGUIHW1DisplayMetrics.cpp</in>
+              <in>GOGUIImage.cpp</in>
+              <in>GOGUILabel.cpp</in>
+              <in>GOGUILayoutEngine.cpp</in>
+              <in>GOGUIManual.cpp</in>
+              <in>GOGUIManualBackground.cpp</in>
+              <in>GOGUIMasterPanel.cpp</in>
+              <in>GOGUIMetronomePanel.cpp</in>
+              <in>GOGUIPanel.cpp</in>
+              <in>GOGUIPanelView.cpp</in>
+              <in>GOGUIPanelWidget.cpp</in>
+              <in>GOGUIRecorderPanel.cpp</in>
+              <in>GOGUISequencerPanel.cpp</in>
+              <in>GOGUISetterDisplayMetrics.cpp</in>
+            </df>
+            <df name="size">
+              <in>GOSizeKeeper.cpp</in>
+            </df>
             <df name="wxcontrols">
               <in>GOAudioGauge.cpp</in>
               <in>GOGrid.cpp</in>
               <in>GORightVisiblePicker.cpp</in>
+              <in>go_gui_utils.cpp</in>
             </df>
           </df>
           <df name="help">
@@ -552,9 +587,6 @@
           </df>
           <df name="modification">
             <in>GOModificationProxy.cpp</in>
-          </df>
-          <df name="size">
-            <in>GOSizeKeeper.cpp</in>
           </df>
           <df name="sound">
             <df name="ports">
@@ -650,10 +682,18 @@
           </df>
         </df>
         <df name="tests">
+          <df name="common">
+            <in>GOTest.cpp</in>
+            <in>GOTestCollection.cpp</in>
+            <in>GOTestResult.cpp</in>
+            <in>GOTestResultCollection.cpp</in>
+          </df>
           <df name="testing">
             <df name="model">
               <in>GOTestDrawStop.cpp</in>
+              <in>GOTestOrganModel.cpp</in>
               <in>GOTestSwitch.cpp</in>
+              <in>GOTestWindchest.cpp</in>
             </df>
           </df>
           <in>GOTestExe.cpp</in>
@@ -707,7 +747,10 @@
         </df>
       </df>
     </df>
-    <logicalFolder name="Modules" displayName="Modules" projectFiles="true">
+    <logicalFolder name="Modules"
+                   displayName="Modules"
+                   projectFiles="true"
+                   root="/usr/share/cmake/Modules">
       <itemPath>/usr/share/cmake/Modules/CMakeCCompilerABI.c</itemPath>
       <itemPath>/usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp</itemPath>
       <itemPath>/usr/share/cmake/Modules/CMakeCompilerABI.h</itemPath>
@@ -31912,13 +31955,6 @@
         <ccTool flags="1">
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/size/GOSizeKeeper.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
       <item path="../../src/grandorgue/sound/GOSound.cpp"
             ex="false"
             tool="1"
@@ -32787,6 +32823,13 @@
         </ccTool>
       </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsTemperaments.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/size/GOSizeKeeper.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -39918,7 +39961,6 @@
           <ccTool flags="1">
             <incDir>
               <pElem>../../build/current/src/core/go_defs.h</pElem>
-              <pElem>../../src/grandorgue/contrib</pElem>
             </incDir>
             <preprocessorList>
               <Elem>WXUSINGDLL</Elem>
@@ -70390,6 +70432,18 @@
       </item>
       <item path="../../src/grandorgue/GOApp.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOAudioRecorder.cpp"
@@ -70397,6 +70451,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOBitmapCache.cpp"
@@ -70404,6 +70470,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GODocument.cpp"
@@ -70411,14 +70489,51 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOEvent.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOLog.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOMetronome.cpp"
@@ -70426,6 +70541,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOOrganController.cpp"
@@ -70433,6 +70560,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/GOVirtualCouplerController.cpp"
@@ -70440,6 +70579,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/GODivisionalSetter.cpp"
@@ -70447,6 +70598,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/GOSetter.cpp"
@@ -70454,6 +70617,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GOCombinationButtonSet.cpp"
@@ -70461,6 +70636,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GOCombinationControllerProxy.cpp"
@@ -70468,6 +70656,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GODivisionalButtonControl.cpp"
@@ -70475,6 +70676,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GOGeneralButtonControl.cpp"
@@ -70482,6 +70695,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/model/GOCombination.cpp"
@@ -70517,6 +70742,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOAudioDeviceNode.cpp"
@@ -70524,6 +70762,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOConfig.cpp"
@@ -70531,6 +70782,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GODeviceNamePattern.cpp"
@@ -70538,6 +70801,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOMidiDeviceConfig.cpp"
@@ -70545,6 +70821,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOMidiDeviceConfigList.cpp"
@@ -70552,6 +70841,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOPortFactory.cpp"
@@ -70559,6 +70861,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/config/GOPortsConfig.cpp"
@@ -70566,6 +70881,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOButtonControl.cpp"
@@ -70573,6 +70901,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOCallbackButtonControl.cpp"
@@ -70580,6 +70920,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOElementCreator.cpp"
@@ -70587,6 +70940,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOEventDistributor.cpp"
@@ -70594,6 +70960,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOLabelControl.cpp"
@@ -70601,6 +70980,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPistonControl.cpp"
@@ -70608,6 +70999,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOPushbuttonControl.cpp"
@@ -70616,6 +71019,17 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../build/current/src/core</pElem>
             <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/grandorgue/sound</pElem>
@@ -70689,6 +71103,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/document-base/GOView.cpp"
@@ -70696,6 +71123,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/frames/GOFrame.cpp"
@@ -70713,6 +71152,13 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/frames/GOMainWindowData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/wxcontrols/go_gui_utils.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -70738,6 +71184,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/loader/GOLoadThread.cpp"
@@ -70745,6 +71203,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/loader/GOLoadWorker.cpp"
@@ -70752,6 +71223,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/loader/GOLoaderFilename.cpp"
@@ -70759,6 +71243,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/loader/cache/GOCache.cpp"
@@ -70766,6 +71263,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/loader/cache/GOCacheCleaner.cpp"
@@ -70773,6 +71283,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/loader/cache/GOCacheWriter.cpp"
@@ -70780,6 +71302,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidi.cpp"
@@ -70787,6 +71322,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiConfigurator.cpp"
@@ -70794,6 +71341,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiInputMerger.cpp"
@@ -70801,6 +71361,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiListener.cpp"
@@ -70808,6 +71381,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiOutputMerger.cpp"
@@ -70815,6 +71401,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiPlayer.cpp"
@@ -70822,6 +71421,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiPlayerContent.cpp"
@@ -70829,6 +71440,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiReceiver.cpp"
@@ -70836,6 +71460,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiRecorder.cpp"
@@ -70843,6 +71479,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiSendProxy.cpp"
@@ -70850,6 +71498,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiSender.cpp"
@@ -70857,6 +71518,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiShortcutPattern.cpp"
@@ -70864,6 +71538,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiShortcutReceiver.cpp"
@@ -70871,6 +71558,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/dialog-creator/GOMidiDialogCreatorProxy.cpp"
@@ -70934,6 +71634,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOCoupler.cpp"
@@ -70941,6 +71654,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GODivisionalCoupler.cpp"
@@ -70948,6 +71673,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GODrawStop.cpp"
@@ -70955,6 +71692,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOEnclosure.cpp"
@@ -70962,6 +71711,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOEventHandlerList.cpp"
@@ -70969,6 +71730,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOManual.cpp"
@@ -70976,6 +71750,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOOrganModel.cpp"
@@ -70983,6 +71769,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOPipe.cpp"
@@ -70990,6 +71788,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GORank.cpp"
@@ -70997,6 +71807,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOReferencePipe.cpp"
@@ -71004,6 +71826,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOSoundingPipe.cpp"
@@ -71011,6 +71845,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOStop.cpp"
@@ -71018,6 +71864,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOSwitch.cpp"
@@ -71025,6 +71883,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOTremulant.cpp"
@@ -71032,6 +71903,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOWindchest.cpp"
@@ -71039,6 +71922,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/pipe-config/GOPipeConfig.cpp"
@@ -71046,6 +71941,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/pipe-config/GOPipeConfigNode.cpp"
@@ -71053,6 +71961,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/pipe-config/GOPipeConfigTreeNode.cpp"
@@ -71060,16 +71980,21 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/modification/GOModificationProxy.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/size/GOSizeKeeper.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -71081,6 +72006,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundAudioSection.cpp"
@@ -71088,6 +72025,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundEngine.cpp"
@@ -71095,6 +72045,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundFader.cpp"
@@ -71102,6 +72064,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundFilter.cpp"
@@ -71109,6 +72084,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProvider.cpp"
@@ -71116,6 +72104,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProviderSynthedTrem.cpp"
@@ -71123,6 +72124,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundProviderWave.cpp"
@@ -71130,6 +72144,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundRecorder.cpp"
@@ -71137,6 +72164,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundReleaseAlignTable.cpp"
@@ -71144,6 +72184,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundResample.cpp"
@@ -71151,6 +72204,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundReverb.cpp"
@@ -71158,6 +72224,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundReverbEngine.cpp"
@@ -71165,6 +72243,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundReverbPartition.cpp"
@@ -71172,6 +72263,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundSamplerPool.cpp"
@@ -71179,6 +72283,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundStateHandler.cpp"
@@ -71186,6 +72303,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/GOSoundToneBalanceFilter.cpp"
@@ -71193,6 +72323,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/ports/GOSoundJackPort.cpp"
@@ -71235,6 +72378,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundGroupWorkItem.cpp"
@@ -71243,6 +72398,17 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -71266,6 +72432,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundOutputWorkItem.cpp"
@@ -71274,6 +72453,17 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
@@ -71293,6 +72483,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundReleaseWorkItem.cpp"
@@ -71301,6 +72504,17 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -71324,6 +72538,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundThread.cpp"
@@ -71331,6 +72558,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundTouchTask.cpp"
@@ -71338,6 +72578,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundTouchWorkItem.cpp"
@@ -71346,6 +72599,17 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -71364,6 +72628,19 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundTremulantWorkItem.cpp"
@@ -71372,6 +72649,17 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13/bits</pElem>
@@ -71395,6 +72683,18 @@
             tool="1"
             flavor2="11">
         <ccTool flags="1">
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/sound/scheduler/GOSoundWindchestWorkItem.cpp"
@@ -71403,6 +72703,17 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../src/grandorgue/sound/scheduler</pElem>
             <pElem>/usr/include/c++/13/x86_64-redhat-linux/bits</pElem>
             <pElem>/usr/include/c++/13</pElem>
@@ -71548,7 +72859,21 @@
         <ccTool flags="1">
         </ccTool>
       </item>
+      <item path="../../src/tests/testing/model/GOTestOrganModel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
       <item path="../../src/tests/testing/model/GOTestSwitch.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/tests/testing/model/GOTestWindchest.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -71558,20 +72883,13 @@
       <item path="../../src/tools/GOPerfTest.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
           <incDir>
-            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
             <pElem>../../src/grandorgue</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
             <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
             <pElem>../../build/current/src/tools</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
             <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
@@ -71579,6 +72897,7 @@
       <item path="../../src/tools/GOTool.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../src/core</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
             <pElem>/usr/include/wx-3.2</pElem>
@@ -71775,6 +73094,13 @@
         <ccTool flags="1">
         </ccTool>
       </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOPropertiesDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOSelectOrganDialog.cpp"
             ex="false"
             tool="1"
@@ -71943,6 +73269,202 @@
         <ccTool flags="1">
         </ccTool>
       </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIBankedGeneralsPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIButton.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIControl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUICouplerPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUICrescendoPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIDisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIDivisionalsPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIEnclosure.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIFloatingPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIHW1Background.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIHW1DisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIImage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUILabel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUILayoutEngine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIManual.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIManualBackground.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIMasterPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIMetronomePanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIPanelView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIPanelWidget.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIRecorderPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUISequencerPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUISetterDisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/primitives/GOBitmap.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/primitives/GODC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/primitives/GOFont.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/size/GOSizeKeeper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
       <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/wxcontrols/GOAudioGauge.cpp"
             ex="false"
             tool="1"
@@ -71964,6 +73486,34 @@
         <ccTool flags="1">
         </ccTool>
       </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTestCollection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTestResult.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTestResultCollection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
       <item path="/usr/share/cmake/Modules/CMakeCCompilerABI.c"
             ex="false"
             tool="0"
@@ -71979,6 +73529,7 @@
       <folder path="0/build">
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -72018,9 +73569,6 @@
       </folder>
       <folder path="0/build/current/CMakeFiles">
         <ccTool>
-          <incDir>
-            <pElem>../../src/grandorgue/contrib</pElem>
-          </incDir>
           <preprocessorList>
             <Elem>GO_STD_MUTEX=1</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
@@ -72088,6 +73636,7 @@
       <folder path="0/src/build">
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -72112,6 +73661,9 @@
       </folder>
       <folder path="0/src/core">
         <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>GrandOrgueCore_EXPORTS=1</Elem>
             <Elem>WXUSINGDLL=1</Elem>
@@ -72569,6 +74121,14 @@
       </folder>
       <folder path="0/src/grandorgue">
         <ccTool>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/combinations/model">
+        <ccTool>
           <incDir>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
@@ -72581,15 +74141,147 @@
             <pElem>/usr/include/wx-3.2</pElem>
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>_REENTRANT</Elem>
-          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/gui">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/help">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/midi/dialog-creator">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/midi/ports">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/modification">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/sound/ports">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/updater">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/yaml">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
         </ccTool>
       </folder>
       <folder path="0/src/rt">
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -72603,7 +74295,6 @@
             <pElem>../../build/current/src/core</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>build/current/src/core/GrandOrgueDef.h</pElem>
             <pElem>src/grandorgue/contrib</pElem>
             <pElem>src/grandorgue/resource</pElem>
@@ -72677,6 +74368,18 @@
           </preprocessorList>
         </ccTool>
       </folder>
+      <folder path="0/src/tests/common">
+        <ccTool>
+          <incDir>
+            <pElem>../../src/tests</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>/usr/local/include/cpptrace</pElem>
+            <pElem>../../build/current/src/tests/common</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
       <folder path="0/src/tests/testing">
         <ccTool>
           <incDir>
@@ -72707,6 +74410,7 @@
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -73025,6 +74729,7 @@
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -73038,7 +74743,6 @@
             <pElem>../../build/current/src/core</pElem>
             <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
             <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../build/current/CMakeFiles/CMakeTmp</pElem>
           </incDir>
           <preprocessorList>

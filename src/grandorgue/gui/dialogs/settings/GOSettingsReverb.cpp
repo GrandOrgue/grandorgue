@@ -19,7 +19,7 @@
 
 #include "config/GOConfig.h"
 #include "files/GOStandardFile.h"
-#include "wxcontrols/GOFilePickerCtrl.h"
+#include "gui/wxcontrols/GOFilePickerCtrl.h"
 
 #include "GOWave.h"
 

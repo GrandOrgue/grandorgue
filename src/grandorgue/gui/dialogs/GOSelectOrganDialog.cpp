@@ -12,8 +12,8 @@
 
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfig.h"
-#include "size/GOAdditionalSizeKeeperProxy.h"
-#include "wxcontrols/GOGrid.h"
+#include "gui/size/GOAdditionalSizeKeeperProxy.h"
+#include "gui/wxcontrols/GOGrid.h"
 
 #include "GOOrgan.h"
 #include "GOOrganList.h"

@@ -11,7 +11,7 @@
 
 #include <wx/dc.h>
 
-#include "size/GOAdditionalSizeKeeper.h"
+#include "gui/size/GOAdditionalSizeKeeper.h"
 
 class GOCellRenderer : public wxGridCellStringRenderer {
 private:

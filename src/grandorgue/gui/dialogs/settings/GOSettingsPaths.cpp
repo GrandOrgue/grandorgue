@@ -14,7 +14,7 @@
 #include <wx/string.h>
 
 #include "config/GOConfig.h"
-#include "wxcontrols/GODirPickerCtrl.h"
+#include "gui/wxcontrols/GODirPickerCtrl.h"
 
 GOSettingsPaths::GOSettingsPaths(GOConfig &settings, wxWindow *parent)
   : wxPanel(parent, wxID_ANY), m_config(settings) {

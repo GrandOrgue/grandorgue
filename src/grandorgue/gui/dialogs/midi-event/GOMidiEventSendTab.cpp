@@ -16,7 +16,7 @@
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
-#include "dialogs/common/GOTabbedDialog.h"
+#include "gui/dialogs/common/GOTabbedDialog.h"
 
 #include "GOMidiEventRecvTab.h"
 

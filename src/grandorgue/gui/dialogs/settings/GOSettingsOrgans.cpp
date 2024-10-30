@@ -28,10 +28,10 @@
 #include "archive/GOArchiveFile.h"
 #include "archive/GOArchiveIndex.h"
 #include "config/GOConfig.h"
-#include "dialogs/midi-event/GOMidiEventDialog.h"
 #include "files/GOStdFileName.h"
-#include "size/GOAdditionalSizeKeeperProxy.h"
-#include "wxcontrols/GOGrid.h"
+#include "gui/dialogs/midi-event/GOMidiEventDialog.h"
+#include "gui/size/GOAdditionalSizeKeeperProxy.h"
+#include "gui/wxcontrols/GOGrid.h"
 
 #include "GOOrgan.h"
 #include "GOOrganController.h"

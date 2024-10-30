@@ -13,8 +13,8 @@
 
 #include "ptrvector.h"
 
+#include "gui/size/GOSizeKeeper.h"
 #include "primitives/GOBitmap.h"
-#include "size/GOSizeKeeper.h"
 
 class GOGUIControl;
 class GOGUIDisplayMetrics;
