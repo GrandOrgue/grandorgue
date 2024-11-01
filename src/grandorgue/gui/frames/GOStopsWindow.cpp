@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOStopsDialog.h"
+#include "GOStopsWindow.h"
 
 #include <wx/checkbox.h>
 #include <wx/intl.h>

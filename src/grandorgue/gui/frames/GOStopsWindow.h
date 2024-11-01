@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSTOPSDIALOG_H
-#define GOSTOPSDIALOG_H
+#ifndef GOSTOPSWINDOW_H
+#define GOSTOPSWINDOW_H
 
 #include <unordered_map>
 
@@ -44,4 +44,4 @@ public:
   DECLARE_EVENT_TABLE()
 };
 
-#endif /* GOSTOPSDIALOG_H */
+#endif /* GOSTOPSWINDOW_H */
