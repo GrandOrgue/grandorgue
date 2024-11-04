@@ -191,15 +191,18 @@ void GODocument::ShowMidiList() {
 }
 
 void GODocument::ShowStops() {
-  if (!showWindow(GODocument::STOPS, NULL) && m_OrganController)
+  if (!showWindow(GODocument::STOPS, NULL) && m_OrganController) {
+    auto stopsWindow = new GOStopsWindow(
+      this,
+      nullptr,
+      m_OrganController->GetStopWindowSizeKeeper(),
+      *m_OrganController);
+
     registerWindow(
       GODocument::STOPS,
-      nullptr,
-      new GOStopsWindow(
-        this,
-        nullptr,
-        m_OrganController->GetConfig().m_DialogSizes,
-        *m_OrganController));
+      stopsWindow, // Otherwise GOStopsWindow::SyncState() wont be called
+      stopsWindow);
+  }
 }
 
 void GODocument::ShowMIDIEventDialog(

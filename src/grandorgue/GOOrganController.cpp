@@ -317,6 +317,8 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     m_panels[i + 1]->Load(cfg, buffer);
   }
 
+  m_StopWindowSizeKeeper.Load(cfg, wxT("Stops"));
+
   for (unsigned i = 0; i < m_panelcreators.size(); i++)
     m_panelcreators[i]->CreatePanels(cfg);
 
@@ -883,6 +885,7 @@ bool GOOrganController::Export(const wxString &cmb) {
 
   GOEventDistributor::Save(cfg);
   GetDialogSizeSet().Save(cfg);
+  m_StopWindowSizeKeeper.Save(cfg);
   m_VirtualCouplers.Save(cfg);
 
   wxString tmp_name = cmb + wxT(".new");

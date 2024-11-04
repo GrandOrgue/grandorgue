@@ -18,7 +18,6 @@
 class wxCheckBox;
 
 class GOCombinationElement;
-class GODialogSizeSet;
 class GOOrganModel;
 class GOSizeKeeper;
 
@@ -42,7 +41,7 @@ public:
   GOStopsWindow(
     GODocumentBase *doc,
     wxWindow *parent,
-    GODialogSizeSet &dialogSizes,
+    GOSizeKeeper &sizeKeeper,
     GOOrganModel &model);
 
   DECLARE_EVENT_TABLE()

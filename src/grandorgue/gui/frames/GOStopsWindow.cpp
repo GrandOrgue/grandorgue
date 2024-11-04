@@ -35,12 +35,11 @@ END_EVENT_TABLE()
 GOStopsWindow::GOStopsWindow(
   GODocumentBase *doc,
   wxWindow *parent,
-  GODialogSizeSet &dialogSizes,
+  GOSizeKeeper &sizeKeeper,
   GOOrganModel &model)
   : wxFrame(parent, wxID_ANY, _("Stops")),
-
     GOView(doc, this),
-    r_SizeKeeper(dialogSizes.AssureSizeKeeperFor(wxT("Stops"), wxEmptyString)),
+    r_SizeKeeper(sizeKeeper),
     r_model(model) {
   SetIcon(get_go_icon());
   wxBoxSizer *const mainSizer = new wxBoxSizer(wxHORIZONTAL);

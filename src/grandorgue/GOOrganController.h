@@ -72,6 +72,7 @@ private:
   GOAudioRecorder *m_AudioRecorder;
   GOMidiPlayer *m_MidiPlayer;
   GOMidiRecorder *m_MidiRecorder;
+  GOSizeKeeper m_StopWindowSizeKeeper;
   GOTimer *m_timer;
   GOButtonControl *p_OnStateButton;
   int m_volume;
@@ -130,6 +131,8 @@ public:
     GOMidiDialogCreator *pMidiDialogCreator = nullptr,
     bool isAppInitialized = false);
   ~GOOrganController();
+
+  GOSizeKeeper &GetStopWindowSizeKeeper() { return m_StopWindowSizeKeeper; }
 
   // Returns organ modification flag
   bool IsOrganModified() const { return m_OrganModified; }
