@@ -8,7 +8,9 @@
 #include "GOStopsWindow.h"
 
 #include <wx/checkbox.h>
+#include <wx/display.h>
 #include <wx/intl.h>
+#include <wx/scrolwin.h>
 #include <wx/sizer.h>
 
 #include "gui/wxcontrols/go_gui_utils.h"
@@ -42,6 +44,8 @@ GOStopsWindow::GOStopsWindow(
     r_SizeKeeper(sizeKeeper),
     r_model(model) {
   SetIcon(get_go_icon());
+  wxScrolledWindow *sw = new wxScrolledWindow(this, wxID_ANY);
+
   wxBoxSizer *const mainSizer = new wxBoxSizer(wxHORIZONTAL);
   const unsigned nOdfManuals = model.GetODFManualCount();
   const unsigned globalSectionN = nOdfManuals;
@@ -51,7 +55,7 @@ GOStopsWindow::GOStopsWindow(
   for (unsigned i = model.GetFirstManualIndex(); i <= nOdfManuals; i++) {
     GOManual *const pManual = model.GetManual(i);
     wxStaticBoxSizer *const pSizer = new wxStaticBoxSizer(
-      wxVERTICAL, this, i < nOdfManuals ? pManual->GetName() : _("Globals"));
+      wxVERTICAL, sw, i < nOdfManuals ? pManual->GetName() : _("Globals"));
 
     sizers[i] = pSizer;
     mainSizer->Add(pSizer, 1, wxEXPAND | wxALL, 5);
@@ -107,7 +111,7 @@ GOStopsWindow::GOStopsWindow(
       if (
         sizerIndex >= 0 && sizerIndex <= (int)globalSectionN && pName
         && e.control->IsControlledByUser()) {
-        wxCheckBox *pCheckBox = new wxCheckBox(this, ID_CHECKBOX, *pName);
+        wxCheckBox *pCheckBox = new wxCheckBox(sw, ID_CHECKBOX, *pName);
 
         pCheckBox->SetClientData(e.control);
         mp_checkboxesByControl[e.control] = pCheckBox;
@@ -116,7 +120,29 @@ GOStopsWindow::GOStopsWindow(
       }
     }
   }
-  SetSizerAndFit(mainSizer);
+  sw->SetScrollRate(5, 5);
+  sw->SetSizerAndFit(mainSizer);
+
+  // Set the optimal window size
+  SetClientSize(sw->GetVirtualSize());
+
+  // Lower the size if it does not fit the display.
+  wxRect max = wxDisplay(wxDisplay::GetFromWindow(this)).GetClientArea();
+  wxRect rect = GetRect();
+
+  // Check if the window fits the current display
+  if (!max.Contains(rect)) {
+    // Otherwise, check and correct width and height, The scrollbar will appear
+    if (rect.GetWidth() > max.GetWidth()) {
+      rect.SetWidth(max.GetWidth());
+      rect.SetX(max.GetX());
+    }
+    if (rect.GetHeight() > max.GetHeight()) {
+      rect.SetHeight(max.GetHeight());
+      rect.SetY(max.GetY());
+    }
+    SetSize(rect);
+  }
 }
 
 void GOStopsWindow::OnShow(wxShowEvent &event) {
