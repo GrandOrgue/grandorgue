@@ -13,9 +13,9 @@
 #include "document-base/GOView.h"
 #include "gui/dialogs/GOMidiListDialog.h"
 #include "gui/dialogs/GOOrganSettingsDialog.h"
-#include "gui/dialogs/GOStopsDialog.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 #include "gui/frames/GOFrame.h"
+#include "gui/frames/GOStopsWindow.h"
 #include "gui/panels/GOGUIPanel.h"
 #include "gui/panels/GOGUIPanelView.h"
 #include "gui/size/GOResizable.h"
@@ -195,7 +195,7 @@ void GODocument::ShowStops() {
     registerWindow(
       GODocument::STOPS,
       nullptr,
-      new GOStopsDialog(
+      new GOStopsWindow(
         this,
         nullptr,
         m_OrganController->GetConfig().m_DialogSizes,

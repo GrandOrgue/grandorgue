@@ -10,32 +10,36 @@
 
 #include <unordered_map>
 
-#include "common/GOSimpleDialog.h"
+#include <wx/frame.h>
+
 #include "control/GOControlChangedHandler.h"
 #include "document-base/GOView.h"
 
 class wxCheckBox;
 
 class GOCombinationElement;
+class GODialogSizeSet;
 class GOOrganModel;
+class GOSizeKeeper;
 
-class GOStopsDialog : public GOSimpleDialog,
+class GOStopsWindow : public wxFrame,
                       public GOView,
                       private GOControlChangedHandler {
 private:
+  GOSizeKeeper &r_SizeKeeper;
   GOOrganModel &r_model;
 
   std::unordered_map<GOCombinationElement *, wxCheckBox *>
     mp_checkboxesByControl;
 
+  virtual void OnShow(wxShowEvent &event);
+
   void OnElementChanging(wxCommandEvent &event);
   void ControlChanged(GOControl *pControl) override;
-
-  void OnShow() override;
-  void OnHide() override;
+  void SyncState() override;
 
 public:
-  GOStopsDialog(
+  GOStopsWindow(
     GODocumentBase *doc,
     wxWindow *parent,
     GODialogSizeSet &dialogSizes,

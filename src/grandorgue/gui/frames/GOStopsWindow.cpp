@@ -11,6 +11,8 @@
 #include <wx/intl.h>
 #include <wx/sizer.h>
 
+#include "gui/wxcontrols/go_gui_utils.h"
+
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
@@ -25,25 +27,22 @@ enum {
   ID_CHECKBOX = 200,
 };
 
-BEGIN_EVENT_TABLE(GOStopsDialog, GOSimpleDialog)
-EVT_CHECKBOX(ID_CHECKBOX, GOStopsDialog::OnElementChanging)
+BEGIN_EVENT_TABLE(GOStopsWindow, wxFrame)
+EVT_CHECKBOX(ID_CHECKBOX, GOStopsWindow::OnElementChanging)
+EVT_SHOW(GOStopsWindow::OnShow)
 END_EVENT_TABLE()
 
-GOStopsDialog::GOStopsDialog(
+GOStopsWindow::GOStopsWindow(
   GODocumentBase *doc,
   wxWindow *parent,
   GODialogSizeSet &dialogSizes,
   GOOrganModel &model)
-  : GOSimpleDialog(
-    parent,
-    wxT("Stops"),
-    _("Stops"),
-    dialogSizes,
-    wxEmptyString,
-    0,
-    wxCLOSE | wxHELP),
+  : wxFrame(parent, wxID_ANY, _("Stops")),
+
     GOView(doc, this),
+    r_SizeKeeper(dialogSizes.AssureSizeKeeperFor(wxT("Stops"), wxEmptyString)),
     r_model(model) {
+  SetIcon(get_go_icon());
   wxBoxSizer *const mainSizer = new wxBoxSizer(wxHORIZONTAL);
   const unsigned nOdfManuals = model.GetODFManualCount();
   const unsigned globalSectionN = nOdfManuals;
@@ -56,7 +55,7 @@ GOStopsDialog::GOStopsDialog(
       wxVERTICAL, this, i < nOdfManuals ? pManual->GetName() : _("Globals"));
 
     sizers[i] = pSizer;
-    mainSizer->Add(pSizer, 0, wxEXPAND | wxALL, 5);
+    mainSizer->Add(pSizer, 1, wxEXPAND | wxALL, 5);
   }
 
   auto &elements = model.GetGeneralTemplate().GetElements();
@@ -114,26 +113,24 @@ GOStopsDialog::GOStopsDialog(
         pCheckBox->SetClientData(e.control);
         mp_checkboxesByControl[e.control] = pCheckBox;
         pCheckBox->SetValue(e.control->GetCombinationState());
-        sizers[sizerIndex]->Add(pCheckBox, 0, wxEXPAND | wxALL, 5);
+        sizers[sizerIndex]->Add(pCheckBox, 1, wxEXPAND | wxALL, 5);
       }
     }
   }
-
-  LayoutWithInnerSizer(mainSizer);
+  SetSizerAndFit(mainSizer);
 }
 
-void GOStopsDialog::OnShow() {
-  GOSimpleDialog::OnShow();
-  r_model.RegisterControlChangedHandler(this);
+void GOStopsWindow::OnShow(wxShowEvent &event) {
+  if (event.IsShown()) {
+    r_SizeKeeper.ApplySizeInfo(*this);
+    r_model.RegisterControlChangedHandler(this);
+  } else {
+    r_model.UnRegisterControlChangedHandler(this);
+    r_SizeKeeper.CaptureSizeInfo(*this);
+  }
 }
 
-void GOStopsDialog::OnHide() {
-  // Don't move to the destructor becaus it may be called after ~GOOrganModel
-  r_model.UnRegisterControlChangedHandler(this);
-  GOSimpleDialog::OnHide();
-};
-
-void GOStopsDialog::OnElementChanging(wxCommandEvent &event) {
+void GOStopsWindow::OnElementChanging(wxCommandEvent &event) {
   wxCheckBox *pCheck = static_cast<wxCheckBox *>(event.GetEventObject());
   GOCombinationElement *pE
     = static_cast<GOCombinationElement *>(pCheck->GetClientData());
@@ -142,7 +139,7 @@ void GOStopsDialog::OnElementChanging(wxCommandEvent &event) {
     pE->SetCombinationState(event.IsChecked(), wxEmptyString);
 }
 
-void GOStopsDialog::ControlChanged(GOControl *pControl) {
+void GOStopsWindow::ControlChanged(GOControl *pControl) {
   auto pElement = dynamic_cast<GOCombinationElement *>(pControl);
 
   if (pElement) {
@@ -152,3 +149,5 @@ void GOStopsDialog::ControlChanged(GOControl *pControl) {
       it->second->SetValue(pElement->GetCombinationState());
   }
 }
+
+void GOStopsWindow::SyncState() { r_SizeKeeper.CaptureSizeInfo(*this); }
