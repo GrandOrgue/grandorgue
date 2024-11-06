@@ -58,7 +58,7 @@ GOStopsWindow::GOStopsWindow(
       wxVERTICAL, sw, i < nOdfManuals ? pManual->GetName() : _("Globals"));
 
     sizers[i] = pSizer;
-    mainSizer->Add(pSizer, 1, wxEXPAND | wxALL, 5);
+    mainSizer->Add(pSizer, 0, wxEXPAND | wxALL, 5);
   }
 
   auto &elements = model.GetGeneralTemplate().GetElements();
@@ -116,7 +116,7 @@ GOStopsWindow::GOStopsWindow(
         pCheckBox->SetClientData(e.control);
         mp_checkboxesByControl[e.control] = pCheckBox;
         pCheckBox->SetValue(e.control->GetCombinationState());
-        sizers[sizerIndex]->Add(pCheckBox, 1, wxEXPAND | wxALL, 5);
+        sizers[sizerIndex]->Add(pCheckBox, 0, wxEXPAND | wxALL, 5);
       }
     }
   }
