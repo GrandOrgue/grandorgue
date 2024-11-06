@@ -1,3 +1,4 @@
+- Fixed the sequencer "Save file" button not lightening after inserting or deleting a combination https://github.com/GrandOrgue/grandorgue/issues/2024
 - Fixed appearence, sizing and the scrollbar issues with the Stops window https://github.com/GrandOrgue/grandorgue/issues/1961
 # 3.15.2 (2024-10-25)
 - Fixed disengaging manually enabled stops when a crescendo was in the Override=Off mode https://github.com/GrandOrgue/grandorgue/issues/1935

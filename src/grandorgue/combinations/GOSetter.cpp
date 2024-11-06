@@ -557,8 +557,9 @@ void GOSetter::NotifyCmbChanged() {
   m_OrganController->SetOrganModified();
 }
 
-void GOSetter::NotifyCmbPushed(bool isChanged) {
-  if (isChanged && m_state.m_IsActive && !m_state.m_IsModified) {
+void GOSetter::NotifyCmbPushed(bool isChanged, bool isForceSet) {
+  if (
+    isChanged && (m_state.m_IsActive || isForceSet) && !m_state.m_IsModified) {
     m_state.m_IsModified = true;
     // light the save button if the last loaded combination file  is displayed
     if (
@@ -785,7 +786,7 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
     for (unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
       changed = CopyFrameGenerals(j + 1, j, changed);
     UpdateAllButtonsLight(nullptr, -1);
-    NotifyCmbPushed(changed);
+    NotifyCmbPushed(changed, true);
     break;
   }
   case ID_SETTER_INSERT: {
@@ -795,7 +796,7 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
       changed = CopyFrameGenerals(j - 1, j, changed);
     UpdateAllButtonsLight(nullptr, -1);
     SetPosition(m_pos);
-    NotifyCmbPushed(changed);
+    NotifyCmbPushed(changed, true);
     break;
   }
   case ID_SETTER_L0:

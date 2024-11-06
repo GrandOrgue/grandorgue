@@ -112,10 +112,13 @@ private:
   void NotifyCmbChanged();
   /**
    * Called after a combination is pushed
-   * When Set is active then marks the cpmbinations as modified
+   * When Set is active then marks the combinations as modified
    * Temporary it calls mOrganController->SetModified()
+   * @param isChanged is the combination actually changed
+   * @param isForceSet is the combination memory changed even the Set button
+   *   is not engaged (for example, Ins or Del are pushed)
    */
-  void NotifyCmbPushed(bool isChanged = true);
+  void NotifyCmbPushed(bool isChanged = true, bool isForceSet = false);
 
   /**
    * Update all setter combination buttons light.
