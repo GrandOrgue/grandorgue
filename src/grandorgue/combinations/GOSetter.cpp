@@ -695,6 +695,16 @@ void GOSetter::FromYaml(const YAML::Node &yamlNode) {
       >> *m_framegeneral[i];
 }
 
+bool GOSetter::CopyFrameGenerals(
+  unsigned fromIdx, unsigned toIdx, bool changedBefore) {
+  const GOGeneralCombination *pNewCmb = m_framegeneral[fromIdx];
+  GOGeneralCombination *pOldCmb = m_framegeneral[toIdx];
+  bool changed = (changedBefore || !pOldCmb->IsEmpty() || !pNewCmb->IsEmpty());
+
+  pOldCmb->Copy(pNewCmb);
+  return changed;
+}
+
 void GOSetter::ButtonStateChanged(int id, bool newState) {
   switch (id) {
 
@@ -769,18 +779,25 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
   case ID_SETTER_CURRENT:
     SetPosition(m_pos);
     break;
-  case ID_SETTER_DELETE:
+  case ID_SETTER_DELETE: {
+    bool changed = false;
+
     for (unsigned j = m_pos; j < m_framegeneral.size() - 1; j++)
-      m_framegeneral[j]->Copy(m_framegeneral[j + 1]);
+      changed = CopyFrameGenerals(j + 1, j, changed);
     UpdateAllButtonsLight(nullptr, -1);
-    NotifyCmbChanged();
+    NotifyCmbPushed(changed);
     break;
-  case ID_SETTER_INSERT:
+  }
+  case ID_SETTER_INSERT: {
+    bool changed = false;
+
     for (unsigned j = m_framegeneral.size() - 1; j > m_pos; j--)
-      m_framegeneral[j]->Copy(m_framegeneral[j - 1]);
+      changed = CopyFrameGenerals(j - 1, j, changed);
+    UpdateAllButtonsLight(nullptr, -1);
     SetPosition(m_pos);
-    NotifyCmbChanged();
+    NotifyCmbPushed(changed);
     break;
+  }
   case ID_SETTER_L0:
   case ID_SETTER_L1:
   case ID_SETTER_L2:

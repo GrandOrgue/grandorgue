@@ -89,6 +89,16 @@ private:
   static const struct ButtonDefinitionEntry m_element_types[];
   const struct ButtonDefinitionEntry *GetButtonDefinitionList() override;
 
+  /**
+   * Copy the sequencer combination
+   * @param fromIdx - position of the source combination
+   * @param toIdx - position of the destination combination
+   * @param changedBefore - has the combination been changed before. If yes then
+   *   do not check more for changing
+   * @return if any of two combinations is changed or changedBefore
+   */
+  bool CopyFrameGenerals(unsigned fromIdx, unsigned toIdx, bool changedBefore);
+
   void ButtonStateChanged(int id, bool newState) override;
 
   void ControlChanged(GOControl *control) override;
