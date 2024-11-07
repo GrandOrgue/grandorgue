@@ -12,7 +12,7 @@
 
 #include "ptrvector.h"
 
-#include "gui/primitives/GOBitmap.h"
+#include "gui/panels/primitives/GOBitmap.h"
 
 class GOOrganController;
 
