@@ -1,3 +1,4 @@
+- Fixed crash of reference pipes with the "--justgui" option https://github.com/GrandOrgue/grandorgue/issues/2019
 - Fixed crash on attempt of loading an organ if it's files did not exist https://github.com/GrandOrgue/grandorgue/issues/1990
 - Fixed the sequencer "Save file" button not lightening after inserting or deleting a combination https://github.com/GrandOrgue/grandorgue/issues/2024
 - Fixed appearence, sizing and the scrollbar issues with the Stops window https://github.com/GrandOrgue/grandorgue/issues/1961

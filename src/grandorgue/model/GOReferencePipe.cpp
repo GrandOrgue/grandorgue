@@ -10,8 +10,6 @@
 #include <wx/intl.h>
 #include <wx/tokenzr.h>
 
-#include "config/GOConfigReader.h"
-
 #include "GOManual.h"
 #include "GOOrganModel.h"
 #include "GORank.h"
@@ -28,8 +26,6 @@ GOReferencePipe::GOReferencePipe(
 
 void GOReferencePipe::Load(
   GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
-  SetGroupAndPrefix(group, prefix);
-  m_model->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   if (!m_Filename.StartsWith(wxT("REF:")))
     throw(wxString) _("ReferencePipe without Reference");
