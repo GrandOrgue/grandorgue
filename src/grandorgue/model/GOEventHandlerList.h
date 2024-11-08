@@ -18,6 +18,7 @@ class GOControl;
 class GOControlChangedHandler;
 class GOEventHandler;
 class GOMidiConfigurator;
+class GOReferencingObject;
 class GOSoundStateHandler;
 class GOSaveableObject;
 
@@ -57,6 +58,7 @@ private:
   };
 
   UPVector<GOCacheObject> m_CacheObjects;
+  UPVector<GOReferencingObject> m_ReferencingObjects;
   UPVector<GOCombinationButtonSet> m_CombinationButtonSets;
   UPVector<GOControlChangedHandler> m_ControlChangedHandlers;
   UPVector<GOMidiConfigurator> m_MidiConfigurators;
@@ -67,6 +69,9 @@ private:
 public:
   const std::vector<GOCacheObject *> &GetCacheObjects() const {
     return m_CacheObjects.AsVector();
+  }
+  const std::vector<GOReferencingObject *> &GetReferencingObjects() const {
+    return m_ReferencingObjects.AsVector();
   }
   const std::vector<GOCombinationButtonSet *> &GetCombinationButtonSets()
     const {
@@ -86,6 +91,14 @@ public:
   }
 
   void RegisterCacheObject(GOCacheObject *obj) { m_CacheObjects.Add(obj); }
+
+  void RegisterReferencingObject(GOReferencingObject *pObj) {
+    m_ReferencingObjects.Add(pObj);
+  }
+
+  void UnRegisterReferencingObject(GOReferencingObject *pObj) {
+    m_ReferencingObjects.Remove(pObj);
+  }
 
   void RegisterCombinationButtonSet(GOCombinationButtonSet *obj) {
     m_CombinationButtonSets.Add(obj);

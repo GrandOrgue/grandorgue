@@ -10,19 +10,23 @@
 
 #include "GOCacheObject.h"
 #include "GOPipe.h"
+#include "GOReferencingObject.h"
 
 class GOOrganModel;
 
-class GOReferencePipe : public GOPipe, private GOCacheObject {
+class GOReferencePipe : public GOPipe,
+                        private GOCacheObject,
+                        public GOReferencingObject {
 private:
   GOOrganModel *m_model;
   GOPipe *m_Reference;
   unsigned m_ReferenceID;
   wxString m_Filename;
 
-  void Initialize() override;
+  void OnResolvingReferences() override;
   void LoadData(const GOFileStore &fileStore, GOMemoryPool &pool) override {}
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override { return true; }
+  void Initialize() override {}
   bool SaveCache(GOCacheWriter &cache) const override { return true; }
   void UpdateHash(GOHash &hash) const override {}
   const wxString &GetLoadTitle() const override { return m_Filename; }

@@ -20,6 +20,7 @@
 GOReferencePipe::GOReferencePipe(
   GOOrganModel *model, GORank *rank, unsigned midi_key_number)
   : GOPipe(model, rank, midi_key_number),
+    GOReferencingObject(*model),
     m_model(model),
     m_Reference(NULL),
     m_ReferenceID(0),
@@ -34,7 +35,7 @@ void GOReferencePipe::Load(
     throw(wxString) _("ReferencePipe without Reference");
 }
 
-void GOReferencePipe::Initialize() {
+void GOReferencePipe::OnResolvingReferences() {
   if (!m_Filename.StartsWith(wxT("REF:")))
     throw(wxString) _("ReferencePipe without Reference");
 
