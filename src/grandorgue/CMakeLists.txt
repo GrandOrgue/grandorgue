@@ -99,10 +99,10 @@ gui/dialogs/GOProgressDialog.cpp
 gui/dialogs/GOPropertiesDialog.cpp
 gui/dialogs/GOSelectOrganDialog.cpp
 gui/dialogs/GOSplash.cpp
-gui/dialogs/GOStopsDialog.cpp
 gui/frames/GOFrame.cpp
 gui/frames/GOLogWindow.cpp
 gui/frames/GOMainWindowData.cpp
+gui/frames/GOStopsWindow.cpp
 gui/panels/primitives/GOBitmap.cpp
 gui/panels/primitives/GODC.cpp
 gui/panels/primitives/GOFont.cpp

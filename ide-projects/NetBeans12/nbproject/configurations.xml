@@ -470,7 +470,6 @@
               <in>GOPropertiesDialog.cpp</in>
               <in>GOSelectOrganDialog.cpp</in>
               <in>GOSplash.cpp</in>
-              <in>GOStopsDialog.cpp</in>
             </df>
             <df name="frames">
               <in>GOFrame.cpp</in>
@@ -31584,6 +31583,202 @@
         <ccTool flags="1">
         </ccTool>
       </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOMidiListDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GONewReleaseDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOOrganSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOPropertiesDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOSelectOrganDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOSplash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogCloser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogSizeSet.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GOSimpleDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GOTabbedDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventKeyTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventRecvTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventSendTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiDeviceList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiDevices.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiMessage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsOptions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsOrgans.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsPaths.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsPorts.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsReverb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsTemperaments.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
       <item path="../../src/grandorgue/gui/frames/GOFrame.cpp"
             ex="false"
             tool="1"
@@ -31599,6 +31794,34 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/frames/GOMainWindowData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/size/GOSizeKeeper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/wxcontrols/GOAudioGauge.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/wxcontrols/GOGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/wxcontrols/GORightVisiblePicker.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -32620,237 +32843,6 @@
         </ccTool>
       </item>
       <item path="../../submodules/ZitaConvolver/source/zita-convolver.cc"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOMidiListDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GONewReleaseDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOOrganSettingsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOPropertiesDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOSelectOrganDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOSplash.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOStopsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogCloser.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogSizeSet.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GOSimpleDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GOTabbedDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventKeyTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventRecvTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventSendTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiDeviceList.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiDevices.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiMessage.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsOptions.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsOrgans.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsPaths.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsPorts.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsReverb.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsTemperaments.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/size/GOSizeKeeper.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/wxcontrols/GOAudioGauge.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/wxcontrols/GOGrid.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/wxcontrols/GORightVisiblePicker.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -37213,6 +37205,650 @@
           </incDir>
         </ccTool>
       </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOMidiListDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOPropertiesDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOSelectOrganDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/core/archive</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOSplash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/dialogs</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogCloser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GOTabbedDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/grandorgue/dialogs/common</pElem>
+            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue/document-base</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventKeyTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventRecvTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_STD_MUTEX</Elem>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventSendTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_STD_MUTEX</Elem>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiDeviceList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiDevices.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiMessage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsOptions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsOrgans.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsPaths.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsPorts.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/11</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>/usr/include/c++/11/bits</pElem>
+            <pElem>../../src/grandorgue/dialogs/settings</pElem>
+            <pElem>/usr/include/c++/11/ext</pElem>
+            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
+            <pElem>/usr/include/c++/11/debug</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
+            <pElem>/usr/include/c++/11/backward</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsReverb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsTemperaments.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="4">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/contrib</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
+            <pElem>/usr/include/wx-3.0</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
       <item path="../../src/grandorgue/gui/frames/GOFrame.cpp"
             ex="false"
             tool="1"
@@ -38873,650 +39509,6 @@
       </item>
       <item path="../../submodules/RtMidi/RtMidi.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="2">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOMidiListDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>../../src/grandorgue/dialogs</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/core/midi</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../src/grandorgue/document-base</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>../../src/grandorgue/dialogs</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOPropertiesDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOSelectOrganDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>../../src/grandorgue/dialogs</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/core/archive</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>../../src/core/midi</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOSplash.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>../../src/grandorgue/dialogs</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/grandorgue/dialogs/common</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogCloser.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>../../src/grandorgue/dialogs/common</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>../../src/grandorgue/dialogs/common</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GOTabbedDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>../../src/grandorgue/dialogs/common</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>../../src/grandorgue/dialogs/common</pElem>
-            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/grandorgue/document-base</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../src/core/midi</pElem>
-            <pElem>../../src/grandorgue/midi</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventKeyTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>../../src/grandorgue/dialogs/midi-event</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventRecvTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventSendTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_STD_MUTEX</Elem>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiDeviceList.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiDevices.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiMessage.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsOptions.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsOrgans.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsPaths.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsPorts.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/wx-3.0/wx</pElem>
-            <pElem>/usr/include/c++/11</pElem>
-            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
-            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
-            <pElem>../../src/grandorgue/config</pElem>
-            <pElem>/usr/include/c++/11/bits</pElem>
-            <pElem>../../src/grandorgue/dialogs/settings</pElem>
-            <pElem>/usr/include/c++/11/ext</pElem>
-            <pElem>/usr/lib/gcc/x86_64-redhat-linux/11/include</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/11/debug</pElem>
-            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0/wx</pElem>
-            <pElem>/usr/include/wx-3.0/wx/unix</pElem>
-            <pElem>/usr/include/c++/11/backward</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>/usr/include/c++/11/x86_64-redhat-linux</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsReverb.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsTemperaments.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/contrib</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.0</pElem>
-            <pElem>/usr/include/wx-3.0</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="/usr/share/cmake/Modules/CMakeCCompilerABI.c"
@@ -71137,6 +71129,202 @@
           </incDir>
         </ccTool>
       </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOMidiListDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GONewReleaseDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOOrganSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOPropertiesDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOSelectOrganDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/GOSplash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogCloser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogSizeSet.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GODialogTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GOSimpleDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/common/GOTabbedDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventKeyTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventRecvTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/midi-event/GOMidiEventSendTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiDeviceList.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiDevices.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsMidiMessage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsOptions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsOrgans.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsPaths.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsPorts.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsReverb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsTemperaments.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
       <item path="../../src/grandorgue/gui/frames/GOFrame.cpp"
             ex="false"
             tool="1"
@@ -71152,6 +71340,223 @@
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/frames/GOMainWindowData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIBankedGeneralsPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIButton.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIControl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUICouplerPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUICrescendoPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIDisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIDivisionalsPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIEnclosure.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIFloatingPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIHW1Background.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIHW1DisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIImage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUILabel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUILayoutEngine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIManual.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIManualBackground.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIMasterPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIMetronomePanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIPanelView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIPanelWidget.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUIRecorderPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUISequencerPanel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/GOGUISetterDisplayMetrics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/primitives/GOBitmap.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/primitives/GODC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/panels/primitives/GOFont.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/size/GOSizeKeeper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/wxcontrols/GOAudioGauge.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/wxcontrols/GOGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/wxcontrols/GORightVisiblePicker.cpp"
             ex="false"
             tool="1"
             flavor2="11">
@@ -72852,6 +73257,31 @@
           </incDir>
         </ccTool>
       </item>
+      <item path="../../src/tests/common/GOTest.cpp" ex="false" tool="1" flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/tests/common/GOTestCollection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/tests/common/GOTestResult.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../src/tests/common/GOTestResultCollection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
       <item path="../../src/tests/testing/model/GOTestDrawStop.cpp"
             ex="false"
             tool="1"
@@ -73060,454 +73490,6 @@
         </ccTool>
       </item>
       <item path="../../submodules/ZitaConvolver/source/zita-convolver.cc"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOMidiListDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GONewReleaseDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOOrganSettingsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOPropertiesDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOSelectOrganDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOSplash.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/GOStopsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogCloser.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogSizeSet.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GODialogTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GOSimpleDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/common/GOTabbedDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventKeyTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventRecvTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/midi-event/GOMidiEventSendTab.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiDeviceList.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiDevices.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsMidiMessage.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsOptions.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsOrgans.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsPaths.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsPorts.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsReverb.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/dialogs/settings/GOSettingsTemperaments.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIBankedGeneralsPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIButton.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIControl.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUICouplerPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUICrescendoPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIDisplayMetrics.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIDivisionalsPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIEnclosure.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIFloatingPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIHW1Background.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIHW1DisplayMetrics.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIImage.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUILabel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUILayoutEngine.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIManual.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIManualBackground.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIMasterPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIMetronomePanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIPanelView.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIPanelWidget.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUIRecorderPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUISequencerPanel.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/GOGUISetterDisplayMetrics.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/primitives/GOBitmap.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/primitives/GODC.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/panels/primitives/GOFont.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/size/GOSizeKeeper.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/wxcontrols/GOAudioGauge.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/wxcontrols/GOGrid.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/grandorgue/gui/wxcontrols/GORightVisiblePicker.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTest.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTestCollection.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTestResult.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="/home/oleg/my-projects/grandorgue/GrandOrgue/src/tests/common/GOTestResultCollection.cpp"
             ex="false"
             tool="1"
             flavor2="11">

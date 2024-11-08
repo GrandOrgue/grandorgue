@@ -1,3 +1,4 @@
+- Fixed appearence, sizing and the scrollbar issues with the Stops window https://github.com/GrandOrgue/grandorgue/issues/1961
 # 3.15.2 (2024-10-25)
 - Fixed disengaging manually enabled stops when a crescendo was in the Override=Off mode https://github.com/GrandOrgue/grandorgue/issues/1935
 - Fixed non bringing a dialog windows on top when it had been already open https://github.com/GrandOrgue/grandorgue/issues/1961

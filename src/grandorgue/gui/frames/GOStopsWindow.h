@@ -5,12 +5,13 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSTOPSDIALOG_H
-#define GOSTOPSDIALOG_H
+#ifndef GOSTOPSWINDOW_H
+#define GOSTOPSWINDOW_H
 
 #include <unordered_map>
 
-#include "common/GOSimpleDialog.h"
+#include <wx/frame.h>
+
 #include "control/GOControlChangedHandler.h"
 #include "document-base/GOView.h"
 
@@ -18,30 +19,32 @@ class wxCheckBox;
 
 class GOCombinationElement;
 class GOOrganModel;
+class GOSizeKeeper;
 
-class GOStopsDialog : public GOSimpleDialog,
+class GOStopsWindow : public wxFrame,
                       public GOView,
                       private GOControlChangedHandler {
 private:
+  GOSizeKeeper &r_SizeKeeper;
   GOOrganModel &r_model;
 
   std::unordered_map<GOCombinationElement *, wxCheckBox *>
     mp_checkboxesByControl;
 
+  virtual void OnShow(wxShowEvent &event);
+
   void OnElementChanging(wxCommandEvent &event);
   void ControlChanged(GOControl *pControl) override;
-
-  void OnShow() override;
-  void OnHide() override;
+  void SyncState() override;
 
 public:
-  GOStopsDialog(
+  GOStopsWindow(
     GODocumentBase *doc,
     wxWindow *parent,
-    GODialogSizeSet &dialogSizes,
+    GOSizeKeeper &sizeKeeper,
     GOOrganModel &model);
 
   DECLARE_EVENT_TABLE()
 };
 
-#endif /* GOSTOPSDIALOG_H */
+#endif /* GOSTOPSWINDOW_H */
