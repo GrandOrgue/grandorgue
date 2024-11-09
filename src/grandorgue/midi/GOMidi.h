@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -33,7 +33,6 @@ private:
   int m_transpose;
   std::vector<GOMidiListener *> m_Listeners;
   GOMidiPortFactory m_MidiFactory;
-  void OnMidiEvent(wxMidiEvent &event);
 
 public:
   GOMidi(GOConfig &settings);
@@ -43,6 +42,8 @@ public:
   void UpdateDevices(const GOPortsConfig &portsConfig);
 
   void Recv(const GOMidiEvent &e);
+  void PlayEvent(const GOMidiEvent &e);
+  void OnMidiEvent(wxMidiEvent &e);
   void Send(const GOMidiEvent &e);
 
   const ptr_vector<GOMidiPort> &GetInDevices() const {

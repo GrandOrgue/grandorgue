@@ -16,6 +16,7 @@
 #include "midi/GOMidiMap.h"
 
 #include "GOEvent.h"
+#include "GOMidi.h"
 #include "GOOrganController.h"
 
 enum {
@@ -38,8 +39,16 @@ const struct GOElementCreator::ButtonDefinitionEntry *GOMidiPlayer::
   return m_element_types;
 }
 
+void GOMidiPlayer::ResetUI() {
+  m_buttons[ID_MIDI_PLAYER_PLAY]->Display(false);
+  m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(false);
+  UpdateDisplay();
+}
+
 GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
-  : m_OrganController(organController),
+  : r_MidiMap(organController->GetSettings().GetMidiMap()),
+    r_timer(*organController->GetTimer()),
+    p_midi(nullptr),
     m_content(),
     m_PlayingTime(organController),
     m_Start(0),
@@ -47,15 +56,12 @@ GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
     m_Speed(1),
     m_IsPlaying(false),
     m_Pause(false) {
-  CreateButtons(*m_OrganController);
-  Clear();
-  m_DeviceID
-    = m_OrganController->GetSettings().GetMidiMap().GetDeviceIdByLogicalName(
-      _("GrandOrgue MIDI Player"));
-  UpdateDisplay();
+  CreateButtons(*organController);
+  m_DeviceID = r_MidiMap.GetDeviceIdByLogicalName(_("GrandOrgue MIDI Player"));
+  ResetUI();
 }
 
-GOMidiPlayer::~GOMidiPlayer() { StopPlaying(); }
+GOMidiPlayer::~GOMidiPlayer() { Cleanup(); }
 
 void GOMidiPlayer::Load(GOConfigReader &cfg) {
   m_buttons[ID_MIDI_PLAYER_PLAY]->Init(cfg, wxT("MidiPlayerPlay"), _("PLAY"));
@@ -81,15 +87,11 @@ void GOMidiPlayer::ButtonStateChanged(int id, bool newState) {
   }
 }
 
-void GOMidiPlayer::Clear() {
-  StopPlaying();
-  m_content.Clear();
-}
-
 void GOMidiPlayer::LoadFile(
   const wxString &filename, unsigned manuals, bool pedal) {
-  Clear();
-  GOMidiFileReader reader(m_OrganController->GetSettings().GetMidiMap());
+  StopPlaying();
+  m_content.Clear();
+  GOMidiFileReader reader(r_MidiMap);
   if (!reader.Open(filename)) {
     GOMessageBox(
       wxString::Format(_("Failed to load %s"), filename.c_str()),
@@ -98,11 +100,7 @@ void GOMidiPlayer::LoadFile(
       NULL);
     return;
   }
-  if (!m_content.Load(
-        reader,
-        m_OrganController->GetSettings().GetMidiMap(),
-        manuals,
-        pedal)) {
+  if (!m_content.Load(reader, r_MidiMap, manuals, pedal)) {
     m_content.Clear();
     GOMessageBox(
       wxString::Format(_("Failed to load %s"), filename.c_str()),
@@ -150,8 +148,15 @@ void GOMidiPlayer::Pause() {
     m_Pause = true;
     m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(m_Pause);
     m_Start = wxGetLocalTimeMillis() - m_Start;
-    m_OrganController->GetTimer()->DeleteTimer(this);
+    r_timer.DeleteTimer(this);
   }
+}
+
+void GOMidiPlayer::PlayMidiEvent(const GOMidiEvent &e) {
+  GOMidi *pMidi = p_midi;
+
+  if (pMidi)
+    pMidi->PlayEvent(e);
 }
 
 void GOMidiPlayer::StopPlaying() {
@@ -164,15 +169,14 @@ void GOMidiPlayer::StopPlaying() {
       e.SetValue(0);
       e.SetDevice(m_DeviceID);
       e.SetTime(wxGetLocalTimeMillis());
-      m_OrganController->ProcessMidi(e);
+      e.SetAllowedToReload(false);
+      PlayMidiEvent(e);
     }
   }
 
   m_IsPlaying = false;
-  m_buttons[ID_MIDI_PLAYER_PLAY]->Display(false);
-  m_buttons[ID_MIDI_PLAYER_PAUSE]->Display(false);
-  UpdateDisplay();
-  m_OrganController->GetTimer()->DeleteTimer(this);
+  ResetUI();
+  r_timer.DeleteTimer(this);
 }
 
 bool GOMidiPlayer::IsPlaying() { return m_IsPlaying; }
@@ -207,12 +211,13 @@ void GOMidiPlayer::HandleTimer() {
       }
       e.SetDevice(m_DeviceID);
       e.SetTime(wxGetLocalTimeMillis());
-      m_OrganController->ProcessMidi(e);
+      e.SetAllowedToReload(false);
+      PlayMidiEvent(e);
     } else {
       GOTime next = e.GetTime() * m_Speed + m_Start;
       if (next > m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000)
         next = m_Start + m_Speed * (m_PlayingSeconds + 1) * 1000;
-      m_OrganController->GetTimer()->SetTimer(next, this);
+      r_timer.SetTimer(next, this);
       return;
     }
   } while (true);
@@ -230,4 +235,9 @@ GOLabelControl *GOMidiPlayer::GetLabelControl(
   if (name == wxT("MidiPlayerLabel"))
     return &m_PlayingTime;
   return NULL;
+}
+
+void GOMidiPlayer::Cleanup() {
+  StopPlaying();
+  p_midi = nullptr;
 }

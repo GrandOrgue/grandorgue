@@ -20,13 +20,18 @@
 #include "GOTime.h"
 #include "GOTimerCallback.h"
 
+class GOMidi;
+class GOMidiMap;
 class GOMidiEvent;
 class GOMidiFileReader;
 class GOOrganController;
+class GOTimer;
 
 class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
 private:
-  GOOrganController *m_OrganController;
+  GOMidiMap &r_MidiMap;
+  GOTimer &r_timer;
+  GOMidi *p_midi;
   GOMidiPlayerContent m_content;
   GOLabelControl m_PlayingTime;
   GOTime m_Start;
@@ -43,13 +48,28 @@ private:
   void ButtonStateChanged(int id, bool newState) override;
 
   void UpdateDisplay();
+
+  /**
+   * Set the buttons and the display to the initial state
+   */
+  void ResetUI();
+  /**
+   * Send midi event to the organ
+   * @param event the event to process
+   */
+  void PlayMidiEvent(const GOMidiEvent &e);
   void HandleTimer() override;
 
 public:
   GOMidiPlayer(GOOrganController *organController);
   ~GOMidiPlayer();
 
-  void Clear();
+  /**
+   * Set up for playing any midi
+   * @param pMidi - a pointer to the midi engine
+   */
+  void Setup(GOMidi *pMidi) { p_midi = pMidi; }
+
   void LoadFile(const wxString &filename, unsigned manuals, bool pedal);
   bool IsLoaded();
 
@@ -61,6 +81,11 @@ public:
   void Load(GOConfigReader &cfg) override;
   GOEnclosure *GetEnclosure(const wxString &name, bool is_panel) override;
   GOLabelControl *GetLabelControl(const wxString &name, bool is_panel) override;
+
+  /**
+   * Clean up. Playing will be impossible until Setup is called
+   */
+  void Cleanup();
 };
 
 #endif

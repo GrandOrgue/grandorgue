@@ -95,12 +95,13 @@ void GOMidi::Recv(const GOMidiEvent &e) {
   AddPendingEvent(event);
 }
 
-void GOMidi::OnMidiEvent(wxMidiEvent &event) {
-  GOMidiEvent e = event.GetMidiEvent();
+void GOMidi::PlayEvent(const GOMidiEvent &e) {
   for (unsigned i = 0; i < m_Listeners.size(); i++)
     if (m_Listeners[i])
       m_Listeners[i]->Send(e);
 }
+
+void GOMidi::OnMidiEvent(wxMidiEvent &e) { PlayEvent(e.GetMidiEvent()); }
 
 void GOMidi::Send(const GOMidiEvent &e) {
   for (unsigned j = 0; j < m_midi_out_devices.size(); j++)
