@@ -359,131 +359,127 @@ wxString GOOrganController::Load(
   const GOOrgan &organ,
   const wxString &file2,
   bool isGuiOnly) {
-  GOLoaderFilename odf_name;
-
-  m_ArchiveID = organ.GetArchiveID();
-  if (m_ArchiveID != wxEmptyString) {
-    dlg->Setup(1, _("Loading sample set"), _("Parsing organ packages"));
-
-    wxString errMsg;
-
-    if (!m_FileStore.LoadArchives(
-          m_config,
-          m_config.OrganCachePath(),
-          organ.GetArchiveID(),
-          organ.GetArchivePath(),
-          errMsg))
-      return errMsg;
-    m_ArchivePath = organ.GetArchivePath();
-    m_odf = organ.GetODFPath();
-    odf_name.Assign(m_odf);
-  } else {
-    wxString file = organ.GetODFPath();
-    m_odf = go_normalize_path(file);
-    odf_name.AssignAbsolute(m_odf);
-    m_FileStore.SetDirectory(go_get_path(m_odf));
-  }
-  m_hash = organ.GetOrganHash();
-  dlg->Setup(
-    1, _("Loading sample set"), _("Parsing sample set definition file"));
-  m_SettingFilename = GenerateSettingFileName();
-  m_CacheFilename = GenerateCacheFileName();
-  m_Cacheable = false;
-
+  GOBuffer<char> dummy;
   wxString errMsg;
 
-  GOConfigFileReader odf_ini_file;
+  try {
+    GOLoaderFilename odf_name;
 
-  if (!odf_ini_file.Read(odf_name.Open(m_FileStore).get())) {
-    errMsg.Printf(_("Unable to read '%s'"), odf_name.GetPath().c_str());
-    return errMsg;
-  }
+    m_ArchiveID = organ.GetArchiveID();
+    if (m_ArchiveID != wxEmptyString) {
+      dlg->Setup(1, _("Loading sample set"), _("Parsing organ packages"));
 
-  m_ODFHash = odf_ini_file.GetHash();
-  m_b_customized = false;
-  GOConfigReaderDB ini(m_config.ODFCheck());
-  ini.ReadData(odf_ini_file, ODFSetting, false);
+      wxString errMsg1;
 
-  wxString setting_file = file2;
-  bool can_read_cmb_directly = true;
-
-  if (setting_file.IsEmpty()) {
-    if (wxFileExists(m_SettingFilename)) {
-      setting_file = m_SettingFilename;
-      m_b_customized = true;
+      if (!m_FileStore.LoadArchives(
+            m_config,
+            m_config.OrganCachePath(),
+            organ.GetArchiveID(),
+            organ.GetArchivePath(),
+            errMsg1))
+        throw errMsg1;
+      m_ArchivePath = organ.GetArchivePath();
+      m_odf = organ.GetODFPath();
+      odf_name.Assign(m_odf);
     } else {
-      wxString bundledSettingsFile = m_odf.BeforeLast('.') + wxT(".cmb");
-      if (!m_FileStore.AreArchivesUsed()) {
-        if (wxFileExists(bundledSettingsFile)) {
-          setting_file = bundledSettingsFile;
-          m_b_customized = true;
-        }
+      wxString file = organ.GetODFPath();
+      m_odf = go_normalize_path(file);
+      odf_name.AssignAbsolute(m_odf);
+      m_FileStore.SetDirectory(go_get_path(m_odf));
+    }
+    m_hash = organ.GetOrganHash();
+    dlg->Setup(
+      1, _("Loading sample set"), _("Parsing sample set definition file"));
+    m_SettingFilename = GenerateSettingFileName();
+    m_CacheFilename = GenerateCacheFileName();
+    m_Cacheable = false;
+
+    GOConfigFileReader odf_ini_file;
+
+    if (!odf_ini_file.Read(odf_name.Open(m_FileStore).get()))
+      throw wxString::Format(_("Unable to read '%s'"), odf_name.GetPath());
+
+    m_ODFHash = odf_ini_file.GetHash();
+    m_b_customized = false;
+    GOConfigReaderDB ini(m_config.ODFCheck());
+    ini.ReadData(odf_ini_file, ODFSetting, false);
+
+    wxString setting_file = file2;
+    bool can_read_cmb_directly = true;
+
+    if (setting_file.IsEmpty()) {
+      if (wxFileExists(m_SettingFilename)) {
+        setting_file = m_SettingFilename;
+        m_b_customized = true;
       } else {
-        if (m_FileStore.FindArchiveContaining(m_odf)->containsFile(
-              bundledSettingsFile)) {
-          setting_file = bundledSettingsFile;
-          m_b_customized = true;
-          can_read_cmb_directly = false;
+        wxString bundledSettingsFile = m_odf.BeforeLast('.') + wxT(".cmb");
+        if (!m_FileStore.AreArchivesUsed()) {
+          if (wxFileExists(bundledSettingsFile)) {
+            setting_file = bundledSettingsFile;
+            m_b_customized = true;
+          }
+        } else {
+          if (m_FileStore.FindArchiveContaining(m_odf)->containsFile(
+                bundledSettingsFile)) {
+            setting_file = bundledSettingsFile;
+            m_b_customized = true;
+            can_read_cmb_directly = false;
+          }
         }
       }
     }
-  }
 
-  if (!setting_file.IsEmpty()) {
-    GOConfigFileReader extra_odf_config;
-    if (can_read_cmb_directly) {
-      if (!extra_odf_config.Read(setting_file)) {
-        errMsg.Printf(_("Unable to read '%s'"), setting_file.c_str());
-        return errMsg;
+    if (!setting_file.IsEmpty()) {
+      GOConfigFileReader extra_odf_config;
+      if (can_read_cmb_directly) {
+        if (!extra_odf_config.Read(setting_file))
+          throw wxString::Format(_("Unable to read '%s'"), setting_file);
+      } else {
+        if (!extra_odf_config.Read(
+              m_FileStore.FindArchiveContaining(m_odf)->OpenFile(setting_file)))
+          throw wxString::Format(_("Unable to read '%s'"), setting_file);
       }
+
+      if (
+        odf_ini_file.getEntry(WX_ORGAN, wxT("ChurchName")).Trim()
+        != extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).Trim())
+        wxLogWarning(
+          _("This .cmb file was originally created for:\n%s"),
+          extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).c_str());
+
+      ini.ReadData(extra_odf_config, CMBSetting, false);
+      wxString hash = extra_odf_config.getEntry(WX_ORGAN, wxT("ODFHash"));
+      if (hash != wxEmptyString)
+        if (hash != m_ODFHash) {
+          if (
+            wxMessageBox(
+              _("The .cmb file does not exactly match the current "
+                "ODF. Importing it can cause various problems. "
+                "Should it really be imported?"),
+              _("Import"),
+              wxYES_NO,
+              NULL)
+            == wxNO) {
+            ini.ClearCMB();
+          }
+        }
     } else {
-      if (!extra_odf_config.Read(
-            m_FileStore.FindArchiveContaining(m_odf)->OpenFile(setting_file))) {
-        errMsg.Printf(_("Unable to read '%s'"), setting_file.c_str());
-        return errMsg;
-      }
-    }
-
-    if (
-      odf_ini_file.getEntry(WX_ORGAN, wxT("ChurchName")).Trim()
-      != extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).Trim())
-      wxLogWarning(
-        _("This .cmb file was originally created for:\n%s"),
-        extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).c_str());
-
-    ini.ReadData(extra_odf_config, CMBSetting, false);
-    wxString hash = extra_odf_config.getEntry(WX_ORGAN, wxT("ODFHash"));
-    if (hash != wxEmptyString)
-      if (hash != m_ODFHash) {
+      bool old_go_settings = ini.ReadData(odf_ini_file, CMBSetting, true);
+      if (old_go_settings)
         if (
           wxMessageBox(
-            _("The .cmb file does not exactly match the current "
-              "ODF. Importing it can cause various problems. "
-              "Should it really be imported?"),
+            _("The ODF contains GrandOrgue 0.2 styled saved "
+              "settings. Should they be imported?"),
             _("Import"),
             wxYES_NO,
             NULL)
           == wxNO) {
           ini.ClearCMB();
         }
-      }
-  } else {
-    bool old_go_settings = ini.ReadData(odf_ini_file, CMBSetting, true);
-    if (old_go_settings)
-      if (
-        wxMessageBox(
-          _("The ODF contains GrandOrgue 0.2 styled saved "
-            "settings. Should they be imported?"),
-          _("Import"),
-          wxYES_NO,
-          NULL)
-        == wxNO) {
-        ini.ClearCMB();
-      }
-  }
+    }
 
-  try {
     GOConfigReader cfg(ini, m_config.ODFCheck(), m_config.ODFHw1Check());
+
     /* skip informational items */
     cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchName"), false);
     cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
@@ -491,142 +487,138 @@ wxString GOOrganController::Load(
     cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFHash"), false);
     cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ArchiveID"), false);
     ReadOrganFile(cfg);
-  } catch (wxString error_) {
-    return error_;
-  }
-  ini.ReportUnused();
+    ini.ReportUnused();
 
-  if (!isGuiOnly) {
-    GOBuffer<char> dummy;
+    if (!isGuiOnly) {
+      try {
+        bool cache_ok = false;
 
-    try {
-      bool cache_ok = false;
+        dummy.resize(1024 * 1024 * 50);
+        ResolveReferences();
 
-      dummy.resize(1024 * 1024 * 50);
-      ResolveReferences();
+        /* Figure out list of pipes to load */
+        GOCacheObjectDistributor objectDistributor(GetCacheObjects());
 
-      /* Figure out list of pipes to load */
-      GOCacheObjectDistributor objectDistributor(GetCacheObjects());
-
-      dlg->Reset(objectDistributor.GetNObjects());
-
-      GOCacheObject *obj = nullptr;
-
-      /* Load pipes */
-      if (wxFileExists(m_CacheFilename)) {
-        wxFile cache_file(m_CacheFilename);
-        GOCache reader(cache_file, m_pool);
-        cache_ok = cache_file.IsOpened();
-
-        if (cache_ok) {
-          GOHashType hash1, hash2;
-          if (!reader.ReadHeader()) {
-            cache_ok = false;
-            wxLogWarning(_("Cache file had bad magic bypassing cache."));
-          }
-          hash1 = GenerateCacheHash();
-          if (
-            !reader.Read(&hash2, sizeof(hash2))
-            || memcmp(&hash1, &hash2, sizeof(hash1))) {
-            cache_ok = false;
-            reader.FreeCacheFile();
-            wxLogWarning(_("Cache file had diffent hash bypassing cache."));
-          }
-        }
+        dlg->Reset(objectDistributor.GetNObjects());
 
         GOCacheObject *obj = nullptr;
 
-        if (cache_ok) {
-          while ((obj = objectDistributor.FetchNext())) {
-            if (!obj->LoadFromCacheWithoutExc(m_pool, reader)) {
-              wxLogWarning(_("Cache load failure: %s"), obj->GetLoadError());
-              break;
+        /* Load pipes */
+        if (wxFileExists(m_CacheFilename)) {
+          wxFile cache_file(m_CacheFilename);
+          GOCache reader(cache_file, m_pool);
+          cache_ok = cache_file.IsOpened();
+
+          if (cache_ok) {
+            GOHashType hash1, hash2;
+            if (!reader.ReadHeader()) {
+              cache_ok = false;
+              wxLogWarning(_("Cache file had bad magic bypassing cache."));
             }
+            hash1 = GenerateCacheHash();
+            if (
+              !reader.Read(&hash2, sizeof(hash2))
+              || memcmp(&hash1, &hash2, sizeof(hash1))) {
+              cache_ok = false;
+              reader.FreeCacheFile();
+              wxLogWarning(_("Cache file had diffent hash bypassing cache."));
+            }
+          }
+
+          GOCacheObject *obj = nullptr;
+
+          if (cache_ok) {
+            while ((obj = objectDistributor.FetchNext())) {
+              if (!obj->LoadFromCacheWithoutExc(m_pool, reader)) {
+                wxLogWarning(_("Cache load failure: %s"), obj->GetLoadError());
+                break;
+              }
+              if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+                throw GOLoadAborted(); // Skip the rest of the loading code
+            }
+            if (!obj)
+              m_Cacheable = true;
+            else
+              // obj points to an object with a load error. We will try to load
+              // it from the file later
+              cache_ok = false;
+          }
+
+          if (!cache_ok && !m_config.ManageCache())
+            wxLogWarning(
+              _("The cache for this organ is outdated. Please update "
+                "or delete it."));
+
+          reader.Close();
+        }
+
+        if (!cache_ok) {
+          GOLoadWorker thisWorker(m_FileStore, m_pool, objectDistributor);
+          ptr_vector<GOLoadThread> threads;
+
+          // Create and run additional worker threads
+          for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
+            threads.push_back(
+              new GOLoadThread(m_FileStore, m_pool, objectDistributor));
+          for (unsigned i = 0; i < threads.size(); i++)
+            threads[i]->Run();
+
+          // try to load the object that we could not load from cache
+          if (obj)
+            thisWorker.LoadObjectNoExc(obj);
+
+          while (thisWorker.LoadNextObject(obj))
+            // show the progress and process possible Cancel
             if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
-              throw GOLoadAborted(); // Skip the rest of the loading code
+              throw GOLoadAborted(); // skip the rest of loading code
+          // rethrow exception if any occured in thisWorker.LoadNextObject
+          bool wereExceptions = thisWorker.WereExceptions();
+
+          for (unsigned i = 0; i < threads.size(); i++)
+            wereExceptions |= threads[i]->CheckExceptions();
+          if (wereExceptions) {
+            for (auto obj : GetCacheObjects()) {
+              if (!obj->IsReady())
+                wxLogError(obj->GetLoadError());
+            }
+            GOMessageBox(
+              _("There are errors while loading the organ. See Log Messages."),
+              _("Load error"),
+              wxOK | wxICON_ERROR,
+              NULL);
+          } else {
+            if (objectDistributor.IsComplete())
+              m_Cacheable = true;
+            if (m_config.ManageCache() && m_Cacheable)
+              UpdateCache(dlg, m_config.CompressCache());
           }
-          if (!obj)
-            m_Cacheable = true;
-          else
-            // obj points to an object with a load error. We will try to load
-            // it from the file later
-            cache_ok = false;
+
+          // Despite a possible exception automatic calling ~GOLoadThread from
+          // ~ptr_vector stops all additional worker threads
         }
-
-        if (!cache_ok && !m_config.ManageCache())
-          wxLogWarning(_("The cache for this organ is outdated. Please update "
-                         "or delete it."));
-
-        reader.Close();
+      } catch (const GOOutOfMemory &e) {
+        GOMessageBox(
+          _("Out of memory - only parts of the organ are loaded. Please "
+            "reduce memory footprint via the sample loading settings."),
+          _("Load error"),
+          wxOK | wxICON_ERROR,
+          NULL);
+      } catch (const GOLoadAborted &) {
+        GOMessageBox(
+          _("Load aborted by the user - only parts of the organ are loaded."),
+          _("Load error"),
+          wxOK | wxICON_ERROR,
+          NULL);
       }
-
-      if (!cache_ok) {
-        GOLoadWorker thisWorker(m_FileStore, m_pool, objectDistributor);
-        ptr_vector<GOLoadThread> threads;
-
-        // Create and run additional worker threads
-        for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
-          threads.push_back(
-            new GOLoadThread(m_FileStore, m_pool, objectDistributor));
-        for (unsigned i = 0; i < threads.size(); i++)
-          threads[i]->Run();
-
-        // try to load the object that we could not load from cache
-        if (obj)
-          thisWorker.LoadObjectNoExc(obj);
-
-        while (thisWorker.LoadNextObject(obj))
-          // show the progress and process possible Cancel
-          if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
-            throw GOLoadAborted(); // skip the rest of loading code
-        // rethrow exception if any occured in thisWorker.LoadNextObject
-        bool wereExceptions = thisWorker.WereExceptions();
-
-        for (unsigned i = 0; i < threads.size(); i++)
-          wereExceptions |= threads[i]->CheckExceptions();
-        if (wereExceptions) {
-          for (auto obj : GetCacheObjects()) {
-            if (!obj->IsReady())
-              wxLogError(obj->GetLoadError());
-          }
-          GOMessageBox(
-            _("There are errors while loading the organ. See Log Messages."),
-            _("Load error"),
-            wxOK | wxICON_ERROR,
-            NULL);
-        } else {
-          if (objectDistributor.IsComplete())
-            m_Cacheable = true;
-          if (m_config.ManageCache() && m_Cacheable)
-            UpdateCache(dlg, m_config.CompressCache());
-        }
-
-        // Despite a possible exception automatic calling ~GOLoadThread from
-        // ~ptr_vector stops all additional worker threads
-      }
-    } catch (const GOOutOfMemory &e) {
-      GOMessageBox(
-        _("Out of memory - only parts of the organ are loaded. Please "
-          "reduce memory footprint via the sample loading settings."),
-        _("Load error"),
-        wxOK | wxICON_ERROR,
-        NULL);
-    } catch (const GOLoadAborted &) {
-      GOMessageBox(
-        _("Load aborted by the user - only parts of the organ are loaded."),
-        _("Load error"),
-        wxOK | wxICON_ERROR,
-        NULL);
-    } catch (const wxString &error_) {
-      errMsg = error_;
-    } catch (const std::exception &e) {
-      errMsg = e.what();
-    } catch (...) { // We must not allow unhandled exceptions here
-      errMsg.Printf("Unknown exception");
     }
-    dummy.free();
+  } catch (const wxString &error_) {
+    errMsg = error_;
+  } catch (const std::exception &e) {
+    errMsg = e.what();
+  } catch (...) { // We must not allow unhandled exceptions here
+    errMsg.Printf("Unknown exception");
   }
-
+  dummy.free();
   m_FileStore.CloseArchives();
   if (errMsg.IsEmpty())
     SetTemperament(m_Temperament);
