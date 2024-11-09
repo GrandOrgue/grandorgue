@@ -1,3 +1,4 @@
+- Fixed not releasing a pipe after fast switching between vave-based tremulant samples and regular pipe samples https://github.com/GrandOrgue/grandorgue/issues/2004
 - Fixed hang if there were lots of unused ODF entries https://github.com/GrandOrgue/grandorgue/issues/1918
 # 3.15.3 (2024-11-23)
 - Fixed crash of reference pipes with the "--justgui" option https://github.com/GrandOrgue/grandorgue/issues/2019

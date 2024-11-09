@@ -69,6 +69,8 @@ public:
    * @param nFrames number of frames for full decay
    */
   inline void StartDecreasingVolume(unsigned nFrames) {
+    // stop increasing the volume if it has not yet finished
+    m_IncreasingDeltaPerFrame = 0.0f;
     // maybe m_TargetVolume has not yet been reached, but the velocity of
     // decreasing should be the same as it has reached
     m_DecreasingDeltaPerFrame = -(m_TargetVolume / nFrames);
