@@ -100,9 +100,7 @@ void GOTremulant::OnDrawstopStateChanged(bool on) {
       m_PlaybackHandle = pSoundEngine ? pSoundEngine->StartTremulantSample(
                            m_TremProvider, m_TremulantN, m_LastStop)
                                       : nullptr;
-      on = (m_PlaybackHandle != nullptr);
-    } else {
-      assert(m_PlaybackHandle);
+    } else if (m_PlaybackHandle) {
       m_LastStop = pSoundEngine
         ? pSoundEngine->StopSample(m_TremProvider, m_PlaybackHandle)
         : 0;
