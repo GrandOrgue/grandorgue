@@ -89,6 +89,16 @@ private:
   static const struct ButtonDefinitionEntry m_element_types[];
   const struct ButtonDefinitionEntry *GetButtonDefinitionList() override;
 
+  /**
+   * Copy the sequencer combination
+   * @param fromIdx - position of the source combination
+   * @param toIdx - position of the destination combination
+   * @param changedBefore - has the combination been changed before. If yes then
+   *   do not check more for changing
+   * @return if any of two combinations is changed or changedBefore
+   */
+  bool CopyFrameGenerals(unsigned fromIdx, unsigned toIdx, bool changedBefore);
+
   void ButtonStateChanged(int id, bool newState) override;
 
   void ControlChanged(GOControl *control) override;
@@ -102,10 +112,13 @@ private:
   void NotifyCmbChanged();
   /**
    * Called after a combination is pushed
-   * When Set is active then marks the cpmbinations as modified
+   * When Set is active then marks the combinations as modified
    * Temporary it calls mOrganController->SetModified()
+   * @param isChanged is the combination actually changed
+   * @param isForceSet is the combination memory changed even the Set button
+   *   is not engaged (for example, Ins or Del are pushed)
    */
-  void NotifyCmbPushed(bool isChanged = true);
+  void NotifyCmbPushed(bool isChanged = true, bool isForceSet = false);
 
   /**
    * Update all setter combination buttons light.
