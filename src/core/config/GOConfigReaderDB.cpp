@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,30 +12,35 @@
 
 #include "config/GOConfigFileReader.h"
 
+static constexpr unsigned UNUSED_REPORT_LIMIT = 3000;
+
 GOConfigReaderDB::GOConfigReaderDB(bool case_sensitive)
   : m_CaseSensitive(case_sensitive), m_ODF(1000), m_ODF_LC(1000), m_CMB(100) {}
 
 GOConfigReaderDB::~GOConfigReaderDB() {}
 
 void GOConfigReaderDB::ReportUnused() {
-  for (GOBoolHashMap::iterator i = m_CMBUsed.begin(); i != m_CMBUsed.end();
-       i++) {
-    if (!i->second) {
-      wxLogWarning(_("Unused CMB entry '%s'"), i->first.c_str());
+  for (const auto &pair : m_CMBUsed) {
+    if (!pair.second) {
+      wxLogWarning(_("Unused CMB entry '%s'"), pair.first);
     }
   }
+
   bool warn_old = false;
-  for (GOBoolHashMap::iterator i = m_ODFUsed.begin(); i != m_ODFUsed.end();
-       i++) {
-    if (!i->second) {
-      if (i->first.StartsWith(wxT("_"))) {
-        if (!warn_old) {
-          wxLogWarning(_("Old GO 0.2 styled setting in ODF"));
-        }
-        warn_old = true;
-      } else {
-        wxLogWarning(_("Unused ODF entry '%s'"), i->first.c_str());
+  unsigned unusedCnt = 0;
+
+  for (const auto &pair : m_ODFUsed) {
+    if (!pair.second) {
+      if (++unusedCnt > UNUSED_REPORT_LIMIT) {
+        wxLogWarning(_("More than %u unused ODF entries detected"));
+        break;
       }
+      if (pair.first.StartsWith(wxT("_"))) {
+        if (!warn_old)
+          wxLogWarning(_("Old GO 0.2 styled setting in ODF"));
+        warn_old = true;
+      } else
+        wxLogWarning(_("Unused ODF entry '%s'"), pair.first);
     }
   }
 }
