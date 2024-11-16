@@ -32,7 +32,8 @@ void GOConfigReaderDB::ReportUnused() {
   for (const auto &pair : m_ODFUsed) {
     if (!pair.second) {
       if (++unusedCnt > UNUSED_REPORT_LIMIT) {
-        wxLogWarning(_("More than %u unused ODF entries detected"));
+        wxLogWarning(
+          _("More than %u unused ODF entries detected"), UNUSED_REPORT_LIMIT);
         break;
       }
       if (pair.first.StartsWith(wxT("_"))) {
