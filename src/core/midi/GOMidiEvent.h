@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -56,6 +56,11 @@ private:
   wxString m_string;
   std::vector<uint8_t> m_data;
   bool m_IsToUseNoteOff;
+  /**
+   * Is allowing to close the organ and to load another organ when playing this
+   * midi event
+   */
+  bool m_IsAllowedToReload;
 
 public:
   GOMidiEvent();
@@ -95,6 +100,9 @@ public:
 
   void SetUseNoteOff(bool useNoteOff) { m_IsToUseNoteOff = useNoteOff; }
   bool IsUsingNoteOff() const { return m_IsToUseNoteOff; }
+
+  bool IsAllowedToReload() const { return m_IsAllowedToReload; }
+  void SetAllowedToReload(bool value) { m_IsAllowedToReload = value; }
 };
 
 #endif

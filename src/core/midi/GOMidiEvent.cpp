@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,7 +20,8 @@ GOMidiEvent::GOMidiEvent()
     m_time(0),
     m_string(),
     m_data(),
-    m_IsToUseNoteOff(true) {}
+    m_IsToUseNoteOff(true),
+    m_IsAllowedToReload(true) {}
 
 GOMidiEvent::GOMidiEvent(const GOMidiEvent &e)
   : m_MidiType(e.m_MidiType),
@@ -31,7 +32,8 @@ GOMidiEvent::GOMidiEvent(const GOMidiEvent &e)
     m_time(e.m_time),
     m_string(e.m_string.Clone()),
     m_data(e.m_data),
-    m_IsToUseNoteOff(e.m_IsToUseNoteOff) {}
+    m_IsToUseNoteOff(e.m_IsToUseNoteOff),
+    m_IsAllowedToReload(e.m_IsAllowedToReload) {}
 
 void GOMidiEvent::SetString(const wxString &str, unsigned length) {
   unsigned len = str.length();

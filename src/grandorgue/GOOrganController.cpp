@@ -1027,7 +1027,7 @@ void GOOrganController::Abort() {
 
   GOEventDistributor::AbortPlayback();
 
-  m_MidiPlayer->StopPlaying();
+  m_MidiPlayer->Cleanup();
   m_MidiRecorder->StopRecording();
   m_AudioRecorder->StopRecording();
   m_AudioRecorder->SetAudioRecorder(NULL);
@@ -1064,6 +1064,7 @@ void GOOrganController::PreparePlayback(
 
   GOEventDistributor::StartPlayback();
   GOEventDistributor::PrepareRecording();
+  m_MidiPlayer->Setup(midi);
 
   // Light the OnState button
   if (p_OnStateButton) {

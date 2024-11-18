@@ -1345,12 +1345,14 @@ void GOFrame::OnMidiEvent(const GOMidiEvent &event) {
       _("MIDI event: ") + event.ToString(m_Sound.GetMidi().GetMidiMap()));
   }
 
-  ptr_vector<GOOrgan> &organs = m_config.GetOrganList();
-  for (unsigned i = 0; i < organs.size(); i++)
-    if (organs[i]->Match(event) && organs[i]->IsUsable(m_config)) {
-      SendLoadOrgan(*organs[i]);
-      return;
-    }
+  if (event.IsAllowedToReload()) {
+    ptr_vector<GOOrgan> &organs = m_config.GetOrganList();
+    for (auto pOrgan : organs)
+      if (pOrgan->Match(event) && pOrgan->IsUsable(m_config)) {
+        SendLoadOrgan(*pOrgan);
+        break;
+      }
+  }
 }
 
 void GOFrame::OnSetTitle(wxCommandEvent &event) {
