@@ -17,6 +17,7 @@
 #include "GOEnclosure.h"
 #include "GOManual.h"
 #include "GORank.h"
+#include "GOReferencingObject.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 #include "GOWindchest.h"
@@ -169,6 +170,9 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   for (unsigned i = 0; i < m_tremulants.size(); i++)
     m_tremulants[i]->SetElementID(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
+
+  for (GOReferencingObject *pObj : GetReferencingObjects())
+    pObj->ResolveReferences();
 }
 
 void GOOrganModel::LoadCmbButtons(GOConfigReader &cfg) {

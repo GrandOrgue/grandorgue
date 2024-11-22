@@ -179,6 +179,7 @@ model/GOOrganModel.cpp
 model/GOPipe.cpp
 model/GORank.cpp
 model/GOReferencePipe.cpp
+model/GOReferencingObject.cpp
 model/GOSoundingPipe.cpp
 model/GOStop.cpp
 model/GOSwitch.cpp

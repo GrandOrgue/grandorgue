@@ -10,8 +10,6 @@
 #include <wx/intl.h>
 #include <wx/tokenzr.h>
 
-#include "config/GOConfigReader.h"
-
 #include "GOManual.h"
 #include "GOOrganModel.h"
 #include "GORank.h"
@@ -20,6 +18,7 @@
 GOReferencePipe::GOReferencePipe(
   GOOrganModel *model, GORank *rank, unsigned midi_key_number)
   : GOPipe(model, rank, midi_key_number),
+    GOReferencingObject(*model),
     m_model(model),
     m_Reference(NULL),
     m_ReferenceID(0),
@@ -27,14 +26,12 @@ GOReferencePipe::GOReferencePipe(
 
 void GOReferencePipe::Load(
   GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
-  SetGroupAndPrefix(group, prefix);
-  m_model->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   if (!m_Filename.StartsWith(wxT("REF:")))
     throw(wxString) _("ReferencePipe without Reference");
 }
 
-void GOReferencePipe::Initialize() {
+void GOReferencePipe::OnResolvingReferences() {
   if (!m_Filename.StartsWith(wxT("REF:")))
     throw(wxString) _("ReferencePipe without Reference");
 
