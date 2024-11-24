@@ -2,8 +2,8 @@
 
 set -e
 
-brew install pkgconf || true
-brew link --overwrite pkgconf
+brew install pkg-config || true
+brew link --overwrite pkg-config
 brew install \
   cmake \
   docbook-xsl \
