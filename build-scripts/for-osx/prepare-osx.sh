@@ -1,6 +1,9 @@
 #!/bin/bash
 
 set -e
+
+brew install pkgconf || true
+brew link --overwrite pkgconf
 brew install \
   cmake \
   docbook-xsl \
@@ -8,7 +11,6 @@ brew install \
   gettext \
   imagemagick \
   jack \
-  pkg-config \
   wxwidgets \
   yaml-cpp
 brew link gettext --force
