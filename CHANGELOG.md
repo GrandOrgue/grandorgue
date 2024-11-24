@@ -1,3 +1,4 @@
+# 3.15.3 (2024-11-23)
 - Fixed crash of reference pipes with the "--justgui" option https://github.com/GrandOrgue/grandorgue/issues/2019
 - Fixed crash on attempt of loading an organ if it's files did not exist https://github.com/GrandOrgue/grandorgue/issues/1990
 - Fixed the sequencer "Save file" button not lightening after inserting or deleting a combination https://github.com/GrandOrgue/grandorgue/issues/2024
