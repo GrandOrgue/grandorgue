@@ -5,9 +5,12 @@
 
 include(${CMAKE_SOURCE_DIR}/cmake/AddCXXOption.cmake)
 
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "x86")
 add_cxx_option(-mmmx)
 add_cxx_option(-msse)
 add_cxx_option(-msse2)
 add_cxx_option(-msse3)
+endif()
+
 add_cxx_option(-mstackrealign)
 
