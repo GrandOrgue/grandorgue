@@ -32,9 +32,6 @@ void GOSoundFader::Process(
   unsigned nFrames, float *buffer, float externalVolume) {
   // setup process
 
-  // Consider the velocity volume as part of the external volume
-  externalVolume *= m_VelocityVolume;
-
   float startTargetVolumePoint = m_LastTargetVolumePoint;
 
   // Calculate new m_LastTargetVolumePoint
@@ -82,12 +79,19 @@ void GOSoundFader::Process(
     }
   }
 
+  // Calculate the external volume
+  float newExternalVolume = m_VelocityVolume * externalVolume;
+
+  if (m_LastExternalVolumePoint < 0.0f)
+    m_LastExternalVolumePoint = newExternalVolume;
+
   float startExternalVolumePoint = m_LastExternalVolumePoint;
+
   // Calculate new m_LastExternalVolumePoint
   // the target volume will be changed from startExternalVolumePoint to
   // m_LastExternalVolumePoint during the nFrames period
-  if (externalVolume != startExternalVolumePoint)
-    m_LastExternalVolumePoint += (externalVolume - startExternalVolumePoint)
+  if (newExternalVolume != startExternalVolumePoint)
+    m_LastExternalVolumePoint += (newExternalVolume - startExternalVolumePoint)
       // Assume that external volume is to be reached in MAX_FRAME_SIZE frames
       * std::max(nFrames, EXTERNAL_VOLUME_CHANGE_FRAMES)
       / EXTERNAL_VOLUME_CHANGE_FRAMES;
