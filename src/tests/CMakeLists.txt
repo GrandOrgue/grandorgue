@@ -1,10 +1,4 @@
-add_option(-mmmx)
-add_option(-msse)
-add_option(-msse2)
-add_option(-msse3)
-
-add_option(-mstackrealign)
-
+include(${CMAKE_SOURCE_DIR}/cmake/AddCpuOptions.cmake)
 include(UsewxWidgets)
 include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_SOURCE_DIR}/src/core)
 
