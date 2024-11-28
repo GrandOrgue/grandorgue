@@ -328,7 +328,7 @@ bool GOMidiEventRecvTab::TransferDataFromWindow() {
 }
 
 void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {
-  GOMidiReceiverMessageType type = m_eventtype->GetCurrentSelection();
+  GOMidiReceiverMessageType type = m_eventtype->GetCurrentValue();
   if (m_original->HasChannel(type))
     m_channel->Enable();
   else
@@ -467,7 +467,7 @@ void GOMidiEventRecvTab::LoadEvent() {
 
   GOMidiReceiverEventPattern &e = m_midi.GetEvent(m_current);
 
-  m_eventtype->SetCurrentSelection(e.type);
+  m_eventtype->SetCurrentValue(e.type);
 
   wxCommandEvent event;
   OnTypeChange(event);
@@ -508,7 +508,7 @@ GOMidiReceiverEventPattern GOMidiEventRecvTab::GetCurrentEvent() {
     e.deviceId
       = m_MidiMap.GetDeviceIdByLogicalName(m_device->GetStringSelection());
 
-  e.type = m_eventtype->GetCurrentSelection();
+  e.type = m_eventtype->GetCurrentValue();
   if (m_channel->GetSelection() == 0)
     e.channel = -1;
   else
