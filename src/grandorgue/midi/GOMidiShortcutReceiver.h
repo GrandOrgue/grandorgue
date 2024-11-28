@@ -14,7 +14,6 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOOrganController;
 
 class GOMidiShortcutReceiver : public GOMidiShortcutPattern {
 public:

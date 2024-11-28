@@ -5,15 +5,15 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
+#ifndef GOLOADWORKER_H
+#define GOLOADWORKER_H
+
 #include "GOCacheObjectDistributor.h"
 
 #include <wx/string.h>
 
 class GOFileStore;
 class GOMemoryPool;
-
-#ifndef GOLOADWORKER_H
-#define GOLOADWORKER_H
 
 /**
  * A class for loading objects taken from GOCacheObjectDistributor
