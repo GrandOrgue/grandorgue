@@ -236,7 +236,6 @@ void GODivisionalSetter::LoadCombination(GOConfigReader &cfg) {
 
 const char *const DIVISIONALS = "divisionals";
 const char *const BANKED_DIVISIONALS = "banked-divisionals";
-const char *const NAME = "name";
 const char *const COMBINATIONS = "combinations";
 const wxString WX_MANUALP03U = wxT("Manual%03u");
 const wxString WX_PU = wxT("%u");

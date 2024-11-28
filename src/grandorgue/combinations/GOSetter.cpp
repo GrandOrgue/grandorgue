@@ -580,7 +580,6 @@ void GOSetter::Save(GOConfigWriter &cfg) {
   // another objects are saveble themself so they are saved separatelly
 }
 
-const char *const CURRENT = "current";
 const char *const SIMPLE_GENERALS = "generals";
 const char *const BANKED_GENERALS = "banked-generals";
 const char *const CRESCENDOS = "crescendos";
