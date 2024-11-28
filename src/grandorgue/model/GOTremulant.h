@@ -18,7 +18,7 @@ class GOSoundProvider;
 class GOConfigReader;
 class GOConfigWriter;
 class GOMemoryPool;
-class GOSoundSampler;
+struct GOSoundSampler;
 struct IniFileEnumEntry;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
