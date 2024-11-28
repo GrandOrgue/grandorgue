@@ -61,7 +61,7 @@ SettingsMidiDevices::SettingsMidiDevices(
   box1->Add(midiPropSizer, 0, wxALL | wxALIGN_TOP, 5);
 
   box1->Add(GetPortsBox(), 1, wxEXPAND | wxALL, 5);
-  topSizer->Add(box1, 0.5, wxEXPAND | wxALL, 5);
+  topSizer->Add(box1, 0, wxEXPAND | wxALL, 5);
   wxBoxSizer *item3
     = new wxStaticBoxSizer(wxVERTICAL, this, _("MIDI &input devices"));
   item3->Add(
