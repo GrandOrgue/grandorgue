@@ -54,7 +54,6 @@ private:
   GOSoundSamplerPool m_SamplerPool;
   unsigned m_AudioGroupCount;
   std::atomic_uint m_UsedPolyphony;
-  unsigned m_WorkerSlots;
   std::vector<double> m_MeterInfo;
   ptr_vector<GOSoundTremulantTask> m_TremulantTasks;
   ptr_vector<GOSoundWindchestTask> m_WindchestTasks;
