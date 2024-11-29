@@ -5,13 +5,7 @@
 include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyDependencies.cmake)
-
-add_option(-mmmx)
-add_option(-msse)
-add_option(-msse2)
-add_option(-msse3)
-
-add_option(-mstackrealign)
+include(${CMAKE_SOURCE_DIR}/cmake/AddCpuOptions.cmake)
 
 find_package(wxWidgets REQUIRED html net adv core base)
 include(${wxWidgets_USE_FILE})
