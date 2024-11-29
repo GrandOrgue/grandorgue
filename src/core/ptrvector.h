@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,16 +16,24 @@ private:
   ptr_vector(const ptr_vector &);
   const ptr_vector operator=(const ptr_vector &);
 
+  inline void deleteEl(T *e) {
+    if (e) {
+      if (std::is_array<T>::value)
+        delete[] e;
+      else
+        delete e;
+    }
+  }
+
 public:
   ptr_vector(unsigned new_size = 0) : std::vector<T *>(new_size) {
     for (unsigned i = 0; i < new_size; i++)
-      at(i) = 0;
+      at(i) = nullptr;
   }
 
   ~ptr_vector() {
-    for (unsigned i = 0; i < size(); i++)
-      if (at(i))
-        delete at(i);
+    for (auto &e : (*this))
+      deleteEl(e);
   }
 
   T *&operator[](unsigned pos) { return at(pos); }
@@ -43,11 +51,10 @@ public:
   void resize(unsigned new_size) {
     unsigned oldsize = size();
     for (unsigned i = new_size; i < oldsize; i++)
-      if (at(i))
-        delete at(i);
+      deleteEl(at(i));
     std::vector<T *>::resize(new_size);
     for (unsigned i = oldsize; i < new_size; i++)
-      at(i) = 0;
+      at(i) = nullptr;
   }
 
   void push_back(T *ptr) { std::vector<T *>::push_back(ptr); }
