@@ -19,20 +19,20 @@ private:
   template <
     typename T1,
     std::enable_if_t<std::is_array<T1>::value, bool> = true>
-  inline static void destroyE(T1 *e) {
+  inline static void delete0(T1 *e) {
     delete[] e;
   }
 
   template <
     typename T1,
-    std::enable_if_t<std::is_array<T1>::value, bool> = false>
-  inline static void destroyE(T1 *e) {
+    std::enable_if_t<!std::is_array<T1>::value, bool> = true>
+  inline static void delete0(T1 *e) {
     delete e;
   }
 
-  inline static void deleteEl(T *e) {
+  inline static void delete1(T *e) {
     if (e)
-      destroyE<T>(e);
+      delete0(e);
   }
 
 public:
@@ -43,7 +43,7 @@ public:
 
   ~ptr_vector() {
     for (auto &e : (*this))
-      deleteEl(e);
+      delete1(e);
   }
 
   T *&operator[](unsigned pos) { return at(pos); }
@@ -61,7 +61,7 @@ public:
   void resize(unsigned new_size) {
     unsigned oldsize = size();
     for (unsigned i = new_size; i < oldsize; i++)
-      deleteEl(at(i));
+      delete1(at(i));
     std::vector<T *>::resize(new_size);
     for (unsigned i = oldsize; i < new_size; i++)
       at(i) = nullptr;
