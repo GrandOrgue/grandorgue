@@ -16,13 +16,23 @@ private:
   ptr_vector(const ptr_vector &);
   const ptr_vector operator=(const ptr_vector &);
 
-  inline void deleteEl(T *e) {
-    if (e) {
-      if (std::is_array<T>::value)
-        delete[] e;
-      else
-        delete e;
-    }
+  template <
+    typename T1,
+    std::enable_if_t<std::is_array<T1>::value, bool> = true>
+  inline static void destroyE(T1 *e) {
+    delete[] e;
+  }
+
+  template <
+    typename T1,
+    std::enable_if_t<std::is_array<T1>::value, bool> = false>
+  inline static void destroyE(T1 *e) {
+    delete e;
+  }
+
+  inline static void deleteEl(T *e) {
+    if (e)
+      destroyE<T>(e);
   }
 
 public:
