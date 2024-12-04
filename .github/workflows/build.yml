@@ -135,7 +135,7 @@ jobs:
             build_on: linux
             pkg_suffix: wx32
 
-          - run_on: macos-12 # x86_64
+          - run_on: macos-13 # x86_64
             for: osx
             prepare: osx
             build_on: osx
