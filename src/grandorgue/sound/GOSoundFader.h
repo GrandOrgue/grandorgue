@@ -8,6 +8,8 @@
 #ifndef GOSOUNDFADER_H_
 #define GOSOUNDFADER_H_
 
+#include <assert.h>
+
 /**
  * This class is responsible for smoothly changing a volume of samples.
  *
@@ -71,7 +73,20 @@ public:
   inline void StartDecreasingVolume(unsigned nFrames) {
     // maybe m_TargetVolume has not yet been reached, but the velocity of
     // decreasing should be the same as it has reached
-    m_DecreasingDeltaPerFrame = -(m_TargetVolume / nFrames);
+    m_DecreasingDeltaPerFrame = m_TargetVolume / nFrames;
+    if (m_IncreasingDeltaPerFrame > 0.0f) {
+      /*
+        The increasing has not yet finished. We are starting a "virtual"
+        decreasing from m_TargetVolume to 0.
+        The increasing processus will continue until it meet the "virtual"
+        decreasing one at the new m_TargetVolume. Let's calculate it
+       */
+      assert(m_LastTargetVolumePoint < m_TargetVolume);
+      m_TargetVolume = (m_TargetVolume - m_LastTargetVolumePoint)
+          * m_IncreasingDeltaPerFrame
+          / (m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame)
+        + m_LastTargetVolumePoint;
+    }
   }
 
   inline float GetVelocityVolume() const { return m_VelocityVolume; }
