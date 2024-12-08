@@ -23,8 +23,6 @@
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
 
-constexpr unsigned MAX_ELEMENTS = 2000;
-
 enum {
   ID_CHECKBOX = 200,
 };

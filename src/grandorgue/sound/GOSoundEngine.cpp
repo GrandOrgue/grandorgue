@@ -38,7 +38,6 @@ GOSoundEngine::GOSoundEngine()
     m_SamplerPool(),
     m_AudioGroupCount(1),
     m_UsedPolyphony(0),
-    m_WorkerSlots(0),
     m_MeterInfo(1),
     m_TremulantTasks(),
     m_WindchestTasks(),
