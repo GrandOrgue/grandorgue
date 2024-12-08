@@ -10,7 +10,10 @@ set(DEPLIST)
 # ========================
 
 # Find ImageMagick
-find_program(ImageMagick_convert_EXECUTABLE convert)
+LIST(APPEND CMAKE_IGNORE_PATH "C:\\Windows\\System32") # ignore convert.exe here
+find_program(ImageMagick_convert_EXECUTABLE convert REQUIRED)
+MESSAGE("Found ImageMagick convert at ${ImageMagick_convert_EXECUTABLE}")
+LIST(POP_BACK CMAKE_IGNORE_PATH)
 
 # Setup command to generate GOIcon.ico.
 # That icon is used for two purposes:

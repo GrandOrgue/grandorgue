@@ -1,7 +1,7 @@
 # GrandOrgue - free pipe organ simulator
 # 
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2019 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -34,9 +34,9 @@ function(BUILD_EXECUTABLE TARGET)
       OUTPUT "${BINDIR}/${TARGET}.pdb"
       DEPENDS ${TARGET}
       COMMAND
-	${CMAKE_COMMAND}
-	  -E env "WINEPATH=Z:${VC_PATH}"
-	  wine "${CV2PDB_EXE}"
+  ${CMAKE_COMMAND}
+	  -E env "PATH=${VC_PATH}"
+	  "${CV2PDB_EXE}"
 	  "$<TARGET_FILE:${TARGET}>"
 	  "${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_PREFIX:${TARGET}>$<TARGET_FILE_BASE_NAME:${TARGET}>-tmp$<TARGET_FILE_SUFFIX:${TARGET}>"
 	  "${BINDIR}/${TARGET}.pdb"
