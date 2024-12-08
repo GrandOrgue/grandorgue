@@ -131,7 +131,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   m_LoadLastFile->Append(
     _("Start without any organ"), GOInitialLoadType::LOAD_NONE);
   m_Limit->SetValue(m_config.ManagePolyphony());
-  m_LoadLastFile->SetCurrentSelection(m_config.LoadLastFile());
+  m_LoadLastFile->SetCurrentValue(m_config.LoadLastFile());
   m_Scale->SetValue(m_config.ScaleRelease());
   m_Random->SetValue(m_config.RandomizeSpeaking());
 
@@ -430,7 +430,7 @@ bool GOSettingsOptions::TransferDataFromWindow() {
   m_config.ManagePolyphony(m_Limit->IsChecked());
   m_config.CompressCache(m_CompressCache->IsChecked());
   m_config.ManageCache(m_ManageCache->IsChecked());
-  m_config.LoadLastFile(m_LoadLastFile->GetCurrentSelection());
+  m_config.LoadLastFile(m_LoadLastFile->GetCurrentValue());
   m_config.ODFCheck(m_ODFCheck->IsChecked());
   m_config.ODFHw1Check(m_ODFHw1Check->IsChecked());
   m_config.RecordDownmix(m_RecordDownmix->IsChecked());
