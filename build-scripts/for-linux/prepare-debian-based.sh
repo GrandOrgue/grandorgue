@@ -64,6 +64,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   docbook-xsl \
   dpkg-dev \
   file \
+  gcovr \
   gettext \
   imagemagick \
   pkg-config \
@@ -83,6 +84,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libcurl4-openssl-dev:$TARGET_ARCH
 
 # download and install additional packages
+
 mkdir -p deb
 pushd deb
 
@@ -106,3 +108,6 @@ fi
 if dpkg -s libwxgtk3.2-dev 2>/dev/null && ! grep -q libwx /etc/dpkg/shlibs.override; then
   cut -d " " -f 1-3 /var/lib/dpkg/info/libwx*3.2*.shlibs | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
 fi
+
+# install cpptrace
+$DIR/prepare-cpptrace.bash
