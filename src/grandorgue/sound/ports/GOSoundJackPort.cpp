@@ -121,7 +121,7 @@ void GOSoundJackPort::Open() {
   if (m_Channels) {
     m_JackOutputPorts = new jack_port_t *[m_Channels];
     for (unsigned int i = 0; i < m_Channels; i++) {
-      sprintf(port_name, "out_%d", i);
+      snprintf(port_name, sizeof(port_name), "out_%d", i);
       m_JackOutputPorts[i] = jack_port_register(
         m_JackClient, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
       if (m_JackOutputPorts[i] == NULL)
