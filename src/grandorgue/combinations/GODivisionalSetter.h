@@ -25,7 +25,7 @@
 class GOOrganController;
 class GODivisionalCombination;
 class GOLabelControl;
-class GOSetterState;
+struct GOSetterState;
 
 class GODivisionalSetter : public GOElementCreator,
                            private GOCombinationButtonSet,

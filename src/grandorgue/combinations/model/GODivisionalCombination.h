@@ -15,7 +15,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOOrganController;
-class GOSetterState;
+struct GOSetterState;
 
 class GODivisionalCombination : public GOCombination {
 protected:
