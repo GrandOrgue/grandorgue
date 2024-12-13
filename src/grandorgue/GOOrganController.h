@@ -130,7 +130,7 @@ public:
     GOConfig &config,
     GOMidiDialogCreator *pMidiDialogCreator = nullptr,
     bool isAppInitialized = false);
-  ~GOOrganController();
+  virtual ~GOOrganController();
 
   GOSizeKeeper &GetStopWindowSizeKeeper() { return m_StopWindowSizeKeeper; }
 
