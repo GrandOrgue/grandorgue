@@ -1,9 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
+
+#ifndef GOLOADWORKER_H
+#define GOLOADWORKER_H
 
 #include "GOCacheObjectDistributor.h"
 
@@ -11,9 +14,6 @@
 
 class GOFileStore;
 class GOMemoryPool;
-
-#ifndef GOLOADWORKER_H
-#define GOLOADWORKER_H
 
 /**
  * A class for loading objects taken from GOCacheObjectDistributor
@@ -27,7 +27,6 @@ private:
   GOMemoryPool &m_pool;
   GOCacheObjectDistributor &m_distributor;
 
-  GOCacheObject *m_LastObject;
   bool m_WereExceptions; // any exception included GOOutOfMemory
   bool m_OutOfMemory;
 

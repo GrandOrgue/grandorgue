@@ -821,7 +821,7 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
   if (!writer.Write(&hash, sizeof(hash)))
     cache_save_ok = false;
 
-  for (unsigned i = 0; cache_save_ok; i++) {
+  while (cache_save_ok) {
     GOCacheObject *obj = objectDistributor.FetchNext();
 
     if (!obj)
