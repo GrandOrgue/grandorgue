@@ -32,39 +32,67 @@ void GOSoundFader::Process(
   unsigned nFrames, float *buffer, float externalVolume) {
   // setup process
 
-  // Consider the velocity volume as part of the external volume
-  externalVolume *= m_VelocityVolume;
-
   float startTargetVolumePoint = m_LastTargetVolumePoint;
+
   // Calculate new m_LastTargetVolumePoint
   // the target volume will be changed from startTargetVolumePoint to
   // m_LastTargetVolumePoint during the nFrames
-  float targetVolumeDeltaPerFrame
-    = m_IncreasingDeltaPerFrame + m_DecreasingDeltaPerFrame;
 
-  if (targetVolumeDeltaPerFrame != 0.0f) {
-    m_LastTargetVolumePoint = std::clamp(
-      startTargetVolumePoint + targetVolumeDeltaPerFrame * nFrames,
-      0.0f,
-      m_TargetVolume);
+  unsigned framesLeftAfterIncreasing = nFrames;
 
-    if (m_LastTargetVolumePoint >= m_TargetVolume)
-      // target volume is reached. Stop increasing
+  // increasing section
+  if (m_IncreasingDeltaPerFrame > 0.0f) {
+    // we are increasing now
+    float newTargetVolumePoint
+      = m_LastTargetVolumePoint + m_IncreasingDeltaPerFrame * nFrames;
+
+    if (newTargetVolumePoint < m_TargetVolume) {
+      framesLeftAfterIncreasing = 0; // we are increase during the whole period
+      m_LastTargetVolumePoint = newTargetVolumePoint;
+    } else {
+      // we reach m_TargetVolume inside this nFrames period
+
+      // stop increasing
       m_IncreasingDeltaPerFrame = 0.0f;
-    else if (m_LastTargetVolumePoint <= 0.0f)
-      // Decreasing is finished. Stop it.
-      m_DecreasingDeltaPerFrame = 0.0f;
+
+      // calculate how many frames left after increasing
+      framesLeftAfterIncreasing = nFrames
+        - unsigned((m_TargetVolume - m_LastTargetVolumePoint)
+                   / m_IncreasingDeltaPerFrame);
+
+      m_LastTargetVolumePoint = m_TargetVolume;
+    }
   }
 
-  if (m_LastExternalVolumePoint < 0.0f) // The first Process() call
-    m_LastExternalVolumePoint = externalVolume;
+  // decreasing section
+  if (framesLeftAfterIncreasing && m_DecreasingDeltaPerFrame > 0.0f) {
+    // decrease the volume
+    float newTargetVolumePoint = m_LastTargetVolumePoint
+      - m_DecreasingDeltaPerFrame * framesLeftAfterIncreasing;
+
+    if (newTargetVolumePoint > 0.0f) {
+      m_LastTargetVolumePoint = newTargetVolumePoint;
+    } else {
+      // stop decreasing
+      m_DecreasingDeltaPerFrame = 0.0f;
+      m_LastTargetVolumePoint = 0.0f;
+    }
+  }
+
+  // Calculate the external volume
+  float targetExternalVolume = m_VelocityVolume * externalVolume;
+
+  if (m_LastExternalVolumePoint < 0.0f)
+    m_LastExternalVolumePoint = targetExternalVolume;
 
   float startExternalVolumePoint = m_LastExternalVolumePoint;
+
   // Calculate new m_LastExternalVolumePoint
   // the target volume will be changed from startExternalVolumePoint to
   // m_LastExternalVolumePoint during the nFrames period
-  if (externalVolume != startExternalVolumePoint)
-    m_LastExternalVolumePoint += (externalVolume - startExternalVolumePoint)
+  if (targetExternalVolume != startExternalVolumePoint)
+    m_LastExternalVolumePoint
+      += (targetExternalVolume - startExternalVolumePoint)
       // Assume that external volume is to be reached in MAX_FRAME_SIZE frames
       * std::max(nFrames, EXTERNAL_VOLUME_CHANGE_FRAMES)
       / EXTERNAL_VOLUME_CHANGE_FRAMES;
