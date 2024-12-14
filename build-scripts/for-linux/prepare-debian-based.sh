@@ -7,8 +7,10 @@ set -e
 
 DIR=`dirname $0`
 
+. $DIR/prepare-parse-prms.bash
+
 # calculate wx package name
-case "$1" in
+case "$WX_VER" in
 wx32)
   WX_PKG_NAME=libwxgtk3.2-dev
   ;;
@@ -59,12 +61,14 @@ fi
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libcups2:$TARGET_ARCH
 
+OPTIONAL_PKGS=""
+[[ "$INSTALL_TESTS" == "tests" ]] && OPTIONAL_PKGS="$OPTIONAL_PKGS gcovr"
+
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cmake \
   docbook-xsl \
   dpkg-dev \
   file \
-  gcovr \
   gettext \
   imagemagick \
   pkg-config \
@@ -81,7 +85,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ${WX_PKG_NAME}:$TARGET_ARCH \
   libyaml-cpp-dev:$TARGET_ARCH \
   zlib1g-dev:$TARGET_ARCH \
-  libcurl4-openssl-dev:$TARGET_ARCH
+  libcurl4-openssl-dev:$TARGET_ARCH \
+  $OPTIONAL_PKGS
 
 # download and install additional packages
 
@@ -110,4 +115,4 @@ if dpkg -s libwxgtk3.2-dev 2>/dev/null && ! grep -q libwx /etc/dpkg/shlibs.overr
 fi
 
 # install cpptrace
-$DIR/prepare-cpptrace.bash
+[[ "$INSTALL_TESTS" == "tests" ]] && $DIR/prepare-cpptrace.bash
