@@ -9,6 +9,13 @@ DIR=`dirname $0`
 
 . $DIR/prepare-parse-prms.bash
 
+CURRENT_ARCH=$(dpkg --print-architecture)
+if [[ "$TARGET_CPU" == "auto" ]]; then
+  TARGET_ARCH=$CURRENT_ARCH
+else
+  TARGET_ARCH=$TARGET_CPU
+fi
+
 # calculate wx package name
 case "$WX_VER" in
 wx32)
@@ -33,9 +40,6 @@ wx30)
 esac
 
 echo "wx package: $WX_PKG_NAME"
-
-CURRENT_ARCH=$(dpkg --print-architecture)
-TARGET_ARCH="${2:-$CURRENT_ARCH}"
 
 OS_DISTR=$(awk -F= '$1=="ID" {print $2;}' /etc/os-release)
 [[ "$OS_DISTR" == "ubuntu" ]] && $DIR/prepare-ubuntu-wx-repo.bash $WX_PKG_NAME
