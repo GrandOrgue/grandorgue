@@ -12,6 +12,8 @@ while [[ $# -gt 0 ]]; do
     tests | notests)
       INSTALL_TESTS=$1
       ;;
+    "")
+      ;;
     *)
       echo "Unknown parameter $1" >&2
       echo "Usage: $(basename $0) [wx30 | wx32] [tests | notests]"
