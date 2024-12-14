@@ -119,4 +119,8 @@ if dpkg -s libwxgtk3.2-dev 2>/dev/null && ! grep -q libwx /etc/dpkg/shlibs.overr
 fi
 
 # install cpptrace
-[[ "$INSTALL_TESTS" == "tests" ]] && $DIR/prepare-cpptrace.bash
+if [[ "$INSTALL_TESTS" == "tests" ]]; then
+  $DIR/prepare-cpptrace.bash
+else
+  true
+fi
