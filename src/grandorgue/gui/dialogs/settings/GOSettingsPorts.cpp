@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -94,12 +94,13 @@ void GOSettingsPorts::FillPortsWith(const GOPortsConfig &config) {
   m_Ports->DeleteAllItems();
 
   for (const wxString &portName : m_PortFactory.GetPortNames()) {
+    const bool isToShowPort = m_PortFactory.IsToUsePortName();
     const wxTreeListItem &rootItem = m_Ports->GetRootItem();
-    const wxTreeListItem &portItem = m_PortFactory.IsToUsePortName()
-      ? AddPortItem(rootItem, portName)
-      : rootItem;
+    const wxTreeListItem &portItem
+      = isToShowPort ? AddPortItem(rootItem, portName) : rootItem;
 
-    SetPortItemChecked(portItem, m_PortsConfig.IsConfigEnabled(portName));
+    if (isToShowPort)
+      SetPortItemChecked(portItem, m_PortsConfig.IsConfigEnabled(portName));
     for (const wxString &apiName : m_PortFactory.GetPortApiNames(portName)) {
       const wxTreeListItem portApiItem
         = AddPortItem(portItem, portName, apiName);

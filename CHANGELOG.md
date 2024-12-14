@@ -1,3 +1,4 @@
+- Eliminated a MacOs debug alert when opening a settings dialog https://github.com/GrandOrgue/grandorgue/issues/2003
 - Fixed not releasing a pipe after fast switching between vave-based tremulant samples and regular pipe samples https://github.com/GrandOrgue/grandorgue/issues/2004
 - Removed support of MacOs 12
 - Fixed hang if there were lots of unused ODF entries https://github.com/GrandOrgue/grandorgue/issues/1918
