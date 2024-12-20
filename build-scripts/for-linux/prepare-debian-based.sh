@@ -7,8 +7,17 @@ set -e
 
 DIR=`dirname $0`
 
+. $DIR/prepare-parse-prms.bash
+
+CURRENT_ARCH=$(dpkg --print-architecture)
+if [[ "$TARGET_CPU" == "auto" ]]; then
+  TARGET_ARCH=$CURRENT_ARCH
+else
+  TARGET_ARCH=$TARGET_CPU
+fi
+
 # calculate wx package name
-case "$1" in
+case "$WX_VER" in
 wx32)
   WX_PKG_NAME=libwxgtk3.2-dev
   ;;
@@ -31,9 +40,6 @@ wx30)
 esac
 
 echo "wx package: $WX_PKG_NAME"
-
-CURRENT_ARCH=$(dpkg --print-architecture)
-TARGET_ARCH="${2:-$CURRENT_ARCH}"
 
 OS_DISTR=$(awk -F= '$1=="ID" {print $2;}' /etc/os-release)
 [[ "$OS_DISTR" == "ubuntu" ]] && $DIR/prepare-ubuntu-wx-repo.bash $WX_PKG_NAME
@@ -59,6 +65,9 @@ fi
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libcups2:$TARGET_ARCH
 
+OPTIONAL_PKGS=""
+[[ "$INSTALL_TESTS" == "tests" ]] && OPTIONAL_PKGS="$OPTIONAL_PKGS gcovr"
+
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   cmake \
   docbook-xsl \
@@ -80,9 +89,11 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ${WX_PKG_NAME}:$TARGET_ARCH \
   libyaml-cpp-dev:$TARGET_ARCH \
   zlib1g-dev:$TARGET_ARCH \
-  libcurl4-openssl-dev:$TARGET_ARCH
+  libcurl4-openssl-dev:$TARGET_ARCH \
+  $OPTIONAL_PKGS
 
 # download and install additional packages
+
 mkdir -p deb
 pushd deb
 
@@ -105,4 +116,11 @@ fi
 # installing on other systems. Remove the version
 if dpkg -s libwxgtk3.2-dev 2>/dev/null && ! grep -q libwx /etc/dpkg/shlibs.override; then
   cut -d " " -f 1-3 /var/lib/dpkg/info/libwx*3.2*.shlibs | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
+fi
+
+# install cpptrace
+if [[ "$INSTALL_TESTS" == "tests" ]]; then
+  $DIR/prepare-cpptrace.bash
+else
+  true
 fi
