@@ -1,12 +1,14 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #ifndef GOENCLOSURE_H_
 #define GOENCLOSURE_H_
+
+#include <cstdint>
 
 #include <wx/string.h>
 
@@ -38,16 +40,20 @@ private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOMidiShortcutReceiver m_shortcut;
-  int m_AmpMinimumLevel;
+  uint8_t m_DefaultAmpMinimumLevel;
   int m_MIDIInputNumber;
-  int m_MIDIValue;
   wxString m_Name;
   bool m_Displayed1;
   bool m_Displayed2;
 
+  uint8_t m_AmpMinimumLevel;
+  uint8_t m_MIDIValue;
+
   void ProcessMidi(const GOMidiEvent &event) override;
   void HandleKey(int key) override;
 
+  // Load all customizable values from the .cmb file
+  void LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue);
   void Save(GOConfigWriter &cfg) override;
 
   void AbortPlayback() override;
@@ -63,8 +69,11 @@ private:
 public:
   GOEnclosure(GOOrganModel &organModel);
   void Init(
-    GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value);
-  void Load(GOConfigReader &cfg, wxString group, int enclosure_nb);
+    GOConfigReader &cfg,
+    const wxString &group,
+    const wxString &name,
+    uint8_t defaultValue);
+  void Load(GOConfigReader &cfg, const wxString &group, int enclosure_nb);
   void Set(int n);
   const wxString &GetName() const { return m_Name; }
   int GetValue();

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,6 +15,8 @@
 
 #include "GOOrganModel.h"
 
+static constexpr uint8_t MAX_MIDI_VALUE = 127;
+
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
   : GOMidiConfigurator(organModel),
     r_OrganModel(organModel),
@@ -22,31 +24,50 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     m_midi(organModel, MIDI_RECV_ENCLOSURE),
     m_sender(organModel, MIDI_SEND_ENCLOSURE),
     m_shortcut(KEY_RECV_ENCLOSURE),
-    m_AmpMinimumLevel(0),
+    m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
-    m_MIDIValue(0),
     m_Name(),
     m_Displayed1(false),
-    m_Displayed2(false) {
+    m_Displayed2(false),
+    m_AmpMinimumLevel(0),
+    m_MIDIValue(0) {
   organModel.RegisterEventHandler(this);
   organModel.RegisterMidiConfigurator(this);
   organModel.RegisterSoundStateHandler(this);
 }
 
 void GOEnclosure::Init(
-  GOConfigReader &cfg, wxString group, wxString Name, unsigned def_value) {
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &name,
+  uint8_t defaultValue) {
   r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
-  m_Name = Name;
-  Set(cfg.ReadInteger(
-    CMBSetting, m_group, wxT("Value"), 0, 127, false, def_value));
+  m_Name = name;
+  m_DefaultAmpMinimumLevel = 0;
+  LoadFromCmb(cfg, defaultValue);
+}
+
+static const wxString WX_AMP_MINIMUM_LEVEL = wxT("AmpMinimumLevel");
+static const wxString WX_VALUE = wxT("Value");
+
+void GOEnclosure::LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue) {
   m_midi.Load(cfg, m_group, r_MidiMap);
   m_sender.Load(cfg, m_group, r_MidiMap);
   m_shortcut.Load(cfg, m_group);
-  m_AmpMinimumLevel = 0;
+  m_AmpMinimumLevel = cfg.ReadInteger(
+    CMBSetting,
+    m_group,
+    WX_AMP_MINIMUM_LEVEL,
+    0,
+    100,
+    m_DefaultAmpMinimumLevel);
+  Set(cfg.ReadInteger(
+    CMBSetting, m_group, WX_VALUE, 0, MAX_MIDI_VALUE, false, defaultValue));
 }
 
-void GOEnclosure::Load(GOConfigReader &cfg, wxString group, int enclosure_nb) {
+void GOEnclosure::Load(
+  GOConfigReader &cfg, const wxString &group, int enclosure_nb) {
   r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_Name = cfg.ReadStringNotEmpty(ODFSetting, m_group, wxT("Name"));
@@ -54,22 +75,20 @@ void GOEnclosure::Load(GOConfigReader &cfg, wxString group, int enclosure_nb) {
     = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
   m_Displayed2
     = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, false);
-  m_AmpMinimumLevel
-    = cfg.ReadInteger(ODFSetting, m_group, wxT("AmpMinimumLevel"), 0, 100);
+  m_DefaultAmpMinimumLevel
+    = cfg.ReadInteger(ODFSetting, m_group, WX_AMP_MINIMUM_LEVEL, 0, 100);
   m_MIDIInputNumber = cfg.ReadInteger(
     ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
-  Set(cfg.ReadInteger(CMBSetting, m_group, wxT("Value"), 0, 127, false, 127));
   m_midi.SetIndex(enclosure_nb);
-  m_midi.Load(cfg, m_group, r_MidiMap);
-  m_sender.Load(cfg, m_group, r_MidiMap);
-  m_shortcut.Load(cfg, m_group);
+  LoadFromCmb(cfg, MAX_MIDI_VALUE);
 }
 
 void GOEnclosure::Save(GOConfigWriter &cfg) {
   m_midi.Save(cfg, m_group, r_MidiMap);
   m_sender.Save(cfg, m_group, r_MidiMap);
   m_shortcut.Save(cfg, m_group);
-  cfg.WriteInteger(m_group, wxT("Value"), m_MIDIValue);
+  cfg.WriteInteger(m_group, WX_AMP_MINIMUM_LEVEL, m_AmpMinimumLevel);
+  cfg.WriteInteger(m_group, WX_VALUE, m_MIDIValue);
 }
 
 void GOEnclosure::Set(int n) {
