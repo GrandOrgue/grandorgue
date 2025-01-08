@@ -8,6 +8,7 @@
 #ifndef GOENCLOSURE_H_
 #define GOENCLOSURE_H_
 
+#include <algorithm>
 #include <cstdint>
 
 #include <wx/string.h>
@@ -67,6 +68,8 @@ private:
   }
 
 public:
+  static constexpr uint8_t MAX_MIDI_VALUE = 127;
+
   GOEnclosure(GOOrganModel &organModel);
   void Init(
     GOConfigReader &cfg,
@@ -78,8 +81,11 @@ public:
   uint8_t GetAmpMinimumLevel() const { return m_AmpMinimumLevel; }
   void SetAmpMinimumLevel(uint8_t v) { m_AmpMinimumLevel = v; }
   uint8_t GetMIDIInputNumber() const { return m_MIDIInputNumber; }
-  uint8_t GetValue() const { return m_MIDIValue; }
-  void SetValue(uint8_t n);
+  uint8_t GetMidiValue() const { return m_MIDIValue; }
+  void SetMidiValue(uint8_t n);
+  void SetIntMidiValue(int n) {
+    SetMidiValue((uint8_t)std::clamp(n, 0, (int)MAX_MIDI_VALUE));
+  }
   float GetAttenuation();
 
   void Scroll(bool scroll_up);

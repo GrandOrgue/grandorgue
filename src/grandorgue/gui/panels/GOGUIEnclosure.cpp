@@ -305,8 +305,9 @@ void GOGUIEnclosure::PrepareDraw(double scale, GOBitmap *background) {
 }
 
 void GOGUIEnclosure::Draw(GODC &dc) {
-  GOBitmap &bmp
-    = m_Bitmaps[((m_Bitmaps.size() - 1) * m_enclosure->GetValue()) / 127];
+  GOBitmap &bmp = m_Bitmaps
+    [((m_Bitmaps.size() - 1) * m_enclosure->GetMidiValue())
+     / GOEnclosure::MAX_MIDI_VALUE];
   dc.DrawBitmap(bmp, m_BoundingRect);
 
   if (m_TextWidth)
@@ -341,7 +342,7 @@ bool GOGUIEnclosure::HandleMousePress(
     state.SetControl(this);
     state.SetIndex(value);
 
-    m_enclosure->SetValue(value);
+    m_enclosure->SetIntMidiValue(value);
     return true;
   }
 }

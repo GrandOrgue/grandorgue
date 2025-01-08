@@ -15,8 +15,6 @@
 
 #include "GOOrganModel.h"
 
-static constexpr uint8_t MAX_MIDI_VALUE = 127;
-
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
   : GOMidiConfigurator(organModel),
     r_OrganModel(organModel),
@@ -62,7 +60,7 @@ void GOEnclosure::LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue) {
     0,
     100,
     m_DefaultAmpMinimumLevel);
-  SetValue(cfg.ReadInteger(
+  SetMidiValue(cfg.ReadInteger(
     CMBSetting, m_group, WX_VALUE, 0, MAX_MIDI_VALUE, false, defaultValue));
 }
 
@@ -91,12 +89,10 @@ void GOEnclosure::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, WX_VALUE, m_MIDIValue);
 }
 
-void GOEnclosure::SetValue(uint8_t n) {
-  if (n > 127)
-    n = 127;
+void GOEnclosure::SetMidiValue(uint8_t n) {
   if (n != m_MIDIValue) {
     m_MIDIValue = n;
-    m_sender.SetValue(m_MIDIValue);
+    m_sender.SetValue(n);
   }
   r_OrganModel.UpdateVolume();
   r_OrganModel.SendControlChanged(this);
@@ -109,23 +105,24 @@ float GOEnclosure::GetAttenuation() {
 }
 
 void GOEnclosure::Scroll(bool scroll_up) {
-  SetValue(m_MIDIValue + (scroll_up ? 4 : -4));
+  SetIntMidiValue(m_MIDIValue + (scroll_up ? 4 : -4));
 }
 
 void GOEnclosure::ProcessMidi(const GOMidiEvent &event) {
   int value;
+
   if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
-    SetValue(value);
+    SetIntMidiValue(value);
 }
 
 void GOEnclosure::HandleKey(int key) {
   switch (m_shortcut.Match(key)) {
   case KEY_MATCH:
-    SetValue(m_MIDIValue + 8);
+    SetIntMidiValue(m_MIDIValue + 8);
     break;
 
   case KEY_MATCH_MINUS:
-    SetValue(m_MIDIValue - 8);
+    SetIntMidiValue(m_MIDIValue - 8);
     break;
   default:
     break;
