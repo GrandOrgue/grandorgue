@@ -40,9 +40,9 @@ private:
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOMidiShortcutReceiver m_shortcut;
-  uint8_t m_DefaultAmpMinimumLevel;
-  int m_MIDIInputNumber;
   wxString m_Name;
+  uint8_t m_DefaultAmpMinimumLevel;
+  uint8_t m_MIDIInputNumber;
   bool m_Displayed1;
   bool m_Displayed2;
 
@@ -74,10 +74,12 @@ public:
     const wxString &name,
     uint8_t defaultValue);
   void Load(GOConfigReader &cfg, const wxString &group, int enclosure_nb);
-  void Set(int n);
   const wxString &GetName() const { return m_Name; }
-  int GetValue();
-  int GetMIDIInputNumber();
+  uint8_t GetAmpMinimumLevel() const { return m_AmpMinimumLevel; }
+  void SetAmpMinimumLevel(uint8_t v) { m_AmpMinimumLevel = v; }
+  uint8_t GetMIDIInputNumber() const { return m_MIDIInputNumber; }
+  uint8_t GetValue() const { return m_MIDIValue; }
+  void SetValue(uint8_t n);
   float GetAttenuation();
 
   void Scroll(bool scroll_up);

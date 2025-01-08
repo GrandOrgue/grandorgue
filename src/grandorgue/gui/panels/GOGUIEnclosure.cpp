@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -341,7 +341,7 @@ bool GOGUIEnclosure::HandleMousePress(
     state.SetControl(this);
     state.SetIndex(value);
 
-    m_enclosure->Set(value);
+    m_enclosure->SetValue(value);
     return true;
   }
 }

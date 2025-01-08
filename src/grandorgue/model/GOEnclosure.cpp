@@ -24,9 +24,9 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     m_midi(organModel, MIDI_RECV_ENCLOSURE),
     m_sender(organModel, MIDI_SEND_ENCLOSURE),
     m_shortcut(KEY_RECV_ENCLOSURE),
+    m_Name(),
     m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
-    m_Name(),
     m_Displayed1(false),
     m_Displayed2(false),
     m_AmpMinimumLevel(0),
@@ -62,7 +62,7 @@ void GOEnclosure::LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue) {
     0,
     100,
     m_DefaultAmpMinimumLevel);
-  Set(cfg.ReadInteger(
+  SetValue(cfg.ReadInteger(
     CMBSetting, m_group, WX_VALUE, 0, MAX_MIDI_VALUE, false, defaultValue));
 }
 
@@ -91,9 +91,7 @@ void GOEnclosure::Save(GOConfigWriter &cfg) {
   cfg.WriteInteger(m_group, WX_VALUE, m_MIDIValue);
 }
 
-void GOEnclosure::Set(int n) {
-  if (n < 0)
-    n = 0;
+void GOEnclosure::SetValue(uint8_t n) {
   if (n > 127)
     n = 127;
   if (n != m_MIDIValue) {
@@ -104,8 +102,6 @@ void GOEnclosure::Set(int n) {
   r_OrganModel.SendControlChanged(this);
 }
 
-int GOEnclosure::GetMIDIInputNumber() { return m_MIDIInputNumber; }
-
 float GOEnclosure::GetAttenuation() {
   static const float scale = 1.0 / 12700.0;
   return (float)(m_MIDIValue * (100 - m_AmpMinimumLevel) + 127 * m_AmpMinimumLevel)
@@ -113,30 +109,28 @@ float GOEnclosure::GetAttenuation() {
 }
 
 void GOEnclosure::Scroll(bool scroll_up) {
-  Set(m_MIDIValue + (scroll_up ? 4 : -4));
+  SetValue(m_MIDIValue + (scroll_up ? 4 : -4));
 }
 
 void GOEnclosure::ProcessMidi(const GOMidiEvent &event) {
   int value;
   if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
-    Set(value);
+    SetValue(value);
 }
 
 void GOEnclosure::HandleKey(int key) {
   switch (m_shortcut.Match(key)) {
   case KEY_MATCH:
-    Set(m_MIDIValue + 8);
+    SetValue(m_MIDIValue + 8);
     break;
 
   case KEY_MATCH_MINUS:
-    Set(m_MIDIValue - 8);
+    SetValue(m_MIDIValue - 8);
     break;
   default:
     break;
   }
 }
-
-int GOEnclosure::GetValue() { return m_MIDIValue; }
 
 bool GOEnclosure::IsDisplayed(bool new_format) {
   if (new_format)
