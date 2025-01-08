@@ -59,6 +59,7 @@ void GOEnclosure::LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue) {
     WX_AMP_MINIMUM_LEVEL,
     0,
     100,
+    false,
     m_DefaultAmpMinimumLevel);
   SetMidiValue(cfg.ReadInteger(
     CMBSetting, m_group, WX_VALUE, 0, MAX_MIDI_VALUE, false, defaultValue));
