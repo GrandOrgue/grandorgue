@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
@@ -147,7 +147,6 @@ midi/ports/GOMidiRtPortFactory.cpp
 midi/ports/GOMidiRtInPort.cpp
 midi/ports/GOMidiRtOutPort.cpp
 midi/GOMidi.cpp
-midi/GOMidiConfigurator.cpp
 midi/GOMidiInputMerger.cpp
 midi/GOMidiListener.cpp
 midi/GOMidiOutputMerger.cpp
@@ -159,6 +158,7 @@ midi/GOMidiShortcutPattern.cpp
 midi/GOMidiShortcutReceiver.cpp
 midi/GOMidiReceiver.cpp
 midi/GOMidiRecorder.cpp
+midi/objects/GOMidiObject.cpp
 model/pipe-config/GOPipeConfig.cpp
 model/pipe-config/GOPipeConfigNode.cpp
 model/pipe-config/GOPipeConfigTreeNode.cpp
