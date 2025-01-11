@@ -12,14 +12,16 @@
 
 #include <vector>
 
-class GOMidiDialogCreator;
-class GOMidiReceiverBase;
-class GOMidiSender;
-class GOMidiShortcutReceiver;
+#include "sound/GOSoundStateHandler.h"
 
-class GOMidiObject {
+class GOMidiSender;
+class GOMidiReceiverBase;
+class GOMidiShortcutReceiver;
+class GOOrganModel;
+
+class GOMidiObject : public GOSoundStateHandler {
 private:
-  GOMidiDialogCreator &r_DialogCreator;
+  GOOrganModel &r_OrganModel;
   const wxString &r_MidiTypeCode;
   const wxString &r_MidiTypeName;
   const wxString &r_MidiName;
@@ -31,7 +33,7 @@ private:
 
 protected:
   GOMidiObject(
-    GOMidiDialogCreator &dialogCreator,
+    GOOrganModel &organModel,
     const wxString &midiTypeCode,
     const wxString &midiTypeName,
     const wxString &midiName,
@@ -40,7 +42,7 @@ protected:
     GOMidiShortcutReceiver *pShortcutReceiver,
     GOMidiSender *pDivisionSender);
 
-  virtual ~GOMidiObject() {}
+  virtual ~GOMidiObject();
 
 public:
   const wxString &GetMidiTypeCode() const { return r_MidiTypeCode; }

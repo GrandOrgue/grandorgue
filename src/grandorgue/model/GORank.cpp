@@ -45,10 +45,9 @@ GORank::GORank(GOOrganModel &organModel)
     m_MaxVolume(100),
     m_RetuneRank(true),
     m_sender(organModel, MIDI_SEND_MANUAL),
-    m_PipeConfig(NULL, &organModel, NULL) {
-  r_OrganModel.RegisterMidiConfigurator(this);
-  r_OrganModel.RegisterSoundStateHandler(this);
-}
+    m_PipeConfig(NULL, &organModel, NULL) {}
+
+GORank::~GORank() { r_OrganModel.UnregisterSaveableObject(this); }
 
 void GORank::Resize() {
   m_MaxNoteVelocities.resize(m_Pipes.size());

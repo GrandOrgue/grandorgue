@@ -23,7 +23,6 @@ class GOOrganModel;
 
 class GOLabelControl : public GOControl,
                        private GOSaveableObject,
-                       private GOSoundStateHandler,
                        public GOMidiObject {
 protected:
   GOOrganModel &r_OrganModel;

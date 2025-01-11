@@ -32,7 +32,6 @@ class GOOrganModel;
 class GOEnclosure : public GOControl,
                     private GOEventHandler,
                     private GOSaveableObject,
-                    private GOSoundStateHandler,
                     public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
@@ -65,6 +64,7 @@ public:
   static constexpr uint8_t MAX_MIDI_VALUE = 127;
 
   GOEnclosure(GOOrganModel &organModel);
+  ~GOEnclosure();
   void Init(
     GOConfigReader &cfg,
     const wxString &group,

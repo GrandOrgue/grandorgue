@@ -23,9 +23,7 @@ class GOOrganModel;
 class GOStop;
 class GOTemperament;
 
-class GORank : private GOSaveableObject,
-               public GOMidiObject,
-               private GOSoundStateHandler {
+class GORank : private GOSaveableObject, public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
   GOMidiMap &r_MidiMap;
@@ -61,6 +59,7 @@ private:
 
 public:
   GORank(GOOrganModel &organModel);
+  ~GORank();
   void Init(
     GOConfigReader &cfg,
     const wxString &group,

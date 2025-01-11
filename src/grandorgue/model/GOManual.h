@@ -36,7 +36,6 @@ class GOManual : public GOControl,
                  private GOEventHandler,
                  private GOCombinationButtonSet,
                  private GOSaveableObject,
-                 private GOSoundStateHandler,
                  public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
@@ -100,6 +99,7 @@ private:
 
 public:
   GOManual(GOOrganModel &organModel);
+  ~GOManual();
 
   unsigned GetManulNumber() const { return m_manual_number; }
 
@@ -120,7 +120,6 @@ public:
   void Update();
   void Reset();
   void SetElementID(int id);
-  ~GOManual(void);
 
   unsigned GetNumberOfAccessibleKeys();
   unsigned GetFirstAccessibleKeyMIDINoteNumber();

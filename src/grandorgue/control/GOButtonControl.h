@@ -29,7 +29,6 @@ class GOOrganModel;
 class GOButtonControl : public GOControl,
                         private GOEventHandler,
                         public GOSaveableObject,
-                        public GOSoundStateHandler,
                         public GOMidiObject {
 private:
   GOMidiMap &r_MidiMap;
@@ -64,6 +63,7 @@ public:
     GOMidiReceiverType midi_type,
     bool pushbutton,
     bool isPiston = false);
+  ~GOButtonControl();
   void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
   void Load(GOConfigReader &cfg, const wxString &group);
   bool IsDisplayed();

@@ -61,10 +61,14 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
   m_InputCouplers.push_back(NULL);
-  organModel.RegisterCombinationButtonSet(this);
-  organModel.RegisterEventHandler(this);
-  organModel.RegisterMidiConfigurator(this);
-  organModel.RegisterSoundStateHandler(this);
+  r_OrganModel.RegisterCombinationButtonSet(this);
+  r_OrganModel.RegisterEventHandler(this);
+}
+
+GOManual::~GOManual(void) {
+  r_OrganModel.UnregisterSaveableObject(this);
+  r_OrganModel.UnRegisterEventHandler(this);
+  r_OrganModel.UnRegisterCombinationButtonSet(this);
 }
 
 unsigned GOManual::RegisterCoupler(GOCoupler *coupler) {
@@ -345,8 +349,6 @@ void GOManual::SetUnisonOff(bool on) {
   for (unsigned note = 0; note < m_Velocity.size(); note++)
     SetOutput(note, on ? m_RemoteVelocity[note] : m_Velocity[note]);
 }
-
-GOManual::~GOManual(void) {}
 
 int GOManual::GetMIDIInputNumber() { return m_MIDIInputNumber; }
 

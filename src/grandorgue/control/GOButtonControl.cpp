@@ -42,9 +42,12 @@ GOButtonControl::GOButtonControl(
     m_DisplayInInvertedState(false),
     m_ReadOnly(false),
     m_IsPiston(isPiston) {
-  organModel.RegisterEventHandler(this);
-  organModel.RegisterMidiConfigurator(this);
-  organModel.RegisterSoundStateHandler(this);
+  r_OrganModel.RegisterEventHandler(this);
+}
+
+GOButtonControl::~GOButtonControl() {
+  r_OrganModel.UnregisterSaveableObject(this);
+  r_OrganModel.UnRegisterEventHandler(this);
 }
 
 void GOButtonControl::Init(

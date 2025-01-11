@@ -9,10 +9,10 @@
 
 #include <wx/intl.h>
 
-#include "midi/dialog-creator/GOMidiDialogCreator.h"
+#include "model/GOOrganModel.h"
 
 GOMidiObject::GOMidiObject(
-  GOMidiDialogCreator &dialogCreator,
+  GOOrganModel &organModel,
   const wxString &midiTypeCode,
   const wxString &midiType,
   const wxString &midiName,
@@ -20,14 +20,22 @@ GOMidiObject::GOMidiObject(
   GOMidiReceiverBase *pMidiReceiver,
   GOMidiShortcutReceiver *pShortcutReceiver,
   GOMidiSender *pDivisionSender)
-  : r_DialogCreator(dialogCreator),
+  : r_OrganModel(organModel),
     r_MidiTypeCode(midiTypeCode),
     r_MidiTypeName(midiType),
     r_MidiName(midiName),
     p_MidiSender(pMidiSender),
     p_MidiReceiver(pMidiReceiver),
     p_ShortcutReceiver(pShortcutReceiver),
-    p_DivisionSender(pDivisionSender) {}
+    p_DivisionSender(pDivisionSender) {
+  r_OrganModel.RegisterSoundStateHandler(this);
+  r_OrganModel.RegisterMidiObject(this);
+}
+
+GOMidiObject::~GOMidiObject() {
+  r_OrganModel.UnRegisterMidiObject(this);
+  r_OrganModel.UnRegisterSoundStateHandler(this);
+}
 
 void GOMidiObject::ShowConfigDialog() {
   const bool isReadOnly = IsReadOnly();
@@ -36,7 +44,7 @@ void GOMidiObject::ShowConfigDialog() {
   const wxString selector
     = wxString::Format(wxT("%s.%s"), r_MidiTypeCode, r_MidiName);
 
-  r_DialogCreator.ShowMIDIEventDialog(
+  r_OrganModel.ShowMIDIEventDialog(
     this,
     title,
     selector,

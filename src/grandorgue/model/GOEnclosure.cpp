@@ -40,9 +40,12 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     m_Displayed2(false),
     m_AmpMinimumLevel(0),
     m_MIDIValue(0) {
-  organModel.RegisterEventHandler(this);
-  organModel.RegisterMidiConfigurator(this);
-  organModel.RegisterSoundStateHandler(this);
+  r_OrganModel.RegisterEventHandler(this);
+}
+
+GOEnclosure::~GOEnclosure() {
+  r_OrganModel.UnregisterSaveableObject(this);
+  r_OrganModel.UnRegisterEventHandler(this);
 }
 
 void GOEnclosure::Init(
