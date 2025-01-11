@@ -24,7 +24,7 @@ class GOStop;
 class GOTemperament;
 
 class GORank : private GOSaveableObject,
-               public GOMidiConfigurator,
+               public GOMidiObject,
                private GOSoundStateHandler {
 private:
   GOOrganModel &r_OrganModel;

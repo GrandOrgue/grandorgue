@@ -17,7 +17,7 @@ class GOMidiReceiverBase;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
 
-class GOMidiConfigurator {
+class GOMidiObject {
 private:
   GOMidiDialogCreator &r_DialogCreator;
 
@@ -28,10 +28,10 @@ protected:
   virtual GOMidiSender *GetDivision() { return nullptr; }
 
 public:
-  GOMidiConfigurator(GOMidiDialogCreator &dialogCreator)
+  GOMidiObject(GOMidiDialogCreator &dialogCreator)
     : r_DialogCreator(dialogCreator) {}
 
-  virtual ~GOMidiConfigurator() {}
+  virtual ~GOMidiObject() {}
 
   virtual const wxString &GetMidiTypeCode() const = 0;
   virtual const wxString &GetMidiType() const = 0;

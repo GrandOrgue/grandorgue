@@ -30,7 +30,7 @@ class GOEnclosure : public GOControl,
                     private GOEventHandler,
                     private GOSaveableObject,
                     private GOSoundStateHandler,
-                    public GOMidiConfigurator {
+                    public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
   GOMidiMap &r_MidiMap;

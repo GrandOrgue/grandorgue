@@ -11,7 +11,7 @@
 
 #include "midi/dialog-creator/GOMidiDialogCreator.h"
 
-void GOMidiConfigurator::ShowConfigDialog() {
+void GOMidiObject::ShowConfigDialog() {
   const wxString &midiTypeCode = GetMidiTypeCode();
   const wxString &midiName = GetMidiName();
   wxString title

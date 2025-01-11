@@ -30,7 +30,7 @@ class GOButtonControl : public GOControl,
                         private GOEventHandler,
                         public GOSaveableObject,
                         public GOSoundStateHandler,
-                        public GOMidiConfigurator {
+                        public GOMidiObject {
 private:
   GOMidiMap &r_MidiMap;
 

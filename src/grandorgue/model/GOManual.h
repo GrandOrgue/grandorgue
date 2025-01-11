@@ -38,7 +38,7 @@ class GOManual : public GOControl,
                  private GOCombinationButtonSet,
                  private GOSaveableObject,
                  private GOSoundStateHandler,
-                 public GOMidiConfigurator {
+                 public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
   GOMidiMap &r_MidiMap;
