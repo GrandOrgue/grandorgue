@@ -55,9 +55,6 @@ public:
   ~GOTremulant();
   void Load(GOConfigReader &cfg, const wxString &group, unsigned tremulantN);
   GOTremulantType GetTremulantType();
-
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
 };
 
 #endif /* GOTREMULANT_H_ */

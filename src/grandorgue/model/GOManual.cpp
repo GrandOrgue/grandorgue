@@ -20,8 +20,19 @@
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
+static const wxString WX_MIDI_TYPE_NAME = _("Manual");
+
 GOManual::GOManual(GOOrganModel &organModel)
-  : GOMidiObject(organModel),
+  : GOMidiObject(
+    organModel,
+    WX_MIDI_TYPE_CODE,
+    WX_MIDI_TYPE_NAME,
+    m_name,
+    &m_sender,
+    &m_midi,
+    nullptr,
+    &m_division),
     r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_group(wxT("---")),
@@ -43,7 +54,6 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_MIDIInputNumber(0),
     m_tremulant_ids(0),
     m_GlobalSwitchIds(0),
-    m_name(),
     m_stops(0),
     m_couplers(0),
     m_divisionals(0),
@@ -552,13 +562,6 @@ void GOManual::SetElementID(int id) {
   m_midi.SetElementID(id);
   m_sender.SetElementID(id);
 }
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
-const wxString WX_MIDI_TYPE = _("Manual");
-
-const wxString &GOManual::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
-
-const wxString &GOManual::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOManual::GetElementStatus() { return _("-"); }
 

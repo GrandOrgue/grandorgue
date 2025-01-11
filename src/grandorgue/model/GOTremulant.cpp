@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -27,8 +27,11 @@ const struct IniFileEnumEntry GOTremulant::m_tremulant_types[] = {
   {wxT("Wave"), GOWavTrem},
 };
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Tremulant");
+static const wxString WX_MIDI_TYPE_NAME = _("Tremulant");
+
 GOTremulant::GOTremulant(GOOrganModel &organModel)
-  : GODrawstop(organModel),
+  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
     m_TremulantType(GOSynthTrem),
     m_Period(0),
     m_StartRate(0),
@@ -135,12 +138,3 @@ void GOTremulant::StartPlayback() {
 }
 
 GOTremulantType GOTremulant::GetTremulantType() { return m_TremulantType; }
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Tremulant");
-const wxString WX_MIDI_TYPE = _("Tremulant");
-
-const wxString &GOTremulant::GetMidiTypeCode() const {
-  return WX_MIDI_TYPE_CODE;
-}
-
-const wxString &GOTremulant::GetMidiType() const { return WX_MIDI_TYPE; }

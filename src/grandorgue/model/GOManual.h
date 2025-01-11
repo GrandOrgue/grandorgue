@@ -98,11 +98,6 @@ private:
   void UpdateAllButtonsLight(
     GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
 
-protected:
-  GOMidiReceiverBase *GetMidiReceiver() override { return &m_midi; }
-  GOMidiSender *GetMidiSender() override { return &m_sender; }
-  GOMidiSender *GetDivision() override { return &m_division; }
-
 public:
   GOManual(GOOrganModel &organModel);
 
@@ -179,9 +174,6 @@ public:
   GOCombinationDefinition &GetDivisionalTemplate();
   const wxString &GetName() const { return m_name; }
   bool IsDisplayed();
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
-  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;

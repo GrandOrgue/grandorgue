@@ -5,21 +5,32 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
+#include "GOButtonControl.h"
+
 #include <wx/intl.h>
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
-#include "control/GOButtonControl.h"
+#include "model/GOOrganModel.h"
 
 #include "GODocument.h"
-#include "GOOrganController.h"
 
 GOButtonControl::GOButtonControl(
   GOOrganModel &organModel,
+  const wxString &midiTypeCode,
+  const wxString &midiTypeName,
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : GOMidiObject(organModel),
+  : GOMidiObject(
+    organModel,
+    midiTypeCode,
+    midiTypeName,
+    m_Name,
+    &m_sender,
+    &m_midi,
+    &m_shortcut,
+    nullptr),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_OrganModel(organModel),
     m_midi(organModel, midi_type),
@@ -27,7 +38,6 @@ GOButtonControl::GOButtonControl(
     m_shortcut(GOMidiShortcutReceiver::KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
-    m_Name(),
     m_Engaged(false),
     m_DisplayInInvertedState(false),
     m_ReadOnly(false),

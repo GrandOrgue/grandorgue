@@ -15,15 +15,21 @@
 #include "GODocument.h"
 
 GOLabelControl::GOLabelControl(GOOrganModel &organModel)
-  : GOMidiObject(organModel),
+  : GOMidiObject(
+    organModel,
+    WX_MIDI_TYPE_CODE,
+    WX_MIDI_TYPE_NAME,
+    m_Name,
+    &m_sender,
+    nullptr,
+    nullptr,
+    nullptr),
     m_Name(),
     m_Content(),
     m_sender(organModel, MIDI_SEND_LABEL) {
   r_OrganModel.RegisterMidiConfigurator(this);
   r_OrganModel.RegisterSoundStateHandler(this);
 }
-
-GOLabelControl::~GOLabelControl() {}
 
 void GOLabelControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
   r_OrganModel.RegisterSaveableObject(this);
@@ -59,15 +65,6 @@ void GOLabelControl::AbortPlayback() {
 void GOLabelControl::PreparePlayback() { m_sender.SetName(m_Name); }
 
 void GOLabelControl::PrepareRecording() { m_sender.SetLabel(m_Content); }
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Label");
-const wxString WX_MIDI_TYPE = _("Label");
-
-const wxString &GOLabelControl::GetMidiTypeCode() const {
-  return WX_MIDI_TYPE_CODE;
-}
-
-const wxString &GOLabelControl::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOLabelControl::GetElementStatus() { return m_Content; }
 

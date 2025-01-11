@@ -20,25 +20,38 @@ class GOMidiShortcutReceiver;
 class GOMidiObject {
 private:
   GOMidiDialogCreator &r_DialogCreator;
+  const wxString &r_MidiTypeCode;
+  const wxString &r_MidiTypeName;
+  const wxString &r_MidiName;
+
+  GOMidiSender *p_MidiSender;
+  GOMidiReceiverBase *p_MidiReceiver;
+  GOMidiShortcutReceiver *p_ShortcutReceiver;
+  GOMidiSender *p_DivisionSender;
 
 protected:
-  virtual GOMidiReceiverBase *GetMidiReceiver() { return nullptr; }
-  virtual GOMidiSender *GetMidiSender() { return nullptr; }
-  virtual GOMidiShortcutReceiver *GetMidiShortcutReceiver() { return nullptr; }
-  virtual GOMidiSender *GetDivision() { return nullptr; }
-
-public:
-  GOMidiObject(GOMidiDialogCreator &dialogCreator)
-    : r_DialogCreator(dialogCreator) {}
+  GOMidiObject(
+    GOMidiDialogCreator &dialogCreator,
+    const wxString &midiTypeCode,
+    const wxString &midiTypeName,
+    const wxString &midiName,
+    GOMidiSender *pMidiSender,
+    GOMidiReceiverBase *pMidiReceiver,
+    GOMidiShortcutReceiver *pShortcutReceiver,
+    GOMidiSender *pDivisionSender);
 
   virtual ~GOMidiObject() {}
 
-  virtual const wxString &GetMidiTypeCode() const = 0;
-  virtual const wxString &GetMidiType() const = 0;
-  virtual const wxString &GetMidiName() const = 0;
+public:
+  const wxString &GetMidiTypeCode() const { return r_MidiTypeCode; }
+  const wxString &GetMidiTypeName() const { return r_MidiTypeName; }
+  const wxString &GetMidiName() const { return r_MidiName; }
+
+  virtual bool IsReadOnly() const { return false; }
 
   void ShowConfigDialog();
 
+  // Used in the GOMidiList dialog
   virtual wxString GetElementStatus() = 0;
   virtual std::vector<wxString> GetElementActions() = 0;
   virtual void TriggerElementActions(unsigned no) = 0;

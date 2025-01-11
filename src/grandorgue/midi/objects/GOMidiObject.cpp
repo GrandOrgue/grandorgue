@@ -11,19 +11,37 @@
 
 #include "midi/dialog-creator/GOMidiDialogCreator.h"
 
+GOMidiObject::GOMidiObject(
+  GOMidiDialogCreator &dialogCreator,
+  const wxString &midiTypeCode,
+  const wxString &midiType,
+  const wxString &midiName,
+  GOMidiSender *pMidiSender,
+  GOMidiReceiverBase *pMidiReceiver,
+  GOMidiShortcutReceiver *pShortcutReceiver,
+  GOMidiSender *pDivisionSender)
+  : r_DialogCreator(dialogCreator),
+    r_MidiTypeCode(midiTypeCode),
+    r_MidiTypeName(midiType),
+    r_MidiName(midiName),
+    p_MidiSender(pMidiSender),
+    p_MidiReceiver(pMidiReceiver),
+    p_ShortcutReceiver(pShortcutReceiver),
+    p_DivisionSender(pDivisionSender) {}
+
 void GOMidiObject::ShowConfigDialog() {
-  const wxString &midiTypeCode = GetMidiTypeCode();
-  const wxString &midiName = GetMidiName();
-  wxString title
-    = wxString::Format(_("Midi-Settings for %s - %s"), GetMidiType(), midiName);
-  wxString selector = wxString::Format(wxT("%s.%s"), midiTypeCode, midiName);
+  const bool isReadOnly = IsReadOnly();
+  const wxString title = wxString::Format(
+    _("Midi-Settings for %s - %s"), r_MidiTypeName, r_MidiName);
+  const wxString selector
+    = wxString::Format(wxT("%s.%s"), r_MidiTypeCode, r_MidiName);
 
   r_DialogCreator.ShowMIDIEventDialog(
     this,
     title,
     selector,
-    GetMidiReceiver(),
-    GetMidiSender(),
-    GetMidiShortcutReceiver(),
-    GetDivision());
+    isReadOnly ? nullptr : p_MidiReceiver,
+    p_MidiSender,
+    isReadOnly ? nullptr : p_ShortcutReceiver,
+    p_DivisionSender);
 }

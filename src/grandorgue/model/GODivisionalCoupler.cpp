@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,12 +15,13 @@
 
 #include "GOOrganModel.h"
 
-const wxString GODivisionalCoupler::WX_MIDI_TYPE_CODE
-  = wxT("DivisionalCoupler");
-const wxString GODivisionalCoupler::WX_MIDI_TYPE_DESC = _("Divisional Coupler");
+static const wxString WX_MIDI_TYPE_CODE = wxT("DivisionalCoupler");
+static const wxString WX_MIDI_TYPE_NAME = _("Divisional Coupler");
 
 GODivisionalCoupler::GODivisionalCoupler(GOOrganModel &organModel)
-  : GODrawstop(organModel), m_BiDirectionalCoupling(false), m_manuals(0) {}
+  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
+    m_BiDirectionalCoupling(false),
+    m_manuals(0) {}
 
 void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
   wxString buffer;

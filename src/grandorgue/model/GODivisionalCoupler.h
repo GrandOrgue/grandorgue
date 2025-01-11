@@ -17,9 +17,6 @@ class GOOrganModel;
 
 class GODivisionalCoupler : public GODrawstop {
 private:
-  static const wxString WX_MIDI_TYPE_CODE;
-  static const wxString WX_MIDI_TYPE_DESC;
-
   bool m_BiDirectionalCoupling;
   std::vector<unsigned> m_manuals;
 
@@ -37,9 +34,6 @@ public:
    * @return the resulting set of other manuals
    */
   std::set<unsigned> GetCoupledManuals(unsigned startManual) const;
-
-  const wxString &GetMidiTypeCode() const override { return WX_MIDI_TYPE_CODE; }
-  const wxString &GetMidiType() const override { return WX_MIDI_TYPE_DESC; }
 };
 
 #endif /* GODIVISIONALCOUPLER_H */

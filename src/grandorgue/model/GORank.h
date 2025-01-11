@@ -15,11 +15,11 @@
 #include "pipe-config/GOPipeConfigTreeNode.h"
 #include "sound/GOSoundStateHandler.h"
 
+#include "GOPipe.h"
 #include "GOSaveableObject.h"
 
 class GOMidiMap;
 class GOOrganModel;
-class GOPipe;
 class GOStop;
 class GOTemperament;
 
@@ -59,12 +59,8 @@ private:
   void AbortPlayback() override;
   void PreparePlayback() override;
 
-protected:
-  GOMidiSender *GetMidiSender() override { return &m_sender; }
-
 public:
   GORank(GOOrganModel &organModel);
-  ~GORank();
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
@@ -88,10 +84,6 @@ public:
   GOPipeConfigNode &GetPipeConfig();
   void SetTemperament(const GOTemperament &temperament);
   const wxString &GetName() const { return m_Name; }
-
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
-  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;
