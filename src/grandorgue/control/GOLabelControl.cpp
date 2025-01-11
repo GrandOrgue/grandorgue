@@ -16,7 +16,6 @@
 
 GOLabelControl::GOLabelControl(GOOrganModel &organModel)
   : GOMidiObject(organModel),
-    r_OrganModel(organModel),
     m_Name(),
     m_Content(),
     m_sender(organModel, MIDI_SEND_LABEL) {
