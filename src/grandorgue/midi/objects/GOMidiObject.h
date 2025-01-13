@@ -14,17 +14,22 @@
 
 #include "sound/GOSoundStateHandler.h"
 
-class GOMidiSender;
+#include "GOSaveableObject.h"
+
+class GOMidiMap;
 class GOMidiReceiverBase;
+class GOMidiSender;
 class GOMidiShortcutReceiver;
 class GOOrganModel;
 
-class GOMidiObject : public GOSoundStateHandler {
+class GOMidiObject : public GOSoundStateHandler, public GOSaveableObject {
 private:
   GOOrganModel &r_OrganModel;
+  GOMidiMap &r_MidiMap;
   const wxString &r_MidiTypeCode;
   const wxString &r_MidiTypeName;
-  const wxString &r_MidiName;
+
+  wxString m_name;
 
   GOMidiSender *p_MidiSender;
   GOMidiReceiverBase *p_MidiReceiver;
@@ -36,7 +41,6 @@ protected:
     GOOrganModel &organModel,
     const wxString &midiTypeCode,
     const wxString &midiTypeName,
-    const wxString &midiName,
     GOMidiSender *pMidiSender,
     GOMidiReceiverBase *pMidiReceiver,
     GOMidiShortcutReceiver *pShortcutReceiver,
@@ -44,10 +48,36 @@ protected:
 
   virtual ~GOMidiObject();
 
+private:
+  void InitMidiObject(
+    GOConfigReader &cfg, const wxString &group, const wxString &name);
+
+protected:
+  virtual void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {}
+  virtual void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {}
+
 public:
+  GOMidiMap &GetMidiMap() { return r_MidiMap; }
   const wxString &GetMidiTypeCode() const { return r_MidiTypeCode; }
   const wxString &GetMidiTypeName() const { return r_MidiTypeName; }
-  const wxString &GetMidiName() const { return r_MidiName; }
+  const wxString &GetName() const { return m_name; }
+  void SetName(const wxString &name) { m_name = name; }
+
+  virtual void Init(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) {
+    InitMidiObject(cfg, group, name);
+  }
+
+  virtual void Load(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) {
+    InitMidiObject(cfg, group, name);
+  }
+
+  virtual void Save(GOConfigWriter &cfg) {
+    SaveMidiObject(cfg, m_group, r_MidiMap);
+  }
 
   virtual bool IsReadOnly() const { return false; }
 

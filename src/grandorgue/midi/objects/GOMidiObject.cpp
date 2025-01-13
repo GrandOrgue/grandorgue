@@ -15,15 +15,14 @@ GOMidiObject::GOMidiObject(
   GOOrganModel &organModel,
   const wxString &midiTypeCode,
   const wxString &midiType,
-  const wxString &midiName,
   GOMidiSender *pMidiSender,
   GOMidiReceiverBase *pMidiReceiver,
   GOMidiShortcutReceiver *pShortcutReceiver,
   GOMidiSender *pDivisionSender)
   : r_OrganModel(organModel),
+    r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_MidiTypeCode(midiTypeCode),
     r_MidiTypeName(midiType),
-    r_MidiName(midiName),
     p_MidiSender(pMidiSender),
     p_MidiReceiver(pMidiReceiver),
     p_ShortcutReceiver(pShortcutReceiver),
@@ -33,16 +32,25 @@ GOMidiObject::GOMidiObject(
 }
 
 GOMidiObject::~GOMidiObject() {
+  r_OrganModel.UnregisterSaveableObject(this);
   r_OrganModel.UnRegisterMidiObject(this);
   r_OrganModel.UnRegisterSoundStateHandler(this);
 }
 
+void GOMidiObject::InitMidiObject(
+  GOConfigReader &cfg, const wxString &group, const wxString &name) {
+  SetGroup(group);
+  m_name = name;
+  r_OrganModel.RegisterSaveableObject(this);
+  LoadMidiObject(cfg, group, r_MidiMap);
+}
+
 void GOMidiObject::ShowConfigDialog() {
   const bool isReadOnly = IsReadOnly();
-  const wxString title = wxString::Format(
-    _("Midi-Settings for %s - %s"), r_MidiTypeName, r_MidiName);
+  const wxString title
+    = wxString::Format(_("Midi-Settings for %s - %s"), r_MidiTypeName, m_name);
   const wxString selector
-    = wxString::Format(wxT("%s.%s"), r_MidiTypeCode, r_MidiName);
+    = wxString::Format(wxT("%s.%s"), r_MidiTypeCode, m_name);
 
   r_OrganModel.ShowMIDIEventDialog(
     this,

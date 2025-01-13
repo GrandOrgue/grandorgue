@@ -26,12 +26,10 @@ GOButtonControl::GOButtonControl(
     organModel,
     midiTypeCode,
     midiTypeName,
-    m_Name,
     &m_sender,
     &m_midi,
     &m_shortcut,
     nullptr),
-    r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_OrganModel(organModel),
     m_midi(organModel, midi_type),
     m_sender(organModel, MIDI_SEND_BUTTON),
@@ -50,41 +48,40 @@ GOButtonControl::~GOButtonControl() {
   r_OrganModel.UnRegisterEventHandler(this);
 }
 
-void GOButtonControl::Init(
-  GOConfigReader &cfg, const wxString &group, const wxString &name) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_Name = name;
-  m_Displayed = false;
-  m_DisplayInInvertedState = false;
+void GOButtonControl::LoadMidiObject(
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOMidiObject::LoadMidiObject(cfg, group, midiMap);
   if (!m_ReadOnly) {
-    m_midi.Load(cfg, group, r_MidiMap);
+    m_midi.Load(cfg, group, midiMap);
     m_shortcut.Load(cfg, group);
   }
-  m_sender.Load(cfg, group, r_MidiMap);
+  m_sender.Load(cfg, group, midiMap);
+}
+
+void GOButtonControl::Init(
+  GOConfigReader &cfg, const wxString &group, const wxString &name) {
+  GOMidiObject::Init(cfg, group, name);
+  m_Displayed = false;
+  m_DisplayInInvertedState = false;
 }
 
 void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_Name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true, m_Name);
+  GOMidiObject::Load(
+    cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true));
   m_Displayed
     = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
   m_DisplayInInvertedState = cfg.ReadBoolean(
     ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
-  if (!m_ReadOnly) {
-    m_midi.Load(cfg, group, r_MidiMap);
-    m_shortcut.Load(cfg, group);
-  }
-  m_sender.Load(cfg, group, r_MidiMap);
 }
 
-void GOButtonControl::Save(GOConfigWriter &cfg) {
+void GOButtonControl::SaveMidiObject(
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOMidiObject::SaveMidiObject(cfg, group, midiMap);
   if (!m_ReadOnly) {
-    m_midi.Save(cfg, m_group, r_MidiMap);
-    m_shortcut.Save(cfg, m_group);
+    m_midi.Save(cfg, group, midiMap);
+    m_shortcut.Save(cfg, group);
   }
-  m_sender.Save(cfg, m_group, r_MidiMap);
+  m_sender.Save(cfg, group, midiMap);
 }
 
 bool GOButtonControl::IsDisplayed() { return m_Displayed; }
@@ -117,7 +114,7 @@ void GOButtonControl::AbortPlayback() {
 
 void GOButtonControl::PreparePlayback() {
   m_midi.PreparePlayback();
-  m_sender.SetName(m_Name);
+  m_sender.SetName(GetName());
 }
 
 void GOButtonControl::PrepareRecording() { m_sender.SetDisplay(m_Engaged); }

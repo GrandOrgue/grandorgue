@@ -28,11 +28,7 @@ class GOOrganModel;
 
 class GOButtonControl : public GOControl,
                         private GOEventHandler,
-                        public GOSaveableObject,
                         public GOMidiObject {
-private:
-  GOMidiMap &r_MidiMap;
-
 protected:
   GOOrganModel &r_OrganModel;
   GOMidiReceiver m_midi;
@@ -40,11 +36,15 @@ protected:
   GOMidiShortcutReceiver m_shortcut;
   bool m_Pushbutton;
   bool m_Displayed;
-  wxString m_Name;
   bool m_Engaged;
   bool m_DisplayInInvertedState;
   bool m_ReadOnly;
   bool m_IsPiston;
+
+  void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
+  void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
   void ProcessMidi(const GOMidiEvent &event) override;
   void HandleKey(int key) override;
@@ -64,12 +64,12 @@ public:
     bool pushbutton,
     bool isPiston = false);
   ~GOButtonControl();
-  void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
-  void Load(GOConfigReader &cfg, const wxString &group);
+  void Init(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) override;
+  virtual void Load(GOConfigReader &cfg, const wxString &group);
   bool IsDisplayed();
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }
   bool IsReadOnly() const override { return m_ReadOnly; }
-  const wxString &GetName() const { return m_Name; }
   bool IsPiston() const { return m_IsPiston; }
 
   virtual void Push();

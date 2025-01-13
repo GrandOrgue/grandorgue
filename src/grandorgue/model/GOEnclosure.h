@@ -31,11 +31,9 @@ class GOOrganModel;
 
 class GOEnclosure : public GOControl,
                     private GOEventHandler,
-                    private GOSaveableObject,
                     public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
-  GOMidiMap &r_MidiMap;
 
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
@@ -48,6 +46,11 @@ private:
 
   uint8_t m_AmpMinimumLevel;
   uint8_t m_MIDIValue;
+
+  void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
+  void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
   void ProcessMidi(const GOMidiEvent &event) override;
   void HandleKey(int key) override;
@@ -65,21 +68,13 @@ public:
 
   GOEnclosure(GOOrganModel &organModel);
   ~GOEnclosure();
+
+  using GOMidiObject::Init; // for avoiding a warning
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
     const wxString &name,
-    uint8_t defaultValue);
-  void Load(GOConfigReader &cfg, const wxString &group, int enclosure_nb);
-  const wxString &GetName() const { return m_Name; }
-  uint8_t GetAmpMinimumLevel() const { return m_AmpMinimumLevel; }
-  void SetAmpMinimumLevel(uint8_t v) { m_AmpMinimumLevel = v; }
-  uint8_t GetMIDIInputNumber() const { return m_MIDIInputNumber; }
-  uint8_t GetMidiValue() const { return m_MIDIValue; }
-  void SetMidiValue(uint8_t n);
-  void SetIntMidiValue(int n) {
-    SetMidiValue((uint8_t)std::clamp(n, 0, (int)MAX_MIDI_VALUE));
-  }
+
   float GetAttenuation();
 
   void Scroll(bool scroll_up);

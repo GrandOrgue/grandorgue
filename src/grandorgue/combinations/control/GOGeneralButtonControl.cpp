@@ -21,7 +21,7 @@ GOGeneralButtonControl::GOGeneralButtonControl(
     r_OrganModel(organModel),
     m_combination(r_OrganModel, is_setter) {}
 
-void GOGeneralButtonControl::Load(GOConfigReader &cfg, wxString group) {
+void GOGeneralButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
   m_combination.Load(cfg, group);
   GOPushbuttonControl::Load(cfg, group);
 }

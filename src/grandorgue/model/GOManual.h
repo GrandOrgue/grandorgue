@@ -35,13 +35,11 @@ class GOOrganModel;
 class GOManual : public GOControl,
                  private GOEventHandler,
                  private GOCombinationButtonSet,
-                 private GOSaveableObject,
                  public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
   GOMidiMap &r_MidiMap;
 
-  wxString m_group;
   GOMidiReceiver m_midi;
   GOMidiSender m_sender;
   GOMidiSender m_division;
@@ -68,8 +66,6 @@ private:
   // Global Switch Id is the number of switch in ODF started with 1
   std::vector<unsigned> m_GlobalSwitchIds;
 
-  wxString m_name;
-
   ptr_vector<GOStop> m_stops;
   ptr_vector<GOCoupler> m_couplers;
   ptr_vector<GODivisionalButtonControl> m_divisionals;
@@ -77,13 +73,16 @@ private:
   bool m_displayed;
   GOCombinationDefinition m_DivisionalTemplate;
 
+  void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
+  void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
+
   void Resize();
 
   void ProcessMidi(const GOMidiEvent &event) override;
   void HandleKey(int key) override;
   void SetOutput(unsigned note, unsigned velocity);
-
-  void Save(GOConfigWriter &cfg) override;
 
   void AbortPlayback() override;
   void PreparePlayback() override;
@@ -103,12 +102,14 @@ public:
 
   unsigned GetManulNumber() const { return m_manual_number; }
 
+  using GOMidiObject::Init; // avoiding a compilation warning
   void Init(
     GOConfigReader &cfg,
-    wxString group,
+    const wxString &group,
     int manualNumber,
-    unsigned first_midi,
+    unsigned firstMidi,
     unsigned keys);
+  using GOMidiObject::Load; // avoiding a compilation warning
   void Load(GOConfigReader &cfg, const wxString &group, int manualNumber);
   void LoadDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);
@@ -171,7 +172,6 @@ public:
   int FindSwitchByName(const wxString &name) const;
 
   GOCombinationDefinition &GetDivisionalTemplate();
-  const wxString &GetName() const { return m_name; }
   bool IsDisplayed();
 
   wxString GetElementStatus() override;

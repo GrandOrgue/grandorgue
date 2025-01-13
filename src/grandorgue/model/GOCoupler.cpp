@@ -87,8 +87,8 @@ const struct IniFileEnumEntry GOCoupler::m_coupler_types[] = {
 
 void GOCoupler::Init(
   GOConfigReader &cfg,
-  wxString group,
-  wxString name,
+  const wxString &group,
+  const wxString &name,
   bool unison_off,
   bool recursive,
   int keyshift,

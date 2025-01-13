@@ -74,7 +74,7 @@ GOMidiListDialog::GOMidiListDialog(
 
     m_Objects->InsertItem(i, obj->GetMidiTypeName());
     m_Objects->SetItemPtrData(i, (wxUIntPtr)obj);
-    m_Objects->SetItem(i, 1, obj->GetMidiName());
+    m_Objects->SetItem(i, 1, obj->GetName());
   }
 
   m_Objects->SetColumnWidth(0, wxLIST_AUTOSIZE);
@@ -98,7 +98,7 @@ void GOMidiListDialog::OnStatus(wxCommandEvent &event) {
   wxString status = obj->GetElementStatus();
   GOMessageBox(
     wxString::Format(_("Status: %s"), status),
-    obj->GetMidiTypeName() + _(" ") + obj->GetMidiName(),
+    obj->GetMidiTypeName() + _(" ") + obj->GetName(),
     wxOK);
 }
 

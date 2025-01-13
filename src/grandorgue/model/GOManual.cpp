@@ -28,14 +28,12 @@ GOManual::GOManual(GOOrganModel &organModel)
     organModel,
     WX_MIDI_TYPE_CODE,
     WX_MIDI_TYPE_NAME,
-    m_name,
     &m_sender,
     &m_midi,
     nullptr,
     &m_division),
     r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
-    m_group(wxT("---")),
     m_midi(organModel, MIDI_RECV_MANUAL),
     m_sender(organModel, MIDI_SEND_MANUAL),
     m_division(organModel, MIDI_SEND_MANUAL),
@@ -66,9 +64,15 @@ GOManual::GOManual(GOOrganModel &organModel)
 }
 
 GOManual::~GOManual(void) {
-  r_OrganModel.UnregisterSaveableObject(this);
   r_OrganModel.UnRegisterEventHandler(this);
   r_OrganModel.UnRegisterCombinationButtonSet(this);
+}
+
+void GOManual::LoadMidiObject(
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
+  m_midi.Load(cfg, group, midiMap);
+  m_sender.Load(cfg, group, midiMap);
+  m_division.Load(cfg, group + wxT("Division"), midiMap);
 }
 
 unsigned GOManual::RegisterCoupler(GOCoupler *coupler) {
@@ -88,18 +92,19 @@ void GOManual::Resize() {
 
 void GOManual::Init(
   GOConfigReader &cfg,
-  wxString group,
+  const wxString &group,
   int manualNumber,
-  unsigned first_midi,
+  unsigned firstMidi,
   unsigned keys) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_name = wxString::Format(
-    _("Coupling manual %d"),
-    manualNumber - r_OrganModel.GetODFManualCount() + 1);
+  GOMidiObject::Init(
+    cfg,
+    group,
+    wxString::Format(
+      _("Coupling manual %d"),
+      manualNumber - r_OrganModel.GetODFManualCount() + 1));
   m_nb_logical_keys = keys;
   m_first_accessible_logical_key_nb = 1;
-  m_first_accessible_key_midi_note_nb = first_midi;
+  m_first_accessible_key_midi_note_nb = firstMidi;
   m_nb_accessible_keys = keys;
   m_MIDIInputNumber = 0;
   m_displayed = false;
@@ -113,9 +118,6 @@ void GOManual::Init(
   m_tremulant_ids.resize(0);
   m_GlobalSwitchIds.resize(0);
   m_divisionals.resize(0);
-  m_midi.Load(cfg, group, r_MidiMap);
-  m_sender.Load(cfg, group, r_MidiMap);
-  m_division.Load(cfg, group + wxT("Division"), r_MidiMap);
 
   SetElementID(r_OrganModel.GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
@@ -127,9 +129,8 @@ void GOManual::Init(
 
 void GOManual::Load(
   GOConfigReader &cfg, const wxString &group, int manualNumber) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_name = cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"));
+  GOMidiObject::Load(
+    cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_nb_logical_keys
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalKeys"), 1, 192);
   m_first_accessible_logical_key_nb = cfg.ReadInteger(
@@ -235,16 +236,19 @@ void GOManual::Load(
       ->AssociateWithManual(m_manual_number, i);
   }
 
-  m_midi.Load(cfg, group, r_MidiMap);
-  m_sender.Load(cfg, group, r_MidiMap);
-  m_division.Load(cfg, group + wxT("Division"), r_MidiMap);
-
   SetElementID(r_OrganModel.GetRecorderElementID(
     wxString::Format(wxT("M%d"), m_manual_number)));
 
   Resize();
   m_KeyVelocity.resize(m_nb_accessible_keys);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
+}
+
+void GOManual::SaveMidiObject(
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  m_midi.Save(cfg, group, midiMap);
+  m_sender.Save(cfg, group, midiMap);
+  m_division.Save(cfg, group + wxT("Division"), midiMap);
 }
 
 void GOManual::LoadDivisionals(GOConfigReader &cfg) {
@@ -480,12 +484,6 @@ bool GOManual::IsKeyDown(unsigned midiNoteNumber) {
 
 bool GOManual::IsDisplayed() { return m_displayed; }
 
-void GOManual::Save(GOConfigWriter &cfg) {
-  m_midi.Save(cfg, m_group, r_MidiMap);
-  m_sender.Save(cfg, m_group, r_MidiMap);
-  m_division.Save(cfg, m_group + wxT("Division"), r_MidiMap);
-}
-
 void GOManual::AbortPlayback() {
   AllNotesOff();
   m_sender.SetName(wxEmptyString);
@@ -506,7 +504,7 @@ void GOManual::PreparePlayback() {
   for (unsigned i = 0; i < m_Velocities.size(); i++)
     for (unsigned j = 0; j < m_Velocities[i].size(); j++)
       m_Velocities[i][j] = 0;
-  m_sender.SetName(m_name);
+  m_sender.SetName(GetName());
 }
 
 void GOManual::PrepareRecording() {

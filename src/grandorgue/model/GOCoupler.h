@@ -66,16 +66,17 @@ public:
   }
   void SetRecursive(bool isRecursive);
 
+  using GODrawstop::Init; // for avoiding a compilation warning
   void Init(
     GOConfigReader &cfg,
-    wxString group,
-    wxString name,
+    const wxString &group,
+    const wxString &name,
     bool unison_off,
     bool recursive,
     int keyshift,
     int dest_manual,
     GOCouplerType coupler_type);
-  void Load(GOConfigReader &cfg, const wxString &group);
+  void Load(GOConfigReader &cfg, const wxString &group) override;
 
   // send key states for all chained couplers
   void RefreshState();

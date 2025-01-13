@@ -21,7 +21,7 @@ private:
 
 public:
   GOGeneralButtonControl(GOOrganModel &organModel, bool is_setter);
-  void Load(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, const wxString &group) override;
   void Push() override;
   GOGeneralCombination &GetCombination();
 };

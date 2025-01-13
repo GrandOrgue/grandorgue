@@ -45,7 +45,7 @@ private:
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override;
   bool SaveCache(GOCacheWriter &cache) const override { return true; }
   void UpdateHash(GOHash &hash) const override {}
-  const wxString &GetLoadTitle() const override { return m_Name; };
+  const wxString &GetLoadTitle() const override { return GetName(); };
 
   void AbortPlayback() override;
   void StartPlayback() override;

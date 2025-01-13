@@ -23,11 +23,9 @@ class GOOrganModel;
 class GOStop;
 class GOTemperament;
 
-class GORank : private GOSaveableObject, public GOMidiObject {
+class GORank : public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
-  GOMidiMap &r_MidiMap;
-  wxString m_Name;
   ptr_vector<GOPipe> m_Pipes;
   /**
    * Number of stops using this rank
@@ -50,16 +48,20 @@ private:
   GOMidiSender m_sender;
   GOPipeConfigTreeNode m_PipeConfig;
 
-  void Resize();
+  void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
+  void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
-  void Save(GOConfigWriter &cfg) override;
+  void Resize();
 
   void AbortPlayback() override;
   void PreparePlayback() override;
 
 public:
   GORank(GOOrganModel &organModel);
-  ~GORank();
+
+  using GOMidiObject::Init; // Avoiding a compilation warning
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
@@ -82,7 +84,6 @@ public:
   unsigned GetPipeCount();
   GOPipeConfigNode &GetPipeConfig();
   void SetTemperament(const GOTemperament &temperament);
-  const wxString &GetName() const { return m_Name; }
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;

@@ -25,7 +25,9 @@ private:
 
 public:
   GODivisionalCoupler(GOOrganModel &organModel);
-  void Load(GOConfigReader &cfg, wxString group);
+
+  using GODrawstop::Load; // for avoiding a compilation warning
+  void Load(GOConfigReader &cfg, const wxString &group);
 
   /**
    * If the coupler is engaged and start manual participates in the coupler

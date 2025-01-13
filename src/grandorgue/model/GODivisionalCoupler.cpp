@@ -23,7 +23,7 @@ GODivisionalCoupler::GODivisionalCoupler(GOOrganModel &organModel)
     m_BiDirectionalCoupling(false),
     m_manuals(0) {}
 
-void GODivisionalCoupler::Load(GOConfigReader &cfg, wxString group) {
+void GODivisionalCoupler::Load(GOConfigReader &cfg, const wxString &group) {
   wxString buffer;
 
   m_BiDirectionalCoupling
