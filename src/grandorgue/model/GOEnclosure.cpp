@@ -47,14 +47,6 @@ void GOEnclosure::LoadMidiObject(
   m_shortcut.Load(cfg, group);
 }
 
-void GOEnclosure::Init(
-  GOConfigReader &cfg,
-  const wxString &group,
-  const wxString &name,  uint8_t defaultValue) {
-  GOMidiObject::Init(cfg, group, name);
-  m_DefaultAmpMinimumLevel = 0;
-  LoadFromCmb(cfg, defaultValue);
-}
 
 static const wxString WX_AMP_MINIMUM_LEVEL = wxT("AmpMinimumLevel");
 static const wxString WX_VALUE = wxT("Value");
@@ -72,9 +64,19 @@ void GOEnclosure::LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue) {
     CMBSetting, m_group, WX_VALUE, 0, MAX_MIDI_VALUE, false, defaultValue));
 }
 
+void GOEnclosure::Init(
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &name,
+  uint8_t defaultValue) {
+  GOMidiSendingObject::Init(cfg, group, name);
+  m_DefaultAmpMinimumLevel = 0;
+  LoadFromCmb(cfg, defaultValue);
+}
+
 void GOEnclosure::Load(
-  GOConfigReader &cfg, const wxString &group, int enclosure_nb) {
-  GOMidiObject::Load(
+  GOConfigReader &cfg, const wxString &group, int enclosureNb) {
+  GOMidiSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_Displayed1
     = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
@@ -96,7 +98,7 @@ void GOEnclosure::SaveMidiObject(
 }
 
 void GOEnclosure::Save(GOConfigWriter &cfg) {
-  GOMidiObject::Save(cfg);
+  GOMidiSendingObject::Save(cfg);
   cfg.WriteInteger(m_group, WX_AMP_MINIMUM_LEVEL, m_AmpMinimumLevel);
   cfg.WriteInteger(m_group, WX_VALUE, m_MIDIValue);
 }

@@ -17,7 +17,7 @@
 #include "control/GOControl.h"
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
-#include "midi/objects/GOMidiObject.h"
+#include "midi/objects/GOMidiSendingObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
@@ -32,16 +32,14 @@ class GOSwitch;
 class GOTremulant;
 class GOOrganModel;
 
-class GOManual : public GOMidiObject,
+class GOManual : public GOMidiSendingObject,
                  public GOControl,
                  private GOEventHandler,
                  private GOCombinationButtonSet {
 private:
   GOOrganModel &r_OrganModel;
-  GOMidiMap &r_MidiMap;
 
   GOMidiReceiver m_midi;
-  GOMidiSender m_sender;
   GOMidiSender m_division;
   std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */
@@ -120,7 +118,7 @@ public:
   void SetUnisonOff(bool on);
   void Update();
   void Reset();
-  void SetElementID(int id);
+  void SetElementId(int id) override;
 
   unsigned GetNumberOfAccessibleKeys();
   unsigned GetFirstAccessibleKeyMIDINoteNumber();

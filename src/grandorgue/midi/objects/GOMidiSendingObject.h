@@ -37,6 +37,10 @@ protected:
 
   void SendMidiValue(bool value) { m_sender.SetDisplay(value); }
   void SendMidiValue(int value) { m_sender.SetValue(value); }
+  void SendMidiKey(unsigned key, unsigned value) {
+    m_sender.SetKey(key, value);
+  }
+  void ResetMidiKey() { m_sender.ResetKey(); }
 
   void PreparePlayback() override;
   void AbortPlayback() override;
