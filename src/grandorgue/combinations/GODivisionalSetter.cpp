@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -119,7 +119,7 @@ GODivisionalSetter::GODivisionalSetter(
   organController->RegisterCombinationButtonSet(this);
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);
-    m_BankLabels.push_back(new GOLabelControl(organController));
+    m_BankLabels.push_back(new GOLabelControl(*organController));
     m_DivisionalMaps.emplace_back();
   }
 }

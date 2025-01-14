@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -122,8 +122,8 @@ GOOrganController::GOOrganController(
     m_SampleSetId1(0),
     m_SampleSetId2(0),
     m_bitmaps(nullptr),
-    m_PitchLabel(this),
-    m_TemperamentLabel(this),
+    m_PitchLabel(*this),
+    m_TemperamentLabel(*this),
     m_MainWindowData(this, wxT("MainWindow")) {
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded

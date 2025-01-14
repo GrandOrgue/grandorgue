@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -49,7 +49,7 @@ const struct GOElementCreator::ButtonDefinitionEntry *GOMidiRecorder::
 GOMidiRecorder::GOMidiRecorder(GOOrganController *organController)
   : m_OrganController(organController),
     m_Map(organController->GetSettings().GetMidiMap()),
-    m_RecordingTime(organController),
+    m_RecordingTime(*organController),
     m_RecordSeconds(0),
     m_NextChannel(0),
     m_NextNRPN(0),
