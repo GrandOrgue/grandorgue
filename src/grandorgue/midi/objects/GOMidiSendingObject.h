@@ -36,6 +36,7 @@ protected:
   virtual void SetElementId(int id);
 
   void SendMidiValue(bool value) { m_sender.SetDisplay(value); }
+  void SendMidiValue(int value) { m_sender.SetValue(value); }
 
   void PreparePlayback() override;
   void AbortPlayback() override;

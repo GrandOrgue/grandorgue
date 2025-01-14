@@ -17,7 +17,7 @@
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
 #include "midi/GOMidiShortcutReceiver.h"
-#include "midi/objects/GOMidiObject.h"
+#include "midi/objects/GOMidiSendingObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
@@ -29,14 +29,13 @@ class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOEnclosure : public GOMidiObject,
+class GOEnclosure : public GOMidiSendingObject,
                     public GOControl,
                     private GOEventHandler {
 private:
   GOOrganModel &r_OrganModel;
 
   GOMidiReceiver m_midi;
-  GOMidiSender m_sender;
   GOMidiShortcutReceiver m_shortcut;
   wxString m_Name;
   uint8_t m_DefaultAmpMinimumLevel;
@@ -59,9 +58,9 @@ private:
   void LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue);
   void Save(GOConfigWriter &cfg) override;
 
-  void AbortPlayback() override;
   void PreparePlayback() override;
   void PrepareRecording() override;
+  void AbortPlayback() override;
 
 public:
   static constexpr uint8_t MAX_MIDI_VALUE = 127;
@@ -74,12 +73,17 @@ public:
     GOConfigReader &cfg,
     const wxString &group,
     const wxString &name,
-
+    uint8_t defValue);
+  using GOMidiObject::Load; // for avoiding a warning
+  void Load(GOConfigReader &cfg, const wxString &group, int enclosureNb);
+  void SetElementId(int id) override;
+  void Set(int n);
+  int GetValue();
+  int GetMIDIInputNumber();
   float GetAttenuation();
 
   void Scroll(bool scroll_up);
   bool IsDisplayed(bool new_format);
-  void SetElementID(int id);
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;

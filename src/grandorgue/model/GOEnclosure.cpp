@@ -19,19 +19,16 @@ static const wxString WX_MIDI_TYPE_CODE = wxT("Enclosure");
 static const wxString WX_MIDI_TYPE_NAME = _("Enclosure");
 
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
-  : GOMidiObject(
+  : GOMidiSendingObject(
     organModel,
     WX_MIDI_TYPE_CODE,
     WX_MIDI_TYPE_NAME,
-    &m_sender,
+    MIDI_SEND_ENCLOSURE,
     &m_midi,
-    &m_shortcut,
-    nullptr),
+    &m_shortcut),
     r_OrganModel(organModel),
     m_midi(organModel, MIDI_RECV_ENCLOSURE),
-    m_sender(organModel, MIDI_SEND_ENCLOSURE),
     m_shortcut(GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
-    m_Name(),
     m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
     m_Displayed1(false),
@@ -45,8 +42,8 @@ GOEnclosure::~GOEnclosure() { r_OrganModel.UnRegisterEventHandler(this); }
 
 void GOEnclosure::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOMidiSendingObject::LoadMidiObject(cfg, group, midiMap);
   m_midi.Load(cfg, group, midiMap);
-  m_sender.Load(cfg, group, midiMap);
   m_shortcut.Load(cfg, group);
 }
 
@@ -93,8 +90,8 @@ void GOEnclosure::Load(
 
 void GOEnclosure::SaveMidiObject(
   GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOMidiSendingObject::SaveMidiObject(cfg, group, midiMap);
   m_midi.Save(cfg, group, midiMap);
-  m_sender.Save(cfg, group, midiMap);
   m_shortcut.Save(cfg, group);
 }
 
@@ -107,7 +104,7 @@ void GOEnclosure::Save(GOConfigWriter &cfg) {
 void GOEnclosure::SetMidiValue(uint8_t n) {
   if (n != m_MIDIValue) {
     m_MIDIValue = n;
-    m_sender.SetValue(n);
+    SendMidiValue(m_MIDIValue);
   }
   r_OrganModel.UpdateVolume();
   r_OrganModel.SendControlChanged(this);
@@ -151,21 +148,16 @@ bool GOEnclosure::IsDisplayed(bool new_format) {
     return m_Displayed1;
 }
 
-void GOEnclosure::AbortPlayback() {
-  m_sender.SetValue(0);
-  m_sender.SetName(wxEmptyString);
-}
-
 void GOEnclosure::PreparePlayback() {
+  GOMidiSendingObject::PreparePlayback();
   m_midi.PreparePlayback();
-  m_sender.SetName(GetName());
 }
 
-void GOEnclosure::PrepareRecording() { m_sender.SetValue(m_MIDIValue); }
+void GOEnclosure::PrepareRecording() { SendMidiValue(m_MIDIValue); }
 
-void GOEnclosure::SetElementID(int id) {
-  m_midi.SetElementID(id);
-  m_sender.SetElementID(id);
+void GOEnclosure::AbortPlayback() {
+  SendMidiValue(0);
+  GOMidiSendingObject::AbortPlayback();
 }
 
 wxString GOEnclosure::GetElementStatus() {

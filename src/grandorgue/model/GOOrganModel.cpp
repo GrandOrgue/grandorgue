@@ -160,7 +160,7 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   }
 
   for (unsigned i = 0; i < m_enclosures.size(); i++)
-    m_enclosures[i]->SetElementID(
+    m_enclosures[i]->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("E%d"), i)));
 
   for (unsigned i = 0; i < m_switches.size(); i++)
