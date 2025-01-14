@@ -22,17 +22,15 @@ GOButtonControl::GOButtonControl(
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : GOMidiObject(
+  : GOMidiSendingObject(
     organModel,
     midiTypeCode,
     midiTypeName,
-    &m_sender,
+    MIDI_SEND_BUTTON,
     &m_midi,
-    &m_shortcut,
-    nullptr),
+    &m_shortcut),
     r_OrganModel(organModel),
     m_midi(organModel, midi_type),
-    m_sender(organModel, MIDI_SEND_BUTTON),
     m_shortcut(GOMidiShortcutReceiver::KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
@@ -44,29 +42,27 @@ GOButtonControl::GOButtonControl(
 }
 
 GOButtonControl::~GOButtonControl() {
-  r_OrganModel.UnregisterSaveableObject(this);
   r_OrganModel.UnRegisterEventHandler(this);
 }
 
 void GOButtonControl::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiObject::LoadMidiObject(cfg, group, midiMap);
+  GOMidiSendingObject::LoadMidiObject(cfg, group, midiMap);
   if (!m_ReadOnly) {
     m_midi.Load(cfg, group, midiMap);
     m_shortcut.Load(cfg, group);
   }
-  m_sender.Load(cfg, group, midiMap);
 }
 
 void GOButtonControl::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
-  GOMidiObject::Init(cfg, group, name);
+  GOMidiSendingObject::Init(cfg, group, name);
   m_Displayed = false;
   m_DisplayInInvertedState = false;
 }
 
 void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
-  GOMidiObject::Load(
+  GOMidiSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true));
   m_Displayed
     = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
@@ -76,12 +72,11 @@ void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
 
 void GOButtonControl::SaveMidiObject(
   GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiObject::SaveMidiObject(cfg, group, midiMap);
+  GOMidiSendingObject::SaveMidiObject(cfg, group, midiMap);
   if (!m_ReadOnly) {
     m_midi.Save(cfg, group, midiMap);
     m_shortcut.Save(cfg, group);
   }
-  m_sender.Save(cfg, group, midiMap);
 }
 
 bool GOButtonControl::IsDisplayed() { return m_Displayed; }
@@ -107,17 +102,20 @@ void GOButtonControl::Push() {
 
 void GOButtonControl::SetButtonState(bool on) {}
 
-void GOButtonControl::AbortPlayback() {
-  m_sender.SetDisplay(false);
-  m_sender.SetName(wxEmptyString);
-}
-
 void GOButtonControl::PreparePlayback() {
+  GOMidiSendingObject::PreparePlayback();
   m_midi.PreparePlayback();
-  m_sender.SetName(GetName());
 }
 
-void GOButtonControl::PrepareRecording() { m_sender.SetDisplay(m_Engaged); }
+void GOButtonControl::PrepareRecording() {
+  GOMidiSendingObject::PrepareRecording();
+  SendMidiValue(m_Engaged);
+}
+
+void GOButtonControl::AbortPlayback() {
+  SendMidiValue(false);
+  GOMidiSendingObject::AbortPlayback();
+}
 
 void GOButtonControl::ProcessMidi(const GOMidiEvent &event) {
   if (m_ReadOnly)
@@ -147,7 +145,7 @@ void GOButtonControl::ProcessMidi(const GOMidiEvent &event) {
 void GOButtonControl::Display(bool onoff) {
   if (m_Engaged == onoff)
     return;
-  m_sender.SetDisplay(onoff);
+  SendMidiValue(onoff);
   m_Engaged = onoff;
   r_OrganModel.SendControlChanged(this);
 }
@@ -158,10 +156,10 @@ bool GOButtonControl::DisplayInverted() const {
   return m_DisplayInInvertedState;
 }
 
-void GOButtonControl::SetElementID(int id) {
+void GOButtonControl::SetElementId(int id) {
   if (!m_ReadOnly) {
     m_midi.SetElementID(id);
-    m_sender.SetElementID(id);
+    GOMidiSendingObject::SetElementId(id);
   }
 }
 

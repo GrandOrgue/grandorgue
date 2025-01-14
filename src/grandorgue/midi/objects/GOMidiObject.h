@@ -81,6 +81,10 @@ public:
 
   virtual bool IsReadOnly() const { return false; }
 
+  void PreparePlayback() override {}
+  void PrepareRecording() override {}
+  void AbortPlayback() override {}
+
   void ShowConfigDialog();
 
   // Used in the GOMidiList dialog

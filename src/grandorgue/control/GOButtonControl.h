@@ -13,7 +13,7 @@
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
 #include "midi/GOMidiShortcutReceiver.h"
-#include "midi/objects/GOMidiObject.h"
+#include "midi/objects/GOMidiSendingObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOControl.h"
@@ -26,13 +26,12 @@ class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOButtonControl : public GOControl,
-                        private GOEventHandler,
-                        public GOMidiObject {
+class GOButtonControl : public GOMidiSendingObject,
+                        public GOControl,
+                        private GOEventHandler {
 protected:
   GOOrganModel &r_OrganModel;
   GOMidiReceiver m_midi;
-  GOMidiSender m_sender;
   GOMidiShortcutReceiver m_shortcut;
   bool m_Pushbutton;
   bool m_Displayed;
@@ -49,9 +48,9 @@ protected:
   void ProcessMidi(const GOMidiEvent &event) override;
   void HandleKey(int key) override;
 
-  void AbortPlayback() override;
   void PreparePlayback() override;
   void PrepareRecording() override;
+  void AbortPlayback() override;
 
 public:
   GOButtonControl(
@@ -76,7 +75,7 @@ public:
   virtual void Display(bool onoff);
   bool IsEngaged() const;
   bool DisplayInverted() const;
-  void SetElementID(int id);
+  void SetElementId(int id) override;
   void SetShortcutKey(unsigned key);
   void SetPreconfigIndex(unsigned index);
 

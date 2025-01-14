@@ -190,7 +190,7 @@ void GOManual::Load(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
     cfg.MarkGroupInUse(buffer);
     m_stops[i]->Load(cfg, buffer);
-    m_stops[i]->SetElementID(r_OrganModel.GetRecorderElementID(
+    m_stops[i]->SetElementId(r_OrganModel.GetRecorderElementID(
       wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
   }
 
@@ -202,7 +202,7 @@ void GOManual::Load(
       wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
     cfg.MarkGroupInUse(buffer);
     m_couplers[i]->Load(cfg, buffer);
-    m_couplers[i]->SetElementID(r_OrganModel.GetRecorderElementID(
+    m_couplers[i]->SetElementId(r_OrganModel.GetRecorderElementID(
       wxString::Format(wxT("M%dC%d"), m_manual_number, i)));
   }
 

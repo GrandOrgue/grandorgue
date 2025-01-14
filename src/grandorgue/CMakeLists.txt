@@ -139,6 +139,8 @@ loader/cache/GOCache.cpp
 loader/cache/GOCacheCleaner.cpp
 loader/cache/GOCacheWriter.cpp
 midi/dialog-creator/GOMidiDialogCreatorProxy.cpp
+midi/objects/GOMidiObject.cpp
+midi/objects/GOMidiSendingObject.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp
 midi/ports/GOMidiPort.cpp
@@ -158,7 +160,6 @@ midi/GOMidiShortcutPattern.cpp
 midi/GOMidiShortcutReceiver.cpp
 midi/GOMidiReceiver.cpp
 midi/GOMidiRecorder.cpp
-midi/objects/GOMidiObject.cpp
 model/pipe-config/GOPipeConfig.cpp
 model/pipe-config/GOPipeConfigNode.cpp
 model/pipe-config/GOPipeConfigTreeNode.cpp
