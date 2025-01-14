@@ -21,7 +21,7 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOOrganModel;
 
-class GOLabelControl : public GOControl, public GOMidiObject {
+class GOLabelControl : public GOMidiObject, public GOControl {
 protected:
   GOOrganModel &r_OrganModel;
   wxString m_Content;

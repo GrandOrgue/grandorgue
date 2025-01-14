@@ -32,10 +32,10 @@ class GOSwitch;
 class GOTremulant;
 class GOOrganModel;
 
-class GOManual : public GOControl,
+class GOManual : public GOMidiObject,
+                 public GOControl,
                  private GOEventHandler,
-                 private GOCombinationButtonSet,
-                 public GOMidiObject {
+                 private GOCombinationButtonSet {
 private:
   GOOrganModel &r_OrganModel;
   GOMidiMap &r_MidiMap;

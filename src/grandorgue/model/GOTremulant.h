@@ -53,6 +53,7 @@ private:
 public:
   GOTremulant(GOOrganModel &organModel);
   ~GOTremulant();
+  using GODrawstop::Load; // Avoiding a compilation warning
   void Load(GOConfigReader &cfg, const wxString &group, unsigned tremulantN);
   GOTremulantType GetTremulantType();
 };

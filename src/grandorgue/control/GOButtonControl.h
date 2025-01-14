@@ -49,8 +49,6 @@ protected:
   void ProcessMidi(const GOMidiEvent &event) override;
   void HandleKey(int key) override;
 
-  void Save(GOConfigWriter &cfg) override;
-
   void AbortPlayback() override;
   void PreparePlayback() override;
   void PrepareRecording() override;
@@ -66,6 +64,7 @@ public:
   ~GOButtonControl();
   void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) override;
+  using GOMidiObject::Load; // Avoiding a compilation warning
   virtual void Load(GOConfigReader &cfg, const wxString &group);
   bool IsDisplayed();
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }

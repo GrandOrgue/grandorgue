@@ -29,9 +29,9 @@ class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOEnclosure : public GOControl,
-                    private GOEventHandler,
-                    public GOMidiObject {
+class GOEnclosure : public GOMidiObject,
+                    public GOControl,
+                    private GOEventHandler {
 private:
   GOOrganModel &r_OrganModel;
 

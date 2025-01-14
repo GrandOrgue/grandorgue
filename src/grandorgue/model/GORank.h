@@ -75,6 +75,7 @@ public:
    * @param firstMidiNoteNumber. -1 means no default and must be specified in
    *   the ODF
    */
+  using GOMidiObject::Load; // Avoiding a compilation warning
   void Load(
     GOConfigReader &cfg, const wxString &group, int defaultFirstMidiNoteNumber);
   void AddPipe(GOPipe *pipe);
