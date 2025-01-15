@@ -10,20 +10,18 @@
 
 #include "ptrvector.h"
 
-#include "midi/GOMidiSender.h"
-#include "midi/objects/GOMidiObject.h"
+#include "midi/objects/GOMidiSendingObject.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOPipe.h"
-#include "GOSaveableObject.h"
 
 class GOMidiMap;
 class GOOrganModel;
 class GOStop;
 class GOTemperament;
 
-class GORank : public GOMidiObject {
+class GORank : public GOMidiSendingObject {
 private:
   GOOrganModel &r_OrganModel;
   ptr_vector<GOPipe> m_Pipes;
@@ -45,7 +43,6 @@ private:
   float m_MinVolume;
   float m_MaxVolume;
   bool m_RetuneRank;
-  GOMidiSender m_sender;
   GOPipeConfigTreeNode m_PipeConfig;
 
   void LoadMidiObject(
@@ -55,7 +52,6 @@ private:
 
   void Resize();
 
-  void AbortPlayback() override;
   void PreparePlayback() override;
 
 public:
@@ -90,7 +86,9 @@ public:
   std::vector<wxString> GetElementActions() override;
   void TriggerElementActions(unsigned no) override;
 
-  void SendKey(unsigned note, unsigned velocity);
+  void SendKey(unsigned note, unsigned velocity) {
+    SendMidiKey(note, velocity);
+  }
 };
 
 #endif

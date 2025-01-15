@@ -24,14 +24,8 @@ static const wxString WX_MIDI_TYPE_CODE = wxT("Rank");
 static const wxString WX_MIDI_TYPE_NAME = _("Rank");
 
 GORank::GORank(GOOrganModel &organModel)
-  : GOMidiObject(
-    organModel,
-    WX_MIDI_TYPE_CODE,
-    WX_MIDI_TYPE_NAME,
-    &m_sender,
-    nullptr,
-    nullptr,
-    nullptr),
+  : GOMidiSendingObject(
+    organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_MANUAL),
     r_OrganModel(organModel),
     m_StopCount(0),
     m_NoteStopVelocities(),
@@ -42,12 +36,11 @@ GORank::GORank(GOOrganModel &organModel)
     m_MinVolume(100),
     m_MaxVolume(100),
     m_RetuneRank(true),
-    m_sender(organModel, MIDI_SEND_MANUAL),
     m_PipeConfig(NULL, &organModel, NULL) {}
 
 void GORank::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  m_sender.Load(cfg, group + wxT("Rank"), midiMap);
+  GOMidiSendingObject::LoadMidiObject(cfg, group + wxT("Rank"), midiMap);
 }
 
 void GORank::Resize() {
@@ -63,7 +56,7 @@ void GORank::Init(
   const wxString &name,
   unsigned firstMidiNoteNumber,
   unsigned windchestN) {
-  GOMidiObject::Init(cfg, group, name);
+  GOMidiSendingObject::Init(cfg, group, name);
 
   m_FirstMidiNoteNumber = firstMidiNoteNumber;
   m_PipeConfig.Init(cfg, group, wxEmptyString);
@@ -85,7 +78,7 @@ void GORank::Init(
 
 void GORank::Load(
   GOConfigReader &cfg, const wxString &group, int defaultFirstMidiNoteNumber) {
-  GOMidiObject::Load(
+  GOMidiSendingObject::Load(
     cfg, group, cfg.ReadString(ODFSetting, group, wxT("Name"), true));
 
   m_FirstMidiNoteNumber = cfg.ReadInteger(
@@ -150,7 +143,7 @@ void GORank::Load(
 
 void GORank::SaveMidiObject(
   GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
-  m_sender.Save(cfg, group + wxT("Rank"), midiMap);
+  GOMidiSendingObject::SaveMidiObject(cfg, group + wxT("Rank"), midiMap);
 }
 
 void GORank::AddPipe(GOPipe *pipe) {
@@ -194,20 +187,14 @@ void GORank::SetTemperament(const GOTemperament &temperament) {
     m_Pipes[j]->SetTemperament(temperament);
 }
 
-void GORank::AbortPlayback() { m_sender.SetName(wxEmptyString); }
-
 void GORank::PreparePlayback() {
-  m_sender.ResetKey();
+  ResetMidiKey();
   for (unsigned i = 0; i < m_MaxNoteVelocities.size(); i++)
     m_MaxNoteVelocities[i] = 0;
   for (unsigned i = 0; i < m_NoteStopVelocities.size(); i++)
     for (unsigned j = 0; j < m_NoteStopVelocities[i].size(); j++)
       m_NoteStopVelocities[i][j] = 0;
-  m_sender.SetName(GetName());
-}
-
-void GORank::SendKey(unsigned note, unsigned velocity) {
-  m_sender.SetKey(note, velocity);
+  GOMidiSendingObject::PreparePlayback();
 }
 
 wxString GORank::GetElementStatus() { return _("-"); }
