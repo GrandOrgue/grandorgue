@@ -11,7 +11,7 @@
 #include <wx/string.h>
 
 #include "midi/GOMidiSender.h"
-#include "midi/objects/GOMidiObject.h"
+#include "midi/objects/GOMidiSendingObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOControl.h"
@@ -21,19 +21,12 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOOrganModel;
 
-class GOLabelControl : public GOMidiObject, public GOControl {
+class GOLabelControl : public GOMidiSendingObject, public GOControl {
 protected:
   GOOrganModel &r_OrganModel;
   wxString m_Content;
-  GOMidiSender m_sender;
-
-  void LoadMidiObject(
-    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
-  void SaveMidiObject(
-    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
   void AbortPlayback() override;
-  void PreparePlayback() override;
   void PrepareRecording() override;
 
 public:
