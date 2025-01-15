@@ -21,7 +21,6 @@
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
-#include "GOSaveableObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;

@@ -15,13 +15,11 @@
 
 #include "control/GOControl.h"
 #include "midi/GOMidiReceiver.h"
-#include "midi/GOMidiSender.h"
 #include "midi/GOMidiShortcutReceiver.h"
 #include "midi/objects/GOMidiSendingObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
-#include "GOSaveableObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;
