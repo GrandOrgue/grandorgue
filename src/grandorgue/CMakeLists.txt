@@ -140,6 +140,7 @@ loader/cache/GOCacheCleaner.cpp
 loader/cache/GOCacheWriter.cpp
 midi/dialog-creator/GOMidiDialogCreatorProxy.cpp
 midi/objects/GOMidiObject.cpp
+midi/objects/GOMidiReceivingSendingObject.cpp
 midi/objects/GOMidiSendingObject.cpp
 midi/ports/GOMidiInPort.cpp
 midi/ports/GOMidiOutPort.cpp

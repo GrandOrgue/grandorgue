@@ -10,13 +10,11 @@
 
 #include <wx/string.h>
 
-#include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiShortcutReceiver.h"
-#include "midi/objects/GOMidiSendingObject.h"
+#include "midi/objects/GOMidiReceivingSendingObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOControl.h"
-#include "GOEventHandler.h"
 
 class GOConfigReader;
 class GOConfigWriter;
@@ -24,12 +22,8 @@ class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOButtonControl : public GOMidiSendingObject,
-                        public GOControl,
-                        private GOEventHandler {
+class GOButtonControl : public GOMidiReceivingSendingObject, public GOControl {
 protected:
-  GOOrganModel &r_OrganModel;
-  GOMidiReceiver m_midi;
   GOMidiShortcutReceiver m_shortcut;
   bool m_Pushbutton;
   bool m_Displayed;
@@ -43,10 +37,10 @@ protected:
   void SaveMidiObject(
     GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
-  void ProcessMidi(const GOMidiEvent &event) override;
+  void OnMatchedMidi(
+    const GOMidiEvent &event, GOMidiMatchType matchType) override;
   void HandleKey(int key) override;
 
-  void PreparePlayback() override;
   void PrepareRecording() override;
   void AbortPlayback() override;
 
@@ -55,10 +49,10 @@ public:
     GOOrganModel &organModel,
     const wxString &midiTypeCode,
     const wxString &midiTypeName,
-    GOMidiReceiverType midi_type,
+    GOMidiReceiverType midiType,
     bool pushbutton,
     bool isPiston = false);
-  ~GOButtonControl();
+
   void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) override;
   using GOMidiObject::Load; // Avoiding a compilation warning
@@ -73,9 +67,7 @@ public:
   virtual void Display(bool onoff);
   bool IsEngaged() const;
   bool DisplayInverted() const;
-  void SetElementId(int id) override;
   void SetShortcutKey(unsigned key);
-  void SetPreconfigIndex(unsigned index);
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;

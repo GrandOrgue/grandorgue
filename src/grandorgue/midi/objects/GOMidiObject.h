@@ -23,8 +23,10 @@ class GOMidiShortcutReceiver;
 class GOOrganModel;
 
 class GOMidiObject : public GOSoundStateHandler, public GOSaveableObject {
-private:
+protected:
   GOOrganModel &r_OrganModel;
+
+private:
   GOMidiMap &r_MidiMap;
   const wxString &r_MidiTypeCode;
   const wxString &r_MidiTypeName;

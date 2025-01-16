@@ -33,8 +33,6 @@ protected:
   void SaveMidiObject(
     GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
-  virtual void SetElementId(int id);
-
   void SendMidiValue(bool value) { m_sender.SetDisplay(value); }
   void SendMidiValue(int value) { m_sender.SetValue(value); }
   void SendMidiValue(const wxString &value) { m_sender.SetLabel(value); }
@@ -45,6 +43,9 @@ protected:
 
   void PreparePlayback() override;
   void AbortPlayback() override;
+
+public:
+  virtual void SetElementId(int id);
 };
 
 #endif /* GOMIDISENDINGOBJECT_H */
