@@ -37,8 +37,8 @@ protected:
   void SaveMidiObject(
     GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
-  void OnMatchedMidi(
-    const GOMidiEvent &event, GOMidiMatchType matchType) override;
+  void OnMidiReceived(
+    const GOMidiEvent &event, GOMidiMatchType matchType, int value) override;
   void HandleKey(int key) override;
 
   void PrepareRecording() override;

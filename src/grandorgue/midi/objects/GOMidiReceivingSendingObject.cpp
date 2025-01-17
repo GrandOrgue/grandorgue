@@ -56,10 +56,6 @@ void GOMidiReceivingSendingObject::SetElementId(int id) {
   }
 }
 
-void GOMidiReceivingSendingObject::SetPreconfigIndex(unsigned index) {
-  m_receiver.SetIndex(index);
-}
-
 void GOMidiReceivingSendingObject::PreparePlayback() {
   GOMidiSendingObject::PreparePlayback();
   m_receiver.PreparePlayback();
@@ -67,9 +63,10 @@ void GOMidiReceivingSendingObject::PreparePlayback() {
 
 void GOMidiReceivingSendingObject::ProcessMidi(const GOMidiEvent &event) {
   if (!IsReadOnly()) {
-    GOMidiMatchType matchType = m_receiver.Match(event);
+    int value;
+    GOMidiMatchType matchType = m_receiver.Match(event, value);
 
     if (matchType > MIDI_MATCH_NONE)
-      OnMatchedMidi(event, matchType);
+      OnMidiReceived(event, matchType, value);
   }
 }

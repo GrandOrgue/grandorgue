@@ -308,33 +308,33 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_CrescendoCtrl(*organController) {
   CreateButtons(*m_OrganController);
 
-  m_buttons[ID_SETTER_PREV]->SetPreconfigIndex(0);
-  m_buttons[ID_SETTER_NEXT]->SetPreconfigIndex(1);
-  m_buttons[ID_SETTER_SET]->SetPreconfigIndex(2);
-  m_buttons[ID_SETTER_CURRENT]->SetPreconfigIndex(3);
-  m_buttons[ID_SETTER_GC]->SetPreconfigIndex(4);
-  m_buttons[ID_SETTER_M10]->SetPreconfigIndex(5);
-  m_buttons[ID_SETTER_P10]->SetPreconfigIndex(6);
-  m_buttons[ID_SETTER_L0]->SetPreconfigIndex(7);
-  m_buttons[ID_SETTER_L1]->SetPreconfigIndex(8);
-  m_buttons[ID_SETTER_L2]->SetPreconfigIndex(9);
-  m_buttons[ID_SETTER_L3]->SetPreconfigIndex(10);
-  m_buttons[ID_SETTER_L4]->SetPreconfigIndex(11);
-  m_buttons[ID_SETTER_L5]->SetPreconfigIndex(12);
-  m_buttons[ID_SETTER_L6]->SetPreconfigIndex(13);
-  m_buttons[ID_SETTER_L7]->SetPreconfigIndex(14);
-  m_buttons[ID_SETTER_L8]->SetPreconfigIndex(15);
-  m_buttons[ID_SETTER_L9]->SetPreconfigIndex(16);
-  m_buttons[ID_SETTER_PITCH_M1]->SetPreconfigIndex(17);
-  m_buttons[ID_SETTER_PITCH_P1]->SetPreconfigIndex(18);
-  m_buttons[ID_SETTER_PITCH_M100]->SetPreconfigIndex(19);
-  m_buttons[ID_SETTER_PITCH_P100]->SetPreconfigIndex(20);
-  m_buttons[ID_SETTER_TEMPERAMENT_PREV]->SetPreconfigIndex(21);
-  m_buttons[ID_SETTER_TEMPERAMENT_NEXT]->SetPreconfigIndex(22);
-  m_buttons[ID_SETTER_TRANSPOSE_DOWN]->SetPreconfigIndex(23);
-  m_buttons[ID_SETTER_TRANSPOSE_UP]->SetPreconfigIndex(24);
-  m_buttons[ID_SETTER_AUDIO_PANIC]->SetPreconfigIndex(25);
-  m_buttons[ID_SETTER_FILE_EXIT]->SetPreconfigIndex(26);
+  m_buttons[ID_SETTER_PREV]->SetReceiverIndex(0);
+  m_buttons[ID_SETTER_NEXT]->SetReceiverIndex(1);
+  m_buttons[ID_SETTER_SET]->SetReceiverIndex(2);
+  m_buttons[ID_SETTER_CURRENT]->SetReceiverIndex(3);
+  m_buttons[ID_SETTER_GC]->SetReceiverIndex(4);
+  m_buttons[ID_SETTER_M10]->SetReceiverIndex(5);
+  m_buttons[ID_SETTER_P10]->SetReceiverIndex(6);
+  m_buttons[ID_SETTER_L0]->SetReceiverIndex(7);
+  m_buttons[ID_SETTER_L1]->SetReceiverIndex(8);
+  m_buttons[ID_SETTER_L2]->SetReceiverIndex(9);
+  m_buttons[ID_SETTER_L3]->SetReceiverIndex(10);
+  m_buttons[ID_SETTER_L4]->SetReceiverIndex(11);
+  m_buttons[ID_SETTER_L5]->SetReceiverIndex(12);
+  m_buttons[ID_SETTER_L6]->SetReceiverIndex(13);
+  m_buttons[ID_SETTER_L7]->SetReceiverIndex(14);
+  m_buttons[ID_SETTER_L8]->SetReceiverIndex(15);
+  m_buttons[ID_SETTER_L9]->SetReceiverIndex(16);
+  m_buttons[ID_SETTER_PITCH_M1]->SetReceiverIndex(17);
+  m_buttons[ID_SETTER_PITCH_P1]->SetReceiverIndex(18);
+  m_buttons[ID_SETTER_PITCH_M100]->SetReceiverIndex(19);
+  m_buttons[ID_SETTER_PITCH_P100]->SetReceiverIndex(20);
+  m_buttons[ID_SETTER_TEMPERAMENT_PREV]->SetReceiverIndex(21);
+  m_buttons[ID_SETTER_TEMPERAMENT_NEXT]->SetReceiverIndex(22);
+  m_buttons[ID_SETTER_TRANSPOSE_DOWN]->SetReceiverIndex(23);
+  m_buttons[ID_SETTER_TRANSPOSE_UP]->SetReceiverIndex(24);
+  m_buttons[ID_SETTER_AUDIO_PANIC]->SetReceiverIndex(25);
+  m_buttons[ID_SETTER_FILE_EXIT]->SetReceiverIndex(26);
 
   m_buttons[ID_SETTER_PREV]->SetShortcutKey(37);
   m_buttons[ID_SETTER_NEXT]->SetShortcutKey(39);
@@ -1174,7 +1174,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
 
 void GOSetter::ControlChanged(GOControl *control) {
   if (control == &m_CrescendoCtrl)
-    Crescendo(m_CrescendoCtrl.GetMidiValue() * CRESCENDO_STEPS / 128);
+    Crescendo(m_CrescendoCtrl.GetEnclosureValue() * CRESCENDO_STEPS / 128);
 }
 
 void GOSetter::UpdateTranspose() {

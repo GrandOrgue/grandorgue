@@ -14,26 +14,16 @@
 #include <wx/string.h>
 
 #include "control/GOControl.h"
-#include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiShortcutReceiver.h"
-#include "midi/objects/GOMidiSendingObject.h"
-#include "sound/GOSoundStateHandler.h"
-
-#include "GOEventHandler.h"
+#include "midi/objects/GOMidiReceivingSendingObject.h"
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOEnclosure : public GOMidiSendingObject,
-                    public GOControl,
-                    private GOEventHandler {
+class GOEnclosure : public GOMidiReceivingSendingObject, public GOControl {
 private:
-  GOOrganModel &r_OrganModel;
-
-  GOMidiReceiver m_midi;
   GOMidiShortcutReceiver m_shortcut;
   wxString m_Name;
   uint8_t m_DefaultAmpMinimumLevel;
@@ -49,14 +39,14 @@ private:
   void SaveMidiObject(
     GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
-  void ProcessMidi(const GOMidiEvent &event) override;
+  void OnMidiReceived(
+    const GOMidiEvent &event, GOMidiMatchType matchType, int value) override;
   void HandleKey(int key) override;
 
   // Load all customizable values from the .cmb file
   void LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue);
   void Save(GOConfigWriter &cfg) override;
 
-  void PreparePlayback() override;
   void PrepareRecording() override;
   void AbortPlayback() override;
 
@@ -64,9 +54,8 @@ public:
   static constexpr uint8_t MAX_MIDI_VALUE = 127;
 
   GOEnclosure(GOOrganModel &organModel);
-  ~GOEnclosure();
 
-  using GOMidiObject::Init; // for avoiding a warning
+  using GOMidiReceivingSendingObject::Init; // for avoiding a warning
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
@@ -74,9 +63,8 @@ public:
     uint8_t defValue);
   using GOMidiObject::Load; // for avoiding a warning
   void Load(GOConfigReader &cfg, const wxString &group, int enclosureNb);
-  void SetElementId(int id) override;
-  void Set(int n);
-  int GetValue();
+  void SetEnclosureValue(int n);
+  int GetEnclosureValue() const { return m_MIDIValue; }
   int GetMIDIInputNumber();
   float GetAttenuation();
 

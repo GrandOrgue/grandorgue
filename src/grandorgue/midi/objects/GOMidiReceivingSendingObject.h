@@ -39,13 +39,13 @@ protected:
 
   void ProcessMidi(const GOMidiEvent &event) override;
 
-  virtual void OnMatchedMidi(
-    const GOMidiEvent &event, GOMidiMatchType matchType)
+  virtual void OnMidiReceived(
+    const GOMidiEvent &event, GOMidiMatchType matchType, int value)
     = 0;
 
 public:
   virtual void SetElementId(int id) override;
-  void SetPreconfigIndex(unsigned index);
+  void SetReceiverIndex(unsigned index) { m_receiver.SetIndex(index); }
 };
 
 #endif /* GOMIDIRECEIVINGSENDINGOBJECT_H */
