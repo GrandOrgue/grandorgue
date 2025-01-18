@@ -24,16 +24,14 @@ static const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
 static const wxString WX_MIDI_TYPE_NAME = _("Manual");
 
 GOManual::GOManual(GOOrganModel &organModel)
-  : GOMidiSendingObject(
+  : GOMidiReceivingSendingObject(
     organModel,
     WX_MIDI_TYPE_CODE,
     WX_MIDI_TYPE_NAME,
     MIDI_SEND_MANUAL,
-    &m_midi,
+    MIDI_RECV_MANUAL,
     nullptr,
     &m_division),
-    r_OrganModel(organModel),
-    m_midi(organModel, MIDI_RECV_MANUAL),
     m_division(organModel, MIDI_SEND_MANUAL),
     m_InputCouplers(),
     m_KeyVelocity(0),
@@ -56,20 +54,16 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
+  SetReceiverKeyMap(&m_MidiMap);
   m_InputCouplers.push_back(NULL);
   r_OrganModel.RegisterCombinationButtonSet(this);
-  r_OrganModel.RegisterEventHandler(this);
 }
 
-GOManual::~GOManual(void) {
-  r_OrganModel.UnRegisterEventHandler(this);
-  r_OrganModel.UnRegisterCombinationButtonSet(this);
-}
+GOManual::~GOManual(void) { r_OrganModel.UnRegisterCombinationButtonSet(this); }
 
 void GOManual::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiSendingObject::LoadMidiObject(cfg, group, midiMap);
-  m_midi.Load(cfg, group, midiMap);
+  GOMidiReceivingSendingObject::LoadMidiObject(cfg, group, midiMap);
   m_division.Load(cfg, group + wxT("Division"), midiMap);
 }
 
@@ -94,7 +88,7 @@ void GOManual::Init(
   int manualNumber,
   unsigned firstMidi,
   unsigned keys) {
-  GOMidiSendingObject::Init(
+  GOMidiReceivingSendingObject::Init(
     cfg,
     group,
     wxString::Format(
@@ -127,7 +121,7 @@ void GOManual::Init(
 
 void GOManual::Load(
   GOConfigReader &cfg, const wxString &group, int manualNumber) {
-  GOMidiSendingObject::Load(
+  GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_nb_logical_keys
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalKeys"), 1, 192);
@@ -165,7 +159,7 @@ void GOManual::Load(
     false);
   m_manual_number = manualNumber;
 
-  m_midi.SetIndex(manualNumber);
+  SetReceiverIndex(manualNumber);
 
   for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
     m_MidiKeyMap[i] = (uint8_t)cfg.ReadInteger(
@@ -244,8 +238,7 @@ void GOManual::Load(
 
 void GOManual::SaveMidiObject(
   GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiSendingObject::SaveMidiObject(cfg, group, midiMap);
-  m_midi.Save(cfg, group, midiMap);
+  GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
   m_division.Save(cfg, group + wxT("Division"), midiMap);
 }
 
@@ -483,8 +476,7 @@ bool GOManual::IsKeyDown(unsigned midiNoteNumber) {
 bool GOManual::IsDisplayed() { return m_displayed; }
 
 void GOManual::PreparePlayback() {
-  GOMidiSendingObject::PrepareRecording();
-  m_midi.PreparePlayback();
+  GOMidiReceivingSendingObject::PreparePlayback();
   m_KeyVelocity.resize(m_nb_accessible_keys);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
   m_division.ResetKey();
@@ -502,6 +494,7 @@ void GOManual::PreparePlayback() {
 
 void GOManual::PrepareRecording() {
   ResetMidiKey();
+  GOMidiReceivingSendingObject::PrepareRecording();
   for (unsigned i = 0; i < m_KeyVelocity.size(); i++)
     if (m_KeyVelocity[i] > 0)
       SendMidiKey(i + m_first_accessible_key_midi_note_nb, m_KeyVelocity[i]);
@@ -509,7 +502,7 @@ void GOManual::PrepareRecording() {
 
 void GOManual::AbortPlayback() {
   AllNotesOff();
-  GOMidiSendingObject::AbortPlayback();
+  GOMidiReceivingSendingObject::AbortPlayback();
 }
 
 void GOManual::Update() {
@@ -520,10 +513,9 @@ void GOManual::Update() {
     m_couplers[i]->Update();
 }
 
-void GOManual::ProcessMidi(const GOMidiEvent &event) {
-  int key, value;
-
-  switch (m_midi.Match(event, &m_MidiKeyMap, key, value)) {
+void GOManual::OnMidiReceived(
+  const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value) {
+  switch (matchType) {
   case MIDI_MATCH_ON:
     if (value <= 0)
       value = 1;
@@ -553,11 +545,6 @@ void GOManual::Reset() {
 
   for (unsigned j = 0; j < GetStopCount(); j++)
     GetStop(j)->Reset();
-}
-
-void GOManual::SetElementId(int id) {
-  m_midi.SetElementID(id);
-  GOMidiSendingObject::SetElementId(id);
 }
 
 wxString GOManual::GetElementStatus() { return _("-"); }

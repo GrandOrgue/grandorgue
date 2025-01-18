@@ -17,6 +17,7 @@ class GOMidiReceivingSendingObject : public GOMidiSendingObject,
                                      private GOEventHandler {
 private:
   GOMidiReceiver m_receiver;
+  const GOMidiReceiver::KeyMap *p_ReceiverKeyMap;
 
 protected:
   GOMidiReceivingSendingObject(
@@ -30,6 +31,11 @@ protected:
 
   ~GOMidiReceivingSendingObject();
 
+  const GOMidiReceiver::KeyMap *GetReceiverKeyMap() { return p_ReceiverKeyMap; }
+  void SetReceiverKeyMap(const GOMidiReceiver::KeyMap *pKeyMap) {
+    p_ReceiverKeyMap = pKeyMap;
+  }
+
   virtual void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
   virtual void SaveMidiObject(
@@ -40,7 +46,7 @@ protected:
   void ProcessMidi(const GOMidiEvent &event) override;
 
   virtual void OnMidiReceived(
-    const GOMidiEvent &event, GOMidiMatchType matchType, int value)
+    const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value)
     = 0;
 
 public:

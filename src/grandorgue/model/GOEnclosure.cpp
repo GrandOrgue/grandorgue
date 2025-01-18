@@ -115,7 +115,7 @@ void GOEnclosure::Scroll(bool scroll_up) {
 }
 
 void GOEnclosure::OnMidiReceived(
-  const GOMidiEvent &event, GOMidiMatchType matchType, int value) {
+  const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value) {
   if (matchType == MIDI_MATCH_CHANGE)
     SetEnclosureValue(value);
 }

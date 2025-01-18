@@ -103,7 +103,7 @@ void GOButtonControl::AbortPlayback() {
 }
 
 void GOButtonControl::OnMidiReceived(
-  const GOMidiEvent &event, GOMidiMatchType matchType, int value) {
+  const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value) {
   switch (matchType) {
   case MIDI_MATCH_CHANGE:
     Push();

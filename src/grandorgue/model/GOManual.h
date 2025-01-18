@@ -15,9 +15,8 @@
 #include "combinations/control/GOCombinationButtonSet.h"
 #include "combinations/model/GOCombinationDefinition.h"
 #include "control/GOControl.h"
-#include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
-#include "midi/objects/GOMidiSendingObject.h"
+#include "midi/objects/GOMidiReceivingSendingObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
@@ -31,14 +30,10 @@ class GOSwitch;
 class GOTremulant;
 class GOOrganModel;
 
-class GOManual : public GOMidiSendingObject,
+class GOManual : public GOMidiReceivingSendingObject,
                  public GOControl,
-                 private GOEventHandler,
                  private GOCombinationButtonSet {
 private:
-  GOOrganModel &r_OrganModel;
-
-  GOMidiReceiver m_midi;
   GOMidiSender m_division;
   std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */
@@ -77,7 +72,8 @@ private:
 
   void Resize();
 
-  void ProcessMidi(const GOMidiEvent &event) override;
+  void OnMidiReceived(
+    const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value);
   void HandleKey(int key) override;
   void SetOutput(unsigned note, unsigned velocity);
 
@@ -99,7 +95,7 @@ public:
 
   unsigned GetManulNumber() const { return m_manual_number; }
 
-  using GOMidiObject::Init; // avoiding a compilation warning
+  using GOMidiReceivingSendingObject::Init; // avoiding a compilation warning
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
@@ -117,7 +113,6 @@ public:
   void SetUnisonOff(bool on);
   void Update();
   void Reset();
-  void SetElementId(int id) override;
 
   unsigned GetNumberOfAccessibleKeys();
   unsigned GetFirstAccessibleKeyMIDINoteNumber();

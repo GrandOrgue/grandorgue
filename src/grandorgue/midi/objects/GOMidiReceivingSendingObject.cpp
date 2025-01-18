@@ -25,7 +25,8 @@ GOMidiReceivingSendingObject::GOMidiReceivingSendingObject(
     &m_receiver,
     pShortcutReceiver,
     pDivisionSender),
-    m_receiver(organModel, reveiverType) {
+    m_receiver(organModel, reveiverType),
+    p_ReceiverKeyMap(nullptr) {
   r_OrganModel.RegisterEventHandler(this);
 }
 
@@ -63,10 +64,12 @@ void GOMidiReceivingSendingObject::PreparePlayback() {
 
 void GOMidiReceivingSendingObject::ProcessMidi(const GOMidiEvent &event) {
   if (!IsReadOnly()) {
+    int key;
     int value;
-    GOMidiMatchType matchType = m_receiver.Match(event, value);
+    GOMidiMatchType matchType
+      = m_receiver.Match(event, p_ReceiverKeyMap, key, value);
 
     if (matchType > MIDI_MATCH_NONE)
-      OnMidiReceived(event, matchType, value);
+      OnMidiReceived(event, matchType, key, value);
   }
 }
