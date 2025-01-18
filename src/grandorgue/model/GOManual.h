@@ -30,8 +30,8 @@ class GOSwitch;
 class GOTremulant;
 class GOOrganModel;
 
-class GOManual : public GOMidiReceivingSendingObject,
-                 public GOControl,
+class GOManual : public GOControl,
+                 public GOMidiReceivingSendingObject,
                  private GOCombinationButtonSet {
 private:
   GOMidiSender m_division;

@@ -22,7 +22,7 @@ class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOButtonControl : public GOMidiReceivingSendingObject, public GOControl {
+class GOButtonControl : public GOControl, public GOMidiReceivingSendingObject {
 protected:
   GOMidiShortcutReceiver m_shortcut;
   bool m_Pushbutton;

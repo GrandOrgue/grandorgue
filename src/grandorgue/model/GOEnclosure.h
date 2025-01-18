@@ -22,7 +22,7 @@ class GOConfigWriter;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOEnclosure : public GOMidiReceivingSendingObject, public GOControl {
+class GOEnclosure : public GOControl, public GOMidiReceivingSendingObject {
 private:
   GOMidiShortcutReceiver m_shortcut;
   wxString m_Name;
