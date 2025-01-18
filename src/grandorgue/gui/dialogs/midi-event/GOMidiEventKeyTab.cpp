@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -32,8 +32,9 @@ GOMidiEventKeyTab::GOMidiEventKeyTab(
   wxBoxSizer *sizer = new wxStaticBoxSizer(
     wxVERTICAL,
     this,
-    m_key.GetType() == KEY_RECV_ENCLOSURE ? _("&Plus-Shortcut:")
-                                          : _("&Shortcut:"));
+    m_key.GetType() == GOMidiShortcutPattern::KEY_RECV_ENCLOSURE
+      ? _("&Plus-Shortcut:")
+      : _("&Shortcut:"));
   m_keyselect = new wxChoice(this, ID_KEY_SELECT);
   sizer->Add(m_keyselect, 1, wxEXPAND);
 
@@ -43,7 +44,7 @@ GOMidiEventKeyTab::GOMidiEventKeyTab(
 
   topSizer->Add(sizer, 0, wxALL | wxEXPAND, 6);
 
-  if (m_key.GetType() == KEY_RECV_ENCLOSURE) {
+  if (m_key.GetType() == GOMidiShortcutPattern::KEY_RECV_ENCLOSURE) {
     sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("&Minus-Shortcut:"));
     m_keyminusselect = new wxChoice(this, ID_MINUS_KEY_SELECT);
     sizer->Add(m_keyminusselect, 1, wxEXPAND);
