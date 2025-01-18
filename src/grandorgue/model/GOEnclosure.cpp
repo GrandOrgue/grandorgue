@@ -19,29 +19,19 @@ static const wxString WX_MIDI_TYPE_CODE = wxT("Enclosure");
 static const wxString WX_MIDI_TYPE_NAME = _("Enclosure");
 
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
-  : GOMidiReceivingSendingObject(
+  : GOMidiObjectWithShortcut(
     organModel,
     WX_MIDI_TYPE_CODE,
     WX_MIDI_TYPE_NAME,
     MIDI_SEND_ENCLOSURE,
-    MIDI_RECV_ENCLOSURE),
-    m_shortcut(GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
+    MIDI_RECV_ENCLOSURE,
+    GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
     m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
     m_Displayed1(false),
     m_Displayed2(false),
     m_AmpMinimumLevel(0),
-    m_MIDIValue(0) {
-  SetMidiShortcutReceiver(&m_shortcut);
-}
-
-GOEnclosure::~GOEnclosure() { SetMidiShortcutReceiver(nullptr); }
-
-void GOEnclosure::LoadMidiObject(
-  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::LoadMidiObject(cfg, group, midiMap);
-  m_shortcut.Load(cfg, group);
-}
+    m_MIDIValue(0) {}
 
 
 static const wxString WX_AMP_MINIMUM_LEVEL = wxT("AmpMinimumLevel");
@@ -86,12 +76,6 @@ void GOEnclosure::Load(
   SetReceiverIndex(enclosureNb);
 }
 
-void GOEnclosure::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
-  m_shortcut.Save(cfg, group);
-}
-
 void GOEnclosure::Save(GOConfigWriter &cfg) {
   GOMidiReceivingSendingObject::Save(cfg);
   cfg.WriteInteger(m_group, WX_AMP_MINIMUM_LEVEL, m_AmpMinimumLevel);
@@ -123,8 +107,9 @@ void GOEnclosure::OnMidiReceived(
     SetEnclosureValue(value);
 }
 
-void GOEnclosure::HandleKey(int key) {
-  switch (m_shortcut.Match(key)) {
+void GOEnclosure::OnShortcutKeyReceived(
+  GOMidiShortcutReceiver::MatchType matchType, int key) {
+  switch (matchType) {
   case GOMidiShortcutReceiver::KEY_MATCH:
     SetIntEnclosureValue(m_MIDIValue + 8);
     break;

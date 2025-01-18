@@ -14,18 +14,14 @@
 #include <wx/string.h>
 
 #include "control/GOControl.h"
-#include "midi/GOMidiShortcutReceiver.h"
-#include "midi/objects/GOMidiReceivingSendingObject.h"
+#include "midi/objects/GOMidiObjectWithShortcut.h"
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOMidiMap;
 class GOOrganModel;
 
-class GOEnclosure : public GOControl, public GOMidiReceivingSendingObject {
+class GOEnclosure : public GOControl, public GOMidiObjectWithShortcut {
 private:
-  GOMidiShortcutReceiver m_shortcut;
-  wxString m_Name;
   uint8_t m_DefaultAmpMinimumLevel;
   uint8_t m_MIDIInputNumber;
   bool m_Displayed1;
@@ -34,17 +30,13 @@ private:
   uint8_t m_AmpMinimumLevel;
   uint8_t m_MIDIValue;
 
-  void LoadMidiObject(
-    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
-  void SaveMidiObject(
-    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
-
   void OnMidiReceived(
     const GOMidiEvent &event,
     GOMidiMatchType matchType,
     int key,
     int value) override;
-  void HandleKey(int key) override;
+  void OnShortcutKeyReceived(
+    GOMidiShortcutReceiver::MatchType matchType, int key) override;
 
   // Load all customizable values from the .cmb file
   void LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue);
@@ -57,9 +49,8 @@ public:
   static constexpr uint8_t MAX_MIDI_VALUE = 127;
 
   GOEnclosure(GOOrganModel &organModel);
-  ~GOEnclosure();
 
-  using GOMidiReceivingSendingObject::Init; // for avoiding a warning
+  using GOMidiObjectWithShortcut::Init; // for avoiding a warning
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
@@ -69,7 +60,7 @@ public:
   void Load(GOConfigReader &cfg, const wxString &group, int enclosureNb);
   void SetEnclosureValue(int n);
   int GetEnclosureValue() const { return m_MIDIValue; }
-  int GetMIDIInputNumber();
+  int GetMIDIInputNumber() const { return m_MIDIInputNumber; }
   float GetAttenuation();
 
   void Scroll(bool scroll_up);
