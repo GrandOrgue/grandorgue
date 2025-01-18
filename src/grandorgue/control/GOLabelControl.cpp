@@ -9,10 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "config/GOConfig.h"
 #include "model/GOOrganModel.h"
-
-#include "GODocument.h"
 
 GOLabelControl::GOLabelControl(GOOrganModel &organModel)
   : GOMidiSendingObject(

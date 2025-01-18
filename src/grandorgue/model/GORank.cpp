@@ -11,7 +11,6 @@
 
 #include <wx/intl.h>
 
-#include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 
 #include "GODummyPipe.h"
