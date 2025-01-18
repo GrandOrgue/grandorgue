@@ -91,7 +91,7 @@ void GOManual::Init(
   m_MIDIInputNumber = 0;
   m_displayed = false;
   m_manual_number = manualNumber;
-  for (unsigned i = 0; i < 128; i++)
+  for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
     m_MidiMap[i] = i;
 
   m_stops.resize(0);
@@ -155,7 +155,7 @@ void GOManual::Load(
 
   SetReceiverIndex(manualNumber);
 
-  for (unsigned i = 0; i < 128; i++)
+  for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
     m_MidiMap[i] = cfg.ReadInteger(
       ODFSetting,
       group,
