@@ -57,6 +57,7 @@ public:
   static constexpr uint8_t MAX_MIDI_VALUE = 127;
 
   GOEnclosure(GOOrganModel &organModel);
+  ~GOEnclosure();
 
   using GOMidiReceivingSendingObject::Init; // for avoiding a warning
   void Init(

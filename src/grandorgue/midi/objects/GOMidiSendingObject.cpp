@@ -13,19 +13,13 @@ GOMidiSendingObject::GOMidiSendingObject(
   GOOrganModel &organModel,
   const wxString &midiTypeCode,
   const wxString &midiTypeName,
-  GOMidiSenderType senderType,
-  GOMidiReceiverBase *pMidiReceiver,
-  GOMidiShortcutReceiver *pShortcutReceiver,
-  GOMidiSender *pDivisionSender)
-  : GOMidiObject(
-    organModel,
-    midiTypeCode,
-    midiTypeName,
-    &m_sender,
-    pMidiReceiver,
-    pShortcutReceiver,
-    pDivisionSender),
-    m_sender(organModel, senderType) {}
+  GOMidiSenderType senderType)
+  : GOMidiObject(organModel, midiTypeCode, midiTypeName),
+    m_sender(organModel, senderType) {
+  SetMidiSender(&m_sender);
+}
+
+GOMidiSendingObject::~GOMidiSendingObject() { SetMidiSender(nullptr); }
 
 void GOMidiSendingObject::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {

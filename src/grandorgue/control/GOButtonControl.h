@@ -12,7 +12,6 @@
 
 #include "midi/GOMidiShortcutReceiver.h"
 #include "midi/objects/GOMidiReceivingSendingObject.h"
-#include "sound/GOSoundStateHandler.h"
 
 #include "GOControl.h"
 
@@ -55,6 +54,7 @@ public:
     GOMidiReceiverType midiType,
     bool pushbutton,
     bool isPiston = false);
+  ~GOButtonControl();
 
   void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) override;

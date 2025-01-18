@@ -25,9 +25,7 @@ protected:
     const wxString &midiTypeCode,
     const wxString &midiTypeName,
     GOMidiSenderType senderType,
-    GOMidiReceiverType reveiverType,
-    GOMidiShortcutReceiver *pShortcutReceiver = nullptr,
-    GOMidiSender *pDivisionSender = nullptr);
+    GOMidiReceiverType reveiverType);
 
   ~GOMidiReceivingSendingObject();
 

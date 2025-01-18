@@ -23,10 +23,9 @@ protected:
     GOOrganModel &organModel,
     const wxString &midiTypeCode,
     const wxString &midiTypeName,
-    GOMidiSenderType senderType,
-    GOMidiReceiverBase *pMidiReceiver = nullptr,
-    GOMidiShortcutReceiver *pShortcutReceiver = nullptr,
-    GOMidiSender *pDivisionSender = nullptr);
+    GOMidiSenderType senderType);
+
+  ~GOMidiSendingObject();
 
   void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;

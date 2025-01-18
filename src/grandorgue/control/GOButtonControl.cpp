@@ -23,19 +23,18 @@ GOButtonControl::GOButtonControl(
   bool pushbutton,
   bool isPiston)
   : GOMidiReceivingSendingObject(
-    organModel,
-    midiTypeCode,
-    midiTypeName,
-    MIDI_SEND_BUTTON,
-    midiType,
-    &m_shortcut),
+    organModel, midiTypeCode, midiTypeName, MIDI_SEND_BUTTON, midiType),
     m_shortcut(GOMidiShortcutReceiver::KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
     m_Engaged(false),
     m_DisplayInInvertedState(false),
     m_ReadOnly(false),
-    m_IsPiston(isPiston) {}
+    m_IsPiston(isPiston) {
+  SetMidiShortcutReceiver(&m_shortcut);
+}
+
+GOButtonControl::~GOButtonControl() { SetMidiShortcutReceiver(nullptr); }
 
 void GOButtonControl::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {

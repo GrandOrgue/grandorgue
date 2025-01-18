@@ -29,9 +29,7 @@ GOManual::GOManual(GOOrganModel &organModel)
     WX_MIDI_TYPE_CODE,
     WX_MIDI_TYPE_NAME,
     MIDI_SEND_MANUAL,
-    MIDI_RECV_MANUAL,
-    nullptr,
-    &m_division),
+    MIDI_RECV_MANUAL),
     m_division(organModel, MIDI_SEND_MANUAL),
     m_InputCouplers(),
     m_KeyVelocity(0),
@@ -54,12 +52,16 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
-  SetReceiverKeyMap(&m_MidiMap);
+  SetDivisionSender(&m_division), SetReceiverKeyMap(&m_MidiMap);
   m_InputCouplers.push_back(NULL);
   r_OrganModel.RegisterCombinationButtonSet(this);
 }
 
-GOManual::~GOManual(void) { r_OrganModel.UnRegisterCombinationButtonSet(this); }
+GOManual::~GOManual(void) {
+  r_OrganModel.UnRegisterCombinationButtonSet(this);
+  SetReceiverKeyMap(nullptr);
+  SetDivisionSender(nullptr);
+}
 
 void GOManual::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {

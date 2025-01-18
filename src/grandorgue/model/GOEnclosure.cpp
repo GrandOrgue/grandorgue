@@ -24,15 +24,18 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     WX_MIDI_TYPE_CODE,
     WX_MIDI_TYPE_NAME,
     MIDI_SEND_ENCLOSURE,
-    MIDI_RECV_ENCLOSURE,
-    &m_shortcut),
+    MIDI_RECV_ENCLOSURE),
     m_shortcut(GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
     m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
     m_Displayed1(false),
     m_Displayed2(false),
     m_AmpMinimumLevel(0),
-    m_MIDIValue(0) {}
+    m_MIDIValue(0) {
+  SetMidiShortcutReceiver(&m_shortcut);
+}
+
+GOEnclosure::~GOEnclosure() { SetMidiShortcutReceiver(nullptr); }
 
 void GOEnclosure::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {

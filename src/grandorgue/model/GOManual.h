@@ -17,7 +17,6 @@
 #include "control/GOControl.h"
 #include "midi/GOMidiSender.h"
 #include "midi/objects/GOMidiReceivingSendingObject.h"
-#include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
 

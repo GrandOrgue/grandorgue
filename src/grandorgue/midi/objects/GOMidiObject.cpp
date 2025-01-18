@@ -9,24 +9,21 @@
 
 #include <wx/intl.h>
 
+#include "midi/GOMidiReceiver.h"
 #include "model/GOOrganModel.h"
 
 GOMidiObject::GOMidiObject(
   GOOrganModel &organModel,
   const wxString &midiTypeCode,
-  const wxString &midiType,
-  GOMidiSender *pMidiSender,
-  GOMidiReceiverBase *pMidiReceiver,
-  GOMidiShortcutReceiver *pShortcutReceiver,
-  GOMidiSender *pDivisionSender)
+  const wxString &midiType)
   : r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_MidiTypeCode(midiTypeCode),
     r_MidiTypeName(midiType),
-    p_MidiSender(pMidiSender),
-    p_MidiReceiver(pMidiReceiver),
-    p_ShortcutReceiver(pShortcutReceiver),
-    p_DivisionSender(pDivisionSender) {
+    p_MidiSender(nullptr),
+    p_MidiReceiver(nullptr),
+    p_ShortcutReceiver(nullptr),
+    p_DivisionSender(nullptr) {
   r_OrganModel.RegisterSoundStateHandler(this);
   r_OrganModel.RegisterMidiObject(this);
 }

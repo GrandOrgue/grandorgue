@@ -17,7 +17,7 @@
 #include "GOSaveableObject.h"
 
 class GOMidiMap;
-class GOMidiReceiverBase;
+class GOMidiReceiver;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
 class GOOrganModel;
@@ -34,7 +34,7 @@ private:
   wxString m_name;
 
   GOMidiSender *p_MidiSender;
-  GOMidiReceiverBase *p_MidiReceiver;
+  GOMidiReceiver *p_MidiReceiver;
   GOMidiShortcutReceiver *p_ShortcutReceiver;
   GOMidiSender *p_DivisionSender;
 
@@ -42,13 +42,26 @@ protected:
   GOMidiObject(
     GOOrganModel &organModel,
     const wxString &midiTypeCode,
-    const wxString &midiTypeName,
-    GOMidiSender *pMidiSender,
-    GOMidiReceiverBase *pMidiReceiver,
-    GOMidiShortcutReceiver *pShortcutReceiver,
-    GOMidiSender *pDivisionSender);
+    const wxString &midiTypeName);
 
   virtual ~GOMidiObject();
+
+  GOMidiSender *GetMidiSender() const { return p_MidiSender; }
+  void SetMidiSender(GOMidiSender *pMidiSender) { p_MidiSender = pMidiSender; }
+  GOMidiReceiver *GetMidiReceiver() const { return p_MidiReceiver; }
+  void SetMidiReceiver(GOMidiReceiver *pMidiReceiver) {
+    p_MidiReceiver = pMidiReceiver;
+  }
+  GOMidiShortcutReceiver *GetMidiShortcutReceiver() const {
+    return p_ShortcutReceiver;
+  }
+  void SetMidiShortcutReceiver(GOMidiShortcutReceiver *pShortcutReceiver) {
+    p_ShortcutReceiver = pShortcutReceiver;
+  }
+  GOMidiSender *GetDivisionSender() const { return p_DivisionSender; }
+  void SetDivisionSender(GOMidiSender *pDivisionSender) {
+    p_DivisionSender = pDivisionSender;
+  }
 
 private:
   void InitMidiObject(

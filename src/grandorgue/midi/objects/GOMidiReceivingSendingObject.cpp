@@ -14,24 +14,17 @@ GOMidiReceivingSendingObject::GOMidiReceivingSendingObject(
   const wxString &midiTypeCode,
   const wxString &midiTypeName,
   GOMidiSenderType senderType,
-  GOMidiReceiverType reveiverType,
-  GOMidiShortcutReceiver *pShortcutReceiver,
-  GOMidiSender *pDivisionSender)
-  : GOMidiSendingObject(
-    organModel,
-    midiTypeCode,
-    midiTypeName,
-    senderType,
-    &m_receiver,
-    pShortcutReceiver,
-    pDivisionSender),
+  GOMidiReceiverType reveiverType)
+  : GOMidiSendingObject(organModel, midiTypeCode, midiTypeName, senderType),
     m_receiver(organModel, reveiverType),
     p_ReceiverKeyMap(nullptr) {
+  SetMidiReceiver(&m_receiver);
   r_OrganModel.RegisterEventHandler(this);
 }
 
 GOMidiReceivingSendingObject::~GOMidiReceivingSendingObject() {
   r_OrganModel.UnRegisterEventHandler(this);
+  SetMidiReceiver(nullptr);
 }
 
 void GOMidiReceivingSendingObject::LoadMidiObject(
