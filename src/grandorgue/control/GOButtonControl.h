@@ -10,8 +10,7 @@
 
 #include <wx/string.h>
 
-#include "midi/GOMidiShortcutReceiver.h"
-#include "midi/objects/GOMidiReceivingSendingObject.h"
+#include "midi/objects/GOMidiObjectWithShortcut.h"
 
 #include "GOControl.h"
 
@@ -21,9 +20,8 @@ class GOMidiEvent;
 class GOMidiMap;
 class GOOrganModel;
 
-class GOButtonControl : public GOControl, public GOMidiReceivingSendingObject {
+class GOButtonControl : public GOControl, public GOMidiObjectWithShortcut {
 protected:
-  GOMidiShortcutReceiver m_shortcut;
   bool m_Pushbutton;
   bool m_Displayed;
   bool m_Engaged;
@@ -31,17 +29,13 @@ protected:
   bool m_ReadOnly;
   bool m_IsPiston;
 
-  void LoadMidiObject(
-    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
-  void SaveMidiObject(
-    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
-
   void OnMidiReceived(
     const GOMidiEvent &event,
     GOMidiMatchType matchType,
     int key,
     int value) override;
-  void HandleKey(int key) override;
+  void OnShortcutKeyReceived(
+    GOMidiShortcutReceiver::MatchType matchType, int key) override;
 
   void PrepareRecording() override;
   void AbortPlayback() override;
@@ -54,23 +48,22 @@ public:
     GOMidiReceiverType midiType,
     bool pushbutton,
     bool isPiston = false);
-  ~GOButtonControl();
 
   void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) override;
   using GOMidiObject::Load; // Avoiding a compilation warning
   virtual void Load(GOConfigReader &cfg, const wxString &group);
-  bool IsDisplayed();
+
+  bool IsDisplayed() const { return m_Displayed; }
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }
   bool IsReadOnly() const override { return m_ReadOnly; }
   bool IsPiston() const { return m_IsPiston; }
+  bool IsEngaged() const { return m_Engaged; }
+  bool DisplayInverted() const { return m_DisplayInInvertedState; }
 
   virtual void Push();
-  virtual void SetButtonState(bool on);
+  virtual void SetButtonState(bool on) {}
   virtual void Display(bool onoff);
-  bool IsEngaged() const;
-  bool DisplayInverted() const;
-  void SetShortcutKey(unsigned key);
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;

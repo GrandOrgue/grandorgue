@@ -22,37 +22,29 @@ GOButtonControl::GOButtonControl(
   GOMidiReceiverType midiType,
   bool pushbutton,
   bool isPiston)
-  : GOMidiReceivingSendingObject(
-    organModel, midiTypeCode, midiTypeName, MIDI_SEND_BUTTON, midiType),
-    m_shortcut(GOMidiShortcutReceiver::KEY_RECV_BUTTON),
+  : GOMidiObjectWithShortcut(
+    organModel,
+    midiTypeCode,
+    midiTypeName,
+    MIDI_SEND_BUTTON,
+    midiType,
+    GOMidiShortcutReceiver::KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
     m_Engaged(false),
     m_DisplayInInvertedState(false),
     m_ReadOnly(false),
-    m_IsPiston(isPiston) {
-  SetMidiShortcutReceiver(&m_shortcut);
-}
-
-GOButtonControl::~GOButtonControl() { SetMidiShortcutReceiver(nullptr); }
-
-void GOButtonControl::LoadMidiObject(
-  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::LoadMidiObject(cfg, group, midiMap);
-  if (!m_ReadOnly) {
-    m_shortcut.Load(cfg, group);
-  }
-}
+    m_IsPiston(isPiston) {}
 
 void GOButtonControl::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
-  GOMidiReceivingSendingObject::Init(cfg, group, name);
+  GOMidiObjectWithShortcut::Init(cfg, group, name);
   m_Displayed = false;
   m_DisplayInInvertedState = false;
 }
 
 void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
-  GOMidiReceivingSendingObject::Load(
+  GOMidiObjectWithShortcut::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true));
   m_Displayed
     = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
@@ -60,20 +52,9 @@ void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
     ODFSetting, group, wxT("DisplayInInvertedState"), false, false);
 }
 
-void GOButtonControl::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
-  if (!m_ReadOnly) {
-    m_shortcut.Save(cfg, group);
-  }
-}
-
-bool GOButtonControl::IsDisplayed() { return m_Displayed; }
-
-void GOButtonControl::HandleKey(int key) {
-  if (m_ReadOnly)
-    return;
-  switch (m_shortcut.Match(key)) {
+void GOButtonControl::OnShortcutKeyReceived(
+  GOMidiShortcutReceiver::MatchType matchType, int key) {
+  switch (matchType) {
   case GOMidiShortcutReceiver::KEY_MATCH:
     Push();
     break;
@@ -89,16 +70,14 @@ void GOButtonControl::Push() {
   SetButtonState(m_Engaged ^ true);
 }
 
-void GOButtonControl::SetButtonState(bool on) {}
-
 void GOButtonControl::PrepareRecording() {
-  GOMidiReceivingSendingObject::PrepareRecording();
+  GOMidiObjectWithShortcut::PrepareRecording();
   SendMidiValue(m_Engaged);
 }
 
 void GOButtonControl::AbortPlayback() {
   SendMidiValue(false);
-  GOMidiReceivingSendingObject::AbortPlayback();
+  GOMidiObjectWithShortcut::AbortPlayback();
 }
 
 void GOButtonControl::OnMidiReceived(
@@ -131,16 +110,6 @@ void GOButtonControl::Display(bool onoff) {
   SendMidiValue(onoff);
   m_Engaged = onoff;
   r_OrganModel.SendControlChanged(this);
-}
-
-bool GOButtonControl::IsEngaged() const { return m_Engaged; }
-
-bool GOButtonControl::DisplayInverted() const {
-  return m_DisplayInInvertedState;
-}
-
-void GOButtonControl::SetShortcutKey(unsigned key) {
-  m_shortcut.SetShortcut(key);
 }
 
 wxString GOButtonControl::GetElementStatus() {

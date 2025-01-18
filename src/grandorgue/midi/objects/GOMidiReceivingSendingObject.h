@@ -19,6 +19,8 @@ private:
   GOMidiReceiver m_receiver;
   const GOMidiReceiver::KeyMap *p_ReceiverKeyMap;
 
+  void ProcessMidi(const GOMidiEvent &event) override;
+
 protected:
   GOMidiReceivingSendingObject(
     GOOrganModel &organModel,
@@ -41,11 +43,11 @@ protected:
 
   void PreparePlayback() override;
 
-  void ProcessMidi(const GOMidiEvent &event) override;
-
   virtual void OnMidiReceived(
     const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value)
     = 0;
+
+  virtual void HandleKey(int key) override {}
 
 public:
   virtual void SetElementId(int id) override;
