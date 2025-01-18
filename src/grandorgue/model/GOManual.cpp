@@ -24,13 +24,12 @@ static const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
 static const wxString WX_MIDI_TYPE_NAME = _("Manual");
 
 GOManual::GOManual(GOOrganModel &organModel)
-  : GOMidiReceivingSendingObject(
+  : GOMidiObjectWithDivision(
     organModel,
     WX_MIDI_TYPE_CODE,
     WX_MIDI_TYPE_NAME,
     MIDI_SEND_MANUAL,
     MIDI_RECV_MANUAL),
-    m_division(organModel, MIDI_SEND_MANUAL),
     m_InputCouplers(),
     m_KeyVelocity(0),
     m_RemoteVelocity(),
@@ -52,7 +51,7 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
-  SetDivisionSender(&m_division), SetReceiverKeyMap(&m_MidiMap);
+  SetReceiverKeyMap(&m_MidiMap);
   m_InputCouplers.push_back(NULL);
   r_OrganModel.RegisterCombinationButtonSet(this);
 }
@@ -60,13 +59,6 @@ GOManual::GOManual(GOOrganModel &organModel)
 GOManual::~GOManual(void) {
   r_OrganModel.UnRegisterCombinationButtonSet(this);
   SetReceiverKeyMap(nullptr);
-  SetDivisionSender(nullptr);
-}
-
-void GOManual::LoadMidiObject(
-  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::LoadMidiObject(cfg, group, midiMap);
-  m_division.Load(cfg, group + wxT("Division"), midiMap);
 }
 
 unsigned GOManual::RegisterCoupler(GOCoupler *coupler) {
@@ -238,12 +230,6 @@ void GOManual::Load(
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 }
 
-void GOManual::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
-  m_division.Save(cfg, group + wxT("Division"), midiMap);
-}
-
 void GOManual::LoadDivisionals(GOConfigReader &cfg) {
   unsigned nDivisionals = cfg.ReadInteger(
     ODFSetting, m_group, wxT("NumberOfDivisionals"), 0, 999, false);
@@ -279,7 +265,7 @@ void GOManual::SetOutput(unsigned note, unsigned velocity) {
   int midi_note = note + m_first_accessible_key_midi_note_nb
     - m_first_accessible_logical_key_nb + 1;
   if (midi_note >= 0 && midi_note < 127)
-    m_division.SetKey(midi_note, velocity);
+    SendDivisionMidiKey(midi_note, velocity);
 }
 
 void GOManual::PropagateKeyToCouplers(unsigned note) {
@@ -481,7 +467,7 @@ void GOManual::PreparePlayback() {
   GOMidiReceivingSendingObject::PreparePlayback();
   m_KeyVelocity.resize(m_nb_accessible_keys);
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
-  m_division.ResetKey();
+  ResetDivisionMidiKey();
   m_UnisonOff = 0;
   for (unsigned i = 0; i < m_Velocity.size(); i++)
     m_Velocity[i] = 0;

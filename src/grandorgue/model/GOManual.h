@@ -15,13 +15,9 @@
 #include "combinations/control/GOCombinationButtonSet.h"
 #include "combinations/model/GOCombinationDefinition.h"
 #include "control/GOControl.h"
-#include "midi/GOMidiSender.h"
-#include "midi/objects/GOMidiReceivingSendingObject.h"
-
-#include "GOEventHandler.h"
+#include "midi/objects/GOMidiObjectWithDivision.h"
 
 class GOConfigReader;
-class GOConfigWriter;
 class GOCoupler;
 class GODivisionalButtonControl;
 class GOStop;
@@ -30,10 +26,9 @@ class GOTremulant;
 class GOOrganModel;
 
 class GOManual : public GOControl,
-                 public GOMidiReceivingSendingObject,
+                 public GOMidiObjectWithDivision,
                  private GOCombinationButtonSet {
 private:
-  GOMidiSender m_division;
   std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */
   std::vector<unsigned> m_KeyVelocity;
@@ -63,11 +58,6 @@ private:
   unsigned m_ODFCouplerCount;
   bool m_displayed;
   GOCombinationDefinition m_DivisionalTemplate;
-
-  void LoadMidiObject(
-    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
-  void SaveMidiObject(
-    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
   void Resize();
 

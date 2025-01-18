@@ -23,6 +23,16 @@ protected:
     GOMidiReceiverType receiverType);
 
   ~GOMidiObjectWithDivision();
+
+  void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
+  void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
+
+  void SendDivisionMidiKey(unsigned key, unsigned value) {
+    m_DivisionSender.SetKey(key, value);
+  }
+  void ResetDivisionMidiKey() { m_DivisionSender.ResetKey(); }
 };
 
 #endif /* GOMIDIOBJECTWITHDIVISION_H */
