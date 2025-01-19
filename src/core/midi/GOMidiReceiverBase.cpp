@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -463,7 +463,7 @@ GOMidiMatchType GOMidiReceiverBase::Match(const GOMidiEvent &e, int &value) {
 }
 
 GOMidiMatchType GOMidiReceiverBase::Match(
-  const GOMidiEvent &e, const unsigned midi_map[128], int &key, int &value) {
+  const GOMidiEvent &e, const KeyMap *pMidiMap, int &key, int &value) {
   const GOMidiEvent::MidiType eMidiType = e.GetMidiType();
 
   value = 0;
@@ -564,9 +564,9 @@ GOMidiMatchType GOMidiReceiverBase::Match(
         if (key > 127)
           continue;
         if (
-          midi_map && pattern.type != MIDI_M_NOTE_SHORT_OCTAVE
+          pMidiMap && pattern.type != MIDI_M_NOTE_SHORT_OCTAVE
           && pattern.type != MIDI_M_NOTE_NORMAL)
-          key = midi_map[key];
+          key = (*pMidiMap)[key];
         if (pattern.type == MIDI_M_NOTE_NO_VELOCITY) {
           value = e.GetValue() ? 127 : 0;
           if (eMidiType == GOMidiEvent::MIDI_AFTERTOUCH)

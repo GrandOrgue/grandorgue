@@ -27,7 +27,6 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOCoupler;
 class GODivisionalButtonControl;
-class GOMidiEvent;
 class GOStop;
 class GOSwitch;
 class GOTremulant;
@@ -55,7 +54,7 @@ private:
   std::vector<unsigned> m_Velocity;
   std::vector<unsigned> m_DivisionState;
   std::vector<std::vector<unsigned>> m_Velocities;
-  unsigned m_MidiMap[128];
+  GOMidiReceiver::KeyMap m_MidiMap;
   unsigned m_manual_number;
   unsigned m_first_accessible_logical_key_nb;
   unsigned m_nb_logical_keys;
@@ -81,7 +80,8 @@ private:
 
   void Resize();
 
-  void ProcessMidi(const GOMidiEvent &event) override;
+  void OnMidiReceived(
+    const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value);
   void HandleKey(int key) override;
   void SetOutput(unsigned note, unsigned velocity);
 

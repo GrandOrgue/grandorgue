@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,6 +19,10 @@ class GOMidiMap;
 struct IniFileEnumEntry;
 
 class GOMidiReceiverBase : public GOMidiReceiverEventPatternList {
+public:
+  constexpr static unsigned KEY_MAP_SIZE = 128;
+  using KeyMap = unsigned[KEY_MAP_SIZE];
+
 private:
   typedef struct {
     unsigned device;
@@ -52,7 +56,7 @@ public:
   GOMidiMatchType Match(const GOMidiEvent &e);
   GOMidiMatchType Match(const GOMidiEvent &e, int &value);
   GOMidiMatchType Match(
-    const GOMidiEvent &e, const unsigned midi_map[128], int &key, int &value);
+    const GOMidiEvent &e, const KeyMap *pMidiMap, int &key, int &value);
 
   bool HasDebounce(GOMidiReceiverMessageType type);
   bool HasChannel(GOMidiReceiverMessageType type);

@@ -50,6 +50,7 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
+  SetReceiverKeyMap(&m_MidiMap);
   m_InputCouplers.push_back(NULL);
   organModel.RegisterCombinationButtonSet(this);
   organModel.RegisterEventHandler(this);
@@ -152,7 +153,7 @@ void GOManual::Load(
     false);
   m_manual_number = manualNumber;
 
-  m_midi.SetIndex(manualNumber);
+  SetReceiverIndex(manualNumber);
 
   for (unsigned i = 0; i < 128; i++)
     m_MidiMap[i] = cfg.ReadInteger(
@@ -513,10 +514,9 @@ void GOManual::Update() {
     m_couplers[i]->Update();
 }
 
-void GOManual::ProcessMidi(const GOMidiEvent &event) {
-  int key, value;
-
-  switch (m_midi.Match(event, m_MidiMap, key, value)) {
+void GOManual::OnMidiReceived(
+  const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value) {
+  switch (matchType) {
   case MIDI_MATCH_ON:
     if (value <= 0)
       value = 1;
