@@ -54,7 +54,7 @@ private:
   std::vector<unsigned> m_Velocity;
   std::vector<unsigned> m_DivisionState;
   std::vector<std::vector<unsigned>> m_Velocities;
-  GOMidiReceiver::KeyMap m_MidiMap;
+  GOMidiReceiver::KeyMap m_MidiKeyMap;
   unsigned m_manual_number;
   unsigned m_first_accessible_logical_key_nb;
   unsigned m_nb_logical_keys;
@@ -80,8 +80,7 @@ private:
 
   void Resize();
 
-  void OnMidiReceived(
-    const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value);
+  void ProcessMidi(const GOMidiEvent &event) override;
   void HandleKey(int key) override;
   void SetOutput(unsigned note, unsigned velocity);
 

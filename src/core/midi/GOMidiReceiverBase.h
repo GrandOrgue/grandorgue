@@ -8,6 +8,8 @@
 #ifndef GOMIDIRECEIVERBASE_H
 #define GOMIDIRECEIVERBASE_H
 
+#include <cstdint>
+
 #include "GOMidiMatchType.h"
 #include "GOMidiReceiverEventPatternList.h"
 #include "GOTime.h"
@@ -21,7 +23,7 @@ struct IniFileEnumEntry;
 class GOMidiReceiverBase : public GOMidiReceiverEventPatternList {
 public:
   constexpr static unsigned KEY_MAP_SIZE = 128;
-  using KeyMap = unsigned[KEY_MAP_SIZE];
+  using KeyMap = uint8_t[KEY_MAP_SIZE];
 
 private:
   typedef struct {
