@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,7 +19,7 @@ GOButtonControl::GOButtonControl(
   GOMidiReceiverType midi_type,
   bool pushbutton,
   bool isPiston)
-  : GOMidiConfigurator(organModel),
+  : GOMidiObject(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_OrganModel(organModel),
     m_midi(organModel, midi_type),

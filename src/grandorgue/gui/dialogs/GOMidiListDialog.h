@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -17,7 +17,7 @@ class wxButton;
 class wxListEvent;
 class wxListView;
 
-class GOMidiConfigurator;
+class GOMidiObject;
 
 class GOMidiListDialog : public GOSimpleDialog, public GOView {
 private:
@@ -45,7 +45,7 @@ public:
     GODocumentBase *doc,
     wxWindow *parent,
     GODialogSizeSet &dialogSizes,
-    const std::vector<GOMidiConfigurator *> &midi_elements);
+    const std::vector<GOMidiObject *> &midi_elements);
   ~GOMidiListDialog();
 
   DECLARE_EVENT_TABLE()

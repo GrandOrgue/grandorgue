@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDICONFIGURATOR_H
-#define GOMIDICONFIGURATOR_H
+#ifndef GOMIDIOBJECT_H
+#define GOMIDIOBJECT_H
 
 #include <wx/string.h>
 
@@ -17,7 +17,7 @@ class GOMidiReceiverBase;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
 
-class GOMidiConfigurator {
+class GOMidiObject {
 private:
   GOMidiDialogCreator &r_DialogCreator;
 
@@ -28,10 +28,10 @@ protected:
   virtual GOMidiSender *GetDivision() { return nullptr; }
 
 public:
-  GOMidiConfigurator(GOMidiDialogCreator &dialogCreator)
+  GOMidiObject(GOMidiDialogCreator &dialogCreator)
     : r_DialogCreator(dialogCreator) {}
 
-  virtual ~GOMidiConfigurator() {}
+  virtual ~GOMidiObject() {}
 
   virtual const wxString &GetMidiTypeCode() const = 0;
   virtual const wxString &GetMidiType() const = 0;

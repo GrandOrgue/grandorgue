@@ -14,10 +14,10 @@
 #include <wx/string.h>
 
 #include "control/GOControl.h"
-#include "midi/GOMidiConfigurator.h"
 #include "midi/GOMidiReceiver.h"
 #include "midi/GOMidiSender.h"
 #include "midi/GOMidiShortcutReceiver.h"
+#include "midi/objects/GOMidiObject.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOEventHandler.h"
@@ -33,7 +33,7 @@ class GOEnclosure : public GOControl,
                     private GOEventHandler,
                     private GOSaveableObject,
                     private GOSoundStateHandler,
-                    public GOMidiConfigurator {
+                    public GOMidiObject {
 private:
   GOOrganModel &r_OrganModel;
   GOMidiMap &r_MidiMap;

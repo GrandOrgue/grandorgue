@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,7 +11,7 @@
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 
-#include "midi/GOMidiConfigurator.h"
+#include "midi/objects/GOMidiObject.h"
 
 #include "GOEvent.h"
 
@@ -28,7 +28,7 @@ GOMidiListDialog::GOMidiListDialog(
   GODocumentBase *doc,
   wxWindow *parent,
   GODialogSizeSet &dialogSizes,
-  const std::vector<GOMidiConfigurator *> &midi_elements)
+  const std::vector<GOMidiObject *> &midi_elements)
   : GOSimpleDialog(
     parent,
     wxT("MIDI Objects"),
@@ -70,7 +70,7 @@ GOMidiListDialog::GOMidiListDialog(
   topSizer->Add(buttons, 0, wxALIGN_RIGHT | wxALL, 1);
 
   for (unsigned i = 0; i < midi_elements.size(); i++) {
-    GOMidiConfigurator *obj = midi_elements[i];
+    GOMidiObject *obj = midi_elements[i];
 
     m_Objects->InsertItem(i, obj->GetMidiType());
     m_Objects->SetItemPtrData(i, (wxUIntPtr)obj);
@@ -87,14 +87,14 @@ GOMidiListDialog::GOMidiListDialog(
 GOMidiListDialog::~GOMidiListDialog() {}
 
 void GOMidiListDialog::OnButton(wxCommandEvent &event) {
-  GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
-    m_Objects->GetFirstSelected());
+  GOMidiObject *obj
+    = (GOMidiObject *)m_Objects->GetItemData(m_Objects->GetFirstSelected());
   obj->TriggerElementActions(event.GetId() - ID_BUTTON);
 }
 
 void GOMidiListDialog::OnStatus(wxCommandEvent &event) {
-  GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
-    m_Objects->GetFirstSelected());
+  GOMidiObject *obj
+    = (GOMidiObject *)m_Objects->GetItemData(m_Objects->GetFirstSelected());
   wxString status = obj->GetElementStatus();
   GOMessageBox(
     wxString::Format(_("Status: %s"), status),
@@ -105,8 +105,8 @@ void GOMidiListDialog::OnStatus(wxCommandEvent &event) {
 void GOMidiListDialog::OnObjectClick(wxListEvent &event) {
   m_Edit->Enable();
   m_Status->Enable();
-  GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
-    m_Objects->GetFirstSelected());
+  GOMidiObject *obj
+    = (GOMidiObject *)m_Objects->GetItemData(m_Objects->GetFirstSelected());
   std::vector<wxString> actions = obj->GetElementActions();
   for (unsigned i = 0; i < m_Buttons.size(); i++)
     if (i < actions.size()) {
@@ -118,8 +118,8 @@ void GOMidiListDialog::OnObjectClick(wxListEvent &event) {
 }
 
 void GOMidiListDialog::OnObjectDoubleClick(wxListEvent &event) {
-  GOMidiConfigurator *obj = (GOMidiConfigurator *)m_Objects->GetItemData(
-    m_Objects->GetFirstSelected());
+  GOMidiObject *obj
+    = (GOMidiObject *)m_Objects->GetItemData(m_Objects->GetFirstSelected());
   obj->ShowConfigDialog();
 }
 

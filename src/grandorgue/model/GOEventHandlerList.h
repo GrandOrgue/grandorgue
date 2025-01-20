@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -17,7 +17,7 @@ class GOCombinationButtonSet;
 class GOControl;
 class GOControlChangedHandler;
 class GOEventHandler;
-class GOMidiConfigurator;
+class GOMidiObject;
 class GOReferencingObject;
 class GOSoundStateHandler;
 class GOSaveableObject;
@@ -61,7 +61,7 @@ private:
   UPVector<GOReferencingObject> m_ReferencingObjects;
   UPVector<GOCombinationButtonSet> m_CombinationButtonSets;
   UPVector<GOControlChangedHandler> m_ControlChangedHandlers;
-  UPVector<GOMidiConfigurator> m_MidiConfigurators;
+  UPVector<GOMidiObject> m_MidiConfigurators;
   UPVector<GOEventHandler> m_MidiEventHandlers;
   UPVector<GOSoundStateHandler> m_SoundStateHandlers;
   UPVector<GOSaveableObject> m_SaveableObjects;
@@ -77,7 +77,7 @@ public:
     const {
     return m_CombinationButtonSets.AsVector();
   }
-  const std::vector<GOMidiConfigurator *> &GetMidiConfigurators() const {
+  const std::vector<GOMidiObject *> &GetMidiConfigurators() const {
     return m_MidiConfigurators.AsVector();
   }
   const std::vector<GOEventHandler *> &GetMidiEventHandlers() const {
@@ -112,7 +112,7 @@ public:
     m_ControlChangedHandlers.Remove(handler);
   }
 
-  void RegisterMidiConfigurator(GOMidiConfigurator *obj) {
+  void RegisterMidiConfigurator(GOMidiObject *obj) {
     m_MidiConfigurators.Add(obj);
   }
 

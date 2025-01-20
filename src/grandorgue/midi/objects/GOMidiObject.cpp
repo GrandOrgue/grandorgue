@@ -1,17 +1,17 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOMidiConfigurator.h"
+#include "GOMidiObject.h"
 
 #include <wx/intl.h>
 
-#include "dialog-creator/GOMidiDialogCreator.h"
+#include "midi/dialog-creator/GOMidiDialogCreator.h"
 
-void GOMidiConfigurator::ShowConfigDialog() {
+void GOMidiObject::ShowConfigDialog() {
   const wxString &midiTypeCode = GetMidiTypeCode();
   const wxString &midiName = GetMidiName();
   wxString title

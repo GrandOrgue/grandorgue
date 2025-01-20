@@ -16,7 +16,7 @@
 #include "GOOrganModel.h"
 
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
-  : GOMidiConfigurator(organModel),
+  : GOMidiObject(organModel),
     r_OrganModel(organModel),
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_midi(organModel, MIDI_RECV_ENCLOSURE),
