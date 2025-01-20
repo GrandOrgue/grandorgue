@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -47,20 +47,20 @@ void GOTestWindchest::run() {
   GOEnclosure *enclosure = new GOEnclosure(*this->controller);
   windchest->AddEnclosure(enclosure);
 
-  enclosure->Set(127);
+  enclosure->SetMidiValue(127);
   float volume = windchest->GetVolume();
   message = "The Windchest volume is not 1 but ";
   message = message + std::to_string(volume);
   this->GOAssert(volume == 1, message);
 
-  enclosure->Set(0);
+  enclosure->SetMidiValue(0);
   volume = windchest->GetVolume();
   message = "The Windchest volume is not 0 but ";
   message = message + std::to_string(volume);
   this->GOAssert(volume == 0, message);
 
   // Check a MIDI value of 50 (50/127)
-  enclosure->Set(50);
+  enclosure->SetMidiValue(50);
   volume = windchest->GetVolume();
   message = "The Windchest volume is not 0.393701 but ";
   message = message + std::to_string(volume);

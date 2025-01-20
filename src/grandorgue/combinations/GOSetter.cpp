@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -1174,7 +1174,7 @@ void GOSetter::Crescendo(int newpos, bool force) {
 
 void GOSetter::ControlChanged(GOControl *control) {
   if (control == &m_CrescendoCtrl)
-    Crescendo(m_CrescendoCtrl.GetValue() * CRESCENDO_STEPS / 128);
+    Crescendo(m_CrescendoCtrl.GetMidiValue() * CRESCENDO_STEPS / 128);
 }
 
 void GOSetter::UpdateTranspose() {
