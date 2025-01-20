@@ -90,8 +90,8 @@ void GOManual::Init(
   m_MIDIInputNumber = 0;
   m_displayed = false;
   m_manual_number = manualNumber;
-  for (unsigned i = 0; i < 128; i++)
-    m_MidiMap[i] = i;
+  for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
+    m_MidiKeyMap[i] = (uint8_t)i;
 
   m_stops.resize(0);
   m_couplers.resize(0);
@@ -154,8 +154,8 @@ void GOManual::Load(
 
   m_midi.SetIndex(manualNumber);
 
-  for (unsigned i = 0; i < 128; i++)
-    m_MidiMap[i] = cfg.ReadInteger(
+  for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
+    m_MidiKeyMap[i] = (uint8_t)cfg.ReadInteger(
       ODFSetting,
       group,
       wxString::Format(wxT("MIDIKey%03d"), i),
@@ -516,7 +516,7 @@ void GOManual::Update() {
 void GOManual::ProcessMidi(const GOMidiEvent &event) {
   int key, value;
 
-  switch (m_midi.Match(event, m_MidiMap, key, value)) {
+  switch (m_midi.Match(event, &m_MidiKeyMap, key, value)) {
   case MIDI_MATCH_ON:
     if (value <= 0)
       value = 1;
