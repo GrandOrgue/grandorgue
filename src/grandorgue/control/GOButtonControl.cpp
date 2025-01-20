@@ -24,7 +24,7 @@ GOButtonControl::GOButtonControl(
     r_OrganModel(organModel),
     m_midi(organModel, midi_type),
     m_sender(organModel, MIDI_SEND_BUTTON),
-    m_shortcut(KEY_RECV_BUTTON),
+    m_shortcut(GOMidiShortcutReceiver::KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
     m_Name(),
@@ -80,7 +80,7 @@ void GOButtonControl::HandleKey(int key) {
   if (m_ReadOnly)
     return;
   switch (m_shortcut.Match(key)) {
-  case KEY_MATCH:
+  case GOMidiShortcutReceiver::KEY_MATCH:
     Push();
     break;
 

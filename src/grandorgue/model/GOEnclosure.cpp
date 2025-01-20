@@ -21,7 +21,7 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     m_midi(organModel, MIDI_RECV_ENCLOSURE),
     m_sender(organModel, MIDI_SEND_ENCLOSURE),
-    m_shortcut(KEY_RECV_ENCLOSURE),
+    m_shortcut(GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
     m_Name(),
     m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
@@ -118,11 +118,11 @@ void GOEnclosure::ProcessMidi(const GOMidiEvent &event) {
 
 void GOEnclosure::HandleKey(int key) {
   switch (m_shortcut.Match(key)) {
-  case KEY_MATCH:
+  case GOMidiShortcutReceiver::KEY_MATCH:
     SetIntMidiValue(m_MIDIValue + 8);
     break;
 
-  case KEY_MATCH_MINUS:
+  case GOMidiShortcutReceiver::KEY_MATCH_MINUS:
     SetIntMidiValue(m_MIDIValue - 8);
     break;
   default:
