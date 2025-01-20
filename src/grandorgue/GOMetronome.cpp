@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -53,8 +53,8 @@ GOMetronome::GOMetronome(GOOrganController *organController)
     m_MeasureLength(4),
     m_Pos(0),
     m_Running(false),
-    m_BPMDisplay(organController),
-    m_MeasureDisplay(organController),
+    m_BPMDisplay(*organController),
+    m_MeasureDisplay(*organController),
     m_rank(NULL),
     m_StopID(0) {
   CreateButtons(*m_OrganController);

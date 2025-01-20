@@ -9,38 +9,38 @@
 
 #include <wx/intl.h>
 
-#include "GODocument.h"
-#include "GOOrganController.h"
 #include "config/GOConfig.h"
+#include "model/GOOrganModel.h"
 
-GOLabelControl::GOLabelControl(GOOrganController *organController)
-  : GOMidiObject(*organController),
+#include "GODocument.h"
+
+GOLabelControl::GOLabelControl(GOOrganModel &organModel)
+  : GOMidiConfigurator(organModel),
     m_Name(),
     m_Content(),
-    m_OrganController(organController),
-    m_sender(*organController, MIDI_SEND_LABEL) {
-  m_OrganController->RegisterMidiConfigurator(this);
-  m_OrganController->RegisterSoundStateHandler(this);
+    m_sender(organModel, MIDI_SEND_LABEL) {
+  r_OrganModel.RegisterMidiConfigurator(this);
+  r_OrganModel.RegisterSoundStateHandler(this);
 }
 
 GOLabelControl::~GOLabelControl() {}
 
 void GOLabelControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
-  m_sender.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, m_group, r_OrganModel.GetConfig().GetMidiMap());
 }
 
 void GOLabelControl::Load(GOConfigReader &cfg, wxString group, wxString name) {
-  m_OrganController->RegisterSaveableObject(this);
+  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
   m_Name = name;
-  m_sender.Load(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Load(cfg, m_group, r_OrganModel.GetConfig().GetMidiMap());
 }
 
 void GOLabelControl::Save(GOConfigWriter &cfg) {
-  m_sender.Save(cfg, m_group, m_OrganController->GetSettings().GetMidiMap());
+  m_sender.Save(cfg, m_group, r_OrganModel.GetConfig().GetMidiMap());
 }
 
 const wxString &GOLabelControl::GetContent() { return m_Content; }
@@ -48,7 +48,7 @@ const wxString &GOLabelControl::GetContent() { return m_Content; }
 void GOLabelControl::SetContent(wxString name) {
   m_Content = name;
   m_sender.SetLabel(m_Content);
-  m_OrganController->SendControlChanged(this);
+  r_OrganModel.SendControlChanged(this);
 }
 
 void GOLabelControl::AbortPlayback() {

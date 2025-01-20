@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -50,7 +50,7 @@ GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
     r_timer(*organController->GetTimer()),
     p_midi(nullptr),
     m_content(),
-    m_PlayingTime(organController),
+    m_PlayingTime(*organController),
     m_Start(0),
     m_PlayingSeconds(0),
     m_Speed(1),

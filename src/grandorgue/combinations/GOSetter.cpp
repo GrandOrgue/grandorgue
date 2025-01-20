@@ -299,12 +299,12 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_framegeneral(0),
     m_general(0),
     m_crescendo(0),
-    m_CurrFileDisplay(organController),
-    m_PosDisplay(organController),
-    m_BankDisplay(organController),
-    m_CrescendoDisplay(organController),
-    m_TransposeDisplay(organController),
-    m_NameDisplay(organController),
+    m_CurrFileDisplay(*organController),
+    m_PosDisplay(*organController),
+    m_BankDisplay(*organController),
+    m_CrescendoDisplay(*organController),
+    m_TransposeDisplay(*organController),
+    m_NameDisplay(*organController),
     m_CrescendoCtrl(*organController) {
   CreateButtons(*m_OrganController);
 
