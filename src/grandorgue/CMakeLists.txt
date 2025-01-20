@@ -165,7 +165,7 @@ model/pipe-config/GOPipeConfigTreeNode.cpp
 model/GOCacheObject.cpp
 model/GOCoupler.cpp
 model/GODivisionalCoupler.cpp
-model/GODrawStop.cpp
+model/GODrawstop.cpp
 model/GOEnclosure.cpp
 model/GOEventHandlerList.cpp
 model/GOManual.cpp
