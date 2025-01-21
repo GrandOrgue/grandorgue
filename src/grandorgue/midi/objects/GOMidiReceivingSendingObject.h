@@ -51,7 +51,7 @@ protected:
 
 public:
   virtual void SetElementId(int id) override;
-  void SetReceiverIndex(unsigned index) { m_receiver.SetIndex(index); }
+  void SetMidiReceiverIndex(unsigned index) { m_receiver.SetIndex(index); }
 };
 
 #endif /* GOMIDIRECEIVINGSENDINGOBJECT_H */

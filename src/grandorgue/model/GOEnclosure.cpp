@@ -32,7 +32,6 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     m_AmpMinimumLevel(0),
     m_MIDIValue(0) {}
 
-
 static const wxString WX_AMP_MINIMUM_LEVEL = wxT("AmpMinimumLevel");
 static const wxString WX_VALUE = wxT("Value");
 
@@ -72,7 +71,7 @@ void GOEnclosure::Load(
   m_MIDIInputNumber = cfg.ReadInteger(
     ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   LoadFromCmb(cfg, MAX_MIDI_VALUE);
-  SetReceiverIndex(enclosureNb);
+  SetMidiReceiverIndex(enclosureNb);
 }
 
 void GOEnclosure::Save(GOConfigWriter &cfg) {

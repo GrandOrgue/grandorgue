@@ -153,7 +153,7 @@ void GOManual::Load(
     false);
   m_manual_number = manualNumber;
 
-  SetReceiverIndex(manualNumber);
+  SetMidiReceiverIndex(manualNumber);
 
   for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
     m_MidiKeyMap[i] = (uint8_t)cfg.ReadInteger(
