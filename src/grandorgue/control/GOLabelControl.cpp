@@ -11,9 +11,12 @@
 
 #include "model/GOOrganModel.h"
 
+const wxString WX_MIDI_TYPE_CODE = wxT("Label");
+const wxString WX_MIDI_TYPE_NAME = _("Label");
+
 GOLabelControl::GOLabelControl(GOOrganModel &organModel)
   : GOMidiSendingObject(
-    *organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_LABEL) {}
+    organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_LABEL) {}
 
 const wxString &GOLabelControl::GetContent() { return m_Content; }
 

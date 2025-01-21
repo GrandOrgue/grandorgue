@@ -23,7 +23,6 @@ class GOOrganModel;
 
 class GOLabelControl : public GOControl, public GOMidiSendingObject {
 protected:
-  GOOrganModel &r_OrganModel;
   wxString m_Content;
 
   void AbortPlayback() override;

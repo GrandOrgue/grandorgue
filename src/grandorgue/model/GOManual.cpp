@@ -51,7 +51,7 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
-  SetReceiverKeyMap(&m_MidiMap);
+  SetReceiverKeyMap(&m_MidiKeyMap);
   m_InputCouplers.push_back(NULL);
   r_OrganModel.RegisterCombinationButtonSet(this);
 }

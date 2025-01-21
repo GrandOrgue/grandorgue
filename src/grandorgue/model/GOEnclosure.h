@@ -42,6 +42,8 @@ private:
   void LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue);
   void Save(GOConfigWriter &cfg) override;
 
+  void SetIntEnclosureValue(int n) { SetEnclosureValue(std::clamp(n, 0, 127)); }
+
   void PrepareRecording() override;
   void AbortPlayback() override;
 
@@ -58,7 +60,7 @@ public:
     uint8_t defValue);
   using GOMidiObject::Load; // for avoiding a warning
   void Load(GOConfigReader &cfg, const wxString &group, int enclosureNb);
-  void SetEnclosureValue(int n);
+  void SetEnclosureValue(uint8_t n);
   int GetEnclosureValue() const { return m_MIDIValue; }
   int GetMIDIInputNumber() const { return m_MIDIInputNumber; }
   float GetAttenuation();
