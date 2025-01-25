@@ -48,8 +48,7 @@ GOSettingsDialog::GOSettingsDialog(
     _("Program Settings"),
     config.m_DialogSizes,
     wxEmptyString,
-    wxDIALOG_NO_PARENT,
-    wxHELP | wxCLOSE),
+    wxDIALOG_NO_PARENT),
     m_ReasonsAlreadyShown(false),
     m_Reasons(reasons) {
   wxBookCtrlBase *notebook = GetBook();
