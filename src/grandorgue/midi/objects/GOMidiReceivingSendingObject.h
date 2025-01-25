@@ -19,8 +19,6 @@ private:
   GOMidiReceiver m_receiver;
   const GOMidiReceiver::KeyMap *p_ReceiverKeyMap;
 
-  void ProcessMidi(const GOMidiEvent &event) override;
-
 protected:
   GOMidiReceivingSendingObject(
     GOOrganModel &organModel,
@@ -36,6 +34,13 @@ protected:
     p_ReceiverKeyMap = pKeyMap;
   }
 
+public:
+  // Should be used before Load()
+  void SetInitialMidiIndex(unsigned index) { m_receiver.SetIndex(index); }
+
+  virtual void SetElementId(int id) override;
+
+protected:
   virtual void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
   virtual void SaveMidiObject(
@@ -43,15 +48,15 @@ protected:
 
   void PreparePlayback() override;
 
+private:
+  void ProcessMidi(const GOMidiEvent &event) override;
+
+protected:
   virtual void OnMidiReceived(
     const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value)
     = 0;
 
   virtual void HandleKey(int key) override {}
-
-public:
-  virtual void SetElementId(int id) override;
-  void SetMidiReceiverIndex(unsigned index) { m_receiver.SetIndex(index); }
 };
 
 #endif /* GOMIDIRECEIVINGSENDINGOBJECT_H */

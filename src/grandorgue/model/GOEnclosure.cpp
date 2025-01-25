@@ -60,7 +60,7 @@ void GOEnclosure::Init(
 
 void GOEnclosure::Load(
   GOConfigReader &cfg, const wxString &group, int enclosureNb) {
-  SetMidiReceiverIndex(enclosureNb); // Used in LoadMidiObject
+  SetInitialMidiIndex(enclosureNb); // Used in LoadMidiObject
   GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_Displayed1
