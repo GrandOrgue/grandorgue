@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -22,8 +22,10 @@ GOTabbedDialog::GOTabbedDialog(
   const wxString &title, // translated
   GODialogSizeSet &dialogSizes,
   const wxString dialogSelector,
-  long addStyle)
-  : GODialog(win, name, title, dialogSizes, dialogSelector, addStyle) {
+  long addStyle,
+  long buttonFlags)
+  : GODialog(
+    win, name, title, dialogSizes, dialogSelector, addStyle, buttonFlags) {
   p_book = GetBookCtrl();
   p_book->SetExtraStyle(p_book->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
   wxPropertySheetDialog::GetInnerSizer()->Add(
