@@ -449,6 +449,13 @@
                 <in>GOMidiEventRecvTab.cpp</in>
                 <in>GOMidiEventSendTab.cpp</in>
               </df>
+              <df name="organ-settings">
+                <in>GOOrganSettingsButtonsProxy.cpp</in>
+                <in>GOOrganSettingsDialog.cpp</in>
+                <in>GOOrganSettingsDialog.h</in>
+                <in>GOOrganSettingsPipesTab.cpp</in>
+                <in>GOOrganSettingsPipesTab.h</in>
+              </df>
               <df name="settings">
                 <in>GOSettingsAudio.cpp</in>
                 <in>GOSettingsDeviceMatchDialog.cpp</in>
@@ -465,7 +472,6 @@
               </df>
               <in>GOMidiListDialog.cpp</in>
               <in>GONewReleaseDialog.cpp</in>
-              <in>GOOrganSettingsDialog.cpp</in>
               <in>GOProgressDialog.cpp</in>
               <in>GOPropertiesDialog.cpp</in>
               <in>GOSelectOrganDialog.cpp</in>
@@ -574,6 +580,7 @@
             <in>GODivisionalCoupler.cpp</in>
             <in>GODivisionalCoupler.h</in>
             <in>GODrawStop.cpp</in>
+            <in>GODrawstop.cpp</in>
             <in>GOEnclosure.cpp</in>
             <in>GOEventHandlerList.cpp</in>
             <in>GOManual.cpp</in>
@@ -28623,28 +28630,20 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/combinations/control</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/combinations/control/GOCombinationControllerProxy.cpp"
@@ -28929,6 +28928,7 @@
             flavor2="11">
         <ccTool flags="2">
           <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -28941,7 +28941,12 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
             <Elem>_LARGEFILE_SOURCE=</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -28949,66 +28954,70 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOElementCreator.cpp"
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOEventDistributor.cpp"
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/c++/9/pstl</pElem>
+            <pElem>../../src/grandorgue/loader</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/control/GOLabelControl.cpp"
@@ -29017,6 +29026,7 @@
             flavor2="11">
         <ccTool flags="2">
           <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -29029,7 +29039,12 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
             <Elem>_LARGEFILE_SOURCE=</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -29039,6 +29054,7 @@
             flavor2="11">
         <ccTool flags="2">
           <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
             <pElem>../../submodules/RtMidi</pElem>
@@ -29051,7 +29067,12 @@
             <pElem>../../build/current/src/grandorgue</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
             <Elem>_LARGEFILE_SOURCE=</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -29061,6 +29082,7 @@
             flavor2="8">
         <ccTool flags="1">
           <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
             <pElem>../../src/grandorgue/contrib</pElem>
             <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
@@ -29096,6 +29118,8 @@
             <Elem>GO_USE_JACK=1</Elem>
             <Elem>GrandOrgueCore_EXPORTS</Elem>
             <Elem>WXUSINGDLL=1</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_REENTRANT</Elem>
             <Elem>__DBL_IS_IEC_60559__=2</Elem>
             <Elem>__FLT128_IS_IEC_60559__=2</Elem>
             <Elem>__FLT16_DECIMAL_DIG__=5</Elem>
@@ -29182,28 +29206,30 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/grandorgue/gui/dialogs</pElem>
+            <pElem>../../src/grandorgue/gui/dialogs/common</pElem>
+            <pElem>/usr/include/wx-3.0/wx/generic</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/wx-3.0/wx/meta</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue/help</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/gui/size</pElem>
             <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/dialogs/GONewReleaseDialog.cpp"
@@ -29236,34 +29262,6 @@
             <pElem>../../src/grandorgue</pElem>
             <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-        </ccTool>
-      </item>
-      <item path="../../src/grandorgue/gui/dialogs/GOOrganSettingsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="2">
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
@@ -29607,6 +29605,27 @@
             <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsButtonsProxy.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="12">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsPipesTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="2">
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
@@ -30082,28 +30101,27 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/gui/panels</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>../../src/grandorgue/gui/panels/primitives</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/grandorgue/gui/wxcontrols</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/panels/GOGUIControl.cpp"
@@ -30244,28 +30262,27 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/gui/panels</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>../../src/grandorgue/gui/panels/primitives</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>../../src/grandorgue/gui/wxcontrols</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/panels/GOGUIFloatingPanel.cpp"
@@ -30419,56 +30436,50 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/gui/panels</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>../../src/grandorgue/gui/panels/primitives</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/panels/GOGUIManualBackground.cpp"
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/gui/panels</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>../../src/grandorgue/gui/panels/primitives</pElem>
+            <pElem>/usr/include/wx-3.0/wx/gtk</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/gui/panels/GOGUIMasterPanel.cpp"
@@ -31272,28 +31283,20 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/midi/GOMidiSender.cpp"
@@ -31628,6 +31631,34 @@
           </preprocessorList>
         </ccTool>
       </item>
+      <item path="../../src/grandorgue/model/GODrawstop.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="2">
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_LARGEFILE_SOURCE=</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
       <item path="../../src/grandorgue/model/GOEnclosure.cpp"
             ex="false"
             tool="1"
@@ -31660,28 +31691,21 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/c++/9/pstl</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOManual.cpp"
@@ -31744,28 +31768,26 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/c++/9/pstl</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/core/config</pElem>
+            <pElem>../../src/grandorgue/config</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GORank.cpp"
@@ -31828,28 +31850,20 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
-            <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>/usr/include/c++/9/pstl</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOSoundingPipe.cpp"
@@ -31912,28 +31926,25 @@
             ex="false"
             tool="1"
             flavor2="11">
-        <ccTool flags="2">
+        <ccTool flags="0">
           <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/grandorgue/midi</pElem>
             <pElem>../../src/core</pElem>
-            <pElem>../../submodules/RtMidi</pElem>
-            <pElem>../../submodules/RtAudio</pElem>
-            <pElem>../../submodules/PortAudio/include</pElem>
-            <pElem>../../submodules/ZitaConvolver/source</pElem>
-            <pElem>../../src/grandorgue</pElem>
-            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
-            <pElem>/usr/include/wx-3.2</pElem>
-            <pElem>../../build/current/src/grandorgue</pElem>
+            <pElem>../../src/grandorgue/control</pElem>
+            <pElem>../../src/grandorgue/model</pElem>
+            <pElem>../../src/core/midi</pElem>
+            <pElem>/usr/include/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/ext</pElem>
+            <pElem>/usr/include/wx-3.0/wx</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits</pElem>
+            <pElem>../../src/grandorgue/sound</pElem>
+            <pElem>/usr/include/c++/9</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/c++/9/bits</pElem>
+            <pElem>/usr/include/c++/9/debug</pElem>
+            <pElem>/usr/lib/gcc/x86_64-linux-gnu/9/include</pElem>
+            <pElem>/usr/include/x86_64-linux-gnu/bits/types</pElem>
+            <pElem>../../../../../../runner/build/linux/src/grandorgue</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_LARGEFILE_SOURCE=</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="../../src/grandorgue/model/GOTremulant.cpp"
@@ -33632,20 +33643,6 @@
           </preprocessorList>
         </ccTool>
       </folder>
-      <folder path="0/src/grandorgue/control">
-        <ccTool>
-          <incDir>
-            <pElem>../../build/current/src/core/go_defs.h</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>GO_USE_JACK</Elem>
-            <Elem>WXUSINGDLL</Elem>
-            <Elem>_FILE_OFFSET_BITS=64</Elem>
-            <Elem>_REENTRANT</Elem>
-            <Elem>__WXGTK__</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
       <folder path="0/src/grandorgue/document-base">
         <ccTool>
           <incDir>
@@ -33658,6 +33655,31 @@
           <incDir>
             <pElem>/usr/include/wx-3.0/wx</pElem>
           </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/src/grandorgue/gui/dialogs/organ-settings">
+        <ccTool>
+          <incDir>
+            <pElem>../../build/current/src/core/go_defs.h</pElem>
+            <pElem>../../src/grandorgue/resource</pElem>
+            <pElem>../../src/core</pElem>
+            <pElem>../../submodules/RtMidi</pElem>
+            <pElem>../../submodules/RtAudio</pElem>
+            <pElem>../../submodules/PortAudio/include</pElem>
+            <pElem>../../submodules/ZitaConvolver/source</pElem>
+            <pElem>../../src/grandorgue</pElem>
+            <pElem>/usr/lib64/wx/include/gtk3-unicode-3.2</pElem>
+            <pElem>/usr/include/wx-3.2</pElem>
+            <pElem>../../build/current/src/grandorgue</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>GO_USE_JACK</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>_LARGEFILE_SOURCE=</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
         </ccTool>
       </folder>
       <folder path="0/src/grandorgue/gui/size">
@@ -37770,6 +37792,31 @@
             <Elem>__WXGTK__</Elem>
           </preprocessorList>
         </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsButtonsProxy.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsDialog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsPipesTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsPipesTab.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
             ex="false"
@@ -71364,13 +71411,6 @@
         <ccTool flags="1">
         </ccTool>
       </item>
-      <item path="../../src/grandorgue/gui/dialogs/GOOrganSettingsDialog.cpp"
-            ex="false"
-            tool="1"
-            flavor2="11">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
       <item path="../../src/grandorgue/gui/dialogs/GOProgressDialog.cpp"
             ex="false"
             tool="1"
@@ -71461,6 +71501,31 @@
             flavor2="11">
         <ccTool flags="1">
         </ccTool>
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsButtonsProxy.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsDialog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsDialog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsPipesTab.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/grandorgue/gui/dialogs/organ-settings/GOOrganSettingsPipesTab.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/grandorgue/gui/dialogs/settings/GOSettingsAudio.cpp"
             ex="false"
