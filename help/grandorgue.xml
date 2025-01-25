@@ -5378,271 +5378,275 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
     <para>This dialog allows to customize settings for the currently loaded sample set.</para>
     <para>Initial values come  from the current preset number or imported settings file or from the organ definition file if the settings file does not exist.</para>
     <para>Modified settings are saved in the current preset number. They also can be exported to a settings file.</para>
-    <figure>
-      <title>Organ Settings dialog</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata scalefit="1" width="100%" fileref="images/organ_settings.png"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-    <para>
-In its left box, this dialog displays all ranks found in the definition file
-grouped by windchest. The tree can unfold down to the individual pipe level.
-Within  windchests, the ranks are ordered as found in the definition file.
-    </para>
-    <para>When the tree is unfolded down to the pipe level, the dialog displays the MIDI number assigned to the sample file, along with the file's path.</para>
-    <para>The right frames display controls which allow to fine set features at the rank or pipe level.</para>
-    <para>Settings can be modified at the organ, windchest, rank and individual pipe level.</para>
-    <para>Some setting are cumulative from the organ level down to the pipe level: the effective setting value applied to the individual pipe is calculated from values at all levels.</para>
-    <para>For the other (non cumulative) settings, the effective setting value is applied to the individual pipe using these precedence rules:</para>
-    <itemizedlist>
-      <listitem>
-        <simpara>If a pipe-level value is defined, use it</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Else if a rank-level value is defined, use it</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Else if a windchest-level value is defined, use it</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Else if an organ-level value is defined, use it</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Else use the value defined in the Program Settings dialog <link linkend="optionstab">Options</link> tab if any.</simpara>
-      </listitem>
-    </itemizedlist>
-    <note>
-    <simpara>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current preset number if the latter was saved.</simpara>
-    <simpara>It is possible to select multiple elements at once, to e.g. update one setting of multiple elements to the same value in a single operation.</simpara>
-    <simpara>
-      <emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set, when made in the <emphasis>Organ Settings</emphasis> dialog, are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. If they were designed to be integral part of the sample set, these customizations need to be manually merged from the settings file to the organ definition file. It is however possible to export the settings to a file with the same name as the ODF file, except that the suffix must be .cmb instead of .organ (eg. TheOrgan.organ becomes TheOrgan.cmb as name for the exported settings file). When that settings file is put in the same directory as it's companion .organ file, it will be used as default settings for that organ.
-    </simpara>
-    </note>
     <sect1>
-      <title>Settings frame</title>
+      <title>Pipes</title>
+      <indexterm><primary>Organ settings.Pipes</primary></indexterm>
+      <figure>
+	<title>Organ Settings dialog, Pipes tab</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata scalefit="1" width="100%" fileref="images/organ_settings_pipes.png"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      <para>
+  In its left box, this dialog displays all ranks found in the definition file
+  grouped by windchest. The tree can unfold down to the individual pipe level.
+  Within  windchests, the ranks are ordered as found in the definition file.
+      </para>
+      <para>When the tree is unfolded down to the pipe level, the dialog displays the MIDI number assigned to the sample file, along with the file's path.</para>
+      <para>The right frames display controls which allow to fine set features at the rank or pipe level.</para>
+      <para>Settings can be modified at the organ, windchest, rank and individual pipe level.</para>
+      <para>Some setting are cumulative from the organ level down to the pipe level: the effective setting value applied to the individual pipe is calculated from values at all levels.</para>
+      <para>For the other (non cumulative) settings, the effective setting value is applied to the individual pipe using these precedence rules:</para>
+      <itemizedlist>
+	<listitem>
+	  <simpara>If a pipe-level value is defined, use it</simpara>
+	</listitem>
+	<listitem>
+	  <simpara>Else if a rank-level value is defined, use it</simpara>
+	</listitem>
+	<listitem>
+	  <simpara>Else if a windchest-level value is defined, use it</simpara>
+	</listitem>
+	<listitem>
+	  <simpara>Else if an organ-level value is defined, use it</simpara>
+	</listitem>
+	<listitem>
+	  <simpara>Else use the value defined in the Program Settings dialog <link linkend="optionstab">Options</link> tab if any.</simpara>
+	</listitem>
+      </itemizedlist>
+      <note>
+      <simpara>Select the element you wish to customize. The right frames are populated with values picked from the organ definition file or the current preset number if the latter was saved.</simpara>
+      <simpara>It is possible to select multiple elements at once, to e.g. update one setting of multiple elements to the same value in a single operation.</simpara>
+      <simpara>
+	<emphasis>To the sample set designer</emphasis>: Fine customizations to the sample set, when made in the <emphasis>Organ Settings</emphasis> dialog, are <emphasis role="bold">NOT</emphasis> copied to the organ definition file. If they were designed to be integral part of the sample set, these customizations need to be manually merged from the settings file to the organ definition file. It is however possible to export the settings to a file with the same name as the ODF file, except that the suffix must be .cmb instead of .organ (eg. TheOrgan.organ becomes TheOrgan.cmb as name for the exported settings file). When that settings file is put in the same directory as it's companion .organ file, it will be used as default settings for that organ.
+      </simpara>
+      </note>
       <sect2>
-        <title>Amplitude</title>
-        <para>Linear amplitude scale factor applied to the element. The allowed range is {0, +1000}. Amplitude is cumulative from organ level down to pipe level.</para>
-        <para>
-        <emphasis>Note</emphasis>: A 100 value means that this setting value has no effect on the effective amplitude.
-        </para>
+	<title>Settings frame</title>
+	<sect3>
+	  <title>Amplitude</title>
+	  <para>Linear amplitude scale factor applied to the element. The allowed range is {0, +1000}. Amplitude is cumulative from organ level down to pipe level.</para>
+	  <para>
+	  <emphasis>Note</emphasis>: A 100 value means that this setting value has no effect on the effective amplitude.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Gain</title>
+	  <para>Amplitude scale factor in dB applied to the selected element. The allowed range is {-120, +40}. Gain is cumulative from organ level down to pipe level.</para>
+	  <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective gain.</para>
+	</sect3>
+	<sect3>
+	  <title>ManualTuning</title>
+	  <para>
+	    This spinner allows to fine tune the pitch of the element. The unit is
+	    1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning
+	    is cumulative from organ level down to pipe level. This value is used
+	    only with the original temperament.
+	  </para>
+	  <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
+	</sect3>
+	<sect3>
+	  <title>AutoTuningCorrection</title>
+	  <para>
+	    This spinner allows to fine tune the pitch of the element. The unit is
+	    1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning
+	    is cumulative from organ level down to pipe level. This value is used
+	    only with the non-original temperaments.
+	  </para>
+	  <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
+	</sect3>
+	<sect3>
+	  <title>Tracker</title>
+	  <para>This spinner allows to define a delay in ms. This delay simulates the time spent by the tracker system to open the valve after a key is depressed.</para>
+	  <para>Tracker delay is cumulative from organ level down to pipe level.</para>
+	</sect3>
+	<sect3>
+	  <title>Release Length</title>
+	  <para>
+	    The release tail length control limits the duration the sound engine
+	    uses to play the release section of the sample. The values are: Max or
+	    a range from 50 ms to 3000 ms by increments of 50 ms. Max means playing
+	    the full release section without a limit.
+	  </para>
+	  <para>
+	    The organ-wide limit can be set also on the GrandOrgan toolbar. The
+	    limits of the lower levels may only decrease the limit of the upper
+	    levels.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Tone balance</title>
+	  <para>
+	    This setting adjusts the bass/treble harmonics balance of the pipes.
+	    The value is a converted to a cutoff frequency for a filter where a negative
+	    number means less high frequencies and a positive number means less
+	    low frequencies. Allowed range is {-100, +100}. A tone balance value
+	    which is not zero on a child level will override a value set at any
+	    parent level.
+	  </para>
+	  <para><emphasis>Note</emphasis>: A 0 value means that this setting
+	    value has no effect on the effective tone balance. Using this setting
+	    on the individual pipe level usually gives the best results.
+	  </para>
+	</sect3>
+	<sect3>
+	  <title>Audio Group</title>
+	  <para>This dropdown selects which audio group the sound from the selected element is routed to</para>
+	  <para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>
+	</sect3>
+	<sect3>
+	  <title>Ignore pitch info in organ samples wav files</title>
+	  <para>This feature is closely related to the temperament feature which assumes, when the samples are dynamically retuned after a new temperament is applied, that pitch information was embedded in each sample file <emphasis>or in the pipe entry within the Organ Definition File</emphasis>. If the sample set designer has <emphasis role="bold">NOT</emphasis> embedded pitch information, the result is weird and unpredictable.</para>
+	  <para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected. In this case, GrandOrgue assumes that the samples are tuned to equal temperament.</para>
+	</sect3>
       </sect2>
       <sect2>
-        <title>Gain</title>
-        <para>Amplitude scale factor in dB applied to the selected element. The allowed range is {-120, +40}. Gain is cumulative from organ level down to pipe level.</para>
-        <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective gain.</para>
-      </sect2>
-      <sect2>
-        <title>ManualTuning</title>
-        <para>
-	  This spinner allows to fine tune the pitch of the element. The unit is
-	  1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning
-	  is cumulative from organ level down to pipe level. This value is used
-	  only with the original temperament.
-	</para>
-        <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
-      </sect2>
-      <sect2>
-        <title>AutoTuningCorrection</title>
-        <para>
-	  This spinner allows to fine tune the pitch of the element. The unit is
-	  1/100th of a semitone, and the allowed range is {-1800, +1800}. Tuning
-	  is cumulative from organ level down to pipe level. This value is used
-	  only with the non-original temperaments.
-	</para>
-        <para><emphasis>Note</emphasis>: A 0 value means that this setting value has no effect on the effective tuning.</para>
-      </sect2>
-      <sect2>
-        <title>Tracker</title>
-        <para>This spinner allows to define a delay in ms. This delay simulates the time spent by the tracker system to open the valve after a key is depressed.</para>
-        <para>Tracker delay is cumulative from organ level down to pipe level.</para>
-      </sect2>
-      <sect2>
-        <title>Release Length</title>
-	<para>
-	  The release tail length control limits the duration the sound engine
-	  uses to play the release section of the sample. The values are: Max or
-	  a range from 50 ms to 3000 ms by increments of 50 ms. Max means playing
-	  the full release section without a limit.
-	</para>
-	<para>
-	  The organ-wide limit can be set also on the GrandOrgan toolbar. The
-	  limits of the lower levels may only decrease the limit of the upper
-	  levels.
-	</para>
-      </sect2>
-      <sect2>
-        <title>Tone balance</title>
-        <para>
-          This setting adjusts the bass/treble harmonics balance of the pipes.
-          The value is a converted to a cutoff frequency for a filter where a negative
-          number means less high frequencies and a positive number means less
-          low frequencies. Allowed range is {-100, +100}. A tone balance value
-          which is not zero on a child level will override a value set at any
-          parent level.
-        </para>
-        <para><emphasis>Note</emphasis>: A 0 value means that this setting
-          value has no effect on the effective tone balance. Using this setting
-          on the individual pipe level usually gives the best results.
-        </para>
-      </sect2>
-      <sect2>
-        <title>Audio Group</title>
-        <para>This dropdown selects which audio group the sound from the selected element is routed to</para>
-        <para><emphasis>Note</emphasis>: A blank value means that this setting value is fetched from the upper level. If the effective audio group is still blank, the pipe is routed to the default audio group.</para>
-      </sect2>
-      <sect2>
-	<title>Ignore pitch info in organ samples wav files</title>
-	<para>This feature is closely related to the temperament feature which assumes, when the samples are dynamically retuned after a new temperament is applied, that pitch information was embedded in each sample file <emphasis>or in the pipe entry within the Organ Definition File</emphasis>. If the sample set designer has <emphasis role="bold">NOT</emphasis> embedded pitch information, the result is weird and unpredictable.</para>
-	<para>When checked, this box instructs GrandOrgue to ignore any pitch information found is sample files while retuning the organ to another temperament than the original. This way the retuned sample set behaves as expected. In this case, GrandOrgue assumes that the samples are tuned to equal temperament.</para>
-      </sect2>
-    </sect1>
-    <sect1>
-      <title>Sample loading frame</title>
-      <sect2>
-        <title>Sample size</title>
-        <para>This dropdown list allows to overwrite its counterpart at the parent level.</para>
-        <para>The <emphasis>Parent default</emphasis> value means that the value is fetched from the parent level.</para>
-        <para>See <link linkend="samplesize">Sample size</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
-      </sect2>
-      <sect2>
-        <title>Lossless Compression</title>
-        <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
-        <variablelist>
-          <varlistentry>
-            <term>Parent default</term>
-            <listitem>
-              <simpara>Means that the value is fetched from the parent level.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Enabled</term>
-            <listitem>
-              <simpara>Enables lossless compression at that level</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Disabled</term>
-            <listitem>
-              <simpara>Disables lossless compression at that level</simpara>
-            </listitem>
-          </varlistentry>
-        </variablelist>
-        <para>See <link linkend="losslesscompression">Lossless compression</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
-      </sect2>
-      <sect2>
-        <title>Sample channels</title>
-        <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
-        <variablelist>
-          <varlistentry>
-            <term>Parent default</term>
-            <listitem>
-              <simpara>Means that the value is fetched from the parent level.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Don't load</term>
-            <listitem>
-              <simpara>Don't load the samples at that level.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Mono</term>
-            <listitem>
-              <simpara>Load stereo samples in mono.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Stereo</term>
-            <listitem>
-              <simpara>Load stereo samples in stereo.</simpara>
-            </listitem>
-          </varlistentry>
-        </variablelist>
-        <para>See <link linkend="loadstereosamples">Load stereo samples</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
-      </sect2>
-      <sect2>
-        <title>Loop loading</title>
-        <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
-        <variablelist>
-          <varlistentry>
-            <term>Parent default</term>
-            <listitem>
-              <simpara>Means that the value is fetched from the parent level.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>First loop</term>
-            <listitem>
-              <simpara>Load the first loop found in the sample file.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Longest loop</term>
-            <listitem>
-              <simpara>Load the longest loop found in the sample file.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>All loops</term>
-            <listitem>
-              <simpara>Load all loops found in the sample file.</simpara>
-            </listitem>
-          </varlistentry>
-        </variablelist>
-        <para>See <link linkend="looploading">Loop loading</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
-      </sect2>
-      <sect2>
-        <title>Attack loading</title>
-        <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
-        <variablelist>
-          <varlistentry>
-            <term>Parent default</term>
-            <listitem>
-              <simpara>Means that the value is fetched from the parent level.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Single attack</term>
-            <listitem>
-              <simpara>Loads only the "best" provided attack sample file.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>All</term>
-            <listitem>
-              <simpara>Loads all attack sample files</simpara>
-            </listitem>
-          </varlistentry>
-        </variablelist>
-        <para>See <link linkend="attackloading">Attack loading</link> in the Program Settings dialog for further detail on this topic.</para>
-      </sect2>
-      <sect2>
-        <title>Release loading</title>
-        <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
-        <variablelist>
-          <varlistentry>
-            <term>Parent default</term>
-            <listitem>
-              <simpara>Means that the value is fetched from the parent level.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Single&#160;release</term>
-            <listitem>
-              <simpara>Loads only the "best" provided release sample file.</simpara>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>All</term>
-            <listitem>
-              <simpara>Loads all release sample files</simpara>
-            </listitem>
-          </varlistentry>
-        </variablelist>
-        <para>See <link linkend="releaseloading">Release loading</link> in the Program Settings dialog for further detail on this topic.</para>
+	<title>Sample loading frame</title>
+	<sect3>
+	  <title>Sample size</title>
+	  <para>This dropdown list allows to overwrite its counterpart at the parent level.</para>
+	  <para>The <emphasis>Parent default</emphasis> value means that the value is fetched from the parent level.</para>
+	  <para>See <link linkend="samplesize">Sample size</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
+	</sect3>
+	<sect3>
+	  <title>Lossless Compression</title>
+	  <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
+	  <variablelist>
+	    <varlistentry>
+	      <term>Parent default</term>
+	      <listitem>
+		<simpara>Means that the value is fetched from the parent level.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Enabled</term>
+	      <listitem>
+		<simpara>Enables lossless compression at that level</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Disabled</term>
+	      <listitem>
+		<simpara>Disables lossless compression at that level</simpara>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	  <para>See <link linkend="losslesscompression">Lossless compression</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
+	</sect3>
+	<sect3>
+	  <title>Sample channels</title>
+	  <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
+	  <variablelist>
+	    <varlistentry>
+	      <term>Parent default</term>
+	      <listitem>
+		<simpara>Means that the value is fetched from the parent level.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Don't load</term>
+	      <listitem>
+		<simpara>Don't load the samples at that level.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Mono</term>
+	      <listitem>
+		<simpara>Load stereo samples in mono.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Stereo</term>
+	      <listitem>
+		<simpara>Load stereo samples in stereo.</simpara>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	  <para>See <link linkend="loadstereosamples">Load stereo samples</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
+	</sect3>
+	<sect3>
+	  <title>Loop loading</title>
+	  <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
+	  <variablelist>
+	    <varlistentry>
+	      <term>Parent default</term>
+	      <listitem>
+		<simpara>Means that the value is fetched from the parent level.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>First loop</term>
+	      <listitem>
+		<simpara>Load the first loop found in the sample file.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Longest loop</term>
+	      <listitem>
+		<simpara>Load the longest loop found in the sample file.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>All loops</term>
+	      <listitem>
+		<simpara>Load all loops found in the sample file.</simpara>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	  <para>See <link linkend="looploading">Loop loading</link> in the <emphasis>Program Settings</emphasis> dialog for further detail on this topic.</para>
+	</sect3>
+	<sect3>
+	  <title>Attack loading</title>
+	  <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
+	  <variablelist>
+	    <varlistentry>
+	      <term>Parent default</term>
+	      <listitem>
+		<simpara>Means that the value is fetched from the parent level.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Single attack</term>
+	      <listitem>
+		<simpara>Loads only the "best" provided attack sample file.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>All</term>
+	      <listitem>
+		<simpara>Loads all attack sample files</simpara>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	  <para>See <link linkend="attackloading">Attack loading</link> in the Program Settings dialog for further detail on this topic.</para>
+	</sect3>
+	<sect3>
+	  <title>Release loading</title>
+	  <para>This dropdown list allows to overwrite its counterpart at the parent level. The allowed values are:</para>
+	  <variablelist>
+	    <varlistentry>
+	      <term>Parent default</term>
+	      <listitem>
+		<simpara>Means that the value is fetched from the parent level.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>Single&#160;release</term>
+	      <listitem>
+		<simpara>Loads only the "best" provided release sample file.</simpara>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term>All</term>
+	      <listitem>
+		<simpara>Loads all release sample files</simpara>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	  <para>See <link linkend="releaseloading">Release loading</link> in the Program Settings dialog for further detail on this topic.</para>
+	</sect3>
       </sect2>
     </sect1>
     <sect1>
@@ -5653,7 +5657,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
 	  <term>Help</term>
 	  <listitem>
 	    <simpara>This button opens the help window.</simpara>
-          </listitem>
+	  </listitem>
 	</varlistentry>
 	<varlistentry>
 	  <term>Distribute audio groups</term>
@@ -5684,29 +5688,29 @@ Within  windchests, the ranks are ordered as found in the definition file.
 		order of the round-robin scheme.
 	      </simpara>
 	    </caution>
-          </listitem>
+	  </listitem>
 	</varlistentry>
-        <varlistentry>
-          <term>Default</term>
-          <listitem>
-            <simpara>
+	<varlistentry>
+	  <term>Default</term>
+	  <listitem>
+	    <simpara>
 	      This button restores the setting values for the selected elements
 	      from the organ definition.
 	    </simpara>
-            <simpara>
-	      Because the audio group cannot be specified in the ODF, the 
-	      Default button does not affect the Audio group setting. For 
+	    <simpara>
+	      Because the audio group cannot be specified in the ODF, the
+	      Default button does not affect the Audio group setting. For
 	      resetting an audio group for the selected elements the user has to
 	      select the empty value in the Audio Group field and press to the
 	      Apply button.
 	    </simpara>
-    	    <caution>
+	    <caution>
 	      <simpara>
 		This action can not be undone with the
 		<emphasis role="bold">Discard</emphasis> button.
 	      </simpara>
-    	    </caution>
-            <simpara>
+	    </caution>
+	    <simpara>
 	      If any of selected elements has a subelement then a confirmation
 	      box will appear.
 	    </simpara>
@@ -5718,43 +5722,43 @@ Within  windchests, the ranks are ordered as found in the definition file.
 		/>
 	      </imageobject>
 	    </mediaobject>
-            <simpara>
-              Pushing <emphasis role="bold">No</emphasis> causes restoring the
+	    <simpara>
+	      Pushing <emphasis role="bold">No</emphasis> causes restoring the
 	      values only for the selected elements but not for their
 	      subelements.
 	    </simpara>
-            <simpara>
-              Pushing <emphasis role="bold">Yes</emphasis> causes restoring the
+	    <simpara>
+	      Pushing <emphasis role="bold">Yes</emphasis> causes restoring the
 	      values for the selected and for all their subelements
 	      recursivelly.
 	    </simpara>
-            <simpara>
-              Pushing <emphasis role="bold">Cancel</emphasis> causing not
+	    <simpara>
+	      Pushing <emphasis role="bold">Cancel</emphasis> causing not
 	      changing anything.
 	    </simpara>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Discard</term>
-          <listitem>
-            <simpara>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>Discard</term>
+	  <listitem>
+	    <simpara>
 	      This button is grayed out until any value is modified. It restores
 	      all previously changed values that have not yet been applied.
 	    </simpara>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>Apply</term>
-          <listitem>
-            <simpara>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>Apply</term>
+	  <listitem>
+	    <simpara>
 	      This button applies all modified values to the selected element.
 	      Changes <emphasis role="bold">MUST</emphasis> be applied or
 	      discarded before proceeding to another element modification or
 	      closing the dialog with the <emphasis role="bold">Close</emphasis>
 	      button.
-            </simpara>
-          </listitem>
-        </varlistentry>
+	    </simpara>
+	  </listitem>
+	</varlistentry>
 	<varlistentry>
 	  <term>Close</term>
 	  <listitem>
@@ -5765,7 +5769,7 @@ Within  windchests, the ranks are ordered as found in the definition file.
 	      <emphasis role="bold">Apply</emphasis> or
 	      <emphasis role="bold">Discard</emphasis> button before.
 	    </simpara>
-          </listitem>
+	  </listitem>
 	</varlistentry>
       </variablelist>
     </sect1>
