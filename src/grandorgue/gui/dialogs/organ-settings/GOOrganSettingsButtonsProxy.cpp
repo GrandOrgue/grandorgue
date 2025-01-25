@@ -7,7 +7,27 @@
 
 #include "GOOrganSettingsButtonsProxy.h"
 
+#include <wx/intl.h>
+
+#include "GOEvent.h"
+
+GOOrganSettingsButtonsProxy::GOOrganSettingsButtonsProxy(
+  Listener &listener, wxWindow *pWindow)
+  : r_listener(listener), p_window(pWindow) {}
+
 void GOOrganSettingsButtonsProxy::NotifyModified(bool newValue) {
   SetModified(newValue);
   NotifyButtonStatesChanged();
+}
+
+bool GOOrganSettingsButtonsProxy::CheckForUnapplied() {
+  bool res = IsModified();
+
+  if (res)
+    GOMessageBox(
+      _("Please apply or discard changes first"),
+      _("Error"),
+      wxOK | wxICON_ERROR,
+      p_window);
+  return res;
 }

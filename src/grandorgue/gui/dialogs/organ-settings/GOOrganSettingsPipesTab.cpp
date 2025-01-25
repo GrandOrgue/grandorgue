@@ -115,7 +115,7 @@ GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
   wxWindow *parent,
   GOOrganSettingsButtonsProxy::Listener &listener)
   : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
-    GOOrganSettingsButtonsProxy(listener),
+    GOOrganSettingsButtonsProxy(listener, this),
     r_config(organModel.GetConfig()),
     r_RootNode(organModel.GetRootPipeConfigNode()),
     p_LastTreeItemData(nullptr),
@@ -421,18 +421,6 @@ bool GOOrganSettingsPipesTab::TransferDataToWindow() {
   m_Tree->Expand(idRoot);
   m_Tree->SelectItem(idRoot, true);
   return true;
-}
-
-bool GOOrganSettingsPipesTab::CheckForUnapplied() {
-  bool res = IsModified();
-
-  if (res)
-    GOMessageBox(
-      _("Please apply or discard changes first"),
-      _("Error"),
-      wxOK | wxICON_ERROR,
-      this);
-  return res;
 }
 
 void GOOrganSettingsPipesTab::SetEmpty(wxChoice *choice) {
