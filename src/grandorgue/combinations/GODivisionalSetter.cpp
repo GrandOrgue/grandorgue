@@ -170,7 +170,6 @@ void GODivisionalSetter::Load(GOConfigReader &cfg) {
 
       assert(divisional);
       divisional->Init(cfg, buttonName, wxString::Format(wxT("%d"), j + 1));
-      divisional->Load(cfg, buttonName);
       divisional->SetDisplayed(true);
     }
 
