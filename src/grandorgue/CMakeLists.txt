@@ -74,6 +74,9 @@ gui/dialogs/midi-event/GOMidiEventDialog.cpp
 gui/dialogs/midi-event/GOMidiEventKeyTab.cpp
 gui/dialogs/midi-event/GOMidiEventRecvTab.cpp
 gui/dialogs/midi-event/GOMidiEventSendTab.cpp
+gui/dialogs/organ-settings/GOOrganSettingsButtonsProxy.cpp
+gui/dialogs/organ-settings/GOOrganSettingsDialog.cpp
+gui/dialogs/organ-settings/GOOrganSettingsPipesTab.cpp
 gui/dialogs/settings/GOSettingsAudio.cpp
 gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp
 gui/dialogs/settings/GOSettingsDialog.cpp
@@ -88,7 +91,6 @@ gui/dialogs/settings/GOSettingsReverb.cpp
 gui/dialogs/settings/GOSettingsTemperaments.cpp
 gui/dialogs/GOMidiListDialog.cpp
 gui/dialogs/GONewReleaseDialog.cpp
-gui/dialogs/GOOrganSettingsDialog.cpp
 gui/dialogs/GOProgressDialog.cpp
 gui/dialogs/GOPropertiesDialog.cpp
 gui/dialogs/GOSelectOrganDialog.cpp

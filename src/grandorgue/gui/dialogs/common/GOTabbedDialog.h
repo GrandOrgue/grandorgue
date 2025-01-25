@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -31,7 +31,8 @@ protected:
     const wxString &title, // translated
     GODialogSizeSet &dialogSizes,
     const wxString dialogSelector,
-    long addStyle = 0);
+    long addStyle = 0,
+    long buttonFlags = DEFAULT_BUTTON_FLAGS);
 
   void AddTab(wxPanel *tab, const wxString &tabName, const wxString &tabTitle);
   void AddTab(GODialogTab *tab);
