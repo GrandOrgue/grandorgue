@@ -8,6 +8,8 @@
 #ifndef GOORGANSETTINGSPIPESTAB_H
 #define GOORGANSETTINGSPIPESTAB_H
 
+#include <vector>
+
 #include <wx/event.h>
 #include <wx/panel.h>
 
