@@ -39,7 +39,8 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     _("Organ settings"),
     organModel.GetConfig().m_DialogSizes,
     wxEmptyString,
-    wxDIALOG_NO_PARENT | wxHELP | wxCLOSE),
+    0,
+    wxHELP | wxCLOSE),
     GOView(doc, this) {
   wxBookCtrlBase *pNoteBook = GetBookCtrl();
 
