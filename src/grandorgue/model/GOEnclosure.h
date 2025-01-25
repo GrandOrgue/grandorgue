@@ -60,6 +60,8 @@ public:
     uint8_t defValue);
   using GOMidiObject::Load; // for avoiding a warning
   void Load(GOConfigReader &cfg, const wxString &group, int enclosureNb);
+  uint8_t GetAmpMinimumLevel() const { return m_AmpMinimumLevel; }
+  void SetAmpMinimumLevel(uint8_t v) { m_AmpMinimumLevel = v; }
   void SetEnclosureValue(uint8_t n);
   int GetEnclosureValue() const { return m_MIDIValue; }
   int GetMIDIInputNumber() const { return m_MIDIInputNumber; }

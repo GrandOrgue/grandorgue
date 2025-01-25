@@ -8,6 +8,8 @@
 #ifndef GOORGANSETTINGSBUTTONSPROXY_H
 #define GOORGANSETTINGSBUTTONSPROXY_H
 
+class wxWindow;
+
 class GOOrganSettingsButtonsProxy {
 public:
   class Listener {
@@ -17,6 +19,7 @@ public:
 
 private:
   Listener &r_listener;
+  wxWindow *p_window;
 
 protected:
   bool m_IsDistributeAudioEnabled = true;
@@ -26,13 +29,19 @@ private:
   bool m_IsModified = false;
 
 public:
-  GOOrganSettingsButtonsProxy(Listener &listener) : r_listener(listener) {}
+  GOOrganSettingsButtonsProxy(Listener &listener, wxWindow *pWindow);
 
 protected:
   void NotifyButtonStatesChanged() { r_listener.ButtonStatesChanged(); }
   bool IsModified() const { return m_IsModified; }
   void SetModified(bool newValue) { m_IsModified = newValue; }
   void NotifyModified(bool newValue = true);
+  /**
+   * Checks if all changes have been applied. If some unapplied changes are
+   * present, then display an error message.
+   * Returns if there are unapplied changes
+   */
+  bool CheckForUnapplied();
 
 public:
   bool IsDistributeAudioEnabled() const { return m_IsDistributeAudioEnabled; }

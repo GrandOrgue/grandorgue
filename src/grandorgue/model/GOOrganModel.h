@@ -150,6 +150,7 @@ public:
   void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();
 
+  const ptr_vector<GOWindchest> &GetWindchests() const { return m_windchests; }
   unsigned GetWindchestCount() const { return m_windchests.size(); }
   // Returns the windchest number starting with 1
   unsigned AddWindchest(GOWindchest *windchest);
