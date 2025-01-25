@@ -77,13 +77,6 @@ private:
   wxTreeItemId FillTree(wxTreeItemId parent, GOPipeConfigNode &config);
   bool TransferDataToWindow() override;
 
-  /**
-   * Checks if all changes have been applied. If some unapplied changes are
-   * present, then display an error message.
-   * Returns if there are unapplied changes
-   */
-  bool CheckForUnapplied();
-
   void SetEmpty(wxChoice *choice);
   void RemoveEmpty(wxChoice *choice);
 

@@ -18,6 +18,7 @@
 class wxButton;
 
 class GOOrganModel;
+class GOOrganSettingsEnclosuresTab;
 class GOOrganSettingsPipesTab;
 
 class GOOrganSettingsDialog : public GOTabbedDialog,
@@ -25,6 +26,7 @@ class GOOrganSettingsDialog : public GOTabbedDialog,
                               private GOOrganSettingsButtonsProxy::Listener {
 private:
   GOOrganSettingsPipesTab *m_PipesTab;
+  GOOrganSettingsEnclosuresTab *m_EnclosuresTab;
 
   wxButton *m_AudioGroupAssistant;
   wxButton *m_Default;
