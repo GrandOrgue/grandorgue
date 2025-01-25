@@ -115,6 +115,7 @@ void GOManual::Init(
 
 void GOManual::Load(
   GOConfigReader &cfg, const wxString &group, int manualNumber) {
+  SetMidiReceiverIndex(manualNumber); // Used in LoadMidiObject
   GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_nb_logical_keys
@@ -152,8 +153,6 @@ void GOManual::Load(
     r_OrganModel.GetSwitchCount(),
     false);
   m_manual_number = manualNumber;
-
-  SetMidiReceiverIndex(manualNumber);
 
   for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
     m_MidiKeyMap[i] = (uint8_t)cfg.ReadInteger(
