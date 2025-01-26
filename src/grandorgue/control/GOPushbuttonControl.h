@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,8 +12,12 @@
 
 class GOPushbuttonControl : public GOButtonControl {
 public:
-  GOPushbuttonControl(GOOrganModel &organModel)
-    : GOButtonControl(organModel, MIDI_RECV_BUTTON, true) {}
+  GOPushbuttonControl(
+    GOOrganModel &organModel,
+    const wxString &midiTypeCode,
+    const wxString &midiTypeName)
+    : GOButtonControl(
+      organModel, midiTypeCode, midiTypeName, MIDI_RECV_BUTTON, true) {}
 };
 
 #endif

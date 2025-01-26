@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -83,7 +83,7 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
   GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
   master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
   m_OrganController->AddEnclosure(master_enc);
-  master_enc->SetElementID(
+  master_enc->SetElementId(
     m_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
 
   GOGUIEnclosure *enclosure = new GOGUIEnclosure(panel, master_enc);
@@ -101,7 +101,7 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
       windchest->GetName(),
       127);
     m_OrganController->AddEnclosure(enc);
-    enc->SetElementID(m_OrganController->GetRecorderElementID(
+    enc->SetElementId(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("SM%d"), i)));
     windchest->AddEnclosure(enc);
 

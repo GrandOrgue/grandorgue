@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -160,15 +160,15 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   }
 
   for (unsigned i = 0; i < m_enclosures.size(); i++)
-    m_enclosures[i]->SetElementID(
+    m_enclosures[i]->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("E%d"), i)));
 
   for (unsigned i = 0; i < m_switches.size(); i++)
-    m_switches[i]->SetElementID(
+    m_switches[i]->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("S%d"), i)));
 
   for (unsigned i = 0; i < m_tremulants.size(); i++)
-    m_tremulants[i]->SetElementID(
+    m_tremulants[i]->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 
   for (GOReferencingObject *pObj : GetReferencingObjects())

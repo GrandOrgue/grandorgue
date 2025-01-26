@@ -72,9 +72,9 @@ GOMidiListDialog::GOMidiListDialog(
   for (unsigned i = 0; i < midi_elements.size(); i++) {
     GOMidiObject *obj = midi_elements[i];
 
-    m_Objects->InsertItem(i, obj->GetMidiType());
+    m_Objects->InsertItem(i, obj->GetMidiTypeName());
     m_Objects->SetItemPtrData(i, (wxUIntPtr)obj);
-    m_Objects->SetItem(i, 1, obj->GetMidiName());
+    m_Objects->SetItem(i, 1, obj->GetName());
   }
 
   m_Objects->SetColumnWidth(0, wxLIST_AUTOSIZE);
@@ -98,7 +98,7 @@ void GOMidiListDialog::OnStatus(wxCommandEvent &event) {
   wxString status = obj->GetElementStatus();
   GOMessageBox(
     wxString::Format(_("Status: %s"), status),
-    obj->GetMidiType() + _(" ") + obj->GetMidiName(),
+    obj->GetMidiTypeName() + _(" ") + obj->GetName(),
     wxOK);
 }
 

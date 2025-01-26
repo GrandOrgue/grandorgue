@@ -46,9 +46,6 @@ public:
   ~GOStop(void);
 
   unsigned IsAuto() const;
-
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
 };
 
 #endif /* GOSTOP_H_ */

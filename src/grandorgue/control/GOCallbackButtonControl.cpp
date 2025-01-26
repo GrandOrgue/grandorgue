@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,12 +11,21 @@
 
 #include "control/GOButtonCallback.h"
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Button");
+static const wxString WX_MIDI_TYPE_NAME = _("Button");
+
 GOCallbackButtonControl::GOCallbackButtonControl(
   GOOrganModel &organModel,
   GOButtonCallback *callback,
   bool isPushbutton,
   bool isPiston)
-  : GOButtonControl(organModel, MIDI_RECV_SETTER, isPushbutton, isPiston),
+  : GOButtonControl(
+    organModel,
+    WX_MIDI_TYPE_CODE,
+    WX_MIDI_TYPE_NAME,
+    MIDI_RECV_SETTER,
+    isPushbutton,
+    isPiston),
     m_callback(callback) {}
 
 void GOCallbackButtonControl::Push() {
@@ -31,15 +40,4 @@ void GOCallbackButtonControl::SetButtonState(bool on) {
     return;
   m_callback->ButtonStateChanged(this, on);
   Display(on);
-}
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Button");
-const wxString WX_MIDI_TYPE = _("Button");
-
-const wxString &GOCallbackButtonControl::GetMidiTypeCode() const {
-  return WX_MIDI_TYPE_CODE;
-}
-
-const wxString &GOCallbackButtonControl::GetMidiType() const {
-  return WX_MIDI_TYPE;
 }

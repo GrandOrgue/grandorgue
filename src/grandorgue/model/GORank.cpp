@@ -11,7 +11,6 @@
 
 #include <wx/intl.h>
 
-#include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 
 #include "GODummyPipe.h"
@@ -20,12 +19,13 @@
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Rank");
+static const wxString WX_MIDI_TYPE_NAME = _("Rank");
+
 GORank::GORank(GOOrganModel &organModel)
-  : GOMidiObject(organModel),
+  : GOMidiSendingObject(
+    organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_MANUAL),
     r_OrganModel(organModel),
-    r_MidiMap(organModel.GetConfig().GetMidiMap()),
-    m_Name(),
-    m_Pipes(),
     m_StopCount(0),
     m_NoteStopVelocities(),
     m_MaxNoteVelocities(),
@@ -35,13 +35,12 @@ GORank::GORank(GOOrganModel &organModel)
     m_MinVolume(100),
     m_MaxVolume(100),
     m_RetuneRank(true),
-    m_sender(organModel, MIDI_SEND_MANUAL),
-    m_PipeConfig(NULL, &organModel, NULL) {
-  r_OrganModel.RegisterMidiConfigurator(this);
-  r_OrganModel.RegisterSoundStateHandler(this);
-}
+    m_PipeConfig(NULL, &organModel, NULL) {}
 
-GORank::~GORank() {}
+void GORank::LoadMidiObject(
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOMidiSendingObject::LoadMidiObject(cfg, group + wxT("Rank"), midiMap);
+}
 
 void GORank::Resize() {
   m_MaxNoteVelocities.resize(m_Pipes.size());
@@ -56,12 +55,9 @@ void GORank::Init(
   const wxString &name,
   unsigned firstMidiNoteNumber,
   unsigned windchestN) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
+  GOMidiSendingObject::Init(cfg, group, name);
 
   m_FirstMidiNoteNumber = firstMidiNoteNumber;
-  m_Name = name;
-
   m_PipeConfig.Init(cfg, group, wxEmptyString);
   m_WindchestN = windchestN;
   m_HarmonicNumber = 8;
@@ -75,15 +71,14 @@ void GORank::Init(
   m_PipeConfig.SetParent(&windchest->GetPipeConfig());
 
   m_Pipes.clear();
-  m_sender.Load(cfg, group + wxT("Rank"), r_MidiMap);
   m_PipeConfig.SetName(GetName());
   Resize();
 }
 
 void GORank::Load(
   GOConfigReader &cfg, const wxString &group, int defaultFirstMidiNoteNumber) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
+  GOMidiSendingObject::Load(
+    cfg, group, cfg.ReadString(ODFSetting, group, wxT("Name"), true));
 
   m_FirstMidiNoteNumber = cfg.ReadInteger(
     ODFSetting,
@@ -93,7 +88,6 @@ void GORank::Load(
     256,
     defaultFirstMidiNoteNumber < 0,
     std::max(defaultFirstMidiNoteNumber, 0));
-  m_Name = cfg.ReadString(ODFSetting, group, wxT("Name"), true);
 
   unsigned number_of_logical_pipes
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
@@ -142,18 +136,18 @@ void GORank::Load(
     }
     m_Pipes[i]->Load(cfg, group, buffer);
   }
-  m_sender.Load(cfg, group + wxT("Rank"), r_MidiMap);
   m_PipeConfig.SetName(GetName());
   Resize();
+}
+
+void GORank::SaveMidiObject(
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOMidiSendingObject::SaveMidiObject(cfg, group + wxT("Rank"), midiMap);
 }
 
 void GORank::AddPipe(GOPipe *pipe) {
   m_Pipes.push_back(pipe);
   Resize();
-}
-
-void GORank::Save(GOConfigWriter &cfg) {
-  m_sender.Save(cfg, m_group + wxT("Rank"), r_MidiMap);
 }
 
 unsigned GORank::RegisterStop(GOStop *stop) {
@@ -192,28 +186,15 @@ void GORank::SetTemperament(const GOTemperament &temperament) {
     m_Pipes[j]->SetTemperament(temperament);
 }
 
-void GORank::AbortPlayback() { m_sender.SetName(wxEmptyString); }
-
 void GORank::PreparePlayback() {
-  m_sender.ResetKey();
+  ResetMidiKey();
   for (unsigned i = 0; i < m_MaxNoteVelocities.size(); i++)
     m_MaxNoteVelocities[i] = 0;
   for (unsigned i = 0; i < m_NoteStopVelocities.size(); i++)
     for (unsigned j = 0; j < m_NoteStopVelocities[i].size(); j++)
       m_NoteStopVelocities[i][j] = 0;
-  m_sender.SetName(m_Name);
+  GOMidiSendingObject::PreparePlayback();
 }
-
-void GORank::SendKey(unsigned note, unsigned velocity) {
-  m_sender.SetKey(note, velocity);
-}
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Rank");
-const wxString WX_MIDI_TYPE = _("Rank");
-
-const wxString &GORank::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
-
-const wxString &GORank::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GORank::GetElementStatus() { return _("-"); }
 

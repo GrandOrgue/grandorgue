@@ -9,66 +9,32 @@
 
 #include <wx/intl.h>
 
-#include "config/GOConfig.h"
 #include "model/GOOrganModel.h"
 
-#include "GODocument.h"
+const wxString WX_MIDI_TYPE_CODE = wxT("Label");
+const wxString WX_MIDI_TYPE_NAME = _("Label");
 
 GOLabelControl::GOLabelControl(GOOrganModel &organModel)
-  : GOMidiObject(organModel),
-    r_OrganModel(organModel),
-    m_Name(),
-    m_Content(),
-    m_sender(organModel, MIDI_SEND_LABEL) {
-  r_OrganModel.RegisterMidiConfigurator(this);
-  r_OrganModel.RegisterSoundStateHandler(this);
-}
-
-GOLabelControl::~GOLabelControl() {}
-
-void GOLabelControl::Init(GOConfigReader &cfg, wxString group, wxString name) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_Name = name;
-  m_sender.Load(cfg, m_group, r_OrganModel.GetConfig().GetMidiMap());
-}
-
-void GOLabelControl::Load(GOConfigReader &cfg, wxString group, wxString name) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_Name = name;
-  m_sender.Load(cfg, m_group, r_OrganModel.GetConfig().GetMidiMap());
-}
-
-void GOLabelControl::Save(GOConfigWriter &cfg) {
-  m_sender.Save(cfg, m_group, r_OrganModel.GetConfig().GetMidiMap());
-}
+  : GOMidiSendingObject(
+    organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_LABEL) {}
 
 const wxString &GOLabelControl::GetContent() { return m_Content; }
 
 void GOLabelControl::SetContent(wxString name) {
   m_Content = name;
-  m_sender.SetLabel(m_Content);
+  SendMidiValue(m_Content);
   r_OrganModel.SendControlChanged(this);
 }
 
 void GOLabelControl::AbortPlayback() {
-  m_sender.SetLabel(wxEmptyString);
-  m_sender.SetName(wxEmptyString);
+  SendMidiValue(wxEmptyString);
+  GOMidiSendingObject::AbortPlayback();
 }
 
-void GOLabelControl::PreparePlayback() { m_sender.SetName(m_Name); }
-
-void GOLabelControl::PrepareRecording() { m_sender.SetLabel(m_Content); }
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Label");
-const wxString WX_MIDI_TYPE = _("Label");
-
-const wxString &GOLabelControl::GetMidiTypeCode() const {
-  return WX_MIDI_TYPE_CODE;
+void GOLabelControl::PrepareRecording() {
+  GOMidiSendingObject::PrepareRecording();
+  SendMidiValue(m_Content);
 }
-
-const wxString &GOLabelControl::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOLabelControl::GetElementStatus() { return m_Content; }
 

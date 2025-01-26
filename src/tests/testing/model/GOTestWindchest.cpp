@@ -47,20 +47,20 @@ void GOTestWindchest::run() {
   GOEnclosure *enclosure = new GOEnclosure(*this->controller);
   windchest->AddEnclosure(enclosure);
 
-  enclosure->SetMidiValue(127);
+  enclosure->SetEnclosureValue(127);
   float volume = windchest->GetVolume();
   message = "The Windchest volume is not 1 but ";
   message = message + std::to_string(volume);
   this->GOAssert(volume == 1, message);
 
-  enclosure->SetMidiValue(0);
+  enclosure->SetEnclosureValue(0);
   volume = windchest->GetVolume();
   message = "The Windchest volume is not 0 but ";
   message = message + std::to_string(volume);
   this->GOAssert(volume == 0, message);
 
   // Check a MIDI value of 50 (50/127)
-  enclosure->SetMidiValue(50);
+  enclosure->SetEnclosureValue(50);
   volume = windchest->GetVolume();
   message = "The Windchest volume is not 0.393701 but ";
   message = message + std::to_string(volume);

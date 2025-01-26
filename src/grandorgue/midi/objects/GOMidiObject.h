@@ -12,33 +12,97 @@
 
 #include <vector>
 
-class GOMidiDialogCreator;
-class GOMidiReceiverBase;
+#include "sound/GOSoundStateHandler.h"
+
+#include "GOSaveableObject.h"
+
+class GOMidiMap;
+class GOMidiReceiver;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
+class GOOrganModel;
 
-class GOMidiObject {
+class GOMidiObject : public GOSoundStateHandler, public GOSaveableObject {
+protected:
+  GOOrganModel &r_OrganModel;
+
 private:
-  GOMidiDialogCreator &r_DialogCreator;
+  GOMidiMap &r_MidiMap;
+  const wxString &r_MidiTypeCode;
+  const wxString &r_MidiTypeName;
+
+  wxString m_name;
+
+  GOMidiSender *p_MidiSender;
+  GOMidiReceiver *p_MidiReceiver;
+  GOMidiShortcutReceiver *p_ShortcutReceiver;
+  GOMidiSender *p_DivisionSender;
 
 protected:
-  virtual GOMidiReceiverBase *GetMidiReceiver() { return nullptr; }
-  virtual GOMidiSender *GetMidiSender() { return nullptr; }
-  virtual GOMidiShortcutReceiver *GetMidiShortcutReceiver() { return nullptr; }
-  virtual GOMidiSender *GetDivision() { return nullptr; }
+  GOMidiObject(
+    GOOrganModel &organModel,
+    const wxString &midiTypeCode,
+    const wxString &midiTypeName);
+
+  virtual ~GOMidiObject();
+
+  GOMidiSender *GetMidiSender() const { return p_MidiSender; }
+  void SetMidiSender(GOMidiSender *pMidiSender) { p_MidiSender = pMidiSender; }
+  GOMidiReceiver *GetMidiReceiver() const { return p_MidiReceiver; }
+  void SetMidiReceiver(GOMidiReceiver *pMidiReceiver) {
+    p_MidiReceiver = pMidiReceiver;
+  }
+  GOMidiShortcutReceiver *GetMidiShortcutReceiver() const {
+    return p_ShortcutReceiver;
+  }
+  void SetMidiShortcutReceiver(GOMidiShortcutReceiver *pShortcutReceiver) {
+    p_ShortcutReceiver = pShortcutReceiver;
+  }
+  GOMidiSender *GetDivisionSender() const { return p_DivisionSender; }
+  void SetDivisionSender(GOMidiSender *pDivisionSender) {
+    p_DivisionSender = pDivisionSender;
+  }
+
+private:
+  void InitMidiObject(
+    GOConfigReader &cfg, const wxString &group, const wxString &name);
+
+protected:
+  virtual void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {}
+  virtual void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {}
 
 public:
-  GOMidiObject(GOMidiDialogCreator &dialogCreator)
-    : r_DialogCreator(dialogCreator) {}
+  GOMidiMap &GetMidiMap() { return r_MidiMap; }
+  const wxString &GetMidiTypeCode() const { return r_MidiTypeCode; }
+  const wxString &GetMidiTypeName() const { return r_MidiTypeName; }
+  const wxString &GetName() const { return m_name; }
+  void SetName(const wxString &name) { m_name = name; }
 
-  virtual ~GOMidiObject() {}
+  virtual void Init(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) {
+    InitMidiObject(cfg, group, name);
+  }
 
-  virtual const wxString &GetMidiTypeCode() const = 0;
-  virtual const wxString &GetMidiType() const = 0;
-  virtual const wxString &GetMidiName() const = 0;
+  virtual void Load(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) {
+    InitMidiObject(cfg, group, name);
+  }
+
+  virtual void Save(GOConfigWriter &cfg) {
+    SaveMidiObject(cfg, m_group, r_MidiMap);
+  }
+
+  virtual bool IsReadOnly() const { return false; }
+
+  void PreparePlayback() override {}
+  void PrepareRecording() override {}
+  void AbortPlayback() override {}
 
   void ShowConfigDialog();
 
+  // Used in the GOMidiList dialog
   virtual wxString GetElementStatus() = 0;
   virtual std::vector<wxString> GetElementActions() = 0;
   virtual void TriggerElementActions(unsigned no) = 0;
