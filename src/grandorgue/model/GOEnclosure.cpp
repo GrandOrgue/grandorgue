@@ -63,7 +63,7 @@ void GOEnclosure::Load(
   GOConfigReader &cfg, const wxString &group, int enclosureNb) {
   SetInitialMidiIndex(enclosureNb); // Used in LoadMidiObject
   m_MIDIInputNumber = cfg.ReadInteger(
-    ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
+    ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_Displayed1
