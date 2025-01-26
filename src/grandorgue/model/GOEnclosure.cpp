@@ -53,6 +53,7 @@ void GOEnclosure::Init(
   const wxString &group,
   const wxString &name,
   uint8_t defaultValue) {
+  m_MIDIInputNumber = 0;
   GOMidiReceivingSendingObject::Init(cfg, group, name);
   m_DefaultAmpMinimumLevel = 0;
   LoadFromCmb(cfg, defaultValue);
@@ -61,6 +62,8 @@ void GOEnclosure::Init(
 void GOEnclosure::Load(
   GOConfigReader &cfg, const wxString &group, int enclosureNb) {
   SetInitialMidiIndex(enclosureNb); // Used in LoadMidiObject
+  m_MIDIInputNumber = cfg.ReadInteger(
+    ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_Displayed1
@@ -69,8 +72,6 @@ void GOEnclosure::Load(
     = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, false);
   m_DefaultAmpMinimumLevel
     = cfg.ReadInteger(ODFSetting, m_group, WX_AMP_MINIMUM_LEVEL, 0, 100);
-  m_MIDIInputNumber = cfg.ReadInteger(
-    ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   LoadFromCmb(cfg, MAX_MIDI_VALUE);
 }
 

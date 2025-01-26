@@ -82,6 +82,8 @@ void GOManual::Init(
   int manualNumber,
   unsigned firstMidi,
   unsigned keys) {
+  m_manual_number = manualNumber;
+  m_MIDIInputNumber = 0;
   GOMidiReceivingSendingObject::Init(
     cfg,
     group,
@@ -92,9 +94,7 @@ void GOManual::Init(
   m_first_accessible_logical_key_nb = 1;
   m_first_accessible_key_midi_note_nb = firstMidi;
   m_nb_accessible_keys = keys;
-  m_MIDIInputNumber = 0;
   m_displayed = false;
-  m_manual_number = manualNumber;
   for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
     m_MidiKeyMap[i] = (uint8_t)i;
 
@@ -115,7 +115,10 @@ void GOManual::Init(
 
 void GOManual::Load(
   GOConfigReader &cfg, const wxString &group, int manualNumber) {
+  m_manual_number = manualNumber;
   SetInitialMidiIndex(manualNumber); // Used in LoadMidiObject
+  m_MIDIInputNumber = cfg.ReadInteger(
+    ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_nb_logical_keys
@@ -130,8 +133,6 @@ void GOManual::Load(
     ODFSetting, group, wxT("FirstAccessibleKeyMIDINoteNumber"), 0, 127);
   m_nb_accessible_keys
     = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfAccessibleKeys"), 0, 85);
-  m_MIDIInputNumber = cfg.ReadInteger(
-    ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   m_displayed
     = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
   unsigned nb_stops
@@ -152,7 +153,6 @@ void GOManual::Load(
     0,
     r_OrganModel.GetSwitchCount(),
     false);
-  m_manual_number = manualNumber;
 
   for (unsigned i = 0; i < GOMidiReceiver::KEY_MAP_SIZE; i++)
     m_MidiKeyMap[i] = (uint8_t)cfg.ReadInteger(
