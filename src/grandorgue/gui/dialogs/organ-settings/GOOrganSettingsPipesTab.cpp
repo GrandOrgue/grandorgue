@@ -413,11 +413,11 @@ bool GOOrganSettingsPipesTab::TransferDataToWindow() {
     m_AudioGroup->Append(group);
   m_AudioGroup->ChangeValue(WX_SPACE);
   m_LastAudioGroup = WX_SPACE;
-  
+
   wxTreeItemId idRoot = FillTree(wxTreeItemId(), r_RootNode);
 
   NotifyModified(false);
-  
+
   m_Tree->Expand(idRoot);
   m_Tree->SelectItem(idRoot, true);
   return true;
