@@ -14,39 +14,37 @@
 #include "document-base/GOView.h"
 
 class wxButton;
-class wxListEvent;
-class wxListView;
+class wxGridEvent;
 
+class GOGrid;
 class GOMidiObject;
 
 class GOMidiListDialog : public GOSimpleDialog, public GOView {
 private:
-  wxListView *m_Objects;
+  const std::vector<GOMidiObject *> &r_MidiObjects;
+
+  GOGrid *m_Objects;
   wxButton *m_Edit;
   wxButton *m_Status;
   std::vector<wxButton *> m_Buttons;
-
-  enum {
-    ID_LIST = 200,
-    ID_EDIT,
-    ID_STATUS,
-    ID_BUTTON,
-    ID_BUTTON_LAST = ID_BUTTON + 2,
-  };
-
-  void OnObjectClick(wxListEvent &event);
-  void OnObjectDoubleClick(wxListEvent &event);
-  void OnEdit(wxCommandEvent &event);
-  void OnStatus(wxCommandEvent &event);
-  void OnButton(wxCommandEvent &event);
 
 public:
   GOMidiListDialog(
     GODocumentBase *doc,
     wxWindow *parent,
     GODialogSizeSet &dialogSizes,
-    const std::vector<GOMidiObject *> &midi_elements);
-  ~GOMidiListDialog();
+    const std::vector<GOMidiObject *> &midiObjects);
+
+private:
+  bool TransferDataToWindow() override;
+
+  GOMidiObject *GetSelectedObject() const;
+
+  void OnObjectClick(wxGridEvent &event);
+  void OnObjectDoubleClick(wxGridEvent &event);
+  void OnEdit(wxCommandEvent &event);
+  void OnStatus(wxCommandEvent &event);
+  void OnButton(wxCommandEvent &event);
 
   DECLARE_EVENT_TABLE()
 };
