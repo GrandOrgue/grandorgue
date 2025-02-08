@@ -10,26 +10,20 @@
 
 #include "ptrvector.h"
 
-#include "midi/GOMidiSender.h"
-#include "midi/objects/GOMidiObject.h"
+#include "midi/objects/GOMidiSendingObject.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
 #include "sound/GOSoundStateHandler.h"
 
-#include "GOSaveableObject.h"
+#include "GOPipe.h"
 
 class GOMidiMap;
 class GOOrganModel;
-class GOPipe;
 class GOStop;
 class GOTemperament;
 
-class GORank : private GOSaveableObject,
-               public GOMidiObject,
-               private GOSoundStateHandler {
+class GORank : public GOMidiSendingObject {
 private:
   GOOrganModel &r_OrganModel;
-  GOMidiMap &r_MidiMap;
-  wxString m_Name;
   ptr_vector<GOPipe> m_Pipes;
   /**
    * Number of stops using this rank
@@ -49,22 +43,21 @@ private:
   float m_MinVolume;
   float m_MaxVolume;
   bool m_RetuneRank;
-  GOMidiSender m_sender;
   GOPipeConfigTreeNode m_PipeConfig;
+
+  void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
+  void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
   void Resize();
 
-  void Save(GOConfigWriter &cfg) override;
-
-  void AbortPlayback() override;
   void PreparePlayback() override;
-
-protected:
-  GOMidiSender *GetMidiSender() override { return &m_sender; }
 
 public:
   GORank(GOOrganModel &organModel);
-  ~GORank();
+
+  using GOMidiObject::Init; // Avoiding a compilation warning
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
@@ -78,6 +71,7 @@ public:
    * @param firstMidiNoteNumber. -1 means no default and must be specified in
    *   the ODF
    */
+  using GOMidiObject::Load; // Avoiding a compilation warning
   void Load(
     GOConfigReader &cfg, const wxString &group, int defaultFirstMidiNoteNumber);
   void AddPipe(GOPipe *pipe);
@@ -87,17 +81,14 @@ public:
   unsigned GetPipeCount();
   GOPipeConfigNode &GetPipeConfig();
   void SetTemperament(const GOTemperament &temperament);
-  const wxString &GetName() const { return m_Name; }
-
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
-  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;
   void TriggerElementActions(unsigned no) override;
 
-  void SendKey(unsigned note, unsigned velocity);
+  void SendKey(unsigned note, unsigned velocity) {
+    SendMidiKey(note, velocity);
+  }
 };
 
 #endif

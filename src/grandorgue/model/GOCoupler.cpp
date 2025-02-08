@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,9 +15,12 @@
 #include "GOManual.h"
 #include "GOOrganModel.h"
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Coupler");
+static const wxString WX_MIDI_TYPE_NAME = _("Coupler");
+
 GOCoupler::GOCoupler(
   GOOrganModel &organModel, unsigned sourceManual, bool isVirtual)
-  : GODrawstop(organModel),
+  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
     m_IsVirtual(isVirtual),
     m_UnisonOff(false),
     m_CoupleToSubsequentUnisonIntermanualCouplers(false),
@@ -84,8 +87,8 @@ const struct IniFileEnumEntry GOCoupler::m_coupler_types[] = {
 
 void GOCoupler::Init(
   GOConfigReader &cfg,
-  wxString group,
-  wxString name,
+  const wxString &group,
+  const wxString &name,
   bool unison_off,
   bool recursive,
   int keyshift,
@@ -397,10 +400,3 @@ bool GOCoupler::IsIntermanual() {
 }
 
 bool GOCoupler::IsUnisonOff() { return m_UnisonOff; }
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Coupler");
-const wxString WX_MIDI_TYPE = _("Coupler");
-
-const wxString &GOCoupler::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
-
-const wxString &GOCoupler::GetMidiType() const { return WX_MIDI_TYPE; }

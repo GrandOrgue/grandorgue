@@ -15,16 +15,9 @@
 #include "combinations/control/GOCombinationButtonSet.h"
 #include "combinations/model/GOCombinationDefinition.h"
 #include "control/GOControl.h"
-#include "midi/GOMidiReceiver.h"
-#include "midi/GOMidiSender.h"
-#include "midi/objects/GOMidiObject.h"
-#include "sound/GOSoundStateHandler.h"
-
-#include "GOEventHandler.h"
-#include "GOSaveableObject.h"
+#include "midi/objects/GOMidiObjectWithDivision.h"
 
 class GOConfigReader;
-class GOConfigWriter;
 class GOCoupler;
 class GODivisionalButtonControl;
 class GOStop;
@@ -33,19 +26,9 @@ class GOTremulant;
 class GOOrganModel;
 
 class GOManual : public GOControl,
-                 private GOEventHandler,
-                 private GOCombinationButtonSet,
-                 private GOSaveableObject,
-                 private GOSoundStateHandler,
-                 public GOMidiObject {
+                 public GOMidiObjectWithDivision,
+                 private GOCombinationButtonSet {
 private:
-  GOOrganModel &r_OrganModel;
-  GOMidiMap &r_MidiMap;
-
-  wxString m_group;
-  GOMidiReceiver m_midi;
-  GOMidiSender m_sender;
-  GOMidiSender m_division;
   std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */
   std::vector<unsigned> m_KeyVelocity;
@@ -69,8 +52,6 @@ private:
   // Global Switch Id is the number of switch in ODF started with 1
   std::vector<unsigned> m_GlobalSwitchIds;
 
-  wxString m_name;
-
   ptr_vector<GOStop> m_stops;
   ptr_vector<GOCoupler> m_couplers;
   ptr_vector<GODivisionalButtonControl> m_divisionals;
@@ -80,11 +61,10 @@ private:
 
   void Resize();
 
-  void ProcessMidi(const GOMidiEvent &event) override;
+  void OnMidiReceived(
+    const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value);
   void HandleKey(int key) override;
   void SetOutput(unsigned note, unsigned velocity);
-
-  void Save(GOConfigWriter &cfg) override;
 
   void AbortPlayback() override;
   void PreparePlayback() override;
@@ -98,22 +78,20 @@ private:
   void UpdateAllButtonsLight(
     GOButtonControl *buttonToLight, int manualIndexOnlyFor) override;
 
-protected:
-  GOMidiReceiverBase *GetMidiReceiver() override { return &m_midi; }
-  GOMidiSender *GetMidiSender() override { return &m_sender; }
-  GOMidiSender *GetDivision() override { return &m_division; }
-
 public:
   GOManual(GOOrganModel &organModel);
+  ~GOManual();
 
   unsigned GetManulNumber() const { return m_manual_number; }
 
+  using GOMidiReceivingSendingObject::Init; // avoiding a compilation warning
   void Init(
     GOConfigReader &cfg,
-    wxString group,
+    const wxString &group,
     int manualNumber,
-    unsigned first_midi,
+    unsigned firstMidi,
     unsigned keys);
+  using GOMidiObject::Load; // avoiding a compilation warning
   void Load(GOConfigReader &cfg, const wxString &group, int manualNumber);
   void LoadDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);
@@ -124,8 +102,6 @@ public:
   void SetUnisonOff(bool on);
   void Update();
   void Reset();
-  void SetElementID(int id);
-  ~GOManual(void);
 
   unsigned GetNumberOfAccessibleKeys();
   unsigned GetFirstAccessibleKeyMIDINoteNumber();
@@ -177,11 +153,7 @@ public:
   int FindSwitchByName(const wxString &name) const;
 
   GOCombinationDefinition &GetDivisionalTemplate();
-  const wxString &GetName() const { return m_name; }
   bool IsDisplayed();
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
-  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;

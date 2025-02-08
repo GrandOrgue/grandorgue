@@ -9,50 +9,33 @@
 
 #include <wx/intl.h>
 
-#include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
 #include "GOOrganModel.h"
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Enclosure");
+static const wxString WX_MIDI_TYPE_NAME = _("Enclosure");
+
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
-  : GOMidiObject(organModel),
-    r_OrganModel(organModel),
-    r_MidiMap(organModel.GetConfig().GetMidiMap()),
-    m_midi(organModel, MIDI_RECV_ENCLOSURE),
-    m_sender(organModel, MIDI_SEND_ENCLOSURE),
-    m_shortcut(GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
-    m_Name(),
+  : GOMidiObjectWithShortcut(
+    organModel,
+    WX_MIDI_TYPE_CODE,
+    WX_MIDI_TYPE_NAME,
+    MIDI_SEND_ENCLOSURE,
+    MIDI_RECV_ENCLOSURE,
+    GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
     m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
     m_Displayed1(false),
     m_Displayed2(false),
     m_AmpMinimumLevel(0),
-    m_MIDIValue(0) {
-  organModel.RegisterEventHandler(this);
-  organModel.RegisterMidiConfigurator(this);
-  organModel.RegisterSoundStateHandler(this);
-}
-
-void GOEnclosure::Init(
-  GOConfigReader &cfg,
-  const wxString &group,
-  const wxString &name,
-  uint8_t defaultValue) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_Name = name;
-  m_DefaultAmpMinimumLevel = 0;
-  LoadFromCmb(cfg, defaultValue);
-}
+    m_MIDIValue(0) {}
 
 static const wxString WX_AMP_MINIMUM_LEVEL = wxT("AmpMinimumLevel");
 static const wxString WX_VALUE = wxT("Value");
 
 void GOEnclosure::LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue) {
-  m_midi.Load(cfg, m_group, r_MidiMap);
-  m_sender.Load(cfg, m_group, r_MidiMap);
-  m_shortcut.Load(cfg, m_group);
   m_AmpMinimumLevel = cfg.ReadInteger(
     CMBSetting,
     m_group,
@@ -61,39 +44,47 @@ void GOEnclosure::LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue) {
     100,
     false,
     m_DefaultAmpMinimumLevel);
-  SetMidiValue(cfg.ReadInteger(
+  SetEnclosureValue(cfg.ReadInteger(
     CMBSetting, m_group, WX_VALUE, 0, MAX_MIDI_VALUE, false, defaultValue));
 }
 
+void GOEnclosure::Init(
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &name,
+  uint8_t defaultValue) {
+  m_MIDIInputNumber = 0;
+  GOMidiReceivingSendingObject::Init(cfg, group, name);
+  m_DefaultAmpMinimumLevel = 0;
+  LoadFromCmb(cfg, defaultValue);
+}
+
 void GOEnclosure::Load(
-  GOConfigReader &cfg, const wxString &group, int enclosure_nb) {
-  r_OrganModel.RegisterSaveableObject(this);
-  m_group = group;
-  m_Name = cfg.ReadStringNotEmpty(ODFSetting, m_group, wxT("Name"));
+  GOConfigReader &cfg, const wxString &group, int enclosureNb) {
+  SetInitialMidiIndex(enclosureNb); // Used in LoadMidiObject
+  m_MIDIInputNumber = cfg.ReadInteger(
+    ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
+  GOMidiReceivingSendingObject::Load(
+    cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
   m_Displayed1
     = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, true);
   m_Displayed2
     = cfg.ReadBoolean(ODFSetting, m_group, wxT("Displayed"), false, false);
   m_DefaultAmpMinimumLevel
     = cfg.ReadInteger(ODFSetting, m_group, WX_AMP_MINIMUM_LEVEL, 0, 100);
-  m_MIDIInputNumber = cfg.ReadInteger(
-    ODFSetting, m_group, wxT("MIDIInputNumber"), 0, 200, false, 0);
-  m_midi.SetIndex(enclosure_nb);
   LoadFromCmb(cfg, MAX_MIDI_VALUE);
 }
 
 void GOEnclosure::Save(GOConfigWriter &cfg) {
-  m_midi.Save(cfg, m_group, r_MidiMap);
-  m_sender.Save(cfg, m_group, r_MidiMap);
-  m_shortcut.Save(cfg, m_group);
+  GOMidiReceivingSendingObject::Save(cfg);
   cfg.WriteInteger(m_group, WX_AMP_MINIMUM_LEVEL, m_AmpMinimumLevel);
   cfg.WriteInteger(m_group, WX_VALUE, m_MIDIValue);
 }
 
-void GOEnclosure::SetMidiValue(uint8_t n) {
+void GOEnclosure::SetEnclosureValue(uint8_t n) {
   if (n != m_MIDIValue) {
     m_MIDIValue = n;
-    m_sender.SetValue(n);
+    SendMidiValue(m_MIDIValue);
   }
   r_OrganModel.UpdateVolume();
   r_OrganModel.SendControlChanged(this);
@@ -106,24 +97,24 @@ float GOEnclosure::GetAttenuation() {
 }
 
 void GOEnclosure::Scroll(bool scroll_up) {
-  SetIntMidiValue(m_MIDIValue + (scroll_up ? 4 : -4));
+  SetIntEnclosureValue(m_MIDIValue + (scroll_up ? 4 : -4));
 }
 
-void GOEnclosure::ProcessMidi(const GOMidiEvent &event) {
-  int value;
-
-  if (m_midi.Match(event, value) == MIDI_MATCH_CHANGE)
-    SetIntMidiValue(value);
+void GOEnclosure::OnMidiReceived(
+  const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value) {
+  if (matchType == MIDI_MATCH_CHANGE)
+    SetEnclosureValue(value);
 }
 
-void GOEnclosure::HandleKey(int key) {
-  switch (m_shortcut.Match(key)) {
+void GOEnclosure::OnShortcutKeyReceived(
+  GOMidiShortcutReceiver::MatchType matchType, int key) {
+  switch (matchType) {
   case GOMidiShortcutReceiver::KEY_MATCH:
-    SetIntMidiValue(m_MIDIValue + 8);
+    SetIntEnclosureValue(m_MIDIValue + 8);
     break;
 
   case GOMidiShortcutReceiver::KEY_MATCH_MINUS:
-    SetIntMidiValue(m_MIDIValue - 8);
+    SetIntEnclosureValue(m_MIDIValue - 8);
     break;
   default:
     break;
@@ -137,31 +128,15 @@ bool GOEnclosure::IsDisplayed(bool new_format) {
     return m_Displayed1;
 }
 
+void GOEnclosure::PrepareRecording() {
+  GOMidiReceivingSendingObject::PrepareRecording();
+  SendMidiValue(m_MIDIValue);
+}
+
 void GOEnclosure::AbortPlayback() {
-  m_sender.SetValue(0);
-  m_sender.SetName(wxEmptyString);
+  SendMidiValue(0);
+  GOMidiReceivingSendingObject::AbortPlayback();
 }
-
-void GOEnclosure::PreparePlayback() {
-  m_midi.PreparePlayback();
-  m_sender.SetName(m_Name);
-}
-
-void GOEnclosure::PrepareRecording() { m_sender.SetValue(m_MIDIValue); }
-
-void GOEnclosure::SetElementID(int id) {
-  m_midi.SetElementID(id);
-  m_sender.SetElementID(id);
-}
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Enclosure");
-const wxString WX_MIDI_TYPE = _("Enclosure");
-
-const wxString &GOEnclosure::GetMidiTypeCode() const {
-  return WX_MIDI_TYPE_CODE;
-}
-
-const wxString &GOEnclosure::GetMidiType() const { return WX_MIDI_TYPE; }
 
 wxString GOEnclosure::GetElementStatus() {
   return wxString::Format(_("%.3f %%"), (m_MIDIValue * 100.0 / 127));

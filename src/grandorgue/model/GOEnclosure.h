@@ -14,34 +14,14 @@
 #include <wx/string.h>
 
 #include "control/GOControl.h"
-#include "midi/GOMidiReceiver.h"
-#include "midi/GOMidiSender.h"
-#include "midi/GOMidiShortcutReceiver.h"
-#include "midi/objects/GOMidiObject.h"
-#include "sound/GOSoundStateHandler.h"
-
-#include "GOEventHandler.h"
-#include "GOSaveableObject.h"
+#include "midi/objects/GOMidiObjectWithShortcut.h"
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOMidiEvent;
-class GOMidiMap;
 class GOOrganModel;
 
-class GOEnclosure : public GOControl,
-                    private GOEventHandler,
-                    private GOSaveableObject,
-                    private GOSoundStateHandler,
-                    public GOMidiObject {
+class GOEnclosure : public GOControl, public GOMidiObjectWithShortcut {
 private:
-  GOOrganModel &r_OrganModel;
-  GOMidiMap &r_MidiMap;
-
-  GOMidiReceiver m_midi;
-  GOMidiSender m_sender;
-  GOMidiShortcutReceiver m_shortcut;
-  wxString m_Name;
   uint8_t m_DefaultAmpMinimumLevel;
   uint8_t m_MIDIInputNumber;
   bool m_Displayed1;
@@ -50,51 +30,43 @@ private:
   uint8_t m_AmpMinimumLevel;
   uint8_t m_MIDIValue;
 
-  void ProcessMidi(const GOMidiEvent &event) override;
-  void HandleKey(int key) override;
+  void OnMidiReceived(
+    const GOMidiEvent &event,
+    GOMidiMatchType matchType,
+    int key,
+    int value) override;
+  void OnShortcutKeyReceived(
+    GOMidiShortcutReceiver::MatchType matchType, int key) override;
 
   // Load all customizable values from the .cmb file
   void LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue);
   void Save(GOConfigWriter &cfg) override;
 
-  void AbortPlayback() override;
-  void PreparePlayback() override;
-  void PrepareRecording() override;
+  void SetIntEnclosureValue(int n) { SetEnclosureValue(std::clamp(n, 0, 127)); }
 
-  GOMidiReceiverBase *GetMidiReceiver() override { return &m_midi; }
-  GOMidiSender *GetMidiSender() override { return &m_sender; }
-  GOMidiShortcutReceiver *GetMidiShortcutReceiver() override {
-    return &m_shortcut;
-  }
+  void PrepareRecording() override;
+  void AbortPlayback() override;
 
 public:
   static constexpr uint8_t MAX_MIDI_VALUE = 127;
 
   GOEnclosure(GOOrganModel &organModel);
+
+  using GOMidiObjectWithShortcut::Init; // for avoiding a warning
   void Init(
     GOConfigReader &cfg,
     const wxString &group,
     const wxString &name,
-    uint8_t defaultValue);
-  void Load(GOConfigReader &cfg, const wxString &group, int enclosure_nb);
-  const wxString &GetName() const { return m_Name; }
-  uint8_t GetAmpMinimumLevel() const { return m_AmpMinimumLevel; }
-  void SetAmpMinimumLevel(uint8_t v) { m_AmpMinimumLevel = v; }
-  uint8_t GetMIDIInputNumber() const { return m_MIDIInputNumber; }
-  uint8_t GetMidiValue() const { return m_MIDIValue; }
-  void SetMidiValue(uint8_t n);
-  void SetIntMidiValue(int n) {
-    SetMidiValue((uint8_t)std::clamp(n, 0, (int)MAX_MIDI_VALUE));
-  }
+    uint8_t defValue);
+  using GOMidiObject::Load; // for avoiding a warning
+  void Load(GOConfigReader &cfg, const wxString &group, int enclosureNb);
+  void SetEnclosureValue(uint8_t n);
+  int GetEnclosureValue() const { return m_MIDIValue; }
+  int GetMIDIInputNumber() const { return m_MIDIInputNumber; }
   float GetAttenuation();
 
   void Scroll(bool scroll_up);
   bool IsDisplayed(bool new_format);
-  void SetElementID(int id);
-
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
-  const wxString &GetMidiName() const override { return GetName(); }
 
   wxString GetElementStatus() override;
   std::vector<wxString> GetElementActions() override;

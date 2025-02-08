@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -68,7 +68,10 @@ protected:
   void StartPlayback() override;
 
 public:
-  GODrawstop(GOOrganModel &organModel);
+  GODrawstop(
+    GOOrganModel &organModel,
+    const wxString &midiTypeCode,
+    const wxString &midiTypeName);
 
   /* + For tests only */
   GOFunctionType GetFunctionType() const { return m_Type; }
@@ -83,8 +86,10 @@ public:
   bool IsToStoreInGeneral() const { return m_IsToStoreInGeneral; }
   bool GetCombinationState() const override { return IsEngaged(); }
 
-  void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
-  void Load(GOConfigReader &cfg, const wxString &group);
+  void Init(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) override;
+
+  void Load(GOConfigReader &cfg, const wxString &group) override;
   void RegisterControlled(GODrawstop *sw);
   void UnRegisterControlled(GODrawstop *sw);
   virtual void SetButtonState(bool on) override;

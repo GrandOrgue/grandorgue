@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,8 +14,11 @@
 #include "GOOrganModel.h"
 #include "GORank.h"
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Stop");
+static const wxString WX_MIDI_TYPE_NAME = _("Stop");
+
 GOStop::GOStop(GOOrganModel &organModel, unsigned first_midi_note_number)
-  : GODrawstop(organModel),
+  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
     m_RankInfo(0),
     m_KeyVelocity(0),
     m_FirstMidiNoteNumber(first_midi_note_number),
@@ -162,10 +165,3 @@ void GOStop::StartPlayback() {
 }
 
 GORank *GOStop::GetRank(unsigned index) { return m_RankInfo[index].Rank; }
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Stop");
-const wxString WX_MIDI_TYPE = _("Stop");
-
-const wxString &GOStop::GetMidiTypeCode() const { return WX_MIDI_TYPE_CODE; }
-
-const wxString &GOStop::GetMidiType() const { return WX_MIDI_TYPE; }

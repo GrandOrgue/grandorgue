@@ -25,8 +25,12 @@ const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
   {wxT("Xor"), FUNCTION_XOR},
 };
 
-GODrawstop::GODrawstop(GOOrganModel &organModel)
-  : GOButtonControl(organModel, MIDI_RECV_DRAWSTOP, false),
+GODrawstop::GODrawstop(
+  GOOrganModel &organModel,
+  const wxString &midiTypeCode,
+  const wxString &midiTypeName)
+  : GOButtonControl(
+    organModel, midiTypeCode, midiTypeName, MIDI_RECV_DRAWSTOP, false),
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
     m_ControlledDrawstops(),

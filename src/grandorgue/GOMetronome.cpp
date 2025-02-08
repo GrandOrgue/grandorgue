@@ -59,11 +59,11 @@ GOMetronome::GOMetronome(GOOrganController *organController)
     m_StopID(0) {
   CreateButtons(*m_OrganController);
 
-  m_buttons[ID_METRONOME_ON]->SetPreconfigIndex(25);
-  m_buttons[ID_METRONOME_MEASURE_P1]->SetPreconfigIndex(28);
-  m_buttons[ID_METRONOME_MEASURE_M1]->SetPreconfigIndex(29);
-  m_buttons[ID_METRONOME_BEAT_P1]->SetPreconfigIndex(26);
-  m_buttons[ID_METRONOME_BEAT_M1]->SetPreconfigIndex(27);
+  m_buttons[ID_METRONOME_ON]->SetInitialMidiIndex(25);
+  m_buttons[ID_METRONOME_MEASURE_P1]->SetInitialMidiIndex(28);
+  m_buttons[ID_METRONOME_MEASURE_M1]->SetInitialMidiIndex(29);
+  m_buttons[ID_METRONOME_BEAT_P1]->SetInitialMidiIndex(26);
+  m_buttons[ID_METRONOME_BEAT_M1]->SetInitialMidiIndex(27);
 
   m_OrganController->RegisterSoundStateHandler(this);
 }

@@ -45,7 +45,7 @@ private:
   bool LoadCache(GOMemoryPool &pool, GOCache &cache) override;
   bool SaveCache(GOCacheWriter &cache) const override { return true; }
   void UpdateHash(GOHash &hash) const override {}
-  const wxString &GetLoadTitle() const override { return m_Name; };
+  const wxString &GetLoadTitle() const override { return GetName(); };
 
   void AbortPlayback() override;
   void StartPlayback() override;
@@ -53,11 +53,9 @@ private:
 public:
   GOTremulant(GOOrganModel &organModel);
   ~GOTremulant();
+  using GODrawstop::Load; // Avoiding a compilation warning
   void Load(GOConfigReader &cfg, const wxString &group, unsigned tremulantN);
   GOTremulantType GetTremulantType();
-
-  const wxString &GetMidiTypeCode() const override;
-  const wxString &GetMidiType() const override;
 };
 
 #endif /* GOTREMULANT_H_ */

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,24 +12,16 @@
 #include "model/GOManual.h"
 #include "model/GOOrganModel.h"
 
+static const wxString WX_MIDI_TYPE_CODE = wxT("Divisional");
+static const wxString WX_MIDI_TYPE_NAME = _("Divisional");
+
 GODivisionalButtonControl::GODivisionalButtonControl(
   GOOrganModel &organModel, unsigned manualNumber, unsigned divisionalIndex)
-  : GOPushbuttonControl(organModel),
+  : GOPushbuttonControl(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
     r_OrganModel(organModel),
     m_ManualN(manualNumber),
     m_DivisionalIndex(divisionalIndex),
     m_combination(organModel, manualNumber, false) {}
-
-const wxString WX_MIDI_TYPE_CODE = wxT("Divisional");
-const wxString WX_MIDI_TYPE = _("Divisional");
-
-const wxString &GODivisionalButtonControl::GetMidiTypeCode() const {
-  return WX_MIDI_TYPE_CODE;
-}
-
-const wxString &GODivisionalButtonControl::GetMidiType() const {
-  return WX_MIDI_TYPE;
-}
 
 void GODivisionalButtonControl::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
