@@ -112,12 +112,13 @@ void GOMidiListDialog::OnButton(wxCommandEvent &event) {
 }
 
 void GOMidiListDialog::OnObjectClick(wxGridEvent &event) {
-  int index = m_Objects->GetGridCursorRow();
+  int index = event.GetRow();
   bool isAnySelected = index >= 0;
 
   m_Edit->Enable(isAnySelected);
   m_Status->Enable(isAnySelected);
   if (isAnySelected) {
+    m_Objects->SelectRow(index);
     GOMidiObject *obj = r_MidiObjects[index];
     std::vector<wxString> actions = obj->GetElementActions();
 
