@@ -10,6 +10,7 @@
 #include <wx/button.h>
 #include <wx/sizer.h>
 
+#include "gui/size/GOAdditionalSizeKeeperProxy.h"
 #include "gui/wxcontrols/GOGrid.h"
 #include "midi/objects/GOMidiObject.h"
 
@@ -83,6 +84,24 @@ GOMidiListDialog::GOMidiListDialog(
 
   topSizer->AddSpacer(5);
   LayoutWithInnerSizer(topSizer);
+}
+
+static const wxString WX_GRID_MIDI_OBJECTS = wxT("GridMidiObjects");
+
+void GOMidiListDialog::ApplyAdditionalSizes(
+  const GOAdditionalSizeKeeper &sizeKeeper) {
+  GOAdditionalSizeKeeperProxy proxyMidiObjects(
+    const_cast<GOAdditionalSizeKeeper &>(sizeKeeper), WX_GRID_MIDI_OBJECTS);
+
+  m_Objects->ApplyColumnSizes(proxyMidiObjects);
+}
+
+void GOMidiListDialog::CaptureAdditionalSizes(
+  GOAdditionalSizeKeeper &sizeKeeper) const {
+  GOAdditionalSizeKeeperProxy proxyMidiObjects(
+    sizeKeeper, WX_GRID_MIDI_OBJECTS);
+
+  m_Objects->CaptureColumnSizes(proxyMidiObjects);
 }
 
 bool GOMidiListDialog::TransferDataToWindow() {

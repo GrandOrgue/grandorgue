@@ -36,6 +36,10 @@ public:
     const std::vector<GOMidiObject *> &midiObjects);
 
 private:
+  void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
+  void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const override;
+
   bool TransferDataToWindow() override;
 
   GOMidiObject *GetSelectedObject() const;
