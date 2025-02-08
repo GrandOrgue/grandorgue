@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDILISTDIALOG_H
-#define GOMIDILISTDIALOG_H
+#ifndef GOMIDIOBJECTSDIALOG_H
+#define GOMIDIOBJECTSDIALOG_H
 
 #include <vector>
 
@@ -19,17 +19,17 @@ class wxGridEvent;
 class GOGrid;
 class GOMidiObject;
 
-class GOMidiListDialog : public GOSimpleDialog, public GOView {
+class GOMidiObjectsDialog : public GOSimpleDialog, public GOView {
 private:
   const std::vector<GOMidiObject *> &r_MidiObjects;
 
-  GOGrid *m_Objects;
-  wxButton *m_Edit;
-  wxButton *m_Status;
-  std::vector<wxButton *> m_Buttons;
+  GOGrid *m_ObjectsGrid;
+  wxButton *m_ConfigureButton;
+  wxButton *m_StatusButton;
+  std::vector<wxButton *> m_ActionButtons;
 
 public:
-  GOMidiListDialog(
+  GOMidiObjectsDialog(
     GODocumentBase *doc,
     wxWindow *parent,
     GODialogSizeSet &dialogSizes,
@@ -43,14 +43,15 @@ private:
   bool TransferDataToWindow() override;
 
   GOMidiObject *GetSelectedObject() const;
+  void ConfigureSelectedObject();
 
-  void OnObjectClick(wxGridEvent &event);
-  void OnObjectDoubleClick(wxGridEvent &event);
-  void OnEdit(wxCommandEvent &event);
-  void OnStatus(wxCommandEvent &event);
-  void OnButton(wxCommandEvent &event);
+  void OnSelectCell(wxGridEvent &event);
+  void OnObjectDoubleClick(wxGridEvent &event) { ConfigureSelectedObject(); }
+  void OnConfigureButton(wxCommandEvent &event) { ConfigureSelectedObject(); }
+  void OnStatusButton(wxCommandEvent &event);
+  void OnActionButton(wxCommandEvent &event);
 
   DECLARE_EVENT_TABLE()
 };
 
-#endif
+#endif // GOMIDIOBJECTSDIALOG_H
