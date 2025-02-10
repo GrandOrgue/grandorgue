@@ -13,7 +13,7 @@
 #include "document-base/GOView.h"
 #include "gui/dialogs/common/GOTabbedDialog.h"
 
-#include "GOOrganSettingsButtonsProxy.h"
+#include "GOOrganSettingsTab.h"
 
 class wxButton;
 
