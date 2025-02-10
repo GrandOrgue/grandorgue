@@ -115,8 +115,8 @@ bool GOMidiListDialog::TransferDataToWindow() {
   for (unsigned i = 0; i < newRowCnt; i++) {
     GOMidiObject *obj = r_MidiObjects[i];
 
-    m_Objects->SetCellValue(i, GRID_COL_TYPE, obj->GetMidiType());
-    m_Objects->SetCellValue(i, GRID_COL_ELEMENT, obj->GetMidiName());
+    m_Objects->SetCellValue(i, GRID_COL_TYPE, obj->GetMidiTypeName());
+    m_Objects->SetCellValue(i, GRID_COL_ELEMENT, obj->GetName());
   }
   return true;
 }
