@@ -15,7 +15,7 @@
 #include <wx/event.h>
 #include <wx/panel.h>
 
-#include "GOOrganSettingsButtonsProxy.h"
+#include "GOOrganSettingsTab.h"
 
 class wxListBox;
 class wxTextCtrl;

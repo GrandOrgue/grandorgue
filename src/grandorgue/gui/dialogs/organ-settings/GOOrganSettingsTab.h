@@ -8,9 +8,9 @@
 #ifndef GOORGANSETTINGSBUTTONSPROXY_H
 #define GOORGANSETTINGSBUTTONSPROXY_H
 
-class wxWindow;
+#include "gui/dialogs/common/GODialogTab.h"
 
-class GOOrganSettingsButtonsProxy {
+class GOOrganSettingsButtonsProxy : GODialogTab {
 public:
   class Listener {
   public:
@@ -29,7 +29,11 @@ private:
   bool m_IsModified = false;
 
 public:
-  GOOrganSettingsButtonsProxy(Listener &listener, wxWindow *pWindow);
+  GOOrganSettingsButtonsProxy(
+    Listener &listener,
+    GOTabbedDialog *pDlg,
+    const wxString &name,
+    const wxString &label);
 
 protected:
   void NotifyButtonStatesChanged() { r_listener.ButtonStatesChanged(); }
