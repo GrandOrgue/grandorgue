@@ -25,6 +25,7 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     MIDI_SEND_ENCLOSURE,
     MIDI_RECV_ENCLOSURE,
     GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
+    m_IsOdfDefined(false),
     m_DefaultAmpMinimumLevel(0),
     m_MIDIInputNumber(0),
     m_Displayed1(false),
@@ -53,6 +54,7 @@ void GOEnclosure::Init(
   const wxString &group,
   const wxString &name,
   uint8_t defaultValue) {
+  m_IsOdfDefined = false;
   m_MIDIInputNumber = 0;
   GOMidiReceivingSendingObject::Init(cfg, group, name);
   m_DefaultAmpMinimumLevel = 0;
@@ -62,6 +64,7 @@ void GOEnclosure::Init(
 void GOEnclosure::Load(
   GOConfigReader &cfg, const wxString &group, int enclosureNb) {
   SetInitialMidiIndex(enclosureNb); // Used in LoadMidiObject
+  m_IsOdfDefined = true;
   m_MIDIInputNumber = cfg.ReadInteger(
     ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
   GOMidiReceivingSendingObject::Load(

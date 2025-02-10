@@ -8,6 +8,7 @@
 #ifndef GOORGANSETTINGSENCLOSURESTAB_H
 #define GOORGANSETTINGSENCLOSURESTAB_H
 
+#include <functional>
 #include <unordered_map>
 #include <vector>
 
@@ -46,14 +47,16 @@ public:
     GOOrganSettingsButtonsProxy::Listener &listener);
 
 private:
+  void LoadValues();
   bool TransferDataToWindow() override;
-
   void OnTreeChanging(wxTreeEvent &e);
-  void OnTreeChanged(wxTreeEvent &e);
+  void OnTreeChanged(wxTreeEvent &e) { LoadValues(); }
+  void OnMinAmpLevelChanged(wxCommandEvent &e) { NotifyModified(); }
+  void DoForAllEnclosures(const std::function<void(GOEnclosure &enclosure)> &f);
 
 public:
   void ResetToDefault();
-  void DiscardChanges();
+  void DiscardChanges() { LoadValues(); }
   void ApplyChanges();
 
   bool Validate() override { return !CheckForUnapplied(); }
