@@ -12,9 +12,11 @@
 #include <wx/stattext.h>
 #include <wx/treectrl.h>
 
-#include <model/GOEnclosure.h>
-#include <model/GOOrganModel.h>
-#include <model/GOWindchest.h>
+#include "model/GOEnclosure.h"
+#include "model/GOOrganModel.h"
+#include "model/GOWindchest.h"
+
+#include "GOEvent.h"
 
 static const wxSize EDIT_SIZE = wxSize(60, -1);
 
@@ -27,6 +29,8 @@ BEGIN_EVENT_TABLE(GOOrganSettingsEnclosuresTab, wxPanel)
 EVT_TREE_SEL_CHANGING(
   ID_EVENT_TREE, GOOrganSettingsEnclosuresTab::OnTreeChanging)
 EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganSettingsEnclosuresTab::OnTreeChanged)
+EVT_TEXT(
+  ID_EVENT_MIN_AMP_LEVEL, GOOrganSettingsEnclosuresTab::OnMinAmpLevelChanged)
 END_EVENT_TABLE()
 
 class GOOrganSettingsEnclosuresTab::ItemData : public wxTreeItemData {
@@ -130,13 +134,16 @@ void GOOrganSettingsEnclosuresTab::OnTreeChanging(wxTreeEvent &e) {
     e.Veto();
 }
 
-void GOOrganSettingsEnclosuresTab::OnTreeChanged(wxTreeEvent &e) {
+void GOOrganSettingsEnclosuresTab::LoadValues() {
   wxArrayTreeItemIds entries;
   GOEnclosure *pSelectedEnclosure = nullptr;
 
   m_tree->GetSelections(entries);
+
+  const unsigned nSelected = entries.size();
+
   // set pSelectedEnclosure if only one enclosure is selected
-  if (entries.size() == 1) {
+  if (nSelected == 1) {
     ItemData *pData = (ItemData *)m_tree->GetItemData(entries[0]);
 
     if (pData->m_type == ItemData::ENCLOSURE)
@@ -154,5 +161,63 @@ void GOOrganSettingsEnclosuresTab::OnTreeChanged(wxTreeEvent &e) {
     m_MinAmpLevelEdit->DiscardEdits();
   } else {
     m_MinAmpLevelEdit->Clear();
+  }
+
+  // check that all selected items are internal enclosures
+  bool areInternalEnclosuresSelected = false;
+
+  for (auto id : entries) {
+    ItemData *pData = (ItemData *)m_tree->GetItemData(id);
+
+    if (
+      pData->m_type != ItemData::ENCLOSURE
+      || pData->p_enclosure->IsOdfDefined()) {
+      // now we do not allow to change min value of odf-defined enclosures
+      areInternalEnclosuresSelected = false;
+      break;
+    }
+    areInternalEnclosuresSelected = true;
+  }
+  m_MinAmpLevelEdit->Enable(areInternalEnclosuresSelected);
+  NotifyModified(false);
+}
+
+void GOOrganSettingsEnclosuresTab::DoForAllEnclosures(
+  const std::function<void(GOEnclosure &enclosure)> &f) {
+  wxArrayTreeItemIds entries;
+
+  m_tree->GetSelections(entries);
+  for (auto id : entries) {
+    ItemData *pData = (ItemData *)m_tree->GetItemData(id);
+
+    if (pData->m_type == ItemData::ENCLOSURE)
+      f(*(pData->p_enclosure));
+  }
+}
+
+void GOOrganSettingsEnclosuresTab::ResetToDefault() {
+  DoForAllEnclosures([](GOEnclosure &enclosure) {
+    enclosure.SetAmpMinimumLevel(enclosure.GetDefaultAmpMinimumLevel());
+  });
+  LoadValues();
+}
+
+void GOOrganSettingsEnclosuresTab::ApplyChanges() {
+  if (m_MinAmpLevelEdit->IsModified()) {
+    unsigned minAmpVal;
+
+    if (
+      m_MinAmpLevelEdit->GetValue().ToUInt(&minAmpVal) && minAmpVal >= 0
+      && minAmpVal <= 100)
+      DoForAllEnclosures([minAmpVal](GOEnclosure &enclosure) {
+        enclosure.SetAmpMinimumLevel(minAmpVal);
+      });
+    else
+      GOMessageBox(
+        _("Minimal amplitude level is invalid"),
+        _("Error"),
+        wxOK | wxICON_ERROR,
+        this);
+    NotifyModified(false);
   }
 }

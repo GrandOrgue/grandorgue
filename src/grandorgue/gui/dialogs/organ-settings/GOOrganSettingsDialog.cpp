@@ -94,12 +94,15 @@ void GOOrganSettingsDialog::OnButtonDistributeAudio(wxCommandEvent &e) {
 
 void GOOrganSettingsDialog::OnButtonDefault(wxCommandEvent &e) {
   m_PipesTab->ResetToDefault();
+  m_EnclosuresTab->ResetToDefault();
 }
 
 void GOOrganSettingsDialog::OnButtonDiscard(wxCommandEvent &e) {
   m_PipesTab->DiscardChanges();
+  m_EnclosuresTab->DiscardChanges();
 }
 
 void GOOrganSettingsDialog::OnButtonApply(wxCommandEvent &e) {
   m_PipesTab->ApplyChanges();
+  m_EnclosuresTab->ApplyChanges();
 }
