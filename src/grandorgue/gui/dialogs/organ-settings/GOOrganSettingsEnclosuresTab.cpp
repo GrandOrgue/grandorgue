@@ -220,3 +220,11 @@ void GOOrganSettingsEnclosuresTab::ApplyChanges() {
     NotifyModified(false);
   }
 }
+
+void GOOrganSettingsEnclosuresTab::DistributeAudio() {}
+
+void GOOrganSettingsEnclosuresTab::ResetToDefault() {}
+
+void GOOrganSettingsEnclosuresTab::DiscardChanges() {}
+
+void GOOrganSettingsEnclosuresTab::ApplyChanges() {}

@@ -47,6 +47,13 @@ public:
   bool IsDefaultEnabled() const { return m_IsDefaultEnabled; }
   bool IsRevertEnabled() const { return IsModified(); }
   bool IsApplyEnabled() const { return IsModified(); }
+
+  virtual void DistributeAudio() {}
+  virtual void ResetToDefault() = 0;
+  virtual void DiscardChanges() = 0;
+  virtual void ApplyChanges() = 0;
+
+  bool Validate() override { return !CheckForUnapplied(); }
 };
 
 #endif /* GOORGANSETTINGSBUTTONSPROXY_H */

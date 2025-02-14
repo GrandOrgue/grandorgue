@@ -56,7 +56,10 @@ public:
   void DiscardChanges() { LoadValues(); }
   void ApplyChanges();
 
-  bool Validate() override { return !CheckForUnapplied(); }
+  void DistributeAudio() override;
+  void ResetToDefault() override;
+  void DiscardChanges() override;
+  void ApplyChanges() override;
 
   DECLARE_EVENT_TABLE()
 };

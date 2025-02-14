@@ -35,9 +35,10 @@ public:
     GOOrganModel &organModel, GODocumentBase *doc, wxWindow *parent);
 
 private:
-  void ButtonStatesChanged() override;
+  void CallTabFunc(void GOOrganSettingsTab::*pFunc());
 
-  void OnButtonDistributeAudio(wxCommandEvent &e);
+  void ButtonStatesChanged() override;
+  void OnButtonDistributeAudio(wxCommandEvent &e) { CallTabFunc(); }
   void OnButtonDefault(wxCommandEvent &e);
   void OnButtonDiscard(wxCommandEvent &e);
   void OnButtonApply(wxCommandEvent &e);
