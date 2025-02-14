@@ -9,18 +9,25 @@
 
 #include <wx/intl.h>
 
+#include "gui/dialogs/common/GOTabbedDialog.h"
+
 #include "GOEvent.h"
+#include "GOOrganSettingsDialogBase.h"
 
-GOOrganSettingsButtonsProxy::GOOrganSettingsButtonsProxy(
-  Listener &listener, wxWindow *pWindow)
-  : r_listener(listener), p_window(pWindow) {}
+GOOrganSettingsTab::GOOrganSettingsTab(
+  GOOrganSettingsDialogBase *pDlg, const wxString &name, const wxString &label)
+  : GODialogTab(pDlg, name, label), p_dlg(pDlg) {}
 
-void GOOrganSettingsButtonsProxy::NotifyModified(bool newValue) {
+void GOOrganSettingsTab::NotifyButtonStatesChanged() {
+  p_dlg->ButtonStatesChanged();
+}
+
+void GOOrganSettingsTab::NotifyModified(bool newValue) {
   SetModified(newValue);
   NotifyButtonStatesChanged();
 }
 
-bool GOOrganSettingsButtonsProxy::CheckForUnapplied() {
+bool GOOrganSettingsTab::CheckForUnapplied() {
   bool res = IsModified();
 
   if (res)
@@ -28,6 +35,6 @@ bool GOOrganSettingsButtonsProxy::CheckForUnapplied() {
       _("Please apply or discard changes first"),
       _("Error"),
       wxOK | wxICON_ERROR,
-      p_window);
+      p_dlg);
   return res;
 }
