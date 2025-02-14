@@ -109,16 +109,14 @@ private:
   void OnAttackLoadChanged(wxCommandEvent &e);
   void OnReleaseLoadChanged(wxCommandEvent &e);
 
-  bool Validate() override { return !CheckForUnapplied(); }
-
 public:
   GOOrganSettingsPipesTab(
     GOOrganModel &organModel, GOOrganSettingsDialogBase *pDlg);
 
-  void DistributeAudio();
-  void ResetToDefault();
-  void DiscardChanges();
-  void ApplyChanges();
+  void DistributeAudio() override;
+  void ResetToDefault() override;
+  void DiscardChanges() override;
+  void ApplyChanges() override;
 
   DECLARE_EVENT_TABLE()
 };

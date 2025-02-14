@@ -85,6 +85,13 @@ void GOOrganSettingsDialog::ButtonStatesChanged() {
   m_Apply->Enable(m_PipesTab->IsApplyEnabled());
 }
 
+void GOOrganSettingsDialog::CallTabFunc(void GOOrganSettingsTab::*pFunc()) {
+  auto pTab = dynamic_cast<GOOrganSettingsTab>(GetBook()->GetCurrentPage());
+
+  if (pTab)
+    (pTab->*pFunc)();
+}
+
 void GOOrganSettingsDialog::OnButtonDistributeAudio(wxCommandEvent &e) {
   m_PipesTab->DistributeAudio();
 }
