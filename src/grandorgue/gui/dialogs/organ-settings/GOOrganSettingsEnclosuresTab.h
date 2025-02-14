@@ -26,8 +26,7 @@ class GOEnclosure;
 class GOOrganModel;
 class GOWindchest;
 
-class GOOrganSettingsEnclosuresTab : public wxPanel,
-                                     public GOOrganSettingsButtonsProxy {
+class GOOrganSettingsEnclosuresTab : public GOOrganSettingsTab {
 private:
   class ItemData;
 
@@ -42,9 +41,7 @@ private:
 
 public:
   GOOrganSettingsEnclosuresTab(
-    GOOrganModel &organModel,
-    wxWindow *parent,
-    GOOrganSettingsButtonsProxy::Listener &listener);
+    GOOrganModel &organModel, GOOrganSettingsDialogBase *pDlg);
 
 private:
   void LoadValues();

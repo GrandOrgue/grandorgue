@@ -11,9 +11,8 @@
 #include <wx/event.h>
 
 #include "document-base/GOView.h"
-#include "gui/dialogs/common/GOTabbedDialog.h"
 
-#include "GOOrganSettingsTab.h"
+#include "GOOrganSettingsDialogBase.h"
 
 class wxButton;
 
@@ -21,9 +20,7 @@ class GOOrganModel;
 class GOOrganSettingsEnclosuresTab;
 class GOOrganSettingsPipesTab;
 
-class GOOrganSettingsDialog : public GOTabbedDialog,
-                              public GOView,
-                              private GOOrganSettingsButtonsProxy::Listener {
+class GOOrganSettingsDialog : public GOOrganSettingsDialogBase, public GOView {
 private:
   GOOrganSettingsPipesTab *m_PipesTab;
   GOOrganSettingsEnclosuresTab *m_EnclosuresTab;

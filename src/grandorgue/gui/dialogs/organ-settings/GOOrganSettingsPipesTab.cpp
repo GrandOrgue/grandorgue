@@ -30,6 +30,8 @@ static constexpr unsigned RELEASE_LENGTH_STEP = 50;
 static constexpr unsigned RELEASE_LENGTH_MAX_INDEX
   = RELEASE_LENGTH_MAX / RELEASE_LENGTH_STEP;
 static const wxSize EDIT_SIZE = wxSize(60, -1);
+static const wxString WX_TAB_CODE = wxT("Pipes");
+static const wxString WX_TAB_TITLE = _("Pipes");
 
 class GOOrganSettingsPipesTab::TreeItemData : public wxTreeItemData {
 public:
@@ -111,11 +113,8 @@ EVT_CHOICE(ID_EVENT_RELEASE_LOAD, GOOrganSettingsPipesTab::OnReleaseLoadChanged)
 END_EVENT_TABLE()
 
 GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
-  GOOrganModel &organModel,
-  wxWindow *parent,
-  GOOrganSettingsButtonsProxy::Listener &listener)
-  : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
-    GOOrganSettingsButtonsProxy(listener, this),
+  GOOrganModel &organModel, GOSettingsDialogBase *pDlg)
+  : GOOrganSettingsTab(pDlg, WX_TAB_CODE, WX_TAB_TITLE),
     r_config(organModel.GetConfig()),
     r_RootNode(organModel.GetRootPipeConfigNode()),
     p_LastTreeItemData(nullptr),
