@@ -10,16 +10,12 @@
 
 #include "gui/dialogs/common/GODialogTab.h"
 
-class GOOrganSettingsButtonsProxy : GODialogTab {
-public:
-  class Listener {
-  public:
-    virtual void ButtonStatesChanged() = 0;
-  };
+class GOOrganSettingsDialogBase;
 
+class GOOrganSettingsTab : GODialogTab {
+public:
 private:
-  Listener &r_listener;
-  wxWindow *p_window;
+  GOOrganSettingsDialogBase *p_dlg;
 
 protected:
   bool m_IsDistributeAudioEnabled = true;
@@ -29,14 +25,13 @@ private:
   bool m_IsModified = false;
 
 public:
-  GOOrganSettingsButtonsProxy(
-    Listener &listener,
-    GOTabbedDialog *pDlg,
+  GOOrganSettingsTab(
+    GOOrganSettingsDialogBase *pDlg,
     const wxString &name,
     const wxString &label);
 
 protected:
-  void NotifyButtonStatesChanged() { r_listener.ButtonStatesChanged(); }
+  void NotifyButtonStatesChanged();
   bool IsModified() const { return m_IsModified; }
   void SetModified(bool newValue) { m_IsModified = newValue; }
   void NotifyModified(bool newValue = true);

@@ -19,6 +19,8 @@
 #include "GOEvent.h"
 
 static const wxSize EDIT_SIZE = wxSize(60, -1);
+static const wxString WX_TAB_CODE = wxT("Enclosures");
+static const wxString WX_TAB_TITLE = _("Enclosures");
 
 enum {
   ID_EVENT_TREE = 200,
@@ -55,11 +57,8 @@ public:
 };
 
 GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
-  GOOrganModel &organModel,
-  wxWindow *parent,
-  GOOrganSettingsButtonsProxy::Listener &listener)
-  : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS),
-    GOOrganSettingsButtonsProxy(listener, this),
+  GOOrganModel &organModel, GOSettingsDialogBase *pDlg)
+  : GOOrganSettingsTab(pDlg, WX_TAB_CODE, WX_TAB_TITLE),
     r_OrganModel(organModel) {
   wxGridBagSizer *const mainSizer = new wxGridBagSizer(5, 5);
 

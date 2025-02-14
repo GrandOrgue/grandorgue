@@ -29,8 +29,7 @@ class GOConfig;
 class GOOrganModel;
 class GOPipeConfigNode;
 
-class GOOrganSettingsPipesTab : public wxPanel,
-                                public GOOrganSettingsButtonsProxy {
+class GOOrganSettingsPipesTab : public GOOrganSettingsTab {
 private:
   class TreeItemData;
 
@@ -114,9 +113,7 @@ private:
 
 public:
   GOOrganSettingsPipesTab(
-    GOOrganModel &organModel,
-    wxWindow *parent,
-    GOOrganSettingsButtonsProxy::Listener &listener);
+    GOOrganModel &organModel, GOOrganSettingsDialogBase *pDlg);
 
   void DistributeAudio();
   void ResetToDefault();

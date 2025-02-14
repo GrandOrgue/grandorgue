@@ -34,7 +34,7 @@ END_EVENT_TABLE()
 
 GOOrganSettingsDialog::GOOrganSettingsDialog(
   GOOrganModel &organModel, GODocumentBase *doc, wxWindow *parent)
-  : GOTabbedDialog(
+  : GOOrganSettingsDialogBase(
     parent,
     wxT("Organ settings"),
     _("Organ settings"),
