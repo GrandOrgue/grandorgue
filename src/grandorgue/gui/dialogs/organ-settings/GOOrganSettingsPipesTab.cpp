@@ -113,7 +113,7 @@ EVT_CHOICE(ID_EVENT_RELEASE_LOAD, GOOrganSettingsPipesTab::OnReleaseLoadChanged)
 END_EVENT_TABLE()
 
 GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
-  GOOrganModel &organModel, GOSettingsDialogBase *pDlg)
+  GOOrganModel &organModel, GOOrganSettingsDialogBase *pDlg)
   : GOOrganSettingsTab(pDlg, WX_TAB_CODE, WX_TAB_TITLE),
     r_config(organModel.GetConfig()),
     r_RootNode(organModel.GetRootPipeConfigNode()),
