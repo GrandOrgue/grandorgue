@@ -43,14 +43,11 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     0,
     wxHELP | wxCLOSE),
     GOView(doc, this) {
-  wxBookCtrlBase *pNoteBook = GetBookCtrl();
+  m_PipesTab = new GOOrganSettingsPipesTab(organModel, this);
+  AddTab(m_PipesTab);
 
-  m_PipesTab = new GOOrganSettingsPipesTab(organModel, pNoteBook, *this);
-  AddTab(m_PipesTab, "Pipes", _("Pipes"));
-
-  m_EnclosuresTab
-    = new GOOrganSettingsEnclosuresTab(organModel, pNoteBook, *this);
-  AddTab(m_EnclosuresTab, "Enclosures", _("Enclosures"));
+  m_EnclosuresTab = new GOOrganSettingsEnclosuresTab(organModel, this);
+  AddTab(m_EnclosuresTab);
 
   // add a custom button 'Reason into the space of the standard dialog button
   wxSizer *const pButtonSizer = GetButtonSizer();
