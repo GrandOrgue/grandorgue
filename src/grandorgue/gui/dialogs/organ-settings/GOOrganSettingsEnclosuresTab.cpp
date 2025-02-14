@@ -57,7 +57,7 @@ public:
 };
 
 GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
-  GOOrganModel &organModel, GOSettingsDialogBase *pDlg)
+  GOOrganModel &organModel, GOOrganSettingsDialogBase *pDlg)
   : GOOrganSettingsTab(pDlg, WX_TAB_CODE, WX_TAB_TITLE),
     r_OrganModel(organModel) {
   wxGridBagSizer *const mainSizer = new wxGridBagSizer(5, 5);

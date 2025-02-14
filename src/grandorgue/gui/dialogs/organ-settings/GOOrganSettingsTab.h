@@ -12,7 +12,7 @@
 
 class GOOrganSettingsDialogBase;
 
-class GOOrganSettingsTab : GODialogTab {
+class GOOrganSettingsTab : public GODialogTab {
 public:
 private:
   GOOrganSettingsDialogBase *p_dlg;
