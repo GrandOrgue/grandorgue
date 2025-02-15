@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -76,7 +76,7 @@ bool GODocument::LoadOrgan(
   }
 
   wxCommandEvent event(wxEVT_WINTITLE, 0);
-  event.SetString(m_OrganController->GetChurchName());
+  event.SetString(m_OrganController->GetOrganName());
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
   for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)

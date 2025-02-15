@@ -351,7 +351,7 @@ void GOMidiRecorder::StartRecording(bool rename) {
   Write(&h, sizeof(h));
   Write(&t, sizeof(t));
 
-  wxString s = m_OrganController->GetChurchName();
+  wxString s = m_OrganController->GetOrganName();
   wxCharBuffer b = s.ToAscii();
   unsigned len = s.length();
   unsigned char th[] = {0x00, 0xFF, 0x04};
