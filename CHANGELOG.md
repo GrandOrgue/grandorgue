@@ -1,3 +1,4 @@
+- Added capability of customising minimum amplitude level of enclosures added internally by GrandOrgue https://github.com/GrandOrgue/grandorgue/issues/782
 - Fixed nested scrolling in the MidiObject dialog on macOs https://github.com/GrandOrgue/grandorgue/issues/1972
 - Increased the maximum number of user-defined temperaments to 999 https://github.com/GrandOrgue/grandorgue/issues/1982
 # 3.15.4 (2024-12-20)
