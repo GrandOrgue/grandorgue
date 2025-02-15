@@ -24,12 +24,14 @@ enum {
   ID_BUTTON_APPLY,
 };
 
-BEGIN_EVENT_TABLE(GOOrganSettingsDialog, GOTabbedDialog)
+BEGIN_EVENT_TABLE(GOOrganSettingsDialog, GOOrganSettingsDialogBase)
 EVT_BUTTON(
   ID_BUTTON_DISTRIBUTE_AUDIO, GOOrganSettingsDialog::OnButtonDistributeAudio)
 EVT_BUTTON(ID_BUTTON_DEFAULT, GOOrganSettingsDialog::OnButtonDefault)
 EVT_BUTTON(ID_BUTTON_DISCARD, GOOrganSettingsDialog::OnButtonDiscard)
 EVT_BUTTON(ID_BUTTON_APPLY, GOOrganSettingsDialog::OnButtonApply)
+EVT_BOOKCTRL_PAGE_CHANGING(wxID_ANY, GOOrganSettingsDialog::OnTabSelecting)
+EVT_BOOKCTRL_PAGE_CHANGED(wxID_ANY, GOOrganSettingsDialog::OnTabSelected)
 END_EVENT_TABLE()
 
 GOOrganSettingsDialog::GOOrganSettingsDialog(
@@ -79,34 +81,24 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
 }
 
 void GOOrganSettingsDialog::ButtonStatesChanged() {
-  m_AudioGroupAssistant->Enable(m_PipesTab->IsDistributeAudioEnabled());
-  m_Default->Enable(m_PipesTab->IsDefaultEnabled());
-  m_Discard->Enable(m_PipesTab->IsRevertEnabled());
-  m_Apply->Enable(m_PipesTab->IsApplyEnabled());
+  auto pTab = dynamic_cast<GOOrganSettingsTab *>(GetBook()->GetCurrentPage());
+
+  if (pTab) {
+    m_AudioGroupAssistant->Enable(pTab->IsDistributeAudioEnabled());
+    m_Default->Enable(pTab->IsDefaultEnabled());
+    m_Discard->Enable(pTab->IsRevertEnabled());
+    m_Apply->Enable(pTab->IsApplyEnabled());
+  }
 }
 
-void GOOrganSettingsDialog::CallTabFunc(void GOOrganSettingsTab::*pFunc()) {
-  auto pTab = dynamic_cast<GOOrganSettingsTab>(GetBook()->GetCurrentPage());
+template <typename T>
+T GOOrganSettingsDialog::CallTabFunc(T (GOOrganSettingsTab::*pFunc)()) {
+  auto pTab = dynamic_cast<GOOrganSettingsTab *>(GetBook()->GetCurrentPage());
 
-  if (pTab)
-    (pTab->*pFunc)();
+  return pTab ? (pTab->*pFunc)() : T();
 }
 
-void GOOrganSettingsDialog::OnButtonDistributeAudio(wxCommandEvent &e) {
-  m_PipesTab->DistributeAudio();
-}
-
-void GOOrganSettingsDialog::OnButtonDefault(wxCommandEvent &e) {
-  m_PipesTab->ResetToDefault();
-  m_EnclosuresTab->ResetToDefault();
-}
-
-void GOOrganSettingsDialog::OnButtonDiscard(wxCommandEvent &e) {
-  m_PipesTab->DiscardChanges();
-  m_EnclosuresTab->DiscardChanges();
-}
-
-void GOOrganSettingsDialog::OnButtonApply(wxCommandEvent &e) {
-  m_PipesTab->ApplyChanges();
-  m_EnclosuresTab->ApplyChanges();
+void GOOrganSettingsDialog::OnTabSelecting(wxBookCtrlEvent &e) {
+  if (CallTabFunc(&GOOrganSettingsTab::CheckForUnapplied))
+    e.Veto();
 }

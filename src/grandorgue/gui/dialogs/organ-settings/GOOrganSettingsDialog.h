@@ -13,7 +13,9 @@
 #include "document-base/GOView.h"
 
 #include "GOOrganSettingsDialogBase.h"
+#include "GOOrganSettingsTab.h"
 
+class wxBookCtrlEvent;
 class wxButton;
 
 class GOOrganModel;
@@ -35,13 +37,28 @@ public:
     GOOrganModel &organModel, GODocumentBase *doc, wxWindow *parent);
 
 private:
-  void CallTabFunc(void GOOrganSettingsTab::*pFunc());
-
   void ButtonStatesChanged() override;
-  void OnButtonDistributeAudio(wxCommandEvent &e) { CallTabFunc(); }
-  void OnButtonDefault(wxCommandEvent &e);
-  void OnButtonDiscard(wxCommandEvent &e);
-  void OnButtonApply(wxCommandEvent &e);
+
+  void OnTabSelecting(wxBookCtrlEvent &e);
+  void OnTabSelected(wxBookCtrlEvent &e) { ButtonStatesChanged(); }
+
+  template <typename T> T CallTabFunc(T (GOOrganSettingsTab::*pFunc)());
+
+  void OnButtonDistributeAudio(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::DistributeAudio);
+  }
+
+  void OnButtonDefault(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::ResetToDefault);
+  }
+
+  void OnButtonDiscard(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::DiscardChanges);
+  }
+
+  void OnButtonApply(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::ApplyChanges);
+  }
 
   DECLARE_EVENT_TABLE()
 };

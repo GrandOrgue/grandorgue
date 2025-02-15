@@ -18,7 +18,7 @@ private:
   GOOrganSettingsDialogBase *p_dlg;
 
 protected:
-  bool m_IsDistributeAudioEnabled = true;
+  bool m_IsDistributeAudioEnabled = false;
   bool m_IsDefaultEnabled = true;
 
 private:
@@ -35,16 +35,14 @@ protected:
   bool IsModified() const { return m_IsModified; }
   void SetModified(bool newValue) { m_IsModified = newValue; }
   void NotifyModified(bool newValue = true);
-  /**
-   * Checks if all changes have been applied. If some unapplied changes are
-   * present, then display an error message.
-   * Returns if there are unapplied changes
-   */
-  bool CheckForUnapplied();
 
 public:
-  bool IsDistributeAudioEnabled() const { return m_IsDistributeAudioEnabled; }
-  bool IsDefaultEnabled() const { return m_IsDefaultEnabled; }
+  bool IsDistributeAudioEnabled() const {
+    return m_IsDistributeAudioEnabled && !IsModified();
+  }
+
+  bool IsDefaultEnabled() const { return m_IsDefaultEnabled && !IsModified(); }
+
   bool IsRevertEnabled() const { return IsModified(); }
   bool IsApplyEnabled() const { return IsModified(); }
 
@@ -53,6 +51,12 @@ public:
   virtual void DiscardChanges() = 0;
   virtual void ApplyChanges() = 0;
 
+  /**
+   * Checks if all changes have been applied. If some unapplied changes are
+   * present, then display an error message.
+   * Returns if there are unapplied changes
+   */
+  bool CheckForUnapplied();
   bool Validate() override { return !CheckForUnapplied(); }
 };
 

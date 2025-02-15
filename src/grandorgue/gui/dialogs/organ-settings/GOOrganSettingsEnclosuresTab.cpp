@@ -7,6 +7,7 @@
 
 #include "GOOrganSettingsEnclosuresTab.h"
 
+#include <wx/checkbox.h>
 #include <wx/gbsizer.h>
 #include <wx/listbox.h>
 #include <wx/stattext.h>
@@ -69,11 +70,21 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
     wxDefaultSize,
     wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
   mainSizer->Add(
-    m_tree, wxGBPosition(0, 0), wxGBSpan(3, 1), wxEXPAND | wxALL, 5);
+    m_tree, wxGBPosition(0, 0), wxGBSpan(4, 1), wxEXPAND | wxALL, 5);
+
+  m_IsOdfDefined = new wxCheckBox(
+    this, wxID_ANY, _("This enclosure is ODF defined and may not be altered"));
+  m_IsOdfDefined->Disable();
 
   mainSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Affected windchests:")),
+    m_IsOdfDefined,
     wxGBPosition(0, 1),
+    wxGBSpan(1, 3),
+    wxALIGN_LEFT | wxEXPAND | wxALL,
+    5);
+  mainSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Affected windchests:")),
+    wxGBPosition(1, 1),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxTOP | wxLEFT | wxBOTTOM,
     5);
@@ -81,13 +92,13 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
     this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SINGLE);
   mainSizer->Add(
     m_WindchestList,
-    wxGBPosition(0, 2),
+    wxGBPosition(1, 2),
     wxGBSpan(2, 2),
     wxEXPAND | wxTOP | wxRIGHT | wxBOTTOM,
     5);
   mainSizer->Add(
     new wxStaticText(this, wxID_ANY, _("Minimal amplitude level:")),
-    wxGBPosition(2, 1),
+    wxGBPosition(3, 1),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM,
     5);
@@ -95,14 +106,14 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
     this, ID_EVENT_MIN_AMP_LEVEL, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   mainSizer->Add(
     m_MinAmpLevelEdit,
-    wxGBPosition(2, 2),
+    wxGBPosition(3, 2),
     wxDefaultSpan,
     wxEXPAND | wxRIGHT | wxBOTTOM,
     5);
 
   mainSizer->AddGrowableCol(0, 1);
   mainSizer->AddGrowableCol(3, 1);
-  mainSizer->AddGrowableRow(1, 1);
+  mainSizer->AddGrowableRow(2, 1);
   SetSizerAndFit(mainSizer);
 }
 
@@ -164,20 +175,31 @@ void GOOrganSettingsEnclosuresTab::LoadValues() {
 
   // check that all selected items are internal enclosures
   bool areInternalEnclosuresSelected = false;
+  bool areOnlyEnclosuresSelected = false;
 
   for (auto id : entries) {
     ItemData *pData = (ItemData *)m_tree->GetItemData(id);
+    bool isEnclosure = pData->m_type == ItemData::ENCLOSURE;
+    bool isOdfDefined = isEnclosure && pData->p_enclosure->IsOdfDefined();
 
-    if (
-      pData->m_type != ItemData::ENCLOSURE
-      || pData->p_enclosure->IsOdfDefined()) {
+    if (isEnclosure) {
+      areOnlyEnclosuresSelected = true;
+      if (!isOdfDefined)
+        areInternalEnclosuresSelected = true;
+    }
+
+    if (!isEnclosure || isOdfDefined) {
       // now we do not allow to change min value of odf-defined enclosures
       areInternalEnclosuresSelected = false;
+      if (!isEnclosure)
+        areOnlyEnclosuresSelected = false;
       break;
     }
-    areInternalEnclosuresSelected = true;
   }
+  m_IsOdfDefined->SetValue(
+    areOnlyEnclosuresSelected && !areInternalEnclosuresSelected);
   m_MinAmpLevelEdit->Enable(areInternalEnclosuresSelected);
+  m_IsDefaultEnabled = areInternalEnclosuresSelected;
   NotifyModified(false);
 }
 
@@ -220,11 +242,3 @@ void GOOrganSettingsEnclosuresTab::ApplyChanges() {
     NotifyModified(false);
   }
 }
-
-void GOOrganSettingsEnclosuresTab::DistributeAudio() {}
-
-void GOOrganSettingsEnclosuresTab::ResetToDefault() {}
-
-void GOOrganSettingsEnclosuresTab::DiscardChanges() {}
-
-void GOOrganSettingsEnclosuresTab::ApplyChanges() {}

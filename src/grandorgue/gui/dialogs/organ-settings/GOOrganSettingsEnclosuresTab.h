@@ -17,6 +17,7 @@
 
 #include "GOOrganSettingsTab.h"
 
+class wxCheckBox;
 class wxListBox;
 class wxTextCtrl;
 class wxTreeCtrl;
@@ -33,6 +34,7 @@ private:
   GOOrganModel &r_OrganModel;
 
   wxTreeCtrl *m_tree;
+  wxCheckBox *m_IsOdfDefined;
   wxListBox *m_WindchestList;
   wxTextCtrl *m_MinAmpLevelEdit;
 
@@ -52,13 +54,8 @@ private:
   void DoForAllEnclosures(const std::function<void(GOEnclosure &enclosure)> &f);
 
 public:
-  void ResetToDefault();
-  void DiscardChanges() { LoadValues(); }
-  void ApplyChanges();
-
-  void DistributeAudio() override;
   void ResetToDefault() override;
-  void DiscardChanges() override;
+  void DiscardChanges() override { LoadValues(); }
   void ApplyChanges() override;
 
   DECLARE_EVENT_TABLE()
