@@ -1,3 +1,6 @@
+- Changed default sample rate, samples per buffer and interpolation type to 48000, 512 and Polyphase https://github.com/GrandOrgue/grandorgue/issues/2115
+- Increased the maximum samples per buffer to 2048 https://github.com/GrandOrgue/grandorgue/issues/2115
+- Increased the maximum supported sample rate to 192000 https://github.com/GrandOrgue/grandorgue/issues/2115
 - Fixed nested scrolling in the MidiObject dialog on macOs https://github.com/GrandOrgue/grandorgue/issues/1972
 - Increased the maximum number of user-defined temperaments to 999 https://github.com/GrandOrgue/grandorgue/issues/1982
 # 3.15.4 (2024-12-20)
