@@ -38,8 +38,7 @@ private:
   wxListBox *m_WindchestList;
   wxTextCtrl *m_MinAmpLevelEdit;
 
-  std::unordered_map<GOEnclosure *, std::vector<wxString>>
-    m_WindchestsByEnclosures;
+  std::unordered_map<GOEnclosure *, wxArrayString> m_WindchestsByEnclosures;
 
 public:
   GOOrganSettingsEnclosuresTab(

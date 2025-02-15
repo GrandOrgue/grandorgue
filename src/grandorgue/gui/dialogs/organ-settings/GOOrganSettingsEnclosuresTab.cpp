@@ -225,10 +225,10 @@ void GOOrganSettingsEnclosuresTab::ResetToDefault() {
 
 void GOOrganSettingsEnclosuresTab::ApplyChanges() {
   if (m_MinAmpLevelEdit->IsModified()) {
-    unsigned minAmpVal;
+    long minAmpVal;
 
     if (
-      m_MinAmpLevelEdit->GetValue().ToUInt(&minAmpVal) && minAmpVal >= 0
+      m_MinAmpLevelEdit->GetValue().ToLong(&minAmpVal) && minAmpVal >= 0
       && minAmpVal <= 100)
       DoForAllEnclosures([minAmpVal](GOEnclosure &enclosure) {
         enclosure.SetAmpMinimumLevel(minAmpVal);
