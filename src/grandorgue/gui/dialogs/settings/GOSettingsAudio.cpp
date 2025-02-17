@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -202,7 +202,8 @@ bool GOSettingsAudio::TransferDataToWindow() {
   m_SampleRate->Append(wxT("44100"));
   m_SampleRate->Append(wxT("48000"));
   m_SampleRate->Append(wxT("96000"));
-  m_SampleRate->Select(0);
+  m_SampleRate->Append(wxT("192000"));
+  m_SampleRate->Select(1);
   for (unsigned i = 0; i < m_SampleRate->GetCount(); i++)
     if (
       wxString::Format(wxT("%d"), m_config.SampleRate())

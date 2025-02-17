@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -120,7 +120,7 @@ void GOSound::OpenSound() {
   m_SoundEngine.SetHardPolyphony(m_config.PolyphonyLimit());
   m_SoundEngine.SetScaledReleases(m_config.ScaleRelease());
   m_SoundEngine.SetRandomizeSpeaking(m_config.RandomizeSpeaking());
-  m_SoundEngine.SetInterpolationType(m_config.InterpolationType());
+  m_SoundEngine.SetInterpolationType(m_config.m_InterpolationType());
   m_SoundEngine.SetAudioGroupCount(audio_group_count);
   unsigned sample_rate = m_config.SampleRate();
   m_AudioRecorder.SetBytesPerSample(m_config.WaveFormatBytesPerSample());

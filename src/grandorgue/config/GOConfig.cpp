@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -31,6 +31,11 @@
 #include "sound/GOSoundDefs.h"
 #include "sound/ports/GOSoundPort.h"
 #include "sound/ports/GOSoundPortFactory.h"
+
+static constexpr unsigned SAMPLE_RATE_DEFAULT = 48000;
+static constexpr unsigned SAMPLES_PER_BUFFER_DEFAULT = 512;
+static constexpr GOConfig::InterpolationType INTERPOLATION_DEFAULT
+  = GOConfig::INTERPOLATION_POLYPHASE;
 
 static const wxString COUNT = wxT("Count");
 static const wxString ENABLED = wxT(".Enabled");
@@ -148,7 +153,13 @@ GOConfig::GOConfig(wxString instance)
       this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
     LoadConcurrency(
       this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
-    InterpolationType(this, wxT("General"), wxT("InterpolationType"), 0, 1, 0),
+    m_InterpolationType(
+      this,
+      wxT("General"),
+      wxT("InterpolationType"),
+      INTERPOLATION_LINEAR,
+      INTERPOLATION_POLYPHASE,
+      INTERPOLATION_DEFAULT),
     WaveFormatBytesPerSample(this, wxT("General"), wxT("WaveFormat"), 1, 4, 4),
     RecordDownmix(this, wxT("General"), wxT("RecordDownmix"), false),
     AttackLoad(this, wxT("General"), wxT("AttackLoad"), 0, 1, 1),
@@ -188,8 +199,19 @@ GOConfig::GOConfig(wxString instance)
       1024 * 1024,
       GOMemoryPool::GetSystemMemoryLimit()),
     SamplesPerBuffer(
-      this, wxT("General"), wxT("SamplesPerBuffer"), 1, MAX_FRAME_SIZE, 1024),
-    SampleRate(this, wxT("General"), wxT("SampleRate"), 1000, 100000, 44100),
+      this,
+      wxT("General"),
+      wxT("SamplesPerBuffer"),
+      1,
+      MAX_FRAME_SIZE,
+      SAMPLES_PER_BUFFER_DEFAULT),
+    SampleRate(
+      this,
+      wxT("General"),
+      wxT("SampleRate"),
+      1000,
+      192000,
+      SAMPLE_RATE_DEFAULT),
     Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
     PolyphonyLimit(
       this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
@@ -218,9 +240,6 @@ GOConfig::GOConfig(wxString instance)
       this, wxT("General"), wxT("CheckForUpdatesAtStartup"), true),
     m_MidiIn(MIDI_IN),
     m_MidiOut(MIDI_OUT) {}
-
-GOConfig::~GOConfig() { /* Flush(); */
-}
 
 void load_ports_config(
   GOConfigReader &cfg,
