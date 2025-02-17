@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -27,8 +27,8 @@ GOAudioDeviceConfig::GOAudioDeviceConfig(
   std::vector<GroupOutput> &leftOutput = m_ChannelOutputs[0];
   std::vector<GroupOutput> &rightOutput = m_ChannelOutputs[1];
   for (const auto &groupName : audioGroups) {
-    leftOutput.emplace_back(groupName, true, DEFAULT_VOLUME);
-    rightOutput.emplace_back(groupName, false, DEFAULT_VOLUME);
+    leftOutput.emplace_back(groupName, DEFAULT_VOLUME, MUTE_VOLUME);
+    rightOutput.emplace_back(groupName, MUTE_VOLUME, DEFAULT_VOLUME);
   }
 }
 

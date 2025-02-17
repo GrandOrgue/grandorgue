@@ -1,3 +1,4 @@
+- Fixed incorrect default audio channels config https://github.com/GrandOrgue/grandorgue/issues/2115
 - Fixed nested scrolling in the MidiObject dialog on macOs https://github.com/GrandOrgue/grandorgue/issues/1972
 - Increased the maximum number of user-defined temperaments to 999 https://github.com/GrandOrgue/grandorgue/issues/1982
 # 3.15.4 (2024-12-20)
