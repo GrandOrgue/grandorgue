@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,8 +12,8 @@
 #include "config/GOConfig.h"
 #include "document-base/GOView.h"
 #include "gui/dialogs/GOMidiListDialog.h"
-#include "gui/dialogs/GOOrganSettingsDialog.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
+#include "gui/dialogs/organ-settings/GOOrganSettingsDialog.h"
 #include "gui/frames/GOFrame.h"
 #include "gui/frames/GOStopsWindow.h"
 #include "gui/panels/GOGUIPanel.h"
@@ -173,7 +173,7 @@ void GODocument::ShowOrganSettingsDialog() {
     registerWindow(
       GODocument::ORGAN_DIALOG,
       NULL,
-      new GOOrganSettingsDialog(this, NULL, m_OrganController));
+      new GOOrganSettingsDialog(*m_OrganController, this, nullptr));
   }
 }
 
