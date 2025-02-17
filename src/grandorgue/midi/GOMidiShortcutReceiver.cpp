@@ -10,7 +10,7 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-void GOMidiShortcutReceiver::Load(GOConfigReader &cfg, wxString group) {
+void GOMidiShortcutReceiver::Load(GOConfigReader &cfg, const wxString &group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
     m_ShortcutKey
       = cfg.ReadInteger(CMBSetting, group, wxT("PlusKey"), 0, 255, false, 0);
@@ -24,12 +24,15 @@ void GOMidiShortcutReceiver::Load(GOConfigReader &cfg, wxString group) {
   }
 }
 
-void GOMidiShortcutReceiver::Save(GOConfigWriter &cfg, wxString group) {
-  if (m_type == KEY_RECV_ENCLOSURE) {
-    cfg.WriteInteger(group, wxT("PlusKey"), m_ShortcutKey);
-    cfg.WriteInteger(group, wxT("MinusKey"), m_MinusKey);
-  } else {
-    cfg.WriteInteger(group, wxT("ShortcutKey"), m_ShortcutKey);
+void GOMidiShortcutReceiver::Save(GOConfigWriter &cfg, const wxString &group) {
+  if (m_ShortcutKey) {
+    if (m_type == KEY_RECV_ENCLOSURE) {
+      cfg.WriteInteger(group, wxT("PlusKey"), m_ShortcutKey);
+      if (m_MinusKey)
+        cfg.WriteInteger(group, wxT("MinusKey"), m_MinusKey);
+    } else {
+      cfg.WriteInteger(group, wxT("ShortcutKey"), m_ShortcutKey);
+    }
   }
 }
 
