@@ -3806,7 +3806,7 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
             <varlistentry>
               <term>Linear</term>
               <listitem>
-                <simpara>This method  lowers CPU load at he expense of audio quality.</simpara>
+                <simpara>This method lowers CPU load at he expense of audio quality.</simpara>
               </listitem>
             </varlistentry>
           </variablelist>
