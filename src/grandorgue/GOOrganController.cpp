@@ -106,7 +106,6 @@ GOOrganController::GOOrganController(
     m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
-    m_ChurchName(),
     m_ChurchAddress(),
     m_OrganBuilder(),
     m_OrganBuildDate(),
@@ -209,7 +208,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   /* load church info */
   cfg.ReadString(
     ODFSetting, WX_ORGAN, wxT("HauptwerkOrganFileFormatVersion"), false);
-  m_ChurchName = cfg.ReadStringTrim(ODFSetting, WX_ORGAN, wxT("ChurchName"));
   m_ChurchAddress = cfg.ReadString(ODFSetting, WX_ORGAN, wxT("ChurchAddress"));
   m_OrganBuilder
     = cfg.ReadString(ODFSetting, WX_ORGAN, wxT("OrganBuilder"), false);
@@ -325,12 +323,16 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   for (unsigned i = 0; i < m_panels.size(); i++)
     m_panels[i]->Layout();
 
-  GetRootPipeConfigNode().SetName(GetChurchName());
+  const wxString &organName = GetOrganName();
+
+  GetRootPipeConfigNode().SetName(organName);
   ReadCombinations(cfg);
   m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
 
   GOHash hash;
-  hash.Update(m_ChurchName.utf8_str(), strlen(m_ChurchName.utf8_str()));
+  const auto organNameUtf8 = organName.utf8_str();
+
+  hash.Update(organNameUtf8, strlen(organNameUtf8));
   GOHashType result = hash.getHash();
   m_SampleSetId1 = ((result.hash[0] & 0x7F) << 24)
     | ((result.hash[1] & 0x7F) << 16) | ((result.hash[2] & 0x7F) << 8)
@@ -339,8 +341,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     | ((result.hash[5] & 0x7F) << 16) | ((result.hash[6] & 0x7F) << 8)
     | (result.hash[7] & 0x7F);
 }
-
-wxString GOOrganController::GetOrganHash() { return m_hash; }
 
 wxString GOOrganController::GenerateSettingFileName() {
   return m_config.OrganSettingsPath() + wxFileName::GetPathSeparator()
@@ -643,7 +643,7 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
     YAML::Node infoNode = globalNode[INFO];
 
     infoNode[CONTENT_TYPE] = WX_GRANDORGUE_COMBINATIONS;
-    infoNode[ORGAN_NAME] = m_ChurchName;
+    infoNode[ORGAN_NAME] = GetOrganName();
     infoNode[GRANDORGUE_VERSION] = APP_VERSION;
     infoNode[SAVED_TIME] = wxDateTime::Now().Format();
 
@@ -668,29 +668,29 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
 }
 
 /**
- * Check the churchName of the imported combination file. If it differs from the
- * current organ m_ChurchName then ask for the user
- * @param churchName the organ the combination file was saved of
+ * Check the organName of the imported combination file. If it differs from the
+ * current organ name then ask for the user
+ * @param organName the organ the combination file was saved of
  * @return true if the churchNames are the same or the user agree with importing
  *   the combination file
  */
 bool GOOrganController::IsToImportCombinationsFor(
-  const wxString &fileName, const wxString &churchName) const {
+  const wxString &fileName, const wxString &organName) const {
   bool isToImport = true;
 
-  if (churchName != m_ChurchName) {
+  if (organName != GetOrganName()) {
     wxLogWarning(
       _("This combination file '%s' was originally made for another organ "
         "'%s'"),
       fileName,
-      churchName);
+      organName);
     isToImport = wxMessageBox(
                    wxString::Format(
                      _("This combination file '%s' was originally made for "
                        "another organ '%s'. Importing it can cause various "
                        "problems. Should it really be imported?"),
                      fileName,
-                     churchName),
+                     organName),
                    _("Import Combinations"),
                    wxYES_NO,
                    NULL)
@@ -866,7 +866,7 @@ bool GOOrganController::Export(const wxString &cmb) {
 
   m_b_customized = true;
   cfg.WriteString(WX_ORGAN, wxT("ODFHash"), m_ODFHash);
-  cfg.WriteString(WX_ORGAN, wxT("ChurchName"), m_ChurchName);
+  cfg.WriteString(WX_ORGAN, wxT("ChurchName"), GetOrganName());
   cfg.WriteString(WX_ORGAN, wxT("ChurchAddress"), m_ChurchAddress);
   cfg.WriteString(WX_ORGAN, wxT("ODFPath"), GetODFFilename());
   if (m_ArchiveID != wxEmptyString)
@@ -943,8 +943,6 @@ void GOOrganController::AddPanel(GOGUIPanel *panel) {
   m_panels.push_back(panel);
 }
 
-const wxString &GOOrganController::GetChurchName() { return m_ChurchName; }
-
 const wxString &GOOrganController::GetChurchAddress() {
   return m_ChurchAddress;
 }
@@ -987,7 +985,7 @@ GOOrgan GOOrganController::GetOrganInfo() {
     GetODFFilename(),
     m_ArchiveID,
     m_ArchivePath,
-    GetChurchName(),
+    GetOrganName(),
     GetOrganBuilder(),
     GetRecordingDetails());
 }
@@ -999,7 +997,7 @@ const wxString GOOrganController::GetSettingFilename() {
 const wxString GOOrganController::GetCacheFilename() { return m_CacheFilename; }
 
 wxString GOOrganController::GetCombinationsDir() const {
-  return wxFileName(m_config.OrganCombinationsPath(), m_ChurchName)
+  return wxFileName(m_config.OrganCombinationsPath(), GetOrganName())
     .GetFullPath();
 }
 

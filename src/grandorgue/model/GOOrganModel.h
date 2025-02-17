@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -47,6 +47,7 @@ private:
   GOModificationProxy m_ModificationProxy;
   GOCombinationDefinition m_GeneralTemplate;
 
+  wxString m_OrganName;
   bool m_DivisionalsStoreIntermanualCouplers;
   bool m_DivisionalsStoreIntramanualCouplers;
   bool m_DivisionalsStoreTremulants;
@@ -105,6 +106,8 @@ public:
 
   const GOConfig &GetConfig() const { return m_config; }
   GOConfig &GetConfig() { return m_config; }
+
+  const wxString &GetOrganName() const { return m_OrganName; }
 
   unsigned GetRecorderElementID(const wxString &name);
 
