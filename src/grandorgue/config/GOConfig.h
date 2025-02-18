@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -44,6 +44,12 @@ typedef struct {
 enum class GOInitialLoadType { LOAD_NONE, LOAD_LAST_USED, LOAD_FIRST };
 
 class GOConfig : public GOSettingStore, public GOOrganList {
+public:
+  enum InterpolationType {
+    INTERPOLATION_LINEAR = 0,
+    INTERPOLATION_POLYPHASE,
+  };
+
 private:
   wxString m_InstanceName;
   wxString m_ConfigFileName;
@@ -68,7 +74,6 @@ private:
 
 public:
   GOConfig(wxString instance);
-  ~GOConfig();
 
   GOSettingDirectory OrganSettingsPath;
   GOSettingDirectory OrganCachePath;
@@ -77,7 +82,7 @@ public:
   GOSettingUnsigned ReleaseConcurrency;
   GOSettingUnsigned LoadConcurrency;
 
-  GOSettingUnsigned InterpolationType;
+  GOSettingUnsigned m_InterpolationType;
   GOSettingUnsigned WaveFormatBytesPerSample;
   GOSettingBool RecordDownmix;
 

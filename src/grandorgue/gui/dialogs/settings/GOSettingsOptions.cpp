@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -230,7 +230,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   item6->Add(grid, 0, wxEXPAND | wxALL, 5);
   item9->Add(item6, 0, wxEXPAND | wxALL, 5);
 
-  m_Interpolation->Select(m_config.InterpolationType());
+  m_Interpolation->Select(m_config.m_InterpolationType());
   m_Concurrency->Select(m_config.Concurrency() - 1);
   m_ReleaseConcurrency->Select(m_config.ReleaseConcurrency() - 1);
   m_LoadConcurrency->Select(m_config.LoadConcurrency());
@@ -446,7 +446,7 @@ bool GOSettingsOptions::TransferDataFromWindow() {
   m_config.AttackLoad(m_AttackLoad->GetSelection());
   m_config.ReleaseLoad(m_ReleaseLoad->GetSelection());
   m_config.LoadChannels(m_Channels->GetSelection());
-  m_config.InterpolationType(m_Interpolation->GetSelection());
+  m_config.m_InterpolationType(m_Interpolation->GetSelection());
   m_config.MemoryLimit(m_MemoryLimit->GetValue());
   m_config.MetronomeBPM(m_MetronomeBPM->GetValue());
   m_config.MetronomeMeasure(m_MetronomeMeasure->GetValue());
