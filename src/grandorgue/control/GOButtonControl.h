@@ -37,8 +37,8 @@ protected:
   void OnShortcutKeyReceived(
     GOMidiShortcutReceiver::MatchType matchType, int key) override;
 
-  void PrepareRecording() override;
-  void AbortPlayback() override;
+  void SendCurrentMidiValue() override { SendMidiValue(m_Engaged); }
+  void SendEmptyMidiValue() override { SendMidiValue(false); }
 
 public:
   GOButtonControl(

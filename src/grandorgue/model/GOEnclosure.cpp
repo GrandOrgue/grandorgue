@@ -84,7 +84,7 @@ void GOEnclosure::Save(GOConfigWriter &cfg) {
 void GOEnclosure::SetEnclosureValue(uint8_t n) {
   if (n != m_MIDIValue) {
     m_MIDIValue = n;
-    SendMidiValue(m_MIDIValue);
+    SendCurrentMidiValue();
   }
   r_OrganModel.UpdateVolume();
   r_OrganModel.SendControlChanged(this);
@@ -126,16 +126,6 @@ bool GOEnclosure::IsDisplayed(bool new_format) {
     return m_Displayed2;
   else
     return m_Displayed1;
-}
-
-void GOEnclosure::PrepareRecording() {
-  GOMidiReceivingSendingObject::PrepareRecording();
-  SendMidiValue(m_MIDIValue);
-}
-
-void GOEnclosure::AbortPlayback() {
-  SendMidiValue(0);
-  GOMidiReceivingSendingObject::AbortPlayback();
 }
 
 wxString GOEnclosure::GetElementStatus() {

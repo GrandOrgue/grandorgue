@@ -41,6 +41,12 @@ void GOMidiSendingObject::PreparePlayback() {
 }
 
 void GOMidiSendingObject::AbortPlayback() {
+  SendEmptyMidiValue();
   GOMidiObject::AbortPlayback();
   m_sender.SetName(wxEmptyString);
+}
+
+void GOMidiSendingObject::ResendMidi() {
+  m_sender.SetName(GetName());
+  SendCurrentMidiValue();
 }

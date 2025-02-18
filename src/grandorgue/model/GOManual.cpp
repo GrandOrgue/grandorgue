@@ -480,7 +480,7 @@ void GOManual::PreparePlayback() {
 }
 
 void GOManual::PrepareRecording() {
-  ResetMidiKey();
+  SendEmptyMidiKey();
   GOMidiReceivingSendingObject::PrepareRecording();
   for (unsigned i = 0; i < m_KeyVelocity.size(); i++)
     if (m_KeyVelocity[i] > 0)
