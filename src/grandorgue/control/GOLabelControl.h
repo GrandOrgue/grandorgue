@@ -10,32 +10,30 @@
 
 #include <wx/string.h>
 
-#include "midi/GOMidiSender.h"
 #include "midi/objects/GOMidiSendingObject.h"
-#include "sound/GOSoundStateHandler.h"
 
 #include "GOControl.h"
-#include "GOSaveableObject.h"
 
-class GOConfigReader;
-class GOConfigWriter;
 class GOOrganModel;
 
 class GOLabelControl : public GOControl, public GOMidiSendingObject {
 protected:
   wxString m_Content;
 
-  void AbortPlayback() override;
-  void PrepareRecording() override;
+  void SendCurrentMidiValue() override { SendMidiValue(m_Content); }
+  void SendEmptyMidiValue() override { SendMidiValue(wxEmptyString); }
 
 public:
   GOLabelControl(GOOrganModel &organModel);
-  const wxString &GetContent();
-  void SetContent(wxString name);
+  const wxString &GetContent() const { return m_Content; }
+  void SetContent(const wxString &name);
 
-  wxString GetElementStatus() override;
-  std::vector<wxString> GetElementActions() override;
-  void TriggerElementActions(unsigned no) override;
+  wxString GetElementStatus() override { return m_Content; }
+  std::vector<wxString> GetElementActions() override {
+    return std::vector<wxString>();
+  }
+  void TriggerElementActions(unsigned no) override { /* Never called */
+  }
 };
 
 #endif

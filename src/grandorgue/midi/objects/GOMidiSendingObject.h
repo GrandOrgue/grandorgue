@@ -38,13 +38,29 @@ protected:
   void SendMidiKey(unsigned key, unsigned value) {
     m_sender.SetKey(key, value);
   }
-  void ResetMidiKey() { m_sender.ResetKey(); }
+  void SendEmptyMidiKey() { m_sender.ResetKey(); }
+
+  /**
+   * The midi object should send the current midi value with certain
+   * SendMidiValue()
+   */
+  virtual void SendCurrentMidiValue() {}
+  /**
+   * The midi object should send the empty midi value with certain
+   * SendMidiValue()
+   */
+  virtual void SendEmptyMidiValue() {}
 
   void PreparePlayback() override;
   void AbortPlayback() override;
 
 public:
   virtual void SetElementId(int id);
+
+  /**
+   * Send current object state event again. It calls SendCurrentMidiValue()
+   */
+  void ResendMidi();
 };
 
 #endif /* GOMIDISENDINGOBJECT_H */

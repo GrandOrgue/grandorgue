@@ -187,7 +187,7 @@ void GORank::SetTemperament(const GOTemperament &temperament) {
 }
 
 void GORank::PreparePlayback() {
-  ResetMidiKey();
+  SendEmptyMidiKey();
   for (unsigned i = 0; i < m_MaxNoteVelocities.size(); i++)
     m_MaxNoteVelocities[i] = 0;
   for (unsigned i = 0; i < m_NoteStopVelocities.size(); i++)

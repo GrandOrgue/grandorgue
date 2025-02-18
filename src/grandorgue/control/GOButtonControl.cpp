@@ -69,16 +69,6 @@ void GOButtonControl::Push() {
   SetButtonState(m_Engaged ^ true);
 }
 
-void GOButtonControl::PrepareRecording() {
-  GOMidiObjectWithShortcut::PrepareRecording();
-  SendMidiValue(m_Engaged);
-}
-
-void GOButtonControl::AbortPlayback() {
-  SendMidiValue(false);
-  GOMidiObjectWithShortcut::AbortPlayback();
-}
-
 void GOButtonControl::OnMidiReceived(
   const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value) {
   switch (matchType) {
@@ -106,8 +96,8 @@ void GOButtonControl::OnMidiReceived(
 void GOButtonControl::Display(bool onoff) {
   if (m_Engaged == onoff)
     return;
-  SendMidiValue(onoff);
   m_Engaged = onoff;
+  SendCurrentMidiValue();
   r_OrganModel.SendControlChanged(this);
 }
 
