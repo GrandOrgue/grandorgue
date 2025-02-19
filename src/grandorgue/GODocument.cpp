@@ -11,7 +11,7 @@
 
 #include "config/GOConfig.h"
 #include "document-base/GOView.h"
-#include "gui/dialogs/GOMidiListDialog.h"
+#include "gui/dialogs/GOMidiObjectstDialog.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 #include "gui/dialogs/organ-settings/GOOrganSettingsDialog.h"
 #include "gui/frames/GOFrame.h"
@@ -182,7 +182,7 @@ void GODocument::ShowMidiList() {
     registerWindow(
       GODocument::MIDI_LIST,
       NULL,
-      new GOMidiListDialog(
+      new GOMidiObjectsDialog(
         this,
         NULL,
         m_OrganController->GetConfig().m_DialogSizes,
