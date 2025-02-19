@@ -76,7 +76,7 @@ bool GODocument::LoadOrgan(
   }
 
   wxCommandEvent event(wxEVT_WINTITLE, 0);
-  event.SetString(m_OrganController->GetChurchName());
+  event.SetString(m_OrganController->GetOrganName());
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
   for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -82,7 +82,6 @@ private:
   float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
 
-  wxString m_ChurchName;
   wxString m_ChurchAddress;
   wxString m_OrganBuilder;
   wxString m_OrganBuildDate;
@@ -121,7 +120,7 @@ private:
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
 
-  wxString GetOrganHash();
+  const wxString &GetOrganHash() const { return m_hash; }
   bool IsToImportCombinationsFor(
     const wxString &fileName, const wxString &churchName) const;
 
@@ -226,7 +225,6 @@ public:
   wxString GetCombinationsDir() const;
 
   /* Organ and Building general information */
-  const wxString &GetChurchName();
   const wxString &GetChurchAddress();
   const wxString &GetOrganBuilder();
   const wxString &GetOrganBuildDate();

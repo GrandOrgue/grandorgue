@@ -985,7 +985,7 @@ void GOSetter::PreparePlayback() {
   buffer.Printf(wxT("%03d"), m_pos);
   m_PosDisplay.SetContent(buffer);
 
-  m_NameDisplay.SetContent(m_OrganController->GetChurchName());
+  m_NameDisplay.SetContent(m_OrganController->GetOrganName());
 
   wxCommandEvent event(wxEVT_SETVALUE, ID_METER_FRAME_SPIN);
   event.SetInt(m_pos);
