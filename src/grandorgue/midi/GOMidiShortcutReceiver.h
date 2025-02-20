@@ -19,8 +19,8 @@ class GOMidiShortcutReceiver : public GOMidiShortcutPattern {
 public:
   GOMidiShortcutReceiver(ReceiverType type) : GOMidiShortcutPattern(type) {}
 
-  void Load(GOConfigReader &cfg, wxString group);
-  void Save(GOConfigWriter &cfg, wxString group);
+  void Load(GOConfigReader &cfg, const wxString &group);
+  void Save(GOConfigWriter &cfg, const wxString &group);
 
   MatchType Match(unsigned key);
 
