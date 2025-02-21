@@ -3409,7 +3409,7 @@ msgstr "No se pudo cambiar el nombre del archivo %s a %s"
 
 #, fuzzy, c-format
 msgid "Unexpected file in the cache directory: %s"
-msgstr "Fallo inesperado en el directorio de caché: '%s'"
+msgstr "Archivo inesperado en el directorio de caché: '%s'"
 
 #, c-format
 msgid "Unknown MIDI file type %d"
