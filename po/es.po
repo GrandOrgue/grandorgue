@@ -3569,7 +3569,7 @@ msgid "Yes"
 msgstr "Sí"
 
 msgid "You are using the latest GrandOrgue version"
-msgstr "Estás usando la última versión de GrandOrgue"
+msgstr "Está usando la última versión de GrandOrgue"
 
 msgid "Z"
 msgstr "Z"
