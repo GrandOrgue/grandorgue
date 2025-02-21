@@ -1185,7 +1185,7 @@ msgstr "Divisionales"
 
 #, c-format
 msgid "Do you want to delete organs%s%s?"
-msgstr "¿Quieres borrar los órganos%s%s?"
+msgstr "¿Quiere borrar los órganos%s%s?"
 
 msgid "Don't load"
 msgstr "No cargar"
