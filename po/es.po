@@ -2529,7 +2529,7 @@ msgstr "Opciones de órgano"
 
 #, fuzzy
 msgid "Organ hash:"
-msgstr ""
+msgstr "Hash del órgano"
 
 msgid "Organ package"
 msgstr "Paquete de órgano"
