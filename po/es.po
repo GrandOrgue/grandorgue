@@ -1938,7 +1938,7 @@ msgid "Lambert (1774) 1/7 comma"
 msgstr "Lambert (1774) 1/7 de coma"
 
 msgid "Last track is missing the end marker"
-msgstr "A la última pista le falta el marcador de final"
+msgstr "La última pista no tiene un marcador de final"
 
 msgid "Length:"
 msgstr "Duración:"
