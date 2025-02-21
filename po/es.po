@@ -2872,7 +2872,7 @@ msgstr "Duración del decaimiento inválida"
 
 #, fuzzy
 msgid "Release Tail Length (ms):"
-msgstr "Longitud de la cola de decaimiento (ms):"
+msgstr "Longitud del decaimiento (ms):"
 
 msgid "Release loading:"
 msgstr "Cargar decaimiento:"
