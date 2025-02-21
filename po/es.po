@@ -834,7 +834,7 @@ msgstr "Añadir nuevos dispositivos automáticamente"
 
 #, fuzzy
 msgid "AutoTuning Correction (Cent):"
-msgstr "Correcciones de afinación automáticas (Cents):"
+msgstr "Correcciones de afinación (Cents):"
 
 #, fuzzy
 msgid "AutoTuningCorrection is invalid"
