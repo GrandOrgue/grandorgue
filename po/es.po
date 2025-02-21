@@ -1178,7 +1178,7 @@ msgid "Divisional"
 msgstr "Divisional"
 
 msgid "Divisional Coupler"
-msgstr "Acoplador divisional"
+msgstr "Acoplador de divisionales"
 
 msgid "Divisionals"
 msgstr "Divisionales"
