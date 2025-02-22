@@ -186,7 +186,7 @@ void GODocument::ShowMidiList() {
         this,
         NULL,
         m_OrganController->GetConfig().m_DialogSizes,
-        m_OrganController->GetMidiConfigurators()));
+        m_OrganController->GetMidiObjects()));
   }
 }
 
