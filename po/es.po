@@ -1195,11 +1195,11 @@ msgid "Download"
 msgstr "Descargar"
 
 msgid "Drawstop"
-msgstr "Tirador de registro"
+msgstr "Tirador"
 
 #, c-format
 msgid "Drawstop %s can't reference to itself"
-msgstr "El tirador de registro %s no puede autoreferenciarse"
+msgstr "El tirador %s no puede autoreferenciarse"
 
 #, c-format
 msgid "Duplicate combination entry %s in %s"
