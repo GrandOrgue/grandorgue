@@ -86,7 +86,7 @@ void GOOrganSettingsDialog::ButtonStatesChanged() {
 
   if (pTab) {
     bool isDistributeAnabled = pTab->IsDistributeAudioEnabled();
-      
+
     m_AudioGroupAssistant->Enable(isDistributeAnabled);
     m_Default->Enable(pTab->IsDefaultEnabled());
     m_Discard->Enable(pTab->IsRevertEnabled());
