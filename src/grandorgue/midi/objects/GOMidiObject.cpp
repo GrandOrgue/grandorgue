@@ -56,5 +56,6 @@ void GOMidiObject::ShowConfigDialog() {
     isReadOnly ? nullptr : p_MidiReceiver,
     p_MidiSender,
     isReadOnly ? nullptr : p_ShortcutReceiver,
-    p_DivisionSender);
+    p_DivisionSender,
+    this);
 }

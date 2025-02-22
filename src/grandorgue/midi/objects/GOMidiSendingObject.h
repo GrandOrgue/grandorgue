@@ -51,16 +51,18 @@ protected:
    */
   virtual void SendEmptyMidiValue() {}
 
+  /**
+   * Send current object state event again. It calls SendCurrentMidiValue()
+   */
+  void ResendMidi();
+
+  void OnSettingsApplied() override { ResendMidi(); }
+
   void PreparePlayback() override;
   void AbortPlayback() override;
 
 public:
   virtual void SetElementId(int id);
-
-  /**
-   * Send current object state event again. It calls SendCurrentMidiValue()
-   */
-  void ResendMidi();
 };
 
 #endif /* GOMIDISENDINGOBJECT_H */

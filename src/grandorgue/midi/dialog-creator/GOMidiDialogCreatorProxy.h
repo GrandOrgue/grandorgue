@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -26,7 +26,8 @@ public:
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,
-    GOMidiSender *division = nullptr) override;
+    GOMidiSender *division = nullptr,
+    GOMidiDialogListener *pDialogListener = nullptr) override;
 };
 
 #endif /* GOMIDIDIALOGCREATORPROXY_H */

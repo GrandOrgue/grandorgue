@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,6 +9,7 @@
 
 #include <wx/bookctrl.h>
 
+#include "midi/dialog-creator/GOMidiDialogListener.h"
 #include <config/GOConfig.h>
 
 #include "GOMidiEventKeyTab.h"
@@ -24,10 +25,12 @@ GOMidiEventDialog::GOMidiEventDialog(
   GOMidiReceiverBase *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
-  GOMidiSender *division)
+  GOMidiSender *division,
+  GOMidiDialogListener *pDialogListener)
   : GOTabbedDialog(
     parent, "MidiEvent", title, settings.m_DialogSizes, dialogSelector),
     GOView(doc, this),
+    p_DialogListener(pDialogListener),
     m_recvPage(NULL),
     m_sendPage(NULL),
     m_sendDivisionPage(NULL),
@@ -61,4 +64,12 @@ GOMidiEventDialog::GOMidiEventDialog(
 void GOMidiEventDialog::RegisterMIDIListener(GOMidi *midi) {
   if (m_recvPage)
     m_recvPage->RegisterMIDIListener(midi);
+}
+
+bool GOMidiEventDialog::TransferDataFromWindow() {
+  bool res = GOTabbedDialog::TransferDataFromWindow();
+
+  if (res && p_DialogListener)
+    p_DialogListener->OnSettingsApplied();
+  return res;
 }
