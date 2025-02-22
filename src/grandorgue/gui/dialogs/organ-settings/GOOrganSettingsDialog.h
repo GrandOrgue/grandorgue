@@ -24,13 +24,13 @@ class GOOrganSettingsPipesTab;
 
 class GOOrganSettingsDialog : public GOOrganSettingsDialogBase, public GOView {
 private:
-  GOOrganSettingsPipesTab *m_PipesTab;
-  GOOrganSettingsEnclosuresTab *m_EnclosuresTab;
-
   wxButton *m_AudioGroupAssistant;
   wxButton *m_Default;
   wxButton *m_Discard;
   wxButton *m_Apply;
+
+  GOOrganSettingsPipesTab *m_PipesTab;
+  GOOrganSettingsEnclosuresTab *m_EnclosuresTab;
 
 public:
   GOOrganSettingsDialog(
