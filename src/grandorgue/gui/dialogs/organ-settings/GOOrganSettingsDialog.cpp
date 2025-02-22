@@ -45,12 +45,6 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     0,
     wxHELP | wxCLOSE),
     GOView(doc, this) {
-  m_PipesTab = new GOOrganSettingsPipesTab(organModel, this);
-  AddTab(m_PipesTab);
-
-  m_EnclosuresTab = new GOOrganSettingsEnclosuresTab(organModel, this);
-  AddTab(m_EnclosuresTab);
-
   // add a custom button 'Reason into the space of the standard dialog button
   wxSizer *const pButtonSizer = GetButtonSizer();
 
@@ -77,6 +71,13 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     pButtonSizer->InsertSpacer(9, 10);
   }
 
+  // Don't move above because adding tabs raises events that require buttons
+  m_PipesTab = new GOOrganSettingsPipesTab(organModel, this);
+  AddTab(m_PipesTab);
+
+  m_EnclosuresTab = new GOOrganSettingsEnclosuresTab(organModel, this);
+  AddTab(m_EnclosuresTab);
+
   LayoutDialog();
 }
 
@@ -84,7 +85,9 @@ void GOOrganSettingsDialog::ButtonStatesChanged() {
   auto pTab = dynamic_cast<GOOrganSettingsTab *>(GetBook()->GetCurrentPage());
 
   if (pTab) {
-    m_AudioGroupAssistant->Enable(pTab->IsDistributeAudioEnabled());
+    bool isDistributeAnabled = pTab->IsDistributeAudioEnabled();
+      
+    m_AudioGroupAssistant->Enable(isDistributeAnabled);
     m_Default->Enable(pTab->IsDefaultEnabled());
     m_Discard->Enable(pTab->IsRevertEnabled());
     m_Apply->Enable(pTab->IsApplyEnabled());
