@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -23,7 +23,8 @@ void GOConfigFileWriter::AddEntry(
   g[name] = value;
 }
 
-bool GOConfigFileWriter::GetFileContent(GOBuffer<uint8_t> &buf) {
+bool GOConfigFileWriter::GetFileContent(
+  GOBuffer<uint8_t> &buf, bool isToCompress) {
   uint8_t bom[] = {0xEF, 0xBB, 0xBF};
   wxString content = wxEmptyString;
 
@@ -49,24 +50,26 @@ bool GOConfigFileWriter::GetFileContent(GOBuffer<uint8_t> &buf) {
   buf.Append(bom, sizeof(bom));
   buf.Append((const uint8_t *)b.data(), b.length());
 
-  if (!compressBuffer(buf))
+  if (isToCompress && !compressBuffer(buf))
     return false;
 
   return true;
 }
 
-bool GOConfigFileWriter::Save(wxString filename) {
+bool GOConfigFileWriter::Save(const wxString &fileName, bool isToCompress) {
   wxFile out;
   GOBuffer<uint8_t> buf;
-  if (!GetFileContent(buf))
-    return false;
 
-  if (!out.Create(filename, true))
-    return false;
+  bool isOk = GetFileContent(buf, isToCompress);
 
-  if (!out.Write(buf.get(), buf.GetSize()))
-    return false;
-  out.Flush();
-  out.Close();
-  return true;
+  if (isOk)
+    isOk = out.Create(fileName, true);
+
+  if (isOk)
+    isOk = out.Write(buf.get(), buf.GetSize());
+  if (isOk)
+    isOk = out.Flush();
+  if (isOk)
+    isOk = out.Close();
+  return isOk;
 }
