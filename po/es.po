@@ -26,19 +26,25 @@ msgid ""
 "\n"
 "(the following packages will also be deleted:%s)"
 msgstr ""
+"\n"
+"\n"
+"(también se borrarán los siguientes paquetes:%s)"
 
 msgid ""
 "\n"
 "\n"
 "Please select a valid impulse response file"
 msgstr ""
+"\n"
+"\n"
+"Por favor, seleccione un archivo de respuesta al impulso válido"
 
 msgid " "
-msgstr ""
+msgstr " "
 
 #, c-format
 msgid " (%.3f used)"
-msgstr ""
+msgstr " (%.3f usado)"
 
 msgid " (PA): "
 msgstr " (PA): "
@@ -70,7 +76,7 @@ msgstr "%.3f MB"
 
 #, fuzzy, c-format
 msgid "%.3f MB  (%.3f MB end)"
-msgstr "%.3f MB de %.3f MB"
+msgstr "%.3f MB (%.3f MB final)"
 
 #, c-format
 msgid "%.3f MB (not limited)"
@@ -81,10 +87,10 @@ msgid "%.3f MB of %.3f MB"
 msgstr "%.3f MB de %.3f MB"
 
 msgid "%Y-%m-%d-%H-%M-%S.%l.mid"
-msgstr ""
+msgstr "%d-%m-%Y-%H-%M-%S.%l.mid"
 
 msgid "%Y-%m-%d-%H-%M-%S.%l.wav"
-msgstr ""
+msgstr "%d-%m-%Y-%H-%M-%S.%l.wav"
 
 #, c-format
 msgid "%d"
@@ -108,7 +114,7 @@ msgstr "%d PPM"
 
 #, fuzzy, c-format
 msgid "%d bits"
-msgstr "8 bits"
+msgstr "%d bits"
 
 #, c-format
 msgid "%d ms"
@@ -160,11 +166,11 @@ msgstr "%s: %s\n"
 
 #, c-format
 msgid "%s: extension with uppercase letters"
-msgstr ""
+msgstr "%s: extensión con letras mayúsculas"
 
 #, c-format
 msgid "%s: mute"
-msgstr "%s: mute"
+msgstr "%s: silenciado"
 
 #, c-format
 msgid "%s: unknown"
@@ -196,10 +202,10 @@ msgid "&Channel:"
 msgstr "&Canal:"
 
 msgid "&Check for updates"
-msgstr ""
+msgstr "&Comprobar actualizaciones"
 
 msgid "&Clear"
-msgstr ""
+msgstr "&Limpiar"
 
 msgid "&Close"
 msgstr "&Cerrar"
@@ -208,22 +214,22 @@ msgid "&Color:"
 msgstr "&Color:"
 
 msgid "&Controller-No:"
-msgstr "&Controlador-Número:"
+msgstr "&Núm. de controlador:"
 
 msgid "&Convolution reverb"
 msgstr "&Reverberación de convolución"
 
 msgid "&Copy current receive event"
-msgstr ""
+msgstr "&Copiar event de recepción actual"
 
 msgid "&Data:"
-msgstr "&Datos"
+msgstr "&Datos:"
 
 msgid "&Debounce time(ms):"
-msgstr "Tiempo de rebote (ms):"
+msgstr "&Tiempo de rebote (ms):"
 
 msgid "&Default volume"
-msgstr "Volumen predeterminado"
+msgstr "&Volumen predeterminado"
 
 msgid "&Delete"
 msgstr "&Eliminar"
@@ -233,7 +239,7 @@ msgstr "&Detectar configuración compleja de MIDI"
 
 #, fuzzy
 msgid "&Device number:"
-msgstr "&Número de bits:"
+msgstr "&Número de dispositivo:"
 
 msgid "&Device:"
 msgstr "&Dispositivo:"
@@ -243,7 +249,7 @@ msgstr "&Abajo"
 
 #, fuzzy
 msgid "&Download"
-msgstr "No cargarlas"
+msgstr "&Descargar"
 
 msgid "&Enhancements"
 msgstr "&Mejoras"
@@ -253,7 +259,7 @@ msgstr "&Evento:"
 
 #, fuzzy
 msgid "&Export Settings"
-msgstr "Exportar Configuraciones"
+msgstr "&Exportar Configuración"
 
 msgid "&Favorites"
 msgstr "&Favoritos"
@@ -274,24 +280,24 @@ msgid "&ID:"
 msgstr "&ID:"
 
 msgid "&Import Settings"
-msgstr "&Importar Configuraciones"
+msgstr "&Importar Configuración"
 
 msgid "&Install organ package\tCtrl+I"
 msgstr "&Instalar paquete de órgano\tCtrl+I"
 
 #, fuzzy
 msgid "&Length:"
-msgstr "Longitud:"
+msgstr "&Longitud:"
 
 msgid "&Listen for Event"
-msgstr "&Esperar Evento MIDI"
+msgstr "&Esperar evento MIDI"
 
 msgid "&Load\tCtrl+L"
 msgstr "&Cargar\tCtrl+L"
 
 #, fuzzy
 msgid "&Log MIDI events"
-msgstr "Evento MIDI"
+msgstr "&Registrar eventos MIDI"
 
 msgid "&Lower PGM number:"
 msgstr "&Número PGM más bajo:"
@@ -300,17 +306,17 @@ msgid "&Lowest key:"
 msgstr "&Tecla más grave:"
 
 msgid "&MIDI-Output-Device..."
-msgstr "Dispositivo de salida..."
+msgstr "&Dispositivo MIDI de salida..."
 
 msgid "&MIDI-note:"
-msgstr "&Nota-MIDI:"
+msgstr "&Nota MIDI:"
 
 #, fuzzy
 msgid "&MIDI..."
-msgstr "MIDI"
+msgstr "&MIDI..."
 
 msgid "&Mapping output"
-msgstr "Trazado de salida"
+msgstr "&Trazado de salida"
 
 msgid "&Memory Level"
 msgstr "&Nivel de memoria"
@@ -322,32 +328,32 @@ msgid "&Metronome"
 msgstr "&Metrónomo"
 
 msgid "&Midi properties"
-msgstr "Propiedades de MIDI"
+msgstr "&Propiedades de MIDI"
 
 #, fuzzy
 msgid "&Minus-Shortcut:"
 msgstr "&Atajo:"
 
 msgid "&Off NRPN number:"
-msgstr ""
+msgstr "&Número de NRPN off:"
 
 msgid "&Off RPN number:"
-msgstr "&Off número RPN:"
+msgstr "&Número RPN off:"
 
 msgid "&Off Value:"
-msgstr "&Valor Off:"
+msgstr "&Valor off:"
 
 msgid "&Off value:"
-msgstr "&Valor Off:"
+msgstr "&Valor off:"
 
 msgid "&On NRPN number:"
-msgstr "&On número NRPN:"
+msgstr "&Número NRPN on:"
 
 msgid "&On RPN number:"
-msgstr "&On número RPN:"
+msgstr "&Número RPN on:"
 
 msgid "&On value:"
-msgstr "&Valor On:"
+msgstr "&Valor on:"
 
 msgid "&Open\tCtrl+O"
 msgstr "&Abrir\tCtrl+O"
@@ -362,7 +368,7 @@ msgid "&Panic\tEscape"
 msgstr "&Pánico\tEscape"
 
 msgid "&Parameter-No:"
-msgstr "&Parámetro-Número:"
+msgstr "&Núm. de parámetro:"
 
 #, fuzzy
 msgid "&Plus-Shortcut:"
@@ -372,13 +378,13 @@ msgid "&Polyphony"
 msgstr "&Polifonía"
 
 msgid "&Release tail length"
-msgstr "&Longitud de la cola de decaimiento"
+msgstr "&Duración de decaimiento"
 
 msgid "&Relocate..."
-msgstr ""
+msgstr "&Reubicar..."
 
 msgid "&Sample loading"
-msgstr "&Carga de la muestras"
+msgstr "&Carga de muestras"
 
 msgid "&Save\tCtrl+S"
 msgstr "&Guardar\tCtrl+S"
@@ -387,33 +393,33 @@ msgid "&Shortcut:"
 msgstr "&Atajo:"
 
 msgid "&Show changelog"
-msgstr ""
+msgstr "&Mostrar registro de cambios"
 
 msgid "&Sound Engine"
-msgstr "&Motor de Sonido"
+msgstr "&Motor de sonido"
 
 msgid "&Sound Output State"
-msgstr "&Estado de la Salida del Sonido"
+msgstr "&Estado de la salida del sonido"
 
 msgid "&Sound output"
 msgstr "&Salida del sonido"
 
 #, fuzzy
 msgid "&Start-Position:"
-msgstr "Offset de comienzo:"
+msgstr "&Posición inicial:"
 
 msgid "&Status"
-msgstr ""
+msgstr "&Estado"
 
 #, fuzzy
 msgid "&Stop number:"
-msgstr "&Número de bits:"
+msgstr "&Número de registro:"
 
 msgid "&Temperament"
 msgstr "&Temperamento"
 
 msgid "&Top"
-msgstr "&Top"
+msgstr "&Superior"
 
 msgid "&Transpose"
 msgstr "&Transportar"
@@ -429,17 +435,17 @@ msgstr "&Actualizar Caché..."
 
 #, fuzzy
 msgid "&Update available!"
-msgstr "Dispositivo no disponible"
+msgstr "&¡Actualización disponible!"
 
 msgid "&Updates"
-msgstr ""
+msgstr "&Actualizaciones"
 
 msgid "&Upper PGM number:"
 msgstr "&Número PGM superior:"
 
 #, fuzzy
 msgid "&Upper bank:"
-msgstr "&Límite superior:"
+msgstr "&Banco superior:"
 
 msgid "&Upper limit:"
 msgstr "&Límite superior:"
@@ -463,7 +469,7 @@ msgid "+1"
 msgstr "+1"
 
 msgid "+1 Cent"
-msgstr "+1 Cent"
+msgstr "+1 cent"
 
 msgid "+10"
 msgstr "+10"
@@ -472,7 +478,7 @@ msgid "+100"
 msgstr "+100"
 
 msgid "+100 Cent"
-msgstr "+100 Cents"
+msgstr "+100 cents"
 
 msgid ","
 msgstr ","
@@ -481,16 +487,16 @@ msgid "-"
 msgstr "-"
 
 msgid "-- bits (- used)"
-msgstr ""
+msgstr "— bits (- usados)"
 
 msgid "--- MB (--- MB end)"
-msgstr ""
+msgstr "--- MB (--- MB final)"
 
 msgid "-1"
 msgstr "-1"
 
 msgid "-1 Cent"
-msgstr "-1 Cent"
+msgstr "-1 cent"
 
 msgid "-10"
 msgstr "-10"
@@ -499,7 +505,7 @@ msgid "-100"
 msgstr "-100"
 
 msgid "-100 Cent"
-msgstr "-100 Cents"
+msgstr "-100 cents"
 
 msgid "-:--:--"
 msgstr ""
@@ -647,22 +653,22 @@ msgid "< Invalid WAVE format chunk"
 msgstr ""
 
 msgid "< More than 2 channels in"
-msgstr "< Más de 2 canales en"
+msgstr "< Más de 2 canales de entrada"
 
 msgid "< Only 32bit IEEE float samples supported"
-msgstr "< Sólo muestras de 32bit IEEE float son soportadas"
+msgstr "< Solo se aceptan muestras de IEEE float de 32 bits"
 
 msgid "< Unsupport PCM bit size"
-msgstr ""
+msgstr "< Tamaño de bit PCM no aceptado"
 
 msgid "< Unsupported PCM format"
-msgstr "< Formato PCM no soportado"
+msgstr "< Formato PCM no aceptado"
 
 msgid "<Invalid SMPL chunk in"
 msgstr ""
 
 msgid "<no file loaded>"
-msgstr ""
+msgstr "<no se ha cargado ningún archivo>"
 
 msgid ">"
 msgstr ">"
@@ -674,7 +680,7 @@ msgid "A"
 msgstr "A"
 
 msgid "A NOT Switch must not have more than one controlling switches"
-msgstr ""
+msgstr "Un interruptor NOT no puede tener más de un interruptor que lo controle"
 
 msgid ""
 "A channel offset allows the use of two MIDI\n"
@@ -687,7 +693,7 @@ msgstr ""
 "Un canal offset permite usar dos interfaces\n"
 "MIDI con canales MIDI en conflicto. Por\n"
 "ejemplo, aplicar un offset de canal de 8 a una\n"
-"de las interfaces MIDI podría causar que el\n"
+"de las interfaces MIDI podría hacer que el\n"
 "canal 1 de la interfaz apareciera como canal 9,\n"
 "el canal 2 como canal 10, y así sucesivamente."
 
@@ -700,17 +706,12 @@ msgid ""
 "by use of the Steinberg ASIO SDK, Version 2.3.3.\n"
 "ASIO is a trademark and software of Steinberg Media Technologies GmbH."
 msgstr ""
-"Copyright 2006 Milan Digital Audio LLC\n"
-"Copyright 2009-2019 GrandOrgue colaboradores\n"
-"\n"
-"Este software viene sin ninguna garantía.\n"
-"\n"
-"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
-"by use of the Steinberg ASIO SDK, Versión 2.2.\n"
+"ASIO Interface Technology de Steinberg Media Technologies GmbH,\n"
+"por el uso de Steinberg ASIO SDK, Versión 2.2.\n"
 "ASIO es una marca y software de Steinberg Media Technologies GmbH."
 
 msgid "Active polyphony management"
-msgstr "Activar tratamiento de la polifonía"
+msgstr "Activar gestión de polifonía"
 
 msgid "Add dirac pulse"
 msgstr "Añadir pulso de Dirac"
@@ -746,7 +747,7 @@ msgid "Amplitude:"
 msgstr "Amplitud:"
 
 msgid "Another registered organ already uses this path"
-msgstr ""
+msgstr "Ya hay otro órgano registrado en esta carpeta"
 
 msgid "Any channel"
 msgstr "Cualquier canal"
@@ -779,9 +780,9 @@ msgid ""
 "Right-click on manuals, stops, ... to do further changes."
 msgstr ""
 "Atención:\n"
-"Estas configuraciones midi inciales afectan sólo a la primera\n"
+"Esta configuración MIDI incial afecta solo a la primera\n"
 "carga de un órgano.\n"
-"Haz click derecho en manuales, registros... para más cambios."
+"Haz click derecho en manuales, registros, etc, para hacer más cambios."
 
 msgid "Audio"
 msgstr "Audio"
@@ -819,25 +820,25 @@ msgstr "Grupos de audio"
 
 #, fuzzy
 msgid "Audio recording time"
-msgstr "Grabacione de audio"
+msgstr "Tiempo de la grabación de audio"
 
 msgid "Audio recording:"
-msgstr "Grabación audio:"
+msgstr "Grabación de audio:"
 
 #, fuzzy
 msgid "Audio recordings"
-msgstr "Grabacione de audio"
+msgstr "Grabaciones de audio"
 
 msgid "Auto add new devices"
-msgstr "Auto añadir nuevos dispositivos"
+msgstr "Añadir nuevos dispositivos automáticamente"
 
 #, fuzzy
 msgid "AutoTuning Correction (Cent):"
-msgstr "Afinación (Cents):"
+msgstr "Correcciones de afinación (Cents):"
 
 #, fuzzy
 msgid "AutoTuningCorrection is invalid"
-msgstr "La afinación no es válida"
+msgstr "La corrección de afinación automática no es válida"
 
 msgid "Automatically manage cache"
 msgstr "Gestionar caché automáticamente"
@@ -870,7 +871,7 @@ msgid "Bethisy temperament ordinaire (1764)"
 msgstr "Temperamento ordinario, Bethisy (1764)"
 
 msgid "Bits per sample:"
-msgstr ""
+msgstr "Bits mor muestra:"
 
 msgid "Boulliau (1373)/Mersenne 1636. "
 msgstr "Boulliau (1373)/Mersenne 1636. "
@@ -883,7 +884,7 @@ msgstr "Organero"
 
 #, fuzzy
 msgid "Builder:"
-msgstr "Organero"
+msgstr "Organero:"
 
 msgid "Button"
 msgstr "Botón"
@@ -892,7 +893,7 @@ msgid "Bx Controller"
 msgstr "Controlador Bx"
 
 msgid "Bx Controller Off"
-msgstr "Controlador Bx Off"
+msgstr "Controlador Bx off"
 
 msgid "Bx Controller Off Toggle"
 msgstr ""
@@ -901,11 +902,11 @@ msgid "Bx Controller On"
 msgstr "Controlador Bx On"
 
 msgid "Bx Controller On Toggle"
-msgstr ""
+msgstr "Interruptor de controlador Bx on"
 
 #, fuzzy
 msgid "Bx Controller On/Off Toggle"
-msgstr "Controlador Bx Off"
+msgstr "Interruptor de controlador Bx on/off"
 
 msgid "Bx Ctrl Change Fixed Off Value Toggle"
 msgstr ""
@@ -929,7 +930,7 @@ msgid "C&opy"
 msgstr "C&opiar"
 
 msgid "CRC mismatch in organ package - file corrupted?"
-msgstr ""
+msgstr "Incompatibilidad CRC en el paquete de órgano - ¿archivo corrompido?"
 
 msgid "Cache file had bad magic bypassing cache."
 msgstr ""
@@ -946,7 +947,7 @@ msgid ""
 "Cannot use buffer size above %d samples; unacceptable quantization would "
 "occur."
 msgstr ""
-"No se puede usar un tamaño de buffer mayor que %d muestras; resultaría una "
+"No se puede usar un tamaño de buffer mayor que %d muestras; resultaría en una "
 "cuantización inaceptable."
 
 msgid "Change"
@@ -960,7 +961,7 @@ msgstr "Cambiar grupo de audio"
 
 #, fuzzy
 msgid "Changelog:"
-msgstr "Canal:"
+msgstr "Registro de cambios:"
 
 #, c-format
 msgid "Channel %d"
@@ -976,44 +977,44 @@ msgid "Chaumont"
 msgstr "Chaumont"
 
 msgid "Check ODF for HW1-compatibility"
-msgstr ""
+msgstr "Revisar si el ODF es compatible con HW1"
 
 #, fuzzy
 msgid "Check for updates at startup"
-msgstr "Verificar en inicio"
+msgstr "Comprobar actualizaciones al iniciar"
 
 msgid "Check on startup"
-msgstr "Verificar en inicio"
+msgstr "Comprobar al iniciar"
 
 #, c-format
 msgid "ChurchName missing in organ definition %s"
-msgstr ""
+msgstr "Falta ChurchName en la definición de órgano %s"
 
 msgid "Combination Setter"
 msgstr "Configurador de Combinaciones"
 
 #, fuzzy
 msgid "Combination files (*.yaml)|*.yaml"
-msgstr "Archivos de configuraciones (*.cmb)|*.cmb"
+msgstr "Archivos de combinación (*.yaml)|*.yaml"
 
 #, fuzzy
 msgid "Combinations"
-msgstr "Importar Combinaciones"
+msgstr "Combinaciones"
 
 #, fuzzy
 msgid "Combinations files (*.yaml)|*.yaml|Settings files (*.cmb)|*.cmb"
-msgstr "Archivos de configuraciones (*.cmb)|*.cmb"
+msgstr "Archivos de combinación (*.yaml)|*.yaml|Archivos de configuración (*.cmb)|*.cmb"
 
 #, fuzzy
 msgid "Combinations:"
-msgstr "Importar Combinaciones"
+msgstr "Combinaciones:"
 
 msgid "Compress cache"
 msgstr "Comprimir caché"
 
 #, c-format
 msgid "Config entry without any group at line %d"
-msgstr ""
+msgstr "Entrada de configuración sin grupo en la linea %d"
 
 msgid ""
 "Copyright 2006 Milan Digital Audio LLC\n"
@@ -1021,6 +1022,10 @@ msgid ""
 "\n"
 "This software comes with no warranty"
 msgstr ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2024 Colaboradores de GrandOrgue\n"
+"\n"
+"Este software se publica sin garantía"
 
 msgid "Cores used at loadtime:"
 msgstr "Núcleos utilizados en la carga:"
@@ -1038,7 +1043,7 @@ msgstr "No se ha podido borrar '%s'"
 
 #, c-format
 msgid "Could not write to '%s'"
-msgstr "No se ha podido escribir a '%s'"
+msgstr "No se ha podido escribir en '%s'"
 
 msgid "Couperin"
 msgstr "Couperin"
@@ -1065,10 +1070,10 @@ msgid "Creating sample cache"
 msgstr "Creando caché de muestras"
 
 msgid "Creating the cache failed"
-msgstr ""
+msgstr "Fallo en la creación de caché"
 
 msgid "Crescendo"
-msgstr ""
+msgstr "Crescendo"
 
 msgid "Crescendo Pedal"
 msgstr "Pedal de crescendo"
@@ -1117,19 +1122,19 @@ msgid "Delete &cache(s)"
 msgstr "Borrar &Caché..."
 
 msgid "Delete &preset(s)"
-msgstr ""
+msgstr "Borrar &preconfiguración(es)"
 
 #, fuzzy
 msgid "Delete Organ Packages"
-msgstr "Paquetes de órgano"
+msgstr "Borrar paquetes de órgano"
 
 #, fuzzy
 msgid "Delete Organs"
-msgstr "Borrar"
+msgstr "Borrar órganos"
 
 #, fuzzy, c-format
 msgid "Delete file %s"
-msgstr "Falló al abrir el archivo '%s'"
+msgstr "Borrar archivo '%s'"
 
 msgid "Desired latency:"
 msgstr "Latencia deseada:"
@@ -1151,50 +1156,50 @@ msgstr ""
 
 #, fuzzy
 msgid "Device matching properties"
-msgstr "Propiedades de MIDI"
+msgstr ""
 
 #, c-format
 msgid "Device: %s [%d ms requested]"
-msgstr ""
+msgstr "Dispositivo: %s [%d ms solicitados]"
 
 msgid "Direct Sound:"
 msgstr "Sonido directo:"
 
 msgid "Disabled"
-msgstr ""
+msgstr "Desactivado"
 
 msgid "Discard"
-msgstr ""
+msgstr "Descartar"
 
 msgid "Distribute audio groups"
-msgstr ""
+msgstr "Distribuir grupos de audio"
 
 msgid "Divisional"
-msgstr ""
+msgstr "Divisional"
 
 msgid "Divisional Coupler"
-msgstr ""
+msgstr "Acoplador de divisionales"
 
 msgid "Divisionals"
-msgstr ""
+msgstr "Divisionales"
 
 #, c-format
 msgid "Do you want to delete organs%s%s?"
-msgstr ""
+msgstr "¿Quiere borrar los órganos%s%s?"
 
 msgid "Don't load"
-msgstr "No cargarlas"
+msgstr "No cargar"
 
 #, fuzzy
 msgid "Download"
-msgstr "No cargarlas"
+msgstr "Descargar"
 
 msgid "Drawstop"
 msgstr "Tirador"
 
 #, c-format
 msgid "Drawstop %s can't reference to itself"
-msgstr ""
+msgstr "El tirador %s no puede autoreferenciarse"
 
 #, c-format
 msgid "Duplicate combination entry %s in %s"
@@ -1202,28 +1207,28 @@ msgstr "Entrada de combinación duplicada %s en %s"
 
 #, c-format
 msgid "Duplicate entry in section %s at line %d: %s"
-msgstr ""
+msgstr "Entrada duplicada en la sección %s, línea %d: %s"
 
 #, c-format
 msgid "Duplicate entry: %s"
-msgstr ""
+msgstr "Entrada duplicada: %s"
 
 #, c-format
 msgid "Duplicate file '%s'"
-msgstr ""
+msgstr "Archivo duplicado '%s'"
 
 #, c-format
 msgid "Duplicate group at line %d: %s"
-msgstr ""
+msgstr "Grupo duplicado en la línea %d: %s"
 
 msgid "E"
 msgstr ""
 
 msgid "E&xit"
-msgstr "Salir"
+msgstr "&Salir"
 
 msgid "Element"
-msgstr ""
+msgstr "Elemento"
 
 msgid "Element already in the pool"
 msgstr ""
@@ -1236,31 +1241,31 @@ msgid "Enable Convolution Reverb"
 msgstr "Habilitar Reverberación de Circunvolución"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Activado"
 
 msgid "Enclosure"
-msgstr "Pedal"
+msgstr "Caja"
 
 msgid "Enclosure 1"
-msgstr "Pedal 1"
+msgstr "Caja 1"
 
 msgid "Enclosure 2"
-msgstr "Pedal 2"
+msgstr "Caja 2"
 
 msgid "Enclosure 3"
-msgstr "Pedal 3"
+msgstr "Caja 3"
 
 msgid "Enclosure 4"
-msgstr "Pedal 4"
+msgstr "Caja 4"
 
 msgid "Enclosure 5"
-msgstr "Pedal 5"
+msgstr "Caja 5"
 
 msgid "Enclosure 6"
-msgstr "Pedal 6"
+msgstr "Caja 6"
 
 msgid "Enclosures"
-msgstr "Pedales"
+msgstr "Cajas"
 
 #, c-format
 msgid "End of track marker missing at offset %d"
@@ -1279,7 +1284,7 @@ msgid "Error decoding a track"
 msgstr "Error decodificanto una pista"
 
 msgid "Event-&No"
-msgstr "Evento-&nº"
+msgstr "&Núm de evento"
 
 #, c-format
 msgid "Events after end of track marker at %d"
@@ -1293,21 +1298,21 @@ msgstr ""
 
 #, fuzzy
 msgid "Exit GrandOrgue"
-msgstr "GrandOrgue"
+msgstr "Salir de GrandOrgue"
 
 #, fuzzy
 msgid "Export &Combinations"
-msgstr "Importar &Combinaciones"
+msgstr "Exportar &Combinaciones"
 
 #, fuzzy
 msgid "Export Combinations"
-msgstr "Importar Combinaciones"
+msgstr "Exportar Combinaciones"
 
 msgid "Export Settings"
-msgstr "Exportar Configuraciones"
+msgstr "Exportar Configuración"
 
 msgid "Export/import:"
-msgstr "Exportación/Importación:"
+msgstr "Exportar/importar:"
 
 msgid "F"
 msgstr "F"
@@ -1386,99 +1391,99 @@ msgstr "F9"
 
 #, fuzzy, c-format
 msgid "Failed creating organ package file %s"
-msgstr "Falló al abrir el paquete de órgano '%s' (%s)"
+msgstr "Fallo al crear el paquete de órgano %s"
 
 #, fuzzy, c-format
 msgid "Failed to check for updates: %s"
-msgstr "Falló al decodificar %s"
+msgstr "Fallo al comprobar actualizaciones: %s"
 
 #, c-format
 msgid "Failed to create directory '%s'"
-msgstr "Falló al crear el directorio '%s'"
+msgstr "Fallo al crear el directorio '%s'"
 
 #, c-format
 msgid "Failed to decode %s"
-msgstr "Falló al decodificar %s"
+msgstr "Fallo al decodificar %s"
 
 #, fuzzy, c-format
 msgid "Failed to decode WavePack data: %s"
-msgstr "Falló al decodificar WavePack data"
+msgstr "Fallo al decodificar datos de WavePack"
 
 #, c-format
 msgid "Failed to decode file '%s'"
-msgstr "Falló al decodificar el archivo '%s'"
+msgstr "Fallo al decodificar el archivo '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to decompress file '%s'"
-msgstr "Falló al decodificar el archivo '%s'"
+msgstr "Fallo al descomprimir el archivo '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to export combinations to '%s': %s"
-msgstr "Falló al exportar configuraciones a '%s'"
+msgstr "Fallo al exportar configuración a '%s': %s"
 
 #, c-format
 msgid "Failed to export settings to '%s'"
-msgstr "Falló al exportar configuraciones a '%s'"
+msgstr "Fallo al exportar configuración a '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to find organ package %s"
-msgstr "Falló al abrir el paquete de órgano '%s'"
+msgstr "Fallo al buscar el paquete de órgano '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to index organ package %s"
-msgstr "Falló al abrir el paquete de órgano '%s'"
+msgstr "Fallo al indexar el paquete de órgano '%s'"
 
 #, c-format
 msgid "Failed to load %s"
-msgstr "Falló al cargar %s"
+msgstr "Fallo al cargar %s"
 
 #, c-format
 msgid "Failed to load file '%s' into the memory"
-msgstr "Falló al cargar el archivo '%s' a la memoria"
+msgstr "Fallo al cargar el archivo '%s' a la memoria"
 
 #, fuzzy, c-format
 msgid "Failed to load organ package %s"
-msgstr "Falló al abrir el paquete de órgano '%s'"
+msgstr "Fallo al cargar el paquete de órgano '%s'"
 
 #, c-format
 msgid "Failed to open %s"
-msgstr "Falló al abrir %s"
+msgstr "Fallo al abrir %s"
 
 #, c-format
 msgid "Failed to open '%s'"
-msgstr "Falló al abrir '%s'"
+msgstr "Fallo al abrir '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to open '%s': %s"
-msgstr "Falló al abrir '%s'"
+msgstr "Fallo al abrir '%s': %s
 
 #, fuzzy, c-format
 msgid "Failed to open archive %s"
-msgstr "Falló al abrir el archivo '%s'"
+msgstr "Fallo al abrir el archivo '%s'"
 
 #, c-format
 msgid "Failed to open file '%s'"
-msgstr "Falló al abrir el archivo '%s'"
+msgstr "Fallo al abrir el archivo '%s'"
 
 #, c-format
 msgid "Failed to open organ package '%s' (%s)"
-msgstr "Falló al abrir el paquete de órgano '%s' (%s)"
+msgstr "Fallo al abrir el paquete de órgano '%s' (%s)"
 
 #, c-format
 msgid "Failed to open the graphic '%s'"
-msgstr "Falló al abrir el gráfico '%s'"
+msgstr "Fallo al abrir el gráfico '%s'"
 
 #, c-format
 msgid "Failed to open the organ package '%s'"
-msgstr "Falló al abrir el paquete de órgano '%s'"
+msgstr "Fallo al abrir el paquete de órgano '%s'"
 
 #, c-format
 msgid "Failed to parse '%s'"
-msgstr ""
+msgstr "Fallo al leer '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to parse organ definition %s"
-msgstr "Falló al leer el contenido de %s"
+msgstr "Fallo al leer la definición de órgan %s"
 
 #, c-format
 msgid "Failed to parse the organ package index of '%s'"
@@ -1486,46 +1491,46 @@ msgstr ""
 
 #, fuzzy, c-format
 msgid "Failed to read %s from the organ package"
-msgstr "Falló al abrir el paquete de órgano '%s'"
+msgstr "Fallo al leer %s del paquete de órgano"
 
 #, c-format
 msgid "Failed to read '%s'"
-msgstr "Falló al leer '%s'"
+msgstr "Fallo al leer '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to read '%s': %s"
-msgstr "Falló al leer '%s'"
+msgstr "Fallo al leer '%s': %s
 
 #, fuzzy
 msgid "Failed to read cache directory"
-msgstr "Falló al crear el directorio '%s'"
+msgstr "Fallo al leer el directorio de caché '%s'"
 
 #, c-format
 msgid "Failed to read content of %s"
-msgstr "Falló al leer el contenido de %s"
+msgstr "Fallo al leer el contenido de %s"
 
 #, c-format
 msgid "Failed to read directory '%s'"
-msgstr ""
+msgstr "Fallo al leer el directorio '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to read file %s"
-msgstr "Falló al leer el archivo '%s'"
+msgstr "Fallo al leer el archivo %s"
 
 #, c-format
 msgid "Failed to read file '%s'"
-msgstr "Falló al leer el archivo '%s'"
+msgstr "Fallo al leer el archivo '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to read wav file %s: %s"
-msgstr "Falló al leer el archivo '%s'"
+msgstr "Fallo al leer el archivo wav %s: %s"
 
 msgid "Failed to save the organ setting"
-msgstr ""
+msgstr "Fallo al guardar la configuración del órgano"
 
 #, fuzzy, c-format
 msgid "Failed to write %s to the organ package"
-msgstr "Falló al abrir el paquete de órgano '%s'"
+msgstr "Fallo al escribir %s en el paquete de órgano"
 
 #, c-format
 msgid "Failed to write content to '%s'"
@@ -1537,7 +1542,7 @@ msgstr ""
 
 #, fuzzy
 msgid "Failed writing the package directory"
-msgstr "Directorio de paquetes del órgano:"
+msgstr "Fallo al escribir el directorio del paquete"
 
 msgid "Failed writing the package index file"
 msgstr ""
@@ -1547,7 +1552,7 @@ msgstr ""
 
 #, fuzzy, c-format
 msgid "File %s is not found in the organ package archives"
-msgstr "Falló al abrir el paquete de órgano '%s'"
+msgstr "No se ha encontrado el archivo %s en los archivos de paquete de órgano"
 
 #, c-format
 msgid "File '%s' does not exist"
@@ -1614,13 +1619,13 @@ msgid "Garbage detected in the MIDI file"
 msgstr "Se ha detectado basura en el archivo MIDI"
 
 msgid "General"
-msgstr ""
+msgstr "General"
 
 msgid "Generals"
-msgstr ""
+msgstr "Generales"
 
 msgid "Globals"
-msgstr ""
+msgstr "Globales"
 
 msgid "Gottfried Silbermann nr 1"
 msgstr "Gottfried Silbermann nº 1"
@@ -1641,14 +1646,14 @@ msgstr "GrandOrgue %s - Software de Órgano de Tubos Virtual"
 
 #, fuzzy
 msgid "GrandOrgue - virtual pipe organ sample player"
-msgstr "GrandOrgue %s - Software de Órgano de Tubos Virtual"
+msgstr "GrandOrgue - Reproductor de muestras de órgano de tubos virtual"
 
 msgid "GrandOrgue MIDI Player"
 msgstr "Reproductor MIDI de GrandOrgue"
 
 #, fuzzy, c-format
 msgid "GrandOrgueTool %s"
-msgstr "GrandOrgue %s"
+msgstr "GrandOrgueTool %s"
 
 msgid "Group"
 msgstr "Grupo"
@@ -1657,7 +1662,7 @@ msgid "H"
 msgstr "H"
 
 msgid "H&ighest velocity:"
-msgstr "Mayor veloc&idad:"
+msgstr "Veloc&idad más alta:"
 
 msgid "Harpsichord/Piano/Monochord"
 msgstr "Clave/Piano/Monocordio"
@@ -1687,8 +1692,7 @@ msgid "INCOMPLETE - "
 msgstr "INCOMPLETO - "
 
 msgid "Ignore pitch info in organ samples wav files"
-msgstr ""
-"Ignorar la información de pitch en los archivos wav de muestras de órgano"
+msgstr "Ignorar la información de pitch en los archivos wav de muestras de órgano"
 
 msgid "Import"
 msgstr "Importar"
@@ -1700,11 +1704,11 @@ msgid "Import Combinations"
 msgstr "Importar Combinaciones"
 
 msgid "Import Settings"
-msgstr "Importar Configuraciones"
+msgstr "Importar Configuración"
 
 #, fuzzy, c-format
 msgid "Impulse response file '%s' not found"
-msgstr "Respuesta al impulso:"
+msgstr "Archivo de respuesta al impulso '%s' no encontradio"
 
 msgid "Impulse response:"
 msgstr "Respuesta al impulso:"
@@ -1741,7 +1745,7 @@ msgstr ""
 
 #, fuzzy, c-format
 msgid "Inconsitant WavPack file: %s"
-msgstr "Archivo WavPack inconsistente"
+msgstr "Archivo WavPack inconsistente: %s"
 
 #, c-format
 msgid "Incorrect case for section '%s' entry '%s'"
@@ -1756,18 +1760,18 @@ msgstr ""
 
 #, fuzzy, c-format
 msgid "InfoFilename %s either does not exist or is not a html file"
-msgstr "InfoFilename no apunta a un archivo html"
+msgstr "InfoFilename %s no existe o no es un archivo html"
 
 msgid "Initial MIDI"
 msgstr "MIDI inicial"
 
 #, c-format
 msgid "Initial MIDI settings for %s"
-msgstr "Configuraciones MIDI iniciales para %s"
+msgstr "Configuración MIDI inicial para %s"
 
 #, fuzzy, c-format
 msgid "Input directory %s not found"
-msgstr "Registro de final de Zip64 no encontrado"
+msgstr "No se ha encontrado el directorio de entrada %s"
 
 msgid "Insert"
 msgstr "Insertar"
@@ -1784,15 +1788,15 @@ msgstr "Entrada de configuración no válida en la línea %d: %s"
 
 #, fuzzy, c-format
 msgid "Invalid RIFF file: %s"
-msgstr "< Archivo RIFF no válido"
+msgstr "Archivo RIFF no válido: %s"
 
 #, fuzzy, c-format
 msgid "Invalid RIFF/WAVE file: %s"
-msgstr "< Archivo RIFF/WAVE no válido"
+msgstr "Archivo RIFF/WAVE no válido: %s"
 
 #, fuzzy, c-format
 msgid "Invalid WAV file: %s"
-msgstr "<Archivo WAV no soportado"
+msgstr "Archivo WAV inválido: %s"
 
 #, c-format
 msgid "Invalid boolean value at section '%s' entry '%s': %s"
@@ -1848,11 +1852,11 @@ msgstr "Definición de bucle no válida"
 
 #, fuzzy, c-format
 msgid "Invalid loop in the file: %s\n"
-msgstr "Definición de bucle no válida"
+msgstr "Bucle no válida en el archivo: %s\n"
 
 #, fuzzy, c-format
 msgid "Invalid manual number %s"
-msgstr "Número de canales no válido"
+msgstr "Número de manual no válido %s"
 
 msgid "Invalid object type for reversible piston"
 msgstr ""
@@ -1865,10 +1869,10 @@ msgstr "Referencia no válida "
 
 #, fuzzy
 msgid "Invalid regex"
-msgstr "Dispositivo no válido"
+msgstr "Regex invalida"
 
 msgid "Invalid release end position"
-msgstr "Posición no válida de fin de decaimiento no válido"
+msgstr "Posición de fin de decaimiento no válida"
 
 msgid "Invalid release position"
 msgstr "Posición de decaimiento no válida"
@@ -1934,28 +1938,28 @@ msgid "Lambert (1774) 1/7 comma"
 msgstr "Lambert (1774) 1/7 de coma"
 
 msgid "Last track is missing the end marker"
-msgstr ""
+msgstr "La última pista no tiene un marcador de final"
 
 msgid "Length:"
-msgstr "Longitud:"
+msgstr "Duración:"
 
 msgid "Linear"
 msgstr "Linear"
 
 #, fuzzy
 msgid "Load &MIDI\tCtrl+P"
-msgstr "Reproducir &MIDI\tCtrl+P"
+msgstr "Cargar &MIDI\tCtrl+P"
 
 msgid "Load &stereo samples in:"
 msgstr "Cargar muestras &stereo en:"
 
 #, fuzzy
 msgid "Load MIDI file"
-msgstr "Cargar MIDI"
+msgstr "Cargar archivo MIDI"
 
 msgid "Load aborted by the user - only parts of the organ are loaded."
 msgstr ""
-"Proceso de carga cancelado por el usuario - se han cargado sólo partes del "
+"Proceso de carga cancelado por el usuario - se han cargado sólo algunas partes del "
 "órgano."
 
 msgid "Load error"
@@ -1963,18 +1967,18 @@ msgstr "Error de carga"
 
 #, fuzzy
 msgid "Load file"
-msgstr "Cargando archivo %s"
+msgstr "Cargar archivo"
 
 #, fuzzy
 msgid "Load first favorit organ at startup"
-msgstr "Cargar el último archivo al inicio"
+msgstr "Cargar el primer órgano favorito al iniciar"
 
 msgid "Load just GUI. Not to load any sound samples"
 msgstr ""
 
 #, fuzzy
 msgid "Load last used organ at startup"
-msgstr "Cargar el último archivo al inicio"
+msgstr "Cargar el último órgano usado al iniciar"
 
 msgid "Loading sample set"
 msgstr "Cargando el set de muestras"
@@ -2048,10 +2052,10 @@ msgstr "Grabación MIDI:"
 
 #, fuzzy
 msgid "MIDI event: "
-msgstr "Evento MIDI"
+msgstr "Evento MIDI: "
 
 msgid "MIDI file type 0 only supports one track"
-msgstr "El archivo MIDI tipo 0 sólo soporta una pista"
+msgstr "El archivo MIDI tipo 0 solo soporta una pista"
 
 msgid "MIDI file type 1 has not tracks"
 msgstr "El archivo MIDI tipo 1 no tiene pistas"
@@ -2072,11 +2076,11 @@ msgstr "Dispositivos de salida MIDI"
 
 #, fuzzy
 msgid "MIDI playing time"
-msgstr "Reproductor MIDI:"
+msgstr "Tiempo de reproducción MIDI"
 
 #, fuzzy
 msgid "MIDI recording time"
-msgstr "Grabación MIDI:"
+msgstr "Tiempo de grabación MIDI"
 
 msgid "MIDI recording:"
 msgstr "Grabación MIDI:"
@@ -2119,26 +2123,26 @@ msgstr ""
 
 #, c-format
 msgid "Manual %d: Tremulant%03d already in use"
-msgstr "Teclado %d: Tremolo%03d ya en uso"
+msgstr "Manual %d: Tremolo%03d ya en uso"
 
 msgid "Manual 1"
-msgstr "Teclado 1"
+msgstr "Manual 1"
 
 msgid "Manual 2"
-msgstr "Teclado 2"
+msgstr "Manual 2"
 
 msgid "Manual 3"
-msgstr "Teclado 3"
+msgstr "Manual 3"
 
 msgid "Manual 4"
-msgstr "Teclado 4"
+msgstr "Manual 4"
 
 msgid "Manual 5"
-msgstr "Teclado 5"
+msgstr "Manual 5"
 
 #, fuzzy
 msgid "Manual Tuning (Cent):"
-msgstr "Afinación (Cents):"
+msgstr "Afinación manual (Cents):"
 
 #, c-format
 msgid "Manual key %d outside of the bounding box"
@@ -2210,13 +2214,13 @@ msgid "Measure -"
 msgstr ""
 
 msgid "Memory Level"
-msgstr "Nivel de Memoria"
+msgstr "Nivel de memoria"
 
 msgid "Memory Limit (MB):"
-msgstr "Límite de Memoria (MB):"
+msgstr "Límite de memoria (MB):"
 
 msgid "Memory Set"
-msgstr "Configurar memorias"
+msgstr ""
 
 #, c-format
 msgid "Memory mapping of the cache file failed with error code %d"
@@ -2224,14 +2228,14 @@ msgstr ""
 
 #, c-format
 msgid "Memory pool is full: %llu of %llu used"
-msgstr "El agrupamiento de memoria está lleno: %llu de %llu usado"
+msgstr "La memoria asignada está llena: %llu de %llu en uso"
 
 msgid "Memory pool size"
-msgstr "Tamaño del agrupamiento de memoria"
+msgstr "Tamaño de la memoria asignada"
 
 #, fuzzy
 msgid "Memory usage:"
-msgstr "Configurar memorias"
+msgstr "Uso de memoria:"
 
 msgid "Mercadier's well-temperament"
 msgstr "Buen temperamento de Mercadier"
@@ -2247,17 +2251,17 @@ msgstr "Mesotónico de Mersenne mejorado 1"
 
 #, fuzzy
 msgid "Metronom measure"
-msgstr "Metrónomo"
+msgstr ""
 
 msgid "Metronome"
 msgstr "Metrónomo"
 
 #, fuzzy
 msgid "Metronome BPM"
-msgstr "Metrónomo"
+msgstr "PPM del metrónomo"
 
 msgid "Midi &ports"
-msgstr "MIDI puertos"
+msgstr "&Puertos MIDI"
 
 #, fuzzy
 msgid "Midi player:"
@@ -2278,8 +2282,7 @@ msgid "Missing required value section '%s' entry '%s'"
 msgstr "Falta el valor requerido en la sección '%s' entrada '%s'"
 
 msgid "Mixing of percussive and non-percussive samples in one pipe not allowed"
-msgstr ""
-"No está permitido mezclar muestras percusivas y no percusivas en un tubo"
+msgstr "No está permitido mezclar muestras percusivas y no percusivas en un tubo"
 
 msgid "Mod. Silbermann nr 2"
 msgstr "Mod. Silbermann nº 2"
@@ -2314,7 +2317,7 @@ msgstr ""
 
 #, fuzzy
 msgid "NRPN On/Off Toggle"
-msgstr "NRPN Off"
+msgstr ""
 
 msgid "NRPN Range"
 msgstr ""
@@ -2349,11 +2352,11 @@ msgstr "Nuevo nombre de grupo de audio"
 
 #, fuzzy
 msgid "New release available"
-msgstr "Dispositivo no disponible"
+msgstr "Nueva versión disponible"
 
 #, c-format
 msgid "New version: %s"
-msgstr ""
+msgstr "Nueva versión: %s"
 
 msgid "Next"
 msgstr "Siguiente"
@@ -2363,7 +2366,7 @@ msgstr "Siguiente memoria"
 
 #, fuzzy
 msgid "Next file"
-msgstr "Siguiente"
+msgstr "Siguiente archivo"
 
 msgid "Next temperament"
 msgstr "Siguiente temperamento"
@@ -2373,7 +2376,7 @@ msgstr "No"
 
 #, fuzzy
 msgid "No active MIDI input devices"
-msgstr "Dispositivos de entrada MIDI"
+msgstr "No hay dispositivos de entrada MIDI activos"
 
 msgid "No audio group selected"
 msgstr "Ningún grupo de audio seleccionado"
@@ -2386,11 +2389,11 @@ msgstr "No se ha encontrado registro de final"
 
 #, fuzzy
 msgid "No function selected"
-msgstr "Ningún grupo de audio seleccionado"
+msgstr "Ninguna función seleccionada"
 
 #, fuzzy
 msgid "No input directory specified"
-msgstr "Directorio '%s' no vacío"
+msgstr ""
 
 msgid "No loop found"
 msgstr "Ningún bucle encontrado"
@@ -2405,7 +2408,7 @@ msgstr "Ninguna rutina callback especificada"
 
 #, fuzzy, c-format
 msgid "No samples found: %s"
-msgstr "Ninguna muestra encontrada"
+msgstr "No se han encontrado muestras: %s"
 
 msgid "No sound output occurring"
 msgstr "Ninguna salida de audio resultante"
@@ -2415,7 +2418,7 @@ msgid ""
 "No sound output will happen. Samples per buffer has been changed by the "
 "sound driver to %d"
 msgstr ""
-"No resultará ninguna salida de audio. Las muestras por buffer han sido "
+"No se producirá ninguna salida de audio. Las muestras por buffer han sido "
 "cambiadas por el controlador de sonido a %d"
 
 #, fuzzy
@@ -2437,7 +2440,7 @@ msgstr ""
 
 #, fuzzy, c-format
 msgid "Not a RIFF file: %s"
-msgstr "< No es archivo RIFF"
+msgstr "No es archivo RIFF: %s"
 
 #, c-format
 msgid "Not recognized MIDI chunk at offset %d"
@@ -2448,7 +2451,7 @@ msgstr ""
 
 #, fuzzy
 msgid "Not supported event"
-msgstr "ZIP usa características no soportadas"
+msgstr "Evento sin soporte"
 
 #, c-format
 msgid "Number %s contains locale dependent floating point"
@@ -2476,16 +2479,16 @@ msgid "On"
 msgstr "On"
 
 msgid "Only non-splitted ZIP archives are supported"
-msgstr "Sólo son soportados archivos ZIP no partidos"
+msgstr "Solo son soportados archivos ZIP no partidos"
 
 msgid "Only non-splitted ZIP64 archives are supported"
-msgstr "Sólo son soportados archivos ZIP64 no partidos"
+msgstr "Solo son soportados archivos ZIP64 no partidos"
 
 msgid "Only non-splitted archive is supported"
-msgstr "Sólo son soportados archivos no partidos"
+msgstr "Solo son soportados archivos no partidos"
 
 msgid "Only stored compression supported"
-msgstr "Sólo es soportada la compresión almacenada"
+msgstr "Solo es soportada la compresión almacenada"
 
 msgid "Open &Recent"
 msgstr "Abrir &Reciente"
@@ -2502,15 +2505,15 @@ msgstr "Opciones"
 
 #, c-format
 msgid "Organ %s changed its name"
-msgstr "El órgano %s ha cambiado su nombre"
+msgstr "El órgano %s ha cambiado de nombre"
 
 #, c-format
 msgid "Organ %s changed its organ builder"
-msgstr "El órgano %s ha cambiado el organero"
+msgstr "El órgano %s ha cambiado de organero"
 
 #, c-format
 msgid "Organ %s changed its recording details"
-msgstr "El órgano %s ha cambiado los detalles de grabación"
+msgstr "El órgano %s ha cambiado de detalles de grabación"
 
 msgid "Organ &Properties"
 msgstr "&Propiedades del Órgano"
@@ -2519,25 +2522,25 @@ msgid "Organ Properties"
 msgstr "Propiedades del órgano"
 
 msgid "Organ cache:"
-msgstr "Caché de órganos:"
+msgstr "Caché del órgano:"
 
 msgid "Organ dialog"
-msgstr "Diálogo del órgano"
+msgstr "Opciones de órgano"
 
 #, fuzzy
 msgid "Organ hash:"
-msgstr "Caché de órganos:"
+msgstr "Hash del órgano"
 
 msgid "Organ package"
 msgstr "Paquete de órgano"
 
 #, c-format
 msgid "Organ package %s changed its title"
-msgstr "El paquete del órgano %s ha cambiado su título"
+msgstr "El paquete del órgano %s ha cambiado de título"
 
 #, fuzzy
 msgid "Organ package (*.orgue)"
-msgstr "Paquete de órgano (*.orgue)|*.orgue"
+msgstr "Paquete de órgano (*.orgue)"
 
 msgid "Organ packages"
 msgstr "Paquetes de órganos"
@@ -2550,10 +2553,10 @@ msgid "Organ path"
 msgstr "Caché de órganos:"
 
 msgid "Organ settings"
-msgstr "Configuraciones del órgano"
+msgstr "Configuración del órgano"
 
 msgid "Organ settings:"
-msgstr "Configuraciones de órganos:"
+msgstr "Configuración de órganos:"
 
 msgid "Organs"
 msgstr "Órganos"
@@ -2574,8 +2577,8 @@ msgid ""
 "Out of memory - only parts of the organ are loaded. Please reduce memory "
 "footprint via the sample loading settings."
 msgstr ""
-"Sin memoria - se han cargado sólo algunas partes del órgano. Reduzca el uso "
-"de memoria en las configuraciones de carga de muestras."
+"Sin memoria - se han cargado solo algunas partes del órgano. Reduzca el uso "
+"de memoria en la configuración de carga de muestras."
 
 #, c-format
 msgid "Out of range value at section '%s' entry '%s': %f"
@@ -2616,19 +2619,19 @@ msgstr ""
 
 #, fuzzy
 msgid "Package hash:"
-msgstr "Paquetes"
+msgstr "Hash del paquete:"
 
 #, fuzzy
 msgid "Package id:"
-msgstr "Paquetes"
+msgstr "Id del paquete:"
 
 #, fuzzy
 msgid "Package info:"
-msgstr "Paquetes"
+msgstr "Información del paquete:"
 
 #, fuzzy
 msgid "Package name:"
-msgstr "Paquetes"
+msgstr "Nombre del paquete:"
 
 #, c-format
 msgid "PackageID %s added more than once"
@@ -2651,7 +2654,7 @@ msgstr "Ruta"
 
 #, fuzzy
 msgid "Path in package:"
-msgstr "Paquetes de órganos:"
+msgstr "Ruta del paquete:"
 
 msgid "Paths"
 msgstr "Rutas"
@@ -2663,37 +2666,37 @@ msgid "Perform strict ODF"
 msgstr "Interpretar ODF estricto"
 
 msgid "Physical device name:"
-msgstr ""
+msgstr "Nombre del dispositivo físico:"
 
 msgid "Physical name regex pattern:"
-msgstr ""
+msgstr "Patrón regex del nombre físico:"
 
 #, fuzzy
 msgid "Pipe organ simulator"
-msgstr "simulador de órgano de tubos virtual"
+msgstr "Simulador de órgano de tubos"
 
 msgid "Pipes"
-msgstr ""
+msgstr "Tubos"
 
 msgid "Piston"
-msgstr ""
+msgstr "Pistón"
 
 #, fuzzy
 msgid "Please apply or discard changes first"
-msgstr "Aplique los cambios primero"
+msgstr "Aplique o descarte los cambios primero"
 
 #, fuzzy, c-format
 msgid "Please enter a volume between %3.1f and %2.1f dB"
-msgstr "Introduzca un volumen entre -120 y 40 dB"
+msgstr "Introduzca un volumen entre %3.1f y %2.1f dB"
 
 msgid "Please enter new volume in dB:"
 msgstr "Introduzca el nuevo volumen en dB:"
 
 msgid "Please fully close the enclosure"
-msgstr "Cierre completamente el pedal"
+msgstr "Cierre completamente la caja"
 
 msgid "Please fully open the enclosure"
-msgstr "Abra totalmente el pedal"
+msgstr "Abra totalmente la caja"
 
 msgid "Please press the MIDI element"
 msgstr "Presione el elemento MIDI"
@@ -2714,7 +2717,7 @@ msgid "Please toggle it again (to off state, if possible)"
 msgstr "Por favor, cámbielo de nuevo (al estado \"off\", si es posible)"
 
 msgid "Polyphase"
-msgstr "Polyphase"
+msgstr "Polifase"
 
 msgid "Polyphony"
 msgstr "Polifonía"
@@ -2734,16 +2737,16 @@ msgstr "Anterior"
 
 #, fuzzy
 msgid "Prev file"
-msgstr "Anterior"
+msgstr "Archivo anterior"
 
 msgid "Prev temperament"
-msgstr "Anterior temperamento"
+msgstr "Temperamento anterior"
 
 msgid "Previous"
 msgstr "Anterior"
 
 msgid "Previous Memory"
-msgstr "Anterior memoria"
+msgstr "Memoria anterior"
 
 msgid "Program Settings"
 msgstr "Configuración del programa"
@@ -2771,7 +2774,7 @@ msgstr ""
 
 #, fuzzy
 msgid "REC File"
-msgstr "&Archivo"
+msgstr "Grabar en archivo"
 
 msgid "RPN"
 msgstr "RPN"
@@ -2814,10 +2817,10 @@ msgid "Ramos de Pareja 1482 - Monochord"
 msgstr "Ramos de Pareja 1482 - Monocordio"
 
 msgid "Randomize pipe speaking"
-msgstr "Aleatorizar el tono de las pipas"
+msgstr "Variar el tono de los tubos"
 
 msgid "Rank"
-msgstr "Fila"
+msgstr "Rango"
 
 msgid "Re&load"
 msgstr "Recargar"
@@ -2849,7 +2852,7 @@ msgstr "Detalles de la grabación"
 
 #, fuzzy
 msgid "Recording:"
-msgstr "Grabación"
+msgstr "Grabación:"
 
 msgid "ReferencePipe without Reference"
 msgstr ""
@@ -2865,11 +2868,11 @@ msgstr ""
 
 #, fuzzy
 msgid "Release Length is invalid"
-msgstr "La ganancia no es válida"
+msgstr "Duración del decaimiento inválida"
 
 #, fuzzy
 msgid "Release Tail Length (ms):"
-msgstr "Longitud de la cola de decaimiento"
+msgstr "Longitud del decaimiento (ms):"
 
 msgid "Release loading:"
 msgstr "Cargar decaimiento:"
@@ -2895,7 +2898,7 @@ msgid "Renamed file %s to %s"
 msgstr ""
 
 msgid "Resampling failed"
-msgstr "El remuestreo a fallado"
+msgstr "El remuestreo ha fallado"
 
 msgid "Reset to &Defaults"
 msgstr "Volver a valores por &defecto"
@@ -2913,7 +2916,7 @@ msgstr "Reverberación"
 
 #, fuzzy, c-format
 msgid "Reverb load error: %s"
-msgstr "Error de carga: %s"
+msgstr "Error de carga de reverberación: %s"
 
 #, c-format
 msgid "Reversible piston connect to a read-only object: %s"
@@ -2971,11 +2974,11 @@ msgid "Sample Size:"
 msgstr "Tamaño de muestra:"
 
 msgid "Sample channels:"
-msgstr "Canalos de muestra:"
+msgstr "Canales de muestra:"
 
 #, fuzzy
 msgid "Sample information"
-msgstr "Más información"
+msgstr "Información de la muestra"
 
 #, c-format
 msgid "Sample rate of device %s changed"
@@ -2983,7 +2986,7 @@ msgstr "Ha cambiado la frecuencia de muestreo del dispositivo %s"
 
 #, fuzzy
 msgid "Sample set definition files (*.organ)"
-msgstr "Archivos de definición de set de muestras (*.organ)|*.organ"
+msgstr "Archivos de definición de set de muestras (*.organ)"
 
 msgid "Sample size:"
 msgstr "Tamaño de la muestra:"
@@ -3008,19 +3011,19 @@ msgstr "Guardar como"
 
 #, fuzzy
 msgid "Save file"
-msgstr "Guardar como"
+msgstr "Guardar archivo"
 
 #, c-format
 msgid "Save of %s to the cache failed"
-msgstr "Falló la operación de guardado de %s al caché"
+msgstr "Fallo al guardar %s al caché"
 
 #, fuzzy
 msgid "Save organ settings"
-msgstr "Configuraciones del órgano"
+msgstr "Guardar configuración del órgano"
 
 #, fuzzy
 msgid "Save settings"
-msgstr "Configuraciones"
+msgstr "Guardar configuración"
 
 msgid "Scheffer (1748) modified, Sweden"
 msgstr "Scheffer (1748) modificado, Sweden"
@@ -3045,7 +3048,7 @@ msgstr ""
 
 #, c-format
 msgid "Section %s already in use"
-msgstr "Seción %s ya en uso"
+msgstr "Sección %s ya en uso"
 
 #, c-format
 msgid "Seek to offset %d in archive failed"
@@ -3059,27 +3062,27 @@ msgstr ""
 
 #, fuzzy
 msgid "Select directory for export/import organ combinations"
-msgstr "Seleccione directorio para sus paquetes de órganos"
+msgstr "Seleccione directorio para exportar/importar combinaciones de órgano"
 
 #, fuzzy
 msgid "Select directory for export/import organ settings"
-msgstr "Seleccione directorio para sus paquetes de órganos"
+msgstr "Seleccione directorio para exportar/importat configuraciones de órgano"
 
 #, fuzzy
 msgid "Select directory for load new organ packages from"
-msgstr "Seleccione directorio para sus paquetes de órganos"
+msgstr "Seleccione directorio desde donde cargar paquetes de órgano"
 
 #, fuzzy
 msgid "Select directory for open new organs at"
-msgstr "Seleccione directorio para sus paquetes de órganos"
+msgstr "Seleccione directorio en donde abrir nuevos órganos"
 
 #, fuzzy
 msgid "Select directory for storing organ cache"
-msgstr "Seleccione directorio para sus paquetes de órganos"
+msgstr "Seleccione directorio para guardar el caché del órgano"
 
 #, fuzzy
 msgid "Select directory for storing organ settings"
-msgstr "Seleccione directorio para sus paquetes de órganos"
+msgstr "Seleccione directorio para guardar las configuraciones de órgano"
 
 msgid "Select directory for the MIDI player"
 msgstr "Seleccione directorio para el reproductor MIDI"
@@ -3091,12 +3094,14 @@ msgid "Select directory for your audio recordings"
 msgstr "Seleccione directorio para sus grabaciones de audio"
 
 msgid "Select organ to load"
-msgstr "Seleccione órgano para cargar"
+msgstr "Seleccione un órgano para cargar"
 
 msgid ""
 "Select the corresponding MIDI output device for converting input events into "
 "output events"
 msgstr ""
+"Seleccione el dispositivo MIDI de salida correspondiente para convertir los eventos "
+"de entrada en eventos de salida"
 
 msgid "Self referencing organ package"
 msgstr ""
@@ -3105,10 +3110,10 @@ msgid "Send"
 msgstr "Enviar"
 
 msgid "Send Division Output"
-msgstr ""
+msgstr "Enviar salida de división"
 
 msgid "Send MIDI Recorder Output Stream to:"
-msgstr "Enviar Flujo de Output de la Grabadora MIDI a:"
+msgstr "Enviar flujo de salida de la grabadora MIDI a:"
 
 msgid "Sequencer"
 msgstr "Secuenciador"
@@ -3117,23 +3122,22 @@ msgid "Set"
 msgstr ""
 
 msgid "Settings"
-msgstr "Configuraciones"
+msgstr "Configuración"
 
 #, fuzzy
 msgid "Settings Reason"
-msgstr "Configuraciones"
+msgstr ""
 
 msgid "Settings files (*.cmb)|*.cmb"
-msgstr "Archivos de configuraciones (*.cmb)|*.cmb"
+msgstr "Archivos de configuración (*.cmb)|*.cmb"
 
 msgid "Shortcut"
-msgstr ""
+msgstr "Atajo"
 
 msgid ""
 "Should the audio config be reverted to the default stereo configuration?"
 msgstr ""
-"¿La configuración de audio debería revertirse a la configuración por defecto "
-"de stereo?"
+"¿Revertir la configuiración de audio a la configuración por defecto de stereo?"
 
 msgid "Single attack"
 msgstr "Un solo ataque"
@@ -3150,9 +3154,9 @@ msgid ""
 "Would you like to reload the sample set now?"
 msgstr ""
 "Algunos cambios en la configuración surtirán efecto cuando se vuelva a "
-"cargar el sample set.\n"
+"cargar el set de muestras.\n"
 "\n"
-"¿Le gustaría volver a cargar ahora el sample set?"
+"¿Quiere volver a cargar el set de muestras ahora?"
 
 msgid ""
 "Some selected objects have subobjects.\n"
@@ -3193,7 +3197,7 @@ msgid "Start offset:"
 msgstr "Offset de comienzo:"
 
 msgid "Start without any organ"
-msgstr ""
+msgstr "Iniciar sin ningún órgano"
 
 #, c-format
 msgid "Status byte missing at offset %d"
@@ -3201,7 +3205,7 @@ msgstr ""
 
 #, c-format
 msgid "Status: %s"
-msgstr ""
+msgstr "Estado: %s"
 
 msgid "Stereo"
 msgstr "Stereo"
@@ -3214,7 +3218,7 @@ msgstr "Registro"
 
 #, fuzzy
 msgid "Stops"
-msgstr "Registro"
+msgstr "Registros"
 
 #, c-format
 msgid "Strange boolean value for section '%s' entry '%s': %s"
@@ -3259,25 +3263,25 @@ msgid ""
 "The .cmb file does not exactly match the current ODF. Importing it can cause "
 "various problems. Should it really be imported?"
 msgstr ""
-"El ODF no se corresponde con el archivo de combinaciones. Su importación "
-"puede causar varios problemas. ¿Debería ser realmente importado?"
+"El archivo .cmb no se corresponde exactamente al ODF actual. Importarlo "
+"puede causar varios problemas. ¿Seguro que quiere importarlo?"
 
 msgid ""
 "The ODF contains GrandOrgue 0.2 styled saved settings. Should they be "
 "imported?"
 msgstr ""
 "El ODF contiene configuraciones guardadas al estilo de GrandOrgue 0.2. "
-"¿Deberían ser importadas?"
+"¿Seguro que quiere importarlas?"
 
 msgid "The cache for this organ is outdated. Please update or delete it."
 msgstr "El caché para este órgano está desactualizado. Actualícelo o bórrelo."
 
 msgid "The combination file does not exactly match the current ODF."
-msgstr ""
+msgstr "El archivo de combinaciones no se corresponde exactamente al ODF actual."
 
 #, fuzzy, c-format
 msgid "The file '%s' is not a GrandOrgue Combination file"
-msgstr "El ODF no se corresponde con el archivo de combinaciones."
+msgstr "El archivo '%s' no és un archivo de combinaciones de GrandOrgue."
 
 #, c-format
 msgid ""
@@ -3288,7 +3292,7 @@ msgstr ""
 
 #, fuzzy, c-format
 msgid "The loop %u is ignored: it is too short for crossfade"
-msgstr "Bucle demasiado corto para crossfade"
+msgstr "Bucle %u ignorado: demasiado corto para crossfade"
 
 #, c-format
 msgid ""
@@ -3303,7 +3307,7 @@ msgid ""
 "The organ settings have been modified\n"
 "Do you want to save them?"
 msgstr ""
-"Las configuraciones del órgano han sido modificadas. ¿Quiere guardar los "
+"La configuración del órgano ha sido modificada. ¿Quiere guardar los "
 "cambios?"
 
 #, c-format
@@ -3312,32 +3316,30 @@ msgstr ""
 
 #, fuzzy
 msgid "The regex does not match the physical device name"
-msgstr "El ODF no se corresponde con el archivo de combinaciones."
+msgstr "La regex no se corresponde al nombre del dispositivo físico."
 
 msgid "There are errors while loading the organ. See Log Messages."
-msgstr ""
+msgstr "Errores durante la carga del órgano. Ver los mensajes del registro"
 
 #, fuzzy, c-format
 msgid ""
 "This .cmb file was originally created for:\n"
 "%s"
 msgstr ""
-"Este archivo de combinaciones es compatible sólamente con:\n"
+"Este archivo .cmb se creó originalmente para:\n"
 "%s"
 
 #, fuzzy, c-format
 msgid "This combination file '%s' was originally made for another organ '%s'"
-msgstr ""
-"Este archivo de combinaciones es compatible sólamente con:\n"
-"%s"
+msgstr "Este archivo de combinaciones '%s' se creó originalmente para otro órgano '%s'"
 
 #, fuzzy, c-format
 msgid ""
 "This combination file '%s' was originally made for another organ '%s'. "
 "Importing it can cause various problems. Should it really be imported?"
 msgstr ""
-"El ODF no se corresponde con el archivo de combinaciones. Su importación "
-"puede causar varios problemas. ¿Debería ser realmente importado?"
+"Este archivo de combinaciones '%s' se creó originalmente para otro órgano '%s'. "
+"Importarlo puede causar varios problemas. ¿Seguro que quiere importarlo?"
 
 msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
 msgstr ""
@@ -3346,7 +3348,7 @@ msgid "Ticks per Measure:"
 msgstr "Partes por compás:"
 
 msgid "Title"
-msgstr "Nombre"
+msgstr "Título"
 
 msgid "Tone balance:"
 msgstr ""
@@ -3356,8 +3358,7 @@ msgid "ToneBalance value is invalid"
 msgstr "La afinación no es válida"
 
 msgid "Too many audio channels configured for the new audio interface"
-msgstr ""
-"Demasiados canales de audio configurados para la nueva interfaz de audio"
+msgstr "Demasiados canales de audio configurados para la nueva interfaz de audio"
 
 msgid "Tracker (ms):"
 msgstr ""
@@ -3370,7 +3371,7 @@ msgid "Trailing whitespace at section '%s' entry '%s': %s"
 msgstr ""
 
 msgid "Transpose"
-msgstr "Transpositor"
+msgstr "Transportar"
 
 msgid "Transpose +"
 msgstr "Transportar +"
@@ -3392,23 +3393,23 @@ msgstr "U.O."
 
 #, fuzzy, c-format
 msgid "Unable to delete file %s"
-msgstr "Falló al decodificar el archivo '%s'"
+msgstr "Fallo al borrar el archivo '%s'"
 
 #, c-format
 msgid "Unable to open file %s for writing"
-msgstr "Imposible de abrir archivo %s para escribir"
+msgstr "No se pudo abrir el archivo %s en modo de escritura"
 
 #, c-format
 msgid "Unable to read '%s'"
-msgstr "Imposible de leer '%s'"
+msgstr "No se pudo leer '%s'"
 
 #, fuzzy, c-format
 msgid "Unable to rename file %s to %s"
-msgstr "Imposible de abrir archivo %s para escribir"
+msgstr "No se pudo cambiar el nombre del archivo %s a %s"
 
 #, fuzzy, c-format
 msgid "Unexpected file in the cache directory: %s"
-msgstr "Falló al crear el directorio '%s'"
+msgstr "Archivo inesperado en el directorio de caché: '%s'"
 
 #, c-format
 msgid "Unknown MIDI file type %d"
@@ -3427,7 +3428,7 @@ msgstr "Atributos desconocidos"
 
 #, fuzzy
 msgid "Unknown exception"
-msgstr "Desconocido: "
+msgstr "Error desconocido"
 
 #, c-format
 msgid "Unknown extendend information %04x"
@@ -3438,7 +3439,7 @@ msgid "Unknown filetype %s"
 msgstr "Tipo de archivo MIDI %d desconocido"
 
 msgid "Unsupported channel count"
-msgstr ""
+msgstr "Cantidad de canales no soportada"
 
 msgid "Unsupported channel number"
 msgstr "Número de canal no soportado"
@@ -3448,15 +3449,15 @@ msgstr "Formato no soportado"
 
 #, c-format
 msgid "Unused CMB entry '%s'"
-msgstr ""
+msgstr "Entrada CMB '%s' sin usar"
 
 #, c-format
 msgid "Unused ODF entry '%s'"
-msgstr ""
+msgstr "Entrada ODF '%s' sin usar"
 
 #, fuzzy
 msgid "Update checker"
-msgstr "&Actualizar Caché..."
+msgstr "Comprobador de actualizaciones"
 
 msgid "User"
 msgstr "Usuario"
@@ -3469,7 +3470,7 @@ msgstr "Temperamento del usuario"
 
 #, c-format
 msgid "Using helpfile %s (search path: %s)"
-msgstr "Usando el archivo de ayuda %s (buscar ruta: %s)"
+msgstr "Usando el archivo de ayuda %s (ruta de búsqueda: %s)"
 
 msgid "Using more than one audio interface is currently not supported."
 msgstr "El uso de más de una interfaz de audio no está soportado actualmente."
@@ -3493,7 +3494,7 @@ msgid "Variable meantone 4"
 msgstr "Mesotónico variable 4"
 
 msgid "Various comma"
-msgstr "Varios comas"
+msgstr "Varias comas"
 
 msgid "Victorian temperament 1885"
 msgstr "Temperamento Victoriano 1885"
@@ -3517,7 +3518,7 @@ msgid "Wegscheider 20 note"
 msgstr ""
 
 msgid "Well tempered"
-msgstr "Buenos temperamentos"
+msgstr "Bien temperado"
 
 msgid "Werckmeister 4 (1691)"
 msgstr "Werckmeister 4 (1691)"
@@ -3539,13 +3540,13 @@ msgid "Windchest %d"
 msgstr "Fuelle %d"
 
 msgid "Windows left"
-msgstr "Windows izquierda"
+msgstr "Windows (izquierda)"
 
 msgid "Windows menu"
 msgstr "Menú de Windows"
 
 msgid "Windows right"
-msgstr "Windows derecha"
+msgstr "Windows (derecha)"
 
 msgid "Workload distribution:"
 msgstr "Distribución de cargas:"
@@ -3568,7 +3569,7 @@ msgid "Yes"
 msgstr "Sí"
 
 msgid "You are using the latest GrandOrgue version"
-msgstr ""
+msgstr "Está usando la última versión de GrandOrgue"
 
 msgid "Z"
 msgstr "Z"
@@ -3685,18 +3686,18 @@ msgid "coupler"
 msgstr "Acoplamiento"
 
 msgid "create"
-msgstr ""
+msgstr "crear"
 
 #, fuzzy
 msgid "create an organ package"
-msgstr "Instalar paquete de órgano"
+msgstr "crear paquete de órgano"
 
 #, fuzzy
 msgid "crescendo position"
-msgstr "Posición no válida de fin de decaimiento no válido"
+msgstr "posición de crescendo"
 
 msgid "current file name"
-msgstr ""
+msgstr "nombre de archivo actual"
 
 msgid "d"
 msgstr "re"
@@ -3718,10 +3719,10 @@ msgstr "eliminar"
 
 #, fuzzy
 msgid "depend on organ package"
-msgstr "Instalar paquete de órgano"
+msgstr "depender de paquete de órgano"
 
 msgid "displays help on the command line parameters"
-msgstr ""
+msgstr "muestra ayuda sobre los parámetros de la línea de comandos"
 
 msgid "divide"
 msgstr "dividir"
@@ -3731,7 +3732,7 @@ msgid "divisional bank for %s"
 msgstr ""
 
 msgid "divisional coupler"
-msgstr ""
+msgstr "acoplador divisional"
 
 msgid "down"
 msgstr "abajo"
@@ -3740,7 +3741,7 @@ msgid "e"
 msgstr "mi"
 
 msgid "enclosure not found"
-msgstr "pedal no encontrado"
+msgstr "caja no encontrada"
 
 msgid "end"
 msgstr "fin"
@@ -3759,11 +3760,11 @@ msgstr "fa#"
 
 #, fuzzy, c-format
 msgid "failed to compress data %s"
-msgstr "Falló al abrir %s"
+msgstr "fallo al comprimir los datos %s"
 
 #, fuzzy
 msgid "failed to create relative path"
-msgstr "Falló al crear el directorio '%s'"
+msgstr "fallo al crear el directorio relativo"
 
 msgid "g"
 msgstr "sol"
@@ -3791,7 +3792,7 @@ msgstr "i"
 
 #, fuzzy
 msgid "input-directory"
-msgstr "Directorio '%s' no vacío"
+msgstr ""
 
 msgid "insert"
 msgstr "insertar"
@@ -3801,7 +3802,7 @@ msgstr "izquierda"
 
 #, fuzzy
 msgid "licensed under the GNU GPLv2"
-msgstr "licenciado bajo la GNU GPLv2 (o posterior)"
+msgstr "licenciado bajo la GNU GPLv2"
 
 msgid "menu"
 msgstr "menú"
@@ -3847,114 +3848,114 @@ msgid "numpad 9"
 msgstr "numpad 9"
 
 msgid "numpad equal"
-msgstr "numpad igual"
+msgstr ""
 
 #, fuzzy
 msgid "o"
-msgstr "No"
+msgstr ""
 
 #, fuzzy
 msgid "o1"
-msgstr "1"
+msgstr ""
 
 #, fuzzy
 msgid "o10"
-msgstr "+10"
+msgstr ""
 
 #, fuzzy
 msgid "o2"
-msgstr "2"
+msgstr ""
 
 #, fuzzy
 msgid "o3"
-msgstr "3"
+msgstr ""
 
 #, fuzzy
 msgid "o4"
-msgstr "4"
+msgstr ""
 
 #, fuzzy
 msgid "o5"
-msgstr "5"
+msgstr ""
 
 #, fuzzy
 msgid "o6"
-msgstr "6"
+msgstr ""
 
 #, fuzzy
 msgid "o7"
-msgstr "7"
+msgstr ""
 
 #, fuzzy
 msgid "o8"
-msgstr "8"
+msgstr ""
 
 #, fuzzy
 msgid "o9"
-msgstr "9"
+msgstr ""
 
 #, c-format
 msgid "organ definition %s not found in organ package"
 msgstr ""
 
 msgid "organ file"
-msgstr ""
+msgstr "archivo de órgano"
 
 #, fuzzy
 msgid "organ name"
-msgstr "Caché de órganos:"
+msgstr "nombre del órgano:"
 
 #, fuzzy, c-format
 msgid "organ package %s created"
-msgstr "El paquete del órgano %s ha cambiado su título"
+msgstr "paquete de órgano %s creado"
 
 #, fuzzy
 msgid "organ package creation failed"
-msgstr "Directorio de paquetes del órgano:"
+msgstr "fallo al crear el paquete de órgano"
 
 #, fuzzy
 msgid "organ package title"
-msgstr "Paquete de órgano"
+msgstr "título del paquete de órgano"
 
 #, fuzzy
 msgid "organ pitch"
-msgstr "Caché de órganos:"
+msgstr ""
 
 #, fuzzy
 msgid "organ-package"
-msgstr "Paquete de órgano"
+msgstr ""
 
 #, fuzzy
 msgid "p1"
-msgstr "1"
+msgstr ""
 
 #, fuzzy
 msgid "p2"
-msgstr "2"
+msgstr ""
 
 #, fuzzy
 msgid "p3"
-msgstr "3"
+msgstr ""
 
 #, fuzzy
 msgid "p4"
-msgstr "4"
+msgstr ""
 
 #, fuzzy
 msgid "p5"
-msgstr "5"
+msgstr ""
 
 msgid "pagedown"
-msgstr "página abajo"
+msgstr ""
 
 msgid "pageup"
-msgstr "página arriba"
+msgstr ""
 
 msgid "pause"
-msgstr "pausa"
+msgstr ""
 
 msgid "print"
-msgstr "imprimir"
+msgstr ""
 
 #, c-format
 msgid "program change channel: %d key: %d "
@@ -3965,7 +3966,7 @@ msgstr ""
 
 #, fuzzy, c-format
 msgid "rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"
-msgstr "fila %s tubo %s: falta el decaimiento por defecto"
+msgstr "fila %s tubo %s: falta el ataque con MaxTimeSinceLastRelease=-1"
 
 #, c-format
 msgid "rank %s pipe %s: default release is missing"
@@ -3999,13 +4000,13 @@ msgstr "requiere '%s' "
 
 #, fuzzy
 msgid "reset"
-msgstr "Pr&eajustes"
+msgstr ""
 
 msgid "return"
-msgstr "return"
+msgstr ""
 
 msgid "right"
-msgstr "derecha"
+msgstr ""
 
 msgid "scroll"
 msgstr ""
@@ -4023,24 +4024,24 @@ msgid "snapshot"
 msgstr "instantánea"
 
 msgid "space"
-msgstr "espacio"
+msgstr ""
 
 msgid "specify GrandOrgue instance name"
 msgstr "especificar nombre de instancia de GrandOrgue"
 
 #, fuzzy
 msgid "specify generated organ package filename"
-msgstr "especificar nombre de instancia de GrandOrgue"
+msgstr "especificar nombre de archivo del paquete de órgano generado"
 
 msgid "specify input directory"
 msgstr ""
 
 #, fuzzy
 msgid "stop"
-msgstr "Tirador"
+msgstr ""
 
 msgid "subtract"
-msgstr "restar"
+msgstr ""
 
 msgid "switch"
 msgstr ""
@@ -4089,23 +4090,23 @@ msgid "t"
 msgstr ""
 
 msgid "tab"
-msgstr "tabulador"
+msgstr ""
 
 #, fuzzy
 msgid "temperament"
-msgstr "&Temperamento"
+msgstr "temperamento"
 
 #, fuzzy
 msgid "title"
-msgstr "Nombre"
+msgstr "título"
 
 #, fuzzy
 msgid "transpose"
-msgstr "Transpositor"
+msgstr "transportar"
 
 #, fuzzy
 msgid "tremulant"
-msgstr "Trémolo"
+msgstr "trémolo"
 
 msgid "trigger"
 msgstr ""
