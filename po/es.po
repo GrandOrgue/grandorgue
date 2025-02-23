@@ -1455,7 +1455,7 @@ msgstr "Fallo al abrir '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to open '%s': %s"
-msgstr "Fallo al abrir '%s': %s
+msgstr "Fallo al abrir '%s': %s"
 
 #, fuzzy, c-format
 msgid "Failed to open archive %s"
@@ -1499,7 +1499,7 @@ msgstr "Fallo al leer '%s'"
 
 #, fuzzy, c-format
 msgid "Failed to read '%s': %s"
-msgstr "Fallo al leer '%s': %s
+msgstr "Fallo al leer '%s': %s"
 
 #, fuzzy
 msgid "Failed to read cache directory"
