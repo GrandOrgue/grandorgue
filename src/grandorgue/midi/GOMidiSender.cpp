@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -49,7 +49,8 @@ const struct IniFileEnumEntry GOMidiSender::m_MidiTypes[] = {
 
 void GOMidiSender::SetElementID(int id) { m_ElementID = id; }
 
-void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
+void GOMidiSender::Load(
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
   m_events.resize(0);
 
   int event_cnt = cfg.ReadInteger(
@@ -139,58 +140,61 @@ void GOMidiSender::Load(GOConfigReader &cfg, wxString group, GOMidiMap &map) {
   }
 }
 
-void GOMidiSender::Save(GOConfigWriter &cfg, wxString group, GOMidiMap &map) {
-  cfg.WriteInteger(group, wxT("NumberOfMIDISendEvents"), m_events.size());
-  for (unsigned i = 0; i < m_events.size(); i++) {
-    cfg.WriteString(
-      group,
-      wxString::Format(wxT("MIDISendDevice%03d"), i + 1),
-      map.GetDeviceLogicalNameById(m_events[i].deviceId));
-    cfg.WriteEnum(
-      group,
-      wxString::Format(wxT("MIDISendEventType%03d"), i + 1),
-      m_events[i].type,
-      m_MidiTypes,
-      sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
-    if (HasChannel(m_events[i].type))
-      cfg.WriteInteger(
+void GOMidiSender::Save(
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) {
+  if (!m_events.empty()) {
+    cfg.WriteInteger(group, wxT("NumberOfMIDISendEvents"), m_events.size());
+    for (unsigned i = 0; i < m_events.size(); i++) {
+      cfg.WriteString(
         group,
-        wxString::Format(wxT("MIDISendChannel%03d"), i + 1),
-        m_events[i].channel);
-    if (HasKey(m_events[i].type))
-      cfg.WriteInteger(
+        wxString::Format(wxT("MIDISendDevice%03d"), i + 1),
+        map.GetDeviceLogicalNameById(m_events[i].deviceId));
+      cfg.WriteEnum(
         group,
-        wxString::Format(wxT("MIDISendKey%03d"), i + 1),
-        m_events[i].key);
+        wxString::Format(wxT("MIDISendEventType%03d"), i + 1),
+        m_events[i].type,
+        m_MidiTypes,
+        sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
+      if (HasChannel(m_events[i].type))
+        cfg.WriteInteger(
+          group,
+          wxString::Format(wxT("MIDISendChannel%03d"), i + 1),
+          m_events[i].channel);
+      if (HasKey(m_events[i].type))
+        cfg.WriteInteger(
+          group,
+          wxString::Format(wxT("MIDISendKey%03d"), i + 1),
+          m_events[i].key);
 
-    if (IsNote(m_events[i].type))
-      cfg.WriteBoolean(
-        group,
-        wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
-        m_events[i].useNoteOff);
+      if (IsNote(m_events[i].type))
+        cfg.WriteBoolean(
+          group,
+          wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
+          m_events[i].useNoteOff);
 
-    if (HasLowValue(m_events[i].type))
-      cfg.WriteInteger(
-        group,
-        wxString::Format(wxT("MIDISendLowValue%03d"), i + 1),
-        m_events[i].low_value);
+      if (HasLowValue(m_events[i].type))
+        cfg.WriteInteger(
+          group,
+          wxString::Format(wxT("MIDISendLowValue%03d"), i + 1),
+          m_events[i].low_value);
 
-    if (HasHighValue(m_events[i].type))
-      cfg.WriteInteger(
-        group,
-        wxString::Format(wxT("MIDISendHighValue%03d"), i + 1),
-        m_events[i].high_value);
+      if (HasHighValue(m_events[i].type))
+        cfg.WriteInteger(
+          group,
+          wxString::Format(wxT("MIDISendHighValue%03d"), i + 1),
+          m_events[i].high_value);
 
-    if (HasStart(m_events[i].type))
-      cfg.WriteInteger(
-        group,
-        wxString::Format(wxT("MIDISendStart%03d"), i + 1),
-        m_events[i].start);
-    if (HasLength(m_events[i].type))
-      cfg.WriteInteger(
-        group,
-        wxString::Format(wxT("MIDISendLength%03d"), i + 1),
-        m_events[i].length);
+      if (HasStart(m_events[i].type))
+        cfg.WriteInteger(
+          group,
+          wxString::Format(wxT("MIDISendStart%03d"), i + 1),
+          m_events[i].start);
+      if (HasLength(m_events[i].type))
+        cfg.WriteInteger(
+          group,
+          wxString::Format(wxT("MIDISendLength%03d"), i + 1),
+          m_events[i].length);
+    }
   }
 }
 
