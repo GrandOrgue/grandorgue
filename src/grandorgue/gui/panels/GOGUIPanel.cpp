@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -151,7 +151,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, const wxString &group) {
     new_format = true;
 
   if (cfgGroup.IsEmpty()) {
-    m_Name = m_OrganController->GetChurchName();
+    m_Name = m_OrganController->GetOrganName();
     m_GroupName = wxT("");
     cfgGroup = wxT("Organ");
     if (new_format) {

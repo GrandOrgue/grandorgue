@@ -47,6 +47,7 @@ unsigned GOOrganModel::GetRecorderElementID(const wxString &name) {
 static const wxString WX_ORGAN = wxT("Organ");
 
 void GOOrganModel::Load(GOConfigReader &cfg) {
+  m_OrganName = cfg.ReadStringTrim(ODFSetting, WX_ORGAN, wxT("ChurchName"));
   m_DivisionalsStoreIntermanualCouplers = cfg.ReadBoolean(
     ODFSetting, WX_ORGAN, wxT("DivisionalsStoreIntermanualCouplers"));
   m_DivisionalsStoreIntramanualCouplers = cfg.ReadBoolean(
