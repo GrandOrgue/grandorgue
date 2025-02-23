@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,19 +15,22 @@
 #include "modification/GOModificationProxy.h"
 
 class GOConfig;
-class GOMidiShortcutReceiver;
 class GOMidi;
-class GOMidiListener;
-class GOMidiReceiverBase;
-class GOMidiSender;
+class GOMidiDialogListener;
 class GOMidiEventKeyTab;
 class GOMidiEventRecvTab;
 class GOMidiEventSendTab;
+class GOMidiListener;
+class GOMidiReceiverBase;
+class GOMidiSender;
+class GOMidiShortcutReceiver;
 
 class GOMidiEventDialog : public GOTabbedDialog,
                           public GOView,
                           public GOModificationProxy {
 private:
+  GOMidiDialogListener *p_DialogListener;
+
   GOMidiEventRecvTab *m_recvPage;
   GOMidiEventSendTab *m_sendPage;
   GOMidiEventSendTab *m_sendDivisionPage;
@@ -48,9 +51,13 @@ public:
     GOMidiReceiverBase *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,
-    GOMidiSender *division = NULL);
+    GOMidiSender *division = NULL,
+    GOMidiDialogListener *pDialogListener = nullptr);
 
   void RegisterMIDIListener(GOMidi *midi);
+
+private:
+  bool TransferDataFromWindow() override;
 };
 
 #endif /* MIDIEVENTDIALOG_H_ */

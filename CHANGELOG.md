@@ -1,3 +1,4 @@
+- Added resending midi events when exiting from MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/2062
 - Fixed incorrect default audio channels config https://github.com/GrandOrgue/grandorgue/issues/2115
 - Changed default sample rate, samples per buffer and interpolation type to 48000, 512 and Polyphase https://github.com/GrandOrgue/grandorgue/issues/2115
 - Increased the maximum samples per buffer to 2048 https://github.com/GrandOrgue/grandorgue/issues/2115

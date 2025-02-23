@@ -42,10 +42,10 @@ private:
   void LoadFromCmb(GOConfigReader &cfg, uint8_t defaultValue);
   void Save(GOConfigWriter &cfg) override;
 
-  void SetIntEnclosureValue(int n) { SetEnclosureValue(std::clamp(n, 0, 127)); }
+  void SendCurrentMidiValue() override { SendMidiValue(m_MIDIValue); }
+  void SendEmptyMidiValue() override { SendMidiValue(0); }
 
-  void PrepareRecording() override;
-  void AbortPlayback() override;
+  void SetIntEnclosureValue(int n) { SetEnclosureValue(std::clamp(n, 0, 127)); }
 
 public:
   static constexpr uint8_t MAX_MIDI_VALUE = 127;
