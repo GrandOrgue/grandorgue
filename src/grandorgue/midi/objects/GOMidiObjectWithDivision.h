@@ -29,6 +29,13 @@ protected:
   void SaveMidiObject(
     GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
+public:
+  virtual bool IsMidiConfigured() const {
+    return m_DivisionSender.IsMidiConfigured()
+      || GOMidiReceivingSendingObject::IsMidiConfigured();
+  }
+
+protected:
   void SendDivisionMidiKey(unsigned key, unsigned value) {
     m_DivisionSender.SetKey(key, value);
   }
