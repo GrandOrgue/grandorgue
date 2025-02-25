@@ -12,6 +12,7 @@
 
 #include "config/GOConfig.h"
 #include "control/GOCallbackButtonControl.h"
+#include "midi/objects/GOMidiObjectContext.h"
 #include "sound/GOSoundRecorder.h"
 
 #include "GOEvent.h"
@@ -24,21 +25,35 @@ enum {
   ID_AUDIO_RECORDER_RECORD_RENAME,
 };
 
+static const GOMidiObjectContext MIDI_CONTEXT(
+  wxT("AudioRecorder"), _("AudioRecorder"));
+
 const struct GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
-  {wxT("AudioRecorderRecord"), ID_AUDIO_RECORDER_RECORD, false, true, false},
-  {wxT("AudioRecorderStop"), ID_AUDIO_RECORDER_STOP, false, true, false},
+  {wxT("AudioRecorderRecord"),
+   ID_AUDIO_RECORDER_RECORD,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("AudioRecorderStop"),
+   ID_AUDIO_RECORDER_STOP,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
   {wxT("AudioRecorderRecordRename"),
    ID_AUDIO_RECORDER_RECORD_RENAME,
    false,
    true,
-   false},
+   false,
+   &MIDI_CONTEXT},
   {wxT(""), -1, false, false, false},
 };
 
 GOAudioRecorder::GOAudioRecorder(GOOrganController *organController)
   : m_OrganController(organController),
     m_recorder(NULL),
-    m_RecordingTime(*organController),
+    m_RecordingTime(*organController, &MIDI_CONTEXT),
     m_RecordSeconds(0),
     m_Filename(),
     m_DoRename(false) {

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,10 +9,12 @@
 #define GOVIRTUALCOUPLERCONTROLLER_H
 
 #include <map>
+#include <memory>
 #include <utility>
 #include <vector>
 
 #include "control/GOButtonCallback.h"
+#include "midi/objects/GOMidiObjectContext.h"
 
 class GOCallbackButtonControl;
 class GOConfigReader;
@@ -38,13 +40,17 @@ public:
   // FromManual, toManual
   using CouplerSetKey = std::pair<unsigned, unsigned>;
 
-  // indexed by CouplerType
-  using ManualCouplerSet = std::vector<GOCoupler *>;
+  struct CouplerSet {
+    std::unique_ptr<GOMidiObjectContext> m_CouplersContext;
+    // indexed by CouplerType
+    std::vector<GOCoupler *> m_CouplerPtrs;
+    GOCallbackButtonControl *m_ButtonCoupleThrough;
+  };
 
 private:
-  std::map<CouplerSetKey, ManualCouplerSet> m_CouplerPtrs;
-  std::map<CouplerSetKey, GOCallbackButtonControl *> m_CoupleThroughPtrs;
+  std::map<CouplerSetKey, CouplerSet> m_CouplerSets;
 
+public:
   void ButtonStateChanged(GOButtonControl *button, bool newState) override;
 
 public:
@@ -55,7 +61,7 @@ public:
   void Save(GOConfigWriter &cfg);
 
   // Clears the couplers
-  void Cleanup() { m_CouplerPtrs.clear(); }
+  void Cleanup() { m_CouplerSets.clear(); }
 
   // Returns the coupler pointer
   GOCoupler *GetCoupler(
