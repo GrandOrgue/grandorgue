@@ -29,21 +29,35 @@ enum {
   ID_MIDI_RECORDER_RECORD_RENAME,
 };
 
+static const GOMidiObjectContext MIDI_CONTEXT(
+  wxT("MidiRecorder"), _("MidiRecorder"));
+
 const GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
-  {wxT("MidiRecorderRecord"), ID_MIDI_RECORDER_RECORD, false, true, false},
-  {wxT("MidiRecorderStop"), ID_MIDI_RECORDER_STOP, false, true, false},
+  {wxT("MidiRecorderRecord"),
+   ID_MIDI_RECORDER_RECORD,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MidiRecorderStop"),
+   ID_MIDI_RECORDER_STOP,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
   {wxT("MidiRecorderRecordRename"),
    ID_MIDI_RECORDER_RECORD_RENAME,
    false,
    true,
-   false},
+   false,
+   &MIDI_CONTEXT},
   {wxT(""), -1, false, false, false},
 };
 
 GOMidiRecorder::GOMidiRecorder(GOOrganController *organController)
   : m_OrganController(organController),
     m_Map(organController->GetSettings().GetMidiMap()),
-    m_RecordingTime(*organController),
+    m_RecordingTime(*organController, &MIDI_CONTEXT),
     m_RecordSeconds(0),
     m_NextChannel(0),
     m_NextNRPN(0),

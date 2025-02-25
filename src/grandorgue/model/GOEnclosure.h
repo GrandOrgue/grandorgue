@@ -62,6 +62,7 @@ public:
     uint8_t defValue);
   using GOMidiObjectWithShortcut::Load; // for avoiding a warning
   void Load(GOConfigReader &cfg, const wxString &group);
+
   uint8_t GetDefaultAmpMinimumLevel() const { return m_DefaultAmpMinimumLevel; }
   uint8_t GetAmpMinimumLevel() const { return m_AmpMinimumLevel; }
   void SetAmpMinimumLevel(uint8_t v) { m_AmpMinimumLevel = v; }

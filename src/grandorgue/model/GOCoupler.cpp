@@ -19,7 +19,10 @@ static const wxString WX_MIDI_TYPE_CODE = wxT("Coupler");
 static const wxString WX_MIDI_TYPE_NAME = _("Coupler");
 
 GOCoupler::GOCoupler(
-  GOOrganModel &organModel, unsigned sourceManual, bool isVirtual)
+  GOOrganModel &organModel,
+  unsigned sourceManual,
+  bool isVirtual,
+  const GOMidiObjectContext *pContext)
   : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
     m_IsVirtual(isVirtual),
     m_UnisonOff(false),
@@ -41,7 +44,9 @@ GOCoupler::GOCoupler(
     m_LastTone(-1),
     m_FirstMidiNote(0),
     m_FirstLogicalKey(0),
-    m_NumberOfKeys(127) {}
+    m_NumberOfKeys(127) {
+  SetContext(pContext);
+}
 
 void GOCoupler::PreparePlayback() {
   GODrawstop::PreparePlayback();

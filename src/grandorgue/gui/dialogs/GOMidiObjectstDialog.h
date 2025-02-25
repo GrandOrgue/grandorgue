@@ -12,6 +12,7 @@
 
 #include "common/GOSimpleDialog.h"
 #include "document-base/GOView.h"
+#include "midi/dialog-creator/GOMidiDialogListener.h"
 
 class wxButton;
 class wxGridEvent;
@@ -23,10 +24,25 @@ class GOMidiObjectsDialog : public GOSimpleDialog, public GOView {
 private:
   const std::vector<GOMidiObject *> &r_MidiObjects;
 
+  class ObjectConfigListener : public GOMidiDialogListener {
+  private:
+    GOMidiObjectsDialog &r_dialog;
+    unsigned m_index;
+    GOMidiObject *p_object;
+
+  public:
+    ObjectConfigListener(
+      GOMidiObjectsDialog &dialog, unsigned index, GOMidiObject *pObject);
+    ~ObjectConfigListener();
+
+    void OnSettingsApplied() override;
+  };
+
   GOGrid *m_ObjectsGrid;
   wxButton *m_ConfigureButton;
   wxButton *m_StatusButton;
   std::vector<wxButton *> m_ActionButtons;
+  std::vector<ObjectConfigListener> m_ObjectListeners;
 
 public:
   GOMidiObjectsDialog(
@@ -40,6 +56,7 @@ private:
   void CaptureAdditionalSizes(
     GOAdditionalSizeKeeper &sizeKeeper) const override;
 
+  void RefreshIsConfigured(unsigned row, GOMidiObject *pObj);
   bool TransferDataToWindow() override;
 
   GOMidiObject *GetSelectedObject() const;
