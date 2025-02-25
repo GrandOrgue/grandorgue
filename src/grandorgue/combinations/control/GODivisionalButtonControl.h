@@ -33,7 +33,10 @@ private:
 
 public:
   GODivisionalButtonControl(
-    GOOrganModel &organModel, unsigned manualNumber, unsigned divisionalIndex);
+    GOOrganModel &organModel,
+    unsigned manualNumber,
+    unsigned divisionalIndex,
+    const GOMidiObjectContext *pContext);
 
   GODivisionalCombination &GetCombination() { return m_combination; }
 

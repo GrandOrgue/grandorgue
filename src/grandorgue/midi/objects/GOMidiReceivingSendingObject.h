@@ -62,6 +62,13 @@ protected:
   virtual void SaveMidiObject(
     GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
+public:
+  virtual bool IsMidiConfigured() const {
+    return m_receiver.IsMidiConfigured()
+      || GOMidiSendingObject::IsMidiConfigured();
+  }
+
+protected:
   void PreparePlayback() override;
 
 private:
