@@ -12,6 +12,8 @@
 #include "midi/GOMidiReceiver.h"
 #include "model/GOOrganModel.h"
 
+#include "GOMidiObjectContext.h"
+
 GOMidiObject::GOMidiObject(
   GOOrganModel &organModel,
   const wxString &midiTypeCode,
@@ -23,7 +25,8 @@ GOMidiObject::GOMidiObject(
     p_MidiSender(nullptr),
     p_MidiReceiver(nullptr),
     p_ShortcutReceiver(nullptr),
-    p_DivisionSender(nullptr) {
+    p_DivisionSender(nullptr),
+    p_context(nullptr) {
   r_OrganModel.RegisterSoundStateHandler(this);
   r_OrganModel.RegisterMidiObject(this);
 }
@@ -32,6 +35,10 @@ GOMidiObject::~GOMidiObject() {
   r_OrganModel.UnregisterSaveableObject(this);
   r_OrganModel.UnRegisterMidiObject(this);
   r_OrganModel.UnRegisterSoundStateHandler(this);
+}
+
+wxString GOMidiObject::GetContextTitle() const {
+  return GOMidiObjectContext::getFullTitle(p_context);
 }
 
 void GOMidiObject::InitMidiObject(

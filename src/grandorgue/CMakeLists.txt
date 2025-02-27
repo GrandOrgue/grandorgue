@@ -143,6 +143,7 @@ loader/cache/GOCacheCleaner.cpp
 loader/cache/GOCacheWriter.cpp
 midi/dialog-creator/GOMidiDialogCreatorProxy.cpp
 midi/objects/GOMidiObject.cpp
+midi/objects/GOMidiObjectContext.cpp
 midi/objects/GOMidiObjectWithDivision.cpp
 midi/objects/GOMidiObjectWithShortcut.cpp
 midi/objects/GOMidiReceivingSendingObject.cpp
