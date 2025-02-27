@@ -43,11 +43,6 @@ enum {
   ID_FIRST = 0
 };
 
-const struct GOElementCreator::ButtonDefinitionEntry *GODivisionalSetter::
-  GetButtonDefinitionList() {
-  return m_ButtonDefinitions;
-}
-
 // fills a button definition
 void fill_button_definition(
   wxString name,
@@ -115,7 +110,7 @@ GODivisionalSetter::GODivisionalSetter(
 
   // create button conrols for all buttons. It calls the GetButtonDefinitionList
   // callback
-  CreateButtons(*organController);
+  CreateButtons(*organController, m_ButtonDefinitions);
   organController->RegisterCombinationButtonSet(this);
   for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
     m_manualBanks.push_back(0);

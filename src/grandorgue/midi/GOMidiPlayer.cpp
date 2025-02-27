@@ -25,19 +25,12 @@ enum {
   ID_MIDI_PLAYER_PAUSE,
 };
 
-const struct GOElementCreator::ButtonDefinitionEntry
-  GOMidiPlayer::m_element_types[]
-  = {
-    {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true, false},
-    {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true, false},
-    {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true, false},
-    {wxT(""), -1, false, false, false},
+const GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
+  {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true, false},
+  {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true, false},
+  {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true, false},
+  {wxT(""), -1, false, false, false},
 };
-
-const struct GOElementCreator::ButtonDefinitionEntry *GOMidiPlayer::
-  GetButtonDefinitionList() {
-  return m_element_types;
-}
 
 void GOMidiPlayer::ResetUI() {
   m_buttons[ID_MIDI_PLAYER_PLAY]->Display(false);
@@ -56,7 +49,7 @@ GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
     m_Speed(1),
     m_IsPlaying(false),
     m_Pause(false) {
-  CreateButtons(*organController);
+  CreateButtons(*organController, BUTTON_DEFS);
   m_DeviceID = r_MidiMap.GetDeviceIdByLogicalName(_("GrandOrgue MIDI Player"));
   ResetUI();
 }
