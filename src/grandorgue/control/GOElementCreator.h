@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,9 +15,10 @@
 
 class GOButtonControl;
 class GOConfigReader;
-class GOOrganModel;
 class GOEnclosure;
 class GOLabelControl;
+class GOMidiObjectContext;
+class GOOrganModel;
 
 class GOElementCreator : private GOButtonCallback {
 public:
@@ -27,6 +28,7 @@ public:
     bool is_public;
     bool is_pushbutton;
     bool is_piston;
+    const GOMidiObjectContext *p_MidiContext = nullptr;
   };
 
 protected:

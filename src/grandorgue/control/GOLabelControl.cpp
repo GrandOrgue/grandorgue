@@ -14,13 +14,14 @@
 const wxString WX_MIDI_TYPE_CODE = wxT("Label");
 const wxString WX_MIDI_TYPE_NAME = _("Label");
 
-GOLabelControl::GOLabelControl(GOOrganModel &organModel)
+GOLabelControl::GOLabelControl(
+  GOOrganModel &organModel, const GOMidiObjectContext *pContext)
   : GOMidiSendingObject(
-    organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_LABEL) {}
+    organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_LABEL) {
+  SetContext(pContext);
+}
 
-const wxString &GOLabelControl::GetContent() { return m_Content; }
-
-void GOLabelControl::SetContent(wxString name) {
+void GOLabelControl::SetContent(const wxString &name) {
   m_Content = name;
   SendMidiValue(m_Content);
   r_OrganModel.SendControlChanged(this);
@@ -35,8 +36,6 @@ void GOLabelControl::PrepareRecording() {
   GOMidiSendingObject::PrepareRecording();
   SendMidiValue(m_Content);
 }
-
-wxString GOLabelControl::GetElementStatus() { return m_Content; }
 
 std::vector<wxString> GOLabelControl::GetElementActions() {
   std::vector<wxString> actions;
