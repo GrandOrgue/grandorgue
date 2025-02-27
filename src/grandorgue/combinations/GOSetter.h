@@ -87,9 +87,6 @@ private:
   wxString GetCrescendoCmbStateName(uint8_t crescendoIdx) const;
   void Crescendo(int pos, bool force = false);
 
-  static const struct ButtonDefinitionEntry m_element_types[];
-  const struct ButtonDefinitionEntry *GetButtonDefinitionList() override;
-
   /**
    * Copy the sequencer combination
    * @param fromIdx - position of the source combination
