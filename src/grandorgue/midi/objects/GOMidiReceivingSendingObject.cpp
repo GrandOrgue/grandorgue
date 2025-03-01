@@ -30,8 +30,6 @@ GOMidiReceivingSendingObject::~GOMidiReceivingSendingObject() {
 
 void GOMidiReceivingSendingObject::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
-  // using in Load for initial MIDI config
-  m_MidiInputNumber = 0;
   GOMidiSendingObject::Init(cfg, group, name);
 }
 
@@ -39,7 +37,13 @@ void GOMidiReceivingSendingObject::Load(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
   // using in Load for initial MIDI config
   m_MidiInputNumber = cfg.ReadInteger(
-    ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
+    ODFSetting,
+    group,
+    wxT("MIDIInputNumber"),
+    0,
+    200,
+    false,
+    m_MidiInputNumber);
   GOMidiSendingObject::Load(cfg, group, name);
 }
 
