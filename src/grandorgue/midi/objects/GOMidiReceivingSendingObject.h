@@ -18,6 +18,8 @@ class GOMidiReceivingSendingObject : public GOMidiSendingObject,
 private:
   GOMidiReceiver m_receiver;
   const GOMidiReceiver::KeyMap *p_ReceiverKeyMap;
+  // used for load initial config
+  uint8_t m_MidiInputNumber;
 
 protected:
   GOMidiReceivingSendingObject(
@@ -36,11 +38,18 @@ protected:
 
 public:
   // Should be used before Load()
-  void SetInitialMidiIndex(unsigned index) { m_receiver.SetIndex(index); }
+  int GetMidiInputNumber() const { return m_MidiInputNumber; }
+  void SetMidiInputNumber(int midiInputNumber) {
+    m_MidiInputNumber = midiInputNumber;
+  }
 
   virtual void SetElementId(int id) override;
 
 protected:
+  void Init(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) override;
+  void Load(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) override;
   virtual void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
   virtual void SaveMidiObject(

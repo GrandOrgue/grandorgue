@@ -23,7 +23,6 @@ class GOOrganModel;
 class GOEnclosure : public GOControl, public GOMidiObjectWithShortcut {
 private:
   uint8_t m_DefaultAmpMinimumLevel;
-  uint8_t m_MIDIInputNumber;
   bool m_Displayed1;
   bool m_Displayed2;
 
@@ -59,10 +58,9 @@ public:
     const wxString &name,
     uint8_t defValue);
   using GOMidiObject::Load; // for avoiding a warning
-  void Load(GOConfigReader &cfg, const wxString &group, int enclosureNb);
+  void Load(GOConfigReader &cfg, const wxString &group);
   void SetEnclosureValue(uint8_t n);
   int GetEnclosureValue() const { return m_MIDIValue; }
-  int GetMIDIInputNumber() const { return m_MIDIInputNumber; }
   float GetAttenuation();
 
   void Scroll(bool scroll_up);

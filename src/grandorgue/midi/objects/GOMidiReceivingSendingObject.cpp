@@ -17,7 +17,8 @@ GOMidiReceivingSendingObject::GOMidiReceivingSendingObject(
   GOMidiReceiverType reveiverType)
   : GOMidiSendingObject(organModel, midiTypeCode, midiTypeName, senderType),
     m_receiver(organModel, reveiverType),
-    p_ReceiverKeyMap(nullptr) {
+    p_ReceiverKeyMap(nullptr),
+    m_MidiInputNumber(0) {
   SetMidiReceiver(&m_receiver);
   r_OrganModel.RegisterEventHandler(this);
 }
@@ -27,11 +28,26 @@ GOMidiReceivingSendingObject::~GOMidiReceivingSendingObject() {
   SetMidiReceiver(nullptr);
 }
 
+void GOMidiReceivingSendingObject::Init(
+  GOConfigReader &cfg, const wxString &group, const wxString &name) {
+  // using in Load for initial MIDI config
+  m_MidiInputNumber = 0;
+  GOMidiSendingObject::Init(cfg, group, name);
+}
+
+void GOMidiReceivingSendingObject::Load(
+  GOConfigReader &cfg, const wxString &group, const wxString &name) {
+  // using in Load for initial MIDI config
+  m_MidiInputNumber = cfg.ReadInteger(
+    ODFSetting, group, wxT("MIDIInputNumber"), 0, 200, false, 0);
+  GOMidiSendingObject::Load(cfg, group, name);
+}
+
 void GOMidiReceivingSendingObject::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
   GOMidiSendingObject::LoadMidiObject(cfg, group, midiMap);
   if (!IsReadOnly()) {
-    m_receiver.Load(cfg, group, midiMap);
+    m_receiver.Load(cfg, group, midiMap, m_MidiInputNumber);
   }
 }
 
