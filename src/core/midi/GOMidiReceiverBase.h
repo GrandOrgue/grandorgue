@@ -43,8 +43,7 @@ private:
   unsigned createInternal(unsigned device);
 
 protected:
-  virtual void Preconfigure(GOConfigReader &cfg, wxString group);
-  virtual int GetTranspose();
+  virtual int GetTranspose() const { return 0; }
 
 public:
   GOMidiReceiverBase(GOMidiReceiverType type);
