@@ -16,8 +16,11 @@
 class GOMidiReceivingSendingObject : public GOMidiSendingObject,
                                      private GOEventHandler {
 private:
+  GOMidiReceiverType m_ReceiverType;
   GOMidiReceiver m_receiver;
   const GOMidiReceiver::KeyMap *p_ReceiverKeyMap;
+  // used for load initial config
+  int m_MidiInputNumber;
 
 protected:
   GOMidiReceivingSendingObject(
@@ -25,7 +28,7 @@ protected:
     const wxString &midiTypeCode,
     const wxString &midiTypeName,
     GOMidiSenderType senderType,
-    GOMidiReceiverType reveiverType);
+    GOMidiReceiverType receiverType);
 
   ~GOMidiReceivingSendingObject();
 
@@ -36,11 +39,24 @@ protected:
 
 public:
   // Should be used before Load()
-  void SetInitialMidiIndex(unsigned index) { m_receiver.SetIndex(index); }
+  int GetMidiInputNumber() const { return m_MidiInputNumber; }
+  void SetMidiInputNumber(int midiInputNumber) {
+    m_MidiInputNumber = midiInputNumber;
+  }
 
   virtual void SetElementId(int id) override;
 
 protected:
+  // Now it is present only for the symmetry with Load
+  // TODO: add the initialMidiNumber parameter
+  void Init(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) override;
+  using GOMidiSendingObject::Load;
+  void Load(
+    GOConfigReader &cfg,
+    const wxString &group,
+    const wxString &name,
+    bool mayHaveOdfMidiInputNumber);
   virtual void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
   virtual void SaveMidiObject(
