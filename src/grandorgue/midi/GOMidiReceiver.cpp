@@ -18,10 +18,7 @@ GOMidiReceiver::GOMidiReceiver(
   : GOMidiReceiverBase(type), r_config(organModel.GetConfig()) {}
 
 void GOMidiReceiver::Load(
-  GOConfigReader &cfg,
-  const wxString &group,
-  GOMidiMap &map,
-  int midiInputNumber) {
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
   if (!r_config.ODFCheck()) {
     /* Skip old style entries */
     if (m_type == MIDI_RECV_DRAWSTOP)
@@ -32,13 +29,6 @@ void GOMidiReceiver::Load(
         ODFSetting, group, wxT("MIDIProgramChangeNumber"), 0, 128, false);
   }
   GOMidiReceiverBase::Load(cfg, group, map);
-  if (!IsMidiConfigured() && midiInputNumber >= 0) {
-    const GOMidiReceiverBase *pInitialEvents
-      = r_config.FindMidiEvent(m_type, midiInputNumber);
-
-    if (pInitialEvents)
-      RenewFrom(*pInitialEvents);
-  }
 }
 
 int GOMidiReceiver::GetTranspose() const { return r_config.Transpose(); }
