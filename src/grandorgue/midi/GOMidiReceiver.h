@@ -24,11 +24,7 @@ public:
   GOMidiReceiver(GOOrganModel &organModel, GOMidiReceiverType type);
 
   using GOMidiReceiverBase::Load;
-  void Load(
-    GOConfigReader &cfg,
-    const wxString &group,
-    GOMidiMap &map,
-    int midiInputNumber = -1);
+  void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 };
 
 #endif

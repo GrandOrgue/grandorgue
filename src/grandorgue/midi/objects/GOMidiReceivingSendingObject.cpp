@@ -14,9 +14,10 @@ GOMidiReceivingSendingObject::GOMidiReceivingSendingObject(
   const wxString &midiTypeCode,
   const wxString &midiTypeName,
   GOMidiSenderType senderType,
-  GOMidiReceiverType reveiverType)
+  GOMidiReceiverType receiverType)
   : GOMidiSendingObject(organModel, midiTypeCode, midiTypeName, senderType),
-    m_receiver(organModel, reveiverType),
+    m_ReceiverType(receiverType),
+    m_receiver(organModel, receiverType),
     p_ReceiverKeyMap(nullptr),
     m_MidiInputNumber(0) {
   SetMidiReceiver(&m_receiver);
@@ -51,7 +52,15 @@ void GOMidiReceivingSendingObject::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
   GOMidiSendingObject::LoadMidiObject(cfg, group, midiMap);
   if (!IsReadOnly()) {
-    m_receiver.Load(cfg, group, midiMap, m_MidiInputNumber);
+    m_receiver.Load(cfg, group, midiMap);
+    if (!m_receiver.IsMidiConfigured() && m_MidiInputNumber >= 0) {
+      const GOMidiReceiverBase *pInitialEvents
+        = r_OrganModel.GetConfig().FindMidiEvent(
+          m_ReceiverType, m_MidiInputNumber);
+
+      if (pInitialEvents)
+        m_receiver.RenewFrom(*pInitialEvents);
+    }
   }
 }
 

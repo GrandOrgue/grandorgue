@@ -16,6 +16,7 @@
 class GOMidiReceivingSendingObject : public GOMidiSendingObject,
                                      private GOEventHandler {
 private:
+  GOMidiReceiverType m_ReceiverType;
   GOMidiReceiver m_receiver;
   const GOMidiReceiver::KeyMap *p_ReceiverKeyMap;
   // used for load initial config
@@ -27,7 +28,7 @@ protected:
     const wxString &midiTypeCode,
     const wxString &midiTypeName,
     GOMidiSenderType senderType,
-    GOMidiReceiverType reveiverType);
+    GOMidiReceiverType receiverType);
 
   ~GOMidiReceivingSendingObject();
 
