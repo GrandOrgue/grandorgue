@@ -77,7 +77,7 @@ public:
     const {
     return m_CombinationButtonSets.AsVector();
   }
-  const std::vector<GOMidiObject *> &GetMidiConfigurators() const {
+  const std::vector<GOMidiObject *> &GetMidiObjects() const {
     return m_MidiObjects.AsVector();
   }
   const std::vector<GOEventHandler *> &GetMidiEventHandlers() const {
