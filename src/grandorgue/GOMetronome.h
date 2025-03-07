@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -33,10 +33,6 @@ private:
   GOLabelControl m_MeasureDisplay;
   GORank *m_rank;
   unsigned m_StopID;
-
-  static const struct GOElementCreator::ButtonDefinitionEntry m_element_types[];
-  const struct GOElementCreator::ButtonDefinitionEntry *
-  GetButtonDefinitionList() override;
 
   void HandleTimer() override;
 
