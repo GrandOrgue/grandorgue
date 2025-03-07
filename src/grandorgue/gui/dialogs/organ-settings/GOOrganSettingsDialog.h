@@ -11,25 +11,26 @@
 #include <wx/event.h>
 
 #include "document-base/GOView.h"
-#include "gui/dialogs/common/GOTabbedDialog.h"
 
-#include "GOOrganSettingsButtonsProxy.h"
+#include "GOOrganSettingsDialogBase.h"
+#include "GOOrganSettingsTab.h"
 
+class wxBookCtrlEvent;
 class wxButton;
 
 class GOOrganModel;
+class GOOrganSettingsEnclosuresTab;
 class GOOrganSettingsPipesTab;
 
-class GOOrganSettingsDialog : public GOTabbedDialog,
-                              public GOView,
-                              private GOOrganSettingsButtonsProxy::Listener {
+class GOOrganSettingsDialog : public GOOrganSettingsDialogBase, public GOView {
 private:
-  GOOrganSettingsPipesTab *m_PipesTab;
-
   wxButton *m_AudioGroupAssistant;
   wxButton *m_Default;
   wxButton *m_Discard;
   wxButton *m_Apply;
+
+  GOOrganSettingsPipesTab *m_PipesTab;
+  GOOrganSettingsEnclosuresTab *m_EnclosuresTab;
 
 public:
   GOOrganSettingsDialog(
@@ -38,10 +39,26 @@ public:
 private:
   void ButtonStatesChanged() override;
 
-  void OnButtonDistributeAudio(wxCommandEvent &e);
-  void OnButtonDefault(wxCommandEvent &e);
-  void OnButtonDiscard(wxCommandEvent &e);
-  void OnButtonApply(wxCommandEvent &e);
+  void OnTabSelecting(wxBookCtrlEvent &e);
+  void OnTabSelected(wxBookCtrlEvent &e) { ButtonStatesChanged(); }
+
+  template <typename T> T CallTabFunc(T (GOOrganSettingsTab::*pFunc)());
+
+  void OnButtonDistributeAudio(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::DistributeAudio);
+  }
+
+  void OnButtonDefault(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::ResetToDefault);
+  }
+
+  void OnButtonDiscard(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::DiscardChanges);
+  }
+
+  void OnButtonApply(wxCommandEvent &e) {
+    CallTabFunc(&GOOrganSettingsTab::ApplyChanges);
+  }
 
   DECLARE_EVENT_TABLE()
 };
