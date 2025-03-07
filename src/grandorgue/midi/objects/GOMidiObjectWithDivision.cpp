@@ -34,7 +34,7 @@ void GOMidiObjectWithDivision::LoadMidiObject(
 }
 
 void GOMidiObjectWithDivision::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
   GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
   m_DivisionSender.Save(cfg, group + WX_DIVISION, midiMap);
 }
