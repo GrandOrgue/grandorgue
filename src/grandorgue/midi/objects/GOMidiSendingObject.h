@@ -59,6 +59,7 @@ protected:
   void OnSettingsApplied() override { ResendMidi(); }
 
   void PreparePlayback() override;
+  void PrepareRecording() override;
   void AbortPlayback() override;
 
 public:

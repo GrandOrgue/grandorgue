@@ -45,6 +45,11 @@ void GOMidiSendingObject::PreparePlayback() {
   m_sender.SetName(GetName());
 }
 
+void GOMidiSendingObject::PrepareRecording() {
+  GOMidiObject::PrepareRecording();
+  SendCurrentMidiValue();
+}
+
 void GOMidiSendingObject::AbortPlayback() {
   SendEmptyMidiValue();
   GOMidiObject::AbortPlayback();
