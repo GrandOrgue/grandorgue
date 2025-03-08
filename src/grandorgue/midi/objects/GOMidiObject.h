@@ -12,6 +12,7 @@
 
 #include <vector>
 
+#include "midi/dialog-creator/GOMidiDialogListener.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOSaveableObject.h"
@@ -22,7 +23,9 @@ class GOMidiSender;
 class GOMidiShortcutReceiver;
 class GOOrganModel;
 
-class GOMidiObject : public GOSoundStateHandler, public GOSaveableObject {
+class GOMidiObject : public GOSoundStateHandler,
+                     public GOSaveableObject,
+                     protected GOMidiDialogListener {
 protected:
   GOOrganModel &r_OrganModel;
 

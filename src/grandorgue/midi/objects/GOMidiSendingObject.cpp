@@ -35,12 +35,23 @@ void GOMidiSendingObject::SaveMidiObject(
   m_sender.Save(cfg, group, midiMap);
 }
 
+void GOMidiSendingObject::ResendMidi() {
+  m_sender.SetName(GetName());
+  SendCurrentMidiValue();
+}
+
 void GOMidiSendingObject::PreparePlayback() {
   GOMidiObject::PreparePlayback();
   m_sender.SetName(GetName());
 }
 
+void GOMidiSendingObject::PrepareRecording() {
+  GOMidiObject::PrepareRecording();
+  SendCurrentMidiValue();
+}
+
 void GOMidiSendingObject::AbortPlayback() {
+  SendEmptyMidiValue();
   GOMidiObject::AbortPlayback();
   m_sender.SetName(wxEmptyString);
 }
