@@ -64,8 +64,7 @@
 #include "sound/GOSoundEngine.h"
 #include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
-#include "yaml/GOYamlInModel.h"
-#include "yaml/GOYamlOutModel.h"
+#include "yaml/GOYamlModel.h"
 #include "yaml/go-wx-yaml.h"
 
 #include "go_defs.h"
@@ -631,7 +630,7 @@ const wxString &WX_YAML = wxT("yaml");
 const wxString WX_GRANDORGUE_COMBINATIONS = "GrandOrgue Combinations";
 
 wxString GOOrganController::ExportCombination(const wxString &fileName) {
-  GOYamlOutModel yamlOut(GetOrganName(), WX_GRANDORGUE_COMBINATIONS);
+  GOYamlModel::Out yamlOut(GetOrganName(), WX_GRANDORGUE_COMBINATIONS);
 
   yamlOut << *m_setter;
   yamlOut << *m_DivisionalSetter;
@@ -646,7 +645,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
     const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
-      GOYamlInModel inYaml(GetOrganName(), file, WX_GRANDORGUE_COMBINATIONS);
+      GOYamlModel::In inYaml(GetOrganName(), file, WX_GRANDORGUE_COMBINATIONS);
 
       if (is_to_import_to_this_organ(
             GetOrganName(),

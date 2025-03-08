@@ -221,9 +221,7 @@ sound/GOSoundFilter.cpp
 sound/GOSoundToneBalanceFilter.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp
-yaml/GOYamlModelBase.cpp
-yaml/GOYamlInModel.cpp
-yaml/GOYamlOutModel.cpp
+yaml/GOYamlModel.cpp
 yaml/go-wx-yaml.cpp
 GOAudioRecorder.cpp
 GOBitmapCache.cpp
