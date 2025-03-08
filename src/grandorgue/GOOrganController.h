@@ -121,8 +121,6 @@ private:
   void PreconfigRecorder();
 
   const wxString &GetOrganHash() const { return m_hash; }
-  bool IsToImportCombinationsFor(
-    const wxString &fileName, const wxString &churchName) const;
 
 public:
   GOOrganController(
