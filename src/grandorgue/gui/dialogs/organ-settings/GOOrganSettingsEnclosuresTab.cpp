@@ -97,7 +97,7 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
     wxEXPAND | wxTOP | wxRIGHT | wxBOTTOM,
     5);
   mainSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Minimal amplitude level:")),
+    new wxStaticText(this, wxID_ANY, _("Minimum amplitude level:")),
     wxGBPosition(3, 1),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM,
