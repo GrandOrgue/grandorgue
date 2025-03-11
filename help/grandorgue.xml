@@ -5691,11 +5691,11 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
 	<title>Minimum amplitude level</title>
 	<para>
 	  Linear sound amplitude scale factor when the enclosure is closed. The
-	  allowed range is {0, +10}.
+	  allowed range is 0, 100.
 	</para>
 	<para>
-	  0 means full silence. 100 means the enclosure does not affect the
-	  windchests volume at all.
+	  0 means complete silence. 100 means the enclosure does not affect the
+	  windchest volume at all.
 	</para>
       </sect2>
     </sect1>

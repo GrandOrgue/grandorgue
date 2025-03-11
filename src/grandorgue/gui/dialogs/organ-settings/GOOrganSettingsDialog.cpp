@@ -85,9 +85,9 @@ void GOOrganSettingsDialog::ButtonStatesChanged() {
   auto pTab = dynamic_cast<GOOrganSettingsTab *>(GetBook()->GetCurrentPage());
 
   if (pTab) {
-    bool isDistributeAnabled = pTab->IsDistributeAudioEnabled();
+    bool isDistributeEnabled = pTab->IsDistributeAudioEnabled();
 
-    m_AudioGroupAssistant->Enable(isDistributeAnabled);
+    m_AudioGroupAssistant->Enable(isDistributeEnabled);
     m_Default->Enable(pTab->IsDefaultEnabled());
     m_Discard->Enable(pTab->IsRevertEnabled());
     m_Apply->Enable(pTab->IsApplyEnabled());
