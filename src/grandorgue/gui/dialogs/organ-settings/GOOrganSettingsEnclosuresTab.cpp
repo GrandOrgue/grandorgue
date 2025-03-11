@@ -123,16 +123,35 @@ bool GOOrganSettingsEnclosuresTab::TransferDataToWindow() {
     -1,
     -1,
     new ItemData(r_OrganModel));
+  const auto &windchests = r_OrganModel.GetWindchests();
 
-  for (GOWindchest *pW : r_OrganModel.GetWindchests()) {
+  // fill m_WindchestsByEnclosures
+  for (GOWindchest *pW : windchests)
+    for (GOEnclosure *pE : pW->GetEnclosures())
+      m_WindchestsByEnclosures[pE].push_back(pW->GetName());
+
+  // find global enclosures
+  unsigned nWindchests = windchests.size();
+  std::unordered_set<GOEnclosure *> globalEnclosures;
+
+  for (const auto &e : m_WindchestsByEnclosures)
+    if (e.second.size() == nWindchests)
+      globalEnclosures.insert(e.first);
+
+  // add global enclosures
+  for (GOEnclosure *pE : r_OrganModel.GetEnclosures())
+    if (globalEnclosures.find(pE) != globalEnclosures.end())
+      m_tree->AppendItem(rootItem, pE->GetName(), -1, -1, new ItemData(*pE));
+
+  // add enclosures to the tree
+  for (GOWindchest *pW : windchests) {
     auto windchestItem
       = m_tree->AppendItem(rootItem, pW->GetName(), -1, -1, new ItemData(*pW));
 
-    for (GOEnclosure *pE : pW->GetEnclosures()) {
-      m_tree->AppendItem(
-        windchestItem, pE->GetName(), -1, -1, new ItemData(*pE));
-      m_WindchestsByEnclosures[pE].push_back(pW->GetName());
-    }
+    for (GOEnclosure *pE : pW->GetEnclosures())
+      if (globalEnclosures.find(pE) == globalEnclosures.end())
+        m_tree->AppendItem(
+          windchestItem, pE->GetName(), -1, -1, new ItemData(*pE));
   }
   m_tree->Expand(rootItem);
   m_tree->SelectItem(rootItem, true);
