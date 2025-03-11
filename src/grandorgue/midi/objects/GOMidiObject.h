@@ -17,6 +17,7 @@
 #include "GOSaveableObject.h"
 
 class GOMidiMap;
+class GOMidiObjectContext;
 class GOMidiReceiver;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
@@ -37,6 +38,8 @@ private:
   GOMidiReceiver *p_MidiReceiver;
   GOMidiShortcutReceiver *p_ShortcutReceiver;
   GOMidiSender *p_DivisionSender;
+
+  const GOMidiObjectContext *p_context;
 
 protected:
   GOMidiObject(
@@ -79,6 +82,11 @@ public:
   const wxString &GetMidiTypeName() const { return r_MidiTypeName; }
   const wxString &GetName() const { return m_name; }
   void SetName(const wxString &name) { m_name = name; }
+
+  const GOMidiObjectContext *GetContext() const { return p_context; }
+  void SetContext(const GOMidiObjectContext *pContext) { p_context = pContext; }
+
+  wxString GetContextTitle() const;
 
   virtual void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) {

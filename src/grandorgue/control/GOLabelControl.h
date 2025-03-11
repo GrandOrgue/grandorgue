@@ -19,6 +19,7 @@
 
 class GOConfigReader;
 class GOConfigWriter;
+class GOMidiObjectContext;
 class GOOrganModel;
 
 class GOLabelControl : public GOControl, public GOMidiSendingObject {
@@ -29,11 +30,12 @@ protected:
   void PrepareRecording() override;
 
 public:
-  GOLabelControl(GOOrganModel &organModel);
-  const wxString &GetContent();
-  void SetContent(wxString name);
+  GOLabelControl(
+    GOOrganModel &organModel, const GOMidiObjectContext *pContext = nullptr);
+  const wxString &GetContent() const { return m_Content; }
+  void SetContent(const wxString &name);
 
-  wxString GetElementStatus() override;
+  wxString GetElementStatus() override { return m_Content; }
   std::vector<wxString> GetElementActions() override;
   void TriggerElementActions(unsigned no) override;
 };
