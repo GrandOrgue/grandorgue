@@ -90,6 +90,7 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
     5);
   m_WindchestList = new wxListBox(
     this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SINGLE);
+  m_WindchestList->Disable();
   mainSizer->Add(
     m_WindchestList,
     wxGBPosition(1, 2),
