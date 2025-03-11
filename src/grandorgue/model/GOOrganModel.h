@@ -157,6 +157,7 @@ public:
   // Returns the windchest by it's index starting with 0
   GOWindchest *GetWindchest(unsigned index) { return m_windchests[index]; }
 
+  const ptr_vector<GOEnclosure> &GetEnclosures() const { return m_enclosures; }
   GOEnclosure *GetEnclosureElement(unsigned index);
   unsigned GetEnclosureCount();
   unsigned AddEnclosure(GOEnclosure *enclosure);
