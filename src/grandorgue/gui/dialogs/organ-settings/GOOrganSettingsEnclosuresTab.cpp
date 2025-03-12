@@ -24,19 +24,18 @@ static const wxString WX_TAB_CODE = wxT("Enclosures");
 static const wxString WX_TAB_TITLE = _("Enclosures");
 
 enum {
-  ID_EVENT_TREE = 200,
+  ID_EVENT_ENCLOSURE_LIST = 200,
   ID_EVENT_MIN_AMP_LEVEL,
 };
 
 BEGIN_EVENT_TABLE(GOOrganSettingsEnclosuresTab, wxPanel)
-EVT_TREE_SEL_CHANGING(
-  ID_EVENT_TREE, GOOrganSettingsEnclosuresTab::OnTreeChanging)
-EVT_TREE_SEL_CHANGED(ID_EVENT_TREE, GOOrganSettingsEnclosuresTab::OnTreeChanged)
+EVT_LISTBOX(
+  ID_EVENT_ENCLOSURE_LIST, GOOrganSettingsEnclosuresTab::OnEnclosureListChanged)
 EVT_TEXT(
   ID_EVENT_MIN_AMP_LEVEL, GOOrganSettingsEnclosuresTab::OnMinAmpLevelChanged)
 END_EVENT_TABLE()
 
-class GOOrganSettingsEnclosuresTab::ItemData : public wxTreeItemData {
+class GOOrganSettingsEnclosuresTab::ItemData : public wxClientData {
 public:
   enum ItemType {
     ORGAN,
@@ -63,14 +62,16 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
     r_OrganModel(organModel) {
   wxGridBagSizer *const mainSizer = new wxGridBagSizer(5, 5);
 
-  m_tree = new wxTreeCtrl(
+  m_EnclosureList = new wxListBox(
     this,
-    ID_EVENT_TREE,
+    ID_EVENT_ENCLOSURE_LIST,
     wxDefaultPosition,
     wxDefaultSize,
-    wxTR_HAS_BUTTONS | wxTR_MULTIPLE);
+    0,
+    nullptr,
+    wxLB_EXTENDED);
   mainSizer->Add(
-    m_tree, wxGBPosition(0, 0), wxGBSpan(4, 1), wxEXPAND | wxALL, 5);
+    m_EnclosureList, wxGBPosition(0, 0), wxGBSpan(4, 1), wxEXPAND | wxALL, 5);
 
   m_IsOdfDefined = new wxCheckBox(
     this, wxID_ANY, _("This enclosure is ODF defined and may not be altered"));
@@ -119,62 +120,35 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
 }
 
 bool GOOrganSettingsEnclosuresTab::TransferDataToWindow() {
-  auto rootItem = m_tree->AddRoot(
-    r_OrganModel.GetRootPipeConfigNode().GetName(),
-    -1,
-    -1,
-    new ItemData(r_OrganModel));
-  const auto &windchests = r_OrganModel.GetWindchests();
+  for (GOEnclosure *pE : r_OrganModel.GetEnclosures())
+    m_EnclosureList->Append(pE->GetName(), new ItemData(*pE));
 
   // fill m_WindchestsByEnclosures
-  for (GOWindchest *pW : windchests)
+  for (GOWindchest *pW : r_OrganModel.GetWindchests())
     for (GOEnclosure *pE : pW->GetEnclosures())
       m_WindchestsByEnclosures[pE].push_back(pW->GetName());
-
-  // find global enclosures
-  unsigned nWindchests = windchests.size();
-  std::unordered_set<GOEnclosure *> globalEnclosures;
-
-  for (const auto &e : m_WindchestsByEnclosures)
-    if (e.second.size() == nWindchests)
-      globalEnclosures.insert(e.first);
-
-  // add global enclosures
-  for (GOEnclosure *pE : r_OrganModel.GetEnclosures())
-    if (globalEnclosures.find(pE) != globalEnclosures.end())
-      m_tree->AppendItem(rootItem, pE->GetName(), -1, -1, new ItemData(*pE));
-
-  // add enclosures to the tree
-  for (GOWindchest *pW : windchests) {
-    auto windchestItem
-      = m_tree->AppendItem(rootItem, pW->GetName(), -1, -1, new ItemData(*pW));
-
-    for (GOEnclosure *pE : pW->GetEnclosures())
-      if (globalEnclosures.find(pE) == globalEnclosures.end())
-        m_tree->AppendItem(
-          windchestItem, pE->GetName(), -1, -1, new ItemData(*pE));
-  }
-  m_tree->Expand(rootItem);
-  m_tree->SelectItem(rootItem, true);
   return true;
 }
 
-void GOOrganSettingsEnclosuresTab::OnTreeChanging(wxTreeEvent &e) {
+void GOOrganSettingsEnclosuresTab::OnEnclosureListChanged(
+  wxCommandEvent &event) {
   if (CheckForUnapplied())
-    e.Veto();
+    event.Skip();
+  else
+    LoadValues();
 }
 
 void GOOrganSettingsEnclosuresTab::LoadValues() {
-  wxArrayTreeItemIds entries;
+  wxArrayInt entries;
   GOEnclosure *pSelectedEnclosure = nullptr;
 
-  m_tree->GetSelections(entries);
+  m_EnclosureList->GetSelections(entries);
 
   const unsigned nSelected = entries.size();
 
   // set pSelectedEnclosure if only one enclosure is selected
   if (nSelected == 1) {
-    ItemData *pData = (ItemData *)m_tree->GetItemData(entries[0]);
+    ItemData *pData = (ItemData *)m_EnclosureList->GetClientObject(entries[0]);
 
     if (pData->m_type == ItemData::ENCLOSURE)
       pSelectedEnclosure = pData->p_enclosure;
@@ -198,7 +172,7 @@ void GOOrganSettingsEnclosuresTab::LoadValues() {
   bool areOnlyEnclosuresSelected = false;
 
   for (auto id : entries) {
-    ItemData *pData = (ItemData *)m_tree->GetItemData(id);
+    ItemData *pData = (ItemData *)m_EnclosureList->GetClientObject(id);
     bool isEnclosure = pData->m_type == ItemData::ENCLOSURE;
     bool isOdfDefined = isEnclosure && pData->p_enclosure->IsOdfDefined();
 
@@ -225,11 +199,11 @@ void GOOrganSettingsEnclosuresTab::LoadValues() {
 
 void GOOrganSettingsEnclosuresTab::DoForAllEnclosures(
   const std::function<void(GOEnclosure &enclosure)> &f) {
-  wxArrayTreeItemIds entries;
+  wxArrayInt entries;
 
-  m_tree->GetSelections(entries);
+  m_EnclosureList->GetSelections(entries);
   for (auto id : entries) {
-    ItemData *pData = (ItemData *)m_tree->GetItemData(id);
+    ItemData *pData = (ItemData *)m_EnclosureList->GetClientObject(id);
 
     if (pData->m_type == ItemData::ENCLOSURE)
       f(*(pData->p_enclosure));
