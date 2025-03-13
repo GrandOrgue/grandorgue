@@ -20,6 +20,7 @@
 class wxCheckBox;
 class wxListBox;
 class wxTextCtrl;
+class wxTreeCtrl;
 class wxTreeEvent;
 
 class GOEnclosure;
@@ -32,7 +33,7 @@ private:
 
   GOOrganModel &r_OrganModel;
 
-  wxListBox *m_EnclosureList;
+  wxTreeCtrl *m_tree;
   wxCheckBox *m_IsOdfDefined;
   wxListBox *m_WindchestList;
   wxTextCtrl *m_MinAmpLevelEdit;
@@ -46,7 +47,8 @@ public:
 private:
   void LoadValues();
   bool TransferDataToWindow() override;
-  void OnEnclosureListChanged(wxCommandEvent &event);
+  void OnTreeChanging(wxTreeEvent &e);
+  void OnTreeChanged(wxTreeEvent &e) { LoadValues(); }
   void OnMinAmpLevelChanged(wxCommandEvent &e) { NotifyModified(); }
   void DoForAllEnclosures(const std::function<void(GOEnclosure &enclosure)> &f);
 
