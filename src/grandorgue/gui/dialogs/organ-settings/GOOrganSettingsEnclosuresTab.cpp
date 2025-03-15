@@ -63,6 +63,8 @@ GOOrganSettingsEnclosuresTab::GOOrganSettingsEnclosuresTab(
     r_OrganModel(organModel) {
   wxGridBagSizer *const mainSizer = new wxGridBagSizer(5, 5);
 
+  // wxListBox would be better but it does not allow to veto selections
+  // so we use wxTreeCtrl instead of wxListBox
   m_tree = new wxTreeCtrl(
     this,
     ID_EVENT_TREE,
@@ -129,8 +131,16 @@ bool GOOrganSettingsEnclosuresTab::TransferDataToWindow() {
   for (GOWindchest *pW : r_OrganModel.GetWindchests())
     for (GOEnclosure *pE : pW->GetEnclosures())
       m_WindchestsByEnclosures[pE].push_back(pW->GetName());
+
+  // list internal enclosures
   for (GOEnclosure *pE : r_OrganModel.GetEnclosures())
-    m_tree->AppendItem(rootItem, pE->GetName(), -1, -1, new ItemData(*pE));
+    if (!pE->IsOdfDefined())
+      m_tree->AppendItem(rootItem, pE->GetName(), -1, -1, new ItemData(*pE));
+
+  // list odf-defined enclosures
+  for (GOEnclosure *pE : r_OrganModel.GetEnclosures())
+    if (pE->IsOdfDefined())
+      m_tree->AppendItem(rootItem, pE->GetName(), -1, -1, new ItemData(*pE));
   return true;
 }
 
