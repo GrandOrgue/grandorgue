@@ -188,7 +188,7 @@ void GOMidiReceiverBase::Preconfigure(GOConfigReader &cfg, wxString group) {}
 int GOMidiReceiverBase::GetTranspose() { return 0; }
 
 void GOMidiReceiverBase::Save(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) {
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const {
   if (!m_events.empty()) {
     cfg.WriteInteger(group, wxT("NumberOfMIDIEvents"), m_events.size());
     for (unsigned i = 0; i < m_events.size(); i++) {

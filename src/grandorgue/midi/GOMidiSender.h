@@ -31,7 +31,7 @@ public:
   void SetElementID(int id);
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
-  void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map);
+  void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
 
   void SetDisplay(bool state);
   void SetKey(unsigned key, unsigned velocity);

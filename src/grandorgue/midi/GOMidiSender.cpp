@@ -141,7 +141,7 @@ void GOMidiSender::Load(
 }
 
 void GOMidiSender::Save(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) {
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const {
   if (!m_events.empty()) {
     cfg.WriteInteger(group, wxT("NumberOfMIDISendEvents"), m_events.size());
     for (unsigned i = 0; i < m_events.size(); i++) {

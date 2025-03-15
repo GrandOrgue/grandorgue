@@ -50,7 +50,7 @@ public:
   GOMidiReceiverBase(GOMidiReceiverType type);
 
   virtual void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
-  void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map);
+  void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
   void PreparePlayback();
 
   void SetElementID(int id);
