@@ -91,7 +91,7 @@ void GOMidiReceiverBase::Load(
         sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]),
         false,
         default_type);
-      if (HasChannel(pattern.type))
+      if (hasChannel(pattern.type))
         pattern.channel = cfg.ReadInteger(
           CMBSetting,
           group,
@@ -135,7 +135,7 @@ void GOMidiReceiverBase::Load(
           wxString::Format(wxT("MIDIKeyShift%03d"), i + 1),
           -35,
           35);
-      else if (HasKey(pattern.type))
+      else if (hasKey(pattern.type))
         pattern.key = cfg.ReadInteger(
           CMBSetting,
           group,
@@ -143,7 +143,7 @@ void GOMidiReceiverBase::Load(
           0,
           0x200000);
 
-      if (HasLowerLimit(pattern.type))
+      if (hasLowerLimit(pattern.type))
         pattern.low_value = cfg.ReadInteger(
           CMBSetting,
           group,
@@ -160,7 +160,7 @@ void GOMidiReceiverBase::Load(
             false,
             1));
 
-      if (HasUpperLimit(pattern.type))
+      if (hasUpperLimit(pattern.type))
         pattern.high_value = cfg.ReadInteger(
           CMBSetting,
           group,
@@ -204,7 +204,7 @@ void GOMidiReceiverBase::Save(
         pattern.type,
         m_MidiTypes,
         sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
-      if (HasChannel(pattern.type))
+      if (hasChannel(pattern.type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDIChannel%03d"), i + 1),
@@ -229,16 +229,16 @@ void GOMidiReceiverBase::Save(
       if (m_type == MIDI_RECV_MANUAL)
         cfg.WriteInteger(
           group, wxString::Format(wxT("MIDIKeyShift%03d"), i + 1), pattern.key);
-      else if (HasKey(pattern.type))
+      else if (hasKey(pattern.type))
         cfg.WriteInteger(
           group, wxString::Format(wxT("MIDIKey%03d"), i + 1), pattern.key);
 
-      if (HasLowerLimit(pattern.type))
+      if (hasLowerLimit(pattern.type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDILowerLimit%03d"), i + 1),
           pattern.low_value);
-      if (HasUpperLimit(pattern.type))
+      if (hasUpperLimit(pattern.type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1),
@@ -247,7 +247,7 @@ void GOMidiReceiverBase::Save(
   }
 }
 
-bool GOMidiReceiverBase::HasChannel(GOMidiReceiverMessageType type) {
+bool GOMidiReceiverBase::hasChannel(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_PGM_CHANGE || type == MIDI_M_PGM_RANGE
@@ -268,7 +268,7 @@ bool GOMidiReceiverBase::HasChannel(GOMidiReceiverMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasKey(GOMidiReceiverMessageType type) {
+bool GOMidiReceiverBase::hasKey(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_CTRL_CHANGE
     || type == MIDI_M_PGM_CHANGE || type == MIDI_M_RPN_RANGE
@@ -291,7 +291,7 @@ bool GOMidiReceiverBase::HasKey(GOMidiReceiverMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasLowKey(GOMidiReceiverMessageType type) {
+bool GOMidiReceiverBase::HasLowKey(GOMidiReceiverMessageType type) const {
   if (m_type != MIDI_RECV_MANUAL)
     return false;
   if (
@@ -301,7 +301,7 @@ bool GOMidiReceiverBase::HasLowKey(GOMidiReceiverMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasHighKey(GOMidiReceiverMessageType type) {
+bool GOMidiReceiverBase::HasHighKey(GOMidiReceiverMessageType type) const {
   if (m_type != MIDI_RECV_MANUAL)
     return false;
   if (
@@ -311,7 +311,7 @@ bool GOMidiReceiverBase::HasHighKey(GOMidiReceiverMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasDebounce(GOMidiReceiverMessageType type) {
+bool GOMidiReceiverBase::HasDebounce(GOMidiReceiverMessageType type) const {
   if (m_type == MIDI_RECV_MANUAL)
     return false;
   if (m_type == MIDI_RECV_ENCLOSURE)
@@ -333,7 +333,7 @@ bool GOMidiReceiverBase::HasDebounce(GOMidiReceiverMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasLowerLimit(GOMidiReceiverMessageType type) {
+bool GOMidiReceiverBase::hasLowerLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_PGM_RANGE || type == MIDI_M_RPN_RANGE
     || type == MIDI_M_NRPN_RANGE || type == MIDI_M_CTRL_CHANGE
@@ -356,7 +356,7 @@ bool GOMidiReceiverBase::HasLowerLimit(GOMidiReceiverMessageType type) {
   return false;
 }
 
-bool GOMidiReceiverBase::HasUpperLimit(GOMidiReceiverMessageType type) {
+bool GOMidiReceiverBase::hasUpperLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_NOTE || type == MIDI_M_PGM_RANGE || type == MIDI_M_RPN_RANGE
     || type == MIDI_M_NRPN_RANGE || type == MIDI_M_CTRL_CHANGE
@@ -376,7 +376,7 @@ bool GOMidiReceiverBase::HasUpperLimit(GOMidiReceiverMessageType type) {
   return false;
 }
 
-unsigned GOMidiReceiverBase::KeyLimit(GOMidiReceiverMessageType type) {
+unsigned GOMidiReceiverBase::keyLimit(GOMidiReceiverMessageType type) {
   if (type == MIDI_M_PGM_CHANGE)
     return 0x200000;
   if (
@@ -387,7 +387,7 @@ unsigned GOMidiReceiverBase::KeyLimit(GOMidiReceiverMessageType type) {
   return 0x7f;
 }
 
-unsigned GOMidiReceiverBase::LowerValueLimit(GOMidiReceiverMessageType type) {
+unsigned GOMidiReceiverBase::lowerValueLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_RPN_RANGE || type == MIDI_M_NRPN_RANGE
     || type == MIDI_M_SYSEX_AHLBORN_GALANTI
@@ -409,7 +409,7 @@ unsigned GOMidiReceiverBase::LowerValueLimit(GOMidiReceiverMessageType type) {
   return 0x7f;
 }
 
-unsigned GOMidiReceiverBase::UpperValueLimit(GOMidiReceiverMessageType type) {
+unsigned GOMidiReceiverBase::upperValueLimit(GOMidiReceiverMessageType type) {
   if (
     type == MIDI_M_RPN_RANGE || type == MIDI_M_NRPN_RANGE
     || type == MIDI_M_SYSEX_AHLBORN_GALANTI
@@ -537,7 +537,7 @@ GOMidiMatchType GOMidiReceiverBase::Match(
 
     if (
       pattern.channel != -1 && pattern.channel != e.GetChannel()
-      && HasChannel(pattern.type))
+      && hasChannel(pattern.type))
       continue;
     if (pattern.deviceId != 0 && pattern.deviceId != e.GetDevice())
       continue;

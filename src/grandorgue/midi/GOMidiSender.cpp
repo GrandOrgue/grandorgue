@@ -73,7 +73,7 @@ void GOMidiSender::Load(
         sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
 
     m_events[i].type = eventType;
-    if (HasChannel(eventType))
+    if (hasChannel(eventType))
       m_events[i].channel = cfg.ReadInteger(
         CMBSetting,
         group,
@@ -88,7 +88,7 @@ void GOMidiSender::Load(
         0,
         0x200000);
 
-    if (IsNote(eventType))
+    if (isNote(eventType))
       m_events[i].useNoteOff = cfg.ReadBoolean(
         CMBSetting,
         group,
@@ -96,27 +96,27 @@ void GOMidiSender::Load(
         false,
         true);
 
-    if (HasLowValue(eventType))
+    if (hasLowValue(eventType))
       m_events[i].low_value = cfg.ReadInteger(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendLowValue%03d"), i + 1),
         0,
-        LowValueLimit(eventType),
+        lowValueLimit(eventType),
         false,
         0);
 
-    if (HasHighValue(eventType))
+    if (hasHighValue(eventType))
       m_events[i].high_value = cfg.ReadInteger(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendHighValue%03d"), i + 1),
         0,
-        HighValueLimit(eventType),
+        highValueLimit(eventType),
         false,
         0x7f);
 
-    if (HasStart(eventType))
+    if (hasStart(eventType))
       m_events[i].start = cfg.ReadInteger(
         CMBSetting,
         group,
@@ -125,8 +125,8 @@ void GOMidiSender::Load(
         0x1f,
         false,
         0);
-    if (HasLength(eventType)) {
-      unsigned maxLength = LengthLimit(eventType);
+    if (hasLength(eventType)) {
+      unsigned maxLength = lengthLimit(eventType);
 
       m_events[i].length = cfg.ReadInteger(
         CMBSetting,
@@ -155,7 +155,7 @@ void GOMidiSender::Save(
         m_events[i].type,
         m_MidiTypes,
         sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
-      if (HasChannel(m_events[i].type))
+      if (hasChannel(m_events[i].type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDISendChannel%03d"), i + 1),
@@ -166,30 +166,30 @@ void GOMidiSender::Save(
           wxString::Format(wxT("MIDISendKey%03d"), i + 1),
           m_events[i].key);
 
-      if (IsNote(m_events[i].type))
+      if (isNote(m_events[i].type))
         cfg.WriteBoolean(
           group,
           wxString::Format(wxT("MIDISendNoteOff%03d"), i + 1),
           m_events[i].useNoteOff);
 
-      if (HasLowValue(m_events[i].type))
+      if (hasLowValue(m_events[i].type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDISendLowValue%03d"), i + 1),
           m_events[i].low_value);
 
-      if (HasHighValue(m_events[i].type))
+      if (hasHighValue(m_events[i].type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDISendHighValue%03d"), i + 1),
           m_events[i].high_value);
 
-      if (HasStart(m_events[i].type))
+      if (hasStart(m_events[i].type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDISendStart%03d"), i + 1),
           m_events[i].start);
-      if (HasLength(m_events[i].type))
+      if (hasLength(m_events[i].type))
         cfg.WriteInteger(
           group,
           wxString::Format(wxT("MIDISendLength%03d"), i + 1),
@@ -198,7 +198,7 @@ void GOMidiSender::Save(
   }
 }
 
-bool GOMidiSender::HasChannel(GOMidiSenderMessageType type) {
+bool GOMidiSender::hasChannel(GOMidiSenderMessageType type) {
   if (
     type == MIDI_S_NOTE || type == MIDI_S_NOTE_NO_VELOCITY
     || type == MIDI_S_CTRL || type == MIDI_S_RPN || type == MIDI_S_NRPN
@@ -214,7 +214,7 @@ bool GOMidiSender::HasChannel(GOMidiSenderMessageType type) {
   return false;
 }
 
-bool GOMidiSender::HasKey(GOMidiSenderMessageType type) {
+bool GOMidiSender::HasKey(GOMidiSenderMessageType type) const {
   if (m_type == MIDI_SEND_MANUAL)
     return false;
 
@@ -234,7 +234,7 @@ bool GOMidiSender::HasKey(GOMidiSenderMessageType type) {
   return false;
 }
 
-bool GOMidiSender::HasLowValue(GOMidiSenderMessageType type) {
+bool GOMidiSender::hasLowValue(GOMidiSenderMessageType type) {
   if (
     type == MIDI_S_NOTE_OFF || type == MIDI_S_CTRL_OFF || type == MIDI_S_RPN_OFF
     || type == MIDI_S_NRPN_OFF || type == MIDI_S_PGM_RANGE
@@ -247,7 +247,7 @@ bool GOMidiSender::HasLowValue(GOMidiSenderMessageType type) {
   return false;
 }
 
-bool GOMidiSender::HasHighValue(GOMidiSenderMessageType type) {
+bool GOMidiSender::hasHighValue(GOMidiSenderMessageType type) {
   if (
     type == MIDI_S_NOTE_ON || type == MIDI_S_CTRL_ON || type == MIDI_S_RPN_ON
     || type == MIDI_S_NRPN_ON || type == MIDI_S_PGM_RANGE
@@ -258,7 +258,7 @@ bool GOMidiSender::HasHighValue(GOMidiSenderMessageType type) {
   return false;
 }
 
-bool GOMidiSender::HasStart(GOMidiSenderMessageType type) {
+bool GOMidiSender::hasStart(GOMidiSenderMessageType type) {
   if (
     type == MIDI_S_HW_NAME_STRING || type == MIDI_S_HW_NAME_LCD
     || type == MIDI_S_HW_STRING || type == MIDI_S_HW_LCD)
@@ -266,7 +266,7 @@ bool GOMidiSender::HasStart(GOMidiSenderMessageType type) {
   return false;
 }
 
-bool GOMidiSender::HasLength(GOMidiSenderMessageType type) {
+bool GOMidiSender::hasLength(GOMidiSenderMessageType type) {
   if (
     type == MIDI_S_HW_NAME_STRING || type == MIDI_S_HW_NAME_LCD
     || type == MIDI_S_HW_STRING || type == MIDI_S_HW_LCD)
@@ -274,7 +274,7 @@ bool GOMidiSender::HasLength(GOMidiSenderMessageType type) {
   return false;
 }
 
-bool GOMidiSender::IsNote(GOMidiSenderMessageType type) {
+bool GOMidiSender::isNote(GOMidiSenderMessageType type) {
   if (
     type == MIDI_S_NOTE || type == MIDI_S_NOTE_NO_VELOCITY
     || type == MIDI_S_NOTE_ON || type == MIDI_S_NOTE_OFF)
@@ -283,7 +283,7 @@ bool GOMidiSender::IsNote(GOMidiSenderMessageType type) {
   return false;
 }
 
-unsigned GOMidiSender::KeyLimit(GOMidiSenderMessageType type) {
+unsigned GOMidiSender::keyLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_PGM_ON || type == MIDI_S_PGM_OFF)
     return 0x200000;
 
@@ -297,7 +297,7 @@ unsigned GOMidiSender::KeyLimit(GOMidiSenderMessageType type) {
   return 0x7f;
 }
 
-unsigned GOMidiSender::LowValueLimit(GOMidiSenderMessageType type) {
+unsigned GOMidiSender::lowValueLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_PGM_RANGE)
     return 0x200000;
   if (type == MIDI_S_RPN_RANGE || type == MIDI_S_NRPN_RANGE)
@@ -307,7 +307,7 @@ unsigned GOMidiSender::LowValueLimit(GOMidiSenderMessageType type) {
   return 0x7f;
 }
 
-unsigned GOMidiSender::HighValueLimit(GOMidiSenderMessageType type) {
+unsigned GOMidiSender::highValueLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_PGM_RANGE)
     return 0x200000;
   if (type == MIDI_S_RPN_RANGE || type == MIDI_S_NRPN_RANGE)
@@ -315,7 +315,7 @@ unsigned GOMidiSender::HighValueLimit(GOMidiSenderMessageType type) {
   return 0x7f;
 }
 
-unsigned GOMidiSender::StartLimit(GOMidiSenderMessageType type) {
+unsigned GOMidiSender::startLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_HW_NAME_STRING || type == MIDI_S_HW_STRING)
     return 15;
   if (type == MIDI_S_HW_NAME_LCD || type == MIDI_S_HW_LCD)
@@ -323,7 +323,7 @@ unsigned GOMidiSender::StartLimit(GOMidiSenderMessageType type) {
   return 0x00;
 }
 
-unsigned GOMidiSender::LengthLimit(GOMidiSenderMessageType type) {
+unsigned GOMidiSender::lengthLimit(GOMidiSenderMessageType type) {
   if (type == MIDI_S_HW_NAME_STRING || type == MIDI_S_HW_STRING)
     return 16;
   if (type == MIDI_S_HW_NAME_LCD || type == MIDI_S_HW_LCD)
