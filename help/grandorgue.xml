@@ -5664,10 +5664,9 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
 	</mediaobject>
       </figure>
       <para>
-	In its left box, this dialog displays all enclosures in the three: both
-	found in the definition file or added internally by GrandOrgue. They are
-	grouped by windchest. Now only the enclosures added internally are
-	allowed to change.
+	In its left box, this dialog displays all enclosures: both added 
+	internally by GrandOrgueand ones found in the definition file. Now only
+	the enclosures added internally are allowed to be changed.
       </para>
       <simpara>
 	Select the element you wish to customize. The right controls are
