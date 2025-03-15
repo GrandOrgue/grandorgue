@@ -5665,7 +5665,7 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
       </figure>
       <para>
 	In its left box, this dialog displays all enclosures: both added 
-	internally by GrandOrgueand ones found in the definition file. Now only
+	internally by GrandOrgue and the ones found in the definition file. Only
 	the enclosures added internally are allowed to be changed.
       </para>
       <simpara>
@@ -5681,9 +5681,6 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
 	<title>Affected windchests</title>
 	<para>
 	  The list of windchest the enclosure affects.
-	</para>
-	<para>
-	  The same enclosure appears under all the the windchests in tree.
 	</para>
       </sect2>
       <sect2>
