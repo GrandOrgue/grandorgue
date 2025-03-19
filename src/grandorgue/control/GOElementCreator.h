@@ -15,9 +15,10 @@
 
 class GOButtonControl;
 class GOConfigReader;
-class GOOrganModel;
 class GOEnclosure;
 class GOLabelControl;
+class GOMidiObjectContext;
+class GOOrganModel;
 
 class GOElementCreator : private GOButtonCallback {
 public:
@@ -27,6 +28,7 @@ public:
     bool is_public;
     bool is_pushbutton;
     bool is_piston;
+    const GOMidiObjectContext *p_MidiContext = nullptr;
   };
 
   const ButtonDefinitionEntry *p_ButtonDefinitions;

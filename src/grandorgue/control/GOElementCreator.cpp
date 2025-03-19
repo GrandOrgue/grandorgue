@@ -19,6 +19,7 @@ void GOElementCreator::CreateButtons(
       organModel, this, pEntry->is_pushbutton, pEntry->is_piston);
     const unsigned buttonIndex = (unsigned)pEntry->value;
 
+    pButton->SetContext(pEntry->p_MidiContext);
     if (m_buttons.size() <= buttonIndex)
       m_buttons.resize(buttonIndex + 1);
     m_buttons[buttonIndex] = pButton;
