@@ -18,31 +18,8 @@ GOLabelControl::GOLabelControl(GOOrganModel &organModel)
   : GOMidiSendingObject(
     organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_LABEL) {}
 
-const wxString &GOLabelControl::GetContent() { return m_Content; }
-
-void GOLabelControl::SetContent(wxString name) {
+void GOLabelControl::SetContent(const wxString &name) {
   m_Content = name;
-  SendMidiValue(m_Content);
+  SendCurrentMidiValue();
   r_OrganModel.SendControlChanged(this);
-}
-
-void GOLabelControl::AbortPlayback() {
-  SendMidiValue(wxEmptyString);
-  GOMidiSendingObject::AbortPlayback();
-}
-
-void GOLabelControl::PrepareRecording() {
-  GOMidiSendingObject::PrepareRecording();
-  SendMidiValue(m_Content);
-}
-
-wxString GOLabelControl::GetElementStatus() { return m_Content; }
-
-std::vector<wxString> GOLabelControl::GetElementActions() {
-  std::vector<wxString> actions;
-  return actions;
-}
-
-void GOLabelControl::TriggerElementActions(unsigned no) {
-  // Never called
 }
