@@ -9,13 +9,11 @@
 
 #include <algorithm>
 #include <math.h>
-#include <wx/datetime.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/txtstrm.h>
 #include <wx/wfstream.h>
-#include <yaml-cpp/yaml.h>
 
 #include "archive/GOArchive.h"
 #include "archive/GOArchiveFile.h"
@@ -34,6 +32,7 @@
 #include "files/GOOpenedFile.h"
 #include "files/GOStdFileName.h"
 #include "gui/dialogs/GOProgressDialog.h"
+#include "gui/dialogs/go-message-boxes.h"
 #include "gui/panels/GOGUIBankedGeneralsPanel.h"
 #include "gui/panels/GOGUICouplerPanel.h"
 #include "gui/panels/GOGUICrescendoPanel.h"
@@ -65,6 +64,7 @@
 #include "sound/GOSoundEngine.h"
 #include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
+#include "yaml/GOYamlModel.h"
 #include "yaml/go-wx-yaml.h"
 
 #include "go_defs.h"
@@ -627,111 +627,14 @@ wxString GOOrganController::Load(
 
 // const wxString &WX_CMB = wxT(".cmb");
 const wxString &WX_YAML = wxT("yaml");
-const char *const INFO = "info";
-const char *const CONTENT_TYPE = "content-type";
 const wxString WX_GRANDORGUE_COMBINATIONS = "GrandOrgue Combinations";
-const char *const ORGAN_NAME = "organ-name";
-const char *const GRANDORGUE_VERSION = "grandorgue-version";
-const char *const SAVED_TIME = "saved_time";
 
 wxString GOOrganController::ExportCombination(const wxString &fileName) {
-  wxString errMsg;
-  wxFileOutputStream fOS(fileName);
+  GOYamlModel::Out yamlOut(GetOrganName(), WX_GRANDORGUE_COMBINATIONS);
 
-  if (fOS.IsOk()) {
-    YAML::Node globalNode(YAML::NodeType::Map);
-    YAML::Node infoNode = globalNode[INFO];
-
-    infoNode[CONTENT_TYPE] = WX_GRANDORGUE_COMBINATIONS;
-    infoNode[ORGAN_NAME] = GetOrganName();
-    infoNode[GRANDORGUE_VERSION] = APP_VERSION;
-    infoNode[SAVED_TIME] = wxDateTime::Now().Format();
-
-    globalNode << *m_setter;
-    globalNode << *m_DivisionalSetter;
-    YAML::Emitter outYaml;
-
-    outYaml << YAML::BeginDoc << globalNode;
-
-    static const uint8_t utf8bom[] = {0xEF, 0xBB, 0xBF};
-    if (
-      fOS.WriteAll(utf8bom, sizeof(utf8bom))
-      && fOS.WriteAll(outYaml.c_str(), outYaml.size()))
-      m_setter->OnCombinationsSaved(fileName);
-    else
-      errMsg.Printf(
-        wxT("Unable to write all the data to the file '%s'"), fileName);
-    fOS.Close();
-  } else
-    errMsg.Printf(wxT("Unable to open the file '%s' for writing"), fileName);
-  return errMsg;
-}
-
-/**
- * Check the organName of the imported combination file. If it differs from the
- * current organ name then ask for the user
- * @param organName the organ the combination file was saved of
- * @return true if the churchNames are the same or the user agree with importing
- *   the combination file
- */
-bool GOOrganController::IsToImportCombinationsFor(
-  const wxString &fileName, const wxString &organName) const {
-  bool isToImport = true;
-
-  if (organName != GetOrganName()) {
-    wxLogWarning(
-      _("This combination file '%s' was originally made for another organ "
-        "'%s'"),
-      fileName,
-      organName);
-    isToImport = wxMessageBox(
-                   wxString::Format(
-                     _("This combination file '%s' was originally made for "
-                       "another organ '%s'. Importing it can cause various "
-                       "problems. Should it really be imported?"),
-                     fileName,
-                     organName),
-                   _("Import Combinations"),
-                   wxYES_NO,
-                   NULL)
-      == wxYES;
-  }
-  return isToImport;
-}
-
-static std::vector<char> load_file_bytes(const wxString &filePath) {
-  wxFile file;
-  if (!file.Open(filePath)) {
-    throw wxString::Format(
-      _("Failed to open '%s': %s"), filePath, strerror(file.GetLastError()));
-  }
-  std::vector<char> content;
-  content.reserve(file.Length());
-  char buf[8 * 1024]; // 8 KiB
-  ssize_t bytesRead;
-  while ((bytesRead = file.Read(buf, sizeof(buf))) != 0) {
-    if (bytesRead == wxInvalidOffset) {
-      throw wxString::Format(
-        _("Failed to read '%s': %s"), filePath, strerror(file.GetLastError()));
-    }
-    content.insert(content.end(), &buf[0], &buf[bytesRead]);
-  }
-  return content;
-}
-
-static wxString load_file_text_with_encoding_detection(
-  const wxString &filePath) {
-  std::vector<char> content = load_file_bytes(filePath);
-  wxBOM detectedBOM = wxConvAuto::DetectBOM(&content[0], content.size());
-  if (detectedBOM != wxBOM_None && detectedBOM != wxBOM_Unknown) {
-    // We know what encoding was used for that file.
-    // wxConvAuto will use BOM to determine encoding and to decode file content.
-    // Note: newer GO versions export yaml files with UTF-8-BOM.
-    return wxString(&content[0], wxConvAuto(), content.size());
-  } else {
-    // Use encoding that was used in older GO versions (system default)
-    return wxString(&content[0], *wxConvCurrent, content.size());
-  }
+  yamlOut << *m_setter;
+  yamlOut << *m_DivisionalSetter;
+  return yamlOut.writeTo(fileName);
 }
 
 void GOOrganController::LoadCombination(const wxString &file) {
@@ -742,21 +645,15 @@ void GOOrganController::LoadCombination(const wxString &file) {
     const wxString fileExt = fileName.GetExt();
 
     if (fileExt == WX_YAML) {
-      wxString fileContent = load_file_text_with_encoding_detection(file);
-      // Note: wxScopedCharBuffer may point to internals of wxString above
-      // fileContent must not be destructed while fileContentInUtf8 is in use
-      wxScopedCharBuffer fileContentInUtf8 = fileContent.utf8_str();
-      YAML::Node cmbNode = YAML::Load(fileContentInUtf8.data());
-      YAML::Node cmbInfoNode = cmbNode[INFO];
-      const wxString contentType = cmbInfoNode[CONTENT_TYPE].as<wxString>();
+      GOYamlModel::In inYaml(GetOrganName(), file, WX_GRANDORGUE_COMBINATIONS);
 
-      if (contentType != WX_GRANDORGUE_COMBINATIONS)
-        throw wxString::Format(
-          _("The file '%s' is not a GrandOrgue Combination file"), file);
-      if (IsToImportCombinationsFor(
-            file, cmbInfoNode[ORGAN_NAME].as<wxString>())) {
-        cmbNode >> *m_setter;
-        cmbNode >> *m_DivisionalSetter;
+      if (is_to_import_to_this_organ(
+            GetOrganName(),
+            WX_GRANDORGUE_COMBINATIONS,
+            file,
+            inYaml.GetFileOrganName())) {
+        inYaml >> *m_setter;
+        inYaml >> *m_DivisionalSetter;
         m_setter->OnCombinationsLoaded(fileName.GetPath(), file);
       }
     } else {
@@ -768,24 +665,24 @@ void GOOrganController::LoadCombination(const wxString &file) {
       GOConfigReaderDB ini;
       ini.ReadData(odf_ini_file, CMBSetting, false);
       GOConfigReader cfg(ini);
-
-      wxString church_name
+      wxString fileOrganName
         = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchName"));
-      if (!IsToImportCombinationsFor(file, church_name))
-        return;
 
-      wxString hash = odf_ini_file.getEntry(WX_ORGAN, wxT("ODFHash"));
-      if (hash != wxEmptyString)
-        if (hash != m_ODFHash) {
-          wxLogWarning(
-            _("The combination file does not exactly match the current ODF."));
-        }
-      /* skip informational items */
-      cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
-      cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
+      if (is_to_import_to_this_organ(
+            GetOrganName(), wxT("Organ Settings"), file, fileOrganName)) {
+        wxString hash = odf_ini_file.getEntry(WX_ORGAN, wxT("ODFHash"));
+        if (hash != wxEmptyString)
+          if (hash != m_ODFHash) {
+            wxLogWarning(_(
+              "The combination file does not exactly match the current ODF."));
+          }
+        /* skip informational items */
+        cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
+        cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
 
-      ReadCombinations(cfg);
-      m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
+        ReadCombinations(cfg);
+        m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
+      }
     }
     SetOrganModified();
   } catch (const wxString &error) {
