@@ -150,12 +150,14 @@ public:
   void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();
 
+  const ptr_vector<GOWindchest> &GetWindchests() const { return m_windchests; }
   unsigned GetWindchestCount() const { return m_windchests.size(); }
   // Returns the windchest number starting with 1
   unsigned AddWindchest(GOWindchest *windchest);
   // Returns the windchest by it's index starting with 0
   GOWindchest *GetWindchest(unsigned index) { return m_windchests[index]; }
 
+  const ptr_vector<GOEnclosure> &GetEnclosures() const { return m_enclosures; }
   GOEnclosure *GetEnclosureElement(unsigned index);
   unsigned GetEnclosureCount();
   unsigned AddEnclosure(GOEnclosure *enclosure);

@@ -5653,6 +5653,49 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
       </sect2>
     </sect1>
     <sect1>
+      <title>Enclosures</title>
+      <indexterm><primary>Organ settings.Enclosures</primary></indexterm>
+      <figure>
+	<title>Organ Settings dialog, Enclosures tab</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata scalefit="1" width="100%" fileref="images/organ_settings_enclosures.png"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      <para>
+	In its left box, this dialog displays all enclosures: both added 
+	internally by GrandOrgue and the ones found in the definition file. Only
+	the enclosures added internally are allowed to be changed.
+      </para>
+      <simpara>
+	Select the element you wish to customize. The right controls are
+	populated with values picked from the organ definition file or the
+	current preset number if the latter was saved.
+      </simpara>
+      <simpara>
+	It is possible to select multiple elements at once, to e.g. update one
+	setting of multiple elements to the same value in a single operation.
+      </simpara>
+      <sect2>
+	<title>Affected windchests</title>
+	<para>
+	  The list of windchest the enclosure affects.
+	</para>
+      </sect2>
+      <sect2>
+	<title>Minimum amplitude level</title>
+	<para>
+	  Linear sound amplitude scale factor when the enclosure is closed. The
+	  allowed range is 0, 100.
+	</para>
+	<para>
+	  0 means complete silence. 100 means the enclosure does not affect the
+	  windchest volume at all.
+	</para>
+      </sect2>
+    </sect1>
+    <sect1>
       <title>Buttons row</title>
       <para>These buttons are used to drive the dialog and always act on the selected element.</para>
       <variablelist>

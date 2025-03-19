@@ -74,8 +74,9 @@ gui/dialogs/midi-event/GOMidiEventDialog.cpp
 gui/dialogs/midi-event/GOMidiEventKeyTab.cpp
 gui/dialogs/midi-event/GOMidiEventRecvTab.cpp
 gui/dialogs/midi-event/GOMidiEventSendTab.cpp
-gui/dialogs/organ-settings/GOOrganSettingsButtonsProxy.cpp
+gui/dialogs/organ-settings/GOOrganSettingsTab.cpp
 gui/dialogs/organ-settings/GOOrganSettingsDialog.cpp
+gui/dialogs/organ-settings/GOOrganSettingsEnclosuresTab.cpp
 gui/dialogs/organ-settings/GOOrganSettingsPipesTab.cpp
 gui/dialogs/settings/GOSettingsAudio.cpp
 gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp

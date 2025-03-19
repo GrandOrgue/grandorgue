@@ -13,7 +13,7 @@
 #include <wx/event.h>
 #include <wx/panel.h>
 
-#include "GOOrganSettingsButtonsProxy.h"
+#include "GOOrganSettingsTab.h"
 
 class wxCheckBox;
 class wxChoice;
@@ -29,8 +29,7 @@ class GOConfig;
 class GOOrganModel;
 class GOPipeConfigNode;
 
-class GOOrganSettingsPipesTab : public wxPanel,
-                                public GOOrganSettingsButtonsProxy {
+class GOOrganSettingsPipesTab : public GOOrganSettingsTab {
 private:
   class TreeItemData;
 
@@ -77,13 +76,6 @@ private:
   wxTreeItemId FillTree(wxTreeItemId parent, GOPipeConfigNode &config);
   bool TransferDataToWindow() override;
 
-  /**
-   * Checks if all changes have been applied. If some unapplied changes are
-   * present, then display an error message.
-   * Returns if there are unapplied changes
-   */
-  bool CheckForUnapplied();
-
   void SetEmpty(wxChoice *choice);
   void RemoveEmpty(wxChoice *choice);
 
@@ -117,18 +109,14 @@ private:
   void OnAttackLoadChanged(wxCommandEvent &e);
   void OnReleaseLoadChanged(wxCommandEvent &e);
 
-  bool Validate() override { return !CheckForUnapplied(); }
-
 public:
   GOOrganSettingsPipesTab(
-    GOOrganModel &organModel,
-    wxWindow *parent,
-    GOOrganSettingsButtonsProxy::Listener &listener);
+    GOOrganModel &organModel, GOOrganSettingsDialogBase *pDlg);
 
-  void DistributeAudio();
-  void ResetToDefault();
-  void DiscardChanges();
-  void ApplyChanges();
+  void DistributeAudio() override;
+  void ResetToDefault() override;
+  void DiscardChanges() override;
+  void ApplyChanges() override;
 
   DECLARE_EVENT_TABLE()
 };

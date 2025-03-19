@@ -13,6 +13,7 @@
 
 #include "model/GOOrganModel.h"
 
+#include "GOOrganSettingsEnclosuresTab.h"
 #include "GOOrganSettingsPipesTab.h"
 
 enum {
@@ -23,17 +24,19 @@ enum {
   ID_BUTTON_APPLY,
 };
 
-BEGIN_EVENT_TABLE(GOOrganSettingsDialog, GOTabbedDialog)
+BEGIN_EVENT_TABLE(GOOrganSettingsDialog, GOOrganSettingsDialogBase)
 EVT_BUTTON(
   ID_BUTTON_DISTRIBUTE_AUDIO, GOOrganSettingsDialog::OnButtonDistributeAudio)
 EVT_BUTTON(ID_BUTTON_DEFAULT, GOOrganSettingsDialog::OnButtonDefault)
 EVT_BUTTON(ID_BUTTON_DISCARD, GOOrganSettingsDialog::OnButtonDiscard)
 EVT_BUTTON(ID_BUTTON_APPLY, GOOrganSettingsDialog::OnButtonApply)
+EVT_BOOKCTRL_PAGE_CHANGING(wxID_ANY, GOOrganSettingsDialog::OnTabSelecting)
+EVT_BOOKCTRL_PAGE_CHANGED(wxID_ANY, GOOrganSettingsDialog::OnTabSelected)
 END_EVENT_TABLE()
 
 GOOrganSettingsDialog::GOOrganSettingsDialog(
   GOOrganModel &organModel, GODocumentBase *doc, wxWindow *parent)
-  : GOTabbedDialog(
+  : GOOrganSettingsDialogBase(
     parent,
     wxT("Organ settings"),
     _("Organ settings"),
@@ -42,11 +45,6 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     0,
     wxHELP | wxCLOSE),
     GOView(doc, this) {
-  wxBookCtrlBase *pNoteBook = GetBookCtrl();
-
-  m_PipesTab = new GOOrganSettingsPipesTab(organModel, pNoteBook, *this);
-  AddTab(m_PipesTab, "Pipes", _("Pipes"));
-
   // add a custom button 'Reason into the space of the standard dialog button
   wxSizer *const pButtonSizer = GetButtonSizer();
 
@@ -73,28 +71,37 @@ GOOrganSettingsDialog::GOOrganSettingsDialog(
     pButtonSizer->InsertSpacer(9, 10);
   }
 
+  // Don't move above because adding tabs raises events that require buttons
+  m_PipesTab = new GOOrganSettingsPipesTab(organModel, this);
+  AddTab(m_PipesTab);
+
+  m_EnclosuresTab = new GOOrganSettingsEnclosuresTab(organModel, this);
+  AddTab(m_EnclosuresTab);
+
   LayoutDialog();
 }
 
 void GOOrganSettingsDialog::ButtonStatesChanged() {
-  m_AudioGroupAssistant->Enable(m_PipesTab->IsDistributeAudioEnabled());
-  m_Default->Enable(m_PipesTab->IsDefaultEnabled());
-  m_Discard->Enable(m_PipesTab->IsRevertEnabled());
-  m_Apply->Enable(m_PipesTab->IsApplyEnabled());
+  auto pTab = dynamic_cast<GOOrganSettingsTab *>(GetBook()->GetCurrentPage());
+
+  if (pTab) {
+    bool isDistributeEnabled = pTab->IsDistributeAudioEnabled();
+
+    m_AudioGroupAssistant->Enable(isDistributeEnabled);
+    m_Default->Enable(pTab->IsDefaultEnabled());
+    m_Discard->Enable(pTab->IsRevertEnabled());
+    m_Apply->Enable(pTab->IsApplyEnabled());
+  }
 }
 
-void GOOrganSettingsDialog::OnButtonDistributeAudio(wxCommandEvent &e) {
-  m_PipesTab->DistributeAudio();
+template <typename T>
+T GOOrganSettingsDialog::CallTabFunc(T (GOOrganSettingsTab::*pFunc)()) {
+  auto pTab = dynamic_cast<GOOrganSettingsTab *>(GetBook()->GetCurrentPage());
+
+  return pTab ? (pTab->*pFunc)() : T();
 }
 
-void GOOrganSettingsDialog::OnButtonDefault(wxCommandEvent &e) {
-  m_PipesTab->ResetToDefault();
-}
-
-void GOOrganSettingsDialog::OnButtonDiscard(wxCommandEvent &e) {
-  m_PipesTab->DiscardChanges();
-}
-
-void GOOrganSettingsDialog::OnButtonApply(wxCommandEvent &e) {
-  m_PipesTab->ApplyChanges();
+void GOOrganSettingsDialog::OnTabSelecting(wxBookCtrlEvent &e) {
+  if (CallTabFunc(&GOOrganSettingsTab::CheckForUnapplied))
+    e.Veto();
 }
