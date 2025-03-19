@@ -24,7 +24,8 @@ void GOMidiShortcutReceiver::Load(GOConfigReader &cfg, const wxString &group) {
   }
 }
 
-void GOMidiShortcutReceiver::Save(GOConfigWriter &cfg, const wxString &group) {
+void GOMidiShortcutReceiver::Save(
+  GOConfigWriter &cfg, const wxString &group) const {
   if (m_ShortcutKey) {
     if (m_type == KEY_RECV_ENCLOSURE) {
       cfg.WriteInteger(group, wxT("PlusKey"), m_ShortcutKey);

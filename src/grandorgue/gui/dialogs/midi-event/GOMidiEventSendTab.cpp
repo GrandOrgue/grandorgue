@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -290,37 +290,37 @@ bool GOMidiEventSendTab::TransferDataFromWindow() {
 
 void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
   GOMidiSenderMessageType type = m_eventtype->GetCurrentValue();
-  if (m_original->HasChannel(type))
+  if (m_original->hasChannel(type))
     m_channel->Enable();
   else
     m_channel->Disable();
   if (m_original->HasKey(type)) {
     m_key->Enable();
-    m_key->SetRange(0, m_original->KeyLimit(type));
+    m_key->SetRange(0, m_original->keyLimit(type));
   } else
     m_key->Disable();
-  if (m_original->IsNote(type))
+  if (m_original->isNote(type))
     m_noteOff->Enable();
   else
     m_noteOff->Disable();
-  if (m_original->HasLowValue(type)) {
+  if (m_original->hasLowValue(type)) {
     m_LowValue->Enable();
-    m_LowValue->SetRange(0, m_original->LowValueLimit(type));
+    m_LowValue->SetRange(0, m_original->lowValueLimit(type));
   } else
     m_LowValue->Disable();
-  if (m_original->HasHighValue(type)) {
+  if (m_original->hasHighValue(type)) {
     m_HighValue->Enable();
-    m_HighValue->SetRange(0, m_original->HighValueLimit(type));
+    m_HighValue->SetRange(0, m_original->highValueLimit(type));
   } else
     m_HighValue->Disable();
-  if (m_original->HasStart(type)) {
+  if (m_original->hasStart(type)) {
     m_StartValue->Enable();
-    m_StartValue->SetRange(0, m_original->StartLimit(type));
+    m_StartValue->SetRange(0, m_original->startLimit(type));
   } else
     m_StartValue->Disable();
-  if (m_original->HasLength(type)) {
+  if (m_original->hasLength(type)) {
     m_LengthValue->Enable();
-    m_LengthValue->SetRange(0, m_original->LengthLimit(type));
+    m_LengthValue->SetRange(0, m_original->lengthLimit(type));
   } else
     m_LengthValue->Disable();
   if (type == MIDI_S_HW_LCD || type == MIDI_S_HW_NAME_LCD)

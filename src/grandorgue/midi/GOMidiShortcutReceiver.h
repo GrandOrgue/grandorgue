@@ -20,7 +20,7 @@ public:
   GOMidiShortcutReceiver(ReceiverType type) : GOMidiShortcutPattern(type) {}
 
   void Load(GOConfigReader &cfg, const wxString &group);
-  void Save(GOConfigWriter &cfg, const wxString &group);
+  void Save(GOConfigWriter &cfg, const wxString &group) const;
 
   MatchType Match(unsigned key);
 
