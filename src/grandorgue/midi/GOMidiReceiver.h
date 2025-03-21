@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,21 +15,16 @@ class GOOrganModel;
 
 class GOMidiReceiver : public GOMidiReceiverBase {
 private:
-  GOOrganModel &r_OrganModel;
   const GOConfig &r_config;
-  int m_Index;
 
 protected:
-  void Preconfigure(GOConfigReader &cfg, wxString group) override;
-  int GetTranspose() override;
+  int GetTranspose() const override;
 
 public:
   GOMidiReceiver(GOOrganModel &organModel, GOMidiReceiverType type);
 
-  void Load(
-    GOConfigReader &cfg, const wxString &group, GOMidiMap &map) override;
-
-  void SetIndex(int index) { m_Index = index; }
+  using GOMidiReceiverBase::Load;
+  void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 };
 
 #endif

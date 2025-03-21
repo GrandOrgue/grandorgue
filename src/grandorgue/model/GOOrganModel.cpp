@@ -85,8 +85,7 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   m_enclosures.resize(0);
   for (unsigned i = 0; i < NumberOfEnclosures; i++) {
     m_enclosures.push_back(new GOEnclosure(*this));
-    m_enclosures[i]->Load(
-      cfg, wxString::Format(wxT("Enclosure%03u"), i + 1), i);
+    m_enclosures[i]->Load(cfg, wxString::Format(wxT("Enclosure%03u"), i + 1));
   }
 
   // Switches must be loaded before manuals because manuals reference to
