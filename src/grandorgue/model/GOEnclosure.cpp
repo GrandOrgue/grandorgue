@@ -59,8 +59,7 @@ void GOEnclosure::Init(
   LoadFromCmb(cfg, defaultValue);
 }
 
-void GOEnclosure::Load(
-  GOConfigReader &cfg, const wxString &group) {
+void GOEnclosure::Load(GOConfigReader &cfg, const wxString &group) {
   m_IsOdfDefined = true;
   GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")));
