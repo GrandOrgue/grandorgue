@@ -14,6 +14,7 @@
 
 #include "GOControl.h"
 
+class GOMidiObjectContext;
 class GOOrganModel;
 
 class GOLabelControl : public GOControl, public GOMidiSendingObject {
@@ -24,7 +25,8 @@ protected:
   void SendEmptyMidiValue() override { SendMidiValue(wxEmptyString); }
 
 public:
-  GOLabelControl(GOOrganModel &organModel);
+  GOLabelControl(
+    GOOrganModel &organModel, const GOMidiObjectContext *pContext = nullptr);
   const wxString &GetContent() const { return m_Content; }
   void SetContent(const wxString &name);
 
