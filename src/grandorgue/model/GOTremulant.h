@@ -19,13 +19,11 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOMemoryPool;
 struct GOSoundSampler;
-struct IniFileEnumEntry;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
 
 class GOTremulant : public GODrawstop, private GOCacheObject {
 private:
-  static const struct IniFileEnumEntry m_tremulant_types[];
   GOTremulantType m_TremulantType;
   int m_Period;
   int m_StartRate;

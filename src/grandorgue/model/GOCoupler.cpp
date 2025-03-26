@@ -79,11 +79,11 @@ void GOCoupler::SetRecursive(bool isRecursive) {
   m_CoupleToSubsequentDownwardIntramanualCouplers = isRecursive;
 }
 
-const struct IniFileEnumEntry GOCoupler::m_coupler_types[] = {
-  {wxT("Normal"), COUPLER_NORMAL},
-  {wxT("Bass"), COUPLER_BASS},
-  {wxT("Melody"), COUPLER_MELODY},
-};
+static const GOConfigEnum COUPLER_TYPES({
+  {wxT("Normal"), GOCoupler::COUPLER_NORMAL},
+  {wxT("Bass"), GOCoupler::COUPLER_BASS},
+  {wxT("Melody"), GOCoupler::COUPLER_MELODY},
+});
 
 void GOCoupler::Init(
   GOConfigReader &cfg,
@@ -168,8 +168,7 @@ void GOCoupler::Load(GOConfigReader &cfg, const wxString &group) {
       ODFSetting,
       group,
       wxT("CouplerType"),
-      m_coupler_types,
-      sizeof(m_coupler_types) / sizeof(m_coupler_types[0]),
+      COUPLER_TYPES,
       false,
       COUPLER_NORMAL);
     if (m_CouplerType == COUPLER_BASS || m_CouplerType == COUPLER_MELODY) {

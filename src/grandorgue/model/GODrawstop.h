@@ -29,7 +29,6 @@ public:
   };
 
 private:
-  static const struct IniFileEnumEntry m_function_types[];
   GOFunctionType m_Type;
   int m_GCState;
   std::unordered_map<wxString, bool, wxStringHash, wxStringEqual>

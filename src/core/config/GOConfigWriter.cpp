@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,9 +10,9 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
+#include "GOConfigEnum.h"
+#include "GOConfigFileWriter.h"
 #include "GOUtil.h"
-#include "config/GOConfigFileWriter.h"
-#include "config/GOConfigReader.h"
 
 GOConfigWriter::GOConfigWriter(GOConfigFileWriter &cfg, bool prefix)
   : m_ConfigFile(cfg), m_Prefix(prefix) {}
@@ -36,18 +36,16 @@ void GOConfigWriter::WriteFloat(wxString group, wxString key, float value) {
 }
 
 void GOConfigWriter::WriteEnum(
-  wxString group,
-  wxString key,
-  int value,
-  const struct IniFileEnumEntry *entry,
-  unsigned count) {
-  for (unsigned i = 0; i < count; i++)
-    if (entry[i].value == value) {
-      WriteString(group, key, entry[i].name);
-      return;
-    }
-  wxLogError(
-    _("Invalid enum value for /%s/%s: %d"), group.c_str(), key.c_str(), value);
+  const wxString &group,
+  const wxString &key,
+  const GOConfigEnum &configEnum,
+  int value) {
+  const wxString &valueName = configEnum.GetName(value);
+
+  if (valueName.IsEmpty())
+    wxLogError(_("Invalid enum value for /%s/%s: %d"), group, key, value);
+  else
+    WriteString(group, key, valueName);
 }
 
 void GOConfigWriter::WriteBooleanTriple(
