@@ -31,7 +31,7 @@ public:
   void SetElementID(int id);
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
-  void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map);
+  void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
 
   void SetDisplay(bool state);
   void SetKey(unsigned key, unsigned velocity);
@@ -40,18 +40,18 @@ public:
   void SetLabel(const wxString &text);
   void SetName(const wxString &text);
 
-  bool HasChannel(GOMidiSenderMessageType type);
-  bool HasKey(GOMidiSenderMessageType type);
-  bool HasLowValue(GOMidiSenderMessageType type);
-  bool HasHighValue(GOMidiSenderMessageType type);
-  bool HasStart(GOMidiSenderMessageType type);
-  bool HasLength(GOMidiSenderMessageType type);
-  bool IsNote(GOMidiSenderMessageType type);
-  unsigned KeyLimit(GOMidiSenderMessageType type);
-  unsigned LowValueLimit(GOMidiSenderMessageType type);
-  unsigned HighValueLimit(GOMidiSenderMessageType type);
-  unsigned StartLimit(GOMidiSenderMessageType type);
-  unsigned LengthLimit(GOMidiSenderMessageType type);
+  static bool hasChannel(GOMidiSenderMessageType type);
+  bool HasKey(GOMidiSenderMessageType type) const;
+  static bool hasLowValue(GOMidiSenderMessageType type);
+  static bool hasHighValue(GOMidiSenderMessageType type);
+  static bool hasStart(GOMidiSenderMessageType type);
+  static bool hasLength(GOMidiSenderMessageType type);
+  static bool isNote(GOMidiSenderMessageType type);
+  static unsigned keyLimit(GOMidiSenderMessageType type);
+  static unsigned lowValueLimit(GOMidiSenderMessageType type);
+  static unsigned highValueLimit(GOMidiSenderMessageType type);
+  static unsigned startLimit(GOMidiSenderMessageType type);
+  static unsigned lengthLimit(GOMidiSenderMessageType type);
 };
 
 #endif
