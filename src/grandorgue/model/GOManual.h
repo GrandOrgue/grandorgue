@@ -45,8 +45,6 @@ private:
   unsigned m_nb_accessible_keys;
   unsigned m_UnisonOff;
 
-  int m_MIDIInputNumber;
-
   std::vector<unsigned> m_tremulant_ids;
 
   // Global Switch Id is the number of switch in ODF started with 1
@@ -91,7 +89,7 @@ public:
     int manualNumber,
     unsigned firstMidi,
     unsigned keys);
-  using GOMidiObject::Load; // avoiding a compilation warning
+  using GOMidiObjectWithDivision::Load; // avoiding a compilation warning
   void Load(GOConfigReader &cfg, const wxString &group, int manualNumber);
   void LoadDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);

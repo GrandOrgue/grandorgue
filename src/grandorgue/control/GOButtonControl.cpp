@@ -44,7 +44,10 @@ void GOButtonControl::Init(
 
 void GOButtonControl::Load(GOConfigReader &cfg, const wxString &group) {
   GOMidiObjectWithShortcut::Load(
-    cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true));
+    cfg,
+    group,
+    cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name"), true),
+    false);
   m_Displayed
     = cfg.ReadBoolean(ODFSetting, group, wxT("Displayed"), false, false);
   m_DisplayInInvertedState = cfg.ReadBoolean(
