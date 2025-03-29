@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,10 +9,9 @@
 #define GOMIDIEVENTSENDTAB_H
 
 #include "gui/dialogs/common/GODialogTab.h"
+#include "gui/wxcontrols/GOChoice.h"
 #include "midi/GOMidiSender.h"
 #include "modification/GOModificationProxy.h"
-
-#include "GOChoice.h"
 
 class wxButton;
 class wxChoice;
