@@ -42,7 +42,7 @@
 #include "help/GOHelpRequestor.h"
 #include "loader/cache/GOCacheCleaner.h"
 #include "midi/GOMidi.h"
-#include "midi/GOMidiEvent.h"
+#include "midi/events/GOMidiEvent.h"
 #include "sound/GOSound.h"
 #include "temperaments/GOTemperament.h"
 #include "threading/GOMutexLocker.h"

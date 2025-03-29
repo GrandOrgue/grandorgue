@@ -14,8 +14,9 @@
 
 #include "config/GOConfig.h"
 #include "control/GOCallbackButtonControl.h"
-#include "midi/GOMidiEvent.h"
-#include "midi/GOMidiFile.h"
+#include "midi/events/GOMidiEvent.h"
+#include "midi/files/GOMidiFile.h"
+#include "midi/objects/GOMidiObjectContext.h"
 
 #include "GOEvent.h"
 #include "GOMidi.h"

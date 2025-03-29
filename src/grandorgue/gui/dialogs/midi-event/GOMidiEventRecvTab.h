@@ -14,9 +14,9 @@
 #include <wx/timer.h>
 
 #include "gui/wxcontrols/GOChoice.h"
-#include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
-#include "midi/GOMidiReceiverBase.h"
+#include "midi/elements/GOMidiReceiverBase.h"
+#include "midi/events/GOMidiCallback.h"
 #include "modification/GOModificationProxy.h"
 
 class wxButton;

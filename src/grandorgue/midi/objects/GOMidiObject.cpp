@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-#include "midi/GOMidiReceiver.h"
+#include "midi/elements/GOMidiReceiver.h"
 #include "model/GOOrganModel.h"
 
 #include "GOMidiObjectContext.h"

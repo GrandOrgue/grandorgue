@@ -12,8 +12,8 @@
 #include "config/GOConfigEnum.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
-#include "midi/GOMidiEvent.h"
 #include "midi/GOMidiMap.h"
+#include "midi/events/GOMidiEvent.h"
 
 #include "GOMidiSendProxy.h"
 
