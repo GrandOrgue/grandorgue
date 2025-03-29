@@ -48,6 +48,7 @@ protected:
     const wxString &midiTypeCode,
     const wxString &midiTypeName);
 
+public:
   GOMidiSender *GetMidiSender() const { return p_MidiSender; }
   void SetMidiSender(GOMidiSender *pMidiSender) { p_MidiSender = pMidiSender; }
   GOMidiReceiver *GetMidiReceiver() const { return p_MidiReceiver; }
