@@ -14,15 +14,12 @@
 
 class GOConfigReader;
 class GOConfigWriter;
-struct IniFileEnumEntry;
 
 class GOCoupler : public GODrawstop {
 public:
   typedef enum { COUPLER_NORMAL, COUPLER_BASS, COUPLER_MELODY } GOCouplerType;
 
 private:
-  static const struct IniFileEnumEntry m_coupler_types[];
-
   bool m_IsVirtual;
   bool m_UnisonOff;
   bool m_CoupleToSubsequentUnisonIntermanualCouplers;

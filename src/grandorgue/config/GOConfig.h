@@ -66,7 +66,6 @@ private:
   GOLogicalRect m_MainWindowRect;
 
   static const GOMidiSetting m_MIDISettings[];
-  static const struct IniFileEnumEntry m_InitialLoadTypes[];
 
   wxString GetEventSection(unsigned index);
 

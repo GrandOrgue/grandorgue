@@ -9,21 +9,22 @@
 
 #include <wx/intl.h>
 
+#include "config/GOConfigEnum.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
 #include "GOOrganModel.h"
 #include "GOSwitch.h"
 
-const struct IniFileEnumEntry GODrawstop::m_function_types[] = {
-  {wxT("Input"), FUNCTION_INPUT},
-  {wxT("And"), FUNCTION_AND},
-  {wxT("Or"), FUNCTION_OR},
-  {wxT("Not"), FUNCTION_NOT},
-  {wxT("Nand"), FUNCTION_NAND},
-  {wxT("Nor"), FUNCTION_NOR},
-  {wxT("Xor"), FUNCTION_XOR},
-};
+static const GOConfigEnum FUNCTION_TYPES({
+  {wxT("Input"), GODrawstop::FUNCTION_INPUT},
+  {wxT("And"), GODrawstop::FUNCTION_AND},
+  {wxT("Or"), GODrawstop::FUNCTION_OR},
+  {wxT("Not"), GODrawstop::FUNCTION_NOT},
+  {wxT("Nand"), GODrawstop::FUNCTION_NAND},
+  {wxT("Nor"), GODrawstop::FUNCTION_NOR},
+  {wxT("Xor"), GODrawstop::FUNCTION_XOR},
+});
 
 GODrawstop::GODrawstop(
   GOOrganModel &organModel,
@@ -103,13 +104,7 @@ void GODrawstop::SetupIsToStoreInCmb() {
 
 void GODrawstop::Load(GOConfigReader &cfg, const wxString &group) {
   m_Type = (GOFunctionType)cfg.ReadEnum(
-    ODFSetting,
-    group,
-    wxT("Function"),
-    m_function_types,
-    sizeof(m_function_types) / sizeof(m_function_types[0]),
-    false,
-    FUNCTION_INPUT);
+    ODFSetting, group, wxT("Function"), FUNCTION_TYPES, false, FUNCTION_INPUT);
 
   if (m_Type == FUNCTION_INPUT) {
     m_Engaged = cfg.ReadBoolean(ODFSetting, group, wxT("DefaultToEngaged"));

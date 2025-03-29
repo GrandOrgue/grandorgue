@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,14 +8,14 @@
 #ifndef GOSETTINGENUM_H
 #define GOSETTINGENUM_H
 
+#include "config/GOConfigEnum.h"
 #include "settings/GOSetting.h"
 
 template <class T> class GOSettingEnum : private GOSetting {
 private:
+  const GOConfigEnum &r_enum;
   T m_Value;
   T m_DefaultValue;
-  const struct IniFileEnumEntry *m_Entries;
-  unsigned m_Count;
 
   void Load(GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
@@ -23,10 +23,9 @@ private:
 public:
   GOSettingEnum(
     GOSettingStore *store,
-    wxString group,
-    wxString name,
-    const struct IniFileEnumEntry *entries,
-    unsigned count,
+    const wxString &group,
+    const wxString &name,
+    const GOConfigEnum &configEnum,
     T default_value);
 
   void setDefaultValue(T default_value);

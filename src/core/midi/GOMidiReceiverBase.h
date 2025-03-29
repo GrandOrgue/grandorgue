@@ -18,7 +18,6 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOMidiEvent;
 class GOMidiMap;
-struct IniFileEnumEntry;
 
 class GOMidiReceiverBase : public GOMidiReceiverEventPatternList {
 public:
@@ -32,7 +31,6 @@ private:
     int key;
   } midi_internal_match;
 
-  static const struct IniFileEnumEntry m_MidiTypes[];
   int m_ElementID;
   std::vector<GOTime> m_last;
   std::vector<midi_internal_match> m_Internal;
