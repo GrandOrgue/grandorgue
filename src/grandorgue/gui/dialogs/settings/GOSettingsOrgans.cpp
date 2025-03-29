@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -28,12 +28,12 @@
 #include "archive/GOArchiveFile.h"
 #include "archive/GOArchiveIndex.h"
 #include "config/GOConfig.h"
+#include "config/GORegisteredOrgan.h"
 #include "files/GOStdFileName.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 #include "gui/size/GOAdditionalSizeKeeperProxy.h"
 #include "gui/wxcontrols/GOGrid.h"
 
-#include "GOOrgan.h"
 #include "GOOrganController.h"
 
 static const wxString EMPTY_STRING = wxEmptyString;
@@ -290,7 +290,8 @@ GOSettingsOrgans::PackageSlotSet GOSettingsOrgans::GetUsedPackages(
   return packagesUsed;
 }
 
-void GOSettingsOrgans::DisplayMidiCell(unsigned rowN, GOOrgan *pOrgan) {
+void GOSettingsOrgans::DisplayMidiCell(
+  unsigned rowN, GORegisteredOrgan *pOrgan) {
   m_GridOrgans->SetCellValue(
     rowN,
     GRID_COL_MIDI,
@@ -302,7 +303,7 @@ void GOSettingsOrgans::DisplayPathCell(unsigned rowN, const wxString &path) {
 }
 
 void GOSettingsOrgans::FillGridRow(unsigned rowN, OrganSlot &organSlot) {
-  GOOrgan *o = organSlot.p_CurrentOrgan;
+  GORegisteredOrgan *o = organSlot.p_CurrentOrgan;
   wxString title = o->GetChurchName();
 
   if (!o->IsUsable(m_config))
@@ -351,8 +352,9 @@ bool GOSettingsOrgans::TransferDataToWindow() {
     GOOrgan *o = m_OrigOrganList[i];
     wxString hash = o->GetOrganHash();
 
-    organSlot.p_OrigOrgan = o;
-    organSlot.p_CurrentOrgan = o;
+    organSlot.p_OrigOrgan = dynamic_cast<GORegisteredOrgan *>(o);
+    ;
+    organSlot.p_CurrentOrgan = organSlot.p_OrigOrgan;
     organSlot.is_packaged = !o->GetArchiveID().IsEmpty();
     organSlot.m_CurrentPath
       = organSlot.is_packaged ? o->GetArchivePath() : o->GetODFPath();
@@ -645,7 +647,8 @@ void GOSettingsOrgans::ReplaceOrganPath(
   OrganSlot *pOrganSlot = m_OrganSlotPtrsByGridLine[index];
 
   if (pOrganSlot->m_CurrentPath != newPath) {
-    GOOrgan *pNewOrgan = new GOOrgan(*pOrganSlot->p_CurrentOrgan);
+    GORegisteredOrgan *pNewOrgan
+      = new GORegisteredOrgan(*pOrganSlot->p_CurrentOrgan);
 
     if (pOrganSlot->is_packaged)
       pNewOrgan->SetArchivePath(newPath);
