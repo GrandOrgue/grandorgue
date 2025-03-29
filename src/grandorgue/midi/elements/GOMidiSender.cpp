@@ -25,6 +25,10 @@ const GOConfigEnum GOMidiSender::SENDER_TYPES({
   {wxT("Manual"), MIDI_SEND_MANUAL},
 });
 
+const GOConfigEnum GOMidiSender::DIVISIONAL_SENDER_TYPES({
+  {wxT("Manual"), MIDI_SEND_MANUAL},
+});
+
 GOMidiSender::GOMidiSender(GOMidiSenderType type)
   : GOMidiSenderEventPatternList(type), m_ElementID(-1), p_proxy(nullptr) {}
 
