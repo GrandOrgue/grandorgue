@@ -95,7 +95,6 @@ public:
   ~GOManual();
 
   unsigned GetManulNumber() const { return m_manual_number; }
-  const wxString &GetNameForContext() const override { return m_ShortName; }
   const GOMidiObjectContext *GetManualContext() const { return &m_MidiContext; }
   const GOMidiObjectContext *GetCouplersContext() const {
     return &m_MidiContextCouplers;
