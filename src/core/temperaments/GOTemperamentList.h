@@ -12,6 +12,9 @@
 
 #include "ptrvector.h"
 
+#include "GOTemperament.h"
+#include "GOTemperamentUser.h"
+
 class GOConfigReader;
 class GOConfigWriter;
 class GOTemperament;
