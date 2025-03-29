@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -55,7 +55,7 @@ wxString GOArchiveFile::getArchiveHash(const wxString &path) {
   return hash.getStringHash();
 }
 
-void GOArchiveFile::Save(GOConfigWriter &cfg, wxString group) {
+void GOArchiveFile::Save(GOConfigWriter &cfg, const wxString &group) const {
   cfg.WriteString(group, wxT("ID"), m_ID);
   cfg.WriteString(group, wxT("Path"), m_Path);
   cfg.WriteString(group, wxT("Name"), m_Name);

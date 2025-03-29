@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -26,6 +26,7 @@
 #include "archive/GOArchiveManager.h"
 #include "combinations/GOSetter.h"
 #include "config/GOConfig.h"
+#include "config/GORegisteredOrgan.h"
 #include "files/GOStdFileName.h"
 #include "gui/dialogs/GONewReleaseDialog.h"
 #include "gui/dialogs/GOProgressDialog.h"
@@ -49,7 +50,6 @@
 #include "GOApp.h"
 #include "GODocument.h"
 #include "GOEvent.h"
-#include "GOOrgan.h"
 #include "GOOrganController.h"
 #include "Images.h"
 #include "go_defs.h"
@@ -1347,11 +1347,14 @@ void GOFrame::OnMidiEvent(const GOMidiEvent &event) {
 
   if (event.IsAllowedToReload()) {
     ptr_vector<GOOrgan> &organs = m_config.GetOrganList();
-    for (auto pOrgan : organs)
-      if (pOrgan->Match(event) && pOrgan->IsUsable(m_config)) {
-        SendLoadOrgan(*pOrgan);
+    for (auto pOrgan : organs) {
+      GORegisteredOrgan *pO = dynamic_cast<GORegisteredOrgan *>(pOrgan);
+
+      if (pO && pO->Match(event) && pO->IsUsable(m_config)) {
+        SendLoadOrgan(*pO);
         break;
       }
+    }
   }
 }
 
