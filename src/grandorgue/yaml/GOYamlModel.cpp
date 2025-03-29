@@ -18,15 +18,19 @@
 
 static const uint8_t UTF8_BOM[] = {0xEF, 0xBB, 0xBF};
 
-const char *const INFO = "info";
-const char *const CONTENT_TYPE = "content-type";
-const char *const ORGAN_NAME = "organ-name";
-const char *const GRANDORGUE_VERSION = "grandorgue-version";
-const char *const SAVED_TIME = "saved_time";
+const wxString WX_INFO = "info";
+const wxString WX_CONTENT_TYPE = "content-type";
+const wxString WX_ORGAN_NAME = "organ-name";
+const wxString WX_GRANDORGUE_VERSION = "grandorgue-version";
+const wxString WX_SAVED_TIME = "saved_time";
 
 static wxString get_info_field(
-  const YAML::Node &globalNode, const wxString &fieldName) {
-  return globalNode[INFO][fieldName].as<wxString>();
+  const YAML::Node &globalNode,
+  const wxString &fieldName,
+  bool isRequired,
+  GOStringSet &usedPaths) {
+  return read_string(
+    globalNode[WX_INFO], WX_INFO, fieldName, isRequired, usedPaths);
 }
 
 static std::vector<char> load_file_bytes(const wxString &filePath) {
@@ -78,7 +82,8 @@ GOYamlModel::In::In(
   const wxString &fileName,
   const wxString &contentType)
   : m_GlobalNode(load_yaml_from_file(fileName)) {
-  const wxString fileContentType = get_info_field(m_GlobalNode, CONTENT_TYPE);
+  const wxString fileContentType
+    = get_info_field(m_GlobalNode, WX_CONTENT_TYPE, true, m_UsedPaths);
 
   if (fileContentType != contentType)
     throw wxString::Format(
@@ -86,10 +91,9 @@ GOYamlModel::In::In(
       fileName,
       fileContentType,
       contentType);
-}
-
-wxString GOYamlModel::In::GetFileOrganName() const {
-  return get_info_field(m_GlobalNode, ORGAN_NAME);
+  m_OrganName = get_info_field(m_GlobalNode, WX_ORGAN_NAME, false, m_UsedPaths);
+  get_info_field(m_GlobalNode, WX_GRANDORGUE_VERSION, false, m_UsedPaths);
+  get_info_field(m_GlobalNode, WX_SAVED_TIME, false, m_UsedPaths);
 }
 
 const GOYamlModel::In &GOYamlModel::In::operator>>(
@@ -98,14 +102,18 @@ const GOYamlModel::In &GOYamlModel::In::operator>>(
   return *this;
 }
 
+void GOYamlModel::In::CheckAllUsed() const {
+  check_all_used(m_GlobalNode, wxEmptyString, m_UsedPaths);
+}
+
 GOYamlModel::Out::Out(const wxString &organName, const wxString &contentType)
   : m_GlobalNode(YAML::NodeType::Map) {
-  YAML::Node infoNode = m_GlobalNode[INFO];
+  YAML::Node infoNode = m_GlobalNode[WX_INFO];
 
-  infoNode[CONTENT_TYPE] = contentType;
-  infoNode[ORGAN_NAME] = organName;
-  infoNode[GRANDORGUE_VERSION] = APP_VERSION;
-  infoNode[SAVED_TIME] = wxDateTime::Now().Format();
+  infoNode[WX_CONTENT_TYPE] = contentType;
+  infoNode[WX_ORGAN_NAME] = organName;
+  infoNode[WX_GRANDORGUE_VERSION] = APP_VERSION;
+  infoNode[WX_SAVED_TIME] = wxDateTime::Now().Format();
 }
 
 GOYamlModel::Out &GOYamlModel::Out::operator<<(

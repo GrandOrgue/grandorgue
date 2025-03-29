@@ -36,6 +36,7 @@ static const GOMidiObjectContext MIDI_CONTEXT_SWITCHES(
   wxT("switches"), _("switches"));
 static const GOMidiObjectContext MIDI_CONTEXT_TREMULANTS(
   wxT("tremulants"), _("tremulants"));
+static const wxString WX_OBJ_NUM_FMT = wxT("%03u");
 
 GOOrganModel::GOOrganModel(GOConfig &config)
   : m_config(config),
@@ -60,6 +61,10 @@ unsigned GOOrganModel::GetRecorderElementID(const wxString &name) {
 }
 
 static const wxString WX_ORGAN = wxT("Organ");
+
+static void set_name_for_context(GOMidiObject *pObj, unsigned n) {
+  pObj->SetNameForContext(wxString::Format(WX_OBJ_NUM_FMT, n));
+}
 
 void GOOrganModel::Load(GOConfigReader &cfg) {
   m_OrganName = cfg.ReadStringTrim(ODFSetting, WX_ORGAN, wxT("ChurchName"));
@@ -101,8 +106,10 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   m_enclosures.resize(0);
   for (unsigned i = 0; i < NumberOfEnclosures; i++) {
     GOEnclosure *pEnclosure = new GOEnclosure(*this);
+    unsigned num = i + 1;
 
     pEnclosure->SetContext(&MIDI_CONTEXT_ENCLOSURES);
+    set_name_for_context(pEnclosure, num);
     pEnclosure->Load(cfg, wxString::Format(wxT("Enclosure%03u"), i + 1));
     m_enclosures.push_back(pEnclosure);
   }
@@ -113,17 +120,23 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfSwitches"), 0, 999, 0);
   m_switches.resize(0);
   for (unsigned i = 0; i < NumberOfSwitches; i++) {
-    m_switches.push_back(new GOSwitch(*this));
-    m_switches[i]->Load(cfg, wxString::Format(wxT("Switch%03d"), i + 1));
+    GOSwitch *pSwitch = new GOSwitch(*this);
+    unsigned num = i + 1;
+
+    set_name_for_context(pSwitch, num);
+    pSwitch->Load(cfg, wxString::Format(wxT("Switch%03d"), num));
+    m_switches.push_back(pSwitch);
   }
 
   unsigned NumberOfTremulants
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfTremulants"), 0, 999);
   for (unsigned i = 0; i < NumberOfTremulants; i++) {
     GOTremulant *pTremulant = new GOTremulant(*this);
+    unsigned num = i + 1;
 
     pTremulant->SetContext(&MIDI_CONTEXT_TREMULANTS);
-    pTremulant->Load(cfg, wxString::Format(wxT("Tremulant%03d"), i + 1), i + 1);
+    set_name_for_context(pTremulant, num);
+    pTremulant->Load(cfg, wxString::Format(wxT("Tremulant%03u"), num), num);
     m_tremulants.push_back(pTremulant);
   }
 
@@ -135,9 +148,11 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
     ODFSetting, WX_ORGAN, wxT("NumberOfRanks"), 0, 999, false);
   for (unsigned i = 0; i < m_ODFRankCount; i++) {
     GORank *pRank = new GORank(*this);
+    unsigned num = i + 1;
 
     pRank->SetContext(&MIDI_CONTEXT_RANKS);
-    pRank->Load(cfg, wxString::Format(wxT("Rank%03d"), i + 1), -1);
+    set_name_for_context(pRank, num);
+    pRank->Load(cfg, wxString::Format(wxT("Rank%03d"), num), -1);
     m_ranks.push_back(pRank);
   }
 
@@ -192,8 +207,11 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
     const GOMidiObjectContext *pSwitchContext = switchManualIdx >= 0
       ? m_manuals[switchManualIdx]->GetSwitchesContext()
       : nullptr;
+    unsigned num
+      = switchManualIdx >= 0 ? pSwitch->GetIndexInManual() + 1 : i + 1;
 
     pSwitch->SetContext(pSwitchContext);
+    set_name_for_context(pSwitch, num);
     pSwitch->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("S%d"), i)));
   }

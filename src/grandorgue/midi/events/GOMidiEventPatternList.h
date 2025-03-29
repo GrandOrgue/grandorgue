@@ -25,6 +25,8 @@ public:
 
   bool IsMidiConfigured() const { return !m_events.empty(); }
 
+  void ClearEvents() { m_events.clear(); }
+
   const MidiEventPattern &GetEvent(unsigned index) const {
     return m_events[index];
   }

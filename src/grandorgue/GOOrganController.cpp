@@ -65,7 +65,6 @@
 #include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
 #include "yaml/GOYamlModel.h"
-#include "yaml/go-wx-yaml.h"
 
 #include "go_defs.h"
 

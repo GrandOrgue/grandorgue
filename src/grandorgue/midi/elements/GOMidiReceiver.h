@@ -10,9 +10,11 @@
 
 #include <cstdint>
 
-#include "GOTime.h"
 #include "midi/events/GOMidiMatchType.h"
 #include "midi/events/GOMidiReceiverEventPatternList.h"
+
+#include "GOMidiElement.h"
+#include "GOTime.h"
 
 class GOConfig;
 class GOConfigReader;
@@ -20,7 +22,8 @@ class GOConfigWriter;
 class GOMidiEvent;
 class GOMidiMap;
 
-class GOMidiReceiver : public GOMidiReceiverEventPatternList {
+class GOMidiReceiver : public GOMidiReceiverEventPatternList,
+                       public GOMidiElement {
 public:
   constexpr static unsigned KEY_MAP_SIZE = 128;
   using KeyMap = uint8_t[KEY_MAP_SIZE];
@@ -38,6 +41,8 @@ private:
   std::vector<GOTime> m_last;
   std::vector<midi_internal_match> m_Internal;
 
+  GOMidiReceiverMessageType GetDefaultMidiType() const;
+
   GOMidiMatchType debounce(
     const GOMidiEvent &e, GOMidiMatchType event, unsigned index);
   void deleteInternal(unsigned device);
@@ -51,6 +56,15 @@ public:
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
+
+  void ToYaml(YAML::Node &yamlNode, GOMidiMap &map) const override;
+  void FromYaml(
+    const YAML::Node &yamlNode,
+    const wxString &yamlPath,
+    GOMidiMap &map,
+    GOStringSet &usedPaths) override;
+
+public:
   void PreparePlayback();
 
   void SetElementID(int id) { m_ElementID = id; }

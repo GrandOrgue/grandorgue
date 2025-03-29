@@ -11,6 +11,8 @@
 #include <wx/string.h>
 #include <yaml-cpp/yaml.h>
 
+#include "GOStringSet.h"
+
 class GOSaveableToYaml;
 
 /**
@@ -29,10 +31,11 @@ public:
    * inYaml >> saveableToYaml2;
    */
   class In {
-  private:
-    YAML::Node m_GlobalNode;
-
   public:
+    YAML::Node m_GlobalNode;
+    GOStringSet m_UsedPaths;
+    wxString m_OrganName;
+
     /**
      * Construct an instance. If sometimes goes wrong, it throws a wxString with
      * the error messag
@@ -45,9 +48,11 @@ public:
       const wxString &fileName,
       const wxString &contentType);
 
-    wxString GetFileOrganName() const;
+    wxString GetFileOrganName() const { return m_OrganName; }
 
     const In &operator>>(GOSaveableToYaml &saveableObj) const;
+
+    void CheckAllUsed() const;
   };
 
   /**
@@ -63,10 +68,9 @@ public:
    * wxString errorMsg = outYaml.writeTo(fileName)
    */
   class Out {
-  private:
+  public:
     YAML::Node m_GlobalNode;
 
-  public:
     Out(const wxString &organName, const wxString &contentType);
 
     Out &operator<<(const GOSaveableToYaml &saveableObj);
