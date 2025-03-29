@@ -48,7 +48,9 @@ private:
   void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
   void SaveMidiObject(
-    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) override;
+    GOConfigWriter &cfg,
+    const wxString &group,
+    GOMidiMap &midiMap) const override;
 
   void Resize();
 
