@@ -181,12 +181,8 @@ void GODocument::ShowMidiList() {
   if (!showWindow(GODocument::MIDI_LIST, NULL) && m_OrganController) {
     registerWindow(
       GODocument::MIDI_LIST,
-      NULL,
-      new GOMidiObjectsDialog(
-        this,
-        NULL,
-        m_OrganController->GetConfig().m_DialogSizes,
-        m_OrganController->GetMidiObjects()));
+      nullptr,
+      new GOMidiObjectsDialog(this, nullptr, *m_OrganController));
   }
 }
 
