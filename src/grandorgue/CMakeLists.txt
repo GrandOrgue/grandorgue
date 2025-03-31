@@ -96,6 +96,7 @@ gui/dialogs/GOProgressDialog.cpp
 gui/dialogs/GOPropertiesDialog.cpp
 gui/dialogs/GOSelectOrganDialog.cpp
 gui/dialogs/GOSplash.cpp
+gui/dialogs/go-message-boxes.cpp
 gui/frames/GOFrame.cpp
 gui/frames/GOLogWindow.cpp
 gui/frames/GOMainWindowData.cpp
@@ -222,6 +223,7 @@ sound/GOSoundFilter.cpp
 sound/GOSoundToneBalanceFilter.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp
+yaml/GOYamlModel.cpp
 yaml/go-wx-yaml.cpp
 GOAudioRecorder.cpp
 GOBitmapCache.cpp
