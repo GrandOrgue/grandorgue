@@ -173,6 +173,9 @@ public:
   wxString GetEventGroup(unsigned index);
   wxString GetEventTitle(unsigned index);
   const GOMidiReceiverBase *GetMidiEvent(unsigned index) const;
+  unsigned GetEventInputNumber(unsigned index) const {
+    return m_MIDISettings[index].index;
+  }
   const GOMidiReceiverBase *FindMidiEvent(
     GOMidiReceiverType type, unsigned index) const;
 

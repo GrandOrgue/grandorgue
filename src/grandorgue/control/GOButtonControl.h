@@ -51,7 +51,7 @@ public:
 
   void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) override;
-  using GOMidiObject::Load; // Avoiding a compilation warning
+  using GOMidiReceivingSendingObject::Load; // Avoiding a compilation warning
   virtual void Load(GOConfigReader &cfg, const wxString &group);
 
   bool IsDisplayed() const { return m_Displayed; }

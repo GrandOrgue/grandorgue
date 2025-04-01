@@ -177,15 +177,8 @@ void GOMidiReceiverBase::Load(
             false,
             127));
     }
-  } else {
-    m_events.resize(0);
-    Preconfigure(cfg, group);
   }
 }
-
-void GOMidiReceiverBase::Preconfigure(GOConfigReader &cfg, wxString group) {}
-
-int GOMidiReceiverBase::GetTranspose() { return 0; }
 
 void GOMidiReceiverBase::Save(
   GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const {
