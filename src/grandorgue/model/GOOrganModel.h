@@ -102,7 +102,7 @@ protected:
 
 public:
   GOOrganModel(GOConfig &config);
-  ~GOOrganModel();
+  virtual ~GOOrganModel();
 
   const GOConfig &GetConfig() const { return m_config; }
   GOConfig &GetConfig() { return m_config; }

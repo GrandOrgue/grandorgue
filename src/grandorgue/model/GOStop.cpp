@@ -17,13 +17,18 @@
 static const wxString WX_MIDI_TYPE_CODE = wxT("Stop");
 static const wxString WX_MIDI_TYPE_NAME = _("Stop");
 
-GOStop::GOStop(GOOrganModel &organModel, unsigned first_midi_note_number)
+GOStop::GOStop(
+  GOOrganModel &organModel,
+  unsigned first_midi_note_number,
+  GOMidiObjectContext *pContext)
   : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
     m_RankInfo(0),
     m_KeyVelocity(0),
     m_FirstMidiNoteNumber(first_midi_note_number),
     m_FirstAccessiblePipeLogicalKeyNumber(0),
-    m_NumberOfAccessiblePipes(0) {}
+    m_NumberOfAccessiblePipes(0) {
+  SetContext(pContext);
+}
 
 unsigned GOStop::IsAuto() const {
   /* m_auto seems to state that if a stop only has 1 note, the note isn't
