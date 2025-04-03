@@ -69,7 +69,7 @@ void GOMidiReceivingSendingObject::LoadMidiObject(
 }
 
 void GOMidiReceivingSendingObject::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
   GOMidiSendingObject::SaveMidiObject(cfg, group, midiMap);
   if (!IsReadOnly()) {
     m_receiver.Save(cfg, group, midiMap);
