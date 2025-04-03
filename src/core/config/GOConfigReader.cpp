@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -607,53 +607,50 @@ int GOConfigReader::ReadEnum(
   GOSettingType type,
   const wxString &group,
   const wxString &key,
-  const struct IniFileEnumEntry *entry,
-  unsigned count,
+  const GOConfigEnum &configEnum,
   bool required,
   int defaultValue) {
-  int defaultEntry = -1;
-  wxString value;
-  for (unsigned i = 0; i < count; i++)
-    if (entry[i].value == defaultValue)
-      defaultEntry = i;
-  if (defaultEntry == -1) {
+  if (configEnum.GetName(defaultValue).IsEmpty()) {
     wxLogError(_("Invalid enum default value"));
-    defaultEntry = 0;
+    defaultValue = configEnum.GetFirstValue();
   }
 
-  if (!Read(type, group, key, required, value))
-    return entry[defaultEntry].value;
+  wxString strValue;
+  int enumValue;
 
-  if (value.length() > 0 && value[value.length() - 1] == ' ') {
-    if (m_Strict)
-      wxLogWarning(
-        _("Trailing whitespace at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-    value.Trim();
-  }
-  for (unsigned i = 0; i < count; i++)
-    if (entry[i].name == value)
-      return entry[i].value;
-
-  wxString error;
-  error.Printf(
-    _("Invalid enum value at section '%s' entry '%s': %s"),
-    group.c_str(),
-    key.c_str(),
-    value.c_str());
-  throw error;
+  if (Read(type, group, key, required, strValue)) {
+    if (strValue.length() > 0 && strValue[strValue.length() - 1] == ' ') {
+      if (m_Strict)
+        wxLogWarning(
+          _("Trailing whitespace at section '%s' entry '%s': %s"),
+          group,
+          key,
+          strValue);
+      strValue.Trim();
+    }
+    enumValue = configEnum.GetValue(strValue, -1);
+    if (enumValue == -1) {
+      wxString error;
+      error.Printf(
+        _("Invalid enum value at section '%s' entry '%s': %s"),
+        group,
+        key,
+        strValue);
+      throw error;
+    }
+  } else
+    enumValue = defaultValue;
+  return enumValue;
 }
 
 int GOConfigReader::ReadEnum(
   GOSettingType type,
   const wxString &group,
   const wxString &key,
-  const struct IniFileEnumEntry *entry,
-  unsigned count,
+  const GOConfigEnum &configEnum,
   bool required) {
-  return ReadEnum(type, group, key, entry, count, required, entry[0].value);
+  return ReadEnum(
+    type, group, key, configEnum, required, configEnum.GetFirstValue());
 }
 
 void GOConfigReader::MarkGroupInUse(const wxString &group) {

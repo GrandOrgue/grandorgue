@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(UsewxWidgets)
@@ -18,6 +18,7 @@ archive/GOArchiveEntryFile.cpp
 archive/GOArchiveManager.cpp
 archive/GOArchiveReader.cpp
 archive/GOArchiveWriter.cpp
+config/GOConfigEnum.cpp
 config/GOConfigFileReader.cpp
 config/GOConfigFileWriter.cpp
 config/GOConfigReader.cpp

@@ -9,6 +9,7 @@
 
 #include <wx/intl.h>
 
+#include "config/GOConfigEnum.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "midi/GOMidiEvent.h"
@@ -21,7 +22,7 @@ GOMidiSender::GOMidiSender(GOMidiSendProxy &proxy, GOMidiSenderType type)
 
 GOMidiSender::~GOMidiSender() {}
 
-const struct IniFileEnumEntry GOMidiSender::m_MidiTypes[] = {
+static const GOConfigEnum MIDI_SEND_TYPES({
   {wxT("Note"), MIDI_S_NOTE},
   {wxT("NoteNoVelocity"), MIDI_S_NOTE_NO_VELOCITY},
   {wxT("ControlChange"), MIDI_S_CTRL},
@@ -45,7 +46,7 @@ const struct IniFileEnumEntry GOMidiSender::m_MidiTypes[] = {
   {wxT("HWLCD"), MIDI_S_HW_LCD},
   {wxT("HWString"), MIDI_S_HW_STRING},
   {wxT("RodgersStopChange"), MIDI_S_RODGERS_STOP_CHANGE},
-};
+});
 
 void GOMidiSender::SetElementID(int id) { m_ElementID = id; }
 
@@ -69,8 +70,7 @@ void GOMidiSender::Load(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDISendEventType%03d"), i + 1),
-        m_MidiTypes,
-        sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
+        MIDI_SEND_TYPES);
 
     m_events[i].type = eventType;
     if (hasChannel(eventType))
@@ -152,9 +152,8 @@ void GOMidiSender::Save(
       cfg.WriteEnum(
         group,
         wxString::Format(wxT("MIDISendEventType%03d"), i + 1),
-        m_events[i].type,
-        m_MidiTypes,
-        sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
+        MIDI_SEND_TYPES,
+        m_events[i].type);
       if (hasChannel(m_events[i].type))
         cfg.WriteInteger(
           group,

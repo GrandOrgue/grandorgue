@@ -134,11 +134,11 @@ const GOMidiSetting GOConfig::m_MIDISettings[] = {
   {MIDI_RECV_SETTER, 29, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure +")},
 };
 
-const struct IniFileEnumEntry GOConfig::m_InitialLoadTypes[] = {
+static const GOConfigEnum INITIAL_LOAD_TYPES({
   {wxT("N"), (int)GOInitialLoadType::LOAD_NONE},
   {wxT("Y"), (int)GOInitialLoadType::LOAD_LAST_USED},
   {wxT("First"), (int)GOInitialLoadType::LOAD_FIRST},
-};
+});
 
 GOConfig::GOConfig(wxString instance)
   : m_InstanceName(instance),
@@ -171,8 +171,7 @@ GOConfig::GOConfig(wxString instance)
       this,
       wxT("General"),
       wxT("LoadLastFile"),
-      m_InitialLoadTypes,
-      sizeof(m_InitialLoadTypes) / sizeof(m_InitialLoadTypes[0]),
+      INITIAL_LOAD_TYPES,
       GOInitialLoadType::LOAD_LAST_USED),
     ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
     ODFHw1Check(this, wxT("General"), wxT("ODFHw1Check"), false),

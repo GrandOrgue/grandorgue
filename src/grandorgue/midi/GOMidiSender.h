@@ -16,11 +16,9 @@ class GOConfigReader;
 class GOConfigWriter;
 class GOMidiMap;
 class GOMidiSendProxy;
-struct IniFileEnumEntry;
 
 class GOMidiSender : public GOMidiSenderEventPatternList {
 private:
-  static const struct IniFileEnumEntry m_MidiTypes[];
   GOMidiSendProxy &r_proxy;
   int m_ElementID;
 
