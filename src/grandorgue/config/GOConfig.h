@@ -68,6 +68,11 @@ private:
   static const GOMidiSetting m_MIDISettings[];
   static const struct IniFileEnumEntry m_InitialLoadTypes[];
 
+  GOOrgan *CloneOrgan(const GOOrgan &newOrgan) const override;
+
+  void LoadOrgans(GOConfigReader &cfg);
+  void SaveOrgans(GOConfigWriter &cfg);
+
   wxString GetEventSection(unsigned index);
 
   void LoadDefaults();
