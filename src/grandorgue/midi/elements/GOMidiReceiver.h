@@ -8,23 +8,68 @@
 #ifndef GOMIDIRECEIVER_H
 #define GOMIDIRECEIVER_H
 
-#include "GOMidiReceiverBase.h"
+#include <cstdint>
+
+#include "GOTime.h"
+#include "midi/events/GOMidiMatchType.h"
+#include "midi/events/GOMidiReceiverEventPatternList.h"
 
 class GOConfig;
-class GOOrganModel;
+class GOConfigReader;
+class GOConfigWriter;
+class GOMidiEvent;
+class GOMidiMap;
 
-class GOMidiReceiver : public GOMidiReceiverBase {
+class GOMidiReceiver : public GOMidiReceiverEventPatternList {
+public:
+  constexpr static unsigned KEY_MAP_SIZE = 128;
+  using KeyMap = uint8_t[KEY_MAP_SIZE];
+
 private:
+  typedef struct {
+    unsigned device;
+    int channel;
+    int key;
+  } midi_internal_match;
+
   const GOConfig &r_config;
 
+  int m_ElementID;
+  std::vector<GOTime> m_last;
+  std::vector<midi_internal_match> m_Internal;
+
+  GOMidiMatchType debounce(
+    const GOMidiEvent &e, GOMidiMatchType event, unsigned index);
+  void deleteInternal(unsigned device);
+  unsigned createInternal(unsigned device);
+
 protected:
-  int GetTranspose() const override;
+  int GetTranspose() const;
 
 public:
-  GOMidiReceiver(GOOrganModel &organModel, GOMidiReceiverType type);
+  GOMidiReceiver(GOConfig &config, GOMidiReceiverType type);
 
-  using GOMidiReceiverBase::Load;
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
+  void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
+  void PreparePlayback();
+
+  void SetElementID(int id) { m_ElementID = id; }
+
+  GOMidiMatchType Match(const GOMidiEvent &e);
+  GOMidiMatchType Match(const GOMidiEvent &e, int &value);
+  GOMidiMatchType Match(
+    const GOMidiEvent &e, const KeyMap *pMidiMap, int &key, int &value);
+
+  bool HasDebounce(GOMidiReceiverMessageType type) const;
+  static bool hasChannel(GOMidiReceiverMessageType type);
+  static bool hasKey(GOMidiReceiverMessageType type);
+  bool HasLowKey(GOMidiReceiverMessageType type) const;
+  bool HasHighKey(GOMidiReceiverMessageType type) const;
+  static bool hasLowerLimit(GOMidiReceiverMessageType type);
+  static bool hasUpperLimit(GOMidiReceiverMessageType type);
+  static unsigned keyLimit(GOMidiReceiverMessageType type);
+  static unsigned lowerValueLimit(GOMidiReceiverMessageType type);
+  static unsigned upperValueLimit(GOMidiReceiverMessageType type);
 };
 
 #endif

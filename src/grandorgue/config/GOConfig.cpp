@@ -254,7 +254,7 @@ void GOConfig::LoadOrgans(GOConfigReader &cfg) {
     CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
   for (unsigned i = 0; i < organ_count; i++)
     AddNewOrgan(new GORegisteredOrgan(
-      cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
+      *this, cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
 
   ClearArchives();
   unsigned archive_count = cfg.ReadInteger(
@@ -443,7 +443,7 @@ void GOConfig::LoadDefaults() {
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueConfig") + m_InstanceName;
   for (unsigned i = 0; i < GetEventCount(); i++)
-    m_MIDIEvents.push_back(new GOMidiReceiverBase(m_MIDISettings[i].type));
+    m_MIDIEvents.push_back(new GOMidiReceiver(*this, m_MIDISettings[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
   OrganPath.SetDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
@@ -516,12 +516,12 @@ wxString GOConfig::GetEventTitle(unsigned index) {
   return wxGetTranslation(m_MIDISettings[index].name);
 }
 
-const GOMidiReceiverBase *GOConfig::GetMidiEvent(unsigned index) const {
+const GOMidiReceiver *GOConfig::GetMidiEvent(unsigned index) const {
   assert(index < GetEventCount());
   return m_MIDIEvents[index];
 }
 
-const GOMidiReceiverBase *GOConfig::FindMidiEvent(
+const GOMidiReceiver *GOConfig::FindMidiEvent(
   GOMidiReceiverType type, unsigned index) const {
   for (unsigned i = 0; i < GetEventCount(); i++)
     if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)

@@ -9,8 +9,8 @@
 
 #include <wx/bookctrl.h>
 
+#include "config/GOConfig.h"
 #include "midi/dialog-creator/GOMidiDialogListener.h"
-#include <config/GOConfig.h>
 
 #include "GOMidiEventKeyTab.h"
 #include "GOMidiEventRecvTab.h"
@@ -22,7 +22,7 @@ GOMidiEventDialog::GOMidiEventDialog(
   const wxString &title,
   GOConfig &settings,
   const wxString &dialogSelector,
-  GOMidiReceiverBase *event,
+  GOMidiReceiver *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
   GOMidiSender *division,

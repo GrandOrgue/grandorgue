@@ -21,7 +21,7 @@ class GOMidiEventKeyTab;
 class GOMidiEventRecvTab;
 class GOMidiEventSendTab;
 class GOMidiListener;
-class GOMidiReceiverBase;
+class GOMidiReceiver;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
 
@@ -48,7 +48,7 @@ public:
     const wxString &title,
     GOConfig &settings,
     const wxString &dialogSelector,
-    GOMidiReceiverBase *event,
+    GOMidiReceiver *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,
     GOMidiSender *division = NULL,
