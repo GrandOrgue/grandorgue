@@ -28,7 +28,7 @@ GOPistonControl::GOPistonControl(GOOrganModel &organModel)
   organModel.RegisterControlChangedHandler(this);
 }
 
-void GOPistonControl::Load(GOConfigReader &cfg, wxString group) {
+void GOPistonControl::Load(GOConfigReader &cfg, const wxString &group) {
   int i, j;
   wxString type = cfg.ReadStringTrim(ODFSetting, group, wxT("ObjectType"));
   type.MakeUpper();

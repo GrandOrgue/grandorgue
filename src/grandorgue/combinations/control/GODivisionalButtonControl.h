@@ -37,9 +37,10 @@ public:
 
   GODivisionalCombination &GetCombination() { return m_combination; }
 
-  void Init(GOConfigReader &cfg, const wxString &group, const wxString &name);
+  void Init(
+    GOConfigReader &cfg, const wxString &group, const wxString &name) override;
 
-  void Load(GOConfigReader &cfg, const wxString &group);
+  void Load(GOConfigReader &cfg, const wxString &group) override;
 
   void LoadCombination(GOConfigReader &cfg) override;
   void Save(GOConfigWriter &cfg) override;

@@ -24,7 +24,7 @@ private:
 
 public:
   GOPistonControl(GOOrganModel &organModel);
-  void Load(GOConfigReader &cfg, wxString group);
+  void Load(GOConfigReader &cfg, const wxString &group) override;
   void Push() override;
 };
 

@@ -41,7 +41,7 @@ private:
 public:
   GOStop(GOOrganModel &organModel, unsigned first_midi_note_number);
   GORank *GetRank(unsigned index);
-  void Load(GOConfigReader &cfg, const wxString &group);
+  void Load(GOConfigReader &cfg, const wxString &group) override;
   void SetKey(unsigned note, unsigned velocity);
   ~GOStop(void);
 
