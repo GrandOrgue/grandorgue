@@ -10,6 +10,7 @@
 #include "GOMidiEvent.h"
 #include "GOMidiMap.h"
 #include "GORodgers.h"
+#include "config/GOConfigEnum.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
@@ -21,7 +22,7 @@ GOMidiReceiverBase::GOMidiReceiverBase(GOMidiReceiverType type)
 
 void GOMidiReceiverBase::SetElementID(int id) { m_ElementID = id; }
 
-const struct IniFileEnumEntry GOMidiReceiverBase::m_MidiTypes[] = {
+static const GOConfigEnum MIDI_RECEIVE_TYPES({
   {wxT("ControlChange"), MIDI_M_CTRL_CHANGE},
   {wxT("Note"), MIDI_M_NOTE},
   {wxT("ProgramChange"), MIDI_M_PGM_CHANGE},
@@ -59,7 +60,7 @@ const struct IniFileEnumEntry GOMidiReceiverBase::m_MidiTypes[] = {
   {wxT("NoteNoVelocity"), MIDI_M_NOTE_NO_VELOCITY},
   {wxT("NoteShortOctave"), MIDI_M_NOTE_SHORT_OCTAVE},
   {wxT("NoteNormal"), MIDI_M_NOTE_NORMAL},
-};
+});
 
 void GOMidiReceiverBase::Load(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
@@ -87,8 +88,7 @@ void GOMidiReceiverBase::Load(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDIEventType%03d"), i + 1),
-        m_MidiTypes,
-        sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]),
+        MIDI_RECEIVE_TYPES,
         false,
         default_type);
       if (hasChannel(pattern.type))
@@ -194,9 +194,8 @@ void GOMidiReceiverBase::Save(
       cfg.WriteEnum(
         group,
         wxString::Format(wxT("MIDIEventType%03d"), i + 1),
-        pattern.type,
-        m_MidiTypes,
-        sizeof(m_MidiTypes) / sizeof(m_MidiTypes[0]));
+        MIDI_RECEIVE_TYPES,
+        pattern.type);
       if (hasChannel(pattern.type))
         cfg.WriteInteger(
           group,

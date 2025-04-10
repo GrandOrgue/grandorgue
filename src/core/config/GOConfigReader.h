@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,14 +14,10 @@
 #include <wx/string.h>
 
 #include "GOBool3.h"
+#include "GOConfigEnum.h"
 #include "GOLogicalColour.h"
 
 class GOConfigReaderDB;
-
-struct IniFileEnumEntry {
-  wxString name;
-  int value;
-};
 
 typedef enum { ODFSetting, CMBSetting } GOSettingType;
 
@@ -194,15 +190,13 @@ public:
     GOSettingType type,
     const wxString &group,
     const wxString &key,
-    const struct IniFileEnumEntry *entry,
-    unsigned count,
+    const GOConfigEnum &configEnum,
     bool required = true);
   int ReadEnum(
     GOSettingType type,
     const wxString &group,
     const wxString &key,
-    const struct IniFileEnumEntry *entry,
-    unsigned count,
+    const GOConfigEnum &configEnum,
     bool required,
     int defaultValue);
 

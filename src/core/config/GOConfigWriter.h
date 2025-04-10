@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,8 +10,8 @@
 
 #include <wx/string.h>
 
+class GOConfigEnum;
 class GOConfigFileWriter;
-struct IniFileEnumEntry;
 
 class GOConfigWriter {
 private:
@@ -24,11 +24,10 @@ public:
   void WriteString(wxString group, wxString key, wxString value);
   void WriteInteger(wxString group, wxString key, int value);
   void WriteEnum(
-    wxString group,
-    wxString key,
-    int value,
-    const struct IniFileEnumEntry *entry,
-    unsigned count);
+    const wxString &group,
+    const wxString &key,
+    const GOConfigEnum &confEnum,
+    int value);
   void WriteFloat(wxString group, wxString key, float value);
   /**
    * Saves 0 as N, 1 as Y. -1 is not saved at all

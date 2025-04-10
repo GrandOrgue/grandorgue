@@ -22,10 +22,10 @@
     }                                                                          \
   } while (0)
 
-const struct IniFileEnumEntry GOTremulant::m_tremulant_types[] = {
+static const GOConfigEnum TREMULANT_TYPES({
   {wxT("Synth"), GOSynthTrem},
   {wxT("Wave"), GOWavTrem},
-};
+});
 
 static const wxString WX_MIDI_TYPE_CODE = wxT("Tremulant");
 static const wxString WX_MIDI_TYPE_NAME = _("Tremulant");
@@ -62,8 +62,7 @@ void GOTremulant::Load(
     ODFSetting,
     group,
     wxT("TremulantType"),
-    m_tremulant_types,
-    sizeof(m_tremulant_types) / sizeof(m_tremulant_types[0]),
+    TREMULANT_TYPES,
     false,
     GOSynthTrem);
   if (m_TremulantType == GOSynthTrem) {
