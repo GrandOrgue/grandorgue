@@ -67,6 +67,11 @@ private:
 
   static const GOMidiSetting m_MIDISettings[];
 
+  GOOrgan *CloneOrgan(const GOOrgan &newOrgan) const override;
+
+  void LoadOrgans(GOConfigReader &cfg);
+  void SaveOrgans(GOConfigWriter &cfg);
+
   wxString GetEventSection(unsigned index);
 
   void LoadDefaults();

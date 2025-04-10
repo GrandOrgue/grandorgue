@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -41,7 +41,7 @@ public:
   void Update(const GOArchiveFile &archive);
   wxString GetCurrentFileID() const;
 
-  void Save(GOConfigWriter &cfg, wxString group);
+  void Save(GOConfigWriter &cfg, const wxString &group) const;
 
   const wxString &GetID() const;
   const wxString &GetPath() const;

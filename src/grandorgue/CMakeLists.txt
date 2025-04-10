@@ -57,6 +57,7 @@ config/GOMidiDeviceConfig.cpp
 config/GOMidiDeviceConfigList.cpp
 config/GOPortsConfig.cpp
 config/GOPortFactory.cpp
+config/GORegisteredOrgan.cpp
 control/GOButtonControl.cpp
 control/GOCallbackButtonControl.cpp
 control/GOElementCreator.cpp
