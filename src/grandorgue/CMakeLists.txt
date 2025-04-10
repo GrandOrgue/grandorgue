@@ -227,11 +227,12 @@ yaml/GOYamlModel.cpp
 yaml/go-wx-yaml.cpp
 GOAudioRecorder.cpp
 GOBitmapCache.cpp
+GODocument.cpp
 GOEvent.cpp
+GOKeyConvert.cpp
 GOLog.cpp
 GOMetronome.cpp
 GOOrganController.cpp
-GODocument.cpp
 GOVirtualCouplerController.cpp
 )
 
