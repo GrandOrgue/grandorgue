@@ -60,7 +60,10 @@ private:
   void Resize();
 
   void OnMidiReceived(
-    const GOMidiEvent &event, GOMidiMatchType matchType, int key, int value);
+    const GOMidiEvent &event,
+    GOMidiMatchType matchType,
+    int key,
+    int value) override;
   void HandleKey(int key) override;
   void SetOutput(unsigned note, unsigned velocity);
 
