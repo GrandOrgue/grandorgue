@@ -242,6 +242,7 @@ endif()
 add_library(golib STATIC ${grandorgue_src})
 set(go_libs ${wxWidgets_LIBRARIES} ${YAML_CPP_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES} CURL::libcurl)
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR})
+target_include_directories(golib PUBLIC ${YAML_CPP_INCLUDE_DIRS})
 target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
 link_directories(${go_libdir})
 
