@@ -77,7 +77,7 @@ protected:
   virtual void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {}
   virtual void SaveMidiObject(
-    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {}
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {}
 
 public:
   GOMidiMap &GetMidiMap() { return r_MidiMap; }

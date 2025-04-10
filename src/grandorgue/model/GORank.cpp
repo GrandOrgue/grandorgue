@@ -141,7 +141,7 @@ void GORank::Load(
 }
 
 void GORank::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
   GOMidiSendingObject::SaveMidiObject(cfg, group + wxT("Rank"), midiMap);
 }
 
