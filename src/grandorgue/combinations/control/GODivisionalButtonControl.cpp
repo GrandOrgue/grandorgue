@@ -16,12 +16,17 @@ static const wxString WX_MIDI_TYPE_CODE = wxT("Divisional");
 static const wxString WX_MIDI_TYPE_NAME = _("Divisional");
 
 GODivisionalButtonControl::GODivisionalButtonControl(
-  GOOrganModel &organModel, unsigned manualNumber, unsigned divisionalIndex)
+  GOOrganModel &organModel,
+  unsigned manualNumber,
+  unsigned divisionalIndex,
+  const GOMidiObjectContext *pContext)
   : GOPushbuttonControl(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
     r_OrganModel(organModel),
     m_ManualN(manualNumber),
     m_DivisionalIndex(divisionalIndex),
-    m_combination(organModel, manualNumber, false) {}
+    m_combination(organModel, manualNumber, false) {
+  SetContext(pContext);
+}
 
 void GODivisionalButtonControl::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &name) {
