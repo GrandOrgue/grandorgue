@@ -33,7 +33,7 @@ void GOMidiObjectWithShortcut::LoadMidiObject(
 }
 
 void GOMidiObjectWithShortcut::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) {
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
   GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
   if (!IsReadOnly()) {
     m_ShortcutReceiver.Save(cfg, group);
