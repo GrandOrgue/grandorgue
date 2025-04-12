@@ -19,7 +19,7 @@
 #include "gui/panels/GOGUIPanel.h"
 #include "gui/panels/GOGUIPanelView.h"
 #include "gui/size/GOResizable.h"
-#include "midi/GOMidiEvent.h"
+#include "midi/events/GOMidiEvent.h"
 #include "sound/GOSound.h"
 #include "threading/GOMutexLocker.h"
 

@@ -10,7 +10,7 @@
 
 #include "GOOrgan.h"
 
-#include "midi/GOMidiReceiverBase.h"
+#include "midi/elements/GOMidiReceiverBase.h"
 
 class GOConfigReader;
 class GOConfigWriter;

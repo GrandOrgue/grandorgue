@@ -10,9 +10,9 @@
 
 #include <cstdint>
 
-#include "GOMidiMatchType.h"
-#include "GOMidiReceiverEventPatternList.h"
 #include "GOTime.h"
+#include "midi/events/GOMidiMatchType.h"
+#include "midi/events/GOMidiReceiverEventPatternList.h"
 
 class GOConfigReader;
 class GOConfigWriter;

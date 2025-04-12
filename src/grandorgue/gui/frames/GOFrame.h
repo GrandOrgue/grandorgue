@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,8 +15,8 @@
 
 #include "gui/size/GOResizable.h"
 #include "help/GOHelpRequestor.h"
-#include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
+#include "midi/events/GOMidiCallback.h"
 #include "modification/GOModificationListener.h"
 #include "threading/GOMutex.h"
 #include "updater/GOUpdateChecker.h"

@@ -8,7 +8,7 @@
 #ifndef GOMIDISENDINGOBJECT_H
 #define GOMIDISENDINGOBJECT_H
 
-#include "midi/GOMidiSender.h"
+#include "midi/elements/GOMidiSender.h"
 
 #include "GOMidiObject.h"
 

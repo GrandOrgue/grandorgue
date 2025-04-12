@@ -8,7 +8,7 @@
 #ifndef GOMIDIRECEIVER_H
 #define GOMIDIRECEIVER_H
 
-#include "midi/GOMidiReceiverBase.h"
+#include "GOMidiReceiverBase.h"
 
 class GOConfig;
 class GOOrganModel;

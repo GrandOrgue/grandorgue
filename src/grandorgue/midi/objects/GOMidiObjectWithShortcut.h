@@ -8,7 +8,7 @@
 #ifndef GOMIDIOBJECTWITHSHORTCUT_H
 #define GOMIDIOBJECTWITHSHORTCUT_H
 
-#include "midi/GOMidiShortcutReceiver.h"
+#include "midi/elements/GOMidiShortcutReceiver.h"
 
 #include "GOMidiReceivingSendingObject.h"
 

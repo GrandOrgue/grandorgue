@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,7 +11,7 @@
 #include "GOMidiListener.h"
 #include "config/GOConfig.h"
 #include "config/GOMidiDeviceConfig.h"
-#include "midi/GOMidiWXEvent.h"
+#include "midi/events/GOMidiWXEvent.h"
 #include "ports/GOMidiInPort.h"
 #include "ports/GOMidiOutPort.h"
 

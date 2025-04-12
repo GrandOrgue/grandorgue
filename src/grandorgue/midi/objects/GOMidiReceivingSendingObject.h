@@ -8,7 +8,7 @@
 #ifndef GOMIDIRECEIVINGSENDINGOBJECT_H
 #define GOMIDIRECEIVINGSENDINGOBJECT_H
 
-#include "midi/GOMidiReceiver.h"
+#include "midi/elements/GOMidiReceiver.h"
 
 #include "GOEventHandler.h"
 #include "GOMidiSendingObject.h"

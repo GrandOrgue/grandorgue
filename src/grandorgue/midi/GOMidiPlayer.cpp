@@ -11,12 +11,13 @@
 
 #include "config/GOConfig.h"
 #include "control/GOCallbackButtonControl.h"
-#include "midi/GOMidiEvent.h"
-#include "midi/GOMidiFileReader.h"
-#include "midi/GOMidiMap.h"
+#include "midi/events/GOMidiEvent.h"
+#include "midi/files/GOMidiFileReader.h"
+#include "midi/objects/GOMidiObjectContext.h"
 
 #include "GOEvent.h"
 #include "GOMidi.h"
+#include "GOMidiMap.h"
 #include "GOOrganController.h"
 
 enum {

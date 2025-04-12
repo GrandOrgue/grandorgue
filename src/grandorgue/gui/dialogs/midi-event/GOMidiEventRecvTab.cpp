@@ -15,10 +15,11 @@
 #include <wx/stattext.h>
 #include <wx/tglbtn.h>
 
-#include "GOOrganController.h"
-#include "GORodgers.h"
 #include "config/GOConfig.h"
-#include "midi/GOMidiEvent.h"
+#include "midi/events/GOMidiEvent.h"
+#include "midi/events/GORodgers.h"
+
+#include "GOOrganController.h"
 
 BEGIN_EVENT_TABLE(GOMidiEventRecvTab, wxPanel)
 EVT_TOGGLEBUTTON(ID_LISTEN_SIMPLE, GOMidiEventRecvTab::OnListenSimpleClick)
