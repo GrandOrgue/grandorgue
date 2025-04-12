@@ -15,10 +15,11 @@
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
-#include "GOChoice.h"
 #include "config/GOConfig.h"
-#include "go_limits.h"
+#include "gui/wxcontrols/GOChoice.h"
 #include "sound/GOSoundDefs.h"
+
+#include "go_limits.h"
 
 const wxSize SPINCTRL_SIZE(120, wxDefaultCoord);
 
