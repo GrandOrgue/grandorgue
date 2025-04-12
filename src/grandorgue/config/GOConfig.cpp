@@ -12,10 +12,6 @@
 #include <wx/stdpaths.h>
 #include <wx/thread.h>
 
-#include "GOMemoryPool.h"
-#include "GOOrgan.h"
-#include "GOPortFactory.h"
-#include "GOStdPath.h"
 #include "archive/GOArchiveFile.h"
 #include "config/GOConfigFileReader.h"
 #include "config/GOConfigFileWriter.h"
@@ -31,6 +27,11 @@
 #include "sound/GOSoundDefs.h"
 #include "sound/ports/GOSoundPort.h"
 #include "sound/ports/GOSoundPortFactory.h"
+
+#include "GOMemoryPool.h"
+#include "GOPortFactory.h"
+#include "GORegisteredOrgan.h"
+#include "GOStdPath.h"
 
 static constexpr unsigned SAMPLE_RATE_DEFAULT = 48000;
 static constexpr unsigned SAMPLES_PER_BUFFER_DEFAULT = 512;
@@ -240,6 +241,47 @@ GOConfig::GOConfig(wxString instance)
     m_MidiIn(MIDI_IN),
     m_MidiOut(MIDI_OUT) {}
 
+GOOrgan *GOConfig::CloneOrgan(const GOOrgan &newOrgan) const {
+  const GORegisteredOrgan *pO
+    = dynamic_cast<const GORegisteredOrgan *>(&newOrgan);
+
+  return pO ? new GORegisteredOrgan(*pO) : GOOrganList::CloneOrgan(newOrgan);
+}
+
+void GOConfig::LoadOrgans(GOConfigReader &cfg) {
+  ClearOrgans();
+  unsigned organ_count = cfg.ReadInteger(
+    CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
+  for (unsigned i = 0; i < organ_count; i++)
+    AddNewOrgan(new GORegisteredOrgan(
+      cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
+
+  ClearArchives();
+  unsigned archive_count = cfg.ReadInteger(
+    CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
+  for (unsigned i = 0; i < archive_count; i++)
+    AddNewArchive(
+      new GOArchiveFile(cfg, wxString::Format(wxT("Archive%03d"), i + 1)));
+}
+
+void GOConfig::SaveOrgans(GOConfigWriter &cfg) {
+  const ptr_vector<GOOrgan> &organs = GetOrganList();
+  const ptr_vector<GOArchiveFile> &archives = GetArchiveList();
+
+  cfg.WriteInteger(wxT("General"), wxT("ArchiveCount"), archives.size());
+  for (unsigned i = 0; i < archives.size(); i++)
+    archives[i]->Save(cfg, wxString::Format(wxT("Archive%03d"), i + 1));
+
+  cfg.WriteInteger(wxT("General"), wxT("OrganCount"), organs.size());
+  for (unsigned i = 0; i < organs.size(); i++) {
+    const auto pOo = organs[i];
+    const GORegisteredOrgan *pO = dynamic_cast<const GORegisteredOrgan *>(pOo);
+
+    if (pO)
+      pO->Save(cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap);
+  }
+}
+
 void load_ports_config(
   GOConfigReader &cfg,
   const wxString &groupName,
@@ -301,7 +343,7 @@ void GOConfig::Load() {
     cfg_db.ReadData(cfg_file, CMBSetting, false);
     GOConfigReader cfg(cfg_db);
 
-    GOOrganList::Load(cfg, m_MidiMap);
+    LoadOrgans(cfg);
 
     m_MainWindowRect.x = cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowX"), -32000, 32000, false, 0);
@@ -620,7 +662,7 @@ void GOConfig::Flush() {
   GOConfigWriter cfg(cfg_file, false);
 
   GOSettingStore::Save(cfg);
-  GOOrganList::Save(cfg, m_MidiMap);
+  SaveOrgans(cfg);
 
   cfg.WriteInteger(wxT("UI"), wxT("MainWindowX"), m_MainWindowRect.x);
   cfg.WriteInteger(wxT("UI"), wxT("MainWindowY"), m_MainWindowRect.y);

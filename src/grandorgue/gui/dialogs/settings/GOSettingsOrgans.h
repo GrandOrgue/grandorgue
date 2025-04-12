@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -28,6 +28,7 @@ class GOArchiveFile;
 class GOConfig;
 class GOGrid;
 class GOOrgan;
+class GORegisteredOrgan;
 
 class GOSettingsOrgans : public GODialogTab {
 public:
@@ -54,8 +55,8 @@ private:
   };
   using PackageSlotSet = std::unordered_set<const PackageSlot *>;
   struct OrganSlot {
-    GOOrgan *p_OrigOrgan;
-    GOOrgan *p_CurrentOrgan;
+    GORegisteredOrgan *p_OrigOrgan;
+    GORegisteredOrgan *p_CurrentOrgan;
     bool is_packaged;
     wxString m_CurrentPath;
     bool is_AnyCacheExisting;
@@ -111,7 +112,7 @@ private:
   void RefreshButtons();
   VisibleOrganRecs GetCurrentOrganRecs();
 
-  void DisplayMidiCell(unsigned rowN, GOOrgan *pOrgan);
+  void DisplayMidiCell(unsigned rowN, GORegisteredOrgan *pOrgan);
   void DisplayPathCell(unsigned rowN, const wxString &path);
   void FillGridRow(unsigned rowN, OrganSlot &organSlot);
   void ReorderOrgans(const VisibleOrganRecs &newSortedRecs);
