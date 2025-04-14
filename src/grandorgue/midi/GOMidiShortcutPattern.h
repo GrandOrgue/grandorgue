@@ -31,11 +31,11 @@ public:
 
   ReceiverType GetType() const { return m_type; }
 
-  bool IsMidiConfigured() const { return m_ShortcutKey; }
   unsigned GetShortcut() const { return m_ShortcutKey; }
   void SetShortcut(unsigned key) { m_ShortcutKey = key; }
   unsigned GetMinusKey() const { return m_MinusKey; }
   void SetMinusKey(unsigned key) { m_MinusKey = key; };
+  bool IsMidiConfigured() const { return m_ShortcutKey; }
   bool operator==(const GOMidiShortcutPattern &other) const;
 };
 
