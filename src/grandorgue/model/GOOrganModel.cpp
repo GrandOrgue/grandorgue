@@ -92,7 +92,7 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   for (unsigned int i = m_FirstManual; i < m_ODFManualCount; i++)
     m_manuals.push_back(new GOManual(*this, i, &MIDI_CONTEXT_MANUALS));
 
-  for (unsigned int i = 0; i < 4; i++)
+  for (unsigned i = m_ODFManualCount, l = i + 4; i < l; i++)
     m_manuals.push_back(new GOManual(*this, i, &MIDI_CONTEXT_MANUALS));
 
   unsigned NumberOfEnclosures
