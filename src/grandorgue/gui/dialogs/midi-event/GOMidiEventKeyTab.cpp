@@ -69,8 +69,8 @@ GOMidiEventKeyTab::GOMidiEventKeyTab(
 GOMidiEventKeyTab::~GOMidiEventKeyTab() {}
 
 void GOMidiEventKeyTab::FillKeylist(wxChoice *select, unsigned shortcut) {
-  const GOShortcutKey *keys = GetShortcutKeys();
-  unsigned count = GetShortcutKeyCount();
+  const GOKeyConvert::Shortcut *keys = GOKeyConvert::getShortcutKeys();
+  unsigned count = GOKeyConvert::getShortcutKeyCount();
   select->Append(_("None"), (void *)0);
   select->SetSelection(0);
   for (unsigned i = 0; i < count; i++) {
@@ -81,14 +81,15 @@ void GOMidiEventKeyTab::FillKeylist(wxChoice *select, unsigned shortcut) {
 }
 
 bool GOMidiEventKeyTab::TransferDataFromWindow() {
-  const GOShortcutKey *key = (const GOShortcutKey *)m_keyselect->GetClientData(
-    m_keyselect->GetSelection());
+  const GOKeyConvert::Shortcut *key
+    = (const GOKeyConvert::Shortcut *)m_keyselect->GetClientData(
+      m_keyselect->GetSelection());
   if (!key)
     m_key.SetShortcut(0);
   else
     m_key.SetShortcut(key->key_code);
   if (m_keyminusselect) {
-    key = (const GOShortcutKey *)m_keyminusselect->GetClientData(
+    key = (const GOKeyConvert::Shortcut *)m_keyminusselect->GetClientData(
       m_keyminusselect->GetSelection());
     if (!key)
       m_key.SetMinusKey(0);
@@ -131,14 +132,14 @@ void GOMidiEventKeyTab::Listen(bool enable) {
 }
 
 void GOMidiEventKeyTab::OnKeyDown(wxKeyEvent &event) {
-  unsigned code = WXKtoVK(event.GetKeyCode());
+  unsigned code = GOKeyConvert::wXKtoVK(event.GetKeyCode());
   if (code) {
     wxChoice *select = m_keyselect;
     if (m_minuslisten && m_minuslisten->GetValue())
       select = m_keyminusselect;
     for (unsigned i = 0; i < select->GetCount(); i++) {
-      const GOShortcutKey *key
-        = (const GOShortcutKey *)select->GetClientData(i);
+      const GOKeyConvert::Shortcut *key
+        = (const GOKeyConvert::Shortcut *)select->GetClientData(i);
       if (key && key->key_code == code)
         select->SetSelection(i);
     }
