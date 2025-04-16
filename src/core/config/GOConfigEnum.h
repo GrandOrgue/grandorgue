@@ -19,10 +19,8 @@ public:
     int value;
   };
 
-private:
   const std::vector<Entry> m_entries;
 
-public:
   GOConfigEnum(const std::vector<Entry> &entries) : m_entries(entries) {}
 
   const wxString &GetName(int value) const;

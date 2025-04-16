@@ -10,15 +10,11 @@
 
 #include <wx/string.h>
 
+#include "config/GOConfigEnum.h"
+
 class GOKeyConvert {
 public:
-  struct Shortcut {
-    wxString name;
-    unsigned key_code;
-  };
-
-  static unsigned getShortcutKeyCount();
-  static const Shortcut *getShortcutKeys();
+  static const GOConfigEnum SHORTCUTS;
 
   static int wXKtoVK(int what);
 };
