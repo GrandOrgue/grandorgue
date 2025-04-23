@@ -15,5 +15,5 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@v5.5.0
         with:
-          python_version: 3.12
+          python-version: 3.12
       - uses: pre-commit/action@v3.0.1
