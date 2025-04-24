@@ -10,7 +10,7 @@
 
 #include "gui/dialogs/common/GODialogTab.h"
 #include "gui/wxcontrols/GOChoice.h"
-#include "midi/GOMidiSender.h"
+#include "midi/elements/GOMidiSender.h"
 #include "modification/GOModificationProxy.h"
 
 class wxButton;

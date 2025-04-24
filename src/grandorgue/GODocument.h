@@ -11,9 +11,9 @@
 #include <wx/string.h>
 
 #include "document-base/GODocumentBase.h"
-#include "midi/GOMidiCallback.h"
 #include "midi/GOMidiListener.h"
 #include "midi/dialog-creator/GOMidiDialogCreator.h"
+#include "midi/events/GOMidiCallback.h"
 #include "threading/GOMutex.h"
 
 class GOOrganController;

@@ -28,14 +28,6 @@ contrib/sha1.cpp
 files/GOInvalidFile.cpp
 files/GOStandardFile.cpp
 files/GOStdFileName.cpp
-midi/GOMidiEvent.cpp
-midi/GOMidiFileReader.cpp
-midi/GOMidiMap.cpp
-midi/GOMidiEventPattern.cpp
-midi/GOMidiReceiverBase.cpp
-midi/GOMidiReceiverEventPattern.cpp
-midi/GOMidiSenderEventPattern.cpp
-midi/GOMidiWXEvent.cpp
 settings/GOSetting.cpp
 settings/GOSettingBool.cpp
 settings/GOSettingDirectory.cpp
@@ -59,7 +51,6 @@ GOLogicalColour.cpp
 GOMemoryPool.cpp
 GOOrgan.cpp
 GOOrganList.cpp
-GORodgers.cpp
 GOSampleStatistic.cpp
 GOStdPath.cpp
 GOTimer.cpp

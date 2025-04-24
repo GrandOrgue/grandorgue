@@ -10,7 +10,7 @@
 
 #include <wx/string.h>
 
-#include "midi/GOMidiSenderEventPatternList.h"
+#include "midi/events/GOMidiSenderEventPatternList.h"
 
 class GOConfigReader;
 class GOConfigWriter;

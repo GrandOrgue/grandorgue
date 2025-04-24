@@ -17,7 +17,7 @@
 #include "gui/dialogs/common/GODialogSizeSet.h"
 #include "gui/size/GOLogicalRect.h"
 #include "midi/GOMidiMap.h"
-#include "midi/GOMidiReceiverBase.h"
+#include "midi/elements/GOMidiReceiverBase.h"
 #include "settings/GOSettingBool.h"
 #include "settings/GOSettingDirectory.h"
 #include "settings/GOSettingEnum.h"

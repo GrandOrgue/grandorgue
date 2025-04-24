@@ -7,12 +7,12 @@
 
 #include "GOMidiReceiverBase.h"
 
-#include "GOMidiEvent.h"
-#include "GOMidiMap.h"
-#include "GORodgers.h"
 #include "config/GOConfigEnum.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "midi/GOMidiMap.h"
+#include "midi/events/GOMidiEvent.h"
+#include "midi/events/GORodgers.h"
 
 GOMidiReceiverBase::GOMidiReceiverBase(GOMidiReceiverType type)
   : GOMidiReceiverEventPatternList(type),
