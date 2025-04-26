@@ -252,15 +252,16 @@ GOOrgan *GOConfig::CloneOrgan(const GOOrgan &newOrgan) const {
 
 void GOConfig::LoadOrgans(GOConfigReader &cfg) {
   ClearOrgans();
+  ClearArchives();
+
   unsigned organ_count = cfg.ReadInteger(
     CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
+  unsigned archive_count = cfg.ReadInteger(
+    CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
+
   for (unsigned i = 0; i < organ_count; i++)
     AddNewOrgan(new GORegisteredOrgan(
       cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
-
-  ClearArchives();
-  unsigned archive_count = cfg.ReadInteger(
-    CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
   for (unsigned i = 0; i < archive_count; i++)
     AddNewArchive(
       new GOArchiveFile(cfg, wxString::Format(wxT("Archive%03d"), i + 1)));
@@ -345,7 +346,11 @@ void GOConfig::Load() {
     cfg_db.ReadData(cfg_file, CMBSetting, false);
     GOConfigReader cfg(cfg_db);
 
-    LoadOrgans(cfg);
+    try {
+      LoadOrgans(cfg);
+    } catch (const wxString &error) {
+      wxLogError(wxT("%s\n"), error);
+    }
 
     m_MainWindowRect.x = cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowX"), -32000, 32000, false, 0);
@@ -427,8 +432,8 @@ void GOConfig::Load() {
 
     if (wxFileExists(m_ConfigFileName))
       wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
-  } catch (wxString error) {
-    wxLogError(wxT("%s\n"), error.c_str());
+  } catch (const wxString &error) {
+    wxLogError(wxT("%s\n"), error);
   }
 }
 
