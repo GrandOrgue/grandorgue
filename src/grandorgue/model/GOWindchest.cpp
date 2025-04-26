@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -95,7 +95,9 @@ unsigned GOWindchest::GetTremulantId(unsigned no) { return m_tremulant[no]; }
 
 unsigned GOWindchest::GetRankCount() { return m_ranks.size(); }
 
-GORank *GOWindchest::GetRank(unsigned index) { return m_ranks[index]; }
+GORank *GOWindchest::GetRank(unsigned index) {
+  return index < m_ranks.size() ? m_ranks[index] : nullptr;
+}
 
 void GOWindchest::AddRank(GORank *rank) { m_ranks.push_back(rank); }
 
