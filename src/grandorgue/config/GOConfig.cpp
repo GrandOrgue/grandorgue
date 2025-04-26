@@ -239,7 +239,9 @@ GOConfig::GOConfig(wxString instance)
     CheckForUpdatesAtStartup(
       this, wxT("General"), wxT("CheckForUpdatesAtStartup"), true),
     m_MidiIn(MIDI_IN),
-    m_MidiOut(MIDI_OUT) {}
+    m_MidiOut(MIDI_OUT) {
+  m_Temperaments.InitTemperaments();
+}
 
 GOOrgan *GOConfig::CloneOrgan(const GOOrgan &newOrgan) const {
   const GORegisteredOrgan *pO
@@ -354,7 +356,6 @@ void GOConfig::Load() {
     m_MainWindowRect.height = (unsigned)cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
 
-    m_Temperaments.InitTemperaments();
     m_Temperaments.Load(cfg);
 
     m_AudioGroups.clear();
