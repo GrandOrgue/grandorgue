@@ -68,6 +68,7 @@ private:
   static const GOMidiSetting m_MIDISettings[];
 
   GOOrgan *CloneOrgan(const GOOrgan &newOrgan) const override;
+  bool IsValidOrgan(const GOOrgan *pOrgan) const override;
 
   void LoadOrgans(GOConfigReader &cfg);
   void SaveOrgans(GOConfigWriter &cfg);
