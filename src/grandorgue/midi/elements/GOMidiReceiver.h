@@ -47,7 +47,7 @@ protected:
   int GetTranspose() const;
 
 public:
-  GOMidiReceiver(GOConfig &config, GOMidiReceiverType type);
+  GOMidiReceiver(const GOConfig &config, GOMidiReceiverType type);
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;

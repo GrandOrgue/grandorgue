@@ -7,16 +7,18 @@
 
 #include "GORegisteredOrgan.h"
 
+#include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GORegisteredOrgan::GORegisteredOrgan(const GOOrgan &organ)
-  : GOOrgan(organ), m_midi(MIDI_RECV_ORGAN) {
+GORegisteredOrgan::GORegisteredOrgan(
+  const GOConfig &config, const GOOrgan &organ)
+  : GOOrgan(organ), m_midi(config, MIDI_RECV_ORGAN) {
   const GORegisteredOrgan *pRegOrgan
     = dynamic_cast<const GORegisteredOrgan *>(&organ);
 
   if (pRegOrgan)
-    m_midi = pRegOrgan->m_midi;
+    m_midi.RenewFrom(pRegOrgan->m_midi);
 }
 
 GORegisteredOrgan::GORegisteredOrgan(
