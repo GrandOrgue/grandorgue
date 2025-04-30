@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -63,20 +63,20 @@ const GOTemperament &GOTemperamentList::GetTemperament(unsigned index) {
   return *m_Temperaments[0];
 }
 
-const GOTemperament &GOTemperamentList::GetTemperament(wxString Name) {
+const GOTemperament &GOTemperamentList::GetTemperament(const wxString &name) {
   for (unsigned i = 0; i < m_Temperaments.size(); i++)
-    if (Name == m_Temperaments[i]->GetName())
+    if (name == m_Temperaments[i]->GetName())
       return *m_Temperaments[i];
 
   for (unsigned i = 0; i < m_UserTemperaments.size(); i++)
-    if (Name == m_UserTemperaments[i]->GetName())
+    if (name == m_UserTemperaments[i]->GetName())
       return *m_UserTemperaments[i];
 
   /* else return original temperament */
   return *m_Temperaments[0];
 }
 
-unsigned GOTemperamentList::GetTemperamentIndex(wxString name) {
+unsigned GOTemperamentList::GetTemperamentIndex(const wxString &name) {
   for (unsigned i = 0; i < m_Temperaments.size(); i++)
     if (m_Temperaments[i]->GetName() == name)
       return i;
