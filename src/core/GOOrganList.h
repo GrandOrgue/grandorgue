@@ -23,7 +23,10 @@ private:
 
 protected:
   virtual GOOrgan *CloneOrgan(const GOOrgan &newOrgan) const;
-  void AddNewOrgan(GOOrgan *pOrgan) { m_OrganList.push_back(pOrgan); }
+  virtual bool IsValidOrgan(const GOOrgan *pOrgan) const {
+    return pOrgan != nullptr;
+  }
+  void AddNewOrgan(GOOrgan *pOrgan);
   void AddNewArchive(GOArchiveFile *pArchive) {
     m_ArchiveList.push_back(pArchive);
   }

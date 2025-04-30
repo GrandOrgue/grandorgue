@@ -16,6 +16,11 @@ GOOrgan *GOOrganList::CloneOrgan(const GOOrgan &newOrgan) const {
   return new GOOrgan(newOrgan);
 }
 
+void GOOrganList::AddNewOrgan(GOOrgan *pOrgan) {
+  if (IsValidOrgan(pOrgan))
+    m_OrganList.push_back(pOrgan);
+}
+
 void GOOrganList::RemoveInvalidTmpOrgans() {
   const wxString tmpDirPrefix
     = wxDir(wxStandardPaths::Get().GetTempDir()).GetNameWithSep();

@@ -244,10 +244,17 @@ GOConfig::GOConfig(wxString instance)
 }
 
 GOOrgan *GOConfig::CloneOrgan(const GOOrgan &newOrgan) const {
-  const GORegisteredOrgan *pO
-    = dynamic_cast<const GORegisteredOrgan *>(&newOrgan);
+  return new GORegisteredOrgan(newOrgan);
+}
 
-  return pO ? new GORegisteredOrgan(*pO) : GOOrganList::CloneOrgan(newOrgan);
+bool GOConfig::IsValidOrgan(const GOOrgan *pOrgan) const {
+  bool isOk = dynamic_cast<const GORegisteredOrgan *>(pOrgan);
+
+  if (!isOk) {
+    wxLogMessage(
+      wxT("The organ %s is not registered"), pOrgan->GetChurchName());
+  }
+  return isOk;
 }
 
 void GOConfig::LoadOrgans(GOConfigReader &cfg) {
