@@ -244,7 +244,7 @@ GOConfig::GOConfig(wxString instance)
 }
 
 GOOrgan *GOConfig::CloneOrgan(const GOOrgan &newOrgan) const {
-  return new GORegisteredOrgan(newOrgan);
+  return new GORegisteredOrgan(*this, newOrgan);
 }
 
 bool GOConfig::IsValidOrgan(const GOOrgan *pOrgan) const {
@@ -268,7 +268,7 @@ void GOConfig::LoadOrgans(GOConfigReader &cfg) {
 
   for (unsigned i = 0; i < organ_count; i++)
     AddNewOrgan(new GORegisteredOrgan(
-      cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
+      *this, cfg, wxString::Format(wxT("Organ%03d"), i + 1)));
   for (unsigned i = 0; i < archive_count; i++)
     AddNewArchive(
       new GOArchiveFile(cfg, wxString::Format(wxT("Archive%03d"), i + 1)));

@@ -12,6 +12,7 @@
 
 #include "midi/elements/GOMidiReceiver.h"
 
+class GOConfig;
 class GOConfigReader;
 class GOConfigWriter;
 
@@ -20,8 +21,9 @@ private:
   GOMidiReceiver m_midi;
 
 public:
-  GORegisteredOrgan(const GOOrgan &organ);
-  GORegisteredOrgan(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
+  GORegisteredOrgan(const GOConfig &config, const GOOrgan &organ);
+  GORegisteredOrgan(
+    GOConfig &config, GOConfigReader &cfg, const wxString &group);
 
   GOMidiReceiver &GetMIDIReceiver() { return m_midi; }
   const GOMidiReceiver &GetMIDIReceiver() const { return m_midi; }

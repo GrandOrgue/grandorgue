@@ -55,7 +55,7 @@ static const GOConfigEnum MIDI_RECEIVE_TYPES({
   {wxT("NoteNormal"), MIDI_M_NOTE_NORMAL},
 });
 
-GOMidiReceiver::GOMidiReceiver(GOConfig &config, GOMidiReceiverType type)
+GOMidiReceiver::GOMidiReceiver(const GOConfig &config, GOMidiReceiverType type)
   : GOMidiReceiverEventPatternList(type), r_config(config), m_ElementID(-1) {}
 
 void GOMidiReceiver::Load(
