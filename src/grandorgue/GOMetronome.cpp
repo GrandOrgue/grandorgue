@@ -13,6 +13,7 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "control/GOCallbackButtonControl.h"
+#include "midi/objects/GOMidiObjectContext.h"
 #include "model/GORank.h"
 #include "model/GOSoundingPipe.h"
 #include "model/GOWindchest.h"
@@ -29,14 +30,46 @@ enum {
   ID_METRONOME_BEAT_M10,
 };
 
+static const GOMidiObjectContext MIDI_CONTEXT(wxT("Metronome"), _("Metronome"));
+
 const struct GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
-  {wxT("MetronomeOn"), ID_METRONOME_ON, false, false, false},
-  {wxT("MetronomeMeasureP1"), ID_METRONOME_MEASURE_P1, false, true, false},
-  {wxT("MetronomeMeasureM1"), ID_METRONOME_MEASURE_M1, false, true, false},
-  {wxT("MetronomeBpmP1"), ID_METRONOME_BEAT_P1, false, true, false},
-  {wxT("MetronomeBpmM1"), ID_METRONOME_BEAT_M1, false, true, false},
-  {wxT("MetronomeBpmP10"), ID_METRONOME_BEAT_P10, false, true, false},
-  {wxT("MetronomeBpmM10"), ID_METRONOME_BEAT_M10, false, true, false},
+  {wxT("MetronomeOn"), ID_METRONOME_ON, false, false, false, &MIDI_CONTEXT},
+  {wxT("MetronomeMeasureP1"),
+   ID_METRONOME_MEASURE_P1,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MetronomeMeasureM1"),
+   ID_METRONOME_MEASURE_M1,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MetronomeBpmP1"),
+   ID_METRONOME_BEAT_P1,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MetronomeBpmM1"),
+   ID_METRONOME_BEAT_M1,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MetronomeBpmP10"),
+   ID_METRONOME_BEAT_P10,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MetronomeBpmM10"),
+   ID_METRONOME_BEAT_M10,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
   {wxT(""), -1, false, false, false},
 };
 
@@ -46,8 +79,8 @@ GOMetronome::GOMetronome(GOOrganController *organController)
     m_MeasureLength(4),
     m_Pos(0),
     m_Running(false),
-    m_BPMDisplay(*organController),
-    m_MeasureDisplay(*organController),
+    m_BPMDisplay(*organController, &MIDI_CONTEXT),
+    m_MeasureDisplay(*organController, &MIDI_CONTEXT),
     m_rank(NULL),
     m_StopID(0) {
   CreateButtons(*m_OrganController, BUTTON_DEFS);

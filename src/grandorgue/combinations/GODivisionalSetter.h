@@ -48,6 +48,7 @@ private:
   // the actual number of manuals. m_OdfManualCount = m_NManuals +
   // m_FirstManualIndex
   unsigned m_NManuals;
+  GOMidiObjectContext *m_ManualMidiContexts;
   // Button definitions for creating button controls
   ButtonDefinitionEntry *m_ButtonDefinitions;
   // Labels displaying the current bank for each manual

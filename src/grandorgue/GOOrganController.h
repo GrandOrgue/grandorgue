@@ -187,7 +187,7 @@ public:
   GOMemoryPool &GetMemoryPool();
   GOConfig &GetSettings();
   GOBitmapCache &GetBitmapCache() const { return *m_bitmaps; }
-  void SetTemperament(wxString name);
+  void SetTemperament(const wxString &name);
   wxString GetTemperament();
 
   GOLabelControl *GetPitchLabel();

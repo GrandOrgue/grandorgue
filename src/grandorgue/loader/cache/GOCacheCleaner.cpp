@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -39,30 +39,33 @@ wxArrayString GOCacheCleaner::GetArchiveIDList() {
 }
 
 void GOCacheCleaner::Cleanup() {
-  if (!m_config.ManageCache())
-    return;
+  if (m_config.ManageCache()) {
+    const wxString &cahePath = m_config.OrganCachePath();
 
-  wxDir dir(m_config.OrganCachePath());
-  if (!dir.IsOpened()) {
-    wxLogError(_("Failed to read cache directory"));
-    return;
+    if (!cahePath.IsEmpty()) {
+      wxDir dir(cahePath);
+
+      if (dir.IsOpened()) {
+        wxArrayString organs = GetOrganIDList();
+        wxArrayString archives = GetArchiveIDList();
+
+        wxString name;
+        if (!dir.GetFirst(&name))
+          return;
+        do {
+          wxFileName fn(name);
+          if (fn.GetExt() == wxT("idx")) {
+            if (archives.Index(fn.GetName()) == wxNOT_FOUND)
+              wxRemoveFile(dir.GetNameWithSep() + name);
+          } else if (fn.GetExt() == wxT("cache")) {
+            if (organs.Index(fn.GetName().Mid(0, 40)) == wxNOT_FOUND)
+              wxRemoveFile(dir.GetNameWithSep() + name);
+          } else
+            wxLogError(
+              _("Unexpected file in the cache directory: %s"), name.c_str());
+        } while (dir.GetNext(&name));
+      } else
+        wxLogError(_("Failed to read cache directory"));
+    }
   }
-
-  wxArrayString organs = GetOrganIDList();
-  wxArrayString archives = GetArchiveIDList();
-
-  wxString name;
-  if (!dir.GetFirst(&name))
-    return;
-  do {
-    wxFileName fn(name);
-    if (fn.GetExt() == wxT("idx")) {
-      if (archives.Index(fn.GetName()) == wxNOT_FOUND)
-        wxRemoveFile(dir.GetNameWithSep() + name);
-    } else if (fn.GetExt() == wxT("cache")) {
-      if (organs.Index(fn.GetName().Mid(0, 40)) == wxNOT_FOUND)
-        wxRemoveFile(dir.GetNameWithSep() + name);
-    } else
-      wxLogError(_("Unexpected file in the cache directory: %s"), name.c_str());
-  } while (dir.GetNext(&name));
 }

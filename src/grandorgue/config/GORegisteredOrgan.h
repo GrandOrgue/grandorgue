@@ -10,22 +10,21 @@
 
 #include "GOOrgan.h"
 
-#include "midi/elements/GOMidiReceiverBase.h"
+#include "midi/elements/GOMidiReceiver.h"
 
 class GOConfigReader;
 class GOConfigWriter;
-class GOMidiMap;
 
 class GORegisteredOrgan : public GOOrgan {
 private:
-  GOMidiReceiverBase m_midi;
+  GOMidiReceiver m_midi;
 
 public:
   GORegisteredOrgan(const GOOrgan &organ);
   GORegisteredOrgan(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
 
-  GOMidiReceiverBase &GetMIDIReceiver() { return m_midi; }
-  const GOMidiReceiverBase &GetMIDIReceiver() const { return m_midi; }
+  GOMidiReceiver &GetMIDIReceiver() { return m_midi; }
+  const GOMidiReceiver &GetMIDIReceiver() const { return m_midi; }
 
   void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
 

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -173,15 +173,17 @@ bool GOArchiveManager::RegisterPackage(const wxString &path) {
 }
 
 void GOArchiveManager::RegisterPackageDirectory(const wxString &path) {
-  wxDir dir(path);
-  if (!dir.IsOpened()) {
-    wxLogError(_("Failed to read directory '%s'"), path.c_str());
-    return;
+  if (!path.IsEmpty()) {
+    wxDir dir(path);
+    if (!dir.IsOpened()) {
+      wxLogError(_("Failed to read directory '%s'"), path.c_str());
+      return;
+    }
+    wxString name;
+    if (!dir.GetFirst(&name, wxT("*.orgue"), wxDIR_FILES | wxDIR_HIDDEN))
+      return;
+    do {
+      RegisterPackage(path + wxFileName::GetPathSeparator() + name);
+    } while (dir.GetNext(&name));
   }
-  wxString name;
-  if (!dir.GetFirst(&name, wxT("*.orgue"), wxDIR_FILES | wxDIR_HIDDEN))
-    return;
-  do {
-    RegisterPackage(path + wxFileName::GetPathSeparator() + name);
-  } while (dir.GetNext(&name));
 }

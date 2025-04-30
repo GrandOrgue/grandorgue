@@ -17,7 +17,7 @@ GOMidiReceivingSendingObject::GOMidiReceivingSendingObject(
   GOMidiReceiverType receiverType)
   : GOMidiSendingObject(organModel, midiTypeCode, midiTypeName, senderType),
     m_ReceiverType(receiverType),
-    m_receiver(organModel, receiverType),
+    m_receiver(organModel.GetConfig(), receiverType),
     p_ReceiverKeyMap(nullptr),
     m_MidiInputNumber(-1) {
   SetMidiReceiver(&m_receiver);
@@ -58,7 +58,7 @@ void GOMidiReceivingSendingObject::LoadMidiObject(
   if (!IsReadOnly()) {
     m_receiver.Load(cfg, group, midiMap);
     if (!m_receiver.IsMidiConfigured() && m_MidiInputNumber >= 0) {
-      const GOMidiReceiverBase *pInitialEvents
+      const GOMidiReceiver *pInitialEvents
         = r_OrganModel.GetConfig().FindMidiEvent(
           m_ReceiverType, m_MidiInputNumber);
 

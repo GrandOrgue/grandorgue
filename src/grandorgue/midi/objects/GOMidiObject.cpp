@@ -10,6 +10,8 @@
 #include <wx/intl.h>
 
 #include "midi/elements/GOMidiReceiver.h"
+#include "midi/elements/GOMidiSender.h"
+#include "midi/elements/GOMidiShortcutReceiver.h"
 #include "model/GOOrganModel.h"
 
 #include "GOMidiObjectContext.h"
@@ -39,6 +41,13 @@ GOMidiObject::~GOMidiObject() {
 
 wxString GOMidiObject::GetContextTitle() const {
   return GOMidiObjectContext::getFullTitle(p_context);
+}
+
+bool GOMidiObject::IsMidiConfigured() const {
+  return (p_MidiSender && p_MidiSender->IsMidiConfigured())
+    || (p_MidiReceiver && p_MidiReceiver->IsMidiConfigured())
+    || (p_ShortcutReceiver && p_ShortcutReceiver->IsMidiConfigured())
+    || (p_DivisionSender && p_DivisionSender->IsMidiConfigured());
 }
 
 void GOMidiObject::InitMidiObject(

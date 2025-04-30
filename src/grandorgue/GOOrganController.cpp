@@ -701,6 +701,8 @@ void GOOrganController::LoadCombination(const wxString &file) {
 bool GOOrganController::CachePresent() { return wxFileExists(m_CacheFilename); }
 
 bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
+  bool isOk = false;
+
   DeleteCache();
 
   /* Figure out the list of pipes to save */
@@ -709,38 +711,39 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
   dlg->Setup(objectDistributor.GetNObjects(), _("Creating sample cache"));
 
   wxFileOutputStream file(m_CacheFilename);
-  GOCacheWriter writer(file, compress);
 
-  /* Save pipes to cache */
-  bool cache_save_ok = writer.WriteHeader();
+  if (file.IsOk()) {
+    GOCacheWriter writer(file, compress);
 
-  GOHashType hash = GenerateCacheHash();
-  if (!writer.Write(&hash, sizeof(hash)))
-    cache_save_ok = false;
+    /* Save pipes to cache */
+    bool isOk = writer.WriteHeader();
 
-  while (cache_save_ok) {
-    GOCacheObject *obj = objectDistributor.FetchNext();
+    GOHashType hash = GenerateCacheHash();
+    if (!writer.Write(&hash, sizeof(hash)))
+      isOk = false;
 
-    if (!obj)
-      break;
-    if (!obj->SaveCache(writer)) {
-      cache_save_ok = false;
-      wxLogError(
-        _("Save of %s to the cache failed"), obj->GetLoadTitle().c_str());
+    while (isOk) {
+      GOCacheObject *obj = objectDistributor.FetchNext();
+
+      if (!obj)
+        break;
+      if (!obj->SaveCache(writer)) {
+        isOk = false;
+        wxLogError(
+          _("Save of %s to the cache failed"), obj->GetLoadTitle().c_str());
+      }
+      if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
+        writer.Close();
+        DeleteCache();
+        isOk = false;
+      }
     }
-    if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
-      writer.Close();
+    writer.Close();
+    if (!isOk)
       DeleteCache();
-      return false;
-    }
-  }
-
-  writer.Close();
-  if (!cache_save_ok) {
-    DeleteCache();
-    return false;
-  }
-  return true;
+  } else
+    wxLogError(_("Opening the cache file %s failed"), m_CacheFilename);
+  return isOk;
 }
 
 void GOOrganController::DeleteCache() {
@@ -1032,7 +1035,7 @@ void GOOrganController::SetTemperament(const GOTemperament &temperament) {
     m_ranks[k]->SetTemperament(temperament);
 }
 
-void GOOrganController::SetTemperament(wxString name) {
+void GOOrganController::SetTemperament(const wxString &name) {
   const GOTemperament &temperament
     = m_config.GetTemperaments().GetTemperament(name);
   m_Temperament = temperament.GetName();

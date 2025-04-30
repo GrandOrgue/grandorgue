@@ -17,7 +17,7 @@
 #include "gui/dialogs/common/GODialogSizeSet.h"
 #include "gui/size/GOLogicalRect.h"
 #include "midi/GOMidiMap.h"
-#include "midi/elements/GOMidiReceiverBase.h"
+#include "midi/elements/GOMidiReceiver.h"
 #include "settings/GOSettingBool.h"
 #include "settings/GOSettingDirectory.h"
 #include "settings/GOSettingEnum.h"
@@ -59,7 +59,7 @@ private:
   std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 
   GOPortsConfig m_MidiPortsConfig;
-  ptr_vector<GOMidiReceiverBase> m_MIDIEvents;
+  ptr_vector<GOMidiReceiver> m_MIDIEvents;
   GOMidiMap m_MidiMap;
   GOTemperamentList m_Temperaments;
 
@@ -177,11 +177,11 @@ public:
   unsigned GetEventCount() const;
   wxString GetEventGroup(unsigned index);
   wxString GetEventTitle(unsigned index);
-  const GOMidiReceiverBase *GetMidiEvent(unsigned index) const;
+  const GOMidiReceiver *GetMidiEvent(unsigned index) const;
   unsigned GetEventInputNumber(unsigned index) const {
     return m_MIDISettings[index].index;
   }
-  const GOMidiReceiverBase *FindMidiEvent(
+  const GOMidiReceiver *FindMidiEvent(
     GOMidiReceiverType type, unsigned index) const;
 
   const std::vector<wxString> &GetAudioGroups();

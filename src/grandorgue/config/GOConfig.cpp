@@ -239,7 +239,9 @@ GOConfig::GOConfig(wxString instance)
     CheckForUpdatesAtStartup(
       this, wxT("General"), wxT("CheckForUpdatesAtStartup"), true),
     m_MidiIn(MIDI_IN),
-    m_MidiOut(MIDI_OUT) {}
+    m_MidiOut(MIDI_OUT) {
+  m_Temperaments.InitTemperaments();
+}
 
 GOOrgan *GOConfig::CloneOrgan(const GOOrgan &newOrgan) const {
   return new GORegisteredOrgan(newOrgan);
@@ -257,15 +259,16 @@ bool GOConfig::IsValidOrgan(const GOOrgan *pOrgan) const {
 
 void GOConfig::LoadOrgans(GOConfigReader &cfg) {
   ClearOrgans();
+  ClearArchives();
+
   unsigned organ_count = cfg.ReadInteger(
     CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
+  unsigned archive_count = cfg.ReadInteger(
+    CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
+
   for (unsigned i = 0; i < organ_count; i++)
     AddNewOrgan(new GORegisteredOrgan(
       cfg, wxString::Format(wxT("Organ%03d"), i + 1), m_MidiMap));
-
-  ClearArchives();
-  unsigned archive_count = cfg.ReadInteger(
-    CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
   for (unsigned i = 0; i < archive_count; i++)
     AddNewArchive(
       new GOArchiveFile(cfg, wxString::Format(wxT("Archive%03d"), i + 1)));
@@ -350,7 +353,11 @@ void GOConfig::Load() {
     cfg_db.ReadData(cfg_file, CMBSetting, false);
     GOConfigReader cfg(cfg_db);
 
-    LoadOrgans(cfg);
+    try {
+      LoadOrgans(cfg);
+    } catch (const wxString &error) {
+      wxLogError(wxT("%s\n"), error);
+    }
 
     m_MainWindowRect.x = cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowX"), -32000, 32000, false, 0);
@@ -361,7 +368,6 @@ void GOConfig::Load() {
     m_MainWindowRect.height = (unsigned)cfg.ReadInteger(
       CMBSetting, wxT("UI"), wxT("MainWindowHeight"), 0, 32000, false, 0);
 
-    m_Temperaments.InitTemperaments();
     m_Temperaments.Load(cfg);
 
     m_AudioGroups.clear();
@@ -433,8 +439,8 @@ void GOConfig::Load() {
 
     if (wxFileExists(m_ConfigFileName))
       wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
-  } catch (wxString error) {
-    wxLogError(wxT("%s\n"), error.c_str());
+  } catch (const wxString &error) {
+    wxLogError(wxT("%s\n"), error);
   }
 }
 
@@ -450,7 +456,7 @@ void GOConfig::LoadDefaults() {
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueConfig") + m_InstanceName;
   for (unsigned i = 0; i < GetEventCount(); i++)
-    m_MIDIEvents.push_back(new GOMidiReceiverBase(m_MIDISettings[i].type));
+    m_MIDIEvents.push_back(new GOMidiReceiver(*this, m_MIDISettings[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
   OrganPath.SetDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
@@ -523,12 +529,12 @@ wxString GOConfig::GetEventTitle(unsigned index) {
   return wxGetTranslation(m_MIDISettings[index].name);
 }
 
-const GOMidiReceiverBase *GOConfig::GetMidiEvent(unsigned index) const {
+const GOMidiReceiver *GOConfig::GetMidiEvent(unsigned index) const {
   assert(index < GetEventCount());
   return m_MIDIEvents[index];
 }
 
-const GOMidiReceiverBase *GOConfig::FindMidiEvent(
+const GOMidiReceiver *GOConfig::FindMidiEvent(
   GOMidiReceiverType type, unsigned index) const {
   for (unsigned i = 0; i < GetEventCount(); i++)
     if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)

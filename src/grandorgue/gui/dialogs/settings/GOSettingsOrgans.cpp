@@ -231,12 +231,14 @@ using StringSet = std::unordered_set<wxString, wxStringHash, wxStringEqual>;
 static StringSet collect_hashes_from_organ_files(
   const wxString &dirPath, const wxString &pattern) {
   StringSet hashSet;
-  wxArrayString files;
 
-  wxDir::GetAllFiles(dirPath, &files, pattern);
+  if (!dirPath.IsEmpty()) {
+    wxArrayString files;
 
-  for (const wxString &fileName : files)
-    hashSet.insert(GOStdFileName::extractOrganHash(fileName));
+    wxDir::GetAllFiles(dirPath, &files, pattern);
+    for (const wxString &fileName : files)
+      hashSet.insert(GOStdFileName::extractOrganHash(fileName));
+  }
   return hashSet;
 }
 

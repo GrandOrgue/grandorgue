@@ -9,7 +9,7 @@
 
 #include <wx/intl.h>
 
-static GOKeyConvert::Shortcut shortcuts[] = {
+const GOConfigEnum GOKeyConvert::SHORTCUTS({
   {wxTRANSLATE("back"), 8},
   {wxTRANSLATE("tab"), 9},
   {wxTRANSLATE("return"), 13},
@@ -128,15 +128,7 @@ static GOKeyConvert::Shortcut shortcuts[] = {
   {wxTRANSLATE("}"), 221},
   {wxTRANSLATE("#"), 222},
   {wxTRANSLATE("`"), 223},
-};
-
-unsigned GOKeyConvert::getShortcutKeyCount() {
-  return sizeof(shortcuts) / sizeof(Shortcut);
-}
-
-const GOKeyConvert::Shortcut *GOKeyConvert::getShortcutKeys() {
-  return shortcuts;
-}
+});
 
 int GOKeyConvert::wXKtoVK(int what) {
   switch (what) {
