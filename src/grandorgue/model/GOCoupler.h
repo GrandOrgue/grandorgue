@@ -55,7 +55,10 @@ private:
 
 public:
   GOCoupler(
-    GOOrganModel &organModel, unsigned sourceManual, bool isVirtual = false);
+    GOOrganModel &organModel,
+    unsigned sourceManual,
+    bool isVirtual,
+    const GOMidiObjectContext *pContext);
 
   bool IsVirtual() const { return m_IsVirtual; }
   bool IsRecursive() const {

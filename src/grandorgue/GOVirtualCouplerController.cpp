@@ -15,12 +15,17 @@
 #include "model/GOManual.h"
 #include "model/GOOrganModel.h"
 
-void load_coupler(
+static GOVirtualCouplerController::CouplerSetKey make_key(
+  unsigned srcManualN, unsigned dstManualN) {
+  return std::make_pair(srcManualN, dstManualN);
+}
+
+static void load_coupler(
   GOOrganModel &organModel,
   GOConfigReader &cfg,
-  GOVirtualCouplerController::ManualCouplerSet &manualCouplers,
   unsigned srcManualN,
   unsigned dstManualN,
+  GOVirtualCouplerController::CouplerSet &couplerSet,
   bool unisonOff,
   GOCoupler::GOCouplerType couplerType,
   int keyshift,
@@ -28,7 +33,8 @@ void load_coupler(
   const wxString &recorderNameFmt,
   const wxString &couplerLabel) {
   GOManual *pSrcManual = organModel.GetManual(srcManualN);
-  GOCoupler *pCoupler = new GOCoupler(organModel, srcManualN, true);
+  GOCoupler *pCoupler = new GOCoupler(
+    organModel, srcManualN, true, couplerSet.m_CouplersContext.get());
 
   pCoupler->Init(
     cfg,
@@ -42,31 +48,36 @@ void load_coupler(
   pCoupler->SetElementId(organModel.GetRecorderElementID(
     wxString::Format(recorderNameFmt, srcManualN, dstManualN)));
   pSrcManual->AddCoupler(pCoupler);
-  manualCouplers.push_back(pCoupler);
+  couplerSet.m_CouplerPtrs.push_back(pCoupler);
 }
 
-GOVirtualCouplerController::CouplerSetKey make_key(
-  unsigned srcManualN, unsigned dstManualN) {
-  return std::make_pair(srcManualN, dstManualN);
-}
+static wxString WX_03U = wxT("%03u");
 
 void GOVirtualCouplerController::Init(
   GOOrganModel &organModel, GOConfigReader &cfg) {
   for (unsigned srcManualN = organModel.GetFirstManualIndex();
        srcManualN <= organModel.GetManualAndPedalCount();
        srcManualN++) {
+    const GOMidiObjectContext *pSrcVirtCouplerContext
+      = organModel.GetManual(srcManualN)->GetVirtualCouplersContext();
+
     for (unsigned int dstManualN = organModel.GetFirstManualIndex();
          dstManualN < organModel.GetODFManualCount();
          dstManualN++) {
-      CouplerSetKey couplerSetKey = make_key(srcManualN, dstManualN);
-      ManualCouplerSet &manualCouplers = m_CouplerPtrs[couplerSetKey];
+      CouplerSet &couplers = m_CouplerSets[make_key(srcManualN, dstManualN)];
+
+      couplers.m_CouplersContext
+        = std::unique_ptr<GOMidiObjectContext>(new GOMidiObjectContext(
+          wxString::Format(WX_03U, dstManualN),
+          organModel.GetManual(dstManualN)->GetNameForContext(),
+          pSrcVirtCouplerContext));
 
       load_coupler(
         organModel,
         cfg,
-        manualCouplers,
         srcManualN,
         dstManualN,
+        couplers,
         false,
         GOCoupler::COUPLER_NORMAL,
         -12,
@@ -77,9 +88,9 @@ void GOVirtualCouplerController::Init(
       load_coupler(
         organModel,
         cfg,
-        manualCouplers,
         srcManualN,
         dstManualN,
+        couplers,
         srcManualN == dstManualN,
         GOCoupler::COUPLER_NORMAL,
         0,
@@ -90,9 +101,9 @@ void GOVirtualCouplerController::Init(
       load_coupler(
         organModel,
         cfg,
-        manualCouplers,
         srcManualN,
         dstManualN,
+        couplers,
         false,
         GOCoupler::COUPLER_NORMAL,
         12,
@@ -103,9 +114,9 @@ void GOVirtualCouplerController::Init(
       load_coupler(
         organModel,
         cfg,
-        manualCouplers,
         srcManualN,
         dstManualN,
+        couplers,
         false,
         GOCoupler::COUPLER_BASS,
         0,
@@ -116,9 +127,9 @@ void GOVirtualCouplerController::Init(
       load_coupler(
         organModel,
         cfg,
-        manualCouplers,
         srcManualN,
         dstManualN,
+        couplers,
         false,
         GOCoupler::COUPLER_MELODY,
         0,
@@ -126,15 +137,15 @@ void GOVirtualCouplerController::Init(
         wxT("S%dM%dCM"),
         _("MEL"));
 
-      GOCallbackButtonControl *pCoupleThrough
+      couplers.m_ButtonCoupleThrough
         = new GOCallbackButtonControl(organModel, this, false, false);
-
-      pCoupleThrough->Init(
+      couplers.m_ButtonCoupleThrough->SetContext(
+        couplers.m_CouplersContext.get());
+      couplers.m_ButtonCoupleThrough->Init(
         cfg,
         wxString::Format(
           wxT("SetterManual%03dCoupler%03dThrough"), srcManualN, dstManualN),
         _("Couple Through"));
-      m_CoupleThroughPtrs[couplerSetKey] = pCoupleThrough;
     }
   }
 }
@@ -144,8 +155,8 @@ static wxString WX_COUPLE_THROUGH = wxT("CoupleThrough");
 void GOVirtualCouplerController::Load(
   GOOrganModel &organModel, GOConfigReader &cfg) {
   Init(organModel, cfg);
-  for (auto e : m_CoupleThroughPtrs) {
-    GOCallbackButtonControl *pCoupleThrough = e.second;
+  for (auto &e : m_CouplerSets) {
+    GOCallbackButtonControl *pCoupleThrough = e.second.m_ButtonCoupleThrough;
     bool isCoupleThrough = cfg.ReadBoolean(
       CMBSetting, pCoupleThrough->GetGroup(), WX_COUPLE_THROUGH, false, false);
 
@@ -154,8 +165,8 @@ void GOVirtualCouplerController::Load(
 }
 
 void GOVirtualCouplerController::Save(GOConfigWriter &cfg) {
-  for (auto e : m_CoupleThroughPtrs) {
-    GOCallbackButtonControl *pCoupleThrough = e.second;
+  for (auto &e : m_CouplerSets) {
+    GOCallbackButtonControl *pCoupleThrough = e.second.m_ButtonCoupleThrough;
 
     cfg.WriteBoolean(
       pCoupleThrough->GetGroup(),
@@ -166,28 +177,26 @@ void GOVirtualCouplerController::Save(GOConfigWriter &cfg) {
 
 GOCoupler *GOVirtualCouplerController::GetCoupler(
   unsigned fromManual, unsigned toManual, CouplerType type) const {
-  const auto iter = m_CouplerPtrs.find(make_key(fromManual, toManual));
+  const auto iter = m_CouplerSets.find(make_key(fromManual, toManual));
 
-  return iter != m_CouplerPtrs.end() ? iter->second[type] : nullptr;
+  return iter != m_CouplerSets.end() ? iter->second.m_CouplerPtrs[type]
+                                     : nullptr;
 }
 
 GOButtonControl *GOVirtualCouplerController::GetCouplerThrough(
   unsigned fromManual, unsigned toManual) const {
-  const auto iter = m_CoupleThroughPtrs.find(make_key(fromManual, toManual));
+  const auto iter = m_CouplerSets.find(make_key(fromManual, toManual));
 
-  return iter != m_CoupleThroughPtrs.end() ? iter->second : nullptr;
+  return iter != m_CouplerSets.end() ? iter->second.m_ButtonCoupleThrough
+                                     : nullptr;
 }
 
 void GOVirtualCouplerController::ButtonStateChanged(
   GOButtonControl *button, bool newState) {
-  for (auto e : m_CoupleThroughPtrs)
-    if (e.second == button) {
-      const CouplerSetKey &couplerSetKey = e.first;
-      ManualCouplerSet &manualCouplers = m_CouplerPtrs[couplerSetKey];
-
-      for (auto pCoupler : manualCouplers) {
+  for (auto &e : m_CouplerSets)
+    if (e.second.m_ButtonCoupleThrough == button)
+      for (auto pCoupler : e.second.m_CouplerPtrs) {
         pCoupler->SetRecursive(newState);
         pCoupler->RefreshState();
       }
-    }
 }
