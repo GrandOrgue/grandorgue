@@ -15,7 +15,7 @@
 
 #include "gui/wxcontrols/GOChoice.h"
 #include "midi/GOMidiListener.h"
-#include "midi/elements/GOMidiReceiverBase.h"
+#include "midi/elements/GOMidiReceiver.h"
 #include "midi/events/GOMidiCallback.h"
 #include "modification/GOModificationProxy.h"
 
@@ -35,7 +35,7 @@ private:
   GOMidiDeviceConfigList &m_MidiIn;
   GOMidiMap &m_MidiMap;
 
-  GOMidiReceiverBase *m_original;
+  GOMidiReceiver *m_original;
   GOMidiReceiverEventPatternList m_midi;
   GOMidiReceiverType m_ReceiverType;
   GOMidiListener m_listener;
@@ -114,8 +114,7 @@ protected:
   };
 
 public:
-  GOMidiEventRecvTab(
-    wxWindow *parent, GOMidiReceiverBase *event, GOConfig &config);
+  GOMidiEventRecvTab(wxWindow *parent, GOMidiReceiver *event, GOConfig &config);
   ~GOMidiEventRecvTab();
   void RegisterMIDIListener(GOMidi *midi);
 

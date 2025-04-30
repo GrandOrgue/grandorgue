@@ -19,7 +19,7 @@
 class GOOrganController;
 class GOMidiShortcutReceiver;
 class GOMidiEvent;
-class GOMidiReceiverBase;
+class GOMidiReceiver;
 class GOMidiSender;
 class GOOrgan;
 class GOProgressDialog;
@@ -69,7 +69,7 @@ public:
     void *element,
     const wxString &title,
     const wxString &dialogSelector,
-    GOMidiReceiverBase *event,
+    GOMidiReceiver *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,
     GOMidiSender *division = nullptr,

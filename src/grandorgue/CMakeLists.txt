@@ -146,7 +146,6 @@ loader/cache/GOCacheWriter.cpp
 midi/dialog-creator/GOMidiDialogCreatorProxy.cpp
 midi/dialog-creator/GOMidiConfigDispatcher.cpp
 midi/elements/GOMidiReceiver.cpp
-midi/elements/GOMidiReceiverBase.cpp
 midi/elements/GOMidiShortcutReceiver.cpp
 midi/elements/GOMidiSendProxy.cpp
 midi/elements/GOMidiSender.cpp
