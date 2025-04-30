@@ -32,7 +32,7 @@ EVT_CHOICE(ID_EVENT, GOMidiEventRecvTab::OnTypeChange)
 END_EVENT_TABLE()
 
 GOMidiEventRecvTab::GOMidiEventRecvTab(
-  wxWindow *parent, GOMidiReceiverBase *event, GOConfig &config)
+  wxWindow *parent, GOMidiReceiver *event, GOConfig &config)
   : wxPanel(parent, wxID_ANY),
     m_MidiIn(config.m_MidiIn),
     m_MidiMap(config.GetMidiMap()),

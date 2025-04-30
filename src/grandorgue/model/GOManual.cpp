@@ -22,8 +22,12 @@
 
 static const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
 static const wxString WX_MIDI_TYPE_NAME = _("Manual");
+static const wxString WX_MANUAL_NUM_FMT = wxT("%03u");
 
-GOManual::GOManual(GOOrganModel &organModel)
+GOManual::GOManual(
+  GOOrganModel &organModel,
+  unsigned manualNumber,
+  const GOMidiObjectContext *pParentContext)
   : GOMidiObjectWithDivision(
     organModel,
     WX_MIDI_TYPE_CODE,
@@ -36,7 +40,16 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_Velocity(),
     m_DivisionState(),
     m_Velocities(),
-    m_manual_number(0),
+    m_manual_number(manualNumber),
+    m_ShortName(wxString::Format(WX_MANUAL_NUM_FMT, manualNumber)),
+    m_MidiContext(m_ShortName, m_ShortName, pParentContext),
+    m_MidiContextCouplers(wxT("couplers"), _("couplers"), &m_MidiContext),
+    m_MidiContextDivisionals(
+      wxT("divisionals"), _("divisionals"), &m_MidiContext),
+    m_MidiContextStops(wxT("stops"), _("stops"), &m_MidiContext),
+    m_MidiContextSwitches(wxT("switches"), _("switches"), &m_MidiContext),
+    m_MidiContextVirtualCouplers(
+      wxT("virtual-couplers"), _("virtual-couplers"), &m_MidiContext),
     m_first_accessible_logical_key_nb(0),
     m_nb_logical_keys(0),
     m_first_accessible_key_midi_note_nb(0),
@@ -50,6 +63,7 @@ GOManual::GOManual(GOOrganModel &organModel)
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
+  SetContext(pParentContext);
   SetReceiverKeyMap(&m_MidiKeyMap);
   m_InputCouplers.push_back(NULL);
   r_OrganModel.RegisterCombinationButtonSet(this);
@@ -78,16 +92,14 @@ void GOManual::Resize() {
 void GOManual::Init(
   GOConfigReader &cfg,
   const wxString &group,
-  int manualNumber,
   unsigned firstMidi,
   unsigned keys) {
-  m_manual_number = manualNumber;
   GOMidiReceivingSendingObject::Init(
     cfg,
     group,
     wxString::Format(
       _("Coupling manual %d"),
-      manualNumber - r_OrganModel.GetODFManualCount() + 1));
+      m_manual_number - r_OrganModel.GetODFManualCount() + 1));
   m_nb_logical_keys = keys;
   m_first_accessible_logical_key_nb = 1;
   m_first_accessible_key_midi_note_nb = firstMidi;
@@ -111,9 +123,7 @@ void GOManual::Init(
   std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0x00);
 }
 
-void GOManual::Load(
-  GOConfigReader &cfg, const wxString &group, int manualNumber) {
-  m_manual_number = manualNumber;
+void GOManual::Load(GOConfigReader &cfg, const wxString &group) {
   GOMidiReceivingSendingObject::Load(
     cfg, group, cfg.ReadStringNotEmpty(ODFSetting, group, wxT("Name")), true);
   m_nb_logical_keys
@@ -163,8 +173,8 @@ void GOManual::Load(
 
   m_stops.resize(0);
   for (unsigned i = 0; i < nb_stops; i++) {
-    m_stops.push_back(
-      new GOStop(r_OrganModel, GetFirstLogicalKeyMIDINoteNumber()));
+    m_stops.push_back(new GOStop(
+      r_OrganModel, GetFirstLogicalKeyMIDINoteNumber(), &m_MidiContextStops));
     buffer.Printf(wxT("Stop%03d"), i + 1);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
@@ -176,7 +186,8 @@ void GOManual::Load(
 
   m_couplers.resize(0);
   for (unsigned i = 0; i < m_ODFCouplerCount; i++) {
-    m_couplers.push_back(new GOCoupler(r_OrganModel, m_manual_number));
+    m_couplers.push_back(new GOCoupler(
+      r_OrganModel, m_manual_number, false, &m_MidiContextCouplers));
     buffer.Printf(wxT("Coupler%03d"), i + 1);
     buffer.Printf(
       wxT("Coupler%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
@@ -232,8 +243,8 @@ void GOManual::LoadDivisionals(GOConfigReader &cfg) {
   m_DivisionalTemplate.InitDivisional(*this);
   m_divisionals.resize(0);
   for (unsigned i = 0; i < nDivisionals; i++) {
-    m_divisionals.push_back(
-      new GODivisionalButtonControl(r_OrganModel, m_manual_number, i));
+    m_divisionals.push_back(new GODivisionalButtonControl(
+      r_OrganModel, m_manual_number, i, &m_MidiContextDivisionals));
 
     buffer.Printf(wxT("Divisional%03d"), i + 1);
     buffer.Printf(

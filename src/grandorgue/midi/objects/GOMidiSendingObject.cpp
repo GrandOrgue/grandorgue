@@ -40,6 +40,11 @@ void GOMidiSendingObject::ResendMidi() {
   SendCurrentMidiValue();
 }
 
+void GOMidiSendingObject::OnSettingsApplied() {
+  ResendMidi();
+  GOMidiObject::OnSettingsApplied();
+}
+
 void GOMidiSendingObject::PreparePlayback() {
   GOMidiObject::PreparePlayback();
   m_sender.SetName(GetName());

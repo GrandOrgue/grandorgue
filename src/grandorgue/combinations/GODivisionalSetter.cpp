@@ -43,9 +43,13 @@ enum {
   ID_FIRST = 0
 };
 
+static wxString WX_DIVISIONAL_CTX_NAME = wxT("setter-divisionals");
+static wxString WX_DIVISIONAL_CTX_TITLE = _("setter-divisionals");
+
 // fills a button definition
-void fill_button_definition(
-  wxString name,
+static void fill_button_definition(
+  const GOMidiObjectContext *pContext,
+  const wxString &name,
   GOElementCreator::ButtonDefinitionEntry *&pb,
   unsigned &currId) {
   pb->name = name;
@@ -53,6 +57,7 @@ void fill_button_definition(
   pb->is_public = true;
   pb->is_pushbutton = true;
   pb->is_piston = true;
+  pb->p_MidiContext = pContext;
   pb++;
 }
 
@@ -87,6 +92,7 @@ GODivisionalSetter::GODivisionalSetter(
     m_FirstManualIndex(m_OrganController->GetFirstManualIndex()),
     m_OdfManualCount(m_OrganController->GetODFManualCount()),
     m_NManuals(m_OdfManualCount - m_FirstManualIndex),
+    m_ManualMidiContexts(new GOMidiObjectContext[m_NManuals]),
     // additional 1 element for the end mark
     m_ButtonDefinitions(new ButtonDefinitionEntry[N_BUTTONS * m_NManuals + 1]) {
   // fill m_ButtonDefinitions
@@ -94,17 +100,28 @@ GODivisionalSetter::GODivisionalSetter(
   unsigned currId = ID_DIVISIONAL01 + ID_FIRST;
 
   // construct button definitions
-  for (unsigned odfManualIndex = m_FirstManualIndex;
-       odfManualIndex < m_OdfManualCount;
-       odfManualIndex++) {
+  for (unsigned i = 0; i < m_NManuals; i++) {
+    unsigned odfManualIndex = m_FirstManualIndex + i;
+    GOMidiObjectContext *pContext = m_ManualMidiContexts + i;
+    *pContext = GOMidiObjectContext(
+      WX_DIVISIONAL_CTX_NAME,
+      WX_DIVISIONAL_CTX_TITLE,
+      organController->GetManual(odfManualIndex)->GetManualContext());
+
     for (unsigned divisionalIndex = 0; divisionalIndex < N_DIVISIONALS;
          divisionalIndex++)
       fill_button_definition(
-        GetDivisionalButtonName(odfManualIndex, divisionalIndex), pb, currId);
+        pContext,
+        GetDivisionalButtonName(odfManualIndex, divisionalIndex),
+        pb,
+        currId);
     fill_button_definition(
-      GetDivisionalBankPrevLabelName(odfManualIndex), pb, currId);
+      pContext, GetDivisionalBankPrevLabelName(odfManualIndex), pb, currId);
     fill_button_definition(
-      GetDivisionalBankNextLabelName(odfManualIndex), pb, currId);
+      pContext, GetDivisionalBankNextLabelName(odfManualIndex), pb, currId);
+    m_manualBanks.push_back(0);
+    m_BankLabels.push_back(new GOLabelControl(*organController, pContext));
+    m_DivisionalMaps.emplace_back();
   }
   *pb = final_button_definition_entry;
 
@@ -112,17 +129,13 @@ GODivisionalSetter::GODivisionalSetter(
   // callback
   CreateButtons(*organController, m_ButtonDefinitions);
   organController->RegisterCombinationButtonSet(this);
-  for (unsigned manualN = 0; manualN < m_NManuals; manualN++) {
-    m_manualBanks.push_back(0);
-    m_BankLabels.push_back(new GOLabelControl(*organController));
-    m_DivisionalMaps.emplace_back();
-  }
 }
 
 GODivisionalSetter::~GODivisionalSetter() {
   ClearCombinations();
   m_BankLabelsByName.clear();
   delete[] m_ButtonDefinitions;
+  delete[] m_ManualMidiContexts;
   m_OrganController->UnregisterSaveableObject(this);
 }
 
@@ -236,20 +249,20 @@ const wxString WX_PU = wxT("%u");
 const wxString WX_P03U = wxT("%03u");
 const wxString WX_PCP02U = wxT("%c%02u");
 
-wxString manual_yaml_key(unsigned odfManualIndex) {
+static wxString manual_yaml_key(unsigned odfManualIndex) {
   return wxString::Format(WX_MANUALP03U, odfManualIndex);
 }
 
-wxString divisional_yaml_key(unsigned i) {
+static wxString divisional_yaml_key(unsigned i) {
   return wxString::Format(WX_PU, i + 1);
 }
 
-wxString banked_divisional_yaml_key(unsigned i) {
+static wxString banked_divisional_yaml_key(unsigned i) {
   return wxString::Format(
     WX_PCP02U, i / N_DIVISIONALS + 'A', i % N_DIVISIONALS + 1);
 }
 
-unsigned banked_divisional_yaml_key_to_index(const wxString &key) {
+static unsigned banked_divisional_yaml_key_to_index(const wxString &key) {
   return N_DIVISIONALS * (key[0].GetValue() - 'A') + wxAtoi(key.Mid(1)) - 1;
 }
 

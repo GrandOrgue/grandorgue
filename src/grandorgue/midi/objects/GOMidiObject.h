@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "midi/dialog-creator/GOMidiDialogListener.h"
+#include "midi/dialog-creator/GOMidiConfigDispatcher.h"
 #include "sound/GOSoundStateHandler.h"
 
 #include "GOSaveableObject.h"
@@ -26,7 +26,7 @@ class GOOrganModel;
 
 class GOMidiObject : public GOSoundStateHandler,
                      public GOSaveableObject,
-                     protected GOMidiDialogListener {
+                     public GOMidiConfigDispatcher {
 protected:
   GOOrganModel &r_OrganModel;
 
@@ -89,7 +89,11 @@ public:
   const GOMidiObjectContext *GetContext() const { return p_context; }
   void SetContext(const GOMidiObjectContext *pContext) { p_context = pContext; }
 
+  virtual const wxString &GetNameForContext() const { return GetName(); }
+
   wxString GetContextTitle() const;
+
+  bool IsMidiConfigured() const;
 
   virtual void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) {

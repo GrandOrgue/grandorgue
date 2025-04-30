@@ -11,7 +11,7 @@ void GOMidiDialogCreatorProxy::ShowMIDIEventDialog(
   void *element,
   const wxString &title,
   const wxString &dialogSelector,
-  GOMidiReceiverBase *event,
+  GOMidiReceiver *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
   GOMidiSender *division,

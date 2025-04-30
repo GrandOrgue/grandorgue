@@ -13,6 +13,7 @@
 #include "gui/size/GOAdditionalSizeKeeperProxy.h"
 #include "gui/wxcontrols/GOGrid.h"
 #include "midi/objects/GOMidiObject.h"
+#include "midi/objects/GOMidiObjectContext.h"
 
 #include "GOEvent.h"
 
@@ -33,7 +34,27 @@ EVT_COMMAND_RANGE(
   ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, GOMidiObjectsDialog::OnActionButton)
 END_EVENT_TABLE()
 
-enum { GRID_COL_TYPE = 0, GRID_COL_ELEMENT };
+enum {
+  GRID_COL_TYPE = 0,
+  GRID_COL_CONTEXT,
+  GRID_COL_ELEMENT,
+  GRID_COL_CONFIGURED,
+  GRID_N_COLS,
+};
+
+GOMidiObjectsDialog::ObjectConfigListener::ObjectConfigListener(
+  GOMidiObjectsDialog &dialog, unsigned index, GOMidiObject *pObject)
+  : r_dialog(dialog), m_index(index), p_object(pObject) {
+  p_object->AddListener(this);
+}
+
+GOMidiObjectsDialog::ObjectConfigListener::~ObjectConfigListener() {
+  p_object->RemoveListener(this);
+}
+
+void GOMidiObjectsDialog::ObjectConfigListener::OnSettingsApplied() {
+  r_dialog.RefreshIsConfigured(m_index, p_object);
+}
 
 GOMidiObjectsDialog::GOMidiObjectsDialog(
   GODocumentBase *doc,
@@ -54,14 +75,18 @@ GOMidiObjectsDialog::GOMidiObjectsDialog(
   topSizer->AddSpacer(5);
 
   m_ObjectsGrid
-    = new GOGrid(this, ID_LIST, wxDefaultPosition, wxSize(250, 200));
-  m_ObjectsGrid->CreateGrid(0, 2, wxGrid::wxGridSelectRows);
+    = new GOGrid(this, ID_LIST, wxDefaultPosition, wxSize(350, 200));
+  m_ObjectsGrid->CreateGrid(0, GRID_N_COLS, wxGrid::wxGridSelectRows);
   m_ObjectsGrid->HideRowLabels();
   m_ObjectsGrid->EnableEditing(false);
   m_ObjectsGrid->SetColLabelValue(GRID_COL_TYPE, _("Type"));
+  m_ObjectsGrid->SetColLabelValue(GRID_COL_CONTEXT, _("Context"));
   m_ObjectsGrid->SetColLabelValue(GRID_COL_ELEMENT, _("Element"));
+  m_ObjectsGrid->SetColLabelValue(GRID_COL_CONFIGURED, _("Configured"));
   m_ObjectsGrid->SetColSize(GRID_COL_TYPE, 100);
+  m_ObjectsGrid->SetColSize(GRID_COL_CONTEXT, 150);
   m_ObjectsGrid->SetColSize(GRID_COL_ELEMENT, 100);
+  m_ObjectsGrid->SetColSize(GRID_COL_CONFIGURED, 30);
 
   topSizer->Add(m_ObjectsGrid, 1, wxEXPAND | wxALL, 5);
 
@@ -105,19 +130,34 @@ void GOMidiObjectsDialog::CaptureAdditionalSizes(
   m_ObjectsGrid->CaptureColumnSizes(proxyMidiObjects);
 }
 
+void GOMidiObjectsDialog::RefreshIsConfigured(
+  unsigned row, GOMidiObject *pObj) {
+  m_ObjectsGrid->SetCellValue(
+    row, GRID_COL_CONFIGURED, pObj->IsMidiConfigured() ? _("Yes") : _("No"));
+}
+
 bool GOMidiObjectsDialog::TransferDataToWindow() {
   unsigned oldRowCnt = m_ObjectsGrid->GetNumberRows();
   unsigned newRowCnt = r_MidiObjects.size();
 
+  m_ObjectListeners.clear();
   if (oldRowCnt)
     m_ObjectsGrid->DeleteRows(0, oldRowCnt);
 
+  m_ObjectListeners.reserve(newRowCnt);
   m_ObjectsGrid->AppendRows(newRowCnt);
   for (unsigned i = 0; i < newRowCnt; i++) {
-    GOMidiObject *obj = r_MidiObjects[i];
+    GOMidiObject *pObj = r_MidiObjects[i];
 
-    m_ObjectsGrid->SetCellValue(i, GRID_COL_TYPE, obj->GetMidiTypeName());
-    m_ObjectsGrid->SetCellValue(i, GRID_COL_ELEMENT, obj->GetName());
+    m_ObjectListeners.emplace_back(*this, i, pObj);
+    pObj->AddListener(&m_ObjectListeners[i]);
+    m_ObjectsGrid->SetCellValue(i, GRID_COL_TYPE, pObj->GetMidiTypeName());
+    m_ObjectsGrid->SetCellValue(
+      i,
+      GRID_COL_CONTEXT,
+      GOMidiObjectContext::getFullTitle(pObj->GetContext()));
+    m_ObjectsGrid->SetCellValue(i, GRID_COL_ELEMENT, pObj->GetName());
+    RefreshIsConfigured(i, pObj);
   }
   return true;
 }
@@ -127,7 +167,13 @@ GOMidiObject *GOMidiObjectsDialog::GetSelectedObject() const {
 }
 
 void GOMidiObjectsDialog::ConfigureSelectedObject() {
-  GetSelectedObject()->ShowConfigDialog();
+  int row = m_ObjectsGrid->GetGridCursorRow();
+
+  if (row >= 0) {
+    GOMidiObject *pObj = r_MidiObjects[row];
+
+    pObj->ShowConfigDialog();
+  }
 }
 
 void GOMidiObjectsDialog::OnSelectCell(wxGridEvent &event) {

@@ -26,10 +26,28 @@ enum {
   ID_MIDI_PLAYER_PAUSE,
 };
 
+static const GOMidiObjectContext MIDI_CONTEXT(
+  wxT("MidiPlayer"), _("MidiPlayer"));
+
 const GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
-  {wxT("MidiPlayerPlay"), ID_MIDI_PLAYER_PLAY, false, true, false},
-  {wxT("MidiPlayerStop"), ID_MIDI_PLAYER_STOP, false, true, false},
-  {wxT("MidiPlayerPause"), ID_MIDI_PLAYER_PAUSE, false, true, false},
+  {wxT("MidiPlayerPlay"),
+   ID_MIDI_PLAYER_PLAY,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MidiPlayerStop"),
+   ID_MIDI_PLAYER_STOP,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
+  {wxT("MidiPlayerPause"),
+   ID_MIDI_PLAYER_PAUSE,
+   false,
+   true,
+   false,
+   &MIDI_CONTEXT},
   {wxT(""), -1, false, false, false},
 };
 
@@ -44,7 +62,7 @@ GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
     r_timer(*organController->GetTimer()),
     p_midi(nullptr),
     m_content(),
-    m_PlayingTime(*organController),
+    m_PlayingTime(*organController, &MIDI_CONTEXT),
     m_Start(0),
     m_PlayingSeconds(0),
     m_Speed(1),

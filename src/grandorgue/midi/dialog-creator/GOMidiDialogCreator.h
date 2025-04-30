@@ -11,7 +11,7 @@
 class wxString;
 
 class GOMidiDialogListener;
-class GOMidiReceiverBase;
+class GOMidiReceiver;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
 
@@ -24,7 +24,7 @@ public:
     void *element,
     const wxString &title,
     const wxString &dialogSelector,
-    GOMidiReceiverBase *event,
+    GOMidiReceiver *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,
     GOMidiSender *division = nullptr,

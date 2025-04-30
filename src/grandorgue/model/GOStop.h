@@ -39,7 +39,10 @@ private:
   void StartPlayback() override;
 
 public:
-  GOStop(GOOrganModel &organModel, unsigned first_midi_note_number);
+  GOStop(
+    GOOrganModel &organModel,
+    unsigned first_midi_note_number,
+    GOMidiObjectContext *pContext);
   GORank *GetRank(unsigned index);
   void Load(GOConfigReader &cfg, const wxString &group) override;
   void SetKey(unsigned note, unsigned velocity);
