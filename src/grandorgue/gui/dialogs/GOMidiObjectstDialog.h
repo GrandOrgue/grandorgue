@@ -68,6 +68,8 @@ private:
   void OnStatusButton(wxCommandEvent &event);
   void OnActionButton(wxCommandEvent &event);
 
+  void OnHide() override;
+
   DECLARE_EVENT_TABLE()
 };
 
