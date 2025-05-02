@@ -212,3 +212,9 @@ void GOMidiObjectsDialog::OnActionButton(wxCommandEvent &event) {
   GOMidiObject *obj = GetSelectedObject();
   obj->TriggerElementActions(event.GetId() - ID_BUTTON);
 }
+
+void GOMidiObjectsDialog::OnHide() {
+  // remove references to the organ objects before destructing
+  m_ObjectListeners.clear();
+  GOSimpleDialog::OnHide();
+}
