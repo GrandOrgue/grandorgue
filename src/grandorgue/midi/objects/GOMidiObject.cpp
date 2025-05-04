@@ -61,7 +61,7 @@ void GOMidiObject::InitMidiObject(
 void GOMidiObject::ShowConfigDialog() {
   const bool isReadOnly = IsReadOnly();
   const wxString title
-    = wxString::Format(_("Midi-Settings for %s - %s"), r_MidiTypeName, m_name);
+    = wxString::Format(_("MIDI-Settings for %s - %s"), r_MidiTypeName, m_name);
   const wxString selector
     = wxString::Format(wxT("%s.%s"), r_MidiTypeCode, m_name);
 

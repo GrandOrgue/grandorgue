@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -69,7 +69,7 @@ public:
     const GOMidiDeviceConfig &devConfSrc, GOMidiDeviceConfig &devConfDst) const;
 
   /**
-   * Add a midi device config to the list
+   * Add a MIDI device config to the list
    * @param devConf the source config
    * @param outputList the list for finding output device by name
    * @return the reference to the new device
@@ -79,8 +79,8 @@ public:
     const GOMidiDeviceConfigList *outputList = NULL);
 
   /**
-   * Add a midi device to the list
-   * @param logicalName the logical name of the midi device
+   * Add a MIDI device to the list
+   * @param logicalName the logical name of the MIDI device
    * @param regEx regex for matching with physical device
    * @param isEnabled is this device enabled
    * @param physicalName the physicalName this device is matched with

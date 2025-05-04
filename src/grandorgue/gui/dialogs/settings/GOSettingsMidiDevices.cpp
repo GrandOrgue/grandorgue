@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 SettingsMidiDevices::SettingsMidiDevices(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
   : wxPanel(parent, wxID_ANY),
-    GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("Midi &ports")),
+    GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("MIDI &ports")),
     m_config(settings),
     m_Midi(midi),
     m_InDevices(m_Midi.GetInDevices(), m_config.m_MidiIn, this, ID_INDEVICES),
@@ -40,7 +40,7 @@ SettingsMidiDevices::SettingsMidiDevices(
   wxBoxSizer *box1 = new wxBoxSizer(wxHORIZONTAL);
 
   wxBoxSizer *midiPropSizer
-    = new wxStaticBoxSizer(wxVERTICAL, this, _("&Midi properties"));
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("&MIDI properties"));
 
   m_AutoAddInput = new wxCheckBox();
   m_CheckOnStartup = new (wxCheckBox);

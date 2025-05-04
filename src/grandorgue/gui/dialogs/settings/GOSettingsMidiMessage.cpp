@@ -30,7 +30,7 @@ GOSettingsMidiMessage::GOSettingsMidiMessage(
     new wxStaticText(
       this,
       wxID_ANY,
-      _("Attention:\nThese initial midi settings only affect "
+      _("Attention:\nThese initial MIDI settings only affect "
         "the first load of a organ.\nRight-click on manuals, "
         "stops, ... to do further changes.")),
     0,
