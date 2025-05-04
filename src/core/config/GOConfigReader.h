@@ -8,14 +8,12 @@
 #ifndef GOCONFIGREADER_H
 #define GOCONFIGREADER_H
 
-#include <unordered_set>
-
-#include <wx/hashmap.h>
 #include <wx/string.h>
 
 #include "GOBool3.h"
 #include "GOConfigEnum.h"
 #include "GOLogicalColour.h"
+#include "GOStringSet.h"
 
 class GOConfigReaderDB;
 
@@ -23,10 +21,8 @@ typedef enum { ODFSetting, CMBSetting } GOSettingType;
 
 class GOConfigReader {
 private:
-  using StringSet = std::unordered_set<wxString, wxStringHash, wxStringEqual>;
-
   GOConfigReaderDB &m_Config;
-  StringSet m_GroupsInUse;
+  GOStringSet m_GroupsInUse;
   bool m_Strict;
   bool m_IsHw1Check;
 
