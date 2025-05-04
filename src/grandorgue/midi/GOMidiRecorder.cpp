@@ -30,7 +30,7 @@ enum {
 };
 
 static const GOMidiObjectContext MIDI_CONTEXT(
-  wxT("MidiRecorder"), _("MidiRecorder"));
+  wxT("MidiRecorder"), _("MIDIRecorder"));
 
 const GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
   {wxT("MidiRecorderRecord"),

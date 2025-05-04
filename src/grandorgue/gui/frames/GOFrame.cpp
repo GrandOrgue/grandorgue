@@ -267,7 +267,7 @@ GOFrame::GOFrame(
 
   wxMenuBar *menu_bar = new wxMenuBar;
   menu_bar->Append(m_file_menu, _("&File"));
-  menu_bar->Append(m_audio_menu, _("&Audio/Midi"));
+  menu_bar->Append(m_audio_menu, _("&Audio/MIDI"));
   menu_bar->Append(m_panel_menu, _("&Panel"));
   menu_bar->Append(help_menu, _("&Help"));
   SetMenuBar(menu_bar);
