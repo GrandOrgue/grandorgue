@@ -144,15 +144,17 @@ GOOrganController::~GOOrganController() {
   m_tremulants.clear();
   m_ranks.clear();
   m_VirtualCouplers.Cleanup();
-  if (m_timer)
-    delete m_timer;
-  if (m_bitmaps)
-    delete m_bitmaps;
   GOOrganModel::Cleanup();
   GOOrganModel::SetModelModificationListener(nullptr);
   GOOrganModel::SetMidiDialogCreator(nullptr);
   GOOrganModel::SetCombinationController(nullptr);
   m_elementcreators.clear();
+  // some elementcreator may reference to m_timer so we respect the deletion
+  // order
+  if (m_bitmaps)
+    delete m_bitmaps;
+  if (m_timer)
+    delete m_timer;
 }
 
 void GOOrganController::SetOrganModified(bool modified) {
