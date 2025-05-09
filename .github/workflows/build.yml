@@ -145,7 +145,7 @@ jobs:
             prepare: osx
             build_on: osx
 
-          - run_on: ubuntu-latest
+          - run_on: ubuntu-22.04
             for: win64
             prepare: "debian-based"
             build_on: linux
