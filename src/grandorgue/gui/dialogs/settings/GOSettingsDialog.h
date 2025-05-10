@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -18,7 +18,7 @@ class GOSound;
 class GOSettingsAudioGroup;
 class GOSettingsAudio;
 class SettingsMidiDevices;
-class GOSettingsMidiMessage;
+class GOSettingsMidiInitial;
 class GOSettingsOptions;
 class GOSettingsPaths;
 class GOSettingsOrgans;
@@ -45,7 +45,7 @@ private:
   GOSettingsPaths *m_PathsPage;
   GOSettingsAudio *m_AudioPage;
   SettingsMidiDevices *m_MidiDevicePage;
-  GOSettingsMidiMessage *m_MidiMessagePage;
+  GOSettingsMidiInitial *m_MidiMessagePage;
   GOSettingsOrgans *m_OrgansPage;
   GOSettingsReverb *m_ReverbPage;
   GOSettingsTemperaments *m_TemperamentsPage;

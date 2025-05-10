@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSettingsMidiMessage.h"
+#include "GOSettingsMidiInitial.h"
 
 #include <wx/button.h>
 #include <wx/listctrl.h>
@@ -15,13 +15,13 @@
 #include "config/GOConfig.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 
-BEGIN_EVENT_TABLE(GOSettingsMidiMessage, wxPanel)
-EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiMessage::OnEventsClick)
-EVT_LIST_ITEM_ACTIVATED(ID_EVENTS, GOSettingsMidiMessage::OnEventsDoubleClick)
-EVT_BUTTON(ID_PROPERTIES, GOSettingsMidiMessage::OnProperties)
+BEGIN_EVENT_TABLE(GOSettingsMidiInitial, wxPanel)
+EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiInitial::OnEventsClick)
+EVT_LIST_ITEM_ACTIVATED(ID_EVENTS, GOSettingsMidiInitial::OnEventsDoubleClick)
+EVT_BUTTON(ID_PROPERTIES, GOSettingsMidiInitial::OnProperties)
 END_EVENT_TABLE()
 
-GOSettingsMidiMessage::GOSettingsMidiMessage(
+GOSettingsMidiInitial::GOSettingsMidiInitial(
   GOConfig &settings, GOMidi &midi, wxWindow *parent)
   : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
@@ -69,11 +69,11 @@ GOSettingsMidiMessage::GOSettingsMidiMessage(
   m_Events->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
 }
 
-void GOSettingsMidiMessage::OnEventsClick(wxListEvent &event) {
+void GOSettingsMidiInitial::OnEventsClick(wxListEvent &event) {
   m_Properties->Enable();
 }
 
-void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent &event) {
+void GOSettingsMidiInitial::OnEventsDoubleClick(wxListEvent &event) {
   m_Properties->Enable();
   int index = m_Events->GetFirstSelected();
 
@@ -94,7 +94,7 @@ void GOSettingsMidiMessage::OnEventsDoubleClick(wxListEvent &event) {
   m_Events->SetItem(index, 2, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
 }
 
-void GOSettingsMidiMessage::OnProperties(wxCommandEvent &event) {
+void GOSettingsMidiInitial::OnProperties(wxCommandEvent &event) {
   wxListEvent listevent;
   OnEventsDoubleClick(listevent);
 }
