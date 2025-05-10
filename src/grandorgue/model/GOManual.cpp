@@ -63,6 +63,7 @@ GOManual::GOManual(
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
+  SetNameForContext(&m_ShortName);
   SetContext(pParentContext);
   SetReceiverKeyMap(&m_MidiKeyMap);
   m_InputCouplers.push_back(NULL);

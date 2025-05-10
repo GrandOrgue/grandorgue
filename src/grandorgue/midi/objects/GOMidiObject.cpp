@@ -13,6 +13,9 @@
 #include "midi/elements/GOMidiSender.h"
 #include "midi/elements/GOMidiShortcutReceiver.h"
 #include "model/GOOrganModel.h"
+#include "yaml/go-wx-yaml.h"
+
+#include "GOMidiObjectContext.h"
 
 #include "GOMidiObjectContext.h"
 
@@ -24,6 +27,7 @@ GOMidiObject::GOMidiObject(
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_MidiTypeCode(midiTypeCode),
     r_MidiTypeName(midiType),
+    p_NameForContext(nullptr),
     p_MidiSender(nullptr),
     p_MidiReceiver(nullptr),
     p_ShortcutReceiver(nullptr),
@@ -37,6 +41,23 @@ GOMidiObject::~GOMidiObject() {
   r_OrganModel.UnregisterSaveableObject(this);
   r_OrganModel.UnRegisterMidiObject(this);
   r_OrganModel.UnRegisterSoundStateHandler(this);
+}
+
+static const wxString WX_CONTEXT_SEPARATOR = wxT(".");
+
+wxString GOMidiObject::GetPath() const {
+  std::vector<wxString> contextNames = GOMidiObjectContext::getNames(p_context);
+
+  contextNames.push_back(GetNameForContext());
+
+  wxString path;
+
+  for (const wxString &name : contextNames) {
+    if (!path.IsEmpty())
+      path = path + WX_CONTEXT_SEPARATOR;
+    path = path + name;
+  }
+  return path;
 }
 
 wxString GOMidiObject::GetContextTitle() const {
@@ -56,6 +77,69 @@ void GOMidiObject::InitMidiObject(
   m_name = name;
   r_OrganModel.RegisterSaveableObject(this);
   LoadMidiObject(cfg, group, r_MidiMap);
+}
+
+void GOMidiObject::SubToYaml(
+  YAML::Node &yamlNode,
+  const wxString &subName,
+  const GOMidiElement *pEl) const {
+  if (pEl) {
+    YAML::Node subNode;
+
+    pEl->ToYaml(subNode, r_MidiMap);
+    put_to_map_if_not_null(yamlNode, subName, subNode);
+  }
+}
+
+void GOMidiObject::SubFromYaml(
+  const YAML::Node &objNode,
+  const wxString &objPath,
+  const wxString &subName,
+  GOMidiElement *pEl,
+  GOStringSet &usedPaths) {
+  if (pEl) {
+    YAML::Node subNode = get_from_map_or_null(objNode, subName);
+
+    pEl->FromYaml(
+      subNode, get_child_path(objPath, subName), r_MidiMap, usedPaths);
+  }
+}
+
+const wxString WX_RECEIVE = "receive";
+const wxString WX_SEND = "send";
+const wxString WX_SHORTCUT = "shortcut";
+const wxString WX_DIVISION = "division";
+
+void GOMidiObject::ToYaml(YAML::Node &yamlNode) const {
+  YAML::Node objNode;
+
+  SubToYaml(objNode, WX_RECEIVE, p_MidiReceiver);
+  SubToYaml(objNode, WX_SEND, p_MidiSender);
+  SubToYaml(objNode, WX_SHORTCUT, p_ShortcutReceiver);
+  SubToYaml(objNode, WX_DIVISION, p_DivisionSender);
+  put_to_map_by_path_if_not_null(
+    yamlNode,
+    GOMidiObjectContext::getNames(p_context),
+    GetNameForContext(),
+    objNode);
+}
+
+void GOMidiObject::FromYaml(
+  const YAML::Node &yamlNode, GOStringSet &usedPaths) {
+  const std::vector<wxString> parentNames
+    = GOMidiObjectContext::getNames(p_context);
+  const wxString objName = GetNameForContext();
+  YAML::Node objNode
+    = get_from_map_by_path_or_null(yamlNode, parentNames, objName);
+  wxString objPath;
+
+  for (const auto &parentName : parentNames)
+    objPath = get_child_path(objPath, parentName);
+  objPath = get_child_path(objPath, objName);
+  SubFromYaml(objNode, objPath, WX_RECEIVE, p_MidiReceiver, usedPaths);
+  SubFromYaml(objNode, objPath, WX_SEND, p_MidiSender, usedPaths);
+  SubFromYaml(objNode, objPath, WX_SHORTCUT, p_ShortcutReceiver, usedPaths);
+  SubFromYaml(objNode, objPath, WX_DIVISION, p_DivisionSender, usedPaths);
 }
 
 void GOMidiObject::ShowConfigDialog() {

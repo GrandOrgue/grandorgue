@@ -1,3 +1,4 @@
+- Added support of exporting current midi settings to a text file and of importing them from both text and .cmb files https://github.com/GrandOrgue/grandorgue/issues/1199
 - Removed support of linux distributions with GLIBC versions before 2.35 (ubuntu<22, debian<12, fedora<36, oracle linux<9)
 - Added capability of customising minimum amplitude level of enclosures added internally by GrandOrgue https://github.com/GrandOrgue/grandorgue/issues/782
 - Added resending midi events when exiting from MidiEventDialog https://github.com/GrandOrgue/grandorgue/issues/2062
