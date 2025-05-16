@@ -27,7 +27,6 @@ GOMidiObject::GOMidiObject(
     r_MidiMap(organModel.GetConfig().GetMidiMap()),
     r_MidiTypeCode(midiTypeCode),
     r_MidiTypeName(midiType),
-    p_NameForContext(nullptr),
     p_MidiSender(nullptr),
     p_MidiReceiver(nullptr),
     p_ShortcutReceiver(nullptr),
@@ -105,18 +104,30 @@ void GOMidiObject::SubFromYaml(
   }
 }
 
-const wxString WX_RECEIVE = "receive";
-const wxString WX_SEND = "send";
-const wxString WX_SHORTCUT = "shortcut";
-const wxString WX_DIVISION = "division";
+static const wxString WX_RECEIVE = "receive";
+static const wxString WX_SEND = "send";
+static const wxString WX_SHORTCUT = "shortcut";
+static const wxString WX_DIVISION = "division";
+static const wxString WX_NAME = "name";
 
 void GOMidiObject::ToYaml(YAML::Node &yamlNode) const {
+  const wxString &name = GetName();
+  const wxString &nameForContext = GetNameForContext();
   YAML::Node objNode;
 
   SubToYaml(objNode, WX_RECEIVE, p_MidiReceiver);
   SubToYaml(objNode, WX_SEND, p_MidiSender);
   SubToYaml(objNode, WX_SHORTCUT, p_ShortcutReceiver);
   SubToYaml(objNode, WX_DIVISION, p_DivisionSender);
+  if (!objNode.IsNull() && nameForContext != name) {
+    YAML::Node newNode;
+
+    // put name at tfirst, then put all other keys
+    newNode[WX_NAME] = name;
+    for (const auto &e : objNode)
+      newNode[e.first] = e.second;
+    objNode = newNode;
+  }
   put_to_map_by_path_if_not_null(
     yamlNode,
     GOMidiObjectContext::getNames(p_context),
@@ -128,14 +139,19 @@ void GOMidiObject::FromYaml(
   const YAML::Node &yamlNode, GOStringSet &usedPaths) {
   const std::vector<wxString> parentNames
     = GOMidiObjectContext::getNames(p_context);
-  const wxString objName = GetNameForContext();
+  const wxString &name = GetName();
+  const wxString &nameForContext = GetNameForContext();
   YAML::Node objNode
-    = get_from_map_by_path_or_null(yamlNode, parentNames, objName);
+    = get_from_map_by_path_or_null(yamlNode, parentNames, nameForContext);
   wxString objPath;
 
   for (const auto &parentName : parentNames)
     objPath = get_child_path(objPath, parentName);
-  objPath = get_child_path(objPath, objName);
+  objPath = get_child_path(objPath, nameForContext);
+
+  if (nameForContext != name)
+    wxString storedName
+      = read_string(objNode, objPath, WX_NAME, false, usedPaths);
   SubFromYaml(objNode, objPath, WX_RECEIVE, p_MidiReceiver, usedPaths);
   SubFromYaml(objNode, objPath, WX_SEND, p_MidiSender, usedPaths);
   SubFromYaml(objNode, objPath, WX_SHORTCUT, p_ShortcutReceiver, usedPaths);

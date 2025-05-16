@@ -37,7 +37,7 @@ private:
   const wxString &r_MidiTypeCode;
   const wxString &r_MidiTypeName;
 
-  const wxString *p_NameForContext;
+  wxString m_NameForContext;
   wxString m_name;
 
   GOMidiSender *p_MidiSender;
@@ -105,10 +105,10 @@ public:
   const GOMidiObjectContext *GetContext() const { return p_context; }
   void SetContext(const GOMidiObjectContext *pContext) { p_context = pContext; }
 
-  void SetNameForContext(const wxString *pName) { p_NameForContext = pName; }
+  void SetNameForContext(const wxString &name) { m_NameForContext = name; }
   wxString GetNameForContext() const {
-    return p_NameForContext ? *p_NameForContext
-                            : wxString(m_name).Trim(true).Trim(false);
+    return m_NameForContext.IsEmpty() ? wxString(m_name).Trim(true).Trim(false)
+                                      : m_NameForContext;
   }
 
   wxString GetPath() const;
