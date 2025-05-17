@@ -18,21 +18,23 @@ class wxButton;
 class wxGridEvent;
 
 class GOGrid;
-class GOMidiObject;
+class GOMidiPlayingObject;
+class GOOrganModel;
 
 class GOMidiObjectsDialog : public GOSimpleDialog, public GOView {
-private:
-  const std::vector<GOMidiObject *> &r_MidiObjects;
+  const std::vector<GOMidiPlayingObject *> &r_MidiObjects;
 
   class ObjectConfigListener : public GOMidiDialogListener {
   private:
     GOMidiObjectsDialog &r_dialog;
     unsigned m_index;
-    GOMidiObject *p_object;
+    GOMidiPlayingObject *p_object;
 
   public:
     ObjectConfigListener(
-      GOMidiObjectsDialog &dialog, unsigned index, GOMidiObject *pObject);
+      GOMidiObjectsDialog &dialog,
+      unsigned index,
+      GOMidiPlayingObject *pObject);
     ~ObjectConfigListener();
 
     void OnSettingsApplied() override;
@@ -49,17 +51,17 @@ public:
     GODocumentBase *doc,
     wxWindow *parent,
     GODialogSizeSet &dialogSizes,
-    const std::vector<GOMidiObject *> &midiObjects);
+    const std::vector<GOMidiPlayingObject *> &midiObjects);
 
 private:
   void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
   void CaptureAdditionalSizes(
     GOAdditionalSizeKeeper &sizeKeeper) const override;
 
-  void RefreshIsConfigured(unsigned row, GOMidiObject *pObj);
+  void RefreshIsConfigured(unsigned row, GOMidiPlayingObject *pObj);
   bool TransferDataToWindow() override;
 
-  GOMidiObject *GetSelectedObject() const;
+  GOMidiPlayingObject *GetSelectedObject() const;
   void ConfigureSelectedObject();
 
   void OnSelectCell(wxGridEvent &event);

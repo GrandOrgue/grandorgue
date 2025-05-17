@@ -24,12 +24,7 @@ class GOMidiSender;
 class GOMidiShortcutReceiver;
 class GOOrganModel;
 
-class GOMidiObject : public GOSoundStateHandler,
-                     public GOSaveableObject,
-                     public GOMidiConfigDispatcher {
-protected:
-  GOOrganModel &r_OrganModel;
-
+class GOMidiObject : public GOSaveableObject, public GOMidiConfigDispatcher {
 private:
   GOMidiMap &r_MidiMap;
   const wxString &r_MidiTypeCode;
@@ -46,11 +41,9 @@ private:
 
 protected:
   GOMidiObject(
-    GOOrganModel &organModel,
+    GOMidiMap &midiMap,
     const wxString &midiTypeCode,
     const wxString &midiTypeName);
-
-  virtual ~GOMidiObject();
 
   GOMidiSender *GetMidiSender() const { return p_MidiSender; }
   void SetMidiSender(GOMidiSender *pMidiSender) { p_MidiSender = pMidiSender; }
@@ -110,17 +103,6 @@ public:
   }
 
   virtual bool IsReadOnly() const { return false; }
-
-  void PreparePlayback() override {}
-  void PrepareRecording() override {}
-  void AbortPlayback() override {}
-
-  void ShowConfigDialog();
-
-  // Used in the GOMidiList dialog
-  virtual wxString GetElementStatus() = 0;
-  virtual std::vector<wxString> GetElementActions() = 0;
-  virtual void TriggerElementActions(unsigned no) = 0;
 };
 
 #endif
