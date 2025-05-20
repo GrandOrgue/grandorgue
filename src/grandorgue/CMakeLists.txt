@@ -84,7 +84,7 @@ gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp
 gui/dialogs/settings/GOSettingsDialog.cpp
 gui/dialogs/settings/GOSettingsMidiDeviceList.cpp
 gui/dialogs/settings/GOSettingsMidiDevices.cpp
-gui/dialogs/settings/GOSettingsMidiMessage.cpp
+gui/dialogs/settings/GOSettingsMidiInitial.cpp
 gui/dialogs/settings/GOSettingsPaths.cpp
 gui/dialogs/settings/GOSettingsPorts.cpp
 gui/dialogs/settings/GOSettingsOptions.cpp
