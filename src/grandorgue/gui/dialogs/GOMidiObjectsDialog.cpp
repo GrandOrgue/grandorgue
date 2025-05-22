@@ -12,8 +12,9 @@
 
 #include "gui/size/GOAdditionalSizeKeeperProxy.h"
 #include "gui/wxcontrols/GOGrid.h"
-#include "midi/objects/GOMidiObject.h"
 #include "midi/objects/GOMidiObjectContext.h"
+#include "midi/objects/GOMidiPlayingObject.h"
+#include "model/GOOrganModel.h"
 
 #include "GOEvent.h"
 
@@ -43,7 +44,7 @@ enum {
 };
 
 GOMidiObjectsDialog::ObjectConfigListener::ObjectConfigListener(
-  GOMidiObjectsDialog &dialog, unsigned index, GOMidiObject *pObject)
+  GOMidiObjectsDialog &dialog, unsigned index, GOMidiPlayingObject *pObject)
   : r_dialog(dialog), m_index(index), p_object(pObject) {
   p_object->AddListener(this);
 }
@@ -60,7 +61,7 @@ GOMidiObjectsDialog::GOMidiObjectsDialog(
   GODocumentBase *doc,
   wxWindow *parent,
   GODialogSizeSet &dialogSizes,
-  const std::vector<GOMidiObject *> &midiObjects)
+  const std::vector<GOMidiPlayingObject *> &midiObjects)
   : GOSimpleDialog(
     parent,
     wxT("MIDI Objects"),
@@ -131,7 +132,7 @@ void GOMidiObjectsDialog::CaptureAdditionalSizes(
 }
 
 void GOMidiObjectsDialog::RefreshIsConfigured(
-  unsigned row, GOMidiObject *pObj) {
+  unsigned row, GOMidiPlayingObject *pObj) {
   m_ObjectsGrid->SetCellValue(
     row, GRID_COL_CONFIGURED, pObj->IsMidiConfigured() ? _("Yes") : _("No"));
 }
@@ -147,7 +148,7 @@ bool GOMidiObjectsDialog::TransferDataToWindow() {
   m_ObjectListeners.reserve(newRowCnt);
   m_ObjectsGrid->AppendRows(newRowCnt);
   for (unsigned i = 0; i < newRowCnt; i++) {
-    GOMidiObject *pObj = r_MidiObjects[i];
+    GOMidiPlayingObject *pObj = r_MidiObjects[i];
 
     m_ObjectListeners.emplace_back(*this, i, pObj);
     pObj->AddListener(&m_ObjectListeners[i]);
@@ -162,7 +163,7 @@ bool GOMidiObjectsDialog::TransferDataToWindow() {
   return true;
 }
 
-GOMidiObject *GOMidiObjectsDialog::GetSelectedObject() const {
+GOMidiPlayingObject *GOMidiObjectsDialog::GetSelectedObject() const {
   return r_MidiObjects[m_ObjectsGrid->GetGridCursorRow()];
 }
 
@@ -170,7 +171,7 @@ void GOMidiObjectsDialog::ConfigureSelectedObject() {
   int row = m_ObjectsGrid->GetGridCursorRow();
 
   if (row >= 0) {
-    GOMidiObject *pObj = r_MidiObjects[row];
+    GOMidiPlayingObject *pObj = r_MidiObjects[row];
 
     pObj->ShowConfigDialog();
   }
@@ -184,7 +185,7 @@ void GOMidiObjectsDialog::OnSelectCell(wxGridEvent &event) {
   m_StatusButton->Enable(isAnySelected);
   if (isAnySelected) {
     m_ObjectsGrid->SelectRow(index);
-    GOMidiObject *obj = r_MidiObjects[index];
+    GOMidiPlayingObject *obj = r_MidiObjects[index];
     std::vector<wxString> actions = obj->GetElementActions();
 
     for (unsigned i = 0; i < m_ActionButtons.size(); i++)
@@ -199,7 +200,7 @@ void GOMidiObjectsDialog::OnSelectCell(wxGridEvent &event) {
 }
 
 void GOMidiObjectsDialog::OnStatusButton(wxCommandEvent &event) {
-  GOMidiObject *obj = GetSelectedObject();
+  GOMidiPlayingObject *obj = GetSelectedObject();
   wxString status = obj->GetElementStatus();
 
   GOMessageBox(
@@ -209,7 +210,7 @@ void GOMidiObjectsDialog::OnStatusButton(wxCommandEvent &event) {
 }
 
 void GOMidiObjectsDialog::OnActionButton(wxCommandEvent &event) {
-  GOMidiObject *obj = GetSelectedObject();
+  GOMidiPlayingObject *obj = GetSelectedObject();
   obj->TriggerElementActions(event.GetId() - ID_BUTTON);
 }
 

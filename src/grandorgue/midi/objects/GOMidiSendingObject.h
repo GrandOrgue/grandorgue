@@ -10,11 +10,11 @@
 
 #include "midi/elements/GOMidiSender.h"
 
-#include "GOMidiObject.h"
+#include "GOMidiPlayingObject.h"
 
 class GOOrganModel;
 
-class GOMidiSendingObject : public GOMidiObject {
+class GOMidiSendingObject : public GOMidiPlayingObject {
 private:
   GOMidiSender m_sender;
 
