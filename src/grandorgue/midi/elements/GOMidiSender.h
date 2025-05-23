@@ -22,13 +22,17 @@ class GOMidiSendProxy;
 
 class GOMidiSender : public GOMidiSenderEventPatternList, public GOMidiElement {
 private:
-  GOMidiSendProxy &r_proxy;
   int m_ElementID;
+  GOMidiSendProxy *p_proxy;
 
 public:
-  GOMidiSender(GOMidiSendProxy &proxy, GOMidiSenderType type);
+  GOMidiSender(GOMidiSenderType type);
 
-  void SetElementID(int id);
+  int GetElementId() const { return m_ElementID; }
+  void SetElementID(int id) { m_ElementID = id; }
+
+  GOMidiSendProxy *GetProxy() const { return p_proxy; }
+  void SetProxy(GOMidiSendProxy *pProxy) { p_proxy = pProxy; }
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;

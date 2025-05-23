@@ -14,12 +14,15 @@ GOMidiSendingObject::GOMidiSendingObject(
   const wxString &midiTypeCode,
   const wxString &midiTypeName,
   GOMidiSenderType senderType)
-  : GOMidiPlayingObject(organModel, midiTypeCode, midiTypeName),
-    m_sender(organModel, senderType) {
+  : GOMidiPlayingObject(organModel, midiTypeCode, midiTypeName), m_sender(senderType) {
+  m_sender.SetProxy(&organModel);
   SetMidiSender(&m_sender);
 }
 
-GOMidiSendingObject::~GOMidiSendingObject() { SetMidiSender(nullptr); }
+GOMidiSendingObject::~GOMidiSendingObject() {
+  SetMidiSender(nullptr);
+  m_sender.SetProxy(nullptr);
+}
 
 void GOMidiSendingObject::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
