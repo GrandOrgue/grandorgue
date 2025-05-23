@@ -17,12 +17,14 @@ GOMidiObjectWithDivision::GOMidiObjectWithDivision(
   GOMidiReceiverType receiverType)
   : GOMidiReceivingSendingObject(
     organModel, midiTypeCode, midiTypeName, senderType, receiverType),
-    m_DivisionSender(organModel, MIDI_SEND_MANUAL) {
+    m_DivisionSender(MIDI_SEND_MANUAL) {
+  m_DivisionSender.SetProxy(&organModel);
   SetDivisionSender(&m_DivisionSender);
 }
 
 GOMidiObjectWithDivision::~GOMidiObjectWithDivision() {
   SetDivisionSender(nullptr);
+  m_DivisionSender.SetProxy(nullptr);
 }
 
 static const wxString WX_DIVISION = wxT("Division");
