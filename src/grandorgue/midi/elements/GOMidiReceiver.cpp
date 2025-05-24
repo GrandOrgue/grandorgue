@@ -14,6 +14,7 @@
 #include "midi/GOMidiMap.h"
 #include "midi/events/GOMidiEvent.h"
 #include "midi/events/GORodgers.h"
+#include "yaml/go-wx-yaml.h"
 
 static const GOConfigEnum MIDI_RECEIVE_TYPES({
   {wxT("ControlChange"), MIDI_M_CTRL_CHANGE},
@@ -76,6 +77,8 @@ void GOMidiReceiver::Load(
     CMBSetting, group, wxT("NumberOfMIDIEvents"), 0, 255, false);
 
   if (event_cnt > 0) {
+    const GOMidiReceiverMessageType default_type = GetDefaultMidiType();
+
     m_events.resize(event_cnt);
     for (unsigned i = 0; i < m_events.size(); i++) {
       auto &pattern = m_events[i];
@@ -85,11 +88,6 @@ void GOMidiReceiver::Load(
         group,
         wxString::Format(wxT("MIDIDevice%03d"), i + 1),
         false));
-      GOMidiReceiverMessageType default_type = MIDI_M_PGM_CHANGE;
-      if (m_type == MIDI_RECV_MANUAL)
-        default_type = MIDI_M_NOTE;
-      if (m_type == MIDI_RECV_ENCLOSURE)
-        default_type = MIDI_M_CTRL_CHANGE;
       pattern.type = (GOMidiReceiverMessageType)cfg.ReadEnum(
         CMBSetting,
         group,
@@ -243,6 +241,130 @@ void GOMidiReceiver::Save(
           group,
           wxString::Format(wxT("MIDIUpperLimit%03d"), i + 1),
           pattern.high_value);
+    }
+  }
+}
+
+static const wxString WX_EVENT_TYPE = wxT("event_type");
+static const wxString WX_CHANNEL = wxT("channel");
+static const wxString WX_KEY_TRANSPOSE = wxT("transpose");
+static const wxString WX_KEY = wxT("key");
+static const wxString WX_LOW_KEY = wxT("low_key");
+static const wxString WX_HIGH_KEY = wxT("high_key");
+static const wxString WX_LOW_VALUE = wxT("low_value");
+static const wxString WX_HIGH_VALUE = wxT("high_value");
+static const wxString WX_DEBOUNCE_TIME = wxT("debounce_time");
+
+void GOMidiReceiver::ToYaml(YAML::Node &yamlNode, GOMidiMap &map) const {
+  for (const auto &e : m_events) {
+    YAML::Node eventNode;
+
+    e.DeviceIdToYaml(eventNode, map);
+    eventNode[WX_EVENT_TYPE] = MIDI_RECEIVE_TYPES.GetName(e.type);
+    if (hasChannel(e.type))
+      eventNode[WX_CHANNEL] = e.channel;
+    if (m_type == MIDI_RECV_MANUAL)
+      eventNode[WX_KEY_TRANSPOSE] = e.key;
+    else if (hasKey(e.type))
+      eventNode[WX_KEY] = e.key;
+    if (HasLowKey(e.type))
+      eventNode[WX_LOW_KEY] = e.low_key;
+    if (HasHighKey(e.type))
+      eventNode[WX_HIGH_KEY] = e.high_key;
+    if (hasLowerLimit(e.type))
+      eventNode[WX_LOW_VALUE] = e.low_value;
+    if (hasUpperLimit(e.type))
+      eventNode[WX_HIGH_VALUE] = e.high_value;
+    if (HasDebounce(e.type))
+      eventNode[WX_DEBOUNCE_TIME] = e.debounce_time;
+
+    yamlNode.push_back(eventNode);
+  }
+}
+
+void GOMidiReceiver::FromYaml(
+  const YAML::Node &yamlNode,
+  const wxString &yamlPath,
+  GOMidiMap &map,
+  GOStringSet &usedPaths) {
+  m_events.clear();
+  if (yamlNode.IsDefined() && yamlNode.IsSequence()) {
+    const GOMidiReceiverMessageType defaultMidiType = GetDefaultMidiType();
+
+    for (unsigned l = yamlNode.size(), i = 0; i < l; i++) {
+      const YAML::Node &eventNode = yamlNode[i];
+      const wxString eventPath = get_child_path(yamlPath, i);
+
+      if (eventNode.IsDefined() && eventNode.IsMap()) {
+        GOMidiReceiverEventPattern e;
+
+        e.DeviceIdFromYaml(eventNode, eventPath, map, usedPaths);
+        e.type = (GOMidiReceiverMessageType)read_enum(
+          eventNode,
+          eventPath,
+          WX_EVENT_TYPE,
+          MIDI_RECEIVE_TYPES,
+          false,
+          defaultMidiType,
+          usedPaths);
+
+        if (hasChannel(e.type))
+          e.channel = read_int(
+            eventNode, eventPath, WX_CHANNEL, -1, 16, true, -1, usedPaths);
+        else
+          e.channel = -1;
+        if (m_type == MIDI_RECV_MANUAL)
+          e.key = read_int(
+            eventNode,
+            eventPath,
+            WX_KEY_TRANSPOSE,
+            -35,
+            35,
+            false,
+            0,
+            usedPaths);
+        else if (hasKey(e.type))
+          e.key = read_int(
+            eventNode, eventPath, WX_KEY, 0, 0x200000, true, 0, usedPaths);
+
+        if (HasLowKey(e.type))
+          e.low_key = read_int(
+            eventNode, eventPath, WX_LOW_KEY, 0, 127, false, 0, usedPaths);
+        if (HasHighKey(e.type))
+          e.high_key = read_int(
+            eventNode, eventPath, WX_HIGH_KEY, 0, 127, false, 127, usedPaths);
+        if (hasLowerLimit(e.type))
+          e.low_value = read_int(
+            eventNode,
+            eventPath,
+            WX_LOW_VALUE,
+            0,
+            0x200000,
+            false,
+            1,
+            usedPaths);
+        if (hasUpperLimit(e.type))
+          e.high_value = read_int(
+            eventNode,
+            eventPath,
+            WX_HIGH_VALUE,
+            0,
+            0x200000,
+            false,
+            127,
+            usedPaths);
+        if (HasDebounce(e.type))
+          e.debounce_time = read_int(
+            eventNode,
+            eventPath,
+            WX_DEBOUNCE_TIME,
+            0,
+            3000,
+            false,
+            0,
+            usedPaths);
+        m_events.push_back(e);
+      }
     }
   }
 }
@@ -423,6 +545,12 @@ unsigned GOMidiReceiver::upperValueLimit(GOMidiReceiverMessageType type) {
     return 0x200000;
 
   return 0x7f;
+}
+
+GOMidiReceiverMessageType GOMidiReceiver::GetDefaultMidiType() const {
+  return m_type == MIDI_RECV_MANUAL ? MIDI_M_NOTE
+    : m_type == MIDI_RECV_ENCLOSURE ? MIDI_M_CTRL_CHANGE
+                                    : MIDI_M_PGM_CHANGE;
 }
 
 GOMidiMatchType GOMidiReceiver::debounce(
