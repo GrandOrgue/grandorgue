@@ -14,7 +14,7 @@ GOMidiSendingObject::GOMidiSendingObject(
   const wxString &midiTypeCode,
   const wxString &midiTypeName,
   GOMidiSenderType senderType)
-  : GOMidiObject(organModel, midiTypeCode, midiTypeName),
+  : GOMidiPlayingObject(organModel, midiTypeCode, midiTypeName),
     m_sender(organModel, senderType) {
   SetMidiSender(&m_sender);
 }
@@ -23,7 +23,7 @@ GOMidiSendingObject::~GOMidiSendingObject() { SetMidiSender(nullptr); }
 
 void GOMidiSendingObject::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiObject::LoadMidiObject(cfg, group, midiMap);
+  GOMidiPlayingObject::LoadMidiObject(cfg, group, midiMap);
   m_sender.Load(cfg, group, midiMap);
 }
 
@@ -31,7 +31,7 @@ void GOMidiSendingObject::SetElementId(int id) { m_sender.SetElementID(id); }
 
 void GOMidiSendingObject::SaveMidiObject(
   GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
-  GOMidiObject::SaveMidiObject(cfg, group, midiMap);
+  GOMidiPlayingObject::SaveMidiObject(cfg, group, midiMap);
   m_sender.Save(cfg, group, midiMap);
 }
 
@@ -42,21 +42,21 @@ void GOMidiSendingObject::ResendMidi() {
 
 void GOMidiSendingObject::OnSettingsApplied() {
   ResendMidi();
-  GOMidiObject::OnSettingsApplied();
+  GOMidiPlayingObject::OnSettingsApplied();
 }
 
 void GOMidiSendingObject::PreparePlayback() {
-  GOMidiObject::PreparePlayback();
+  GOMidiPlayingObject::PreparePlayback();
   m_sender.SetName(GetName());
 }
 
 void GOMidiSendingObject::PrepareRecording() {
-  GOMidiObject::PrepareRecording();
+  GOMidiPlayingObject::PrepareRecording();
   SendCurrentMidiValue();
 }
 
 void GOMidiSendingObject::AbortPlayback() {
   SendEmptyMidiValue();
-  GOMidiObject::AbortPlayback();
+  GOMidiPlayingObject::AbortPlayback();
   m_sender.SetName(wxEmptyString);
 }

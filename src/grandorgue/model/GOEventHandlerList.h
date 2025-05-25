@@ -17,7 +17,7 @@ class GOCombinationButtonSet;
 class GOControl;
 class GOControlChangedHandler;
 class GOEventHandler;
-class GOMidiObject;
+class GOMidiPlayingObject;
 class GOReferencingObject;
 class GOSoundStateHandler;
 class GOSaveableObject;
@@ -61,7 +61,7 @@ private:
   UPVector<GOReferencingObject> m_ReferencingObjects;
   UPVector<GOCombinationButtonSet> m_CombinationButtonSets;
   UPVector<GOControlChangedHandler> m_ControlChangedHandlers;
-  UPVector<GOMidiObject> m_MidiObjects;
+  UPVector<GOMidiPlayingObject> m_MidiObjects;
   UPVector<GOEventHandler> m_MidiEventHandlers;
   UPVector<GOSoundStateHandler> m_SoundStateHandlers;
   UPVector<GOSaveableObject> m_SaveableObjects;
@@ -77,7 +77,7 @@ public:
     const {
     return m_CombinationButtonSets.AsVector();
   }
-  const std::vector<GOMidiObject *> &GetMidiObjects() const {
+  const std::vector<GOMidiPlayingObject *> &GetMidiObjects() const {
     return m_MidiObjects.AsVector();
   }
   const std::vector<GOEventHandler *> &GetMidiEventHandlers() const {
@@ -116,9 +116,11 @@ public:
     m_ControlChangedHandlers.Remove(handler);
   }
 
-  void RegisterMidiObject(GOMidiObject *obj) { m_MidiObjects.Add(obj); }
+  void RegisterMidiObject(GOMidiPlayingObject *obj) { m_MidiObjects.Add(obj); }
 
-  void UnRegisterMidiObject(GOMidiObject *obj) { m_MidiObjects.Remove(obj); }
+  void UnRegisterMidiObject(GOMidiPlayingObject *obj) {
+    m_MidiObjects.Remove(obj);
+  }
 
   void RegisterEventHandler(GOEventHandler *handler) {
     m_MidiEventHandlers.Add(handler);
