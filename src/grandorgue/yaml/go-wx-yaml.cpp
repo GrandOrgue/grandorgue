@@ -229,7 +229,8 @@ bool read_bool(
   bool isRequired,
   bool defaultValue,
   GOStringSet &usedPaths) {
-  int resValue = defaultValue;
+  bool resValue = defaultValue;
+
   read_scalar(
     parentNode,
     get_child_path(parentPath, key),
