@@ -388,7 +388,7 @@ wxString GOMidiObjectsDialog::ImportMidiSettings(const wxString &fileName) {
         for (const auto &e : nodesByPath) {
           const wxString &objPath = e.first;
 
-          if (usedobjectPaths.find(objPath) != usedobjectPaths.end())
+          if (usedobjectPaths.find(objPath) == usedobjectPaths.end())
             wxLogWarning(_("Unused MIDI object path: %s"), objPath);
         }
       }
