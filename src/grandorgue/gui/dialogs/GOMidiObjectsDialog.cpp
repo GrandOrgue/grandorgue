@@ -354,7 +354,8 @@ wxString GOMidiObjectsDialog::ImportMidiSettings(const wxString &fileName) {
             _("The %s node in not a sequence"), WX_OBJECTS);
 
         GOStringSet usedYamlPaths;
-        std::unordered_map<wxString, YAML::Node> nodesByPath;
+        std::unordered_map<wxString, YAML::Node, wxStringHash, wxStringEqual>
+          nodesByPath;
 
         for (unsigned l = objectsNode.size(), i = 0; i < l; i++) {
           const YAML::Node &objNode = objectsNode[i];
