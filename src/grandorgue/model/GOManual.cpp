@@ -22,7 +22,7 @@
 
 static const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
 static const wxString WX_MIDI_TYPE_NAME = _("Manual");
-static const wxString WX_MANUAL_NUM_FMT = wxT("%03u");
+static const wxString WX_ODF_OBJ_NUM_FMT = wxT("%03u");
 
 GOManual::GOManual(
   GOOrganModel &organModel,
@@ -41,7 +41,7 @@ GOManual::GOManual(
     m_DivisionState(),
     m_Velocities(),
     m_manual_number(manualNumber),
-    m_ShortName(wxString::Format(WX_MANUAL_NUM_FMT, manualNumber)),
+    m_ShortName(wxString::Format(WX_ODF_OBJ_NUM_FMT, manualNumber)),
     m_MidiContext(m_ShortName, m_ShortName, pParentContext),
     m_MidiContextCouplers(wxT("couplers"), _("couplers"), &m_MidiContext),
     m_MidiContextDivisionals(
@@ -63,6 +63,7 @@ GOManual::GOManual(
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
+  SetNameForContext(m_ShortName);
   SetContext(pParentContext);
   SetReceiverKeyMap(&m_MidiKeyMap);
   m_InputCouplers.push_back(NULL);
@@ -173,15 +174,19 @@ void GOManual::Load(GOConfigReader &cfg, const wxString &group) {
 
   m_stops.resize(0);
   for (unsigned i = 0; i < nb_stops; i++) {
-    m_stops.push_back(new GOStop(
-      r_OrganModel, GetFirstLogicalKeyMIDINoteNumber(), &m_MidiContextStops));
-    buffer.Printf(wxT("Stop%03d"), i + 1);
+    GOStop *pStop = new GOStop(
+      r_OrganModel, GetFirstLogicalKeyMIDINoteNumber(), &m_MidiContextStops);
+    unsigned localNumber = i + 1;
+
+    pStop->SetNameForContext(wxString::Format(WX_ODF_OBJ_NUM_FMT, localNumber));
+    buffer.Printf(wxT("Stop%03d"), localNumber);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
     cfg.MarkGroupInUse(buffer);
-    m_stops[i]->Load(cfg, buffer);
-    m_stops[i]->SetElementId(r_OrganModel.GetRecorderElementID(
+    pStop->Load(cfg, buffer);
+    pStop->SetElementId(r_OrganModel.GetRecorderElementID(
       wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
+    m_stops.push_back(pStop);
   }
 
   m_couplers.resize(0);

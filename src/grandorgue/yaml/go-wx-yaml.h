@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,6 +14,10 @@
 
 #include <wx/string.h>
 #include <yaml-cpp/yaml.h>
+
+#include "GOStringSet.h"
+
+class GOConfigEnum;
 
 namespace YAML {
 
@@ -50,7 +54,7 @@ inline YAML::Node get_from_map_or_null(
  */
 extern void put_to_map_if_not_null(
   YAML::Node &container, const char *key, const YAML::Node &value);
-inline void putToMapIfNotNull(
+inline void put_to_map_if_not_null(
   YAML::Node &container, const wxString &key, const YAML::Node &value) {
   put_to_map_if_not_null(container, key.utf8_str().data(), value);
 }
@@ -82,4 +86,68 @@ inline void put_to_map_with_name(
   put_to_map_with_name(
     container, key.utf8_str().data(), nameValue, valueLabel, value);
 }
+
+extern void put_to_map_by_path_if_not_null(
+  YAML::Node &rootNode,
+  const std::vector<wxString> &path,
+  const wxString &lastKey,
+  const YAML::Node &node);
+
+extern YAML::Node get_from_map_by_path_or_null(
+  const YAML::Node &rootNode,
+  const std::vector<wxString> &path,
+  const wxString &lastKey);
+
+extern wxString get_child_path(
+  const wxString &parentPath, const wxString &childKey);
+
+extern wxString get_child_path(
+  const wxString &parentPath, const unsigned childIndex);
+
+extern wxString read_string(
+  const YAML::Node &parentNode,
+  const wxString &parentPath,
+  const wxString &key,
+  bool isRequired,
+  GOStringSet &usedPaths);
+
+extern int read_int(
+  const YAML::Node &parentNode,
+  const wxString &parentPath,
+  const wxString &key,
+  int minValue,
+  int maxValue,
+  bool isRequired,
+  int defaultValue,
+  GOStringSet &usedPaths);
+
+extern bool read_bool(
+  const YAML::Node &parentNode,
+  const wxString &parentPath,
+  const wxString &key,
+  bool isRequired,
+  bool defaultValue,
+  GOStringSet &usedPaths);
+
+extern int read_enum(
+  const YAML::Node &parentNode,
+  const wxString &parentPath,
+  const wxString &key,
+  const GOConfigEnum &configEnum,
+  bool isRequired,
+  int defaultValue,
+  GOStringSet &usedPaths);
+
+/**
+ * Check that all scalar elements ubder the node is used. If some element is not
+ * used then print a warning.
+ *
+ * It does not check that all collections are uset themself.
+ * @param node - a yaml node to check with all it's subnodes
+ * @param path - a yaml path to the node
+ * @param usedPaths - a collection of all used paths to chack against
+ */
+extern void check_all_used(
+  const YAML::Node &node, const wxString &path, const GOStringSet &usedPaths);
+
 #endif /* GOWXYAML_H */

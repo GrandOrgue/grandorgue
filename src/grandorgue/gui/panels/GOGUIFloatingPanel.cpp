@@ -9,12 +9,10 @@
 
 #include <wx/intl.h>
 
-#include "combinations/GODivisionalSetter.h"
+#include "midi/objects/GOMidiObjectContext.h"
 #include "model/GOEnclosure.h"
-#include "model/GOManual.h"
 #include "model/GOWindchest.h"
 
-#include "GOGUIButton.h"
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUIManual.h"
@@ -22,6 +20,9 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
+
+static const GOMidiObjectContext MIDI_CONTEXT_VOLUMES(
+  wxT("volumes"), _("volumes"));
 
 GOGUIFloatingPanel::GOGUIFloatingPanel(GOOrganController *organController)
   : m_OrganController(organController) {}
@@ -81,7 +82,9 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
   }
 
   GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
+  master_enc->SetContext(&MIDI_CONTEXT_VOLUMES);
   master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
+  master_enc->SetNameForContext(wxT("Master"));
   m_OrganController->AddEnclosure(master_enc);
   master_enc->SetElementId(
     m_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
@@ -95,6 +98,8 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
     windchest->AddEnclosure(master_enc);
 
     GOEnclosure *enc = new GOEnclosure(*m_OrganController);
+    enc->SetContext(&MIDI_CONTEXT_VOLUMES);
+    enc->SetNameForContext(wxString::Format(wxT("Windchest%03u"), i + 1));
     enc->Init(
       cfg,
       wxString::Format(wxT("SetterMaster%03d"), i + 1),

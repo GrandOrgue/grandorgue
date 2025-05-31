@@ -14,7 +14,7 @@ License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
       <holder>Milan Digital Audio LLC</holder>
     </copyright>
     <copyright>
-      <year>2009-2024</year>
+      <year>2009-2025</year>
       <holder>GrandOrgue contributors (see AUTHORS)</holder>
     </copyright>
     <legalnotice>
@@ -565,6 +565,17 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
           <para>Opens a window displaying all GrandOrgue objects which can have a MIDI event assigned to them.</para>
           <para>The <emphasis role="strong">Configure</emphasis> button opens the <link linkend="midieventeditor">MIDI event editor</link> dialog for this element.</para>
           <para>Double-clicking on the element in the list opens the MIDI event editor as well.</para>
+          <para>
+	    The <emphasis role="strong">Export</emphasis> button opens a file
+	    selection dialog for selecting a file where current MIDI settings
+	    will be saved.
+	  </para>
+          <para>
+	    The <emphasis role="strong">Import</emphasis> button opens a file
+	    selection dialog for selecting a file to load previous saved MIDI
+	    settings from. Both MIDI settings files (*.yaml) and organ preset
+            files (*.cmb) are supported.
+	  </para>
         </sect3>
         <sect3 id="accessibility-stops">
           <title>Stops</title>
