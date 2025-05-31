@@ -26,21 +26,8 @@ GOMidiObject::GOMidiObject(
     p_DivisionSender(nullptr),
     p_context(nullptr) {}
 
-static const wxString WX_PATH_SEPARATOR = wxT(".");
-
 wxString GOMidiObject::GetPath() const {
-  std::vector<wxString> contextNames = GOMidiObjectContext::getNames(p_context);
-
-  contextNames.push_back(GetNameForContext());
-
-  wxString path;
-
-  for (const wxString &name : contextNames) {
-    if (!path.IsEmpty())
-      path = path + WX_PATH_SEPARATOR;
-    path = path + name;
-  }
-  return path;
+  return GOMidiObjectContext::getPath(p_context, GetNameForContext());
 }
 
 wxString GOMidiObject::GetContextTitle() const {

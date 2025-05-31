@@ -43,6 +43,8 @@ public:
   const GOMidiObjectContext *GetParent() const { return p_parent; }
 
   static std::vector<wxString> getNames(const GOMidiObjectContext *pContext);
+  static wxString getPath(
+    const GOMidiObjectContext *pContext, const wxString &name);
   static wxString getFullTitle(const GOMidiObjectContext *pContext);
 };
 

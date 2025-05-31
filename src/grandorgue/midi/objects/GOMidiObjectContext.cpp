@@ -24,6 +24,22 @@ std::vector<wxString> GOMidiObjectContext::getNames(
   return res;
 }
 
+wxString GOMidiObjectContext::getPath(
+  const GOMidiObjectContext *pContext, const wxString &name) {
+  std::vector<wxString> contextNames = getNames(pContext);
+
+  contextNames.push_back(name);
+
+  wxString path;
+
+  for (const wxString &name : contextNames) {
+    if (!path.IsEmpty())
+      path = path + WX_PATH_SEPARATOR;
+    path = path + name;
+  }
+  return path;
+}
+
 wxString GOMidiObjectContext::getFullTitle(
   const GOMidiObjectContext *pContext) {
   wxString path;
