@@ -15,6 +15,31 @@ GOMidiObjectContext::GOMidiObjectContext(
   const GOMidiObjectContext *pParent)
   : m_name(name), m_title(title), p_parent(pParent) {}
 
+std::vector<wxString> GOMidiObjectContext::getNames(
+  const GOMidiObjectContext *pContext) {
+  std::vector<wxString> res;
+
+  for (; pContext; pContext = pContext->p_parent)
+    res.insert(res.begin(), pContext->m_name);
+  return res;
+}
+
+wxString GOMidiObjectContext::getPath(
+  const GOMidiObjectContext *pContext, const wxString &name) {
+  std::vector<wxString> contextNames = getNames(pContext);
+
+  contextNames.push_back(name);
+
+  wxString path;
+
+  for (const wxString &name : contextNames) {
+    if (!path.IsEmpty())
+      path = path + WX_PATH_SEPARATOR;
+    path = path + name;
+  }
+  return path;
+}
+
 wxString GOMidiObjectContext::getFullTitle(
   const GOMidiObjectContext *pContext) {
   wxString path;

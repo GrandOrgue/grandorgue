@@ -9,27 +9,36 @@
 #define GOMIDISENDER_H
 
 #include <wx/string.h>
+#include <yaml-cpp/yaml.h>
 
 #include "midi/events/GOMidiSenderEventPatternList.h"
+
+#include "GOMidiElement.h"
 
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiMap;
 class GOMidiSendProxy;
 
-class GOMidiSender : public GOMidiSenderEventPatternList {
+class GOMidiSender : public GOMidiSenderEventPatternList, public GOMidiElement {
 private:
   GOMidiSendProxy &r_proxy;
   int m_ElementID;
 
 public:
   GOMidiSender(GOMidiSendProxy &proxy, GOMidiSenderType type);
-  ~GOMidiSender();
 
   void SetElementID(int id);
 
   void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
   void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
+
+  void ToYaml(YAML::Node &yamlNode, GOMidiMap &map) const override;
+  void FromYaml(
+    const YAML::Node &yamlNode,
+    const wxString &yamlPath,
+    GOMidiMap &map,
+    GOStringSet &usedPaths) override;
 
   void SetDisplay(bool state);
   void SetKey(unsigned key, unsigned velocity);

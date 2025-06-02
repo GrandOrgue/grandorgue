@@ -8,6 +8,8 @@
 #ifndef GOMIDIOBJECTCONTEXT_H
 #define GOMIDIOBJECTCONTEXT_H
 
+#include <vector>
+
 #include <wx/string.h>
 
 /**
@@ -40,6 +42,9 @@ public:
   void SetTitle(const wxString title) { m_title = title; }
   const GOMidiObjectContext *GetParent() const { return p_parent; }
 
+  static std::vector<wxString> getNames(const GOMidiObjectContext *pContext);
+  static wxString getPath(
+    const GOMidiObjectContext *pContext, const wxString &name);
   static wxString getFullTitle(const GOMidiObjectContext *pContext);
 };
 

@@ -17,11 +17,15 @@
 class wxButton;
 class wxGridEvent;
 
+class GOConfig;
 class GOGrid;
 class GOMidiPlayingObject;
 class GOOrganModel;
 
 class GOMidiObjectsDialog : public GOSimpleDialog, public GOView {
+private:
+  wxString m_ExportImportDir;
+  wxString m_OrganName;
   const std::vector<GOMidiPlayingObject *> &r_MidiObjects;
 
   class ObjectConfigListener : public GOMidiDialogListener {
@@ -46,12 +50,12 @@ class GOMidiObjectsDialog : public GOSimpleDialog, public GOView {
   std::vector<wxButton *> m_ActionButtons;
   std::vector<ObjectConfigListener> m_ObjectListeners;
 
+  wxButton *m_ExportButton;
+  wxButton *m_ImportButton;
+
 public:
   GOMidiObjectsDialog(
-    GODocumentBase *doc,
-    wxWindow *parent,
-    GODialogSizeSet &dialogSizes,
-    const std::vector<GOMidiPlayingObject *> &midiObjects);
+    GODocumentBase *doc, wxWindow *parent, GOOrganModel &organModel);
 
 private:
   void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
@@ -69,6 +73,18 @@ private:
   void OnConfigureButton(wxCommandEvent &event) { ConfigureSelectedObject(); }
   void OnStatusButton(wxCommandEvent &event);
   void OnActionButton(wxCommandEvent &event);
+
+  bool IsToImportSettingsFor(
+    const wxString &fileName, const wxString &savedOrganName) const;
+  wxString ExportMidiSettings(const wxString &fileName) const;
+
+  template <typename ImportObjFun>
+  void ImportAllObjects(ImportObjFun importObjFun);
+
+  wxString ImportMidiSettings(const wxString &fileName);
+
+  void OnExportButton(wxCommandEvent &event);
+  void OnImportButton(wxCommandEvent &event);
 
   void OnHide() override;
 
