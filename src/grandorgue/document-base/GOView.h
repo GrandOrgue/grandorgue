@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -22,6 +22,8 @@ public:
   virtual ~GOView();
 
   bool HasDocument() const { return m_doc != NULL; }
+
+  GODocumentBase *GetDocument() const { return m_doc; }
 
   virtual void RemoveView();
   void ShowView();

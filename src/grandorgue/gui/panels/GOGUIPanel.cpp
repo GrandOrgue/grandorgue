@@ -75,7 +75,9 @@ GOBitmap GOGUIPanel::LoadBitmap(wxString filename, wxString maskname) {
   return m_OrganController->GetBitmapCache().GetBitmap(filename, maskname);
 }
 
-void GOGUIPanel::SetView(GOGUIPanelView *view) { m_view = view; }
+GODocumentBase *GOGUIPanel::GetDocument() const {
+  return m_view ? m_view->GetDocument() : nullptr;
+}
 
 void GOGUIPanel::Init(
   GOConfigReader &cfg,

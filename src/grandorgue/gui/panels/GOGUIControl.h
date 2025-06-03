@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,6 +13,7 @@
 
 #include "control/GOControlChangedHandler.h"
 
+#include "GOGUIPanel.h"
 #include "GOSaveableObject.h"
 
 class GOGUIDisplayMetrics;
@@ -41,6 +42,10 @@ protected:
 public:
   GOGUIControl(GOGUIPanel *panel, void *control);
   virtual ~GOGUIControl();
+
+  GODocumentBase *GetDocument() const {
+    return m_panel ? m_panel->GetDocument() : nullptr;
+  }
 
   virtual void Load(GOConfigReader &cfg, wxString group);
   virtual void Layout();
