@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,7 +21,7 @@
 
 GOGUIManual::GOGUIManual(
   GOGUIPanel *panel, GOManual *manual, unsigned manual_number)
-  : GOGUIControl(panel, manual),
+  : GOGUIMidiControl(panel, manual),
     m_manual(manual),
     m_ManualNumber(manual_number),
     m_Keys() {
@@ -468,10 +468,9 @@ bool GOGUIManual::HandleMousePress(
   if (!m_BoundingRect.Contains(x, y))
     return false;
 
-  if (right) {
-    m_manual->ShowConfigDialog();
+  if (HandleMidiConfig(right))
     return true;
-  } else {
+  else {
     for (unsigned i = 0; i < m_Keys.size(); i++) {
       if (m_Keys[i].MouseRect.Contains(x, y)) {
         if (
