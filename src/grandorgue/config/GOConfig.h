@@ -34,13 +34,6 @@
 #include "GOPortsConfig.h"
 #include "ptrvector.h"
 
-typedef struct {
-  GOMidiReceiverType type;
-  unsigned index;
-  const wxString group;
-  const wxString name;
-} GOMidiSetting;
-
 enum class GOInitialLoadType { LOAD_NONE, LOAD_LAST_USED, LOAD_FIRST };
 
 class GOConfig : public GOSettingStore, public GOOrganList {
@@ -64,8 +57,6 @@ private:
   GOTemperamentList m_Temperaments;
 
   GOLogicalRect m_MainWindowRect;
-
-  static const GOMidiSetting m_MIDISettings[];
 
   GOOrgan *CloneOrgan(const GOOrgan &newOrgan) const override;
   bool IsValidOrgan(const GOOrgan *pOrgan) const override;
@@ -178,9 +169,6 @@ public:
   wxString GetEventGroup(unsigned index);
   wxString GetEventTitle(unsigned index);
   const GOMidiReceiver *GetMidiEvent(unsigned index) const;
-  unsigned GetEventInputNumber(unsigned index) const {
-    return m_MIDISettings[index].index;
-  }
   const GOMidiReceiver *FindMidiEvent(
     GOMidiReceiverType type, unsigned index) const;
 
