@@ -80,10 +80,7 @@
 static const wxString WX_ORGAN = wxT("Organ");
 static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");
 
-GOOrganController::GOOrganController(
-  GOConfig &config,
-  GOMidiDialogCreator *pMidiDialogCreator,
-  bool isAppInitialized)
+GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
   : GOEventDistributor(this),
     GOOrganModel(config),
     m_config(config),
@@ -128,7 +125,6 @@ GOOrganController::GOOrganController(
     m_timer = new GOTimer();
     m_bitmaps = new GOBitmapCache(this);
   }
-  GOOrganModel::SetMidiDialogCreator(pMidiDialogCreator);
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
@@ -145,7 +141,6 @@ GOOrganController::~GOOrganController() {
   m_VirtualCouplers.Cleanup();
   GOOrganModel::Cleanup();
   GOOrganModel::SetModelModificationListener(nullptr);
-  GOOrganModel::SetMidiDialogCreator(nullptr);
   GOOrganModel::SetCombinationController(nullptr);
   m_elementcreators.clear();
   // some elementcreator may reference to m_timer so we respect the deletion
