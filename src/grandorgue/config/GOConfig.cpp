@@ -18,8 +18,6 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
-#include "go_limits.h"
-#include "go_path.h"
 #include "midi/ports/GOMidiPort.h"
 #include "midi/ports/GOMidiPortFactory.h"
 #include "settings/GOSettingEnum.cpp"
@@ -32,6 +30,8 @@
 #include "GOPortFactory.h"
 #include "GORegisteredOrgan.h"
 #include "GOStdPath.h"
+#include "go_limits.h"
+#include "go_path.h"
 
 static constexpr unsigned SAMPLE_RATE_DEFAULT = 48000;
 static constexpr unsigned SAMPLES_PER_BUFFER_DEFAULT = 512;
@@ -45,7 +45,14 @@ static const wxString MIDI_IN(wxT("MIDIIn"));
 static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
 
-const GOMidiSetting GOConfig::m_MIDISettings[] = {
+struct GOInternalMidiObjectDesc {
+  GOMidiReceiverType type;
+  unsigned index;
+  const wxString group;
+  const wxString name;
+};
+
+static const GOInternalMidiObjectDesc INTERNAL_MIDI_DESCS[] = {
   {MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal")},
   {MIDI_RECV_MANUAL, 2, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 1")},
   {MIDI_RECV_MANUAL, 3, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 2")},
@@ -456,7 +463,8 @@ void GOConfig::LoadDefaults() {
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueConfig") + m_InstanceName;
   for (unsigned i = 0; i < GetEventCount(); i++)
-    m_MIDIEvents.push_back(new GOMidiReceiver(*this, m_MIDISettings[i].type));
+    m_MIDIEvents.push_back(
+      new GOMidiReceiver(*this, INTERNAL_MIDI_DESCS[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
   OrganPath.SetDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
@@ -498,20 +506,23 @@ void GOConfig::SetLanguageId(int langId) {
 }
 
 unsigned GOConfig::GetEventCount() const {
-  return sizeof(m_MIDISettings) / sizeof(m_MIDISettings[0]);
+  return sizeof(INTERNAL_MIDI_DESCS) / sizeof(INTERNAL_MIDI_DESCS[0]);
 }
 
 wxString GOConfig::GetEventSection(unsigned index) {
   assert(index < GetEventCount());
-  switch (m_MIDISettings[index].type) {
+  switch (INTERNAL_MIDI_DESCS[index].type) {
   case MIDI_RECV_ENCLOSURE:
-    return wxString::Format(wxT("Enclosure%03d"), m_MIDISettings[index].index);
+    return wxString::Format(
+      wxT("Enclosure%03d"), INTERNAL_MIDI_DESCS[index].index);
 
   case MIDI_RECV_MANUAL:
-    return wxString::Format(wxT("Manual%03d"), m_MIDISettings[index].index);
+    return wxString::Format(
+      wxT("Manual%03d"), INTERNAL_MIDI_DESCS[index].index);
 
   case MIDI_RECV_SETTER:
-    return wxString::Format(wxT("Setter%03d"), m_MIDISettings[index].index);
+    return wxString::Format(
+      wxT("Setter%03d"), INTERNAL_MIDI_DESCS[index].index);
 
   default:
     assert(false);
@@ -521,12 +532,12 @@ wxString GOConfig::GetEventSection(unsigned index) {
 
 wxString GOConfig::GetEventGroup(unsigned index) {
   assert(index < GetEventCount());
-  return wxGetTranslation(m_MIDISettings[index].group);
+  return wxGetTranslation(INTERNAL_MIDI_DESCS[index].group);
 }
 
 wxString GOConfig::GetEventTitle(unsigned index) {
   assert(index < GetEventCount());
-  return wxGetTranslation(m_MIDISettings[index].name);
+  return wxGetTranslation(INTERNAL_MIDI_DESCS[index].name);
 }
 
 const GOMidiReceiver *GOConfig::GetMidiEvent(unsigned index) const {
@@ -537,7 +548,9 @@ const GOMidiReceiver *GOConfig::GetMidiEvent(unsigned index) const {
 const GOMidiReceiver *GOConfig::FindMidiEvent(
   GOMidiReceiverType type, unsigned index) const {
   for (unsigned i = 0; i < GetEventCount(); i++)
-    if (m_MIDISettings[i].type == type && m_MIDISettings[i].index == index)
+    if (
+      INTERNAL_MIDI_DESCS[i].type == type
+      && INTERNAL_MIDI_DESCS[i].index == index)
       return m_MIDIEvents[i];
   return NULL;
 }
@@ -545,84 +558,6 @@ const GOMidiReceiver *GOConfig::FindMidiEvent(
 const wxString GOConfig::GetPackageDirectory() {
   return m_ResourceDir + wxFileName::GetPathSeparator() + wxT("packages");
 }
-
-/*
-bool GOSettings::GetMidiInState(wxString device, bool isEnabledByDefault)
-{
-        bool isEnabled = false;
-        std::map<wxString, bool>::iterator it = m_MidiIn.find(device);
-
-        if (it != m_MidiIn.end())
-                isEnabled = it->second;
-        else
-        {
-                isEnabled
-                  = isEnabledByDefault && device.Find(wxT("GrandOrgue")) ==
-wxNOT_FOUND; m_MidiIn[device] = isEnabled;
-        }
-        return isEnabled;
-}
-
-void GOSettings::SetMidiInState(wxString device, bool enabled)
-{
-        m_MidiIn[device] = enabled;
-}
-
-unsigned GOSettings::GetMidiInDeviceChannelShift(wxString device)
-{
-        std::map<wxString, unsigned>::iterator it = m_MidiInShift.find(device);
-        if (it == m_MidiInShift.end())
-                return 0;
-        else
-                return it->second;
-}
-
-void GOSettings::SetMidiInDeviceChannelShift(wxString device, unsigned shift)
-{
-        shift = shift % 16;
-        m_MidiInShift[device] = shift;
-}
-
-wxString GOSettings::GetMidiInOutDevice(wxString device)
-{
-        std::map<wxString, wxString>::iterator it =
-m_MidiInOutDeviceMap.find(device); if (it == m_MidiInOutDeviceMap.end()) return
-wxEmptyString; else return it->second;
-}
-
-void GOSettings::SetMidiInOutDevice(wxString device, wxString out_device)
-{
-        m_MidiInOutDeviceMap[device] = out_device;
-}
-
-std::vector<wxString> GOSettings::GetMidiInDeviceList()
-{
-        std::vector<wxString> list;
-        for (std::map<wxString, bool>::iterator it = m_MidiIn.begin(); it !=
-m_MidiIn.end(); it++) list.push_back(it->first); return list;
-}
-
-bool GOSettings::GetMidiOutState(wxString device)
-{
-        std::map<wxString, bool>::iterator it = m_MidiOut.find(device);
-        if (it == m_MidiOut.end())
-                return false;
-        else
-                return it->second;
-}
-
-void GOSettings::SetMidiOutState(wxString device, bool enabled)
-{
-        m_MidiOut[device] = enabled;
-}
-
-std::vector<wxString> GOSettings::GetMidiOutDeviceList()
-{
-        std::vector<wxString> list;
-        for (std::map<wxString, bool>::iterator it = m_MidiOut.begin(); it !=
-m_MidiOut.end(); it++) list.push_back(it->first); return list;
-}
- */
 
 const std::vector<wxString> &GOConfig::GetAudioGroups() {
   return m_AudioGroups;
