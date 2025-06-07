@@ -16,7 +16,6 @@
 #include "GOMidiElement.h"
 #include "GOTime.h"
 
-class GOConfig;
 class GOConfigReader;
 class GOConfigWriter;
 class GOMidiEvent;
@@ -35,8 +34,6 @@ private:
     int key;
   } midi_internal_match;
 
-  const GOConfig &r_config;
-
   int m_ElementID;
   std::vector<GOTime> m_last;
   std::vector<midi_internal_match> m_Internal;
@@ -48,13 +45,14 @@ private:
   void deleteInternal(unsigned device);
   unsigned createInternal(unsigned device);
 
-protected:
-  int GetTranspose() const;
-
 public:
-  GOMidiReceiver(const GOConfig &config, GOMidiReceiverType type);
+  GOMidiReceiver(GOMidiReceiverType type);
 
-  void Load(GOConfigReader &cfg, const wxString &group, GOMidiMap &map);
+  void Load(
+    bool isOdfCheck,
+    GOConfigReader &cfg,
+    const wxString &group,
+    GOMidiMap &map);
   void Save(GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const;
 
   void ToYaml(YAML::Node &yamlNode, GOMidiMap &map) const override;
@@ -70,9 +68,12 @@ public:
   void SetElementID(int id) { m_ElementID = id; }
 
   GOMidiMatchType Match(const GOMidiEvent &e);
-  GOMidiMatchType Match(const GOMidiEvent &e, int &value);
   GOMidiMatchType Match(
-    const GOMidiEvent &e, const KeyMap *pMidiMap, int &key, int &value);
+    const GOMidiEvent &e,
+    const KeyMap *pMidiMap,
+    int transpose,
+    int &key,
+    int &value);
 
   bool HasDebounce(GOMidiReceiverMessageType type) const;
   static bool hasChannel(GOMidiReceiverMessageType type);

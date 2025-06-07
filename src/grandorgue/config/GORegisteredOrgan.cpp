@@ -11,9 +11,8 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 
-GORegisteredOrgan::GORegisteredOrgan(
-  const GOConfig &config, const GOOrgan &organ)
-  : GOOrgan(organ), m_midi(config, MIDI_RECV_ORGAN) {
+GORegisteredOrgan::GORegisteredOrgan(const GOOrgan &organ)
+  : GOOrgan(organ), m_midi(MIDI_RECV_ORGAN) {
   const GORegisteredOrgan *pRegOrgan
     = dynamic_cast<const GORegisteredOrgan *>(&organ);
 
@@ -30,10 +29,10 @@ GORegisteredOrgan::GORegisteredOrgan(
     cfg.ReadString(CMBSetting, group, wxT("ChurchName")),
     cfg.ReadString(CMBSetting, group, wxT("OrganBuilder")),
     cfg.ReadString(CMBSetting, group, wxT("RecordingDetail"))),
-    m_midi(config, MIDI_RECV_ORGAN) {
+    m_midi(MIDI_RECV_ORGAN) {
   m_LastUse = cfg.ReadInteger(
     CMBSetting, group, wxT("LastUse"), 0, INT_MAX, false, m_LastUse);
-  m_midi.Load(cfg, group, config.GetMidiMap());
+  m_midi.Load(config.ODFCheck(), cfg, group, config.GetMidiMap());
 }
 
 void GORegisteredOrgan::Save(

@@ -251,7 +251,7 @@ GOConfig::GOConfig(wxString instance)
 }
 
 GOOrgan *GOConfig::CloneOrgan(const GOOrgan &newOrgan) const {
-  return new GORegisteredOrgan(*this, newOrgan);
+  return new GORegisteredOrgan(newOrgan);
 }
 
 bool GOConfig::IsValidOrgan(const GOOrgan *pOrgan) const {
@@ -415,7 +415,7 @@ void GOConfig::Load() {
       cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(), m_MidiPortsConfig);
 
     for (unsigned i = 0; i < GetEventCount(); i++)
-      m_MIDIEvents[i]->Load(cfg, GetEventSection(i), m_MidiMap);
+      m_MIDIEvents[i]->Load(ODFCheck(), cfg, GetEventSection(i), m_MidiMap);
 
     long cpus = wxThread::GetCPUCount();
     if (cpus == -1)
@@ -463,8 +463,7 @@ void GOConfig::LoadDefaults() {
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueConfig") + m_InstanceName;
   for (unsigned i = 0; i < GetEventCount(); i++)
-    m_MIDIEvents.push_back(
-      new GOMidiReceiver(*this, INTERNAL_MIDI_DESCS[i].type));
+    m_MIDIEvents.push_back(new GOMidiReceiver(INTERNAL_MIDI_DESCS[i].type));
   m_ResourceDir = GOStdPath::GetResourceDir();
 
   OrganPath.SetDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));

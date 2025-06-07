@@ -17,7 +17,7 @@ GOMidiReceivingSendingObject::GOMidiReceivingSendingObject(
   GOMidiReceiverType receiverType)
   : GOMidiSendingObject(organModel, midiTypeCode, midiTypeName, senderType),
     m_ReceiverType(receiverType),
-    m_receiver(organModel.GetConfig(), receiverType),
+    m_receiver(receiverType),
     p_ReceiverKeyMap(nullptr),
     m_MidiInputNumber(-1) {
   SetMidiReceiver(&m_receiver);
@@ -56,7 +56,7 @@ void GOMidiReceivingSendingObject::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
   GOMidiSendingObject::LoadMidiObject(cfg, group, midiMap);
   if (!IsReadOnly()) {
-    m_receiver.Load(cfg, group, midiMap);
+    m_receiver.Load(r_OrganModel.GetConfig().ODFCheck(), cfg, group, midiMap);
     if (!m_receiver.IsMidiConfigured() && m_MidiInputNumber >= 0) {
       const GOMidiReceiver *pInitialEvents
         = r_OrganModel.GetConfig().FindMidiEvent(
@@ -92,8 +92,13 @@ void GOMidiReceivingSendingObject::ProcessMidi(const GOMidiEvent &event) {
   if (!IsReadOnly()) {
     int key;
     int value;
-    GOMidiMatchType matchType
-      = m_receiver.Match(event, p_ReceiverKeyMap, key, value);
+
+    GOMidiMatchType matchType = m_receiver.Match(
+      event,
+      p_ReceiverKeyMap,
+      r_OrganModel.GetConfig().Transpose(),
+      key,
+      value);
 
     if (matchType > MIDI_MATCH_NONE)
       OnMidiReceived(event, matchType, key, value);

@@ -56,12 +56,12 @@ static const GOConfigEnum MIDI_RECEIVE_TYPES({
   {wxT("NoteNormal"), MIDI_M_NOTE_NORMAL},
 });
 
-GOMidiReceiver::GOMidiReceiver(const GOConfig &config, GOMidiReceiverType type)
-  : GOMidiReceiverEventPatternList(type), r_config(config), m_ElementID(-1) {}
+GOMidiReceiver::GOMidiReceiver(GOMidiReceiverType type)
+  : GOMidiReceiverEventPatternList(type), m_ElementID(-1) {}
 
 void GOMidiReceiver::Load(
-  GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
-  if (!r_config.ODFCheck()) {
+  bool isOdfCheck, GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
+  if (!isOdfCheck) {
     /* Skip old style entries */
     if (m_type == MIDI_RECV_DRAWSTOP)
       cfg.ReadInteger(
@@ -183,8 +183,6 @@ void GOMidiReceiver::Load(
     }
   }
 }
-
-int GOMidiReceiver::GetTranspose() const { return r_config.Transpose(); }
 
 void GOMidiReceiver::Save(
   GOConfigWriter &cfg, const wxString &group, GOMidiMap &map) const {
@@ -583,17 +581,18 @@ unsigned GOMidiReceiver::createInternal(unsigned device) {
 }
 
 GOMidiMatchType GOMidiReceiver::Match(const GOMidiEvent &e) {
-  int tmp;
-  return Match(e, tmp);
-}
+  int key;
+  int value;
 
-GOMidiMatchType GOMidiReceiver::Match(const GOMidiEvent &e, int &value) {
-  int tmp;
-  return Match(e, NULL, tmp, value);
+  return Match(e, nullptr, 0, key, value);
 }
 
 GOMidiMatchType GOMidiReceiver::Match(
-  const GOMidiEvent &e, const KeyMap *pMidiMap, int &key, int &value) {
+  const GOMidiEvent &e,
+  const KeyMap *pMidiMap,
+  int transpose,
+  int &key,
+  int &value) {
   const GOMidiEvent::MidiType eMidiType = e.GetMidiType();
 
   value = 0;
@@ -626,7 +625,7 @@ GOMidiMatchType GOMidiReceiver::Match(
         if (
           eMidiType == GOMidiEvent::MIDI_NOTE
           && e.GetChannel() == m_Internal[i].channel) {
-          key = e.GetKey() + GetTranspose();
+          key = e.GetKey() + transpose;
           value = e.GetValue();
           if (key < 0)
             return MIDI_MATCH_NONE;
@@ -688,7 +687,7 @@ GOMidiMatchType GOMidiReceiver::Match(
           if (no == 4 || no == 6 || no == 8)
             key -= 4;
         }
-        key = key + GetTranspose() + pattern.key;
+        key = key + transpose + pattern.key;
         if (key < 0)
           continue;
         if (key > 127)
