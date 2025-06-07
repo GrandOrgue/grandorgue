@@ -8,12 +8,10 @@
 #ifndef GOMIDISHORTCUTPATTERN_H
 #define GOMIDISHORTCUTPATTERN_H
 
+#include "GOMidiShortcutReceiverType.h"
+
 class GOMidiShortcutPattern {
 public:
-  enum ReceiverType {
-    KEY_RECV_BUTTON,
-    KEY_RECV_ENCLOSURE,
-  };
   enum MatchType {
     KEY_MATCH_NONE,
     KEY_MATCH,
@@ -21,15 +19,15 @@ public:
   };
 
 protected:
-  ReceiverType m_type;
+  GOMidiShortcutReceiverType m_type;
   unsigned m_ShortcutKey = 0;
   unsigned m_MinusKey = 0;
 
 public:
-  GOMidiShortcutPattern(ReceiverType type) : m_type(type) {}
+  GOMidiShortcutPattern(GOMidiShortcutReceiverType type) : m_type(type) {}
   virtual ~GOMidiShortcutPattern() {}
 
-  ReceiverType GetType() const { return m_type; }
+  GOMidiShortcutReceiverType GetType() const { return m_type; }
 
   unsigned GetShortcut() const { return m_ShortcutKey; }
   void SetShortcut(unsigned key) { m_ShortcutKey = key; }
