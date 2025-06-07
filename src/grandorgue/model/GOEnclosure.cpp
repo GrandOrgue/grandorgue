@@ -24,7 +24,7 @@ GOEnclosure::GOEnclosure(GOOrganModel &organModel)
     WX_MIDI_TYPE_NAME,
     MIDI_SEND_ENCLOSURE,
     MIDI_RECV_ENCLOSURE,
-    GOMidiShortcutReceiver::KEY_RECV_ENCLOSURE),
+    KEY_RECV_ENCLOSURE),
     m_IsOdfDefined(false),
     m_DefaultAmpMinimumLevel(0),
     m_Displayed1(false),

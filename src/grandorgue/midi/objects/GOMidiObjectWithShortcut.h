@@ -25,7 +25,7 @@ protected:
     const wxString &midiTypeName,
     GOMidiSenderType senderType,
     GOMidiReceiverType receiverType,
-    GOMidiShortcutReceiver::ReceiverType shortcutType);
+    GOMidiShortcutReceiverType shortcutType);
 
   virtual ~GOMidiObjectWithShortcut();
 

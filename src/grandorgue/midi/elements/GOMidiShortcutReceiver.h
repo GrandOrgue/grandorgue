@@ -20,7 +20,8 @@ class GOConfigWriter;
 class GOMidiShortcutReceiver : public GOMidiShortcutPattern,
                                public GOMidiElement {
 public:
-  GOMidiShortcutReceiver(ReceiverType type) : GOMidiShortcutPattern(type) {}
+  GOMidiShortcutReceiver(GOMidiShortcutReceiverType type)
+    : GOMidiShortcutPattern(type) {}
 
   void Load(GOConfigReader &cfg, const wxString &group);
   void Save(GOConfigWriter &cfg, const wxString &group) const;

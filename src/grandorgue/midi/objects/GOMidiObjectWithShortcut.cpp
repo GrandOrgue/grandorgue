@@ -13,7 +13,7 @@ GOMidiObjectWithShortcut::GOMidiObjectWithShortcut(
   const wxString &midiTypeName,
   GOMidiSenderType senderType,
   GOMidiReceiverType receiverType,
-  GOMidiShortcutReceiver::ReceiverType shortcutType)
+  GOMidiShortcutReceiverType shortcutType)
   : GOMidiReceivingSendingObject(
     organModel, midiTypeCode, midiTypeName, senderType, receiverType),
     m_ShortcutReceiver(shortcutType) {
