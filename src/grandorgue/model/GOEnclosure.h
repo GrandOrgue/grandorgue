@@ -21,6 +21,10 @@ class GOConfigWriter;
 class GOOrganModel;
 
 class GOEnclosure : public GOControl, public GOMidiObjectWithShortcut {
+public:
+  static const wxString WX_MIDI_TYPE_CODE;
+  static const wxString WX_MIDI_TYPE_NAME;
+
 private:
   bool m_IsOdfDefined;
   uint8_t m_DefaultAmpMinimumLevel;

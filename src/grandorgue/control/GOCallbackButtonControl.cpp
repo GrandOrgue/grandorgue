@@ -11,8 +11,8 @@
 
 #include "control/GOButtonCallback.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Button");
-static const wxString WX_MIDI_TYPE_NAME = _("Button");
+const wxString GOCallbackButtonControl::WX_MIDI_TYPE_CODE = wxT("Button");
+const wxString GOCallbackButtonControl::WX_MIDI_TYPE_NAME = _("Button");
 
 GOCallbackButtonControl::GOCallbackButtonControl(
   GOOrganModel &organModel,
