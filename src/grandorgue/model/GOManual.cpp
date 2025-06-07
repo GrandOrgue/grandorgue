@@ -20,9 +20,9 @@
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Manual");
-static const wxString WX_MIDI_TYPE_NAME = _("Manual");
-static const wxString WX_ODF_OBJ_NUM_FMT = wxT("%03u");
+const wxString GOManual::WX_MIDI_TYPE_CODE = wxT("Manual");
+const wxString GOManual::WX_MIDI_TYPE_NAME = _("Manual");
+const wxString WX_ODF_OBJ_NUM_FMT = wxT("%03u");
 
 GOManual::GOManual(
   GOOrganModel &organModel,
