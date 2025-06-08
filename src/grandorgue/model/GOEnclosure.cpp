@@ -14,8 +14,8 @@
 
 #include "GOOrganModel.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Enclosure");
-static const wxString WX_MIDI_TYPE_NAME = _("Enclosure");
+const wxString GOEnclosure::WX_MIDI_TYPE_CODE = wxT("Enclosure");
+const wxString GOEnclosure::WX_MIDI_TYPE_NAME = _("Enclosure");
 
 GOEnclosure::GOEnclosure(GOOrganModel &organModel)
   : GOMidiObjectWithShortcut(

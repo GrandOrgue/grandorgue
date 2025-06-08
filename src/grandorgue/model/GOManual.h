@@ -29,6 +29,10 @@ class GOTremulant;
 class GOManual : public GOControl,
                  public GOMidiObjectWithDivision,
                  private GOCombinationButtonSet {
+public:
+  static const wxString WX_MIDI_TYPE_CODE;
+  static const wxString WX_MIDI_TYPE_NAME;
+
 private:
   std::vector<GOCoupler *> m_InputCouplers;
   /* Keyboard state */

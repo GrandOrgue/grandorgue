@@ -13,6 +13,10 @@
 class GOButtonCallback;
 
 class GOCallbackButtonControl : public GOButtonControl {
+public:
+  static const wxString WX_MIDI_TYPE_CODE;
+  static const wxString WX_MIDI_TYPE_NAME;
+
 protected:
   GOButtonCallback *m_callback;
 
