@@ -27,7 +27,7 @@ GOButtonControl::GOButtonControl(
     midiTypeName,
     MIDI_SEND_BUTTON,
     midiType,
-    GOMidiShortcutReceiver::KEY_RECV_BUTTON),
+    KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
     m_Engaged(false),
