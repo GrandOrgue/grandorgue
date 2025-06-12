@@ -13,6 +13,11 @@
 
 #include "GOKeyConvert.h"
 
+const GOConfigEnum GOMidiShortcutReceiver::SHORTCUT_RECEIVER_TYPES({
+  {wxT("Button"), KEY_RECV_BUTTON},
+  {wxT("Enclosure"), KEY_RECV_ENCLOSURE},
+});
+
 void GOMidiShortcutReceiver::Load(GOConfigReader &cfg, const wxString &group) {
   if (m_type == KEY_RECV_ENCLOSURE) {
     m_ShortcutKey

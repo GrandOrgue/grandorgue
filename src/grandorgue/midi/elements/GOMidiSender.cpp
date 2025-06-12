@@ -10,7 +10,6 @@
 #include <wx/intl.h>
 #include <yaml-cpp/node/node.h>
 
-#include "config/GOConfigEnum.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "midi/GOMidiMap.h"
@@ -18,6 +17,13 @@
 #include "yaml/go-wx-yaml.h"
 
 #include "GOMidiSendProxy.h"
+
+const GOConfigEnum GOMidiSender::SENDER_TYPES({
+  {wxT("Button"), MIDI_SEND_BUTTON},
+  {wxT("Label"), MIDI_SEND_LABEL},
+  {wxT("Enclosure"), MIDI_SEND_ENCLOSURE},
+  {wxT("Manual"), MIDI_SEND_MANUAL},
+});
 
 GOMidiSender::GOMidiSender(GOMidiSenderType type)
   : GOMidiSenderEventPatternList(type), m_ElementID(-1), p_proxy(nullptr) {}

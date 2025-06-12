@@ -10,6 +10,7 @@
 
 #include <wx/string.h>
 
+#include "config/GOConfigEnum.h"
 #include "midi/events/GOMidiShortcutPattern.h"
 
 #include "GOMidiElement.h"
@@ -20,6 +21,8 @@ class GOConfigWriter;
 class GOMidiShortcutReceiver : public GOMidiShortcutPattern,
                                public GOMidiElement {
 public:
+  static const GOConfigEnum SHORTCUT_RECEIVER_TYPES;
+
   GOMidiShortcutReceiver(GOMidiShortcutReceiverType type)
     : GOMidiShortcutPattern(type) {}
 
