@@ -21,7 +21,7 @@ private:
   GOMidiReceiver m_midi;
 
 public:
-  GORegisteredOrgan(const GOConfig &config, const GOOrgan &organ);
+  GORegisteredOrgan(const GOOrgan &organ);
   GORegisteredOrgan(
     GOConfig &config, GOConfigReader &cfg, const wxString &group);
 
