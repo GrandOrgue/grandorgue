@@ -8,13 +8,21 @@
 #include "GOMidiReceiver.h"
 
 #include "config/GOConfig.h"
-#include "config/GOConfigEnum.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "midi/GOMidiMap.h"
 #include "midi/events/GOMidiEvent.h"
 #include "midi/events/GORodgers.h"
 #include "yaml/go-wx-yaml.h"
+
+const GOConfigEnum GOMidiReceiver::RECEIVER_TYPES({
+  {wxT("Drawstop"), MIDI_RECV_DRAWSTOP},
+  {wxT("Button"), MIDI_RECV_BUTTON},
+  {wxT("Enclosure"), MIDI_RECV_ENCLOSURE},
+  {wxT("Manual"), MIDI_RECV_MANUAL},
+  {wxT("Setter"), MIDI_RECV_SETTER},
+  {wxT("Organ"), MIDI_RECV_ORGAN},
+});
 
 static const GOConfigEnum MIDI_RECEIVE_TYPES({
   {wxT("ControlChange"), MIDI_M_CTRL_CHANGE},

@@ -11,6 +11,7 @@
 #include <wx/string.h>
 #include <yaml-cpp/yaml.h>
 
+#include "config/GOConfigEnum.h"
 #include "midi/events/GOMidiSenderEventPatternList.h"
 
 #include "GOMidiElement.h"
@@ -21,6 +22,9 @@ class GOMidiMap;
 class GOMidiSendProxy;
 
 class GOMidiSender : public GOMidiSenderEventPatternList, public GOMidiElement {
+public:
+  static const GOConfigEnum SENDER_TYPES;
+
 private:
   int m_ElementID;
   GOMidiSendProxy *p_proxy;
