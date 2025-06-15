@@ -87,17 +87,17 @@ void GOSettingsMidiInitial::CaptureAdditionalSizes(
 }
 
 bool GOSettingsMidiInitial::TransferDataToWindow() {
-  const unsigned nInitials = r_config.GetEventCount();
+  const unsigned nInitials = r_config.GetMidiInitialCount();
 
   m_Initials->ClearGrid();
   m_Initials->AppendRows(nInitials);
   for (unsigned i = 0; i < nInitials; i++) {
-    const GOMidiReceiver *recv = r_config.GetMidiEvent(i);
+    const GOConfigMidiObject *pObj = r_config.GetMidiInitialObject(i);
 
     m_Initials->SetCellValue(i, GRID_COL_GROUP, r_config.GetEventGroup(i));
     m_Initials->SetCellValue(i, GRID_COL_NAME, r_config.GetEventTitle(i));
     m_Initials->SetCellValue(
-      i, GRID_COL_CONFIGURED, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
+      i, GRID_COL_CONFIGURED, pObj->IsMidiConfigured() ? _("Yes") : _("No"));
   }
   return true;
 }
@@ -110,8 +110,7 @@ void GOSettingsMidiInitial::OnInitialsSelected(wxGridEvent &event) {
 
 void GOSettingsMidiInitial::ConfigureInitial() {
   int index = m_Initials->GetGridCursorRow();
-  GOMidiReceiver *recv
-    = const_cast<GOMidiReceiver *>(r_config.GetMidiEvent(index));
+  GOConfigMidiObject *pObj = r_config.GetMidiInitialObject(index);
   GOMidiEventDialog dlg(
     NULL,
     this,
@@ -119,12 +118,12 @@ void GOSettingsMidiInitial::ConfigureInitial() {
       _("Initial MIDI settings for %s"), r_config.GetEventTitle(index)),
     r_config,
     wxT("InitialSettings"),
-    recv,
+    pObj->GetMidiReceiver(),
     NULL,
     NULL);
 
   dlg.RegisterMIDIListener(&r_midi);
   dlg.ShowModal();
   m_Initials->SetCellValue(
-    index, GRID_COL_CONFIGURED, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
+    index, GRID_COL_CONFIGURED, pObj->IsMidiConfigured() ? _("Yes") : _("No"));
 }

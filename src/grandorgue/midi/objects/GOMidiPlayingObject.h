@@ -19,6 +19,15 @@ public:
 
   virtual ~GOMidiPlayingObject();
 
+  /* Try to find the initial MIDI settings suitable for tthis objects.
+   * This implementation searches only among user-added MIDI objects. The
+   * subclasses may implement more complex searching.
+   */
+  virtual const GOMidiObject *FindInitialMidiObject() const;
+
+  // if MIDI is not configured then try
+  void AfterMidiLoaded() override;
+
   void ShowConfigDialog();
 
   void PreparePlayback() override {}
