@@ -21,8 +21,7 @@ private:
 protected:
   GOMidiObjectWithShortcut(
     GOOrganModel &organModel,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName,
+    ObjectType objectType,
     GOMidiSenderType senderType,
     GOMidiReceiverType receiverType,
     GOMidiShortcutReceiverType shortcutType);

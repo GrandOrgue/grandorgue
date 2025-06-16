@@ -11,11 +11,10 @@
 
 GOMidiReceivingSendingObject::GOMidiReceivingSendingObject(
   GOOrganModel &organModel,
-  const wxString &midiTypeCode,
-  const wxString &midiTypeName,
+  ObjectType objectType,
   GOMidiSenderType senderType,
   GOMidiReceiverType receiverType)
-  : GOMidiSendingObject(organModel, midiTypeCode, midiTypeName, senderType),
+  : GOMidiSendingObject(organModel, objectType, senderType),
     m_ReceiverType(receiverType),
     m_receiver(receiverType),
     p_ReceiverKeyMap(nullptr),

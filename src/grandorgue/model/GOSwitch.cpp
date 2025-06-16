@@ -9,11 +9,8 @@
 
 #include <wx/intl.h>
 
-const wxString WX_MIDI_TYPE_CODE = wxT("Drawstop");
-const wxString WX_MIDI_TYPE_NAME = _("Drawstop");
-
 GOSwitch::GOSwitch(GOOrganModel &organModel)
-  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME) {}
+  : GODrawstop(organModel, OBJECT_TYPE_SWITCH) {}
 
 void GOSwitch::AssociateWithManual(int manualN, unsigned indexInManual) {
   m_AssociatedManualN = m_AssociatedManualN < -1 ? manualN : -1;
