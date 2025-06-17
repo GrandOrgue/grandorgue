@@ -41,6 +41,8 @@
 #include "go_limits.h"
 #include "go_path.h"
 
+static constexpr int MIDI_ELEMENT_NONE = -1;
+
 static constexpr unsigned SAMPLE_RATE_DEFAULT = 48000;
 static constexpr unsigned SAMPLES_PER_BUFFER_DEFAULT = 512;
 static constexpr GOConfig::InterpolationType INTERPOLATION_DEFAULT
@@ -53,6 +55,11 @@ static const wxString MIDI_IN(wxT("MIDIIn"));
 static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
 static const wxString GENERAL = wxT("General");
+static const wxString WX_MIDI_INITIAL_COUNT = wxT("MidiInitialCount");
+static const wxString WX_MIDI_INITIAL_FMT = wxT("MidiInitial%03u");
+static const wxString WX_MIDI_INPUT_NUMBER = wxT("MidiInputNumber");
+static const wxString WX_PATH = wxT("Path");
+static const wxString WX_OBJECT_TYPE = wxT("ObjectType");
 static const wxString WX_FMT_D = wxT("%d");
 
 struct initial_midi_group_desc {
@@ -350,6 +357,18 @@ unsigned GOConfig::getMidiBuiltinCount() {
   return sizeof(INTERNAL_MIDI_DESCS) / sizeof(INTERNAL_MIDI_DESCS[0]);
 }
 
+static wxString get_old_style_initial_midi_group(unsigned index) {
+  assert(index < GOConfig::getMidiBuiltinCount());
+  const auto &desc = INTERNAL_MIDI_DESCS[index];
+
+  return wxString::Format(
+    INITIAL_MIDI_GROUP_DESCS[desc.m_group].m_SectionFmt, desc.m_index);
+}
+
+static wxString get_initial_midi_group(unsigned index) {
+  return wxString::Format(WX_MIDI_INITIAL_FMT, index + 1);
+}
+
 void GOConfig::Load() {
   if (m_ConfigFileName.IsEmpty()) {
     LoadDefaults();
@@ -426,9 +445,44 @@ void GOConfig::Load() {
     load_ports_config(
       cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(), m_MidiPortsConfig);
 
-    for (unsigned i = 0; i < getMidiBuiltinCount(); i++)
-      m_InitialMidiObjects[i]->GetMidiReceiver()->Load(
-        ODFCheck(), cfg, GetEventSection(i), m_MidiMap);
+    int midiInitialCount = cfg.ReadInteger(
+      CMBSetting, GENERAL, WX_MIDI_INITIAL_COUNT, 0, 9999, false, -1);
+
+    if (midiInitialCount < 1) // old style config
+      for (unsigned l = getMidiBuiltinCount(), i = 0; i < l; i++)
+        m_InitialMidiObjects[i]->GetMidiReceiver()->Load(
+          ODFCheck(), cfg, get_old_style_initial_midi_group(i), m_MidiMap);
+    else
+      for (unsigned l = midiInitialCount, i = 0; i < l; i++) {
+        const wxString group = get_initial_midi_group(i);
+        const wxString path = cfg.ReadString(CMBSetting, group, WX_PATH, false);
+        const GOMidiObject::ObjectType objectType
+          = (GOMidiObject::ObjectType)cfg.ReadEnum(
+            CMBSetting, group, WX_OBJECT_TYPE, GOMidiObject::OBJECT_TYPES);
+        GOConfigMidiObject *pObj = nullptr;
+
+        if (path.IsEmpty()) {
+          // An internal MIDI object. Match by receiverType, midiInputNumber
+          const unsigned midiInputNumber
+            = cfg.ReadInteger(CMBSetting, group, WX_MIDI_INPUT_NUMBER, 0, 999);
+
+          pObj = FindMidiInitialObject(objectType, midiInputNumber);
+          if (!pObj)
+            wxLogWarning(
+              _("Internal MIDI object %s:%u exists"),
+              GOMidiObject::OBJECT_TYPES.GetName(objectType),
+              midiInputNumber);
+        } else { // A user-added MIDI object. Match it by path
+          auto it = m_InitialMidiObjectsByPath.find(path);
+
+          if (it == m_InitialMidiObjectsByPath.end()) {
+            pObj = new GOConfigMidiObject(m_MidiMap, objectType);
+            m_InitialMidiObjectsByPath[path] = pObj;
+          }
+        }
+        if (pObj)
+          pObj->LoadMidiObject(cfg, group, m_MidiMap);
+      }
 
     long cpus = wxThread::GetCPUCount();
     if (cpus == -1)
@@ -529,14 +583,6 @@ void GOConfig::SetLanguageId(int langId) {
   LanguageCode(
     langId == wxLANGUAGE_DEFAULT ? wxString(wxEmptyString)
                                  : wxLocale::GetLanguageCanonicalName(langId));
-}
-
-wxString GOConfig::GetEventSection(unsigned index) {
-  assert(index < getMidiBuiltinCount());
-  const auto &desc = INTERNAL_MIDI_DESCS[index];
-
-  return wxString::Format(
-    INITIAL_MIDI_GROUP_DESCS[desc.m_group].m_SectionFmt, desc.m_index);
 }
 
 const wxString &GOConfig::GetEventGroup(unsigned index) const {
@@ -640,9 +686,23 @@ void GOConfig::Flush() {
 
   m_Temperaments.Save(cfg);
 
-  for (unsigned i = 0; i < getMidiBuiltinCount(); i++)
-    m_InitialMidiObjects[i]->GetMidiReceiver()->Save(
-      cfg, GetEventSection(i), m_MidiMap);
+  unsigned midiInitialBuiltinCount = getMidiBuiltinCount();
+  unsigned midiInitialCount = m_InitialMidiObjects.size();
+
+  cfg.WriteInteger(GENERAL, WX_MIDI_INITIAL_COUNT, midiInitialCount);
+  for (unsigned i = 0; i < midiInitialCount; i++) {
+    const wxString group = get_initial_midi_group(i);
+    const GOConfigMidiObject *pObj = m_InitialMidiObjects[i];
+
+    cfg.WriteEnum(
+      group, WX_OBJECT_TYPE, GOMidiObject::OBJECT_TYPES, pObj->GetObjectType());
+    if (i < midiInitialBuiltinCount)
+      cfg.WriteInteger(
+        group, WX_MIDI_INPUT_NUMBER, INTERNAL_MIDI_DESCS[i].m_index);
+    else // A user-added MIDI object. Match it by path
+      cfg.WriteString(group, WX_PATH, pObj->GetPath());
+    pObj->SaveMidiObject(cfg, group, m_MidiMap);
+  }
 
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
     cfg.WriteString(
