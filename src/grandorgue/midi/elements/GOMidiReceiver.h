@@ -10,6 +10,7 @@
 
 #include <cstdint>
 
+#include "config/GOConfigEnum.h"
 #include "midi/events/GOMidiMatchType.h"
 #include "midi/events/GOMidiReceiverEventPatternList.h"
 
@@ -24,7 +25,8 @@ class GOMidiMap;
 class GOMidiReceiver : public GOMidiReceiverEventPatternList,
                        public GOMidiElement {
 public:
-  constexpr static unsigned KEY_MAP_SIZE = 128;
+  static const GOConfigEnum RECEIVER_TYPES;
+  static constexpr unsigned KEY_MAP_SIZE = 128;
   using KeyMap = uint8_t[KEY_MAP_SIZE];
 
 private:
