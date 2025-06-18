@@ -54,8 +54,7 @@ static const wxString SOUND_PORTS = wxT("SoundPorts");
 static const wxString GENERAL = wxT("General");
 
 struct initial_midi_group_desc {
-  const wxString &r_MidiTypeCode;
-  const wxString &r_MidiTypeName;
+  GOMidiObject::ObjectType objectType;
   GOMidiSenderType m_SenderType;
   GOMidiReceiverType m_ReceiverType;
   GOMidiShortcutReceiverType m_ShortcutReceiverType;
@@ -76,8 +75,7 @@ enum initial_midi_group {
 // Indexed by initial_midi_group
 static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
   {
-    GOManual::WX_MIDI_TYPE_CODE,
-    GOManual::WX_MIDI_TYPE_NAME,
+    GOMidiObject::OBJECT_TYPE_MANUAL,
     MIDI_SEND_MANUAL,
     MIDI_RECV_MANUAL,
     KEY_RECV_ENCLOSURE,
@@ -87,8 +85,7 @@ static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
     wxT("Manual%03d"),
   },
   {
-    GOEnclosure::WX_MIDI_TYPE_CODE,
-    GOEnclosure::WX_MIDI_TYPE_NAME,
+    GOMidiObject::OBJECT_TYPE_ENCLOSURE,
     MIDI_SEND_ENCLOSURE,
     MIDI_RECV_ENCLOSURE,
     KEY_RECV_ENCLOSURE,
@@ -97,8 +94,7 @@ static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
     _("Enclosures"),
     wxT("Enclosure%03d"),
   },
-  {GOCallbackButtonControl::WX_MIDI_TYPE_CODE,
-   GOCallbackButtonControl::WX_MIDI_TYPE_NAME,
+  {GOMidiObject::OBJECT_TYPE_BUTTON,
    MIDI_SEND_BUTTON,
    MIDI_RECV_SETTER,
    KEY_RECV_BUTTON,
@@ -106,8 +102,7 @@ static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
    false,
    _("Sequencer"),
    wxT("Setter%03d")},
-  {GOCallbackButtonControl::WX_MIDI_TYPE_CODE,
-   GOCallbackButtonControl::WX_MIDI_TYPE_NAME,
+  {GOMidiObject::OBJECT_TYPE_BUTTON,
    MIDI_SEND_BUTTON,
    MIDI_RECV_SETTER,
    KEY_RECV_BUTTON,
@@ -115,8 +110,7 @@ static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
    false,
    _("Master Controls"),
    wxT("Setter%03d")},
-  {GOCallbackButtonControl::WX_MIDI_TYPE_CODE,
-   GOCallbackButtonControl::WX_MIDI_TYPE_NAME,
+  {GOMidiObject::OBJECT_TYPE_BUTTON,
    MIDI_SEND_BUTTON,
    MIDI_RECV_SETTER,
    KEY_RECV_BUTTON,
@@ -487,8 +481,7 @@ void GOConfig::LoadDefaults() {
 
     m_InitialMidiObjects.push_back(new GOConfigMidiObject(
       m_MidiMap,
-      groupDesc.r_MidiTypeCode,
-      groupDesc.r_MidiTypeName,
+      groupDesc.objectType,
       groupDesc.m_SenderType,
       groupDesc.m_ReceiverType,
       groupDesc.m_ShortcutReceiverType,

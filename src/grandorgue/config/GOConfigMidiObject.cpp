@@ -29,15 +29,14 @@ void GOConfigMidiObject::ReplaceMidiElement(
 
 GOConfigMidiObject::GOConfigMidiObject(
   GOMidiMap &midiMap,
-  const wxString &midiTypeCode,
-  const wxString &midiTypeName,
+  ObjectType objectType,
   GOMidiSenderType senderType,
   GOMidiReceiverType receiverType,
   GOMidiShortcutReceiverType shortcutType,
   bool hasReceiver,
   bool hasShortcut,
   bool hasDivision)
-  : GOMidiObject(midiMap, midiTypeCode, midiTypeName),
+  : GOMidiObject(midiMap, objectType),
     mp_MidiSender(nullptr),
     mp_MidiReceiver(nullptr),
     mp_ShortcutReceiver(nullptr),

@@ -58,8 +58,7 @@ private:
 public:
   GOConfigMidiObject(
     GOMidiMap &midiMap,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName,
+    ObjectType objectType,
     GOMidiSenderType senderType,
     GOMidiReceiverType receiverType,
     GOMidiShortcutReceiverType shortcutType,
