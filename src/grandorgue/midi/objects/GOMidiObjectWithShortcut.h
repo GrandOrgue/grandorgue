@@ -28,13 +28,6 @@ protected:
 
   virtual ~GOMidiObjectWithShortcut();
 
-  void LoadMidiObject(
-    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
-  void SaveMidiObject(
-    GOConfigWriter &cfg,
-    const wxString &group,
-    GOMidiMap &midiMap) const override;
-
   virtual void OnShortcutKeyReceived(
     GOMidiShortcutReceiver::MatchType matchType, int key)
     = 0;

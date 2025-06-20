@@ -82,17 +82,17 @@ protected:
     p_DivisionSender = pDivisionSender;
   }
 
+protected:
+  virtual void LoadMidiObject(
+    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap);
+  virtual void SaveMidiObject(
+    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const;
+  virtual void AfterMidiLoaded() {}
+
 private:
   void InitMidiObject(
     GOConfigReader &cfg, const wxString &group, const wxString &name);
 
-protected:
-  virtual void LoadMidiObject(
-    GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {}
-  virtual void SaveMidiObject(
-    GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {}
-
-private:
   void SubToYaml(
     YAML::Node &yamlNode,
     const wxString &objPath,

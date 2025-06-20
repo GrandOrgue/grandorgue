@@ -51,11 +51,8 @@ void GOMidiReceivingSendingObject::Load(
   GOMidiSendingObject::Load(cfg, group, name);
 }
 
-void GOMidiReceivingSendingObject::LoadMidiObject(
-  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiSendingObject::LoadMidiObject(cfg, group, midiMap);
+void GOMidiReceivingSendingObject::AfterMidiLoaded() {
   if (!IsReadOnly()) {
-    m_receiver.Load(r_OrganModel.GetConfig().ODFCheck(), cfg, group, midiMap);
     if (!m_receiver.IsMidiConfigured() && m_MidiInputNumber >= 0) {
       const GOMidiReceiver *pInitialEvents
         = r_OrganModel.GetConfig().FindMidiEvent(
@@ -64,14 +61,6 @@ void GOMidiReceivingSendingObject::LoadMidiObject(
       if (pInitialEvents)
         m_receiver.RenewFrom(*pInitialEvents);
     }
-  }
-}
-
-void GOMidiReceivingSendingObject::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
-  GOMidiSendingObject::SaveMidiObject(cfg, group, midiMap);
-  if (!IsReadOnly()) {
-    m_receiver.Save(cfg, group, midiMap);
   }
 }
 

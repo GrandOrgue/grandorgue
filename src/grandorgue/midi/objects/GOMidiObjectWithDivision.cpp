@@ -25,17 +25,3 @@ GOMidiObjectWithDivision::~GOMidiObjectWithDivision() {
   SetDivisionSender(nullptr);
   m_DivisionSender.SetProxy(nullptr);
 }
-
-static const wxString WX_DIVISION = wxT("Division");
-
-void GOMidiObjectWithDivision::LoadMidiObject(
-  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::LoadMidiObject(cfg, group, midiMap);
-  m_DivisionSender.Load(cfg, group + WX_DIVISION, midiMap);
-}
-
-void GOMidiObjectWithDivision::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
-  GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
-  m_DivisionSender.Save(cfg, group + WX_DIVISION, midiMap);
-}
