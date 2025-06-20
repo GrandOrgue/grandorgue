@@ -15,6 +15,8 @@
 
 #include "GOMidiObjectContext.h"
 
+static const wxString WX_DIVISIONAL_GROUP_SUFFIX = wxT("Divisional");
+
 GOMidiObject::GOMidiObject(
   GOMidiMap &midiMap, const wxString &midiTypeCode, const wxString &midiType)
   : r_MidiMap(midiMap),
@@ -34,6 +36,38 @@ wxString GOMidiObject::GetContextTitle() const {
   return GOMidiObjectContext::getFullTitle(p_context);
 }
 
+static wxString divisional_group(const wxString &group) {
+  return group + WX_DIVISIONAL_GROUP_SUFFIX;
+}
+
+void GOMidiObject::LoadMidiObject(
+  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
+  if (p_MidiSender)
+    p_MidiSender->Load(cfg, group, midiMap);
+  if (!IsReadOnly()) {
+    if (p_MidiReceiver)
+      p_MidiReceiver->Load(false, cfg, group, midiMap);
+    if (p_ShortcutReceiver)
+      p_ShortcutReceiver->Load(cfg, group);
+  }
+  if (p_DivisionSender)
+    p_DivisionSender->Load(cfg, divisional_group(group), midiMap);
+}
+
+void GOMidiObject::SaveMidiObject(
+  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
+  if (p_MidiSender)
+    p_MidiSender->Save(cfg, group, midiMap);
+  if (!IsReadOnly()) {
+    if (p_MidiReceiver)
+      p_MidiReceiver->Save(cfg, group, midiMap);
+    if (p_ShortcutReceiver)
+      p_ShortcutReceiver->Save(cfg, group);
+  }
+  if (p_DivisionSender)
+    p_DivisionSender->Save(cfg, divisional_group(group), midiMap);
+}
+
 bool GOMidiObject::IsMidiConfigured() const {
   return (p_MidiSender && p_MidiSender->IsMidiConfigured())
     || (p_MidiReceiver && p_MidiReceiver->IsMidiConfigured())
@@ -46,6 +80,7 @@ void GOMidiObject::InitMidiObject(
   SetGroup(group);
   m_name = name;
   LoadMidiObject(cfg, group, r_MidiMap);
+  AfterMidiLoaded();
 }
 
 void GOMidiObject::SubToYaml(
@@ -115,4 +150,5 @@ void GOMidiObject::FromYaml(
   SubFromYaml(objNode, objPath, WX_SHORTCUT, p_ShortcutReceiver, usedPaths);
   SubFromYaml(objNode, objPath, WX_DIVISION, p_DivisionSender, usedPaths);
   check_all_used(objNode, objPath, usedPaths);
+  AfterMidiLoaded();
 }
