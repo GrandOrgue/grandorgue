@@ -44,6 +44,7 @@ static const wxString MIDI_PORTS = wxT("MidiPorts");
 static const wxString MIDI_IN(wxT("MIDIIn"));
 static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
+static const wxString GENERAL = wxT("General");
 
 struct GOInternalMidiObjectDesc {
   GOMidiReceiverType type;
@@ -150,45 +151,38 @@ static const GOConfigEnum INITIAL_LOAD_TYPES({
 
 GOConfig::GOConfig(wxString instance)
   : m_InstanceName(instance),
-    m_ResourceDir(),
-    m_AudioGroups(),
-    m_AudioDeviceConfig(),
-    m_MIDIEvents(),
-    OrganSettingsPath(this, wxT("General"), wxT("SettingPath"), wxEmptyString),
-    OrganCachePath(this, wxT("General"), wxT("CachePath"), wxEmptyString),
-    Concurrency(this, wxT("General"), wxT("Concurrency"), 0, MAX_CPU, 1),
-    ReleaseConcurrency(
-      this, wxT("General"), wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
-    LoadConcurrency(
-      this, wxT("General"), wxT("LoadConcurrency"), 0, MAX_CPU, 1),
+    OrganSettingsPath(this, GENERAL, wxT("SettingPath"), wxEmptyString),
+    OrganCachePath(this, GENERAL, wxT("CachePath"), wxEmptyString),
+    Concurrency(this, GENERAL, wxT("Concurrency"), 0, MAX_CPU, 1),
+    ReleaseConcurrency(this, GENERAL, wxT("ReleaseConcurrency"), 1, MAX_CPU, 1),
+    LoadConcurrency(this, GENERAL, wxT("LoadConcurrency"), 0, MAX_CPU, 1),
     m_InterpolationType(
       this,
-      wxT("General"),
+      GENERAL,
       wxT("InterpolationType"),
       INTERPOLATION_LINEAR,
       INTERPOLATION_POLYPHASE,
       INTERPOLATION_DEFAULT),
-    WaveFormatBytesPerSample(this, wxT("General"), wxT("WaveFormat"), 1, 4, 4),
-    RecordDownmix(this, wxT("General"), wxT("RecordDownmix"), false),
-    AttackLoad(this, wxT("General"), wxT("AttackLoad"), 0, 1, 1),
-    LoopLoad(this, wxT("General"), wxT("LoopLoad"), 0, 2, 2),
-    ReleaseLoad(this, wxT("General"), wxT("ReleaseLoad"), 0, 1, 1),
-    ManageCache(this, wxT("General"), wxT("ManageCache"), true),
-    CompressCache(this, wxT("General"), wxT("CompressCache"), false),
+    WaveFormatBytesPerSample(this, GENERAL, wxT("WaveFormat"), 1, 4, 4),
+    RecordDownmix(this, GENERAL, wxT("RecordDownmix"), false),
+    AttackLoad(this, GENERAL, wxT("AttackLoad"), 0, 1, 1),
+    LoopLoad(this, GENERAL, wxT("LoopLoad"), 0, 2, 2),
+    ReleaseLoad(this, GENERAL, wxT("ReleaseLoad"), 0, 1, 1),
+    ManageCache(this, GENERAL, wxT("ManageCache"), true),
+    CompressCache(this, GENERAL, wxT("CompressCache"), false),
     LoadLastFile(
       this,
-      wxT("General"),
+      GENERAL,
       wxT("LoadLastFile"),
       INITIAL_LOAD_TYPES,
       GOInitialLoadType::LOAD_LAST_USED),
-    ODFCheck(this, wxT("General"), wxT("StrictODFCheck"), false),
-    ODFHw1Check(this, wxT("General"), wxT("ODFHw1Check"), false),
-    LoadChannels(this, wxT("General"), wxT("Channels"), 0, 2, 2),
-    LosslessCompression(
-      this, wxT("General"), wxT("LosslessCompression"), false),
-    ManagePolyphony(this, wxT("General"), wxT("ManagePolyphony"), true),
-    ScaleRelease(this, wxT("General"), wxT("ScaleRelease"), true),
-    RandomizeSpeaking(this, wxT("General"), wxT("RandomizeSpeaking"), true),
+    ODFCheck(this, GENERAL, wxT("StrictODFCheck"), false),
+    ODFHw1Check(this, GENERAL, wxT("ODFHw1Check"), false),
+    LoadChannels(this, GENERAL, wxT("Channels"), 0, 2, 2),
+    LosslessCompression(this, GENERAL, wxT("LosslessCompression"), false),
+    ManagePolyphony(this, GENERAL, wxT("ManagePolyphony"), true),
+    ScaleRelease(this, GENERAL, wxT("ScaleRelease"), true),
+    RandomizeSpeaking(this, GENERAL, wxT("RandomizeSpeaking"), true),
     ReverbEnabled(this, wxT("Reverb"), wxT("ReverbEnabled"), false),
     ReverbDirect(this, wxT("Reverb"), wxT("ReverbDirect"), true),
     ReverbChannel(this, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, 1),
@@ -200,51 +194,42 @@ GOConfig::GOConfig(wxString instance)
     ReverbFile(this, wxT("Reverb"), wxT("ReverbFile"), wxEmptyString),
     MemoryLimit(
       this,
-      wxT("General"),
+      GENERAL,
       wxT("MemoryLimit"),
       0,
       1024 * 1024,
       GOMemoryPool::GetSystemMemoryLimit()),
     SamplesPerBuffer(
       this,
-      wxT("General"),
+      GENERAL,
       wxT("SamplesPerBuffer"),
       1,
       MAX_FRAME_SIZE,
       SAMPLES_PER_BUFFER_DEFAULT),
     SampleRate(
-      this,
-      wxT("General"),
-      wxT("SampleRate"),
-      1000,
-      192000,
-      SAMPLE_RATE_DEFAULT),
-    Volume(this, wxT("General"), wxT("Volume"), -120, 20, -15),
+      this, GENERAL, wxT("SampleRate"), 1000, 192000, SAMPLE_RATE_DEFAULT),
+    Volume(this, GENERAL, wxT("Volume"), -120, 20, -15),
     PolyphonyLimit(
-      this, wxT("General"), wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
-    Preset(this, wxT("General"), wxT("Preset"), 0, MAX_PRESET, 0),
-    LanguageCode(this, wxT("General"), wxT("Language"), wxEmptyString),
-    BitsPerSample(this, wxT("General"), wxT("BitsPerSample"), 8, 24, 24),
-    Transpose(this, wxT("General"), wxT("Transpose"), -11, 11, 0),
+      this, GENERAL, wxT("PolyphonyLimit"), 0, MAX_POLYPHONY, 2048),
+    Preset(this, GENERAL, wxT("Preset"), 0, MAX_PRESET, 0),
+    LanguageCode(this, GENERAL, wxT("Language"), wxEmptyString),
+    BitsPerSample(this, GENERAL, wxT("BitsPerSample"), 8, 24, 24),
+    Transpose(this, GENERAL, wxT("Transpose"), -11, 11, 0),
     MetronomeMeasure(this, wxT("Metronome"), wxT("Measure"), 0, 32, 4),
     MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
     IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
     IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
     MidiRecorderOutputDevice(
       this, MIDI_OUT, wxT("MIDIRecorderDevice"), wxEmptyString),
-    OrganPath(this, wxT("General"), wxT("OrganPath"), wxEmptyString),
-    OrganPackagePath(
-      this, wxT("General"), wxT("OrganPackagePath"), wxEmptyString),
-    OrganCombinationsPath(
-      this, wxT("General"), wxT("CmbYamlPath"), wxEmptyString),
-    ExportImportPath(this, wxT("General"), wxT("CMBPath"), wxEmptyString),
-    AudioRecorderPath(
-      this, wxT("General"), wxT("AudioRecorder"), wxEmptyString),
-    MidiRecorderPath(
-      this, wxT("General"), wxT("MIDIRecorderPath"), wxEmptyString),
-    MidiPlayerPath(this, wxT("General"), wxT("MIDIPlayerPath"), wxEmptyString),
+    OrganPath(this, GENERAL, wxT("OrganPath"), wxEmptyString),
+    OrganPackagePath(this, GENERAL, wxT("OrganPackagePath"), wxEmptyString),
+    OrganCombinationsPath(this, GENERAL, wxT("CmbYamlPath"), wxEmptyString),
+    ExportImportPath(this, GENERAL, wxT("CMBPath"), wxEmptyString),
+    AudioRecorderPath(this, GENERAL, wxT("AudioRecorder"), wxEmptyString),
+    MidiRecorderPath(this, GENERAL, wxT("MIDIRecorderPath"), wxEmptyString),
+    MidiPlayerPath(this, GENERAL, wxT("MIDIPlayerPath"), wxEmptyString),
     CheckForUpdatesAtStartup(
-      this, wxT("General"), wxT("CheckForUpdatesAtStartup"), true),
+      this, GENERAL, wxT("CheckForUpdatesAtStartup"), true),
     m_MidiIn(MIDI_IN),
     m_MidiOut(MIDI_OUT) {
   m_Temperaments.InitTemperaments();
@@ -269,9 +254,9 @@ void GOConfig::LoadOrgans(GOConfigReader &cfg) {
   ClearArchives();
 
   unsigned organ_count = cfg.ReadInteger(
-    CMBSetting, wxT("General"), wxT("OrganCount"), 0, 99999, false, 0);
+    CMBSetting, GENERAL, wxT("OrganCount"), 0, 99999, false, 0);
   unsigned archive_count = cfg.ReadInteger(
-    CMBSetting, wxT("General"), wxT("ArchiveCount"), 0, 99999, false, 0);
+    CMBSetting, GENERAL, wxT("ArchiveCount"), 0, 99999, false, 0);
 
   for (unsigned i = 0; i < organ_count; i++)
     AddNewOrgan(new GORegisteredOrgan(
@@ -285,11 +270,11 @@ void GOConfig::SaveOrgans(GOConfigWriter &cfg) {
   const ptr_vector<GOOrgan> &organs = GetOrganList();
   const ptr_vector<GOArchiveFile> &archives = GetArchiveList();
 
-  cfg.WriteInteger(wxT("General"), wxT("ArchiveCount"), archives.size());
+  cfg.WriteInteger(GENERAL, wxT("ArchiveCount"), archives.size());
   for (unsigned i = 0; i < archives.size(); i++)
     archives[i]->Save(cfg, wxString::Format(wxT("Archive%03d"), i + 1));
 
-  cfg.WriteInteger(wxT("General"), wxT("OrganCount"), organs.size());
+  cfg.WriteInteger(GENERAL, wxT("OrganCount"), organs.size());
   for (unsigned i = 0; i < organs.size(); i++) {
     const auto pOo = organs[i];
     const GORegisteredOrgan *pO = dynamic_cast<const GORegisteredOrgan *>(pOo);
