@@ -1,3 +1,4 @@
+- Added capability of settings Save, Division and Shortcut elements of Initial MIDI objects https://github.com/GrandOrgue/grandorgue/issues/1974
 - Reduced decimal numbers for PitchLabel https://github.com/GrandOrgue/grandorgue/issues/2234
 - Added support of exporting current midi settings to a text file and of importing them from both text and .cmb files https://github.com/GrandOrgue/grandorgue/issues/1199
 - Fixed crash on reloading an organ https://github.com/GrandOrgue/grandorgue/issues/2185
