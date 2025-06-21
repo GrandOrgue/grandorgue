@@ -17,10 +17,6 @@
 #include "threading/GOMutex.h"
 
 class GOOrganController;
-class GOMidiShortcutReceiver;
-class GOMidiEvent;
-class GOMidiReceiver;
-class GOMidiSender;
 class GOOrgan;
 class GOProgressDialog;
 class GOResizable;
@@ -69,10 +65,7 @@ public:
     void *element,
     const wxString &title,
     const wxString &dialogSelector,
-    GOMidiReceiver *event,
-    GOMidiSender *sender,
-    GOMidiShortcutReceiver *key,
-    GOMidiSender *division = nullptr,
+    GOMidiObject &obj,
     GOMidiDialogListener *pDialogListener = nullptr) override;
 };
 
