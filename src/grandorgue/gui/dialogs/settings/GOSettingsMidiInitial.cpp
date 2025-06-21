@@ -112,15 +112,12 @@ void GOSettingsMidiInitial::ConfigureInitial() {
   int index = m_Initials->GetGridCursorRow();
   GOConfigMidiObject *pObj = r_config.GetMidiInitialObject(index);
   GOMidiEventDialog dlg(
-    NULL,
     this,
     wxString::Format(
       _("Initial MIDI settings for %s"), r_config.GetEventTitle(index)),
     r_config,
     wxT("InitialSettings"),
-    pObj->GetMidiReceiver(),
-    NULL,
-    NULL);
+    pObj->GetMidiReceiver());
 
   dlg.RegisterMIDIListener(&r_midi);
   dlg.ShowModal();

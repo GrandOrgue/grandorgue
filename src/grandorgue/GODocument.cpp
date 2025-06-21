@@ -205,10 +205,7 @@ void GODocument::ShowMIDIEventDialog(
   void *element,
   const wxString &title,
   const wxString &dialogSelector,
-  GOMidiReceiver *event,
-  GOMidiSender *sender,
-  GOMidiShortcutReceiver *key,
-  GOMidiSender *division,
+  GOMidiObject &obj,
   GOMidiDialogListener *pDialogListener) {
   if (!showWindow(GODocument::MIDI_EVENT, element) && m_OrganController) {
     GOMidiEventDialog *dlg = new GOMidiEventDialog(
@@ -217,10 +214,7 @@ void GODocument::ShowMIDIEventDialog(
       title,
       m_OrganController->GetSettings(),
       dialogSelector,
-      event,
-      sender,
-      key,
-      division,
+      obj,
       pDialogListener);
     dlg->RegisterMIDIListener(m_OrganController->GetMidi());
     dlg->SetModificationListener(m_OrganController);
