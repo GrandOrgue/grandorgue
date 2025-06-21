@@ -12,11 +12,8 @@
 #include "model/GOOrganModel.h"
 
 GOMidiPlayingObject::GOMidiPlayingObject(
-  GOOrganModel &organModel,
-  const wxString &midiTypeCode,
-  const wxString &midiTypeName)
-  : GOMidiObject(
-    organModel.GetConfig().GetMidiMap(), midiTypeCode, midiTypeName),
+  GOOrganModel &organModel, ObjectType objectType)
+  : GOMidiObject(organModel.GetConfig().GetMidiMap(), objectType),
     r_OrganModel(organModel) {
   r_OrganModel.RegisterSoundStateHandler(this);
   r_OrganModel.RegisterMidiObject(this);

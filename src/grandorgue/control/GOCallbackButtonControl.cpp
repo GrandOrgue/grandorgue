@@ -11,21 +11,13 @@
 
 #include "control/GOButtonCallback.h"
 
-const wxString GOCallbackButtonControl::WX_MIDI_TYPE_CODE = wxT("Button");
-const wxString GOCallbackButtonControl::WX_MIDI_TYPE_NAME = _("Button");
-
 GOCallbackButtonControl::GOCallbackButtonControl(
   GOOrganModel &organModel,
   GOButtonCallback *callback,
   bool isPushbutton,
   bool isPiston)
   : GOButtonControl(
-    organModel,
-    WX_MIDI_TYPE_CODE,
-    WX_MIDI_TYPE_NAME,
-    MIDI_RECV_SETTER,
-    isPushbutton,
-    isPiston),
+    organModel, OBJECT_TYPE_BUTTON, MIDI_RECV_SETTER, isPushbutton, isPiston),
     m_callback(callback) {}
 
 void GOCallbackButtonControl::Push() {

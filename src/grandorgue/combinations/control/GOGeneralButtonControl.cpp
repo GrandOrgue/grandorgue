@@ -12,12 +12,9 @@
 #include "combinations/model/GOCombinationDefinition.h"
 #include "model/GOOrganModel.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("General");
-static const wxString WX_MIDI_TYPE_NAME = _("General");
-
 GOGeneralButtonControl::GOGeneralButtonControl(
   GOOrganModel &organModel, bool is_setter)
-  : GOPushbuttonControl(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
+  : GOPushbuttonControl(organModel, OBJECT_TYPE_GENERAL),
     r_OrganModel(organModel),
     m_combination(r_OrganModel, is_setter) {}
 

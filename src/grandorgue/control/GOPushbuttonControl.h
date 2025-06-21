@@ -12,12 +12,8 @@
 
 class GOPushbuttonControl : public GOButtonControl {
 public:
-  GOPushbuttonControl(
-    GOOrganModel &organModel,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName)
-    : GOButtonControl(
-      organModel, midiTypeCode, midiTypeName, MIDI_RECV_BUTTON, true) {}
+  GOPushbuttonControl(GOOrganModel &organModel, ObjectType objectType)
+    : GOButtonControl(organModel, objectType, MIDI_RECV_BUTTON, true) {}
 };
 
 #endif

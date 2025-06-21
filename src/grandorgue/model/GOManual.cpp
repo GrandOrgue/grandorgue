@@ -20,8 +20,6 @@
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 
-const wxString GOManual::WX_MIDI_TYPE_CODE = wxT("Manual");
-const wxString GOManual::WX_MIDI_TYPE_NAME = _("Manual");
 const wxString WX_ODF_OBJ_NUM_FMT = wxT("%03u");
 
 GOManual::GOManual(
@@ -29,11 +27,7 @@ GOManual::GOManual(
   unsigned manualNumber,
   const GOMidiObjectContext *pParentContext)
   : GOMidiObjectWithDivision(
-    organModel,
-    WX_MIDI_TYPE_CODE,
-    WX_MIDI_TYPE_NAME,
-    MIDI_SEND_MANUAL,
-    MIDI_RECV_MANUAL),
+    organModel, OBJECT_TYPE_MANUAL, MIDI_SEND_MANUAL, MIDI_RECV_MANUAL),
     m_InputCouplers(),
     m_KeyVelocity(0),
     m_RemoteVelocity(),

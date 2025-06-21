@@ -25,8 +25,7 @@ private:
 protected:
   GOMidiReceivingSendingObject(
     GOOrganModel &organModel,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName,
+    ObjectType objectType,
     GOMidiSenderType senderType,
     GOMidiReceiverType receiverType);
 

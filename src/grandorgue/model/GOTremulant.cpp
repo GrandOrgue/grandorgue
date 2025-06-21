@@ -27,11 +27,8 @@ static const GOConfigEnum TREMULANT_TYPES({
   {wxT("Wave"), GOWavTrem},
 });
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Tremulant");
-static const wxString WX_MIDI_TYPE_NAME = _("Tremulant");
-
 GOTremulant::GOTremulant(GOOrganModel &organModel)
-  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
+  : GODrawstop(organModel, OBJECT_TYPE_TREMULANT),
     m_TremulantType(GOSynthTrem),
     m_Period(0),
     m_StartRate(0),

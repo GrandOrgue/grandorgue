@@ -15,15 +15,12 @@
 #include "GOManual.h"
 #include "GOOrganModel.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Coupler");
-static const wxString WX_MIDI_TYPE_NAME = _("Coupler");
-
 GOCoupler::GOCoupler(
   GOOrganModel &organModel,
   unsigned sourceManual,
   bool isVirtual,
   const GOMidiObjectContext *pContext)
-  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
+  : GODrawstop(organModel, OBJECT_TYPE_COUPLER),
     m_IsVirtual(isVirtual),
     m_UnisonOff(false),
     m_CoupleToSubsequentUnisonIntermanualCouplers(false),

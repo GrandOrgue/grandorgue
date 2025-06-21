@@ -43,8 +43,7 @@ protected:
 public:
   GOButtonControl(
     GOOrganModel &organModel,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName,
+    ObjectType objectType,
     GOMidiReceiverType midiType,
     bool pushbutton,
     bool isPiston = false);

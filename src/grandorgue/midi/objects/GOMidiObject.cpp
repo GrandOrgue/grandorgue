@@ -7,6 +7,8 @@
 
 #include "GOMidiObject.h"
 
+#include <wx/intl.h>
+
 #include "midi/elements/GOMidiReceiver.h"
 #include "midi/elements/GOMidiSender.h"
 #include "midi/elements/GOMidiShortcutReceiver.h"
@@ -15,11 +17,41 @@
 
 #include "GOMidiObjectContext.h"
 
-GOMidiObject::GOMidiObject(
-  GOMidiMap &midiMap, const wxString &midiTypeCode, const wxString &midiType)
+const GOConfigEnum GOMidiObject::OBJECT_TYPES({
+  {wxT("Label"), (int)OBJECT_TYPE_LABEL},
+  {wxT("Rank"), (int)OBJECT_TYPE_RANK},
+  {wxT("Manual"), (int)OBJECT_TYPE_MANUAL},
+  {wxT("Enclosure"), (int)OBJECT_TYPE_ENCLOSURE},
+  {wxT("Button"), (int)OBJECT_TYPE_BUTTON},
+  {wxT("Piston"), (int)OBJECT_TYPE_PISTON},
+  {wxT("Stop"), (int)OBJECT_TYPE_STOP},
+  {wxT("Switch"), (int)OBJECT_TYPE_SWITCH},
+  {wxT("Tremulant"), (int)OBJECT_TYPE_TREMULANT},
+  {wxT("General"), (int)OBJECT_TYPE_GENERAL},
+  {wxT("Divisional"), (int)OBJECT_TYPE_DIVISIONAL},
+  {wxT("Coupler"), (int)OBJECT_TYPE_COUPLER},
+  {wxT("DivisionalCoupler"), (int)OBJECT_TYPE_DIVISIONAL_COUPLER},
+});
+
+const wxString GOMidiObject::OBJECT_TYPE_NAMES[] = {
+  _("Label"),
+  _("Rank"),
+  _("Manual"),
+  _("Enclosure"),
+  _("Button"),
+  _("Piston"),
+  _("Stop"),
+  _("Switch"),
+  _("Tremulant"),
+  _("General"),
+  _("Divisional"),
+  _("Coupler"),
+  _("Divisional Coupler"),
+};
+
+GOMidiObject::GOMidiObject(GOMidiMap &midiMap, ObjectType objectType)
   : r_MidiMap(midiMap),
-    r_MidiTypeCode(midiTypeCode),
-    r_MidiTypeName(midiType),
+    m_ObjectType(objectType),
     p_MidiSender(nullptr),
     p_MidiReceiver(nullptr),
     p_ShortcutReceiver(nullptr),

@@ -19,12 +19,8 @@
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Piston");
-static const wxString WX_MIDI_TYPE_NAME = _("Piston");
-
 GOPistonControl::GOPistonControl(GOOrganModel &organModel)
-  : GOPushbuttonControl(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
-    drawstop(nullptr) {
+  : GOPushbuttonControl(organModel, OBJECT_TYPE_PISTON), drawstop(nullptr) {
   organModel.RegisterControlChangedHandler(this);
 }
 

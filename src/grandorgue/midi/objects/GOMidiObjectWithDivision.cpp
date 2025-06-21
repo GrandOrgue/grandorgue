@@ -11,12 +11,11 @@
 
 GOMidiObjectWithDivision::GOMidiObjectWithDivision(
   GOOrganModel &organModel,
-  const wxString &midiTypeCode,
-  const wxString &midiTypeName,
+  ObjectType objectType,
   GOMidiSenderType senderType,
   GOMidiReceiverType receiverType)
   : GOMidiReceivingSendingObject(
-    organModel, midiTypeCode, midiTypeName, senderType, receiverType),
+    organModel, objectType, senderType, receiverType),
     m_DivisionSender(MIDI_SEND_MANUAL) {
   m_DivisionSender.SetProxy(&organModel);
   SetDivisionSender(&m_DivisionSender);
