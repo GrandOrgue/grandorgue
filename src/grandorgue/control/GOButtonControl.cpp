@@ -16,18 +16,12 @@
 
 GOButtonControl::GOButtonControl(
   GOOrganModel &organModel,
-  const wxString &midiTypeCode,
-  const wxString &midiTypeName,
+  ObjectType objectType,
   GOMidiReceiverType midiType,
   bool pushbutton,
   bool isPiston)
   : GOMidiObjectWithShortcut(
-    organModel,
-    midiTypeCode,
-    midiTypeName,
-    MIDI_SEND_BUTTON,
-    midiType,
-    KEY_RECV_BUTTON),
+    organModel, objectType, MIDI_SEND_BUTTON, midiType, KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
     m_Engaged(false),

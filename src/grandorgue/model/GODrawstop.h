@@ -67,10 +67,7 @@ protected:
   void StartPlayback() override;
 
 public:
-  GODrawstop(
-    GOOrganModel &organModel,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName);
+  GODrawstop(GOOrganModel &organModel, ObjectType objectType);
 
   /* + For tests only */
   GOFunctionType GetFunctionType() const { return m_Type; }

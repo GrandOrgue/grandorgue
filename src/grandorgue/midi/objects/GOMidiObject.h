@@ -12,6 +12,7 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include "config/GOConfigEnum.h"
 #include "midi/dialog-creator/GOMidiConfigDispatcher.h"
 #include "sound/GOSoundStateHandler.h"
 
@@ -27,10 +28,29 @@ class GOMidiSender;
 class GOOrganModel;
 
 class GOMidiObject : public GOSaveableObject, public GOMidiConfigDispatcher {
+public:
+  enum ObjectType {
+    OBJECT_TYPE_LABEL,
+    OBJECT_TYPE_RANK,
+    OBJECT_TYPE_MANUAL,
+    OBJECT_TYPE_ENCLOSURE,
+    OBJECT_TYPE_BUTTON,
+    OBJECT_TYPE_PISTON,
+    OBJECT_TYPE_STOP,
+    OBJECT_TYPE_SWITCH,
+    OBJECT_TYPE_TREMULANT,
+    OBJECT_TYPE_GENERAL,
+    OBJECT_TYPE_DIVISIONAL,
+    OBJECT_TYPE_COUPLER,
+    OBJECT_TYPE_DIVISIONAL_COUPLER,
+  };
+
+  static const GOConfigEnum OBJECT_TYPES;
+  static const wxString OBJECT_TYPE_NAMES[];
+
 private:
   GOMidiMap &r_MidiMap;
-  const wxString &r_MidiTypeCode;
-  const wxString &r_MidiTypeName;
+  ObjectType m_ObjectType;
 
   wxString m_NameForContext;
   wxString m_name;
@@ -43,10 +63,7 @@ private:
   const GOMidiObjectContext *p_context;
 
 protected:
-  GOMidiObject(
-    GOMidiMap &midiMap,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName);
+  GOMidiObject(GOMidiMap &midiMap, ObjectType objectType);
 
   GOMidiSender *GetMidiSender() const { return p_MidiSender; }
   void SetMidiSender(GOMidiSender *pMidiSender) { p_MidiSender = pMidiSender; }
@@ -89,8 +106,14 @@ private:
 
 public:
   GOMidiMap &GetMidiMap() { return r_MidiMap; }
-  const wxString &GetMidiTypeCode() const { return r_MidiTypeCode; }
-  const wxString &GetMidiTypeName() const { return r_MidiTypeName; }
+
+  const wxString &GetMidiTypeCode() const {
+    return OBJECT_TYPES.GetName((int)m_ObjectType);
+  }
+
+  const wxString &GetMidiTypeName() const {
+    return OBJECT_TYPE_NAMES[m_ObjectType];
+  }
 
   const wxString &GetName() const { return m_name; }
   void SetName(const wxString &name) { m_name = name; }

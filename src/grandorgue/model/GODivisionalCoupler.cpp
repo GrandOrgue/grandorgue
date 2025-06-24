@@ -15,11 +15,8 @@
 
 #include "GOOrganModel.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("DivisionalCoupler");
-static const wxString WX_MIDI_TYPE_NAME = _("Divisional Coupler");
-
 GODivisionalCoupler::GODivisionalCoupler(GOOrganModel &organModel)
-  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
+  : GODrawstop(organModel, OBJECT_TYPE_DIVISIONAL_COUPLER),
     m_BiDirectionalCoupling(false),
     m_manuals(0) {}
 

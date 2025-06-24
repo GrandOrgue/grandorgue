@@ -26,12 +26,8 @@ static const GOConfigEnum FUNCTION_TYPES({
   {wxT("Xor"), GODrawstop::FUNCTION_XOR},
 });
 
-GODrawstop::GODrawstop(
-  GOOrganModel &organModel,
-  const wxString &midiTypeCode,
-  const wxString &midiTypeName)
-  : GOButtonControl(
-    organModel, midiTypeCode, midiTypeName, MIDI_RECV_DRAWSTOP, false),
+GODrawstop::GODrawstop(GOOrganModel &organModel, ObjectType objectType)
+  : GOButtonControl(organModel, objectType, MIDI_RECV_DRAWSTOP, false),
     m_Type(FUNCTION_INPUT),
     m_GCState(0),
     m_ControlledDrawstops(),

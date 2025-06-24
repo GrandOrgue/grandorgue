@@ -14,14 +14,11 @@
 #include "GOOrganModel.h"
 #include "GORank.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Stop");
-static const wxString WX_MIDI_TYPE_NAME = _("Stop");
-
 GOStop::GOStop(
   GOOrganModel &organModel,
   unsigned first_midi_note_number,
   GOMidiObjectContext *pContext)
-  : GODrawstop(organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME),
+  : GODrawstop(organModel, OBJECT_TYPE_STOP),
     m_RankInfo(0),
     m_KeyVelocity(0),
     m_FirstMidiNoteNumber(first_midi_note_number),

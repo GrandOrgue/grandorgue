@@ -10,12 +10,8 @@
 #include "model/GOOrganModel.h"
 
 GOMidiSendingObject::GOMidiSendingObject(
-  GOOrganModel &organModel,
-  const wxString &midiTypeCode,
-  const wxString &midiTypeName,
-  GOMidiSenderType senderType)
-  : GOMidiPlayingObject(organModel, midiTypeCode, midiTypeName),
-    m_sender(senderType) {
+  GOOrganModel &organModel, ObjectType objectType, GOMidiSenderType senderType)
+  : GOMidiPlayingObject(organModel, objectType), m_sender(senderType) {
   m_sender.SetProxy(&organModel);
   SetMidiSender(&m_sender);
 }

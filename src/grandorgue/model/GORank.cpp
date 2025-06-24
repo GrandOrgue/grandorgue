@@ -19,12 +19,8 @@
 #include "GOSoundingPipe.h"
 #include "GOWindchest.h"
 
-static const wxString WX_MIDI_TYPE_CODE = wxT("Rank");
-static const wxString WX_MIDI_TYPE_NAME = _("Rank");
-
 GORank::GORank(GOOrganModel &organModel)
-  : GOMidiSendingObject(
-    organModel, WX_MIDI_TYPE_CODE, WX_MIDI_TYPE_NAME, MIDI_SEND_MANUAL),
+  : GOMidiSendingObject(organModel, OBJECT_TYPE_RANK, MIDI_SEND_MANUAL),
     r_OrganModel(organModel),
     m_StopCount(0),
     m_NoteStopVelocities(),

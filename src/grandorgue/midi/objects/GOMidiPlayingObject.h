@@ -15,10 +15,7 @@ protected:
   GOOrganModel &r_OrganModel;
 
 public:
-  GOMidiPlayingObject(
-    GOOrganModel &organModel,
-    const wxString &midiTypeCode,
-    const wxString &midiTypeName);
+  GOMidiPlayingObject(GOOrganModel &organModel, ObjectType objectType);
 
   virtual ~GOMidiPlayingObject();
 
