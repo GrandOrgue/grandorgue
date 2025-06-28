@@ -270,19 +270,6 @@ GOMidiEventSendTab::~GOMidiEventSendTab() {}
 bool GOMidiEventSendTab::TransferDataFromWindow() {
   // save the current event being edited
   StoreEvent();
-
-  // Delete empty events.
-  bool empty_event;
-  do {
-    empty_event = false;
-    for (unsigned i = 0; i < m_midi.GetEventCount(); i++)
-      if (m_midi.GetEvent(i).type == MIDI_S_NONE) {
-        m_midi.DeleteEvent(i);
-        empty_event = true;
-      }
-  } while (empty_event);
-  // The event with index 0 is also deleted so the dialog can't be used more
-
   if (m_original->RenewFrom(m_midi))
     OnIsModifiedChanged(true);
   return true;

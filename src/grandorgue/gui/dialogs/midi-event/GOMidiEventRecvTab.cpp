@@ -312,17 +312,6 @@ void GOMidiEventRecvTab::RegisterMIDIListener(GOMidi *midi) {
 
 bool GOMidiEventRecvTab::TransferDataFromWindow() {
   StoreEvent();
-
-  bool empty_event;
-  do {
-    empty_event = false;
-    for (unsigned i = 0; i < m_midi.GetEventCount(); i++)
-      if (m_midi.GetEvent(i).type == MIDI_M_NONE) {
-        m_midi.DeleteEvent(i);
-        empty_event = true;
-      }
-  } while (empty_event);
-
   if (m_original->RenewFrom(m_midi))
     GOModificationProxy::OnIsModifiedChanged(true);
   return true;

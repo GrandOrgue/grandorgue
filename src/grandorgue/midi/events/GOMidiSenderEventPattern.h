@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,6 +21,8 @@ struct GOMidiSenderEventPattern : public GOMidiEventPattern {
       type(MIDI_S_NONE),
       start(0),
       length(0) {}
+
+  bool IsEmpty() const override { return type == MIDI_S_NONE; }
 
   bool operator==(const GOMidiSenderEventPattern &other) const;
 

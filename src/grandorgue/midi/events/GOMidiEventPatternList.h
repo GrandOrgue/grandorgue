@@ -8,6 +8,7 @@
 #ifndef GOMIDIEVENTPATTERNLIST_H
 #define GOMIDIEVENTPATTERNLIST_H
 
+#include <algorithm>
 #include <vector>
 
 template <class MidiType, class MidiEventPattern> class GOMidiEventPatternList {
@@ -47,10 +48,21 @@ public:
    */
 
   bool RenewFrom(const GOMidiEventPatternList &newList) {
-    bool result = newList.m_type != m_type || newList.m_events != m_events;
+    std::vector<MidiEventPattern> nonEmptyEvents;
 
-    if (result)
-      *this = newList;
+    // copy not empty events.
+    std::copy_if(
+      newList.m_events.begin(),
+      newList.m_events.end(),
+      std::back_inserter(nonEmptyEvents),
+      [](const MidiEventPattern &x) { return !x.IsEmpty(); });
+
+    bool result = newList.m_type != m_type || nonEmptyEvents != m_events;
+
+    if (result) {
+      m_type = newList.m_type;
+      m_events = nonEmptyEvents;
+    }
     return result;
   }
 };
