@@ -8,32 +8,48 @@
 #ifndef GOSETTINGSMIDIINITIAL_H
 #define GOSETTINGSMIDIINITIAL_H
 
-#include <wx/panel.h>
+#include "gui/dialogs/common/GODialogTab.h"
 
-class GOMidi;
-class GOConfig;
 class wxButton;
-class wxListEvent;
-class wxListView;
+class wxGridEvent;
 
-class GOSettingsMidiInitial : public wxPanel {
+class GOConfig;
+class GOGrid;
+class GOMidi;
+
+class GOSettingsMidiInitial : public GODialogTab {
   enum {
-    ID_EVENTS,
+    ID_INITIALS,
     ID_PROPERTIES,
   };
 
 private:
-  GOConfig &m_config;
-  GOMidi &m_midi;
-  wxListView *m_Events;
+  GOConfig &r_config;
+  GOMidi &r_midi;
+
+  GOGrid *m_Initials;
   wxButton *m_Properties;
 
-  void OnEventsClick(wxListEvent &event);
-  void OnEventsDoubleClick(wxListEvent &event);
-  void OnProperties(wxCommandEvent &event);
+  void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
+  void CaptureAdditionalSizes(
+    GOAdditionalSizeKeeper &sizeKeeper) const override;
+
+  bool TransferDataToWindow() override;
+
+  void OnInitialsSelected(wxGridEvent &event);
+
+  void ConfigureInitial();
+
+  void OnInitialsDoubleClick(wxGridEvent &event) { ConfigureInitial(); }
+  void OnProperties(wxCommandEvent &event) { ConfigureInitial(); }
 
 public:
-  GOSettingsMidiInitial(GOConfig &settings, GOMidi &midi, wxWindow *parent);
+  GOSettingsMidiInitial(
+    GOConfig &settings,
+    GOMidi &midi,
+    GOTabbedDialog *pDlg,
+    const wxString &name,
+    const wxString &label);
 
   DECLARE_EVENT_TABLE()
 };
