@@ -55,11 +55,13 @@ static const wxString MIDI_IN(wxT("MIDIIn"));
 static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
 static const wxString GENERAL = wxT("General");
+static const wxString WX_USER_ADDED = wxT("User-added");
 static const wxString WX_MIDI_INITIAL_COUNT = wxT("MidiInitialCount");
 static const wxString WX_MIDI_INITIAL_FMT = wxT("MidiInitial%03u");
 static const wxString WX_MIDI_INPUT_NUMBER = wxT("MidiInputNumber");
 static const wxString WX_PATH = wxT("Path");
 static const wxString WX_OBJECT_TYPE = wxT("ObjectType");
+static const wxString WX_NAME = wxT("Name");
 static const wxString WX_FMT_D = wxT("%d");
 
 struct initial_midi_group_desc {
@@ -476,7 +478,11 @@ void GOConfig::Load() {
           auto it = m_InitialMidiObjectsByPath.find(path);
 
           if (it == m_InitialMidiObjectsByPath.end()) {
-            pObj = new GOConfigMidiObject(m_MidiMap, objectType);
+            const wxString name
+              = cfg.ReadString(CMBSetting, group, WX_NAME, false);
+
+            pObj = new GOConfigMidiObject(
+              m_MidiMap, objectType, WX_USER_ADDED, path, name);
             m_InitialMidiObjectsByPath[path] = pObj;
           }
         }
@@ -699,8 +705,10 @@ void GOConfig::Flush() {
     if (i < midiInitialBuiltinCount)
       cfg.WriteInteger(
         group, WX_MIDI_INPUT_NUMBER, INTERNAL_MIDI_DESCS[i].m_index);
-    else // A user-added MIDI object. Match it by path
-      cfg.WriteString(group, WX_PATH, pObj->GetPath());
+    else { // A user-added MIDI object. Match it by path
+      cfg.WriteString(group, WX_PATH, pObj->GetMatchingBy());
+      cfg.WriteString(group, WX_NAME, pObj->GetName());
+    }
     pObj->SaveMidiObject(cfg, group, m_MidiMap);
   }
 
