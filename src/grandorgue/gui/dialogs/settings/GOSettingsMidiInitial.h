@@ -12,6 +12,7 @@
 
 class wxButton;
 class wxGridEvent;
+class wxGridRangeSelectEvent;
 
 class GOConfig;
 class GOGrid;
@@ -21,6 +22,7 @@ class GOSettingsMidiInitial : public GODialogTab {
   enum {
     ID_INITIALS,
     ID_PROPERTIES,
+    ID_DELETE,
   };
 
 private:
@@ -29,6 +31,7 @@ private:
 
   GOGrid *m_Initials;
   wxButton *m_Properties;
+  wxButton *m_ButtonDel;
 
   void ApplyAdditionalSizes(const GOAdditionalSizeKeeper &sizeKeeper) override;
   void CaptureAdditionalSizes(
@@ -37,11 +40,13 @@ private:
   bool TransferDataToWindow() override;
 
   void OnInitialsSelected(wxGridEvent &event);
+  void OnInitialsRangeSelected(wxGridRangeSelectEvent &event);
 
   void ConfigureInitial();
 
   void OnInitialsDoubleClick(wxGridEvent &event) { ConfigureInitial(); }
   void OnProperties(wxCommandEvent &event) { ConfigureInitial(); }
+  void OnDelete(wxCommandEvent &event);
 
 public:
   GOSettingsMidiInitial(

@@ -30,6 +30,7 @@ void GODivisionalButtonControl::Init(
   GOPushbuttonControl::Init(cfg, group, name);
   m_combination.Init(group, m_DivisionalIndex);
 }
+
 void GODivisionalButtonControl::Load(
   GOConfigReader &cfg, const wxString &group) {
   GOPushbuttonControl::Load(cfg, group);
