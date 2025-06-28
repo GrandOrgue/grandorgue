@@ -8,6 +8,7 @@
 #ifndef GOMIDIEVENTPATTERNLIST_H
 #define GOMIDIEVENTPATTERNLIST_H
 
+#include <algorithm>
 #include <vector>
 
 template <class MidiType, class MidiEventPattern> class GOMidiEventPatternList {
