@@ -23,22 +23,6 @@ GOMidiObjectWithShortcut::~GOMidiObjectWithShortcut() {
   SetMidiShortcutReceiver(nullptr);
 }
 
-void GOMidiObjectWithShortcut::LoadMidiObject(
-  GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
-  GOMidiReceivingSendingObject::LoadMidiObject(cfg, group, midiMap);
-  if (!IsReadOnly()) {
-    m_ShortcutReceiver.Load(cfg, group);
-  }
-}
-
-void GOMidiObjectWithShortcut::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
-  GOMidiReceivingSendingObject::SaveMidiObject(cfg, group, midiMap);
-  if (!IsReadOnly()) {
-    m_ShortcutReceiver.Save(cfg, group);
-  }
-}
-
 void GOMidiObjectWithShortcut::HandleKey(int key) {
   if (!IsReadOnly()) {
     auto matchType = m_ShortcutReceiver.Match(key);
