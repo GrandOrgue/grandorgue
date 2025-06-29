@@ -52,6 +52,7 @@ combinations/GOSetter.cpp
 config/GOAudioDeviceConfig.cpp
 config/GOAudioDeviceNode.cpp
 config/GOConfig.cpp
+config/GOConfigMidiObject.cpp
 config/GODeviceNamePattern.cpp
 config/GOMidiDeviceConfig.cpp
 config/GOMidiDeviceConfigList.cpp

@@ -24,6 +24,7 @@ class GOMidiSendProxy;
 class GOMidiSender : public GOMidiSenderEventPatternList, public GOMidiElement {
 public:
   static const GOConfigEnum SENDER_TYPES;
+  static const GOConfigEnum DIVISIONAL_SENDER_TYPES;
 
 private:
   int m_ElementID;

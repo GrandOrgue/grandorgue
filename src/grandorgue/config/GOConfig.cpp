@@ -7,6 +7,8 @@
 
 #include "GOConfig.h"
 
+#include <functional>
+
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
@@ -18,14 +20,19 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
+#include "control/GOCallbackButtonControl.h"
+#include "control/GOPushbuttonControl.h"
 #include "midi/ports/GOMidiPort.h"
 #include "midi/ports/GOMidiPortFactory.h"
+#include "model/GOEnclosure.h"
+#include "model/GOManual.h"
 #include "settings/GOSettingEnum.cpp"
 #include "settings/GOSettingNumber.cpp"
 #include "sound/GOSoundDefs.h"
 #include "sound/ports/GOSoundPort.h"
 #include "sound/ports/GOSoundPortFactory.h"
 
+#include "GOConfigMidiObject.h"
 #include "GOMemoryPool.h"
 #include "GOPortFactory.h"
 #include "GORegisteredOrgan.h"
@@ -45,102 +52,117 @@ static const wxString MIDI_IN(wxT("MIDIIn"));
 static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
 static const wxString GENERAL = wxT("General");
+static const wxString WX_FMT_D = wxT("%d");
 
-struct GOInternalMidiObjectDesc {
-  GOMidiReceiverType type;
-  unsigned index;
-  const wxString group;
-  const wxString name;
+struct initial_midi_group_desc {
+  GOMidiObject::ObjectType m_ObjectType;
+  int m_SenderType;
+  int m_ReceiverType;
+  int m_ShortcutReceiverType;
+  int m_DivisionalType;
+  wxString m_GroupName;
+  wxString m_SectionFmt;
 };
 
-static const GOInternalMidiObjectDesc INTERNAL_MIDI_DESCS[] = {
-  {MIDI_RECV_MANUAL, 1, wxTRANSLATE("Manuals"), wxTRANSLATE("Pedal")},
-  {MIDI_RECV_MANUAL, 2, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 1")},
-  {MIDI_RECV_MANUAL, 3, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 2")},
-  {MIDI_RECV_MANUAL, 4, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 3")},
-  {MIDI_RECV_MANUAL, 5, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 4")},
-  {MIDI_RECV_MANUAL, 6, wxTRANSLATE("Manuals"), wxTRANSLATE("Manual 5")},
-  {MIDI_RECV_ENCLOSURE,
-   1,
-   wxTRANSLATE("Enclosures"),
-   wxTRANSLATE("Enclosure 1")},
-  {MIDI_RECV_ENCLOSURE,
-   2,
-   wxTRANSLATE("Enclosures"),
-   wxTRANSLATE("Enclosure 2")},
-  {MIDI_RECV_ENCLOSURE,
-   3,
-   wxTRANSLATE("Enclosures"),
-   wxTRANSLATE("Enclosure 3")},
-  {MIDI_RECV_ENCLOSURE,
-   4,
-   wxTRANSLATE("Enclosures"),
-   wxTRANSLATE("Enclosure 4")},
-  {MIDI_RECV_ENCLOSURE,
-   5,
-   wxTRANSLATE("Enclosures"),
-   wxTRANSLATE("Enclosure 5")},
-  {MIDI_RECV_ENCLOSURE,
-   6,
-   wxTRANSLATE("Enclosures"),
-   wxTRANSLATE("Enclosure 6")},
-  {MIDI_RECV_SETTER,
-   0,
-   wxTRANSLATE("Sequencer"),
-   wxTRANSLATE("Previous Memory")},
-  {MIDI_RECV_SETTER, 1, wxTRANSLATE("Sequencer"), wxTRANSLATE("Next Memory")},
-  {MIDI_RECV_SETTER, 2, wxTRANSLATE("Sequencer"), wxTRANSLATE("Memory Set")},
-  {MIDI_RECV_SETTER, 3, wxTRANSLATE("Sequencer"), wxTRANSLATE("Current")},
-  {MIDI_RECV_SETTER, 4, wxTRANSLATE("Sequencer"), wxTRANSLATE("G.C.")},
-  {MIDI_RECV_SETTER, 5, wxTRANSLATE("Sequencer"), wxTRANSLATE("-10")},
-  {MIDI_RECV_SETTER, 6, wxTRANSLATE("Sequencer"), wxTRANSLATE("+10")},
-  {MIDI_RECV_SETTER, 7, wxTRANSLATE("Sequencer"), wxTRANSLATE("__0")},
-  {MIDI_RECV_SETTER, 8, wxTRANSLATE("Sequencer"), wxTRANSLATE("__1")},
-  {MIDI_RECV_SETTER, 9, wxTRANSLATE("Sequencer"), wxTRANSLATE("__2")},
-  {MIDI_RECV_SETTER, 10, wxTRANSLATE("Sequencer"), wxTRANSLATE("__3")},
-  {MIDI_RECV_SETTER, 11, wxTRANSLATE("Sequencer"), wxTRANSLATE("__4")},
-  {MIDI_RECV_SETTER, 12, wxTRANSLATE("Sequencer"), wxTRANSLATE("__5")},
-  {MIDI_RECV_SETTER, 13, wxTRANSLATE("Sequencer"), wxTRANSLATE("__6")},
-  {MIDI_RECV_SETTER, 14, wxTRANSLATE("Sequencer"), wxTRANSLATE("__7")},
-  {MIDI_RECV_SETTER, 15, wxTRANSLATE("Sequencer"), wxTRANSLATE("__8")},
-  {MIDI_RECV_SETTER, 16, wxTRANSLATE("Sequencer"), wxTRANSLATE("__9")},
-  {MIDI_RECV_SETTER,
-   17,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("-1 Cent")},
-  {MIDI_RECV_SETTER,
-   18,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("+1 Cent")},
-  {MIDI_RECV_SETTER,
-   19,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("-100 Cent")},
-  {MIDI_RECV_SETTER,
-   20,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("+100 Cent")},
-  {MIDI_RECV_SETTER,
-   21,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("Prev temperament")},
-  {MIDI_RECV_SETTER,
-   22,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("Next temperament")},
-  {MIDI_RECV_SETTER,
-   23,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("Transpose -")},
-  {MIDI_RECV_SETTER,
-   24,
-   wxTRANSLATE("Master Controls"),
-   wxTRANSLATE("Transpose +")},
-  {MIDI_RECV_SETTER, 25, wxTRANSLATE("Metronome"), wxTRANSLATE("On")},
-  {MIDI_RECV_SETTER, 26, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM +")},
-  {MIDI_RECV_SETTER, 27, wxTRANSLATE("Metronome"), wxTRANSLATE("BPM -")},
-  {MIDI_RECV_SETTER, 28, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure -")},
-  {MIDI_RECV_SETTER, 29, wxTRANSLATE("Metronome"), wxTRANSLATE("Measure +")},
+enum initial_midi_group {
+  INITIAL_MANUAL,
+  INITIAL_ENCLOSURE,
+  INITIAL_SETTER,
+  INITIAL_MASTER,
+  INITIAL_METRONOME,
+};
+
+// Indexed by initial_midi_group
+static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
+  {
+    GOMidiObject::OBJECT_TYPE_MANUAL,
+    MIDI_SEND_MANUAL,
+    MIDI_RECV_MANUAL,
+    GOConfigMidiObject::ELEMENT_TYPE_NONE,
+    MIDI_SEND_MANUAL,
+    _("Manuals"),
+    wxT("Manual%03d"),
+  },
+  {
+    GOMidiObject::OBJECT_TYPE_ENCLOSURE,
+    MIDI_SEND_ENCLOSURE,
+    MIDI_RECV_ENCLOSURE,
+    KEY_RECV_ENCLOSURE,
+    GOConfigMidiObject::ELEMENT_TYPE_NONE,
+    _("Enclosures"),
+    wxT("Enclosure%03d"),
+  },
+  {GOMidiObject::OBJECT_TYPE_BUTTON,
+   MIDI_SEND_BUTTON,
+   MIDI_RECV_SETTER,
+   KEY_RECV_BUTTON,
+   GOMidiObject::ELEMENT_TYPE_NONE,
+   _("Sequencer"),
+   wxT("Setter%03d")},
+  {GOMidiObject::OBJECT_TYPE_BUTTON,
+   MIDI_SEND_BUTTON,
+   MIDI_RECV_SETTER,
+   KEY_RECV_BUTTON,
+   GOMidiObject::ELEMENT_TYPE_NONE,
+   _("Master Controls"),
+   wxT("Setter%03d")},
+  {GOMidiObject::OBJECT_TYPE_BUTTON,
+   MIDI_SEND_BUTTON,
+   MIDI_RECV_SETTER,
+   KEY_RECV_BUTTON,
+   GOMidiObject::ELEMENT_TYPE_NONE,
+   _("Metronome"),
+   wxT("Setter%03d")}};
+
+struct internal_midi_object_desc {
+  initial_midi_group m_group;
+  unsigned m_index;
+  wxString m_name;
+};
+
+static const internal_midi_object_desc INTERNAL_MIDI_DESCS[] = {
+  {INITIAL_MANUAL, 1, _("Pedal")},
+  {INITIAL_MANUAL, 2, _("Manual 1")},
+  {INITIAL_MANUAL, 3, _("Manual 2")},
+  {INITIAL_MANUAL, 4, _("Manual 3")},
+  {INITIAL_MANUAL, 5, _("Manual 4")},
+  {INITIAL_MANUAL, 6, _("Manual 5")},
+  {INITIAL_ENCLOSURE, 1, _("Enclosure 1")},
+  {INITIAL_ENCLOSURE, 2, _("Enclosure 2")},
+  {INITIAL_ENCLOSURE, 3, _("Enclosure 3")},
+  {INITIAL_ENCLOSURE, 4, _("Enclosure 4")},
+  {INITIAL_ENCLOSURE, 5, _("Enclosure 5")},
+  {INITIAL_ENCLOSURE, 6, _("Enclosure 6")},
+  {INITIAL_SETTER, 0, _("Previous Memory")},
+  {INITIAL_SETTER, 1, _("Next Memory")},
+  {INITIAL_SETTER, 2, _("Memory Set")},
+  {INITIAL_SETTER, 3, _("Current")},
+  {INITIAL_SETTER, 4, _("G.C.")},
+  {INITIAL_SETTER, 5, _("-10")},
+  {INITIAL_SETTER, 6, _("+10")},
+  {INITIAL_SETTER, 7, _("__0")},
+  {INITIAL_SETTER, 8, _("__1")},
+  {INITIAL_SETTER, 9, _("__2")},
+  {INITIAL_SETTER, 10, _("__3")},
+  {INITIAL_SETTER, 11, _("__4")},
+  {INITIAL_SETTER, 12, _("__5")},
+  {INITIAL_SETTER, 13, _("__6")},
+  {INITIAL_SETTER, 14, _("__7")},
+  {INITIAL_SETTER, 15, _("__8")},
+  {INITIAL_SETTER, 16, _("__9")},
+  {INITIAL_MASTER, 17, _("-1 Cent")},
+  {INITIAL_MASTER, 18, _("+1 Cent")},
+  {INITIAL_MASTER, 19, _("-100 Cent")},
+  {INITIAL_MASTER, 20, _("+100 Cent")},
+  {INITIAL_MASTER, 21, _("Prev temperament")},
+  {INITIAL_MASTER, 22, _("Next temperament")},
+  {INITIAL_MASTER, 23, _("Transpose -")},
+  {INITIAL_MASTER, 24, _("Transpose +")},
+  {INITIAL_METRONOME, 25, _("On")},
+  {INITIAL_METRONOME, 26, _("BPM +")},
+  {INITIAL_METRONOME, 27, _("BPM -")},
+  {INITIAL_METRONOME, 28, _("Measure -")},
+  {INITIAL_METRONOME, 29, _("Measure +")},
 };
 
 static const GOConfigEnum INITIAL_LOAD_TYPES({
@@ -400,7 +422,8 @@ void GOConfig::Load() {
       cfg, MIDI_PORTS, GOMidiPortFactory::getInstance(), m_MidiPortsConfig);
 
     for (unsigned i = 0; i < GetEventCount(); i++)
-      m_MIDIEvents[i]->Load(ODFCheck(), cfg, GetEventSection(i), m_MidiMap);
+      m_InitialMidiObjects[i]->GetMidiReceiver()->Load(
+        ODFCheck(), cfg, GetEventSection(i), m_MidiMap);
 
     long cpus = wxThread::GetCPUCount();
     if (cpus == -1)
@@ -447,8 +470,22 @@ void GOConfig::LoadDefaults() {
 
   m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
     + wxT("GrandOrgueConfig") + m_InstanceName;
-  for (unsigned i = 0; i < GetEventCount(); i++)
-    m_MIDIEvents.push_back(new GOMidiReceiver(INTERNAL_MIDI_DESCS[i].type));
+  for (const auto &desc : INTERNAL_MIDI_DESCS) {
+    const initial_midi_group_desc &groupDesc
+      = INITIAL_MIDI_GROUP_DESCS[desc.m_group];
+    GOConfigMidiObject *pObj = new GOConfigMidiObject(
+      m_MidiMap,
+      groupDesc.m_ObjectType,
+      groupDesc.m_GroupName,
+      wxString::Format(WX_FMT_D, desc.m_index),
+      desc.m_name);
+
+    pObj->SetSenderType(groupDesc.m_SenderType);
+    pObj->SetReceiverType(groupDesc.m_ReceiverType);
+    pObj->SetShortcutReceiverType(groupDesc.m_ShortcutReceiverType);
+    pObj->SetDivisionSenderType(groupDesc.m_DivisionalType);
+    m_InitialMidiObjects.push_back(pObj);
+  }
   m_ResourceDir = GOStdPath::GetResourceDir();
 
   OrganPath.SetDefaultValue(GOStdPath::GetGrandOrgueSubDir(_("Organs")));
@@ -495,48 +532,44 @@ unsigned GOConfig::GetEventCount() const {
 
 wxString GOConfig::GetEventSection(unsigned index) {
   assert(index < GetEventCount());
-  switch (INTERNAL_MIDI_DESCS[index].type) {
-  case MIDI_RECV_ENCLOSURE:
-    return wxString::Format(
-      wxT("Enclosure%03d"), INTERNAL_MIDI_DESCS[index].index);
+  const auto &desc = INTERNAL_MIDI_DESCS[index];
 
-  case MIDI_RECV_MANUAL:
-    return wxString::Format(
-      wxT("Manual%03d"), INTERNAL_MIDI_DESCS[index].index);
-
-  case MIDI_RECV_SETTER:
-    return wxString::Format(
-      wxT("Setter%03d"), INTERNAL_MIDI_DESCS[index].index);
-
-  default:
-    assert(false);
-    return wxEmptyString;
-  }
+  return wxString::Format(
+    INITIAL_MIDI_GROUP_DESCS[desc.m_group].m_SectionFmt, desc.m_index);
 }
 
-wxString GOConfig::GetEventGroup(unsigned index) {
+const wxString &GOConfig::GetEventGroup(unsigned index) const {
   assert(index < GetEventCount());
-  return wxGetTranslation(INTERNAL_MIDI_DESCS[index].group);
+
+  return INITIAL_MIDI_GROUP_DESCS[INTERNAL_MIDI_DESCS[index].m_group]
+    .m_GroupName;
 }
 
 wxString GOConfig::GetEventTitle(unsigned index) {
   assert(index < GetEventCount());
-  return wxGetTranslation(INTERNAL_MIDI_DESCS[index].name);
+  return INTERNAL_MIDI_DESCS[index].m_name;
 }
 
 const GOMidiReceiver *GOConfig::GetMidiEvent(unsigned index) const {
   assert(index < GetEventCount());
-  return m_MIDIEvents[index];
+  return m_InitialMidiObjects[index]->GetMidiReceiver();
 }
 
 const GOMidiReceiver *GOConfig::FindMidiEvent(
   GOMidiReceiverType type, unsigned index) const {
-  for (unsigned i = 0; i < GetEventCount(); i++)
+  GOMidiReceiver *pRec = nullptr;
+
+  for (unsigned i = 0; i < GetEventCount(); i++) {
+    const auto &desc = INTERNAL_MIDI_DESCS[i];
+
     if (
-      INTERNAL_MIDI_DESCS[i].type == type
-      && INTERNAL_MIDI_DESCS[i].index == index)
-      return m_MIDIEvents[i];
-  return NULL;
+      INITIAL_MIDI_GROUP_DESCS[desc.m_group].m_ReceiverType == type
+      && desc.m_index == index) {
+      pRec = m_InitialMidiObjects[i]->GetMidiReceiver();
+      break;
+    }
+  }
+  return pRec;
 }
 
 const wxString GOConfig::GetPackageDirectory() {
@@ -604,7 +637,8 @@ void GOConfig::Flush() {
   m_Temperaments.Save(cfg);
 
   for (unsigned i = 0; i < GetEventCount(); i++)
-    m_MIDIEvents[i]->Save(cfg, GetEventSection(i), m_MidiMap);
+    m_InitialMidiObjects[i]->GetMidiReceiver()->Save(
+      cfg, GetEventSection(i), m_MidiMap);
 
   for (unsigned i = 0; i < m_AudioGroups.size(); i++)
     cfg.WriteString(
