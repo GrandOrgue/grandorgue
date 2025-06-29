@@ -52,14 +52,14 @@ static const wxString MIDI_IN(wxT("MIDIIn"));
 static const wxString MIDI_OUT(wxT("MIDIOut"));
 static const wxString SOUND_PORTS = wxT("SoundPorts");
 static const wxString GENERAL = wxT("General");
+static const wxString WX_FMT_D = wxT("%d");
 
 struct initial_midi_group_desc {
-  GOMidiObject::ObjectType objectType;
-  GOMidiSenderType m_SenderType;
-  GOMidiReceiverType m_ReceiverType;
-  GOMidiShortcutReceiverType m_ShortcutReceiverType;
-  bool hasShortcut;
-  bool hasDivision;
+  GOMidiObject::ObjectType m_ObjectType;
+  int m_SenderType;
+  int m_ReceiverType;
+  int m_ShortcutReceiverType;
+  int m_DivisionalType;
   wxString m_GroupName;
   wxString m_SectionFmt;
 };
@@ -78,9 +78,8 @@ static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
     GOMidiObject::OBJECT_TYPE_MANUAL,
     MIDI_SEND_MANUAL,
     MIDI_RECV_MANUAL,
-    KEY_RECV_ENCLOSURE,
-    false,
-    true,
+    GOConfigMidiObject::ELEMENT_TYPE_NONE,
+    MIDI_SEND_MANUAL,
     _("Manuals"),
     wxT("Manual%03d"),
   },
@@ -89,8 +88,7 @@ static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
     MIDI_SEND_ENCLOSURE,
     MIDI_RECV_ENCLOSURE,
     KEY_RECV_ENCLOSURE,
-    true,
-    false,
+    GOConfigMidiObject::ELEMENT_TYPE_NONE,
     _("Enclosures"),
     wxT("Enclosure%03d"),
   },
@@ -98,24 +96,21 @@ static const initial_midi_group_desc INITIAL_MIDI_GROUP_DESCS[]{
    MIDI_SEND_BUTTON,
    MIDI_RECV_SETTER,
    KEY_RECV_BUTTON,
-   true,
-   false,
+   GOMidiObject::ELEMENT_TYPE_NONE,
    _("Sequencer"),
    wxT("Setter%03d")},
   {GOMidiObject::OBJECT_TYPE_BUTTON,
    MIDI_SEND_BUTTON,
    MIDI_RECV_SETTER,
    KEY_RECV_BUTTON,
-   true,
-   false,
+   GOMidiObject::ELEMENT_TYPE_NONE,
    _("Master Controls"),
    wxT("Setter%03d")},
   {GOMidiObject::OBJECT_TYPE_BUTTON,
    MIDI_SEND_BUTTON,
    MIDI_RECV_SETTER,
    KEY_RECV_BUTTON,
-   true,
-   false,
+   GOMidiObject::ELEMENT_TYPE_NONE,
    _("Metronome"),
    wxT("Setter%03d")}};
 
@@ -478,16 +473,18 @@ void GOConfig::LoadDefaults() {
   for (const auto &desc : INTERNAL_MIDI_DESCS) {
     const initial_midi_group_desc &groupDesc
       = INITIAL_MIDI_GROUP_DESCS[desc.m_group];
-
-    m_InitialMidiObjects.push_back(new GOConfigMidiObject(
+    GOConfigMidiObject *pObj = new GOConfigMidiObject(
       m_MidiMap,
-      groupDesc.objectType,
-      groupDesc.m_SenderType,
-      groupDesc.m_ReceiverType,
-      groupDesc.m_ShortcutReceiverType,
-      true,
-      groupDesc.hasShortcut,
-      groupDesc.hasDivision));
+      groupDesc.m_ObjectType,
+      groupDesc.m_GroupName,
+      wxString::Format(WX_FMT_D, desc.m_index),
+      desc.m_name);
+
+    pObj->SetSenderType(groupDesc.m_SenderType);
+    pObj->SetReceiverType(groupDesc.m_ReceiverType);
+    pObj->SetShortcutReceiverType(groupDesc.m_ShortcutReceiverType);
+    pObj->SetDivisionSenderType(groupDesc.m_DivisionalType);
+    m_InitialMidiObjects.push_back(pObj);
   }
   m_ResourceDir = GOStdPath::GetResourceDir();
 

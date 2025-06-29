@@ -29,6 +29,9 @@ class GOOrganModel;
 
 class GOMidiObject : public GOSaveableObject, public GOMidiConfigDispatcher {
 public:
+public:
+  static constexpr int ELEMENT_TYPE_NONE = -1;
+
   enum ObjectType {
     OBJECT_TYPE_LABEL,
     OBJECT_TYPE_RANK,
@@ -63,9 +66,13 @@ private:
   const GOMidiObjectContext *p_context;
 
 protected:
+  template <typename MidiElementType>
+  static int getElementType(const MidiElementType *pEl);
+
   GOMidiObject(GOMidiMap &midiMap, ObjectType objectType);
 
 public:
+  ObjectType GetObjectType() const { return m_ObjectType; }
   GOMidiSender *GetMidiSender() const { return p_MidiSender; }
   void SetMidiSender(GOMidiSender *pMidiSender) { p_MidiSender = pMidiSender; }
   GOMidiReceiver *GetMidiReceiver() const { return p_MidiReceiver; }
@@ -83,7 +90,11 @@ public:
     p_DivisionSender = pDivisionSender;
   }
 
-protected:
+  int GetSenderType() const;
+  int GetReceiverType() const;
+  int GetShortcutReceiverType() const;
+  int GetDivisionSenderType() const;
+
   virtual void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap);
   virtual void SaveMidiObject(
@@ -133,6 +144,8 @@ public:
   wxString GetContextTitle() const;
 
   bool IsMidiConfigured() const;
+
+  void CopyMidiSettingFrom(const GOMidiObject &objFrom);
 
   virtual void Init(
     GOConfigReader &cfg, const wxString &group, const wxString &name) {
