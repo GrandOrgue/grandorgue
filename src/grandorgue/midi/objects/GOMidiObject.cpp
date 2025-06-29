@@ -60,11 +60,6 @@ GOMidiObject::GOMidiObject(GOMidiMap &midiMap, ObjectType objectType)
     p_DivisionSender(nullptr),
     p_context(nullptr) {}
 
-template <typename MidiElementType>
-int GOMidiObject::getElementType(const MidiElementType *pEl) {
-  return pEl ? (int)pEl->GetType() : ELEMENT_TYPE_NONE;
-}
-
 wxString GOMidiObject::GetPath() const {
   return GOMidiObjectContext::getPath(p_context, GetNameForContext());
 }

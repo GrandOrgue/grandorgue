@@ -67,7 +67,9 @@ private:
 
 protected:
   template <typename MidiElementType>
-  static int getElementType(const MidiElementType *pEl);
+  static int getElementType(const MidiElementType *pEl) {
+    return pEl ? (int)pEl->GetType() : ELEMENT_TYPE_NONE;
+  }
 
   GOMidiObject(GOMidiMap &midiMap, ObjectType objectType);
 
