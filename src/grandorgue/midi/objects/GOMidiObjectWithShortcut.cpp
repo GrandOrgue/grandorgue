@@ -23,6 +23,11 @@ GOMidiObjectWithShortcut::~GOMidiObjectWithShortcut() {
   SetMidiShortcutReceiver(nullptr);
 }
 
+void GOMidiObjectWithShortcut::SetDefaultShortcutKey(unsigned key) {
+  if (!m_ShortcutReceiver.IsMidiConfigured())
+    m_ShortcutReceiver.SetShortcut(key);
+}
+
 void GOMidiObjectWithShortcut::HandleKey(int key) {
   if (!IsReadOnly()) {
     auto matchType = m_ShortcutReceiver.Match(key);

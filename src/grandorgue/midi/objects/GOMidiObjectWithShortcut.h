@@ -33,7 +33,9 @@ protected:
     = 0;
 
 public:
-  void SetShortcutKey(unsigned key) { m_ShortcutReceiver.SetShortcut(key); }
+  // Set the shortcut key if it is not configured
+  // Should be called after Init()
+  void SetDefaultShortcutKey(unsigned key);
 };
 
 #endif /* GOMIDIOBJECTWITHSHORTCUT_H */

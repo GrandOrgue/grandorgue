@@ -735,10 +735,6 @@ GOSetter::GOSetter(GOOrganController *organController)
   m_buttons[ID_SETTER_AUDIO_PANIC]->SetMidiInputNumber(25);
   m_buttons[ID_SETTER_FILE_EXIT]->SetMidiInputNumber(26);
 
-  m_buttons[ID_SETTER_PREV]->SetShortcutKey(37);
-  m_buttons[ID_SETTER_NEXT]->SetShortcutKey(39);
-  m_buttons[ID_SETTER_CURRENT]->SetShortcutKey(40);
-
   SetSetterType(GOSetterState::SETTER_REGULAR);
   SetCrescendoType(m_crescendobank);
 
@@ -812,6 +808,10 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_buttons[ID_SETTER_PREV]->Init(cfg, wxT("SetterPrev"), _("Previous"));
   m_buttons[ID_SETTER_NEXT]->Init(cfg, wxT("SetterNext"), _("Next"));
   m_buttons[ID_SETTER_SET]->Init(cfg, wxT("SetterSet"), _("Set"));
+  m_buttons[ID_SETTER_PREV]->SetDefaultShortcutKey(37);
+  m_buttons[ID_SETTER_NEXT]->SetDefaultShortcutKey(39);
+  m_buttons[ID_SETTER_CURRENT]->SetDefaultShortcutKey(40);
+
   m_buttons[ID_SETTER_M1]->Init(cfg, wxT("SetterM1"), _("-1"));
   m_buttons[ID_SETTER_M10]->Init(cfg, wxT("SetterM10"), _("-10"));
   m_buttons[ID_SETTER_M100]->Init(cfg, wxT("SetterM100"), _("-100"));
