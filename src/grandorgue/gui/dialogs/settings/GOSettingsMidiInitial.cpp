@@ -14,6 +14,7 @@
 
 #include "config/GOConfig.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
+#include "midi/elements/GOMidiReceiver.h"
 
 BEGIN_EVENT_TABLE(GOSettingsMidiInitial, wxPanel)
 EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiInitial::OnEventsClick)

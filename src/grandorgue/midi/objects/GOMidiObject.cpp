@@ -72,6 +72,17 @@ static wxString divisional_group(const wxString &group) {
   return group + WX_DIVISIONAL_GROUP_SUFFIX;
 }
 
+int GOMidiObject::GetSenderType() const { return getElementType(p_MidiSender); }
+int GOMidiObject::GetReceiverType() const {
+  return getElementType(p_MidiReceiver);
+}
+int GOMidiObject::GetShortcutReceiverType() const {
+  return getElementType(p_ShortcutReceiver);
+}
+int GOMidiObject::GetDivisionSenderType() const {
+  return getElementType(p_DivisionSender);
+}
+
 void GOMidiObject::LoadMidiObject(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) {
   if (p_MidiSender)
@@ -105,6 +116,19 @@ bool GOMidiObject::IsMidiConfigured() const {
     || (p_MidiReceiver && p_MidiReceiver->IsMidiConfigured())
     || (p_ShortcutReceiver && p_ShortcutReceiver->IsMidiConfigured())
     || (p_DivisionSender && p_DivisionSender->IsMidiConfigured());
+}
+
+void GOMidiObject::CopyMidiSettingFrom(const GOMidiObject &objFrom) {
+  if (p_MidiSender && objFrom.p_MidiSender)
+    p_MidiSender->RenewFrom(*objFrom.p_MidiSender);
+  if (!IsReadOnly()) {
+    if (p_MidiReceiver && objFrom.p_MidiReceiver)
+      p_MidiReceiver->RenewFrom(*objFrom.p_MidiReceiver);
+    if (p_ShortcutReceiver && objFrom.p_ShortcutReceiver)
+      p_ShortcutReceiver->RenewFrom(*objFrom.p_ShortcutReceiver);
+  }
+  if (p_DivisionSender && objFrom.p_DivisionSender)
+    p_DivisionSender->RenewFrom(*objFrom.p_DivisionSender);
 }
 
 void GOMidiObject::InitMidiObject(

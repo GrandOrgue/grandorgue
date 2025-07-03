@@ -17,7 +17,7 @@
 #include "gui/dialogs/common/GODialogSizeSet.h"
 #include "gui/size/GOLogicalRect.h"
 #include "midi/GOMidiMap.h"
-#include "midi/elements/GOMidiReceiver.h"
+#include "midi/events/GOMidiReceiverType.h"
 #include "settings/GOSettingBool.h"
 #include "settings/GOSettingDirectory.h"
 #include "settings/GOSettingEnum.h"
@@ -29,12 +29,15 @@
 #include "temperaments/GOTemperamentList.h"
 
 #include "GOAudioDeviceConfig.h"
+#include "GOConfigMidiObject.h"
 #include "GOMidiDeviceConfigList.h"
 #include "GOOrganList.h"
 #include "GOPortsConfig.h"
 #include "ptrvector.h"
 
 enum class GOInitialLoadType { LOAD_NONE, LOAD_LAST_USED, LOAD_FIRST };
+
+class GOMidiReceiver;
 
 class GOConfig : public GOSettingStore, public GOOrganList {
 public:
@@ -52,7 +55,7 @@ private:
   std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 
   GOPortsConfig m_MidiPortsConfig;
-  ptr_vector<GOMidiReceiver> m_MIDIEvents;
+  ptr_vector<GOConfigMidiObject> m_InitialMidiObjects;
   GOMidiMap m_MidiMap;
   GOTemperamentList m_Temperaments;
 
@@ -166,7 +169,7 @@ public:
   const wxString GetPackageDirectory();
 
   unsigned GetEventCount() const;
-  wxString GetEventGroup(unsigned index);
+  const wxString &GetEventGroup(unsigned index) const;
   wxString GetEventTitle(unsigned index);
   const GOMidiReceiver *GetMidiEvent(unsigned index) const;
   const GOMidiReceiver *FindMidiEvent(
