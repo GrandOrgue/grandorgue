@@ -15,6 +15,7 @@
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 #include "gui/size/GOAdditionalSizeKeeperProxy.h"
 #include "gui/wxcontrols/GOGrid.h"
+#include "midi/elements/GOMidiReceiver.h"
 
 BEGIN_EVENT_TABLE(GOSettingsMidiInitial, GODialogTab)
 EVT_GRID_CMD_SELECT_CELL(ID_INITIALS, GOSettingsMidiInitial::OnInitialsSelected)
@@ -53,9 +54,9 @@ GOSettingsMidiInitial::GOSettingsMidiInitial(
   m_Initials->CreateGrid(0, GRID_N_COLS, wxGrid::wxGridSelectRows);
   m_Initials->HideRowLabels();
   m_Initials->EnableEditing(false);
-  m_Initials->SetColSize(GRID_COL_GROUP, 50);
+  m_Initials->SetColSize(GRID_COL_GROUP, 100);
   m_Initials->SetColLabelValue(GRID_COL_GROUP, _("Group"));
-  m_Initials->SetColSize(GRID_COL_NAME, 100);
+  m_Initials->SetColSize(GRID_COL_NAME, 150);
   m_Initials->SetColLabelValue(GRID_COL_NAME, _("Name"));
   m_Initials->SetColSize(GRID_COL_CONFIGURED, 100);
   m_Initials->SetColLabelValue(GRID_COL_CONFIGURED, _("Configured"));
