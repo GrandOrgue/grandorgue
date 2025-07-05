@@ -610,11 +610,6 @@ int GOConfigReader::ReadEnum(
   const GOConfigEnum &configEnum,
   bool required,
   int defaultValue) {
-  if (configEnum.GetName(defaultValue).IsEmpty()) {
-    wxLogError(_("Invalid enum default value"));
-    defaultValue = configEnum.GetFirstValue();
-  }
-
   wxString strValue;
   int enumValue;
 
