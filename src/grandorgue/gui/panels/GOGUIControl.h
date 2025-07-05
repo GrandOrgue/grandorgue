@@ -22,6 +22,7 @@ class GOGUIMouseState;
 class GOGUIPanel;
 class GOBitmap;
 class GOConfigReader;
+class GOControl;
 class GODC;
 
 class GOGUIControl : private GOSaveableObject,
@@ -30,7 +31,7 @@ protected:
   GOGUIPanel *m_panel;
   GOGUIDisplayMetrics *m_metrics;
   GOGUILayoutEngine *m_layout;
-  void *m_control;
+  GOControl *p_control;
   wxRect m_BoundingRect;
   bool m_DrawPending;
 
@@ -40,7 +41,7 @@ protected:
   void ControlChanged(GOControl *control) override;
 
 public:
-  GOGUIControl(GOGUIPanel *panel, void *control);
+  GOGUIControl(GOGUIPanel *panel, GOControl *pControl);
   virtual ~GOGUIControl();
 
   GODocumentBase *GetDocument() const {

@@ -20,8 +20,9 @@ private:
   GOMidiPlayingObject *p_MidiObject;
 
 public:
-  GOGUIMidiControl(GOGUIPanel *pPanel, GOMidiPlayingObject *pMidiObject)
-    : GOGUIControl(pPanel, pMidiObject), p_MidiObject(pMidiObject) {}
+  GOGUIMidiControl(
+    GOGUIPanel *pPanel, GOControl *pControl, GOMidiPlayingObject *pMidiObject)
+    : GOGUIControl(pPanel, pControl), p_MidiObject(pMidiObject) {}
 
   /**
    * Opens a MIDI configuration dialog on a right mouse click

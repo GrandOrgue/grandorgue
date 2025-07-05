@@ -21,7 +21,7 @@
 
 GOGUIManual::GOGUIManual(
   GOGUIPanel *panel, GOManual *manual, unsigned manual_number)
-  : GOGUIMidiControl(panel, manual),
+  : GOGUIMidiControl(panel, manual, manual),
     m_manual(manual),
     m_ManualNumber(manual_number),
     m_Keys() {

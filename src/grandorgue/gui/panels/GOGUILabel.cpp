@@ -20,7 +20,7 @@
 #include "GOOrganController.h"
 
 GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabelControl *label)
-  : GOGUIMidiControl(panel, label),
+  : GOGUIMidiControl(panel, label, label),
     m_DispXpos(0),
     m_DispYpos(0),
     m_Label(label),

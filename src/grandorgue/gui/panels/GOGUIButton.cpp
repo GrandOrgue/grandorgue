@@ -21,7 +21,7 @@
 
 GOGUIButton::GOGUIButton(
   GOGUIPanel *panel, GOButtonControl *control, bool is_piston)
-  : GOGUIMidiControl(panel, control),
+  : GOGUIMidiControl(panel, control, control),
     m_IsPiston(is_piston),
     m_DispKeyLabelOnLeft(true),
     m_ButtonControl(control),
