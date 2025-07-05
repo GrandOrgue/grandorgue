@@ -40,6 +40,8 @@ struct GOMidiEventPattern {
       high_value(iHighValue),
       useNoteOff(iUseNoteOff) {}
 
+  virtual bool IsEmpty() const = 0;
+
   bool operator==(const GOMidiEventPattern &other) const;
 
   void DeviceIdToYaml(YAML::Node &eventNode, const GOMidiMap &map) const;
