@@ -20,7 +20,7 @@
 #include "GOGUIPanel.h"
 
 GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)
-  : GOGUIControl(panel, control),
+  : GOGUIMidiControl(panel, control, control),
     m_enclosure(control),
     m_FontSize(0),
     m_FontName(),
@@ -320,10 +320,9 @@ bool GOGUIEnclosure::HandleMousePress(
   int x, int y, bool right, GOGUIMouseState &state) {
   if (!m_BoundingRect.Contains(x, y))
     return false;
-  if (right) {
-    m_enclosure->ShowConfigDialog();
+  if (HandleMidiConfig(right))
     return true;
-  } else {
+  else {
     unsigned value;
     if (!m_MouseRect.Contains(x, y))
       return false;

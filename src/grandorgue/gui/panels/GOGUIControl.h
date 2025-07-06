@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,6 +13,7 @@
 
 #include "control/GOControlChangedHandler.h"
 
+#include "GOGUIPanel.h"
 #include "GOSaveableObject.h"
 
 class GOGUIDisplayMetrics;
@@ -21,6 +22,7 @@ class GOGUIMouseState;
 class GOGUIPanel;
 class GOBitmap;
 class GOConfigReader;
+class GOControl;
 class GODC;
 
 class GOGUIControl : private GOSaveableObject,
@@ -29,7 +31,7 @@ protected:
   GOGUIPanel *m_panel;
   GOGUIDisplayMetrics *m_metrics;
   GOGUILayoutEngine *m_layout;
-  void *m_control;
+  GOControl *p_control;
   wxRect m_BoundingRect;
   bool m_DrawPending;
 
@@ -39,8 +41,12 @@ protected:
   void ControlChanged(GOControl *control) override;
 
 public:
-  GOGUIControl(GOGUIPanel *panel, void *control);
+  GOGUIControl(GOGUIPanel *panel, GOControl *pControl);
   virtual ~GOGUIControl();
+
+  GODocumentBase *GetDocument() const {
+    return m_panel ? m_panel->GetDocument() : nullptr;
+  }
 
   virtual void Load(GOConfigReader &cfg, wxString group);
   virtual void Layout();

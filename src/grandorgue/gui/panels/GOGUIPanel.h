@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,16 +16,17 @@
 #include "gui/size/GOSizeKeeper.h"
 #include "primitives/GOBitmap.h"
 
+class GOButtonControl;
+class GOConfigReader;
+class GOConfigWriter;
+class GODC;
+class GODocumentBase;
 class GOGUIControl;
 class GOGUIDisplayMetrics;
 class GOGUILayoutEngine;
 class GOGUIMouseState;
-class GOGUIPanelWidget;
-class GOConfigReader;
-class GOConfigWriter;
-class GOButtonControl;
-class GODC;
 class GOGUIPanelView;
+class GOGUIPanelWidget;
 class GOOrganController;
 
 #define GOBitmapPrefix "../GO:"
@@ -82,7 +83,9 @@ public:
   void Load(GOConfigReader &cfg, const wxString &group) override;
   void Layout();
 
-  void SetView(GOGUIPanelView *view);
+  GOGUIPanelView *GetView() const { return m_view; }
+  void SetView(GOGUIPanelView *view) { m_view = view; }
+  GODocumentBase *GetDocument() const;
 
   GOOrganController *GetOrganFile();
   const wxString &GetName();

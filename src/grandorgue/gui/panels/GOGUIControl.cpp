@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,9 +11,9 @@
 #include "GOOrganController.h"
 #include "config/GOConfigReader.h"
 
-GOGUIControl::GOGUIControl(GOGUIPanel *panel, void *control)
+GOGUIControl::GOGUIControl(GOGUIPanel *panel, GOControl *pControl)
   : m_panel(panel),
-    m_control(control),
+    p_control(pControl),
     m_BoundingRect(0, 0, 0, 0),
     m_DrawPending(false) {
   m_metrics = panel->GetDisplayMetrics();
@@ -38,7 +38,7 @@ void GOGUIControl::Layout() {}
 void GOGUIControl::Save(GOConfigWriter &cfg) {}
 
 void GOGUIControl::ControlChanged(GOControl *control) {
-  if (control == m_control)
+  if (control == p_control)
     if (!m_DrawPending) {
       m_DrawPending = true;
       m_panel->AddEvent(this);

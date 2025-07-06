@@ -119,6 +119,7 @@ gui/panels/GOGUIHW1Background.cpp
 gui/panels/GOGUIHW1DisplayMetrics.cpp
 gui/panels/GOGUIImage.cpp
 gui/panels/GOGUILayoutEngine.cpp
+gui/panels/GOGUIMidiControl.cpp
 gui/panels/GOGUIPanelView.cpp
 gui/panels/GOGUISetterDisplayMetrics.cpp
 gui/panels/GOGUILabel.cpp
