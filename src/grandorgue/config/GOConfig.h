@@ -11,7 +11,7 @@
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 #include "gui/dialogs/common/GODialogSizeSet.h"
@@ -55,7 +55,19 @@ private:
   std::vector<GOAudioDeviceConfig> m_AudioDeviceConfig;
 
   GOPortsConfig m_MidiPortsConfig;
+
+  /* Thre are two sets of initial MIDI objects: built-in and user-added.
+   * The built-in MIDI objects are matched by ReceiverType and MIDIInputNumber.
+   * The user-added MIDI objects are matched by path.
+   * In this vector the first indices correspond the built-in objects and the
+   * rest indices correspond the user-added objects.
+   */
   ptr_vector<GOConfigMidiObject> m_InitialMidiObjects;
+  // Used for finding a user-added Initial MIDI object
+  std::
+    unordered_map<wxString, GOConfigMidiObject *, wxStringHash, wxStringEqual>
+      m_InitialMidiObjectsByPath;
+
   GOMidiMap m_MidiMap;
   GOTemperamentList m_Temperaments;
 
@@ -168,12 +180,19 @@ public:
   const wxString &GetResourceDirectory() const { return m_ResourceDir; }
   const wxString GetPackageDirectory();
 
-  unsigned GetEventCount() const;
+  // return count of built-in initial MIDI objects
+  static unsigned getMidiBuiltinCount();
+
+  // return count of all initial MIDI objects, both built-in and user-addeds
+  unsigned GetMidiInitialCount() const { return m_InitialMidiObjects.size(); }
   const wxString &GetEventGroup(unsigned index) const;
   wxString GetEventTitle(unsigned index);
-  const GOMidiReceiver *GetMidiEvent(unsigned index) const;
-  const GOMidiReceiver *FindMidiEvent(
-    GOMidiReceiverType type, unsigned index) const;
+  GOConfigMidiObject *GetMidiInitialObject(unsigned index);
+  // search among built-in MIDI objects
+  GOConfigMidiObject *FindMidiInitialObject(
+    GOMidiObject::ObjectType type, unsigned index);
+  // search among user-added MIDI objects
+  GOConfigMidiObject *FindMidiInitialObject(const wxString &path);
 
   const std::vector<wxString> &GetAudioGroups();
   void SetAudioGroups(const std::vector<wxString> &audio_groups);

@@ -26,6 +26,19 @@ GOMidiPlayingObject::~GOMidiPlayingObject() {
   r_OrganModel.UnRegisterSoundStateHandler(this);
 }
 
+const GOMidiObject *GOMidiPlayingObject::FindInitialMidiObject() const {
+  return r_OrganModel.GetConfig().FindMidiInitialObject(GetPath());
+}
+
+void GOMidiPlayingObject::AfterMidiLoaded() {
+  if (!IsMidiConfigured()) {
+    const GOMidiObject *pInitialObj = FindInitialMidiObject();
+
+    if (pInitialObj)
+      CopyMidiSettingFrom(*pInitialObj);
+  }
+}
+
 void GOMidiPlayingObject::ShowConfigDialog() {
   const bool isReadOnly = IsReadOnly();
   const wxString title = wxString::Format(
