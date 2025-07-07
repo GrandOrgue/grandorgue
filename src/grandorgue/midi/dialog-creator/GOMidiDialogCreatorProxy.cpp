@@ -11,19 +11,9 @@ void GOMidiDialogCreatorProxy::ShowMIDIEventDialog(
   void *element,
   const wxString &title,
   const wxString &dialogSelector,
-  GOMidiReceiver *event,
-  GOMidiSender *sender,
-  GOMidiShortcutReceiver *key,
-  GOMidiSender *division,
+  GOMidiObject &obj,
   GOMidiDialogListener *pDialogListener) {
   if (p_creator)
     p_creator->ShowMIDIEventDialog(
-      element,
-      title,
-      dialogSelector,
-      event,
-      sender,
-      key,
-      division,
-      pDialogListener);
+      element, title, dialogSelector, obj, pDialogListener);
 }

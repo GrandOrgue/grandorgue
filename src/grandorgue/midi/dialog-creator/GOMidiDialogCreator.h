@@ -11,9 +11,7 @@
 class wxString;
 
 class GOMidiDialogListener;
-class GOMidiReceiver;
-class GOMidiSender;
-class GOMidiShortcutReceiver;
+class GOMidiObject;
 
 /**
  * An abstract class that can show a MIDIEventDialog
@@ -24,10 +22,7 @@ public:
     void *element,
     const wxString &title,
     const wxString &dialogSelector,
-    GOMidiReceiver *event,
-    GOMidiSender *sender,
-    GOMidiShortcutReceiver *key,
-    GOMidiSender *division = nullptr,
+    GOMidiObject &obj,
     GOMidiDialogListener *pDialogListener = nullptr)
     = 0;
 };
