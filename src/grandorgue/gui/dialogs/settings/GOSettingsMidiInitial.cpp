@@ -8,23 +8,33 @@
 #include "GOSettingsMidiInitial.h"
 
 #include <wx/button.h>
-#include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
+#include "gui/size/GOAdditionalSizeKeeperProxy.h"
+#include "gui/wxcontrols/GOGrid.h"
 #include "midi/elements/GOMidiReceiver.h"
 
-BEGIN_EVENT_TABLE(GOSettingsMidiInitial, wxPanel)
-EVT_LIST_ITEM_SELECTED(ID_EVENTS, GOSettingsMidiInitial::OnEventsClick)
-EVT_LIST_ITEM_ACTIVATED(ID_EVENTS, GOSettingsMidiInitial::OnEventsDoubleClick)
+BEGIN_EVENT_TABLE(GOSettingsMidiInitial, GODialogTab)
+EVT_GRID_CMD_SELECT_CELL(ID_INITIALS, GOSettingsMidiInitial::OnInitialsSelected)
+EVT_GRID_CMD_CELL_LEFT_DCLICK(
+  ID_INITIALS, GOSettingsMidiInitial::OnInitialsDoubleClick)
 EVT_BUTTON(ID_PROPERTIES, GOSettingsMidiInitial::OnProperties)
 END_EVENT_TABLE()
 
+const wxString WX_INITIALS = wxT("Initials");
+
+enum { GRID_COL_GROUP = 0, GRID_COL_NAME, GRID_COL_CONFIGURED, GRID_N_COLS };
+
 GOSettingsMidiInitial::GOSettingsMidiInitial(
-  GOConfig &settings, GOMidi &midi, wxWindow *parent)
-  : wxPanel(parent, wxID_ANY), m_config(settings), m_midi(midi) {
+  GOConfig &settings,
+  GOMidi &midi,
+  GOTabbedDialog *pDlg,
+  const wxString &name,
+  const wxString &label)
+  : GODialogTab(pDlg, name, label), r_config(settings), r_midi(midi) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   topSizer->AddSpacer(5);
   topSizer->Add(
@@ -38,64 +48,83 @@ GOSettingsMidiInitial::GOSettingsMidiInitial(
     wxALL);
   topSizer->AddSpacer(5);
 
-  m_Events = new wxListView(
-    this,
-    ID_EVENTS,
-    wxDefaultPosition,
-    wxDefaultSize,
-    wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES);
-  m_Events->InsertColumn(0, _("Group"));
-  m_Events->InsertColumn(1, _("Element"));
-  m_Events->InsertColumn(2, _("MIDI Event"));
-  topSizer->Add(m_Events, 1, wxEXPAND | wxALL, 5);
+  m_Initials
+    = new GOGrid(this, ID_INITIALS, wxDefaultPosition, wxSize(100, 40));
+
+  m_Initials->CreateGrid(0, GRID_N_COLS, wxGrid::wxGridSelectRows);
+  m_Initials->HideRowLabels();
+  m_Initials->EnableEditing(false);
+  m_Initials->SetColSize(GRID_COL_GROUP, 100);
+  m_Initials->SetColLabelValue(GRID_COL_GROUP, _("Group"));
+  m_Initials->SetColSize(GRID_COL_NAME, 150);
+  m_Initials->SetColLabelValue(GRID_COL_NAME, _("Name"));
+  m_Initials->SetColSize(GRID_COL_CONFIGURED, 100);
+  m_Initials->SetColLabelValue(GRID_COL_CONFIGURED, _("Configured"));
+
+  topSizer->Add(m_Initials, 1, wxEXPAND | wxALL, 5);
   m_Properties = new wxButton(this, ID_PROPERTIES, _("P&roperties..."));
   m_Properties->Disable();
   topSizer->Add(m_Properties, 0, wxALIGN_RIGHT | wxALL, 5);
 
-  for (unsigned i = 0; i < m_config.GetEventCount(); i++) {
-    const GOMidiReceiver *recv = m_config.GetMidiEvent(i);
-
-    m_Events->InsertItem(i, m_config.GetEventGroup(i));
-    m_Events->SetItemPtrData(i, (wxUIntPtr)recv);
-    m_Events->SetItem(i, 1, m_config.GetEventTitle(i));
-    m_Events->SetItem(i, 2, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
-  }
-
   topSizer->AddSpacer(5);
   this->SetSizer(topSizer);
   topSizer->Fit(this);
-
-  m_Events->SetColumnWidth(0, wxLIST_AUTOSIZE);
-  m_Events->SetColumnWidth(1, wxLIST_AUTOSIZE);
-  m_Events->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
 }
 
-void GOSettingsMidiInitial::OnEventsClick(wxListEvent &event) {
-  m_Properties->Enable();
+void GOSettingsMidiInitial::ApplyAdditionalSizes(
+  const GOAdditionalSizeKeeper &sizeKeeper) {
+  GOAdditionalSizeKeeperProxy proxyGrid(
+    const_cast<GOAdditionalSizeKeeper &>(sizeKeeper), WX_INITIALS);
+
+  m_Initials->ApplyColumnSizes(proxyGrid);
 }
 
-void GOSettingsMidiInitial::OnEventsDoubleClick(wxListEvent &event) {
-  m_Properties->Enable();
-  int index = m_Events->GetFirstSelected();
+void GOSettingsMidiInitial::CaptureAdditionalSizes(
+  GOAdditionalSizeKeeper &sizeKeeper) const {
+  GOAdditionalSizeKeeperProxy proxyGrid(sizeKeeper, WX_INITIALS);
 
+  m_Initials->CaptureColumnSizes(proxyGrid);
+}
+
+bool GOSettingsMidiInitial::TransferDataToWindow() {
+  const unsigned nInitials = r_config.GetEventCount();
+
+  m_Initials->ClearGrid();
+  m_Initials->AppendRows(nInitials);
+  for (unsigned i = 0; i < nInitials; i++) {
+    const GOMidiReceiver *recv = r_config.GetMidiEvent(i);
+
+    m_Initials->SetCellValue(i, GRID_COL_GROUP, r_config.GetEventGroup(i));
+    m_Initials->SetCellValue(i, GRID_COL_NAME, r_config.GetEventTitle(i));
+    m_Initials->SetCellValue(
+      i, GRID_COL_CONFIGURED, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
+  }
+  return true;
+}
+
+void GOSettingsMidiInitial::OnInitialsSelected(wxGridEvent &event) {
+  int index = m_Initials->GetGridCursorRow();
+
+  m_Properties->Enable(index >= 0);
+}
+
+void GOSettingsMidiInitial::ConfigureInitial() {
+  int index = m_Initials->GetGridCursorRow();
   GOMidiReceiver *recv
-    = (GOMidiReceiver *)m_Events->GetItemData(m_Events->GetFirstSelected());
+    = const_cast<GOMidiReceiver *>(r_config.GetMidiEvent(index));
   GOMidiEventDialog dlg(
     NULL,
     this,
     wxString::Format(
-      _("Initial MIDI settings for %s"), m_config.GetEventTitle(index)),
-    m_config,
+      _("Initial MIDI settings for %s"), r_config.GetEventTitle(index)),
+    r_config,
     wxT("InitialSettings"),
     recv,
     NULL,
     NULL);
-  dlg.RegisterMIDIListener(&m_midi);
-  dlg.ShowModal();
-  m_Events->SetItem(index, 2, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
-}
 
-void GOSettingsMidiInitial::OnProperties(wxCommandEvent &event) {
-  wxListEvent listevent;
-  OnEventsDoubleClick(listevent);
+  dlg.RegisterMIDIListener(&r_midi);
+  dlg.ShowModal();
+  m_Initials->SetCellValue(
+    index, GRID_COL_CONFIGURED, recv->GetEventCount() > 0 ? _("Yes") : _("No"));
 }
