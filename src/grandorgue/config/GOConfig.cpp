@@ -569,7 +569,7 @@ void GOConfig::Load() {
               _("Internal MIDI object %s:%u exists"),
               GOMidiObject::OBJECT_TYPES.GetName(objectType),
               midiInputNumber);
-        } else { // A user-added MIDI object. Match it by path
+        } else { // Patch is present. Match the object by path
           auto it = m_InitialMidiObjectsByPath.find(path);
 
           if (it == m_InitialMidiObjectsByPath.end()) {
@@ -578,8 +578,10 @@ void GOConfig::Load() {
 
             pObj = new GOConfigMidiObject(
               m_MidiMap, objectType, WX_USER_ADDED, path, name);
+            m_InitialMidiObjects.push_back(pObj);
             m_InitialMidiObjectsByPath[path] = pObj;
-          }
+          } else // A built-in initial MIDI object (button) matched by path
+            pObj = it->second;
         }
         if (pObj)
           pObj->LoadMidiObject(cfg, group, m_MidiMap);
@@ -801,13 +803,16 @@ void GOConfig::Flush() {
   for (unsigned i = 0; i < midiInitialCount; i++) {
     const wxString group = get_initial_midi_group(i);
     const GOConfigMidiObject *pObj = m_InitialMidiObjects[i];
+    const unsigned midiInputNumber
+      = i < midiInitialBuiltinCount ? INTERNAL_MIDI_DESCS[i].m_index : 0;
 
     cfg.WriteEnum(
       group, WX_OBJECT_TYPE, GOMidiObject::OBJECT_TYPES, pObj->GetObjectType());
-    if (i < midiInitialBuiltinCount)
-      cfg.WriteInteger(
-        group, WX_MIDI_INPUT_NUMBER, INTERNAL_MIDI_DESCS[i].m_index);
-    else { // A user-added MIDI object. Match it by path
+    if (midiInputNumber) // matching by objectType, midiInputNumber
+      cfg.WriteInteger(group, WX_MIDI_INPUT_NUMBER, midiInputNumber);
+    else {
+      // A user-added MIDI object or a built-in with a m_ButtonDef. Match it by
+      // path
       cfg.WriteString(group, WX_PATH, pObj->GetMatchingBy());
       cfg.WriteString(group, WX_NAME, pObj->GetName());
     }
