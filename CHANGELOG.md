@@ -9,6 +9,7 @@
 - Increased the maximum supported sample rate to 192000 https://github.com/GrandOrgue/grandorgue/issues/2115
 - Fixed nested scrolling in the MidiObject dialog on macOs https://github.com/GrandOrgue/grandorgue/issues/1972
 - Increased the maximum number of user-defined temperaments to 999 https://github.com/GrandOrgue/grandorgue/issues/1982
+- Load pitch and show it to labels on organ load https://github.com/GrandOrgue/grandorgue/issues/2233
 # 3.15.4 (2024-12-20)
 - Eliminated a MacOs debug alert when opening a settings dialog https://github.com/GrandOrgue/grandorgue/issues/2003
 - Fixed not releasing a pipe after fast switching between vave-based tremulant samples and regular pipe samples https://github.com/GrandOrgue/grandorgue/issues/2004
