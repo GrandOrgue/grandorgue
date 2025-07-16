@@ -296,12 +296,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   }
 
   m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
-
-  // Load current pitch and write it to labels on loading of organ
-  const float currentPitch
-    = GetRootPipeConfigNode().GetPipeConfig().GetManualTuning();
-  m_PitchLabel.SetContent(wxString::Format(_("%f cent"), currentPitch));
-
   m_TemperamentLabel.Load(
     cfg, wxT("SetterMasterTemperament"), _("temperament"));
   m_MainWindowData.Load(cfg);
