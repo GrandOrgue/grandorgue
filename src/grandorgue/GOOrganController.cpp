@@ -171,7 +171,7 @@ void GOOrganController::OnIsModifiedChanged(bool modified) {
       = GetRootPipeConfigNode().GetPipeConfig().GetManualTuning();
 
     if (newPitch != m_CurrentPitch) {
-      m_PitchLabel.SetContent(wxString::Format(_("%f cent"), newPitch));
+      m_PitchLabel.SetContent(wxString::Format(_("%0.1f cent"), newPitch));
       m_CurrentPitch = newPitch;
     }
     // If the organ model is modified then the organ is also modified
