@@ -20,58 +20,56 @@
 
 #include "GOOrganController.h"
 
-enum {
-  ID_METRONOME_ON = 0,
-  ID_METRONOME_MEASURE_P1,
-  ID_METRONOME_MEASURE_M1,
-  ID_METRONOME_BEAT_P1,
-  ID_METRONOME_BEAT_M1,
-  ID_METRONOME_BEAT_P10,
-  ID_METRONOME_BEAT_M10,
-};
-
 static const GOMidiObjectContext MIDI_CONTEXT(wxT("Metronome"), _("Metronome"));
 
 const struct GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
-  {wxT("MetronomeOn"), ID_METRONOME_ON, false, false, false, &MIDI_CONTEXT},
+  {wxT("MetronomeOn"),
+   GOMetronome::ID_METRONOME_ON,
+   false,
+   false,
+   false,
+   &MIDI_CONTEXT},
   {wxT("MetronomeMeasureP1"),
-   ID_METRONOME_MEASURE_P1,
+   GOMetronome::ID_METRONOME_MEASURE_P1,
    false,
    true,
    false,
    &MIDI_CONTEXT},
   {wxT("MetronomeMeasureM1"),
-   ID_METRONOME_MEASURE_M1,
+   GOMetronome::ID_METRONOME_MEASURE_M1,
    false,
    true,
    false,
    &MIDI_CONTEXT},
   {wxT("MetronomeBpmP1"),
-   ID_METRONOME_BEAT_P1,
+   GOMetronome::ID_METRONOME_BEAT_P1,
    false,
    true,
    false,
    &MIDI_CONTEXT},
   {wxT("MetronomeBpmM1"),
-   ID_METRONOME_BEAT_M1,
+   GOMetronome::ID_METRONOME_BEAT_M1,
    false,
    true,
    false,
    &MIDI_CONTEXT},
   {wxT("MetronomeBpmP10"),
-   ID_METRONOME_BEAT_P10,
+   GOMetronome::ID_METRONOME_BEAT_P10,
    false,
    true,
    false,
    &MIDI_CONTEXT},
   {wxT("MetronomeBpmM10"),
-   ID_METRONOME_BEAT_M10,
+   GOMetronome::ID_METRONOME_BEAT_M10,
    false,
    true,
    false,
    &MIDI_CONTEXT},
   {wxT(""), -1, false, false, false},
 };
+
+const GOMetronome::ButtonDefinitionEntry *const GOMetronome::P_BUTTON_DEFS
+  = BUTTON_DEFS;
 
 GOMetronome::GOMetronome(GOOrganController *organController)
   : m_OrganController(organController),
