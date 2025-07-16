@@ -11,6 +11,7 @@
 
 #include "config/GOConfig.h"
 #include "midi/dialog-creator/GOMidiDialogListener.h"
+#include "midi/objects/GOMidiObject.h"
 
 #include "GOMidiEventKeyTab.h"
 #include "GOMidiEventRecvTab.h"
@@ -22,6 +23,7 @@ GOMidiEventDialog::GOMidiEventDialog(
   const wxString &title,
   GOConfig &settings,
   const wxString &dialogSelector,
+  GOMidiObject *pMidiObject,
   GOMidiReceiver *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
@@ -60,6 +62,46 @@ GOMidiEventDialog::GOMidiEventDialog(
 
   LayoutDialog();
 }
+
+GOMidiEventDialog::GOMidiEventDialog(
+  GODocumentBase *doc,
+  wxWindow *parent,
+  const wxString &title,
+  GOConfig &settings,
+  const wxString &dialogSelector,
+  GOMidiObject &midiObject,
+  GOMidiDialogListener *pDialogListener)
+  : GOMidiEventDialog(
+    doc,
+    parent,
+    title,
+    settings,
+    dialogSelector,
+    &midiObject,
+    !midiObject.IsReadOnly() ? midiObject.GetMidiReceiver() : nullptr,
+    midiObject.GetMidiSender(),
+    !midiObject.IsReadOnly() ? midiObject.GetMidiShortcutReceiver() : nullptr,
+    midiObject.GetDivisionSender(),
+    pDialogListener) {}
+
+GOMidiEventDialog::GOMidiEventDialog(
+  wxWindow *parent,
+  const wxString &title,
+  GOConfig &settings,
+  const wxString &dialogSelector,
+  GOMidiReceiver *pReceiver)
+  : GOMidiEventDialog(
+    nullptr,
+    parent,
+    title,
+    settings,
+    dialogSelector,
+    nullptr,
+    pReceiver,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr) {}
 
 void GOMidiEventDialog::RegisterMIDIListener(GOMidi *midi) {
   if (m_recvPage)
