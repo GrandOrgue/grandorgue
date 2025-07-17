@@ -327,8 +327,10 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   const wxString &organName = GetOrganName();
 
   GetRootPipeConfigNode().SetName(organName);
+  OnIsModifiedChanged(true);
   ReadCombinations(cfg);
   m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
+  ResetOrganModified();
 
   GOHash hash;
   const auto organNameUtf8 = organName.utf8_str();
