@@ -21,6 +21,7 @@ class GOMidiEventKeyTab;
 class GOMidiEventRecvTab;
 class GOMidiEventSendTab;
 class GOMidiListener;
+class GOMidiObject;
 class GOMidiReceiver;
 class GOMidiSender;
 class GOMidiShortcutReceiver;
@@ -36,6 +37,24 @@ private:
   GOMidiEventSendTab *m_sendDivisionPage;
   GOMidiEventKeyTab *m_keyPage;
 
+  GOMidiEventDialog(
+    GODocumentBase *doc,
+    /*
+      if doc != NULL then the dialog is auto destroyed when closed
+      if doc == NULL then the caller should call ShowModal() and then should
+      call Destroy() if needed
+    */
+    wxWindow *parent,
+    const wxString &title,
+    GOConfig &settings,
+    const wxString &dialogSelector,
+    GOMidiObject *pMidiObject,
+    GOMidiReceiver *event,
+    GOMidiSender *sender,
+    GOMidiShortcutReceiver *key,
+    GOMidiSender *division = nullptr,
+    GOMidiDialogListener *pDialogListener = nullptr);
+
 public:
   GOMidiEventDialog(
     GODocumentBase *doc,
@@ -48,11 +67,15 @@ public:
     const wxString &title,
     GOConfig &settings,
     const wxString &dialogSelector,
-    GOMidiReceiver *event,
-    GOMidiSender *sender,
-    GOMidiShortcutReceiver *key,
-    GOMidiSender *division = NULL,
+    GOMidiObject &midiObject,
     GOMidiDialogListener *pDialogListener = nullptr);
+
+  GOMidiEventDialog(
+    wxWindow *parent,
+    const wxString &title,
+    GOConfig &settings,
+    const wxString &dialogSelector,
+    GOMidiReceiver *pReceiver);
 
   void RegisterMIDIListener(GOMidi *midi);
 

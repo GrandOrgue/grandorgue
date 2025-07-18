@@ -23,10 +23,7 @@ public:
     void *element,
     const wxString &title,
     const wxString &dialogSelector,
-    GOMidiReceiver *event,
-    GOMidiSender *sender,
-    GOMidiShortcutReceiver *key,
-    GOMidiSender *division = nullptr,
+    GOMidiObject &obj,
     GOMidiDialogListener *pDialogListener = nullptr) override;
 };
 

@@ -23,6 +23,18 @@ class GOMetronome : private GOTimerCallback,
                     private GOSoundStateHandler,
                     private GOSaveableObject,
                     public GOElementCreator {
+public:
+  enum {
+    ID_METRONOME_ON = 0,
+    ID_METRONOME_MEASURE_P1,
+    ID_METRONOME_MEASURE_M1,
+    ID_METRONOME_BEAT_P1,
+    ID_METRONOME_BEAT_M1,
+    ID_METRONOME_BEAT_P10,
+    ID_METRONOME_BEAT_M10,
+  };
+  static const ButtonDefinitionEntry *const P_BUTTON_DEFS;
+
 private:
   GOOrganController *m_OrganController;
   unsigned m_BPM;
