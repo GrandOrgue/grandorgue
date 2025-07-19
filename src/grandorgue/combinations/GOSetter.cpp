@@ -743,34 +743,6 @@ GOSetter::GOSetter(GOOrganController *organController)
 
   m_CrescendoCtrl.SetContext(&MIDI_CONTEXT_CRESCENDOS);
 
-  m_buttons[ID_SETTER_PREV]->SetMidiInputNumber(0);
-  m_buttons[ID_SETTER_NEXT]->SetMidiInputNumber(1);
-  m_buttons[ID_SETTER_SET]->SetMidiInputNumber(2);
-  m_buttons[ID_SETTER_CURRENT]->SetMidiInputNumber(3);
-  m_buttons[ID_SETTER_GC]->SetMidiInputNumber(4);
-  m_buttons[ID_SETTER_M10]->SetMidiInputNumber(5);
-  m_buttons[ID_SETTER_P10]->SetMidiInputNumber(6);
-  m_buttons[ID_SETTER_L0]->SetMidiInputNumber(7);
-  m_buttons[ID_SETTER_L1]->SetMidiInputNumber(8);
-  m_buttons[ID_SETTER_L2]->SetMidiInputNumber(9);
-  m_buttons[ID_SETTER_L3]->SetMidiInputNumber(10);
-  m_buttons[ID_SETTER_L4]->SetMidiInputNumber(11);
-  m_buttons[ID_SETTER_L5]->SetMidiInputNumber(12);
-  m_buttons[ID_SETTER_L6]->SetMidiInputNumber(13);
-  m_buttons[ID_SETTER_L7]->SetMidiInputNumber(14);
-  m_buttons[ID_SETTER_L8]->SetMidiInputNumber(15);
-  m_buttons[ID_SETTER_L9]->SetMidiInputNumber(16);
-  m_buttons[ID_SETTER_PITCH_M1]->SetMidiInputNumber(17);
-  m_buttons[ID_SETTER_PITCH_P1]->SetMidiInputNumber(18);
-  m_buttons[ID_SETTER_PITCH_M100]->SetMidiInputNumber(19);
-  m_buttons[ID_SETTER_PITCH_P100]->SetMidiInputNumber(20);
-  m_buttons[ID_SETTER_TEMPERAMENT_PREV]->SetMidiInputNumber(21);
-  m_buttons[ID_SETTER_TEMPERAMENT_NEXT]->SetMidiInputNumber(22);
-  m_buttons[ID_SETTER_TRANSPOSE_DOWN]->SetMidiInputNumber(23);
-  m_buttons[ID_SETTER_TRANSPOSE_UP]->SetMidiInputNumber(24);
-  m_buttons[ID_SETTER_AUDIO_PANIC]->SetMidiInputNumber(25);
-  m_buttons[ID_SETTER_FILE_EXIT]->SetMidiInputNumber(26);
-
   SetSetterType(GOSetterState::SETTER_REGULAR);
   SetCrescendoType(m_crescendobank);
 

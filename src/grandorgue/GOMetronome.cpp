@@ -82,13 +82,6 @@ GOMetronome::GOMetronome(GOOrganController *organController)
     m_rank(NULL),
     m_StopID(0) {
   CreateButtons(*m_OrganController, BUTTON_DEFS);
-
-  m_buttons[ID_METRONOME_ON]->SetMidiInputNumber(25);
-  m_buttons[ID_METRONOME_MEASURE_P1]->SetMidiInputNumber(28);
-  m_buttons[ID_METRONOME_MEASURE_M1]->SetMidiInputNumber(29);
-  m_buttons[ID_METRONOME_BEAT_P1]->SetMidiInputNumber(26);
-  m_buttons[ID_METRONOME_BEAT_M1]->SetMidiInputNumber(27);
-
   m_OrganController->RegisterSoundStateHandler(this);
 }
 

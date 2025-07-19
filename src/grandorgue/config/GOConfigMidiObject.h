@@ -55,10 +55,10 @@ public:
 
   void AssignFrom(const GOMidiObject &objFrom);
 
-  virtual void LoadMidiObject(
+  void LoadMidiObject(
     GOConfigReader &cfg, const wxString &group, GOMidiMap &midiMap) override;
 
-  virtual void SaveMidiObject(
+  void SaveMidiObject(
     GOConfigWriter &cfg,
     const wxString &group,
     GOMidiMap &midiMap) const override;

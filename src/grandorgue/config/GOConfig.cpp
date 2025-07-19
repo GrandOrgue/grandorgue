@@ -16,12 +16,14 @@
 #include <wx/thread.h>
 
 #include "archive/GOArchiveFile.h"
+#include "combinations/GOSetter.h"
 #include "config/GOConfigFileReader.h"
 #include "config/GOConfigFileWriter.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
 #include "control/GOCallbackButtonControl.h"
+#include "control/GOElementCreator.h"
 #include "control/GOPushbuttonControl.h"
 #include "midi/ports/GOMidiPort.h"
 #include "midi/ports/GOMidiPortFactory.h"
@@ -35,6 +37,7 @@
 
 #include "GOConfigMidiObject.h"
 #include "GOMemoryPool.h"
+#include "GOMetronome.h"
 #include "GOPortFactory.h"
 #include "GORegisteredOrgan.h"
 #include "GOStdPath.h"
@@ -46,6 +49,7 @@ static constexpr unsigned SAMPLES_PER_BUFFER_DEFAULT = 512;
 static constexpr GOConfig::InterpolationType INTERPOLATION_DEFAULT
   = GOConfig::INTERPOLATION_POLYPHASE;
 
+static const wxString WX_EMPTY = wxEmptyString;
 static const wxString COUNT = wxT("Count");
 static const wxString ENABLED = wxT(".Enabled");
 static const wxString MIDI_PORTS = wxT("MidiPorts");
@@ -119,51 +123,142 @@ struct internal_midi_object_desc {
   initial_midi_group m_group;
   unsigned m_index;
   wxString m_name;
+  const GOElementCreator::ButtonDefinitionEntry *p_ButtonDef;
 };
 
 static const internal_midi_object_desc INTERNAL_MIDI_DESCS[] = {
-  {INITIAL_MANUAL, 1, _("Pedal")},
-  {INITIAL_MANUAL, 2, _("Manual 1")},
-  {INITIAL_MANUAL, 3, _("Manual 2")},
-  {INITIAL_MANUAL, 4, _("Manual 3")},
-  {INITIAL_MANUAL, 5, _("Manual 4")},
-  {INITIAL_MANUAL, 6, _("Manual 5")},
-  {INITIAL_ENCLOSURE, 1, _("Enclosure 1")},
-  {INITIAL_ENCLOSURE, 2, _("Enclosure 2")},
-  {INITIAL_ENCLOSURE, 3, _("Enclosure 3")},
-  {INITIAL_ENCLOSURE, 4, _("Enclosure 4")},
-  {INITIAL_ENCLOSURE, 5, _("Enclosure 5")},
-  {INITIAL_ENCLOSURE, 6, _("Enclosure 6")},
-  {INITIAL_SETTER, 0, _("Previous Memory")},
-  {INITIAL_SETTER, 1, _("Next Memory")},
-  {INITIAL_SETTER, 2, _("Memory Set")},
-  {INITIAL_SETTER, 3, _("Current")},
-  {INITIAL_SETTER, 4, _("G.C.")},
-  {INITIAL_SETTER, 5, _("-10")},
-  {INITIAL_SETTER, 6, _("+10")},
-  {INITIAL_SETTER, 7, _("__0")},
-  {INITIAL_SETTER, 8, _("__1")},
-  {INITIAL_SETTER, 9, _("__2")},
-  {INITIAL_SETTER, 10, _("__3")},
-  {INITIAL_SETTER, 11, _("__4")},
-  {INITIAL_SETTER, 12, _("__5")},
-  {INITIAL_SETTER, 13, _("__6")},
-  {INITIAL_SETTER, 14, _("__7")},
-  {INITIAL_SETTER, 15, _("__8")},
-  {INITIAL_SETTER, 16, _("__9")},
-  {INITIAL_MASTER, 17, _("-1 Cent")},
-  {INITIAL_MASTER, 18, _("+1 Cent")},
-  {INITIAL_MASTER, 19, _("-100 Cent")},
-  {INITIAL_MASTER, 20, _("+100 Cent")},
-  {INITIAL_MASTER, 21, _("Prev temperament")},
-  {INITIAL_MASTER, 22, _("Next temperament")},
-  {INITIAL_MASTER, 23, _("Transpose -")},
-  {INITIAL_MASTER, 24, _("Transpose +")},
-  {INITIAL_METRONOME, 25, _("On")},
-  {INITIAL_METRONOME, 26, _("BPM +")},
-  {INITIAL_METRONOME, 27, _("BPM -")},
-  {INITIAL_METRONOME, 28, _("Measure -")},
-  {INITIAL_METRONOME, 29, _("Measure +")},
+  {INITIAL_MANUAL, 1, _("Pedal"), nullptr},
+  {INITIAL_MANUAL, 2, _("Manual 1"), nullptr},
+  {INITIAL_MANUAL, 3, _("Manual 2"), nullptr},
+  {INITIAL_MANUAL, 4, _("Manual 3"), nullptr},
+  {INITIAL_MANUAL, 5, _("Manual 4"), nullptr},
+  {INITIAL_MANUAL, 6, _("Manual 5"), nullptr},
+  {INITIAL_ENCLOSURE, 1, _("Enclosure 1"), nullptr},
+  {INITIAL_ENCLOSURE, 2, _("Enclosure 2"), nullptr},
+  {INITIAL_ENCLOSURE, 3, _("Enclosure 3"), nullptr},
+  {INITIAL_ENCLOSURE, 4, _("Enclosure 4"), nullptr},
+  {INITIAL_ENCLOSURE, 5, _("Enclosure 5"), nullptr},
+  {INITIAL_ENCLOSURE, 6, _("Enclosure 6"), nullptr},
+  {INITIAL_SETTER,
+   0,
+   _("Previous Memory"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_PREV},
+  {INITIAL_SETTER,
+   0,
+   _("Next Memory"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_NEXT},
+  {INITIAL_SETTER,
+   0,
+   _("Memory Set"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_SET},
+  {INITIAL_SETTER,
+   0,
+   _("Current"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_CURRENT},
+  {INITIAL_SETTER,
+   0,
+   _("G.C."),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_GC},
+  {INITIAL_SETTER,
+   0,
+   _("-10"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_M10},
+  {INITIAL_SETTER,
+   0,
+   _("+10"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_P10},
+  {INITIAL_SETTER,
+   0,
+   _("__0"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L0},
+  {INITIAL_SETTER,
+   0,
+   _("__1"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L1},
+  {INITIAL_SETTER,
+   0,
+   _("__2"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L2},
+  {INITIAL_SETTER,
+   0,
+   _("__3"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L3},
+  {INITIAL_SETTER,
+   0,
+   _("__4"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L4},
+  {INITIAL_SETTER,
+   0,
+   _("__5"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L5},
+  {INITIAL_SETTER,
+   0,
+   _("__6"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L6},
+  {INITIAL_SETTER,
+   0,
+   _("__7"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L7},
+  {INITIAL_SETTER,
+   0,
+   _("__8"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L8},
+  {INITIAL_SETTER,
+   0,
+   _("__9"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_L9},
+  {INITIAL_MASTER,
+   0,
+   _("-1 Cent"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_PITCH_M1},
+  {INITIAL_MASTER,
+   0,
+   _("+1 Cent"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_PITCH_P1},
+  {INITIAL_MASTER,
+   0,
+   _("-100 Cent"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_PITCH_M100},
+  {INITIAL_MASTER,
+   0,
+   _("+100 Cent"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_PITCH_P100},
+  {INITIAL_MASTER,
+   0,
+   _("Prev temperament"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_TEMPERAMENT_PREV},
+  {INITIAL_MASTER,
+   0,
+   _("Next temperament"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_TEMPERAMENT_NEXT},
+  {INITIAL_MASTER,
+   0,
+   _("Transpose -"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_TRANSPOSE_DOWN},
+  {INITIAL_MASTER,
+   0,
+   _("Transpose +"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_TRANSPOSE_UP},
+  {INITIAL_METRONOME,
+   0,
+   _("On"),
+   GOMetronome::P_BUTTON_DEFS + GOMetronome::ID_METRONOME_ON},
+  {INITIAL_METRONOME,
+   0,
+   _("BPM +"),
+   GOMetronome::P_BUTTON_DEFS + GOMetronome::ID_METRONOME_BEAT_P1},
+  {INITIAL_METRONOME,
+   0,
+   _("BPM -"),
+   GOMetronome::P_BUTTON_DEFS + GOMetronome::ID_METRONOME_BEAT_M1},
+  {INITIAL_METRONOME,
+   0,
+   _("Measure -"),
+   GOMetronome::P_BUTTON_DEFS + GOMetronome::ID_METRONOME_MEASURE_M1},
+  {INITIAL_METRONOME,
+   0,
+   _("Measure +"),
+   GOMetronome::P_BUTTON_DEFS + GOMetronome::ID_METRONOME_MEASURE_P1},
 };
 
 static const GOConfigEnum INITIAL_LOAD_TYPES({
@@ -478,11 +573,16 @@ void GOConfig::LoadDefaults() {
   for (const auto &desc : INTERNAL_MIDI_DESCS) {
     const initial_midi_group_desc &groupDesc
       = INITIAL_MIDI_GROUP_DESCS[desc.m_group];
+    const GOElementCreator::ButtonDefinitionEntry *pButtonDef
+      = desc.p_ButtonDef;
+    wxString path = pButtonDef ? GOMidiObjectContext::getPath(
+                      pButtonDef->p_MidiContext, pButtonDef->name)
+                               : WX_EMPTY;
     GOConfigMidiObject *pObj = new GOConfigMidiObject(
       m_MidiMap,
       groupDesc.m_ObjectType,
       groupDesc.m_GroupName,
-      wxString::Format(WX_FMT_D, desc.m_index),
+      path.IsEmpty() ? wxString::Format(WX_FMT_D, desc.m_index) : path,
       desc.m_name);
 
     pObj->SetSenderType(groupDesc.m_SenderType);
@@ -490,6 +590,8 @@ void GOConfig::LoadDefaults() {
     pObj->SetShortcutReceiverType(groupDesc.m_ShortcutReceiverType);
     pObj->SetDivisionSenderType(groupDesc.m_DivisionalType);
     m_InitialMidiObjects.push_back(pObj);
+    if (!path.IsEmpty())
+      m_InitialMidiObjectsByPath[path] = pObj;
   }
   m_ResourceDir = GOStdPath::GetResourceDir();
 
