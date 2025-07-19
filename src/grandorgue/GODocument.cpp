@@ -55,7 +55,7 @@ bool GODocument::LoadOrgan(
   GOConfig &cfg = m_sound.GetSettings();
 
   CloseOrgan();
-  m_OrganController = new GOOrganController(cfg, this, true);
+  m_OrganController = new GOOrganController(cfg, true);
   wxString error = m_OrganController->Load(dlg, organ, cmb, isGuiOnly);
   if (!error.IsEmpty()) {
     if (error != wxT("!")) {
@@ -202,12 +202,13 @@ void GODocument::ShowStops() {
 }
 
 void GODocument::ShowMIDIEventDialog(
-  void *element,
-  const wxString &title,
-  const wxString &dialogSelector,
-  GOMidiObject &obj,
-  GOMidiDialogListener *pDialogListener) {
-  if (!showWindow(GODocument::MIDI_EVENT, element) && m_OrganController) {
+  GOMidiObject &obj, GOMidiDialogListener *pDialogListener) {
+  if (!showWindow(GODocument::MIDI_EVENT, &obj) && m_OrganController) {
+    const wxString title = wxString::Format(
+      _("MIDI-Settings for %s - %s"), obj.GetMidiTypeName(), obj.GetName());
+    const wxString dialogSelector
+      = wxString::Format(wxT("%s.%s"), obj.GetMidiTypeCode(), obj.GetName());
+
     GOMidiEventDialog *dlg = new GOMidiEventDialog(
       this,
       NULL,
@@ -218,6 +219,6 @@ void GODocument::ShowMIDIEventDialog(
       pDialogListener);
     dlg->RegisterMIDIListener(m_OrganController->GetMidi());
     dlg->SetModificationListener(m_OrganController);
-    registerWindow(GODocument::MIDI_EVENT, element, dlg);
+    registerWindow(GODocument::MIDI_EVENT, &obj, dlg);
   }
 }

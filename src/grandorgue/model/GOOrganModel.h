@@ -15,7 +15,6 @@
 #include "combinations/control/GOCombinationButtonSet.h"
 #include "combinations/control/GOCombinationControllerProxy.h"
 #include "combinations/model/GOCombinationDefinition.h"
-#include "midi/dialog-creator/GOMidiDialogCreatorProxy.h"
 #include "midi/elements/GOMidiSendProxy.h"
 #include "modification/GOModificationProxy.h"
 #include "pipe-config/GOPipeConfigListener.h"
@@ -38,7 +37,6 @@ class GOWindchest;
 class GOOrganModel : private GOCombinationButtonSet,
                      public GOCombinationControllerProxy,
                      public GOEventHandlerList,
-                     public GOMidiDialogCreatorProxy,
                      public GOMidiSendProxy,
                      public GOPipeConfigListener {
 private:

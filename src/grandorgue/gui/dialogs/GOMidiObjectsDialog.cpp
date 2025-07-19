@@ -27,6 +27,7 @@
 #include "yaml/GOYamlModel.h"
 #include "yaml/go-wx-yaml.h"
 
+#include "GODocument.h"
 #include "GOEvent.h"
 #include "go-message-boxes.h"
 
@@ -222,11 +223,12 @@ GOMidiPlayingObject *GOMidiObjectsDialog::GetSelectedObject() const {
 
 void GOMidiObjectsDialog::ConfigureSelectedObject() {
   int row = m_ObjectsGrid->GetGridCursorRow();
+  GODocument *pDoc = dynamic_cast<GODocument *>(GetDocument());
 
   if (row >= 0) {
     GOMidiPlayingObject *pObj = r_MidiObjects[row];
 
-    pObj->ShowConfigDialog();
+    pDoc->ShowMIDIEventDialog(*pObj, pObj);
   }
 }
 

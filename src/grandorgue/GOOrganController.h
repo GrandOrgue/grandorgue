@@ -123,10 +123,7 @@ private:
   const wxString &GetOrganHash() const { return m_hash; }
 
 public:
-  GOOrganController(
-    GOConfig &config,
-    GOMidiDialogCreator *pMidiDialogCreator = nullptr,
-    bool isAppInitialized = false);
+  GOOrganController(GOConfig &config, bool isAppInitialized = false);
   virtual ~GOOrganController();
 
   GOSizeKeeper &GetStopWindowSizeKeeper() { return m_StopWindowSizeKeeper; }

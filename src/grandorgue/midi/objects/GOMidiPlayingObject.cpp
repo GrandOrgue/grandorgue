@@ -38,12 +38,3 @@ void GOMidiPlayingObject::AfterMidiLoaded() {
       CopyMidiSettingFrom(*pInitialObj);
   }
 }
-
-void GOMidiPlayingObject::ShowConfigDialog() {
-  const wxString title = wxString::Format(
-    _("MIDI-Settings for %s - %s"), GetMidiTypeName(), GetName());
-  const wxString selector
-    = wxString::Format(wxT("%s.%s"), GetMidiTypeCode(), GetName());
-
-  r_OrganModel.ShowMIDIEventDialog(this, title, selector, *this, this);
-}

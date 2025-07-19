@@ -28,8 +28,6 @@ public:
   // if MIDI is not configured then try
   void AfterMidiLoaded() override;
 
-  void ShowConfigDialog();
-
   void PreparePlayback() override {}
   void PrepareRecording() override {}
   void AbortPlayback() override {}
