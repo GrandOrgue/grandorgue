@@ -1,3 +1,4 @@
+- Changed package names for Linux: grandorgue-wx30 requires wxWidgets 3.0 and grandorgue requires wxWidgets 3.2
 - Load pitch and show it to labels on organ load https://github.com/GrandOrgue/grandorgue/issues/2233
 - Reduced decimal numbers for PitchLabel https://github.com/GrandOrgue/grandorgue/issues/2234
 - Added support of exporting current midi settings to a text file and of importing them from both text and .cmb files https://github.com/GrandOrgue/grandorgue/issues/1199
