@@ -101,39 +101,46 @@ jobs:
             for: linux
             prepare: "debian-based"
             build_on: linux
+            wx_version: wx30
+            pkg_suffix: wx30
 
           - run_on: ubuntu-22.04
             for: linux
             prepare: "debian-based"
             build_on: linux
-            pkg_suffix: wx32
+            wx_version: wx32
 
           - run_on: ubuntu-22.04
             for: appimage-x86_64
             prepare: "debian-based"
             build_on: linux
+            wx_version: wx32
 
           - run_on: ubuntu-22.04
             for: linux-armhf
             prepare: "debian-based"
             build_on: linux
+            wx_version: wx30
+            pkg_suffix: wx30
     
           - run_on: ubuntu-22.04
             for: linux-armhf
             prepare: "debian-based"
             build_on: linux
-            pkg_suffix: wx32
+            wx_version: wx32
 
           - run_on: ubuntu-22.04
             for: linux-aarch64
             prepare: "debian-based"
             build_on: linux
+            wx_version: wx30
+            pkg_suffix: wx30
 
           - run_on: ubuntu-22.04
             for: linux-aarch64
             prepare: "debian-based"
             build_on: linux
-            pkg_suffix: wx32
+            wx_version: wx32
 
           - run_on: macos-13 # x86_64
             for: osx
@@ -157,7 +164,7 @@ jobs:
         submodules: true
     
     - name: Install Dependencies
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.pkg_suffix }}"
+      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.wx_version }}"
       
     - name: Build
       working-directory: ${{github.workspace}}

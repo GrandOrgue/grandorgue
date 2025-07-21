@@ -111,7 +111,7 @@ This method requires that all dependencies have already been installed. Usually 
 3. Follow the prompts.
 4. After installation/upgrading, run GrandOrgue from the `Start` menu.
 
-### Running Grandorgue on Windows without installation
+### Running Grandorgue on Windows 64-bit without installation
 1. Download the file ``grandorgue-<version>.windows.x86_64.zip``
 2. Unpack it's contents to some directory.
 3. Run ``GrandOrgue.exe`` from the `bin` subdirectory
