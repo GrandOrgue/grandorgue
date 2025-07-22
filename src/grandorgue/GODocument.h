@@ -12,19 +12,18 @@
 
 #include "document-base/GODocumentBase.h"
 #include "midi/GOMidiListener.h"
-#include "midi/dialog-creator/GOMidiDialogCreator.h"
 #include "midi/events/GOMidiCallback.h"
 #include "threading/GOMutex.h"
 
+class GOMidiDialogListener;
+class GOMidiObject;
 class GOOrganController;
 class GOOrgan;
 class GOProgressDialog;
 class GOResizable;
 class GOSound;
 
-class GODocument : public GODocumentBase,
-                   protected GOMidiCallback,
-                   public GOMidiDialogCreator {
+class GODocument : public GODocumentBase, protected GOMidiCallback {
 private:
   GOResizable *p_MainWindow;
   GOSound &m_sound;
@@ -62,11 +61,7 @@ public:
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
 
   void ShowMIDIEventDialog(
-    void *element,
-    const wxString &title,
-    const wxString &dialogSelector,
-    GOMidiObject &obj,
-    GOMidiDialogListener *pDialogListener = nullptr) override;
+    GOMidiObject &obj, GOMidiDialogListener *pDialogListener = nullptr);
 };
 
 #endif
