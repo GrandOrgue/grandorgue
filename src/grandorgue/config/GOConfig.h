@@ -79,8 +79,6 @@ private:
   void LoadOrgans(GOConfigReader &cfg);
   void SaveOrgans(GOConfigWriter &cfg);
 
-  wxString GetEventSection(unsigned index);
-
   void LoadDefaults();
 
 public:

@@ -1,3 +1,4 @@
+- Added capability of setting Send, Division and Shortcut events for Initial MIDI objects https://github.com/GrandOrgue/grandorgue/issues/1974
 - Changed package names for Linux: grandorgue-wx30 requires wxWidgets 3.0 and grandorgue requires wxWidgets 3.2
 - Load pitch and show it to labels on organ load https://github.com/GrandOrgue/grandorgue/issues/2233
 - Reduced decimal numbers for PitchLabel https://github.com/GrandOrgue/grandorgue/issues/2234
