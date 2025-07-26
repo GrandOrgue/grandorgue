@@ -8,6 +8,8 @@
 #include "GOMidiEventDialog.h"
 
 #include <wx/bookctrl.h>
+#include <wx/button.h>
+#include <wx/msgdlg.h>
 
 #include "config/GOConfig.h"
 #include "midi/dialog-creator/GOMidiDialogListener.h"
@@ -17,6 +19,14 @@
 #include "GOMidiEventRecvTab.h"
 #include "GOMidiEventSendTab.h"
 
+enum {
+  ID_BUTTON_TO_INITIAL = 400,
+};
+
+BEGIN_EVENT_TABLE(GOMidiEventDialog, GOTabbedDialog)
+EVT_BUTTON(ID_BUTTON_TO_INITIAL, GOMidiEventDialog::OnButtonToInitial)
+END_EVENT_TABLE()
+
 GOMidiEventDialog::GOMidiEventDialog(
   GODocumentBase *doc,
   wxWindow *parent,
@@ -24,6 +34,7 @@ GOMidiEventDialog::GOMidiEventDialog(
   GOConfig &settings,
   const wxString &dialogSelector,
   GOMidiObject *pMidiObject,
+  bool mayBeAssignedToInitial,
   GOMidiReceiver *event,
   GOMidiSender *sender,
   GOMidiShortcutReceiver *key,
@@ -32,7 +43,9 @@ GOMidiEventDialog::GOMidiEventDialog(
   : GOTabbedDialog(
     parent, "MidiEvent", title, settings.m_DialogSizes, dialogSelector),
     GOView(doc, this),
+    r_config(settings),
     p_DialogListener(pDialogListener),
+    p_object(pMidiObject),
     m_recvPage(NULL),
     m_sendPage(NULL),
     m_sendDivisionPage(NULL),
@@ -60,6 +73,18 @@ GOMidiEventDialog::GOMidiEventDialog(
     AddTab(m_sendDivisionPage);
   }
 
+  // add a custom button 'Reason into the space of the standard dialog button
+  wxSizer *const pButtonSizer = GetButtonSizer();
+
+  if (pButtonSizer) {
+    pButtonSizer->InsertSpacer(2, 10);
+    m_ToInitial = new wxButton(this, ID_BUTTON_TO_INITIAL, _("To initial"));
+    pButtonSizer->Insert(
+      3, m_ToInitial, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    pButtonSizer->InsertSpacer(3, 10);
+    m_ToInitial->Enable(mayBeAssignedToInitial && pMidiObject);
+  }
+
   LayoutDialog();
 }
 
@@ -70,6 +95,7 @@ GOMidiEventDialog::GOMidiEventDialog(
   GOConfig &settings,
   const wxString &dialogSelector,
   GOMidiObject &midiObject,
+  bool mayBeAssignedToInitial,
   GOMidiDialogListener *pDialogListener)
   : GOMidiEventDialog(
     doc,
@@ -78,6 +104,7 @@ GOMidiEventDialog::GOMidiEventDialog(
     settings,
     dialogSelector,
     &midiObject,
+    mayBeAssignedToInitial,
     !midiObject.IsReadOnly() ? midiObject.GetMidiReceiver() : nullptr,
     midiObject.GetMidiSender(),
     !midiObject.IsReadOnly() ? midiObject.GetMidiShortcutReceiver() : nullptr,
@@ -97,6 +124,7 @@ GOMidiEventDialog::GOMidiEventDialog(
     settings,
     dialogSelector,
     nullptr,
+    false,
     pReceiver,
     nullptr,
     nullptr,
@@ -114,4 +142,22 @@ bool GOMidiEventDialog::TransferDataFromWindow() {
   if (res && p_DialogListener)
     p_DialogListener->OnSettingsApplied();
   return res;
+}
+
+void GOMidiEventDialog::OnButtonToInitial(wxCommandEvent &e) {
+  if (p_object) {
+    TransferDataFromWindow();
+    if (
+      p_object->IsMidiConfigured()
+      || wxMessageBox(
+           _("No MIDI events are configured for this object.\n"
+             "Are you sure to save the empty MIDI settings to initial?"),
+           _("Empty MIDI settings"),
+           wxCENTRE | wxYES_NO,
+           this)
+        == wxYES) {
+      r_config.AssignToInitial(*p_object);
+      r_config.Flush();
+    }
+  }
 }

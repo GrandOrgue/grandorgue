@@ -576,6 +576,15 @@ Opens a bunch of menus and sub menus allowing to select a new tuning temperament
 	    settings from. Both MIDI settings files (*.yaml) and organ preset
             files (*.cmb) are supported.
 	  </para>
+          <para>
+	    The <emphasis role="strong">To initial</emphasis> button copies the
+            MIDI settings of selected objects to the Initial MIDI settings. When
+            the user loads another organ that contains MIDI objects with the
+            same path as the selected ones, they will inherit the MIDI settings
+            from here unless they are not overriden in that organ preset. In the
+            future the user can alter the initial MIDI settings at 
+            <link linkend="initialconfiguration">Initial MIDI</link>.
+	  </para>
         </sect3>
         <sect3 id="accessibility-stops">
           <title>Stops</title>
@@ -3538,6 +3547,14 @@ sends the label contents following the Hauptwerk&#8482; standards.
         </sect3>
       </sect2>
     </sect1>
+    <para>
+      The "To initial" button copies the MIDI settings from the all tabs to the
+      Initial MIDI settings. When the user loads another organ that contains a
+      MIDI object with the same path as this one, it will inherit the MIDI
+      settings from here unless they are not overriden in tat organ preset. In
+      the future the user can alter the initial MIDI settings at 
+      <link linkend="initialconfiguration">Initial MIDI</link>.
+    </para>
   </chapter>
   <chapter>
     <title>Audio and Organ settings overview</title>
@@ -5025,11 +5042,24 @@ Event dialogs that are accessible by right-clicking a control in the GUI (e.g.
 manual, stop, enclosure, piston, etc.).
       </para>
       <para>
-Customizations done by the user always supersede the matching initial setting.
-If customizations are <link linkend="save">saved</link> to a preset number, all
-subsequent loads will ignore the initial MIDI settings and all further updates to
-the sample set's MIDI configuration will be done by right-clicking on the elements
-in the user interface.
+        Customizations done by the user always supersede the matching initial 
+        setting. If customizations of some MIDI objects are 
+        <link linkend="save">saved</link> to a preset number, all subsequent
+        loads will ignore the initial MIDI settings for these objects and all 
+        further updates to the sample set's MIDI configuration will be done by 
+        right-clicking on the elements in the user interface.
+      </para>
+      <para>
+        There are two parts of initial MIDI objects: built-in ones and 
+        user-added ones. The built-in objects have different groups and they are
+        matched with ODF by MIDIInputNumber. The user-added objects have
+        "user-added" as their group and they are matched by their path.
+      </para>
+      <para>
+        A user can add more Initial MIDI objects from the right-click MIDI event
+        editor or from the <link linkend="midiobjects">MIDI Objects</link> 
+        dialog. The user-added Initial MIDI settings take precedence over the
+        built-in objects settings.
       </para>
       <para>
 When a loaded sample set is <link linkend="resettodefaults">reset to
@@ -5045,7 +5075,13 @@ and <link linkend="odfEnclosureEntry">enclosure mapping</link> to the initial
 MIDI settings work properly.
         </simpara>
       </note>
-      <para>The "Group" column shows which group the element is filed under; the "Element" column identifies the element; The "MIDI Event" column shows if the element is associated to MIDI event(s).</para>
+      <para>
+        The "Group" column shows which group the element is filed under. The
+        "Type column shows the MIDI object type. The "Name" column identifies
+        the object. The "Matching" column shows the value a particular MIDI
+        object in the loaded organ is matched by. The "Configured" column shows
+        if the object is associated to MIDI event(s).
+      </para>
       <para>The <link linkend="midieventeditor">MIDI Event Editor</link> can be displayed by selecting an element and pushing the "Properties" button, or by double-clicking on the element's entry.</para>
       <para>The available initial setting are those that are tied to the physical hardware and have no reason to change across dispositions:</para>
       <variablelist>
@@ -5109,7 +5145,22 @@ MIDI settings work properly.
             </variablelist>
           </listitem>
         </varlistentry>
+        <varlistentry>
+          <term>User-added&#160;Group</term>
+          <listitem>
+            <simpara>
+              MIDI settings for any MIDI objects. If a MIDI object exists in any
+              loaded organ with the path equal to the value in the Matching
+              column then it inherits the MIDI settings from here unless they 
+              are not oveddiden in the organ preset.
+            </simpara>
+          </listitem>
+        </varlistentry>
       </variablelist>
+      <para>
+        The "Delete" button allows to delete the selected MIDI obects from the
+        list. Only user-added initial MIDI objects may be deleted.
+      </para>
     </sect1>
     <sect1>
       <title>Organs tab</title>

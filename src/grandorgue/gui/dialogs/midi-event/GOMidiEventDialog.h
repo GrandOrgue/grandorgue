@@ -14,6 +14,8 @@
 #include "gui/dialogs/common/GOTabbedDialog.h"
 #include "modification/GOModificationProxy.h"
 
+class wxButton;
+
 class GOConfig;
 class GOMidi;
 class GOMidiDialogListener;
@@ -30,12 +32,16 @@ class GOMidiEventDialog : public GOTabbedDialog,
                           public GOView,
                           public GOModificationProxy {
 private:
+  GOConfig &r_config;
   GOMidiDialogListener *p_DialogListener;
 
+  GOMidiObject *p_object;
   GOMidiEventRecvTab *m_recvPage;
   GOMidiEventSendTab *m_sendPage;
   GOMidiEventSendTab *m_sendDivisionPage;
   GOMidiEventKeyTab *m_keyPage;
+
+  wxButton *m_ToInitial;
 
   GOMidiEventDialog(
     GODocumentBase *doc,
@@ -49,11 +55,12 @@ private:
     GOConfig &settings,
     const wxString &dialogSelector,
     GOMidiObject *pMidiObject,
+    bool mayBeAssignedToInitial,
     GOMidiReceiver *event,
     GOMidiSender *sender,
     GOMidiShortcutReceiver *key,
-    GOMidiSender *division = nullptr,
-    GOMidiDialogListener *pDialogListener = nullptr);
+    GOMidiSender *division,
+    GOMidiDialogListener *pDialogListener);
 
 public:
   GOMidiEventDialog(
@@ -68,6 +75,7 @@ public:
     GOConfig &settings,
     const wxString &dialogSelector,
     GOMidiObject &midiObject,
+    bool mayBeAssignedToInitial,
     GOMidiDialogListener *pDialogListener = nullptr);
 
   GOMidiEventDialog(
@@ -80,7 +88,10 @@ public:
   void RegisterMIDIListener(GOMidi *midi);
 
 private:
+  void OnButtonToInitial(wxCommandEvent &e);
   bool TransferDataFromWindow() override;
+
+  DECLARE_EVENT_TABLE()
 };
 
 #endif /* MIDIEVENTDIALOG_H_ */

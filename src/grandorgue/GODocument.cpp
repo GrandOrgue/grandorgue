@@ -216,6 +216,7 @@ void GODocument::ShowMIDIEventDialog(
       m_OrganController->GetSettings(),
       dialogSelector,
       obj,
+      true,
       pDialogListener);
     dlg->RegisterMIDIListener(m_OrganController->GetMidi());
     dlg->SetModificationListener(m_OrganController);

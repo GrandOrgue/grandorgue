@@ -37,17 +37,20 @@ enum {
   ID_STATUS,
   ID_BUTTON_EXPORT,
   ID_BUTTON_IMPORT,
+  ID_BUTTON_TO_INITIAL,
   ID_BUTTON,
   ID_BUTTON_LAST = ID_BUTTON + 2,
 };
 
 BEGIN_EVENT_TABLE(GOMidiObjectsDialog, GOSimpleDialog)
 EVT_GRID_CMD_SELECT_CELL(ID_LIST, GOMidiObjectsDialog::OnSelectCell)
+EVT_GRID_CMD_RANGE_SELECT(ID_LIST, GOMidiObjectsDialog::OnRangeSelect)
 EVT_GRID_CMD_CELL_LEFT_DCLICK(ID_LIST, GOMidiObjectsDialog::OnObjectDoubleClick)
 EVT_BUTTON(ID_EDIT, GOMidiObjectsDialog::OnConfigureButton)
 EVT_BUTTON(ID_STATUS, GOMidiObjectsDialog::OnStatusButton)
 EVT_BUTTON(ID_BUTTON_EXPORT, GOMidiObjectsDialog::OnExportButton)
 EVT_BUTTON(ID_BUTTON_IMPORT, GOMidiObjectsDialog::OnImportButton)
+EVT_BUTTON(ID_BUTTON_TO_INITIAL, GOMidiObjectsDialog::OnToInitialButton)
 EVT_COMMAND_RANGE(
   ID_BUTTON, ID_BUTTON_LAST, wxEVT_BUTTON, GOMidiObjectsDialog::OnActionButton)
 END_EVENT_TABLE()
@@ -113,7 +116,8 @@ GOMidiObjectsDialog::GOMidiObjectsDialog(
     0,
     wxCLOSE | wxHELP),
     GOView(doc, this),
-    m_ExportImportDir(organModel.GetConfig().ExportImportPath()),
+    r_config(organModel.GetConfig()),
+    m_ExportImportDir(r_config.ExportImportPath()),
     m_OrganName(organModel.GetOrganName()),
     r_MidiObjects(organModel.GetMidiObjects()) {
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
@@ -166,7 +170,12 @@ GOMidiObjectsDialog::GOMidiObjectsDialog(
     m_ImportButton = new wxButton(this, ID_BUTTON_IMPORT, _("Import"));
     pButtonSizer->Insert(
       4, m_ImportButton, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
-    pButtonSizer->InsertSpacer(6, 10);
+    pButtonSizer->InsertSpacer(5, 10);
+    m_ToInitialButton
+      = new wxButton(this, ID_BUTTON_TO_INITIAL, _("To initial"));
+    pButtonSizer->Insert(
+      6, m_ToInitialButton, 0, wxALIGN_CENTRE_VERTICAL | wxLEFT | wxRIGHT, 2);
+    m_ToInitialButton->Disable();
   }
 
   LayoutWithInnerSizer(topSizer);
@@ -252,6 +261,10 @@ void GOMidiObjectsDialog::OnSelectCell(wxGridEvent &event) {
   }
   Layout();
   event.StopPropagation();
+}
+
+void GOMidiObjectsDialog::OnRangeSelect(wxGridRangeSelectEvent &event) {
+  m_ToInitialButton->Enable(!m_ObjectsGrid->GetSelectedRows().IsEmpty());
 }
 
 void GOMidiObjectsDialog::OnStatusButton(wxCommandEvent &event) {
@@ -477,6 +490,25 @@ void GOMidiObjectsDialog::OnImportButton(wxCommandEvent &event) {
         wxOK | wxICON_ERROR,
         this);
     }
+  }
+}
+
+void GOMidiObjectsDialog::OnToInitialButton(wxCommandEvent &event) {
+  wxArrayInt selectedRows = m_ObjectsGrid->GetSelectedRows();
+
+  if (
+    !selectedRows.IsEmpty()
+    && wxMessageBox(
+         wxString::Format(
+           _("Are you sure to store the %u MIDI objects settings to initial?"),
+           (unsigned)selectedRows.size()),
+         _("Store MIDI settings to initial"),
+         wxYES_NO,
+         this)
+      == wxYES) {
+    for (auto row : selectedRows)
+      r_config.AssignToInitial(*r_MidiObjects[row]);
+    r_config.Flush();
   }
 }
 

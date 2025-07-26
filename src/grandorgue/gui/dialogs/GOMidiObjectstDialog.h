@@ -16,6 +16,7 @@
 
 class wxButton;
 class wxGridEvent;
+class wxGridRangeSelectEvent;
 
 class GOConfig;
 class GOGrid;
@@ -24,6 +25,8 @@ class GOOrganModel;
 
 class GOMidiObjectsDialog : public GOSimpleDialog, public GOView {
 private:
+  GOConfig &r_config;
+
   wxString m_ExportImportDir;
   wxString m_OrganName;
   const std::vector<GOMidiPlayingObject *> &r_MidiObjects;
@@ -52,6 +55,7 @@ private:
 
   wxButton *m_ExportButton;
   wxButton *m_ImportButton;
+  wxButton *m_ToInitialButton;
 
 public:
   GOMidiObjectsDialog(
@@ -69,6 +73,7 @@ private:
   void ConfigureSelectedObject();
 
   void OnSelectCell(wxGridEvent &event);
+  void OnRangeSelect(wxGridRangeSelectEvent &event);
   void OnObjectDoubleClick(wxGridEvent &event) { ConfigureSelectedObject(); }
   void OnConfigureButton(wxCommandEvent &event) { ConfigureSelectedObject(); }
   void OnStatusButton(wxCommandEvent &event);
@@ -85,6 +90,7 @@ private:
 
   void OnExportButton(wxCommandEvent &event);
   void OnImportButton(wxCommandEvent &event);
+  void OnToInitialButton(wxCommandEvent &event);
 
   void OnHide() override;
 
