@@ -693,18 +693,6 @@ void GOConfig::SetLanguageId(int langId) {
                                  : wxLocale::GetLanguageCanonicalName(langId));
 }
 
-const wxString &GOConfig::GetEventGroup(unsigned index) const {
-  assert(index < getMidiBuiltinCount());
-
-  return INITIAL_MIDI_GROUP_DESCS[INTERNAL_MIDI_DESCS[index].m_group]
-    .m_GroupName;
-}
-
-wxString GOConfig::GetEventTitle(unsigned index) {
-  assert(index < getMidiBuiltinCount());
-  return INTERNAL_MIDI_DESCS[index].m_name;
-}
-
 GOConfigMidiObject *GOConfig::GetMidiInitialObject(unsigned index) {
   assert(index < m_InitialMidiObjects.size());
   return m_InitialMidiObjects[index];

@@ -183,8 +183,6 @@ public:
 
   // return count of all initial MIDI objects, both built-in and user-addeds
   unsigned GetMidiInitialCount() const { return m_InitialMidiObjects.size(); }
-  const wxString &GetEventGroup(unsigned index) const;
-  wxString GetEventTitle(unsigned index);
   GOConfigMidiObject *GetMidiInitialObject(unsigned index);
   // search among built-in MIDI objects
   GOConfigMidiObject *FindMidiInitialObject(
