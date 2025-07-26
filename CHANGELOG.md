@@ -1,3 +1,4 @@
+# 3.16.0 (2025-08-03)
 - Added more columns to the Initial MIDI tab of the Organ settings  https://github.com/GrandOrgue/grandorgue/issues/1974
 - Added capability of assigning any MIDI object events to the initial MIDI configuration https://github.com/GrandOrgue/grandorgue/issues/1974
 - Added capability of setting Send, Division and Shortcut events for Initial MIDI objects https://github.com/GrandOrgue/grandorgue/issues/1974
