@@ -83,8 +83,8 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
 
   GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
   master_enc->SetContext(&MIDI_CONTEXT_VOLUMES);
-  master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
   master_enc->SetNameForContext(wxT("Master"));
+  master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
   m_OrganController->AddEnclosure(master_enc);
   master_enc->SetElementId(
     m_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
