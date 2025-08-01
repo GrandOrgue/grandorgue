@@ -63,7 +63,7 @@ unsigned GOOrganModel::GetRecorderElementID(const wxString &name) {
 static const wxString WX_ORGAN = wxT("Organ");
 
 static void set_name_for_context(GOMidiObject *pObj, unsigned n) {
-  pObj->SetNameForContext(wxString::Format(WX_OBJ_NUM_FMT, n));
+  pObj->SetHardName(wxString::Format(WX_OBJ_NUM_FMT, n));
 }
 
 void GOOrganModel::Load(GOConfigReader &cfg) {

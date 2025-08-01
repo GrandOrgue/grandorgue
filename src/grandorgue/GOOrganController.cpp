@@ -60,7 +60,6 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
-#include "model/GOWindchest.h"
 #include "sound/GOSoundEngine.h"
 #include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"

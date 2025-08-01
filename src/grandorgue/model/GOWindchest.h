@@ -26,6 +26,10 @@ class GOWindchest : private GOSoundStateHandler {
 private:
   GOOrganModel &r_OrganModel;
   wxString m_Name;
+  // a name tat is never translated. May be empty that causes that m_name is
+  // used
+  wxString m_HardName;
+
   float m_Volume;
   std::vector<GOEnclosure *> m_enclosure;
   std::vector<unsigned> m_tremulant;
@@ -37,6 +41,9 @@ private:
 
 public:
   GOWindchest(GOOrganModel &organModel);
+
+  const wxString &GetHardName() { return m_HardName; }
+  void SetHardName(const wxString &name) { m_HardName = name; }
 
   void Init(GOConfigReader &cfg, wxString group, wxString name);
   void Load(GOConfigReader &cfg, wxString group, unsigned index);
