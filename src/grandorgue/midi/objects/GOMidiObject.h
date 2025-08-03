@@ -55,8 +55,11 @@ private:
   GOMidiMap &r_MidiMap;
   ObjectType m_ObjectType;
 
-  wxString m_NameForContext;
+  // a name that may be translated (for built-in objects)
   wxString m_name;
+  // a name that is never translated. May be empty which causes that m_name is
+  // used
+  wxString m_HardName;
 
   GOMidiSender *p_MidiSender;
   GOMidiReceiver *p_MidiReceiver;
@@ -135,10 +138,11 @@ public:
   const GOMidiObjectContext *GetContext() const { return p_context; }
   void SetContext(const GOMidiObjectContext *pContext) { p_context = pContext; }
 
-  void SetNameForContext(const wxString &name) { m_NameForContext = name; }
+  const wxString &GetHardName() { return m_HardName; }
+  void SetHardName(const wxString &name) { m_HardName = name; }
   wxString GetNameForContext() const {
-    return m_NameForContext.IsEmpty() ? wxString(m_name).Trim(true).Trim(false)
-                                      : m_NameForContext;
+    return m_HardName.IsEmpty() ? wxString(m_name).Trim(true).Trim(false)
+                                : m_HardName;
   }
 
   wxString GetPath() const;

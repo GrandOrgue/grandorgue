@@ -119,10 +119,12 @@ void GOMetronome::Load(GOConfigReader &cfg) {
 
   m_OrganController->RegisterSaveableObject(this);
 
-  GOWindchest *windchest = new GOWindchest(*m_OrganController);
-  windchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
-  windchest->GetPipeConfig().GetPipeConfig().SetPercussiveFromInit(BOOL3_TRUE);
-  unsigned windchestN = m_OrganController->AddWindchest(windchest);
+  GOWindchest *pWindchest = new GOWindchest(*m_OrganController);
+
+  pWindchest->SetHardName(wxT("Metronome"));
+  pWindchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
+  pWindchest->GetPipeConfig().GetPipeConfig().SetPercussiveFromInit(BOOL3_TRUE);
+  unsigned windchestN = m_OrganController->AddWindchest(pWindchest);
 
   m_rank = new GORank(*m_OrganController);
   m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, windchestN);

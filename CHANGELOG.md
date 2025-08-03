@@ -1,3 +1,5 @@
+- Added more columns to the Initial MIDI tab of the Organ settings  https://github.com/GrandOrgue/grandorgue/issues/1974
+- Added capability of assigning any MIDI object events to the initial MIDI configuration https://github.com/GrandOrgue/grandorgue/issues/1974
 - Added capability of setting Send, Division and Shortcut events for Initial MIDI objects https://github.com/GrandOrgue/grandorgue/issues/1974
 - Changed package names for Linux: grandorgue-wx30 requires wxWidgets 3.0 and grandorgue requires wxWidgets 3.2
 - Load pitch and show it to labels on organ load https://github.com/GrandOrgue/grandorgue/issues/2233

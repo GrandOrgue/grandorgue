@@ -84,7 +84,6 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
   GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
   master_enc->SetContext(&MIDI_CONTEXT_VOLUMES);
   master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
-  master_enc->SetNameForContext(wxT("Master"));
   m_OrganController->AddEnclosure(master_enc);
   master_enc->SetElementId(
     m_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
@@ -94,21 +93,27 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
   panel->AddControl(enclosure);
 
   for (unsigned i = 0; i < m_OrganController->GetWindchestCount(); i++) {
-    GOWindchest *windchest = m_OrganController->GetWindchest(i);
-    windchest->AddEnclosure(master_enc);
+    GOWindchest *pWindchest = m_OrganController->GetWindchest(i);
+    const wxString &windchestHardName = pWindchest->GetHardName();
+
+    pWindchest->AddEnclosure(master_enc);
 
     GOEnclosure *enc = new GOEnclosure(*m_OrganController);
+
     enc->SetContext(&MIDI_CONTEXT_VOLUMES);
-    enc->SetNameForContext(wxString::Format(wxT("Windchest%03u"), i + 1));
+    enc->SetHardName(
+      windchestHardName.IsEmpty()
+        ? wxString::Format(wxT("Windchest%03u"), i + 1)
+        : windchestHardName);
     enc->Init(
       cfg,
       wxString::Format(wxT("SetterMaster%03d"), i + 1),
-      windchest->GetName(),
+      pWindchest->GetName(),
       127);
     m_OrganController->AddEnclosure(enc);
     enc->SetElementId(m_OrganController->GetRecorderElementID(
       wxString::Format(wxT("SM%d"), i)));
-    windchest->AddEnclosure(enc);
+    pWindchest->AddEnclosure(enc);
 
     enclosure = new GOGUIEnclosure(panel, enc);
     enclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));

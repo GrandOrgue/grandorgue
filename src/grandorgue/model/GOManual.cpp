@@ -57,7 +57,7 @@ GOManual::GOManual(
     m_ODFCouplerCount(0),
     m_displayed(false),
     m_DivisionalTemplate(organModel) {
-  SetNameForContext(m_ShortName);
+  SetHardName(m_ShortName);
   SetContext(pParentContext);
   SetReceiverKeyMap(&m_MidiKeyMap);
   m_InputCouplers.push_back(NULL);
@@ -172,7 +172,7 @@ void GOManual::Load(GOConfigReader &cfg, const wxString &group) {
       r_OrganModel, GetFirstLogicalKeyMIDINoteNumber(), &m_MidiContextStops);
     unsigned localNumber = i + 1;
 
-    pStop->SetNameForContext(wxString::Format(WX_ODF_OBJ_NUM_FMT, localNumber));
+    pStop->SetHardName(wxString::Format(WX_ODF_OBJ_NUM_FMT, localNumber));
     buffer.Printf(wxT("Stop%03d"), localNumber);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
