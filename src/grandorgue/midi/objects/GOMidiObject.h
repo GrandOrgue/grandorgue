@@ -57,7 +57,7 @@ private:
 
   // a name that may be translated (for built-in objects)
   wxString m_name;
-  // a name tat is never translated. May be empty that causes that m_name is
+  // a name that is never translated. May be empty which causes that m_name is
   // used
   wxString m_HardName;
 
