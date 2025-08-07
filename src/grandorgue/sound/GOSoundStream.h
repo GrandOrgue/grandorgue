@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -73,11 +73,10 @@ private:
   void DecodeBlock(float *pOut, unsigned nOutSamples);
 
   static DecodeBlockFunction getDecodeBlockFunction(
-    uint8_t channels,
-    uint8_t bits_per_sample,
-    bool compressed,
-    GOSoundResample::InterpolationType interpolation,
-    bool is_end);
+    uint8_t nChannels,
+    uint8_t nBitsPerSample,
+    bool isCompressed,
+    GOSoundResample::InterpolationType interpolationType);
 
   void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
 
