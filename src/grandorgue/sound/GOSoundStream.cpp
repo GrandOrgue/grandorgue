@@ -388,15 +388,6 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       end_ptr = next_end->end_ptr;
 
       m_ResamplingPos.SetIndex(newPos);
-      printf(
-        "GOSoundStream::ReadBlock looping: ptr=%p end_ptr=%p newPos=%u "
-        "transition_position=%u end_pos=%u cache.ptr=%p\n",
-        ptr,
-        end_ptr,
-        newPos,
-        transition_position,
-        end_pos,
-        cache.ptr);
       if (newPos < end_pos) // valid loop
         m_NextStartSegmentIndex = next_end->next_start_segment_index;
       else { // invalid loop. Using it might cause infinite iterations here
