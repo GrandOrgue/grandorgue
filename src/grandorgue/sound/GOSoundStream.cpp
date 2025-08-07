@@ -130,8 +130,10 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
   uint8_t nBitsPerSample,
   bool isCompressed,
   GOSoundResample::InterpolationType interpolationType) {
-  if (isCompressed) {
-    if (interpolationType == GOSoundResample::GO_POLYPHASE_INTERPOLATION) {
+
+  if (interpolationType == GOSoundResample::GO_POLYPHASE_INTERPOLATION) {
+    if (isCompressed) {
+      // Polyphase interpolation + compressed audio
       if (nChannels == 1) {
         if (nBitsPerSample >= 20)
           return &GOSoundStream::DecodeBlock<
@@ -166,30 +168,7 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
             2>>;
       }
     } else {
-      if (nChannels == 1) {
-        if (nBitsPerSample >= 20)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamCacheWindow<true, 1>>;
-
-        assert(nBitsPerSample >= 12);
-        return &GOSoundStream::DecodeBlock<
-          GOSoundResample::LinearResampler,
-          StreamCacheWindow<false, 1>>;
-      } else if (nChannels == 2) {
-        if (nBitsPerSample >= 20)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamCacheWindow<true, 2>>;
-
-        assert(nBitsPerSample >= 12);
-        return &GOSoundStream::DecodeBlock<
-          GOSoundResample::LinearResampler,
-          StreamCacheWindow<false, 2>>;
-      }
-    }
-  } else {
-    if (interpolationType == GOSoundResample::GO_POLYPHASE_INTERPOLATION) {
+      // Polyphase interpolation + uncompressed audio
       if (nChannels == 1) {
         if (nBitsPerSample <= 8)
           return &GOSoundStream::DecodeBlock<
@@ -217,7 +196,34 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
             GOSoundResample::PolyphaseResampler,
             StreamPtrWindow<GOInt24, 2>>;
       }
+    }
+  } else {
+    // Linear interpolation
+    if (isCompressed) {
+      // Linear interpolation + compressed audio
+      if (nChannels == 1) {
+        if (nBitsPerSample >= 20)
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamCacheWindow<true, 1>>;
+
+        assert(nBitsPerSample >= 12);
+        return &GOSoundStream::DecodeBlock<
+          GOSoundResample::LinearResampler,
+          StreamCacheWindow<false, 1>>;
+      } else if (nChannels == 2) {
+        if (nBitsPerSample >= 20)
+          return &GOSoundStream::DecodeBlock<
+            GOSoundResample::LinearResampler,
+            StreamCacheWindow<true, 2>>;
+
+        assert(nBitsPerSample >= 12);
+        return &GOSoundStream::DecodeBlock<
+          GOSoundResample::LinearResampler,
+          StreamCacheWindow<false, 2>>;
+      }
     } else {
+      // Linear interpolation + uncompressed audio
       if (nChannels == 1) {
         if (nBitsPerSample <= 8)
           return &GOSoundStream::DecodeBlock<
