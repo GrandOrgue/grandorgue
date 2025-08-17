@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -359,7 +359,7 @@ void GOSoundAudioSection::Setup(
         min_reqd_samples = loop.m_EndPosition + 1;
 
       start_seg.start_offset = loop.m_StartPosition;
-      end_seg.end_pos = loop.m_EndPosition;
+      end_seg.end_pos = loop.m_EndPosition + 1;
       end_seg.next_start_segment_index = i + 1;
       const unsigned loop_length = end_seg.end_pos - start_seg.start_offset;
       wxString loopError;
