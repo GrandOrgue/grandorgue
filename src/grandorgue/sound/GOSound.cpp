@@ -339,10 +339,14 @@ void GOSound::FillDeviceNamePattern(
 GOMidi &GOSound::GetMidi() { return m_midi; }
 
 void GOSound::ResetMeters() {
-  wxCommandEvent event(wxEVT_METERS, 0);
-  event.SetInt(0x1);
-  if (wxTheApp->GetTopWindow())
-    wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+  wxWindow *const topWindow = wxTheApp ? wxTheApp->GetTopWindow() : nullptr;
+
+  if (topWindow) {
+    wxCommandEvent event(wxEVT_METERS, 0);
+
+    event.SetInt(0x1);
+    topWindow->GetEventHandler()->AddPendingEvent(event);
+  }
 }
 
 void GOSound::UpdateMeter() {
