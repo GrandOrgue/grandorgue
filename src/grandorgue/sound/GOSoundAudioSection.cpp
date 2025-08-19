@@ -355,12 +355,17 @@ void GOSoundAudioSection::Setup(
       EndSegment end_seg;
       const GOWaveLoop &loop = (*loop_points)[i];
 
-      if (loop.m_EndPosition + 1 > min_reqd_samples)
-        min_reqd_samples = loop.m_EndPosition + 1;
-
       start_seg.start_offset = loop.m_StartPosition;
+      /* According to
+       * https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/RIFFNEW.pdf
+       * dwEnd is the position of the last sample of the loop, but we need the
+       * first position after this sample
+       */
       end_seg.end_pos = loop.m_EndPosition + 1;
+      if (end_seg.end_pos > min_reqd_samples)
+        min_reqd_samples = end_seg.end_pos;
       end_seg.next_start_segment_index = i + 1;
+
       const unsigned loop_length = end_seg.end_pos - start_seg.start_offset;
       wxString loopError;
 
