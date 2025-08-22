@@ -1,3 +1,4 @@
+- Fixed crash on exit from GrandOrgue on MacOs https://github.com/GrandOrgue/grandorgue/issues/2256
 - Fixed playing the last sample of a loop https://github.com/GrandOrgue/grandorgue/issues/2211
 # 3.16.0 (2025-08-03)
 - Added more columns to the Initial MIDI tab of the Organ settings  https://github.com/GrandOrgue/grandorgue/issues/1974
