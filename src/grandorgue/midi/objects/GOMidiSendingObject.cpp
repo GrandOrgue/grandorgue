@@ -29,12 +29,6 @@ void GOMidiSendingObject::LoadMidiObject(
 
 void GOMidiSendingObject::SetElementId(int id) { m_sender.SetElementID(id); }
 
-void GOMidiSendingObject::SaveMidiObject(
-  GOConfigWriter &cfg, const wxString &group, GOMidiMap &midiMap) const {
-  GOMidiPlayingObject::SaveMidiObject(cfg, group, midiMap);
-  m_sender.Save(cfg, group, midiMap);
-}
-
 void GOMidiSendingObject::ResendMidi() {
   m_sender.SetName(GetName());
   SendCurrentMidiValue();
