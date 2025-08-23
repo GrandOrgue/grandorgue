@@ -34,10 +34,10 @@
 #include "gui/dialogs/GOProgressDialog.h"
 #include "gui/dialogs/go-message-boxes.h"
 #include "gui/panels/GOGUIBankedGeneralsPanel.h"
+#include "gui/panels/GOGUICouplerManualsAndVolumePanel.h"
 #include "gui/panels/GOGUICouplerPanel.h"
 #include "gui/panels/GOGUICrescendoPanel.h"
 #include "gui/panels/GOGUIDivisionalsPanel.h"
-#include "gui/panels/GOGUIFloatingPanel.h"
 #include "gui/panels/GOGUIMasterPanel.h"
 #include "gui/panels/GOGUIMetronomePanel.h"
 #include "gui/panels/GOGUIPanel.h"
@@ -269,7 +269,7 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   m_elementcreators.push_back(m_MidiRecorder);
   m_elementcreators.push_back(new GOMetronome(this));
   m_panelcreators.push_back(new GOGUICouplerPanel(this, m_VirtualCouplers));
-  m_panelcreators.push_back(new GOGUIFloatingPanel(this));
+  m_panelcreators.push_back(new GOGUICouplerManualsAndVolumePanel(this));
   m_panelcreators.push_back(new GOGUIMetronomePanel(this));
   m_panelcreators.push_back(new GOGUICrescendoPanel(this));
   m_panelcreators.push_back(new GOGUIDivisionalsPanel(this));

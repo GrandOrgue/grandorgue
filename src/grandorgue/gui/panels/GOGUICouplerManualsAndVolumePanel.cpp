@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOGUIFloatingPanel.h"
+#include "GOGUICouplerManualsAndVolumePanel.h"
 
 #include <wx/intl.h>
 
@@ -24,16 +24,18 @@
 static const GOMidiObjectContext MIDI_CONTEXT_VOLUMES(
   wxT("volumes"), _("volumes"));
 
-GOGUIFloatingPanel::GOGUIFloatingPanel(GOOrganController *organController)
+GOGUICouplerManualsAndVolumePanel::GOGUICouplerManualsAndVolumePanel(
+  GOOrganController *organController)
   : m_OrganController(organController) {}
 
-GOGUIFloatingPanel::~GOGUIFloatingPanel() {}
+GOGUICouplerManualsAndVolumePanel::~GOGUICouplerManualsAndVolumePanel() {}
 
-void GOGUIFloatingPanel::CreatePanels(GOConfigReader &cfg) {
-  m_OrganController->AddPanel(CreateFloatingPanel(cfg));
+void GOGUICouplerManualsAndVolumePanel::CreatePanels(GOConfigReader &cfg) {
+  m_OrganController->AddPanel(CreatePanel(cfg));
 }
 
-GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
+GOGUIPanel *GOGUICouplerManualsAndVolumePanel::CreatePanel(
+  GOConfigReader &cfg) {
   GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
   GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
     cfg, m_OrganController, GOGUI_SETTER_FLOATING);
@@ -66,19 +68,6 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
       i - m_OrganController->GetODFManualCount());
     manual->Init(cfg, group);
     panel->AddControl(manual);
-
-    /*
-    for (unsigned j = 0; j < 10; j++) {
-      wxString buttonName = GODivisionalSetter::GetDivisionalButtonName(i, j);
-      GOButtonControl *const divisional
-        = m_OrganController->GetButtonControl(buttonName, false);
-
-      GOGUIButton *button = new GOGUIButton(panel, divisional, true);
-      button->Init(
-        cfg, buttonName, j + 1, i - m_OrganController->GetODFManualCount());
-      panel->AddControl(button);
-    }
-    */
   }
 
   GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
@@ -119,6 +108,5 @@ GOGUIPanel *GOGUIFloatingPanel::CreateFloatingPanel(GOConfigReader &cfg) {
     enclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
     panel->AddControl(enclosure);
   }
-
   return panel;
 }
