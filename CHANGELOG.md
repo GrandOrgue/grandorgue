@@ -1,3 +1,4 @@
+- Fixed sending 'ON' strings in sysex MIDI messages https://github.com/GrandOrgue/grandorgue/issues/2260
 - Fixed crash on exit from GrandOrgue on MacOs https://github.com/GrandOrgue/grandorgue/issues/2256
 - Fixed playing the last sample of a loop https://github.com/GrandOrgue/grandorgue/issues/2211
 # 3.16.0 (2025-08-03)
