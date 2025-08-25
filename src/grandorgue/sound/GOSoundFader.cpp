@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -52,14 +52,12 @@ void GOSoundFader::Process(
     } else {
       // we reach m_TargetVolume inside this nFrames period
 
-      // stop increasing
-      m_IncreasingDeltaPerFrame = 0.0f;
-
-      // calculate how many frames left after increasing
+      // calculate how many frames left after reaching m_TargetVolume
       framesLeftAfterIncreasing = nFrames
         - unsigned((m_TargetVolume - m_LastTargetVolumePoint)
                    / m_IncreasingDeltaPerFrame);
-
+      // stop increasing
+      m_IncreasingDeltaPerFrame = 0.0f;
       m_LastTargetVolumePoint = m_TargetVolume;
     }
   }
