@@ -114,7 +114,7 @@ gui/panels/GOGUICouplerPanel.cpp
 gui/panels/GOGUIDisplayMetrics.cpp
 gui/panels/GOGUIDivisionalsPanel.cpp
 gui/panels/GOGUIEnclosure.cpp
-gui/panels/GOGUIFloatingPanel.cpp
+gui/panels/GOGUICouplerManualsAndVolumePanel.cpp
 gui/panels/GOGUIHW1Background.cpp
 gui/panels/GOGUIHW1DisplayMetrics.cpp
 gui/panels/GOGUIImage.cpp
