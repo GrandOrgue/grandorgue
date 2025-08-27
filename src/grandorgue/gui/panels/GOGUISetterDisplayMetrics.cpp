@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -59,13 +59,16 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
     break;
 
   case GOGUI_SETTER_FLOATING:
-    x_size
-      = 40
-      + std::max(
-          10
-            * organController->GetManual(organController->GetODFManualCount())
-                ->GetLogicalKeyCount(),
-          (unsigned)10 * 40);
+    x_size = std::max(
+      10
+          * organController->GetManual(organController->GetODFManualCount())
+              ->GetLogicalKeyCount()
+        + 40,
+      GetEnclosureWidth()
+          * (
+            // one enclosure per windchest + master volume
+            organController->GetWindchestCount() + 1)
+        + 6);
     y_size = (organController->GetManualAndPedalCount()
               - organController->GetODFManualCount() + 1)
         * 60
