@@ -18,11 +18,14 @@ class GOMidiObjectContext;
 class GOOrganModel;
 
 class GOLabelControl : public GOControl, public GOMidiSendingObject {
+private:
+  static const wxString WX_EMPTY_STRING;
+
 protected:
   wxString m_Content;
 
   void SendCurrentMidiValue() override { SendMidiValue(m_Content); }
-  void SendEmptyMidiValue() override { SendMidiValue(wxEmptyString); }
+  void SendEmptyMidiValue() override { SendMidiValue(WX_EMPTY_STRING); }
 
 public:
   GOLabelControl(

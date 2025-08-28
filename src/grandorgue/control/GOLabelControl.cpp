@@ -11,6 +11,8 @@
 
 #include "model/GOOrganModel.h"
 
+const wxString GOLabelControl::WX_EMPTY_STRING = wxEmptyString;
+
 GOLabelControl::GOLabelControl(
   GOOrganModel &organModel, const GOMidiObjectContext *pContext)
   : GOMidiSendingObject(organModel, OBJECT_TYPE_LABEL, MIDI_SEND_LABEL) {
