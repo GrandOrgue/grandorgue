@@ -1,3 +1,4 @@
+- Fixed displaying more than 10 enclosures on the CouplerManualsAndVolume panel https://github.com/GrandOrgue/grandorgue/issues/2100
 # 3.16.1 (2025-08-28)
 - Fixed sending 'ON' strings in sysex MIDI messages https://github.com/GrandOrgue/grandorgue/issues/2260
 - Fixed crash on exit from GrandOrgue on MacOs https://github.com/GrandOrgue/grandorgue/issues/2256
