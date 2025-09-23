@@ -310,6 +310,7 @@ GOConfig::GOConfig(wxString instance)
     ManagePolyphony(this, GENERAL, wxT("ManagePolyphony"), true),
     ScaleRelease(this, GENERAL, wxT("ScaleRelease"), true),
     RandomizeSpeaking(this, GENERAL, wxT("RandomizeSpeaking"), true),
+    NewBasMelBehaviour(this, GENERAL, wxT("NewBasMelBehaviour"), false),
     ReverbEnabled(this, wxT("Reverb"), wxT("ReverbEnabled"), false),
     ReverbDirect(this, wxT("Reverb"), wxT("ReverbDirect"), true),
     ReverbChannel(this, wxT("Reverb"), wxT("ReverbChannel"), 1, 4, 1),

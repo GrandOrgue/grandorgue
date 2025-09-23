@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -44,6 +44,7 @@ class GOSettingsOptions : public wxPanel {
     ID_LANGUAGE,
     ID_METRONOME_MEASURE,
     ID_METRONOME_BPM,
+    ID_NEW_BAS_MEL,
   };
 
 private:
@@ -59,6 +60,7 @@ private:
   GOChoice<GOInitialLoadType> *m_LoadLastFile;
   wxCheckBox *m_Scale;
   wxCheckBox *m_Random;
+  wxCheckBox *m_NewBasMel;
   wxCheckBox *m_ODFCheck;
   wxCheckBox *m_ODFHw1Check;
   wxCheckBox *m_RecordDownmix;
@@ -82,6 +84,7 @@ private:
   unsigned m_OldLoopLoad;
   unsigned m_OldAttackLoad;
   unsigned m_OldReleaseLoad;
+  bool m_OldBasMelCoupler;
 
 public:
   GOSettingsOptions(GOConfig &settings, wxWindow *parent);

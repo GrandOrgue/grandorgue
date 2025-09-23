@@ -110,6 +110,7 @@ public:
   GOSettingBool ManagePolyphony;
   GOSettingBool ScaleRelease;
   GOSettingBool RandomizeSpeaking;
+  GOSettingBool NewBasMelBehaviour;
   GOSettingBool ReverbEnabled;
   GOSettingBool ReverbDirect;
   GOSettingUnsigned ReverbChannel;

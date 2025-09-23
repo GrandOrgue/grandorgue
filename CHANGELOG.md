@@ -1,3 +1,4 @@
+- Added option of BAS/MEL coupler behaviour to fix missed notes https://github.com/GrandOrgue/grandorgue/issues/1672
 - Fixed displaying more than 10 enclosures on the CouplerManualsAndVolume panel https://github.com/GrandOrgue/grandorgue/issues/2100
 # 3.16.1 (2025-08-28)
 - Fixed sending 'ON' strings in sysex MIDI messages https://github.com/GrandOrgue/grandorgue/issues/2260

@@ -27,6 +27,7 @@ private:
   bool m_CoupleToSubsequentDownwardIntermanualCouplers;
   bool m_CoupleToSubsequentUpwardIntramanualCouplers;
   bool m_CoupleToSubsequentDownwardIntramanualCouplers;
+  bool m_IsNewBasMel;
   GOCouplerType m_CouplerType;
   unsigned m_SourceManual;
   unsigned m_CouplerIndexInDest;
@@ -65,6 +66,8 @@ public:
     return m_CoupleToSubsequentUnisonIntermanualCouplers;
   }
   void SetRecursive(bool isRecursive);
+  void SetIsNewBasMel(bool isNew) { m_IsNewBasMel = isNew; }
+  bool GetIsNewBasMel() { return m_IsNewBasMel; }
 
   using GODrawstop::Init; // for avoiding a compilation warning
   void Init(

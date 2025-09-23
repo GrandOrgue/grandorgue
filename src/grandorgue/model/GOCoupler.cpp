@@ -28,6 +28,7 @@ GOCoupler::GOCoupler(
     m_CoupleToSubsequentDownwardIntermanualCouplers(false),
     m_CoupleToSubsequentUpwardIntramanualCouplers(false),
     m_CoupleToSubsequentDownwardIntramanualCouplers(false),
+    m_IsNewBasMel(false),
     m_CouplerType(COUPLER_NORMAL),
     m_SourceManual(sourceManual),
     m_CouplerIndexInDest(0),
@@ -68,6 +69,10 @@ void GOCoupler::PreparePlayback() {
 
     m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber()
       - dest->GetFirstLogicalKeyMIDINoteNumber();
+
+    // Currently only the global setting option will be used. This needs to be
+    // changed if a per coupler setting option is to be implemented.
+    SetIsNewBasMel(r_OrganModel.GetConfig().NewBasMelBehaviour());
   }
   if (m_UnisonOff && IsEngaged())
     src->SetUnisonOff(true);
@@ -320,31 +325,39 @@ void GOCoupler::ChangeKey(int note, unsigned velocity) {
     if (m_CurrentTone != -1)
       SetOut(m_CurrentTone + m_Keyshift, m_KeyVelocity[m_CurrentTone]);
 
-    int nextCandidate = nextNote;
-    if (m_CouplerType == COUPLER_BASS) {
-      for (nextCandidate += 1; nextCandidate < (int)m_KeyVelocity.size();
-           nextCandidate++)
-        if (m_KeyVelocity[nextCandidate] > 0)
-          break;
-      if (nextCandidate == (int)m_KeyVelocity.size())
-        nextCandidate = -1;
-      if (velocity > 0)
-        m_LastTone = (note < nextCandidate)
-          ? note
-          : (nextCandidate < 0 ? note : nextCandidate);
-      else
-        m_LastTone = (note < nextCandidate) ? -1 : nextCandidate;
-      return;
+    if (m_IsNewBasMel) {
+      int nextCandidate = nextNote;
+      if (m_CouplerType == COUPLER_BASS) {
+        for (nextCandidate += 1; nextCandidate < (int)m_KeyVelocity.size();
+             nextCandidate++)
+          if (m_KeyVelocity[nextCandidate] > 0)
+            break;
+        if (nextCandidate == (int)m_KeyVelocity.size())
+          nextCandidate = -1;
+        if (velocity > 0)
+          m_LastTone = (note < nextCandidate)
+            ? note
+            : (nextCandidate < 0 ? note : nextCandidate);
+        else
+          m_LastTone = (note < nextCandidate) ? -1 : nextCandidate;
+        return;
+      } else {
+        for (nextCandidate -= 1; nextCandidate >= 0; nextCandidate--)
+          if (m_KeyVelocity[nextCandidate] > 0)
+            break;
+        if (velocity > 0)
+          m_LastTone = (note > nextCandidate)
+            ? note
+            : (nextCandidate > 0 ? nextCandidate : note);
+        else
+          m_LastTone = (note > nextCandidate) ? -1 : nextCandidate;
+        return;
+      }
     } else {
-      for (nextCandidate -= 1; nextCandidate >= 0; nextCandidate--)
-        if (m_KeyVelocity[nextCandidate] > 0)
-          break;
       if (velocity > 0)
-        m_LastTone = (note > nextCandidate)
-          ? note
-          : (nextCandidate > 0 ? nextCandidate : note);
+        m_LastTone = note;
       else
-        m_LastTone = (note > nextCandidate) ? -1 : nextCandidate;
+        m_LastTone = -1;
       return;
     }
   }
