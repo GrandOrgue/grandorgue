@@ -67,7 +67,7 @@ public:
   }
   void SetRecursive(bool isRecursive);
   void SetIsNewBasMel(bool isNew) { m_IsNewBasMel = isNew; }
-  bool GetIsNewBasMel() { return m_IsNewBasMel; }
+  bool IsNewBasMel() const { return m_IsNewBasMel; }
 
   using GODrawstop::Init; // for avoiding a compilation warning
   void Init(

@@ -326,40 +326,31 @@ void GOCoupler::ChangeKey(int note, unsigned velocity) {
       SetOut(m_CurrentTone + m_Keyshift, m_KeyVelocity[m_CurrentTone]);
 
     if (m_IsNewBasMel) {
-      int nextCandidate = nextNote;
       if (m_CouplerType == COUPLER_BASS) {
-        for (nextCandidate += 1; nextCandidate < (int)m_KeyVelocity.size();
-             nextCandidate++)
-          if (m_KeyVelocity[nextCandidate] > 0)
+        for (nextNote += 1; nextNote < (int)m_KeyVelocity.size(); nextNote++)
+          if (m_KeyVelocity[nextNote] > 0)
             break;
-        if (nextCandidate == (int)m_KeyVelocity.size())
-          nextCandidate = -1;
+        if (nextNote == (int)m_KeyVelocity.size())
+          nextNote = -1;
         if (velocity > 0)
-          m_LastTone = (note < nextCandidate)
-            ? note
-            : (nextCandidate < 0 ? note : nextCandidate);
+          m_LastTone
+            = (note < nextNote) ? note : (nextNote < 0 ? note : nextNote);
         else
-          m_LastTone = (note < nextCandidate) ? -1 : nextCandidate;
-        return;
+          m_LastTone = (note < nextNote) ? -1 : nextNote;
       } else {
-        for (nextCandidate -= 1; nextCandidate >= 0; nextCandidate--)
-          if (m_KeyVelocity[nextCandidate] > 0)
+        for (nextNote -= 1; nextNote >= 0; nextNote--)
+          if (m_KeyVelocity[nextNote] > 0)
             break;
         if (velocity > 0)
-          m_LastTone = (note > nextCandidate)
-            ? note
-            : (nextCandidate > 0 ? nextCandidate : note);
+          m_LastTone
+            = (note > nextNote) ? note : (nextNote > 0 ? nextNote : note);
         else
-          m_LastTone = (note > nextCandidate) ? -1 : nextCandidate;
-        return;
+          m_LastTone = (note > nextNote) ? -1 : nextNote;
       }
-    } else {
-      if (velocity > 0)
-        m_LastTone = note;
-      else
-        m_LastTone = -1;
-      return;
-    }
+    } else
+      m_LastTone = (velocity > 0) ? note : -1;
+
+    return;
   }
   SetOut(note + m_Keyshift, velocity);
 }
