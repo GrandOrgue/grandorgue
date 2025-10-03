@@ -49,6 +49,7 @@ private:
   void ChangeKey(int note, unsigned velocity);
   void SetOut(int note, unsigned velocity);
   unsigned GetInternalState(int note);
+  int GetNextBasMelPressedKey(int afterKey) const;
   void OnDrawstopStateChanged(bool on) override;
   void SetupIsToStoreInCmb() override;
 
