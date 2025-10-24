@@ -10,12 +10,16 @@ sudo apt-get update
 # remove an odd version of packages that prevents installing wine32
 $BASE_DIR/../for-linux/prepare-debian-based-align-libs.sh $TARGET_ARCH i386
 
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wget
+
+$BASE_DIR/prepare-debian-based-mingw.sh
+
 # install dependencies for wine32
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libgcc-s1:i386 libstdc++6:i386
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  wget unzip cmake g++ pkg-config g++-mingw-w64-x86-64 nsis \
+  wget unzip cmake g++ pkg-config nsis \
   docbook-xsl xsltproc gettext po4a imagemagick zip \
   wine32 winbind pipx
 
@@ -54,7 +58,7 @@ if [ ! -d /usr/local/asio-sdk ]; then
 	wget -O $DL_DIR/asiosdk.zip https://www.steinberg.net/asiosdk
 	sudo unzip -o $DL_DIR/asiosdk.zip -d /usr/local/
 	rm -rf $DL_DIR
-	SDK_DIR=`ls -1d /usr/local/asiosdk* | tail -1`
+	SDK_DIR=`ls -1d /usr/local/ASIOSDK | tail -1`
 	sudo ln -sf `basename $SDK_DIR` /usr/local/asio-sdk
 fi
 
