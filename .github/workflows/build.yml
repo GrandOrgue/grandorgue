@@ -142,12 +142,12 @@ jobs:
             build_on: linux
             wx_version: wx32
 
-          - run_on: macos-13-large # x86_64
+          - run_on: macos-13 # x86_64
             for: osx
             prepare: osx
             build_on: osx
 
-          - run_on: macos-13-xlarge # arm64
+          - run_on: macos-14 # arm64
             for: osx
             prepare: osx
             build_on: osx
