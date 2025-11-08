@@ -84,7 +84,6 @@ private:
   unsigned m_OldLoopLoad;
   unsigned m_OldAttackLoad;
   unsigned m_OldReleaseLoad;
-  bool m_OldBasMelCoupler;
 
 public:
   GOSettingsOptions(GOConfig &settings, wxWindow *parent);

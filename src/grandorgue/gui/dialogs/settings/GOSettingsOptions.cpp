@@ -33,7 +33,6 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   m_OldLoopLoad = m_config.LoopLoad();
   m_OldAttackLoad = m_config.AttackLoad();
   m_OldReleaseLoad = m_config.ReleaseLoad();
-  m_OldBasMelCoupler = m_config.NewBasMelBehaviour();
 
   wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer *item0 = new wxBoxSizer(wxHORIZONTAL);
