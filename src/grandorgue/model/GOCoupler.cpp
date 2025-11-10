@@ -28,6 +28,7 @@ GOCoupler::GOCoupler(
     m_CoupleToSubsequentDownwardIntermanualCouplers(false),
     m_CoupleToSubsequentUpwardIntramanualCouplers(false),
     m_CoupleToSubsequentDownwardIntramanualCouplers(false),
+    m_IsNewBasMel(false),
     m_CouplerType(COUPLER_NORMAL),
     m_SourceManual(sourceManual),
     m_CouplerIndexInDest(0),
@@ -68,6 +69,10 @@ void GOCoupler::PreparePlayback() {
 
     m_Keyshift = m_DestinationKeyshift + src->GetFirstLogicalKeyMIDINoteNumber()
       - dest->GetFirstLogicalKeyMIDINoteNumber();
+
+    // Currently only the global setting option will be used. This needs to be
+    // changed if a per coupler setting option is to be implemented.
+    SetIsNewBasMel(r_OrganModel.GetConfig().NewBasMelBehaviour());
   }
   if (m_UnisonOff && IsEngaged())
     src->SetUnisonOff(true);
@@ -291,42 +296,85 @@ unsigned GOCoupler::GetInternalState(int noteNumber) {
   return m_InternalVelocity[note];
 }
 
+/**
+  Returns the next pressed key after afterKey in order of coupler.
+  If afterKey == -1 then returns the first pressed key.
+  Returns -1 if no keys are pressed or if the coupler is neither BAS nor MEL
+**/
+int GOCoupler::GetNextBasMelPressedKey(int afterKey) const {
+  int nextNote = -1; // no key is pressed
+  const int keysCount = (int)m_KeyVelocity.size();
+
+  if (m_CouplerType == COUPLER_BASS) {
+    for (nextNote = afterKey + 1; nextNote < keysCount; nextNote++)
+      if (m_KeyVelocity[nextNote] > 0)
+        break;
+    if (nextNote == keysCount)
+      nextNote = -1;
+  } else if (m_CouplerType == COUPLER_MELODY) {
+    for (nextNote = (afterKey >= 0 ? afterKey : keysCount) - 1; nextNote >= 0;
+         nextNote--)
+      if (m_KeyVelocity[nextNote] > 0)
+        break;
+  }
+  return nextNote;
+}
+
+/**
+  Always processes every attack/release for every coupler.
+  Parameter note with value 0 is actually the first key.
+  A release is indicated by a velocity of 0, otherwise it's an attack.
+**/
 void GOCoupler::ChangeKey(int note, unsigned velocity) {
   if (m_UnisonOff)
     return;
   if (m_CouplerType == COUPLER_BASS || m_CouplerType == COUPLER_MELODY) {
-    int nextNote = -1;
-    if (m_CouplerType == COUPLER_BASS) {
-      for (nextNote = 0; nextNote < (int)m_KeyVelocity.size(); nextNote++)
-        if (m_KeyVelocity[nextNote] > 0)
-          break;
-      if (nextNote == (int)m_KeyVelocity.size())
-        nextNote = -1;
-    } else {
-      for (nextNote = m_KeyVelocity.size() - 1; nextNote >= 0; nextNote--)
-        if (m_KeyVelocity[nextNote] > 0)
-          break;
-    }
+    // nextNote is initially the lowest/highest currently pressed note
+    int nextNote = GetNextBasMelPressedKey(-1);
 
+    // Cancel currently coupled note if it should change
     if (m_CurrentTone != -1 && nextNote != m_CurrentTone) {
       SetOut(m_CurrentTone + m_Keyshift, 0);
       m_CurrentTone = -1;
     }
 
-    if (((velocity > 0 && nextNote == note)
-         || (velocity == 0 && nextNote == m_LastTone)))
+    // Couple the lowest/highest note if a matching attack is processed. If a
+    // release is processed use the lowest/highest if it matches m_LastTone.
+    if (
+      (velocity > 0 && nextNote == note)
+      || (velocity == 0 && nextNote == m_LastTone))
       m_CurrentTone = nextNote;
 
+    // Always sends the note to be coupled if it's valid
     if (m_CurrentTone != -1)
       SetOut(m_CurrentTone + m_Keyshift, m_KeyVelocity[m_CurrentTone]);
 
-    if (velocity > 0)
-      m_LastTone = note;
-    else
-      m_LastTone = -1;
-    return;
-  }
-  SetOut(note + m_Keyshift, velocity);
+    if (m_IsNewBasMel) {
+      // In the new algorithm nextNote will now indicate the next candidate to
+      // the currently lowest/highest. It's stored as m_LastTone for any attack
+      // except if the currently processed attack itself is a better choice
+      // which also is true if no next candidate exist i.e. is invalid.
+      nextNote = GetNextBasMelPressedKey(nextNote);
+      if (m_CouplerType == COUPLER_BASS) {
+        if (velocity > 0)
+          m_LastTone
+            = (note < nextNote) ? note : (nextNote < 0 ? note : nextNote);
+        else
+          m_LastTone = (note < nextNote) ? -1 : nextNote;
+      } else {
+        if (velocity > 0)
+          m_LastTone
+            = (note > nextNote) ? note : (nextNote > 0 ? nextNote : note);
+        else
+          m_LastTone = (note > nextNote) ? -1 : nextNote;
+      }
+    } else {
+      // In the older algorithm m_LastTone is always just the latest attack and
+      // invalidated (set to -1) as soon as any release is processed.
+      m_LastTone = (velocity > 0) ? note : -1;
+    }
+  } else
+    SetOut(note + m_Keyshift, velocity);
 }
 
 void GOCoupler::SetKey(

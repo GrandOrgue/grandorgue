@@ -27,6 +27,7 @@ private:
   bool m_CoupleToSubsequentDownwardIntermanualCouplers;
   bool m_CoupleToSubsequentUpwardIntramanualCouplers;
   bool m_CoupleToSubsequentDownwardIntramanualCouplers;
+  bool m_IsNewBasMel;
   GOCouplerType m_CouplerType;
   unsigned m_SourceManual;
   unsigned m_CouplerIndexInDest;
@@ -48,6 +49,7 @@ private:
   void ChangeKey(int note, unsigned velocity);
   void SetOut(int note, unsigned velocity);
   unsigned GetInternalState(int note);
+  int GetNextBasMelPressedKey(int afterKey) const;
   void OnDrawstopStateChanged(bool on) override;
   void SetupIsToStoreInCmb() override;
 
@@ -65,6 +67,8 @@ public:
     return m_CoupleToSubsequentUnisonIntermanualCouplers;
   }
   void SetRecursive(bool isRecursive);
+  void SetIsNewBasMel(bool isNew) { m_IsNewBasMel = isNew; }
+  bool IsNewBasMel() const { return m_IsNewBasMel; }
 
   using GODrawstop::Init; // for avoiding a compilation warning
   void Init(

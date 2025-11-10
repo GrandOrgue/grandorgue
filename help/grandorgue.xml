@@ -3789,6 +3789,35 @@ The detuning is small enough so that the ear can't appreciate the tuning differe
           </variablelist>
         </sect3>
         <sect3>
+          <title>New Bas/Mel coupler behaviour</title>
+          <indexterm>
+            <primary>New Bas/Mel coupler behaviour</primary>
+          </indexterm>
+          <para>
+With this option checked an alternate algorithm will be used for Bas/Mel couplers that will reduce the number of missed notes at the expense of possibly having slightly more un-intended jumps between voices, depending on playing style.
+          </para>
+          <variablelist>
+            <varlistentry>
+              <term>Memory</term>
+              <listitem>
+                <simpara>No impact</simpara>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Polyphony</term>
+              <listitem>
+                <simpara>No impact</simpara>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Load time</term>
+              <listitem>
+                <simpara>No impact</simpara>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3>
           <title>Load last file at startup</title>
           <indexterm>
             <primary>Load last file at startup</primary>

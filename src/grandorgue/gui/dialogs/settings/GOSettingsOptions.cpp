@@ -121,6 +121,12 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     wxEXPAND | wxALL,
     5);
   item6->Add(
+    m_NewBasMel
+    = new wxCheckBox(this, ID_NEW_BAS_MEL, _("New Bas/Mel coupler behaviour")),
+    0,
+    wxEXPAND | wxALL,
+    5);
+  item6->Add(
     m_LoadLastFile = new GOChoice<GOInitialLoadType>(this, ID_LOAD_LAST_FILE),
     0,
     wxEXPAND | wxALL,
@@ -135,6 +141,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   m_LoadLastFile->SetCurrentValue(m_config.LoadLastFile());
   m_Scale->SetValue(m_config.ScaleRelease());
   m_Random->SetValue(m_config.RandomizeSpeaking());
+  m_NewBasMel->SetValue(m_config.NewBasMelBehaviour());
 
   wxFlexGridSizer *grid = new wxFlexGridSizer(2, 5, 5);
   item6 = new wxStaticBoxSizer(wxVERTICAL, this, _("&Sound Engine"));
@@ -438,6 +445,7 @@ bool GOSettingsOptions::TransferDataFromWindow() {
   m_config.Volume(m_Volume->GetValue());
   m_config.ScaleRelease(m_Scale->IsChecked());
   m_config.RandomizeSpeaking(m_Random->IsChecked());
+  m_config.NewBasMelBehaviour(m_NewBasMel->IsChecked());
   m_config.Concurrency(m_Concurrency->GetSelection() + 1);
   m_config.ReleaseConcurrency(m_ReleaseConcurrency->GetSelection() + 1);
   m_config.LoadConcurrency(m_LoadConcurrency->GetSelection());
