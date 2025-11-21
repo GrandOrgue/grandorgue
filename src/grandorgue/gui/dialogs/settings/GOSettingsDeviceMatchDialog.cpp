@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,6 +19,7 @@
 #include "help/GOHelpRequestor.h"
 
 BEGIN_EVENT_TABLE(GOSettingsDeviceMatchDialog, wxDialog)
+EVT_SHOW(GOSettingsDeviceMatchDialog::OnShow)
 EVT_TEXT(ID_LOGICAL_NAME, GOSettingsDeviceMatchDialog::OnLogicalNameChanged)
 EVT_TEXT(ID_REGEX, GOSettingsDeviceMatchDialog::OnRegexChanged)
 EVT_BUTTON(wxID_HELP, GOSettingsDeviceMatchDialog::OnHelp)
@@ -108,16 +109,11 @@ bool GOSettingsDeviceMatchDialog::ValidateLogicalName(wxString &errMsg) {
                "differ");
     isValid = false;
   }
-  if (isValid)
-    errMsg = wxEmptyString;
+  if (isValid) {
+    if (newLogicalName != newLogicalName.Strip(wxString::both))
+      errMsg = _("The logical device name contains leading or trailing spaces");
+  }
   return isValid;
-}
-
-void GOSettingsDeviceMatchDialog::OnLogicalNameChanged(wxCommandEvent &event) {
-  wxString errMsg;
-
-  ValidateLogicalName(errMsg);
-  m_StatusBar->SetStatusText(errMsg);
 }
 
 bool GOSettingsDeviceMatchDialog::ValidateRegex(wxString &errMsg) {
@@ -135,10 +131,43 @@ bool GOSettingsDeviceMatchDialog::ValidateRegex(wxString &errMsg) {
       isValid = false;
     }
   }
-  if (isValid)
-    errMsg = wxEmptyString;
-
   return isValid;
+}
+
+bool GOSettingsDeviceMatchDialog::ValidateAll(wxString &errMsg) {
+  bool isValid = true;
+
+  if (isValid)
+    isValid = ValidateLogicalName(errMsg);
+  if (isValid)
+    isValid = ValidateRegex(errMsg);
+  return isValid;
+}
+
+bool GOSettingsDeviceMatchDialog::Validate() {
+  wxString errMsg;
+  bool isValid = ValidateAll(errMsg);
+
+  if (!isValid)
+    wxMessageBox(
+      errMsg, _("Device matching error"), wxOK | wxCENTRE | wxICON_ERROR);
+  return isValid;
+}
+
+void GOSettingsDeviceMatchDialog::OnShow(wxShowEvent &event) {
+  if (event.IsShown()) {
+    wxString errMsg;
+
+    ValidateAll(errMsg);
+    m_StatusBar->SetStatusText(errMsg);
+  }
+}
+
+void GOSettingsDeviceMatchDialog::OnLogicalNameChanged(wxCommandEvent &event) {
+  wxString errMsg;
+
+  ValidateLogicalName(errMsg);
+  m_StatusBar->SetStatusText(errMsg);
 }
 
 void GOSettingsDeviceMatchDialog::OnRegexChanged(wxCommandEvent &event) {
@@ -150,20 +179,6 @@ void GOSettingsDeviceMatchDialog::OnRegexChanged(wxCommandEvent &event) {
 
 void GOSettingsDeviceMatchDialog::OnHelp(wxCommandEvent &event) {
   GOHelpRequestor::DisplayHelp("Device Matching", IsModal());
-}
-
-bool GOSettingsDeviceMatchDialog::Validate() {
-  wxString errMsg;
-  bool isValid = true;
-
-  if (isValid)
-    isValid = ValidateLogicalName(errMsg);
-  if (isValid)
-    isValid = ValidateRegex(errMsg);
-  if (!isValid)
-    wxMessageBox(
-      errMsg, _("Device matching error"), wxOK | wxCENTRE | wxICON_ERROR);
-  return isValid;
 }
 
 void GOSettingsDeviceMatchDialog::SaveTo(GODeviceNamePattern &namePattern) {
