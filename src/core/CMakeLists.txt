@@ -49,6 +49,7 @@ GOCompress.cpp
 GOHash.cpp
 GOLogicalColour.cpp
 GOMemoryPool.cpp
+GONameMap.cpp
 GOOrgan.cpp
 GOOrganList.cpp
 GOSampleStatistic.cpp
