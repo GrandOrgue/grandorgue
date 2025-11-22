@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -7,11 +7,12 @@
 #include <cstdio>
 #include <iostream>
 
-#include "GOTestCollection.h"
-#include "GOTestDrawStop.h"
-#include "GOTestOrganModel.h"
-#include "GOTestSwitch.h"
-#include "GOTestWindchest.h"
+#include "common/GOTestCollection.h"
+#include "testing/GOTestNameMap.h"
+#include "testing/model/GOTestDrawStop.h"
+#include "testing/model/GOTestOrganModel.h"
+#include "testing/model/GOTestSwitch.h"
+#include "testing/model/GOTestWindchest.h"
 
 int main() {
   /*
@@ -26,6 +27,7 @@ int main() {
   GOTestOrganModel testOrganModel;
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
+  GOTestNameMap goTestNameMap;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->run();
