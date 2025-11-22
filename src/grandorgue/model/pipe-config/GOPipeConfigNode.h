@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -49,7 +49,7 @@ private:
     GOBool3 (GOPipeConfig::*getThisValue)() const,
     bool (GOPipeConfigNode::*getParentValue)() const,
     const T GOConfig::*globalValue) const {
-    return to_bool((m_PipeConfig.*getThisValue)(), [=]() {
+    return to_bool((m_PipeConfig.*getThisValue)(), [=, this]() {
       return m_parent ? (m_parent->*getParentValue)()
                       : globalValue && (bool)(m_config.*globalValue)();
     });
