@@ -18,7 +18,7 @@ private:
   GONameMap m_ElementMap;
 
   static unsigned getIdByName(GONameMap &map, const wxString &name) {
-    return map.EnsureNameExists(name.utf8_string());
+    return map.EnsureNameExists(name.utf8_str().data());
   }
 
   static wxString getNameById(const GONameMap &map, unsigned id) {
