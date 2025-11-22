@@ -21,6 +21,12 @@ private:
     return map.EnsureNameExists(name.utf8_str().data());
   }
 
+  template <typename AddingFun>
+  static unsigned ensureName(
+    GONameMap &map, const wxString &name, AddingFun addingFun) {
+    return map.EnsureNameExists(name.utf8_str().data(), addingFun);
+  }
+
   static wxString getNameById(const GONameMap &map, unsigned id) {
     return wxString::FromUTF8(
       map.GetNameById(static_cast<GONameMap::IdType>(id)).c_str());
@@ -29,6 +35,11 @@ private:
 public:
   unsigned GetDeviceIdByLogicalName(const wxString &name) {
     return getIdByName(m_DeviceMap, name);
+  }
+
+  template <typename AddingFun>
+  unsigned EnsureLogicalName(const wxString &name, AddingFun addingFun) {
+    return ensureName(m_DeviceMap, name, addingFun);
   }
 
   wxString GetDeviceLogicalNameById(unsigned id) const {
