@@ -8,6 +8,8 @@
 #ifndef GOMIDIMAP_H
 #define GOMIDIMAP_H
 
+#include <cstdint>
+
 #include <wx/string.h>
 
 #include "GONameMap.h"
@@ -17,40 +19,40 @@ private:
   GONameMap m_DeviceMap;
   GONameMap m_ElementMap;
 
-  static unsigned getIdByName(GONameMap &map, const wxString &name) {
+  static uint_fast16_t getIdByName(GONameMap &map, const wxString &name) {
     return map.EnsureNameExists(name.utf8_str().data());
   }
 
   template <typename AddingFun>
-  static unsigned ensureName(
+  static uint_fast16_t ensureName(
     GONameMap &map, const wxString &name, AddingFun addingFun) {
     return map.EnsureNameExists(name.utf8_str().data(), addingFun);
   }
 
-  static wxString getNameById(const GONameMap &map, unsigned id) {
+  static wxString getNameById(const GONameMap &map, uint_fast16_t id) {
     return wxString::FromUTF8(
       map.GetNameById(static_cast<GONameMap::IdType>(id)).c_str());
   }
 
 public:
-  unsigned GetDeviceIdByLogicalName(const wxString &name) {
+  uint_fast16_t GetDeviceIdByLogicalName(const wxString &name) {
     return getIdByName(m_DeviceMap, name);
   }
 
   template <typename AddingFun>
-  unsigned EnsureLogicalName(const wxString &name, AddingFun addingFun) {
+  uint_fast16_t EnsureLogicalName(const wxString &name, AddingFun addingFun) {
     return ensureName(m_DeviceMap, name, addingFun);
   }
 
-  wxString GetDeviceLogicalNameById(unsigned id) const {
+  wxString GetDeviceLogicalNameById(uint_fast16_t id) const {
     return getNameById(m_DeviceMap, id);
   }
 
-  unsigned GetElementByString(const wxString &str) {
+  uint_fast16_t GetElementByString(const wxString &str) {
     return getIdByName(m_ElementMap, str);
   }
 
-  wxString GetElementByID(unsigned id) const {
+  wxString GetElementByID(uint_fast16_t id) const {
     return getNameById(m_ElementMap, id);
   }
 };
