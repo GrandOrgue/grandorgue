@@ -8,6 +8,8 @@
 #ifndef GOMIDIMAP_H
 #define GOMIDIMAP_H
 
+#include <cstdint>
+
 #include <wx/string.h>
 
 #include <vector>
@@ -21,8 +23,8 @@ public:
   GOMidiMap();
   ~GOMidiMap();
 
-  unsigned GetDeviceIdByLogicalName(const wxString &str);
-  const wxString &GetDeviceLogicalNameById(unsigned id) const;
+  uint16_t GetDeviceIdByLogicalName(const wxString &str);
+  const wxString &GetDeviceLogicalNameById(uint16_t id) const;
 
   unsigned GetElementByString(const wxString &str);
   const wxString &GetElementByID(unsigned id);

@@ -9,6 +9,7 @@
 #define GOMIDIEVENTPATTERNLIST_H
 
 #include <algorithm>
+#include <cstdint>
 #include <vector>
 
 template <class MidiType, class MidiEventPattern> class GOMidiEventPatternList {
@@ -22,24 +23,24 @@ public:
 
   MidiType GetType() const { return m_type; }
 
-  unsigned GetEventCount() const { return m_events.size(); }
+  uint8_t GetEventCount() const { return m_events.size(); }
 
   bool IsMidiConfigured() const { return !m_events.empty(); }
 
   void ClearEvents() { m_events.clear(); }
 
-  const MidiEventPattern &GetEvent(unsigned index) const {
+  const MidiEventPattern &GetEvent(uint8_t index) const {
     return m_events[index];
   }
 
-  MidiEventPattern &GetEvent(unsigned index) { return m_events[index]; }
+  MidiEventPattern &GetEvent(uint8_t index) { return m_events[index]; }
 
   unsigned AddNewEvent() {
     m_events.emplace_back();
     return m_events.size() - 1;
   }
 
-  void DeleteEvent(unsigned index) { m_events.erase(m_events.begin() + index); }
+  void DeleteEvent(uint8_t index) { m_events.erase(m_events.begin() + index); }
 
   /**
    * Assign the new list to the current one
