@@ -72,6 +72,7 @@ gui/dialogs/common/GODialogSizeSet.cpp
 gui/dialogs/common/GODialogTab.cpp
 gui/dialogs/common/GOSimpleDialog.cpp
 gui/dialogs/common/GOTabbedDialog.cpp
+gui/dialogs/midi-event/GOMidiEventDeviceChoice.cpp
 gui/dialogs/midi-event/GOMidiEventDialog.cpp
 gui/dialogs/midi-event/GOMidiEventKeyTab.cpp
 gui/dialogs/midi-event/GOMidiEventRecvTab.cpp

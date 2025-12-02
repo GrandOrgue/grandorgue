@@ -21,21 +21,21 @@ class wxCheckBox;
 
 class GOConfig;
 class GOMidiDeviceConfigList;
+class GOMidiEventDeviceChoice;
 class GOMidiMap;
 class GOMidiEventRecvTab;
 class GOTabbedDialog;
 
 class GOMidiEventSendTab : public GODialogTab, public GOModificationProxy {
 private:
-  GOMidiDeviceConfigList &m_MidiIn;
-  GOMidiDeviceConfigList &m_MidiOut;
-  GOMidiMap &m_MidiMap;
+  const GOConfig &r_config;
 
   GOMidiSender *m_original;
   GOMidiEventRecvTab *m_recv;
   GOMidiSenderEventPatternList m_midi;
   GOChoice<GOMidiSenderMessageType> *m_eventtype;
-  wxChoice *m_eventno, *m_channel, *m_device;
+  wxChoice *m_eventno, *m_channel;
+  GOMidiEventDeviceChoice *m_device;
   wxStaticText *m_KeyLabel;
   wxSpinCtrl *m_key;
   wxCheckBox *m_noteOff;
@@ -86,6 +86,7 @@ public:
     GOConfig &config);
   ~GOMidiEventSendTab();
 
+  bool TransferDataToWindow() override;
   virtual bool TransferDataFromWindow() override;
 
   DECLARE_EVENT_TABLE()
