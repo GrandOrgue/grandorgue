@@ -219,9 +219,10 @@ public:
     m_MidiPortsConfig = portsConfig;
   }
 
-  GOMidiMap &GetMidiMap();
+  GOMidiMap &GetMidiMap() { return m_MidiMap; }
+  const GOMidiMap &GetMidiMap() const { return m_MidiMap; }
 
-  GOTemperamentList &GetTemperaments();
+  GOTemperamentList &GetTemperaments() { return m_Temperaments; }
 
   const GOLogicalRect &GetMainWindowRect() const { return m_MainWindowRect; }
   void SetMainWindowRect(const GOLogicalRect &rect) { m_MainWindowRect = rect; }

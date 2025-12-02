@@ -791,10 +791,6 @@ const unsigned GOConfig::GetTotalAudioChannels() const {
 
 unsigned GOConfig::GetDefaultLatency() { return 50; }
 
-GOMidiMap &GOConfig::GetMidiMap() { return m_MidiMap; }
-
-GOTemperamentList &GOConfig::GetTemperaments() { return m_Temperaments; }
-
 void GOConfig::Flush() {
   wxString tmp_name = m_ConfigFileName + wxT(".new");
   GOConfigFileWriter cfg_file;
