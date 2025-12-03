@@ -1,3 +1,4 @@
+- Added validation of the device logical names for leading/trailing spaces in the Device Matching Dialog https://github.com/GrandOrgue/grandorgue/issues/2278
 # 3.16.2 (2025-11-10)
 - Added option of BAS/MEL coupler behaviour to fix missed notes https://github.com/GrandOrgue/grandorgue/issues/1672
 - Fixed displaying more than 10 enclosures on the CouplerManualsAndVolume panel https://github.com/GrandOrgue/grandorgue/issues/2100
