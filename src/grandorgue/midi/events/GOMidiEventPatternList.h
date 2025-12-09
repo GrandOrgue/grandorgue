@@ -11,7 +11,16 @@
 #include <algorithm>
 #include <vector>
 
-template <class MidiType, class MidiEventPattern> class GOMidiEventPatternList {
+#include "GOMidiBasePatternList.h"
+
+class GOMidiEventPattern;
+
+template <
+  class MidiType,
+  class MidiEventPattern,
+  typename = std::enable_if_t<
+    std::is_base_of<GOMidiEventPattern, MidiEventPattern>::value>>
+class GOMidiEventPatternList : public GOMidiBasePatternList {
 protected:
   MidiType m_type;
   std::vector<MidiEventPattern> m_events;
@@ -22,7 +31,7 @@ public:
 
   MidiType GetType() const { return m_type; }
 
-  unsigned GetEventCount() const { return m_events.size(); }
+  unsigned GetEventCount() const override { return m_events.size(); }
 
   bool IsMidiConfigured() const { return !m_events.empty(); }
 
@@ -30,6 +39,10 @@ public:
 
   const MidiEventPattern &GetEvent(unsigned index) const {
     return m_events[index];
+  }
+
+  const GOMidiEventPattern &GetBasePattern(unsigned index) const override {
+    return GetEvent(index);
   }
 
   MidiEventPattern &GetEvent(unsigned index) { return m_events[index]; }
