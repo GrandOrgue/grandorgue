@@ -631,7 +631,11 @@ wxString GOOrganController::ExportCombination(const wxString &fileName) {
 
   yamlOut << *m_setter;
   yamlOut << *m_DivisionalSetter;
-  return yamlOut.writeTo(fileName);
+
+  const wxString errMsg = yamlOut.writeTo(fileName);
+
+  m_setter->OnCombinationsSaved(fileName);
+  return errMsg;
 }
 
 void GOOrganController::LoadCombination(const wxString &file) {
