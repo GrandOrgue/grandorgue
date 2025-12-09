@@ -10,22 +10,49 @@
 
 #include <wx/string.h>
 
-#include <vector>
+#include "GONameMap.h"
 
 class GOMidiMap {
 private:
-  std::vector<wxString> m_DeviceMap;
-  std::vector<wxString> m_ElementMap;
+  GONameMap m_DeviceMap;
+  GONameMap m_ElementMap;
+
+  static unsigned getIdByName(GONameMap &map, const wxString &name) {
+    return map.EnsureNameExists(name.utf8_str().data());
+  }
+
+  template <typename AddingFun>
+  static unsigned ensureName(
+    GONameMap &map, const wxString &name, AddingFun addingFun) {
+    return map.EnsureNameExists(name.utf8_str().data(), addingFun);
+  }
+
+  static wxString getNameById(const GONameMap &map, unsigned id) {
+    return wxString::FromUTF8(
+      map.GetNameById(static_cast<GONameMap::IdType>(id)).c_str());
+  }
 
 public:
-  GOMidiMap();
-  ~GOMidiMap();
+  unsigned GetDeviceIdByLogicalName(const wxString &name) {
+    return getIdByName(m_DeviceMap, name);
+  }
 
-  unsigned GetDeviceIdByLogicalName(const wxString &str);
-  const wxString &GetDeviceLogicalNameById(unsigned id) const;
+  template <typename AddingFun>
+  unsigned EnsureLogicalName(const wxString &name, AddingFun addingFun) {
+    return ensureName(m_DeviceMap, name, addingFun);
+  }
 
-  unsigned GetElementByString(const wxString &str);
-  const wxString &GetElementByID(unsigned id);
+  wxString GetDeviceLogicalNameById(unsigned id) const {
+    return getNameById(m_DeviceMap, id);
+  }
+
+  unsigned GetElementByString(const wxString &str) {
+    return getIdByName(m_ElementMap, str);
+  }
+
+  wxString GetElementByID(unsigned id) const {
+    return getNameById(m_ElementMap, id);
+  }
 };
 
 #endif
