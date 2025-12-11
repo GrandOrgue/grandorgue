@@ -60,7 +60,7 @@ void GOMidi::Open() {
     if (pDevConf && pDevConf->m_IsEnabled)
       ((GOMidiInPort *)pPort)
         ->Open(
-          m_MidiMap.GetDeviceIdByLogicalName(pDevConf->GetLogicalName()),
+          m_MidiMap.EnsureLogicalName(pDevConf->GetLogicalName()),
           pDevConf->m_ChannelShift);
     else
       pPort->Close();
@@ -75,8 +75,7 @@ void GOMidi::Open() {
       pPort->IsToUse() && portsConfig.IsEnabled(portName, apiName)
       && (devConf = m_config.m_MidiOut.FindByPhysicalName(pPort->GetName(), portName, apiName))
       && devConf->m_IsEnabled)
-      pPort->Open(
-        m_MidiMap.GetDeviceIdByLogicalName(devConf->GetLogicalName()));
+      pPort->Open(m_MidiMap.EnsureLogicalName(devConf->GetLogicalName()));
     else
       pPort->Close();
   }

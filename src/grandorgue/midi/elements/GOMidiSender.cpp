@@ -67,7 +67,7 @@ void GOMidiSender::Load(
 
   m_events.resize(event_cnt);
   for (unsigned i = 0; i < m_events.size(); i++) {
-    m_events[i].deviceId = map.GetDeviceIdByLogicalName(cfg.ReadString(
+    m_events[i].deviceId = map.EnsureLogicalName(cfg.ReadString(
       CMBSetting,
       group,
       wxString::Format(wxT("MIDISendDevice%03d"), i + 1),
