@@ -16,6 +16,8 @@ namespace YAML {
 class Node;
 };
 
+class GOConfigReader;
+class GOConfigWriter;
 class GOMidiMap;
 
 struct GOMidiEventPattern {
@@ -45,6 +47,40 @@ struct GOMidiEventPattern {
   virtual bool IsEmpty() const = 0;
 
   bool operator==(const GOMidiEventPattern &other) const;
+
+  /**
+   * Search the device name in the map and put it's id to deviceId. If the
+   * device is not yet in the map, add it automatically and put a warning
+   * message
+   * @param msgContext a string to put into the warning message
+   * @param deviceName a device name to search
+   * @param map a GOMidiMap instance with the MIDI device list
+   */
+  void FillDeviceId(
+    const wxString &msgContext, const wxString &deviceName, GOMidiMap &map);
+
+  /**
+   * Read deviceId from the ConfigReader
+   * @param cfg - a source ConfigReader
+   * @param group - the configuration section
+   * @param keykeyPrefix - the configuration key prefix
+   * @param patternIndex - the pattern index used to calculate the final
+   *   configuration key
+   * @param map a GOMidiMap instance with the MIDI device list
+   */
+  void LoadDeviceId(
+    GOConfigReader &cfg,
+    const wxString &group,
+    const wxString &keyPrefix,
+    unsigned patternIndex,
+    GOMidiMap &map);
+
+  void SaveDeviceId(
+    GOConfigWriter &cfg,
+    const wxString &group,
+    const wxString &keyPrefix,
+    unsigned patternIndex,
+    const GOMidiMap &map) const;
 
   void DeviceIdToYaml(YAML::Node &eventNode, const GOMidiMap &map) const;
   void DeviceIdFromYaml(

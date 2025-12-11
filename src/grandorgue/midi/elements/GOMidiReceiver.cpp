@@ -67,6 +67,8 @@ static const GOConfigEnum MIDI_RECEIVE_TYPES({
 GOMidiReceiver::GOMidiReceiver(GOMidiReceiverType type)
   : GOMidiReceiverEventPatternList(type), m_ElementID(-1) {}
 
+static const wxString WX_MIDI_DEVICE = wxT("MIDIDevice");
+
 void GOMidiReceiver::Load(
   bool isOdfCheck, GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
   if (!isOdfCheck) {
@@ -199,10 +201,7 @@ void GOMidiReceiver::Save(
     for (unsigned i = 0; i < m_events.size(); i++) {
       auto &pattern = m_events[i];
 
-      cfg.WriteString(
-        group,
-        wxString::Format(wxT("MIDIDevice%03d"), i + 1),
-        map.GetDeviceLogicalNameById(pattern.deviceId));
+      pattern.SaveDeviceId(cfg, group, WX_MIDI_DEVICE, i, map);
       cfg.WriteEnum(
         group,
         wxString::Format(wxT("MIDIEventType%03d"), i + 1),

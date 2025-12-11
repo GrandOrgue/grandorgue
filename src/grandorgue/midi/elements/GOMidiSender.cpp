@@ -58,6 +58,8 @@ static const GOConfigEnum MIDI_SEND_TYPES({
   {wxT("RodgersStopChange"), MIDI_S_RODGERS_STOP_CHANGE},
 });
 
+static const wxString WX_MIDI_SEND_DEVICE = wxT("MIDISendDevice");
+
 void GOMidiSender::Load(
   GOConfigReader &cfg, const wxString &group, GOMidiMap &map) {
   m_events.resize(0);
@@ -153,10 +155,7 @@ void GOMidiSender::Save(
   if (!m_events.empty()) {
     cfg.WriteInteger(group, wxT("NumberOfMIDISendEvents"), m_events.size());
     for (unsigned i = 0; i < m_events.size(); i++) {
-      cfg.WriteString(
-        group,
-        wxString::Format(wxT("MIDISendDevice%03d"), i + 1),
-        map.GetDeviceLogicalNameById(m_events[i].deviceId));
+      m_events[i].SaveDeviceId(cfg, group, WX_MIDI_SEND_DEVICE, i, map);
       cfg.WriteEnum(
         group,
         wxString::Format(wxT("MIDISendEventType%03d"), i + 1),

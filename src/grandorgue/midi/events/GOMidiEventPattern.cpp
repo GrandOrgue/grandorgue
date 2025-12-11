@@ -10,8 +10,13 @@
 #include <algorithm>
 #include <math.h>
 
+#include <wx/intl.h>
+#include <wx/log.h>
+
 #include "yaml/go-wx-yaml.h"
 
+#include "config/GOConfigReader.h"
+#include "config/GOConfigWriter.h"
 #include "midi/GOMidiMap.h"
 
 bool GOMidiEventPattern::operator==(const GOMidiEventPattern &other) const {
@@ -21,6 +26,42 @@ bool GOMidiEventPattern::operator==(const GOMidiEventPattern &other) const {
 }
 
 static wxString WX_DEVICE = wxT("device");
+
+void GOMidiEventPattern::FillDeviceId(
+  const wxString &msgContext, const wxString &deviceName, GOMidiMap &map) {
+  deviceId = map.EnsureLogicalName(deviceName, [=](GONameMap::IdType id) {
+    wxLogWarning(
+      _("%s: Unknown MIDI device logical name \"%s\""), msgContext, deviceName);
+  });
+}
+
+static wxString calc_key(const wxString &keyPrefix, unsigned patternIndex) {
+  return wxString::Format(wxT("%s%03u"), keyPrefix, patternIndex + 1);
+}
+
+void GOMidiEventPattern::LoadDeviceId(
+  GOConfigReader &cfg,
+  const wxString &group,
+  const wxString &keyPrefix,
+  unsigned patternIndex,
+  GOMidiMap &map) {
+  wxString key = calc_key(keyPrefix, patternIndex);
+  wxString deviceName = cfg.ReadString(CMBSetting, group, key, false);
+
+  FillDeviceId(wxString::Format(wxT("%s/%s"), group, key), deviceName, map);
+}
+
+void GOMidiEventPattern::SaveDeviceId(
+  GOConfigWriter &cfg,
+  const wxString &group,
+  const wxString &keyPrefix,
+  unsigned patternIndex,
+  const GOMidiMap &map) const {
+  cfg.WriteString(
+    group,
+    calc_key(keyPrefix, patternIndex),
+    map.GetDeviceLogicalNameById(deviceId));
+}
 
 void GOMidiEventPattern::DeviceIdToYaml(
   YAML::Node &eventNode, const GOMidiMap &map) const {
@@ -33,11 +74,10 @@ void GOMidiEventPattern::DeviceIdFromYaml(
   const wxString &eventPath,
   GOMidiMap &map,
   GOStringSet &unusedPaths) {
-  wxString deviceName
-    = read_string(eventNode, eventPath, WX_DEVICE, false, unusedPaths);
-
-  deviceId
-    = !deviceName.IsEmpty() ? map.GetDeviceIdByLogicalName(deviceName) : 0;
+  FillDeviceId(
+    eventPath,
+    read_string(eventNode, eventPath, WX_DEVICE, false, unusedPaths),
+    map);
 }
 
 int GOMidiEventPattern::convertValueBetweenRanges(
