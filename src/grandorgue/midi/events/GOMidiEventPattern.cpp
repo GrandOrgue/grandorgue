@@ -41,10 +41,14 @@ void GOMidiEventPattern::DeviceIdFromYaml(
 }
 
 int GOMidiEventPattern::convertValueBetweenRanges(
-  int srcValue, int srcLow, int srcHigh, int dstLow, int dstHigh) {
-  const int dstAbsLow = std::min(dstLow, dstHigh);
-  const int dstAbsHigh = std::max(dstLow, dstHigh);
-  int dstValue = srcValue - srcLow;
+  int_fast8_t srcValue,
+  int_fast8_t srcLow,
+  int_fast8_t srcHigh,
+  int_fast8_t dstLow,
+  int_fast8_t dstHigh) {
+  const int_fast8_t dstAbsLow = std::min(dstLow, dstHigh);
+  const int_fast8_t dstAbsHigh = std::max(dstLow, dstHigh);
+  int_fast8_t dstValue = srcValue - srcLow;
 
   if (srcHigh != srcLow)
     dstValue = dstLow

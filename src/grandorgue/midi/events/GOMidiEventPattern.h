@@ -8,6 +8,8 @@
 #ifndef GOMIDIEVENTPATTERN_H
 #define GOMIDIEVENTPATTERN_H
 
+#include <cstdint>
+
 #include "GOStringSet.h"
 
 namespace YAML {
@@ -19,19 +21,19 @@ class GOMidiMap;
 struct GOMidiEventPattern {
   enum { MIN_VALUE = 0, MAX_VALUE = 127 };
 
-  unsigned deviceId;
-  int channel;
-  int key;
-  int low_value;
-  int high_value;
+  uint16_t deviceId;
+  int8_t channel;
+  int8_t key;
+  int8_t low_value;
+  int8_t high_value;
   bool useNoteOff;
 
   GOMidiEventPattern(
-    unsigned uDeviceId,
-    int iChannel,
-    int iKey,
-    int iLowValue = 0,
-    int iHighValue = 0,
+    uint_fast16_t uDeviceId,
+    int_fast8_t iChannel,
+    int_fast8_t iKey,
+    int_fast8_t iLowValue = 0,
+    int_fast8_t iHighValue = 0,
     bool iUseNoteOff = true)
     : deviceId(uDeviceId),
       channel(iChannel),
@@ -63,7 +65,11 @@ struct GOMidiEventPattern {
    * @return the destination value
    **/
   static int convertValueBetweenRanges(
-    int srcValue, int srcLow, int srcHigh, int dstLow, int dstHigh);
+    int_fast8_t srcValue,
+    int_fast8_t srcLow,
+    int_fast8_t srcHigh,
+    int_fast8_t dstLow,
+    int_fast8_t dstHigh);
 };
 
 #endif /* GOMIDIEVENTPATTERN_H */
