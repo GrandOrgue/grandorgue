@@ -69,7 +69,7 @@ GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
     m_IsPlaying(false),
     m_Pause(false) {
   CreateButtons(*organController, BUTTON_DEFS);
-  m_DeviceID = r_MidiMap.GetDeviceIdByLogicalName(_("GrandOrgue MIDI Player"));
+  m_DeviceID = r_MidiMap.EnsureLogicalName(_("GrandOrgue MIDI Player"));
   ResetUI();
 }
 
