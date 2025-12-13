@@ -509,7 +509,7 @@ free the RAM it required.
 Closes and exits the GrandOrgue app.
 </para>
         <para>
-          Exit can also be fired by a MIDI message, see Audio/MIDI menu &rarr; <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Exit).
+          Exit can also be fired by a MIDI message, see Audio/MIDI menu, <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Exit).
 </para>
         </sect3>
       </sect2>
@@ -629,7 +629,7 @@ unnecessary, although it may be useful if you need to quickly stop the
 sound output, or if the sound is breaking up due to CPU overload.
 </para>
           <para>
-Panic button can also be fired by a MIDI message, see Audio/MIDI menu &rarr; <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Panic).
+Panic button can also be fired by a MIDI message, see Audio/MIDI menu, <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Panic).
 </para>
         </sect3>
         <sect3 id="memoryset">
@@ -857,7 +857,7 @@ unnecessary, although it may be useful if you need to quickly stop the
 sound output, or if the sound is breaking up due to CPU overload.
         </para>
         <para>
-Panic button can also be fired by a MIDI message, see Audio/MIDI menu &rarr; <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Panic).
+Panic button can also be fired by a MIDI message, see Audio/MIDI menu, <link linkend="midiobjects">MIDI Objects</link> (look for type Button, element Panic).
 </para>
       </sect2>
     </sect1>
@@ -6396,7 +6396,7 @@ controls.
           <varlistentry>
             <term>Hidden buttons</term>
             <listitem>
-              <simpara>There are two hidden buttons, <link linkend="panicButton">Panic</link> and <link linkend="fileExit">Exit GO</link>, that serve as MIDI receivers only, not visible in this panel for mouse interaction. To configure them, go to Audio/MIDI menu &rarr; <link linkend="midiobjects">MIDI Objects</link> and look for type Button, elements Panic resp. Exit to assign MIDI events that will fire the two functions. 
+              <simpara>There are two hidden buttons, <link linkend="panicButton">Panic</link> and <link linkend="fileExit">Exit GO</link>, that serve as MIDI receivers only, not visible in this panel for mouse interaction. To configure them, go to Audio/MIDI menu, <link linkend="midiobjects">MIDI Objects</link> and look for type Button, elements Panic resp. Exit to assign MIDI events that will fire the two functions. 
               </simpara>
             </listitem>
           </varlistentry>
