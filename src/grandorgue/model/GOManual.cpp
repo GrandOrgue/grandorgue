@@ -32,8 +32,8 @@ GOManual::GOManual(
     m_KeyVelocity(0),
     m_RemoteVelocity(),
     m_Velocity(),
-    m_DivisionState(),
-    m_Velocities(),
+    m_DivisionKeyVelocities(),
+    m_KeyVelocitiesByCoupler(),
     m_manual_number(manualNumber),
     m_ShortName(wxString::Format(WX_ODF_OBJ_NUM_FMT, manualNumber)),
     m_MidiContext(m_ShortName, m_ShortName, pParentContext),
@@ -77,11 +77,11 @@ unsigned GOManual::RegisterCoupler(GOCoupler *coupler) {
 
 void GOManual::Resize() {
   m_Velocity.resize(m_nb_logical_keys);
-  m_DivisionState.resize(m_nb_logical_keys);
+  m_DivisionKeyVelocities.resize(m_nb_logical_keys);
   m_RemoteVelocity.resize(m_nb_logical_keys);
-  m_Velocities.resize(m_nb_logical_keys);
-  for (unsigned i = 0; i < m_Velocities.size(); i++)
-    m_Velocities[i].resize(m_InputCouplers.size());
+  m_KeyVelocitiesByCoupler.resize(m_nb_logical_keys);
+  for (unsigned i = 0; i < m_KeyVelocitiesByCoupler.size(); i++)
+    m_KeyVelocitiesByCoupler[i].resize(m_InputCouplers.size());
 }
 
 void GOManual::Init(
@@ -254,72 +254,75 @@ void GOManual::LoadDivisionals(GOConfigReader &cfg) {
   }
 }
 
-void GOManual::SetOutput(unsigned note, unsigned velocity) {
-  if (note < 0 || note >= m_DivisionState.size())
+void GOManual::SetDivisionKeyState(unsigned keyIndex, unsigned velocity) {
+  if (keyIndex < 0 || keyIndex >= m_DivisionKeyVelocities.size())
     return;
   velocity >>= 2;
 
-  if (m_DivisionState[note] == velocity)
+  if (m_DivisionKeyVelocities[keyIndex] == velocity)
     return;
-  m_DivisionState[note] = velocity;
+  m_DivisionKeyVelocities[keyIndex] = velocity;
 
   for (unsigned i = 0; i < m_stops.size(); i++)
-    m_stops[i]->SetKey(note + 1, velocity);
+    m_stops[i]->SetKeyState(keyIndex + 1, velocity);
 
-  int midi_note = note + m_first_accessible_key_midi_note_nb
+  int midi_note = keyIndex + m_first_accessible_key_midi_note_nb
     - m_first_accessible_logical_key_nb + 1;
   if (midi_note >= 0 && midi_note < 127)
     SendDivisionMidiKey(midi_note, velocity);
 }
 
-void GOManual::PropagateKeyToCouplers(unsigned note) {
-  if (note < m_Velocity.size()) {
-    auto &noteVelocities = m_Velocities[note];
+void GOManual::PropagateKeyToCouplers(unsigned keyIndex) {
+  if (keyIndex < m_Velocity.size()) {
+    auto &keyVelocities = m_KeyVelocitiesByCoupler[keyIndex];
 
     for (auto pCoupler : m_couplers)
-      pCoupler->SetKey(note, noteVelocities, m_InputCouplers);
+      pCoupler->SetKey(keyIndex, keyVelocities, m_InputCouplers);
   }
 }
 
-void GOManual::SetKey(unsigned note, unsigned velocity, unsigned couplerID) {
-  if (note >= m_Velocity.size())
+void GOManual::SetKeyState(
+  unsigned keyIndex, unsigned velocity, unsigned couplerID) {
+  if (keyIndex >= m_Velocity.size())
     return;
 
-  if (m_Velocities[note][couplerID] == velocity)
+  if (m_KeyVelocitiesByCoupler[keyIndex][couplerID] == velocity)
     return;
 
-  m_Velocities[note][couplerID] = velocity;
-  m_Velocity[note] = m_Velocities[note][0];
-  m_RemoteVelocity[note] = 0;
-  for (unsigned i = 1; i < m_Velocities[note].size(); i++) {
-    if (m_Velocity[note] < m_Velocities[note][i])
-      m_Velocity[note] = m_Velocities[note][i];
-    if (m_RemoteVelocity[note] < m_Velocities[note][i])
-      m_RemoteVelocity[note] = m_Velocities[note][i];
+  m_KeyVelocitiesByCoupler[keyIndex][couplerID] = velocity;
+  m_Velocity[keyIndex] = m_KeyVelocitiesByCoupler[keyIndex][0];
+  m_RemoteVelocity[keyIndex] = 0;
+  for (unsigned i = 1; i < m_KeyVelocitiesByCoupler[keyIndex].size(); i++) {
+    if (m_Velocity[keyIndex] < m_KeyVelocitiesByCoupler[keyIndex][i])
+      m_Velocity[keyIndex] = m_KeyVelocitiesByCoupler[keyIndex][i];
+    if (m_RemoteVelocity[keyIndex] < m_KeyVelocitiesByCoupler[keyIndex][i])
+      m_RemoteVelocity[keyIndex] = m_KeyVelocitiesByCoupler[keyIndex][i];
   }
 
-  PropagateKeyToCouplers(note);
-  SetOutput(note, m_UnisonOff > 0 ? m_RemoteVelocity[note] : m_Velocity[note]);
+  PropagateKeyToCouplers(keyIndex);
+  SetDivisionKeyState(
+    keyIndex,
+    m_UnisonOff > 0 ? m_RemoteVelocity[keyIndex] : m_Velocity[keyIndex]);
 
   if (
-    m_first_accessible_logical_key_nb <= note + 1
-    && note <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
+    m_first_accessible_logical_key_nb <= keyIndex + 1
+    && keyIndex <= m_first_accessible_logical_key_nb + m_nb_accessible_keys)
     r_OrganModel.SendControlChanged(this);
 }
 
-void GOManual::Set(unsigned note, unsigned velocity) {
+void GOManual::SetMidiNoteState(unsigned midiNote, unsigned velocity) {
   if (
-    note < m_first_accessible_key_midi_note_nb
-    || note >= m_first_accessible_key_midi_note_nb + m_KeyVelocity.size())
+    midiNote < m_first_accessible_key_midi_note_nb
+    || midiNote >= m_first_accessible_key_midi_note_nb + m_KeyVelocity.size())
     return;
-  if (m_KeyVelocity[note - m_first_accessible_key_midi_note_nb] == velocity)
+  if (m_KeyVelocity[midiNote - m_first_accessible_key_midi_note_nb] == velocity)
     return;
-  m_KeyVelocity[note - m_first_accessible_key_midi_note_nb] = velocity;
-  SendMidiKey(note, velocity);
+  m_KeyVelocity[midiNote - m_first_accessible_key_midi_note_nb] = velocity;
+  SendMidiKey(midiNote, velocity);
   if (velocity)
     velocity = (velocity << 2) + 3;
-  SetKey(
-    note - m_first_accessible_key_midi_note_nb
+  SetKeyState(
+    midiNote - m_first_accessible_key_midi_note_nb
       + m_first_accessible_logical_key_nb - 1,
     velocity,
     0);
@@ -334,7 +337,7 @@ void GOManual::SetUnisonOff(bool on) {
       return;
   }
   for (unsigned note = 0; note < m_Velocity.size(); note++)
-    SetOutput(note, on ? m_RemoteVelocity[note] : m_Velocity[note]);
+    SetDivisionKeyState(note, on ? m_RemoteVelocity[note] : m_Velocity[note]);
 }
 
 unsigned GOManual::GetLogicalKeyCount() { return m_nb_logical_keys; }
@@ -442,7 +445,7 @@ int GOManual::FindSwitchByName(const wxString &name) const {
 
 void GOManual::AllNotesOff() {
   for (unsigned j = 0; j < m_nb_accessible_keys; j++)
-    Set(m_first_accessible_key_midi_note_nb + j, 0x00);
+    SetMidiNoteState(m_first_accessible_key_midi_note_nb + j, 0x00);
 }
 
 bool GOManual::IsKeyDown(unsigned midiNoteNumber) {
@@ -473,13 +476,13 @@ void GOManual::PreparePlayback() {
   m_UnisonOff = 0;
   for (unsigned i = 0; i < m_Velocity.size(); i++)
     m_Velocity[i] = 0;
-  for (unsigned i = 0; i < m_DivisionState.size(); i++)
-    m_DivisionState[i] = 0;
+  for (unsigned i = 0; i < m_DivisionKeyVelocities.size(); i++)
+    m_DivisionKeyVelocities[i] = 0;
   for (unsigned i = 0; i < m_RemoteVelocity.size(); i++)
     m_RemoteVelocity[i] = 0;
-  for (unsigned i = 0; i < m_Velocities.size(); i++)
-    for (unsigned j = 0; j < m_Velocities[i].size(); j++)
-      m_Velocities[i][j] = 0;
+  for (unsigned i = 0; i < m_KeyVelocitiesByCoupler.size(); i++)
+    for (unsigned j = 0; j < m_KeyVelocitiesByCoupler[i].size(); j++)
+      m_KeyVelocitiesByCoupler[i][j] = 0;
 }
 
 void GOManual::PrepareRecording() {
@@ -509,11 +512,11 @@ void GOManual::OnMidiReceived(
   case MIDI_MATCH_ON:
     if (value <= 0)
       value = 1;
-    Set(key, value);
+    SetMidiNoteState(key, value);
     break;
 
   case MIDI_MATCH_OFF:
-    Set(key, 0x00);
+    SetMidiNoteState(key, 0x00);
     break;
 
   case MIDI_MATCH_RESET:

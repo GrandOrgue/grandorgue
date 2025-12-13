@@ -40,8 +40,8 @@ private:
   /* Internal state affected by couplers */
   std::vector<unsigned> m_RemoteVelocity;
   std::vector<unsigned> m_Velocity;
-  std::vector<unsigned> m_DivisionState;
-  std::vector<std::vector<unsigned>> m_Velocities;
+  std::vector<unsigned> m_DivisionKeyVelocities;
+  std::vector<std::vector<unsigned>> m_KeyVelocitiesByCoupler;
   GOMidiReceiver::KeyMap m_MidiKeyMap;
   unsigned m_manual_number;
   wxString m_ShortName;
@@ -77,7 +77,14 @@ private:
     int key,
     int value) override;
   void HandleKey(int key) override;
-  void SetOutput(unsigned note, unsigned velocity);
+
+  /**
+   * Remember the key state (pressed, released) in m_DivisionKeyVelocities and
+   *   propagate it states to all stops
+   * @param keyIndex
+   * @param velocity
+   */
+  void SetDivisionKeyState(unsigned keyIndex, unsigned velocity);
 
   void AbortPlayback() override;
   void PreparePlayback() override;
@@ -121,9 +128,24 @@ public:
   void LoadDivisionals(GOConfigReader &cfg);
   unsigned RegisterCoupler(GOCoupler *coupler);
   // send the key state to all outgoing couplers
-  void PropagateKeyToCouplers(unsigned note);
-  void SetKey(unsigned note, unsigned velocity, unsigned couplerID);
-  void Set(unsigned note, unsigned velocity);
+  void PropagateKeyToCouplers(unsigned keyIndex);
+
+  /**
+   * Set key state (pressed, released)
+   * @param keyIndex
+   * @param velocity
+   * @param couplerID
+   */
+  void SetKeyState(unsigned keyIndex, unsigned velocity, unsigned couplerID);
+
+  /**
+   * Set the note state (pressed, released), It is called from the MIDI receiver
+   * and from the GUI.
+   * This function converts midiNote to keyIndex and calls SetKeyState
+   * @param midiNote the midi note
+   * @param velocity the velocity of the key pressing. 0 means release
+   */
+  void SetMidiNoteState(unsigned midiNote, unsigned velocity);
   void SetUnisonOff(bool on);
   void Update();
   void Reset();

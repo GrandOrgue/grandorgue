@@ -78,7 +78,7 @@ public:
     GOConfigReader &cfg, const wxString &group, int defaultFirstMidiNoteNumber);
   void AddPipe(GOPipe *pipe);
   unsigned RegisterStop(GOStop *stop);
-  void SetKey(int note, unsigned velocity, unsigned stopID);
+  void SetPipeState(int pipeIndex, unsigned velocity, unsigned stopID);
   GOPipe *GetPipe(unsigned index);
   unsigned GetPipeCount();
   GOPipeConfigNode &GetPipeConfig();
