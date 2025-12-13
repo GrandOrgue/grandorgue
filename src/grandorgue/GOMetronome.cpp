@@ -235,8 +235,8 @@ void GOMetronome::HandleTimer() {
     type = 0;
   else
     type = 1;
-  m_rank->SetKey(type, 0x7f, m_StopID);
-  m_rank->SetKey(type, 0, m_StopID);
+  m_rank->SetPipeState(type, 0x7f, m_StopID);
+  m_rank->SetPipeState(type, 0, m_StopID);
 
   m_Pos++;
   if (m_Pos >= m_MeasureLength)
