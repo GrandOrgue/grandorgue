@@ -20,15 +20,15 @@ GOStop::GOStop(
   GOMidiObjectContext *pContext)
   : GODrawstop(organModel, OBJECT_TYPE_STOP),
     m_RankInfo(0),
-    m_KeyVelocity(0),
+    m_KeyVelocities(0),
     m_FirstMidiNoteNumber(first_midi_note_number),
     m_FirstAccessiblePipeLogicalKeyNumber(0),
     m_NumberOfAccessiblePipes(0) {
   SetContext(pContext);
 }
 
-unsigned GOStop::IsAuto() const {
-  /* m_auto seems to state that if a stop only has 1 note, the note isn't
+bool GOStop::IsForEffects() const {
+  /* seems to state that if a stop only has 1 note, the note isn't
    * actually controlled by a manual, but will be on if the stop is on and
    * off if the stop is off... */
   return (m_RankInfo.size() == 1 && m_RankInfo[0].Rank->GetPipeCount() == 1);
@@ -100,56 +100,57 @@ void GOStop::Load(GOConfigReader &cfg, const wxString &group) {
     m_RankInfo.push_back(info);
   }
 
-  m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
-  std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
+  m_KeyVelocities.resize(m_NumberOfAccessiblePipes);
+  std::fill(m_KeyVelocities.begin(), m_KeyVelocities.end(), 0);
   GODrawstop::Load(cfg, group);
 }
 
-void GOStop::SetRankKey(unsigned key, unsigned velocity) {
+void GOStop::SetRankKeyState(unsigned keyIndex, unsigned velocity) {
   for (unsigned j = 0; j < m_RankInfo.size(); j++) {
     if (
-      key + 1 < m_RankInfo[j].FirstAccessibleKeyNumber
-      || key
+      keyIndex + 1 < m_RankInfo[j].FirstAccessibleKeyNumber
+      || keyIndex
         >= m_RankInfo[j].FirstAccessibleKeyNumber + m_RankInfo[j].PipeCount)
       continue;
-    m_RankInfo[j].Rank->SetKey(
-      key + m_RankInfo[j].FirstPipeNumber
+    m_RankInfo[j].Rank->SetPipeState(
+      keyIndex + m_RankInfo[j].FirstPipeNumber
         - m_RankInfo[j].FirstAccessibleKeyNumber,
       velocity,
       m_RankInfo[j].StopID);
   }
 }
 
-void GOStop::SetKey(unsigned note, unsigned velocity) {
+void GOStop::SetKeyState(unsigned manualKeyNumber, unsigned velocity) {
   if (
-    note < m_FirstAccessiblePipeLogicalKeyNumber
-    || note
+    manualKeyNumber < m_FirstAccessiblePipeLogicalKeyNumber
+    || manualKeyNumber
       >= m_FirstAccessiblePipeLogicalKeyNumber + m_NumberOfAccessiblePipes)
     return;
-  if (IsAuto())
+  if (IsForEffects())
     return;
-  note -= m_FirstAccessiblePipeLogicalKeyNumber;
 
-  if (m_KeyVelocity[note] == velocity)
+  unsigned keyIndex = manualKeyNumber - m_FirstAccessiblePipeLogicalKeyNumber;
+
+  if (m_KeyVelocities[keyIndex] == velocity)
     return;
-  m_KeyVelocity[note] = velocity;
+  m_KeyVelocities[keyIndex] = velocity;
   if (IsEngaged())
-    SetRankKey(note, m_KeyVelocity[note]);
+    SetRankKeyState(keyIndex, m_KeyVelocities[keyIndex]);
 }
 
 void GOStop::OnDrawstopStateChanged(bool on) {
-  if (IsAuto()) {
-    SetRankKey(0, on ? 0x7f : 0x00);
+  if (IsForEffects()) {
+    SetRankKeyState(0, on ? 0x7f : 0x00);
   } else {
     for (unsigned i = 0; i < m_NumberOfAccessiblePipes; i++)
-      SetRankKey(i, on ? m_KeyVelocity[i] : 0);
+      SetRankKeyState(i, on ? m_KeyVelocities[i] : 0);
   }
 }
 
 GOStop::~GOStop(void) {}
 
 void GOStop::AbortPlayback() {
-  if (IsAuto())
+  if (IsForEffects())
     SetButtonState(false);
   GOButtonControl::AbortPlayback();
 }
@@ -157,15 +158,15 @@ void GOStop::AbortPlayback() {
 void GOStop::PreparePlayback() {
   GODrawstop::PreparePlayback();
 
-  m_KeyVelocity.resize(m_NumberOfAccessiblePipes);
-  std::fill(m_KeyVelocity.begin(), m_KeyVelocity.end(), 0);
+  m_KeyVelocities.resize(m_NumberOfAccessiblePipes);
+  std::fill(m_KeyVelocities.begin(), m_KeyVelocities.end(), 0);
 }
 
 void GOStop::StartPlayback() {
   GODrawstop::StartPlayback();
 
-  if (IsAuto() && IsEngaged())
-    SetRankKey(0, 0x7f);
+  if (IsForEffects() && IsEngaged())
+    SetRankKeyState(0, 0x7f);
 }
 
 GORank *GOStop::GetRank(unsigned index) { return m_RankInfo[index].Rank; }

@@ -482,7 +482,7 @@ bool GOGUIManual::HandleMousePress(
         state.SetControl(this);
         state.SetIndex(i);
 
-        m_manual->Set(
+        m_manual->SetMidiNoteState(
           m_Keys[i].MidiNumber,
           m_manual->IsKeyDown(m_Keys[i].MidiNumber) ? 0 : 0x7f);
         return true;

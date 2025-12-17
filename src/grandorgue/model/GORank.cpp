@@ -152,12 +152,12 @@ unsigned GORank::RegisterStop(GOStop *stop) {
   return id;
 }
 
-void GORank::SetKey(int note, unsigned velocity, unsigned stopID) {
-  if (note >= 0 && note < (int)m_Pipes.size()) {
-    auto &allStopVelocities = m_NoteStopVelocities[note];
+void GORank::SetPipeState(int pipeIndex, unsigned velocity, unsigned stopID) {
+  if (pipeIndex >= 0 && pipeIndex < (int)m_Pipes.size()) {
+    auto &allStopVelocities = m_NoteStopVelocities[pipeIndex];
     unsigned &thisStopVelocity = allStopVelocities[stopID];
     unsigned oldThisStopVelocity = thisStopVelocity;
-    unsigned &maxVelocity = m_MaxNoteVelocities[note];
+    unsigned &maxVelocity = m_MaxNoteVelocities[pipeIndex];
 
     thisStopVelocity = velocity;
     if (velocity > maxVelocity || velocity < oldThisStopVelocity) {
@@ -166,7 +166,7 @@ void GORank::SetKey(int note, unsigned velocity, unsigned stopID) {
       maxVelocity = velocity >= maxVelocity
         ? velocity
         : *std::max_element(allStopVelocities.begin(), allStopVelocities.end());
-      m_Pipes[note]->SetVelocity(maxVelocity);
+      m_Pipes[pipeIndex]->SetVelocity(maxVelocity);
     }
   }
 }

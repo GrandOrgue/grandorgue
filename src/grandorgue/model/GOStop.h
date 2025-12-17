@@ -26,12 +26,14 @@ private:
     unsigned PipeCount;
   } RankInfo;
   std::vector<RankInfo> m_RankInfo;
-  std::vector<unsigned> m_KeyVelocity;
+  std::vector<unsigned> m_KeyVelocities;
   unsigned m_FirstMidiNoteNumber;
   unsigned m_FirstAccessiblePipeLogicalKeyNumber;
   unsigned m_NumberOfAccessiblePipes;
 
-  void SetRankKey(unsigned key, unsigned velocity);
+  bool IsForEffects() const;
+
+  void SetRankKeyState(unsigned keyIndex, unsigned velocity);
   void OnDrawstopStateChanged(bool on) override;
 
   void AbortPlayback() override;
@@ -45,10 +47,15 @@ public:
     GOMidiObjectContext *pContext);
   GORank *GetRank(unsigned index);
   void Load(GOConfigReader &cfg, const wxString &group) override;
-  void SetKey(unsigned note, unsigned velocity);
-  ~GOStop(void);
 
-  unsigned IsAuto() const;
+  /**
+   * Set the key state (pressed, released). Called for both engaged and
+   *   disengaged stops
+   * @param manualKeyNumber the key number in the manual (started with 1)
+   * @param velocity - the velocity of precing the key. 0 means released
+   */
+  void SetKeyState(unsigned manualKeyNumber, unsigned velocity);
+  ~GOStop(void);
 };
 
 #endif /* GOSTOP_H_ */
