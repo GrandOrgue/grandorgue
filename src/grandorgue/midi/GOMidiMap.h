@@ -19,7 +19,11 @@ private:
   GONameMap m_DeviceMap;
   GONameMap m_ElementMap;
 
-  static uint_fast16_t getIdByName(GONameMap &map, const wxString &name) {
+  static uint_fast16_t getIdByName(const GONameMap &map, const wxString &name) {
+    return map.GetIdByName(name.utf8_str().data());
+  }
+
+  static uint_fast16_t ensureName(GONameMap &map, const wxString &name) {
     return map.EnsureNameExists(name.utf8_str().data());
   }
 
@@ -35,8 +39,12 @@ private:
   }
 
 public:
-  uint_fast16_t GetDeviceIdByLogicalName(const wxString &name) {
+  uint_fast16_t GetDeviceIdByLogicalName(const wxString &name) const {
     return getIdByName(m_DeviceMap, name);
+  }
+
+  uint_fast16_t EnsureLogicalName(const wxString &name) {
+    return ensureName(m_DeviceMap, name);
   }
 
   template <typename AddingFun>

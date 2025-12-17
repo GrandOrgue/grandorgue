@@ -91,7 +91,7 @@ void GOMidiReceiver::Load(
     for (unsigned i = 0; i < m_events.size(); i++) {
       auto &pattern = m_events[i];
 
-      pattern.deviceId = map.GetDeviceIdByLogicalName(cfg.ReadString(
+      pattern.deviceId = map.EnsureLogicalName(cfg.ReadString(
         CMBSetting,
         group,
         wxString::Format(wxT("MIDIDevice%03d"), i + 1),

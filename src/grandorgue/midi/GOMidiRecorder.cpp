@@ -104,7 +104,7 @@ void GOMidiRecorder::ButtonStateChanged(int id, bool newState) {
 }
 
 void GOMidiRecorder::SetOutputDevice(const wxString &device_id) {
-  m_OutputDevice = m_Map.GetDeviceIdByLogicalName(device_id);
+  m_OutputDevice = m_Map.EnsureLogicalName(device_id);
 }
 
 void GOMidiRecorder::SendEvent(GOMidiEvent &e) {
