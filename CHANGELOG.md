@@ -1,3 +1,4 @@
+- Fixed creating an organ cache https://github.com/GrandOrgue/grandorgue/issues/2325
 - Removed support of MacOs 13. Now MacOs 14+-arm64 and MacOs 15-intel are only supported
 - Fixed light of the Save combinations button https://github.com/GrandOrgue/grandorgue/issues/2305
 - Added validation of the device logical names for leading/trailing spaces in the Device Matching Dialog https://github.com/GrandOrgue/grandorgue/issues/2278

@@ -717,7 +717,7 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
     GOCacheWriter writer(file, compress);
 
     /* Save pipes to cache */
-    bool isOk = writer.WriteHeader();
+    isOk = writer.WriteHeader();
 
     GOHashType hash = GenerateCacheHash();
     if (!writer.Write(&hash, sizeof(hash)))
