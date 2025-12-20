@@ -1,3 +1,4 @@
+- Fixed exporting MIDI Settings to yaml file https://github.com/GrandOrgue/grandorgue/issues/2333
 - Fixed creating an organ cache https://github.com/GrandOrgue/grandorgue/issues/2325
 - Removed support of MacOs 13. Now MacOs 14+-arm64 and MacOs 15-intel are only supported
 - Fixed light of the Save combinations button https://github.com/GrandOrgue/grandorgue/issues/2305

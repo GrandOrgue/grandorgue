@@ -268,21 +268,21 @@ void GOMidiReceiver::ToYaml(YAML::Node &yamlNode, GOMidiMap &map) const {
     e.DeviceIdToYaml(eventNode, map);
     eventNode[WX_EVENT_TYPE] = MIDI_RECEIVE_TYPES.GetName(e.type);
     if (hasChannel(e.type))
-      eventNode[WX_CHANNEL] = e.channel;
+      eventNode[WX_CHANNEL] = (int)e.channel;
     if (m_type == MIDI_RECV_MANUAL)
-      eventNode[WX_KEY_TRANSPOSE] = e.key;
+      eventNode[WX_KEY_TRANSPOSE] = (int)e.key;
     else if (hasKey(e.type))
-      eventNode[WX_KEY] = e.key;
+      eventNode[WX_KEY] = (int)e.key;
     if (HasLowKey(e.type))
-      eventNode[WX_LOW_KEY] = e.low_key;
+      eventNode[WX_LOW_KEY] = (int)e.low_key;
     if (HasHighKey(e.type))
-      eventNode[WX_HIGH_KEY] = e.high_key;
+      eventNode[WX_HIGH_KEY] = (int)e.high_key;
     if (hasLowerLimit(e.type))
-      eventNode[WX_LOW_VALUE] = e.low_value;
+      eventNode[WX_LOW_VALUE] = (int)e.low_value;
     if (hasUpperLimit(e.type))
-      eventNode[WX_HIGH_VALUE] = e.high_value;
+      eventNode[WX_HIGH_VALUE] = (int)e.high_value;
     if (HasDebounce(e.type))
-      eventNode[WX_DEBOUNCE_TIME] = e.debounce_time;
+      eventNode[WX_DEBOUNCE_TIME] = (int)e.debounce_time;
 
     yamlNode.push_back(eventNode);
   }
