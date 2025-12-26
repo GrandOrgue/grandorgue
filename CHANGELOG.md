@@ -1,3 +1,4 @@
+- Fixed resetting devices of MIDI events on editing if the device was missed
 - Added logging a warning message when importing MIDI objects referencing to a not-existing device https://github.com/GrandOrgue/grandorgue/issues/2281
 - Fixed exporting MIDI Settings to yaml file https://github.com/GrandOrgue/grandorgue/issues/2333
 - Fixed creating an organ cache https://github.com/GrandOrgue/grandorgue/issues/2325

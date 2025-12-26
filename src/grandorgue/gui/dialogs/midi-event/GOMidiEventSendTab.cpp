@@ -18,6 +18,7 @@
 #include "config/GOConfig.h"
 #include "gui/dialogs/common/GOTabbedDialog.h"
 
+#include "GOMidiEventDeviceChoice.h"
 #include "GOMidiEventRecvTab.h"
 
 BEGIN_EVENT_TABLE(GOMidiEventSendTab, wxPanel)
@@ -35,9 +36,7 @@ GOMidiEventSendTab::GOMidiEventSendTab(
   GOMidiEventRecvTab *recv,
   GOConfig &config)
   : GODialogTab(pDlg, "Send", label),
-    m_MidiIn(config.m_MidiIn),
-    m_MidiOut(config.m_MidiOut),
-    m_MidiMap(config.GetMidiMap()),
+    r_config(config),
     m_original(event),
     m_recv(recv),
     m_midi(*event) {
@@ -65,7 +64,7 @@ GOMidiEventSendTab::GOMidiEventSendTab(
     wxGBPosition(1, 0),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-  m_device = new wxChoice(this, ID_EVENT);
+  m_device = new GOMidiEventDeviceChoice(this, ID_DEVICE);
   grid->Add(m_device, wxGBPosition(1, 1), wxGBSpan(1, 4), wxEXPAND);
 
   grid->Add(
@@ -189,15 +188,6 @@ GOMidiEventSendTab::GOMidiEventSendTab(
 
   SetSizer(topSizer);
 
-  const GOPortsConfig &portsConfig = config.GetMidiPortsConfig();
-
-  m_device->Append(_("Any device"));
-  for (const GOMidiDeviceConfig *pDevConf : m_MidiOut)
-    if (
-      portsConfig.IsEnabled(pDevConf->GetPortName(), pDevConf->GetApiName())
-      && pDevConf->m_IsEnabled)
-      m_device->Append(pDevConf->GetLogicalName());
-
   for (unsigned int i = 1; i <= 16; i++)
     m_channel->Append(wxString::Format(wxT("%d"), i));
   ;
@@ -256,16 +246,23 @@ GOMidiEventSendTab::GOMidiEventSendTab(
       _("SYSEX Rogers Stop Change"), MIDI_S_RODGERS_STOP_CHANGE);
   }
 
-  m_current = 0;
-  if (!m_midi.GetEventCount())
-    m_midi.AddNewEvent();
-
-  LoadEvent();
-
   topSizer->Fit(this);
 }
 
 GOMidiEventSendTab::~GOMidiEventSendTab() {}
+
+bool GOMidiEventSendTab::TransferDataToWindow() {
+  m_device->FillWithDevices(
+    r_config.GetMidiPortsConfig(),
+    r_config.m_MidiOut,
+    r_config.GetMidiMap(),
+    m_midi);
+  m_current = 0;
+  if (!m_midi.GetEventCount())
+    m_midi.AddNewEvent();
+  LoadEvent();
+  return true;
+}
 
 bool GOMidiEventSendTab::TransferDataFromWindow() {
   // save the current event being edited
@@ -377,16 +374,17 @@ void GOMidiEventSendTab::OnTypeChange(wxCommandEvent &event) {
 }
 
 void GOMidiEventSendTab::LoadEvent() {
+  const GOMidiMap &midiMap = r_config.GetMidiMap();
+
   m_eventno->Clear();
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
-    wxString buffer;
-    wxString device;
-    if (m_midi.GetEvent(i).deviceId == 0)
-      device = _("Any device");
-    else
-      device = m_MidiMap.GetDeviceLogicalNameById(m_midi.GetEvent(i).deviceId);
-    buffer.Printf(_("%d (%s)"), i + 1, device.c_str());
-    m_eventno->Append(buffer);
+    uint16_t deviceId = m_midi.GetEvent(i).deviceId;
+    const wxString deviceName
+      = deviceId ? midiMap.GetDeviceLogicalNameById(deviceId) : _("Any device");
+    const wxString eventName
+      = wxString::Format(_("%d (%s)"), i + 1, deviceName);
+
+    m_eventno->Append(eventName);
   }
   m_eventno->Select(m_current);
   if (m_midi.GetEventCount() > 1)
@@ -401,12 +399,7 @@ void GOMidiEventSendTab::LoadEvent() {
   wxCommandEvent event;
   OnTypeChange(event);
 
-  m_device->SetSelection(0);
-  for (unsigned i = 1; i < m_device->GetCount(); i++)
-    if (
-      m_MidiMap.GetDeviceLogicalNameById(e.deviceId) == m_device->GetString(i))
-      m_device->SetSelection(i);
-
+  m_device->SetSelectedDeviceId(e.deviceId);
   m_channel->SetSelection(e.channel > 0 && e.channel <= 16 ? e.channel - 1 : 0);
   m_key->SetValue(e.key);
   m_LowValue->SetValue(e.low_value);
@@ -418,12 +411,7 @@ void GOMidiEventSendTab::LoadEvent() {
 
 void GOMidiEventSendTab::StoreEvent() {
   GOMidiSenderEventPattern &e = m_midi.GetEvent(m_current);
-  if (m_device->GetSelection() == 0)
-    e.deviceId = 0;
-  else
-    e.deviceId
-      = m_MidiMap.GetDeviceIdByLogicalName(m_device->GetStringSelection());
-
+  e.deviceId = m_device->GetSelectedDeviceId();
   e.type = m_eventtype->GetCurrentValue();
   e.channel = m_channel->GetSelection() + 1;
   e.key = m_key->GetValue();
@@ -458,20 +446,20 @@ void GOMidiEventSendTab::OnCopyClick(wxCommandEvent &event) {
 }
 
 GOMidiSenderEventPattern GOMidiEventSendTab::CopyEvent() {
+  const GOMidiMap &midiMap = r_config.GetMidiMap();
   GOMidiReceiverEventPattern recv = m_recv->GetCurrentEvent();
   GOMidiSenderEventPattern e;
 
   // try to fill e.deviceId as the id of the bound output device of the input
   // device
   const GOMidiDeviceConfig *pInDev = recv.deviceId
-    ? m_MidiIn.FindByLogicalName(
-      m_MidiMap.GetDeviceLogicalNameById(recv.deviceId))
-    : NULL;
-  const GOMidiDeviceConfig *pOutDev = pInDev ? pInDev->p_OutputDevice : NULL;
+    ? r_config.m_MidiIn.FindByLogicalName(
+      midiMap.GetDeviceLogicalNameById(recv.deviceId))
+    : nullptr;
+  const GOMidiDeviceConfig *pOutDev = pInDev ? pInDev->p_OutputDevice : nullptr;
 
-  e.deviceId = pOutDev
-    ? m_MidiMap.GetDeviceIdByLogicalName(pOutDev->GetLogicalName())
-    : 0;
+  e.deviceId
+    = pOutDev ? midiMap.GetDeviceIdByLogicalName(pOutDev->GetLogicalName()) : 0;
 
   e.type = MIDI_S_NONE;
   e.channel = 1;

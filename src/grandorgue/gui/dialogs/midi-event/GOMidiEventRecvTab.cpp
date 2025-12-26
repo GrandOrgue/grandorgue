@@ -19,7 +19,7 @@
 #include "midi/events/GOMidiEvent.h"
 #include "midi/events/GORodgers.h"
 
-#include "GOOrganController.h"
+#include "GOMidiEventDeviceChoice.h"
 
 BEGIN_EVENT_TABLE(GOMidiEventRecvTab, wxPanel)
 EVT_TOGGLEBUTTON(ID_LISTEN_SIMPLE, GOMidiEventRecvTab::OnListenSimpleClick)
@@ -34,8 +34,7 @@ END_EVENT_TABLE()
 GOMidiEventRecvTab::GOMidiEventRecvTab(
   wxWindow *parent, GOMidiReceiver *event, GOConfig &config)
   : wxPanel(parent, wxID_ANY),
-    m_MidiIn(config.m_MidiIn),
-    m_MidiMap(config.GetMidiMap()),
+    r_config(config),
     m_original(event),
     m_midi(*event),
     m_ReceiverType(event->GetType()),
@@ -67,7 +66,7 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-  m_device = new wxChoice(this, ID_EVENT);
+  m_device = new GOMidiEventDeviceChoice(this, ID_DEVICE);
   grid->Add(m_device, wxGBPosition(1, 1), wxGBSpan(1, 4), wxEXPAND);
 
   grid->Add(
@@ -203,15 +202,6 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
 
   SetSizer(topSizer);
 
-  const GOPortsConfig &portsConfig = config.GetMidiPortsConfig();
-
-  m_device->Append(_("Any device"));
-  for (GOMidiDeviceConfig *pDevConf : m_MidiIn)
-    if (
-      portsConfig.IsEnabled(pDevConf->GetPortName(), pDevConf->GetApiName())
-      && pDevConf->m_IsEnabled)
-      m_device->Append(pDevConf->GetLogicalName());
-
   m_channel->Append(_("Any channel"));
   for (unsigned int i = 1; i <= 16; i++)
     m_channel->Append(wxString::Format(wxT("%d"), i));
@@ -294,20 +284,22 @@ GOMidiEventRecvTab::GOMidiEventRecvTab(
       _("Sys Ex Ahlborn-Galanti Toggle"), MIDI_M_SYSEX_AHLBORN_GALANTI_TOGGLE);
   }
 
-  m_current = 0;
-  if (!m_midi.GetEventCount())
-    m_midi.AddNewEvent();
-
-  LoadEvent();
-
   topSizer->Fit(this);
 }
 
 GOMidiEventRecvTab::~GOMidiEventRecvTab() { StopListen(); }
 
-void GOMidiEventRecvTab::RegisterMIDIListener(GOMidi *midi) {
-  if (midi)
-    m_listener.Register(midi);
+bool GOMidiEventRecvTab::TransferDataToWindow() {
+  m_device->FillWithDevices(
+    r_config.GetMidiPortsConfig(),
+    r_config.m_MidiIn,
+    r_config.GetMidiMap(),
+    m_midi);
+  m_current = 0;
+  if (!m_midi.GetEventCount())
+    m_midi.AddNewEvent();
+  LoadEvent();
+  return true;
 }
 
 bool GOMidiEventRecvTab::TransferDataFromWindow() {
@@ -315,6 +307,11 @@ bool GOMidiEventRecvTab::TransferDataFromWindow() {
   if (m_original->RenewFrom(m_midi))
     GOModificationProxy::OnIsModifiedChanged(true);
   return true;
+}
+
+void GOMidiEventRecvTab::RegisterMIDIListener(GOMidi *midi) {
+  if (midi)
+    m_listener.Register(midi);
 }
 
 void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {
@@ -438,16 +435,17 @@ void GOMidiEventRecvTab::OnTypeChange(wxCommandEvent &event) {
 }
 
 void GOMidiEventRecvTab::LoadEvent() {
+  const GOMidiMap &midiMap = r_config.GetMidiMap();
+
   m_eventno->Clear();
   for (unsigned i = 0; i < m_midi.GetEventCount(); i++) {
-    wxString buffer;
-    wxString device;
-    if (m_midi.GetEvent(i).deviceId == 0)
-      device = _("Any device");
-    else
-      device = m_MidiMap.GetDeviceLogicalNameById(m_midi.GetEvent(i).deviceId);
-    buffer.Printf(_("%d (%s)"), i + 1, device.c_str());
-    m_eventno->Append(buffer);
+    uint16_t deviceId = m_midi.GetEvent(i).deviceId;
+    const wxString deviceName
+      = deviceId ? midiMap.GetDeviceLogicalNameById(deviceId) : _("Any device");
+    const wxString eventName
+      = wxString::Format(_("%d (%s)"), i + 1, deviceName);
+
+    m_eventno->Append(eventName);
   }
   m_eventno->Select(m_current);
   if (m_midi.GetEventCount() > 1)
@@ -463,19 +461,7 @@ void GOMidiEventRecvTab::LoadEvent() {
   OnTypeChange(event);
 
   // Select current device
-  m_device->SetSelection(0);
-  if (e.deviceId > 0) {
-    const wxString &eventDeviceLogicalName
-      = m_MidiMap.GetDeviceLogicalNameById(e.deviceId);
-
-    for (unsigned i = 1; i < m_device->GetCount(); i++) {
-      const wxString &deviceLogicalName = m_device->GetString(i);
-
-      if (deviceLogicalName == eventDeviceLogicalName)
-        m_device->SetSelection(i);
-    }
-  }
-
+  m_device->SetSelectedDeviceId(e.deviceId);
   m_channel->SetSelection(0);
   if (e.channel == -1)
     m_channel->SetSelection(0);
@@ -492,12 +478,8 @@ void GOMidiEventRecvTab::LoadEvent() {
 
 GOMidiReceiverEventPattern GOMidiEventRecvTab::GetCurrentEvent() {
   GOMidiReceiverEventPattern e;
-  if (m_device->GetSelection() == 0)
-    e.deviceId = 0;
-  else
-    e.deviceId
-      = m_MidiMap.GetDeviceIdByLogicalName(m_device->GetStringSelection());
 
+  e.deviceId = m_device->GetSelectedDeviceId();
   e.type = m_eventtype->GetCurrentValue();
   if (m_channel->GetSelection() == 0)
     e.channel = -1;
