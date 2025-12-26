@@ -38,7 +38,7 @@ echo "Phase 1"
 if ! make -k $PARALLEL_PRMS VERBOSE=1 all; then
 
   echo "Phase 2"
-  make -j 1 -k 1 VERBOSE=1 all
+  make -j1 -k 1 VERBOSE=1 all
 fi
 
 echo "Phase 3"
