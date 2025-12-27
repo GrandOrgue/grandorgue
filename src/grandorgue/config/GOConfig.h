@@ -8,11 +8,12 @@
 #ifndef GOCONFIG_H
 #define GOCONFIG_H
 
-#include <wx/gdicmn.h>
-#include <wx/string.h>
-
+#include <filesystem>
 #include <unordered_map>
 #include <vector>
+
+#include <wx/gdicmn.h>
+#include <wx/string.h>
 
 #include "gui/dialogs/common/GODialogSizeSet.h"
 #include "gui/size/GOLogicalRect.h"
@@ -48,7 +49,7 @@ public:
 
 private:
   wxString m_InstanceName;
-  wxString m_ConfigFileName;
+  std::filesystem::path m_ConfigFilePath;
   wxString m_ResourceDir;
   std::vector<wxString> m_AudioGroups;
   GOPortsConfig m_SoundPortsConfig;
