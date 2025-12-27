@@ -71,7 +71,7 @@ protected:
   bool m_IsGuiOnly = false;
 
 public:
-  void SetRestart();
+  void SetRestart() { m_Restart = true; }
 };
 
 DECLARE_APP(GOApp)
