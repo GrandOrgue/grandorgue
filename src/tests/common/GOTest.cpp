@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2025 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -38,7 +38,7 @@ bool GOCommonControllerTest::setUp() {
   GOTest::setUp();
   char path[] = ".";
   this->organ_directory = mkdtemp(path);
-  GOConfig settings(this->GetName());
+  GOConfig settings(GetName(), "");
   this->controller = new GOOrganController(settings);
   this->controller->InitOrganDirectory(this->organ_directory);
   return true;

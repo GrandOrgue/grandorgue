@@ -83,7 +83,7 @@ private:
   void LoadDefaults();
 
 public:
-  GOConfig(wxString instance);
+  GOConfig(const std::string &instanceName, const std::string &confFilePath);
 
   GOSettingDirectory OrganSettingsPath;
   GOSettingDirectory OrganCachePath;
