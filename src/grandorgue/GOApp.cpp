@@ -7,6 +7,8 @@
 
 #include "GOApp.h"
 
+#include <format>
+
 #include <wx/cmdline.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
@@ -42,6 +44,7 @@ void GOApp::TemporaryLog::DoLogTextAtLevel(
 static const char *const SWITCH_GUI = "g";
 static const char *const SWITCH_HELP = "h";
 static const char *const OPTION_INSTANCE = "i";
+static const char *const OPTION_CONFIG_FILE = "c";
 
 static const wxCmdLineEntryDesc cmd_line_desc[] = {
   {wxCMD_LINE_SWITCH,
@@ -60,6 +63,12 @@ static const wxCmdLineEntryDesc cmd_line_desc[] = {
    OPTION_INSTANCE,
    "instance",
    wxTRANSLATE("specify GrandOrgue instance name"),
+   wxCMD_LINE_VAL_STRING,
+   wxCMD_LINE_PARAM_OPTIONAL},
+  {wxCMD_LINE_OPTION,
+   OPTION_CONFIG_FILE,
+   "config",
+   wxTRANSLATE("specify GrandOrgue config file name"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
   {wxCMD_LINE_SWITCH,
@@ -84,23 +93,22 @@ void GOApp::OnInitCmdLine(wxCmdLineParser &parser) {
 
 bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
   bool res = wxApp::OnCmdLineParsed(parser);
+  wxString str;
 
   if (res)
     m_IsGuiOnly = parser.FoundSwitch(SWITCH_GUI) == wxCMD_SWITCH_ON;
-  if (res) {
-    wxString str;
+  if (res && parser.Found(OPTION_INSTANCE, &str)) {
+    wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
 
-    if (parser.Found(OPTION_INSTANCE, &str)) {
-      wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
-
-      if (r.Matches(str))
-        m_InstanceName = wxT("-") + str;
-      else {
-        wxMessageOutput::Get()->Printf(_("Invalid instance name"));
-        res = false;
-      }
+    if (r.Matches(str))
+      m_InstanceName = std::format("-{}", str.ToStdString());
+    else {
+      wxMessageOutput::Get()->Printf(_("Invalid instance name"));
+      res = false;
     }
   }
+  if (res && parser.Found(OPTION_CONFIG_FILE, &str))
+    m_ConfigFilePath = str.ToStdString();
   if (res)
     for (unsigned i = 0; i < parser.GetParamCount(); i++)
       m_FileName = parser.GetParam(i);
@@ -141,7 +149,7 @@ bool GOApp::OnInit() {
   if (!wxApp::OnInit())
     return false;
 
-  m_config = new GOConfig(m_InstanceName);
+  m_config = new GOConfig(m_InstanceName, m_ConfigFilePath);
   m_config->Load();
 
   GOStdPath::InitLocaleDir();
