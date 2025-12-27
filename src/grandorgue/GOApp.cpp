@@ -7,6 +7,8 @@
 
 #include "GOApp.h"
 
+#include <format>
+
 #include <wx/cmdline.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
@@ -42,6 +44,7 @@ void GOApp::TemporaryLog::DoLogTextAtLevel(
 static const char *const SWITCH_GUI = "g";
 static const char *const SWITCH_HELP = "h";
 static const char *const OPTION_INSTANCE = "i";
+static const char *const OPTION_CONFIG_FILE = "c";
 
 static const wxCmdLineEntryDesc cmd_line_desc[] = {
   {wxCMD_LINE_SWITCH,
@@ -60,6 +63,12 @@ static const wxCmdLineEntryDesc cmd_line_desc[] = {
    OPTION_INSTANCE,
    "instance",
    wxTRANSLATE("specify GrandOrgue instance name"),
+   wxCMD_LINE_VAL_STRING,
+   wxCMD_LINE_PARAM_OPTIONAL},
+  {wxCMD_LINE_OPTION,
+   OPTION_CONFIG_FILE,
+   "config",
+   wxTRANSLATE("specify GrandOrgue config file name"),
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
   {wxCMD_LINE_SWITCH,
@@ -84,23 +93,22 @@ void GOApp::OnInitCmdLine(wxCmdLineParser &parser) {
 
 bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
   bool res = wxApp::OnCmdLineParsed(parser);
+  wxString str;
 
   if (res)
     m_IsGuiOnly = parser.FoundSwitch(SWITCH_GUI) == wxCMD_SWITCH_ON;
-  if (res) {
-    wxString str;
+  if (res && parser.Found(OPTION_INSTANCE, &str)) {
+    wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
 
-    if (parser.Found(OPTION_INSTANCE, &str)) {
-      wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
-
-      if (r.Matches(str))
-        m_InstanceName = wxT("-") + str;
-      else {
-        wxMessageOutput::Get()->Printf(_("Invalid instance name"));
-        res = false;
-      }
+    if (r.Matches(str))
+      m_InstanceName = std::format("-{}", str.ToStdString());
+    else {
+      wxMessageOutput::Get()->Printf(_("Invalid instance name"));
+      res = false;
     }
   }
+  if (res && parser.Found(OPTION_CONFIG_FILE, &str))
+    m_ConfigFilePath = str.ToStdString();
   if (res)
     for (unsigned i = 0; i < parser.GetParamCount(); i++)
       m_FileName = parser.GetParam(i);
@@ -108,71 +116,64 @@ bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
 }
 
 bool GOApp::OnInit() {
-  bool rc = false;
-
   wxLog::SetActiveTarget(m_TemporaryLog.get());
-  try {
+
 #ifdef __WXMAC__
-    /* This ensures that the executable (when it is not in the form of an OS X
-     * bundle, is brought into the foreground). GetCurrentProcess() should not
-     * be used as it has been deprecated as of 10.9. We use a "Process
-     * Identification Constant" instead. See the "Process Manager Reference"
-     * document for more information. */
-    static const ProcessSerialNumber PSN = {0, kCurrentProcess};
-    TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
+  /* This ensures that the executable (when it is not in the form of an OS X
+   * bundle, is brought into the foreground). GetCurrentProcess() should not
+   * be used as it has been deprecated as of 10.9. We use a "Process
+   * Identification Constant" instead. See the "Process Manager Reference"
+   * document for more information. */
+  static const ProcessSerialNumber PSN = {0, kCurrentProcess};
+  TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
 #endif
 
-    SetAppName(wxT("GrandOrgue"));
-    SetClassName(wxT("GrandOrgue"));
-    SetVendorName(wxT("Our Organ"));
+  SetAppName(wxT("GrandOrgue"));
+  SetClassName(wxT("GrandOrgue"));
+  SetVendorName(wxT("Our Organ"));
 
-    wxIdleEvent::SetMode(wxIDLE_PROCESS_SPECIFIED);
-    wxFileSystem::AddHandler(new wxZipFSHandler);
-    wxImage::AddHandler(new wxJPEGHandler);
-    wxImage::AddHandler(new wxGIFHandler);
-    wxImage::AddHandler(new wxPNGHandler);
-    wxImage::AddHandler(new wxBMPHandler);
-    wxImage::AddHandler(new wxICOHandler);
-    srand(::wxGetUTCTime());
+  wxIdleEvent::SetMode(wxIDLE_PROCESS_SPECIFIED);
+  wxFileSystem::AddHandler(new wxZipFSHandler);
+  wxImage::AddHandler(new wxJPEGHandler);
+  wxImage::AddHandler(new wxGIFHandler);
+  wxImage::AddHandler(new wxPNGHandler);
+  wxImage::AddHandler(new wxBMPHandler);
+  wxImage::AddHandler(new wxICOHandler);
+  srand(::wxGetUTCTime());
 
 #ifdef __WIN32__
-    SetThreadExecutionState(
-      ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
+  SetThreadExecutionState(
+    ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
 #endif
 
-    if (wxApp::OnInit()) {
-      m_config = new GOConfig(m_InstanceName);
-      m_config->Load();
+  if (!wxApp::OnInit())
+    return false;
 
-      GOStdPath::InitLocaleDir();
-      m_locale.Init(m_config->GetLanguageId());
-      m_locale.AddCatalog(wxT("GrandOrgue"));
+  m_config = new GOConfig(m_InstanceName, m_ConfigFilePath);
+  m_config->Load();
 
-      m_soundSystem = new GOSound(*m_config);
+  GOStdPath::InitLocaleDir();
+  m_locale.Init(m_config->GetLanguageId());
+  m_locale.AddCatalog(wxT("GrandOrgue"));
 
-      m_Frame = new GOFrame(
-        *this,
-        NULL,
-        wxID_ANY,
-        wxString::Format(_("GrandOrgue %s"), wxT(APP_VERSION)),
-        wxDefaultPosition,
-        wxDefaultSize,
-        wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION
-          | wxCLOSE_BOX | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE,
-        *m_soundSystem);
-      SetTopWindow(m_Frame);
-      m_Log = new GOLog(m_Frame);
-      wxLog::SetActiveTarget(m_Log);
-      m_Frame->Init(m_FileName, m_IsGuiOnly);
-      rc = true;
-    }
-  } catch (const std::exception &exc) {
-    // otherwise the segfault can occur during ~GOApp
-    wxLog::SetActiveTarget(nullptr);
+  m_soundSystem = new GOSound(*m_config);
 
-    wxLogError(wxT("%s"), exc.what());
-  }
-  return rc;
+  m_Frame = new GOFrame(
+    *this,
+    NULL,
+    wxID_ANY,
+    wxString::Format(_("GrandOrgue %s"), wxT(APP_VERSION)),
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX
+      | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE,
+    *m_soundSystem);
+  SetTopWindow(m_Frame);
+  m_Log = new GOLog(m_Frame);
+  wxLog::SetActiveTarget(m_Log);
+  m_Frame->Init(m_FileName, m_IsGuiOnly);
+
+  return true;
 }
 
 #ifdef __WXMAC__
@@ -216,3 +217,5 @@ void GOApp::CleanUp() {
     m_Log = nullptr;
   }
 }
+
+void GOApp::SetRestart() { m_Restart = true; }

@@ -67,7 +67,8 @@ protected:
   GOSound *m_soundSystem = nullptr;
   GOLog *m_Log = nullptr;
   wxString m_FileName;
-  wxString m_InstanceName;
+  std::string m_InstanceName;
+  std::string m_ConfigFilePath;
   bool m_IsGuiOnly = false;
 
 public:
