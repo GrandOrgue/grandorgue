@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-class GOMidiEventPattern;
+struct GOMidiEventPattern;
 
 class GOMidiBasePatternList {
 public:
