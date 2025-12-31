@@ -7,8 +7,6 @@
 
 #include "config/GOConfigWriter.h"
 
-#include <format>
-
 #include <wx/intl.h>
 #include <wx/log.h>
 
@@ -32,7 +30,8 @@ void GOConfigWriter::WriteInteger(wxString group, wxString key, int value) {
 }
 
 void GOConfigWriter::WriteFloat(wxString group, wxString key, float value) {
-  std::string str = std::format("{:.6f}", value);
+  wxString str = wxString::Format(wxT("%.6f"), value);
+
   WriteString(group, key, str);
 }
 

@@ -459,21 +459,25 @@ double GOConfigReader::ReadFloat(
         value.c_str());
     value.Trim();
   }
-  double retval;
+
   int pos = value.find(wxT(","), 0);
   if (pos >= 0) {
     wxLogWarning(
       _("Number %s contains locale dependent floating point"), value.c_str());
     value[pos] = wxT('.');
   }
-  if (!parseCDouble(retval, value)) {
-    wxString error;
-    error.Printf(
-      _("Invalid float value at section '%s' entry '%s': %s"),
-      group.c_str(),
-      key.c_str(),
-      value.c_str());
-    throw error;
+
+  double retval;
+
+  try {
+    retval = std::stod(value.ToStdString());
+  } catch (const std::exception &exc) {
+    throw wxString::Format(
+      _("Invalid float value '%s' at section '%s' entry '%s': %s"),
+      group,
+      key,
+      value,
+      exc.what());
   }
 
   if (retval < nmin || retval > nmax) {
@@ -538,29 +542,29 @@ unsigned GOConfigReader::ReadSize(
     return sizes[size_type][3];
 
   long size;
-  wxString errMsg;
 
   try {
     size = std::stol(value.ToStdString());
   } catch (const std::exception &exc) {
-    errMsg = wxString::Format(
-      _("Invalid size '%s' at section '%s' entry '%s': %s"),
-      value,
-      group,
-      key,
-      exc.what());
+    throw std::runtime_error(
+      wxString::Format(
+        _("Invalid size '%s' at section '%s' entry '%s': %s"),
+        value,
+        group,
+        key,
+        exc.what())
+        .ToStdString());
   }
 
-  if (errMsg.IsEmpty() && size < 100 && size > 32000)
-    errMsg = wxString::Format(
-      _("The size '%s' at section '%s' entry '%s' is out of range [100, "
-        "32000]"),
-      value,
-      group,
-      key);
-
-  if (!errMsg.IsEmpty())
-    throw std::runtime_error(errMsg.ToStdString());
+  if (size < 100 && size > 32000)
+    throw std::runtime_error(
+      wxString::Format(
+        _("The size '%s' at section '%s' entry '%s' is out of range [100, "
+          "32000]"),
+        value,
+        group,
+        key)
+        .ToStdString());
   return size;
 }
 
@@ -601,29 +605,29 @@ unsigned GOConfigReader::ReadFontSize(
     return 10;
 
   long size;
-  wxString errMsg;
 
   try {
     size = std::stol(value.ToStdString());
   } catch (const std::exception &exc) {
-    errMsg = wxString::Format(
-      _("Invalid font size '%s' at section '%s' entry '%s': %s"),
-      value,
-      group,
-      key,
-      exc.what());
+    throw std::runtime_error(
+      wxString::Format(
+        _("Invalid font size '%s' at section '%s' entry '%s': %s"),
+        value,
+        group,
+        key,
+        exc.what())
+        .ToStdString());
   }
 
-  if (errMsg.IsEmpty() && size < 1 && size > 50)
-    errMsg = wxString::Format(
-      _("The font size '%s' at section '%s' entry '%s' is out of range [1, "
-        "50]"),
-      value,
-      group,
-      key);
-
-  if (!errMsg.IsEmpty())
-    throw std::runtime_error(errMsg.ToStdString());
+  if (size < 1 && size > 50)
+    throw std::runtime_error(
+      wxString::Format(
+        _("The font size '%s' at section '%s' entry '%s' is out of range [1, "
+          "50]"),
+        value,
+        group,
+        key)
+        .ToStdString());
   return size;
 }
 
