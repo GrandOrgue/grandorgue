@@ -7,7 +7,9 @@
 
 #include "config/GOConfigReader.h"
 
+#include <stdexcept>
 #include <unordered_set>
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
