@@ -10,6 +10,7 @@
 
 #include "gui/dialogs/common/GODialogTab.h"
 
+class wxSpinCtrl;
 class wxString;
 
 class GOConfig;
@@ -18,12 +19,18 @@ class GOSettingsMetronome : public GODialogTab {
 private:
   GOConfig &r_config;
 
+  wxSpinCtrl *m_MetronomeMeasure;
+  wxSpinCtrl *m_MetronomeBPM;
+
 public:
   GOSettingsMetronome(
     GOConfig &config,
     GOTabbedDialog *pDlg,
     const wxString &name,
     const wxString &label);
+
+  virtual bool TransferDataToWindow() override;
+  virtual bool TransferDataFromWindow() override;
 };
 
 #endif /* GOSETTINGSMETRONOME_H */
