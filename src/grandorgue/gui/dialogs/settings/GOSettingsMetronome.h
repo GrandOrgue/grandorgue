@@ -10,17 +10,22 @@
 
 #include "gui/dialogs/common/GODialogTab.h"
 
+class wxRadioBox;
 class wxSpinCtrl;
 class wxString;
 
 class GOConfig;
+class GOFilePickerCtrl;
 
 class GOSettingsMetronome : public GODialogTab {
 private:
   GOConfig &r_config;
 
-  wxSpinCtrl *m_MetronomeMeasure;
-  wxSpinCtrl *m_MetronomeBPM;
+  wxSpinCtrl *m_measure;
+  wxSpinCtrl *m_bpm;
+  wxRadioBox *m_sound;
+  GOFilePickerCtrl *m_FirstBeatPath;
+  GOFilePickerCtrl *m_BeatPath;
 
 public:
   GOSettingsMetronome(
