@@ -46,6 +46,11 @@ public:
     INTERPOLATION_LINEAR = 0,
     INTERPOLATION_POLYPHASE,
   };
+  enum MetronomeSoundType {
+    METRONOME_SOUND_RINGING,
+    METRONOME_SOUND_CLICKING,
+    METRONOME_SOUND_CUSTOM,
+  };
 
 private:
   wxString m_InstanceName;
@@ -150,9 +155,6 @@ public:
 
   GOSettingInteger Transpose;
 
-  GOSettingUnsigned MetronomeMeasure;
-  GOSettingUnsigned MetronomeBPM;
-
   GOSettingBool IsToAutoAddMidi;
   GOSettingBool IsToCheckMidiOnStart;
   GOSettingString MidiRecorderOutputDevice;
@@ -169,6 +171,12 @@ public:
 
   GOMidiDeviceConfigList m_MidiIn;
   GOMidiDeviceConfigList m_MidiOut;
+
+  GOSettingUnsigned MetronomeMeasure;
+  GOSettingUnsigned MetronomeBPM;
+  GOSettingUnsigned m_MetromomeSound;
+  GOSettingFile m_MetronomeFirstBeat;
+  GOSettingFile m_MetronomeBeat;
 
   GODialogSizeSet m_DialogSizes;
 
