@@ -23,7 +23,7 @@ private:
 
   wxSpinCtrl *m_measure;
   wxSpinCtrl *m_bpm;
-  wxRadioBox *m_sound;
+  wxRadioBox *m_SoundType;
   GOFilePickerCtrl *m_FirstBeatPath;
   GOFilePickerCtrl *m_BeatPath;
 
@@ -34,8 +34,17 @@ public:
     const wxString &name,
     const wxString &label);
 
-  virtual bool TransferDataToWindow() override;
-  virtual bool TransferDataFromWindow() override;
+private:
+  void OnSoundTypeChanged(unsigned soundType);
+  void OnSoundTypeChanged(wxCommandEvent &event);
+
+public:
+  bool Validate() override;
+
+  bool TransferDataToWindow() override;
+  bool TransferDataFromWindow() override;
+
+  DECLARE_EVENT_TABLE()
 };
 
 #endif /* GOSETTINGSMETRONOME_H */

@@ -8,6 +8,7 @@
 #include "GOSettingsMetronome.h"
 
 #include <wx/gbsizer.h>
+#include <wx/msgdlg.h>
 #include <wx/radiobox.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
@@ -25,7 +26,17 @@ static constexpr size_t SOUND_CHOICE_CNT
 static const wxString WX_FILE_MASK_SAMPLES
   = wxT("Audio sample files (*.wav;*.wv)|*.wav;*.wv");
 
-enum { ID_MEASURE = 200, ID_BPM, ID_SOUND, ID_FIRST_BEAT_PATH, ID_BEAT_PATH };
+enum {
+  ID_MEASURE = 200,
+  ID_BPM,
+  ID_SOUND_TYPE,
+  ID_FIRST_BEAT_PATH,
+  ID_BEAT_PATH
+};
+
+BEGIN_EVENT_TABLE(GOSettingsMetronome, GODialogTab)
+EVT_RADIOBOX(ID_SOUND_TYPE, GOSettingsMetronome::OnSoundTypeChanged)
+END_EVENT_TABLE()
 
 GOSettingsMetronome::GOSettingsMetronome(
   GOConfig &config,
@@ -63,17 +74,17 @@ GOSettingsMetronome::GOSettingsMetronome(
     wxDefaultSpan,
     wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
   m_measure->SetRange(0, 32);
-  m_sound = new wxRadioBox(
+  m_SoundType = new wxRadioBox(
     this,
-    ID_SOUND,
-    _("Metronome Sound"),
+    ID_SOUND_TYPE,
+    _("Metronome Sound Type"),
     wxDefaultPosition,
     wxDefaultSize,
     SOUND_CHOICE_CNT,
     WX_SOUND_CHOICES,
     0,
     wxRA_SPECIFY_ROWS);
-  gbSizer->Add(m_sound, wxGBPosition(2, 0), wxGBSpan(1, 3), wxEXPAND);
+  gbSizer->Add(m_SoundType, wxGBPosition(2, 0), wxGBSpan(1, 3), wxEXPAND);
   gbSizer->Add(
     new wxStaticText(this, wxID_ANY, _("Custom sound wave paths:")),
     wxGBPosition(3, 0),
@@ -113,14 +124,53 @@ GOSettingsMetronome::GOSettingsMetronome(
   SetSizerAndFit(topSizer);
 }
 
+static bool is_custom_sound(unsigned soundType) {
+  return soundType == GOConfig::METRONOME_SOUND_CUSTOM;
+}
+
+void GOSettingsMetronome::OnSoundTypeChanged(unsigned soundType) {
+  const bool isCustom = is_custom_sound(soundType);
+
+  m_FirstBeatPath->Enable(isCustom);
+  m_BeatPath->Enable(isCustom);
+}
+
+void GOSettingsMetronome::OnSoundTypeChanged(wxCommandEvent &event) {
+  OnSoundTypeChanged(event.GetSelection());
+}
+
+bool GOSettingsMetronome::Validate() {
+  bool isValid = true;
+
+  if (
+    isValid && is_custom_sound(m_SoundType->GetSelection())
+    && (m_FirstBeatPath->GetPath().IsEmpty() || m_BeatPath->GetPath().IsEmpty())) {
+    wxMessageBox(
+      _("Both First beat and beat paths must be set for Custom sound type"),
+      _("Metronome config error"),
+      wxOK | wxCENTRE | wxICON_ERROR);
+    isValid = false;
+  }
+  return isValid;
+}
+
 bool GOSettingsMetronome::TransferDataToWindow() {
+  const unsigned soundType = r_config.m_MetromomeSound();
+
   m_bpm->SetValue(r_config.MetronomeBPM());
   m_measure->SetValue(r_config.MetronomeMeasure());
+  m_SoundType->SetSelection(soundType);
+  m_FirstBeatPath->SetPath(r_config.m_MetronomeFirstBeat());
+  m_BeatPath->SetPath(r_config.m_MetronomeBeat());
+  OnSoundTypeChanged(soundType);
   return true;
 }
 
 bool GOSettingsMetronome::TransferDataFromWindow() {
   r_config.MetronomeBPM(m_bpm->GetValue());
   r_config.MetronomeMeasure(m_measure->GetValue());
+  r_config.m_MetromomeSound(m_SoundType->GetSelection());
+  r_config.m_MetronomeFirstBeat(m_FirstBeatPath->GetPath());
+  r_config.m_MetronomeBeat(m_BeatPath->GetPath());
   return true;
 }
