@@ -225,7 +225,7 @@ void GOMidiSender::ToYaml(YAML::Node &yamlNode, GOMidiMap &map) const {
     if (HasKey(e.type))
       eventNode[WX_KEY] = (int)e.key;
     if (isNote(e.type))
-      eventNode[WX_USE_NOTE_OFF] = (int)e.useNoteOff;
+      eventNode[WX_USE_NOTE_OFF] = e.useNoteOff;
     if (hasLowValue(e.type))
       eventNode[WX_LOW_VALUE] = (int)e.low_value;
     if (hasHighValue(e.type))
