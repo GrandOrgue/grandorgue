@@ -13,8 +13,6 @@
 
 #include "GOMidiBasePatternList.h"
 
-class GOMidiEventPattern;
-
 template <
   class MidiType,
   class MidiEventPattern,
