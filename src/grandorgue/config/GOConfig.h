@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -44,6 +44,11 @@ public:
   enum InterpolationType {
     INTERPOLATION_LINEAR = 0,
     INTERPOLATION_POLYPHASE,
+  };
+  enum MetronomeSoundType {
+    METRONOME_SOUND_RINGING,
+    METRONOME_SOUND_CLICKING,
+    METRONOME_SOUND_CUSTOM,
   };
 
 private:
@@ -149,9 +154,6 @@ public:
 
   GOSettingInteger Transpose;
 
-  GOSettingUnsigned MetronomeMeasure;
-  GOSettingUnsigned MetronomeBPM;
-
   GOSettingBool IsToAutoAddMidi;
   GOSettingBool IsToCheckMidiOnStart;
   GOSettingString MidiRecorderOutputDevice;
@@ -168,6 +170,12 @@ public:
 
   GOMidiDeviceConfigList m_MidiIn;
   GOMidiDeviceConfigList m_MidiOut;
+
+  GOSettingUnsigned MetronomeMeasure;
+  GOSettingUnsigned MetronomeBPM;
+  GOSettingUnsigned m_MetromomeSound;
+  GOSettingFile m_MetronomeFirstBeat;
+  GOSettingFile m_MetronomeBeat;
 
   GODialogSizeSet m_DialogSizes;
 
