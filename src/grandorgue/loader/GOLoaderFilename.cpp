@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,6 +21,7 @@ void GOLoaderFilename::Assign(const RootKind rootKind, const wxString &path) {
 
   m_RootKind = rootKind;
   tmpPath.Normalize(wxPATH_NORM_DOTS);
+  m_RootKind = tmpPath.IsAbsolute() ? ROOT_ABSOLUTE : rootKind;
   m_path = tmpPath.GetFullPath();
   if (m_path != tmpPath.GetLongPath())
     wxLogWarning(
