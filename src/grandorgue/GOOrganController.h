@@ -161,8 +161,8 @@ public:
   void LoadCombination(const wxString &cmb);
   bool Save();
   bool Export(const wxString &cmb);
-  bool CachePresent();
-  bool IsCacheable();
+  bool CachePresent() const { return wxFileExists(m_CacheFilename); }
+  bool IsCacheable() const { return m_Cacheable; }
   bool UpdateCache(GOProgressDialog *dlg, bool compress);
   void DeleteCache();
   void DeleteSettings();
@@ -177,24 +177,24 @@ public:
   // GODocument *GetDocument();
 
   /* Access to internal ODF objects */
-  GOSetter *GetSetter();
-  GOGUIPanel *GetPanel(unsigned index);
-  unsigned GetPanelCount();
-  void AddPanel(GOGUIPanel *panel);
-  GOMemoryPool &GetMemoryPool();
-  GOConfig &GetSettings();
+  GOSetter *GetSetter() const { return m_setter; }
+  GOGUIPanel *GetPanel(unsigned index) { return m_panels[index]; }
+  unsigned GetPanelCount() const { return m_panels.size(); }
+  void AddPanel(GOGUIPanel *panel) { m_panels.push_back(panel); }
+  GOMemoryPool &GetMemoryPool() { return m_pool; }
+  GOConfig &GetSettings() { return m_config; }
   GOBitmapCache &GetBitmapCache() const { return *m_bitmaps; }
   void SetTemperament(const wxString &name);
-  wxString GetTemperament();
+  const wxString &GetTemperament() const { return m_Temperament; }
 
-  GOLabelControl *GetPitchLabel();
-  GOLabelControl *GetTemperamentLabel();
-  GOMainWindowData *GetMainWindowData();
+  GOLabelControl *GetPitchLabel() { return &m_PitchLabel; }
+  GOLabelControl *GetTemperamentLabel() { return &m_TemperamentLabel; }
+  GOMainWindowData *GetMainWindowData() { return &m_MainWindowData; }
 
   void LoadMIDIFile(const wxString &filename);
 
-  void SetVolume(int volume);
-  int GetVolume();
+  void SetVolume(int volume) { m_volume = volume; }
+  int GetVolume() const { return m_volume; }
 
   unsigned GetReleaseTail() {
     return GetRootPipeConfigNode().GetEffectiveReleaseTail();
@@ -209,25 +209,25 @@ public:
     const wxString &name, bool is_panel = false);
 
   /* TODO: can somebody figure out what this thing is */
-  bool IsCustomized();
+  bool IsCustomized() const { return m_b_customized; }
 
   /* Filename of the organ definition used to load */
-  const wxString GetODFFilename();
+  const wxString &GetODFFilename() const { return m_odf; }
   const wxString GetOrganPathInfo();
   GOOrgan GetOrganInfo();
-  const wxString GetSettingFilename();
-  const wxString GetCacheFilename();
+  const wxString &GetSettingFilename() const { return m_SettingFilename; }
+  const wxString &GetCacheFilename() const { return m_CacheFilename; }
   wxString GetCombinationsDir() const;
 
   /* Organ and Building general information */
-  const wxString &GetChurchAddress();
-  const wxString &GetOrganBuilder();
-  const wxString &GetOrganBuildDate();
-  const wxString &GetOrganComments();
-  const wxString &GetRecordingDetails();
-  const wxString &GetInfoFilename();
+  const wxString &GetChurchAddress() const { return m_ChurchAddress; }
+  const wxString &GetOrganBuilder() const { return m_OrganBuilder; }
+  const wxString &GetOrganBuildDate() const { return m_OrganBuildDate; }
+  const wxString &GetOrganComments() const { return m_OrganComments; }
+  const wxString &GetRecordingDetails() const { return m_RecordingDetails; }
+  const wxString &GetInfoFilename() const { return m_InfoFilename; }
 
-  GOMidi *GetMidi();
+  GOMidi *GetMidi() { return m_midi; }
 
   GOGUIMouseState &GetMouseState() { return m_MouseState; }
 
