@@ -52,7 +52,7 @@ static constexpr unsigned SAMPLES_PER_BUFFER_DEFAULT = 512;
 static constexpr GOConfig::InterpolationType INTERPOLATION_DEFAULT
   = GOConfig::INTERPOLATION_POLYPHASE;
 static constexpr GOConfig::MetronomeSoundType METRONOME_SOUND_DEFAULT
-  = GOConfig::METRONOME_SOUND_RINGING;
+  = GOConfig::METRONOME_SOUND_BELL;
 
 static const wxString WX_EMPTY = wxEmptyString;
 static const wxString COUNT = wxT("Count");
@@ -369,7 +369,7 @@ GOConfig::GOConfig(
       this,
       wxT("Metronome"),
       wxT("SoundType"),
-      METRONOME_SOUND_RINGING,
+      METRONOME_SOUND_BELL,
       METRONOME_SOUND_CUSTOM,
       METRONOME_SOUND_DEFAULT),
     m_MetronomeFirstBeat(

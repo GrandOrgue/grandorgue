@@ -100,10 +100,10 @@ const wxString &GOMetronome::GetSampleFilePath(bool isFirst) {
   const wxString *pPath;
 
   switch (config.m_MetromomeSound()) {
-  case GOConfig::METRONOME_SOUND_RINGING:
+  case GOConfig::METRONOME_SOUND_BELL:
     pPath = isFirst ? &WX_BELL_FIRST_BEAT_PATH : &WX_BELL_BEAT_PATH;
     break;
-  case GOConfig::METRONOME_SOUND_CLICKING:
+  case GOConfig::METRONOME_SOUND_CLICK:
     pPath = isFirst ? &WX_CLICK_FIRST_BEAT_PATH : &WX_CLICK_BEAT_PATH;
     break;
   case GOConfig::METRONOME_SOUND_CUSTOM:
