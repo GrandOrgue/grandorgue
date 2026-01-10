@@ -1,12 +1,13 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "config/GOConfigReader.h"
 
+#include <sstream>
 #include <stdexcept>
 #include <unordered_set>
 
@@ -15,6 +16,8 @@
 
 #include "GOBool3.h"
 #include "GOConfigReaderDB.h"
+
+static const std::locale C_LOCALE("C");
 
 GOConfigReader::GOConfigReader(
   GOConfigReaderDB &cfg, bool strict, bool hw1Check)
@@ -472,7 +475,10 @@ double GOConfigReader::ReadFloat(
   double retval;
 
   try {
-    retval = std::stod(value.ToStdString());
+    std::istringstream iss(value.ToStdString());
+
+    iss.imbue(C_LOCALE);
+    iss >> retval;
   } catch (const std::exception &exc) {
     throw wxString::Format(
       _("Invalid float value '%s' at section '%s' entry '%s': %s"),
