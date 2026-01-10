@@ -5525,6 +5525,10 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
         <title>Beat</title>
         <para>A sound file path with all other beats of a measure.</para>
       </sect2>
+      <para>
+        A current loaded organ should be reloaded for changing the metronome
+        sound.
+      </para>
     </sect1>
   </chapter>
   <chapter id="organsettings">

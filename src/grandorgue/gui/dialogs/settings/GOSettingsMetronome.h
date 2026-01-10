@@ -27,6 +27,10 @@ private:
   GOFilePickerCtrl *m_FirstBeatPath;
   GOFilePickerCtrl *m_BeatPath;
 
+  unsigned m_OldSoundType;
+  wxString m_OldFirstBeatPath;
+  wxString m_OldBeatPath;
+
 public:
   GOSettingsMetronome(
     GOConfig &config,
@@ -43,6 +47,8 @@ public:
 
   bool TransferDataToWindow() override;
   bool TransferDataFromWindow() override;
+
+  bool NeedReload();
 
   DECLARE_EVENT_TABLE()
 };
