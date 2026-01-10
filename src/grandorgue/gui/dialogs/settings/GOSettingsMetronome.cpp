@@ -154,14 +154,15 @@ bool GOSettingsMetronome::Validate() {
 }
 
 bool GOSettingsMetronome::TransferDataToWindow() {
-  const unsigned soundType = r_config.m_MetromomeSound();
-
   m_bpm->SetValue(r_config.MetronomeBPM());
   m_measure->SetValue(r_config.MetronomeMeasure());
-  m_SoundType->SetSelection(soundType);
-  m_FirstBeatPath->SetPath(r_config.m_MetronomeFirstBeat());
-  m_BeatPath->SetPath(r_config.m_MetronomeBeat());
-  OnSoundTypeChanged(soundType);
+  m_OldSoundType = r_config.m_MetromomeSound();
+  m_OldFirstBeatPath = r_config.m_MetronomeFirstBeat();
+  m_OldBeatPath = r_config.m_MetronomeBeat();
+  m_SoundType->SetSelection(m_OldSoundType);
+  m_FirstBeatPath->SetPath(m_OldFirstBeatPath);
+  m_BeatPath->SetPath(m_OldBeatPath);
+  OnSoundTypeChanged(m_OldSoundType);
   return true;
 }
 
@@ -172,4 +173,12 @@ bool GOSettingsMetronome::TransferDataFromWindow() {
   r_config.m_MetronomeFirstBeat(m_FirstBeatPath->GetPath());
   r_config.m_MetronomeBeat(m_BeatPath->GetPath());
   return true;
+}
+
+bool GOSettingsMetronome::NeedReload() {
+  const unsigned soundType = r_config.m_MetromomeSound();
+
+  return soundType != m_OldSoundType
+    || (soundType == GOConfig::METRONOME_SOUND_CUSTOM
+        && (r_config.m_MetronomeFirstBeat() != m_FirstBeatPath || r_config.m_MetronomeBeat() != m_BeatPath));
 }
