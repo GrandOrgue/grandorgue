@@ -1,19 +1,23 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "config/GOConfigReader.h"
 
+#include <sstream>
+#include <stdexcept>
 #include <unordered_set>
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
 #include "GOBool3.h"
 #include "GOConfigReaderDB.h"
-#include "GOUtil.h"
+
+static const std::locale C_LOCALE("C");
 
 GOConfigReader::GOConfigReader(
   GOConfigReaderDB &cfg, bool strict, bool hw1Check)
@@ -369,26 +373,25 @@ int GOConfigReader::ReadInteger(
         value.c_str());
     value.Trim();
   }
-  if (!parseLong(retval, value)) {
-    if (
-      value.Length() && !::wxIsdigit(value[0]) && value[0] != wxT('+')
-      && value[0] != wxT('-') && value.CmpNoCase(wxT("none"))
-      && !value.IsEmpty()) {
-      wxString error;
-      error.Printf(
-        _("Invalid integer value at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-      throw error;
-    }
 
-    retval = wxAtoi(value);
-    wxLogWarning(
-      _("Invalid integer value at section '%s' entry '%s': %s"),
-      group.c_str(),
-      key.c_str(),
-      value.c_str());
+  try {
+    retval = std::stol(value.ToStdString());
+  } catch (const std::exception &exc) {
+    wxString errMsg = wxString::Format(
+      _("Invalid integer value '%s' at section '%s' entry '%s': %s"),
+      value,
+      group,
+      key,
+      exc.what());
+
+    if (
+      !value.empty() && !std::isdigit(value[0]) && value[0] != '+'
+      && value[0] != '-' && value != "none") {
+
+      throw std::runtime_error(errMsg.ToStdString());
+    }
+    retval = std::stoi(value.ToStdString());
+    wxLogWarning(errMsg);
   }
 
   if (retval < nmin || retval > nmax) {
@@ -461,21 +464,28 @@ double GOConfigReader::ReadFloat(
         value.c_str());
     value.Trim();
   }
-  double retval;
+
   int pos = value.find(wxT(","), 0);
   if (pos >= 0) {
     wxLogWarning(
       _("Number %s contains locale dependent floating point"), value.c_str());
     value[pos] = wxT('.');
   }
-  if (!parseCDouble(retval, value)) {
-    wxString error;
-    error.Printf(
-      _("Invalid float value at section '%s' entry '%s': %s"),
-      group.c_str(),
-      key.c_str(),
-      value.c_str());
-    throw error;
+
+  double retval;
+
+  try {
+    std::istringstream iss(value.ToStdString());
+
+    iss.imbue(C_LOCALE);
+    iss >> retval;
+  } catch (const std::exception &exc) {
+    throw wxString::Format(
+      _("Invalid float value '%s' at section '%s' entry '%s': %s"),
+      group,
+      key,
+      value,
+      exc.what());
   }
 
   if (retval < nmin || retval > nmax) {
@@ -540,17 +550,30 @@ unsigned GOConfigReader::ReadSize(
     return sizes[size_type][3];
 
   long size;
-  if (parseLong(size, value))
-    if (100 <= size && size <= 32000)
-      return size;
 
-  wxString error;
-  error.Printf(
-    _("Invalid size at section '%s' entry '%s': %s"),
-    group.c_str(),
-    key.c_str(),
-    value.c_str());
-  throw error;
+  try {
+    size = std::stol(value.ToStdString());
+  } catch (const std::exception &exc) {
+    throw std::runtime_error(
+      wxString::Format(
+        _("Invalid size '%s' at section '%s' entry '%s': %s"),
+        value,
+        group,
+        key,
+        exc.what())
+        .ToStdString());
+  }
+
+  if (size < 100 && size > 32000)
+    throw std::runtime_error(
+      wxString::Format(
+        _("The size '%s' at section '%s' entry '%s' is out of range [100, "
+          "32000]"),
+        value,
+        group,
+        key)
+        .ToStdString());
+  return size;
 }
 
 unsigned GOConfigReader::ReadFontSize(
@@ -590,17 +613,30 @@ unsigned GOConfigReader::ReadFontSize(
     return 10;
 
   long size;
-  if (parseLong(size, value))
-    if (1 <= size && size <= 50)
-      return size;
 
-  wxString error;
-  error.Printf(
-    _("Invalid font size at section '%s' entry '%s': %s"),
-    group.c_str(),
-    key.c_str(),
-    value.c_str());
-  throw error;
+  try {
+    size = std::stol(value.ToStdString());
+  } catch (const std::exception &exc) {
+    throw std::runtime_error(
+      wxString::Format(
+        _("Invalid font size '%s' at section '%s' entry '%s': %s"),
+        value,
+        group,
+        key,
+        exc.what())
+        .ToStdString());
+  }
+
+  if (size < 1 && size > 50)
+    throw std::runtime_error(
+      wxString::Format(
+        _("The font size '%s' at section '%s' entry '%s' is out of range [1, "
+          "50]"),
+        value,
+        group,
+        key)
+        .ToStdString());
+  return size;
 }
 
 int GOConfigReader::ReadEnum(

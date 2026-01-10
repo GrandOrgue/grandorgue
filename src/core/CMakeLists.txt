@@ -55,7 +55,6 @@ GOOrganList.cpp
 GOSampleStatistic.cpp
 GOStdPath.cpp
 GOTimer.cpp
-GOUtil.cpp
 GOWave.cpp
 GOWavPack.cpp
 GOWavPackWriter.cpp
