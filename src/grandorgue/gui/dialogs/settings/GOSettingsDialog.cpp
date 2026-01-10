@@ -131,6 +131,8 @@ void GOSettingsDialog::OnReasons(wxCommandEvent &event) {
   }
 }
 
-bool GOSettingsDialog::NeedReload() { return m_OptionsPage->NeedReload(); }
+bool GOSettingsDialog::NeedReload() {
+  return m_OptionsPage->NeedReload() || m_MetronomePage->NeedReload();
+}
 
 bool GOSettingsDialog::NeedRestart() { return m_OptionsPage->NeedRestart(); }
