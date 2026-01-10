@@ -1,17 +1,22 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "config/GOConfigWriter.h"
 
+#include <iomanip>
+#include <sstream>
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
 #include "GOConfigEnum.h"
 #include "GOConfigFileWriter.h"
+
+static const std::locale C_LOCALE("C");
 
 GOConfigWriter::GOConfigWriter(GOConfigFileWriter &cfg, bool prefix)
   : m_ConfigFile(cfg), m_Prefix(prefix) {}
@@ -30,9 +35,11 @@ void GOConfigWriter::WriteInteger(wxString group, wxString key, int value) {
 }
 
 void GOConfigWriter::WriteFloat(wxString group, wxString key, float value) {
-  wxString str = wxString::Format(wxT("%.6f"), value);
+  std::ostringstream oss;
 
-  WriteString(group, key, str);
+  oss.imbue(C_LOCALE);
+  oss << std::fixed << std::setprecision(6) << value;
+  WriteString(group, key, oss.str());
 }
 
 void GOConfigWriter::WriteEnum(
