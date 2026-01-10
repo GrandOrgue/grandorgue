@@ -19,8 +19,7 @@
 
 static const wxSize SPINCTRL_SIZE(120, wxDefaultCoord);
 
-static const wxString WX_SOUND_CHOICES[]
-  = {_("Ringing"), _("Clicking"), _("Custom")};
+static const wxString WX_SOUND_CHOICES[] = {_("Bell"), _("Click"), _("Custom")};
 static constexpr size_t SOUND_CHOICE_CNT
   = sizeof(WX_SOUND_CHOICES) / sizeof(wxString);
 static const wxString WX_FILE_MASK_SAMPLES
@@ -86,12 +85,12 @@ GOSettingsMetronome::GOSettingsMetronome(
     wxRA_SPECIFY_ROWS);
   gbSizer->Add(m_SoundType, wxGBPosition(2, 0), wxGBSpan(1, 3), wxEXPAND);
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("Custom sound wave paths:")),
+    new wxStaticText(this, wxID_ANY, _("Custom Sound Wave File Paths:")),
     wxGBPosition(3, 0),
     wxGBSpan(1, 3),
     wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
   gbSizer->Add(
-    new wxStaticText(this, wxID_ANY, _("First beat:")),
+    new wxStaticText(this, wxID_ANY, _("First Beat:")),
     wxGBPosition(4, 1),
     wxDefaultSpan,
     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
