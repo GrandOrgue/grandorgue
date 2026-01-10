@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -475,6 +475,7 @@ static std::filesystem::path make_config_filename(
   return std::filesystem::path(baseDir) / (CONFIG_FILE_NAME + instanceName);
 }
 
+// Unability to read the config file is one of intended behavior
 static bool try_to_read_config_file(
   const std::filesystem::path &configPath, GOConfigFileReader &cfgFileReader) {
   bool isExist = std::filesystem::exists(configPath);
