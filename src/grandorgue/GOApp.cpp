@@ -7,8 +7,6 @@
 
 #include "GOApp.h"
 
-#include <format>
-
 #include <wx/cmdline.h>
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
@@ -101,7 +99,7 @@ bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
     wxRegEx r(wxT("^[A-Za-z0-9]+$"), wxRE_ADVANCED);
 
     if (r.Matches(str))
-      m_InstanceName = std::format("-{}", str.ToStdString());
+      m_InstanceName = std::string("-") + str.ToStdString();
     else {
       wxMessageOutput::Get()->Printf(_("Invalid instance name"));
       res = false;
@@ -217,5 +215,3 @@ void GOApp::CleanUp() {
     m_Log = nullptr;
   }
 }
-
-void GOApp::SetRestart() { m_Restart = true; }
