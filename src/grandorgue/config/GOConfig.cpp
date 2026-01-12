@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,6 +11,7 @@
 #include <functional>
 
 #include <wx/filename.h>
+#include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
 #include <wx/thread.h>
@@ -467,26 +468,47 @@ static wxString get_initial_midi_group(unsigned index) {
   return wxString::Format(WX_MIDI_INITIAL_FMT, index + 1);
 }
 
+static const std::string CONFIG_FILE_NAME("GrandOrgueConfig");
+
+static std::filesystem::path make_config_filename(
+  const std::string &baseDir, const std::string &instanceName) {
+  return std::filesystem::path(baseDir) / (CONFIG_FILE_NAME + instanceName);
+}
+
+// Unability to read the config file is one of intended behavior
+static bool try_to_read_config_file(
+  const std::filesystem::path &configPath, GOConfigFileReader &cfgFileReader) {
+  bool isExist = std::filesystem::exists(configPath);
+
+  if (isExist && !cfgFileReader.Read(configPath.string()))
+    wxLogError(_("Unable to read '%s'"), configPath.c_str());
+  return isExist;
+}
+
 void GOConfig::Load() {
-  if (m_ConfigFileName.IsEmpty()) {
-    LoadDefaults();
-  }
-  GOConfigFileReader cfg_file;
-  if (wxFileExists(m_ConfigFileName)) {
-    if (!cfg_file.Read(m_ConfigFileName))
-      wxLogError(_("Unable to read '%s'"), m_ConfigFileName.c_str());
-  } else {
-    wxString fileName = wxStandardPaths::Get().GetUserDataDir()
-      + wxFileName::GetPathSeparator() + wxT("GrandOrgueConfig")
-      + m_InstanceName;
-    if (wxFileExists(fileName))
-      if (!cfg_file.Read(fileName))
-        wxLogError(_("Unable to read '%s'"), fileName.c_str());
-  }
+  std::string errMsg;
 
   try {
+    LoadDefaults();
+
+    GOConfigFileReader cfgFileReader;
+
+    if (m_ConfigFilePath.empty()) { // default config file
+      m_ConfigFilePath = make_config_filename(
+        GOStdPath::GetConfigDir().ToStdString(), m_InstanceName.ToStdString());
+    }
+
+    if (!try_to_read_config_file(m_ConfigFilePath, cfgFileReader))
+      try_to_read_config_file(
+        make_config_filename(
+          wxStandardPaths::Get().GetUserDataDir().ToStdString(),
+          m_InstanceName.ToStdString()),
+        cfgFileReader);
+
     GOConfigReaderDB cfg_db;
-    cfg_db.ReadData(cfg_file, CMBSetting, false);
+
+    cfg_db.ReadData(cfgFileReader, CMBSetting, false);
+
     GOConfigReader cfg(cfg_db);
 
     try {
@@ -615,24 +637,21 @@ void GOConfig::Load() {
 
     m_DialogSizes.Load(cfg, CMBSetting);
 
-    if (wxFileExists(m_ConfigFileName))
-      wxCopyFile(m_ConfigFileName, m_ConfigFileName + wxT(".last"));
+    if (std::filesystem::exists(m_ConfigFilePath))
+      std::filesystem::copy_file(
+        m_ConfigFilePath,
+        m_ConfigFilePath.string() + ".last",
+        std::filesystem::copy_options::overwrite_existing);
   } catch (const wxString &error) {
-    wxLogError(wxT("%s\n"), error);
+    errMsg = error;
+  } catch (const std::exception &exc) {
+    errMsg = exc.what();
   }
+  if (!errMsg.empty())
+    wxLogError(wxT("%s"), errMsg);
 }
 
 void GOConfig::LoadDefaults() {
-
-  /* This has to be called in the wxApp context
-     e.g.: after having done the wxApp::OnInit() call.
-
-     As wx is waiting for the wxApp to have been initialized
-     before calling th Get() method.
-  */
-
-  m_ConfigFileName = GOStdPath::GetConfigDir() + wxFileName::GetPathSeparator()
-    + wxT("GrandOrgueConfig") + m_InstanceName;
   for (const auto &desc : INTERNAL_MIDI_DESCS) {
     const initial_midi_group_desc &groupDesc
       = INITIAL_MIDI_GROUP_DESCS[desc.m_group];
@@ -792,7 +811,7 @@ const unsigned GOConfig::GetTotalAudioChannels() const {
 unsigned GOConfig::GetDefaultLatency() { return 50; }
 
 void GOConfig::Flush() {
-  wxString tmp_name = m_ConfigFileName + wxT(".new");
+  wxString tmp_name = m_ConfigFilePath.string() + ".new";
   GOConfigFileWriter cfg_file;
   GOConfigWriter cfg(cfg_file, false);
 
@@ -862,6 +881,6 @@ void GOConfig::Flush() {
     wxLogError(_("Could not write to '%s'"), tmp_name.c_str());
     return;
   }
-  if (!go_rename_file(tmp_name, m_ConfigFileName))
+  if (!go_rename_file(tmp_name, m_ConfigFilePath.string()))
     return;
 }
