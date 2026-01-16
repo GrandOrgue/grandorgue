@@ -181,8 +181,6 @@ void GOOrganController::ResetOrganModified() {
   SetOrganModified(false);
 }
 
-bool GOOrganController::IsCacheable() { return m_Cacheable; }
-
 GOHashType GOOrganController::GenerateCacheHash() {
   GOHash hash;
 
@@ -699,8 +697,6 @@ void GOOrganController::LoadCombination(const wxString &file) {
   }
 }
 
-bool GOOrganController::CachePresent() { return wxFileExists(m_CacheFilename); }
-
 bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
   bool isOk = false;
 
@@ -826,48 +822,6 @@ GOButtonControl *GOOrganController::GetButtonControl(
   return NULL;
 }
 
-// GODocument *GOOrganController::GetDocument() { return m_doc; }
-
-void GOOrganController::SetVolume(int volume) { m_volume = volume; }
-
-int GOOrganController::GetVolume() { return m_volume; }
-
-GOSetter *GOOrganController::GetSetter() { return m_setter; }
-
-GOGUIPanel *GOOrganController::GetPanel(unsigned index) {
-  return m_panels[index];
-}
-
-unsigned GOOrganController::GetPanelCount() { return m_panels.size(); }
-
-void GOOrganController::AddPanel(GOGUIPanel *panel) {
-  m_panels.push_back(panel);
-}
-
-const wxString &GOOrganController::GetChurchAddress() {
-  return m_ChurchAddress;
-}
-
-const wxString &GOOrganController::GetOrganBuilder() { return m_OrganBuilder; }
-
-const wxString &GOOrganController::GetOrganBuildDate() {
-  return m_OrganBuildDate;
-}
-
-const wxString &GOOrganController::GetOrganComments() {
-  return m_OrganComments;
-}
-
-const wxString &GOOrganController::GetRecordingDetails() {
-  return m_RecordingDetails;
-}
-
-const wxString &GOOrganController::GetInfoFilename() { return m_InfoFilename; }
-
-bool GOOrganController::IsCustomized() { return m_b_customized; }
-
-const wxString GOOrganController::GetODFFilename() { return m_odf; }
-
 const wxString GOOrganController::GetOrganPathInfo() {
   if (m_ArchiveID == wxEmptyString)
     return GetODFFilename();
@@ -891,22 +845,10 @@ GOOrgan GOOrganController::GetOrganInfo() {
     GetRecordingDetails());
 }
 
-const wxString GOOrganController::GetSettingFilename() {
-  return m_SettingFilename;
-}
-
-const wxString GOOrganController::GetCacheFilename() { return m_CacheFilename; }
-
 wxString GOOrganController::GetCombinationsDir() const {
   return wxFileName(m_config.OrganCombinationsPath(), GetOrganName())
     .GetFullPath();
 }
-
-GOMemoryPool &GOOrganController::GetMemoryPool() { return m_pool; }
-
-GOConfig &GOOrganController::GetSettings() { return m_config; }
-
-GOMidi *GOOrganController::GetMidi() { return m_midi; }
 
 void GOOrganController::LoadMIDIFile(wxString const &filename) {
   m_MidiPlayer->LoadFile(
@@ -1043,19 +985,7 @@ void GOOrganController::SetTemperament(const wxString &name) {
   SetTemperament(temperament);
 }
 
-wxString GOOrganController::GetTemperament() { return m_Temperament; }
-
 void GOOrganController::AllNotesOff() {
   for (unsigned k = GetFirstManualIndex(); k <= GetManualAndPedalCount(); k++)
     GetManual(k)->AllNotesOff();
-}
-
-GOLabelControl *GOOrganController::GetPitchLabel() { return &m_PitchLabel; }
-
-GOLabelControl *GOOrganController::GetTemperamentLabel() {
-  return &m_TemperamentLabel;
-}
-
-GOMainWindowData *GOOrganController::GetMainWindowData() {
-  return &m_MainWindowData;
 }
