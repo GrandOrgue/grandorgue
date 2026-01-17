@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -51,7 +51,7 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
     1,
     m_metrics->GetScreenWidth(),
     false,
-    m_Bitmap.GetWidth());
+    m_Bitmap.GetSourceWidth());
   h = cfg.ReadInteger(
     ODFSetting,
     group,
@@ -59,7 +59,7 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
     1,
     m_metrics->GetScreenHeight(),
     false,
-    m_Bitmap.GetHeight());
+    m_Bitmap.GetSourceHeight());
   m_BoundingRect = wxRect(x, y, w, h);
 
   m_TileOffsetX = cfg.ReadInteger(
@@ -67,7 +67,7 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("TileOffsetX"),
     0,
-    m_Bitmap.GetWidth() - 1,
+    m_Bitmap.GetSourceWidth() - 1,
     false,
     0);
   m_TileOffsetY = cfg.ReadInteger(
@@ -75,13 +75,13 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("TileOffsetY"),
     0,
-    m_Bitmap.GetHeight() - 1,
+    m_Bitmap.GetSourceHeight() - 1,
     false,
     0);
 }
 
 void GOGUIImage::PrepareDraw(double scale, GOBitmap *background) {
-  m_Bitmap.PrepareTileBitmap(
+  m_Bitmap.BuildTileBitmap(
     scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
