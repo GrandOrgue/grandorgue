@@ -33,7 +33,8 @@ void GOGUIManualBackground::Layout() {
   m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
   m_VRect = wxRect(
     m_layout->GetCenterX(), mri.y, m_layout->GetCenterWidth(), mri.height);
-  m_VBackground = m_panel->GetWood(m_metrics->GetKeyVertBackgroundImageNum());
+  m_VBackground.SetSourceImage(
+    m_panel->GetWoodImage(m_metrics->GetKeyVertBackgroundImageNum()));
   m_HRect = wxRect(
     m_layout->GetCenterX(),
     mri.piston_y,
@@ -41,7 +42,8 @@ void GOGUIManualBackground::Layout() {
     (!m_ManualNumber && m_metrics->HasExtraPedalButtonRow())
       ? 2 * m_metrics->GetButtonHeight()
       : m_metrics->GetButtonHeight());
-  m_HBackground = m_panel->GetWood(m_metrics->GetKeyHorizBackgroundImageNum());
+  m_HBackground.SetSourceImage(
+    m_panel->GetWoodImage(m_metrics->GetKeyHorizBackgroundImageNum()));
 }
 
 void GOGUIManualBackground::PrepareDraw(double scale, GOBitmap *background) {

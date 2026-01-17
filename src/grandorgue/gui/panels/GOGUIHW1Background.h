@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,14 +14,17 @@
 
 #include "GOGUIControl.h"
 
+class wxImage;
+
 class GOGUIHW1Background : public GOGUIControl {
   class GOBackgroundImage {
   public:
     wxRect rect;
     GOBitmap bmp;
 
-    GOBackgroundImage(wxRect Rect, const GOBitmap &Bmp)
-      : rect(Rect), bmp(Bmp) {}
+    GOBackgroundImage(wxRect Rect, const wxImage *pImage) : rect(Rect) {
+      bmp.SetSourceImage(pImage);
+    }
   };
 
 private:

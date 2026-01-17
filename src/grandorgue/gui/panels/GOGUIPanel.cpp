@@ -43,20 +43,13 @@ GOGUIPanel::GOGUIPanel(GOOrganController *organController)
   : m_OrganController(organController),
     m_MouseState(organController->GetMouseState()),
     m_controls(0),
-    m_WoodImages(0),
     m_BackgroundControls(0),
     m_Name(),
     m_GroupName(),
     m_metrics(0),
     m_layout(0),
     m_view(0),
-    m_InitialOpenWindow(false) {
-  for (unsigned i = 0; i < 64; i++) {
-    m_WoodImages.emplace_back();
-    m_WoodImages.back().SetSourceImage(LoadImage(
-      wxString::Format(wxT(GOBitmapPrefix "wood%02d"), i + 1), wxEmptyString));
-  }
-}
+    m_InitialOpenWindow(false) {}
 
 GOGUIPanel::~GOGUIPanel() {
   if (m_layout)
@@ -854,6 +847,6 @@ void GOGUIPanel::HandleMouseScroll(int x, int y, int amount) {
       return;
 }
 
-const GOBitmap &GOGUIPanel::GetWood(unsigned index) {
-  return m_WoodImages[index - 1];
+const wxImage *GOGUIPanel::GetWoodImage(unsigned woodImageNumber) const {
+  return m_OrganController->GetImageCache().GetWoodImage(woodImageNumber);
 }

@@ -24,12 +24,18 @@ private:
   std::vector<wxString> m_filenames;
   std::vector<wxString> m_masknames;
 
+  const wxImage *FindImage(
+    const wxString &filename, const wxString &maskname) const;
+
   bool LoadImageFromFile(const wxString &filename, wxImage &image);
+
   void RegisterImage(
     const wxString &filename, const wxString &maskname, wxImage *pImage);
 
 public:
   GOImageCache(GOOrganController *organController);
+
+  const wxImage *GetWoodImage(unsigned woodImageNum) const;
 
   void Cleanup() {
     m_images.clear();
