@@ -973,7 +973,7 @@ void GOOrganController::Reset() {
 }
 
 void GOOrganController::SetTemperament(const GOTemperament &temperament) {
-  m_TemperamentLabel.SetContent(wxGetTranslation(temperament.GetName()));
+  m_TemperamentLabel.SetContent(temperament.GetTitle());
   for (unsigned k = 0; k < m_ranks.size(); k++)
     m_ranks[k]->SetTemperament(temperament);
 }

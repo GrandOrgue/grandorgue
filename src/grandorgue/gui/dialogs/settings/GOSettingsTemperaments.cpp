@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -146,7 +146,7 @@ bool GOSettingsTemperaments::TransferDataFromWindow() {
   for (unsigned i = 0; i < m_Ptrs.size(); i++) {
     if (!m_Ptrs[i])
       m_Ptrs[i] = new GOTemperamentUser(
-        wxString::Format(wxT("UserTemperament%d-%d"), time, i),
+        wxString::Format(wxT("UserTemperament%ld-%d"), time, i),
         m_List->GetCellValue(i, 1),
         m_List->GetCellValue(i, 0),
         m_List->GetCellValue(i, 0));
