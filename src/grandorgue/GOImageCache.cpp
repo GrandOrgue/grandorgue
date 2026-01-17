@@ -15,7 +15,6 @@
 
 #include "GOBuffer.h"
 #include "GOLog.h"
-#include "GOOrganController.h"
 #include "Images.h"
 
 #define BITMAP_LIST                                                            \
@@ -158,14 +157,9 @@ BITMAP_LIST
 
 const wxString GOImageCache::WX_EMPTY_STRING = wxEmptyString;
 
-GOImageCache::GOImageCache(GOOrganController *organController)
-  : m_OrganController(organController),
-    m_images(),
-    m_filenames(),
-    m_masknames() {
-  if (organController) {
-    BITMAP_LIST;
-  }
+GOImageCache::GOImageCache(const GOFileStore &fileStore)
+  : r_FileStore(fileStore) {
+  BITMAP_LIST;
 }
 
 bool GOImageCache::LoadImageFromFile(const wxString &filename, wxImage &image) {
@@ -179,8 +173,7 @@ bool GOImageCache::LoadImageFromFile(const wxString &filename, wxImage &image) {
     GOLoaderFilename name;
     name.Assign(filename);
 
-    std::unique_ptr<GOOpenedFile> file
-      = name.Open(m_OrganController->GetFileStore());
+    std::unique_ptr<GOOpenedFile> file = name.Open(r_FileStore);
     GOBuffer<char> data;
 
     result = file->ReadContent(data);

@@ -122,7 +122,7 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded
     m_timer = new GOTimer();
-    mp_ImageCache = new GOImageCache(this);
+    mp_ImageCache = new GOImageCache(m_FileStore);
   }
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);
