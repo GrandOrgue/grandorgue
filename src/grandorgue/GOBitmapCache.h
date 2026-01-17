@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,11 +8,10 @@
 #ifndef GOBITMAPCACHE_H
 #define GOBITMAPCACHE_H
 
+#include <wx/image.h>
 #include <wx/string.h>
 
 #include "ptrvector.h"
-
-#include "gui/panels/primitives/GOBitmap.h"
 
 class GOOrganController;
 
@@ -36,7 +35,8 @@ public:
 
   void RegisterBitmap(
     wxImage *bitmap, wxString filename, wxString maskname = wxEmptyString);
-  GOBitmap GetBitmap(wxString filename, wxString maskName = wxEmptyString);
+  const wxImage *GetBitmap(
+    wxString filename, wxString maskName = wxEmptyString);
 };
 
 #endif
