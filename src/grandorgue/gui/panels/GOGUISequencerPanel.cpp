@@ -154,18 +154,23 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   panel->AddControl(button);
 
   button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(wxT("SetterN")), false);
+  button->Init(cfg, wxT("SetterN"), 2, curRow);
+  panel->AddControl(button);
+
+  button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Regular")), false);
-  button->Init(cfg, wxT("SetterRegular"), 3, curRow);
+  button->Init(cfg, wxT("SetterRegular"), 4, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Scope")), false);
-  button->Init(cfg, wxT("SetterScope"), 4, curRow);
+  button->Init(cfg, wxT("SetterScope"), 5, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Scoped")), false);
-  button->Init(cfg, wxT("SetterScoped"), 5, curRow);
+  button->Init(cfg, wxT("SetterScoped"), 6, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
