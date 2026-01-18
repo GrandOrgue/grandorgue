@@ -387,18 +387,18 @@ wxString GOMidiObjectsDialog::ImportMidiSettings(const wxString &fileName) {
         }
 
         GOStringSet usedobjectPaths;
-        YAML::Node emptyNode;
 
         ImportAllObjects(
-          [&nodesByPath, &usedobjectPaths, &emptyNode](GOMidiObject &obj) {
+          [&nodesByPath, &usedobjectPaths](GOMidiObject &obj) {
             const wxString objectPath = obj.GetPath();
             const auto it = nodesByPath.find(objectPath);
 
+            // Only import objects that exist in the YAML file
+            // Skip objects not in the file to preserve existing settings
             if (it != nodesByPath.end()) {
               obj.FromYaml(it->second, objectPath);
               usedobjectPaths.insert(objectPath);
-            } else
-              obj.FromYaml(emptyNode, objectPath);
+            }
           });
 
         for (const auto &e : nodesByPath) {
