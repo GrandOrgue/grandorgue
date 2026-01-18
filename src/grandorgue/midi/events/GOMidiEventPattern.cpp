@@ -29,10 +29,15 @@ static wxString WX_DEVICE = wxT("device");
 
 void GOMidiEventPattern::FillDeviceId(
   const wxString &msgContext, const wxString &deviceName, GOMidiMap &map) {
-  deviceId = map.EnsureLogicalName(deviceName, [=](GONameMap::IdType id) {
-    wxLogWarning(
-      _("%s: Unknown MIDI device logical name \"%s\""), msgContext, deviceName);
-  });
+  // Empty device name means "Any device" (ID 0)
+  if (deviceName.IsEmpty()) {
+    deviceId = 0;
+  } else {
+    deviceId = map.EnsureLogicalName(deviceName, [=](GONameMap::IdType id) {
+      wxLogWarning(
+        _("%s: Unknown MIDI device logical name \"%s\""), msgContext, deviceName);
+    });
+  }
 }
 
 static wxString calc_key(const wxString &keyPrefix, unsigned patternIndex) {
