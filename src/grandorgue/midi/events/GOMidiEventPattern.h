@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -25,17 +25,17 @@ struct GOMidiEventPattern {
 
   uint16_t deviceId;
   int8_t channel;
-  int8_t key;
-  int8_t low_value;
-  int8_t high_value;
+  int32_t key;        // Some MIDI events ex SysEx may have up to 21 bits
+  int32_t low_value;  // Some MIDI events ex SysEx may haveup to 32 bits
+  int32_t high_value; // Some MIDI events ex SysEx may haveup to 32 bits
   bool useNoteOff;
 
   GOMidiEventPattern(
     uint_fast16_t uDeviceId,
     int_fast8_t iChannel,
-    int_fast8_t iKey,
-    int_fast8_t iLowValue = 0,
-    int_fast8_t iHighValue = 0,
+    int_fast32_t iKey,
+    int_fast32_t iLowValue = 0,
+    int_fast32_t iHighValue = 0,
     bool iUseNoteOff = true)
     : deviceId(uDeviceId),
       channel(iChannel),
