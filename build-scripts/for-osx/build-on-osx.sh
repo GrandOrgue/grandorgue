@@ -35,10 +35,9 @@ cmake -G "Unix Makefiles" $OS_PRMS $GO_PRMS . $SRC_DIR
 
 echo "Phase 1"
 
-if ! make -k $PARALLEL_PRMS VERBOSE=1 all; then
-
+if ! make -k $PARALLEL_PRMS all; then
   echo "Phase 2"
-  make -j1 -k1 VERBOSE=1 all
+  make -j1 VERBOSE=1 all
 fi
 
 echo "Phase 3"
