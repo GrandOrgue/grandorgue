@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2024-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -73,6 +73,40 @@ void GOTestNameMap::TestEnsureNameExists() {
     "Callback should NOT be called when name 'Device' already exists");
 }
 
+void GOTestNameMap::TestEmptyName() {
+  GONameMap map;
+
+  // Test with empty string without callback
+  auto id1 = map.EnsureNameExists("");
+  GOAssert(
+    id1 == GONameMap::ID_NOT_IN_FILE,
+    std::format(
+      "EnsureNameExists('') should return ID_NOT_IN_FILE, got: {}", id1));
+
+  // Test that callback is NOT called for empty name
+  bool callbackCalled = false;
+  auto id2 = map.EnsureNameExists(
+    "", [&](GONameMap::IdType id) { callbackCalled = true; });
+  GOAssert(
+    id2 == GONameMap::ID_NOT_IN_FILE,
+    std::format(
+      "EnsureNameExists('', callback) should return ID_NOT_IN_FILE, got: {}",
+      id2));
+  GOAssert(!callbackCalled, "Callback should NOT be called for empty name");
+
+  // Verify empty string was not added to the map
+  GOAssert(
+    map.GetIdByName("") == GONameMap::ID_NOT_IN_FILE,
+    "GetIdByName('') should return ID_NOT_IN_FILE after EnsureNameExists('', "
+    "callback)");
+
+  // Verify map size remains 0 (no names added)
+  GOAssert(
+    map.GetNameById(1).empty(),
+    "No names should have been added after EnsureNameExists('') - id 1 should "
+    "be invalid");
+}
+
 void GOTestNameMap::TestMultipleNames() {
   GONameMap map;
   for (int i = 1; i <= 10; ++i) {
@@ -101,5 +135,6 @@ void GOTestNameMap::TestMultipleNames() {
 void GOTestNameMap::run() {
   TestAddAndGetName();
   TestEnsureNameExists();
+  TestEmptyName();
   TestMultipleNames();
 }
