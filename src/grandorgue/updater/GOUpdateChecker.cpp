@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -140,7 +140,9 @@ private:
     // Configure the request
     curl_slist *headers = nullptr;
     headers = curl_slist_append(headers, USER_AGENT_HEADER);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, TIMEOUT_MS);
+    /* abort if slower than 30 bytes/sec during 60 seconds */
+    curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
+    curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_URL, RELEASES_API_URL);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, handle_received_bytes);
@@ -174,6 +176,19 @@ private:
         throw UpdateCheckerException(
           std::string("curl_multi_perform: ")
           + curl_multi_strerror(performCode));
+      }
+    }
+
+    CURLMsg *msg = nullptr;
+    int msgs_left = 0;
+
+    while ((msg = curl_multi_info_read(curlMulti, &msgs_left))) {
+      if (msg->msg == CURLMSG_DONE) {
+        if (msg->data.result != CURLE_OK) {
+          throw UpdateCheckerException(
+            std::string("CURL transfer failed: ")
+            + curl_easy_strerror(msg->data.result));
+        }
       }
     }
 
