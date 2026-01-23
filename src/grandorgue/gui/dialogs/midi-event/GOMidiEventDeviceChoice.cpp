@@ -37,8 +37,12 @@ void GOMidiEventDeviceChoice::FillWithDevices(
       portsConfig.IsEnabled(pDevConf->GetPortName(), pDevConf->GetApiName())
       && pDevConf->m_IsEnabled) {
       const wxString &logicalName = pDevConf->GetLogicalName();
+      const uint_fast16_t deviceId
+        = m_MidiMap.GetDeviceIdByLogicalName(logicalName);
 
-      AddDevice(m_MidiMap.GetDeviceIdByLogicalName(logicalName), logicalName);
+      // Skip devices not in the MIDI map (ID 0 is reserved for "Any device")
+      if (deviceId != GONameMap::ID_NOT_IN_FILE)
+        AddDevice(deviceId, logicalName);
     }
   for (unsigned l = patterns.GetEventCount(), i = 0; i < l; i++) {
     uint_fast16_t deviceId = patterns.GetBasePattern(i).deviceId;

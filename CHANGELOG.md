@@ -1,3 +1,4 @@
+- Fixed MIDI device dropdown showing duplicate entries for devices not yet registered in the MIDI map. Devices with ID 0 (reserved for "Any device") are now skipped when populating the device selection dropdown.
 - Fixed saving a SYSEX ID https://github.com/GrandOrgue/grandorgue/issues/2353
 # 3.16.3 (2025-12-26)
 - Fixed resetting devices of MIDI events on editing if the device was missed
