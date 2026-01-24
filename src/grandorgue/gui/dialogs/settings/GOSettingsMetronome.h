@@ -10,6 +10,7 @@
 
 #include "gui/dialogs/common/GODialogTab.h"
 
+class wxFileDirPickerEvent;
 class wxRadioBox;
 class wxSpinCtrl;
 class wxString;
@@ -41,6 +42,7 @@ public:
 private:
   void OnSoundTypeChanged(unsigned soundType);
   void OnSoundTypeChanged(wxCommandEvent &event);
+  void OnSampleFile(wxFileDirPickerEvent &event);
 
 public:
   bool Validate() override;
