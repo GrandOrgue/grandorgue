@@ -277,8 +277,10 @@ static const GOConfigEnum INITIAL_LOAD_TYPES({
   {wxT("First"), (int)GOInitialLoadType::LOAD_FIRST},
 });
 
-GOConfig::GOConfig(wxString instance)
-  : m_InstanceName(instance),
+GOConfig::GOConfig(
+  const std::string &instanceName, const std::string &confFilePath)
+  : m_InstanceName(instanceName),
+    m_ConfigFilePath(confFilePath),
     OrganSettingsPath(this, GENERAL, wxT("SettingPath"), wxEmptyString),
     OrganCachePath(this, GENERAL, wxT("CachePath"), wxEmptyString),
     Concurrency(this, GENERAL, wxT("Concurrency"), 0, MAX_CPU, 1),
@@ -496,14 +498,15 @@ void GOConfig::Load() {
     if (m_ConfigFilePath.empty()) { // default config file
       m_ConfigFilePath = make_config_filename(
         GOStdPath::GetConfigDir().ToStdString(), m_InstanceName.ToStdString());
-    }
 
-    if (!try_to_read_config_file(m_ConfigFilePath, cfgFileReader))
-      try_to_read_config_file(
-        make_config_filename(
-          wxStandardPaths::Get().GetUserDataDir().ToStdString(),
-          m_InstanceName.ToStdString()),
-        cfgFileReader);
+      if (!try_to_read_config_file(m_ConfigFilePath, cfgFileReader))
+        try_to_read_config_file(
+          make_config_filename(
+            wxStandardPaths::Get().GetUserDataDir().ToStdString(),
+            m_InstanceName.ToStdString()),
+          cfgFileReader);
+    } else // user-provided config file name
+      try_to_read_config_file(m_ConfigFilePath, cfgFileReader);
 
     GOConfigReaderDB cfg_db;
 
