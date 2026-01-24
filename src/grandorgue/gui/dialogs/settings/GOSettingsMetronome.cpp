@@ -7,6 +7,8 @@
 
 #include "GOSettingsMetronome.h"
 
+#include <filesystem>
+
 #include <wx/gbsizer.h>
 #include <wx/msgdlg.h>
 #include <wx/radiobox.h>
@@ -35,6 +37,8 @@ enum {
 
 BEGIN_EVENT_TABLE(GOSettingsMetronome, GODialogTab)
 EVT_RADIOBOX(ID_SOUND_TYPE, GOSettingsMetronome::OnSoundTypeChanged)
+EVT_FILEPICKER_CHANGED(ID_FIRST_BEAT_PATH, GOSettingsMetronome::OnSampleFile)
+EVT_FILEPICKER_CHANGED(ID_BEAT_PATH, GOSettingsMetronome::OnSampleFile)
 END_EVENT_TABLE()
 
 GOSettingsMetronome::GOSettingsMetronome(
@@ -138,6 +142,20 @@ void GOSettingsMetronome::OnSoundTypeChanged(wxCommandEvent &event) {
   OnSoundTypeChanged(event.GetSelection());
 }
 
+void GOSettingsMetronome::OnSampleFile(wxFileDirPickerEvent &event) {
+  wxString selectedPathStr = event.GetPath();
+
+  if (!selectedPathStr.IsEmpty()) {
+    const std::filesystem::path selectedPath(selectedPathStr.ToStdString());
+    const std::string parentPathStr = selectedPath.parent_path();
+
+    if (!parentPathStr.empty()) {
+      m_FirstBeatPath->SetInitialDirectory(parentPathStr);
+      m_BeatPath->SetInitialDirectory(parentPathStr);
+    }
+  }
+}
+
 bool GOSettingsMetronome::Validate() {
   bool isValid = true;
 
@@ -177,8 +195,7 @@ bool GOSettingsMetronome::TransferDataFromWindow() {
 
 bool GOSettingsMetronome::NeedReload() {
   const unsigned soundType = r_config.m_MetromomeSound();
-
   return soundType != m_OldSoundType
     || (soundType == GOConfig::METRONOME_SOUND_CUSTOM
-        && (r_config.m_MetronomeFirstBeat() != m_FirstBeatPath || r_config.m_MetronomeBeat() != m_BeatPath));
+        && (r_config.m_MetronomeFirstBeat() != m_OldFirstBeatPath || r_config.m_MetronomeBeat() != m_OldBeatPath));
 }
