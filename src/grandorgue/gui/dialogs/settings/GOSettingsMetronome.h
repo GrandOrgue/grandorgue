@@ -42,8 +42,8 @@ public:
 private:
   void OnSoundTypeChanged(unsigned soundType);
   void OnSoundTypeChanged(wxCommandEvent &event);
-  void OnSampleFile(wxFileDirPickerEvent &event);
-
+  void OnSampleFileChanged(wxFileDirPickerEvent &event);
+  
 public:
   bool Validate() override;
 
