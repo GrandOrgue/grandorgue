@@ -148,7 +148,7 @@ void GOSettingsMetronome::OnSampleFileChanged(wxFileDirPickerEvent &event) {
 
   if (!selectedPathStr.IsEmpty()) {
     const std::filesystem::path selectedPath(selectedPathStr.ToStdString());
-    const std::string parentPathStr = selectedPath.parent_path();
+    const std::string parentPathStr = selectedPath.parent_path().string();
 
     if (!parentPathStr.empty()) {
       m_FirstBeatPath->SetInitialDirectory(parentPathStr);
