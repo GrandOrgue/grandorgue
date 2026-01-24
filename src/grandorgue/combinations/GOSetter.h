@@ -219,10 +219,10 @@ private:
    * @return if any of two combinations is changed or changedBefore
    */
   bool CopyFrameGenerals(unsigned fromIdx, unsigned toIdx, bool changedBefore);
-  
+
   // Display entered number on m_PosDisplay in the N__ format
   void DisplayNumericPos();
-  
+
   // Display the current sequencer position on m_PosDisplay in the 00N format
   void DisplayPos();
 
