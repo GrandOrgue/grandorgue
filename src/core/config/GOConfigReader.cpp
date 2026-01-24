@@ -28,6 +28,7 @@ bool GOConfigReader::Read(
   const wxString &group,
   const wxString &key,
   bool required,
+  bool isToTrim,
   wxString &value) {
   bool found = false;
 
@@ -52,18 +53,33 @@ bool GOConfigReader::Read(
 
   found = m_Config.GetString(type, group, key, value);
 
-  if (!found) {
-    if (required) {
-      wxString error;
-      error.Printf(
-        _("Missing required value section '%s' entry '%s'"),
-        group.c_str(),
-        key.c_str());
-      throw error;
-    } else
-      return false;
+  if (found && isToTrim) { // Trim the value
+    wxString trimmedValue = value.Trim(true).Trim(false);
+
+    if (trimmedValue != value) {
+      if (m_Strict)
+        wxLogWarning(
+          _("Leading or trailing whitespaces at section '%s' entry '%s': '%s'"),
+          group,
+          key,
+          value);
+      value = trimmedValue;
+    }
+
+    // treat an empty value as no value. It is valid when isTrim
+    if (value.IsEmpty())
+      found = false;
   }
-  return true;
+
+  if (!found && required) {
+    wxString error;
+    error.Printf(
+      _("Missing required value section '%s' entry '%s'"),
+      group.c_str(),
+      key.c_str());
+    throw error;
+  }
+  return found;
 }
 
 wxString GOConfigReader::ReadString(
@@ -73,7 +89,7 @@ wxString GOConfigReader::ReadString(
   bool required,
   const wxString &defaultValue) {
   wxString value;
-  bool found = Read(type, group, key, required, value);
+  bool found = Read(type, group, key, required, false, value);
 
   if (!found)
     value = defaultValue;
@@ -168,18 +184,9 @@ GOBool3 GOConfigReader::ReadBooleanTriple(
   bool required) {
   wxString value;
 
-  if (!Read(type, group, key, required, value))
+  if (!Read(type, group, key, required, true, value))
     return BOOL3_DEFAULT;
 
-  if (value.length() > 0 && value[value.length() - 1] == ' ') {
-    if (m_Strict)
-      wxLogWarning(
-        _("Trailing whitespace at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-    value.Trim();
-  }
   if (value == wxT("Y") || value == wxT("y"))
     return BOOL3_TRUE;
   if (value == wxT("N") || value == wxT("n"))
@@ -279,18 +286,9 @@ GOLogicalColour GOConfigReader::ReadColor(
   bool required,
   const wxString &defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
+  if (!Read(type, group, key, required, true, value))
     value = defaultValue;
 
-  if (value.length() > 0 && value[value.length() - 1] == ' ') {
-    if (m_Strict)
-      wxLogWarning(
-        _("Trailing whitespace at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-    value.Trim();
-  }
   value.MakeUpper();
 
   if (value == wxT("BLACK"))
@@ -360,40 +358,34 @@ int GOConfigReader::ReadInteger(
   bool required,
   int defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
+  if (!Read(type, group, key, required, true, value))
     return defaultValue;
 
+  std::string strValue = value.ToStdString();
+  std::size_t nParcedChars;
   long retval;
-  if (value.length() > 0 && value[value.length() - 1] == ' ') {
-    if (m_Strict)
-      wxLogWarning(
-        _("Trailing whitespace at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-    value.Trim();
-  }
+  wxString errMsg;
 
   try {
-    retval = std::stol(value.ToStdString());
+    retval = std::stol(strValue, &nParcedChars);
   } catch (const std::exception &exc) {
-    wxString errMsg = wxString::Format(
+    throw wxString::Format(
       _("Invalid integer value '%s' at section '%s' entry '%s': %s"),
       value,
       group,
       key,
       exc.what());
-
-    if (
-      !value.empty() && !std::isdigit(value[0]) && value[0] != '+'
-      && value[0] != '-' && value != "none") {
-
-      throw std::runtime_error(errMsg.ToStdString());
-    }
-    wxLogWarning(errMsg);
-    retval = defaultValue;
   }
 
+  // check if the whole string is parced
+  if (nParcedChars < strValue.length()) { // not all characters are parced
+    wxLogError(
+      _("Invalid integer value '%s' at section '%s' entry '%s'; assunmed %ld"),
+      group,
+      key,
+      value,
+      retval);
+  }
   if (retval < nmin || retval > nmax) {
     if (type == ODFSetting)
       throw wxString::Format(
@@ -452,18 +444,8 @@ double GOConfigReader::ReadFloat(
   bool required,
   double defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
+  if (!Read(type, group, key, required, true, value))
     return defaultValue;
-
-  if (value.length() > 0 && value[value.length() - 1] == ' ') {
-    if (m_Strict)
-      wxLogWarning(
-        _("Trailing whitespace at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-    value.Trim();
-  }
 
   int pos = value.find(wxT(","), 0);
   if (pos >= 0) {
@@ -526,20 +508,10 @@ unsigned GOConfigReader::ReadSize(
     = {{800, 1007, 1263, 1583}, {500, 663, 855, 1095}};
   wxString value;
 
-  if (!Read(type, group, key, required, value))
+  if (!Read(type, group, key, required, true, value))
     value = defaultValue;
 
-  if (value.length() > 0 && value[value.length() - 1] == ' ') {
-    if (m_Strict)
-      wxLogWarning(
-        _("Trailing whitespace at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-    value.Trim();
-  }
   value.MakeUpper();
-
   if (value == wxT("SMALL"))
     return sizes[size_type][0];
   else if (value == wxT("MEDIUM"))
@@ -591,20 +563,10 @@ unsigned GOConfigReader::ReadFontSize(
   bool required,
   const wxString &defaultValue) {
   wxString value;
-  if (!Read(type, group, key, required, value))
+  if (!Read(type, group, key, required, true, value))
     value = defaultValue;
 
-  if (value.length() > 0 && value[value.length() - 1] == ' ') {
-    if (m_Strict)
-      wxLogWarning(
-        _("Trailing whitespace at section '%s' entry '%s': %s"),
-        group.c_str(),
-        key.c_str(),
-        value.c_str());
-    value.Trim();
-  }
   value.MakeUpper();
-
   if (value == wxT("SMALL"))
     return 6;
   else if (value == wxT("NORMAL"))
@@ -649,16 +611,7 @@ int GOConfigReader::ReadEnum(
   wxString strValue;
   int enumValue;
 
-  if (Read(type, group, key, required, strValue)) {
-    if (strValue.length() > 0 && strValue[strValue.length() - 1] == ' ') {
-      if (m_Strict)
-        wxLogWarning(
-          _("Trailing whitespace at section '%s' entry '%s': %s"),
-          group,
-          key,
-          strValue);
-      strValue.Trim();
-    }
+  if (Read(type, group, key, required, true, strValue)) {
     enumValue = configEnum.GetValue(strValue, -1);
     if (enumValue == -1) {
       wxString error;

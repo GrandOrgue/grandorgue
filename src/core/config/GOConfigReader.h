@@ -31,6 +31,7 @@ private:
     const wxString &group,
     const wxString &key,
     bool required,
+    bool isToTrim,
     wxString &value);
 
 public:
