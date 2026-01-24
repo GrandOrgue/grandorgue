@@ -205,7 +205,12 @@ static const GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
    true,
    false,
    &MIDI_CONTEXT_SEQUENCER},
-  {wxT("SetterN"), GOSetter::ID_SETTER_N, true, true, false, &MIDI_CONTEXT_SEQUENCER},
+  {wxT("SetterN"),
+   GOSetter::ID_SETTER_N,
+   true,
+   true,
+   false,
+   &MIDI_CONTEXT_SEQUENCER},
   {wxT("Regular"),
    GOSetter::ID_SETTER_REGULAR,
    true,
@@ -1118,14 +1123,16 @@ bool GOSetter::CopyFrameGenerals(
 // Display entered number on m_PosDisplay in the N__ format
 void GOSetter::DisplayNumericPos() {
   std::string numStr;
-  
+
   if (m_NumericModeDigitsEntered > 0) {
     std::ostringstream oss;
 
-    oss << std::setw(m_NumericModeDigitsEntered) << std::setfill('0') << m_NumericModeAccomulated;
+    oss << std::setw(m_NumericModeDigitsEntered) << std::setfill('0')
+        << m_NumericModeAccomulated;
     numStr = oss.str();
   }
-  std::string strToDisplay = numStr + std::string(3 - m_NumericModeDigitsEntered, '_');
+  std::string strToDisplay
+    = numStr + std::string(3 - m_NumericModeDigitsEntered, '_');
   m_PosDisplay.SetContent(strToDisplay);
 }
 
@@ -1443,7 +1450,8 @@ void GOSetter::PreparePlayback() {
 
   event.SetInt(m_pos);
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-  m_CrescendoDisplay.SetContent(wxString::Format(wxT("%d"), m_crescendopos + 1));
+  m_CrescendoDisplay.SetContent(
+    wxString::Format(wxT("%d"), m_crescendopos + 1));
   m_BankDisplay.SetContent(wxString::Format(wxT("%c"), m_bank + wxT('A')));
   UpdateTranspose();
 }
