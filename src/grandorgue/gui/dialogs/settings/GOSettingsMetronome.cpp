@@ -37,7 +37,8 @@ enum {
 
 BEGIN_EVENT_TABLE(GOSettingsMetronome, GODialogTab)
 EVT_RADIOBOX(ID_SOUND_TYPE, GOSettingsMetronome::OnSoundTypeChanged)
-EVT_FILEPICKER_CHANGED(ID_FIRST_BEAT_PATH, GOSettingsMetronome::OnSampleFileChanged)
+EVT_FILEPICKER_CHANGED(
+  ID_FIRST_BEAT_PATH, GOSettingsMetronome::OnSampleFileChanged)
 EVT_FILEPICKER_CHANGED(ID_BEAT_PATH, GOSettingsMetronome::OnSampleFileChanged)
 END_EVENT_TABLE()
 
@@ -144,7 +145,7 @@ void GOSettingsMetronome::OnSoundTypeChanged(wxCommandEvent &event) {
 
 void GOSettingsMetronome::OnSampleFileChanged(wxFileDirPickerEvent &event) {
   wxString selectedPathStr = event.GetPath();
-  
+
   if (!selectedPathStr.IsEmpty()) {
     const std::filesystem::path selectedPath(selectedPathStr.ToStdString());
     const std::string parentPathStr = selectedPath.parent_path();
@@ -156,13 +157,15 @@ void GOSettingsMetronome::OnSampleFileChanged(wxFileDirPickerEvent &event) {
   }
 }
 
-static bool validate_path(GOFilePickerCtrl *pPathControl, const wxString &fieldName) {
+static bool validate_path(
+  GOFilePickerCtrl *pPathControl, const wxString &fieldName) {
   const wxString &path = pPathControl->GetPath();
   bool isValid = std::filesystem::exists(path.ToStdString());
-  
+
   if (!isValid)
     wxMessageBox(
-      wxString::Format(_("The file '%s specified at %s does not exist'"), path, fieldName),
+      wxString::Format(
+        _("The file '%s specified at %s does not exist'"), path, fieldName),
       _("Metronome sample file"),
       wxOK | wxCENTRE | wxICON_ERROR);
   return isValid;
@@ -173,8 +176,7 @@ bool GOSettingsMetronome::Validate() {
   bool isCustomSound = is_custom_sound(m_SoundType->GetSelection());
 
   if (
-    isValid 
-    && isCustomSound
+    isValid && isCustomSound
     && (m_FirstBeatPath->GetPath().IsEmpty() || m_BeatPath->GetPath().IsEmpty())) {
     wxMessageBox(
       _("Both First beat and beat paths must be set for Custom sound type"),
