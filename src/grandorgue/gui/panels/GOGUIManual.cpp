@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -104,17 +104,19 @@ void GOGUIManual::Init(GOConfigReader &cfg, wxString group) {
     m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
 
     if (
-      m_Keys[i].OnBitmap.GetWidth() != m_Keys[i].OffBitmap.GetWidth()
-      || m_Keys[i].OnBitmap.GetHeight() != m_Keys[i].OffBitmap.GetHeight())
+      m_Keys[i].OnBitmap.GetSourceWidth()
+        != m_Keys[i].OffBitmap.GetSourceWidth()
+      || m_Keys[i].OnBitmap.GetSourceHeight()
+        != m_Keys[i].OffBitmap.GetSourceHeight())
       throw wxString::Format(
         _("bitmap size does not match for '%s'"), group.c_str());
 
-    key_width = m_Keys[i].OnBitmap.GetWidth();
+    key_width = m_Keys[i].OnBitmap.GetSourceWidth();
     key_offset = 0;
     key_yoffset = 0;
     if (m_Keys[i].IsSharp && m_ManualNumber) {
       key_width = 0;
-      key_offset = -((int)m_Keys[i].OnBitmap.GetWidth()) / 2;
+      key_offset = -((int)m_Keys[i].OnBitmap.GetSourceWidth()) / 2;
     } else if (!m_ManualNumber && !next_is_sharp && !m_Keys[i].IsSharp) {
       key_width *= 2;
     }
@@ -122,8 +124,8 @@ void GOGUIManual::Init(GOConfigReader &cfg, wxString group) {
     m_Keys[i].Rect = wxRect(
       x + key_offset,
       y + key_yoffset,
-      m_Keys[i].OnBitmap.GetWidth(),
-      m_Keys[i].OnBitmap.GetHeight());
+      m_Keys[i].OnBitmap.GetSourceWidth(),
+      m_Keys[i].OnBitmap.GetSourceHeight());
     if (x + key_offset < 0)
       wxLogWarning(
         _("Manual key %d outside of the bounding box"), m_Keys[i].MidiNumber);
@@ -307,17 +309,19 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
     m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
 
     if (
-      m_Keys[i].OnBitmap.GetWidth() != m_Keys[i].OffBitmap.GetWidth()
-      || m_Keys[i].OnBitmap.GetHeight() != m_Keys[i].OffBitmap.GetHeight())
+      m_Keys[i].OnBitmap.GetSourceWidth()
+        != m_Keys[i].OffBitmap.GetSourceWidth()
+      || m_Keys[i].OnBitmap.GetSourceHeight()
+        != m_Keys[i].OffBitmap.GetSourceHeight())
       throw wxString::Format(
         _("bitmap size does not match for '%s'"), group.c_str());
 
-    key_width = m_Keys[i].OnBitmap.GetWidth();
+    key_width = m_Keys[i].OnBitmap.GetSourceWidth();
     key_offset = 0;
     key_yoffset = 0;
     if (m_Keys[i].IsSharp && m_ManualNumber) {
       key_width = 0;
-      key_offset = -((int)m_Keys[i].OnBitmap.GetWidth()) / 2;
+      key_offset = -((int)m_Keys[i].OnBitmap.GetSourceWidth()) / 2;
     } else if (!m_ManualNumber && !next_is_sharp && !m_Keys[i].IsSharp) {
       key_width *= 2;
     }
@@ -359,8 +363,8 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
     keyRect = wxRect(
       x + key_offset,
       y + key_yoffset,
-      m_Keys[i].OnBitmap.GetWidth(),
-      m_Keys[i].OnBitmap.GetHeight());
+      m_Keys[i].OnBitmap.GetSourceWidth(),
+      m_Keys[i].OnBitmap.GetSourceHeight());
 
     unsigned mouse_x = cfg.ReadInteger(
       ODFSetting,
@@ -448,8 +452,8 @@ void GOGUIManual::Layout() {
 
 void GOGUIManual::PrepareDraw(double scale, GOBitmap *background) {
   for (unsigned i = 0; i < m_Keys.size(); i++) {
-    m_Keys[i].OnBitmap.PrepareBitmap(scale, m_Keys[i].Rect, background);
-    m_Keys[i].OffBitmap.PrepareBitmap(scale, m_Keys[i].Rect, background);
+    m_Keys[i].OnBitmap.BuildScaledBitmap(scale, m_Keys[i].Rect, background);
+    m_Keys[i].OffBitmap.BuildScaledBitmap(scale, m_Keys[i].Rect, background);
   }
 }
 

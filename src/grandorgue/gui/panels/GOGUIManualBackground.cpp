@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -45,8 +45,8 @@ void GOGUIManualBackground::Layout() {
 }
 
 void GOGUIManualBackground::PrepareDraw(double scale, GOBitmap *background) {
-  m_VBackground.PrepareTileBitmap(scale, m_VRect, 0, 0, background);
-  m_HBackground.PrepareTileBitmap(scale, m_HRect, 0, 0, background);
+  m_VBackground.BuildTileBitmap(scale, m_VRect, 0, 0, background);
+  m_HBackground.BuildTileBitmap(scale, m_HRect, 0, 0, background);
 }
 
 void GOGUIManualBackground::Draw(GODC &dc) {

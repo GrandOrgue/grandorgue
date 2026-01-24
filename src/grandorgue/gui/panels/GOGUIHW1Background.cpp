@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -99,8 +99,7 @@ void GOGUIHW1Background::Layout() {
 
 void GOGUIHW1Background::PrepareDraw(double scale, GOBitmap *background) {
   for (unsigned i = 0; i < m_Images.size(); i++)
-    m_Images[i].bmp.PrepareTileBitmap(
-      scale, m_Images[i].rect, 0, 0, background);
+    m_Images[i].bmp.BuildTileBitmap(scale, m_Images[i].rect, 0, 0, background);
 }
 
 void GOGUIHW1Background::Draw(GODC &dc) {

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -78,9 +78,9 @@ void GOGUILabel::InitBackgroundBitmap(
 
   // take the size from the bitmap if it is not specified
   if (!w)
-    w = m_PBackgroundBitmap ? m_PBackgroundBitmap->GetWidth() : 80;
+    w = m_PBackgroundBitmap ? m_PBackgroundBitmap->GetSourceWidth() : 80;
   if (!h)
-    h = m_PBackgroundBitmap ? m_PBackgroundBitmap->GetHeight() : 25;
+    h = m_PBackgroundBitmap ? m_PBackgroundBitmap->GetSourceHeight() : 25;
   unsigned textX = 1;
   unsigned textY = 1;
   unsigned textWidth = w - textX;
@@ -309,7 +309,7 @@ void GOGUILabel::Layout() {
 
 void GOGUILabel::PrepareDraw(double scale, GOBitmap *background) {
   if (m_PBackgroundBitmap)
-    m_PBackgroundBitmap->PrepareTileBitmap(
+    m_PBackgroundBitmap->BuildTileBitmap(
       scale, m_BoundingRect, m_TileOffsetX, m_TileOffsetY, background);
 }
 
