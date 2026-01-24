@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -63,6 +63,7 @@ public:
     ID_SETTER_L7,
     ID_SETTER_L8,
     ID_SETTER_L9,
+    ID_SETTER_N,
     ID_SETTER_REGULAR,
     ID_SETTER_SCOPE,
     ID_SETTER_SCOPED,
@@ -173,6 +174,10 @@ private:
                     // populated yet or no file are loaded
 
   unsigned m_pos;
+  // -1 - not in the numeric mode. 0, 1, 2, 3 - the number of digits entered
+  int m_NumericModeDigitsEntered;
+  // The number already entered in the numeric mode
+  unsigned m_NumericModeAccomulated;
   unsigned m_bank;
   unsigned m_crescendopos;
   unsigned m_crescendobank;
@@ -214,6 +219,12 @@ private:
    * @return if any of two combinations is changed or changedBefore
    */
   bool CopyFrameGenerals(unsigned fromIdx, unsigned toIdx, bool changedBefore);
+
+  // Display entered number on m_PosDisplay in the N__ format
+  void DisplayNumericPos();
+
+  // Display the current sequencer position on m_PosDisplay in the 00N format
+  void DisplayPos();
 
   void ButtonStateChanged(int id, bool newState) override;
 
