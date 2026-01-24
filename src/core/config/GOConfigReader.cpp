@@ -390,8 +390,8 @@ int GOConfigReader::ReadInteger(
 
       throw std::runtime_error(errMsg.ToStdString());
     }
-    retval = std::stoi(value.ToStdString());
     wxLogWarning(errMsg);
+    retval = defaultValue;
   }
 
   if (retval < nmin || retval > nmax) {
