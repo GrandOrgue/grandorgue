@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,7 +16,7 @@
 
 /**
  * This class represents an id-name dictionary with search capability by id and
- * by name.
+ * by name. The name must not be empty
  */
 class GONameMap {
 public:
@@ -43,18 +43,22 @@ public:
   // returns the id of the name or an empty string if the name does not exist
   const std::string &GetNameById(IdType id) const;
 
-  /* Ensure that the name exists in the map.
+  /* Ensure that the not empty name exists in the map.
+   * If the name is empty, return ID_NOT_IN_FILE
    * If the name is already here, return it's id
    * If the name is not yet here, add in to the map with the new id, call
    * addingFun and return the new id
    */
   template <typename AddingFun>
   inline IdType EnsureNameExists(const std::string &name, AddingFun addingFun) {
-    IdType id = GetIdByName(name);
+    IdType id = ID_NOT_IN_FILE;
 
-    if (id == ID_NOT_IN_FILE) {
-      id = AddName(name);
-      addingFun(id);
+    if (!name.empty()) {
+      id = GetIdByName(name);
+      if (id == ID_NOT_IN_FILE) {
+        id = AddName(name);
+        addingFun(id);
+      }
     }
     return id;
   }

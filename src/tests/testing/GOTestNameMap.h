@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2024-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,6 +16,7 @@ private:
 
   void TestAddAndGetName();
   void TestEnsureNameExists();
+  void TestEmptyName();
   void TestMultipleNames();
 
 public:
