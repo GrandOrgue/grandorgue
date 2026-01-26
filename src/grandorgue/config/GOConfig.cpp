@@ -51,6 +51,8 @@ static constexpr unsigned SAMPLE_RATE_DEFAULT = 48000;
 static constexpr unsigned SAMPLES_PER_BUFFER_DEFAULT = 512;
 static constexpr GOConfig::InterpolationType INTERPOLATION_DEFAULT
   = GOConfig::INTERPOLATION_POLYPHASE;
+static constexpr GOConfig::MetronomeSoundType METRONOME_SOUND_DEFAULT
+  = GOConfig::METRONOME_SOUND_BELL;
 
 static const wxString WX_EMPTY = wxEmptyString;
 static const wxString COUNT = wxT("Count");
@@ -346,8 +348,6 @@ GOConfig::GOConfig(
     LanguageCode(this, GENERAL, wxT("Language"), wxEmptyString),
     BitsPerSample(this, GENERAL, wxT("BitsPerSample"), 8, 24, 24),
     Transpose(this, GENERAL, wxT("Transpose"), -11, 11, 0),
-    MetronomeMeasure(this, wxT("Metronome"), wxT("Measure"), 0, 32, 4),
-    MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
     IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
     IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
     MidiRecorderOutputDevice(
@@ -362,7 +362,19 @@ GOConfig::GOConfig(
     CheckForUpdatesAtStartup(
       this, GENERAL, wxT("CheckForUpdatesAtStartup"), true),
     m_MidiIn(MIDI_IN),
-    m_MidiOut(MIDI_OUT) {
+    m_MidiOut(MIDI_OUT),
+    MetronomeMeasure(this, wxT("Metronome"), wxT("Measure"), 0, 32, 4),
+    MetronomeBPM(this, wxT("Metronome"), wxT("BPM"), 1, 500, 80),
+    m_MetromomeSound(
+      this,
+      wxT("Metronome"),
+      wxT("SoundType"),
+      METRONOME_SOUND_BELL,
+      METRONOME_SOUND_CUSTOM,
+      METRONOME_SOUND_DEFAULT),
+    m_MetronomeFirstBeat(
+      this, wxT("Metronome"), wxT("FirstBeatFile"), wxEmptyString),
+    m_MetronomeBeat(this, wxT("Metronome"), wxT("BeatFile"), wxEmptyString) {
   m_Temperaments.InitTemperaments();
 }
 

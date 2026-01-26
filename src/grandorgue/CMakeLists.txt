@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
@@ -84,6 +84,7 @@ gui/dialogs/organ-settings/GOOrganSettingsPipesTab.cpp
 gui/dialogs/settings/GOSettingsAudio.cpp
 gui/dialogs/settings/GOSettingsDeviceMatchDialog.cpp
 gui/dialogs/settings/GOSettingsDialog.cpp
+gui/dialogs/settings/GOSettingsMetronome.cpp
 gui/dialogs/settings/GOSettingsMidiDeviceList.cpp
 gui/dialogs/settings/GOSettingsMidiDevices.cpp
 gui/dialogs/settings/GOSettingsMidiInitial.cpp

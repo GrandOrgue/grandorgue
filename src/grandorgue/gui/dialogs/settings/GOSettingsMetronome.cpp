@@ -1,0 +1,228 @@
+/*
+ * Copyright 2006 Milan Digital Audio LLC
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+ */
+
+#include "GOSettingsMetronome.h"
+
+#include <filesystem>
+
+#include <wx/gbsizer.h>
+#include <wx/msgdlg.h>
+#include <wx/radiobox.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/stattext.h>
+
+#include "config/GOConfig.h"
+#include "gui/wxcontrols/GOFilePickerCtrl.h"
+
+static const wxSize SPINCTRL_SIZE(120, wxDefaultCoord);
+
+static const wxString WX_SOUND_CHOICES[] = {_("Bell"), _("Click"), _("Custom")};
+static constexpr size_t SOUND_CHOICE_CNT
+  = sizeof(WX_SOUND_CHOICES) / sizeof(wxString);
+static const wxString WX_FILE_MASK_SAMPLES
+  = wxT("Audio sample files (*.wav;*.wv)|*.wav;*.wv");
+
+enum {
+  ID_MEASURE = 200,
+  ID_BPM,
+  ID_SOUND_TYPE,
+  ID_FIRST_BEAT_PATH,
+  ID_BEAT_PATH
+};
+
+BEGIN_EVENT_TABLE(GOSettingsMetronome, GODialogTab)
+EVT_RADIOBOX(ID_SOUND_TYPE, GOSettingsMetronome::OnSoundTypeChanged)
+EVT_FILEPICKER_CHANGED(
+  ID_FIRST_BEAT_PATH, GOSettingsMetronome::OnSampleFileChanged)
+EVT_FILEPICKER_CHANGED(ID_BEAT_PATH, GOSettingsMetronome::OnSampleFileChanged)
+END_EVENT_TABLE()
+
+GOSettingsMetronome::GOSettingsMetronome(
+  GOConfig &config,
+  GOTabbedDialog *pDlg,
+  const wxString &name,
+  const wxString &label)
+  : GODialogTab(pDlg, name, label), r_config(config) {
+  wxBoxSizer *const topSizer = new wxBoxSizer(wxVERTICAL);
+  wxGridBagSizer *const gbSizer = new wxGridBagSizer(5, 5);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("BPM:")),
+    wxGBPosition(0, 0),
+    wxGBSpan(1, 2),
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_bpm = new wxSpinCtrl(
+    this, ID_BPM, wxEmptyString, wxDefaultPosition, SPINCTRL_SIZE);
+  gbSizer->Add(
+    m_bpm,
+    wxGBPosition(0, 2),
+    wxDefaultSpan,
+    wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+  m_bpm->SetRange(1, 500);
+
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Ticks per Measure:")),
+    wxGBPosition(1, 0),
+    wxGBSpan(1, 2),
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_measure = new wxSpinCtrl(
+    this, ID_MEASURE, wxEmptyString, wxDefaultPosition, SPINCTRL_SIZE);
+  gbSizer->Add(
+    m_measure,
+    wxGBPosition(1, 2),
+    wxDefaultSpan,
+    wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+  m_measure->SetRange(0, 32);
+  m_SoundType = new wxRadioBox(
+    this,
+    ID_SOUND_TYPE,
+    _("Metronome Sound Type"),
+    wxDefaultPosition,
+    wxDefaultSize,
+    SOUND_CHOICE_CNT,
+    WX_SOUND_CHOICES,
+    0,
+    wxRA_SPECIFY_ROWS);
+  gbSizer->Add(m_SoundType, wxGBPosition(2, 0), wxGBSpan(1, 3), wxEXPAND);
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Custom Sound Wave File Paths:")),
+    wxGBPosition(3, 0),
+    wxGBSpan(1, 3),
+    wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("First Beat:")),
+    wxGBPosition(4, 1),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_FirstBeatPath = new GOFilePickerCtrl(
+    this,
+    ID_FIRST_BEAT_PATH,
+    _("Select a sample file for the first metronome beat"),
+    WX_FILE_MASK_SAMPLES,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxFLP_USE_TEXTCTRL | wxFLP_OPEN | wxFLP_FILE_MUST_EXIST | wxFLP_SMALL);
+  gbSizer->Add(m_FirstBeatPath, wxGBPosition(4, 2), wxDefaultSpan, wxEXPAND);
+  gbSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Beat:")),
+    wxGBPosition(5, 1),
+    wxDefaultSpan,
+    wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+  m_BeatPath = new GOFilePickerCtrl(
+    this,
+    ID_BEAT_PATH,
+    _("Select a sample file for all other metronome beats"),
+    WX_FILE_MASK_SAMPLES,
+    wxDefaultPosition,
+    wxDefaultSize,
+    wxFLP_USE_TEXTCTRL | wxFLP_OPEN | wxFLP_FILE_MUST_EXIST | wxFLP_SMALL);
+  gbSizer->Add(m_BeatPath, wxGBPosition(5, 2), wxDefaultSpan, wxEXPAND);
+  gbSizer->AddGrowableCol(2, 1);
+
+  topSizer->Add(gbSizer, 1, wxEXPAND | wxALL, 5);
+  SetSizerAndFit(topSizer);
+}
+
+static bool is_custom_sound(unsigned soundType) {
+  return soundType == GOConfig::METRONOME_SOUND_CUSTOM;
+}
+
+void GOSettingsMetronome::OnSoundTypeChanged(unsigned soundType) {
+  const bool isCustom = is_custom_sound(soundType);
+
+  m_FirstBeatPath->Enable(isCustom);
+  m_BeatPath->Enable(isCustom);
+}
+
+void GOSettingsMetronome::OnSoundTypeChanged(wxCommandEvent &event) {
+  OnSoundTypeChanged(event.GetSelection());
+}
+
+void GOSettingsMetronome::OnSampleFileChanged(wxFileDirPickerEvent &event) {
+  wxString selectedPathStr = event.GetPath();
+
+  if (!selectedPathStr.IsEmpty()) {
+    const std::filesystem::path selectedPath(selectedPathStr.ToStdString());
+    const std::string parentPathStr = selectedPath.parent_path().string();
+
+    if (!parentPathStr.empty()) {
+      m_FirstBeatPath->SetInitialDirectory(parentPathStr);
+      m_BeatPath->SetInitialDirectory(parentPathStr);
+    }
+  }
+}
+
+static bool validate_path(
+  GOFilePickerCtrl *pPathControl, const wxString &fieldName) {
+  const wxString &path = pPathControl->GetPath();
+  const std::string filePath = path.ToStdString();
+  bool isValid = std::filesystem::exists(filePath)
+    && std::filesystem::is_regular_file(filePath);
+
+  if (!isValid)
+    wxMessageBox(
+      wxString::Format(
+        _("The file '%s' specified at '%s' does not exist or it is not a "
+          "regular file"),
+        path,
+        fieldName),
+      _("Metronome sample file"),
+      wxOK | wxCENTRE | wxICON_ERROR);
+  return isValid;
+}
+
+bool GOSettingsMetronome::Validate() {
+  bool isValid = true;
+  bool isCustomSound = is_custom_sound(m_SoundType->GetSelection());
+
+  if (
+    isValid && isCustomSound
+    && (m_FirstBeatPath->GetPath().IsEmpty() || m_BeatPath->GetPath().IsEmpty())) {
+    wxMessageBox(
+      _("Both First beat and beat paths must be set for Custom sound type"),
+      _("Metronome config error"),
+      wxOK | wxCENTRE | wxICON_ERROR);
+    isValid = false;
+  }
+  if (isCustomSound) {
+    if (isValid)
+      isValid = validate_path(m_FirstBeatPath, _("First Beat"));
+    if (isValid)
+      isValid = validate_path(m_BeatPath, _("Beat"));
+  }
+  return isValid;
+}
+
+bool GOSettingsMetronome::TransferDataToWindow() {
+  m_bpm->SetValue(r_config.MetronomeBPM());
+  m_measure->SetValue(r_config.MetronomeMeasure());
+  m_OldSoundType = r_config.m_MetromomeSound();
+  m_OldFirstBeatPath = r_config.m_MetronomeFirstBeat();
+  m_OldBeatPath = r_config.m_MetronomeBeat();
+  m_SoundType->SetSelection(m_OldSoundType);
+  m_FirstBeatPath->SetPath(m_OldFirstBeatPath);
+  m_BeatPath->SetPath(m_OldBeatPath);
+  OnSoundTypeChanged(m_OldSoundType);
+  return true;
+}
+
+bool GOSettingsMetronome::TransferDataFromWindow() {
+  r_config.MetronomeBPM(m_bpm->GetValue());
+  r_config.MetronomeMeasure(m_measure->GetValue());
+  r_config.m_MetromomeSound(m_SoundType->GetSelection());
+  r_config.m_MetronomeFirstBeat(m_FirstBeatPath->GetPath());
+  r_config.m_MetronomeBeat(m_BeatPath->GetPath());
+  return true;
+}
+
+bool GOSettingsMetronome::NeedReload() {
+  const unsigned soundType = r_config.m_MetromomeSound();
+  return soundType != m_OldSoundType
+    || (soundType == GOConfig::METRONOME_SOUND_CUSTOM
+        && (r_config.m_MetronomeFirstBeat() != m_OldFirstBeatPath || r_config.m_MetronomeBeat() != m_OldBeatPath));
+}
