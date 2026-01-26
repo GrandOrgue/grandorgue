@@ -160,12 +160,17 @@ void GOSettingsMetronome::OnSampleFileChanged(wxFileDirPickerEvent &event) {
 static bool validate_path(
   GOFilePickerCtrl *pPathControl, const wxString &fieldName) {
   const wxString &path = pPathControl->GetPath();
-  bool isValid = std::filesystem::exists(path.ToStdString());
+  const std::string filePath = path.ToStdString();
+  bool isValid = std::filesystem::exists(filePath)
+    && std::filesystem::is_regular_file(filePath);
 
   if (!isValid)
     wxMessageBox(
       wxString::Format(
-        _("The file '%s specified at %s does not exist'"), path, fieldName),
+        _("The file '%s' specified at '%s' does not exist or it is not a "
+          "regular file"),
+        path,
+        fieldName),
       _("Metronome sample file"),
       wxOK | wxCENTRE | wxICON_ERROR);
   return isValid;
