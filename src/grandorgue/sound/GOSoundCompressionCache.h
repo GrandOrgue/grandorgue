@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDCOMPRESS_H_
-#define GOSOUNDCOMPRESS_H_
+#ifndef GOSOUNDCOMPRESSIONCACHE_H
+#define GOSOUNDCOMPRESSIONCACHE_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -86,50 +86,52 @@ static inline void AudioWriteCompressed16(
   }
 }
 
-typedef struct {
-  unsigned position;
-  int value[MAX_OUTPUT_CHANNELS];
-  int last[MAX_OUTPUT_CHANNELS];
-  int prev[MAX_OUTPUT_CHANNELS];
-  const unsigned char *ptr;
-} DecompressionCache;
+class GOSoundCompressionCache {
+public:
+  unsigned m_position;
+  int m_value[MAX_OUTPUT_CHANNELS];
+  int m_last[MAX_OUTPUT_CHANNELS];
+  int m_prev[MAX_OUTPUT_CHANNELS];
+  const unsigned char *m_ptr;
+};
 
-static inline void InitDecompressionCache(DecompressionCache &cache) {
-  cache.position = 0;
-  cache.ptr = NULL;
+static inline void InitDecompressionCache(GOSoundCompressionCache &cache) {
+  cache.m_position = 0;
+  cache.m_ptr = NULL;
   for (unsigned j = 0; j < MAX_OUTPUT_CHANNELS; j++) {
-    cache.last[j] = 0;
-    cache.value[j] = 0;
-    cache.prev[j] = 0;
+    cache.m_last[j] = 0;
+    cache.m_value[j] = 0;
+    cache.m_prev[j] = 0;
   }
 }
 
 static inline void DecompressionStep(
-  DecompressionCache &cache, unsigned channels, bool format16) {
+  GOSoundCompressionCache &cache, unsigned channels, bool format16) {
   for (unsigned j = 0; j < channels; j++) {
     int val;
     if (format16)
-      val = AudioReadCompressed16(cache.ptr);
+      val = AudioReadCompressed16(cache.m_ptr);
     else
-      val = AudioReadCompressed8(cache.ptr);
-    cache.last[j] = cache.prev[j];
-    cache.prev[j] = cache.value[j];
-    cache.value[j] = cache.prev[j] + (cache.prev[j] - cache.last[j]) / 2 + val;
+      val = AudioReadCompressed8(cache.m_ptr);
+    cache.m_last[j] = cache.m_prev[j];
+    cache.m_prev[j] = cache.m_value[j];
+    cache.m_value[j]
+      = cache.m_prev[j] + (cache.m_prev[j] - cache.m_last[j]) / 2 + val;
   }
-  cache.position++;
+  cache.m_position++;
 }
 
 static inline void DecompressTo(
-  DecompressionCache &cache,
+  GOSoundCompressionCache &cache,
   unsigned position,
   const unsigned char *data,
   unsigned channels,
   bool format16) {
-  if (!cache.ptr || cache.position > position + 1) {
+  if (!cache.m_ptr || cache.m_position > position + 1) {
     InitDecompressionCache(cache);
-    cache.ptr = data;
+    cache.m_ptr = data;
   }
-  while (cache.position <= position)
+  while (cache.m_position <= position)
     DecompressionStep(cache, channels, format16);
 }
 
