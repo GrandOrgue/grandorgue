@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -866,6 +866,8 @@ void GOMidiEventRecvTab::DetectEvent() {
               break;
             case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
               e.type = MIDI_M_SYSEX_JOHANNUS_11;
+              low = off.GetValue();
+              high = on.GetValue();
               high = 0x7f;
               break;
             case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
@@ -950,7 +952,8 @@ void GOMidiEventRecvTab::DetectEvent() {
       break;
     case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
       e.type = MIDI_M_SYSEX_JOHANNUS_11;
-      high_value = 127;
+      low_value = event.GetValue(); // Bank number
+      high_value = low_value;
       break;
     case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
       e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
