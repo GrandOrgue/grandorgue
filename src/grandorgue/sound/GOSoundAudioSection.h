@@ -256,12 +256,12 @@ public:
       GOSoundCompressionCache tmp;
       if (!cache) {
         cache = &tmp;
-        InitDecompressionCache(*cache);
+        cache->Init();
       }
 
       assert(m_BitsPerSample >= 12);
-      DecompressTo(
-        *cache, position, m_data, m_channels, (m_BitsPerSample >= 20));
+      cache->DecompressTo(
+        position, m_data, m_channels, (m_BitsPerSample >= 20));
       return cache->m_value[channel];
     }
   }
