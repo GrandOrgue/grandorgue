@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -56,7 +56,7 @@ void GOSoundReleaseAlignTable::ComputeTable(
   int phase_align_max_derivative,
   unsigned int sample_rate,
   unsigned start_position) {
-  DecompressionCache cache;
+  GOSoundCompressionCache cache;
   InitDecompressionCache(cache);
 
   for (unsigned i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,7 +8,7 @@
 #ifndef GOSOUNDSTREAM_H
 #define GOSOUNDSTREAM_H
 
-#include "GOSoundCompress.h"
+#include "GOSoundCompressionCache.h"
 #include "GOSoundResample.h"
 
 class GOSoundAudioSection;
@@ -59,7 +59,7 @@ private:
   GOSoundResample::ResamplingPosition m_ResamplingPos;
 
   /* for decoding compressed format */
-  DecompressionCache cache;
+  GOSoundCompressionCache cache;
 
   /* A ring buffer for resampling of compressed samples. It has double
    * MAX_WINDOW_LEN length for having a continous memory region of

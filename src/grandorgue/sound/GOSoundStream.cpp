@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -27,7 +27,7 @@ template <bool format16, uint8_t nChannels>
 class GOSoundStream::StreamCacheWindow
   : public GOSoundResample::FloatingSampleVector<nChannels> {
 private:
-  DecompressionCache &r_cache;
+  GOSoundCompressionCache &r_cache;
   uint8_t m_ChannelN;
   enum { PREV, VALUE, ZERO } m_curr;
 
@@ -35,7 +35,7 @@ public:
   inline StreamCacheWindow(GOSoundStream &stream) : r_cache(stream.cache) {}
 
   inline void Seek(unsigned index, uint8_t channelN) {
-    while (r_cache.position <= index + 1) {
+    while (r_cache.m_position <= index + 1) {
       DecompressionStep(r_cache, nChannels, format16);
     }
     m_ChannelN = channelN;
@@ -46,10 +46,10 @@ public:
     int res;
 
     if (m_curr == PREV) {
-      res = r_cache.prev[m_ChannelN];
+      res = r_cache.m_prev[m_ChannelN];
       m_curr = VALUE;
     } else if (m_curr == VALUE) {
-      res = r_cache.value[m_ChannelN];
+      res = r_cache.m_value[m_ChannelN];
       m_curr = ZERO;
     } else
       res = 0;
@@ -64,7 +64,7 @@ private:
   static constexpr unsigned WINDOW_SAMPLES = nChannels * windowLen;
   static constexpr unsigned BUFFER_SAMPLES = WINDOW_SAMPLES * 2;
 
-  DecompressionCache &r_cache;
+  GOSoundCompressionCache &r_cache;
   int *p_begin;
   int *p_end;
 
@@ -79,20 +79,20 @@ public:
   inline void Seek(unsigned index, uint8_t channelN) {
     unsigned readAheadIndexTo = index + windowLen;
 
-    if (r_cache.position < readAheadIndexTo) {
-      unsigned writePosition = std::max(r_cache.position, index);
+    if (r_cache.m_position < readAheadIndexTo) {
+      unsigned writePosition = std::max(r_cache.m_position, index);
       // pWrite1 points somewhere in the first half of the buffer
       int *pWrite1 = p_begin + nChannels * (writePosition % windowLen);
       // pWrite2 points somewhere in the second half of the buffer
       int *pWrite2 = pWrite1 + WINDOW_SAMPLES;
 
-      while (r_cache.position < readAheadIndexTo) {
+      while (r_cache.m_position < readAheadIndexTo) {
         DecompressionStep(r_cache, nChannels, format16);
 
         /* fill the read ahead buffer. If r_cache.position > index we assume
           that the previous samples already present */
-        if (r_cache.position >= index) {
-          const int *pRead = r_cache.value;
+        if (r_cache.m_position >= index) {
+          const int *pRead = r_cache.m_value;
 
           for (uint8_t i = nChannels; i > 0; i--)
             *(pWrite1++) = *(pWrite2++) = *(pRead++);
@@ -289,7 +289,7 @@ void GOSoundStream::InitStream(
     interpolation);
   end_pos = end.end_pos;
   cache = start.cache;
-  cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
+  cache.m_ptr = audio_section->GetData() + (intptr_t)cache.m_ptr;
 }
 
 void GOSoundStream::InitAlignedStream(
@@ -338,7 +338,7 @@ void GOSoundStream::InitAlignedStream(
     interpolation);
   end_pos = end.end_pos;
   cache = start.cache;
-  cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
+  cache.m_ptr = audio_section->GetData() + (intptr_t)cache.m_ptr;
 }
 
 bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
@@ -388,7 +388,7 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       assert(next_end->end_pos >= next->start_offset);
 
       cache = next->cache;
-      cache.ptr = audio_section->GetData() + (intptr_t)cache.ptr;
+      cache.m_ptr = audio_section->GetData() + (intptr_t)cache.m_ptr;
       transition_position = next_end->transition_offset;
       end_pos = next_end->end_pos;
       end_ptr = next_end->end_ptr;
@@ -436,11 +436,11 @@ void GOSoundStream::GetHistory(
       for (uint8_t j = 0; j < nChannels; j++)
         history[i][j] = audio_section->GetSampleData(ptr, pos + i, j);
   else {
-    DecompressionCache tmpCache = cache;
+    GOSoundCompressionCache tmpCache = cache;
 
     for (unsigned i = 0; i < BLOCK_HISTORY; i++) {
       for (uint8_t j = 0; j < nChannels; j++)
-        history[i][j] = tmpCache.value[j];
+        history[i][j] = tmpCache.m_value[j];
       DecompressionStep(
         tmpCache, nChannels, audio_section->GetBitsPerSample() >= 20);
     }
