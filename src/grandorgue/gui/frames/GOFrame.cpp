@@ -47,6 +47,8 @@
 #include "temperaments/GOTemperament.h"
 #include "threading/GOMutexLocker.h"
 
+#include "icons/GOIconManager.h"
+
 #include "GOApp.h"
 #include "GODocument.h"
 #include "GOEvent.h"
@@ -274,16 +276,19 @@ GOFrame::GOFrame(
 
   m_ToolBar = CreateToolBar(wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT);
   m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
+  GOIconManager *m_icon = new GOIconManager();
+  std::string set = "set";
   m_ToolBar->AddTool(
     ID_AUDIO_MEMSET,
     _("&Memory Set\tShift"),
-    GetImage_set(),
+    m_icon->GetIcon(set),
     _("Memory Set"),
     wxITEM_CHECK);
+  std::string level = "level";
   m_ToolBar->AddTool(
     ID_MEMORY,
     _("&Memory Level"),
-    GetImage_memory(),
+    m_icon->GetIcon(level),
     _("Memory Level"),
     wxITEM_NORMAL);
   m_SetterPosition = new wxSpinCtrl(
@@ -297,9 +302,13 @@ GOFrame::GOFrame(
     999);
   m_ToolBar->AddControl(m_SetterPosition);
   m_SetterPosition->SetValue(0);
-
+  std::string volume = "volume";
   m_ToolBar->AddTool(
-    ID_VOLUME, _("&Volume"), GetImage_volume(), _("Volume"), wxITEM_NORMAL);
+    ID_VOLUME,
+    _("&Volume"),
+    m_icon->GetIcon(volume),
+    _("Volume"),
+    wxITEM_NORMAL);
   m_Volume = new wxSpinCtrl(
     m_ToolBar,
     ID_METER_AUDIO_SPIN,
@@ -314,11 +323,11 @@ GOFrame::GOFrame(
   m_VolumeControlTool = m_ToolBar->AddControl(m_VolumeControl);
   AdjustVolumeControlWithSettings();
   m_Volume->SetValue(m_config.Volume());
-
+  std::string reverb = "reverb";
   m_ToolBar->AddTool(
     ID_RELEASELENGTH,
     _("&Release tail length"),
-    GetImage_reverb(),
+    m_icon->GetIcon(reverb),
     _("Release tail length"),
     wxITEM_NORMAL);
   choices.clear();
@@ -333,11 +342,11 @@ GOFrame::GOFrame(
     choices);
   m_ToolBar->AddControl(m_ReleaseLength);
   UpdateReleaseLength(0);
-
+  std::string transpose = "transpose";
   m_ToolBar->AddTool(
     ID_TRANSPOSE,
     _("&Transpose"),
-    GetImage_transpose(),
+    m_icon->GetIcon(transpose),
     _("Transpose"),
     wxITEM_NORMAL);
   m_Transpose = new wxSpinCtrl(
@@ -351,11 +360,11 @@ GOFrame::GOFrame(
     11);
   m_ToolBar->AddControl(m_Transpose);
   m_Transpose->SetValue(m_config.Transpose());
-
+  std::string polyphony = "polyphony";
   m_ToolBar->AddTool(
     ID_POLYPHONY,
     _("&Polyphony"),
-    GetImage_polyphony(),
+    m_icon->GetIcon(polyphony),
     _("Polyphony"),
     wxITEM_NORMAL);
   m_Polyphony = new wxSpinCtrl(
@@ -372,11 +381,11 @@ GOFrame::GOFrame(
   m_SamplerUsage = new GOAudioGauge(m_ToolBar, wxID_ANY, wxDefaultPosition);
   m_ToolBar->AddControl(m_SamplerUsage);
   m_Polyphony->SetValue(m_config.PolyphonyLimit());
-
+  std::string panic = "panic";
   m_ToolBar->AddTool(
     ID_AUDIO_PANIC,
     _("&Panic\tEscape"),
-    GetImage_panic(),
+    m_icon->GetIcon(panic),
     _("Panic"),
     wxITEM_NORMAL);
 
