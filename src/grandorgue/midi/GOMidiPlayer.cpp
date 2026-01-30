@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,8 +16,8 @@
 #include "midi/objects/GOMidiObjectContext.h"
 
 #include "GOEvent.h"
-#include "GOMidi.h"
 #include "GOMidiMap.h"
+#include "GOMidiSystem.h"
 #include "GOOrganController.h"
 
 enum {
@@ -165,7 +165,7 @@ void GOMidiPlayer::Pause() {
 }
 
 void GOMidiPlayer::PlayMidiEvent(const GOMidiEvent &e) {
-  GOMidi *pMidi = p_midi;
+  GOMidiSystem *pMidi = p_midi;
 
   if (pMidi)
     pMidi->PlayEvent(e);

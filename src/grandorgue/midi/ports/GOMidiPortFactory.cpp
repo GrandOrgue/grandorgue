@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -33,7 +33,7 @@ static GOMidiPortFactory instance;
 GOMidiPortFactory &GOMidiPortFactory::getInstance() { return instance; }
 
 void GOMidiPortFactory::addMissingInDevices(
-  GOMidi *midi,
+  GOMidiSystem *midi,
   const GOPortsConfig &portsConfig,
   ptr_vector<GOMidiPort> &ports) {
   if (portsConfig.IsEnabled(GOMidiRtPortFactory::PORT_NAME))
@@ -42,7 +42,7 @@ void GOMidiPortFactory::addMissingInDevices(
 }
 
 void GOMidiPortFactory::addMissingOutDevices(
-  GOMidi *midi,
+  GOMidiSystem *midi,
   const GOPortsConfig &portsConfig,
   ptr_vector<GOMidiPort> &ports) {
   if (portsConfig.IsEnabled(GOMidiRtPortFactory::PORT_NAME))

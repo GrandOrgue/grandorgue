@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,11 +14,11 @@
 
 #include "config/GOPortsConfig.h"
 
-class GOSound;
+class GOSoundSystem;
 
 class GOSoundPort {
 protected:
-  GOSound *m_Sound;
+  GOSoundSystem *m_Sound;
   unsigned m_Index;
   bool m_IsOpen;
   wxString m_Name;
@@ -32,7 +32,7 @@ protected:
   bool AudioCallback(float *outputBuffer, unsigned int nFrames);
 
 public:
-  GOSoundPort(GOSound *sound, wxString name);
+  GOSoundPort(GOSoundSystem *sound, wxString name);
   virtual ~GOSoundPort();
 
   void Init(

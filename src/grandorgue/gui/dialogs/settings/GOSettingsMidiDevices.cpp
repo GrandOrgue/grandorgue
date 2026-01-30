@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,7 +16,7 @@
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
-#include "midi/GOMidi.h"
+#include "midi/GOMidiSystem.h"
 #include "midi/ports/GOMidiPortFactory.h"
 
 BEGIN_EVENT_TABLE(SettingsMidiDevices, wxPanel)
@@ -28,7 +28,7 @@ EVT_LISTBOX(ID_OUTDEVICES, SettingsMidiDevices::OnOutDevicesClick)
 END_EVENT_TABLE()
 
 SettingsMidiDevices::SettingsMidiDevices(
-  GOConfig &settings, GOMidi &midi, wxWindow *parent)
+  GOConfig &settings, GOMidiSystem &midi, wxWindow *parent)
   : wxPanel(parent, wxID_ANY),
     GOSettingsPorts(this, GOMidiPortFactory::getInstance(), _("MIDI &ports")),
     m_config(settings),

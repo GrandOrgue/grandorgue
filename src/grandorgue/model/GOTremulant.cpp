@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,7 +11,7 @@
 
 #include "config/GOConfigReader.h"
 #include "model/GOOrganModel.h"
-#include "sound/GOSoundEngine.h"
+#include "sound/GOSoundOrganEngine.h"
 #include "sound/GOSoundProviderSynthedTrem.h"
 
 #define DELETE_AND_NULL(x)                                                     \
@@ -92,7 +92,7 @@ void GOTremulant::InitSoundProvider(GOMemoryPool &pool) {
 
 void GOTremulant::OnDrawstopStateChanged(bool on) {
   if (m_TremulantType == GOSynthTrem) {
-    GOSoundEngine *pSoundEngine = GetSoundEngine();
+    GOSoundOrganEngine *pSoundEngine = GetSoundEngine();
 
     if (on) {
       assert(m_TremulantN > 0);
@@ -121,7 +121,7 @@ void GOTremulant::StartPlayback() {
   GODrawstop::StartPlayback();
 
   if (IsEngaged() && m_TremulantType == GOSynthTrem) {
-    GOSoundEngine *pSoundEngine = GetSoundEngine();
+    GOSoundOrganEngine *pSoundEngine = GetSoundEngine();
 
     assert(m_TremulantN > 0);
     m_PlaybackHandle = pSoundEngine

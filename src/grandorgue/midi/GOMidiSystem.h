@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOMIDI_H
-#define GOMIDI_H
+#ifndef GOMIDISYSTEM_H
+#define GOMIDISYSTEM_H
 
 #include <wx/event.h>
 
@@ -20,9 +20,14 @@ class GOMidiListener;
 class GOMidiMap;
 class GOConfig;
 class GOOrganController;
-class wxMidiEvent;
+class GOMidiWxEvent;
 
-class GOMidi : public wxEvtHandler {
+/**
+ * This class represents a GrandOrgue-wide MIDI system. It may be used even
+ * without any organ is loaded and without the Sound System is open
+ */
+
+class GOMidiSystem : public wxEvtHandler {
 private:
   GOConfig &m_config;
   GOMidiMap &m_MidiMap;
@@ -35,15 +40,15 @@ private:
   GOMidiPortFactory m_MidiFactory;
 
 public:
-  GOMidi(GOConfig &settings);
-  ~GOMidi();
+  GOMidiSystem(GOConfig &settings);
+  ~GOMidiSystem();
 
   void Open();
   void UpdateDevices(const GOPortsConfig &portsConfig);
 
   void Recv(const GOMidiEvent &e);
   void PlayEvent(const GOMidiEvent &e);
-  void OnMidiEvent(wxMidiEvent &e);
+  void OnMidiEvent(GOMidiWxEvent &e);
   void Send(const GOMidiEvent &e);
 
   const ptr_vector<GOMidiPort> &GetInDevices() const {
@@ -63,4 +68,4 @@ public:
   DECLARE_EVENT_TABLE()
 };
 
-#endif /* GOMIDI_H */
+#endif /* GOMIDISYSTEM_H */

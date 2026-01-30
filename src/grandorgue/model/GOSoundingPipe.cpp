@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,7 +12,7 @@
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
-#include "sound/GOSoundEngine.h"
+#include "sound/GOSoundOrganEngine.h"
 #include "temperaments/GOTemperament.h"
 
 #include "GOAlloc.h"
@@ -473,7 +473,7 @@ void GOSoundingPipe::SetWaveTremulant(bool on) {
   if (m_SoundProvider.IsWaveTremulant() != on) {
     m_SoundProvider.SetWaveTremulant(on);
 
-    GOSoundEngine *pSoundEngine = GetSoundEngine();
+    GOSoundOrganEngine *pSoundEngine = GetSoundEngine();
 
     if (
       pSoundEngine && p_CurrentLoopSampler
@@ -485,7 +485,7 @@ void GOSoundingPipe::SetWaveTremulant(bool on) {
 
 void GOSoundingPipe::VelocityChanged(
   unsigned velocity, unsigned last_velocity) {
-  GOSoundEngine *pSoundEngine = GetSoundEngine();
+  GOSoundOrganEngine *pSoundEngine = GetSoundEngine();
 
   if (!m_Instances && velocity) {
     // the key pressed
@@ -570,7 +570,7 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
 void GOSoundingPipe::PreparePlayback() {
   GOPipe::PreparePlayback();
   UpdateAudioGroup();
-  GOSoundEngine *pSoundEngine = GetSoundEngine();
+  GOSoundOrganEngine *pSoundEngine = GetSoundEngine();
   if (pSoundEngine)
     m_SoundProvider.SetToneBalanceFilterSamplerate(
       pSoundEngine->GetSampleRate());

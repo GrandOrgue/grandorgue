@@ -1,38 +1,38 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOMidi.h"
+#include "GOMidiSystem.h"
 
 #include "GOEvent.h"
 #include "GOMidiListener.h"
 #include "config/GOConfig.h"
 #include "config/GOMidiDeviceConfig.h"
-#include "midi/events/GOMidiWXEvent.h"
+#include "midi/events/GOMidiWxEvent.h"
 #include "ports/GOMidiInPort.h"
 #include "ports/GOMidiOutPort.h"
 
-BEGIN_EVENT_TABLE(GOMidi, wxEvtHandler)
-EVT_MIDI(GOMidi::OnMidiEvent)
+BEGIN_EVENT_TABLE(GOMidiSystem, wxEvtHandler)
+EVT_MIDI(GOMidiSystem::OnMidiEvent)
 END_EVENT_TABLE()
 
-GOMidi::GOMidi(GOConfig &config)
+GOMidiSystem::GOMidiSystem(GOConfig &config)
   : m_config(config), m_MidiMap(config.GetMidiMap()) {}
 
-void GOMidi::UpdateDevices(const GOPortsConfig &portsConfig) {
+void GOMidiSystem::UpdateDevices(const GOPortsConfig &portsConfig) {
   m_MidiFactory.addMissingInDevices(this, portsConfig, m_midi_in_devices);
   m_MidiFactory.addMissingOutDevices(this, portsConfig, m_midi_out_devices);
 }
 
-GOMidi::~GOMidi() {
+GOMidiSystem::~GOMidiSystem() {
   m_midi_in_devices.clear();
   m_midi_out_devices.clear();
 }
 
-void GOMidi::Open() {
+void GOMidiSystem::Open() {
   const bool isToAutoAdd = m_config.IsToAutoAddMidi();
   const GOPortsConfig &portsConfig(m_config.GetMidiPortsConfig());
   GOMidiDeviceConfigList &midiIn = m_config.m_MidiIn;
@@ -81,7 +81,7 @@ void GOMidi::Open() {
   }
 }
 
-bool GOMidi::HasActiveDevice() {
+bool GOMidiSystem::HasActiveDevice() {
   for (unsigned i = 0; i < m_midi_in_devices.size(); i++)
     if (m_midi_in_devices[i]->IsActive())
       return true;
@@ -89,25 +89,27 @@ bool GOMidi::HasActiveDevice() {
   return false;
 }
 
-void GOMidi::Recv(const GOMidiEvent &e) {
-  wxMidiEvent event(e);
+void GOMidiSystem::Recv(const GOMidiEvent &e) {
+  GOMidiWxEvent event(e);
   AddPendingEvent(event);
 }
 
-void GOMidi::PlayEvent(const GOMidiEvent &e) {
+void GOMidiSystem::PlayEvent(const GOMidiEvent &e) {
   for (unsigned i = 0; i < m_Listeners.size(); i++)
     if (m_Listeners[i])
       m_Listeners[i]->Send(e);
 }
 
-void GOMidi::OnMidiEvent(wxMidiEvent &e) { PlayEvent(e.GetMidiEvent()); }
+void GOMidiSystem::OnMidiEvent(GOMidiWxEvent &e) {
+  PlayEvent(e.GetMidiEvent());
+}
 
-void GOMidi::Send(const GOMidiEvent &e) {
+void GOMidiSystem::Send(const GOMidiEvent &e) {
   for (unsigned j = 0; j < m_midi_out_devices.size(); j++)
     ((GOMidiOutPort *)m_midi_out_devices[j])->Send(e);
 }
 
-void GOMidi::Register(GOMidiListener *listener) {
+void GOMidiSystem::Register(GOMidiListener *listener) {
   if (!listener)
     return;
   for (unsigned i = 0; i < m_Listeners.size(); i++)
@@ -121,7 +123,7 @@ void GOMidi::Register(GOMidiListener *listener) {
   m_Listeners.push_back(listener);
 }
 
-void GOMidi::Unregister(GOMidiListener *listener) {
+void GOMidiSystem::Unregister(GOMidiListener *listener) {
   for (unsigned i = 0; i < m_Listeners.size(); i++)
     if (m_Listeners[i] == listener) {
       m_Listeners[i] = NULL;

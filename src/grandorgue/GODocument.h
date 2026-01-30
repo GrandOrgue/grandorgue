@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,12 +21,12 @@ class GOOrganController;
 class GOOrgan;
 class GOProgressDialog;
 class GOResizable;
-class GOSound;
+class GOSoundSystem;
 
 class GODocument : public GODocumentBase, protected GOMidiCallback {
 private:
   GOResizable *p_MainWindow;
-  GOSound &m_sound;
+  GOSoundSystem &m_sound;
 
   GOMutex m_lock;
   bool m_OrganFileReady;
@@ -40,7 +40,7 @@ private:
   void CloseOrgan();
 
 public:
-  GODocument(GOResizable *pMainWindow, GOSound *sound);
+  GODocument(GOResizable *pMainWindow, GOSoundSystem *sound);
   ~GODocument();
 
   GOOrganController *GetOrganController() const { return m_OrganController; }
