@@ -362,12 +362,12 @@ int GOConfigReader::ReadInteger(
     return defaultValue;
 
   std::string strValue = value.ToStdString();
-  std::size_t nParcedChars;
+  std::size_t nParsedChars;
   long retval;
   wxString errMsg;
 
   try {
-    retval = std::stol(strValue, &nParcedChars);
+    retval = std::stol(strValue, &nParsedChars);
   } catch (const std::exception &exc) {
     throw wxString::Format(
       _("Invalid integer value '%s' at section '%s' entry '%s': %s"),
@@ -377,8 +377,8 @@ int GOConfigReader::ReadInteger(
       exc.what());
   }
 
-  // check if the whole string is parced
-  if (nParcedChars < strValue.length()) { // not all characters are parced
+  // check if the whole string is parsed
+  if (nParsedChars < strValue.length()) { // not all characters are parsed
     wxLogError(
       _("Invalid integer value '%s' at section '%s' entry '%s'; assunmed %ld"),
       group,
