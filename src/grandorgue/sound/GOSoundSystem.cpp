@@ -131,7 +131,10 @@ void GOSoundSystem::OpenSound() {
   m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
 
   if (m_OrganController)
-    m_SoundEngine.Setup(m_OrganController, m_config.ReleaseConcurrency());
+    m_SoundEngine.Setup(
+      *m_OrganController,
+      m_OrganController->GetMemoryPool(),
+      m_config.ReleaseConcurrency());
   else
     m_SoundEngine.ClearSetup();
 
@@ -287,7 +290,10 @@ void GOSoundSystem::AssignOrganFile(GOOrganController *organController) {
   m_OrganController = organController;
 
   if (m_OrganController && m_AudioOutputs.size()) {
-    m_SoundEngine.Setup(organController, m_config.ReleaseConcurrency());
+    m_SoundEngine.Setup(
+      *organController,
+      m_OrganController->GetMemoryPool(),
+      m_config.ReleaseConcurrency());
     m_OrganController->PreparePlayback(
       &GetEngine(), &GetMidi(), &m_AudioRecorder);
   }

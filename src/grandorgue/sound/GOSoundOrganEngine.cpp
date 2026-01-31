@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "model/GOOrganModel.h"
 #include "model/GOPipe.h"
 #include "model/GOWindchest.h"
 #include "sound/scheduler/GOSoundGroupTask.h"
@@ -19,7 +20,6 @@
 #include "sound/scheduler/GOSoundWindchestTask.h"
 
 #include "GOEvent.h"
-#include "GOOrganController.h"
 #include "GOSoundProvider.h"
 #include "GOSoundRecorder.h"
 #include "GOSoundReleaseAlignTable.h"
@@ -187,23 +187,23 @@ void GOSoundOrganEngine::ClearSetup() {
 }
 
 void GOSoundOrganEngine::Setup(
-  GOOrganController *organController, unsigned release_count) {
+  GOOrganModel &organModel, GOMemoryPool &memoryPool, unsigned releaseCount) {
   m_Scheduler.Clear();
-  if (release_count < 1)
-    release_count = 1;
-  m_Scheduler.SetRepeatCount(release_count);
+  if (releaseCount < 1)
+    releaseCount = 1;
+  m_Scheduler.SetRepeatCount(releaseCount);
   m_TremulantTasks.clear();
-  for (unsigned i = 0; i < organController->GetTremulantCount(); i++)
+  for (unsigned i = 0; i < organModel.GetTremulantCount(); i++)
     m_TremulantTasks.push_back(
       new GOSoundTremulantTask(*this, m_SamplesPerBuffer));
   m_WindchestTasks.clear();
   // a special windchest task for detached releases
   m_WindchestTasks.push_back(new GOSoundWindchestTask(*this, NULL));
-  for (unsigned i = 0; i < organController->GetWindchestCount(); i++)
+  for (unsigned i = 0; i < organModel.GetWindchestCount(); i++)
     m_WindchestTasks.push_back(
-      new GOSoundWindchestTask(*this, organController->GetWindchest(i)));
-  m_TouchTask = std::unique_ptr<GOSoundTouchTask>(
-    new GOSoundTouchTask(organController->GetMemoryPool()));
+      new GOSoundWindchestTask(*this, organModel.GetWindchest(i)));
+  m_TouchTask
+    = std::unique_ptr<GOSoundTouchTask>(new GOSoundTouchTask(memoryPool));
   m_HasBeenSetup.store(true);
   Reset();
 }
