@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,7 +11,6 @@
 
 #include "config/GOConfigReader.h"
 #include "model/GOOrganModel.h"
-#include "sound/GOSoundEngine.h"
 #include "sound/GOSoundProviderSynthedTrem.h"
 
 #define DELETE_AND_NULL(x)                                                     \
@@ -29,6 +28,7 @@ static const GOConfigEnum TREMULANT_TYPES({
 
 GOTremulant::GOTremulant(GOOrganModel &organModel)
   : GODrawstop(organModel, OBJECT_TYPE_TREMULANT),
+    r_sound(organModel),
     m_TremulantType(GOSynthTrem),
     m_Period(0),
     m_StartRate(0),
@@ -92,23 +92,17 @@ void GOTremulant::InitSoundProvider(GOMemoryPool &pool) {
 
 void GOTremulant::OnDrawstopStateChanged(bool on) {
   if (m_TremulantType == GOSynthTrem) {
-    GOSoundEngine *pSoundEngine = GetSoundEngine();
-
     if (on) {
       assert(m_TremulantN > 0);
-      m_PlaybackHandle = pSoundEngine ? pSoundEngine->StartTremulantSample(
-                           m_TremProvider, m_TremulantN, m_LastStop)
-                                      : nullptr;
+      m_PlaybackHandle = r_OrganModel.StartTremulantSample(
+        m_TremProvider, m_TremulantN, m_LastStop);
     } else if (m_PlaybackHandle) {
-      m_LastStop = pSoundEngine
-        ? pSoundEngine->StopSample(m_TremProvider, m_PlaybackHandle)
-        : 0;
+      m_LastStop = r_OrganModel.StopSample(m_TremProvider, m_PlaybackHandle);
       m_PlaybackHandle = NULL;
     }
   }
-  if (m_TremulantType == GOWavTrem) {
+  if (m_TremulantType == GOWavTrem)
     r_OrganModel.UpdateTremulant(this);
-  }
 }
 
 void GOTremulant::AbortPlayback() {
@@ -121,16 +115,11 @@ void GOTremulant::StartPlayback() {
   GODrawstop::StartPlayback();
 
   if (IsEngaged() && m_TremulantType == GOSynthTrem) {
-    GOSoundEngine *pSoundEngine = GetSoundEngine();
-
     assert(m_TremulantN > 0);
-    m_PlaybackHandle = pSoundEngine
-      ? pSoundEngine->StartTremulantSample(m_TremProvider, m_TremulantN, 0)
-      : nullptr;
+    r_sound.StartTremulantSample(m_TremProvider, m_TremulantN, 0);
   }
-  if (m_TremulantType == GOWavTrem) {
+  if (m_TremulantType == GOWavTrem)
     r_OrganModel.UpdateTremulant(this);
-  }
 }
 
 GOTremulantType GOTremulant::GetTremulantType() { return m_TremulantType; }
