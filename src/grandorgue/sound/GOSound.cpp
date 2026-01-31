@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -131,7 +131,10 @@ void GOSound::OpenSound() {
   m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
 
   if (m_OrganController)
-    m_SoundEngine.Setup(m_OrganController, m_config.ReleaseConcurrency());
+    m_SoundEngine.Setup(
+      *m_OrganController,
+      m_OrganController->GetMemoryPool(),
+      m_config.ReleaseConcurrency());
   else
     m_SoundEngine.ClearSetup();
 
@@ -287,7 +290,10 @@ void GOSound::AssignOrganFile(GOOrganController *organController) {
   m_OrganController = organController;
 
   if (m_OrganController && m_AudioOutputs.size()) {
-    m_SoundEngine.Setup(organController, m_config.ReleaseConcurrency());
+    m_SoundEngine.Setup(
+      *organController,
+      m_OrganController->GetMemoryPool(),
+      m_config.ReleaseConcurrency());
     m_OrganController->PreparePlayback(
       &GetEngine(), &GetMidi(), &m_AudioRecorder);
   }
