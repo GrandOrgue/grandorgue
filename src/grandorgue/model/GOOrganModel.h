@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,6 +19,7 @@
 #include "modification/GOModificationProxy.h"
 #include "pipe-config/GOPipeConfigListener.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
+#include "sound/GOSoundOrganInterfaceProxy.h"
 
 #include "GOEventHandlerList.h"
 
@@ -37,6 +38,7 @@ class GOWindchest;
 class GOOrganModel : private GOCombinationButtonSet,
                      public GOCombinationControllerProxy,
                      public GOEventHandlerList,
+                     public GOSoundOrganInterfaceProxy,
                      public GOMidiSendProxy,
                      public GOPipeConfigListener {
 private:

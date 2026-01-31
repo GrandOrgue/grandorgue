@@ -105,8 +105,6 @@ void GOSoundOrganEngine::SetInterpolationType(unsigned type) {
   m_interpolation = (GOSoundResample::InterpolationType)type;
 }
 
-unsigned GOSoundOrganEngine::GetSampleRate() { return m_SampleRate; }
-
 void GOSoundOrganEngine::SetHardPolyphony(unsigned polyphony) {
   m_SamplerPool.SetUsageLimit(polyphony);
   m_PolyphonySoftLimit = (m_SamplerPool.GetUsageLimit() * 3) / 4;

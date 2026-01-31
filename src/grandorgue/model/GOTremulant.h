@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,16 +14,19 @@
 #include "GOCacheObject.h"
 #include "GODrawstop.h"
 
-class GOSoundProvider;
 class GOConfigReader;
 class GOConfigWriter;
 class GOMemoryPool;
+class GOSoundOrganInterface;
+class GOSoundProvider;
 struct GOSoundSampler;
 
 typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
 
 class GOTremulant : public GODrawstop, private GOCacheObject {
 private:
+  GOSoundOrganInterface &r_sound;
+
   GOTremulantType m_TremulantType;
   int m_Period;
   int m_StartRate;
