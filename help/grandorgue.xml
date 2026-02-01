@@ -6423,6 +6423,24 @@ controls.
           <listitem><simpara>Shortcut to <link linkend="memoryset">Memory Set</link></simpara></listitem>
         </varlistentry>
         <varlistentry>
+          <term>N</term>
+          <listitem>
+            <simpara>
+              Activate the <emphasis role="strong">Numeric</emphasis> setter mode.
+            </simpara>
+            <simpara>
+              While this mode is active, the user may press three numeric 
+              buttons in the fourth line to switch to a combination with this
+              three-digit number, for example, 007, 143 etc. The numeric mode
+              is deactivated as soon as three numbers are entered.
+            </simpara>
+            <simpara>
+              Pressing <emphasis role="strong">N</emphasis> second time
+              deactivates the numeric mode.
+            </simpara>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
           <term>Regular</term>
           <term>Scope</term>
           <term>Scoped</term>
@@ -7799,6 +7817,16 @@ Recall combination with the specified digit as last digit button of
 the setter. The section must contain the GUI attributes of a button
 (displayed as drawstop per default).
      </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>SetterN</term>
+          <listitem>
+            <para>
+              Activate or deactivate the numeric setter mode as described on the
+              <emphasis>Combination Setter</emphasis> chapter. The section must
+              contain the GUI attributes of a button (displayed as drawstop per default).
+            </para>
           </listitem>
         </varlistentry>
         <varlistentry>
