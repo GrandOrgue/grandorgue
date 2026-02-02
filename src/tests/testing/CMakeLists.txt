@@ -4,6 +4,10 @@ set(go_tests
     model/GOTestOrganModel.cpp
     model/GOTestSwitch.cpp
     model/GOTestWindchest.cpp
+    sound/buffer/GOTestSoundBuffer.cpp
+    sound/buffer/GOTestSoundBufferManaged.cpp
+    sound/buffer/GOTestSoundBufferMutable.cpp
+    sound/buffer/GOTestSoundBufferMutableMono.cpp
     GOTestNameMap.cpp
 )
 add_library(GOTests STATIC ${go_tests})

@@ -202,6 +202,7 @@ model/GOSwitch.cpp
 model/GOTremulant.cpp
 model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
+sound/buffer/GOSoundBufferManaged.cpp
 sound/ports/GOSoundJackPort.cpp
 sound/ports/GOSoundPort.cpp
 sound/ports/GOSoundPortFactory.cpp
