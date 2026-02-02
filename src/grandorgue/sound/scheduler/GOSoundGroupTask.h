@@ -11,15 +11,16 @@
 #include <atomic>
 
 #include "GOSoundThread.h"
-#include "sound/GOSoundBufferItem.h"
 #include "sound/GOSoundSamplerList.h"
-#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
+#include "GOSoundBufferTaskBase.h"
+#include "GOSoundTask.h"
+
 class GOSoundOrganEngine;
 
-class GOSoundGroupTask : public GOSoundTask, public GOSoundBufferItem {
+class GOSoundGroupTask : public GOSoundTask, public GOSoundBufferTaskBase {
 private:
   GOSoundOrganEngine &m_engine;
   GOSoundSamplerList m_Active;
