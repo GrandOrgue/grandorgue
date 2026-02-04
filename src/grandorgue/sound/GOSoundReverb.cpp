@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -39,8 +39,13 @@ void GOSoundReverb::Setup(GOConfig &settings) {
     return;
 
   m_engine.clear();
-  for (unsigned i = 0; i < m_channels; i++)
-    m_engine.push_back(new Convproc());
+  for (unsigned i = 0; i < m_channels; i++) {
+    Convproc *pConvProc = new Convproc();
+
+    // Disable stopping the reverb engine when the system is overloaded
+    pConvProc->set_options(Convproc::OPT_LATE_CONTIN);
+    m_engine.push_back(pConvProc);
+  }
   unsigned val = settings.SamplesPerBuffer();
   if (val < Convproc::MINPART)
     val = Convproc::MINPART;
