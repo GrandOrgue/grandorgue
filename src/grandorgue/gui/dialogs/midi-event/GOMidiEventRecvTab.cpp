@@ -868,7 +868,6 @@ void GOMidiEventRecvTab::DetectEvent() {
               e.type = MIDI_M_SYSEX_JOHANNUS_11;
               low = off.GetValue();
               high = on.GetValue();
-              high = 0x7f;
               break;
             case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
               if (on.GetValue() == off.GetValue()) {
