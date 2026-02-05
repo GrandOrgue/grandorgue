@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -101,7 +101,7 @@ public:
   void PrepareDraw(double scale, GOBitmap *background);
   void Draw(GODC &dc);
   const GOBitmap &GetWood(unsigned which);
-  GOBitmap LoadBitmap(wxString filename, wxString maskname);
+  const wxImage *LoadBitmap(wxString filename, wxString maskname);
   void HandleKey(int key);
   void HandleMousePress(int x, int y, bool right);
   void HandleMouseRelease(bool right);

@@ -77,8 +77,8 @@ void GOGUIButton::Init(
   on_mask_file = wxEmptyString;
   off_mask_file = on_mask_file;
 
-  m_OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
-  m_OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
+  m_OnBitmap.SetSourceImage(m_panel->LoadBitmap(on_file, on_mask_file));
+  m_OffBitmap.SetSourceImage(m_panel->LoadBitmap(off_file, off_mask_file));
 
   x = -1;
   y = -1;
@@ -207,8 +207,8 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
   off_mask_file = cfg.ReadStringTrim(
     ODFSetting, group, wxT("MaskOff"), false, on_mask_file);
 
-  m_OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
-  m_OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
+  m_OnBitmap.SetSourceImage(m_panel->LoadBitmap(on_file, on_mask_file));
+  m_OffBitmap.SetSourceImage(m_panel->LoadBitmap(off_file, off_mask_file));
 
   x = cfg.ReadInteger(
     ODFSetting,

@@ -11,26 +11,12 @@
 #include <wx/dcmemory.h>
 #include <wx/image.h>
 
-GOBitmap::GOBitmap()
-  : p_SourceImage(nullptr),
-    m_Scale(0),
-    m_ResultWidth(0),
-    m_ResultHeight(0),
-    m_ResultXOffset(0),
-    m_ResultYOffset(0) {}
-
-GOBitmap::GOBitmap(const wxImage *pSourceImg)
-  : p_SourceImage(pSourceImg),
-    m_Scale(0),
-    m_ResultWidth(0),
-    m_ResultHeight(0),
-    m_ResultXOffset(0),
-    m_ResultYOffset(0) {}
-
-unsigned GOBitmap::GetSourceWidth() const { return p_SourceImage->GetWidth(); }
+unsigned GOBitmap::GetSourceWidth() const {
+  return p_SourceImage ? p_SourceImage->GetWidth() : 0;
+}
 
 unsigned GOBitmap::GetSourceHeight() const {
-  return p_SourceImage->GetHeight();
+  return p_SourceImage ? p_SourceImage->GetHeight() : 0;
 }
 
 void GOBitmap::BuildBitmapFrom(
@@ -61,7 +47,7 @@ void GOBitmap::BuildBitmapFrom(
 
 void GOBitmap::BuildScaledBitmap(
   double scale, const wxRect &rect, GOBitmap *background) {
-  if (scale != m_Scale || m_ResultWidth || m_ResultHeight) {
+  if (p_SourceImage && (scale != m_Scale || m_ResultWidth || m_ResultHeight)) {
     BuildBitmapFrom(*p_SourceImage, scale, rect, background);
     m_ResultWidth = 0;
     m_ResultHeight = 0;
@@ -75,9 +61,12 @@ void GOBitmap::BuildTileBitmap(
   unsigned yo,
   GOBitmap *background) {
   if (
-    scale != m_Scale || m_ResultWidth != rect.GetWidth()
-    || m_ResultHeight != rect.GetHeight() || xo != m_ResultXOffset
-    || yo != m_ResultYOffset) {
+    p_SourceImage
+    && (
+      scale != m_Scale 
+      || m_ResultWidth != rect.GetWidth()
+      || m_ResultHeight != rect.GetHeight() || xo != m_ResultXOffset
+      || yo != m_ResultYOffset)) {
     wxImage img(rect.GetWidth(), rect.GetHeight());
 
     for (int y = -yo; y < img.GetHeight(); y += GetSourceHeight())

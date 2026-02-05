@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -51,9 +51,11 @@ GOGUIPanel::GOGUIPanel(GOOrganController *organController)
     m_layout(0),
     m_view(0),
     m_InitialOpenWindow(false) {
-  for (unsigned i = 0; i < 64; i++)
-    m_WoodImages.push_back(LoadBitmap(
+  for (unsigned i = 0; i < 64; i++) {
+    m_WoodImages.emplace_back();
+    m_WoodImages.back().SetSourceImage(LoadBitmap(
       wxString::Format(wxT(GOBitmapPrefix "wood%02d"), i + 1), wxEmptyString));
+  }
 }
 
 GOGUIPanel::~GOGUIPanel() {
@@ -71,7 +73,7 @@ const wxString &GOGUIPanel::GetName() { return m_Name; }
 
 const wxString &GOGUIPanel::GetGroupName() { return m_GroupName; }
 
-GOBitmap GOGUIPanel::LoadBitmap(wxString filename, wxString maskname) {
+const wxImage *GOGUIPanel::LoadBitmap(wxString filename, wxString maskname) {
   return m_OrganController->GetBitmapCache().GetBitmap(filename, maskname);
 }
 

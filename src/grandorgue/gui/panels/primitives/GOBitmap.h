@@ -20,20 +20,19 @@ class wxRect;
 
 class GOBitmap {
 private:
-  const wxImage *p_SourceImage;
+  const wxImage *p_SourceImage = nullptr;
   wxBitmap m_ResultBitmap;
-  double m_Scale;
-  int m_ResultWidth;
-  int m_ResultHeight;
-  unsigned m_ResultXOffset;
-  unsigned m_ResultYOffset;
+  double m_Scale = 0.0;
+  int m_ResultWidth = 0;
+  int m_ResultHeight = 0;
+  unsigned m_ResultXOffset = 0;
+  unsigned m_ResultYOffset = 0;
 
   void BuildBitmapFrom(
     const wxImage &img, double scale, const wxRect &rect, GOBitmap *background);
 
 public:
-  GOBitmap(); // Makes a dummy instance
-  GOBitmap(const wxImage *pSourceImg);
+  void SetSourceImage(const wxImage *pSourceImg) { p_SourceImage = pSourceImg; }
 
   unsigned GetSourceWidth() const;
   unsigned GetSourceHeight() const;

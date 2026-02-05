@@ -100,8 +100,10 @@ void GOGUIManual::Init(GOConfigReader &cfg, wxString group) {
     on_mask_file = wxEmptyString;
     off_mask_file = on_mask_file;
 
-    m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
-    m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
+    m_Keys[i].OnBitmap.SetSourceImage(
+      m_panel->LoadBitmap(on_file, on_mask_file));
+    m_Keys[i].OffBitmap.SetSourceImage(
+      m_panel->LoadBitmap(off_file, off_mask_file));
 
     if (
       m_Keys[i].OnBitmap.GetSourceWidth()
@@ -305,8 +307,10 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       false,
       off_mask_file);
 
-    m_Keys[i].OnBitmap = m_panel->LoadBitmap(on_file, on_mask_file);
-    m_Keys[i].OffBitmap = m_panel->LoadBitmap(off_file, off_mask_file);
+    m_Keys[i].OnBitmap.SetSourceImage(
+      m_panel->LoadBitmap(on_file, on_mask_file));
+    m_Keys[i].OffBitmap.SetSourceImage(
+      m_panel->LoadBitmap(off_file, off_mask_file));
 
     if (
       m_Keys[i].OnBitmap.GetSourceWidth()
