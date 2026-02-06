@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -17,7 +17,9 @@
 #include "GOSoundSampler.h"
 #include "GOSoundSamplerPool.h"
 
-class GOWindchest;
+class GOConfig;
+class GOMemoryPool;
+class GOOrganModel;
 class GOSoundProvider;
 class GOSoundRecorder;
 class GOSoundGroupTask;
@@ -27,8 +29,7 @@ class GOSoundTouchTask;
 class GOSoundTremulantTask;
 class GOSoundWindchestTask;
 class GOSoundTask;
-class GOOrganController;
-class GOConfig;
+class GOWindchest;
 
 typedef struct {
   unsigned channels;
@@ -115,7 +116,10 @@ public:
   GOSoundEngine();
   ~GOSoundEngine();
   void Reset();
-  void Setup(GOOrganController *organController, unsigned release_count = 1);
+  void Setup(
+    GOOrganModel &organModel,
+    GOMemoryPool &memoryPool,
+    unsigned releaseCount = 1);
   void ClearSetup();
   void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
   void SetupReverb(GOConfig &settings);
