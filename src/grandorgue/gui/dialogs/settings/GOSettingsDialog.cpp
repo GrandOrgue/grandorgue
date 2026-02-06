@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,6 +15,7 @@
 #include <wx/sizer.h>
 
 #include "GOSettingsAudio.h"
+#include "GOSettingsMetronome.h"
 #include "GOSettingsMidiDevices.h"
 #include "GOSettingsMidiInitial.h"
 #include "GOSettingsOptions.h"
@@ -35,6 +36,7 @@ const wxString GOSettingsDialog::PAGE_INITIAL_MIDI = wxT("InitialMidi");
 const wxString GOSettingsDialog::PAGE_ORGANS = wxT("Organs");
 const wxString GOSettingsDialog::PAGE_REVERB = wxT("Reverb");
 const wxString GOSettingsDialog::PAGE_TEMPERAMENTS = wxT("Temperaments");
+const wxString GOSettingsDialog::PAGE_METRONOME = wxT("Metronome");
 
 GOSettingsDialog::GOSettingsDialog(
   wxWindow *parent,
@@ -71,6 +73,9 @@ GOSettingsDialog::GOSettingsDialog(
   AddTab(m_ReverbPage, PAGE_REVERB, _("Reverb"));
   m_TemperamentsPage = new GOSettingsTemperaments(config, notebook);
   AddTab(m_TemperamentsPage, PAGE_TEMPERAMENTS, _("Temperaments"));
+  m_MetronomePage
+    = new GOSettingsMetronome(config, this, PAGE_METRONOME, _("Metronome"));
+  AddTab(m_MetronomePage);
 
   bool hasReasons = reasons && reasons->size();
 
@@ -126,6 +131,8 @@ void GOSettingsDialog::OnReasons(wxCommandEvent &event) {
   }
 }
 
-bool GOSettingsDialog::NeedReload() { return m_OptionsPage->NeedReload(); }
+bool GOSettingsDialog::NeedReload() {
+  return m_OptionsPage->NeedReload() || m_MetronomePage->NeedReload();
+}
 
 bool GOSettingsDialog::NeedRestart() { return m_OptionsPage->NeedRestart(); }

@@ -1,3 +1,4 @@
+- Added capability of changing metronome sound https://github.com/GrandOrgue/grandorgue/issues/2258
 - Fixed switching the convolution reverb off when the system is overloaded https://github.com/GrandOrgue/grandorgue/issues/2348
 - Added capability to specify the config file path in the command line with the --config option https://github.com/GrandOrgue/grandorgue/issues/2328
 - Fixed displaying an invalid user-defined temperament name in the Master Control panel https://github.com/GrandOrgue/grandorgue/discussions/2362
