@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -154,18 +154,23 @@ GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   panel->AddControl(button);
 
   button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(wxT("SetterN")), false);
+  button->Init(cfg, wxT("SetterN"), 2, curRow);
+  panel->AddControl(button);
+
+  button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Regular")), false);
-  button->Init(cfg, wxT("SetterRegular"), 3, curRow);
+  button->Init(cfg, wxT("SetterRegular"), 4, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Scope")), false);
-  button->Init(cfg, wxT("SetterScope"), 4, curRow);
+  button->Init(cfg, wxT("SetterScope"), 5, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
     panel, m_OrganController->GetButtonControl(wxT("Scoped")), false);
-  button->Init(cfg, wxT("SetterScoped"), 5, curRow);
+  button->Init(cfg, wxT("SetterScoped"), 6, curRow);
   panel->AddControl(button);
 
   button = new GOGUIButton(
