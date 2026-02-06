@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -37,13 +37,18 @@ void GOMidiEventDeviceChoice::FillWithDevices(
       portsConfig.IsEnabled(pDevConf->GetPortName(), pDevConf->GetApiName())
       && pDevConf->m_IsEnabled) {
       const wxString &logicalName = pDevConf->GetLogicalName();
+      const uint_fast16_t existingDevId
+        = m_MidiMap.GetDeviceIdByLogicalName(logicalName);
 
-      AddDevice(m_MidiMap.GetDeviceIdByLogicalName(logicalName), logicalName);
+      // Don't show missing devices remaining in the configs, otherwise it will
+      // confuse with "Any Device" that also has id=0
+      if (existingDevId)
+        AddDevice(existingDevId, logicalName);
     }
   for (unsigned l = patterns.GetEventCount(), i = 0; i < l; i++) {
     uint_fast16_t deviceId = patterns.GetBasePattern(i).deviceId;
 
-    if (!m_IndicesById.contains(deviceId))
+    if (deviceId && !m_IndicesById.contains(deviceId))
       AddDevice(
         deviceId, m_MidiMap.GetDeviceLogicalNameById(deviceId) + WX_MISSING);
   }
