@@ -257,7 +257,7 @@ static inline void loop_memcpy(
 void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
   GOSoundCompressionCache cache;
 
-  InitDecompressionCache(cache);
+  cache.Init();
   m_MaxAmplitude = 0;
   m_MaxAbsAmplitude = 0;
   m_MaxAbsDerivative = 0;
@@ -509,8 +509,8 @@ void GOSoundAudioSection::Compress(bool format16) {
 
   unsigned output_len = 0;
   GOSoundCompressionCache state;
-  InitDecompressionCache(state);
 
+  state.Init();
   for (unsigned i = 0; i < m_SampleCount; i++) {
     state.m_position = i;
     state.m_ptr = (const unsigned char *)(intptr_t)output_len;
@@ -535,9 +535,9 @@ void GOSoundAudioSection::Compress(bool format16) {
         = val - (state.m_prev[j] + (state.m_prev[j] - state.m_last[j]) / 2);
 
       if (format16)
-        AudioWriteCompressed16(data, output_len, encode);
+        GOSoundCompressionCache::writeCompressed16(data, output_len, encode);
       else
-        AudioWriteCompressed8(data, output_len, encode);
+        GOSoundCompressionCache::writeCompressed8(data, output_len, encode);
 
       /* Early abort if the compressed data will be larger than the
        * uncompressed data. */
