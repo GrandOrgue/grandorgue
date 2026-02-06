@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,7 +19,7 @@
 #include "GOAlloc.h"
 #include "GOMemoryPool.h"
 #include "GOSampleStatistic.h"
-#include "GOSoundCompress.h"
+#include "GOSoundCompressionCache.h"
 #include "GOSoundReleaseAlignTable.h"
 #include "GOSoundResample.h"
 
@@ -255,7 +255,7 @@ static inline void loop_memcpy(
 }
 
 void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
-  DecompressionCache cache;
+  GOSoundCompressionCache cache;
 
   InitDecompressionCache(cache);
   m_MaxAmplitude = 0;
@@ -508,30 +508,31 @@ void GOSoundAudioSection::Compress(bool format16) {
     throw GOOutOfMemory();
 
   unsigned output_len = 0;
-  DecompressionCache state;
+  GOSoundCompressionCache state;
   InitDecompressionCache(state);
 
   for (unsigned i = 0; i < m_SampleCount; i++) {
-    state.position = i;
-    state.ptr = (const unsigned char *)(intptr_t)output_len;
+    state.m_position = i;
+    state.m_ptr = (const unsigned char *)(intptr_t)output_len;
     for (unsigned j = 0; j < m_StartSegments.size(); j++) {
       if (m_StartSegments[j].start_offset == i) {
         m_StartSegments[j].cache = state;
       }
     }
 
-    state.last[0] = state.prev[0];
-    state.last[1] = state.prev[1];
-    state.prev[0] = state.value[0];
-    state.prev[1] = state.value[1];
+    state.m_last[0] = state.m_prev[0];
+    state.m_last[1] = state.m_prev[1];
+    state.m_prev[0] = state.m_value[0];
+    state.m_prev[1] = state.m_value[1];
 
-    state.value[0] = GetSample(i, 0);
+    state.m_value[0] = GetSample(i, 0);
     if (m_channels > 1)
-      state.value[1] = GetSample(i, 1);
+      state.m_value[1] = GetSample(i, 1);
 
     for (unsigned j = 0; j < m_channels; j++) {
-      int val = state.value[j];
-      int encode = val - (state.prev[j] + (state.prev[j] - state.last[j]) / 2);
+      int val = state.m_value[j];
+      int encode
+        = val - (state.m_prev[j] + (state.m_prev[j] - state.m_last[j]) / 2);
 
       if (format16)
         AudioWriteCompressed16(data, output_len, encode);

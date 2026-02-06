@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,7 +13,7 @@
 
 #include "GOBool3.h"
 #include "GOInt.h"
-#include "GOSoundCompress.h"
+#include "GOSoundCompressionCache.h"
 #include "GOSoundResample.h"
 #include "GOWave.h"
 
@@ -34,7 +34,7 @@ public:
     /* Sample offset into entire audio section where data begins. */
     unsigned start_offset;
 
-    DecompressionCache cache;
+    GOSoundCompressionCache cache;
   };
 
   /**
@@ -249,11 +249,11 @@ public:
   inline int GetSample(
     unsigned position,
     unsigned channel,
-    DecompressionCache *cache = nullptr) const {
+    GOSoundCompressionCache *cache = nullptr) const {
     if (!m_IsCompressed) {
       return GetSampleData(m_data, position, channel);
     } else {
-      DecompressionCache tmp;
+      GOSoundCompressionCache tmp;
       if (!cache) {
         cache = &tmp;
         InitDecompressionCache(*cache);
@@ -262,7 +262,7 @@ public:
       assert(m_BitsPerSample >= 12);
       DecompressTo(
         *cache, position, m_data, m_channels, (m_BitsPerSample >= 20));
-      return cache->value[channel];
+      return cache->m_value[channel];
     }
   }
 
