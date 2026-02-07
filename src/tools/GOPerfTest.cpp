@@ -157,9 +157,12 @@ void GOPerfTestApp::RunTest(
       wxMilliClock_t diff;
       unsigned batch_size = 1 * engine->GetSampleRate() / samples_per_frame;
       unsigned blocks = 0;
+      GOSoundBufferMutable outputBufferMutable(
+        output_buffer, 2, samples_per_frame);
+
       do {
         for (unsigned i = 0; i < batch_size; i++) {
-          engine->GetAudioOutput(output_buffer, samples_per_frame, 0, false);
+          engine->GetAudioOutput(0, false, outputBufferMutable);
           engine->NextPeriod();
           blocks++;
         }

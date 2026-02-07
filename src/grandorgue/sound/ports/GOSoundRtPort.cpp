@@ -12,6 +12,7 @@
 
 #include "GOSoundPortFactory.h"
 #include "config/GODeviceNamePattern.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
 
 const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
 const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
@@ -131,10 +132,10 @@ int GOSoundRtPort::Callback(
   RtAudioStreamStatus status,
   void *userData) {
   GOSoundRtPort *port = (GOSoundRtPort *)userData;
-  if (port->AudioCallback((float *)outputBuffer, nFrames))
-    return 0;
-  else
-    return 1;
+  GOSoundBufferMutable outputBufferMutable(
+    (float *)outputBuffer, port->m_Channels, nFrames);
+
+  return port->AudioCallback(outputBufferMutable) ? 0 : 1;
 }
 
 static wxString compose_device_name(

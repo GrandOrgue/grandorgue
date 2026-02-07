@@ -11,6 +11,7 @@
 #include <wx/regex.h>
 
 #include "config/GODeviceNamePattern.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
 
 const wxString GOSoundPortaudioPort::PORT_NAME = wxT("PortAudio");
 const wxString GOSoundPortaudioPort::PORT_NAME_OLD = wxT("Pa");
@@ -114,10 +115,10 @@ int GOSoundPortaudioPort::Callback(
   PaStreamCallbackFlags statusFlags,
   void *userData) {
   GOSoundPortaudioPort *port = (GOSoundPortaudioPort *)userData;
-  if (port->AudioCallback((float *)output, frameCount))
-    return paContinue;
-  else
-    return paAbort;
+  GOSoundBufferMutable outputBuffer(
+    (float *)output, port->m_Channels, frameCount);
+
+  return port->AudioCallback(outputBuffer) ? paContinue : paAbort;
 }
 
 // for compatibility with old settings

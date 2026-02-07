@@ -11,6 +11,7 @@
 #include <wx/thread.h>
 
 #include "sound/GOSoundSystem.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
 
 GOSoundPort::GOSoundPort(GOSoundSystem *sound, wxString name)
   : m_Sound(sound),
@@ -46,8 +47,8 @@ void GOSoundPort::SetActualLatency(double latency) {
   m_ActualLatency = latency * 1000;
 }
 
-bool GOSoundPort::AudioCallback(float *outputBuffer, unsigned int nFrames) {
-  return m_Sound->AudioCallback(m_Index, outputBuffer, nFrames);
+bool GOSoundPort::AudioCallback(GOSoundBufferMutable &outputBuffer) {
+  return m_Sound->AudioCallback(m_Index, outputBuffer);
 }
 
 const wxString &GOSoundPort::GetName() { return m_Name; }

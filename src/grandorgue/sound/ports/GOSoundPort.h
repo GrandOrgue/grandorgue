@@ -14,6 +14,7 @@
 
 #include "config/GOPortsConfig.h"
 
+class GOSoundBufferMutable;
 class GOSoundSystem;
 
 class GOSoundPort {
@@ -29,7 +30,7 @@ protected:
   int m_ActualLatency;
 
   void SetActualLatency(double latency);
-  bool AudioCallback(float *outputBuffer, unsigned int nFrames);
+  bool AudioCallback(GOSoundBufferMutable &outputBuffer);
 
 public:
   GOSoundPort(GOSoundSystem *sound, wxString name);
