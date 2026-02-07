@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,7 +12,7 @@
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
-#include "sound/GOSoundEngine.h"
+#include "sound/GOSoundSampler.h"
 #include "temperaments/GOTemperament.h"
 
 #include "GOAlloc.h"
@@ -473,32 +473,27 @@ void GOSoundingPipe::SetWaveTremulant(bool on) {
   if (m_SoundProvider.IsWaveTremulant() != on) {
     m_SoundProvider.SetWaveTremulant(on);
 
-    GOSoundEngine *pSoundEngine = GetSoundEngine();
-
     if (
-      pSoundEngine && p_CurrentLoopSampler
+      p_OrganModel && p_CurrentLoopSampler
       && !m_SoundProvider.IsWaveTremulantStateSuitable(
         p_CurrentLoopSampler->m_WaveTremulantStateFor))
-      pSoundEngine->SwitchSample(&m_SoundProvider, p_CurrentLoopSampler);
+      p_OrganModel->SwitchSample(&m_SoundProvider, p_CurrentLoopSampler);
   }
 }
 
 void GOSoundingPipe::VelocityChanged(
   unsigned velocity, unsigned last_velocity) {
-  GOSoundEngine *pSoundEngine = GetSoundEngine();
-
   if (!m_Instances && velocity) {
     // the key pressed
-    GOSoundSampler *pSampler = pSoundEngine ? pSoundEngine->StartPipeSample(
-                                 &m_SoundProvider,
-                                 m_WindchestN,
-                                 m_AudioGroupID,
-                                 velocity,
-                                 m_PipeConfigNode.GetEffectiveDelay(),
-                                 m_LastStop,
-                                 false,
-                                 &m_LastStart)
-                                            : nullptr;
+    GOSoundSampler *pSampler = p_OrganModel->StartPipeSample(
+      &m_SoundProvider,
+      m_WindchestN,
+      m_AudioGroupID,
+      velocity,
+      m_PipeConfigNode.GetEffectiveDelay(),
+      m_LastStop,
+      false,
+      &m_LastStart);
     if (pSampler) {
       m_Instances++;
       if (!m_SoundProvider.IsOneshot()) {
@@ -508,13 +503,12 @@ void GOSoundingPipe::VelocityChanged(
   } else if (m_Instances && !velocity) {
     // the key released
     m_Instances--;
-    if (p_CurrentLoopSampler) {
-      m_LastStop = pSoundEngine
-        ? pSoundEngine->StopSample(&m_SoundProvider, p_CurrentLoopSampler)
-        : 0;
+    if (p_CurrentLoopSampler && p_OrganModel) {
+      m_LastStop
+        = p_OrganModel->StopSample(&m_SoundProvider, p_CurrentLoopSampler);
       p_CurrentLoopSampler = nullptr;
-    } else if (m_PipeConfigNode.IsEffectiveIndependentRelease() && pSoundEngine)
-      pSoundEngine->StartPipeSample(
+    } else if (m_PipeConfigNode.IsEffectiveIndependentRelease() && p_OrganModel)
+      p_OrganModel->StartPipeSample(
         &m_SoundProvider,
         m_WindchestN,
         m_AudioGroupID,
@@ -523,11 +517,10 @@ void GOSoundingPipe::VelocityChanged(
         m_LastStart,
         true,
         &m_LastStop);
-  } else if (p_CurrentLoopSampler && last_velocity != velocity)
+  } else if (p_CurrentLoopSampler && last_velocity != velocity && p_OrganModel)
     // the key was pressed before and the velocity is changed now
-    if (pSoundEngine)
-      pSoundEngine->UpdateVelocity(
-        &m_SoundProvider, p_CurrentLoopSampler, velocity);
+    p_OrganModel->UpdateVelocity(
+      &m_SoundProvider, p_CurrentLoopSampler, velocity);
 }
 
 void GOSoundingPipe::UpdateAmplitude() {
@@ -570,10 +563,9 @@ void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
 void GOSoundingPipe::PreparePlayback() {
   GOPipe::PreparePlayback();
   UpdateAudioGroup();
-  GOSoundEngine *pSoundEngine = GetSoundEngine();
-  if (pSoundEngine)
+  if (p_OrganModel)
     m_SoundProvider.SetToneBalanceFilterSamplerate(
-      pSoundEngine->GetSampleRate());
+      p_OrganModel->GetSampleRate());
 }
 
 void GOSoundingPipe::AbortPlayback() {

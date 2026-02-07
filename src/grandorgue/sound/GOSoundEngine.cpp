@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -104,8 +104,6 @@ void GOSoundEngine::SetSampleRate(unsigned sample_rate) {
 void GOSoundEngine::SetInterpolationType(unsigned type) {
   m_interpolation = (GOSoundResample::InterpolationType)type;
 }
-
-unsigned GOSoundEngine::GetSampleRate() { return m_SampleRate; }
 
 void GOSoundEngine::SetHardPolyphony(unsigned polyphony) {
   m_SamplerPool.SetUsageLimit(polyphony);
