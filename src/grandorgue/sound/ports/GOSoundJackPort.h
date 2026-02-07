@@ -1,12 +1,14 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #ifndef GOSOUNDJACKPORT_H
 #define GOSOUNDJACKPORT_H
+
+#include <vector>
 
 #if defined(GO_USE_JACK)
 #if defined(_WIN32) && !defined(WIN32)
@@ -31,7 +33,7 @@ public:
 #if defined(GO_USE_JACK)
 private:
   jack_client_t *m_JackClient = NULL;
-  jack_port_t **m_JackOutputPorts = NULL;
+  std::vector<jack_port_t *> mp_JackOutPorts;
   float *m_GoBuffer = NULL;
   bool m_IsOpen = false;
   bool m_IsStarted = false;
