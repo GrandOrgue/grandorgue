@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -31,7 +31,7 @@ class GOMidiEvent;
 class GOOrgan;
 class GOOrganController;
 class GOProgressDialog;
-class GOSound;
+class GOSoundSystem;
 class wxChoice;
 class wxHtmlHelpController;
 class wxSpinCtrl;
@@ -63,7 +63,7 @@ private:
   wxSpinCtrl *m_Polyphony;
   wxSpinCtrl *m_SetterPosition;
   wxSpinCtrl *m_Volume;
-  GOSound &m_Sound;
+  GOSoundSystem &m_Sound;
   GOConfig &m_config;
   GOMidiListener m_listener;
   wxString m_Title;
@@ -189,7 +189,7 @@ public:
     const wxPoint &pos,
     const wxSize &size,
     const long type,
-    GOSound &sound);
+    GOSoundSystem &sound);
   virtual ~GOFrame(void);
 
   void Init(const wxString &filename, bool isGuiOnly);

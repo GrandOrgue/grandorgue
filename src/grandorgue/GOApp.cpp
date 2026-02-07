@@ -14,7 +14,7 @@
 
 #include "config/GOConfig.h"
 #include "gui/frames/GOFrame.h"
-#include "sound/GOSound.h"
+#include "sound/GOSoundSystem.h"
 
 #include "GOLog.h"
 #include "GOStdPath.h"
@@ -154,7 +154,7 @@ bool GOApp::OnInit() {
   m_locale.Init(m_config->GetLanguageId());
   m_locale.AddCatalog(wxT("GrandOrgue"));
 
-  m_soundSystem = new GOSound(*m_config);
+  m_soundSystem = new GOSoundSystem(*m_config);
 
   m_Frame = new GOFrame(
     *this,

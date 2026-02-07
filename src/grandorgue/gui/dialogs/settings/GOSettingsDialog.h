@@ -13,8 +13,8 @@
 #include "GOSettingsReason.h"
 
 class GOConfig;
-class GOMidi;
-class GOSound;
+class GOMidiSystem;
+class GOSoundSystem;
 class GOSettingsAudioGroup;
 class GOSettingsAudio;
 class GOSettingsMetronome;
@@ -61,8 +61,8 @@ public:
   GOSettingsDialog(
     wxWindow *parent,
     GOConfig &config,
-    GOSound &sound,
-    GOMidi &midi,
+    GOSoundSystem &sound,
+    GOMidiSystem &midi,
     SettingsReasons *reasons);
 
   bool NeedReload();

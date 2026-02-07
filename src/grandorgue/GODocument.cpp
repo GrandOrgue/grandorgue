@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,7 +20,7 @@
 #include "gui/panels/GOGUIPanelView.h"
 #include "gui/size/GOResizable.h"
 #include "midi/events/GOMidiEvent.h"
-#include "sound/GOSound.h"
+#include "sound/GOSoundSystem.h"
 #include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
@@ -28,7 +28,7 @@
 #include "GOOrganController.h"
 #include "go_ids.h"
 
-GODocument::GODocument(GOResizable *pMainWindow, GOSound *sound)
+GODocument::GODocument(GOResizable *pMainWindow, GOSoundSystem *sound)
   : p_MainWindow(pMainWindow),
     m_sound(*sound),
     m_OrganFileReady(false),

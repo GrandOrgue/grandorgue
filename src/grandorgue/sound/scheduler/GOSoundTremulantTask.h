@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,11 +12,11 @@
 #include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
-class GOSoundEngine;
+class GOSoundOrganEngine;
 
 class GOSoundTremulantTask : public GOSoundTask {
 private:
-  GOSoundEngine &m_engine;
+  GOSoundOrganEngine &m_engine;
   GOSoundSamplerList m_Samplers;
   GOMutex m_Mutex;
   float m_Volume;
@@ -25,7 +25,7 @@ private:
 
 public:
   GOSoundTremulantTask(
-    GOSoundEngine &sound_engine, unsigned samples_per_buffer);
+    GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer);
 
   unsigned GetGroup();
   unsigned GetCost();

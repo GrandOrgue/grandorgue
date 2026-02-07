@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -37,7 +37,7 @@ wxString GOSoundPortaudioPort::getLastError(PaError error) {
 }
 
 GOSoundPortaudioPort::GOSoundPortaudioPort(
-  GOSound *sound, unsigned paDevIndex, const wxString &name)
+  GOSoundSystem *sound, unsigned paDevIndex, const wxString &name)
   : GOSoundPort(sound, name), m_PaDevIndex(paDevIndex), m_stream(nullptr) {}
 
 GOSoundPortaudioPort::~GOSoundPortaudioPort() { Close(); }
@@ -146,7 +146,7 @@ void GOSoundPortaudioPort::terminate() {
 
 GOSoundPort *GOSoundPortaudioPort::create(
   const GOPortsConfig &portsConfig,
-  GOSound *sound,
+  GOSoundSystem *sound,
   GODeviceNamePattern &pattern) {
   GOSoundPort *pPort = nullptr;
 

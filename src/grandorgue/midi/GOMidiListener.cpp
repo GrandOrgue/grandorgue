@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,7 +10,7 @@
 #include "midi/events/GOMidiCallback.h"
 #include "midi/events/GOMidiEvent.h"
 
-#include "GOMidi.h"
+#include "GOMidiSystem.h"
 
 GOMidiListener::GOMidiListener() : m_Callback(NULL), m_midi(NULL) {}
 
@@ -20,7 +20,7 @@ void GOMidiListener::SetCallback(GOMidiCallback *callback) {
   m_Callback = callback;
 }
 
-void GOMidiListener::Register(GOMidi *midi) {
+void GOMidiListener::Register(GOMidiSystem *midi) {
   Unregister();
   if (midi) {
     m_midi = midi;

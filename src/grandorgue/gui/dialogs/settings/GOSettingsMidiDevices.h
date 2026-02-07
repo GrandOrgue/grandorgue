@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,7 +19,7 @@
 class wxButton;
 class wxCheckListBox;
 class wxChoice;
-class GOMidi;
+class GOMidiSystem;
 class GOMidiPort;
 class GOConfig;
 
@@ -36,7 +36,7 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts {
 
 private:
   GOConfig &m_config;
-  GOMidi &m_Midi;
+  GOMidiSystem &m_Midi;
 
   GOSettingsMidiDeviceList m_InDevices;
   GOSettingsMidiDeviceList m_OutDevices;
@@ -60,7 +60,7 @@ private:
   void OnOutDevicesClick(wxCommandEvent &event);
 
 public:
-  SettingsMidiDevices(GOConfig &settings, GOMidi &midi, wxWindow *parent);
+  SettingsMidiDevices(GOConfig &settings, GOMidiSystem &midi, wxWindow *parent);
 
   virtual bool TransferDataFromWindow() override;
 

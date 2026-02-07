@@ -41,8 +41,8 @@ const wxString GOSettingsDialog::PAGE_METRONOME = wxT("Metronome");
 GOSettingsDialog::GOSettingsDialog(
   wxWindow *parent,
   GOConfig &config,
-  GOSound &sound,
-  GOMidi &midi,
+  GOSoundSystem &sound,
+  GOMidiSystem &midi,
   SettingsReasons *reasons)
   : GOTabbedDialog(
     parent,

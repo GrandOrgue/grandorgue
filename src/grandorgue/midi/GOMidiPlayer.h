@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,7 +20,7 @@
 #include "GOTime.h"
 #include "GOTimerCallback.h"
 
-class GOMidi;
+class GOMidiSystem;
 class GOMidiMap;
 class GOMidiEvent;
 class GOMidiFileReader;
@@ -31,7 +31,7 @@ class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
 private:
   GOMidiMap &r_MidiMap;
   GOTimer &r_timer;
-  GOMidi *p_midi;
+  GOMidiSystem *p_midi;
   GOMidiPlayerContent m_content;
   GOLabelControl m_PlayingTime;
   GOTime m_Start;
@@ -64,7 +64,7 @@ public:
    * Set up for playing any midi
    * @param pMidi - a pointer to the midi engine
    */
-  void Setup(GOMidi *pMidi) { p_midi = pMidi; }
+  void Setup(GOMidiSystem *pMidi) { p_midi = pMidi; }
 
   void LoadFile(const wxString &filename, unsigned manuals, bool pedal);
   bool IsLoaded();

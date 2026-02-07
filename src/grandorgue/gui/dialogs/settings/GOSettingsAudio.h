@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -26,7 +26,7 @@
 class wxButton;
 class wxListBox;
 class AudioItemData;
-class GOSound;
+class GOSoundSystem;
 
 class GOSettingsAudio : public wxPanel, GOSettingsPorts {
   enum {
@@ -48,7 +48,7 @@ class GOSettingsAudio : public wxPanel, GOSettingsPorts {
 
 private:
   GOConfig &m_config;
-  GOSound &m_Sound;
+  GOSoundSystem &m_Sound;
 
   wxListBox *m_AudioGroups;
   wxButton *m_AddGroup;
@@ -104,7 +104,7 @@ private:
   void OnOutputDefault(wxCommandEvent &event);
 
 public:
-  GOSettingsAudio(GOConfig &config, GOSound &sound, wxWindow *parent);
+  GOSettingsAudio(GOConfig &config, GOSoundSystem &sound, wxWindow *parent);
 
   virtual bool TransferDataToWindow() override;
   virtual bool TransferDataFromWindow() override;

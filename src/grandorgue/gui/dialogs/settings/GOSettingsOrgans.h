@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -17,7 +17,7 @@
 
 #include "ptrvector.h"
 
-class GOMidi;
+class GOMidiSystem;
 class wxButton;
 class wxGridEvent;
 class wxGridRangeSelectEvent;
@@ -74,7 +74,7 @@ private:
   using VisibleOrganRecs = std::vector<VisibleOrganRec>;
 
   GOConfig &m_config;
-  GOMidi &m_midi;
+  GOMidiSystem &m_midi;
   ptr_vector<GOOrgan> &m_OrigOrganList;
   ptr_vector<GOArchiveFile> &m_OrigPackageList;
 
@@ -139,7 +139,7 @@ private:
 public:
   GOSettingsOrgans(
     GOConfig &settings,
-    GOMidi &midi,
+    GOMidiSystem &midi,
     GOTabbedDialog *pDlg,
     const wxString &name,
     const wxString &label);

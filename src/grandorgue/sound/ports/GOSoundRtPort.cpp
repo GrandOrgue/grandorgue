@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -17,7 +17,7 @@ const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
 const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
 
 GOSoundRtPort::GOSoundRtPort(
-  GOSound *sound, RtAudio *rtApi, unsigned rtDevId, const wxString &name)
+  GOSoundSystem *sound, RtAudio *rtApi, unsigned rtDevId, const wxString &name)
   : GOSoundPort(sound, name),
     m_rtApi(rtApi),
     m_RtDevId(rtDevId),
@@ -204,7 +204,7 @@ const std::vector<wxString> &GOSoundRtPort::getApis() {
 
 GOSoundPort *GOSoundRtPort::create(
   const GOPortsConfig &portsConfig,
-  GOSound *sound,
+  GOSoundSystem *sound,
   GODeviceNamePattern &pattern) {
   GOSoundRtPort *port = NULL;
 

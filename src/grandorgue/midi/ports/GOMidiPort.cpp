@@ -1,21 +1,21 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOMidiPort.h"
 
-#include "midi/GOMidi.h"
 #include "midi/GOMidiMap.h"
+#include "midi/GOMidiSystem.h"
 
 static wxString GRANDORGUE = wxT("GrandOrgue");
 
 const wxString GOMidiPort::GetClientName() { return GRANDORGUE; }
 
 GOMidiPort::GOMidiPort(
-  GOMidi *midi,
+  GOMidiSystem *midi,
   const wxString &portName,
   const wxString &apiName,
   const wxString &deviceName,

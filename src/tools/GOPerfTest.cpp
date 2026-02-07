@@ -16,7 +16,7 @@
 
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
-#include "sound/GOSoundEngine.h"
+#include "sound/GOSoundOrganEngine.h"
 #include "sound/GOSoundProviderWave.h"
 #include "sound/GOSoundRecorder.h"
 
@@ -78,7 +78,7 @@ void GOPerfTestApp::RunTest(
 
     organController->InitOrganDirectory(testsDir);
     organController->AddWindchest(new GOWindchest(*organController));
-    GOSoundEngine *engine = new GOSoundEngine();
+    GOSoundOrganEngine *engine = new GOSoundOrganEngine();
     GOSoundRecorder recorder;
 
     try {

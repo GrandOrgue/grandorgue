@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,9 +10,9 @@
 #include <wx/intl.h>
 #include <wx/thread.h>
 
-#include "sound/GOSound.h"
+#include "sound/GOSoundSystem.h"
 
-GOSoundPort::GOSoundPort(GOSound *sound, wxString name)
+GOSoundPort::GOSoundPort(GOSoundSystem *sound, wxString name)
   : m_Sound(sound),
     m_Index(0),
     m_IsOpen(false),

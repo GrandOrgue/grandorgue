@@ -1,16 +1,17 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOMidiSendProxy.h"
 
-#include "midi/GOMidi.h"
 #include "midi/GOMidiRecorder.h"
+#include "midi/GOMidiSystem.h"
 
-void GOMidiSendProxy::SetMidi(GOMidi *pMidi, GOMidiRecorder *pMidiRecorder) {
+void GOMidiSendProxy::SetMidi(
+  GOMidiSystem *pMidi, GOMidiRecorder *pMidiRecorder) {
   p_midi = pMidi;
   p_MidiRecorder = pMidiRecorder;
 }

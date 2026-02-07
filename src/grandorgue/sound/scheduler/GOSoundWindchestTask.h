@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,13 +16,13 @@
 #include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
-class GOSoundEngine;
+class GOSoundOrganEngine;
 class GOSoundTremulantTask;
 class GOWindchest;
 
 class GOSoundWindchestTask : public GOSoundTask {
 private:
-  GOSoundEngine &r_engine;
+  GOSoundOrganEngine &r_engine;
   GOMutex m_mutex;
   float m_volume;
   std::atomic_bool m_done;
@@ -30,7 +30,8 @@ private:
   std::vector<GOSoundTremulantTask *> m_pTremulantTasks;
 
 public:
-  GOSoundWindchestTask(GOSoundEngine &sound_engine, GOWindchest *windchest);
+  GOSoundWindchestTask(
+    GOSoundOrganEngine &sound_engine, GOWindchest *windchest);
 
   unsigned GetGroup() override { return WINDCHEST; }
   unsigned GetCost() override { return 0; }

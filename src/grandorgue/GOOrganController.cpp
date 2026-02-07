@@ -48,9 +48,9 @@
 #include "loader/GOLoaderFilename.h"
 #include "loader/cache/GOCache.h"
 #include "loader/cache/GOCacheWriter.h"
-#include "midi/GOMidi.h"
 #include "midi/GOMidiPlayer.h"
 #include "midi/GOMidiRecorder.h"
+#include "midi/GOMidiSystem.h"
 #include "midi/events/GOMidiEvent.h"
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
@@ -60,7 +60,7 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
-#include "sound/GOSoundEngine.h"
+#include "sound/GOSoundOrganEngine.h"
 #include "sound/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
 #include "yaml/GOYamlModel.h"
@@ -878,7 +878,7 @@ void GOOrganController::PreconfigRecorder() {
 }
 
 void GOOrganController::PreparePlayback(
-  GOSoundEngine *engine, GOMidi *midi, GOSoundRecorder *recorder) {
+  GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder) {
   m_soundengine = engine;
   m_midi = midi;
   m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());

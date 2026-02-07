@@ -30,11 +30,11 @@ public:
   static void terminateInstance();
 
   void addMissingInDevices(
-    GOMidi *midi,
+    GOMidiSystem *midi,
     const GOPortsConfig &portsConfig,
     ptr_vector<GOMidiPort> &ports);
   void addMissingOutDevices(
-    GOMidi *midi,
+    GOMidiSystem *midi,
     const GOPortsConfig &portsConfig,
     ptr_vector<GOMidiPort> &ports);
 

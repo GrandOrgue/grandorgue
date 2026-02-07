@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -41,9 +41,9 @@
 #include "gui/wxcontrols/go_gui_utils.h"
 #include "help/GOHelpRequestor.h"
 #include "loader/cache/GOCacheCleaner.h"
-#include "midi/GOMidi.h"
+#include "midi/GOMidiSystem.h"
 #include "midi/events/GOMidiEvent.h"
-#include "sound/GOSound.h"
+#include "sound/GOSoundSystem.h"
 #include "temperaments/GOTemperament.h"
 #include "threading/GOMutexLocker.h"
 
@@ -132,7 +132,7 @@ GOFrame::GOFrame(
   const wxPoint &pos,
   const wxSize &size,
   const long type,
-  GOSound &sound)
+  GOSoundSystem &sound)
   : wxFrame(frame, id, title, pos, size, type),
     GOHelpRequestor(this),
     m_App(app),

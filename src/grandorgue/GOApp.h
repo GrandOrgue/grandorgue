@@ -29,7 +29,7 @@
 class GOConfig;
 class GOFrame;
 class GOLog;
-class GOSound;
+class GOSoundSystem;
 
 class GOApp : public wxApp {
 private:
@@ -64,7 +64,7 @@ protected:
   GOFrame *m_Frame = nullptr;
   wxLocale m_locale;
   GOConfig *m_config = nullptr;
-  GOSound *m_soundSystem = nullptr;
+  GOSoundSystem *m_soundSystem = nullptr;
   GOLog *m_Log = nullptr;
   wxString m_FileName;
   std::string m_InstanceName;

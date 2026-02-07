@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -32,7 +32,7 @@ public:
   static const wxString PORT_NAME_OLD;
 
   GOSoundPortaudioPort(
-    GOSound *sound, unsigned paDevIndex, const wxString &name);
+    GOSoundSystem *sound, unsigned paDevIndex, const wxString &name);
   virtual ~GOSoundPortaudioPort();
 
   void Open();
@@ -45,7 +45,7 @@ public:
 
   static GOSoundPort *create(
     const GOPortsConfig &portsConfig,
-    GOSound *sound,
+    GOSoundSystem *sound,
     GODeviceNamePattern &pattern);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);

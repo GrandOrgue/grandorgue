@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -43,7 +43,7 @@ enum { SUBSYS_PA_BIT = 1, SUBSYS_RT_BIT = 2, SUBSYS_JACK_BIT = 4 };
 
 GOSoundPort *GOSoundPortFactory::create(
   const GOPortsConfig &portsConfig,
-  GOSound *sound,
+  GOSoundSystem *sound,
   GODeviceNamePattern &pattern) {
   GOSoundPort *port = NULL;
   const wxString &patternPort = pattern.GetPortName();
