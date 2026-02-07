@@ -147,8 +147,7 @@ public:
 
   GOSoundOrganEngine &GetEngine();
 
-  bool AudioCallback(
-    unsigned dev_index, float *outputBuffer, unsigned int nFrames);
+  bool AudioCallback(unsigned devIndex, GOSoundBufferMutable &outBuffer);
 };
 
 #endif

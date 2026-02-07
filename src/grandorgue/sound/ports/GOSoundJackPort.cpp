@@ -12,6 +12,7 @@
 #include <wx/log.h>
 
 #include "config/GODeviceNamePattern.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
 
 const wxString GOSoundJackPort::PORT_NAME = wxT("Jack");
 
@@ -46,7 +47,9 @@ void GOSoundJackPort::jackLatencyCallback(
 
 int GOSoundJackPort::jackProcessCallback(jack_nframes_t nFrames, void *pData) {
   GOSoundJackPort *const pPort = (GOSoundJackPort *)pData;
-  const bool isContinue = pPort->AudioCallback(pPort->mp_GoBuffer, nFrames);
+  GOSoundBufferMutable outputBuffer(
+    pPort->mp_GoBuffer, pPort->m_Channels, nFrames);
+  const bool isContinue = pPort->AudioCallback(outputBuffer);
 
   if (isContinue) {
     const unsigned nChannels = pPort->m_Channels;
