@@ -44,7 +44,7 @@ public:
     : GOSoundBuffer(pData, nChannels, nSamples) {}
 
 protected:
-  // Sublcasses may create an invalid instance and then they may call Assign
+  // Subclasses may create an invalid instance and then they may call Assign
   inline GOSoundBufferMutable() : GOSoundBuffer() {}
 
 public:

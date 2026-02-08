@@ -15,7 +15,7 @@
  *
  * We assume that the buffer has interleaved format: it consists of nSamples
  * consecutive multichannel sound samples. One multichannel sample consists of
- * nChannels consecutive sound units. Now the sound unit is float.
+ * nChannels consecutive sound units. Currently, the sound unit is float.
  *
  * The class is a non-owning wrapper around existing memory. Multiple
  * GOSoundBuffer objects can point to the same memory region (shared data).
@@ -24,7 +24,7 @@
 
 class GOSoundBuffer {
 public:
-  // Now we work with float units
+  // Currently we work with float units
   using SoundUnit = float;
 
   /**
@@ -43,7 +43,7 @@ private:
 
   // Points to the memory buffer of nChannels * nSamples sound units
   const SoundUnit *p_data;
-  // Number of sound unit in one sample
+  // Number of sound units in one sample
   unsigned m_NChannels;
   // Number of samples in the buffer
   unsigned m_NSamples;
@@ -103,7 +103,7 @@ public:
   }
 
 protected:
-  // Sublcasses may create an invalid instance and then they may call Assign
+  // Subclasses may create an invalid instance and then they may call Assign
   inline GOSoundBuffer() : p_data(nullptr), m_NChannels(0), m_NSamples(0) {}
 
   // Some subclasses may switch to another memory buffer
