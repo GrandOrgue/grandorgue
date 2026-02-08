@@ -26,7 +26,7 @@ private:
     assert(srcBuffer.m_NSamples == m_NSamples);
   }
 
-  inline void AssertChannelCompatibility(
+  inline void AssertChannelCompatibilityWith(
     const GOSoundBuffer &srcBuffer,
     unsigned srcChannel,
     unsigned dstChannel) const {
@@ -122,7 +122,7 @@ public:
    */
   inline void CopyChannelFrom(
     const GOSoundBuffer &srcBuffer, unsigned srcChannel, unsigned dstChannel) {
-    AssertChannelCompatibility(srcBuffer, srcChannel, dstChannel);
+    AssertChannelCompatibilityWith(srcBuffer, srcChannel, dstChannel);
 
     const unsigned srcNChannels = srcBuffer.m_NChannels;
     SoundUnit *pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
@@ -144,7 +144,7 @@ public:
    */
   inline void AddChannelFrom(
     const GOSoundBuffer &srcBuffer, unsigned srcChannel, unsigned dstChannel) {
-    AssertChannelCompatibility(srcBuffer, srcChannel, dstChannel);
+    AssertChannelCompatibilityWith(srcBuffer, srcChannel, dstChannel);
 
     const unsigned srcNChannels = srcBuffer.m_NChannels;
     SoundUnit *pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
@@ -170,7 +170,7 @@ public:
     unsigned srcChannel,
     unsigned dstChannel,
     float coeff) {
-    AssertChannelCompatibility(srcBuffer, srcChannel, dstChannel);
+    AssertChannelCompatibilityWith(srcBuffer, srcChannel, dstChannel);
 
     const unsigned srcNChannels = srcBuffer.m_NChannels;
     SoundUnit *pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
