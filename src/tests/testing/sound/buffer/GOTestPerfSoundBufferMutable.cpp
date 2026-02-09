@@ -48,10 +48,10 @@ static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
   {512, 800},  // 800 Msamples/sec
   {2048, 2000} // 2000 Msamples/sec
 #else
-  {32, 10},   // 10 Msamples/sec (debug)
-  {128, 30},  // 30 Msamples/sec (debug)
-  {512, 80},  // 80 Msamples/sec (debug)
-  {2048, 200} // 200 Msamples/sec (debug)
+  {32, 100},   // 100 Msamples/sec (debug)
+  {128, 400},  // 400 Msamples/sec (debug)
+  {512, 1200}, // 1200 Msamples/sec (debug)
+  {2048, 3000} // 3000 Msamples/sec (debug)
 #endif
 };
 
@@ -62,10 +62,10 @@ static constexpr Baseline BASELINE_COPY_FROM[] = {
   {512, 500},  // 500 Msamples/sec
   {2048, 1000} // 1000 Msamples/sec
 #else
-  {32, 5},    // 5 Msamples/sec (debug)
-  {128, 20},  // 20 Msamples/sec (debug)
-  {512, 50},  // 50 Msamples/sec (debug)
-  {2048, 100} // 100 Msamples/sec (debug)
+  {32, 80},    // 80 Msamples/sec (debug)
+  {128, 330},  // 330 Msamples/sec (debug)
+  {512, 1200}, // 1200 Msamples/sec (debug)
+  {2048, 2300} // 2300 Msamples/sec (debug)
 #endif
 };
 
@@ -76,10 +76,10 @@ static constexpr Baseline BASELINE_ADD_FROM[] = {
   {512, 400}, // 400 Msamples/sec
   {2048, 800} // 800 Msamples/sec
 #else
-  {32, 5},    // 5 Msamples/sec (debug)
-  {128, 20},  // 20 Msamples/sec (debug)
-  {512, 40},  // 40 Msamples/sec (debug)
-  {2048, 80}  // 80 Msamples/sec (debug)
+  {32, 30},    // 30 Msamples/sec (debug)
+  {128, 40},   // 40 Msamples/sec (debug)
+  {512, 45},   // 45 Msamples/sec (debug)
+  {2048, 50}   // 50 Msamples/sec (debug)
 #endif
 };
 
@@ -90,10 +90,10 @@ static constexpr Baseline BASELINE_ADD_FROM_COEFF[] = {
   {512, 300}, // 300 Msamples/sec
   {2048, 600} // 600 Msamples/sec
 #else
-  {32, 3},    // 3 Msamples/sec (debug)
-  {128, 10},  // 10 Msamples/sec (debug)
-  {512, 30},  // 30 Msamples/sec (debug)
-  {2048, 60}  // 60 Msamples/sec (debug)
+  {32, 30},    // 30 Msamples/sec (debug)
+  {128, 40},   // 40 Msamples/sec (debug)
+  {512, 45},   // 45 Msamples/sec (debug)
+  {2048, 50}   // 50 Msamples/sec (debug)
 #endif
 };
 
@@ -104,10 +104,10 @@ static constexpr Baseline BASELINE_COPY_CHANNEL_FROM[] = {
   {512, 200}, // 200 Msamples/sec
   {2048, 500} // 500 Msamples/sec
 #else
-  {32, 2},    // 2 Msamples/sec (debug)
-  {128, 8},   // 8 Msamples/sec (debug)
-  {512, 20},  // 20 Msamples/sec (debug)
-  {2048, 50}  // 50 Msamples/sec (debug)
+  {32, 50},    // 50 Msamples/sec (debug)
+  {128, 80},   // 80 Msamples/sec (debug)
+  {512, 90},   // 90 Msamples/sec (debug)
+  {2048, 100}  // 100 Msamples/sec (debug)
 #endif
 };
 
@@ -118,10 +118,10 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM[] = {
   {512, 200}, // 200 Msamples/sec
   {2048, 400} // 400 Msamples/sec
 #else
-  {32, 2},    // 2 Msamples/sec (debug)
-  {128, 8},   // 8 Msamples/sec (debug)
-  {512, 20},  // 20 Msamples/sec (debug)
-  {2048, 40}  // 40 Msamples/sec (debug)
+  {32, 50},    // 50 Msamples/sec (debug)
+  {128, 80},   // 80 Msamples/sec (debug)
+  {512, 90},   // 90 Msamples/sec (debug)
+  {2048, 100}  // 100 Msamples/sec (debug)
 #endif
 };
 
@@ -132,10 +132,10 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM_COEFF[] = {
   {512, 150}, // 150 Msamples/sec
   {2048, 300} // 300 Msamples/sec
 #else
-  {32, 1},    // 1 Msamples/sec (debug)
-  {128, 6},   // 6 Msamples/sec (debug)
-  {512, 15},  // 15 Msamples/sec (debug)
-  {2048, 30}  // 30 Msamples/sec (debug)
+  {32, 50},    // 50 Msamples/sec (debug)
+  {128, 80},   // 80 Msamples/sec (debug)
+  {512, 90},   // 90 Msamples/sec (debug)
+  {2048, 100}  // 100 Msamples/sec (debug)
 #endif
 };
 
