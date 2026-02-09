@@ -1,4 +1,4 @@
-# 3.17.0 (2026-02-06)
+# 3.17.0 (2026-02-09)
 - Added capability of entering a setter combination number with the new "N" MIDI button https://github.com/GrandOrgue/grandorgue/issues/1237
 - Fixed importing MIDI settings with "Any device" 
 - Added capability of changing metronome sound https://github.com/GrandOrgue/grandorgue/issues/2258
