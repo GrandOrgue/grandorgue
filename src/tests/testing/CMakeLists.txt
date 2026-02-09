@@ -8,6 +8,7 @@ set(go_tests
     sound/buffer/GOTestSoundBufferManaged.cpp
     sound/buffer/GOTestSoundBufferMutable.cpp
     sound/buffer/GOTestSoundBufferMutableMono.cpp
+    sound/buffer/GOTestPerfSoundBufferMutable.cpp
     GOTestNameMap.cpp
 )
 add_library(GOTests STATIC ${go_tests})
