@@ -21,11 +21,6 @@
 const std::string GOTestPerfSoundBufferMutable::TEST_NAME
   = "GOTestPerfSoundBufferMutable";
 
-// Buffer sizes to test (in samples)
-static constexpr unsigned BUFFER_SIZES[] = {32, 128, 512, 2048};
-static constexpr unsigned NUM_BUFFER_SIZES
-  = sizeof(BUFFER_SIZES) / sizeof(BUFFER_SIZES[0]);
-
 // Number of channels (stereo)
 static constexpr unsigned NUM_CHANNELS = 2;
 
@@ -141,37 +136,24 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM_COEFF[] = {
 
 // Helper function to fill buffer with sine wave signal
 // Each channel gets a different frequency to make data more realistic
-static void fill_with_sine_wave(
-  std::vector<GOSoundBuffer::SoundUnit> &data,
-  unsigned nChannels,
-  unsigned nSamples) {
+static void fill_with_sine_wave(GOSoundBufferMutable &buffer) {
   constexpr double PI = 3.14159265358979323846;
   constexpr double baseFrequency = 440.0; // A4 note
   constexpr double sampleRate = 48000.0;
 
-  for (unsigned sample = 0; sample < nSamples; ++sample) {
-    for (unsigned channel = 0; channel < nChannels; ++channel) {
+  const unsigned nChannels = buffer.GetNChannels();
+  const unsigned nSamples = buffer.GetNSamples();
+  GOSoundBuffer::SoundUnit *pData = buffer.GetData();
+
+  for (unsigned sampleI = 0; sampleI < nSamples; ++sampleI) {
+    for (unsigned channelI = 0; channelI < nChannels; ++channelI) {
       // Different frequency for each channel
-      double frequency = baseFrequency * (channel + 1);
-      double phase = 2.0 * PI * frequency * sample / sampleRate;
-      data[sample * nChannels + channel] = static_cast<float>(std::sin(phase));
+      double frequency = baseFrequency * (channelI + 1);
+      double phase = 2.0 * PI * frequency * sampleI / sampleRate;
+
+      *pData++ = static_cast<float>(std::sin(phase));
     }
   }
-}
-
-// Helper function to find baseline for a given buffer size
-static const Baseline *get_baseline(
-  const Baseline *baselines, unsigned bufferSize) {
-  const Baseline *result = nullptr;
-
-  for (unsigned i = 0; i < NUM_BUFFER_SIZES; ++i) {
-    if (baselines[i].m_BufferSize == bufferSize) {
-      result = &baselines[i];
-      break;
-    }
-  }
-
-  return result;
 }
 
 // Helper function to measure performance
@@ -230,159 +212,153 @@ void GOTestPerfSoundBufferMutable::RunAndEvaluateTest(
 void GOTestPerfSoundBufferMutable::TestPerfFillWithSilence() {
   std::cout << "\nPerformance test: FillWithSilence\n";
 
-  for (unsigned bufSize : BUFFER_SIZES) {
-    const unsigned totalUnits = NUM_CHANNELS * bufSize;
-    std::vector<GOSoundBuffer::SoundUnit> data(totalUnits);
+  for (const Baseline &baseline : BASELINE_FILL_WITH_SILENCE) {
+    std::vector<GOSoundBuffer::SoundUnit> data(
+      GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize));
+    GOSoundBufferMutable buffer(
+      data.data(), NUM_CHANNELS, baseline.m_BufferSize);
 
-    fill_with_sine_wave(data, NUM_CHANNELS, bufSize);
+    fill_with_sine_wave(buffer);
 
-    GOSoundBufferMutable buffer(data.data(), NUM_CHANNELS, bufSize);
-    const Baseline *baseline
-      = get_baseline(BASELINE_FILL_WITH_SILENCE, bufSize);
-
-    auto operation = [&buffer]() { buffer.FillWithSilence(); };
-
-    RunAndEvaluateTest("FillWithSilence", *baseline, operation);
+    RunAndEvaluateTest(
+      "FillWithSilence", baseline, [&buffer]() { buffer.FillWithSilence(); });
   }
 }
 
 void GOTestPerfSoundBufferMutable::TestPerfCopyFrom() {
   std::cout << "\nPerformance test: CopyFrom\n";
 
-  for (unsigned bufSize : BUFFER_SIZES) {
-    const unsigned totalUnits = NUM_CHANNELS * bufSize;
-    std::vector<GOSoundBuffer::SoundUnit> srcData(totalUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(totalUnits);
+  for (const Baseline &baseline : BASELINE_COPY_FROM) {
+    const unsigned nUnits
+      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
+    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
+    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
+    GOSoundBufferMutable srcBuffer(
+      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    GOSoundBufferMutable dstBuffer(
+      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
 
-    fill_with_sine_wave(srcData, NUM_CHANNELS, bufSize);
-    std::fill(dstData.begin(), dstData.end(), 0.0f);
+    fill_with_sine_wave(srcBuffer);
+    dstBuffer.FillWithSilence();
 
-    GOSoundBuffer srcBuffer(srcData.data(), NUM_CHANNELS, bufSize);
-    GOSoundBufferMutable dstBuffer(dstData.data(), NUM_CHANNELS, bufSize);
-    const Baseline *baseline = get_baseline(BASELINE_COPY_FROM, bufSize);
-
-    auto operation
-      = [&dstBuffer, &srcBuffer]() { dstBuffer.CopyFrom(srcBuffer); };
-
-    RunAndEvaluateTest("CopyFrom", *baseline, operation);
+    RunAndEvaluateTest("CopyFrom", baseline, [&dstBuffer, &srcBuffer]() {
+      dstBuffer.CopyFrom(srcBuffer);
+    });
   }
 }
 
 void GOTestPerfSoundBufferMutable::TestPerfAddFrom() {
   std::cout << "\nPerformance test: AddFrom\n";
 
-  for (unsigned bufSize : BUFFER_SIZES) {
-    const unsigned totalUnits = NUM_CHANNELS * bufSize;
-    std::vector<GOSoundBuffer::SoundUnit> srcData(totalUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(totalUnits);
+  for (const Baseline &baseline : BASELINE_ADD_FROM) {
+    const unsigned nUnits
+      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
+    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
+    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
+    GOSoundBufferMutable srcBuffer(
+      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    GOSoundBufferMutable dstBuffer(
+      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
 
-    fill_with_sine_wave(srcData, NUM_CHANNELS, bufSize);
-    fill_with_sine_wave(dstData, NUM_CHANNELS, bufSize);
+    fill_with_sine_wave(srcBuffer);
+    fill_with_sine_wave(dstBuffer);
 
-    GOSoundBuffer srcBuffer(srcData.data(), NUM_CHANNELS, bufSize);
-    GOSoundBufferMutable dstBuffer(dstData.data(), NUM_CHANNELS, bufSize);
-    const Baseline *baseline = get_baseline(BASELINE_ADD_FROM, bufSize);
-
-    auto operation
-      = [&dstBuffer, &srcBuffer]() { dstBuffer.AddFrom(srcBuffer); };
-
-    RunAndEvaluateTest("AddFrom", *baseline, operation);
+    RunAndEvaluateTest("AddFrom", baseline, [&dstBuffer, &srcBuffer]() {
+      dstBuffer.AddFrom(srcBuffer);
+    });
   }
 }
 
 void GOTestPerfSoundBufferMutable::TestPerfAddFromWithCoefficient() {
   std::cout << "\nPerformance test: AddFrom (with coefficient)\n";
 
-  for (unsigned bufSize : BUFFER_SIZES) {
-    const unsigned totalUnits = NUM_CHANNELS * bufSize;
-    std::vector<GOSoundBuffer::SoundUnit> srcData(totalUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(totalUnits);
+  for (const Baseline &baseline : BASELINE_ADD_FROM_COEFF) {
+    const unsigned nUnits
+      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
+    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
+    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
+    GOSoundBufferMutable srcBuffer(
+      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    GOSoundBufferMutable dstBuffer(
+      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
 
-    fill_with_sine_wave(srcData, NUM_CHANNELS, bufSize);
-    fill_with_sine_wave(dstData, NUM_CHANNELS, bufSize);
+    fill_with_sine_wave(srcBuffer);
+    fill_with_sine_wave(dstBuffer);
 
-    GOSoundBuffer srcBuffer(srcData.data(), NUM_CHANNELS, bufSize);
-    GOSoundBufferMutable dstBuffer(dstData.data(), NUM_CHANNELS, bufSize);
-    const Baseline *baseline = get_baseline(BASELINE_ADD_FROM_COEFF, bufSize);
+    constexpr float coeff = 0.5f;
 
-    const float coeff = 0.5f;
-    auto operation = [&dstBuffer, &srcBuffer, coeff]() {
+    RunAndEvaluateTest("AddFrom+coeff", baseline, [&dstBuffer, &srcBuffer]() {
       dstBuffer.AddFrom(srcBuffer, coeff);
-    };
-
-    RunAndEvaluateTest("AddFrom+coeff", *baseline, operation);
+    });
   }
 }
 
 void GOTestPerfSoundBufferMutable::TestPerfCopyChannelFrom() {
   std::cout << "\nPerformance test: CopyChannelFrom\n";
 
-  for (unsigned bufSize : BUFFER_SIZES) {
-    const unsigned totalUnits = NUM_CHANNELS * bufSize;
-    std::vector<GOSoundBuffer::SoundUnit> srcData(totalUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(totalUnits);
+  for (const Baseline &baseline : BASELINE_COPY_CHANNEL_FROM) {
+    const unsigned nUnits
+      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
+    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
+    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
+    GOSoundBufferMutable srcBuffer(
+      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    GOSoundBufferMutable dstBuffer(
+      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
 
-    fill_with_sine_wave(srcData, NUM_CHANNELS, bufSize);
-    std::fill(dstData.begin(), dstData.end(), 0.0f);
+    fill_with_sine_wave(srcBuffer);
+    dstBuffer.FillWithSilence();
 
-    GOSoundBuffer srcBuffer(srcData.data(), NUM_CHANNELS, bufSize);
-    GOSoundBufferMutable dstBuffer(dstData.data(), NUM_CHANNELS, bufSize);
-    const Baseline *baseline
-      = get_baseline(BASELINE_COPY_CHANNEL_FROM, bufSize);
-
-    auto operation = [&dstBuffer, &srcBuffer]() {
+    RunAndEvaluateTest("CopyChannelFrom", baseline, [&dstBuffer, &srcBuffer]() {
       dstBuffer.CopyChannelFrom(srcBuffer, 0, 1);
-    };
-
-    RunAndEvaluateTest("CopyChannelFrom", *baseline, operation);
+    });
   }
 }
 
 void GOTestPerfSoundBufferMutable::TestPerfAddChannelFrom() {
   std::cout << "\nPerformance test: AddChannelFrom\n";
 
-  for (unsigned bufSize : BUFFER_SIZES) {
-    const unsigned totalUnits = NUM_CHANNELS * bufSize;
-    std::vector<GOSoundBuffer::SoundUnit> srcData(totalUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(totalUnits);
+  for (const Baseline &baseline : BASELINE_ADD_CHANNEL_FROM) {
+    const unsigned nUnits
+      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
+    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
+    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
+    GOSoundBufferMutable srcBuffer(
+      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    GOSoundBufferMutable dstBuffer(
+      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
 
-    fill_with_sine_wave(srcData, NUM_CHANNELS, bufSize);
-    fill_with_sine_wave(dstData, NUM_CHANNELS, bufSize);
+    fill_with_sine_wave(srcBuffer);
+    fill_with_sine_wave(dstBuffer);
 
-    GOSoundBuffer srcBuffer(srcData.data(), NUM_CHANNELS, bufSize);
-    GOSoundBufferMutable dstBuffer(dstData.data(), NUM_CHANNELS, bufSize);
-    const Baseline *baseline = get_baseline(BASELINE_ADD_CHANNEL_FROM, bufSize);
-
-    auto operation = [&dstBuffer, &srcBuffer]() {
+    RunAndEvaluateTest("AddChannelFrom", baseline, [&dstBuffer, &srcBuffer]() {
       dstBuffer.AddChannelFrom(srcBuffer, 0, 1);
-    };
-
-    RunAndEvaluateTest("AddChannelFrom", *baseline, operation);
+    });
   }
 }
 
 void GOTestPerfSoundBufferMutable::TestPerfAddChannelFromWithCoefficient() {
   std::cout << "\nPerformance test: AddChannelFrom (with coefficient)\n";
 
-  for (unsigned bufSize : BUFFER_SIZES) {
-    const unsigned totalUnits = NUM_CHANNELS * bufSize;
-    std::vector<GOSoundBuffer::SoundUnit> srcData(totalUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(totalUnits);
+  for (const Baseline &baseline : BASELINE_ADD_CHANNEL_FROM_COEFF) {
+    const unsigned nUnits
+      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
+    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
+    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
+    GOSoundBufferMutable srcBuffer(
+      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    GOSoundBufferMutable dstBuffer(
+      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
 
-    fill_with_sine_wave(srcData, NUM_CHANNELS, bufSize);
-    fill_with_sine_wave(dstData, NUM_CHANNELS, bufSize);
+    fill_with_sine_wave(srcBuffer);
+    fill_with_sine_wave(dstBuffer);
 
-    GOSoundBuffer srcBuffer(srcData.data(), NUM_CHANNELS, bufSize);
-    GOSoundBufferMutable dstBuffer(dstData.data(), NUM_CHANNELS, bufSize);
-    const Baseline *baseline
-      = get_baseline(BASELINE_ADD_CHANNEL_FROM_COEFF, bufSize);
+    constexpr float coeff = 0.5f;
 
-    const float coeff = 0.5f;
-    auto operation = [&dstBuffer, &srcBuffer, coeff]() {
-      dstBuffer.AddChannelFrom(srcBuffer, 0, 1, coeff);
-    };
-
-    RunAndEvaluateTest("AddChannelFrom+coeff", *baseline, operation);
+    RunAndEvaluateTest(
+      "AddChannelFrom+coeff", baseline, [&dstBuffer, &srcBuffer]() {
+        dstBuffer.AddChannelFrom(srcBuffer, 0, 1, coeff);
+      });
   }
 }
 
