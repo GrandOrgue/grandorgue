@@ -79,43 +79,49 @@ public:
   }
 
   /**
-   * Add audio data from another buffer.
-   * Both buffers must have the same number of channels and samples.
-   * @param srcBuffer Source buffer to add from
-   */
-  inline void AddFrom(const GOSoundBuffer &srcBuffer) {
-    AssertCompatibilityWith(srcBuffer);
-
-    const unsigned nUnits = GetNUnits();
-    SoundUnit *pDst = const_cast<SoundUnit *>(p_data);
-    const SoundUnit *pSrc = srcBuffer.p_data;
-
-    // The compiler should auto-vectorize this loop
-    for (unsigned i = 0; i < nUnits; ++i)
-      *pDst++ += *pSrc++;
-  }
-
-  /**
    * Add audio data from another buffer with coefficient.
    * Both buffers must have the same number of channels and samples.
+   *
    * @param srcBuffer Source buffer to add from
    * @param coeff Multiply source samples by this coefficient before adding
    */
   inline void AddFrom(const GOSoundBuffer &srcBuffer, float coeff) {
     AssertCompatibilityWith(srcBuffer);
 
-    const unsigned nUnits = GetNUnits();
-    SoundUnit *pDst = const_cast<SoundUnit *>(p_data);
-    const SoundUnit *pSrc = srcBuffer.p_data;
+    // Take the pointers into a register cache for better performance
+    const SoundUnit *__restrict pSrc = srcBuffer.p_data;
+    SoundUnit *__restrict pDst = const_cast<SoundUnit *>(p_data);
 
     // The compiler should auto-vectorize this loop
-    for (unsigned i = 0; i < nUnits; ++i)
+    for (unsigned i = GetNUnits(); i; i--)
       *pDst++ += *pSrc++ * coeff;
+  }
+
+  /**
+   * Add audio data from another buffer.
+   * Both buffers must have the same number of channels and samples.
+   *
+   * @param srcBuffer Source buffer to add from
+   */
+  inline void AddFrom(const GOSoundBuffer &srcBuffer) {
+    AssertCompatibilityWith(srcBuffer);
+
+    // Take the pointers into a register cache for better performance
+    const SoundUnit *__restrict pSrc = srcBuffer.p_data;
+    SoundUnit *__restrict pDst = const_cast<SoundUnit *>(p_data);
+
+    // The compiler should auto-vectorize this loop
+    for (unsigned i = GetNUnits(); i; i--)
+      *pDst++ += *pSrc++;
   }
 
   /**
    * Copy audio data from one channel of another buffer to one channel of this
    * buffer. Both buffers must have the same number of samples.
+   *
+   * It is not implemented as a wrapper around the similar function with coeff=1
+   * for better optimisation.
+   *
    * @param srcBuffer Source buffer to copy from
    * @param srcChannel Source channel index (0-based)
    * @param dstChannel Destination channel index (0-based)
@@ -124,35 +130,16 @@ public:
     const GOSoundBuffer &srcBuffer, unsigned srcChannel, unsigned dstChannel) {
     AssertChannelCompatibilityWith(srcBuffer, srcChannel, dstChannel);
 
+    // Take the number and the pointers into a register cache for better
+    // performance
+    const SoundUnit *__restrict pSrc = srcBuffer.p_data + srcChannel;
+    SoundUnit *__restrict pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
     const unsigned srcNChannels = srcBuffer.m_NChannels;
-    SoundUnit *pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
-    const SoundUnit *pSrc = srcBuffer.p_data + srcChannel;
+    const unsigned dstNChannels = m_NChannels;
 
-    for (unsigned i = 0; i < m_NSamples; ++i) {
+    for (unsigned i = m_NSamples; i; i--) {
       *pDst = *pSrc;
-      pDst += m_NChannels;
-      pSrc += srcNChannels;
-    }
-  }
-
-  /**
-   * Add audio data from one channel of another buffer to one channel of this
-   * buffer. Both buffers must have the same number of samples.
-   * @param srcBuffer Source buffer to add from
-   * @param srcChannel Source channel index (0-based)
-   * @param dstChannel Destination channel index (0-based)
-   */
-  inline void AddChannelFrom(
-    const GOSoundBuffer &srcBuffer, unsigned srcChannel, unsigned dstChannel) {
-    AssertChannelCompatibilityWith(srcBuffer, srcChannel, dstChannel);
-
-    const unsigned srcNChannels = srcBuffer.m_NChannels;
-    SoundUnit *pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
-    const SoundUnit *pSrc = srcBuffer.p_data + srcChannel;
-
-    for (unsigned i = 0; i < m_NSamples; ++i) {
-      *pDst += *pSrc;
-      pDst += m_NChannels;
+      pDst += dstNChannels;
       pSrc += srcNChannels;
     }
   }
@@ -160,6 +147,7 @@ public:
   /**
    * Add audio data from one channel of another buffer to one channel of this
    * buffer with coefficient. Both buffers must have the same number of samples.
+   *
    * @param srcBuffer Source buffer to add from
    * @param srcChannel Source channel index (0-based)
    * @param dstChannel Destination channel index (0-based)
@@ -172,13 +160,45 @@ public:
     float coeff) {
     AssertChannelCompatibilityWith(srcBuffer, srcChannel, dstChannel);
 
+    // Take the number and the pointers into a register cache for better
+    // performance
+    const SoundUnit *__restrict pSrc = srcBuffer.p_data + srcChannel;
+    SoundUnit *__restrict pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
     const unsigned srcNChannels = srcBuffer.m_NChannels;
-    SoundUnit *pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
-    const SoundUnit *pSrc = srcBuffer.p_data + srcChannel;
+    const unsigned dstNChannels = m_NChannels;
 
-    for (unsigned i = 0; i < m_NSamples; ++i) {
+    for (unsigned i = m_NSamples; i; --i) {
       *pDst += *pSrc * coeff;
-      pDst += m_NChannels;
+      pSrc += srcNChannels;
+      pDst += dstNChannels;
+    }
+  }
+
+  /**
+   * Add audio data from one channel of another buffer to one channel of this
+   * buffer. Both buffers must have the same number of samples.
+   *
+   * It is not implemented as a wrapper around the similar function with coeff=1
+   * for better optimisation.
+   *
+   * @param srcBuffer Source buffer to add from
+   * @param srcChannel Source channel index (0-based)
+   * @param dstChannel Destination channel index (0-based)
+   */
+  inline void AddChannelFrom(
+    const GOSoundBuffer &srcBuffer, unsigned srcChannel, unsigned dstChannel) {
+    AssertChannelCompatibilityWith(srcBuffer, srcChannel, dstChannel);
+
+    // Take the number and the pointers into a register cache for better
+    // performance
+    const SoundUnit *__restrict pSrc = srcBuffer.p_data + srcChannel;
+    SoundUnit *__restrict pDst = const_cast<SoundUnit *>(p_data) + dstChannel;
+    const unsigned srcNChannels = srcBuffer.m_NChannels;
+    const unsigned dstNChannels = m_NChannels;
+
+    for (unsigned i = m_NSamples; i; i--) {
+      *pDst += *pSrc;
+      pDst += dstNChannels;
       pSrc += srcNChannels;
     }
   }
