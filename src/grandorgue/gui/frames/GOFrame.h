@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -53,6 +53,7 @@ private:
   wxMenu *m_recent_menu;
   wxMenu *m_temperament_menu;
   GODocument *m_doc;
+  GOOrganController *p_OrganController;
   wxToolBar *m_ToolBar;
   GOAudioGauge *m_SamplerUsage;
   wxControl *m_VolumeControl;
@@ -90,16 +91,13 @@ private:
   void UpdateSize();
   void UpdateVolumeControlWithSettings();
 
-  // Returns the current open organ controller or nullptr
-  GOOrganController *GetOrganController() const;
-
   void AttachDetachOrganController(bool isToAttach);
 
   // Processes the organ model modification event:
   // updates some controls according the organ model changes
   void OnIsModifiedChanged(bool modified) override;
 
-  bool LoadOrgan(const GOOrgan &organ, const wxString &cmb = wxEmptyString);
+  void LoadOrgan(const GOOrgan &organ, const wxString &cmb = wxEmptyString);
 
   void OnMeters(wxCommandEvent &event);
   void OnLoadFile(wxCommandEvent &event);

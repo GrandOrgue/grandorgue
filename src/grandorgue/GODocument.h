@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -53,7 +53,10 @@ public:
 
   bool Save();
   bool Export(const wxString &cmb);
-  bool LoadOrgan(
+  // Returns the loaded organ controller, or nullptr on failure.
+  // Note: on failure CloseOrgan() is called, which also clears
+  // m_OrganController.
+  GOOrganController *LoadOrgan(
     GOProgressDialog *dlg,
     const GOOrgan &organ,
     const wxString &cmb,
