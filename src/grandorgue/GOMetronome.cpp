@@ -87,6 +87,7 @@ GOMetronome::GOMetronome(GOOrganController *organController)
 
 GOMetronome::~GOMetronome() { StopTimer(); }
 
+static const wxString WX_EMPTY_STRING;
 static const wxString WX_BELL_BEAT_PATH = wxT("sounds\\metronome\\beat.wv");
 static const wxString WX_BELL_FIRST_BEAT_PATH
   = wxT("sounds\\metronome\\first_beat.wv");
@@ -97,7 +98,7 @@ static const wxString WX_CLICK_FIRST_BEAT_PATH
 
 const wxString &GOMetronome::GetSampleFilePath(bool isFirst) {
   const GOConfig &config = m_OrganController->GetConfig();
-  const wxString *pPath;
+  const wxString *pPath = &WX_EMPTY_STRING;
 
   switch (config.m_MetromomeSound()) {
   case GOConfig::METRONOME_SOUND_BELL:
