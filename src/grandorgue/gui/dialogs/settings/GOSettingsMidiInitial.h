@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,7 +16,7 @@ class wxGridRangeSelectEvent;
 
 class GOConfig;
 class GOGrid;
-class GOMidi;
+class GOMidiSystem;
 
 class GOSettingsMidiInitial : public GODialogTab {
   enum {
@@ -27,7 +27,7 @@ class GOSettingsMidiInitial : public GODialogTab {
 
 private:
   GOConfig &r_config;
-  GOMidi &r_midi;
+  GOMidiSystem &r_midi;
 
   GOGrid *m_Initials;
   wxButton *m_Properties;
@@ -51,7 +51,7 @@ private:
 public:
   GOSettingsMidiInitial(
     GOConfig &settings,
-    GOMidi &midi,
+    GOMidiSystem &midi,
     GOTabbedDialog *pDlg,
     const wxString &name,
     const wxString &label);

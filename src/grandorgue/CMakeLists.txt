@@ -157,7 +157,7 @@ midi/events/GOMidiEventPattern.cpp
 midi/events/GOMidiReceiverEventPattern.cpp
 midi/events/GOMidiSenderEventPattern.cpp
 midi/events/GOMidiShortcutPattern.cpp
-midi/events/GOMidiWXEvent.cpp
+midi/events/GOMidiWxEvent.cpp
 midi/events/GORodgers.cpp
 midi/files/GOMidiFileReader.cpp
 midi/objects/GOMidiObject.cpp
@@ -174,13 +174,13 @@ midi/ports/GOMidiPortFactory.cpp
 midi/ports/GOMidiRtPortFactory.cpp
 midi/ports/GOMidiRtInPort.cpp
 midi/ports/GOMidiRtOutPort.cpp
-midi/GOMidi.cpp
 midi/GOMidiInputMerger.cpp
 midi/GOMidiListener.cpp
 midi/GOMidiOutputMerger.cpp
 midi/GOMidiPlayer.cpp
 midi/GOMidiPlayerContent.cpp
 midi/GOMidiRecorder.cpp
+midi/GOMidiSystem.cpp
 model/pipe-config/GOPipeConfig.cpp
 model/pipe-config/GOPipeConfigNode.cpp
 model/pipe-config/GOPipeConfigTreeNode.cpp
@@ -217,8 +217,9 @@ sound/scheduler/GOSoundTremulantTask.cpp
 sound/scheduler/GOSoundWindchestTask.cpp
 sound/GOSoundAudioSection.cpp
 sound/GOSoundDevInfo.cpp
-sound/GOSoundEngine.cpp
 sound/GOSoundFader.cpp
+sound/GOSoundFilter.cpp
+sound/GOSoundOrganEngine.cpp
 sound/GOSoundProvider.cpp
 sound/GOSoundProviderSynthedTrem.cpp
 sound/GOSoundProviderWave.cpp
@@ -231,8 +232,7 @@ sound/GOSoundResample.cpp
 sound/GOSoundSamplerPool.cpp
 sound/GOSoundStateHandler.cpp
 sound/GOSoundStream.cpp
-sound/GOSound.cpp
-sound/GOSoundFilter.cpp
+sound/GOSoundSystem.cpp
 sound/GOSoundToneBalanceFilter.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp

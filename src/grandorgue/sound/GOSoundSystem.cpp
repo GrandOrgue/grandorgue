@@ -1,11 +1,11 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSound.h"
+#include "GOSoundSystem.h"
 
 #include <wx/app.h>
 #include <wx/intl.h>
@@ -15,13 +15,13 @@
 #include "GOOrganController.h"
 #include "GOSoundDefs.h"
 #include "config/GOConfig.h"
-#include "midi/GOMidi.h"
+#include "midi/GOMidiSystem.h"
 #include "scheduler/GOSoundThread.h"
 #include "sound/ports/GOSoundPort.h"
 #include "threading/GOMultiMutexLocker.h"
 #include "threading/GOMutexLocker.h"
 
-GOSound::GOSound(GOConfig &settings)
+GOSoundSystem::GOSoundSystem(GOConfig &settings)
   : m_open(false),
     m_IsRunning(false),
     m_NCallbacksEntered(0),
@@ -37,14 +37,14 @@ GOSound::GOSound(GOConfig &settings)
     m_config(settings),
     m_midi(settings) {}
 
-GOSound::~GOSound() {
+GOSoundSystem::~GOSoundSystem() {
   CloseSound();
 
   GOMidiPortFactory::terminate();
   GOSoundPortFactory::terminate();
 }
 
-void GOSound::StartThreads() {
+void GOSoundSystem::StartThreads() {
   StopThreads();
 
   unsigned n_cpus = m_config.Concurrency();
@@ -57,7 +57,7 @@ void GOSound::StartThreads() {
     m_Threads[i]->Run();
 }
 
-void GOSound::StopThreads() {
+void GOSoundSystem::StopThreads() {
   for (unsigned i = 0; i < m_Threads.size(); i++)
     m_Threads[i]->Delete();
 
@@ -65,9 +65,9 @@ void GOSound::StopThreads() {
   m_Threads.resize(0);
 }
 
-void GOSound::OpenMidi() { m_midi.Open(); }
+void GOSoundSystem::OpenMidi() { m_midi.Open(); }
 
-void GOSound::OpenSound() {
+void GOSoundSystem::OpenSound() {
   m_LastErrorMessage = wxEmptyString;
   assert(!m_open);
   assert(m_AudioOutputs.size() == 0);
@@ -186,7 +186,7 @@ void GOSound::OpenSound() {
     CloseSound();
 }
 
-void GOSound::StartStreams() {
+void GOSoundSystem::StartStreams() {
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
     m_AudioOutputs[i].port->Open();
 
@@ -208,7 +208,7 @@ void GOSound::StartStreams() {
     m_AudioOutputs[i].port->StartStream();
 }
 
-void GOSound::CloseSound() {
+void GOSoundSystem::CloseSound() {
   m_IsRunning.store(false);
 
   // wait for all started callbacks to finish
@@ -217,7 +217,7 @@ void GOSound::CloseSound() {
 
     while (m_NCallbacksEntered.load() > 0)
       m_CallbackCondition.WaitOrStop(
-        "GOSound::CloseSound waits for all callbacks to finish", nullptr);
+        "GOSoundSystem::CloseSound waits for all callbacks to finish", nullptr);
   }
 
   StopThreads();
@@ -250,18 +250,18 @@ void GOSound::CloseSound() {
   m_open = false;
 }
 
-bool GOSound::AssureSoundIsOpen() {
+bool GOSoundSystem::AssureSoundIsOpen() {
   if (!m_open)
     OpenSound();
   return m_open;
 }
 
-void GOSound::AssureSoundIsClosed() {
+void GOSoundSystem::AssureSoundIsClosed() {
   if (m_open)
     CloseSound();
 }
 
-void GOSound::AssignOrganFile(GOOrganController *organController) {
+void GOSoundSystem::AssignOrganFile(GOOrganController *organController) {
   if (organController == m_OrganController)
     return;
 
@@ -293,15 +293,15 @@ void GOSound::AssignOrganFile(GOOrganController *organController) {
   }
 }
 
-GOConfig &GOSound::GetSettings() { return m_config; }
+GOConfig &GOSoundSystem::GetSettings() { return m_config; }
 
-GOOrganController *GOSound::GetOrganFile() { return m_OrganController; }
+GOOrganController *GOSoundSystem::GetOrganFile() { return m_OrganController; }
 
-void GOSound::SetLogSoundErrorMessages(bool settingsDialogVisible) {
+void GOSoundSystem::SetLogSoundErrorMessages(bool settingsDialogVisible) {
   logSoundErrors = settingsDialogVisible;
 }
 
-std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
+std::vector<GOSoundDevInfo> GOSoundSystem::GetAudioDevices(
   const GOPortsConfig &portsConfig) {
   // Getting a device list tries to open and close each device
   // Because some devices (ex. ASIO) cann't be open more than once
@@ -320,14 +320,14 @@ std::vector<GOSoundDevInfo> GOSound::GetAudioDevices(
   return list;
 }
 
-const GOSoundDevInfo &GOSound::GetDefaultAudioDevice(
+const GOSoundDevInfo &GOSoundSystem::GetDefaultAudioDevice(
   const GOPortsConfig &portsConfig) {
   if (!m_DefaultAudioDevice.IsValid())
     GetAudioDevices(portsConfig);
   return m_DefaultAudioDevice;
 }
 
-void GOSound::FillDeviceNamePattern(
+void GOSoundSystem::FillDeviceNamePattern(
   const GOSoundDevInfo &deviceInfo, GODeviceNamePattern &pattern) {
   pattern.SetLogicalName(deviceInfo.GetDefaultLogicalName());
   pattern.SetRegEx(deviceInfo.GetDefaultNameRegex());
@@ -336,9 +336,9 @@ void GOSound::FillDeviceNamePattern(
   pattern.SetPhysicalName(deviceInfo.GetFullName());
 }
 
-GOMidi &GOSound::GetMidi() { return m_midi; }
+GOMidiSystem &GOSoundSystem::GetMidi() { return m_midi; }
 
-void GOSound::ResetMeters() {
+void GOSoundSystem::ResetMeters() {
   wxWindow *const topWindow = wxTheApp ? wxTheApp->GetTopWindow() : nullptr;
 
   if (topWindow) {
@@ -349,7 +349,7 @@ void GOSound::ResetMeters() {
   }
 }
 
-void GOSound::UpdateMeter() {
+void GOSoundSystem::UpdateMeter() {
   /* Update meters */
   meter_counter += m_SamplesPerBuffer;
   if (meter_counter >= 6144) // update 44100 / (N / 2) = ~14 times per second
@@ -362,7 +362,7 @@ void GOSound::UpdateMeter() {
   }
 }
 
-bool GOSound::AudioCallback(
+bool GOSoundSystem::AudioCallback(
   unsigned dev_index, float *output_buffer, unsigned int n_frames) {
   bool wasEntered = false;
 
@@ -423,9 +423,9 @@ bool GOSound::AudioCallback(
   return true;
 }
 
-GOSoundEngine &GOSound::GetEngine() { return m_SoundEngine; }
+GOSoundOrganEngine &GOSoundSystem::GetEngine() { return m_SoundEngine; }
 
-wxString GOSound::getState() {
+wxString GOSoundSystem::getState() {
   if (!m_AudioOutputs.size())
     return _("No sound output occurring");
   wxString result = wxString::Format(

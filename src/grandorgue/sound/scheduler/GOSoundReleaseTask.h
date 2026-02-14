@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,13 +15,13 @@
 
 #include "ptrvector.h"
 
-class GOSoundEngine;
+class GOSoundOrganEngine;
 class GOSoundGroupTask;
 class GOSoundSampler;
 
 class GOSoundReleaseTask : public GOSoundTask {
 private:
-  GOSoundEngine &m_engine;
+  GOSoundOrganEngine &m_engine;
   ptr_vector<GOSoundGroupTask> &m_AudioGroups;
   GOSoundSimpleSamplerList m_List;
   std::atomic_uint m_WaitCnt;
@@ -30,7 +30,8 @@ private:
 
 public:
   GOSoundReleaseTask(
-    GOSoundEngine &sound_engine, ptr_vector<GOSoundGroupTask> &audio_groups);
+    GOSoundOrganEngine &sound_engine,
+    ptr_vector<GOSoundGroupTask> &audio_groups);
 
   unsigned GetGroup();
   unsigned GetCost();

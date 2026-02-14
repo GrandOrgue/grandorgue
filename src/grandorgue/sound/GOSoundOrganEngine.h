@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDENGINE_H_
-#define GOSOUNDENGINE_H_
+#ifndef GOSOUNDORGANENGINE_H
+#define GOSOUNDORGANENGINE_H
 
 #include <atomic>
 #include <vector>
@@ -35,7 +35,13 @@ typedef struct {
   std::vector<std::vector<float>> scale_factors;
 } GOAudioOutputConfiguration;
 
-class GOSoundEngine {
+/**
+ * This class represents a sound engine of one loaded organ. It reflects some
+ * GrandOrgue-wide objects (AudioGroup) and some objects of it's model
+ * (WindChests, Tremulants)
+ */
+
+class GOSoundOrganEngine {
 private:
   static constexpr int DETACHED_RELEASE_TASK_ID = 0;
 
@@ -112,8 +118,8 @@ private:
   unsigned GetBufferSizeFor(unsigned outputIndex, unsigned n_frames);
 
 public:
-  GOSoundEngine();
-  ~GOSoundEngine();
+  GOSoundOrganEngine();
+  ~GOSoundOrganEngine();
   void Reset();
   void Setup(GOOrganController *organController, unsigned release_count = 1);
   void ClearSetup();
@@ -184,4 +190,4 @@ public:
   uint64_t GetTime() const { return m_CurrentTime; }
 };
 
-#endif /* GOSOUNDENGINE_H_ */
+#endif /* GOSOUNDORGANENGINE_H */

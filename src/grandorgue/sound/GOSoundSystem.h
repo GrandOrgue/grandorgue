@@ -1,20 +1,20 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUND_H
-#define GOSOUND_H
-
-#include <wx/string.h>
+#ifndef GOSOUNDSYSTEM_H
+#define GOSOUNDSYSTEM_H
 
 #include <map>
 #include <vector>
 
+#include <wx/string.h>
+
 #include "config/GOPortsConfig.h"
-#include "midi/GOMidi.h"
+#include "midi/GOMidiSystem.h"
 #include "ports/GOSoundPortFactory.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
@@ -22,19 +22,24 @@
 #include "ptrvector.h"
 
 #include "GOSoundDevInfo.h"
-#include "GOSoundEngine.h"
+#include "GOSoundOrganEngine.h"
 #include "GOSoundRecorder.h"
 
 class GODeviceNamePattern;
 class GOOrganController;
-class GOMidi;
+class GOMidiSystem;
 class GOSoundThread;
 class GOSoundPort;
 class GOSoundRtPort;
 class GOSoundPortaudioPort;
 class GOConfig;
 
-class GOSound {
+/**
+ * This class represents a GrandOrgue-wide sound system. It may be used even
+ * without a loaded organ
+ */
+
+class GOSoundSystem {
   class GOSoundOutput {
   public:
     GOSoundPort *port;
@@ -93,12 +98,12 @@ private:
   GOOrganController *m_OrganController;
   GOSoundRecorder m_AudioRecorder;
 
-  GOSoundEngine m_SoundEngine;
+  GOSoundOrganEngine m_SoundEngine;
   ptr_vector<GOSoundThread> m_Threads;
 
   GOConfig &m_config;
 
-  GOMidi m_midi;
+  GOMidiSystem m_midi;
 
   wxString m_LastErrorMessage;
 
@@ -116,8 +121,8 @@ private:
   void UpdateMeter();
 
 public:
-  GOSound(GOConfig &settings);
-  ~GOSound();
+  GOSoundSystem(GOConfig &settings);
+  ~GOSoundSystem();
 
   bool AssureSoundIsOpen();
   void AssureSoundIsClosed();
@@ -138,9 +143,9 @@ public:
   static void FillDeviceNamePattern(
     const GOSoundDevInfo &deviceInfo, GODeviceNamePattern &pattern);
 
-  GOMidi &GetMidi();
+  GOMidiSystem &GetMidi();
 
-  GOSoundEngine &GetEngine();
+  GOSoundOrganEngine &GetEngine();
 
   bool AudioCallback(
     unsigned dev_index, float *outputBuffer, unsigned int nFrames);

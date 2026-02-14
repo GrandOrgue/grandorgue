@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,7 +13,7 @@
 #include "GOMidiRtPortFactory.h"
 
 GOMidiRtInPort::GOMidiRtInPort(
-  GOMidi *midi,
+  GOMidiSystem *midi,
   RtMidi::Api api,
   const wxString &deviceName,
   const wxString &fullName)

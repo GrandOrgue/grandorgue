@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -25,7 +25,7 @@ class GOSoundJackPort : public GOSoundPort {
 public:
   static const wxString PORT_NAME;
 
-  GOSoundJackPort(GOSound *sound, wxString name);
+  GOSoundJackPort(GOSoundSystem *sound, wxString name);
   ~GOSoundJackPort();
 
 #if defined(GO_USE_JACK)
@@ -56,7 +56,7 @@ public:
   }
   static GOSoundPort *create(
     const GOPortsConfig &portsConfig,
-    GOSound *sound,
+    GOSoundSystem *sound,
     GODeviceNamePattern &pattern);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);

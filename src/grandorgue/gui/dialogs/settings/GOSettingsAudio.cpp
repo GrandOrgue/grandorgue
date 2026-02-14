@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,7 +20,7 @@
 #include <wx/textdlg.h>
 
 #include "config/GOConfig.h"
-#include "sound/GOSound.h"
+#include "sound/GOSoundSystem.h"
 #include "sound/ports/GOSoundPortFactory.h"
 
 #include "GOSettingsDeviceMatchDialog.h"
@@ -77,7 +77,7 @@ EVT_BUTTON(ID_OUTPUT_DEFAULT, GOSettingsAudio::OnOutputDefault)
 END_EVENT_TABLE()
 
 GOSettingsAudio::GOSettingsAudio(
-  GOConfig &config, GOSound &sound, wxWindow *parent)
+  GOConfig &config, GOSoundSystem &sound, wxWindow *parent)
   : wxPanel(parent, wxID_ANY),
     GOSettingsPorts(this, GOSoundPortFactory::getInstance(), _("Sound &ports")),
     m_config(config),
@@ -312,7 +312,7 @@ wxTreeItemId GOSettingsAudio::AddDeviceNode(const GOSoundDevInfo &deviceInfo) {
     // this device is not present yet
     GOAudioDeviceNode deviceNode;
 
-    GOSound::FillDeviceNamePattern(deviceInfo, deviceNode);
+    GOSoundSystem::FillDeviceNamePattern(deviceInfo, deviceNode);
     nodeId = AddDeviceNode(deviceNode);
   }
   return nodeId;
@@ -621,7 +621,7 @@ void GOSettingsAudio::OnOutputChange(wxCommandEvent &event) {
         this);
       return;
     }
-    GOSound::FillDeviceNamePattern(newDeviceInfo, data->m_device);
+    GOSoundSystem::FillDeviceNamePattern(newDeviceInfo, data->m_device);
     UpdateDevice(selection);
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
     int index;
@@ -738,7 +738,7 @@ void GOSettingsAudio::OnOutputDefault(wxCommandEvent &event) {
   if (pOldPattern)
     static_cast<GODeviceNamePattern &>(newDeviceNode) = *pOldPattern;
   else
-    GOSound::FillDeviceNamePattern(
+    GOSoundSystem::FillDeviceNamePattern(
       m_Sound.GetDefaultAudioDevice(RenewPortsConfig()), newDeviceNode);
 
   m_AudioOutput->DeleteChildren(root);

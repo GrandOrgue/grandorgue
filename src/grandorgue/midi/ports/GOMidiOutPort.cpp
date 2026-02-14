@@ -1,18 +1,18 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOMidiOutPort.h"
 
-#include "midi/GOMidi.h"
 #include "midi/GOMidiMap.h"
+#include "midi/GOMidiSystem.h"
 #include "midi/events/GOMidiEvent.h"
 
 GOMidiOutPort::GOMidiOutPort(
-  GOMidi *midi,
+  GOMidiSystem *midi,
   const wxString &portName,
   const wxString &apiName,
   const wxString &deviceName,

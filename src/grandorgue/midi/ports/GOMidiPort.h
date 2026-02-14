@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,11 +10,11 @@
 
 #include <wx/string.h>
 
-class GOMidi;
+class GOMidiSystem;
 
 class GOMidiPort {
 protected:
-  GOMidi *m_midi;
+  GOMidiSystem *m_midi;
   bool m_IsActive;
 
   wxString m_PortName;
@@ -30,7 +30,7 @@ protected:
 
 public:
   GOMidiPort(
-    GOMidi *midi,
+    GOMidiSystem *midi,
     const wxString &portName,
     const wxString &apiName,
     const wxString &deviceName,

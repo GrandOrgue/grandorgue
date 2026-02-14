@@ -38,7 +38,7 @@ class GOCache;
 class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
-class GOMidi;
+class GOMidiSystem;
 class GOMidiEvent;
 class GOMidiPlayer;
 class GOMidiRecorder;
@@ -48,7 +48,7 @@ class GOSetter;
 class GOConfig;
 class GOTemperament;
 class GODocument;
-class GOSoundEngine;
+class GOSoundOrganEngine;
 class GOSoundProvider;
 class GOSoundRecorder;
 typedef struct _GOHashType GOHashType;
@@ -95,8 +95,8 @@ private:
   ptr_vector<GOGUIPanelCreator> m_panelcreators;
   ptr_vector<GOElementCreator> m_elementcreators;
 
-  GOSoundEngine *m_soundengine;
-  GOMidi *m_midi;
+  GOSoundOrganEngine *m_soundengine;
+  GOMidiSystem *m_midi;
   std::vector<bool> m_MidiSamplesetMatch;
   int m_SampleSetId1, m_SampleSetId2;
   GOGUIMouseState m_MouseState;
@@ -168,7 +168,7 @@ public:
   void DeleteSettings();
   void Abort();
   void PreparePlayback(
-    GOSoundEngine *engine, GOMidi *midi, GOSoundRecorder *recorder);
+    GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder);
   void PrepareRecording();
   void Update();
   void Reset();
@@ -227,7 +227,7 @@ public:
   const wxString &GetRecordingDetails() const { return m_RecordingDetails; }
   const wxString &GetInfoFilename() const { return m_InfoFilename; }
 
-  GOMidi *GetMidi() { return m_midi; }
+  GOMidiSystem *GetMidi() { return m_midi; }
 
   GOGUIMouseState &GetMouseState() { return m_MouseState; }
 
