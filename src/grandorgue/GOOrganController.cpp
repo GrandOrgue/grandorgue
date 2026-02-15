@@ -866,6 +866,7 @@ void GOOrganController::Abort() {
   m_AudioRecorder->SetAudioRecorder(NULL);
   if (p_OnStateButton)
     p_OnStateButton->AbortPlaybackExt();
+  GOOrganModel::GOSoundOrganInterfaceProxy::Disconnect();
   GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;
 }
@@ -891,6 +892,7 @@ void GOOrganController::PreparePlayback(
 
   m_MidiSamplesetMatch.clear();
   GOOrganModel::SetMidi(midi, m_MidiRecorder);
+  GOOrganModel::GOSoundOrganInterfaceProxy::Connect(engine);
   GOEventDistributor::PreparePlayback(engine);
 
   m_setter->UpdateModified(m_OrganModified);
