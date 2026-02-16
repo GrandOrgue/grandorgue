@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -32,6 +32,10 @@ endif()
 
 if (NOT DEFINED GO_BUILD_TESTING OR GO_BUILD_TESTING STREQUAL "")
   set(GO_BUILD_TESTING ${BUILD_TESTING})
+endif()
+
+if (NOT DEFINED GO_BUILD_COVERAGE OR GO_BUILD_COVERAGE STREQUAL "")
+  set(GO_BUILD_COVERAGE OFF)
 endif()
 
 set(FULL_VERSION "${PROJECT_VERSION}-${BUILD_VERSION}")
@@ -122,6 +126,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 add_option(-Wall)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_option(-g3)
+  add_option(-Og)
 else()
   add_option(-O3)
   add_option(-g)
@@ -217,7 +222,7 @@ message(STATUS "  wxWidgets configuration     : ${wxWidgets_CONFIGURATION}")
 message(STATUS "============================================================================")
 
 
-if (GO_BUILD_TESTING)
+if (GO_BUILD_COVERAGE)
     # Add coverage configuration to include project files - Don't put extra libraries here under
     set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage")
     message(STATUS "============================================================================")
