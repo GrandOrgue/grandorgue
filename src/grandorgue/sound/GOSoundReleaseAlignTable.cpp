@@ -57,7 +57,8 @@ void GOSoundReleaseAlignTable::ComputeTable(
   unsigned int sample_rate,
   unsigned start_position) {
   GOSoundCompressionCache cache;
-  InitDecompressionCache(cache);
+
+  cache.Init();
 
   for (unsigned i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)
     for (unsigned j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
