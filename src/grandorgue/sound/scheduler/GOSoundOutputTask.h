@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,17 +11,18 @@
 #include <atomic>
 #include <vector>
 
-#include "sound/GOSoundBufferItem.h"
 #include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
+
+#include "GOSoundBufferTaskBase.h"
 
 class GOSoundReverb;
 class GOConfig;
 
-class GOSoundOutputTask : public GOSoundTask, public GOSoundBufferItem {
+class GOSoundOutputTask : public GOSoundTask, public GOSoundBufferTaskBase {
 private:
   std::vector<float> m_ScaleFactors;
-  std::vector<GOSoundBufferItem *> m_Outputs;
+  std::vector<GOSoundBufferTaskBase *> m_Outputs;
   unsigned m_OutputCount;
   std::vector<float> m_MeterInfo;
   GOSoundReverb *m_Reverb;
@@ -36,7 +37,7 @@ public:
     unsigned samples_per_buffer);
   ~GOSoundOutputTask();
 
-  void SetOutputs(std::vector<GOSoundBufferItem *> outputs);
+  void SetOutputs(std::vector<GOSoundBufferTaskBase *> outputs);
 
   unsigned GetGroup();
   unsigned GetCost();

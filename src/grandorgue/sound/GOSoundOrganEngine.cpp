@@ -312,7 +312,7 @@ void GOSoundOrganEngine::SetAudioOutput(
       audio_outputs[i].channels, scale_factors, m_SamplesPerBuffer));
     channels += audio_outputs[i].channels;
   }
-  std::vector<GOSoundBufferItem *> outputs;
+  std::vector<GOSoundBufferTaskBase *> outputs;
   for (unsigned i = 0; i < m_AudioGroupTasks.size(); i++)
     outputs.push_back(m_AudioGroupTasks[i]);
   for (unsigned i = 0; i < m_AudioOutputTasks.size(); i++)
@@ -323,7 +323,7 @@ void GOSoundOrganEngine::SetAudioOutput(
 void GOSoundOrganEngine::SetAudioRecorder(
   GOSoundRecorder *recorder, bool downmix) {
   m_AudioRecorder = recorder;
-  std::vector<GOSoundBufferItem *> outputs;
+  std::vector<GOSoundBufferTaskBase *> outputs;
   if (downmix)
     outputs.push_back(m_AudioOutputTasks[0]);
   else {

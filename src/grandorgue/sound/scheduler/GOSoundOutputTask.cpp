@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,7 +15,7 @@ GOSoundOutputTask::GOSoundOutputTask(
   unsigned channels,
   std::vector<float> scale_factors,
   unsigned samples_per_buffer)
-  : GOSoundBufferItem(samples_per_buffer, channels),
+  : GOSoundBufferTaskBase(samples_per_buffer, channels),
     m_ScaleFactors(scale_factors),
     m_Outputs(),
     m_OutputCount(0),
@@ -30,7 +30,8 @@ GOSoundOutputTask::~GOSoundOutputTask() {
     delete m_Reverb;
 }
 
-void GOSoundOutputTask::SetOutputs(std::vector<GOSoundBufferItem *> outputs) {
+void GOSoundOutputTask::SetOutputs(
+  std::vector<GOSoundBufferTaskBase *> outputs) {
   m_Outputs = outputs;
   m_OutputCount = m_Outputs.size() * 2;
 }

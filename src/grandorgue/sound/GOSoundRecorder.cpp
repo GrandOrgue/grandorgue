@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,9 +10,10 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "GOSoundBufferItem.h"
-#include "GOWaveTypes.h"
+#include "scheduler/GOSoundBufferTaskBase.h"
 #include "threading/GOMutexLocker.h"
+
+#include "GOWaveTypes.h"
 
 #pragma pack(push, 1)
 
@@ -109,7 +110,7 @@ void GOSoundRecorder::SetBytesPerSample(unsigned value) {
 }
 
 void GOSoundRecorder::SetOutputs(
-  std::vector<GOSoundBufferItem *> outputs, unsigned samples_per_buffer) {
+  std::vector<GOSoundBufferTaskBase *> outputs, unsigned samples_per_buffer) {
   m_Outputs = outputs;
   m_SamplesPerBuffer = samples_per_buffer;
   SetupBuffer();

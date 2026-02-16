@@ -13,7 +13,7 @@
 
 GOSoundGroupTask::GOSoundGroupTask(
   GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer)
-  : GOSoundBufferItem(samples_per_buffer, 2),
+  : GOSoundBufferTaskBase(samples_per_buffer, 2),
     m_engine(sound_engine),
     m_Condition(m_Mutex),
     m_ActiveCount(0),
