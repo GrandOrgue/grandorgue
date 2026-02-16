@@ -218,10 +218,8 @@ void GOTestPerfSoundBufferMutable::TestPerfFillWithSilence() {
   std::cout << "\nPerformance test: FillWithSilence\n";
 
   for (const Baseline &baseline : BASELINE_FILL_WITH_SILENCE) {
-    std::vector<GOSoundBuffer::SoundUnit> data(
-      GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize));
-    GOSoundBufferMutable buffer(
-      data.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    // Use macro to declare local buffer on stack
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, NUM_CHANNELS, baseline.m_BufferSize);
 
     fill_with_sine_wave(buffer);
 
@@ -234,14 +232,11 @@ void GOTestPerfSoundBufferMutable::TestPerfCopyFrom() {
   std::cout << "\nPerformance test: CopyFrom\n";
 
   for (const Baseline &baseline : BASELINE_COPY_FROM) {
-    const unsigned nUnits
-      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
-    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
-    GOSoundBufferMutable srcBuffer(
-      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
-    GOSoundBufferMutable dstBuffer(
-      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    // Declare source and destination buffers using macro
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      srcBuffer, NUM_CHANNELS, baseline.m_BufferSize);
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      dstBuffer, NUM_CHANNELS, baseline.m_BufferSize);
 
     fill_with_sine_wave(srcBuffer);
     dstBuffer.FillWithSilence();
@@ -256,14 +251,11 @@ void GOTestPerfSoundBufferMutable::TestPerfAddFrom() {
   std::cout << "\nPerformance test: AddFrom\n";
 
   for (const Baseline &baseline : BASELINE_ADD_FROM) {
-    const unsigned nUnits
-      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
-    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
-    GOSoundBufferMutable srcBuffer(
-      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
-    GOSoundBufferMutable dstBuffer(
-      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    // Declare source and destination buffers using macro
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      srcBuffer, NUM_CHANNELS, baseline.m_BufferSize);
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      dstBuffer, NUM_CHANNELS, baseline.m_BufferSize);
 
     fill_with_sine_wave(srcBuffer);
     fill_with_sine_wave(dstBuffer);
@@ -278,14 +270,11 @@ void GOTestPerfSoundBufferMutable::TestPerfAddFromWithCoefficient() {
   std::cout << "\nPerformance test: AddFrom (with coefficient)\n";
 
   for (const Baseline &baseline : BASELINE_ADD_FROM_COEFF) {
-    const unsigned nUnits
-      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
-    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
-    GOSoundBufferMutable srcBuffer(
-      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
-    GOSoundBufferMutable dstBuffer(
-      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    // Declare source and destination buffers using macro
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      srcBuffer, NUM_CHANNELS, baseline.m_BufferSize);
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      dstBuffer, NUM_CHANNELS, baseline.m_BufferSize);
 
     fill_with_sine_wave(srcBuffer);
     fill_with_sine_wave(dstBuffer);
@@ -302,14 +291,11 @@ void GOTestPerfSoundBufferMutable::TestPerfCopyChannelFrom() {
   std::cout << "\nPerformance test: CopyChannelFrom\n";
 
   for (const Baseline &baseline : BASELINE_COPY_CHANNEL_FROM) {
-    const unsigned nUnits
-      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
-    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
-    GOSoundBufferMutable srcBuffer(
-      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
-    GOSoundBufferMutable dstBuffer(
-      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    // Declare source and destination buffers using macro
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      srcBuffer, NUM_CHANNELS, baseline.m_BufferSize);
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      dstBuffer, NUM_CHANNELS, baseline.m_BufferSize);
 
     fill_with_sine_wave(srcBuffer);
     dstBuffer.FillWithSilence();
@@ -324,14 +310,11 @@ void GOTestPerfSoundBufferMutable::TestPerfAddChannelFrom() {
   std::cout << "\nPerformance test: AddChannelFrom\n";
 
   for (const Baseline &baseline : BASELINE_ADD_CHANNEL_FROM) {
-    const unsigned nUnits
-      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
-    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
-    GOSoundBufferMutable srcBuffer(
-      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
-    GOSoundBufferMutable dstBuffer(
-      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    // Declare source and destination buffers using macro
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      srcBuffer, NUM_CHANNELS, baseline.m_BufferSize);
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      dstBuffer, NUM_CHANNELS, baseline.m_BufferSize);
 
     fill_with_sine_wave(srcBuffer);
     fill_with_sine_wave(dstBuffer);
@@ -346,14 +329,11 @@ void GOTestPerfSoundBufferMutable::TestPerfAddChannelFromWithCoefficient() {
   std::cout << "\nPerformance test: AddChannelFrom (with coefficient)\n";
 
   for (const Baseline &baseline : BASELINE_ADD_CHANNEL_FROM_COEFF) {
-    const unsigned nUnits
-      = GOSoundBuffer::getNUnits(NUM_CHANNELS, baseline.m_BufferSize);
-    std::vector<GOSoundBuffer::SoundUnit> srcData(nUnits);
-    std::vector<GOSoundBuffer::SoundUnit> dstData(nUnits);
-    GOSoundBufferMutable srcBuffer(
-      srcData.data(), NUM_CHANNELS, baseline.m_BufferSize);
-    GOSoundBufferMutable dstBuffer(
-      dstData.data(), NUM_CHANNELS, baseline.m_BufferSize);
+    // Declare source and destination buffers using macro
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      srcBuffer, NUM_CHANNELS, baseline.m_BufferSize);
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      dstBuffer, NUM_CHANNELS, baseline.m_BufferSize);
 
     fill_with_sine_wave(srcBuffer);
     fill_with_sine_wave(dstBuffer);
