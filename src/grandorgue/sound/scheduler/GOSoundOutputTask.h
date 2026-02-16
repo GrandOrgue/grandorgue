@@ -49,7 +49,10 @@ public:
   void Clear();
   void Reset();
 
-  void SetupReverb(GOConfig &settings);
+  void SetupReverb(
+    const GOSoundReverb::ReverbConfig &config,
+    unsigned nSamplesPerBuffer,
+    unsigned sampleRate);
 
   const std::vector<float> &GetMeterInfo();
   void ResetMeterInfo();

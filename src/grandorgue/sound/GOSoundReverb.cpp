@@ -20,6 +20,23 @@
 #include "GOWave.h"
 #include "config/GOConfig.h"
 
+const GOSoundReverb::ReverbConfig GOSoundReverb::CONFIG_REVERB_DISABLED
+  = {false, false, 0, 0, 0, 0, 0.0f, wxEmptyString};
+
+GOSoundReverb::ReverbConfig GOSoundReverb::createReverbConfig(
+  const GOConfig &config) {
+  return {
+    .isEnabled = config.ReverbEnabled(),
+    .isDirect = config.ReverbDirect(),
+    .channel = config.ReverbChannel(),
+    .startOffset = config.ReverbStartOffset(),
+    .len = config.ReverbLen(),
+    .delay = config.ReverbDelay(),
+    .gain = config.ReverbGain(),
+    .file = config.ReverbFile(),
+  };
+}
+
 GOSoundReverb::GOSoundReverb(unsigned channels)
   : m_channels(channels), m_engine() {}
 
@@ -32,10 +49,11 @@ void GOSoundReverb::Cleanup() {
   }
 }
 
-void GOSoundReverb::Setup(GOConfig &settings) {
+void GOSoundReverb::Setup(
+  const ReverbConfig &config, unsigned nSamplesPerBuffer, unsigned sampleRate) {
   Cleanup();
 
-  if (!settings.ReverbEnabled())
+  if (!config.isEnabled)
     return;
 
   m_engine.clear();
@@ -46,7 +64,7 @@ void GOSoundReverb::Setup(GOConfig &settings) {
     pConvProc->set_options(Convproc::OPT_LATE_CONTIN);
     m_engine.push_back(pConvProc);
   }
-  unsigned val = settings.SamplesPerBuffer();
+  unsigned val = nSamplesPerBuffer;
   if (val < Convproc::MINPART)
     val = Convproc::MINPART;
   if (val > Convproc::MAXPART)
@@ -56,21 +74,15 @@ void GOSoundReverb::Setup(GOConfig &settings) {
   try {
     for (unsigned i = 0; i < m_engine.size(); i++)
       if (m_engine[i]->configure(
-            1,
-            1,
-            1000000,
-            settings.SamplesPerBuffer(),
-            val,
-            Convproc::MAXPART,
-            1))
+            1, 1, 1000000, nSamplesPerBuffer, val, Convproc::MAXPART, 1))
         throw(wxString) _("Invalid reverb configuration (samples per buffer)");
 
     GOWave wav;
     unsigned block = 0x4000;
-    unsigned offset = settings.ReverbStartOffset();
-    float gain = settings.ReverbGain();
+    unsigned offset = config.startOffset;
+    float gain = config.gain;
 
-    GOStandardFile reverb_file(settings.ReverbFile());
+    GOStandardFile reverb_file(config.file);
     wav.Open(&reverb_file);
     if (offset > wav.GetLength())
       throw(wxString) _("Invalid reverb start offset");
@@ -79,49 +91,28 @@ void GOSoundReverb::Setup(GOConfig &settings) {
     if (!data)
       throw(wxString) _("Out of memory");
     wav.ReadSamples(
-      data,
-      GOWave::SF_IEEE_FLOAT,
-      wav.GetSampleRate(),
-      -settings.ReverbChannel());
+      data, GOWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -config.channel);
     for (unsigned i = 0; i < len; i++)
       data[i] *= gain;
-    if (len >= offset + settings.ReverbLen() && settings.ReverbLen())
-      len = offset + settings.ReverbLen();
-    /*
-    wxLogMessage(
-      "GOSoundReverb::Setup before resample: offset=%u, len=%u, "
-      "wav.GetSampleRate()=%u, settings.SampleRate()=%u",
-      offset,
-      len,
-      wav.GetSampleRate(),
-      settings.SampleRate());
-     */
-    if (wav.GetSampleRate() != settings.SampleRate()) {
+    if (len >= offset + config.len && config.len)
+      len = offset + config.len;
+    if (wav.GetSampleRate() != sampleRate) {
       GOSoundResample resample;
 
-      float *new_data = resample.NewResampledMono(
-        data, len, wav.GetSampleRate(), settings.SampleRate());
+      float *new_data
+        = resample.NewResampledMono(data, len, wav.GetSampleRate(), sampleRate);
       if (!new_data)
         throw(wxString) _("Resampling failed");
       free(data);
       data = new_data;
-      offset = (offset * settings.SampleRate()) / (float)wav.GetSampleRate();
+      offset = (offset * sampleRate) / (float)wav.GetSampleRate();
     }
-    /*
-    wxLogMessage(
-      "GOSoundReverb::Setup after resample: offset=%u, len=%u, "
-      "wav.GetSampleRate()=%u, settings.SampleRate()=%u",
-      offset,
-      len,
-      wav.GetSampleRate(),
-      settings.SampleRate());
-     */
-    unsigned delay = (settings.SampleRate() * settings.ReverbDelay()) / 1000;
+    unsigned delay = (sampleRate * config.delay) / 1000;
     for (unsigned i = 0; i < m_channels; i++) {
       float *d = data + offset;
       unsigned l = len - offset;
       float g = 1;
-      if (settings.ReverbDirect())
+      if (config.isDirect)
         m_engine[i]->impdata_create(0, 0, 0, &g, 0, 1);
       for (unsigned j = 0; j < l; j += block) {
         m_engine[i]->impdata_create(
