@@ -204,4 +204,29 @@ public:
   }
 };
 
+/**
+ * Declares a local sound buffer on the stack.
+ *
+ * Creates an array named <varName>Memory with enough space for nChannels *
+ * nSamples sound units, and a GOSoundBufferMutable object named <varName> that
+ * wraps this array.
+ *
+ * ATTENTION: Don't create too large buffers on the stack to avoid stack
+ * overflows
+ *
+ * @param varName The name of the GOSoundBufferMutable variable to declare
+ * @param nChannels Number of audio channels
+ * @param nSamples Number of samples per channel
+ *
+ * Example:
+ *   GO_DECLARE_LOCAL_SOUND_BUFFER(myBuffer, 2, 480);
+ *   // Creates:
+ *   // - GOSoundBuffer::SoundUnit myBufferMemory[960];
+ *   // - GOSoundBufferMutable myBuffer(myBufferMemory, 2, 480);
+ */
+#define GO_DECLARE_LOCAL_SOUND_BUFFER(varName, nChannels, nSamples)            \
+  GOSoundBuffer::SoundUnit                                                     \
+    varName##Memory[GOSoundBuffer::getNUnits(nChannels, nSamples)];            \
+  GOSoundBufferMutable varName(varName##Memory, nChannels, nSamples)
+
 #endif /* GOSOUNDBUFFERMUTABLE_H */
