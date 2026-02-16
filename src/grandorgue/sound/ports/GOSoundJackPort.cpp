@@ -37,7 +37,7 @@ void GOSoundJackPort::JackLatencyCallback(
       jack_latency_range_t range;
 
       jack_port_get_latency_range(
-        jp->m_JackOutputPorts[0], JackPlaybackLatency, &range);
+        jp->mp_JackOutPorts[0], JackPlaybackLatency, &range);
       jp->SetActualLatency(range.min / (double)jp->m_SampleRate);
       wxLogDebug("JACK actual latency set to %d ms", jp->m_ActualLatency);
     }
@@ -54,7 +54,7 @@ int GOSoundJackPort::JackProcessCallback(jack_nframes_t nFrames, void *data) {
     for (unsigned int i = 0; i < nc; i++) {
       jack_default_audio_sample_t *out
         = (jack_default_audio_sample_t *)jack_port_get_buffer(
-          port->m_JackOutputPorts[i], nFrames);
+          port->mp_JackOutPorts[i], nFrames);
 
       if (port->m_IsStarted) {
         // copy samples from the interleaved port->m_GoBuffer to the non
@@ -119,13 +119,16 @@ void GOSoundJackPort::Open() {
   char port_name[32];
 
   if (m_Channels) {
-    m_JackOutputPorts = new jack_port_t *[m_Channels];
+    mp_JackOutPorts.clear();
     for (unsigned int i = 0; i < m_Channels; i++) {
       snprintf(port_name, sizeof(port_name), "out_%d", i);
-      m_JackOutputPorts[i] = jack_port_register(
+
+      jack_port_t *pJackOutPort = jack_port_register(
         m_JackClient, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
-      if (m_JackOutputPorts[i] == NULL)
+
+      if (!pJackOutPort)
         throw wxString::Format("No more JACK ports available");
+      mp_JackOutPorts.push_back(pJackOutPort);
     }
   }
   wxLogDebug("Created %d output ports", m_Channels);
@@ -163,10 +166,7 @@ void GOSoundJackPort::Close() {
     jack_client_close(m_JackClient);
     m_JackClient = NULL;
   }
-  if (m_JackOutputPorts) {
-    delete m_JackOutputPorts;
-    m_JackOutputPorts = NULL;
-  }
+  mp_JackOutPorts.clear();
   if (m_GoBuffer) {
     delete m_GoBuffer;
     m_GoBuffer = NULL;

@@ -8,6 +8,8 @@
 #ifndef GOSOUNDJACKPORT_H
 #define GOSOUNDJACKPORT_H
 
+#include <vector>
+
 #if defined(GO_USE_JACK)
 #if defined(_WIN32) && !defined(WIN32)
 // workaround of the bug in the old jack that was fixed in
@@ -31,7 +33,7 @@ public:
 #if defined(GO_USE_JACK)
 private:
   jack_client_t *m_JackClient = NULL;
-  jack_port_t **m_JackOutputPorts = NULL;
+  std::vector<jack_port_t *> mp_JackOutPorts;
   float *m_GoBuffer = NULL;
   bool m_IsOpen = false;
   bool m_IsStarted = false;
