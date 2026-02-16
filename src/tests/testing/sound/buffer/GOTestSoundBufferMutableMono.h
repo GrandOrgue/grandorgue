@@ -1,15 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt
- * to change this license Click
- * nbfs://nbhost/SystemFileSystem/Templates/cppFiles/file.h to edit this
- * template
- */
-
-/*
- * File:   GOTestSoundMutableBufferMono.h
- * Author: oleg
- *
- * Created on 2 февраля 2026 г., 22:48
+ * Copyright 2024-2026 GrandOrgue contributors (see AUTHORS)
+ * License GPL-2.0 or later
+ * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #ifndef GOTESTSOUNDMUTABLEBUFFERMONO_H
