@@ -48,10 +48,17 @@ public:
   void Add(GOSoundTask *item);
   void Remove(GOSoundTask *item);
 
-  // m_Tasks is always rebuilt from m_Work via Update(), so m_Work.empty()
-  // implies m_Tasks.empty(). Clear() calls Update(), so after Clear() both
-  // are guaranteed empty.
-  bool IsEmpty() const { return m_Work.empty(); }
+  /**
+   * Checks if any tasks have been added to the scheduler and have not yet been
+   * removed.
+   * @return true if there are no tasks, false if there are some tasks
+   */
+  bool IsEmpty() const {
+    /* m_Tasks is always rebuilt from m_Work via Update(), so m_Work.empty()
+     * implies m_Tasks.empty(). Clear() calls Update(), so after Clear() both
+     * are guaranteed empty */
+    return m_Work.empty();
+  }
 
   void PauseGivingWork() { m_IsNotGivingWork.store(true); }
   void ResumeGivingWork() { m_IsNotGivingWork.store(false); }
