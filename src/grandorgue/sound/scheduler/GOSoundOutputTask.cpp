@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,7 +8,6 @@
 #include "GOSoundOutputTask.h"
 
 #include "GOSoundThread.h"
-#include "sound/GOSoundReverb.h"
 #include "threading/GOMutexLocker.h"
 
 GOSoundOutputTask::GOSoundOutputTask(
@@ -114,8 +113,11 @@ unsigned GOSoundOutputTask::GetCost() { return 0; }
 
 bool GOSoundOutputTask::GetRepeat() { return false; }
 
-void GOSoundOutputTask::SetupReverb(GOConfig &settings) {
-  m_Reverb->Setup(settings);
+void GOSoundOutputTask::SetupReverb(
+  const GOSoundReverb::ReverbConfig &config,
+  unsigned nSamplesPerBuffer,
+  unsigned sampleRate) {
+  m_Reverb->Setup(config, nSamplesPerBuffer, sampleRate);
 }
 
 const std::vector<float> &GOSoundOutputTask::GetMeterInfo() {
