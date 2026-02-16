@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -47,6 +47,11 @@ public:
   void Exec();
   void Add(GOSoundTask *item);
   void Remove(GOSoundTask *item);
+
+  // m_Tasks is always rebuilt from m_Work via Update(), so m_Work.empty()
+  // implies m_Tasks.empty(). Clear() calls Update(), so after Clear() both
+  // are guaranteed empty.
+  bool IsEmpty() const { return m_Work.empty(); }
 
   void PauseGivingWork() { m_IsNotGivingWork.store(true); }
   void ResumeGivingWork() { m_IsNotGivingWork.store(false); }
