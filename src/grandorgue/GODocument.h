@@ -53,7 +53,10 @@ public:
 
   bool Save();
   bool Export(const wxString &cmb);
-  bool LoadOrgan(
+  // Returns the loaded organ controller, or nullptr on failure.
+  // Note: on failure CloseOrgan() is called, which also clears
+  // m_OrganController.
+  GOOrganController *LoadOrgan(
     GOProgressDialog *dlg,
     const GOOrgan &organ,
     const wxString &cmb,

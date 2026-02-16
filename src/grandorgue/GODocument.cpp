@@ -46,7 +46,7 @@ bool GODocument::IsModified() const {
   return m_OrganController && m_OrganController->IsOrganModified();
 }
 
-bool GODocument::LoadOrgan(
+GOOrganController *GODocument::LoadOrgan(
   GOProgressDialog *dlg,
   const GOOrgan &organ,
   const wxString &cmb,
@@ -57,51 +57,52 @@ bool GODocument::LoadOrgan(
   CloseOrgan();
   m_OrganController = new GOOrganController(cfg, true);
   wxString error = m_OrganController->Load(dlg, organ, cmb, isGuiOnly);
-  if (!error.IsEmpty()) {
+
+  if (error.IsEmpty()) {
+    cfg.AddOrgan(m_OrganController->GetOrganInfo());
+    cfg.Flush();
+    {
+      wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
+      event.SetInt(m_OrganController->GetVolume());
+      wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+
+      m_sound.GetEngine().SetVolume(m_OrganController->GetVolume());
+    }
+
+    wxCommandEvent event(wxEVT_WINTITLE, 0);
+    event.SetString(m_OrganController->GetOrganName());
+    wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+
+    for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)
+      if (m_OrganController->GetPanel(i)->InitialOpenWindow())
+        ShowPanel(i);
+
+    const GOLogicalRect &mRect(
+      m_OrganController->GetMainWindowData()->GetWindowRect());
+
+    if (!mRect.IsEmpty() && p_MainWindow)
+      p_MainWindow->SetPosSize(mRect);
+
+    m_sound.AssignOrganFile(m_OrganController);
+    m_OrganFileReady = true;
+    m_listener.SetCallback(this);
+    if (!cmb.IsEmpty())
+      m_OrganController->SetOrganModified();
+
+    /* The sound was open on GOFrame::Init.
+     * m_sound.AssignOrganFile made all necessary for the new organController.
+     * So the new opening is not necessary
+    if (m_sound.OpenSound())
+            return nullptr;
+     */
+  } else {
     if (error != wxT("!")) {
       wxLogError(wxT("%s\n"), error.c_str());
       GOMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
     }
-    CloseOrgan();
-    return false;
+    CloseOrgan(); // also clears m_OrganController
   }
-  cfg.AddOrgan(m_OrganController->GetOrganInfo());
-  cfg.Flush();
-  {
-    wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
-    event.SetInt(m_OrganController->GetVolume());
-    wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-
-    m_sound.GetEngine().SetVolume(m_OrganController->GetVolume());
-  }
-
-  wxCommandEvent event(wxEVT_WINTITLE, 0);
-  event.SetString(m_OrganController->GetOrganName());
-  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-
-  for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)
-    if (m_OrganController->GetPanel(i)->InitialOpenWindow())
-      ShowPanel(i);
-
-  const GOLogicalRect &mRect(
-    m_OrganController->GetMainWindowData()->GetWindowRect());
-
-  if (!mRect.IsEmpty() && p_MainWindow)
-    p_MainWindow->SetPosSize(mRect);
-
-  m_sound.AssignOrganFile(m_OrganController);
-  m_OrganFileReady = true;
-  m_listener.SetCallback(this);
-  if (!cmb.IsEmpty())
-    m_OrganController->SetOrganModified();
-
-  /* The sound was open on GOFrame::Init.
-   * m_sound.AssignOrganFile made all necessary for the new organController.
-   * So the new opening is not necessary
-  if (m_sound.OpenSound())
-          return false;
-   */
-  return true;
+  return m_OrganController;
 }
 
 bool GODocument::UpdateCache(GOProgressDialog *dlg, bool compress) {
