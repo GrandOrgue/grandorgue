@@ -31,6 +31,7 @@ private:
   void TestPerfCopyChannelFrom();
   void TestPerfAddChannelFrom();
   void TestPerfAddChannelFromWithCoefficient();
+  void TestPerfAddChannelFromMonoRecipient();
 
 public:
   std::string GetName() override { return TEST_NAME; }

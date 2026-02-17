@@ -13,14 +13,29 @@
 #include <memory>
 
 /**
- * Sound buffer that owns its memory.
+ * Sound buffer that owns its memory (heap-allocated via unique_ptr).
  * Inherits from GOSoundBufferMutable and manages its own memory allocation.
+ *
+ * Use this class when:
+ * - The buffer must persist beyond the current scope (e.g. as a class member)
+ * - The buffer size is not known at compile time
+ * - The buffer is large (to avoid stack overflow)
+ *
+ * Prefer GO_DECLARE_LOCAL_SOUND_BUFFER (defined in GOSoundBufferMutable.h)
+ * instead when:
+ * - The buffer is short-lived (local variable within a function)
+ * - The size is known at compile time and is small
+ * - You are in a real-time audio callback and want to avoid heap allocation
+ *
+ * @warning In real-time audio callbacks, heap allocation can cause latency
+ * spikes. Use GO_DECLARE_LOCAL_SOUND_BUFFER for stack-allocated buffers in
+ * such contexts when the buffer size is bounded and small.
  */
 class GOSoundBufferManaged : public GOSoundBufferMutable {
 private:
-  // The memory buffer that contains sound samples. It is deleted automatically
+  // The memory buffer that contains sound items. It is deleted automatically
   // when the instance is destroyed
-  std::unique_ptr<SoundUnit[]> m_OwnedData;
+  std::unique_ptr<Item[]> m_OwnedData;
 
   /**
    * Copy data from source buffer (resizes this buffer to match source).
@@ -40,9 +55,9 @@ public:
    * Resize the buffer to new dimensions.
    * If dimensions differ, memory is reallocated.
    * @param nChannels New number of channels
-   * @param nSamples New number of samples
+   * @param nFrames New number of frames
    */
-  void Resize(unsigned nChannels, unsigned nSamples);
+  void Resize(unsigned nChannels, unsigned nFrames);
 
   /**
    * Default constructor - creates empty invalid buffer.
@@ -52,11 +67,11 @@ public:
   /**
    * Constructor that allocates memory for the buffer.
    * @param nChannels Number of channels
-   * @param nSamples Number of samples
+   * @param nFrames Number of frames
    */
-  inline GOSoundBufferManaged(unsigned nChannels, unsigned nSamples)
+  inline GOSoundBufferManaged(unsigned nChannels, unsigned nFrames)
     : GOSoundBufferMutable() {
-    Resize(nChannels, nSamples);
+    Resize(nChannels, nFrames);
   }
 
   /**

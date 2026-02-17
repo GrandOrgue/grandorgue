@@ -19,20 +19,20 @@ class GOSoundBufferMutableMono : public GOSoundBufferMutable {
 private:
   /**
    * Check if this buffer is compatible with another buffer.
-   * For mono operations, we require same number of samples.
+   * For mono operations, we require same number of frames.
    */
   inline void AssertCompatibleWith(const GOSoundBuffer &otherBuffer) const {
     assert(isValid());
     assert(otherBuffer.isValid());
-    assert(otherBuffer.GetNSamples() == GetNSamples());
+    assert(otherBuffer.GetNFrames() == GetNFrames());
     // Mono buffer should have exactly 1 channel
     assert(GetNChannels() == 1);
   }
 
 public:
   // Constructor for mono mutable buffer
-  inline GOSoundBufferMutableMono(SoundUnit *pData, unsigned nSamples)
-    : GOSoundBufferMutable(pData, 1, nSamples) {}
+  inline GOSoundBufferMutableMono(Item *pData, unsigned nFrames)
+    : GOSoundBufferMutable(pData, 1, nFrames) {}
 
 protected:
   // Subclasses may create an invalid instance and then they may call Assign
@@ -41,16 +41,16 @@ protected:
 public:
   // Override GetSubBuffer to return mono mutable version
   inline GOSoundBufferMutableMono GetSubBuffer(
-    unsigned offset, unsigned nSamples) {
-    assert(offset + nSamples <= GetNSamples());
+    unsigned frameIndex, unsigned nFrames) {
+    assert(frameIndex + nFrames <= GetNFrames());
     return GOSoundBufferMutableMono(
-      GetData() + offset, // Mono buffer: offset in samples = offset in units
-      nSamples);
+      GetData() + frameIndex, // Mono buffer: frame index = item index
+      nFrames);
   }
 
   /**
    * Copy data from a specific channel of a multi-channel source buffer.
-   * This mono buffer must have the same number of samples as the source buffer.
+   * This mono buffer must have the same number of frames as the source buffer.
    * @param srcBuffer Source buffer to copy from
    * @param srcChannel Channel number in source buffer to copy from (0-based)
    */
@@ -64,7 +64,7 @@ public:
 
   /**
    * Copy mono data to a specific channel of a multi-channel destination buffer.
-   * This mono buffer must have the same number of samples as the destination
+   * This mono buffer must have the same number of frames as the destination
    * buffer.
    * @param dstBuffer Destination buffer to copy to
    * @param dstChannel Channel number in destination buffer to copy to (0-based)

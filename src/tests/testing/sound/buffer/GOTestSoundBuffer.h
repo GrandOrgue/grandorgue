@@ -15,8 +15,8 @@ private:
   static const std::string TEST_NAME;
 
   void TestConstructorAndBasicProperties();
-  void TestGetNUnits();
-  void TestGetUnitOffset();
+  void TestGetNItems();
+  void TestGetItemIndex();
   void TestGetSubBuffer();
   void TestInvalidBuffer();
   void TestEdgeCases();

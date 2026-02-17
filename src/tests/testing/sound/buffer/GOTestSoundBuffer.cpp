@@ -20,17 +20,17 @@ const std::string GOTestSoundBuffer::TEST_NAME = "GOTestSoundBuffer";
 
 void GOTestSoundBuffer::TestConstructorAndBasicProperties() {
   const unsigned nChannels = 2;
-  const unsigned nSamples = 4;
-  const unsigned totalUnits = nChannels * nSamples;
+  const unsigned nFrames = 4;
+  const unsigned totalItems = nChannels * nFrames;
 
-  std::vector<GOSoundBuffer::SoundUnit> data(totalUnits);
+  std::vector<GOSoundBuffer::Item> data(totalItems);
   std::iota(data.begin(), data.end(), 1.0f);
 
-  GOSoundBuffer buffer(data.data(), nChannels, nSamples);
+  GOSoundBuffer buffer(data.data(), nChannels, nFrames);
 
   GOAssert(
     buffer.isValid(),
-    "Buffer should be valid with non-null data, positive channels and samples");
+    "Buffer should be valid with non-null data, positive channels and frames");
 
   GOAssert(
     buffer.GetData() == data.data(),
@@ -48,24 +48,22 @@ void GOTestSoundBuffer::TestConstructorAndBasicProperties() {
       buffer.GetNChannels()));
 
   GOAssert(
-    buffer.GetNSamples() == nSamples,
+    buffer.GetNFrames() == nFrames,
     std::format(
-      "GetNSamples() should return {} (got: {})",
-      nSamples,
-      buffer.GetNSamples()));
+      "GetNFrames() should return {} (got: {})", nFrames, buffer.GetNFrames()));
 
   GOAssert(
-    buffer.GetNUnits() == totalUnits,
+    buffer.GetNItems() == totalItems,
     std::format(
-      "GetNUnits() should return {} (got: {})",
-      totalUnits,
-      buffer.GetNUnits()));
+      "GetNItems() should return {} (got: {})",
+      totalItems,
+      buffer.GetNItems()));
 
   GOAssert(
-    buffer.GetNBytes() == totalUnits * sizeof(GOSoundBuffer::SoundUnit),
+    buffer.GetNBytes() == totalItems * sizeof(GOSoundBuffer::Item),
     std::format(
       "GetNBytes() should return {} (got: {})",
-      totalUnits * sizeof(GOSoundBuffer::SoundUnit),
+      totalItems * sizeof(GOSoundBuffer::Item),
       buffer.GetNBytes()));
 
   // Check data
@@ -74,98 +72,98 @@ void GOTestSoundBuffer::TestConstructorAndBasicProperties() {
     "Buffer data should match original data");
 }
 
-void GOTestSoundBuffer::TestGetNUnits() {
+void GOTestSoundBuffer::TestGetNItems() {
   GOAssert(
-    GOSoundBuffer::getNUnits(2, 4) == 8,
+    GOSoundBuffer::getNItems(2, 4) == 8,
     std::format(
-      "getNUnits(2, 4) should return 8 (got: {})",
-      GOSoundBuffer::getNUnits(2, 4)));
+      "getNItems(2, 4) should return 8 (got: {})",
+      GOSoundBuffer::getNItems(2, 4)));
 
   GOAssert(
-    GOSoundBuffer::getNUnits(1, 10) == 10,
+    GOSoundBuffer::getNItems(1, 10) == 10,
     std::format(
-      "getNUnits(1, 10) should return 10 (got: {})",
-      GOSoundBuffer::getNUnits(1, 10)));
+      "getNItems(1, 10) should return 10 (got: {})",
+      GOSoundBuffer::getNItems(1, 10)));
 
   GOAssert(
-    GOSoundBuffer::getNUnits(5, 2) == 10,
+    GOSoundBuffer::getNItems(5, 2) == 10,
     std::format(
-      "getNUnits(5, 2) should return 10 (got: {})",
-      GOSoundBuffer::getNUnits(5, 2)));
+      "getNItems(5, 2) should return 10 (got: {})",
+      GOSoundBuffer::getNItems(5, 2)));
 
   GOAssert(
-    GOSoundBuffer::getNUnits(0, 10) == 0,
+    GOSoundBuffer::getNItems(0, 10) == 0,
     std::format(
-      "getNUnits(0, 10) should return 0 (got: {})",
-      GOSoundBuffer::getNUnits(0, 10)));
+      "getNItems(0, 10) should return 0 (got: {})",
+      GOSoundBuffer::getNItems(0, 10)));
 
   GOAssert(
-    GOSoundBuffer::getNUnits(2, 0) == 0,
+    GOSoundBuffer::getNItems(2, 0) == 0,
     std::format(
-      "getNUnits(2, 0) should return 0 (got: {})",
-      GOSoundBuffer::getNUnits(2, 0)));
+      "getNItems(2, 0) should return 0 (got: {})",
+      GOSoundBuffer::getNItems(2, 0)));
 }
 
-void GOTestSoundBuffer::TestGetUnitOffset() {
+void GOTestSoundBuffer::TestGetItemIndex() {
   const unsigned nChannels = 3;
-  const unsigned nSamples = 4;
+  const unsigned nFrames = 4;
 
-  std::vector<GOSoundBuffer::SoundUnit> data(nChannels * nSamples);
+  std::vector<GOSoundBuffer::Item> data(nChannels * nFrames);
   std::iota(data.begin(), data.end(), 1.0f);
 
-  GOSoundBuffer buffer(data.data(), nChannels, nSamples);
+  GOSoundBuffer buffer(data.data(), nChannels, nFrames);
 
-  // Test basic offsets
+  // Test basic indices
   GOAssert(
-    buffer.GetUnitOffset(0, 0) == 0,
+    buffer.GetItemIndex(0, 0) == 0,
     std::format(
-      "GetUnitOffset(0, 0) should return 0 (got: {})",
-      buffer.GetUnitOffset(0, 0)));
-
-  GOAssert(
-    buffer.GetUnitOffset(0, 1) == 1,
-    std::format(
-      "GetUnitOffset(0, 1) should return 1 (got: {})",
-      buffer.GetUnitOffset(0, 1)));
+      "GetItemIndex(0, 0) should return 0 (got: {})",
+      buffer.GetItemIndex(0, 0)));
 
   GOAssert(
-    buffer.GetUnitOffset(1, 0) == nChannels,
+    buffer.GetItemIndex(0, 1) == 1,
     std::format(
-      "GetUnitOffset(1, 0) should return {} (got: {})",
+      "GetItemIndex(0, 1) should return 1 (got: {})",
+      buffer.GetItemIndex(0, 1)));
+
+  GOAssert(
+    buffer.GetItemIndex(1, 0) == nChannels,
+    std::format(
+      "GetItemIndex(1, 0) should return {} (got: {})",
       nChannels,
-      buffer.GetUnitOffset(1, 0)));
+      buffer.GetItemIndex(1, 0)));
 
   GOAssert(
-    buffer.GetUnitOffset(1, 1) == nChannels + 1,
+    buffer.GetItemIndex(1, 1) == nChannels + 1,
     std::format(
-      "GetUnitOffset(1, 1) should return {} (got: {})",
+      "GetItemIndex(1, 1) should return {} (got: {})",
       nChannels + 1,
-      buffer.GetUnitOffset(1, 1)));
+      buffer.GetItemIndex(1, 1)));
 
   GOAssert(
-    buffer.GetUnitOffset(2) == nChannels * 2,
+    buffer.GetItemIndex(2) == nChannels * 2,
     std::format(
-      "GetUnitOffset(2) should return {} (got: {})",
+      "GetItemIndex(2) should return {} (got: {})",
       nChannels * 2,
-      buffer.GetUnitOffset(2)));
+      buffer.GetItemIndex(2)));
 
-  // Test that GetNUnits uses GetUnitOffset
+  // Test that GetNItems uses GetItemIndex
   GOAssert(
-    buffer.GetNUnits() == buffer.GetUnitOffset(nSamples, 0),
-    std::format("GetNUnits() should equal GetUnitOffset({}, 0)", nSamples));
+    buffer.GetNItems() == buffer.GetItemIndex(nFrames, 0),
+    std::format("GetNItems() should equal GetItemIndex({}, 0)", nFrames));
 }
 
 void GOTestSoundBuffer::TestGetSubBuffer() {
   const unsigned nChannels = 2;
-  const unsigned nSamples = 5;
-  const unsigned totalUnits = nChannels * nSamples;
+  const unsigned nFrames = 5;
+  const unsigned totalItems = nChannels * nFrames;
 
-  std::vector<GOSoundBuffer::SoundUnit> data(totalUnits);
-  for (unsigned i = 0; i < totalUnits; ++i) {
+  std::vector<GOSoundBuffer::Item> data(totalItems);
+  for (unsigned i = 0; i < totalItems; ++i) {
     data[i] = static_cast<float>(i * 10);
   }
 
-  GOSoundBuffer buffer(data.data(), nChannels, nSamples);
+  GOSoundBuffer buffer(data.data(), nChannels, nFrames);
 
   // SubBuffer from the beginning
   GOSoundBuffer sub1 = buffer.GetSubBuffer(0, 2);
@@ -174,38 +172,39 @@ void GOTestSoundBuffer::TestGetSubBuffer() {
   GOAssert(
     sub1.GetData() == data.data(),
     std::format(
-      "SubBuffer at offset 0 should point to same data (expected: {}, got: {})",
+      "SubBuffer at frameIndex 0 should point to same data (expected: {}, got: "
+      "{})",
       static_cast<const void *>(data.data()),
       static_cast<const void *>(sub1.GetData())));
 
   GOAssert(
-    sub1.GetNSamples() == 2,
+    sub1.GetNFrames() == 2,
     std::format(
-      "SubBuffer with 2 samples should have GetNSamples() == 2 (got: {})",
-      sub1.GetNSamples()));
+      "SubBuffer with 2 frames should have GetNFrames() == 2 (got: {})",
+      sub1.GetNFrames()));
 
-  // SubBuffer with offset
-  const unsigned offset = 2;
-  const unsigned subSamples = 2;
-  GOSoundBuffer sub2 = buffer.GetSubBuffer(offset, subSamples);
+  // SubBuffer with frameIndex
+  const unsigned frameIndex = 2;
+  const unsigned subFrames = 2;
+  GOSoundBuffer sub2 = buffer.GetSubBuffer(frameIndex, subFrames);
 
-  GOAssert(sub2.isValid(), "SubBuffer with offset should be valid");
+  GOAssert(sub2.isValid(), "SubBuffer with frameIndex should be valid");
 
-  const unsigned expectedOffsetUnits = buffer.GetUnitOffset(offset);
+  const unsigned expectedItemIndex = buffer.GetItemIndex(frameIndex);
   GOAssert(
-    sub2.GetData() == data.data() + expectedOffsetUnits,
+    sub2.GetData() == data.data() + expectedItemIndex,
     std::format(
-      "SubBuffer at offset {} should point to correct position (expected "
-      "offset: {} units)",
-      offset,
-      expectedOffsetUnits));
+      "SubBuffer at frameIndex {} should point to correct position (expected "
+      "item index: {} items)",
+      frameIndex,
+      expectedItemIndex));
 
   GOAssert(
-    sub2.GetNSamples() == subSamples,
+    sub2.GetNFrames() == subFrames,
     std::format(
-      "SubBuffer should have {} samples (got: {})",
-      subSamples,
-      sub2.GetNSamples()));
+      "SubBuffer should have {} frames (got: {})",
+      subFrames,
+      sub2.GetNFrames()));
 
   GOAssert(
     sub2.GetNChannels() == nChannels,
@@ -214,12 +213,12 @@ void GOTestSoundBuffer::TestGetSubBuffer() {
       nChannels,
       sub2.GetNChannels()));
 
-  // Check sub-buffer data using GetUnitOffset
+  // Check sub-buffer data using GetItemIndex
   GOAssert(
-    sub2.GetData()[0] == data[buffer.GetUnitOffset(offset, 0)],
+    sub2.GetData()[0] == data[buffer.GetItemIndex(frameIndex, 0)],
     std::format(
-      "First unit of SubBuffer should be {} (got: {})",
-      data[buffer.GetUnitOffset(offset, 0)],
+      "First item of SubBuffer should be {} (got: {})",
+      data[buffer.GetItemIndex(frameIndex, 0)],
       sub2.GetData()[0]));
 }
 
@@ -235,70 +234,69 @@ void GOTestSoundBuffer::TestInvalidBuffer() {
   GOAssert(
     !zeroChannelsBuffer.isValid(), "Buffer with 0 channels should be invalid");
 
-  // Buffer with zero samples
-  GOSoundBuffer zeroSamplesBuffer(dummyData, 2, 0);
+  // Buffer with zero frames
+  GOSoundBuffer zeroFramesBuffer(dummyData, 2, 0);
   GOAssert(
-    !zeroSamplesBuffer.isValid(), "Buffer with 0 samples should be invalid");
+    !zeroFramesBuffer.isValid(), "Buffer with 0 frames should be invalid");
 
-  // Valid buffer with one sample
-  float singleSample[2] = {1.0f, 2.0f};
-  GOSoundBuffer singleBuffer(singleSample, 2, 1);
-  GOAssert(singleBuffer.isValid(), "Buffer with 1 sample should be valid");
+  // Valid buffer with one frame
+  float singleFrame[2] = {1.0f, 2.0f};
+  GOSoundBuffer singleBuffer(singleFrame, 2, 1);
+  GOAssert(singleBuffer.isValid(), "Buffer with 1 frame should be valid");
 
   GOAssert(
-    singleBuffer.GetNUnits() == 2,
+    singleBuffer.GetNItems() == 2,
     std::format(
-      "Buffer with 2 channels and 1 sample should have 2 total units (got: {})",
-      singleBuffer.GetNUnits()));
+      "Buffer with 2 channels and 1 frame should have 2 total items (got: {})",
+      singleBuffer.GetNItems()));
 }
 
 void GOTestSoundBuffer::TestEdgeCases() {
   // Maximum size buffer (within reasonable limits)
   const unsigned largeChannels = 8;
-  const unsigned largeSamples = 10000;
-  const unsigned largeTotalUnits = largeChannels * largeSamples;
+  const unsigned largeFrames = 10000;
+  const unsigned largeTotalItems = largeChannels * largeFrames;
 
-  std::vector<GOSoundBuffer::SoundUnit> largeData(largeTotalUnits);
+  std::vector<GOSoundBuffer::Item> largeData(largeTotalItems);
   std::fill(largeData.begin(), largeData.end(), 0.5f);
 
-  GOSoundBuffer largeBuffer(largeData.data(), largeChannels, largeSamples);
+  GOSoundBuffer largeBuffer(largeData.data(), largeChannels, largeFrames);
 
   GOAssert(largeBuffer.isValid(), "Large buffer should be valid");
 
   GOAssert(
-    largeBuffer.GetNBytes()
-      == largeTotalUnits * sizeof(GOSoundBuffer::SoundUnit),
+    largeBuffer.GetNBytes() == largeTotalItems * sizeof(GOSoundBuffer::Item),
     std::format(
       "Large buffer size should be {} bytes (got: {})",
-      largeTotalUnits * sizeof(GOSoundBuffer::SoundUnit),
+      largeTotalItems * sizeof(GOSoundBuffer::Item),
       largeBuffer.GetNBytes()));
 
-  // Test GetUnitOffset for edge cases
+  // Test GetItemIndex for edge cases
   GOAssert(
-    largeBuffer.GetUnitOffset(0, 0) == 0,
-    "GetUnitOffset(0, 0) should return 0 for large buffer");
+    largeBuffer.GetItemIndex(0, 0) == 0,
+    "GetItemIndex(0, 0) should return 0 for large buffer");
 
   GOAssert(
-    largeBuffer.GetUnitOffset(largeSamples - 1, largeChannels - 1)
-      == largeTotalUnits - 1,
+    largeBuffer.GetItemIndex(largeFrames - 1, largeChannels - 1)
+      == largeTotalItems - 1,
     std::format(
-      "GetUnitOffset({}, {}) should return last unit index {}",
-      largeSamples - 1,
+      "GetItemIndex({}, {}) should return last item index {}",
+      largeFrames - 1,
       largeChannels - 1,
-      largeTotalUnits - 1));
+      largeTotalItems - 1));
 
   // SubBuffer at the very end
-  GOSoundBuffer lastSample = largeBuffer.GetSubBuffer(largeSamples - 1, 1);
-  GOAssert(lastSample.isValid(), "SubBuffer at last sample should be valid");
+  GOSoundBuffer lastFrame = largeBuffer.GetSubBuffer(largeFrames - 1, 1);
+  GOAssert(lastFrame.isValid(), "SubBuffer at last frame should be valid");
 
   GOAssert(
-    lastSample.GetNSamples() == 1,
+    lastFrame.GetNFrames() == 1,
     std::format(
-      "Last sample SubBuffer should have 1 sample (got: {})",
-      lastSample.GetNSamples()));
+      "Last frame SubBuffer should have 1 frame (got: {})",
+      lastFrame.GetNFrames()));
 
   // SubBuffer of entire length
-  GOSoundBuffer fullBuffer = largeBuffer.GetSubBuffer(0, largeSamples);
+  GOSoundBuffer fullBuffer = largeBuffer.GetSubBuffer(0, largeFrames);
   GOAssert(fullBuffer.isValid(), "SubBuffer of full length should be valid");
 
   GOAssert(
@@ -308,8 +306,8 @@ void GOTestSoundBuffer::TestEdgeCases() {
 
 void GOTestSoundBuffer::run() {
   TestConstructorAndBasicProperties();
-  TestGetNUnits();
-  TestGetUnitOffset();
+  TestGetNItems();
+  TestGetItemIndex();
   TestGetSubBuffer();
   TestInvalidBuffer();
   TestEdgeCases();

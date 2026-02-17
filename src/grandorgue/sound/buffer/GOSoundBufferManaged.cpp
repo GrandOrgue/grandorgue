@@ -7,23 +7,23 @@
 
 #include "GOSoundBufferManaged.h"
 
-void GOSoundBufferManaged::Resize(unsigned nChannels, unsigned nSamples) {
-  if (nChannels != GetNChannels() || nSamples != GetNSamples()) {
-    unsigned newNUnits = getNUnits(nChannels, nSamples);
+void GOSoundBufferManaged::Resize(unsigned nChannels, unsigned nFrames) {
+  if (nChannels != GetNChannels() || nFrames != GetNFrames()) {
+    unsigned newNItems = getNItems(nChannels, nFrames);
 
     // reallocate memory only if the size is changed
-    if (newNUnits != GetNUnits()) {
-      if (newNUnits)
-        m_OwnedData = std::make_unique<SoundUnit[]>(newNUnits);
+    if (newNItems != GetNItems()) {
+      if (newNItems)
+        m_OwnedData = std::make_unique<Item[]>(newNItems);
       else
         m_OwnedData.reset();
     }
-    Assign(m_OwnedData.get(), nChannels, nSamples);
+    Assign(m_OwnedData.get(), nChannels, nFrames);
   }
 }
 
 void GOSoundBufferManaged::CopyDataFrom(const GOSoundBuffer &srcBuffer) {
-  Resize(srcBuffer.GetNChannels(), srcBuffer.GetNSamples());
+  Resize(srcBuffer.GetNChannels(), srcBuffer.GetNFrames());
   // After Resize, both buffers have same validity: either both valid or both
   // invalid
   if (isValid())
@@ -32,21 +32,21 @@ void GOSoundBufferManaged::CopyDataFrom(const GOSoundBuffer &srcBuffer) {
 
 void GOSoundBufferManaged::MoveDataFrom(GOSoundBufferManaged &other) noexcept {
   m_OwnedData = std::move(other.m_OwnedData);
-  Assign(other.GetData(), other.GetNChannels(), other.GetNSamples());
+  Assign(other.GetData(), other.GetNChannels(), other.GetNFrames());
   other.Assign(nullptr, 0, 0);
 }
 
 void GOSoundBufferManaged::Swap(GOSoundBufferManaged &other) noexcept {
   // Save current data of this buffer
   unsigned oldChannels = GetNChannels();
-  unsigned oldSamples = GetNSamples();
+  unsigned oldFrames = GetNFrames();
 
   // Swap ownership of memory
   std::swap(m_OwnedData, other.m_OwnedData);
 
   // Update this buffer from new m_OwnedData
-  Assign(m_OwnedData.get(), other.GetNChannels(), other.GetNSamples());
+  Assign(m_OwnedData.get(), other.GetNChannels(), other.GetNFrames());
 
   // Update other buffer from new other.m_OwnedData
-  other.Assign(other.m_OwnedData.get(), oldChannels, oldSamples);
+  other.Assign(other.m_OwnedData.get(), oldChannels, oldFrames);
 }
