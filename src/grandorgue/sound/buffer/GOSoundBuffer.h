@@ -18,7 +18,7 @@
  *
  * We assume that the buffer has interleaved format: it consists of nFrames
  * consecutive multichannel frames. One multichannel frame consists of
- * nChannels consecutive sound items. By default, the sound item is float.
+ * nChannels consecutive sound items.
  *
  * The class is a non-owning wrapper around existing memory. Multiple
  * GOSoundBuffer objects can point to the same memory region (shared data).
