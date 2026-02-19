@@ -56,6 +56,8 @@ public:
   inline GOSoundBuffer(const Item *pData, unsigned nChannels, unsigned nFrames)
     : p_data(pData), m_NChannels(nChannels), m_NFrames(nFrames) {}
 
+  inline GOSoundBuffer(const GOSoundBuffer &srcBuffer) = default;
+
   inline const Item *GetData() const { return p_data; }
   inline unsigned GetNChannels() const { return m_NChannels; }
   inline unsigned GetNFrames() const { return m_NFrames; }

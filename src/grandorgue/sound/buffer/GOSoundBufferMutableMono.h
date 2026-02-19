@@ -33,6 +33,8 @@ public:
   // Constructor for mono mutable buffer
   inline GOSoundBufferMutableMono(Item *pData, unsigned nFrames)
     : GOSoundBufferMutable(pData, 1, nFrames) {}
+  inline GOSoundBufferMutableMono(const GOSoundBufferMutableMono &srcBuffer)
+    = default;
 
 protected:
   // Subclasses may create an invalid instance and then they may call Assign

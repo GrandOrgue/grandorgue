@@ -43,6 +43,8 @@ public:
   inline GOSoundBufferMutable(Item *pData, unsigned nChannels, unsigned nFrames)
     : GOSoundBuffer(pData, nChannels, nFrames) {}
 
+  inline GOSoundBufferMutable(const GOSoundBufferMutable &srcBuffer) = default;
+
 protected:
   // Subclasses may create an invalid instance and then they may call Assign
   inline GOSoundBufferMutable() : GOSoundBuffer() {}

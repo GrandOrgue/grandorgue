@@ -46,7 +46,9 @@ private:
 public:
   /**
    * Resize the buffer to new dimensions.
-   * If dimensions differ, memory is reallocated.
+   * If dimensions differ, memory is reallocated and all existing data in the
+   * buffer is lost.
+   *
    * @param nChannels New number of channels
    * @param nFrames New number of frames
    */
