@@ -140,7 +140,7 @@ void GOPerfTestApp::RunTest(
       engine->SetAudioOutput(engine_config);
       engine->SetAudioRecorder(&recorder, false);
 
-      engine->Setup(organController);
+      engine->Setup(*organController, organController->GetMemoryPool());
 
       std::vector<GOSoundSampler *> handles;
       float output_buffer[samples_per_frame * 2];
