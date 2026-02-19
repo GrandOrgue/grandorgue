@@ -183,20 +183,20 @@ void GOTestSoundBuffer::TestGetSubBuffer() {
       "SubBuffer with 2 frames should have GetNFrames() == 2 (got: {})",
       sub1.GetNFrames()));
 
-  // SubBuffer with frameIndex
-  const unsigned frameIndex = 2;
+  // SubBuffer with firstFrameIndex
+  const unsigned firstFrameIndex = 2;
   const unsigned subFrames = 2;
-  GOSoundBuffer sub2 = buffer.GetSubBuffer(frameIndex, subFrames);
+  GOSoundBuffer sub2 = buffer.GetSubBuffer(firstFrameIndex, subFrames);
 
-  GOAssert(sub2.isValid(), "SubBuffer with frameIndex should be valid");
+  GOAssert(sub2.isValid(), "SubBuffer with firstFrameIndex should be valid");
 
-  const unsigned expectedItemIndex = buffer.GetItemIndex(frameIndex);
+  const unsigned expectedItemIndex = buffer.GetItemIndex(firstFrameIndex);
   GOAssert(
     sub2.GetData() == data.data() + expectedItemIndex,
     std::format(
-      "SubBuffer at frameIndex {} should point to correct position (expected "
-      "item index: {} items)",
-      frameIndex,
+      "SubBuffer at firstFrameIndex {} should point to correct position "
+      "(expected item index: {} items)",
+      firstFrameIndex,
       expectedItemIndex));
 
   GOAssert(
@@ -215,10 +215,10 @@ void GOTestSoundBuffer::TestGetSubBuffer() {
 
   // Check sub-buffer data using GetItemIndex
   GOAssert(
-    sub2.GetData()[0] == data[buffer.GetItemIndex(frameIndex, 0)],
+    sub2.GetData()[0] == data[buffer.GetItemIndex(firstFrameIndex, 0)],
     std::format(
       "First item of SubBuffer should be {} (got: {})",
-      data[buffer.GetItemIndex(frameIndex, 0)],
+      data[buffer.GetItemIndex(firstFrameIndex, 0)],
       sub2.GetData()[0]));
 }
 

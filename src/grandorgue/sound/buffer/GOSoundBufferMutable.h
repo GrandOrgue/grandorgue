@@ -53,10 +53,10 @@ public:
 
   // Override SubBuffer to return mutable version
   inline GOSoundBufferMutable GetSubBuffer(
-    unsigned frameIndex, unsigned nFrames) {
-    assert(frameIndex + nFrames <= m_NFrames);
+    unsigned firstFrameIndex, unsigned nFrames) {
+    assert(firstFrameIndex + nFrames <= m_NFrames);
     return GOSoundBufferMutable(
-      const_cast<Item *>(p_data + GetItemIndex(frameIndex)),
+      const_cast<Item *>(p_data + GetItemIndex(firstFrameIndex)),
       m_NChannels,
       nFrames);
   }

@@ -41,10 +41,10 @@ protected:
 public:
   // Override GetSubBuffer to return mono mutable version
   inline GOSoundBufferMutableMono GetSubBuffer(
-    unsigned frameIndex, unsigned nFrames) {
-    assert(frameIndex + nFrames <= GetNFrames());
+    unsigned firstFrameIndex, unsigned nFrames) {
+    assert(firstFrameIndex + nFrames <= GetNFrames());
     return GOSoundBufferMutableMono(
-      GetData() + frameIndex, // Mono buffer: frame index = item index
+      GetData() + firstFrameIndex, // Mono buffer: frame index = item index
       nFrames);
   }
 

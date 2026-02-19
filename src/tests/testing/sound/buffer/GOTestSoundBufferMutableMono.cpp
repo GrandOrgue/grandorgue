@@ -89,18 +89,19 @@ void GOTestSoundBufferMutableMono::TestGetSubBuffer() {
       "GetSubBuffer with 2 frames should have GetNFrames() == 2 (got: {})",
       sub1.GetNFrames()));
 
-  // GetSubBuffer with frameIndex
-  const unsigned frameIndex = 2;
+  // GetSubBuffer with firstFrameIndex
+  const unsigned firstFrameIndex = 2;
   const unsigned subFrames = 2;
-  GOSoundBufferMutableMono sub2 = buffer.GetSubBuffer(frameIndex, subFrames);
+  GOSoundBufferMutableMono sub2
+    = buffer.GetSubBuffer(firstFrameIndex, subFrames);
 
-  GOAssert(sub2.isValid(), "GetSubBuffer with frameIndex should be valid");
+  GOAssert(sub2.isValid(), "GetSubBuffer with firstFrameIndex should be valid");
 
   GOAssert(
-    sub2.GetData() == data.data() + frameIndex,
+    sub2.GetData() == data.data() + firstFrameIndex,
     std::format(
-      "GetSubBuffer at frameIndex {} should point to correct position",
-      frameIndex));
+      "GetSubBuffer at firstFrameIndex {} should point to correct position",
+      firstFrameIndex));
 
   GOAssert(
     sub2.GetNFrames() == subFrames,
@@ -117,11 +118,11 @@ void GOTestSoundBufferMutableMono::TestGetSubBuffer() {
   // Modify data through sub-buffer
   sub2.GetData()[0] = 99.0f;
   GOAssert(
-    data[frameIndex] == 99.0f,
+    data[firstFrameIndex] == 99.0f,
     std::format(
       "Original data should be modified through GetSubBuffer (expected: 99.0, "
       "got: {})",
-      data[frameIndex]));
+      data[firstFrameIndex]));
 }
 
 void GOTestSoundBufferMutableMono::TestCopyChannelFrom() {

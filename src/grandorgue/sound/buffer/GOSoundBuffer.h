@@ -94,16 +94,16 @@ public:
 
   /**
    * Create a sub-buffer that shares the same memory region starting from
-   * frameIndex.
-   * @param frameIndex Index of the first frame in this buffer
+   * firstFrameIndex.
+   * @param firstFrameIndex Index of the first frame in this buffer
    * @param nFrames Number of frames in the sub-buffer
    * @return A new buffer object pointing to a subset of the original data
    */
   inline GOSoundBuffer GetSubBuffer(
-    unsigned frameIndex, unsigned nFrames) const {
-    assert(frameIndex + nFrames <= m_NFrames);
+    unsigned firstFrameIndex, unsigned nFrames) const {
+    assert(firstFrameIndex + nFrames <= m_NFrames);
     return GOSoundBuffer(
-      p_data + GetItemIndex(frameIndex), m_NChannels, nFrames);
+      p_data + GetItemIndex(firstFrameIndex), m_NChannels, nFrames);
   }
 
 protected:
