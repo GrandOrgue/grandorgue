@@ -18,14 +18,7 @@
  *
  * Use this class when:
  * - The buffer must persist beyond the current scope (e.g. as a class member)
- * - The buffer size is not known at compile time
  * - The buffer is large (to avoid stack overflow)
- *
- * Prefer GO_DECLARE_LOCAL_SOUND_BUFFER (defined in GOSoundBufferMutable.h)
- * instead when:
- * - The buffer is short-lived (local variable within a function)
- * - The size is known at compile time and is small
- * - You are in a real-time audio callback and want to avoid heap allocation
  *
  * @warning In real-time audio callbacks, heap allocation can cause latency
  * spikes. Use GO_DECLARE_LOCAL_SOUND_BUFFER for stack-allocated buffers in
