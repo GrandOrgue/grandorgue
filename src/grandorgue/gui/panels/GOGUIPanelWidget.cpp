@@ -41,10 +41,10 @@ GOGUIPanelWidget::GOGUIPanelWidget(
   : wxPanel(parent, id),
     m_panel(panel),
     m_BGInit(false),
-    m_Background(&m_BGImage),
     m_Scale(1),
     m_FontScale(1),
     m_PressedPoint(default_point) {
+  m_Background.SetSourceImage(&m_BGImage);
   initFont();
   SetLabel(m_panel->GetName());
   m_ClientBitmap.Create(

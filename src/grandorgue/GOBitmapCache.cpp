@@ -1,13 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOBitmapCache.h"
 
-#include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/mstream.h>
 
@@ -207,10 +206,10 @@ bool GOBitmapCache::loadFile(wxImage &img, const wxString &filename) {
   return result;
 }
 
-GOBitmap GOBitmapCache::GetBitmap(wxString filename, wxString maskName) {
+const wxImage *GOBitmapCache::GetBitmap(wxString filename, wxString maskName) {
   for (unsigned i = 0; i < m_Filenames.size(); i++)
     if (m_Filenames[i] == filename && m_Masknames[i] == maskName)
-      return GOBitmap(m_Bitmaps[i]);
+      return m_Bitmaps[i];
 
   wxImage image, maskimage;
 
@@ -235,8 +234,9 @@ GOBitmap GOBitmapCache::GetBitmap(wxString filename, wxString maskName) {
   }
 
   wxImage *bitmap = new wxImage(image);
+
   if (bitmap->HasMask())
     bitmap->InitAlpha();
   RegisterBitmap(bitmap, filename, maskName);
-  return GOBitmap(bitmap);
+  return bitmap;
 }

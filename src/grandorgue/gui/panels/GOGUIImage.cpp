@@ -26,7 +26,7 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
   image_mask_file
     = cfg.ReadStringTrim(ODFSetting, group, wxT("Mask"), false, wxEmptyString);
 
-  m_Bitmap = m_panel->LoadBitmap(image_file, image_mask_file);
+  m_Bitmap.SetSourceImage(m_panel->LoadBitmap(image_file, image_mask_file));
 
   x = cfg.ReadInteger(
     ODFSetting,
