@@ -866,7 +866,8 @@ void GOMidiEventRecvTab::DetectEvent() {
               break;
             case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
               e.type = MIDI_M_SYSEX_JOHANNUS_11;
-              high = 0x7f;
+              low = off.GetValue();
+              high = on.GetValue();
               break;
             case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
               if (on.GetValue() == off.GetValue()) {
@@ -950,7 +951,8 @@ void GOMidiEventRecvTab::DetectEvent() {
       break;
     case GOMidiEvent::MIDI_SYSEX_JOHANNUS_11:
       e.type = MIDI_M_SYSEX_JOHANNUS_11;
-      high_value = 127;
+      low_value = event.GetValue(); // Bank number
+      high_value = low_value;
       break;
     case GOMidiEvent::MIDI_SYSEX_VISCOUNT:
       e.type = MIDI_M_SYSEX_VISCOUNT_TOGGLE;
