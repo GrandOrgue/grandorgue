@@ -7,15 +7,11 @@
 
 #include "GOTestPerfSoundBufferMutable.h"
 
-#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <format>
 #include <functional>
 #include <iostream>
-#include <numeric>
-#include <string>
-#include <vector>
 
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/buffer/GOSoundBufferMutableMono.h"

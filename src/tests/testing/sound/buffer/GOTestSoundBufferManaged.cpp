@@ -11,7 +11,6 @@
 #include <format>
 #include <vector>
 
-#include "sound/buffer/GOSoundBuffer.h"
 #include "sound/buffer/GOSoundBufferManaged.h"
 
 const std::string GOTestSoundBufferManaged::TEST_NAME

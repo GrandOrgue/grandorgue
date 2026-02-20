@@ -10,7 +10,6 @@
 #include <cstring>
 #include <format>
 #include <numeric>
-#include <vector>
 
 #include "sound/buffer/GOSoundBufferMutableMono.h"
 
