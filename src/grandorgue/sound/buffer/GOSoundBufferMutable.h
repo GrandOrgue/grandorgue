@@ -75,7 +75,7 @@ public:
    * Fill the buffer with values from an initializer list.
    * The number of values in the list must match the buffer's total items.
    *
-   * This method is usualy used in tests for more compaction.
+   * This method is usually used in tests for more compaction.
    *
    * @param values Initializer list of float values
    */
