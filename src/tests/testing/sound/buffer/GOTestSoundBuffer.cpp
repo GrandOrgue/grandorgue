@@ -7,10 +7,8 @@
 
 #include "GOTestSoundBuffer.h"
 
-#include <cstdlib>
 #include <cstring>
 #include <format>
-#include <iostream>
 #include <numeric>
 #include <vector>
 
@@ -18,19 +16,31 @@
 
 const std::string GOTestSoundBuffer::TEST_NAME = "GOTestSoundBuffer";
 
+void GOTestSoundBuffer::AssertGetNItems(
+  unsigned nChannels, unsigned nFrames, unsigned expectedValue) {
+  const unsigned gotValue = GOSoundBuffer::getNItems(nChannels, nFrames);
+
+  GOAssert(
+    gotValue == expectedValue,
+    std::format(
+      "getNItems({}, {}) should return {} (got: {})",
+      nChannels,
+      nFrames,
+      expectedValue,
+      gotValue));
+}
+
 void GOTestSoundBuffer::TestConstructorAndBasicProperties() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 4;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
-  std::vector<GOSoundBuffer::Item> data(totalItems);
+  std::vector<GOSoundBuffer::Item> data(nItems);
   std::iota(data.begin(), data.end(), 1.0f);
 
   GOSoundBuffer buffer(data.data(), nChannels, nFrames);
 
-  GOAssert(
-    buffer.isValid(),
-    "Buffer should be valid with non-null data, positive channels and frames");
+  AssertDimensions("ConstructorAndBasicProperties", buffer, nChannels, nFrames);
 
   GOAssert(
     buffer.GetData() == data.data(),
@@ -41,29 +51,15 @@ void GOTestSoundBuffer::TestConstructorAndBasicProperties() {
       static_cast<const void *>(buffer.GetData())));
 
   GOAssert(
-    buffer.GetNChannels() == nChannels,
+    buffer.GetNItems() == nItems,
     std::format(
-      "GetNChannels() should return {} (got: {})",
-      nChannels,
-      buffer.GetNChannels()));
+      "GetNItems() should return {} (got: {})", nItems, buffer.GetNItems()));
 
   GOAssert(
-    buffer.GetNFrames() == nFrames,
-    std::format(
-      "GetNFrames() should return {} (got: {})", nFrames, buffer.GetNFrames()));
-
-  GOAssert(
-    buffer.GetNItems() == totalItems,
-    std::format(
-      "GetNItems() should return {} (got: {})",
-      totalItems,
-      buffer.GetNItems()));
-
-  GOAssert(
-    buffer.GetNBytes() == totalItems * sizeof(GOSoundBuffer::Item),
+    buffer.GetNBytes() == nItems * sizeof(GOSoundBuffer::Item),
     std::format(
       "GetNBytes() should return {} (got: {})",
-      totalItems * sizeof(GOSoundBuffer::Item),
+      nItems * sizeof(GOSoundBuffer::Item),
       buffer.GetNBytes()));
 
   // Check data
@@ -73,35 +69,28 @@ void GOTestSoundBuffer::TestConstructorAndBasicProperties() {
 }
 
 void GOTestSoundBuffer::TestGetNItems() {
-  GOAssert(
-    GOSoundBuffer::getNItems(2, 4) == 8,
-    std::format(
-      "getNItems(2, 4) should return 8 (got: {})",
-      GOSoundBuffer::getNItems(2, 4)));
+  AssertGetNItems(2, 4, 8);
+  AssertGetNItems(1, 10, 10);
+  AssertGetNItems(5, 2, 10);
+  AssertGetNItems(0, 10, 0);
+  AssertGetNItems(2, 0, 0);
+}
+
+void GOTestSoundBuffer::AssertGetItemIndex(
+  const GOSoundBuffer &buffer,
+  unsigned frameIndex,
+  unsigned channelIndex,
+  unsigned expectedValue) {
+  const unsigned gotValue = buffer.GetItemIndex(frameIndex, channelIndex);
 
   GOAssert(
-    GOSoundBuffer::getNItems(1, 10) == 10,
+    gotValue == expectedValue,
     std::format(
-      "getNItems(1, 10) should return 10 (got: {})",
-      GOSoundBuffer::getNItems(1, 10)));
-
-  GOAssert(
-    GOSoundBuffer::getNItems(5, 2) == 10,
-    std::format(
-      "getNItems(5, 2) should return 10 (got: {})",
-      GOSoundBuffer::getNItems(5, 2)));
-
-  GOAssert(
-    GOSoundBuffer::getNItems(0, 10) == 0,
-    std::format(
-      "getNItems(0, 10) should return 0 (got: {})",
-      GOSoundBuffer::getNItems(0, 10)));
-
-  GOAssert(
-    GOSoundBuffer::getNItems(2, 0) == 0,
-    std::format(
-      "getNItems(2, 0) should return 0 (got: {})",
-      GOSoundBuffer::getNItems(2, 0)));
+      "GetItemIndex({}, {}) should return {} (got: {})",
+      frameIndex,
+      channelIndex,
+      expectedValue,
+      gotValue));
 }
 
 void GOTestSoundBuffer::TestGetItemIndex() {
@@ -113,61 +102,30 @@ void GOTestSoundBuffer::TestGetItemIndex() {
 
   GOSoundBuffer buffer(data.data(), nChannels, nFrames);
 
-  // Test basic indices
-  GOAssert(
-    buffer.GetItemIndex(0, 0) == 0,
-    std::format(
-      "GetItemIndex(0, 0) should return 0 (got: {})",
-      buffer.GetItemIndex(0, 0)));
-
-  GOAssert(
-    buffer.GetItemIndex(0, 1) == 1,
-    std::format(
-      "GetItemIndex(0, 1) should return 1 (got: {})",
-      buffer.GetItemIndex(0, 1)));
-
-  GOAssert(
-    buffer.GetItemIndex(1, 0) == nChannels,
-    std::format(
-      "GetItemIndex(1, 0) should return {} (got: {})",
-      nChannels,
-      buffer.GetItemIndex(1, 0)));
-
-  GOAssert(
-    buffer.GetItemIndex(1, 1) == nChannels + 1,
-    std::format(
-      "GetItemIndex(1, 1) should return {} (got: {})",
-      nChannels + 1,
-      buffer.GetItemIndex(1, 1)));
-
-  GOAssert(
-    buffer.GetItemIndex(2) == nChannels * 2,
-    std::format(
-      "GetItemIndex(2) should return {} (got: {})",
-      nChannels * 2,
-      buffer.GetItemIndex(2)));
+  AssertGetItemIndex(buffer, 0, 0, 0);
+  AssertGetItemIndex(buffer, 0, 1, 1);
+  AssertGetItemIndex(buffer, 1, 0, nChannels);
+  AssertGetItemIndex(buffer, 1, 1, nChannels + 1);
+  AssertGetItemIndex(buffer, 2, 0, nChannels * 2);
 
   // Test that GetNItems uses GetItemIndex
-  GOAssert(
-    buffer.GetNItems() == buffer.GetItemIndex(nFrames, 0),
-    std::format("GetNItems() should equal GetItemIndex({}, 0)", nFrames));
+  AssertGetItemIndex(buffer, nFrames, 0, buffer.GetNItems());
 }
 
 void GOTestSoundBuffer::TestGetSubBuffer() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 5;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
+  std::vector<GOSoundBuffer::Item> data(nItems);
 
-  std::vector<GOSoundBuffer::Item> data(totalItems);
-  for (unsigned i = 0; i < totalItems; ++i) {
-    data[i] = static_cast<float>(i * 10);
-  }
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    data[itemI] = static_cast<float>(itemI * 10);
 
   GOSoundBuffer buffer(data.data(), nChannels, nFrames);
 
   // SubBuffer from the beginning
   GOSoundBuffer sub1 = buffer.GetSubBuffer(0, 2);
-  GOAssert(sub1.isValid(), "SubBuffer starting at 0 should be valid");
+  AssertDimensions("GetSubBuffer sub1", sub1, nChannels, 2);
 
   GOAssert(
     sub1.GetData() == data.data(),
@@ -177,18 +135,12 @@ void GOTestSoundBuffer::TestGetSubBuffer() {
       static_cast<const void *>(data.data()),
       static_cast<const void *>(sub1.GetData())));
 
-  GOAssert(
-    sub1.GetNFrames() == 2,
-    std::format(
-      "SubBuffer with 2 frames should have GetNFrames() == 2 (got: {})",
-      sub1.GetNFrames()));
-
   // SubBuffer with firstFrameIndex
   const unsigned firstFrameIndex = 2;
-  const unsigned subFrames = 2;
-  GOSoundBuffer sub2 = buffer.GetSubBuffer(firstFrameIndex, subFrames);
+  const unsigned subNFrames = 2;
+  GOSoundBuffer sub2 = buffer.GetSubBuffer(firstFrameIndex, subNFrames);
 
-  GOAssert(sub2.isValid(), "SubBuffer with firstFrameIndex should be valid");
+  AssertDimensions("GetSubBuffer", sub2, nChannels, subNFrames);
 
   const unsigned expectedItemIndex = buffer.GetItemIndex(firstFrameIndex);
   GOAssert(
@@ -198,20 +150,6 @@ void GOTestSoundBuffer::TestGetSubBuffer() {
       "(expected item index: {} items)",
       firstFrameIndex,
       expectedItemIndex));
-
-  GOAssert(
-    sub2.GetNFrames() == subFrames,
-    std::format(
-      "SubBuffer should have {} frames (got: {})",
-      subFrames,
-      sub2.GetNFrames()));
-
-  GOAssert(
-    sub2.GetNChannels() == nChannels,
-    std::format(
-      "SubBuffer should have {} channels (got: {})",
-      nChannels,
-      sub2.GetNChannels()));
 
   // Check sub-buffer data using GetItemIndex
   GOAssert(
@@ -253,50 +191,35 @@ void GOTestSoundBuffer::TestInvalidBuffer() {
 
 void GOTestSoundBuffer::TestEdgeCases() {
   // Maximum size buffer (within reasonable limits)
-  const unsigned largeChannels = 8;
-  const unsigned largeFrames = 10000;
-  const unsigned largeTotalItems = largeChannels * largeFrames;
+  const unsigned largeNChannels = 8;
+  const unsigned largeNFrames = 10000;
+  const unsigned nItems = largeNChannels * largeNFrames;
+  std::vector<GOSoundBuffer::Item> largeData(nItems);
 
-  std::vector<GOSoundBuffer::Item> largeData(largeTotalItems);
   std::fill(largeData.begin(), largeData.end(), 0.5f);
 
-  GOSoundBuffer largeBuffer(largeData.data(), largeChannels, largeFrames);
+  GOSoundBuffer largeBuffer(largeData.data(), largeNChannels, largeNFrames);
 
   GOAssert(largeBuffer.isValid(), "Large buffer should be valid");
 
   GOAssert(
-    largeBuffer.GetNBytes() == largeTotalItems * sizeof(GOSoundBuffer::Item),
+    largeBuffer.GetNBytes() == nItems * sizeof(GOSoundBuffer::Item),
     std::format(
       "Large buffer size should be {} bytes (got: {})",
-      largeTotalItems * sizeof(GOSoundBuffer::Item),
+      nItems * sizeof(GOSoundBuffer::Item),
       largeBuffer.GetNBytes()));
 
   // Test GetItemIndex for edge cases
-  GOAssert(
-    largeBuffer.GetItemIndex(0, 0) == 0,
-    "GetItemIndex(0, 0) should return 0 for large buffer");
-
-  GOAssert(
-    largeBuffer.GetItemIndex(largeFrames - 1, largeChannels - 1)
-      == largeTotalItems - 1,
-    std::format(
-      "GetItemIndex({}, {}) should return last item index {}",
-      largeFrames - 1,
-      largeChannels - 1,
-      largeTotalItems - 1));
+  AssertGetItemIndex(largeBuffer, 0, 0, 0);
+  AssertGetItemIndex(
+    largeBuffer, largeNFrames - 1, largeNChannels - 1, nItems - 1);
 
   // SubBuffer at the very end
-  GOSoundBuffer lastFrame = largeBuffer.GetSubBuffer(largeFrames - 1, 1);
-  GOAssert(lastFrame.isValid(), "SubBuffer at last frame should be valid");
-
-  GOAssert(
-    lastFrame.GetNFrames() == 1,
-    std::format(
-      "Last frame SubBuffer should have 1 frame (got: {})",
-      lastFrame.GetNFrames()));
+  GOSoundBuffer lastFrame = largeBuffer.GetSubBuffer(largeNFrames - 1, 1);
+  AssertDimensions("EdgeCases lastFrame", lastFrame, largeNChannels, 1);
 
   // SubBuffer of entire length
-  GOSoundBuffer fullBuffer = largeBuffer.GetSubBuffer(0, largeFrames);
+  GOSoundBuffer fullBuffer = largeBuffer.GetSubBuffer(0, largeNFrames);
   GOAssert(fullBuffer.isValid(), "SubBuffer of full length should be valid");
 
   GOAssert(

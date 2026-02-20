@@ -8,11 +8,19 @@
 #ifndef GOTESTSOUNDBUFFER_H
 #define GOTESTSOUNDBUFFER_H
 
-#include "GOTest.h"
+#include "GOTestSoundBufferBase.h"
 
-class GOTestSoundBuffer : public GOTest {
+class GOTestSoundBuffer : public GOTestSoundBufferBase {
 private:
   static const std::string TEST_NAME;
+
+  void AssertGetNItems(
+    unsigned nChannels, unsigned nFrames, unsigned expectedValue);
+  void AssertGetItemIndex(
+    const GOSoundBuffer &buffer,
+    unsigned frameIndex,
+    unsigned channelIndex,
+    unsigned expectedValue);
 
   void TestConstructorAndBasicProperties();
   void TestGetNItems();

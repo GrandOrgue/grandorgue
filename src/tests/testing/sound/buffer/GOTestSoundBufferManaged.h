@@ -8,25 +8,23 @@
 #ifndef GOTESTSOUNDBUFFERMANAGED_H
 #define GOTESTSOUNDBUFFERMANAGED_H
 
-#include "GOTest.h"
+#include "GOTestSoundBufferBase.h"
 
-#include <string>
-
-#include "sound/buffer/GOSoundBuffer.h"
-
-class GOTestSoundBufferManaged : public GOTest {
+class GOTestSoundBufferManaged : public GOTestSoundBufferBase {
 private:
   static const std::string TEST_NAME;
 
-  void AssertDataEquals(
-    const std::string &context,
-    const GOSoundBuffer::Item *expectedData,
-    unsigned nItems,
-    const GOSoundBuffer &buffer);
   void TestDeepCopy(
     const std::string &context,
     GOSoundBuffer::Item *sourceData,
     const GOSoundBuffer &buffer);
+  void AssertMoveResult(
+    const std::string &context,
+    const GOSoundBuffer &buffer,
+    const GOSoundBuffer::Item *originalPtr,
+    const GOSoundBuffer &source,
+    float offset,
+    unsigned nItems);
 
   void TestDefaultConstructor();
   void TestConstructorWithDimensions();

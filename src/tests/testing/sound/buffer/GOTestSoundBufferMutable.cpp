@@ -7,34 +7,13 @@
 
 #include "GOTestSoundBufferMutable.h"
 
-#include <algorithm>
 #include <cmath>
-#include <cstdlib>
-#include <cstring>
 #include <format>
-#include <iostream>
-#include <numeric>
-#include <vector>
 
 #include "sound/buffer/GOSoundBufferMutable.h"
 
 const std::string GOTestSoundBufferMutable::TEST_NAME
   = "GOTestSoundBufferMutable";
-
-void GOTestSoundBufferMutable::AssertItemEqual(
-  const std::string &context,
-  unsigned itemIndex,
-  float expectedValue,
-  float gotValue) {
-  GOAssert(
-    gotValue == expectedValue,
-    std::format(
-      "{}: item {} got: {}, expected: {}",
-      context,
-      itemIndex,
-      gotValue,
-      expectedValue));
-}
 
 void GOTestSoundBufferMutable::AssertAllItemsEqual(
   const std::string &context,
@@ -44,14 +23,32 @@ void GOTestSoundBufferMutable::AssertAllItemsEqual(
     AssertItemEqual(context, i, expectedValue, buffer.GetData()[i]);
 }
 
-void GOTestSoundBufferMutable::AssertChannelNear(
+void GOTestSoundBufferMutable::AssertChannelItemEqual(
+  const std::string &context,
+  unsigned frameIndex,
+  unsigned channelIndex,
+  float expectedValue,
+  float gotValue) {
+  GOAssert(
+    gotValue == expectedValue,
+    std::format(
+      "{}: frame {} ch{} got: {}, expected: {}",
+      context,
+      frameIndex,
+      channelIndex,
+      gotValue,
+      expectedValue));
+}
+
+void GOTestSoundBufferMutable::AssertChannelItemNear(
   const std::string &context,
   unsigned frameIndex,
   unsigned channelIndex,
   float expectedValue,
   float gotValue) {
   const float epsilon = 1e-6f;
-  float diff = std::abs(gotValue - expectedValue);
+  const float diff = std::abs(gotValue - expectedValue);
+
   GOAssert(
     diff < epsilon,
     std::format(
@@ -62,6 +59,24 @@ void GOTestSoundBufferMutable::AssertChannelNear(
       gotValue,
       expectedValue,
       diff));
+}
+
+void GOTestSoundBufferMutable::AssertChannelEqual(
+  const std::string &context,
+  const GOSoundBuffer &dstBuffer,
+  unsigned dstChannelI,
+  const GOSoundBuffer &srcBuffer,
+  unsigned srcChannelI) {
+  const unsigned dstNChannels = dstBuffer.GetNChannels();
+  const unsigned srcNChannels = srcBuffer.GetNChannels();
+  const unsigned nFrames = dstBuffer.GetNFrames();
+
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI)
+    AssertItemEqual(
+      context,
+      frameI,
+      srcBuffer.GetData()[frameI * srcNChannels + srcChannelI],
+      dstBuffer.GetData()[frameI * dstNChannels + dstChannelI]);
 }
 
 void GOTestSoundBufferMutable::AssertBuffersDataEqual(
@@ -80,21 +95,7 @@ void GOTestSoundBufferMutable::TestInheritanceAndMutableAccess() {
   // Use macro to declare local buffer
   GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, nChannels, nFrames);
 
-  GOAssert(buffer.isValid(), "Mutable buffer should be valid");
-
-  GOAssert(
-    buffer.GetNChannels() == nChannels,
-    std::format(
-      "Mutable buffer should have {} channels (got: {})",
-      nChannels,
-      buffer.GetNChannels()));
-
-  GOAssert(
-    buffer.GetNFrames() == nFrames,
-    std::format(
-      "Mutable buffer should have {} frames (got: {})",
-      nFrames,
-      buffer.GetNFrames()));
+  AssertDimensions("InheritanceAndMutableAccess", buffer, nChannels, nFrames);
 
   // Initialize data with 1.0f using FillWith
   buffer.FillWith({1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f});
@@ -161,12 +162,12 @@ void GOTestSoundBufferMutable::TestAddFrom() {
   result.AddFrom(bufferB);
 
   // Verify results
-  for (unsigned n = result.GetNItems(), i = 0; i < n; ++i)
+  for (unsigned nItems = result.GetNItems(), itemI = 0; itemI < nItems; ++itemI)
     AssertItemEqual(
       "AddFrom",
-      i,
-      bufferA.GetData()[i] + bufferB.GetData()[i],
-      result.GetData()[i]);
+      itemI,
+      bufferA.GetData()[itemI] + bufferB.GetData()[itemI],
+      result.GetData()[itemI]);
 }
 
 void GOTestSoundBufferMutable::TestAddFromWithCoefficient() {
@@ -191,12 +192,12 @@ void GOTestSoundBufferMutable::TestAddFromWithCoefficient() {
   result.AddFrom(bufferB, coefficient);
 
   // Verify results
-  for (unsigned n = result.GetNItems(), i = 0; i < n; ++i)
+  for (unsigned nItems = result.GetNItems(), itemI = 0; itemI < nItems; ++itemI)
     AssertItemEqual(
       "AddFrom+coeff",
-      i,
-      bufferA.GetData()[i] + bufferB.GetData()[i] * coefficient,
-      result.GetData()[i]);
+      itemI,
+      bufferA.GetData()[itemI] + bufferB.GetData()[itemI] * coefficient,
+      result.GetData()[itemI]);
 }
 
 void GOTestSoundBufferMutable::TestMutableGetSubBuffer() {
@@ -211,13 +212,7 @@ void GOTestSoundBufferMutable::TestMutableGetSubBuffer() {
   // Create mutable sub-buffer
   GOSoundBufferMutable subBuffer = buffer.GetSubBuffer(1, 2);
 
-  GOAssert(subBuffer.isValid(), "Mutable SubBuffer should be valid");
-
-  GOAssert(
-    subBuffer.GetNFrames() == 2,
-    std::format(
-      "Mutable SubBuffer should have 2 frames (got: {})",
-      subBuffer.GetNFrames()));
+  AssertDimensions("MutableGetSubBuffer", subBuffer, nChannels, 2);
 
   // Modify data through sub-buffer
   subBuffer.FillWithSilence();
@@ -285,30 +280,32 @@ void GOTestSoundBufferMutable::TestComplexOperations() {
   result.AddFrom(sourceA, -0.5f); // result = 0.5*A
   result.AddFrom(sourceB, 2.0f);  // result = 0.5*A + 2.0*B
 
-  for (unsigned n = result.GetNItems(), i = 0; i < n; ++i) {
-    float expected = 0.5f * sourceA.GetData()[i] + 2.0f * sourceB.GetData()[i];
+  for (unsigned nItems = result.GetNItems(), itemI = 0; itemI < nItems;
+       ++itemI) {
+    float expected
+      = 0.5f * sourceA.GetData()[itemI] + 2.0f * sourceB.GetData()[itemI];
     const float epsilon = 1e-6f;
-    float diff = std::abs(result.GetData()[i] - expected);
+    float diff = std::abs(result.GetData()[itemI] - expected);
 
     GOAssert(
       diff < epsilon,
       std::format(
         "ComplexOperations: item {} got: {}, expected: {} (diff: {})",
-        i,
-        result.GetData()[i],
+        itemI,
+        result.GetData()[itemI],
         expected,
         diff));
   }
 }
 
 void GOTestSoundBufferMutable::TestCopyChannelFrom() {
-  const unsigned srcChannels = 3;
-  const unsigned dstChannels = 2;
+  const unsigned srcNChannels = 3;
+  const unsigned dstNChannels = 2;
   const unsigned nFrames = 4;
 
   // Source buffer with 3 channels
-  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstNChannels, nFrames);
 
   // Initialize source buffer with test data using FillWith
   srcBuffer.FillWith({
@@ -333,56 +330,30 @@ void GOTestSoundBufferMutable::TestCopyChannelFrom() {
 
   // Verify that channel 0 of destination now contains data from channel 1 of
   // source and channel 1 of destination remains zero
-  for (unsigned i = 0; i < nFrames; ++i) {
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels]
-        == srcBuffer.GetData()[i * srcChannels + 1],
-      std::format(
-        "Frame {} channel 0 should be {} (got: {})",
-        i,
-        srcBuffer.GetData()[i * srcChannels + 1],
-        dstBuffer.GetData()[i * dstChannels]));
-
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels + 1] == 0.0f,
-      std::format(
-        "Frame {} channel 1 should still be 0.0 (got: {})",
-        i,
-        dstBuffer.GetData()[i * dstChannels + 1]));
-  }
+  AssertChannelEqual("CopyChannelFrom ch1->ch0", dstBuffer, 0, srcBuffer, 1);
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI)
+    AssertChannelItemEqual(
+      "CopyChannelFrom ch1->ch0",
+      frameI,
+      1,
+      0.0f,
+      dstBuffer.GetData()[frameI * dstNChannels + 1]);
 
   // Copy channel 2 from source to channel 1 of destination
   dstBuffer.CopyChannelFrom(srcBuffer, 2, 1);
 
   // Verify both channels
-  for (unsigned i = 0; i < nFrames; ++i) {
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels]
-        == srcBuffer.GetData()[i * srcChannels + 1],
-      std::format(
-        "Frame {} channel 0 should be {} (got: {})",
-        i,
-        srcBuffer.GetData()[i * srcChannels + 1],
-        dstBuffer.GetData()[i * dstChannels]));
-
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels + 1]
-        == srcBuffer.GetData()[i * srcChannels + 2],
-      std::format(
-        "Frame {} channel 1 should be {} (got: {})",
-        i,
-        srcBuffer.GetData()[i * srcChannels + 2],
-        dstBuffer.GetData()[i * dstChannels + 1]));
-  }
+  AssertChannelEqual("CopyChannelFrom ch1->ch0", dstBuffer, 0, srcBuffer, 1);
+  AssertChannelEqual("CopyChannelFrom ch2->ch1", dstBuffer, 1, srcBuffer, 2);
 }
 
 void GOTestSoundBufferMutable::TestAddChannelFrom() {
-  const unsigned srcChannels = 2;
-  const unsigned dstChannels = 2;
+  const unsigned srcNChannels = 2;
+  const unsigned dstNChannels = 2;
   const unsigned nFrames = 3;
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstNChannels, nFrames);
 
   // Initialize source buffer with FillWith
   srcBuffer.FillWith({1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f});
@@ -394,69 +365,53 @@ void GOTestSoundBufferMutable::TestAddChannelFrom() {
   dstBuffer.AddChannelFrom(srcBuffer, 0, 0);
 
   // Verify results after first addition
-  for (unsigned i = 0; i < nFrames; ++i) {
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
     // Channel 0: 10 + 1, 30 + 3, 50 + 5
-    float expectedCh0 = 10.0f + (i * 20.0f) + (1.0f + i * 2.0f);
     // Channel 1 unchanged: 20, 40, 60
-    float expectedCh1 = 20.0f + (i * 20.0f);
-
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels] == expectedCh0,
-      std::format(
-        "Frame {} channel 0 should be {} after AddChannelFrom(ch0->ch0) (got: "
-        "{})",
-        i,
-        expectedCh0,
-        dstBuffer.GetData()[i * dstChannels]));
-
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels + 1] == expectedCh1,
-      std::format(
-        "Frame {} channel 1 should be {} after AddChannelFrom(ch0->ch0) (got: "
-        "{})",
-        i,
-        expectedCh1,
-        dstBuffer.GetData()[i * dstChannels + 1]));
+    AssertChannelItemEqual(
+      "AddChannelFrom(ch0->ch0)",
+      frameI,
+      0,
+      10.0f + (frameI * 20.0f) + (1.0f + frameI * 2.0f),
+      dstBuffer.GetData()[frameI * dstNChannels]);
+    AssertChannelItemEqual(
+      "AddChannelFrom(ch0->ch0)",
+      frameI,
+      1,
+      20.0f + (frameI * 20.0f),
+      dstBuffer.GetData()[frameI * dstNChannels + 1]);
   }
 
   // Add channel 1 from source to channel 1 of destination
   dstBuffer.AddChannelFrom(srcBuffer, 1, 1);
 
   // Verify final results
-  for (unsigned i = 0; i < nFrames; ++i) {
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
     // Channel 0: same as before
-    float expectedCh0 = 10.0f + (i * 20.0f) + (1.0f + i * 2.0f);
     // Channel 1: 20 + 2, 40 + 4, 60 + 6
-    float expectedCh1 = 20.0f + (i * 20.0f) + (2.0f + i * 2.0f);
-
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels] == expectedCh0,
-      std::format(
-        "Frame {} channel 0 should be {} after AddChannelFrom(ch1->ch1) (got: "
-        "{})",
-        i,
-        expectedCh0,
-        dstBuffer.GetData()[i * dstChannels]));
-
-    GOAssert(
-      dstBuffer.GetData()[i * dstChannels + 1] == expectedCh1,
-      std::format(
-        "Frame {} channel 1 should be {} after AddChannelFrom(ch1->ch1) (got: "
-        "{})",
-        i,
-        expectedCh1,
-        dstBuffer.GetData()[i * dstChannels + 1]));
+    AssertChannelItemEqual(
+      "AddChannelFrom(ch1->ch1)",
+      frameI,
+      0,
+      10.0f + (frameI * 20.0f) + (1.0f + frameI * 2.0f),
+      dstBuffer.GetData()[frameI * dstNChannels]);
+    AssertChannelItemEqual(
+      "AddChannelFrom(ch1->ch1)",
+      frameI,
+      1,
+      20.0f + (frameI * 20.0f) + (2.0f + frameI * 2.0f),
+      dstBuffer.GetData()[frameI * dstNChannels + 1]);
   }
 }
 
 void GOTestSoundBufferMutable::TestAddChannelFromWithCoefficient() {
-  const unsigned srcChannels = 2;
-  const unsigned dstChannels = 2;
+  const unsigned srcNChannels = 2;
+  const unsigned dstNChannels = 2;
   const unsigned nFrames = 3;
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer2, dstChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer2, dstNChannels, nFrames);
 
   // Initialize source buffer with FillWith
   srcBuffer.FillWith({1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f});
@@ -477,28 +432,21 @@ void GOTestSoundBufferMutable::TestAddChannelFromWithCoefficient() {
     // Channel 1 unchanged: 20, 40, 60
     float expectedCh1 = 20.0f + (frameI * 20.0f);
 
-    AssertChannelNear(
+    AssertChannelItemNear(
       "AddChannelFrom+coeff",
       frameI,
       0,
       expectedCh0,
-      dstBuffer.GetData()[frameI * dstChannels]);
-    AssertChannelNear(
+      dstBuffer.GetData()[frameI * dstNChannels]);
+    AssertChannelItemNear(
       "AddChannelFrom+coeff",
       frameI,
       1,
       expectedCh1,
-      dstBuffer.GetData()[frameI * dstChannels + 1]);
+      dstBuffer.GetData()[frameI * dstNChannels + 1]);
   }
 
-  // Copy current state to dstBuffer2 using FillWith
-  dstBuffer2.FillWith(
-    {dstBuffer.GetData()[0],
-     dstBuffer.GetData()[1],
-     dstBuffer.GetData()[2],
-     dstBuffer.GetData()[3],
-     dstBuffer.GetData()[4],
-     dstBuffer.GetData()[5]});
+  dstBuffer2.CopyFrom(dstBuffer);
 
   // Test with negative coefficient
   const float negativeCoefficient = -1.0f;
@@ -512,18 +460,18 @@ void GOTestSoundBufferMutable::TestAddChannelFromWithCoefficient() {
     // Channel 1: previous value minus source channel 1
     float expectedCh1 = 20.0f + (frameI * 20.0f) - (2.0f + frameI * 2.0f);
 
-    AssertChannelNear(
+    AssertChannelItemNear(
       "AddChannelFrom+negCoeff",
       frameI,
       0,
       expectedCh0,
-      dstBuffer2.GetData()[frameI * dstChannels]);
-    AssertChannelNear(
+      dstBuffer2.GetData()[frameI * dstNChannels]);
+    AssertChannelItemNear(
       "AddChannelFrom+negCoeff",
       frameI,
       1,
       expectedCh1,
-      dstBuffer2.GetData()[frameI * dstChannels + 1]);
+      dstBuffer2.GetData()[frameI * dstNChannels + 1]);
   }
 }
 
@@ -562,39 +510,30 @@ void GOTestSoundBufferMutable::TestCrossChannelOperations() {
   dstBuffer.AddChannelFrom(srcBuffer, 2, 0, 0.5f);
 
   // Verify results
-  for (unsigned i = 0; i < nFrames; ++i) {
-    const unsigned base = i * nChannels;
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
+    const unsigned base = frameI * nChannels;
 
     // Channel 0: 0.5 * source channel 2
-    float expectedCh0 = srcBuffer.GetData()[base + 2] * 0.5f;
     // Channel 1: source channel 0
-    float expectedCh1 = srcBuffer.GetData()[base];
     // Channel 2: 2.0 * source channel 1
-    float expectedCh2 = srcBuffer.GetData()[base + 1] * 2.0f;
-
-    GOAssert(
-      dstBuffer.GetData()[base] == expectedCh0,
-      std::format(
-        "Frame {} channel 0 should be {} (got: {})",
-        i,
-        expectedCh0,
-        dstBuffer.GetData()[base]));
-
-    GOAssert(
-      dstBuffer.GetData()[base + 1] == expectedCh1,
-      std::format(
-        "Frame {} channel 1 should be {} (got: {})",
-        i,
-        expectedCh1,
-        dstBuffer.GetData()[base + 1]));
-
-    GOAssert(
-      dstBuffer.GetData()[base + 2] == expectedCh2,
-      std::format(
-        "Frame {} channel 2 should be {} (got: {})",
-        i,
-        expectedCh2,
-        dstBuffer.GetData()[base + 2]));
+    AssertChannelItemEqual(
+      "CrossChannel",
+      frameI,
+      0,
+      srcBuffer.GetData()[base + 2] * 0.5f,
+      dstBuffer.GetData()[base]);
+    AssertChannelItemEqual(
+      "CrossChannel",
+      frameI,
+      1,
+      srcBuffer.GetData()[base],
+      dstBuffer.GetData()[base + 1]);
+    AssertChannelItemEqual(
+      "CrossChannel",
+      frameI,
+      2,
+      srcBuffer.GetData()[base + 1] * 2.0f,
+      dstBuffer.GetData()[base + 2]);
   }
 }
 
@@ -655,12 +594,12 @@ void GOTestSoundBufferMutable::TestInvalidChannelIndices() {
   // This test verifies that using invalid channel indices
   // triggers assert in debug builds
 
-  const unsigned srcChannels = 2;
-  const unsigned dstChannels = 2;
+  const unsigned srcNChannels = 2;
+  const unsigned dstNChannels = 2;
   const unsigned nFrames = 3;
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstNChannels, nFrames);
 
   // Initialize source with 1.0f using FillWith
   srcBuffer.FillWith({1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f});
@@ -688,12 +627,12 @@ void GOTestSoundBufferMutable::TestInvalidChannelIndices() {
 void GOTestSoundBufferMutable::TestSingleChannelBuffer() {
   // Test operations with single-channel buffers
 
-  const unsigned monoChannels = 1;
-  const unsigned stereoChannels = 2;
+  const unsigned monoNChannels = 1;
+  const unsigned stereoNChannels = 2;
   const unsigned nFrames = 4;
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(monoBuffer, monoChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(stereoBuffer, stereoChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(monoBuffer, monoNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(stereoBuffer, stereoNChannels, nFrames);
 
   // Initialize mono buffer with FillWith
   monoBuffer.FillWith({1.0f, 2.0f, 3.0f, 4.0f});
@@ -707,23 +646,19 @@ void GOTestSoundBufferMutable::TestSingleChannelBuffer() {
   stereoBuffer.AddChannelFrom(monoBuffer, 0, 1, 0.5f);
 
   // Verify results
-  for (unsigned i = 0; i < nFrames; ++i) {
-    GOAssert(
-      stereoBuffer.GetData()[i * stereoChannels] == monoBuffer.GetData()[i],
-      std::format(
-        "Left channel frame {} should be {} (got: {})",
-        i,
-        monoBuffer.GetData()[i],
-        stereoBuffer.GetData()[i * stereoChannels]));
-
-    GOAssert(
-      stereoBuffer.GetData()[i * stereoChannels + 1]
-        == monoBuffer.GetData()[i] * 0.5f,
-      std::format(
-        "Right channel frame {} should be {} (got: {})",
-        i,
-        monoBuffer.GetData()[i] * 0.5f,
-        stereoBuffer.GetData()[i * stereoChannels + 1]));
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
+    AssertChannelItemEqual(
+      "SingleChannel",
+      frameI,
+      0,
+      monoBuffer.GetData()[frameI],
+      stereoBuffer.GetData()[frameI * stereoNChannels]);
+    AssertChannelItemEqual(
+      "SingleChannel",
+      frameI,
+      1,
+      monoBuffer.GetData()[frameI] * 0.5f,
+      stereoBuffer.GetData()[frameI * stereoNChannels + 1]);
   }
 }
 

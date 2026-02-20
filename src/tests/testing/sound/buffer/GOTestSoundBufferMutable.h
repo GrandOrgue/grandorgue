@@ -8,19 +8,12 @@
 #ifndef GOTESTSOUNDMUTABLEBUFFER_H
 #define GOTESTSOUNDMUTABLEBUFFER_H
 
-#include "GOTest.h"
+#include "GOTestSoundBufferBase.h"
 
-class GOSoundBuffer;
-
-class GOTestSoundBufferMutable : public GOTest {
+class GOTestSoundBufferMutable : public GOTestSoundBufferBase {
 private:
   static const std::string TEST_NAME;
 
-  void AssertItemEqual(
-    const std::string &context,
-    unsigned itemIndex,
-    float expectedValue,
-    float gotValue);
   void AssertAllItemsEqual(
     const std::string &context,
     float expectedValue,
@@ -29,12 +22,24 @@ private:
     const std::string &context,
     const GOSoundBuffer &expectedBuffer,
     const GOSoundBuffer &buffer);
-  void AssertChannelNear(
+  void AssertChannelItemEqual(
     const std::string &context,
     unsigned frameIndex,
     unsigned channelIndex,
     float expectedValue,
     float gotValue);
+  void AssertChannelItemNear(
+    const std::string &context,
+    unsigned frameIndex,
+    unsigned channelIndex,
+    float expectedValue,
+    float gotValue);
+  void AssertChannelEqual(
+    const std::string &context,
+    const GOSoundBuffer &dstBuffer,
+    unsigned dstChannelI,
+    const GOSoundBuffer &srcBuffer,
+    unsigned srcChannelI);
 
   void TestInheritanceAndMutableAccess();
   void TestFillWithSilence();
