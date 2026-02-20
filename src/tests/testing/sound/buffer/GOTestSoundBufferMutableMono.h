@@ -8,8 +8,6 @@
 #ifndef GOTESTSOUNDMUTABLEBUFFERMONO_H
 #define GOTESTSOUNDMUTABLEBUFFERMONO_H
 
-#include <vector>
-
 #include "GOTestSoundBufferBase.h"
 
 class GOSoundBufferMutable;
@@ -21,19 +19,12 @@ private:
 
   void TestCopyMonoFromChannel(
     GOSoundBufferMutableMono &monoBuffer,
-    std::vector<GOSoundBuffer::Item> &monoData,
     const GOSoundBuffer &srcBuffer,
-    unsigned srcNChannels,
-    unsigned channelI,
-    unsigned nFrames);
+    unsigned channelI);
   void TestCopyMonoToChannel(
     GOSoundBufferMutableMono &monoBuffer,
-    const std::vector<GOSoundBuffer::Item> &monoData,
     GOSoundBufferMutable &dstBuffer,
-    const std::vector<GOSoundBuffer::Item> &dstData,
-    unsigned dstNChannels,
-    unsigned channelI,
-    unsigned nFrames);
+    unsigned channelI);
 
   void TestConstructorAndBasicProperties();
   void TestGetSubBuffer();

@@ -9,10 +9,17 @@
 
 #include <format>
 
+#include "sound/buffer/GOSoundBufferMutable.h"
+
 void GOTestSoundBufferBase::fillWithSequential(
   GOSoundBuffer::Item *data, unsigned nItems, float offset) {
   for (unsigned itemI = 0; itemI < nItems; ++itemI)
     data[itemI] = static_cast<float>(itemI) + offset;
+}
+
+void GOTestSoundBufferBase::fillWithSequential(
+  GOSoundBufferMutable &buffer, float offset) {
+  fillWithSequential(buffer.GetData(), buffer.GetNItems(), offset);
 }
 
 void GOTestSoundBufferBase::AssertItemEqual(
@@ -31,13 +38,13 @@ void GOTestSoundBufferBase::AssertItemEqual(
 }
 
 void GOTestSoundBufferBase::AssertSequentialData(
-  const std::string &context,
-  const GOSoundBuffer::Item *data,
-  unsigned nItems,
-  float offset) {
-  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+  const std::string &context, const GOSoundBuffer &buffer, float offset) {
+  for (unsigned n = buffer.GetNItems(), itemI = 0; itemI < n; ++itemI)
     AssertItemEqual(
-      context, itemI, static_cast<float>(itemI) + offset, data[itemI]);
+      context,
+      itemI,
+      static_cast<float>(itemI) + offset,
+      buffer.GetData()[itemI]);
 }
 
 void GOTestSoundBufferBase::AssertDimensions(

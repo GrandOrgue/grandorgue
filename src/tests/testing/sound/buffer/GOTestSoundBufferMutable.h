@@ -36,10 +36,10 @@ private:
     float gotValue);
   void AssertChannelEqual(
     const std::string &context,
-    const GOSoundBuffer &dstBuffer,
-    unsigned dstChannelI,
-    const GOSoundBuffer &srcBuffer,
-    unsigned srcChannelI);
+    const GOSoundBuffer &expectedBuffer,
+    unsigned expectedChannelI,
+    const GOSoundBuffer &gotBuffer,
+    unsigned gotChannelI);
 
   void TestInheritanceAndMutableAccess();
   void TestFillWithSilence();

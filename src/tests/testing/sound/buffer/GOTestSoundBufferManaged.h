@@ -23,8 +23,7 @@ private:
     const GOSoundBuffer &buffer,
     const GOSoundBuffer::Item *originalPtr,
     const GOSoundBuffer &source,
-    float offset,
-    unsigned nItems);
+    float offset);
 
   void TestDefaultConstructor();
   void TestConstructorWithDimensions();

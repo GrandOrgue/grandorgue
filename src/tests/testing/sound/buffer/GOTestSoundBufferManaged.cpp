@@ -21,14 +21,13 @@ void GOTestSoundBufferManaged::AssertMoveResult(
   const GOSoundBuffer &buffer,
   const GOSoundBuffer::Item *originalPtr,
   const GOSoundBuffer &source,
-  float offset,
-  unsigned nItems) {
+  float offset) {
   GOAssert(buffer.isValid(), context + ": moved-to buffer should be valid");
   GOAssert(
     buffer.GetData() == originalPtr,
     context + ": moved-to buffer should have same data pointer");
 
-  AssertSequentialData(context, buffer.GetData(), nItems, offset);
+  AssertSequentialData(context, buffer, offset);
 
   GOAssert(
     !source.isValid(), context + ": moved-from buffer should be invalid");
@@ -56,17 +55,14 @@ void GOTestSoundBufferManaged::TestDefaultConstructor() {
 void GOTestSoundBufferManaged::TestConstructorWithDimensions() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged buffer(nChannels, nFrames);
 
   AssertDimensions("ConstructorWithDimensions", buffer, nChannels, nFrames);
 
   // Check that memory is accessible (no crash)
-  GOSoundBuffer::Item *data = buffer.GetData();
-
-  fillWithSequential(data, nItems, 0.0f);
-  AssertSequentialData("ConstructorWithDimensions", data, nItems, 0.0f);
+  fillWithSequential(buffer, 0.0f);
+  AssertSequentialData("ConstructorWithDimensions", buffer, 0.0f);
 }
 
 void GOTestSoundBufferManaged::TestCopyConstructorFromBuffer() {
@@ -84,8 +80,7 @@ void GOTestSoundBufferManaged::TestCopyConstructorFromBuffer() {
   AssertDimensions("CopyConstructorFromBuffer", buffer, nChannels, nFrames);
 
   // Verify data was copied
-  AssertSequentialData(
-    "CopyConstructorFromBuffer", buffer.GetData(), nItems, 1.0f);
+  AssertSequentialData("CopyConstructorFromBuffer", buffer, 1.0f);
 
   // Verify it's a deep copy (modifying source doesn't affect buffer)
   TestDeepCopy("CopyConstructorFromBuffer", sourceData.data(), buffer);
@@ -94,20 +89,18 @@ void GOTestSoundBufferManaged::TestCopyConstructorFromBuffer() {
 void GOTestSoundBufferManaged::TestCopyConstructorFromManaged() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
   GOSoundBuffer::Item *sourceData = source.GetData();
 
-  fillWithSequential(sourceData, nItems, 1.0f);
+  fillWithSequential(source, 1.0f);
 
   GOSoundBufferManaged buffer(source);
 
   AssertDimensions("CopyConstructorFromManaged", buffer, nChannels, nFrames);
 
   // Verify data was copied
-  AssertSequentialData(
-    "CopyConstructorFromManaged", buffer.GetData(), nItems, 1.0f);
+  AssertSequentialData("CopyConstructorFromManaged", buffer, 1.0f);
 
   // Verify it's a deep copy
   TestDeepCopy("CopyConstructorFromManaged", sourceData, buffer);
@@ -116,17 +109,15 @@ void GOTestSoundBufferManaged::TestCopyConstructorFromManaged() {
 void GOTestSoundBufferManaged::TestMoveConstructor() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
   GOSoundBuffer::Item *originalPtr = source.GetData();
 
-  fillWithSequential(originalPtr, nItems, 1.0f);
+  fillWithSequential(source, 1.0f);
 
   GOSoundBufferManaged buffer(std::move(source));
 
-  AssertMoveResult(
-    "MoveConstructor", buffer, originalPtr, source, 1.0f, nItems);
+  AssertMoveResult("MoveConstructor", buffer, originalPtr, source, 1.0f);
 }
 
 void GOTestSoundBufferManaged::TestCopyAssignmentFromBuffer() {
@@ -146,19 +137,17 @@ void GOTestSoundBufferManaged::TestCopyAssignmentFromBuffer() {
   AssertDimensions("CopyAssignmentFromBuffer", buffer, nChannels, nFrames);
 
   // Verify data was copied
-  AssertSequentialData(
-    "CopyAssignmentFromBuffer", buffer.GetData(), nItems, 10.0f);
+  AssertSequentialData("CopyAssignmentFromBuffer", buffer, 10.0f);
 }
 
 void GOTestSoundBufferManaged::TestCopyAssignmentFromManaged() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
   GOSoundBuffer::Item *sourceData = source.GetData();
 
-  fillWithSequential(sourceData, nItems, 20.0f);
+  fillWithSequential(source, 20.0f);
 
   GOSoundBufferManaged buffer(1, 2); // Different size initially
 
@@ -167,8 +156,7 @@ void GOTestSoundBufferManaged::TestCopyAssignmentFromManaged() {
   AssertDimensions("CopyAssignmentFromManaged", buffer, nChannels, nFrames);
 
   // Verify data was copied
-  AssertSequentialData(
-    "CopyAssignmentFromManaged", buffer.GetData(), nItems, 20.0f);
+  AssertSequentialData("CopyAssignmentFromManaged", buffer, 20.0f);
 
   // Verify it's a deep copy
   TestDeepCopy("CopyAssignmentFromManaged", sourceData, buffer);
@@ -177,31 +165,28 @@ void GOTestSoundBufferManaged::TestCopyAssignmentFromManaged() {
 void GOTestSoundBufferManaged::TestMoveAssignment() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
-  GOSoundBuffer::Item *sourceData = source.GetData();
-
-  fillWithSequential(sourceData, nItems, 30.0f);
-
   GOSoundBuffer::Item *originalPtr = source.GetData();
+
+  fillWithSequential(source, 30.0f);
+
   GOSoundBufferManaged buffer(1, 1); // Different size initially
 
   buffer = std::move(source);
 
-  AssertMoveResult(
-    "MoveAssignment", buffer, originalPtr, source, 30.0f, nItems);
+  AssertMoveResult("MoveAssignment", buffer, originalPtr, source, 30.0f);
 }
 
 void GOTestSoundBufferManaged::TestResize() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged buffer(nChannels, nFrames);
-  GOSoundBuffer::Item *oldData = buffer.GetData();
 
-  fillWithSequential(oldData, nItems, 1.0f);
+  fillWithSequential(buffer, 1.0f);
+
+  GOSoundBuffer::Item *oldData = buffer.GetData();
 
   // Resize to larger
   buffer.Resize(2, 5);
@@ -224,14 +209,13 @@ void GOTestSoundBufferManaged::TestResize() {
 }
 
 void GOTestSoundBufferManaged::TestResizeNoReallocation() {
-  const unsigned nItems = 6; // 2*3 = 3*2
-
   GOSoundBufferManaged buffer(2, 3);
+
+  fillWithSequential(buffer, 1.0f);
+
   GOSoundBuffer::Item *oldData = buffer.GetData();
 
-  fillWithSequential(oldData, nItems, 1.0f);
-
-  // Resize to 3x2 (same total items)
+  // Resize to 3x2 (same total items: 2*3 = 3*2)
   buffer.Resize(3, 2);
   GOAssert(
     buffer.GetData() == oldData,
@@ -239,7 +223,7 @@ void GOTestSoundBufferManaged::TestResizeNoReallocation() {
   AssertDimensions("ResizeNoReallocation", buffer, 3, 2);
 
   // Data should be preserved
-  AssertSequentialData("ResizeNoReallocation", oldData, nItems, 1.0f);
+  AssertSequentialData("ResizeNoReallocation", buffer, 1.0f);
 }
 
 void GOTestSoundBufferManaged::TestSwap() {
@@ -247,15 +231,14 @@ void GOTestSoundBufferManaged::TestSwap() {
   const unsigned nFrames1 = 3;
   const unsigned nChannels2 = 3;
   const unsigned nFrames2 = 2;
-  const unsigned nItems = nChannels1 * nFrames1; // = nChannels2 * nFrames2
 
   GOSoundBufferManaged buffer1(nChannels1, nFrames1);
   GOSoundBufferManaged buffer2(nChannels2, nFrames2);
   GOSoundBuffer::Item *data1 = buffer1.GetData();
   GOSoundBuffer::Item *data2 = buffer2.GetData();
 
-  fillWithSequential(data1, nItems, 100.0f);
-  fillWithSequential(data2, nItems, 200.0f);
+  fillWithSequential(buffer1, 100.0f);
+  fillWithSequential(buffer2, 200.0f);
 
   swap(buffer1, buffer2);
 
@@ -272,8 +255,8 @@ void GOTestSoundBufferManaged::TestSwap() {
     "Buffer2 should have buffer1's data after swap");
 
   // Check that data content is swapped
-  AssertSequentialData("Swap buffer1", buffer1.GetData(), nItems, 200.0f);
-  AssertSequentialData("Swap buffer2", buffer2.GetData(), nItems, 100.0f);
+  AssertSequentialData("Swap buffer1", buffer1, 200.0f);
+  AssertSequentialData("Swap buffer2", buffer2, 100.0f);
 }
 
 void GOTestSoundBufferManaged::TestComplexOperations() {

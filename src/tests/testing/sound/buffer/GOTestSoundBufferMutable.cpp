@@ -63,20 +63,20 @@ void GOTestSoundBufferMutable::AssertChannelItemNear(
 
 void GOTestSoundBufferMutable::AssertChannelEqual(
   const std::string &context,
-  const GOSoundBuffer &dstBuffer,
-  unsigned dstChannelI,
-  const GOSoundBuffer &srcBuffer,
-  unsigned srcChannelI) {
-  const unsigned dstNChannels = dstBuffer.GetNChannels();
-  const unsigned srcNChannels = srcBuffer.GetNChannels();
-  const unsigned nFrames = dstBuffer.GetNFrames();
+  const GOSoundBuffer &expectedBuffer,
+  unsigned expectedChannelI,
+  const GOSoundBuffer &gotBuffer,
+  unsigned gotChannelI) {
+  const unsigned expectedNChannels = expectedBuffer.GetNChannels();
+  const unsigned gotNChannels = gotBuffer.GetNChannels();
+  const unsigned nFrames = expectedBuffer.GetNFrames();
 
   for (unsigned frameI = 0; frameI < nFrames; ++frameI)
     AssertItemEqual(
       context,
       frameI,
-      srcBuffer.GetData()[frameI * srcNChannels + srcChannelI],
-      dstBuffer.GetData()[frameI * dstNChannels + dstChannelI]);
+      expectedBuffer.GetData()[frameI * expectedNChannels + expectedChannelI],
+      gotBuffer.GetData()[frameI * gotNChannels + gotChannelI]);
 }
 
 void GOTestSoundBufferMutable::AssertBuffersDataEqual(
@@ -330,7 +330,7 @@ void GOTestSoundBufferMutable::TestCopyChannelFrom() {
 
   // Verify that channel 0 of destination now contains data from channel 1 of
   // source and channel 1 of destination remains zero
-  AssertChannelEqual("CopyChannelFrom ch1->ch0", dstBuffer, 0, srcBuffer, 1);
+  AssertChannelEqual("CopyChannelFrom ch1->ch0", srcBuffer, 1, dstBuffer, 0);
   for (unsigned frameI = 0; frameI < nFrames; ++frameI)
     AssertChannelItemEqual(
       "CopyChannelFrom ch1->ch0",
@@ -343,17 +343,16 @@ void GOTestSoundBufferMutable::TestCopyChannelFrom() {
   dstBuffer.CopyChannelFrom(srcBuffer, 2, 1);
 
   // Verify both channels
-  AssertChannelEqual("CopyChannelFrom ch1->ch0", dstBuffer, 0, srcBuffer, 1);
-  AssertChannelEqual("CopyChannelFrom ch2->ch1", dstBuffer, 1, srcBuffer, 2);
+  AssertChannelEqual("CopyChannelFrom ch1->ch0", srcBuffer, 1, dstBuffer, 0);
+  AssertChannelEqual("CopyChannelFrom ch2->ch1", srcBuffer, 2, dstBuffer, 1);
 }
 
 void GOTestSoundBufferMutable::TestAddChannelFrom() {
-  const unsigned srcNChannels = 2;
-  const unsigned dstNChannels = 2;
+  const unsigned nChannels = 2;
   const unsigned nFrames = 3;
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcNChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, nChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, nChannels, nFrames);
 
   // Initialize source buffer with FillWith
   srcBuffer.FillWith({1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f});
@@ -373,13 +372,13 @@ void GOTestSoundBufferMutable::TestAddChannelFrom() {
       frameI,
       0,
       10.0f + (frameI * 20.0f) + (1.0f + frameI * 2.0f),
-      dstBuffer.GetData()[frameI * dstNChannels]);
+      dstBuffer.GetData()[frameI * nChannels]);
     AssertChannelItemEqual(
       "AddChannelFrom(ch0->ch0)",
       frameI,
       1,
       20.0f + (frameI * 20.0f),
-      dstBuffer.GetData()[frameI * dstNChannels + 1]);
+      dstBuffer.GetData()[frameI * nChannels + 1]);
   }
 
   // Add channel 1 from source to channel 1 of destination
@@ -394,24 +393,23 @@ void GOTestSoundBufferMutable::TestAddChannelFrom() {
       frameI,
       0,
       10.0f + (frameI * 20.0f) + (1.0f + frameI * 2.0f),
-      dstBuffer.GetData()[frameI * dstNChannels]);
+      dstBuffer.GetData()[frameI * nChannels]);
     AssertChannelItemEqual(
       "AddChannelFrom(ch1->ch1)",
       frameI,
       1,
       20.0f + (frameI * 20.0f) + (2.0f + frameI * 2.0f),
-      dstBuffer.GetData()[frameI * dstNChannels + 1]);
+      dstBuffer.GetData()[frameI * nChannels + 1]);
   }
 }
 
 void GOTestSoundBufferMutable::TestAddChannelFromWithCoefficient() {
-  const unsigned srcNChannels = 2;
-  const unsigned dstNChannels = 2;
+  const unsigned nChannels = 2;
   const unsigned nFrames = 3;
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, srcNChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstNChannels, nFrames);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer2, dstNChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(srcBuffer, nChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, nChannels, nFrames);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer2, nChannels, nFrames);
 
   // Initialize source buffer with FillWith
   srcBuffer.FillWith({1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f});
@@ -437,13 +435,13 @@ void GOTestSoundBufferMutable::TestAddChannelFromWithCoefficient() {
       frameI,
       0,
       expectedCh0,
-      dstBuffer.GetData()[frameI * dstNChannels]);
+      dstBuffer.GetData()[frameI * nChannels]);
     AssertChannelItemNear(
       "AddChannelFrom+coeff",
       frameI,
       1,
       expectedCh1,
-      dstBuffer.GetData()[frameI * dstNChannels + 1]);
+      dstBuffer.GetData()[frameI * nChannels + 1]);
   }
 
   dstBuffer2.CopyFrom(dstBuffer);
@@ -465,13 +463,13 @@ void GOTestSoundBufferMutable::TestAddChannelFromWithCoefficient() {
       frameI,
       0,
       expectedCh0,
-      dstBuffer2.GetData()[frameI * dstNChannels]);
+      dstBuffer2.GetData()[frameI * nChannels]);
     AssertChannelItemNear(
       "AddChannelFrom+negCoeff",
       frameI,
       1,
       expectedCh1,
-      dstBuffer2.GetData()[frameI * dstNChannels + 1]);
+      dstBuffer2.GetData()[frameI * nChannels + 1]);
   }
 }
 

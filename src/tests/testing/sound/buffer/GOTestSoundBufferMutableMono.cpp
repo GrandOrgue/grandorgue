@@ -10,6 +10,7 @@
 #include <cstring>
 #include <format>
 #include <numeric>
+#include <vector>
 
 #include "sound/buffer/GOSoundBufferMutableMono.h"
 
@@ -93,44 +94,53 @@ void GOTestSoundBufferMutableMono::TestGetSubBuffer() {
 
 void GOTestSoundBufferMutableMono::TestCopyMonoFromChannel(
   GOSoundBufferMutableMono &monoBuffer,
-  std::vector<GOSoundBuffer::Item> &monoData,
   const GOSoundBuffer &srcBuffer,
-  unsigned srcNChannels,
-  unsigned channelI,
-  unsigned nFrames) {
-  std::fill(monoData.begin(), monoData.end(), 0.0f);
+  unsigned channelI) {
+  monoBuffer.FillWithSilence();
   monoBuffer.CopyChannelFrom(srcBuffer, channelI);
 
-  for (unsigned frameI = 0; frameI < nFrames; ++frameI)
+  const unsigned srcNChannels = srcBuffer.GetNChannels();
+  const unsigned nFrames = monoBuffer.GetNFrames();
+
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
+    const float gotValue = monoBuffer.GetData()[frameI];
+    const float expectedValue
+      = srcBuffer.GetData()[frameI * srcNChannels + channelI];
+
     GOAssert(
-      monoData[frameI] == srcBuffer.GetData()[frameI * srcNChannels + channelI],
+      gotValue == expectedValue,
       std::format(
         "Channel {}, frame {} should be {} (got: {})",
         channelI,
         frameI,
-        srcBuffer.GetData()[frameI * srcNChannels + channelI],
-        monoData[frameI]));
+        expectedValue,
+        gotValue));
+  }
 }
 
 void GOTestSoundBufferMutableMono::TestCopyMonoToChannel(
   GOSoundBufferMutableMono &monoBuffer,
-  const std::vector<GOSoundBuffer::Item> &monoData,
   GOSoundBufferMutable &dstBuffer,
-  const std::vector<GOSoundBuffer::Item> &dstData,
-  unsigned dstNChannels,
-  unsigned channelI,
-  unsigned nFrames) {
+  unsigned channelI) {
   monoBuffer.CopyChannelTo(dstBuffer, channelI);
 
-  for (unsigned frameI = 0; frameI < nFrames; ++frameI)
+  const unsigned dstNChannels = dstBuffer.GetNChannels();
+  const unsigned nFrames = monoBuffer.GetNFrames();
+
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
+    const float gotValue
+      = dstBuffer.GetData()[frameI * dstNChannels + channelI];
+    const float expectedValue = monoBuffer.GetData()[frameI];
+
     GOAssert(
-      dstData[frameI * dstNChannels + channelI] == monoData[frameI],
+      gotValue == expectedValue,
       std::format(
         "Channel {}, frame {} should be {} (got: {})",
         channelI,
         frameI,
-        monoData[frameI],
-        dstData[frameI * dstNChannels + channelI]));
+        expectedValue,
+        gotValue));
+  }
 }
 
 void GOTestSoundBufferMutableMono::TestCopyChannelFrom() {
@@ -149,12 +159,9 @@ void GOTestSoundBufferMutableMono::TestCopyChannelFrom() {
   std::vector<GOSoundBuffer::Item> monoData(nSrcFrames, 0.0f);
   GOSoundBufferMutableMono monoBuffer(monoData.data(), nSrcFrames);
 
-  TestCopyMonoFromChannel(
-    monoBuffer, monoData, srcBuffer, srcNChannels, 0, nSrcFrames);
-  TestCopyMonoFromChannel(
-    monoBuffer, monoData, srcBuffer, srcNChannels, 1, nSrcFrames);
-  TestCopyMonoFromChannel(
-    monoBuffer, monoData, srcBuffer, srcNChannels, 2, nSrcFrames);
+  TestCopyMonoFromChannel(monoBuffer, srcBuffer, 0);
+  TestCopyMonoFromChannel(monoBuffer, srcBuffer, 1);
+  TestCopyMonoFromChannel(monoBuffer, srcBuffer, 2);
 }
 
 void GOTestSoundBufferMutableMono::TestCopyChannelTo() {
@@ -174,12 +181,9 @@ void GOTestSoundBufferMutableMono::TestCopyChannelTo() {
   std::vector<GOSoundBuffer::Item> dstData(dstNItems, 0.0f);
   GOSoundBufferMutable dstBuffer(dstData.data(), dstNChannels, nDstFrames);
 
-  TestCopyMonoToChannel(
-    monoBuffer, monoData, dstBuffer, dstData, dstNChannels, 0, nDstFrames);
-  TestCopyMonoToChannel(
-    monoBuffer, monoData, dstBuffer, dstData, dstNChannels, 1, nDstFrames);
-  TestCopyMonoToChannel(
-    monoBuffer, monoData, dstBuffer, dstData, dstNChannels, 2, nDstFrames);
+  TestCopyMonoToChannel(monoBuffer, dstBuffer, 0);
+  TestCopyMonoToChannel(monoBuffer, dstBuffer, 1);
+  TestCopyMonoToChannel(monoBuffer, dstBuffer, 2);
 }
 
 void GOTestSoundBufferMutableMono::TestInvalidBuffer() {

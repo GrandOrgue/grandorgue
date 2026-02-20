@@ -14,12 +14,17 @@
 
 #include "GOTest.h"
 
+class GOSoundBufferMutable;
+
 /** Base class for GOSoundBuffer tests providing common helpers. */
 class GOTestSoundBufferBase : public GOTest {
 protected:
   /** Fills data[i] = static_cast<float>(i) + offset for i in [0, nItems). */
   static void fillWithSequential(
     GOSoundBuffer::Item *data, unsigned nItems, float offset);
+
+  /** Fills buffer.GetData()[i] = static_cast<float>(i) + offset for all i. */
+  static void fillWithSequential(GOSoundBufferMutable &buffer, float offset);
 
   /** Asserts gotValue == expectedValue, reporting item index on failure. */
   void AssertItemEqual(
@@ -28,12 +33,10 @@ protected:
     float expectedValue,
     float gotValue);
 
-  /** Asserts data[i] == static_cast<float>(i) + offset for all i. */
+  /** Asserts buffer.GetData()[i] == static_cast<float>(i) + offset for all i.
+   */
   void AssertSequentialData(
-    const std::string &context,
-    const GOSoundBuffer::Item *data,
-    unsigned nItems,
-    float offset);
+    const std::string &context, const GOSoundBuffer &buffer, float offset);
 
   /** Asserts buffer dimensions and validity match expected values. */
   void AssertDimensions(
