@@ -12,9 +12,21 @@
 
 #include <string>
 
+#include "sound/buffer/GOSoundBuffer.h"
+
 class GOTestSoundBufferManaged : public GOTest {
 private:
   static const std::string TEST_NAME;
+
+  void AssertDataEquals(
+    const std::string &context,
+    const GOSoundBuffer::Item *expectedData,
+    unsigned nItems,
+    const GOSoundBuffer &buffer);
+  void TestDeepCopy(
+    const std::string &context,
+    GOSoundBuffer::Item *sourceData,
+    const GOSoundBuffer &buffer);
 
   void TestDefaultConstructor();
   void TestConstructorWithDimensions();

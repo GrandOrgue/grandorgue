@@ -267,7 +267,7 @@ void GOTestSoundBufferMutableMono::TestInvalidBuffer() {
   GOAssert(
     singleBuffer.GetNItems() == 1,
     std::format(
-      "Buffer with 1 frame should have 1 total unit (got: {})",
+      "Buffer with 1 frame should have 1 total item (got: {})",
       singleBuffer.GetNItems()));
 }
 

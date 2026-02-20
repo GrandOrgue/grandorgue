@@ -22,6 +22,32 @@
 const std::string GOTestSoundBufferManaged::TEST_NAME
   = "GOTestSoundBufferManaged";
 
+void GOTestSoundBufferManaged::AssertDataEquals(
+  const std::string &context,
+  const GOSoundBuffer::Item *expectedData,
+  unsigned nItems,
+  const GOSoundBuffer &buffer) {
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    GOAssert(
+      buffer.GetData()[itemI] == expectedData[itemI],
+      std::format(
+        "{}: item {} got: {}, expected: {}",
+        context,
+        itemI,
+        buffer.GetData()[itemI],
+        expectedData[itemI]));
+}
+
+void GOTestSoundBufferManaged::TestDeepCopy(
+  const std::string &context,
+  GOSoundBuffer::Item *sourceData,
+  const GOSoundBuffer &buffer) {
+  sourceData[0] = 999.0f;
+  GOAssert(
+    buffer.GetData()[0] != 999.0f,
+    context + ": buffer should have independent copy of data");
+}
+
 void GOTestSoundBufferManaged::TestDefaultConstructor() {
   GOSoundBufferManaged buffer;
 
@@ -41,7 +67,7 @@ void GOTestSoundBufferManaged::TestDefaultConstructor() {
 void GOTestSoundBufferManaged::TestConstructorWithDimensions() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged buffer(nChannels, nFrames);
 
@@ -59,27 +85,30 @@ void GOTestSoundBufferManaged::TestConstructorWithDimensions() {
 
   // Check that memory is accessible (no crash)
   GOSoundBuffer::Item *data = buffer.GetData();
-  for (unsigned i = 0; i < totalItems; ++i) {
-    data[i] = static_cast<float>(i);
-  }
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    data[itemI] = static_cast<float>(itemI);
 
   // Verify we can read back
-  for (unsigned i = 0; i < totalItems; ++i) {
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
     GOAssert(
-      data[i] == static_cast<float>(i),
-      std::format("Data unit {} should be {} (got: {})", i, i, data[i]));
-  }
+      data[itemI] == static_cast<float>(itemI),
+      std::format(
+        "ConstructorWithDimensions: item {} got: {}, expected: {}",
+        itemI,
+        data[itemI],
+        static_cast<float>(itemI)));
 }
 
 void GOTestSoundBufferManaged::TestCopyConstructorFromBuffer() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
-  std::vector<GOSoundBuffer::Item> sourceData(totalItems);
-  for (unsigned i = 0; i < totalItems; ++i) {
-    sourceData[i] = static_cast<float>(i + 1);
-  }
+  std::vector<GOSoundBuffer::Item> sourceData(nItems);
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    sourceData[itemI] = static_cast<float>(itemI + 1);
 
   GOSoundBuffer sourceBuffer(sourceData.data(), nChannels, nFrames);
   GOSoundBufferManaged buffer(sourceBuffer);
@@ -99,66 +128,45 @@ void GOTestSoundBufferManaged::TestCopyConstructorFromBuffer() {
       buffer.GetNFrames()));
 
   // Verify data was copied
-  for (unsigned i = 0; i < totalItems; ++i) {
-    GOAssert(
-      buffer.GetData()[i] == sourceData[i],
-      std::format(
-        "Unit {} should be {} (got: {})",
-        i,
-        sourceData[i],
-        buffer.GetData()[i]));
-  }
+  AssertDataEquals(
+    "CopyConstructorFromBuffer", sourceData.data(), nItems, buffer);
 
   // Verify it's a deep copy (modifying source doesn't affect buffer)
-  sourceData[0] = 999.0f;
-  GOAssert(
-    buffer.GetData()[0] != 999.0f,
-    "Buffer should have independent copy of data");
+  TestDeepCopy("CopyConstructorFromBuffer", sourceData.data(), buffer);
 }
 
 void GOTestSoundBufferManaged::TestCopyConstructorFromManaged() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
   GOSoundBuffer::Item *sourceData = source.GetData();
-  for (unsigned i = 0; i < totalItems; ++i) {
-    sourceData[i] = static_cast<float>(i + 1);
-  }
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    sourceData[itemI] = static_cast<float>(itemI + 1);
 
   GOSoundBufferManaged buffer(source);
 
   GOAssert(buffer.isValid(), "Copied buffer should be valid");
 
   // Verify data was copied
-  for (unsigned i = 0; i < totalItems; ++i) {
-    GOAssert(
-      buffer.GetData()[i] == sourceData[i],
-      std::format(
-        "Unit {} should be {} (got: {})",
-        i,
-        sourceData[i],
-        buffer.GetData()[i]));
-  }
+  AssertDataEquals("CopyConstructorFromManaged", sourceData, nItems, buffer);
 
   // Verify it's a deep copy
-  sourceData[0] = 999.0f;
-  GOAssert(
-    buffer.GetData()[0] != 999.0f,
-    "Buffer should have independent copy of data");
+  TestDeepCopy("CopyConstructorFromManaged", sourceData, buffer);
 }
 
 void GOTestSoundBufferManaged::TestMoveConstructor() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
   GOSoundBuffer::Item *sourceData = source.GetData();
-  for (unsigned i = 0; i < totalItems; ++i) {
-    sourceData[i] = static_cast<float>(i + 1);
-  }
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    sourceData[itemI] = static_cast<float>(itemI + 1);
 
   GOSoundBuffer::Item *originalPtr = source.GetData();
 
@@ -170,12 +178,14 @@ void GOTestSoundBufferManaged::TestMoveConstructor() {
     buffer.GetData() == originalPtr,
     "Moved-to buffer should have same data pointer");
 
-  for (unsigned i = 0; i < totalItems; ++i) {
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
     GOAssert(
-      buffer.GetData()[i] == static_cast<float>(i + 1),
+      buffer.GetData()[itemI] == static_cast<float>(itemI + 1),
       std::format(
-        "Unit {} should be {} (got: {})", i, i + 1, buffer.GetData()[i]));
-  }
+        "MoveConstructor: item {} got: {}, expected: {}",
+        itemI,
+        buffer.GetData()[itemI],
+        static_cast<float>(itemI + 1)));
 
   // Source should be empty
   GOAssert(!source.isValid(), "Moved-from buffer should be invalid");
@@ -187,12 +197,12 @@ void GOTestSoundBufferManaged::TestMoveConstructor() {
 void GOTestSoundBufferManaged::TestCopyAssignmentFromBuffer() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
-  std::vector<GOSoundBuffer::Item> sourceData(totalItems);
-  for (unsigned i = 0; i < totalItems; ++i) {
-    sourceData[i] = static_cast<float>(i + 10);
-  }
+  std::vector<GOSoundBuffer::Item> sourceData(nItems);
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    sourceData[itemI] = static_cast<float>(itemI + 10);
 
   GOSoundBuffer sourceBuffer(sourceData.data(), nChannels, nFrames);
   GOSoundBufferManaged buffer(1, 1); // Different size initially
@@ -214,27 +224,20 @@ void GOTestSoundBufferManaged::TestCopyAssignmentFromBuffer() {
       buffer.GetNFrames()));
 
   // Verify data was copied
-  for (unsigned i = 0; i < totalItems; ++i) {
-    GOAssert(
-      buffer.GetData()[i] == sourceData[i],
-      std::format(
-        "Unit {} should be {} (got: {})",
-        i,
-        sourceData[i],
-        buffer.GetData()[i]));
-  }
+  AssertDataEquals(
+    "CopyAssignmentFromBuffer", sourceData.data(), nItems, buffer);
 }
 
 void GOTestSoundBufferManaged::TestCopyAssignmentFromManaged() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
   GOSoundBuffer::Item *sourceData = source.GetData();
-  for (unsigned i = 0; i < totalItems; ++i) {
-    sourceData[i] = static_cast<float>(i + 20);
-  }
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    sourceData[itemI] = static_cast<float>(itemI + 20);
 
   GOSoundBufferManaged buffer(1, 2); // Different size initially
 
@@ -243,33 +246,22 @@ void GOTestSoundBufferManaged::TestCopyAssignmentFromManaged() {
   GOAssert(buffer.isValid(), "Assigned buffer should be valid");
 
   // Verify data was copied
-  for (unsigned i = 0; i < totalItems; ++i) {
-    GOAssert(
-      buffer.GetData()[i] == sourceData[i],
-      std::format(
-        "Unit {} should be {} (got: {})",
-        i,
-        sourceData[i],
-        buffer.GetData()[i]));
-  }
+  AssertDataEquals("CopyAssignmentFromManaged", sourceData, nItems, buffer);
 
   // Verify it's a deep copy
-  sourceData[0] = 999.0f;
-  GOAssert(
-    buffer.GetData()[0] != 999.0f,
-    "Buffer should have independent copy of data");
+  TestDeepCopy("CopyAssignmentFromManaged", sourceData, buffer);
 }
 
 void GOTestSoundBufferManaged::TestMoveAssignment() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
   GOSoundBufferManaged source(nChannels, nFrames);
   GOSoundBuffer::Item *sourceData = source.GetData();
-  for (unsigned i = 0; i < totalItems; ++i) {
-    sourceData[i] = static_cast<float>(i + 30);
-  }
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    sourceData[itemI] = static_cast<float>(itemI + 30);
 
   GOSoundBuffer::Item *originalPtr = source.GetData();
   GOSoundBufferManaged buffer(1, 1); // Different size initially
@@ -282,12 +274,14 @@ void GOTestSoundBufferManaged::TestMoveAssignment() {
     buffer.GetData() == originalPtr,
     "Moved-to buffer should have same data pointer");
 
-  for (unsigned i = 0; i < totalItems; ++i) {
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
     GOAssert(
-      buffer.GetData()[i] == static_cast<float>(i + 30),
+      buffer.GetData()[itemI] == static_cast<float>(itemI + 30),
       std::format(
-        "Unit {} should be {} (got: {})", i, i + 30, buffer.GetData()[i]));
-  }
+        "MoveAssignment: item {} got: {}, expected: {}",
+        itemI,
+        buffer.GetData()[itemI],
+        static_cast<float>(itemI + 30)));
 
   // Source should be empty
   GOAssert(!source.isValid(), "Moved-from buffer should be invalid");
@@ -297,13 +291,16 @@ void GOTestSoundBufferManaged::TestMoveAssignment() {
 }
 
 void GOTestSoundBufferManaged::TestResize() {
-  GOSoundBufferManaged buffer(2, 3);
+  const unsigned nChannels = 2;
+  const unsigned nFrames = 3;
+  const unsigned nItems = nChannels * nFrames;
+
+  GOSoundBufferManaged buffer(nChannels, nFrames);
   GOSoundBuffer::Item *oldData = buffer.GetData();
 
   // Fill with data
-  for (unsigned i = 0; i < 6; ++i) {
-    oldData[i] = static_cast<float>(i + 1);
-  }
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    oldData[itemI] = static_cast<float>(itemI + 1);
 
   // Resize to larger
   buffer.Resize(2, 5);
@@ -349,19 +346,20 @@ void GOTestSoundBufferManaged::TestResize() {
 }
 
 void GOTestSoundBufferManaged::TestResizeNoReallocation() {
-  GOSoundBufferManaged buffer(2, 3); // 2*3 = 6 units
+  const unsigned nItems = 6; // 2*3 = 3*2
+
+  GOSoundBufferManaged buffer(2, 3);
   GOSoundBuffer::Item *oldData = buffer.GetData();
 
   // Fill with data
-  for (unsigned i = 0; i < 6; ++i) {
-    oldData[i] = static_cast<float>(i + 1);
-  }
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    oldData[itemI] = static_cast<float>(itemI + 1);
 
-  // Resize to 3x2 (same total units)
-  buffer.Resize(3, 2); // 3*2 = 6 units
+  // Resize to 3x2 (same total items)
+  buffer.Resize(3, 2);
   GOAssert(
     buffer.GetData() == oldData,
-    "Data pointer should NOT change when total units unchanged");
+    "Data pointer should NOT change when total items unchanged");
   GOAssert(
     buffer.GetNChannels() == 3,
     std::format(
@@ -374,57 +372,60 @@ void GOTestSoundBufferManaged::TestResizeNoReallocation() {
       buffer.GetNFrames()));
 
   // Data should be preserved
-  for (unsigned i = 0; i < 6; ++i) {
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
     GOAssert(
-      oldData[i] == static_cast<float>(i + 1),
-      std::format("Unit {} should be preserved (got: {})", i + 1, oldData[i]));
-  }
+      oldData[itemI] == static_cast<float>(itemI + 1),
+      std::format(
+        "ResizeNoReallocation: item {} got: {}, expected: {}",
+        itemI,
+        oldData[itemI],
+        static_cast<float>(itemI + 1)));
 }
 
 void GOTestSoundBufferManaged::TestSwap() {
-  GOSoundBufferManaged buffer1(2, 3);
-  GOSoundBufferManaged buffer2(3, 2);
+  const unsigned nChannels1 = 2;
+  const unsigned nFrames1 = 3;
+  const unsigned nChannels2 = 3;
+  const unsigned nFrames2 = 2;
+  const unsigned nItems = nChannels1 * nFrames1; // = nChannels2 * nFrames2
 
+  GOSoundBufferManaged buffer1(nChannels1, nFrames1);
+  GOSoundBufferManaged buffer2(nChannels2, nFrames2);
   GOSoundBuffer::Item *data1 = buffer1.GetData();
   GOSoundBuffer::Item *data2 = buffer2.GetData();
 
   // Fill with different data
-  for (unsigned i = 0; i < 6; ++i) {
-    data1[i] = static_cast<float>(i + 100);
-    data2[i] = static_cast<float>(i + 200);
+  for (unsigned itemI = 0; itemI < nItems; ++itemI) {
+    data1[itemI] = static_cast<float>(itemI + 100);
+    data2[itemI] = static_cast<float>(itemI + 200);
   }
-
-  const unsigned channels1 = buffer1.GetNChannels();
-  const unsigned frames1 = buffer1.GetNFrames();
-  const unsigned channels2 = buffer2.GetNChannels();
-  const unsigned frames2 = buffer2.GetNFrames();
 
   swap(buffer1, buffer2);
 
   // Check that dimensions are swapped
   GOAssert(
-    buffer1.GetNChannels() == channels2,
+    buffer1.GetNChannels() == nChannels2,
     std::format(
       "Buffer1 should have {} channels after swap (got: {})",
-      channels2,
+      nChannels2,
       buffer1.GetNChannels()));
   GOAssert(
-    buffer1.GetNFrames() == frames2,
+    buffer1.GetNFrames() == nFrames2,
     std::format(
       "Buffer1 should have {} frames after swap (got: {})",
-      frames2,
+      nFrames2,
       buffer1.GetNFrames()));
   GOAssert(
-    buffer2.GetNChannels() == channels1,
+    buffer2.GetNChannels() == nChannels1,
     std::format(
       "Buffer2 should have {} channels after swap (got: {})",
-      channels1,
+      nChannels1,
       buffer2.GetNChannels()));
   GOAssert(
-    buffer2.GetNFrames() == frames1,
+    buffer2.GetNFrames() == nFrames1,
     std::format(
       "Buffer2 should have {} frames after swap (got: {})",
-      frames1,
+      nFrames1,
       buffer2.GetNFrames()));
 
   // Check that data pointers are swapped
@@ -436,34 +437,34 @@ void GOTestSoundBufferManaged::TestSwap() {
     "Buffer2 should have buffer1's data after swap");
 
   // Check that data content is swapped
-  for (unsigned i = 0; i < 6; ++i) {
+  for (unsigned itemI = 0; itemI < nItems; ++itemI) {
     GOAssert(
-      buffer1.GetData()[i] == static_cast<float>(i + 200),
+      buffer1.GetData()[itemI] == static_cast<float>(itemI + 200),
       std::format(
-        "Buffer1 unit {} should be {} (got: {})",
-        i,
-        i + 200,
-        buffer1.GetData()[i]));
+        "Swap buffer1: item {} got: {}, expected: {}",
+        itemI,
+        buffer1.GetData()[itemI],
+        static_cast<float>(itemI + 200)));
     GOAssert(
-      buffer2.GetData()[i] == static_cast<float>(i + 100),
+      buffer2.GetData()[itemI] == static_cast<float>(itemI + 100),
       std::format(
-        "Buffer2 unit {} should be {} (got: {})",
-        i,
-        i + 100,
-        buffer2.GetData()[i]));
+        "Swap buffer2: item {} got: {}, expected: {}",
+        itemI,
+        buffer2.GetData()[itemI],
+        static_cast<float>(itemI + 100)));
   }
 }
 
 void GOTestSoundBufferManaged::TestComplexOperations() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
-  const unsigned totalItems = nChannels * nFrames;
+  const unsigned nItems = nChannels * nFrames;
 
   // Create source buffer with external memory
-  std::vector<GOSoundBuffer::Item> sourceData(totalItems);
-  for (unsigned i = 0; i < totalItems; ++i) {
-    sourceData[i] = static_cast<float>(i + 1);
-  }
+  std::vector<GOSoundBuffer::Item> sourceData(nItems);
+
+  for (unsigned itemI = 0; itemI < nItems; ++itemI)
+    sourceData[itemI] = static_cast<float>(itemI + 1);
 
   GOSoundBuffer sourceBuffer(sourceData.data(), nChannels, nFrames);
 
@@ -479,18 +480,18 @@ void GOTestSoundBufferManaged::TestComplexOperations() {
   buffer2.AddFrom(buffer, 2.0f); // buffer2 = 3.0 * source
 
   // Verify calculations
-  for (unsigned i = 0; i < totalItems; ++i) {
-    float expected = static_cast<float>(i + 1) * 3.0f;
+  for (unsigned itemI = 0; itemI < nItems; ++itemI) {
+    float expected = static_cast<float>(itemI + 1) * 3.0f;
     const float epsilon = 1e-6f;
-    float diff = std::abs(buffer2.GetData()[i] - expected);
+    float diff = std::abs(buffer2.GetData()[itemI] - expected);
 
     GOAssert(
       diff < epsilon,
       std::format(
-        "Unit {} should be {} (got: {}, diff: {})",
-        i,
+        "ComplexOperations: item {} got: {}, expected: {} (diff: {})",
+        itemI,
+        buffer2.GetData()[itemI],
         expected,
-        buffer2.GetData()[i],
         diff));
   }
 }

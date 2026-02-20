@@ -10,9 +10,31 @@
 
 #include "GOTest.h"
 
+class GOSoundBuffer;
+
 class GOTestSoundBufferMutable : public GOTest {
 private:
   static const std::string TEST_NAME;
+
+  void AssertItemEqual(
+    const std::string &context,
+    unsigned itemIndex,
+    float expectedValue,
+    float gotValue);
+  void AssertAllItemsEqual(
+    const std::string &context,
+    float expectedValue,
+    const GOSoundBuffer &buffer);
+  void AssertBuffersDataEqual(
+    const std::string &context,
+    const GOSoundBuffer &expectedBuffer,
+    const GOSoundBuffer &buffer);
+  void AssertChannelNear(
+    const std::string &context,
+    unsigned frameIndex,
+    unsigned channelIndex,
+    float expectedValue,
+    float gotValue);
 
   void TestInheritanceAndMutableAccess();
   void TestFillWithSilence();
