@@ -72,6 +72,16 @@ public:
   }
 
   /**
+   * Copy audio data from another buffer.
+   * Both buffers must have the same number of channels and frames.
+   * @param srcBuffer Source buffer to copy from
+   */
+  inline void CopyFrom(const GOSoundBuffer &srcBuffer) {
+    AssertCompatibilityWith(srcBuffer);
+    std::memcpy(const_cast<Item *>(p_data), srcBuffer.p_data, GetNBytes());
+  }
+
+  /**
    * Fill the buffer with values from an initializer list.
    * The number of values in the list must match the buffer's total items.
    *
@@ -80,24 +90,8 @@ public:
    * @param values Initializer list of float values
    */
   inline void FillWith(std::initializer_list<float> values) {
-    assert(isValid());
     assert(values.size() == GetNItems());
-
-    Item *__restrict pDst = const_cast<Item *>(p_data);
-
-    for (float val : values) {
-      *pDst++ = val;
-    }
-  }
-
-  /**
-   * Copy audio data from another buffer.
-   * Both buffers must have the same number of channels and frames.
-   * @param srcBuffer Source buffer to copy from
-   */
-  inline void CopyFrom(const GOSoundBuffer &srcBuffer) {
-    AssertCompatibilityWith(srcBuffer);
-    std::memcpy(const_cast<Item *>(p_data), srcBuffer.p_data, GetNBytes());
+    CopyFrom(GOSoundBuffer(values.begin(), m_NChannels, m_NFrames));
   }
 
   /**
