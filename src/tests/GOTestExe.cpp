@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,6 +13,11 @@
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestWindchest.h"
+#include "testing/sound/buffer/GOTestPerfSoundBufferMutable.h"
+#include "testing/sound/buffer/GOTestSoundBuffer.h"
+#include "testing/sound/buffer/GOTestSoundBufferManaged.h"
+#include "testing/sound/buffer/GOTestSoundBufferMutable.h"
+#include "testing/sound/buffer/GOTestSoundBufferMutableMono.h"
 
 int main() {
   /*
@@ -28,6 +33,11 @@ int main() {
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
   GOTestNameMap goTestNameMap;
+  GOTestSoundBuffer goTestSoundBuffer;
+  GOTestSoundBufferManaged testSoundBufferManaged;
+  GOTestSoundBufferMutable testSoundBufferMutable;
+  GOTestSoundBufferMutableMono testSoundBufferMutableMono;
+  GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->run();
