@@ -38,10 +38,10 @@ struct Baseline {
 // Baselines are set ~10% below the minimum observed value across all CI runs.
 static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 #ifdef NDEBUG
-  {32, 7500},   // 7500 Mframes/sec (raised for modern hardware)
-  {128, 5900},  // 5900 Mframes/sec (measured: 6636.1, -10% margin)
-  {512, 5500},  // 5500 Mframes/sec (lowered: min observed 6112.9, -10% margin)
-  {2048, 10000} // 10000 Mframes/sec (raised for modern hardware)
+  {32, 7500},  // 7500 Mframes/sec (raised for modern hardware)
+  {128, 5900}, // 5900 Mframes/sec (measured: 6636.1, -10% margin)
+  {512, 5500}, // 5500 Mframes/sec (lowered: min observed 6112.9, -10% margin)
+  {2048, 8600} // 8600 Mframes/sec (lowered: min observed 9653.4, -10% margin)
 #else
   {32, 160},   // 160 Mframes/sec (debug, raised for modern hardware)
   {128, 600},  // 600 Mframes/sec (debug, raised for modern hardware)
@@ -56,7 +56,7 @@ static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 // bare-metal and virtualized environments.
 static constexpr Baseline BASELINE_COPY_FROM[] = {
 #ifdef NDEBUG
-  {32, 5500},  // 5500 Mframes/sec (lowered: min observed 6285.4, -10% margin)
+  {32, 3800},  // 3800 Mframes/sec (lowered: min observed 4308.0, -10% margin)
   {128, 7500}, // 7500 Mframes/sec (lowered: min observed 8511.4, -10% margin)
   {512, 220},  // 220 Mframes/sec (lowered: min observed 255.5, -10% margin)
   {2048, 220}  // 220 Mframes/sec (lowered for Azure VM compatibility)
