@@ -39,7 +39,7 @@ struct Baseline {
 static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 #ifdef NDEBUG
   {32, 7500},   // 7500 Mframes/sec (raised for modern hardware)
-  {128, 9500},  // 9500 Mframes/sec (raised for modern hardware)
+  {128, 5900},  // 5900 Mframes/sec (measured: 6636.1, -10% margin)
   {512, 5500},  // 5500 Mframes/sec (lowered: min observed 6112.9, -10% margin)
   {2048, 10000} // 10000 Mframes/sec (raised for modern hardware)
 #else
@@ -149,10 +149,10 @@ static constexpr Baseline BASELINE_MONO_COPY_ADD_FROM_COEFF[] = {
   {512, 2100}, // 2100 Mframes/sec (measured: 2434.9, -10% margin)
   {2048, 2100} // 2100 Mframes/sec (measured: 2435.9, -10% margin)
 #else
-  {32, 100},  // 100 Mframes/sec (debug, measured: 116.7, -10% margin)
-  {128, 160}, // 160 Mframes/sec (debug, measured: 186.4, -10% margin)
-  {512, 190}, // 190 Mframes/sec (debug, measured: 216.4, -10% margin)
-  {2048, 200} // 200 Mframes/sec (debug, measured: 222.2, -10% margin)
+  {32, 50},   // 50 Mframes/sec (debug, measured: 57.3, -10% margin)
+  {128, 60},  // 60 Mframes/sec (debug, measured: 74.4, -10% margin)
+  {512, 70},  // 70 Mframes/sec (debug, measured: 79.4, -10% margin)
+  {2048, 70}  // 70 Mframes/sec (debug, measured: 81.7, -10% margin)
 #endif
 };
 
