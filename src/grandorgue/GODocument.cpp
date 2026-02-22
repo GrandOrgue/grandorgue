@@ -88,13 +88,6 @@ GOOrganController *GODocument::LoadOrgan(
     m_listener.SetCallback(this);
     if (!cmb.IsEmpty())
       m_OrganController->SetOrganModified();
-
-    /* The sound was open on GOFrame::Init.
-     * m_sound.AssignOrganFile made all necessary for the new organController.
-     * So the new opening is not necessary
-    if (m_sound.OpenSound())
-            return nullptr;
-     */
   } else {
     if (error != wxT("!")) {
       wxLogError(wxT("%s\n"), error.c_str());
