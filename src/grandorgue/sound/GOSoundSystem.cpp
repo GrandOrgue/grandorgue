@@ -14,7 +14,6 @@
 #include "buffer/GOSoundBufferMutable.h"
 #include "config/GOConfig.h"
 #include "config/GOPortsConfig.h"
-#include "ports/GOSoundPort.h"
 #include "ports/GOSoundPortFactory.h"
 #include "scheduler/GOSoundThread.h"
 #include "threading/GOMultiMutexLocker.h"
@@ -25,23 +24,23 @@
 #include "GOSoundDefs.h"
 
 GOSoundSystem::GOSoundSystem(GOConfig &settings)
-  : m_open(false),
+  : m_config(settings),
+    m_midi(settings),
+    m_open(false),
+    logSoundErrors(true),
+    m_SampleRate(0),
+    m_SamplesPerBuffer(0),
+    m_OrganController(0),
+    m_DefaultAudioDevice(GOSoundDevInfo::getInvalideDeviceInfo()),
     m_IsRunning(false),
     m_NCallbacksEntered(0),
     m_CallbackCondition(m_CallbackMutex),
-    logSoundErrors(true),
-    m_AudioOutputs(),
-    m_WaitCount(),
-    m_CalcCount(),
-    m_SamplesPerBuffer(0),
-    meter_counter(0),
-    m_DefaultAudioDevice(GOSoundDevInfo::getInvalideDeviceInfo()),
-    m_OrganController(0),
-    m_config(settings),
-    m_midi(settings) {}
+    m_WaitCount(0),
+    m_CalcCount(0),
+    meter_counter(0) {}
 
 GOSoundSystem::~GOSoundSystem() {
-  CloseSound();
+  AssureSoundIsClosed();
 
   GOMidiPortFactory::terminate();
   GOSoundPortFactory::terminate();
@@ -68,83 +67,26 @@ void GOSoundSystem::StopThreads() {
   m_Threads.resize(0);
 }
 
-void GOSoundSystem::OpenMidi() { m_midi.Open(); }
-
-void GOSoundSystem::OpenSound() {
-  m_LastErrorMessage = wxEmptyString;
+void GOSoundSystem::OpenSoundSystem() {
   assert(!m_open);
   assert(m_AudioOutputs.size() == 0);
 
-  const unsigned audio_group_count = m_config.GetAudioGroups().size();
   std::vector<GOAudioDeviceConfig> &audio_config
     = m_config.GetAudioDeviceConfig();
-  const unsigned audioDeviceCount = audio_config.size();
-  std::vector<GOAudioOutputConfiguration> engine_config;
+
+  m_LastErrorMessage = wxEmptyString;
+  m_SampleRate = m_config.SampleRate();
+  m_SamplesPerBuffer = m_config.SamplesPerBuffer();
+  m_AudioRecorder.SetBytesPerSample(m_config.WaveFormatBytesPerSample());
 
   m_AudioOutputs.resize(audio_config.size());
-  for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-    m_AudioOutputs[i].port = NULL;
-  engine_config.resize(audioDeviceCount);
-  for (unsigned i = 0; i < audioDeviceCount; i++) {
-    const GOAudioDeviceConfig &deviceConfig = audio_config[i];
-    const auto &deviceOutputs = deviceConfig.GetChannelOututs();
-    GOAudioOutputConfiguration &engineConfig = engine_config[i];
-
-    engineConfig.channels = deviceConfig.GetChannels();
-    engineConfig.scale_factors.resize(engineConfig.channels);
-    for (unsigned j = 0; j < engineConfig.channels; j++) {
-      std::vector<float> &scaleFactors = engineConfig.scale_factors[j];
-
-      scaleFactors.resize(audio_group_count * 2);
-      std::fill(
-        scaleFactors.begin(),
-        scaleFactors.end(),
-        GOAudioDeviceConfig::MUTE_VOLUME);
-
-      if (j >= deviceOutputs.size())
-        continue;
-
-      const auto &channelOutputs = deviceOutputs[j];
-
-      for (unsigned k = 0; k < channelOutputs.size(); k++) {
-        const auto &groupOutput = channelOutputs[k];
-        int id = m_config.GetStrictAudioGroupId(groupOutput.GetName());
-
-        if (id >= 0) {
-          scaleFactors[id * 2] = groupOutput.GetLeft();
-          scaleFactors[id * 2 + 1] = groupOutput.GetRight();
-        }
-      }
-    }
-  }
-  m_SamplesPerBuffer = m_config.SamplesPerBuffer();
-  m_SoundEngine.SetSamplesPerBuffer(m_SamplesPerBuffer);
-  m_SoundEngine.SetPolyphonyLimiting(m_config.ManagePolyphony());
-  m_SoundEngine.SetHardPolyphony(m_config.PolyphonyLimit());
-  m_SoundEngine.SetScaledReleases(m_config.ScaleRelease());
-  m_SoundEngine.SetRandomizeSpeaking(m_config.RandomizeSpeaking());
-  m_SoundEngine.SetInterpolationType(m_config.m_InterpolationType());
-  m_SoundEngine.SetAudioGroupCount(audio_group_count);
-  unsigned sample_rate = m_config.SampleRate();
-  m_AudioRecorder.SetBytesPerSample(m_config.WaveFormatBytesPerSample());
-  GetEngine().SetSampleRate(sample_rate);
-  m_AudioRecorder.SetSampleRate(sample_rate);
-  m_SoundEngine.SetAudioOutput(engine_config);
-  m_SoundEngine.SetupReverb(m_config);
-  m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
-
-  if (m_OrganController)
-    m_SoundEngine.Setup(
-      *m_OrganController,
-      m_OrganController->GetMemoryPool(),
-      m_config.ReleaseConcurrency());
-  else
-    m_SoundEngine.ClearSetup();
+  for (GOSoundOutput &output : m_AudioOutputs)
+    output.port = NULL;
 
   const GOPortsConfig &portsConfig(m_config.GetSoundPortsConfig());
 
   try {
-    for (unsigned l = m_AudioOutputs.size(), i = 0; i < l; i++) {
+    for (unsigned n = m_AudioOutputs.size(), i = 0; i < n; i++) {
       GOAudioDeviceConfig &deviceConfig = audio_config[i];
       GODeviceNamePattern *pNamePattern = &deviceConfig;
       GODeviceNamePattern defaultDevicePattern;
@@ -165,56 +107,107 @@ void GOSoundSystem::OpenSound() {
       m_AudioOutputs[i].port = pPort;
       pPort->Init(
         deviceConfig.GetChannels(),
-        GetEngine().GetSampleRate(),
+        m_SampleRate,
         m_SamplesPerBuffer,
         deviceConfig.GetDesiredLatency(),
         i);
     }
-
-    OpenMidi();
-    m_NCallbacksEntered.store(0);
+    // Callbacks fired during stream start are no-ops: the audio callback
+    // checks m_IsRunning first and exits early while it is false.
+    // m_IsRunning is set to true only in StartSoundSystem(), called after
+    // OpenSoundSystem() completes.
     StartStreams();
-    StartThreads();
+    OpenMidi();
+    m_AudioRecorder.SetSampleRate(m_SampleRate);
     m_open = true;
-    m_IsRunning.store(true);
-
-    if (m_OrganController)
-      m_OrganController->PreparePlayback(
-        &GetEngine(), &GetMidi(), &m_AudioRecorder);
   } catch (wxString &msg) {
     if (logSoundErrors)
       GOMessageBox(msg, _("Error"), wxOK | wxICON_ERROR, NULL);
     else
       m_LastErrorMessage = msg;
-  }
 
-  if (!m_open)
-    CloseSound();
+    CloseSoundSystem();
+  }
 }
 
-void GOSoundSystem::StartStreams() {
-  for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-    m_AudioOutputs[i].port->Open();
+void GOSoundSystem::BuildAndStartEngine() {
+  const unsigned audio_group_count = m_config.GetAudioGroups().size();
+  std::vector<GOAudioDeviceConfig> &audio_config
+    = m_config.GetAudioDeviceConfig();
+  const unsigned audioDeviceCount = audio_config.size();
+  std::vector<GOAudioOutputConfiguration> engine_config;
 
-  if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
-    throw wxString::Format(
-      _("Cannot use buffer size above %d samples; "
-        "unacceptable quantization would occur."),
-      MAX_FRAME_SIZE);
+  engine_config.resize(audioDeviceCount);
+  for (unsigned deviceI = 0; deviceI < audioDeviceCount; deviceI++) {
+    const GOAudioDeviceConfig &deviceConfig = audio_config[deviceI];
+    const auto &deviceOutputs = deviceConfig.GetChannelOututs();
+    GOAudioOutputConfiguration &engineConfig = engine_config[deviceI];
 
-  m_WaitCount.exchange(0);
-  m_CalcCount.exchange(0);
-  for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-    GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
-    m_AudioOutputs[i].wait = false;
-    m_AudioOutputs[i].waiting = true;
+    engineConfig.channels = deviceConfig.GetChannels();
+    engineConfig.scale_factors.resize(engineConfig.channels);
+    for (unsigned channelI = 0; channelI < engineConfig.channels; channelI++) {
+      std::vector<float> &scaleFactors = engineConfig.scale_factors[channelI];
+
+      scaleFactors.resize(audio_group_count * 2);
+      std::fill(
+        scaleFactors.begin(),
+        scaleFactors.end(),
+        GOAudioDeviceConfig::MUTE_VOLUME);
+
+      if (channelI < deviceOutputs.size()) {
+        for (const auto &groupOutput : deviceOutputs[channelI]) {
+          int id = m_config.GetStrictAudioGroupId(groupOutput.GetName());
+
+          if (id >= 0) {
+            scaleFactors[id * 2] = groupOutput.GetLeft();
+            scaleFactors[id * 2 + 1] = groupOutput.GetRight();
+          }
+        }
+      }
+    }
   }
 
-  for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-    m_AudioOutputs[i].port->StartStream();
+  m_SoundEngine.SetSamplesPerBuffer(m_SamplesPerBuffer);
+  m_SoundEngine.SetPolyphonyLimiting(m_config.ManagePolyphony());
+  m_SoundEngine.SetHardPolyphony(m_config.PolyphonyLimit());
+  m_SoundEngine.SetScaledReleases(m_config.ScaleRelease());
+  m_SoundEngine.SetRandomizeSpeaking(m_config.RandomizeSpeaking());
+  m_SoundEngine.SetInterpolationType(m_config.m_InterpolationType());
+  m_SoundEngine.SetAudioGroupCount(audio_group_count);
+  m_SoundEngine.SetSampleRate(m_SampleRate);
+  m_SoundEngine.SetAudioOutput(engine_config);
+  m_SoundEngine.SetupReverb(m_config);
+  m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
+  m_SoundEngine.Setup(
+    *m_OrganController,
+    m_OrganController->GetMemoryPool(),
+    m_config.ReleaseConcurrency());
+  StartThreads();
+  m_SoundEngine.GetScheduler().ResumeGivingWork();
 }
 
-void GOSoundSystem::CloseSound() {
+void GOSoundSystem::StartSoundSystem() {
+  // Enable all outputs
+  for (GOSoundOutput &output : m_AudioOutputs) {
+    GOMutexLocker dev_lock(output.mutex);
+
+    output.wait = false;
+    output.waiting = true;
+  }
+  m_WaitCount.store(0);
+  m_CalcCount.store(0);
+  m_NCallbacksEntered.store(0);
+  m_IsRunning.store(true);
+}
+
+void GOSoundSystem::NotifySoundIsOpen() {
+  m_OrganController->PreparePlayback(
+    &GetEngine(), &GetMidi(), &m_AudioRecorder);
+}
+
+void GOSoundSystem::NotifySoundIsClosing() { m_OrganController->Abort(); }
+
+void GOSoundSystem::StopSoundSystem() {
   m_IsRunning.store(false);
 
   // wait for all started callbacks to finish
@@ -223,22 +216,34 @@ void GOSoundSystem::CloseSound() {
 
     while (m_NCallbacksEntered.load() > 0)
       m_CallbackCondition.WaitOrStop(
-        "GOSoundSystem::CloseSound waits for all callbacks to finish", nullptr);
+        "GOSoundSystem::StopSoundSystem waits for all callbacks to finish",
+        nullptr);
   }
 
+  // Disable all outputs
+  {
+    GOMultiMutexLocker multi;
+
+    for (GOSoundOutput &output : m_AudioOutputs)
+      multi.Add(output.mutex);
+
+    for (GOSoundOutput &output : m_AudioOutputs) {
+      output.waiting = false;
+      output.wait = false;
+      output.condition.Broadcast();
+    }
+  }
+}
+
+void GOSoundSystem::StopAndDestroyEngine() {
+  m_SoundEngine.GetScheduler().PauseGivingWork();
+  for (GOSoundThread *pThread : m_Threads)
+    pThread->WaitForIdle();
   StopThreads();
+  m_SoundEngine.ClearSetup();
+}
 
-  for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-    m_AudioOutputs[i].waiting = false;
-    m_AudioOutputs[i].wait = false;
-    m_AudioOutputs[i].condition.Broadcast();
-  }
-
-  for (unsigned i = 1; i < m_AudioOutputs.size(); i++) {
-    GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
-    m_AudioOutputs[i].condition.Broadcast();
-  }
-
+void GOSoundSystem::CloseSoundSystem() {
   for (int i = m_AudioOutputs.size() - 1; i >= 0; i--) {
     if (m_AudioOutputs[i].port) {
       GOSoundPort *const port = m_AudioOutputs[i].port;
@@ -249,65 +254,65 @@ void GOSoundSystem::CloseSound() {
     }
   }
 
-  if (m_OrganController)
-    m_OrganController->Abort();
   ResetMeters();
   m_AudioOutputs.clear();
   m_open = false;
 }
 
+void GOSoundSystem::StartStreams() {
+  for (GOSoundOutput &output : m_AudioOutputs)
+    output.port->Open();
+
+  if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
+    throw wxString::Format(
+      _("Cannot use buffer size above %d samples; "
+        "unacceptable quantization would occur."),
+      MAX_FRAME_SIZE);
+  for (GOSoundOutput &output : m_AudioOutputs)
+    output.port->StartStream();
+}
+
 bool GOSoundSystem::AssureSoundIsOpen() {
-  if (!m_open)
-    OpenSound();
+  if (!m_open) {
+    OpenSoundSystem();
+    if (m_open && m_OrganController) {
+      BuildAndStartEngine();
+      StartSoundSystem();
+      NotifySoundIsOpen();
+    }
+  }
   return m_open;
 }
 
 void GOSoundSystem::AssureSoundIsClosed() {
-  if (m_open)
-    CloseSound();
-}
-
-void GOSoundSystem::AssignOrganFile(GOOrganController *organController) {
-  if (organController == m_OrganController)
-    return;
-
-  GOMutexLocker locker(m_lock);
-  GOMultiMutexLocker multi;
-  for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-    multi.Add(m_AudioOutputs[i].mutex);
-
-  if (m_OrganController) {
-    // ensure pointers to work items are not held by threads
-    m_SoundEngine.GetScheduler().PauseGivingWork();
-    for (GOSoundThread *thread : m_Threads)
-      thread->WaitForIdle();
-
-    m_OrganController->Abort();
-    // now work items are safe to be deleted
-    m_SoundEngine.ClearSetup();
-
-    // resume processing of work items
-    m_SoundEngine.GetScheduler().ResumeGivingWork();
-  }
-
-  m_OrganController = organController;
-
-  if (m_OrganController && m_AudioOutputs.size()) {
-    m_SoundEngine.Setup(
-      *organController,
-      m_OrganController->GetMemoryPool(),
-      m_config.ReleaseConcurrency());
-    m_OrganController->PreparePlayback(
-      &GetEngine(), &GetMidi(), &m_AudioRecorder);
+  if (m_open) {
+    if (m_OrganController) {
+      NotifySoundIsClosing();
+      StopSoundSystem();
+      StopAndDestroyEngine();
+    }
+    CloseSoundSystem();
   }
 }
 
-GOConfig &GOSoundSystem::GetSettings() { return m_config; }
+void GOSoundSystem::AssignOrganFile(GOOrganController *pNewOrganController) {
+  if (pNewOrganController != m_OrganController) {
+    GOMutexLocker locker(m_lock);
 
-GOOrganController *GOSoundSystem::GetOrganFile() { return m_OrganController; }
+    if (m_open && m_OrganController) {
+      NotifySoundIsClosing();
+      StopSoundSystem();
+      StopAndDestroyEngine();
+    }
 
-void GOSoundSystem::SetLogSoundErrorMessages(bool settingsDialogVisible) {
-  logSoundErrors = settingsDialogVisible;
+    m_OrganController = pNewOrganController;
+
+    if (m_open && m_OrganController) {
+      BuildAndStartEngine();
+      StartSoundSystem();
+      NotifySoundIsOpen();
+    }
+  }
 }
 
 std::vector<GOSoundDevInfo> GOSoundSystem::GetAudioDevices(
@@ -344,8 +349,6 @@ void GOSoundSystem::FillDeviceNamePattern(
   pattern.SetApiName(deviceInfo.GetApiName());
   pattern.SetPhysicalName(deviceInfo.GetFullName());
 }
-
-GOMidiSystem &GOSoundSystem::GetMidi() { return m_midi; }
 
 void GOSoundSystem::ResetMeters() {
   wxWindow *const topWindow = wxTheApp ? wxTheApp->GetTopWindow() : nullptr;
@@ -432,8 +435,6 @@ bool GOSoundSystem::AudioCallback(
   }
   return true;
 }
-
-GOSoundOrganEngine &GOSoundSystem::GetEngine() { return m_SoundEngine; }
 
 wxString GOSoundSystem::getState() {
   if (!m_AudioOutputs.size())
