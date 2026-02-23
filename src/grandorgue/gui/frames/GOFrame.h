@@ -8,10 +8,10 @@
 #ifndef GOFRAME_H
 #define GOFRAME_H
 
-#include <wx/dcmemory.h>
-#include <wx/frame.h>
-
+#include <memory>
 #include <vector>
+
+#include <wx/frame.h>
 
 #include "gui/size/GOResizable.h"
 #include "help/GOHelpRequestor.h"
@@ -20,8 +20,6 @@
 #include "modification/GOModificationListener.h"
 #include "threading/GOMutex.h"
 #include "updater/GOUpdateChecker.h"
-
-#include "GOEvent.h"
 
 class GOApp;
 class GOAudioGauge;
@@ -33,7 +31,8 @@ class GOOrganController;
 class GOProgressDialog;
 class GOSoundSystem;
 class wxChoice;
-class wxHtmlHelpController;
+class wxMsgBoxEvent;
+class wxRenameFileEvent;
 class wxSpinCtrl;
 class wxToolBar;
 class wxToolBarToolBase;
@@ -44,15 +43,21 @@ class GOFrame : public wxFrame,
                 protected GOMidiCallback,
                 private GOModificationListener {
 private:
-  GOApp &m_App;
+  GOApp &r_app;
+  GOConfig &r_config;
+  GOSoundSystem &r_SoundSystem;
+  GOMidiSystem &r_MidiSystem;
+
   GOMutex m_mutex;
+
   wxMenu *m_file_menu;
   wxMenu *m_audio_menu;
   wxMenu *m_panel_menu;
   wxMenu *m_favorites_menu;
   wxMenu *m_recent_menu;
   wxMenu *m_temperament_menu;
-  GODocument *m_doc;
+
+  std::unique_ptr<GODocument> mp_doc;
   GOOrganController *p_OrganController;
   wxToolBar *m_ToolBar;
   GOAudioGauge *m_SamplerUsage;
@@ -64,8 +69,6 @@ private:
   wxSpinCtrl *m_Polyphony;
   wxSpinCtrl *m_SetterPosition;
   wxSpinCtrl *m_Volume;
-  GOSoundSystem &m_Sound;
-  GOConfig &m_config;
   GOMidiListener m_listener;
   wxString m_Title;
   wxString m_Label;
