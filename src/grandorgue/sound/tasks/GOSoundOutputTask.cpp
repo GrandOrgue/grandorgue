@@ -9,10 +9,9 @@
 
 #include <algorithm>
 
-#include "sound/GOSoundReverb.h"
+#include "sound/reverb/GOSoundReverb.h"
+#include "sound/scheduler/GOSoundThread.h"
 #include "threading/GOMutexLocker.h"
-
-#include "GOSoundThread.h"
 
 // Maximum sound items amplitude for output
 static constexpr float CLAMP_MIN = -1.0f;

@@ -7,18 +7,17 @@
 
 #include "GOSoundReverb.h"
 
+#include <algorithm>
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include <algorithm>
-
-#include "zita-convolver.h"
-
-#include "files/GOStandardFile.h"
-
-#include "GOSoundResample.h"
-#include "GOWave.h"
 #include "config/GOConfig.h"
+#include "files/GOStandardFile.h"
+#include "sound/playing/GOSoundResample.h"
+
+#include "GOWave.h"
+#include "zita-convolver.h"
 
 const GOSoundReverb::ReverbConfig GOSoundReverb::CONFIG_REVERB_DISABLED
   = {false, false, 0, 0, 0, 0, 0.0f, wxEmptyString};

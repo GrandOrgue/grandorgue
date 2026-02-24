@@ -10,7 +10,7 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "scheduler/GOSoundBufferTaskBase.h"
+#include "tasks/GOSoundBufferTaskBase.h"
 #include "threading/GOMutexLocker.h"
 
 #include "GOWaveTypes.h"

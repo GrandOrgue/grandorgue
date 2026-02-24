@@ -10,13 +10,13 @@
 
 #include <atomic>
 
-#include "GOSoundThread.h"
-#include "sound/GOSoundSamplerList.h"
+#include "sound/playing/GOSoundSamplerList.h"
+#include "sound/scheduler/GOSoundTask.h"
+#include "sound/scheduler/GOSoundThread.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
 #include "GOSoundBufferTaskBase.h"
-#include "GOSoundTask.h"
 
 class GOSoundOrganEngine;
 

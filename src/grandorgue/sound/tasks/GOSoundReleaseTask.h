@@ -10,7 +10,7 @@
 
 #include <atomic>
 
-#include "sound/GOSoundSimpleSamplerList.h"
+#include "sound/playing/GOSoundSimpleSamplerList.h"
 #include "sound/scheduler/GOSoundTask.h"
 
 #include "ptrvector.h"

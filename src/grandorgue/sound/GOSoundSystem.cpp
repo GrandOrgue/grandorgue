@@ -11,15 +11,18 @@
 #include <wx/intl.h>
 #include <wx/window.h>
 
+#include "buffer/GOSoundBufferMutable.h"
+#include "config/GOConfig.h"
+#include "config/GOPortsConfig.h"
+#include "ports/GOSoundPort.h"
+#include "ports/GOSoundPortFactory.h"
+#include "scheduler/GOSoundThread.h"
+#include "threading/GOMultiMutexLocker.h"
+#include "threading/GOMutexLocker.h"
+
 #include "GOEvent.h"
 #include "GOOrganController.h"
 #include "GOSoundDefs.h"
-#include "config/GOConfig.h"
-#include "midi/GOMidiSystem.h"
-#include "scheduler/GOSoundThread.h"
-#include "sound/ports/GOSoundPort.h"
-#include "threading/GOMultiMutexLocker.h"
-#include "threading/GOMutexLocker.h"
 
 GOSoundSystem::GOSoundSystem(GOConfig &settings)
   : m_open(false),

@@ -8,13 +8,13 @@
 #ifndef GOSOUNDRECORDER_H
 #define GOSOUNDRECORDER_H
 
-#include <wx/file.h>
-#include <wx/string.h>
-
 #include <atomic>
 #include <vector>
 
-#include "sound/scheduler/GOSoundTask.h"
+#include <wx/file.h>
+#include <wx/string.h>
+
+#include "scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
 class GOSoundBufferTaskBase;

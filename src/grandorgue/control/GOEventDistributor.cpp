@@ -9,7 +9,7 @@
 
 #include "model/GOCacheObject.h"
 #include "model/GOEventHandlerList.h"
-#include "sound/GOSoundStateHandler.h"
+#include "sound/playing/GOSoundStateHandler.h"
 
 #include "GOControlChangedHandler.h"
 #include "GOEventHandler.h"

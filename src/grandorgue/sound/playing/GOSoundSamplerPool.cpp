@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,8 +10,9 @@
 #include <assert.h>
 #include <string.h>
 
-#include "GOSoundSampler.h"
 #include "threading/GOMutexLocker.h"
+
+#include "GOSoundSampler.h"
 
 GOSoundSamplerPool::GOSoundSamplerPool()
   : m_SamplerCount(0), m_UsageLimit(0), m_AvailableSamplers(), m_Samplers() {

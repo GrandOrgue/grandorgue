@@ -2,7 +2,7 @@
  * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -24,7 +24,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "GOSoundDefs.h"
+#include "sound/GOSoundDefs.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327950288

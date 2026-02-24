@@ -10,7 +10,7 @@
 
 #include "control/GOElementCreator.h"
 #include "control/GOLabelControl.h"
-#include "sound/GOSoundStateHandler.h"
+#include "sound/playing/GOSoundStateHandler.h"
 
 #include "GOSaveableObject.h"
 #include "GOTimerCallback.h"
