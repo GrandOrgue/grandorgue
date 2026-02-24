@@ -23,7 +23,7 @@
 #include "model/GOEnclosure.h"
 #include "model/GOGeneralCombination.h"
 #include "model/GOSetterState.h"
-#include "sound/GOSoundStateHandler.h"
+#include "sound/playing/GOSoundStateHandler.h"
 #include "yaml/GOSaveableToYaml.h"
 
 #define N_CRESCENDOS 4

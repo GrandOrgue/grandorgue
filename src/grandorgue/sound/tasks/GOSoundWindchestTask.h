@@ -10,11 +10,11 @@
 
 #include <atomic>
 
-#include "ptrvector.h"
-
 #include "model/GOWindchest.h"
 #include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
+
+#include "ptrvector.h"
 
 class GOSoundOrganEngine;
 class GOSoundTremulantTask;

@@ -11,12 +11,12 @@
 #include <atomic>
 #include <vector>
 
+#include "playing/GOSoundResample.h"
+#include "playing/GOSoundSampler.h"
+#include "playing/GOSoundSamplerPool.h"
 #include "scheduler/GOSoundScheduler.h"
 
 #include "GOSoundOrganInterface.h"
-#include "GOSoundResample.h"
-#include "GOSoundSampler.h"
-#include "GOSoundSamplerPool.h"
 
 class GOConfig;
 class GOMemoryPool;

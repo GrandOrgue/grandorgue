@@ -9,21 +9,22 @@
 
 #include <algorithm>
 
+#include "buffer/GOSoundBufferMutable.h"
 #include "model/GOOrganModel.h"
 #include "model/GOPipe.h"
 #include "model/GOWindchest.h"
-#include "sound/scheduler/GOSoundGroupTask.h"
-#include "sound/scheduler/GOSoundOutputTask.h"
-#include "sound/scheduler/GOSoundReleaseTask.h"
-#include "sound/scheduler/GOSoundTouchTask.h"
-#include "sound/scheduler/GOSoundTremulantTask.h"
-#include "sound/scheduler/GOSoundWindchestTask.h"
+#include "playing/GOSoundReleaseAlignTable.h"
+#include "playing/GOSoundSampler.h"
+#include "providers/GOSoundProvider.h"
+#include "tasks/GOSoundGroupTask.h"
+#include "tasks/GOSoundOutputTask.h"
+#include "tasks/GOSoundReleaseTask.h"
+#include "tasks/GOSoundTouchTask.h"
+#include "tasks/GOSoundTremulantTask.h"
+#include "tasks/GOSoundWindchestTask.h"
 
 #include "GOEvent.h"
-#include "GOSoundProvider.h"
 #include "GOSoundRecorder.h"
-#include "GOSoundReleaseAlignTable.h"
-#include "GOSoundSampler.h"
 
 GOSoundOrganEngine::GOSoundOrganEngine()
   : m_PolyphonyLimiting(true),

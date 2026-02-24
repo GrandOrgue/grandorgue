@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-#include "GOSoundDefs.h"
+#include "sound/GOSoundDefs.h"
 
 class GOSoundCompressionCache {
 public:

@@ -11,7 +11,7 @@
 
 #include "config/GOConfigReader.h"
 #include "model/GOOrganModel.h"
-#include "sound/GOSoundProviderSynthedTrem.h"
+#include "sound/providers/GOSoundProviderSynthedTrem.h"
 
 #define DELETE_AND_NULL(x)                                                     \
   do {                                                                         \

@@ -12,7 +12,7 @@
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
-#include "sound/GOSoundSampler.h"
+#include "sound/playing/GOSoundSampler.h"
 #include "temperaments/GOTemperament.h"
 
 #include "GOAlloc.h"

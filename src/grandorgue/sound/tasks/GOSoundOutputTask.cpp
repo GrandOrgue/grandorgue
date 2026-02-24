@@ -7,7 +7,10 @@
 
 #include "GOSoundOutputTask.h"
 
-#include "GOSoundThread.h"
+#include <algorithm>
+
+#include "sound/reverb/GOSoundReverb.h"
+#include "sound/scheduler/GOSoundThread.h"
 #include "threading/GOMutexLocker.h"
 
 GOSoundOutputTask::GOSoundOutputTask(

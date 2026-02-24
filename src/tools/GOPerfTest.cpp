@@ -12,16 +12,16 @@
 #include <wx/image.h>
 #include <wx/stopwatch.h>
 
-#include "ptrvector.h"
-
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
 #include "sound/GOSoundOrganEngine.h"
-#include "sound/GOSoundProviderWave.h"
 #include "sound/GOSoundRecorder.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/providers/GOSoundProviderWave.h"
 
 #include "GOOrganController.h"
 #include "GOStdPath.h"
+#include "ptrvector.h"
 
 #ifdef __linux__
 #include <sys/resource.h>

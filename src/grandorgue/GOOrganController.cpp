@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <math.h>
+
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
@@ -61,7 +62,7 @@
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
 #include "sound/GOSoundOrganEngine.h"
-#include "sound/GOSoundReleaseAlignTable.h"
+#include "sound/playing/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
 #include "yaml/GOYamlModel.h"
 

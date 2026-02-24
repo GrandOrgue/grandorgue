@@ -8,7 +8,7 @@
 #ifndef GOSOUNDTREMULANTTASK_H
 #define GOSOUNDTREMULANTTASK_H
 
-#include "sound/GOSoundSamplerList.h"
+#include "sound/playing/GOSoundSamplerList.h"
 #include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
