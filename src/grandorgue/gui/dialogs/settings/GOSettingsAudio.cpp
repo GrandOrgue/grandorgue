@@ -20,6 +20,7 @@
 #include <wx/textdlg.h>
 
 #include "config/GOConfig.h"
+#include "sound/GOSoundDefs.h"
 #include "sound/GOSoundSystem.h"
 #include "sound/ports/GOSoundPortFactory.h"
 

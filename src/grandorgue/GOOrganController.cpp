@@ -58,7 +58,7 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
-#include "sound/GOSoundOrganEngine.h"
+#include "sound/GOSoundSystem.h"
 #include "sound/playing/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
 #include "yaml/GOYamlModel.h"
@@ -89,13 +89,13 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
     m_MidiRecorder(NULL),
     m_timer(NULL),
     p_OnStateButton(nullptr),
-    m_volume(0),
     m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
     m_midi(0),
     m_SampleSetId1(0),
     m_SampleSetId2(0),
+    m_SoundEngine(*this, m_pool),
     mp_ImageCache(nullptr),
     m_PitchLabel(*this),
     m_TemperamentLabel(*this),
@@ -220,10 +220,11 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   unsigned NumberOfPanels = cfg.ReadInteger(
     ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
   cfg.ReadString(CMBSetting, WX_ORGAN, WX_GRANDORGUE_VERSION, false);
-  m_volume = cfg.ReadInteger(
+
+  int volume = cfg.ReadInteger(
     CMBSetting, WX_ORGAN, wxT("Volume"), -120, 100, false, m_config.Volume());
-  if (m_volume > 20)
-    m_volume = 0;
+
+  m_SoundEngine.SetVolume(volume > 20 ? 0 : volume);
   m_Temperament
     = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("Temperament"), false);
 
@@ -752,7 +753,7 @@ bool GOOrganController::Export(const wxString &cmb) {
   if (m_ArchiveID != wxEmptyString)
     cfg.WriteString(WX_ORGAN, wxT("ArchiveID"), m_ArchiveID);
   cfg.WriteString(WX_ORGAN, WX_GRANDORGUE_VERSION, wxT(APP_VERSION));
-  cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_volume);
+  cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_SoundEngine.GetVolume());
   cfg.WriteString(WX_ORGAN, wxT("Temperament"), m_Temperament);
 
   GOEventDistributor::Save(cfg);
@@ -838,9 +839,57 @@ void GOOrganController::LoadMIDIFile(wxString const &filename) {
     filename, GetODFManualCount() - 1, GetFirstManualIndex() == 0);
 }
 
-void GOOrganController::Abort() {
-  m_soundengine = NULL;
+void GOOrganController::PreconfigRecorder() {
+  for (unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++) {
+    wxString id = wxString::Format(wxT("M%d"), i);
+    m_MidiRecorder->PreconfigureMapping(id, false);
+  }
+}
 
+void GOOrganController::StartOrgan(GOSoundSystem &soundSystem) {
+  const std::vector<GOSoundOrganEngine::AudioOutputConfig> audioOutputConfigs
+    = GOSoundOrganEngine::createAudioOutputConfigs(
+      m_config, m_config.GetAudioGroups().size());
+
+  m_SoundEngine.SetFromConfig(m_config);
+  m_SoundEngine.BuildAndStart(
+    audioOutputConfigs,
+    soundSystem.GetSamplesPerBuffer(),
+    soundSystem.GetSampleRate(),
+    soundSystem.GetAudioRecorder());
+  soundSystem.ConnectToEngine(m_SoundEngine);
+
+  GOMidiSystem &midi = soundSystem.GetMidi();
+
+  m_midi = &midi;
+  m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
+  m_AudioRecorder->SetAudioRecorder(&soundSystem.GetAudioRecorder());
+
+  m_MidiRecorder->Clear();
+  PreconfigRecorder();
+  m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
+  PreconfigRecorder();
+
+  m_MidiSamplesetMatch.clear();
+  GOOrganModel::SetMidi(&midi, m_MidiRecorder);
+  GOOrganModel::GOSoundOrganInterfaceProxy::Connect(&m_SoundEngine);
+  GOEventDistributor::PreparePlayback();
+
+  m_setter->UpdateModified(m_OrganModified);
+
+  GOEventDistributor::StartPlayback();
+  GOEventDistributor::PrepareRecording();
+  m_MidiPlayer->Setup(&midi);
+
+  // Light the OnState button
+  if (p_OnStateButton) {
+    p_OnStateButton->PreparePlayback();
+    p_OnStateButton->StartPlayback();
+    p_OnStateButton->PrepareRecording();
+  }
+}
+
+void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
   GOEventDistributor::AbortPlayback();
 
   m_MidiPlayer->Cleanup();
@@ -852,44 +901,9 @@ void GOOrganController::Abort() {
   GOOrganModel::GOSoundOrganInterfaceProxy::Disconnect();
   GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;
-}
 
-void GOOrganController::PreconfigRecorder() {
-  for (unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++) {
-    wxString id = wxString::Format(wxT("M%d"), i);
-    m_MidiRecorder->PreconfigureMapping(id, false);
-  }
-}
-
-void GOOrganController::PreparePlayback(
-  GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder) {
-  m_soundengine = engine;
-  m_midi = midi;
-  m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
-  m_AudioRecorder->SetAudioRecorder(recorder);
-
-  m_MidiRecorder->Clear();
-  PreconfigRecorder();
-  m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
-  PreconfigRecorder();
-
-  m_MidiSamplesetMatch.clear();
-  GOOrganModel::SetMidi(midi, m_MidiRecorder);
-  GOOrganModel::GOSoundOrganInterfaceProxy::Connect(engine);
-  GOEventDistributor::PreparePlayback();
-
-  m_setter->UpdateModified(m_OrganModified);
-
-  GOEventDistributor::StartPlayback();
-  GOEventDistributor::PrepareRecording();
-  m_MidiPlayer->Setup(midi);
-
-  // Light the OnState button
-  if (p_OnStateButton) {
-    p_OnStateButton->PreparePlayback();
-    p_OnStateButton->StartPlayback();
-    p_OnStateButton->PrepareRecording();
-  }
+  soundSystem.DisconnectFromEngine(m_SoundEngine);
+  m_SoundEngine.StopAndDestroy();
 }
 
 void GOOrganController::PrepareRecording() {
