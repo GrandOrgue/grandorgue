@@ -36,7 +36,7 @@ public:
 
   inline void Seek(unsigned index, uint8_t channelN) {
     while (r_cache.m_position <= index + 1) {
-      DecompressionStep(r_cache, nChannels, format16);
+      r_cache.DecompressionStep(nChannels, format16);
     }
     m_ChannelN = channelN;
     m_curr = PREV;
@@ -87,7 +87,7 @@ public:
       int *pWrite2 = pWrite1 + WINDOW_SAMPLES;
 
       while (r_cache.m_position < readAheadIndexTo) {
-        DecompressionStep(r_cache, nChannels, format16);
+        r_cache.DecompressionStep(nChannels, format16);
 
         /* fill the read ahead buffer. If r_cache.position > index we assume
           that the previous samples already present */
@@ -441,8 +441,8 @@ void GOSoundStream::GetHistory(
     for (unsigned i = 0; i < BLOCK_HISTORY; i++) {
       for (uint8_t j = 0; j < nChannels; j++)
         history[i][j] = tmpCache.m_value[j];
-      DecompressionStep(
-        tmpCache, nChannels, audio_section->GetBitsPerSample() >= 20);
+      tmpCache.DecompressionStep(
+        nChannels, audio_section->GetBitsPerSample() >= 20);
     }
   }
 }
