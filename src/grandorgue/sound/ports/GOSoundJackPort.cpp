@@ -12,7 +12,7 @@
 #include <wx/log.h>
 
 #include "config/GODeviceNamePattern.h"
-#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/buffer/GOSoundBufferMutableMono.h"
 
 const wxString GOSoundJackPort::PORT_NAME = wxT("Jack");
 
@@ -47,9 +47,7 @@ void GOSoundJackPort::jackLatencyCallback(
 
 int GOSoundJackPort::jackProcessCallback(jack_nframes_t nFrames, void *pData) {
   GOSoundJackPort *const pPort = (GOSoundJackPort *)pData;
-  GOSoundBufferMutable outputBuffer(
-    pPort->mp_GoBuffer, pPort->m_Channels, nFrames);
-  const bool isContinue = pPort->AudioCallback(outputBuffer);
+  const bool isContinue = pPort->AudioCallback(pPort->m_GoBuffer);
 
   if (isContinue) {
     const unsigned nChannels = pPort->m_Channels;
@@ -58,20 +56,15 @@ int GOSoundJackPort::jackProcessCallback(jack_nframes_t nFrames, void *pData) {
       jack_default_audio_sample_t *pOut
         = (jack_default_audio_sample_t *)jack_port_get_buffer(
           pPort->mp_JackOutPorts[channelI], nFrames);
+      GOSoundBufferMutableMono monoBuffer(pOut, nFrames);
 
-      if (pPort->m_IsStarted) {
-        // copy samples from the interleaved pPort->mp_GoBuffer to the non
+      if (pPort->m_IsStarted)
+        // copy samples from the interleaved pPort->m_GoBuffer to the non
         // interleaved jack buffer
-        float *pIn = pPort->mp_GoBuffer + channelI;
-
-        for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
-          *(pOut++) = *pIn;
-          pIn += nChannels;
-        }
-      } else {
+        monoBuffer.CopyChannelFrom(pPort->m_GoBuffer, channelI);
+      else
         // wipe the jack buffer
-        memset(pOut, 0, sizeof(jack_default_audio_sample_t) * nFrames);
-      }
+        monoBuffer.FillWithSilence();
     }
   }
   return isContinue ? 0 : 1;
@@ -140,7 +133,7 @@ void GOSoundJackPort::Open() {
   jack_set_process_callback(mp_JackClient, &jackProcessCallback, this);
   jack_on_shutdown(mp_JackClient, &jackShutdownCallback, this);
 
-  mp_GoBuffer = new float[samplesPerBuffer * m_Channels];
+  m_GoBuffer.Resize(m_Channels, samplesPerBuffer);
 
   m_IsOpen = true;
 }
@@ -170,10 +163,6 @@ void GOSoundJackPort::Close() {
     mp_JackClient = nullptr;
   }
   mp_JackOutPorts.clear();
-  if (mp_GoBuffer) {
-    delete[] mp_GoBuffer;
-    mp_GoBuffer = nullptr;
-  }
 #endif
 }
 

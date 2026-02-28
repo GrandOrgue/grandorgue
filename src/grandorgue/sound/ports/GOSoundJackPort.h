@@ -18,6 +18,8 @@
 #define WIN32 1
 #endif
 #include <jack/jack.h>
+
+#include "sound/buffer/GOSoundBufferManaged.h"
 #endif
 
 #include "GOSoundPort.h"
@@ -34,7 +36,7 @@ public:
 private:
   jack_client_t *mp_JackClient = nullptr;
   std::vector<jack_port_t *> mp_JackOutPorts;
-  float *mp_GoBuffer = nullptr;
+  GOSoundBufferManaged m_GoBuffer;
   bool m_IsOpen = false;
   bool m_IsStarted = false;
 
