@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -10,16 +10,39 @@ set(DEPLIST)
 # ========================
 
 # Find ImageMagick
+# In ImageMagick v7 'convert' is deprecated; prefer 'magick' when available
+find_program(ImageMagick_magick_EXECUTABLE magick)
 find_program(ImageMagick_convert_EXECUTABLE convert)
+if(ImageMagick_magick_EXECUTABLE)
+  set(IMAGEMAGICK_EXECUTABLE ${ImageMagick_magick_EXECUTABLE})
+elseif(ImageMagick_convert_EXECUTABLE)
+  set(IMAGEMAGICK_EXECUTABLE ${ImageMagick_convert_EXECUTABLE})
+else()
+  message(FATAL_ERROR "ImageMagick not found (neither 'magick' nor 'convert')")
+endif()
+
+# rsvg-convert (from librsvg) reliably renders SVG files with embedded images.
+# ImageMagick on macOS typically lacks SVG delegate support, so rsvg-convert
+# is preferred when available: SVG is first rendered to PNG, then ImageMagick
+# converts the PNG to the target format.
+find_program(RSVG_CONVERT_EXECUTABLE rsvg-convert)
 
 # Setup command to generate GOIcon.ico.
 # That icon is used for two purposes:
 # 1. Windows application icon (included from GrandOrgue.rc that is copied below and included from ${CMAKE_SOURCE_DIR}/src/grandorgue/CMakeLists.txt)
 # 2. Conversion into .cpp and usage in GO code (in ${CMAKE_SOURCE_DIR}/src/images/CMakeLists.txt)
 
-ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_BINARY_DIR}/GOIcon.ico"
-                     COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${CMAKE_BINARY_DIR}/GOIcon.ico"
-                     DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
+set(GOICON_TMP_PNG "${CMAKE_BINARY_DIR}/GOIcon_tmp.png")
+if(RSVG_CONVERT_EXECUTABLE)
+  ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_BINARY_DIR}/GOIcon.ico"
+                       COMMAND ${RSVG_CONVERT_EXECUTABLE} -w 32 -h 32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" -o "${GOICON_TMP_PNG}"
+                       COMMAND ${IMAGEMAGICK_EXECUTABLE} "${GOICON_TMP_PNG}" "${CMAKE_BINARY_DIR}/GOIcon.ico"
+                       DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
+else()
+  ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_BINARY_DIR}/GOIcon.ico"
+                       COMMAND ${IMAGEMAGICK_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${CMAKE_BINARY_DIR}/GOIcon.ico"
+                       DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
+endif()
 LIST(APPEND DEPLIST "${CMAKE_BINARY_DIR}/GOIcon.ico")
 
 # Configure generation of icons & create directory for generated .png icons
@@ -34,9 +57,15 @@ ADD_CUSTOM_COMMAND(OUTPUT ${GENERATED_ICONS_DIR} COMMAND ${CMAKE_COMMAND} -E mak
 set(GENERATED_ICONS)
 foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
   LIST(APPEND GENERATED_ICONS "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" )
-  ADD_CUSTOM_COMMAND(OUTPUT "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png" 
-                     COMMAND ${ImageMagick_convert_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
-                     DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
+  if(RSVG_CONVERT_EXECUTABLE)
+    ADD_CUSTOM_COMMAND(OUTPUT "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
+                       COMMAND ${RSVG_CONVERT_EXECUTABLE} -w ${ICON_SIZE} -h ${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" -o "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
+                       DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
+  else()
+    ADD_CUSTOM_COMMAND(OUTPUT "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
+                       COMMAND ${IMAGEMAGICK_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
+                       DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
+  endif()
 endforeach()
 
 # ========================
