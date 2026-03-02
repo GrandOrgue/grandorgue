@@ -15,11 +15,11 @@
 #include "config/GOPortsConfig.h"
 
 class GOSoundBufferMutable;
-class GOSoundSystem;
+class GOSoundCallbackConnector;
 
 class GOSoundPort {
 protected:
-  GOSoundSystem *m_Sound;
+  GOSoundCallbackConnector &r_CallbackConnector;
   unsigned m_Index;
   bool m_IsOpen;
   wxString m_Name;
@@ -33,7 +33,8 @@ protected:
   bool AudioCallback(GOSoundBufferMutable &outputBuffer);
 
 public:
-  GOSoundPort(GOSoundSystem *sound, wxString name);
+  GOSoundPort(
+    GOSoundCallbackConnector &callbackConnector, const wxString &name);
   virtual ~GOSoundPort();
 
   void Init(

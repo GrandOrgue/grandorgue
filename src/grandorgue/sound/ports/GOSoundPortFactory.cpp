@@ -43,7 +43,7 @@ enum { SUBSYS_PA_BIT = 1, SUBSYS_RT_BIT = 2, SUBSYS_JACK_BIT = 4 };
 
 GOSoundPort *GOSoundPortFactory::create(
   const GOPortsConfig &portsConfig,
-  GOSoundSystem *sound,
+  GOSoundCallbackConnector &callbackConnector,
   GODeviceNamePattern &pattern) {
   GOSoundPort *port = NULL;
   const wxString &patternPort = pattern.GetPortName();
@@ -68,15 +68,16 @@ GOSoundPort *GOSoundPortFactory::create(
   if (
     port == NULL && (portMask & SUBSYS_PA_BIT)
     && portsConfig.IsEnabled(GOSoundPortaudioPort::PORT_NAME))
-    port = GOSoundPortaudioPort::create(portsConfig, sound, pattern);
+    port
+      = GOSoundPortaudioPort::create(portsConfig, callbackConnector, pattern);
   if (
     port == NULL && (portMask & SUBSYS_RT_BIT)
     && portsConfig.IsEnabled(GOSoundRtPort::PORT_NAME))
-    port = GOSoundRtPort::create(portsConfig, sound, pattern);
+    port = GOSoundRtPort::create(portsConfig, callbackConnector, pattern);
   if (
     port == NULL && (portMask & SUBSYS_JACK_BIT)
     && portsConfig.IsEnabled(GOSoundJackPort::PORT_NAME))
-    port = GOSoundJackPort::create(portsConfig, sound, pattern);
+    port = GOSoundJackPort::create(portsConfig, callbackConnector, pattern);
   return port;
 }
 

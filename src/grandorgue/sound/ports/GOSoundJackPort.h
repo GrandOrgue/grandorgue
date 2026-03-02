@@ -29,7 +29,8 @@ class GOSoundJackPort : public GOSoundPort {
 public:
   static const wxString PORT_NAME;
 
-  GOSoundJackPort(GOSoundSystem *sound, wxString name);
+  GOSoundJackPort(
+    GOSoundCallbackConnector &callbackConnector, const wxString &name);
   ~GOSoundJackPort();
 
 #if defined(GO_USE_JACK)
@@ -60,7 +61,7 @@ public:
   }
   static GOSoundPort *create(
     const GOPortsConfig &portsConfig,
-    GOSoundSystem *sound,
+    GOSoundCallbackConnector &callbackConnector,
     GODeviceNamePattern &pattern);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);

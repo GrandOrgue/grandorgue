@@ -32,7 +32,9 @@ public:
   static const wxString PORT_NAME_OLD;
 
   GOSoundPortaudioPort(
-    GOSoundSystem *sound, unsigned paDevIndex, const wxString &name);
+    GOSoundCallbackConnector &callbackConnector,
+    unsigned paDevIndex,
+    const wxString &name);
   virtual ~GOSoundPortaudioPort();
 
   void Open();
@@ -45,7 +47,7 @@ public:
 
   static GOSoundPort *create(
     const GOPortsConfig &portsConfig,
-    GOSoundSystem *sound,
+    GOSoundCallbackConnector &callbackConnector,
     GODeviceNamePattern &pattern);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);

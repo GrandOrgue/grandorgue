@@ -10,6 +10,7 @@
 
 #include "GOTest.h"
 
+#include "sound/GOSoundCallbackConnector.h"
 #include "sound/tasks/GOSoundRecorderTask.h"
 
 class GOSoundOrganEngine;
@@ -34,6 +35,10 @@ private:
   GOSoundRecorderTask m_recorder;
 
 protected:
+  GOSoundCallbackConnector m_connector;
+
+  GOTestSoundOrganEngineBase();
+
   /*
    * Configures and starts the engine with the given parameters.
    * Asserts that the engine is WORKING and not USED after start.
