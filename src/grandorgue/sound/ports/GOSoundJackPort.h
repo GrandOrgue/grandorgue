@@ -32,16 +32,16 @@ public:
 
 #if defined(GO_USE_JACK)
 private:
-  jack_client_t *m_JackClient = NULL;
+  jack_client_t *mp_JackClient = nullptr;
   std::vector<jack_port_t *> mp_JackOutPorts;
-  float *m_GoBuffer = NULL;
+  float *mp_GoBuffer = nullptr;
   bool m_IsOpen = false;
   bool m_IsStarted = false;
 
-  static void JackLatencyCallback(
-    jack_latency_callback_mode_t mode, void *data);
-  static int JackProcessCallback(jack_nframes_t nFrames, void *data);
-  static void JackShutdownCallback(void *data);
+  static void jackLatencyCallback(
+    jack_latency_callback_mode_t mode, void *pData);
+  static int jackProcessCallback(jack_nframes_t nFrames, void *pData);
+  static void jackShutdownCallback(void *pData);
 
   static wxString getName();
 
