@@ -535,10 +535,10 @@ void GOSoundOrganEngine::CreateReleaseSampler(GOSoundSampler *handle) {
           int time = ((m_CurrentTime - handle->time) * 1000) / m_SampleRate;
           /* TODO: below code should be replaced by a more accurate model of the
            * attack to get a better estimate of the amplitude when playing very
-           * short notes estimating attack duration from pipe midi pitch */
+           * short notes; estimating attack duration from pipe MIDI pitch */
           unsigned midikey_frequency = this_pipe->GetMidiKeyNumber();
-          /* if MidiKeyNumber is not within an organ 64 feet to 1 foot pipes, we
-           * assume average pipe (MIDI = 60)*/
+          /* if MidiKeyNumber is not within the range of organ pipes (64 feet
+           * to 1 foot), we assume average pipe (MIDI = 60) */
           if (midikey_frequency > 133 || midikey_frequency == 0)
             midikey_frequency = 60;
           /* attack duration is assumed 50 ms above MIDI 96, 800 ms below MIDI
@@ -551,8 +551,8 @@ void GOSoundOrganEngine::CreateReleaseSampler(GOSoundSampler *handle) {
               attack_duration
                 = 500.0f + ((24.0f - (float)midikey_frequency) * 6.25f);
           }
-          /* calculate gain (gain_target) to apply to tail amplitude in function
-           * of when the note is released during the attack */
+          /* calculate gain (gain_target) to apply to tail amplitude as a
+           * function of when the note is released during the attack */
           if (time < (int)attack_duration) {
             float attack_index = (float)time / attack_duration;
             float gain_delta
@@ -560,11 +560,11 @@ void GOSoundOrganEngine::CreateReleaseSampler(GOSoundSampler *handle) {
             gain_target *= gain_delta;
           }
           /* calculate the volume decay to be applied to the release to take
-           * into account the fact reverb is not completely formed during
-           * staccato time to full reverb is estimated in function of release
-           * length for an organ with a release length of 5 seconds or more,
-           * time_to_full_reverb is around 350 ms for an organ with a release
-           * length of 1 second or less, time_to_full_reverb is around 100 ms
+           * into account the fact that reverb is not completely formed during
+           * staccato. Time to full reverb is estimated as a function of release
+           * length: for an organ with a release length of 5 seconds or more,
+           * time_to_full_reverb is around 350 ms; for an organ with a release
+           * length of 1 second or less, time_to_full_reverb is around 100 ms;
            * time_to_full_reverb is linear in between */
           int time_to_full_reverb = ((60 * release_section->GetLength())
                                      / release_section->GetSampleRate())
@@ -574,7 +574,7 @@ void GOSoundOrganEngine::CreateReleaseSampler(GOSoundSampler *handle) {
           if (time_to_full_reverb < 100)
             time_to_full_reverb = 100;
           if (time < time_to_full_reverb) {
-            /* in function of note duration, fading happens between:
+            /* as a function of note duration, fading happens between:
              * 200 ms and 6 s for release with little reverberation e.g. short
              * release
              * 700 ms and 6 s for release with large reverberation e.g. long
@@ -667,10 +667,11 @@ void GOSoundOrganEngine::UpdateVelocity(
   assert(pipe);
 
   if (handle->p_SoundProvider == pipe) {
-    // we've just checked that handle is still playing the same pipe
-    // may be handle was switched to another pipe between checking and
-    // SetVelocityVolume but we don't want to lock it because this functionality
-    // is not so important Concurrent update possible, as it just update a float
+    // we've just checked that handle is still playing the same pipe;
+    // maybe handle was switched to another pipe between checking and
+    // SetVelocityVolume, but we don't want to lock it because this
+    // functionality is not so important. Concurrent update is acceptable,
+    // as it just updates a float
     handle->velocity = velocity;
     handle->fader.SetVelocityVolume(pipe->GetVelocityVolume(velocity));
   }
