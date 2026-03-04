@@ -53,7 +53,6 @@ protected:
   GOOrganController *m_OrganController;
   GOGUIMouseState &m_MouseState;
   ptr_vector<GOGUIControl> m_controls;
-  std::vector<GOBitmap> m_WoodImages;
   unsigned m_BackgroundControls;
   wxString m_Name;
   wxString m_GroupName;
@@ -100,7 +99,7 @@ public:
   GOGUILayoutEngine *GetLayoutEngine();
   void PrepareDraw(double scale, GOBitmap *background);
   void Draw(GODC &dc);
-  const GOBitmap &GetWood(unsigned which);
+  const wxImage *GetWoodImage(unsigned woodImageNumber) const;
   const wxImage *LoadImage(const wxString &filename, const wxString &maskname);
   void HandleKey(int key);
   void HandleMousePress(int x, int y, bool right);

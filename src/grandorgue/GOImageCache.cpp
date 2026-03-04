@@ -158,6 +158,25 @@ BITMAP_LIST
 
 const wxString GOImageCache::WX_EMPTY_STRING = wxEmptyString;
 
+const wxImage *GOImageCache::FindImage(
+  const wxString &filename, const wxString &maskname) const {
+  const wxImage *pImage = nullptr;
+
+  for (unsigned i = 0; i < m_filenames.size(); i++)
+    if (m_filenames[i] == filename && m_masknames[i] == maskname) {
+      pImage = m_images[i];
+      break;
+    }
+  return pImage;
+}
+
+void GOImageCache::RegisterImage(
+  const wxString &filename, const wxString &maskname, wxImage *pImage) {
+  m_images.push_back(pImage);
+  m_filenames.push_back(filename);
+  m_masknames.push_back(maskname);
+}
+
 GOImageCache::GOImageCache(GOOrganController *organController)
   : m_OrganController(organController),
     m_images(),
@@ -166,6 +185,12 @@ GOImageCache::GOImageCache(GOOrganController *organController)
   if (organController) {
     BITMAP_LIST;
   }
+}
+
+const wxImage *GOImageCache::GetWoodImage(unsigned woodImageNum) const {
+  return FindImage(
+    wxString::Format(wxT(GOBitmapPrefix "wood%02d"), woodImageNum),
+    wxEmptyString);
 }
 
 bool GOImageCache::LoadImageFromFile(const wxString &filename, wxImage &image) {
@@ -200,45 +225,39 @@ bool GOImageCache::LoadImageFromFile(const wxString &filename, wxImage &image) {
   return result;
 }
 
-void GOImageCache::RegisterImage(
-  const wxString &filename, const wxString &maskname, wxImage *pImage) {
-  m_images.push_back(pImage);
-  m_filenames.push_back(filename);
-  m_masknames.push_back(maskname);
-}
-
 const wxImage *GOImageCache::LoadImage(
   const wxString &filename, const wxString &maskName) {
-  for (unsigned i = 0; i < m_filenames.size(); i++)
-    if (m_filenames[i] == filename && m_masknames[i] == maskName)
-      return m_images[i];
+  const wxImage *pImage = FindImage(filename, maskName);
 
-  wxImage image, maskimage;
+  if (!pImage) {
+    wxImage image, maskimage;
 
-  if (!LoadImageFromFile(filename, image))
-    throw wxString::Format(
-      _("Failed to open the graphic '%s'"), filename.c_str());
-
-  if (maskName != wxEmptyString) {
-    if (!LoadImageFromFile(maskName, maskimage))
+    if (!LoadImageFromFile(filename, image))
       throw wxString::Format(
-        _("Failed to open the graphic '%s'"), maskName.c_str());
+        _("Failed to open the graphic '%s'"), filename.c_str());
 
-    if (
-      image.GetWidth() != maskimage.GetWidth()
-      || image.GetHeight() != maskimage.GetHeight())
-      throw wxString::Format(
-        _("bitmap size of '%s' does not match mask '%s'"),
-        filename.c_str(),
-        maskName.c_str());
+    if (maskName != wxEmptyString) {
+      if (!LoadImageFromFile(maskName, maskimage))
+        throw wxString::Format(
+          _("Failed to open the graphic '%s'"), maskName.c_str());
 
-    image.SetMaskFromImage(maskimage, 0xFF, 0xFF, 0xFF);
+      if (
+        image.GetWidth() != maskimage.GetWidth()
+        || image.GetHeight() != maskimage.GetHeight())
+        throw wxString::Format(
+          _("bitmap size of '%s' does not match mask '%s'"),
+          filename.c_str(),
+          maskName.c_str());
+
+      image.SetMaskFromImage(maskimage, 0xFF, 0xFF, 0xFF);
+    }
+
+    wxImage *pNewImage = new wxImage(image);
+
+    if (pNewImage->HasMask())
+      pNewImage->InitAlpha();
+    RegisterImage(filename, maskName, pNewImage);
+    pImage = pNewImage;
   }
-
-  wxImage *pImage = new wxImage(image);
-
-  if (pImage->HasMask())
-    pImage->InitAlpha();
-  RegisterImage(filename, maskName, pImage);
   return pImage;
 }
