@@ -27,6 +27,7 @@ private:
   int m_ResultHeight = 0;
   unsigned m_ResultXOffset = 0;
   unsigned m_ResultYOffset = 0;
+  bool m_ResultValid = false;
 
   void BuildBitmapFrom(
     const wxImage &img, double scale, const wxRect &rect, GOBitmap *background);
@@ -41,12 +42,14 @@ public:
     double scale, const wxRect &rect, GOBitmap *background);
   void BuildTileBitmap(
     double scale,
-    const wxRect &rect,
-    unsigned xo,
-    unsigned yo,
+    const wxRect &newRect,
+    unsigned newXOffset,
+    unsigned newYOffset,
     GOBitmap *background);
 
-  const wxBitmap &GetResultBitmap() const { return m_ResultBitmap; }
+  const wxBitmap *GetResultBitmap() const {
+    return m_ResultValid ? &m_ResultBitmap : nullptr;
+  }
 };
 
 #endif

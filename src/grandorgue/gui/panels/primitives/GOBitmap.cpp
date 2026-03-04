@@ -21,27 +21,37 @@ unsigned GOBitmap::GetSourceHeight() const {
 
 void GOBitmap::BuildBitmapFrom(
   const wxImage &img, double scale, const wxRect &rect, GOBitmap *background) {
-  if (background && img.HasAlpha()) {
-    wxBitmap bmp(img.GetWidth(), img.GetHeight());
-    wxBitmap orig(img);
-    wxMemoryDC dc;
+  const int imgHeight = img.GetHeight();
+  const int imgWidth = img.GetWidth();
+  const int newHeight = imgHeight * scale;
+  const int newWidth = imgWidth * scale;
 
-    dc.SelectObject(bmp);
-    dc.DrawBitmap(
-      background->GetResultBitmap(), -rect.GetX(), -rect.GetY(), false);
-    dc.DrawBitmap(orig, 0, 0, true);
-    bmp.SetMask(orig.GetMask());
-    wxImage img_result = bmp.ConvertToImage();
-    if (!img_result.HasAlpha())
-      img_result.InitAlpha();
-    memcpy(
-      img_result.GetAlpha(), img.GetAlpha(), img.GetWidth() * img.GetHeight());
+  m_ResultValid = newHeight > 0 && newWidth > 0;
+  if (m_ResultValid) {
+    const wxBitmap *pBackgroundBitmap
+      = background ? background->GetResultBitmap() : nullptr;
 
-    m_ResultBitmap = (wxBitmap)img_result.Scale(
-      img.GetWidth() * scale, img.GetHeight() * scale, wxIMAGE_QUALITY_BICUBIC);
-  } else
-    m_ResultBitmap = (wxBitmap)img.Scale(
-      img.GetWidth() * scale, img.GetHeight() * scale, wxIMAGE_QUALITY_BICUBIC);
+    if (pBackgroundBitmap && img.HasAlpha()) {
+      wxBitmap bmp(imgWidth, imgHeight);
+      wxBitmap orig(img);
+      wxMemoryDC dc;
+
+      dc.SelectObject(bmp);
+      dc.DrawBitmap(*pBackgroundBitmap, -rect.GetX(), -rect.GetY(), false);
+      dc.DrawBitmap(orig, 0, 0, true);
+      bmp.SetMask(orig.GetMask());
+
+      wxImage img_result = bmp.ConvertToImage();
+
+      if (!img_result.HasAlpha())
+        img_result.InitAlpha();
+      memcpy(img_result.GetAlpha(), img.GetAlpha(), imgWidth * imgHeight);
+      m_ResultBitmap = (wxBitmap)img_result.Scale(
+        newWidth, newHeight, wxIMAGE_QUALITY_BICUBIC);
+    } else
+      m_ResultBitmap
+        = (wxBitmap)img.Scale(newWidth, newHeight, wxIMAGE_QUALITY_BICUBIC);
+  }
   m_Scale = scale;
 }
 
@@ -56,26 +66,47 @@ void GOBitmap::BuildScaledBitmap(
 
 void GOBitmap::BuildTileBitmap(
   double scale,
-  const wxRect &rect,
-  unsigned xo,
-  unsigned yo,
+  const wxRect &newRect,
+  unsigned newXOffset,
+  unsigned newYOffset,
   GOBitmap *background) {
+  const int tgtHeight = newRect.GetHeight();
+  const int tgtWidth = newRect.GetWidth();
+
   if (
     p_SourceImage
-    && (
-      scale != m_Scale 
-      || m_ResultWidth != rect.GetWidth()
-      || m_ResultHeight != rect.GetHeight() || xo != m_ResultXOffset
-      || yo != m_ResultYOffset)) {
-    wxImage img(rect.GetWidth(), rect.GetHeight());
+    && (scale != m_Scale || m_ResultWidth != tgtHeight || m_ResultHeight != tgtWidth || newXOffset != m_ResultXOffset || newYOffset != m_ResultYOffset)) {
+    const int srcHeight = p_SourceImage->GetHeight();
+    const int srcWidth = p_SourceImage->GetWidth();
+    wxImage img(tgtWidth, tgtHeight);
 
-    for (int y = -yo; y < img.GetHeight(); y += GetSourceHeight())
-      for (int x = -xo; x < img.GetWidth(); x += GetSourceWidth())
-        img.Paste(*p_SourceImage, x, y);
-    BuildBitmapFrom(img, scale, rect, background);
-    m_ResultWidth = rect.GetWidth();
-    m_ResultHeight = rect.GetHeight();
-    m_ResultXOffset = xo;
-    m_ResultYOffset = yo;
+    for (int y = -newYOffset; y < tgtHeight; y += srcHeight)
+      for (int x = -newXOffset; x < tgtWidth; x += srcWidth) {
+        // Calculate source starting position using std::max(0, -offset)
+        const int srcX = std::max(0, -x);
+        const int srcY = std::max(0, -y);
+
+        // Ensure copy stays within target bounds using std::min
+        const int copyWidth = std::min(srcWidth - srcX, tgtWidth - x);
+        const int copyHeight = std::min(srcHeight - srcY, tgtHeight - y);
+
+        // Paste only if valid copy region exists
+        if (copyWidth > 0 && copyHeight > 0) {
+          if (copyWidth != (int)srcWidth || copyHeight != (int)srcHeight) {
+            // Partial copy - use GetSubImage
+            wxImage tile = p_SourceImage->GetSubImage(
+              wxRect(srcX, srcY, copyWidth, copyHeight));
+            img.Paste(tile, x, y);
+          } else {
+            // Full tile copy - use direct Paste
+            img.Paste(*p_SourceImage, x, y);
+          }
+        }
+      }
+    BuildBitmapFrom(img, scale, newRect, background);
+    m_ResultHeight = tgtHeight;
+    m_ResultWidth = tgtWidth;
+    m_ResultXOffset = newXOffset;
+    m_ResultYOffset = newYOffset;
   }
 }
