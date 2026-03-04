@@ -240,7 +240,7 @@ yaml/GOSaveableToYaml.cpp
 yaml/GOYamlModel.cpp
 yaml/go-wx-yaml.cpp
 GOAudioRecorder.cpp
-GOBitmapCache.cpp
+GOImageCache.cpp
 GODocument.cpp
 GOEvent.cpp
 GOKeyConvert.cpp

@@ -45,7 +45,7 @@ void GOGUIEnclosure::Init(GOConfigReader &cfg, wxString group) {
       wxT(GOBitmapPrefix "enclosure%c%02d"), wxT('B'), i - 1);
 
     m_Bitmaps.emplace_back();
-    m_Bitmaps.back().SetSourceImage(m_panel->LoadBitmap(bitmap, wxEmptyString));
+    m_Bitmaps.back().SetSourceImage(m_panel->LoadImage(bitmap, wxEmptyString));
   }
 
   for (unsigned i = 1; i < m_Bitmaps.size(); i++)
@@ -121,7 +121,7 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
       false,
       wxEmptyString);
     m_Bitmaps.emplace_back();
-    m_Bitmaps.back().SetSourceImage(m_panel->LoadBitmap(bitmap, mask));
+    m_Bitmaps.back().SetSourceImage(m_panel->LoadImage(bitmap, mask));
   }
 
   for (unsigned i = 1; i < m_Bitmaps.size(); i++)

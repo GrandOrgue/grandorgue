@@ -101,7 +101,7 @@ public:
   void PrepareDraw(double scale, GOBitmap *background);
   void Draw(GODC &dc);
   const GOBitmap &GetWood(unsigned which);
-  const wxImage *LoadBitmap(wxString filename, wxString maskname);
+  const wxImage *LoadImage(const wxString &filename, const wxString &maskname);
   void HandleKey(int key);
   void HandleMousePress(int x, int y, bool right);
   void HandleMouseRelease(bool right);

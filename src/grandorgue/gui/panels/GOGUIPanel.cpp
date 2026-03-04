@@ -53,7 +53,7 @@ GOGUIPanel::GOGUIPanel(GOOrganController *organController)
     m_InitialOpenWindow(false) {
   for (unsigned i = 0; i < 64; i++) {
     m_WoodImages.emplace_back();
-    m_WoodImages.back().SetSourceImage(LoadBitmap(
+    m_WoodImages.back().SetSourceImage(LoadImage(
       wxString::Format(wxT(GOBitmapPrefix "wood%02d"), i + 1), wxEmptyString));
   }
 }
@@ -73,8 +73,9 @@ const wxString &GOGUIPanel::GetName() { return m_Name; }
 
 const wxString &GOGUIPanel::GetGroupName() { return m_GroupName; }
 
-const wxImage *GOGUIPanel::LoadBitmap(wxString filename, wxString maskname) {
-  return m_OrganController->GetBitmapCache().GetBitmap(filename, maskname);
+const wxImage *GOGUIPanel::LoadImage(
+  const wxString &filename, const wxString &maskname) {
+  return m_OrganController->GetImageCache().LoadImage(filename, maskname);
 }
 
 GODocumentBase *GOGUIPanel::GetDocument() const {

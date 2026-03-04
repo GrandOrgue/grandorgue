@@ -75,7 +75,7 @@ void GOGUILabel::InitBackgroundBitmap(
   if (!imageFileName.IsEmpty()) {
     m_PBackgroundBitmap = new GOBitmap();
     m_PBackgroundBitmap->SetSourceImage(
-      m_panel->LoadBitmap(imageFileName, imageMaskFilename));
+      m_panel->LoadImage(imageFileName, imageMaskFilename));
   }
 
   // take the size from the bitmap if it is not specified

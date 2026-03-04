@@ -115,14 +115,14 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
     m_MidiSamplesetMatch(),
     m_SampleSetId1(0),
     m_SampleSetId2(0),
-    m_bitmaps(nullptr),
+    mp_ImageCache(nullptr),
     m_PitchLabel(*this),
     m_TemperamentLabel(*this),
     m_MainWindowData(this, wxT("MainWindow")) {
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded
     m_timer = new GOTimer();
-    m_bitmaps = new GOBitmapCache(this);
+    mp_ImageCache = new GOImageCache(this);
   }
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);
@@ -144,8 +144,8 @@ GOOrganController::~GOOrganController() {
   m_elementcreators.clear();
   // some elementcreator may reference to m_timer so we respect the deletion
   // order
-  if (m_bitmaps)
-    delete m_bitmaps;
+  if (mp_ImageCache)
+    delete mp_ImageCache;
   if (m_timer)
     delete m_timer;
 }

@@ -23,7 +23,7 @@
 #include "model/GOOrganModel.h"
 #include "modification/GOModificationProxy.h"
 
-#include "GOBitmapCache.h"
+#include "GOImageCache.h"
 #include "GOMemoryPool.h"
 #include "GOTimer.h"
 #include "GOVirtualCouplerController.h"
@@ -102,7 +102,7 @@ private:
   GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
-  GOBitmapCache *m_bitmaps;
+  GOImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
   GOMainWindowData m_MainWindowData;
@@ -183,7 +183,7 @@ public:
   void AddPanel(GOGUIPanel *panel) { m_panels.push_back(panel); }
   GOMemoryPool &GetMemoryPool() { return m_pool; }
   GOConfig &GetSettings() { return m_config; }
-  GOBitmapCache &GetBitmapCache() const { return *m_bitmaps; }
+  GOImageCache &GetImageCache() const { return *mp_ImageCache; }
   void SetTemperament(const wxString &name);
   const wxString &GetTemperament() const { return m_Temperament; }
 
