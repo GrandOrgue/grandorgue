@@ -34,6 +34,7 @@ private:
   void TestPerfAddChannelFromMonoRecipient();
 
 public:
+  GOTestPerfSoundBufferMutable() : GOTest(GOTest::PERF) {}
   std::string GetName() override { return TEST_NAME; }
   void run() override;
 };

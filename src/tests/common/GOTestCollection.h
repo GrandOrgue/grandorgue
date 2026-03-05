@@ -1,14 +1,16 @@
 /*
- * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 #ifndef GOTESTCOLLECTION_H
 #define GOTESTCOLLECTION_H
 
+#include <optional>
+#include <vector>
+
 #include "GOTest.h"
 #include "GOTestResultCollection.h"
-#include <vector>
 
 class GOTestCollection {
   /*
@@ -31,7 +33,8 @@ public:
       go_test_collection = new GOTestCollection;
     return go_test_collection;
   }
-  GOTestResultCollection run();
+  GOTestResultCollection Run(
+    std::optional<GOTest::Category> categoryFilter = std::nullopt);
   void add_test(GOTest *test);
   int get_failed_count();
   int get_success_count();

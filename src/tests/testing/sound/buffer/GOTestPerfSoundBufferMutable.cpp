@@ -38,34 +38,37 @@ struct Baseline {
 // Baselines are set ~10% below the minimum observed value across all CI runs.
 static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 #ifdef NDEBUG
-  {32, 7500},  // 7500 Mframes/sec (raised for modern hardware)
-  {128, 5900}, // 5900 Mframes/sec (measured: 6636.1, -10% margin)
+  {32, 4690},  // 4690 Mframes/sec (lowered: min observed 5216.9, -10% margin)
+  {128, 7390}, // 7390 Mframes/sec (lowered: min observed 8214.0, -10% margin)
   {512, 5500}, // 5500 Mframes/sec (lowered: min observed 6112.9, -10% margin)
   {2048, 8600} // 8600 Mframes/sec (lowered: min observed 9653.4, -10% margin)
 #else
-  {32, 160},   // 160 Mframes/sec (debug, raised for modern hardware)
-  {128, 600},  // 600 Mframes/sec (debug, raised for modern hardware)
-  {512, 2100}, // 2100 Mframes/sec (debug, raised for modern hardware)
-  {2048, 6000} // 6000 Mframes/sec (debug, raised for modern hardware)
+  {32,
+   2330}, // 2330 Mframes/sec (debug, lowered: min observed 2590.4, -10% margin)
+  {128,
+   5520}, // 5520 Mframes/sec (debug, lowered: min observed 6141.5, -10% margin)
+  {512,
+   5800}, // 5800 Mframes/sec (debug, raised: min observed 6548.4, -10% margin)
+  {2048,
+   9200} // 9200 Mframes/sec (debug, raised: min observed 10324.8, -10% margin)
 #endif
 };
 
-// Note: Large memcpy operations (512+ frames) show significant overhead
-// in Azure VM environments (~25x slower) due to hypervisor optimizations.
-// Baselines for large buffers are set conservatively to pass on both
-// bare-metal and virtualized environments.
 static constexpr Baseline BASELINE_COPY_FROM[] = {
 #ifdef NDEBUG
-  {32, 3800},  // 3800 Mframes/sec (lowered: min observed 4308.0, -10% margin)
-  {128, 7500}, // 7500 Mframes/sec (lowered: min observed 8511.4, -10% margin)
-  {512, 220},  // 220 Mframes/sec (lowered: min observed 255.5, -10% margin)
-  {2048, 220}  // 220 Mframes/sec (lowered for Azure VM compatibility)
+  {32, 5600},   // 5600 Mframes/sec (lowered: min observed 6222.4, -10% margin)
+  {128, 9500},  // 9500 Mframes/sec (raised: min observed 10636.4, -10% margin)
+  {512, 7500},  // 7500 Mframes/sec (raised: min observed 8354.3, -10% margin)
+  {2048, 10000} // 10000 Mframes/sec (raised: min observed 11208.8, -10% margin)
 #else
-  {32, 140},   // 140 Mframes/sec (debug, raised for modern hardware)
-  {128, 550},  // 550 Mframes/sec (debug, raised for modern hardware)
+  {32,
+   2150}, // 2150 Mframes/sec (debug, lowered: min observed 2390.4, -10% margin)
+  {128,
+   6600}, // 6600 Mframes/sec (debug, lowered: min observed 7337.8, -10% margin)
   {512,
-   220}, // 220 Mframes/sec (debug, lowered: min observed 255.0, -10% margin)
-  {2048, 220} // 220 Mframes/sec (debug, lowered for Azure VM compatibility)
+   8000}, // 8000 Mframes/sec (debug, raised: min observed 8959.9, -10% margin)
+  {2048, 10000} // 10000 Mframes/sec (debug, raised: min observed 11258.4, -10%
+                // margin)
 #endif
 };
 
@@ -73,27 +76,33 @@ static constexpr Baseline BASELINE_ADD_FROM[] = {
 #ifdef NDEBUG
   {32, 3100},  // 3100 Mframes/sec (measured: 3492.3, with 10% margin)
   {128, 4000}, // 4000 Mframes/sec (lowered: min observed 4485.6, -10% margin)
-  {512, 4000}, // 4000 Mframes/sec (measured: 4476.4, with 10% margin)
-  {2048, 3400} // 3400 Mframes/sec (lowered: min observed 3861.3, -10% margin)
+  {512, 4900}, // 4900 Mframes/sec (raised: min observed 5471.4, -10% margin)
+  {2048, 4900} // 4900 Mframes/sec (raised: min observed 5542.0, -10% margin)
 #else
-  {32, 50},   // 50 Mframes/sec (debug, raised for modern hardware)
-  {128, 70},  // 70 Mframes/sec (debug, raised for modern hardware)
-  {512, 80},  // 80 Mframes/sec (debug, raised for modern hardware)
-  {2048, 80}  // 80 Mframes/sec (debug, raised for modern hardware)
+  {32, 590}, // 590 Mframes/sec (debug, raised: min observed 663.8, -10% margin)
+  {128,
+   660}, // 660 Mframes/sec (debug, raised: min observed 744.1, -10% margin)
+  {512,
+   700}, // 700 Mframes/sec (debug, raised: min observed 786.8, -10% margin)
+  {2048,
+   700}      // 700 Mframes/sec (debug, raised: min observed 791.2, -10% margin)
 #endif
 };
 
 static constexpr Baseline BASELINE_ADD_FROM_COEFF[] = {
 #ifdef NDEBUG
   {32, 2800},  // 2800 Mframes/sec (lowered: min observed 3136.9, -10% margin)
-  {128, 3200}, // 3200 Mframes/sec (lowered: min observed 3654.9, -10% margin)
-  {512, 3500}, // 3500 Mframes/sec (measured: 3890.1, with 10% margin)
-  {2048, 3300} // 3300 Mframes/sec (lowered: min observed 3692.3, -10% margin)
+  {128, 4400}, // 4400 Mframes/sec (raised: min observed 4959.0, -10% margin)
+  {512, 4800}, // 4800 Mframes/sec (raised: min observed 5452.5, -10% margin)
+  {2048, 4800} // 4800 Mframes/sec (raised: min observed 5457.8, -10% margin)
 #else
-  {32, 50},   // 50 Mframes/sec (debug, raised for modern hardware)
-  {128, 70},  // 70 Mframes/sec (debug, raised for modern hardware)
-  {512, 80},  // 80 Mframes/sec (debug, raised for modern hardware)
-  {2048, 80}  // 80 Mframes/sec (debug, raised for modern hardware)
+  {32, 450}, // 450 Mframes/sec (debug, raised: min observed 506.4, -10% margin)
+  {128,
+   470}, // 470 Mframes/sec (debug, raised: min observed 533.3, -10% margin)
+  {512,
+   500}, // 500 Mframes/sec (debug, raised: min observed 557.2, -10% margin)
+  {2048,
+   500} // 500 Mframes/sec (debug, raised: min observed 562.6, -10% margin)
 #endif
 };
 
@@ -104,10 +113,14 @@ static constexpr Baseline BASELINE_COPY_CHANNEL_FROM[] = {
   {512, 2800}, // 2800 Mframes/sec (raised for modern hardware)
   {2048, 2800} // 2800 Mframes/sec (raised for modern hardware)
 #else
-  {32, 80},   // 80 Mframes/sec (debug, raised for modern hardware)
-  {128, 130}, // 130 Mframes/sec (debug, raised for modern hardware)
-  {512, 150}, // 150 Mframes/sec (debug, raised for modern hardware)
-  {2048, 160} // 160 Mframes/sec (debug, raised for modern hardware)
+  {32,
+   980}, // 980 Mframes/sec (debug, lowered: min observed 1091.1, -10% margin)
+  {128,
+   1230}, // 1230 Mframes/sec (debug, lowered: min observed 1365.5, -10% margin)
+  {512,
+   1380}, // 1380 Mframes/sec (debug, lowered: min observed 1537.6, -10% margin)
+  {2048,
+   1420} // 1420 Mframes/sec (debug, lowered: min observed 1582.5, -10% margin)
 #endif
 };
 
@@ -118,10 +131,14 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM[] = {
   {512, 2400}, // 2400 Mframes/sec (measured: 2688.1, with 10% margin)
   {2048, 2700} // 2700 Mframes/sec (raised for modern hardware)
 #else
-  {32, 80},   // 80 Mframes/sec (debug, raised for modern hardware)
-  {128, 130}, // 130 Mframes/sec (debug, raised for modern hardware)
-  {512, 150}, // 150 Mframes/sec (debug, raised for modern hardware)
-  {2048, 160} // 160 Mframes/sec (debug, raised for modern hardware)
+  {32,
+   960}, // 960 Mframes/sec (debug, raised: min observed 1079.7, -10% margin)
+  {128,
+   1160}, // 1160 Mframes/sec (debug, raised: min observed 1295.5, -10% margin)
+  {512,
+   1300}, // 1300 Mframes/sec (debug, raised: min observed 1445.8, -10% margin)
+  {2048,
+   1300} // 1300 Mframes/sec (debug, raised: min observed 1496.9, -10% margin)
 #endif
 };
 
@@ -132,10 +149,14 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM_COEFF[] = {
   {512, 2400}, // 2400 Mframes/sec (raised for modern hardware)
   {2048, 2500} // 2500 Mframes/sec (raised for modern hardware)
 #else
-  {32, 80},   // 80 Mframes/sec (debug, raised for modern hardware)
-  {128, 130}, // 130 Mframes/sec (debug, raised for modern hardware)
-  {512, 150}, // 150 Mframes/sec (debug, raised for modern hardware)
-  {2048, 160} // 160 Mframes/sec (debug, raised for modern hardware)
+  {32,
+   970}, // 970 Mframes/sec (debug, lowered: min observed 1078.6, -10% margin)
+  {128,
+   1200}, // 1200 Mframes/sec (debug, raised: min observed 1352.8, -10% margin)
+  {512,
+   1300}, // 1300 Mframes/sec (debug, raised: min observed 1533.3, -10% margin)
+  {2048,
+   1400} // 1400 Mframes/sec (debug, raised: min observed 1581.0, -10% margin)
 #endif
 };
 
@@ -149,10 +170,13 @@ static constexpr Baseline BASELINE_MONO_COPY_ADD_FROM_COEFF[] = {
   {512, 2100}, // 2100 Mframes/sec (measured: 2434.9, -10% margin)
   {2048, 2100} // 2100 Mframes/sec (measured: 2435.9, -10% margin)
 #else
-  {32, 50},   // 50 Mframes/sec (debug, measured: 57.3, -10% margin)
-  {128, 60},  // 60 Mframes/sec (debug, measured: 74.4, -10% margin)
-  {512, 70},  // 70 Mframes/sec (debug, measured: 79.4, -10% margin)
-  {2048, 70}  // 70 Mframes/sec (debug, measured: 81.7, -10% margin)
+  {32, 520}, // 520 Mframes/sec (debug, raised: min observed 581.6, -10% margin)
+  {128,
+   590}, // 590 Mframes/sec (debug, raised: min observed 659.3, -10% margin)
+  {512,
+   640}, // 640 Mframes/sec (debug, raised: min observed 724.3, -10% margin)
+  {2048,
+   660} // 660 Mframes/sec (debug, raised: min observed 744.4, -10% margin)
 #endif
 };
 
