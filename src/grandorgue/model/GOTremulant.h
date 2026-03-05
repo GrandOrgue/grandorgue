@@ -17,7 +17,7 @@
 class GOConfigReader;
 class GOConfigWriter;
 class GOMemoryPool;
-class GOSoundOrganInterface;
+class GOSoundSamplerPlayerInterface;
 class GOSoundProvider;
 struct GOSoundSampler;
 
@@ -25,7 +25,7 @@ typedef enum { GOSynthTrem, GOWavTrem } GOTremulantType;
 
 class GOTremulant : public GODrawstop, private GOCacheObject {
 private:
-  GOSoundOrganInterface &r_sound;
+  GOSoundSamplerPlayerInterface &r_sound;
 
   GOTremulantType m_TremulantType;
   int m_Period;

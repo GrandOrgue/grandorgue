@@ -18,7 +18,7 @@
 #include "midi/GOMidiListener.h"
 #include "midi/events/GOMidiCallback.h"
 #include "modification/GOModificationListener.h"
-#include "sound/GOSoundCloseListener.h"
+#include "sound/interfaces/GOSoundCloseListener.h"
 #include "threading/GOMutex.h"
 #include "updater/GOUpdateChecker.h"
 

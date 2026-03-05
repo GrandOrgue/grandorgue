@@ -10,10 +10,9 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "buffer/GOSoundBufferMutable.h"
+#include "sound/GOSoundOrganEngine.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
 #include "threading/GOMutexLocker.h"
-
-#include "GOSoundOrganEngine.h"
 
 void GOSoundCallbackConnector::ConnectToEngine(GOSoundOrganEngine &engine) {
   OnBeforeConnectToEngine();

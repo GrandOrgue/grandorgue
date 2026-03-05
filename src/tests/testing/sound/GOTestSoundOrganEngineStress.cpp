@@ -12,9 +12,9 @@
 #include <thread>
 #include <vector>
 
-#include "sound/GOSoundCallbackConnector.h"
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/interfaces/GOSoundCallbackConnector.h"
 
 const std::string GOTestSoundOrganEngineStress::TEST_NAME
   = "GOTestSoundOrganEngineStress";

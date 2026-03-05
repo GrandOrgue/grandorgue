@@ -13,10 +13,10 @@
 #include <memory>
 #include <vector>
 
+#include "sound/interfaces/GOSoundSamplerPlayerInterface.h"
+
 #include "GOSoundResample.h"
 #include "GOSoundSamplerPool.h"
-#include "sound/GOSoundOrganInterface.h"
-
 #include "ptrvector.h"
 
 class GOSoundBufferMutable;
@@ -29,10 +29,10 @@ class GOSoundWindchestTask;
  * @brief Manages samplers and implements the organ sound interface.
  *
  * Handles sampler lifecycle (start, stop, release, switch), sampler pool
- * management, and the GOSoundOrganInterface methods called by the organ model.
- * Designed to be owned by GOSoundOrganEngine.
+ * management, and the GOSoundSamplerPlayerInterface methods called by the organ
+ * model. Designed to be owned by GOSoundOrganEngine.
  */
-class GOSoundSamplerPlayer : public GOSoundOrganInterface {
+class GOSoundSamplerPlayer : public GOSoundSamplerPlayerInterface {
 private:
   /*
    * Constructor constants
@@ -234,7 +234,7 @@ public:
   void AdvanceTime(unsigned nSamplesPerBuffer);
 
   /*
-   * Organ interface (from GOSoundOrganInterface)
+   * Organ interface (from GOSoundSamplerPlayerInterface)
    */
 
   GOSoundSampler *StartPipeSample(
