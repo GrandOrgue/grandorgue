@@ -7,21 +7,29 @@
 
 #include "GOSoundOutputTask.h"
 
-#include "GOSoundThread.h"
+#include <algorithm>
+
+#include "sound/GOSoundReverb.h"
 #include "threading/GOMutexLocker.h"
+
+#include "GOSoundThread.h"
+
+// Maximum sound items amplitude for output
+static constexpr float CLAMP_MIN = -1.0f;
+static constexpr float CLAMP_MAX = 1.0f;
 
 GOSoundOutputTask::GOSoundOutputTask(
   unsigned channels,
   std::vector<float> scale_factors,
   unsigned samples_per_buffer)
-  : GOSoundBufferTaskBase(samples_per_buffer, channels),
+  : GOSoundBufferTaskBase(channels, samples_per_buffer),
     m_ScaleFactors(scale_factors),
     m_Outputs(),
     m_OutputCount(0),
     m_MeterInfo(channels),
     m_Reverb(0),
     m_Done(false) {
-  m_Reverb = new GOSoundReverb(m_Channels);
+  m_Reverb = new GOSoundReverb(channels);
 }
 
 GOSoundOutputTask::~GOSoundOutputTask() {
@@ -44,39 +52,49 @@ void GOSoundOutputTask::Run(GOSoundThread *pThread) {
     return;
 
   /* initialise the output buffer */
-  std::fill(m_Buffer, m_Buffer + m_SamplesPerBuffer * m_Channels, 0.0f);
+  FillWithSilence();
 
-  for (unsigned i = 0; i < m_Channels; i++) {
+  const unsigned nChannels = GetNChannels();
+
+  for (unsigned i = 0; i < nChannels; i++) {
     for (unsigned j = 0; j < m_OutputCount; j++) {
       float factor = m_ScaleFactors[i * m_OutputCount + j];
+
       if (factor == 0)
         continue;
 
-      float *this_buff = m_Outputs[j / 2]->m_Buffer;
-      m_Outputs[j / 2]->Finish(m_Stop.load(), pThread);
+      GOSoundBufferTaskBase *output = m_Outputs[j / 2];
+
+      output->Finish(m_Stop.load(), pThread);
       if (pThread && pThread->ShouldStop())
         return;
 
-      for (unsigned k = i, l = j % 2; k < m_SamplesPerBuffer * m_Channels;
-           k += m_Channels, l += 2)
-        m_Buffer[k] += factor * this_buff[l];
+      AddChannelFrom(*output, j % 2, i, factor);
     }
   }
 
-  m_Reverb->Process(m_Buffer, m_SamplesPerBuffer);
+  m_Reverb->Process(GetData(), GetNFrames());
 
-  /* Clamp the output */
-  const float CLAMP_MIN = -1.0f;
-  const float CLAMP_MAX = 1.0f;
-  for (unsigned k = 0, c = 0; k < m_SamplesPerBuffer * m_Channels; k++) {
-    float f = std::min(std::max(m_Buffer[k], CLAMP_MIN), CLAMP_MAX);
-    m_Buffer[k] = f;
-    if (f > m_MeterInfo[c])
-      m_MeterInfo[c] = f;
+  /* Clamp the output and put the maximum amplitude to m_MeterInfo */
+  float *pData = GetData();
+  float *pMeterInfo = m_MeterInfo.data();
 
-    c++;
-    if (c >= m_Channels)
-      c = 0;
+  for (unsigned nItems = GetNItems(), itemI = 0, channelI = 0; itemI < nItems;
+       itemI++, pData++, pMeterInfo++) {
+    float f = std::clamp(*pData, CLAMP_MIN, CLAMP_MAX);
+    float absF = std::abs(f);
+
+    if (f != *pData)
+      *pData = f;
+    if (absF > *pMeterInfo)
+      *pMeterInfo = absF;
+
+    // Move to next channel (circular: after last channel, wrap to first)
+    channelI++;
+    if (channelI >= nChannels) {
+      channelI = 0;
+      pMeterInfo = m_MeterInfo.data();
+    }
   }
 
   m_Done.store(true);

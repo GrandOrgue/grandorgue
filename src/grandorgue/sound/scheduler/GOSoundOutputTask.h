@@ -17,10 +17,7 @@
 
 #include "GOSoundBufferTaskBase.h"
 
-class GOSoundReverb;
-class GOConfig;
-
-class GOSoundOutputTask : public GOSoundTask, public GOSoundBufferTaskBase {
+class GOSoundOutputTask : public GOSoundBufferTaskBase {
 private:
   std::vector<float> m_ScaleFactors;
   std::vector<GOSoundBufferTaskBase *> m_Outputs;

@@ -13,7 +13,7 @@
 
 GOSoundGroupTask::GOSoundGroupTask(
   GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer)
-  : GOSoundBufferTaskBase(samples_per_buffer, 2),
+  : GOSoundBufferTaskBase(2, samples_per_buffer),
     m_engine(sound_engine),
     m_Condition(m_Mutex),
     m_ActiveCount(0),
@@ -58,7 +58,7 @@ void GOSoundGroupTask::ProcessList(
     if (
       windchest
       && m_engine.ProcessSampler(
-        output_buffer, sampler, m_SamplesPerBuffer, windchest->GetVolume()))
+        output_buffer, sampler, GetNFrames(), windchest->GetVolume()))
       Add(sampler);
   }
 }
@@ -95,27 +95,24 @@ void GOSoundGroupTask::Run(GOSoundThread *pThread) {
 
   // several threads may process the same list in parallel helping each other
   // at first, they fill their's own buffer instances
-  float buffer[m_SamplesPerBuffer * 2];
+  GO_DECLARE_LOCAL_SOUND_BUFFER(localBuffer, 2, GetNFrames())
 
-  memset(buffer, 0, m_SamplesPerBuffer * 2 * sizeof(float));
-  ProcessList(m_Active, false, buffer);
-  ProcessList(m_Release, true, buffer);
+  localBuffer.FillWithSilence();
+  ProcessList(m_Active, false, localBuffer.GetData());
+  ProcessList(m_Release, true, localBuffer.GetData());
 
   {
     GOMutexLocker locker(
       m_Mutex, false, "GOSoundGroupTask::Run.afterProcess", pThread);
 
     if (locker.IsLocked()) {
-      if (m_Done.load() == 1)
-      // The first thread is finished. Assign the result to the common buffer
-      {
-        memcpy(m_Buffer, buffer, m_SamplesPerBuffer * 2 * sizeof(float));
+      if (m_Done.load() == 1) {
+        // The first thread is finished. Assign the result to the common buffer
+        CopyFrom(localBuffer);
         m_Done.store(2); // some thread has already finished
-      } else
-      // not the first thread. Add the result to the common buffer
-      {
-        for (unsigned i = 0; i < m_SamplesPerBuffer * 2; i++)
-          m_Buffer[i] += buffer[i];
+      } else {
+        // not the first thread. Add the result to the common buffer
+        AddFrom(localBuffer);
       }
     }
     if (m_ActiveCount.fetch_sub(1) <= 1) {

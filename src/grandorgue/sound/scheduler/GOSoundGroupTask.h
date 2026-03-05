@@ -20,7 +20,7 @@
 
 class GOSoundOrganEngine;
 
-class GOSoundGroupTask : public GOSoundTask, public GOSoundBufferTaskBase {
+class GOSoundGroupTask : public GOSoundBufferTaskBase {
 private:
   GOSoundOrganEngine &m_engine;
   GOSoundSamplerList m_Active;
