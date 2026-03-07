@@ -1290,7 +1290,7 @@ void GOAppWindow::OnSettingsVolume(wxCommandEvent &event) {
   long n = m_Volume->GetValue();
 
   if (p_OrganController)
-    p_OrganController->SetVolume(n);
+    p_OrganController->SetGain(n);
   for (unsigned i = 0; i < m_VolumeGauge.size(); i++)
     m_VolumeGauge[i]->ResetClip();
 }

@@ -293,7 +293,7 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   int volume = cfg.ReadInteger(
     CMBSetting, WX_ORGAN, wxT("Volume"), -120, 100, false, m_config.Volume());
 
-  m_SoundEngine.SetVolume(volume > 20 ? 0 : volume);
+  m_SoundEngine.SetGain(volume > 20 ? 0 : volume);
   m_Temperament
     = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("Temperament"), false);
 
@@ -699,7 +699,7 @@ void GOOrganController::SaveOrganCoreData(GOConfigWriter &cfg) {
     cfg.WriteString(
       WX_ORGAN, wxT("ArchiveID"), m_ConfiguredOrgan.GetArchiveID());
   cfg.WriteString(WX_ORGAN, WX_GRANDORGUE_VERSION, wxT(APP_VERSION));
-  cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_SoundEngine.GetVolume());
+  cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_SoundEngine.GetGain());
   cfg.WriteString(WX_ORGAN, wxT("Temperament"), m_Temperament);
 
   GOEventDistributor::Save(cfg);

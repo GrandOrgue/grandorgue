@@ -119,7 +119,7 @@ void GOPerfTestApp::RunTest(
           true);
         pipes.push_back(w);
       }
-      engine.SetVolume(10);
+      engine.SetGain(10);
       engine.SetPolyphonyLimiting(false);
       engine.SetHardPolyphony(10000);
       engine.SetScaledReleases(true);

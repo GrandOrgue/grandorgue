@@ -43,7 +43,7 @@ void GOTestWindchest::run() {
   message = "Windchest name should be void (no configuration set)";
   this->GOAssert(name == "", message);
 
-  // Check enclosure volume values from midi ones
+  // Check enclosure amplitude values from midi ones
   GOEnclosure *enclosure = new GOEnclosure(*this->controller);
   // windchest->AddEnclosure() only registers enclosure in a non-owning
   // std::vector (GOWindchest::m_enclosure) for volume grouping; ownership
@@ -53,23 +53,23 @@ void GOTestWindchest::run() {
   windchest->AddEnclosure(enclosure);
 
   enclosure->SetEnclosureValue(127);
-  float volume = windchest->GetVolume();
-  message = "The Windchest volume is not 1 but ";
-  message = message + std::to_string(volume);
-  this->GOAssert(volume == 1, message);
+  float amplitude = windchest->GetAmplitude();
+  message = "The Windchest amplitude is not 1 but ";
+  message = message + std::to_string(amplitude);
+  this->GOAssert(amplitude == 1, message);
 
   enclosure->SetEnclosureValue(0);
-  volume = windchest->GetVolume();
-  message = "The Windchest volume is not 0 but ";
-  message = message + std::to_string(volume);
-  this->GOAssert(volume == 0, message);
+  amplitude = windchest->GetAmplitude();
+  message = "The Windchest amplitude is not 0 but ";
+  message = message + std::to_string(amplitude);
+  this->GOAssert(amplitude == 0, message);
 
   // Check a MIDI value of 50 (50/127)
   enclosure->SetEnclosureValue(50);
-  volume = windchest->GetVolume();
-  message = "The Windchest volume is not 0.393701 but ";
-  message = message + std::to_string(volume);
-  this->GOAssert(volume == 0.393700778f, message);
+  amplitude = windchest->GetAmplitude();
+  message = "The Windchest amplitude is not 0.393701 but ";
+  message = message + std::to_string(amplitude);
+  this->GOAssert(amplitude == 0.393700778f, message);
 
   // Check Tremulants
   int tremulant_count = windchest->GetTremulantCount();
