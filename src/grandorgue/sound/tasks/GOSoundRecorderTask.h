@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDRECORDER_H
-#define GOSOUNDRECORDER_H
+#ifndef GOSOUNDRECORDERTASK_H
+#define GOSOUNDRECORDERTASK_H
 
 #include <atomic>
 #include <vector>
@@ -14,13 +14,13 @@
 #include <wx/file.h>
 #include <wx/string.h>
 
-#include "scheduler/GOSoundTask.h"
+#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
 class GOSoundBufferTaskBase;
 struct struct_WAVE;
 
-class GOSoundRecorder : public GOSoundTask {
+class GOSoundRecorderTask : public GOSoundTask {
 private:
   wxFile m_file;
   GOMutex m_lock;
@@ -42,8 +42,8 @@ private:
   struct_WAVE generateHeader(unsigned datasize);
 
 public:
-  GOSoundRecorder();
-  virtual ~GOSoundRecorder();
+  GOSoundRecorderTask();
+  virtual ~GOSoundRecorderTask();
 
   void Open(wxString filename);
   bool IsOpen();
@@ -51,6 +51,7 @@ public:
   void SetSampleRate(unsigned sample_rate);
   /* 1 = 8 bit, 2 = 16 bit, 3 = 24 bit, 4 = float */
   void SetBytesPerSample(unsigned value);
+  unsigned GetBytesPerSample() const { return m_BytesPerSample; }
   void SetOutputs(
     std::vector<GOSoundBufferTaskBase *> outputs, unsigned samples_per_buffer);
 
