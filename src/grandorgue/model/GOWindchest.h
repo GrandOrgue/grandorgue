@@ -31,7 +31,7 @@ private:
   // used
   wxString m_HardName;
 
-  float m_Volume;
+  float m_amplitude;
   std::vector<GOEnclosure *> m_enclosure;
   std::vector<unsigned> m_tremulant;
   std::vector<GORank *> m_ranks;
@@ -50,7 +50,7 @@ public:
   void Load(GOConfigReader &cfg, wxString group, unsigned index);
   void UpdateTremulant(GOTremulant *tremulant);
   void UpdateVolume();
-  float GetVolume();
+  float GetAmplitude() const { return m_amplitude; }
   unsigned GetTremulantCount();
   unsigned GetTremulantId(unsigned index);
   unsigned GetRankCount();

@@ -314,7 +314,7 @@ void GOSoundSamplerPlayer::CreateReleaseSampler(GOSoundSampler *handle) {
 
   int taskId = handle->m_SamplerTaskId;
   float vol = isWindchestTask(taskId)
-    ? r_WindchestTasks[windchestTaskToIndex(taskId)]->GetWindchestVolume()
+    ? r_WindchestTasks[windchestTaskToIndex(taskId)]->GetWindchestAmplitude()
     : 1.0f;
 
   // FIXME: this is wrong... the intention is to not create a release for a
