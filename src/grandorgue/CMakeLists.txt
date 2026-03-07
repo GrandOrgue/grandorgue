@@ -229,13 +229,13 @@ sound/scheduler/GOSoundScheduler.cpp
 sound/scheduler/GOSoundThread.cpp
 sound/tasks/GOSoundGroupTask.cpp
 sound/tasks/GOSoundOutputTask.cpp
+sound/tasks/GOSoundRecorderTask.cpp
 sound/tasks/GOSoundReleaseTask.cpp
 sound/tasks/GOSoundTouchTask.cpp
 sound/tasks/GOSoundTremulantTask.cpp
 sound/tasks/GOSoundWindchestTask.cpp
 sound/GOSoundDevInfo.cpp
 sound/GOSoundOrganEngine.cpp
-sound/GOSoundRecorder.cpp
 sound/GOSoundSystem.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp

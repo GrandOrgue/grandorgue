@@ -15,9 +15,9 @@
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
 #include "sound/GOSoundOrganEngine.h"
-#include "sound/GOSoundRecorder.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/providers/GOSoundProviderWave.h"
+#include "sound/tasks/GOSoundRecorderTask.h"
 
 #include "GOOrganController.h"
 #include "GOStdPath.h"
@@ -82,7 +82,7 @@ void GOPerfTestApp::RunTest(
     GOSoundOrganEngine *engine = new GOSoundOrganEngine(
       static_cast<GOOrganModel &>(*organController),
       organController->GetMemoryPool());
-    GOSoundRecorder recorder;
+    GOSoundRecorderTask recorder;
 
     try {
       ptr_vector<GOSoundProvider> pipes;

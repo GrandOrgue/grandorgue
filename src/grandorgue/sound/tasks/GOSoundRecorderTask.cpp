@@ -5,14 +5,14 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundRecorder.h"
+#include "GOSoundRecorderTask.h"
 
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include "tasks/GOSoundBufferTaskBase.h"
 #include "threading/GOMutexLocker.h"
 
+#include "GOSoundBufferTaskBase.h"
 #include "GOWaveTypes.h"
 
 #pragma pack(push, 1)
@@ -27,7 +27,7 @@ struct struct_WAVE {
 
 #pragma pack(pop)
 
-GOSoundRecorder::GOSoundRecorder()
+GOSoundRecorderTask::GOSoundRecorderTask()
   : m_file(),
     m_lock(),
     m_SampleRate(0),
@@ -41,13 +41,13 @@ GOSoundRecorder::GOSoundRecorder()
   SetupBuffer();
 }
 
-GOSoundRecorder::~GOSoundRecorder() {
+GOSoundRecorderTask::~GOSoundRecorderTask() {
   Close();
   if (m_Buffer)
     delete[] m_Buffer;
 }
 
-struct_WAVE GOSoundRecorder::generateHeader(unsigned datasize) {
+struct_WAVE GOSoundRecorderTask::generateHeader(unsigned datasize) {
   struct_WAVE WAVE = {
     {WAVE_TYPE_RIFF, datasize + 36},
     WAVE_TYPE_WAVE,
@@ -62,7 +62,7 @@ struct_WAVE GOSoundRecorder::generateHeader(unsigned datasize) {
   return WAVE;
 }
 
-void GOSoundRecorder::Open(wxString filename) {
+void GOSoundRecorderTask::Open(wxString filename) {
   struct_WAVE WAVE = generateHeader(0);
 
   Close();
@@ -81,9 +81,9 @@ void GOSoundRecorder::Open(wxString filename) {
   m_BufferPos = 0;
 }
 
-bool GOSoundRecorder::IsOpen() { return m_Recording; }
+bool GOSoundRecorderTask::IsOpen() { return m_Recording; }
 
-void GOSoundRecorder::Close() {
+void GOSoundRecorderTask::Close() {
   GOMutexLocker locker(m_lock);
   {
     GOMutexLocker locker(m_Mutex);
@@ -98,25 +98,25 @@ void GOSoundRecorder::Close() {
   m_file.Close();
 }
 
-void GOSoundRecorder::SetSampleRate(unsigned sample_rate) {
+void GOSoundRecorderTask::SetSampleRate(unsigned sample_rate) {
   m_SampleRate = sample_rate;
 }
 
-void GOSoundRecorder::SetBytesPerSample(unsigned value) {
+void GOSoundRecorderTask::SetBytesPerSample(unsigned value) {
   if (value < 1 || value > 4)
     value = 4;
   m_BytesPerSample = value;
   SetupBuffer();
 }
 
-void GOSoundRecorder::SetOutputs(
+void GOSoundRecorderTask::SetOutputs(
   std::vector<GOSoundBufferTaskBase *> outputs, unsigned samples_per_buffer) {
   m_Outputs = outputs;
   m_SamplesPerBuffer = samples_per_buffer;
   SetupBuffer();
 }
 
-void GOSoundRecorder::SetupBuffer() {
+void GOSoundRecorderTask::SetupBuffer() {
   Close();
   if (m_Buffer)
     delete[] m_Buffer;
@@ -152,7 +152,7 @@ static void convertValue(float value, GOInt8 &result) {
 
 static void convertValue(float value, float &result) { result = value; }
 
-template <class T> void GOSoundRecorder::ConvertData() {
+template <class T> void GOSoundRecorderTask::ConvertData() {
   unsigned start_pos = 0;
   T *buf = (T *)m_Buffer;
 
@@ -175,13 +175,13 @@ template <class T> void GOSoundRecorder::ConvertData() {
   }
 }
 
-unsigned GOSoundRecorder::GetGroup() { return AUDIORECORDER; }
+unsigned GOSoundRecorderTask::GetGroup() { return AUDIORECORDER; }
 
-unsigned GOSoundRecorder::GetCost() { return 0; }
+unsigned GOSoundRecorderTask::GetCost() { return 0; }
 
-bool GOSoundRecorder::GetRepeat() { return false; }
+bool GOSoundRecorderTask::GetRepeat() { return false; }
 
-void GOSoundRecorder::Run(GOSoundThread *thread) {
+void GOSoundRecorderTask::Run(GOSoundThread *thread) {
   if (!m_Recording)
     return;
   if (m_Done)
@@ -211,17 +211,17 @@ void GOSoundRecorder::Run(GOSoundThread *thread) {
   m_Done = true;
 }
 
-void GOSoundRecorder::Exec() {
+void GOSoundRecorderTask::Exec() {
   m_Stop.store(true);
   Run();
 }
 
-void GOSoundRecorder::Clear() {
+void GOSoundRecorderTask::Clear() {
   Close();
   Reset();
 }
 
-void GOSoundRecorder::Reset() {
+void GOSoundRecorderTask::Reset() {
   GOMutexLocker locker(m_Mutex);
   m_Done = false;
   m_Stop.store(false);
