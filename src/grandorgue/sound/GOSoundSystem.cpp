@@ -17,6 +17,7 @@
 #include "config/GOConfig.h"
 #include "midi/GOMidiSystem.h"
 #include "scheduler/GOSoundThread.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/ports/GOSoundPort.h"
 #include "threading/GOMultiMutexLocker.h"
 #include "threading/GOMutexLocker.h"
@@ -369,32 +370,33 @@ void GOSoundSystem::UpdateMeter() {
 }
 
 bool GOSoundSystem::AudioCallback(
-  unsigned dev_index, float *output_buffer, unsigned int n_frames) {
+  unsigned devIndex, GOSoundBufferMutable &outBuffer) {
   bool wasEntered = false;
+  const unsigned nSamples = outBuffer.GetNFrames();
 
   if (m_IsRunning.load()) {
-    if (n_frames == m_SamplesPerBuffer) {
+    if (nSamples == m_SamplesPerBuffer) {
       m_NCallbacksEntered.fetch_add(1);
       wasEntered = true;
     } else
       wxLogError(
         _("No sound output will happen. Samples per buffer has been "
           "changed by the sound driver to %d"),
-        n_frames);
+        nSamples);
   }
   // assure that m_IsRunning has not yet been changed after
   // m_NCallbacksEntered.fetch_add, otherwise the control thread may not wait
   if (wasEntered && m_IsRunning.load()) {
-    GOSoundOutput *device = &m_AudioOutputs[dev_index];
-    GOMutexLocker locker(device->mutex);
+    GOSoundOutput &device = m_AudioOutputs[devIndex];
+    GOMutexLocker locker(device.mutex);
 
-    while (device->wait && device->waiting)
-      device->condition.Wait();
+    while (device.wait && device.waiting)
+      device.condition.Wait();
 
     unsigned cnt = m_CalcCount.fetch_add(1);
     m_SoundEngine.GetAudioOutput(
-      output_buffer, n_frames, dev_index, cnt + 1 >= m_AudioOutputs.size());
-    device->wait = true;
+      devIndex, cnt + 1 >= m_AudioOutputs.size(), outBuffer);
+    device.wait = true;
     unsigned count = m_WaitCount.fetch_add(1);
 
     if (count + 1 == m_AudioOutputs.size()) {
@@ -410,13 +412,13 @@ bool GOSoundSystem::AudioCallback(
       m_WaitCount.exchange(0);
 
       for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-        GOMutexLocker lock(m_AudioOutputs[i].mutex, i == dev_index);
+        GOMutexLocker lock(m_AudioOutputs[i].mutex, i == devIndex);
         m_AudioOutputs[i].wait = false;
         m_AudioOutputs[i].condition.Signal();
       }
     }
   } else
-    m_SoundEngine.GetEmptyAudioOutput(dev_index, n_frames, output_buffer);
+    outBuffer.FillWithSilence();
   if (
     wasEntered && m_NCallbacksEntered.fetch_sub(1) <= 1
     && !m_IsRunning.load()) {

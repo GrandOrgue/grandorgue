@@ -21,6 +21,7 @@
 class GOConfig;
 class GOMemoryPool;
 class GOOrganModel;
+class GOSoundBufferMutable;
 class GOSoundProvider;
 class GOSoundRecorder;
 class GOSoundGroupTask;
@@ -183,10 +184,8 @@ public:
     GOSoundSampler *handle,
     unsigned velocity) override;
 
-  void GetEmptyAudioOutput(
-    unsigned outputIndex, unsigned nFrames, float *pOutputBuffer);
   void GetAudioOutput(
-    float *output_buffer, unsigned n_frames, unsigned audio_output, bool last);
+    unsigned outputIndex, bool isLast, GOSoundBufferMutable &outBuffer);
   void NextPeriod();
   GOSoundScheduler &GetScheduler();
 
