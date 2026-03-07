@@ -11,15 +11,13 @@
 #include "GOTest.h"
 
 #include "sound/GOSoundCallbackConnector.h"
-#include "sound/tasks/GOSoundRecorderTask.h"
 
 class GOSoundOrganEngine;
 
 /*
  * Base class for GOSoundOrganEngine tests.
  *
- * Provides helpers for building and stopping the engine and owns the recorder
- * passed to BuildAndStart.
+ * Provides helpers for building and stopping the engine.
  */
 class GOTestSoundOrganEngineBase : public GOCommonControllerTest {
 public:
@@ -30,9 +28,6 @@ public:
 
   static constexpr unsigned N_SAMPLES_PER_BUFFER = 128;
   static constexpr unsigned SAMPLE_RATE = 96000;
-
-private:
-  GOSoundRecorderTask m_recorder;
 
 protected:
   GOSoundCallbackConnector m_connector;

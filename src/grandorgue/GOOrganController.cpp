@@ -816,14 +816,13 @@ void GOOrganController::StartOrgan(
   m_SoundEngine.BuildEngine(
     audioOutputConfigs,
     soundSystem.GetSamplesPerBuffer(),
-    soundSystem.GetSampleRate(),
-    soundSystem.GetAudioRecorder());
+    soundSystem.GetSampleRate());
   m_SoundEngine.StartEngine();
   soundSystem.ConnectToEngine(m_SoundEngine);
 
   m_midi = &midi;
   m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
-  m_AudioRecorder->SetAudioRecorder(&soundSystem.GetAudioRecorder());
+  m_AudioRecorder->SetAudioRecorder(&m_SoundEngine.GetRecorderTask());
 
   m_MidiRecorder->Clear();
   PreconfigRecorder();

@@ -17,7 +17,6 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "sound/providers/GOSoundProviderWave.h"
-#include "sound/tasks/GOSoundRecorderTask.h"
 
 #include "GOOrganController.h"
 #include "GOStdPath.h"
@@ -79,7 +78,6 @@ void GOPerfTestApp::RunTest(
     organController->InitOrganDirectory(testsDir);
     organController->AddWindchest(new GOWindchest(*organController));
 
-    GOSoundRecorderTask recorder;
     GOSoundOrganEngine &engine = organController->GetSoundEngine();
 
     try {
@@ -127,8 +125,7 @@ void GOPerfTestApp::RunTest(
       engine.BuildEngine(
         GOSoundOrganEngine::createDefaultOutputConfigs(),
         samples_per_frame,
-        sample_rate,
-        recorder);
+        sample_rate);
       engine.StartEngine();
       engine.SetUsed(true);
       engine.SetStreaming(true);
