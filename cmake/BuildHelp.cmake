@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -26,9 +26,14 @@ function(BUILD_HELPFILE xmlfile VARIANT)
     SET(_ImgList ${_ImgList} ${BUILDDIR}/images/${IMG_NAME})
   ENDFOREACH()
   
-  ADD_CUSTOM_COMMAND(OUTPUT ${BUILDDIR}/GrandOrgue.hhp COMMAND ${XSLTPROC}
-    ARGS --path ${DOCBOOK_PATH}/htmlhelp ${SRCDIR}/grandorgue.xsl ${xmlfile}
-    WORKING_DIRECTORY ${BUILDDIR} DEPENDS ${SRCDIR}/grandorgue.xsl ${xmlfile})
+  if(XML_CATALOG_FILE)
+    set(_CatalogArgs "XML_CATALOG_FILES=${XML_CATALOG_FILE}")
+  endif()
+  ADD_CUSTOM_COMMAND(OUTPUT ${BUILDDIR}/GrandOrgue.hhp
+    COMMAND ${CMAKE_COMMAND} -E env ${_CatalogArgs}
+      ${XSLTPROC} --path ${DOCBOOK_PATH}/htmlhelp ${SRCDIR}/grandorgue.xsl ${xmlfile}
+    WORKING_DIRECTORY ${BUILDDIR}
+    DEPENDS ${SRCDIR}/grandorgue.xsl ${xmlfile})
 
   ADD_CUSTOM_COMMAND(OUTPUT ${HELPDIR}/GrandOrgue${VARIANT}.htb COMMAND ${ZIP} 
     ARGS -r -X --filesync ${HELPDIR}/GrandOrgue${VARIANT}.htb * WORKING_DIRECTORY ${BUILDDIR}

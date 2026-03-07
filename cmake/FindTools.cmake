@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -38,6 +38,17 @@ IF (NOT PO4A_GETTEXT)
 ENDIF()
 IF (NOT PO4A_TRANSLATE)
    MESSAGE(STATUS "po4a-translate not found (package po4a)")
+ENDIF()
+
+FIND_FILE(XML_CATALOG_FILE catalog
+  PATHS
+    /opt/homebrew/etc/xml   # macOS Homebrew arm64
+    /usr/local/etc/xml      # macOS Homebrew x86
+    /etc/xml                # Linux
+  NO_DEFAULT_PATH
+)
+IF (NOT XML_CATALOG_FILE)
+   MESSAGE(STATUS "XML catalog not found - xsltproc may fail to resolve DocBook entities")
 ENDIF()
 
 IF(CMAKE_CROSSCOMPILING)
