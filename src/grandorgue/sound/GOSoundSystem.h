@@ -8,14 +8,11 @@
 #ifndef GOSOUNDSYSTEM_H
 #define GOSOUNDSYSTEM_H
 
-#include <map>
 #include <vector>
 
 #include <wx/string.h>
 
-#include "config/GOPortsConfig.h"
 #include "midi/GOMidiSystem.h"
-#include "ports/GOSoundPortFactory.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
@@ -25,14 +22,13 @@
 #include "GOSoundOrganEngine.h"
 #include "GOSoundRecorder.h"
 
+class GOConfig;
 class GODeviceNamePattern;
 class GOOrganController;
-class GOMidiSystem;
-class GOSoundThread;
+class GOPortsConfig;
+class GOSoundBufferMutable;
 class GOSoundPort;
-class GOSoundRtPort;
-class GOSoundPortaudioPort;
-class GOConfig;
+class GOSoundThread;
 
 /**
  * This class represents a GrandOrgue-wide sound system. It may be used even
@@ -69,9 +65,26 @@ class GOSoundSystem {
   };
 
 private:
-  bool m_open;
-  std::atomic_bool m_IsRunning;
+  GOConfig &m_config;
 
+  GOMidiSystem m_midi;
+  GOSoundRecorder m_AudioRecorder;
+  GOSoundOrganEngine m_SoundEngine;
+  ptr_vector<GOSoundThread> m_Threads;
+
+  bool m_open;
+  bool logSoundErrors;
+  unsigned m_SampleRate;
+  unsigned m_SamplesPerBuffer;
+  std::vector<GOSoundOutput> m_AudioOutputs;
+
+  wxString m_LastErrorMessage;
+
+  GOOrganController *m_OrganController;
+
+  GOSoundDevInfo m_DefaultAudioDevice;
+
+  std::atomic_bool m_IsRunning;
   // counter of audio callbacks that have been entered but have not yet been
   // exited
   std::atomic_uint m_NCallbacksEntered;
@@ -83,69 +96,62 @@ private:
   GOMutex m_lock;
   GOMutex m_thread_lock;
 
-  bool logSoundErrors;
+  unsigned meter_counter;
 
-  std::vector<GOSoundOutput> m_AudioOutputs;
   std::atomic_uint m_WaitCount;
   std::atomic_uint m_CalcCount;
 
-  unsigned m_SamplesPerBuffer;
+  void StartStreams();
+  void OpenMidi() { m_midi.Open(); }
 
-  unsigned meter_counter;
-
-  GOSoundDevInfo m_DefaultAudioDevice;
-
-  GOOrganController *m_OrganController;
-  GOSoundRecorder m_AudioRecorder;
-
-  GOSoundOrganEngine m_SoundEngine;
-  ptr_vector<GOSoundThread> m_Threads;
-
-  GOConfig &m_config;
-
-  GOMidiSystem m_midi;
-
-  wxString m_LastErrorMessage;
-
-  void StopThreads();
   void StartThreads();
+  void StopThreads();
 
+  void UpdateMeter();
   void ResetMeters();
 
-  void OpenMidi();
+  /** Open audio ports and configure the sound engine (without organ setup) */
+  void OpenSoundSystem();
+  /** Set up the sound engine for the current organ and start worker threads */
+  void BuildAndStartEngine();
+  /** Start audio streams and mark system as running */
+  void StartSoundSystem();
+  /** Notify the organ controller that sound is open and begin playback */
+  void NotifySoundIsOpen();
 
-  void OpenSound();
-  void CloseSound();
-
-  void StartStreams();
-  void UpdateMeter();
+  /** Notify the organ controller that sound is about to close */
+  void NotifySoundIsClosing();
+  /** Stop audio streams and wait for all callbacks to finish */
+  void StopSoundSystem();
+  /** Stop sound engine worker threads and tear down the organ setup */
+  void StopAndDestroyEngine();
+  /** Close and delete audio ports, reset meters, mark system as closed */
+  void CloseSoundSystem();
 
 public:
-  GOSoundSystem(GOConfig &settings);
-  ~GOSoundSystem();
-
-  bool AssureSoundIsOpen();
-  void AssureSoundIsClosed();
-
-  wxString getLastErrorMessage() const { return m_LastErrorMessage; }
-  wxString getState();
-
-  GOConfig &GetSettings();
-
-  void AssignOrganFile(GOOrganController *organController);
-  GOOrganController *GetOrganFile();
-
-  void SetLogSoundErrorMessages(bool settingsDialogVisible);
-
-  std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
-  const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
-
   static void FillDeviceNamePattern(
     const GOSoundDevInfo &deviceInfo, GODeviceNamePattern &pattern);
 
-  GOMidiSystem &GetMidi();
+  GOSoundSystem(GOConfig &settings);
+  ~GOSoundSystem();
 
-  GOSoundOrganEngine &GetEngine();
+  GOConfig &GetSettings() { return m_config; }
+  GOMidiSystem &GetMidi() { return m_midi; }
+  GOSoundOrganEngine &GetEngine() { return m_SoundEngine; }
+
+  std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
+  const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
+  wxString getLastErrorMessage() const { return m_LastErrorMessage; }
+  GOOrganController *GetOrganFile() { return m_OrganController; }
+  unsigned GetSampleRate() const { return m_SampleRate; }
+  unsigned GetSamplesPerBuffer() const { return m_SamplesPerBuffer; }
+  wxString getState();
+
+  void SetLogSoundErrorMessages(bool isVisible) { logSoundErrors = isVisible; }
+
+  bool AssureSoundIsOpen();
+  void AssureSoundIsClosed();
+  void AssignOrganFile(GOOrganController *pNewOrganController);
 
   bool AudioCallback(
     unsigned dev_index, float *outputBuffer, unsigned int nFrames);
