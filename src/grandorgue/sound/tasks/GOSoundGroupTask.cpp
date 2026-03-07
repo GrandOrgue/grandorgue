@@ -7,9 +7,10 @@
 
 #include "GOSoundGroupTask.h"
 
-#include "GOSoundWindchestTask.h"
 #include "sound/GOSoundOrganEngine.h"
 #include "threading/GOMutexLocker.h"
+
+#include "GOSoundWindchestTask.h"
 
 GOSoundGroupTask::GOSoundGroupTask(
   GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer)
