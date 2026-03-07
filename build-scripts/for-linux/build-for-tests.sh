@@ -2,6 +2,7 @@
 
 # $1 - target deb architecture. Default - current
 # $2 - build type: Debug or Release. Default - Debug
+# $3 - enable coverage: ON or OFF. Default - ON for Debug, OFF for Release
 
 set -e
 
@@ -13,12 +14,13 @@ SRC_DIR=$(readlink -f $(dirname $0)/../..)
 
 TARGET_ARCH=${1:-$(dpkg --print-architecture)}
 BUILD_TYPE=${2:-Debug}
+COVERAGE=${3:-$([ "$BUILD_TYPE" = "Debug" ] && echo ON || echo OFF)}
 
 export LANG=C
 
-# Enable coverage only for Debug builds
+# Enable coverage only when explicitly requested (default: ON for Debug)
 COVERAGE_FLAG=""
-if [ "$BUILD_TYPE" = "Debug" ]; then
+if [ "$COVERAGE" = "ON" ]; then
     COVERAGE_FLAG="-DGO_BUILD_COVERAGE=ON"
 fi
 

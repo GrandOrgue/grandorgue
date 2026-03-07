@@ -1,9 +1,24 @@
 name: Build
 
-on: [push]
+on:
+  push:
+  workflow_dispatch:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - actions: "functional coverage"
+            build_type: Debug
+            coverage: "ON"
+          - actions: "perf"
+            build_type: Debug
+            coverage: "OFF"
+          - actions: "perf"
+            build_type: Release
+            coverage: "OFF"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -14,12 +29,15 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}
-        run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64
-  
+        run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64 ${{ matrix.build_type }} ${{ matrix.coverage }}
+
       - name: Run tests
         working-directory: ${{github.workspace}}
-        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh
-      - uses: codecov/codecov-action@v3
+        run: ${{github.workspace}}/build-scripts/for-linux/do-tests.sh ${{ matrix.actions }}
+
+      - name: Upload coverage
+        if: contains(matrix.actions, 'coverage')
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
         

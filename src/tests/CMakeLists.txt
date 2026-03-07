@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -23,5 +23,6 @@ target_include_directories(GOTestExe PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/testin
 target_include_directories(GOTests PUBLIC ${CMAKE_SOURCE_DIR}/src/tests/common)
 BUILD_EXECUTABLE(GOTestExe)
 
-add_test(NAME GOTestExe COMMAND GOTestExe)
+add_test(NAME GOTestFunctional COMMAND GOTestExe --no-perf)
+add_test(NAME GOTestPerf       COMMAND GOTestExe --perf-only)
 include(CTest)

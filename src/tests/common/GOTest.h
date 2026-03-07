@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -18,16 +18,21 @@ class GOTest : public GOTestUtils {
           - A tear down method
   */
 
+public:
+  enum Category { FUNCTIONAL, PERF };
+
 private:
   std::string name = "GOTest";
+  Category m_Category;
 
 public:
-  GOTest();
+  GOTest(Category category = FUNCTIONAL);
   virtual ~GOTest();
   virtual bool setUp();
   virtual void run();
   virtual bool tearDown();
-  virtual std::string GetName() { return name; };
+  virtual std::string GetName() { return name; }
+  Category GetCategory() const { return m_Category; }
 };
 
 class GOCommonControllerTest : public GOTest {

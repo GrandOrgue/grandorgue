@@ -10,7 +10,7 @@
 #include <cstdio>
 #include <iostream>
 
-GOTest::GOTest() {
+GOTest::GOTest(Category category) : m_Category(category) {
   // This is the magic to auto register tests in TestCollection
   GOTestCollection::Instance()->add_test(this);
 }
