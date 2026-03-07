@@ -30,6 +30,8 @@
 
 IMPLEMENT_APP(GOApp)
 
+GOApp::~GOApp() = default;
+
 void GOApp::TemporaryLog::DoLogTextAtLevel(
   wxLogLevel level, const wxString &msg) {
   FILE *output = (level <= wxLOG_Warning) ? stderr : stdout;
@@ -114,7 +116,7 @@ bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
 }
 
 bool GOApp::OnInit() {
-  wxLog::SetActiveTarget(m_TemporaryLog.get());
+  wxLog::SetActiveTarget(mp_TemporaryLog.get());
 
 #ifdef __WXMAC__
   /* This ensures that the executable (when it is not in the form of an OS X
@@ -147,16 +149,16 @@ bool GOApp::OnInit() {
   if (!wxApp::OnInit())
     return false;
 
-  m_config = new GOConfig(m_InstanceName, m_ConfigFilePath);
-  m_config->Load();
+  mp_config = std::make_unique<GOConfig>(m_InstanceName, m_ConfigFilePath);
+  mp_config->Load();
 
   GOStdPath::InitLocaleDir();
-  m_locale.Init(m_config->GetLanguageId());
+  m_locale.Init(mp_config->GetLanguageId());
   m_locale.AddCatalog(wxT("GrandOrgue"));
 
-  m_soundSystem = new GOSoundSystem(*m_config);
+  mp_SoundSystem = std::make_unique<GOSoundSystem>(*mp_config);
 
-  m_Frame = new GOFrame(
+  p_frame = new GOFrame(
     *this,
     NULL,
     wxID_ANY,
@@ -165,19 +167,19 @@ bool GOApp::OnInit() {
     wxDefaultSize,
     wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX
       | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE,
-    *m_soundSystem);
-  SetTopWindow(m_Frame);
-  m_Log = new GOLog(m_Frame);
-  wxLog::SetActiveTarget(m_Log);
-  m_Frame->Init(m_FileName, m_IsGuiOnly);
+    *mp_SoundSystem);
+  SetTopWindow(p_frame);
+  mp_log = std::make_unique<GOLog>(p_frame);
+  wxLog::SetActiveTarget(mp_log.get());
+  p_frame->Init(m_FileName, m_IsGuiOnly);
 
   return true;
 }
 
 #ifdef __WXMAC__
 void GOApp::MacOpenFile(const wxString &filename) {
-  if (m_Frame)
-    m_Frame->SendLoadFile(filename);
+  if (p_frame)
+    p_frame->SendLoadFile(filename);
 }
 #endif
 
@@ -189,7 +191,7 @@ int GOApp::OnExit() {
 
   int rc = wxApp::OnExit();
 
-  if (m_Restart) {
+  if (m_IsToRestartAfterExit) {
     wchar_t **cmdargs(argv);
 
     wxExecute(cmdargs);
@@ -200,18 +202,9 @@ int GOApp::OnExit() {
 void GOApp::CleanUp() {
   // Ensure that GOFrame and other objects are destroyed before deleting
   wxApp::CleanUp();
-  // CleanUp() may be called even if OnInit() has not succeed, so we need to
-  // check
-  if (m_soundSystem) {
-    delete m_soundSystem;
-    m_soundSystem = nullptr;
-  }
-  if (m_config) {
-    delete m_config;
-    m_config = nullptr;
-  }
-  if (m_Log) {
-    delete m_Log;
-    m_Log = nullptr;
-  }
+  // CleanUp() may be called even if OnInit() has not succeed, so unique_ptr
+  // reset() is safe to call even if the objects were never created
+  mp_SoundSystem.reset();
+  mp_config.reset();
+  mp_log.reset();
 }

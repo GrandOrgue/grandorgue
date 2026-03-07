@@ -46,9 +46,9 @@ private:
   };
 
   // A temporary logging instance
-  std::unique_ptr<TemporaryLog> m_TemporaryLog
+  std::unique_ptr<TemporaryLog> mp_TemporaryLog
     = std::make_unique<TemporaryLog>();
-  bool m_Restart = false;
+  bool m_IsToRestartAfterExit = false;
 
 #ifdef __WXMAC__
   virtual void MacOpenFile(const wxString &fileName) override;
@@ -61,18 +61,21 @@ private:
   virtual void CleanUp() override;
 
 protected:
-  GOFrame *m_Frame = nullptr;
+  GOFrame *p_frame = nullptr;
   wxLocale m_locale;
-  GOConfig *m_config = nullptr;
-  GOSoundSystem *m_soundSystem = nullptr;
-  GOLog *m_Log = nullptr;
+  std::unique_ptr<GOConfig> mp_config;
+  std::unique_ptr<GOSoundSystem> mp_SoundSystem;
+  std::unique_ptr<GOLog> mp_log;
   wxString m_FileName;
   std::string m_InstanceName;
   std::string m_ConfigFilePath;
   bool m_IsGuiOnly = false;
 
 public:
-  void SetRestart() { m_Restart = true; }
+  ~GOApp();
+
+  bool IsToRestartAfterExit() const { return m_IsToRestartAfterExit; }
+  void SetToRestartAfterExit() { m_IsToRestartAfterExit = true; }
 };
 
 DECLARE_APP(GOApp)

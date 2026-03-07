@@ -1158,7 +1158,7 @@ void GOFrame::OnSettings(wxCommandEvent &event) {
            wxYES_NO | wxICON_QUESTION,
            this)
         == wxYES) {
-      m_App.SetRestart();
+      m_App.SetToRestartAfterExit();
       SetEventAfterSettings(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_EXIT);
       isToContinue = false;
     } else if (
