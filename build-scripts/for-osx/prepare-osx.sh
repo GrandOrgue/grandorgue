@@ -14,6 +14,7 @@ brew install \
   gettext \
   imagemagick \
   jack \
+  librsvg \
   wxwidgets \
   yaml-cpp
 brew link gettext --force

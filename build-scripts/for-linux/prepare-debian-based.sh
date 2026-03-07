@@ -75,6 +75,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   file \
   gettext \
   imagemagick \
+  librsvg2-bin \
   pkg-config \
   po4a \
   rpm \

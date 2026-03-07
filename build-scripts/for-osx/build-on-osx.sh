@@ -42,6 +42,18 @@ fi
 
 echo "Phase 3"
 
-make VERBOSE=1 package
+# Retry make package up to 3 times because hdiutil detach can fail intermittently
+for attempt in 1 2 3; do
+  if make VERBOSE=1 package; then
+    break
+  fi
+  if [ $attempt -lt 3 ]; then
+    echo "make package failed (attempt $attempt), retrying after 5s..."
+    sleep 5
+  else
+    echo "make package failed after $attempt attempts"
+    exit 1
+  fi
+done
 
 popd

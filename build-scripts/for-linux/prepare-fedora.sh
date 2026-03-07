@@ -16,7 +16,7 @@ OPTIONAL_PKGS=""
 [[ "$INSTALL_TESTS" == "tests" ]] && OPTIONAL_PKGS="$OPTIONAL_PKGS gcovr"
 
 sudo dnf install -y \
-  cmake gcc-c++ make gettext docbook-style-xsl zip po4a ImageMagick rpm-build $OPTIONAL_PKGS \
+  cmake gcc-c++ make gettext docbook-style-xsl zip po4a ImageMagick librsvg2-tools rpm-build $OPTIONAL_PKGS \
   pipewire-jack-audio-connection-kit-devel fftw-devel zlib-devel wavpack-devel \
   $WX_PKG_NAME alsa-lib-devel systemd-devel yaml-cpp-static dpkg-dev libcurl-devel
 
