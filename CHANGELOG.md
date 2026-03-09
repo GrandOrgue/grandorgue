@@ -1,3 +1,4 @@
+- Fixed wrong .cmb group of division sender MIDI settings https://github.com/GrandOrgue/grandorgue/issues/2409
 - Fixed wrong initial position of the Combination Setter https://github.com/GrandOrgue/grandorgue/issues/2430
 - Fixed listening a SYSEX Johanus event in the MIDI event editor https://github.com/GrandOrgue/grandorgue/issues/2114
 # 3.17.0 (2026-02-09)

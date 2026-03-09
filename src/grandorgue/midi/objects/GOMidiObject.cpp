@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -17,7 +17,7 @@
 
 #include "GOMidiObjectContext.h"
 
-static const wxString WX_DIVISIONAL_GROUP_SUFFIX = wxT("Divisional");
+static const wxString WX_DIVISION_GROUP_SUFFIX = wxT("Divisional");
 
 const GOConfigEnum GOMidiObject::OBJECT_TYPES({
   {wxT("Label"), (int)OBJECT_TYPE_LABEL},
@@ -68,8 +68,8 @@ wxString GOMidiObject::GetContextTitle() const {
   return GOMidiObjectContext::getFullTitle(p_context);
 }
 
-static wxString divisional_group(const wxString &group) {
-  return group + WX_DIVISIONAL_GROUP_SUFFIX;
+static wxString division_group(const wxString &group) {
+  return group + WX_DIVISION_GROUP_SUFFIX;
 }
 
 int GOMidiObject::GetSenderType() const { return getElementType(p_MidiSender); }
@@ -94,7 +94,7 @@ void GOMidiObject::LoadMidiObject(
       p_ShortcutReceiver->Load(cfg, group);
   }
   if (p_DivisionSender)
-    p_DivisionSender->Load(cfg, divisional_group(group), midiMap);
+    p_DivisionSender->Load(cfg, division_group(group), midiMap);
 }
 
 void GOMidiObject::SaveMidiObject(
@@ -108,7 +108,7 @@ void GOMidiObject::SaveMidiObject(
       p_ShortcutReceiver->Save(cfg, group);
   }
   if (p_DivisionSender)
-    p_DivisionSender->Save(cfg, divisional_group(group), midiMap);
+    p_DivisionSender->Save(cfg, division_group(group), midiMap);
 }
 
 bool GOMidiObject::IsMidiConfigured() const {
