@@ -72,28 +72,63 @@ private:
   template <class ResamplerT, class WindowT>
   void DecodeBlock(float *pOut, unsigned nOutSamples);
 
+  /* These functions must be static class members rather than file-scope
+   * functions because they reference the private typedef DecodeBlockFunction
+   * and the private nested window classes (StreamPtrWindow, StreamCacheWindow,
+   * StreamCacheReadAheadWindow). */
   static DecodeBlockFunction getDecodeBlockFunction(
     uint8_t nChannels,
-    uint8_t nBitsPerSample,
+    uint8_t nBitsPerSoundItem,
+    bool isCompressed,
+    GOSoundResample::InterpolationType interpolationType);
+
+  /**
+   * Returns a decode block function for the given audio section,
+   * compression flag and interpolation type.
+   */
+  static DecodeBlockFunction getDecodeBlockFunctionFor(
+    const GOSoundAudioSection *pSection,
     bool isCompressed,
     GOSoundResample::InterpolationType interpolationType);
 
   void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
+
+  /**
+   * Switches the stream to the start segment with the given index.
+   * Sets up ptr, cache, end segment fields and next segment index.
+   * Returns start_offset of the start segment.
+   */
+  unsigned GoToStartSegment(unsigned startSegmentIndex);
+
+  /** Switches the stream to the end segment. */
+  void GoToEndSegment() { ptr = end_ptr; }
+
+  /**
+   * Initializes audio_section, sets up decode functions and switches
+   * to the start segment with the given index.
+   * Returns start_offset of the start segment.
+   */
+  unsigned InitFromSection(
+    const GOSoundAudioSection *pSection,
+    unsigned startSegmentIndex,
+    GOSoundResample::InterpolationType interpolationType);
 
 public:
   /* Initialize a stream to play this audio section */
   void InitStream(
     const GOSoundResample *pResample,
     const GOSoundAudioSection *pSection,
-    GOSoundResample::InterpolationType interpolation,
-    float sample_rate_adjustment);
+    GOSoundResample::InterpolationType interpolationType,
+    float sampleRateAdjustment);
 
-  /* Initialize a stream to play this audio section and seek into it using
-   * release alignment if available. */
+  /**
+   * Initializes a release stream aligned to the existing attack stream.
+   * Uses release alignment table if available.
+   */
   void InitAlignedStream(
     const GOSoundAudioSection *pSection,
-    GOSoundResample::InterpolationType interpolation,
-    const GOSoundStream *existing_stream);
+    GOSoundResample::InterpolationType interpolationType,
+    const GOSoundStream *pExistingStream);
 
   /* Read an audio buffer from an audio section stream */
   bool ReadBlock(float *buffer, unsigned int n_blocks);
