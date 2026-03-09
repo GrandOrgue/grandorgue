@@ -19,6 +19,7 @@
 
 #include "ptrvector.h"
 
+class GOSoundBufferMutable;
 class GOSoundGroupTask;
 class GOSoundReleaseTask;
 class GOSoundTremulantTask;
@@ -267,17 +268,13 @@ public:
   /**
    * @brief Processes one period of audio for a single sampler.
    *
-   * @param output_buffer  Interleaved stereo buffer to mix into.
-   * @param sampler        The sampler to process.
-   * @param n_frames       Number of frames.
-   * @param volume         Windchest/tremulant volume factor.
+   * @param sampler    The sampler to process.
+   * @param amplitude  Windchest/tremulant amplitude factor.
+   * @param outBuffer  Interleaved stereo buffer to mix into.
    * @return true if the sampler should be kept alive for the next period.
    */
   bool ProcessSampler(
-    float *output_buffer,
-    GOSoundSampler *sampler,
-    unsigned n_frames,
-    float volume);
+    GOSoundSampler &sampler, float amplitude, GOSoundBufferMutable &outBuffer);
 
   /**
    * @brief Processes a release or attack-switch event for a sampler.

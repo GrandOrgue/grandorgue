@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,8 @@
 #include "GOSoundFader.h"
 
 #include <algorithm>
+
+#include "sound/buffer/GOSoundBufferMutable.h"
 
 void GOSoundFader::Setup(
   float targetVolume, float velocityVolume, unsigned nFramesToIncreaseIn) {
@@ -29,7 +31,10 @@ void GOSoundFader::Setup(
 static constexpr unsigned EXTERNAL_VOLUME_CHANGE_FRAMES = 1024;
 
 void GOSoundFader::Process(
-  unsigned nFrames, float *buffer, float externalVolume) {
+  float externalAmplitude, GOSoundBufferMutable &outBuffer) {
+  float *pData = outBuffer.GetData();
+  const unsigned nFrames = outBuffer.GetNFrames();
+
   // setup process
 
   float startTargetVolumePoint = m_LastTargetVolumePoint;
@@ -78,7 +83,7 @@ void GOSoundFader::Process(
   }
 
   // Calculate the external volume
-  float targetExternalVolume = m_VelocityVolume * externalVolume;
+  float targetExternalVolume = m_VelocityVolume * externalAmplitude;
 
   if (m_LastExternalVolumePoint < 0.0f)
     m_LastExternalVolumePoint = targetExternalVolume;
@@ -102,9 +107,9 @@ void GOSoundFader::Process(
     (m_LastTargetVolumePoint == startTargetVolumePoint)
     && (m_LastExternalVolumePoint == startExternalVolumePoint)) {
     // Adjust the buffer by frameTotalVolume
-    for (unsigned int i = 0; i < nFrames; i++, buffer += 2) {
-      buffer[0] *= frameTotalVolume;
-      buffer[1] *= frameTotalVolume;
+    for (unsigned int i = nFrames; i > 0; i--) {
+      *pData++ *= frameTotalVolume;
+      *pData++ *= frameTotalVolume;
     }
   } else {
     // Adjust the buffer smoothly from frameTotalVolume to
@@ -113,9 +118,9 @@ void GOSoundFader::Process(
       = (m_LastTargetVolumePoint * m_LastExternalVolumePoint - frameTotalVolume)
       / nFrames;
 
-    for (unsigned int i = 0; i < nFrames; i++, buffer += 2) {
-      buffer[0] *= frameTotalVolume;
-      buffer[1] *= frameTotalVolume;
+    for (unsigned int i = nFrames; i > 0; i--) {
+      *pData++ *= frameTotalVolume;
+      *pData++ *= frameTotalVolume;
       frameTotalVolume += frameTotalVolumeDelta;
     }
   }

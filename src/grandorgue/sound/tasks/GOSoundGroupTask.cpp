@@ -42,12 +42,12 @@ void GOSoundGroupTask::Add(GOSoundSampler *sampler) {
 }
 
 void GOSoundGroupTask::ProcessList(
-  GOSoundSamplerList &list, bool toDropOld, float *output_buffer) {
+  GOSoundSamplerList &list, bool isToDropOld, GOSoundBufferMutable &outBuffer) {
   GOSoundSampler *sampler;
 
   while ((sampler = list.Get())) {
     if (
-      toDropOld && m_IsToComplete.load()
+      isToDropOld && m_IsToComplete.load()
       && sampler->time + 2000 < r_SamplerPlayer.GetTime()) {
       if (sampler->drop_counter++ > 3) {
         r_SamplerPlayer.ReturnSampler(sampler);
@@ -61,7 +61,7 @@ void GOSoundGroupTask::ProcessList(
     if (
       windchest
       && r_SamplerPlayer.ProcessSampler(
-        output_buffer, sampler, GetNFrames(), windchest->GetVolume()))
+        *sampler, windchest->GetVolume(), outBuffer))
       Add(sampler);
   }
 }
@@ -97,8 +97,8 @@ void GOSoundGroupTask::Run(GOSchedulerThread *pThread) {
   GO_DECLARE_LOCAL_SOUND_BUFFER(localBuffer, 2, GetNFrames())
 
   localBuffer.FillWithSilence();
-  ProcessList(m_Active, false, localBuffer.GetData());
-  ProcessList(m_Release, true, localBuffer.GetData());
+  ProcessList(m_Active, false, localBuffer);
+  ProcessList(m_Release, true, localBuffer);
 
   {
     GOMutexLocker locker(

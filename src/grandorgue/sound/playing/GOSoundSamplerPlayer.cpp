@@ -12,13 +12,15 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "GOSoundReleaseAlignTable.h"
-#include "GOSoundSampler.h"
+#include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/providers/GOSoundProvider.h"
 #include "sound/tasks/GOSoundGroupTask.h"
 #include "sound/tasks/GOSoundReleaseTask.h"
 #include "sound/tasks/GOSoundTremulantTask.h"
 #include "sound/tasks/GOSoundWindchestTask.h"
+
+#include "GOSoundReleaseAlignTable.h"
+#include "GOSoundSampler.h"
 
 /*
  * Constructor
@@ -126,55 +128,47 @@ void GOSoundSamplerPlayer::StartSampler(GOSoundSampler *sampler) {
 }
 
 bool GOSoundSamplerPlayer::ProcessSampler(
-  float *output_buffer,
-  GOSoundSampler *sampler,
-  unsigned n_frames,
-  float volume) {
-  float temp[n_frames * 2];
-  const bool process_sampler = (sampler->time <= m_CurrentTime);
+  GOSoundSampler &sampler, float amplitude, GOSoundBufferMutable &outBuffer) {
+  const bool process_sampler = (sampler.time <= m_CurrentTime);
 
   if (process_sampler) {
-    if (sampler->is_release &&
+    if (sampler.is_release &&
         ((m_IsPolyphonyLimiting &&
           m_SamplerPool.UsedSamplerCount() >= m_PolyphonySoftLimit &&
-          m_CurrentTime - sampler->time > 172 * 16) ||
-         sampler->drop_counter > 1))
-      sampler->fader.StartDecreasingVolume(MsToSamples(370));
+          m_CurrentTime - sampler.time > 172 * 16) ||
+         sampler.drop_counter > 1))
+      sampler.fader.StartDecreasingVolume(MsToSamples(370));
 
     /* The decoded sampler frame will contain values containing
-     * sampler->pipe_section->sample_bits worth of significant bits.
+     * sampler.pipe_section->sample_bits worth of significant bits.
      * It is the responsibility of the fade engine to bring these bits
      * back into a sensible state. This is achieved during setup of the
      * fade parameters. The gain target should be:
      *
-     *     playback gain * (2 ^ -sampler->pipe_section->sample_bits)
+     *     playback gain * (2 ^ -sampler.pipe_section->sample_bits)
      */
-    if (!sampler->stream.ReadBlock(temp, n_frames))
-      sampler->p_SoundProvider = NULL;
+    GO_DECLARE_LOCAL_SOUND_BUFFER(tmpBuffer, 2, outBuffer.GetNFrames())
 
-    sampler->fader.Process(n_frames, temp, volume);
-    if (sampler->toneBalanceFilterState.IsToApply())
-      sampler->toneBalanceFilterState.ProcessBuffer(n_frames, temp);
+    if (!sampler.stream.ReadBlock(tmpBuffer))
+      sampler.p_SoundProvider = NULL;
 
-    /* Add these samples to the current output buffer shifting
-     * right by the necessary amount to bring the sample gain back
-     * to unity (this value is computed in GOPipe.cpp)
-     */
-    for (unsigned i = 0; i < n_frames * 2; i++)
-      output_buffer[i] += temp[i];
+    sampler.fader.Process(amplitude, tmpBuffer);
+    if (sampler.toneBalanceFilterState.IsToApply())
+      sampler.toneBalanceFilterState.ProcessBuffer(tmpBuffer);
+
+    outBuffer.AddFrom(tmpBuffer);
 
     if (
-      (sampler->stop && sampler->stop <= m_CurrentTime)
-      || (sampler->new_attack && sampler->new_attack <= m_CurrentTime)) {
-      rp_ReleaseTask->Add(sampler);
+      (sampler.stop && sampler.stop <= m_CurrentTime)
+      || (sampler.new_attack && sampler.new_attack <= m_CurrentTime)) {
+      rp_ReleaseTask->Add(&sampler);
       return false;
     }
   }
 
   if (
-    !sampler->p_SoundProvider
-    || (sampler->fader.IsSilent() && process_sampler)) {
-    ReturnSampler(sampler);
+    !sampler.p_SoundProvider || (sampler.fader.IsSilent() && process_sampler)) {
+    ReturnSampler(&sampler);
     return false;
   } else
     return true;
