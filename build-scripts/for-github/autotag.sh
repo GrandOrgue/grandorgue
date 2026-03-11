@@ -26,7 +26,7 @@ if [[ "$(echo $CHANGELOG_HEAD | cut -d\  -f1)" == "#" ]]; then
   # release
   CHANGELOG_TAG=$(assure_full_version $(echo $CHANGELOG_HEAD | cut -d\  -f2) 1)
 fi
-if [[ "$CHANGELOG_TAG" > "$GIT_TAG" ]]; then
+if [[ -n "$CHANGELOG_TAG" ]] && [[ ! "$CHANGELOG_TAG" < "$GIT_TAG" ]]; then
   # a new release. Push the release tag and make the relnotes
   NEW_TAG=$CHANGELOG_TAG
   sed '0,/^#/d;/^#/Q' CHANGELOG.md >$RELEASE_NOTES
@@ -37,7 +37,18 @@ else
 fi
 echo "NEW_TAG=$NEW_TAG"
 if [[ -n "$NEW_TAG" ]]; then
+  # If moving an existing tag, check the release is not already published.
+  # If the release is a draft or does not exist yet, push the tag as usual.
+  if [[ "$NEW_TAG" == "$GIT_TAG" ]] && [[ -n "$GH_TOKEN" ]]; then
+    IS_DRAFT=$(gh release view "$NEW_TAG" --json isDraft --jq '.isDraft' 2>/dev/null || echo "notfound")
+    if [[ "$IS_DRAFT" == "false" ]]; then
+      echo "Release $NEW_TAG is already published, skipping tag push."
+      NEW_TAG=
+    fi
+  fi
+fi
+if [[ -n "$NEW_TAG" ]]; then
   # add and push the new tag
-  git tag $NEW_TAG
-  git push origin $NEW_TAG
+  git tag --force $NEW_TAG
+  git push --force origin $NEW_TAG
 fi
