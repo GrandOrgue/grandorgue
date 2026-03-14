@@ -200,7 +200,7 @@ public:
    * Starts the organ sound engine: builds audio tasks, connects to the sound
    * system, and begins MIDI and audio playback.
    */
-  void StartOrgan(GOSoundSystem &soundSystem);
+  void StartOrgan(GOSoundSystem &soundSystem, GOMidiSystem &midi);
 
   /**
    * Stops the organ sound engine: aborts playback, disconnects from the sound

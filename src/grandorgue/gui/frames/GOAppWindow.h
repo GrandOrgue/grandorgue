@@ -27,6 +27,7 @@ class GOConfig;
 class GOGuiApp;
 class GOGuiOrgan;
 class GOMidiEvent;
+class GOMidiSystem;
 class GOOrgan;
 class GOOrganController;
 class GOProgressDialog;
@@ -98,6 +99,19 @@ private:
 
   /** GOSoundCloseListener: stops the organ before the sound system closes. */
   void OnBeforeSoundClose() override;
+
+  /**
+   * Opens the sound system. If the sound system transitions from closed to
+   * open, also opens the MIDI system. Returns true if the sound system is
+   * open after the call, false otherwise.
+   */
+  bool EnsureSoundMidiOpen();
+
+  /**
+   * Closes the sound system. The organ is stopped first via the
+   * OnBeforeSoundClose callback.
+   */
+  void EnsureSoundMidiClosed();
 
   /**
    * Starts the organ if a controller is present, the sound system is open,
@@ -205,7 +219,9 @@ public:
     const wxPoint &pos,
     const wxSize &size,
     const long type,
-    GOSoundSystem &sound);
+    GOConfig &config,
+    GOSoundSystem &sound,
+    GOMidiSystem &midi);
   virtual ~GOAppWindow(void);
 
   void Init(const wxString &filename, bool isGuiOnly);

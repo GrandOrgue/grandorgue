@@ -14,7 +14,6 @@
 
 #include <wx/string.h>
 
-#include "midi/GOMidiSystem.h"
 #include "tasks/GOSoundRecorderTask.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
@@ -39,7 +38,6 @@ class GOSoundSystem {
 private:
   GOConfig &m_config;
 
-  GOMidiSystem m_midi;
   GOSoundRecorderTask m_AudioRecorder;
   std::atomic<GOSoundOrganEngine *> p_OrganEngine;
 
@@ -68,7 +66,6 @@ private:
   unsigned meter_counter;
 
   void StartStreams();
-  void OpenMidi() { m_midi.Open(); }
 
   void UpdateMeter();
   void ResetMeters();
@@ -84,9 +81,6 @@ public:
 
   GOSoundSystem(GOConfig &settings);
   ~GOSoundSystem();
-
-  GOConfig &GetSettings() { return m_config; }
-  GOMidiSystem &GetMidi() { return m_midi; }
 
   std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
   const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
