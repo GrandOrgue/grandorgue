@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later
 # (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
@@ -19,10 +19,16 @@ endif ()
 
 BUILD_EXECUTABLE(GrandOrgueTool)
 target_link_libraries(GrandOrgueTool GrandOrgueCore)
+if (INSTALL_DEPEND STREQUAL "ON")
+  CopyDependencies(GrandOrgueTool "${BININSTDIR}/GrandOrgueTool${CMAKE_EXECUTABLE_SUFFIX}" GrandOrgueCore)
+endif()
 
 add_executable(GrandOrguePerfTest GOPerfTest.cpp)
 BUILD_EXECUTABLE(GrandOrguePerfTest)
 target_include_directories(GrandOrguePerfTest PUBLIC ${CMAKE_SOURCE_DIR}/src/grandorgue)
 target_link_libraries(GrandOrguePerfTest golib)
+if (INSTALL_DEPEND STREQUAL "ON")
+  CopyDependencies(GrandOrguePerfTest "${BININSTDIR}/GrandOrguePerfTest${CMAKE_EXECUTABLE_SUFFIX}" golib)
+endif()
 
 add_custom_target(runperftest COMMAND GrandOrguePerfTest "${CMAKE_SOURCE_DIR}/tests" DEPENDS GrandOrguePerfTest)
