@@ -65,8 +65,9 @@ control/GOElementCreator.cpp
 control/GOEventDistributor.cpp
 control/GOLabelControl.cpp
 control/GOPistonControl.cpp
-document-base/GODocumentBase.cpp
-document-base/GOView.cpp
+gui/GOGuiImageCache.cpp
+gui/GOGuiLog.cpp
+gui/GOGuiOrgan.cpp
 gui/dialogs/common/GODialogCloser.cpp
 gui/dialogs/common/GODialogSizeSet.cpp
 gui/dialogs/common/GODialogTab.cpp
@@ -101,7 +102,9 @@ gui/dialogs/GOPropertiesDialog.cpp
 gui/dialogs/GOSelectOrganDialog.cpp
 gui/dialogs/GOSplash.cpp
 gui/dialogs/go-message-boxes.cpp
-gui/frames/GOFrame.cpp
+gui/document-base/GODocumentBase.cpp
+gui/document-base/GODocumentView.cpp
+gui/frames/GOToolbarWindow.cpp
 gui/frames/GOLogWindow.cpp
 gui/frames/GOMainWindowData.cpp
 gui/frames/GOStopsWindow.cpp
@@ -239,11 +242,8 @@ yaml/GOSaveableToYaml.cpp
 yaml/GOYamlModel.cpp
 yaml/go-wx-yaml.cpp
 GOAudioRecorder.cpp
-GOImageCache.cpp
-GODocument.cpp
 GOEvent.cpp
 GOKeyConvert.cpp
-GOLog.cpp
 GOMetronome.cpp
 GOOrganController.cpp
 GOVirtualCouplerController.cpp
@@ -262,11 +262,11 @@ link_directories(${go_libdir})
 
 if (WIN32)
   set_source_files_properties("${RESOURCEDIR}/GrandOrgue.rc" PROPERTIES GENERATED "YES")
-  add_executable(GrandOrgue WIN32 GOApp.cpp "${RESOURCEDIR}/GrandOrgue.rc")
+  add_executable(GrandOrgue WIN32 gui/GOGuiApp.cpp "${RESOURCEDIR}/GrandOrgue.rc")
   add_dependencies(GrandOrgue resources) # GrandOrgue.rc and GrandOrgue.manifest & GOIcon.ico referenced from GrandOrgue.rc
   add_linker_option(GrandOrgue large-address-aware)
 else ()
-   add_executable(GrandOrgue GOApp.cpp)
+   add_executable(GrandOrgue gui/GOGuiApp.cpp)
 endif ()
 
 BUILD_EXECUTABLE(GrandOrgue)

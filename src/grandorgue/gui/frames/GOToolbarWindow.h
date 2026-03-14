@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOFRAME_H
-#define GOFRAME_H
+#ifndef GOTOOLBARWINDOW_H
+#define GOTOOLBARWINDOW_H
 
 #include <memory>
 #include <vector>
@@ -21,10 +21,10 @@
 #include "threading/GOMutex.h"
 #include "updater/GOUpdateChecker.h"
 
-class GOApp;
 class GOAudioGauge;
 class GOConfig;
-class GODocument;
+class GOGuiApp;
+class GOGuiOrgan;
 class GOMidiEvent;
 class GOOrgan;
 class GOOrganController;
@@ -37,13 +37,13 @@ class wxSpinCtrl;
 class wxToolBar;
 class wxToolBarToolBase;
 
-class GOFrame : public wxFrame,
-                private GOHelpRequestor,
-                public GOResizable,
-                protected GOMidiCallback,
-                private GOModificationListener {
+class GOToolbarWindow : public wxFrame,
+                        private GOHelpRequestor,
+                        public GOResizable,
+                        protected GOMidiCallback,
+                        private GOModificationListener {
 private:
-  GOApp &r_app;
+  GOGuiApp &r_app;
   GOConfig &r_config;
   GOSoundSystem &r_SoundSystem;
   GOMidiSystem &r_MidiSystem;
@@ -57,7 +57,7 @@ private:
   wxMenu *m_recent_menu;
   wxMenu *m_temperament_menu;
 
-  std::unique_ptr<GODocument> mp_doc;
+  std::unique_ptr<GOGuiOrgan> mp_organ;
   GOOrganController *p_OrganController;
   wxToolBar *m_ToolBar;
   GOAudioGauge *m_SamplerUsage;
@@ -182,16 +182,16 @@ private:
   void SendLoadOrgan(const GOOrgan &organ);
 
 public:
-  GOFrame(
-    GOApp &app,
-    wxFrame *frame,
+  GOToolbarWindow(
+    GOGuiApp &app,
+    wxFrame *pParentFrame,
     wxWindowID id,
     const wxString &title,
     const wxPoint &pos,
     const wxSize &size,
     const long type,
     GOSoundSystem &sound);
-  virtual ~GOFrame(void);
+  virtual ~GOToolbarWindow(void);
 
   void Init(const wxString &filename, bool isGuiOnly);
 

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,7 +10,7 @@
 
 #include <wx/event.h>
 
-#include "document-base/GOView.h"
+#include "gui/document-base/GODocumentView.h"
 
 #include "GOOrganSettingsDialogBase.h"
 #include "GOOrganSettingsTab.h"
@@ -22,7 +22,8 @@ class GOOrganModel;
 class GOOrganSettingsEnclosuresTab;
 class GOOrganSettingsPipesTab;
 
-class GOOrganSettingsDialog : public GOOrganSettingsDialogBase, public GOView {
+class GOOrganSettingsDialog : public GOOrganSettingsDialogBase,
+                              public GODocumentView {
 private:
   wxButton *m_AudioGroupAssistant;
   wxButton *m_Default;

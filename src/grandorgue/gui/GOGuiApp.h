@@ -19,25 +19,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GOAPP_H
-#define GOAPP_H
+#ifndef GOGUIAPP_H
+#define GOGUIAPP_H
 
 #include <memory>
 
 #include <wx/app.h>
 
 class GOConfig;
-class GOFrame;
-class GOLog;
+class GOToolbarWindow;
+class GOGuiLog;
 class GOSoundSystem;
 
-class GOApp : public wxApp {
+class GOGuiApp : public wxApp {
 private:
   /**
    * A temporary logging class.
    * It logs all Warning and Error log messages to stderr, all other messages to
    * stdout. It alse displays all Error messages to a modal message box.
-   * It is used only before initialising the GOLog instance, including during
+   * It is used only before initialising the GOGuiLog instance, including during
    * reading the GrandOrgueConfig
    */
   class TemporaryLog : public wxLog {
@@ -61,23 +61,23 @@ private:
   virtual void CleanUp() override;
 
 protected:
-  GOFrame *p_frame = nullptr;
+  GOToolbarWindow *p_ToolbarWindow = nullptr;
   wxLocale m_locale;
   std::unique_ptr<GOConfig> mp_config;
   std::unique_ptr<GOSoundSystem> mp_SoundSystem;
-  std::unique_ptr<GOLog> mp_log;
+  std::unique_ptr<GOGuiLog> mp_log;
   wxString m_FileName;
   std::string m_InstanceName;
   std::string m_ConfigFilePath;
   bool m_IsGuiOnly = false;
 
 public:
-  ~GOApp();
+  ~GOGuiApp();
 
   bool IsToRestartAfterExit() const { return m_IsToRestartAfterExit; }
   void SetToRestartAfterExit() { m_IsToRestartAfterExit = true; }
 };
 
-DECLARE_APP(GOApp)
+DECLARE_APP(GOGuiApp)
 
 #endif

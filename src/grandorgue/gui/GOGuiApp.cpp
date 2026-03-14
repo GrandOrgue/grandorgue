@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOApp.h"
+#include "GOGuiApp.h"
 
 #include <wx/cmdline.h>
 #include <wx/filesys.h>
@@ -13,10 +13,10 @@
 #include <wx/regex.h>
 
 #include "config/GOConfig.h"
-#include "gui/frames/GOFrame.h"
+#include "frames/GOToolbarWindow.h"
 #include "sound/GOSoundSystem.h"
 
-#include "GOLog.h"
+#include "GOGuiLog.h"
 #include "GOStdPath.h"
 #include "go_defs.h"
 
@@ -28,11 +28,11 @@
 #include <windows.h>
 #endif
 
-IMPLEMENT_APP(GOApp)
+IMPLEMENT_APP(GOGuiApp)
 
-GOApp::~GOApp() = default;
+GOGuiApp::~GOGuiApp() = default;
 
-void GOApp::TemporaryLog::DoLogTextAtLevel(
+void GOGuiApp::TemporaryLog::DoLogTextAtLevel(
   wxLogLevel level, const wxString &msg) {
   FILE *output = (level <= wxLOG_Warning) ? stderr : stdout;
 
@@ -85,13 +85,13 @@ static const wxCmdLineEntryDesc cmd_line_desc[] = {
    wxCMD_LINE_PARAM_OPTIONAL},
   {wxCMD_LINE_NONE}};
 
-void GOApp::OnInitCmdLine(wxCmdLineParser &parser) {
+void GOGuiApp::OnInitCmdLine(wxCmdLineParser &parser) {
   parser.SetLogo(wxString::Format(
     _("GrandOrgue %s - Virtual Pipe Organ Software"), wxT(APP_VERSION)));
   parser.SetDesc(cmd_line_desc);
 }
 
-bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
+bool GOGuiApp::OnCmdLineParsed(wxCmdLineParser &parser) {
   bool res = wxApp::OnCmdLineParsed(parser);
   wxString str;
 
@@ -115,7 +115,7 @@ bool GOApp::OnCmdLineParsed(wxCmdLineParser &parser) {
   return res;
 }
 
-bool GOApp::OnInit() {
+bool GOGuiApp::OnInit() {
   wxLog::SetActiveTarget(mp_TemporaryLog.get());
 
 #ifdef __WXMAC__
@@ -158,7 +158,7 @@ bool GOApp::OnInit() {
 
   mp_SoundSystem = std::make_unique<GOSoundSystem>(*mp_config);
 
-  p_frame = new GOFrame(
+  p_ToolbarWindow = new GOToolbarWindow(
     *this,
     NULL,
     wxID_ANY,
@@ -168,24 +168,24 @@ bool GOApp::OnInit() {
     wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX
       | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE,
     *mp_SoundSystem);
-  SetTopWindow(p_frame);
-  mp_log = std::make_unique<GOLog>(p_frame);
+  SetTopWindow(p_ToolbarWindow);
+  mp_log = std::make_unique<GOGuiLog>(p_ToolbarWindow);
   wxLog::SetActiveTarget(mp_log.get());
-  p_frame->Init(m_FileName, m_IsGuiOnly);
+  p_ToolbarWindow->Init(m_FileName, m_IsGuiOnly);
 
   return true;
 }
 
 #ifdef __WXMAC__
-void GOApp::MacOpenFile(const wxString &filename) {
-  if (p_frame)
-    p_frame->SendLoadFile(filename);
+void GOGuiApp::MacOpenFile(const wxString &filename) {
+  if (p_ToolbarWindow)
+    p_ToolbarWindow->SendLoadFile(filename);
 }
 #endif
 
-int GOApp::OnRun() { return wxApp::OnRun(); }
+int GOGuiApp::OnRun() { return wxApp::OnRun(); }
 
-int GOApp::OnExit() {
+int GOGuiApp::OnExit() {
   wxLog::FlushActive();
   wxLog::SetActiveTarget(nullptr);
 
@@ -199,8 +199,8 @@ int GOApp::OnExit() {
   return rc;
 }
 
-void GOApp::CleanUp() {
-  // Ensure that GOFrame and other objects are destroyed before deleting
+void GOGuiApp::CleanUp() {
+  // Ensure that GOToolbarWindow and other objects are destroyed before deleting
   wxApp::CleanUp();
   // CleanUp() may be called even if OnInit() has not succeed, so unique_ptr
   // reset() is safe to call even if the objects were never created

@@ -19,6 +19,7 @@
 #include "GOMidiMap.h"
 #include "GOMidiSystem.h"
 #include "GOOrganController.h"
+#include "GOTimer.h"
 
 enum {
   ID_MIDI_PLAYER_PLAY = 0,

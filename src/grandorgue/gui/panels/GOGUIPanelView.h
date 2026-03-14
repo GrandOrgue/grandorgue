@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,15 +9,16 @@
 #define GOGUIPANELVIEW_H
 
 #include <wx/scrolwin.h>
-#include <wx/toplevel.h>
 
-#include "document-base/GOView.h"
+#include "gui/document-base/GODocumentView.h"
+
+class wxTopLevelWindow;
 
 class GOGUIControl;
 class GOGUIPanel;
 class GOGUIPanelWidget;
 
-class GOGUIPanelView : public wxScrolledWindow, public GOView {
+class GOGUIPanelView : public wxScrolledWindow, public GODocumentView {
 private:
   GOGUIPanelWidget *m_panelwidget;
   GOGUIPanel *m_panel;

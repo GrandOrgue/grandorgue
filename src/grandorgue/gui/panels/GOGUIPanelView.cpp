@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,6 +10,7 @@
 #include <wx/display.h>
 #include <wx/frame.h>
 #include <wx/image.h>
+#include <wx/toplevel.h>
 
 #include "gui/wxcontrols/go_gui_utils.h"
 
@@ -42,7 +43,7 @@ GOGUIPanelView *GOGUIPanelView::createWithFrame(
 GOGUIPanelView::GOGUIPanelView(
   GODocumentBase *doc, GOGUIPanel *panel, wxTopLevelWindow *topWindow)
   : wxScrolledWindow(topWindow),
-    GOView(doc, topWindow),
+    GODocumentView(doc, topWindow),
     m_panelwidget(new GOGUIPanelWidget(panel, this)),
     m_panel(panel),
     m_TopWindow(topWindow) {
@@ -98,7 +99,7 @@ void GOGUIPanelView::RemoveView() {
   if (m_panel)
     m_panel->SetView(NULL);
   m_panel = NULL;
-  GOView::RemoveView();
+  GODocumentView::RemoveView();
 }
 
 void GOGUIPanelView::AddEvent(GOGUIControl *control) {

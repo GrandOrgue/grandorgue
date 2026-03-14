@@ -5,16 +5,16 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GODocument.h"
+#include "GOGuiOrgan.h"
 
 #include <wx/app.h>
 
 #include "config/GOConfig.h"
-#include "document-base/GOView.h"
+#include "document-base/GODocumentView.h"
+#include "frames/GOToolbarWindow.h"
 #include "gui/dialogs/GOMidiObjectstDialog.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 #include "gui/dialogs/organ-settings/GOOrganSettingsDialog.h"
-#include "gui/frames/GOFrame.h"
 #include "gui/frames/GOStopsWindow.h"
 #include "gui/panels/GOGUIPanel.h"
 #include "gui/panels/GOGUIPanelView.h"
@@ -28,7 +28,7 @@
 #include "GOOrganController.h"
 #include "go_ids.h"
 
-GODocument::GODocument(GOResizable *pMainWindow, GOSoundSystem *sound)
+GOGuiOrgan::GOGuiOrgan(GOResizable *pMainWindow, GOSoundSystem *sound)
   : p_MainWindow(pMainWindow),
     m_sound(*sound),
     m_OrganFileReady(false),
@@ -37,16 +37,16 @@ GODocument::GODocument(GOResizable *pMainWindow, GOSoundSystem *sound)
   m_listener.Register(&m_sound.GetMidi());
 }
 
-GODocument::~GODocument() {
+GOGuiOrgan::~GOGuiOrgan() {
   m_listener.SetCallback(NULL);
   CloseOrgan();
 }
 
-bool GODocument::IsModified() const {
+bool GOGuiOrgan::IsModified() const {
   return m_OrganController && m_OrganController->IsOrganModified();
 }
 
-GOOrganController *GODocument::LoadOrgan(
+GOOrganController *GOGuiOrgan::LoadOrgan(
   GOProgressDialog *dlg,
   const GOOrgan &organ,
   const wxString &cmb,
@@ -98,23 +98,22 @@ GOOrganController *GODocument::LoadOrgan(
   return m_OrganController;
 }
 
-bool GODocument::UpdateCache(GOProgressDialog *dlg, bool compress) {
+bool GOGuiOrgan::UpdateCache(GOProgressDialog *dlg, bool compress) {
   if (!m_OrganController)
     return false;
   return m_OrganController->UpdateCache(dlg, compress);
 }
 
-void GODocument::ShowPanel(unsigned id) {
+void GOGuiOrgan::ShowPanel(unsigned id) {
   GOGUIPanel *panel = m_OrganController->GetPanel(id);
 
-  if (!showWindow(GODocument::PANEL, panel)) {
+  if (!showWindow(GOGuiOrgan::PANEL, panel)) {
     registerWindow(
-      GODocument::PANEL, panel, GOGUIPanelView::createWithFrame(this, panel));
+      GOGuiOrgan::PANEL, panel, GOGUIPanelView::createWithFrame(this, panel));
   }
 }
 
-void GODocument::SyncState() {
-  m_OrganController->SetVolume(m_sound.GetEngine().GetVolume());
+void GOGuiOrgan::SyncState() {
   if (p_MainWindow)
     m_OrganController->GetMainWindowData()->SetWindowRect(
       p_MainWindow->GetPosSize());
@@ -123,17 +122,17 @@ void GODocument::SyncState() {
   GODocumentBase::SyncState();
 }
 
-bool GODocument::Save() {
+bool GOGuiOrgan::Save() {
   SyncState();
   return m_OrganController->Save();
 }
 
-bool GODocument::Export(const wxString &cmb) {
+bool GOGuiOrgan::Export(const wxString &cmb) {
   SyncState();
   return m_OrganController->Export(cmb);
 }
 
-void GODocument::CloseOrgan() {
+void GOGuiOrgan::CloseOrgan() {
   m_listener.SetCallback(NULL);
   m_sound.AssignOrganFile(NULL);
   // m_sound.CloseSound();
@@ -152,7 +151,7 @@ void GODocument::CloseOrgan() {
   wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 }
 
-void GODocument::OnMidiEvent(const GOMidiEvent &event) {
+void GOGuiOrgan::OnMidiEvent(const GOMidiEvent &event) {
   GOMutexLocker locker(m_lock);
 
   if (!m_OrganFileReady)
@@ -162,26 +161,26 @@ void GODocument::OnMidiEvent(const GOMidiEvent &event) {
     m_OrganController->ProcessMidi(event);
 }
 
-void GODocument::ShowOrganSettingsDialog() {
-  if (!showWindow(GODocument::ORGAN_DIALOG, NULL) && m_OrganController) {
+void GOGuiOrgan::ShowOrganSettingsDialog() {
+  if (!showWindow(GOGuiOrgan::ORGAN_DIALOG, NULL) && m_OrganController) {
     registerWindow(
-      GODocument::ORGAN_DIALOG,
+      GOGuiOrgan::ORGAN_DIALOG,
       NULL,
       new GOOrganSettingsDialog(*m_OrganController, this, nullptr));
   }
 }
 
-void GODocument::ShowMidiList() {
-  if (!showWindow(GODocument::MIDI_LIST, NULL) && m_OrganController) {
+void GOGuiOrgan::ShowMidiList() {
+  if (!showWindow(GOGuiOrgan::MIDI_LIST, NULL) && m_OrganController) {
     registerWindow(
-      GODocument::MIDI_LIST,
+      GOGuiOrgan::MIDI_LIST,
       nullptr,
       new GOMidiObjectsDialog(this, nullptr, *m_OrganController));
   }
 }
 
-void GODocument::ShowStops() {
-  if (!showWindow(GODocument::STOPS, NULL) && m_OrganController) {
+void GOGuiOrgan::ShowStops() {
+  if (!showWindow(GOGuiOrgan::STOPS, NULL) && m_OrganController) {
     auto stopsWindow = new GOStopsWindow(
       this,
       nullptr,
@@ -189,15 +188,15 @@ void GODocument::ShowStops() {
       *m_OrganController);
 
     registerWindow(
-      GODocument::STOPS,
+      GOGuiOrgan::STOPS,
       stopsWindow, // Otherwise GOStopsWindow::SyncState() wont be called
       stopsWindow);
   }
 }
 
-void GODocument::ShowMIDIEventDialog(
+void GOGuiOrgan::ShowMIDIEventDialog(
   GOMidiObject &obj, GOMidiDialogListener *pDialogListener) {
-  if (!showWindow(GODocument::MIDI_EVENT, &obj) && m_OrganController) {
+  if (!showWindow(GOGuiOrgan::MIDI_EVENT, &obj) && m_OrganController) {
     const wxString title = wxString::Format(
       _("MIDI-Settings for %s - %s"), obj.GetMidiTypeName(), obj.GetName());
     const wxString dialogSelector
@@ -214,6 +213,6 @@ void GODocument::ShowMIDIEventDialog(
       pDialogListener);
     dlg->RegisterMIDIListener(m_OrganController->GetMidi());
     dlg->SetModificationListener(m_OrganController);
-    registerWindow(GODocument::MIDI_EVENT, &obj, dlg);
+    registerWindow(GOGuiOrgan::MIDI_EVENT, &obj, dlg);
   }
 }

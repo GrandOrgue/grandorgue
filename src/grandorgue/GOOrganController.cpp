@@ -8,7 +8,6 @@
 #include "GOOrganController.h"
 
 #include <algorithm>
-#include <math.h>
 
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -27,11 +26,10 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
-#include "contrib/sha1.h"
 #include "control/GOElementCreator.h"
-#include "control/GOPushbuttonControl.h"
 #include "files/GOOpenedFile.h"
 #include "files/GOStdFileName.h"
+#include "gui/GOGuiImageCache.h"
 #include "gui/dialogs/GOProgressDialog.h"
 #include "gui/dialogs/go-message-boxes.h"
 #include "gui/panels/GOGUIBankedGeneralsPanel.h"
@@ -53,7 +51,6 @@
 #include "midi/GOMidiRecorder.h"
 #include "midi/GOMidiSystem.h"
 #include "midi/events/GOMidiEvent.h"
-#include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOEnclosure.h"
 #include "model/GOManual.h"
@@ -70,11 +67,11 @@
 
 #include "GOAudioRecorder.h"
 #include "GOBuffer.h"
-#include "GODocument.h"
 #include "GOEvent.h"
 #include "GOHash.h"
 #include "GOMetronome.h"
 #include "GOOrgan.h"
+#include "GOTimer.h"
 #include "go_path.h"
 
 static const wxString WX_ORGAN = wxT("Organ");
@@ -84,13 +81,7 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
   : GOEventDistributor(this),
     GOOrganModel(config),
     m_config(config),
-    m_odf(),
-    m_ArchiveID(),
-    m_hash(),
     m_FileStore(config),
-    m_CacheFilename(),
-    m_SettingFilename(),
-    m_ODFHash(),
     m_Cacheable(false),
     m_setter(0),
     m_AudioRecorder(NULL),
@@ -102,18 +93,7 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
     m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
-    m_ChurchAddress(),
-    m_OrganBuilder(),
-    m_OrganBuildDate(),
-    m_OrganComments(),
-    m_RecordingDetails(),
-    m_InfoFilename(),
-    m_panels(),
-    m_panelcreators(),
-    m_elementcreators(),
-    m_soundengine(0),
     m_midi(0),
-    m_MidiSamplesetMatch(),
     m_SampleSetId1(0),
     m_SampleSetId2(0),
     mp_ImageCache(nullptr),
@@ -123,7 +103,7 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded
     m_timer = new GOTimer();
-    mp_ImageCache = new GOImageCache(m_FileStore);
+    mp_ImageCache = new GOGuiImageCache(m_FileStore);
   }
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);

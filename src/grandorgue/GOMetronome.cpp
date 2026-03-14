@@ -19,6 +19,7 @@
 #include "model/GOWindchest.h"
 
 #include "GOOrganController.h"
+#include "GOTimer.h"
 
 static const GOMidiObjectContext MIDI_CONTEXT(wxT("Metronome"), _("Metronome"));
 

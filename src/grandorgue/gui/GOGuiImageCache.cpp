@@ -5,7 +5,7 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOImageCache.h"
+#include "GOGuiImageCache.h"
 
 #include <wx/intl.h>
 #include <wx/mstream.h>
@@ -14,7 +14,7 @@
 #include "loader/GOLoaderFilename.h"
 
 #include "GOBuffer.h"
-#include "GOLog.h"
+#include "GOGuiLog.h"
 #include "Images.h"
 
 #define BITMAP_LIST                                                            \
@@ -155,9 +155,9 @@ BITMAP_LIST
   static wxImage A##_r(GetImage_##A().Rotate90());                             \
   RegisterImage(wxT(GOBitmapPrefix B), WX_EMPTY_STRING, new wxImage(A##_r));
 
-const wxString GOImageCache::WX_EMPTY_STRING = wxEmptyString;
+const wxString GOGuiImageCache::WX_EMPTY_STRING = wxEmptyString;
 
-const wxImage *GOImageCache::FindImage(
+const wxImage *GOGuiImageCache::FindImage(
   const wxString &filename, const wxString &maskname) const {
   const wxImage *pImage = nullptr;
 
@@ -169,27 +169,28 @@ const wxImage *GOImageCache::FindImage(
   return pImage;
 }
 
-void GOImageCache::RegisterImage(
+void GOGuiImageCache::RegisterImage(
   const wxString &filename, const wxString &maskname, wxImage *pImage) {
   m_images.push_back(pImage);
   m_filenames.push_back(filename);
   m_masknames.push_back(maskname);
 }
 
-GOImageCache::GOImageCache(const GOFileStore &fileStore)
+GOGuiImageCache::GOGuiImageCache(const GOFileStore &fileStore)
   : r_FileStore(fileStore) {
   BITMAP_LIST;
 }
 
-const wxImage *GOImageCache::GetWoodImage(unsigned woodImageNum) const {
+const wxImage *GOGuiImageCache::GetWoodImage(unsigned woodImageNum) const {
   return FindImage(
     wxString::Format(wxT(GOBitmapPrefix "wood%02d"), woodImageNum),
     wxEmptyString);
 }
 
-bool GOImageCache::LoadImageFromFile(const wxString &filename, wxImage &image) {
+bool GOGuiImageCache::LoadImageFromFile(
+  const wxString &filename, wxImage &image) {
   bool result;
-  GOLog *const log = dynamic_cast<GOLog *>(wxLog::GetActiveTarget());
+  GOGuiLog *const log = dynamic_cast<GOGuiLog *>(wxLog::GetActiveTarget());
 
   if (log)
     log->SetCurrentFileName(filename);
@@ -218,7 +219,7 @@ bool GOImageCache::LoadImageFromFile(const wxString &filename, wxImage &image) {
   return result;
 }
 
-const wxImage *GOImageCache::LoadImage(
+const wxImage *GOGuiImageCache::LoadImage(
   const wxString &filename, const wxString &maskName) {
   const wxImage *pImage = FindImage(filename, maskName);
 

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "common/GOSimpleDialog.h"
-#include "document-base/GOView.h"
+#include "gui/document-base/GODocumentView.h"
 #include "midi/dialog-creator/GOMidiDialogListener.h"
 
 class wxButton;
@@ -23,7 +23,7 @@ class GOGrid;
 class GOMidiPlayingObject;
 class GOOrganModel;
 
-class GOMidiObjectsDialog : public GOSimpleDialog, public GOView {
+class GOMidiObjectsDialog : public GOSimpleDialog, public GODocumentView {
 private:
   GOConfig &r_config;
 

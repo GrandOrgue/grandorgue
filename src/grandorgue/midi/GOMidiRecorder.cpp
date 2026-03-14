@@ -21,6 +21,7 @@
 #include "GOEvent.h"
 #include "GOMidiSystem.h"
 #include "GOOrganController.h"
+#include "GOTimer.h"
 #include "go_path.h"
 
 enum {
