@@ -155,7 +155,7 @@ Run the following command by root:
 
 ## Deinstallation on Windows
 
-1. Run ``Control Pannel`` -> `Programs` -> ``Uninstall a progam``.
+1. Run ``Control Panel`` -> `Programs` -> ``Uninstall a program``.
 2. Select ``GrandOrgue``.
 3. Follow the prompts.
 

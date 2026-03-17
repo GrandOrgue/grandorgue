@@ -3,7 +3,7 @@
 ### With git
 The simplest way of getting the source code is to use `git`.
 
-1. Go to some directory where the GrandOgue source subdirectory will be created
+1. Go to some directory where the GrandOrgue source subdirectory will be created
 2. Clone the main GrandOrgue repository
 
     ```
@@ -22,7 +22,7 @@ You can download the source code archive from GitHub
 2. Unpack this archive to some directory
 
 3. Download external submodules
-    1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) end extract the contents of the ``rtaudio-master`` subdirectory from the archive to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
+    1. `RtAudio`: Download [the source archive](https://github.com/thestk/rtaudio/archive/refs/heads/master.zip) and extract the contents of the ``rtaudio-master`` subdirectory from the archive to the ``submodules/RtAudio`` subdirectory of GrandOrgue source tree.
     2. `RtMidi`: Download [the source archive](https://github.com/thestk/rtmidi/archive/refs/heads/master.zip) and extract the contents of the ``rtmidi-master`` subdirectory from the archive to the ``submodules/RtMidi`` subdirectory of GrandOrgue source tree.
     3. `PortAudio`: Download [the source archive](https://github.com/PortAudio/portaudio/archive/refs/heads/master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/PortAudio`` subdirectory of GrandOrgue source tree.
     4. `ZitaConvolver`: Download [the source archive](https://salsa.debian.org/multimedia-team/zita-convolver/-/archive/master/zita-convolver-master.zip) and extract the contents of the ``zita-convolver-master`` subdirectory from the archive to the ``submodules/ZitaConvolver`` subdirectory of GrandOrgue source tree.
@@ -31,8 +31,8 @@ You can download the source code archive from GitHub
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
 2. Install required software
     - Manually
-        1. Install gcc C++ compiler, make, cmake, imagemagic, pkg-config
-        2. Install the development packages of wxWigets, alsa (libasound), jack (libjack), fftw (fftw3), wavpack, yaml-cpp, zlib, libcurl, udev from your distribution.
+        1. Install gcc C++ compiler, make, cmake, imagemagick, pkg-config
+        2. Install the development packages of wxWidgets, alsa (libasound), jack (libjack), fftw (fftw3), wavpack, yaml-cpp, zlib, libcurl, udev from your distribution.
         
             The exact name of packages differ from one distribution to another.             For example, on any debian-based distribution (including Ubuntu, Mint and Raspbian) they are libasound2-dev, libfftw3-dev, libjack-dev, libudev-dev, libwxgtk3.2-dev, libyaml-cpp-dev, zlib1g-dev, libcurl4-openssl-dev.
         3. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution).
@@ -92,11 +92,11 @@ You can download the source code archive from GitHub
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``
 2. Install required software
     - Manually
-        1. Install gcc C++ compiler, make, cmake, imagemagic and the development packages of wxWigets, pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
+        1. Install gcc C++ compiler, make, cmake, imagemagick and the development packages of wxWidgets, pkg-config, fftw (fftw3), wavpack and alsa (libasound) from your distribution
         2. Install docbook-xsl, xsltproc, zip, gettext and po4a (if present on your distribution)
         3. Install patchelf, libgtk-3-dev and librsvg2-dev from your distribution (if you want to use linuxdeploy-plugin-gtk, otherwise you don't need them and can ignore all the plugin related commands below)
         4. Install linuxdeploy, linuxdeploy-plugin-gtk and appimagetool somewhere in path like /usr/local/bin
-           (or $HOME/bin in which case the use of sudo below should be ommitted and the patch changed accordingly)
+           (or $HOME/bin in which case the use of sudo below should be omitted and the patch changed accordingly)
            ```
            sudo wget -P /usr/local/bin https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh
            sudo wget -P /usr/local/bin https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
@@ -142,7 +142,7 @@ You can download the source code archive from GitHub
             appimagetool-x86_64.AppImage --no-appstream AppDir grandorgue-<version_number>-<build_number>.x86_64.AppImage
             ```
 
-            Note: On a local AppImage build you might get better results by ommitting the linuxdeploy-plugin-gtk completely, and you can ommit specifying the appimage output name like so
+            Note: On a local AppImage build you might get better results by omitting the linuxdeploy-plugin-gtk completely, and you can omit specifying the appimage output name like so
 
             ```
             linuxdeploy-x86_64.AppImage --appdir AppDir
@@ -161,7 +161,7 @@ You can download the source code archive from GitHub
 
 ## Building for macOS on macOS
 
-1. Prequisites:
+1. Prerequisites:
     1. A macOS version supported by Homebrew (the three latest major versions of macOS)
     2. Xcode or Command Line Tools for Xcode
     3. Homebrew
@@ -215,8 +215,8 @@ You can download the source code archive from GitHub
 ## Cross-building for Windows-64 bit on Linux
 
 1. Install mingw-w64 (On Debian/Ubuntu, install the package mingw-w64) and all packages needed to build GO under Linux.
-2. Prepare 5 directores:
-    1. extracted wxWidgets sources [use the lastest release] to a directory (/wxsrc)
+2. Prepare 5 directories:
+    1. extracted wxWidgets sources [use the latest release] to a directory (/wxsrc)
     2. extract GO trunk sources to a directory (/gosrc)
     3. create empty install directory (/inst)
     4. create empty win build directory (/buildwin)
