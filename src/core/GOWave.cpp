@@ -41,7 +41,7 @@ GOWave::~GOWave() {
 }
 
 void GOWave::LoadFormatChunk(const uint8_t *ptr, unsigned long length) {
-  /* FIXME: This could be done much more elequently */
+  /* FIXME: This could be done much more eloquently */
   /* Ensure format chunk size is 16 (basic wave
    * format chunk... no extensible data... and
    * that the format tag is 1 */
@@ -65,7 +65,7 @@ void GOWave::LoadFormatChunk(const uint8_t *ptr, unsigned long length) {
   if (formatCode == 3 && m_BytesPerSample != 4)
     throw(wxString) _("< Only 32bit IEEE float samples supported");
   else if (formatCode == 1 && m_BytesPerSample > 3)
-    throw(wxString) _("< Unsupport PCM bit size");
+    throw(wxString) _("< Unsupported PCM bit size");
 }
 
 void GOWave::LoadCueChunk(const uint8_t *ptr, unsigned long length) {
@@ -202,11 +202,11 @@ void GOWave::Open(const GOBuffer<uint8_t> &content, const wxString fileName) {
 
     if (m_isPacked) {
       if (riffChunkSize < origDataLen)
-        throw wxString::Format(_("Inconsitant WavPack file: %s"), fileName);
+        throw wxString::Format(_("Inconsistent WavPack file: %s"), fileName);
       riffChunkSize -= origDataLen;
     }
 
-    /* This is a bit more leaniant than the original code... it will
+    /* This is a bit more lenient than the original code... it will
      * truncate the usable size of the file if the size on disk is larger
      * than the size of the RIFF chunk */
     if ((unsigned long)length > riffChunkSize + 8 + start)

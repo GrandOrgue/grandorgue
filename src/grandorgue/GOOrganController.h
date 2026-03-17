@@ -154,8 +154,8 @@ public:
     bool isGuiOnly);
   /**
    * Exports organ combinations in the yaml file
-   * @param fileName - the path to the taml file to export
-   * @return an empty string if successed otherwise the error message
+   * @param fileName - the path to the yaml file to export
+   * @return an empty string if succeeded otherwise the error message
    */
   wxString ExportCombination(const wxString &fileName);
   void LoadCombination(const wxString &cmb);
