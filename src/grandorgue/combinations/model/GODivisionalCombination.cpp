@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -254,7 +254,7 @@ GODivisionalCombination *GODivisionalCombination::loadFrom(
     pCmb->LoadCombination(cfg);
     if (isCmbOnReadGroup) {  // The combination was loaded from the legacy group
       pCmb->m_group = group; // It will be saved to the normal group
-      if (isCmbOnGroup)      // Load the overriden combination
+      if (isCmbOnGroup)      // Load the overridden combination
         pCmb->LoadCombination(cfg);
     }
   }

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -44,7 +44,7 @@ public:
     GOCacheObjectDistributor &distributor);
 
   /**
-   * Load the object. If an exception occured then remembers it for
+   * Load the object. If an exception occurred then remembers it for
    *   future calls of AssertNoException(). Only GOOutOfMemory may be thrown,
    *   all other exceptions are catched and remembered  for
    *   future calls of AssertNoException()
@@ -64,7 +64,7 @@ public:
   /**
    * If there was GOOutOfMemory then rethrows it
    * Otherwise does nothing
-   * @return whether any exceptions were occured
+   * @return whether any exceptions were occurred
    */
   bool WereExceptions() const;
 };
