@@ -55,7 +55,7 @@ public:
    * @param mainArchivePath - an path to the main archive to load. If empty
    *   then search among organList
    * @param errMsg - an error message that is returned if the operation fails
-   * @return - true if success and false if any error occured (the error message
+   * @return - true if success and false if any error occurred (the error message
    *   is returned in errMsg)
    */
   bool LoadArchives(

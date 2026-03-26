@@ -157,7 +157,7 @@ if (USE_INTERNAL_RTAUDIO)
       message(
         FATAL_ERROR 
         "${RTAUDIO_SRC_DIR}/RtAudio.h file does not exist."
-        "Possible the RtAudio submodule has not been updated."
+        "Possibly the RtAudio submodule has not been updated."
         "Try to execute 'git submodule update --init --recursive' in the source directory"
       )
     endif()
@@ -168,7 +168,7 @@ if (USE_INTERNAL_RTAUDIO)
       message(
         FATAL_ERROR 
         "${RTMIDI_SRC_DIR}/RtMidi.h file does not exist."
-        "Possible the RtMidi submodule has not been updated."
+        "Possibly the RtMidi submodule has not been updated."
         "Try to execute 'git submodule update --init --recursive' in the source directory"
       )
     endif()
@@ -201,7 +201,7 @@ else()
   set(ZITACONVOLVER_LIBRARIES zita-convolver)
 endif()
 
-# include libcurl for automatic cheking for updates
+# include libcurl for automatic checking for updates
 # exports CURL::libcurl that can be used in target_link_libraries
 find_package(CURL REQUIRED)
 

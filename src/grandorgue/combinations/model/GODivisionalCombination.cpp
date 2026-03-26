@@ -254,7 +254,7 @@ GODivisionalCombination *GODivisionalCombination::loadFrom(
     pCmb->LoadCombination(cfg);
     if (isCmbOnReadGroup) {  // The combination was loaded from the legacy group
       pCmb->m_group = group; // It will be saved to the normal group
-      if (isCmbOnGroup)      // Load the overriden combination
+      if (isCmbOnGroup)      // Load the overridden combination
         pCmb->LoadCombination(cfg);
     }
   }

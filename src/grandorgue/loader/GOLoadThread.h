@@ -31,7 +31,7 @@ public:
 
   /**
    * Waits for completions
-   * @return true if any exceptions occured. Otherwise - false
+   * @return true if any exceptions occurred. Otherwise - false
    */
   bool CheckExceptions();
 };

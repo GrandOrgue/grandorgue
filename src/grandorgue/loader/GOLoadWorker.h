@@ -44,7 +44,7 @@ public:
     GOCacheObjectDistributor &distributor);
 
   /**
-   * Load the object. If an exception occured then remembers it for
+   * Load the object. If an exception occurred then remembers it for
    *   future calls of AssertNoException(). Only GOOutOfMemory may be thrown,
    *   all other exceptions are catched and remembered  for
    *   future calls of AssertNoException()
@@ -64,7 +64,7 @@ public:
   /**
    * If there was GOOutOfMemory then rethrows it
    * Otherwise does nothing
-   * @return whether any exceptions were occured
+   * @return whether any exceptions were occurred
    */
   bool WereExceptions() const;
 };
