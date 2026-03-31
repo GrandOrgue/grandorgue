@@ -2,9 +2,9 @@
 Version=1.0
 Name=GrandOrgue
 GenericName=Pipe organ simulator
-GenericName[fr]=Émulateur de grand orgue
+GenericName[fr]=Émulateur d'orgue à tuyaux
 Comment=GrandOrgue - virtual pipe organ sample player
-Comment[fr]=Lecteur d'échantillon de grand orgue virtuel
+Comment[fr]=Lecteur d'échantillon d'orgue à tuyaux virtuel
 Exec=GrandOrgue %f
 Icon=GrandOrgue
 Terminal=false
