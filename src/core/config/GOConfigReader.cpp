@@ -290,6 +290,8 @@ GOLogicalColour GOConfigReader::ReadColor(
     value = defaultValue;
 
   value.MakeUpper();
+  // Fix I became İ in Turkish
+  value.Replace(wxT("İ"), wxT("I"));
 
   if (value == wxT("BLACK"))
     return GOLogicalColour::BLACK;
@@ -512,6 +514,8 @@ unsigned GOConfigReader::ReadSize(
     value = defaultValue;
 
   value.MakeUpper();
+  // Fix I became İ in Turkish
+  value.Replace(wxT("İ"), wxT("I"));
   if (value == wxT("SMALL"))
     return sizes[size_type][0];
   else if (value == wxT("MEDIUM"))
