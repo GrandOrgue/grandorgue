@@ -120,6 +120,13 @@ if dpkg -s libwxgtk3.2-dev 2>/dev/null && ! grep -q libwx /etc/dpkg/shlibs.overr
   cut -d " " -f 1-3 /var/lib/dpkg/info/libwx*3.2*.shlibs | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
 fi
 
+# Use pipewire-jack as alternative for libjack so the package installs on both
+# old Ubuntu (libjack-jackd2-0) and new Ubuntu with PipeWire (pipewire-jack)
+if ! grep -q libjack /etc/dpkg/shlibs.override; then
+  echo "libjack 0 pipewire-jack | libjack-jackd2-0 | libjack0" \
+    | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
+fi
+
 # install cpptrace
 if [[ "$INSTALL_TESTS" == "tests" ]]; then
   $DIR/prepare-cpptrace.bash
