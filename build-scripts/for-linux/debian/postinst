@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "configure" ]; then
+    for f in /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf; do
+        [ -f "$f" ] && cp "$f" "/etc/ld.so.conf.d/grandorgue-$(basename "$f")"
+    done
+    ldconfig
+fi

@@ -3,6 +3,6 @@
 set -e
 
 if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
-    rm -f /etc/ld.so.conf.d/grandorgue-pipewire-jack.conf
+    rm -f /etc/ld.so.conf.d/pipewire-jack-*.conf
     ldconfig
 fi

@@ -506,8 +506,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CPACK_DEBIAN_UNSPECIFIED_PACKAGE_RECOMMENDS "grandorgue-demo")
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
-      "${CMAKE_SOURCE_DIR}/build-scripts/for-linux/postinst"
-      "${CMAKE_SOURCE_DIR}/build-scripts/for-linux/postrm")
+      "${CMAKE_SOURCE_DIR}/build-scripts/for-linux/debian/postinst"
+      "${CMAKE_SOURCE_DIR}/build-scripts/for-linux/debian/postrm")
   set(CPACK_DEBIAN_PACKAGE_CONTROL_STRICT_PERMISSION TRUE)
   set(CPACK_DEBIAN_PACKAGE_SOURCE "${CPACK_DEBIAN_UNSPECIFIED_PACKAGE_NAME}")
   string (REPLACE ";" ", " CPACK_DEBIAN_PACKAGE_REPLACES "${OTHER_PACKAGE_NAMES}")
