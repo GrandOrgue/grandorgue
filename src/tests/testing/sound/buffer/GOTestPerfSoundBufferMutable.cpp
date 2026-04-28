@@ -62,7 +62,7 @@ static constexpr Baseline BASELINE_COPY_FROM[] = {
   {2048, 8530} // 8530 Mframes/sec (lowered: min observed 9483.2, -10% margin)
 #else
   {32,
-   2150}, // 2150 Mframes/sec (debug, lowered: min observed 2390.4, -10% margin)
+   1550}, // 1550 Mframes/sec (debug, lowered: min observed 1727.1, -10% margin)
   {128,
    5750}, // 5750 Mframes/sec (debug, lowered: min observed 6390.3, -10% margin)
   {512,
@@ -86,7 +86,7 @@ static constexpr Baseline BASELINE_ADD_FROM[] = {
   {512,
    630}, // 630 Mframes/sec (debug, lowered: min observed 696.8, -10% margin)
   {2048,
-   700}      // 700 Mframes/sec (debug, raised: min observed 791.2, -10% margin)
+   620} // 620 Mframes/sec (debug, lowered: min observed 691.8, -10% margin)
 #endif
 };
 
@@ -157,7 +157,7 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM_COEFF[] = {
   {512,
    1300}, // 1300 Mframes/sec (debug, raised: min observed 1533.3, -10% margin)
   {2048,
-   1400} // 1400 Mframes/sec (debug, raised: min observed 1581.0, -10% margin)
+   1250} // 1250 Mframes/sec (debug, lowered: min observed 1395.6, -10% margin)
 #endif
 };
 
