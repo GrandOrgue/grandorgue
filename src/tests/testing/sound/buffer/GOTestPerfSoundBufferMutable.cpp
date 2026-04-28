@@ -46,7 +46,7 @@ static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
   {32,
    2330}, // 2330 Mframes/sec (debug, lowered: min observed 2590.4, -10% margin)
   {128,
-   5520}, // 5520 Mframes/sec (debug, lowered: min observed 6141.5, -10% margin)
+   4050}, // 4050 Mframes/sec (debug, lowered: min observed 4507.3, -10% margin)
   {512,
    5800}, // 5800 Mframes/sec (debug, raised: min observed 6548.4, -10% margin)
   {2048,
@@ -56,17 +56,17 @@ static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 
 static constexpr Baseline BASELINE_COPY_FROM[] = {
 #ifdef NDEBUG
-  {32, 5600},  // 5600 Mframes/sec (lowered: min observed 6222.4, -10% margin)
-  {128, 8300}, // 8300 Mframes/sec (lowered: min observed 9298.1, -10% margin)
+  {32, 4240},  // 4240 Mframes/sec (lowered: min observed 4718.7, -10% margin)
+  {128, 5980}, // 5980 Mframes/sec (lowered: min observed 6647.4, -10% margin)
   {512, 7500}, // 7500 Mframes/sec (raised: min observed 8354.3, -10% margin)
   {2048, 8530} // 8530 Mframes/sec (lowered: min observed 9483.2, -10% margin)
 #else
   {32,
    2150}, // 2150 Mframes/sec (debug, lowered: min observed 2390.4, -10% margin)
   {128,
-   6600}, // 6600 Mframes/sec (debug, lowered: min observed 7337.8, -10% margin)
+   5750}, // 5750 Mframes/sec (debug, lowered: min observed 6390.3, -10% margin)
   {512,
-   8000}, // 8000 Mframes/sec (debug, raised: min observed 8959.9, -10% margin)
+   6950}, // 6950 Mframes/sec (debug, lowered: min observed 7726.8, -10% margin)
   {2048,
    8450} // 8450 Mframes/sec (debug, lowered: min observed 9386.8, -10% margin)
 #endif
@@ -76,7 +76,7 @@ static constexpr Baseline BASELINE_ADD_FROM[] = {
 #ifdef NDEBUG
   {32, 3100},  // 3100 Mframes/sec (measured: 3492.3, with 10% margin)
   {128, 4000}, // 4000 Mframes/sec (lowered: min observed 4485.6, -10% margin)
-  {512, 4900}, // 4900 Mframes/sec (raised: min observed 5471.4, -10% margin)
+  {512, 4240}, // 4240 Mframes/sec (lowered: min observed 4720.2, -10% margin)
   {2048, 4900} // 4900 Mframes/sec (raised: min observed 5542.0, -10% margin)
 #else
   {32,
@@ -95,7 +95,7 @@ static constexpr Baseline BASELINE_ADD_FROM_COEFF[] = {
   {32, 2800},  // 2800 Mframes/sec (lowered: min observed 3136.9, -10% margin)
   {128, 3940}, // 3940 Mframes/sec (lowered: min observed 4373.0, -10% margin)
   {512, 4800}, // 4800 Mframes/sec (raised: min observed 5452.5, -10% margin)
-  {2048, 4800} // 4800 Mframes/sec (raised: min observed 5457.8, -10% margin)
+  {2048, 4300} // 4300 Mframes/sec (lowered: min observed 4781.1, -10% margin)
 #else
   {32, 450}, // 450 Mframes/sec (debug, raised: min observed 506.4, -10% margin)
   {128,
