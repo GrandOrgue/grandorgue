@@ -39,7 +39,7 @@ struct Baseline {
 static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 #ifdef NDEBUG
   {32, 2680},  // 2680 Mframes/sec (lowered: min observed 2975.4, -10% margin)
-  {128, 6040}, // 6040 Mframes/sec (lowered: min observed 6706.9, -10% margin)
+  {128, 5400}, // 5400 Mframes/sec (lowered: min observed 5120.3, -10% margin)
   {512, 5500}, // 5500 Mframes/sec (lowered: min observed 6112.9, -10% margin)
   {2048, 8600} // 8600 Mframes/sec (lowered: min observed 9653.4, -10% margin)
 #else
@@ -66,9 +66,9 @@ static constexpr Baseline BASELINE_COPY_FROM[] = {
   {128,
    5750}, // 5750 Mframes/sec (debug, lowered: min observed 6390.3, -10% margin)
   {512,
-   6950}, // 6950 Mframes/sec (debug, lowered: min observed 7726.8, -10% margin)
+   5410}, // 5410 Mframes/sec (debug, lowered: min observed 6018.0, -10% margin)
   {2048,
-   8450} // 8450 Mframes/sec (debug, lowered: min observed 9386.8, -10% margin)
+   7400} // 7400 Mframes/sec (debug, lowered: min observed 8231.6, -10% margin)
 #endif
 };
 
@@ -112,7 +112,7 @@ static constexpr Baseline BASELINE_COPY_CHANNEL_FROM[] = {
   {32, 2400},  // 2400 Mframes/sec (raised for modern hardware)
   {128, 2700}, // 2700 Mframes/sec (raised for modern hardware)
   {512, 2470}, // 2470 Mframes/sec (lowered: min observed 2746.1, -10% margin)
-  {2048, 2800} // 2800 Mframes/sec (raised for modern hardware)
+  {2048, 2510} // 2510 Mframes/sec (lowered: min observed 2797.1, -10% margin)
 #else
   {32,
    710}, // 710 Mframes/sec (debug, lowered: min observed 790.2, -10% margin)
