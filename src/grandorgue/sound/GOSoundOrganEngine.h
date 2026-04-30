@@ -11,6 +11,8 @@
 #include <atomic>
 #include <vector>
 
+#include "threading/GOMutex.h"
+
 #include "playing/GOSoundResample.h"
 #include "playing/GOSoundSampler.h"
 #include "playing/GOSoundSamplerPool.h"
@@ -63,7 +65,22 @@ private:
   GOSoundSamplerPool m_SamplerPool;
   unsigned m_AudioGroupCount;
   std::atomic_uint m_UsedPolyphony;
-  std::vector<double> m_MeterInfo;
+
+  // protects m_MeterInfo against concurrent resize (SetAudioOutput vs
+  // GetMeterInfo)
+  GOMutex m_MeterMutex;
+
+  // Meter snapshot: [0] = polyphony ratio, [1..N] = per-channel peak levels.
+  // Written atomically by the audio thread in NextPeriod() after each buffer:
+  // polyphony is taken from m_UsedPolyphony, per-channel peaks are collected
+  // from GOSoundOutputTask::GetMeterInfo() and then reset via ResetMeterInfo().
+  // Read by the GUI thread in GetMeterInfo() under m_MeterMutex.
+  // Resized under m_MeterMutex in SetAudioOutput() when audio configuration
+  // changes. float is used instead of double because std::atomic<float> is
+  // lock-free on all supported platforms (x86, ARM), while std::atomic<double>
+  // is not guaranteed to be lock-free
+  std::vector<std::atomic<float>> m_MeterInfo;
+
   ptr_vector<GOSoundTremulantTask> m_TremulantTasks;
   ptr_vector<GOSoundWindchestTask> m_WindchestTasks;
   ptr_vector<GOSoundGroupTask> m_AudioGroupTasks;
@@ -148,7 +165,7 @@ public:
   int GetVolume() const { return m_Volume; }
   void SetScaledReleases(bool enable) { m_ScaledReleases = enable; }
   void SetRandomizeSpeaking(bool enable) { m_RandomizeSpeaking = enable; }
-  const std::vector<double> &GetMeterInfo();
+  std::vector<float> GetMeterInfo();
   void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 
   GOSoundSampler *StartPipeSample(

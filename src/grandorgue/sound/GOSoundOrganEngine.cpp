@@ -22,6 +22,7 @@
 #include "tasks/GOSoundTouchTask.h"
 #include "tasks/GOSoundTremulantTask.h"
 #include "tasks/GOSoundWindchestTask.h"
+#include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
 #include "GOSoundRecorder.h"
@@ -282,7 +283,10 @@ void GOSoundOrganEngine::SetAudioOutput(
     outputs.push_back(m_AudioGroupTasks[i]);
   for (unsigned i = 0; i < m_AudioOutputTasks.size(); i++)
     m_AudioOutputTasks[i]->SetOutputs(outputs);
-  m_MeterInfo.resize(channels + 1);
+  {
+    GOMutexLocker locker(m_MeterMutex);
+    m_MeterInfo = std::vector<std::atomic<float>>(channels + 1);
+  }
 }
 
 void GOSoundOrganEngine::SetAudioRecorder(
@@ -333,8 +337,25 @@ void GOSoundOrganEngine::NextPeriod() {
 
   m_CurrentTime += m_SamplesPerBuffer;
   unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
+
   if (used_samplers > m_UsedPolyphony.load())
     m_UsedPolyphony.store(used_samplers);
+
+  // publish meter snapshot for the GUI thread
+  for (auto &v : m_MeterInfo)
+    v.store(0.0f);
+  m_MeterInfo[0].store(m_UsedPolyphony.load() / (float)GetHardPolyphony());
+  m_UsedPolyphony.store(0);
+
+  std::atomic<float> *pMeter = m_MeterInfo.data() + 1;
+
+  for (GOSoundOutputTask *pTask : m_AudioOutputTasks) {
+    if (pTask) {
+      for (const float f : pTask->GetMeterInfo())
+        (pMeter++)->store(f);
+      pTask->ResetMeterInfo();
+    }
+  }
 
   m_Scheduler.Reset();
 }
@@ -636,19 +657,11 @@ void GOSoundOrganEngine::UpdateVelocity(
   }
 }
 
-const std::vector<double> &GOSoundOrganEngine::GetMeterInfo() {
-  m_MeterInfo[0] = m_UsedPolyphony.load() / (double)GetHardPolyphony();
-  m_UsedPolyphony.store(0);
+std::vector<float> GOSoundOrganEngine::GetMeterInfo() {
+  GOMutexLocker locker(m_MeterMutex);
+  std::vector<float> result(m_MeterInfo.size());
 
-  for (unsigned i = 1; i < m_MeterInfo.size(); i++)
-    m_MeterInfo[i] = 0;
-  for (unsigned i = 0, nr = 1; i < m_AudioOutputTasks.size(); i++) {
-    if (!m_AudioOutputTasks[i])
-      continue;
-    const std::vector<float> &info = m_AudioOutputTasks[i]->GetMeterInfo();
-    for (unsigned j = 0; j < info.size(); j++)
-      m_MeterInfo[nr++] = info[j];
-    m_AudioOutputTasks[i]->ResetMeterInfo();
-  }
-  return m_MeterInfo;
+  for (unsigned i = 0; i < m_MeterInfo.size(); i++)
+    result[i] = m_MeterInfo[i].load();
+  return result;
 }
