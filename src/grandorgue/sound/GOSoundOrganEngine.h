@@ -157,33 +157,48 @@ private:
 public:
   GOSoundOrganEngine();
   ~GOSoundOrganEngine();
+
+  // Group 1: Independent setters (no call-order dependencies)
+  unsigned GetSampleRate() const override { return m_SampleRate; }
+  void SetSampleRate(unsigned sample_rate) { m_SampleRate = sample_rate; }
+  void SetSamplesPerBuffer(unsigned sample_per_buffer) {
+    m_SamplesPerBuffer = sample_per_buffer;
+  }
+  int GetVolume() const { return m_Volume; }
+  void SetVolume(int volume);
+  unsigned GetHardPolyphony() const { return m_SamplerPool.GetUsageLimit(); }
+  void SetHardPolyphony(unsigned polyphony);
+  void SetPolyphonyLimiting(bool limiting) { m_PolyphonyLimiting = limiting; }
+  void SetScaledReleases(bool enable) { m_ScaledReleases = enable; }
+  void SetRandomizeSpeaking(bool enable) { m_RandomizeSpeaking = enable; }
+  void SetInterpolationType(unsigned type) {
+    m_interpolation = (GOSoundResample::InterpolationType)type;
+  }
+
+  // Group 2: Dependent setters (must be called in this order)
+  // Must be called after SetSamplesPerBuffer because uses m_SamplesPerBuffer
+  unsigned GetAudioGroupCount() const { return m_AudioGroupCount; }
+  void SetAudioGroupCount(unsigned groups);
+  // Must be called after SetAudioGroupCount because uses m_AudioGroupCount and
+  // m_SamplesPerBuffer
+  void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
+  // Must be called after SetAudioOutput because iterates m_AudioOutputTasks
+  void SetupReverb(GOConfig &settings);
+  // Must be called after SetAudioOutput because uses m_AudioOutputTasks
+  void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
+
+  // Group 3: Other getters
+  float GetGain() const { return m_Gain; }
+  uint64_t GetTime() const { return m_CurrentTime; }
+  std::vector<float> GetMeterInfo();
+  GOSoundScheduler &GetScheduler() { return m_Scheduler; }
+
   void Reset();
   void Setup(
     GOOrganModel &organModel,
     GOMemoryPool &memoryPool,
     unsigned releaseCount = 1);
   void ClearSetup();
-  void SetAudioOutput(std::vector<GOAudioOutputConfiguration> audio_outputs);
-  void SetupReverb(GOConfig &settings);
-  void SetVolume(int volume);
-  void SetSampleRate(unsigned sample_rate) { m_SampleRate = sample_rate; }
-  void SetSamplesPerBuffer(unsigned sample_per_buffer) {
-    m_SamplesPerBuffer = sample_per_buffer;
-  }
-  void SetInterpolationType(unsigned type) {
-    m_interpolation = (GOSoundResample::InterpolationType)type;
-  }
-  unsigned GetSampleRate() const override { return m_SampleRate; }
-  void SetAudioGroupCount(unsigned groups);
-  unsigned GetAudioGroupCount() const { return m_AudioGroupCount; }
-  void SetHardPolyphony(unsigned polyphony);
-  void SetPolyphonyLimiting(bool limiting) { m_PolyphonyLimiting = limiting; }
-  unsigned GetHardPolyphony() const { return m_SamplerPool.GetUsageLimit(); }
-  int GetVolume() const { return m_Volume; }
-  void SetScaledReleases(bool enable) { m_ScaledReleases = enable; }
-  void SetRandomizeSpeaking(bool enable) { m_RandomizeSpeaking = enable; }
-  std::vector<float> GetMeterInfo();
-  void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 
   GOSoundSampler *StartPipeSample(
     const GOSoundProvider *pipeProvider,
@@ -225,15 +240,12 @@ public:
   void GetAudioOutput(
     unsigned outputIndex, bool isLast, GOSoundBufferMutable &outBuffer);
   void NextPeriod();
-  GOSoundScheduler &GetScheduler() { return m_Scheduler; }
 
   bool ProcessSampler(
     float *buffer, GOSoundSampler *sampler, unsigned n_frames, float volume);
   void ProcessRelease(GOSoundSampler *sampler);
   void PassSampler(GOSoundSampler *sampler);
   void ReturnSampler(GOSoundSampler *sampler);
-  float GetGain() const { return m_Gain; }
-  uint64_t GetTime() const { return m_CurrentTime; }
 };
 
 #endif /* GOSOUNDORGANENGINE_H */
