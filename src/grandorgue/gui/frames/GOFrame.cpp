@@ -764,7 +764,8 @@ void GOFrame::OnSize(wxSizeEvent &event) {
 
 void GOFrame::OnMeters(wxCommandEvent &event) {
   if (m_isMeterReady) {
-    const std::vector<double> vals = r_SoundSystem.GetEngine().GetMeterInfo();
+    const std::vector<float> vals = r_SoundSystem.GetEngine().GetMeterInfo();
+
     if (vals.size() == m_VolumeGauge.size() + 1) {
       m_SamplerUsage->SetValue(33 * vals[0]);
       for (unsigned i = 1; i < vals.size(); i++)

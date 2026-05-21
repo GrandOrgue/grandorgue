@@ -22,6 +22,7 @@
 #include "tasks/GOSoundTouchTask.h"
 #include "tasks/GOSoundTremulantTask.h"
 #include "tasks/GOSoundWindchestTask.h"
+#include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
 #include "GOSoundRecorder.h"
@@ -39,7 +40,8 @@ GOSoundOrganEngine::GOSoundOrganEngine()
     m_SamplerPool(),
     m_AudioGroupCount(1),
     m_UsedPolyphony(0),
-    m_MeterInfo(1),
+    mp_MeterInfo(std::make_unique<std::vector<std::atomic<float>>>(0)),
+    p_MeterInfo(mp_MeterInfo.get()),
     m_TremulantTasks(),
     m_WindchestTasks(),
     m_AudioGroupTasks(),
@@ -81,7 +83,6 @@ void GOSoundOrganEngine::Reset() {
       m_Scheduler.Add(m_TouchTask.get());
   }
   m_UsedPolyphony.store(0);
-
   m_SamplerPool.ReturnAll();
   m_CurrentTime = 1;
   m_Scheduler.Reset();
@@ -282,7 +283,30 @@ void GOSoundOrganEngine::SetAudioOutput(
     outputs.push_back(m_AudioGroupTasks[i]);
   for (unsigned i = 0; i < m_AudioOutputTasks.size(); i++)
     m_AudioOutputTasks[i]->SetOutputs(outputs);
-  m_MeterInfo.resize(channels + 1);
+  {
+    // Control thread: prevent GetMeterInfo() from reading the buffer while it
+    // is being replaced. SetAudioOutput() is called only when all audio
+    // callbacks are stopped (between StopSoundSystem and StartSoundSystem),
+    // so the audio thread is not accessing p_MeterInfo concurrently.
+    GOMutexLocker locker(m_MeterMutex);
+
+    if (mp_MeterInfo->size() != channels) {
+      auto newInfo
+        = std::make_unique<std::vector<std::atomic<float>>>(channels);
+
+      // Prior to C++20, std::atomic default construction does not
+      // zero-initialize the value; initialize explicitly for safety.
+      for (auto &v : *newInfo)
+        v.store(0.0f, std::memory_order_relaxed);
+
+      // Store the new pointer before destroying the old vector so that
+      // p_MeterInfo always points to a valid object.
+      // release: the audio thread will see the new vector (size + data) via
+      // acquire-load of p_MeterInfo on the next NextPeriod() call.
+      p_MeterInfo.store(newInfo.get(), std::memory_order_release);
+      mp_MeterInfo = std::move(newInfo);
+    }
+  }
 }
 
 void GOSoundOrganEngine::SetAudioRecorder(
@@ -328,13 +352,50 @@ void GOSoundOrganEngine::GetAudioOutput(
     outBuffer.FillWithSilence();
 }
 
+/**
+ * Atomically updates maxValue to max(maxValue, value) with relaxed ordering.
+ * std::atomic<T>::fetch_max is only available in C++26.
+ */
+template <typename T>
+static void atomic_fetch_max_relaxed(std::atomic<T> &maxValue, T value) {
+  T oldMax = maxValue.load(std::memory_order_relaxed);
+
+  while (oldMax < value
+         && !maxValue.compare_exchange_weak(
+           oldMax, value, std::memory_order_relaxed))
+    ;
+}
+
 void GOSoundOrganEngine::NextPeriod() {
   m_Scheduler.Exec();
 
   m_CurrentTime += m_SamplesPerBuffer;
-  unsigned used_samplers = m_SamplerPool.UsedSamplerCount();
-  if (used_samplers > m_UsedPolyphony.load())
-    m_UsedPolyphony.store(used_samplers);
+  atomic_fetch_max_relaxed(m_UsedPolyphony, m_SamplerPool.UsedSamplerCount());
+
+  // Audio thread: load with acquire so that the new vector written by
+  // SetAudioOutput() (store with release) is visible after a Stop/Start cycle.
+  // Values accumulate between GUI polls; GetMeterInfo() resets via exchange(0).
+  std::vector<std::atomic<float>> *const pMeterInfo
+    = p_MeterInfo.load(std::memory_order_acquire);
+  const std::atomic<float> *const pMeterEnd
+    = pMeterInfo->data() + pMeterInfo->size();
+  std::atomic<float> *pMeter = pMeterInfo->data();
+
+  // task[0] is the downmix/recorder task; its channels have never been part of
+  // the meter display. mp_MeterInfo holds exactly the real output channels from
+  // tasks[1..N]. GOFrame::OnMeters guards against size mismatches with
+  // vals.size() == m_VolumeGauge.size() + 1, so a temporary count change
+  // (e.g. during Stop/Start) safely skips one GUI tick rather than crashing.
+  for (unsigned i = 1; i < m_AudioOutputTasks.size(); i++) {
+    GOSoundOutputTask *const pTask = m_AudioOutputTasks[i];
+
+    assert(pTask);
+    for (const float f : pTask->GetMeterInfo()) {
+      assert(pMeter < pMeterEnd);
+      atomic_fetch_max_relaxed(*(pMeter++), f);
+    }
+    pTask->ResetMeterInfo();
+  }
 
   m_Scheduler.Reset();
 }
@@ -636,19 +697,19 @@ void GOSoundOrganEngine::UpdateVelocity(
   }
 }
 
-const std::vector<double> &GOSoundOrganEngine::GetMeterInfo() {
-  m_MeterInfo[0] = m_UsedPolyphony.load() / (double)GetHardPolyphony();
-  m_UsedPolyphony.store(0);
+std::vector<float> GOSoundOrganEngine::GetMeterInfo() {
+  // GUI thread: m_MeterMutex prevents concurrent replacement by SetAudioOutput
+  GOMutexLocker locker(m_MeterMutex);
+  std::vector<std::atomic<float>> &info = *p_MeterInfo.load();
+  const unsigned hardPolyphony = GetHardPolyphony();
+  std::vector<float> result(info.size() + 1);
+  float *pResult = result.data();
 
-  for (unsigned i = 1; i < m_MeterInfo.size(); i++)
-    m_MeterInfo[i] = 0;
-  for (unsigned i = 0, nr = 1; i < m_AudioOutputTasks.size(); i++) {
-    if (!m_AudioOutputTasks[i])
-      continue;
-    const std::vector<float> &info = m_AudioOutputTasks[i]->GetMeterInfo();
-    for (unsigned j = 0; j < info.size(); j++)
-      m_MeterInfo[nr++] = info[j];
-    m_AudioOutputTasks[i]->ResetMeterInfo();
-  }
-  return m_MeterInfo;
+  assert(hardPolyphony > 0);
+  // exchange(0) reads accumulated max and resets it for the next poll
+  *(pResult++)
+    = m_UsedPolyphony.exchange(0) / static_cast<float>(hardPolyphony);
+  for (std::atomic<float> &v : info)
+    *(pResult++) = v.exchange(0.0f);
+  return result;
 }

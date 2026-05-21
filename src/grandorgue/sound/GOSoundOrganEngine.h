@@ -9,7 +9,10 @@
 #define GOSOUNDORGANENGINE_H
 
 #include <atomic>
+#include <memory>
 #include <vector>
+
+#include "threading/GOMutex.h"
 
 #include "playing/GOSoundResample.h"
 #include "playing/GOSoundSampler.h"
@@ -63,7 +66,38 @@ private:
   GOSoundSamplerPool m_SamplerPool;
   unsigned m_AudioGroupCount;
   std::atomic_uint m_UsedPolyphony;
-  std::vector<double> m_MeterInfo;
+
+  // protects mp_MeterInfo/p_MeterInfo against concurrent replacement
+  // (SetAudioOutput vs GetMeterInfo)
+  GOMutex m_MeterMutex;
+
+  // Per-channel peak levels for the meter display (one element per real output
+  // channel; polyphony is tracked separately in m_UsedPolyphony).
+  //
+  // Ownership and access pattern:
+  //   Audio thread   — p_MeterInfo.load(acquire) each period; writes peaks via
+  //                    atomic_fetch_max_relaxed(); no mutex held
+  //   GUI thread     — GetMeterInfo() under m_MeterMutex; reads *p_MeterInfo,
+  //                    resets elements via exchange(0); prepends polyphony
+  //                    ratio from m_UsedPolyphony.exchange(0)
+  //   Control thread — SetAudioOutput() under m_MeterMutex; creates a new
+  //                    vector when channel count changes, stores pointer via
+  //                    p_MeterInfo.store(release)
+  //
+  // mp_MeterInfo owns the vector; p_MeterInfo is an atomic pointer to the
+  // same object (always == mp_MeterInfo.get()). SetAudioOutput() always
+  // allocates a new vector, so size and data pointer are always consistent
+  // within a single vector object published atomically via p_MeterInfo.
+  // std::shared_ptr with atomic access would provide automatic lifetime safety
+  // but incurs atomic reference-count increments/decrements on every
+  // NextPeriod() call (~100/s), adding unnecessary overhead in the audio
+  // thread. float is used instead of double because std::atomic<float> is
+  // lock-free on all supported platforms (x86, ARM), while std::atomic<double>
+  // is not.
+  std::unique_ptr<std::vector<std::atomic<float>>> mp_MeterInfo;
+  // always == mp_MeterInfo.get()
+  std::atomic<std::vector<std::atomic<float>> *> p_MeterInfo;
+
   ptr_vector<GOSoundTremulantTask> m_TremulantTasks;
   ptr_vector<GOSoundWindchestTask> m_WindchestTasks;
   ptr_vector<GOSoundGroupTask> m_AudioGroupTasks;
@@ -148,7 +182,7 @@ public:
   int GetVolume() const { return m_Volume; }
   void SetScaledReleases(bool enable) { m_ScaledReleases = enable; }
   void SetRandomizeSpeaking(bool enable) { m_RandomizeSpeaking = enable; }
-  const std::vector<double> &GetMeterInfo();
+  std::vector<float> GetMeterInfo();
   void SetAudioRecorder(GOSoundRecorder *recorder, bool downmix);
 
   GOSoundSampler *StartPipeSample(
