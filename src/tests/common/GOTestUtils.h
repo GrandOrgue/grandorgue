@@ -2,7 +2,7 @@
 #define GOTESTUTILS_H
 
 #include "GOTestException.h"
-#include <cpptrace.hpp>
+#include <cpptrace/cpptrace.hpp>
 
 class GOTestUtils {
   /*

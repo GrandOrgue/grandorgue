@@ -2,7 +2,7 @@
 
 set -e
 
-CPP_TRACE_VERSION="0.4.1"
+CPP_TRACE_VERSION="1.0.4"
 
 # Install cpptrace from sources
 if ! ls /usr/local/lib*/libcpptrace.a &> /dev/null ; then
