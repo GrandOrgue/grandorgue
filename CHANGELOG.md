@@ -1,3 +1,4 @@
+- Fixed matching MIDI and audio device names containing regex metacharacters (e.g. parentheses) https://github.com/GrandOrgue/grandorgue/issues/2491
 - Fixed installing the .deb package on Ubuntu with PipeWire https://github.com/GrandOrgue/grandorgue/issues/2457
 - Fixed running GrandOrgueTool and GrandOrguePerfTest from macOS app bundle https://github.com/GrandOrgue/grandorgue/issues/2400
 - Fixed controlling organ elements when recording or playing MIDI https://github.com/GrandOrgue/grandorgue/issues/2388
