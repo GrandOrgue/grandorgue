@@ -1,3 +1,4 @@
+- Fixed expression pedal malfunction when CC value exceeds configured high value https://github.com/GrandOrgue/grandorgue/issues/2494
 # 3.17.2 (2026-05-24)
 - Fixed matching MIDI and audio device names containing regex metacharacters (e.g. parentheses) https://github.com/GrandOrgue/grandorgue/issues/2491
 - Fixed installing the .deb package on Ubuntu with PipeWire https://github.com/GrandOrgue/grandorgue/issues/2457
