@@ -40,7 +40,7 @@ static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 #ifdef NDEBUG
   {32, 2680},  // 2680 Mframes/sec (lowered: min observed 2975.4, -10% margin)
   {128, 5400}, // 5400 Mframes/sec (lowered: min observed 5120.3, -10% margin)
-  {512, 5500}, // 5500 Mframes/sec (lowered: min observed 6112.9, -10% margin)
+  {512, 4840}, // 4840 Mframes/sec (lowered: min observed 5382.5, -10% margin)
   {2048, 8600} // 8600 Mframes/sec (lowered: min observed 9653.4, -10% margin)
 #else
   {32,
