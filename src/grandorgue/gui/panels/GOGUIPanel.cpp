@@ -7,6 +7,8 @@
 
 #include "GOGUIPanel.h"
 
+#include <algorithm>
+
 #include <wx/image.h>
 #include <wx/toplevel.h>
 
@@ -61,6 +63,15 @@ GOGUIPanel::~GOGUIPanel() {
 bool GOGUIPanel::InitialOpenWindow() { return m_InitialOpenWindow; }
 
 GOOrganController *GOGUIPanel::GetOrganFile() { return m_OrganController; }
+
+bool GOGUIPanel::IsKeyboardInputUsed() const {
+  return std::any_of(
+    m_controls.begin(), m_controls.end(), [](const GOGUIControl *pGuiCtrl) {
+      const GOControl *pCtrl = pGuiCtrl->GetControl();
+
+      return pCtrl && pCtrl->IsKeyboardInputUsed();
+    });
+}
 
 const wxString &GOGUIPanel::GetName() { return m_Name; }
 
