@@ -27,7 +27,7 @@
 #include <wx/app.h>
 
 class GOConfig;
-class GOToolbarWindow;
+class GOAppWindow;
 class GOGuiLog;
 class GOSoundSystem;
 
@@ -61,7 +61,7 @@ private:
   virtual void CleanUp() override;
 
 protected:
-  GOToolbarWindow *p_ToolbarWindow = nullptr;
+  GOAppWindow *p_AppWindow = nullptr;
   wxLocale m_locale;
   std::unique_ptr<GOConfig> mp_config;
   std::unique_ptr<GOSoundSystem> mp_SoundSystem;

@@ -13,7 +13,7 @@
 #include <wx/regex.h>
 
 #include "config/GOConfig.h"
-#include "frames/GOToolbarWindow.h"
+#include "frames/GOAppWindow.h"
 #include "sound/GOSoundSystem.h"
 
 #include "GOGuiLog.h"
@@ -158,7 +158,7 @@ bool GOGuiApp::OnInit() {
 
   mp_SoundSystem = std::make_unique<GOSoundSystem>(*mp_config);
 
-  p_ToolbarWindow = new GOToolbarWindow(
+  p_AppWindow = new GOAppWindow(
     *this,
     NULL,
     wxID_ANY,
@@ -168,18 +168,18 @@ bool GOGuiApp::OnInit() {
     wxMINIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX
       | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE,
     *mp_SoundSystem);
-  SetTopWindow(p_ToolbarWindow);
-  mp_log = std::make_unique<GOGuiLog>(p_ToolbarWindow);
+  SetTopWindow(p_AppWindow);
+  mp_log = std::make_unique<GOGuiLog>(p_AppWindow);
   wxLog::SetActiveTarget(mp_log.get());
-  p_ToolbarWindow->Init(m_FileName, m_IsGuiOnly);
+  p_AppWindow->Init(m_FileName, m_IsGuiOnly);
 
   return true;
 }
 
 #ifdef __WXMAC__
 void GOGuiApp::MacOpenFile(const wxString &filename) {
-  if (p_ToolbarWindow)
-    p_ToolbarWindow->SendLoadFile(filename);
+  if (p_AppWindow)
+    p_AppWindow->SendLoadFile(filename);
 }
 #endif
 
@@ -200,7 +200,7 @@ int GOGuiApp::OnExit() {
 }
 
 void GOGuiApp::CleanUp() {
-  // Ensure that GOToolbarWindow and other objects are destroyed before deleting
+  // Ensure that GOAppWindow and other objects are destroyed before deleting
   wxApp::CleanUp();
   // CleanUp() may be called even if OnInit() has not succeed, so unique_ptr
   // reset() is safe to call even if the objects were never created

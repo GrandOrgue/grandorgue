@@ -104,7 +104,7 @@ gui/dialogs/GOSplash.cpp
 gui/dialogs/go-message-boxes.cpp
 gui/document-base/GODocumentBase.cpp
 gui/document-base/GODocumentView.cpp
-gui/frames/GOToolbarWindow.cpp
+gui/frames/GOAppWindow.cpp
 gui/frames/GOLogWindow.cpp
 gui/frames/GOMainWindowData.cpp
 gui/frames/GOStopsWindow.cpp

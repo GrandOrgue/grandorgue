@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOTOOLBARWINDOW_H
-#define GOTOOLBARWINDOW_H
+#ifndef GOAPPWINDOW_H
+#define GOAPPWINDOW_H
 
 #include <memory>
 #include <vector>
@@ -37,11 +37,11 @@ class wxSpinCtrl;
 class wxToolBar;
 class wxToolBarToolBase;
 
-class GOToolbarWindow : public wxFrame,
-                        private GOHelpRequestor,
-                        public GOResizable,
-                        protected GOMidiCallback,
-                        private GOModificationListener {
+class GOAppWindow : public wxFrame,
+                    private GOHelpRequestor,
+                    public GOResizable,
+                    protected GOMidiCallback,
+                    private GOModificationListener {
 private:
   GOGuiApp &r_app;
   GOConfig &r_config;
@@ -182,7 +182,7 @@ private:
   void SendLoadOrgan(const GOOrgan &organ);
 
 public:
-  GOToolbarWindow(
+  GOAppWindow(
     GOGuiApp &app,
     wxFrame *pParentFrame,
     wxWindowID id,
@@ -191,7 +191,7 @@ public:
     const wxSize &size,
     const long type,
     GOSoundSystem &sound);
-  virtual ~GOToolbarWindow(void);
+  virtual ~GOAppWindow(void);
 
   void Init(const wxString &filename, bool isGuiOnly);
 
