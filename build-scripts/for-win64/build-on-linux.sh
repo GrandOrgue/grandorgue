@@ -3,11 +3,12 @@
 # $1 - Version
 # $2 - Build version
 # $3 - Go source Dir. If not set then relative to the script dir
-# $4 - release flag (ON/OFF, default: OFF)
+# $4 - pkg_suffix
+# $5 - release flag (ON/OFF, default: OFF)
 
 set -e
 
-source $(dirname $0)/../set-ver-prms.sh "$1" "$2" "$4"
+source $(dirname $0)/../set-ver-prms.sh "$1" "$2" "$5"
 
 if [[ -n "$3" ]]; then
 	SRC_DIR=$3
