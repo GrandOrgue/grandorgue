@@ -290,6 +290,8 @@ unsigned GOSoundStream::GoToStartSegment(unsigned startSegmentIndex) {
   // next start segment
   m_NextStartSegmentIndex = endSegment.next_start_segment_index;
 
+  assert(end_pos >= startSegment.start_offset);
+
   return startSegment.start_offset;
 }
 
@@ -376,11 +378,12 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       n_blocks -= targetSamples;
       assert(!n_blocks || m_ResamplingPos.GetIndex() >= finishPos);
     } else if (m_NextStartSegmentIndex >= 0) {
-      // switch to the start of the loop
+      // switch to the start of the loop.
+      // overflowOffset must be computed BEFORE GoToStartSegment(): it
+      // overwrites end_pos with the new segment's end position.
+      const unsigned overflowOffset = currSrcOffset - end_pos;
       const unsigned startOffset = GoToStartSegment(m_NextStartSegmentIndex);
-      const unsigned newSrcOffset = startOffset + (currSrcOffset - end_pos);
-
-      assert(end_pos >= startOffset);
+      const unsigned newSrcOffset = startOffset + overflowOffset;
 
       m_ResamplingPos.SetIndex(newSrcOffset);
       if (newSrcOffset >= end_pos) { // invalid loop. Using it might cause

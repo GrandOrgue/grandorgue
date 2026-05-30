@@ -53,6 +53,14 @@ private:
   void TestLoopedStreamAlwaysReturnsTrue();
 
   /**
+   * Tests that wrap-around between loop segments with different end_pos
+   * keeps the source position consistent. Catches a regression where
+   * ReadBlock used the new segment's end_pos instead of the previous one
+   * when computing the post-wrap position.
+   */
+  void TestLoopTransitionAcrossDifferentEndPos();
+
+  /**
    * Tests InitAlignedStream with real release alignment.
    * Verifies that ReadBlock returns true after alignment.
    */

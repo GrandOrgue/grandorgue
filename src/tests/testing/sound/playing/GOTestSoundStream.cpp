@@ -6,6 +6,7 @@
 
 #include "GOTestSoundStream.h"
 
+#include <cstdlib>
 #include <format>
 #include <vector>
 
@@ -163,6 +164,73 @@ void GOTestSoundStream::TestInitAlignedStream() {
   GOAssert(result, "ReadBlock should return true after InitAlignedStream");
 }
 
+void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
+  // Two loops with different end_pos: a long loop and a short loop placed
+  // so PickEndSegment can pick either for some start segments. With the
+  // regression in ReadBlock (using the new segment's end_pos when computing
+  // the post-wrap position), wrap-around between segments with different
+  // end_pos breaks the source position and eventually triggers the
+  // "invalid loop" path, after which ReadBlock returns false.
+  constexpr unsigned N_TOTAL_FRAMES = 1100;
+  constexpr unsigned N_ITERATIONS = 500;
+  // Two long loops with very different end_pos. start_offsets are chosen
+  // such that an unsigned underflow in the buggy expression
+  //   startOffset + (currSrcOffset - end_pos_new)
+  // does NOT happen to wrap back into a valid (< end_pos_new) range — it
+  // stays huge, so the broken code reliably enters the "Breaking invalid
+  // loop" branch and ReadBlock subsequently returns false.
+  const std::vector<GOWaveLoop> loops = {
+    {500, 999}, // long loop, start_offset=500, end_pos=1000
+    {200, 599}, // long loop, start_offset=200, end_pos=600
+  };
+  const unsigned nChannels = 1;
+  const unsigned nSamples = nChannels * N_TOTAL_FRAMES;
+  std::vector<GOInt24> pcmData(nSamples);
+
+  for (unsigned i = 0; i < nSamples; i++)
+    pcmData[i] = (i % 100) * 30000 - 1500000;
+
+  auto pSection = std::make_unique<GOSoundAudioSection>(m_pool);
+
+  pSection->Setup(
+    nullptr,
+    nullptr,
+    pcmData.data(),
+    GOWave::SF_SIGNEDINT24_24,
+    nChannels,
+    SECTION_RATE,
+    N_TOTAL_FRAMES,
+    &loops,
+    BOOL3_DEFAULT,
+    false,
+    0,
+    0);
+
+  GOSoundResample resample;
+  GOSoundStream stream;
+
+  // PickEndSegment uses rand(); seed for reproducibility of the test path.
+  std::srand(0);
+  stream.InitStream(
+    &resample,
+    pSection.get(),
+    GOSoundResample::GO_LINEAR_INTERPOLATION,
+    SAMPLE_RATE_ADJUSTMENT);
+
+  float buffer[N_BUFFER_ITEMS];
+
+  for (unsigned iterI = 0; iterI < N_ITERATIONS; iterI++) {
+    const bool result = stream.ReadBlock(buffer, N_FRAMES_PER_BLOCK);
+
+    GOAssert(
+      result,
+      std::format(
+        "ReadBlock should always return true across loop-segment "
+        "transitions with different end_pos (iteration {})",
+        iterI));
+  }
+}
+
 void GOTestSoundStream::run() {
   for (unsigned nChannels : {1u, 2u}) {
     for (bool isCompressed : {false, true}) {
@@ -173,5 +241,6 @@ void GOTestSoundStream::run() {
     }
   }
   TestLoopedStreamAlwaysReturnsTrue();
+  TestLoopTransitionAcrossDifferentEndPos();
   TestInitAlignedStream();
 }
