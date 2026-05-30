@@ -85,7 +85,7 @@ void GOSoundProviderWave::AddAttackSection(
     case LOOP_LOAD_CONSERVATIVE: {
       unsigned cidx = 0;
       for (unsigned i = 1; i < pSrcLoops->size(); i++)
-        if ((*pSrcLoops)[i].m_EndPosition < (*pSrcLoops)[i].m_EndPosition)
+        if ((*pSrcLoops)[i].m_EndPosition < (*pSrcLoops)[cidx].m_EndPosition)
           if (attack_pos <= (*pSrcLoops)[i].m_StartPosition)
             cidx = i;
       loops.push_back((*pSrcLoops)[cidx]);
