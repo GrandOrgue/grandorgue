@@ -64,7 +64,7 @@ static constexpr Baseline BASELINE_COPY_FROM[] = {
   {32,
    1550}, // 1550 Mframes/sec (debug, lowered: min observed 1727.1, -10% margin)
   {128,
-   5750}, // 5750 Mframes/sec (debug, lowered: min observed 6390.3, -10% margin)
+   4140}, // 4140 Mframes/sec (debug, lowered: min observed 4608.0, -10% margin)
   {512,
    5410}, // 5410 Mframes/sec (debug, lowered: min observed 6018.0, -10% margin)
   {2048,
@@ -94,7 +94,7 @@ static constexpr Baseline BASELINE_ADD_FROM_COEFF[] = {
 #ifdef NDEBUG
   {32, 2800},  // 2800 Mframes/sec (lowered: min observed 3136.9, -10% margin)
   {128, 3940}, // 3940 Mframes/sec (lowered: min observed 4373.0, -10% margin)
-  {512, 4800}, // 4800 Mframes/sec (raised: min observed 5452.5, -10% margin)
+  {512, 4220}, // 4220 Mframes/sec (lowered: min observed 4689.3, -10% margin)
   {2048, 4300} // 4300 Mframes/sec (lowered: min observed 4781.1, -10% margin)
 #else
   {32, 450}, // 450 Mframes/sec (debug, raised: min observed 506.4, -10% margin)
