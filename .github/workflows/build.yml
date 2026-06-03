@@ -68,6 +68,8 @@ jobs:
 
     - name: Set git tags and compose RELNOTES.md
       shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: ${{github.workspace}}/build-scripts/for-github/autotag.sh
       if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release-') }}
 
@@ -116,15 +118,15 @@ jobs:
     - name: Create Draft Release
       if: ${{ steps.vers.outputs.release_flag == 'ON' }}
       id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1
       with:
-        tag_name: "${{ steps.vers.outputs.full_ver }}"
-        release_name:  "v${{ steps.vers.outputs.full_ver }}"
+        tag: "${{ steps.vers.outputs.full_ver }}"
+        name: "v${{ steps.vers.outputs.full_ver }}"
         draft: true
-        prerelease: false
-        body_path: "${{ steps.relnotes.outputs.file }}"
+        bodyFile: "${{ steps.relnotes.outputs.file }}"
+        allowUpdates: true
+        updateOnlyUnreleased: true
+        token: ${{ secrets.GITHUB_TOKEN }}
         
   build:
     needs: [calc_ver]
