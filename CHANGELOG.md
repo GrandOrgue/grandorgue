@@ -1,4 +1,5 @@
 - Fixed installing the .deb package on Ubuntu with PipeWire https://github.com/GrandOrgue/grandorgue/issues/2457
+- Fixed running GrandOrgueTool and GrandOrguePerfTest from macOS app bundle https://github.com/GrandOrgue/grandorgue/issues/2400
 - Fixed controlling organ elements when recording or playing MIDI https://github.com/GrandOrgue/grandorgue/issues/2388
 - Fixed Loading organ errors with Tuskish system locale https://github.com/GrandOrgue/grandorgue/issues/2401
 # 3.17.1 (2026-03-31)
