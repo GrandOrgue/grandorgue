@@ -12,3 +12,6 @@
 [submodule "submodules/ZitaConvolver"]
 	path = submodules/ZitaConvolver
 	url = https://github.com/GrandOrgue/ZitaConvolver.git
+[submodule "submodules/cpptrace"]
+	path = submodules/cpptrace
+	url = https://github.com/jeremy-rifkin/cpptrace.git

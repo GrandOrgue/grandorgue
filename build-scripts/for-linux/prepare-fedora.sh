@@ -21,10 +21,3 @@ sudo dnf install -y \
   pipewire-jack-audio-connection-kit-devel fftw-devel zlib-devel wavpack-devel \
   $WX_PKG_NAME alsa-lib-devel systemd-devel yaml-cpp-static dpkg-dev libcurl-devel
 
-# install cpptrace
-# install cpptrace
-if [[ "$INSTALL_TESTS" == "tests" ]]; then
-  $DIR/prepare-cpptrace.bash
-else
-  true
-fi
