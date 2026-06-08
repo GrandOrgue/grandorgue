@@ -229,23 +229,28 @@ wxString GOMidiRtPortFactory::GetDefaultRegEx(
       // Client Name:Port Name
       regEx = wxString::Format(
         wxT("%s:%s"),
-        m_AlsaDevnamePattern.GetMatch(deviceName, 1),
-        m_AlsaDevnamePattern.GetMatch(deviceName, 2));
+        GOPortFactory::escapeRegex(
+          m_AlsaDevnamePattern.GetMatch(deviceName, 1)),
+        GOPortFactory::escapeRegex(
+          m_AlsaDevnamePattern.GetMatch(deviceName, 2)));
     break;
   case RtMidi::Api::UNIX_JACK:
     if (m_JackDevnamePattern.Matches(deviceName))
       // Midi-Bridge:Client Name:(direction_num)) Port Name
       regEx = wxString::Format(
         wxT("Midi-Bridge:%s:(%s_%s) %s"),
-        m_JackDevnamePattern.GetMatch(deviceName, 1),
+        GOPortFactory::escapeRegex(
+          m_JackDevnamePattern.GetMatch(deviceName, 1)),
         m_JackDevnamePattern.GetMatch(deviceName, 2),
         m_JackDevnamePattern.GetMatch(deviceName, 3),
-        m_JackDevnamePattern.GetMatch(deviceName, 4));
+        GOPortFactory::escapeRegex(
+          m_JackDevnamePattern.GetMatch(deviceName, 4)));
     break;
   case RtMidi::Api::WINDOWS_MM:
     if (m_WinMmDevnamePattern.Matches(deviceName))
       // Device Name
-      regEx = m_WinMmDevnamePattern.GetMatch(deviceName, 1);
+      regEx = GOPortFactory::escapeRegex(
+        m_WinMmDevnamePattern.GetMatch(deviceName, 1));
     break;
   default:
     break;

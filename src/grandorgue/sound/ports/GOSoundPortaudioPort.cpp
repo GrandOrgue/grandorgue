@@ -188,7 +188,10 @@ static void fill_logical_name_and_regex(GOSoundDevInfo &info) {
       info.SetDefaultNameRegex(GOSoundPortFactory::getFullDeviceName(
         GOSoundPortaudioPort::PORT_NAME,
         apiName,
-        wxString::Format("%s \\(hw:[0-9]+,%s\\)", devName1, devName3)));
+        wxString::Format(
+          "%s \\(hw:[0-9]+,%s\\)",
+          GOPortFactory::escapeRegex(devName1),
+          devName3)));
       info.SetDefaultLogicalName(GOSoundPortFactory::getFullDeviceName(
         GOSoundPortaudioPort::PORT_NAME,
         apiName,

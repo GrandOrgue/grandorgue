@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -37,6 +37,19 @@ void append_name(wxString const &nameComp, wxString &resName) {
       resName.Append(GOPortFactory::c_NameDelim);
     resName.Append(nameComp);
   }
+}
+
+wxString GOPortFactory::escapeRegex(const wxString &s) {
+  static const wxString metaChars = wxT("\\^$.|?*+()[]{}");
+  wxString result;
+
+  result.reserve(s.size() * 2);
+  for (wxUniChar c : s) {
+    if (metaChars.find(c) != wxString::npos)
+      result += wxT('\\');
+    result += c;
+  }
+  return result;
 }
 
 wxString GOPortFactory::ComposeDeviceName(
