@@ -1,25 +1,26 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOView.h"
+#include "GODocumentView.h"
 
 #include "gui/dialogs/common/GODialogCloser.h"
 
 #include "GODocumentBase.h"
 
-GOView::GOView(GODocumentBase *doc, wxWindow *wnd) : m_doc(doc), m_wnd(wnd) {}
+GODocumentView::GODocumentView(GODocumentBase *doc, wxWindow *wnd)
+  : m_doc(doc), m_wnd(wnd) {}
 
-GOView::~GOView() {
+GODocumentView::~GODocumentView() {
   if (m_doc)
     m_doc->unregisterWindow(this);
   m_doc = NULL;
 }
 
-void GOView::RemoveView() {
+void GODocumentView::RemoveView() {
   m_doc = NULL;
 
   const bool isAutoDestroyed = dynamic_cast<GODialogCloser *>(m_wnd);
@@ -30,7 +31,7 @@ void GOView::RemoveView() {
     m_wnd->Destroy();
 }
 
-void GOView::ShowView() {
+void GODocumentView::ShowView() {
   if (GODialogCloser *pDialog = dynamic_cast<GODialogCloser *>(m_wnd))
     pDialog->ShowAdvanced(true);
   else {
@@ -39,4 +40,4 @@ void GOView::ShowView() {
   }
 }
 
-void GOView::SyncState() {}
+void GODocumentView::SyncState() {}

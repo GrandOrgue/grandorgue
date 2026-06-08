@@ -8,6 +8,7 @@
 #include "GOGUIPanel.h"
 
 #include <wx/image.h>
+#include <wx/toplevel.h>
 
 #include "combinations/GOSetter.h"
 #include "combinations/control/GODivisionalButtonControl.h"
@@ -15,13 +16,13 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
 #include "control/GOPistonControl.h"
+#include "gui/GOGuiImageCache.h"
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
 #include "model/GOStop.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
-#include "primitives/GODC.h"
 
 #include "GOGUIButton.h"
 #include "GOGUIControl.h"
@@ -37,7 +38,6 @@
 #include "GOGUIPanelView.h"
 #include "GOGUIPanelWidget.h"
 #include "GOOrganController.h"
-#include "Images.h"
 
 GOGUIPanel::GOGUIPanel(GOOrganController *organController)
   : m_OrganController(organController),

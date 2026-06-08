@@ -42,7 +42,7 @@ GOMidiEventDialog::GOMidiEventDialog(
   GOMidiDialogListener *pDialogListener)
   : GOTabbedDialog(
     parent, "MidiEvent", title, settings.m_DialogSizes, dialogSelector),
-    GOView(doc, this),
+    GODocumentView(doc, this),
     r_config(settings),
     p_DialogListener(pDialogListener),
     p_object(pMidiObject),

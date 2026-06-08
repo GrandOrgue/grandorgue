@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -19,6 +19,7 @@
 #include "config/GOConfigReader.h"
 #include "config/GOConfigReaderDB.h"
 #include "config/GOConfigWriter.h"
+#include "gui/GOGuiOrgan.h"
 #include "gui/size/GOAdditionalSizeKeeperProxy.h"
 #include "gui/wxcontrols/GOGrid.h"
 #include "midi/objects/GOMidiObjectContext.h"
@@ -27,7 +28,6 @@
 #include "yaml/GOYamlModel.h"
 #include "yaml/go-wx-yaml.h"
 
-#include "GODocument.h"
 #include "GOEvent.h"
 #include "go-message-boxes.h"
 
@@ -115,7 +115,7 @@ GOMidiObjectsDialog::GOMidiObjectsDialog(
     wxEmptyString,
     0,
     wxCLOSE | wxHELP),
-    GOView(doc, this),
+    GODocumentView(doc, this),
     r_config(organModel.GetConfig()),
     m_ExportImportDir(r_config.ExportImportPath()),
     m_OrganName(organModel.GetOrganName()),
@@ -232,12 +232,12 @@ GOMidiPlayingObject *GOMidiObjectsDialog::GetSelectedObject() const {
 
 void GOMidiObjectsDialog::ConfigureSelectedObject() {
   int row = m_ObjectsGrid->GetGridCursorRow();
-  GODocument *pDoc = dynamic_cast<GODocument *>(GetDocument());
+  GOGuiOrgan *pOrgan = dynamic_cast<GOGuiOrgan *>(GetDocument());
 
   if (row >= 0) {
     GOMidiPlayingObject *pObj = r_MidiObjects[row];
 
-    pDoc->ShowMIDIEventDialog(*pObj, pObj);
+    pOrgan->ShowMIDIEventDialog(*pObj, pObj);
   }
 }
 

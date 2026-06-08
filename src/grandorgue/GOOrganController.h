@@ -10,6 +10,7 @@
 
 #include <vector>
 
+#include <wx/filefn.h>
 #include <wx/string.h>
 
 #include "ptrvector.h"
@@ -23,14 +24,11 @@
 #include "model/GOOrganModel.h"
 #include "modification/GOModificationProxy.h"
 
-#include "GOImageCache.h"
+#include "sound/GOSoundOrganEngine.h"
+
 #include "GOMemoryPool.h"
-#include "GOTimer.h"
 #include "GOVirtualCouplerController.h"
 
-class GOGUIPanel;
-class GOGUIPanelCreator;
-class GOGUICouplerPanel;
 class GOArchive;
 class GOAudioRecorder;
 class GOButtonControl;
@@ -38,19 +36,23 @@ class GOCache;
 class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
-class GOMidiSystem;
+class GOGUICouplerPanel;
+class GOGuiImageCache;
+class GOGuiOrgan;
+class GOGUIPanel;
+class GOGUIPanelCreator;
 class GOMidiEvent;
 class GOMidiPlayer;
 class GOMidiRecorder;
+class GOMidiSystem;
 class GOOrgan;
 class GOProgressDialog;
 class GOSetter;
-class GOConfig;
-class GOTemperament;
-class GODocument;
-class GOSoundOrganEngine;
 class GOSoundProvider;
 class GOSoundRecorder;
+class GOSoundSystem;
+class GOTemperament;
+class GOTimer;
 typedef struct _GOHashType GOHashType;
 
 class GOOrganController : public GOEventDistributor,
@@ -102,7 +104,8 @@ private:
   GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
-  GOImageCache *mp_ImageCache;
+  GOSoundOrganEngine m_SoundEngine;
+  GOGuiImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
   GOMainWindowData m_MainWindowData;
@@ -183,7 +186,7 @@ public:
   void AddPanel(GOGUIPanel *panel) { m_panels.push_back(panel); }
   GOMemoryPool &GetMemoryPool() { return m_pool; }
   GOConfig &GetSettings() { return m_config; }
-  GOImageCache &GetImageCache() const { return *mp_ImageCache; }
+  GOGuiImageCache &GetImageCache() const { return *mp_ImageCache; }
   void SetTemperament(const wxString &name);
   const wxString &GetTemperament() const { return m_Temperament; }
 

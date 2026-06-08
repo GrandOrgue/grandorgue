@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOIMAGECACHE_H
-#define GOIMAGECACHE_H
+#ifndef GOGUIIMAGECACHE_H
+#define GOGUIIMAGECACHE_H
 
 #include <wx/image.h>
 #include <wx/string.h>
@@ -15,7 +15,7 @@
 
 class GOFileStore;
 
-class GOImageCache {
+class GOGuiImageCache {
 private:
   static const wxString WX_EMPTY_STRING;
 
@@ -33,7 +33,7 @@ private:
     const wxString &filename, const wxString &maskname, wxImage *pImage);
 
 public:
-  GOImageCache(const GOFileStore &fileStore);
+  GOGuiImageCache(const GOFileStore &fileStore);
 
   const wxImage *GetWoodImage(unsigned woodImageNum) const;
 

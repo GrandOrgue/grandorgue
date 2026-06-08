@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GODOCUMENT_H
-#define GODOCUMENT_H
+#ifndef GOGUIORGAN_H
+#define GOGUIORGAN_H
 
 #include <wx/string.h>
 
@@ -23,7 +23,7 @@ class GOProgressDialog;
 class GOResizable;
 class GOSoundSystem;
 
-class GODocument : public GODocumentBase, protected GOMidiCallback {
+class GOGuiOrgan : public GODocumentBase, protected GOMidiCallback {
 private:
   GOResizable *p_MainWindow;
   GOSoundSystem &m_sound;
@@ -40,8 +40,8 @@ private:
   void CloseOrgan();
 
 public:
-  GODocument(GOResizable *pMainWindow, GOSoundSystem *sound);
-  ~GODocument();
+  GOGuiOrgan(GOResizable *pMainWindow, GOSoundSystem *sound);
+  ~GOGuiOrgan();
 
   GOOrganController *GetOrganController() const { return m_OrganController; }
   bool IsModified() const;

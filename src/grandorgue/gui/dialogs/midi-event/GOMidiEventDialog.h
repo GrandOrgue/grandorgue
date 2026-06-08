@@ -8,10 +8,8 @@
 #ifndef GOMIDIEVENTDIALOG_H
 #define GOMIDIEVENTDIALOG_H
 
-#include <wx/propdlg.h>
-
-#include "document-base/GOView.h"
 #include "gui/dialogs/common/GOTabbedDialog.h"
+#include "gui/document-base/GODocumentView.h"
 #include "modification/GOModificationProxy.h"
 
 class wxButton;
@@ -29,7 +27,7 @@ class GOMidiSender;
 class GOMidiShortcutReceiver;
 
 class GOMidiEventDialog : public GOTabbedDialog,
-                          public GOView,
+                          public GODocumentView,
                           public GOModificationProxy {
 private:
   GOConfig &r_config;
