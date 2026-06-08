@@ -20,6 +20,8 @@ endif ()
 BUILD_EXECUTABLE(GrandOrgueTool)
 target_link_libraries(GrandOrgueTool GrandOrgueCore)
 if (INSTALL_DEPEND STREQUAL "ON")
+  # fixup_bundle scans all executables in bin/; ensure GrandOrgue.exe is fully written first
+  add_dependencies(GrandOrgueTool GrandOrgue)
   CopyDependencies(GrandOrgueTool "${BININSTDIR}/GrandOrgueTool${CMAKE_EXECUTABLE_SUFFIX}" GrandOrgueCore)
 endif()
 
@@ -28,6 +30,8 @@ BUILD_EXECUTABLE(GrandOrguePerfTest)
 target_include_directories(GrandOrguePerfTest PUBLIC ${CMAKE_SOURCE_DIR}/src/grandorgue)
 target_link_libraries(GrandOrguePerfTest golib)
 if (INSTALL_DEPEND STREQUAL "ON")
+  # fixup_bundle scans all executables in bin/; ensure they are all fully written first
+  add_dependencies(GrandOrguePerfTest GrandOrgue GrandOrgueTool)
   CopyDependencies(GrandOrguePerfTest "${BININSTDIR}/GrandOrguePerfTest${CMAKE_EXECUTABLE_SUFFIX}" golib)
 endif()
 
