@@ -16,7 +16,7 @@ assure_full_version()
 }
 
 # Returns 0 (true) if $1 >= $2 using semantic version ordering
-version_ge() { [[ "$(printf '%s\n' "$1" "$2" | sort -V | head -1)" != "$2" ]] || [[ "$1" == "$2" ]]; }
+version_ge() { [[ "$(printf '%s\n' "$1" "$2" | sort -V | head -1)" != "$1" ]] || [[ "$1" == "$2" ]]; }
 
 # Returns 0 (true) if $1 > $2 using semantic version ordering
 version_gt() { [[ "$(printf '%s\n' "$1" "$2" | sort -V | head -1)" != "$1" ]]; }
