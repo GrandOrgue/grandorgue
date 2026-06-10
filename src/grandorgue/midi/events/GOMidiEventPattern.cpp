@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -86,16 +86,18 @@ int GOMidiEventPattern::convertValueBetweenRanges(
   int_fast8_t srcHigh,
   int_fast8_t dstLow,
   int_fast8_t dstHigh) {
-  const int_fast8_t dstAbsLow = std::min(dstLow, dstHigh);
-  const int_fast8_t dstAbsHigh = std::max(dstLow, dstHigh);
-  int_fast8_t dstValue = srcValue - srcLow;
+  // Linear interpolation from [srcLow, srcHigh] to [dstLow, dstHigh].
+  // dstValue is int (not int_fast8_t) to avoid overflow when the intermediate
+  // result exceeds 127 (e.g. srcValue > srcHigh maps to dstHigh + epsilon).
+  const int dstValue = srcHigh != srcLow ? dstLow
+      + (int)round((srcValue - srcLow) * (float)(dstHigh - dstLow)
+                   / (srcHigh - srcLow))
+                                         : (int)dstLow;
 
-  if (srcHigh != srcLow)
-    dstValue = dstLow
-      + round(dstValue * (float)(dstHigh - dstLow) / (srcHigh - srcLow));
-  if (dstValue < dstAbsLow)
-    dstValue = dstAbsLow;
-  if (dstValue > dstAbsHigh)
-    dstValue = dstAbsHigh;
-  return dstValue;
+  // Clamp to [min(dstLow,dstHigh), max(dstLow,dstHigh)] to handle both normal
+  // (low < high) and inverted (high < low) destination ranges, and to keep
+  // out-of-range srcValues (srcValue < srcLow or srcValue > srcHigh) within
+  // the destination bounds.
+  return std::clamp(
+    dstValue, (int)std::min(dstLow, dstHigh), (int)std::max(dstLow, dstHigh));
 }
