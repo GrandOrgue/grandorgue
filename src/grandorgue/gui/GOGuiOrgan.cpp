@@ -19,6 +19,7 @@
 #include "gui/panels/GOGUIPanel.h"
 #include "gui/panels/GOGUIPanelView.h"
 #include "gui/size/GOResizable.h"
+#include "loader/GOProgressMonitor.h"
 #include "midi/events/GOMidiEvent.h"
 #include "sound/GOSoundSystem.h"
 #include "threading/GOMutexLocker.h"
@@ -47,16 +48,16 @@ bool GOGuiOrgan::IsModified() const {
 }
 
 GOOrganController *GOGuiOrgan::LoadOrgan(
-  GOProgressDialog *dlg,
   const GOOrgan &organ,
   const wxString &cmb,
-  bool isGuiOnly) {
+  bool isGuiOnly,
+  GOProgressMonitor &monitor) {
   wxBusyCursor busy;
   GOConfig &cfg = m_sound.GetSettings();
 
   CloseOrgan();
   m_OrganController = new GOOrganController(cfg, true);
-  wxString error = m_OrganController->Load(dlg, organ, cmb, isGuiOnly);
+  wxString error = m_OrganController->Load(organ, cmb, isGuiOnly, monitor);
 
   if (error.IsEmpty()) {
     cfg.AddOrgan(m_OrganController->GetOrganInfo());
@@ -98,10 +99,10 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
   return m_OrganController;
 }
 
-bool GOGuiOrgan::UpdateCache(GOProgressDialog *dlg, bool compress) {
+bool GOGuiOrgan::UpdateCache(bool compress, GOProgressMonitor &monitor) {
   if (!m_OrganController)
     return false;
-  return m_OrganController->UpdateCache(dlg, compress);
+  return m_OrganController->UpdateCache(compress, monitor);
 }
 
 void GOGuiOrgan::ShowPanel(unsigned id) {

@@ -30,7 +30,6 @@
 #include "files/GOOpenedFile.h"
 #include "files/GOStdFileName.h"
 #include "gui/GOGuiImageCache.h"
-#include "gui/dialogs/GOProgressDialog.h"
 #include "gui/dialogs/go-message-boxes.h"
 #include "gui/panels/GOGUIBankedGeneralsPanel.h"
 #include "gui/panels/GOGUICouplerManualsAndVolumePanel.h"
@@ -45,6 +44,7 @@
 #include "gui/panels/GOGUISequencerPanel.h"
 #include "loader/GOLoadThread.h"
 #include "loader/GOLoaderFilename.h"
+#include "loader/GOProgressMonitor.h"
 #include "loader/cache/GOCache.h"
 #include "loader/cache/GOCacheWriter.h"
 #include "midi/GOMidiPlayer.h"
@@ -331,10 +331,10 @@ wxString GOOrganController::GenerateCacheFileName() {
 class GOLoadAborted : public std::exception {};
 
 wxString GOOrganController::Load(
-  GOProgressDialog *dlg,
   const GOOrgan &organ,
   const wxString &file2,
-  bool isGuiOnly) {
+  bool isGuiOnly,
+  GOProgressMonitor &monitor) {
   GOBuffer<char> dummy;
   wxString errMsg;
 
@@ -343,7 +343,7 @@ wxString GOOrganController::Load(
 
     m_ArchiveID = organ.GetArchiveID();
     if (m_ArchiveID != wxEmptyString) {
-      dlg->Setup(1, _("Loading sample set"), _("Parsing organ packages"));
+      monitor.Setup(1, _("Loading sample set"), _("Parsing organ packages"));
 
       wxString errMsg1;
 
@@ -364,7 +364,7 @@ wxString GOOrganController::Load(
       m_FileStore.SetDirectory(go_get_path(m_odf));
     }
     m_hash = organ.GetOrganHash();
-    dlg->Setup(
+    monitor.Setup(
       1, _("Loading sample set"), _("Parsing sample set definition file"));
     m_SettingFilename = GenerateSettingFileName();
     m_CacheFilename = GenerateCacheFileName();
@@ -475,7 +475,7 @@ wxString GOOrganController::Load(
         /* Figure out list of pipes to load */
         GOCacheObjectDistributor objectDistributor(GetCacheObjects());
 
-        dlg->Reset(objectDistributor.GetNObjects());
+        monitor.Reset(objectDistributor.GetNObjects());
 
         GOCacheObject *obj = nullptr;
 
@@ -509,7 +509,8 @@ wxString GOOrganController::Load(
                 wxLogWarning(_("Cache load failure: %s"), obj->GetLoadError());
                 break;
               }
-              if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+              if (!monitor.Update(
+                    objectDistributor.GetPos(), obj->GetLoadTitle()))
                 throw GOLoadAborted(); // Skip the rest of the loading code
             }
             if (!obj)
@@ -545,7 +546,8 @@ wxString GOOrganController::Load(
 
           while (thisWorker.LoadNextObject(obj))
             // show the progress and process possible Cancel
-            if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+            if (!monitor.Update(
+                  objectDistributor.GetPos(), obj->GetLoadTitle()))
               throw GOLoadAborted(); // skip the rest of loading code
           // rethrow exception if any occured in thisWorker.LoadNextObject
           bool wereExceptions = thisWorker.WereExceptions();
@@ -566,7 +568,7 @@ wxString GOOrganController::Load(
             if (objectDistributor.IsComplete())
               m_Cacheable = true;
             if (m_config.ManageCache() && m_Cacheable)
-              UpdateCache(dlg, m_config.CompressCache());
+              UpdateCache(m_config.CompressCache(), monitor);
           }
 
           // Despite a possible exception automatic calling ~GOLoadThread from
@@ -678,7 +680,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
   }
 }
 
-bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
+bool GOOrganController::UpdateCache(bool compress, GOProgressMonitor &monitor) {
   bool isOk = false;
 
   DeleteCache();
@@ -686,7 +688,7 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
   /* Figure out the list of pipes to save */
   GOCacheObjectDistributor objectDistributor(GetCacheObjects());
 
-  dlg->Setup(objectDistributor.GetNObjects(), _("Creating sample cache"));
+  monitor.Setup(objectDistributor.GetNObjects(), _("Creating sample cache"));
 
   wxFileOutputStream file(m_CacheFilename);
 
@@ -710,7 +712,7 @@ bool GOOrganController::UpdateCache(GOProgressDialog *dlg, bool compress) {
         wxLogError(
           _("Save of %s to the cache failed"), obj->GetLoadTitle().c_str());
       }
-      if (!dlg->Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
+      if (!monitor.Update(objectDistributor.GetPos(), obj->GetLoadTitle())) {
         writer.Close();
         DeleteCache();
         isOk = false;

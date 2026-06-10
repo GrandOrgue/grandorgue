@@ -2,7 +2,7 @@
  * GrandOrgue - a free pipe organ simulator
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -24,9 +24,11 @@
 
 #include <wx/string.h>
 
+#include "loader/GOProgressMonitor.h"
+
 class wxProgressDialog;
 
-class GOProgressDialog {
+class GOProgressDialog : public GOProgressMonitor {
 private:
   wxProgressDialog *m_dlg;
   long m_last;
@@ -39,10 +41,12 @@ public:
   ~GOProgressDialog();
 
   void Setup(
-    long max, const wxString &title, const wxString &msg = wxEmptyString);
-  void Reset(long max, const wxString &msg = wxEmptyString);
+    long max,
+    const wxString &title,
+    const wxString &msg = wxEmptyString) override;
+  void Reset(long max, const wxString &msg = wxEmptyString) override;
 
-  bool Update(unsigned value, const wxString &msg);
+  bool Update(unsigned value, const wxString &msg) override;
 };
 
 #endif

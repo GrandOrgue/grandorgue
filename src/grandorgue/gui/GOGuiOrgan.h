@@ -19,7 +19,7 @@ class GOMidiDialogListener;
 class GOMidiObject;
 class GOOrganController;
 class GOOrgan;
-class GOProgressDialog;
+class GOProgressMonitor;
 class GOResizable;
 class GOSoundSystem;
 
@@ -57,11 +57,11 @@ public:
   // Note: on failure CloseOrgan() is called, which also clears
   // m_OrganController.
   GOOrganController *LoadOrgan(
-    GOProgressDialog *dlg,
     const GOOrgan &organ,
     const wxString &cmb,
-    bool isGuiOnly);
-  bool UpdateCache(GOProgressDialog *dlg, bool compress);
+    bool isGuiOnly,
+    GOProgressMonitor &monitor);
+  bool UpdateCache(bool compress, GOProgressMonitor &monitor);
 
   void ShowMIDIEventDialog(
     GOMidiObject &obj, GOMidiDialogListener *pDialogListener = nullptr);
