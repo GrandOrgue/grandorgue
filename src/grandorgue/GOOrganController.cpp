@@ -549,7 +549,7 @@ wxString GOOrganController::Load(
             if (!monitor.Update(
                   objectDistributor.GetPos(), obj->GetLoadTitle()))
               throw GOLoadAborted(); // skip the rest of loading code
-          // rethrow exception if any occured in thisWorker.LoadNextObject
+          // rethrow exception if any occurred in thisWorker.LoadNextObject
           bool wereExceptions = thisWorker.WereExceptions();
 
           for (unsigned i = 0; i < threads.size(); i++)

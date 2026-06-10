@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -58,7 +58,7 @@ unsigned GOCondition::WaitOrStop(const char *waiterInfo, GOThread *pThread) {
     if (rc & SIGNAL_RECEIVED)
       break;
 
-    // timeout occured
+    // timeout occurred
     if (isFirstTime && waiterInfo) {
       wxLogWarning(
         "GOCondition::WaitOrStop: timeout while %s waited for condition %p",
