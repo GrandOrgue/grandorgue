@@ -10,12 +10,14 @@
 #include <algorithm>
 
 #include "buffer/GOSoundBufferMutable.h"
+#include "config/GOConfig.h"
 #include "model/GOOrganModel.h"
 #include "model/GOPipe.h"
 #include "model/GOWindchest.h"
 #include "playing/GOSoundReleaseAlignTable.h"
 #include "playing/GOSoundSampler.h"
 #include "providers/GOSoundProvider.h"
+#include "scheduler/GOSoundThread.h"
 #include "tasks/GOSoundGroupTask.h"
 #include "tasks/GOSoundOutputTask.h"
 #include "tasks/GOSoundReleaseTask.h"
@@ -696,6 +698,100 @@ void GOSoundOrganEngine::SwitchSample(
     return;
 
   handle->new_attack = m_CurrentTime + handle->delay;
+}
+
+void GOSoundOrganEngine::StartThreads(unsigned nConcurrency) {
+  GOMutexLocker thread_locker(m_ThreadLock);
+
+  for (unsigned i = 0; i < nConcurrency; i++)
+    mp_threads.push_back(std::make_unique<GOSoundThread>(&m_Scheduler));
+
+  for (auto &pThread : mp_threads)
+    pThread->Run();
+}
+
+void GOSoundOrganEngine::StopThreads() {
+  for (auto &pThread : mp_threads)
+    pThread->Delete();
+
+  GOMutexLocker thread_locker(m_ThreadLock);
+
+  mp_threads.clear();
+}
+
+void GOSoundOrganEngine::BuildAndStart(
+  GOConfig &config,
+  unsigned sampleRate,
+  unsigned samplesPerBuffer,
+  GOOrganModel &organModel,
+  GOMemoryPool &memoryPool,
+  unsigned releaseConcurrency,
+  GOSoundRecorder &audioRecorder) {
+  const unsigned audio_group_count = config.GetAudioGroups().size();
+  std::vector<GOAudioDeviceConfig> &audio_config
+    = config.GetAudioDeviceConfig();
+  const unsigned audioDeviceCount = audio_config.size();
+  std::vector<GOAudioOutputConfiguration> engine_config;
+
+  engine_config.resize(audioDeviceCount);
+  for (unsigned deviceI = 0; deviceI < audioDeviceCount; deviceI++) {
+    const GOAudioDeviceConfig &deviceConfig = audio_config[deviceI];
+    const auto &deviceOutputs = deviceConfig.GetChannelOututs();
+    GOAudioOutputConfiguration &engineConfig = engine_config[deviceI];
+
+    engineConfig.channels = deviceConfig.GetChannels();
+    engineConfig.scale_factors.resize(engineConfig.channels);
+    for (unsigned channelI = 0; channelI < engineConfig.channels; channelI++) {
+      std::vector<float> &scaleFactors = engineConfig.scale_factors[channelI];
+
+      scaleFactors.resize(audio_group_count * 2);
+      std::fill(
+        scaleFactors.begin(),
+        scaleFactors.end(),
+        GOAudioDeviceConfig::MUTE_VOLUME);
+
+      if (channelI < deviceOutputs.size()) {
+        for (const auto &groupOutput : deviceOutputs[channelI]) {
+          int id = config.GetStrictAudioGroupId(groupOutput.GetName());
+
+          if (id >= 0) {
+            scaleFactors[id * 2] = groupOutput.GetLeft();
+            scaleFactors[id * 2 + 1] = groupOutput.GetRight();
+          }
+        }
+      }
+    }
+  }
+
+  SetSamplesPerBuffer(samplesPerBuffer);
+  SetPolyphonyLimiting(config.ManagePolyphony());
+  SetHardPolyphony(config.PolyphonyLimit());
+  SetScaledReleases(config.ScaleRelease());
+  SetRandomizeSpeaking(config.RandomizeSpeaking());
+  SetInterpolationType(config.m_InterpolationType());
+  SetAudioGroupCount(audio_group_count);
+  SetSampleRate(sampleRate);
+  SetAudioOutput(engine_config);
+  SetupReverb(config);
+  SetAudioRecorder(&audioRecorder, config.RecordDownmix());
+  Setup(organModel, memoryPool, releaseConcurrency);
+  StartThreads(config.Concurrency());
+  m_Scheduler.ResumeGivingWork();
+}
+
+void GOSoundOrganEngine::StopAndDestroy() {
+  m_Scheduler.PauseGivingWork();
+  for (auto &pThread : mp_threads)
+    pThread->WaitForIdle();
+  StopThreads();
+  ClearSetup();
+}
+
+void GOSoundOrganEngine::WakeupThreads() {
+  GOMutexLocker thread_locker(m_ThreadLock);
+
+  for (auto &pThread : mp_threads)
+    pThread->Wakeup();
 }
 
 void GOSoundOrganEngine::UpdateVelocity(
