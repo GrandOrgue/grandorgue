@@ -35,9 +35,9 @@ GOSoundSystem::GOSoundSystem(GOConfig &settings)
     m_IsRunning(false),
     m_NCallbacksEntered(0),
     m_CallbackCondition(m_CallbackMutex),
+    meter_counter(0),
     m_WaitCount(0),
-    m_CalcCount(0),
-    meter_counter(0) {}
+    m_CalcCount(0) {}
 
 GOSoundSystem::~GOSoundSystem() {
   AssureSoundIsClosed();
