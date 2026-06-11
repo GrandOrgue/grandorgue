@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -43,6 +43,8 @@ protected:
 public:
   GOGUIControl(GOGUIPanel *panel, GOControl *pControl);
   virtual ~GOGUIControl();
+
+  GOControl *GetControl() const { return p_control; }
 
   GODocumentBase *GetDocument() const {
     return m_panel ? m_panel->GetDocument() : nullptr;

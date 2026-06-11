@@ -1,3 +1,5 @@
+- Fixed on-screen keyboard appearing when tapping organ panels on touch-enabled desktops https://github.com/GrandOrgue/grandorgue/issues/2492
+- Removed default keyboard shortcut assignments from MIDI objects; shortcuts must now be assigned manually in the MIDI event dialog
 - Fixed expression pedal malfunction when CC value exceeds configured high value https://github.com/GrandOrgue/grandorgue/issues/2494
 # 3.17.2 (2026-05-24)
 - Fixed matching MIDI and audio device names containing regex metacharacters (e.g. parentheses) https://github.com/GrandOrgue/grandorgue/issues/2491
