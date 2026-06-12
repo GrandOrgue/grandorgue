@@ -22,6 +22,9 @@ if [ "$1" = "--help" ] || [ "$1" = "-?" ]; then
     exit 0
 fi
 
+SRC_DIR=$(readlink -f "$(dirname $0)/../..")
+cd "$SRC_DIR/build/tests"
+
 ACTIONS="${*:-all}"
 IS_ALL=false
 IS_TESTS=false

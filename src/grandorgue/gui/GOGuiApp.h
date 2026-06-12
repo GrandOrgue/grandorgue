@@ -60,6 +60,15 @@ private:
   int OnExit() override;
   virtual void CleanUp() override;
 
+#if wxDEBUG_LEVEL
+  void OnAssertFailure(
+    const wxChar *file,
+    int line,
+    const wxChar *func,
+    const wxChar *cond,
+    const wxChar *msg) override;
+#endif
+
 protected:
   GOAppWindow *p_AppWindow = nullptr;
   wxLocale m_locale;

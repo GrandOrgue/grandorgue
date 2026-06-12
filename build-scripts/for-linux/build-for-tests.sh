@@ -35,8 +35,14 @@ GO_PRMS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_TESTING=ON $COVERAGE_FLAG $ASAN_
   $CMAKE_VERSION_PRMS \
   $($DIR/cmake-prm-yaml-cpp.bash $TARGET_ARCH)"
 
+BUILD_DIR="$SRC_DIR/build/tests"
+mkdir -p "$BUILD_DIR"
+pushd "$BUILD_DIR"
+
 # Build simply GrandOrgue without packaging
 echo "cmake -G \"Unix Makefiles\" $GO_PRMS . $SRC_DIR"
 cmake -G "Unix Makefiles" $GO_PRMS . $SRC_DIR
 echo "cmake --build . --parallel $PARALLEL_PRMS"
 cmake --build . --parallel $PARALLEL_PRMS
+
+popd

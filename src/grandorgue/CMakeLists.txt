@@ -271,6 +271,10 @@ endif ()
 
 BUILD_EXECUTABLE(GrandOrgue)
 target_link_libraries(GrandOrgue golib)
+if(TARGET cpptrace::cpptrace)
+  target_link_libraries(GrandOrgue cpptrace::cpptrace)
+  target_compile_definitions(GrandOrgue PRIVATE GO_HAS_CPPTRACE)
+endif()
 
 if (INSTALL_DEPEND STREQUAL "ON")
   CopyWxTranslations()

@@ -126,10 +126,3 @@ if ! grep -q libjack /etc/dpkg/shlibs.override; then
   echo "libjack 0 pipewire-jack | libjack-jackd2-0 | libjack0" \
     | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
 fi
-
-# install cpptrace
-if [[ "$INSTALL_TESTS" == "tests" ]]; then
-  $DIR/prepare-cpptrace.bash
-else
-  true
-fi
