@@ -12,6 +12,9 @@
 [submodule "submodules/ZitaConvolver"]
 	path = submodules/ZitaConvolver
 	url = https://github.com/GrandOrgue/ZitaConvolver.git
-[submodule "submodules/cpptrace"]
-	path = submodules/cpptrace
+[submodule "submodules/CppTrace"]
+	path = submodules/CppTrace
 	url = https://github.com/jeremy-rifkin/cpptrace.git
+[submodule "submodules/LibDwarfLite"]
+	path = submodules/LibDwarfLite
+	url = https://github.com/jeremy-rifkin/libdwarf-lite.git

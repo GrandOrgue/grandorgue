@@ -260,12 +260,12 @@ endif()
 
 # include cpptrace
 if(USE_INTERNAL_CPPTRACE)
-  set(CPPTRACE_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/cpptrace")
+  set(CPPTRACE_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/CppTrace")
   if(NOT EXISTS "${CPPTRACE_SRC_DIR}/CMakeLists.txt")
     message(
       FATAL_ERROR
       "${CPPTRACE_SRC_DIR}/CMakeLists.txt does not exist. "
-      "Possible the cpptrace submodule has not been updated. "
+      "Possible the CppTrace submodule has not been updated. "
       "Try to execute 'git submodule update --init --recursive' in the source directory"
     )
   endif()
@@ -276,6 +276,18 @@ if(USE_INTERNAL_CPPTRACE)
     # FetchContent does not cross-compile libdwarf correctly; use dbghelp instead
     set(CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF OFF CACHE BOOL "" FORCE)
     set(CPPTRACE_GET_SYMBOLS_WITH_DBGHELP  ON  CACHE BOOL "" FORCE)
+  else()
+    set(GO_LIBDWARF_LITE_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/LibDwarfLite")
+    if(NOT EXISTS "${GO_LIBDWARF_LITE_SRC_DIR}/CMakeLists.txt")
+      message(
+        FATAL_ERROR
+        "${GO_LIBDWARF_LITE_SRC_DIR}/CMakeLists.txt does not exist. "
+        "Possible the LibDwarfLite submodule has not been updated. "
+        "Try to execute 'git submodule update --init --recursive' in the source directory"
+      )
+    endif()
+    # Use vendored libdwarf-lite to avoid a git clone at build time
+    set(FETCHCONTENT_SOURCE_DIR_LIBDWARF "${GO_LIBDWARF_LITE_SRC_DIR}" CACHE PATH "" FORCE)
   endif()
   add_subdirectory(${CPPTRACE_SRC_DIR})
   if(NOT TARGET cpptrace::cpptrace)

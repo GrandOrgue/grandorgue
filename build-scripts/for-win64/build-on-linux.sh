@@ -8,12 +8,14 @@
 
 set -e
 
-source $(dirname $0)/../set-ver-prms.sh "$1" "$2" "$5"
+DIR=$(readlink -f $(dirname $0))
+
+source $DIR/../set-ver-prms.sh "$1" "$2" "$5"
 
 if [[ -n "$3" ]]; then
 	SRC_DIR=$3
 else
-	SRC_DIR=$(readlink -f $(dirname $0)/../..)
+	SRC_DIR=$(readlink -f $DIR/../..)
 fi
 
 PARALLEL_PRMS="-j$(nproc)"
@@ -33,7 +35,7 @@ export LANG=C
 
 WX_CONFIG=$MINGW_DIR/bin/wx-config; export WX_CONFIG
 
-source $(dirname $0)/set-mingw-vars.sh
+source $DIR/set-mingw-vars.sh
 
 CMAKE_WIN_PRMS="-DASIO_SDK_DIR=/usr/local/asio-sdk \
   -DCV2PDB_EXE=/usr/local/share/wine/cv2pdb/cv2pdb.exe \
