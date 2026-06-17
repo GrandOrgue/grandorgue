@@ -116,7 +116,11 @@ bool GOGuiApp::OnCmdLineParsed(wxCmdLineParser &parser) {
 }
 
 bool GOGuiApp::OnInit() {
-  wxLog::SetActiveTarget(mp_TemporaryLog.get());
+  // Transfer ownership to wxWidgets: wxEntryCleanup() calls D0 (deleting
+  // destructor) on the active log target, so we must not also delete it via
+  // the unique_ptr. release() makes mp_TemporaryLog null so ~GOGuiApp() is
+  // a no-op for this pointer.
+  wxLog::SetActiveTarget(mp_TemporaryLog.release());
 
 #ifdef __WXMAC__
   /* This ensures that the executable (when it is not in the form of an OS X
@@ -170,7 +174,10 @@ bool GOGuiApp::OnInit() {
     *mp_SoundSystem);
   SetTopWindow(p_AppWindow);
   mp_log = std::make_unique<GOGuiLog>(p_AppWindow);
-  wxLog::SetActiveTarget(mp_log.get());
+  // SetActiveTarget returns the previous logger (TemporaryLog, released from
+  // mp_TemporaryLog), which wxWidgets won't delete because it's no longer
+  // active. Delete it explicitly now that we are done with it.
+  delete wxLog::SetActiveTarget(mp_log.get());
   p_AppWindow->Init(m_FileName, m_IsGuiOnly);
 
   return true;
