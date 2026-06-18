@@ -45,9 +45,6 @@ private:
     void DoLogTextAtLevel(wxLogLevel level, const wxString &msg) override;
   };
 
-  // A temporary logging instance
-  std::unique_ptr<TemporaryLog> mp_TemporaryLog
-    = std::make_unique<TemporaryLog>();
   bool m_IsToRestartAfterExit = false;
 
 #ifdef __WXMAC__

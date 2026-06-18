@@ -116,11 +116,9 @@ bool GOGuiApp::OnCmdLineParsed(wxCmdLineParser &parser) {
 }
 
 bool GOGuiApp::OnInit() {
-  // Transfer ownership to wxWidgets: wxEntryCleanup() calls D0 (deleting
-  // destructor) on the active log target, so we must not also delete it via
-  // the unique_ptr. release() makes mp_TemporaryLog null so ~GOGuiApp() is
-  // a no-op for this pointer.
-  wxLog::SetActiveTarget(mp_TemporaryLog.release());
+  // Ownership is transferred to wxWidgets: wxEntryCleanup() calls the deleting
+  // destructor on the active log target, so we must not delete it ourselves.
+  wxLog::SetActiveTarget(new TemporaryLog());
 
 #ifdef __WXMAC__
   /* This ensures that the executable (when it is not in the form of an OS X
