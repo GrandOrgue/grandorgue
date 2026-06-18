@@ -28,7 +28,6 @@ class GOOrganController;
 class GOPortsConfig;
 class GOSoundBufferMutable;
 class GOSoundPort;
-class GOSoundThread;
 
 /**
  * This class represents a GrandOrgue-wide sound system. It may be used even
@@ -70,7 +69,6 @@ private:
   GOMidiSystem m_midi;
   GOSoundRecorder m_AudioRecorder;
   GOSoundOrganEngine m_SoundEngine;
-  ptr_vector<GOSoundThread> m_Threads;
 
   bool m_open;
   bool logSoundErrors;
@@ -94,7 +92,6 @@ private:
   GOCondition m_CallbackCondition;
 
   GOMutex m_lock;
-  GOMutex m_thread_lock;
 
   unsigned meter_counter;
 
@@ -104,16 +101,11 @@ private:
   void StartStreams();
   void OpenMidi() { m_midi.Open(); }
 
-  void StartThreads();
-  void StopThreads();
-
   void UpdateMeter();
   void ResetMeters();
 
   /** Open audio ports and configure the sound engine (without organ setup) */
   void OpenSoundSystem();
-  /** Set up the sound engine for the current organ and start worker threads */
-  void BuildAndStartEngine();
   /** Start audio streams and mark system as running */
   void StartSoundSystem();
   /** Notify the organ controller that sound is open and begin playback */
@@ -123,10 +115,13 @@ private:
   void NotifySoundIsClosing();
   /** Stop audio streams and wait for all callbacks to finish */
   void StopSoundSystem();
-  /** Stop sound engine worker threads and tear down the organ setup */
-  void StopAndDestroyEngine();
   /** Close and delete audio ports, reset meters, mark system as closed */
   void CloseSoundSystem();
+
+  /** Build the sound organ engine and start its worker threads */
+  void BuildAndStartEngine();
+  /** Stop the sound organ engine worker threads and destroy the engine */
+  void StopAndDestroyEngine();
 
 public:
   static void FillDeviceNamePattern(
