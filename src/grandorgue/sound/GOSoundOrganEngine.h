@@ -30,6 +30,7 @@ class GOSoundRecorder;
 class GOSoundGroupTask;
 class GOSoundOutputTask;
 class GOSoundReleaseTask;
+class GOSoundThread;
 class GOSoundTouchTask;
 class GOSoundTremulantTask;
 class GOSoundWindchestTask;
@@ -107,10 +108,16 @@ private:
   std::unique_ptr<GOSoundTouchTask> m_TouchTask;
   GOSoundScheduler m_Scheduler;
 
+  std::vector<std::unique_ptr<GOSoundThread>> mp_threads;
+  GOMutex m_ThreadLock;
+
   GOSoundResample m_resample;
   GOSoundResample::InterpolationType m_interpolation;
 
   std::atomic_bool m_HasBeenSetup;
+
+  void StartThreads(unsigned nConcurrency);
+  void StopThreads();
 
   unsigned MsToSamples(unsigned ms) const { return m_SampleRate * ms / 1000; }
 
@@ -236,6 +243,22 @@ public:
     const GOSoundProvider *pipe,
     GOSoundSampler *handle,
     unsigned velocity) override;
+
+  /** Configure the engine for the given organ and start worker threads */
+  void BuildAndStart(
+    GOConfig &config,
+    unsigned sampleRate,
+    unsigned samplesPerBuffer,
+    GOOrganModel &organModel,
+    GOMemoryPool &memoryPool,
+    unsigned releaseConcurrency,
+    GOSoundRecorder &audioRecorder);
+
+  /** Stop worker threads and tear down the organ setup */
+  void StopAndDestroy();
+
+  /** Wake up all worker threads. Called from the audio callback. */
+  void WakeupThreads();
 
   void GetAudioOutput(
     unsigned outputIndex, bool isLast, GOSoundBufferMutable &outBuffer);

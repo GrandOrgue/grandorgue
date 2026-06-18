@@ -15,7 +15,6 @@
 #include "config/GOConfig.h"
 #include "config/GOPortsConfig.h"
 #include "ports/GOSoundPortFactory.h"
-#include "scheduler/GOSoundThread.h"
 #include "threading/GOMultiMutexLocker.h"
 #include "threading/GOMutexLocker.h"
 
@@ -44,27 +43,6 @@ GOSoundSystem::~GOSoundSystem() {
 
   GOMidiPortFactory::terminate();
   GOSoundPortFactory::terminate();
-}
-
-void GOSoundSystem::StartThreads() {
-  StopThreads();
-
-  unsigned n_cpus = m_config.Concurrency();
-
-  GOMutexLocker thread_locker(m_thread_lock);
-  for (unsigned i = 0; i < n_cpus; i++)
-    m_Threads.push_back(new GOSoundThread(&GetEngine().GetScheduler()));
-
-  for (unsigned i = 0; i < m_Threads.size(); i++)
-    m_Threads[i]->Run();
-}
-
-void GOSoundSystem::StopThreads() {
-  for (unsigned i = 0; i < m_Threads.size(); i++)
-    m_Threads[i]->Delete();
-
-  GOMutexLocker thread_locker(m_thread_lock);
-  m_Threads.resize(0);
 }
 
 void GOSoundSystem::OpenSoundSystem() {
@@ -130,62 +108,6 @@ void GOSoundSystem::OpenSoundSystem() {
   }
 }
 
-void GOSoundSystem::BuildAndStartEngine() {
-  const unsigned audio_group_count = m_config.GetAudioGroups().size();
-  std::vector<GOAudioDeviceConfig> &audio_config
-    = m_config.GetAudioDeviceConfig();
-  const unsigned audioDeviceCount = audio_config.size();
-  std::vector<GOAudioOutputConfiguration> engine_config;
-
-  engine_config.resize(audioDeviceCount);
-  for (unsigned deviceI = 0; deviceI < audioDeviceCount; deviceI++) {
-    const GOAudioDeviceConfig &deviceConfig = audio_config[deviceI];
-    const auto &deviceOutputs = deviceConfig.GetChannelOututs();
-    GOAudioOutputConfiguration &engineConfig = engine_config[deviceI];
-
-    engineConfig.channels = deviceConfig.GetChannels();
-    engineConfig.scale_factors.resize(engineConfig.channels);
-    for (unsigned channelI = 0; channelI < engineConfig.channels; channelI++) {
-      std::vector<float> &scaleFactors = engineConfig.scale_factors[channelI];
-
-      scaleFactors.resize(audio_group_count * 2);
-      std::fill(
-        scaleFactors.begin(),
-        scaleFactors.end(),
-        GOAudioDeviceConfig::MUTE_VOLUME);
-
-      if (channelI < deviceOutputs.size()) {
-        for (const auto &groupOutput : deviceOutputs[channelI]) {
-          int id = m_config.GetStrictAudioGroupId(groupOutput.GetName());
-
-          if (id >= 0) {
-            scaleFactors[id * 2] = groupOutput.GetLeft();
-            scaleFactors[id * 2 + 1] = groupOutput.GetRight();
-          }
-        }
-      }
-    }
-  }
-
-  m_SoundEngine.SetSamplesPerBuffer(m_SamplesPerBuffer);
-  m_SoundEngine.SetPolyphonyLimiting(m_config.ManagePolyphony());
-  m_SoundEngine.SetHardPolyphony(m_config.PolyphonyLimit());
-  m_SoundEngine.SetScaledReleases(m_config.ScaleRelease());
-  m_SoundEngine.SetRandomizeSpeaking(m_config.RandomizeSpeaking());
-  m_SoundEngine.SetInterpolationType(m_config.m_InterpolationType());
-  m_SoundEngine.SetAudioGroupCount(audio_group_count);
-  m_SoundEngine.SetSampleRate(m_SampleRate);
-  m_SoundEngine.SetAudioOutput(engine_config);
-  m_SoundEngine.SetupReverb(m_config);
-  m_SoundEngine.SetAudioRecorder(&m_AudioRecorder, m_config.RecordDownmix());
-  m_SoundEngine.Setup(
-    *m_OrganController,
-    m_OrganController->GetMemoryPool(),
-    m_config.ReleaseConcurrency());
-  StartThreads();
-  m_SoundEngine.GetScheduler().ResumeGivingWork();
-}
-
 void GOSoundSystem::StartSoundSystem() {
   // Enable all outputs
   for (GOSoundOutput &output : m_AudioOutputs) {
@@ -235,14 +157,6 @@ void GOSoundSystem::StopSoundSystem() {
   }
 }
 
-void GOSoundSystem::StopAndDestroyEngine() {
-  m_SoundEngine.GetScheduler().PauseGivingWork();
-  for (GOSoundThread *pThread : m_Threads)
-    pThread->WaitForIdle();
-  StopThreads();
-  m_SoundEngine.ClearSetup();
-}
-
 void GOSoundSystem::CloseSoundSystem() {
   for (int i = m_AudioOutputs.size() - 1; i >= 0; i--) {
     if (m_AudioOutputs[i].port) {
@@ -271,6 +185,19 @@ void GOSoundSystem::StartStreams() {
   for (GOSoundOutput &output : m_AudioOutputs)
     output.port->StartStream();
 }
+
+void GOSoundSystem::BuildAndStartEngine() {
+  m_SoundEngine.BuildAndStart(
+    m_config,
+    m_SampleRate,
+    m_SamplesPerBuffer,
+    static_cast<GOOrganModel &>(*m_OrganController),
+    m_OrganController->GetMemoryPool(),
+    m_config.ReleaseConcurrency(),
+    m_AudioRecorder);
+}
+
+void GOSoundSystem::StopAndDestroyEngine() { m_SoundEngine.StopAndDestroy(); }
 
 bool GOSoundSystem::AssureSoundIsOpen() {
   if (!m_open) {
@@ -408,11 +335,7 @@ bool GOSoundSystem::AudioCallback(
       m_SoundEngine.NextPeriod();
       UpdateMeter();
 
-      {
-        GOMutexLocker thread_locker(m_thread_lock);
-        for (unsigned i = 0; i < m_Threads.size(); i++)
-          m_Threads[i]->Wakeup();
-      }
+      m_SoundEngine.WakeupThreads();
       m_CalcCount.exchange(0);
       m_WaitCount.exchange(0);
 
