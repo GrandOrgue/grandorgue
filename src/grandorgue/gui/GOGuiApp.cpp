@@ -32,8 +32,19 @@ IMPLEMENT_APP(GOGuiApp)
 
 GOGuiApp::~GOGuiApp() = default;
 
-void GOGuiApp::TemporaryLog::DoLogTextAtLevel(
-  wxLogLevel level, const wxString &msg) {
+/**
+ * A temporary logging class.
+ * It logs all Warning and Error log messages to stderr, all other messages to
+ * stdout. It also displays all Error messages to a modal message box.
+ * It is used only before initializing the GOGuiLog instance, including during
+ * reading the GrandOrgueConfig
+ */
+class TemporaryLog : public wxLog {
+protected:
+  void DoLogTextAtLevel(wxLogLevel level, const wxString &msg) override;
+};
+
+void TemporaryLog::DoLogTextAtLevel(wxLogLevel level, const wxString &msg) {
   FILE *output = (level <= wxLOG_Warning) ? stderr : stdout;
 
   fprintf(output, "%s\n", msg.mb_str().data());

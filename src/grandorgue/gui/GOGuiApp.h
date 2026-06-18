@@ -33,18 +33,6 @@ class GOSoundSystem;
 
 class GOGuiApp : public wxApp {
 private:
-  /**
-   * A temporary logging class.
-   * It logs all Warning and Error log messages to stderr, all other messages to
-   * stdout. It alse displays all Error messages to a modal message box.
-   * It is used only before initialising the GOGuiLog instance, including during
-   * reading the GrandOrgueConfig
-   */
-  class TemporaryLog : public wxLog {
-  protected:
-    void DoLogTextAtLevel(wxLogLevel level, const wxString &msg) override;
-  };
-
   bool m_IsToRestartAfterExit = false;
 
 #ifdef __WXMAC__
