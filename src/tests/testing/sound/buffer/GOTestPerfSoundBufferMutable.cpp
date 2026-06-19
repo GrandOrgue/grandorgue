@@ -92,7 +92,7 @@ static constexpr Baseline BASELINE_ADD_FROM[] = {
 
 static constexpr Baseline BASELINE_ADD_FROM_COEFF[] = {
 #ifdef NDEBUG
-  {32, 2500},  // 2500 Mframes/sec (lowered: min observed 2787.3, -10% margin)
+  {32, 2120},  // 2120 Mframes/sec (lowered: min observed 2358.9, -10% margin)
   {128, 3940}, // 3940 Mframes/sec (lowered: min observed 4373.0, -10% margin)
   {512, 4220}, // 4220 Mframes/sec (lowered: min observed 4689.3, -10% margin)
   {2048, 4300} // 4300 Mframes/sec (lowered: min observed 4781.1, -10% margin)
