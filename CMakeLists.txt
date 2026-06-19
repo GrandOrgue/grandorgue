@@ -288,6 +288,8 @@ if(USE_INTERNAL_CPPTRACE)
     endif()
     # Use vendored libdwarf-lite to avoid a git clone at build time
     set(FETCHCONTENT_SOURCE_DIR_LIBDWARF "${GO_LIBDWARF_LITE_SRC_DIR}" CACHE PATH "" FORCE)
+    # Use system zstd to avoid a FetchContent download at build time
+    set(CPPTRACE_USE_EXTERNAL_ZSTD      ON  CACHE BOOL "" FORCE)
   endif()
   add_subdirectory(${CPPTRACE_SRC_DIR})
   if(NOT TARGET cpptrace::cpptrace)

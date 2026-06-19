@@ -91,6 +91,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ${WX_PKG_NAME}:$TARGET_ARCH \
   libyaml-cpp-dev:$TARGET_ARCH \
   zlib1g-dev:$TARGET_ARCH \
+  libzstd-dev:$TARGET_ARCH \
   libcurl4-openssl-dev:$TARGET_ARCH \
   $OPTIONAL_PKGS
 

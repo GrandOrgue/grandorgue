@@ -17,7 +17,8 @@ brew install \
   jack \
   librsvg \
   wxwidgets \
-  yaml-cpp
+  yaml-cpp \
+  zstd
 brew link gettext --force
 
 # A workaround of https://gitlab.kitware.com/cmake/cmake/-/issues/23826
