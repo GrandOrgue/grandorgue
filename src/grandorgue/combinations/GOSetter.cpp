@@ -828,10 +828,6 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_buttons[ID_SETTER_PREV]->Init(cfg, wxT("SetterPrev"), _("Previous"));
   m_buttons[ID_SETTER_NEXT]->Init(cfg, wxT("SetterNext"), _("Next"));
   m_buttons[ID_SETTER_SET]->Init(cfg, wxT("SetterSet"), _("Set"));
-  m_buttons[ID_SETTER_PREV]->SetDefaultShortcutKey(37);
-  m_buttons[ID_SETTER_NEXT]->SetDefaultShortcutKey(39);
-  m_buttons[ID_SETTER_CURRENT]->SetDefaultShortcutKey(40);
-
   m_buttons[ID_SETTER_M1]->Init(cfg, wxT("SetterM1"), _("-1"));
   m_buttons[ID_SETTER_M10]->Init(cfg, wxT("SetterM10"), _("-10"));
   m_buttons[ID_SETTER_M100]->Init(cfg, wxT("SetterM100"), _("-100"));
