@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,12 +12,15 @@
 
 class GOCache;
 class GOCacheWriter;
+class GOTestReleaseAlignTable;
 
 #define PHASE_ALIGN_DERIVATIVES 2
 #define PHASE_ALIGN_AMPLITUDES 32
 #define PHASE_ALIGN_MIN_FREQUENCY 20 /* Hertz */
 
 class GOSoundReleaseAlignTable {
+  friend class GOTestReleaseAlignTable;
+
 private:
   int m_PhaseAlignMaxAmplitude;
   int m_PhaseAlignMaxDerivative;
