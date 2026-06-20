@@ -15,6 +15,12 @@ class GOTestReleaseAlignTable : public GOTest {
 private:
   static const std::string TEST_NAME;
 
+  void TestComputeBucketIndexNormal();
+  void TestComputeBucketIndexBelowRange();
+  void TestComputeBucketIndexAboveRange();
+  void TestComputeBucketIndexZeroMaxValue();
+  void TestComputeBucketIndexBoundaries();
+
   /**
    * Regression test for the original bug: when only one cell in the table is
    * filled, its direct vertical neighbor (same amplitude, other derivative row)
