@@ -7,6 +7,8 @@
 
 #include "GOSoundAudioSection.h"
 
+#include <algorithm>
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
@@ -273,14 +275,14 @@ void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
         m_MaxAmplitude = abs(val);
     }
 
-    if (abs(f) > m_MaxAbsAmplitude)
-      m_MaxAbsAmplitude = abs(f);
+    m_MaxAbsAmplitude
+      = std::max(m_MaxAbsAmplitude, static_cast<unsigned>(std::abs(f)));
 
     if (i != 0) {
       /* Get v */
       int v = f - f_p;
-      if (abs(v) > m_MaxAbsDerivative)
-        m_MaxAbsDerivative = abs(v);
+      m_MaxAbsDerivative
+        = std::max(m_MaxAbsDerivative, static_cast<unsigned>(std::abs(v)));
     }
     f_p = f;
   }
@@ -571,13 +573,12 @@ void GOSoundAudioSection::SetupStreamAlignment(
   if (!joinables.size())
     return;
 
-  int max_amplitude = m_MaxAbsAmplitude;
-  int max_derivative = m_MaxAbsDerivative;
-  for (unsigned i = 0; i < joinables.size(); i++) {
-    if (joinables[i]->m_MaxAbsAmplitude > max_amplitude)
-      max_amplitude = joinables[i]->m_MaxAbsAmplitude;
-    if (joinables[i]->m_MaxAbsDerivative > max_derivative)
-      max_derivative = joinables[i]->m_MaxAbsDerivative;
+  unsigned max_amplitude = m_MaxAbsAmplitude;
+  unsigned max_derivative = m_MaxAbsDerivative;
+
+  for (const GOSoundAudioSection *pJoinable : joinables) {
+    max_amplitude = std::max(max_amplitude, pJoinable->m_MaxAbsAmplitude);
+    max_derivative = std::max(max_derivative, pJoinable->m_MaxAbsDerivative);
   }
   m_ReleaseStartSegment = start_index;
   if (m_ReleaseStartSegment >= m_StartSegments.size())

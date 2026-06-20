@@ -15,6 +15,12 @@ class GOTestReleaseAlignTable : public GOTest {
 private:
   static const std::string TEST_NAME;
 
+  void TestComputeBucketIndexNormal();
+  void TestComputeBucketIndexBelowRange();
+  void TestComputeBucketIndexAboveRange();
+  void TestComputeBucketIndexZeroMaxValue();
+  void TestComputeBucketIndexBoundaries();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
