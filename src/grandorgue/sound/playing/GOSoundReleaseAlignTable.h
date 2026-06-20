@@ -8,6 +8,8 @@
 #ifndef GOSOUNDRELEASEALIGNTABLE_H
 #define GOSOUNDRELEASEALIGNTABLE_H
 
+#include <optional>
+
 #include "GOSoundAudioSection.h"
 
 class GOCache;
@@ -18,13 +20,47 @@ class GOTestReleaseAlignTable;
 #define PHASE_ALIGN_AMPLITUDES 32
 #define PHASE_ALIGN_MIN_FREQUENCY 20 /* Hertz */
 
+class GOTestReleaseAlignTable;
+
 class GOSoundReleaseAlignTable {
   friend class GOTestReleaseAlignTable;
 
 private:
   int m_PhaseAlignMaxAmplitude;
   int m_PhaseAlignMaxDerivative;
-  int m_PositionEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
+  /* Sample-position lookup table indexed by (derivative bucket, amplitude
+   * bucket). Each entry is an absolute sample offset within the release
+   * segment, so values are always non-negative. */
+  unsigned m_PositionEntries[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
+
+  /** Row/column coordinates into the phase-align lookup table. */
+  struct CellCoords {
+    unsigned derivI;
+    unsigned ampI;
+  };
+
+  /**
+   * Searches outward from @p target for a cell whose entry in
+   * @p areCellsFilled is true, and returns its coordinates.
+   *
+   * Algorithm: separable (row-major) outward scan. The derivative dimension
+   * is the outer loop and the amplitude dimension is the inner loop; both
+   * iterate offsets in symmetric order 0, +1, -1, +2, -2, .... Consequently
+   * the entire row at |Δderiv| = d is exhausted before any row at
+   * |Δderiv| = d + 1, giving derivative-proximity priority over
+   * amplitude-proximity (not a true Chebyshev-nearest search). For
+   * PHASE_ALIGN_DERIVATIVES = 2 this degenerates to "same row first, then
+   * the other row".
+   *
+   * @param areCellsFilled 2D table marking which cells already hold a valid
+   *                       value.
+   * @param target         Coordinates of the target cell being filled.
+   * @return Coordinates of the nearest filled neighbor, or @c std::nullopt
+   *         if the @p areCellsFilled table is entirely empty.
+   */
+  static std::optional<CellCoords> findNearestFilledCell(
+    const bool areCellsFilled[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES],
+    CellCoords target);
 
 public:
   GOSoundReleaseAlignTable();
