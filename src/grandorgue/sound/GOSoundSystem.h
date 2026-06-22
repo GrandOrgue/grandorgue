@@ -8,6 +8,8 @@
 #ifndef GOSOUNDSYSTEM_H
 #define GOSOUNDSYSTEM_H
 
+#include <atomic>
+#include <memory>
 #include <vector>
 
 #include <wx/string.h>
@@ -68,7 +70,7 @@ private:
 
   GOMidiSystem m_midi;
   GOSoundRecorder m_AudioRecorder;
-  GOSoundOrganEngine m_SoundEngine;
+  std::unique_ptr<GOSoundOrganEngine> mp_SoundEngine;
 
   bool m_open;
   bool logSoundErrors;
@@ -132,7 +134,7 @@ public:
 
   GOConfig &GetSettings() { return m_config; }
   GOMidiSystem &GetMidi() { return m_midi; }
-  GOSoundOrganEngine &GetEngine() { return m_SoundEngine; }
+  GOSoundOrganEngine &GetEngine() { return *mp_SoundEngine; }
 
   std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
   const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
