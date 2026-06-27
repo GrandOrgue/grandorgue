@@ -79,21 +79,19 @@ void GOSoundOutputTask::Run(GOSoundThread *pThread) {
   float *pMeterInfo = m_MeterInfo.data();
 
   for (unsigned nItems = GetNItems(), itemI = 0, channelI = 0; itemI < nItems;
-       itemI++, pData++, pMeterInfo++) {
+       itemI++, pData++) {
     float f = std::clamp(*pData, CLAMP_MIN, CLAMP_MAX);
     float absF = std::abs(f);
 
     if (f != *pData)
       *pData = f;
-    if (absF > *pMeterInfo)
-      *pMeterInfo = absF;
+    if (absF > pMeterInfo[channelI])
+      pMeterInfo[channelI] = absF;
 
     // Move to next channel (circular: after last channel, wrap to first)
     channelI++;
-    if (channelI >= nChannels) {
+    if (channelI >= nChannels)
       channelI = 0;
-      pMeterInfo = m_MeterInfo.data();
-    }
   }
 
   m_Done.store(true);
