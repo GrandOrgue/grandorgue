@@ -9,6 +9,7 @@ brew link --overwrite pkg-config
 cmake --version || brew install cmake
 
 brew install \
+  berkeley-db@5 \
   docbook \
   docbook-xsl \
   fftw wavpack \
