@@ -76,10 +76,10 @@ void GOSoundOutputTask::Run(GOSoundThread *pThread) {
 
   /* Clamp the output and put the maximum amplitude to m_MeterInfo */
   float *pData = GetData();
+  unsigned nChannelsRest = nChannels;
   float *pMeterInfo = m_MeterInfo.data();
 
-  for (unsigned nItems = GetNItems(), itemI = 0, channelI = 0; itemI < nItems;
-       itemI++, pData++, pMeterInfo++) {
+  for (unsigned nItemsRest = GetNItems(); nItemsRest; nItemsRest--, pData++) {
     float f = std::clamp(*pData, CLAMP_MIN, CLAMP_MAX);
     float absF = std::abs(f);
 
@@ -89,9 +89,9 @@ void GOSoundOutputTask::Run(GOSoundThread *pThread) {
       *pMeterInfo = absF;
 
     // Move to next channel (circular: after last channel, wrap to first)
-    channelI++;
-    if (channelI >= nChannels) {
-      channelI = 0;
+    pMeterInfo++;
+    if (!--nChannelsRest) {
+      nChannelsRest = nChannels;
       pMeterInfo = m_MeterInfo.data();
     }
   }
