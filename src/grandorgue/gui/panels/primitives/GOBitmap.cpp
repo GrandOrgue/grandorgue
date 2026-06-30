@@ -73,11 +73,19 @@ void GOBitmap::BuildTileBitmap(
   const int tgtHeight = newRect.GetHeight();
   const int tgtWidth = newRect.GetWidth();
 
+  if (tgtWidth <= 0 || tgtHeight <= 0) {
+    m_ResultValid = false;
+    return;
+  }
   if (
     p_SourceImage
     && (scale != m_Scale || m_ResultWidth != tgtHeight || m_ResultHeight != tgtWidth || newXOffset != m_ResultXOffset || newYOffset != m_ResultYOffset)) {
     const int srcHeight = p_SourceImage->GetHeight();
     const int srcWidth = p_SourceImage->GetWidth();
+    if (srcWidth <= 0 || srcHeight <= 0) {
+      m_ResultValid = false;
+      return;
+    }
     wxImage img(tgtWidth, tgtHeight);
 
     for (int y = -newYOffset; y < tgtHeight; y += srcHeight)

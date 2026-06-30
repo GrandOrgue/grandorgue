@@ -9,12 +9,20 @@
 
 #include <wx/intl.h>
 #include <wx/mstream.h>
+#include <wx/stopwatch.h>
 
 #include "files/GOOpenedFile.h"
 #include "loader/GOLoaderFilename.h"
 
 #include "GOBuffer.h"
 #include "GOGuiLog.h"
+#ifndef LOG_TIMING
+#define LOG_TIMING(...)
+#endif
+#ifndef LOG_GUI_GAP
+#define LOG_GUI_GAP(...)
+#endif
+#define GUI_BITMAP_TIMING 1
 #include "Images.h"
 
 #define BITMAP_LIST                                                            \
@@ -223,6 +231,10 @@ const wxImage *GOGuiImageCache::LoadImage(
   const wxString &filename, const wxString &maskName) {
   const wxImage *pImage = FindImage(filename, maskName);
 
+#if GUI_BITMAP_TIMING
+  wxStopWatch swBmp;
+#endif
+
   if (!pImage) {
     wxImage image, maskimage;
 
@@ -243,15 +255,51 @@ const wxImage *GOGuiImageCache::LoadImage(
           filename.c_str(),
           maskName.c_str());
 
+      const bool hadAlpha = image.HasAlpha();
+
       image.SetMaskFromImage(maskimage, 0xFF, 0xFF, 0xFF);
+
+      if (hadAlpha) {
+        // image already had its own alpha channel (e.g. a PNG with native
+        // transparency) before SetMaskFromImage() above also turned on
+        // HasMask(). Having both set at once on the same wxImage crashes
+        // wxImage::Scale() (heap corruption) in GOBitmap::BuildBitmapFrom
+        // during panel resize - confirmed via a synchronous crash-site log
+        // capturing the exact image that was being scaled when the process
+        // died. Fold the mask into the alpha channel instead of carrying
+        // both states.
+        const unsigned char maskRed = image.GetMaskRed();
+        const unsigned char maskGreen = image.GetMaskGreen();
+        const unsigned char maskBlue = image.GetMaskBlue();
+        unsigned char *const alpha = image.GetAlpha();
+        const unsigned char *const rgb = image.GetData();
+        const int pixelCount = image.GetWidth() * image.GetHeight();
+
+        for (int i = 0; i < pixelCount; i++)
+          if (
+            rgb[i * 3] == maskRed && rgb[i * 3 + 1] == maskGreen
+            && rgb[i * 3 + 2] == maskBlue)
+            alpha[i] = 0;
+        image.SetMask(false);
+      }
     }
 
     wxImage *pNewImage = new wxImage(image);
 
-    if (pNewImage->HasMask())
+    if (pNewImage->HasMask() && !pNewImage->HasAlpha())
       pNewImage->InitAlpha();
     RegisterImage(filename, maskName, pNewImage);
     pImage = pNewImage;
   }
+
+#if GUI_BITMAP_TIMING
+  long long ms = swBmp.Time();
+  // Log only relatively slow decodes to avoid spamming the log
+  if (ms > 120) {
+    LOG_GUI_GAP(wxString::Format(
+      "GUI.Bitmap.Load key=\"%s\" ms=%lld", filename.c_str(), ms));
+  }
+#endif
+
   return pImage;
 }
