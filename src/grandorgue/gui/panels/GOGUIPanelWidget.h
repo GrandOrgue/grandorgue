@@ -10,6 +10,7 @@
 
 #include <wx/bitmap.h>
 #include <wx/panel.h>
+#include <wx/timer.h>
 
 #include "primitives/GOBitmap.h"
 
@@ -24,8 +25,28 @@ private:
   bool m_BGInit;
   GOBitmap m_Background;
   wxBitmap m_ClientBitmap;
+
+  /**
+   * The bitmap produced by the last full, sharp redraw (OnUpdate() right
+   * after PrepareDraw()). UpdateSize() always rescales from this one for its
+   * cheap live-drag preview rather than from m_ClientBitmap - which during a
+   * drag may itself already be a rescaled preview - to avoid repeatedly
+   * rescaling an already-rescaled (and thus progressively softer) image.
+   */
+  wxBitmap m_LastFullBitmap;
   double m_Scale;
   double m_FontScale;
+
+  /**
+   * Fires once resizing has been idle for a short while. UpdateSize() only
+   * does a cheap rescale of m_LastFullBitmap on every WM_SIZE tick (a live
+   * drag can fire dozens of those); the expensive, sharp re-render of every
+   * control bitmap only runs once here, after the user stops moving the
+   * border - otherwise every pixel of mouse movement triggered a full
+   * BICUBIC rescale of every key/stop/texture, making resizing unusably
+   * slow.
+   */
+  wxTimer m_ResizeTimer;
 
   /**
    * A point where the mouse has been pressed. Used for deduplication
@@ -38,6 +59,7 @@ private:
   void OnErase(wxEraseEvent &event);
   void OnPaint(wxPaintEvent &event);
   void OnGOControl(wxCommandEvent &event);
+  void OnResizeTimer(wxTimerEvent &event);
 
   /**
    * Stores m_PressedPoint and calls m_Panel->HandleMousePress with relative
