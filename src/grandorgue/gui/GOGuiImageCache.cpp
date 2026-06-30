@@ -268,6 +268,10 @@ const wxImage *GOGuiImageCache::LoadImage(
           opaque (alpha=255) would be rendered opaque — the mask would be
           silently ignored. Applying the mask to the alpha channel here ensures
           correct transparency regardless of how the image is later composited.
+
+          GetData() returns pixels as RGBRGBRGB... with no padding — exactly
+          3 bytes per pixel — per wxImage::GetData() documentation:
+          https://docs.wxwidgets.org/latest/classwx_image.html
         */
         const unsigned char maskR = pNewImage->GetMaskRed();
         const unsigned char maskG = pNewImage->GetMaskGreen();
