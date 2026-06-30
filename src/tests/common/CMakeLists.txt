@@ -1,4 +1,3 @@
-find_package(cpptrace REQUIRED)
 set(go_test_common
     # Test framework - Don't modify
     GOTestResult.cpp

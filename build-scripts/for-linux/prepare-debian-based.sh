@@ -91,6 +91,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ${WX_PKG_NAME}:$TARGET_ARCH \
   libyaml-cpp-dev:$TARGET_ARCH \
   zlib1g-dev:$TARGET_ARCH \
+  libzstd-dev:$TARGET_ARCH \
   libcurl4-openssl-dev:$TARGET_ARCH \
   $OPTIONAL_PKGS
 
@@ -125,11 +126,4 @@ fi
 if ! grep -q libjack /etc/dpkg/shlibs.override; then
   echo "libjack 0 pipewire-jack | libjack-jackd2-0 | libjack0" \
     | sudo sh -c "cat >>/etc/dpkg/shlibs.override"
-fi
-
-# install cpptrace
-if [[ "$INSTALL_TESTS" == "tests" ]]; then
-  $DIR/prepare-cpptrace.bash
-else
-  true
 fi

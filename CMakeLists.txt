@@ -123,6 +123,7 @@ option(USE_INTERNAL_RTAUDIO   "Use builtin RtAudio/RtMidi sources" ON)
 option(INSTALL_DEMO           "Install demo sampleset" ON)
 option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
 option(USE_INTERNAL_ZITACONVOLVER "Use builtin Zita Convolver sources" ON)
+option(USE_INTERNAL_CPPTRACE      "Use builtin cpptrace sources" ON)
 option(GO_USE_JACK	      "Use native Jack output" ON)
 if (WIN32 OR APPLE)
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" ON)
@@ -255,6 +256,47 @@ if (USE_INTERNAL_ZITACONVOLVER)
 else()
   set(ZITACONVOLVER_INCLUDE_DIRS "")
   set(ZITACONVOLVER_LIBRARIES zita-convolver)
+endif()
+
+# include cpptrace
+if(USE_INTERNAL_CPPTRACE)
+  set(CPPTRACE_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/CppTrace")
+  if(NOT EXISTS "${CPPTRACE_SRC_DIR}/CMakeLists.txt")
+    message(
+      FATAL_ERROR
+      "${CPPTRACE_SRC_DIR}/CMakeLists.txt does not exist. "
+      "Possible the CppTrace submodule has not been updated. "
+      "Try to execute 'git submodule update --init --recursive' in the source directory"
+    )
+  endif()
+  set(CPPTRACE_BUILD_SHARED_LIB        OFF CACHE BOOL "" FORCE)
+  set(CPPTRACE_BUILD_TESTING           OFF CACHE BOOL "" FORCE)
+  set(CPPTRACE_DISABLE_CXX_20_MODULES  ON  CACHE BOOL "" FORCE)
+  if(WIN32)
+    # FetchContent does not cross-compile libdwarf correctly; use dbghelp instead
+    set(CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF OFF CACHE BOOL "" FORCE)
+    set(CPPTRACE_GET_SYMBOLS_WITH_DBGHELP  ON  CACHE BOOL "" FORCE)
+  else()
+    set(GO_LIBDWARF_LITE_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/LibDwarfLite")
+    if(NOT EXISTS "${GO_LIBDWARF_LITE_SRC_DIR}/CMakeLists.txt")
+      message(
+        FATAL_ERROR
+        "${GO_LIBDWARF_LITE_SRC_DIR}/CMakeLists.txt does not exist. "
+        "Possible the LibDwarfLite submodule has not been updated. "
+        "Try to execute 'git submodule update --init --recursive' in the source directory"
+      )
+    endif()
+    # Use vendored libdwarf-lite to avoid a git clone at build time
+    set(FETCHCONTENT_SOURCE_DIR_LIBDWARF "${GO_LIBDWARF_LITE_SRC_DIR}" CACHE PATH "" FORCE)
+    # Use system zstd to avoid a FetchContent download at build time
+    set(CPPTRACE_USE_EXTERNAL_ZSTD      ON  CACHE BOOL "" FORCE)
+  endif()
+  add_subdirectory(${CPPTRACE_SRC_DIR})
+  if(NOT TARGET cpptrace::cpptrace)
+    add_library(cpptrace::cpptrace ALIAS cpptrace)
+  endif()
+else()
+  find_package(cpptrace REQUIRED)
 endif()
 
 # include libcurl for automatic checking for updates
