@@ -129,6 +129,16 @@ void GOGUIPanelView::OnSize(wxSizeEvent &event) {
     // Scale out the panel according the new size
 
     const wxSize newSize = event.GetSize();
+
+    // UpdateSize(), SetPosition() and CentreOnParent() below each move/resize
+    // m_panelwidget natively on their own. Without freezing, the window
+    // manager can paint the in-between states (e.g. still at the old
+    // centering position right after the size already changed), which is
+    // seen as a brief flicker/jump whenever the panel is dragged past its
+    // native size and centering kicks in. Freeze() suppresses repaints until
+    // all the geometry changes below are settled.
+    m_panelwidget->Freeze();
+
     const wxSize maxSize = m_panelwidget->UpdateSize(newSize);
 
     this->SetVirtualSize(maxSize);
@@ -156,6 +166,8 @@ void GOGUIPanelView::OnSize(wxSizeEvent &event) {
       m_panelwidget->CentreOnParent(wxHORIZONTAL);
     if (actualsize.GetHeight() > maxSize.GetHeight())
       m_panelwidget->CentreOnParent(wxVERTICAL);
+
+    m_panelwidget->Thaw();
   }
   event.Skip();
 }
