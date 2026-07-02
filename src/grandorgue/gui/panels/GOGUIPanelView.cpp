@@ -7,6 +7,7 @@
 
 #include "GOGUIPanelView.h"
 
+#include <wx/app.h>
 #include <wx/display.h>
 #include <wx/frame.h>
 #include <wx/image.h>
@@ -88,6 +89,25 @@ GOGUIPanelView::GOGUIPanelView(
     m_panelwidget->CentreOnParent(wxVERTICAL);
 
   m_panel->SetView(this);
+
+  // Forward key events from detached panel frames to the main window so that
+  // keyboard shortcuts (e.g. Escape/Panic, Ctrl+S, F2-F12) work regardless of
+  // which panel has focus. GOAppWindow's OnKeyCommand returns without Skip()
+  // for recognized shortcuts, causing ProcessEvent() to return true; in that
+  // case we suppress e.Skip() so the panel widget does not also process the key
+  // (e.g. organ note). For unrecognized keys (organ notes, Shift) Skip() is
+  // called and GOGUIPanelWidget handles them normally.
+  // Panels embedded directly inside GOAppWindow are skipped because
+  // GOAppWindow's own EVT_CHAR_HOOK already covers them.
+  wxWindow *mainWin = wxTheApp->GetTopWindow();
+  if (mainWin && topWindow != mainWin) {
+    topWindow->Bind(wxEVT_CHAR_HOOK, [mainWin](wxKeyEvent &e) {
+      wxKeyEvent copy(e);
+      copy.SetEventObject(mainWin);
+      if (!mainWin->GetEventHandler()->ProcessEvent(copy))
+        e.Skip();
+    });
+  }
 }
 
 GOGUIPanelView::~GOGUIPanelView() {
