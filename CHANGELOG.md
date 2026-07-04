@@ -1,3 +1,4 @@
+- Fixed a rare glitch right after a loop wrap in compressed samples, caused by an off-by-one in the read-ahead ring buffer
 - Fixed on-screen keyboard appearing when tapping organ panels on touch-enabled desktops https://github.com/GrandOrgue/grandorgue/issues/2492
 - Removed default keyboard shortcut assignments from MIDI objects; shortcuts must now be assigned manually in the MIDI event dialog
 - Fixed expression pedal malfunction when CC value exceeds configured high value https://github.com/GrandOrgue/grandorgue/issues/2494
