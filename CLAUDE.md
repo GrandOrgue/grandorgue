@@ -51,6 +51,7 @@ make -j$(nproc)
 cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-g -DCMAKE_C_FLAGS=-g -G "Unix Makefiles" ../..
 make -j$(nproc)
 ```
+Debug builds link the bundled `cpptrace` library (`USE_INTERNAL_CPPTRACE` CMake option, submodule at `submodules/CppTrace`) and print a stack trace on assertion failure via `GOGuiApp::OnAssertFailure` (`src/grandorgue/gui/GOGuiApp.cpp`).
 
 **Create packages:**
 ```bash
@@ -208,13 +209,13 @@ This pattern flows through: `GOSoundPort` → `GOSound` → `GOSoundEngine`
   - `combinations/`: Combination system (pistons, generals, divisionals)
   - `config/`: Configuration management
   - `control/`: Organ control elements (buttons, sliders, etc.)
-  - `document-base/`: Document base classes
-  - `gui/`: wxWidgets UI panels
+  - `gui/`: wxWidgets UI panels (includes `document-base/`: document base classes)
   - `help/`: Help system
   - `loader/`: ODF parsing
   - `midi/`: MIDI handling
   - `model/`: Organ model (pipes, stops, windchests)
   - `modification/`: Organ modification tracking
+  - `resource/`: Bundled resources
   - `sound/`: Audio engine and sound processing
   - `updater/`: ODF/CMB version updater
   - `yaml/`: YAML serialization utilities
@@ -224,6 +225,8 @@ This pattern flows through: `GOSoundPort` → `GOSound` → `GOSoundEngine`
 - `src/portaudio/`: PortAudio wrapper and integration
 
 - `src/rt/`: RtAudio and RtMidi library integration
+
+- `src/images/`: Icons and image assets
 
 - `src/tests/`: Test framework and test suites
   - `common/`: Test infrastructure (`GOTest`, `GOTestCollection`)
