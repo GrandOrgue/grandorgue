@@ -99,12 +99,14 @@ GOGUIPanelView::GOGUIPanelView(
   // called and GOGUIPanelWidget handles them normally.
   // Panels embedded directly inside GOAppWindow are skipped because
   // GOAppWindow's own EVT_CHAR_HOOK already covers them.
-  wxWindow *mainWin = wxTheApp->GetTopWindow();
-  if (mainWin && topWindow != mainWin) {
-    topWindow->Bind(wxEVT_CHAR_HOOK, [mainWin](wxKeyEvent &e) {
-      wxKeyEvent copy(e);
-      copy.SetEventObject(mainWin);
-      if (!mainWin->GetEventHandler()->ProcessEvent(copy))
+  wxWindow *pMainAppWin = wxTheApp->GetTopWindow();
+
+  if (pMainAppWin && topWindow != pMainAppWin) {
+    topWindow->Bind(wxEVT_CHAR_HOOK, [pMainAppWin](wxKeyEvent &e) {
+      wxKeyEvent eCopied(e);
+
+      eCopied.SetEventObject(pMainAppWin);
+      if (!pMainAppWin->ProcessWindowEvent(eCopied))
         e.Skip();
     });
   }
