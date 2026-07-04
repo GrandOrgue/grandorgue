@@ -110,6 +110,7 @@ public:
   unsigned GetWidth();
   unsigned GetHeight();
   bool InitialOpenWindow();
+  bool IsKeyboardInputUsed() const;
 
   void SetInitialOpenWindow(bool open);
 };

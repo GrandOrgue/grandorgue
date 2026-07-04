@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,6 +9,8 @@
 #define GODIALOG_H
 
 #include "wx/dialog.h"
+#include <type_traits>
+#include <wx/propdlg.h>
 #include <wx/sizer.h>
 
 #include "gui/size/GOSizeKeeper.h"
@@ -36,8 +38,9 @@ private:
 
   // For using in constructors only
   void Init() {
-    ((DialogClass *)this)
-      ->SetLayoutAdaptationMode(wxDIALOG_ADAPTATION_MODE_ENABLED);
+    if constexpr (!std::is_base_of_v<wxPropertySheetDialog, DialogClass>)
+      ((DialogClass *)this)
+        ->SetLayoutAdaptationMode(wxDIALOG_ADAPTATION_MODE_ENABLED);
   }
 
   void OnHelp(wxCommandEvent &event) {

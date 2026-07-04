@@ -8,6 +8,10 @@
 #include "GOGuiApp.h"
 
 #include <wx/cmdline.h>
+
+#if wxDEBUG_LEVEL && defined(GO_HAS_CPPTRACE)
+#include <cpptrace/cpptrace.hpp>
+#endif
 #include <wx/filesys.h>
 #include <wx/fs_zip.h>
 #include <wx/regex.h>
@@ -214,6 +218,29 @@ int GOGuiApp::OnExit() {
   }
   return rc;
 }
+
+#if wxDEBUG_LEVEL
+void GOGuiApp::OnAssertFailure(
+  const wxChar *file,
+  int line,
+  const wxChar *func,
+  const wxChar *cond,
+  const wxChar *msg) {
+  fprintf(
+    stderr,
+    "wxWidgets assertion failed: %s(%d): %s(): condition \"%s\"%s%s\n",
+    (const char *)wxString(file).mb_str(),
+    line,
+    (const char *)wxString(func).mb_str(),
+    (const char *)wxString(cond).mb_str(),
+    msg ? ": " : "",
+    msg ? (const char *)wxString(msg).mb_str() : "");
+#if defined(GO_HAS_CPPTRACE)
+  cpptrace::generate_trace().print(std::cerr);
+#endif
+  wxApp::OnAssertFailure(file, line, func, cond, msg);
+}
+#endif
 
 void GOGuiApp::CleanUp() {
   // Ensure that GOAppWindow and other objects are destroyed before deleting

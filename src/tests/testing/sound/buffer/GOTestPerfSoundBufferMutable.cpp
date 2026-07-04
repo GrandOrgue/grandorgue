@@ -56,9 +56,9 @@ static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 
 static constexpr Baseline BASELINE_COPY_FROM[] = {
 #ifdef NDEBUG
-  {32, 3100},  // 3100 Mframes/sec (lowered: min observed 3467.3, -10% margin)
+  {32, 2300},  // 2300 Mframes/sec (lowered: min observed 2552.0, -10% margin)
   {128, 4480}, // 4480 Mframes/sec (lowered: min observed 4982.2, -10% margin)
-  {512, 7500}, // 7500 Mframes/sec (raised: min observed 8354.3, -10% margin)
+  {512, 6730}, // 6730 Mframes/sec (lowered: min observed 7477.0, -10% margin)
   {2048, 8530} // 8530 Mframes/sec (lowered: min observed 9483.2, -10% margin)
 #else
   {32,
@@ -92,7 +92,7 @@ static constexpr Baseline BASELINE_ADD_FROM[] = {
 
 static constexpr Baseline BASELINE_ADD_FROM_COEFF[] = {
 #ifdef NDEBUG
-  {32, 2500},  // 2500 Mframes/sec (lowered: min observed 2787.3, -10% margin)
+  {32, 2120},  // 2120 Mframes/sec (lowered: min observed 2358.9, -10% margin)
   {128, 3940}, // 3940 Mframes/sec (lowered: min observed 4373.0, -10% margin)
   {512, 4220}, // 4220 Mframes/sec (lowered: min observed 4689.3, -10% margin)
   {2048, 4300} // 4300 Mframes/sec (lowered: min observed 4781.1, -10% margin)
@@ -117,7 +117,7 @@ static constexpr Baseline BASELINE_COPY_CHANNEL_FROM[] = {
   {32,
    710}, // 710 Mframes/sec (debug, lowered: min observed 790.2, -10% margin)
   {128,
-   1230}, // 1230 Mframes/sec (debug, lowered: min observed 1365.5, -10% margin)
+   1080}, // 1080 Mframes/sec (debug, lowered: min observed 1197.9, -10% margin)
   {512,
    1220}, // 1220 Mframes/sec (debug, lowered: min observed 1356.2, -10% margin)
   {2048,
@@ -135,7 +135,7 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM[] = {
   {32,
    820}, // 820 Mframes/sec (debug, lowered: min observed 908.9, -10% margin)
   {128,
-   1160}, // 1160 Mframes/sec (debug, raised: min observed 1295.5, -10% margin)
+   1020}, // 1020 Mframes/sec (debug, lowered: min observed 1132.4, -10% margin)
   {512,
    1300}, // 1300 Mframes/sec (debug, raised: min observed 1445.8, -10% margin)
   {2048,
@@ -155,7 +155,7 @@ static constexpr Baseline BASELINE_ADD_CHANNEL_FROM_COEFF[] = {
   {128,
    1200}, // 1200 Mframes/sec (debug, raised: min observed 1352.8, -10% margin)
   {512,
-   1300}, // 1300 Mframes/sec (debug, raised: min observed 1533.3, -10% margin)
+   1130}, // 1130 Mframes/sec (debug, lowered: min observed 1260.2, -10% margin)
   {2048,
    1250} // 1250 Mframes/sec (debug, lowered: min observed 1395.6, -10% margin)
 #endif

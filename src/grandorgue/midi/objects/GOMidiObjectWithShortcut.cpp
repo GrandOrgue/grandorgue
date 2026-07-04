@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -23,9 +23,8 @@ GOMidiObjectWithShortcut::~GOMidiObjectWithShortcut() {
   SetMidiShortcutReceiver(nullptr);
 }
 
-void GOMidiObjectWithShortcut::SetDefaultShortcutKey(unsigned key) {
-  if (!m_ShortcutReceiver.IsMidiConfigured())
-    m_ShortcutReceiver.SetShortcut(key);
+bool GOMidiObjectWithShortcut::IsKeyboardInputUsed() const {
+  return m_ShortcutReceiver.GetShortcut() || m_ShortcutReceiver.GetMinusKey();
 }
 
 void GOMidiObjectWithShortcut::HandleKey(int key) {

@@ -9,6 +9,7 @@ brew link --overwrite pkg-config
 cmake --version || brew install cmake
 
 brew install \
+  berkeley-db@5 \
   docbook \
   docbook-xsl \
   fftw wavpack \
@@ -17,7 +18,8 @@ brew install \
   jack \
   librsvg \
   wxwidgets \
-  yaml-cpp
+  yaml-cpp \
+  zstd
 brew link gettext --force
 
 # A workaround of https://gitlab.kitware.com/cmake/cmake/-/issues/23826

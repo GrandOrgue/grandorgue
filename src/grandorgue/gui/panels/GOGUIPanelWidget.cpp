@@ -54,7 +54,7 @@ GOGUIPanelWidget::GOGUIPanelWidget(
   m_BGImage = m_ClientBitmap.ConvertToImage();
   m_Background.BuildScaledBitmap(m_Scale, wxRect(0, 0, 0, 0), NULL);
   m_BGInit = true;
-  SetCanFocus(true);
+  SetCanFocus(m_panel->IsKeyboardInputUsed());
 }
 
 GOGUIPanelWidget::~GOGUIPanelWidget() {}
@@ -70,7 +70,10 @@ void GOGUIPanelWidget::initFont() {
 }
 
 void GOGUIPanelWidget::Focus() {
-  if (!HasFocus())
+  const bool isKeyboardUsed = m_panel->IsKeyboardInputUsed();
+
+  SetCanFocus(isKeyboardUsed);
+  if (isKeyboardUsed && !HasFocus())
     SetFocus();
 }
 
