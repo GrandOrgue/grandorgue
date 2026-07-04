@@ -89,9 +89,13 @@ public:
       while (r_cache.m_position < readAheadIndexTo) {
         r_cache.DecompressionStep(nChannels, format16);
 
-        /* fill the read ahead buffer. If r_cache.position > index we assume
-          that the previous samples already present */
-        if (r_cache.m_position >= index) {
+        /* DecompressionStep increments m_position AFTER decoding, so the
+         * sample it just produced has index (m_position - 1). Store it only
+         * if that index is >= the requested index, i.e. m_position > index
+         * (not >=): on a Seek() to a fresh/skip-ahead position, using ">="
+         * stored one sample too early, shifting every subsequent tap in the
+         * window by one until it self-healed after windowLen samples. */
+        if (r_cache.m_position > index) {
           const int *pRead = r_cache.m_value;
 
           for (uint8_t i = nChannels; i > 0; i--)
