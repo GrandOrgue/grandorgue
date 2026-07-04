@@ -64,12 +64,12 @@ struct ShortcutEntry {
 // forwarded events from detached panel frames).
 static const ShortcutEntry s_shortcuts[] = {
   {wxACCEL_NORMAL, WXK_ESCAPE, ID_AUDIO_PANIC},
-  {wxACCEL_NORMAL, WXK_F1,     wxID_HELP},
-  {wxACCEL_CTRL,   'L',        ID_FILE_LOAD},
-  {wxACCEL_CTRL,   'O',        ID_FILE_OPEN},
-  {wxACCEL_CTRL,   'S',        ID_FILE_SAVE},
-  {wxACCEL_CTRL,   'I',        ID_FILE_INSTALL},
-  {wxACCEL_CTRL,   'P',        ID_MIDI_LOAD},
+  {wxACCEL_NORMAL, WXK_F1, wxID_HELP},
+  {wxACCEL_CTRL, 'L', ID_FILE_LOAD},
+  {wxACCEL_CTRL, 'O', ID_FILE_OPEN},
+  {wxACCEL_CTRL, 'S', ID_FILE_SAVE},
+  {wxACCEL_CTRL, 'I', ID_FILE_INSTALL},
+  {wxACCEL_CTRL, 'P', ID_MIDI_LOAD},
 };
 
 BEGIN_EVENT_TABLE(GOAppWindow, wxFrame)
