@@ -99,22 +99,34 @@ GOGUIPanelView::GOGUIPanelView(
   // called and GOGUIPanelWidget handles them normally.
   // Panels embedded directly inside GOAppWindow are skipped because
   // GOAppWindow's own EVT_CHAR_HOOK already covers them.
-  wxWindow *pMainAppWin = wxTheApp->GetTopWindow();
-
-  if (pMainAppWin && topWindow != pMainAppWin) {
-    topWindow->Bind(wxEVT_CHAR_HOOK, [pMainAppWin](wxKeyEvent &e) {
-      wxKeyEvent eCopied(e);
-
-      eCopied.SetEventObject(pMainAppWin);
-      if (!pMainAppWin->ProcessWindowEvent(eCopied))
-        e.Skip();
-    });
-  }
+  if (topWindow != wxTheApp->GetTopWindow())
+    topWindow->Bind(wxEVT_CHAR_HOOK, &GOGUIPanelView::OnCharHook, this);
 }
 
 GOGUIPanelView::~GOGUIPanelView() {
+  if (m_TopWindow && m_TopWindow != wxTheApp->GetTopWindow())
+    m_TopWindow->Unbind(wxEVT_CHAR_HOOK, &GOGUIPanelView::OnCharHook, this);
   if (m_panel)
     m_panel->SetView(NULL);
+}
+
+void GOGUIPanelView::OnCharHook(wxKeyEvent &e) {
+  wxWindow *pMainAppWin = wxTheApp->GetTopWindow();
+  bool isProcessed = false;
+
+  if (pMainAppWin) {
+    /* Copy the event: SetEventObject() below must not mutate the original e,
+     * because e is still routed further via e.Skip() to topWindow's own
+     * handlers (e.g. GOGUIPanelWidget playing a note) when the key is not a
+     * recognized shortcut, and those expect GetEventObject() to stay the
+     * panel/frame, not the main window. */
+    wxKeyEvent eCopied(e);
+
+    eCopied.SetEventObject(pMainAppWin);
+    isProcessed = pMainAppWin->ProcessWindowEvent(eCopied);
+  }
+  if (!isProcessed)
+    e.Skip();
 }
 
 void GOGUIPanelView::RemoveView() {
