@@ -1,4 +1,4 @@
-- Fixed keyboard shortcuts (Panic, Help, Load/Open/Save/Install organ, MIDI player load) not working when a detached organ panel window has focus
+- Fixed keyboard shortcuts (Panic, Help, Load/Open/Save/Install organ, MIDI player load) not working when a detached organ panel window has focus https://github.com/GrandOrgue/grandorgue/issues/2541
 - Fixed on-screen keyboard appearing when tapping organ panels on touch-enabled desktops https://github.com/GrandOrgue/grandorgue/issues/2492
 - Removed default keyboard shortcut assignments from MIDI objects; shortcuts must now be assigned manually in the MIDI event dialog
 - Fixed expression pedal malfunction when CC value exceeds configured high value https://github.com/GrandOrgue/grandorgue/issues/2494
