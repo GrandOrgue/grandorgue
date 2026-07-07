@@ -21,6 +21,7 @@
 #include "GOEvent.h"
 #include "GOOrganController.h"
 #include "GOSoundDefs.h"
+#include "GOSoundOrganEngine.h"
 
 GOSoundSystem::GOSoundSystem(GOConfig &settings)
   : m_config(settings),
@@ -187,17 +188,23 @@ void GOSoundSystem::StartStreams() {
 }
 
 void GOSoundSystem::BuildAndStartEngine() {
-  m_SoundEngine.BuildAndStart(
-    m_config,
-    m_SampleRate,
-    m_SamplesPerBuffer,
-    static_cast<GOOrganModel &>(*m_OrganController),
-    m_OrganController->GetMemoryPool(),
-    m_config.ReleaseConcurrency(),
-    m_AudioRecorder);
+  GOOrganModel &organModel = static_cast<GOOrganModel &>(*m_OrganController);
+
+  mp_SoundEngine = std::make_unique<GOSoundOrganEngine>(
+    organModel, m_OrganController->GetMemoryPool());
+  mp_SoundEngine->SetFromConfig(m_config);
+
+  auto configs = GOSoundOrganEngine::createAudioOutputConfigs(
+    m_config, mp_SoundEngine->GetNAudioGroups());
+
+  mp_SoundEngine->BuildAndStart(
+    configs, m_SamplesPerBuffer, m_SampleRate, m_AudioRecorder);
 }
 
-void GOSoundSystem::StopAndDestroyEngine() { m_SoundEngine.StopAndDestroy(); }
+void GOSoundSystem::StopAndDestroyEngine() {
+  mp_SoundEngine->StopAndDestroy();
+  mp_SoundEngine.reset();
+}
 
 bool GOSoundSystem::AssureSoundIsOpen() {
   if (!m_open) {
@@ -326,16 +333,17 @@ bool GOSoundSystem::AudioCallback(
       device.condition.Wait();
 
     unsigned cnt = m_CalcCount.fetch_add(1);
-    m_SoundEngine.GetAudioOutput(
+
+    mp_SoundEngine->GetAudioOutput(
       devIndex, cnt + 1 >= m_AudioOutputs.size(), outBuffer);
     device.wait = true;
     unsigned count = m_WaitCount.fetch_add(1);
 
     if (count + 1 == m_AudioOutputs.size()) {
-      m_SoundEngine.NextPeriod();
+      mp_SoundEngine->NextPeriod();
       UpdateMeter();
 
-      m_SoundEngine.WakeupThreads();
+      mp_SoundEngine->WakeupThreads();
       m_CalcCount.exchange(0);
       m_WaitCount.exchange(0);
 
@@ -363,9 +371,7 @@ wxString GOSoundSystem::getState() {
   if (!m_AudioOutputs.size())
     return _("No sound output occurring");
   wxString result = wxString::Format(
-    _("%d samples per buffer, %d Hz\n"),
-    m_SamplesPerBuffer,
-    m_SoundEngine.GetSampleRate());
+    _("%d samples per buffer, %d Hz\n"), m_SamplesPerBuffer, m_SampleRate);
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
     result = result + _("\n") + m_AudioOutputs[i].port->getPortState();
   return result;
