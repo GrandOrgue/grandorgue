@@ -28,6 +28,12 @@ class GOSampleStatistic;
 
 class GOSoundAudioSection {
 public:
+  /* A section whose max single-channel amplitude never exceeds this many raw
+   * PCM units (regardless of bit depth, since 1 LSB is always 1 in these raw
+   * units) is considered essentially silent, e.g. a "BlankLoop" placeholder
+   * attack containing only quantization noise. */
+  static constexpr unsigned SILENT_AMPLITUDE_THRESHOLD = 4;
+
   static const unsigned getMaxReadAhead();
 
   struct StartSegment {
@@ -112,6 +118,8 @@ private:
   GOMemoryPool &m_Pool;
   unsigned m_AllocSize;
 
+  /* Max absolute value of any single channel, in raw PCM units at this
+   * section's own m_BitsPerSample (not normalized across sections). */
   unsigned m_MaxAmplitude;
   int m_MaxAbsAmplitude;
   int m_MaxAbsDerivative;
@@ -271,6 +279,10 @@ public:
   }
 
   inline bool SupportsStreamAlignment() const { return (m_ReleaseAligner); }
+
+  inline bool IsEssentiallySilent() const {
+    return m_MaxAmplitude <= SILENT_AMPLITUDE_THRESHOLD;
+  }
 
   void SetupStreamAlignment(
     const std::vector<const GOSoundAudioSection *> &joinables,

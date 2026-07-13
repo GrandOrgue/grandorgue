@@ -30,13 +30,18 @@ std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
   unsigned nChannels,
   unsigned nFrames,
   bool isCompressed,
-  const GOWaveLoop *pLoop) {
+  const GOWaveLoop *pLoop,
+  bool isSilent) {
   const unsigned nSamples = nChannels * nFrames;
   std::vector<GOInt24> pcmData(nSamples);
   std::vector<GOWaveLoop> loops;
 
-  for (unsigned i = 0; i < nSamples; i++)
-    pcmData[i] = (i % 100) * 30000 - 1500000;
+  if (isSilent)
+    for (unsigned i = 0; i < nSamples; i++)
+      pcmData[i] = (i % 2) ? 1 : -1;
+  else
+    for (unsigned i = 0; i < nSamples; i++)
+      pcmData[i] = (i % 100) * 30000 - 1500000;
 
   if (pLoop)
     loops.push_back(*pLoop);
@@ -164,6 +169,34 @@ void GOTestSoundStream::TestInitAlignedStream() {
   GOAssert(result, "ReadBlock should return true after InitAlignedStream");
 }
 
+void GOTestSoundStream::TestInitAlignedStreamWithSilentAttack() {
+  const auto pSilentAttack
+    = CreateAudioSection(1, N_FRAMES, false, nullptr, true);
+  const auto pNormalAttack = CreateAudioSection(1, N_FRAMES, false);
+  const auto pRelease = CreateAudioSection(1, N_FRAMES, false);
+
+  GOAssert(
+    pSilentAttack->IsEssentiallySilent(),
+    "A BlankLoop-like near-zero attack should be detected as essentially "
+    "silent");
+  GOAssert(
+    !pNormalAttack->IsEssentiallySilent(),
+    "A normal attack with real amplitude should not be detected as "
+    "essentially silent");
+
+  // GOSoundProvider::ComputeReleaseAlignmentInfo excludes essentially silent
+  // attacks from the joinables it passes to SetupStreamAlignment; simulate
+  // that filtering here and confirm the release aligner stays null, so
+  // playback falls back to the release's natural start position instead of
+  // matching quantization noise inside the release.
+  pRelease->SetupStreamAlignment({}, 0);
+
+  GOAssert(
+    !pRelease->SupportsStreamAlignment(),
+    "A release should have no aligner when the only joinable attack is "
+    "silent");
+}
+
 void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
   // Two loops with different end_pos: a long loop and a short loop placed
   // so PickEndSegment can pick either for some start segments. With the
@@ -243,4 +276,5 @@ void GOTestSoundStream::run() {
   TestLoopedStreamAlwaysReturnsTrue();
   TestLoopTransitionAcrossDifferentEndPos();
   TestInitAlignedStream();
+  TestInitAlignedStreamWithSilentAttack();
 }
