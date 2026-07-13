@@ -83,7 +83,6 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
       p_MainWindow->SetPosSize(mRect);
 
     m_sound.AssignOrganFile(m_OrganController);
-    m_sound.GetEngine().SetVolume(m_OrganController->GetVolume());
     m_OrganFileReady = true;
     m_listener.SetCallback(this);
     if (!cmb.IsEmpty())

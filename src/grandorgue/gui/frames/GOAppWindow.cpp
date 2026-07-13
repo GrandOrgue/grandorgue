@@ -1221,7 +1221,8 @@ void GOAppWindow::OnHelp(wxCommandEvent &event) {
 void GOAppWindow::OnSettingsVolume(wxCommandEvent &event) {
   long n = m_Volume->GetValue();
 
-  r_SoundSystem.GetEngine().SetVolume(n);
+  if (p_OrganController)
+    p_OrganController->SetVolume(n);
   for (unsigned i = 0; i < m_VolumeGauge.size(); i++)
     m_VolumeGauge[i]->ResetClip();
 }
