@@ -1261,6 +1261,8 @@ void GOAppWindow::OnSettingsVolume(wxCommandEvent &event) {
 
   if (p_OrganController)
     p_OrganController->SetVolume(n);
+  if (r_SoundSystem.GetOrganFile())
+    r_SoundSystem.GetEngine().SetVolume(n);
   for (unsigned i = 0; i < m_VolumeGauge.size(); i++)
     m_VolumeGauge[i]->ResetClip();
 }
