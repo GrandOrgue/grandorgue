@@ -195,7 +195,7 @@ public:
 
   void LoadMIDIFile(const wxString &filename);
 
-  void SetVolume(int volume) { m_volume = volume; }
+  void SetVolume(int volume);
   int GetVolume() const { return m_volume; }
 
   unsigned GetReleaseTail() {
