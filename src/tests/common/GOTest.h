@@ -36,6 +36,11 @@ public:
 };
 
 class GOCommonControllerTest : public GOTest {
+private:
+  // mkdtemp() writes the actual directory name into this buffer and
+  // organ_directory points into it, so it must outlive setUp() (a member,
+  // not a setUp()-local string).
+  std::string m_OrganDirectoryTemplate;
 
 public:
   GOCommonControllerTest();

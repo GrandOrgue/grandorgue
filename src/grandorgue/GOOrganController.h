@@ -21,6 +21,7 @@
 #include "gui/frames/GOMainWindowData.h"
 #include "gui/panels/GOGUIMouseState.h"
 #include "loader/GOFileStore.h"
+#include "loader/GOLoadedOrganInfo.h"
 #include "loader/GOProgressMonitor.h"
 #include "model/GOOrganModel.h"
 #include "modification/GOModificationProxy.h"
@@ -28,6 +29,7 @@
 #include "sound/GOSoundOrganEngine.h"
 
 #include "GOMemoryPool.h"
+#include "GOOrgan.h"
 #include "GOVirtualCouplerController.h"
 
 class GOArchive;
@@ -46,7 +48,6 @@ class GOMidiEvent;
 class GOMidiPlayer;
 class GOMidiRecorder;
 class GOMidiSystem;
-class GOOrgan;
 class GOSetter;
 class GOSoundProvider;
 class GOSoundRecorder;
@@ -60,14 +61,9 @@ class GOOrganController : public GOEventDistributor,
                           public GOModificationProxy {
 private:
   GOConfig &m_config;
-  wxString m_odf;
-  wxString m_ArchiveID;
-  wxString m_ArchivePath;
-  wxString m_hash;
+  GOOrgan m_ConfiguredOrgan;
+  GOLoadedOrganInfo m_LoadedOrganInfo;
   GOFileStore m_FileStore;
-  wxString m_CacheFilename;
-  wxString m_SettingFilename;
-  wxString m_ODFHash;
   bool m_Cacheable;
   GOSetter *m_setter;
   GODivisionalSetter *m_DivisionalSetter;
@@ -80,7 +76,6 @@ private:
   int m_volume;
   wxString m_Temperament;
 
-  bool m_b_customized;
   float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
 
@@ -118,12 +113,8 @@ private:
 
   void ReadOrganFile(GOConfigReader &cfg);
   GOHashType GenerateCacheHash();
-  wxString GenerateSettingFileName();
-  wxString GenerateCacheFileName();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
-
-  const wxString &GetOrganHash() const { return m_hash; }
 
 public:
   GOOrganController(GOConfig &config, bool isAppInitialized = false);
@@ -164,7 +155,9 @@ public:
   void LoadCombination(const wxString &cmb);
   bool Save();
   bool Export(const wxString &cmb);
-  bool CachePresent() const { return wxFileExists(m_CacheFilename); }
+  bool CachePresent() const {
+    return wxFileExists(m_LoadedOrganInfo.cacheFilePath);
+  }
   bool IsCacheable() const { return m_Cacheable; }
   bool UpdateCache(bool compress, GOProgressMonitor &monitor);
   void DeleteCache();
@@ -212,14 +205,20 @@ public:
     const wxString &name, bool is_panel = false);
 
   /* TODO: can somebody figure out what this thing is */
-  bool IsCustomized() const { return m_b_customized; }
+  bool IsCustomized() const { return m_LoadedOrganInfo.isCustomized; }
 
   /* Filename of the organ definition used to load */
-  const wxString &GetODFFilename() const { return m_odf; }
+  const wxString &GetODFFilename() const {
+    return m_ConfiguredOrgan.GetODFPath();
+  }
   const wxString GetOrganPathInfo();
   GOOrgan GetOrganInfo();
-  const wxString &GetSettingFilename() const { return m_SettingFilename; }
-  const wxString &GetCacheFilename() const { return m_CacheFilename; }
+  const wxString &GetSettingFilename() const {
+    return m_LoadedOrganInfo.settingsFilePath;
+  }
+  const wxString &GetCacheFilename() const {
+    return m_LoadedOrganInfo.cacheFilePath;
+  }
   wxString GetCombinationsDir() const;
 
   /* Organ and Building general information */
