@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,6 +16,7 @@
 #include "GOHash.h"
 #include "GOOrganList.h"
 #include "archive/GOArchiveFile.h"
+#include "go_path.h"
 
 GOOrgan::GOOrgan(
   const wxString &odf,
@@ -24,17 +25,18 @@ GOOrgan::GOOrgan(
   const wxString &church_name,
   const wxString &organ_builder,
   const wxString &recording_detail)
-  : m_ODF(odf),
-    m_ChurchName(church_name),
+  : m_ChurchName(church_name),
     m_OrganBuilder(organ_builder),
     m_RecordingDetail(recording_detail),
     m_ArchiveID(archive),
     m_ArchivePath(archivePath),
     m_NamesInitialized(true) {
+  SetODFPath(odf);
   m_LastUse = wxGetUTCTime();
 }
 
-GOOrgan::GOOrgan(wxString odf) : m_ODF(odf), m_NamesInitialized(false) {
+GOOrgan::GOOrgan(wxString odf) : m_NamesInitialized(false) {
+  SetODFPath(odf);
   m_LastUse = wxGetUTCTime();
 }
 
@@ -56,6 +58,10 @@ void GOOrgan::Update(const GOOrgan &organ) {
 }
 
 const wxString &GOOrgan::GetODFPath() const { return m_ODF; }
+
+void GOOrgan::SetODFPath(const wxString &newPath) {
+  m_ODF = m_ArchiveID.IsEmpty() ? go_normalize_path(newPath) : newPath;
+}
 
 const wxString &GOOrgan::GetChurchName() const { return m_ChurchName; }
 

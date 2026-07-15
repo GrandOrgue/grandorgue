@@ -8,6 +8,7 @@
 #include "GOTestCollection.h"
 #include "config/GOConfig.h"
 #include <cstdio>
+#include <filesystem>
 #include <iostream>
 
 GOTest::GOTest(Category category) : m_Category(category) {
@@ -36,8 +37,8 @@ bool GOCommonControllerTest::setUp() {
 
   // Make organ temporary directory
   GOTest::setUp();
-  char path[] = ".";
-  this->organ_directory = mkdtemp(path);
+  m_OrganDirectoryTemplate = "./GOTestXXXXXX";
+  this->organ_directory = mkdtemp(&m_OrganDirectoryTemplate[0]);
   mp_config.emplace(GetName(), "");
   this->controller = new GOOrganController(*mp_config);
   this->controller->InitOrganDirectory(this->organ_directory);
@@ -50,6 +51,7 @@ bool GOCommonControllerTest::tearDown() {
   delete this->controller;
   this->controller = nullptr;
   mp_config.reset();
-  unlink(this->organ_directory);
+  if (this->organ_directory)
+    std::filesystem::remove_all(this->organ_directory);
   return true;
 }
