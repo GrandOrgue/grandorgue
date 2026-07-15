@@ -49,6 +49,14 @@ void GOTestOrganReader::run() {
 
 void GOTestOrganReader::runImpl() {
   GOConfig config(GetName(), "");
+
+  // Without a call to config.Load(), OrganSettingsPath() defaults to an
+  // empty string, which would make settingsFilePath resolve under the
+  // filesystem root. Redirect it into organ_directory so the "previously
+  // saved per-user CMB" case below can safely write there.
+  config.OrganSettingsPath(
+    wxString::Format(wxT("%s/settings"), organ_directory));
+
   GOFileStore fileStore(config);
   GOTestProgressMonitor monitor;
   const wxString odfPath
@@ -115,6 +123,81 @@ void GOTestOrganReader::runImpl() {
   GOAssert(
     overriddenChurchName == wxT("Overridden Organ"),
     "The .cmb file should be layered over the ODF, not ignored");
+
+  // An explicit settingsPath must bypass auto-discovery entirely: even
+  // though a bundled .cmb (test.cmb, "Overridden Organ") already exists
+  // next to the ODF, the explicitly named file must win.
+  const wxString explicitCmbPath
+    = wxString::Format(wxT("%s/explicit.cmb"), organ_directory);
+
+  writeTextFile(
+    explicitCmbPath,
+    wxString::Format(
+      wxT("[Organ]\nChurchName=Explicit Organ\nODFHash=%s\n"), info.odfHash));
+
+  GOOrganReader explicitOrganReader(
+    config, organ, explicitCmbPath, fileStore, monitor);
+  const GOLoadedOrganInfo &explicitInfo
+    = explicitOrganReader.GetLoadedOrganInfo();
+
+  GOAssert(
+    !explicitInfo.isCustomized,
+    "Loading with an explicit settingsPath should not mark the organ as "
+    "customized, matching GOOrganController's pre-refactor behaviour");
+
+  wxString explicitChurchName
+    = explicitOrganReader.GetConfigReader().ReadString(
+      CMBSetting, wxT("Organ"), wxT("ChurchName"));
+
+  GOAssert(
+    explicitChurchName == wxT("Explicit Organ"),
+    "An explicit settingsPath should be read directly, bypassing both the "
+    "saved-settings and bundled-cmb auto-discovery checks");
+
+  // A previously saved per-user CMB (at the computed settingsFilePath) must
+  // be auto-discovered and take priority over the bundled .cmb next to the
+  // ODF, even though both exist at this point.
+  writeTextFile(
+    info.settingsFilePath,
+    wxString::Format(
+      wxT("[Organ]\nChurchName=Saved Organ\nODFHash=%s\n"), info.odfHash));
+
+  GOOrganReader savedOrganReader(
+    config, organ, wxEmptyString, fileStore, monitor);
+  const GOLoadedOrganInfo &savedInfo = savedOrganReader.GetLoadedOrganInfo();
+
+  GOAssert(
+    savedInfo.isCustomized,
+    "Loading a previously saved per-user CMB should mark the organ as "
+    "customized");
+
+  wxString savedChurchName = savedOrganReader.GetConfigReader().ReadString(
+    CMBSetting, wxT("Organ"), wxT("ChurchName"));
+
+  GOAssert(
+    savedChurchName == wxT("Saved Organ"),
+    "The previously saved per-user CMB should take priority over the "
+    "bundled .cmb next to the ODF");
+
+  // A CMB with a matching ChurchName (no mismatch warning) and no ODFHash
+  // entry at all (skipping the hash-mismatch check, which would otherwise
+  // pop up a blocking wxMessageBox) must still be read and applied.
+  const wxString matchingNoHashCmbPath
+    = wxString::Format(wxT("%s/matching-no-hash.cmb"), organ_directory);
+
+  writeTextFile(matchingNoHashCmbPath, wxT("[Organ]\nChurchName=Test Organ\n"));
+
+  GOOrganReader matchingNoHashOrganReader(
+    config, organ, matchingNoHashCmbPath, fileStore, monitor);
+
+  wxString matchingChurchNameFromDb;
+  bool wasFoundInCmb = matchingNoHashOrganReader.GetConfigDB().GetString(
+    CMBSetting, wxT("Organ"), wxT("ChurchName"), matchingChurchNameFromDb);
+
+  GOAssert(
+    wasFoundInCmb && matchingChurchNameFromDb == wxT("Test Organ"),
+    "A CMB with a matching ChurchName and no ODFHash entry should still be "
+    "read into the CMB config, without hitting the mismatch dialogs");
 
   const GOOrgan missingOrgan(
     wxString::Format(wxT("%s/nonexistent.organ"), organ_directory));
