@@ -62,7 +62,7 @@ class GOOrganController : public GOEventDistributor,
                           public GOModificationProxy {
   // Exercises LoadOrganCoreData()/LoadObjects()/SaveOrganCoreData()/
   // ClearObjects()/ClearOrganCoreData() directly, bypassing Load()'s
-  // unconditional call to LoadOrganGui() (which needs a real GUI display).
+  // unconditional call to OnLoad() (which needs a real GUI display).
   friend class GOTestOrganController;
 
 private:
@@ -121,21 +121,30 @@ private:
   /** Reads the non-GUI ODF/CMB data (church info, model, element creators,
    * combinations) into this controller. Sets m_IsOrganCoreDataLoaded. */
   void LoadOrganCoreData(GOConfigReader &cfg);
-  /** Reads the GUI ODF/CMB data (panel creators, panels, stops-window size,
-   * main-window data) and builds the panels. Sets m_IsOrganGuiLoaded. */
-  void LoadOrganGui(GOConfigReader &cfg);
+  /** Hook for a subclass to load GUI-only data, called after
+   * LoadOrganCoreData() and before the ODF/CMB unused-key report. Empty by
+   * default - a bare GOOrganController has no GUI.
+   * @param cfg the config reader for the ODF/CMB currently being loaded,
+   *   the same one passed to LoadOrganCoreData() */
+  virtual void OnLoad(GOConfigReader &cfg);
   /** Loads pipe/sample data from the cache or, failing that, from the
    * sample files in parallel worker threads. Sets m_IsObjectsLoaded. */
   void LoadObjects(GOProgressMonitor &monitor);
   /** Writes the non-GUI organ state (church info, volume, temperament,
    * saveable objects, virtual couplers) to cfg. */
   void SaveOrganCoreData(GOConfigWriter &cfg);
-  /** Writes the GUI organ state (stops-window size) to cfg. */
-  void SaveOrganGui(GOConfigWriter &cfg);
+  /** Hook for a subclass to save GUI-only data, called after
+   * SaveOrganCoreData() and before the file is written. Empty by default.
+   * @param cfg the config writer Save() is assembling; core data has
+   *   already been written to it by the time this runs */
+  virtual void OnSave(GOConfigWriter &cfg);
   /** Undoes LoadObjects if it ran. Idempotent. */
   void ClearObjects();
-  /** Undoes LoadOrganGui if it ran. Idempotent. */
-  void ClearOrganGui();
+  /** Hook for a subclass to clear GUI-only data, called after
+   * ClearObjects() and before ClearOrganCoreData() (GUI data may reference
+   * core model objects that ClearOrganCoreData() frees). Empty by default.
+   * Undoes OnLoad() if it ran. Idempotent. */
+  virtual void OnClear();
   /** Undoes LoadOrganCoreData if it ran. Idempotent. */
   void ClearOrganCoreData();
   GOHashType GenerateCacheHash();

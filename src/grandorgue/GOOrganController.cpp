@@ -141,7 +141,7 @@ void GOOrganController::ClearObjects() {
   }
 }
 
-void GOOrganController::ClearOrganGui() {
+void GOOrganController::OnClear() {
   if (m_IsOrganGuiLoaded) {
     m_panels.clear();
     m_panelcreators.clear();
@@ -181,7 +181,7 @@ void GOOrganController::ClearOrganCoreData() {
 
 void GOOrganController::Clear() {
   ClearObjects();
-  ClearOrganGui();
+  OnClear();
   ClearOrganCoreData();
 }
 
@@ -338,7 +338,7 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
     | (result.hash[7] & 0x7F);
 }
 
-void GOOrganController::LoadOrganGui(GOConfigReader &cfg) {
+void GOOrganController::OnLoad(GOConfigReader &cfg) {
   m_IsOrganGuiLoaded = true;
 
   unsigned NumberOfPanels = cfg.ReadInteger(
@@ -523,7 +523,7 @@ wxString GOOrganController::Load(
     m_Cacheable = false;
 
     LoadOrganCoreData(organReader.GetConfigReader());
-    LoadOrganGui(organReader.GetConfigReader());
+    OnLoad(organReader.GetConfigReader());
     organReader.ReportUnused();
 
     if (!isGuiOnly)
@@ -699,7 +699,7 @@ void GOOrganController::SaveOrganCoreData(GOConfigWriter &cfg) {
   m_VirtualCouplers.Save(cfg);
 }
 
-void GOOrganController::SaveOrganGui(GOConfigWriter &cfg) {
+void GOOrganController::OnSave(GOConfigWriter &cfg) {
   m_StopWindowSizeKeeper.Save(cfg);
 }
 
@@ -708,7 +708,7 @@ bool GOOrganController::Export(const wxString &cmb) {
   GOConfigWriter cfg(cfg_file, false);
 
   SaveOrganCoreData(cfg);
-  SaveOrganGui(cfg);
+  OnSave(cfg);
 
   wxString tmp_name = cmb + wxT(".new");
 
