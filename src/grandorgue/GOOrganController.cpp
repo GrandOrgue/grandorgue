@@ -31,17 +31,7 @@
 #include "files/GOOpenedFile.h"
 #include "gui/GOGuiImageCache.h"
 #include "gui/dialogs/go-message-boxes.h"
-#include "gui/panels/GOGUIBankedGeneralsPanel.h"
-#include "gui/panels/GOGUICouplerManualsAndVolumePanel.h"
-#include "gui/panels/GOGUICouplerPanel.h"
-#include "gui/panels/GOGUICrescendoPanel.h"
-#include "gui/panels/GOGUIDivisionalsPanel.h"
-#include "gui/panels/GOGUIMasterPanel.h"
-#include "gui/panels/GOGUIMetronomePanel.h"
 #include "gui/panels/GOGUIPanel.h"
-#include "gui/panels/GOGUIPanelCreator.h"
-#include "gui/panels/GOGUIRecorderPanel.h"
-#include "gui/panels/GOGUISequencerPanel.h"
 #include "loader/GOLoadThread.h"
 #include "loader/GOLoaderFilename.h"
 #include "loader/GOOrganReader.h"
@@ -156,10 +146,9 @@ void GOOrganController::ClearObjects() {
   }
 }
 
-void GOOrganController::OnClear() {
+void GOOrganController::ClearOrganGuiData() {
   if (m_IsOrganGuiLoaded) {
     m_panels.clear();
-    m_panelcreators.clear();
     m_IsOrganGuiLoaded = false;
   }
 }
@@ -353,21 +342,11 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
     | (result.hash[7] & 0x7F);
 }
 
-void GOOrganController::OnLoad(GOConfigReader &cfg) {
+void GOOrganController::LoadOrganGuiData(GOConfigReader &cfg) {
   m_IsOrganGuiLoaded = true;
 
   unsigned NumberOfPanels = cfg.ReadInteger(
     ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
-
-  m_panelcreators.push_back(new GOGUICouplerPanel(this, m_VirtualCouplers));
-  m_panelcreators.push_back(new GOGUICouplerManualsAndVolumePanel(this));
-  m_panelcreators.push_back(new GOGUIMetronomePanel(this));
-  m_panelcreators.push_back(new GOGUICrescendoPanel(this));
-  m_panelcreators.push_back(new GOGUIDivisionalsPanel(this));
-  m_panelcreators.push_back(new GOGUIBankedGeneralsPanel(this));
-  m_panelcreators.push_back(new GOGUISequencerPanel(this));
-  m_panelcreators.push_back(new GOGUIMasterPanel(this));
-  m_panelcreators.push_back(new GOGUIRecorderPanel(this));
 
   m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
   m_TemperamentLabel.Load(
@@ -375,24 +354,18 @@ void GOOrganController::OnLoad(GOConfigReader &cfg) {
   m_MainWindowData.Load(cfg);
 
   m_panels.resize(0);
-  m_panels.push_back(new GOGUIPanel(this));
+  m_panels.push_back(new GOGUIPanel(this, GetImageCache(), GetMouseState()));
   m_panels[0]->Load(cfg, wxT(""));
 
   wxString buffer;
 
   for (unsigned i = 0; i < NumberOfPanels; i++) {
     buffer.Printf(wxT("Panel%03d"), i + 1);
-    m_panels.push_back(new GOGUIPanel(this));
+    m_panels.push_back(new GOGUIPanel(this, GetImageCache(), GetMouseState()));
     m_panels[i + 1]->Load(cfg, buffer);
   }
 
   m_StopWindowSizeKeeper.Load(cfg, wxT("Stops"));
-
-  for (unsigned i = 0; i < m_panelcreators.size(); i++)
-    m_panelcreators[i]->CreatePanels(cfg);
-
-  for (unsigned i = 0; i < m_panels.size(); i++)
-    m_panels[i]->Layout();
 }
 
 class GOLoadAborted : public std::exception {};

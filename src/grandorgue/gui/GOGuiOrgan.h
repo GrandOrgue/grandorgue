@@ -10,22 +10,63 @@
 
 #include <wx/string.h>
 
+#include "ptrvector.h"
+
+#include "GOOrganController.h"
 #include "document-base/GODocumentBase.h"
 #include "midi/GOMidiListener.h"
 #include "midi/events/GOMidiCallback.h"
 #include "threading/GOMutex.h"
 
 class GOConfig;
+class GOConfigReader;
+class GOGuiImageCache;
+class GOGUIMouseState;
+class GOGUIPanel;
+class GOGUIPanelCreator;
 class GOMidiDialogListener;
 class GOMidiObject;
 class GOMidiSystem;
-class GOOrganController;
 class GOOrgan;
 class GOProgressMonitor;
 class GOResizable;
 
 class GOGuiOrgan : public GODocumentBase, protected GOMidiCallback {
 private:
+  /** GUI-aware GOOrganController used only while this GOGuiOrgan has an
+   * organ loaded. Its OnLoad()/OnClear() overrides run the panel-creator
+   * orchestration that used to live in GOOrganController::OnLoad()/
+   * OnClear() directly - the rest of that GUI data (image cache, panels,
+   * main-window data, stop-window size) is still owned by
+   * GOOrganController itself for now (see LoadOrganGuiData()/
+   * ClearOrganGuiData() there) and reached here through m_OrganController's
+   * existing accessors, until a later step moves it here too. */
+  class Controller : public GOOrganController {
+  private:
+    GOGuiOrgan &r_GuiOrgan;
+
+  protected:
+    void OnLoad(GOConfigReader &cfg) override {
+      LoadOrganGuiData(cfg);
+      r_GuiOrgan.LoadOrganGui(cfg);
+    }
+    void OnClear() override {
+      r_GuiOrgan.ClearOrganGui();
+      ClearOrganGuiData();
+    }
+
+  public:
+    /**
+     * @param config the application config, forwarded to GOOrganController
+     * @param guiOrgan the enclosing GOGuiOrgan that owns this Controller
+     */
+    Controller(GOConfig &config, GOGuiOrgan &guiOrgan)
+      : GOOrganController(config, true), r_GuiOrgan(guiOrgan) {}
+    /** Clears GUI data (via OnClear()) before the base destructor frees
+     * core model data panels may reference. */
+    ~Controller() override { Clear(); }
+  };
+
   GOResizable *p_MainWindow;
   GOConfig &r_config;
   GOMidiSystem &r_MidiSystem;
@@ -36,7 +77,22 @@ private:
 
   GOMidiListener m_listener;
 
+  /** The panel-creator objects that build this organ's built-in panels
+   * (coupler, crescendo, divisionals, etc.). Temporary: the rest of the
+   * GUI data these creators populate (m_OrganController's m_panels) will
+   * move here too in a later step. */
+  ptr_vector<GOGUIPanelCreator> m_PanelCreators;
+
   void OnMidiEvent(const GOMidiEvent &event) override;
+
+  /** Builds and runs this organ's panel creators, called from
+   * Controller::OnLoad() after LoadOrganGuiData() has built the base and
+   * numbered panels the creators may add to.
+   * @param cfg the config reader for the ODF/CMB currently being loaded */
+  void LoadOrganGui(GOConfigReader &cfg);
+  /** Undoes LoadOrganGui(). Called from Controller::OnClear() before
+   * ClearOrganGuiData() frees the panels the creators may reference. */
+  void ClearOrganGui();
 
   void SyncState();
   void CloseOrgan();
@@ -47,6 +103,20 @@ public:
 
   GOOrganController *GetOrganController() const { return m_OrganController; }
   bool IsModified() const;
+
+  /** @return the image cache for the currently loaded organ, still owned
+   * by m_OrganController. */
+  GOGuiImageCache &GetImageCache();
+  /** @return the shared mouse state for the currently loaded organ's
+   * panels, still owned by m_OrganController. */
+  GOGUIMouseState &GetMouseState();
+  /**
+   * Registers a newly-built panel, called by a panel creator's
+   * CreatePanels() while building this organ's GUI. Forwards to
+   * m_OrganController, which still owns the panels array.
+   * @param panel the panel to add; ownership transfers to m_OrganController
+   */
+  void AddPanel(GOGUIPanel *panel);
 
   void ShowPanel(unsigned id);
   void ShowOrganSettingsDialog();

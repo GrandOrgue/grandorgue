@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,23 +20,25 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
+#include "gui/GOGuiOrgan.h"
 
 static const GOMidiObjectContext MIDI_CONTEXT_VOLUMES(
   wxT("volumes"), _("volumes"));
 
 GOGUICouplerManualsAndVolumePanel::GOGUICouplerManualsAndVolumePanel(
-  GOOrganController *organController)
-  : m_OrganController(organController) {}
+  GOGuiOrgan &guiOrgan)
+  : r_GuiOrgan(guiOrgan), m_OrganController(guiOrgan.GetOrganController()) {}
 
 GOGUICouplerManualsAndVolumePanel::~GOGUICouplerManualsAndVolumePanel() {}
 
 void GOGUICouplerManualsAndVolumePanel::CreatePanels(GOConfigReader &cfg) {
-  m_OrganController->AddPanel(CreatePanel(cfg));
+  r_GuiOrgan.AddPanel(CreatePanel(cfg));
 }
 
 GOGUIPanel *GOGUICouplerManualsAndVolumePanel::CreatePanel(
   GOConfigReader &cfg) {
-  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIPanel *panel = new GOGUIPanel(
+    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
   GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
     cfg, m_OrganController, GOGUI_SETTER_FLOATING);
   panel->Init(

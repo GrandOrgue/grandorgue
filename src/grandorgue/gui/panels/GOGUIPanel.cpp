@@ -19,6 +19,7 @@
 #include "config/GOConfigWriter.h"
 #include "control/GOPistonControl.h"
 #include "gui/GOGuiImageCache.h"
+#include "gui/panels/GOGUIMouseState.h"
 #include "model/GOCoupler.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOManual.h"
@@ -41,9 +42,13 @@
 #include "GOGUIPanelWidget.h"
 #include "GOOrganController.h"
 
-GOGUIPanel::GOGUIPanel(GOOrganController *organController)
+GOGUIPanel::GOGUIPanel(
+  GOOrganController *organController,
+  GOGuiImageCache &imageCache,
+  GOGUIMouseState &mouseState)
   : m_OrganController(organController),
-    m_MouseState(organController->GetMouseState()),
+    r_ImageCache(imageCache),
+    m_MouseState(mouseState),
     m_controls(0),
     m_BackgroundControls(0),
     m_Name(),
@@ -79,7 +84,7 @@ const wxString &GOGUIPanel::GetGroupName() { return m_GroupName; }
 
 const wxImage *GOGUIPanel::LoadImage(
   const wxString &filename, const wxString &maskname) {
-  return m_OrganController->GetImageCache().LoadImage(filename, maskname);
+  return r_ImageCache.LoadImage(filename, maskname);
 }
 
 GODocumentBase *GOGUIPanel::GetDocument() const {
@@ -859,5 +864,5 @@ void GOGUIPanel::HandleMouseScroll(int x, int y, int amount) {
 }
 
 const wxImage *GOGUIPanel::GetWoodImage(unsigned woodImageNumber) const {
-  return m_OrganController->GetImageCache().GetWoodImage(woodImageNumber);
+  return r_ImageCache.GetWoodImage(woodImageNumber);
 }

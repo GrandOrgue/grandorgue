@@ -40,11 +40,9 @@ class GOConfigWriter;
 class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
-class GOGUICouplerPanel;
 class GOGuiImageCache;
 class GOGuiOrgan;
 class GOGUIPanel;
-class GOGUIPanelCreator;
 class GOMidiEvent;
 class GOMidiPlayer;
 class GOMidiRecorder;
@@ -97,7 +95,6 @@ private:
   GOVirtualCouplerController m_VirtualCouplers;
 
   ptr_vector<GOGUIPanel> m_panels;
-  ptr_vector<GOGUIPanelCreator> m_panelcreators;
   ptr_vector<GOElementCreator> m_elementcreators;
 
   GOMidiSystem *m_midi;
@@ -123,10 +120,12 @@ private:
   void LoadOrganCoreData(GOConfigReader &cfg);
   /** Hook for a subclass to load GUI-only data, called after
    * LoadOrganCoreData() and before the ODF/CMB unused-key report. Empty by
-   * default - a bare GOOrganController has no GUI.
+   * default - a bare GOOrganController has no GUI. Overridden by
+   * GOGuiOrgan::Controller, which calls LoadOrganGuiData() below (still
+   * owned by this class) before building its own panel creators.
    * @param cfg the config reader for the ODF/CMB currently being loaded,
    *   the same one passed to LoadOrganCoreData() */
-  virtual void OnLoad(GOConfigReader &cfg);
+  virtual void OnLoad(GOConfigReader &cfg) {}
   /** Loads pipe/sample data from the cache or, failing that, from the
    * sample files in parallel worker threads. Sets m_IsObjectsLoaded. */
   void LoadObjects(GOProgressMonitor &monitor);
@@ -143,13 +142,30 @@ private:
   /** Hook for a subclass to clear GUI-only data, called after
    * ClearObjects() and before ClearOrganCoreData() (GUI data may reference
    * core model objects that ClearOrganCoreData() frees). Empty by default.
-   * Undoes OnLoad() if it ran. Idempotent. */
-  virtual void OnClear();
+   * Overridden by GOGuiOrgan::Controller, which calls ClearOrganGuiData()
+   * below (still owned by this class) to clear its own panel creators. */
+  virtual void OnClear() {}
   /** Undoes LoadOrganCoreData if it ran. Idempotent. */
   void ClearOrganCoreData();
   GOHashType GenerateCacheHash();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
+
+protected:
+  /**
+   * Loads the GUI-only data still owned by this class (panels, image
+   * cache, main-window data, stop-window size) - everything OnLoad() used
+   * to do except building/running the panel creators, which
+   * GOGuiOrgan::Controller now owns and runs after this returns. Called
+   * from GOGuiOrgan::Controller::OnLoad(). Temporary: GOGuiOrgan will take
+   * over this data too once the ownership move is complete, at which point
+   * this method goes away.
+   * @param cfg the config reader for the ODF/CMB currently being loaded
+   */
+  void LoadOrganGuiData(GOConfigReader &cfg);
+  /** Undoes LoadOrganGuiData(). Called from
+   * GOGuiOrgan::Controller::OnClear(). Temporary, see LoadOrganGuiData(). */
+  void ClearOrganGuiData();
 
 public:
   GOOrganController(GOConfig &config, bool isAppInitialized = false);
@@ -255,6 +271,12 @@ public:
   GOLabelControl *GetPitchLabel() { return &m_PitchLabel; }
   GOLabelControl *GetTemperamentLabel() { return &m_TemperamentLabel; }
   GOMainWindowData *GetMainWindowData() { return &m_MainWindowData; }
+
+  /** @return the virtual coupler configuration for this organ, used by
+   * GOGUICouplerPanel when building the coupler panel. */
+  const GOVirtualCouplerController &GetVirtualCouplers() const {
+    return m_VirtualCouplers;
+  }
 
   /**
    * Loads a MIDI file for playback via the MIDI player.
