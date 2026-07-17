@@ -1012,7 +1012,7 @@ void GOAppWindow::OnExport(wxCommandEvent &event) {
       wxString exportedFilePath = dlg.GetPath();
       if (!exportedFilePath.EndsWith(wxT(".cmb"), NULL))
         exportedFilePath += wxT(".cmb");
-      if (!mp_organ->Export(exportedFilePath))
+      if (!mp_organ->Save(exportedFilePath))
         GOMessageBox(
           wxString::Format(
             _("Failed to export settings to '%s'"), exportedFilePath.c_str()),

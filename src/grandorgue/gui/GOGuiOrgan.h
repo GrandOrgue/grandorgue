@@ -51,8 +51,7 @@ public:
   void ShowMidiList();
   void ShowStops();
 
-  bool Save();
-  bool Export(const wxString &cmb);
+  bool Save(const wxString &path = wxEmptyString);
   // Returns the loaded organ controller, or nullptr on failure.
   // Note: on failure CloseOrgan() is called, which also clears
   // m_OrganController.

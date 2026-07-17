@@ -182,8 +182,17 @@ public:
    */
   wxString ExportCombination(const wxString &fileName);
   void LoadCombination(const wxString &cmb);
-  bool Save();
-  bool Export(const wxString &cmb);
+  /**
+   * Writes the organ's core and GUI data to a config file.
+   * @param path the file to write to; empty (the default) means the path
+   *   this organ was loaded from (m_LoadedOrganInfo.settingsFilePath) - a
+   *   default member expression can't be used here since default arguments
+   *   can't reference `this`, so the sentinel is resolved in the body.
+   *   An explicit non-empty path is treated as an export to a copy and does
+   *   not reset the modified flag.
+   * @return true if the file was written successfully
+   */
+  bool Save(const wxString &path = wxEmptyString);
   bool CachePresent() const {
     return wxFileExists(m_LoadedOrganInfo.cacheFilePath);
   }
