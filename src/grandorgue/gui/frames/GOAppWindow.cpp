@@ -623,7 +623,7 @@ bool GOAppWindow::CloseOrgan(bool isForce) {
   bool isClosed = true;
 
   if (mp_organ) {
-    if (mp_organ->IsModified()) {
+    if (p_OrganController && p_OrganController->IsOrganModified()) {
       int choice = isForce ? wxYES
                            : wxMessageBox(
                              _("The organ settings have been modified\n"
@@ -634,7 +634,7 @@ bool GOAppWindow::CloseOrgan(bool isForce) {
 
       switch (choice) {
       case wxYES:
-        isClosed = mp_organ->Save();
+        isClosed = p_OrganController->Save();
         break;
       case wxCANCEL:
         isClosed = false;
@@ -685,7 +685,7 @@ void GOAppWindow::Open(const GOOrgan &organ) {
 void GOAppWindow::OnPanel(wxCommandEvent &event) {
   unsigned no = event.GetId() - ID_PANEL_FIRST;
 
-  if (p_OrganController && no < p_OrganController->GetPanelCount())
+  if (mp_organ && no < mp_organ->GetPanelCount())
     mp_organ->ShowPanel(no);
 }
 
@@ -696,10 +696,7 @@ void GOAppWindow::OnIsModifiedChanged(bool modified) {
 }
 
 void GOAppWindow::UpdatePanelMenu() {
-  unsigned panelcount
-    = (p_OrganController && p_OrganController->GetPanelCount())
-    ? p_OrganController->GetPanelCount()
-    : 0;
+  unsigned panelcount = mp_organ ? mp_organ->GetPanelCount() : 0;
   panelcount = std::min(panelcount, (unsigned)(ID_PANEL_LAST - ID_PANEL_FIRST));
 
   while (m_panel_menu->GetMenuItemCount() > 0)
@@ -707,7 +704,7 @@ void GOAppWindow::UpdatePanelMenu() {
       m_panel_menu->FindItemByPosition(m_panel_menu->GetMenuItemCount() - 1));
 
   for (unsigned i = 0; i < panelcount; i++) {
-    GOGUIPanel *panel = p_OrganController->GetPanel(i);
+    GOGUIPanel *panel = mp_organ->GetPanel(i);
     wxMenu *menu = NULL;
     if (panel->GetGroupName() == wxEmptyString)
       menu = m_panel_menu;
@@ -1028,7 +1025,7 @@ void GOAppWindow::OnExport(wxCommandEvent &event) {
       wxString exportedFilePath = dlg.GetPath();
       if (!exportedFilePath.EndsWith(wxT(".cmb"), NULL))
         exportedFilePath += wxT(".cmb");
-      if (!mp_organ->Save(exportedFilePath))
+      if (!p_OrganController->Save(exportedFilePath))
         GOMessageBox(
           wxString::Format(
             _("Failed to export settings to '%s'"), exportedFilePath.c_str()),
@@ -1040,7 +1037,7 @@ void GOAppWindow::OnExport(wxCommandEvent &event) {
 }
 
 void GOAppWindow::OnSave(wxCommandEvent &event) {
-  if (p_OrganController && !mp_organ->Save())
+  if (p_OrganController && !p_OrganController->Save())
     GOMessageBox(
       _("Failed to save the organ setting"),
       _("Error"),
