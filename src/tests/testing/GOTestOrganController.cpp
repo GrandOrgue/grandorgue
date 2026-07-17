@@ -43,13 +43,12 @@ void GOTestOrganController::run() {
 }
 
 // Deliberately does not go through the public Load()/Clear(), since those
-// unconditionally call LoadOrganGui()/ClearOrganGui() (which build real
-// panels needing a live GUI display) and LoadObjects() (whose error path
-// pops up a GOMessageBox, also needing a display, when GOMetronome's sound
-// files aren't installed in this environment). GOTestOrganController is a
-// friend of GOOrganController precisely so this test can call the
-// non-GUI, non-cache phase methods (LoadOrganCoreData/SaveOrganCoreData/
-// ClearOrganCoreData) directly, skipping the other phases entirely.
+// unconditionally call LoadObjects() (whose error path pops up a
+// GOMessageBox, needing a display, when GOMetronome's sound files aren't
+// installed in this environment). GOTestOrganController is a friend of
+// GOOrganController precisely so this test can call the non-cache phase
+// methods (LoadOrganCoreData/SaveOrganCoreData/ClearOrganCoreData)
+// directly, skipping the other phases entirely.
 void GOTestOrganController::runImpl() {
   const GOOrgan organ(MINIMAL_ODF_PATH);
 
@@ -66,10 +65,6 @@ void GOTestOrganController::runImpl() {
   GOAssert(
     controller->GetOrganName() == wxT("Test Organ"),
     "LoadOrganCoreData() should populate the organ name from the ODF");
-  GOAssert(
-    controller->GetPanelCount() == 0,
-    "LoadOrganCoreData() alone must not build any panels "
-    "(that's LoadOrganGui's job, not exercised here)");
   // 1 windchest group from the ODF (NumberOfWindchestGroups=1) plus 1 more
   // that GOMetronome::Load() creates for itself via AddWindchest() to route
   // its own sound (GOMetronome.cpp), regardless of the ODF's own count.
