@@ -1,5 +1,6 @@
 set(go_tests
     # Add here your tests files
+    midi/GOTestMidiSendProxy.cpp
     model/GOTestDrawStop.cpp
     model/GOTestOrganModel.cpp
     model/GOTestSwitch.cpp
