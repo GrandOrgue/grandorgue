@@ -1,3 +1,4 @@
+- Fixed MIDI REC resending external MIDI sends on recording start https://github.com/GrandOrgue/grandorgue/issues/2523
 - Fixed crash on unknown command-line argument
 - Fixed on-screen keyboard appearing when tapping organ panels on touch-enabled desktops https://github.com/GrandOrgue/grandorgue/issues/2492
 - Removed default keyboard shortcut assignments from MIDI objects; shortcuts must now be assigned manually in the MIDI event dialog
