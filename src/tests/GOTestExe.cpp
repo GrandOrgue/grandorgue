@@ -20,6 +20,7 @@
 #include "testing/sound/buffer/GOTestSoundBufferManaged.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutableMono.h"
+#include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
 
 int main(int argc, char *argv[]) {
@@ -55,6 +56,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundBufferMutable testSoundBufferMutable;
   GOTestSoundBufferMutableMono testSoundBufferMutableMono;
   GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
+  GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
