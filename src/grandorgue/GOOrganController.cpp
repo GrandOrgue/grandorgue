@@ -898,6 +898,17 @@ void GOOrganController::PrepareRecording() {
   m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
   PreconfigRecorder();
 
+  // The broadcasted PrepareRecording() below makes every MIDI-sending object
+  // resend its current value so that the new recording starts from a known
+  // state and can later be played back correctly. SetToSendMidi(false)
+  // keeps that resend from reaching external MIDI outputs (physical panels,
+  // LCDs, SysEx-driven consoles), which did not actually change and should
+  // not be refreshed just because recording started. SetToRecordMidi(true)
+  // ensures the resent values are still written into the recording itself.
+  GOMidiSendProxy::StateRestorer midiSendStateRestorer(*this);
+
+  SetToSendMidi(false);
+  SetToRecordMidi(true);
   GOEventDistributor::PrepareRecording();
 }
 
