@@ -104,7 +104,6 @@ private:
   GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
-  GOSoundOrganEngine m_SoundEngine;
   GOGuiImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
