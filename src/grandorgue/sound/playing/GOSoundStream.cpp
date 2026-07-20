@@ -87,11 +87,16 @@ public:
       int *pWrite2 = pWrite1 + WINDOW_SAMPLES;
 
       while (r_cache.m_position < readAheadIndexTo) {
+        /* The sample about to be decoded has this index; DecompressionStep
+         * increments m_position afterwards, so m_position itself no longer
+         * identifies it. */
+        unsigned lastDecompressedPos = r_cache.m_position;
+
         r_cache.DecompressionStep(nChannels, format16);
 
-        /* fill the read ahead buffer. If r_cache.position > index we assume
-          that the previous samples already present */
-        if (r_cache.m_position >= index) {
+        /* fill the read ahead buffer. If lastDecompressedPos >= index we
+          assume that the previous samples already present */
+        if (lastDecompressedPos >= index) {
           const int *pRead = r_cache.m_value;
 
           for (uint8_t i = nChannels; i > 0; i--)
