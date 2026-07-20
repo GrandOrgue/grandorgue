@@ -49,7 +49,7 @@ class GOMidiSystem;
 class GOOrgan;
 class GOSetter;
 class GOSoundProvider;
-class GOSoundRecorder;
+class GOSoundRecorderTask;
 class GOSoundSystem;
 class GOTemperament;
 class GOTimer;
@@ -170,7 +170,9 @@ public:
   void DeleteSettings();
   void Abort();
   void PreparePlayback(
-    GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder);
+    GOSoundOrganEngine *engine,
+    GOMidiSystem *midi,
+    GOSoundRecorderTask *recorder);
   void PrepareRecording();
   void Update();
   void Reset();

@@ -29,7 +29,7 @@ class GOSoundBufferMutable;
 class GOSoundGroupTask;
 class GOSoundOutputTask;
 class GOSoundProvider;
-class GOSoundRecorder;
+class GOSoundRecorderTask;
 class GOSoundReleaseTask;
 class GOSoundTask;
 class GOSoundThread;
@@ -172,7 +172,7 @@ private:
   std::unique_ptr<GOSoundOutputTask> mp_DownmixTask;
   // [B5] p_AudioRecorder: non-owning pointer to the recorder passed in
   //   — uses mp_DownmixTask [B4] or mp_AudioOutputTasks [B2]
-  GOSoundRecorder *p_AudioRecorder;
+  GOSoundRecorderTask *p_AudioRecorder;
   // [B6] reverb: set up inline on mp_DownmixTask [B4] and mp_AudioOutputTasks
   // [B2]
   //   — uses m_ReverbConfig, m_SampleRate, m_NSamplesPerBuffer
@@ -208,7 +208,7 @@ private:
     const std::vector<AudioOutputConfig> &audioOutputConfigs,
     unsigned nSamplesPerBuffer,
     unsigned sampleRate,
-    GOSoundRecorder &recorder);
+    GOSoundRecorderTask &recorder);
   void DestroyEngine();
 
   void ResetCounters();
@@ -383,13 +383,14 @@ public:
    * @param audioOutputConfigs  Output configurations; must not be empty.
    * @param nSamplesPerBuffer   Buffer size in samples (from audio system).
    * @param sampleRate          Sample rate in Hz (from audio system).
-   * @param recorder            Recorder (non-owning).
+   * @param recorder            Recorder (non-owning, must be a
+   * GOSoundRecorderTask).
    */
   void BuildAndStart(
     const std::vector<AudioOutputConfig> &audioOutputConfigs,
     unsigned nSamplesPerBuffer,
     unsigned sampleRate,
-    GOSoundRecorder &recorder);
+    GOSoundRecorderTask &recorder);
 
   /**
    * @brief Stops the engine and destroys tasks.

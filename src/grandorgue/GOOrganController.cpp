@@ -862,7 +862,9 @@ void GOOrganController::PreconfigRecorder() {
 }
 
 void GOOrganController::PreparePlayback(
-  GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder) {
+  GOSoundOrganEngine *engine,
+  GOMidiSystem *midi,
+  GOSoundRecorderTask *recorder) {
   m_soundengine = engine;
   m_midi = midi;
   m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
