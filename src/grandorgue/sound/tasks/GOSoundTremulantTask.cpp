@@ -7,14 +7,14 @@
 
 #include "GOSoundTremulantTask.h"
 
-#include "sound/GOSoundOrganEngine.h"
+#include "sound/playing/GOSoundSamplerPlayer.h"
 #include "threading/GOMutexLocker.h"
 
 GOSoundTremulantTask::GOSoundTremulantTask(
-  GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer)
-  : m_engine(sound_engine),
+  GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer)
+  : r_SamplerPlayer(samplerPlayer),
     m_Volume(0),
-    m_SamplesPerBuffer(samples_per_buffer),
+    m_SamplesPerBuffer(nFramesPerBuffer),
     m_Done(false) {}
 
 void GOSoundTremulantTask::Reset() {
@@ -56,8 +56,8 @@ void GOSoundTremulantTask::Run(GOSoundThread *thread) {
   for (GOSoundSampler *sampler = m_Samplers.Get(); sampler;
        sampler = m_Samplers.Get()) {
     bool keep;
-    keep
-      = m_engine.ProcessSampler(output_buffer, sampler, m_SamplesPerBuffer, 1);
+    keep = r_SamplerPlayer.ProcessSampler(
+      output_buffer, sampler, m_SamplesPerBuffer, 1);
 
     if (keep)
       m_Samplers.Put(sampler);

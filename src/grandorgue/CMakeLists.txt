@@ -211,6 +211,7 @@ sound/playing/GOSoundFader.cpp
 sound/playing/GOSoundFilter.cpp
 sound/playing/GOSoundReleaseAlignTable.cpp
 sound/playing/GOSoundResample.cpp
+sound/playing/GOSoundSamplerPlayer.cpp
 sound/playing/GOSoundSamplerPool.cpp
 sound/playing/GOSoundStream.cpp
 sound/playing/GOSoundToneBalanceFilter.cpp
