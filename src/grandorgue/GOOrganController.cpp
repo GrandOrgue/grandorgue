@@ -861,9 +861,16 @@ void GOOrganController::PreconfigRecorder() {
   }
 }
 
+void GOOrganController::SetVolume(int volume) {
+  m_volume = volume;
+  if (m_soundengine)
+    m_soundengine->SetVolume(volume);
+}
+
 void GOOrganController::PreparePlayback(
   GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder) {
   m_soundengine = engine;
+  m_soundengine->SetVolume(m_volume);
   m_midi = midi;
   m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
   m_AudioRecorder->SetAudioRecorder(recorder);
