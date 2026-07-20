@@ -55,6 +55,23 @@
 #include "go_limits.h"
 #include "go_path.h"
 
+struct ShortcutEntry {
+  int mod, key, id;
+};
+// Single source of truth for all keyboard shortcuts.
+// To add a shortcut: append one line here. The menu label's \tXxx annotation
+// handles display; this table handles dispatch (for both GOAppWindow focus and
+// forwarded events from detached panel frames).
+static const ShortcutEntry s_shortcuts[] = {
+  {wxACCEL_NORMAL, WXK_ESCAPE, ID_AUDIO_PANIC},
+  {wxACCEL_NORMAL, WXK_F1, wxID_HELP},
+  {wxACCEL_CTRL, 'L', ID_FILE_LOAD},
+  {wxACCEL_CTRL, 'O', ID_FILE_OPEN},
+  {wxACCEL_CTRL, 'S', ID_FILE_SAVE},
+  {wxACCEL_CTRL, 'I', ID_FILE_INSTALL},
+  {wxACCEL_CTRL, 'P', ID_MIDI_LOAD},
+};
+
 BEGIN_EVENT_TABLE(GOAppWindow, wxFrame)
 EVT_MSGBOX(GOAppWindow::OnMsgBox)
 EVT_RENAMEFILE(GOAppWindow::OnRenameFile)
@@ -1333,16 +1350,27 @@ void GOAppWindow::OnChangeVolume(wxCommandEvent &event) {
 }
 
 void GOAppWindow::OnKeyCommand(wxKeyEvent &event) {
-  int k = event.GetKeyCode();
-  if (!event.AltDown()) {
-    switch (k) {
-    case WXK_ESCAPE: {
-      ProcessCommand(ID_AUDIO_PANIC);
+  int flags = wxACCEL_NORMAL;
+
+  if (event.ControlDown())
+    flags |= wxACCEL_CTRL;
+  if (event.AltDown())
+    flags |= wxACCEL_ALT;
+  if (event.ShiftDown())
+    flags |= wxACCEL_SHIFT;
+
+  const int k = event.GetKeyCode();
+  bool isProcessed = false;
+
+  for (const auto &s : s_shortcuts) {
+    if (s.mod == flags && s.key == k) {
+      ProcessCommand(s.id);
+      isProcessed = true;
       break;
     }
-    }
   }
-  event.Skip();
+  if (!isProcessed)
+    event.Skip();
 }
 
 void GOAppWindow::OnMidiEvent(const GOMidiEvent &event) {

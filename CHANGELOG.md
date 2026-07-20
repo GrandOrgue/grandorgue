@@ -1,3 +1,4 @@
+- Fixed keyboard shortcuts (Panic, Help, Load/Open/Save/Install organ, MIDI player load) not working when a detached organ panel window has focus https://github.com/GrandOrgue/grandorgue/issues/2541
 - Fixed a rare glitch right after a loop wrap in compressed samples, caused by an off-by-one in the read-ahead ring buffer
 - Fixed crash on unknown command-line argument
 - Fixed on-screen keyboard appearing when tapping organ panels on touch-enabled desktops https://github.com/GrandOrgue/grandorgue/issues/2492
