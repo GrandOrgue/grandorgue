@@ -7,15 +7,15 @@
 
 #include "GOSoundGroupTask.h"
 
-#include "sound/GOSoundOrganEngine.h"
+#include "sound/playing/GOSoundSamplerPlayer.h"
 #include "threading/GOMutexLocker.h"
 
 #include "GOSoundWindchestTask.h"
 
 GOSoundGroupTask::GOSoundGroupTask(
-  GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer)
-  : GOSoundBufferTaskBase(2, samples_per_buffer),
-    m_engine(sound_engine),
+  GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer)
+  : GOSoundBufferTaskBase(2, nFramesPerBuffer),
+    r_SamplerPlayer(samplerPlayer),
     m_Condition(m_Mutex),
     m_ActiveCount(0),
     m_Done(0),
@@ -46,9 +46,10 @@ void GOSoundGroupTask::ProcessList(
 
   while ((sampler = list.Get())) {
     if (
-      toDropOld && m_Stop.load() && sampler->time + 2000 < m_engine.GetTime()) {
+      toDropOld && m_Stop.load()
+      && sampler->time + 2000 < r_SamplerPlayer.GetTime()) {
       if (sampler->drop_counter++ > 3) {
-        m_engine.ReturnSampler(sampler);
+        r_SamplerPlayer.ReturnSampler(sampler);
         continue;
       }
     }
@@ -58,7 +59,7 @@ void GOSoundGroupTask::ProcessList(
 
     if (
       windchest
-      && m_engine.ProcessSampler(
+      && r_SamplerPlayer.ProcessSampler(
         output_buffer, sampler, GetNFrames(), windchest->GetVolume()))
       Add(sampler);
   }

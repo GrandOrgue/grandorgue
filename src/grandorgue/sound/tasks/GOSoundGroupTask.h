@@ -18,11 +18,11 @@
 
 #include "GOSoundBufferTaskBase.h"
 
-class GOSoundOrganEngine;
+class GOSoundSamplerPlayer;
 
 class GOSoundGroupTask : public GOSoundBufferTaskBase {
 private:
-  GOSoundOrganEngine &m_engine;
+  GOSoundSamplerPlayer &r_SamplerPlayer;
   GOSoundSamplerList m_Active;
   GOSoundSamplerList m_Release;
   GOMutex m_Mutex;
@@ -44,7 +44,7 @@ private:
 
 public:
   GOSoundGroupTask(
-    GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer);
+    GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer);
 
   unsigned GetGroup();
   unsigned GetCost();
