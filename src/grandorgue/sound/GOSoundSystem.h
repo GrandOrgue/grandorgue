@@ -20,6 +20,7 @@
 
 #include "ptrvector.h"
 
+#include "GOSoundCloseListener.h"
 #include "GOSoundDevInfo.h"
 #include "GOSoundOrganEngine.h"
 #include "GOSoundRecorder.h"
@@ -72,6 +73,8 @@ private:
   GOSoundRecorder m_AudioRecorder;
   std::unique_ptr<GOSoundOrganEngine> mp_SoundEngine;
 
+  GOSoundCloseListener *p_CloseListener;
+
   bool m_open;
   bool logSoundErrors;
   unsigned m_SampleRate;
@@ -84,7 +87,6 @@ private:
 
   GOSoundDevInfo m_DefaultAudioDevice;
 
-  std::atomic_bool m_IsRunning;
   // counter of audio callbacks that have been entered but have not yet been
   // exited
   std::atomic_uint m_NCallbacksEntered;
@@ -108,22 +110,8 @@ private:
 
   /** Open audio ports and configure the sound engine (without organ setup) */
   void OpenSoundSystem();
-  /** Start audio streams and mark system as running */
-  void StartSoundSystem();
-  /** Notify the organ controller that sound is open and begin playback */
-  void NotifySoundIsOpen();
-
-  /** Notify the organ controller that sound is about to close */
-  void NotifySoundIsClosing();
-  /** Stop audio streams and wait for all callbacks to finish */
-  void StopSoundSystem();
   /** Close and delete audio ports, reset meters, mark system as closed */
   void CloseSoundSystem();
-
-  /** Build the sound organ engine and start its worker threads */
-  void BuildAndStartEngine();
-  /** Stop the sound organ engine worker threads and destroy the engine */
-  void StopAndDestroyEngine();
 
 public:
   static void FillDeviceNamePattern(
@@ -140,17 +128,37 @@ public:
   const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
   wxString getLastErrorMessage() const { return m_LastErrorMessage; }
   GOOrganController *GetOrganFile() { return m_OrganController; }
+
+  /** Returns true if the sound system is currently open (audio ports active).
+   */
+  bool IsOpen() const { return m_open; }
+
+  /** Returns the audio recorder associated with this sound system. */
+  GOSoundRecorder &GetAudioRecorder() { return m_AudioRecorder; }
+
   unsigned GetSampleRate() const { return m_SampleRate; }
   unsigned GetSamplesPerBuffer() const { return m_SamplesPerBuffer; }
   wxString getState();
 
   void SetLogSoundErrorMessages(bool isVisible) { logSoundErrors = isVisible; }
 
+  /**
+   * Sets the listener to be notified before the sound system closes its audio
+   * ports. Pass nullptr to unregister. The caller must ensure the listener
+   * outlives this sound system (or unregisters before being destroyed).
+   */
+  void SetCloseListener(GOSoundCloseListener *pListener) {
+    p_CloseListener = pListener;
+  }
+
   bool AssureSoundIsOpen();
   void AssureSoundIsClosed();
   void AssignOrganFile(GOOrganController *pNewOrganController);
 
   bool AudioCallback(unsigned devIndex, GOSoundBufferMutable &outBuffer);
+
+  void ConnectToEngine(GOSoundOrganEngine &engine);
+  void DisconnectFromEngine(GOSoundOrganEngine &engine);
 };
 
 #endif

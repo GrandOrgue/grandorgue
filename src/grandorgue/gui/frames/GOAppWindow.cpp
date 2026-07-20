@@ -180,6 +180,7 @@ GOAppWindow::GOAppWindow(
     m_AfterSettingsEventType(wxEVT_NULL),
     m_AfterSettingsEventId(0),
     p_AfterSettingsEventOrgan(NULL) {
+  r_SoundSystem.SetCloseListener(this);
   SetIcon(get_go_icon());
 
   wxArrayString choices;
@@ -410,6 +411,7 @@ GOAppWindow::GOAppWindow(
 }
 
 GOAppWindow::~GOAppWindow() {
+  r_SoundSystem.SetCloseListener(nullptr);
   m_isMeterReady = false;
   m_listener.SetCallback(NULL);
 }
@@ -587,9 +589,40 @@ void GOAppWindow::Init(const wxString &filename, bool isGuiOnly) {
   clean.Cleanup();
 }
 
-void GOAppWindow::AttachDetachOrganController(bool isToAttach) {
-  if (p_OrganController)
-    p_OrganController->SetModificationListener(isToAttach ? this : nullptr);
+void GOAppWindow::OnBeforeSoundClose() { EnsureOrganStopped(); }
+
+void GOAppWindow::EnsureOrganStartedIfReady() {
+  if (
+    p_OrganController && r_SoundSystem.IsOpen() && r_SoundSystem.GetOrganFile()
+    && !r_SoundSystem.GetEngine().IsWorking()) {
+    GOSoundOrganEngine &engine = r_SoundSystem.GetEngine();
+
+    engine.SetFromConfig(r_SoundSystem.GetSettings());
+
+    auto configs = GOSoundOrganEngine::createAudioOutputConfigs(
+      r_SoundSystem.GetSettings(), engine.GetNAudioGroups());
+
+    engine.BuildAndStart(
+      configs,
+      r_SoundSystem.GetSamplesPerBuffer(),
+      r_SoundSystem.GetSampleRate(),
+      r_SoundSystem.GetAudioRecorder());
+    r_SoundSystem.ConnectToEngine(engine);
+    p_OrganController->PreparePlayback(
+      &engine, &r_SoundSystem.GetMidi(), &r_SoundSystem.GetAudioRecorder());
+  }
+}
+
+void GOAppWindow::EnsureOrganStopped() {
+  if (
+    p_OrganController && r_SoundSystem.GetOrganFile()
+    && r_SoundSystem.GetEngine().IsWorking()) {
+    GOSoundOrganEngine &engine = r_SoundSystem.GetEngine();
+
+    p_OrganController->Abort();
+    r_SoundSystem.DisconnectFromEngine(engine);
+    engine.StopAndDestroy();
+  }
 }
 
 bool GOAppWindow::CloseOrgan(bool isForce) {
@@ -619,7 +652,8 @@ bool GOAppWindow::CloseOrgan(bool isForce) {
       GOMutexLocker m_locker(m_mutex, true);
 
       if (m_locker.IsLocked()) {
-        AttachDetachOrganController(false);
+        EnsureOrganStopped();
+        p_OrganController->SetModificationListener(nullptr);
         p_OrganController = nullptr;
         mp_organ.reset();
         UpdatePanelMenu();
@@ -637,8 +671,9 @@ void GOAppWindow::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
     p_OrganController = mp_organ->LoadOrgan(organ, cmb, m_IsGuiOnly, dlg);
     OnIsModifiedChanged(false);
 
-    // for reflecting model changes
-    AttachDetachOrganController(true);
+    if (p_OrganController)
+      p_OrganController->SetModificationListener(this);
+    EnsureOrganStartedIfReady();
   }
 }
 
@@ -1113,6 +1148,7 @@ void GOAppWindow::OnProperties(wxCommandEvent &event) {
 void GOAppWindow::OnAudioPanic(wxCommandEvent &WXUNUSED(event)) {
   r_SoundSystem.AssureSoundIsClosed();
   r_SoundSystem.AssureSoundIsOpen();
+  EnsureOrganStartedIfReady();
 }
 
 void GOAppWindow::OnMidiMonitor(wxCommandEvent &WXUNUSED(event)) {
@@ -1180,7 +1216,7 @@ void GOAppWindow::OnSettings(wxCommandEvent &event) {
       SetEventAfterSettings(wxEVT_COMMAND_MENU_SELECTED, ID_FILE_EXIT);
       isToContinue = false;
     } else if (
-      dialog.NeedReload() && r_SoundSystem.GetOrganFile() != NULL
+      dialog.NeedReload() && p_OrganController
       && wxMessageBox(
            _("Some changed settings effect unless the sample "
              "set is reloaded.\n\nWould you like to reload "
@@ -1197,8 +1233,10 @@ void GOAppWindow::OnSettings(wxCommandEvent &event) {
 
   // The sound might be closed in the settings dialog (for obtaining the list of
   // devices) or later if the settings were changed
-  if (isToContinue)
+  if (isToContinue) {
     r_SoundSystem.AssureSoundIsOpen();
+    EnsureOrganStartedIfReady();
+  }
 
   if (m_AfterSettingsEventType != wxEVT_NULL) {
     wxCommandEvent event(m_AfterSettingsEventType, m_AfterSettingsEventId);
@@ -1238,7 +1276,10 @@ void GOAppWindow::OnHelp(wxCommandEvent &event) {
 void GOAppWindow::OnSettingsVolume(wxCommandEvent &event) {
   long n = m_Volume->GetValue();
 
-  r_SoundSystem.GetEngine().SetVolume(n);
+  if (p_OrganController)
+    p_OrganController->SetVolume(n);
+  if (r_SoundSystem.GetOrganFile())
+    r_SoundSystem.GetEngine().SetVolume(n);
   for (unsigned i = 0; i < m_VolumeGauge.size(); i++)
     m_VolumeGauge[i]->ResetClip();
 }
@@ -1247,7 +1288,8 @@ void GOAppWindow::OnSettingsPolyphony(wxCommandEvent &event) {
   long n = m_Polyphony->GetValue();
 
   r_config.PolyphonyLimit(n);
-  r_SoundSystem.GetEngine().SetHardPolyphony(n);
+  if (r_SoundSystem.GetOrganFile())
+    r_SoundSystem.GetEngine().SetHardPolyphony(n);
   m_SamplerUsage->ResetClip();
 }
 

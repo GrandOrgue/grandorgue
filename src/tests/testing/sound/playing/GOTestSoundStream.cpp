@@ -231,6 +231,77 @@ void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
   }
 }
 
+void GOTestSoundStream::TestCompressedLoopWrapMatchesUncompressed() {
+  constexpr unsigned N_TOTAL_FRAMES = 1100;
+  constexpr unsigned N_ITERATIONS = 500;
+  const std::vector<GOWaveLoop> loops = {
+    {500, 999}, // long loop, start_offset=500, end_pos=1000
+    {200, 599}, // long loop, start_offset=200, end_pos=600
+  };
+  const unsigned nChannels = 1;
+  const unsigned nSamples = nChannels * N_TOTAL_FRAMES;
+  std::vector<GOInt24> pcmData(nSamples);
+
+  for (unsigned i = 0; i < nSamples; i++)
+    pcmData[i] = (i % 100) * 30000 - 1500000;
+
+  auto runCapture = [&](bool isCompressed) {
+    auto pSection = std::make_unique<GOSoundAudioSection>(m_pool);
+
+    pSection->Setup(
+      nullptr,
+      nullptr,
+      pcmData.data(),
+      GOWave::SF_SIGNEDINT24_24,
+      nChannels,
+      SECTION_RATE,
+      N_TOTAL_FRAMES,
+      &loops,
+      BOOL3_DEFAULT,
+      isCompressed,
+      0,
+      0);
+
+    GOSoundResample resample;
+    GOSoundStream stream;
+
+    // Same seed for both runs: PickEndSegment() uses rand() to choose among
+    // multiple valid end segments, and both runs must pick identically so
+    // the wrap timing (and hence the skip-ahead pattern) matches.
+    std::srand(0);
+    stream.InitStream(
+      &resample,
+      pSection.get(),
+      GOSoundResample::GO_LINEAR_INTERPOLATION,
+      SAMPLE_RATE_ADJUSTMENT);
+
+    std::vector<float> captured(N_ITERATIONS * N_BUFFER_ITEMS);
+    float buffer[N_BUFFER_ITEMS];
+
+    for (unsigned iterI = 0; iterI < N_ITERATIONS; iterI++) {
+      stream.ReadBlock(buffer, N_FRAMES_PER_BLOCK);
+      for (unsigned i = 0; i < N_BUFFER_ITEMS; i++)
+        captured[iterI * N_BUFFER_ITEMS + i] = buffer[i];
+    }
+    return captured;
+  };
+
+  const std::vector<float> uncompressed = runCapture(false);
+  const std::vector<float> compressed = runCapture(true);
+
+  for (unsigned i = 0; i < uncompressed.size(); i++)
+    GOAssert(
+      compressed[i] == uncompressed[i],
+      std::format(
+        "compressed/uncompressed mismatch at output sample {} (iteration {}, "
+        "offset {}): compressed={} uncompressed={}",
+        i,
+        i / N_BUFFER_ITEMS,
+        i % N_BUFFER_ITEMS,
+        compressed[i],
+        uncompressed[i]));
+}
+
 void GOTestSoundStream::run() {
   for (unsigned nChannels : {1u, 2u}) {
     for (bool isCompressed : {false, true}) {
@@ -243,4 +314,5 @@ void GOTestSoundStream::run() {
   TestLoopedStreamAlwaysReturnsTrue();
   TestLoopTransitionAcrossDifferentEndPos();
   TestInitAlignedStream();
+  TestCompressedLoopWrapMatchesUncompressed();
 }
