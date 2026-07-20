@@ -17,6 +17,7 @@
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/GOSoundRecorder.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/playing/GOSoundSamplerPlayer.h"
 #include "sound/providers/GOSoundProviderWave.h"
 
 #include "GOOrganController.h"
@@ -134,10 +135,12 @@ void GOPerfTestApp::RunTest(
 
       std::vector<GOSoundSampler *> handles;
       float output_buffer[samples_per_frame * 2];
+      GOSoundSamplerPlayer &samplerPlayer = engine->GetSamplerPlayer();
 
-      for (unsigned i = 0; i < pipes.size(); i++) {
+      for (GOSoundProvider *pPipe : pipes) {
         GOSoundSampler *handle
-          = engine->StartPipeSample(pipes[i], 1, 0, 127, 0, 0);
+          = samplerPlayer.StartPipeSample(pPipe, 1, 0, 127, 0, 0);
+
         if (handle)
           handles.push_back(handle);
       }

@@ -875,7 +875,8 @@ void GOOrganController::PreparePlayback(
 
   m_MidiSamplesetMatch.clear();
   GOOrganModel::SetMidi(midi, m_MidiRecorder);
-  GOOrganModel::GOSoundOrganInterfaceProxy::Connect(engine);
+  GOOrganModel::GOSoundOrganInterfaceProxy::Connect(
+    &engine->GetSamplerPlayer());
   GOEventDistributor::PreparePlayback();
 
   m_setter->UpdateModified(m_OrganModified);

@@ -8,11 +8,14 @@
 #include "GOSoundReleaseTask.h"
 
 #include "GOSoundGroupTask.h"
-#include "sound/GOSoundOrganEngine.h"
+#include "sound/playing/GOSoundSamplerPlayer.h"
 
 GOSoundReleaseTask::GOSoundReleaseTask(
-  GOSoundOrganEngine &sound_engine, ptr_vector<GOSoundGroupTask> &audio_groups)
-  : m_engine(sound_engine), m_AudioGroups(audio_groups), m_Stop(false) {}
+  GOSoundSamplerPlayer &samplerPlayer,
+  ptr_vector<GOSoundGroupTask> &audioGroupTaskPtrs)
+  : r_SamplerPlayer(samplerPlayer),
+    m_AudioGroups(audioGroupTaskPtrs),
+    m_Stop(false) {}
 
 unsigned GOSoundReleaseTask::GetGroup() { return RELEASE; }
 
@@ -35,7 +38,7 @@ void GOSoundReleaseTask::Run(GOSoundThread *pThread) {
   do {
     while ((sampler = m_List.Get())) {
       m_Cnt.fetch_add(1);
-      m_engine.ProcessRelease(sampler);
+      r_SamplerPlayer.ProcessRelease(sampler);
       if (m_Stop.load() && m_Cnt > 10)
         break;
     }
@@ -52,5 +55,5 @@ void GOSoundReleaseTask::Exec() {
   Run();
   GOSoundSampler *sampler;
   while ((sampler = m_List.Get()))
-    m_engine.PassSampler(sampler);
+    r_SamplerPlayer.PassSampler(sampler);
 }
