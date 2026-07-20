@@ -19,18 +19,18 @@
 #include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
-#include "GOOrganController.h"
 #include "GOSoundDefs.h"
+#include "GOSoundOrganEngine.h"
 
 GOSoundSystem::GOSoundSystem(GOConfig &settings)
   : m_config(settings),
     m_midi(settings),
+    p_OrganEngine(nullptr),
     p_CloseListener(nullptr),
     m_open(false),
     logSoundErrors(true),
     m_SampleRate(0),
     m_SamplesPerBuffer(0),
-    m_OrganController(0),
     m_DefaultAudioDevice(GOSoundDevInfo::getInvalideDeviceInfo()),
     m_NCallbacksEntered(0),
     m_CallbackCondition(m_CallbackMutex),
@@ -149,24 +149,9 @@ void GOSoundSystem::AssureSoundIsClosed() {
     if (p_CloseListener) // The callback must call to DisconnectFromEngine()
       p_CloseListener->OnBeforeSoundClose();
 
+    assert(!p_OrganEngine.load());
+
     CloseSoundSystem();
-  }
-}
-
-void GOSoundSystem::AssignOrganFile(GOOrganController *pNewOrganController) {
-  if (pNewOrganController != m_OrganController) {
-    GOMutexLocker locker(m_lock);
-
-    mp_SoundEngine.reset();
-    m_OrganController = pNewOrganController;
-
-    if (m_OrganController) {
-      GOOrganModel &organModel
-        = static_cast<GOOrganModel &>(*m_OrganController);
-
-      mp_SoundEngine = std::make_unique<GOSoundOrganEngine>(
-        organModel, m_OrganController->GetMemoryPool());
-    }
   }
 }
 
@@ -233,9 +218,8 @@ bool GOSoundSystem::AudioCallback(
   unsigned devIndex, GOSoundBufferMutable &outBuffer) {
   bool wasEntered = false;
   const unsigned nSamples = outBuffer.GetNFrames();
-  GOSoundOrganEngine *const pEngine = mp_SoundEngine.get();
 
-  if (pEngine && pEngine->IsUsed()) {
+  if (p_OrganEngine.load()) {
     if (nSamples == m_SamplesPerBuffer) {
       m_NCallbacksEntered.fetch_add(1);
       wasEntered = true;
@@ -245,9 +229,12 @@ bool GOSoundSystem::AudioCallback(
           "changed by the sound driver to %d"),
         nSamples);
   }
-  // assure that IsUsed has not yet been changed after
+  // assure that p_OrganEngine has not yet been changed after
   // m_NCallbacksEntered.fetch_add, otherwise the control thread may not wait
-  if (wasEntered && pEngine && pEngine->IsUsed()) {
+  GOSoundOrganEngine *pOrganEngine
+    = wasEntered ? p_OrganEngine.load() : nullptr;
+
+  if (pOrganEngine) {
     GOSoundOutput &device = m_AudioOutputs[devIndex];
     GOMutexLocker locker(device.mutex);
 
@@ -256,16 +243,15 @@ bool GOSoundSystem::AudioCallback(
 
     unsigned cnt = m_CalcCount.fetch_add(1);
 
-    pEngine->GetAudioOutput(
+    pOrganEngine->GetAudioOutput(
       devIndex, cnt + 1 >= m_AudioOutputs.size(), outBuffer);
     device.wait = true;
     unsigned count = m_WaitCount.fetch_add(1);
 
     if (count + 1 == m_AudioOutputs.size()) {
-      pEngine->NextPeriod();
+      pOrganEngine->NextPeriod();
+      pOrganEngine->WakeupThreads();
       UpdateMeter();
-
-      pEngine->WakeupThreads();
       m_CalcCount.exchange(0);
       m_WaitCount.exchange(0);
 
@@ -279,7 +265,7 @@ bool GOSoundSystem::AudioCallback(
     outBuffer.FillWithSilence();
   if (
     wasEntered && m_NCallbacksEntered.fetch_sub(1) <= 1
-    && !(pEngine && pEngine->IsUsed())) {
+    && !p_OrganEngine.load()) {
     // ensure that the control thread enters into m_NCallbackCondition.Wait()
     GOMutexLocker lk(m_CallbackMutex);
 
@@ -294,6 +280,7 @@ wxString GOSoundSystem::getState() {
     return _("No sound output occurring");
   wxString result = wxString::Format(
     _("%d samples per buffer, %d Hz\n"), m_SamplesPerBuffer, m_SampleRate);
+
   for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
     result = result + _("\n") + m_AudioOutputs[i].port->getPortState();
   return result;
@@ -316,11 +303,12 @@ void GOSoundSystem::ConnectToEngine(GOSoundOrganEngine &engine) {
   m_WaitCount.store(0);
   m_CalcCount.store(0);
   m_NCallbacksEntered.store(0);
+  p_OrganEngine.store(&engine);
 }
 
 void GOSoundSystem::DisconnectFromEngine(GOSoundOrganEngine &engine) {
-  // Signal callbacks to stop by clearing IsUsed
-  engine.SetUsed(false);
+  // Signal callbacks to stop by clearing the engine pointer
+  p_OrganEngine.store(nullptr);
 
   // wait for all started callbacks to finish
   {
@@ -350,4 +338,6 @@ void GOSoundSystem::DisconnectFromEngine(GOSoundOrganEngine &engine) {
       m_AudioOutputs[i].condition.Broadcast();
     }
   }
+
+  engine.SetUsed(false);
 }

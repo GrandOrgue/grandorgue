@@ -77,7 +77,6 @@ private:
   GOSizeKeeper m_StopWindowSizeKeeper;
   GOTimer *m_timer;
   GOButtonControl *p_OnStateButton;
-  int m_volume;
   wxString m_Temperament;
 
   bool m_b_customized;
@@ -97,13 +96,13 @@ private:
   ptr_vector<GOGUIPanelCreator> m_panelcreators;
   ptr_vector<GOElementCreator> m_elementcreators;
 
-  GOSoundOrganEngine *m_soundengine;
   GOMidiSystem *m_midi;
   std::vector<bool> m_MidiSamplesetMatch;
   int m_SampleSetId1, m_SampleSetId2;
   GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
+  GOSoundOrganEngine m_SoundEngine;
   GOGuiImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
@@ -168,10 +167,23 @@ public:
   bool UpdateCache(bool compress, GOProgressMonitor &monitor);
   void DeleteCache();
   void DeleteSettings();
-  void Abort();
-  void PreparePlayback(
-    GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder);
   void PrepareRecording();
+
+  /** Returns true if the organ sound engine is currently running. */
+  bool IsOrganStarted() const { return m_SoundEngine.IsWorking(); }
+
+  /**
+   * Starts the organ sound engine: builds audio tasks, connects to the sound
+   * system, and begins MIDI and audio playback.
+   */
+  void StartOrgan(GOSoundSystem &soundSystem);
+
+  /**
+   * Stops the organ sound engine: aborts playback, disconnects from the sound
+   * system, and tears down audio tasks.
+   */
+  void StopOrgan(GOSoundSystem &soundSystem);
+  GOSoundOrganEngine &GetSoundEngine() { return m_SoundEngine; }
   void Update();
   void Reset();
   void ProcessMidi(const GOMidiEvent &event);
@@ -195,8 +207,22 @@ public:
 
   void LoadMIDIFile(const wxString &filename);
 
-  void SetVolume(int volume) { m_volume = volume; }
-  int GetVolume() const { return m_volume; }
+  int GetVolume() const { return m_SoundEngine.GetVolume(); }
+  /** Sets the master volume and forwards it to the sound engine. */
+  void SetVolume(int volume) { m_SoundEngine.SetVolume(volume); }
+
+  /** Returns true if the sound engine is running. */
+  bool IsStarted() const { return m_SoundEngine.IsWorking(); }
+
+  /** Sets the polyphony hard limit in the sound engine. */
+  void SetHardPolyphony(unsigned polyphony) {
+    m_SoundEngine.SetHardPolyphony(polyphony);
+  }
+
+  /**
+   * Returns meter info from the sound engine.
+   */
+  std::vector<float> GetMeterInfo() { return m_SoundEngine.GetMeterInfo(); }
 
   unsigned GetReleaseTail() {
     return GetRootPipeConfigNode().GetEffectiveReleaseTail();
