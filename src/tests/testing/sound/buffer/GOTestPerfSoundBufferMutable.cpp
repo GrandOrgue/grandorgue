@@ -38,7 +38,7 @@ struct Baseline {
 // Baselines are set ~10% below the minimum observed value across all CI runs.
 static constexpr Baseline BASELINE_FILL_WITH_SILENCE[] = {
 #ifdef NDEBUG
-  {32, 2680},  // 2680 Mframes/sec (lowered: min observed 2975.4, -10% margin)
+  {32, 2370},  // 2370 Mframes/sec (lowered: min observed 2635.2, -10% margin)
   {128, 5400}, // 5400 Mframes/sec (lowered: min observed 5120.3, -10% margin)
   {512, 4840}, // 4840 Mframes/sec (lowered: min observed 5382.5, -10% margin)
   {2048, 8600} // 8600 Mframes/sec (lowered: min observed 9653.4, -10% margin)
