@@ -19,9 +19,15 @@
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
 
+namespace {
+enum { ID_PANEL_RESIZE_TIMER = wxID_HIGHEST + 1 };
+constexpr int RESIZE_SETTLE_MS = 150;
+} // namespace
+
 BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 EVT_ERASE_BACKGROUND(GOGUIPanelWidget::OnErase)
 EVT_PAINT(GOGUIPanelWidget::OnPaint)
+EVT_TIMER(ID_PANEL_RESIZE_TIMER, GOGUIPanelWidget::OnResizeTimer)
 EVT_COMMAND(0, wxEVT_GOCONTROL, GOGUIPanelWidget::OnGOControl)
 EVT_MOTION(GOGUIPanelWidget::OnMouseMove)
 EVT_LEFT_DOWN(GOGUIPanelWidget::OnMouseLeftDown)
@@ -43,6 +49,7 @@ GOGUIPanelWidget::GOGUIPanelWidget(
     m_BGInit(false),
     m_Scale(1),
     m_FontScale(1),
+    m_ResizeTimer(this, ID_PANEL_RESIZE_TIMER),
     m_PressedPoint(default_point) {
   m_Background.SetSourceImage(&m_BGImage);
   initFont();
@@ -51,13 +58,14 @@ GOGUIPanelWidget::GOGUIPanelWidget(
     m_panel->GetWidth() * m_Scale, m_panel->GetHeight() * m_Scale);
   m_panel->PrepareDraw(m_Scale, NULL);
   OnUpdate();
+  m_LastFullBitmap = m_ClientBitmap;
   m_BGImage = m_ClientBitmap.ConvertToImage();
   m_Background.BuildScaledBitmap(m_Scale, wxRect(0, 0, 0, 0), NULL);
   m_BGInit = true;
   SetCanFocus(m_panel->IsKeyboardInputUsed());
 }
 
-GOGUIPanelWidget::~GOGUIPanelWidget() {}
+GOGUIPanelWidget::~GOGUIPanelWidget() { m_ResizeTimer.Stop(); }
 
 void GOGUIPanelWidget::initFont() {
   wxMemoryDC dc;
@@ -92,10 +100,43 @@ wxSize GOGUIPanelWidget::UpdateSize(wxSize size) {
                       // this. Without this limit, sizing too a too small value
                       // causes a crash!
     m_Scale = 0.25;
+
+  const int targetWidth = m_panel->GetWidth() * m_Scale + 0.5;
+  const int targetHeight = m_panel->GetHeight() * m_Scale + 0.5;
+
+  // Cheap immediate feedback for a live drag: rescale the last sharply
+  // redrawn bitmap instead of re-running PrepareDraw()/OnUpdate(), which
+  // rescale every key/stop/texture with BICUBIC quality and made dragging a
+  // panel border unusably slow when done on every single WM_SIZE tick. The
+  // sharp, full-quality redraw happens once in OnResizeTimer(), after
+  // resizing has been idle for a moment.
+  //
+  // Always rescale from m_LastFullBitmap, never from m_ClientBitmap: during
+  // a drag m_ClientBitmap is itself the result of this same preview rescale,
+  // so chaining off it would compound quality loss tick after tick instead
+  // of staying as sharp as a single rescale from the original allows.
+  //
+  // wxDC::StretchBlit was tried here first, but on wxMSW it maps to GDI
+  // StretchBlt in COLORONCOLOR (nearest-neighbour) mode, which duplicates or
+  // drops whole rows/columns at non-integer scale factors instead of
+  // interpolating - visibly blocky. wxImage::Scale() with NORMAL (bilinear)
+  // quality looks smooth and is still cheap here because it runs once on the
+  // already-composed panel bitmap, not once per control like BICUBIC mode
+  // does in OnUpdate()/PrepareDraw().
+  if (m_LastFullBitmap.IsOk() && targetWidth > 0 && targetHeight > 0)
+    m_ClientBitmap = (wxBitmap)m_LastFullBitmap.ConvertToImage().Scale(
+      targetWidth, targetHeight, wxIMAGE_QUALITY_NORMAL);
+  SetSize(targetWidth, targetHeight);
+  Refresh();
+  m_ResizeTimer.StartOnce(RESIZE_SETTLE_MS);
+  return GetSize();
+}
+
+void GOGUIPanelWidget::OnResizeTimer(wxTimerEvent &WXUNUSED(event)) {
   m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
   OnUpdate();
+  m_LastFullBitmap = m_ClientBitmap;
   Refresh();
-  return GetSize();
 }
 
 void GOGUIPanelWidget::OnDraw(wxDC *dc) {
