@@ -344,7 +344,8 @@ void GOSoundStream::InitAlignedStream(
     int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
 
     pExistingStream->GetHistory(history);
-    startOffset = releaseAligner->GetPositionFor(history);
+    startOffset
+      = releaseAligner->GetPositionFor(history, pSection->GetChannels());
   }
   m_ResamplingPos.Init(
     (float)pSection->GetSampleRate()
