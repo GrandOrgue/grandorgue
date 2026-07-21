@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -37,7 +37,14 @@ public:
   void Update(const GOOrgan &organ);
 
   const wxString &GetODFPath() const;
-  void SetODFPath(const wxString &newPath) { m_ODF = newPath; }
+  /**
+   * Sets the path of the ODF file. If an archive is set (GetArchiveID() is
+   * not empty), the path is relative to that archive and is stored as-is;
+   * otherwise it is a normal filesystem path and is normalized to an
+   * absolute path.
+   * @param newPath - the archive-relative or filesystem ODF path
+   */
+  void SetODFPath(const wxString &newPath);
   const wxString &GetChurchName() const;
   const wxString &GetOrganBuilder() const;
   const wxString &GetRecordingDetail() const;
