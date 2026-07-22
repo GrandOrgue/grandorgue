@@ -101,35 +101,69 @@ void GOMidiPlayer::ButtonStateChanged(int id, bool newState) {
   }
 }
 
+std::optional<GOConfig::MidiFileChannelMapping> GOMidiPlayer::
+  DetermineMappingMode(
+    const std::vector<GOMidiEvent> &events,
+    const std::vector<int> &midiInputNumbers,
+    const GOConfig::MidiChannelMappingChooser &chooseMapping) {
+  std::optional<GOConfig::MidiFileChannelMapping> mappingMode
+    = GOConfig::MIDI_PLAY_CHANNELS_PEDAL_LAST;
+
+  if (!events.empty() && !GOMidiPlayerContent::hasNativeHeader(events)) {
+    const bool isInputNumberUsable
+      = GOMidiPlayerContent::isMidiInputNumberMappingUsable(midiInputNumbers);
+    const GOConfig::MidiFileChannelMapping defaultMapping = isInputNumberUsable
+      ? r_Config.MidiPlayerChannelMappingWithInputNumber()
+      : r_Config.MidiPlayerChannelMappingWithoutInputNumber();
+
+    mappingMode = r_Config.IsToAskMidiPlayerChannelMapping()
+      ? chooseMapping(isInputNumberUsable, defaultMapping)
+      : std::optional(defaultMapping);
+  }
+
+  return mappingMode;
+}
+
 void GOMidiPlayer::LoadFile(
-  const wxString &filename, unsigned manuals, bool pedal) {
+  const wxString &filename,
+  bool hasPedal,
+  const std::vector<int> &midiInputNumbers,
+  const GOConfig::MidiChannelMappingChooser &chooseMapping) {
   StopPlaying();
   m_content.Clear();
+
   GOMidiFileReader reader(r_MidiMap);
-  if (!reader.Open(filename)) {
+
+  if (!reader.Open(filename))
     GOMessageBox(
       wxString::Format(_("Failed to load %s"), filename.c_str()),
       _("MIDI Player"),
       wxOK | wxICON_ERROR,
       NULL);
-    return;
-  }
-  if (!m_content.Load(reader, r_MidiMap, manuals, pedal)) {
-    m_content.Clear();
-    GOMessageBox(
-      wxString::Format(_("Failed to load %s"), filename.c_str()),
-      _("MIDI Player"),
-      wxOK | wxICON_ERROR,
-      NULL);
-    return;
-  }
-  if (!reader.Close()) {
-    GOMessageBox(
-      wxString::Format(_("Failed to decode %s"), filename.c_str()),
-      _("MIDI Player"),
-      wxOK | wxICON_ERROR,
-      NULL);
-    return;
+  else {
+    std::vector<GOMidiEvent> events;
+
+    reader.ReadAllEvents(events);
+
+    const std::optional<GOConfig::MidiFileChannelMapping> mappingMode
+      = DetermineMappingMode(events, midiInputNumbers, chooseMapping);
+
+    if (!mappingMode) {
+      // the user cancelled the channel mapping dialog: silently abort
+    } else if (!m_content.Load(
+                 events, r_MidiMap, hasPedal, midiInputNumbers, *mappingMode)) {
+      m_content.Clear();
+      GOMessageBox(
+        wxString::Format(_("Failed to load %s"), filename.c_str()),
+        _("MIDI Player"),
+        wxOK | wxICON_ERROR,
+        NULL);
+    } else if (!reader.Close())
+      GOMessageBox(
+        wxString::Format(_("Failed to decode %s"), filename.c_str()),
+        _("MIDI Player"),
+        wxOK | wxICON_ERROR,
+        NULL);
   }
 }
 

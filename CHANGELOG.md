@@ -1,3 +1,4 @@
+- Added a choice of MIDI channel mapping schemes (pedal first, pedal last, or by the organ's MIDIInputNumber) when playing back MIDI files without a GrandOrgue setup header, configurable via a per-load dialog and MIDI Devices settings https://github.com/GrandOrgue/grandorgue/issues/2523
 - Fixed MIDI REC resending external MIDI sends on recording start https://github.com/GrandOrgue/grandorgue/issues/2523
 - Fixed divisionals that could not be selected in organs without a pedal https://github.com/GrandOrgue/grandorgue/discussions/2552
 - Fixed organ volume not saved into organ settings https://github.com/GrandOrgue/grandorgue/issues/2547
