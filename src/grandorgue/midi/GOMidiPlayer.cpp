@@ -59,7 +59,8 @@ void GOMidiPlayer::ResetUI() {
 }
 
 GOMidiPlayer::GOMidiPlayer(GOOrganController *organController)
-  : r_MidiMap(organController->GetSettings().GetMidiMap()),
+  : r_Config(organController->GetSettings()),
+    r_MidiMap(organController->GetSettings().GetMidiMap()),
     r_timer(*organController->GetTimer()),
     p_midi(nullptr),
     m_content(),
