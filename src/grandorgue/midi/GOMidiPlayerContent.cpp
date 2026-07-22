@@ -7,8 +7,11 @@
 
 #include "GOMidiPlayerContent.h"
 
+#include <algorithm>
+#include <cassert>
+#include <set>
+
 #include "midi/events/GOMidiEvent.h"
-#include "midi/files/GOMidiFileReader.h"
 
 #include "GOMidiInputMerger.h"
 #include "GOMidiMap.h"
@@ -26,23 +29,53 @@ void GOMidiPlayerContent::Reset() { m_Pos = 0; }
 
 bool GOMidiPlayerContent::IsLoaded() { return m_Events.size() > 0; }
 
-void GOMidiPlayerContent::ReadFileContent(
-  GOMidiFileReader &reader, std::vector<GOMidiEvent> &events) {
-  unsigned pos = 0;
-  GOMidiEvent e;
-  while (reader.ReadEvent(e)) {
-    while (pos > 0 && events[pos - 1].GetTime() > e.GetTime()) {
-      pos--;
-    }
-    while (pos < events.size() && events[pos].GetTime() < e.GetTime()) {
-      pos++;
-    }
-    if (pos <= events.size())
-      events.insert(events.begin() + pos, e);
-    else
-      events.push_back(e);
-    pos++;
+bool GOMidiPlayerContent::hasNativeHeader(
+  const std::vector<GOMidiEvent> &events) {
+  return !events.empty()
+    && events[0].GetMidiType() == GOMidiEvent::MIDI_SYSEX_GO_CLEAR;
+}
+
+bool GOMidiPlayerContent::isMidiInputNumberMappingUsable(
+  const std::vector<int> &midiInputNumbers) {
+  const bool isEveryNumberInRange = std::all_of(
+    midiInputNumbers.begin(), midiInputNumbers.end(), [](int midiInputNumber) {
+      return midiInputNumber >= 1 && midiInputNumber <= 16;
+    });
+  const std::set<int> distinctNumbers(
+    midiInputNumbers.begin(), midiInputNumbers.end());
+  const bool areAllNumbersDistinct
+    = distinctNumbers.size() == midiInputNumbers.size();
+
+  return isEveryNumberInRange && areAllNumbersDistinct;
+}
+
+std::vector<unsigned> GOMidiPlayerContent::computeManualChannels(
+  bool hasPedal,
+  const std::vector<int> &midiInputNumbers,
+  GOConfig::MidiFileChannelMapping mappingMode) {
+  std::vector<unsigned> channels;
+
+  if (
+    mappingMode == GOConfig::MIDI_PLAY_CHANNELS_USE_INPUT_NUMBER
+    && isMidiInputNumberMappingUsable(midiInputNumbers))
+    for (int midiInputNumber : midiInputNumbers)
+      channels.push_back((unsigned)midiInputNumber);
+  else {
+    const bool isPedalFirst
+      = mappingMode == GOConfig::MIDI_PLAY_CHANNELS_PEDAL_FIRST;
+    const unsigned nManuals = midiInputNumbers.size() - (hasPedal ? 1 : 0);
+    const unsigned pedalChannel = isPedalFirst ? 1 : nManuals + 1;
+    unsigned nextManualChannel = isPedalFirst && hasPedal ? 2 : 1;
+
+    if (hasPedal)
+      channels.push_back(pedalChannel);
+    for (unsigned manualI = nManuals; manualI > 0; manualI--)
+      channels.push_back(nextManualChannel++);
   }
+
+  assert(channels.size() == midiInputNumbers.size());
+
+  return channels;
 }
 
 void GOMidiPlayerContent::SetupManual(
@@ -64,30 +97,33 @@ void GOMidiPlayerContent::SetupManual(
 }
 
 bool GOMidiPlayerContent::Load(
-  GOMidiFileReader &reader, GOMidiMap &map, unsigned manuals, bool pedal) {
+  const std::vector<GOMidiEvent> &events,
+  GOMidiMap &map,
+  bool hasPedal,
+  const std::vector<int> &midiInputNumbers,
+  GOConfig::MidiFileChannelMapping mappingMode) {
   Clear();
-  std::vector<GOMidiEvent> events;
-  ReadFileContent(reader, events);
 
   GOMidiMerger merger;
   merger.Clear();
-  if (
-    events.size()
-    && events[0].GetMidiType() != GOMidiEvent::MIDI_SYSEX_GO_CLEAR) {
+  if (!events.empty() && !hasNativeHeader(events)) {
     GOMidiEvent e;
     e.SetTime(0);
     e.SetMidiType(GOMidiEvent::MIDI_SYSEX_GO_CLEAR);
     e.SetChannel(0);
     m_Events.push_back(e);
 
-    for (unsigned i = 1; i <= manuals; i++)
-      SetupManual(map, i, wxString::Format(wxT("M%d"), i));
-    if (pedal)
-      SetupManual(map, manuals + 1, wxString::Format(wxT("M%d"), 0));
+    const std::vector<unsigned> channels
+      = computeManualChannels(hasPedal, midiInputNumbers, mappingMode);
+    const unsigned manualIndexOffset = hasPedal ? 0 : 1;
+
+    for (unsigned n = channels.size(), i = 0; i < n; i++)
+      SetupManual(
+        map, channels[i], wxString::Format(wxT("M%d"), i + manualIndexOffset));
   }
-  for (unsigned i = 0; i < events.size(); i++)
-    if (merger.Process(events[i]))
-      m_Events.push_back(events[i]);
+  for (GOMidiEvent e : events)
+    if (merger.Process(e))
+      m_Events.push_back(e);
 
   return true;
 }

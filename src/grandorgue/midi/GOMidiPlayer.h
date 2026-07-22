@@ -11,8 +11,10 @@
 #include <wx/string.h>
 #include <wx/timer.h>
 
+#include <optional>
 #include <vector>
 
+#include "config/GOConfig.h"
 #include "control/GOElementCreator.h"
 #include "control/GOLabelControl.h"
 #include "midi/GOMidiPlayerContent.h"
@@ -29,6 +31,7 @@ class GOTimer;
 
 class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
 private:
+  GOConfig &r_Config;
   GOMidiMap &r_MidiMap;
   GOTimer &r_timer;
   GOMidiSystem *p_midi;
@@ -42,6 +45,20 @@ private:
   unsigned m_DeviceID;
 
   void ButtonStateChanged(int id, bool newState) override;
+
+  /**
+   * Decides which MIDI channel mapping scheme to use for a MIDI file, asking
+   * chooseMapping if the file lacks a native header and asking is enabled in
+   * settings.
+   * @param events the MIDI events read from the file, in time order
+   * @param midiInputNumbers see GOMidiPlayerContent::computeManualChannels()
+   * @param chooseMapping see LoadFile()
+   * @return the mapping to use, or std::nullopt if the user cancelled
+   */
+  std::optional<GOConfig::MidiFileChannelMapping> DetermineMappingMode(
+    const std::vector<GOMidiEvent> &events,
+    const std::vector<int> &midiInputNumbers,
+    const GOConfig::MidiChannelMappingChooser &chooseMapping);
 
   void UpdateDisplay();
 
@@ -66,7 +83,20 @@ public:
    */
   void Setup(GOMidiSystem *pMidi) { p_midi = pMidi; }
 
-  void LoadFile(const wxString &filename, unsigned manuals, bool pedal);
+  /**
+   * Loads a MIDI file for playback.
+   * @param filename the MIDI file to load
+   * @param hasPedal see GOMidiPlayerContent::computeManualChannels()
+   * @param midiInputNumbers see GOMidiPlayerContent::computeManualChannels()
+   * @param chooseMapping asks which channel mapping scheme to use if
+   *   filename lacks GrandOrgue's own setup header; not called if asking is
+   *   disabled in settings
+   */
+  void LoadFile(
+    const wxString &filename,
+    bool hasPedal,
+    const std::vector<int> &midiInputNumbers,
+    const GOConfig::MidiChannelMappingChooser &chooseMapping);
   bool IsLoaded();
 
   void Play();

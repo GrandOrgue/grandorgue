@@ -1,11 +1,13 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOMidiFileReader.h"
+
+#include <algorithm>
 
 #include <wx/file.h>
 #include <wx/intl.h>
@@ -316,6 +318,21 @@ bool GOMidiFileReader::ReadEvent(GOMidiEvent &e) {
     if (e.GetMidiType() != GOMidiEvent::MIDI_NONE)
       return true;
   } while (true);
+}
+
+void GOMidiFileReader::ReadAllEvents(std::vector<GOMidiEvent> &outEvents) {
+  GOMidiEvent e;
+
+  // read all the remaining events in whatever order the file stores them
+  while (ReadEvent(e))
+    outEvents.push_back(e);
+  // then bring them into time order, keeping same-time events in read order
+  std::stable_sort(
+    outEvents.begin(),
+    outEvents.end(),
+    [](const GOMidiEvent &e1, const GOMidiEvent &e2) {
+      return e1.GetTime() < e2.GetTime();
+    });
 }
 
 bool GOMidiFileReader::Close() {

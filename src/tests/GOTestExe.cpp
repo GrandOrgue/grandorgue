@@ -11,6 +11,7 @@
 
 #include "common/GOTestCollection.h"
 #include "testing/GOTestNameMap.h"
+#include "testing/midi/GOTestMidiPlayerContent.h"
 #include "testing/model/GOTestDrawStop.h"
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestSwitch.h"
@@ -51,6 +52,7 @@ int main(int argc, char *argv[]) {
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
   GOTestNameMap goTestNameMap;
+  GOTestMidiPlayerContent testMidiPlayerContent;
   GOTestSoundBuffer goTestSoundBuffer;
   GOTestSoundBufferManaged testSoundBufferManaged;
   GOTestSoundBufferMutable testSoundBufferMutable;
