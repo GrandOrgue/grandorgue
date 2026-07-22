@@ -193,7 +193,14 @@ public:
   GOLabelControl *GetTemperamentLabel() { return &m_TemperamentLabel; }
   GOMainWindowData *GetMainWindowData() { return &m_MainWindowData; }
 
-  void LoadMIDIFile(const wxString &filename);
+  /**
+   * Loads a MIDI file for playback via the MIDI player.
+   * @param filename the MIDI file to load
+   * @param chooseMapping see GOMidiPlayer::LoadFile()
+   */
+  void LoadMIDIFile(
+    const wxString &filename,
+    const GOConfig::MidiChannelMappingChooser &chooseMapping);
 
   void SetVolume(int volume) { m_volume = volume; }
   int GetVolume() const { return m_volume; }

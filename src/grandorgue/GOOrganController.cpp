@@ -833,9 +833,16 @@ wxString GOOrganController::GetCombinationsDir() const {
     .GetFullPath();
 }
 
-void GOOrganController::LoadMIDIFile(wxString const &filename) {
-  m_MidiPlayer->LoadFile(
-    filename, GetODFManualCount() - 1, GetFirstManualIndex() == 0);
+void GOOrganController::LoadMIDIFile(
+  wxString const &filename,
+  const GOConfig::MidiChannelMappingChooser &chooseMapping) {
+  const bool hasPedal = GetFirstManualIndex() == 0;
+  std::vector<int> midiInputNumbers;
+
+  for (unsigned n = GetODFManualCount(), i = GetFirstManualIndex(); i < n; i++)
+    midiInputNumbers.push_back(GetManual(i)->GetMidiInputNumber());
+
+  m_MidiPlayer->LoadFile(filename, hasPedal, midiInputNumbers, chooseMapping);
 }
 
 void GOOrganController::Abort() {

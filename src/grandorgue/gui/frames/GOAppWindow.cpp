@@ -30,6 +30,7 @@
 #include "files/GOStdFileName.h"
 #include "gui/GOGuiApp.h"
 #include "gui/GOGuiOrgan.h"
+#include "gui/dialogs/GOMidiChannelMappingDialog.h"
 #include "gui/dialogs/GONewReleaseDialog.h"
 #include "gui/dialogs/GOProgressDialog.h"
 #include "gui/dialogs/GOPropertiesDialog.h"
@@ -1165,7 +1166,22 @@ void GOAppWindow::OnMidiLoad(wxCommandEvent &WXUNUSED(event)) {
     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dlg.ShowModal() == wxID_OK) {
     if (p_OrganController)
-      p_OrganController->LoadMIDIFile(dlg.GetPath());
+      // asks the user which MIDI channel mapping to use, only called by
+      // GOOrganController/GOMidiPlayer when the loaded file actually needs
+      // one chosen; this is the only place allowed to own the GUI dialog
+      p_OrganController->LoadMIDIFile(
+        dlg.GetPath(),
+        [this](
+          bool isMidiInputNumberMappingUsable,
+          GOConfig::MidiFileChannelMapping defaultMapping)
+          -> std::optional<GOConfig::MidiFileChannelMapping> {
+          GOMidiChannelMappingDialog chooserDlg(
+            this, r_config, isMidiInputNumberMappingUsable, defaultMapping);
+
+          return chooserDlg.ShowModal() == wxID_OK
+            ? std::optional(chooserDlg.GetSelectedMapping())
+            : std::nullopt;
+        });
   }
 }
 

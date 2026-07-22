@@ -16,6 +16,7 @@
 #include "config/GOConfig.h"
 #include "config/GOPortsConfig.h"
 
+template <class T> class GOChoice;
 class wxButton;
 class wxCheckListBox;
 class wxChoice;
@@ -32,6 +33,9 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts {
     ID_INOUTDEVICE,
     ID_OUTDEVICES,
     ID_RECORDERDEVICE,
+    ID_ASK_MIDI_PLAYER_CHANNEL_MAPPING,
+    ID_MIDI_PLAYER_CHANNEL_MAPPING_WITH_INPUT_NUMBER,
+    ID_MIDI_PLAYER_CHANNEL_MAPPING_WITHOUT_INPUT_NUMBER,
   };
 
 private:
@@ -46,6 +50,11 @@ private:
   wxButton *m_InProperties;
   wxButton *m_InOutDevice;
   wxChoice *m_RecorderDevice;
+  wxCheckBox *m_AskMidiPlayerChannelMapping;
+  GOChoice<GOConfig::MidiFileChannelMapping>
+    *m_MidiPlayerChannelMappingWithInputNumber;
+  GOChoice<GOConfig::MidiFileChannelMapping>
+    *m_MidiPlayerChannelMappingWithoutInputNumber;
 
   void RenewDevices(
     const GOPortsConfig &portsConfig, const bool isToAutoAddInput);
