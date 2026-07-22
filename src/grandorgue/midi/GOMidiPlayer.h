@@ -13,6 +13,7 @@
 
 #include <vector>
 
+#include "config/GOConfig.h"
 #include "control/GOElementCreator.h"
 #include "control/GOLabelControl.h"
 #include "midi/GOMidiPlayerContent.h"
@@ -29,6 +30,7 @@ class GOTimer;
 
 class GOMidiPlayer : public GOElementCreator, private GOTimerCallback {
 private:
+  GOConfig &r_Config;
   GOMidiMap &r_MidiMap;
   GOTimer &r_timer;
   GOMidiSystem *p_midi;
@@ -66,7 +68,20 @@ public:
    */
   void Setup(GOMidiSystem *pMidi) { p_midi = pMidi; }
 
-  void LoadFile(const wxString &filename, unsigned manuals, bool pedal);
+  /**
+   * Loads a MIDI file for playback.
+   * @param filename the MIDI file to load
+   * @param hasPedal see GOMidiPlayerContent::computeManualChannels()
+   * @param midiInputNumbers see GOMidiPlayerContent::computeManualChannels()
+   * @param chooseMapping asks which channel mapping scheme to use if
+   *   filename lacks GrandOrgue's own setup header; not called if asking is
+   *   disabled in settings
+   */
+  void LoadFile(
+    const wxString &filename,
+    bool hasPedal,
+    const std::vector<int> &midiInputNumbers,
+    const GOConfig::MidiChannelMappingChooser &chooseMapping);
   bool IsLoaded();
 
   void Play();
