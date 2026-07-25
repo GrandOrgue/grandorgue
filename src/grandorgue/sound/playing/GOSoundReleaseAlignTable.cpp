@@ -7,6 +7,7 @@
 
 #include "GOSoundReleaseAlignTable.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 #include "loader/cache/GOCache.h"
@@ -96,10 +97,24 @@ bool GOSoundReleaseAlignTable::Save(GOCacheWriter &cache) {
   return true;
 }
 
+unsigned GOSoundReleaseAlignTable::computeBucketIndex(
+  int shiftedValue, unsigned maxValue, unsigned nBuckets) {
+  const unsigned result = maxValue
+    // clamp to valid range, then map to bucket
+    ? static_cast<unsigned>(
+        std::clamp(shiftedValue, 0, static_cast<int>(2 * maxValue - 1)))
+      * nBuckets / (2 * maxValue)
+    // maxValue == 0: table was not built, fall back to midpoint
+    : nBuckets / 2;
+
+  assert(result < nBuckets);
+  return result;
+}
+
 void GOSoundReleaseAlignTable::ComputeTable(
   const GOSoundAudioSection &release,
-  int phase_align_max_amplitude,
-  int phase_align_max_derivative,
+  unsigned phase_align_max_amplitude,
+  unsigned phase_align_max_derivative,
   unsigned int sample_rate,
   unsigned start_position) {
   GOSoundCompressionCache cache;
@@ -144,29 +159,18 @@ void GOSoundReleaseAlignTable::ComputeTable(
     for (unsigned int j = 0; j < channels; j++)
       f += release.GetSample(start_position + i, j, &cache);
 
-    /* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-    int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
-    int derivIndex
-      = (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative);
+    /* Bring v into the range [0, 2*m_PhaseAlignMaxDerivative) */
+    const int v_mod
+      = (f - f_p) + static_cast<int>(m_PhaseAlignMaxDerivative) - 1;
+    const unsigned derivIndex = computeBucketIndex(
+      v_mod, m_PhaseAlignMaxDerivative, PHASE_ALIGN_DERIVATIVES);
 
-    /* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-    int f_mod = f + m_PhaseAlignMaxAmplitude - 1;
-    int ampIndex
-      = (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
+    /* Bring f into the range [0, 2*m_PhaseAlignMaxAmplitude) */
+    const int f_mod = f + static_cast<int>(m_PhaseAlignMaxAmplitude) - 1;
+    const unsigned ampIndex = computeBucketIndex(
+      f_mod, m_PhaseAlignMaxAmplitude, PHASE_ALIGN_AMPLITUDES);
 
     /* Store this release point if it was not already filled */
-    derivIndex = (derivIndex < 0)
-      ? 0
-      : (
-        (derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES - 1
-                                                : derivIndex);
-    ampIndex = (ampIndex < 0)
-      ? 0
-      : (
-        (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
-                                             : ampIndex);
-    assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-    assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
     if (!areCellsFilled[derivIndex][ampIndex]) {
       m_PositionEntries[derivIndex][ampIndex] = i + 1 + start_position;
       areCellsFilled[derivIndex][ampIndex] = true;
@@ -209,41 +213,24 @@ void GOSoundReleaseAlignTable::ComputeTable(
 }
 
 unsigned GOSoundReleaseAlignTable::GetPositionFor(
-  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const {
+  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS], unsigned nChannels) const {
   /* Get combined release f's and v's */
   int f_mod = 0;
   int v_mod = 0;
-  for (unsigned i = 0; i < MAX_OUTPUT_CHANNELS; i++) {
+  for (unsigned i = 0; i < nChannels; i++) {
     f_mod += history[(BLOCK_HISTORY - 1)][i];
     v_mod += history[(BLOCK_HISTORY - 2)][i];
   }
   v_mod = f_mod - v_mod;
 
-  /* Bring f and v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-  v_mod += (m_PhaseAlignMaxDerivative - 1);
-  f_mod += (m_PhaseAlignMaxAmplitude - 1);
+  /* Bring f and v into the range [0, 2*m_PhaseAlignMax*) */
+  v_mod += static_cast<int>(m_PhaseAlignMaxDerivative) - 1;
+  f_mod += static_cast<int>(m_PhaseAlignMaxAmplitude) - 1;
 
-  int derivIndex = m_PhaseAlignMaxDerivative
-    ? (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative)
-    : PHASE_ALIGN_DERIVATIVES / 2;
+  const unsigned derivIndex = computeBucketIndex(
+    v_mod, m_PhaseAlignMaxDerivative, PHASE_ALIGN_DERIVATIVES);
+  const unsigned ampIndex = computeBucketIndex(
+    f_mod, m_PhaseAlignMaxAmplitude, PHASE_ALIGN_AMPLITUDES);
 
-  /* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-  int ampIndex = m_PhaseAlignMaxAmplitude
-    ? (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude)
-    : PHASE_ALIGN_AMPLITUDES / 2;
-
-  /* Store this release point if it was not already found */
-  assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-  assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-  derivIndex = (derivIndex < 0)
-    ? 0
-    : (
-      (derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES - 1
-                                              : derivIndex);
-  ampIndex = (ampIndex < 0)
-    ? 0
-    : (
-      (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
-                                           : ampIndex);
   return m_PositionEntries[derivIndex][ampIndex];
 }
