@@ -113,8 +113,8 @@ private:
   unsigned m_AllocSize;
 
   unsigned m_MaxAmplitude;
-  int m_MaxAbsAmplitude;
-  int m_MaxAbsDerivative;
+  unsigned m_MaxAbsAmplitude;
+  unsigned m_MaxAbsDerivative;
   unsigned m_ReleaseCrossfadeLength; // in ms
 
   void ClearData();
