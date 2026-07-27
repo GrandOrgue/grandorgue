@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -45,6 +45,11 @@ void GOTestWindchest::run() {
 
   // Check enclosure volume values from midi ones
   GOEnclosure *enclosure = new GOEnclosure(*this->controller);
+  // windchest->AddEnclosure() only registers enclosure in a non-owning
+  // std::vector (GOWindchest::m_enclosure) for volume grouping; ownership
+  // (and destruction) comes from the model's own ptr_vector, registered
+  // via controller->AddEnclosure().
+  controller->AddEnclosure(enclosure);
   windchest->AddEnclosure(enclosure);
 
   enclosure->SetEnclosureValue(127);
@@ -75,6 +80,11 @@ void GOTestWindchest::run() {
   GORank *rank = new GORank(*this->controller);
   message = "The Rank count for Windchest should be 0";
   this->GOAssert(windchest->GetRankCount() == 0, message);
+  // windchest->AddRank() only registers rank in a non-owning std::vector
+  // (GOWindchest::m_ranks) for grouping; ownership (and destruction, which
+  // transitively frees rank's own owned pipes via GORank::m_Pipes) comes
+  // from the model's own ptr_vector, registered via controller->AddRank().
+  controller->AddRank(rank);
   windchest->AddRank(rank);
   this->GOAssert(windchest->GetRankCount() == 1, message);
 
