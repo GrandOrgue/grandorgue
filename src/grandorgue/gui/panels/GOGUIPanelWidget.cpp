@@ -19,10 +19,8 @@
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
 
-namespace {
 enum { ID_PANEL_RESIZE_TIMER = wxID_HIGHEST + 1 };
 constexpr int RESIZE_SETTLE_MS = 150;
-} // namespace
 
 BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 EVT_ERASE_BACKGROUND(GOGUIPanelWidget::OnErase)
@@ -47,7 +45,9 @@ GOGUIPanelWidget::GOGUIPanelWidget(
   : wxPanel(parent, id),
     m_panel(panel),
     m_BGInit(false),
+    m_ResizeInProgress(false),
     m_Scale(1),
+    m_LastRedrawScale(1),
     m_FontScale(1),
     m_ResizeTimer(this, ID_PANEL_RESIZE_TIMER),
     m_PressedPoint(default_point) {
@@ -58,7 +58,6 @@ GOGUIPanelWidget::GOGUIPanelWidget(
     m_panel->GetWidth() * m_Scale, m_panel->GetHeight() * m_Scale);
   m_panel->PrepareDraw(m_Scale, NULL);
   OnUpdate();
-  m_LastFullBitmap = m_ClientBitmap;
   m_BGImage = m_ClientBitmap.ConvertToImage();
   m_Background.BuildScaledBitmap(m_Scale, wxRect(0, 0, 0, 0), NULL);
   m_BGInit = true;
@@ -85,7 +84,7 @@ void GOGUIPanelWidget::Focus() {
     SetFocus();
 }
 
-wxSize GOGUIPanelWidget::UpdateSize(wxSize size) {
+void GOGUIPanelWidget::ComputeScale(const wxSize &size) {
   double scaleX = size.GetWidth() / (double)m_panel->GetWidth();
   double scaleY = size.GetHeight() / (double)m_panel->GetHeight();
   if (scaleX < scaleY) // To fit all, we need to use the SMALLEST of the two
@@ -100,9 +99,26 @@ wxSize GOGUIPanelWidget::UpdateSize(wxSize size) {
                       // this. Without this limit, sizing too a too small value
                       // causes a crash!
     m_Scale = 0.25;
+}
 
-  const int targetWidth = m_panel->GetWidth() * m_Scale + 0.5;
-  const int targetHeight = m_panel->GetHeight() * m_Scale + 0.5;
+wxSize GOGUIPanelWidget::GetScaledPanelSize() const {
+  return wxSize(
+    m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5);
+}
+
+wxSize GOGUIPanelWidget::SetInitialSize(const wxSize &size) {
+  ComputeScale(size);
+  m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
+  OnUpdate();
+  m_LastRedrawScale = m_Scale;
+  Refresh();
+  return GetSize();
+}
+
+wxSize GOGUIPanelWidget::UpdatePreviewSize(const wxSize &size) {
+  ComputeScale(size);
+
+  const wxSize scaledSize = GetScaledPanelSize();
 
   // Cheap immediate feedback for a live drag: rescale the last sharply
   // redrawn bitmap instead of re-running PrepareDraw()/OnUpdate(), which
@@ -111,8 +127,11 @@ wxSize GOGUIPanelWidget::UpdateSize(wxSize size) {
   // sharp, full-quality redraw happens once in OnResizeTimer(), after
   // resizing has been idle for a moment.
   //
-  // Always rescale from m_LastFullBitmap, never from m_ClientBitmap: during
-  // a drag m_ClientBitmap is itself the result of this same preview rescale,
+  // The snapshot is captured lazily at the start of each resize series so
+  // that it reflects whatever m_ClientBitmap shows right now - including
+  // single-control redraws (OnGOControl) done since the last full redraw.
+  // Always rescale from that snapshot, never from m_ClientBitmap: during a
+  // drag m_ClientBitmap is itself the result of this same preview rescale,
   // so chaining off it would compound quality loss tick after tick instead
   // of staying as sharp as a single rescale from the original allows.
   //
@@ -123,19 +142,37 @@ wxSize GOGUIPanelWidget::UpdateSize(wxSize size) {
   // quality looks smooth and is still cheap here because it runs once on the
   // already-composed panel bitmap, not once per control like BICUBIC mode
   // does in OnUpdate()/PrepareDraw().
-  if (m_LastFullBitmap.IsOk() && targetWidth > 0 && targetHeight > 0)
-    m_ClientBitmap = (wxBitmap)m_LastFullBitmap.ConvertToImage().Scale(
-      targetWidth, targetHeight, wxIMAGE_QUALITY_NORMAL);
-  SetSize(targetWidth, targetHeight);
+  if (!m_ResizeInProgress) {
+    m_ResizeInProgress = true;
+    m_PreResizeBitmap = m_ClientBitmap;
+  }
+  if (
+    m_PreResizeBitmap.IsOk() && scaledSize.GetWidth() > 0
+    && scaledSize.GetHeight() > 0)
+    m_ClientBitmap = (wxBitmap)m_PreResizeBitmap.ConvertToImage().Scale(
+      scaledSize.GetWidth(), scaledSize.GetHeight(), wxIMAGE_QUALITY_NORMAL);
+  SetSize(scaledSize.GetWidth(), scaledSize.GetHeight());
   Refresh();
   m_ResizeTimer.StartOnce(RESIZE_SETTLE_MS);
   return GetSize();
 }
 
 void GOGUIPanelWidget::OnResizeTimer(wxTimerEvent &WXUNUSED(event)) {
+  m_ResizeInProgress = false;
+
+  /* The series ended at the very scale that is already sharply rendered
+   * (the user dragged out and back, or size events delivered while a long
+   * redraw was running re-armed the timer). m_ClientBitmap already shows
+   * the 1:1 preview of the sharp bitmap plus any control redraws done on
+   * top of it, so there is nothing a full redraw could improve. Without
+   * this check a slow redraw ran up to three times back to back for
+   * identical output. */
+  if (m_Scale == m_LastRedrawScale)
+    return;
+
   m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
   OnUpdate();
-  m_LastFullBitmap = m_ClientBitmap;
+  m_LastRedrawScale = m_Scale;
   Refresh();
 }
 
@@ -154,15 +191,13 @@ void GOGUIPanelWidget::OnPaint(wxPaintEvent &event) {
 }
 
 void GOGUIPanelWidget::OnUpdate() {
+  const wxSize scaledSize = GetScaledPanelSize();
+
   if (m_BGInit)
     m_ClientBitmap = (wxBitmap)m_BGImage.Scale(
-      m_panel->GetWidth() * m_Scale + 0.5,
-      m_panel->GetHeight() * m_Scale + 0.5,
-      wxIMAGE_QUALITY_BICUBIC);
+      scaledSize.GetWidth(), scaledSize.GetHeight(), wxIMAGE_QUALITY_BICUBIC);
   else
-    m_ClientBitmap = wxBitmap(
-      m_panel->GetWidth() * m_Scale + 0.5,
-      m_panel->GetHeight() * m_Scale + 0.5);
+    m_ClientBitmap = wxBitmap(scaledSize.GetWidth(), scaledSize.GetHeight());
   wxMemoryDC dc;
   dc.SelectObject(m_ClientBitmap);
   GODC DC(&dc, m_Scale, m_FontScale);
