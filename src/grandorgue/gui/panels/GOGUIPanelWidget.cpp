@@ -64,7 +64,11 @@ GOGUIPanelWidget::GOGUIPanelWidget(
   SetCanFocus(m_panel->IsKeyboardInputUsed());
 }
 
-GOGUIPanelWidget::~GOGUIPanelWidget() { m_ResizeTimer.Stop(); }
+GOGUIPanelWidget::~GOGUIPanelWidget() {
+  /* Relies on wx discarding any wxTimerEvent already queued for this timer
+  at the moment of Stop()/destruction, on all supported backends. */
+  m_ResizeTimer.Stop();
+}
 
 void GOGUIPanelWidget::initFont() {
   wxMemoryDC dc;

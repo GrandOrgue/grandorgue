@@ -67,6 +67,25 @@ private:
    * after the user stops moving the border - otherwise every pixel of mouse
    * movement triggered a full BICUBIC rescale of every key/stop/texture,
    * making resizing unusably slow.
+   *
+   * Started (or restarted, since it is one-shot) by every
+   * UpdatePreviewSize() call, i.e. on every live-drag resize tick.
+   * wxTimer::Start()/StartOnce() simply restarts an already-running timer
+   * rather than queuing another firing, so in the common case of ticks
+   * arriving faster than RESIZE_SETTLE_MS apart (a normal mouse drag), it
+   * does not fire even once until the ticks stop - it fires exactly once,
+   * RESIZE_SETTLE_MS after the last tick. Only if ticks are spaced out by
+   * more than RESIZE_SETTLE_MS (a slow/stepped resize) can it fire more than
+   * once per resize series. Stops itself once it fires, running
+   * OnResizeTimer(); also explicitly stopped in the destructor so it cannot
+   * fire after the widget is destroyed. SetInitialSize() never touches it -
+   * the initial sizing path is fully synchronous and skips the timer
+   * entirely.
+   *
+   * TODO: this is the third independent hand-rolled debounce-timer
+   * implementation in the codebase (alongside GOSplash and
+   * GOMidiEventRecvTab::m_Timer). If a fourth case appears, extract a shared
+   * "settle timer" helper instead of writing a fourth copy.
    */
   wxTimer m_ResizeTimer;
 
