@@ -78,7 +78,10 @@ void GOPerfTestApp::RunTest(
 
     organController->InitOrganDirectory(testsDir);
     organController->AddWindchest(new GOWindchest(*organController));
-    GOSoundOrganEngine *engine = new GOSoundOrganEngine();
+
+    GOSoundOrganEngine *engine = new GOSoundOrganEngine(
+      static_cast<GOOrganModel &>(*organController),
+      organController->GetMemoryPool());
     GOSoundRecorder recorder;
 
     try {
@@ -118,29 +121,16 @@ void GOPerfTestApp::RunTest(
           true);
         pipes.push_back(w);
       }
-      engine->SetSamplesPerBuffer(samples_per_frame);
       engine->SetVolume(10);
-      engine->SetSampleRate(sample_rate);
       engine->SetPolyphonyLimiting(false);
       engine->SetHardPolyphony(10000);
       engine->SetScaledReleases(true);
-      engine->SetAudioGroupCount(1);
       engine->SetInterpolationType(interpolation);
-
-      std::vector<GOAudioOutputConfiguration> engine_config;
-      engine_config.resize(1);
-      engine_config[0].channels = 2;
-      engine_config[0].scale_factors.resize(2);
-      engine_config[0].scale_factors[0].resize(2);
-      engine_config[0].scale_factors[0][0] = 0;
-      engine_config[0].scale_factors[0][1] = -121;
-      engine_config[0].scale_factors[1].resize(2);
-      engine_config[0].scale_factors[1][0] = -121;
-      engine_config[0].scale_factors[1][1] = 0;
-      engine->SetAudioOutput(engine_config);
-      engine->SetAudioRecorder(&recorder, false);
-
-      engine->Setup(*organController, organController->GetMemoryPool());
+      engine->BuildAndStart(
+        GOSoundOrganEngine::createDefaultOutputConfigs(),
+        samples_per_frame,
+        sample_rate,
+        recorder);
 
       std::vector<GOSoundSampler *> handles;
       float output_buffer[samples_per_frame * 2];
@@ -186,6 +176,7 @@ void GOPerfTestApp::RunTest(
         playback_time * 1000.0 * pipes.size() / diff.ToLong());
 
       pipes.clear();
+      engine->StopAndDestroy();
     } catch (wxString msg) {
       wxLogError(wxT("Error: %s"), msg.c_str());
     }

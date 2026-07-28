@@ -66,8 +66,6 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
       wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
       event.SetInt(m_OrganController->GetVolume());
       wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-
-      m_sound.GetEngine().SetVolume(m_OrganController->GetVolume());
     }
 
     wxCommandEvent event(wxEVT_WINTITLE, 0);
@@ -85,6 +83,7 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
       p_MainWindow->SetPosSize(mRect);
 
     m_sound.AssignOrganFile(m_OrganController);
+    m_sound.GetEngine().SetVolume(m_OrganController->GetVolume());
     m_OrganFileReady = true;
     m_listener.SetCallback(this);
     if (!cmb.IsEmpty())

@@ -99,7 +99,7 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
     mp_ImageCache(nullptr),
     m_PitchLabel(*this),
     m_TemperamentLabel(*this),
-    m_MainWindowData(this, wxT("MainWindow")) {
+    m_MainWindowData(*this, wxT("MainWindow")) {
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded
     m_timer = new GOTimer();

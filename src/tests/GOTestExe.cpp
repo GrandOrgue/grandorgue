@@ -20,6 +20,7 @@
 #include "testing/sound/buffer/GOTestSoundBufferManaged.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutableMono.h"
+#include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
 
 int main(int argc, char *argv[]) {
@@ -55,21 +56,17 @@ int main(int argc, char *argv[]) {
   GOTestSoundBufferMutable testSoundBufferMutable;
   GOTestSoundBufferMutableMono testSoundBufferMutableMono;
   GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
+  GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->Run(categoryFilter);
 
   // Display tests results
-  int run_number_ = 0;
-  std::vector<GOTestResult *> test_results
-    = test_result_collection.get_results();
   std::cout << "==================== TESTS RESULTS ====================\n";
-  for (auto current = test_results.begin(); current != test_results.end();
-       ++current, ++run_number_) {
-    auto test_result = *current;
+  for (GOTestResult *pResult : test_result_collection.get_results()) {
     std::cout << "-------------------------------------------------------\n";
-    std::cout << test_result->GetMessage() << "\n";
+    std::cout << pResult->GetMessage() << "\n";
   }
 
   const int failed_count = GOTestCollection::Instance()->get_failed_count();

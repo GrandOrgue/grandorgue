@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,16 +14,16 @@
 
 #include "GOSaveableObject.h"
 
-class GOOrganController;
+class GOOrganModel;
 
 class GOMainWindowData : private GOSaveableObject {
 protected:
-  GOOrganController *p_organFile;
+  GOOrganModel &r_OrganModel;
   GOLogicalRect m_rect;
 
 public:
-  GOMainWindowData(GOOrganController *pOrganFile, const wxString &group)
-    : p_organFile(pOrganFile) {
+  GOMainWindowData(GOOrganModel &organModel, const wxString &group)
+    : r_OrganModel(organModel) {
     m_group = group;
   }
   virtual ~GOMainWindowData() {}
