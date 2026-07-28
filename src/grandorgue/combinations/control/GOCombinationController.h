@@ -1,12 +1,14 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #ifndef GOCOMBINATIONCONTROLLER_H
 #define GOCOMBINATIONCONTROLLER_H
+
+#include <functional>
 
 class GODivisionalCombination;
 class GOGeneralCombination;
@@ -29,19 +31,19 @@ public:
     = 0;
 
   /**
-   * Activate the divisional cmb. Does not process divisional couplers
-   * @param cmb the cmb to activate or to set
-   * @param startManual the manual that is pushed manually.
-   * @param cmbManual the manual where to push the divisional. It may differ
-   *   from startManual if cmbManual has a divisional coupler with startManual
-   * @param pButtonToLight the button to light on. All other buttons on the
-   *   cmbManual are ligthed off
+   * Activate or set the divisional cmb for all manuals coupled with
+   * startManualIndex
+   * @param startManualIndex the manual that is pushed manually
+   * @param findManualDivisional the function (usually lambda) returning a pair
+   *   of (pButtonToLight, pCmb) by coupledManualIndex. Any of them may be
+   *   nullptr. pButtonToLight is a pointer to the button to light on.
+   *   All other buttons on the cmbManual are ligthed off. pCmb is a pointer to
+   *   the combination to activate or to set.
    */
-  virtual void PushDivisional(
-    GODivisionalCombination &cmb,
-    unsigned startManual,
-    unsigned cmbManual,
-    GOButtonControl *pButtonToLight)
+  virtual void ProcessPushDivisional(
+    unsigned startManualIndex,
+    std::function<std::pair<GOButtonControl *, GODivisionalCombination *>(
+      unsigned)> findManualDivisional)
     = 0;
 };
 
