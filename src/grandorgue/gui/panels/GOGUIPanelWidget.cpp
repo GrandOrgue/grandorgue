@@ -19,8 +19,8 @@
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_GOCONTROL)
 
-enum { ID_PANEL_RESIZE_TIMER = wxID_HIGHEST + 1 };
-constexpr int RESIZE_SETTLE_MS = 150;
+static constexpr int ID_PANEL_RESIZE_TIMER = wxID_HIGHEST + 1;
+static constexpr unsigned RESIZE_SETTLE_MS = 150;
 
 BEGIN_EVENT_TABLE(GOGUIPanelWidget, wxPanel)
 EVT_ERASE_BACKGROUND(GOGUIPanelWidget::OnErase)
@@ -164,17 +164,15 @@ wxSize GOGUIPanelWidget::UpdatePreviewSize(const wxSize &size) {
 void GOGUIPanelWidget::OnResizeTimer(wxTimerEvent &WXUNUSED(event)) {
   m_ResizeInProgress = false;
 
-  /* The series ended at the very scale that is already sharply rendered
-   * (the user dragged out and back, or size events delivered while a long
-   * redraw was running re-armed the timer). m_ClientBitmap already shows
-   * the 1:1 preview of the sharp bitmap plus any control redraws done on
-   * top of it, so there is nothing a full redraw could improve. Without
-   * this check a slow redraw ran up to three times back to back for
-   * identical output. */
-  if (m_Scale == m_LastRedrawScale)
-    return;
-
-  FullRedraw();
+  /* Skip the redraw when the series ended at the very scale that is
+   * already sharply rendered (the user dragged out and back, or size
+   * events delivered while a long redraw was running re-armed the timer).
+   * m_ClientBitmap already shows the 1:1 preview of the sharp bitmap plus
+   * any control redraws done on top of it, so there is nothing a full
+   * redraw could improve. Without this check a slow redraw ran up to three
+   * times back to back for identical output. */
+  if (m_Scale != m_LastRedrawScale)
+    FullRedraw();
 }
 
 void GOGUIPanelWidget::OnDraw(wxDC *dc) {
