@@ -1,3 +1,4 @@
+# 3.17.3 (2026-07-28)
 - Fixed heap overflow and wrong channel metering in audio output task https://github.com/GrandOrgue/grandorgue/issues/2531
 - Fixed crash when loading PNG images with embedded alpha channel used with mask images https://github.com/GrandOrgue/grandorgue/issues/2535
 - Fixed keyboard shortcuts (Panic, Help, Load/Open/Save/Install organ, MIDI player load) not working when a detached organ panel window has focus https://github.com/GrandOrgue/grandorgue/issues/2541
