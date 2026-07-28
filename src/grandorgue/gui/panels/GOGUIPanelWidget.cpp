@@ -106,12 +106,16 @@ wxSize GOGUIPanelWidget::GetScaledPanelSize() const {
     m_panel->GetWidth() * m_Scale + 0.5, m_panel->GetHeight() * m_Scale + 0.5);
 }
 
-wxSize GOGUIPanelWidget::SetInitialSize(const wxSize &size) {
-  ComputeScale(size);
+void GOGUIPanelWidget::FullRedraw() {
   m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
   OnUpdate();
   m_LastRedrawScale = m_Scale;
   Refresh();
+}
+
+wxSize GOGUIPanelWidget::SetInitialSize(const wxSize &size) {
+  ComputeScale(size);
+  FullRedraw();
   return GetSize();
 }
 
@@ -170,10 +174,7 @@ void GOGUIPanelWidget::OnResizeTimer(wxTimerEvent &WXUNUSED(event)) {
   if (m_Scale == m_LastRedrawScale)
     return;
 
-  m_panel->PrepareDraw(m_Scale, m_BGInit ? &m_Background : NULL);
-  OnUpdate();
-  m_LastRedrawScale = m_Scale;
-  Refresh();
+  FullRedraw();
 }
 
 void GOGUIPanelWidget::OnDraw(wxDC *dc) {

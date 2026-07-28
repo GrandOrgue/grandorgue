@@ -81,6 +81,13 @@ private:
   void ComputeScale(const wxSize &size);
   /** The panel's pixel size at the current m_Scale. */
   wxSize GetScaledPanelSize() const;
+  /**
+   * Runs the expensive, sharp redraw of every control at the current
+   * m_Scale: PrepareDraw()+OnUpdate(), then repaints. Used both for the
+   * initial full-quality render and for the settled redraw after a resize
+   * series ends (OnResizeTimer()).
+   */
+  void FullRedraw();
 
   void OnCreate(wxWindowCreateEvent &event);
   void OnDraw(wxDC *dc);
