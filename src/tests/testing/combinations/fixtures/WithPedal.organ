@@ -1,3 +1,7 @@
+; Used by GOTestDivisionalSetter::TestWithPedal.
+; Same scenario as NoPedal.organ but with a Pedal present (HasPedals=Y), so
+; GetFirstManualIndex() == 0 -- confirms the previously-working, has-pedal
+; case still works.
 [Organ]
 ChurchName=Test organ
 ChurchAddress=Test address

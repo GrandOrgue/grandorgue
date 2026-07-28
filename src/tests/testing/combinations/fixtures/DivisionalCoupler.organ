@@ -1,3 +1,11 @@
+; Used by GOTestDivisionalSetter::TestDivisionalCoupler.
+; Two manuals, no Pedal (HasPedals=N), each with its own associated Switch,
+; coupled by an engaged, bidirectional DivisionalCoupler001. Exercises the
+; coupled-manual loop in SwitchDivisionalTo/ProcessPushDivisional that
+; contained the original bug: each manual first gets its own combination via
+; its own Set press, then recalling the divisional on one manual (Set not
+; active) must also recall the other manual's combination through the
+; coupler.
 [Organ]
 ChurchName=Test organ
 ChurchAddress=Test address
