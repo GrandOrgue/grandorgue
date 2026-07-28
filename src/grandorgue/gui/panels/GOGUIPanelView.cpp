@@ -12,6 +12,7 @@
 #include <wx/frame.h>
 #include <wx/image.h>
 #include <wx/toplevel.h>
+#include <wx/wupdlock.h>
 
 #include "gui/wxcontrols/go_gui_utils.h"
 
@@ -68,7 +69,7 @@ GOGUIPanelView::GOGUIPanelView(
   // At this point, the new window may fill the whole display and still not be
   // large enough to show all contents. So, before showing anything, lets see
   // what scaling is needed to fit the content completely to the window.
-  wxSize scaledsize = m_panelwidget->UpdateSize(topWindow->GetClientSize());
+  wxSize scaledsize = m_panelwidget->SetInitialSize(topWindow->GetClientSize());
 
   topWindow->Show();
   topWindow->Update();
@@ -163,7 +164,17 @@ void GOGUIPanelView::OnSize(wxSizeEvent &event) {
     // Scale out the panel according the new size
 
     const wxSize newSize = event.GetSize();
-    const wxSize maxSize = m_panelwidget->UpdateSize(newSize);
+
+    // UpdatePreviewSize(), SetPosition() and CentreOnParent() below each
+    // move/resize m_panelwidget natively on their own. Without freezing, the
+    // window manager can paint the in-between states (e.g. still at the old
+    // centering position right after the size already changed), which is
+    // seen as a brief flicker/jump whenever the panel is dragged past its
+    // native size and centering kicks in. The update locker suppresses
+    // repaints until all the geometry changes below are settled.
+    wxWindowUpdateLocker lock(m_panelwidget);
+
+    const wxSize maxSize = m_panelwidget->UpdatePreviewSize(newSize);
 
     this->SetVirtualSize(maxSize);
 

@@ -1,3 +1,4 @@
+- Fixed slow/flickery panel resizing while dragging a panel window's border https://github.com/GrandOrgue/grandorgue/issues/2537
 - Fixed heap overflow and wrong channel metering in audio output task https://github.com/GrandOrgue/grandorgue/issues/2531
 - Fixed crash when loading PNG images with embedded alpha channel used with mask images https://github.com/GrandOrgue/grandorgue/issues/2535
 - Fixed keyboard shortcuts (Panic, Help, Load/Open/Save/Install organ, MIDI player load) not working when a detached organ panel window has focus https://github.com/GrandOrgue/grandorgue/issues/2541
