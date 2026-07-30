@@ -212,6 +212,27 @@ You can download the source code archive from GitHub
             ```
             The built app will appear in the build/osx subdirectory of current directory.
 
+## Building for Windows on Windows using MSYS2
+
+This is the recommended way for Windows-only contributors to build GrandOrgue - it builds natively on Windows via the [MSYS2](https://www.msys2.org/) mingw-w64 toolchain, without needing a Linux machine for cross-compiling (see the next section for that alternative, still used for Linux-hosted CI/release builds).
+
+1. Prerequisites:
+    1. Windows 10/11, 64-bit.
+    2. [MSYS2](https://www.msys2.org/) - `prepare-windows.cmd` (next step) installs it automatically if it isn't already present at `C:\msys64`; if it's installed somewhere else, set the `MSYS2_DIR` environment variable to that location first.
+    3. (Optional) Visual Studio Build Tools with the "Desktop development with C++" workload, if you want split debug symbols (a separate `.pdb` file next to each executable/DLL). GrandOrgue itself is always compiled with the mingw-w64 gcc from MSYS2, not MSVC - Visual Studio is only used by `cv2pdb`, a small tool that converts the mingw debug info into the (proprietary) `.pdb` format. Without it, the build still succeeds, just without split `.pdb` files.
+
+2. Install the build dependencies, from an elevated ("Run as administrator") `cmd.exe` prompt in the repo root:
+    ```
+    build-scripts\for-win64\prepare-windows.cmd
+    ```
+    This installs MSYS2 if needed, the required MSYS2 mingw64 packages, and downloads the ASIO SDK, `vswhere`, and `cv2pdb`. Administrator rights are required because it may install MSYS2 itself and its packages.
+
+3. Build, from a regular (non-elevated) `cmd.exe` prompt in the repo root:
+    ```
+    build-scripts\for-win64\build-on-windows.cmd
+    ```
+    The built packages (a `.zip` and an NSIS installer `.exe`) will appear in the `build\win64` subdirectory of the current directory.
+
 ## Cross-building for Windows-64 bit on Linux
 
 1. Install mingw-w64 (On Debian/Ubuntu, install the package mingw-w64) and all packages needed to build GO under Linux.
