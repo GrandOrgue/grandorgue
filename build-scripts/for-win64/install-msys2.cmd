@@ -14,16 +14,6 @@ if exist "%MSYS2_DIR%\msys2_shell.cmd" (
 
 echo MSYS2 not found at "%MSYS2_DIR%" - installing it...
 
-rem Prefer winget (installs to its own default location, usually
-rem C:\msys64; --location is best-effort and not honored by every
-rem winget package manifest).
-where winget >nul 2>nul
-if not errorlevel 1 (
-  winget install --id MSYS2.MSYS2 -e --silent --accept-package-agreements --accept-source-agreements --location "%MSYS2_DIR%"
-  if not errorlevel 1 exit /b 0
-  echo winget install failed, falling back to downloading the MSYS2 installer directly.
-)
-
 set "MSYS2_INSTALLER_URL=https://github.com/msys2/msys2-installer/releases/latest/download/msys2-x86_64-latest.exe"
 set "MSYS2_INSTALLER=%TEMP%\msys2-installer.exe"
 

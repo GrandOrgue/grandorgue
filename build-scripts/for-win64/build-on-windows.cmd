@@ -20,7 +20,13 @@ if not exist "%MSYS2_DIR%\msys2_shell.cmd" (
 set "SCRIPT_DIR=%~dp0"
 set "SCRIPT_DIR=%SCRIPT_DIR:\=/%"
 
-"%MSYS2_DIR%\msys2_shell.cmd" -mingw64 -here -no-start -defterm -c "'%SCRIPT_DIR%build-on-msys2.sh' %*"
+rem Backslashes in arguments (eg. a Windows-style SRC_DIR path) would
+rem otherwise be eaten as bash escape characters once forwarded into the
+rem quoted -c string below; forward slashes work fine on Windows too.
+set "ARGS=%*"
+set "ARGS=%ARGS:\=/%"
+
+"%MSYS2_DIR%\msys2_shell.cmd" -mingw64 -here -no-start -defterm -c "'%SCRIPT_DIR%build-on-msys2.sh' %ARGS%"
 if errorlevel 1 exit /b %errorlevel%
 
 endlocal

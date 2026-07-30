@@ -8,7 +8,7 @@
 
 set -e
 
-if [ -w /usr/local ] || [ "$(id -u)" = "0" ]; then
+if [ "$(id -u)" = "0" ] || ! command -v sudo >/dev/null 2>&1 || [ -w /usr/local ]; then
 	SUDO=
 else
 	SUDO=sudo

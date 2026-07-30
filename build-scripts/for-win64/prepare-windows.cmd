@@ -25,7 +25,13 @@ if errorlevel 1 exit /b %errorlevel%
 set "SCRIPT_DIR=%~dp0"
 set "SCRIPT_DIR=%SCRIPT_DIR:\=/%"
 
-"%MSYS2_DIR%\msys2_shell.cmd" -mingw64 -here -no-start -defterm -c "'%SCRIPT_DIR%prepare-msys2.sh' %*"
+rem Backslashes in arguments would otherwise be eaten as bash escape
+rem characters once forwarded into the quoted -c string below; forward
+rem slashes work fine on Windows too.
+set "ARGS=%*"
+set "ARGS=%ARGS:\=/%"
+
+"%MSYS2_DIR%\msys2_shell.cmd" -mingw64 -here -no-start -defterm -c "'%SCRIPT_DIR%prepare-msys2.sh' %ARGS%"
 if errorlevel 1 exit /b %errorlevel%
 
 endlocal
