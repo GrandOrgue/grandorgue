@@ -9,7 +9,6 @@
 #define GOSOUNDSYSTEM_H
 
 #include <atomic>
-#include <memory>
 #include <vector>
 
 #include <wx/string.h>
@@ -22,12 +21,12 @@
 
 #include "GOSoundCloseListener.h"
 #include "GOSoundDevInfo.h"
-#include "GOSoundOrganEngine.h"
 #include "GOSoundRecorder.h"
+
+class GOSoundOrganEngine;
 
 class GOConfig;
 class GODeviceNamePattern;
-class GOOrganController;
 class GOPortsConfig;
 class GOSoundBufferMutable;
 class GOSoundPort;
@@ -71,7 +70,7 @@ private:
 
   GOMidiSystem m_midi;
   GOSoundRecorder m_AudioRecorder;
-  std::unique_ptr<GOSoundOrganEngine> mp_SoundEngine;
+  std::atomic<GOSoundOrganEngine *> p_OrganEngine;
 
   GOSoundCloseListener *p_CloseListener;
 
@@ -82,8 +81,6 @@ private:
   std::vector<GOSoundOutput> m_AudioOutputs;
 
   wxString m_LastErrorMessage;
-
-  GOOrganController *m_OrganController;
 
   GOSoundDevInfo m_DefaultAudioDevice;
 
@@ -122,12 +119,10 @@ public:
 
   GOConfig &GetSettings() { return m_config; }
   GOMidiSystem &GetMidi() { return m_midi; }
-  GOSoundOrganEngine &GetEngine() { return *mp_SoundEngine; }
 
   std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
   const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
   wxString getLastErrorMessage() const { return m_LastErrorMessage; }
-  GOOrganController *GetOrganFile() { return m_OrganController; }
 
   /** Returns true if the sound system is currently open (audio ports active).
    */
@@ -153,7 +148,6 @@ public:
 
   bool AssureSoundIsOpen();
   void AssureSoundIsClosed();
-  void AssignOrganFile(GOOrganController *pNewOrganController);
 
   bool AudioCallback(unsigned devIndex, GOSoundBufferMutable &outBuffer);
 
