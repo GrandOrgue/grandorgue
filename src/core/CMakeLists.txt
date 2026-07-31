@@ -46,6 +46,7 @@ temperaments/GOTemperamentCent.cpp
 temperaments/GOTemperamentList.cpp
 temperaments/GOTemperamentUser.cpp
 GOCompress.cpp
+GOCrashHandler.cpp
 GOHash.cpp
 GOLogicalColour.cpp
 GOMemoryPool.cpp
@@ -63,4 +64,10 @@ go_path.cpp
 
 BUILD_LIBRARY(GrandOrgueCore ${src})
 target_link_libraries(GrandOrgueCore ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES} ${ZLIB_LIBRARIES})
+# GOCrashHandler takes stack traces with cpptrace. PUBLIC because everything
+# linked against GrandOrgueCore gets the crash reporting as well
+if(TARGET cpptrace::cpptrace)
+  target_link_libraries(GrandOrgueCore cpptrace::cpptrace)
+  target_compile_definitions(GrandOrgueCore PUBLIC GO_HAS_CPPTRACE)
+endif()
 link_directories(${wxWidgets_LIBRARY_DIRS} ${WAVPACK_LIBDIR} ${ZLIB_LIBDIR})
