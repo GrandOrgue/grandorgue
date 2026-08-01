@@ -10,6 +10,7 @@
 #include <format>
 #include <vector>
 
+#include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/playing/GOSoundAudioSection.h"
 #include "sound/playing/GOSoundStream.h"
 
