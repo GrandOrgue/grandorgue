@@ -40,7 +40,7 @@ GOTestResultCollection GOTestCollection::Run(
       This iterates on tests_ vector, run them one by one, then collects
       the tests results and display them at the end.
   */
-  GOTestResultCollection *test_result_collection = new GOTestResultCollection();
+  GOTestResultCollection test_result_collection;
 
   run_number_ = 0;
   for (auto current = tests_.begin(); current != tests_.end();
@@ -57,37 +57,37 @@ GOTestResultCollection GOTestCollection::Run(
             isRunSucceeded = true;
           } catch (GOTestException &e) {
             fail_count_++;
-            test_result_collection->add_result(
-              new GOTestResult(test->GetName() + " failed: " + e.what(), true));
+            test_result_collection.add_result(
+              GOTestResult(test->GetName() + " failed: " + e.what(), true));
             test->tearDown();
           } catch (std::exception &e) {
             fail_count_++;
-            test_result_collection->add_result(
-              new GOTestResult(test->GetName() + " failed: " + e.what(), true));
+            test_result_collection.add_result(
+              GOTestResult(test->GetName() + " failed: " + e.what(), true));
             test->tearDown();
           }
           if (isRunSucceeded) {
-            test_result_collection->add_result(
-              new GOTestResult(test->GetName() + " succeeded"));
+            test_result_collection.add_result(
+              GOTestResult(test->GetName() + " succeeded"));
             success_count_++;
             test->tearDown();
           }
         } else {
-          test_result_collection->add_result(new GOTestResult(
+          test_result_collection.add_result(GOTestResult(
             "The setUp() of test '" + test->GetName() + "' has failed."));
         }
       } catch (std::exception &e) {
-        test_result_collection->add_result(new GOTestResult(
+        test_result_collection.add_result(GOTestResult(
           "An exception occurred during test '" + test->GetName() + "'."));
       } catch (...) {
         fail_count_++;
-        test_result_collection->add_result(
-          new GOTestResult("Unknown exception", true));
+        test_result_collection.add_result(
+          GOTestResult("Unknown exception", true));
         test->tearDown();
       }
     }
   }
-  return *test_result_collection;
+  return test_result_collection;
 }
 
 GOTestCollection *GOTestCollection::go_test_collection = nullptr;

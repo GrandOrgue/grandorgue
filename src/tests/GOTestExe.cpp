@@ -64,9 +64,9 @@ int main(int argc, char *argv[]) {
 
   // Display tests results
   std::cout << "==================== TESTS RESULTS ====================\n";
-  for (GOTestResult *pResult : test_result_collection.get_results()) {
+  for (GOTestResult &result : test_result_collection.get_results()) {
     std::cout << "-------------------------------------------------------\n";
-    std::cout << pResult->GetMessage() << "\n";
+    std::cout << result.GetMessage() << "\n";
   }
 
   const int failed_count = GOTestCollection::Instance()->get_failed_count();

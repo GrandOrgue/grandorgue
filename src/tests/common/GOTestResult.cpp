@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,5 +20,5 @@ GOTestResult::GOTestResult(std::string message) : m_result_message(message) {
 
 GOTestResult::GOTestResult(std::string message, bool failed)
   : m_result_message(message) {
-  failed = failed;
+  this->failed = failed;
 }
