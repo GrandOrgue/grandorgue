@@ -10,6 +10,7 @@
 #include <format>
 #include <vector>
 
+#include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/playing/GOSoundAudioSection.h"
 #include "sound/playing/GOSoundStream.h"
 
@@ -30,13 +31,18 @@ std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
   unsigned nChannels,
   unsigned nFrames,
   bool isCompressed,
-  const GOWaveLoop *pLoop) {
+  const GOWaveLoop *pLoop,
+  bool isSilent) {
   const unsigned nSamples = nChannels * nFrames;
   std::vector<GOInt24> pcmData(nSamples);
   std::vector<GOWaveLoop> loops;
 
-  for (unsigned i = 0; i < nSamples; i++)
-    pcmData[i] = (i % 100) * 30000 - 1500000;
+  if (isSilent)
+    for (unsigned i = 0; i < nSamples; i++)
+      pcmData[i] = (i % 2) ? 1 : -1;
+  else
+    for (unsigned i = 0; i < nSamples; i++)
+      pcmData[i] = (i % 100) * 30000 - 1500000;
 
   if (pLoop)
     loops.push_back(*pLoop);
@@ -164,6 +170,34 @@ void GOTestSoundStream::TestInitAlignedStream() {
   GOAssert(result, "ReadBlock should return true after InitAlignedStream");
 }
 
+void GOTestSoundStream::TestInitAlignedStreamWithSilentAttack() {
+  const auto pSilentAttack
+    = CreateAudioSection(1, N_FRAMES, false, nullptr, true);
+  const auto pNormalAttack = CreateAudioSection(1, N_FRAMES, false);
+  const auto pRelease = CreateAudioSection(1, N_FRAMES, false);
+
+  GOAssert(
+    pSilentAttack->IsEssentiallySilent(),
+    "A BlankLoop-like near-zero attack should be detected as essentially "
+    "silent");
+  GOAssert(
+    !pNormalAttack->IsEssentiallySilent(),
+    "A normal attack with real amplitude should not be detected as "
+    "essentially silent");
+
+  // GOSoundProvider::ComputeReleaseAlignmentInfo excludes essentially silent
+  // attacks from the joinables it passes to SetupStreamAlignment; simulate
+  // that filtering here and confirm the release aligner stays null, so
+  // playback falls back to the release's natural start position instead of
+  // matching quantization noise inside the release.
+  pRelease->SetupStreamAlignment({}, 0);
+
+  GOAssert(
+    !pRelease->SupportsStreamAlignment(),
+    "A release should have no aligner when the only joinable attack is "
+    "silent");
+}
+
 void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
   // Two loops with different end_pos: a long loop and a short loop placed
   // so PickEndSegment can pick either for some start segments. With the
@@ -231,6 +265,77 @@ void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
   }
 }
 
+void GOTestSoundStream::TestCompressedLoopWrapMatchesUncompressed() {
+  constexpr unsigned N_TOTAL_FRAMES = 1100;
+  constexpr unsigned N_ITERATIONS = 500;
+  const std::vector<GOWaveLoop> loops = {
+    {500, 999}, // long loop, start_offset=500, end_pos=1000
+    {200, 599}, // long loop, start_offset=200, end_pos=600
+  };
+  const unsigned nChannels = 1;
+  const unsigned nSamples = nChannels * N_TOTAL_FRAMES;
+  std::vector<GOInt24> pcmData(nSamples);
+
+  for (unsigned i = 0; i < nSamples; i++)
+    pcmData[i] = (i % 100) * 30000 - 1500000;
+
+  auto runCapture = [&](bool isCompressed) {
+    auto pSection = std::make_unique<GOSoundAudioSection>(m_pool);
+
+    pSection->Setup(
+      nullptr,
+      nullptr,
+      pcmData.data(),
+      GOWave::SF_SIGNEDINT24_24,
+      nChannels,
+      SECTION_RATE,
+      N_TOTAL_FRAMES,
+      &loops,
+      BOOL3_DEFAULT,
+      isCompressed,
+      0,
+      0);
+
+    GOSoundResample resample;
+    GOSoundStream stream;
+
+    // Same seed for both runs: PickEndSegment() uses rand() to choose among
+    // multiple valid end segments, and both runs must pick identically so
+    // the wrap timing (and hence the skip-ahead pattern) matches.
+    std::srand(0);
+    stream.InitStream(
+      &resample,
+      pSection.get(),
+      GOSoundResample::GO_LINEAR_INTERPOLATION,
+      SAMPLE_RATE_ADJUSTMENT);
+
+    std::vector<float> captured(N_ITERATIONS * N_BUFFER_ITEMS);
+    float buffer[N_BUFFER_ITEMS];
+
+    for (unsigned iterI = 0; iterI < N_ITERATIONS; iterI++) {
+      stream.ReadBlock(buffer, N_FRAMES_PER_BLOCK);
+      for (unsigned i = 0; i < N_BUFFER_ITEMS; i++)
+        captured[iterI * N_BUFFER_ITEMS + i] = buffer[i];
+    }
+    return captured;
+  };
+
+  const std::vector<float> uncompressed = runCapture(false);
+  const std::vector<float> compressed = runCapture(true);
+
+  for (unsigned i = 0; i < uncompressed.size(); i++)
+    GOAssert(
+      compressed[i] == uncompressed[i],
+      std::format(
+        "compressed/uncompressed mismatch at output sample {} (iteration {}, "
+        "offset {}): compressed={} uncompressed={}",
+        i,
+        i / N_BUFFER_ITEMS,
+        i % N_BUFFER_ITEMS,
+        compressed[i],
+        uncompressed[i]));
+}
+
 void GOTestSoundStream::run() {
   for (unsigned nChannels : {1u, 2u}) {
     for (bool isCompressed : {false, true}) {
@@ -243,4 +348,6 @@ void GOTestSoundStream::run() {
   TestLoopedStreamAlwaysReturnsTrue();
   TestLoopTransitionAcrossDifferentEndPos();
   TestInitAlignedStream();
+  TestCompressedLoopWrapMatchesUncompressed();
+  TestInitAlignedStreamWithSilentAttack();
 }

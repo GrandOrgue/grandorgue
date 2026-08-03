@@ -29,12 +29,15 @@ private:
    * of synthetic GOInt24 PCM data at 48000 Hz sample rate.
    * If isCompressed is true, the data is stored in compressed format.
    * If pLoop is not null, the section is created with the given loop points.
+   * If isSilent is true, the PCM data only contains quantization-noise-level
+   * values (a "BlankLoop"-like placeholder) instead of the usual sawtooth.
    */
   std::unique_ptr<GOSoundAudioSection> CreateAudioSection(
     unsigned nChannels,
     unsigned nFrames,
     bool isCompressed,
-    const GOWaveLoop *pLoop = nullptr);
+    const GOWaveLoop *pLoop = nullptr,
+    bool isSilent = false);
 
   /**
    * Tests ReadBlock for the given interpolation, compression and channel
@@ -65,6 +68,32 @@ private:
    * Verifies that ReadBlock returns true after alignment.
    */
   void TestInitAlignedStream();
+
+  /**
+   * Regression test for an off-by-one in
+   * StreamCacheReadAheadWindow::Seek() (GOSoundStream.cpp): after a loop
+   * wraps to a new start segment, the compressed decoder resumes from a
+   * precomputed cache snapshot pinned at that segment's start_offset, while
+   * the resampling position typically requests a few samples further in
+   * (the wrap remainder) - a genuine skip-ahead Seek() on an otherwise-fresh
+   * cache. Using ">= index" instead of "> index" to decide whether a freshly
+   * decoded sample should be stored shifted every FIR tap by one sample
+   * until it self-healed after windowLen samples.
+   *
+   * Verified differentially: with LINEAR interpolation and factor 1.0
+   * (identity), decoding is lossless, so a compressed and an uncompressed
+   * section with identical PCM data and identical loop layout must produce
+   * bit-identical ReadBlock() output for every frame, including immediately
+   * after a wrap - no assumption about "realistic" sample values is needed.
+   */
+  void TestCompressedLoopWrapMatchesUncompressed();
+
+  /**
+   * Tests that a silent ("BlankLoop"-like) attack is not used for release
+   * alignment: SetupStreamAlignment must leave the release aligner null so
+   * that playback falls back to the release's natural start position.
+   */
+  void TestInitAlignedStreamWithSilentAttack();
 
 public:
   std::string GetName() override { return TEST_NAME; }

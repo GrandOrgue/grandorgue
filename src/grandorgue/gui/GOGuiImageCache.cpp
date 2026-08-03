@@ -248,8 +248,50 @@ const wxImage *GOGuiImageCache::LoadImage(
 
     wxImage *pNewImage = new wxImage(image);
 
-    if (pNewImage->HasMask())
-      pNewImage->InitAlpha();
+    if (pNewImage->HasMask()) {
+      if (!pNewImage->HasAlpha()) {
+        /* No alpha channel yet: convert mask to alpha.
+          InitAlpha() sets mask-colored pixels to alpha=0, all others to
+          alpha=255, then removes the mask. Calling it when HasAlpha() is
+          true would trigger a wxWidgets assertion and corrupt the image. */
+        pNewImage->InitAlpha();
+      } else {
+        /* Image already has an alpha channel (e.g. a PNG with embedded alpha).
+          InitAlpha() must not be called here — apply the mask manually:
+          pixels whose RGB matches the mask color are made fully transparent;
+          all other pixels keep their existing alpha value.
+
+          We cannot rely on the wxImage mask (chroma-key) alone because
+          GOBitmap::BuildBitmapFrom() copies img.GetAlpha() directly into the
+          compositing result (memcpy on img.GetAlpha()). The mask is never
+          consulted there, so any mask-colored pixel that the PNG marks as
+          opaque (alpha=255) would be rendered opaque — the mask would be
+          silently ignored. Applying the mask to the alpha channel here ensures
+          correct transparency regardless of how the image is later composited.
+
+          GetData() returns pixels as RGBRGBRGB... with no padding — exactly
+          3 bytes per pixel — per wxImage::GetData() documentation:
+          https://docs.wxwidgets.org/latest/classwx_image.html
+        */
+        const unsigned char maskR = pNewImage->GetMaskRed();
+        const unsigned char maskG = pNewImage->GetMaskGreen();
+        const unsigned char maskB = pNewImage->GetMaskBlue();
+        const unsigned nPixels = pNewImage->GetWidth() * pNewImage->GetHeight();
+        const unsigned char *pData = pNewImage->GetData();
+        unsigned char *pAlpha = pNewImage->GetAlpha();
+
+        for (unsigned nPixelsRest = nPixels; nPixelsRest > 0;
+             nPixelsRest--, pAlpha++) {
+          const unsigned char r = *pData++;
+          const unsigned char g = *pData++;
+          const unsigned char b = *pData++;
+
+          if (r == maskR && g == maskG && b == maskB)
+            *pAlpha = 0;
+        }
+        pNewImage->SetMask(false);
+      }
+    }
     RegisterImage(filename, maskName, pNewImage);
     pImage = pNewImage;
   }

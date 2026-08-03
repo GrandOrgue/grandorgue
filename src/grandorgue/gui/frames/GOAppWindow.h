@@ -18,6 +18,7 @@
 #include "midi/GOMidiListener.h"
 #include "midi/events/GOMidiCallback.h"
 #include "modification/GOModificationListener.h"
+#include "sound/GOSoundCloseListener.h"
 #include "threading/GOMutex.h"
 #include "updater/GOUpdateChecker.h"
 
@@ -41,7 +42,8 @@ class GOAppWindow : public wxFrame,
                     private GOHelpRequestor,
                     public GOResizable,
                     protected GOMidiCallback,
-                    private GOModificationListener {
+                    private GOModificationListener,
+                    private GOSoundCloseListener {
 private:
   GOGuiApp &r_app;
   GOConfig &r_config;
@@ -94,7 +96,20 @@ private:
   void UpdateSize();
   void UpdateVolumeControlWithSettings();
 
-  void AttachDetachOrganController(bool isToAttach);
+  /** GOSoundCloseListener: stops the organ before the sound system closes. */
+  void OnBeforeSoundClose() override;
+
+  /**
+   * Starts the organ if a controller is present, the sound system is open,
+   * and the organ has not yet been started. Safe to call multiple times.
+   */
+  void EnsureOrganStartedIfReady();
+
+  /**
+   * Stops the organ if a controller is present and the organ is currently
+   * started. Safe to call multiple times.
+   */
+  void EnsureOrganStopped();
 
   // Processes the organ model modification event:
   // updates some controls according the organ model changes

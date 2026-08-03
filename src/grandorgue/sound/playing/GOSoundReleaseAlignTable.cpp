@@ -7,12 +7,11 @@
 
 #include "GOSoundReleaseAlignTable.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 #include "loader/cache/GOCache.h"
 #include "loader/cache/GOCacheWriter.h"
-
-#include "GOSoundAudioSection.h"
 
 #ifndef NDEBUG
 #ifdef PALIGN_DEBUG
@@ -39,6 +38,54 @@ bool GOSoundReleaseAlignTable::Load(GOCache &cache) {
   return true;
 }
 
+/**
+ * Converts a 0-based step index into a signed offset visited in symmetric
+ * outward order: step 0 -> 0, step 1 -> +1, step 2 -> -1, step 3 -> +2, ...
+ *
+ * @param stepI 0-based step index.
+ * @return Signed offset for this step (alternating sign, magnitude
+ *         (stepI + 1) / 2).
+ */
+static int signed_offset(unsigned stepI) {
+  return (stepI & 1) ? static_cast<int>((stepI + 1) / 2)
+                     : -static_cast<int>(stepI / 2);
+}
+
+std::optional<GOSoundReleaseAlignTable::CellCoords> GOSoundReleaseAlignTable::
+  findNearestFilledCell(
+    const bool areCellsFilled[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES],
+    CellCoords target) {
+  const unsigned nDerivSteps = 2 * PHASE_ALIGN_DERIVATIVES - 1;
+  const unsigned nAmpSteps = 2 * PHASE_ALIGN_AMPLITUDES - 1;
+
+  std::optional<CellCoords> result;
+
+  for (unsigned derivStepI = 0; derivStepI < nDerivSteps && !result;
+       derivStepI++) {
+    const int neighborDerivI
+      = static_cast<int>(target.derivI) + signed_offset(derivStepI);
+
+    if (
+      neighborDerivI >= 0
+      && neighborDerivI < static_cast<int>(PHASE_ALIGN_DERIVATIVES)) {
+      for (unsigned ampStepI = 0; ampStepI < nAmpSteps && !result; ampStepI++) {
+        const int neighborAmpI
+          = static_cast<int>(target.ampI) + signed_offset(ampStepI);
+
+        if (
+          neighborAmpI >= 0
+          && neighborAmpI < static_cast<int>(PHASE_ALIGN_AMPLITUDES)
+          && areCellsFilled[neighborDerivI][neighborAmpI])
+          result = CellCoords{
+            static_cast<unsigned>(neighborDerivI),
+            static_cast<unsigned>(neighborAmpI)};
+      }
+    }
+  }
+
+  return result;
+}
+
 bool GOSoundReleaseAlignTable::Save(GOCacheWriter &cache) {
   if (!cache.Write(&m_PhaseAlignMaxAmplitude, sizeof(m_PhaseAlignMaxAmplitude)))
     return false;
@@ -50,10 +97,24 @@ bool GOSoundReleaseAlignTable::Save(GOCacheWriter &cache) {
   return true;
 }
 
+unsigned GOSoundReleaseAlignTable::computeBucketIndex(
+  int shiftedValue, unsigned maxValue, unsigned nBuckets) {
+  const unsigned result = maxValue
+    // clamp to valid range, then map to bucket
+    ? static_cast<unsigned>(
+        std::clamp(shiftedValue, 0, static_cast<int>(2 * maxValue - 1)))
+      * nBuckets / (2 * maxValue)
+    // maxValue == 0: table was not built, fall back to midpoint
+    : nBuckets / 2;
+
+  assert(result < nBuckets);
+  return result;
+}
+
 void GOSoundReleaseAlignTable::ComputeTable(
   const GOSoundAudioSection &release,
-  int phase_align_max_amplitude,
-  int phase_align_max_derivative,
+  unsigned phase_align_max_amplitude,
+  unsigned phase_align_max_derivative,
   unsigned int sample_rate,
   unsigned start_position) {
   GOSoundCompressionCache cache;
@@ -84,8 +145,9 @@ void GOSoundReleaseAlignTable::ComputeTable(
     return;
 
   /* Generate the release table using the small portion of the release... */
-  bool found[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
-  memset(found, 0, sizeof(found));
+  bool areCellsFilled[PHASE_ALIGN_DERIVATIVES][PHASE_ALIGN_AMPLITUDES];
+
+  memset(areCellsFilled, 0, sizeof(areCellsFilled));
 
   int f_p = 0;
   for (unsigned int j = 0; j < channels; j++)
@@ -97,32 +159,21 @@ void GOSoundReleaseAlignTable::ComputeTable(
     for (unsigned int j = 0; j < channels; j++)
       f += release.GetSample(start_position + i, j, &cache);
 
-    /* Bring v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-    int v_mod = (f - f_p) + m_PhaseAlignMaxDerivative - 1;
-    int derivIndex
-      = (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative);
+    /* Bring v into the range [0, 2*m_PhaseAlignMaxDerivative) */
+    const int v_mod
+      = (f - f_p) + static_cast<int>(m_PhaseAlignMaxDerivative) - 1;
+    const unsigned derivIndex = computeBucketIndex(
+      v_mod, m_PhaseAlignMaxDerivative, PHASE_ALIGN_DERIVATIVES);
 
-    /* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-    int f_mod = f + m_PhaseAlignMaxAmplitude - 1;
-    int ampIndex
-      = (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude);
+    /* Bring f into the range [0, 2*m_PhaseAlignMaxAmplitude) */
+    const int f_mod = f + static_cast<int>(m_PhaseAlignMaxAmplitude) - 1;
+    const unsigned ampIndex = computeBucketIndex(
+      f_mod, m_PhaseAlignMaxAmplitude, PHASE_ALIGN_AMPLITUDES);
 
-    /* Store this release point if it was not already found */
-    derivIndex = (derivIndex < 0)
-      ? 0
-      : (
-        (derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES - 1
-                                                : derivIndex);
-    ampIndex = (ampIndex < 0)
-      ? 0
-      : (
-        (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
-                                             : ampIndex);
-    assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-    assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-    if (!found[derivIndex][ampIndex]) {
+    /* Store this release point if it was not already filled */
+    if (!areCellsFilled[derivIndex][ampIndex]) {
       m_PositionEntries[derivIndex][ampIndex] = i + 1 + start_position;
-      found[derivIndex][ampIndex] = true;
+      areCellsFilled[derivIndex][ampIndex] = true;
     }
 
     f_p = f;
@@ -134,82 +185,52 @@ void GOSoundReleaseAlignTable::ComputeTable(
   for (unsigned int i = 0; i < PHASE_ALIGN_DERIVATIVES; i++) {
     printf("deridx: %d\n", i);
     for (unsigned int j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
-      if (found[i][j])
-        printf("  idx %d: found\n", j);
+      if (areCellsFilled[i][j])
+        printf("  idx %d: filled\n", j);
       else
-        printf("  idx %d: not found\n", j);
+        printf("  idx %d: empty\n", j);
   }
 #endif
 #endif
 
-  /* Phase 2, if there are any entries in the table which were not found,
-   * attempt to fill them with the nearest available value. */
-  for (int i = 0; i < PHASE_ALIGN_DERIVATIVES; i++)
-    for (int j = 0; j < PHASE_ALIGN_AMPLITUDES; j++)
-      if (!found[i][j]) {
-        bool foundsecond = false;
-        for (int l = 0; (l < 2 * PHASE_ALIGN_DERIVATIVES) && (!foundsecond);
-             l++)
-          for (int k = 0; (k < 2 * PHASE_ALIGN_AMPLITUDES) && (!foundsecond);
-               k++) {
-            foundsecond = true;
-            int sl = (l + 1) / 2;
-            if ((l & 1) == 0)
-              sl = -sl;
-            int sk = (k + 2) / 2;
-            if ((k & 1) == 0)
-              sk = -sk;
-            if (
-              (i + sl < PHASE_ALIGN_DERIVATIVES) && (i + sl >= 0)
-              && (j + sk < PHASE_ALIGN_AMPLITUDES) && (j + sk >= 0)
-              && (found[i + sl][j + sk])) {
-              m_PositionEntries[i][j] = m_PositionEntries[i + sl][j + sk];
-            } else {
-              foundsecond = false;
-            }
-          }
+  /* Phase 2: fill any entries that were not filled in Phase 1 by copying the
+   * value of the nearest already-filled neighbor. Phase 1 always marks at
+   * least one cell (guaranteed by the early returns above), so the assertion
+   * below is a true invariant. */
+  for (unsigned derivI = 0; derivI < PHASE_ALIGN_DERIVATIVES; derivI++)
+    for (unsigned ampI = 0; ampI < PHASE_ALIGN_AMPLITUDES; ampI++)
+      if (!areCellsFilled[derivI][ampI]) {
+        const auto nearestFilledCell
+          = findNearestFilledCell(areCellsFilled, {derivI, ampI});
 
-        assert(foundsecond);
-        foundsecond = false;
+        /* Phase 1 guarantees at least one cell is filled, so the search
+         * always succeeds. */
+        assert(nearestFilledCell);
+        m_PositionEntries[derivI][ampI]
+          = m_PositionEntries[nearestFilledCell->derivI]
+                             [nearestFilledCell->ampI];
       }
 }
 
 unsigned GOSoundReleaseAlignTable::GetPositionFor(
-  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const {
+  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS], unsigned nChannels) const {
   /* Get combined release f's and v's */
   int f_mod = 0;
   int v_mod = 0;
-  for (unsigned i = 0; i < MAX_OUTPUT_CHANNELS; i++) {
+  for (unsigned i = 0; i < nChannels; i++) {
     f_mod += history[(BLOCK_HISTORY - 1)][i];
     v_mod += history[(BLOCK_HISTORY - 2)][i];
   }
   v_mod = f_mod - v_mod;
 
-  /* Bring f and v into the range -1..2*m_PhaseAlignMaxDerivative-1 */
-  v_mod += (m_PhaseAlignMaxDerivative - 1);
-  f_mod += (m_PhaseAlignMaxAmplitude - 1);
+  /* Bring f and v into the range [0, 2*m_PhaseAlignMax*) */
+  v_mod += static_cast<int>(m_PhaseAlignMaxDerivative) - 1;
+  f_mod += static_cast<int>(m_PhaseAlignMaxAmplitude) - 1;
 
-  int derivIndex = m_PhaseAlignMaxDerivative
-    ? (PHASE_ALIGN_DERIVATIVES * v_mod) / (2 * m_PhaseAlignMaxDerivative)
-    : PHASE_ALIGN_DERIVATIVES / 2;
+  const unsigned derivIndex = computeBucketIndex(
+    v_mod, m_PhaseAlignMaxDerivative, PHASE_ALIGN_DERIVATIVES);
+  const unsigned ampIndex = computeBucketIndex(
+    f_mod, m_PhaseAlignMaxAmplitude, PHASE_ALIGN_AMPLITUDES);
 
-  /* Bring f into the range -1..2*m_PhaseAlignMaxAmplitude-1 */
-  int ampIndex = m_PhaseAlignMaxAmplitude
-    ? (PHASE_ALIGN_AMPLITUDES * f_mod) / (2 * m_PhaseAlignMaxAmplitude)
-    : PHASE_ALIGN_AMPLITUDES / 2;
-
-  /* Store this release point if it was not already found */
-  assert((derivIndex >= 0) && (derivIndex < PHASE_ALIGN_DERIVATIVES));
-  assert((ampIndex >= 0) && (ampIndex < PHASE_ALIGN_AMPLITUDES));
-  derivIndex = (derivIndex < 0)
-    ? 0
-    : (
-      (derivIndex >= PHASE_ALIGN_DERIVATIVES) ? PHASE_ALIGN_DERIVATIVES - 1
-                                              : derivIndex);
-  ampIndex = (ampIndex < 0)
-    ? 0
-    : (
-      (ampIndex >= PHASE_ALIGN_AMPLITUDES) ? PHASE_ALIGN_AMPLITUDES - 1
-                                           : ampIndex);
   return m_PositionEntries[derivIndex][ampIndex];
 }

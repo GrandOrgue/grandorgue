@@ -26,6 +26,7 @@ private:
   wxSize m_Scroll;
 
   void OnSize(wxSizeEvent &event);
+  void OnCharHook(wxKeyEvent &e);
 
 public:
   GOGUIPanelView(
