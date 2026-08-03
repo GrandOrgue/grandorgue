@@ -29,12 +29,15 @@ private:
    * of synthetic GOInt24 PCM data at 48000 Hz sample rate.
    * If isCompressed is true, the data is stored in compressed format.
    * If pLoop is not null, the section is created with the given loop points.
+   * If isSilent is true, the PCM data only contains quantization-noise-level
+   * values (a "BlankLoop"-like placeholder) instead of the usual sawtooth.
    */
   std::unique_ptr<GOSoundAudioSection> CreateAudioSection(
     unsigned nChannels,
     unsigned nFrames,
     bool isCompressed,
-    const GOWaveLoop *pLoop = nullptr);
+    const GOWaveLoop *pLoop = nullptr,
+    bool isSilent = false);
 
   /**
    * Tests ReadBlock for the given interpolation, compression and channel
@@ -84,6 +87,13 @@ private:
    * after a wrap - no assumption about "realistic" sample values is needed.
    */
   void TestCompressedLoopWrapMatchesUncompressed();
+
+  /**
+   * Tests that a silent ("BlankLoop"-like) attack is not used for release
+   * alignment: SetupStreamAlignment must leave the release aligner null so
+   * that playback falls back to the release's natural start position.
+   */
+  void TestInitAlignedStreamWithSilentAttack();
 
 public:
   std::string GetName() override { return TEST_NAME; }
