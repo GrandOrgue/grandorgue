@@ -8,6 +8,7 @@
 # $3 - Go source Dir. If not set then relative to the script dir
 # $4 - pkg_suffix (unused for now, accepted for parity with build-on-linux.sh)
 # $5 - release flag (ON/OFF, default: OFF)
+# $6 - optional: "asan" to enable AddressSanitizer
 
 set -e
 
@@ -19,6 +20,11 @@ if [[ -n "$3" ]]; then
 	SRC_DIR=$3
 else
 	SRC_DIR=$(readlink -f "$DIR/../..")
+fi
+
+ASAN_FLAG=""
+if [ "${6:-}" = "asan" ]; then
+	ASAN_FLAG="-DGO_BUILD_ASAN=ON"
 fi
 
 PARALLEL_PRMS="-j$(nproc)"
@@ -55,7 +61,7 @@ CMAKE_WIN_PRMS="-DASIO_SDK_DIR=/usr/local/asio-sdk \
   -DRTAUDIO_USE_ASIO=ON \
   $CMAKE_CV2PDB_PRMS"
 
-CMAKE_APP_PRMS="-DGO_USE_JACK=ON $CMAKE_VERSION_PRMS $CMAKE_RELEASE_FLAG_PRM"
+CMAKE_APP_PRMS="-DGO_USE_JACK=ON $CMAKE_VERSION_PRMS $CMAKE_RELEASE_FLAG_PRM $ASAN_FLAG"
 
 cmake -G "MSYS Makefiles" $CMAKE_WIN_PRMS $CMAKE_APP_PRMS . "$SRC_DIR"
 make $PARALLEL_PRMS VERBOSE=1 package

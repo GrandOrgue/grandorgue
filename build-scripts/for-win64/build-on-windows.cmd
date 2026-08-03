@@ -6,6 +6,7 @@ rem %2 - Build version
 rem %3 - Go source Dir. If not set then relative to this script's location
 rem %4 - pkg_suffix (unused for now, accepted for parity with build-on-linux.sh)
 rem %5 - release flag (ON/OFF, default: OFF)
+rem %6 - optional: "asan" to enable AddressSanitizer
 
 setlocal
 
@@ -24,7 +25,9 @@ rem Backslashes in arguments (eg. a Windows-style SRC_DIR path) would
 rem otherwise be eaten as bash escape characters once forwarded into the
 rem quoted -c string below; forward slashes work fine on Windows too.
 set "ARGS=%*"
-set "ARGS=%ARGS:\=/%"
+rem "set VAR=" (even quoted) unsets the variable rather than making it
+rem empty, so only run the substitution when an argument was actually given.
+if defined ARGS set "ARGS=%ARGS:\=/%"
 
 "%MSYS2_DIR%\msys2_shell.cmd" -mingw64 -here -no-start -defterm -c "'%SCRIPT_DIR%build-on-msys2.sh' %ARGS%"
 if errorlevel 1 exit /b %errorlevel%

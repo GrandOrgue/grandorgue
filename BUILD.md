@@ -227,11 +227,18 @@ This is the recommended way for Windows-only contributors to build GrandOrgue - 
     ```
     This installs MSYS2 if needed, the required MSYS2 mingw64 packages, and downloads the ASIO SDK, `vswhere`, and `cv2pdb`. Administrator rights are required because it may install MSYS2 itself and its packages.
 
+    Optional keywords can be passed in any order, eg. `prepare-windows.cmd tests asan`:
+    - `wx32` (default: `auto`) - wxWidgets package version.
+    - `tests` (default: `notests`) - also install `gcovr`, needed for generating code coverage reports.
+    - `asan` (default: `noasan`) - accepted for parity with the Linux prepare scripts; [AddressSanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) support is already bundled with the MSYS2 mingw-w64 gcc package, so nothing extra is installed.
+
 3. Build, from a regular (non-elevated) `cmd.exe` prompt in the repo root:
     ```
     build-scripts\for-win64\build-on-windows.cmd
     ```
     The built packages (a `.zip` and an NSIS installer `.exe`) will appear in the `build\win64` subdirectory of the current directory.
+
+    To build with AddressSanitizer enabled, pass `asan` as the 6th argument, eg. `build-on-windows.cmd "" "" "" "" OFF asan` (the earlier positional arguments - version, build version, source dir, package suffix, release flag - can be left empty to use their defaults).
 
 ## Cross-building for Windows-64 bit on Linux
 
