@@ -20,6 +20,10 @@ set(go_tests
     sound/GOTestSoundOrganEngine.cpp
     sound/GOTestSoundCallbackConnector.cpp
     sound/GOTestSoundOrganEngineStress.cpp
+    sound/tasks/GOSoundCooperativeTaskTestImpl.cpp
+    sound/tasks/GOSoundTaskTestImpl.cpp
+    sound/tasks/GOTestPerfSoundTaskBase.cpp
+    sound/tasks/GOTestSoundTaskBase.cpp
     GOTestNameMap.cpp
     GOTestOrganController.cpp
 )

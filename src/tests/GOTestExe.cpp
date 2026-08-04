@@ -30,6 +30,8 @@
 #include "testing/sound/buffer/GOTestSoundBufferMutableMono.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
+#include "testing/sound/tasks/GOTestPerfSoundTaskBase.h"
+#include "testing/sound/tasks/GOTestSoundTaskBase.h"
 
 int main(int argc, char *argv[]) {
   /*
@@ -74,6 +76,8 @@ int main(int argc, char *argv[]) {
   GOTestSoundOrganEngine testSoundOrganEngine;
   GOTestSoundCallbackConnector testSoundCallbackConnector;
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
+  GOTestSoundTaskBase testSoundTaskBase;
+  GOTestPerfSoundTaskBase testPerfSoundTaskBase;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->Run(categoryFilter);

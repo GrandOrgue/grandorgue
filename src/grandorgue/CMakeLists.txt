@@ -234,6 +234,7 @@ sound/tasks/GOSoundGroupTask.cpp
 sound/tasks/GOSoundOutputTask.cpp
 sound/tasks/GOSoundRecorderTask.cpp
 sound/tasks/GOSoundReleaseTask.cpp
+sound/tasks/GOSoundTaskBase.cpp
 sound/tasks/GOSoundTouchTask.cpp
 sound/tasks/GOSoundTremulantTask.cpp
 sound/tasks/GOSoundWindchestTask.cpp
