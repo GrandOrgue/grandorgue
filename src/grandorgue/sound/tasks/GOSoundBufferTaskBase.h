@@ -9,18 +9,20 @@
 #define GOSOUNDBUFFERTASKBASE_H
 
 #include "sound/buffer/GOSoundBufferManaged.h"
-#include "sound/scheduler/GOSoundTask.h"
 
-class GOSoundThread;
+#include "GOSoundTaskBase.h"
 
-class GOSoundThread;
+class GOSchedulerThread;
 
-class GOSoundBufferTaskBase : public GOSoundTask, public GOSoundBufferManaged {
+class GOSoundBufferTaskBase : public GOSoundTaskBase,
+                              public GOSoundBufferManaged {
 public:
   GOSoundBufferTaskBase(unsigned nChannels, unsigned nFrames)
     : GOSoundBufferManaged(nChannels, nFrames) {}
 
-  virtual void Finish(bool stop, GOSoundThread *pThread = nullptr) = 0;
+  virtual void EnsureBufferReady(
+    bool isToComplete, GOSchedulerThread *pThread = nullptr)
+    = 0;
 };
 
 #endif /* GOSOUNDBUFFERTASKBASE_H */

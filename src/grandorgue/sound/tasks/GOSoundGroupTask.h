@@ -11,13 +11,12 @@
 #include <atomic>
 
 #include "sound/playing/GOSoundSamplerList.h"
-#include "sound/scheduler/GOSoundTask.h"
-#include "sound/scheduler/GOSoundThread.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
 #include "GOSoundBufferTaskBase.h"
 
+class GOSchedulerThread;
 class GOSoundSamplerPlayer;
 
 class GOSoundGroupTask : public GOSoundBufferTaskBase {
@@ -37,7 +36,7 @@ private:
   //   2 - some thread has finished processing samples but not all
   //   3 - all threads have finished processing samples
   std::atomic_uint m_Done;
-  std::atomic_bool m_Stop;
+  std::atomic_bool m_IsToComplete;
 
   void ProcessList(
     GOSoundSamplerList &list, bool toDropOld, float *output_buffer);
@@ -46,17 +45,18 @@ public:
   GOSoundGroupTask(
     GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer);
 
-  unsigned GetGroup();
-  unsigned GetCost();
-  bool GetRepeat();
-  void Run(GOSoundThread *pThread = nullptr);
-  void Exec();
-  void Finish(bool stop, GOSoundThread *pThread = nullptr);
+  unsigned GetPriority() const override { return PRIORITY_AUDIOGROUP; }
+  unsigned GetCost() const override;
+  bool IsRepeatable() const override { return true; }
+  void Run(GOSchedulerThread *pThread = nullptr) override;
+  void CompleteRound() override;
+  void EnsureBufferReady(
+    bool isToComplete, GOSchedulerThread *pThread = nullptr) override;
 
-  void Reset();
-  void Clear();
+  void NewRound() override;
+  void DiscardContent() override;
   void Add(GOSoundSampler *sampler);
-  void WaitAndClear();
+  void WaitAndDiscardContent();
 };
 
 #endif

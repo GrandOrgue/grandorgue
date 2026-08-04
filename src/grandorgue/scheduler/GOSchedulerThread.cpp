@@ -5,18 +5,18 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundThread.h"
+#include "GOSchedulerThread.h"
 
 #include <unistd.h>
 
 #include <wx/log.h>
 
-#include "sound/scheduler/GOSoundTask.h"
+#include "scheduler/GOSchedulerTask.h"
 #include "threading/GOMutexLocker.h"
 
-#include "GOSoundScheduler.h"
+#include "GOScheduler.h"
 
-GOSoundThread::GOSoundThread(GOSoundScheduler *scheduler)
+GOSchedulerThread::GOSchedulerThread(GOScheduler *scheduler)
   : GOThread(),
     m_Scheduler(scheduler),
     m_Condition(m_Mutex),
@@ -25,12 +25,12 @@ GOSoundThread::GOSoundThread(GOSoundScheduler *scheduler)
   wxLogDebug(wxT("Create Thread"));
 }
 
-void GOSoundThread::Entry() {
+void GOSchedulerThread::Entry() {
   while (!ShouldStop()) {
     bool shouldStop = false;
 
     do {
-      GOSoundTask *next = m_Scheduler->GetNextGroup();
+      GOSchedulerTask *next = m_Scheduler->GetNextTask();
 
       if (next == NULL)
         break;
@@ -41,12 +41,12 @@ void GOSoundThread::Entry() {
     if (shouldStop)
       break;
 
-    GOMutexLocker lock(m_Mutex, false, "GOSoundThread::Entry", this);
+    GOMutexLocker lock(m_Mutex, false, "GOSchedulerThread::Entry", this);
     if (!lock.IsLocked() || ShouldStop())
       break;
     m_IsIdle = true;
     m_IdleStateReachedCondition.Broadcast();
-    if (!m_Condition.WaitOrStop("GOSoundThread::Entry"))
+    if (!m_Condition.WaitOrStop("GOSchedulerThread::Entry"))
       break;
     m_IsIdle = false;
   }
@@ -54,18 +54,18 @@ void GOSoundThread::Entry() {
   return;
 }
 
-void GOSoundThread::WaitForIdle() {
-  GOMutexLocker lock(m_Mutex, false, "GOSoundThread::WaitForIdle");
+void GOSchedulerThread::WaitForIdle() {
+  GOMutexLocker lock(m_Mutex, false, "GOSchedulerThread::WaitForIdle");
   while (!m_IsIdle) {
     m_IdleStateReachedCondition.Wait();
   }
 }
 
-void GOSoundThread::Run() { Start(); }
+void GOSchedulerThread::Run() { Start(); }
 
-void GOSoundThread::Wakeup() { m_Condition.Signal(); }
+void GOSchedulerThread::Wakeup() { m_Condition.Signal(); }
 
-void GOSoundThread::Delete() {
+void GOSchedulerThread::Delete() {
   MarkForStop();
   Wakeup();
   Wait();

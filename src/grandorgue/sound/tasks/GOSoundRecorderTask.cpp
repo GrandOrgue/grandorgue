@@ -159,7 +159,7 @@ template <class T> void GOSoundRecorderTask::ConvertData() {
   for (unsigned i = 0; i < m_Outputs.size(); i++) {
     GOSoundBufferTaskBase *pOutput = m_Outputs[i];
 
-    pOutput->Finish(m_Stop.load());
+    pOutput->EnsureBufferReady(m_IsToComplete.load());
 
     const unsigned nChannels = pOutput->GetNChannels();
     float *pData = pOutput->GetData();
@@ -175,13 +175,7 @@ template <class T> void GOSoundRecorderTask::ConvertData() {
   }
 }
 
-unsigned GOSoundRecorderTask::GetGroup() { return AUDIORECORDER; }
-
-unsigned GOSoundRecorderTask::GetCost() { return 0; }
-
-bool GOSoundRecorderTask::GetRepeat() { return false; }
-
-void GOSoundRecorderTask::Run(GOSoundThread *thread) {
+void GOSoundRecorderTask::Run(GOSchedulerThread *pThread) {
   if (!m_Recording)
     return;
   if (m_Done)
@@ -211,18 +205,18 @@ void GOSoundRecorderTask::Run(GOSoundThread *thread) {
   m_Done = true;
 }
 
-void GOSoundRecorderTask::Exec() {
-  m_Stop.store(true);
+void GOSoundRecorderTask::CompleteRound() {
+  m_IsToComplete.store(true);
   Run();
 }
 
-void GOSoundRecorderTask::Clear() {
+void GOSoundRecorderTask::DiscardContent() {
   Close();
-  Reset();
+  NewRound();
 }
 
-void GOSoundRecorderTask::Reset() {
+void GOSoundRecorderTask::NewRound() {
   GOMutexLocker locker(m_Mutex);
   m_Done = false;
-  m_Stop.store(false);
+  m_IsToComplete.store(false);
 }

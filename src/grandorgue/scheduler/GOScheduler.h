@@ -5,20 +5,21 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDSCHEDULER_H
-#define GOSOUNDSCHEDULER_H
+#ifndef GOSCHEDULER_H
+#define GOSCHEDULER_H
 
+#include <atomic>
 #include <vector>
 
 #include "threading/GOMutex.h"
 
-class GOSoundTask;
+class GOSchedulerTask;
 
-class GOSoundScheduler {
+class GOScheduler {
 private:
-  std::vector<GOSoundTask *> m_Work;
-  std::vector<GOSoundTask **> m_Tasks;
-  // if GetNextGroup() always returns nullptr
+  std::vector<GOSchedulerTask *> m_Work;
+  std::vector<GOSchedulerTask **> m_Tasks;
+  // if GetNextTask() always returns nullptr
   std::atomic_bool m_IsNotGivingWork;
   std::atomic_uint m_NextItem;
   std::atomic_uint m_ItemCount;
@@ -29,24 +30,24 @@ private:
   void Unlock() { m_ItemCount.store(m_Tasks.size()); }
   void Update();
 
-  bool CompareItem(GOSoundTask *a, GOSoundTask *b);
-  void SortList(std::vector<GOSoundTask *> &list);
-  void ResetList(std::vector<GOSoundTask *> &list);
-  void AddList(GOSoundTask *item, std::vector<GOSoundTask *> &list);
-  void RemoveList(GOSoundTask *item, std::vector<GOSoundTask *> &list);
-  void ExecList(std::vector<GOSoundTask *> &list);
+  bool CompareItem(GOSchedulerTask *a, GOSchedulerTask *b);
+  void SortList(std::vector<GOSchedulerTask *> &list);
+  void NewRoundList(std::vector<GOSchedulerTask *> &list);
+  void AddList(GOSchedulerTask *item, std::vector<GOSchedulerTask *> &list);
+  void RemoveList(GOSchedulerTask *item, std::vector<GOSchedulerTask *> &list);
+  void CompleteRoundList(std::vector<GOSchedulerTask *> &list);
 
 public:
-  GOSoundScheduler();
-  ~GOSoundScheduler();
+  GOScheduler();
+  ~GOScheduler();
 
   void SetRepeatCount(unsigned count);
 
   void Clear();
-  void Reset();
-  void Exec();
-  void Add(GOSoundTask *item);
-  void Remove(GOSoundTask *item);
+  void NewRound();
+  void CompleteRound();
+  void Add(GOSchedulerTask *item);
+  void Remove(GOSchedulerTask *item);
 
   /**
    * Checks if any tasks have been added to the scheduler and have not yet been
@@ -63,7 +64,7 @@ public:
   void PauseGivingWork() { m_IsNotGivingWork.store(true); }
   void ResumeGivingWork() { m_IsNotGivingWork.store(false); }
 
-  GOSoundTask *GetNextGroup();
+  GOSchedulerTask *GetNextTask();
 };
 
 #endif

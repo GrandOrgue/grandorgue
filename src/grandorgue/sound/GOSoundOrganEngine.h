@@ -14,20 +14,20 @@
 
 #include "playing/GOSoundSamplerPlayer.h"
 #include "reverb/GOSoundReverb.h"
-#include "scheduler/GOSoundScheduler.h"
+#include "scheduler/GOScheduler.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
 class GOConfig;
 class GOMemoryPool;
 class GOOrganModel;
+class GOSchedulerTask;
+class GOSchedulerThread;
 class GOSoundBufferMutable;
 class GOSoundGroupTask;
 class GOSoundOutputTask;
 class GOSoundRecorderTask;
 class GOSoundReleaseTask;
-class GOSoundTask;
-class GOSoundThread;
 class GOSoundTouchTask;
 class GOSoundTremulantTask;
 class GOSoundWindchestTask;
@@ -127,10 +127,10 @@ private:
   GOOrganModel &r_OrganModel;
   GOMemoryPool &r_MemoryPool;
   // mp_ReleaseTask references mp_AudioGroupTasks [B1]; created in constructor
-  // body (after m_SamplerPlayer), added to m_Scheduler in BuildEngine [B8]
+  // body (after m_SamplerPlayer), added to m_scheduler in BuildEngine [B8]
   std::unique_ptr<GOSoundReleaseTask> mp_ReleaseTask;
   // mp_TouchTask references r_MemoryPool; created in constructor,
-  // added to m_Scheduler in BuildEngine [B8]
+  // added to m_scheduler in BuildEngine [B8]
   std::unique_ptr<GOSoundTouchTask> mp_TouchTask;
   // m_SamplerPlayer is declared after mp_ReleaseTask so that mp_ReleaseTask
   // is already a valid (though null) unique_ptr when passed by reference to
@@ -209,12 +209,12 @@ private:
   std::vector<std::unique_ptr<GOSoundWindchestTask>> mp_WindchestTasks;
   // [B9] Init(): connects mp_WindchestTasks [B8] to mp_TremulantTasks [B7]
   //
-  // [B10] m_Scheduler: all tasks added; SetRepeatCount(m_NReleaseRepeats)
+  // [B10] m_scheduler: all tasks added; SetRepeatCount(m_NReleaseRepeats)
   //   — uses all tasks above + mp_ReleaseTask + mp_TouchTask (constructor)
-  GOSoundScheduler m_Scheduler;
+  GOScheduler m_scheduler;
   // [B11] mp_threads: worker threads created via BuildThreads(m_NAuxThreads)
-  //   — uses m_Scheduler [B10]
-  std::vector<std::unique_ptr<GOSoundThread>> mp_threads;
+  //   — uses m_scheduler [B10]
+  std::vector<std::unique_ptr<GOSchedulerThread>> mp_threads;
 
   /*
    * Per-period counters reset by SetStreaming(true) at each streaming session
@@ -352,7 +352,7 @@ public:
 
   uint64_t GetTime() const { return m_SamplerPlayer.GetTime(); }
   std::vector<float> GetMeterInfo();
-  GOSoundScheduler &GetScheduler() { return m_Scheduler; }
+  GOScheduler &GetScheduler() { return m_scheduler; }
 
   /*
    * Lifecycle state

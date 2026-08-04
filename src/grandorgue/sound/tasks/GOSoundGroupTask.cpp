@@ -7,6 +7,7 @@
 
 #include "GOSoundGroupTask.h"
 
+#include "scheduler/GOSchedulerThread.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "threading/GOMutexLocker.h"
 
@@ -19,16 +20,16 @@ GOSoundGroupTask::GOSoundGroupTask(
     m_Condition(m_Mutex),
     m_ActiveCount(0),
     m_Done(0),
-    m_Stop(false) {}
+    m_IsToComplete(false) {}
 
-void GOSoundGroupTask::Reset() {
+void GOSoundGroupTask::NewRound() {
   GOMutexLocker locker(m_Mutex);
   m_Done.store(0);
   m_ActiveCount.store(0);
-  m_Stop.store(false);
+  m_IsToComplete.store(false);
 }
 
-void GOSoundGroupTask::Clear() {
+void GOSoundGroupTask::DiscardContent() {
   m_Active.Clear();
   m_Release.Clear();
 }
@@ -46,7 +47,7 @@ void GOSoundGroupTask::ProcessList(
 
   while ((sampler = list.Get())) {
     if (
-      toDropOld && m_Stop.load()
+      toDropOld && m_IsToComplete.load()
       && sampler->time + 2000 < r_SamplerPlayer.GetTime()) {
       if (sampler->drop_counter++ > 3) {
         r_SamplerPlayer.ReturnSampler(sampler);
@@ -65,15 +66,11 @@ void GOSoundGroupTask::ProcessList(
   }
 }
 
-unsigned GOSoundGroupTask::GetGroup() { return AUDIOGROUP; }
-
-unsigned GOSoundGroupTask::GetCost() {
+unsigned GOSoundGroupTask::GetCost() const {
   return m_Active.GetCount() + m_Release.GetCount();
 }
 
-bool GOSoundGroupTask::GetRepeat() { return true; }
-
-void GOSoundGroupTask::Run(GOSoundThread *pThread) {
+void GOSoundGroupTask::Run(GOSchedulerThread *pThread) {
   if (m_Done.load() == 3) // has already processed in this period
     return;
   {
@@ -125,35 +122,37 @@ void GOSoundGroupTask::Run(GOSoundThread *pThread) {
   }
 }
 
-void GOSoundGroupTask::Exec() {
-  m_Stop.store(true);
+void GOSoundGroupTask::CompleteRound() {
+  m_IsToComplete.store(true);
   Run();
 }
 
-void GOSoundGroupTask::Finish(bool stop, GOSoundThread *pThread) {
-  if (stop)
-    m_Stop.store(true);
+void GOSoundGroupTask::EnsureBufferReady(
+  bool isToComplete, GOSchedulerThread *pThread) {
+  if (isToComplete)
+    m_IsToComplete.store(true);
   Run(pThread);
   if (m_Done.load() == 3)
     return;
 
   {
-    GOMutexLocker locker(m_Mutex, false, "GOSoundGroupTask::Finish", pThread);
+    GOMutexLocker locker(
+      m_Mutex, false, "GOSoundGroupTask::EnsureBufferReady", pThread);
 
     while (locker.IsLocked() && m_Done.load() != 3
            && (pThread == nullptr || !pThread->ShouldStop()))
-      m_Condition.WaitOrStop("GOSoundGroupTask::Finish", pThread);
+      m_Condition.WaitOrStop("GOSoundGroupTask::EnsureBufferReady", pThread);
   }
 }
 
-void GOSoundGroupTask::WaitAndClear() {
-  GOMutexLocker locker(m_Mutex, false, "ClearAndWait::WaitAndClear");
+void GOSoundGroupTask::WaitAndDiscardContent() {
+  GOMutexLocker locker(m_Mutex, false, "WaitAndDiscardContent");
 
   // wait for no threads are inside Run()
   while (m_Done.load() > 0 && m_Done.load() < 3)
-    m_Condition.WaitOrStop("ClearAndWait::ClearAndWait", NULL);
+    m_Condition.WaitOrStop("WaitAndDiscardContent", NULL);
 
   // Now it is safe to clear because m_Mutex is locked and no other threads can
   // enter in Run()
-  Clear();
+  DiscardContent();
 }

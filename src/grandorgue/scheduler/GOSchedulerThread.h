@@ -1,22 +1,22 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDTHREAD_H
-#define GOSOUNDTHREAD_H
+#ifndef GOSCHEDULERTHREAD_H
+#define GOSCHEDULERTHREAD_H
 
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 #include "threading/GOThread.h"
 
-class GOSoundScheduler;
+class GOScheduler;
 
-class GOSoundThread : public GOThread {
+class GOSchedulerThread : public GOThread {
 private:
-  GOSoundScheduler *m_Scheduler;
+  GOScheduler *m_Scheduler;
 
   GOMutex m_Mutex;
   GOCondition m_Condition;
@@ -27,12 +27,12 @@ private:
   void Entry();
 
 public:
-  GOSoundThread(GOSoundScheduler *scheduler);
+  GOSchedulerThread(GOScheduler *scheduler);
 
   /*
    * === Prerequisites ===
    * During the execution the following must be true:
-   * 1. m_Scheduler->GetNextGroup() always returns nullptr
+   * 1. m_Scheduler->GetNextTask() always returns nullptr
    * 2. thread is running and is not marked to be stopped
    *
    * === Result ===

@@ -9,12 +9,14 @@
 #define GOSOUNDTREMULANTTASK_H
 
 #include "sound/playing/GOSoundSamplerList.h"
-#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
+#include "GOSoundTaskBase.h"
+
+class GOSchedulerThread;
 class GOSoundSamplerPlayer;
 
-class GOSoundTremulantTask : public GOSoundTask {
+class GOSoundTremulantTask : public GOSoundTaskBase {
 private:
   GOSoundSamplerPlayer &r_SamplerPlayer;
   GOSoundSamplerList m_Samplers;
@@ -27,14 +29,14 @@ public:
   GOSoundTremulantTask(
     GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer);
 
-  unsigned GetGroup();
-  unsigned GetCost();
-  bool GetRepeat();
-  void Run(GOSoundThread *thread = nullptr);
-  void Exec();
+  unsigned GetPriority() const override { return PRIORITY_TREMULANT; }
+  unsigned GetCost() const override { return 0; }
+  bool IsRepeatable() const override { return false; }
+  void Run(GOSchedulerThread *pThread = nullptr) override;
+  void CompleteRound() override { Run(); }
 
-  void Reset();
-  void Clear();
+  void NewRound() override;
+  void DiscardContent() override { m_Samplers.Clear(); }
   void Add(GOSoundSampler *sampler);
 
   float GetVolume() {
