@@ -55,6 +55,19 @@ private:
   void TestPerfNextPeriodLatency();
 
   /**
+   * The same NextPeriod() shape as TestPerfNextPeriodLatency, but on the
+   * cooperative task: one thread standing in for the audio thread calls
+   * CompleteRound() then NewRound() while worker threads race Run() on the
+   * same round. Its share of the work is deliberately tiny, so what is
+   * measured is the entry and merge sections rather than the work between
+   * them - that is, exactly the mutex a lock-free entry would remove. No
+   * other scenario covers this: RoundProtocolCost runs on the base task,
+   * whose mutex is deliberately kept, and CooperativeThroughput is aggregate
+   * throughput, in which the cost of the entry section disappears.
+   */
+  void TestPerfCooperativeRoundLatency();
+
+  /**
    * The lazy-prerequisite path: several threads reading a not-yet-done task
    * the way GOSoundWindchestTask::GetVolume() reads m_volume. Run in both
    * protocols - DoRun() returning true, and DoRun() always returning false

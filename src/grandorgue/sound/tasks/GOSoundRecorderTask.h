@@ -8,7 +8,6 @@
 #ifndef GOSOUNDRECORDERTASK_H
 #define GOSOUNDRECORDERTASK_H
 
-#include <atomic>
 #include <vector>
 
 #include <wx/file.h>
@@ -26,7 +25,6 @@ class GOSoundRecorderTask : public GOSoundTaskBase {
 private:
   wxFile m_file;
   GOMutex m_lock;
-  GOMutex m_Mutex;
   unsigned m_SampleRate;
   unsigned m_Channels;
   unsigned m_BytesPerSample;
@@ -34,14 +32,14 @@ private:
   unsigned m_BufferPos;
   unsigned m_SamplesPerBuffer;
   bool m_Recording;
-  bool m_Done;
-  std::atomic_bool m_IsToComplete;
   std::vector<GOSoundBufferTaskBase *> m_Outputs;
   char *m_Buffer;
 
   void SetupBuffer();
   template <class T> void ConvertData();
   struct_WAVE generateHeader(unsigned datasize);
+
+  bool DoRun(GOSchedulerThread *pThread) override;
 
 public:
   GOSoundRecorderTask();
@@ -57,14 +55,7 @@ public:
   void SetOutputs(
     std::vector<GOSoundBufferTaskBase *> outputs, unsigned samples_per_buffer);
 
-  unsigned GetPriority() const override { return PRIORITY_AUDIORECORDER; }
-  unsigned GetCost() const override { return 0; }
-  bool IsRepeatable() const override { return false; }
-  void Run(GOSchedulerThread *pThread = nullptr) override;
-  void CompleteRound() override;
-
   void DiscardContent() override;
-  void NewRound() override;
 };
 
 #endif

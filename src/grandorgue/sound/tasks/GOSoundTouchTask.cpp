@@ -7,23 +7,20 @@
 
 #include "GOSoundTouchTask.h"
 
-#include "GOMemoryPool.h"
 #include "threading/GOMutexLocker.h"
 
-GOSoundTouchTask::GOSoundTouchTask(GOMemoryPool &pool)
-  : m_Pool(pool), m_IsToComplete(false) {}
+#include "GOMemoryPool.h"
 
-void GOSoundTouchTask::Run(GOSchedulerThread *pThread) {
-  GOMutexLocker locker(m_Mutex);
+GOSoundTouchTask::GOSoundTouchTask(GOMemoryPool &pool)
+  : GOSoundTaskBase(PRIORITY_TOUCH, false), m_Pool(pool) {}
+
+bool GOSoundTouchTask::DoRun(GOSchedulerThread *pThread) {
   m_Pool.TouchMemory(m_IsToComplete);
+  return false;
 }
 
 void GOSoundTouchTask::CompleteRound() {
-  m_IsToComplete = true;
-  GOMutexLocker locker(m_Mutex);
-}
+  m_IsToComplete.store(true);
 
-void GOSoundTouchTask::NewRound() {
-  GOMutexLocker locker(m_Mutex);
-  m_IsToComplete = false;
+  GOMutexLocker locker(m_mutex);
 }

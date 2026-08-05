@@ -18,17 +18,14 @@ static constexpr float CLAMP_MIN = -1.0f;
 static constexpr float CLAMP_MAX = 1.0f;
 
 GOSoundOutputTask::GOSoundOutputTask(
-  unsigned channels,
-  std::vector<float> scale_factors,
-  unsigned samples_per_buffer)
-  : GOSoundBufferTaskBase(channels, samples_per_buffer),
-    m_ScaleFactors(scale_factors),
+  unsigned channels, std::vector<float> scaleFactors, unsigned samplesPerBuffer)
+  : GOSoundBufferTaskBase(
+    PRIORITY_AUDIOOUTPUT, false, channels, samplesPerBuffer),
+    m_ScaleFactors(scaleFactors),
     m_Outputs(),
     m_OutputCount(0),
     m_MeterInfo(channels),
-    m_Reverb(0),
-    m_Done(false),
-    m_IsToComplete(false) {
+    m_Reverb(0) {
   m_Reverb = new GOSoundReverb(channels);
 }
 
@@ -43,70 +40,63 @@ void GOSoundOutputTask::SetOutputs(
   m_OutputCount = m_Outputs.size() * 2;
 }
 
-void GOSoundOutputTask::Run(GOSchedulerThread *pThread) {
-  if (m_Done.load())
-    return;
-  GOMutexLocker locker(m_Mutex, false, "GOSoundOutputTask::Run", pThread);
-
-  if (m_Done.load() || !locker.IsLocked())
-    return;
+bool GOSoundOutputTask::DoRun(GOSchedulerThread *pThread) {
+  bool isStopped = false;
 
   /* initialise the output buffer */
   FillWithSilence();
 
   const unsigned nChannels = GetNChannels();
 
-  for (unsigned i = 0; i < nChannels; i++) {
-    for (unsigned j = 0; j < m_OutputCount; j++) {
+  for (unsigned i = 0; i < nChannels && !isStopped; i++)
+    for (unsigned j = 0; j < m_OutputCount && !isStopped; j++) {
       float factor = m_ScaleFactors[i * m_OutputCount + j];
 
-      if (factor == 0)
-        continue;
+      if (factor != 0) {
+        GOSoundBufferTaskBase *output = m_Outputs[j / 2];
 
-      GOSoundBufferTaskBase *output = m_Outputs[j / 2];
+        output->EnsureBufferReady(m_IsToComplete.load(), pThread);
+        if (pThread && pThread->ShouldStop())
+          isStopped = true;
+        else
+          AddChannelFrom(*output, j % 2, i, factor);
+      }
+    }
 
-      output->EnsureBufferReady(m_IsToComplete.load(), pThread);
-      if (pThread && pThread->ShouldStop())
-        return;
+  if (!isStopped) {
+    m_Reverb->Process(GetData(), GetNFrames());
 
-      AddChannelFrom(*output, j % 2, i, factor);
+    /* Clamp the output and put the maximum amplitude to m_MeterInfo */
+    float *pData = GetData();
+    unsigned nChannelsRest = nChannels;
+    float *pMeterInfo = m_MeterInfo.data();
+
+    for (unsigned nItemsRest = GetNItems(); nItemsRest; nItemsRest--, pData++) {
+      float f = std::clamp(*pData, CLAMP_MIN, CLAMP_MAX);
+      float absF = std::abs(f);
+
+      if (f != *pData)
+        *pData = f;
+      if (absF > *pMeterInfo)
+        *pMeterInfo = absF;
+
+      // Move to next channel (circular: after last channel, wrap to first)
+      pMeterInfo++;
+      if (!--nChannelsRest) {
+        nChannelsRest = nChannels;
+        pMeterInfo = m_MeterInfo.data();
+      }
     }
   }
 
-  m_Reverb->Process(GetData(), GetNFrames());
-
-  /* Clamp the output and put the maximum amplitude to m_MeterInfo */
-  float *pData = GetData();
-  unsigned nChannelsRest = nChannels;
-  float *pMeterInfo = m_MeterInfo.data();
-
-  for (unsigned nItemsRest = GetNItems(); nItemsRest; nItemsRest--, pData++) {
-    float f = std::clamp(*pData, CLAMP_MIN, CLAMP_MAX);
-    float absF = std::abs(f);
-
-    if (f != *pData)
-      *pData = f;
-    if (absF > *pMeterInfo)
-      *pMeterInfo = absF;
-
-    // Move to next channel (circular: after last channel, wrap to first)
-    pMeterInfo++;
-    if (!--nChannelsRest) {
-      nChannelsRest = nChannels;
-      pMeterInfo = m_MeterInfo.data();
-    }
-  }
-
-  m_Done.store(true);
+  return !isStopped;
 }
-
-void GOSoundOutputTask::CompleteRound() { Run(); }
 
 void GOSoundOutputTask::EnsureBufferReady(
   bool isToComplete, GOSchedulerThread *pThread) {
   if (isToComplete)
     m_IsToComplete.store(true);
-  if (!m_Done.load())
+  if (!IsDone())
     Run(pThread);
 }
 
@@ -116,15 +106,10 @@ void GOSoundOutputTask::DiscardContent() {
 }
 
 void GOSoundOutputTask::ResetMeterInfo() {
-  GOMutexLocker locker(m_Mutex);
+  GOMutexLocker locker(m_mutex);
+
   for (unsigned i = 0; i < m_MeterInfo.size(); i++)
     m_MeterInfo[i] = 0;
-}
-
-void GOSoundOutputTask::NewRound() {
-  GOMutexLocker locker(m_Mutex);
-  m_Done.store(false);
-  m_IsToComplete.store(false);
 }
 
 void GOSoundOutputTask::SetupReverb(

@@ -8,52 +8,40 @@
 #include "GOSoundTremulantTask.h"
 
 #include "sound/playing/GOSoundSamplerPlayer.h"
-#include "threading/GOMutexLocker.h"
 
 GOSoundTremulantTask::GOSoundTremulantTask(
   GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer)
-  : r_SamplerPlayer(samplerPlayer),
-    m_Volume(0),
-    m_SamplesPerBuffer(nFramesPerBuffer),
-    m_Done(false) {}
-
-void GOSoundTremulantTask::NewRound() {
-  GOMutexLocker locker(m_Mutex);
-  m_Done = false;
-}
+  : GOSoundTaskBase(PRIORITY_TREMULANT, false),
+    r_SamplerPlayer(samplerPlayer),
+    m_volume(0),
+    m_SamplesPerBuffer(nFramesPerBuffer) {}
 
 void GOSoundTremulantTask::Add(GOSoundSampler *sampler) {
   m_Samplers.Put(sampler);
 }
 
-void GOSoundTremulantTask::Run(GOSchedulerThread *pThread) {
-  if (m_Done)
-    return;
-
-  GOMutexLocker locker(m_Mutex);
-
-  if (m_Done)
-    return;
+bool GOSoundTremulantTask::DoRun(GOSchedulerThread *pThread) {
+  bool isDone = true;
 
   m_Samplers.Move();
-  if (m_Samplers.Peek() == NULL) {
-    m_Volume = 1;
-    m_Done = true;
-    return;
+  if (m_Samplers.Peek() == NULL)
+    m_volume = 1;
+  else {
+    float outputBuffer[m_SamplesPerBuffer * 2];
+
+    std::fill(outputBuffer, outputBuffer + m_SamplesPerBuffer * 2, 0.0f);
+    outputBuffer[2 * m_SamplesPerBuffer - 1] = 1.0f;
+    for (GOSoundSampler *sampler = m_Samplers.Get(); sampler;
+         sampler = m_Samplers.Get()) {
+      bool keep;
+      keep = r_SamplerPlayer.ProcessSampler(
+        outputBuffer, sampler, m_SamplesPerBuffer, 1);
+
+      if (keep)
+        m_Samplers.Put(sampler);
+    }
+    m_volume = outputBuffer[2 * m_SamplesPerBuffer - 1];
   }
 
-  float output_buffer[m_SamplesPerBuffer * 2];
-  std::fill(output_buffer, output_buffer + m_SamplesPerBuffer * 2, 0.0f);
-  output_buffer[2 * m_SamplesPerBuffer - 1] = 1.0f;
-  for (GOSoundSampler *sampler = m_Samplers.Get(); sampler;
-       sampler = m_Samplers.Get()) {
-    bool keep;
-    keep = r_SamplerPlayer.ProcessSampler(
-      output_buffer, sampler, m_SamplesPerBuffer, 1);
-
-    if (keep)
-      m_Samplers.Put(sampler);
-  }
-  m_Volume = output_buffer[2 * m_SamplesPerBuffer - 1];
-  m_Done = true;
+  return isDone;
 }

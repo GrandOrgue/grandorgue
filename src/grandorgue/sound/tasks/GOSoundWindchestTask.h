@@ -8,10 +8,7 @@
 #ifndef GOSOUNDWINDCHESTTASK_H
 #define GOSOUNDWINDCHESTTASK_H
 
-#include <atomic>
-
 #include "model/GOWindchest.h"
-#include "threading/GOMutex.h"
 
 #include "GOSoundTaskBase.h"
 #include "ptrvector.h"
@@ -24,24 +21,18 @@ class GOWindchest;
 class GOSoundWindchestTask : public GOSoundTaskBase {
 private:
   GOSoundOrganEngine &r_engine;
-  GOMutex m_mutex;
   float m_volume;
-  std::atomic_bool m_done;
   GOWindchest *p_windchest;
   std::vector<GOSoundTremulantTask *> m_pTremulantTasks;
 
+  bool DoRun(GOSchedulerThread *pThread) override;
+
 public:
   GOSoundWindchestTask(
-    GOSoundOrganEngine &sound_engine, GOWindchest *windchest);
+    GOSoundOrganEngine &soundEngine, GOWindchest *pWindchest);
 
-  unsigned GetPriority() const override { return PRIORITY_WINDCHEST; }
-  unsigned GetCost() const override { return 0; }
-  bool IsRepeatable() const override { return false; }
-  void Run(GOSchedulerThread *pThread = nullptr) override;
   void CompleteRound() override {}
 
-  void DiscardContent() override { NewRound(); }
-  void NewRound() override;
   void Init(ptr_vector<GOSoundTremulantTask> &tremulantTasks);
 
   float GetWindchestVolume() const {
@@ -49,7 +40,7 @@ public:
   }
 
   float GetVolume() {
-    if (!m_done.load())
+    if (!IsDone())
       Run();
     return m_volume;
   }

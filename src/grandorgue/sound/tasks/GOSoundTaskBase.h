@@ -144,13 +144,9 @@ protected:
 
 public:
   /**
-   * @param priority this task's scheduling priority, see TaskPriority. Not
-   *   yet used by every subclass: some still override GetPriority()
-   *   themselves and ignore this value until they are switched to rely on
-   *   the base implementation
+   * @param priority this task's scheduling priority, see TaskPriority
    * @param isRepeatable whether the task may be scheduled several times
-   *   within one round, see GOSchedulerTask::IsRepeatable(). Same caveat as
-   *   priority above
+   *   within one round, see GOSchedulerTask::IsRepeatable()
    */
   GOSoundTaskBase(
     TaskPriority priority = PRIORITY_AUDIOGROUP, bool isRepeatable = false);
