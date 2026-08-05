@@ -56,6 +56,12 @@ public:
   std::atomic<int> nCopyTransitions{0};
   /** Number of transitions to RUN_STATE_DONE */
   std::atomic<int> nLastThreadFinishes{0};
+  /**
+   * If > 0, a thread lingers this long at the end of its share, before
+   * merging. Stands in for a worker still inside GOSoundGroupTask's
+   * ProcessList(), i.e. doing round work while holding no lock.
+   */
+  std::atomic<int> shareSleepMicroseconds{0};
 
   GOSoundCooperativeTaskTestImpl()
     : GOSoundTaskBase(PRIORITY_AUDIOGROUP, true) {}
@@ -86,8 +92,13 @@ public:
    * merges the result; the last thread to finish marks the round done */
   void Run(GOSchedulerThread *pThread = nullptr) override;
 
-  /** Resets the active-worker count for the next round */
-  void DoNewRound() override { m_ActiveCount.store(0); }
+  /** Mirrors GOSoundGroupTask::CompleteRound(): does not return until the
+   * round has actually finished */
+  void CompleteRound() override;
+
+  /** Resets the active-worker count for the next round, asserting first that
+   * no worker is still inside its share */
+  void DoNewRound() override;
 
   /** Blocks the calling thread until the round becomes done, mirroring
    * GOSoundGroupTask::WaitAndDiscardContent() */

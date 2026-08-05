@@ -321,6 +321,55 @@ void GOTestSoundTaskBase::TestCooperativeNewRoundAllowsFreshRound() {
     "the second round's result must not be mixed with the first round's");
 }
 
+void GOTestSoundTaskBase::TestCooperativeCompleteRoundWaitsForInFlightWork() {
+  constexpr long N_WORK_ITEMS = 200;
+  constexpr int SHARE_SLEEP_MICROSECONDS = 50000;
+
+  GOSoundCooperativeTaskTestImpl task;
+
+  task.SetWorkItems(N_WORK_ITEMS);
+  // the runner drains every item, then lingers outside any lock, exactly
+  // where a real worker sits inside ProcessList()
+  task.shareSleepMicroseconds.store(SHARE_SLEEP_MICROSECONDS);
+
+  std::thread runner([&task]() { task.Run(); });
+
+  // give the runner time to claim the round and drain the items, so that the
+  // CompleteRound() below finds nothing to help with and really has to wait
+  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  task.CompleteRound();
+
+  // Sample the state the instant CompleteRound() returns, and only assert
+  // after the join: GOAssert() throws, and throwing while runner is still
+  // joinable would terminate the process. Asserting after the join without
+  // sampling first would be worse than useless - by then the round has
+  // finished either way, which is exactly what this test must not be fooled
+  // by.
+  const bool wasDoneOnReturn = task.IsDone();
+  const long sharedValueOnReturn = task.nSharedValue.load();
+
+  runner.join();
+
+  GOAssert(
+    wasDoneOnReturn,
+    "CompleteRound() must not return while a thread is still in its share");
+  GOAssert(
+    sharedValueOnReturn == N_WORK_ITEMS,
+    "the in-flight share must be merged into the result, not lost");
+
+  // the invariant NewRound() relies on: with nothing in flight, the
+  // assertions inside DoNewRound() hold
+  task.shareSleepMicroseconds.store(0);
+  task.NewRound();
+
+  task.SetWorkItems(N_WORK_ITEMS + 100);
+  run_on_threads(N_STRESS_THREADS, [&task]() { task.Run(); });
+
+  GOAssert(
+    task.nSharedValue.load() == N_WORK_ITEMS + 100,
+    "the round after a waited-out CompleteRound() must start clean");
+}
+
 void GOTestSoundTaskBase::run() {
   TestInitialState();
   TestRunCallsDoRunOnce();
@@ -340,4 +389,5 @@ void GOTestSoundTaskBase::run() {
   TestCooperativeThreadWithNoWorkExitsEarly();
   TestCooperativeWaitOrStopBlocksUntilDone();
   TestCooperativeNewRoundAllowsFreshRound();
+  TestCooperativeCompleteRoundWaitsForInFlightWork();
 }

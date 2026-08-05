@@ -7,6 +7,8 @@
 
 #include "GOSoundGroupTask.h"
 
+#include <cassert>
+
 #include "scheduler/GOSchedulerThread.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "threading/GOMutexLocker.h"
@@ -128,6 +130,28 @@ void GOSoundGroupTask::EnsureBufferReady(
            && (pThread == nullptr || !pThread->ShouldStop()))
       m_Condition.WaitOrStop("GOSoundGroupTask::EnsureBufferReady", pThread);
   }
+}
+
+void GOSoundGroupTask::CompleteRound() {
+  // precisely the round deadline: pass it down, finish the round, and do not
+  // return until it is finished
+  EnsureBufferReady(true);
+}
+
+// Called under m_mutex from GOSoundTaskBase::NewRound(), before the round
+// state is reset, so the assertions still see the round that is ending. This
+// task mixes in ProcessList() outside m_mutex, so the mutex alone cannot keep
+// a worker out of a round being reset: the protocol must already have brought
+// the task to rest. Either it never ran this period (RUN_STATE_NOT_STARTED),
+// or CompleteRound() ran it to completion (RUN_STATE_DONE).
+void GOSoundGroupTask::DoNewRound() {
+  assert(m_ActiveCount.load() == 0);
+  assert(
+    m_RunState.load() == RUN_STATE_NOT_STARTED
+    || m_RunState.load() == RUN_STATE_DONE);
+  // not redundant with the assertion above: assert() is compiled out under
+  // NDEBUG, and resetting the counter is what this hook exists to do
+  m_ActiveCount.store(0);
 }
 
 void GOSoundGroupTask::WaitAndDiscardContent() {
