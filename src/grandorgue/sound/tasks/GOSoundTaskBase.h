@@ -158,8 +158,11 @@ protected:
    */
   virtual bool DoRun(GOSchedulerThread *pThread) { return true; }
 
-  /** Resets subclass-specific per-round state. Called from NewRound() under
-   * m_mutex */
+  /**
+   * Resets subclass-specific per-round state. Called from NewRound() under
+   * m_mutex, before m_IsToComplete and m_RunState are reset, so it still
+   * observes the round that is ending and may assert on it.
+   */
   virtual void DoNewRound() {}
 
 public:
