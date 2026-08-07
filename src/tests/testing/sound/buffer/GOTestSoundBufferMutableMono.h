@@ -25,11 +25,16 @@ private:
     GOSoundBufferMutableMono &monoBuffer,
     GOSoundBufferMutable &dstBuffer,
     unsigned channelI);
+  void TestAddMonoFromChannel(
+    GOSoundBufferMutableMono &monoBuffer,
+    const GOSoundBuffer &srcBuffer,
+    unsigned channelI);
 
   void TestConstructorAndBasicProperties();
   void TestGetSubBuffer();
   void TestCopyChannelFrom();
   void TestCopyChannelTo();
+  void TestAddChannelFrom();
   void TestInvalidBuffer();
   void TestEdgeCases();
 
