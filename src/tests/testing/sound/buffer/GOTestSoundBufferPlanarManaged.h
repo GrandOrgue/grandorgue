@@ -5,33 +5,30 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOTESTSOUNDBUFFERMANAGED_H
-#define GOTESTSOUNDBUFFERMANAGED_H
+#ifndef GOTESTSOUNDBUFFERPLANARMANAGED_H
+#define GOTESTSOUNDBUFFERPLANARMANAGED_H
 
 #include "GOTestSoundBufferBase.h"
 
-class GOTestSoundBufferManaged : public GOTestSoundBufferBase {
+class GOTestSoundBufferPlanarManaged : public GOTestSoundBufferBase {
 private:
   static const std::string TEST_NAME;
 
   void TestDefaultConstructor();
   void TestConstructorWithDimensions();
-  void TestCopyConstructorFromBuffer();
+  void TestCopyConstructorFromView();
   void TestCopyConstructorFromManaged();
   void TestMoveConstructor();
-  void TestCopyAssignmentFromBuffer();
+  void TestCopyAssignmentFromView();
   void TestCopyAssignmentFromManaged();
   void TestMoveAssignment();
   void TestResize();
   void TestResizeNoReallocation();
   void TestSwap();
-  void TestComplexOperations();
-  void TestSubBufferCompatibility();
-  void TestInvalidBufferOperations();
 
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
 };
 
-#endif /* GOTESTSOUNDBUFFERMANAGED_H */
+#endif /* GOTESTSOUNDBUFFERPLANARMANAGED_H */

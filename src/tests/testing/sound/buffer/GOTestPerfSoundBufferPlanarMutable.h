@@ -5,14 +5,14 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOTESTPERFSOUNDBUFFERMUTABLE_H
-#define GOTESTPERFSOUNDBUFFERMUTABLE_H
+#ifndef GOTESTPERFSOUNDBUFFERPLANARMUTABLE_H
+#define GOTESTPERFSOUNDBUFFERPLANARMUTABLE_H
 
 #include "GOTestPerfSoundBufferBase.h"
 
 #include <string>
 
-class GOTestPerfSoundBufferMutable : public GOTestPerfSoundBufferBase {
+class GOTestPerfSoundBufferPlanarMutable : public GOTestPerfSoundBufferBase {
 private:
   static const std::string TEST_NAME;
 
@@ -23,12 +23,13 @@ private:
   void TestPerfCopyChannelFrom();
   void TestPerfAddChannelFrom();
   void TestPerfAddChannelFromWithCoefficient();
-  void TestPerfAddChannelFromMonoRecipient();
-  void TestPerfAddChannelFromMono();
+  void TestPerfDeinterleaveFrom();
+  void TestPerfAddDeinterleaveFrom();
+  void TestPerfInterleaveTo();
 
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
 };
 
-#endif /* GOTESTPERFSOUNDBUFFERMUTABLE_H */
+#endif /* GOTESTPERFSOUNDBUFFERPLANARMUTABLE_H */

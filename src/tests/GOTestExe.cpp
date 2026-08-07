@@ -16,10 +16,14 @@
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestWindchest.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferMutable.h"
+#include "testing/sound/buffer/GOTestPerfSoundBufferPlanarMutable.h"
 #include "testing/sound/buffer/GOTestSoundBuffer.h"
 #include "testing/sound/buffer/GOTestSoundBufferManaged.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutableMono.h"
+#include "testing/sound/buffer/GOTestSoundBufferPlanar.h"
+#include "testing/sound/buffer/GOTestSoundBufferPlanarManaged.h"
+#include "testing/sound/buffer/GOTestSoundBufferPlanarMutable.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
 
@@ -55,7 +59,11 @@ int main(int argc, char *argv[]) {
   GOTestSoundBufferManaged testSoundBufferManaged;
   GOTestSoundBufferMutable testSoundBufferMutable;
   GOTestSoundBufferMutableMono testSoundBufferMutableMono;
+  GOTestSoundBufferPlanar testSoundBufferPlanar;
+  GOTestSoundBufferPlanarMutable testSoundBufferPlanarMutable;
+  GOTestSoundBufferPlanarManaged testSoundBufferPlanarManaged;
   GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
+  GOTestPerfSoundBufferPlanarMutable testPerfSoundBufferPlanarMutable;
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
   /* end of instanciation */

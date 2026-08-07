@@ -19,23 +19,122 @@
  * It also has some methods for manipulating sound in the buffer
  */
 class GOSoundBufferMutable : public GOSoundBuffer {
-private:
-  inline void AssertCompatibilityWith(const GOSoundBuffer &srcBuffer) const {
-    assert(isValid());
-    assert(srcBuffer.isValid());
-    assert(srcBuffer.m_NChannels == m_NChannels);
-    assert(srcBuffer.m_NFrames == m_NFrames);
+public:
+  /**
+   * Asserts that two buffers (interleaved or planar, any mix) are valid and
+   * have the same number of channels and frames. Shared by
+   * GOSoundBufferMutable and GOSoundBufferPlanarMutable so the whole-buffer
+   * compatibility check is not duplicated between the interleaved and
+   * planar hierarchies.
+   * @param bufferA First buffer to check
+   * @param bufferB Second buffer to check
+   */
+  template <typename BufferAType, typename BufferBType>
+  static inline void assertBuffersCompatible(
+    const BufferAType &bufferA, const BufferBType &bufferB) {
+    assert(bufferA.isValid());
+    assert(bufferB.isValid());
+    assert(bufferA.GetNChannels() == bufferB.GetNChannels());
+    assert(bufferA.GetNFrames() == bufferB.GetNFrames());
   }
 
+  /**
+   * Asserts that a per-channel copy/add between two buffers (interleaved or
+   * planar, any mix) is valid: both buffers are valid, they have the same
+   * number of frames, and the channel indices are in range. Shared by
+   * GOSoundBufferMutable and GOSoundBufferPlanarMutable.
+   * @param dstBuffer Destination buffer
+   * @param srcBuffer Source buffer
+   * @param srcChannelI Source channel index (0-based)
+   * @param dstChannelI Destination channel index (0-based)
+   */
+  template <typename BufferAType, typename BufferBType>
+  static inline void assertChannelsCompatible(
+    const BufferAType &dstBuffer,
+    const BufferBType &srcBuffer,
+    unsigned srcChannelI,
+    unsigned dstChannelI) {
+    assert(dstBuffer.isValid());
+    assert(srcBuffer.isValid());
+    assert(srcBuffer.GetNFrames() == dstBuffer.GetNFrames());
+    assert(srcChannelI < srcBuffer.GetNChannels());
+    assert(dstChannelI < dstBuffer.GetNChannels());
+  }
+
+  /**
+   * Fills the entire buffer (all channels) with zeros (silence). Shared by
+   * GOSoundBufferMutable and GOSoundBufferPlanarMutable.
+   * @param buffer Buffer to fill with silence
+   */
+  template <typename BufferType>
+  static inline void fillWithSilence(BufferType &buffer) {
+    assert(buffer.isValid());
+    std::memset(buffer.GetData(), 0, buffer.GetNBytes());
+  }
+
+  /**
+   * Copies audio data from one buffer into another of the same shape (both
+   * interleaved or both planar). Shared by GOSoundBufferMutable and
+   * GOSoundBufferPlanarMutable.
+   * @param dstBuffer Destination buffer
+   * @param srcBuffer Source buffer, same shape as dstBuffer
+   */
+  template <typename BufferAType, typename BufferBType>
+  static inline void copyFrom(
+    BufferAType &dstBuffer, const BufferBType &srcBuffer) {
+    assertBuffersCompatible(dstBuffer, srcBuffer);
+    std::memcpy(
+      dstBuffer.GetData(), srcBuffer.GetData(), dstBuffer.GetNBytes());
+  }
+
+  /**
+   * Adds audio data from one buffer into another of the same shape,
+   * scaled by coeff. Shared by GOSoundBufferMutable and
+   * GOSoundBufferPlanarMutable.
+   * @param dstBuffer Destination buffer
+   * @param srcBuffer Source buffer, same shape as dstBuffer
+   * @param coeff Multiply source items by this coefficient before adding
+   */
+  template <typename BufferAType, typename BufferBType>
+  static inline void addFrom(
+    BufferAType &dstBuffer, const BufferBType &srcBuffer, float coeff) {
+    assertBuffersCompatible(dstBuffer, srcBuffer);
+
+    // Take the pointers into a register cache for better performance
+    const typename BufferAType::Item *__restrict pSrc = srcBuffer.GetData();
+    typename BufferAType::Item *__restrict pDst = dstBuffer.GetData();
+
+    // The compiler should auto-vectorize this loop
+    for (unsigned i = dstBuffer.GetNItems(); i; i--)
+      *pDst++ += *pSrc++ * coeff;
+  }
+
+  /**
+   * Adds audio data from one buffer into another of the same shape. Shared
+   * by GOSoundBufferMutable and GOSoundBufferPlanarMutable.
+   * @param dstBuffer Destination buffer
+   * @param srcBuffer Source buffer, same shape as dstBuffer
+   */
+  template <typename BufferAType, typename BufferBType>
+  static inline void addFrom(
+    BufferAType &dstBuffer, const BufferBType &srcBuffer) {
+    assertBuffersCompatible(dstBuffer, srcBuffer);
+
+    // Take the pointers into a register cache for better performance
+    const typename BufferAType::Item *__restrict pSrc = srcBuffer.GetData();
+    typename BufferAType::Item *__restrict pDst = dstBuffer.GetData();
+
+    // The compiler should auto-vectorize this loop
+    for (unsigned i = dstBuffer.GetNItems(); i; i--)
+      *pDst++ += *pSrc++;
+  }
+
+private:
   inline void AssertChannelCompatibilityWith(
     const GOSoundBuffer &srcBuffer,
     unsigned srcChannel,
     unsigned dstChannel) const {
-    assert(isValid());
-    assert(srcBuffer.isValid());
-    assert(srcBuffer.m_NFrames == m_NFrames);
-    assert(srcChannel < srcBuffer.m_NChannels);
-    assert(dstChannel < m_NChannels);
+    assertChannelsCompatible(*this, srcBuffer, srcChannel, dstChannel);
   }
 
 public:
@@ -50,6 +149,12 @@ protected:
   inline GOSoundBufferMutable() : GOSoundBuffer() {}
 
 public:
+  // Un-hide the const overload of GetData() inherited from GOSoundBuffer,
+  // so calling GetData() on a const GOSoundBufferMutable (or subclass)
+  // reference resolves to it instead of failing to find an accessible
+  // overload.
+  using GOSoundBuffer::GetData;
+
   // Get mutable pointer to data
   inline Item *GetData() { return const_cast<Item *>(p_data); }
 
@@ -66,10 +171,7 @@ public:
   /**
    * Fill the entire buffer with zeros (silence).
    */
-  inline void FillWithSilence() {
-    assert(isValid());
-    std::memset(const_cast<Item *>(p_data), 0, GetNBytes());
-  }
+  inline void FillWithSilence() { fillWithSilence(*this); }
 
   /**
    * Copy audio data from another buffer.
@@ -77,8 +179,7 @@ public:
    * @param srcBuffer Source buffer to copy from
    */
   inline void CopyFrom(const GOSoundBuffer &srcBuffer) {
-    AssertCompatibilityWith(srcBuffer);
-    std::memcpy(const_cast<Item *>(p_data), srcBuffer.p_data, GetNBytes());
+    copyFrom(*this, srcBuffer);
   }
 
   /**
@@ -102,15 +203,7 @@ public:
    * @param coeff Multiply source frames by this coefficient before adding
    */
   inline void AddFrom(const GOSoundBuffer &srcBuffer, float coeff) {
-    AssertCompatibilityWith(srcBuffer);
-
-    // Take the pointers into a register cache for better performance
-    const Item *__restrict pSrc = srcBuffer.p_data;
-    Item *__restrict pDst = const_cast<Item *>(p_data);
-
-    // The compiler should auto-vectorize this loop
-    for (unsigned i = GetNItems(); i; i--)
-      *pDst++ += *pSrc++ * coeff;
+    addFrom(*this, srcBuffer, coeff);
   }
 
   /**
@@ -120,15 +213,7 @@ public:
    * @param srcBuffer Source buffer to add from
    */
   inline void AddFrom(const GOSoundBuffer &srcBuffer) {
-    AssertCompatibilityWith(srcBuffer);
-
-    // Take the pointers into a register cache for better performance
-    const Item *__restrict pSrc = srcBuffer.p_data;
-    Item *__restrict pDst = const_cast<Item *>(p_data);
-
-    // The compiler should auto-vectorize this loop
-    for (unsigned i = GetNItems(); i; i--)
-      *pDst++ += *pSrc++;
+    addFrom(*this, srcBuffer);
   }
 
   /**

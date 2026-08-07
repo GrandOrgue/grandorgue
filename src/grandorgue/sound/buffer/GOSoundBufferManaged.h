@@ -8,13 +8,16 @@
 #ifndef GOSOUNDBUFFERMANAGED_H
 #define GOSOUNDBUFFERMANAGED_H
 
+#include "GOSoundBufferManagedBase.h"
 #include "GOSoundBufferMutable.h"
-
-#include <memory>
 
 /**
  * Sound buffer that owns its memory (heap-allocated via unique_ptr).
  * Inherits from GOSoundBufferMutable and manages its own memory allocation.
+ * Resize()/Swap() and the copy/move plumbing are implemented once in
+ * GOSoundBufferManagedBase and shared with GOSoundBufferPlanarManaged; this
+ * class only adds the Rule-of-5 constructors/assignment operators with
+ * GOSoundBuffer-specific signatures.
  *
  * Use this class when:
  * - The buffer must persist beyond the current scope (e.g. as a class member)
@@ -24,48 +27,22 @@
  * spikes. Use GO_DECLARE_LOCAL_SOUND_BUFFER for stack-allocated buffers in
  * such contexts when the buffer size is bounded and small.
  */
-class GOSoundBufferManaged : public GOSoundBufferMutable {
-private:
-  // The memory buffer that contains sound items. It is deleted automatically
-  // when the instance is destroyed
-  std::unique_ptr<Item[]> m_OwnedData;
-
-  /**
-   * Copy data from source buffer (resizes this buffer to match source).
-   * @param srcBuffer Source buffer to copy from
-   */
-  void CopyDataFrom(const GOSoundBuffer &srcBuffer);
-
-  /**
-   * Move data from another GOSoundBufferManaged.
-   * Helper for move constructor and move assignment operator.
-   * @param other Buffer to move from (will be left in empty state)
-   */
-  void MoveDataFrom(GOSoundBufferManaged &other) noexcept;
+class GOSoundBufferManaged
+  : public GOSoundBufferManagedBase<GOSoundBufferMutable, GOSoundBuffer> {
+  using Base = GOSoundBufferManagedBase<GOSoundBufferMutable, GOSoundBuffer>;
 
 public:
   /**
-   * Resize the buffer to new dimensions.
-   * If dimensions differ, memory is reallocated and all existing data in the
-   * buffer is lost.
-   *
-   * @param nChannels New number of channels
-   * @param nFrames New number of frames
-   */
-  void Resize(unsigned nChannels, unsigned nFrames);
-
-  /**
    * Default constructor - creates empty invalid buffer.
    */
-  inline GOSoundBufferManaged() : GOSoundBufferMutable() {}
+  inline GOSoundBufferManaged() : Base() {}
 
   /**
    * Constructor that allocates memory for the buffer.
    * @param nChannels Number of channels
    * @param nFrames Number of frames
    */
-  inline GOSoundBufferManaged(unsigned nChannels, unsigned nFrames)
-    : GOSoundBufferMutable() {
+  inline GOSoundBufferManaged(unsigned nChannels, unsigned nFrames) : Base() {
     Resize(nChannels, nFrames);
   }
 
@@ -73,16 +50,15 @@ public:
    * Copy constructor from GOSoundBuffer.
    * @param srcBuffer Source buffer to copy from
    */
-  inline GOSoundBufferManaged(const GOSoundBuffer &srcBuffer)
-    : GOSoundBufferMutable() {
+  inline GOSoundBufferManaged(const GOSoundBuffer &srcBuffer) : Base() {
     CopyDataFrom(srcBuffer);
   }
 
   /**
    * Copy constructor from another GOSoundBufferManaged.
-   * This constructor is required because when a move constructor is declared,
-   * the compiler does not automatically generate a copy constructor (Rule of
-   * 5). Delegates to constructor from GOSoundBuffer.
+   * This constructor is required because when a move constructor is
+   * declared, the compiler does not automatically generate a copy
+   * constructor (Rule of 5). Delegates to constructor from GOSoundBuffer.
    * @param other Buffer to copy from
    */
   inline GOSoundBufferManaged(const GOSoundBufferManaged &other)
@@ -92,8 +68,7 @@ public:
    * Move constructor.
    * @param other Buffer to move from
    */
-  inline GOSoundBufferManaged(GOSoundBufferManaged &&other) noexcept
-    : GOSoundBufferMutable() {
+  inline GOSoundBufferManaged(GOSoundBufferManaged &&other) noexcept : Base() {
     MoveDataFrom(other);
   }
 
@@ -111,8 +86,9 @@ public:
   /**
    * Copy assignment operator from another GOSoundBufferManaged.
    * This operator is required because when a move assignment operator is
-   * declared, the compiler does not automatically generate a copy assignment
-   * operator (Rule of 5). Delegates to assignment operator from GOSoundBuffer.
+   * declared, the compiler does not automatically generate a copy
+   * assignment operator (Rule of 5). Delegates to assignment operator from
+   * GOSoundBuffer.
    * @param other Buffer to copy from
    * @return Reference to this buffer
    */
@@ -132,12 +108,6 @@ public:
       MoveDataFrom(other);
     return *this;
   }
-
-  /**
-   * Swap contents with another GOSoundBufferManaged.
-   * @param other Buffer to swap with
-   */
-  void Swap(GOSoundBufferManaged &other) noexcept;
 };
 
 /**
