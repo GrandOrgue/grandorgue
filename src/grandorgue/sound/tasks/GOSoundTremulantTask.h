@@ -12,11 +12,11 @@
 #include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
-class GOSoundOrganEngine;
+class GOSoundSamplerPlayer;
 
 class GOSoundTremulantTask : public GOSoundTask {
 private:
-  GOSoundOrganEngine &m_engine;
+  GOSoundSamplerPlayer &r_SamplerPlayer;
   GOSoundSamplerList m_Samplers;
   GOMutex m_Mutex;
   float m_Volume;
@@ -25,7 +25,7 @@ private:
 
 public:
   GOSoundTremulantTask(
-    GOSoundOrganEngine &sound_engine, unsigned samples_per_buffer);
+    GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer);
 
   unsigned GetGroup();
   unsigned GetCost();

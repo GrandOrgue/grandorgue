@@ -28,7 +28,6 @@
 #include "config/GOConfigWriter.h"
 #include "control/GOElementCreator.h"
 #include "files/GOOpenedFile.h"
-#include "files/GOStdFileName.h"
 #include "gui/GOGuiImageCache.h"
 #include "gui/dialogs/go-message-boxes.h"
 #include "gui/panels/GOGUIBankedGeneralsPanel.h"
@@ -44,6 +43,7 @@
 #include "gui/panels/GOGUISequencerPanel.h"
 #include "loader/GOLoadThread.h"
 #include "loader/GOLoaderFilename.h"
+#include "loader/GOOrganReader.h"
 #include "loader/GOProgressMonitor.h"
 #include "loader/cache/GOCache.h"
 #include "loader/cache/GOCacheWriter.h"
@@ -58,7 +58,7 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
-#include "sound/GOSoundOrganEngine.h"
+#include "sound/GOSoundSystem.h"
 #include "sound/playing/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
 #include "yaml/GOYamlModel.h"
@@ -81,6 +81,7 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
   : GOEventDistributor(this),
     GOOrganModel(config),
     m_config(config),
+    m_ConfiguredOrgan(wxEmptyString),
     m_FileStore(config),
     m_Cacheable(false),
     m_setter(0),
@@ -89,13 +90,12 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
     m_MidiRecorder(NULL),
     m_timer(NULL),
     p_OnStateButton(nullptr),
-    m_volume(0),
-    m_b_customized(false),
     m_CurrentPitch(999999.0), // for enforcing updating the label first time
     m_OrganModified(false),
     m_midi(0),
     m_SampleSetId1(0),
     m_SampleSetId2(0),
+    m_SoundEngine(*this, m_pool),
     mp_ImageCache(nullptr),
     m_PitchLabel(*this),
     m_TemperamentLabel(*this),
@@ -220,10 +220,11 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   unsigned NumberOfPanels = cfg.ReadInteger(
     ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
   cfg.ReadString(CMBSetting, WX_ORGAN, WX_GRANDORGUE_VERSION, false);
-  m_volume = cfg.ReadInteger(
+
+  int volume = cfg.ReadInteger(
     CMBSetting, WX_ORGAN, wxT("Volume"), -120, 100, false, m_config.Volume());
-  if (m_volume > 20)
-    m_volume = 0;
+
+  m_SoundEngine.SetVolume(volume > 20 ? 0 : volume);
   m_Temperament
     = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("Temperament"), false);
 
@@ -318,16 +319,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     | (result.hash[7] & 0x7F);
 }
 
-wxString GOOrganController::GenerateSettingFileName() {
-  return m_config.OrganSettingsPath() + wxFileName::GetPathSeparator()
-    + GOStdFileName::composeSettingFileName(GetOrganHash(), m_config.Preset());
-}
-
-wxString GOOrganController::GenerateCacheFileName() {
-  return m_config.OrganCachePath() + wxFileName::GetPathSeparator()
-    + GOStdFileName::composeCacheFileName(GetOrganHash(), m_config.Preset());
-}
-
 class GOLoadAborted : public std::exception {};
 
 wxString GOOrganController::Load(
@@ -339,131 +330,14 @@ wxString GOOrganController::Load(
   wxString errMsg;
 
   try {
-    GOLoaderFilename odf_name;
+    GOOrganReader organReader(m_config, organ, file2, m_FileStore, monitor);
 
-    m_ArchiveID = organ.GetArchiveID();
-    if (m_ArchiveID != wxEmptyString) {
-      monitor.Setup(1, _("Loading sample set"), _("Parsing organ packages"));
-
-      wxString errMsg1;
-
-      if (!m_FileStore.LoadArchives(
-            m_config,
-            m_config.OrganCachePath(),
-            organ.GetArchiveID(),
-            organ.GetArchivePath(),
-            errMsg1))
-        throw errMsg1;
-      m_ArchivePath = organ.GetArchivePath();
-      m_odf = organ.GetODFPath();
-      odf_name.Assign(m_odf);
-    } else {
-      wxString file = organ.GetODFPath();
-      m_odf = go_normalize_path(file);
-      odf_name.AssignAbsolute(m_odf);
-      m_FileStore.SetDirectory(go_get_path(m_odf));
-    }
-    m_hash = organ.GetOrganHash();
-    monitor.Setup(
-      1, _("Loading sample set"), _("Parsing sample set definition file"));
-    m_SettingFilename = GenerateSettingFileName();
-    m_CacheFilename = GenerateCacheFileName();
+    m_ConfiguredOrgan = organ;
+    m_LoadedOrganInfo = organReader.GetLoadedOrganInfo();
     m_Cacheable = false;
 
-    GOConfigFileReader odf_ini_file;
-
-    if (!odf_ini_file.Read(odf_name.Open(m_FileStore).get()))
-      throw wxString::Format(_("Unable to read '%s'"), odf_name.GetPath());
-
-    m_ODFHash = odf_ini_file.GetHash();
-    m_b_customized = false;
-    GOConfigReaderDB ini(m_config.ODFCheck());
-    ini.ReadData(odf_ini_file, ODFSetting, false);
-
-    wxString setting_file = file2;
-    bool can_read_cmb_directly = true;
-
-    if (setting_file.IsEmpty()) {
-      if (wxFileExists(m_SettingFilename)) {
-        setting_file = m_SettingFilename;
-        m_b_customized = true;
-      } else {
-        wxString bundledSettingsFile = m_odf.BeforeLast('.') + wxT(".cmb");
-        if (!m_FileStore.AreArchivesUsed()) {
-          if (wxFileExists(bundledSettingsFile)) {
-            setting_file = bundledSettingsFile;
-            m_b_customized = true;
-          }
-        } else {
-          if (m_FileStore.FindArchiveContaining(m_odf)->containsFile(
-                bundledSettingsFile)) {
-            setting_file = bundledSettingsFile;
-            m_b_customized = true;
-            can_read_cmb_directly = false;
-          }
-        }
-      }
-    }
-
-    if (!setting_file.IsEmpty()) {
-      GOConfigFileReader extra_odf_config;
-      if (can_read_cmb_directly) {
-        if (!extra_odf_config.Read(setting_file))
-          throw wxString::Format(_("Unable to read '%s'"), setting_file);
-      } else {
-        if (!extra_odf_config.Read(
-              m_FileStore.FindArchiveContaining(m_odf)->OpenFile(setting_file)))
-          throw wxString::Format(_("Unable to read '%s'"), setting_file);
-      }
-
-      if (
-        odf_ini_file.getEntry(WX_ORGAN, wxT("ChurchName")).Trim()
-        != extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).Trim())
-        wxLogWarning(
-          _("This .cmb file was originally created for:\n%s"),
-          extra_odf_config.getEntry(WX_ORGAN, wxT("ChurchName")).c_str());
-
-      ini.ReadData(extra_odf_config, CMBSetting, false);
-      wxString hash = extra_odf_config.getEntry(WX_ORGAN, wxT("ODFHash"));
-      if (hash != wxEmptyString)
-        if (hash != m_ODFHash) {
-          if (
-            wxMessageBox(
-              _("The .cmb file does not exactly match the current "
-                "ODF. Importing it can cause various problems. "
-                "Should it really be imported?"),
-              _("Import"),
-              wxYES_NO,
-              NULL)
-            == wxNO) {
-            ini.ClearCMB();
-          }
-        }
-    } else {
-      bool old_go_settings = ini.ReadData(odf_ini_file, CMBSetting, true);
-      if (old_go_settings)
-        if (
-          wxMessageBox(
-            _("The ODF contains GrandOrgue 0.2 styled saved "
-              "settings. Should they be imported?"),
-            _("Import"),
-            wxYES_NO,
-            NULL)
-          == wxNO) {
-          ini.ClearCMB();
-        }
-    }
-
-    GOConfigReader cfg(ini, m_config.ODFCheck(), m_config.ODFHw1Check());
-
-    /* skip informational items */
-    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchName"), false);
-    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ChurchAddress"), false);
-    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFPath"), false);
-    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ODFHash"), false);
-    cfg.ReadString(CMBSetting, WX_ORGAN, wxT("ArchiveID"), false);
-    ReadOrganFile(cfg);
-    ini.ReportUnused();
+    ReadOrganFile(organReader.GetConfigReader());
+    organReader.ReportUnused();
 
     if (!isGuiOnly) {
       try {
@@ -480,8 +354,8 @@ wxString GOOrganController::Load(
         GOCacheObject *obj = nullptr;
 
         /* Load pipes */
-        if (wxFileExists(m_CacheFilename)) {
-          wxFile cache_file(m_CacheFilename);
+        if (wxFileExists(m_LoadedOrganInfo.cacheFilePath)) {
+          wxFile cache_file(m_LoadedOrganInfo.cacheFilePath);
           GOCache reader(cache_file, m_pool);
           cache_ok = cache_file.IsOpened();
 
@@ -654,7 +528,7 @@ void GOOrganController::LoadCombination(const wxString &file) {
             GetOrganName(), wxT("Organ Settings"), file, fileOrganName)) {
         wxString hash = odf_ini_file.getEntry(WX_ORGAN, wxT("ODFHash"));
         if (hash != wxEmptyString)
-          if (hash != m_ODFHash) {
+          if (hash != m_LoadedOrganInfo.odfHash) {
             wxLogWarning(_(
               "The combination file does not exactly match the current ODF."));
           }
@@ -690,7 +564,7 @@ bool GOOrganController::UpdateCache(bool compress, GOProgressMonitor &monitor) {
 
   monitor.Setup(objectDistributor.GetNObjects(), _("Creating sample cache"));
 
-  wxFileOutputStream file(m_CacheFilename);
+  wxFileOutputStream file(m_LoadedOrganInfo.cacheFilePath);
 
   if (file.IsOk()) {
     GOCacheWriter writer(file, compress);
@@ -722,19 +596,22 @@ bool GOOrganController::UpdateCache(bool compress, GOProgressMonitor &monitor) {
     if (!isOk)
       DeleteCache();
   } else
-    wxLogError(_("Opening the cache file %s failed"), m_CacheFilename);
+    wxLogError(
+      _("Opening the cache file %s failed"), m_LoadedOrganInfo.cacheFilePath);
   return isOk;
 }
 
 void GOOrganController::DeleteCache() {
   if (CachePresent())
-    wxRemoveFile(m_CacheFilename);
+    wxRemoveFile(m_LoadedOrganInfo.cacheFilePath);
 }
 
-void GOOrganController::DeleteSettings() { wxRemoveFile(m_SettingFilename); }
+void GOOrganController::DeleteSettings() {
+  wxRemoveFile(m_LoadedOrganInfo.settingsFilePath);
+}
 
 bool GOOrganController::Save() {
-  if (!Export(m_SettingFilename))
+  if (!Export(m_LoadedOrganInfo.settingsFilePath))
     return false;
   ResetOrganModified();
   return true;
@@ -744,15 +621,16 @@ bool GOOrganController::Export(const wxString &cmb) {
   GOConfigFileWriter cfg_file;
   GOConfigWriter cfg(cfg_file, false);
 
-  m_b_customized = true;
-  cfg.WriteString(WX_ORGAN, wxT("ODFHash"), m_ODFHash);
+  m_LoadedOrganInfo.isCustomized = true;
+  cfg.WriteString(WX_ORGAN, wxT("ODFHash"), m_LoadedOrganInfo.odfHash);
   cfg.WriteString(WX_ORGAN, wxT("ChurchName"), GetOrganName());
   cfg.WriteString(WX_ORGAN, wxT("ChurchAddress"), m_ChurchAddress);
   cfg.WriteString(WX_ORGAN, wxT("ODFPath"), GetODFFilename());
-  if (m_ArchiveID != wxEmptyString)
-    cfg.WriteString(WX_ORGAN, wxT("ArchiveID"), m_ArchiveID);
+  if (m_ConfiguredOrgan.GetArchiveID() != wxEmptyString)
+    cfg.WriteString(
+      WX_ORGAN, wxT("ArchiveID"), m_ConfiguredOrgan.GetArchiveID());
   cfg.WriteString(WX_ORGAN, WX_GRANDORGUE_VERSION, wxT(APP_VERSION));
-  cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_volume);
+  cfg.WriteInteger(WX_ORGAN, wxT("Volume"), m_SoundEngine.GetVolume());
   cfg.WriteString(WX_ORGAN, wxT("Temperament"), m_Temperament);
 
   GOEventDistributor::Save(cfg);
@@ -806,23 +684,25 @@ GOButtonControl *GOOrganController::GetButtonControl(
 }
 
 const wxString GOOrganController::GetOrganPathInfo() {
-  if (m_ArchiveID == wxEmptyString)
+  const wxString &archiveID = m_ConfiguredOrgan.GetArchiveID();
+
+  if (archiveID == wxEmptyString)
     return GetODFFilename();
-  const GOArchiveFile *archive = m_config.GetArchiveByID(m_ArchiveID);
+  const GOArchiveFile *archive = m_config.GetArchiveByID(archiveID);
   wxString name = GetODFFilename();
   if (archive)
     name += wxString::Format(
-      _(" from '%s' (%s)"), archive->GetName().c_str(), m_ArchiveID.c_str());
+      _(" from '%s' (%s)"), archive->GetName().c_str(), archiveID.c_str());
   else
-    name += wxString::Format(_(" from %s"), m_ArchiveID.c_str());
+    name += wxString::Format(_(" from %s"), archiveID.c_str());
   return name;
 }
 
 GOOrgan GOOrganController::GetOrganInfo() {
   return GOOrgan(
     GetODFFilename(),
-    m_ArchiveID,
-    m_ArchivePath,
+    m_ConfiguredOrgan.GetArchiveID(),
+    m_ConfiguredOrgan.GetArchivePath(),
     GetOrganName(),
     GetOrganBuilder(),
     GetRecordingDetails());
@@ -838,9 +718,58 @@ void GOOrganController::LoadMIDIFile(wxString const &filename) {
     filename, GetODFManualCount() - 1, GetFirstManualIndex() == 0);
 }
 
-void GOOrganController::Abort() {
-  m_soundengine = NULL;
+void GOOrganController::PreconfigRecorder() {
+  for (unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++) {
+    wxString id = wxString::Format(wxT("M%d"), i);
+    m_MidiRecorder->PreconfigureMapping(id, false);
+  }
+}
 
+void GOOrganController::StartOrgan(GOSoundSystem &soundSystem) {
+  const std::vector<GOSoundOrganEngine::AudioOutputConfig> audioOutputConfigs
+    = GOSoundOrganEngine::createAudioOutputConfigs(
+      m_config, m_config.GetAudioGroups().size());
+
+  m_SoundEngine.SetFromConfig(m_config);
+  m_SoundEngine.BuildAndStart(
+    audioOutputConfigs,
+    soundSystem.GetSamplesPerBuffer(),
+    soundSystem.GetSampleRate(),
+    soundSystem.GetAudioRecorder());
+  soundSystem.ConnectToEngine(m_SoundEngine);
+
+  GOMidiSystem &midi = soundSystem.GetMidi();
+
+  m_midi = &midi;
+  m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
+  m_AudioRecorder->SetAudioRecorder(&soundSystem.GetAudioRecorder());
+
+  m_MidiRecorder->Clear();
+  PreconfigRecorder();
+  m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
+  PreconfigRecorder();
+
+  m_MidiSamplesetMatch.clear();
+  GOOrganModel::SetMidi(&midi, m_MidiRecorder);
+  GOOrganModel::GOSoundOrganInterfaceProxy::Connect(
+    &m_SoundEngine.GetSamplerPlayer());
+  GOEventDistributor::PreparePlayback();
+
+  m_setter->UpdateModified(m_OrganModified);
+
+  GOEventDistributor::StartPlayback();
+  GOEventDistributor::PrepareRecording();
+  m_MidiPlayer->Setup(&midi);
+
+  // Light the OnState button
+  if (p_OnStateButton) {
+    p_OnStateButton->PreparePlayback();
+    p_OnStateButton->StartPlayback();
+    p_OnStateButton->PrepareRecording();
+  }
+}
+
+void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
   GOEventDistributor::AbortPlayback();
 
   m_MidiPlayer->Cleanup();
@@ -852,44 +781,9 @@ void GOOrganController::Abort() {
   GOOrganModel::GOSoundOrganInterfaceProxy::Disconnect();
   GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;
-}
 
-void GOOrganController::PreconfigRecorder() {
-  for (unsigned i = GetFirstManualIndex(); i <= GetManualAndPedalCount(); i++) {
-    wxString id = wxString::Format(wxT("M%d"), i);
-    m_MidiRecorder->PreconfigureMapping(id, false);
-  }
-}
-
-void GOOrganController::PreparePlayback(
-  GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder) {
-  m_soundengine = engine;
-  m_midi = midi;
-  m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
-  m_AudioRecorder->SetAudioRecorder(recorder);
-
-  m_MidiRecorder->Clear();
-  PreconfigRecorder();
-  m_MidiRecorder->SetSamplesetId(m_SampleSetId1, m_SampleSetId2);
-  PreconfigRecorder();
-
-  m_MidiSamplesetMatch.clear();
-  GOOrganModel::SetMidi(midi, m_MidiRecorder);
-  GOOrganModel::GOSoundOrganInterfaceProxy::Connect(engine);
-  GOEventDistributor::PreparePlayback();
-
-  m_setter->UpdateModified(m_OrganModified);
-
-  GOEventDistributor::StartPlayback();
-  GOEventDistributor::PrepareRecording();
-  m_MidiPlayer->Setup(midi);
-
-  // Light the OnState button
-  if (p_OnStateButton) {
-    p_OnStateButton->PreparePlayback();
-    p_OnStateButton->StartPlayback();
-    p_OnStateButton->PrepareRecording();
-  }
+  soundSystem.DisconnectFromEngine(m_SoundEngine);
+  m_SoundEngine.StopAndDestroy();
 }
 
 void GOOrganController::PrepareRecording() {

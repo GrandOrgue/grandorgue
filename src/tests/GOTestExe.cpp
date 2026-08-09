@@ -12,6 +12,7 @@
 #include "common/GOTestCollection.h"
 #include "testing/GOTestNameMap.h"
 #include "testing/combinations/GOTestDivisionalSetter.h"
+#include "testing/loader/GOTestOrganReader.h"
 #include "testing/model/GOTestDrawStop.h"
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestSwitch.h"
@@ -48,6 +49,7 @@ int main(int argc, char *argv[]) {
 
   /* Instantiate all the test classes here */
   GOTestDivisionalSetter testDivisionalSetter;
+  GOTestOrganReader testOrganReader;
   GOTestDrawStop testDrawStop;
   GOTestOrganModel testOrganModel;
   GOTestSwitch testSwitch;
