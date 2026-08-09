@@ -190,9 +190,20 @@ public:
   unsigned GetFirstManualIndex();
   GOManual *GetManual(unsigned index);
 
-  GORank *GetRank(unsigned index);
-  unsigned GetODFRankCount();
+  unsigned GetODFRankCount() const { return m_ODFRankCount; }
+  const GORank *GetRank(unsigned index) const { return m_ranks[index]; }
+  GORank *GetRank(unsigned index) { return m_ranks[index]; }
   void AddRank(GORank *rank);
+
+  /**
+   * Scans every sounding pipe of every rank and collects the distinct
+   * (windchestN, audioGroupId) pairs actually used - the pairs the sound
+   * engine needs a GOSoundWindchestGroupTask for. Tremulant-only samplers
+   * are not pipes, so they are not part of this scan.
+   * @return the distinct (windchestN, audioGroupId) pairs used by the
+   *   organ's pipes
+   */
+  std::set<std::pair<unsigned, unsigned>> GetUsedWindchestGroupPairs() const;
 
   unsigned GetNumberOfReversiblePistons();
   GOPistonControl *GetPiston(unsigned index);

@@ -79,7 +79,8 @@ public:
   unsigned RegisterStop(GOStop *stop);
   void SetPipeState(int pipeIndex, unsigned velocity, unsigned stopID);
   GOPipe *GetPipe(unsigned index);
-  unsigned GetPipeCount();
+  unsigned GetPipeCount() const { return m_Pipes.size(); }
+  const GOPipe *GetPipe(unsigned index) const { return m_Pipes[index]; }
   GOPipeConfigNode &GetPipeConfig();
   void SetTemperament(const GOTemperament &temperament);
 

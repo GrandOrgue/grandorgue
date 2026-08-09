@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -172,8 +172,6 @@ void GORank::SetPipeState(int pipeIndex, unsigned velocity, unsigned stopID) {
 }
 
 GOPipe *GORank::GetPipe(unsigned index) { return m_Pipes[index]; }
-
-unsigned GORank::GetPipeCount() { return m_Pipes.size(); }
 
 GOPipeConfigNode &GORank::GetPipeConfig() { return m_PipeConfig; }
 
