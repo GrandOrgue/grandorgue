@@ -824,7 +824,7 @@ void GOAppWindow::OnUpdateLoaded(wxUpdateUIEvent &event) {
   if (event.GetId() == ID_AUDIO_MEMSET)
     event.Check(
       p_OrganController && p_OrganController->GetSetter()
-      && p_OrganController->GetSetter()->GetState().m_IsActive);
+      && p_OrganController->GetSetter()->GetState().isSetActive);
   else if (event.GetId() == ID_ORGAN_EDIT)
     event.Check(
       mp_organ && mp_organ->WindowExists(GOGuiOrgan::ORGAN_DIALOG, NULL));

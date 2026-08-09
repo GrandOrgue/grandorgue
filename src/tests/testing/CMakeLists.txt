@@ -1,5 +1,6 @@
 set(go_tests
     # Add here your tests files
+    combinations/GOTestDivisionalSetter.cpp
     loader/GOTestOrganReader.cpp
     midi/GOTestMidiSendProxy.cpp
     model/GOTestDrawStop.cpp
@@ -19,3 +20,5 @@ set(go_tests
 add_library(GOTests STATIC ${go_tests})
 
 target_link_libraries(GOTests GOTestLib)
+target_compile_definitions(GOTests PUBLIC
+    GOTEST_FIXTURES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/combinations/fixtures")

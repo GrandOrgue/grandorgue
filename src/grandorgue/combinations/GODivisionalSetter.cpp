@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -384,7 +384,7 @@ void GODivisionalSetter::SwitchDivisionalTo(
     GODivisionalCombination *pCmb = isExist ? divMap[divisionalIdx] : nullptr;
     const unsigned manualIndex = m_FirstManualIndex + manualN;
 
-    if (!isExist && r_SetterState.m_IsActive) {
+    if (!isExist && r_SetterState.isSetActive) {
       // create a new combination
 
       pCmb = new GODivisionalCombination(*m_OrganController, manualIndex, true);
@@ -395,24 +395,24 @@ void GODivisionalSetter::SwitchDivisionalTo(
 
     if (pCmb) {
       // the combination was existing or has just been created
-      for (unsigned coupledManualIndex :
-           m_OrganController->GetCoupledManualsForDivisional(manualIndex)) {
-        unsigned coupledManualN = coupledManualIndex - m_FirstManualIndex;
-        DivisionalMap &coupledDivMap = m_DivisionalMaps[coupledManualN];
+      m_OrganController->ProcessPushDivisional(
+        manualIndex, [&](unsigned coupledManualIndex) {
+          unsigned coupledManualN = coupledManualIndex - m_FirstManualIndex;
+          DivisionalMap &coupledDivMap = m_DivisionalMaps[coupledManualN];
+          auto pCoupledCmb = coupledDivMap.find(divisionalIdx);
 
-        if (coupledDivMap.find(divisionalIdx) != coupledDivMap.end()) {
-          if (!r_SetterState.m_IsActive) {
-            // ensure that coupledManualN has the same current bank
-            SwitchBank(
-              coupledManualN, [=](uint8_t &currBank) { currBank = bankN; });
-          } // else PushDivisional does nothing for coupled manuals
-          m_OrganController->PushDivisional(
-            *coupledDivMap[divisionalIdx],
-            manualIndex,
-            coupledManualN,
-            m_buttons[N_BUTTONS * coupledManualN + divisionalN]);
-        }
-      }
+          if (pCoupledCmb != coupledDivMap.end()) {
+            // this divisional is used in this coupled manual
+            if (!r_SetterState.isSetActive) {
+              // synchronise bank selection with all coupled manuals
+              SwitchBank(
+                coupledManualN, [=](uint8_t &currBank) { currBank = bankN; });
+            } // no synch when Set is active
+          }
+          return std::pair(
+            m_buttons[N_BUTTONS * coupledManualN + divisionalN],
+            pCoupledCmb != coupledDivMap.end() ? pCoupledCmb->second : nullptr);
+        });
     }
   }
 }

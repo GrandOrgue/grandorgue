@@ -16,6 +16,7 @@
 #include "scheduler/GOSoundThread.h"
 #include "tasks/GOSoundGroupTask.h"
 #include "tasks/GOSoundOutputTask.h"
+#include "tasks/GOSoundRecorderTask.h"
 #include "tasks/GOSoundReleaseTask.h"
 #include "tasks/GOSoundTouchTask.h"
 #include "tasks/GOSoundTremulantTask.h"
@@ -23,7 +24,6 @@
 #include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
-#include "GOSoundRecorder.h"
 
 /*
  * Factory functions
@@ -150,7 +150,7 @@ void GOSoundOrganEngine::BuildEngine(
   const std::vector<AudioOutputConfig> &audioOutputConfigs,
   unsigned nSamplesPerBuffer,
   unsigned sampleRate,
-  GOSoundRecorder &recorder) {
+  GOSoundRecorderTask &recorder) {
   GOMutexLocker locker(m_LifecycleMutex);
 
   assert(m_LifecycleState.load() == LifecycleState::IDLE);
@@ -350,7 +350,7 @@ void GOSoundOrganEngine::BuildAndStart(
   const std::vector<AudioOutputConfig> &audioOutputConfigs,
   unsigned nSamplesPerBuffer,
   unsigned sampleRate,
-  GOSoundRecorder &recorder) {
+  GOSoundRecorderTask &recorder) {
   BuildEngine(audioOutputConfigs, nSamplesPerBuffer, sampleRate, recorder);
   StartEngine();
 }

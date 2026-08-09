@@ -1,0 +1,38 @@
+; Used by GOTestDivisionalSetter::TestWithoutPedal.
+; A single manual with no Pedal (HasPedals=N), so GetFirstManualIndex() == 1.
+; The manual has one associated Switch, used as storable/recallable state for
+; a banked divisional (Setter001Divisional001), with no real stops/pipes.
+[Organ]
+ChurchName=Test organ
+ChurchAddress=Test address
+NumberOfManuals=1
+HasPedals=N
+NumberOfWindchestGroups=1
+NumberOfEnclosures=0
+NumberOfSwitches=1
+NumberOfTremulants=0
+NumberOfReversiblePistons=0
+NumberOfGenerals=0
+NumberOfDivisionalCouplers=0
+DivisionalsStoreIntermanualCouplers=N
+DivisionalsStoreIntramanualCouplers=N
+DivisionalsStoreTremulants=N
+GeneralsStoreDivisionalCouplers=N
+
+[WindchestGroup001]
+NumberOfEnclosures=0
+NumberOfTremulants=0
+
+[Switch001]
+Name=Switch1
+DefaultToEngaged=N
+
+[Manual001]
+Name=Manual1
+NumberOfLogicalKeys=61
+FirstAccessibleKeyLogicalKeyNumber=1
+FirstAccessibleKeyMIDINoteNumber=36
+NumberOfAccessibleKeys=61
+NumberOfStops=0
+NumberOfSwitches=1
+Switch001=1
