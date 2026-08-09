@@ -50,7 +50,7 @@ class GOMidiRecorder;
 class GOMidiSystem;
 class GOSetter;
 class GOSoundProvider;
-class GOSoundRecorder;
+class GOSoundRecorderTask;
 class GOSoundSystem;
 class GOTemperament;
 class GOTimer;

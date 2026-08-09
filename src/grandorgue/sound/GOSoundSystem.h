@@ -14,6 +14,7 @@
 #include <wx/string.h>
 
 #include "midi/GOMidiSystem.h"
+#include "tasks/GOSoundRecorderTask.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
@@ -21,7 +22,6 @@
 
 #include "GOSoundCloseListener.h"
 #include "GOSoundDevInfo.h"
-#include "GOSoundRecorder.h"
 
 class GOSoundOrganEngine;
 
@@ -69,7 +69,7 @@ private:
   GOConfig &m_config;
 
   GOMidiSystem m_midi;
-  GOSoundRecorder m_AudioRecorder;
+  GOSoundRecorderTask m_AudioRecorder;
   std::atomic<GOSoundOrganEngine *> p_OrganEngine;
 
   GOSoundCloseListener *p_CloseListener;
@@ -129,7 +129,7 @@ public:
   bool IsOpen() const { return m_open; }
 
   /** Returns the audio recorder associated with this sound system. */
-  GOSoundRecorder &GetAudioRecorder() { return m_AudioRecorder; }
+  GOSoundRecorderTask &GetAudioRecorder() { return m_AudioRecorder; }
 
   unsigned GetSampleRate() const { return m_SampleRate; }
   unsigned GetSamplesPerBuffer() const { return m_SamplesPerBuffer; }

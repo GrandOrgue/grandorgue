@@ -14,10 +14,10 @@
 
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
-#include "sound/GOSoundRecorder.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "sound/providers/GOSoundProviderWave.h"
+#include "sound/tasks/GOSoundRecorderTask.h"
 
 #include "GOOrganController.h"
 #include "GOStdPath.h"
@@ -79,7 +79,7 @@ void GOPerfTestApp::RunTest(
     organController->InitOrganDirectory(testsDir);
     organController->AddWindchest(new GOWindchest(*organController));
 
-    GOSoundRecorder recorder;
+    GOSoundRecorderTask recorder;
     GOSoundOrganEngine &engine = organController->GetSoundEngine();
 
     try {
