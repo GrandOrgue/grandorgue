@@ -1,3 +1,4 @@
+- Fixed divisionals that could not be selected in organs without a pedal https://github.com/GrandOrgue/grandorgue/discussions/2552
 - Fixed organ volume not saved into organ settings https://github.com/GrandOrgue/grandorgue/issues/2547
 - Fixed slow/flickery panel resizing while dragging a panel window's border https://github.com/GrandOrgue/grandorgue/issues/2537
 - Fixed heap overflow and wrong channel metering in audio output task https://github.com/GrandOrgue/grandorgue/issues/2531

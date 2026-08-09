@@ -82,15 +82,6 @@ protected:
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;
 
-  void Load(GOConfigReader &cfg);
-
-  /**
-   * Called after Load() and InitCmbTemplates();
-   * Init general and divisional templates
-   * Load generals and divisionals from ODF/cmb
-   */
-  void LoadCmbButtons(GOConfigReader &cfg);
-
   /**
    * Update all generals buttons light.
    * @param buttonToLight - the button that should be lighted on. All other
@@ -103,6 +94,15 @@ protected:
 public:
   GOOrganModel(GOConfig &config);
   virtual ~GOOrganModel();
+
+  void Load(GOConfigReader &cfg);
+
+  /**
+   * Called after Load() and InitCmbTemplates();
+   * Init general and divisional templates
+   * Load generals and divisionals from ODF/cmb
+   */
+  void LoadCmbButtons(GOConfigReader &cfg);
 
   const GOConfig &GetConfig() const { return m_config; }
   GOConfig &GetConfig() { return m_config; }

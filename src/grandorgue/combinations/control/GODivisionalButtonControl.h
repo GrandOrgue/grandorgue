@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -25,7 +25,7 @@ private:
   GOOrganModel &r_OrganModel;
 
   // A manual the divisional button belongs to
-  unsigned m_ManualN;
+  unsigned m_ManualIndex;
   // An index of divisionals in this manual
   unsigned m_DivisionalIndex;
   // A combination for this divisional
@@ -34,7 +34,7 @@ private:
 public:
   GODivisionalButtonControl(
     GOOrganModel &organModel,
-    unsigned manualNumber,
+    unsigned manualIndex,
     unsigned divisionalIndex,
     const GOMidiObjectContext *pContext);
 
