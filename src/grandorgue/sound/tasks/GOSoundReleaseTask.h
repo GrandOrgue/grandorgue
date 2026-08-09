@@ -15,13 +15,13 @@
 
 #include "ptrvector.h"
 
-class GOSoundOrganEngine;
 class GOSoundGroupTask;
 class GOSoundSampler;
+class GOSoundSamplerPlayer;
 
 class GOSoundReleaseTask : public GOSoundTask {
 private:
-  GOSoundOrganEngine &m_engine;
+  GOSoundSamplerPlayer &r_SamplerPlayer;
   ptr_vector<GOSoundGroupTask> &m_AudioGroups;
   GOSoundSimpleSamplerList m_List;
   std::atomic_uint m_WaitCnt;
@@ -30,8 +30,8 @@ private:
 
 public:
   GOSoundReleaseTask(
-    GOSoundOrganEngine &sound_engine,
-    ptr_vector<GOSoundGroupTask> &audio_groups);
+    GOSoundSamplerPlayer &samplerPlayer,
+    ptr_vector<GOSoundGroupTask> &audioGroupTaskPtrs);
 
   unsigned GetGroup();
   unsigned GetCost();
