@@ -84,6 +84,9 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
     m_ConfiguredOrgan(wxEmptyString),
     m_FileStore(config),
     m_Cacheable(false),
+    m_IsOrganCoreDataLoaded(false),
+    m_IsOrganGuiLoaded(false),
+    m_IsObjectsLoaded(false),
     m_setter(0),
     m_AudioRecorder(NULL),
     m_MidiPlayer(NULL),
@@ -100,9 +103,13 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
     m_PitchLabel(*this),
     m_TemperamentLabel(*this),
     m_MainWindowData(*this, wxT("MainWindow")) {
+  // GOTimer needs no live wx event loop to construct (only to fire), so it
+  // is created unconditionally: GOAudioRecorder/GOMidiPlayer/GOMidiRecorder/
+  // GOMetronome (created by LoadOrganCoreData(), independent of
+  // isAppInitialized) all assume GetTimer() is non-null.
+  m_timer = new GOTimer();
   if (isAppInitialized) {
     // Load here objects that needs App (wx) to be loaded
-    m_timer = new GOTimer();
     mp_ImageCache = new GOGuiImageCache(m_FileStore);
   }
   GOOrganModel::SetModelModificationListener(this);
@@ -111,24 +118,66 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
 }
 
 GOOrganController::~GOOrganController() {
-  p_OnStateButton = nullptr;
+  // Clear() runs m_elementcreators.clear() (via ClearOrganCoreData), which
+  // may reference m_timer, so we respect the deletion order and delete
+  // m_timer only afterward.
+  Clear();
   m_FileStore.CloseArchives();
-  GOEventHandlerList::Cleanup();
-  // Just to be sure, that the sound providers are freed before the pool
-  m_manuals.clear();
-  m_tremulants.clear();
-  m_ranks.clear();
-  m_VirtualCouplers.Cleanup();
-  GOOrganModel::Cleanup();
-  GOOrganModel::SetModelModificationListener(nullptr);
-  GOOrganModel::SetCombinationController(nullptr);
-  m_elementcreators.clear();
-  // some elementcreator may reference to m_timer so we respect the deletion
-  // order
   if (mp_ImageCache)
     delete mp_ImageCache;
   if (m_timer)
     delete m_timer;
+}
+
+void GOOrganController::ClearObjects() {
+  if (m_IsObjectsLoaded) {
+    m_Cacheable = false;
+    m_IsObjectsLoaded = false;
+  }
+}
+
+void GOOrganController::ClearOrganGui() {
+  if (m_IsOrganGuiLoaded) {
+    m_panels.clear();
+    m_panelcreators.clear();
+    m_IsOrganGuiLoaded = false;
+  }
+}
+
+void GOOrganController::ClearOrganCoreData() {
+  if (m_IsOrganCoreDataLoaded) {
+    p_OnStateButton = nullptr;
+
+    // Just to be sure, that the sound providers are freed before the pool
+    GOOrganModel::Cleanup();
+
+    m_VirtualCouplers.Cleanup();
+    GOOrganModel::SetModelModificationListener(nullptr);
+    GOOrganModel::SetCombinationController(nullptr);
+
+    // m_elementcreators (a ptr_vector) is the sole owner of m_setter,
+    // m_DivisionalSetter, m_AudioRecorder, m_MidiRecorder, m_MidiPlayer, and
+    // the anonymous GOMetronome pushed onto it in LoadOrganCoreData().
+    // ptr_vector::clear() deletes every contained pointer (see
+    // ptrvector.h:59-68), so this single call is what actually frees all
+    // six objects; the raw-pointer members below are then only reset to
+    // nullptr to avoid leaving them dangling, not separately deleted.
+    m_elementcreators.clear();
+
+    m_setter = nullptr;
+    m_DivisionalSetter = nullptr;
+    m_AudioRecorder = nullptr;
+    m_MidiRecorder = nullptr;
+    m_MidiPlayer = nullptr;
+
+    m_IsOrganCoreDataLoaded = false;
+  }
+}
+
+void GOOrganController::Clear() {
+  ClearObjects();
+  ClearOrganGui();
+  ClearOrganCoreData();
 }
 
 void GOOrganController::SetOrganModified(bool modified) {
@@ -178,7 +227,9 @@ GOHashType GOOrganController::GenerateCacheHash() {
   return hash.getHash();
 }
 
-void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
+void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
+  m_IsOrganCoreDataLoaded = true;
+
   /* load church info */
   cfg.ReadString(
     ODFSetting, WX_ORGAN, wxT("HauptwerkOrganFileFormatVersion"), false);
@@ -217,8 +268,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   }
 
   /* load basic organ information */
-  unsigned NumberOfPanels = cfg.ReadInteger(
-    ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
   cfg.ReadString(CMBSetting, WX_ORGAN, WX_GRANDORGUE_VERSION, false);
 
   int volume = cfg.ReadInteger(
@@ -248,15 +297,6 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
   m_elementcreators.push_back(m_MidiPlayer);
   m_elementcreators.push_back(m_MidiRecorder);
   m_elementcreators.push_back(new GOMetronome(this));
-  m_panelcreators.push_back(new GOGUICouplerPanel(this, m_VirtualCouplers));
-  m_panelcreators.push_back(new GOGUICouplerManualsAndVolumePanel(this));
-  m_panelcreators.push_back(new GOGUIMetronomePanel(this));
-  m_panelcreators.push_back(new GOGUICrescendoPanel(this));
-  m_panelcreators.push_back(new GOGUIDivisionalsPanel(this));
-  m_panelcreators.push_back(new GOGUIBankedGeneralsPanel(this));
-  m_panelcreators.push_back(new GOGUISequencerPanel(this));
-  m_panelcreators.push_back(new GOGUIMasterPanel(this));
-  m_panelcreators.push_back(new GOGUIRecorderPanel(this));
 
   for (unsigned i = 0; i < m_elementcreators.size(); i++)
     m_elementcreators[i]->Load(cfg);
@@ -269,34 +309,9 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     UnRegisterLifecycleListener(p_OnStateButton);
   }
 
-  m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
-  m_TemperamentLabel.Load(
-    cfg, wxT("SetterMasterTemperament"), _("temperament"));
-  m_MainWindowData.Load(cfg);
-
   // Load dialog sizes
   if (GODialogSizeSet::isPresentInCfg(cfg, CMBSetting))
     m_config.m_DialogSizes.Load(cfg, CMBSetting);
-
-  m_panels.resize(0);
-  m_panels.push_back(new GOGUIPanel(this));
-  m_panels[0]->Load(cfg, wxT(""));
-
-  wxString buffer;
-
-  for (unsigned i = 0; i < NumberOfPanels; i++) {
-    buffer.Printf(wxT("Panel%03d"), i + 1);
-    m_panels.push_back(new GOGUIPanel(this));
-    m_panels[i + 1]->Load(cfg, buffer);
-  }
-
-  m_StopWindowSizeKeeper.Load(cfg, wxT("Stops"));
-
-  for (unsigned i = 0; i < m_panelcreators.size(); i++)
-    m_panelcreators[i]->CreatePanels(cfg);
-
-  for (unsigned i = 0; i < m_panels.size(); i++)
-    m_panels[i]->Layout();
 
   const wxString &organName = GetOrganName();
 
@@ -319,14 +334,181 @@ void GOOrganController::ReadOrganFile(GOConfigReader &cfg) {
     | (result.hash[7] & 0x7F);
 }
 
+void GOOrganController::LoadOrganGui(GOConfigReader &cfg) {
+  m_IsOrganGuiLoaded = true;
+
+  unsigned NumberOfPanels = cfg.ReadInteger(
+    ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
+
+  m_panelcreators.push_back(new GOGUICouplerPanel(this, m_VirtualCouplers));
+  m_panelcreators.push_back(new GOGUICouplerManualsAndVolumePanel(this));
+  m_panelcreators.push_back(new GOGUIMetronomePanel(this));
+  m_panelcreators.push_back(new GOGUICrescendoPanel(this));
+  m_panelcreators.push_back(new GOGUIDivisionalsPanel(this));
+  m_panelcreators.push_back(new GOGUIBankedGeneralsPanel(this));
+  m_panelcreators.push_back(new GOGUISequencerPanel(this));
+  m_panelcreators.push_back(new GOGUIMasterPanel(this));
+  m_panelcreators.push_back(new GOGUIRecorderPanel(this));
+
+  m_PitchLabel.Load(cfg, wxT("SetterMasterPitch"), _("organ pitch"));
+  m_TemperamentLabel.Load(
+    cfg, wxT("SetterMasterTemperament"), _("temperament"));
+  m_MainWindowData.Load(cfg);
+
+  m_panels.resize(0);
+  m_panels.push_back(new GOGUIPanel(this));
+  m_panels[0]->Load(cfg, wxT(""));
+
+  wxString buffer;
+
+  for (unsigned i = 0; i < NumberOfPanels; i++) {
+    buffer.Printf(wxT("Panel%03d"), i + 1);
+    m_panels.push_back(new GOGUIPanel(this));
+    m_panels[i + 1]->Load(cfg, buffer);
+  }
+
+  m_StopWindowSizeKeeper.Load(cfg, wxT("Stops"));
+
+  for (unsigned i = 0; i < m_panelcreators.size(); i++)
+    m_panelcreators[i]->CreatePanels(cfg);
+
+  for (unsigned i = 0; i < m_panels.size(); i++)
+    m_panels[i]->Layout();
+}
+
 class GOLoadAborted : public std::exception {};
+
+void GOOrganController::LoadObjects(GOProgressMonitor &monitor) {
+  m_IsObjectsLoaded = true;
+
+  GOBuffer<char> dummy;
+
+  try {
+    bool cache_ok = false;
+
+    dummy.resize(1024 * 1024 * 50);
+    ResolveReferences();
+
+    /* Figure out list of pipes to load */
+    GOCacheObjectDistributor objectDistributor(GetCacheObjects());
+
+    monitor.Reset(objectDistributor.GetNObjects());
+
+    GOCacheObject *obj = nullptr;
+
+    /* Load pipes */
+    if (wxFileExists(m_LoadedOrganInfo.cacheFilePath)) {
+      wxFile cache_file(m_LoadedOrganInfo.cacheFilePath);
+      GOCache reader(cache_file, m_pool);
+      cache_ok = cache_file.IsOpened();
+
+      if (cache_ok) {
+        GOHashType hash1, hash2;
+        if (!reader.ReadHeader()) {
+          cache_ok = false;
+          wxLogWarning(_("Cache file had bad magic bypassing cache."));
+        }
+        hash1 = GenerateCacheHash();
+        if (
+          !reader.Read(&hash2, sizeof(hash2))
+          || memcmp(&hash1, &hash2, sizeof(hash1))) {
+          cache_ok = false;
+          reader.FreeCacheFile();
+          wxLogWarning(_("Cache file had diffent hash bypassing cache."));
+        }
+      }
+
+      GOCacheObject *obj = nullptr;
+
+      if (cache_ok) {
+        while ((obj = objectDistributor.FetchNext())) {
+          if (!obj->LoadFromCacheWithoutExc(m_pool, reader)) {
+            wxLogWarning(_("Cache load failure: %s"), obj->GetLoadError());
+            break;
+          }
+          if (!monitor.Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+            throw GOLoadAborted(); // Skip the rest of the loading code
+        }
+        if (!obj)
+          m_Cacheable = true;
+        else
+          // obj points to an object with a load error. We will try to load
+          // it from the file later
+          cache_ok = false;
+      }
+
+      if (!cache_ok && !m_config.ManageCache())
+        wxLogWarning(_("The cache for this organ is outdated. Please update "
+                       "or delete it."));
+
+      reader.Close();
+    }
+
+    if (!cache_ok) {
+      GOLoadWorker thisWorker(m_FileStore, m_pool, objectDistributor);
+      ptr_vector<GOLoadThread> threads;
+
+      // Create and run additional worker threads
+      for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
+        threads.push_back(
+          new GOLoadThread(m_FileStore, m_pool, objectDistributor));
+      for (unsigned i = 0; i < threads.size(); i++)
+        threads[i]->Run();
+
+      // try to load the object that we could not load from cache
+      if (obj)
+        thisWorker.LoadObjectNoExc(obj);
+
+      while (thisWorker.LoadNextObject(obj))
+        // show the progress and process possible Cancel
+        if (!monitor.Update(objectDistributor.GetPos(), obj->GetLoadTitle()))
+          throw GOLoadAborted(); // skip the rest of loading code
+      // rethrow exception if any occurred in thisWorker.LoadNextObject
+      bool wereExceptions = thisWorker.WereExceptions();
+
+      for (unsigned i = 0; i < threads.size(); i++)
+        wereExceptions |= threads[i]->CheckExceptions();
+      if (wereExceptions) {
+        for (auto obj : GetCacheObjects()) {
+          if (!obj->IsReady())
+            wxLogError(obj->GetLoadError());
+        }
+        GOMessageBox(
+          _("There are errors while loading the organ. See Log Messages."),
+          _("Load error"),
+          wxOK | wxICON_ERROR,
+          NULL);
+      } else {
+        if (objectDistributor.IsComplete())
+          m_Cacheable = true;
+        if (m_config.ManageCache() && m_Cacheable)
+          UpdateCache(m_config.CompressCache(), monitor);
+      }
+
+      // Despite a possible exception automatic calling ~GOLoadThread from
+      // ~ptr_vector stops all additional worker threads
+    }
+  } catch (const GOOutOfMemory &e) {
+    GOMessageBox(
+      _("Out of memory - only parts of the organ are loaded. Please "
+        "reduce memory footprint via the sample loading settings."),
+      _("Load error"),
+      wxOK | wxICON_ERROR,
+      NULL);
+  } catch (const GOLoadAborted &) {
+    GOMessageBox(
+      _("Load aborted by the user - only parts of the organ are loaded."),
+      _("Load error"),
+      wxOK | wxICON_ERROR,
+      NULL);
+  }
+}
 
 wxString GOOrganController::Load(
   const GOOrgan &organ,
   const wxString &file2,
   bool isGuiOnly,
   GOProgressMonitor &monitor) {
-  GOBuffer<char> dummy;
   wxString errMsg;
 
   try {
@@ -336,133 +518,12 @@ wxString GOOrganController::Load(
     m_LoadedOrganInfo = organReader.GetLoadedOrganInfo();
     m_Cacheable = false;
 
-    ReadOrganFile(organReader.GetConfigReader());
+    LoadOrganCoreData(organReader.GetConfigReader());
+    LoadOrganGui(organReader.GetConfigReader());
     organReader.ReportUnused();
 
-    if (!isGuiOnly) {
-      try {
-        bool cache_ok = false;
-
-        dummy.resize(1024 * 1024 * 50);
-        ResolveReferences();
-
-        /* Figure out list of pipes to load */
-        GOCacheObjectDistributor objectDistributor(GetCacheObjects());
-
-        monitor.Reset(objectDistributor.GetNObjects());
-
-        GOCacheObject *obj = nullptr;
-
-        /* Load pipes */
-        if (wxFileExists(m_LoadedOrganInfo.cacheFilePath)) {
-          wxFile cache_file(m_LoadedOrganInfo.cacheFilePath);
-          GOCache reader(cache_file, m_pool);
-          cache_ok = cache_file.IsOpened();
-
-          if (cache_ok) {
-            GOHashType hash1, hash2;
-            if (!reader.ReadHeader()) {
-              cache_ok = false;
-              wxLogWarning(_("Cache file had bad magic bypassing cache."));
-            }
-            hash1 = GenerateCacheHash();
-            if (
-              !reader.Read(&hash2, sizeof(hash2))
-              || memcmp(&hash1, &hash2, sizeof(hash1))) {
-              cache_ok = false;
-              reader.FreeCacheFile();
-              wxLogWarning(_("Cache file had diffent hash bypassing cache."));
-            }
-          }
-
-          GOCacheObject *obj = nullptr;
-
-          if (cache_ok) {
-            while ((obj = objectDistributor.FetchNext())) {
-              if (!obj->LoadFromCacheWithoutExc(m_pool, reader)) {
-                wxLogWarning(_("Cache load failure: %s"), obj->GetLoadError());
-                break;
-              }
-              if (!monitor.Update(
-                    objectDistributor.GetPos(), obj->GetLoadTitle()))
-                throw GOLoadAborted(); // Skip the rest of the loading code
-            }
-            if (!obj)
-              m_Cacheable = true;
-            else
-              // obj points to an object with a load error. We will try to load
-              // it from the file later
-              cache_ok = false;
-          }
-
-          if (!cache_ok && !m_config.ManageCache())
-            wxLogWarning(
-              _("The cache for this organ is outdated. Please update "
-                "or delete it."));
-
-          reader.Close();
-        }
-
-        if (!cache_ok) {
-          GOLoadWorker thisWorker(m_FileStore, m_pool, objectDistributor);
-          ptr_vector<GOLoadThread> threads;
-
-          // Create and run additional worker threads
-          for (unsigned i = 0; i < m_config.LoadConcurrency(); i++)
-            threads.push_back(
-              new GOLoadThread(m_FileStore, m_pool, objectDistributor));
-          for (unsigned i = 0; i < threads.size(); i++)
-            threads[i]->Run();
-
-          // try to load the object that we could not load from cache
-          if (obj)
-            thisWorker.LoadObjectNoExc(obj);
-
-          while (thisWorker.LoadNextObject(obj))
-            // show the progress and process possible Cancel
-            if (!monitor.Update(
-                  objectDistributor.GetPos(), obj->GetLoadTitle()))
-              throw GOLoadAborted(); // skip the rest of loading code
-          // rethrow exception if any occurred in thisWorker.LoadNextObject
-          bool wereExceptions = thisWorker.WereExceptions();
-
-          for (unsigned i = 0; i < threads.size(); i++)
-            wereExceptions |= threads[i]->CheckExceptions();
-          if (wereExceptions) {
-            for (auto obj : GetCacheObjects()) {
-              if (!obj->IsReady())
-                wxLogError(obj->GetLoadError());
-            }
-            GOMessageBox(
-              _("There are errors while loading the organ. See Log Messages."),
-              _("Load error"),
-              wxOK | wxICON_ERROR,
-              NULL);
-          } else {
-            if (objectDistributor.IsComplete())
-              m_Cacheable = true;
-            if (m_config.ManageCache() && m_Cacheable)
-              UpdateCache(m_config.CompressCache(), monitor);
-          }
-
-          // Despite a possible exception automatic calling ~GOLoadThread from
-          // ~ptr_vector stops all additional worker threads
-        }
-      } catch (const GOOutOfMemory &e) {
-        GOMessageBox(
-          _("Out of memory - only parts of the organ are loaded. Please "
-            "reduce memory footprint via the sample loading settings."),
-          _("Load error"),
-          wxOK | wxICON_ERROR,
-          NULL);
-      } catch (const GOLoadAborted &) {
-        GOMessageBox(
-          _("Load aborted by the user - only parts of the organ are loaded."),
-          _("Load error"),
-          wxOK | wxICON_ERROR,
-          NULL);
-      }
-    }
+    if (!isGuiOnly)
+      LoadObjects(monitor);
   } catch (const wxString &error_) {
     errMsg = error_;
   } catch (const std::exception &e) {
@@ -470,7 +531,6 @@ wxString GOOrganController::Load(
   } catch (...) { // We must not allow unhandled exceptions here
     errMsg.Printf("Unknown exception");
   }
-  dummy.free();
   m_FileStore.CloseArchives();
   if (errMsg.IsEmpty())
     SetTemperament(m_Temperament);
@@ -617,10 +677,7 @@ bool GOOrganController::Save() {
   return true;
 }
 
-bool GOOrganController::Export(const wxString &cmb) {
-  GOConfigFileWriter cfg_file;
-  GOConfigWriter cfg(cfg_file, false);
-
+void GOOrganController::SaveOrganCoreData(GOConfigWriter &cfg) {
   m_LoadedOrganInfo.isCustomized = true;
   cfg.WriteString(WX_ORGAN, wxT("ODFHash"), m_LoadedOrganInfo.odfHash);
   cfg.WriteString(WX_ORGAN, wxT("ChurchName"), GetOrganName());
@@ -635,8 +692,19 @@ bool GOOrganController::Export(const wxString &cmb) {
 
   GOEventDistributor::Save(cfg);
   GetDialogSizeSet().Save(cfg);
-  m_StopWindowSizeKeeper.Save(cfg);
   m_VirtualCouplers.Save(cfg);
+}
+
+void GOOrganController::SaveOrganGui(GOConfigWriter &cfg) {
+  m_StopWindowSizeKeeper.Save(cfg);
+}
+
+bool GOOrganController::Export(const wxString &cmb) {
+  GOConfigFileWriter cfg_file;
+  GOConfigWriter cfg(cfg_file, false);
+
+  SaveOrganCoreData(cfg);
+  SaveOrganGui(cfg);
 
   wxString tmp_name = cmb + wxT(".new");
 

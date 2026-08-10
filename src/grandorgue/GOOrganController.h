@@ -36,6 +36,7 @@ class GOArchive;
 class GOAudioRecorder;
 class GOButtonControl;
 class GOCache;
+class GOConfigWriter;
 class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
@@ -59,12 +60,20 @@ typedef struct _GOHashType GOHashType;
 class GOOrganController : public GOEventDistributor,
                           public GOOrganModel,
                           public GOModificationProxy {
+  // Exercises LoadOrganCoreData()/LoadObjects()/SaveOrganCoreData()/
+  // ClearObjects()/ClearOrganCoreData() directly, bypassing Load()'s
+  // unconditional call to LoadOrganGui() (which needs a real GUI display).
+  friend class GOTestOrganController;
+
 private:
   GOConfig &m_config;
   GOOrgan m_ConfiguredOrgan;
   GOLoadedOrganInfo m_LoadedOrganInfo;
   GOFileStore m_FileStore;
   bool m_Cacheable;
+  bool m_IsOrganCoreDataLoaded;
+  bool m_IsOrganGuiLoaded;
+  bool m_IsObjectsLoaded;
   GOSetter *m_setter;
   GODivisionalSetter *m_DivisionalSetter;
   GOAudioRecorder *m_AudioRecorder;
@@ -109,7 +118,26 @@ private:
   // if modified then sets m_IsOrganModified
   void OnIsModifiedChanged(bool modified);
 
-  void ReadOrganFile(GOConfigReader &cfg);
+  /** Reads the non-GUI ODF/CMB data (church info, model, element creators,
+   * combinations) into this controller. Sets m_IsOrganCoreDataLoaded. */
+  void LoadOrganCoreData(GOConfigReader &cfg);
+  /** Reads the GUI ODF/CMB data (panel creators, panels, stops-window size,
+   * main-window data) and builds the panels. Sets m_IsOrganGuiLoaded. */
+  void LoadOrganGui(GOConfigReader &cfg);
+  /** Loads pipe/sample data from the cache or, failing that, from the
+   * sample files in parallel worker threads. Sets m_IsObjectsLoaded. */
+  void LoadObjects(GOProgressMonitor &monitor);
+  /** Writes the non-GUI organ state (church info, volume, temperament,
+   * saveable objects, virtual couplers) to cfg. */
+  void SaveOrganCoreData(GOConfigWriter &cfg);
+  /** Writes the GUI organ state (stops-window size) to cfg. */
+  void SaveOrganGui(GOConfigWriter &cfg);
+  /** Undoes LoadObjects if it ran. Idempotent. */
+  void ClearObjects();
+  /** Undoes LoadOrganGui if it ran. Idempotent. */
+  void ClearOrganGui();
+  /** Undoes LoadOrganCoreData if it ran. Idempotent. */
+  void ClearOrganCoreData();
   GOHashType GenerateCacheHash();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
@@ -144,6 +172,9 @@ public:
     const wxString &cmb,
     bool isGuiOnly,
     GOProgressMonitor &monitor);
+  /** Undoes whatever Load() built (core data, GUI, cached objects), in
+   * reverse order. Idempotent - safe to call any number of times. */
+  void Clear();
   /**
    * Exports organ combinations in the yaml file
    * @param fileName - the path to the yaml file to export
