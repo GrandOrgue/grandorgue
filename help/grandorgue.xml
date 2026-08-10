@@ -656,6 +656,14 @@ Opens a file chooser to select a recorded MIDI file. The location chosen in
 this dialog will be remembered for the next time. The player starts as soon as
 a file is selected.
           </para>
+          <para>
+            If the selected file does not contain GrandOrgue's own channel
+            setup information, GrandOrgue needs to know how to map the
+            file's MIDI channels to the organ's manuals and pedal; see
+            <link linkend="midichannelmapping">MIDI player</link> for the
+            available mapping schemes and how to configure or skip the
+            confirmation dialog.
+          </para>
           <caution>
             <simpara>GrandOrgue stores MIDI data using a specific internal format that makes the file unsuitable for usage with a regular MIDI sequencer.</simpara>
             <simpara>
@@ -5039,6 +5047,77 @@ Recorder-generated output. The selected device must be activated in the
           <para>When an output device is selected in that dropdown, the recorder output is generated even if no MIDI file is being recorded.</para>
         </listitem>
       </varlistentry>
+        <varlistentry id="midichannelmapping">
+          <term>MIDI player</term>
+          <listitem>
+            <para>
+              These options control how GrandOrgue assigns MIDI channels
+              to manuals when playing back a MIDI file that does not
+              contain GrandOrgue's own channel setup information (files
+              recorded by other software, for example organs from
+              <ulink url="https://www.viscountorgans.net/">viscountorgans.net</ulink>).
+              Without this information, GrandOrgue must guess how the
+              file's MIDI channels map to the organ's manuals and pedal.
+            </para>
+            <para>
+              The <emphasis>Ask channel mapping on MIDI file load</emphasis>
+              checkbox controls whether GrandOrgue asks how to do this
+              mapping every time such a file is loaded. When checked
+              (the default), the <emphasis>Choose MIDI channel
+              mapping</emphasis> dialog is displayed:
+            </para>
+            <figure>
+              <title>Choose MIDI channel mapping</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata fileref="images/midi_channel_mapping_dialog.png"/>
+                </imageobject>
+              </mediaobject>
+            </figure>
+            <para>
+              This dialog offers three mapping schemes:
+            </para>
+            <itemizedlist>
+              <listitem><para><emphasis>Pedal first (Viscount
+              style)</emphasis> &#8212; channel 1 is the pedal, channels 2
+              and up are the manuals in keyboard order.</para></listitem>
+              <listitem><para><emphasis>Pedal last (old GrandOrgue
+              style)</emphasis> &#8212; the manuals get channels 1 and up
+              in keyboard order and the pedal (if any) gets the last
+              channel. This is the historical GrandOrgue
+              behavior.</para></listitem>
+              <listitem><para><emphasis>Use the organ's
+              MIDIInputNumber</emphasis> &#8212; each manual and the pedal
+              use the MIDI channel configured for them in the organ
+              definition (the <emphasis>MIDIInputNumber</emphasis>
+              attribute). This option is grayed out unless every manual
+              and the pedal have a distinct MIDIInputNumber in the range
+              1-16.</para></listitem>
+            </itemizedlist>
+            <para>
+              If the <emphasis>Ask channel mapping on MIDI file
+              load</emphasis> checkbox is unchecked, no dialog is shown
+              and one of the following default schemes is applied
+              silently instead, depending on whether the currently loaded
+              organ has a usable MIDIInputNumber mapping:
+            </para>
+            <para>
+              The <emphasis>With input number</emphasis> dropdown selects
+              the default scheme used when the organ's MIDIInputNumber
+              mapping is usable, and offers all three schemes above
+              (including <emphasis>Use MIDIInputNumber</emphasis>). The
+              <emphasis>Without input number</emphasis> dropdown selects
+              the default scheme used otherwise, and offers
+              <emphasis>Pedal first</emphasis> or <emphasis>Pedal
+              last</emphasis>. Both default to <emphasis>Pedal
+              last</emphasis>, matching GrandOrgue's historical behavior.
+            </para>
+            <note><simpara>MIDI files recorded by GrandOrgue itself
+            already contain their own channel setup information, so none
+            of these options apply to them; they are always played back
+            unambiguously.</simpara></note>
+          </listitem>
+        </varlistentry>
       </variablelist>
       <note><simpara>The devices list is refreshed whenever the <emphasis>Settings</emphasis> dialog is displayed.</simpara></note>
       <note><simpara>GrandOrgue requires a MIDI input/output port to

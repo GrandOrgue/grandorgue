@@ -9,12 +9,12 @@
 #define GOSOUNDSYSTEM_H
 
 #include <atomic>
-#include <memory>
 #include <vector>
 
 #include <wx/string.h>
 
 #include "midi/GOMidiSystem.h"
+#include "tasks/GOSoundRecorderTask.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
@@ -22,12 +22,11 @@
 
 #include "GOSoundCloseListener.h"
 #include "GOSoundDevInfo.h"
-#include "GOSoundOrganEngine.h"
-#include "GOSoundRecorder.h"
+
+class GOSoundOrganEngine;
 
 class GOConfig;
 class GODeviceNamePattern;
-class GOOrganController;
 class GOPortsConfig;
 class GOSoundBufferMutable;
 class GOSoundPort;
@@ -70,8 +69,8 @@ private:
   GOConfig &m_config;
 
   GOMidiSystem m_midi;
-  GOSoundRecorder m_AudioRecorder;
-  std::unique_ptr<GOSoundOrganEngine> mp_SoundEngine;
+  GOSoundRecorderTask m_AudioRecorder;
+  std::atomic<GOSoundOrganEngine *> p_OrganEngine;
 
   GOSoundCloseListener *p_CloseListener;
 
@@ -82,8 +81,6 @@ private:
   std::vector<GOSoundOutput> m_AudioOutputs;
 
   wxString m_LastErrorMessage;
-
-  GOOrganController *m_OrganController;
 
   GOSoundDevInfo m_DefaultAudioDevice;
 
@@ -122,19 +119,17 @@ public:
 
   GOConfig &GetSettings() { return m_config; }
   GOMidiSystem &GetMidi() { return m_midi; }
-  GOSoundOrganEngine &GetEngine() { return *mp_SoundEngine; }
 
   std::vector<GOSoundDevInfo> GetAudioDevices(const GOPortsConfig &portsConfig);
   const GOSoundDevInfo &GetDefaultAudioDevice(const GOPortsConfig &portsConfig);
   wxString getLastErrorMessage() const { return m_LastErrorMessage; }
-  GOOrganController *GetOrganFile() { return m_OrganController; }
 
   /** Returns true if the sound system is currently open (audio ports active).
    */
   bool IsOpen() const { return m_open; }
 
   /** Returns the audio recorder associated with this sound system. */
-  GOSoundRecorder &GetAudioRecorder() { return m_AudioRecorder; }
+  GOSoundRecorderTask &GetAudioRecorder() { return m_AudioRecorder; }
 
   unsigned GetSampleRate() const { return m_SampleRate; }
   unsigned GetSamplesPerBuffer() const { return m_SamplesPerBuffer; }
@@ -153,7 +148,6 @@ public:
 
   bool AssureSoundIsOpen();
   void AssureSoundIsClosed();
-  void AssignOrganFile(GOOrganController *pNewOrganController);
 
   bool AudioCallback(unsigned devIndex, GOSoundBufferMutable &outBuffer);
 

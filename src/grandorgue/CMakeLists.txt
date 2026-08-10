@@ -95,6 +95,7 @@ gui/dialogs/settings/GOSettingsOptions.cpp
 gui/dialogs/settings/GOSettingsOrgans.cpp
 gui/dialogs/settings/GOSettingsReverb.cpp
 gui/dialogs/settings/GOSettingsTemperaments.cpp
+gui/dialogs/GOMidiChannelMappingDialog.cpp
 gui/dialogs/GOMidiObjectsDialog.cpp
 gui/dialogs/GONewReleaseDialog.cpp
 gui/dialogs/GOProgressDialog.cpp
@@ -147,6 +148,7 @@ loader/GOFileStore.cpp
 loader/GOLoaderFilename.cpp
 loader/GOLoadThread.cpp
 loader/GOLoadWorker.cpp
+loader/GOOrganReader.cpp
 loader/cache/GOCache.cpp
 loader/cache/GOCacheCleaner.cpp
 loader/cache/GOCacheWriter.cpp
@@ -211,6 +213,7 @@ sound/playing/GOSoundFader.cpp
 sound/playing/GOSoundFilter.cpp
 sound/playing/GOSoundReleaseAlignTable.cpp
 sound/playing/GOSoundResample.cpp
+sound/playing/GOSoundSamplerPlayer.cpp
 sound/playing/GOSoundSamplerPool.cpp
 sound/playing/GOSoundStream.cpp
 sound/playing/GOSoundToneBalanceFilter.cpp
@@ -229,13 +232,13 @@ sound/scheduler/GOSoundScheduler.cpp
 sound/scheduler/GOSoundThread.cpp
 sound/tasks/GOSoundGroupTask.cpp
 sound/tasks/GOSoundOutputTask.cpp
+sound/tasks/GOSoundRecorderTask.cpp
 sound/tasks/GOSoundReleaseTask.cpp
 sound/tasks/GOSoundTouchTask.cpp
 sound/tasks/GOSoundTremulantTask.cpp
 sound/tasks/GOSoundWindchestTask.cpp
 sound/GOSoundDevInfo.cpp
 sound/GOSoundOrganEngine.cpp
-sound/GOSoundRecorder.cpp
 sound/GOSoundSystem.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp

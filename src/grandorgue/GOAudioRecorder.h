@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,12 +16,12 @@
 #include "GOTimerCallback.h"
 
 class GOOrganController;
-class GOSoundRecorder;
+class GOSoundRecorderTask;
 
 class GOAudioRecorder : public GOElementCreator, private GOTimerCallback {
 private:
   GOOrganController *m_OrganController;
-  GOSoundRecorder *m_recorder;
+  GOSoundRecorderTask *m_recorder;
   GOLabelControl m_RecordingTime;
   unsigned m_RecordSeconds;
   wxString m_Filename;
@@ -36,7 +36,7 @@ public:
   GOAudioRecorder(GOOrganController *organController);
   ~GOAudioRecorder();
 
-  void SetAudioRecorder(GOSoundRecorder *recorder);
+  void SetAudioRecorder(GOSoundRecorderTask *recorder);
 
   void StartRecording(bool rename);
   bool IsRecording();

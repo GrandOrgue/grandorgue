@@ -9,6 +9,8 @@
 #define GOCONFIG_H
 
 #include <filesystem>
+#include <functional>
+#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -51,6 +53,32 @@ public:
     METRONOME_SOUND_CLICK,
     METRONOME_SOUND_CUSTOM,
   };
+  /**
+   * The scheme used to assign MIDI channels to manuals when playing back a
+   * MIDI file that lacks GrandOrgue's own setup/header SysEx events.
+   */
+  enum MidiFileChannelMapping {
+    // The pedal gets channel 1, other manuals follow on channels 2..N+1
+    MIDI_PLAY_CHANNELS_PEDAL_FIRST,
+    // Manuals get channels 1..N, the pedal gets the last channel N+1
+    MIDI_PLAY_CHANNELS_PEDAL_LAST,
+    // Each manual's channel is its own ODF-configured MIDIInputNumber
+    MIDI_PLAY_CHANNELS_USE_INPUT_NUMBER,
+  };
+  /**
+   * A callback that asks the user (or otherwise decides) which
+   * MidiFileChannelMapping to use for a MIDI file lacking GrandOrgue's own
+   * setup header. Returns std::nullopt if the user cancelled, in which case
+   * the file load must be aborted.
+   * @param isMidiInputNumberMappingUsable whether
+   *   MIDI_PLAY_CHANNELS_USE_INPUT_NUMBER is a meaningful choice for this
+   *   organ
+   * @param defaultMapping the scheme that should be pre-selected/used
+   */
+  using MidiChannelMappingChooser
+    = std::function<std::optional<MidiFileChannelMapping>(
+      bool isMidiInputNumberMappingUsable,
+      MidiFileChannelMapping defaultMapping)>;
 
 private:
   wxString m_InstanceName;
@@ -166,6 +194,17 @@ public:
   GOSettingDirectory AudioRecorderPath;
   GOSettingDirectory MidiRecorderPath;
   GOSettingDirectory MidiPlayerPath;
+
+  // Whether to ask for the MIDI channel mapping when loading a MIDI file
+  // without GrandOrgue's own setup/header SysEx events
+  GOSettingBool IsToAskMidiPlayerChannelMapping;
+  // The mapping to use by default when the organ has a usable MIDIInputNumber
+  // mapping (see GOMidiPlayerContent::isMidiInputNumberMappingUsable)
+  GOSettingEnum<MidiFileChannelMapping> MidiPlayerChannelMappingWithInputNumber;
+  // The mapping to use by default when the organ has no usable
+  // MIDIInputNumber mapping
+  GOSettingEnum<MidiFileChannelMapping>
+    MidiPlayerChannelMappingWithoutInputNumber;
 
   GOSettingBool CheckForUpdatesAtStartup;
 

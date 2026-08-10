@@ -21,6 +21,7 @@
 #include "gui/frames/GOMainWindowData.h"
 #include "gui/panels/GOGUIMouseState.h"
 #include "loader/GOFileStore.h"
+#include "loader/GOLoadedOrganInfo.h"
 #include "loader/GOProgressMonitor.h"
 #include "model/GOOrganModel.h"
 #include "modification/GOModificationProxy.h"
@@ -28,12 +29,14 @@
 #include "sound/GOSoundOrganEngine.h"
 
 #include "GOMemoryPool.h"
+#include "GOOrgan.h"
 #include "GOVirtualCouplerController.h"
 
 class GOArchive;
 class GOAudioRecorder;
 class GOButtonControl;
 class GOCache;
+class GOConfigWriter;
 class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
@@ -46,10 +49,9 @@ class GOMidiEvent;
 class GOMidiPlayer;
 class GOMidiRecorder;
 class GOMidiSystem;
-class GOOrgan;
 class GOSetter;
 class GOSoundProvider;
-class GOSoundRecorder;
+class GOSoundRecorderTask;
 class GOSoundSystem;
 class GOTemperament;
 class GOTimer;
@@ -58,17 +60,20 @@ typedef struct _GOHashType GOHashType;
 class GOOrganController : public GOEventDistributor,
                           public GOOrganModel,
                           public GOModificationProxy {
+  // Exercises LoadOrganCoreData()/LoadObjects()/SaveOrganCoreData()/
+  // ClearObjects()/ClearOrganCoreData() directly, bypassing Load()'s
+  // unconditional call to LoadOrganGui() (which needs a real GUI display).
+  friend class GOTestOrganController;
+
 private:
   GOConfig &m_config;
-  wxString m_odf;
-  wxString m_ArchiveID;
-  wxString m_ArchivePath;
-  wxString m_hash;
+  GOOrgan m_ConfiguredOrgan;
+  GOLoadedOrganInfo m_LoadedOrganInfo;
   GOFileStore m_FileStore;
-  wxString m_CacheFilename;
-  wxString m_SettingFilename;
-  wxString m_ODFHash;
   bool m_Cacheable;
+  bool m_IsOrganCoreDataLoaded;
+  bool m_IsOrganGuiLoaded;
+  bool m_IsObjectsLoaded;
   GOSetter *m_setter;
   GODivisionalSetter *m_DivisionalSetter;
   GOAudioRecorder *m_AudioRecorder;
@@ -77,10 +82,8 @@ private:
   GOSizeKeeper m_StopWindowSizeKeeper;
   GOTimer *m_timer;
   GOButtonControl *p_OnStateButton;
-  int m_volume;
   wxString m_Temperament;
 
-  bool m_b_customized;
   float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
 
@@ -97,13 +100,13 @@ private:
   ptr_vector<GOGUIPanelCreator> m_panelcreators;
   ptr_vector<GOElementCreator> m_elementcreators;
 
-  GOSoundOrganEngine *m_soundengine;
   GOMidiSystem *m_midi;
   std::vector<bool> m_MidiSamplesetMatch;
   int m_SampleSetId1, m_SampleSetId2;
   GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
+  GOSoundOrganEngine m_SoundEngine;
   GOGuiImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
@@ -115,14 +118,29 @@ private:
   // if modified then sets m_IsOrganModified
   void OnIsModifiedChanged(bool modified);
 
-  void ReadOrganFile(GOConfigReader &cfg);
+  /** Reads the non-GUI ODF/CMB data (church info, model, element creators,
+   * combinations) into this controller. Sets m_IsOrganCoreDataLoaded. */
+  void LoadOrganCoreData(GOConfigReader &cfg);
+  /** Reads the GUI ODF/CMB data (panel creators, panels, stops-window size,
+   * main-window data) and builds the panels. Sets m_IsOrganGuiLoaded. */
+  void LoadOrganGui(GOConfigReader &cfg);
+  /** Loads pipe/sample data from the cache or, failing that, from the
+   * sample files in parallel worker threads. Sets m_IsObjectsLoaded. */
+  void LoadObjects(GOProgressMonitor &monitor);
+  /** Writes the non-GUI organ state (church info, volume, temperament,
+   * saveable objects, virtual couplers) to cfg. */
+  void SaveOrganCoreData(GOConfigWriter &cfg);
+  /** Writes the GUI organ state (stops-window size) to cfg. */
+  void SaveOrganGui(GOConfigWriter &cfg);
+  /** Undoes LoadObjects if it ran. Idempotent. */
+  void ClearObjects();
+  /** Undoes LoadOrganGui if it ran. Idempotent. */
+  void ClearOrganGui();
+  /** Undoes LoadOrganCoreData if it ran. Idempotent. */
+  void ClearOrganCoreData();
   GOHashType GenerateCacheHash();
-  wxString GenerateSettingFileName();
-  wxString GenerateCacheFileName();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
-
-  const wxString &GetOrganHash() const { return m_hash; }
 
 public:
   GOOrganController(GOConfig &config, bool isAppInitialized = false);
@@ -154,6 +172,9 @@ public:
     const wxString &cmb,
     bool isGuiOnly,
     GOProgressMonitor &monitor);
+  /** Undoes whatever Load() built (core data, GUI, cached objects), in
+   * reverse order. Idempotent - safe to call any number of times. */
+  void Clear();
   /**
    * Exports organ combinations in the yaml file
    * @param fileName - the path to the yaml file to export
@@ -163,15 +184,30 @@ public:
   void LoadCombination(const wxString &cmb);
   bool Save();
   bool Export(const wxString &cmb);
-  bool CachePresent() const { return wxFileExists(m_CacheFilename); }
+  bool CachePresent() const {
+    return wxFileExists(m_LoadedOrganInfo.cacheFilePath);
+  }
   bool IsCacheable() const { return m_Cacheable; }
   bool UpdateCache(bool compress, GOProgressMonitor &monitor);
   void DeleteCache();
   void DeleteSettings();
-  void Abort();
-  void PreparePlayback(
-    GOSoundOrganEngine *engine, GOMidiSystem *midi, GOSoundRecorder *recorder);
   void PrepareRecording();
+
+  /** Returns true if the organ sound engine is currently running. */
+  bool IsOrganStarted() const { return m_SoundEngine.IsWorking(); }
+
+  /**
+   * Starts the organ sound engine: builds audio tasks, connects to the sound
+   * system, and begins MIDI and audio playback.
+   */
+  void StartOrgan(GOSoundSystem &soundSystem);
+
+  /**
+   * Stops the organ sound engine: aborts playback, disconnects from the sound
+   * system, and tears down audio tasks.
+   */
+  void StopOrgan(GOSoundSystem &soundSystem);
+  GOSoundOrganEngine &GetSoundEngine() { return m_SoundEngine; }
   void Update();
   void Reset();
   void ProcessMidi(const GOMidiEvent &event);
@@ -193,10 +229,31 @@ public:
   GOLabelControl *GetTemperamentLabel() { return &m_TemperamentLabel; }
   GOMainWindowData *GetMainWindowData() { return &m_MainWindowData; }
 
-  void LoadMIDIFile(const wxString &filename);
+  /**
+   * Loads a MIDI file for playback via the MIDI player.
+   * @param filename the MIDI file to load
+   * @param chooseMapping see GOMidiPlayer::LoadFile()
+   */
+  void LoadMIDIFile(
+    const wxString &filename,
+    const GOConfig::MidiChannelMappingChooser &chooseMapping);
 
-  void SetVolume(int volume) { m_volume = volume; }
-  int GetVolume() const { return m_volume; }
+  int GetVolume() const { return m_SoundEngine.GetVolume(); }
+  /** Sets the master volume and forwards it to the sound engine. */
+  void SetVolume(int volume) { m_SoundEngine.SetVolume(volume); }
+
+  /** Returns true if the sound engine is running. */
+  bool IsStarted() const { return m_SoundEngine.IsWorking(); }
+
+  /** Sets the polyphony hard limit in the sound engine. */
+  void SetHardPolyphony(unsigned polyphony) {
+    m_SoundEngine.SetHardPolyphony(polyphony);
+  }
+
+  /**
+   * Returns meter info from the sound engine.
+   */
+  std::vector<float> GetMeterInfo() { return m_SoundEngine.GetMeterInfo(); }
 
   unsigned GetReleaseTail() {
     return GetRootPipeConfigNode().GetEffectiveReleaseTail();
@@ -211,14 +268,20 @@ public:
     const wxString &name, bool is_panel = false);
 
   /* TODO: can somebody figure out what this thing is */
-  bool IsCustomized() const { return m_b_customized; }
+  bool IsCustomized() const { return m_LoadedOrganInfo.isCustomized; }
 
   /* Filename of the organ definition used to load */
-  const wxString &GetODFFilename() const { return m_odf; }
+  const wxString &GetODFFilename() const {
+    return m_ConfiguredOrgan.GetODFPath();
+  }
   const wxString GetOrganPathInfo();
   GOOrgan GetOrganInfo();
-  const wxString &GetSettingFilename() const { return m_SettingFilename; }
-  const wxString &GetCacheFilename() const { return m_CacheFilename; }
+  const wxString &GetSettingFilename() const {
+    return m_LoadedOrganInfo.settingsFilePath;
+  }
+  const wxString &GetCacheFilename() const {
+    return m_LoadedOrganInfo.cacheFilePath;
+  }
   wxString GetCombinationsDir() const;
 
   /* Organ and Building general information */

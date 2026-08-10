@@ -1,0 +1,27 @@
+[Organ]
+ChurchName=Test Organ
+ChurchAddress=Test Address
+DivisionalsStoreIntermanualCouplers=N
+DivisionalsStoreIntramanualCouplers=N
+DivisionalsStoreTremulants=N
+GeneralsStoreDivisionalCouplers=N
+NumberOfWindchestGroups=1
+NumberOfManuals=1
+HasPedals=N
+NumberOfEnclosures=0
+NumberOfTremulants=0
+NumberOfReversiblePistons=0
+NumberOfDivisionalCouplers=0
+NumberOfGenerals=0
+
+[Manual001]
+Name=Test Manual
+NumberOfLogicalKeys=32
+FirstAccessibleKeyLogicalKeyNumber=1
+FirstAccessibleKeyMIDINoteNumber=60
+NumberOfAccessibleKeys=32
+NumberOfStops=0
+
+[WindchestGroup001]
+NumberOfEnclosures=0
+NumberOfTremulants=0

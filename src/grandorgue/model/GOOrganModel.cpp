@@ -244,6 +244,19 @@ void GOOrganModel::LoadCmbButtons(GOConfigReader &cfg) {
     m_manuals[i]->LoadDivisionals(cfg);
 }
 
+void GOOrganModel::Cleanup() {
+  GOEventHandlerList::Cleanup();
+  m_windchests.clear();
+  m_manuals.clear();
+  m_enclosures.clear();
+  m_switches.clear();
+  m_tremulants.clear();
+  m_ranks.clear();
+  m_pistons.clear();
+  m_DivisionalCoupler.clear();
+  m_generals.clear();
+}
+
 void GOOrganModel::SetOrganModelModified(bool modified) {
   if (modified != m_OrganModelModified)
     m_OrganModelModified = modified;

@@ -342,11 +342,11 @@ public:
    */
   void PushGeneral(
     GOGeneralCombination &cmb, GOButtonControl *pButtonToLight) override;
-  void PushDivisional(
-    GODivisionalCombination &cmb,
-    unsigned startManual,
-    unsigned cmbManual,
-    GOButtonControl *pButtonToLight) override;
+
+  void ProcessPushDivisional(
+    unsigned startManualIndex,
+    std::function<std::pair<GOButtonControl *, GODivisionalCombination *>(
+      unsigned)> findManualDivisional) override;
 
   void Next();
   void Prev();

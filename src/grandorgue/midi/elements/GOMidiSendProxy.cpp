@@ -10,6 +10,16 @@
 #include "midi/GOMidiRecorder.h"
 #include "midi/GOMidiSystem.h"
 
+GOMidiSendProxy::StateRestorer::StateRestorer(GOMidiSendProxy &midiSendProxy)
+  : r_MidiSendProxy(midiSendProxy),
+    m_IsToSendMidi(midiSendProxy.IsToSendMidi()),
+    m_IsToRecordMidi(midiSendProxy.IsToRecordMidi()) {}
+
+GOMidiSendProxy::StateRestorer::~StateRestorer() {
+  r_MidiSendProxy.SetToSendMidi(m_IsToSendMidi);
+  r_MidiSendProxy.SetToRecordMidi(m_IsToRecordMidi);
+}
+
 void GOMidiSendProxy::SetMidi(
   GOMidiSystem *pMidi, GOMidiRecorder *pMidiRecorder) {
   p_midi = pMidi;
@@ -17,11 +27,11 @@ void GOMidiSendProxy::SetMidi(
 }
 
 void GOMidiSendProxy::SendMidiMessage(const GOMidiEvent &e) {
-  if (p_midi)
+  if (p_midi && m_IsToSendMidi)
     p_midi->Send(e);
 }
 
 void GOMidiSendProxy::SendMidiRecorderMessage(GOMidiEvent &e) {
-  if (p_MidiRecorder)
+  if (p_MidiRecorder && m_IsToRecordMidi)
     p_MidiRecorder->SendMidiRecorderMessage(e);
 }

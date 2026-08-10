@@ -16,6 +16,7 @@
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
+#include "gui/wxcontrols/GOChoice.h"
 #include "midi/GOMidiSystem.h"
 #include "midi/ports/GOMidiPortFactory.h"
 
@@ -107,6 +108,58 @@ SettingsMidiDevices::SettingsMidiDevices(
 
   topSizer->Add(item3, 1, wxEXPAND | wxALL, 5);
 
+  wxBoxSizer *midiPlayerSizer
+    = new wxStaticBoxSizer(wxVERTICAL, this, _("&MIDI player"));
+
+  midiPlayerSizer->Add(
+    m_AskMidiPlayerChannelMapping = new wxCheckBox(
+      this,
+      ID_ASK_MIDI_PLAYER_CHANNEL_MAPPING,
+      _("Ask channel mapping on MIDI file load")),
+    0,
+    wxEXPAND | wxALL,
+    5);
+
+  wxFlexGridSizer *const midiPlayerGrid = new wxFlexGridSizer(3, 5, 5);
+  midiPlayerGrid->AddGrowableCol(2, 1);
+  midiPlayerSizer->Add(midiPlayerGrid, 0, wxEXPAND | wxALL, 5);
+
+  midiPlayerGrid->Add(
+    new wxStaticText(this, wxID_ANY, _("With input number:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  midiPlayerGrid->Add(
+    m_MidiPlayerChannelMappingWithInputNumber
+    = new GOChoice<GOConfig::MidiFileChannelMapping>(
+      this, ID_MIDI_PLAYER_CHANNEL_MAPPING_WITH_INPUT_NUMBER),
+    0,
+    wxEXPAND | wxALL);
+  m_MidiPlayerChannelMappingWithInputNumber->Append(
+    _("Pedal first"), GOConfig::MIDI_PLAY_CHANNELS_PEDAL_FIRST);
+  m_MidiPlayerChannelMappingWithInputNumber->Append(
+    _("Pedal last"), GOConfig::MIDI_PLAY_CHANNELS_PEDAL_LAST);
+  m_MidiPlayerChannelMappingWithInputNumber->Append(
+    _("Use MIDIInputNumber"), GOConfig::MIDI_PLAY_CHANNELS_USE_INPUT_NUMBER);
+  midiPlayerGrid->AddStretchSpacer();
+
+  midiPlayerGrid->Add(
+    new wxStaticText(this, wxID_ANY, _("Without input number:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+  midiPlayerGrid->Add(
+    m_MidiPlayerChannelMappingWithoutInputNumber
+    = new GOChoice<GOConfig::MidiFileChannelMapping>(
+      this, ID_MIDI_PLAYER_CHANNEL_MAPPING_WITHOUT_INPUT_NUMBER),
+    0,
+    wxEXPAND | wxALL);
+  m_MidiPlayerChannelMappingWithoutInputNumber->Append(
+    _("Pedal first"), GOConfig::MIDI_PLAY_CHANNELS_PEDAL_FIRST);
+  m_MidiPlayerChannelMappingWithoutInputNumber->Append(
+    _("Pedal last"), GOConfig::MIDI_PLAY_CHANNELS_PEDAL_LAST);
+  midiPlayerGrid->AddStretchSpacer();
+
+  topSizer->Add(midiPlayerSizer, 0, wxEXPAND | wxALL, 5);
+
   // topSizer->AddSpacer(5);
   this->SetSizer(topSizer);
   topSizer->Fit(this);
@@ -115,6 +168,12 @@ SettingsMidiDevices::SettingsMidiDevices(
 
   m_AutoAddInput->SetValue(isToAutoAddInput);
   m_CheckOnStartup->SetValue(m_config.IsToCheckMidiOnStart());
+  m_AskMidiPlayerChannelMapping->SetValue(
+    m_config.IsToAskMidiPlayerChannelMapping());
+  m_MidiPlayerChannelMappingWithInputNumber->SetCurrentValue(
+    m_config.MidiPlayerChannelMappingWithInputNumber());
+  m_MidiPlayerChannelMappingWithoutInputNumber->SetCurrentValue(
+    m_config.MidiPlayerChannelMappingWithoutInputNumber());
 
   const GOPortsConfig &portsConfig = m_config.GetMidiPortsConfig();
 
@@ -209,6 +268,12 @@ void SettingsMidiDevices::OnOutDevicesClick(wxCommandEvent &event) {
 bool SettingsMidiDevices::TransferDataFromWindow() {
   m_config.IsToAutoAddMidi(m_AutoAddInput->IsChecked());
   m_config.IsToCheckMidiOnStart(m_CheckOnStartup->IsChecked());
+  m_config.IsToAskMidiPlayerChannelMapping(
+    m_AskMidiPlayerChannelMapping->IsChecked());
+  m_config.MidiPlayerChannelMappingWithInputNumber(
+    m_MidiPlayerChannelMappingWithInputNumber->GetCurrentValue());
+  m_config.MidiPlayerChannelMappingWithoutInputNumber(
+    m_MidiPlayerChannelMappingWithoutInputNumber->GetCurrentValue());
   m_config.SetMidiPortsConfig(RenewPortsConfig());
   m_OutDevices.Save();
   m_InDevices.Save(&m_OutDevices);

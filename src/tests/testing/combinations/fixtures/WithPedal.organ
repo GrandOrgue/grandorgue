@@ -1,0 +1,46 @@
+; Used by GOTestDivisionalSetter::TestWithPedal.
+; Same scenario as NoPedal.organ but with a Pedal present (HasPedals=Y), so
+; GetFirstManualIndex() == 0 -- confirms the previously-working, has-pedal
+; case still works.
+[Organ]
+ChurchName=Test organ
+ChurchAddress=Test address
+NumberOfManuals=1
+HasPedals=Y
+NumberOfWindchestGroups=1
+NumberOfEnclosures=0
+NumberOfSwitches=1
+NumberOfTremulants=0
+NumberOfReversiblePistons=0
+NumberOfGenerals=0
+NumberOfDivisionalCouplers=0
+DivisionalsStoreIntermanualCouplers=N
+DivisionalsStoreIntramanualCouplers=N
+DivisionalsStoreTremulants=N
+GeneralsStoreDivisionalCouplers=N
+
+[WindchestGroup001]
+NumberOfEnclosures=0
+NumberOfTremulants=0
+
+[Manual000]
+Name=Pedal
+NumberOfLogicalKeys=30
+FirstAccessibleKeyLogicalKeyNumber=1
+FirstAccessibleKeyMIDINoteNumber=36
+NumberOfAccessibleKeys=30
+NumberOfStops=0
+
+[Switch001]
+Name=Switch1
+DefaultToEngaged=N
+
+[Manual001]
+Name=Manual1
+NumberOfLogicalKeys=61
+FirstAccessibleKeyLogicalKeyNumber=1
+FirstAccessibleKeyMIDINoteNumber=36
+NumberOfAccessibleKeys=61
+NumberOfStops=0
+NumberOfSwitches=1
+Switch001=1

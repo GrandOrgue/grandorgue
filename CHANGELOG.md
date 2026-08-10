@@ -1,9 +1,15 @@
-# 3.17.3 (2026-07-28)
+# 3.17.3 (2026-08-10)
+- Added a choice of MIDI channel mapping schemes (pedal first, pedal last, or by the organ's MIDIInputNumber) when playing back MIDI files without a GrandOrgue setup header, configurable via a per-load dialog and MIDI Devices settings https://github.com/GrandOrgue/grandorgue/issues/2523
+- Fixed MIDI REC resending external MIDI sends on recording start https://github.com/GrandOrgue/grandorgue/issues/2523
+- Fixed divisionals that could not be selected in organs without a pedal https://github.com/GrandOrgue/grandorgue/discussions/2552
+- Fixed organ volume not saved into organ settings https://github.com/GrandOrgue/grandorgue/issues/2547
+- Fixed slow/flickery panel resizing while dragging a panel window's border https://github.com/GrandOrgue/grandorgue/issues/2537
 - Fixed heap overflow and wrong channel metering in audio output task https://github.com/GrandOrgue/grandorgue/issues/2531
 - Fixed crash when loading PNG images with embedded alpha channel used with mask images https://github.com/GrandOrgue/grandorgue/issues/2535
 - Fixed keyboard shortcuts (Panic, Help, Load/Open/Save/Install organ, MIDI player load) not working when a detached organ panel window has focus https://github.com/GrandOrgue/grandorgue/issues/2541
 - Fixed a rare glitch right after a loop wrap in compressed samples, caused by an off-by-one in the read-ahead ring buffer
 - Fixed crash on unknown command-line argument
+- Fixed skipping the start of the release sample for ranks with a silent-attack (BlankLoop) pattern https://github.com/GrandOrgue/grandorgue/issues/2521
 - Fixed on-screen keyboard appearing when tapping organ panels on touch-enabled desktops https://github.com/GrandOrgue/grandorgue/issues/2492
 - Removed default keyboard shortcut assignments from MIDI objects; shortcuts must now be assigned manually in the MIDI event dialog
 - Fixed expression pedal malfunction when CC value exceeds configured high value https://github.com/GrandOrgue/grandorgue/issues/2494

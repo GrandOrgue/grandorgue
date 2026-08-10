@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,14 +14,14 @@
 
 GODivisionalButtonControl::GODivisionalButtonControl(
   GOOrganModel &organModel,
-  unsigned manualNumber,
+  unsigned manualIndex,
   unsigned divisionalIndex,
   const GOMidiObjectContext *pContext)
   : GOPushbuttonControl(organModel, OBJECT_TYPE_DIVISIONAL),
     r_OrganModel(organModel),
-    m_ManualN(manualNumber),
+    m_ManualIndex(manualIndex),
     m_DivisionalIndex(divisionalIndex),
-    m_combination(organModel, manualNumber, false) {
+    m_combination(organModel, manualIndex, false) {
   SetContext(pContext);
 }
 
@@ -47,19 +47,15 @@ void GODivisionalButtonControl::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalButtonControl::Push() {
-  for (unsigned coupledManualN :
-       r_OrganModel.GetCoupledManualsForDivisional(m_ManualN)) {
-    GOManual *pManual = r_OrganModel.GetManual(coupledManualN);
-
-    if (m_DivisionalIndex < pManual->GetDivisionalCount()) {
+  r_OrganModel.ProcessPushDivisional(
+    m_ManualIndex, [&](unsigned coupledManualIndex) {
+      GOManual *pManual = r_OrganModel.GetManual(coupledManualIndex);
       GODivisionalButtonControl *pCoupledButton
-        = pManual->GetDivisional(m_DivisionalIndex);
-
-      r_OrganModel.PushDivisional(
-        pCoupledButton->GetCombination(),
-        m_ManualN,
-        coupledManualN,
-        pCoupledButton);
-    }
-  }
+        = (m_DivisionalIndex < pManual->GetDivisionalCount())
+        ? pManual->GetDivisional(m_DivisionalIndex)
+        : nullptr;
+      return std::pair(
+        pCoupledButton,
+        pCoupledButton ? &pCoupledButton->m_combination : nullptr);
+    });
 }

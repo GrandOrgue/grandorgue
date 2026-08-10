@@ -12,15 +12,9 @@
 #include <memory>
 #include <vector>
 
-#include "threading/GOMutex.h"
-
-#include "playing/GOSoundResample.h"
-#include "playing/GOSoundSampler.h"
-#include "playing/GOSoundSamplerPool.h"
+#include "playing/GOSoundSamplerPlayer.h"
 #include "reverb/GOSoundReverb.h"
 #include "scheduler/GOSoundScheduler.h"
-
-#include "GOSoundOrganInterface.h"
 
 class GOConfig;
 class GOMemoryPool;
@@ -29,7 +23,7 @@ class GOSoundBufferMutable;
 class GOSoundGroupTask;
 class GOSoundOutputTask;
 class GOSoundProvider;
-class GOSoundRecorder;
+class GOSoundRecorderTask;
 class GOSoundReleaseTask;
 class GOSoundTask;
 class GOSoundThread;
@@ -50,7 +44,7 @@ class GOWindchest;
  *      ... GetAudioOutput() is called from the audio thread ...
  *   4. StopAndDestroy() — stops the engine and destroys tasks
  */
-class GOSoundOrganEngine : public GOSoundOrganInterface {
+class GOSoundOrganEngine {
 public:
   /*
    * Nested type
@@ -90,21 +84,22 @@ public:
     unsigned nAudioGroups = 1);
 
 private:
-  static constexpr int DETACHED_RELEASE_TASK_ID = 0;
-
   /*
    * Constructor constants: objects that live for the entire instance lifetime
    */
 
   GOOrganModel &r_OrganModel;
   GOMemoryPool &r_MemoryPool;
-  // mp_ReleaseTask references mp_AudioGroupTasks [B1]; created in constructor,
-  // added to m_Scheduler in BuildEngine [B8]
+  // mp_ReleaseTask references mp_AudioGroupTasks [B1]; created in constructor
+  // body (after m_SamplerPlayer), added to m_Scheduler in BuildEngine [B8]
   std::unique_ptr<GOSoundReleaseTask> mp_ReleaseTask;
   // mp_TouchTask references r_MemoryPool; created in constructor,
   // added to m_Scheduler in BuildEngine [B8]
   std::unique_ptr<GOSoundTouchTask> mp_TouchTask;
-  GOSoundResample m_resample;
+  // m_SamplerPlayer is declared after mp_ReleaseTask so that mp_ReleaseTask
+  // is already a valid (though null) unique_ptr when passed by reference to
+  // the player constructor.
+  GOSoundSamplerPlayer m_SamplerPlayer;
 
   /*
    * Configuration parameters
@@ -114,18 +109,12 @@ private:
   unsigned m_NAuxThreads;
   bool m_IsDownmix;
   unsigned m_NReleaseRepeats;
-  bool m_IsPolyphonyLimiting;
-  unsigned m_PolyphonySoftLimit;
-  bool m_IsScaledReleases;
-  bool m_IsReleaseAlignmentEnabled;
-  bool m_IsRandomizeSpeaking;
   // TODO: rename to m_gain (stores gain in dB; in GrandOrgue "gain" means dB)
   int m_volume;
   // TODO: rename to m_amplitude (stores the linear amplitude coefficient
-  // derived
-  //       from m_volume; in GrandOrgue "amplitude" means a linear coefficient)
+  //       derived from m_volume; in GrandOrgue "amplitude" means a linear
+  //       coefficient)
   float m_gain;
-  GOSoundResample::InterpolationType m_InterpolationType;
   GOSoundReverb::ReverbConfig m_ReverbConfig;
 
   /*
@@ -133,7 +122,6 @@ private:
    */
 
   unsigned m_NSamplesPerBuffer;
-  unsigned m_SampleRate;
 
   /*
    * Lifecycle state
@@ -172,7 +160,7 @@ private:
   std::unique_ptr<GOSoundOutputTask> mp_DownmixTask;
   // [B5] p_AudioRecorder: non-owning pointer to the recorder passed in
   //   — uses mp_DownmixTask [B4] or mp_AudioOutputTasks [B2]
-  GOSoundRecorder *p_AudioRecorder;
+  GOSoundRecorderTask *p_AudioRecorder;
   // [B6] reverb: set up inline on mp_DownmixTask [B4] and mp_AudioOutputTasks
   // [B2]
   //   — uses m_ReverbConfig, m_SampleRate, m_NSamplesPerBuffer
@@ -193,14 +181,6 @@ private:
   std::vector<std::unique_ptr<GOSoundThread>> mp_threads;
 
   /*
-   * Counters
-   */
-
-  uint64_t m_CurrentTime;
-  GOSoundSamplerPool m_SamplerPool;
-  std::atomic_uint m_UsedPolyphony;
-
-  /*
    * Private lifecycle functions (callee first)
    */
 
@@ -208,55 +188,13 @@ private:
     const std::vector<AudioOutputConfig> &audioOutputConfigs,
     unsigned nSamplesPerBuffer,
     unsigned sampleRate,
-    GOSoundRecorder &recorder);
+    GOSoundRecorderTask &recorder);
   void DestroyEngine();
 
   void ResetCounters();
 
   void StartEngine();
   void StopEngine();
-
-  /*
-   * Other private functions
-   */
-
-  unsigned MsToSamples(unsigned ms) const { return m_SampleRate * ms / 1000; }
-
-  unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples) const;
-
-  inline static unsigned isWindchestTask(int taskId) { return taskId >= 0; }
-
-  inline static unsigned windchestTaskToIndex(int taskId) {
-    return (unsigned)taskId;
-  }
-
-  inline static unsigned tremulantTaskToIndex(int taskId) {
-    return -taskId - 1;
-  }
-
-  void StartSampler(GOSoundSampler *sampler);
-
-  GOSoundSampler *CreateTaskSample(
-    const GOSoundProvider *soundProvider,
-    int samplerTaskId,
-    unsigned audioGroup,
-    unsigned velocity,
-    unsigned delay,
-    uint64_t prevEventTime,
-    bool isRelease,
-    uint64_t *pStartTimeSamples);
-
-  void CreateReleaseSampler(GOSoundSampler *sampler);
-
-  /**
-   * Creates a new sampler with decay of current loop.
-   * Switches this sampler to the new attack.
-   * Used when a wave tremulant is switched on or off.
-   * @param pSampler current playing sampler for switching to a new attack
-   */
-  void SwitchToAnotherAttack(GOSoundSampler *pSampler);
-
-  float GetRandomFactor() const;
 
 public:
   /*
@@ -268,6 +206,14 @@ public:
   // the complete type of the managed object, which is only forward-declared
   // here.
   ~GOSoundOrganEngine();
+
+  /*
+   * Sampler player accessor
+   */
+
+  /** Returns a reference to the sampler player (used to connect the organ
+   * model via GOSoundOrganInterfaceProxy). */
+  GOSoundSamplerPlayer &GetSamplerPlayer() { return m_SamplerPlayer; }
 
   /*
    * Configuration getters and setters
@@ -287,9 +233,11 @@ public:
     m_NReleaseRepeats = nReleaseRepeats;
   }
 
-  bool IsReleaseAlignmentEnabled() const { return m_IsReleaseAlignmentEnabled; }
+  bool IsReleaseAlignmentEnabled() const {
+    return m_SamplerPlayer.IsReleaseAlignmentEnabled();
+  }
   void SetReleaseAlignmentEnabled(bool isEnabled) {
-    m_IsReleaseAlignmentEnabled = isEnabled;
+    m_SamplerPlayer.SetReleaseAlignmentEnabled(isEnabled);
   }
 
   const GOSoundReverb::ReverbConfig &GetReverbConfig() const {
@@ -307,27 +255,37 @@ public:
   // TODO: rename to SetGain(int gain)
   void SetVolume(int volume);
 
-  unsigned GetHardPolyphony() const { return m_SamplerPool.GetUsageLimit(); }
-  void SetHardPolyphony(unsigned polyphony);
-
-  bool IsPolyphonyLimiting() const { return m_IsPolyphonyLimiting; }
-  void SetPolyphonyLimiting(bool isLimiting) {
-    m_IsPolyphonyLimiting = isLimiting;
+  unsigned GetHardPolyphony() const {
+    return m_SamplerPlayer.GetHardPolyphony();
+  }
+  void SetHardPolyphony(unsigned polyphony) {
+    m_SamplerPlayer.SetHardPolyphony(polyphony);
   }
 
-  bool IsScaledReleases() const { return m_IsScaledReleases; }
-  void SetScaledReleases(bool isEnabled) { m_IsScaledReleases = isEnabled; }
+  bool IsPolyphonyLimiting() const {
+    return m_SamplerPlayer.IsPolyphonyLimiting();
+  }
+  void SetPolyphonyLimiting(bool isLimiting) {
+    m_SamplerPlayer.SetPolyphonyLimiting(isLimiting);
+  }
 
-  bool IsRandomizeSpeaking() const { return m_IsRandomizeSpeaking; }
+  bool IsScaledReleases() const { return m_SamplerPlayer.IsScaledReleases(); }
+  void SetScaledReleases(bool isEnabled) {
+    m_SamplerPlayer.SetScaledReleases(isEnabled);
+  }
+
+  bool IsRandomizeSpeaking() const {
+    return m_SamplerPlayer.IsRandomizeSpeaking();
+  }
   void SetRandomizeSpeaking(bool isEnabled) {
-    m_IsRandomizeSpeaking = isEnabled;
+    m_SamplerPlayer.SetRandomizeSpeaking(isEnabled);
   }
 
   GOSoundResample::InterpolationType GetInterpolationType() const {
-    return m_InterpolationType;
+    return m_SamplerPlayer.GetInterpolationType();
   }
   void SetInterpolationType(unsigned type) {
-    m_InterpolationType = (GOSoundResample::InterpolationType)type;
+    m_SamplerPlayer.SetInterpolationType(type);
   }
 
   /** Reads parameters from GOConfig and stores them via setters. */
@@ -337,14 +295,14 @@ public:
    * Start parameter getters (values come via BuildAndStart)
    */
 
-  unsigned GetSampleRate() const override { return m_SampleRate; }
+  unsigned GetSampleRate() const { return m_SamplerPlayer.GetSampleRate(); }
   unsigned GetNSamplesPerBuffer() const { return m_NSamplesPerBuffer; }
 
   /*
    * Other getters
    */
 
-  uint64_t GetTime() const { return m_CurrentTime; }
+  uint64_t GetTime() const { return m_SamplerPlayer.GetTime(); }
   std::vector<float> GetMeterInfo();
   GOSoundScheduler &GetScheduler() { return m_Scheduler; }
 
@@ -383,13 +341,14 @@ public:
    * @param audioOutputConfigs  Output configurations; must not be empty.
    * @param nSamplesPerBuffer   Buffer size in samples (from audio system).
    * @param sampleRate          Sample rate in Hz (from audio system).
-   * @param recorder            Recorder (non-owning).
+   * @param recorder            Recorder (non-owning, must be a
+   * GOSoundRecorderTask).
    */
   void BuildAndStart(
     const std::vector<AudioOutputConfig> &audioOutputConfigs,
     unsigned nSamplesPerBuffer,
     unsigned sampleRate,
-    GOSoundRecorder &recorder);
+    GOSoundRecorderTask &recorder);
 
   /**
    * @brief Stops the engine and destroys tasks.
@@ -397,47 +356,6 @@ public:
    * Call after the audio system has disconnected from the engine.
    */
   void StopAndDestroy();
-
-  /*
-   * Organ interface (from GOSoundOrganInterface)
-   */
-
-  GOSoundSampler *StartPipeSample(
-    const GOSoundProvider *pipeProvider,
-    unsigned windchestN,
-    unsigned audioGroup,
-    unsigned velocity,
-    unsigned delay,
-    uint64_t prevEventTime,
-    bool isRelease = false,
-    uint64_t *pStartTimeSamples = nullptr) override {
-    return CreateTaskSample(
-      pipeProvider,
-      windchestN,
-      audioGroup,
-      velocity,
-      delay,
-      prevEventTime,
-      isRelease,
-      pStartTimeSamples);
-  }
-
-  inline GOSoundSampler *StartTremulantSample(
-    const GOSoundProvider *tremProvider,
-    unsigned tremulantN,
-    uint64_t prevEventTime) override {
-    return CreateTaskSample(
-      tremProvider, -tremulantN, 0, 0x7f, 0, prevEventTime, false, nullptr);
-  }
-
-  uint64_t StopSample(
-    const GOSoundProvider *pipe, GOSoundSampler *handle) override;
-  void SwitchSample(
-    const GOSoundProvider *pipe, GOSoundSampler *handle) override;
-  void UpdateVelocity(
-    const GOSoundProvider *pipe,
-    GOSoundSampler *handle,
-    unsigned velocity) override;
 
   /*
    * Functions called from GOSoundSystem
@@ -449,12 +367,6 @@ public:
 
   /** Wake up all worker threads. Called from the audio callback. */
   void WakeupThreads();
-
-  bool ProcessSampler(
-    float *buffer, GOSoundSampler *sampler, unsigned n_frames, float volume);
-  void ProcessRelease(GOSoundSampler *sampler);
-  void PassSampler(GOSoundSampler *sampler);
-  void ReturnSampler(GOSoundSampler *sampler);
 };
 
 #endif /* GOSOUNDORGANENGINE_H */
