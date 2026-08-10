@@ -279,6 +279,12 @@ static const GOConfigEnum INITIAL_LOAD_TYPES({
   {wxT("First"), (int)GOInitialLoadType::LOAD_FIRST},
 });
 
+static const GOConfigEnum MIDI_FILE_CHANNEL_MAPPINGS({
+  {wxT("PedalFirst"), (int)GOConfig::MIDI_PLAY_CHANNELS_PEDAL_FIRST},
+  {wxT("PedalLast"), (int)GOConfig::MIDI_PLAY_CHANNELS_PEDAL_LAST},
+  {wxT("UseInputNumber"), (int)GOConfig::MIDI_PLAY_CHANNELS_USE_INPUT_NUMBER},
+});
+
 GOConfig::GOConfig(
   const std::string &instanceName, const std::string &confFilePath)
   : m_InstanceName(instanceName),
@@ -359,6 +365,20 @@ GOConfig::GOConfig(
     AudioRecorderPath(this, GENERAL, wxT("AudioRecorder"), wxEmptyString),
     MidiRecorderPath(this, GENERAL, wxT("MIDIRecorderPath"), wxEmptyString),
     MidiPlayerPath(this, GENERAL, wxT("MIDIPlayerPath"), wxEmptyString),
+    IsToAskMidiPlayerChannelMapping(
+      this, GENERAL, wxT("IsToAskMidiPlayerChannelMapping"), true),
+    MidiPlayerChannelMappingWithInputNumber(
+      this,
+      GENERAL,
+      wxT("MidiPlayerChannelMappingWithInputNumber"),
+      MIDI_FILE_CHANNEL_MAPPINGS,
+      MIDI_PLAY_CHANNELS_PEDAL_LAST),
+    MidiPlayerChannelMappingWithoutInputNumber(
+      this,
+      GENERAL,
+      wxT("MidiPlayerChannelMappingWithoutInputNumber"),
+      MIDI_FILE_CHANNEL_MAPPINGS,
+      MIDI_PLAY_CHANNELS_PEDAL_LAST),
     CheckForUpdatesAtStartup(
       this, GENERAL, wxT("CheckForUpdatesAtStartup"), true),
     m_MidiIn(MIDI_IN),

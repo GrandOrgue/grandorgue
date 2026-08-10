@@ -2,6 +2,7 @@ set(go_tests
     # Add here your tests files
     combinations/GOTestDivisionalSetter.cpp
     loader/GOTestOrganReader.cpp
+    midi/GOTestMidiPlayerContent.cpp
     midi/GOTestMidiSendProxy.cpp
     model/GOTestDrawStop.cpp
     model/GOTestOrganModel.cpp
