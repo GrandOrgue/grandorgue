@@ -355,7 +355,7 @@ std::set<std::pair<unsigned, unsigned>> GOOrganModel::
   GetUsedWindchestGroupPairs() const {
   std::set<std::pair<unsigned, unsigned>> pairs;
 
-  for (unsigned n = GetODFRankCount(), rankI = 0; rankI < n; rankI++) {
+  for (unsigned n = GetRankCount(), rankI = 0; rankI < n; rankI++) {
     const GORank *pRank = GetRank(rankI);
 
     for (unsigned m = pRank->GetPipeCount(), pipeI = 0; pipeI < m; pipeI++) {
