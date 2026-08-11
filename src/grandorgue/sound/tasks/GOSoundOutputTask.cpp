@@ -100,10 +100,18 @@ void GOSoundOutputTask::EnsureBufferReady(
     Run(pThread);
 }
 
-void GOSoundOutputTask::DiscardContent() {
-  m_Reverb->Reset();
-  ResetMeterInfo();
+// Read without m_mutex, like every other IsEmpty(): called only while the
+// task is quiescent (deregistered from the scheduler), never concurrently
+// with DoRun()
+bool GOSoundOutputTask::IsEmpty() const {
+  bool isEmpty = true;
+
+  for (unsigned i = 0; i < m_MeterInfo.size() && isEmpty; i++)
+    isEmpty = m_MeterInfo[i] == 0;
+  return isEmpty;
 }
+
+void GOSoundOutputTask::DiscardContent() { ResetMeterInfo(); }
 
 void GOSoundOutputTask::ResetMeterInfo() {
   GOMutexLocker locker(m_mutex);
@@ -117,6 +125,10 @@ void GOSoundOutputTask::SetupReverb(
   unsigned nSamplesPerBuffer,
   unsigned sampleRate) {
   m_Reverb->Setup(config, nSamplesPerBuffer, sampleRate);
+  // a freshly configured reverb engine already starts silent, but reset
+  // explicitly so DiscardContent()'s old guarantee still holds if Setup()
+  // ever stops implying it
+  m_Reverb->Reset();
 }
 
 const std::vector<float> &GOSoundOutputTask::GetMeterInfo() {

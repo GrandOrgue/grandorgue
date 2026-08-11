@@ -45,8 +45,10 @@ public:
   GOSoundRecorderTask();
   virtual ~GOSoundRecorderTask();
 
+  bool IsEmpty() const override;
+
   void Open(wxString filename);
-  bool IsOpen();
+  bool IsOpen() const;
   void Close();
   void SetSampleRate(unsigned sample_rate);
   /* 1 = 8 bit, 2 = 16 bit, 3 = 24 bit, 4 = float */

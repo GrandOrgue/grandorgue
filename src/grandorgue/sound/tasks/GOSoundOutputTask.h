@@ -33,6 +33,8 @@ public:
 
   void SetOutputs(std::vector<GOSoundBufferTaskBase *> outputs);
 
+  bool IsEmpty() const override;
+
   void CompleteRound() override { Run(); }
   void EnsureBufferReady(
     bool isToComplete, GOSchedulerThread *pThread = nullptr) override;
