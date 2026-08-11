@@ -7,6 +7,8 @@
 
 #include "GOScheduler.h"
 
+#include <cassert>
+
 #include "scheduler/GOSchedulerTask.h"
 #include "threading/GOMutexLocker.h"
 
@@ -33,6 +35,9 @@ void GOScheduler::SetRepeatCount(unsigned count) {
 void GOScheduler::Clear() {
   GOMutexLocker lock(m_Mutex);
   Lock();
+  for (GOSchedulerTask *item : m_Work)
+    if (item)
+      item->DiscardContent();
   m_Work.clear();
   Update();
   Unlock();
@@ -62,7 +67,7 @@ void GOScheduler::AddList(
 void GOScheduler::Add(GOSchedulerTask *item) {
   if (!item)
     return;
-  item->DiscardContent();
+  assert(item->IsEmpty());
   GOMutexLocker lock(m_Mutex);
   Lock();
   AddList(item, m_Work);
