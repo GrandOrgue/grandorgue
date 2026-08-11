@@ -45,8 +45,10 @@ public:
   GOSoundRecorderTask();
   virtual ~GOSoundRecorderTask();
 
+  bool IsEmpty() const override;
+
   void Open(wxString filename);
-  bool IsOpen();
+  bool IsOpen() const;
   void Close();
   void SetSampleRate(unsigned sample_rate);
   /* 1 = 8 bit, 2 = 16 bit, 3 = 24 bit, 4 = float */
@@ -54,12 +56,6 @@ public:
   unsigned GetBytesPerSample() const { return m_BytesPerSample; }
   void SetOutputs(
     std::vector<GOSoundBufferTaskBase *> outputs, unsigned samples_per_buffer);
-
-  /** DiscardContent() also closes an open recording file, which
-   * GOSoundTaskBase::IsEmpty() alone does not account for */
-  bool IsEmpty() const override {
-    return !m_Recording && GOSoundTaskBase::IsEmpty();
-  }
 
   void DiscardContent() override;
 };

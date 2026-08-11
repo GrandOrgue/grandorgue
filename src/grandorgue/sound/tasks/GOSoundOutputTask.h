@@ -22,9 +22,6 @@ private:
   unsigned m_OutputCount;
   std::vector<float> m_MeterInfo;
   GOSoundReverb *m_Reverb;
-  /** Whether DoRun() has produced reverb/meter content since the last
-   * DiscardContent() */
-  std::atomic_bool m_HasContent;
 
   bool DoRun(GOSchedulerThread *pThread) override;
 
@@ -37,14 +34,11 @@ public:
 
   void SetOutputs(std::vector<GOSoundBufferTaskBase *> outputs);
 
+  bool IsEmpty() const override;
+
   void CompleteRound() override { Run(); }
   void EnsureBufferReady(
     bool isToComplete, GOSchedulerThread *pThread = nullptr) override;
-
-  /** DiscardContent() also resets the reverb tail and the meter, which
-   * accumulate across rounds independently of the round state that
-   * GOSoundTaskBase::IsEmpty() checks */
-  bool IsEmpty() const override { return !m_HasContent.load(); }
 
   void DiscardContent() override;
 

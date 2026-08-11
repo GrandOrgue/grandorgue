@@ -82,7 +82,11 @@ void GOSoundRecorderTask::Open(wxString filename) {
   m_BufferPos = 0;
 }
 
-bool GOSoundRecorderTask::IsOpen() { return m_Recording; }
+bool GOSoundRecorderTask::IsOpen() const { return m_Recording; }
+
+bool GOSoundRecorderTask::IsEmpty() const {
+  return !IsOpen() && GOSoundTaskBase::IsEmpty();
+}
 
 void GOSoundRecorderTask::Close() {
   GOMutexLocker locker(m_lock);
@@ -202,7 +206,4 @@ bool GOSoundRecorderTask::DoRun(GOSchedulerThread *pThread) {
   return isDone;
 }
 
-void GOSoundRecorderTask::DiscardContent() {
-  Close();
-  NewRound();
-}
+void GOSoundRecorderTask::DiscardContent() { NewRound(); }

@@ -25,8 +25,7 @@ GOSoundOutputTask::GOSoundOutputTask(
     m_Outputs(),
     m_OutputCount(0),
     m_MeterInfo(channels),
-    m_Reverb(0),
-    m_HasContent(false) {
+    m_Reverb(0) {
   m_Reverb = new GOSoundReverb(channels);
 }
 
@@ -65,7 +64,6 @@ bool GOSoundOutputTask::DoRun(GOSchedulerThread *pThread) {
     }
 
   if (!isStopped) {
-    m_HasContent.store(true);
     m_Reverb->Process(GetData(), GetNFrames());
 
     /* Clamp the output and put the maximum amplitude to m_MeterInfo */
@@ -102,11 +100,18 @@ void GOSoundOutputTask::EnsureBufferReady(
     Run(pThread);
 }
 
-void GOSoundOutputTask::DiscardContent() {
-  m_Reverb->Reset();
-  ResetMeterInfo();
-  m_HasContent.store(false);
+// Read without m_mutex, like every other IsEmpty(): called only while the
+// task is quiescent (deregistered from the scheduler), never concurrently
+// with DoRun()
+bool GOSoundOutputTask::IsEmpty() const {
+  bool isEmpty = true;
+
+  for (unsigned i = 0; i < m_MeterInfo.size() && isEmpty; i++)
+    isEmpty = m_MeterInfo[i] == 0;
+  return isEmpty;
 }
+
+void GOSoundOutputTask::DiscardContent() { ResetMeterInfo(); }
 
 void GOSoundOutputTask::ResetMeterInfo() {
   GOMutexLocker locker(m_mutex);
@@ -120,6 +125,10 @@ void GOSoundOutputTask::SetupReverb(
   unsigned nSamplesPerBuffer,
   unsigned sampleRate) {
   m_Reverb->Setup(config, nSamplesPerBuffer, sampleRate);
+  // a freshly configured reverb engine already starts silent, but reset
+  // explicitly so DiscardContent()'s old guarantee still holds if Setup()
+  // ever stops implying it
+  m_Reverb->Reset();
 }
 
 const std::vector<float> &GOSoundOutputTask::GetMeterInfo() {
