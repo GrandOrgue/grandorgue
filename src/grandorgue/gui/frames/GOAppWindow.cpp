@@ -50,8 +50,6 @@
 
 #include "icons/GOIconManager.h"
 
-#include "GOApp.h"
-#include "GODocument.h"
 #include "GOEvent.h"
 #include "GOOrganController.h"
 #include "Images.h"
@@ -347,6 +345,7 @@ GOAppWindow::GOAppWindow(
   AdjustVolumeControlWithSettings();
   m_Volume->SetValue(r_config.Volume());
 
+  std::string reverb = "reverb";
   m_ToolBar->AddTool(
     ID_RELEASELENGTH,
     _("&Release tail length"),
@@ -384,6 +383,7 @@ GOAppWindow::GOAppWindow(
   m_ToolBar->AddControl(m_Transpose);
   m_Transpose->SetValue(r_config.Transpose());
 
+  std::string polyphony = "polyphony";
   m_ToolBar->AddTool(
     ID_POLYPHONY,
     _("&Polyphony"),
@@ -405,6 +405,7 @@ GOAppWindow::GOAppWindow(
   m_ToolBar->AddControl(m_SamplerUsage);
   m_Polyphony->SetValue(r_config.PolyphonyLimit());
 
+  std::string panic = "panic";
   m_ToolBar->AddTool(
     ID_AUDIO_PANIC,
     _("&Panic\tEscape"),
