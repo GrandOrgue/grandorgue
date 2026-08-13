@@ -806,11 +806,12 @@ void GOOrganController::StartOrgan(GOSoundSystem &soundSystem) {
       m_config, m_config.GetAudioGroups().size());
 
   m_SoundEngine.SetFromConfig(m_config);
-  m_SoundEngine.BuildAndStart(
+  m_SoundEngine.BuildEngine(
     audioOutputConfigs,
     soundSystem.GetSamplesPerBuffer(),
     soundSystem.GetSampleRate(),
     soundSystem.GetAudioRecorder());
+  m_SoundEngine.StartEngine();
   soundSystem.ConnectToEngine(m_SoundEngine);
 
   GOMidiSystem &midi = soundSystem.GetMidi();
@@ -858,7 +859,8 @@ void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
   m_midi = NULL;
 
   soundSystem.DisconnectFromEngine(m_SoundEngine);
-  m_SoundEngine.StopAndDestroy();
+  m_SoundEngine.StopEngine();
+  m_SoundEngine.DestroyEngine();
 }
 
 void GOOrganController::PrepareRecording() {
