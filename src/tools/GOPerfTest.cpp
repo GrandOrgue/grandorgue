@@ -124,11 +124,12 @@ void GOPerfTestApp::RunTest(
       engine.SetHardPolyphony(10000);
       engine.SetScaledReleases(true);
       engine.SetInterpolationType(interpolation);
-      engine.BuildAndStart(
+      engine.BuildEngine(
         GOSoundOrganEngine::createDefaultOutputConfigs(),
         samples_per_frame,
         sample_rate,
         recorder);
+      engine.StartEngine();
 
       std::vector<GOSoundSampler *> handles;
       float output_buffer[samples_per_frame * 2];
@@ -177,7 +178,8 @@ void GOPerfTestApp::RunTest(
         playback_time * 1000.0 * pipes.size() / diff.ToLong());
 
       pipes.clear();
-      engine.StopAndDestroy();
+      engine.StopEngine();
+      engine.DestroyEngine();
     } catch (wxString msg) {
       wxLogError(wxT("Error: %s"), msg.c_str());
     }

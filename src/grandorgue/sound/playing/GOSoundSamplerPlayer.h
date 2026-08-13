@@ -201,6 +201,11 @@ public:
    * counter to zero. */
   unsigned GetAndResetUsedPolyphony() { return m_UsedPolyphony.exchange(0); }
 
+  /** @return the number of samplers currently checked out of the pool —
+   * active or releasing, across every task. Used by tests to verify a
+   * pause/resume or rebuild leaves the pool in the expected state. */
+  unsigned UsedSamplerCount() const { return m_SamplerPool.UsedSamplerCount(); }
+
   /*
    * Lifecycle
    */

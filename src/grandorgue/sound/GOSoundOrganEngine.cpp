@@ -283,6 +283,7 @@ void GOSoundOrganEngine::BuildEngine(
     pThread->Run();
 
   m_SamplerPlayer.Build(sampleRate);
+  m_SamplerPlayer.Reset();
   m_LifecycleState.store(LifecycleState::BUILT);
 }
 
@@ -326,14 +327,9 @@ void GOSoundOrganEngine::DestroyEngine() {
   m_LifecycleState.store(LifecycleState::IDLE);
 }
 
-void GOSoundOrganEngine::ResetCounters() {
-  m_SamplerPlayer.Reset();
-  m_Scheduler.Reset();
-}
-
 void GOSoundOrganEngine::StartEngine() {
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
-  ResetCounters();
+  m_Scheduler.Reset();
   m_Scheduler.ResumeGivingWork();
   m_LifecycleState.store(LifecycleState::WORKING);
 }
@@ -344,20 +340,6 @@ void GOSoundOrganEngine::StopEngine() {
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
   m_LifecycleState.store(LifecycleState::BUILT);
-}
-
-void GOSoundOrganEngine::BuildAndStart(
-  const std::vector<AudioOutputConfig> &audioOutputConfigs,
-  unsigned nSamplesPerBuffer,
-  unsigned sampleRate,
-  GOSoundRecorderTask &recorder) {
-  BuildEngine(audioOutputConfigs, nSamplesPerBuffer, sampleRate, recorder);
-  StartEngine();
-}
-
-void GOSoundOrganEngine::StopAndDestroy() {
-  StopEngine();
-  DestroyEngine();
 }
 
 void GOSoundOrganEngine::SetUsed(bool isUsed) {

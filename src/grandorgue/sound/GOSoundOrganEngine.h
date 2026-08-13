@@ -35,14 +35,21 @@ class GOWindchest;
 /**
  * @brief Sound engine for one loaded organ.
  *
- * Lifecycle (steps 3-4 are repeatable for restart with new parameters):
+ * Lifecycle (steps 3-4 are repeatable, e.g. to pause and resume playback
+ * without losing sounding notes):
  *
  *   1. Constructor: GOSoundOrganEngine(organModel, memoryPool)
  *   2. Configuration: SetFromConfig(config) or manual setters
- *   3. BuildAndStart(audioOutputConfigs, nSamplesPerBuffer, sampleRate,
- * recorder) — builds tasks and starts the engine
+ *   3. BuildEngine(audioOutputConfigs, nSamplesPerBuffer, sampleRate,
+ *      recorder) — builds tasks and the sampler pool. IDLE → BUILT.
+ *   4. StartEngine() — starts dispatching work to worker threads. BUILT →
+ *      WORKING.
  *      ... GetAudioOutput() is called from the audio thread ...
- *   4. StopAndDestroy() — stops the engine and destroys tasks
+ *   5. StopEngine() — halts work dispatch without touching any task's
+ *      content, so a subsequent StartEngine() resumes rather than restarts.
+ *      WORKING → BUILT. Repeat from step 4 to resume.
+ *   6. DestroyEngine() — destroys tasks and reclaims the sampler pool. Only
+ *      legal from BUILT (i.e. after StopEngine()). BUILT → IDLE.
  */
 class GOSoundOrganEngine {
 public:
@@ -118,7 +125,7 @@ private:
   GOSoundReverb::ReverbConfig m_ReverbConfig;
 
   /*
-   * Start parameters (set from BuildAndStart arguments)
+   * Start parameters (set from BuildEngine arguments)
    */
 
   unsigned m_NSamplesPerBuffer;
@@ -180,22 +187,6 @@ private:
   //   — uses m_Scheduler [B10]
   std::vector<std::unique_ptr<GOSoundThread>> mp_threads;
 
-  /*
-   * Private lifecycle functions (callee first)
-   */
-
-  void BuildEngine(
-    const std::vector<AudioOutputConfig> &audioOutputConfigs,
-    unsigned nSamplesPerBuffer,
-    unsigned sampleRate,
-    GOSoundRecorderTask &recorder);
-  void DestroyEngine();
-
-  void ResetCounters();
-
-  void StartEngine();
-  void StopEngine();
-
 public:
   /*
    * Constructors and destructors
@@ -214,6 +205,11 @@ public:
   /** Returns a reference to the sampler player (used to connect the organ
    * model via GOSoundOrganInterfaceProxy). */
   GOSoundSamplerPlayer &GetSamplerPlayer() { return m_SamplerPlayer; }
+
+  /** @return GOSoundSamplerPlayer::UsedSamplerCount() — see there. */
+  unsigned GetUsedSamplerCount() const {
+    return m_SamplerPlayer.UsedSamplerCount();
+  }
 
   /*
    * Configuration getters and setters
@@ -292,7 +288,7 @@ public:
   void SetFromConfig(GOConfig &config);
 
   /*
-   * Start parameter getters (values come via BuildAndStart)
+   * Start parameter getters (values come via BuildEngine)
    */
 
   unsigned GetSampleRate() const { return m_SamplerPlayer.GetSampleRate(); }
@@ -310,8 +306,8 @@ public:
    * Lifecycle state
    */
 
-  /** true if the engine is in the initial state (before BuildAndStart or after
-   * StopAndDestroy). */
+  /** true if the engine is in the initial state (before BuildEngine or after
+   * DestroyEngine). */
   bool IsIdle() const {
     return m_LifecycleState.load() == LifecycleState::IDLE;
   }
@@ -334,28 +330,50 @@ public:
    */
 
   /**
-   * @brief Creates tasks and starts the engine.
+   * @brief Builds every sound task from the current configuration and
+   * constructs the sampler pool for this session.
    *
-   * Call after SetFromConfig() or manual setters.
-   * After return the engine is ready to receive GetAudioOutput() calls.
+   * Call after SetFromConfig() or manual setters. IDLE → BUILT.
    * @param audioOutputConfigs  Output configurations; must not be empty.
    * @param nSamplesPerBuffer   Buffer size in samples (from audio system).
    * @param sampleRate          Sample rate in Hz (from audio system).
    * @param recorder            Recorder (non-owning, must be a
    * GOSoundRecorderTask).
    */
-  void BuildAndStart(
+  void BuildEngine(
     const std::vector<AudioOutputConfig> &audioOutputConfigs,
     unsigned nSamplesPerBuffer,
     unsigned sampleRate,
     GOSoundRecorderTask &recorder);
 
   /**
-   * @brief Stops the engine and destroys tasks.
+   * @brief Destroys every task built by BuildEngine() and reclaims the
+   * sampler pool.
    *
-   * Call after the audio system has disconnected from the engine.
+   * Requires the engine to be quiesced first (BUILT, i.e. after
+   * StopEngine()) — this is not a pause, sounding notes do not survive it.
+   * BUILT → IDLE.
    */
-  void StopAndDestroy();
+  void DestroyEngine();
+
+  /**
+   * @brief Starts a new round and resumes dispatching work to worker
+   * threads.
+   *
+   * Safe to call after BuildEngine() (fresh start) or after StopEngine()
+   * (resume: task content — active/releasing samplers — was left untouched
+   * by StopEngine(), so sounding notes continue). BUILT → WORKING.
+   */
+  void StartEngine();
+
+  /**
+   * @brief Drains in-flight processing and halts work dispatch, without
+   * touching any task's content.
+   *
+   * A subsequent StartEngine() resumes rather than restarts. WORKING →
+   * BUILT.
+   */
+  void StopEngine();
 
   /*
    * Functions called from GOSoundSystem
