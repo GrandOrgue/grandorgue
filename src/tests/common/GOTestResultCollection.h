@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,12 +13,12 @@
 class GOTestResultCollection {
 
 private:
-  std::vector<GOTestResult *> test_results;
+  std::vector<GOTestResult> test_results;
 
 public:
   GOTestResultCollection();
-  void add_result(GOTestResult *test);
-  std::vector<GOTestResult *> get_results();
+  void add_result(GOTestResult test);
+  std::vector<GOTestResult> get_results();
 };
 
 #endif

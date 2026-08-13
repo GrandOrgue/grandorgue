@@ -114,6 +114,11 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
   }
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);
+  // Register m_setter for ownership immediately: m_elementcreators.clear()
+  // in the destructor is what frees it, and Load() (which used to be the
+  // only place registering it) may never run (e.g. in tests, or if loading
+  // fails before reaching that point), which would otherwise leak it.
+  m_elementcreators.push_back(m_setter);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
@@ -280,7 +285,6 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   // It must be created before GOOrganModel::Load because lots of objects
   // reference to it
   GOOrganModel::SetCombinationController(m_setter);
-  m_elementcreators.push_back(m_setter);
 
   GOOrganModel::Load(cfg);
 
