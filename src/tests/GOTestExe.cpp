@@ -18,6 +18,8 @@
 #include "testing/midi/GOTestMidiSendProxy.h"
 #include "testing/model/GOTestDrawStop.h"
 #include "testing/model/GOTestOrganModel.h"
+#include "testing/model/GOTestPipeConfigTreeNode.h"
+#include "testing/model/GOTestSoundingPipe.h"
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestWindchest.h"
 #include "testing/scheduler/GOTestScheduler.h"
@@ -25,6 +27,7 @@
 #include "testing/sound/GOTestSoundOrganEngine.h"
 #include "testing/sound/GOTestSoundOrganEngineFactories.h"
 #include "testing/sound/GOTestSoundOrganEngineStress.h"
+#include "testing/sound/GOTestSoundWindchestGroupTaskGrid.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferPlanarMutable.h"
 #include "testing/sound/buffer/GOTestSoundBuffer.h"
@@ -41,6 +44,7 @@
 #include "testing/sound/reverb/GOTestSoundReverb.h"
 #include "testing/sound/tasks/GOTestPerfSoundTaskBase.h"
 #include "testing/sound/tasks/GOTestSoundTaskBase.h"
+#include "testing/sound/tasks/GOTestSoundWindchestGroupTask.h"
 
 int main(int argc, char *argv[]) {
   /*
@@ -70,6 +74,8 @@ int main(int argc, char *argv[]) {
   GOTestOrganController testOrganController;
   GOTestDrawStop testDrawStop;
   GOTestOrganModel testOrganModel;
+  GOTestPipeConfigTreeNode testPipeConfigTreeNode;
+  GOTestSoundingPipe testSoundingPipe;
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
   GOTestScheduler testScheduler;
@@ -94,7 +100,9 @@ int main(int argc, char *argv[]) {
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
   GOTestSoundReverb testSoundReverb;
+  GOTestSoundWindchestGroupTaskGrid testSoundWindchestGroupTaskGrid;
   GOTestSoundTaskBase testSoundTaskBase;
+  GOTestSoundWindchestGroupTask testSoundWindchestGroupTask;
   GOTestPerfSoundTaskBase testPerfSoundTaskBase;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
