@@ -8,6 +8,7 @@
 #include "GOSoundOrganEngine.h"
 
 #include <algorithm>
+#include <set>
 
 #include "buffer/GOSoundBufferMutable.h"
 #include "config/GOConfig.h"
@@ -19,6 +20,7 @@
 #include "tasks/GOSoundReleaseTask.h"
 #include "tasks/GOSoundTouchTask.h"
 #include "tasks/GOSoundTremulantTask.h"
+#include "tasks/GOSoundWindchestGroupTask.h"
 #include "tasks/GOSoundWindchestTask.h"
 #include "threading/GOMutexLocker.h"
 
@@ -126,7 +128,10 @@ GOSoundOrganEngine::GOSoundOrganEngine(
     r_MemoryPool(memoryPool),
     mp_TouchTask(std::make_unique<GOSoundTouchTask>(r_MemoryPool)),
     m_SamplerPlayer(
-      mp_AudioGroupTasks, mp_WindchestTasks, mp_TremulantTasks, mp_ReleaseTask),
+      m_WindchestGroupTaskGrid,
+      mp_WindchestTasks,
+      mp_TremulantTasks,
+      mp_ReleaseTask),
     m_NAudioGroups(1),
     m_NAuxThreads(0),
     m_IsDownmix(false),
@@ -187,18 +192,72 @@ void GOSoundOrganEngine::BuildEngine(
   // Fill out the start parameters
   m_NSamplesPerBuffer = nSamplesPerBuffer;
 
-  // [B1] Build audio group tasks
+  // [B1] Build tremulant tasks
+  for (unsigned n = r_OrganModel.GetTremulantCount(), tremI = 0; tremI < n;
+       tremI++)
+    mp_TremulantTasks.push_back(
+      new GOSoundTremulantTask(m_SamplerPlayer, m_NSamplesPerBuffer));
+
+  // [B2] Build windchest tasks
+  // Special windchest task for detached releases (index 0 =
+  // DETACHED_RELEASE_TASK_ID)
+  mp_WindchestTasks.push_back(
+    std::make_unique<GOSoundWindchestTask>(*this, nullptr));
+  for (unsigned n = r_OrganModel.GetWindchestCount(), wcI = 0; wcI < n; wcI++)
+    mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
+      *this, r_OrganModel.GetWindchest(wcI)));
+
+  // [B3] Initialize windchests with tremulant tasks
+  for (auto &pWcTask : mp_WindchestTasks)
+    pWcTask->Init(mp_TremulantTasks);
+
+  // [B4] Build the windchest-group task grid
+  const unsigned nWindchests = r_OrganModel.GetWindchestCount() + 1;
+
+  m_WindchestGroupTaskGrid.Resize(nWindchests, m_NAudioGroups);
+  {
+    // main cells: GetUsedWindchestGroupPairs() is a std::set, so each pair -
+    // and so each cell - is visited at most once here
+    std::set<unsigned> usedAudioGroupIds;
+
+    for (auto &pair : r_OrganModel.GetUsedWindchestGroupPairs()) {
+      m_WindchestGroupTaskGrid.BuildWindchestGroupTask(
+        pair.first,
+        pair.second,
+        m_scheduler.GetRoundCounter(),
+        m_SamplerPlayer,
+        GetWindchestTaskAt(pair.first),
+        m_NSamplesPerBuffer);
+      usedAudioGroupIds.insert(pair.second);
+    }
+
+    // detached-release row: one task per audio group actually used, not per
+    // pair - several windchests may feed the same group, but its release
+    // cell must only be built once, see
+    // GOSoundWindchestGroupTaskGrid::BuildWindchestGroupTask()
+    for (unsigned audioGroupId : usedAudioGroupIds)
+      m_WindchestGroupTaskGrid.BuildWindchestGroupTask(
+        0,
+        audioGroupId,
+        m_scheduler.GetRoundCounter(),
+        m_SamplerPlayer,
+        GetWindchestTaskAt(0),
+        m_NSamplesPerBuffer);
+  }
+
+  // [B5] Build audio group tasks
   std::vector<GOSoundBufferTaskBase *> groupOutputs;
 
   for (unsigned groupI = 0; groupI < m_NAudioGroups; groupI++) {
-    GOSoundGroupTask *pGroupTask = new GOSoundGroupTask(
-      m_scheduler.GetRoundCounter(), m_SamplerPlayer, m_NSamplesPerBuffer);
+    GOSoundGroupTask *pGroupTask = new GOSoundGroupTask(m_NSamplesPerBuffer);
 
+    pGroupTask->SetInputs(
+      m_WindchestGroupTaskGrid.GetInputsForGroup(groupI, nWindchests));
     mp_AudioGroupTasks.push_back(pGroupTask);
     groupOutputs.push_back(pGroupTask);
   }
 
-  // [B2] Build audio output states (per-device output task + callback sync)
+  // [B6] Build audio output states (per-device output task + callback sync)
   unsigned nTotalChannels = 0;
 
   m_OutputStates.resize(audioOutputConfigs.size());
@@ -224,7 +283,7 @@ void GOSoundOrganEngine::BuildEngine(
     nTotalChannels += nChannels;
   }
 
-  // [B3] Resize meter info to match real output channels.
+  // [B7] Resize meter info to match real output channels.
   // std::atomic is not copyable/movable, so we construct a fresh vector and
   // swap instead of resize.
   {
@@ -233,7 +292,7 @@ void GOSoundOrganEngine::BuildEngine(
     m_MeterInfo.swap(newMeterInfo);
   }
 
-  // [B4] Build downmix task (optional stereo mix for recorder)
+  // [B8] Build downmix task (optional stereo mix for recorder)
   if (m_IsDownmix) {
     const std::vector<float> gains = createDownmixGains(m_NAudioGroups);
     std::vector<float> scaleFactors(gains.size());
@@ -246,7 +305,7 @@ void GOSoundOrganEngine::BuildEngine(
     mp_DownmixTask->SetOutputs(groupOutputs);
   }
 
-  // [B5] Set up recorder outputs
+  // [B9] Set up recorder outputs
   {
     std::vector<GOSoundBufferTaskBase *> recorderOutputs;
 
@@ -259,39 +318,22 @@ void GOSoundOrganEngine::BuildEngine(
     m_RecorderTask.SetOutputs(recorderOutputs, m_NSamplesPerBuffer);
   }
 
-  // [B6] Set up reverb
+  // [B10] Set up reverb
   if (mp_DownmixTask)
     mp_DownmixTask->SetupReverb(
       m_ReverbConfig, m_NSamplesPerBuffer, sampleRate);
   for (OutputState &state : m_OutputStates)
     state.mp_task->SetupReverb(m_ReverbConfig, m_NSamplesPerBuffer, sampleRate);
 
-  // [B7] Build tremulant tasks
-  for (unsigned n = r_OrganModel.GetTremulantCount(), tremI = 0; tremI < n;
-       tremI++)
-    mp_TremulantTasks.push_back(
-      new GOSoundTremulantTask(m_SamplerPlayer, m_NSamplesPerBuffer));
-
-  // [B8] Build windchest tasks
-  // Special windchest task for detached releases (index 0 =
-  // DETACHED_RELEASE_TASK_ID)
-  mp_WindchestTasks.push_back(
-    std::make_unique<GOSoundWindchestTask>(*this, nullptr));
-  for (unsigned n = r_OrganModel.GetWindchestCount(), wcI = 0; wcI < n; wcI++)
-    mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
-      *this, r_OrganModel.GetWindchest(wcI)));
-
-  // [B9] Initialize windchests with tremulant tasks
-  for (auto &pWcTask : mp_WindchestTasks)
-    pWcTask->Init(mp_TremulantTasks);
-
-  // [B10] Add all tasks to scheduler
+  // [B11] Add all tasks to scheduler
   m_scheduler.Clear();
   m_scheduler.SetRepeatCount(m_NReleaseRepeats);
   for (GOSoundTremulantTask *pTremTask : mp_TremulantTasks)
     m_scheduler.Add(pTremTask);
   for (auto &pWcTask : mp_WindchestTasks)
     m_scheduler.Add(pWcTask.get());
+  m_WindchestGroupTaskGrid.ForEachTask(
+    [this](GOSoundWindchestGroupTask *pTask) { m_scheduler.Add(pTask); });
   for (GOSoundGroupTask *pGroupTask : mp_AudioGroupTasks)
     m_scheduler.Add(pGroupTask);
   if (mp_DownmixTask)
@@ -302,7 +344,7 @@ void GOSoundOrganEngine::BuildEngine(
   m_scheduler.Add(mp_ReleaseTask.get());
   m_scheduler.Add(mp_TouchTask.get());
 
-  // [B11] Build worker threads
+  // [B12] Build worker threads
   for (unsigned threadI = 0; threadI < m_NAuxThreads; threadI++)
     mp_threads.push_back(std::make_unique<GOSchedulerThread>(&m_scheduler));
   for (auto &pThread : mp_threads)
@@ -318,36 +360,53 @@ void GOSoundOrganEngine::DestroyEngine() {
 
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
 
-  // [B11] Destroy worker threads
+  // [B12] Destroy worker threads
   for (auto &pThread : mp_threads)
     pThread->Delete();
   mp_threads.clear();
 
-  // [B10] Clear scheduler
+  // [B11] Clear scheduler
   m_scheduler.Clear();
 
-  // [B9] + [B8] Destroy windchest tasks (drops Init() connections too)
-  mp_WindchestTasks.clear();
+  // [B10] Reverb — no explicit cleanup (owned by output tasks below)
+  // [B9] Recorder outputs — no explicit cleanup (recorder is non-owning)
 
-  // [B7] Destroy tremulant tasks
-  mp_TremulantTasks.clear();
-
-  // [B6] Reverb — no explicit cleanup (owned by output tasks below)
-  // [B5] Recorder outputs — no explicit cleanup (recorder is non-owning)
-
-  // [B4] Destroy downmix task
+  // [B8] Destroy downmix task
   mp_DownmixTask.reset();
 
-  // [B3] Clear meter info
+  // [B7] Clear meter info
   m_MeterInfo.clear();
 
-  // [B2] Destroy audio output states
+  // [B6] Destroy audio output states
   m_OutputStates.clear();
 
-  // [B1] Destroy audio group tasks
-  for (GOSoundGroupTask *pGroupTask : mp_AudioGroupTasks)
-    pGroupTask->WaitAndDiscardContent();
+  // [B5] Destroy audio group tasks: unwire before the grid (built at [B4])
+  // is destroyed, so no live task is left holding a dangling pointer into it
+  for (GOSoundGroupTask *pGroupTask : mp_AudioGroupTasks) {
+    pGroupTask->SetInputs({});
+    pGroupTask->DiscardContent();
+  }
   mp_AudioGroupTasks.clear();
+
+  // [B4] Destroy the windchest-group task grid. Every GOSoundProcessorState
+  // owned by a grid cell's chain state must be destroyed before the
+  // GOSoundProcessor it was created from (owned by the windchest tasks,
+  // destroyed below at [B2]) — this is exactly why windchest/tremulant
+  // construction was moved ahead of the grid at [B1]-[B3]: as the mirror of
+  // that build order, this step runs before [B2] destroys the windchest
+  // tasks, automatically.
+  m_WindchestGroupTaskGrid.ForEachTask(
+    [](GOSoundWindchestGroupTask *pTask) { pTask->WaitAndDiscardContent(); });
+  m_WindchestGroupTaskGrid.Clear();
+
+  // [B3] Init() — nothing to explicitly undo; its connections drop with the
+  // windchest tasks at [B2] below
+
+  // [B2] Destroy windchest tasks
+  mp_WindchestTasks.clear();
+
+  // [B1] Destroy tremulant tasks
+  mp_TremulantTasks.clear();
 
   m_SamplerPlayer.Destroy();
   m_LifecycleState.store(LifecycleState::IDLE);
@@ -378,6 +437,62 @@ void GOSoundOrganEngine::StopEngine() {
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
   m_LifecycleState.store(LifecycleState::BUILT);
+}
+
+GOSoundOrganEngine::AudioGroupRoutingChange GOSoundOrganEngine::
+  PrepareSoundRoutingFor(const std::set<std::pair<unsigned, unsigned>> &pairs) {
+  AudioGroupRoutingChange change;
+  std::set<unsigned> newAudioGroupIds;
+
+  // main cells: pairs is already unique by (windchestN, audioGroupId), so
+  // each cell is visited at most once in this loop
+  for (const auto &[windchestN, audioGroupId] : pairs)
+    if (!m_WindchestGroupTaskGrid.HasWindchestGroupTask(
+          windchestN, audioGroupId)) {
+      change.newTasks.push_back(
+        m_WindchestGroupTaskGrid.BuildWindchestGroupTask(
+          windchestN,
+          audioGroupId,
+          m_scheduler.GetRoundCounter(),
+          m_SamplerPlayer,
+          GetWindchestTaskAt(windchestN),
+          m_NSamplesPerBuffer));
+      newAudioGroupIds.insert(audioGroupId);
+    }
+
+  // detached-release row: only for groups that just gained a new main cell -
+  // a group with no new main task keeps whatever release routing it already
+  // had, nothing to check or rebuild for it. Has() still gates the build: a
+  // group can be "new" here on windchest X while its release row already
+  // exists from windchest Y's earlier routing.
+  for (unsigned audioGroupId : newAudioGroupIds)
+    if (!m_WindchestGroupTaskGrid.HasWindchestGroupTask(0, audioGroupId))
+      change.newTasks.push_back(
+        m_WindchestGroupTaskGrid.BuildWindchestGroupTask(
+          0,
+          audioGroupId,
+          m_scheduler.GetRoundCounter(),
+          m_SamplerPlayer,
+          GetWindchestTaskAt(0),
+          m_NSamplesPerBuffer));
+
+  // precompute the input list for every group that gained a cell above, so
+  // CommitSoundRoutingFor() only has to install it, not scan the grid while
+  // the engine is quiesced
+  for (unsigned audioGroupId : newAudioGroupIds)
+    change.groupInputs[audioGroupId]
+      = m_WindchestGroupTaskGrid.GetInputsForGroup(
+        audioGroupId, mp_WindchestTasks.size());
+
+  return change;
+}
+
+void GOSoundOrganEngine::CommitSoundRoutingFor(
+  AudioGroupRoutingChange &&change) {
+  for (GOSoundWindchestGroupTask *pTask : change.newTasks)
+    m_scheduler.Add(pTask);
+  for (auto &[audioGroupId, inputs] : change.groupInputs)
+    mp_AudioGroupTasks[audioGroupId]->SetInputs(std::move(inputs));
 }
 
 void GOSoundOrganEngine::SetUsed(bool isUsed) {
@@ -469,8 +584,8 @@ void GOSoundOrganEngine::NextPeriod() {
 
   for (auto &state : m_OutputStates) {
     for (const float f : state.mp_task->GetMeterInfo()) {
-      // m_MeterInfo.size() == nTotalChannels [B3] == sum of channels across
-      // all m_OutputStates [B2], so the iterator never overflows.
+      // m_MeterInfo.size() == nTotalChannels [B7], accumulated while
+      // building m_OutputStates [B6], so the iterator never overflows.
       assert(meterIt < meterEnd);
       atomic_fetch_max_relaxed(*meterIt++, f);
     }

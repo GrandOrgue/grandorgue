@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,7 @@
 #ifndef GOORGANSETTINGSPIPESTAB_H
 #define GOORGANSETTINGSPIPESTAB_H
 
+#include <utility>
 #include <vector>
 
 #include <wx/event.h>
@@ -33,6 +34,7 @@ class GOOrganSettingsPipesTab : public GOOrganSettingsTab {
 private:
   class TreeItemData;
 
+  GOOrganModel &r_OrganModel;
   GOConfig &r_config;
   GOPipeConfigNode &r_RootNode;
 
@@ -80,8 +82,26 @@ private:
   void RemoveEmpty(wxChoice *choice);
 
   void Load(bool isForce);
-  void UpdateAudioGroup(
-    const std::vector<wxString> &audio_group, unsigned &pos, wxTreeItemId item);
+
+  /**
+   * Walks item and every descendant exactly once, recording each visited
+   * node's round-robin-assigned target group. Recording into outAssignments
+   * instead of mutating the node immediately lets DistributeAudio() run the
+   * routing pre-scan and the actual mutation off the same recorded list,
+   * rather than two tree walks that would need to land on identical
+   * assignments to stay consistent.
+   * @param audio_group the audio group names being distributed round-robin
+   * @param pos index into audio_group for the next visited node; advanced by
+   *   this call
+   * @param item the subtree root to walk
+   * @param outAssignments (node, target group name) pairs are appended here,
+   *   in walk order
+   */
+  void CollectAudioGroupAssignments(
+    const std::vector<wxString> &audio_group,
+    unsigned &pos,
+    wxTreeItemId item,
+    std::vector<std::pair<TreeItemData *, wxString>> &outAssignments);
 
   void OnTreeChanging(wxTreeEvent &e);
   void OnTreeChanged(wxTreeEvent &e);
