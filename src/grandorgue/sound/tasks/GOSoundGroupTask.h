@@ -8,78 +8,47 @@
 #ifndef GOSOUNDGROUPTASK_H
 #define GOSOUNDGROUPTASK_H
 
-#include <atomic>
-
-#include "scheduler/GORoundCounter.h"
-#include "sound/playing/GOSoundSamplerList.h"
-#include "threading/GOCondition.h"
+#include <vector>
 
 #include "GOSoundBufferTaskBase.h"
 
-class GOSchedulerThread;
-class GOSoundBufferMutable;
-class GOSoundSamplerPlayer;
-
+/**
+ * Sums the buffers of one audio group's windchest-group tasks (see
+ * GOSoundWindchestGroupTask) into its own buffer. Unlike
+ * GOSoundWindchestGroupTask, this task does no cooperative per-sampler
+ * mixing of its own: it treats its inputs as already-computed buffers, the
+ * same way GOSoundOutputTask treats its audio-group inputs.
+ */
 class GOSoundGroupTask : public GOSoundBufferTaskBase {
 private:
-  const GORoundCounter &r_RoundCounter;
-  GOSoundSamplerPlayer &r_SamplerPlayer;
-  GOSoundSamplerList m_Active;
-  GOSoundSamplerList m_Release;
-  GOCondition m_Condition;
+  /** The windchest-group tasks summed into this task's buffer, one per
+   * (windchest, this audio group) pair that is actually used. Set by
+   * SetInputs() during BuildEngine(); not owned by this task */
+  std::vector<GOSoundBufferTaskBase *> mp_inputs;
 
-  // the number of threads that are processing the samples
-  std::atomic_uint m_ActiveCount;
-
-  void ProcessList(
-    GOSoundSamplerList &list,
-    bool isToDropOld,
-    GOSoundBufferMutable &outBuffer);
+  /** Sums mp_inputs into this task's buffer, see GOSoundTaskBase::DoRun() */
+  bool DoRun(GOSchedulerThread *pThread) override;
 
 public:
-  GOSoundGroupTask(
-    const GORoundCounter &roundCounter,
-    GOSoundSamplerPlayer &samplerPlayer,
-    unsigned nFramesPerBuffer);
+  /** @param nFramesPerBuffer the number of frames in this task's buffer */
+  GOSoundGroupTask(unsigned nFramesPerBuffer);
 
-  unsigned GetCost() const override;
-  bool IsEmpty() const override;
-  void Run(GOSchedulerThread *pThread = nullptr) override;
+  /** @return the windchest-group tasks summed into this task's buffer */
+  const std::vector<GOSoundBufferTaskBase *> &GetInputs() const {
+    return mp_inputs;
+  }
+
+  /** Sets the windchest-group tasks to sum into this task's buffer */
+  void SetInputs(std::vector<GOSoundBufferTaskBase *> inputs);
+
+  /** Forces the round to complete synchronously before returning, see
+   * GOSoundOutputTask::EnsureBufferReady() */
   void EnsureBufferReady(
     bool isToComplete, GOSchedulerThread *pThread = nullptr) override;
 
-  /**
-   * Unlike the base implementation, does not return until the round has
-   * actually reached RUN_STATE_DONE.
-   *
-   * This task mixes in ProcessList() outside m_mutex, so the mutex NewRound()
-   * takes does not exclude a worker that is still mixing. Without waiting
-   * here, NewRound() could reset the round under such a worker, which would
-   * then merge the previous period into the new period's buffer, mark the
-   * fresh round done before anything was mixed into it, and underflow
-   * m_ActiveCount. Waiting makes "the round is over" true by the time
-   * GOScheduler::CompleteRoundList() returns, which is what NewRound()
-   * relies on.
-   *
-   * Normally free: GetAudioOutput() has already driven this task to
-   * RUN_STATE_DONE before NextPeriod() is entered, so the wait returns at
-   * once. It only really blocks for an audio group whose scale factors are
-   * zero in every output, which is the case nothing else waits for.
-   */
-  void CompleteRound() override;
-
-private:
-  /**
-   * Resets the active-worker count for the next round. Asserts first that the
-   * round protocol really brought this task to rest, which the mutex
-   * NewRound() holds cannot guarantee on its own - see the .cpp.
-   */
-  void DoNewRound() override;
-
-public:
-  void DiscardContent() override;
-  void Add(GOSoundSampler *sampler);
-  void WaitAndDiscardContent();
+  /** Not cooperative, so a plain synchronous Run() suffices, see
+   * GOSoundOutputTask::CompleteRound() */
+  void CompleteRound() override { Run(); }
 };
 
 #endif
