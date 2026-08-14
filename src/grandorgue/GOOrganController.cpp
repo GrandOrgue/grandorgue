@@ -806,6 +806,26 @@ void GOOrganController::ResumeOrgan() {
   p_SoundSystem->ConnectToEngine(m_SoundEngine);
 }
 
+void GOOrganController::AssertSoundRoutingFor(
+  unsigned windchestN, unsigned audioGroupId) const {
+  if (p_SoundSystem)
+    assert(m_SoundEngine.HasSoundRoutingFor(windchestN, audioGroupId));
+}
+
+void GOOrganController::EnsureSoundRoutingFor(
+  const std::set<std::pair<unsigned, unsigned>> &pairs) {
+  if (p_SoundSystem) {
+    GOSoundOrganEngine::AudioGroupRoutingChange change
+      = m_SoundEngine.PrepareSoundRoutingFor(pairs);
+
+    if (!change.IsEmpty()) {
+      SuspendOrgan();
+      m_SoundEngine.CommitSoundRoutingFor(std::move(change));
+      ResumeOrgan();
+    }
+  }
+}
+
 void GOOrganController::StartOrgan(
   GOSoundSystem &soundSystem, GOMidiSystem &midi) {
   const std::vector<GOSoundOrganEngine::AudioOutputConfig> audioOutputConfigs

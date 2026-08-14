@@ -68,6 +68,47 @@ private:
    */
   void TestReconnectAfterMidPeriodDisconnect();
 
+  /*
+   * StopEngine() must not touch the sampler pool: a sample started before
+   * Stop is still checked out (GetUsedSamplerCount() unchanged) and can
+   * still be mixed after the following StartEngine() resumes.
+   */
+  void TestStopStartResumePreservesSamplers();
+
+  /*
+   * DestroyEngine() itself does not touch the pool - GetUsedSamplerCount()
+   * stays at whatever it was before Destroy; reclaiming (GetUsedSamplerCount()
+   * back to 0) happens on the following BuildEngine(). A polyphony limit
+   * lowered after Destroy still takes effect on that next BuildEngine(),
+   * since the pool's shrink-on-return happens there rather than in
+   * DestroyEngine().
+   */
+  void TestDestroyRebuildReclaimsAndResizesPool();
+
+  /* AudioGroupRoutingChange::IsEmpty() is true default-constructed, false
+   * once PrepareSoundRoutingFor() actually builds a task. */
+  void TestAudioGroupRoutingChangeIsEmpty();
+
+  /*
+   * HasSoundRoutingFor() is false for a pair with no task and true once
+   * PrepareSoundRoutingFor() has built its grid cells - even before
+   * CommitSoundRoutingFor() registers them with the scheduler, since Has()
+   * only reflects grid population.
+   */
+  void TestHasSoundRoutingFor();
+
+  /*
+   * PrepareSoundRoutingFor() for a pair with no existing cell builds it
+   * (and its detached-release cell) without touching the scheduler or any
+   * GOSoundGroupTask while the engine keeps running; CommitSoundRoutingFor()
+   * under a suspend/resume then makes the pair actually usable - a sample
+   * started on it afterwards does not hit GetWindchestGroupTask()'s
+   * assert(pTask). A second PrepareSoundRoutingFor() for the same pair,
+   * even without an intervening Commit, does not try to build again (the
+   * grid cell built by the first call already makes Has() true).
+   */
+  void TestPrepareAndCommitSoundRoutingFor();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
