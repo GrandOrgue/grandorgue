@@ -239,7 +239,6 @@ private:
 
   void NextPeriod();
 
-
 public:
   /*
    * Constructors and destructors
