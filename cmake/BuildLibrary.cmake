@@ -8,7 +8,13 @@ function(BUILD_LIBRARY TARGET)
   add_library(${TARGET} SHARED ${ARGN})
   set_target_properties(${TARGET} PROPERTIES VERSION ${NUM_VERSION})
 
-  if (OBJECT_FIXUP_REQUIRED STREQUAL "ON")
+  # When cv2pdb is going to patch the library (see below) the linked library must stay in the
+  # build tree, still carrying its original DWARF debug info: cv2pdb needs to read that DWARF
+  # info every time it runs, and it must never read back a copy that itself has already been
+  # patched by a previous cv2pdb run. So this case reuses the same POST_BUILD-copy pattern as
+  # OBJECT_FIXUP_REQUIRED, just for a different reason: keeping LIBDIR a derived copy rather
+  # than the linker's actual output.
+  if (OBJECT_FIXUP_REQUIRED STREQUAL "ON" OR (CV2PDB_EXE AND GO_SPLIT_DEBUG_SYMBOLS))
     ADD_CUSTOM_COMMAND(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_NAME:${TARGET}>" "${LIBDIR}/$<TARGET_FILE_NAME:${TARGET}>")
   else()
     set_target_properties(${TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${LIBDIR})
@@ -44,6 +50,11 @@ function(BUILD_LIBRARY TARGET)
   endif()
 
   if(CV2PDB_EXE AND GO_SPLIT_DEBUG_SYMBOLS)
+    # cv2pdb reads the DWARF-carrying library (still in the build tree, see above) and writes
+    # the actually shipped copy in LIBDIR with the DWARF info replaced by a CodeView record
+    # (RSDS: pdb GUID + age + path). Without that record dbghelp cannot locate nor validate the
+    # pdb, so this patched copy, and not a plain copy of the linked library, is what must end up
+    # in LIBDIR.
     add_custom_command(
       OUTPUT "${LIBDIR}/lib${TARGET}.pdb"
       DEPENDS ${TARGET}
@@ -51,8 +62,8 @@ function(BUILD_LIBRARY TARGET)
 	${CMAKE_COMMAND}
 	  -E env "WINEPATH=Z:${VC_PATH}"
 	  wine "${CV2PDB_EXE}"
-	  "$<TARGET_FILE:${TARGET}>"
-	  "${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_PREFIX:${TARGET}>$<TARGET_FILE_BASE_NAME:${TARGET}>-tmp$<TARGET_FILE_SUFFIX:${TARGET}>"
+	  "${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_NAME:${TARGET}>"
+	  "${LIBDIR}/$<TARGET_FILE_NAME:${TARGET}>"
 	  "${LIBDIR}/lib${TARGET}.pdb"
     )
     add_custom_target(lib${TARGET}.pdb ALL DEPENDS "${LIBDIR}/lib${TARGET}.pdb")

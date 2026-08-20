@@ -20,6 +20,7 @@
 #include "frames/GOAppWindow.h"
 #include "sound/GOSoundSystem.h"
 
+#include "GOCrashHandler.h"
 #include "GOGuiLog.h"
 #include "GOStdPath.h"
 #include "go_defs.h"
@@ -172,6 +173,15 @@ bool GOGuiApp::OnInit() {
   GOStdPath::InitLocaleDir();
   m_locale.Init(mp_config->GetLanguageId());
   m_locale.AddCatalog(wxT("GrandOrgue"));
+
+  /*
+   * Install it as early as possible, but after InitLocaleDir() because the
+   * report directory is resolved with wxStandardPaths configured there. The
+   * subdirectory name is not translated: it is used at the crash time when no
+   * conversion is possible.
+   */
+  GOCrashHandler::ensureInstalled(
+    GOStdPath::GetGrandOrgueSubDir(wxT("CrashReports")));
 
   mp_SoundSystem = std::make_unique<GOSoundSystem>(*mp_config);
 
