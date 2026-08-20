@@ -15,7 +15,6 @@
 #include "config/GOConfig.h"
 #include "config/GOPortsConfig.h"
 #include "ports/GOSoundPortFactory.h"
-#include "threading/GOMultiMutexLocker.h"
 #include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
@@ -34,9 +33,7 @@ GOSoundSystem::GOSoundSystem(GOConfig &settings)
     m_DefaultAudioDevice(GOSoundDevInfo::getInvalideDeviceInfo()),
     m_NCallbacksEntered(0),
     m_CallbackCondition(m_CallbackMutex),
-    meter_counter(0),
-    m_WaitCount(0),
-    m_CalcCount(0) {}
+    meter_counter(0) {}
 
 GOSoundSystem::~GOSoundSystem() {
   AssureSoundIsClosed();
@@ -47,7 +44,7 @@ GOSoundSystem::~GOSoundSystem() {
 
 void GOSoundSystem::OpenSoundSystem() {
   assert(!m_open);
-  assert(m_AudioOutputs.size() == 0);
+  assert(mp_SoundPorts.empty());
 
   std::vector<GOAudioDeviceConfig> &audio_config
     = m_config.GetAudioDeviceConfig();
@@ -57,14 +54,12 @@ void GOSoundSystem::OpenSoundSystem() {
   m_SamplesPerBuffer = m_config.SamplesPerBuffer();
   m_AudioRecorder.SetBytesPerSample(m_config.WaveFormatBytesPerSample());
 
-  m_AudioOutputs.resize(audio_config.size());
-  for (GOSoundOutput &output : m_AudioOutputs)
-    output.port = NULL;
+  mp_SoundPorts.resize(audio_config.size());
 
   const GOPortsConfig &portsConfig(m_config.GetSoundPortsConfig());
 
   try {
-    for (unsigned n = m_AudioOutputs.size(), i = 0; i < n; i++) {
+    for (unsigned n = mp_SoundPorts.size(), i = 0; i < n; i++) {
       GOAudioDeviceConfig &deviceConfig = audio_config[i];
       GODeviceNamePattern *pNamePattern = &deviceConfig;
       GODeviceNamePattern defaultDevicePattern;
@@ -82,7 +77,7 @@ void GOSoundSystem::OpenSoundSystem() {
         throw wxString::Format(
           _("Output device %s not found - no sound output will occur"),
           pNamePattern->GetRegEx());
-      m_AudioOutputs[i].port = pPort;
+      mp_SoundPorts[i].reset(pPort);
       pPort->Init(
         deviceConfig.GetChannels(),
         m_SampleRate,
@@ -109,32 +104,29 @@ void GOSoundSystem::OpenSoundSystem() {
 }
 
 void GOSoundSystem::CloseSoundSystem() {
-  for (int i = m_AudioOutputs.size() - 1; i >= 0; i--) {
-    if (m_AudioOutputs[i].port) {
-      GOSoundPort *const port = m_AudioOutputs[i].port;
-
-      m_AudioOutputs[i].port = NULL;
-      port->Close();
-      delete port;
+  for (int i = mp_SoundPorts.size() - 1; i >= 0; i--) {
+    if (mp_SoundPorts[i]) {
+      mp_SoundPorts[i]->Close();
+      mp_SoundPorts[i].reset();
     }
   }
 
   ResetMeters();
-  m_AudioOutputs.clear();
+  mp_SoundPorts.clear();
   m_open = false;
 }
 
 void GOSoundSystem::StartStreams() {
-  for (GOSoundOutput &output : m_AudioOutputs)
-    output.port->Open();
+  for (auto &pPort : mp_SoundPorts)
+    pPort->Open();
 
   if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
     throw wxString::Format(
       _("Cannot use buffer size above %d samples; "
         "unacceptable quantization would occur."),
       MAX_FRAME_SIZE);
-  for (GOSoundOutput &output : m_AudioOutputs)
-    output.port->StartStream();
+  for (auto &pPort : mp_SoundPorts)
+    pPort->StartStream();
 }
 
 bool GOSoundSystem::AssureSoundIsOpen() {
@@ -235,32 +227,8 @@ bool GOSoundSystem::AudioCallback(
     = wasEntered ? p_OrganEngine.load() : nullptr;
 
   if (pOrganEngine) {
-    GOSoundOutput &device = m_AudioOutputs[devIndex];
-    GOMutexLocker locker(device.mutex);
-
-    while (device.wait && device.waiting)
-      device.condition.Wait();
-
-    unsigned cnt = m_CalcCount.fetch_add(1);
-
-    pOrganEngine->GetAudioOutput(
-      devIndex, cnt + 1 >= m_AudioOutputs.size(), outBuffer);
-    device.wait = true;
-    unsigned count = m_WaitCount.fetch_add(1);
-
-    if (count + 1 == m_AudioOutputs.size()) {
-      pOrganEngine->NextPeriod();
-      pOrganEngine->WakeupThreads();
+    if (pOrganEngine->ProcessAudioCallback(devIndex, outBuffer))
       UpdateMeter();
-      m_CalcCount.exchange(0);
-      m_WaitCount.exchange(0);
-
-      for (unsigned i = 0; i < m_AudioOutputs.size(); i++) {
-        GOMutexLocker lock(m_AudioOutputs[i].mutex, i == devIndex);
-        m_AudioOutputs[i].wait = false;
-        m_AudioOutputs[i].condition.Signal();
-      }
-    }
   } else
     outBuffer.FillWithSilence();
   if (
@@ -276,13 +244,13 @@ bool GOSoundSystem::AudioCallback(
 }
 
 wxString GOSoundSystem::getState() {
-  if (!m_AudioOutputs.size())
+  if (!mp_SoundPorts.size())
     return _("No sound output occurring");
   wxString result = wxString::Format(
     _("%d samples per buffer, %d Hz\n"), m_SamplesPerBuffer, m_SampleRate);
 
-  for (unsigned i = 0; i < m_AudioOutputs.size(); i++)
-    result = result + _("\n") + m_AudioOutputs[i].port->getPortState();
+  for (auto &pPort : mp_SoundPorts)
+    result = result + _("\n") + pPort->getPortState();
   return result;
 }
 
@@ -292,23 +260,17 @@ void GOSoundSystem::ConnectToEngine(GOSoundOrganEngine &engine) {
   assert(engine.IsWorking());
 
   engine.SetUsed(true);
-
-  // Enable all outputs before making the engine visible to callbacks
-  for (GOSoundOutput &output : m_AudioOutputs) {
-    GOMutexLocker dev_lock(output.mutex);
-
-    output.wait = false;
-    output.waiting = true;
-  }
-  m_WaitCount.store(0);
-  m_CalcCount.store(0);
   m_NCallbacksEntered.store(0);
+  engine.SetStreaming(true);
   p_OrganEngine.store(&engine);
 }
 
 void GOSoundSystem::DisconnectFromEngine(GOSoundOrganEngine &engine) {
   // Signal callbacks to stop by clearing the engine pointer
   p_OrganEngine.store(nullptr);
+
+  // Unblock any callbacks waiting at [W1] and prevent new ones from blocking
+  engine.SetStreaming(false);
 
   // wait for all started callbacks to finish
   {
@@ -318,25 +280,6 @@ void GOSoundSystem::DisconnectFromEngine(GOSoundOrganEngine &engine) {
       m_CallbackCondition.WaitOrStop(
         "GOSoundSystem::DisconnectFromEngine waits for all callbacks to finish",
         nullptr);
-  }
-
-  // Disable all outputs
-  {
-    GOMultiMutexLocker multi;
-
-    for (GOSoundOutput &output : m_AudioOutputs)
-      multi.Add(output.mutex);
-
-    for (GOSoundOutput &output : m_AudioOutputs) {
-      output.waiting = false;
-      output.wait = false;
-      output.condition.Broadcast();
-    }
-
-    for (unsigned n = m_AudioOutputs.size(), i = 1; i < n; i++) {
-      GOMutexLocker dev_lock(m_AudioOutputs[i].mutex);
-      m_AudioOutputs[i].condition.Broadcast();
-    }
   }
 
   engine.SetUsed(false);

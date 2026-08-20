@@ -91,6 +91,16 @@ std::vector<GOSoundOrganEngine::AudioOutputConfig> GOSoundOrganEngine::
  * Constructors and destructors
  */
 
+GOSoundOrganEngine::OutputState::OutputState()
+  : condition(mutex), isFinishedCurrPeriod(false) {}
+
+GOSoundOrganEngine::OutputState::OutputState(OutputState &&other) noexcept
+  : mp_task(std::move(other.mp_task)),
+    condition(mutex),
+    isFinishedCurrPeriod(other.isFinishedCurrPeriod) {}
+
+GOSoundOrganEngine::OutputState::~OutputState() = default;
+
 GOSoundOrganEngine::GOSoundOrganEngine(
   GOOrganModel &organModel, GOMemoryPool &memoryPool)
   : r_OrganModel(organModel),
@@ -105,7 +115,9 @@ GOSoundOrganEngine::GOSoundOrganEngine(
     m_ReverbConfig(GOSoundReverb::CONFIG_REVERB_DISABLED),
     m_NSamplesPerBuffer(1),
     m_LifecycleState(LifecycleState::IDLE),
-    p_AudioRecorder(nullptr) {
+    p_AudioRecorder(nullptr),
+    m_NCallbacksEnteredCurrPeriod(0),
+    m_NCallbacksFinishedCurrPeriod(0) {
   SetVolume(-15);
   mp_ReleaseTask
     = std::make_unique<GOSoundReleaseTask>(m_SamplerPlayer, mp_AudioGroupTasks);
@@ -155,6 +167,7 @@ void GOSoundOrganEngine::BuildEngine(
 
   assert(m_LifecycleState.load() == LifecycleState::IDLE);
 
+  // Fill out thr start parameters
   m_NSamplesPerBuffer = nSamplesPerBuffer;
   p_AudioRecorder = &recorder;
 
@@ -169,10 +182,12 @@ void GOSoundOrganEngine::BuildEngine(
     groupOutputs.push_back(pGroupTask);
   }
 
-  // [B2] Build audio output tasks (per-device only)
+  // [B2] Build audio output states (per-device output task + callback sync)
   unsigned nTotalChannels = 0;
 
+  m_OutputStates.resize(audioOutputConfigs.size());
   for (unsigned deviceI = 0; deviceI < audioOutputConfigs.size(); deviceI++) {
+    OutputState &outputState = m_OutputStates[deviceI];
     const AudioOutputConfig &devConfig = audioOutputConfigs[deviceI];
     const unsigned nChannels = devConfig.channels;
     std::vector<float> scaleFactors;
@@ -191,9 +206,9 @@ void GOSoundOrganEngine::BuildEngine(
         scaleFactors[channelI * m_NAudioGroups * 2 + k] = factor;
       }
     }
-    mp_AudioOutputTasks.push_back(std::make_unique<GOSoundOutputTask>(
-      nChannels, scaleFactors, m_NSamplesPerBuffer));
-    mp_AudioOutputTasks.back()->SetOutputs(groupOutputs);
+    outputState.mp_task = std::make_unique<GOSoundOutputTask>(
+      nChannels, scaleFactors, m_NSamplesPerBuffer);
+    outputState.mp_task->SetOutputs(groupOutputs);
     nTotalChannels += nChannels;
   }
 
@@ -228,8 +243,8 @@ void GOSoundOrganEngine::BuildEngine(
     if (mp_DownmixTask)
       recorderOutputs.push_back(mp_DownmixTask.get());
     else
-      for (auto &pTask : mp_AudioOutputTasks)
-        recorderOutputs.push_back(pTask.get());
+      for (OutputState &state : m_OutputStates)
+        recorderOutputs.push_back(state.mp_task.get());
     p_AudioRecorder->SetOutputs(recorderOutputs, m_NSamplesPerBuffer);
   }
 
@@ -237,8 +252,8 @@ void GOSoundOrganEngine::BuildEngine(
   if (mp_DownmixTask)
     mp_DownmixTask->SetupReverb(
       m_ReverbConfig, m_NSamplesPerBuffer, sampleRate);
-  for (auto &pTask : mp_AudioOutputTasks)
-    pTask->SetupReverb(m_ReverbConfig, m_NSamplesPerBuffer, sampleRate);
+  for (OutputState &state : m_OutputStates)
+    state.mp_task->SetupReverb(m_ReverbConfig, m_NSamplesPerBuffer, sampleRate);
 
   // [B7] Build tremulant tasks
   for (unsigned n = r_OrganModel.GetTremulantCount(), tremI = 0; tremI < n;
@@ -270,8 +285,8 @@ void GOSoundOrganEngine::BuildEngine(
     m_Scheduler.Add(pGroupTask);
   if (mp_DownmixTask)
     m_Scheduler.Add(mp_DownmixTask.get());
-  for (auto &pOutputTask : mp_AudioOutputTasks)
-    m_Scheduler.Add(pOutputTask.get());
+  for (OutputState &state : m_OutputStates)
+    m_Scheduler.Add(state.mp_task.get());
   m_Scheduler.Add(p_AudioRecorder);
   m_Scheduler.Add(mp_ReleaseTask.get());
   m_Scheduler.Add(mp_TouchTask.get());
@@ -315,8 +330,8 @@ void GOSoundOrganEngine::DestroyEngine() {
   // [B3] Clear meter info
   m_MeterInfo.clear();
 
-  // [B2] Destroy audio output tasks
-  mp_AudioOutputTasks.clear();
+  // [B2] Destroy audio output states
+  m_OutputStates.clear();
 
   // [B1] Destroy audio group tasks
   for (GOSoundGroupTask *pGroupTask : mp_AudioGroupTasks)
@@ -331,11 +346,13 @@ void GOSoundOrganEngine::StartEngine() {
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
   m_Scheduler.Reset();
   m_Scheduler.ResumeGivingWork();
+
   m_LifecycleState.store(LifecycleState::WORKING);
 }
 
 void GOSoundOrganEngine::StopEngine() {
   assert(m_LifecycleState.load() == LifecycleState::WORKING);
+
   m_Scheduler.PauseGivingWork();
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
@@ -354,20 +371,49 @@ void GOSoundOrganEngine::SetUsed(bool isUsed) {
     isUsed ? LifecycleState::USED : LifecycleState::WORKING);
 }
 
+void GOSoundOrganEngine::SetStreaming(bool isActive) {
+  // Load first so the assert catches bad transitions before the exchange.
+  LifecycleState oldState = m_LifecycleState.load();
+
+  assert(
+    oldState >= LifecycleState::USED && oldState <= LifecycleState::STREAMING);
+
+  const LifecycleState newState
+    = isActive ? LifecycleState::STREAMING : LifecycleState::USED;
+
+  // Atomically transition; re-read the actual previous state from exchange
+  // so that the side effects below are based on the real transition.
+  oldState = m_LifecycleState.exchange(newState);
+
+  if (newState != oldState) {
+    if (isActive) {
+      // USED → STREAMING: reset period counters and per-output wait flags so
+      // the first callback of each output in the new streaming session is not
+      // blocked at [W1]. Counters must be reset here (not just in the
+      // constructor) because the engine may be reconnected without a full
+      // rebuild, leaving counters dirty from the previous streaming session.
+      m_NCallbacksEnteredCurrPeriod.store(0);
+      m_NCallbacksFinishedCurrPeriod.store(0);
+      for (OutputState &state : m_OutputStates) {
+        GOMutexLocker locker(state.mutex);
+
+        state.isFinishedCurrPeriod = false;
+      }
+    } else {
+      // STREAMING → USED: unblock any callbacks waiting at [W1] so they can
+      // check IsStreaming() and exit gracefully.
+      for (OutputState &state : m_OutputStates) {
+        GOMutexLocker locker(state.mutex);
+
+        state.condition.Broadcast();
+      }
+    }
+  }
+}
+
 /*
  * Functions called from GOSoundSystem
  */
-
-void GOSoundOrganEngine::GetAudioOutput(
-  unsigned outputIndex, bool isLast, GOSoundBufferMutable &outBuffer) {
-  if (IsWorking()) {
-    GOSoundOutputTask *pOutputTask = mp_AudioOutputTasks[outputIndex].get();
-
-    pOutputTask->Finish(isLast);
-    outBuffer.CopyFrom(*pOutputTask);
-  } else
-    outBuffer.FillWithSilence();
-}
 
 /**
  * Atomically updates maxValue to max(maxValue, value) with relaxed ordering.
@@ -394,28 +440,101 @@ void GOSoundOrganEngine::NextPeriod() {
   // Accumulate per-channel peak levels from each output task into m_MeterInfo
   // for the GUI meter display. Values accumulate between GUI polls;
   // GetMeterInfo() resets them via exchange(0). Only real device outputs
-  // (mp_AudioOutputTasks) are counted; mp_DownmixTask is excluded.
+  // (m_OutputStates tasks) are counted; mp_DownmixTask is excluded.
   // Guarded by assert(IsWorking()) above: m_MeterInfo is valid in WORKING
   // state.
   const auto meterEnd = m_MeterInfo.end();
   auto meterIt = m_MeterInfo.begin();
 
-  for (auto &pTask : mp_AudioOutputTasks) {
-    for (const float f : pTask->GetMeterInfo()) {
+  for (auto &state : m_OutputStates) {
+    for (const float f : state.mp_task->GetMeterInfo()) {
       // m_MeterInfo.size() == nTotalChannels [B3] == sum of channels across
-      // all mp_AudioOutputTasks [B2], so the iterator never overflows.
+      // all m_OutputStates [B2], so the iterator never overflows.
       assert(meterIt < meterEnd);
       atomic_fetch_max_relaxed(*meterIt++, f);
     }
-    pTask->ResetMeterInfo();
+    state.mp_task->ResetMeterInfo();
   }
 
   m_Scheduler.Reset();
 }
 
-void GOSoundOrganEngine::WakeupThreads() {
-  for (auto &pThread : mp_threads)
-    pThread->Wakeup();
+bool GOSoundOrganEngine::ProcessAudioCallback(
+  unsigned outputIndex, GOSoundBufferMutable &outBuffer) {
+  assert(IsWorking());
+
+  const unsigned nOutputs = m_OutputStates.size();
+
+  assert(outputIndex < nOutputs);
+
+  bool isNewPeriod = false;
+  OutputState &state = m_OutputStates[outputIndex];
+
+  // Only one callback for this output may hold this mutex at a time.
+  GOMutexLocker locker(state.mutex);
+
+  // [W1] Wait until this output has not yet been processed in the current
+  // period. Exits immediately if the engine leaves STREAMING (e.g.
+  // SetStreaming(false) was called during disconnect).
+  while (IsStreaming() && state.isFinishedCurrPeriod)
+    state.condition.Wait();
+
+  if (IsStreaming()) {
+    /*
+     * The main callback critical section. Only one callback per output may
+     * enter here, and only once per period.
+     */
+
+    // Number of callbacks that have entered the critical section this period.
+    unsigned nEntered = ++m_NCallbacksEnteredCurrPeriod; // atomic
+    bool isLastEntered = nEntered >= nOutputs;
+
+    // Finish computing the output task and copy the result into the buffer.
+    GOSoundOutputTask &outputTask = *m_OutputStates[outputIndex].mp_task;
+
+    outputTask.Finish(isLastEntered);
+    outBuffer.CopyFrom(outputTask);
+
+    // Mark this output as done for the current period so that future callbacks
+    // for this output will block at [W1] until the period advances.
+    state.isFinishedCurrPeriod = true;
+
+    unsigned nFinished = ++m_NCallbacksFinishedCurrPeriod; // atomic
+    bool isLastFinished = nFinished >= nOutputs;
+
+    // The last output to enter may not be the last to finish.
+    if (isLastFinished) {
+      // Advance to the next period.
+      NextPeriod();
+
+      // Wake up worker threads to start processing the new period.
+      for (auto &pThread : mp_threads)
+        pThread->Wakeup();
+
+      // Reset per-period counters.
+      m_NCallbacksEnteredCurrPeriod.store(0);
+      m_NCallbacksFinishedCurrPeriod.store(0);
+
+      // Mark all outputs as not yet processed for the new period and wake up
+      // callbacks waiting at [W1]. Each output's mutex must be held when
+      // writing isFinishedCurrPeriod, because another thread may be
+      // reading it at [W1] under that mutex.
+      for (OutputState &otherState : m_OutputStates) {
+        // The current output's mutex is already held (locker above), so
+        // try_lock=true prevents re-locking and deadlocking; all other outputs
+        // are locked unconditionally (try_lock=false).
+        GOMutexLocker otherLocker(otherState.mutex, &otherState == &state);
+
+        otherState.isFinishedCurrPeriod = false;
+        otherState.condition.Signal();
+      }
+      isNewPeriod = true;
+    }
+  } else
+    // SetStreaming(false) unblocked [W1]; engine is no longer STREAMING.
+    outBuffer.FillWithSilence();
+
+  return isNewPeriod;
 }
 
 /*

@@ -9,6 +9,7 @@
 #define GOSOUNDSYSTEM_H
 
 #include <atomic>
+#include <memory>
 #include <vector>
 
 #include <wx/string.h>
@@ -17,8 +18,6 @@
 #include "tasks/GOSoundRecorderTask.h"
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
-
-#include "ptrvector.h"
 
 #include "GOSoundCloseListener.h"
 #include "GOSoundDevInfo.h"
@@ -37,34 +36,6 @@ class GOSoundPort;
  */
 
 class GOSoundSystem {
-  class GOSoundOutput {
-  public:
-    GOSoundPort *port;
-    GOMutex mutex;
-    GOCondition condition;
-    bool wait;
-    bool waiting;
-
-    GOSoundOutput() : condition(mutex) {
-      port = 0;
-      wait = false;
-      waiting = false;
-    }
-
-    GOSoundOutput(const GOSoundOutput &old) : condition(mutex) {
-      port = old.port;
-      wait = old.wait;
-      waiting = old.waiting;
-    }
-
-    const GOSoundOutput &operator=(const GOSoundOutput &old) {
-      port = old.port;
-      wait = old.wait;
-      waiting = old.waiting;
-      return *this;
-    }
-  };
-
 private:
   GOConfig &m_config;
 
@@ -78,7 +49,7 @@ private:
   bool logSoundErrors;
   unsigned m_SampleRate;
   unsigned m_SamplesPerBuffer;
-  std::vector<GOSoundOutput> m_AudioOutputs;
+  std::vector<std::unique_ptr<GOSoundPort>> mp_SoundPorts;
 
   wxString m_LastErrorMessage;
 
@@ -95,9 +66,6 @@ private:
   GOMutex m_lock;
 
   unsigned meter_counter;
-
-  std::atomic_uint m_WaitCount;
-  std::atomic_uint m_CalcCount;
 
   void StartStreams();
   void OpenMidi() { m_midi.Open(); }
