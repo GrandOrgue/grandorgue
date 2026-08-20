@@ -251,10 +251,10 @@ void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
     GOSoundResample::GO_LINEAR_INTERPOLATION,
     SAMPLE_RATE_ADJUSTMENT);
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
+  float buffer[N_BUFFER_ITEMS];
 
   for (unsigned iterI = 0; iterI < N_ITERATIONS; iterI++) {
-    const bool result = stream.ReadBlock(buffer);
+    const bool result = stream.ReadBlock(buffer, N_FRAMES_PER_BLOCK);
 
     GOAssert(
       result,
