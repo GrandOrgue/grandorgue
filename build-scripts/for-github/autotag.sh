@@ -32,14 +32,17 @@ if [[ "$(echo "$CHANGELOG_HEAD" | cut -d\  -f1)" == "#" ]]; then
   # release
   CHANGELOG_TAG=$(assure_full_version "$(echo "$CHANGELOG_HEAD" | cut -d\  -f2)" 1)
 fi
-if [[ -n "$CHANGELOG_TAG" ]] && version_ge "$CHANGELOG_TAG" "$GIT_TAG"; then
+# the version we are preparing for a release in the future
+FUTURE_RELEASE_TAG=$(assure_full_version "$(cat "$VERSION_TXT")" 0)
+
+if [[ -n "$CHANGELOG_TAG" ]] && version_ge "$CHANGELOG_TAG" "$GIT_TAG" \
+  && version_ge "$CHANGELOG_TAG" "$FUTURE_RELEASE_TAG"; then
   # a new release. Push the release tag and make the relnotes
   NEW_TAG=$CHANGELOG_TAG
-  sed '0,/^#/d;/^#/Q' CHANGELOG.md >$RELEASE_NOTES
-else
-  # No release. May be we are preparing for a new release in the future
-  FUTURE_RELEASE_TAG=$(assure_full_version "$(cat "$VERSION_TXT")" 0)
-  version_gt "$FUTURE_RELEASE_TAG" "$GIT_TAG" && NEW_TAG=$FUTURE_RELEASE_TAG
+  sed '0,/^#/d;/^#/Q' $CHANGELOG >$RELEASE_NOTES
+elif version_gt "$FUTURE_RELEASE_TAG" "$GIT_TAG"; then
+  # No release. We are preparing for a new release in the future
+  NEW_TAG=$FUTURE_RELEASE_TAG
 fi
 echo "NEW_TAG=$NEW_TAG"
 if [[ -n "$NEW_TAG" ]]; then
