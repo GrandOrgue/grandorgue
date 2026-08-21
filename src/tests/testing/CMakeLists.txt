@@ -19,12 +19,13 @@ set(go_tests
     sound/buffer/GOTestSoundBufferPlanar.cpp
     sound/buffer/GOTestSoundBufferPlanarManaged.cpp
     sound/buffer/GOTestSoundBufferPlanarMutable.cpp
+    sound/GOTestSoundCallbackConnector.cpp
+    sound/GOTestSoundOrganEngine.cpp
+    sound/GOTestSoundOrganEngineBase.cpp
+    sound/GOTestSoundOrganEngineFactories.cpp
+    sound/GOTestSoundOrganEngineStress.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
     sound/playing/GOTestSoundStream.cpp
-    sound/GOTestSoundOrganEngineBase.cpp
-    sound/GOTestSoundOrganEngine.cpp
-    sound/GOTestSoundCallbackConnector.cpp
-    sound/GOTestSoundOrganEngineStress.cpp
     GOTestNameMap.cpp
     GOTestOrganController.cpp
 )

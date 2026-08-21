@@ -29,6 +29,29 @@
  * Factory functions
  */
 
+std::vector<float> GOSoundOrganEngine::createDownmixGains(
+  unsigned nAudioGroups) {
+  // GOSoundOutputTask::DoRun() reads the linear form of this (see
+  // convertGainToScaleFactor()) as a row-major [outChannelI][groupI * 2 +
+  // groupChannelI] matrix with row stride nAudioGroups * 2 (not a fixed 4,
+  // which only matches that row stride when nAudioGroups == 1): row 0 (L)
+  // takes each group's left channel (even groupChannelI), row 1 (R),
+  // starting at the row-1 offset nOutputCount, takes each group's right
+  // channel.
+  const unsigned nOutputCount = nAudioGroups * 2;
+  std::vector<float> gains(nOutputCount * 2, GOAudioDeviceConfig::MUTE_VOLUME);
+
+  for (unsigned groupI = 0; groupI < nAudioGroups; groupI++) {
+    gains[groupI * 2] = 0.0f;
+    gains[nOutputCount + groupI * 2 + 1] = 0.0f;
+  }
+  return gains;
+}
+
+float GOSoundOrganEngine::convertGainToScaleFactor(float gain) {
+  return gain >= -120 && gain < 40 ? powf(10.0f, gain * 0.05f) : 0.0f;
+}
+
 std::vector<GOSoundOrganEngine::AudioOutputConfig> GOSoundOrganEngine::
   createAudioOutputConfigs(GOConfig &config, unsigned nAudioGroups) {
   std::vector<GOAudioDeviceConfig> &audioDeviceConfig
@@ -71,19 +94,16 @@ std::vector<GOSoundOrganEngine::AudioOutputConfig> GOSoundOrganEngine::
 
 std::vector<GOSoundOrganEngine::AudioOutputConfig> GOSoundOrganEngine::
   createDefaultOutputConfigs(unsigned nAudioGroups) {
+  const std::vector<float> gains = createDownmixGains(nAudioGroups);
+  const unsigned nOutputCount = nAudioGroups * 2;
   AudioOutputConfig config;
 
   config.channels = 2;
   config.scaleFactors.resize(2);
-  config.scaleFactors[0].resize(
-    nAudioGroups * 2, GOAudioDeviceConfig::MUTE_VOLUME);
-  config.scaleFactors[1].resize(
-    nAudioGroups * 2, GOAudioDeviceConfig::MUTE_VOLUME);
-
-  for (unsigned groupI = 0; groupI < nAudioGroups; groupI++) {
-    config.scaleFactors[0][groupI * 2] = 0.0f;
-    config.scaleFactors[1][groupI * 2 + 1] = 0.0f;
-  }
+  for (unsigned channelI = 0; channelI < 2; channelI++)
+    config.scaleFactors[channelI].assign(
+      gains.begin() + channelI * nOutputCount,
+      gains.begin() + (channelI + 1) * nOutputCount);
   return {config};
 }
 
@@ -198,12 +218,8 @@ void GOSoundOrganEngine::BuildEngine(
       for (unsigned k = 0; k < devConfig.scaleFactors[channelI].size(); k++) {
         if (k >= m_NAudioGroups * 2)
           break;
-        float factor = devConfig.scaleFactors[channelI][k];
-        if (factor >= -120 && factor < 40)
-          factor = powf(10.0f, factor * 0.05f);
-        else
-          factor = 0;
-        scaleFactors[channelI * m_NAudioGroups * 2 + k] = factor;
+        scaleFactors[channelI * m_NAudioGroups * 2 + k]
+          = convertGainToScaleFactor(devConfig.scaleFactors[channelI][k]);
       }
     }
     outputState.mp_task = std::make_unique<GOSoundOutputTask>(
@@ -223,14 +239,12 @@ void GOSoundOrganEngine::BuildEngine(
 
   // [B4] Build downmix task (optional stereo mix for recorder)
   if (m_IsDownmix) {
-    std::vector<float> scaleFactors;
+    const std::vector<float> gains = createDownmixGains(m_NAudioGroups);
+    std::vector<float> scaleFactors(gains.size());
 
-    scaleFactors.resize(m_NAudioGroups * 2 * 2);
-    std::fill(scaleFactors.begin(), scaleFactors.end(), 0.0f);
-    for (unsigned groupI = 0; groupI < m_NAudioGroups; groupI++) {
-      scaleFactors[groupI * 4] = 1;
-      scaleFactors[groupI * 4 + 3] = 1;
-    }
+    for (unsigned i = 0, n = gains.size(); i < n; i++)
+      scaleFactors[i] = convertGainToScaleFactor(gains[i]);
+
     mp_DownmixTask = std::make_unique<GOSoundOutputTask>(
       2, scaleFactors, m_NSamplesPerBuffer);
     mp_DownmixTask->SetOutputs(groupOutputs);
