@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -44,13 +44,16 @@ public:
     std::unique_ptr<GOMidiObjectContext> m_CouplersContext;
     // indexed by CouplerType
     std::vector<GOCoupler *> m_CouplerPtrs;
-    GOCallbackButtonControl *m_ButtonCoupleThrough;
+    std::unique_ptr<GOCallbackButtonControl> m_ButtonCoupleThrough;
   };
 
 private:
   std::map<CouplerSetKey, CouplerSet> m_CouplerSets;
 
 public:
+  GOVirtualCouplerController();
+  ~GOVirtualCouplerController();
+
   void ButtonStateChanged(GOButtonControl *button, bool newState) override;
 
 public:
@@ -60,8 +63,10 @@ public:
   void Load(GOOrganModel &organModel, GOConfigReader &cfg);
   void Save(GOConfigWriter &cfg);
 
-  // Clears the couplers
-  void Cleanup() { m_CouplerSets.clear(); }
+  // Clears the couplers. Defined in the .cpp: destroying m_CouplerSets
+  // needs the complete GOCallbackButtonControl type, same reason as the
+  // destructor above.
+  void Cleanup();
 
   // Returns the coupler pointer
   GOCoupler *GetCoupler(
