@@ -11,6 +11,11 @@
 
 #include "sound/GOSoundOrganEngine.h"
 
+GOTestSoundOrganEngineBase::GOTestSoundOrganEngineBase() {
+  m_connector.SetSamplesPerBuffer(N_SAMPLES_PER_BUFFER);
+  m_connector.SetSampleRate(SAMPLE_RATE);
+}
+
 GOSoundOrganEngine &GOTestSoundOrganEngineBase::BuildAndStartEngine(
   unsigned nAudioGroups, unsigned nAuxThreads, unsigned nOutputs) {
   GOSoundOrganEngine &engine = controller->GetSoundEngine();

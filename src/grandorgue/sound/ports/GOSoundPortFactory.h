@@ -15,6 +15,7 @@
 
 class GODeviceNamePattern;
 class GOPortsConfig;
+class GOSoundCallbackConnector;
 class GOSoundPort;
 
 class GOSoundPortFactory : public GOPortFactory {
@@ -26,7 +27,7 @@ public:
     const GOPortsConfig &portsConfig);
   static GOSoundPort *create(
     const GOPortsConfig &portsConfig,
-    GOSoundSystem *sound,
+    GOSoundCallbackConnector &callbackConnector,
     GODeviceNamePattern &name);
 
   static GOSoundPortFactory &getInstance();
