@@ -19,9 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - actions: "functional coverage"
+          - actions: "functional coverage asan"
             build_type: Debug
             coverage: "ON"
+            asan: "asan"
           - actions: "perf"
             build_type: Debug
             coverage: "OFF"
@@ -38,7 +39,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}
-        run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64 ${{ matrix.build_type }} ${{ matrix.coverage }}
+        run: ${{github.workspace}}/build-scripts/for-linux/build-for-tests.sh amd64 ${{ matrix.build_type }} ${{ matrix.coverage }} ${{ matrix.asan }}
 
       - name: Run tests
         working-directory: ${{github.workspace}}
