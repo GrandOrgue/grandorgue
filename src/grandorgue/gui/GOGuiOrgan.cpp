@@ -20,8 +20,8 @@
 #include "gui/panels/GOGUIPanelView.h"
 #include "gui/size/GOResizable.h"
 #include "loader/GOProgressMonitor.h"
+#include "midi/GOMidiSystem.h"
 #include "midi/events/GOMidiEvent.h"
-#include "sound/GOSoundSystem.h"
 #include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
@@ -29,13 +29,15 @@
 #include "GOOrganController.h"
 #include "go_ids.h"
 
-GOGuiOrgan::GOGuiOrgan(GOResizable *pMainWindow, GOSoundSystem *sound)
+GOGuiOrgan::GOGuiOrgan(
+  GOResizable *pMainWindow, GOConfig &config, GOMidiSystem &midi)
   : p_MainWindow(pMainWindow),
-    m_sound(*sound),
+    r_config(config),
+    r_MidiSystem(midi),
     m_OrganFileReady(false),
     m_OrganController(NULL),
     m_listener() {
-  m_listener.Register(&m_sound.GetMidi());
+  m_listener.Register(&r_MidiSystem);
 }
 
 GOGuiOrgan::~GOGuiOrgan() {
@@ -53,7 +55,7 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
   bool isGuiOnly,
   GOProgressMonitor &monitor) {
   wxBusyCursor busy;
-  GOConfig &cfg = m_sound.GetSettings();
+  GOConfig &cfg = r_config;
 
   CloseOrgan();
   m_OrganController = new GOOrganController(cfg, true);
