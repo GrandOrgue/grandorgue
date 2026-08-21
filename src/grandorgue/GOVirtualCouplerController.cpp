@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,6 +14,17 @@
 #include "model/GOCoupler.h"
 #include "model/GOManual.h"
 #include "model/GOOrganModel.h"
+
+// The (defaulted) constructor and destructor can't be left implicit in the
+// header: GOCallbackButtonControl is only forward-declared there, and any
+// other translation unit implicitly constructing/destroying a
+// GOVirtualCouplerController (e.g. GOOrganController.cpp, which holds one as
+// a by-value member) would need std::unique_ptr<GOCallbackButtonControl>'s
+// constructor/deleter instantiated with an incomplete type. Declaring them
+// here and defining them in this .cpp, where the type is complete, keeps
+// that instantiation confined to this file.
+GOVirtualCouplerController::GOVirtualCouplerController() = default;
+GOVirtualCouplerController::~GOVirtualCouplerController() = default;
 
 static GOVirtualCouplerController::CouplerSetKey make_key(
   unsigned srcManualN, unsigned dstManualN) {
@@ -137,8 +148,11 @@ void GOVirtualCouplerController::Init(
         wxT("S%dM%dCM"),
         _("MEL"));
 
-      couplers.m_ButtonCoupleThrough
-        = new GOCallbackButtonControl(organModel, this, false, false);
+      // Not std::make_unique: it would convert `this` to GOButtonCallback*
+      // inside library code, outside this class's own scope, which fails
+      // since GOButtonCallback is a private base here.
+      couplers.m_ButtonCoupleThrough = std::unique_ptr<GOCallbackButtonControl>(
+        new GOCallbackButtonControl(organModel, this, false, false));
       couplers.m_ButtonCoupleThrough->SetContext(
         couplers.m_CouplersContext.get());
       couplers.m_ButtonCoupleThrough->Init(
@@ -156,7 +170,8 @@ void GOVirtualCouplerController::Load(
   GOOrganModel &organModel, GOConfigReader &cfg) {
   Init(organModel, cfg);
   for (auto &e : m_CouplerSets) {
-    GOCallbackButtonControl *pCoupleThrough = e.second.m_ButtonCoupleThrough;
+    GOCallbackButtonControl *pCoupleThrough
+      = e.second.m_ButtonCoupleThrough.get();
     bool isCoupleThrough = cfg.ReadBoolean(
       CMBSetting, pCoupleThrough->GetGroup(), WX_COUPLE_THROUGH, false, false);
 
@@ -166,7 +181,8 @@ void GOVirtualCouplerController::Load(
 
 void GOVirtualCouplerController::Save(GOConfigWriter &cfg) {
   for (auto &e : m_CouplerSets) {
-    GOCallbackButtonControl *pCoupleThrough = e.second.m_ButtonCoupleThrough;
+    GOCallbackButtonControl *pCoupleThrough
+      = e.second.m_ButtonCoupleThrough.get();
 
     cfg.WriteBoolean(
       pCoupleThrough->GetGroup(),
@@ -174,6 +190,10 @@ void GOVirtualCouplerController::Save(GOConfigWriter &cfg) {
       pCoupleThrough->IsEngaged());
   }
 }
+
+// Can't be inline in the header: m_CouplerSets.clear() destroys
+// m_ButtonCoupleThrough, needing the complete GOCallbackButtonControl type.
+void GOVirtualCouplerController::Cleanup() { m_CouplerSets.clear(); }
 
 GOCoupler *GOVirtualCouplerController::GetCoupler(
   unsigned fromManual, unsigned toManual, CouplerType type) const {
@@ -187,14 +207,14 @@ GOButtonControl *GOVirtualCouplerController::GetCouplerThrough(
   unsigned fromManual, unsigned toManual) const {
   const auto iter = m_CouplerSets.find(make_key(fromManual, toManual));
 
-  return iter != m_CouplerSets.end() ? iter->second.m_ButtonCoupleThrough
+  return iter != m_CouplerSets.end() ? iter->second.m_ButtonCoupleThrough.get()
                                      : nullptr;
 }
 
 void GOVirtualCouplerController::ButtonStateChanged(
   GOButtonControl *button, bool newState) {
   for (auto &e : m_CouplerSets)
-    if (e.second.m_ButtonCoupleThrough == button)
+    if (e.second.m_ButtonCoupleThrough.get() == button)
       for (auto pCoupler : e.second.m_CouplerPtrs) {
         pCoupler->SetRecursive(newState);
         pCoupler->RefreshState();
