@@ -14,13 +14,15 @@
 #include <wx/file.h>
 #include <wx/string.h>
 
-#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
+#include "GOSoundTaskBase.h"
+
+class GOSchedulerThread;
 class GOSoundBufferTaskBase;
 struct struct_WAVE;
 
-class GOSoundRecorderTask : public GOSoundTask {
+class GOSoundRecorderTask : public GOSoundTaskBase {
 private:
   wxFile m_file;
   GOMutex m_lock;
@@ -33,7 +35,7 @@ private:
   unsigned m_SamplesPerBuffer;
   bool m_Recording;
   bool m_Done;
-  std::atomic_bool m_Stop;
+  std::atomic_bool m_IsToComplete;
   std::vector<GOSoundBufferTaskBase *> m_Outputs;
   char *m_Buffer;
 
@@ -55,14 +57,14 @@ public:
   void SetOutputs(
     std::vector<GOSoundBufferTaskBase *> outputs, unsigned samples_per_buffer);
 
-  unsigned GetGroup();
-  unsigned GetCost();
-  bool GetRepeat();
-  void Run(GOSoundThread *thread = nullptr);
-  void Exec();
+  unsigned GetPriority() const override { return PRIORITY_AUDIORECORDER; }
+  unsigned GetCost() const override { return 0; }
+  bool IsRepeatable() const override { return false; }
+  void Run(GOSchedulerThread *pThread = nullptr) override;
+  void CompleteRound() override;
 
-  void Clear();
-  void Reset();
+  void DiscardContent() override;
+  void NewRound() override;
 };
 
 #endif

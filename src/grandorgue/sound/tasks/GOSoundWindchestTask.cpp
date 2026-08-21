@@ -28,13 +28,13 @@ void GOSoundWindchestTask::Init(
         tremulantTasks[p_windchest->GetTremulantId(i)]);
 }
 
-void GOSoundWindchestTask::Reset() {
+void GOSoundWindchestTask::NewRound() {
   GOMutexLocker locker(m_mutex);
 
   m_done.store(false);
 }
 
-void GOSoundWindchestTask::Run(GOSoundThread *pThread) {
+void GOSoundWindchestTask::Run(GOSchedulerThread *pThread) {
   if (!m_done.load()) {
     GOMutexLocker locker(m_mutex);
 
