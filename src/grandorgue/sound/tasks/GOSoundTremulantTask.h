@@ -19,7 +19,7 @@ private:
   GOSoundSamplerPlayer &r_SamplerPlayer;
   GOSoundSamplerList m_Samplers;
   GOMutex m_Mutex;
-  float m_Volume;
+  float m_amplitude;
   unsigned m_SamplesPerBuffer;
   bool m_Done;
 
@@ -37,10 +37,10 @@ public:
   void Clear();
   void Add(GOSoundSampler *sampler);
 
-  float GetVolume() {
+  float GetAmplitude() {
     if (!m_Done)
       Run();
-    return m_Volume;
+    return m_amplitude;
   }
 };
 

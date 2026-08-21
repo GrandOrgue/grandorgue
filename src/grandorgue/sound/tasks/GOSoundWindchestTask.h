@@ -24,7 +24,7 @@ class GOSoundWindchestTask : public GOSoundTask {
 private:
   GOSoundOrganEngine &r_engine;
   GOMutex m_mutex;
-  float m_volume;
+  float m_amplitude;
   std::atomic_bool m_done;
   GOWindchest *p_windchest;
   std::vector<GOSoundTremulantTask *> m_pTremulantTasks;
@@ -43,14 +43,14 @@ public:
   void Reset() override;
   void Init(ptr_vector<GOSoundTremulantTask> &tremulantTasks);
 
-  float GetWindchestVolume() const {
-    return p_windchest ? p_windchest->GetVolume() : 1;
+  float GetWindchestAmplitude() const {
+    return p_windchest ? p_windchest->GetAmplitude() : 1;
   }
 
-  float GetVolume() {
+  float GetAmplitude() {
     if (!m_done.load())
       Run();
-    return m_volume;
+    return m_amplitude;
   }
 };
 

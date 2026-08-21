@@ -19,7 +19,7 @@
 GOWindchest::GOWindchest(GOOrganModel &organModel)
   : r_OrganModel(organModel),
     m_Name(),
-    m_Volume(1),
+    m_amplitude(1),
     m_enclosure(0),
     m_tremulant(0),
     m_ranks(0),
@@ -84,10 +84,8 @@ void GOWindchest::UpdateVolume() {
   float f = 1.0f;
   for (unsigned i = 0; i < m_enclosure.size(); i++)
     f *= m_enclosure[i]->GetAttenuation();
-  m_Volume = f;
+  m_amplitude = f;
 }
-
-float GOWindchest::GetVolume() { return m_Volume; }
 
 unsigned GOWindchest::GetTremulantCount() { return m_tremulant.size(); }
 
