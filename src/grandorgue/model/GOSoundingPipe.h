@@ -126,6 +126,12 @@ public:
     const wxString &filename);
   void Load(GOConfigReader &cfg, const wxString &group, const wxString &prefix)
     override;
+
+  /** @return the 1-based windchest index this pipe belongs to */
+  unsigned GetWindchestN() const { return m_WindchestN; }
+
+  /** @return the audio group id this pipe's sound is routed to */
+  unsigned GetAudioGroupId() const { return m_AudioGroupID; }
 };
 
 #endif

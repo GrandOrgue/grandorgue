@@ -190,9 +190,28 @@ public:
   unsigned GetFirstManualIndex();
   GOManual *GetManual(unsigned index);
 
-  GORank *GetRank(unsigned index);
-  unsigned GetODFRankCount();
+  /** @return the number of ranks declared in the ODF [Ranks] section only;
+   * excludes ranks added later via AddRank(), such as inline stop ranks and
+   * the metronome rank */
+  unsigned GetODFRankCount() const { return m_ODFRankCount; }
+
+  /** @return the total number of ranks, including ODF ranks and ranks added
+   * later via AddRank() */
+  unsigned GetRankCount() const { return m_ranks.size(); }
+
+  const GORank *GetRank(unsigned index) const { return m_ranks[index]; }
+  GORank *GetRank(unsigned index) { return m_ranks[index]; }
   void AddRank(GORank *rank);
+
+  /**
+   * Scans every sounding pipe of every rank and collects the distinct
+   * (windchestN, audioGroupId) pairs actually used - the pairs the sound
+   * engine needs a GOSoundWindchestGroupTask for. Tremulant-only samplers
+   * are not pipes, so they are not part of this scan.
+   * @return the distinct (windchestN, audioGroupId) pairs used by the
+   *   organ's pipes
+   */
+  std::set<std::pair<unsigned, unsigned>> GetUsedWindchestGroupPairs() const;
 
   unsigned GetNumberOfReversiblePistons();
   GOPistonControl *GetPiston(unsigned index);

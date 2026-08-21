@@ -21,6 +21,7 @@
 #include "GOManual.h"
 #include "GORank.h"
 #include "GOReferencingObject.h"
+#include "GOSoundingPipe.h"
 #include "GOSwitch.h"
 #include "GOTremulant.h"
 #include "GOWindchest.h"
@@ -345,13 +346,28 @@ int GOOrganModel::FindTremulantByName(const wxString &name) const {
   return resIndex;
 }
 
-GORank *GOOrganModel::GetRank(unsigned index) { return m_ranks[index]; }
-
-unsigned GOOrganModel::GetODFRankCount() { return m_ODFRankCount; }
-
 void GOOrganModel::AddRank(GORank *rank) {
   rank->SetContext(&MIDI_CONTEXT_RANKS);
   m_ranks.push_back(rank);
+}
+
+std::set<std::pair<unsigned, unsigned>> GOOrganModel::
+  GetUsedWindchestGroupPairs() const {
+  std::set<std::pair<unsigned, unsigned>> pairs;
+
+  for (unsigned n = GetRankCount(), rankI = 0; rankI < n; rankI++) {
+    const GORank *pRank = GetRank(rankI);
+
+    for (unsigned m = pRank->GetPipeCount(), pipeI = 0; pipeI < m; pipeI++) {
+      const GOSoundingPipe *pPipe
+        = dynamic_cast<const GOSoundingPipe *>(pRank->GetPipe(pipeI));
+
+      if (pPipe)
+        pairs.insert({pPipe->GetWindchestN(), pPipe->GetAudioGroupId()});
+    }
+  }
+
+  return pairs;
 }
 
 unsigned GOOrganModel::GetNumberOfReversiblePistons() {
