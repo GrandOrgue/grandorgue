@@ -14,6 +14,7 @@ set(go_tests
     sound/buffer/GOTestSoundBufferManaged.cpp
     sound/buffer/GOTestSoundBufferMutable.cpp
     sound/buffer/GOTestSoundBufferMutableMono.cpp
+    sound/GOTestSoundOrganEngine.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
     sound/playing/GOTestSoundStream.cpp
     GOTestNameMap.cpp

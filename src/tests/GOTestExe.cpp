@@ -20,6 +20,7 @@
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestWindchest.h"
+#include "testing/sound/GOTestSoundOrganEngine.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestSoundBuffer.h"
 #include "testing/sound/buffer/GOTestSoundBufferManaged.h"
@@ -66,6 +67,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundBufferMutable testSoundBufferMutable;
   GOTestSoundBufferMutableMono testSoundBufferMutableMono;
   GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
+  GOTestSoundOrganEngine testSoundOrganEngine;
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
   /* end of instanciation */
