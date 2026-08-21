@@ -11,8 +11,17 @@ set(DEPLIST)
 
 # Find ImageMagick
 # In ImageMagick v7 'convert' is deprecated; prefer 'magick' when available
+# On Windows, C:\Windows\System32\convert.exe is the unrelated FAT-to-NTFS
+# conversion tool; exclude System32 while searching so it isn't picked up
+# instead of ImageMagick's convert.
+if(WIN32)
+  list(APPEND CMAKE_IGNORE_PATH "C:/Windows/System32")
+endif()
 find_program(ImageMagick_magick_EXECUTABLE magick)
 find_program(ImageMagick_convert_EXECUTABLE convert)
+if(WIN32)
+  list(REMOVE_ITEM CMAKE_IGNORE_PATH "C:/Windows/System32")
+endif()
 if(ImageMagick_magick_EXECUTABLE)
   set(IMAGEMAGICK_EXECUTABLE ${ImageMagick_magick_EXECUTABLE})
 elseif(ImageMagick_convert_EXECUTABLE)

@@ -43,15 +43,24 @@ function(BUILD_EXECUTABLE TARGET)
     # actually shipped copy in BINDIR with the DWARF info replaced by a CodeView record (RSDS:
     # pdb GUID + age + path). Without that record dbghelp cannot locate nor validate the pdb, so
     # this patched copy, and not a plain copy of the linked exe, is what must end up in BINDIR.
+    if(CMAKE_HOST_WIN32)
+      # native/MSYS2 build: run cv2pdb directly, no wine involved
+      set(CV2PDB_ENV "PATH=${VC_PATH}")
+      set(CV2PDB_COMMAND "${CV2PDB_EXE}")
+    else()
+      # cross-compiling for Windows on a non-Windows host: run cv2pdb under wine
+      set(CV2PDB_ENV "WINEPATH=Z:${VC_PATH}")
+      set(CV2PDB_COMMAND wine "${CV2PDB_EXE}")
+    endif()
     add_custom_command(
       OUTPUT "${BINDIR}/${TARGET}.pdb"
       DEPENDS ${TARGET}
       COMMAND
 	${CMAKE_COMMAND}
-	  -E env "WINEPATH=Z:${VC_PATH}"
-	  wine "${CV2PDB_EXE}"
-	  "${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_NAME:${TARGET}>"
-	  "${BINDIR}/$<TARGET_FILE_NAME:${TARGET}>"
+	  -E env "${CV2PDB_ENV}"
+	  ${CV2PDB_COMMAND}
+	  "$<TARGET_FILE:${TARGET}>"
+	  "${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_PREFIX:${TARGET}>$<TARGET_FILE_BASE_NAME:${TARGET}>-tmp$<TARGET_FILE_SUFFIX:${TARGET}>"
 	  "${BINDIR}/${TARGET}.pdb"
     )
     add_custom_target(${TARGET}.pdb ALL DEPENDS "${BINDIR}/${TARGET}.pdb")

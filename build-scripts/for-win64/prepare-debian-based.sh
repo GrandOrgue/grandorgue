@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# $1 - wx package version: empty/auto or wx32 (see msys2-mingw64-packages.sh)
+
 set -e
 
 BASE_DIR=$(dirname $0)
+WX_VER=$1
 
 sudo dpkg --add-architecture i386
 sudo apt-get update
@@ -40,7 +43,9 @@ pushd deb
 
 # MSYS2 packages are built against newer libstdc++.
 # It will be downloaded as a dependency for the packages below.
-PACKAGES_FROM_MSYS2=(curl-winssl fftw jack2 wavpack yaml-cpp wxwidgets3.2-msw)
+source $BASE_DIR/msys2-mingw64-packages.sh
+get_msys2_mingw64_lib_packages "$WX_VER"
+PACKAGES_FROM_MSYS2=("${MSYS2_MINGW64_LIB_PACKAGES[@]}")
 DEB_PACKAGES_FROM_MSYS2=("${PACKAGES_FROM_MSYS2[@]/%/-msys2-mingw64}")
 if ! dpkg -l "${DEB_PACKAGES_FROM_MSYS2[@]}" &>/dev/null; then
   # Download packages from MSYS2 repositories and convert them to .deb.
@@ -53,14 +58,7 @@ fi
 popd
 
 # download and install ASIO sdk
-if [ ! -d /usr/local/asio-sdk ]; then
-	DL_DIR=`mktemp -d -t asio.XXX`
-	wget -O $DL_DIR/asiosdk.zip https://www.steinberg.net/asiosdk
-	sudo unzip -o $DL_DIR/asiosdk.zip -d /usr/local/
-	rm -rf $DL_DIR
-	SDK_DIR=`ls -1d /usr/local/ASIOSDK | tail -1`
-	sudo ln -sf `basename $SDK_DIR` /usr/local/asio-sdk
-fi
+$BASE_DIR/download-asio-sdk.sh
 
 # download VC for wine
 if [ ! -d /usr/local/share/wine/msvc ]; then
@@ -74,12 +72,4 @@ if [ ! -d /usr/local/share/wine/msvc ]; then
 fi
 
 # download cv2pdb
-if [ ! -d /usr/local/share/wine/cv2pdb ]; then
-	DL_DIR=`mktemp -d -t cv2pdb.XXX`
-	wget -O $DL_DIR/cv2pdb-0.51.zip https://github.com/rainers/cv2pdb/releases/download/v0.51/cv2pdb-0.51.zip
-	sudo mkdir -p /usr/local/share/wine/cv2pdb.tmp
-	sudo rm -rf /usr/local/share/wine/cv2pdb.tmp/*
-	sudo unzip -d /usr/local/share/wine/cv2pdb.tmp $DL_DIR/cv2pdb-0.51.zip
-	rm -rf $DL_DIR
-	sudo mv /usr/local/share/wine/cv2pdb.tmp /usr/local/share/wine/cv2pdb
-fi
+$BASE_DIR/download-cv2pdb.sh /usr/local/share/wine/cv2pdb

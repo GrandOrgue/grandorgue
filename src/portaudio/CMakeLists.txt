@@ -1,5 +1,5 @@
 # Copyright 2006 Milan Digital Audio LLC
-# Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+# Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
 # License GPL-2.0 or later (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
 message(STATUS "PortAudio build Configuration")
@@ -76,12 +76,11 @@ if (WIN32)
    endif ()
 
    check_include_file_cxx(rpcsal.h HAVE_RPCSAL_H)
-   check_cxx_source_compiles("#include <ksmedia.h>
-   KSRTAUDIO_HWREGISTER_PROPERTY x;" HAVE_KSRT)
-   if (${HAVE_KSRT})
-   else()
-     include_directories(${CMAKE_SOURCE_DIR}/submodules/PortAudio/src/hostapi/wasapi/mingw-include)
-   endif ()
+   # Current mingw-w64 headers already have full WASAPI support; the
+   # vendored PortAudio/src/hostapi/wasapi/mingw-include headers are for old
+   # MinGW toolchains that lacked it, and conflict with the real headers
+   # when both end up on the include path (eg. IPropertySetStorage/
+   # PROPVARIANT redefinition errors), so they are never used.
 
    if (RTAUDIO_USE_WDMKS)
       add_definitions(-DPA_USE_WDMKS)
