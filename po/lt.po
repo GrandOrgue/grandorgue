@@ -1,0 +1,4319 @@
+# Lithuanian translations for GrandOrgue package.
+# This file is published under the project license.
+# GrandOrgue contributors, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GrandOrgue\n"
+"Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
+"POT-Creation-Date: 2026-08-21 10:39+0300\n"
+"PO-Revision-Date: 2026-08-21 23:02+0300\n"
+"Last-Translator: Oleg Samarin <osamarin68@gmail.com>\n"
+"Language-Team: none\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"(n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "\n"
+msgstr "\n"
+
+#, c-format
+msgid ""
+"\n"
+"\n"
+"(the following packages will also be deleted:%s)"
+msgstr ""
+"\n"
+"\n"
+"(šie paketai taip pat bus ištrinti:%s)"
+
+msgid ""
+"\n"
+"\n"
+"Please select a valid impulse response file"
+msgstr ""
+"\n"
+"\n"
+"Pasirinkite tinkamą impulsinės charakteristikos failą"
+
+msgid " "
+msgstr " "
+
+#, c-format
+msgid " (%.3f used)"
+msgstr " (panaudota %.3f)"
+
+msgid " (PA): "
+msgstr " (PA): "
+
+msgid " - "
+msgstr " - "
+
+msgid " - MISSING"
+msgstr " - TRŪKSTA"
+
+#, c-format
+msgid " from %s"
+msgstr " iš %s"
+
+#, c-format
+msgid " from '%s' (%s)"
+msgstr " iš „%s“ (%s)"
+
+msgid "\""
+msgstr "“"
+
+msgid "#"
+msgstr "#"
+
+#, c-format
+msgid "%.3f %%"
+msgstr "%.3f %%"
+
+#, c-format
+msgid "%.3f MB"
+msgstr "%.3f MB"
+
+#, c-format
+msgid "%.3f MB  (%.3f MB end)"
+msgstr "%.3f MB (%.3f MB pabaiga)"
+
+#, c-format
+msgid "%.3f MB (not limited)"
+msgstr "%.3f MB (neribota)"
+
+#, c-format
+msgid "%.3f MB of %.3f MB"
+msgstr "%.3f MB iš %.3f MB"
+
+#, c-format
+msgid "%0.1f cent"
+msgstr "%0.1f cento"
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.mid"
+msgstr "%Y-%m-%d-%H-%M-%S.%l.mid"
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.wav"
+msgstr "%Y-%m-%d-%H-%M-%S.%l.wav"
+
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#, c-format
+msgid "%d %%"
+msgstr "%d %%"
+
+#, c-format
+msgid "%d (%s)"
+msgstr "%d (%s)"
+
+#, c-format
+msgid "%d - %d bits"
+msgstr "%d–%d bitų"
+
+#, c-format
+msgid "%d BPM"
+msgstr "%d BPM"
+
+#, c-format
+msgid "%d bits"
+msgstr "%d bitų"
+
+#, c-format
+msgid "%d ms"
+msgstr "%d ms"
+
+#, c-format
+msgid "%d samples per buffer, %d Hz\n"
+msgstr "%d semplų buferyje, %d Hz\n"
+
+#, c-format
+msgid "%d: %s"
+msgstr "%d: %s"
+
+#, c-format
+msgid "%d:%02d:%02d"
+msgstr "%d:%02d:%02d"
+
+#, c-format
+msgid "%s"
+msgstr "%s"
+
+#, c-format
+msgid "%s - left"
+msgstr "%s – kairysis"
+
+#, c-format
+msgid "%s - right"
+msgstr "%s – dešinysis"
+
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#, c-format
+msgid "%s: %d ms"
+msgstr "%s: %d ms"
+
+#, c-format
+msgid "%s: %f dB"
+msgstr "%s: %f dB"
+
+#, c-format
+msgid "%s: %s\n"
+msgstr "%s: %s\n"
+
+#, c-format
+msgid "%s: Unknown MIDI device logical name \"%s\""
+msgstr "%s: nežinomas MIDI įrenginio loginis pavadinimas „%s“"
+
+#, c-format
+msgid "%s: extension with uppercase letters"
+msgstr "%s: plėtinys su didžiosiomis raidėmis"
+
+#, c-format
+msgid "%s: mute"
+msgstr "%s: nutildyti"
+
+#, c-format
+msgid "%s: unknown"
+msgstr "%s: nežinoma"
+
+#, c-format
+msgid "&%d: %s"
+msgstr "&%d: %s"
+
+msgid "&About"
+msgstr "&Apie programą"
+
+msgid "&Add"
+msgstr "&Pridėti"
+
+msgid "&Audio/MIDI"
+msgstr "&Garsas/MIDI"
+
+msgid "&Bit number:"
+msgstr "&Bito numeris:"
+
+msgid "&CTRL/PGM:"
+msgstr "&CTRL/PGM:"
+
+msgid "&Cache"
+msgstr "&Talpykla"
+
+msgid "&Channel:"
+msgstr "&Kanalas:"
+
+msgid "&Check for updates"
+msgstr "&Tikrinti, ar nėra naujinimų"
+
+msgid "&Clear"
+msgstr "&Išvalyti"
+
+msgid "&Close"
+msgstr "&Uždaryti"
+
+msgid "&Color:"
+msgstr "&Spalva:"
+
+msgid "&Controller-No:"
+msgstr "&Valdiklio Nr.:"
+
+msgid "&Convolution reverb"
+msgstr "&Konvoliucinė reverberacija"
+
+msgid "&Copy current receive event"
+msgstr "&Kopijuoti dabartinį gavimo įvykį"
+
+msgid "&Data:"
+msgstr "&Duomenys:"
+
+msgid "&Debounce time(ms):"
+msgstr "&Atšaukimo laikas (ms):"
+
+msgid "&Default volume"
+msgstr "&Numatytasis garsumas"
+
+msgid "&Delete"
+msgstr "&Ištrinti"
+
+msgid "&Detect complex MIDI setup"
+msgstr "&Aptikti sudėtingą MIDI sąranką"
+
+msgid "&Device number:"
+msgstr "&Įrenginio numeris:"
+
+msgid "&Device:"
+msgstr "&Įrenginys:"
+
+msgid "&Down"
+msgstr "&Žemyn"
+
+msgid "&Download"
+msgstr "&Atsisiųsti"
+
+msgid "&Enhancements"
+msgstr "&Patobulinimai"
+
+msgid "&Event:"
+msgstr "&Įvykis:"
+
+msgid "&Export Settings"
+msgstr "&Eksportuoti nustatymus"
+
+msgid "&Favorites"
+msgstr "&Mėgstamiausi"
+
+msgid "&File"
+msgstr "&Failas"
+
+msgid "&Help"
+msgstr "&Žinynas"
+
+msgid "&Help\tF1"
+msgstr "&Žinynas\tF1"
+
+msgid "&Highest key:"
+msgstr "&Aukščiausias klavišas:"
+
+msgid "&ID:"
+msgstr "&ID:"
+
+msgid "&Import Settings"
+msgstr "&Importuoti nustatymus"
+
+msgid "&Install organ package\tCtrl+I"
+msgstr "&Įdiegti vargonų paketą\tCtrl+I"
+
+msgid "&Length:"
+msgstr "&Ilgis:"
+
+msgid "&Listen for Event"
+msgstr "&Klausyti įvykio"
+
+msgid "&Load\tCtrl+L"
+msgstr "&Įkelti\tCtrl+L"
+
+msgid "&Log MIDI events"
+msgstr "&Registruoti MIDI įvykius"
+
+msgid "&Lower PGM number:"
+msgstr "&Apatinis PGM numeris:"
+
+msgid "&Lowest key:"
+msgstr "&Žemiausias klavišas:"
+
+msgid "&MIDI player"
+msgstr "&MIDI grotuvas"
+
+msgid "&MIDI properties"
+msgstr "&MIDI savybės"
+
+msgid "&MIDI-Output-Device..."
+msgstr "&MIDI išvesties įrenginys..."
+
+msgid "&MIDI-note:"
+msgstr "&MIDI nata:"
+
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+msgid "&Mapping output"
+msgstr "&Susiejimo išvestis"
+
+msgid "&Memory Level"
+msgstr "&Atminties lygis"
+
+msgid "&Memory Set\tShift"
+msgstr "&Derinio įrašymas\tShift"
+
+msgid "&Minus-Shortcut:"
+msgstr "&Minuso spartusis klavišas:"
+
+msgid "&Off NRPN number:"
+msgstr "&Išjungimo NRPN numeris:"
+
+msgid "&Off RPN number:"
+msgstr "&Išjungimo RPN numeris:"
+
+msgid "&Off Value:"
+msgstr "&Išjungimo vertė:"
+
+msgid "&Off value:"
+msgstr "&Išjungimo vertė:"
+
+msgid "&On NRPN number:"
+msgstr "&Įjungimo NRPN numeris:"
+
+msgid "&On RPN number:"
+msgstr "&Įjungimo RPN numeris:"
+
+msgid "&On value:"
+msgstr "&Įjungimo vertė:"
+
+msgid "&Open\tCtrl+O"
+msgstr "&Atidaryti\tCtrl+O"
+
+msgid "&Organ settings"
+msgstr "&Vargonų nustatymai"
+
+msgid "&Panel"
+msgstr "&Skydelis"
+
+msgid "&Panic\tEscape"
+msgstr "&Panika\tEscape"
+
+msgid "&Parameter-No:"
+msgstr "&Parametro Nr.:"
+
+msgid "&Plus-Shortcut:"
+msgstr "&Pliuso spartusis klavišas:"
+
+msgid "&Polyphony"
+msgstr "&Polifonija"
+
+msgid "&Release tail length"
+msgstr "&Atslūgimo uodegos ilgis"
+
+msgid "&Relocate..."
+msgstr "&Perkelti..."
+
+msgid "&Sample loading"
+msgstr "&Semplų įkėlimas"
+
+msgid "&Save\tCtrl+S"
+msgstr "&Išsaugoti\tCtrl+S"
+
+msgid "&Shortcut:"
+msgstr "&Spartusis klavišas:"
+
+msgid "&Show changelog"
+msgstr "&Rodyti pakeitimų žurnalą"
+
+msgid "&Sound Engine"
+msgstr "&Garso variklis"
+
+msgid "&Sound Output State"
+msgstr "&Garso išvesties būsena"
+
+msgid "&Sound output"
+msgstr "&Garso išvestis"
+
+msgid "&Start-Position:"
+msgstr "&Pradžios padėtis:"
+
+msgid "&Status"
+msgstr "&Būsena"
+
+msgid "&Stop number:"
+msgstr "&Registro numeris:"
+
+msgid "&Temperament"
+msgstr "&Derinimo sistema"
+
+msgid "&Top"
+msgstr "&Viršus"
+
+msgid "&Transpose"
+msgstr "&Transponuoti"
+
+msgid "&Transpose:"
+msgstr "&Transponuoti:"
+
+msgid "&Up"
+msgstr "&Aukštyn"
+
+msgid "&Update Cache..."
+msgstr "&Atnaujinti talpyklą..."
+
+msgid "&Update available!"
+msgstr "&Galimas naujinimas!"
+
+msgid "&Updates"
+msgstr "&Naujinimai"
+
+msgid "&Upper PGM number:"
+msgstr "&Viršutinis PGM numeris:"
+
+msgid "&Upper bank:"
+msgstr "Viršutinis &bankas:"
+
+msgid "&Upper limit:"
+msgstr "&Viršutinė riba:"
+
+msgid "&Value:"
+msgstr "&Vertė:"
+
+msgid "&Volume"
+msgstr "&Garsumas"
+
+msgid "(none)"
+msgstr "(nėra)"
+
+msgid "*.wav"
+msgstr "*.wav"
+
+msgid "+"
+msgstr "+"
+
+msgid "+1"
+msgstr "+1"
+
+msgid "+1 Cent"
+msgstr "+1 centas"
+
+msgid "+10"
+msgstr "+10"
+
+msgid "+100"
+msgstr "+100"
+
+msgid "+100 Cent"
+msgstr "+100 centų"
+
+msgid ","
+msgstr ","
+
+msgid "-"
+msgstr "-"
+
+msgid "-- bits (- used)"
+msgstr "-- bitai (- naudoti)"
+
+msgid "--- MB (--- MB end)"
+msgstr "--- MB (--- MB pabaiga)"
+
+msgid "-1"
+msgstr "-1"
+
+msgid "-1 Cent"
+msgstr "-1 centas"
+
+msgid "-10"
+msgstr "-10"
+
+msgid "-100"
+msgstr "-100"
+
+msgid "-100 Cent"
+msgstr "-100 centų"
+
+msgid "-:--:--"
+msgstr "-:--:--"
+
+msgid "."
+msgstr "."
+
+msgid "0"
+msgstr "0"
+
+msgid "000"
+msgstr "000"
+
+msgid "1"
+msgstr "1"
+
+msgid "1/4 comma meantone (Aaron 1523)"
+msgstr "Vidutinio tono 1/4 komos (Aaron, 1523)"
+
+msgid "1/4 comma variants"
+msgstr "1/4 komos variantai"
+
+msgid "1/4-comma equal beating fifths"
+msgstr "1/4 komos, kvintos su lygiais mušimais"
+
+msgid "1/4-comma meantone approximation"
+msgstr "Vidutinio tono 1/4 komos aproksimacija"
+
+msgid "1/5 comma"
+msgstr "1/5 komos"
+
+msgid "1/5-comma meantone (Verheijen)"
+msgstr "Vidutinio tono 1/5 komos (Verheijen)"
+
+msgid "1/6 comma"
+msgstr "1/6 komos"
+
+msgid "1/6-comma (bemols)"
+msgstr "1/6 komos (bemoliai)"
+
+msgid "1/6-comma (dieses)"
+msgstr "1/6 komos (diezai)"
+
+msgid "1/6-comma equal beating fifths"
+msgstr "1/6 komos, kvintos su lygiais mušimais"
+
+msgid "1/6-comma meantone"
+msgstr "Vidutinio tono 1/6 komos"
+
+msgid "1/6-comma, wolf over 4 fifths"
+msgstr "1/6 komos, vilkas per 4 kvintas"
+
+msgid "16"
+msgstr "16"
+
+msgid "16 Bit PCM"
+msgstr "16 bitų PCM"
+
+msgid "2"
+msgstr "2"
+
+msgid "24 Bit PCM"
+msgstr "24 bitų PCM"
+
+msgid "3"
+msgstr "3"
+
+msgid "3/14-comma meantone (Giordano Riccati, 1762)"
+msgstr "Vidutinio tono 3/14 komos (Giordano Riccati, 1762)"
+
+msgid "4"
+msgstr "4"
+
+msgid "5"
+msgstr "5"
+
+msgid "6"
+msgstr "6"
+
+msgid "7"
+msgstr "7"
+
+msgid "8"
+msgstr "8"
+
+msgid "8 Bit PCM"
+msgstr "8 bitų PCM"
+
+msgid "9"
+msgstr "9"
+
+msgid "9x Note"
+msgstr "9x Nata"
+
+msgid "9x Note Fixed Off"
+msgstr "9x Nata, fiksuotas išjungimas"
+
+msgid "9x Note Fixed On"
+msgstr "9x Nata, fiksuotas įjungimas"
+
+msgid "9x Note Off"
+msgstr "9x Nata išj."
+
+msgid "9x Note Off Toggle"
+msgstr "9x Nata išj. perjungimu"
+
+msgid "9x Note On"
+msgstr "9x Nata įj."
+
+msgid "9x Note On Toggle"
+msgstr "9x Nata įj. perjungimu"
+
+msgid "9x Note On/Off Toggle"
+msgstr "9x Nata įj./išj. perjungimu"
+
+msgid "9x Note short octave at low key"
+msgstr "9x natos trumpoji oktava žemu klavišu"
+
+msgid "9x Note without Velocity"
+msgstr "9x Nata be paspaudimo jėgos"
+
+msgid "9x Note without map"
+msgstr "9x Nata be susiejimo"
+
+msgid ":"
+msgstr ":"
+
+#, c-format
+msgid "; FileName=%s"
+msgstr "; FileName=%s"
+
+msgid "<"
+msgstr "<"
+
+msgid "< Bits per sample must be a multiple of 8 in this implementation"
+msgstr "< Šioje realizacijoje bitų skaičius semple turi būti 8 kartotinis"
+
+msgid "< Invalid CUE chunk in"
+msgstr "< Netinkamas CUE fragmentas faile"
+
+msgid "< Invalid SMPL chunk in"
+msgstr "< Netinkamas SMPL fragmentas faile"
+
+msgid "< Invalid WAVE format chunk"
+msgstr "< Netinkamas WAVE formato fragmentas"
+
+msgid "< More than 2 channels in"
+msgstr "< Daugiau nei 2 kanalai"
+
+msgid "< Only 32bit IEEE float samples supported"
+msgstr "< Palaikomi tik 32 bitų IEEE slankiojo kablelio semplai"
+
+msgid "< Unsupported PCM bit size"
+msgstr "< Nepalaikomas PCM bitų dydis"
+
+msgid "< Unsupported PCM format"
+msgstr "< Nepalaikomas PCM formatas"
+
+msgid "<Invalid SMPL chunk in"
+msgstr "<Netinkamas SMPL fragmentas faile"
+
+msgid "<no file loaded>"
+msgstr "<failas neįkeltas>"
+
+msgid ">"
+msgstr ">"
+
+msgid "?"
+msgstr "?"
+
+msgid "A"
+msgstr "A"
+
+msgid "A NOT Switch must not have more than one controlling switches"
+msgstr "NE jungiklis turi turėti ne daugiau kaip vieną valdymo jungiklį"
+
+msgid ""
+"A channel offset allows the use of two MIDI\n"
+"interfaces with conflicting MIDI channels. For\n"
+"example, applying a channel offset of 8 to\n"
+"one of the MIDI interfaces would cause that\n"
+"interface's channel 1 to appear as channel 9,\n"
+"channel 2 to appear as channel 10, and so on."
+msgstr ""
+"Kanalo poslinkis leidžia naudoti dvi MIDI\n"
+"sąsajas, kurių MIDI kanalai sutampa.\n"
+"Pavyzdžiui, vienai iš MIDI sąsajų pritaikius\n"
+"8 kanalų poslinkį, šios sąsajos 1 kanalas būtų\n"
+"rodomas kaip 9 kanalas, 2 kanalas — kaip 10 kanalas,\n"
+"ir t. t."
+
+msgid "A&dvanced..."
+msgstr "Iš&plėstiniai..."
+
+msgid ""
+"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
+"by use of the Steinberg ASIO SDK, Version 2.3.3.\n"
+"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+msgstr ""
+"Steinberg Media Technologies GmbH ASIO sąsajos technologija,\n"
+"naudojant Steinberg ASIO SDK 2.3.3 versiją.\n"
+"ASIO yra Steinberg Media Technologies GmbH prekės ženklas ir programinė "
+"įranga."
+
+msgid "Active polyphony management"
+msgstr "Aktyvus polifonijos valdymas"
+
+msgid "Add dirac pulse"
+msgstr "Pridėti Dirako impulsą"
+
+msgid "Add new audio device"
+msgstr "Pridėti naują garso įrenginį"
+
+msgid "Add new audio group"
+msgstr "Pridėti naują garso grupę"
+
+msgid "Address"
+msgstr "Adresas"
+
+msgid "Affected windchests:"
+msgstr "Paveiktos oro dėžės:"
+
+msgid "Agricola's Monochord, Rudimenta musices (1539)"
+msgstr "„Agricola's Monochord“, „Rudimenta musices“ (1539 m.)"
+
+msgid "Alexander Metcalf Fisher"
+msgstr "Aleksandras Metcalfas Fisheris"
+
+msgid "All"
+msgstr "Visi"
+
+msgid "All loops"
+msgstr "Visos kilpos"
+
+msgid "Allocated sample memory"
+msgstr "Paskirta semplų atmintis"
+
+msgid "Amplitude is invalid"
+msgstr "Netinkama amplitudė"
+
+msgid "Amplitude:"
+msgstr "Amplitudė:"
+
+msgid "Another registered organ already uses this path"
+msgstr "Šiuo keliu jau naudojasi kiti registruoti vargonai"
+
+msgid "Any channel"
+msgstr "Bet koks kanalas"
+
+msgid ""
+"Any customizations you have saved to this\n"
+"organ definition file will be lost!\n"
+"\n"
+"Reset to defaults and reload?"
+msgstr ""
+"Visi jūsų šiam vargonų apibrėžimo failui\n"
+"išsaugoti tinkinimai bus prarasti!\n"
+"\n"
+"Iš naujo nustatyti numatytuosius nustatymus ir įkelti iš naujo?"
+
+msgid "Any device"
+msgstr "Bet koks įrenginys"
+
+msgid "Apply"
+msgstr "Taikyti"
+
+#, c-format
+msgid "Are you sure to delete %u initial MIDI objects settings?"
+msgstr "Ar tikrai ištrinsite %u pradinius MIDI objektų nustatymus?"
+
+#, c-format
+msgid "Are you sure to store the %u MIDI objects settings to initial?"
+msgstr "Ar tikrai išsaugosite %u MIDI objektų nustatymus į pradinę padėtį?"
+
+msgid "Ask channel mapping on MIDI file load"
+msgstr "Klausti kanalų susiejimo įkeliant MIDI failą"
+
+msgid "Attack loading:"
+msgstr "Atakos įkėlimas:"
+
+msgid ""
+"Attention:\n"
+"These initial MIDI settings only affect the first load of a organ.\n"
+"Right-click on manuals, stops, ... to do further changes."
+msgstr ""
+"Dėmesio:\n"
+"Šie pradiniai MIDI nustatymai veikia tik pirmąjį vargonų įkėlimą.\n"
+"Norėdami atlikti tolesnius pakeitimus, dešiniuoju pelės mygtuku spustelėkite "
+"manualus, registrus, ...."
+
+msgid "Audio"
+msgstr "Garsas"
+
+msgid "Audio Output"
+msgstr "Garso išvestis"
+
+msgid "Audio Recorder"
+msgstr "Garso įrašymo įrenginys"
+
+#, c-format
+msgid "Audio device %s not initialised"
+msgstr "Garso įrenginys %s nebuvo inicijuotas"
+
+#, c-format
+msgid "Audio device %s not open"
+msgstr "Garso įrenginys %s neatidarytas"
+
+msgid "Audio device settings"
+msgstr "Garso įrenginio nustatymai"
+
+#, c-format
+msgid "Audio group %d"
+msgstr "Garso grupė %d"
+
+msgid "Audio group name"
+msgstr "Garso grupės pavadinimas"
+
+msgid "Audio group:"
+msgstr "Garso grupė:"
+
+msgid "Audio groups"
+msgstr "Garso grupės"
+
+msgid "Audio recording time"
+msgstr "Garso įrašymo laikas"
+
+msgid "Audio recording:"
+msgstr "Garso įrašas:"
+
+msgid "Audio recordings"
+msgstr "Garso įrašai"
+
+msgid "AudioRecorder"
+msgstr "Garso įrašymo įrenginys"
+
+msgid "Auto add new devices"
+msgstr "Automatiškai pridėti naujų įrenginių"
+
+msgid "AutoTuning Correction (Cent):"
+msgstr "Automatinio derinimo korekcija (centai):"
+
+msgid "AutoTuningCorrection is invalid"
+msgstr "Netinkama automatinio derinimo korekcija"
+
+msgid "Automatically manage cache"
+msgstr "Automatiškai valdyti talpyklą"
+
+msgid "B"
+msgstr "B"
+
+msgid "BAS"
+msgstr "BAS"
+
+msgid "BPM +"
+msgstr "BPM +"
+
+msgid "BPM -"
+msgstr "BPM –"
+
+msgid "BPM:"
+msgstr "BPM:"
+
+msgid "Bach (Bradley Lehman)"
+msgstr "Bachas (Bradley Lehmanas)"
+
+msgid "Barca 1786"
+msgstr "Barca 1786"
+
+msgid "Beat"
+msgstr "Dalis"
+
+msgid "Beat:"
+msgstr "Dalis:"
+
+msgid "Bell"
+msgstr "Varpelis"
+
+msgid "Bermudo (1555) "
+msgstr "Bermudo (1555) "
+
+msgid "Bethisy temperament ordinaire (1764)"
+msgstr "Įprastinė Bethisy derinimo sistema (1764)"
+
+msgid "Bits per sample:"
+msgstr "Bitų viename semple:"
+
+msgid "Both First beat and beat paths must be set for Custom sound type"
+msgstr ""
+"Pasirinktiniam garso tipui reikia nurodyti pirmosios ir kitų dalių failų "
+"kelius"
+
+msgid "Boulliau (1373)/Mersenne 1636. "
+msgstr "Boulliau (1373)/Mersenne 1636. "
+
+msgid "Build Date"
+msgstr "Sukūrimo data"
+
+msgid "Builder"
+msgstr "Vargonų meistras"
+
+msgid "Builder:"
+msgstr "Vargonų meistras:"
+
+msgid "Button"
+msgstr "Mygtukas"
+
+msgid "Bx Controller"
+msgstr "Bx valdiklis"
+
+msgid "Bx Controller Off"
+msgstr "Bx valdiklis išjungtas"
+
+msgid "Bx Controller Off Toggle"
+msgstr "Bx valdiklio išjungimas perjungimu"
+
+msgid "Bx Controller On"
+msgstr "Bx valdiklis įjungtas"
+
+msgid "Bx Controller On Toggle"
+msgstr "Bx valdiklio įjungimas perjungimu"
+
+msgid "Bx Controller On/Off Toggle"
+msgstr "Bx valdiklio įjungimas / išjungimas perjungimu"
+
+msgid "Bx Ctrl Change Fixed Off Value Toggle"
+msgstr "Bx Ctrl Change fiksuotos išjungimo vertės perjungimas"
+
+msgid "Bx Ctrl Change Fixed On Value Toggle"
+msgstr "Bx Ctrl Change fiksuotos įjungimo vertės perjungimas"
+
+msgid "Bx Ctrl Change Fixed On/Off Value Toggle"
+msgstr "Bx Ctrl Change fiksuotų įjungimo / išjungimo verčių perjungimas"
+
+msgid "Bx Ctrl Change Fixed Value"
+msgstr "Bx Ctrl Change fiksuota vertė"
+
+msgid "C"
+msgstr "C"
+
+msgid "C&onfigure..."
+msgstr "K&onfigūruoti..."
+
+msgid "C&opy"
+msgstr "K&opijuoti"
+
+msgid "CRC mismatch in organ package - file corrupted?"
+msgstr "CRC neatitikimas vargonų pakete – failas sugadintas?"
+
+msgid "Cache file had bad magic bypassing cache."
+msgstr "Neteisingas talpyklos failo parašas – talpykla ignoruojama."
+
+msgid "Cache file had diffent hash bypassing cache."
+msgstr "Talpyklos failas turėjo skirtingą maišą, apeinančią talpyklą."
+
+#, c-format
+msgid "Cache load failure: %s"
+msgstr "Talpyklos įkėlimo klaida: %s"
+
+#, c-format
+msgid ""
+"Cannot use buffer size above %d samples; unacceptable quantization would "
+"occur."
+msgstr ""
+"Negalima naudoti didesnio nei %d semplų buferio: įvyktų "
+"nepriimtinas kvantavimas."
+
+msgid "Change"
+msgstr "Keisti"
+
+msgid "Change audio device"
+msgstr "Keisti garso įrenginį"
+
+msgid "Change audio group"
+msgstr "Keisti garso grupę"
+
+msgid "Changelog:"
+msgstr "Pakeitimų žurnalas:"
+
+#, c-format
+msgid "Channel %d"
+msgstr "Kanalas %d"
+
+msgid "Channel mapping"
+msgstr "Kanalų susiejimas"
+
+msgid "Channel offset:"
+msgstr "Kanalo poslinkis:"
+
+msgid "Channel:"
+msgstr "Kanalas:"
+
+msgid "Chaumont"
+msgstr "Chaumont"
+
+msgid "Check ODF for HW1-compatibility"
+msgstr "Tikrinti ODF suderinamumą su HW1"
+
+msgid "Check for updates at startup"
+msgstr "Tikrinti naujinimus paleidžiant"
+
+msgid "Check on startup"
+msgstr "Tikrinti paleidžiant"
+
+msgid "Choose MIDI channel mapping"
+msgstr "Pasirinkti MIDI kanalų susiejimą"
+
+#, c-format
+msgid "ChurchName missing in organ definition %s"
+msgstr "Vargonų apibrėžime trūksta bažnyčios pavadinimo %s"
+
+msgid "Click"
+msgstr "Spragtelėjimas"
+
+msgid "Combination Setter"
+msgstr "Kombinacijų sekvenceris"
+
+msgid "Combination files (*.yaml)|*.yaml"
+msgstr "Derinių failai (*.yaml)|*.yaml"
+
+msgid "Combinations"
+msgstr "Deriniai"
+
+msgid "Combinations files (*.yaml)|*.yaml|Settings files (*.cmb)|*.cmb"
+msgstr "Derinių failai (*.yaml)|*.yaml|Nustatymų failai (*.cmb)|*.cmb"
+
+msgid "Combinations:"
+msgstr "Deriniai:"
+
+msgid "Compress cache"
+msgstr "Suspausti talpyklą"
+
+#, c-format
+msgid "Config entry without any group at line %d"
+msgstr "Konfigūracijos įrašas be jokios grupės eilutėje %d"
+
+msgid "Configured"
+msgstr "Sukonfigūruota"
+
+msgid ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2024 GrandOrgue contributors\n"
+"\n"
+"This software comes with no warranty"
+msgstr ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Autorių teisės 2009–2024 „GrandOrgue“ bendradarbiai\n"
+"\n"
+"Šiai programinei įrangai garantija neteikiama"
+
+msgid "Cores used at loadtime:"
+msgstr "Įkėlimo metu naudojami branduoliai:"
+
+msgid "Corrette (1753)"
+msgstr "Corrette (1753 m.)"
+
+#, c-format
+msgid "Could match the %s \"%s: %s\" neither by name nor by number"
+msgstr "Negali atitikti %s \"%s: %s\" nei pagal pavadinimą, nei pagal numerį"
+
+#, c-format
+msgid "Could not remove '%s'"
+msgstr "Nepavyko pašalinti „%s“"
+
+#, c-format
+msgid "Could not write to '%s'"
+msgstr "Nepavyko parašyti į '%s'"
+
+msgid "Couperin"
+msgstr "Couperin"
+
+msgid "Couple Through"
+msgstr "Kiaurinė kopula"
+
+msgid "Coupler"
+msgstr "Kopula"
+
+#, c-format
+msgid "Coupler %s"
+msgstr "Kopula %s"
+
+msgid "Coupler manuals and volume"
+msgstr "Kopulos manualai ir garsumas"
+
+#, c-format
+msgid "Coupling manual %d"
+msgstr "Kopulos manualas %d"
+
+msgid "Creating sample cache"
+msgstr "Kuriama semplų talpykla"
+
+msgid "Creating the cache failed"
+msgstr "Nepavyko sukurti talpyklos"
+
+msgid "Crescendo"
+msgstr "Crescendo"
+
+msgid "Crescendo Pedal"
+msgstr "Crescendo pedalas"
+
+msgid "Ctrl Change Bitfield"
+msgstr "Ctrl Keisti bitų lauką"
+
+msgid "Current"
+msgstr "Dabartinė"
+
+msgid "Custom"
+msgstr "Pasirinktinis"
+
+msgid "Custom Sound Wave File Paths:"
+msgstr "Pasirinktiniai WAV failų keliai:"
+
+msgid "Cx Program Change"
+msgstr "Cx programos pakeitimas"
+
+msgid "Cx Program Change Off"
+msgstr "Cx programos keitimas išjungtas"
+
+msgid "Cx Program Change On"
+msgstr "Cx programos keitimas įjungtas"
+
+msgid "Cx Program Change Range"
+msgstr "Cx programos keitimo diapazonas"
+
+msgid "D"
+msgstr "D"
+
+msgid "De Caus (1615)"
+msgstr "De Caus (1615 m.)"
+
+msgid "Default"
+msgstr "Numatytoji"
+
+msgid "Default audio group"
+msgstr "Numatytoji garso grupė"
+
+msgid "Delay (ms):"
+msgstr "Vėlavimas (ms):"
+
+msgid "Delete"
+msgstr "Ištrinti"
+
+msgid "Delete &Cache..."
+msgstr "Ištrinti &talpyklą..."
+
+msgid "Delete &cache(s)"
+msgstr "Ištrinti &talpyklą (-as)"
+
+msgid "Delete &preset(s)"
+msgstr "Ištrinti &presetus"
+
+msgid "Delete Organ Packages"
+msgstr "Ištrinti vargonų paketus"
+
+msgid "Delete Organs"
+msgstr "Ištrinti vargonus"
+
+#, c-format
+msgid "Delete file %s"
+msgstr "Ištrinti failą %s"
+
+msgid "Delete initial MIDI settings"
+msgstr "Ištrinti pradinius MIDI nustatymus"
+
+msgid "Desired latency:"
+msgstr "Norimas delsos laikas:"
+
+msgid "Desired output latency"
+msgstr "Norima išvesties delsa"
+
+#, c-format
+msgid ""
+"Device %s wants a different samples per buffer settings: %d.\n"
+"Please adjust the GrandOrgue audio settings."
+msgstr ""
+"Įrenginiui %s reikia kitokio semplų skaičiaus buferyje: %d.\n"
+"Pakoreguokite „GrandOrgue“ garso nustatymus."
+
+msgid "Device matching error"
+msgstr "Įrenginio atitikimo klaida"
+
+msgid "Device matching properties"
+msgstr "Įrenginio atitikimo savybės"
+
+#, c-format
+msgid "Device: %s [%d ms requested]"
+msgstr "Įrenginys: %s [prašoma %d ms]"
+
+msgid "Direct Sound:"
+msgstr "Tiesioginis garsas:"
+
+msgid "Disabled"
+msgstr "Išjungta"
+
+msgid "Discard"
+msgstr "Išmesti"
+
+msgid "Distribute audio groups"
+msgstr "Paskirstyti garso grupes"
+
+msgid "Divisional"
+msgstr "Sekcijos derinys"
+
+msgid "Divisional Coupler"
+msgstr "Sekcijų kopula"
+
+msgid "Divisionals"
+msgstr "Sekcijų deriniai"
+
+#, c-format
+msgid "Do you want to delete organs%s%s?"
+msgstr "Ar norite ištrinti vargonus%s%s?"
+
+msgid "Don't load"
+msgstr "Neįkelti"
+
+msgid "Download"
+msgstr "Atsisiųsti"
+
+#, c-format
+msgid "Drawstop %s can't reference to itself"
+msgstr "Stabtelis %s negali nurodyti savęs"
+
+#, c-format
+msgid "Duplicate combination entry %s in %s"
+msgstr "Pasikartojantis derinio įrašas %s, esantis %s"
+
+#, c-format
+msgid "Duplicate entry in section %s at line %d: %s"
+msgstr "Pasikartojantis įrašas skiltyje %s ties %d: %s"
+
+#, c-format
+msgid "Duplicate entry: %s"
+msgstr "Pasikartojantis įrašas: %s"
+
+#, c-format
+msgid "Duplicate file '%s'"
+msgstr "Pasikartojantis failas „%s“"
+
+#, c-format
+msgid "Duplicate group at line %d: %s"
+msgstr "Dubliuoti grupę eilutėje %d: %s"
+
+#, c-format
+msgid "Duplicate object with the path %s"
+msgstr "Dubliuoti objektą su keliu %s"
+
+msgid "E"
+msgstr "E"
+
+msgid "E&xit"
+msgstr "Iš&eiti"
+
+msgid "Element"
+msgstr "Elementas"
+
+msgid "Element already in the pool"
+msgstr "Elementas jau telkinyje"
+
+msgid "Empty MIDI settings"
+msgstr "Tušti MIDI nustatymai"
+
+#, c-format
+msgid "Empty at section '%s' entry '%s'"
+msgstr "Tuščia skiltyje „%s“ įraše „%s“"
+
+msgid "Enable Convolution Reverb"
+msgstr "Įjungti konvoliucinę reverberaciją"
+
+msgid "Enabled"
+msgstr "Įjungta"
+
+msgid "Enclosure"
+msgstr "Šveleris"
+
+msgid "Enclosure 1"
+msgstr "Šveleris 1"
+
+msgid "Enclosure 2"
+msgstr "Šveleris 2"
+
+msgid "Enclosure 3"
+msgstr "Šveleris 3"
+
+msgid "Enclosure 4"
+msgstr "Šveleris 4"
+
+msgid "Enclosure 5"
+msgstr "Šveleris 5"
+
+msgid "Enclosure 6"
+msgstr "Šveleris 6"
+
+msgid "Enclosures"
+msgstr "Šveleriai"
+
+#, c-format
+msgid "End of track marker missing at offset %d"
+msgstr "Trūksta takelio pabaigos žymeklio ties poslinkiu %d"
+
+msgid "Equal beating Victorian piano temperament"
+msgstr "Viktorijos laikų fortepijono derinimo sistema su lygiais mušimais"
+
+msgid "Equal temperament"
+msgstr "Tolygioji derinimo sistema"
+
+msgid "Error"
+msgstr "Klaida"
+
+msgid "Error decoding a track"
+msgstr "Klaida dekoduojant takelį"
+
+msgid "Event-&No"
+msgstr "Įvykis-&Nr"
+
+#, c-format
+msgid "Events after end of track marker at %d"
+msgstr "Įvykiai pasibaigus takelio žymekliui %d"
+
+msgid "Excess data in the central directory"
+msgstr "Duomenų perteklius centriniame kataloge"
+
+msgid "Excess information in zip64 extendend information record"
+msgstr "Perteklinė informacija zip64 išplėstinės informacijos įraše"
+
+msgid "Exit GrandOrgue"
+msgstr "Išeiti iš GrandOrgue"
+
+msgid "Export"
+msgstr "Eksportuoti"
+
+msgid "Export &Combinations"
+msgstr "Eksportuoti &derinius"
+
+msgid "Export Combinations"
+msgstr "Eksportuoti derinius"
+
+msgid "Export MIDI Settings"
+msgstr "Eksportuoti MIDI nustatymus"
+
+msgid "Export Settings"
+msgstr "Eksportuoti nustatymus"
+
+msgid "Export/import:"
+msgstr "Eksportuoti / importuoti:"
+
+msgid "F"
+msgstr "F"
+
+msgid "F1"
+msgstr "F1"
+
+msgid "F10"
+msgstr "F10"
+
+msgid "F11"
+msgstr "F11"
+
+msgid "F12"
+msgstr "F12"
+
+msgid "F13"
+msgstr "F13"
+
+msgid "F14"
+msgstr "F14"
+
+msgid "F15"
+msgstr "F15"
+
+msgid "F16"
+msgstr "F16"
+
+msgid "F17"
+msgstr "F17"
+
+msgid "F18"
+msgstr "F18"
+
+msgid "F19"
+msgstr "F19"
+
+msgid "F2"
+msgstr "F2"
+
+msgid "F20"
+msgstr "F20"
+
+msgid "F21"
+msgstr "F21"
+
+msgid "F22"
+msgstr "F22"
+
+msgid "F23"
+msgstr "F23"
+
+msgid "F24"
+msgstr "F24"
+
+msgid "F3"
+msgstr "F3"
+
+msgid "F4"
+msgstr "F4"
+
+msgid "F5"
+msgstr "F5"
+
+msgid "F6"
+msgstr "F6"
+
+msgid "F7"
+msgstr "F7"
+
+msgid "F8"
+msgstr "F8"
+
+msgid "F9"
+msgstr "F9"
+
+#, c-format
+msgid "Failed creating organ package file %s"
+msgstr "Nepavyko sukurti vargonų paketo failo %s"
+
+#, c-format
+msgid "Failed to check for updates: %s"
+msgstr "Nepavyko patikrinti, ar yra naujinimų: %s"
+
+#, c-format
+msgid "Failed to create directory '%s'"
+msgstr "Nepavyko sukurti katalogo „%s“"
+
+#, c-format
+msgid "Failed to decode %s"
+msgstr "Nepavyko iššifruoti %s"
+
+#, c-format
+msgid "Failed to decode WavePack data: %s"
+msgstr "Nepavyko iššifruoti „WavePack“ duomenų: %s"
+
+#, c-format
+msgid "Failed to decode file '%s'"
+msgstr "Nepavyko iššifruoti failo „%s“"
+
+#, c-format
+msgid "Failed to decompress file '%s'"
+msgstr "Nepavyko išspausti failo „%s“"
+
+#, c-format
+msgid "Failed to export MIDI settings to '%s': %s"
+msgstr "Nepavyko eksportuoti MIDI nustatymų į „%s“: %s"
+
+#, c-format
+msgid "Failed to export combinations to '%s': %s"
+msgstr "Nepavyko eksportuoti derinių į „%s“: %s"
+
+#, c-format
+msgid "Failed to export settings to '%s'"
+msgstr "Nepavyko eksportuoti nustatymų į „%s“"
+
+#, c-format
+msgid "Failed to find organ package %s"
+msgstr "Nepavyko rasti vargonų paketo %s"
+
+#, c-format
+msgid "Failed to import MIDI settings from '%s': %s"
+msgstr "Nepavyko importuoti MIDI nustatymų iš „%s“: %s"
+
+#, c-format
+msgid "Failed to index organ package %s"
+msgstr "Nepavyko indeksuoti vargonų paketo %s"
+
+#, c-format
+msgid "Failed to load %s"
+msgstr "Nepavyko įkelti %s"
+
+#, c-format
+msgid "Failed to load file '%s' into the memory"
+msgstr "Nepavyko įkelti failo „%s“ į atmintį"
+
+#, c-format
+msgid "Failed to load organ package %s"
+msgstr "Nepavyko įkelti vargonų paketo %s"
+
+#, c-format
+msgid "Failed to open %s"
+msgstr "Nepavyko atidaryti %s"
+
+#, c-format
+msgid "Failed to open '%s'"
+msgstr "Nepavyko atidaryti „%s“"
+
+#, c-format
+msgid "Failed to open '%s': %s"
+msgstr "Nepavyko atidaryti „%s“: %s"
+
+#, c-format
+msgid "Failed to open archive %s"
+msgstr "Nepavyko atidaryti archyvo %s"
+
+#, c-format
+msgid "Failed to open file '%s'"
+msgstr "Nepavyko atidaryti failo „%s“"
+
+#, c-format
+msgid "Failed to open organ package '%s' (%s)"
+msgstr "Nepavyko atidaryti vargonų paketo „%s“ (%s)"
+
+#, c-format
+msgid "Failed to open the graphic '%s'"
+msgstr "Nepavyko atidaryti grafikos „%s“"
+
+#, c-format
+msgid "Failed to open the organ package '%s'"
+msgstr "Nepavyko atidaryti vargonų paketo „%s“"
+
+#, c-format
+msgid "Failed to parse '%s'"
+msgstr "Nepavyko išanalizuoti „%s“"
+
+#, c-format
+msgid "Failed to parse organ definition %s"
+msgstr "Nepavyko išanalizuoti vargonų apibrėžties %s"
+
+#, c-format
+msgid "Failed to parse the organ package index of '%s'"
+msgstr "Nepavyko išanalizuoti vargonų paketo indekso „%s“"
+
+#, c-format
+msgid "Failed to read %s from the organ package"
+msgstr "Nepavyko nuskaityti %s iš vargonų paketo"
+
+#, c-format
+msgid "Failed to read '%s'"
+msgstr "Nepavyko perskaityti „%s“"
+
+#, c-format
+msgid "Failed to read '%s': %s"
+msgstr "Nepavyko perskaityti „%s“: %s"
+
+msgid "Failed to read cache directory"
+msgstr "Nepavyko nuskaityti talpyklos katalogo"
+
+#, c-format
+msgid "Failed to read content of %s"
+msgstr "Nepavyko perskaityti %s turinio"
+
+#, c-format
+msgid "Failed to read directory '%s'"
+msgstr "Nepavyko nuskaityti katalogo „%s“"
+
+#, c-format
+msgid "Failed to read file %s"
+msgstr "Nepavyko nuskaityti failo %s"
+
+#, c-format
+msgid "Failed to read file '%s'"
+msgstr "Nepavyko nuskaityti failo „%s“"
+
+#, c-format
+msgid "Failed to read wav file %s: %s"
+msgstr "Nepavyko nuskaityti wav failo %s: %s"
+
+msgid "Failed to save the organ setting"
+msgstr "Nepavyko išsaugoti vargonų nustatymų"
+
+#, c-format
+msgid "Failed to write %s to the organ package"
+msgstr "Į vargonų paketą nepavyko įrašyti %s"
+
+#, c-format
+msgid "Failed to write content to '%s'"
+msgstr "Nepavyko įrašyti turinio į „%s“"
+
+#, c-format
+msgid "Failed to write to '%s'"
+msgstr "Nepavyko įrašyti į '%s'"
+
+msgid "Failed writing the package directory"
+msgstr "Nepavyko parašyti paketo katalogo"
+
+msgid "Failed writing the package index file"
+msgstr "Nepavyko parašyti paketo indekso failo"
+
+msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
+msgstr "Ferdinandas Bossardas (1743/44) Klosterkirche Muri"
+
+#, c-format
+msgid "File %s is not found in the organ package archives"
+msgstr "Failas %s vargonų paketų archyvuose nerastas"
+
+#, c-format
+msgid "File '%s' does not exist"
+msgstr "Failas „%s“ neegzistuoja"
+
+#, c-format
+msgid "File name '%s' contains invalid path separators"
+msgstr "Failo pavadinime „%s“ yra neteisingų kelių skyriklių"
+
+msgid "File name is empty"
+msgstr "Failo pavadinimas tuščias"
+
+#, c-format
+msgid "Filename '%s' contains non-portable directory separator /"
+msgstr "Failo pavadinime „%s“ yra neperkeliamo katalogo skyriklio /"
+
+#, c-format
+msgid "Filename '%s' not compatible with case sensitive systems"
+msgstr ""
+"Failo pavadinimas „%s“ nesuderinamas su sistemomis, kuriose skiriamos "
+"didžiosios ir mažosios raidės"
+
+msgid "Filename contains invalid characters"
+msgstr "Failo pavadinime yra neteisingų simbolių"
+
+msgid "First Beat"
+msgstr "Pirmoji dalis"
+
+msgid "First Beat:"
+msgstr "Pirmoji dalis:"
+
+msgid "First loop"
+msgstr "Pirma kilpa"
+
+msgid "Fisk-Vogel: Memorial Church at Stanford"
+msgstr "Fisk-Vogel: memorialinė bažnyčia Stanforde"
+
+msgid "Freres Jullien Organ, France (1690)"
+msgstr "Freres Jullien vargonai, Prancūzija (1690 m.)"
+
+msgid "Freytag Organ Bellingwolde 1798/2002"
+msgstr "Freytag Organ Bellingwolde 1798/2002"
+
+msgid "Full"
+msgstr "Pilnas"
+
+msgid "G"
+msgstr "G"
+
+msgid "G. Silbermann nr 2"
+msgstr "G. Silbermann Nr. 2"
+
+msgid "G.C."
+msgstr "G.C."
+
+msgid "GB"
+msgstr "GB"
+
+msgid "Gain (dB):"
+msgstr "Stiprinimas (dB):"
+
+msgid "Gain is invalid"
+msgstr "Netinkamas stiprinimas"
+
+msgid "Gain:"
+msgstr "Stiprinimas:"
+
+msgid "Ganassi (Sylvestro) - 1543"
+msgstr "Ganassi (Sylvestro) – 1543 m"
+
+msgid "Garbage detected in the MIDI file"
+msgstr "MIDI faile aptikta šiukšlių"
+
+msgid "General"
+msgstr "Bendroji"
+
+msgid "Generals"
+msgstr "Bendrosios"
+
+msgid "Globals"
+msgstr "Globaliai"
+
+msgid "Gottfried Silbermann nr 1"
+msgstr "Gottfriedas Silbermannas Nr. 1"
+
+msgid "Grammateus (1518)"
+msgstr "Grammatėjas (1518 m.)"
+
+msgid "GrandOrgue"
+msgstr ""
+
+#, c-format
+msgid "GrandOrgue %s"
+msgstr "GrandOrgue %s"
+
+#, c-format
+msgid "GrandOrgue %s - Virtual Pipe Organ Software"
+msgstr "GrandOrgue %s – virtualių vamzdinių vargonų programinė įranga"
+
+msgid "GrandOrgue - virtual pipe organ sample player"
+msgstr "GrandOrgue – vamzdinių vargonų semplų grotuvas"
+
+msgid "GrandOrgue MIDI Player"
+msgstr "GrandOrgue MIDI grotuvas"
+
+#, c-format
+msgid "GrandOrgueTool %s"
+msgstr "GrandOrgueTool %s"
+
+msgid "Group"
+msgstr "Grupė"
+
+msgid "H"
+msgstr "H"
+
+msgid "H&ighest velocity:"
+msgstr "Didžiausia &paspaudimo jėga:"
+
+msgid "Harpsichord/Piano/Monochord"
+msgstr "Klavesinas/fortepijonas/monokordas"
+
+msgid "Henri Arnaut De Zwolle. (1436)."
+msgstr "Henri Arnaut De Zwolle. (1436)."
+
+msgid "Heun (Jan) 1805"
+msgstr "Heunas (Jan) 1805"
+
+msgid "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+msgstr "Hinszas (1704 - 1785), Pelstergasthuiskerk Groningen"
+
+msgid "Holden (John) 1770"
+msgstr "Holdenas (Jonas) 1770 m"
+
+msgid "Hummel's quasi-equal temperament (1829)"
+msgstr "Hummelio beveik tolygioji derinimo sistema (1829)"
+
+msgid "I"
+msgstr "I"
+
+msgid "IEEE Float"
+msgstr "IEEE slankiojo kablelio formatas"
+
+msgid "INCOMPLETE - "
+msgstr "NEBAIGTA - "
+
+msgid "Ignore pitch info in organ samples wav files"
+msgstr "Nepaisyti tono informacijos vargonų semplų wav failuose"
+
+msgid "Import"
+msgstr "Importuoti"
+
+msgid "Import &Combinations"
+msgstr "Importuoti &derinius"
+
+msgid "Import Combinations"
+msgstr "Importuoti derinius"
+
+msgid "Import File"
+msgstr "Importuoti failą"
+
+msgid "Import MIDI Settings"
+msgstr "Importuoti MIDI nustatymus"
+
+msgid "Import Midi Settings"
+msgstr "Importuoti Midi nustatymus"
+
+msgid "Import Settings"
+msgstr "Importuoti nustatymus"
+
+#, c-format
+msgid "Impulse response file '%s' not found"
+msgstr "Impulsinės charakteristikos failas „%s“ nerastas"
+
+msgid "Impulse response:"
+msgstr "Impulsinė charakteristika:"
+
+#, c-format
+msgid "Incomplete MIDI message at %d"
+msgstr "Neužbaigtas MIDI pranešimas adresu %d"
+
+msgid "Incomplete central directory entry"
+msgstr "Neužbaigtas centrinio katalogo įrašas"
+
+msgid "Incomplete central directory extra record"
+msgstr "Neužbaigtas centrinio katalogo papildomas įrašas"
+
+msgid "Incomplete chunk"
+msgstr "Neužbaigtas fragmentas"
+
+#, c-format
+msgid "Incomplete chunk at offset %d"
+msgstr "Neužbaigtas fragmentas ties poslinkiu %d"
+
+msgid "Incomplete file content"
+msgstr "Neužbaigtas failo turinys"
+
+msgid "Incomplete local record"
+msgstr "Neišsamus vietinis įrašas"
+
+#, c-format
+msgid "Incomplete timestamp at offset %d"
+msgstr "Neužbaigta laiko žyma poslinkyje %d"
+
+msgid "Incomplete zip64 extendend information record"
+msgstr "Neišsamus zip64 išplėstinės informacijos įrašas"
+
+#, c-format
+msgid "Inconsistent WavPack file: %s"
+msgstr "Nenuoseklus WavPack failas: %s"
+
+#, c-format
+msgid "Incorrect case for section '%s' entry '%s'"
+msgstr "Neteisingi skilties „%s“ įrašo „%s“ didžiosios ir mažosios raidės"
+
+msgid "Incorrect track count"
+msgstr "Neteisingas takelių skaičius"
+
+#, c-format
+msgid "Index '%s' has bad magic - bypassing index"
+msgstr "Neteisingas indekso „%s“ parašas – indeksas ignoruojamas"
+
+#, c-format
+msgid "InfoFilename %s either does not exist or is not a html file"
+msgstr "InfoFilename %s arba neegzistuoja arba nėra html failas"
+
+msgid "Initial MIDI"
+msgstr "Pradinis MIDI"
+
+#, c-format
+msgid "Initial MIDI settings for %s"
+msgstr "Pradiniai %s MIDI nustatymai"
+
+#, c-format
+msgid "Input directory %s not found"
+msgstr "Įvesties katalogas %s nerastas"
+
+msgid "Insert"
+msgstr "Įterpti"
+
+msgid "Install organ package"
+msgstr "Įdiegti vargonų paketą"
+
+#, c-format
+msgid "Internal MIDI object %s:%u exists"
+msgstr "Vidinis MIDI objektas %s:%u egzistuoja"
+
+msgid "Interpolation:"
+msgstr "Interpoliacija:"
+
+#, c-format
+msgid "Invalid Config entry at line %d: %s"
+msgstr "Neteisingas konfigūracijos įrašas eilutėje %d: %s"
+
+#, c-format
+msgid "Invalid RIFF file: %s"
+msgstr "Netinkamas RIFF failas: %s"
+
+#, c-format
+msgid "Invalid RIFF/WAVE file: %s"
+msgstr "Netinkamas RIFF / WAVE failas: %s"
+
+#, c-format
+msgid "Invalid WAV file: %s"
+msgstr "Netinkamas WAV failas: %s"
+
+#, c-format
+msgid "Invalid boolean value at section '%s' entry '%s': %s"
+msgstr "Netinkama loginė vertė skilties „%s“ įraše „%s“: %s"
+
+#, c-format
+msgid "Invalid color at section '%s' entry '%s': %s"
+msgstr "Netinkama spalva skilties „%s“ įraše „%s“: %s"
+
+#, c-format
+msgid "Invalid combination entry %s in %s"
+msgstr "Neteisingas derinio įrašas %s, esantis %s"
+
+#, c-format
+msgid "Invalid enum value at section '%s' entry '%s': %s"
+msgstr "Netinkama sąrašo reikšmė skilties „%s“ įraše „%s“: %s"
+
+#, c-format
+msgid "Invalid enum value for /%s/%s: %d"
+msgstr "Netinkama /%s/%s eilės reikšmė: %d"
+
+#, c-format
+msgid "Invalid float value '%s' at section '%s' entry '%s': %s"
+msgstr "Netinkama slankioji vertė „%s“ skilties „%s“ įraše „%s“: %s"
+
+#, c-format
+msgid "Invalid font size '%s' at section '%s' entry '%s': %s"
+msgstr "Netinkamas šrifto dydis „%s“ skilties „%s“ įraše „%s“: %s"
+
+#, c-format
+msgid "Invalid free of %p"
+msgstr "Netinkamas be %p"
+
+msgid "Invalid instance name"
+msgstr "Netinkamas egzemplioriaus pavadinimas"
+
+#, c-format
+msgid "Invalid integer value '%s' at section '%s' entry '%s': %s"
+msgstr "Netinkama sveikojo skaičiaus reikšmė „%s“ skilties „%s“ įraše „%s“: %s"
+
+#, c-format
+msgid "Invalid integer value '%s' at section '%s' entry '%s'; assunmed %ld"
+msgstr ""
+"Netinkama sveikojo skaičiaus reikšmė „%s“ skilties „%s“ įraše „%s“; assunmed "
+"%ld"
+
+#, c-format
+msgid "Invalid item selected: %s"
+msgstr "Pasirinktas netinkamas elementas: %s"
+
+msgid "Invalid local header offset"
+msgstr "Neteisingas vietinės antraštės poslinkis"
+
+msgid "Invalid loop definition"
+msgstr "Netinkamas ciklo apibrėžimas"
+
+#, c-format
+msgid "Invalid loop in the file: %s\n"
+msgstr "Neteisingas ciklas faile: %s\n"
+
+#, c-format
+msgid "Invalid manual number %s"
+msgstr "Neteisingas vadovo numeris %s"
+
+msgid "Invalid object type for reversible piston"
+msgstr "Netinkamas reversinio pistono objekto tipas"
+
+msgid "Invalid offset in Zip64 end locator"
+msgstr "Neteisingas poslinkis Zip64 pabaigos ieškiklyje"
+
+msgid "Invalid reference "
+msgstr "Neteisinga nuoroda "
+
+msgid "Invalid regex"
+msgstr "Netinkamas reguliarusis reiškinys"
+
+msgid "Invalid release end position"
+msgstr "Netinkama atslūgimo pabaigos padėtis"
+
+msgid "Invalid release position"
+msgstr "Netinkama atslūgimo padėtis"
+
+msgid "Invalid reverb configuration (samples per buffer)"
+msgstr "Netinkama aidėjimo konfigūracija (semplų buferyje)"
+
+msgid "Invalid reverb start offset"
+msgstr "Netinkamas aidėjimo pradžios poslinkis"
+
+msgid "Invalid sample rate"
+msgstr "Netinkamas diskretizavimo dažnis"
+
+#, c-format
+msgid "Invalid section start at line %d: %s"
+msgstr "Netinkama sekcijos pradžia %d eilutėje: %s"
+
+#, c-format
+msgid "Invalid size '%s' at section '%s' entry '%s': %s"
+msgstr "Neteisingas dydis „%s“ skilties „%s“ įraše „%s“: %s"
+
+msgid "J"
+msgstr "J"
+
+msgid "K"
+msgstr "K"
+
+msgid "KB"
+msgstr "KB"
+
+msgid "Keller (Gottfried) 1707"
+msgstr "Kelleris (Gottfriedas) 1707 m"
+
+msgid "Kellner's Bach tuning"
+msgstr "Kellnerio Bacho derinimas"
+
+msgid "Kepler's choice system (1619)"
+msgstr "Keplerio pasirinkimo sistema (1619)"
+
+msgid "Kirnberger III"
+msgstr "Kirnbergeris III"
+
+msgid "Koenig, Balthasar Organ Nederehe 1714"
+msgstr "Koenig, Balthasar Organ Nederehe 1714 m"
+
+msgid "L"
+msgstr "L"
+
+msgid "L&ower bank:"
+msgstr "Apatinis &bankas:"
+
+msgid "L&ower limit:"
+msgstr "Apatinė &riba:"
+
+msgid "L&owest velocity:"
+msgstr "Mažiausia &paspaudimo jėga:"
+
+msgid "Label"
+msgstr "Etiketė"
+
+msgid "Lambert (1774) 1/7 comma"
+msgstr "Lambertas (1774), 1/7 komos"
+
+msgid "Last track is missing the end marker"
+msgstr "Paskutiniame take nėra pabaigos žymeklio"
+
+#, c-format
+msgid "Leading or trailing whitespaces at section '%s' entry '%s': '%s'"
+msgstr "Skilties „%s“ įrašo „%s“ pradžioje arba gale esantys tarpai: „%s“"
+
+msgid "Length:"
+msgstr "Ilgis:"
+
+msgid "Linear"
+msgstr "Linijinis"
+
+msgid "Load &MIDI\tCtrl+P"
+msgstr "Įkelti &MIDI\tCtrl+P"
+
+msgid "Load &stereo samples in:"
+msgstr "Įkelti &stereo semplus:"
+
+msgid "Load MIDI file"
+msgstr "Įkelti MIDI failą"
+
+msgid "Load aborted by the user - only parts of the organ are loaded."
+msgstr "Įkėlimą nutraukė naudotojas – įkeltos tik vargonų dalys."
+
+msgid "Load error"
+msgstr "Įkėlimo klaida"
+
+msgid "Load file"
+msgstr "Įkelti failą"
+
+msgid "Load first favorit organ at startup"
+msgstr "Paleidžiant įkelti pirmuosius mėgstamiausius vargonus"
+
+msgid "Load just GUI. Not to load any sound samples"
+msgstr "Įkelti tik GUI. Neįkelti jokių garso semplų"
+
+msgid "Load last used organ at startup"
+msgstr "Paleidžiant įkelti paskutinius naudotus vargonus"
+
+msgid "Loading sample set"
+msgstr "Įkeliamas semplų rinkinys"
+
+msgid "Log messages"
+msgstr "Pranešimų žurnalas"
+
+msgid "Logical device name is already used by "
+msgstr "Loginį įrenginio pavadinimą jau naudoja "
+
+msgid "Logical device name must not be empty"
+msgstr "Loginio įrenginio pavadinimo laukas negali būti tuščias"
+
+msgid "Logical device name:"
+msgstr "Loginis įrenginio pavadinimas:"
+
+msgid "Longest loop"
+msgstr "Ilgiausia kilpa"
+
+msgid "Loop loading:"
+msgstr "Kilpų įkėlimas:"
+
+msgid "Loop too short for a cross fade"
+msgstr "Kilpa per trumpa, kad išbluktų"
+
+msgid "Lossless compression"
+msgstr "Suspaudimas be nuostolių"
+
+msgid "Lossless compression:"
+msgstr "Suspaudimas be nuostolių:"
+
+msgid "M"
+msgstr "M"
+
+msgid "M&idi Objects"
+msgstr "MIDI &objektai"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "MEL"
+msgstr "MEL"
+
+msgid "MID files (*.mid)|*.mid"
+msgstr "MID failai (*.mid)|*.mid"
+
+msgid "MIDI"
+msgstr "MIDI"
+
+msgid "MIDI &input devices"
+msgstr "MIDI &įvesties įrenginiai"
+
+msgid "MIDI &output devices"
+msgstr "MIDI &išvesties įrenginiai"
+
+msgid "MIDI &ports"
+msgstr "MIDI &prievadai"
+
+msgid "MIDI Devices"
+msgstr "MIDI įrenginiai"
+
+msgid "MIDI Objects"
+msgstr "MIDI objektai"
+
+msgid "MIDI Player"
+msgstr "MIDI grotuvas"
+
+msgid "MIDI Recorder"
+msgstr "MIDI įrašymo įrenginys"
+
+msgid "MIDI event: "
+msgstr "MIDI įvykis: "
+
+msgid "MIDI file type 0 only supports one track"
+msgstr "MIDI failo tipas 0 palaiko tik vieną takelį"
+
+msgid "MIDI file type 1 has not tracks"
+msgstr "1 tipo MIDI faile nėra takelių"
+
+msgid "MIDI file type 2 is not supported"
+msgstr "2 tipo MIDI failas nepalaikomas"
+
+msgid "MIDI files (*.mid)|*.mid"
+msgstr "MIDI failai (*.mid)|*.mid"
+
+msgid "MIDI header missing"
+msgstr "Trūksta MIDI antraštės"
+
+msgid "MIDI output device"
+msgstr "MIDI išvesties įrenginys"
+
+msgid "MIDI player:"
+msgstr "MIDI grotuvas:"
+
+msgid "MIDI playing time"
+msgstr "MIDI grojimo laikas"
+
+msgid "MIDI recording time"
+msgstr "MIDI įrašymo laikas"
+
+msgid "MIDI recording:"
+msgstr "MIDI įrašymas:"
+
+msgid "MIDI recordings"
+msgstr "MIDI įrašai"
+
+#, c-format
+msgid "MIDI settings for organ %s"
+msgstr "MIDI nustatymai vargonams %s"
+
+#, c-format
+msgid "MIDI-Settings for %s - %s"
+msgstr "MIDI nustatymai, skirti %s – %s"
+
+msgid "MIDIRecorder"
+msgstr "MIDI Recorder"
+
+msgid "MISSING - "
+msgstr "TRŪKSTA - "
+
+msgid "Malerbi's well-temperament nr 1 (1794)"
+msgstr "Malerbi geroji derinimo sistema Nr. 1 (1794)"
+
+msgid "Malformed MIDI header"
+msgstr "Netinkamai suformuota MIDI antraštė"
+
+#, c-format
+msgid "Malformed wave file '%s'. Format chunk must precede data chunk."
+msgstr ""
+"Sugadintas WAV failas „%s“. Formato blokas turi būti prieš duomenų bloką."
+
+#, c-format
+msgid ""
+"Malformed wave file '%s'. The chunk '%4s' at %lu with the size 8 + %lu ends "
+"after the end of file %lu"
+msgstr ""
+"Netinkamai suformuotas WAV failas „%s“. Blokas „%4s“, esantis ties poslinkiu "
+"%lu ir kurio dydis yra 8 + %lu, baigiasi už failo pabaigos %lu"
+
+msgid "Malformed zip64 end record"
+msgstr "Netinkamai suformuotas zip64 pabaigos įrašas"
+
+msgid "Manual"
+msgstr "Manualas"
+
+#, c-format
+msgid "Manual %d: Switch%03d already in use"
+msgstr "Manualas %d: jungiklis%03d jau naudojamas"
+
+#, c-format
+msgid "Manual %d: Tremulant%03d already in use"
+msgstr "Manualas %d: tremulantas%03d jau naudojamas"
+
+msgid "Manual 1"
+msgstr "Manualas 1"
+
+msgid "Manual 2"
+msgstr "Manualas 2"
+
+msgid "Manual 3"
+msgstr "Manualas 3"
+
+msgid "Manual 4"
+msgstr "Manualas 4"
+
+msgid "Manual 5"
+msgstr "Manualas 5"
+
+msgid "Manual Tuning (Cent):"
+msgstr "Rankinis derinimas (centais):"
+
+#, c-format
+msgid "Manual key %d outside of the bounding box"
+msgstr "Manualo klavišas %d yra už ribojančio langelio ribų"
+
+msgid "ManualTuning is invalid"
+msgstr "Rankinis derinimas netinkamas"
+
+msgid "Manuals"
+msgstr "Manualai"
+
+msgid "Mapped memory of the cache"
+msgstr "Atvaizduota talpyklos atmintis"
+
+msgid "Mark Lindley, Grosvenor Chapel, London"
+msgstr "Markas Lindley, Grosvenor koplyčia, Londonas"
+
+msgid "Marpurg nr 1"
+msgstr "Marpurg nr 1"
+
+msgid "Marpurg nr 11"
+msgstr "Marpurg Nr. 11"
+
+msgid "Marpurg nr 12"
+msgstr "Marpurg Nr. 12"
+
+msgid "Marpurg nr 2"
+msgstr "Marpurg Nr. 2"
+
+msgid "Marpurg nr 3"
+msgstr "Marpurg nr 3"
+
+msgid "Marpurg nr 4"
+msgstr "Marpurg Nr. 4"
+
+msgid "Marpurg nr 5"
+msgstr "Marpurg Nr. 5"
+
+msgid "Marpurg nr 7"
+msgstr "Marpurg Nr. 7"
+
+msgid "Marpurg nr 8"
+msgstr "Marpurg Nr. 8"
+
+msgid "Marpurg nr 9"
+msgstr "Marpurg Nr. 9"
+
+msgid "Master"
+msgstr "Meistras"
+
+msgid "Master Controls"
+msgstr "Pagrindiniai valdikliai"
+
+msgid "Matching"
+msgstr "Atitikimas"
+
+msgid "Matching..."
+msgstr "Nustatomas atitikimas..."
+
+msgid "Max"
+msgstr "Maks"
+
+msgid "Measure +"
+msgstr "Išmatuokite +"
+
+msgid "Measure -"
+msgstr "Išmatuoti -"
+
+msgid "Memory Level"
+msgstr "Atminties lygis"
+
+msgid "Memory Limit (MB):"
+msgstr "Atminties limitas (MB):"
+
+msgid "Memory Set"
+msgstr "Atminties rinkinys"
+
+#, c-format
+msgid "Memory mapping of the cache file failed with error code %d"
+msgstr "Talpyklos failo atminties susiejimas nepavyko su klaidos kodu %d"
+
+#, c-format
+msgid "Memory pool is full: %llu of %llu used"
+msgstr "Atminties telkinys pilnas: naudojamas %llu iš %llu"
+
+msgid "Memory pool size"
+msgstr "Atminties telkinio dydis"
+
+msgid "Memory usage:"
+msgstr "Atminties naudojimas:"
+
+msgid "Mercadier's well-temperament"
+msgstr "Mercadier geroji derinimo sistema"
+
+msgid "Mersenne spinet 1"
+msgstr "Mersenne’o spinetas 1"
+
+msgid "Mersenne spinet 2"
+msgstr "Mersenne’o spinetas 2"
+
+msgid "Mersenne's Improved Meantone 1"
+msgstr "Mersenne’o patobulinta vidutinio tono derinimo sistema 1"
+
+msgid "Metronom measure"
+msgstr "Metronomo matas"
+
+msgid "Metronome"
+msgstr "Metronomas"
+
+msgid "Metronome BPM"
+msgstr "Metronomas BPM"
+
+msgid "Metronome Sound Type"
+msgstr "Metronomo garso tipas"
+
+msgid "Metronome config error"
+msgstr "Metronomo konfigūracijos klaida"
+
+msgid "Metronome sample file"
+msgstr "Metronomo semplo failas"
+
+#, c-format
+msgid "Midi Settings files (%s)"
+msgstr "Midi nustatymų failai (%s)"
+
+msgid "MidiPlayer"
+msgstr "MidiPlayer"
+
+msgid "Minimal amplitude level is invalid"
+msgstr "Minimalus amplitudės lygis netinkamas"
+
+msgid "Minimum amplitude level:"
+msgstr "Minimalus amplitudės lygis:"
+
+msgid "Mismatch of local and central header"
+msgstr "Vietinės ir centrinės antraštės neatitikimas"
+
+msgid "Missing local header"
+msgstr "Trūksta vietinės antraštės"
+
+#, c-format
+msgid "Missing required value section '%s' entry '%s'"
+msgstr "Trūksta būtinos vertės skilties „%s“ įrašo „%s“"
+
+msgid "Mixing of percussive and non-percussive samples in one pipe not allowed"
+msgstr ""
+"Mušamųjų ir nemušamųjų semplų maišymas viename vamzdyje neleidžiamas"
+
+msgid "Mod. Silbermann nr 2"
+msgstr "Mod. Silbermann Nr. 2"
+
+msgid "Mono"
+msgstr "Mono"
+
+msgid "More Information"
+msgstr "Daugiau informacijos"
+
+#, c-format
+msgid "More than %u unused ODF entries detected"
+msgstr "Aptikta daugiau nei %u nenaudojamų ODF įrašų"
+
+msgid "N"
+msgstr "N"
+
+msgid "NRPN"
+msgstr "NRPN"
+
+msgid "NRPN Off"
+msgstr "NRPN išjungtas"
+
+msgid "NRPN Off Toggle"
+msgstr "NRPN išjungimas perjungimu"
+
+msgid "NRPN On"
+msgstr "NRPN įjungtas"
+
+msgid "NRPN On Toggle"
+msgstr "NRPN įjungimas perjungimu"
+
+msgid "NRPN On/Off Toggle"
+msgstr "NRPN įjungimas / išjungimas perjungimu"
+
+msgid "NRPN Range"
+msgstr "NRPN diapazonas"
+
+#, c-format
+msgid "NRPN change channel: %d key: %d value: %d"
+msgstr "NRPN keitimo kanalas: %d klavišas: %d reikšmė: %d"
+
+msgid "Name"
+msgstr "Pavadinimas"
+
+msgid "Neidhardt I (1724)"
+msgstr "Neidhardtas I (1724 m.)"
+
+msgid "Neidhardt II (1724)"
+msgstr "Neidhardtas II (1724 m.)"
+
+msgid "Neidhardt III (1724)"
+msgstr "Neidhardtas III (1724 m.)"
+
+msgid "New"
+msgstr "Nauja"
+
+msgid "New Bas/Mel coupler behaviour"
+msgstr "Nauja Bas/Mel kopulos elgsena"
+
+msgid "New audio device"
+msgstr "Naujas garso įrenginys"
+
+msgid "New audio group"
+msgstr "Nauja garso grupė"
+
+msgid "New audio group name"
+msgstr "Naujas garso grupės pavadinimas"
+
+msgid "New release available"
+msgstr "Galimas naujas leidimas"
+
+#, c-format
+msgid "New version: %s"
+msgstr "Nauja versija: %s"
+
+msgid "Next"
+msgstr "Kitas"
+
+msgid "Next Memory"
+msgstr "Kitas atmintis"
+
+msgid "Next file"
+msgstr "Kitas failas"
+
+msgid "Next temperament"
+msgstr "Kita derinimo sistema"
+
+msgid "No"
+msgstr "Ne"
+
+msgid ""
+"No MIDI events are configured for this object.\n"
+"Are you sure to save the empty MIDI settings to initial?"
+msgstr ""
+"Šiam objektui MIDI įvykių nesukonfigūruota.\n"
+"Ar tikrai išsaugosite tuščius MIDI nustatymus į pradinę formą?"
+
+msgid "No active MIDI input devices"
+msgstr "Nėra aktyvių MIDI įvesties įrenginių"
+
+msgid "No audio group selected"
+msgstr "Nepasirinkta garso grupė"
+
+msgid "No device"
+msgstr "Nėra įrenginio"
+
+msgid "No end record found"
+msgstr "Nerasta pabaigos įrašo"
+
+msgid "No function selected"
+msgstr "Nepasirinkta jokia funkcija"
+
+msgid "No input directory specified"
+msgstr "Įvesties katalogas nenurodytas"
+
+msgid "No loop found"
+msgstr "Nerasta kilpa"
+
+#, c-format
+msgid "No organ section in organ definition %s"
+msgstr "Vargonų apibrėžime nėra Organ skyriaus %s"
+
+msgid "No output-file specified"
+msgstr "Išvesties failas nenurodytas"
+
+#, c-format
+msgid "No samples found: %s"
+msgstr "Semplų nerasta: %s"
+
+msgid "No sound output occurring"
+msgstr "Garso išvestis nevyksta"
+
+#, c-format
+msgid ""
+"No sound output will happen. Samples per buffer has been changed by the "
+"sound driver to %d"
+msgstr ""
+"Garso nebus. Garso tvarkyklė pakeitė semplų skaičių buferyje į %d"
+
+msgid "No title specified"
+msgstr "Pavadinimas nenurodytas"
+
+msgid "No valid loops exist in the file"
+msgstr "Faile nėra galiojančių kilpų"
+
+#, c-format
+msgid "Non-empty directory '%s'"
+msgstr "Netuščias katalogas „%s“"
+
+msgid "None"
+msgstr "Nėra"
+
+msgid "Norden"
+msgstr "Norden"
+
+#, c-format
+msgid "Not a RIFF file: %s"
+msgstr "Ne RIFF failas: %s"
+
+#, c-format
+msgid "Not recognized MIDI chunk at offset %d"
+msgstr "Neatpažintas MIDI fragmentas ties poslinkiu %d"
+
+msgid "Not supported entry in the central directory"
+msgstr "Nepalaikomas įrašas centriniame kataloge"
+
+msgid "Not supported event"
+msgstr "Nepalaikomas įvykis"
+
+#, c-format
+msgid "Number %s contains locale dependent floating point"
+msgstr "Skaičiuje %s yra nuo lokalės priklausantis slankusis kablelis"
+
+msgid "Number of CPU cores:"
+msgstr "CPU branduolių skaičius:"
+
+msgid "O"
+msgstr "O"
+
+msgid "ODF Path"
+msgstr "ODF kelias"
+
+msgid "OFF"
+msgstr "IŠJUNGTA"
+
+msgid "ON"
+msgstr "ĮJ"
+
+msgid "Old GO 0.2 styled setting in ODF"
+msgstr "Senas GO 0.2 stiliaus nustatymas ODF"
+
+msgid "On"
+msgstr "Įjungta"
+
+msgid "Only non-splitted ZIP archives are supported"
+msgstr "Palaikomi tik nepadalyti ZIP archyvai"
+
+msgid "Only non-splitted ZIP64 archives are supported"
+msgstr "Palaikomi tik nepadalyti ZIP64 archyvai"
+
+msgid "Only non-splitted archive is supported"
+msgstr "Palaikomas tik nepadalytas archyvas"
+
+msgid "Only stored compression supported"
+msgstr "Palaikomas tik saugomas glaudinimas"
+
+msgid "Open &Recent"
+msgstr "Atidaryti &Naujausi"
+
+#, c-format
+msgid "Open of the audio stream for %s failed: %s"
+msgstr "Nepavyko atidaryti garso srauto, skirto %s: %s"
+
+msgid "Open organ"
+msgstr "Atviri vargonai"
+
+#, c-format
+msgid "Opening the cache file %s failed"
+msgstr "Nepavyko atidaryti talpyklos failo %s"
+
+msgid "Options"
+msgstr "Parinktys"
+
+#, c-format
+msgid "Organ %s changed its name"
+msgstr "Vargonai %s pakeitė pavadinimą"
+
+#, c-format
+msgid "Organ %s changed its organ builder"
+msgstr "Vargonai %s pakeitė vargonų statytoją"
+
+#, c-format
+msgid "Organ %s changed its recording details"
+msgstr "Vargonai %s pakeitė savo įrašo informaciją"
+
+msgid "Organ &Properties"
+msgstr "Vargonų &ypatybės"
+
+msgid "Organ Properties"
+msgstr "Vargonų savybės"
+
+msgid "Organ cache:"
+msgstr "Vargonų talpykla:"
+
+msgid "Organ dialog"
+msgstr "Vargonų dialogas"
+
+msgid "Organ hash:"
+msgstr "Vargonų maiša:"
+
+msgid "Organ package"
+msgstr "Vargonų paketas"
+
+#, c-format
+msgid "Organ package %s changed its title"
+msgstr "Vargonų paketas %s pakeitė pavadinimą"
+
+msgid "Organ package (*.orgue)"
+msgstr "Vargonų paketas (*.orgue)"
+
+msgid "Organ packages"
+msgstr "Vargonų paketai"
+
+msgid "Organ packages:"
+msgstr "Vargonų paketai:"
+
+msgid "Organ path"
+msgstr "Vargonų kelias"
+
+msgid "Organ settings"
+msgstr "Vargonų nustatymai"
+
+msgid "Organ settings:"
+msgstr "Vargonų nustatymai:"
+
+msgid "Organs"
+msgstr "Vargonai"
+
+msgid "Original temperament"
+msgstr "Pradinė derinimo sistema"
+
+msgid "Other Comments"
+msgstr "Kiti komentarai"
+
+msgid "Other just"
+msgstr "Kita grynoji derinimo sistema"
+
+msgid "Out of memory"
+msgstr "Pritrūko atminties"
+
+msgid ""
+"Out of memory - only parts of the organ are loaded. Please reduce memory "
+"footprint via the sample loading settings."
+msgstr ""
+"Baigėsi atmintis – įkeltos tik vargonų dalys. Sumažinkite atminties sąnaudas "
+"semplų įkėlimo nustatymais."
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %f"
+msgstr "Skilties „%s“ įrašo „%s“ vertė nepatenka į diapazoną: %f"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %f. Assumed %f."
+msgstr ""
+"Skilties „%s“ įrašo „%s“ vertė nepatenka į diapazoną: %f. Manoma, kad %f."
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %ld"
+msgstr "Skilties „%s“ įrašo „%s“ vertė nepatenka į diapazoną: %ld"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %ld. Assumed %d"
+msgstr ""
+"Skilties „%s“ įrašo „%s“ vertė nepatenka į diapazoną: %ld. Manoma, kad %d"
+
+#, c-format
+msgid "Output device %s not found - no sound output will occur"
+msgstr "Išvesties įrenginys %s nerastas – nebus garso išvesties"
+
+msgid "Override"
+msgstr "Nepaisyti"
+
+msgid "P"
+msgstr "P"
+
+msgid "P&roperties..."
+msgstr "S&avybės..."
+
+msgid "PAUSE"
+msgstr "PAUZĖ"
+
+msgid "PLAY"
+msgstr "GROTI"
+
+msgid "Package hash:"
+msgstr "Paketo maiša:"
+
+msgid "Package id:"
+msgstr "Paketo ID:"
+
+msgid "Package info:"
+msgstr "Paketo informacija:"
+
+msgid "Package name:"
+msgstr "Paketo pavadinimas:"
+
+#, c-format
+msgid "PackageID %s added more than once"
+msgstr "PackageID %s pridėtas daugiau nei vieną kartą"
+
+msgid "Panic"
+msgstr "Panika"
+
+msgid "Parent default"
+msgstr "Kaip pirminiame objekte"
+
+msgid "Parsing organ packages"
+msgstr "Vargonų paketų analizavimas"
+
+msgid "Parsing sample set definition file"
+msgstr "Analizuojamas semplų rinkinio apibrėžimo failas"
+
+msgid "Path"
+msgstr "Kelias"
+
+msgid "Path in package:"
+msgstr "Kelias pakete:"
+
+msgid "Paths"
+msgstr "Keliai"
+
+msgid "Pedal"
+msgstr "Pedalas"
+
+msgid "Pedal first"
+msgstr "Pirmas pedalas"
+
+msgid "Pedal first (Viscount style)"
+msgstr "Pirmiausia pedalas (Viscount stilius)"
+
+msgid "Pedal last"
+msgstr "Pedalas paskutinis"
+
+msgid "Pedal last (old GrandOrgue style)"
+msgstr "Paskutinis pedalas (senas GrandOrgue stilius)"
+
+msgid "Perform strict ODF"
+msgstr "Griežtas ODF tikrinimas"
+
+msgid "Physical device name:"
+msgstr "Fizinio įrenginio pavadinimas:"
+
+msgid "Physical name regex pattern:"
+msgstr "Fizinio pavadinimo reguliariosios išraiškos šablonas:"
+
+msgid "Pipe organ simulator"
+msgstr "Vamzdinių vargonų simuliatorius"
+
+msgid "Pipes"
+msgstr "Vamzdžiai"
+
+msgid "Piston"
+msgstr "Pistonas"
+
+msgid "Pitch"
+msgstr "Aukštis"
+
+msgid "Please apply or discard changes first"
+msgstr "Pirmiausia pritaikykite arba atmeskite pakeitimus"
+
+#, c-format
+msgid "Please enter a volume between %3.1f and %2.1f dB"
+msgstr "Įveskite garsumą nuo %3.1f iki %2.1f dB"
+
+msgid "Please enter new volume in dB:"
+msgstr "Įveskite naują garsumą dB:"
+
+msgid "Please fully close the enclosure"
+msgstr "Visiškai uždarykite švelerį"
+
+msgid "Please fully open the enclosure"
+msgstr "Visiškai atidarykite švelerį"
+
+msgid "Please press the MIDI element"
+msgstr "Paspauskite MIDI elementą"
+
+msgid "Please press the highest key with minimal velocity"
+msgstr "Paspauskite aukščiausią klavišą minimaliu greičiu"
+
+msgid "Please press the lowest key with minimal velocity"
+msgstr "Paspauskite žemiausią klavišą minimaliu greičiu"
+
+msgid "Please select an organ"
+msgstr "Pasirinkite vargonus"
+
+msgid "Please toggle it (to on state, if possible)"
+msgstr "Perjunkite jį (jei įmanoma, į įjungtą būseną)"
+
+msgid "Please toggle it again (to off state, if possible)"
+msgstr "Dar kartą perjunkite (jei įmanoma, į išjungtą būseną)"
+
+msgid "Polyphase"
+msgstr "Daugiafazė"
+
+msgid "Polyphony"
+msgstr "Polifonija"
+
+msgid "Pr&eset"
+msgstr "Pr&esetas"
+
+msgid "Prelleur (Peter) 1731"
+msgstr "Preljeras (Petras) 1731 m"
+
+#, c-format
+msgid "Preset %d"
+msgstr "Presetas %d"
+
+msgid "Prev"
+msgstr "Ankstesnis"
+
+msgid "Prev file"
+msgstr "Ankstesnis failas"
+
+msgid "Prev temperament"
+msgstr "Ankstesnė derinimo sistema"
+
+msgid "Previous"
+msgstr "Ankstesnis"
+
+msgid "Previous Memory"
+msgstr "Ankstesnė atmintis"
+
+msgid "Program Settings"
+msgstr "Programos nustatymai"
+
+msgid "Properties"
+msgstr "Savybės"
+
+msgid "Pure Major"
+msgstr "Grynasis majoras"
+
+msgid "Pure Minor"
+msgstr "Grynasis minoras"
+
+msgid "Pythagorean"
+msgstr "Pitagoriškoji"
+
+msgid "Q"
+msgstr "Q"
+
+msgid "R"
+msgstr "R"
+
+msgid "REC"
+msgstr "REC"
+
+msgid "REC File"
+msgstr "REC į failą"
+
+msgid "RPN"
+msgstr "RPN"
+
+msgid "RPN Off"
+msgstr "RPN išjungtas"
+
+msgid "RPN Off Toggle"
+msgstr "RPN išjungimas perjungimu"
+
+msgid "RPN On"
+msgstr "RPN įjungtas"
+
+msgid "RPN On Toggle"
+msgstr "RPN įjungimas perjungimu"
+
+msgid "RPN On/Off Toggle"
+msgstr "RPN įjungimas / išjungimas perjungimu"
+
+msgid "RPN Range"
+msgstr "RPN diapazonas"
+
+#, c-format
+msgid "RPN channel: %d key: %d value: %d"
+msgstr "RPN kanalas: %d klavišas: %d reikšmė: %d"
+
+msgid "Rameau Nouveau Systeme (1726)"
+msgstr "Rameau Nouveau Systeme (1726 m.)"
+
+msgid "Rameau bemols"
+msgstr "Rameau bemoliai"
+
+msgid "Rameau dieses"
+msgstr "Rameau diezai"
+
+msgid "Rameau's modified meantone temperament (1725)"
+msgstr "Rameau modifikuota vidutinio tono derinimo sistema (1725)"
+
+msgid "Ramos de Pareja 1482 - Monochord"
+msgstr "Ramos de Pareja 1482 – Monokordas"
+
+msgid "Randomize pipe speaking"
+msgstr "Atsitiktinis vamzdžių išderinimas"
+
+msgid "Rank"
+msgstr "Rankas"
+
+msgid "Re&load"
+msgstr "Iš naujo į&kelti"
+
+#, c-format
+msgid "Read from the archive failed (%d bytes)"
+msgstr "Nuskaityti iš archyvo nepavyko (%d baitai)"
+
+msgid "Reading data for CRC failed"
+msgstr "Nepavyko nuskaityti CRC duomenų"
+
+msgid "Reason"
+msgstr "Priežastis"
+
+msgid "Receive"
+msgstr "Gauti"
+
+msgid "Record stereo downmix"
+msgstr "Įrašyti stereofoninį mišinį"
+
+msgid "Recorder / Player"
+msgstr "Diktofonas / grotuvas"
+
+msgid "Recorder WAV Format:"
+msgstr "Įrašymo WAV formatas:"
+
+msgid "Recording Details"
+msgstr "Įrašymo detalės"
+
+msgid "Recording:"
+msgstr "Įrašas:"
+
+msgid "ReferencePipe without Reference"
+msgstr "ReferencePipe be nuorodos"
+
+msgid "Refresh files"
+msgstr "Atnaujinti failus"
+
+msgid "Regex must be specified when physical and logical device names differ"
+msgstr ""
+"Kai fizinio ir loginio įrenginių pavadinimai skiriasi, būtina nurodyti "
+"reguliarųjį reiškinį"
+
+msgid "Regular"
+msgstr "Reguliarus"
+
+msgid "Release Length is invalid"
+msgstr "Atslūgimo trukmė netinkama"
+
+msgid "Release Tail Length (ms):"
+msgstr "Atslūgimo uodegos ilgis (ms):"
+
+msgid "Release loading:"
+msgstr "Atslūgimo įkėlimas:"
+
+msgid "Release sample scaling"
+msgstr "Atslūgimo semplo mastelio keitimas"
+
+msgid "Release tail length"
+msgstr "Atslūgimo uodegos ilgis"
+
+msgid "Relocate organ path"
+msgstr "Keisti vargonų kelią"
+
+msgid "Relocating path"
+msgstr "Vargonų kelio keitimas"
+
+msgid "Rename"
+msgstr "Pervardyti"
+
+#, c-format
+msgid "Renamed file %s to %s"
+msgstr "Failas %s pervardytas į %s"
+
+msgid "Resampling failed"
+msgstr "Perdiskretizavimas nepavyko"
+
+msgid "Reset to &Defaults"
+msgstr "Iš naujo nustatyti &numatytuosius nustatymus"
+
+msgid "Resetting to defaults"
+msgstr "Numatytųjų nustatymų atstatymas"
+
+msgid "Reverb"
+msgstr "Aidėjimas"
+
+msgid "Reverb error"
+msgstr "Aidėjimo klaida"
+
+#, c-format
+msgid "Reverb load error: %s"
+msgstr "Aidėjimo įkėlimo klaida: %s"
+
+#, c-format
+msgid "Reversible piston connect to a read-only object: %s"
+msgstr "Reversinis pistonas prijungtas prie tik skaitomo objekto: %s"
+
+msgid "Revert"
+msgstr "Grįžti"
+
+msgid "Revert to Default"
+msgstr "Atkurti numatytąją konfigūraciją"
+
+msgid "Rousseau's temperament (1768)"
+msgstr "Rousseau derinimo sistema (1768)"
+
+#, c-format
+msgid "RtAudio error: %s"
+msgstr "RtAudio klaida: %s"
+
+#, c-format
+msgid "RtAudio warning: %s"
+msgstr "RtAudio įspėjimas: %s"
+
+#, c-format
+msgid "RtMidi error: %s"
+msgstr "RtMidi klaida: %s"
+
+msgid "S"
+msgstr "S"
+
+msgid "STOP"
+msgstr "STOP"
+
+msgid "SYSEX Hauptwerk 16 Byte String Name"
+msgstr "SYSEX Hauptwerk 16 baitų eilutės pavadinimas"
+
+msgid "SYSEX Hauptwerk 16 Byte String Value"
+msgstr "SYSEX Hauptwerk 16 baitų eilutės reikšmė"
+
+msgid "SYSEX Hauptwerk 32 Byte LCD Name"
+msgstr "SYSEX Hauptwerk 32 Byte LCD pavadinimas"
+
+msgid "SYSEX Hauptwerk 32 Byte LCD Value"
+msgstr "SYSEX Hauptwerk 32 baitų LCD reikšmė"
+
+msgid "SYSEX Rogers Stop Change"
+msgstr "SYSEX Rogers registro keitimas"
+
+msgid "Sample Loading"
+msgstr "Semplų įkėlimas"
+
+msgid "Sample Rate:"
+msgstr "Diskretizavimo dažnis:"
+
+msgid "Sample Size:"
+msgstr "Semplo dydis:"
+
+msgid "Sample channels:"
+msgstr "Semplo kanalai:"
+
+msgid "Sample information"
+msgstr "Informacija apie semplą"
+
+#, c-format
+msgid "Sample rate of device %s changed"
+msgstr "Pakeistas įrenginio %s diskretizavimo dažnis"
+
+msgid "Sample set definition files (*.organ)"
+msgstr "Semplų rinkinio aprašo failai (*.organ)"
+
+msgid "Sample size:"
+msgstr "Semplo dydis:"
+
+msgid "Samples per buffer:"
+msgstr "Semplų viename buferyje:"
+
+msgid "Samplesets:"
+msgstr "Semplų rinkiniai:"
+
+msgid "Sauveur (Memoires 1701)"
+msgstr "Sauveur (1701 m. atsiminimai)"
+
+msgid "Sauveur 1702"
+msgstr "Sauveur 1702"
+
+msgid "Sauveur harpsichord 1697"
+msgstr "Sauveur klavesinas 1697 m"
+
+msgid "Save as"
+msgstr "Išsaugoti kaip"
+
+msgid "Save file"
+msgstr "Išsaugoti failą"
+
+#, c-format
+msgid "Save of %s to the cache failed"
+msgstr "Nepavyko išsaugoti %s talpykloje"
+
+msgid "Save organ settings"
+msgstr "Išsaugoti vargonų nustatymus"
+
+msgid "Save settings"
+msgstr "Išsaugokite nustatymus"
+
+msgid "Scheffer (1748) modified, Sweden"
+msgstr "Scheffer (1748) modifikuotas, Švedija"
+
+msgid "Schlick (Arnolt), 1511"
+msgstr "Šlikas (Arnoltas), 1511 m"
+
+msgid "Schlick's (1991)"
+msgstr "Schlicko (1991)"
+
+msgid "Schlick: 1555"
+msgstr "Šlickas: 1555 m"
+
+msgid "Schnitger organ St. Jakobi, Hamburg "
+msgstr "Šnitgerio vargonai, Šv. Jokūbo bažnyčia, Hamburgas "
+
+msgid "Scope"
+msgstr "Taikymo sritis"
+
+msgid "Scoped"
+msgstr "Apimtas"
+
+#, c-format
+msgid "Section %s already in use"
+msgstr "Skyrius %s jau naudojamas"
+
+#, c-format
+msgid "Seek to offset %d in archive failed"
+msgstr "Nepavyko siekti kompensuoti %d archyve"
+
+msgid "Select a sample file for all other metronome beats"
+msgstr "Pasirinkite semplo failą visoms kitoms metronomo dalims"
+
+msgid "Select a sample file for the first metronome beat"
+msgstr "Pasirinkite pirmosios metronomo dalies semplo failą"
+
+msgid "Select an impulse file"
+msgstr "Pasirinkite impulsinės charakteristikos failą"
+
+msgid "Select audio groups to distribute:"
+msgstr "Pasirinkite paskirstomas garso grupes:"
+
+msgid "Select directory for export/import organ combinations"
+msgstr "Pasirinkite katalogą vargonų deriniams eksportuoti / importuoti"
+
+msgid "Select directory for export/import organ settings"
+msgstr "Pasirinkite katalogą vargonų nustatymams eksportuoti / importuoti"
+
+msgid "Select directory for load new organ packages from"
+msgstr "Pasirinkite katalogą, iš kurio įkelti naujus vargonų paketus"
+
+msgid "Select directory for open new organs at"
+msgstr "Pasirinkite katalogą, iš kurio atidaryti naujus vargonus"
+
+msgid "Select directory for storing organ cache"
+msgstr "Pasirinkite katalogą vargonų talpyklai saugoti"
+
+msgid "Select directory for storing organ settings"
+msgstr "Pasirinkite katalogą vargonų nustatymams saugoti"
+
+msgid "Select directory for the MIDI player"
+msgstr "Pasirinkite MIDI grotuvo katalogą"
+
+msgid "Select directory for your MIDI recording"
+msgstr "Pasirinkite savo MIDI įrašymo katalogą"
+
+msgid "Select directory for your audio recordings"
+msgstr "Pasirinkite savo garso įrašų katalogą"
+
+msgid "Select organ to load"
+msgstr "Pasirinkite vargonus, kuriuos norite įkelti"
+
+msgid ""
+"Select the corresponding MIDI output device for converting input events into "
+"output events"
+msgstr ""
+"Pasirinkite atitinkamą MIDI išvesties įrenginį, skirtą įvesties įvykiams "
+"konvertuoti į išvesties įvykius"
+
+msgid "Self referencing organ package"
+msgstr "Į save nurodantis vargonų paketas"
+
+msgid "Send"
+msgstr "Siųsti"
+
+msgid "Send Division Output"
+msgstr "Siųsti sekcijos išvestį"
+
+msgid "Send MIDI Recorder Output Stream to:"
+msgstr "Siųsti MIDI įrašymo įrenginio išvesties srautą adresu:"
+
+msgid "Sequencer"
+msgstr "Sekvenceris"
+
+msgid "Set"
+msgstr "Nustatyti"
+
+msgid "Setter"
+msgstr "Sekvenceris"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Settings Reason"
+msgstr "Nustatymų priežastis"
+
+#, c-format
+msgid "Settings files (%s)"
+msgstr "Nustatymų failai (%s)"
+
+msgid "Settings files (*.cmb)|*.cmb"
+msgstr "Nustatymų failai (*.cmb)|*.cmb"
+
+msgid "Shortcut"
+msgstr "Spartusis klavišas"
+
+msgid ""
+"Should the audio config be reverted to the default stereo configuration?"
+msgstr ""
+"Ar garso konfigūracija turėtų būti grąžinta į numatytąją stereo "
+"konfigūraciją?"
+
+msgid "Single attack"
+msgstr "Viena ataka"
+
+msgid "Single release"
+msgstr "Vienas atslūgimas"
+
+msgid "Smith's (Robert) Equal Harmony 1749"
+msgstr "Smitho (Roberto) lygiavertė harmonija 1749 m"
+
+msgid ""
+"Some changed settings effect unless the sample set is reloaded.\n"
+"\n"
+"Would you like to reload the sample set now?"
+msgstr ""
+"Kai kurie pakeisti nustatymai įsigalios tik iš naujo įkėlus semplų "
+"rinkinį.\n"
+"\n"
+"Ar įkelti semplų rinkinį iš naujo dabar?"
+
+msgid ""
+"Some selected objects have subobjects.\n"
+"Do you want the subobjects also to be reset to defaults?\n"
+"Note: resetting to defaults cannot be undone.\n"
+"Note: resetting all subobjects may take some time."
+msgstr ""
+"Kai kurie pasirinkti objektai turi poobjektus.\n"
+"Ar norite, kad antriniai objektai taip pat būtų atstatyti į numatytuosius "
+"nustatymus?\n"
+"Pastaba: numatytųjų nustatymų atstatymo anuliuoti negalima.\n"
+"Pastaba: visų antrinių objektų nustatymas iš naujo gali užtrukti."
+
+msgid "Some tracks are missing"
+msgstr "Trūksta kai kurių takelių"
+
+msgid "Sorge Monochord (1756)"
+msgstr "Sorge’o monokordas (1756 m.)"
+
+msgid "Sorge, 1744 (A)"
+msgstr "Sorge, 1744 m. (A)"
+
+msgid "Sorge, 1744 (B)"
+msgstr "Sorge, 1744 (B)"
+
+msgid "Sorge, 1758"
+msgstr "Sorge, 1758 m"
+
+msgid "Sound &ports"
+msgstr "Garso &prievadai"
+
+msgid "Sound output"
+msgstr "Garso išvestis"
+
+msgid "Stade St. Cosmae"
+msgstr "Stade St. Cosmae"
+
+#, c-format
+msgid "Start of audio stream of %s failed: %s"
+msgstr "Nepavyko pradėti %s garso srauto: %s"
+
+msgid "Start offset:"
+msgstr "Pradinis poslinkis:"
+
+msgid "Start without any organ"
+msgstr "Paleisti be jokių vargonų"
+
+#, c-format
+msgid "Status byte missing at offset %d"
+msgstr "Trūksta būsenos baito ties poslinkiu %d"
+
+#, c-format
+msgid "Status: %s"
+msgstr "Būsena: %s"
+
+msgid "Stereo"
+msgstr "Stereo"
+
+msgid "Stevin (Simon), monochord 1585"
+msgstr "Stevinas (Simonas), monokordas 1585 m"
+
+msgid "Stop"
+msgstr "Registras"
+
+msgid "Stops"
+msgstr "Registrai"
+
+msgid "Store MIDI settings to initial"
+msgstr "Išsaugokite pradinius MIDI nustatymus"
+
+#, c-format
+msgid "Strange boolean value for section '%s' entry '%s': %s"
+msgstr "Keista skilties „%s“ įrašo „%s“ loginė vertė: %s"
+
+msgid "Switch"
+msgstr "Perjungti"
+
+#, c-format
+msgid "Switch %d already assigned to %s"
+msgstr "Jungiklis %d jau priskirtas %s"
+
+msgid "Sys Ex Ahlborn-Galanti"
+msgstr "Sys Ex Ahlborn-Galanti"
+
+msgid "Sys Ex Ahlborn-Galanti Toggle"
+msgstr "Sys Ex Ahlborn-Galanti perjungiklis"
+
+msgid "Sys Ex Johannus 11 bytes"
+msgstr "Sys Ex Johannus 11 baitų"
+
+msgid "Sys Ex Johannus 9 bytes"
+msgstr "Sys Ex Johannus 9 baitai"
+
+msgid "Sys Ex Rogers Stop Change"
+msgstr "Sys Ex Rogers registro keitimas"
+
+msgid "Sys Ex Viscount"
+msgstr "Sys Ex Viscount"
+
+msgid "Sys Ex Viscount Toggle"
+msgstr "Sys Ex Viscount perjungimas"
+
+msgid "T"
+msgstr "T"
+
+msgid "TB"
+msgstr "TB"
+
+msgid "Temperament"
+msgstr "Derinimo sistema"
+
+msgid "Temperaments"
+msgstr "Derinimo sistemos"
+
+#, c-format
+msgid "The %s node in not a sequence"
+msgstr "Mazgas %s ne seka"
+
+msgid ""
+"The .cmb file does not exactly match the current ODF. Importing it can cause "
+"various problems. Should it really be imported?"
+msgstr ""
+".cmb failas tiksliai neatitinka dabartinio ODF. Jo importavimas gali sukelti "
+"įvairių problemų. Ar tikrai jį reikia importuoti?"
+
+msgid ""
+"The ODF contains GrandOrgue 0.2 styled saved settings. Should they be "
+"imported?"
+msgstr ""
+"ODF yra GrandOrgue 0.2 stiliaus išsaugoti nustatymai. Ar juos reikia "
+"importuoti?"
+
+msgid "The cache for this organ is outdated. Please update or delete it."
+msgstr "Šių vargonų talpykla pasenusi. Atnaujinkite arba ištrinkite."
+
+msgid "The combination file does not exactly match the current ODF."
+msgstr "Derinio failas tiksliai neatitinka dabartinio ODF."
+
+#, c-format
+msgid "The file '%s' is a %s file instead of a %s file"
+msgstr "Failas „%s“ yra %s failas, o ne %s failas"
+
+#, c-format
+msgid ""
+"The file '%s' specified at '%s' does not exist or it is not a regular file"
+msgstr ""
+"Failas „%s“, nurodytas „%s“, neegzistuoja arba tai nėra įprastas failas"
+
+#, c-format
+msgid ""
+"The following organ packages\n"
+"%s are in the Packages directory and will be registered automatically\n"
+"upon next GrandOrgue restart. Do you really want to unregister them?"
+msgstr ""
+"Toliau pateikiami vargonų paketai\n"
+"%s yra paketų kataloge ir bus užregistruoti automatiškai\n"
+"po kito GrandOrgue paleidimo iš naujo. Ar tikrai norite juos išregistruoti?"
+
+#, c-format
+msgid "The font size '%s' at section '%s' entry '%s' is out of range [1, 50]"
+msgstr "Skilties „%s“ įrašo „%s“ šrifto dydis „%s“ yra už diapazono [1, 50]"
+
+msgid "The logical device name contains leading or trailing spaces"
+msgstr "Loginiame įrenginio pavadinime yra tarpų priekyje arba gale"
+
+#, c-format
+msgid "The loop %u is ignored: it is too short for crossfade"
+msgstr "Ciklas %u ignoruojamas: jis per trumpas, kad būtų galima išblukti"
+
+#, c-format
+msgid ""
+"The loop %u is ignored: not enough samples for crossfade before it's start"
+msgstr ""
+"Kilpa %u ignoruojama: nepakanka semplų kryžminiam perėjimui prieš jos "
+"pradžią"
+
+msgid "The organ package has been registered"
+msgstr "Vargonų paketas užregistruotas"
+
+msgid ""
+"The organ settings have been modified\n"
+"Do you want to save them?"
+msgstr ""
+"Vargonų parametrai buvo pakeisti\n"
+"Ar norite juos išsaugoti?"
+
+#, c-format
+msgid "The pipe %s/%s has independent release but %sReleaseCount=0"
+msgstr "Vamzdis %s/%s turi nepriklausomą atslūgimą, bet %sReleaseCount=0"
+
+msgid "The regex does not match the physical device name"
+msgstr "Reguliarioji išraiška neatitinka fizinio įrenginio pavadinimo"
+
+#, c-format
+msgid "The required key %s is missing"
+msgstr "Trūksta reikiamo rakto %s"
+
+#, c-format
+msgid "The size '%s' at section '%s' entry '%s' is out of range [100, 32000]"
+msgstr "Dydis „%s“ skilties „%s“ įraše „%s“ nepatenka į diapazoną [100, 32000]"
+
+#, c-format
+msgid "The value %s is not scalar"
+msgstr "Reikšmė %s nėra skaliarinė"
+
+#, c-format
+msgid "The value of %s (%d) is out of range from %d to %d"
+msgstr "%s (%d) reikšmė yra už diapazono nuo %d iki %d"
+
+#, c-format
+msgid "The value of %s (%s) is not a valid %s"
+msgstr "%s (%s) reikšmė nėra tinkama %s"
+
+#, c-format
+msgid "The value of %s (%s) is not among valid enum values"
+msgstr "%s (%s) reikšmė nėra tarp galiojančių sąrašo verčių"
+
+msgid "There are errors while loading the organ. See Log Messages."
+msgstr "Įkeliant vargonus įvyko klaidų. Žr. „Pranešimų žurnalą“."
+
+#, c-format
+msgid "There is no %s node in the yaml file"
+msgstr "Yaml faile nėra mazgo %s"
+
+#, c-format
+msgid "This %s file '%s' was originally made for another organ '%s'"
+msgstr "Šis %s failas „%s“ iš pradžių buvo sukurtas kitiems vargonams „%s“"
+
+#, c-format
+msgid ""
+"This %s file '%s' was originally made for another organ '%s'. Importing it "
+"can cause various problems. Should it really be imported?"
+msgstr ""
+"Šis %s failas „%s“ iš pradžių buvo sukurtas kitiems vargonams „%s“. Jo "
+"importavimas gali sukelti įvairių problemų. Ar tikrai jį reikia importuoti?"
+
+#, c-format
+msgid ""
+"This .cmb file was originally created for:\n"
+"%s"
+msgstr ""
+"Šis .cmb failas iš pradžių buvo sukurtas:\n"
+"%s"
+
+msgid ""
+"This MIDI file does not contain GrandOrgue's own channel setup.\n"
+"Choose how to map MIDI channels to manuals:"
+msgstr ""
+"Šiame MIDI faile nėra GrandOrgue kanalo sąrankos.\n"
+"Pasirinkite, kaip susieti MIDI kanalus su žinynais:"
+
+#, c-format
+msgid "This MIDI settings file '%s' was originally made for another organ '%s'"
+msgstr ""
+"Šis MIDI nustatymų failas „%s“ iš pradžių buvo sukurtas kitiems vargonams "
+"„%s“"
+
+#, c-format
+msgid ""
+"This MIDI settings file '%s' was originally made for another organ '%s'. "
+"Importing it can cause various problems. Should it really be imported?"
+msgstr ""
+"Šis MIDI nustatymų failas „%s“ iš pradžių buvo sukurtas kitiems vargonams "
+"„%s“. Jo importavimas gali sukelti įvairių problemų. Ar tikrai jį reikia "
+"importuoti?"
+
+msgid "This enclosure is ODF defined and may not be altered"
+msgstr "Šis šveleris apibrėžtas ODF ir negali būti keičiamas"
+
+msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
+msgstr "Thomas/Philpott 1829/1881 vargonai, Šv. Jansklooster"
+
+msgid "Ticks per Measure:"
+msgstr "Dalių takte:"
+
+msgid "Title"
+msgstr "Pavadinimas"
+
+msgid "To initial"
+msgstr "Į pradžią"
+
+msgid "Tone balance:"
+msgstr "Tonų balansas:"
+
+msgid "ToneBalance value is invalid"
+msgstr "ToneBalance reikšmė neteisinga"
+
+msgid "Too many audio channels configured for the new audio interface"
+msgstr "Per daug garso kanalų sukonfigūruota naujai garso sąsajai"
+
+msgid "Tracker (ms):"
+msgstr "Traktūros delsa (ms):"
+
+msgid "Tracker delay is invalid"
+msgstr "Netinkama traktūros delsa"
+
+#, c-format
+msgid "Trailing whitespace at section '%s' entry '%s': %s"
+msgstr "Skilties „%s“ įrašo „%s“ pabaigoje esantis tarpas: %s"
+
+msgid "Transpose"
+msgstr "Transponuoti"
+
+msgid "Transpose +"
+msgstr "Transponuoti +"
+
+msgid "Transpose -"
+msgstr "Transponuoti –"
+
+msgid "Tremulant"
+msgstr "Tremulantas"
+
+msgid "Type"
+msgstr "Tipas"
+
+msgid "U"
+msgstr "U"
+
+msgid "U.O."
+msgstr "U.O."
+
+#, c-format
+msgid "Unable to delete file %s"
+msgstr "Nepavyko ištrinti failo %s"
+
+#, c-format
+msgid "Unable to open file %s for writing"
+msgstr "Nepavyko atidaryti failo %s rašymui"
+
+#, c-format
+msgid "Unable to read '%s'"
+msgstr "Nepavyko perskaityti „%s“"
+
+#, c-format
+msgid "Unable to rename file %s to %s"
+msgstr "Nepavyko pervardyti failo %s į %s"
+
+#, c-format
+msgid "Unexpected file in the cache directory: %s"
+msgstr "Netikėtas failas talpyklos kataloge: %s"
+
+#, c-format
+msgid "Unknown MIDI file type %d"
+msgstr "Nežinomas MIDI failo tipas %d"
+
+#, c-format
+msgid "Unknown MIDI message %02X at %d"
+msgstr "Nežinomas MIDI pranešimas %02X adresu %d"
+
+#, c-format
+msgid "Unknown SetterElement in section %s"
+msgstr "Nežinomas SetterElement skiltyje %s"
+
+msgid "Unknown attributes"
+msgstr "Nežinomi atributai"
+
+msgid "Unknown exception"
+msgstr "Nežinoma išimtis"
+
+#, c-format
+msgid "Unknown extendend information %04x"
+msgstr "Nežinoma išplėstinė informacija %04x"
+
+#, c-format
+msgid "Unknown filetype %s"
+msgstr "Nežinomas failo tipas %s"
+
+msgid "Unsupported channel count"
+msgstr "Nepalaikomas kanalų skaičius"
+
+msgid "Unsupported channel number"
+msgstr "Nepalaikomas kanalo numeris"
+
+msgid "Unsupported format"
+msgstr "Nepalaikomas formatas"
+
+#, c-format
+msgid "Unused CMB entry '%s'"
+msgstr "Nenaudojamas CMB įrašas „%s“"
+
+#, c-format
+msgid "Unused MIDI object path: %s"
+msgstr "Nenaudojamas MIDI objekto kelias: %s"
+
+#, c-format
+msgid "Unused ODF entry '%s'"
+msgstr "Nenaudojamas ODF įrašas „%s“"
+
+#, c-format
+msgid "Unused yaml node %s (%s)"
+msgstr "Nenaudojamas yaml mazgas %s (%s)"
+
+msgid "Update checker"
+msgstr "Naujinių tikrinimas"
+
+msgid "Use MIDIInputNumber"
+msgstr "Naudoti MIDIInputNumber"
+
+msgid "Use the organ's MIDIInputNumber"
+msgstr "Naudoti vargonų MIDIInputNumber"
+
+msgid "User"
+msgstr "Naudotojas"
+
+msgid "User Interface"
+msgstr "Naudotojo sąsaja"
+
+msgid "User Temperament"
+msgstr "Naudotojo derinimo sistema"
+
+#, c-format
+msgid "Using helpfile %s (search path: %s)"
+msgstr "Pagalbos failo %s naudojimas (paieškos kelias: %s)"
+
+msgid "Using more than one audio interface is currently not supported."
+msgstr "Daugiau nei vienos garso sąsajos naudojimas šiuo metu nepalaikomas."
+
+msgid "V"
+msgstr "V"
+
+msgid "Valotti"
+msgstr "Valotti"
+
+msgid "Variable meantone 1"
+msgstr "Kintamoji vidutinio tono derinimo sistema 1"
+
+msgid "Variable meantone 2"
+msgstr "Kintamoji vidutinio tono derinimo sistema 2"
+
+msgid "Variable meantone 3"
+msgstr "Kintamoji vidutinio tono derinimo sistema 3"
+
+msgid "Variable meantone 4"
+msgstr "Kintamoji vidutinio tono derinimo sistema 4"
+
+msgid "Various comma"
+msgstr "Įvairios komos"
+
+msgid "Victorian temperament 1885"
+msgstr "Viktorijos laikų derinimo sistema, 1885"
+
+msgid "Volume"
+msgstr "Garsumas"
+
+msgid "Volume:"
+msgstr "Garsumas:"
+
+msgid "W"
+msgstr "W"
+
+msgid "WAV files (*.wav)|*.wav"
+msgstr "WAV failai (*.wav)|*.wav"
+
+msgid "Warning"
+msgstr "Įspėjimas"
+
+msgid "Wegscheider 20 note"
+msgstr "Wegscheider 20 natų"
+
+msgid "Well tempered"
+msgstr "Gerai temperuota derinimo sistema"
+
+msgid "Werckmeister 4 (1691)"
+msgstr "Werckmeister 4 (1691)"
+
+msgid "Werckmeister 5 (1691)"
+msgstr "Werckmeister 5 (1691)"
+
+msgid "Werckmeister 6"
+msgstr "Werckmeister 6"
+
+msgid "Werckmeister III"
+msgstr "Werckmeister III"
+
+msgid "William Holder equal beating (1694)"
+msgstr "Williamas Holderis, lygūs mušimai (1694)"
+
+#, c-format
+msgid "Windchest %d"
+msgstr "Oro dėžė %d"
+
+msgid "Windows left"
+msgstr "Windows (kairysis)"
+
+msgid "Windows menu"
+msgstr "Windows (meniu)"
+
+msgid "Windows right"
+msgstr "Windows (dešinysis)"
+
+msgid "With input number:"
+msgstr "Su įvesties numeriu:"
+
+msgid "Without input number:"
+msgstr "Be įvesties numerio:"
+
+msgid "Workload distribution:"
+msgstr "Darbo krūvio paskirstymas:"
+
+#, c-format
+msgid "Wrong name \"%s\" instead of \"%s\" of the %s %s"
+msgstr "Neteisingas pavadinimas \"%s\" vietoj \"%s\" iš %s %s"
+
+#, c-format
+msgid "Wrong number %s of the %s \"%s\""
+msgstr "Neteisingas %s \"%s\" numeris %s"
+
+msgid "X"
+msgstr "X"
+
+msgid "Y"
+msgstr "Y"
+
+msgid "Yes"
+msgstr "Taip"
+
+msgid "You are using the latest GrandOrgue version"
+msgstr "Naudojate naujausią GrandOrgue versiją"
+
+msgid "Z"
+msgstr "Z"
+
+msgid "ZIP uses not supported compression flags"
+msgstr "ZIP naudoja nepalaikomas glaudinimo vėliavėles"
+
+msgid "ZIP uses not supported features"
+msgstr "ZIP naudoja nepalaikomas funkcijas"
+
+msgid "ZIP64 uses not supported features"
+msgstr "ZIP64 naudoja nepalaikomas funkcijas"
+
+msgid "Zarlino (1558) 2/7-comma meantone"
+msgstr "Zarlino (1558), vidutinio tono 2/7 komos"
+
+msgid "Zip64 end record not found"
+msgstr "Zip64 pabaigos įrašas nerastas"
+
+msgid "_"
+msgstr "_"
+
+#, c-format
+msgid "__%d"
+msgstr "__%d"
+
+msgid "__0"
+msgstr "__0"
+
+msgid "__1"
+msgstr "__1"
+
+msgid "__2"
+msgstr "__2"
+
+msgid "__3"
+msgstr "__3"
+
+msgid "__4"
+msgstr "__4"
+
+msgid "__5"
+msgstr "__5"
+
+msgid "__6"
+msgstr "__6"
+
+msgid "__7"
+msgstr "__7"
+
+msgid "__8"
+msgstr "__8"
+
+msgid "__9"
+msgstr "__9"
+
+msgid "`"
+msgstr "`"
+
+msgid "a"
+msgstr "a"
+
+msgid "a#"
+msgstr "a#"
+
+msgid "add"
+msgstr "Num +"
+
+#, c-format
+msgid "aftertouch channel: %d key: %d value: %d"
+msgstr "aftertouch kanalas: %d klavišas: %d reikšmė: %d"
+
+msgid "alt"
+msgstr "Alt"
+
+msgid "b"
+msgstr "b"
+
+msgid "back"
+msgstr "Backspace"
+
+msgid "bad format!"
+msgstr "blogas formatas!"
+
+msgid "bad return format!"
+msgstr "blogas grąžinimo formatas!"
+
+msgid "banked-generals"
+msgstr "bendrosios kombinacijos su bankais"
+
+#, c-format
+msgid "bitmap size does not match for '%s'"
+msgstr "bitmap dydis neatitinka '%s'"
+
+#, c-format
+msgid "bitmap size of '%s' does not match mask '%s'"
+msgstr "„%s“ bitų žemėlapio dydis neatitinka kaukės „%s“"
+
+msgid "c"
+msgstr "c"
+
+msgid "c#"
+msgstr "c#"
+
+msgid "capital"
+msgstr "Caps Lock"
+
+msgid "control"
+msgstr "Ctrl"
+
+#, c-format
+msgid "control change channel: %d key: %d value: %d"
+msgstr "valdiklio keitimo kanalas: %d klavišas: %d reikšmė: %d"
+
+msgid "coupler"
+msgstr "kopula"
+
+msgid "couplers"
+msgstr "kopulos"
+
+msgid "create"
+msgstr "sukurti"
+
+msgid "create an organ package"
+msgstr "sukurti vargonų paketą"
+
+msgid "crescendo position"
+msgstr "crescendo padėtis"
+
+msgid "crescendos"
+msgstr "crescendos"
+
+msgid "current file name"
+msgstr "dabartinis failo pavadinimas"
+
+msgid "d"
+msgstr "d"
+
+msgid "d#"
+msgstr "d#"
+
+msgid "d'Alembert modified meantone (1726)"
+msgstr "d’Alembert’o modifikuota vidutinio tono derinimo sistema (1726 m.)"
+
+msgid "d'Alembert's: John Sankey's Scarlatti"
+msgstr "d'Alembertas: Johno Sankey'o Scarlatti"
+
+msgid "decimal"
+msgstr "Num ."
+
+msgid "delete"
+msgstr "Delete"
+
+msgid "depend on organ package"
+msgstr "priklauso nuo vargonų paketo"
+
+msgid "displays help on the command line parameters"
+msgstr "rodo komandų eilutės parametrų pagalbą"
+
+msgid "divide"
+msgstr "Num /"
+
+#, c-format
+msgid "divisional bank for %s"
+msgstr "sekcinių kombinacijų bankas, skirtas %s"
+
+msgid "divisional coupler"
+msgstr "sekcijų kopula"
+
+msgid "divisionals"
+msgstr "sekcinės kombinacijos"
+
+msgid "down"
+msgstr "Rodyklė žemyn"
+
+msgid "e"
+msgstr "e"
+
+msgid "enclosure not found"
+msgstr "Šveleris nerastas"
+
+msgid "enclosures"
+msgstr "šveleriai"
+
+msgid "end"
+msgstr "End"
+
+msgid "escape"
+msgstr "Esc"
+
+msgid "execute"
+msgstr "Execute"
+
+msgid "f"
+msgstr "f"
+
+msgid "f#"
+msgstr "f#"
+
+#, c-format
+msgid "failed to compress data %s"
+msgstr "nepavyko suspausti duomenų %s"
+
+msgid "failed to create relative path"
+msgstr "nepavyko sukurti santykinio kelio"
+
+msgid "g"
+msgstr "g"
+
+msgid "g#"
+msgstr "g#"
+
+msgid "general bank"
+msgstr "bendrųjų derinių bankas"
+
+msgid "generals"
+msgstr "bendrosios"
+
+msgid "generate verbose log messages"
+msgstr "generuoti išsamius žurnalo pranešimus"
+
+msgid "h"
+msgstr "h"
+
+msgid "help"
+msgstr "Help"
+
+msgid "home"
+msgstr "Home"
+
+msgid "i"
+msgstr "i"
+
+msgid "input-directory"
+msgstr "įvesties katalogas"
+
+msgid "insert"
+msgstr "Insert"
+
+msgid "left"
+msgstr "Rodyklė kairėn"
+
+msgid "licensed under the GNU GPLv2"
+msgstr "licencijuota pagal GNU GPLv2"
+
+msgid "manuals"
+msgstr "manualai"
+
+msgid "menu"
+msgstr "Menu"
+
+msgid "multiply"
+msgstr "Num *"
+
+#, c-format
+msgid "note channel: %d key: %d value: %d"
+msgstr "natos kanalas: %d klavišas: %d reikšmė: %d"
+
+msgid "numlock"
+msgstr "Num Lock"
+
+msgid "numpad 0"
+msgstr "Num 0"
+
+msgid "numpad 1"
+msgstr "Num 1"
+
+msgid "numpad 2"
+msgstr "Num 2"
+
+msgid "numpad 3"
+msgstr "Num 3"
+
+msgid "numpad 4"
+msgstr "Num 4"
+
+msgid "numpad 5"
+msgstr "Num 5"
+
+msgid "numpad 6"
+msgstr "Num 6"
+
+msgid "numpad 7"
+msgstr "Num 7"
+
+msgid "numpad 8"
+msgstr "Num 8"
+
+msgid "numpad 9"
+msgstr "Num 9"
+
+msgid "numpad equal"
+msgstr "Num ="
+
+msgid "o"
+msgstr "o"
+
+msgid "o1"
+msgstr "o1"
+
+msgid "o10"
+msgstr "o10"
+
+msgid "o2"
+msgstr "o2"
+
+msgid "o3"
+msgstr "o3"
+
+msgid "o4"
+msgstr "o4"
+
+msgid "o5"
+msgstr "o5"
+
+msgid "o6"
+msgstr "o6"
+
+msgid "o7"
+msgstr "o7"
+
+msgid "o8"
+msgstr "o8"
+
+msgid "o9"
+msgstr "o9"
+
+#, c-format
+msgid "organ definition %s not found in organ package"
+msgstr "vargonų apibrėžimas %s vargonų pakete nerastas"
+
+msgid "organ file"
+msgstr "vargonų failas"
+
+msgid "organ name"
+msgstr "vargonų pavadinimas"
+
+#, c-format
+msgid "organ package %s created"
+msgstr "sukurtas vargonų paketas %s"
+
+msgid "organ package creation failed"
+msgstr "Nepavyko sukurti vargonų paketo"
+
+msgid "organ package title"
+msgstr "vargonų paketo pavadinimas"
+
+msgid "organ pitch"
+msgstr "vargonų aukštis"
+
+msgid "organ-package"
+msgstr "vargonų paketas"
+
+msgid "p1"
+msgstr "p1"
+
+msgid "p2"
+msgstr "p2"
+
+msgid "p3"
+msgstr "p3"
+
+msgid "p4"
+msgstr "p4"
+
+msgid "p5"
+msgstr "p5"
+
+msgid "pagedown"
+msgstr "Page Down"
+
+msgid "pageup"
+msgstr "Page Up"
+
+msgid "pause"
+msgstr "Pause"
+
+msgid "print"
+msgstr "Print"
+
+#, c-format
+msgid "program change channel: %d key: %d "
+msgstr "programos keitimo kanalas: %d klavišas: %d "
+
+msgid "provide odf-file-name"
+msgstr "pateikti odf-failo pavadinimą"
+
+#, c-format
+msgid "rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"
+msgstr "rankas %s, vamzdis %s: trūksta atakos su MaxTimeSinceLastRelease=-1"
+
+#, c-format
+msgid "rank %s pipe %s: default release is missing"
+msgstr "rankas %s, vamzdis %s: trūksta numatytojo atslūgimo"
+
+#, c-format
+msgid "rank %s pipe %s: no pitch information provided"
+msgstr "rankas %s, vamzdis %s: nepateikta informacija apie garso aukštį"
+
+#, c-format
+msgid "rank %s pipe %s: no release defined"
+msgstr "rankas %s, vamzdis %s: atslūgimas neapibrėžtas"
+
+#, c-format
+msgid "rank %s pipe %s: percussive sample with a release"
+msgstr "rankas %s, vamzdis %s: perkusinis semplas su atslūgimu"
+
+#, c-format
+msgid ""
+"rank %s pipe %s: temperament would retune pipe by %f - more than 1800 cent"
+msgstr ""
+"rankas %s, vamzdis %s: derinimo sistema pakeistų vamzdžio derinimą %f – daugiau nei 1800 centų"
+
+#, c-format
+msgid "rank %s pipe %s: temperament would retune pipe by more than 600 cent"
+msgstr ""
+"rankas %s, vamzdis %s: derinimo sistema pakeistų vamzdžio derinimą daugiau nei 600 centų"
+
+msgid "ranks"
+msgstr "rankai"
+
+#, c-format
+msgid "requires '%s' "
+msgstr "reikia „%s“ "
+
+msgid "reset"
+msgstr "nustatyti iš naujo"
+
+msgid "return"
+msgstr "Enter"
+
+msgid "right"
+msgstr "Rodyklė dešinėn"
+
+msgid "scroll"
+msgstr "Scroll Lock"
+
+msgid "select"
+msgstr "Select"
+
+msgid "separator"
+msgstr "Num Separator"
+
+msgid "sequencer position"
+msgstr "sekvencerio padėtis"
+
+msgid "setter-divisionals"
+msgstr "sekvencerio sekcijų deriniai"
+
+msgid "snapshot"
+msgstr "Print Screen"
+
+msgid "space"
+msgstr "Tarpas"
+
+msgid "specify GrandOrgue config file name"
+msgstr "nurodykite GrandOrgue konfigūracijos failo pavadinimą"
+
+msgid "specify GrandOrgue instance name"
+msgstr "nurodykite GrandOrgue egzemplioriaus pavadinimą"
+
+msgid "specify generated organ package filename"
+msgstr "nurodykite sugeneruoto vargonų paketo failo pavadinimą"
+
+msgid "specify input directory"
+msgstr "nurodykite įvesties katalogą"
+
+msgid "stop"
+msgstr "registras"
+
+msgid "stops"
+msgstr "registrai"
+
+msgid "subtract"
+msgstr "Num -"
+
+msgid "switch"
+msgstr "jungiklis"
+
+msgid "switches"
+msgstr "jungikliai"
+
+#, c-format
+msgid "sysex Ahlborn-Galanti value: %d"
+msgstr "sysex Ahlborn-Galanti vertė: %d"
+
+msgid "sysex GrandOrgue clear"
+msgstr "sysex GrandOrgue aiškus"
+
+#, c-format
+msgid "sysex GrandOrgue sampleset %08x%08x"
+msgstr "sysex GrandOrgue semplų rinkinys %08x%08x"
+
+#, c-format
+msgid "sysex GrandOrgue setup channel: %d NRPN: %d: name: %s"
+msgstr "sysex GrandOrgue sąrankos kanalas: %d NRPN: %d: pavadinimas: %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD display: %d color: %d - %s"
+msgstr "sysex Hauptwerk LCD ekranas: %d spalva: %d - %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD string variable: %d - %s"
+msgstr "sysex Hauptwerk LCD eilutės kintamasis: %d – %s"
+
+#, c-format
+msgid "sysex Johannus 11 bytes value: %d/%d"
+msgstr "sysex Johannus 11 baitų vertė: %d / %d"
+
+#, c-format
+msgid "sysex Johannus 9 bytes value: %d"
+msgstr "sysex Johannus 9 baitų vertė: %d"
+
+#, c-format
+msgid "sysex Rogers stop change device: %d offset: %d data %s"
+msgstr "SYSEX Rogers registro keitimo įrenginys: %d, poslinkis: %d, duomenys: %s"
+
+#, c-format
+msgid "sysex Viscount value: %d"
+msgstr "SYSEX Viscount vertė: %d"
+
+msgid "t"
+msgstr "t"
+
+msgid "tab"
+msgstr "Tab"
+
+msgid "temperament"
+msgstr "derinimo sistema"
+
+msgid "title"
+msgstr "titulą"
+
+msgid "transpose"
+msgstr "transponuoti"
+
+msgid "tremulant"
+msgstr "tremulantas"
+
+msgid "tremulants"
+msgstr "tremulantai"
+
+msgid "trigger"
+msgstr "trigeris"
+
+msgid "up"
+msgstr "Rodyklė aukštyn"
+
+msgid "virtual pipe organ simulator"
+msgstr "virtualus vamzdinių vargonų simuliatorius"
+
+msgid "virtual-couplers"
+msgstr "virtualios kopulos"
+
+msgid "volumes"
+msgstr "garsumai"
+
+msgid "wave does not contain loops"
+msgstr "WAV faile nėra kilpų"
+
+msgid "{"
+msgstr "{"
+
+msgid "|"
+msgstr "|"
+
+msgid "}"
+msgstr "}"
