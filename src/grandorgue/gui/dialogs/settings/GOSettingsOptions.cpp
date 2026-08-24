@@ -54,6 +54,10 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_ENGLISH)));
   m_Language->Append(
+    wxLocale::GetLanguageName(wxLANGUAGE_BELARUSIAN),
+    new wxStringClientData(
+      wxLocale::GetLanguageCanonicalName(wxLANGUAGE_BELARUSIAN)));
+  m_Language->Append(
     wxLocale::GetLanguageName(wxLANGUAGE_DUTCH),
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_DUTCH)));
@@ -74,9 +78,17 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_ITALIAN)));
   m_Language->Append(
+    wxLocale::GetLanguageName(wxLANGUAGE_LITHUANIAN),
+    new wxStringClientData(
+      wxLocale::GetLanguageCanonicalName(wxLANGUAGE_LITHUANIAN)));
+  m_Language->Append(
     wxLocale::GetLanguageName(wxLANGUAGE_POLISH),
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_POLISH)));
+  m_Language->Append(
+    wxLocale::GetLanguageName(wxLANGUAGE_RUSSIAN),
+    new wxStringClientData(
+      wxLocale::GetLanguageCanonicalName(wxLANGUAGE_RUSSIAN)));
   m_Language->Append(
     wxLocale::GetLanguageName(wxLANGUAGE_SPANISH),
     new wxStringClientData(
@@ -85,6 +97,10 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
     wxLocale::GetLanguageName(wxLANGUAGE_SWEDISH),
     new wxStringClientData(
       wxLocale::GetLanguageCanonicalName(wxLANGUAGE_SWEDISH)));
+  m_Language->Append(
+    wxLocale::GetLanguageName(wxLANGUAGE_UKRAINIAN),
+    new wxStringClientData(
+      wxLocale::GetLanguageCanonicalName(wxLANGUAGE_UKRAINIAN)));
 
   m_OldLanguageCode = m_config.LanguageCode();
 

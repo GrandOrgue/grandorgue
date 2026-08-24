@@ -1,3 +1,4 @@
+- Added Belarusian, Lithuanian, Russian, and Ukrainian UI translations
 - Added capability of building GrandOrgue natively on Windows via MSYS2, without needing a Linux machine for cross-compiling https://github.com/GrandOrgue/grandorgue/issues/2378
 # 3.17.3 (2026-08-10)
 - Added a choice of MIDI channel mapping schemes (pedal first, pedal last, or by the organ's MIDIInputNumber) when playing back MIDI files without a GrandOrgue setup header, configurable via a per-load dialog and MIDI Devices settings https://github.com/GrandOrgue/grandorgue/issues/2523

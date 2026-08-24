@@ -1,0 +1,4315 @@
+# Ukrainian translations for GrandOrgue package.
+# This file is published under the project license.
+# GrandOrgue contributors, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GrandOrgue\n"
+"Report-Msgid-Bugs-To: ourorgan-developers@lists.sourceforge.net\n"
+"POT-Creation-Date: 2026-08-21 10:39+0300\n"
+"PO-Revision-Date: 2026-08-21 23:02+0300\n"
+"Last-Translator: Oleg Samarin <osamarin68@gmail.com>\n"
+"Language-Team: none\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "\n"
+msgstr "\n"
+
+#, c-format
+msgid ""
+"\n"
+"\n"
+"(the following packages will also be deleted:%s)"
+msgstr ""
+"\n"
+"\n"
+"(наступні пакети також будуть видалені:%s)"
+
+msgid ""
+"\n"
+"\n"
+"Please select a valid impulse response file"
+msgstr ""
+"\n"
+"\n"
+"Виберіть дійсний файл імпульсної характеристики"
+
+msgid " "
+msgstr " "
+
+#, c-format
+msgid " (%.3f used)"
+msgstr " (використано %.3f)"
+
+msgid " (PA): "
+msgstr " (PA): "
+
+msgid " - "
+msgstr " - "
+
+msgid " - MISSING"
+msgstr " - ВІДСУТНІЙ"
+
+#, c-format
+msgid " from %s"
+msgstr " від %s"
+
+#, c-format
+msgid " from '%s' (%s)"
+msgstr " від «%s» (%s)"
+
+msgid "\""
+msgstr "\""
+
+msgid "#"
+msgstr "#"
+
+#, c-format
+msgid "%.3f %%"
+msgstr "%.3f %%"
+
+#, c-format
+msgid "%.3f MB"
+msgstr "%.3f МБ"
+
+#, c-format
+msgid "%.3f MB  (%.3f MB end)"
+msgstr "%.3f МБ (%.3f МБ кінець)"
+
+#, c-format
+msgid "%.3f MB (not limited)"
+msgstr "%.3f МБ (не обмежено)"
+
+#, c-format
+msgid "%.3f MB of %.3f MB"
+msgstr "%.3f МБ з %.3f МБ"
+
+#, c-format
+msgid "%0.1f cent"
+msgstr "%0.1f цента"
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.mid"
+msgstr "%Y-%m-%d-%H-%M-%S.%l.mid"
+
+msgid "%Y-%m-%d-%H-%M-%S.%l.wav"
+msgstr "%Y-%m-%d-%H-%M-%S.%l.wav"
+
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#, c-format
+msgid "%d %%"
+msgstr "%d %%"
+
+#, c-format
+msgid "%d (%s)"
+msgstr "%d (%s)"
+
+#, c-format
+msgid "%d - %d bits"
+msgstr "%d–%d біт"
+
+#, c-format
+msgid "%d BPM"
+msgstr "%d BPM"
+
+#, c-format
+msgid "%d bits"
+msgstr "%d біт"
+
+#, c-format
+msgid "%d ms"
+msgstr "%d мс"
+
+#, c-format
+msgid "%d samples per buffer, %d Hz\n"
+msgstr "%d вибірок на буфер, %d Гц\n"
+
+#, c-format
+msgid "%d: %s"
+msgstr "%d: %s"
+
+#, c-format
+msgid "%d:%02d:%02d"
+msgstr "%d:%02d:%02d"
+
+#, c-format
+msgid "%s"
+msgstr "%s"
+
+#, c-format
+msgid "%s - left"
+msgstr "%s — лівий"
+
+#, c-format
+msgid "%s - right"
+msgstr "%s — правий"
+
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#, c-format
+msgid "%s: %d ms"
+msgstr "%s: %d мс"
+
+#, c-format
+msgid "%s: %f dB"
+msgstr "%s: %f дБ"
+
+#, c-format
+msgid "%s: %s\n"
+msgstr "%s: %s\n"
+
+#, c-format
+msgid "%s: Unknown MIDI device logical name «%s»"
+msgstr "%s: невідоме логічне ім'я пристрою MIDI «%s»"
+
+#, c-format
+msgid "%s: extension with uppercase letters"
+msgstr "%s: розширення з великими літерами"
+
+#, c-format
+msgid "%s: mute"
+msgstr "%s: вимкнути звук"
+
+#, c-format
+msgid "%s: unknown"
+msgstr "%s: невідомо"
+
+#, c-format
+msgid "&%d: %s"
+msgstr "&%d: %s"
+
+msgid "&About"
+msgstr "&Про програму"
+
+msgid "&Add"
+msgstr "&Додати"
+
+msgid "&Audio/MIDI"
+msgstr "&Аудіо/MIDI"
+
+msgid "&Bit number:"
+msgstr "&Номер біта:"
+
+msgid "&CTRL/PGM:"
+msgstr "&CTRL/PGM:"
+
+msgid "&Cache"
+msgstr "&Кеш"
+
+msgid "&Channel:"
+msgstr "&Канал:"
+
+msgid "&Check for updates"
+msgstr "&Перевірити наявність оновлень"
+
+msgid "&Clear"
+msgstr "&Очистити"
+
+msgid "&Close"
+msgstr "&Закрити"
+
+msgid "&Color:"
+msgstr "&Колір:"
+
+msgid "&Controller-No:"
+msgstr "&Номер контролера:"
+
+msgid "&Convolution reverb"
+msgstr "&Згорткова реверберація"
+
+msgid "&Copy current receive event"
+msgstr "&Копіювати поточну подію отримання"
+
+msgid "&Data:"
+msgstr "&Дані:"
+
+msgid "&Debounce time(ms):"
+msgstr "&Час усунення дребезгу (мс):"
+
+msgid "&Default volume"
+msgstr "&Гучність за замовчуванням"
+
+msgid "&Delete"
+msgstr "&Видалити"
+
+msgid "&Detect complex MIDI setup"
+msgstr "&Виявити складні налаштування MIDI"
+
+msgid "&Device number:"
+msgstr "&Номер пристрою:"
+
+msgid "&Device:"
+msgstr "&Пристрій:"
+
+msgid "&Down"
+msgstr "&Вниз"
+
+msgid "&Download"
+msgstr "&Завантажити"
+
+msgid "&Enhancements"
+msgstr "&Покращення"
+
+msgid "&Event:"
+msgstr "&Подія:"
+
+msgid "&Export Settings"
+msgstr "&Експортувати налаштування"
+
+msgid "&Favorites"
+msgstr "&Вибране"
+
+msgid "&File"
+msgstr "&Файл"
+
+msgid "&Help"
+msgstr "&Довідка"
+
+msgid "&Help\tF1"
+msgstr "&Довідка\tF1"
+
+msgid "&Highest key:"
+msgstr "&Верхня клавіша:"
+
+msgid "&ID:"
+msgstr "&ID:"
+
+msgid "&Import Settings"
+msgstr "&Імпортувати налаштування"
+
+msgid "&Install organ package\tCtrl+I"
+msgstr "&Встановити пакет органа\tCtrl+I"
+
+msgid "&Length:"
+msgstr "&Довжина:"
+
+msgid "&Listen for Event"
+msgstr "&Слухати подію"
+
+msgid "&Load\tCtrl+L"
+msgstr "&Завантажити\tCtrl+L"
+
+msgid "&Log MIDI events"
+msgstr "&Реєструвати події MIDI"
+
+msgid "&Lower PGM number:"
+msgstr "&Нижній номер PGM:"
+
+msgid "&Lowest key:"
+msgstr "&Нижня клавіша:"
+
+msgid "&MIDI player"
+msgstr "&MIDI-плеєр"
+
+msgid "&MIDI properties"
+msgstr "&Властивості MIDI"
+
+msgid "&MIDI-Output-Device..."
+msgstr "&MIDI-вихідний пристрій..."
+
+msgid "&MIDI-note:"
+msgstr "&MIDI-нота:"
+
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
+msgid "&Mapping output"
+msgstr "&Зіставлення виходу"
+
+msgid "&Memory Level"
+msgstr "&Рівень пам'яті"
+
+msgid "&Memory Set\tShift"
+msgstr "&Запис комбінації\tShift"
+
+msgid "&Minus-Shortcut:"
+msgstr "&Клавіша «мінус»:"
+
+msgid "&Off NRPN number:"
+msgstr "&Номер NRPN для вимк.:"
+
+msgid "&Off RPN number:"
+msgstr "&Номер RPN для вимк.:"
+
+msgid "&Off Value:"
+msgstr "&Вимкнене значення:"
+
+msgid "&Off value:"
+msgstr "&Значення вимк.:"
+
+msgid "&On NRPN number:"
+msgstr "&Номер NRPN для увімк.:"
+
+msgid "&On RPN number:"
+msgstr "&Номер RPN для увімк.:"
+
+msgid "&On value:"
+msgstr "&Значення увімк.:"
+
+msgid "&Open\tCtrl+O"
+msgstr "&Відкрити\tCtrl+O"
+
+msgid "&Organ settings"
+msgstr "&Налаштування органа"
+
+msgid "&Panel"
+msgstr "&Панель"
+
+msgid "&Panic\tEscape"
+msgstr "&Паніка\tEscape"
+
+msgid "&Parameter-No:"
+msgstr "&Номер параметра:"
+
+msgid "&Plus-Shortcut:"
+msgstr "&Клавіша «плюс»:"
+
+msgid "&Polyphony"
+msgstr "&Поліфонія"
+
+msgid "&Release tail length"
+msgstr "&Довжина хвоста згасання"
+
+msgid "&Relocate..."
+msgstr "&Перемістити..."
+
+msgid "&Sample loading"
+msgstr "&Завантаження семплів"
+
+msgid "&Save\tCtrl+S"
+msgstr "&Зберегти\tCtrl+S"
+
+msgid "&Shortcut:"
+msgstr "&Швидка клавіша:"
+
+msgid "&Show changelog"
+msgstr "&Показати журнал змін"
+
+msgid "&Sound Engine"
+msgstr "&Звуковий рушій"
+
+msgid "&Sound Output State"
+msgstr "&Стан виведення звуку"
+
+msgid "&Sound output"
+msgstr "&Виведення звуку"
+
+msgid "&Start-Position:"
+msgstr "&Початкова позиція:"
+
+msgid "&Status"
+msgstr "&Статус"
+
+msgid "&Stop number:"
+msgstr "&Номер регістра:"
+
+msgid "&Temperament"
+msgstr "&Темперація"
+
+msgid "&Top"
+msgstr "&Догори"
+
+msgid "&Transpose"
+msgstr "&Транспонування"
+
+msgid "&Transpose:"
+msgstr "&Транспонувати:"
+
+msgid "&Up"
+msgstr "&Вгору"
+
+msgid "&Update Cache..."
+msgstr "&Оновити кеш..."
+
+msgid "&Update available!"
+msgstr "&Доступне оновлення!"
+
+msgid "&Updates"
+msgstr "&Оновлення"
+
+msgid "&Upper PGM number:"
+msgstr "&Верхній номер PGM:"
+
+msgid "&Upper bank:"
+msgstr "&Верхній банк:"
+
+msgid "&Upper limit:"
+msgstr "&Верхня межа:"
+
+msgid "&Value:"
+msgstr "&Значення:"
+
+msgid "&Volume"
+msgstr "&Гучність"
+
+msgid "(none)"
+msgstr "(немає)"
+
+msgid "*.wav"
+msgstr "*.wav"
+
+msgid "+"
+msgstr "+"
+
+msgid "+1"
+msgstr "+1"
+
+msgid "+1 Cent"
+msgstr "+1 цент"
+
+msgid "+10"
+msgstr "+10"
+
+msgid "+100"
+msgstr "+100"
+
+msgid "+100 Cent"
+msgstr "+100 центів"
+
+msgid ","
+msgstr ","
+
+msgid "-"
+msgstr "-"
+
+msgid "-- bits (- used)"
+msgstr "-- біти (- використані)"
+
+msgid "--- MB (--- MB end)"
+msgstr "--- МБ (кінець --- МБ)"
+
+msgid "-1"
+msgstr "-1"
+
+msgid "-1 Cent"
+msgstr "-1 цент"
+
+msgid "-10"
+msgstr "-10"
+
+msgid "-100"
+msgstr "-100"
+
+msgid "-100 Cent"
+msgstr "-100 центів"
+
+msgid "-:--:--"
+msgstr "-:--:--"
+
+msgid "."
+msgstr "."
+
+msgid "0"
+msgstr "0"
+
+msgid "000"
+msgstr "000"
+
+msgid "1"
+msgstr "1"
+
+msgid "1/4 comma meantone (Aaron 1523)"
+msgstr "Середньотонова в 1/4 коми (Арон, 1523)"
+
+msgid "1/4 comma variants"
+msgstr "Варіанти 1/4 коми"
+
+msgid "1/4-comma equal beating fifths"
+msgstr "1/4 коми, квінти з рівними биттями"
+
+msgid "1/4-comma meantone approximation"
+msgstr "Наближення середньотонової в 1/4 коми"
+
+msgid "1/5 comma"
+msgstr "1/5 коми"
+
+msgid "1/5-comma meantone (Verheijen)"
+msgstr "Середньотонова в 1/5 коми (Вергейєн)"
+
+msgid "1/6 comma"
+msgstr "1/6 коми"
+
+msgid "1/6-comma (bemols)"
+msgstr "1/6 кома (бемолі)"
+
+msgid "1/6-comma (dieses)"
+msgstr "1/6 коми (дієзи)"
+
+msgid "1/6-comma equal beating fifths"
+msgstr "1/6 коми, квінти з рівними биттями"
+
+msgid "1/6-comma meantone"
+msgstr "Середньотонова в 1/6 коми"
+
+msgid "1/6-comma, wolf over 4 fifths"
+msgstr "1/6 коми, вовк на 4 квінти"
+
+msgid "16"
+msgstr "16"
+
+msgid "16 Bit PCM"
+msgstr "16-бітний PCM"
+
+msgid "2"
+msgstr "2"
+
+msgid "24 Bit PCM"
+msgstr "24-бітний PCM"
+
+msgid "3"
+msgstr "3"
+
+msgid "3/14-comma meantone (Giordano Riccati, 1762)"
+msgstr "Середньотонова в 3/14 коми (Джордано Ріккаті, 1762)"
+
+msgid "4"
+msgstr "4"
+
+msgid "5"
+msgstr "5"
+
+msgid "6"
+msgstr "6"
+
+msgid "7"
+msgstr "7"
+
+msgid "8"
+msgstr "8"
+
+msgid "8 Bit PCM"
+msgstr "8-бітний PCM"
+
+msgid "9"
+msgstr "9"
+
+msgid "9x Note"
+msgstr "9x Нота"
+
+msgid "9x Note Fixed Off"
+msgstr "9x Нота, фіксоване вимкнення"
+
+msgid "9x Note Fixed On"
+msgstr "9x Нота, фіксоване увімкнення"
+
+msgid "9x Note Off"
+msgstr "9x Нота вимк."
+
+msgid "9x Note Off Toggle"
+msgstr "9x Нота вимк. перемиканням"
+
+msgid "9x Note On"
+msgstr "9x Нота увімк."
+
+msgid "9x Note On Toggle"
+msgstr "9x Нота увімк. перемиканням"
+
+msgid "9x Note On/Off Toggle"
+msgstr "9x Нота увімк./вимк. перемиканням"
+
+msgid "9x Note short octave at low key"
+msgstr "9x Нота, коротка октава на нижній клавіші"
+
+msgid "9x Note without Velocity"
+msgstr "9x Нота без сили натискання"
+
+msgid "9x Note without map"
+msgstr "9x Нота без зіставлення"
+
+msgid ":"
+msgstr ":"
+
+#, c-format
+msgid "; FileName=%s"
+msgstr "; Ім'я файлу=%s"
+
+msgid "<"
+msgstr "<"
+
+msgid "< Bits per sample must be a multiple of 8 in this implementation"
+msgstr "< Кількість біт на семпл у цій реалізації має бути кратною 8"
+
+msgid "< Invalid CUE chunk in"
+msgstr "< Недійсний фрагмент CUE"
+
+msgid "< Invalid SMPL chunk in"
+msgstr "< Недійсний фрагмент SMPL"
+
+msgid "< Invalid WAVE format chunk"
+msgstr "< Недійсний фрагмент формату WAVE"
+
+msgid "< More than 2 channels in"
+msgstr "< Більше 2 каналів"
+
+msgid "< Only 32bit IEEE float samples supported"
+msgstr "< Підтримуються лише 32-бітні семпли IEEE з рухомою комою"
+
+msgid "< Unsupported PCM bit size"
+msgstr "< Непідтримуваний бітовий розмір PCM"
+
+msgid "< Unsupported PCM format"
+msgstr "< Непідтримуваний формат PCM"
+
+msgid "<Invalid SMPL chunk in"
+msgstr "<Недійсний фрагмент SMPL"
+
+msgid "<no file loaded>"
+msgstr "<файл не завантажено>"
+
+msgid ">"
+msgstr ">"
+
+msgid "?"
+msgstr "?"
+
+msgid "A"
+msgstr "A"
+
+msgid "A NOT Switch must not have more than one controlling switches"
+msgstr "Перемикач NOT не повинен мати більше одного керуючого перемикача"
+
+msgid ""
+"A channel offset allows the use of two MIDI\n"
+"interfaces with conflicting MIDI channels. For\n"
+"example, applying a channel offset of 8 to\n"
+"one of the MIDI interfaces would cause that\n"
+"interface's channel 1 to appear as channel 9,\n"
+"channel 2 to appear as channel 10, and so on."
+msgstr ""
+"Зсув каналу дає змогу використовувати два MIDI-\n"
+"інтерфейси з однаковими MIDI-каналами. Наприклад,\n"
+"якщо задати для одного MIDI-інтерфейсу зсув 8,\n"
+"його канал 1 відображатиметься як канал 9,\n"
+"канал 2 — як канал 10\n"
+"і так далі."
+
+msgid "A&dvanced..."
+msgstr "&Додатково..."
+
+msgid ""
+"ASIO Interface Technology by Steinberg Media Technologies GmbH,\n"
+"by use of the Steinberg ASIO SDK, Version 2.3.3.\n"
+"ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+msgstr ""
+"Технологія інтерфейсу ASIO від Steinberg Media Technologies GmbH,\n"
+"за допомогою Steinberg ASIO SDK, версія 2.3.3.\n"
+"ASIO є торговою маркою та програмним забезпеченням Steinberg Media "
+"Technologies GmbH."
+
+msgid "Active polyphony management"
+msgstr "Активне управління поліфонією"
+
+msgid "Add dirac pulse"
+msgstr "Додати імпульс Дірака"
+
+msgid "Add new audio device"
+msgstr "Додати новий аудіопристрій"
+
+msgid "Add new audio group"
+msgstr "Додати нову аудіогрупу"
+
+msgid "Address"
+msgstr "Адреса"
+
+msgid "Affected windchests:"
+msgstr "Задіяні віндлади:"
+
+msgid "Agricola's Monochord, Rudimenta musices (1539)"
+msgstr "Монокорд Агріколи, Rudimenta musices (1539)"
+
+msgid "Alexander Metcalf Fisher"
+msgstr "Олександр Меткалф Фішер"
+
+msgid "All"
+msgstr "Усі"
+
+msgid "All loops"
+msgstr "Всі петлі"
+
+msgid "Allocated sample memory"
+msgstr "Виділена пам'ять семплів"
+
+msgid "Amplitude is invalid"
+msgstr "Амплітуда недійсна"
+
+msgid "Amplitude:"
+msgstr "Амплітуда:"
+
+msgid "Another registered organ already uses this path"
+msgstr "Інший зареєстрований орган вже використовує цей шлях"
+
+msgid "Any channel"
+msgstr "Будь-який канал"
+
+msgid ""
+"Any customizations you have saved to this\n"
+"organ definition file will be lost!\n"
+"\n"
+"Reset to defaults and reload?"
+msgstr ""
+"Будь-які налаштування, збережені в цьому\n"
+"файлі визначення органа, буде втрачено!\n"
+"\n"
+"Відновити типові налаштування й перезавантажити?"
+
+msgid "Any device"
+msgstr "Будь-який пристрій"
+
+msgid "Apply"
+msgstr "Застосувати"
+
+#, c-format
+msgid "Are you sure to delete %u initial MIDI objects settings?"
+msgstr ""
+"Ви впевнені, що хочете видалити початкові налаштування MIDI-об'єктів %u?"
+
+#, c-format
+msgid "Are you sure to store the %u MIDI objects settings to initial?"
+msgstr "Ви впевнені, що зберігаєте початкові налаштування об'єктів MIDI %u?"
+
+msgid "Ask channel mapping on MIDI file load"
+msgstr "Запитати відображення каналів під час завантаження файлу MIDI"
+
+msgid "Attack loading:"
+msgstr "Завантаження атаки:"
+
+msgid ""
+"Attention:\n"
+"These initial MIDI settings only affect the first load of a organ.\n"
+"Right-click on manuals, stops, ... to do further changes."
+msgstr ""
+"Увага:\n"
+"Ці початкові налаштування MIDI впливають лише на перше завантаження органа.\n"
+"Клацніть правою кнопкою миші мануали, регістри, ..., щоб внести подальші "
+"зміни."
+
+msgid "Audio"
+msgstr "Аудіо"
+
+msgid "Audio Output"
+msgstr "Аудіовихід"
+
+msgid "Audio Recorder"
+msgstr "Аудіозаписувач"
+
+#, c-format
+msgid "Audio device %s not initialised"
+msgstr "Аудіопристрій %s не ініціалізовано"
+
+#, c-format
+msgid "Audio device %s not open"
+msgstr "Аудіопристрій %s не відкрито"
+
+msgid "Audio device settings"
+msgstr "Налаштування аудіопристрою"
+
+#, c-format
+msgid "Audio group %d"
+msgstr "Аудіогрупа %d"
+
+msgid "Audio group name"
+msgstr "Назва аудіогрупи"
+
+msgid "Audio group:"
+msgstr "Аудіогрупа:"
+
+msgid "Audio groups"
+msgstr "Аудіогрупи"
+
+msgid "Audio recording time"
+msgstr "Час запису звуку"
+
+msgid "Audio recording:"
+msgstr "Аудіозапис:"
+
+msgid "Audio recordings"
+msgstr "Аудіозаписи"
+
+msgid "AudioRecorder"
+msgstr "Аудіозаписувач"
+
+msgid "Auto add new devices"
+msgstr "Автоматичне додавання нових пристроїв"
+
+msgid "AutoTuning Correction (Cent):"
+msgstr "Корекція автоналаштування (цент):"
+
+msgid "AutoTuningCorrection is invalid"
+msgstr "Корекція автоналаштування недійсна"
+
+msgid "Automatically manage cache"
+msgstr "Автоматично керувати кешем"
+
+msgid "B"
+msgstr "B"
+
+msgid "BAS"
+msgstr "BAS"
+
+msgid "BPM +"
+msgstr "BPM +"
+
+msgid "BPM -"
+msgstr "BPM -"
+
+msgid "BPM:"
+msgstr "BPM:"
+
+msgid "Bach (Bradley Lehman)"
+msgstr "Бах (Бредлі Леман)"
+
+msgid "Barca 1786"
+msgstr "Барка 1786"
+
+msgid "Beat"
+msgstr "Доля"
+
+msgid "Beat:"
+msgstr "Доля:"
+
+msgid "Bell"
+msgstr "Дзвоник"
+
+msgid "Bermudo (1555) "
+msgstr "Бермудо (1555) "
+
+msgid "Bethisy temperament ordinaire (1764)"
+msgstr "Звичайна темперація Бетізі (1764)"
+
+msgid "Bits per sample:"
+msgstr "Біт на семпл:"
+
+msgid "Both First beat and beat paths must be set for Custom sound type"
+msgstr ""
+"Для власного типу звуку потрібно вказати шляхи до файлів першої та решти "
+"долей"
+
+msgid "Boulliau (1373)/Mersenne 1636. "
+msgstr "Буйо (1373)/Мерсенн 1636. "
+
+msgid "Build Date"
+msgstr "Дата збірки"
+
+msgid "Builder"
+msgstr "Органобудівник"
+
+msgid "Builder:"
+msgstr "Органобудівник:"
+
+msgid "Button"
+msgstr "Кнопка"
+
+msgid "Bx Controller"
+msgstr "Контролер Bx"
+
+msgid "Bx Controller Off"
+msgstr "Контролер Bx вимк."
+
+msgid "Bx Controller Off Toggle"
+msgstr "Контролер Bx вимк. перемиканням"
+
+msgid "Bx Controller On"
+msgstr "Контролер Bx увімк."
+
+msgid "Bx Controller On Toggle"
+msgstr "Контролер Bx увімк. перемиканням"
+
+msgid "Bx Controller On/Off Toggle"
+msgstr "Контролер Bx увімк./вимк. перемиканням"
+
+msgid "Bx Ctrl Change Fixed Off Value Toggle"
+msgstr "Bx Ctrl, фіксоване значення вимк. перемиканням"
+
+msgid "Bx Ctrl Change Fixed On Value Toggle"
+msgstr "Bx Ctrl, фіксоване значення увімк. перемиканням"
+
+msgid "Bx Ctrl Change Fixed On/Off Value Toggle"
+msgstr "Bx Ctrl, фіксоване значення увімк./вимк. перемиканням"
+
+msgid "Bx Ctrl Change Fixed Value"
+msgstr "Bx Ctrl, зміна фіксованого значення"
+
+msgid "C"
+msgstr "C"
+
+msgid "C&onfigure..."
+msgstr "&Налаштувати..."
+
+msgid "C&opy"
+msgstr "&Копіювати"
+
+msgid "CRC mismatch in organ package - file corrupted?"
+msgstr "Невідповідність CRC у пакеті органа - файл пошкоджено?"
+
+msgid "Cache file had bad magic bypassing cache."
+msgstr "Неправильна сигнатура файлу кешу — кеш ігнорується."
+
+msgid "Cache file had diffent hash bypassing cache."
+msgstr "Файл кешу мав інший хеш в обхід кешу."
+
+#, c-format
+msgid "Cache load failure: %s"
+msgstr "Помилка завантаження кешу: %s"
+
+#, c-format
+msgid ""
+"Cannot use buffer size above %d samples; unacceptable quantization would "
+"occur."
+msgstr ""
+"Не можна використовувати буфер більший за %d семплів: виникне неприйнятне "
+"квантування."
+
+msgid "Change"
+msgstr "Змінити"
+
+msgid "Change audio device"
+msgstr "Змінити аудіопристрій"
+
+msgid "Change audio group"
+msgstr "Змінити аудіогрупу"
+
+msgid "Changelog:"
+msgstr "Журнал змін:"
+
+#, c-format
+msgid "Channel %d"
+msgstr "Канал %d"
+
+msgid "Channel mapping"
+msgstr "Відображення каналів"
+
+msgid "Channel offset:"
+msgstr "Зсув каналу:"
+
+msgid "Channel:"
+msgstr "Канал:"
+
+msgid "Chaumont"
+msgstr "Шомон"
+
+msgid "Check ODF for HW1-compatibility"
+msgstr "Перевіряти ODF на сумісність з HW1"
+
+msgid "Check for updates at startup"
+msgstr "Перевіряти наявність оновлень під час запуску"
+
+msgid "Check on startup"
+msgstr "Перевіряти під час запуску"
+
+msgid "Choose MIDI channel mapping"
+msgstr "Виберіть відображення каналів MIDI"
+
+#, c-format
+msgid "ChurchName missing in organ definition %s"
+msgstr "Назва церкви відсутня у визначенні органа %s"
+
+msgid "Click"
+msgstr "Клацання"
+
+msgid "Combination Setter"
+msgstr "Секвенсор комбінацій"
+
+msgid "Combination files (*.yaml)|*.yaml"
+msgstr "Файли комбінацій (*.yaml)|*.yaml"
+
+msgid "Combinations"
+msgstr "Комбінації"
+
+msgid "Combinations files (*.yaml)|*.yaml|Settings files (*.cmb)|*.cmb"
+msgstr "Файли комбінацій (*.yaml)|*.yaml|Файли налаштувань (*.cmb)|*.cmb"
+
+msgid "Combinations:"
+msgstr "Комбінації:"
+
+msgid "Compress cache"
+msgstr "Стиснути кеш"
+
+#, c-format
+msgid "Config entry without any group at line %d"
+msgstr "Запис конфігурації без будь-якої групи в рядку %d"
+
+msgid "Configured"
+msgstr "Налаштовано"
+
+msgid ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2024 GrandOrgue contributors\n"
+"\n"
+"This software comes with no warranty"
+msgstr ""
+"Copyright 2006 Milan Digital Audio LLC\n"
+"Copyright 2009-2024 Співавтори GrandOrgue\n"
+"\n"
+"На це програмне забезпечення не надається гарантія"
+
+msgid "Cores used at loadtime:"
+msgstr "Ядра, що використовуються під час завантаження:"
+
+msgid "Corrette (1753)"
+msgstr "Коретт (1753)"
+
+#, c-format
+msgid "Could match the %s \"%s: %s\" neither by name nor by number"
+msgstr "Не вдалося зіставити %s «%s: %s» ні за назвою, ні за номером"
+
+#, c-format
+msgid "Could not remove '%s'"
+msgstr "Не вдалося видалити «%s»"
+
+#, c-format
+msgid "Could not write to '%s'"
+msgstr "Не вдалося записати в «%s»"
+
+msgid "Couperin"
+msgstr "Куперен"
+
+msgid "Couple Through"
+msgstr "Наскрізна копула"
+
+msgid "Coupler"
+msgstr "Копула"
+
+#, c-format
+msgid "Coupler %s"
+msgstr "Копула %s"
+
+msgid "Coupler manuals and volume"
+msgstr "Мануали копули і гучність"
+
+#, c-format
+msgid "Coupling manual %d"
+msgstr "Мануал копули %d"
+
+msgid "Creating sample cache"
+msgstr "Створення кешу семплів"
+
+msgid "Creating the cache failed"
+msgstr "Не вдалося створити кеш"
+
+msgid "Crescendo"
+msgstr "Крещендо"
+
+msgid "Crescendo Pedal"
+msgstr "Педаль Crescendo"
+
+msgid "Ctrl Change Bitfield"
+msgstr "Ctrl Змінити бітове поле"
+
+msgid "Current"
+msgstr "Поточний"
+
+msgid "Custom"
+msgstr "Власний"
+
+msgid "Custom Sound Wave File Paths:"
+msgstr "Користувацькі шляхи до WAV-файлів:"
+
+msgid "Cx Program Change"
+msgstr "Зміна програми Cx"
+
+msgid "Cx Program Change Off"
+msgstr "Зміна програми Cx вимк."
+
+msgid "Cx Program Change On"
+msgstr "Зміна програми Cx увімк."
+
+msgid "Cx Program Change Range"
+msgstr "Діапазон зміни програми Cx"
+
+msgid "D"
+msgstr "D"
+
+msgid "De Caus (1615)"
+msgstr "Де Ко (1615)"
+
+msgid "Default"
+msgstr "За замовчуванням"
+
+msgid "Default audio group"
+msgstr "Аудіогрупа за замовчуванням"
+
+msgid "Delay (ms):"
+msgstr "Затримка (мс):"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "Delete &Cache..."
+msgstr "Видалити &кеш..."
+
+msgid "Delete &cache(s)"
+msgstr "Видалити &кеші"
+
+msgid "Delete &preset(s)"
+msgstr "Видалити &пресети"
+
+msgid "Delete Organ Packages"
+msgstr "Видалити пакети органів"
+
+msgid "Delete Organs"
+msgstr "Видалити органи"
+
+#, c-format
+msgid "Delete file %s"
+msgstr "Видалити файл %s"
+
+msgid "Delete initial MIDI settings"
+msgstr "Видалити початкові налаштування MIDI"
+
+msgid "Desired latency:"
+msgstr "Бажана затримка:"
+
+msgid "Desired output latency"
+msgstr "Бажана затримка виведення"
+
+#, c-format
+msgid ""
+"Device %s wants a different samples per buffer settings: %d.\n"
+"Please adjust the GrandOrgue audio settings."
+msgstr ""
+"Пристрій %s потребує іншої кількості семплів на буфер: %d.\n"
+"Змініть параметри звуку GrandOrgue."
+
+msgid "Device matching error"
+msgstr "Помилка підбору пристрою"
+
+msgid "Device matching properties"
+msgstr "Властивості відповідності пристрою"
+
+#, c-format
+msgid "Device: %s [%d ms requested]"
+msgstr "Пристрій: %s [запитано %d мс]"
+
+msgid "Direct Sound:"
+msgstr "Прямий звук:"
+
+msgid "Disabled"
+msgstr "Вимкнено"
+
+msgid "Discard"
+msgstr "Відкинути"
+
+msgid "Distribute audio groups"
+msgstr "Розподілити аудіогрупи"
+
+msgid "Divisional"
+msgstr "Секційна комбінація"
+
+msgid "Divisional Coupler"
+msgstr "Секційна копула"
+
+msgid "Divisionals"
+msgstr "Секційні комбінації"
+
+#, c-format
+msgid "Do you want to delete organs%s%s?"
+msgstr "Ви хочете видалити органи%s%s?"
+
+msgid "Don't load"
+msgstr "Не завантажувати"
+
+msgid "Download"
+msgstr "Завантажити"
+
+#, c-format
+msgid "Drawstop %s can't reference to itself"
+msgstr "Регістрова рукоятка %s не може посилатися на себе"
+
+#, c-format
+msgid "Duplicate combination entry %s in %s"
+msgstr "Дубльований запис комбінації %s у %s"
+
+#, c-format
+msgid "Duplicate entry in section %s at line %d: %s"
+msgstr "Дубльований запис у розділі %s у рядку %d: %s"
+
+#, c-format
+msgid "Duplicate entry: %s"
+msgstr "Дубльований запис: %s"
+
+#, c-format
+msgid "Duplicate file '%s'"
+msgstr "Дублікат файлу «%s»"
+
+#, c-format
+msgid "Duplicate group at line %d: %s"
+msgstr "Дубльована група в рядку %d: %s"
+
+#, c-format
+msgid "Duplicate object with the path %s"
+msgstr "Дубльований об'єкт із шляхом %s"
+
+msgid "E"
+msgstr "E"
+
+msgid "E&xit"
+msgstr "В&ихід"
+
+msgid "Element"
+msgstr "Елемент"
+
+msgid "Element already in the pool"
+msgstr "Елемент уже в пулі"
+
+msgid "Empty MIDI settings"
+msgstr "Порожні налаштування MIDI"
+
+#, c-format
+msgid "Empty at section '%s' entry '%s'"
+msgstr "Пусто в розділі «%s» запис «%s»"
+
+msgid "Enable Convolution Reverb"
+msgstr "Увімкнути згорткову реверберацію"
+
+msgid "Enabled"
+msgstr "Увімкнено"
+
+msgid "Enclosure"
+msgstr "Швелер"
+
+msgid "Enclosure 1"
+msgstr "Швелер 1"
+
+msgid "Enclosure 2"
+msgstr "Швелер 2"
+
+msgid "Enclosure 3"
+msgstr "Швелер 3"
+
+msgid "Enclosure 4"
+msgstr "Швелер 4"
+
+msgid "Enclosure 5"
+msgstr "Швелер 5"
+
+msgid "Enclosure 6"
+msgstr "Швелер 6"
+
+msgid "Enclosures"
+msgstr "Швелери"
+
+#, c-format
+msgid "End of track marker missing at offset %d"
+msgstr "Відсутній кінець маркера доріжки на зсуві %d"
+
+msgid "Equal beating Victorian piano temperament"
+msgstr "Вікторіанська фортепіанна темперація з рівними биттями"
+
+msgid "Equal temperament"
+msgstr "Рівномірна темперація"
+
+msgid "Error"
+msgstr "Помилка"
+
+msgid "Error decoding a track"
+msgstr "Помилка декодування треку"
+
+msgid "Event-&No"
+msgstr "Подія-&№"
+
+#, c-format
+msgid "Events after end of track marker at %d"
+msgstr "Події після закінчення маркера шляху на %d"
+
+msgid "Excess data in the central directory"
+msgstr "Надлишок даних у центральному каталозі"
+
+msgid "Excess information in zip64 extendend information record"
+msgstr "Надлишок інформації в розширеному інформаційному записі zip64"
+
+msgid "Exit GrandOrgue"
+msgstr "Вийдіть з GrandOrgue"
+
+msgid "Export"
+msgstr "Експортувати"
+
+msgid "Export &Combinations"
+msgstr "Експорт &комбінацій"
+
+msgid "Export Combinations"
+msgstr "Експортувати комбінації"
+
+msgid "Export MIDI Settings"
+msgstr "Експорт налаштувань MIDI"
+
+msgid "Export Settings"
+msgstr "Експортувати налаштування"
+
+msgid "Export/import:"
+msgstr "Експорт/імпорт:"
+
+msgid "F"
+msgstr "F"
+
+msgid "F1"
+msgstr "F1"
+
+msgid "F10"
+msgstr "F10"
+
+msgid "F11"
+msgstr "F11"
+
+msgid "F12"
+msgstr "F12"
+
+msgid "F13"
+msgstr "F13"
+
+msgid "F14"
+msgstr "F14"
+
+msgid "F15"
+msgstr "F15"
+
+msgid "F16"
+msgstr "F16"
+
+msgid "F17"
+msgstr "F17"
+
+msgid "F18"
+msgstr "F18"
+
+msgid "F19"
+msgstr "F19"
+
+msgid "F2"
+msgstr "F2"
+
+msgid "F20"
+msgstr "F20"
+
+msgid "F21"
+msgstr "F21"
+
+msgid "F22"
+msgstr "F22"
+
+msgid "F23"
+msgstr "F23"
+
+msgid "F24"
+msgstr "F24"
+
+msgid "F3"
+msgstr "F3"
+
+msgid "F4"
+msgstr "F4"
+
+msgid "F5"
+msgstr "F5"
+
+msgid "F6"
+msgstr "F6"
+
+msgid "F7"
+msgstr "F7"
+
+msgid "F8"
+msgstr "F8"
+
+msgid "F9"
+msgstr "F9"
+
+#, c-format
+msgid "Failed creating organ package file %s"
+msgstr "Не вдалося створити файл пакета органа %s"
+
+#, c-format
+msgid "Failed to check for updates: %s"
+msgstr "Не вдалося перевірити наявність оновлень: %s"
+
+#, c-format
+msgid "Failed to create directory '%s'"
+msgstr "Не вдалося створити каталог «%s»"
+
+#, c-format
+msgid "Failed to decode %s"
+msgstr "Не вдалося декодувати %s"
+
+#, c-format
+msgid "Failed to decode WavePack data: %s"
+msgstr "Не вдалося декодувати дані WavePack: %s"
+
+#, c-format
+msgid "Failed to decode file '%s'"
+msgstr "Не вдалося декодувати файл «%s»"
+
+#, c-format
+msgid "Failed to decompress file '%s'"
+msgstr "Не вдалося розпакувати файл «%s»"
+
+#, c-format
+msgid "Failed to export MIDI settings to '%s': %s"
+msgstr "Не вдалося експортувати налаштування MIDI до «%s»: %s"
+
+#, c-format
+msgid "Failed to export combinations to '%s': %s"
+msgstr "Не вдалося експортувати комбінації в «%s»: %s"
+
+#, c-format
+msgid "Failed to export settings to '%s'"
+msgstr "Не вдалося експортувати налаштування в «%s»"
+
+#, c-format
+msgid "Failed to find organ package %s"
+msgstr "Не вдалося знайти пакет органа %s"
+
+#, c-format
+msgid "Failed to import MIDI settings from '%s': %s"
+msgstr "Не вдалося імпортувати налаштування MIDI з «%s»: %s"
+
+#, c-format
+msgid "Failed to index organ package %s"
+msgstr "Не вдалося проіндексувати пакет органа %s"
+
+#, c-format
+msgid "Failed to load %s"
+msgstr "Не вдалося завантажити %s"
+
+#, c-format
+msgid "Failed to load file '%s' into the memory"
+msgstr "Не вдалося завантажити файл «%s» у пам'ять"
+
+#, c-format
+msgid "Failed to load organ package %s"
+msgstr "Не вдалося завантажити пакет органа %s"
+
+#, c-format
+msgid "Failed to open %s"
+msgstr "Не вдалося відкрити %s"
+
+#, c-format
+msgid "Failed to open '%s'"
+msgstr "Не вдалося відкрити «%s»"
+
+#, c-format
+msgid "Failed to open '%s': %s"
+msgstr "Не вдалося відкрити «%s»: %s"
+
+#, c-format
+msgid "Failed to open archive %s"
+msgstr "Не вдалося відкрити архів %s"
+
+#, c-format
+msgid "Failed to open file '%s'"
+msgstr "Не вдалося відкрити файл «%s»"
+
+#, c-format
+msgid "Failed to open organ package '%s' (%s)"
+msgstr "Не вдалося відкрити пакет органа «%s» (%s)"
+
+#, c-format
+msgid "Failed to open the graphic '%s'"
+msgstr "Не вдалося відкрити графіку «%s»"
+
+#, c-format
+msgid "Failed to open the organ package '%s'"
+msgstr "Не вдалося відкрити пакет органа «%s»"
+
+#, c-format
+msgid "Failed to parse '%s'"
+msgstr "Не вдалося проаналізувати «%s»"
+
+#, c-format
+msgid "Failed to parse organ definition %s"
+msgstr "Не вдалося проаналізувати визначення органа %s"
+
+#, c-format
+msgid "Failed to parse the organ package index of '%s'"
+msgstr "Не вдалося проаналізувати індекс пакета органа «%s»"
+
+#, c-format
+msgid "Failed to read %s from the organ package"
+msgstr "Не вдалося прочитати %s з пакета органа"
+
+#, c-format
+msgid "Failed to read '%s'"
+msgstr "Не вдалося прочитати «%s»"
+
+#, c-format
+msgid "Failed to read '%s': %s"
+msgstr "Не вдалося прочитати «%s»: %s"
+
+msgid "Failed to read cache directory"
+msgstr "Не вдалося прочитати каталог кешу"
+
+#, c-format
+msgid "Failed to read content of %s"
+msgstr "Не вдалося прочитати вміст %s"
+
+#, c-format
+msgid "Failed to read directory '%s'"
+msgstr "Не вдалося прочитати каталог «%s»"
+
+#, c-format
+msgid "Failed to read file %s"
+msgstr "Не вдалося прочитати файл %s"
+
+#, c-format
+msgid "Failed to read file '%s'"
+msgstr "Не вдалося прочитати файл «%s»"
+
+#, c-format
+msgid "Failed to read wav file %s: %s"
+msgstr "Не вдалося прочитати wav-файл %s: %s"
+
+msgid "Failed to save the organ setting"
+msgstr "Не вдалося зберегти налаштування органа"
+
+#, c-format
+msgid "Failed to write %s to the organ package"
+msgstr "Не вдалося записати %s до пакета органа"
+
+#, c-format
+msgid "Failed to write content to '%s'"
+msgstr "Не вдалося записати вміст у «%s»"
+
+#, c-format
+msgid "Failed to write to '%s'"
+msgstr "Не вдалося написати до «%s»"
+
+msgid "Failed writing the package directory"
+msgstr "Помилка запису каталогу пакетів"
+
+msgid "Failed writing the package index file"
+msgstr "Помилка запису файлу індексу пакета"
+
+msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
+msgstr "Фердинанд Боссар (1743/44) Klosterkirche Muri"
+
+#, c-format
+msgid "File %s is not found in the organ package archives"
+msgstr "Файл %s не знайдено в архівах пакета органа"
+
+#, c-format
+msgid "File '%s' does not exist"
+msgstr "Файл «%s» не існує"
+
+#, c-format
+msgid "File name '%s' contains invalid path separators"
+msgstr "Назва файлу «%s» містить недійсні розділювачі шляху"
+
+msgid "File name is empty"
+msgstr "Назва файлу порожня"
+
+#, c-format
+msgid "Filename '%s' contains non-portable directory separator /"
+msgstr "Ім'я файлу «%s» містить непереносимий роздільник каталогу /"
+
+#, c-format
+msgid "Filename '%s' not compatible with case sensitive systems"
+msgstr "Назва файлу «%s» не сумісна з системами, чутливими до регістру"
+
+msgid "Filename contains invalid characters"
+msgstr "Назва файлу містить недійсні символи"
+
+msgid "First Beat"
+msgstr "Перша доля"
+
+msgid "First Beat:"
+msgstr "Перша доля:"
+
+msgid "First loop"
+msgstr "Перша петля"
+
+msgid "Fisk-Vogel: Memorial Church at Stanford"
+msgstr "Фіск-Фогель: Меморіальна церква в Стенфорді"
+
+msgid "Freres Jullien Organ, France (1690)"
+msgstr "Орган Freres Jullien, Франція (1690)"
+
+msgid "Freytag Organ Bellingwolde 1798/2002"
+msgstr "Фрейтаг Орган Беллінгвольде 1798/2002"
+
+msgid "Full"
+msgstr "Повний"
+
+msgid "G"
+msgstr "G"
+
+msgid "G. Silbermann nr 2"
+msgstr "Г. Зільберманн № 2"
+
+msgid "G.C."
+msgstr "G.C."
+
+msgid "GB"
+msgstr "GB"
+
+msgid "Gain (dB):"
+msgstr "Підсилення (дБ):"
+
+msgid "Gain is invalid"
+msgstr "Підсилення недійсне"
+
+msgid "Gain:"
+msgstr "Підсилення:"
+
+msgid "Ganassi (Sylvestro) - 1543"
+msgstr "Ганассі (Сильвестро) - 1543"
+
+msgid "Garbage detected in the MIDI file"
+msgstr "У файлі MIDI виявлено сміття"
+
+msgid "General"
+msgstr "Загальна"
+
+msgid "Generals"
+msgstr "Загальні"
+
+msgid "Globals"
+msgstr "Глобальні"
+
+msgid "Gottfried Silbermann nr 1"
+msgstr "Готфрід Зільберманн № 1"
+
+msgid "Grammateus (1518)"
+msgstr "Граматей (1518)"
+
+msgid "GrandOrgue"
+msgstr ""
+
+#, c-format
+msgid "GrandOrgue %s"
+msgstr "GrandOrgue %s"
+
+#, c-format
+msgid "GrandOrgue %s - Virtual Pipe Organ Software"
+msgstr "GrandOrgue %s – програмне забезпечення для віртуального трубного органа"
+
+msgid "GrandOrgue - virtual pipe organ sample player"
+msgstr "GrandOrgue - віртуальний програвач семплів трубного органа"
+
+msgid "GrandOrgue MIDI Player"
+msgstr "MIDI-плеєр GrandOrgue"
+
+#, c-format
+msgid "GrandOrgueTool %s"
+msgstr "GrandOrgueTool %s"
+
+msgid "Group"
+msgstr "Група"
+
+msgid "H"
+msgstr "H"
+
+msgid "H&ighest velocity:"
+msgstr "Найбільша &сила натискання:"
+
+msgid "Harpsichord/Piano/Monochord"
+msgstr "Клавесин/Фортепіано/Монокорд"
+
+msgid "Henri Arnaut De Zwolle. (1436)."
+msgstr "Анрі Арно де Зволле. (1436)."
+
+msgid "Heun (Jan) 1805"
+msgstr "Гойн (Ян) 1805"
+
+msgid "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
+msgstr "Гінс (1704 - 1785), Pelstergasthuiskerk Groningen"
+
+msgid "Holden (John) 1770"
+msgstr "Холден (Джон) 1770"
+
+msgid "Hummel's quasi-equal temperament (1829)"
+msgstr "Квазірівномірна темперація Гуммеля (1829)"
+
+msgid "I"
+msgstr "I"
+
+msgid "IEEE Float"
+msgstr "IEEE з рухомою комою"
+
+msgid "INCOMPLETE - "
+msgstr "НЕПОВНИЙ - "
+
+msgid "Ignore pitch info in organ samples wav files"
+msgstr "Ігнорувати інформацію про висоту звуку у wav-файлах семплів органа"
+
+msgid "Import"
+msgstr "Імпортувати"
+
+msgid "Import &Combinations"
+msgstr "Імпорт &комбінацій"
+
+msgid "Import Combinations"
+msgstr "Імпортувати комбінації"
+
+msgid "Import File"
+msgstr "Імпортувати файл"
+
+msgid "Import MIDI Settings"
+msgstr "Імпортувати налаштування MIDI"
+
+msgid "Import Midi Settings"
+msgstr "Імпорт налаштувань Midi"
+
+msgid "Import Settings"
+msgstr "Імпортувати налаштування"
+
+#, c-format
+msgid "Impulse response file '%s' not found"
+msgstr "Файл імпульсної характеристики «%s» не знайдено"
+
+msgid "Impulse response:"
+msgstr "Імпульсна характеристика:"
+
+#, c-format
+msgid "Incomplete MIDI message at %d"
+msgstr "Неповне повідомлення MIDI на %d"
+
+msgid "Incomplete central directory entry"
+msgstr "Неповний запис центрального каталогу"
+
+msgid "Incomplete central directory extra record"
+msgstr "Неповний додатковий запис центрального каталогу"
+
+msgid "Incomplete chunk"
+msgstr "Неповний фрагмент"
+
+#, c-format
+msgid "Incomplete chunk at offset %d"
+msgstr "Неповний фрагмент зі зміщенням %d"
+
+msgid "Incomplete file content"
+msgstr "Неповний вміст файлу"
+
+msgid "Incomplete local record"
+msgstr "Неповний локальний запис"
+
+#, c-format
+msgid "Incomplete timestamp at offset %d"
+msgstr "Неповна позначка часу на зсуві %d"
+
+msgid "Incomplete zip64 extendend information record"
+msgstr "Неповний інформаційний запис розширення zip64"
+
+#, c-format
+msgid "Inconsistent WavPack file: %s"
+msgstr "Невідповідний файл WavPack: %s"
+
+#, c-format
+msgid "Incorrect case for section '%s' entry '%s'"
+msgstr "Неправильний регістр для запису розділу «%s» «%s»"
+
+msgid "Incorrect track count"
+msgstr "Неправильна кількість треків"
+
+#, c-format
+msgid "Index '%s' has bad magic - bypassing index"
+msgstr "Неправильна сигнатура індексу «%s» — індекс ігнорується"
+
+#, c-format
+msgid "InfoFilename %s either does not exist or is not a html file"
+msgstr "InfoFilename %s або не існує, або не є файлом html"
+
+msgid "Initial MIDI"
+msgstr "Початковий MIDI"
+
+#, c-format
+msgid "Initial MIDI settings for %s"
+msgstr "Початкові налаштування MIDI для %s"
+
+#, c-format
+msgid "Input directory %s not found"
+msgstr "Вхідний каталог %s не знайдено"
+
+msgid "Insert"
+msgstr "Вставити"
+
+msgid "Install organ package"
+msgstr "Встановити органний пакет"
+
+#, c-format
+msgid "Internal MIDI object %s:%u exists"
+msgstr "Внутрішній MIDI-об'єкт %s:%u існує"
+
+msgid "Interpolation:"
+msgstr "Інтерполяція:"
+
+#, c-format
+msgid "Invalid Config entry at line %d: %s"
+msgstr "Недійсний запис конфігурації в рядку %d: %s"
+
+#, c-format
+msgid "Invalid RIFF file: %s"
+msgstr "Недійсний файл RIFF: %s"
+
+#, c-format
+msgid "Invalid RIFF/WAVE file: %s"
+msgstr "Недійсний файл RIFF/WAVE: %s"
+
+#, c-format
+msgid "Invalid WAV file: %s"
+msgstr "Недійсний файл WAV: %s"
+
+#, c-format
+msgid "Invalid boolean value at section '%s' entry '%s': %s"
+msgstr "Недійсне логічне значення в розділі «%s» запис «%s»: %s"
+
+#, c-format
+msgid "Invalid color at section '%s' entry '%s': %s"
+msgstr "Недійсний колір у розділі «%s» запис «%s»: %s"
+
+#, c-format
+msgid "Invalid combination entry %s in %s"
+msgstr "Недійсний запис комбінації %s у %s"
+
+#, c-format
+msgid "Invalid enum value at section '%s' entry '%s': %s"
+msgstr "Недійсне значення enum у розділі «%s» запис «%s»: %s"
+
+#, c-format
+msgid "Invalid enum value for /%s/%s: %d"
+msgstr "Недійсне значення enum для /%s/%s: %d"
+
+#, c-format
+msgid "Invalid float value '%s' at section '%s' entry '%s': %s"
+msgstr "Недійсне плаваюче значення «%s» у розділі «%s» запис «%s»: %s"
+
+#, c-format
+msgid "Invalid font size '%s' at section '%s' entry '%s': %s"
+msgstr "Недійсний розмір шрифту «%s» у розділі «%s» запис «%s»: %s"
+
+#, c-format
+msgid "Invalid free of %p"
+msgstr "Недійсний без %p"
+
+msgid "Invalid instance name"
+msgstr "Недійсна назва екземпляра"
+
+#, c-format
+msgid "Invalid integer value '%s' at section '%s' entry '%s': %s"
+msgstr "Недійсне ціле значення «%s» у розділі «%s» запис «%s»: %s"
+
+#, c-format
+msgid "Invalid integer value '%s' at section '%s' entry '%s'; assunmed %ld"
+msgstr ""
+"Недійсне ціле значення «%s» у розділі «%s» запис «%s»; передбачувано "
+"%ld"
+
+#, c-format
+msgid "Invalid item selected: %s"
+msgstr "Вибрано недійсний елемент: %s"
+
+msgid "Invalid local header offset"
+msgstr "Недійсне локальне зміщення заголовка"
+
+msgid "Invalid loop definition"
+msgstr "Недійсне визначення циклу"
+
+#, c-format
+msgid "Invalid loop in the file: %s\n"
+msgstr "Недійсний цикл у файлі: %s\n"
+
+#, c-format
+msgid "Invalid manual number %s"
+msgstr "Недійсний номер мануала %s"
+
+msgid "Invalid object type for reversible piston"
+msgstr "Неприпустимий тип об'єкта для реверсивного пістона"
+
+msgid "Invalid offset in Zip64 end locator"
+msgstr "Недійсне зміщення в кінцевому локаторі Zip64"
+
+msgid "Invalid reference "
+msgstr "Недійсне посилання "
+
+msgid "Invalid regex"
+msgstr "Недійсний регулярний вираз"
+
+msgid "Invalid release end position"
+msgstr "Недійсне кінцеве положення згасання"
+
+msgid "Invalid release position"
+msgstr "Недійсне положення згасання"
+
+msgid "Invalid reverb configuration (samples per buffer)"
+msgstr "Недійсна конфігурація реверберації (семплів на буфер)"
+
+msgid "Invalid reverb start offset"
+msgstr "Недійсне початкове зміщення реверберації"
+
+msgid "Invalid sample rate"
+msgstr "Недійсна частота дискретизації"
+
+#, c-format
+msgid "Invalid section start at line %d: %s"
+msgstr "Недійсний початок розділу в рядку %d: %s"
+
+#, c-format
+msgid "Invalid size '%s' at section '%s' entry '%s': %s"
+msgstr "Недійсний розмір «%s» у розділі «%s» запис «%s»: %s"
+
+msgid "J"
+msgstr "J"
+
+msgid "K"
+msgstr "K"
+
+msgid "KB"
+msgstr "KB"
+
+msgid "Keller (Gottfried) 1707"
+msgstr "Келлер (Готфрід) 1707 р"
+
+msgid "Kellner's Bach tuning"
+msgstr "Настроювання Баха Кельнера"
+
+msgid "Kepler's choice system (1619)"
+msgstr "Система вибору Кеплера (1619)"
+
+msgid "Kirnberger III"
+msgstr "Кірнбергер III"
+
+msgid "Koenig, Balthasar Organ Nederehe 1714"
+msgstr "Кеніг, Balthasar Organ Nederehe 1714"
+
+msgid "L"
+msgstr "L"
+
+msgid "L&ower bank:"
+msgstr "Нижній &банк:"
+
+msgid "L&ower limit:"
+msgstr "&Нижня межа:"
+
+msgid "L&owest velocity:"
+msgstr "Найменша &сила натискання:"
+
+msgid "Label"
+msgstr "Мітка"
+
+msgid "Lambert (1774) 1/7 comma"
+msgstr "Ламберт (1774) 1/7 кома"
+
+msgid "Last track is missing the end marker"
+msgstr "В останньому треку відсутній маркер кінця"
+
+#, c-format
+msgid "Leading or trailing whitespaces at section '%s' entry '%s': '%s'"
+msgstr "Пробіли на початку або в кінці розділу «%s» запис «%s»: «%s»"
+
+msgid "Length:"
+msgstr "Довжина:"
+
+msgid "Linear"
+msgstr "Лінійний"
+
+msgid "Load &MIDI\tCtrl+P"
+msgstr "Завантажити &MIDI\tCtrl+P"
+
+msgid "Load &stereo samples in:"
+msgstr "Завантажувати &стереосемпли як:"
+
+msgid "Load MIDI file"
+msgstr "Завантажити файл MIDI"
+
+msgid "Load aborted by the user - only parts of the organ are loaded."
+msgstr ""
+"Завантаження перервано користувачем - завантажуються лише частини органа."
+
+msgid "Load error"
+msgstr "Помилка завантаження"
+
+msgid "Load file"
+msgstr "Завантажити файл"
+
+msgid "Load first favorit organ at startup"
+msgstr "Завантажити перший улюблений орган під час запуску"
+
+msgid "Load just GUI. Not to load any sound samples"
+msgstr "Завантажити тільки GUI. Не завантажувати жодних звукових семплів"
+
+msgid "Load last used organ at startup"
+msgstr "Завантажити останній використаний орган під час запуску"
+
+msgid "Loading sample set"
+msgstr "Завантаження набору семплів"
+
+msgid "Log messages"
+msgstr "Журнал повідомлень"
+
+msgid "Logical device name is already used by "
+msgstr "Логічне ім'я пристрою вже використовується "
+
+msgid "Logical device name must not be empty"
+msgstr "Назва логічного пристрою не може бути пустою"
+
+msgid "Logical device name:"
+msgstr "Логічне ім'я пристрою:"
+
+msgid "Longest loop"
+msgstr "Найдовша петля"
+
+msgid "Loop loading:"
+msgstr "Завантаження петель:"
+
+msgid "Loop too short for a cross fade"
+msgstr "Петля занадто коротка для кросфейду"
+
+msgid "Lossless compression"
+msgstr "Стиснення без втрат"
+
+msgid "Lossless compression:"
+msgstr "Стиснення без втрат:"
+
+msgid "M"
+msgstr "M"
+
+msgid "M&idi Objects"
+msgstr "MIDI-&об'єкти"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "MEL"
+msgstr "MEL"
+
+msgid "MID files (*.mid)|*.mid"
+msgstr "Файли MID (*.mid)|*.mid"
+
+msgid "MIDI"
+msgstr "MIDI"
+
+msgid "MIDI &input devices"
+msgstr "MIDI-пристрої &введення"
+
+msgid "MIDI &output devices"
+msgstr "Пристрої &виведення MIDI"
+
+msgid "MIDI &ports"
+msgstr "MIDI &порти"
+
+msgid "MIDI Devices"
+msgstr "Пристрої MIDI"
+
+msgid "MIDI Objects"
+msgstr "Об'єкти MIDI"
+
+msgid "MIDI Player"
+msgstr "MIDI плеєр"
+
+msgid "MIDI Recorder"
+msgstr "MIDI-рекордер"
+
+msgid "MIDI event: "
+msgstr "Подія MIDI: "
+
+msgid "MIDI file type 0 only supports one track"
+msgstr "MIDI-файл типу 0 підтримує лише одну доріжку"
+
+msgid "MIDI file type 1 has not tracks"
+msgstr "MIDI-файл типу 1 не містить доріжок"
+
+msgid "MIDI file type 2 is not supported"
+msgstr "MIDI-файл типу 2 не підтримується"
+
+msgid "MIDI files (*.mid)|*.mid"
+msgstr "Файли MIDI (*.mid)|*.mid"
+
+msgid "MIDI header missing"
+msgstr "Відсутній заголовок MIDI"
+
+msgid "MIDI output device"
+msgstr "Пристрій виведення MIDI"
+
+msgid "MIDI player:"
+msgstr "MIDI плеєр:"
+
+msgid "MIDI playing time"
+msgstr "Час відтворення MIDI"
+
+msgid "MIDI recording time"
+msgstr "Час запису MIDI"
+
+msgid "MIDI recording:"
+msgstr "Запис MIDI:"
+
+msgid "MIDI recordings"
+msgstr "MIDI-записи"
+
+#, c-format
+msgid "MIDI settings for organ %s"
+msgstr "Параметри MIDI для органа %s"
+
+#, c-format
+msgid "MIDI-Settings for %s - %s"
+msgstr "Параметри MIDI для %s - %s"
+
+msgid "MIDIRecorder"
+msgstr "MIDI-рекордер"
+
+msgid "MISSING - "
+msgstr "ВІДСУТНІЙ - "
+
+msgid "Malerbi's well-temperament nr 1 (1794)"
+msgstr "Добра темперація Малербі № 1 (1794)"
+
+msgid "Malformed MIDI header"
+msgstr "Неправильний MIDI-заголовок"
+
+#, c-format
+msgid "Malformed wave file '%s'. Format chunk must precede data chunk."
+msgstr ""
+"Пошкоджений WAV-файл «%s». Блок формату має передувати блоку даних."
+
+#, c-format
+msgid ""
+"Malformed wave file '%s'. The chunk '%4s' at %lu with the size 8 + %lu ends "
+"after the end of file %lu"
+msgstr ""
+"Неправильно сформований WAV-файл «%s». Блок «%4s» зі зміщенням %lu і "
+"розміром 8 + %lu виходить за межі файлу %lu"
+
+msgid "Malformed zip64 end record"
+msgstr "Неправильний кінцевий запис zip64"
+
+msgid "Manual"
+msgstr "Мануал"
+
+#, c-format
+msgid "Manual %d: Switch%03d already in use"
+msgstr "Мануал %d: перемикач%03d уже використовується"
+
+#, c-format
+msgid "Manual %d: Tremulant%03d already in use"
+msgstr "Мануал %d: тремулянт%03d уже використовується"
+
+msgid "Manual 1"
+msgstr "Мануал 1"
+
+msgid "Manual 2"
+msgstr "Мануал 2"
+
+msgid "Manual 3"
+msgstr "Мануал 3"
+
+msgid "Manual 4"
+msgstr "Мануал 4"
+
+msgid "Manual 5"
+msgstr "Мануал 5"
+
+msgid "Manual Tuning (Cent):"
+msgstr "Ручне настроювання (центи):"
+
+#, c-format
+msgid "Manual key %d outside of the bounding box"
+msgstr "Ручний ключ %d за межами рамки"
+
+msgid "ManualTuning is invalid"
+msgstr "Ручне настроювання недійсне"
+
+msgid "Manuals"
+msgstr "Мануали"
+
+msgid "Mapped memory of the cache"
+msgstr "Відображена пам'ять кеша"
+
+msgid "Mark Lindley, Grosvenor Chapel, London"
+msgstr "Марк Ліндлі, каплиця Гросвенор, Лондон"
+
+msgid "Marpurg nr 1"
+msgstr "Марпург № 1"
+
+msgid "Marpurg nr 11"
+msgstr "Марпург № 11"
+
+msgid "Marpurg nr 12"
+msgstr "Марпург № 12"
+
+msgid "Marpurg nr 2"
+msgstr "Марпург № 2"
+
+msgid "Marpurg nr 3"
+msgstr "Марпург № 3"
+
+msgid "Marpurg nr 4"
+msgstr "Марпург № 4"
+
+msgid "Marpurg nr 5"
+msgstr "Марпург № 5"
+
+msgid "Marpurg nr 7"
+msgstr "Марпург № 7"
+
+msgid "Marpurg nr 8"
+msgstr "Марпург № 8"
+
+msgid "Marpurg nr 9"
+msgstr "Марпург № 9"
+
+msgid "Master"
+msgstr "майстер"
+
+msgid "Master Controls"
+msgstr "Основні елементи керування"
+
+msgid "Matching"
+msgstr "Зіставлення"
+
+msgid "Matching..."
+msgstr "Відповідність..."
+
+msgid "Max"
+msgstr "Макс"
+
+msgid "Measure +"
+msgstr "Виміряйте +"
+
+msgid "Measure -"
+msgstr "міра -"
+
+msgid "Memory Level"
+msgstr "Рівень пам'яті"
+
+msgid "Memory Limit (MB):"
+msgstr "Обмеження пам'яті (МБ):"
+
+msgid "Memory Set"
+msgstr "Набір пам'яті"
+
+#, c-format
+msgid "Memory mapping of the cache file failed with error code %d"
+msgstr "Помилка зіставлення пам'яті файлу кешу з кодом помилки %d"
+
+#, c-format
+msgid "Memory pool is full: %llu of %llu used"
+msgstr "Пул пам'яті заповнено: використано %llu із %llu"
+
+msgid "Memory pool size"
+msgstr "Розмір пулу пам'яті"
+
+msgid "Memory usage:"
+msgstr "Використання пам'яті:"
+
+msgid "Mercadier's well-temperament"
+msgstr "Добра темперація Меркадьє"
+
+msgid "Mersenne spinet 1"
+msgstr "Спінет Мерсенна 1"
+
+msgid "Mersenne spinet 2"
+msgstr "Спінет Мерсенна 2"
+
+msgid "Mersenne's Improved Meantone 1"
+msgstr "Покращена середньотонова темперація Мерсенна 1"
+
+msgid "Metronom measure"
+msgstr "Міра метронома"
+
+msgid "Metronome"
+msgstr "Метроном"
+
+msgid "Metronome BPM"
+msgstr "Метроном BPM"
+
+msgid "Metronome Sound Type"
+msgstr "Тип звуку метронома"
+
+msgid "Metronome config error"
+msgstr "Помилка конфігурації метронома"
+
+msgid "Metronome sample file"
+msgstr "Файл семпла метронома"
+
+#, c-format
+msgid "Midi Settings files (%s)"
+msgstr "Файли налаштувань Midi (%s)"
+
+msgid "MidiPlayer"
+msgstr "MidiPlayer"
+
+msgid "Minimal amplitude level is invalid"
+msgstr "Мінімальний рівень амплітуди недійсний"
+
+msgid "Minimum amplitude level:"
+msgstr "Мінімальний рівень амплітуди:"
+
+msgid "Mismatch of local and central header"
+msgstr "Невідповідність локального та центрального заголовка"
+
+msgid "Missing local header"
+msgstr "Відсутній локальний заголовок"
+
+#, c-format
+msgid "Missing required value section '%s' entry '%s'"
+msgstr "Відсутнє обов'язкове значення розділу «%s» запис «%s»"
+
+msgid "Mixing of percussive and non-percussive samples in one pipe not allowed"
+msgstr "Змішування ударних і неударних семплів в одній трубі не допускається"
+
+msgid "Mod. Silbermann nr 2"
+msgstr "Мод. Зільберманн № 2"
+
+msgid "Mono"
+msgstr "Моно"
+
+msgid "More Information"
+msgstr "Більше інформації"
+
+#, c-format
+msgid "More than %u unused ODF entries detected"
+msgstr "Виявлено більше %u невикористаних записів ODF"
+
+msgid "N"
+msgstr "N"
+
+msgid "NRPN"
+msgstr "NRPN"
+
+msgid "NRPN Off"
+msgstr "NRPN вимк."
+
+msgid "NRPN Off Toggle"
+msgstr "NRPN вимк. перемиканням"
+
+msgid "NRPN On"
+msgstr "NRPN увімк."
+
+msgid "NRPN On Toggle"
+msgstr "NRPN увімк. перемиканням"
+
+msgid "NRPN On/Off Toggle"
+msgstr "NRPN увімк./вимк. перемиканням"
+
+msgid "NRPN Range"
+msgstr "Діапазон NRPN"
+
+#, c-format
+msgid "NRPN change channel: %d key: %d value: %d"
+msgstr "NRPN змінити канал: %d ключ: %d значення: %d"
+
+msgid "Name"
+msgstr "Ім'я"
+
+msgid "Neidhardt I (1724)"
+msgstr "Нейдхардт I (1724)"
+
+msgid "Neidhardt II (1724)"
+msgstr "Нейдхардт II (1724)"
+
+msgid "Neidhardt III (1724)"
+msgstr "Нейдхардт III (1724)"
+
+msgid "New"
+msgstr "новий"
+
+msgid "New Bas/Mel coupler behaviour"
+msgstr "Нова поведінка копули Bas/Mel"
+
+msgid "New audio device"
+msgstr "Новий аудіопристрій"
+
+msgid "New audio group"
+msgstr "Нова аудіогрупа"
+
+msgid "New audio group name"
+msgstr "Нова назва аудіогрупи"
+
+msgid "New release available"
+msgstr "Доступна нова версія"
+
+#, c-format
+msgid "New version: %s"
+msgstr "Нова версія: %s"
+
+msgid "Next"
+msgstr "Далі"
+
+msgid "Next Memory"
+msgstr "Наступна пам'ять"
+
+msgid "Next file"
+msgstr "Наступний файл"
+
+msgid "Next temperament"
+msgstr "Наступна темперація"
+
+msgid "No"
+msgstr "Ні"
+
+msgid ""
+"No MIDI events are configured for this object.\n"
+"Are you sure to save the empty MIDI settings to initial?"
+msgstr ""
+"Для цього об'єкта не налаштовано події MIDI.\n"
+"Ви впевнені, що хочете зберегти порожні налаштування MIDI як початкові?"
+
+msgid "No active MIDI input devices"
+msgstr "Немає активних пристроїв введення MIDI"
+
+msgid "No audio group selected"
+msgstr "Аудіогрупа не вибрана"
+
+msgid "No device"
+msgstr "Немає пристрою"
+
+msgid "No end record found"
+msgstr "Кінцевий запис не знайдено"
+
+msgid "No function selected"
+msgstr "Функція не вибрана"
+
+msgid "No input directory specified"
+msgstr "Вхідний каталог не вказано"
+
+msgid "No loop found"
+msgstr "Петлі не знайдено"
+
+#, c-format
+msgid "No organ section in organ definition %s"
+msgstr "Немає розділу органа у визначенні органа %s"
+
+msgid "No output-file specified"
+msgstr "Не вказано вихідний файл"
+
+#, c-format
+msgid "No samples found: %s"
+msgstr "Семплів не знайдено: %s"
+
+msgid "No sound output occurring"
+msgstr "Звук не виводиться"
+
+#, c-format
+msgid ""
+"No sound output will happen. Samples per buffer has been changed by the "
+"sound driver to %d"
+msgstr ""
+"Звуку не буде. Звуковий драйвер змінив кількість семплів на буфер на %d"
+
+msgid "No title specified"
+msgstr "Назва не вказана"
+
+msgid "No valid loops exist in the file"
+msgstr "У файлі немає дійсних циклів"
+
+#, c-format
+msgid "Non-empty directory '%s'"
+msgstr "Непорожній каталог «%s»"
+
+msgid "None"
+msgstr "Немає"
+
+msgid "Norden"
+msgstr "Норден"
+
+#, c-format
+msgid "Not a RIFF file: %s"
+msgstr "Не файл RIFF: %s"
+
+#, c-format
+msgid "Not recognized MIDI chunk at offset %d"
+msgstr "Нерозпізнаний фрагмент MIDI зі зсувом %d"
+
+msgid "Not supported entry in the central directory"
+msgstr "Не підтримується запис у центральному каталозі"
+
+msgid "Not supported event"
+msgstr "Подія не підтримується"
+
+#, c-format
+msgid "Number %s contains locale dependent floating point"
+msgstr "Число %s містить залежну від мови плаваючу кому"
+
+msgid "Number of CPU cores:"
+msgstr "Кількість ядер ЦП:"
+
+msgid "O"
+msgstr "O"
+
+msgid "ODF Path"
+msgstr "Шлях ODF"
+
+msgid "OFF"
+msgstr "ВИМКНЕНО"
+
+msgid "ON"
+msgstr "УВІМК"
+
+msgid "Old GO 0.2 styled setting in ODF"
+msgstr "Старе налаштування стилю GO 0.2 в ODF"
+
+msgid "On"
+msgstr "Увімкнено"
+
+msgid "Only non-splitted ZIP archives are supported"
+msgstr "Підтримуються лише нерозділені архіви ZIP"
+
+msgid "Only non-splitted ZIP64 archives are supported"
+msgstr "Підтримуються лише нерозділені архіви ZIP64"
+
+msgid "Only non-splitted archive is supported"
+msgstr "Підтримується лише нерозділений архів"
+
+msgid "Only stored compression supported"
+msgstr "Підтримується лише збережене стиснення"
+
+msgid "Open &Recent"
+msgstr "Відкрити &останні"
+
+#, c-format
+msgid "Open of the audio stream for %s failed: %s"
+msgstr "Не вдалося відкрити аудіопотік для %s: %s"
+
+msgid "Open organ"
+msgstr "Відкрити орган"
+
+#, c-format
+msgid "Opening the cache file %s failed"
+msgstr "Не вдалося відкрити кеш-файл %s"
+
+msgid "Options"
+msgstr "Опції"
+
+#, c-format
+msgid "Organ %s changed its name"
+msgstr "Орган %s змінив назву"
+
+#, c-format
+msgid "Organ %s changed its organ builder"
+msgstr "Орган %s змінив конструктора органа"
+
+#, c-format
+msgid "Organ %s changed its recording details"
+msgstr "Орган %s змінив деталі запису"
+
+msgid "Organ &Properties"
+msgstr "&Властивості органа"
+
+msgid "Organ Properties"
+msgstr "Властивості органа"
+
+msgid "Organ cache:"
+msgstr "Кеш органа:"
+
+msgid "Organ dialog"
+msgstr "Органний діалог"
+
+msgid "Organ hash:"
+msgstr "Орган хеш:"
+
+msgid "Organ package"
+msgstr "Органний пакет"
+
+#, c-format
+msgid "Organ package %s changed its title"
+msgstr "Пакет органів %s змінив назву"
+
+msgid "Organ package (*.orgue)"
+msgstr "Органний пакет (*.orgue)"
+
+msgid "Organ packages"
+msgstr "Органні пакети"
+
+msgid "Organ packages:"
+msgstr "Пакети органів:"
+
+msgid "Organ path"
+msgstr "Шлях до органа"
+
+msgid "Organ settings"
+msgstr "Налаштування органа"
+
+msgid "Organ settings:"
+msgstr "Налаштування органа:"
+
+msgid "Organs"
+msgstr "Органи"
+
+msgid "Original temperament"
+msgstr "Початкова темперація"
+
+msgid "Other Comments"
+msgstr "Інші коментарі"
+
+msgid "Other just"
+msgstr "Інша чиста темперація"
+
+msgid "Out of memory"
+msgstr "Брак пам'яті"
+
+msgid ""
+"Out of memory - only parts of the organ are loaded. Please reduce memory "
+"footprint via the sample loading settings."
+msgstr ""
+"Брак пам'яті - завантажено лише частини органа. Зменште обсяг пам'яті за "
+"допомогою налаштувань завантаження семплів."
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %f"
+msgstr "Значення поза діапазоном у розділі «%s» запис «%s»: %f"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %f. Assumed %f."
+msgstr ""
+"Значення поза діапазоном у розділі «%s» запис «%s»: %f. Припустимо %f."
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %ld"
+msgstr "Значення поза діапазоном у розділі «%s» запис «%s»: %ld"
+
+#, c-format
+msgid "Out of range value at section '%s' entry '%s': %ld. Assumed %d"
+msgstr ""
+"Значення поза діапазоном у розділі «%s» запис «%s»: %ld. Припустимо %d"
+
+#, c-format
+msgid "Output device %s not found - no sound output will occur"
+msgstr "Пристрій виведення %s не знайдено – звук не виводиться"
+
+msgid "Override"
+msgstr "Перевизначити"
+
+msgid "P"
+msgstr "P"
+
+msgid "P&roperties..."
+msgstr "В&ластивості..."
+
+msgid "PAUSE"
+msgstr "ПАУЗА"
+
+msgid "PLAY"
+msgstr "ВІДТВ."
+
+msgid "Package hash:"
+msgstr "Хеш пакета:"
+
+msgid "Package id:"
+msgstr "Ідентифікатор пакета:"
+
+msgid "Package info:"
+msgstr "Інформація про пакет:"
+
+msgid "Package name:"
+msgstr "Назва пакета:"
+
+#, c-format
+msgid "PackageID %s added more than once"
+msgstr "PackageID %s додано більше одного разу"
+
+msgid "Panic"
+msgstr "Паніка"
+
+msgid "Parent default"
+msgstr "Як у батьківського об'єкта"
+
+msgid "Parsing organ packages"
+msgstr "Розбір пакетів органів"
+
+msgid "Parsing sample set definition file"
+msgstr "Розбір файлу визначення набору семплів"
+
+msgid "Path"
+msgstr "Шлях"
+
+msgid "Path in package:"
+msgstr "Шлях у пакеті:"
+
+msgid "Paths"
+msgstr "Шляхи"
+
+msgid "Pedal"
+msgstr "Педаль"
+
+msgid "Pedal first"
+msgstr "Педаль спочатку"
+
+msgid "Pedal first (Viscount style)"
+msgstr "Спочатку педаль (стиль Viscount)"
+
+msgid "Pedal last"
+msgstr "Педаль остання"
+
+msgid "Pedal last (old GrandOrgue style)"
+msgstr "Остання педаль (старий стиль GrandOrgue)"
+
+msgid "Perform strict ODF"
+msgstr "Сувора перевірка ODF"
+
+msgid "Physical device name:"
+msgstr "Назва фізичного пристрою:"
+
+msgid "Physical name regex pattern:"
+msgstr "Шаблон регулярного виразу фізичної назви:"
+
+msgid "Pipe organ simulator"
+msgstr "Симулятор трубного органа"
+
+msgid "Pipes"
+msgstr "Труби"
+
+msgid "Piston"
+msgstr "Пістон"
+
+msgid "Pitch"
+msgstr "Висота звуку"
+
+msgid "Please apply or discard changes first"
+msgstr "Спочатку застосуйте або відхиліть зміни"
+
+#, c-format
+msgid "Please enter a volume between %3.1f and %2.1f dB"
+msgstr "Введіть гучність між %3.1f і %2.1f дБ"
+
+msgid "Please enter new volume in dB:"
+msgstr "Будь ласка, введіть нову гучність у дБ:"
+
+msgid "Please fully close the enclosure"
+msgstr "Будь ласка, повністю закрийте швелер"
+
+msgid "Please fully open the enclosure"
+msgstr "Будь ласка, повністю відкрийте швелер"
+
+msgid "Please press the MIDI element"
+msgstr "Будь ласка, натисніть елемент MIDI"
+
+msgid "Please press the highest key with minimal velocity"
+msgstr "Натисніть найвищу клавішу з мінімальною силою натискання"
+
+msgid "Please press the lowest key with minimal velocity"
+msgstr "Натисніть найнижчу клавішу з мінімальною силою натискання"
+
+msgid "Please select an organ"
+msgstr "Будь ласка, виберіть орган"
+
+msgid "Please toggle it (to on state, if possible)"
+msgstr "Будь ласка, увімкніть його (якщо можливо)"
+
+msgid "Please toggle it again (to off state, if possible)"
+msgstr "Перемкніть його ще раз (у вимкнений стан, якщо можливо)"
+
+msgid "Polyphase"
+msgstr "Поліфазна"
+
+msgid "Polyphony"
+msgstr "Поліфонія"
+
+msgid "Pr&eset"
+msgstr "Пре&сет"
+
+msgid "Prelleur (Peter) 1731"
+msgstr "Преллер (Пітер) 1731"
+
+#, c-format
+msgid "Preset %d"
+msgstr "Пресет %d"
+
+msgid "Prev"
+msgstr "Попередній"
+
+msgid "Prev file"
+msgstr "Попередній файл"
+
+msgid "Prev temperament"
+msgstr "Попередня темперація"
+
+msgid "Previous"
+msgstr "Попередній"
+
+msgid "Previous Memory"
+msgstr "Попередня пам'ять"
+
+msgid "Program Settings"
+msgstr "Налаштування програми"
+
+msgid "Properties"
+msgstr "Властивості"
+
+msgid "Pure Major"
+msgstr "Чистий мажор"
+
+msgid "Pure Minor"
+msgstr "Чистий мінор"
+
+msgid "Pythagorean"
+msgstr "Піфагорійський"
+
+msgid "Q"
+msgstr "Q"
+
+msgid "R"
+msgstr "R"
+
+msgid "REC"
+msgstr "ЗАП"
+
+msgid "REC File"
+msgstr "ЗАП у файл"
+
+msgid "RPN"
+msgstr "RPN"
+
+msgid "RPN Off"
+msgstr "RPN вимк."
+
+msgid "RPN Off Toggle"
+msgstr "RPN вимк. перемиканням"
+
+msgid "RPN On"
+msgstr "RPN увімк."
+
+msgid "RPN On Toggle"
+msgstr "RPN увімк. перемиканням"
+
+msgid "RPN On/Off Toggle"
+msgstr "RPN увімк./вимк. перемиканням"
+
+msgid "RPN Range"
+msgstr "Діапазон RPN"
+
+#, c-format
+msgid "RPN channel: %d key: %d value: %d"
+msgstr "Канал RPN: %d ключ: %d значення: %d"
+
+msgid "Rameau Nouveau Systeme (1726)"
+msgstr "Рамо, Nouveau Systeme (1726)"
+
+msgid "Rameau bemols"
+msgstr "Рамо — бемолі"
+
+msgid "Rameau dieses"
+msgstr "Рамо — дієзи"
+
+msgid "Rameau's modified meantone temperament (1725)"
+msgstr "Модифікована середньотонова темперація Рамо (1725)"
+
+msgid "Ramos de Pareja 1482 - Monochord"
+msgstr "Рамос де Пареха 1482 - Монокорд"
+
+msgid "Randomize pipe speaking"
+msgstr "Випадкове розстроювання труб"
+
+msgid "Rank"
+msgstr "Ранк"
+
+msgid "Re&load"
+msgstr "Пере&завантажити"
+
+#, c-format
+msgid "Read from the archive failed (%d bytes)"
+msgstr "Помилка читання з архіву (%d байт)"
+
+msgid "Reading data for CRC failed"
+msgstr "Помилка читання даних для CRC"
+
+msgid "Reason"
+msgstr "Причина"
+
+msgid "Receive"
+msgstr "Отримати"
+
+msgid "Record stereo downmix"
+msgstr "Запис стереозмішування"
+
+msgid "Recorder / Player"
+msgstr "Записувач / програвач"
+
+msgid "Recorder WAV Format:"
+msgstr "Формат запису WAV:"
+
+msgid "Recording Details"
+msgstr "Деталі запису"
+
+msgid "Recording:"
+msgstr "Запис:"
+
+msgid "ReferencePipe without Reference"
+msgstr "ReferencePipe без посилання"
+
+msgid "Refresh files"
+msgstr "Оновити файли"
+
+msgid "Regex must be specified when physical and logical device names differ"
+msgstr ""
+"Необхідно вказати регулярний вираз, якщо імена фізичних і логічних пристроїв "
+"відрізняються"
+
+msgid "Regular"
+msgstr "Регулярний"
+
+msgid "Release Length is invalid"
+msgstr "Недійсна довжина згасання"
+
+msgid "Release Tail Length (ms):"
+msgstr "Довжина хвоста згасання (мс):"
+
+msgid "Release loading:"
+msgstr "Завантаження згасання:"
+
+msgid "Release sample scaling"
+msgstr "Масштабування семпла згасання"
+
+msgid "Release tail length"
+msgstr "Довжина хвоста згасання"
+
+msgid "Relocate organ path"
+msgstr "Змінити шлях до органа"
+
+msgid "Relocating path"
+msgstr "Переміщення шляху"
+
+msgid "Rename"
+msgstr "Перейменувати"
+
+#, c-format
+msgid "Renamed file %s to %s"
+msgstr "Перейменовано файл %s на %s"
+
+msgid "Resampling failed"
+msgstr "Не вдалося виконати передискретизацію"
+
+msgid "Reset to &Defaults"
+msgstr "Скинути до налаштувань &за замовчуванням"
+
+msgid "Resetting to defaults"
+msgstr "Скидання до налаштувань за замовчуванням"
+
+msgid "Reverb"
+msgstr "Реверберація"
+
+msgid "Reverb error"
+msgstr "Помилка реверберації"
+
+#, c-format
+msgid "Reverb load error: %s"
+msgstr "Помилка завантаження реверберації: %s"
+
+#, c-format
+msgid "Reversible piston connect to a read-only object: %s"
+msgstr "Реверсивний пістон підключений до об'єкта, доступного лише для читання: %s"
+
+msgid "Revert"
+msgstr "Повернути"
+
+msgid "Revert to Default"
+msgstr "Відновити типове зіставлення"
+
+msgid "Rousseau's temperament (1768)"
+msgstr "Темперація Руссо (1768)"
+
+#, c-format
+msgid "RtAudio error: %s"
+msgstr "Помилка RtAudio: %s"
+
+#, c-format
+msgid "RtAudio warning: %s"
+msgstr "Попередження RtAudio: %s"
+
+#, c-format
+msgid "RtMidi error: %s"
+msgstr "Помилка RtMidi: %s"
+
+msgid "S"
+msgstr "S"
+
+msgid "STOP"
+msgstr "СТОП"
+
+msgid "SYSEX Hauptwerk 16 Byte String Name"
+msgstr "SYSEX Hauptwerk 16-байтова назва рядка"
+
+msgid "SYSEX Hauptwerk 16 Byte String Value"
+msgstr "SYSEX Hauptwerk 16-байтове значення рядка"
+
+msgid "SYSEX Hauptwerk 32 Byte LCD Name"
+msgstr "SYSEX Hauptwerk 32-байтова назва LCD"
+
+msgid "SYSEX Hauptwerk 32 Byte LCD Value"
+msgstr "SYSEX Hauptwerk 32-байтове значення LCD"
+
+msgid "SYSEX Rogers Stop Change"
+msgstr "SYSEX Rogers — зміна регістра"
+
+msgid "Sample Loading"
+msgstr "Завантаження семплів"
+
+msgid "Sample Rate:"
+msgstr "Частота дискретизації:"
+
+msgid "Sample Size:"
+msgstr "Розмір семпла:"
+
+msgid "Sample channels:"
+msgstr "Канали семпла:"
+
+msgid "Sample information"
+msgstr "Інформація про семпл"
+
+#, c-format
+msgid "Sample rate of device %s changed"
+msgstr "Частота дискретизації пристрою %s змінена"
+
+msgid "Sample set definition files (*.organ)"
+msgstr "Файли визначення набору семплів (*.organ)"
+
+msgid "Sample size:"
+msgstr "Розмір семпла:"
+
+msgid "Samples per buffer:"
+msgstr "Семплів на буфер:"
+
+msgid "Samplesets:"
+msgstr "Набори семплів:"
+
+msgid "Sauveur (Memoires 1701)"
+msgstr "Sauveur (Мемуари 1701)"
+
+msgid "Sauveur 1702"
+msgstr "Sauveur 1702"
+
+msgid "Sauveur harpsichord 1697"
+msgstr "Клавесин Sauveur 1697"
+
+msgid "Save as"
+msgstr "Зберегти як"
+
+msgid "Save file"
+msgstr "Зберегти файл"
+
+#, c-format
+msgid "Save of %s to the cache failed"
+msgstr "Не вдалося зберегти %s у кеш"
+
+msgid "Save organ settings"
+msgstr "Зберегти налаштування органа"
+
+msgid "Save settings"
+msgstr "Зберегти налаштування"
+
+msgid "Scheffer (1748) modified, Sweden"
+msgstr "Scheffer (1748) модифікований, Швеція"
+
+msgid "Schlick (Arnolt), 1511"
+msgstr "Шлік (Арнольт), 1511"
+
+msgid "Schlick's (1991)"
+msgstr "Шлік (1991)"
+
+msgid "Schlick: 1555"
+msgstr "Шлік: 1555"
+
+msgid "Schnitger organ St. Jakobi, Hamburg "
+msgstr "Орган Шнітгера, церква Св. Якоба, Гамбург "
+
+msgid "Scope"
+msgstr "Область застосування"
+
+msgid "Scoped"
+msgstr "Охоплений"
+
+#, c-format
+msgid "Section %s already in use"
+msgstr "Розділ %s уже використовується"
+
+#, c-format
+msgid "Seek to offset %d in archive failed"
+msgstr "Помилка пошуку зсуву %d в архіві"
+
+msgid "Select a sample file for all other metronome beats"
+msgstr "Виберіть файл семпла для всіх інших долей метронома"
+
+msgid "Select a sample file for the first metronome beat"
+msgstr "Виберіть файл семпла для першої долі метронома"
+
+msgid "Select an impulse file"
+msgstr "Виберіть імпульсний файл"
+
+msgid "Select audio groups to distribute:"
+msgstr "Виберіть аудіогрупи для розподілу:"
+
+msgid "Select directory for export/import organ combinations"
+msgstr "Виберіть каталог для експорту/імпорту комбінацій органів"
+
+msgid "Select directory for export/import organ settings"
+msgstr "Виберіть каталог для експорту/імпорту параметрів органа"
+
+msgid "Select directory for load new organ packages from"
+msgstr "Виберіть каталог для завантаження нових пакетів органів"
+
+msgid "Select directory for open new organs at"
+msgstr "Виберіть каталог, з якого відкривати нові органи"
+
+msgid "Select directory for storing organ cache"
+msgstr "Виберіть каталог для зберігання кешу органа"
+
+msgid "Select directory for storing organ settings"
+msgstr "Виберіть каталог для збереження параметрів органа"
+
+msgid "Select directory for the MIDI player"
+msgstr "Виберіть каталог для програвача MIDI"
+
+msgid "Select directory for your MIDI recording"
+msgstr "Виберіть каталог для запису MIDI"
+
+msgid "Select directory for your audio recordings"
+msgstr "Виберіть каталог для аудіозаписів"
+
+msgid "Select organ to load"
+msgstr "Виберіть орган для завантаження"
+
+msgid ""
+"Select the corresponding MIDI output device for converting input events into "
+"output events"
+msgstr ""
+"Виберіть відповідний вихідний пристрій MIDI для перетворення вхідних подій у "
+"вихідні"
+
+msgid "Self referencing organ package"
+msgstr "Пакет органа із самопосиланням"
+
+msgid "Send"
+msgstr "Надіслати"
+
+msgid "Send Division Output"
+msgstr "Надсилати вихід секції"
+
+msgid "Send MIDI Recorder Output Stream to:"
+msgstr "Надіслати вихідний потік запису MIDI на:"
+
+msgid "Sequencer"
+msgstr "Секвенсор"
+
+msgid "Set"
+msgstr "встановити"
+
+msgid "Setter"
+msgstr "Секвенсор"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Settings Reason"
+msgstr "Причина відкриття налаштувань"
+
+#, c-format
+msgid "Settings files (%s)"
+msgstr "Файли налаштувань (%s)"
+
+msgid "Settings files (*.cmb)|*.cmb"
+msgstr "Файли налаштувань (*.cmb)|*.cmb"
+
+msgid "Shortcut"
+msgstr "Швидка клавіша"
+
+msgid ""
+"Should the audio config be reverted to the default stereo configuration?"
+msgstr ""
+"Чи потрібно повернути конфігурацію звуку до стандартної стереоконфігурації?"
+
+msgid "Single attack"
+msgstr "Одиночна атака"
+
+msgid "Single release"
+msgstr "Одиночне згасання"
+
+msgid "Smith's (Robert) Equal Harmony 1749"
+msgstr "Рівна гармонія Сміта (Роберта) 1749"
+
+msgid ""
+"Some changed settings effect unless the sample set is reloaded.\n"
+"\n"
+"Would you like to reload the sample set now?"
+msgstr ""
+"Деякі змінені параметри наберуть чинності лише після перезавантаження набору "
+"семплів.\n"
+"\n"
+"Перезавантажити набір семплів зараз?"
+
+msgid ""
+"Some selected objects have subobjects.\n"
+"Do you want the subobjects also to be reset to defaults?\n"
+"Note: resetting to defaults cannot be undone.\n"
+"Note: resetting all subobjects may take some time."
+msgstr ""
+"Деякі вибрані об'єкти мають підоб'єкти.\n"
+"Ви бажаєте, щоб підоб'єкти також були скинуті до значень за замовчуванням?\n"
+"Примітка: скидання до значень за замовчуванням не можна скасувати.\n"
+"Примітка: скидання всіх підоб'єктів може зайняти деякий час."
+
+msgid "Some tracks are missing"
+msgstr "Деякі треки відсутні"
+
+msgid "Sorge Monochord (1756)"
+msgstr "Монокорд Зорге (1756)"
+
+msgid "Sorge, 1744 (A)"
+msgstr "Зорге, 1744 (A)"
+
+msgid "Sorge, 1744 (B)"
+msgstr "Зорге, 1744 (B)"
+
+msgid "Sorge, 1758"
+msgstr "Зорге, 1758"
+
+msgid "Sound &ports"
+msgstr "Звукові &порти"
+
+msgid "Sound output"
+msgstr "Звуковий вихід"
+
+msgid "Stade St. Cosmae"
+msgstr "Штаде, церква Св. Косми"
+
+#, c-format
+msgid "Start of audio stream of %s failed: %s"
+msgstr "Помилка запуску аудіопотоку %s: %s"
+
+msgid "Start offset:"
+msgstr "Початкове зміщення:"
+
+msgid "Start without any organ"
+msgstr "Запускати без органа"
+
+#, c-format
+msgid "Status byte missing at offset %d"
+msgstr "Відсутній байт стану зі зміщенням %d"
+
+#, c-format
+msgid "Status: %s"
+msgstr "Статус: %s"
+
+msgid "Stereo"
+msgstr "Стерео"
+
+msgid "Stevin (Simon), monochord 1585"
+msgstr "Стевін (Сімон), монокорд 1585"
+
+msgid "Stop"
+msgstr "Регістр"
+
+msgid "Stops"
+msgstr "Регістри"
+
+msgid "Store MIDI settings to initial"
+msgstr "Зберігає початкові параметри MIDI"
+
+#, c-format
+msgid "Strange boolean value for section '%s' entry '%s': %s"
+msgstr "Дивне логічне значення для запису розділу «%s» «%s»: %s"
+
+msgid "Switch"
+msgstr "Перемикач"
+
+#, c-format
+msgid "Switch %d already assigned to %s"
+msgstr "Перемикач %d уже призначено для %s"
+
+msgid "Sys Ex Ahlborn-Galanti"
+msgstr "Sys Ex Ahlborn-Galanti"
+
+msgid "Sys Ex Ahlborn-Galanti Toggle"
+msgstr "Перемикач Sys Ex Ahlborn-Galanti"
+
+msgid "Sys Ex Johannus 11 bytes"
+msgstr "Sys Ex Johannus 11 байт"
+
+msgid "Sys Ex Johannus 9 bytes"
+msgstr "Sys Ex Johannus 9 байт"
+
+msgid "Sys Ex Rogers Stop Change"
+msgstr "Sys Ex Rogers — зміна регістра"
+
+msgid "Sys Ex Viscount"
+msgstr "Sys Ex Viscount"
+
+msgid "Sys Ex Viscount Toggle"
+msgstr "Sys Ex Viscount перемиканням"
+
+msgid "T"
+msgstr "T"
+
+msgid "TB"
+msgstr "ТБ"
+
+msgid "Temperament"
+msgstr "Темперація"
+
+msgid "Temperaments"
+msgstr "Темперації"
+
+#, c-format
+msgid "The %s node in not a sequence"
+msgstr "Вузол %s не в послідовності"
+
+msgid ""
+"The .cmb file does not exactly match the current ODF. Importing it can cause "
+"various problems. Should it really be imported?"
+msgstr ""
+"Файл .cmb точно не відповідає поточному ODF. Його імпорт може спричинити "
+"різні проблеми. Чи дійсно його потрібно імпортувати?"
+
+msgid ""
+"The ODF contains GrandOrgue 0.2 styled saved settings. Should they be "
+"imported?"
+msgstr ""
+"ODF містить збережені налаштування у стилі GrandOrgue 0.2. Чи варто їх "
+"імпортувати?"
+
+msgid "The cache for this organ is outdated. Please update or delete it."
+msgstr "Кеш для цього органа застарів. Оновіть або видаліть його."
+
+msgid "The combination file does not exactly match the current ODF."
+msgstr "Файл комбінацій не точно відповідає поточному ODF."
+
+#, c-format
+msgid "The file '%s' is a %s file instead of a %s file"
+msgstr "Файл «%s» є файлом %s замість файлу %s"
+
+#, c-format
+msgid ""
+"The file '%s' specified at '%s' does not exist or it is not a regular file"
+msgstr "Файл «%s», указаний у «%s», не існує або не є звичайним файлом"
+
+#, c-format
+msgid ""
+"The following organ packages\n"
+"%s are in the Packages directory and will be registered automatically\n"
+"upon next GrandOrgue restart. Do you really want to unregister them?"
+msgstr ""
+"Наступні пакети органів\n"
+"%s знаходяться в каталозі пакетів і будуть зареєстровані автоматично\n"
+"після наступного перезапуску GrandOrgue. Ви дійсно хочете скасувати їх "
+"реєстрацію?"
+
+#, c-format
+msgid "The font size '%s' at section '%s' entry '%s' is out of range [1, 50]"
+msgstr ""
+"Розмір шрифту «%s» у розділі «%s» запис «%s» виходить за межі [1, 50]"
+
+msgid "The logical device name contains leading or trailing spaces"
+msgstr "Назва логічного пристрою містить пробіли на початку або в кінці"
+
+#, c-format
+msgid "The loop %u is ignored: it is too short for crossfade"
+msgstr "Цикл %u ігнорується: він занадто короткий для перехресного переходу"
+
+#, c-format
+msgid ""
+"The loop %u is ignored: not enough samples for crossfade before it's start"
+msgstr ""
+"Петля %u ігнорується: недостатньо семплів для кросфейду до її початку"
+
+msgid "The organ package has been registered"
+msgstr "Пакет органа зареєстровано"
+
+msgid ""
+"The organ settings have been modified\n"
+"Do you want to save them?"
+msgstr ""
+"Налаштування органа було змінено\n"
+"Ви хочете їх зберегти?"
+
+#, c-format
+msgid "The pipe %s/%s has independent release but %sReleaseCount=0"
+msgstr "Труба %s/%s має незалежне згасання, але %sReleaseCount=0"
+
+msgid "The regex does not match the physical device name"
+msgstr "Регулярний вираз не відповідає назві фізичного пристрою"
+
+#, c-format
+msgid "The required key %s is missing"
+msgstr "Необхідний ключ %s відсутній"
+
+#, c-format
+msgid "The size '%s' at section '%s' entry '%s' is out of range [100, 32000]"
+msgstr "Розмір «%s» у розділі «%s» запис «%s» виходить за межі [100, 32000]"
+
+#, c-format
+msgid "The value %s is not scalar"
+msgstr "Значення %s не є скалярним"
+
+#, c-format
+msgid "The value of %s (%d) is out of range from %d to %d"
+msgstr "Значення %s (%d) виходить за межі діапазону від %d до %d"
+
+#, c-format
+msgid "The value of %s (%s) is not a valid %s"
+msgstr "Значення %s (%s) не є дійсним %s"
+
+#, c-format
+msgid "The value of %s (%s) is not among valid enum values"
+msgstr "Значення %s (%s) не входить до числа дійсних значень enum"
+
+msgid "There are errors while loading the organ. See Log Messages."
+msgstr "Під час завантаження органа виникли помилки. Перегляньте «Журнал повідомлень»."
+
+#, c-format
+msgid "There is no %s node in the yaml file"
+msgstr "У файлі yaml немає вузла %s"
+
+#, c-format
+msgid "This %s file '%s' was originally made for another organ '%s'"
+msgstr "Цей файл %s «%s» спочатку створено для іншого органа «%s»"
+
+#, c-format
+msgid ""
+"This %s file '%s' was originally made for another organ '%s'. Importing it "
+"can cause various problems. Should it really be imported?"
+msgstr ""
+"Цей файл %s «%s» спочатку створено для іншого органа «%s». Його імпорт "
+"може спричинити різні проблеми. Чи дійсно його потрібно імпортувати?"
+
+#, c-format
+msgid ""
+"This .cmb file was originally created for:\n"
+"%s"
+msgstr ""
+"Цей файл .cmb спочатку створено для:\n"
+"%s"
+
+msgid ""
+"This MIDI file does not contain GrandOrgue's own channel setup.\n"
+"Choose how to map MIDI channels to manuals:"
+msgstr ""
+"Цей файл MIDI не містить власних налаштувань каналу GrandOrgue.\n"
+"Виберіть, як зіставити канали MIDI з мануалами:"
+
+#, c-format
+msgid "This MIDI settings file '%s' was originally made for another organ '%s'"
+msgstr ""
+"Цей файл налаштувань MIDI «%s» спочатку створено для іншого органа «%s»"
+
+#, c-format
+msgid ""
+"This MIDI settings file '%s' was originally made for another organ '%s'. "
+"Importing it can cause various problems. Should it really be imported?"
+msgstr ""
+"Цей файл налаштувань MIDI «%s» спочатку створено для іншого органа «%s». "
+"Його імпорт може спричинити різні проблеми. Чи дійсно його потрібно "
+"імпортувати?"
+
+msgid "This enclosure is ODF defined and may not be altered"
+msgstr "Цей швелер визначений ODF і не може бути змінений"
+
+msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
+msgstr "Орган Thomas/Philpott 1829/1881, St. Jansklooster"
+
+msgid "Ticks per Measure:"
+msgstr "Долей у такті:"
+
+msgid "Title"
+msgstr "Назва"
+
+msgid "To initial"
+msgstr "До початкових"
+
+msgid "Tone balance:"
+msgstr "Баланс тонів:"
+
+msgid "ToneBalance value is invalid"
+msgstr "Значення ToneBalance недійсне"
+
+msgid "Too many audio channels configured for the new audio interface"
+msgstr "Забагато аудіоканалів налаштовано для нового аудіоінтерфейсу"
+
+msgid "Tracker (ms):"
+msgstr "Затримка трактури (мс):"
+
+msgid "Tracker delay is invalid"
+msgstr "Неприпустима затримка трактури"
+
+#, c-format
+msgid "Trailing whitespace at section '%s' entry '%s': %s"
+msgstr "Кінцевий пробіл у розділі «%s» запис «%s»: %s"
+
+msgid "Transpose"
+msgstr "Транспонувати"
+
+msgid "Transpose +"
+msgstr "Транспонувати +"
+
+msgid "Transpose -"
+msgstr "Транспонувати -"
+
+msgid "Tremulant"
+msgstr "Тремулянт"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "U"
+msgstr "U"
+
+msgid "U.O."
+msgstr "У.О."
+
+#, c-format
+msgid "Unable to delete file %s"
+msgstr "Не вдалося видалити файл %s"
+
+#, c-format
+msgid "Unable to open file %s for writing"
+msgstr "Не вдалося відкрити файл %s для запису"
+
+#, c-format
+msgid "Unable to read '%s'"
+msgstr "Неможливо прочитати «%s»"
+
+#, c-format
+msgid "Unable to rename file %s to %s"
+msgstr "Не вдається перейменувати файл %s на %s"
+
+#, c-format
+msgid "Unexpected file in the cache directory: %s"
+msgstr "Неочікуваний файл у каталозі кешу: %s"
+
+#, c-format
+msgid "Unknown MIDI file type %d"
+msgstr "Невідомий тип файлу MIDI %d"
+
+#, c-format
+msgid "Unknown MIDI message %02X at %d"
+msgstr "Невідоме MIDI-повідомлення %02X на %d"
+
+#, c-format
+msgid "Unknown SetterElement in section %s"
+msgstr "Невідомий SetterElement у розділі %s"
+
+msgid "Unknown attributes"
+msgstr "Невідомі атрибути"
+
+msgid "Unknown exception"
+msgstr "Невідомий виняток"
+
+#, c-format
+msgid "Unknown extendend information %04x"
+msgstr "Невідома розширена інформація %04x"
+
+#, c-format
+msgid "Unknown filetype %s"
+msgstr "Невідомий тип файлу %s"
+
+msgid "Unsupported channel count"
+msgstr "Непідтримувана кількість каналів"
+
+msgid "Unsupported channel number"
+msgstr "Непідтримуваний номер каналу"
+
+msgid "Unsupported format"
+msgstr "Непідтримуваний формат"
+
+#, c-format
+msgid "Unused CMB entry '%s'"
+msgstr "Невикористаний запис CMB «%s»"
+
+#, c-format
+msgid "Unused MIDI object path: %s"
+msgstr "Невикористаний шлях об'єкта MIDI: %s"
+
+#, c-format
+msgid "Unused ODF entry '%s'"
+msgstr "Невикористаний запис ODF «%s»"
+
+#, c-format
+msgid "Unused yaml node %s (%s)"
+msgstr "Невикористаний вузол yaml %s (%s)"
+
+msgid "Update checker"
+msgstr "Перевірка оновлень"
+
+msgid "Use MIDIInputNumber"
+msgstr "Використовувати MIDIInputNumber"
+
+msgid "Use the organ's MIDIInputNumber"
+msgstr "Використовуйте MIDIInputNumber органа"
+
+msgid "User"
+msgstr "Користувач"
+
+msgid "User Interface"
+msgstr "Інтерфейс користувача"
+
+msgid "User Temperament"
+msgstr "Темперація користувача"
+
+#, c-format
+msgid "Using helpfile %s (search path: %s)"
+msgstr "Використання файлу довідки %s (шлях пошуку: %s)"
+
+msgid "Using more than one audio interface is currently not supported."
+msgstr "Використання кількох аудіоінтерфейсів наразі не підтримується."
+
+msgid "V"
+msgstr "V"
+
+msgid "Valotti"
+msgstr "Валотті"
+
+msgid "Variable meantone 1"
+msgstr "Змінна середньотонова 1"
+
+msgid "Variable meantone 2"
+msgstr "Змінна середньотонова 2"
+
+msgid "Variable meantone 3"
+msgstr "Змінна середньотонова 3"
+
+msgid "Variable meantone 4"
+msgstr "Змінна середньотонова 4"
+
+msgid "Various comma"
+msgstr "Різні коми"
+
+msgid "Victorian temperament 1885"
+msgstr "Вікторіанська темперація 1885"
+
+msgid "Volume"
+msgstr "Гучність"
+
+msgid "Volume:"
+msgstr "Гучність:"
+
+msgid "W"
+msgstr "W"
+
+msgid "WAV files (*.wav)|*.wav"
+msgstr "Файли WAV (*.wav)|*.wav"
+
+msgid "Warning"
+msgstr "Попередження"
+
+msgid "Wegscheider 20 note"
+msgstr "Вегшайдер, 20 нот"
+
+msgid "Well tempered"
+msgstr "Добре темперований"
+
+msgid "Werckmeister 4 (1691)"
+msgstr "Веркмайстер 4 (1691)"
+
+msgid "Werckmeister 5 (1691)"
+msgstr "Веркмайстер 5 (1691)"
+
+msgid "Werckmeister 6"
+msgstr "Веркмайстер 6"
+
+msgid "Werckmeister III"
+msgstr "Веркмайстер III"
+
+msgid "William Holder equal beating (1694)"
+msgstr "Вільям Холдер, рівні биття (1694)"
+
+#, c-format
+msgid "Windchest %d"
+msgstr "Віндлада %d"
+
+msgid "Windows left"
+msgstr "Windows (ліва)"
+
+msgid "Windows menu"
+msgstr "Контекстне меню"
+
+msgid "Windows right"
+msgstr "Windows (права)"
+
+msgid "With input number:"
+msgstr "З вхідним номером:"
+
+msgid "Without input number:"
+msgstr "Без вхідного номера:"
+
+msgid "Workload distribution:"
+msgstr "Розподіл навантаження:"
+
+#, c-format
+msgid "Wrong name «%s» instead of «%s» of the %s %s"
+msgstr "Неправильна назва «%s» замість «%s» для %s %s"
+
+#, c-format
+msgid "Wrong number %s of the %s «%s»"
+msgstr "Неправильний номер %s у %s «%s»"
+
+msgid "X"
+msgstr "X"
+
+msgid "Y"
+msgstr "Y"
+
+msgid "Yes"
+msgstr "Так"
+
+msgid "You are using the latest GrandOrgue version"
+msgstr "Ви використовуєте останню версію GrandOrgue"
+
+msgid "Z"
+msgstr "Z"
+
+msgid "ZIP uses not supported compression flags"
+msgstr "ZIP використовує непідтримувані позначки стиснення"
+
+msgid "ZIP uses not supported features"
+msgstr "ZIP використовує непідтримувані функції"
+
+msgid "ZIP64 uses not supported features"
+msgstr "ZIP64 використовує непідтримувані функції"
+
+msgid "Zarlino (1558) 2/7-comma meantone"
+msgstr "Царліно (1558), середньотонова в 2/7 коми"
+
+msgid "Zip64 end record not found"
+msgstr "Кінцевий запис Zip64 не знайдено"
+
+msgid "_"
+msgstr "_"
+
+#, c-format
+msgid "__%d"
+msgstr "__%d"
+
+msgid "__0"
+msgstr "__0"
+
+msgid "__1"
+msgstr "__1"
+
+msgid "__2"
+msgstr "__2"
+
+msgid "__3"
+msgstr "__3"
+
+msgid "__4"
+msgstr "__4"
+
+msgid "__5"
+msgstr "__5"
+
+msgid "__6"
+msgstr "__6"
+
+msgid "__7"
+msgstr "__7"
+
+msgid "__8"
+msgstr "__8"
+
+msgid "__9"
+msgstr "__9"
+
+msgid "`"
+msgstr "`"
+
+msgid "a"
+msgstr "a"
+
+msgid "a#"
+msgstr "a#"
+
+msgid "add"
+msgstr "Num +"
+
+#, c-format
+msgid "aftertouch channel: %d key: %d value: %d"
+msgstr "канал післядотику: %d ключ: %d значення: %d"
+
+msgid "alt"
+msgstr "Alt"
+
+msgid "b"
+msgstr "b"
+
+msgid "back"
+msgstr "Backspace"
+
+msgid "bad format!"
+msgstr "поганий формат!"
+
+msgid "bad return format!"
+msgstr "поганий формат повернення!"
+
+msgid "banked-generals"
+msgstr "загальні за банками"
+
+#, c-format
+msgid "bitmap size does not match for '%s'"
+msgstr "розмір растрового зображення не відповідає «%s»"
+
+#, c-format
+msgid "bitmap size of '%s' does not match mask '%s'"
+msgstr "розмір растрового зображення «%s» не відповідає масці «%s»"
+
+msgid "c"
+msgstr "c"
+
+msgid "c#"
+msgstr "c#"
+
+msgid "capital"
+msgstr "Caps Lock"
+
+msgid "control"
+msgstr "Ctrl"
+
+#, c-format
+msgid "control change channel: %d key: %d value: %d"
+msgstr "керуйте зміною каналу: %d ключ: %d значення: %d"
+
+msgid "coupler"
+msgstr "копула"
+
+msgid "couplers"
+msgstr "копули"
+
+msgid "create"
+msgstr "створити"
+
+msgid "create an organ package"
+msgstr "створити пакет органа"
+
+msgid "crescendo position"
+msgstr "позиція крещендо"
+
+msgid "crescendos"
+msgstr "крещендо"
+
+msgid "current file name"
+msgstr "ім'я поточного файлу"
+
+msgid "d"
+msgstr "d"
+
+msgid "d#"
+msgstr "d#"
+
+msgid "d'Alembert modified meantone (1726)"
+msgstr "Модифікована середньотонова Даламбера (1726)"
+
+msgid "d'Alembert's: John Sankey's Scarlatti"
+msgstr "д'Аламбера: Скарлатті Джона Санкі"
+
+msgid "decimal"
+msgstr "Num ."
+
+msgid "delete"
+msgstr "Delete"
+
+msgid "depend on organ package"
+msgstr "залежить від пакета органа"
+
+msgid "displays help on the command line parameters"
+msgstr "відображає довідку щодо параметрів командного рядка"
+
+msgid "divide"
+msgstr "Num /"
+
+#, c-format
+msgid "divisional bank for %s"
+msgstr "банк секційних комбінацій для %s"
+
+msgid "divisional coupler"
+msgstr "секційна копула"
+
+msgid "divisionals"
+msgstr "секційні комбінації"
+
+msgid "down"
+msgstr "Стрілка вниз"
+
+msgid "e"
+msgstr "e"
+
+msgid "enclosure not found"
+msgstr "швелер не знайдено"
+
+msgid "enclosures"
+msgstr "швелери"
+
+msgid "end"
+msgstr "End"
+
+msgid "escape"
+msgstr "Esc"
+
+msgid "execute"
+msgstr "Execute"
+
+msgid "f"
+msgstr "f"
+
+msgid "f#"
+msgstr "f#"
+
+#, c-format
+msgid "failed to compress data %s"
+msgstr "не вдалося стиснути дані %s"
+
+msgid "failed to create relative path"
+msgstr "не вдалося створити відносний шлях"
+
+msgid "g"
+msgstr "g"
+
+msgid "g#"
+msgstr "g#"
+
+msgid "general bank"
+msgstr "банк загальних комбінацій"
+
+msgid "generals"
+msgstr "загальні комбінації"
+
+msgid "generate verbose log messages"
+msgstr "генерувати докладні повідомлення журналу"
+
+msgid "h"
+msgstr "h"
+
+msgid "help"
+msgstr "Help"
+
+msgid "home"
+msgstr "Home"
+
+msgid "i"
+msgstr "i"
+
+msgid "input-directory"
+msgstr "вхідний каталог"
+
+msgid "insert"
+msgstr "Insert"
+
+msgid "left"
+msgstr "Стрілка вліво"
+
+msgid "licensed under the GNU GPLv2"
+msgstr "під ліцензією GNU GPLv2"
+
+msgid "manuals"
+msgstr "мануали"
+
+msgid "menu"
+msgstr "Menu"
+
+msgid "multiply"
+msgstr "Num *"
+
+#, c-format
+msgid "note channel: %d key: %d value: %d"
+msgstr "канал ноти: %d ключ: %d значення: %d"
+
+msgid "numlock"
+msgstr "Num Lock"
+
+msgid "numpad 0"
+msgstr "Num 0"
+
+msgid "numpad 1"
+msgstr "Num 1"
+
+msgid "numpad 2"
+msgstr "Num 2"
+
+msgid "numpad 3"
+msgstr "Num 3"
+
+msgid "numpad 4"
+msgstr "Num 4"
+
+msgid "numpad 5"
+msgstr "Num 5"
+
+msgid "numpad 6"
+msgstr "Num 6"
+
+msgid "numpad 7"
+msgstr "Num 7"
+
+msgid "numpad 8"
+msgstr "Num 8"
+
+msgid "numpad 9"
+msgstr "Num 9"
+
+msgid "numpad equal"
+msgstr "Num ="
+
+msgid "o"
+msgstr "o"
+
+msgid "o1"
+msgstr "o1"
+
+msgid "o10"
+msgstr "o10"
+
+msgid "o2"
+msgstr "o2"
+
+msgid "o3"
+msgstr "o3"
+
+msgid "o4"
+msgstr "o4"
+
+msgid "o5"
+msgstr "o5"
+
+msgid "o6"
+msgstr "o6"
+
+msgid "o7"
+msgstr "o7"
+
+msgid "o8"
+msgstr "o8"
+
+msgid "o9"
+msgstr "o9"
+
+#, c-format
+msgid "organ definition %s not found in organ package"
+msgstr "визначення органа %s не знайдено в пакеті органа"
+
+msgid "organ file"
+msgstr "файл органа"
+
+msgid "organ name"
+msgstr "назва органа"
+
+#, c-format
+msgid "organ package %s created"
+msgstr "пакет органа %s створено"
+
+msgid "organ package creation failed"
+msgstr "Не вдалося створити пакет органа"
+
+msgid "organ package title"
+msgstr "назву пакета органа"
+
+msgid "organ pitch"
+msgstr "Стрій органа"
+
+msgid "organ-package"
+msgstr "орган-пакет"
+
+msgid "p1"
+msgstr "p1"
+
+msgid "p2"
+msgstr "p2"
+
+msgid "p3"
+msgstr "p3"
+
+msgid "p4"
+msgstr "p4"
+
+msgid "p5"
+msgstr "p5"
+
+msgid "pagedown"
+msgstr "Page Down"
+
+msgid "pageup"
+msgstr "Page Up"
+
+msgid "pause"
+msgstr "Pause"
+
+msgid "print"
+msgstr "Print"
+
+#, c-format
+msgid "program change channel: %d key: %d "
+msgstr "канал зміни програми: %d клавіша: %d "
+
+msgid "provide odf-file-name"
+msgstr "надайте назву файлу odf"
+
+#, c-format
+msgid "rank %s pipe %s: attack with MaxTimeSinceLastRelease=-1 missing"
+msgstr "ранк %s труба %s: відсутня атака з MaxTimeSinceLastRelease=-1"
+
+#, c-format
+msgid "rank %s pipe %s: default release is missing"
+msgstr "ранк %s труба %s: відсутнє типове згасання"
+
+#, c-format
+msgid "rank %s pipe %s: no pitch information provided"
+msgstr "ранк %s труба %s: не вказано інформацію про стрій"
+
+#, c-format
+msgid "rank %s pipe %s: no release defined"
+msgstr "ранк %s труба %s: згасання не визначено"
+
+#, c-format
+msgid "rank %s pipe %s: percussive sample with a release"
+msgstr "ранк %s труба %s: перкусійний семпл зі згасанням"
+
+#, c-format
+msgid ""
+"rank %s pipe %s: temperament would retune pipe by %f - more than 1800 cent"
+msgstr ""
+"ранк %s труба %s: темперація переналаштує трубу на %f — більше 1800 центів"
+
+#, c-format
+msgid "rank %s pipe %s: temperament would retune pipe by more than 600 cent"
+msgstr ""
+"ранк %s труба %s: темперація переналаштує трубу більш ніж на 600 центів"
+
+msgid "ranks"
+msgstr "ранки"
+
+#, c-format
+msgid "requires '%s' "
+msgstr "вимагає '%s' "
+
+msgid "reset"
+msgstr "скинути"
+
+msgid "return"
+msgstr "Enter"
+
+msgid "right"
+msgstr "Стрілка вправо"
+
+msgid "scroll"
+msgstr "Scroll Lock"
+
+msgid "select"
+msgstr "Select"
+
+msgid "separator"
+msgstr "Num Separator"
+
+msgid "sequencer position"
+msgstr "положення секвенсора"
+
+msgid "setter-divisionals"
+msgstr "секційні комбінації секвенсора"
+
+msgid "snapshot"
+msgstr "Print Screen"
+
+msgid "space"
+msgstr "Пробіл"
+
+msgid "specify GrandOrgue config file name"
+msgstr "вкажіть назву конфігураційного файлу GrandOrgue"
+
+msgid "specify GrandOrgue instance name"
+msgstr "вкажіть назву екземпляра GrandOrgue"
+
+msgid "specify generated organ package filename"
+msgstr "вказати назву файлу створеного пакета органа"
+
+msgid "specify input directory"
+msgstr "вказати каталог введення"
+
+msgid "stop"
+msgstr "регістр"
+
+msgid "stops"
+msgstr "регістри"
+
+msgid "subtract"
+msgstr "Num -"
+
+msgid "switch"
+msgstr "перемикач"
+
+msgid "switches"
+msgstr "перемикачі"
+
+#, c-format
+msgid "sysex Ahlborn-Galanti value: %d"
+msgstr "значення sysex Ahlborn-Galanti: %d"
+
+msgid "sysex GrandOrgue clear"
+msgstr "sysex GrandOrgue ясно"
+
+#, c-format
+msgid "sysex GrandOrgue sampleset %08x%08x"
+msgstr "набір семплів sysex GrandOrgue %08x%08x"
+
+#, c-format
+msgid "sysex GrandOrgue setup channel: %d NRPN: %d: name: %s"
+msgstr "Канал налаштування sysex GrandOrgue: %d NRPN: %d: назва: %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD display: %d color: %d - %s"
+msgstr "РК-дисплей sysex Hauptwerk: %d колір: %d - %s"
+
+#, c-format
+msgid "sysex Hauptwerk LCD string variable: %d - %s"
+msgstr "рядкова змінна sysex Hauptwerk LCD: %d - %s"
+
+#, c-format
+msgid "sysex Johannus 11 bytes value: %d/%d"
+msgstr "sysex Johannus 11-байтове значення: %d/%d"
+
+#, c-format
+msgid "sysex Johannus 9 bytes value: %d"
+msgstr "sysex Johannus 9-байтове значення: %d"
+
+#, c-format
+msgid "sysex Rogers stop change device: %d offset: %d data %s"
+msgstr "Пристрій зміни регістра SYSEX Rogers: %d, зміщення: %d, дані: %s"
+
+#, c-format
+msgid "sysex Viscount value: %d"
+msgstr "Значення SYSEX Viscount: %d"
+
+msgid "t"
+msgstr "t"
+
+msgid "tab"
+msgstr "Tab"
+
+msgid "temperament"
+msgstr "темперація"
+
+msgid "title"
+msgstr "назва"
+
+msgid "transpose"
+msgstr "транспонувати"
+
+msgid "tremulant"
+msgstr "тремулянт"
+
+msgid "tremulants"
+msgstr "тремулянти"
+
+msgid "trigger"
+msgstr "тригер"
+
+msgid "up"
+msgstr "Стрілка вгору"
+
+msgid "virtual pipe organ simulator"
+msgstr "симулятор віртуального трубного органа"
+
+msgid "virtual-couplers"
+msgstr "віртуальні копули"
+
+msgid "volumes"
+msgstr "гучності"
+
+msgid "wave does not contain loops"
+msgstr "WAV-файл не містить петель"
+
+msgid "{"
+msgstr "{"
+
+msgid "|"
+msgstr "|"
+
+msgid "}"
+msgstr "}"
