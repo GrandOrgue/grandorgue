@@ -122,14 +122,9 @@ void GOGuiOrgan::SyncState() {
   GODocumentBase::SyncState();
 }
 
-bool GOGuiOrgan::Save() {
+bool GOGuiOrgan::Save(const wxString &path) {
   SyncState();
-  return m_OrganController->Save();
-}
-
-bool GOGuiOrgan::Export(const wxString &cmb) {
-  SyncState();
-  return m_OrganController->Export(cmb);
+  return m_OrganController->Save(path);
 }
 
 void GOGuiOrgan::CloseOrgan() {

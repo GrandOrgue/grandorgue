@@ -674,13 +674,6 @@ void GOOrganController::DeleteSettings() {
   wxRemoveFile(m_LoadedOrganInfo.settingsFilePath);
 }
 
-bool GOOrganController::Save() {
-  if (!Export(m_LoadedOrganInfo.settingsFilePath))
-    return false;
-  ResetOrganModified();
-  return true;
-}
-
 void GOOrganController::SaveOrganCoreData(GOConfigWriter &cfg) {
   m_LoadedOrganInfo.isCustomized = true;
   cfg.WriteString(WX_ORGAN, wxT("ODFHash"), m_LoadedOrganInfo.odfHash);
@@ -703,26 +696,35 @@ void GOOrganController::SaveOrganGui(GOConfigWriter &cfg) {
   m_StopWindowSizeKeeper.Save(cfg);
 }
 
-bool GOOrganController::Export(const wxString &cmb) {
-  GOConfigFileWriter cfg_file;
-  GOConfigWriter cfg(cfg_file, false);
+static bool write_config_file(
+  GOConfigFileWriter &cfgFile, const wxString &path) {
+  wxString tmpName = path + wxT(".new");
+  bool isOk = !::wxFileExists(tmpName) || ::wxRemoveFile(tmpName);
+
+  if (!isOk)
+    wxLogError(_("Could not write to '%s'"), tmpName);
+  else {
+    isOk = cfgFile.Save(tmpName);
+    if (!isOk)
+      wxLogError(_("Could not write to '%s'"), tmpName);
+    else
+      isOk = go_rename_file(tmpName, path);
+  }
+  return isOk;
+}
+
+bool GOOrganController::Save(const wxString &path) {
+  GOConfigFileWriter cfgFile;
+  GOConfigWriter cfg(cfgFile, false);
 
   SaveOrganCoreData(cfg);
   SaveOrganGui(cfg);
 
-  wxString tmp_name = cmb + wxT(".new");
-
-  if (::wxFileExists(tmp_name) && !::wxRemoveFile(tmp_name)) {
-    wxLogError(_("Could not write to '%s'"), tmp_name);
-    return false;
-  }
-  if (!cfg_file.Save(tmp_name)) {
-    wxLogError(_("Could not write to '%s'"), tmp_name);
-    return false;
-  }
-  if (!go_rename_file(tmp_name, cmb))
-    return false;
-  return true;
+  bool isOk = write_config_file(
+    cfgFile, path.IsEmpty() ? m_LoadedOrganInfo.settingsFilePath : path);
+  if (isOk && path.IsEmpty())
+    ResetOrganModified();
+  return isOk;
 }
 
 GOEnclosure *GOOrganController::GetEnclosure(
