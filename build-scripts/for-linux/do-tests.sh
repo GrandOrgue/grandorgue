@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# $@ - optional list of actions: functional, perf, tests, coverage, all (default: all)
+# $@ - optional list of actions: functional, perf, tests, coverage, asan, all (default: all)
 # Actions:
 #   functional - run functional tests (-R GOTestFunctional)
 #   perf       - run performance tests (-R GOTestPerf)
 #   tests      - run all tests without filter (no coverage)
 #   coverage   - run coverage steps (ctest -T coverage + gcovr)
+#   asan       - enable LeakSanitizer while running the tests above
 #   all        - run all tests without filter + coverage (default when no args)
 
 set -e
@@ -18,6 +19,7 @@ if [ "$1" = "--help" ] || [ "$1" = "-?" ]; then
     echo "  perf        Run performance tests (-R GOTestPerf)"
     echo "  tests       Run all tests without filter (no coverage)"
     echo "  coverage    Run coverage steps (ctest -T coverage + gcovr)"
+    echo "  asan        Enable LeakSanitizer while running the tests above"
     echo "  all         Run all tests + coverage (default when no args)"
     exit 0
 fi
@@ -31,6 +33,7 @@ IS_TESTS=false
 IS_FUNCTIONAL=false
 IS_PERF=false
 IS_COVERAGE=false
+IS_ASAN=false
 
 for ACTION in $ACTIONS; do
     case $ACTION in
@@ -39,8 +42,13 @@ for ACTION in $ACTIONS; do
         functional) IS_FUNCTIONAL=true ;;
         perf)       IS_PERF=true ;;
         coverage)   IS_COVERAGE=true ;;
+        asan)       IS_ASAN=true ;;
     esac
 done
+
+if $IS_ASAN; then
+    export ASAN_OPTIONS=detect_leaks=1
+fi
 
 # Print system information for performance test comparison
 echo "=========================================="
