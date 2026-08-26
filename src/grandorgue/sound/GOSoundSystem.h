@@ -8,25 +8,21 @@
 #ifndef GOSOUNDSYSTEM_H
 #define GOSOUNDSYSTEM_H
 
-#include <atomic>
 #include <memory>
 #include <vector>
 
 #include <wx/string.h>
 
 #include "tasks/GOSoundRecorderTask.h"
-#include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
+#include "GOSoundCallbackConnector.h"
 #include "GOSoundCloseListener.h"
 #include "GOSoundDevInfo.h"
-
-class GOSoundOrganEngine;
 
 class GOConfig;
 class GODeviceNamePattern;
 class GOPortsConfig;
-class GOSoundBufferMutable;
 class GOSoundPort;
 
 /**
@@ -34,32 +30,21 @@ class GOSoundPort;
  * without a loaded organ
  */
 
-class GOSoundSystem {
+class GOSoundSystem : public GOSoundCallbackConnector {
 private:
   GOConfig &m_config;
 
   GOSoundRecorderTask m_AudioRecorder;
-  std::atomic<GOSoundOrganEngine *> p_OrganEngine;
 
   GOSoundCloseListener *p_CloseListener;
 
   bool m_open;
   bool logSoundErrors;
-  unsigned m_SampleRate;
-  unsigned m_SamplesPerBuffer;
   std::vector<std::unique_ptr<GOSoundPort>> mp_SoundPorts;
 
   wxString m_LastErrorMessage;
 
   GOSoundDevInfo m_DefaultAudioDevice;
-
-  // counter of audio callbacks that have been entered but have not yet been
-  // exited
-  std::atomic_uint m_NCallbacksEntered;
-
-  // For waiting for and notifying when m_NCallbacksEntered bacomes 0
-  GOMutex m_CallbackMutex;
-  GOCondition m_CallbackCondition;
 
   GOMutex m_lock;
 
@@ -74,6 +59,10 @@ private:
   void OpenSoundSystem();
   /** Close and delete audio ports, reset meters, mark system as closed */
   void CloseSoundSystem();
+
+protected:
+  void OnBeforeConnectToEngine() override;
+  void OnNewAudioPeriod() override { UpdateMeter(); }
 
 public:
   static void FillDeviceNamePattern(
@@ -93,8 +82,6 @@ public:
   /** Returns the audio recorder associated with this sound system. */
   GOSoundRecorderTask &GetAudioRecorder() { return m_AudioRecorder; }
 
-  unsigned GetSampleRate() const { return m_SampleRate; }
-  unsigned GetSamplesPerBuffer() const { return m_SamplesPerBuffer; }
   wxString getState();
 
   void SetLogSoundErrorMessages(bool isVisible) { logSoundErrors = isVisible; }
@@ -110,11 +97,6 @@ public:
 
   bool AssureSoundIsOpen();
   void AssureSoundIsClosed();
-
-  bool AudioCallback(unsigned devIndex, GOSoundBufferMutable &outBuffer);
-
-  void ConnectToEngine(GOSoundOrganEngine &engine);
-  void DisconnectFromEngine(GOSoundOrganEngine &engine);
 };
 
 #endif

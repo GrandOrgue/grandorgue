@@ -38,8 +38,12 @@ wxString GOSoundPortaudioPort::getLastError(PaError error) {
 }
 
 GOSoundPortaudioPort::GOSoundPortaudioPort(
-  GOSoundSystem *sound, unsigned paDevIndex, const wxString &name)
-  : GOSoundPort(sound, name), m_PaDevIndex(paDevIndex), m_stream(nullptr) {}
+  GOSoundCallbackConnector &callbackConnector,
+  unsigned paDevIndex,
+  const wxString &name)
+  : GOSoundPort(callbackConnector, name),
+    m_PaDevIndex(paDevIndex),
+    m_stream(nullptr) {}
 
 GOSoundPortaudioPort::~GOSoundPortaudioPort() { Close(); }
 
@@ -147,7 +151,7 @@ void GOSoundPortaudioPort::terminate() {
 
 GOSoundPort *GOSoundPortaudioPort::create(
   const GOPortsConfig &portsConfig,
-  GOSoundSystem *sound,
+  GOSoundCallbackConnector &callbackConnector,
   GODeviceNamePattern &pattern) {
   GOSoundPort *pPort = nullptr;
 
@@ -165,7 +169,7 @@ GOSoundPort *GOSoundPortaudioPort::create(
 	  || pattern.DoesMatch(get_oldstyle_name(i))
 	  || pattern.DoesMatch(compose_device_name(PORT_NAME_OLD, pInfo)))) {
         pattern.SetPhysicalName(devName);
-        pPort = new GOSoundPortaudioPort(sound, i, devName);
+        pPort = new GOSoundPortaudioPort(callbackConnector, i, devName);
         break;
       }
     }

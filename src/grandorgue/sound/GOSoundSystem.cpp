@@ -15,7 +15,6 @@
 #include "config/GOConfig.h"
 #include "config/GOPortsConfig.h"
 #include "ports/GOSoundPortFactory.h"
-#include "threading/GOMutexLocker.h"
 
 #include "GOEvent.h"
 #include "GOSoundDefs.h"
@@ -23,15 +22,10 @@
 
 GOSoundSystem::GOSoundSystem(GOConfig &settings)
   : m_config(settings),
-    p_OrganEngine(nullptr),
     p_CloseListener(nullptr),
     m_open(false),
     logSoundErrors(true),
-    m_SampleRate(0),
-    m_SamplesPerBuffer(0),
     m_DefaultAudioDevice(GOSoundDevInfo::getInvalideDeviceInfo()),
-    m_NCallbacksEntered(0),
-    m_CallbackCondition(m_CallbackMutex),
     meter_counter(0) {}
 
 GOSoundSystem::~GOSoundSystem() {
@@ -48,8 +42,8 @@ void GOSoundSystem::OpenSoundSystem() {
     = m_config.GetAudioDeviceConfig();
 
   m_LastErrorMessage = wxEmptyString;
-  m_SampleRate = m_config.SampleRate();
-  m_SamplesPerBuffer = m_config.SamplesPerBuffer();
+  SetSampleRate(m_config.SampleRate());
+  SetSamplesPerBuffer(m_config.SamplesPerBuffer());
   m_AudioRecorder.SetBytesPerSample(m_config.WaveFormatBytesPerSample());
 
   mp_SoundPorts.resize(audio_config.size());
@@ -69,7 +63,7 @@ void GOSoundSystem::OpenSoundSystem() {
       }
 
       GOSoundPort *pPort
-        = GOSoundPortFactory::create(portsConfig, this, *pNamePattern);
+        = GOSoundPortFactory::create(portsConfig, *this, *pNamePattern);
 
       if (!pPort)
         throw wxString::Format(
@@ -78,8 +72,8 @@ void GOSoundSystem::OpenSoundSystem() {
       mp_SoundPorts[i].reset(pPort);
       pPort->Init(
         deviceConfig.GetChannels(),
-        m_SampleRate,
-        m_SamplesPerBuffer,
+        GetSampleRate(),
+        GetSamplesPerBuffer(),
         deviceConfig.GetDesiredLatency(),
         i);
     }
@@ -88,7 +82,7 @@ void GOSoundSystem::OpenSoundSystem() {
     // m_IsRunning is set to true only in StartSoundSystem(), called after
     // OpenSoundSystem() completes.
     StartStreams();
-    m_AudioRecorder.SetSampleRate(m_SampleRate);
+    m_AudioRecorder.SetSampleRate(GetSampleRate());
     m_open = true;
   } catch (wxString &msg) {
     if (logSoundErrors)
@@ -117,7 +111,7 @@ void GOSoundSystem::StartStreams() {
   for (auto &pPort : mp_SoundPorts)
     pPort->Open();
 
-  if (m_SamplesPerBuffer > MAX_FRAME_SIZE)
+  if (GetSamplesPerBuffer() > MAX_FRAME_SIZE)
     throw wxString::Format(
       _("Cannot use buffer size above %d samples; "
         "unacceptable quantization would occur."),
@@ -138,7 +132,7 @@ void GOSoundSystem::AssureSoundIsClosed() {
     if (p_CloseListener) // The callback must call to DisconnectFromEngine()
       p_CloseListener->OnBeforeSoundClose();
 
-    assert(!p_OrganEngine.load());
+    assert(!IsEngineConnected());
 
     CloseSoundSystem();
   }
@@ -192,7 +186,7 @@ void GOSoundSystem::ResetMeters() {
 
 void GOSoundSystem::UpdateMeter() {
   /* Update meters */
-  meter_counter += m_SamplesPerBuffer;
+  meter_counter += GetSamplesPerBuffer();
   if (meter_counter >= 6144) // update 44100 / (N / 2) = ~14 times per second
   {
     wxCommandEvent event(wxEVT_METERS, 0);
@@ -203,81 +197,20 @@ void GOSoundSystem::UpdateMeter() {
   }
 }
 
-bool GOSoundSystem::AudioCallback(
-  unsigned devIndex, GOSoundBufferMutable &outBuffer) {
-  bool wasEntered = false;
-  const unsigned nSamples = outBuffer.GetNFrames();
-
-  if (p_OrganEngine.load()) {
-    if (nSamples == m_SamplesPerBuffer) {
-      m_NCallbacksEntered.fetch_add(1);
-      wasEntered = true;
-    } else
-      wxLogError(
-        _("No sound output will happen. Samples per buffer has been "
-          "changed by the sound driver to %d"),
-        nSamples);
-  }
-  // assure that p_OrganEngine has not yet been changed after
-  // m_NCallbacksEntered.fetch_add, otherwise the control thread may not wait
-  GOSoundOrganEngine *pOrganEngine
-    = wasEntered ? p_OrganEngine.load() : nullptr;
-
-  if (pOrganEngine) {
-    if (pOrganEngine->ProcessAudioCallback(devIndex, outBuffer))
-      UpdateMeter();
-  } else
-    outBuffer.FillWithSilence();
-  if (
-    wasEntered && m_NCallbacksEntered.fetch_sub(1) <= 1
-    && !p_OrganEngine.load()) {
-    // ensure that the control thread enters into m_NCallbackCondition.Wait()
-    GOMutexLocker lk(m_CallbackMutex);
-
-    // notify the control thread
-    m_CallbackCondition.Broadcast();
-  }
-  return true;
-}
-
 wxString GOSoundSystem::getState() {
   if (!mp_SoundPorts.size())
     return _("No sound output occurring");
   wxString result = wxString::Format(
-    _("%d samples per buffer, %d Hz\n"), m_SamplesPerBuffer, m_SampleRate);
+    _("%d samples per buffer, %d Hz\n"),
+    GetSamplesPerBuffer(),
+    GetSampleRate());
 
   for (auto &pPort : mp_SoundPorts)
     result = result + _("\n") + pPort->getPortState();
   return result;
 }
 
-void GOSoundSystem::ConnectToEngine(GOSoundOrganEngine &engine) {
+void GOSoundSystem::OnBeforeConnectToEngine() {
   assert(m_open);
   assert(p_CloseListener);
-  assert(engine.IsWorking());
-
-  engine.SetUsed(true);
-  m_NCallbacksEntered.store(0);
-  engine.SetStreaming(true);
-  p_OrganEngine.store(&engine);
-}
-
-void GOSoundSystem::DisconnectFromEngine(GOSoundOrganEngine &engine) {
-  // Signal callbacks to stop by clearing the engine pointer
-  p_OrganEngine.store(nullptr);
-
-  // Unblock any callbacks waiting at [W1] and prevent new ones from blocking
-  engine.SetStreaming(false);
-
-  // wait for all started callbacks to finish
-  {
-    GOMutexLocker lock(m_CallbackMutex);
-
-    while (m_NCallbacksEntered.load() > 0)
-      m_CallbackCondition.WaitOrStop(
-        "GOSoundSystem::DisconnectFromEngine waits for all callbacks to finish",
-        nullptr);
-  }
-
-  engine.SetUsed(false);
 }

@@ -18,8 +18,11 @@ const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
 const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
 
 GOSoundRtPort::GOSoundRtPort(
-  GOSoundSystem *sound, RtAudio *rtApi, unsigned rtDevId, const wxString &name)
-  : GOSoundPort(sound, name),
+  GOSoundCallbackConnector &callbackConnector,
+  RtAudio *rtApi,
+  unsigned rtDevId,
+  const wxString &name)
+  : GOSoundPort(callbackConnector, name),
     m_rtApi(rtApi),
     m_RtDevId(rtDevId),
     m_nBuffers(0) {}
@@ -205,7 +208,7 @@ const std::vector<wxString> &GOSoundRtPort::getApis() {
 
 GOSoundPort *GOSoundRtPort::create(
   const GOPortsConfig &portsConfig,
-  GOSoundSystem *sound,
+  GOSoundCallbackConnector &callbackConnector,
   GODeviceNamePattern &pattern) {
   GOSoundRtPort *port = NULL;
 
@@ -248,7 +251,8 @@ GOSoundPort *GOSoundRtPort::create(
                // usb)
             info.outputChannels > 0) {
             pattern.SetPhysicalName(devName);
-            port = new GOSoundRtPort(sound, rtApi, deviceId, devName);
+            port
+              = new GOSoundRtPort(callbackConnector, rtApi, deviceId, devName);
             break;
           }
         }

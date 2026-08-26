@@ -18,6 +18,8 @@ set(go_tests
     sound/playing/GOTestSoundStream.cpp
     sound/GOTestSoundOrganEngineBase.cpp
     sound/GOTestSoundOrganEngine.cpp
+    sound/GOTestSoundCallbackConnector.cpp
+    sound/GOTestSoundOrganEngineStress.cpp
     GOTestNameMap.cpp
     GOTestOrganController.cpp
 )

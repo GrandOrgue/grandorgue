@@ -33,7 +33,7 @@ private:
   bool processRtResult(RtAudioErrorType rtResult, bool isToThrowOnError = true);
 
   GOSoundRtPort(
-    GOSoundSystem *sound,
+    GOSoundCallbackConnector &callbackConnector,
     RtAudio *rtApi,
     unsigned rtDevIndex,
     const wxString &name);
@@ -52,7 +52,7 @@ public:
   static const std::vector<wxString> &getApis();
   static GOSoundPort *create(
     const GOPortsConfig &portsConfig,
-    GOSoundSystem *sound,
+    GOSoundCallbackConnector &callbackConnector,
     GODeviceNamePattern &pattern);
   static void addDevices(
     const GOPortsConfig &portsConfig, std::vector<GOSoundDevInfo> &list);

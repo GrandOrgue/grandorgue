@@ -16,8 +16,9 @@
 
 const wxString GOSoundJackPort::PORT_NAME = wxT("Jack");
 
-GOSoundJackPort::GOSoundJackPort(GOSoundSystem *sound, wxString name)
-  : GOSoundPort(sound, name) {}
+GOSoundJackPort::GOSoundJackPort(
+  GOSoundCallbackConnector &callbackConnector, const wxString &name)
+  : GOSoundPort(callbackConnector, name) {}
 
 GOSoundJackPort::~GOSoundJackPort() { Close(); }
 
@@ -170,7 +171,7 @@ static const wxString OLD_STYLE_NAME = wxT("Jack Output");
 
 GOSoundPort *GOSoundJackPort::create(
   const GOPortsConfig &portsConfig,
-  GOSoundSystem *sound,
+  GOSoundCallbackConnector &callbackConnector,
   GODeviceNamePattern &pattern) {
   GOSoundPort *pPort = nullptr;
 #if defined(GO_USE_JACK)
@@ -183,7 +184,7 @@ GOSoundPort *GOSoundJackPort::create(
       || pattern.DoesMatch(devName + GOPortFactory::c_NameDelim)
       || pattern.DoesMatch(OLD_STYLE_NAME))) {
     pattern.SetPhysicalName(devName);
-    pPort = new GOSoundJackPort(sound, devName);
+    pPort = new GOSoundJackPort(callbackConnector, devName);
   }
 #endif
   return pPort;
