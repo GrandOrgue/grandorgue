@@ -54,6 +54,22 @@ private:
    * reach done without deadlock or crash, repeated across many rounds. */
   void TestConcurrentRunWithQueuedSamplersReachesDone();
 
+  /** OnMixed() actually runs the owning windchest's chain, in order, on the
+   * fully-merged (here: silent) buffer - not merely wiring it in without
+   * calling it. Covers both a single-processor chain and a
+   * two-processor chain, where add-then-scale must differ from
+   * scale-then-add. */
+  void TestRunExecutesChainInOrder();
+
+  /** OnMixed() forces the owning GOSoundWindchestTask's own round to
+   * completion (GetAmplitude()) even when this round had zero samplers -
+   * the lazy-prerequisite requirement a stateful chain (e.g. a reverb tail)
+   * depends on. */
+  void TestRunForcesWindchestTaskEvenWithNoSamplers();
+
+  /** DiscardContent() resets the chain state, not just the sampler lists. */
+  void TestDiscardContentResetsChainState();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
