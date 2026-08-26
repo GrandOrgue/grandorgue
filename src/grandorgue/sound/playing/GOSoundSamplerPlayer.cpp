@@ -108,7 +108,7 @@ float GOSoundSamplerPlayer::GetRandomFactor() const {
 }
 
 void GOSoundSamplerPlayer::PassSampler(GOSoundSampler *sampler) {
-  int taskId = sampler->m_SamplerTaskId;
+  int taskId = sampler->m_MixWindchestTaskId;
 
   if (isWindchestTask(taskId))
     r_WindchestGroupTaskGrid
@@ -236,6 +236,7 @@ GOSoundSampler *GOSoundSamplerPlayer::CreateTaskSample(
         sampler->p_SoundProvider->GetToneBalance()->GetFilter());
       sampler->is_release = isRelease;
       sampler->m_SamplerTaskId = samplerTaskId;
+      sampler->m_MixWindchestTaskId = samplerTaskId;
       sampler->m_AudioGroupId = audioGroup;
       StartSampler(sampler);
     }
@@ -428,6 +429,14 @@ void GOSoundSamplerPlayer::CreateReleaseSampler(GOSoundSampler *handle) {
          * so put the release on the same windchest as the pipe (which
          * means it will still be affected by tremulants - yuck). */
         : handle->m_SamplerTaskId;
+      /* Unlike m_SamplerTaskId above, the mixing target always stays the
+       * true originating windchest, detached or not: a detached tail's
+       * fader volume is baked in via GetWindchestAmplitude() above (a
+       * scalar can be baked at release time), but the windchest's
+       * processing chain is state, not a scalar, and can only be applied
+       * by actually mixing through that windchest's own grid cell - see
+       * GOSoundSampler::m_MixWindchestTaskId. */
+      new_sampler->m_MixWindchestTaskId = handle->m_MixWindchestTaskId;
       new_sampler->m_AudioGroupId = handle->m_AudioGroupId;
       new_sampler->toneBalanceFilterState.Init(
         new_sampler->p_SoundProvider->GetToneBalance()->GetFilter());

@@ -14,6 +14,7 @@
 #include "config/GOConfig.h"
 #include "model/GOOrganModel.h"
 #include "model/GOWindchest.h"
+#include "processing/GOSoundProcessingChain.h"
 #include "scheduler/GOSchedulerThread.h"
 #include "tasks/GOSoundGroupTask.h"
 #include "tasks/GOSoundOutputTask.h"
@@ -26,6 +27,7 @@
 #include "threading/threading_impl.h"
 
 #include "GOEvent.h"
+#include "GOSoundDefs.h"
 
 /*
  * Factory functions
@@ -182,6 +184,19 @@ void GOSoundOrganEngine::SetFromConfig(GOConfig &config) {
  * Lifecycle functions
  */
 
+/** Builds and EnsureSetup()s an empty processing chain, for
+ * GOSoundWindchestTask's constructor. A thin wrapper purely so the two-line
+ * pattern below is not repeated at each of BuildEngine()'s two
+ * windchest-task construction sites. */
+static std::unique_ptr<GOSoundProcessingChain> build_windchest_chain(
+  unsigned nSamplesPerBuffer, unsigned sampleRate) {
+  auto pChain = std::make_unique<GOSoundProcessingChain>();
+
+  pChain->EnsureSetup(MAX_OUTPUT_CHANNELS, nSamplesPerBuffer, sampleRate);
+
+  return pChain;
+}
+
 void GOSoundOrganEngine::BuildEngine(
   const std::vector<AudioOutputConfig> &audioOutputConfigs,
   unsigned nSamplesPerBuffer,
@@ -201,12 +216,15 @@ void GOSoundOrganEngine::BuildEngine(
 
   // [B2] Build windchest tasks
   // Special windchest task for detached releases (index 0 =
-  // DETACHED_RELEASE_TASK_ID)
-  mp_WindchestTasks.push_back(
-    std::make_unique<GOSoundWindchestTask>(*this, nullptr));
+  // DETACHED_RELEASE_TASK_ID). Always gets a valid, empty chain, uniformly
+  // with every other windchest.
+  mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
+    *this, nullptr, build_windchest_chain(m_NSamplesPerBuffer, sampleRate)));
   for (unsigned n = r_OrganModel.GetWindchestCount(), wcI = 0; wcI < n; wcI++)
     mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
-      *this, r_OrganModel.GetWindchest(wcI)));
+      *this,
+      r_OrganModel.GetWindchest(wcI),
+      build_windchest_chain(m_NSamplesPerBuffer, sampleRate)));
 
   // [B3] Initialize windchests with tremulant tasks
   for (auto &pWcTask : mp_WindchestTasks)
@@ -236,6 +254,17 @@ void GOSoundOrganEngine::BuildEngine(
     // pair - several windchests may feed the same group, but its release
     // cell must only be built once, see
     // GOSoundWindchestGroupTaskGrid::BuildWindchestGroupTask()
+    //
+    // Since m_MixWindchestTaskId (see GOSoundSampler.h) always routes a
+    // sampler - including a detached release tail - to its true originating
+    // windchest's own row now, nothing keys into row 0 for mixing any more;
+    // these cells always merge zero samplers and only ever contribute
+    // silence into their audio group. Kept anyway, rather than special-cased
+    // away, so every row index 0..nWindchests-1 stays uniformly buildable
+    // and so GetWindchestTaskAt(0)/DETACHED_RELEASE_TASK_ID keep meaning
+    // "the row/task reserved for index 0", matching the numbering
+    // m_SamplerPlayer::StartSampler() still relies on for a detached
+    // release's volume source (m_SamplerTaskId, untouched by Stage 5).
     for (unsigned audioGroupId : usedAudioGroupIds)
       m_WindchestGroupTaskGrid.BuildWindchestGroupTask(
         0,
@@ -475,7 +504,9 @@ GOSoundOrganEngine::AudioGroupRoutingChange GOSoundOrganEngine::
   // a group with no new main task keeps whatever release routing it already
   // had, nothing to check or rebuild for it. Has() still gates the build: a
   // group can be "new" here on windchest X while its release row already
-  // exists from windchest Y's earlier routing.
+  // exists from windchest Y's earlier routing. This row no longer receives
+  // any samplers for mixing (see the [B4] comment above), but is kept for
+  // uniform indexing the same way.
   for (unsigned audioGroupId : newAudioGroupIds)
     if (!m_WindchestGroupTaskGrid.HasWindchestGroupTask(0, audioGroupId))
       change.newTasks.push_back(
