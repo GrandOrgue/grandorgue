@@ -9,8 +9,8 @@
 
 #include <algorithm>
 
+#include "scheduler/GOSchedulerThread.h"
 #include "sound/reverb/GOSoundReverb.h"
-#include "sound/scheduler/GOSoundThread.h"
 #include "threading/GOMutexLocker.h"
 
 // Maximum sound items amplitude for output
@@ -27,7 +27,8 @@ GOSoundOutputTask::GOSoundOutputTask(
     m_OutputCount(0),
     m_MeterInfo(channels),
     m_Reverb(0),
-    m_Done(false) {
+    m_Done(false),
+    m_IsToComplete(false) {
   m_Reverb = new GOSoundReverb(channels);
 }
 
@@ -42,7 +43,7 @@ void GOSoundOutputTask::SetOutputs(
   m_OutputCount = m_Outputs.size() * 2;
 }
 
-void GOSoundOutputTask::Run(GOSoundThread *pThread) {
+void GOSoundOutputTask::Run(GOSchedulerThread *pThread) {
   if (m_Done.load())
     return;
   GOMutexLocker locker(m_Mutex, false, "GOSoundOutputTask::Run", pThread);
@@ -64,7 +65,7 @@ void GOSoundOutputTask::Run(GOSoundThread *pThread) {
 
       GOSoundBufferTaskBase *output = m_Outputs[j / 2];
 
-      output->Finish(m_Stop.load(), pThread);
+      output->EnsureBufferReady(m_IsToComplete.load(), pThread);
       if (pThread && pThread->ShouldStop())
         return;
 
@@ -99,16 +100,17 @@ void GOSoundOutputTask::Run(GOSoundThread *pThread) {
   m_Done.store(true);
 }
 
-void GOSoundOutputTask::Exec() { Run(); }
+void GOSoundOutputTask::CompleteRound() { Run(); }
 
-void GOSoundOutputTask::Finish(bool stop, GOSoundThread *pThread) {
-  if (stop)
-    m_Stop.store(true);
+void GOSoundOutputTask::EnsureBufferReady(
+  bool isToComplete, GOSchedulerThread *pThread) {
+  if (isToComplete)
+    m_IsToComplete.store(true);
   if (!m_Done.load())
     Run(pThread);
 }
 
-void GOSoundOutputTask::Clear() {
+void GOSoundOutputTask::DiscardContent() {
   m_Reverb->Reset();
   ResetMeterInfo();
 }
@@ -119,17 +121,11 @@ void GOSoundOutputTask::ResetMeterInfo() {
     m_MeterInfo[i] = 0;
 }
 
-void GOSoundOutputTask::Reset() {
+void GOSoundOutputTask::NewRound() {
   GOMutexLocker locker(m_Mutex);
   m_Done.store(false);
-  m_Stop.store(false);
+  m_IsToComplete.store(false);
 }
-
-unsigned GOSoundOutputTask::GetGroup() { return AUDIOOUTPUT; }
-
-unsigned GOSoundOutputTask::GetCost() { return 0; }
-
-bool GOSoundOutputTask::GetRepeat() { return false; }
 
 void GOSoundOutputTask::SetupReverb(
   const GOSoundReverb::ReverbConfig &config,

@@ -11,16 +11,17 @@
 #include <atomic>
 
 #include "model/GOWindchest.h"
-#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
+#include "GOSoundTaskBase.h"
 #include "ptrvector.h"
 
+class GOSchedulerThread;
 class GOSoundOrganEngine;
 class GOSoundTremulantTask;
 class GOWindchest;
 
-class GOSoundWindchestTask : public GOSoundTask {
+class GOSoundWindchestTask : public GOSoundTaskBase {
 private:
   GOSoundOrganEngine &r_engine;
   GOMutex m_mutex;
@@ -33,14 +34,14 @@ public:
   GOSoundWindchestTask(
     GOSoundOrganEngine &sound_engine, GOWindchest *windchest);
 
-  unsigned GetGroup() override { return WINDCHEST; }
-  unsigned GetCost() override { return 0; }
-  bool GetRepeat() override { return false; }
-  void Run(GOSoundThread *pThread = nullptr) override;
-  void Exec() override {}
+  unsigned GetPriority() const override { return PRIORITY_WINDCHEST; }
+  unsigned GetCost() const override { return 0; }
+  bool IsRepeatable() const override { return false; }
+  void Run(GOSchedulerThread *pThread = nullptr) override;
+  void CompleteRound() override {}
 
-  void Clear() override { Reset(); }
-  void Reset() override;
+  void DiscardContent() override { NewRound(); }
+  void NewRound() override;
   void Init(ptr_vector<GOSoundTremulantTask> &tremulantTasks);
 
   float GetWindchestVolume() const {

@@ -17,24 +17,16 @@ GOSoundTremulantTask::GOSoundTremulantTask(
     m_SamplesPerBuffer(nFramesPerBuffer),
     m_Done(false) {}
 
-void GOSoundTremulantTask::Reset() {
+void GOSoundTremulantTask::NewRound() {
   GOMutexLocker locker(m_Mutex);
   m_Done = false;
 }
-
-void GOSoundTremulantTask::Clear() { m_Samplers.Clear(); }
 
 void GOSoundTremulantTask::Add(GOSoundSampler *sampler) {
   m_Samplers.Put(sampler);
 }
 
-unsigned GOSoundTremulantTask::GetGroup() { return TREMULANT; }
-
-unsigned GOSoundTremulantTask::GetCost() { return 0; }
-
-bool GOSoundTremulantTask::GetRepeat() { return false; }
-
-void GOSoundTremulantTask::Run(GOSoundThread *thread) {
+void GOSoundTremulantTask::Run(GOSchedulerThread *pThread) {
   if (m_Done)
     return;
 
@@ -65,5 +57,3 @@ void GOSoundTremulantTask::Run(GOSoundThread *thread) {
   m_Volume = output_buffer[2 * m_SamplesPerBuffer - 1];
   m_Done = true;
 }
-
-void GOSoundTremulantTask::Exec() { Run(); }

@@ -10,28 +10,30 @@
 
 #include <atomic>
 
-#include "sound/scheduler/GOSoundTask.h"
 #include "threading/GOMutex.h"
 
-class GOMemoryPool;
+#include "GOSoundTaskBase.h"
 
-class GOSoundTouchTask : public GOSoundTask {
+class GOMemoryPool;
+class GOSchedulerThread;
+
+class GOSoundTouchTask : public GOSoundTaskBase {
 private:
   GOMemoryPool &m_Pool;
   GOMutex m_Mutex;
-  std::atomic_bool m_Stop;
+  std::atomic_bool m_IsToComplete;
 
 public:
   GOSoundTouchTask(GOMemoryPool &pool);
 
-  unsigned GetGroup();
-  unsigned GetCost();
-  bool GetRepeat();
-  void Run(GOSoundThread *thread = nullptr);
-  void Exec();
+  unsigned GetPriority() const override { return PRIORITY_TOUCH; }
+  unsigned GetCost() const override { return 0; }
+  bool IsRepeatable() const override { return false; }
+  void Run(GOSchedulerThread *pThread = nullptr) override;
+  void CompleteRound() override;
 
-  void Clear();
-  void Reset();
+  void DiscardContent() override { NewRound(); }
+  void NewRound() override;
 };
 
 #endif

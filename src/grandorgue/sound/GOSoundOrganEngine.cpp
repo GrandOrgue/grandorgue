@@ -13,7 +13,7 @@
 #include "config/GOConfig.h"
 #include "model/GOOrganModel.h"
 #include "model/GOWindchest.h"
-#include "scheduler/GOSoundThread.h"
+#include "scheduler/GOSchedulerThread.h"
 #include "tasks/GOSoundGroupTask.h"
 #include "tasks/GOSoundOutputTask.h"
 #include "tasks/GOSoundRecorderTask.h"
@@ -125,8 +125,8 @@ GOSoundOrganEngine::GOSoundOrganEngine(
 
 // The destructor body is empty, but it must be defined here (not in the header)
 // so that std::unique_ptr can call the complete destructors of its managed
-// types (GOSoundReleaseTask, GOSoundTouchTask, GOSoundThread), which are only
-// forward-declared in the header file.
+// types (GOSoundReleaseTask, GOSoundTouchTask, GOSchedulerThread), which are
+// only forward-declared in the header file.
 GOSoundOrganEngine::~GOSoundOrganEngine() {}
 
 /*
@@ -275,25 +275,25 @@ void GOSoundOrganEngine::BuildEngine(
     pWcTask->Init(mp_TremulantTasks);
 
   // [B10] Add all tasks to scheduler
-  m_Scheduler.Clear();
-  m_Scheduler.SetRepeatCount(m_NReleaseRepeats);
+  m_scheduler.Clear();
+  m_scheduler.SetRepeatCount(m_NReleaseRepeats);
   for (GOSoundTremulantTask *pTremTask : mp_TremulantTasks)
-    m_Scheduler.Add(pTremTask);
+    m_scheduler.Add(pTremTask);
   for (auto &pWcTask : mp_WindchestTasks)
-    m_Scheduler.Add(pWcTask.get());
+    m_scheduler.Add(pWcTask.get());
   for (GOSoundGroupTask *pGroupTask : mp_AudioGroupTasks)
-    m_Scheduler.Add(pGroupTask);
+    m_scheduler.Add(pGroupTask);
   if (mp_DownmixTask)
-    m_Scheduler.Add(mp_DownmixTask.get());
+    m_scheduler.Add(mp_DownmixTask.get());
   for (OutputState &state : m_OutputStates)
-    m_Scheduler.Add(state.mp_task.get());
-  m_Scheduler.Add(p_AudioRecorder);
-  m_Scheduler.Add(mp_ReleaseTask.get());
-  m_Scheduler.Add(mp_TouchTask.get());
+    m_scheduler.Add(state.mp_task.get());
+  m_scheduler.Add(p_AudioRecorder);
+  m_scheduler.Add(mp_ReleaseTask.get());
+  m_scheduler.Add(mp_TouchTask.get());
 
   // [B11] Build worker threads
   for (unsigned threadI = 0; threadI < m_NAuxThreads; threadI++)
-    mp_threads.push_back(std::make_unique<GOSoundThread>(&m_Scheduler));
+    mp_threads.push_back(std::make_unique<GOSchedulerThread>(&m_scheduler));
   for (auto &pThread : mp_threads)
     pThread->Run();
 
@@ -313,7 +313,7 @@ void GOSoundOrganEngine::DestroyEngine() {
   mp_threads.clear();
 
   // [B10] Clear scheduler
-  m_Scheduler.Clear();
+  m_scheduler.Clear();
 
   // [B9] + [B8] Destroy windchest tasks (drops Init() connections too)
   mp_WindchestTasks.clear();
@@ -335,7 +335,7 @@ void GOSoundOrganEngine::DestroyEngine() {
 
   // [B1] Destroy audio group tasks
   for (GOSoundGroupTask *pGroupTask : mp_AudioGroupTasks)
-    pGroupTask->WaitAndClear();
+    pGroupTask->WaitAndDiscardContent();
   mp_AudioGroupTasks.clear();
 
   m_SamplerPlayer.Destroy();
@@ -344,8 +344,8 @@ void GOSoundOrganEngine::DestroyEngine() {
 
 void GOSoundOrganEngine::StartEngine() {
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
-  m_Scheduler.Reset();
-  m_Scheduler.ResumeGivingWork();
+  m_scheduler.NewRound();
+  m_scheduler.ResumeGivingWork();
 
   m_LifecycleState.store(LifecycleState::WORKING);
 }
@@ -353,7 +353,7 @@ void GOSoundOrganEngine::StartEngine() {
 void GOSoundOrganEngine::StopEngine() {
   assert(m_LifecycleState.load() == LifecycleState::WORKING);
 
-  m_Scheduler.PauseGivingWork();
+  m_scheduler.PauseGivingWork();
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
   m_LifecycleState.store(LifecycleState::BUILT);
@@ -431,7 +431,7 @@ static void atomic_fetch_max_relaxed(std::atomic<T> &maxValue, T value) {
 
 void GOSoundOrganEngine::NextPeriod() {
   assert(IsWorking());
-  m_Scheduler.Exec();
+  m_scheduler.CompleteRound();
 
   // AdvanceTime advances m_CurrentTime and records peak used polyphony
   // (both previously done inline here; now delegated to GOSoundSamplerPlayer).
@@ -456,7 +456,7 @@ void GOSoundOrganEngine::NextPeriod() {
     state.mp_task->ResetMeterInfo();
   }
 
-  m_Scheduler.Reset();
+  m_scheduler.NewRound();
 }
 
 bool GOSoundOrganEngine::ProcessAudioCallback(
@@ -492,7 +492,7 @@ bool GOSoundOrganEngine::ProcessAudioCallback(
     // Finish computing the output task and copy the result into the buffer.
     GOSoundOutputTask &outputTask = *m_OutputStates[outputIndex].mp_task;
 
-    outputTask.Finish(isLastEntered);
+    outputTask.EnsureBufferReady(isLastEntered);
     outBuffer.CopyFrom(outputTask);
 
     // Mark this output as done for the current period so that future callbacks

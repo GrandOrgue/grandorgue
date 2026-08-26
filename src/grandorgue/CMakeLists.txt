@@ -207,6 +207,8 @@ model/GOSwitch.cpp
 model/GOTremulant.cpp
 model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
+scheduler/GOScheduler.cpp
+scheduler/GOSchedulerThread.cpp
 sound/buffer/GOSoundBufferManaged.cpp
 sound/playing/GOSoundAudioSection.cpp
 sound/playing/GOSoundFader.cpp
@@ -228,8 +230,6 @@ sound/providers/GOSoundProviderWave.cpp
 sound/reverb/GOSoundReverb.cpp
 sound/reverb/GOSoundReverbEngine.cpp
 sound/reverb/GOSoundReverbPartition.cpp
-sound/scheduler/GOSoundScheduler.cpp
-sound/scheduler/GOSoundThread.cpp
 sound/tasks/GOSoundGroupTask.cpp
 sound/tasks/GOSoundOutputTask.cpp
 sound/tasks/GOSoundRecorderTask.cpp
