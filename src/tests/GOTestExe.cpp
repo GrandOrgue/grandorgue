@@ -30,6 +30,7 @@
 #include "testing/sound/buffer/GOTestSoundBufferMutableMono.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
+#include "testing/sound/reverb/GOTestSoundReverb.h"
 
 int main(int argc, char *argv[]) {
   /*
@@ -71,6 +72,7 @@ int main(int argc, char *argv[]) {
   GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
+  GOTestSoundReverb testSoundReverb;
   GOTestSoundOrganEngine testSoundOrganEngine;
   GOTestSoundCallbackConnector testSoundCallbackConnector;
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
