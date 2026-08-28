@@ -178,10 +178,14 @@ static constexpr GOTestPerfSoundBufferBaseline
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_MONO[]
   = {
 #ifdef NDEBUG
-    {32, 1940},  // 1940 Mframes/sec (measured: 2163.7, with 10% margin)
-    {128, 2480}, // 2480 Mframes/sec (measured: 2763.5, with 10% margin)
-    {512, 2640}, // 2640 Mframes/sec (measured: 2937.9, with 10% margin)
-    {2048, 2720} // 2720 Mframes/sec (measured: 3028.5, with 10% margin)
+    {32, 1720},  // 1720 Mframes/sec (widened to -20% margin: CI runs
+                 // 33182952642/33186258064 observed 2163.7/2158.7)
+    {128, 2050}, // 2050 Mframes/sec (widened to -20% margin: CI runs
+                 // 33182952642/33186258064 observed 2763.5/2568.0)
+    {512, 2110}, // 2110 Mframes/sec (widened to -20% margin: CI runs
+                 // 33182952642/33186258064 observed 2937.9/2648.2)
+    {2048, 2150} // 2150 Mframes/sec (widened to -20% margin: CI runs
+                 // 33182952642/33186258064 observed 3028.5/2696.7)
 #else
     {32, 800},   // 800 Mframes/sec (debug, widened to -20% margin: CI run
                  // 33184580207 observed 1008.5, below the previous 1030
