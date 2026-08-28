@@ -175,6 +175,14 @@ static constexpr GOTestPerfSoundBufferBaseline
 #endif
 };
 
+static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_MONO[]
+  = {
+    {32, 1},
+    {128, 1},
+    {512, 1},
+    {2048, 1},
+};
+
 // Helper function to fill buffer with sine wave signal
 // Each channel gets a different frequency to make data more realistic
 static void fill_with_sine_wave(GOSoundBufferMutable &buffer) {
