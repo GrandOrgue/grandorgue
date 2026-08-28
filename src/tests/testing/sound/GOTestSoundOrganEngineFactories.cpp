@@ -31,14 +31,14 @@ public:
     }
   }
 
-  unsigned GetGroup() override { return AUDIOGROUP; }
-  unsigned GetCost() override { return 0; }
-  bool GetRepeat() override { return false; }
-  void Run(GOSoundThread *) override {}
-  void Exec() override {}
-  void Finish(bool, GOSoundThread *) override {}
-  void Clear() override {}
-  void Reset() override {}
+  unsigned GetPriority() const override { return PRIORITY_AUDIOGROUP; }
+  unsigned GetCost() const override { return 0; }
+  bool IsRepeatable() const override { return false; }
+  void Run(GOSchedulerThread * = nullptr) override {}
+  void CompleteRound() override {}
+  void EnsureBufferReady(bool, GOSchedulerThread * = nullptr) override {}
+  void NewRound() override {}
+  void DiscardContent() override {}
 };
 
 std::vector<float> convertGainsToScaleFactors(const std::vector<float> &gains) {
