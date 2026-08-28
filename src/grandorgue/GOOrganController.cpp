@@ -8,6 +8,7 @@
 #include "GOOrganController.h"
 
 #include <algorithm>
+#include <cassert>
 
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -123,10 +124,24 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
 }
 
 GOOrganController::~GOOrganController() {
-  // Clear() runs m_elementcreators.clear() (via ClearOrganCoreData), which
-  // may reference m_timer, so we respect the deletion order and delete
-  // m_timer only afterward.
-  Clear();
+  // Callers must call Clear() explicitly before destroying this object (see
+  // its doc-comment): OnClear() is virtual, and a call made from here would
+  // never reach a subclass override, since by now the object's dynamic
+  // type has already unwound to GOOrganController.
+  //
+  // ClearObjects() must run before OnClear() (Clear()'s own order), so by
+  // the time we get here it is already too late to call it - OnClear() is
+  // expected to have already run (by the caller) with ClearObjects()
+  // having already preceded it. We only assert that it did.
+  //
+  // ClearOrganCoreData() is different: it is non-virtual, idempotent, and
+  // has no ordering dependency on OnClear() having actually reached a
+  // subclass override, so it is safe - and necessary - to (re-)run it here
+  // unconditionally, regardless of NDEBUG: it frees m_elementcreators,
+  // which must happen before m_timer is deleted below.
+  assert(!m_IsObjectsLoaded);
+  assert(!m_IsOrganGuiLoaded);
+  ClearOrganCoreData();
   m_FileStore.CloseArchives();
   if (mp_ImageCache)
     delete mp_ImageCache;
@@ -141,7 +156,7 @@ void GOOrganController::ClearObjects() {
   }
 }
 
-void GOOrganController::ClearOrganGui() {
+void GOOrganController::OnClear() {
   if (m_IsOrganGuiLoaded) {
     m_panels.clear();
     m_panelcreators.clear();
@@ -181,7 +196,7 @@ void GOOrganController::ClearOrganCoreData() {
 
 void GOOrganController::Clear() {
   ClearObjects();
-  ClearOrganGui();
+  OnClear();
   ClearOrganCoreData();
 }
 
@@ -338,7 +353,7 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
     | (result.hash[7] & 0x7F);
 }
 
-void GOOrganController::LoadOrganGui(GOConfigReader &cfg) {
+void GOOrganController::OnLoad(GOConfigReader &cfg) {
   m_IsOrganGuiLoaded = true;
 
   unsigned NumberOfPanels = cfg.ReadInteger(
@@ -523,7 +538,7 @@ wxString GOOrganController::Load(
     m_Cacheable = false;
 
     LoadOrganCoreData(organReader.GetConfigReader());
-    LoadOrganGui(organReader.GetConfigReader());
+    OnLoad(organReader.GetConfigReader());
     organReader.ReportUnused();
 
     if (!isGuiOnly)
@@ -692,7 +707,7 @@ void GOOrganController::SaveOrganCoreData(GOConfigWriter &cfg) {
   m_VirtualCouplers.Save(cfg);
 }
 
-void GOOrganController::SaveOrganGui(GOConfigWriter &cfg) {
+void GOOrganController::OnSave(GOConfigWriter &cfg) {
   m_StopWindowSizeKeeper.Save(cfg);
 }
 
@@ -718,7 +733,7 @@ bool GOOrganController::Save(const wxString &path) {
   GOConfigWriter cfg(cfgFile, false);
 
   SaveOrganCoreData(cfg);
-  SaveOrganGui(cfg);
+  OnSave(cfg);
 
   bool isOk = write_config_file(
     cfgFile, path.IsEmpty() ? m_LoadedOrganInfo.settingsFilePath : path);

@@ -187,6 +187,7 @@ void GOPerfTestApp::RunTest(
       wxLogError(wxT("Error: %s"), msg.c_str());
     }
 
+    organController->Clear();
     delete organController;
   } catch (wxString msg) {
     wxLogError(wxT("Error: %s"), msg.c_str());

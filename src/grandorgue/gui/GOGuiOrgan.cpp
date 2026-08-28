@@ -136,6 +136,7 @@ void GOGuiOrgan::CloseOrgan() {
   m_OrganFileReady = false;
   GOMutexLocker locker(m_lock);
   if (m_OrganController) {
+    m_OrganController->Clear();
     delete m_OrganController;
     m_OrganController = 0;
   }
