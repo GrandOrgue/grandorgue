@@ -101,9 +101,12 @@ public:
    * Gathers this buffer into an interleaved buffer of the same shape.
    * @param dstBuffer Interleaved destination buffer, same nChannels and
    *   nFrames as this buffer
+   * @note srcBuffer (this) and dstBuffer must not overlap in memory;
+   *   in-place planar/interleaved conversion is not supported.
    */
   inline void InterleaveTo(GOSoundBufferMutable &dstBuffer) const {
     GOSoundBufferMutable::assertBuffersCompatible(*this, dstBuffer);
+    GOSoundBufferMutable::assertBuffersDisjoint(*this, dstBuffer);
 
     for (unsigned channelI = 0; channelI < m_NChannels; ++channelI)
       dstBuffer.CopyChannelFrom(GetChannelBuffer(channelI), 0, channelI);

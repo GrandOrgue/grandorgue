@@ -79,9 +79,12 @@ public:
    * Scatters an interleaved buffer of the same shape into this one.
    * @param srcBuffer Interleaved source buffer, same nChannels and nFrames
    *   as this buffer
+   * @note srcBuffer and this buffer must not overlap in memory; in-place
+   *   planar/interleaved conversion is not supported.
    */
   inline void DeinterleaveFrom(const GOSoundBuffer &srcBuffer) {
     GOSoundBufferMutable::assertBuffersCompatible(*this, srcBuffer);
+    GOSoundBufferMutable::assertBuffersDisjoint(*this, srcBuffer);
 
     for (unsigned channelI = 0, n = GetNChannels(); channelI < n; ++channelI)
       GetChannelBuffer(channelI).CopyChannelFrom(srcBuffer, channelI);
@@ -92,9 +95,12 @@ public:
    * to what is already there.
    * @param srcBuffer Interleaved source buffer, same nChannels and nFrames
    *   as this buffer
+   * @note srcBuffer and this buffer must not overlap in memory; in-place
+   *   planar/interleaved conversion is not supported.
    */
   inline void AddDeinterleavedFrom(const GOSoundBuffer &srcBuffer) {
     GOSoundBufferMutable::assertBuffersCompatible(*this, srcBuffer);
+    GOSoundBufferMutable::assertBuffersDisjoint(*this, srcBuffer);
 
     for (unsigned channelI = 0, n = GetNChannels(); channelI < n; ++channelI)
       GetChannelBuffer(channelI).AddChannelFrom(srcBuffer, channelI);

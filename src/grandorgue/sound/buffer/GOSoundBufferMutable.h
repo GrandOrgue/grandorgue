@@ -62,6 +62,24 @@ public:
   }
 
   /**
+   * Asserts that two buffers (interleaved or planar, any mix) do not
+   * overlap in memory. Shared by GOSoundBufferMutable and
+   * GOSoundBufferPlanarMutable to guard cross-layout conversions
+   * (InterleaveTo(), DeinterleaveFrom(), AddDeinterleavedFrom()), which
+   * cannot be done correctly in place.
+   * @param bufferA First buffer to check
+   * @param bufferB Second buffer to check
+   */
+  template <typename BufferAType, typename BufferBType>
+  static inline void assertBuffersDisjoint(
+    const BufferAType &bufferA, const BufferBType &bufferB) {
+    const auto *pA = reinterpret_cast<const char *>(bufferA.GetData());
+    const auto *pB = reinterpret_cast<const char *>(bufferB.GetData());
+
+    assert(pA + bufferA.GetNBytes() <= pB || pB + bufferB.GetNBytes() <= pA);
+  }
+
+  /**
    * Fills the entire buffer (all channels) with zeros (silence). Shared by
    * GOSoundBufferMutable and GOSoundBufferPlanarMutable.
    * @param buffer Buffer to fill with silence
