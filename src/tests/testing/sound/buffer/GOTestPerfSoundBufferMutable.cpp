@@ -177,10 +177,19 @@ static constexpr GOTestPerfSoundBufferBaseline
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_MONO[]
   = {
-    {32, 1},
-    {128, 1},
-    {512, 1},
-    {2048, 1},
+#ifdef NDEBUG
+    {32, 1940},  // 1940 Mframes/sec (measured: 2163.7, with 10% margin)
+    {128, 2480}, // 2480 Mframes/sec (measured: 2763.5, with 10% margin)
+    {512, 2640}, // 2640 Mframes/sec (measured: 2937.9, with 10% margin)
+    {2048, 2720} // 2720 Mframes/sec (measured: 3028.5, with 10% margin)
+#else
+    {32, 1030},  // 1030 Mframes/sec (debug, measured: 1149.3, with 10% margin)
+    {128, 1270}, // 1270 Mframes/sec (debug, measured: 1418.2, with 10% margin)
+    {512, 1310}, // 1310 Mframes/sec (debug, measured: 1463.9, with 10%
+                 // margin)
+    {2048, 1360} // 1360 Mframes/sec (debug, measured: 1514.4, with 10%
+                 // margin)
+#endif
 };
 
 // Helper function to fill buffer with sine wave signal
