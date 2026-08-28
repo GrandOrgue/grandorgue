@@ -125,10 +125,23 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
 
 GOOrganController::~GOOrganController() {
   // Callers must call Clear() explicitly before destroying this object (see
-  // the doc-comment on Clear()) - it cannot be called from here, since by
-  // now any subclass part of the object is already gone and OnClear() would
-  // not dispatch to a subclass override.
-  assert(!m_IsOrganCoreDataLoaded && !m_IsOrganGuiLoaded && !m_IsObjectsLoaded);
+  // its doc-comment): OnClear() is virtual, and a call made from here would
+  // never reach a subclass override, since by now the object's dynamic
+  // type has already unwound to GOOrganController.
+  //
+  // ClearObjects() must run before OnClear() (Clear()'s own order), so by
+  // the time we get here it is already too late to call it - OnClear() is
+  // expected to have already run (by the caller) with ClearObjects()
+  // having already preceded it. We only assert that it did.
+  //
+  // ClearOrganCoreData() is different: it is non-virtual, idempotent, and
+  // has no ordering dependency on OnClear() having actually reached a
+  // subclass override, so it is safe - and necessary - to (re-)run it here
+  // unconditionally, regardless of NDEBUG: it frees m_elementcreators,
+  // which must happen before m_timer is deleted below.
+  assert(!m_IsObjectsLoaded);
+  assert(!m_IsOrganGuiLoaded);
+  ClearOrganCoreData();
   m_FileStore.CloseArchives();
   if (mp_ImageCache)
     delete mp_ImageCache;
