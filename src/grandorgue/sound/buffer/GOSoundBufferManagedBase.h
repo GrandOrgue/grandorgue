@@ -11,6 +11,7 @@
 #include <memory>
 
 #include "GOSoundBuffer.h"
+#include "GOSoundBufferMutable.h"
 
 /**
  * Shared implementation of an owning (heap-allocated) sound buffer. Used as
@@ -47,8 +48,11 @@ protected:
   /**
    * Copy data from source buffer (resizes this buffer to match source).
    * @param srcBuffer Source buffer to copy from
+   * @note srcBuffer must not be a view into this buffer's own storage:
+   *   Resize() may free/reallocate it before the data is copied.
    */
   void CopyDataFrom(const ViewType &srcBuffer) {
+    GOSoundBufferMutable::assertBuffersDisjoint(*this, srcBuffer);
     Resize(srcBuffer.GetNChannels(), srcBuffer.GetNFrames());
     // After Resize, both buffers have same validity: either both valid or
     // both invalid

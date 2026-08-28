@@ -83,6 +83,8 @@ public:
    * Copy assignment operator from GOSoundBufferPlanar.
    * @param srcBuffer Source buffer to copy from
    * @return Reference to this buffer
+   * @note srcBuffer must not be a view into this buffer's own storage; see
+   *   GOSoundBufferManagedBase::CopyDataFrom().
    */
   inline GOSoundBufferPlanarManaged &operator=(
     const GOSoundBufferPlanar &srcBuffer) {
