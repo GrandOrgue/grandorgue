@@ -48,6 +48,7 @@ bool GOCommonControllerTest::setUp() {
 bool GOCommonControllerTest::tearDown() {
   // Delete controller before resetting mp_config: ~GOOrganController() may
   // still read m_config, so mp_config must outlive it.
+  this->controller->Clear();
   delete this->controller;
   this->controller = nullptr;
   mp_config.reset();

@@ -182,7 +182,14 @@ public:
     bool isGuiOnly,
     GOProgressMonitor &monitor);
   /** Undoes whatever Load() built (core data, GUI, cached objects), in
-   * reverse order. Idempotent - safe to call any number of times. */
+   * reverse order. Idempotent - safe to call any number of times.
+   * Callers must call this explicitly before destroying the object
+   * (stack, member, or heap) - the destructor does not call it itself and
+   * instead asserts that it already ran. This is because Clear() calls the
+   * virtual OnClear(), and a call made from within ~GOOrganController()
+   * would only ever reach GOOrganController::OnClear(), never a subclass
+   * override, since C++ virtual dispatch during base-class destruction is
+   * restricted to the base class. */
   void Clear();
   /**
    * Exports organ combinations in the yaml file

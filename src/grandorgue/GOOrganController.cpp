@@ -8,6 +8,7 @@
 #include "GOOrganController.h"
 
 #include <algorithm>
+#include <cassert>
 
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -123,10 +124,11 @@ GOOrganController::GOOrganController(GOConfig &config, bool isAppInitialized)
 }
 
 GOOrganController::~GOOrganController() {
-  // Clear() runs m_elementcreators.clear() (via ClearOrganCoreData), which
-  // may reference m_timer, so we respect the deletion order and delete
-  // m_timer only afterward.
-  Clear();
+  // Callers must call Clear() explicitly before destroying this object (see
+  // the doc-comment on Clear()) - it cannot be called from here, since by
+  // now any subclass part of the object is already gone and OnClear() would
+  // not dispatch to a subclass override.
+  assert(!m_IsOrganCoreDataLoaded && !m_IsOrganGuiLoaded && !m_IsObjectsLoaded);
   m_FileStore.CloseArchives();
   if (mp_ImageCache)
     delete mp_ImageCache;
