@@ -163,15 +163,15 @@ static constexpr GOTestPerfSoundBufferBaseline
     {512, 2100}, // 2100 Mframes/sec (measured: 2434.9, -10% margin)
     {2048, 2100} // 2100 Mframes/sec (measured: 2435.9, -10% margin)
 #else
-  {32,
-   450}, // 450 Mframes/sec (debug, lowered: min observed 502.5, -10% margin)
-  {128, 500}, // 500 Mframes/sec (debug, widened to -20% margin: CI runner
-              // variance exceeds 10%, observed as low as 547.8 on
-              // 2026-08-26/28)
-  {512,
-   640}, // 640 Mframes/sec (debug, raised: min observed 724.3, -10% margin)
-  {2048,
-   660} // 660 Mframes/sec (debug, raised: min observed 744.4, -10% margin)
+    {32,
+     450}, // 450 Mframes/sec (debug, lowered: min observed 502.5, -10% margin)
+    {128, 500}, // 500 Mframes/sec (debug, widened to -20% margin: CI runner
+                // variance exceeds 10%, observed as low as 547.8 on
+                // 2026-08-26/28)
+    {512,
+     640}, // 640 Mframes/sec (debug, raised: min observed 724.3, -10% margin)
+    {2048,
+     660} // 660 Mframes/sec (debug, raised: min observed 744.4, -10% margin)
 #endif
 };
 
