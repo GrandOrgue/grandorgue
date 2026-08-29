@@ -11,16 +11,16 @@
 
 void GOSoundToneBalanceFilter::Init(int8_t value) {
   if (value == 0)
-    m_filter.Init(GOSoundFilter::FilterType::TYPE_NONE, 0);
+    m_filter.Init(GOSoundOnePoleFilter::Type::TYPE_NONE, 0);
   else {
     double hz;
-    GOSoundFilter::FilterType type;
+    GOSoundOnePoleFilter::Type type;
 
     if (value < 0) {
-      type = GOSoundFilter::FilterType::TYPE_LPF;
+      type = GOSoundOnePoleFilter::Type::TYPE_LPF;
       hz = 16000 * pow(20.0 / 16000.0, abs(value) / 99.0);
     } else {
-      type = GOSoundFilter::FilterType::TYPE_HPF;
+      type = GOSoundOnePoleFilter::Type::TYPE_HPF;
       hz = 20 * pow(800.0, value / 99.0);
     }
 
