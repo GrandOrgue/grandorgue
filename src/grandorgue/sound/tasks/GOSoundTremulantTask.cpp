@@ -7,6 +7,7 @@
 
 #include "GOSoundTremulantTask.h"
 
+#include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "threading/GOMutexLocker.h"
 
@@ -42,18 +43,15 @@ void GOSoundTremulantTask::Run(GOSchedulerThread *pThread) {
     return;
   }
 
-  float output_buffer[m_SamplesPerBuffer * 2];
-  std::fill(output_buffer, output_buffer + m_SamplesPerBuffer * 2, 0.0f);
-  output_buffer[2 * m_SamplesPerBuffer - 1] = 1.0f;
-  for (GOSoundSampler *sampler = m_Samplers.Get(); sampler;
-       sampler = m_Samplers.Get()) {
-    bool keep;
-    keep = r_SamplerPlayer.ProcessSampler(
-      output_buffer, sampler, m_SamplesPerBuffer, 1);
+  GO_DECLARE_LOCAL_SOUND_BUFFER(outputBuffer, 2, m_SamplesPerBuffer)
 
-    if (keep)
-      m_Samplers.Put(sampler);
+  outputBuffer.FillWithSilence();
+  outputBuffer.GetData()[2 * m_SamplesPerBuffer - 1] = 1.0f;
+  for (GOSoundSampler *pSampler = m_Samplers.Get(); pSampler;
+       pSampler = m_Samplers.Get()) {
+    if (r_SamplerPlayer.ProcessSampler(*pSampler, 1.0f, outputBuffer))
+      m_Samplers.Put(pSampler);
   }
-  m_Volume = output_buffer[2 * m_SamplesPerBuffer - 1];
+  m_Volume = outputBuffer.GetData()[2 * m_SamplesPerBuffer - 1];
   m_Done = true;
 }

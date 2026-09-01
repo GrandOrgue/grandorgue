@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -10,6 +10,8 @@
 
 #include <cmath>
 #include <cstdint>
+
+#include "sound/buffer/GOSoundBufferMutable.h"
 
 class GOSoundFilter {
 public:
@@ -25,16 +27,19 @@ public:
     FilterState() { Init(nullptr); }
     void Init(const GOSoundFilter *filter);
     bool IsToApply() { return p_filter && p_filter->IsToApply(); }
-    inline void ProcessBuffer(unsigned n_blocks, float *buffer) {
+    inline void ProcessBuffer(GOSoundBufferMutable &outBuffer) {
+      float *pData = outBuffer.GetData();
+      const unsigned nFrames = outBuffer.GetNFrames();
       float out[2];
-      for (unsigned int i = 0; i < n_blocks; i++, buffer += 2) {
-        out[0] = p_filter->m_B0 * buffer[0] + m_state[0];
-        out[1] = p_filter->m_B0 * buffer[1] + m_state[1];
-        m_state[0] = p_filter->m_B1 * buffer[0] - p_filter->m_A1 * out[0];
-        m_state[1] = p_filter->m_B1 * buffer[1] - p_filter->m_A1 * out[1];
 
-        buffer[0] = out[0];
-        buffer[1] = out[1];
+      for (unsigned int i = 0; i < nFrames; i++, pData += 2) {
+        out[0] = p_filter->m_B0 * pData[0] + m_state[0];
+        out[1] = p_filter->m_B0 * pData[1] + m_state[1];
+        m_state[0] = p_filter->m_B1 * pData[0] - p_filter->m_A1 * out[0];
+        m_state[1] = p_filter->m_B1 * pData[1] - p_filter->m_A1 * out[1];
+
+        pData[0] = out[0];
+        pData[1] = out[1];
       }
     }
 

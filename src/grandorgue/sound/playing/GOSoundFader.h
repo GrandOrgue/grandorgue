@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,6 +9,8 @@
 #define GOSOUNDFADER_H_
 
 #include <assert.h>
+
+class GOSoundBufferMutable;
 
 /**
  * This class is responsible for smoothly changing a volume of samples.
@@ -92,7 +94,7 @@ public:
   inline float GetVelocityVolume() const { return m_VelocityVolume; }
   inline void SetVelocityVolume(float volume) { m_VelocityVolume = volume; }
 
-  void Process(unsigned nFrames, float *buffer, float externalVolume);
+  void Process(float externalAmplitude, GOSoundBufferMutable &outBuffer);
 
   bool IsSilent() const { return (m_LastTargetVolumePoint <= 0.0f); }
 };

@@ -9,6 +9,8 @@
 
 #include <wx/log.h>
 
+#include "sound/buffer/GOSoundBufferMutable.h"
+
 #include "GOSoundAudioSection.h"
 #include "GOSoundReleaseAlignTable.h"
 
@@ -354,10 +356,12 @@ void GOSoundStream::InitAlignedStream(
     &pExistingStream->m_ResamplingPos);
 }
 
-bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
+bool GOSoundStream::ReadBlock(GOSoundBufferMutable &outBuffer) {
+  float *pData = outBuffer.GetData();
+  unsigned nFrames = outBuffer.GetNFrames();
   bool res = true;
 
-  while (n_blocks > 0) {
+  while (nFrames > 0) {
     unsigned currSrcOffset = m_ResamplingPos.GetIndex();
 
     if (currSrcOffset < end_pos) { // the loop has not yet fully played
@@ -365,12 +369,12 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
       bool isToPlayMain = currSrcOffset < transition_position;
       unsigned finishPos = isToPlayMain ? transition_position : end_pos;
       unsigned targetSamples
-        = std::min(m_ResamplingPos.AvailableTargetSamples(finishPos), n_blocks);
+        = std::min(m_ResamplingPos.AvailableTargetSamples(finishPos), nFrames);
 
       assert(targetSamples > 0);
       if (isToPlayMain) {
         assert(decode_call);
-        (this->*decode_call)(buffer, targetSamples);
+        (this->*decode_call)(pData, targetSamples);
       } else {
         assert(end_decode_call);
 
@@ -378,11 +382,11 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
         GoToEndSegment();
         // we continue to use the same position as before because end_ptr is a
         // "virtual" pointer: end_data - transition_offset
-        (this->*end_decode_call)(buffer, targetSamples);
+        (this->*end_decode_call)(pData, targetSamples);
       }
-      buffer += 2 * targetSamples;
-      n_blocks -= targetSamples;
-      assert(!n_blocks || m_ResamplingPos.GetIndex() >= finishPos);
+      pData += 2 * targetSamples;
+      nFrames -= targetSamples;
+      assert(!nFrames || m_ResamplingPos.GetIndex() >= finishPos);
     } else if (m_NextStartSegmentIndex >= 0) {
       // switch to the start of the loop.
       // overflowOffset must be computed BEFORE GoToStartSegment(): it
@@ -404,12 +408,9 @@ bool GOSoundStream::ReadBlock(float *buffer, unsigned int n_blocks) {
         m_NextStartSegmentIndex = -1;
       }
     } else { // no loop available
-      // fill the buffer with zeros
-      float *p = buffer;
-
-      for (unsigned i = n_blocks * 2; i > 0; i--)
-        *(p++) = 0.0f;
-      n_blocks = 0;
+      outBuffer.GetSubBuffer(outBuffer.GetNFrames() - nFrames, nFrames)
+        .FillWithSilence();
+      nFrames = 0;
       res = false;
     }
   }

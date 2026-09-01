@@ -12,6 +12,7 @@
 #include "GOSoundResample.h"
 
 class GOSoundAudioSection;
+class GOSoundBufferMutable;
 
 class GOSoundStream {
 private:
@@ -131,7 +132,7 @@ public:
     const GOSoundStream *pExistingStream);
 
   /* Read an audio buffer from an audio section stream */
-  bool ReadBlock(float *buffer, unsigned int n_blocks);
+  bool ReadBlock(GOSoundBufferMutable &outBuffer);
 };
 
 #endif /* GOSOUNDSTREAM_H */
