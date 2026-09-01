@@ -224,6 +224,8 @@ sound/ports/GOSoundPort.cpp
 sound/ports/GOSoundPortFactory.cpp
 sound/ports/GOSoundPortaudioPort.cpp
 sound/ports/GOSoundRtPort.cpp
+sound/processing/GOSoundProcessingChain.cpp
+sound/processing/GOSoundProcessingChainState.cpp
 sound/providers/GOSoundProvider.cpp
 sound/providers/GOSoundProviderSynthedTrem.cpp
 sound/providers/GOSoundProviderWave.cpp

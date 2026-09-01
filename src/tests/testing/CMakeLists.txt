@@ -26,6 +26,9 @@ set(go_tests
     sound/GOTestSoundOrganEngineStress.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
     sound/playing/GOTestSoundStream.cpp
+    sound/processing/GOSoundProcessingTestImpls.cpp
+    sound/processing/GOTestSoundProcessingChain.cpp
+    sound/processing/GOTestSoundProcessorTyped.cpp
     sound/reverb/GOTestSoundReverb.cpp
     sound/tasks/GOSoundCooperativeTaskTestImpl.cpp
     sound/tasks/GOSoundTaskTestImpl.cpp
