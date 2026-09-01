@@ -60,6 +60,11 @@ private:
    * stale memory (silent input stays exactly silent). */
   void TestBandStateClearedWhenBecomingInactive();
 
+  /** A band whose corner is at or above Nyquist is not isActive (it would be
+   * unstable), and becomes isActive after EnsureSetup() with a sampleRate
+   * high enough for that corner. */
+  void TestBandAboveNyquistIsInactiveUntilSampleRateAllowsIt();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

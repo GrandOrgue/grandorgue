@@ -34,6 +34,7 @@ class GOSoundBufferPlanarMutable;
 class GOSoundBufferTaskBase;
 class GOSoundGroupTask;
 class GOSoundOutputTask;
+class GOSoundProcessingChain;
 class GOSoundReleaseTask;
 class GOSoundTouchTask;
 class GOSoundTremulantTask;
@@ -541,6 +542,16 @@ public:
    */
   std::vector<float> GetMeterInfo();
   GOScheduler &GetScheduler() { return m_scheduler; }
+
+  /** @return windchestN's processing chain (0 = the synthetic
+   * detached-release owner, 1..N = real windchests in r_OrganModel order),
+   * built by the most recent BuildEngine(). Asserts the engine is not IDLE
+   * (i.e. BuildEngine() has run), in addition to GetWindchestTaskAt()'s
+   * own range assert. Defined in the .cpp file: GOSoundWindchestTask is
+   * only forward-declared here, so calling its GetChain() needs the
+   * complete type, only available where GOSoundWindchestTask.h is
+   * included. */
+  const GOSoundProcessingChain &GetWindchestChainAt(unsigned windchestN);
 
   /*
    * Lifecycle state

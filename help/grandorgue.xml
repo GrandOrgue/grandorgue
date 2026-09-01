@@ -5929,6 +5929,43 @@ role="bold">Group</emphasis> attribute are grouped in the same submenu.
 	  windchest volume at all.
 	</para>
       </sect2>
+      <sect2>
+	<title>Low/high shelf frequency and attenuation</title>
+	<para>
+	  In addition to the overall volume reduction controlled by
+	  <emphasis>Minimum amplitude level</emphasis>, an enclosure can apply a
+	  two-band shelf equalizer that cuts low or high frequencies more as it
+	  closes, mimicking how a real swell box attenuates treble more than
+	  bass. The equalizer is defined by two independent bands, each with its
+	  own corner frequency and attenuation:
+	</para>
+	<simpara>
+	  <emphasis role="bold">Low shelf frequency (Hz)</emphasis> and
+	  <emphasis role="bold">Low shelf attenuation (dB)</emphasis> control the
+	  cut applied to frequencies below the given corner frequency.
+	</simpara>
+	<simpara>
+	  <emphasis role="bold">High shelf frequency (Hz)</emphasis> and
+	  <emphasis role="bold">High shelf attenuation (dB)</emphasis> control
+	  the cut applied to frequencies above the given corner frequency.
+	</simpara>
+	<para>
+	  Each attenuation value is entered as a non-negative number of
+	  decibels (allowed range 0&#160;-&#160;121) and represents the cut
+	  applied when the enclosure is fully closed. As the enclosure opens,
+	  the attenuation fades linearly to 0&#160;dB, so the filter has no
+	  effect at all when the enclosure is fully open. Setting an
+	  attenuation to 0 disables that band's filter entirely; the
+	  corresponding frequency field is only meaningful, and only needs to
+	  be set, when its attenuation is non-zero.
+	</para>
+	<para>
+	  For enclosures found in the organ definition file, these values are
+	  read-only here and can only be changed by editing the definition
+	  file. For enclosures added internally by GrandOrgue, they can be
+	  edited directly and are saved with the current preset.
+	</para>
+      </sect2>
     </sect1>
     <sect1>
       <title>Buttons row</title>
@@ -8412,6 +8449,51 @@ of MIDIInputNumber to make initial configurations easy for the user.
           <listitem>
             <para>
 (integer 0 - 100, required) Minimum volume, if the enclosure is closed.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>LowShelfAttenuationDb</term>
+          <listitem>
+            <para>
+(float 0 - 121, default: 0) Attenuation, in decibels, applied to
+frequencies below <emphasis>LowShelfFrequency</emphasis> when the enclosure
+is fully closed. The attenuation fades linearly to 0&#160;dB as the
+enclosure opens, reaching no attenuation at all when fully open. A value of
+0 (the default) disables the low-shelf filter entirely. Together with
+<emphasis>HighShelfAttenuationDb</emphasis>, this lets a closing swell box
+cut treble more than bass, in addition to the overall volume reduction
+controlled by <emphasis>AmpMinimumLevel</emphasis>.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>LowShelfFrequency</term>
+          <listitem>
+            <para>
+(float &gt; 0, required if <emphasis>LowShelfAttenuationDb</emphasis> is
+greater than 0) The corner frequency, in Hz, of the low-shelf filter.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HighShelfAttenuationDb</term>
+          <listitem>
+            <para>
+(float 0 - 121, default: 0) Attenuation, in decibels, applied to
+frequencies above <emphasis>HighShelfFrequency</emphasis> when the
+enclosure is fully closed. The attenuation fades linearly to 0&#160;dB as
+the enclosure opens, reaching no attenuation at all when fully open. A
+value of 0 (the default) disables the high-shelf filter entirely.
+     </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HighShelfFrequency</term>
+          <listitem>
+            <para>
+(float &gt; 0, required if <emphasis>HighShelfAttenuationDb</emphasis> is
+greater than 0) The corner frequency, in Hz, of the high-shelf filter.
      </para>
           </listitem>
         </varlistentry>
