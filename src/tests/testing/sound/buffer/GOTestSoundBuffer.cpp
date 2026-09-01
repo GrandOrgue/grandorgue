@@ -161,32 +161,7 @@ void GOTestSoundBuffer::TestGetSubBuffer() {
 }
 
 void GOTestSoundBuffer::TestInvalidBuffer() {
-  // Buffer with null pointer
-  GOSoundBuffer nullBuffer(nullptr, 2, 4);
-  GOAssert(
-    !nullBuffer.isValid(), "Buffer with null data pointer should be invalid");
-
-  // Buffer with zero channels
-  float dummyData[8];
-  GOSoundBuffer zeroChannelsBuffer(dummyData, 0, 4);
-  GOAssert(
-    !zeroChannelsBuffer.isValid(), "Buffer with 0 channels should be invalid");
-
-  // Buffer with zero frames
-  GOSoundBuffer zeroFramesBuffer(dummyData, 2, 0);
-  GOAssert(
-    !zeroFramesBuffer.isValid(), "Buffer with 0 frames should be invalid");
-
-  // Valid buffer with one frame
-  float singleFrame[2] = {1.0f, 2.0f};
-  GOSoundBuffer singleBuffer(singleFrame, 2, 1);
-  GOAssert(singleBuffer.isValid(), "Buffer with 1 frame should be valid");
-
-  GOAssert(
-    singleBuffer.GetNItems() == 2,
-    std::format(
-      "Buffer with 2 channels and 1 frame should have 2 total items (got: {})",
-      singleBuffer.GetNItems()));
+  TestNullAndZeroDimensionInvalid<GOSoundBuffer>("InvalidBuffer");
 }
 
 void GOTestSoundBuffer::TestEdgeCases() {

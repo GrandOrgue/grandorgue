@@ -78,6 +78,21 @@ public:
 
     dstBuffer.CopyChannelFrom(*this, 0, dstChannel);
   }
+
+  /**
+   * Add data from a specific channel of a multi-channel source buffer.
+   * This mono buffer must have the same number of frames as the source
+   * buffer.
+   * @param srcBuffer Source buffer to add from
+   * @param srcChannelI Channel index in source buffer to add from (0-based)
+   */
+  inline void AddChannelFrom(
+    const GOSoundBuffer &srcBuffer, unsigned srcChannelI) {
+    GOSoundBufferMutable::assertChannelsCompatible(
+      *this, srcBuffer, srcChannelI, 0);
+
+    GOSoundBufferMutable::AddChannelFrom(srcBuffer, srcChannelI, 0);
+  }
 };
 
 #endif /* GOSOUNDBUFFERMUTABLEMONO_H */

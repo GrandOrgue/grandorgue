@@ -143,6 +143,35 @@ void GOTestSoundBufferMutableMono::TestCopyMonoToChannel(
   }
 }
 
+void GOTestSoundBufferMutableMono::TestAddMonoFromChannel(
+  GOSoundBufferMutableMono &monoBuffer,
+  const GOSoundBuffer &srcBuffer,
+  unsigned channelI) {
+  const unsigned nFrames = monoBuffer.GetNFrames();
+  std::vector<GOSoundBuffer::Item> oldData(nFrames);
+
+  std::memcpy(oldData.data(), monoBuffer.GetData(), monoBuffer.GetNBytes());
+
+  monoBuffer.AddChannelFrom(srcBuffer, channelI);
+
+  const unsigned srcNChannels = srcBuffer.GetNChannels();
+
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
+    const float gotValue = monoBuffer.GetData()[frameI];
+    const float expectedValue
+      = oldData[frameI] + srcBuffer.GetData()[frameI * srcNChannels + channelI];
+
+    GOAssert(
+      gotValue == expectedValue,
+      std::format(
+        "AddChannelFrom channel {}, frame {} should be {} (got: {})",
+        channelI,
+        frameI,
+        expectedValue,
+        gotValue));
+  }
+}
+
 void GOTestSoundBufferMutableMono::TestCopyChannelFrom() {
   const unsigned srcNChannels = 3;
   const unsigned nSrcFrames = 4;
@@ -184,6 +213,28 @@ void GOTestSoundBufferMutableMono::TestCopyChannelTo() {
   TestCopyMonoToChannel(monoBuffer, dstBuffer, 0);
   TestCopyMonoToChannel(monoBuffer, dstBuffer, 1);
   TestCopyMonoToChannel(monoBuffer, dstBuffer, 2);
+}
+
+void GOTestSoundBufferMutableMono::TestAddChannelFrom() {
+  const unsigned srcNChannels = 3;
+  const unsigned nSrcFrames = 4;
+  const unsigned srcNItems = srcNChannels * nSrcFrames;
+
+  // Create multi-channel source buffer
+  std::vector<GOSoundBuffer::Item> srcData(srcNItems);
+
+  fillWithSequential(srcData.data(), srcNItems, 1.0f);
+
+  GOSoundBuffer srcBuffer(srcData.data(), srcNChannels, nSrcFrames);
+
+  // Create mono destination buffer
+  std::vector<GOSoundBuffer::Item> monoData(nSrcFrames);
+  GOSoundBufferMutableMono monoBuffer(monoData.data(), nSrcFrames);
+
+  for (unsigned channelI = 0; channelI < srcNChannels; ++channelI) {
+    fillWithSequential(monoBuffer, 100.0f * static_cast<float>(channelI + 1));
+    TestAddMonoFromChannel(monoBuffer, srcBuffer, channelI);
+  }
 }
 
 void GOTestSoundBufferMutableMono::TestInvalidBuffer() {
@@ -263,6 +314,7 @@ void GOTestSoundBufferMutableMono::run() {
   TestGetSubBuffer();
   TestCopyChannelFrom();
   TestCopyChannelTo();
+  TestAddChannelFrom();
   TestInvalidBuffer();
   TestEdgeCases();
 }

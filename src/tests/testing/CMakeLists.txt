@@ -8,12 +8,17 @@ set(go_tests
     model/GOTestOrganModel.cpp
     model/GOTestSwitch.cpp
     model/GOTestWindchest.cpp
+    sound/buffer/GOTestPerfSoundBufferBase.cpp
     sound/buffer/GOTestPerfSoundBufferMutable.cpp
+    sound/buffer/GOTestPerfSoundBufferPlanarMutable.cpp
     sound/buffer/GOTestSoundBuffer.cpp
     sound/buffer/GOTestSoundBufferBase.cpp
     sound/buffer/GOTestSoundBufferManaged.cpp
     sound/buffer/GOTestSoundBufferMutable.cpp
     sound/buffer/GOTestSoundBufferMutableMono.cpp
+    sound/buffer/GOTestSoundBufferPlanar.cpp
+    sound/buffer/GOTestSoundBufferPlanarManaged.cpp
+    sound/buffer/GOTestSoundBufferPlanarMutable.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
     sound/playing/GOTestSoundStream.cpp
     sound/GOTestSoundOrganEngineBase.cpp

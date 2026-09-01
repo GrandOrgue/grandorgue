@@ -209,7 +209,6 @@ model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
 scheduler/GOScheduler.cpp
 scheduler/GOSchedulerThread.cpp
-sound/buffer/GOSoundBufferManaged.cpp
 sound/playing/GOSoundAudioSection.cpp
 sound/playing/GOSoundFader.cpp
 sound/playing/GOSoundFilter.cpp
