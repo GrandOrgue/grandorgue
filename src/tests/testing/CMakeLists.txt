@@ -21,6 +21,7 @@ set(go_tests
     sound/buffer/GOTestSoundBufferPlanarMutable.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
     sound/playing/GOTestSoundStream.cpp
+    sound/reverb/GOTestSoundReverb.cpp
     sound/GOTestSoundOrganEngineBase.cpp
     sound/GOTestSoundOrganEngine.cpp
     sound/GOTestSoundCallbackConnector.cpp

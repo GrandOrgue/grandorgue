@@ -8,7 +8,8 @@
 #ifndef GOSOUNDREVERB_H
 #define GOSOUNDREVERB_H
 
-#include <wx/string.h>
+#include <string>
+#include <vector>
 
 #include "ptrvector.h"
 
@@ -31,7 +32,7 @@ public:
     unsigned len;
     unsigned delay;
     float gain;
-    wxString file;
+    std::string file;
   };
 
   /** Named constant meaning "reverb disabled". Used as default. */
@@ -39,6 +40,35 @@ public:
 
   /** Creates a ReverbConfig from GOConfig. */
   static ReverbConfig createReverbConfig(const GOConfig &config);
+
+  /**
+   * The loaded and pre-processed impulse-response data for a ReverbConfig:
+   * gain-applied, offset/length-trimmed, and resampled to the target sample
+   * rate - exactly the bytes Convproc::impdata_create() needs, with no file
+   * I/O left to do. Returned by loadIRData(); consumed by Setup() and by
+   * sound/effects/GOSoundReverbProcessor's EnsureSetup()/CreateTypedState()
+   * split (Stage 5).
+   */
+  struct IRData {
+    /** Impulse response samples, already offset-trimmed, gain-applied, and
+     * resampled to the target sample rate. */
+    std::vector<float> data;
+    /** Playback delay, in samples at the target sample rate. */
+    unsigned delay;
+    /** Whether to inject a direct (dry) impulse at index 0, ahead of data. */
+    bool isDirect;
+  };
+
+  /**
+   * Loads and pre-processes an impulse-response WAV file for config,
+   * resampling it to sampleRate if needed. All file I/O and resampling -
+   * everything expensive - happens here; the result is cheap to replay into
+   * any number of Convproc instances via impdata_create().
+   * @throws wxString on any load error (missing/invalid file, out of
+   *   memory, resampling failure) - callers handle this the same way
+   *   Setup() does below.
+   */
+  static IRData loadIRData(const ReverbConfig &config, unsigned sampleRate);
 
 private:
   unsigned m_channels;

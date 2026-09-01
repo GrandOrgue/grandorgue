@@ -8,6 +8,8 @@
 #include "GOSoundReverb.h"
 
 #include <algorithm>
+#include <memory>
+#include <new>
 
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -20,7 +22,7 @@
 #include "zita-convolver.h"
 
 const GOSoundReverb::ReverbConfig GOSoundReverb::CONFIG_REVERB_DISABLED
-  = {false, false, 0, 0, 0, 0, 0.0f, wxEmptyString};
+  = {false, false, 0, 0, 0, 0, 0.0f, std::string()};
 
 GOSoundReverb::ReverbConfig GOSoundReverb::createReverbConfig(
   const GOConfig &config) {
@@ -32,7 +34,7 @@ GOSoundReverb::ReverbConfig GOSoundReverb::createReverbConfig(
     .len = config.ReverbLen(),
     .delay = config.ReverbDelay(),
     .gain = config.ReverbGain(),
-    .file = config.ReverbFile(),
+    .file = std::string(config.ReverbFile().ToUTF8().data()),
   };
 }
 
@@ -46,6 +48,88 @@ void GOSoundReverb::Cleanup() {
     m_engine[i]->stop_process();
     m_engine[i]->cleanup();
   }
+}
+
+GOSoundReverb::IRData GOSoundReverb::loadIRData(
+  const ReverbConfig &config, unsigned sampleRate) {
+  GOWave wav;
+  unsigned offset = config.startOffset;
+  const float gain = config.gain;
+  unsigned len;
+
+  GOStandardFile reverb_file(wxString::FromUTF8(config.file.c_str()));
+  wav.Open(&reverb_file);
+  if (offset > wav.GetLength())
+    throw(wxString) _("Invalid reverb start offset");
+  len = wav.GetLength();
+
+  // Read directly into the vector that (modulo a resample below) becomes
+  // IRData::data, rather than a malloc'd scratch buffer copied into it
+  // afterwards: at MAX_SAMPLE_LENGTH, a second full-size copy would nearly
+  // double peak memory right when a large IR is most likely to be declined
+  // as out of memory.
+  std::vector<float> data;
+
+  try {
+    data.resize(len);
+  } catch (const std::bad_alloc &) {
+    throw(wxString) _("Out of memory");
+  }
+  wav.ReadSamples(
+    data.data(), GOWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -config.channel);
+
+  for (float &sample : data)
+    sample *= gain;
+  if (len >= offset + config.len && config.len)
+    len = offset + config.len;
+  if (wav.GetSampleRate() != sampleRate) {
+    GOSoundResample resample;
+    // Mallocs its own buffer and updates len to the resampled length.
+    float *const resampled = resample.NewResampledMono(
+      data.data(), len, wav.GetSampleRate(), sampleRate);
+
+    if (!resampled)
+      throw(wxString) _("Resampling failed");
+
+    // Owns resampled for this scope, so it is freed even if the code below
+    // throws.
+    std::unique_ptr<float, decltype(&free)> resampledData(resampled, &free);
+
+    if (len <= data.capacity()) {
+      // The resampled data still fits in the existing buffer: reuse it in
+      // place instead of allocating a second one.
+      std::copy(resampled, resampled + len, data.begin());
+      data.resize(len);
+    } else {
+      // The existing buffer is too small to hold the resampled data (e.g.
+      // when upsampling). Release it before allocating the bigger one, so
+      // the resampled data and the new vector are the only large buffers
+      // alive at once, instead of three.
+      data.clear();
+      data.shrink_to_fit();
+      try {
+        data.assign(resampled, resampled + len);
+      } catch (const std::bad_alloc &) {
+        throw(wxString) _("Out of memory");
+      }
+    }
+    offset = (offset * sampleRate) / (float)wav.GetSampleRate();
+  }
+  wav.Close();
+
+  IRData irData;
+
+  irData.delay = (sampleRate * config.delay) / 1000;
+  irData.isDirect = config.isDirect;
+  // Shift the kept region to the front of the same buffer and shrink,
+  // instead of assign()-ing a second buffer for the trimmed copy: shrinking
+  // a vector never reallocates, so this is the zero-extra-memory version of
+  // the offset trim.
+  std::copy(data.begin() + offset, data.begin() + len, data.begin());
+  data.resize(len - offset);
+  irData.data = std::move(data);
+
+  return irData;
 }
 
 void GOSoundReverb::Setup(
@@ -68,65 +152,37 @@ void GOSoundReverb::Setup(
     val = Convproc::MINPART;
   if (val > Convproc::MAXPART)
     val = Convproc::MAXPART;
-  float *data = NULL;
-  unsigned len = 0;
   try {
     for (unsigned i = 0; i < m_engine.size(); i++)
       if (m_engine[i]->configure(
             1, 1, 1000000, nSamplesPerBuffer, val, Convproc::MAXPART, 1))
         throw(wxString) _("Invalid reverb configuration (samples per buffer)");
 
-    GOWave wav;
-    unsigned block = 0x4000;
-    unsigned offset = config.startOffset;
-    float gain = config.gain;
+    const IRData irData = loadIRData(config, sampleRate);
+    const unsigned block = 0x4000;
+    float *const d = const_cast<float *>(irData.data.data());
+    const unsigned l = (unsigned)irData.data.size();
 
-    GOStandardFile reverb_file(config.file);
-    wav.Open(&reverb_file);
-    if (offset > wav.GetLength())
-      throw(wxString) _("Invalid reverb start offset");
-    len = wav.GetLength();
-    data = (float *)malloc(sizeof(float) * len);
-    if (!data)
-      throw(wxString) _("Out of memory");
-    wav.ReadSamples(
-      data, GOWave::SF_IEEE_FLOAT, wav.GetSampleRate(), -config.channel);
-    for (unsigned i = 0; i < len; i++)
-      data[i] *= gain;
-    if (len >= offset + config.len && config.len)
-      len = offset + config.len;
-    if (wav.GetSampleRate() != sampleRate) {
-      GOSoundResample resample;
-
-      float *new_data
-        = resample.NewResampledMono(data, len, wav.GetSampleRate(), sampleRate);
-      if (!new_data)
-        throw(wxString) _("Resampling failed");
-      free(data);
-      data = new_data;
-      offset = (offset * sampleRate) / (float)wav.GetSampleRate();
-    }
-    unsigned delay = (sampleRate * config.delay) / 1000;
     for (unsigned i = 0; i < m_channels; i++) {
-      float *d = data + offset;
-      unsigned l = len - offset;
       float g = 1;
-      if (config.isDirect)
+      if (irData.isDirect)
         m_engine[i]->impdata_create(0, 0, 0, &g, 0, 1);
       for (unsigned j = 0; j < l; j += block) {
         m_engine[i]->impdata_create(
-          0, 0, 1, d + j, delay + j, delay + j + std::min(l - j, block));
+          0,
+          0,
+          1,
+          d + j,
+          irData.delay + j,
+          irData.delay + j + std::min(l - j, block));
       }
     }
-    wav.Close();
     for (unsigned i = 0; i < m_engine.size(); i++)
       m_engine[i]->start_process(0, 0);
   } catch (wxString error) {
     wxLogError(_("Reverb load error: %s"), error.c_str());
     m_engine.clear();
   }
-  if (data)
-    free(data);
 }
 
 void GOSoundReverb::Reset() {
