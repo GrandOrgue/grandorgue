@@ -291,7 +291,7 @@ if(USE_INTERNAL_CPPTRACE)
     # Use system zstd to avoid a FetchContent download at build time
     set(CPPTRACE_USE_EXTERNAL_ZSTD      ON  CACHE BOOL "" FORCE)
   endif()
-  add_subdirectory(${CPPTRACE_SRC_DIR})
+  add_subdirectory(${CPPTRACE_SRC_DIR} EXCLUDE_FROM_ALL)
   if(NOT TARGET cpptrace::cpptrace)
     add_library(cpptrace::cpptrace ALIAS cpptrace)
   endif()
