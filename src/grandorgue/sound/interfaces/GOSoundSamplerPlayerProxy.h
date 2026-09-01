@@ -5,24 +5,24 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDORGANINTERFACEPROXY_H
-#define GOSOUNDORGANINTERFACEPROXY_H
+#ifndef GOSOUNDSAMPLERPLAYERPROXY_H
+#define GOSOUNDSAMPLERPLAYERPROXY_H
 
 #include "GOInterfaceProxy.h"
-#include "GOSoundOrganInterface.h"
+#include "GOSoundSamplerPlayerInterface.h"
 
 /**
- * Proxy implementation for GOSoundOrganInterface.
+ * Proxy implementation for GOSoundSamplerPlayerInterface.
  * Provides safe default behavior when not connected to a real sound engine.
  */
-class GOSoundOrganInterfaceProxy
-  : public GOInterfaceProxy<GOSoundOrganInterface> {
+class GOSoundSamplerPlayerProxy
+  : public GOInterfaceProxy<GOSoundSamplerPlayerInterface> {
 public:
   /**
    * Gets the sample rate. Returns 48000 if not connected.
    */
   unsigned GetSampleRate() const override {
-    return ForwardCall(&GOSoundOrganInterface::GetSampleRate, 48000u);
+    return ForwardCall(&GOSoundSamplerPlayerInterface::GetSampleRate, 48000u);
   }
 
   /**
@@ -39,7 +39,7 @@ public:
     uint64_t *pStartTimeSamples = nullptr) override {
 
     return ForwardCall(
-      &GOSoundOrganInterface::StartPipeSample,
+      &GOSoundSamplerPlayerInterface::StartPipeSample,
       nullptr,
       pipeProvider,
       windchestN,
@@ -60,7 +60,7 @@ public:
     uint64_t prevEventTime) override {
 
     return ForwardCall(
-      &GOSoundOrganInterface::StartTremulantSample,
+      &GOSoundSamplerPlayerInterface::StartTremulantSample,
       nullptr,
       tremProvider,
       tremulantN,
@@ -75,7 +75,8 @@ public:
     GOSoundSampler *handle,
     unsigned velocity) override {
 
-    ForwardCall(&GOSoundOrganInterface::UpdateVelocity, pipe, handle, velocity);
+    ForwardCall(
+      &GOSoundSamplerPlayerInterface::UpdateVelocity, pipe, handle, velocity);
   }
 
   /**
@@ -84,7 +85,7 @@ public:
   void SwitchSample(
     const GOSoundProvider *pipe, GOSoundSampler *handle) override {
 
-    ForwardCall(&GOSoundOrganInterface::SwitchSample, pipe, handle);
+    ForwardCall(&GOSoundSamplerPlayerInterface::SwitchSample, pipe, handle);
   }
 
   /**
@@ -94,11 +95,11 @@ public:
     const GOSoundProvider *pipe, GOSoundSampler *handle) override {
 
     return ForwardCall(
-      &GOSoundOrganInterface::StopSample,
+      &GOSoundSamplerPlayerInterface::StopSample,
       static_cast<uint64_t>(0),
       pipe,
       handle);
   }
 };
 
-#endif /* GOSOUNDORGANINTERFACEPROXY_H */
+#endif /* GOSOUNDSAMPLERPLAYERPROXY_H */

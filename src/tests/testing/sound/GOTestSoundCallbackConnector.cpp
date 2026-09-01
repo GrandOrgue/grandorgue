@@ -11,9 +11,9 @@
 #include <chrono>
 #include <thread>
 
-#include "sound/GOSoundCallbackConnector.h"
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/interfaces/GOSoundCallbackConnector.h"
 
 const std::string GOTestSoundCallbackConnector::TEST_NAME
   = "GOTestSoundCallbackConnector";

@@ -10,8 +10,8 @@
 #include <wx/intl.h>
 #include <wx/thread.h>
 
-#include "sound/GOSoundCallbackConnector.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/interfaces/GOSoundCallbackConnector.h"
 
 GOSoundPort::GOSoundPort(
   GOSoundCallbackConnector &callbackConnector, const wxString &name)

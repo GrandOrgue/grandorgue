@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDORGANINTERFACE_H
-#define GOSOUNDORGANINTERFACE_H
+#ifndef GOSOUNDSAMPLERPLAYERINTERFACE_H
+#define GOSOUNDSAMPLERPLAYERINTERFACE_H
 
 #include <cstdint>
 
@@ -19,9 +19,9 @@
 class GOSoundProvider;
 class GOSoundSampler;
 
-class GOSoundOrganInterface {
+class GOSoundSamplerPlayerInterface {
 public:
-  virtual ~GOSoundOrganInterface() = default;
+  virtual ~GOSoundSamplerPlayerInterface() = default;
 
   // ProxyDefault: 48000
   virtual unsigned GetSampleRate() const = 0;
@@ -60,4 +60,4 @@ public:
     = 0;
 };
 
-#endif /* GOSOUNDORGANINTERFACE_H */
+#endif /* GOSOUNDSAMPLERPLAYERINTERFACE_H */

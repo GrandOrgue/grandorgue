@@ -19,7 +19,7 @@
 #include "modification/GOModificationProxy.h"
 #include "pipe-config/GOPipeConfigListener.h"
 #include "pipe-config/GOPipeConfigTreeNode.h"
-#include "sound/GOSoundOrganInterfaceProxy.h"
+#include "sound/interfaces/GOSoundSamplerPlayerProxy.h"
 
 #include "GOEventHandlerList.h"
 
@@ -38,7 +38,7 @@ class GOWindchest;
 class GOOrganModel : private GOCombinationButtonSet,
                      public GOCombinationControllerProxy,
                      public GOEventHandlerList,
-                     public GOSoundOrganInterfaceProxy,
+                     public GOSoundSamplerPlayerProxy,
                      public GOMidiSendProxy,
                      public GOPipeConfigListener {
 private:
