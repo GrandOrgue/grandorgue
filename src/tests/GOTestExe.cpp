@@ -18,6 +18,7 @@
 #include "testing/midi/GOTestMidiPlayerContent.h"
 #include "testing/midi/GOTestMidiSendProxy.h"
 #include "testing/model/GOTestDrawStop.h"
+#include "testing/model/GOTestEnclosure.h"
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestPipeConfigTreeNode.h"
 #include "testing/model/GOTestSoundingPipe.h"
@@ -44,8 +45,11 @@
 #include "testing/sound/dsp-kernels/GOTestPerfSoundResample.h"
 #include "testing/sound/dsp-kernels/GOTestSoundOnePoleFilter.h"
 #include "testing/sound/dsp-kernels/GOTestSoundResample.h"
+#include "testing/sound/effects/GOTestPerfSoundShelfFilterProcessor.h"
 #include "testing/sound/effects/GOTestSoundReverbProcessor.h"
 #include "testing/sound/effects/GOTestSoundShelfFilterProcessor.h"
+#include "testing/sound/mappers/GOTestPerfSoundEnclosureShelfMapper.h"
+#include "testing/sound/mappers/GOTestSoundEnclosureShelfMapper.h"
 #include "testing/sound/playing/GOTestPerfSoundPlayingFader.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundPlayingFader.h"
@@ -88,6 +92,7 @@ int main(int argc, char *argv[]) {
   GOTestOrganReader testOrganReader;
   GOTestOrganController testOrganController;
   GOTestDrawStop testDrawStop;
+  GOTestEnclosure testEnclosure;
   GOTestOrganModel testOrganModel;
   GOTestPipeConfigTreeNode testPipeConfigTreeNode;
   GOTestSoundingPipe testSoundingPipe;
@@ -127,6 +132,9 @@ int main(int argc, char *argv[]) {
   GOTestSoundReverb testSoundReverb;
   GOTestSoundReverbProcessor testSoundReverbProcessor;
   GOTestSoundShelfFilterProcessor testSoundShelfFilterProcessor;
+  GOTestPerfSoundShelfFilterProcessor testPerfSoundShelfFilterProcessor;
+  GOTestSoundEnclosureShelfMapper testSoundEnclosureShelfMapper;
+  GOTestPerfSoundEnclosureShelfMapper testPerfSoundEnclosureShelfMapper;
   GOTestSoundWindchestGroupTaskGrid testSoundWindchestGroupTaskGrid;
   GOTestSoundTaskBase testSoundTaskBase;
   GOTestSoundWindchestTask testSoundWindchestTask;

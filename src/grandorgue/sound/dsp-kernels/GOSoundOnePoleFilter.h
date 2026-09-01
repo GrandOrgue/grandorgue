@@ -55,6 +55,27 @@ public:
   };
 
   /**
+   * The Nyquist frequency of a sample rate.
+   * @param sampleRate the audio sample rate in Hz
+   * @return sampleRate / 2, in Hz. Warnings about an ignored corner must show
+   *   it to the user
+   */
+  static double getNyquist(unsigned sampleRate) { return sampleRate / 2.0; }
+
+  /**
+   * The single definition of the Nyquist limit of a corner frequency: a
+   * corner at or above Nyquist makes a shelf filter unstable, so
+   * computeCoeffs() leaves such a shelf inactive. It says nothing about
+   * non-positive frequencies - those are invalid values, not a limit.
+   * @param frequency a corner frequency, Hz
+   * @param sampleRate the audio sample rate in Hz
+   * @return whether the frequency is below getNyquist(sampleRate)
+   */
+  static bool isBelowNyquist(double frequency, unsigned sampleRate) {
+    return frequency < getNyquist(sampleRate);
+  }
+
+  /**
    * Computes the coefficients of a one-pole filter of the given type. Pure
    * function, no allocation/IO - cheap but not free (a handful of
    * cos/sin/pow calls), so callers should call it only when type,
@@ -63,7 +84,9 @@ public:
    * @param type Filter type; TYPE_NONE yields the identity Coeffs
    * @param frequency Cutoff (LPF/HPF) or shelf corner frequency, in Hz
    * @param gain Shelf gain in dB, ignored for LPF/HPF; 0 for a shelf type
-   *   yields the identity Coeffs, same as TYPE_NONE
+   *   yields the identity Coeffs, same as TYPE_NONE. A shelf frequency that
+   *   is not in (0, sampleRate / 2) also yields the identity Coeffs because
+   *   the filter would be unstable there
    * @param sampleRate Audio sample rate in Hz; 0 yields the identity Coeffs
    *   (filter not usable without a valid sample rate)
    * @param outCoeffs Receives the computed coefficients, with isActive set

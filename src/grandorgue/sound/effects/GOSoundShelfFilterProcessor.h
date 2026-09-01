@@ -27,6 +27,8 @@ class GOSoundShelfFilterProcessor
 private:
   friend class GOTestSoundShelfFilterProcessor; // direct access for unit
                                                 // tests
+  friend class GOTestSoundEnclosureShelfMapper; // canary-corruption access,
+                                                // see the class comment
 
   double m_LowFrequency = 0, m_LowGain = 0;
   double m_HighFrequency = 0, m_HighGain = 0;
