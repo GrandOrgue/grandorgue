@@ -34,6 +34,8 @@
 #include "testing/sound/buffer/GOTestSoundBufferPlanarMutable.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
+#include "testing/sound/processing/GOTestSoundProcessingChain.h"
+#include "testing/sound/processing/GOTestSoundProcessorTyped.h"
 
 int main(int argc, char *argv[]) {
   /*
@@ -79,6 +81,8 @@ int main(int argc, char *argv[]) {
   GOTestPerfSoundBufferPlanarMutable testPerfSoundBufferPlanarMutable;
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
+  GOTestSoundProcessingChain testSoundProcessingChain;
+  GOTestSoundProcessorTyped testSoundProcessorTyped;
   GOTestSoundOrganEngine testSoundOrganEngine;
   GOTestSoundCallbackConnector testSoundCallbackConnector;
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
