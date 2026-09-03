@@ -540,24 +540,39 @@ bool GOSoundOrganEngine::ProcessAudioCallback(
  */
 
 std::vector<float> GOSoundOrganEngine::GetMeterInfo() {
-  // GUI thread: m_LifecycleMutex prevents concurrent BuildEngine/DestroyEngine
-  // from modifying m_MeterInfo while we read it.
-  GOMutexLocker locker(m_LifecycleMutex);
+  /* GUI thread: m_LifecycleMutex prevents concurrent BuildEngine/DestroyEngine
+     from modifying m_MeterInfo while we read it.
+     The lock is taken with try_lock because the GUI thread may re-enter this
+     method while it already holds m_LifecycleMutex: BuildEngine() and
+     DestroyEngine() hold the mutex for their whole duration, and any wxLog*
+     call made from inside them reaches GOLogWindow::LogMsg, which re-enters
+     the event loop via wxApp::Yield() and dispatches the pending wxEVT_METERS.
+     m_LifecycleMutex is not recursive, so a blocking lock would deadlock the
+     application (issue #2606).
+     When the mutex is occupied, an empty result is returned and
+     GOAppWindow::OnMeters skips this meter frame. Nothing is lost: the audio
+     thread keeps accumulating peaks in m_MeterInfo until the next poll. */
+  GOMutexLocker locker(
+    m_LifecycleMutex, true, "GOSoundOrganEngine::GetMeterInfo");
+  std::vector<float> result;
 
-  // result[0] = polyphony ratio; result[1..] = per-channel peak levels.
-  // When not working, m_MeterInfo may be empty; result contains only zeros.
-  std::vector<float> result(m_MeterInfo.size() + 1, 0.0f);
+  if (locker.IsLocked()) {
+    // result[0] = polyphony ratio; result[1..] = per-channel peak levels.
+    // When not working, m_MeterInfo may be empty; result contains only zeros.
+    result.assign(m_MeterInfo.size() + 1, 0.0f);
 
-  if (IsWorking()) {
-    const unsigned hardPolyphony = GetHardPolyphony();
-    float *pResult = result.data();
+    if (IsWorking()) {
+      const unsigned hardPolyphony = GetHardPolyphony();
+      float *pResult = result.data();
 
-    assert(hardPolyphony > 0);
-    // GetAndResetUsedPolyphony() reads accumulated peak polyphony and resets it
-    *(pResult++) = m_SamplerPlayer.GetAndResetUsedPolyphony()
-      / static_cast<float>(hardPolyphony);
-    for (std::atomic<float> &v : m_MeterInfo)
-      *(pResult++) = v.exchange(0.0f);
+      assert(hardPolyphony > 0);
+      // GetAndResetUsedPolyphony() reads accumulated peak polyphony and resets
+      // it
+      *(pResult++) = m_SamplerPlayer.GetAndResetUsedPolyphony()
+        / static_cast<float>(hardPolyphony);
+      for (std::atomic<float> &v : m_MeterInfo)
+        *(pResult++) = v.exchange(0.0f);
+    }
   }
   return result;
 }

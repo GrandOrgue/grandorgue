@@ -170,6 +170,9 @@ private:
   // Any function that must guarantee the lifecycle state does not change
   // during its execution (e.g. GetMeterInfo) must acquire this mutex before
   // reading m_LifecycleState.
+  // The mutex is not recursive, and BuildEngine/DestroyEngine may re-enter the
+  // wx event loop while holding it (logging calls wxApp::Yield). Functions
+  // called from event handlers must therefore lock it with try_lock only.
   GOMutex m_LifecycleMutex;
 
   std::atomic<LifecycleState> m_LifecycleState;
@@ -189,7 +192,9 @@ private:
   // [B3] m_MeterInfo: per-channel peak levels for the meter display
   //   — uses nTotalChannels accumulated over m_OutputStates [B2]
   //   — audio thread: NextPeriod() writes via atomic_fetch_max_relaxed()
-  //   — GUI thread: GetMeterInfo() reads and resets under m_LifecycleMutex
+  //   — GUI thread: GetMeterInfo() reads and resets it when it succeeds in
+  //     try-locking m_LifecycleMutex; otherwise the poll is skipped and the
+  //     peaks stay accumulated until the next one
   std::vector<std::atomic<float>> m_MeterInfo;
   // [B4] mp_DownmixTask: optional stereo downmix task (only when m_IsDownmix)
   //   — uses mp_AudioGroupTasks [B1] via SetOutputs()
@@ -359,6 +364,15 @@ public:
    */
 
   uint64_t GetTime() const { return m_SamplerPlayer.GetTime(); }
+
+  /**
+   * Returns the current meter values for the GUI: result[0] is the polyphony
+   * ratio, result[1..] are the per-channel peak levels, which are reset by
+   * this call.
+   * Never blocks: if m_LifecycleMutex is occupied (the engine is being built
+   * or destroyed) an empty vector is returned and the caller must skip the
+   * meter frame.
+   */
   std::vector<float> GetMeterInfo();
   GOScheduler &GetScheduler() { return m_scheduler; }
 

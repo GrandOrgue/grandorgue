@@ -1,13 +1,12 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOLogWindow.h"
 
-#include <wx/app.h>
 #include <wx/artprov.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
@@ -130,6 +129,16 @@ void GOLogWindow::LogMsg(
   e.SetTimestamp(timestamp);
   GetEventHandler()->AddPendingEvent(e);
   count++;
+  /* A long operation running in the GUI thread may emit thousands of messages
+     without returning to the event loop, so the pending event queue has to be
+     drained from time to time.
+     Only this window's own queue is processed. A full wxApp::Yield() would
+     dispatch any other pending event as well, and log messages are emitted
+     from places that must not be re-entered: it used to dispatch wxEVT_METERS
+     into GOSoundOrganEngine::GetMeterInfo() and a pending toolbar click into
+     GOAppWindow::OnAudioPanic() while GOSoundOrganEngine::BuildEngine() was
+     holding m_LifecycleMutex, which deadlocked the application (issue #2606).
+   */
   if ((count % 100) == 0)
-    wxTheApp->Yield(true);
+    GetEventHandler()->ProcessPendingEvents();
 }
