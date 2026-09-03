@@ -1,0 +1,15 @@
+# LeakSanitizer suppressions for GrandOrgue.
+#
+# fontconfig, pango, GTK and GLib keep process-wide caches that are
+# intentionally never released at exit. They dominate the leak report
+# (hundreds of blocks) and hide the leaks that belong to GrandOrgue itself.
+
+leak:libfontconfig
+leak:libpango
+leak:libpangoft2
+leak:libpangocairo
+leak:libpangocairo-1.0
+leak:libgtk-3
+leak:libgdk-3
+leak:libglib-2.0
+leak:libgobject-2.0
