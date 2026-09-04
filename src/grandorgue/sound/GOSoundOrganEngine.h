@@ -146,12 +146,8 @@ private:
   unsigned m_NAuxThreads;
   bool m_IsDownmix;
   unsigned m_NReleaseRepeats;
-  // TODO: rename to m_gain (stores gain in dB; in GrandOrgue "gain" means dB)
-  int m_volume;
-  // TODO: rename to m_amplitude (stores the linear amplitude coefficient
-  //       derived from m_volume; in GrandOrgue "amplitude" means a linear
-  //       coefficient)
-  float m_gain;
+  int m_gain;
+  float m_amplitude;
   GOSoundReverb::ReverbConfig m_ReverbConfig;
 
   /*
@@ -295,13 +291,10 @@ public:
     m_ReverbConfig = config;
   }
 
-  // TODO: rename to GetAmplitude() (returns linear amplitude coefficient)
-  float GetGain() const { return m_gain; }
+  float GetAmplitude() const { return m_amplitude; }
 
-  // TODO: rename to GetGain() (returns gain in dB)
-  int GetVolume() const { return m_volume; }
-  // TODO: rename to SetGain(int gain)
-  void SetVolume(int volume);
+  int GetGain() const { return m_gain; }
+  void SetGain(int gain);
 
   unsigned GetHardPolyphony() const {
     return m_SamplerPlayer.GetHardPolyphony();
