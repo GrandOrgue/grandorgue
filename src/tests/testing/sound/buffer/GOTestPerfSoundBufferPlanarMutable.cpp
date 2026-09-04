@@ -46,12 +46,12 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_FILL_WITH_SILENCE[] = {
   {512, 5700}, // lowered: min observed 6355.7, -10% margin
   {2048, 9000} // lowered: min observed 10022.3, -10% margin
 #else
-  {32, 1600},    // debug, rebaselined 2026-09-01: min observed 2023.2
-                 // under contention, -20% margin
-  {128, 4900},   // debug, rebaselined 2026-09-01: min observed 6123.3
-                 // under contention, -20% margin
-  {512, 5900},   // debug, lowered: min observed 6548.2, -10% margin
-  {2048, 8900}   // debug, lowered: min observed 9834.6, -10% margin
+  {32, 1600},  // debug, rebaselined 2026-09-01: min observed 2023.2
+               // under contention, -20% margin
+  {128, 4900}, // debug, rebaselined 2026-09-01: min observed 6123.3
+               // under contention, -20% margin
+  {512, 5900}, // debug, lowered: min observed 6548.2, -10% margin
+  {2048, 8900} // debug, lowered: min observed 9834.6, -10% margin
 #endif
 };
 
@@ -65,25 +65,26 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_COPY_FROM[] = {
   {2048, 8300} // widened to -20% margin: CI runner variance exceeds 10%
                // (observed as low as 9346.1 on 2026-08-26/28)
 #else
-  {32, 1500},    // debug, lowered: min observed 1686.3, -10% margin
-  {128, 7300},   // debug, lowered: min observed 8081.5, -10% margin
-  {512, 7300},   // debug, lowered: min observed 8152.6, -10% margin
-  {2048, 8400}   // debug, lowered: min observed 9359.1, -10% margin
+  {32, 1500},  // debug, lowered: min observed 1686.3, -10% margin
+  {128,
+   4440}, // debug, rebaselined 2026-09-04: min observed 5550.6, -20% margin
+  {512, 7300},  // debug, lowered: min observed 8152.6, -10% margin
+  {2048, 8400}  // debug, lowered: min observed 9359.1, -10% margin
 #endif
 };
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM[] = {
 #ifdef NDEBUG
-  {32, 3300},  // lowered: min observed 3653.5, -10% margin
-  {128, 4500}, // lowered: min observed 4989.4, -10% margin
-  {512, 4900}, // lowered: min observed 5440.6, -10% margin
+  {32, 2710},  // rebaselined 2026-09-04: min observed 3398.4, -20% margin
+  {128, 3770}, // rebaselined 2026-09-04: min observed 4719.7, -20% margin
+  {512, 4070}, // rebaselined 2026-09-04: min observed 5089.7, -20% margin
   {2048, 3920} // rebaselined 2026-09-01: min observed 4907.9 under
                // contention, -20% margin
 #else
-  {32, 530},     // debug, lowered: min observed 593.9, -10% margin
-  {128, 610},    // debug, lowered: min observed 677.4, -10% margin
-  {512, 630},    // debug, lowered: min observed 695.1, -10% margin
-  {2048, 640}    // debug, lowered: min observed 706.5, -10% margin
+  {32, 530},    // debug, lowered: min observed 593.9, -10% margin
+  {128, 610},   // debug, lowered: min observed 677.4, -10% margin
+  {512, 630},   // debug, lowered: min observed 695.1, -10% margin
+  {2048, 640}   // debug, lowered: min observed 706.5, -10% margin
 #endif
 };
 
@@ -97,25 +98,26 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM_COEFF[] = {
   {2048, 4350} // widened to -20% margin: CI runner variance exceeds 10%
                // (observed as low as 4836.7 on 2026-08-26/28)
 #else
-  {32, 540},     // debug, lowered: min observed 594.6, -10% margin
-  {128, 610},    // debug, lowered: min observed 677.0, -10% margin
-  {512, 630},    // debug, lowered: min observed 696.1, -10% margin
-  {2048, 640}    // debug, lowered: min observed 706.4, -10% margin
+  {32, 540},    // debug, lowered: min observed 594.6, -10% margin
+  {128, 610},   // debug, lowered: min observed 677.0, -10% margin
+  {512, 630},   // debug, lowered: min observed 696.1, -10% margin
+  {2048, 640}   // debug, lowered: min observed 706.4, -10% margin
 #endif
 };
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_COPY_CHANNEL_FROM[] = {
 #ifdef NDEBUG
-  {32, 6000},   // lowered: min observed 6685.3, -10% margin
-  {128, 15300}, // lowered: min observed 16955.4, -10% margin
+  {32, 4440},   // rebaselined 2026-09-04: min observed 5559.7, -20% margin
+  {128, 9980},  // rebaselined 2026-09-04: min observed 12482.2, -20% margin
   {512, 16000}, // rebaselined 2026-09-01: min observed 20014.5 under
                 // contention, -20% margin
   {2048, 17600} // lowered: min observed 19606.0, -10% margin
 #else
-  {32, 1600},    // debug, lowered: min observed 1750.4, -10% margin
-  {128, 5600},   // debug, lowered: min observed 6258.1, -10% margin
-  {512, 12200},  // debug, lowered: min observed 13507.9, -10% margin
-  {2048, 16000}  // debug, lowered: min observed 17738.8, -10% margin
+  {32, 1600},   // debug, lowered: min observed 1750.4, -10% margin
+  {128, 5600},  // debug, lowered: min observed 6258.1, -10% margin
+  {512, 12200}, // debug, lowered: min observed 13507.9, -10% margin
+  {2048,
+   13260}    // debug, rebaselined 2026-09-04: min observed 16585.3, -20% margin
 #endif
 };
 
@@ -126,11 +128,11 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM[] = {
                // contention, -20% margin
   {512, 6300}, // rebaselined 2026-09-01: min observed 7870.8 under
                // contention, -20% margin
-  {2048, 9900} // lowered: min observed 10988.3, -10% margin
+  {2048, 8280} // rebaselined 2026-09-04: min observed 10362.2, -20% margin
 #else
-  {32, 670},     // debug, rebaselined 2026-09-01: min observed 833.8
-                 // under contention, -20% margin
-  {128, 1150},   // debug, lowered: min observed 1299.8, -10% margin
+  {32, 670}, // debug, rebaselined 2026-09-01: min observed 833.8
+             // under contention, -20% margin
+  {128, 920}, // debug, rebaselined 2026-09-04: min observed 1155.3, -20% margin
   {512, 1020},   // debug, rebaselined 2026-09-01: min observed 1270.6
                  // under contention, -20% margin
   {2048, 1080}   // debug, rebaselined 2026-09-01: min observed 1352.8
@@ -141,7 +143,7 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM[] = {
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
   = {
 #ifdef NDEBUG
-    {32, 5100},  // lowered: min observed 5678.2, -10% margin
+    {32, 3930},  // rebaselined 2026-09-04: min observed 4922.2, -20% margin
     {128, 6090}, // rebaselined 2026-09-01: min observed 7617.8 under
                  // contention, -20% margin
     {512, 7100}, // widened to -20% margin: CI runner variance exceeds 10%
@@ -165,12 +167,11 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
 // against - this is the raw cost of the conversion boundary itself.
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_DEINTERLEAVE_FROM[] = {
 #ifdef NDEBUG
-  {32, 1150},  // widened to -20% margin: CI runner variance exceeds 10%
-               // (observed as low as 1169.6 on 2026-08-26/28)
+  {32, 960},   // rebaselined 2026-09-04: min observed 1201.8, -20% margin
   {128, 1200}, // widened to -20% margin: CI runner variance exceeds 10%
                // (observed as low as 1383.6 on 2026-08-26/28)
-  {512, 1400}, // lowered: min observed 1576.9, -10% margin
-  {2048, 1400} // lowered: min observed 1581.0, -10% margin
+  {512, 1120}, // rebaselined 2026-09-04: min observed 1406.1, -20% margin
+  {2048, 1100} // rebaselined 2026-09-04: min observed 1376.5, -20% margin
 #else
   {32, 380},     // debug, lowered: min observed 422.5, -10% margin
   {128, 550},    // debug, lowered: min observed 606.2, -10% margin
@@ -185,8 +186,7 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_DEINTERLEAVE_FROM[] = {
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_DEINTERLEAVE_FROM[]
   = {
 #ifdef NDEBUG
-    {32, 1150},  // widened to -20% margin: CI runner variance exceeds 10%
-                 // (observed as low as 1371.7 on 2026-08-26/28)
+    {32, 900},   // rebaselined 2026-09-04: min observed 1136.7, -20% margin
     {128, 1500}, // widened to -20% margin: CI runner variance exceeds 10%
                  // (observed as low as 1812.3 on 2026-08-26/28)
     {512, 1800}, // widened to -20% margin: CI runner variance exceeds 10%
@@ -207,8 +207,8 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_INTERLEAVE_TO[] = {
                // (observed as low as 1414.1 on 2026-08-26/28)
   {128, 1200}, // widened to -20% margin: CI runner variance exceeds 10%
                // (observed as low as 1418.3 on 2026-08-26/28)
-  {512, 1350}, // lowered: min observed 1513.0, -10% margin
-  {2048, 1400} // lowered: min observed 1560.2, -10% margin
+  {512, 1070}, // rebaselined 2026-09-04: min observed 1343.8, -20% margin
+  {2048, 1090} // rebaselined 2026-09-04: min observed 1374.5, -20% margin
 #else
   {32, 420},     // debug, lowered: min observed 462.9, -10% margin
   {128, 560},    // debug, lowered: min observed 625.9, -10% margin

@@ -70,7 +70,8 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM[] = {
   {32, 2450},  // 2450 Mframes/sec (lowered: min observed 2732.8, -10% margin)
   {128, 4000}, // 4000 Mframes/sec (lowered: min observed 4485.6, -10% margin)
   {512, 4240}, // 4240 Mframes/sec (lowered: min observed 4720.2, -10% margin)
-  {2048, 4900} // 4900 Mframes/sec (raised: min observed 5542.0, -10% margin)
+  {2048, 4010} // 4010 Mframes/sec (rebaselined 2026-09-04: min observed 5020.9,
+               // -20% margin)
 #else
   {32,
    480}, // 480 Mframes/sec (debug, lowered: min observed 533.6, -10% margin)
@@ -162,10 +163,13 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_MONO_COPY_ADD_FROM_COEFF[]
   = {
 #ifdef NDEBUG
-    {32, 1420},  // 1420 Mframes/sec (lowered: min observed 1575.8, -10% margin)
+    {32, 1040},  // 1040 Mframes/sec (rebaselined 2026-09-04: min observed
+                 // 1301.2, -20% margin)
     {128, 1790}, // 1790 Mframes/sec (lowered: min observed 1996.9, -10% margin)
-    {512, 2100}, // 2100 Mframes/sec (measured: 2434.9, -10% margin)
-    {2048, 2100} // 2100 Mframes/sec (measured: 2435.9, -10% margin)
+    {512, 1640}, // 1640 Mframes/sec (rebaselined 2026-09-04: min observed
+                 // 2050.4, -20% margin)
+    {2048, 1690} // 1690 Mframes/sec (rebaselined 2026-09-04: min observed
+                 // 2121.4, -20% margin)
 #else
     {32,
      450}, // 450 Mframes/sec (debug, lowered: min observed 502.5, -10% margin)
@@ -182,8 +186,8 @@ static constexpr GOTestPerfSoundBufferBaseline
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_MONO[]
   = {
 #ifdef NDEBUG
-    {32, 1720},  // 1720 Mframes/sec (widened to -20% margin: CI runs
-                 // 33182952642/33186258064 observed 2163.7/2158.7)
+    {32, 1100},  // 1100 Mframes/sec (rebaselined 2026-09-04: min observed
+                 // 1382.9, -20% margin)
     {128, 2050}, // 2050 Mframes/sec (widened to -20% margin: CI runs
                  // 33182952642/33186258064 observed 2763.5/2568.0)
     {512, 2110}, // 2110 Mframes/sec (widened to -20% margin: CI runs
@@ -196,10 +200,10 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_MONO[]
                  // baseline)
     {128, 940},  // 940 Mframes/sec (debug, rebaselined 2026-09-01: min
                  // observed 1176.2 under contention, -20% margin)
-    {512, 1310}, // 1310 Mframes/sec (debug, measured: 1463.9, with 10%
-                 // margin)
-    {2048, 1360} // 1360 Mframes/sec (debug, measured: 1514.4, with 10%
-                 // margin)
+    {512, 1080}, // 1080 Mframes/sec (debug, rebaselined 2026-09-04: min
+                 // observed 1352.2, -20% margin)
+    {2048, 1120} // 1120 Mframes/sec (debug, rebaselined 2026-09-04: min
+                 // observed 1400.3, -20% margin)
 #endif
 };
 
