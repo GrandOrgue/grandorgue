@@ -21,6 +21,7 @@ class GOConfigReader;
 class GOConfigWriter;
 class GODC;
 class GODocumentBase;
+class GOGuiImageCache;
 class GOGUIControl;
 class GOGUIDisplayMetrics;
 class GOGUILayoutEngine;
@@ -51,6 +52,11 @@ private:
 
 protected:
   GOOrganController *m_OrganController;
+
+  /** The image cache to load/lookup wood and control images through,
+   * captured from the enclosing GOGuiOrgan at construction (same as
+   * m_MouseState below). */
+  GOGuiImageCache &r_ImageCache;
   GOGUIMouseState &m_MouseState;
   ptr_vector<GOGUIControl> m_controls;
   unsigned m_BackgroundControls;
@@ -71,7 +77,17 @@ protected:
   void SendMousePress(int x, int y, bool right, GOGUIMouseState &state);
 
 public:
-  GOGUIPanel(GOOrganController *organController);
+  /**
+   * @param organController the organ this panel belongs to
+   * @param imageCache the image cache to load wood/control images through,
+   *   captured directly instead of via the enclosing GOGuiOrgan
+   * @param mouseState the shared mouse-drag/click state to report into,
+   *   captured directly instead of via the enclosing GOGuiOrgan
+   */
+  GOGUIPanel(
+    GOOrganController *organController,
+    GOGuiImageCache &imageCache,
+    GOGUIMouseState &mouseState);
   virtual ~GOGUIPanel();
   void Init(
     GOConfigReader &cfg,
