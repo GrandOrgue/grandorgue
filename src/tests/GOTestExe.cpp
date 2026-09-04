@@ -22,6 +22,7 @@
 #include "testing/model/GOTestWindchest.h"
 #include "testing/sound/GOTestSoundCallbackConnector.h"
 #include "testing/sound/GOTestSoundOrganEngine.h"
+#include "testing/sound/GOTestSoundOrganEngineFactories.h"
 #include "testing/sound/GOTestSoundOrganEngineStress.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferPlanarMutable.h"
@@ -77,11 +78,12 @@ int main(int argc, char *argv[]) {
   GOTestSoundBufferPlanarManaged testSoundBufferPlanarManaged;
   GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
   GOTestPerfSoundBufferPlanarMutable testPerfSoundBufferPlanarMutable;
-  GOTestReleaseAlignTable testReleaseAlignTable;
-  GOTestSoundStream testSoundStream;
   GOTestSoundOrganEngine testSoundOrganEngine;
+  GOTestSoundOrganEngineFactories testSoundOrganEngineFactories;
   GOTestSoundCallbackConnector testSoundCallbackConnector;
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
+  GOTestReleaseAlignTable testReleaseAlignTable;
+  GOTestSoundStream testSoundStream;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
   test_result_collection = GOTestCollection::Instance()->Run(categoryFilter);

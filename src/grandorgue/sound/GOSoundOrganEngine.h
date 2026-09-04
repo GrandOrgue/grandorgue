@@ -74,6 +74,32 @@ public:
    */
 
   /**
+   * @brief Creates gains, in dB (like every other gain in this class), for
+   * the row-major [outChannelI][groupI * 2 + groupChannelI] pattern where
+   * each audio group's left channel feeds output channel 0 and right
+   * channel feeds output channel 1: 0.0f dB (pass-through) at the selected
+   * position, GOAudioDeviceConfig::MUTE_VOLUME elsewhere.
+   *
+   * The row stride is nAudioGroups * 2 - matching what
+   * GOSoundOutputTask::DoRun() reads once converted to linear scale
+   * factors via convertGainToScaleFactor() - not a fixed 4, which only
+   * coincides with the real row stride when nAudioGroups == 1.
+   *
+   * Shared by createDefaultOutputConfigs() (used as dB, split per channel)
+   * and BuildEngine()'s downmix task (converted to a linear scale factor at
+   * the call site, same as any other device's scaleFactors).
+   */
+  static std::vector<float> createDownmixGains(unsigned nAudioGroups);
+
+  /**
+   * @brief Converts a gain in dB to a linear scale factor, the same rule
+   * BuildEngine() applies to every device's AudioOutputConfig::scaleFactors:
+   * gains outside [-120, 40) dB (e.g. GOAudioDeviceConfig::MUTE_VOLUME) are
+   * treated as silence (0.0f) rather than converted.
+   */
+  static float convertGainToScaleFactor(float gain);
+
+  /**
    * @brief Creates output configurations from GOConfig.
    */
   static std::vector<AudioOutputConfig> createAudioOutputConfigs(
