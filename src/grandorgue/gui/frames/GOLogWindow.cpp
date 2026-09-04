@@ -13,8 +13,12 @@
 #include <wx/imaglist.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>
+#include <wx/thread.h>
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_ADD_LOG_MESSAGE)
+
+static constexpr unsigned LOG_MESSAGE_BATCH_SIZE = 100;
+static unsigned log_message_count = 0;
 
 BEGIN_EVENT_TABLE(GOLogWindow, wxFrame)
 EVT_COMMAND(0, wxEVT_ADD_LOG_MESSAGE, GOLogWindow::OnLog)
@@ -108,9 +112,14 @@ void GOLogWindow::OnCloseWindow(wxCloseEvent &event) {
   m_List->DeleteAllItems();
 }
 
+bool GOLogWindow::HasPendingLogEvents() {
+  wxCriticalSectionLocker locker(m_pendingEventsLock);
+
+  return m_pendingEvents && !m_pendingEvents->IsEmpty();
+}
+
 void GOLogWindow::LogMsg(
   wxLogLevel level, const wxString &msg, time_t timestamp) {
-  static unsigned count = 0;
   int l;
   switch (level) {
   case wxLOG_FatalError:
@@ -128,7 +137,7 @@ void GOLogWindow::LogMsg(
   e.SetInt(l);
   e.SetTimestamp(timestamp);
   GetEventHandler()->AddPendingEvent(e);
-  count++;
+  log_message_count++;
   /* A long operation running in the GUI thread may emit thousands of messages
      without returning to the event loop, so the pending event queue has to be
      drained from time to time.
@@ -138,7 +147,11 @@ void GOLogWindow::LogMsg(
      into GOSoundOrganEngine::GetMeterInfo() and a pending toolbar click into
      GOAppWindow::OnAudioPanic() while GOSoundOrganEngine::BuildEngine() was
      holding m_LifecycleMutex, which deadlocked the application (issue #2606).
+     ProcessPendingEvents() delivers only a single event per call, so the
+     whole accumulated batch is drained by looping until the queue is
+     actually empty.
    */
-  if ((count % 100) == 0)
-    GetEventHandler()->ProcessPendingEvents();
+  if ((log_message_count % LOG_MESSAGE_BATCH_SIZE) == 0)
+    while (HasPendingLogEvents())
+      GetEventHandler()->ProcessPendingEvents();
 }
