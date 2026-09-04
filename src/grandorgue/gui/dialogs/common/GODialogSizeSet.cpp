@@ -60,7 +60,13 @@ bool GODialogSizeSet::isPresentInCfg(
 }
 
 void GODialogSizeSet::Load(GOConfigReader &cfg, GOSettingType settingType) {
-  m_SizeSet.clear();
+  /*
+     The existing GOSizeKeeper objects are not removed but reused: every open
+     GODialog holds a reference to its keeper for its whole lifetime, and Load()
+     may run while some dialogs are still open (ex. when another organ is
+     loaded). The keepers of the dialogs mentioned in cfg are overwritten below,
+     the other ones keep their current values.
+   */
   const unsigned savedCount = cfg.ReadInteger(
     settingType, WX_DIALOG_SIZES, WX_SAVED_COUNT, 0, 998, false, 0);
 
