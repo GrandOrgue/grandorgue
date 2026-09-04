@@ -24,7 +24,7 @@ namespace {
 class StubGroupTask : public GOSoundBufferTaskBase {
 public:
   StubGroupTask(unsigned nFrames, float leftValue, float rightValue)
-    : GOSoundBufferTaskBase(2, nFrames) {
+    : GOSoundBufferTaskBase(PRIORITY_AUDIOGROUP, false, 2, nFrames) {
     for (unsigned frameI = 0; frameI < nFrames; frameI++) {
       GetData()[GetItemIndex(frameI, 0)] = leftValue;
       GetData()[GetItemIndex(frameI, 1)] = rightValue;

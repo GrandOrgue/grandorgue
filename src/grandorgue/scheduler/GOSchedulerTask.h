@@ -47,6 +47,10 @@ public:
   /** Whether the task may be scheduled several times within one round */
   virtual bool IsRepeatable() const = 0;
 
+  /** @return whether DiscardContent() would change nothing - i.e. the task
+      has no accumulated content and is not mid-round */
+  virtual bool IsEmpty() const = 0;
+
   /** Processes the task, possibly partially, cooperatively with other threads
    */
   virtual void Run(GOSchedulerThread *pThread = nullptr) = 0;
