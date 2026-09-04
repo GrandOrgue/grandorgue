@@ -48,6 +48,7 @@ done
 
 if $IS_ASAN; then
     export ASAN_OPTIONS=detect_leaks=1
+    export LSAN_OPTIONS=suppressions="$SRC_DIR/build-scripts/for-linux/lsan-suppressions.txt"
 fi
 
 # Print system information for performance test comparison
