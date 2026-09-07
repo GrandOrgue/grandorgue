@@ -16,6 +16,8 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/interfaces/GOSoundCallbackConnector.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundOrganEngineStress::TEST_NAME
   = "GOTestSoundOrganEngineStress";
 
@@ -84,6 +86,6 @@ void GOTestSoundOrganEngineStress::TestBuildStopCycles() {
 }
 
 void GOTestSoundOrganEngineStress::run() {
-  TestConnectDisconnectCycles();
-  TestBuildStopCycles();
+  GO_RUN_TEST(TestConnectDisconnectCycles())
+  GO_RUN_TEST(TestBuildStopCycles())
 }

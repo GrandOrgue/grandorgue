@@ -14,6 +14,8 @@
 
 #include "sound/buffer/GOSoundBuffer.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundBuffer::TEST_NAME = "GOTestSoundBuffer";
 
 void GOTestSoundBuffer::AssertGetNItems(
@@ -203,10 +205,10 @@ void GOTestSoundBuffer::TestEdgeCases() {
 }
 
 void GOTestSoundBuffer::run() {
-  TestConstructorAndBasicProperties();
-  TestGetNItems();
-  TestGetItemIndex();
-  TestGetSubBuffer();
-  TestInvalidBuffer();
-  TestEdgeCases();
+  GO_RUN_TEST(TestConstructorAndBasicProperties())
+  GO_RUN_TEST(TestGetNItems())
+  GO_RUN_TEST(TestGetItemIndex())
+  GO_RUN_TEST(TestGetSubBuffer())
+  GO_RUN_TEST(TestInvalidBuffer())
+  GO_RUN_TEST(TestEdgeCases())
 }

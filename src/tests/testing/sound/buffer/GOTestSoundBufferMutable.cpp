@@ -12,6 +12,8 @@
 
 #include "sound/buffer/GOSoundBufferMutable.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundBufferMutable::TEST_NAME
   = "GOTestSoundBufferMutable";
 
@@ -661,19 +663,19 @@ void GOTestSoundBufferMutable::TestSingleChannelBuffer() {
 }
 
 void GOTestSoundBufferMutable::run() {
-  TestInheritanceAndMutableAccess();
-  TestFillWithSilence();
-  TestCopyFrom();
-  TestAddFrom();
-  TestAddFromWithCoefficient();
-  TestMutableGetSubBuffer();
-  TestCompatibilityChecks();
-  TestComplexOperations();
-  TestCopyChannelFrom();
-  TestAddChannelFrom();
-  TestAddChannelFromWithCoefficient();
-  TestCrossChannelOperations();
-  TestChannelOperationsWithSubBuffers();
-  TestInvalidChannelIndices();
-  TestSingleChannelBuffer();
+  GO_RUN_TEST(TestInheritanceAndMutableAccess())
+  GO_RUN_TEST(TestFillWithSilence())
+  GO_RUN_TEST(TestCopyFrom())
+  GO_RUN_TEST(TestAddFrom())
+  GO_RUN_TEST(TestAddFromWithCoefficient())
+  GO_RUN_TEST(TestMutableGetSubBuffer())
+  GO_RUN_TEST(TestCompatibilityChecks())
+  GO_RUN_TEST(TestComplexOperations())
+  GO_RUN_TEST(TestCopyChannelFrom())
+  GO_RUN_TEST(TestAddChannelFrom())
+  GO_RUN_TEST(TestAddChannelFromWithCoefficient())
+  GO_RUN_TEST(TestCrossChannelOperations())
+  GO_RUN_TEST(TestChannelOperationsWithSubBuffers())
+  GO_RUN_TEST(TestInvalidChannelIndices())
+  GO_RUN_TEST(TestSingleChannelBuffer())
 }

@@ -7,6 +7,7 @@
 #include "GOTestCollection.h"
 #include "GOTestException.h"
 #include "GOTestResultCollection.h"
+#include "GOTestScope.h"
 #include <iostream>
 #include <iterator>
 #include <vector>
@@ -48,6 +49,8 @@ GOTestResultCollection GOTestCollection::Run(
     auto test = *current;
 
     if (!categoryFilter.has_value() || test->GetCategory() == *categoryFilter) {
+      GOTestScope testClassScope(GOTestScope::TEST_CLASS, test->GetName());
+
       try {
         if (test->setUp()) {
           bool isRunSucceeded = false;

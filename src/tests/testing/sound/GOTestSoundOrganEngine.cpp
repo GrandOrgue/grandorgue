@@ -18,6 +18,8 @@
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundOrganEngine::TEST_NAME = "GOTestSoundOrganEngine";
 
 struct EngineConfig {
@@ -359,12 +361,12 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
 }
 
 void GOTestSoundOrganEngine::run() {
-  TestSingleOutputLifecycle();
-  TestTwoOutputsLifecycle();
-  TestTwoGroupsTwoOutputsLifecycle();
-  TestSetUsedTransitions();
-  TestBuildStopCyclesAsyncCallbacksXrun();
-  TestMultipleConfigsAsyncCallbacks();
-  TestDisconnectWithXrunDeadlock();
-  TestReconnectAfterMidPeriodDisconnect();
+  GO_RUN_TEST(TestSingleOutputLifecycle())
+  GO_RUN_TEST(TestTwoOutputsLifecycle())
+  GO_RUN_TEST(TestTwoGroupsTwoOutputsLifecycle())
+  GO_RUN_TEST(TestSetUsedTransitions())
+  GO_RUN_TEST(TestBuildStopCyclesAsyncCallbacksXrun())
+  GO_RUN_TEST(TestMultipleConfigsAsyncCallbacks())
+  GO_RUN_TEST(TestDisconnectWithXrunDeadlock())
+  GO_RUN_TEST(TestReconnectAfterMidPeriodDisconnect())
 }

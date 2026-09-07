@@ -14,6 +14,8 @@
 #include "sound/tasks/GOSoundBufferTaskBase.h"
 #include "sound/tasks/GOSoundOutputTask.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundOrganEngineFactories::TEST_NAME
   = "GOTestSoundOrganEngineFactories";
 
@@ -180,8 +182,8 @@ void GOTestSoundOrganEngineFactories::
 }
 
 void GOTestSoundOrganEngineFactories::run() {
-  TestDownmixGainsWithOneGroup();
-  TestDownmixGainsWithTwoGroups();
-  TestDefaultOutputConfigs();
-  TestDefaultOutputConfigsMatchesDownmixGains();
+  GO_RUN_TEST(TestDownmixGainsWithOneGroup())
+  GO_RUN_TEST(TestDownmixGainsWithTwoGroups())
+  GO_RUN_TEST(TestDefaultOutputConfigs())
+  GO_RUN_TEST(TestDefaultOutputConfigsMatchesDownmixGains())
 }

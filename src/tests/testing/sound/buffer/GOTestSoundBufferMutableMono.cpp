@@ -14,6 +14,8 @@
 
 #include "sound/buffer/GOSoundBufferMutableMono.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundBufferMutableMono::TEST_NAME
   = "GOTestSoundBufferMutableMono";
 
@@ -310,11 +312,11 @@ void GOTestSoundBufferMutableMono::TestEdgeCases() {
 }
 
 void GOTestSoundBufferMutableMono::run() {
-  TestConstructorAndBasicProperties();
-  TestGetSubBuffer();
-  TestCopyChannelFrom();
-  TestCopyChannelTo();
-  TestAddChannelFrom();
-  TestInvalidBuffer();
-  TestEdgeCases();
+  GO_RUN_TEST(TestConstructorAndBasicProperties())
+  GO_RUN_TEST(TestGetSubBuffer())
+  GO_RUN_TEST(TestCopyChannelFrom())
+  GO_RUN_TEST(TestCopyChannelTo())
+  GO_RUN_TEST(TestAddChannelFrom())
+  GO_RUN_TEST(TestInvalidBuffer())
+  GO_RUN_TEST(TestEdgeCases())
 }

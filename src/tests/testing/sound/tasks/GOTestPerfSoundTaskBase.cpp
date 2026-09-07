@@ -16,6 +16,7 @@
 
 #include "GOSoundCooperativeTaskTestImpl.h"
 #include "GOSoundTaskTestImpl.h"
+#include "GOTestScope.h"
 
 const std::string GOTestPerfSoundTaskBase::TEST_NAME
   = "GOTestPerfSoundTaskBase";
@@ -604,13 +605,13 @@ void GOTestPerfSoundTaskBase::run() {
   std::cout << "\n========== Performance Tests for GOSoundTaskBase "
                "==========\n";
 
-  TestPerfUncontendedRunThroughput();
-  TestPerfContendedRunLatency();
-  TestPerfCooperativeThroughput();
-  TestPerfRoundProtocolCost();
-  TestPerfNextPeriodLatency();
-  TestPerfCooperativeRoundLatency();
-  TestPerfLazyPrerequisiteAccess();
+  GO_RUN_TEST(TestPerfUncontendedRunThroughput())
+  GO_RUN_TEST(TestPerfContendedRunLatency())
+  GO_RUN_TEST(TestPerfCooperativeThroughput())
+  GO_RUN_TEST(TestPerfRoundProtocolCost())
+  GO_RUN_TEST(TestPerfNextPeriodLatency())
+  GO_RUN_TEST(TestPerfCooperativeRoundLatency())
+  GO_RUN_TEST(TestPerfLazyPrerequisiteAccess())
 
   std::cout << "\n========== Performance Tests Completed ==========\n";
 

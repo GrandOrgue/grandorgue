@@ -13,6 +13,8 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/buffer/GOSoundBufferMutableMono.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestPerfSoundBufferMutable::TEST_NAME
   = "GOTestPerfSoundBufferMutable";
 
@@ -432,17 +434,17 @@ void GOTestPerfSoundBufferMutable::run() {
   std::cout << "Buffer configuration: " << NUM_CHANNELS
             << " channels (stereo)\n";
 
-  TestPerfFillWithSilence();
-  TestPerfCopyFrom();
-  TestPerfAddFrom();
-  TestPerfAddFromWithCoefficient();
-  TestPerfCopyChannelFrom();
-  TestPerfAddChannelFrom();
-  TestPerfAddChannelFromWithCoefficient();
-  TestPerfAddChannelFromMonoRecipient();
-  TestPerfAddChannelFromMono();
+  GO_RUN_TEST(TestPerfFillWithSilence())
+  GO_RUN_TEST(TestPerfCopyFrom())
+  GO_RUN_TEST(TestPerfAddFrom())
+  GO_RUN_TEST(TestPerfAddFromWithCoefficient())
+  GO_RUN_TEST(TestPerfCopyChannelFrom())
+  GO_RUN_TEST(TestPerfAddChannelFrom())
+  GO_RUN_TEST(TestPerfAddChannelFromWithCoefficient())
+  GO_RUN_TEST(TestPerfAddChannelFromMonoRecipient())
+  GO_RUN_TEST(TestPerfAddChannelFromMono())
 
   std::cout << "\n========== Performance Tests Completed ==========\n";
 
-  ReportFailedTests();
+  GO_RUN_TEST(ReportFailedTests())
 }

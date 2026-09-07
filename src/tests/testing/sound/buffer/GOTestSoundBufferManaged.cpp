@@ -13,6 +13,8 @@
 
 #include "sound/buffer/GOSoundBufferManaged.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundBufferManaged::TEST_NAME
   = "GOTestSoundBufferManaged";
 
@@ -148,18 +150,18 @@ void GOTestSoundBufferManaged::TestInvalidBufferOperations() {
 }
 
 void GOTestSoundBufferManaged::run() {
-  TestDefaultConstructor();
-  TestConstructorWithDimensions();
-  TestCopyConstructorFromBuffer();
-  TestCopyConstructorFromManaged();
-  TestMoveConstructor();
-  TestCopyAssignmentFromBuffer();
-  TestCopyAssignmentFromManaged();
-  TestMoveAssignment();
-  TestResize();
-  TestResizeNoReallocation();
-  TestSwap();
-  TestComplexOperations();
-  TestSubBufferCompatibility();
-  TestInvalidBufferOperations();
+  GO_RUN_TEST(TestDefaultConstructor())
+  GO_RUN_TEST(TestConstructorWithDimensions())
+  GO_RUN_TEST(TestCopyConstructorFromBuffer())
+  GO_RUN_TEST(TestCopyConstructorFromManaged())
+  GO_RUN_TEST(TestMoveConstructor())
+  GO_RUN_TEST(TestCopyAssignmentFromBuffer())
+  GO_RUN_TEST(TestCopyAssignmentFromManaged())
+  GO_RUN_TEST(TestMoveAssignment())
+  GO_RUN_TEST(TestResize())
+  GO_RUN_TEST(TestResizeNoReallocation())
+  GO_RUN_TEST(TestSwap())
+  GO_RUN_TEST(TestComplexOperations())
+  GO_RUN_TEST(TestSubBufferCompatibility())
+  GO_RUN_TEST(TestInvalidBufferOperations())
 }

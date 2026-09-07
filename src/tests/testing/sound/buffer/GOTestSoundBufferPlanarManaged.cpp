@@ -9,6 +9,8 @@
 
 #include "sound/buffer/GOSoundBufferPlanarManaged.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundBufferPlanarManaged::TEST_NAME
   = "GOTestSoundBufferPlanarManaged";
 
@@ -68,15 +70,15 @@ void GOTestSoundBufferPlanarManaged::TestSwap() {
 }
 
 void GOTestSoundBufferPlanarManaged::run() {
-  TestDefaultConstructor();
-  TestConstructorWithDimensions();
-  TestCopyConstructorFromView();
-  TestCopyConstructorFromManaged();
-  TestMoveConstructor();
-  TestCopyAssignmentFromView();
-  TestCopyAssignmentFromManaged();
-  TestMoveAssignment();
-  TestResize();
-  TestResizeNoReallocation();
-  TestSwap();
+  GO_RUN_TEST(TestDefaultConstructor())
+  GO_RUN_TEST(TestConstructorWithDimensions())
+  GO_RUN_TEST(TestCopyConstructorFromView())
+  GO_RUN_TEST(TestCopyConstructorFromManaged())
+  GO_RUN_TEST(TestMoveConstructor())
+  GO_RUN_TEST(TestCopyAssignmentFromView())
+  GO_RUN_TEST(TestCopyAssignmentFromManaged())
+  GO_RUN_TEST(TestMoveAssignment())
+  GO_RUN_TEST(TestResize())
+  GO_RUN_TEST(TestResizeNoReallocation())
+  GO_RUN_TEST(TestSwap())
 }

@@ -13,6 +13,8 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/buffer/GOSoundBufferPlanar.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundBufferPlanar::TEST_NAME
   = "GOTestSoundBufferPlanar";
 
@@ -146,9 +148,9 @@ void GOTestSoundBufferPlanar::TestEdgeCases() {
 }
 
 void GOTestSoundBufferPlanar::run() {
-  TestConstructorAndBasicProperties();
-  TestGetChannelBuffer();
-  TestInterleaveTo();
-  TestInvalidBuffer();
-  TestEdgeCases();
+  GO_RUN_TEST(TestConstructorAndBasicProperties())
+  GO_RUN_TEST(TestGetChannelBuffer())
+  GO_RUN_TEST(TestInterleaveTo())
+  GO_RUN_TEST(TestInvalidBuffer())
+  GO_RUN_TEST(TestEdgeCases())
 }

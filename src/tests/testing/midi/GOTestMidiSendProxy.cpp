@@ -8,6 +8,8 @@
 
 #include "midi/elements/GOMidiSendProxy.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestMidiSendProxy::TEST_NAME = "GOTestMidiSendProxy";
 
 void GOTestMidiSendProxy::TestDefaultState() {
@@ -74,8 +76,8 @@ void GOTestMidiSendProxy::TestStateRestorer() {
 }
 
 void GOTestMidiSendProxy::run() {
-  TestDefaultState();
-  TestToSendMidiIsIndependent();
-  TestToRecordMidiIsIndependent();
-  TestStateRestorer();
+  GO_RUN_TEST(TestDefaultState())
+  GO_RUN_TEST(TestToSendMidiIsIndependent())
+  GO_RUN_TEST(TestToRecordMidiIsIndependent())
+  GO_RUN_TEST(TestStateRestorer())
 }
