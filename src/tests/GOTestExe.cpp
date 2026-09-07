@@ -35,6 +35,7 @@
 #include "testing/sound/buffer/GOTestSoundBufferPlanarMutable.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
+#include "testing/sound/reverb/GOTestSoundReverb.h"
 #include "testing/sound/tasks/GOTestPerfSoundTaskBase.h"
 #include "testing/sound/tasks/GOTestSoundTaskBase.h"
 
@@ -86,6 +87,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
+  GOTestSoundReverb testSoundReverb;
   GOTestSoundTaskBase testSoundTaskBase;
   GOTestPerfSoundTaskBase testPerfSoundTaskBase;
   /* end of instanciation */
