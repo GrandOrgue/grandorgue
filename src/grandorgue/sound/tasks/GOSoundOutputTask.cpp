@@ -111,7 +111,10 @@ bool GOSoundOutputTask::IsEmpty() const {
   return isEmpty;
 }
 
-void GOSoundOutputTask::DiscardContent() { ResetMeterInfo(); }
+void GOSoundOutputTask::DiscardContent() {
+  ResetMeterInfo();
+  m_Reverb->Reset();
+}
 
 void GOSoundOutputTask::ResetMeterInfo() {
   GOMutexLocker locker(m_mutex);
@@ -126,8 +129,9 @@ void GOSoundOutputTask::SetupReverb(
   unsigned sampleRate) {
   m_Reverb->Setup(config, nSamplesPerBuffer, sampleRate);
   // a freshly configured reverb engine already starts silent, but reset
-  // explicitly so DiscardContent()'s old guarantee still holds if Setup()
-  // ever stops implying it
+  // explicitly in case Setup() ever stops implying it - DiscardContent()
+  // also resets on every deregistration, so this is defense in depth, not
+  // the only place the guarantee comes from
   m_Reverb->Reset();
 }
 
