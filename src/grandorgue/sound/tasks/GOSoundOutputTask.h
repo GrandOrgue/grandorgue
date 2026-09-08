@@ -12,7 +12,6 @@
 #include <vector>
 
 #include "sound/reverb/GOSoundReverb.h"
-#include "threading/GOMutex.h"
 
 #include "GOSoundBufferTaskBase.h"
 
@@ -23,29 +22,31 @@ private:
   unsigned m_OutputCount;
   std::vector<float> m_MeterInfo;
   GOSoundReverb *m_Reverb;
-  GOMutex m_Mutex;
-  std::atomic_bool m_Done;
-  std::atomic_bool m_IsToComplete;
+  /** Whether DoRun() has produced reverb/meter content since the last
+   * DiscardContent() */
+  std::atomic_bool m_HasContent;
+
+  bool DoRun(GOSchedulerThread *pThread) override;
 
 public:
   GOSoundOutputTask(
     unsigned channels,
-    std::vector<float> scale_factors,
-    unsigned samples_per_buffer);
+    std::vector<float> scaleFactors,
+    unsigned samplesPerBuffer);
   ~GOSoundOutputTask();
 
   void SetOutputs(std::vector<GOSoundBufferTaskBase *> outputs);
 
-  unsigned GetPriority() const override { return PRIORITY_AUDIOOUTPUT; }
-  unsigned GetCost() const override { return 0; }
-  bool IsRepeatable() const override { return false; }
-  void Run(GOSchedulerThread *pThread = nullptr) override;
-  void CompleteRound() override;
+  void CompleteRound() override { Run(); }
   void EnsureBufferReady(
     bool isToComplete, GOSchedulerThread *pThread = nullptr) override;
 
+  /** DiscardContent() also resets the reverb tail and the meter, which
+   * accumulate across rounds independently of the round state that
+   * GOSoundTaskBase::IsEmpty() checks */
+  bool IsEmpty() const override { return !m_HasContent.load(); }
+
   void DiscardContent() override;
-  void NewRound() override;
 
   void SetupReverb(
     const GOSoundReverb::ReverbConfig &config,

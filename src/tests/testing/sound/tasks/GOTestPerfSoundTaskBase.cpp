@@ -101,8 +101,28 @@ static constexpr double MAX_NEXT_PERIOD_MEAN_MICROSECONDS
 static constexpr double MAX_NEXT_PERIOD_PEAK_MICROSECONDS
   = AUDIO_PERIOD_MICROSECONDS * 10.0;
 
+// Maximum acceptable mean and worst-case latency of one CompleteRound() +
+// NewRound() pair on the cooperative task, measured on the thread standing in
+// for the audio thread while workers race Run() on the same round. Budgeted
+// exactly like the non-cooperative pair above - half a period for the mean,
+// ten periods for the tail - but kept as separate constants because this is
+// the go/no-go gate for replacing the cooperative entry section with a
+// lock-free one, and the two sides of that comparison must not share a
+// threshold with a scenario the change does not touch.
+// Six local Debug runs give a mean of 0.5-0.9 us that does not grow from 1 to
+// 8 threads, of which roughly 0.2 us is the merge pass itself, and peaks of
+// 6-49 us. So the entry section this measures costs a fraction of a
+// microsecond even fully contended: whatever replaces it has very little to
+// win, and this is the number that has to show otherwise.
+// TODO: recalibrate once this test has run on CI hardware.
+static constexpr double MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS
+  = AUDIO_PERIOD_MICROSECONDS / 2.0;
+static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS
+  = AUDIO_PERIOD_MICROSECONDS * 10.0;
+
 // Minimum acceptable round rate on the lazy-prerequisite path
-// (GOSoundWindchestTask::GetVolume() shape) with ~5us of work per DoRun().
+// (GOSoundWindchestTask::GetAmplitude() shape) with ~5us of work per
+// DoRun().
 // Unlike MIN_CONTENDED_ROUNDS_PER_SECOND this is NOT the 3000/sec real-time
 // figure: the timed loop includes a full barrier per round, which dominates.
 // Calibrated from 6 local Debug runs: worst observed was ~13986 rounds/sec
@@ -411,6 +431,108 @@ void GOTestPerfSoundTaskBase::TestPerfNextPeriodLatency() {
   }
 }
 
+void GOTestPerfSoundTaskBase::TestPerfCooperativeRoundLatency() {
+  // 5000 periods at 32 frames / 96000 Hz is ~1.7 seconds of audio
+  constexpr int N_PERIODS = 5000;
+  // Deliberately small: this scenario is about the entry and merge sections,
+  // so a thread's own share must not dominate the two mutex acquisitions
+  // around it. A quota of 200 is a few hundred nanoseconds of work.
+  constexpr long N_WORK_ITEMS_PER_THREAD = 200;
+  // Workers retry many times within one period, so that the round is
+  // genuinely contended rather than finished by the measuring thread alone.
+  // The deadline is then called with no delay at all: leaving the round to
+  // run first only means the workers finish it before the deadline arrives,
+  // and the measurement degenerates to CompleteRound() returning at its own
+  // RUN_STATE_DONE guard, having contended for nothing.
+  constexpr int WORKER_GAP_MICROSECONDS = 2;
+
+  for (const unsigned nThreads : {1u, 2u, 4u, 8u}) {
+    GOSoundCooperativeTaskTestImpl task;
+    std::atomic<bool> isStopped{false};
+    std::vector<std::thread> workers;
+
+    // Quota mode also maximises contention on purpose: with a per-thread
+    // quota every thread entering a round joins it, so all nThreads workers
+    // pass through the entry section every round.
+    task.SetWorkItemsPerThread(N_WORK_ITEMS_PER_THREAD);
+    // One stereo buffer of the calibration period, so that the merge section
+    // holds the mutex for as long as GOSoundGroupTask's does. This is the
+    // whole point of the scenario: today the entry section waits behind the
+    // merge because both take the same mutex.
+    task.SetMergeItems(2 * static_cast<unsigned>(N_FRAMES_PER_BUFFER));
+
+    for (unsigned threadI = 0; threadI < nThreads; threadI++)
+      workers.emplace_back([&task, &isStopped, WORKER_GAP_MICROSECONDS]() {
+        while (!isStopped.load()) {
+          task.Run();
+          std::this_thread::sleep_for(
+            std::chrono::microseconds(WORKER_GAP_MICROSECONDS));
+        }
+      });
+
+    double totalMicroseconds = 0;
+    double maxMicroseconds = 0;
+
+    for (int periodI = 0; periodI < N_PERIODS; periodI++) {
+      const auto start = std::chrono::high_resolution_clock::now();
+
+      // The measuring thread contends for the entry section exactly as the
+      // audio thread does: CompleteRound() runs the round itself, then
+      // WaitUntilDone() waits for every worker still in its share to leave -
+      // mirroring GOSoundOrganEngine's separate
+      // GOSoundGroupTask::WaitAndDiscardContent() call after
+      // GOScheduler::CompleteRound(). Without it, NewRound() could reset
+      // m_ActiveCount while a worker from this round is still mid-share,
+      // corrupting the next round's bookkeeping.
+      task.CompleteRound();
+      task.WaitUntilDone();
+      task.NewRound();
+
+      const auto end = std::chrono::high_resolution_clock::now();
+      const double microseconds
+        = std::chrono::duration<double, std::micro>(end - start).count();
+
+      totalMicroseconds += microseconds;
+      if (microseconds > maxMicroseconds)
+        maxMicroseconds = microseconds;
+    }
+    isStopped.store(true);
+    for (std::thread &worker : workers)
+      worker.join();
+
+    const double meanMicroseconds = totalMicroseconds / N_PERIODS;
+    const bool isPassed
+      = meanMicroseconds <= MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS
+      && maxMicroseconds <= MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS;
+    const double meanPeriodPercent
+      = 100.0 * meanMicroseconds / AUDIO_PERIOD_MICROSECONDS;
+    const double maxPeriods = maxMicroseconds / AUDIO_PERIOD_MICROSECONDS;
+
+    std::cout << std::format(
+      "  [{}] CooperativeRoundLatency(nThreads={}): mean {:.1f} us ({:.1f}% "
+      "of a {:.1f} us period, threshold {:.1f}), max {:.1f} us ({:.1f} "
+      "periods, threshold {:.1f})\n",
+      isPassed ? "PASS" : "FAIL",
+      nThreads,
+      meanMicroseconds,
+      meanPeriodPercent,
+      AUDIO_PERIOD_MICROSECONDS,
+      MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS,
+      maxMicroseconds,
+      maxPeriods,
+      MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS);
+    if (!isPassed)
+      m_failedTests.push_back(std::format(
+        "CooperativeRoundLatency(nThreads={}): mean {:.1f} us (max allowed "
+        "{:.1f}), max {:.1f} us (max allowed {:.1f})",
+        nThreads,
+        meanMicroseconds,
+        MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS,
+        maxMicroseconds,
+        MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS));
+  }
+}
+
 void GOTestPerfSoundTaskBase::TestPerfLazyPrerequisiteAccess() {
   constexpr int N_ROUNDS = 5000;
   constexpr int WORK_MICROSECONDS = 5;
@@ -487,6 +609,7 @@ void GOTestPerfSoundTaskBase::run() {
   TestPerfCooperativeThroughput();
   TestPerfRoundProtocolCost();
   TestPerfNextPeriodLatency();
+  TestPerfCooperativeRoundLatency();
   TestPerfLazyPrerequisiteAccess();
 
   std::cout << "\n========== Performance Tests Completed ==========\n";

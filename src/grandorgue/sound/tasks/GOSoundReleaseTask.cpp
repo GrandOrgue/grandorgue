@@ -7,18 +7,18 @@
 
 #include "GOSoundReleaseTask.h"
 
-#include "GOSoundGroupTask.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
+
+#include "GOSoundGroupTask.h"
 
 GOSoundReleaseTask::GOSoundReleaseTask(
   GOSoundSamplerPlayer &samplerPlayer,
   ptr_vector<GOSoundGroupTask> &audioGroupTaskPtrs)
-  : r_SamplerPlayer(samplerPlayer),
-    m_AudioGroups(audioGroupTaskPtrs),
-    m_IsToComplete(false) {}
+  : GOSoundTaskBase(PRIORITY_RELEASE, true),
+    r_SamplerPlayer(samplerPlayer),
+    r_AudioGroups(audioGroupTaskPtrs) {}
 
-void GOSoundReleaseTask::NewRound() {
-  m_IsToComplete.store(false);
+void GOSoundReleaseTask::DoNewRound() {
   m_Cnt.store(0);
   m_WaitCnt.store(0);
 }
@@ -27,6 +27,7 @@ void GOSoundReleaseTask::Add(GOSoundSampler *sampler) { m_List.Put(sampler); }
 
 void GOSoundReleaseTask::Run(GOSchedulerThread *pThread) {
   GOSoundSampler *sampler;
+
   do {
     while ((sampler = m_List.Get())) {
       m_Cnt.fetch_add(1);
@@ -34,18 +35,21 @@ void GOSoundReleaseTask::Run(GOSchedulerThread *pThread) {
       if (m_IsToComplete.load() && m_Cnt > 10)
         break;
     }
+
     unsigned wait = m_WaitCnt.load();
-    if (wait < m_AudioGroups.size()) {
-      m_AudioGroups[wait]->EnsureBufferReady(false, pThread);
+
+    if (wait < r_AudioGroups.size()) {
+      r_AudioGroups[wait]->EnsureBufferReady(false, pThread);
       m_WaitCnt.compare_exchange_strong(wait, wait + 1);
     }
-  } while (!m_IsToComplete.load() && m_WaitCnt.load() < m_AudioGroups.size());
+  } while (!m_IsToComplete.load() && m_WaitCnt.load() < r_AudioGroups.size());
 }
 
 void GOSoundReleaseTask::CompleteRound() {
-  m_IsToComplete.store(true);
-  Run();
+  GOSoundTaskBase::CompleteRound();
+
   GOSoundSampler *sampler;
+
   while ((sampler = m_List.Get()))
     r_SamplerPlayer.PassSampler(sampler);
 }

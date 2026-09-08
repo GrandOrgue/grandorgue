@@ -17,8 +17,13 @@ class GOSchedulerThread;
 class GOSoundBufferTaskBase : public GOSoundTaskBase,
                               public GOSoundBufferManaged {
 public:
-  GOSoundBufferTaskBase(unsigned nChannels, unsigned nFrames)
-    : GOSoundBufferManaged(nChannels, nFrames) {}
+  GOSoundBufferTaskBase(
+    TaskPriority priority,
+    bool isRepeatable,
+    unsigned nChannels,
+    unsigned nFrames)
+    : GOSoundTaskBase(priority, isRepeatable),
+      GOSoundBufferManaged(nChannels, nFrames) {}
 
   virtual void EnsureBufferReady(
     bool isToComplete, GOSchedulerThread *pThread = nullptr)

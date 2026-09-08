@@ -29,6 +29,8 @@ public:
 
   GOSoundSampler *Peek() { return m_GetList.load(); }
 
+  bool IsEmpty() const { return !m_GetList.load() && !m_PutList.load(); }
+
   GOSoundSampler *Get() {
     do {
       GOSoundSampler *sampler = m_GetList.load();

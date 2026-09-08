@@ -56,7 +56,7 @@ public:
    * scheduled earlier. Tasks with the same value form a batch that the
    * scheduler emits together. The order is an optimisation only: a task
    * lazily runs its prerequisites itself (see EnsureBufferReady,
-   * GOSoundWindchestTask::GetVolume).
+   * GOSoundWindchestTask::GetAmplitude).
    */
   enum TaskPriority {
     /** Tremulant oscillation, recomputed before the windchests read it */
@@ -164,13 +164,9 @@ protected:
 
 public:
   /**
-   * @param priority this task's scheduling priority, see TaskPriority. Not
-   *   yet used by every subclass: some still override GetPriority()
-   *   themselves and ignore this value until they are switched to rely on
-   *   the base implementation
+   * @param priority this task's scheduling priority, see TaskPriority
    * @param isRepeatable whether the task may be scheduled several times
-   *   within one round, see GOSchedulerTask::IsRepeatable(). Same caveat as
-   *   priority above
+   *   within one round, see GOSchedulerTask::IsRepeatable()
    */
   GOSoundTaskBase(
     TaskPriority priority = PRIORITY_AUDIOGROUP, bool isRepeatable = false);
@@ -187,6 +183,14 @@ public:
 
   /** @return whether the task has fully processed the current round */
   bool IsDone() const { return m_RunState.load() == RUN_STATE_DONE; }
+
+  /** @return whether the task has no accumulated content and is not
+   * mid-round. The default is exact for a subclass with nothing to
+   * accumulate beyond the round state; a subclass that accumulates content
+   * of its own (e.g. queued samplers) must override this */
+  bool IsEmpty() const override {
+    return m_RunState.load() == RUN_STATE_NOT_STARTED;
+  }
 
   /** Calls DoRun() at most once per round, cooperatively with other threads
    */

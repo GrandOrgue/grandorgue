@@ -28,7 +28,8 @@ struct struct_WAVE {
 #pragma pack(pop)
 
 GOSoundRecorderTask::GOSoundRecorderTask()
-  : m_file(),
+  : GOSoundTaskBase(PRIORITY_AUDIORECORDER, false),
+    m_file(),
     m_lock(),
     m_SampleRate(0),
     m_Channels(2),
@@ -76,7 +77,7 @@ void GOSoundRecorderTask::Open(wxString filename) {
   }
   m_file.Write(&WAVE, sizeof(WAVE));
 
-  GOMutexLocker lock(m_Mutex);
+  GOMutexLocker lock(m_mutex);
   m_Recording = true;
   m_BufferPos = 0;
 }
@@ -86,7 +87,7 @@ bool GOSoundRecorderTask::IsOpen() { return m_Recording; }
 void GOSoundRecorderTask::Close() {
   GOMutexLocker locker(m_lock);
   {
-    GOMutexLocker locker(m_Mutex);
+    GOMutexLocker locker(m_mutex);
     m_Recording = false;
   }
   if (!m_file.IsOpened())
@@ -175,48 +176,33 @@ template <class T> void GOSoundRecorderTask::ConvertData() {
   }
 }
 
-void GOSoundRecorderTask::Run(GOSchedulerThread *pThread) {
-  if (!m_Recording)
-    return;
-  if (m_Done)
-    return;
-  GOMutexLocker locker(m_Mutex);
-  if (m_Done)
-    return;
-  if (!m_Recording)
-    return;
+bool GOSoundRecorderTask::DoRun(GOSchedulerThread *pThread) {
+  bool isDone = false;
 
-  switch (m_BytesPerSample) {
-  case 1:
-    ConvertData<GOInt8>();
-    break;
-  case 2:
-    ConvertData<GOInt16LE>();
-    break;
-  case 3:
-    ConvertData<GOInt24LE>();
-    break;
-  case 4:
-    ConvertData<float>();
-    break;
+  if (m_Recording) {
+    switch (m_BytesPerSample) {
+    case 1:
+      ConvertData<GOInt8>();
+      break;
+    case 2:
+      ConvertData<GOInt16LE>();
+      break;
+    case 3:
+      ConvertData<GOInt24LE>();
+      break;
+    case 4:
+      ConvertData<float>();
+      break;
+    }
+    m_file.Write(m_Buffer, m_BufferSize);
+    m_BufferPos += m_BufferSize;
+    isDone = true;
   }
-  m_file.Write(m_Buffer, m_BufferSize);
-  m_BufferPos += m_BufferSize;
-  m_Done = true;
-}
 
-void GOSoundRecorderTask::CompleteRound() {
-  m_IsToComplete.store(true);
-  Run();
+  return isDone;
 }
 
 void GOSoundRecorderTask::DiscardContent() {
   Close();
   NewRound();
-}
-
-void GOSoundRecorderTask::NewRound() {
-  GOMutexLocker locker(m_Mutex);
-  m_Done = false;
-  m_IsToComplete.store(false);
 }

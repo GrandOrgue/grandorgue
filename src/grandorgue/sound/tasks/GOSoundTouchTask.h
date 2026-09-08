@@ -8,10 +8,6 @@
 #ifndef GOSOUNDTOUCHTASK_H
 #define GOSOUNDTOUCHTASK_H
 
-#include <atomic>
-
-#include "threading/GOMutex.h"
-
 #include "GOSoundTaskBase.h"
 
 class GOMemoryPool;
@@ -20,20 +16,13 @@ class GOSchedulerThread;
 class GOSoundTouchTask : public GOSoundTaskBase {
 private:
   GOMemoryPool &m_Pool;
-  GOMutex m_Mutex;
-  std::atomic_bool m_IsToComplete;
+
+  bool DoRun(GOSchedulerThread *pThread) override;
 
 public:
   GOSoundTouchTask(GOMemoryPool &pool);
 
-  unsigned GetPriority() const override { return PRIORITY_TOUCH; }
-  unsigned GetCost() const override { return 0; }
-  bool IsRepeatable() const override { return false; }
-  void Run(GOSchedulerThread *pThread = nullptr) override;
   void CompleteRound() override;
-
-  void DiscardContent() override { NewRound(); }
-  void NewRound() override;
 };
 
 #endif

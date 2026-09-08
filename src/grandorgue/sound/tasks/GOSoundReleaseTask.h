@@ -23,25 +23,24 @@ class GOSoundSamplerPlayer;
 class GOSoundReleaseTask : public GOSoundTaskBase {
 private:
   GOSoundSamplerPlayer &r_SamplerPlayer;
-  ptr_vector<GOSoundGroupTask> &m_AudioGroups;
+  ptr_vector<GOSoundGroupTask> &r_AudioGroups;
   GOSoundSimpleSamplerList m_List;
   std::atomic_uint m_WaitCnt;
   std::atomic_uint m_Cnt;
-  std::atomic_bool m_IsToComplete;
+
+  void DoNewRound() override;
 
 public:
   GOSoundReleaseTask(
     GOSoundSamplerPlayer &samplerPlayer,
     ptr_vector<GOSoundGroupTask> &audioGroupTaskPtrs);
 
-  unsigned GetPriority() const override { return PRIORITY_RELEASE; }
-  unsigned GetCost() const override { return 0; }
-  bool IsRepeatable() const override { return true; }
+  bool IsEmpty() const override { return m_List.IsEmpty(); }
+
   void Run(GOSchedulerThread *pThread = nullptr) override;
   void CompleteRound() override;
 
   void DiscardContent() override { m_List.Clear(); }
-  void NewRound() override;
 
   void Add(GOSoundSampler *sampler);
 };

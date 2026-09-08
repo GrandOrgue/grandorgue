@@ -8,6 +8,7 @@
 #define GOSOUNDCOOPERATIVETASKTESTIMPL_H
 
 #include <atomic>
+#include <vector>
 
 #include "scheduler/GOSchedulerThread.h"
 #include "sound/tasks/GOSoundTaskBase.h"
@@ -33,6 +34,14 @@ private:
   /** If > 0, each participating thread does this many items of purely
    * thread-local work instead of draining m_RemainingWorkItems */
   std::atomic<long> m_WorkItemsPerThread{0};
+  /** Stands in for the buffer GOSoundGroupTask merges into under m_mutex */
+  std::vector<float> m_MergeBuffer;
+
+  /** Merges this thread's share into the shared result, mirroring the
+   * CopyFrom()/AddFrom() pass GOSoundGroupTask does while holding m_mutex
+   * @param localValue this thread's own result
+   * @param isFirst whether this thread is the first to finish its share */
+  void MergeOwnShare(long localValue, bool isFirst);
 
   /** Does this thread's share of the round's work
    * @return the number of items this thread processed */
@@ -70,6 +79,14 @@ public:
    * draining one shared counter would measure cache-line ping-pong on that
    * counter instead of the cost of the round protocol itself */
   void SetWorkItemsPerThread(long n) { m_WorkItemsPerThread.store(n); }
+
+  /** Gives the merge section a realistic cost: a linear pass over nItems
+   * floats, as GOSoundGroupTask's CopyFrom()/AddFrom() does over its output
+   * buffer while holding m_mutex. Without it the merge is a single atomic
+   * operation, and a measurement of how long the entry section waits behind
+   * someone else's merge is meaningless. Not thread-safe: call before the
+   * round starts */
+  void SetMergeItems(unsigned nItems) { m_MergeBuffer.assign(nItems, 0.0f); }
 
   /** Joins or claims the current round, does a share of the work, then
    * merges the result; the last thread to finish marks the round done */
