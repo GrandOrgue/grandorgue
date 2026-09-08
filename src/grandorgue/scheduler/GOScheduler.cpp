@@ -83,8 +83,12 @@ void GOScheduler::RemoveList(
 }
 
 void GOScheduler::Remove(GOSchedulerTask *item) {
-  GOMutexLocker lock(m_Mutex);
-  RemoveList(item, m_Work);
+  if (item) {
+    GOMutexLocker lock(m_Mutex);
+
+    RemoveList(item, m_Work);
+    item->DiscardContent();
+  }
 }
 
 bool GOScheduler::CompareItem(GOSchedulerTask *a, GOSchedulerTask *b) {
