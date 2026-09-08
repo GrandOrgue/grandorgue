@@ -212,7 +212,6 @@ scheduler/GOSchedulerThread.cpp
 sound/interfaces/GOSoundCallbackConnector.cpp
 sound/playing/GOSoundAudioSection.cpp
 sound/playing/GOSoundFader.cpp
-sound/playing/GOSoundFilter.cpp
 sound/playing/GOSoundReleaseAlignTable.cpp
 sound/playing/GOSoundResample.cpp
 sound/playing/GOSoundSamplerPlayer.cpp
@@ -239,6 +238,7 @@ sound/tasks/GOSoundTouchTask.cpp
 sound/tasks/GOSoundTremulantTask.cpp
 sound/tasks/GOSoundWindchestTask.cpp
 sound/GOSoundDevInfo.cpp
+sound/GOSoundOnePoleFilter.cpp
 sound/GOSoundOrganEngine.cpp
 sound/GOSoundSystem.cpp
 updater/GOUpdateChecker.cpp
