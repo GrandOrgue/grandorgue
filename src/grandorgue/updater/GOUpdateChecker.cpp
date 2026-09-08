@@ -82,6 +82,21 @@ private:
   CURL *m_curlMulti;
 };
 
+// a small helper class that frees a curl string list in destructor
+class CurlSListDestroyer {
+private:
+  curl_slist *mp_SList;
+
+public:
+  explicit CurlSListDestroyer(curl_slist *pSList) : mp_SList(pSList) {}
+
+  ~CurlSListDestroyer() {
+    if (mp_SList) {
+      curl_slist_free_all(mp_SList);
+    }
+  }
+};
+
 static size_t handle_received_bytes(
   void *contents, size_t size, size_t nmemb, std::vector<char> *dst) {
   size_t bytesReceived = size * nmemb;
@@ -140,6 +155,9 @@ private:
     // Configure the request
     curl_slist *headers = nullptr;
     headers = curl_slist_append(headers, USER_AGENT_HEADER);
+
+    CurlSListDestroyer headersDestroyer(headers); // free headers on exit
+
     /* abort if slower than 30 bytes/sec during 60 seconds */
     curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
     curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);

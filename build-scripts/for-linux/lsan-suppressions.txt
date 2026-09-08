@@ -1,0 +1,24 @@
+# LeakSanitizer suppressions for GrandOrgue.
+#
+# fontconfig builds process-wide pattern and font caches that it intentionally
+# never releases at exit. Reached through pango, GTK and wxWidgets, they made up
+# about 542 KB of the 548 KB of a captured exit report (634 of 638 blocks) and
+# hid the leaks that really belong to GrandOrgue.
+#
+# The patterns below name the fontconfig allocation functions themselves rather
+# than whole libraries: LeakSanitizer matches a pattern against every frame of
+# an allocation stack, so suppressing libgtk, libglib or libpango as a whole
+# would also hide real GrandOrgue leaks that merely pass through them.
+# GrandOrgue never calls fontconfig directly, so no leak of ours can own memory
+# allocated by these functions.
+
+leak:FcPatternObjectInsertElt
+leak:FcPatternObjectAddWithBinding
+leak:FcPatternObjectListAdd
+leak:FcPatternBuild
+leak:FcConfigValues
+leak:FcConfigEvaluate
+leak:FcValueSave
+leak:FcValueListDuplicate
+leak:FcValueListPrepend
+leak:FcLangSetCopy

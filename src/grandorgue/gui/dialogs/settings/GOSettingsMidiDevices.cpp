@@ -43,9 +43,6 @@ SettingsMidiDevices::SettingsMidiDevices(
   wxBoxSizer *midiPropSizer
     = new wxStaticBoxSizer(wxVERTICAL, this, _("&MIDI properties"));
 
-  m_AutoAddInput = new wxCheckBox();
-  m_CheckOnStartup = new (wxCheckBox);
-
   midiPropSizer->Add(
     m_AutoAddInput
     = new wxCheckBox(this, ID_AUTO_ADD_MIDI, _("Auto add new devices")),
