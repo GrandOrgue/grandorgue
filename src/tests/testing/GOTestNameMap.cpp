@@ -6,6 +6,8 @@
 
 #include "GOTestNameMap.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestNameMap::TEST_NAME = "GOTestNameMap";
 
 void GOTestNameMap::TestAddAndGetName() {
@@ -133,8 +135,8 @@ void GOTestNameMap::TestMultipleNames() {
 }
 
 void GOTestNameMap::run() {
-  TestAddAndGetName();
-  TestEnsureNameExists();
-  TestEmptyName();
-  TestMultipleNames();
+  GO_RUN_TEST(TestAddAndGetName())
+  GO_RUN_TEST(TestEnsureNameExists())
+  GO_RUN_TEST(TestEmptyName())
+  GO_RUN_TEST(TestMultipleNames())
 }

@@ -10,6 +10,8 @@
 
 #include "sound/playing/GOSoundReleaseAlignTable.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestReleaseAlignTable::TEST_NAME
   = "GOTestReleaseAlignTable";
 
@@ -192,15 +194,15 @@ void GOTestReleaseAlignTable::TestAmplitudeOrdering() {
 }
 
 void GOTestReleaseAlignTable::run() {
-  TestComputeBucketIndexNormal();
-  TestComputeBucketIndexBelowRange();
-  TestComputeBucketIndexAboveRange();
-  TestComputeBucketIndexZeroMaxValue();
-  TestComputeBucketIndexBoundaries();
-  TestBugRegression();
-  TestSameRowPreference();
-  TestDistantSingleCell();
-  TestEmptyTable();
-  TestCellFindsItself();
-  TestAmplitudeOrdering();
+  GO_RUN_TEST(TestComputeBucketIndexNormal())
+  GO_RUN_TEST(TestComputeBucketIndexBelowRange())
+  GO_RUN_TEST(TestComputeBucketIndexAboveRange())
+  GO_RUN_TEST(TestComputeBucketIndexZeroMaxValue())
+  GO_RUN_TEST(TestComputeBucketIndexBoundaries())
+  GO_RUN_TEST(TestBugRegression())
+  GO_RUN_TEST(TestSameRowPreference())
+  GO_RUN_TEST(TestDistantSingleCell())
+  GO_RUN_TEST(TestEmptyTable())
+  GO_RUN_TEST(TestCellFindsItself())
+  GO_RUN_TEST(TestAmplitudeOrdering())
 }

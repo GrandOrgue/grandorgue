@@ -15,6 +15,8 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/interfaces/GOSoundCallbackConnector.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundCallbackConnector::TEST_NAME
   = "GOTestSoundCallbackConnector";
 
@@ -195,9 +197,9 @@ void GOTestSoundCallbackConnector::TestDisconnectWaitsAsyncCallbacks() {
 }
 
 void GOTestSoundCallbackConnector::run() {
-  TestSilenceWithoutEngine();
-  TestConnectDisconnectLifecycle();
-  TestAsyncCallbacksXrun();
-  TestConnectDisconnectCyclesAsyncCallbacks();
-  TestDisconnectWaitsAsyncCallbacks();
+  GO_RUN_TEST(TestSilenceWithoutEngine())
+  GO_RUN_TEST(TestConnectDisconnectLifecycle())
+  GO_RUN_TEST(TestAsyncCallbacksXrun())
+  GO_RUN_TEST(TestConnectDisconnectCyclesAsyncCallbacks())
+  GO_RUN_TEST(TestDisconnectWaitsAsyncCallbacks())
 }

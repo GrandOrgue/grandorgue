@@ -9,7 +9,6 @@
 #include "config/GOConfig.h"
 #include <cstdio>
 #include <filesystem>
-#include <iostream>
 
 GOTest::GOTest(Category category) : m_Category(category) {
   // This is the magic to auto register tests in TestCollection
@@ -17,11 +16,7 @@ GOTest::GOTest(Category category) : m_Category(category) {
 }
 GOTest::~GOTest() {}
 
-bool GOTest::setUp() {
-  std::cout << "==================== " << this->GetName()
-            << " - BEGIN ====================";
-  return true;
-}
+bool GOTest::setUp() { return true; }
 
 void GOTest::run() {}
 

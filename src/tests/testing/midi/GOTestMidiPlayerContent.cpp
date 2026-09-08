@@ -12,6 +12,8 @@
 #include "midi/GOMidiPlayerContent.h"
 #include "midi/events/GOMidiEvent.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestMidiPlayerContent::TEST_NAME
   = "GOTestMidiPlayerContent";
 
@@ -126,10 +128,10 @@ void GOTestMidiPlayerContent::TestHasNativeHeader() {
 }
 
 void GOTestMidiPlayerContent::run() {
-  TestIsMidiInputNumberMappingUsable();
-  TestComputeManualChannelsPedalFirst();
-  TestComputeManualChannelsPedalLast();
-  TestComputeManualChannelsUseInputNumber();
-  TestComputeManualChannelsUseInputNumberFallback();
-  TestHasNativeHeader();
+  GO_RUN_TEST(TestIsMidiInputNumberMappingUsable())
+  GO_RUN_TEST(TestComputeManualChannelsPedalFirst())
+  GO_RUN_TEST(TestComputeManualChannelsPedalLast())
+  GO_RUN_TEST(TestComputeManualChannelsUseInputNumber())
+  GO_RUN_TEST(TestComputeManualChannelsUseInputNumberFallback())
+  GO_RUN_TEST(TestHasNativeHeader())
 }

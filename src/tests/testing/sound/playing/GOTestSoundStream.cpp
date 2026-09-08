@@ -15,6 +15,7 @@
 #include "sound/playing/GOSoundStream.h"
 
 #include "GOInt.h"
+#include "GOTestScope.h"
 #include "GOWave.h"
 #include "GOWaveLoop.h"
 
@@ -346,15 +347,31 @@ void GOTestSoundStream::TestCompressedLoopWrapMatchesUncompressed() {
 void GOTestSoundStream::run() {
   for (unsigned nChannels : {1u, 2u}) {
     for (bool isCompressed : {false, true}) {
-      TestReadBlock(
-        GOSoundResample::GO_LINEAR_INTERPOLATION, isCompressed, nChannels);
-      TestReadBlock(
-        GOSoundResample::GO_POLYPHASE_INTERPOLATION, isCompressed, nChannels);
+      {
+        GOTestScope scope(
+          GOTestScope::TEST,
+          std::format(
+            "TestReadBlock(LINEAR, compressed={}, nChannels={})",
+            isCompressed,
+            nChannels));
+        TestReadBlock(
+          GOSoundResample::GO_LINEAR_INTERPOLATION, isCompressed, nChannels);
+      }
+      {
+        GOTestScope scope(
+          GOTestScope::TEST,
+          std::format(
+            "TestReadBlock(POLYPHASE, compressed={}, nChannels={})",
+            isCompressed,
+            nChannels));
+        TestReadBlock(
+          GOSoundResample::GO_POLYPHASE_INTERPOLATION, isCompressed, nChannels);
+      }
     }
   }
-  TestLoopedStreamAlwaysReturnsTrue();
-  TestLoopTransitionAcrossDifferentEndPos();
-  TestInitAlignedStream();
-  TestCompressedLoopWrapMatchesUncompressed();
-  TestInitAlignedStreamWithSilentAttack();
+  GO_RUN_TEST(TestLoopedStreamAlwaysReturnsTrue())
+  GO_RUN_TEST(TestLoopTransitionAcrossDifferentEndPos())
+  GO_RUN_TEST(TestInitAlignedStream())
+  GO_RUN_TEST(TestCompressedLoopWrapMatchesUncompressed())
+  GO_RUN_TEST(TestInitAlignedStreamWithSilentAttack())
 }

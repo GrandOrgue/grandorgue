@@ -13,6 +13,8 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestPerfSoundBufferPlanarMutable::TEST_NAME
   = "GOTestPerfSoundBufferPlanarMutable";
 
@@ -453,18 +455,18 @@ void GOTestPerfSoundBufferPlanarMutable::run() {
   std::cout << "Buffer configuration: " << NUM_CHANNELS
             << " channels (stereo)\n";
 
-  TestPerfFillWithSilence();
-  TestPerfCopyFrom();
-  TestPerfAddFrom();
-  TestPerfAddFromWithCoefficient();
-  TestPerfCopyChannelFrom();
-  TestPerfAddChannelFrom();
-  TestPerfAddChannelFromWithCoefficient();
-  TestPerfDeinterleaveFrom();
-  TestPerfAddDeinterleaveFrom();
-  TestPerfInterleaveTo();
+  GO_RUN_TEST(TestPerfFillWithSilence())
+  GO_RUN_TEST(TestPerfCopyFrom())
+  GO_RUN_TEST(TestPerfAddFrom())
+  GO_RUN_TEST(TestPerfAddFromWithCoefficient())
+  GO_RUN_TEST(TestPerfCopyChannelFrom())
+  GO_RUN_TEST(TestPerfAddChannelFrom())
+  GO_RUN_TEST(TestPerfAddChannelFromWithCoefficient())
+  GO_RUN_TEST(TestPerfDeinterleaveFrom())
+  GO_RUN_TEST(TestPerfAddDeinterleaveFrom())
+  GO_RUN_TEST(TestPerfInterleaveTo())
 
   std::cout << "\n========== Performance Tests Completed ==========\n";
 
-  ReportFailedTests();
+  GO_RUN_TEST(ReportFailedTests())
 }

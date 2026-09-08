@@ -14,6 +14,8 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundBufferPlanarMutable::TEST_NAME
   = "GOTestSoundBufferPlanarMutable";
 
@@ -277,15 +279,15 @@ void GOTestSoundBufferPlanarMutable::TestSingleChannelBuffer() {
 }
 
 void GOTestSoundBufferPlanarMutable::run() {
-  TestGetChannelBufferWriteThrough();
-  TestFillWithSilence();
-  TestCopyFrom();
-  TestAddFrom();
-  TestAddFromWithCoefficient();
-  TestCopyChannelFrom();
-  TestAddChannelFrom();
-  TestAddChannelFromWithCoefficient();
-  TestDeinterleaveFrom();
-  TestAddDeinterleavedFrom();
-  TestSingleChannelBuffer();
+  GO_RUN_TEST(TestGetChannelBufferWriteThrough())
+  GO_RUN_TEST(TestFillWithSilence())
+  GO_RUN_TEST(TestCopyFrom())
+  GO_RUN_TEST(TestAddFrom())
+  GO_RUN_TEST(TestAddFromWithCoefficient())
+  GO_RUN_TEST(TestCopyChannelFrom())
+  GO_RUN_TEST(TestAddChannelFrom())
+  GO_RUN_TEST(TestAddChannelFromWithCoefficient())
+  GO_RUN_TEST(TestDeinterleaveFrom())
+  GO_RUN_TEST(TestAddDeinterleavedFrom())
+  GO_RUN_TEST(TestSingleChannelBuffer())
 }

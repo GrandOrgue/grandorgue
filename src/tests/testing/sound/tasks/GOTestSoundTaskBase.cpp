@@ -16,6 +16,7 @@
 
 #include "GOSoundCooperativeTaskTestImpl.h"
 #include "GOSoundTaskTestImpl.h"
+#include "GOTestScope.h"
 
 const std::string GOTestSoundTaskBase::TEST_NAME = "GOTestSoundTaskBase";
 
@@ -315,21 +316,21 @@ void GOTestSoundTaskBase::TestCooperativeNewRoundAllowsFreshRound() {
 }
 
 void GOTestSoundTaskBase::run() {
-  TestInitialState();
-  TestRunCallsDoRunOnce();
-  TestRunRepeatsUntilDoRunReturnsTrue();
-  TestCompleteRoundSetsFlagAndFinishes();
-  TestNewRoundResetsState();
-  TestDiscardContentCallsNewRound();
+  GO_RUN_TEST(TestInitialState())
+  GO_RUN_TEST(TestRunCallsDoRunOnce())
+  GO_RUN_TEST(TestRunRepeatsUntilDoRunReturnsTrue())
+  GO_RUN_TEST(TestCompleteRoundSetsFlagAndFinishes())
+  GO_RUN_TEST(TestNewRoundResetsState())
+  GO_RUN_TEST(TestDiscardContentCallsNewRound())
 
-  TestConcurrentRunExecutesDoRunExactlyOnce();
-  TestConcurrentRunWithIncompleteDoRun();
-  TestConcurrentCompleteRoundAndRun();
-  TestNewRoundWaitsForInFlightRun();
-  TestNoTornStateAcrossThreads();
+  GO_RUN_TEST(TestConcurrentRunExecutesDoRunExactlyOnce())
+  GO_RUN_TEST(TestConcurrentRunWithIncompleteDoRun())
+  GO_RUN_TEST(TestConcurrentCompleteRoundAndRun())
+  GO_RUN_TEST(TestNewRoundWaitsForInFlightRun())
+  GO_RUN_TEST(TestNoTornStateAcrossThreads())
 
-  TestCooperativeReachesDoneExactlyOnce();
-  TestCooperativeThreadWithNoWorkExitsEarly();
-  TestCooperativeWaitOrStopBlocksUntilDone();
-  TestCooperativeNewRoundAllowsFreshRound();
+  GO_RUN_TEST(TestCooperativeReachesDoneExactlyOnce())
+  GO_RUN_TEST(TestCooperativeThreadWithNoWorkExitsEarly())
+  GO_RUN_TEST(TestCooperativeWaitOrStopBlocksUntilDone())
+  GO_RUN_TEST(TestCooperativeNewRoundAllowsFreshRound())
 }
