@@ -102,10 +102,39 @@ void GOTestSoundReverb::TestLoadIRDataThrowsOnMissingFile() {
     "expects to catch");
 }
 
+void GOTestSoundReverb::TestHasContentTracksProcessAndReset() {
+  static constexpr unsigned N_FRAMES = 64;
+
+  GOSoundReverb reverb(1);
+
+  reverb.Setup(make_config(), N_FRAMES, TEST_IR_SAMPLE_RATE);
+
+  GOAssert(
+    !reverb.HasContent(),
+    "a freshly set-up reverb must not report content before Process() runs");
+
+  float buffer[N_FRAMES] = {};
+
+  reverb.Process(buffer, N_FRAMES);
+
+  GOAssert(
+    reverb.HasContent(),
+    "HasContent() must become true once Process() has run the convolution "
+    "engine");
+
+  reverb.Reset();
+
+  GOAssert(
+    !reverb.HasContent(),
+    "Reset() must clear HasContent() so a caller can tell the engine holds "
+    "no tail anymore");
+}
+
 void GOTestSoundReverb::run() {
   TestLoadIRDataAppliesGain();
   TestLoadIRDataTrimsOffsetAndLen();
   TestLoadIRDataComputesDelayFromMs();
   TestLoadIRDataPassesThroughIsDirect();
   TestLoadIRDataThrowsOnMissingFile();
+  TestHasContentTracksProcessAndReset();
 }

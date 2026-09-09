@@ -41,6 +41,12 @@ private:
    * catch. */
   void TestLoadIRDataThrowsOnMissingFile();
 
+  /** HasContent() becomes true once Process() has actually run the
+   * convolution engine, and false again after Reset() - the signal
+   * GOSoundOutputTask::IsEmpty() needs, since a periodic meter reset alone
+   * cannot tell whether a convolution tail is still buffered. */
+  void TestHasContentTracksProcessAndReset();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

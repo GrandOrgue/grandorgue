@@ -104,7 +104,7 @@ void GOSoundOutputTask::EnsureBufferReady(
 // task is quiescent (deregistered from the scheduler), never concurrently
 // with DoRun()
 bool GOSoundOutputTask::IsEmpty() const {
-  bool isEmpty = true;
+  bool isEmpty = !m_Reverb->HasContent();
 
   for (unsigned i = 0; i < m_MeterInfo.size() && isEmpty; i++)
     isEmpty = m_MeterInfo[i] == 0;
