@@ -47,15 +47,24 @@ void GOScheduler::Update() {
   m_Tasks.clear();
   SortList(m_Work);
   for (unsigned i = 0; i < m_Work.size();) {
-    unsigned cnt = 1;
-    while (i + cnt < m_Work.size()
-           && m_Work[i]->GetPriority() == m_Work[i + cnt]->GetPriority())
-      cnt++;
-    unsigned rcnt = m_Work[i]->IsRepeatable() ? m_RepeatCount : 1;
-    for (unsigned j = 0; j < rcnt; j++)
-      for (unsigned k = 0; k < cnt; k++)
-        m_Tasks.push_back(&m_Work[i + k]);
-    i += cnt;
+    // A null slot (left by Remove(), not yet compacted by Clear()) groups
+    // and schedules nothing - GetNextTask() already skips nulls in m_Tasks,
+    // so simply advance past it here rather than dereferencing it.
+    if (m_Work[i]) {
+      unsigned cnt = 1;
+
+      while (i + cnt < m_Work.size() && m_Work[i + cnt]
+             && m_Work[i]->GetPriority() == m_Work[i + cnt]->GetPriority())
+        cnt++;
+
+      unsigned rcnt = m_Work[i]->IsRepeatable() ? m_RepeatCount : 1;
+
+      for (unsigned j = 0; j < rcnt; j++)
+        for (unsigned k = 0; k < cnt; k++)
+          m_Tasks.push_back(&m_Work[i + k]);
+      i += cnt;
+    } else
+      i++;
   }
 }
 
@@ -75,19 +84,25 @@ void GOScheduler::Add(GOSchedulerTask *item) {
   Unlock();
 }
 
-void GOScheduler::RemoveList(
-  GOSchedulerTask *item, std::vector<GOSchedulerTask *> &list) {
+bool GOScheduler::RemoveList(
+  GOSchedulerTask *pTask, std::vector<GOSchedulerTask *> &list) {
+  bool wasFound = false;
+
   for (unsigned i = 0; i < list.size(); i++)
-    if (list[i] == item)
+    if (list[i] == pTask) {
       list[i] = nullptr;
+      wasFound = true;
+    }
+  return wasFound;
 }
 
 void GOScheduler::Remove(GOSchedulerTask *item) {
   if (item) {
     GOMutexLocker lock(m_Mutex);
+    bool wasRemoved = RemoveList(item, m_Work);
 
-    RemoveList(item, m_Work);
-    item->DiscardContent();
+    if (wasRemoved)
+      item->DiscardContent();
   }
 }
 
