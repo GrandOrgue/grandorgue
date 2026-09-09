@@ -34,6 +34,18 @@ private:
   /** Remove(nullptr) must be a no-op, matching Add(nullptr). */
   void TestRemoveNullptrIsNoop();
 
+  /** Removing a task a second time (or one this scheduler never held) must
+   * not call DiscardContent() again: RemoveList() found nothing the second
+   * time, and Remove() must not discard content it did not actually take
+   * out of the scheduler. */
+  void TestRemoveTwiceDiscardsContentOnlyOnce();
+
+  /** A task Remove()'d and then Add()'d back must not crash: Remove()
+   * leaves a null placeholder in the work list until the next Clear(), and
+   * Update() (called by the following Add()) must tolerate it instead of
+   * dereferencing it while grouping same-priority tasks. */
+  void TestRemoveThenAddSameTaskSucceeds();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

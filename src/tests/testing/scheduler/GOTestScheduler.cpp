@@ -83,8 +83,57 @@ void GOTestScheduler::TestRemoveNullptrIsNoop() {
   scheduler.Remove(nullptr);
 }
 
+void GOTestScheduler::TestRemoveTwiceDiscardsContentOnlyOnce() {
+  FakeTask task;
+  GOScheduler scheduler;
+
+  scheduler.Add(&task);
+  task.hasContent = true;
+  scheduler.Remove(&task);
+
+  GOAssert(
+    task.nDiscardContentCalls == 1,
+    "sanity check: the first Remove() must discard the task's content");
+
+  // Not a real scenario (a deregistered task should not accumulate content
+  // on its own) - set directly to prove the second Remove() below leaves it
+  // untouched, rather than merely happening to already be empty.
+  task.hasContent = true;
+  scheduler.Remove(&task);
+
+  GOAssert(
+    task.nDiscardContentCalls == 1,
+    "removing a task a second time must not call DiscardContent() again - "
+    "RemoveList() found nothing to remove the second time");
+  GOAssert(
+    task.hasContent,
+    "a Remove() that found nothing must leave the task's content alone");
+}
+
+void GOTestScheduler::TestRemoveThenAddSameTaskSucceeds() {
+  FakeTask task;
+  GOScheduler scheduler;
+
+  scheduler.Add(&task);
+  task.hasContent = true;
+  scheduler.Remove(&task);
+
+  // Regression test: Remove() leaves a null placeholder in the work list
+  // (compacted only by the next Clear()), and this Add() calls Update(),
+  // which used to dereference that placeholder unconditionally while
+  // grouping same-priority tasks - crashing the whole test process rather
+  // than just failing an assertion.
+  scheduler.Add(&task);
+
+  GOAssert(
+    scheduler.GetNextTask() == &task,
+    "the re-added task must be scheduled normally");
+}
+
 void GOTestScheduler::run() {
   GO_RUN_TEST(TestClearDiscardsContentOnEveryTask())
   GO_RUN_TEST(TestRemoveDiscardsContent())
   GO_RUN_TEST(TestRemoveNullptrIsNoop())
+  GO_RUN_TEST(TestRemoveTwiceDiscardsContentOnlyOnce())
+  GO_RUN_TEST(TestRemoveThenAddSameTaskSucceeds())
 }

@@ -34,7 +34,13 @@ private:
   void SortList(std::vector<GOSchedulerTask *> &list);
   void NewRoundList(std::vector<GOSchedulerTask *> &list);
   void AddList(GOSchedulerTask *item, std::vector<GOSchedulerTask *> &list);
-  void RemoveList(GOSchedulerTask *item, std::vector<GOSchedulerTask *> &list);
+  /**
+   * Nulls out pTask's slot in list, if present.
+   * @param pTask the task to look for
+   * @param list the work list to search and mutate
+   * @return whether pTask was found in list (and so was nulled out)
+   */
+  bool RemoveList(GOSchedulerTask *pTask, std::vector<GOSchedulerTask *> &list);
   void CompleteRoundList(std::vector<GOSchedulerTask *> &list);
 
 public:
