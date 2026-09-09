@@ -37,6 +37,7 @@
 #include "testing/sound/playing/GOTestSoundStream.h"
 #include "testing/sound/reverb/GOTestSoundReverb.h"
 #include "testing/sound/tasks/GOTestPerfSoundTaskBase.h"
+#include "testing/sound/tasks/GOTestSoundOutputTask.h"
 #include "testing/sound/tasks/GOTestSoundTaskBase.h"
 
 int main(int argc, char *argv[]) {
@@ -89,6 +90,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundStream testSoundStream;
   GOTestSoundReverb testSoundReverb;
   GOTestSoundTaskBase testSoundTaskBase;
+  GOTestSoundOutputTask testSoundOutputTask;
   GOTestPerfSoundTaskBase testPerfSoundTaskBase;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;
