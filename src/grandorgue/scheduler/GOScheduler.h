@@ -23,6 +23,9 @@ private:
   std::vector<GOSchedulerTask **> m_Tasks;
   // if GetNextTask() always returns nullptr
   std::atomic_bool m_IsNotGivingWork;
+  /* whether GetNextTask() has dispatched a task since the last NewRound() -
+     see IsRoundDirty() */
+  std::atomic_bool m_IsRoundDirty;
   std::atomic_uint m_NextItem;
   std::atomic_uint m_ItemCount;
   unsigned m_RepeatCount;
@@ -70,6 +73,18 @@ public:
 
   void PauseGivingWork() { m_IsNotGivingWork.store(true); }
   void ResumeGivingWork() { m_IsNotGivingWork.store(false); }
+
+  /**
+   * Whether a worker thread has picked up a task via GetNextTask() since the
+   * last NewRound() - i.e. whether the round may already be mid-processing
+   * even though no synchronous caller (e.g. an audio output) has driven it.
+   * A worker that grabs a task this way can consume/mutate real content
+   * (sampler read positions, etc.) before any output ever enters the round,
+   * so this is not implied by any output-side counter - see
+   * GOSoundOrganEngine::StopEngine().
+   * @return true if the round has been touched by a worker thread
+   */
+  bool IsRoundDirty() const { return m_IsRoundDirty.load(); }
 
   GOSchedulerTask *GetNextTask();
 };

@@ -52,23 +52,6 @@ public:
   ~SchedulerThreadGuard() { r_Thread.Delete(); }
 };
 
-// Signals wasRun once actually Run() by a scheduler thread, so a test can
-// prove a task was picked up on its own - not driven by anything else -
-// within a bounded wait.
-class SignalingTask : public GOSchedulerTask {
-public:
-  std::atomic_bool wasRun{false};
-
-  unsigned GetPriority() const override { return 0; }
-  unsigned GetCost() const override { return 0; }
-  bool IsRepeatable() const override { return false; }
-  bool IsEmpty() const override { return true; }
-  void Run(GOSchedulerThread * = nullptr) override { wasRun.store(true); }
-  void CompleteRound() override {}
-  void NewRound() override {}
-  void DiscardContent() override {}
-};
-
 } // namespace
 
 void GOTestScheduler::TestResumeThenWakeupRunsIdleThreadsWork() {
@@ -81,12 +64,12 @@ void GOTestScheduler::TestResumeThenWakeupRunsIdleThreadsWork() {
 
   scheduler.Add(&task);
 
-  // Mirrors GOSoundOrganEngine::StopEngine() then the fixed StartEngine():
-  // pause, wait for the thread to park, then make a fresh round available
-  // and explicitly wake it. Regression coverage for the "wake aux workers on
-  // resume" fix: without the final Wakeup(), the thread would stay parked on
-  // its condition variable forever - GetNextTask() returning real work is
-  // not, by itself, enough to bring an idle thread back.
+  /* Mirrors GOSoundOrganEngine::StopEngine() then the fixed StartEngine():
+     pause, wait for the thread to park, then make a fresh round available
+     and explicitly wake it. Regression coverage for the "wake aux workers on
+     resume" fix: without the final Wakeup(), the thread would stay parked on
+     its condition variable forever - GetNextTask() returning real work is
+     not, by itself, enough to bring an idle thread back. */
   scheduler.PauseGivingWork();
   thread.WaitForIdle();
 

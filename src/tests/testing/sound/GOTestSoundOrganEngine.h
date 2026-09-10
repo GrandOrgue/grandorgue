@@ -79,6 +79,17 @@ private:
   void TestStopEngineFinishesPartialPeriod();
 
   /*
+   * With 1 aux thread, drives one period so the engine opens a fresh round
+   * and wakes the aux thread, then waits for GOScheduler::IsRoundDirty() to
+   * become true - proving a worker claimed a task for the new round before
+   * any output entered it (m_NCallbacksFinishedCurrPeriod == 0). StopEngine()
+   * must still finish that round (sampler clock advances by exactly one
+   * period) even though the earlier output-counter-only check would have
+   * missed it entirely.
+   */
+  void TestStopEngineFinishesWorkerStartedRound();
+
+  /*
    * StopEngine() must not touch the sampler pool: a sample started before
    * Stop is still checked out (GetUsedSamplerCount() unchanged) and can
    * still be mixed after the following StartEngine() resumes.

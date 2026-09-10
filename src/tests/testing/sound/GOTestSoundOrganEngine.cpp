@@ -373,12 +373,12 @@ void GOTestSoundOrganEngine::TestStopEngineFinishesPartialPeriod() {
 
   const uint64_t timeBefore = engine.GetSamplerPlayer().GetTime();
 
-  // Only output 0 enters this period; output 1 never does - mirrors a live
-  // reroute (EnsureSoundRoutingFor) disconnecting between the two outputs'
-  // callbacks. Output 0's ProcessAudioCallback() already drove the shared
-  // group/windchest tasks and computed a full round for this period.
+  /* Only output 0 enters this period; output 1 never does - mirrors a live
+     reroute (EnsureSoundRoutingFor) disconnecting between the two outputs'
+     callbacks. Output 0's ProcessAudioCallback() already drove the shared
+     group/windchest tasks and computed a full round for this period. */
   {
-    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     engine.ProcessAudioCallback(0, buf0);
@@ -387,10 +387,10 @@ void GOTestSoundOrganEngine::TestStopEngineFinishesPartialPeriod() {
   engine.SetStreaming(false);
   engine.SetUsed(false);
 
-  // StopEngine() must close out that half-open period itself: without the
-  // fix, StartEngine()'s unconditional NewRound() would discard the already-
-  // computed round without ever calling AdvanceTime() for it, leaving the
-  // sampler clock one period behind what the samplers actually did.
+  /* StopEngine() must close out that half-open period itself: without the
+     fix, StartEngine()'s unconditional NewRound() would discard the already-
+     computed round without ever calling AdvanceTime() for it, leaving the
+     sampler clock one period behind what the samplers actually did. */
   engine.StopEngine();
 
   GOAssert(
@@ -402,16 +402,16 @@ void GOTestSoundOrganEngine::TestStopEngineFinishesPartialPeriod() {
   engine.StartEngine();
   GOAssert(engine.IsWorking(), "Engine should be WORKING after resume");
 
-  // A fresh, full period across both outputs afterwards must behave
-  // normally - the round StopEngine() closed out must not leave stale state
-  // behind for the next one.
+  /* A fresh, full period across both outputs afterwards must behave
+     normally - the round StopEngine() closed out must not leave stale state
+     behind for the next one. */
   engine.SetUsed(true);
   engine.SetStreaming(true);
 
   {
-    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
       buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     const bool didAdvanceAfter0 = engine.ProcessAudioCallback(0, buf0);
@@ -420,6 +420,75 @@ void GOTestSoundOrganEngine::TestStopEngineFinishesPartialPeriod() {
     GOAssert(
       !didAdvanceAfter0 && didAdvanceAfter1,
       "Period after resume: only the last output should advance the period");
+  }
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestStopEngineFinishesWorkerStartedRound() {
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 1, /* nOutputs */ 1);
+
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  /* Drive one full period so the engine opens a fresh round and wakes the
+     aux thread (ProcessAudioCallback()'s isLastFinished branch) - leaving
+     m_NCallbacksFinishedCurrPeriod at 0 for the new period even though the
+     aux thread may already be mid-flight processing it. */
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    engine.ProcessAudioCallback(0, buf);
+  }
+
+  const uint64_t timeBefore = engine.GetSamplerPlayer().GetTime();
+
+  /* Bounded wait for the aux thread to actually claim a task for the new
+     round via GetNextTask(), mirroring TestDisconnectWithXrunDeadlock's
+     pattern - this is exactly what GOScheduler::IsRoundDirty() exists to
+     detect: no output has entered this period at all
+     (m_NCallbacksFinishedCurrPeriod == 0), yet a worker already has. */
+  const auto deadline
+    = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+
+  while (!engine.GetScheduler().IsRoundDirty()
+         && std::chrono::steady_clock::now() < deadline)
+    std::this_thread::yield();
+
+  GOAssert(
+    engine.GetScheduler().IsRoundDirty(),
+    "sanity check: the aux thread should have claimed a task for the new "
+    "round within 1s");
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+
+  /* StopEngine() must finish this worker-started round, even though no
+     output ever entered it (m_NCallbacksFinishedCurrPeriod == 0) - the gap
+     Codex flagged as a follow-up on the partial-period fix ("Reconcile
+     worker-started rounds before restarting"). */
+  engine.StopEngine();
+
+  GOAssert(
+    engine.GetSamplerPlayer().GetTime() == timeBefore + N_SAMPLES_PER_BUFFER,
+    "StopEngine() must finish a round a worker thread already started, even "
+    "with no output ever entering it, instead of discarding it silently");
+
+  engine.StartEngine();
+  GOAssert(engine.IsWorking(), "Engine should be WORKING after resume");
+
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+    const bool didAdvance = engine.ProcessAudioCallback(0, buf);
+
+    GOAssert(
+      didAdvance, "single output should advance the period after resume");
   }
 
   engine.SetStreaming(false);
@@ -622,6 +691,7 @@ void GOTestSoundOrganEngine::run() {
   GO_RUN_TEST(TestDisconnectWithXrunDeadlock())
   GO_RUN_TEST(TestReconnectAfterMidPeriodDisconnect())
   GO_RUN_TEST(TestStopEngineFinishesPartialPeriod())
+  GO_RUN_TEST(TestStopEngineFinishesWorkerStartedRound())
   GO_RUN_TEST(TestStopStartResumePreservesSamplers())
   GO_RUN_TEST(TestDestroyRebuildReclaimsAndResizesPool())
   GO_RUN_TEST(TestAudioGroupRoutingChangeIsEmpty())

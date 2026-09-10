@@ -14,6 +14,7 @@ GOScheduler::GOScheduler()
   : m_Work(),
     m_Tasks(),
     m_IsNotGivingWork(false),
+    m_IsRoundDirty(false),
     m_ItemCount(0),
     m_RepeatCount(0) {}
 
@@ -118,6 +119,7 @@ void GOScheduler::NewRound() {
   m_RoundCounter.AdvanceRound();
   NewRoundList(m_Work);
   m_NextItem.exchange(0);
+  m_IsRoundDirty.store(false);
 }
 
 void GOScheduler::CompleteRoundList(std::vector<GOSchedulerTask *> &list) {
@@ -132,15 +134,16 @@ void GOScheduler::CompleteRound() {
 }
 
 GOSchedulerTask *GOScheduler::GetNextTask() {
-  do {
-    if (m_IsNotGivingWork.load()) {
-      return nullptr;
-    }
-    unsigned next = m_NextItem.fetch_add(1);
+  GOSchedulerTask *pResultTask = nullptr;
+
+  while (!pResultTask && !m_IsNotGivingWork.load()) {
+    const unsigned next = m_NextItem.fetch_add(1);
+
     if (next >= m_ItemCount)
-      return nullptr;
-    GOSchedulerTask *item = *m_Tasks[next];
-    if (item)
-      return item;
-  } while (true);
+      break;
+    pResultTask = *m_Tasks[next];
+  }
+  if (pResultTask)
+    m_IsRoundDirty.store(true);
+  return pResultTask;
 }
