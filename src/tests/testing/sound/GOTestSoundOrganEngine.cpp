@@ -364,6 +364,69 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
   StopAndDestroyEngine();
 }
 
+void GOTestSoundOrganEngine::TestStopEngineFinishesPartialPeriod() {
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 2);
+
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  const uint64_t timeBefore = engine.GetSamplerPlayer().GetTime();
+
+  // Only output 0 enters this period; output 1 never does - mirrors a live
+  // reroute (EnsureSoundRoutingFor) disconnecting between the two outputs'
+  // callbacks. Output 0's ProcessAudioCallback() already drove the shared
+  // group/windchest tasks and computed a full round for this period.
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+      buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    engine.ProcessAudioCallback(0, buf0);
+  }
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+
+  // StopEngine() must close out that half-open period itself: without the
+  // fix, StartEngine()'s unconditional NewRound() would discard the already-
+  // computed round without ever calling AdvanceTime() for it, leaving the
+  // sampler clock one period behind what the samplers actually did.
+  engine.StopEngine();
+
+  GOAssert(
+    engine.GetSamplerPlayer().GetTime() == timeBefore + N_SAMPLES_PER_BUFFER,
+    "StopEngine() must finish a half-open period (one output already ran, "
+    "another never entered) so the sampler clock advances exactly one "
+    "period, instead of discarding it silently");
+
+  engine.StartEngine();
+  GOAssert(engine.IsWorking(), "Engine should be WORKING after resume");
+
+  // A fresh, full period across both outputs afterwards must behave
+  // normally - the round StopEngine() closed out must not leave stale state
+  // behind for the next one.
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+      buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+      buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    const bool didAdvanceAfter0 = engine.ProcessAudioCallback(0, buf0);
+    const bool didAdvanceAfter1 = engine.ProcessAudioCallback(1, buf1);
+
+    GOAssert(
+      !didAdvanceAfter0 && didAdvanceAfter1,
+      "Period after resume: only the last output should advance the period");
+  }
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+  StopAndDestroyEngine();
+}
+
 void GOTestSoundOrganEngine::TestStopStartResumePreservesSamplers() {
   controller->AddWindchest(new GOWindchest(*controller));
 
@@ -558,6 +621,7 @@ void GOTestSoundOrganEngine::run() {
   GO_RUN_TEST(TestMultipleConfigsAsyncCallbacks())
   GO_RUN_TEST(TestDisconnectWithXrunDeadlock())
   GO_RUN_TEST(TestReconnectAfterMidPeriodDisconnect())
+  GO_RUN_TEST(TestStopEngineFinishesPartialPeriod())
   GO_RUN_TEST(TestStopStartResumePreservesSamplers())
   GO_RUN_TEST(TestDestroyRebuildReclaimsAndResizesPool())
   GO_RUN_TEST(TestAudioGroupRoutingChangeIsEmpty())

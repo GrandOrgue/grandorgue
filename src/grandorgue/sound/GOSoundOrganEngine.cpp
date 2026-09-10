@@ -414,6 +414,15 @@ void GOSoundOrganEngine::DestroyEngine() {
 
 void GOSoundOrganEngine::StartEngine() {
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
+  // May be the second NewRound() in a row if StopEngine() just closed a
+  // half-open period via NextPeriod() (which itself ends with NewRound()):
+  // harmless, not a second real round. Between that call and this one
+  // nothing can touch scheduler state (PauseGivingWork() has been in effect
+  // the whole time, so GetNextTask() never reaches m_NextItem), and every
+  // task's NewRound()/DoNewRound() is idempotent on an already-fresh
+  // (RUN_STATE_NOT_STARTED, m_ActiveCount==0) task. This call is required
+  // here regardless: a genuine first StartEngine() after BuildEngine() (never
+  // preceded by StopEngine()) is the only place m_NextItem ever gets zeroed.
   m_scheduler.NewRound();
   m_scheduler.ResumeGivingWork();
 
@@ -422,8 +431,8 @@ void GOSoundOrganEngine::StartEngine() {
   // there or at the end of a period. Without this, the round just made
   // available above sits unclaimed by any aux thread until the first
   // post-resume period happens to complete one on its own - so the entire
-  // first period after any Stop/Start cycle would run synchronously on the
-  // audio callback thread alone.
+  // first period after any Stop/Start cycle (e.g. a live audio-group reroute)
+  // would run synchronously on the audio callback thread alone.
   for (auto &pThread : mp_threads)
     pThread->Wakeup();
 
@@ -434,6 +443,24 @@ void GOSoundOrganEngine::StopEngine() {
   assert(m_LifecycleState.load() == LifecycleState::WORKING);
 
   m_scheduler.PauseGivingWork();
+
+  // A live reroute (EnsureSoundRoutingFor) can disconnect between two
+  // outputs' callbacks for the same period: one already ran
+  // ProcessAudioCallback() (samplers advanced, round tasks computed) while
+  // another hadn't entered yet. DisconnectFromEngine() only waits for
+  // callbacks currently in flight, not for every output to reach the period
+  // boundary, so by the time we get here that's already settled - no
+  // callback is running or can start one (p_OrganEngine is already null).
+  // Finish the round exactly as the missing outputs' callbacks would have,
+  // so the sampler clock and round state stay consistent instead of being
+  // silently discarded by the next StartEngine()'s NewRound(). This must run
+  // after PauseGivingWork(): GOScheduler::CompleteRound() doesn't need work
+  // being given out (it drives each task directly, not via GetNextTask()),
+  // and pausing first means the fresh round NewRound() leaves behind here
+  // isn't picked up by anyone until StartEngine() resumes giving out work.
+  if (m_NCallbacksFinishedCurrPeriod.load() > 0)
+    NextPeriod();
+
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
   m_LifecycleState.store(LifecycleState::BUILT);

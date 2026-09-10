@@ -69,6 +69,16 @@ private:
   void TestReconnectAfterMidPeriodDisconnect();
 
   /*
+   * With 2 outputs, only output 0 enters a period (mirroring a live reroute
+   * disconnecting between two outputs' callbacks): StopEngine() must finish
+   * that half-open period itself (GetSamplerPlayer().GetTime() advances by
+   * exactly one period), instead of letting the following StartEngine()'s
+   * unconditional NewRound() silently discard the already-computed round
+   * without ever advancing the sampler clock for it.
+   */
+  void TestStopEngineFinishesPartialPeriod();
+
+  /*
    * StopEngine() must not touch the sampler pool: a sample started before
    * Stop is still checked out (GetUsedSamplerCount() unchanged) and can
    * still be mixed after the following StartEngine() resumes.
