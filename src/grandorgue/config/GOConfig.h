@@ -185,6 +185,8 @@ public:
 
   GOSettingBool IsToAutoAddMidi;
   GOSettingBool IsToCheckMidiOnStart;
+  // TCP port the "Web Remote" MIDI input device listens on
+  GOSettingUnsigned WebRemotePort;
   GOSettingString MidiRecorderOutputDevice;
 
   GOSettingDirectory OrganPath;

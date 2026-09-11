@@ -356,6 +356,7 @@ GOConfig::GOConfig(
     Transpose(this, GENERAL, wxT("Transpose"), -11, 11, 0),
     IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
     IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
+    WebRemotePort(this, MIDI_IN, wxT("WebRemotePort"), 1, 65535, 8090),
     MidiRecorderOutputDevice(
       this, MIDI_OUT, wxT("MIDIRecorderDevice"), wxEmptyString),
     OrganPath(this, GENERAL, wxT("OrganPath"), wxEmptyString),
