@@ -37,7 +37,7 @@
   #save { background: #b8862b; color: #111; }
   #del { background: #833; color: #eee; }
   #cancel { background: #444; color: #eee; }
-  #hint { padding: 8px 14px; font-size: 12px; opacity: .6; text-align: center; }
+  #hint { padding: 8px 14px; font-size: 12px; opacity: .6; text-align: center; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -47,7 +47,11 @@
   <button id="edit">Edit</button>
 </header>
 <main id="grid"></main>
-<div id="hint">Buttons drive the Combination Setter out of the box. To remap one, hold it while using "Listen for event" in GrandOrgue.</div>
+<div id="hint">
+  <b>Set</b> arms Memory Set: tap it, tap a number or piston to store the current stops there, tap Set again to leave.
+  Without Set, numbers recall. <b>&lt;</b> and <b>&gt;</b> step through the memory, <b>Cancel</b> clears all stops.
+  To remap a button, hold it while using "Listen for event" in GrandOrgue.
+</div>
 
 <dialog id="dlg">
   <form method="dialog">
@@ -69,11 +73,12 @@
 // Every button is just a MIDI note on a channel. What it does is decided on
 // the GrandOrgue side. The defaults below (notes 60 and up, channel 1) match
 // the initial MIDI config GrandOrgue ships with, so out of the box they drive
-// the Combination Setter: Set, General Cancel, digits 0-9, previous/next.
+// the Combination Setter: Set, General Cancel, digits 0-9, previous/next,
+// volume down/up.
 // Anything else is mapped with "Listen for event". If you change these notes,
 // change web_remote_note() in GOConfig.cpp too.
 const KEY = 'go-remote-buttons';
-const defaults = ['Set', 'Cancel', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '>']
+const defaults = ['Set', 'Cancel', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '>', 'Vol -', 'Vol +']
   .map((label, i) => ({ label, note: 60 + i, ch: 1 }));
 
 let buttons = load();

@@ -6,7 +6,9 @@
 
 #include "GOTestWebRemoteDefaults.h"
 
+#include <filesystem>
 #include <format>
+#include <fstream>
 
 #include <wx/init.h>
 
@@ -44,6 +46,8 @@ static const struct {
   {"Sequencer/L9", 71, MIDI_M_NOTE},
   {"Sequencer/Prev", 72, MIDI_M_NOTE},
   {"Sequencer/Next", 73, MIDI_M_NOTE},
+  {"Volume/VolumeDown", 74, MIDI_M_NOTE},
+  {"Volume/VolumeUp", 75, MIDI_M_NOTE},
 };
 
 void GOTestWebRemoteDefaults::TestSetterButtonsAreMapped() {
@@ -108,7 +112,48 @@ void GOTestWebRemoteDefaults::TestOtherButtonsAreNot() {
   }
 }
 
+// A console piston already mapped to "<" must keep working: the Web Remote
+// event is added next to it, not instead of it.
+void GOTestWebRemoteDefaults::TestKeepsMappingsFromOtherDevices() {
+  const std::filesystem::path cfgPath
+    = std::filesystem::temp_directory_path() / "GOTestWebRemoteDefaults.cfg";
+
+  {
+    std::ofstream out(cfgPath);
+
+    out << "\xEF\xBB\xBF[General]\nMidiInitialCount=1\n"
+           "[MidiInitial001]\nObjectType=Button\nPath=Sequencer/Prev\n"
+           "Name=Previous Memory\nReceiverType=Setter\nSenderType=Button\n"
+           "ShortcutReceiverType=Button\nNumberOfMIDIEvents=1\n"
+           "MIDIDevice001=alsa: CASIO USB-MIDI MIDI 1\nMIDIEventType001=Note\n"
+           "MIDIChannel001=1\nMIDIKey001=95\nMIDILowerLimit001=0\n"
+           "MIDIUpperLimit001=1\n";
+  }
+
+  GOConfig config(TEST_NAME, cfgPath.string());
+
+  config.Load();
+  std::filesystem::remove(cfgPath);
+
+  const unsigned webId = config.GetMidiMap().GetDeviceIdByLogicalName(
+    GOMidiWebInPort::DEVICE_NAME);
+  const GOMidiReceiver &recv
+    = *config.FindMidiInitialObject(wxString("Sequencer/Prev"))
+         ->GetMidiReceiver();
+
+  GOAssert(
+    recv.GetEventCount() == 2,
+    std::format("Prev should have both events, has {}", recv.GetEventCount()));
+  GOAssert(
+    recv.GetEvent(0).key == 95 && recv.GetEvent(0).deviceId != webId,
+    "the console mapping should be kept as the first event");
+  GOAssert(
+    recv.GetEvent(1).key == 72 && recv.GetEvent(1).deviceId == webId,
+    "the Web Remote event should be added after it");
+}
+
 void GOTestWebRemoteDefaults::run() {
   GO_RUN_TEST(TestSetterButtonsAreMapped())
   GO_RUN_TEST(TestOtherButtonsAreNot())
+  GO_RUN_TEST(TestKeepsMappingsFromOtherDevices())
 }

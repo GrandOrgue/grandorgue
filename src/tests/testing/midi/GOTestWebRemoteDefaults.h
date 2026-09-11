@@ -17,6 +17,7 @@ private:
 
   void TestSetterButtonsAreMapped();
   void TestOtherButtonsAreNot();
+  void TestKeepsMappingsFromOtherDevices();
 
 public:
   std::string GetName() override { return TEST_NAME; }

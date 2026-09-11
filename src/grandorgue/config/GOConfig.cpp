@@ -253,6 +253,14 @@ static const internal_midi_object_desc INTERNAL_MIDI_DESCS[] = {
    24,
    _("Transpose +"),
    GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_TRANSPOSE_UP},
+  {INITIAL_MASTER,
+   30,
+   _("Volume -"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_VOLUME_DOWN},
+  {INITIAL_MASTER,
+   31,
+   _("Volume +"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_VOLUME_UP},
   {INITIAL_METRONOME,
    25,
    _("On"),
@@ -690,9 +698,10 @@ void GOConfig::Load() {
     wxLogError(wxT("%s"), errMsg);
 }
 
-// The Web Remote page ships with Set, Cancel, 0-9, < and > on notes 60 and
-// up (see resource/web-remote.html). This says which setter button each of
-// those notes should drive, or -1 for buttons the page doesn't have.
+// The Web Remote page ships with Set, Cancel, 0-9, <, >, Vol- and Vol+ on
+// notes 60 and up (see resource/web-remote.html). This says which setter
+// button each of those notes should drive, or -1 for buttons the page doesn't
+// have.
 static int web_remote_note(
   const GOElementCreator::ButtonDefinitionEntry *pButtonDef) {
   const GOElementCreator::ButtonDefinitionEntry *const pDefs
@@ -707,6 +716,10 @@ static int web_remote_note(
     note = 72;
   else if (pButtonDef == pDefs + GOSetter::ID_SETTER_NEXT)
     note = 73;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_VOLUME_DOWN)
+    note = 74;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_VOLUME_UP)
+    note = 75;
   else
     for (int digit = 0; digit <= 9 && note < 0; digit++)
       if (pButtonDef == pDefs + GOSetter::ID_SETTER_L0 + digit)
@@ -714,11 +727,21 @@ static int web_remote_note(
   return note;
 }
 
-// Setter buttons that have no MIDI mapping at all get wired to the Web Remote
-// notes, so the page works out of the box, also with configs saved before the
-// Web Remote existed. Mapping a button to something else wins over this;
-// clearing it just brings the default back on the next start. Harmless if the
-// Web Remote device is never enabled.
+static bool has_event_from_device(
+  const GOMidiReceiver &recv, unsigned deviceId) {
+  bool isFound = false;
+
+  for (unsigned n = recv.GetEventCount(), i = 0; i < n && !isFound; i++)
+    isFound = recv.GetEvent(i).deviceId == deviceId;
+  return isFound;
+}
+
+// Setter buttons that don't listen to the Web Remote yet get wired to its
+// notes, next to whatever other MIDI they already have (a piston on the
+// console keeps working). So the page works out of the box, also with configs
+// saved before the Web Remote existed. Deleting the Web Remote event just
+// brings it back on the next start; remap it to another note instead.
+// Harmless if the Web Remote device is never enabled.
 void GOConfig::FillWebRemoteDefaults() {
   const unsigned webRemoteId
     = m_MidiMap.EnsureLogicalName(GOMidiWebInPort::DEVICE_NAME);
@@ -729,7 +752,7 @@ void GOConfig::FillWebRemoteDefaults() {
     const int note = web_remote_note(pButtonDef);
     GOMidiReceiver &recv = *m_InitialMidiObjects[i]->GetMidiReceiver();
 
-    if (note >= 0 && !recv.IsMidiConfigured()) {
+    if (note >= 0 && !has_event_from_device(recv, webRemoteId)) {
       GOMidiReceiverEventPattern &e = recv.GetEvent(recv.AddNewEvent());
 
       // Pistons follow the note: on while the finger is down. Set is a
