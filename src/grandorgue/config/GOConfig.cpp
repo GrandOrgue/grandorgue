@@ -724,14 +724,18 @@ void GOConfig::FillWebRemoteDefaults() {
     = m_MidiMap.EnsureLogicalName(GOMidiWebInPort::DEVICE_NAME);
 
   for (unsigned l = getMidiBuiltinCount(), i = 0; i < l; i++) {
-    const int note = web_remote_note(INTERNAL_MIDI_DESCS[i].p_ButtonDef);
+    const GOElementCreator::ButtonDefinitionEntry *pButtonDef
+      = INTERNAL_MIDI_DESCS[i].p_ButtonDef;
+    const int note = web_remote_note(pButtonDef);
     GOMidiReceiver &recv = *m_InitialMidiObjects[i]->GetMidiReceiver();
 
     if (note >= 0 && !recv.IsMidiConfigured()) {
-      // same shape as what "Listen for event" produces for a button
       GOMidiReceiverEventPattern &e = recv.GetEvent(recv.AddNewEvent());
 
-      e.type = MIDI_M_NOTE;
+      // Pistons follow the note: on while the finger is down. Set is a
+      // toggle, so it flips on every tap instead, otherwise you'd have to
+      // hold it while pressing the other buttons.
+      e.type = pButtonDef->is_pushbutton ? MIDI_M_NOTE : MIDI_M_NOTE_ON;
       e.deviceId = webRemoteId;
       e.channel = 1;
       e.key = note;

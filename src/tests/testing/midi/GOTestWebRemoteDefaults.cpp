@@ -35,14 +35,15 @@ bool GOTestWebRemoteDefaults::tearDown() {
 static const struct {
   const char *path;
   int note;
+  GOMidiReceiverMessageType type;
 } EXPECTED[] = {
-  {"Setter/Set", 60},
-  {"Setter/GC", 61},
-  {"Sequencer/L0", 62},
-  {"Sequencer/L5", 67},
-  {"Sequencer/L9", 71},
-  {"Sequencer/Prev", 72},
-  {"Sequencer/Next", 73},
+  {"Setter/Set", 60, MIDI_M_NOTE_ON}, // the only toggle, flips on each tap
+  {"Setter/GC", 61, MIDI_M_NOTE},
+  {"Sequencer/L0", 62, MIDI_M_NOTE},
+  {"Sequencer/L5", 67, MIDI_M_NOTE},
+  {"Sequencer/L9", 71, MIDI_M_NOTE},
+  {"Sequencer/Prev", 72, MIDI_M_NOTE},
+  {"Sequencer/Next", 73, MIDI_M_NOTE},
 };
 
 void GOTestWebRemoteDefaults::TestSetterButtonsAreMapped() {
@@ -73,9 +74,9 @@ void GOTestWebRemoteDefaults::TestSetterButtonsAreMapped() {
     const GOMidiReceiverEventPattern &e = recv.GetEvent(0);
 
     GOAssert(
-      e.type == MIDI_M_NOTE,
+      e.type == x.type,
       std::format(
-        "{} should listen to a note, type is {}", x.path, (int)e.type));
+        "{} should have type {}, has {}", x.path, (int)x.type, (int)e.type));
     GOAssert(
       e.deviceId == webId,
       std::format("{} should listen to the Web Remote device", x.path));
