@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -39,6 +39,20 @@ public:
    */
   unsigned WaitOrStop(const char *waiterInfo = NULL, GOThread *pThread = NULL);
   void Wait() { WaitOrStop(NULL, NULL); }
+
+  /**
+   * Waits for a signal for at most THREADING_WAIT_TIMEOUT and returns.
+   * Requires the mutex to be held; it is released while waiting and
+   * reacquired before returning. Unlike WaitOrStop() this returns on timeout
+   * as well, so the caller must re-check its own predicate in a loop - which
+   * is what makes it safe against a notify that was issued before the waiter
+   * enqueued on the condition.
+   * @return the bit combination of SIGNAL_RECEIVED and MUTEX_LOCKED
+   */
+  unsigned WaitWithTimeout(const char *waiterInfo = NULL) {
+    return DoWait(true, waiterInfo, NULL);
+  }
+
   void Signal();
   void Broadcast();
 };

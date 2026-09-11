@@ -191,8 +191,8 @@ void GOSoundOrganEngine::BuildEngine(
   std::vector<GOSoundBufferTaskBase *> groupOutputs;
 
   for (unsigned groupI = 0; groupI < m_NAudioGroups; groupI++) {
-    GOSoundGroupTask *pGroupTask
-      = new GOSoundGroupTask(m_SamplerPlayer, m_NSamplesPerBuffer);
+    GOSoundGroupTask *pGroupTask = new GOSoundGroupTask(
+      m_scheduler.GetRoundCounter(), m_SamplerPlayer, m_NSamplesPerBuffer);
 
     mp_AudioGroupTasks.push_back(pGroupTask);
     groupOutputs.push_back(pGroupTask);
@@ -357,6 +357,16 @@ void GOSoundOrganEngine::StartEngine() {
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
   m_scheduler.NewRound();
   m_scheduler.ResumeGivingWork();
+
+  // Mirrors the end-of-period wakeup in ProcessAudioCallback(): aux worker
+  // threads are parked (WaitForIdle()'d) by StopEngine() and only ever woken
+  // there or at the end of a period. Without this, the round just made
+  // available above sits unclaimed by any aux thread until the first
+  // post-resume period happens to complete one on its own - so the entire
+  // first period after any Stop/Start cycle would run synchronously on the
+  // audio callback thread alone.
+  for (auto &pThread : mp_threads)
+    pThread->Wakeup();
 
   m_LifecycleState.store(LifecycleState::WORKING);
 }

@@ -75,6 +75,12 @@ private:
    * round without leaking state from the previous one. */
   void TestCooperativeNewRoundAllowsFreshRound();
 
+  /** Reproduces the GOSoundGroupTask::EnsureBufferReady() TOCTOU deadlock: a
+   * NewRound() landing between EnsureBufferReady()'s own Run() call and its
+   * separate m_RunState re-check leaves it waiting forever on a round
+   * nobody will ever finish. */
+  void TestEnsureBufferReadyDoesNotHangOnRaceWithNewRound();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

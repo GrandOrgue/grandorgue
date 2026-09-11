@@ -20,6 +20,7 @@
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestWindchest.h"
+#include "testing/scheduler/GOTestScheduler.h"
 #include "testing/sound/GOTestSoundCallbackConnector.h"
 #include "testing/sound/GOTestSoundOrganEngine.h"
 #include "testing/sound/GOTestSoundOrganEngineFactories.h"
@@ -69,6 +70,7 @@ int main(int argc, char *argv[]) {
   GOTestOrganModel testOrganModel;
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
+  GOTestScheduler testScheduler;
   GOTestNameMap goTestNameMap;
   GOTestMidiSendProxy testMidiSendProxy;
   GOTestMidiPlayerContent testMidiPlayerContent;
