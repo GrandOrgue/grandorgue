@@ -16,6 +16,7 @@
 #include "testing/loader/GOTestOrganReader.h"
 #include "testing/midi/GOTestMidiPlayerContent.h"
 #include "testing/midi/GOTestMidiSendProxy.h"
+#include "testing/midi/GOTestWebRemoteDefaults.h"
 #include "testing/model/GOTestDrawStop.h"
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestSwitch.h"
@@ -72,6 +73,7 @@ int main(int argc, char *argv[]) {
   GOTestNameMap goTestNameMap;
   GOTestMidiSendProxy testMidiSendProxy;
   GOTestMidiPlayerContent testMidiPlayerContent;
+  GOTestWebRemoteDefaults testWebRemoteDefaults;
   GOTestSoundBuffer goTestSoundBuffer;
   GOTestSoundBufferManaged testSoundBufferManaged;
   GOTestSoundBufferMutable testSoundBufferMutable;
