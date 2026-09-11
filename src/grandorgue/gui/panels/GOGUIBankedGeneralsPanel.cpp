@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,22 +15,23 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
+#include "gui/GOGuiOrgan.h"
 
-GOGUIBankedGeneralsPanel::GOGUIBankedGeneralsPanel(
-  GOOrganController *organController)
-  : m_OrganController(organController) {}
+GOGUIBankedGeneralsPanel::GOGUIBankedGeneralsPanel(GOGuiOrgan &guiOrgan)
+  : r_GuiOrgan(guiOrgan), m_OrganController(guiOrgan.GetOrganController()) {}
 
 GOGUIBankedGeneralsPanel::~GOGUIBankedGeneralsPanel() {}
 
 void GOGUIBankedGeneralsPanel::CreatePanels(GOConfigReader &cfg) {
-  m_OrganController->AddPanel(CreateBankedGeneralsPanel(cfg));
+  r_GuiOrgan.AddPanel(CreateBankedGeneralsPanel(cfg));
 }
 
 GOGUIPanel *GOGUIBankedGeneralsPanel::CreateBankedGeneralsPanel(
   GOConfigReader &cfg) {
   GOGUIButton *button;
 
-  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIPanel *panel = new GOGUIPanel(
+    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
   GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
     cfg, m_OrganController, GOGUI_SETTER_GENERALS);
   panel->Init(cfg, metrics, _("Generals"), wxT("SetterGeneralsPanel"));

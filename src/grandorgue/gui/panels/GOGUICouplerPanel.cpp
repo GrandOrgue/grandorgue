@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,6 +12,8 @@
 #include "model/GOCoupler.h"
 #include "model/GOManual.h"
 
+#include "gui/GOGuiOrgan.h"
+
 #include "GOGUIButton.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUILabel.h"
@@ -21,18 +23,25 @@
 #include "GOOrganController.h"
 #include "GOVirtualCouplerController.h"
 
+GOGUICouplerPanel::GOGUICouplerPanel(
+  GOGuiOrgan &guiOrgan, const GOVirtualCouplerController &virtualCouplers)
+  : r_GuiOrgan(guiOrgan),
+    m_OrganController(guiOrgan.GetOrganController()),
+    r_VirtualCouplers(virtualCouplers) {}
+
 void GOGUICouplerPanel::CreatePanels(GOConfigReader &cfg) {
   for (unsigned i = m_OrganController->GetFirstManualIndex();
        i <= m_OrganController->GetManualAndPedalCount();
        i++)
-    m_OrganController->AddPanel(CreateCouplerPanel(cfg, i));
+    r_GuiOrgan.AddPanel(CreateCouplerPanel(cfg, i));
 }
 
 GOGUIPanel *GOGUICouplerPanel::CreateCouplerPanel(
   GOConfigReader &cfg, unsigned manual_nr) {
   GOManual *manual = m_OrganController->GetManual(manual_nr);
 
-  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIPanel *panel = new GOGUIPanel(
+    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
   GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
     cfg, m_OrganController, GOGUI_SETTER_COUPLER);
   panel->Init(

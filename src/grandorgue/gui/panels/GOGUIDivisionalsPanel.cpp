@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -20,20 +20,22 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
+#include "gui/GOGuiOrgan.h"
 
-GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GOOrganController *organController)
-  : m_OrganController(organController) {}
+GOGUIDivisionalsPanel::GOGUIDivisionalsPanel(GOGuiOrgan &guiOrgan)
+  : r_GuiOrgan(guiOrgan), m_OrganController(guiOrgan.GetOrganController()) {}
 
 GOGUIDivisionalsPanel::~GOGUIDivisionalsPanel() {}
 
 void GOGUIDivisionalsPanel::CreatePanels(GOConfigReader &cfg) {
-  m_OrganController->AddPanel(CreateDivisionalsPanel(cfg));
+  r_GuiOrgan.AddPanel(CreateDivisionalsPanel(cfg));
 }
 
 GOGUIPanel *GOGUIDivisionalsPanel::CreateDivisionalsPanel(GOConfigReader &cfg) {
   GOGUIButton *button;
 
-  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIPanel *panel = new GOGUIPanel(
+    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
   GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
     cfg, m_OrganController, GOGUI_SETTER_DIVISIONALS);
   panel->Init(cfg, metrics, _("Divisionals"), wxT("SetterDivisionalPanel"));

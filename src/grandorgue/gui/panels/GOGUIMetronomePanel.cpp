@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -15,20 +15,22 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
+#include "gui/GOGuiOrgan.h"
 
-GOGUIMetronomePanel::GOGUIMetronomePanel(GOOrganController *organController)
-  : m_OrganController(organController) {}
+GOGUIMetronomePanel::GOGUIMetronomePanel(GOGuiOrgan &guiOrgan)
+  : r_GuiOrgan(guiOrgan), m_OrganController(guiOrgan.GetOrganController()) {}
 
 GOGUIMetronomePanel::~GOGUIMetronomePanel() {}
 
 void GOGUIMetronomePanel::CreatePanels(GOConfigReader &cfg) {
-  m_OrganController->AddPanel(CreateMetronomePanel(cfg));
+  r_GuiOrgan.AddPanel(CreateMetronomePanel(cfg));
 }
 
 GOGUIPanel *GOGUIMetronomePanel::CreateMetronomePanel(GOConfigReader &cfg) {
   GOGUIButton *button;
 
-  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIPanel *panel = new GOGUIPanel(
+    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
   GOGUIDisplayMetrics *metrics
     = new GOGUISetterDisplayMetrics(cfg, m_OrganController, GOGUI_METRONOME);
   panel->Init(cfg, metrics, _("Metronome"), wxT("Metronome"), wxT(""));

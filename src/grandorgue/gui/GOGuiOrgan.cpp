@@ -10,14 +10,24 @@
 #include <wx/app.h>
 
 #include "config/GOConfig.h"
+#include "config/GOConfigReader.h"
 #include "document-base/GODocumentView.h"
 #include "frames/GOAppWindow.h"
 #include "gui/dialogs/GOMidiObjectstDialog.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 #include "gui/dialogs/organ-settings/GOOrganSettingsDialog.h"
 #include "gui/frames/GOStopsWindow.h"
+#include "gui/panels/GOGUIBankedGeneralsPanel.h"
+#include "gui/panels/GOGUICouplerManualsAndVolumePanel.h"
+#include "gui/panels/GOGUICouplerPanel.h"
+#include "gui/panels/GOGUICrescendoPanel.h"
+#include "gui/panels/GOGUIDivisionalsPanel.h"
+#include "gui/panels/GOGUIMasterPanel.h"
+#include "gui/panels/GOGUIMetronomePanel.h"
 #include "gui/panels/GOGUIPanel.h"
 #include "gui/panels/GOGUIPanelView.h"
+#include "gui/panels/GOGUIRecorderPanel.h"
+#include "gui/panels/GOGUISequencerPanel.h"
 #include "gui/size/GOResizable.h"
 #include "loader/GOProgressMonitor.h"
 #include "midi/GOMidiSystem.h"
@@ -49,6 +59,18 @@ bool GOGuiOrgan::IsModified() const {
   return m_OrganController && m_OrganController->IsOrganModified();
 }
 
+GOGuiImageCache &GOGuiOrgan::GetImageCache() {
+  return m_OrganController->GetImageCache();
+}
+
+GOGUIMouseState &GOGuiOrgan::GetMouseState() {
+  return m_OrganController->GetMouseState();
+}
+
+void GOGuiOrgan::AddPanel(GOGUIPanel *panel) {
+  m_OrganController->AddPanel(panel);
+}
+
 GOOrganController *GOGuiOrgan::LoadOrgan(
   const GOOrgan &organ,
   const wxString &cmb,
@@ -58,7 +80,7 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
   GOConfig &cfg = r_config;
 
   CloseOrgan();
-  m_OrganController = new GOOrganController(cfg, true);
+  m_OrganController = new Controller(cfg, *this);
   wxString error = m_OrganController->Load(organ, cmb, isGuiOnly, monitor);
 
   if (error.IsEmpty()) {
@@ -126,6 +148,27 @@ bool GOGuiOrgan::Save(const wxString &path) {
   SyncState();
   return m_OrganController->Save(path);
 }
+
+void GOGuiOrgan::LoadOrganGui(GOConfigReader &cfg) {
+  m_PanelCreators.push_back(
+    new GOGUICouplerPanel(*this, m_OrganController->GetVirtualCouplers()));
+  m_PanelCreators.push_back(new GOGUICouplerManualsAndVolumePanel(*this));
+  m_PanelCreators.push_back(new GOGUIMetronomePanel(*this));
+  m_PanelCreators.push_back(new GOGUICrescendoPanel(*this));
+  m_PanelCreators.push_back(new GOGUIDivisionalsPanel(*this));
+  m_PanelCreators.push_back(new GOGUIBankedGeneralsPanel(*this));
+  m_PanelCreators.push_back(new GOGUISequencerPanel(*this));
+  m_PanelCreators.push_back(new GOGUIMasterPanel(*this));
+  m_PanelCreators.push_back(new GOGUIRecorderPanel(*this));
+
+  for (unsigned i = 0; i < m_PanelCreators.size(); i++)
+    m_PanelCreators[i]->CreatePanels(cfg);
+
+  for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)
+    m_OrganController->GetPanel(i)->Layout();
+}
+
+void GOGuiOrgan::ClearOrganGui() { m_PanelCreators.clear(); }
 
 void GOGuiOrgan::CloseOrgan() {
   m_listener.SetCallback(NULL);

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,20 +16,22 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
+#include "gui/GOGuiOrgan.h"
 
-GOGUICrescendoPanel::GOGUICrescendoPanel(GOOrganController *organController)
-  : m_OrganController(organController) {}
+GOGUICrescendoPanel::GOGUICrescendoPanel(GOGuiOrgan &guiOrgan)
+  : r_GuiOrgan(guiOrgan), m_OrganController(guiOrgan.GetOrganController()) {}
 
 GOGUICrescendoPanel::~GOGUICrescendoPanel() {}
 
 void GOGUICrescendoPanel::CreatePanels(GOConfigReader &cfg) {
-  m_OrganController->AddPanel(CreateCrescendoPanel(cfg));
+  r_GuiOrgan.AddPanel(CreateCrescendoPanel(cfg));
 }
 
 GOGUIPanel *GOGUICrescendoPanel::CreateCrescendoPanel(GOConfigReader &cfg) {
   GOGUIButton *button;
 
-  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIPanel *panel = new GOGUIPanel(
+    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
   GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
     cfg, m_OrganController, GOGUI_SETTER_CRESCENDO);
   panel->Init(cfg, metrics, _("Crescendo Pedal"), wxT("SetterCrescendoPanel"));

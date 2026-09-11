@@ -18,20 +18,22 @@
 #include "GOGUIPanel.h"
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
+#include "gui/GOGuiOrgan.h"
 
-GOGUISequencerPanel::GOGUISequencerPanel(GOOrganController *organController)
-  : m_OrganController(organController) {}
+GOGUISequencerPanel::GOGUISequencerPanel(GOGuiOrgan &guiOrgan)
+  : r_GuiOrgan(guiOrgan), m_OrganController(guiOrgan.GetOrganController()) {}
 
 GOGUISequencerPanel::~GOGUISequencerPanel() {}
 
 void GOGUISequencerPanel::CreatePanels(GOConfigReader &cfg) {
-  m_OrganController->AddPanel(CreateSequencerPanel(cfg));
+  r_GuiOrgan.AddPanel(CreateSequencerPanel(cfg));
 }
 
 GOGUIPanel *GOGUISequencerPanel::CreateSequencerPanel(GOConfigReader &cfg) {
   GOGUIButton *button;
 
-  GOGUIPanel *panel = new GOGUIPanel(m_OrganController);
+  GOGUIPanel *panel = new GOGUIPanel(
+    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
   GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
     cfg, m_OrganController, GOGUI_SETTER_SETTER);
   panel->Init(cfg, metrics, _("Combination Setter"), wxT("SetterPanel"));
