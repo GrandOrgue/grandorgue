@@ -114,6 +114,8 @@ void GOScheduler::NewRoundList(std::vector<GOSchedulerTask *> &list) {
 
 void GOScheduler::NewRound() {
   GOMutexLocker lock(m_Mutex);
+
+  m_RoundCounter.AdvanceRound();
   NewRoundList(m_Work);
   m_NextItem.exchange(0);
 }

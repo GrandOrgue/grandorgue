@@ -20,9 +20,9 @@
 #include "ptrvector.h"
 
 class GOSoundBufferMutable;
-class GOSoundGroupTask;
 class GOSoundReleaseTask;
 class GOSoundTremulantTask;
+class GOSoundWindchestGroupTaskGrid;
 class GOSoundWindchestTask;
 
 /**
@@ -38,7 +38,7 @@ private:
    * Constructor constants
    */
 
-  ptr_vector<GOSoundGroupTask> &r_AudioGroupTasks;
+  GOSoundWindchestGroupTaskGrid &r_WindchestGroupTaskGrid;
   std::vector<std::unique_ptr<GOSoundWindchestTask>> &r_WindchestTasks;
   ptr_vector<GOSoundTremulantTask> &r_TremulantTasks;
   /** nullptr when player is constructed; populated in the body of
@@ -147,7 +147,7 @@ public:
    * GOSoundOrganEngine's constructor body before any playback begins.
    */
   GOSoundSamplerPlayer(
-    ptr_vector<GOSoundGroupTask> &audioGroupTasks,
+    GOSoundWindchestGroupTaskGrid &windchestGroupTaskGrid,
     std::vector<std::unique_ptr<GOSoundWindchestTask>> &windchestTasks,
     ptr_vector<GOSoundTremulantTask> &tremulantTasks,
     std::unique_ptr<GOSoundReleaseTask> &pReleaseTask);

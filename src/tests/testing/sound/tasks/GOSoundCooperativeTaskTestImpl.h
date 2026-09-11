@@ -8,20 +8,22 @@
 #define GOSOUNDCOOPERATIVETASKTESTIMPL_H
 
 #include <atomic>
+#include <functional>
 #include <vector>
 
+#include "scheduler/GORoundCounter.h"
 #include "scheduler/GOSchedulerThread.h"
 #include "sound/tasks/GOSoundTaskBase.h"
 #include "threading/GOCondition.h"
 
 /**
  * Test double reproducing the cooperative Run() protocol of
- * GOSoundGroupTask::Run() (several worker threads jointly processing one
- * round, merging into one shared result), without touching the sound
- * engine or real sampler lists. Shared between GOTestSoundTaskBase.cpp
- * (correctness) and GOTestPerfSoundTaskBase.cpp (throughput), both of which
- * include this header, so its definition is identical in every translation
- * unit that uses it.
+ * GOSoundWindchestGroupTask::Run() (several worker threads jointly processing
+ * one round, merging into one shared result), without touching the sound engine
+ * or real sampler lists. Shared between GOTestSoundTaskBase.cpp (correctness)
+ * and GOTestPerfSoundTaskBase.cpp (throughput), both of which include this
+ * header, so its definition is identical in every translation unit that uses
+ * it.
  */
 class GOSoundCooperativeTaskTestImpl : public GOSoundTaskBase {
 private:
@@ -29,16 +31,18 @@ private:
   GOCondition m_Condition{m_mutex};
   /** Number of threads currently doing their own share of the round */
   std::atomic<int> m_ActiveCount{0};
-  /** Stands in for the sampler lists a real GOSoundGroupTask drains */
+  /** Stands in for the sampler lists a real GOSoundWindchestGroupTask drains */
   std::atomic<long> m_RemainingWorkItems{0};
   /** If > 0, each participating thread does this many items of purely
    * thread-local work instead of draining m_RemainingWorkItems */
   std::atomic<long> m_WorkItemsPerThread{0};
-  /** Stands in for the buffer GOSoundGroupTask merges into under m_mutex */
+  /** Stands in for the buffer GOSoundWindchestGroupTask merges into under
+   * m_mutex */
   std::vector<float> m_MergeBuffer;
 
   /** Merges this thread's share into the shared result, mirroring the
-   * CopyFrom()/AddFrom() pass GOSoundGroupTask does while holding m_mutex
+   * CopyFrom()/AddFrom() pass GOSoundWindchestGroupTask does while holding
+   * m_mutex
    * @param localValue this thread's own result
    * @param isFirst whether this thread is the first to finish its share */
   void MergeOwnShare(long localValue, bool isFirst);
@@ -48,6 +52,13 @@ private:
   long DoOwnShare();
 
 public:
+  /** Owned rather than injected: this double already substitutes every
+   * collaborator with a local stand-in (no sampler player, no real buffers,
+   * no scheduler), so it mirrors the round-counter protocol, not production
+   * wiring. Advanced by the test alongside DoNewRound(), mirroring
+   * GOScheduler::NewRound() advancing GOScheduler::m_RoundCounter alongside
+   * the task-state reset it invalidates. */
+  GORoundCounter roundCounter;
   /** Stands in for the shared output buffer the real task mixes into */
   std::atomic<long> nSharedValue{0};
   /** Number of RUN_STATE_NOT_STARTED -> RUN_STATE_IN_PROGRESS transitions */
@@ -62,6 +73,12 @@ public:
    * caller measuring throughput must count this rather than assume every
    * thread processed a full share */
   std::atomic<long> nTotalProcessedItems{0};
+  /**
+   * If > 0, a thread lingers this long at the end of its share, before
+   * merging. Stands in for a worker still inside GOSoundWindchestGroupTask's
+   * ProcessList(), i.e. doing round work while holding no lock.
+   */
+  std::atomic<int> shareSleepMicroseconds{0};
 
   GOSoundCooperativeTaskTestImpl()
     : GOSoundTaskBase(PRIORITY_AUDIOGROUP, true) {}
@@ -81,23 +98,43 @@ public:
   void SetWorkItemsPerThread(long n) { m_WorkItemsPerThread.store(n); }
 
   /** Gives the merge section a realistic cost: a linear pass over nItems
-   * floats, as GOSoundGroupTask's CopyFrom()/AddFrom() does over its output
-   * buffer while holding m_mutex. Without it the merge is a single atomic
-   * operation, and a measurement of how long the entry section waits behind
-   * someone else's merge is meaningless. Not thread-safe: call before the
-   * round starts */
+   * floats, as GOSoundWindchestGroupTask's CopyFrom()/AddFrom() does over its
+   * output buffer while holding m_mutex. Without it the merge is a single
+   * atomic operation, and a measurement of how long the entry section waits
+   * behind someone else's merge is meaningless. Not thread-safe: call before
+   * the round starts */
   void SetMergeItems(unsigned nItems) { m_MergeBuffer.assign(nItems, 0.0f); }
 
   /** Joins or claims the current round, does a share of the work, then
    * merges the result; the last thread to finish marks the round done */
   void Run(GOSchedulerThread *pThread = nullptr) override;
 
-  /** Resets the active-worker count for the next round */
-  void DoNewRound() override { m_ActiveCount.store(0); }
+  /** Mirrors GOSoundWindchestGroupTask::CompleteRound(): does not return until
+   * the round has actually finished */
+  void CompleteRound() override;
+
+  /** Resets the active-worker count for the next round, asserting first that
+   * no worker is still inside its share */
+  void DoNewRound() override;
 
   /** Blocks the calling thread until the round becomes done, mirroring
-   * GOSoundGroupTask::WaitAndDiscardContent() */
+   * GOSoundWindchestGroupTask::WaitAndDiscardContent() */
   void WaitUntilDone();
+
+  /** Mirrors GOSoundWindchestGroupTask::EnsureBufferReady() exactly,
+   * including its two separate m_RunState reads - once inside Run(), once
+   * right after - with nothing atomic tying them together. onAfterRun, if
+   * set, is called in that exact gap, letting a test deterministically land
+   * a concurrent NewRound() in the TOCTOU window instead of relying on it
+   * happening by chance the way it does against the real
+   * GOSoundWindchestGroupTask in production. pThread == nullptr (as in every
+   * other test in this file) means the wait loop below has no ShouldStop()
+   * fallback, matching GOSoundWindchestGroupTask's own
+   * `pThread == nullptr || !pThread->ShouldStop()` condition - so a round
+   * that NewRound() reset out from under this call is never left */
+  void EnsureBufferReady(
+    GOSchedulerThread *pThread = nullptr,
+    std::function<void()> onAfterRun = nullptr);
 };
 
 #endif /* GOSOUNDCOOPERATIVETASKTESTIMPL_H */

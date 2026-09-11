@@ -6,11 +6,14 @@
 
 #include "GOTestOrganController.h"
 
+#include <set>
+
 #include "config/GOConfig.h"
 #include "config/GOConfigFileWriter.h"
 #include "config/GOConfigWriter.h"
 #include "loader/GOOrganReader.h"
 #include "loader/GOProgressMonitor.h"
+#include "model/GOWindchest.h"
 
 #include "GOOrgan.h"
 #include "GOOrganController.h"
@@ -78,6 +81,26 @@ void GOTestOrganController::runImpl() {
     "LoadOrganCoreData() should populate the ODF's windchest group plus "
     "GOMetronome's own, got: "
       + std::to_string(controller->GetWindchestCount()));
+
+  // Regression test: GOOrganModel::Load() must register every ODF windchest
+  // in m_WindchestNByPipeConfig (via AddWindchest()), not just push it onto
+  // m_windchests directly. GOCommonControllerTest-based fixtures always
+  // build windchests through AddWindchest() themselves, so only a real
+  // Load() call - as done here - can catch a regression where the ODF
+  // windchest loop bypasses it and CollectWindchestsForNode() then fails
+  // its assert(windchestN) for every real ODF windchest.
+  for (unsigned windchestI = 0; windchestI < controller->GetWindchestCount();
+       windchestI++) {
+    std::set<unsigned> outWindchests;
+
+    controller->CollectWindchestsForNode(
+      controller->GetWindchest(windchestI)->GetPipeConfig(), outWindchests);
+    GOAssert(
+      outWindchests == std::set<unsigned>{windchestI + 1},
+      "CollectWindchestsForNode() should resolve a real ODF-loaded "
+      "windchest's own node to its windchest number, windchest index: "
+        + std::to_string(windchestI));
+  }
 
   // SaveOrganCoreData() round-trip.
   GOConfigFileWriter cfgFile;

@@ -9,7 +9,11 @@
 #define GOSOUNDORGANENGINE_H
 
 #include <atomic>
+#include <cassert>
 #include <memory>
+#include <set>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "playing/GOSoundSamplerPlayer.h"
@@ -19,17 +23,21 @@
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
+#include "GOSoundWindchestGroupTaskGrid.h"
+
 class GOConfig;
 class GOMemoryPool;
 class GOOrganModel;
 class GOSchedulerTask;
 class GOSchedulerThread;
 class GOSoundBufferMutable;
+class GOSoundBufferTaskBase;
 class GOSoundGroupTask;
 class GOSoundOutputTask;
 class GOSoundReleaseTask;
 class GOSoundTouchTask;
 class GOSoundTremulantTask;
+class GOSoundWindchestGroupTask;
 class GOSoundWindchestTask;
 class GOWindchest;
 
@@ -67,6 +75,28 @@ public:
   struct AudioOutputConfig {
     unsigned channels;
     std::vector<std::vector<float>> scaleFactors;
+  };
+
+  /**
+   * The result of PrepareSoundRoutingFor(): everything CommitSoundRoutingFor()
+   * needs to wire a set of (windchestN, audioGroupId) pairs into the running
+   * engine. Passed by value between the two calls instead of held as mutable
+   * engine state, so a missed or repeated Commit cannot desync from its
+   * Prepare.
+   */
+  struct AudioGroupRoutingChange {
+    /** Newly constructed tasks, not yet known to the scheduler */
+    std::vector<GOSoundWindchestGroupTask *> newTasks;
+
+    /** Per-audio-group input lists to install via
+     * GOSoundGroupTask::SetInputs(), for every group that gained at least
+     * one new task */
+    std::unordered_map<unsigned, std::vector<GOSoundBufferTaskBase *>>
+      groupInputs;
+
+    /** @return true if there is nothing to commit - Prepare found every
+     *   requested pair already routable */
+    bool IsEmpty() const { return newTasks.empty(); }
   };
 
   /*
@@ -152,17 +182,24 @@ private:
 
   GOOrganModel &r_OrganModel;
   GOMemoryPool &r_MemoryPool;
-  // mp_ReleaseTask references mp_AudioGroupTasks [B1]; created in constructor
-  // body (after m_SamplerPlayer), added to m_scheduler in BuildEngine [B8]
+  // mp_ReleaseTask references mp_AudioGroupTasks [B5]; created in constructor
+  // body (after m_SamplerPlayer), added to m_scheduler in BuildEngine [B11]
   std::unique_ptr<GOSoundReleaseTask> mp_ReleaseTask;
   // mp_TouchTask references r_MemoryPool; created in constructor,
-  // added to m_scheduler in BuildEngine [B8]
+  // added to m_scheduler in BuildEngine [B11]
   std::unique_ptr<GOSoundTouchTask> mp_TouchTask;
   GOSoundRecorderTask m_RecorderTask;
   // m_SamplerPlayer is declared after mp_ReleaseTask so that mp_ReleaseTask
   // is already a valid (though null) unique_ptr when passed by reference to
   // the player constructor.
   GOSoundSamplerPlayer m_SamplerPlayer;
+  // m_scheduler is constructed empty here, like mp_ReleaseTask/mp_TouchTask
+  // above; it is only populated by BuildEngine() [B11]. Declared before
+  // mp_TremulantTasks [B1] below - the earliest task block - so that it
+  // outlives every task holding a reference into it
+  // (GOSoundWindchestGroupTask::r_RoundCounter), since members are destroyed
+  // in reverse declaration order.
+  GOScheduler m_scheduler;
 
   /*
    * Configuration parameters
@@ -200,48 +237,74 @@ private:
   std::atomic<LifecycleState> m_LifecycleState;
 
   /*
-   * Tasks built in BuildEngine (in build order [B1]-[B11])
+   * Tasks built in BuildEngine (in build order [B1]-[B12], and declared
+   * here in that same order)
    */
 
-  // [B1] mp_AudioGroupTasks: created per audio group (m_NAudioGroups entries)
-  //   — referenced by: mp_ReleaseTask (constructor), m_OutputStates [B2]
+  // [B1] mp_TremulantTasks: one per tremulant in r_OrganModel
+  //   — referenced by mp_WindchestTasks after [B3] Init()
+  ptr_vector<GOSoundTremulantTask> mp_TremulantTasks;
+  // [B2] mp_WindchestTasks: one special + one per windchest in r_OrganModel
+  //   — initialized in [B3] with mp_TremulantTasks [B1]
+  //   — referenced by m_WindchestGroupTaskGrid [B4] (each cell is
+  //     constructed with a reference to its owning windchest task)
+  std::vector<std::unique_ptr<GOSoundWindchestTask>> mp_WindchestTasks;
+  // [B3] Init(): connects mp_WindchestTasks [B2] to mp_TremulantTasks [B1]
+  //
+  // [B4] m_WindchestGroupTaskGrid: one GOSoundWindchestGroupTask per
+  // (windchest, audio group) pair actually used by the organ's pipes
+  //   — uses mp_WindchestTasks [B2] (each cell is wired to its owning
+  //     windchest task's processing chain at construction)
+  //   — referenced by: mp_AudioGroupTasks [B5] via SetInputs(),
+  //     m_SamplerPlayer::PassSampler() (constructor reference)
+  GOSoundWindchestGroupTaskGrid m_WindchestGroupTaskGrid;
+  // [B5] mp_AudioGroupTasks: created per audio group (m_NAudioGroups entries)
+  //   — uses m_WindchestGroupTaskGrid [B4] via SetInputs()
+  //   — referenced by: mp_ReleaseTask (constructor), m_OutputStates [B6]
   ptr_vector<GOSoundGroupTask> mp_AudioGroupTasks;
-  // [B2] m_OutputStates: created from audioOutputConfigs (per-device
+  // [B6] m_OutputStates: created from audioOutputConfigs (per-device
   // tasks + callback sync state)
-  //   — uses mp_AudioGroupTasks [B1] via SetOutputs()
-  //   — referenced by: m_MeterInfo [B3], m_RecorderTask [B5], reverb [B6]
+  //   — uses mp_AudioGroupTasks [B5] via SetOutputs()
+  //   — referenced by: m_MeterInfo [B7], m_RecorderTask [B9], reverb [B10]
   std::vector<OutputState> m_OutputStates;
-  // [B3] m_MeterInfo: per-channel peak levels for the meter display
-  //   — uses nTotalChannels accumulated over m_OutputStates [B2]
+  // [B7] m_MeterInfo: per-channel peak levels for the meter display
+  //   — uses nTotalChannels accumulated over m_OutputStates [B6]
   //   — audio thread: NextPeriod() writes via atomic_fetch_max_relaxed()
   //   — GUI thread: GetMeterInfo() reads and resets it when it succeeds in
   //     try-locking m_LifecycleMutex; otherwise the poll is skipped and the
   //     peaks stay accumulated until the next one
   std::vector<std::atomic<float>> m_MeterInfo;
-  // [B4] mp_DownmixTask: optional stereo downmix task (only when m_IsDownmix)
-  //   — uses mp_AudioGroupTasks [B1] via SetOutputs()
-  //   — referenced by: m_RecorderTask [B5], reverb setup [B6]
+  // [B8] mp_DownmixTask: optional stereo downmix task (only when m_IsDownmix)
+  //   — uses mp_AudioGroupTasks [B5] via SetOutputs()
+  //   — referenced by: m_RecorderTask [B9], reverb setup [B10]
   std::unique_ptr<GOSoundOutputTask> mp_DownmixTask;
-  // [B5] recorder: set up sample rate and outputs on m_RecorderTask
-  //   — uses mp_DownmixTask [B4] or m_OutputStates [B2]
-  // [B6] reverb: set up inline on mp_DownmixTask [B4] and m_OutputStates [B2]
+  // [B9] recorder: set up sample rate and outputs on m_RecorderTask
+  //   — uses mp_DownmixTask [B8] or m_OutputStates [B6]
+  // [B10] reverb: set up inline on mp_DownmixTask [B8] and m_OutputStates [B6]
   //   — uses m_ReverbConfig, sampleRate (BuildEngine parameter),
   //     m_NSamplesPerBuffer
   //
-  // [B7] mp_TremulantTasks: one per tremulant in r_OrganModel
-  //   — referenced by mp_WindchestTasks after [B9] Init()
-  ptr_vector<GOSoundTremulantTask> mp_TremulantTasks;
-  // [B8] mp_WindchestTasks: one special + one per windchest in r_OrganModel
-  //   — initialized in [B9] with mp_TremulantTasks [B7]
-  std::vector<std::unique_ptr<GOSoundWindchestTask>> mp_WindchestTasks;
-  // [B9] Init(): connects mp_WindchestTasks [B8] to mp_TremulantTasks [B7]
-  //
-  // [B10] m_scheduler: all tasks added; SetRepeatCount(m_NReleaseRepeats)
+  // [B11] m_scheduler (declared above, in the constructor-constants block):
+  // all tasks added; SetRepeatCount(m_NReleaseRepeats)
   //   — uses all tasks above + mp_ReleaseTask + mp_TouchTask (constructor)
-  GOScheduler m_scheduler;
-  // [B11] mp_threads: worker threads created via BuildThreads(m_NAuxThreads)
-  //   — uses m_scheduler [B10]
+  //
+  // [B12] mp_threads: worker threads, one per m_NAuxThreads, constructed
+  // inline in BuildEngine() and started with Run()
+  //   — uses m_scheduler [B11]
   std::vector<std::unique_ptr<GOSchedulerThread>> mp_threads;
+
+  /**
+   * @return the windchest task at windchestIndex. Asserts the index is in
+   * range: every caller is expected to already know the index is valid
+   * (either a real windchest's task index or 0, the detached-release
+   * sentinel), so an out-of-range index indicates a bug rather than a case
+   * to handle gracefully.
+   */
+  GOSoundWindchestTask &GetWindchestTaskAt(unsigned windchestIndex) {
+    assert(windchestIndex < mp_WindchestTasks.size());
+
+    return *mp_WindchestTasks[windchestIndex];
+  }
 
   /*
    * Per-period counters reset by SetStreaming(true) at each streaming session
@@ -475,6 +538,59 @@ public:
    * BUILT.
    */
   void StopEngine();
+
+  /*
+   * Live audio-group rerouting
+   */
+
+  /**
+   * @param windchestN the windchest to check
+   * @param audioGroupId the audio group to check
+   * @return true if a pipe on windchestN can already be routed to
+   *   audioGroupId, i.e. both its main and detached-release
+   *   GOSoundWindchestGroupTask cells exist. Used by
+   *   GOOrganController::AssertSoundRoutingFor() to verify a pre-scan
+   *   actually covered a given pipe.
+   */
+  bool HasSoundRoutingFor(unsigned windchestN, unsigned audioGroupId) const {
+    return m_WindchestGroupTaskGrid.HasWindchestGroupTask(
+             windchestN, audioGroupId)
+      && m_WindchestGroupTaskGrid.HasWindchestGroupTask(0, audioGroupId);
+  }
+
+  /**
+   * Phase 1 of live audio-group rerouting: constructs whatever
+   * GOSoundWindchestGroupTask cells are missing for the requested pairs
+   * (main cell plus, for any newly-touched group, its detached-release
+   * cell), and precomputes the input list for every group that gained a
+   * cell. Safe to call while the engine is running: it only allocates and
+   * reads the grid, it does not touch the scheduler or any GOSoundGroupTask.
+   * Concurrency with the audio thread's grid reads is safe because this
+   * method never calls GOSoundWindchestGroupTaskGrid::Resize() (no
+   * reallocation) and only ever writes into cells that are currently null
+   * (BuildWindchestGroupTask() asserts as much) - and a null cell is by
+   * definition not yet routed to, so the audio thread has no reason to read
+   * it concurrently. Every cell the audio thread does read was already
+   * non-null before this call, and this method never touches those.
+   * @param pairs the (windchestN, audioGroupId) pairs that must be routable
+   *   afterwards; windchestN first, audioGroupId second
+   * @return the change to hand to CommitSoundRoutingFor(); IsEmpty() if
+   *   every pair was already routable
+   */
+  AudioGroupRoutingChange PrepareSoundRoutingFor(
+    const std::set<std::pair<unsigned, unsigned>> &pairs);
+
+  /**
+   * Phase 2 of live audio-group rerouting: registers every task in
+   * change.newTasks with the scheduler and installs every input list in
+   * change.groupInputs. Must only be called with the engine quiesced
+   * (between StopEngine() and StartEngine()) - the scheduler and
+   * GOSoundGroupTask::SetInputs() are both unsynchronized against a running
+   * audio callback.
+   * @param change the value previously returned by
+   *   PrepareSoundRoutingFor(); consumed by move
+   */
+  void CommitSoundRoutingFor(AudioGroupRoutingChange &&change);
 
   /*
    * Functions called from GOSoundSystem

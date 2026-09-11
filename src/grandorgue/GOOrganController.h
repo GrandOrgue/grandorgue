@@ -8,6 +8,8 @@
 #ifndef GOORGANCONTROLLER_H
 #define GOORGANCONTROLLER_H
 
+#include <set>
+#include <utility>
 #include <vector>
 
 #include <wx/filefn.h>
@@ -104,6 +106,11 @@ private:
 
   GOMemoryPool m_pool;
   GOSoundOrganEngine m_SoundEngine;
+  /** Non-owning; set in StartOrgan(), cleared in StopOrgan(). Doubles as the
+   * "organ is started" guard for AssertSoundRoutingFor()/
+   * EnsureSoundRoutingFor(): when null there is nothing to check against or
+   * to suspend/resume. */
+  GOSoundSystem *p_SoundSystem = nullptr;
   GOGuiImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
@@ -251,6 +258,34 @@ public:
    */
   void StopOrgan(GOSoundSystem &soundSystem);
   GOSoundOrganEngine &GetSoundEngine() { return m_SoundEngine; }
+
+  /**
+   * Quiesces the sound engine for a live reconfiguration that needs the
+   * scheduler and GOSoundGroupTask input lists held still (see
+   * GOSoundOrganEngine::CommitSoundRoutingFor()): drains in-flight audio
+   * callbacks, then stops the engine. Sounding notes are preserved. Must be
+   * paired with ResumeOrgan(); reusable by any future live-reconfiguration
+   * need, not specific to audio-group routing.
+   */
+  void SuspendOrgan();
+
+  /** Undoes SuspendOrgan(): restarts the engine and reconnects audio
+   * callbacks. */
+  void ResumeOrgan();
+
+  /**
+   * @see GOOrganModel::AssertSoundRoutingFor(). No-op while the sound engine
+   * does not exist yet (p_SoundSystem null, e.g. during initial
+   * PreparePlayback() at organ-load time) - there is nothing to check
+   * against.
+   */
+  void AssertSoundRoutingFor(
+    unsigned windchestN, unsigned audioGroupId) const override;
+
+  /** @see GOOrganModel::EnsureSoundRoutingFor(). */
+  void EnsureSoundRoutingFor(
+    const std::set<std::pair<unsigned, unsigned>> &pairs) override;
+
   void Update();
   void Reset();
   void ProcessMidi(const GOMidiEvent &event);

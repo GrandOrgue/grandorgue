@@ -794,6 +794,38 @@ void GOOrganController::PreconfigRecorder() {
   }
 }
 
+void GOOrganController::SuspendOrgan() {
+  assert(p_SoundSystem);
+  p_SoundSystem->DisconnectFromEngine(m_SoundEngine);
+  m_SoundEngine.StopEngine();
+}
+
+void GOOrganController::ResumeOrgan() {
+  assert(p_SoundSystem);
+  m_SoundEngine.StartEngine();
+  p_SoundSystem->ConnectToEngine(m_SoundEngine);
+}
+
+void GOOrganController::AssertSoundRoutingFor(
+  unsigned windchestN, unsigned audioGroupId) const {
+  if (p_SoundSystem)
+    assert(m_SoundEngine.HasSoundRoutingFor(windchestN, audioGroupId));
+}
+
+void GOOrganController::EnsureSoundRoutingFor(
+  const std::set<std::pair<unsigned, unsigned>> &pairs) {
+  if (p_SoundSystem) {
+    GOSoundOrganEngine::AudioGroupRoutingChange change
+      = m_SoundEngine.PrepareSoundRoutingFor(pairs);
+
+    if (!change.IsEmpty()) {
+      SuspendOrgan();
+      m_SoundEngine.CommitSoundRoutingFor(std::move(change));
+      ResumeOrgan();
+    }
+  }
+}
+
 void GOOrganController::StartOrgan(
   GOSoundSystem &soundSystem, GOMidiSystem &midi) {
   const std::vector<GOSoundOrganEngine::AudioOutputConfig> audioOutputConfigs
@@ -805,8 +837,8 @@ void GOOrganController::StartOrgan(
     audioOutputConfigs,
     soundSystem.GetSamplesPerBuffer(),
     soundSystem.GetSampleRate());
-  m_SoundEngine.StartEngine();
-  soundSystem.ConnectToEngine(m_SoundEngine);
+  p_SoundSystem = &soundSystem;
+  ResumeOrgan();
 
   m_midi = &midi;
   m_MidiRecorder->SetOutputDevice(m_config.MidiRecorderOutputDevice());
@@ -850,8 +882,9 @@ void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
   GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;
 
-  soundSystem.DisconnectFromEngine(m_SoundEngine);
-  m_SoundEngine.StopEngine();
+  assert(p_SoundSystem == &soundSystem);
+  SuspendOrgan();
+  p_SoundSystem = nullptr;
   m_SoundEngine.DestroyEngine();
 }
 

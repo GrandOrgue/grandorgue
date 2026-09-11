@@ -236,10 +236,12 @@ sound/tasks/GOSoundReleaseTask.cpp
 sound/tasks/GOSoundTaskBase.cpp
 sound/tasks/GOSoundTouchTask.cpp
 sound/tasks/GOSoundTremulantTask.cpp
+sound/tasks/GOSoundWindchestGroupTask.cpp
 sound/tasks/GOSoundWindchestTask.cpp
 sound/GOSoundDevInfo.cpp
 sound/GOSoundOnePoleFilter.cpp
 sound/GOSoundOrganEngine.cpp
+sound/GOSoundWindchestGroupTaskGrid.cpp
 sound/GOSoundSystem.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp
