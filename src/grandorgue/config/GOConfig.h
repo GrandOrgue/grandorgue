@@ -114,6 +114,7 @@ private:
   void SaveOrgans(GOConfigWriter &cfg);
 
   void LoadDefaults();
+  void FillWebRemoteDefaults();
 
 public:
   GOConfig(const std::string &instanceName, const std::string &confFilePath);

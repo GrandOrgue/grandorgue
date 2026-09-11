@@ -47,7 +47,7 @@
   <button id="edit">Edit</button>
 </header>
 <main id="grid"></main>
-<div id="hint">Hold a button while using "Listen for event" in GrandOrgue to map it.</div>
+<div id="hint">Buttons drive the Combination Setter out of the box. To remap one, hold it while using "Listen for event" in GrandOrgue.</div>
 
 <dialog id="dlg">
   <form method="dialog">
@@ -67,10 +67,13 @@
 
 <script>
 // Every button is just a MIDI note on a channel. What it does is decided on
-// the GrandOrgue side via "Listen for event", so the defaults below are only
-// suggestions for the labels.
+// the GrandOrgue side. The defaults below (notes 60 and up, channel 1) match
+// the initial MIDI config GrandOrgue ships with, so out of the box they drive
+// the Combination Setter: Set, General Cancel, digits 0-9, previous/next.
+// Anything else is mapped with "Listen for event". If you change these notes,
+// change web_remote_note() in GOConfig.cpp too.
 const KEY = 'go-remote-buttons';
-const defaults = ['Set', 'Cancel', '1', '2', '3', '4', '5', '6', '7', '8', '<', '>']
+const defaults = ['Set', 'Cancel', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '>']
   .map((label, i) => ({ label, note: 60 + i, ch: 1 }));
 
 let buttons = load();
@@ -89,7 +92,7 @@ function load() {
     const v = JSON.parse(localStorage.getItem(KEY));
     if (Array.isArray(v) && v.length) return v;
   } catch (e) {}
-  return defaults;
+  return defaults.map(b => ({ ...b }));
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(buttons)); }
 
@@ -136,6 +139,16 @@ function render() {
     add.innerHTML = '<div class="label">+</div>';
     add.addEventListener('click', () => openEditor(-1));
     grid.appendChild(add);
+
+    const reset = document.createElement('div');
+    reset.className = 'btn add';
+    reset.innerHTML = '<div class="label">Reset</div>';
+    reset.addEventListener('click', () => {
+      if (!confirm('Restore the default buttons?')) return;
+      buttons = defaults.map(b => ({ ...b }));
+      save(); render();
+    });
+    grid.appendChild(reset);
   }
 }
 

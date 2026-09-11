@@ -26,8 +26,10 @@
 #include "control/GOCallbackButtonControl.h"
 #include "control/GOElementCreator.h"
 #include "control/GOPushbuttonControl.h"
+#include "midi/elements/GOMidiReceiver.h"
 #include "midi/ports/GOMidiPort.h"
 #include "midi/ports/GOMidiPortFactory.h"
+#include "midi/ports/GOMidiWebInPort.h"
 #include "model/GOEnclosure.h"
 #include "model/GOManual.h"
 #include "settings/GOSettingEnum.cpp"
@@ -645,6 +647,7 @@ void GOConfig::Load() {
         if (pObj)
           pObj->LoadMidiObject(cfg, group, m_MidiMap);
       }
+    FillWebRemoteDefaults();
 
     long cpus = wxThread::GetCPUCount();
     if (cpus == -1)
@@ -685,6 +688,57 @@ void GOConfig::Load() {
   }
   if (!errMsg.empty())
     wxLogError(wxT("%s"), errMsg);
+}
+
+// The Web Remote page ships with Set, Cancel, 0-9, < and > on notes 60 and
+// up (see resource/web-remote.html). This says which setter button each of
+// those notes should drive, or -1 for buttons the page doesn't have.
+static int web_remote_note(
+  const GOElementCreator::ButtonDefinitionEntry *pButtonDef) {
+  const GOElementCreator::ButtonDefinitionEntry *const pDefs
+    = GOSetter::P_BUTTON_DEFS;
+  int note = -1;
+
+  if (pButtonDef == pDefs + GOSetter::ID_SETTER_SET)
+    note = 60;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_GC)
+    note = 61;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_PREV)
+    note = 72;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_NEXT)
+    note = 73;
+  else
+    for (int digit = 0; digit <= 9 && note < 0; digit++)
+      if (pButtonDef == pDefs + GOSetter::ID_SETTER_L0 + digit)
+        note = 62 + digit;
+  return note;
+}
+
+// Setter buttons that have no MIDI mapping at all get wired to the Web Remote
+// notes, so the page works out of the box, also with configs saved before the
+// Web Remote existed. Mapping a button to something else wins over this;
+// clearing it just brings the default back on the next start. Harmless if the
+// Web Remote device is never enabled.
+void GOConfig::FillWebRemoteDefaults() {
+  const unsigned webRemoteId
+    = m_MidiMap.EnsureLogicalName(GOMidiWebInPort::DEVICE_NAME);
+
+  for (unsigned l = getMidiBuiltinCount(), i = 0; i < l; i++) {
+    const int note = web_remote_note(INTERNAL_MIDI_DESCS[i].p_ButtonDef);
+    GOMidiReceiver &recv = *m_InitialMidiObjects[i]->GetMidiReceiver();
+
+    if (note >= 0 && !recv.IsMidiConfigured()) {
+      // same shape as what "Listen for event" produces for a button
+      GOMidiReceiverEventPattern &e = recv.GetEvent(recv.AddNewEvent());
+
+      e.type = MIDI_M_NOTE;
+      e.deviceId = webRemoteId;
+      e.channel = 1;
+      e.key = note;
+      e.low_value = 0;
+      e.high_value = 1;
+    }
+  }
 }
 
 void GOConfig::LoadDefaults() {
