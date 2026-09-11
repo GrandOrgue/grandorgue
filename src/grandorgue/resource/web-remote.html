@@ -71,15 +71,16 @@
 
 <script>
 // Every button is just a MIDI note on a channel. What it does is decided on
-// the GrandOrgue side. The defaults below (notes 60 and up, channel 1) match
-// the initial MIDI config GrandOrgue ships with, so out of the box they drive
+// the GrandOrgue side. The defaults below (channel 16, notes 100 and up: out
+// of the way of any real keyboard, in case a manual listens to "Any device")
+// match the initial MIDI config GrandOrgue ships with, so out of the box they drive
 // the Combination Setter: Set, General Cancel, digits 0-9, previous/next,
 // volume down/up.
 // Anything else is mapped with "Listen for event". If you change these notes,
 // change web_remote_note() in GOConfig.cpp too.
 const KEY = 'go-remote-buttons';
 const defaults = ['Set', 'Cancel', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '>', 'Vol -', 'Vol +']
-  .map((label, i) => ({ label, note: 60 + i, ch: 1 }));
+  .map((label, i) => ({ label, note: 100 + i, ch: 16 }));
 
 let buttons = load();
 let editing = false;
@@ -159,7 +160,7 @@ function render() {
 
 function openEditor(i) {
   editIndex = i;
-  const b = i >= 0 ? buttons[i] : { label: '', note: nextFreeNote(), ch: 1 };
+  const b = i >= 0 ? buttons[i] : { label: '', note: nextFreeNote(), ch: 16 };
   fLabel.value = b.label;
   fNote.value = b.note;
   fCh.value = b.ch;
@@ -168,7 +169,7 @@ function openEditor(i) {
 }
 function nextFreeNote() {
   const used = new Set(buttons.map(b => b.note));
-  let n = 60;
+  let n = 100;
   while (used.has(n) && n < 127) n++;
   return n;
 }

@@ -698,10 +698,16 @@ void GOConfig::Load() {
     wxLogError(wxT("%s"), errMsg);
 }
 
-// The Web Remote page ships with Set, Cancel, 0-9, <, >, Vol- and Vol+ on
-// notes 60 and up (see resource/web-remote.html). This says which setter
-// button each of those notes should drive, or -1 for buttons the page doesn't
-// have.
+// The Web Remote page ships with Set, Cancel, 0-9, <, >, Vol- and Vol+ (see
+// resource/web-remote.html). They live on channel 16 from note 100 up: no
+// keyboard sends there, so a manual left on "Any device" can't pick them up
+// as keys by accident. MIDI notes stop at 127, so this is as far out of the
+// way as they can go.
+static const int WEB_REMOTE_CHANNEL = 16;
+static const int WEB_REMOTE_FIRST_NOTE = 100;
+
+// Which setter button each page button drives, as an offset from
+// WEB_REMOTE_FIRST_NOTE, or -1 for buttons the page doesn't have.
 static int web_remote_note(
   const GOElementCreator::ButtonDefinitionEntry *pButtonDef) {
   const GOElementCreator::ButtonDefinitionEntry *const pDefs
@@ -709,22 +715,22 @@ static int web_remote_note(
   int note = -1;
 
   if (pButtonDef == pDefs + GOSetter::ID_SETTER_SET)
-    note = 60;
+    note = 0;
   else if (pButtonDef == pDefs + GOSetter::ID_SETTER_GC)
-    note = 61;
+    note = 1;
   else if (pButtonDef == pDefs + GOSetter::ID_SETTER_PREV)
-    note = 72;
+    note = 12;
   else if (pButtonDef == pDefs + GOSetter::ID_SETTER_NEXT)
-    note = 73;
+    note = 13;
   else if (pButtonDef == pDefs + GOSetter::ID_SETTER_VOLUME_DOWN)
-    note = 74;
+    note = 14;
   else if (pButtonDef == pDefs + GOSetter::ID_SETTER_VOLUME_UP)
-    note = 75;
+    note = 15;
   else
     for (int digit = 0; digit <= 9 && note < 0; digit++)
       if (pButtonDef == pDefs + GOSetter::ID_SETTER_L0 + digit)
-        note = 62 + digit;
-  return note;
+        note = 2 + digit;
+  return note < 0 ? -1 : WEB_REMOTE_FIRST_NOTE + note;
 }
 
 static bool has_event_from_device(
@@ -760,7 +766,7 @@ void GOConfig::FillWebRemoteDefaults() {
       // hold it while pressing the other buttons.
       e.type = pButtonDef->is_pushbutton ? MIDI_M_NOTE : MIDI_M_NOTE_ON;
       e.deviceId = webRemoteId;
-      e.channel = 1;
+      e.channel = WEB_REMOTE_CHANNEL;
       e.key = note;
       e.low_value = 0;
       e.high_value = 1;

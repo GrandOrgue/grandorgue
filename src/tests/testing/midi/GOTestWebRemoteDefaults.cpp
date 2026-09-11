@@ -39,15 +39,15 @@ static const struct {
   int note;
   GOMidiReceiverMessageType type;
 } EXPECTED[] = {
-  {"Setter/Set", 60, MIDI_M_NOTE_ON}, // the only toggle, flips on each tap
-  {"Setter/GC", 61, MIDI_M_NOTE},
-  {"Sequencer/L0", 62, MIDI_M_NOTE},
-  {"Sequencer/L5", 67, MIDI_M_NOTE},
-  {"Sequencer/L9", 71, MIDI_M_NOTE},
-  {"Sequencer/Prev", 72, MIDI_M_NOTE},
-  {"Sequencer/Next", 73, MIDI_M_NOTE},
-  {"Volume/VolumeDown", 74, MIDI_M_NOTE},
-  {"Volume/VolumeUp", 75, MIDI_M_NOTE},
+  {"Setter/Set", 100, MIDI_M_NOTE_ON}, // the only toggle, flips on each tap
+  {"Setter/GC", 101, MIDI_M_NOTE},
+  {"Sequencer/L0", 102, MIDI_M_NOTE},
+  {"Sequencer/L5", 107, MIDI_M_NOTE},
+  {"Sequencer/L9", 111, MIDI_M_NOTE},
+  {"Sequencer/Prev", 112, MIDI_M_NOTE},
+  {"Sequencer/Next", 113, MIDI_M_NOTE},
+  {"Volume/VolumeDown", 114, MIDI_M_NOTE},
+  {"Volume/VolumeUp", 115, MIDI_M_NOTE},
 };
 
 void GOTestWebRemoteDefaults::TestSetterButtonsAreMapped() {
@@ -85,9 +85,9 @@ void GOTestWebRemoteDefaults::TestSetterButtonsAreMapped() {
       e.deviceId == webId,
       std::format("{} should listen to the Web Remote device", x.path));
     GOAssert(
-      e.channel == 1 && e.key == x.note,
+      e.channel == 16 && e.key == x.note,
       std::format(
-        "{} should be note {} on channel 1, got note {} channel {}",
+        "{} should be note {} on channel 16, got note {} channel {}",
         x.path,
         x.note,
         e.key,
@@ -148,7 +148,7 @@ void GOTestWebRemoteDefaults::TestKeepsMappingsFromOtherDevices() {
     recv.GetEvent(0).key == 95 && recv.GetEvent(0).deviceId != webId,
     "the console mapping should be kept as the first event");
   GOAssert(
-    recv.GetEvent(1).key == 72 && recv.GetEvent(1).deviceId == webId,
+    recv.GetEvent(1).key == 112 && recv.GetEvent(1).deviceId == webId,
     "the Web Remote event should be added after it");
 }
 
