@@ -56,6 +56,14 @@ bool GOSoundOutputTask::DoRun(GOSchedulerThread *pThread) {
       if (factor != 0) {
         GOSoundBufferTaskBase *output = m_Outputs[j / 2];
 
+        // EnsureBufferReady() may return early, on a superseded round, with
+        // the previous round's buffer content instead of the current one -
+        // see GOSoundGroupTask::EnsureBufferReady(). That cannot happen here:
+        // this whole DoRun() runs under m_mutex (GOSoundTaskBase::Run() holds
+        // the locker across it), and GOSoundOrganEngine::NextPeriod() always
+        // completes the round for every output task (CompleteRound(), a
+        // blocking acquisition of that same mutex) before it calls
+        // NewRound() - so no DoRun() call can straddle the reset.
         output->EnsureBufferReady(m_IsToComplete.load(), pThread);
         if (pThread && pThread->ShouldStop())
           isStopped = true;

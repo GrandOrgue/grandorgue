@@ -116,9 +116,38 @@ void GOSoundCooperativeTaskTestImpl::Run(GOSchedulerThread *pThread) {
   }
 }
 
+void GOSoundCooperativeTaskTestImpl::DoNewRound() {
+  m_ActiveCount.store(0);
+  // Mirrors GOSoundGroupTask::DoNewRound(): wakes anyone parked in
+  // EnsureBufferReady() on the round being superseded.
+  m_Condition.Broadcast();
+}
+
 void GOSoundCooperativeTaskTestImpl::WaitUntilDone() {
   GOMutexLocker locker(m_mutex);
 
   while (m_RunState.load() != RUN_STATE_DONE)
     m_Condition.WaitOrStop();
+}
+
+void GOSoundCooperativeTaskTestImpl::EnsureBufferReady(
+  GOSchedulerThread *pThread, std::function<void()> onAfterRun) {
+  const uint64_t roundNumber = roundCounter.GetRoundNumber();
+
+  Run(pThread);
+  if (onAfterRun)
+    onAfterRun();
+  if (m_RunState.load() < RUN_STATE_DONE) {
+    GOMutexLocker locker(
+      m_mutex,
+      false,
+      "GOSoundCooperativeTaskTestImpl::EnsureBufferReady",
+      pThread);
+
+    while (locker.IsLocked() && m_RunState.load() < RUN_STATE_DONE
+           && roundCounter.GetRoundNumber() == roundNumber
+           && (pThread == nullptr || !pThread->ShouldStop()))
+      m_Condition.WaitWithTimeout(
+        "GOSoundCooperativeTaskTestImpl::EnsureBufferReady");
+  }
 }

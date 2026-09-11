@@ -14,11 +14,23 @@
 #include "GOSoundWindchestTask.h"
 
 GOSoundGroupTask::GOSoundGroupTask(
-  GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer)
+  const GORoundCounter &roundCounter,
+  GOSoundSamplerPlayer &samplerPlayer,
+  unsigned nFramesPerBuffer)
   : GOSoundBufferTaskBase(PRIORITY_AUDIOGROUP, true, 2, nFramesPerBuffer),
+    r_RoundCounter(roundCounter),
     r_SamplerPlayer(samplerPlayer),
     m_Condition(m_mutex),
     m_ActiveCount(0) {}
+
+void GOSoundGroupTask::DoNewRound() {
+  m_ActiveCount.store(0);
+  // Called from NewRound() while it holds m_mutex: wake anyone parked in
+  // EnsureBufferReady() on the round being superseded so that it leaves on
+  // the round-number check immediately, instead of after a full
+  // WaitWithTimeout() period.
+  m_Condition.Broadcast();
+}
 
 void GOSoundGroupTask::DiscardContent() {
   m_Active.Clear();
@@ -126,14 +138,25 @@ void GOSoundGroupTask::EnsureBufferReady(
   bool isToComplete, GOSchedulerThread *pThread) {
   if (isToComplete)
     m_IsToComplete.store(true);
+
+  // Captured before Run(): a NewRound() landing between Run() and the
+  // re-check below would otherwise be invisible.
+  const uint64_t roundNumber = r_RoundCounter.GetRoundNumber();
+
   Run(pThread);
   if (m_RunState.load() < RUN_STATE_DONE) {
     GOMutexLocker locker(
       m_mutex, false, "GOSoundGroupTask::EnsureBufferReady", pThread);
 
-    while (locker.IsLocked() && m_RunState.load() < RUN_STATE_DONE
+    while (locker.IsLocked()
+           && m_RunState.load() < RUN_STATE_DONE
+           // Leave once the round changes underneath us: RUN_STATE_NOT_STARTED
+           // then means "my round is over and this is the next one", not "my
+           // round has not started yet" - and nothing will ever finish a
+           // round this call did not ask to join.
+           && r_RoundCounter.GetRoundNumber() == roundNumber
            && (pThread == nullptr || !pThread->ShouldStop()))
-      m_Condition.WaitOrStop("GOSoundGroupTask::EnsureBufferReady", pThread);
+      m_Condition.WaitWithTimeout("GOSoundGroupTask::EnsureBufferReady");
   }
 }
 
@@ -143,7 +166,7 @@ void GOSoundGroupTask::WaitAndDiscardContent() {
   // wait for no threads are inside Run()
   while (m_RunState.load() > RUN_STATE_NOT_STARTED
          && m_RunState.load() < RUN_STATE_DONE)
-    m_Condition.WaitOrStop("WaitAndDiscardContent", NULL);
+    m_Condition.WaitWithTimeout("WaitAndDiscardContent");
 
   // Now it is safe to clear because m_mutex is locked and no other threads
   // can enter in Run()
