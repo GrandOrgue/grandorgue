@@ -57,7 +57,7 @@ void GOMidiSystem::Open() {
           pPort->GetDefaultRegEx(),
           portName,
           apiName,
-          true,
+          pPort->IsToAutoEnable(),
           physicalName);
     }
     if (pDevConf && pDevConf->m_IsEnabled)
