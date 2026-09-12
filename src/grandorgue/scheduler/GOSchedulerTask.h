@@ -29,10 +29,13 @@ class GOSchedulerThread;
  *  - NewRound() — exactly once, right after CompleteRound(), to reset the
  *    per-round state so the task is ready for Run() again in the next round.
  *
- * DiscardContent() is unrelated to this per-round cycle: it is called once,
- * when the task is registered with the scheduler (GOScheduler::Add()), and
- * drops any content the task has accumulated across many rounds (queued
- * samplers, reverb state, meter readings, an open file).
+ * DiscardContent() is unrelated to this per-round cycle: GOScheduler::Clear()
+ * and GOScheduler::Remove() call it once, when the task is deregistered from
+ * the scheduler, to drop any content the task has accumulated across many
+ * rounds (queued samplers, reverb state, meter readings, an open file).
+ * GOScheduler::Add() asserts IsEmpty() instead of discarding: a task must
+ * arrive at registration with nothing left to drop - which also means a
+ * task discarded by Remove() or Clear() is safe to Add() again as-is.
  */
 class GOSchedulerTask {
 public:
@@ -63,7 +66,7 @@ public:
   virtual void NewRound() = 0;
 
   /** Drops everything the task has accumulated. Called when the task is
-      added to the scheduler */
+      removed from the scheduler */
   virtual void DiscardContent() = 0;
 };
 
